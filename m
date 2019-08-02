@@ -2,232 +2,306 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B6BC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74BB0C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6631216C8
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:19:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 341692087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:19:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="VLpyKurK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393197AbfHBNT0 (ORCPT
+        id S2393207AbfHBNTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:19:26 -0400
-Received: from mail-out.m-online.net ([212.18.0.9]:44450 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393174AbfHBNTZ (ORCPT
+        Fri, 2 Aug 2019 09:19:49 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:37707 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393185AbfHBNTs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:19:25 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 460SRs2qrkz1rQFs;
-        Fri,  2 Aug 2019 15:19:21 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 460SRs23C3z1qqkh;
-        Fri,  2 Aug 2019 15:19:21 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id oVhibnfya8qd; Fri,  2 Aug 2019 15:19:19 +0200 (CEST)
-X-Auth-Info: 9tvX0qGeQu8hDBS5PC39M2yz/zTWBr8qSiq/Qhrt6bg=
-Received: from jawa (85-222-111-42.dynamic.chello.pl [85.222.111.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Fri,  2 Aug 2019 15:19:19 +0200 (CEST)
-Date:   Fri, 2 Aug 2019 15:19:12 +0200
-From:   Lukasz Majewski <lukma@denx.de>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Enrico Weigelt <info@metux.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] mfd: mc13xxx: Add mc34708 adc support
-Message-ID: <20190802151912.26dbb296@jawa>
-In-Reply-To: <20190725182020.3948c8d9@jawa>
-References: <20190717222602.2912-1-lukma@denx.de>
-        <20190717222602.2912-2-lukma@denx.de>
-        <20190725123641.GJ23883@dell>
-        <20190725182020.3948c8d9@jawa>
-Organization: denx.de
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+        Fri, 2 Aug 2019 09:19:48 -0400
+Received: by mail-io1-f68.google.com with SMTP id q22so32287715iog.4
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 06:19:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LDfH89TOWdqOqnUJpz1Xn0XGQFvLVnvsXuX4C0+q0Fc=;
+        b=VLpyKurKar6KfTshBHaXjM/LfLUKPbkWN4PV1RotQzaHGOB/Smnpn9vQhb1N3f7VwN
+         FZaOY01CSrQLJK+VbG0/mN55sUpe0Wj/Gi8lM9yABgE8PTKSNTfZXEgoHGLsCMwez4Ns
+         rDuzb3vgqyIopxd2nz+biuGvx1rBfF/jPzsY1n+trjGq7055yJ40kQdP++ZmQHezOEJX
+         Eg+HNvmFON7ZR8oUpTkYgqLkkrO13cVjeIzHfGQ+aqtII4VETwHp0u6n3kkCns6caPqW
+         qEDlc8TyXyDR1360pRQ3WsxeeU51Hkuywo8eCZzcfsnpVW50tmO63o4evhdaxe+PxMWv
+         1hCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LDfH89TOWdqOqnUJpz1Xn0XGQFvLVnvsXuX4C0+q0Fc=;
+        b=HcCfmAF9xP+MkC1lnqx1en8uOYPVMuktwBrNIEXMXliVknslo5WyZmX55XG9+QiQDt
+         hWyemkMWvbqjQcVvbcJzt/PxHQAg/5nrZjzXARzrq8BlHZypJ9D7CBjjcfD0ydxQfXiC
+         lutyIMKpDRnaFIT0lzo/dfLD9ZUrROnIqzzbMmlXe8q7SLO1/wmrkjDB5/R45HgoJYGK
+         iqA83L/95eOk9hQRbhIfEgNCde8TRWh3ntnSs0iavGCEsdfEeV6iMG17iM6jCnfBbZX3
+         AXPFJzM+kuRT8EcxwpWNlQD/XyNbl9g0JJf/9rR13hcR2KHirAwcKfGfX4cyoMvXqfL4
+         0ehw==
+X-Gm-Message-State: APjAAAV9ttdEYqnaNytehyteCsqW6PB/j26Rs6FG6S9TfMzcrYfa5LGT
+        IuprI5mTbsb9EEN1MafH3G5es8IiuIk=
+X-Google-Smtp-Source: APXvYqyKCKukCx1vf3nlIe49GPE9M2UHxkAmD4zfC2Z8PpY46sCciMj3c7jnplib+tIjlb6weB9BDA==
+X-Received: by 2002:a02:a07:: with SMTP id 7mr140478035jaw.65.1564751986894;
+        Fri, 02 Aug 2019 06:19:46 -0700 (PDT)
+Received: from brauner.io ([162.223.5.78])
+        by smtp.gmail.com with ESMTPSA id v3sm57388782iom.53.2019.08.02.06.19.45
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 02 Aug 2019 06:19:45 -0700 (PDT)
+From:   Christian Brauner <christian@brauner.io>
+X-Google-Original-From: Christian Brauner <christian.brauner@ubuntu.com>
+Date:   Fri, 2 Aug 2019 15:19:44 +0200
+To:     Adrian Reber <areber@redhat.com>
+Cc:     Christian Brauner <christian@brauner.io>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelianov <xemul@virtuozzo.com>,
+        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>
+Subject: Re: [PATCH v2 1/2] fork: extend clone3() to support CLONE_SET_TID
+Message-ID: <20190802131943.hkvcssv74j25xmmt@brauner.io>
+References: <20190731161223.2928-1-areber@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/zmE80JuW0829EruyaBP_t4j"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190731161223.2928-1-areber@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/zmE80JuW0829EruyaBP_t4j
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jul 31, 2019 at 06:12:22PM +0200, Adrian Reber wrote:
+> The main motivation to add CLONE_SET_TID to clone3() is CRIU.
+> 
+> To restore a process with the same PID/TID CRIU currently uses
+> /proc/sys/kernel/ns_last_pid. It writes the desired (PID - 1) to
+> ns_last_pid and then (quickly) does a clone(). This works most of the
+> time, but it is racy. It is also slow as it requires multiple syscalls.
 
-Hi Lee,
+Can you elaborate how this is racy, please. Afaict, CRIU will always
+usually restore in a new pid namespace that it controls, right? What is
+the exact race?
 
-> Hi Lee,
->=20
-> > On Thu, 18 Jul 2019, Lukasz Majewski wrote:
-> >  =20
-> > > From: Sascha Hauer <s.hauer@pengutronix.de>
-> > >=20
-> > > The mc34708 has an improved adc. The older variants will always
-> > > convert a fixed order of channels. The mc34708 can do up to eight
-> > > conversions in arbitrary channel order. Currently this extended
-> > > feature is not supported. We only support touchscreen conversions
-> > > now, which will be sampled in a data format compatible to the
-> > > older chips in order to keep the API between the mfd and the
-> > > touchscreen driver.
-> > >=20
-> > > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> > > Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> > >=20
-> > > ---
-> > > Changes for v4:
-> > > - None
-> > >=20
-> > > Changes for v3:
-> > > - None
-> > >=20
-> > > Changes for v2:
-> > > - Change the return code patch when the mc13xxx ADC is performing
-> > > conversion
-> > > - Introduce new include/linux/mfd/mc34708.h header file for
-> > > mc34708 specific defines
-> > >=20
-> > > Changes from the original patches:
-> > > - ADC conversion functions prototypes added to fix build error
-> > > - Adjustments to make checkpatch clean (-ENOSYS, line over 80
-> > > char)
-> > >=20
-> > > This patch applies on top of v5.2 - SHA1:
-> > > 0ecfebd2b52404ae0c54a878c872bb93363ada36 ---
-> > >  drivers/mfd/mc13xxx-core.c  | 102
-> > > +++++++++++++++++++++++++++++++++++++++++++-
-> > > drivers/mfd/mc13xxx.h       |   3 ++ include/linux/mfd/mc34708.h |
-> > > 37 ++++++++++++++++ 3 files changed, 141 insertions(+), 1
-> > > deletion(-) create mode 100644 include/linux/mfd/mc34708.h
-> > >=20
-> > > diff --git a/drivers/mfd/mc13xxx-core.c
-> > > b/drivers/mfd/mc13xxx-core.c index 1abe7432aad8..01473d6fda21
-> > > 100644 --- a/drivers/mfd/mc13xxx-core.c
-> > > +++ b/drivers/mfd/mc13xxx-core.c
-> > > @@ -12,6 +12,7 @@
-> > >  #include <linux/of_device.h>
-> > >  #include <linux/platform_device.h>
-> > >  #include <linux/mfd/core.h>
-> > > +#include <linux/mfd/mc34708.h>
-> > > =20
-> > >  #include "mc13xxx.h"
-> > > =20
-> > > @@ -45,6 +46,8 @@
-> > > =20
-> > >  #define MC13XXX_ADC2		45
-> > > =20
-> > > +#define MC13XXX_ADC_WORKING		(1 << 0)   =20
-> >=20
-> > BIT(0) ? =20
->=20
-> The same convention - i.e. (1 << 0) is used in the rest of the file.
->=20
-> >  =20
-> > >  void mc13xxx_lock(struct mc13xxx *mc13xxx)
-> > >  {
-> > >  	if (!mutex_trylock(&mc13xxx->lock)) {
-> > > @@ -198,22 +201,30 @@ static void mc34708_print_revision(struct
-> > > mc13xxx *mc13xxx, u32 revision) maskval(revision,
-> > > MC34708_REVISION_FAB)); }
-> > > =20
-> > > +static int mc13xxx_adc_conversion(struct mc13xxx *, unsigned int,
-> > > +				  unsigned int, u8, bool,
-> > > unsigned int *); +static int mc34708_adc_conversion(struct
-> > > mc13xxx *, unsigned int,
-> > > +				  unsigned int, u8, bool,
-> > > unsigned int *); +
-> > >  /* These are only exported for mc13xxx-i2c and mc13xxx-spi */
-> > >  struct mc13xxx_variant mc13xxx_variant_mc13783 =3D {
-> > >  	.name =3D "mc13783",
-> > >  	.print_revision =3D mc13xxx_print_revision,
-> > > +	.adc_do_conversion =3D mc13xxx_adc_conversion,
-> > >  };
-> > >  EXPORT_SYMBOL_GPL(mc13xxx_variant_mc13783);   =20
-> >=20
-> > I'd prefer to keep the call-back functions as close to zero as
-> > possible. =20
->=20
-> If I may ask - what is wrong with having per device callback(s) ?
->=20
-> >=20
-> > It would be better to turn mc13xxx_adc_conversion() in to the catch
-> > function =20
->=20
-> Could you share any example?=20
->=20
-> > choose an execution route based on some platform matching.
-> >  =20
->=20
-> Could you help me with giving a hint of how shall I do the "platform
-> matching" in this particular driver ?=20
->=20
-> The mc13xxx driver seems rather complex with SPI and I2C support and
-> in which the subdevices are added (e.g. rtc, adc, etc).
->=20
-> This particular patch just follows current driver design and fixes its
-> usability for mc13708 drvice.
->=20
-> > If you could do the same for print_revision too, that would be even
-> > better.
-> >  =20
->=20
-> I would prefer to fix the driver (for mc13708) without the need to
-> change the working code.
->=20
+> 
+> Extending clone3() to support CLONE_SET_TID makes it possible restore a
+> process using CRIU without accessing /proc/sys/kernel/ns_last_pid and
+> race free (as long as the desired PID/TID is available).
+> 
+> This clone3() extension places the same restrictions (CAP_SYS_ADMIN)
+> on clone3() with set_tid as they are currently in place for ns_last_pid.
+> 
+> v2:
+>  - Removed (size < sizeof(struct clone_args)) as discussed with
+>    Christian and Dmitry
+>  - Added comment to ((set_tid != 1) && idr_get_cursor() <= 1) (Oleg)
+>  - Use idr_alloc() instead of idr_alloc_cyclic() (Oleg)
 
-Lee, would you find time to reply to this message?
+Fwiw, the changelog should be placed after the "---" after your SOB, so
+rather :):
 
->=20
-> Best regards,
->=20
-> Lukasz Majewski
->=20
-> --
->=20
-> DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-> HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-> Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email:
-> lukma@denx.de
+Signed-off-by: Adrian Reber <areber@redhat.com>
+---
+v2:
+ - Removed (size < sizeof(struct clone_args)) as discussed with
+   Christian and Dmitry
+ - Added comment to ((set_tid != 1) && idr_get_cursor() <= 1) (Oleg)
+ - Use idr_alloc() instead of idr_alloc_cyclic() (Oleg)
+---
 
+> 
+> Signed-off-by: Adrian Reber <areber@redhat.com>
+> ---
+>  include/linux/pid.h        |  2 +-
+>  include/linux/sched/task.h |  1 +
+>  include/uapi/linux/sched.h |  2 ++
+>  kernel/fork.c              | 25 ++++++++++++++++---------
+>  kernel/pid.c               | 30 +++++++++++++++++++++++-------
+>  5 files changed, 43 insertions(+), 17 deletions(-)
+> 
+> diff --git a/include/linux/pid.h b/include/linux/pid.h
+> index 2a83e434db9d..052000db0ced 100644
+> --- a/include/linux/pid.h
+> +++ b/include/linux/pid.h
+> @@ -116,7 +116,7 @@ extern struct pid *find_vpid(int nr);
+>  extern struct pid *find_get_pid(int nr);
+>  extern struct pid *find_ge_pid(int nr, struct pid_namespace *);
+>  
+> -extern struct pid *alloc_pid(struct pid_namespace *ns);
+> +extern struct pid *alloc_pid(struct pid_namespace *ns, pid_t set_tid);
+>  extern void free_pid(struct pid *pid);
+>  extern void disable_pid_allocation(struct pid_namespace *ns);
+>  
+> diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
+> index 0497091e40c1..4f2a80564332 100644
+> --- a/include/linux/sched/task.h
+> +++ b/include/linux/sched/task.h
+> @@ -26,6 +26,7 @@ struct kernel_clone_args {
+>  	unsigned long stack;
+>  	unsigned long stack_size;
+>  	unsigned long tls;
+> +	pid_t set_tid;
+>  };
+>  
+>  /*
+> diff --git a/include/uapi/linux/sched.h b/include/uapi/linux/sched.h
+> index b3105ac1381a..8c4e803e8147 100644
+> --- a/include/uapi/linux/sched.h
+> +++ b/include/uapi/linux/sched.h
+> @@ -32,6 +32,7 @@
+>  #define CLONE_NEWPID		0x20000000	/* New pid namespace */
+>  #define CLONE_NEWNET		0x40000000	/* New network namespace */
+>  #define CLONE_IO		0x80000000	/* Clone io context */
+> +#define CLONE_SET_TID		0x100000000ULL	/* set if the desired TID is set in set_tid */
+>  
+>  /*
+>   * Arguments for the clone3 syscall
+> @@ -45,6 +46,7 @@ struct clone_args {
+>  	__aligned_u64 stack;
+>  	__aligned_u64 stack_size;
+>  	__aligned_u64 tls;
+> +	__aligned_u64 set_tid;
+>  };
+>  
+>  /*
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index 2852d0e76ea3..405f98ce4c83 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -2031,7 +2031,7 @@ static __latent_entropy struct task_struct *copy_process(
+>  	stackleak_task_init(p);
+>  
+>  	if (pid != &init_struct_pid) {
+> -		pid = alloc_pid(p->nsproxy->pid_ns_for_children);
+> +		pid = alloc_pid(p->nsproxy->pid_ns_for_children, args->set_tid);
+>  		if (IS_ERR(pid)) {
+>  			retval = PTR_ERR(pid);
+>  			goto bad_fork_cleanup_thread;
+> @@ -2530,14 +2530,12 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
+>  					      struct clone_args __user *uargs,
+>  					      size_t size)
+>  {
+> +	struct pid_namespace *pid_ns = task_active_pid_ns(current);
+>  	struct clone_args args;
+>  
+>  	if (unlikely(size > PAGE_SIZE))
+>  		return -E2BIG;
+>  
+> -	if (unlikely(size < sizeof(struct clone_args)))
+> -		return -EINVAL;
+> -
+>  	if (unlikely(!access_ok(uargs, size)))
+>  		return -EFAULT;
+>  
+> @@ -2562,6 +2560,9 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
+>  	if (copy_from_user(&args, uargs, size))
+>  		return -EFAULT;
+>  
+> +	if ((args.flags & CLONE_SET_TID) && !ns_capable(pid_ns->user_ns, CAP_SYS_ADMIN))
+> +		return -EPERM;
 
+Have you made sure that this makes sense with all flags, e.g. does this
+make sense when specified with CLONE_THREAD?
 
+> +
+>  	*kargs = (struct kernel_clone_args){
+>  		.flags		= args.flags,
+>  		.pidfd		= u64_to_user_ptr(args.pidfd),
+> @@ -2571,6 +2572,7 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
+>  		.stack		= args.stack,
+>  		.stack_size	= args.stack_size,
+>  		.tls		= args.tls,
+> +		.set_tid	= args.set_tid,
+>  	};
+>  
+>  	return 0;
+> @@ -2578,11 +2580,16 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
+>  
+>  static bool clone3_args_valid(const struct kernel_clone_args *kargs)
+>  {
+> -	/*
+> -	 * All lower bits of the flag word are taken.
+> -	 * Verify that no other unknown flags are passed along.
+> -	 */
+> -	if (kargs->flags & ~CLONE_LEGACY_FLAGS)
+> +	/* Verify that no other unknown flags are passed along. */
+> +	if (kargs->flags & ~(CLONE_LEGACY_FLAGS | CLONE_SET_TID))
+> +		return false;
+> +
+> +	/* Fail if set_tid is set without CLONE_SET_TID */
+> +	if (kargs->set_tid && !(kargs->flags & CLONE_SET_TID))
+> +		return false;
+> +
+> +	/* Also fail if set_tid is invalid */
+> +	if ((kargs->set_tid <= 0) && (kargs->flags & CLONE_SET_TID))
+>  		return false;
+>  
+>  	/*
+> diff --git a/kernel/pid.c b/kernel/pid.c
+> index 0a9f2e437217..977f3ac39d7f 100644
+> --- a/kernel/pid.c
+> +++ b/kernel/pid.c
+> @@ -157,7 +157,7 @@ void free_pid(struct pid *pid)
+>  	call_rcu(&pid->rcu, delayed_put_pid);
+>  }
+>  
+> -struct pid *alloc_pid(struct pid_namespace *ns)
+> +struct pid *alloc_pid(struct pid_namespace *ns, int set_tid)
+>  {
+>  	struct pid *pid;
+>  	enum pid_type type;
+> @@ -186,12 +186,28 @@ struct pid *alloc_pid(struct pid_namespace *ns)
+>  		if (idr_get_cursor(&tmp->idr) > RESERVED_PIDS)
+>  			pid_min = RESERVED_PIDS;
+>  
+> -		/*
+> -		 * Store a null pointer so find_pid_ns does not find
+> -		 * a partially initialized PID (see below).
+> -		 */
+> -		nr = idr_alloc_cyclic(&tmp->idr, NULL, pid_min,
+> -				      pid_max, GFP_ATOMIC);
+> +		if (set_tid) {
+> +			/*
+> +			 * Also fail if a PID != 1 is requested
+> +			 * and no PID 1 exists.
+> +			 */
+> +			if ((set_tid >= pid_max) || ((set_tid != 1) &&
+> +				(idr_get_cursor(&tmp->idr) <= 1))) {
+> +				spin_unlock_irq(&pidmap_lock);
+> +				retval = -EINVAL;
+> +				goto out_free;
+> +			}
+> +			nr = idr_alloc(&tmp->idr, NULL, set_tid,
+> +				       set_tid + 1, GFP_ATOMIC);
 
-Best regards,
+Hm, feels to me that we should report a different error code than EAGAIN
+when the allocation fails for set_tid. Right now you get EAGAIN for both
+the non set_tid and the set_tid codepath.
+But for set_tid the error that you likely should surface is EEXIST, i.e.
+that pid is already taken.
 
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/zmE80JuW0829EruyaBP_t4j
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAl1EOFAACgkQAR8vZIA0
-zr1RrQgAkaqi4QhRPJw3YqkMBVlkgZlaG1nv8cETXkocLSj3pu9xyAObrunMOFDU
-p0wTmW0BiTF80P2LX4a3UIu3cINVzGIdYv1tIXj1rJLEpSirVvUa/OvbuU8GDOAB
-IV2AB9ojEBeDdgSjSdncqnFH8ZuWXB52uk5cQFATARw3uMUvi0gsNUjg+48T1Bgs
-JLh0JGEa9KZ52OOIOrFSmHGo4UOBjAUDtf3Q1yTIQ5jQKUm/dwuKdxCYLtl7dOxc
-siC5DsgauGtx+U3dPXCYahauQnjUO557c0a/uuctu+QRBkUv42kNNkud4f8GKyfP
-EZB8f6jJA5yLxXqtrNl+4AAQFkjhUQ==
-=TB5+
------END PGP SIGNATURE-----
-
---Sig_/zmE80JuW0829EruyaBP_t4j--
+> +			set_tid = 0;
+> +		} else {
+> +			/*
+> +			 * Store a null pointer so find_pid_ns does not find
+> +			 * a partially initialized PID (see below).
+> +			 */
+> +			nr = idr_alloc_cyclic(&tmp->idr, NULL, pid_min,
+> +					      pid_max, GFP_ATOMIC);
+> +		}
+>  		spin_unlock_irq(&pidmap_lock);
+>  		idr_preload_end();
+>  
+> -- 
+> 2.21.0
+> 
