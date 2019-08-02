@@ -2,163 +2,77 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8580C32753
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 18:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F2F5C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 18:50:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0083217D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 18:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1615B20665
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 18:50:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Y3fHk+98"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dDHD2ywN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729168AbfHBSts (ORCPT
+        id S1729424AbfHBSuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 14:49:48 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:15257 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728100AbfHBStr (ORCPT
+        Fri, 2 Aug 2019 14:50:09 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:37158 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728100AbfHBSuI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 14:49:47 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d4485cb0000>; Fri, 02 Aug 2019 11:49:47 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 02 Aug 2019 11:49:46 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 02 Aug 2019 11:49:46 -0700
-Received: from [10.2.171.217] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 2 Aug
- 2019 18:49:45 +0000
-Subject: Re: [PATCH 06/34] drm/i915: convert put_page() to put_user_page*()
-To:     Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        <john.hubbard@gmail.com>
-CC:     Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <amd-gfx@lists.freedesktop.org>, <ceph-devel@vger.kernel.org>,
-        <devel@driverdev.osuosl.org>, <devel@lists.orangefs.org>,
-        <dri-devel@lists.freedesktop.org>,
-        <intel-gfx@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-block@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-        <linux-fbdev@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-nfs@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-rpi-kernel@lists.infradead.org>,
-        <linux-xfs@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <rds-devel@oss.oracle.com>, <sparclinux@vger.kernel.org>,
-        <x86@kernel.org>, <xen-devel@lists.xenproject.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>
-References: <20190802022005.5117-1-jhubbard@nvidia.com>
- <20190802022005.5117-7-jhubbard@nvidia.com>
- <156473756254.19842.12384378926183716632@jlahtine-desk.ger.corp.intel.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <7d9a9c57-4322-270b-b636-7214019f87e9@nvidia.com>
-Date:   Fri, 2 Aug 2019 11:48:08 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 2 Aug 2019 14:50:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=4FKpdVqJ6x4ipIPagFBQljiwNMfp0DvGjLMeeuRcH8A=; b=dDHD2ywNsssRnL5ii/df4tYig
+        D3ALda+Rih2dKJmSzMKcZtVeekdAr6rLQlyWeDYNAodYDwZCcq1MjFSDSS1NFOUSO482/Y0i/fYFC
+        2IiqBNwW2N0YNUsj8Yx3VBoDkjkZCZc9bBCvpMZIwoEuTMK0eoIkvcWVGeyWZhL8d1QSwxUMjuGt5
+        p3ws1orng4avDhJYSwVrrbuOqCzSvSr01VZy/xxLaNfkNuvqcUzHHnIcIAMurN4H7+fF7CZM0UR9a
+        g9hgXaWENs9inVcSHFLRT+UGJwdr/s6LSeIQ6E80OMVl6Wk25R3ItbiY47onej027TxwekAQBoEOr
+        /dnveekLw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1htccg-0005aF-1p; Fri, 02 Aug 2019 18:49:50 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6C43620293161; Fri,  2 Aug 2019 20:49:47 +0200 (CEST)
+Date:   Fri, 2 Aug 2019 20:49:47 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Jan Glauber <jglauber@marvell.com>
+Subject: Re: [PATCH 0/6] Rework REFCOUNT_FULL using atomic_fetch_* operations
+Message-ID: <20190802184947.GC2349@hirez.programming.kicks-ass.net>
+References: <20190802101000.12958-1-will@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <156473756254.19842.12384378926183716632@jlahtine-desk.ger.corp.intel.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1564771787; bh=S6tEtRzvj2UDxwZj4cj8eQvbGOkT9/8mALKEDpv4kUk=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Y3fHk+98nOh18vMhIm6oxYzfGEP8O2OFNum6iQoB2YYU2gm7Ou5mcASXhMaNa0kba
-         BTSi3qY+ef5NxNUgS+af9aZz1Xc0xlcalUQEIFNZpatz8EG3c4tRcTzbThhIfTheTe
-         KUIJTej9BZ3lpHo5Yb8ku9IclBxYdC+NGE9oZ9fgbh7w5eghYXLn/xfb7XAp0GzwuH
-         IJ6d9B7kXtD+UvM1BqXw9xtNu+yigVn+igq6/71hO2kl6CxZVC/aFF46g+y63m13bY
-         ASWUBsfN5BXUM2Pu5Zj4LSXQjLICQo96hEH38MKObK2sbDPzzqMyeBnMmqRYo7/r9E
-         eYoSABVJVs3oQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190802101000.12958-1-will@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/2/19 2:19 AM, Joonas Lahtinen wrote:
-> Quoting john.hubbard@gmail.com (2019-08-02 05:19:37)
->> From: John Hubbard <jhubbard@nvidia.com>
->>
->> For pages that were retained via get_user_pages*(), release those pages
->> via the new put_user_page*() routines, instead of via put_page() or
->> release_pages().
->>
->> This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
->> ("mm: introduce put_user_page*(), placeholder versions").
->>
->> Note that this effectively changes the code's behavior in
->> i915_gem_userptr_put_pages(): it now calls set_page_dirty_lock(),
->> instead of set_page_dirty(). This is probably more accurate.
-> 
-> We've already fixed this in drm-tip where the current code uses
-> set_page_dirty_lock().
-> 
-> This would conflict with our tree. Rodrigo is handling
-> drm-intel-next for 5.4, so you guys want to coordinate how
-> to merge.
-> 
+On Fri, Aug 02, 2019 at 11:09:54AM +0100, Will Deacon wrote:
 
-Hi Joonas, Rodrigo,
+> Although the revised implementation passes all of the lkdtm REFCOUNT
+> tests, there is a race condition introduced by the deferred saturation
+> whereby if INT_MIN + 2 tasks take a reference on a refcount at
+> REFCOUNT_MAX and are each preempted between detecting overflow and
+> writing the saturated value without being rescheduled, then another task
+> may end up erroneously freeing the object when it drops the refcount and
+> sees zero. It doesn't feel like a particularly realistic case to me, but
+> I thought I should mention it in case somebody else knows better.
 
-First of all, I apologize for the API breakage: put_user_pages_dirty_lock()
-has an additional "dirty" parameter.
+So my OCD has always found that hole objectionable. Also I suppose the
+cmpxchg ones are simpler to understand.
 
-In order to deal with the merge problem, I'll drop this patch from my series,
-and I'd recommend that the drm-intel-next take the following approach:
-
-1) For now, s/put_page/put_user_page/ in i915_gem_userptr_put_pages(),
-and fix up the set_page_dirty() --> set_page_dirty_lock() issue, like this
-(based against linux.git):
-
-diff --git a/drivers/gpu/drm/i915/gem/i915_gem_userptr.c 
-b/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
-index 528b61678334..94721cc0093b 100644
---- a/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
-@@ -664,10 +664,10 @@ i915_gem_userptr_put_pages(struct drm_i915_gem_object *obj,
-
-         for_each_sgt_page(page, sgt_iter, pages) {
-                 if (obj->mm.dirty)
--                       set_page_dirty(page);
-+                       set_page_dirty_lock(page);
-
-                 mark_page_accessed(page);
--               put_page(page);
-+               put_user_page(page);
-         }
-         obj->mm.dirty = false;
-
-
-That will leave you with your original set_page_dirty_lock() calls
-and everything works properly.
-
-2) Next cycle, move to the new put_user_pages_dirty_lock().
-
-thanks,
--- 
-John Hubbard
-NVIDIA
-
-
-> Regards, Joonas
-> 
+Maybe make this fancy stuff depend on !FULL ?
