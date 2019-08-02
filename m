@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C56CC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:24:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0819C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3089E21841
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:24:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA1E020644
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:25:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752296;
-	bh=cuzsLpdJnu8xilvueIg4SUhy4s/85cu7P1L/irrvDH0=;
+	s=default; t=1564752302;
+	bh=RgQN4YF2CFXCe3Y6feEwt0FWqjUndpT+Z2gITf/3vH0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=teSMI8oRZdAo+lPaD3vnWJWu6etHqqIibNSiEouL/9tddfqmPLBfNFJ05TLEyxWDY
-	 EjcJFMlSfJnzMNOdDTFmSBGRGsU4/QU7BNmMLuMAUtwDMKvNMscKvr4AFFwUzR6C8I
-	 niKRIClSv1py5UXjzsp5QOyApmuW6B67Jpiye46o=
+	b=Ke0ScBwCE6gAun6BWi6t7vsGb2Rfs9mHgwOpkWV4v0nkIFaNMc3SKU7UznXd4wCD0
+	 hIJjd0KpP6ctZ6DZRUF4JP+i6LxbWrDdOjYJ1SiZlxF6gtayhmXoZPXf99hXS7vQj/
+	 YLb9ps+au4ycRywzgyiGKy9qrkMUeN/UF6YE0598=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394289AbfHBNYy (ORCPT
+        id S2394315AbfHBNZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:24:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35560 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:25:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394265AbfHBNYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:24:50 -0400
+        id S2394292AbfHBNY4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:24:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE4C3217D4;
-        Fri,  2 Aug 2019 13:24:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AF0D20644;
+        Fri,  2 Aug 2019 13:24:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752289;
-        bh=cuzsLpdJnu8xilvueIg4SUhy4s/85cu7P1L/irrvDH0=;
+        s=default; t=1564752295;
+        bh=RgQN4YF2CFXCe3Y6feEwt0FWqjUndpT+Z2gITf/3vH0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZCwZYVLxdH0CVteS/PxLHsYNu3R3xGMPPVfxrwFRkX6ryqZdOvlNlYo/X89aaBCTO
-         cs0nYx5z9ffEo6WaWeDZj0tpLPqGd2ZtLRDoT2fnivoF8X/BKc/oSAwREwhKudN1kQ
-         Fo4Bg48Z9C/XTKzKzsAw9yTGr/xxU6RzLaS2PfSM=
+        b=lcIkFpvkiMdZpp0MaPSAnz2asstueOtRLGVbBxZDSwpumkHNp2j1NMQXtroHlwA+/
+         Fw++QRbtxxPPQD4cHHv1cVlszcW4QwIqZpMLZxozg4B7o3a19DtOh1+I0v3oi4gK/Y
+         MGx6Oihek4P4O+SjP0HpB+MRIGk0ynCLbHzgPmeo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Yang <wen.yang99@zte.com.cn>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 13/30] cpufreq/pasemi: fix use-after-free in pas_cpufreq_cpu_init()
-Date:   Fri,  2 Aug 2019 09:24:05 -0400
-Message-Id: <20190802132422.13963-13-sashal@kernel.org>
+Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Vinod Koul <vkoul@kernel.org>, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 17/30] ALSA: compress: Don't allow paritial drain operations on capture streams
+Date:   Fri,  2 Aug 2019 09:24:09 -0400
+Message-Id: <20190802132422.13963-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802132422.13963-1-sashal@kernel.org>
 References: <20190802132422.13963-1-sashal@kernel.org>
@@ -61,73 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-[ Upstream commit e0a12445d1cb186d875410d093a00d215bec6a89 ]
+[ Upstream commit a70ab8a8645083f3700814e757f2940a88b7ef88 ]
 
-The cpu variable is still being used in the of_get_property() call
-after the of_node_put() call, which may result in use-after-free.
+Partial drain and next track are intended for gapless playback and
+don't really have an obvious interpretation for a capture stream, so
+makes sense to not allow those operations on capture streams.
 
-Fixes: a9acc26b75f6 ("cpufreq/pasemi: fix possible object reference leak")
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Acked-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/pasemi-cpufreq.c | 23 +++++++++--------------
- 1 file changed, 9 insertions(+), 14 deletions(-)
+ sound/core/compress_offload.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/cpufreq/pasemi-cpufreq.c b/drivers/cpufreq/pasemi-cpufreq.c
-index 8456492124f0c..d1bdd8f622476 100644
---- a/drivers/cpufreq/pasemi-cpufreq.c
-+++ b/drivers/cpufreq/pasemi-cpufreq.c
-@@ -145,10 +145,18 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
- 	int err = -ENODEV;
+diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
+index 1538fbc7562b8..b4f1536b17cb5 100644
+--- a/sound/core/compress_offload.c
++++ b/sound/core/compress_offload.c
+@@ -835,6 +835,10 @@ static int snd_compr_next_track(struct snd_compr_stream *stream)
+ 	if (stream->runtime->state != SNDRV_PCM_STATE_RUNNING)
+ 		return -EPERM;
  
- 	cpu = of_get_cpu_node(policy->cpu, NULL);
-+	if (!cpu)
-+		goto out;
- 
-+	max_freqp = of_get_property(cpu, "clock-frequency", NULL);
- 	of_node_put(cpu);
--	if (!cpu)
-+	if (!max_freqp) {
-+		err = -EINVAL;
- 		goto out;
-+	}
++	/* next track doesn't have any meaning for capture streams */
++	if (stream->direction == SND_COMPRESS_CAPTURE)
++		return -EPERM;
 +
-+	/* we need the freq in kHz */
-+	max_freq = *max_freqp / 1000;
- 
- 	dn = of_find_compatible_node(NULL, NULL, "1682m-sdc");
- 	if (!dn)
-@@ -185,16 +193,6 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+ 	/* you can signal next track if this is intended to be a gapless stream
+ 	 * and current track metadata is set
+ 	 */
+@@ -862,6 +866,10 @@ static int snd_compr_partial_drain(struct snd_compr_stream *stream)
+ 		break;
  	}
  
- 	pr_debug("init cpufreq on CPU %d\n", policy->cpu);
--
--	max_freqp = of_get_property(cpu, "clock-frequency", NULL);
--	if (!max_freqp) {
--		err = -EINVAL;
--		goto out_unmap_sdcpwr;
--	}
--
--	/* we need the freq in kHz */
--	max_freq = *max_freqp / 1000;
--
- 	pr_debug("max clock-frequency is at %u kHz\n", max_freq);
- 	pr_debug("initializing frequency table\n");
- 
-@@ -212,9 +210,6 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
- 
- 	return cpufreq_generic_init(policy, pas_freqs, get_gizmo_latency());
- 
--out_unmap_sdcpwr:
--	iounmap(sdcpwr_mapbase);
--
- out_unmap_sdcasr:
- 	iounmap(sdcasr_mapbase);
- out:
++	/* partial drain doesn't have any meaning for capture streams */
++	if (stream->direction == SND_COMPRESS_CAPTURE)
++		return -EPERM;
++
+ 	/* stream can be drained only when next track has been signalled */
+ 	if (stream->next_track == false)
+ 		return -EPERM;
 -- 
 2.20.1
 
