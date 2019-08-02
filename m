@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A54C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00671C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA4FB2087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:42:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C20EA2087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:42:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738951;
-	bh=UBKMMdY8wtmAJ8UB0y/8LOKxsqp+bYD7SFaXTn2tI4M=;
+	s=default; t=1564738957;
+	bh=dZpLJQa/iNeL7/6UDAIQwxGQuAixpVJtkTlR0A7g43s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nkefKd+MDa5J4TP5Tl9mv15bZKROX60EIaqJRCNoSKIJ6evCy8k663f4yxnh+sP7M
-	 yXS/tMNA11wmBsiqHTpvHhg7EKqINLc4MsA/J1KYPpa2UMcCRIIEQumudNyTxtjCL3
-	 grSlFD2Chh+ZNOLmrn6MGzSrCyTmth9mRSYB5nEk=
+	b=2tPdFDcB9VeAdhEFkKyMOqH/R4wB8SqDlA84KE67GATPwEPJJsLGCH+gKIQ8gkXPz
+	 TUxG3K1qvCt7XnQBBf1+6h+IhubXzA7hm+8cZ20czp8TTEvF4k1MZeeKVu5cxXluHI
+	 1RUbvNB0Q3uwGSy9aZ0dxwYY+O+BOmwBrJknI+es=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391879AbfHBJma (ORCPT
+        id S2391898AbfHBJmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:42:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44808 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:42:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391861AbfHBJm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:42:26 -0400
+        id S2391861AbfHBJmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:42:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE60220880;
-        Fri,  2 Aug 2019 09:42:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 001BE206A2;
+        Fri,  2 Aug 2019 09:42:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738946;
-        bh=UBKMMdY8wtmAJ8UB0y/8LOKxsqp+bYD7SFaXTn2tI4M=;
+        s=default; t=1564738951;
+        bh=dZpLJQa/iNeL7/6UDAIQwxGQuAixpVJtkTlR0A7g43s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=URAD6rnKlb+uUlF9bastM+WkDGIT+4h78ahdaJBqNXBFvv7AMaBua7TByG6wq9gcP
-         xBV7ROftJ3qVen5rbvOgFMkQAt+JKrIGotSoEXs7Jm+c5ASu4saUeyOMpXNASPxQrk
-         957up9x4LIZOMUfwz6BhuJoEhrXULZKJbVBvsop8=
+        b=f9Sogh46RIax29XB6xyGyaif6OvcgOimDvahnw5t7Zw7X7jmqmjutBZ3pLEncdPtZ
+         qhfb9aCmauQE4VsdIfadGEJpKHUMkcYOStA1T7qGGykVF6uwhIuE2ZnTx7jaUUeQY4
+         exTWnntdTmICUbsW7mamP/m7FyA/Tva1Yh6ldrFw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
-        Masato Suzuki <masato.suzuki@wdc.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org,
+        Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 057/223] libata: dont request sense data on !ZAC ATA devices
-Date:   Fri,  2 Aug 2019 11:34:42 +0200
-Message-Id: <20190802092242.567678227@linuxfoundation.org>
+Subject: [PATCH 4.9 059/223] rslib: Fix decoding of shortened codes
+Date:   Fri,  2 Aug 2019 11:34:44 +0200
+Message-Id: <20190802092242.686267916@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -62,66 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ca156e006add67e4beea7896be395160735e09b0 ]
+[ Upstream commit 2034a42d1747fc1e1eeef2c6f1789c4d0762cb9c ]
 
-ZAC support added sense data requesting on error for both ZAC and ATA
-devices. This seems to cause erratic error handling behaviors on some
-SSDs where the device reports sense data availability and then
-delivers the wrong content making EH take the wrong actions.  The
-failure mode was sporadic on a LITE-ON ssd and couldn't be reliably
-reproduced.
+The decoding of shortenend codes is broken. It only works as expected if
+there are no erasures.
 
-There is no value in requesting sense data from non-ZAC ATA devices
-while there's a significant risk of introducing EH misbehaviors which
-are difficult to reproduce and fix.  Let's do the sense data dancing
-only for ZAC devices.
+When decoding with erasures, Lambda (the error and erasure locator
+polynomial) is initialized from the given erasure positions. The pad
+parameter is not accounted for by the initialisation code, and hence
+Lambda is initialized from incorrect erasure positions.
 
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Tested-by: Masato Suzuki <masato.suzuki@wdc.com>
-Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+The fix is to adjust the erasure positions by the supplied pad.
+
+Signed-off-by: Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190620141039.9874-3-ferdinand.blomqvist@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/libata-eh.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ lib/reed_solomon/decode_rs.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/ata/libata-eh.c b/drivers/ata/libata-eh.c
-index 90c38778bc1f..16f8fda89981 100644
---- a/drivers/ata/libata-eh.c
-+++ b/drivers/ata/libata-eh.c
-@@ -1600,7 +1600,7 @@ static int ata_eh_read_log_10h(struct ata_device *dev,
- 	tf->hob_lbah = buf[10];
- 	tf->nsect = buf[12];
- 	tf->hob_nsect = buf[13];
--	if (ata_id_has_ncq_autosense(dev->id))
-+	if (dev->class == ATA_DEV_ZAC && ata_id_has_ncq_autosense(dev->id))
- 		tf->auxiliary = buf[14] << 16 | buf[15] << 8 | buf[16];
- 
- 	return 0;
-@@ -1849,7 +1849,8 @@ void ata_eh_analyze_ncq_error(struct ata_link *link)
- 	memcpy(&qc->result_tf, &tf, sizeof(tf));
- 	qc->result_tf.flags = ATA_TFLAG_ISADDR | ATA_TFLAG_LBA | ATA_TFLAG_LBA48;
- 	qc->err_mask |= AC_ERR_DEV | AC_ERR_NCQ;
--	if ((qc->result_tf.command & ATA_SENSE) || qc->result_tf.auxiliary) {
-+	if (dev->class == ATA_DEV_ZAC &&
-+	    ((qc->result_tf.command & ATA_SENSE) || qc->result_tf.auxiliary)) {
- 		char sense_key, asc, ascq;
- 
- 		sense_key = (qc->result_tf.auxiliary >> 16) & 0xff;
-@@ -1903,10 +1904,11 @@ static unsigned int ata_eh_analyze_tf(struct ata_queued_cmd *qc,
- 	}
- 
- 	switch (qc->dev->class) {
--	case ATA_DEV_ATA:
- 	case ATA_DEV_ZAC:
- 		if (stat & ATA_SENSE)
- 			ata_eh_request_sense(qc, qc->scsicmd);
-+		/* fall through */
-+	case ATA_DEV_ATA:
- 		if (err & ATA_ICRC)
- 			qc->err_mask |= AC_ERR_ATA_BUS;
- 		if (err & (ATA_UNC | ATA_AMNF))
+diff --git a/lib/reed_solomon/decode_rs.c b/lib/reed_solomon/decode_rs.c
+index 0ec3f257ffdf..8eed0f9ac495 100644
+--- a/lib/reed_solomon/decode_rs.c
++++ b/lib/reed_solomon/decode_rs.c
+@@ -99,9 +99,9 @@
+ 	if (no_eras > 0) {
+ 		/* Init lambda to be the erasure locator polynomial */
+ 		lambda[1] = alpha_to[rs_modnn(rs,
+-					      prim * (nn - 1 - eras_pos[0]))];
++					prim * (nn - 1 - (eras_pos[0] + pad)))];
+ 		for (i = 1; i < no_eras; i++) {
+-			u = rs_modnn(rs, prim * (nn - 1 - eras_pos[i]));
++			u = rs_modnn(rs, prim * (nn - 1 - (eras_pos[i] + pad)));
+ 			for (j = i + 1; j > 0; j--) {
+ 				tmp = index_of[lambda[j - 1]];
+ 				if (tmp != nn) {
 -- 
 2.20.1
 
