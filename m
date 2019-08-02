@@ -2,114 +2,129 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFD8C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A9FC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F05F8204EC
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:21:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9F98204EC
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:21:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Eu8Q9a98"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730699AbfHBPVM (ORCPT
+        id S1731650AbfHBPV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 11:21:12 -0400
-Received: from mga03.intel.com ([134.134.136.65]:32939 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727198AbfHBPVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 11:21:12 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Aug 2019 08:21:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,338,1559545200"; 
-   d="scan'208";a="201689365"
-Received: from jsakkine-mobl1.tm.intel.com ([10.237.50.189])
-  by fmsmga002.fm.intel.com with ESMTP; 02 Aug 2019 08:21:07 -0700
-Message-ID: <4e61869efc51a2b10f931bc010e6d37d62d6c06c.camel@linux.intel.com>
-Subject: Re: [PATCH v2 5/6] tpm: add driver for cr50 on SPI
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Stephen Boyd <swboyd@chromium.org>,
-        Alexander Steffen <Alexander.Steffen@infineon.com>,
-        Peter Huewe <peterhuewe@gmx.de>
-Cc:     Andrey Pronin <apronin@chromium.org>, linux-kernel@vger.kernel.org,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>
-Date:   Fri, 02 Aug 2019 18:21:06 +0300
-In-Reply-To: <5d430cfb.1c69fb81.9480d.0d81@mx.google.com>
-References: <20190716224518.62556-1-swboyd@chromium.org>
-         <20190716224518.62556-6-swboyd@chromium.org>
-         <f824e3ab-ae2f-8c2f-549a-16569b10966e@infineon.com>
-         <5d2f7daf.1c69fb81.c0b13.c3d4@mx.google.com>
-         <5d2f955d.1c69fb81.35877.7018@mx.google.com>
-         <b05904bf-00b9-bf30-0fc9-9f363e181d80@infineon.com>
-         <5d30b649.1c69fb81.f440e.9a0a@mx.google.com>
-         <1bb8d417-3199-7aff-ad60-b25464502cb3@infineon.com>
-         <5d430cfb.1c69fb81.9480d.0d81@mx.google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1-2 
+        Fri, 2 Aug 2019 11:21:27 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38179 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727198AbfHBPV1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 11:21:27 -0400
+Received: by mail-ed1-f65.google.com with SMTP id r12so37918821edo.5;
+        Fri, 02 Aug 2019 08:21:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=u/6xSIRYHiOP85ntjseSZQgtsjWb+fEA7f5+m0DuZOs=;
+        b=Eu8Q9a98dbycsbHrjw5S2fpv5HWJJvMYh368ryAYZgHoUjo2Z2fD1TXsG/RmsM9KzN
+         pxACT1HmAvWqBnrsjrCHaV29OWB8+z8mOF7LDEwG84CfrctxqmN2DDxoNmnvXRKzfr0f
+         gdZd99XWAUVenMrtkx8XFjFZlTwgdwgVA88+XiQ/dnwYQM1gnyUtO3qWrxyu6UZMGAqr
+         5FdLvKYXo+ZKLpqZ6NBEvzdo/f4CYuHHaGITr71dYkzvlfXJ7cqAWQp4D9+d8g44nW4R
+         NWhYRm15UuTNqpvnjSwCCFPh8iUCsMHe2hGJmgD/AvseERpi+KBAyXQSfqPSM5fRxH7i
+         mYZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=u/6xSIRYHiOP85ntjseSZQgtsjWb+fEA7f5+m0DuZOs=;
+        b=f0VWoMl1eLsBr3IlINFB35jTSQhWj8vSk/RgGCIcDxkc7217W+CJFDbp5twhsCB3OK
+         9PlIOmEQQpMGq1GdrmdgIZKcCTBTMORFf7zslHymrHyZveaOKwU4Lgnhlh86p4mWO5d2
+         O9EuHWoljKfC5ETO/HiinYd67GmtNLjQQAG2WxxaOMSATv4u1d+eHxaU2iO1urUhF7rT
+         vbjvhfH2g1DZ3m0aD9CSmYI5lhDlr4t1BwhNU13HZcXKZEnEbihxL+ynUicdgfwRORo7
+         xZVw1/3XAcAGsCcz7C09t56hCvS6b97+fSDcOnX1AsMM2EMmcMH4igYhumeDorHYi9Pl
+         e8SA==
+X-Gm-Message-State: APjAAAU9laJ+G6UpZj9fELyZSgZhJIJ6CnwsOXT5XEb+DuZao1thCWuG
+        C9WsQEW6OQkOFDcM2v2j4udogYILEBNZk3ZhlU42IdzsGCo=
+X-Google-Smtp-Source: APXvYqzVCrZejk2zw7E8YTLUxwOLFwwlBwdv2rI44EljcQy/4/XE5SgR8YwCaLt00Ld+MkSGZgxVpLrcIIZtG0FcGOY=
+X-Received: by 2002:a17:906:7cd6:: with SMTP id h22mr12851541ejp.254.1564759285374;
+ Fri, 02 Aug 2019 08:21:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20190802062537.11510-1-hslester96@gmail.com> <20190802073858.19a86f82@lwn.net>
+In-Reply-To: <20190802073858.19a86f82@lwn.net>
+From:   Chuhong Yuan <hslester96@gmail.com>
+Date:   Fri, 2 Aug 2019 23:21:14 +0800
+Message-ID: <CANhBUQ23mc8e+RhG48Vcb_xNUcBuGACMN6SuAJzTom5yUirXgA@mail.gmail.com>
+Subject: Re: [PATCH] Documentation/checkpatch: Prefer str_has_prefix over strncmp
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
+        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-08-01 at 09:02 -0700, Stephen Boyd wrote:
-> Quoting Alexander Steffen (2019-07-19 00:53:00)
-> > On 18.07.2019 20:11, Stephen Boyd wrote:
-> > > Quoting Alexander Steffen (2019-07-18 09:47:22)
-> > > > On 17.07.2019 23:38, Stephen Boyd wrote:
-> > > > > Quoting Stephen Boyd (2019-07-17 12:57:34)
-> > > > > > Quoting Alexander Steffen (2019-07-17 05:00:06)
-> > > > > > > Can't the code be shared more explicitly, e.g. by cr50_spi wrapping
-> > > > > > > tpm_tis_spi, so that it can intercept the calls, execute the additional
-> > > > > > > actions (like waking up the device), but then let tpm_tis_spi do the
-> > > > > > > common work?
-> > > > > > > 
-> > > > > > 
-> > > > > > I suppose the read{16,32} and write32 functions could be reused. I'm not
-> > > > > > sure how great it will be if we combine these two drivers, but I can
-> > > > > > give it a try today and see how it looks.
-> > > > > > 
-> > > > > 
-> > > > > Here's the patch. I haven't tested it besides compile testing.
-> > > 
-> > > The code seems to work but I haven't done any extensive testing besides
-> > > making sure that the TPM responds to pcr reads and some commands like
-> > > reading random numbers.
-> > > 
-> > > > Thanks for providing this. Makes it much easier to see what the actual
-> > > > differences between the devices are.
-> > > > 
-> > > > Do we have a general policy on how to support devices that are very
-> > > > similar but need special handling in some places? Not duplicating the
-> > > > whole driver just to change a few things definitely seems like an
-> > > > improvement (and has already been done in the past, as with
-> > > > TPM_TIS_ITPM_WORKAROUND). But should all the code just be added to
-> > > > tpm_tis_spi.c? Or is there some way to keep a clearer separation,
-> > > > especially when (in the future) we have multiple devices that all have
-> > > > their own set of deviations from the spec?
-> > > > 
-> > > 
-> > > If you have any ideas on how to do it please let me know. At this point,
-> > > I'd prefer if the maintainers could provide direction on what they want.
-> > 
-> > Sure, I'd expect Jarkko will say something once he's back from vacation.
-> > 
-> 
-> Should I just resend this patch series? I haven't attempted to make the
-> i2c driver changes, but at least the SPI driver changes seem good enough
-> to resend.
+Jonathan Corbet <corbet@lwn.net> =E4=BA=8E2019=E5=B9=B48=E6=9C=882=E6=97=A5=
+=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=889:38=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Fri,  2 Aug 2019 14:25:37 +0800
+> Chuhong Yuan <hslester96@gmail.com> wrote:
+>
+> > Add strncmp() to Documentation/process/deprecated.rst since
+> > using strncmp() to check whether a string starts with a
+> > prefix is error-prone.
+> > The safe replacement is str_has_prefix().
+>
+> Is that the *only* use of strncmp()?
 
-Hi, I'm back. If there are already like obvious changes, please send an
-update and I'll take a look at that.
+This is not the only use of strncmp().
+Maybe add a case description like strncpy() is more precise?
+For example, "strncmp() on string prefix".
 
-/Jarkko
+>
+> > Also add check to the newly introduced deprecated_string_apis
+> > in checkpatch.pl.
+> >
+> > This patch depends on patch:
+> > "Documentation/checkpatch: Prefer stracpy/strscpy over
+> > strcpy/strlcpy/strncpy."
+> >
+> > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> > ---
+> >  Documentation/process/deprecated.rst | 8 ++++++++
+> >  scripts/checkpatch.pl                | 1 +
+> >  2 files changed, 9 insertions(+)
+> >
+> > diff --git a/Documentation/process/deprecated.rst b/Documentation/proce=
+ss/deprecated.rst
+> > index 56280e108d5a..22d3f0dbcf61 100644
+> > --- a/Documentation/process/deprecated.rst
+> > +++ b/Documentation/process/deprecated.rst
+> > @@ -109,6 +109,14 @@ the given limit of bytes to copy. This is ineffici=
+ent and can lead to
+> >  linear read overflows if a source string is not NUL-terminated. The
+> >  safe replacement is stracpy() or strscpy().
+> >
+> > +strncmp()
+> > +---------
+> > +:c:func:`strncmp` is often used to test if a string starts with a pref=
+ix
+>
+> Please don't use :c:func: anymore; just say strncmp() and the right thing=
+s
+> will happen.
+>
 
+I will revise this in the next version.
+
+Regards,
+Chuhong
+
+> Thanks,
+>
+> jon
