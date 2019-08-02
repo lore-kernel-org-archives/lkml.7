@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BFBC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B716C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1960020B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 248B62064A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:55:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739747;
-	bh=cK7N5Yfv+VC+WSKZs/UDgLrFtnhOVaEJChSHV+Xe8TU=;
+	s=default; t=1564739750;
+	bh=ZjDcXP0Wz/sTUK16guHwPbb1e26Bau2spHDEwnTu/GA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jAGqMvxjvGK+U6Vk/WQ+Crob5f7iS5xIqOFBdeTBxs6/8jxegqhZIMsyNk/JmajHf
-	 OC0c4gzAIX9Luza0QRFHXvv8wUpzzaQFWy1bk0jWv05DvK83ZrkVvEwe/z22n1ubpX
-	 eE9cXInM2HgHgrwX5cxi1/fYQm7EXYhr9puwh+mw=
+	b=i/bgb4bOwt4Qkq05hCUX9ZowHOrseWMVNIB6j3X407xDjsNfawfRLlKbJAl1YyrNh
+	 EMDsMsm/J/7ekfEc7VZGKQrnmn0zP+G9afvJ5pPjGq6/twWvk6OY2FjqeG9aXTYRcA
+	 UHrPy8We7vrQNsEmJVTT5PXJgrUtzFNNyrXWuk9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406364AbfHBJzo (ORCPT
+        id S2406616AbfHBJzt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:55:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34258 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:55:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406567AbfHBJzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:55:39 -0400
+        id S2406601AbfHBJzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:55:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 052CB2086A;
-        Fri,  2 Aug 2019 09:55:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A39A20880;
+        Fri,  2 Aug 2019 09:55:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739738;
-        bh=cK7N5Yfv+VC+WSKZs/UDgLrFtnhOVaEJChSHV+Xe8TU=;
+        s=default; t=1564739743;
+        bh=ZjDcXP0Wz/sTUK16guHwPbb1e26Bau2spHDEwnTu/GA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QwXFv4RYTHk+29LafLqxr0XlyZNAsc6hsxBGFc8uT85F2wKDWHJgec0PIeqbN24K5
-         Q/4gqOY8EVqCQQqPCy0yt3UlQGJ1tJHHwPvfnP+NP/S3UNSPI5PbAV6ufW/qUdP7rN
-         XUbd3by1ld6QMz5tzbA0MNvqkNJ0HFJiMftlCyOs=
+        b=uud4LiqyW3lpuIIm19xp4WAt8qy7R4X9W1/DVB7AkfiBXYo91QPHxCIKt9IeL35s1
+         shV2EVteZ5FK+qwN3gb8NgzP5nHBBVOd5ICsbxuWfluUxY1XeIKCAbDew5ZxzdvulN
+         UcHwJNoeF7pCU1kAPBM9MO3D/zuy2EDmi5OLtz+4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+af8f8d2ac0d39b0ed3a0@syzkaller.appspotmail.com,
-        syzbot+170a86bf206dd2c6217e@syzkaller.appspotmail.com,
-        Andrey Konovalov <andreyknvl@google.com>,
+        Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.19 14/32] media: pvrusb2: use a different format for warnings
-Date:   Fri,  2 Aug 2019 11:39:48 +0200
-Message-Id: <20190802092106.126101554@linuxfoundation.org>
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        syzbot+a4387f5b6b799f6becbf@syzkaller.appspotmail.com
+Subject: [PATCH 4.19 16/32] media: radio-raremono: change devm_k*alloc to k*alloc
+Date:   Fri,  2 Aug 2019 11:39:50 +0200
+Message-Id: <20190802092106.776576552@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092101.913646560@linuxfoundation.org>
 References: <20190802092101.913646560@linuxfoundation.org>
@@ -63,87 +62,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Konovalov <andreyknvl@google.com>
+From: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
 
-commit 1753c7c4367aa1201e1e5d0a601897ab33444af1 upstream.
+commit c666355e60ddb4748ead3bdd983e3f7f2224aaf0 upstream.
 
-When the pvrusb2 driver detects that there's something wrong with the
-device, it prints a warning message. Right now those message are
-printed in two different formats:
+Change devm_k*alloc to k*alloc to manually allocate memory
 
-1. ***WARNING*** message here
-2. WARNING: message here
+The manual allocation and freeing of memory is necessary because when
+the USB radio is disconnected, the memory associated with devm_k*alloc
+is freed. Meaning if we still have unresolved references to the radio
+device, then we get use-after-free errors.
 
-There's an issue with the second format. Syzkaller recognizes it as a
-message produced by a WARN_ON(), which is used to indicate a bug in the
-kernel. However pvrusb2 prints those warnings to indicate an issue with
-the device, not the bug in the kernel.
+This patch fixes this by manually allocating memory, and freeing it in
+the v4l2.release callback that gets called when the last radio device
+exits.
 
-This patch changes the pvrusb2 driver to consistently use the first
-warning message format. This will unblock syzkaller testing of this
-driver.
+Reported-and-tested-by: syzbot+a4387f5b6b799f6becbf@syzkaller.appspotmail.com
 
-Reported-by: syzbot+af8f8d2ac0d39b0ed3a0@syzkaller.appspotmail.com
-Reported-by: syzbot+170a86bf206dd2c6217e@syzkaller.appspotmail.com
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+[hverkuil-cisco@xs4all.nl: cleaned up two small checkpatch.pl warnings]
+[hverkuil-cisco@xs4all.nl: prefix subject with driver name]
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/pvrusb2/pvrusb2-hdw.c      |    4 ++--
- drivers/media/usb/pvrusb2/pvrusb2-i2c-core.c |    6 +++---
- drivers/media/usb/pvrusb2/pvrusb2-std.c      |    2 +-
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/media/radio/radio-raremono.c |   30 +++++++++++++++++++++++-------
+ 1 file changed, 23 insertions(+), 7 deletions(-)
 
---- a/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
-+++ b/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
-@@ -1680,7 +1680,7 @@ static int pvr2_decoder_enable(struct pv
- 	}
- 	if (!hdw->flag_decoder_missed) {
- 		pvr2_trace(PVR2_TRACE_ERROR_LEGS,
--			   "WARNING: No decoder present");
-+			   "***WARNING*** No decoder present");
- 		hdw->flag_decoder_missed = !0;
- 		trace_stbit("flag_decoder_missed",
- 			    hdw->flag_decoder_missed);
-@@ -2366,7 +2366,7 @@ struct pvr2_hdw *pvr2_hdw_create(struct
- 	if (hdw_desc->flag_is_experimental) {
- 		pvr2_trace(PVR2_TRACE_INFO, "**********");
- 		pvr2_trace(PVR2_TRACE_INFO,
--			   "WARNING: Support for this device (%s) is experimental.",
-+			   "***WARNING*** Support for this device (%s) is experimental.",
- 							      hdw_desc->description);
- 		pvr2_trace(PVR2_TRACE_INFO,
- 			   "Important functionality might not be entirely working.");
---- a/drivers/media/usb/pvrusb2/pvrusb2-i2c-core.c
-+++ b/drivers/media/usb/pvrusb2/pvrusb2-i2c-core.c
-@@ -343,11 +343,11 @@ static int i2c_hack_cx25840(struct pvr2_
+--- a/drivers/media/radio/radio-raremono.c
++++ b/drivers/media/radio/radio-raremono.c
+@@ -271,6 +271,14 @@ static int vidioc_g_frequency(struct fil
+ 	return 0;
+ }
  
- 	if ((ret != 0) || (*rdata == 0x04) || (*rdata == 0x0a)) {
- 		pvr2_trace(PVR2_TRACE_ERROR_LEGS,
--			   "WARNING: Detected a wedged cx25840 chip; the device will not work.");
-+			   "***WARNING*** Detected a wedged cx25840 chip; the device will not work.");
- 		pvr2_trace(PVR2_TRACE_ERROR_LEGS,
--			   "WARNING: Try power cycling the pvrusb2 device.");
-+			   "***WARNING*** Try power cycling the pvrusb2 device.");
- 		pvr2_trace(PVR2_TRACE_ERROR_LEGS,
--			   "WARNING: Disabling further access to the device to prevent other foul-ups.");
-+			   "***WARNING*** Disabling further access to the device to prevent other foul-ups.");
- 		// This blocks all further communication with the part.
- 		hdw->i2c_func[0x44] = NULL;
- 		pvr2_hdw_render_useless(hdw);
---- a/drivers/media/usb/pvrusb2/pvrusb2-std.c
-+++ b/drivers/media/usb/pvrusb2/pvrusb2-std.c
-@@ -353,7 +353,7 @@ struct v4l2_standard *pvr2_std_create_en
- 		bcnt = pvr2_std_id_to_str(buf,sizeof(buf),fmsk);
- 		pvr2_trace(
- 			PVR2_TRACE_ERROR_LEGS,
--			"WARNING: Failed to classify the following standard(s): %.*s",
-+			"***WARNING*** Failed to classify the following standard(s): %.*s",
- 			bcnt,buf);
++static void raremono_device_release(struct v4l2_device *v4l2_dev)
++{
++	struct raremono_device *radio = to_raremono_dev(v4l2_dev);
++
++	kfree(radio->buffer);
++	kfree(radio);
++}
++
+ /* File system interface */
+ static const struct v4l2_file_operations usb_raremono_fops = {
+ 	.owner		= THIS_MODULE,
+@@ -295,12 +303,14 @@ static int usb_raremono_probe(struct usb
+ 	struct raremono_device *radio;
+ 	int retval = 0;
+ 
+-	radio = devm_kzalloc(&intf->dev, sizeof(struct raremono_device), GFP_KERNEL);
+-	if (radio)
+-		radio->buffer = devm_kmalloc(&intf->dev, BUFFER_LENGTH, GFP_KERNEL);
+-
+-	if (!radio || !radio->buffer)
++	radio = kzalloc(sizeof(*radio), GFP_KERNEL);
++	if (!radio)
++		return -ENOMEM;
++	radio->buffer = kmalloc(BUFFER_LENGTH, GFP_KERNEL);
++	if (!radio->buffer) {
++		kfree(radio);
+ 		return -ENOMEM;
++	}
+ 
+ 	radio->usbdev = interface_to_usbdev(intf);
+ 	radio->intf = intf;
+@@ -324,7 +334,8 @@ static int usb_raremono_probe(struct usb
+ 	if (retval != 3 ||
+ 	    (get_unaligned_be16(&radio->buffer[1]) & 0xfff) == 0x0242) {
+ 		dev_info(&intf->dev, "this is not Thanko's Raremono.\n");
+-		return -ENODEV;
++		retval = -ENODEV;
++		goto free_mem;
  	}
+ 
+ 	dev_info(&intf->dev, "Thanko's Raremono connected: (%04X:%04X)\n",
+@@ -333,7 +344,7 @@ static int usb_raremono_probe(struct usb
+ 	retval = v4l2_device_register(&intf->dev, &radio->v4l2_dev);
+ 	if (retval < 0) {
+ 		dev_err(&intf->dev, "couldn't register v4l2_device\n");
+-		return retval;
++		goto free_mem;
+ 	}
+ 
+ 	mutex_init(&radio->lock);
+@@ -345,6 +356,7 @@ static int usb_raremono_probe(struct usb
+ 	radio->vdev.ioctl_ops = &usb_raremono_ioctl_ops;
+ 	radio->vdev.lock = &radio->lock;
+ 	radio->vdev.release = video_device_release_empty;
++	radio->v4l2_dev.release = raremono_device_release;
+ 
+ 	usb_set_intfdata(intf, &radio->v4l2_dev);
+ 
+@@ -360,6 +372,10 @@ static int usb_raremono_probe(struct usb
+ 	}
+ 	dev_err(&intf->dev, "could not register video device\n");
+ 	v4l2_device_unregister(&radio->v4l2_dev);
++
++free_mem:
++	kfree(radio->buffer);
++	kfree(radio);
+ 	return retval;
+ }
  
 
 
