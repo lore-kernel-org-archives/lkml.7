@@ -2,76 +2,107 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B56C3C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C75C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9222820679
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B1E920679
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:15:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564733703;
+	bh=M8CXPr54lctTpT9n1ymDOLbViWrnvnZDLFZP+N9mvLA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=vfY77woaLiE6ymh0RwOYvRrrLD5qpTyRAE04IZvim2N+MufyWCGai2fQgy8W3+kZc
+	 utAXfX+dT42SRgj5po78RR3hoSKM31Bi1p0qhf8By4cDwdQ0kHVb53Bf0G4OxW0Lrh
+	 d8CcfhEB3u0d3T5IZ9cIbwd3iziQ1Ve7ebDfzT/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390663AbfHBIOq (ORCPT
+        id S2390760AbfHBIPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 04:14:46 -0400
-Received: from verein.lst.de ([213.95.11.211]:50730 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726937AbfHBIOq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 04:14:46 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 9F17E68B05; Fri,  2 Aug 2019 10:14:41 +0200 (CEST)
-Date:   Fri, 2 Aug 2019 10:14:41 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Will Deacon <will@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org,
-        Shawn Anastasio <shawn@anastas.io>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dma-mapping: fix page attributes for dma_mmap_*
-Message-ID: <20190802081441.GA9725@lst.de>
-References: <20190801142118.21225-1-hch@lst.de> <20190801142118.21225-2-hch@lst.de> <20190801162305.3m32chycsdjmdejk@willie-the-truck> <20190801163457.GB26588@lst.de> <20190801164411.kmsl4japtfkgvzxe@willie-the-truck>
+        Fri, 2 Aug 2019 04:15:02 -0400
+Received: from mail-oi1-f179.google.com ([209.85.167.179]:45525 "EHLO
+        mail-oi1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726937AbfHBIPC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 04:15:02 -0400
+Received: by mail-oi1-f179.google.com with SMTP id m206so56225184oib.12;
+        Fri, 02 Aug 2019 01:15:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=M8CXPr54lctTpT9n1ymDOLbViWrnvnZDLFZP+N9mvLA=;
+        b=YA0ERajjGLChv5+nlwq9xDAgn/rdfw7QXmuf2wpAqgM57XNBZNetHjHSHdReQbrueq
+         uczoOJBt5GoalOajVr/tW5uhuD7ULcRo2Y8nIu7pWZMKeDBMlKqCx9D3N+MS5Rtn4oDi
+         6N0iA9ADS7mptkywtBYco6Ws3cyvIeypaMWwjWsOpR6FWhAifWFEiB6CJ/85jsJm5Vux
+         vRuRUPm38o2JPnXzLjcJA2YRYgIlbX+79nYOvomqEL+EN3C1Bzsqofu6QBWv2bO6ru9V
+         K3vzZ+63nMVyx3mM/9d7Ry4Jpc2PU7Y+GJFBpD4vY/Rl4vQr1Mm9ByO4qPwQ4EZEhvTG
+         VlXg==
+X-Gm-Message-State: APjAAAXr+vnIrhvxg2SoYUt6CZwvBHjIg3jzEwGaE3SMABwF1HzRvGs1
+        s6E7zgx5UXDFS8PoWRJQ76zLEKNs8+Q5QvudY3LBaw==
+X-Google-Smtp-Source: APXvYqzclE9UPKLLLbJdm4/GbD3vCIgZP4Wrn5033xqe67VnfM4owdkHeOH80ccBCIVIyuhV/i+hgq+x3txRtrd6WFY=
+X-Received: by 2002:aca:4e89:: with SMTP id c131mr2019124oib.57.1564733700646;
+ Fri, 02 Aug 2019 01:15:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190801164411.kmsl4japtfkgvzxe@willie-the-truck>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <CAJZ5v0hrpO_PRos3=JnLQ0ZbuBX1vdR8j2jx3je5+Y2m=Dwk2A@mail.gmail.com>
+In-Reply-To: <CAJZ5v0hrpO_PRos3=JnLQ0ZbuBX1vdR8j2jx3je5+Y2m=Dwk2A@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 2 Aug 2019 10:14:48 +0200
+Message-ID: <CAJZ5v0g5ywC0tz-35z_NektV3xfqFXq6Ckhppn30zQrtkDb7EA@mail.gmail.com>
+Subject: Re: [LPC 2019] Power Management and Thermal Control MC: Call for topics
+To:     Linux PM <linux-pm@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Eduardo Valentin <edubezval@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 05:44:12PM +0100, Will Deacon wrote:
-> > > Although arch_dma_mmap_pgprot() is a bit of a misnomer now that it only
-> > > gets involved in the non-coherent case.
-> > 
-> > A better name is welcome.
-> 
-> How about arch_dma_noncoherent_mmap_pgprot() ? Too long?
+On Wed, Jul 17, 2019 at 12:48 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> Hi All,
+>
+> Now that the PM+Thermal MC has been officially announced
+>
+> https://linuxplumbersconf.org/event/4/page/34-accepted-microconferences#pm-tc
+>
+> everyone interested in the problem space in question and having a
+> topic for discussion is kindly requested to submit a topic proposal
+> for that MC via the LPC web site:
+>
+> https://linuxplumbersconf.org/event/4/abstracts/
+>
+> To do that (after following the link above):
+>
+> 1. "Press" the "Submit new proposal" button.
+> 2. Log in to the LPC CFP system (* see below in case you don't want to
+> create an account).
+> 3. Put a one line title of your topic into the "Title" field.
+> 4. Put your abstract into the "Content" field (please keep the
+> abstracts concise).
+> 5. Add yourself as the author (there may be multiple authors, in which
+> case add all of them).
+> 6. In the "Comments" field say how much time the topic is expected to take.
+> 7. Choose "Power Management and Thermal Control MC topic" in the
+> "Track" selection.
+> 8. Answer "Yes" to the anti-harassment policy compliance confirmation.
+> 9. "Press" the "Submit" button.
+>
+> * In case you don't have an account in the LPC web site and you don't
+> want to create one, you can send the topic title and abstract to me,
+> and I will put the proposal into the LPC CFP system for you. Still,
+> please do consider adding an LPC account and following the steps above
+> yourself.
+>
+> Please note that the most relevant topics are those aimed at solving
+> specific problems in the Linux "plumbing" area: the kernel, libraries,
+> system management tools etc.
 
-Sounds a little long yes.  And doesn't fix the additional problem that
-we don't just it for mmap but also for the in-kernel remapping these
-days.
+This is a reminder for everyone possibly interested that today is the
+last day to submit MC topics for LPC 2019.
 
-> > But my worry is how this interacts with architectures that have an
-> > uncached segment (mips, nios2, microblaze, extensa) where we'd have
-> > the kernel access DMA_ATTR_WRITE_COMBINE mappigns using the uncached
-> > segment, and userspace mmaps using pgprot_writecombine, which could
-> > lead to aliasing issues.  But then again mips already supports
-> > DMA_ATTR_WRITE_COMBINE, so this must be ok somehow.  I guess I'll
-> > need to field that question to the relevant parties.
-> 
-> Or it's always been busted and happens to work out in practice...
-
-I've sent a ping to the mips folks.  While we'are at it:  arm64
-and arm32 (optionally) map dma coherent allocations as write combine.
-I suspect this hasn't always just been busted but intentional (of course!),
-but is there any chance to get a quote from the arm architecture spec
-on why this is fine as it looks rather confusion?
-
-Also if we assume mips is buggy DMA_ATTR_WRITE_COMBINE really just seems
-to be there for old arm platforms, which makes the scope pretty limited.
+Thanks,
+Rafael
