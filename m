@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F67C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF3FBC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D5EC217D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:33:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA61221773
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:33:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738423;
-	bh=IL+AhAqkgbbrsuckFqFDp5Nf/7BzwpvJH1iwvwBAI3s=;
+	s=default; t=1564738431;
+	bh=TmMe6w4uJikcmWxDy9aha4me4xYkKfIJtTY9M5JoQRE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UFnE4fJRJzZQnjPbMEAOezmOXgk0Zj+UkNSFKmKcBhqCN8hxgeaPj7vnoMEowPqC+
-	 ruCc4K060lm1GTeZIdEwFnGxaMTrRRxer7fAxaJMU95mduMD5Zv8t5c5PoEIWOKXtF
-	 IFAjUlqaW9easiIHZizqEgptlxr7XT+UK60dZ9cQ=
+	b=10aDsL7nyUB7JJKb3A8wMGBSSNPGiUOxuXcO36m3n0Ba4k1YGlKM9TCIHJt10a5At
+	 2esQOsMXeO0ImRGjvyZX+M0cB+z1/TLkljVQOKfS9nbVu7eWhBme6W5dCrcGEA7MAg
+	 KCVqJVM5S1dNheqWCpdbxHTDFV74PWFx/zw9m6Y4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391335AbfHBJdi (ORCPT
+        id S2390452AbfHBJdu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:33:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32978 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:33:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390432AbfHBJdd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:33:33 -0400
+        id S2391425AbfHBJdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:33:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 745822184B;
-        Fri,  2 Aug 2019 09:33:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C132A21773;
+        Fri,  2 Aug 2019 09:33:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738413;
-        bh=IL+AhAqkgbbrsuckFqFDp5Nf/7BzwpvJH1iwvwBAI3s=;
+        s=default; t=1564738428;
+        bh=TmMe6w4uJikcmWxDy9aha4me4xYkKfIJtTY9M5JoQRE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fbPrJTNbfMR15d9Qpv+i8cvjo73N4UiuMeIUouN/ZOdHWLQnOsOmEhjig3snPpY6e
-         jZnPq5qYxi2EDqESDqPoxbmd3Orjky+tD5HCud/wcy2qvg4tgYHtRIbGFaq/1pUPp9
-         K45IzNtppMPjF4pa0gRCFOK+5goSByjS27l2u3xc=
+        b=HmGWduCfpuNb5De1hWaINbPTEwhljVXRc2/pj4c6LEHAgiFf1wbUMdLI/i9T90wSR
+         Qm4vs1cNFC5NFKFBj75cmkGj6aQtSHBhUDVub3Ryka2+lpDLuwMatXnmwynqeLsFEy
+         KEtNxtWYc0HsVKp3oNaE4fh4u/jh7Y37ydL0IgWI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve Longerbeam <slongerbeam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH 4.4 077/158] gpu: ipu-v3: ipu-ic: Fix saturation bit offset in TPMEM
-Date:   Fri,  2 Aug 2019 11:28:18 +0200
-Message-Id: <20190802092219.694924228@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Bart Van Assche <Bart.VanAssche@sandisk.com>,
+        Jens Axboe <axboe@fb.com>
+Subject: [PATCH 4.4 100/158] elevator: fix truncation of icq_cache_name
+Date:   Fri,  2 Aug 2019 11:28:41 +0200
+Message-Id: <20190802092224.860632666@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -59,36 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve Longerbeam <slongerbeam@gmail.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 3d1f62c686acdedf5ed9642b763f3808d6a47d1e upstream.
+commit 9bd2bbc01d17ddd567cc0f81f77fe1163e497462 upstream.
 
-The saturation bit was being set at bit 9 in the second 32-bit word
-of the TPMEM CSC. This isn't correct, the saturation bit is bit 42,
-which is bit 10 of the second word.
+gcc 7.1 reports the following warning:
 
-Fixes: 1aa8ea0d2bd5d ("gpu: ipu-v3: Add Image Converter unit")
+    block/elevator.c: In function ‘elv_register’:
+    block/elevator.c:898:5: warning: ‘snprintf’ output may be truncated before the last format character [-Wformat-truncation=]
+         "%s_io_cq", e->elevator_name);
+         ^~~~~~~~~~
+    block/elevator.c:897:3: note: ‘snprintf’ output between 7 and 22 bytes into a destination of size 21
+       snprintf(e->icq_cache_name, sizeof(e->icq_cache_name),
+       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         "%s_io_cq", e->elevator_name);
+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: stable@vger.kernel.org
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+The bug is that the name of the icq_cache is 6 characters longer than
+the elevator name, but only ELV_NAME_MAX + 5 characters were reserved
+for it --- so in the case of a maximum-length elevator name, the 'q'
+character in "_io_cq" would be truncated by snprintf().  Fix it by
+reserving ELV_NAME_MAX + 6 characters instead.
+
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Bart Van Assche <Bart.VanAssche@sandisk.com>
+Signed-off-by: Jens Axboe <axboe@fb.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/ipu-v3/ipu-ic.c |    2 +-
+ include/linux/elevator.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/ipu-v3/ipu-ic.c
-+++ b/drivers/gpu/ipu-v3/ipu-ic.c
-@@ -255,7 +255,7 @@ static int init_csc(struct ipu_ic *ic,
- 	writel(param, base++);
+--- a/include/linux/elevator.h
++++ b/include/linux/elevator.h
+@@ -97,7 +97,7 @@ struct elevator_type
+ 	struct module *elevator_owner;
  
- 	param = ((a[0] & 0x1fe0) >> 5) | (params->scale << 8) |
--		(params->sat << 9);
-+		(params->sat << 10);
- 	writel(param, base++);
+ 	/* managed by elevator core */
+-	char icq_cache_name[ELV_NAME_MAX + 5];	/* elvname + "_io_cq" */
++	char icq_cache_name[ELV_NAME_MAX + 6];	/* elvname + "_io_cq" */
+ 	struct list_head list;
+ };
  
- 	param = ((a[1] & 0x1f) << 27) | ((c[0][1] & 0x1ff) << 18) |
 
 
