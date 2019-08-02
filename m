@@ -6,41 +6,43 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 611A0C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 07:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC38C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 07:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3572E20449
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 07:18:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C00852086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 07:21:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389450AbfHBHSz (ORCPT
+        id S2389479AbfHBHVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 03:18:55 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:28828 "EHLO mx1.redhat.com"
+        Fri, 2 Aug 2019 03:21:10 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52668 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389182AbfHBHSz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 03:18:55 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        id S1729406AbfHBHVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 03:21:10 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BB3C83082145;
-        Fri,  2 Aug 2019 07:18:53 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 56E3D5AFD9;
+        Fri,  2 Aug 2019 07:21:09 +0000 (UTC)
 Received: from [10.36.116.87] (ovpn-116-87.ams2.redhat.com [10.36.116.87])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2E4F35D9CD;
-        Fri,  2 Aug 2019 07:18:48 +0000 (UTC)
-Subject: Re: [PATCH 1/1] pseries/hotplug-memory.c: Change rc variable to bool
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 792C5100032A;
+        Fri,  2 Aug 2019 07:21:06 +0000 (UTC)
+Subject: Re: [PATCH 1/1] pseries/hotplug-memory.c: Replace nested ifs by
+ switch-case
 To:     Leonardo Bras <leonardo@linux.ibm.com>,
         linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
 Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Nathan Fontenot <nfont@linux.vnet.ibm.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
         YueHaibing <yuehaibing@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
         Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
         Rob Herring <robh@kernel.org>
-References: <20190801231055.19603-1-leonardo@linux.ibm.com>
+References: <20190801225251.17864-1-leonardo@linux.ibm.com>
 From:   David Hildenbrand <david@redhat.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
@@ -87,69 +89,93 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  +8Umfre0Xt4713VxMygW0PnQt5aSQdMD58jHFxTk092mU+yIHj5LeYgvwSgZN4airXk5yRXl
  SE+xAvmumFBY
 Organization: Red Hat GmbH
-Message-ID: <69821502-a449-d1a8-c2e8-a1aa67cca02f@redhat.com>
-Date:   Fri, 2 Aug 2019 09:18:47 +0200
+Message-ID: <a01e8782-c59c-4c77-76f2-f4c36d1d9ed9@redhat.com>
+Date:   Fri, 2 Aug 2019 09:21:05 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190801231055.19603-1-leonardo@linux.ibm.com>
+In-Reply-To: <20190801225251.17864-1-leonardo@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 02 Aug 2019 07:18:54 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Fri, 02 Aug 2019 07:21:09 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02.08.19 01:10, Leonardo Bras wrote:
-> Changes the return variable to bool (as the return value) and
-> avoids doing a ternary operation before returning.
-> 
-> Also, since rc will always be true, there is no need to do
-> rc &= bool, as (true && X) will result in X.
+On 02.08.19 00:52, Leonardo Bras wrote:
+> I noticed these nested ifs can be easily replaced by switch-cases,
+> which can improve readability.
 > 
 > Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
 > ---
->  arch/powerpc/platforms/pseries/hotplug-memory.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>  .../platforms/pseries/hotplug-memory.c        | 26 +++++++++++++------
+>  1 file changed, 18 insertions(+), 8 deletions(-)
+
+More LOC but seems to be the right thing to do
+
+Reviewed-by: David Hildenbrand <david@redhat.com>
+
 > 
 > diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/powerpc/platforms/pseries/hotplug-memory.c
-> index 8e700390f3d6..392deb4855e5 100644
+> index 46d0d35b9ca4..8e700390f3d6 100644
 > --- a/arch/powerpc/platforms/pseries/hotplug-memory.c
 > +++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
-> @@ -338,7 +338,7 @@ static int pseries_remove_mem_node(struct device_node *np)
->  static bool lmb_is_removable(struct drmem_lmb *lmb)
->  {
->  	int i, scns_per_block;
-> -	int rc = 1;
-> +	bool rc = true;
->  	unsigned long pfn, block_sz;
->  	u64 phys_addr;
+> @@ -880,34 +880,44 @@ int dlpar_memory(struct pseries_hp_errorlog *hp_elog)
 >  
-> @@ -363,11 +363,11 @@ static bool lmb_is_removable(struct drmem_lmb *lmb)
->  		if (!pfn_present(pfn))
->  			continue;
+>  	switch (hp_elog->action) {
+>  	case PSERIES_HP_ELOG_ACTION_ADD:
+> -		if (hp_elog->id_type == PSERIES_HP_ELOG_ID_DRC_COUNT) {
+> +		switch (hp_elog->id_type) {
+> +		case PSERIES_HP_ELOG_ID_DRC_COUNT:
+>  			count = hp_elog->_drc_u.drc_count;
+>  			rc = dlpar_memory_add_by_count(count);
+> -		} else if (hp_elog->id_type == PSERIES_HP_ELOG_ID_DRC_INDEX) {
+> +			break;
+> +		case PSERIES_HP_ELOG_ID_DRC_INDEX:
+>  			drc_index = hp_elog->_drc_u.drc_index;
+>  			rc = dlpar_memory_add_by_index(drc_index);
+> -		} else if (hp_elog->id_type == PSERIES_HP_ELOG_ID_DRC_IC) {
+> +			break;
+> +		case PSERIES_HP_ELOG_ID_DRC_IC:
+>  			count = hp_elog->_drc_u.ic.count;
+>  			drc_index = hp_elog->_drc_u.ic.index;
+>  			rc = dlpar_memory_add_by_ic(count, drc_index);
+> -		} else {
+> +			break;
+> +		default:
+>  			rc = -EINVAL;
+> +			break;
+>  		}
 >  
-> -		rc &= is_mem_section_removable(pfn, PAGES_PER_SECTION);
-> +		rc = is_mem_section_removable(pfn, PAGES_PER_SECTION);
-
-No, that's wrong.
-
-If is_mem_section_removable() is false in the first iteration but true
-in the last iteration, you would return true instead of false, which
-introduced a bug. We have to AND all sub-results, not simply use the
-last one.
-
->  		phys_addr += MIN_MEMORY_BLOCK_SIZE;
->  	}
+>  		break;
+>  	case PSERIES_HP_ELOG_ACTION_REMOVE:
+> -		if (hp_elog->id_type == PSERIES_HP_ELOG_ID_DRC_COUNT) {
+> +		switch (hp_elog->id_type) {
+> +		case PSERIES_HP_ELOG_ID_DRC_COUNT:
+>  			count = hp_elog->_drc_u.drc_count;
+>  			rc = dlpar_memory_remove_by_count(count);
+> -		} else if (hp_elog->id_type == PSERIES_HP_ELOG_ID_DRC_INDEX) {
+> +			break;
+> +		case PSERIES_HP_ELOG_ID_DRC_INDEX:
+>  			drc_index = hp_elog->_drc_u.drc_index;
+>  			rc = dlpar_memory_remove_by_index(drc_index);
+> -		} else if (hp_elog->id_type == PSERIES_HP_ELOG_ID_DRC_IC) {
+> +			break;
+> +		case PSERIES_HP_ELOG_ID_DRC_IC:
+>  			count = hp_elog->_drc_u.ic.count;
+>  			drc_index = hp_elog->_drc_u.ic.index;
+>  			rc = dlpar_memory_remove_by_ic(count, drc_index);
+> -		} else {
+> +			break;
+> +		default:
+>  			rc = -EINVAL;
+> +			break;
+>  		}
 >  
-> -	return rc ? true : false;
-> +	return rc;
->  }
->  
->  static int dlpar_add_lmb(struct drmem_lmb *);
+>  		break;
 > 
 
 
