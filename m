@@ -2,137 +2,104 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8424FC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2211BC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 644562067D
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:04:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3A6D2067D
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:05:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564740303;
+	bh=4WRnDc6ccVf1F9VSDNYejaU+jEuRvyZ28WXLUbFz+a0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=U9Glh+OacwFY3SJiCBYu92YNS7Geukssh2Y04WCVhd1g48rfkWpAaWMRk9v9ALYQh
+	 rhxMMETd/U7ZO7onuUOTzvycb5Kp0ghtIoFCZigz7ptP5pe4FET8dpe35s1/ogkxeV
+	 aaxWaP0QtGruwrQi95QGn6J6sNWAbEzGtVZv3830=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406173AbfHBKE4 convert rfc822-to-8bit (ORCPT
+        id S2391703AbfHBJk3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 06:04:56 -0400
-Received: from skedge03.snt-world.com ([91.208.41.68]:58060 "EHLO
-        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390117AbfHBKEN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 06:04:13 -0400
-Received: from sntmail11s.snt-is.com (unknown [10.203.32.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 2 Aug 2019 05:40:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41436 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391065AbfHBJk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:40:26 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by skedge03.snt-world.com (Postfix) with ESMTPS id 7EEE7603D28;
-        Fri,  2 Aug 2019 12:04:10 +0200 (CEST)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail11s.snt-is.com
- (10.203.32.181) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 2 Aug 2019
- 12:04:10 +0200
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1713.004; Fri, 2 Aug 2019 12:04:10 +0200
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "geert+renesas@glider.be" <geert+renesas@glider.be>,
-        Schrempf Frieder <frieder.schrempf@kontron.de>,
-        Jiri Slaby <jslaby@suse.com>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 1/4] serial: mctrl_gpio: Avoid probe failures in case of
- missing gpiolib
-Thread-Topic: [PATCH v3 1/4] serial: mctrl_gpio: Avoid probe failures in case
- of missing gpiolib
-Thread-Index: AQHVSRmgIMto6YABN0CHGANRcY/fqA==
-Date:   Fri, 2 Aug 2019 10:04:09 +0000
-Message-ID: <20190802100349.8659-1-frieder.schrempf@kontron.de>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A37E206A2;
+        Fri,  2 Aug 2019 09:40:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564738825;
+        bh=4WRnDc6ccVf1F9VSDNYejaU+jEuRvyZ28WXLUbFz+a0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nYocTJui8b2iJLu7NEo9kDnayXU3MRzlAOekXaJEovfdeRHq3VrgpGZHK+lAyvUKM
+         /9dgqH6okNSTI8piDxdRUlxRbCO1xGrNkbpzQCbf0In1LdscWrlsNxKL9jIxosgubA
+         RWhMsBjUjNJUPrrS0kzMuiidaahJStmrpzGE7nqs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        syzbot+26ec41e9f788b3eba396@syzkaller.appspotmail.com,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 010/223] media: dvb: usb: fix use after free in dvb_usb_device_exit
+Date:   Fri,  2 Aug 2019 11:33:55 +0200
+Message-Id: <20190802092239.554840027@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
+References: <20190802092238.692035242@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 7EEE7603D28.AEAF5
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: festevam@gmail.com, geert+renesas@glider.be,
-        gregkh@linuxfoundation.org, jslaby@suse.com, kernel@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-        s.hauer@pengutronix.de, shawnguo@kernel.org,
-        u.kleine-koenig@pengutronix.de
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+[ Upstream commit 6cf97230cd5f36b7665099083272595c55d72be7 ]
 
-If CONFIG_GPIOLIB is not enabled, mctrl_gpio_init() and
-mctrl_gpio_init_noauto() will currently return an error pointer with
--ENOSYS. As the mctrl GPIOs are usually optional, drivers need to
-check for this condition to allow continue probing.
+dvb_usb_device_exit() frees and uses the device name in that order.
+Fix by storing the name in a buffer before freeing it.
 
-To avoid the need for this check in each driver, we return NULL
-instead, as all the mctrl_gpio_*() functions are skipped anyway.
-We also adapt mctrl_gpio_to_gpiod() to be in line with this change.
-
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Reported-by: syzbot+26ec41e9f788b3eba396@syzkaller.appspotmail.com
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-Changes in v3
-=============
-* Move the changes in mctrl_gpio_to_gpiod() to a separate patch
-* Reorder tags
+ drivers/media/usb/dvb-usb/dvb-usb-init.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-Changes in v2
-=============
-* Move the sh_sci changes to a separate patch
-* Add Fabio's R-b tag
----
- drivers/tty/serial/serial_mctrl_gpio.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/tty/serial/serial_mctrl_gpio.h b/drivers/tty/serial/serial_mctrl_gpio.h
-index b7d3cca48ede..1b2ff503b2c2 100644
---- a/drivers/tty/serial/serial_mctrl_gpio.h
-+++ b/drivers/tty/serial/serial_mctrl_gpio.h
-@@ -114,19 +114,19 @@ static inline
- struct gpio_desc *mctrl_gpio_to_gpiod(struct mctrl_gpios *gpios,
- 				      enum mctrl_gpio_idx gidx)
+diff --git a/drivers/media/usb/dvb-usb/dvb-usb-init.c b/drivers/media/usb/dvb-usb/dvb-usb-init.c
+index 84308569e7dc..b3413404f91a 100644
+--- a/drivers/media/usb/dvb-usb/dvb-usb-init.c
++++ b/drivers/media/usb/dvb-usb/dvb-usb-init.c
+@@ -287,12 +287,15 @@ EXPORT_SYMBOL(dvb_usb_device_init);
+ void dvb_usb_device_exit(struct usb_interface *intf)
  {
--	return ERR_PTR(-ENOSYS);
-+	return NULL;
- }
+ 	struct dvb_usb_device *d = usb_get_intfdata(intf);
+-	const char *name = "generic DVB-USB module";
++	const char *default_name = "generic DVB-USB module";
++	char name[40];
  
- static inline
- struct mctrl_gpios *mctrl_gpio_init(struct uart_port *port, unsigned int idx)
- {
--	return ERR_PTR(-ENOSYS);
-+	return NULL;
- }
+ 	usb_set_intfdata(intf, NULL);
+ 	if (d != NULL && d->desc != NULL) {
+-		name = d->desc->name;
++		strscpy(name, d->desc->name, sizeof(name));
+ 		dvb_usb_exit(d);
++	} else {
++		strscpy(name, default_name, sizeof(name));
+ 	}
+ 	info("%s successfully deinitialized and disconnected.", name);
  
- static inline
- struct mctrl_gpios *mctrl_gpio_init_noauto(struct device *dev, unsigned int idx)
- {
--	return ERR_PTR(-ENOSYS);
-+	return NULL;
- }
- 
- static inline
 -- 
-2.17.1
+2.20.1
+
+
+
