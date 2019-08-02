@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 261BBC19759
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 02:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B66C19759
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 02:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E24F820840
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 02:55:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 285A020840
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 02:56:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="goYxbeEW";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nUnYSHPR"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="YB0B0Lno";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="zyPywBiw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729372AbfHBCzZ (ORCPT
+        id S1729527AbfHBC41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 22:55:25 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:38477 "EHLO
+        Thu, 1 Aug 2019 22:56:27 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:42317 "EHLO
         out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727848AbfHBCzY (ORCPT
+        by vger.kernel.org with ESMTP id S1728045AbfHBC41 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 22:55:24 -0400
+        Thu, 1 Aug 2019 22:56:27 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 4FEA021FB6;
-        Thu,  1 Aug 2019 22:55:21 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id 30ED821FE7;
+        Thu,  1 Aug 2019 22:56:26 -0400 (EDT)
 Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Thu, 01 Aug 2019 22:55:21 -0400
+  by compute4.internal (MEProxy); Thu, 01 Aug 2019 22:56:26 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
         mime-version:message-id:in-reply-to:references:date:from:to
-        :subject:content-type; s=fm3; bh=l5LjbiKcknm05fGmRdJT/jtA1vdx+I7
-        zKZnQjtWUt1I=; b=goYxbeEWRGcdU+zqyYVdpOxlXl6x7gs4YowEEszRohKJ8Lg
-        Oi6qXNiul8z4uvaY6xxWk3H8KYSTldLCM6nkks5zTo0+d0EubyFiXXjdU/TeclKe
-        RqvFpiRkwxzkh9fvBXxFK/KcTPoTefjaYO6io97LXSOhHWJoPZgMgo1VlITgJb8Z
-        9O93X1vbZfYBfXotroAxm7iqzz+w5Qtj8wVVf87Rq+r9/nB4ExvGQzrHXf9nWJuk
-        ejKUCSJhFz42eNAOHMtMk4++lsat1pS6BMywYzOC0Zx0BW8uD5ZJdv8MXFVU5Qqv
-        /nPnUd3DKOq5m5wAio/CvxAoetW3QBKdfiTTG3g==
+        :subject:content-type; s=fm3; bh=b13Qy1cbkkhaYNqP2u5N7xcdlQ9zyV2
+        1qZFwzIFtu3w=; b=YB0B0LnoLskRSKCcZlVV0Js1yIDy1QUteqFqwLQdDbtd2qd
+        HHQCwu9Zm2sQ07nxyQ2IQQqwDJCRNyoMbzwoBPOgCPGqtgMfVh9ouJoEDhQqx91q
+        THUZwGLnXjN58TzHpVGStMSyxKtQ+IBSuJ/CYnYxOLyppFqhcrlE9wvIzypMeM4k
+        inhcYflYeAFlK/iICRSGf+gN/Yq2TMvUD5Qy3DZnUZkzT+ZJyD/YI35amEMqt6o6
+        FtN1D09VErOS+SsTsb/aFwDllPM94k3IQi1RG6Ea98Q83Pd3rVAJ+is5AL92S/7M
+        wQsKlTZq2dsfDvBExMAKDOdPPgwr5chOlVK26bw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=content-type:date:from:in-reply-to
         :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=l5Ljbi
-        Kcknm05fGmRdJT/jtA1vdx+I7zKZnQjtWUt1I=; b=nUnYSHPRUiB4kabHqt0sia
-        ua5nekb97I/gDIa3MpkBB7Rs3tegWB6zlkTunCcXWLRxpkcCJmIS5mqp1Fyuq2dz
-        Tg3hYDIWbjnlit3CUaeGifSyl9HPkEtX/hFQYE0hFlVOFgr1ZxvTtDRDNUdgjwXf
-        gkk2SylaPI3BAE7Klkym0bo7sjr4oOXiQyYkcng4foEVsFfuSz+CNF323QbDYQKy
-        W9kkmHm+fEhNJ1iNTAvrFFOs+bgk/+dap+/ffJLyQJgMThHxUJCMtF3wkEBSOdry
-        druNpA72QC2x74SUrvgsP75qy4qUuymrG6q4K+z17uLwEGp+v3KB74VuC0FtFDsg
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=b13Qy1
+        cbkkhaYNqP2u5N7xcdlQ9zyV21qZFwzIFtu3w=; b=zyPywBiw14Cf6SCHIcI2yy
+        192WMY3/xF+fgHhZaaBHssd2DhycCwjimND7DYBa6/y7yS2jQHhxr0tJcQkhuy+X
+        aSSMZSxF1GNi0l3WPjwH2V5S8j/HZY6mdWDkDn55NCQJxPlg9raHyk5GpS+YliAP
+        VnckwwWi4jKz4CQv1TnQO/piMdqxebkpLu7rlcchj9Xx38NNGORuxeCiqZWz2Hpa
+        uO8zH6DjSmIKljsqC2tW2mPLDcLxNFSI08w2SNY0RXwQmElbKl6Nmm4KruzukOCg
+        w8HJi8MR49LhBQiIy7GTuDJq2ZFM4MMgPndA91nPntNcwoKnLriAsp+3GHE6dhCw
         ==
-X-ME-Sender: <xms:F6ZDXZl2Lg9AZ_0N0_bSCiIvPNKYvUhOZrwoz7Z7SLcBDiZRsZhGSQ>
+X-ME-Sender: <xms:WaZDXXKXyrKPlpfLNRKeG2RX5zO_lNGeK8i10muBmz0YF0H5NUVuwg>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrleekgdeihecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
@@ -57,19 +57,19 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrleekgdeihecutefuodetggdote
     vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
     hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
     ufhiiigvpedt
-X-ME-Proxy: <xmx:F6ZDXWRHUertP7XXnSE7MwHzCnVwYJqjLiphIM6DWdC2ICHGyqHAbw>
-    <xmx:F6ZDXbB1pXdegQrbxJgmHBrdembKwekJxnMhtt6vbOQULjI1taUAxw>
-    <xmx:F6ZDXWowztH4Cc8iSWYxDn9sTwWDIoaTXWev7XZtqdZSJABvwAsPSw>
-    <xmx:GaZDXZijaswA4fpfKoBE1EXyUk3eNodMaxsEOAAWi7ajBuftaBxR8g>
+X-ME-Proxy: <xmx:WqZDXfQNDXAuYTk6GygGUP5iLxwGoXVKakLl4y-tW7URx3wVO6Sp6A>
+    <xmx:WqZDXUOH6RkeV_nwtOZcJzGYSEJGz41zK2vLYwAMbmgeAOSB3sRPJg>
+    <xmx:WqZDXRGmi0HH7zSJjCQ9ArgWdzYxdTiE4YalMBOveXuIEwFkzJ0YOQ>
+    <xmx:WqZDXexA962Vsu_-Bk--56X9ruoskOpS5SCC6tzEZxUBZ0ZXbzHoZA>
 Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 8975AE00A2; Thu,  1 Aug 2019 22:55:19 -0400 (EDT)
+        id E340AE00A2; Thu,  1 Aug 2019 22:56:25 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 User-Agent: Cyrus-JMAP/3.1.6-799-g925e343-fmstable-20190729v1
 Mime-Version: 1.0
-Message-Id: <b9755ff0-20a9-44f0-9778-59183ded72be@www.fastmail.com>
-In-Reply-To: <20190802010155.489238-1-taoren@fb.com>
-References: <20190802010155.489238-1-taoren@fb.com>
-Date:   Fri, 02 Aug 2019 12:25:39 +0930
+Message-Id: <266be87c-3bf2-4dcb-9d90-8272fbc3b057@www.fastmail.com>
+In-Reply-To: <20190802005427.467841-1-taoren@fb.com>
+References: <20190802005427.467841-1-taoren@fb.com>
+Date:   Fri, 02 Aug 2019 12:26:46 +0930
 From:   "Andrew Jeffery" <andrew@aj.id.au>
 To:     "Tao Ren" <taoren@fb.com>, "Rob Herring" <robh+dt@kernel.org>,
         "Mark Rutland" <mark.rutland@arm.com>,
@@ -77,7 +77,7 @@ To:     "Tao Ren" <taoren@fb.com>, "Rob Herring" <robh+dt@kernel.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
         openbmc@lists.ozlabs.org
-Subject: Re: [PATCH] ARM: dts: aspeed: Add Facebook Wedge100 BMC
+Subject: Re: [PATCH] ARM: dts: aspeed: Add Facebook Wedge40 BMC
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -86,8 +86,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On Fri, 2 Aug 2019, at 10:32, Tao Ren wrote:
-> Add initial version of device tree for Facebook Wedge100 AST2400 BMC
+On Fri, 2 Aug 2019, at 10:24, Tao Ren wrote:
+> Add initial version of device tree for Facebook Wedge40 AST2400 BMC
 > platform.
 > 
 > Signed-off-by: Tao Ren <taoren@fb.com>
@@ -96,29 +96,29 @@ Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
 
 > ---
 >  arch/arm/boot/dts/Makefile                    |   1 +
->  .../boot/dts/aspeed-bmc-facebook-wedge100.dts | 149 ++++++++++++++++++
->  2 files changed, 150 insertions(+)
->  create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-wedge100.dts
+>  .../boot/dts/aspeed-bmc-facebook-wedge40.dts  | 141 ++++++++++++++++++
+>  2 files changed, 142 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts
 > 
 > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 39a05a10a2a2..d71504ed82d3 100644
+> index 39a05a10a2a2..dfc1011eb3f2 100644
 > --- a/arch/arm/boot/dts/Makefile
 > +++ b/arch/arm/boot/dts/Makefile
 > @@ -1273,6 +1273,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
 >  	aspeed-bmc-facebook-cmm.dtb \
 >  	aspeed-bmc-facebook-minipack.dtb \
 >  	aspeed-bmc-facebook-tiogapass.dtb \
-> +	aspeed-bmc-facebook-wedge100.dtb \
+> +	aspeed-bmc-facebook-wedge40.dtb \
 >  	aspeed-bmc-facebook-yamp.dtb \
 >  	aspeed-bmc-intel-s2600wf.dtb \
 >  	aspeed-bmc-inspur-fp5280g2.dtb \
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-wedge100.dts 
-> b/arch/arm/boot/dts/aspeed-bmc-facebook-wedge100.dts
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts 
+> b/arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts
 > new file mode 100644
-> index 000000000000..ccd700467ea7
+> index 000000000000..764633964ac1
 > --- /dev/null
-> +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-wedge100.dts
-> @@ -0,0 +1,149 @@
+> +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts
+> @@ -0,0 +1,141 @@
 > +// SPDX-License-Identifier: GPL-2.0+
 > +// Copyright (c) 2018 Facebook Inc.
 > +/dts-v1/;
@@ -126,8 +126,8 @@ Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
 > +#include "aspeed-g4.dtsi"
 > +
 > +/ {
-> +	model = "Facebook Wedge 100 BMC";
-> +	compatible = "facebook,wedge100-bmc", "aspeed,ast2400";
+> +	model = "Facebook Wedge 40 BMC";
+> +	compatible = "facebook,wedge40-bmc", "aspeed,ast2400";
 > +
 > +	aliases {
 > +		/*
@@ -156,8 +156,7 @@ Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
 > +};
 > +
 > +&wdt2 {
-> +	status = "okay";
-> +	aspeed,reset-type = "system";
+> +	status = "disabled";
 > +};
 > +
 > +&fmc {
@@ -232,13 +231,6 @@ Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
 > +
 > +&i2c7 {
 > +	status = "okay";
-> +
-> +	i2c-switch@70 {
-> +		compatible = "nxp,pca9548";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		reg = <0x70>;
-> +	};
 > +};
 > +
 > +&i2c8 {
