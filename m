@@ -2,206 +2,184 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ECA8C19759
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 00:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFB3C19759
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 00:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60C292083B
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 00:01:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 263952083B
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 00:02:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="prfBV9ct"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390518AbfHBABR (ORCPT
+        id S2390526AbfHBACf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 20:01:17 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61366 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390508AbfHBABQ (ORCPT
+        Thu, 1 Aug 2019 20:02:35 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:33098 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731258AbfHBACe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 20:01:16 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71NvAYL107313;
-        Thu, 1 Aug 2019 20:00:59 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u49bthghp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Aug 2019 20:00:59 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x71Nx1od110677;
-        Thu, 1 Aug 2019 20:00:58 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u49bthgh8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Aug 2019 20:00:58 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7200uEg021477;
-        Fri, 2 Aug 2019 00:00:57 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma01dal.us.ibm.com with ESMTP id 2u0e87hkec-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 02 Aug 2019 00:00:57 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7200ujJ53608828
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 2 Aug 2019 00:00:56 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D6B7BAC066;
-        Fri,  2 Aug 2019 00:00:56 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 52CDAAC069;
-        Fri,  2 Aug 2019 00:00:55 +0000 (GMT)
-Received: from LeoBras.aus.stglabs.ibm.com (unknown [9.18.235.147])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri,  2 Aug 2019 00:00:55 +0000 (GMT)
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Leonardo Bras <leonardo@linux.ibm.com>,
-        Jens Axboe <axboe@kernel.dk>, Dennis Zhou <dennis@kernel.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Tejun Heo <tj@kernel.org>,
-        "Dennis Zhou (Facebook)" <dennisszhou@gmail.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Sagi Grimberg <sagi@grimberg.me>
-Subject: [PATCH 1/1] block: Use bits.h macros to improve readability
-Date:   Thu,  1 Aug 2019 21:00:41 -0300
-Message-Id: <20190802000041.24513-1-leonardo@linux.ibm.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 1 Aug 2019 20:02:34 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7202LwS079622;
+        Thu, 1 Aug 2019 19:02:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1564704141;
+        bh=JPE8/NA+otNSQgKjCkF3O2VPfxJQy2lptz0Icmukqvg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=prfBV9ctXodPzUT23xo90cQEWAnAX6tL+06BorNRljZBJRYe2oRfHsBiqIdAMGs7O
+         PPVh71UDGq9Tq8UkDT9Ku69n88u9XM87wiMg9Y7d2NvrW0xI7nekoHul2xNjNzHJwv
+         mMQkfomteHfr6UD/6KBsmEvhwWvFpPiMYVrZrrJw=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7202Ll6036373
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 1 Aug 2019 19:02:21 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 1 Aug
+ 2019 19:02:20 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 1 Aug 2019 19:02:20 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7202K7Q048015;
+        Thu, 1 Aug 2019 19:02:20 -0500
+Subject: Re: [PATCH 1/3] leds: lm3532: Fix brightness control for i2c mode
+To:     Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>
+CC:     <tony@atomide.com>, <sre@kernel.org>, <nekit1000@gmail.com>,
+        <mpartap@gmx.net>, <merlijn@wizzup.org>,
+        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190801151421.21486-1-dmurphy@ti.com>
+ <3e304b9a-e7fc-9294-1950-ee9bc5956305@gmail.com> <20190801213620.GA30096@amd>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <bcbb9c96-062a-b9e5-41f5-c3d015641e8d@ti.com>
+Date:   Thu, 1 Aug 2019 19:02:20 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <20190801213620.GA30096@amd>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-01_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908010254
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Applies some bits.h macros in order to improve readability of
-linux/blk_types.h.
+Pavel
 
-Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
----
- include/linux/blk_types.h | 55 ++++++++++++++++++++-------------------
- 1 file changed, 28 insertions(+), 27 deletions(-)
+Thanks for the review
 
-diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
-index 95202f80676c..31c8c6d274f6 100644
---- a/include/linux/blk_types.h
-+++ b/include/linux/blk_types.h
-@@ -9,6 +9,7 @@
- #include <linux/types.h>
- #include <linux/bvec.h>
- #include <linux/ktime.h>
-+#include <linux/bits.h>
- 
- struct bio_set;
- struct bio;
-@@ -101,13 +102,13 @@ static inline bool blk_path_error(blk_status_t error)
- #define BIO_ISSUE_SIZE_BITS     12
- #define BIO_ISSUE_RES_SHIFT     (64 - BIO_ISSUE_RES_BITS)
- #define BIO_ISSUE_SIZE_SHIFT    (BIO_ISSUE_RES_SHIFT - BIO_ISSUE_SIZE_BITS)
--#define BIO_ISSUE_TIME_MASK     ((1ULL << BIO_ISSUE_SIZE_SHIFT) - 1)
-+#define BIO_ISSUE_TIME_MASK     GENMASK_ULL(BIO_ISSUE_SIZE_SHIFT - 1, 0)
- #define BIO_ISSUE_SIZE_MASK     \
--	(((1ULL << BIO_ISSUE_SIZE_BITS) - 1) << BIO_ISSUE_SIZE_SHIFT)
--#define BIO_ISSUE_RES_MASK      (~((1ULL << BIO_ISSUE_RES_SHIFT) - 1))
-+	GENMASK_ULL(BIO_ISSUE_RES_SHIFT - 1, BIO_ISSUE_SIZE_SHIFT)
-+#define BIO_ISSUE_RES_MASK      GENMASK_ULL(64, BIO_ISSUE_RES_SHIFT)
- 
- /* Reserved bit for blk-throtl */
--#define BIO_ISSUE_THROTL_SKIP_LATENCY (1ULL << 63)
-+#define BIO_ISSUE_THROTL_SKIP_LATENCY   BIT_ULL(63)
- 
- struct bio_issue {
- 	u64 value;
-@@ -131,7 +132,7 @@ static inline sector_t bio_issue_size(struct bio_issue *issue)
- static inline void bio_issue_init(struct bio_issue *issue,
- 				       sector_t size)
- {
--	size &= (1ULL << BIO_ISSUE_SIZE_BITS) - 1;
-+	size &= GENMASK_ULL(BIO_ISSUE_SIZE_BITS - 1, 0);
- 	issue->value = ((issue->value & BIO_ISSUE_RES_MASK) |
- 			(ktime_get_ns() & BIO_ISSUE_TIME_MASK) |
- 			((u64)size << BIO_ISSUE_SIZE_SHIFT));
-@@ -270,7 +271,7 @@ typedef __u32 __bitwise blk_mq_req_flags_t;
-  * meaning.
-  */
- #define REQ_OP_BITS	8
--#define REQ_OP_MASK	((1 << REQ_OP_BITS) - 1)
-+#define REQ_OP_MASK	GENMASK(REQ_OP_BITS - 1, 0)
- #define REQ_FLAG_BITS	24
- 
- enum req_opf {
-@@ -329,25 +330,25 @@ enum req_flag_bits {
- 	__REQ_NR_BITS,		/* stops here */
- };
- 
--#define REQ_FAILFAST_DEV	(1ULL << __REQ_FAILFAST_DEV)
--#define REQ_FAILFAST_TRANSPORT	(1ULL << __REQ_FAILFAST_TRANSPORT)
--#define REQ_FAILFAST_DRIVER	(1ULL << __REQ_FAILFAST_DRIVER)
--#define REQ_SYNC		(1ULL << __REQ_SYNC)
--#define REQ_META		(1ULL << __REQ_META)
--#define REQ_PRIO		(1ULL << __REQ_PRIO)
--#define REQ_NOMERGE		(1ULL << __REQ_NOMERGE)
--#define REQ_IDLE		(1ULL << __REQ_IDLE)
--#define REQ_INTEGRITY		(1ULL << __REQ_INTEGRITY)
--#define REQ_FUA			(1ULL << __REQ_FUA)
--#define REQ_PREFLUSH		(1ULL << __REQ_PREFLUSH)
--#define REQ_RAHEAD		(1ULL << __REQ_RAHEAD)
--#define REQ_BACKGROUND		(1ULL << __REQ_BACKGROUND)
--#define REQ_NOWAIT		(1ULL << __REQ_NOWAIT)
--#define REQ_NOUNMAP		(1ULL << __REQ_NOUNMAP)
--#define REQ_HIPRI		(1ULL << __REQ_HIPRI)
--
--#define REQ_DRV			(1ULL << __REQ_DRV)
--#define REQ_SWAP		(1ULL << __REQ_SWAP)
-+#define REQ_FAILFAST_DEV	BIT_ULL(__REQ_FAILFAST_DEV)
-+#define REQ_FAILFAST_TRANSPORT	BIT_ULL(__REQ_FAILFAST_TRANSPORT)
-+#define REQ_FAILFAST_DRIVER	BIT_ULL(__REQ_FAILFAST_DRIVER)
-+#define REQ_SYNC		BIT_ULL(__REQ_SYNC)
-+#define REQ_META		BIT_ULL(__REQ_META)
-+#define REQ_PRIO		BIT_ULL(__REQ_PRIO)
-+#define REQ_NOMERGE		BIT_ULL(__REQ_NOMERGE)
-+#define REQ_IDLE		BIT_ULL(__REQ_IDLE)
-+#define REQ_INTEGRITY		BIT_ULL(__REQ_INTEGRITY)
-+#define REQ_FUA			BIT_ULL(__REQ_FUA)
-+#define REQ_PREFLUSH		BIT_ULL(__REQ_PREFLUSH)
-+#define REQ_RAHEAD		BIT_ULL(__REQ_RAHEAD)
-+#define REQ_BACKGROUND		BIT_ULL(__REQ_BACKGROUND)
-+#define REQ_NOWAIT		BIT_ULL(__REQ_NOWAIT)
-+#define REQ_NOUNMAP		BIT_ULL(__REQ_NOUNMAP)
-+#define REQ_HIPRI		BIT_ULL(__REQ_HIPRI)
-+
-+#define REQ_DRV			BIT_ULL(__REQ_DRV)
-+#define REQ_SWAP		BIT_ULL(__REQ_SWAP)
- 
- #define REQ_FAILFAST_MASK \
- 	(REQ_FAILFAST_DEV | REQ_FAILFAST_TRANSPORT | REQ_FAILFAST_DRIVER)
-@@ -415,7 +416,7 @@ static inline int op_stat_group(unsigned int op)
- typedef unsigned int blk_qc_t;
- #define BLK_QC_T_NONE		-1U
- #define BLK_QC_T_SHIFT		16
--#define BLK_QC_T_INTERNAL	(1U << 31)
-+#define BLK_QC_T_INTERNAL	BIT(31)
- 
- static inline bool blk_qc_t_valid(blk_qc_t cookie)
- {
-@@ -429,7 +430,7 @@ static inline unsigned int blk_qc_t_to_queue_num(blk_qc_t cookie)
- 
- static inline unsigned int blk_qc_t_to_tag(blk_qc_t cookie)
- {
--	return cookie & ((1u << BLK_QC_T_SHIFT) - 1);
-+	return cookie & GENMASK(BLK_QC_T_SHIFT - 1, 0);
- }
- 
- static inline bool blk_qc_t_is_internal(blk_qc_t cookie)
--- 
-2.20.1
+On 8/1/19 4:36 PM, Pavel Machek wrote:
+> Hi!
+>
+> If we are going to complain about coding style... this should really
+> be split, one change per patch.
+>
+>>> @@ -161,18 +167,18 @@ struct lm3532_data {
+>>>   };
+>>>   
+>>>   static const struct reg_default lm3532_reg_defs[] = {
+>>> -	{LM3532_REG_OUTPUT_CFG, 0xe4},
+>>> +	{LM3532_REG_OUTPUT_CFG, 0x24},
+>>>   	{LM3532_REG_STARTSHUT_RAMP, 0xc0},
+>>>   	{LM3532_REG_RT_RAMP, 0xc0},
+>>>   	{LM3532_REG_PWM_A_CFG, 0x82},
+>>>   	{LM3532_REG_PWM_B_CFG, 0x82},
+>>>   	{LM3532_REG_PWM_C_CFG, 0x82},
+>>>   	{LM3532_REG_ZONE_CFG_A, 0xf1},
+>>> -	{LM3532_REG_CTRL_A_BRT, 0xf3},
+>>> +	{LM3532_REG_CTRL_A_FS_CURR, 0x13},
+>>>   	{LM3532_REG_ZONE_CFG_B, 0xf1},
+>>> -	{LM3532_REG_CTRL_B_BRT, 0xf3},
+>>> +	{LM3532_REG_CTRL_B_FS_CURR, 0x13},
+>>>   	{LM3532_REG_ZONE_CFG_C, 0xf1},
+>>> -	{LM3532_REG_CTRL_C_BRT, 0xf3},
+>>> +	{LM3532_REG_CTRL_C_FS_CURR, 0x13},
+>>>   	{LM3532_REG_ENABLE, 0xf8},
+>>>   	{LM3532_ALS_CONFIG, 0x44},
+>>>   	{LM3532_REG_ZN_0_HI, 0x35},
+> Default register values; are they related to the rest?
 
+Yes and no. I changed the #define so we would see a change anyway.
+
+And the default is 0x13.
+
+I can move it to a clean up patch
+
+>
+>>> @@ -302,7 +308,7 @@ static int lm3532_led_disable(struct lm3532_led *led_data)
+>>>   	int ret;
+>>>   
+>>>   	ret = regmap_update_bits(led_data->priv->regmap, LM3532_REG_ENABLE,
+>>> -					 ctrl_en_val, ~ctrl_en_val);
+>>> +					 ctrl_en_val, 0);
+>>>   	if (ret) {
+>>>   		dev_err(led_data->priv->dev, "Failed to set ctrl:%d\n", ret);
+>>>   		return ret;
+> This should have no functional impact, its just a clenaup, probably
+> should go separately.
+
+I took it from your patch.  Thought it was a good clean up.
+
+I can move it to a separate patch and give you credit
+
+
+>
+>>> @@ -339,11 +345,9 @@ static int lm3532_brightness_set(struct led_classdev *led_cdev,
+>>>   	if (ret)
+>>>   		goto unlock;
+>>>   
+>>> -	brightness_reg = LM3532_REG_CTRL_A_BRT + led->control_bank * 2;
+>>> -	brt_val = brt_val / LM3532_BRT_VAL_ADJUST;
+>>> -
+>>> +	brightness_reg = LM3532_REG_ZONE_TRGT_A + led->control_bank * 5 +
+>>> +			 (led->ctrl_brt_pointer >> 2);
+>>>   	ret = regmap_write(led->priv->regmap, brightness_reg, brt_val);
+>>> -
+>>>   unlock:
+>>>   	mutex_unlock(&led->priv->lock);
+>>>   	return ret;
+> This is the core change, AFAICT.
+
+Yep.  This is the fix you want.
+
+
+>
+>>> @@ -356,8 +360,29 @@ static int lm3532_init_registers(struct lm3532_led *led)
+>>>   	unsigned int output_cfg_val = 0;
+>>>   	unsigned int output_cfg_shift = 0;
+>>>   	unsigned int output_cfg_mask = 0;
+>>> +	int brightness_config_reg;
+>>> +	int brightness_config_val;
+>>>   	int ret, i;
+>>>   
+>>> +	if (drvdata->enable_gpio)
+>>> +		gpiod_direction_output(drvdata->enable_gpio, 1);
+>>> +
+>>> +	brightness_config_reg = LM3532_REG_ZONE_CFG_A + led->control_bank * 2;
+>>> +	/* This could be hard coded to the default value but the control
+> Code is moved, probably should go in separately. We'll have less fun
+> bisecting problems when things are separate...
+
+On my Droid4 moving this enable call allowed the init to pass without a 
+regmap failure.
+
+But I did not see the same issue on the BBB with the LM3532 EVM.
+
+Without this change in this patch the backlight failed to register.  I 
+think we want to keep this change here.
+
+Dan
+
+
+>
+> Thanks and best regards,
+> 									Pavel
+>
