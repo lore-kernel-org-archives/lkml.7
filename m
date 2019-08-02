@@ -2,201 +2,101 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF90C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78824C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7294217D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:31:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752671;
-	bh=bvJg+05Kuo7DtE3pMkbqu3NpZb+vflvfWgsyop1hkEY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e0Jbkge2zT2sdL3fGrhGoT9FILKZuAITwdmtA1RztMd273eI1QXOkQFhnHmhS7ECO
-	 PKAAkULxIjIqZm9K/OjevTUXQmrSxRie5ry/qY+Q8kHRRePKTC5NrqvGEL4frqJJz+
-	 8nQJGVBI/yQEMVRFMxzM81RHCq0Dc6/Qfv6V+9sk=
+	by mail.kernel.org (Postfix) with ESMTP id 53BAA21882
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:31:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436475AbfHBNbJ (ORCPT
+        id S2404442AbfHBNbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:31:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34946 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729004AbfHBNYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:24:15 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A96F20880;
-        Fri,  2 Aug 2019 13:24:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752254;
-        bh=bvJg+05Kuo7DtE3pMkbqu3NpZb+vflvfWgsyop1hkEY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oesCtRKHl7gZnKwpGpBKjMnmucMxKe1IOmsmvJQ1Zbb/SyXUx5BgQsjz3To+B5QDA
-         doGvM0bSpm6xLZz8cqJI0JSYi/lZj3GLOzi9K2MIPl3tFvFg/LDvwXvpPu+O9JF1Sx
-         UpgOIbnCzyXkkmtYs0p7XYcSFJtN3r+Iza4FXl+Q=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jann Horn <jannh@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 38/42] sched/fair: Don't free p->numa_faults with concurrent readers
-Date:   Fri,  2 Aug 2019 09:22:58 -0400
-Message-Id: <20190802132302.13537-38-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190802132302.13537-1-sashal@kernel.org>
-References: <20190802132302.13537-1-sashal@kernel.org>
+        Fri, 2 Aug 2019 09:31:15 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:50602 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2404401AbfHBNbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:31:10 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 98B08AA14CE5C9058219;
+        Fri,  2 Aug 2019 21:31:07 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Fri, 2 Aug 2019
+ 21:30:59 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <herbert@gondor.apana.org.au>, <lars.persson@axis.com>,
+        <jesper.nilsson@axis.com>, <davem@davemloft.net>,
+        <thomas.lendacky@amd.com>, <gary.hook@amd.com>, <krzk@kernel.org>,
+        <kgene@kernel.org>, <antoine.tenart@bootlin.com>,
+        <matthias.bgg@gmail.com>, <jamie@jamieiles.com>,
+        <agross@kernel.org>, <heiko@sntech.de>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <clabbe.montjoie@gmail.com>, <mripard@kernel.org>, <wens@csie.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+        <linux-arm-kernel@axis.com>, <linux-samsung-soc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>,
+        <linux-rockchip@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next 00/12] crypto: use devm_platform_ioremap_resource() to simplify code
+Date:   Fri, 2 Aug 2019 21:27:57 +0800
+Message-ID: <20190802132809.8116-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+devm_platform_ioremap_resource() internally have platform_get_resource()
+and devm_ioremap_resource() in it. So instead of calling them separately
+use devm_platform_ioremap_resource() directly.
 
-[ Upstream commit 16d51a590a8ce3befb1308e0e7ab77f3b661af33 ]
+YueHaibing (12):
+  crypto: artpec6 - use devm_platform_ioremap_resource() to simplify
+    code
+  crypto: ccp - use devm_platform_ioremap_resource() to simplify code
+  crypto: exynos - use devm_platform_ioremap_resource() to simplify code
+  crypto: img-hash - use devm_platform_ioremap_resource() to simplify
+    code
+  crypto: inside-secure - use devm_platform_ioremap_resource() to
+    simplify code
+  crypto: mediatek - use devm_platform_ioremap_resource() to simplify
+    code
+  crypto: picoxcell - use devm_platform_ioremap_resource() to simplify
+    code
+  crypto: sunxi-ss - use devm_platform_ioremap_resource() to simplify
+    code
+  crypto: rockchip - use devm_platform_ioremap_resource() to simplify
+    code
+  crypto: stm32 - use devm_platform_ioremap_resource() to simplify code
+  crypto: qce - use devm_platform_ioremap_resource() to simplify code
+  crypto: qcom-rng - use devm_platform_ioremap_resource() to simplify
+    code
 
-When going through execve(), zero out the NUMA fault statistics instead of
-freeing them.
+ drivers/crypto/axis/artpec6_crypto.c    | 4 +---
+ drivers/crypto/ccp/sp-platform.c        | 4 +---
+ drivers/crypto/exynos-rng.c             | 4 +---
+ drivers/crypto/img-hash.c               | 4 +---
+ drivers/crypto/inside-secure/safexcel.c | 4 +---
+ drivers/crypto/mediatek/mtk-platform.c  | 3 +--
+ drivers/crypto/picoxcell_crypto.c       | 5 ++---
+ drivers/crypto/qce/core.c               | 4 +---
+ drivers/crypto/qcom-rng.c               | 4 +---
+ drivers/crypto/rockchip/rk3288_crypto.c | 4 +---
+ drivers/crypto/stm32/stm32-crc32.c      | 4 +---
+ drivers/crypto/stm32/stm32-cryp.c       | 4 +---
+ drivers/crypto/sunxi-ss/sun4i-ss-core.c | 4 +---
+ 13 files changed, 14 insertions(+), 38 deletions(-)
 
-During execve, the task is reachable through procfs and the scheduler. A
-concurrent /proc/*/sched reader can read data from a freed ->numa_faults
-allocation (confirmed by KASAN) and write it back to userspace.
-I believe that it would also be possible for a use-after-free read to occur
-through a race between a NUMA fault and execve(): task_numa_fault() can
-lead to task_numa_compare(), which invokes task_weight() on the currently
-running task of a different CPU.
-
-Another way to fix this would be to make ->numa_faults RCU-managed or add
-extra locking, but it seems easier to wipe the NUMA fault statistics on
-execve.
-
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will@kernel.org>
-Fixes: 82727018b0d3 ("sched/numa: Call task_numa_free() from do_execve()")
-Link: https://lkml.kernel.org/r/20190716152047.14424-1-jannh@google.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/exec.c                            |  2 +-
- include/linux/sched/numa_balancing.h |  4 ++--
- kernel/fork.c                        |  2 +-
- kernel/sched/fair.c                  | 24 ++++++++++++++++++++----
- 4 files changed, 24 insertions(+), 8 deletions(-)
-
-diff --git a/fs/exec.c b/fs/exec.c
-index 433b1257694ab..561ea64829ece 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1826,7 +1826,7 @@ static int __do_execve_file(int fd, struct filename *filename,
- 	membarrier_execve(current);
- 	rseq_execve(current);
- 	acct_update_integrals(current);
--	task_numa_free(current);
-+	task_numa_free(current, false);
- 	free_bprm(bprm);
- 	kfree(pathbuf);
- 	if (filename)
-diff --git a/include/linux/sched/numa_balancing.h b/include/linux/sched/numa_balancing.h
-index e7dd04a84ba89..3988762efe15c 100644
---- a/include/linux/sched/numa_balancing.h
-+++ b/include/linux/sched/numa_balancing.h
-@@ -19,7 +19,7 @@
- extern void task_numa_fault(int last_node, int node, int pages, int flags);
- extern pid_t task_numa_group_id(struct task_struct *p);
- extern void set_numabalancing_state(bool enabled);
--extern void task_numa_free(struct task_struct *p);
-+extern void task_numa_free(struct task_struct *p, bool final);
- extern bool should_numa_migrate_memory(struct task_struct *p, struct page *page,
- 					int src_nid, int dst_cpu);
- #else
-@@ -34,7 +34,7 @@ static inline pid_t task_numa_group_id(struct task_struct *p)
- static inline void set_numabalancing_state(bool enabled)
- {
- }
--static inline void task_numa_free(struct task_struct *p)
-+static inline void task_numa_free(struct task_struct *p, bool final)
- {
- }
- static inline bool should_numa_migrate_memory(struct task_struct *p,
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 69874db3fba83..e76ce81c9c757 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -679,7 +679,7 @@ void __put_task_struct(struct task_struct *tsk)
- 	WARN_ON(tsk == current);
- 
- 	cgroup_free(tsk);
--	task_numa_free(tsk);
-+	task_numa_free(tsk, true);
- 	security_task_free(tsk);
- 	exit_creds(tsk);
- 	delayacct_tsk_free(tsk);
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 4a433608ba74a..34b998678b97d 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -2345,13 +2345,23 @@ static void task_numa_group(struct task_struct *p, int cpupid, int flags,
- 	return;
- }
- 
--void task_numa_free(struct task_struct *p)
-+/*
-+ * Get rid of NUMA staticstics associated with a task (either current or dead).
-+ * If @final is set, the task is dead and has reached refcount zero, so we can
-+ * safely free all relevant data structures. Otherwise, there might be
-+ * concurrent reads from places like load balancing and procfs, and we should
-+ * reset the data back to default state without freeing ->numa_faults.
-+ */
-+void task_numa_free(struct task_struct *p, bool final)
- {
- 	struct numa_group *grp = p->numa_group;
--	void *numa_faults = p->numa_faults;
-+	unsigned long *numa_faults = p->numa_faults;
- 	unsigned long flags;
- 	int i;
- 
-+	if (!numa_faults)
-+		return;
-+
- 	if (grp) {
- 		spin_lock_irqsave(&grp->lock, flags);
- 		for (i = 0; i < NR_NUMA_HINT_FAULT_STATS * nr_node_ids; i++)
-@@ -2364,8 +2374,14 @@ void task_numa_free(struct task_struct *p)
- 		put_numa_group(grp);
- 	}
- 
--	p->numa_faults = NULL;
--	kfree(numa_faults);
-+	if (final) {
-+		p->numa_faults = NULL;
-+		kfree(numa_faults);
-+	} else {
-+		p->total_numa_faults = 0;
-+		for (i = 0; i < NR_NUMA_HINT_FAULT_STATS * nr_node_ids; i++)
-+			numa_faults[i] = 0;
-+	}
- }
- 
- /*
 -- 
-2.20.1
+2.7.4
+
 
