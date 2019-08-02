@@ -7,55 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06731C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47ABDC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D41822064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:56:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FFB720578
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:56:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739781;
-	bh=VquHcwOcF7WSDfdfcKHX4oo10wc6iWPacef/VpfOICg=;
+	s=default; t=1564739786;
+	bh=TZyC/e3XWGinl9VbLp32LC4zDGiye8OtkVuPC0YrCuY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IU2gx4B8asuY/6RS0fuBRYEkG6m2JBnzE4z86Hr9c/Ilm+YcaxP9IWKTlFYK9lJUh
-	 Ym6kNY3y13zz7zXKJVtA9Odhb7ziEbVT384+y3o1unyZA0k1Nk+orLEZnF+YB37oWH
-	 CZzLCu5H1eK2gilQGHzBvSIrd+qR2R6sq9aoJyA0=
+	b=Yqxdj+IR3KAbo2aE5lysPMvJNPpXI7/OUu0nUdzhjiOa53TA5IMMPAzay2hcYTnUK
+	 9XJBMhRHPk212gtz0K0u/hRUgEY0rUQbZ7njXaZLAnKIJfZrBs64O7IOX/3XDXzPPm
+	 Z8fXnV46lAk7A/rjEdK+8kzCrcagLMs8WOnhAJwk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406723AbfHBJ4U (ORCPT
+        id S2406732AbfHBJ4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:56:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35052 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:56:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406701AbfHBJ4O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:56:14 -0400
+        id S2406713AbfHBJ4Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:56:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5DC62067D;
-        Fri,  2 Aug 2019 09:56:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 805432064A;
+        Fri,  2 Aug 2019 09:56:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739773;
-        bh=VquHcwOcF7WSDfdfcKHX4oo10wc6iWPacef/VpfOICg=;
+        s=default; t=1564739776;
+        bh=TZyC/e3XWGinl9VbLp32LC4zDGiye8OtkVuPC0YrCuY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P6gRnQpRa6zGhJ1WgeI26kLwvGiEdR+xtKIL3W1zI0wmHev7iNvoK0mIvZkxWg/pb
-         9CT13HuHzIzfM166HNUXBszUvHYjzrgqCZD/W2dAMt4uwOreUfHQ9NYOGML7aIOyXV
-         zUnENpCwqtieJEkYxB/qJxU89beiAGwdz2Yuabvw=
+        b=I2gQdk93RCDDpAzTQO/DBEAmBgusyW/DXt5snZZymcg2PbHWU9+YnNA3KvHXGJN8b
+         8VB+uta3i+ZAz7Kq5WP+bXcPzkHU8TTY++tv0gcAlm6+ysCBn8EqXF7gklJ1roFi6x
+         x7GF/yaCXX6rKfGDGvFwcuBb+WGIxcwmZQtpt0cE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Steve McIntyre <steve.mcintyre@arm.com>,
-        Steve McIntyre <93sam@debian.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 4.19 08/32] arm64: compat: Provide definition for COMPAT_SIGMINSTKSZ
-Date:   Fri,  2 Aug 2019 11:39:42 +0200
-Message-Id: <20190802092104.138562524@linuxfoundation.org>
+        stable@vger.kernel.org, Todd Kjos <tkjos@google.com>
+Subject: [PATCH 4.19 09/32] binder: fix possible UAF when freeing buffer
+Date:   Fri,  2 Aug 2019 11:39:43 +0200
+Message-Id: <20190802092104.545353007@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092101.913646560@linuxfoundation.org>
 References: <20190802092101.913646560@linuxfoundation.org>
@@ -68,39 +58,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will.deacon@arm.com>
+From: Todd Kjos <tkjos@android.com>
 
-commit 24951465cbd279f60b1fdc2421b3694405bcff42 upstream.
+commit a370003cc301d4361bae20c9ef615f89bf8d1e8a upstream.
 
-arch/arm/ defines a SIGMINSTKSZ of 2k, so we should use the same value
-for compat tasks.
+There is a race between the binder driver cleaning
+up a completed transaction via binder_free_transaction()
+and a user calling binder_ioctl(BC_FREE_BUFFER) to
+release a buffer. It doesn't matter which is first but
+they need to be protected against running concurrently
+which can result in a UAF.
 
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Dominik Brodowski <linux@dominikbrodowski.net>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Reviewed-by: Dave Martin <Dave.Martin@arm.com>
-Reported-by: Steve McIntyre <steve.mcintyre@arm.com>
-Tested-by: Steve McIntyre <93sam@debian.org>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Todd Kjos <tkjos@google.com>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- arch/arm64/include/asm/compat.h |    1 +
- 1 file changed, 1 insertion(+)
 
---- a/arch/arm64/include/asm/compat.h
-+++ b/arch/arm64/include/asm/compat.h
-@@ -159,6 +159,7 @@ static inline compat_uptr_t ptr_to_compa
- }
+
+---
+ drivers/android/binder.c |   16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
+
+--- a/drivers/android/binder.c
++++ b/drivers/android/binder.c
+@@ -1960,8 +1960,18 @@ static struct binder_thread *binder_get_
  
- #define compat_user_stack_pointer() (user_stack_pointer(task_pt_regs(current)))
-+#define COMPAT_MINSIGSTKSZ	2048
- 
- static inline void __user *arch_compat_alloc_user_space(long len)
+ static void binder_free_transaction(struct binder_transaction *t)
  {
+-	if (t->buffer)
+-		t->buffer->transaction = NULL;
++	struct binder_proc *target_proc = t->to_proc;
++
++	if (target_proc) {
++		binder_inner_proc_lock(target_proc);
++		if (t->buffer)
++			t->buffer->transaction = NULL;
++		binder_inner_proc_unlock(target_proc);
++	}
++	/*
++	 * If the transaction has no target_proc, then
++	 * t->buffer->transaction has already been cleared.
++	 */
+ 	kfree(t);
+ 	binder_stats_deleted(BINDER_STAT_TRANSACTION);
+ }
+@@ -3484,10 +3494,12 @@ static int binder_thread_write(struct bi
+ 				     buffer->debug_id,
+ 				     buffer->transaction ? "active" : "finished");
+ 
++			binder_inner_proc_lock(proc);
+ 			if (buffer->transaction) {
+ 				buffer->transaction->buffer = NULL;
+ 				buffer->transaction = NULL;
+ 			}
++			binder_inner_proc_unlock(proc);
+ 			if (buffer->async_transaction && buffer->target_node) {
+ 				struct binder_node *buf_node;
+ 				struct binder_work *w;
 
 
