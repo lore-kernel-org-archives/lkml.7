@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 761FEC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86667C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B2A620665
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:32:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A46F20665
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:32:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752754;
-	bh=TFQRTj3/7D8jnoe4BJv+m0z7LgOh2e78JsSqRuTuDww=;
+	s=default; t=1564752759;
+	bh=8f7K031i4FP76JzNvmYkrd181BcKJpbw4yDnNNJNuMk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HeusiHTfxlcapy4F8RkAE6sV/TRIyQ85/xfDtu9xF0hi6pENdQpFSVfx7baKD9jco
-	 cyzdxMWtUnsdDTJkJTXLbak3nzVX23FTUVfrOjf7PLxahsjjWtNJMxIGe1INF7ePuj
-	 arCO/I7N1vCfZEFi8mMmFotGN1P1YgGm1bVslbRg=
+	b=lGReixmQ6zxEFccHCXCw0SpVfCM6Ah5vMKh3whlN2JuPvw+O1RCPjbGaYDMdbzKR3
+	 3Mz9lvG7/5FYo/MHiw2ciFAM7eN9O5BleojcKRJhCwU+CmfiG4quuLNRfESD57hnoE
+	 ntuxI1CXtaYCX6bDO4pjO3bw9Dw/r7r2aJ4INC6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394074AbfHBNX5 (ORCPT
+        id S2405186AbfHBNch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:23:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34292 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:32:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389361AbfHBNXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:23:45 -0400
+        id S1730453AbfHBNX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:23:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AAB021871;
-        Fri,  2 Aug 2019 13:23:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FC7421871;
+        Fri,  2 Aug 2019 13:23:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752224;
-        bh=TFQRTj3/7D8jnoe4BJv+m0z7LgOh2e78JsSqRuTuDww=;
+        s=default; t=1564752237;
+        bh=8f7K031i4FP76JzNvmYkrd181BcKJpbw4yDnNNJNuMk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hRlXPbebioBADVedI644SfVZgP4CbpUoPqpWMcf+VD3dol0nCRuoC3nRPRBMGE0aa
-         IYOLi+pWEWMrU28x3Z4h8se851GzMi8yUbsL2o9IDh0y1w9hpAB1PZ2FcQNSOhaPhn
-         6KjeKH6I25kqRekrQPyCG5yZ0NgrDSmPK15bSvhU=
+        b=iaIkmwfwEezNwS5Y9Vw1SeuZSplp5K1GwvGXCZJmF/1EHVLSgzp8UvwgYjQXc7hCS
+         levBzANEE5xaA6nDq/9a7eQwfgeE6/ic8ssdH66vGxoGPwqJvVjx5wA0+NfrcnfTun
+         arnQb47z2v9gzvG0FjMTMJ3bf6Gh3wSSpuw8El6o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 19/42] drm/msm: stop abusing dma_map/unmap for cache
-Date:   Fri,  2 Aug 2019 09:22:39 -0400
-Message-Id: <20190802132302.13537-19-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Kees Cook <keescook@chromium.org>,
+        Roland Kammerer <roland.kammerer@linbit.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 29/42] drbd: dynamically allocate shash descriptor
+Date:   Fri,  2 Aug 2019 09:22:49 -0400
+Message-Id: <20190802132302.13537-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802132302.13537-1-sashal@kernel.org>
 References: <20190802132302.13537-1-sashal@kernel.org>
@@ -63,83 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 0036bc73ccbe7e600a3468bf8e8879b122252274 ]
+[ Upstream commit 77ce56e2bfaa64127ae5e23ef136c0168b818777 ]
 
-Recently splats like this started showing up:
+Building with clang and KASAN, we get a warning about an overly large
+stack frame on 32-bit architectures:
 
-   WARNING: CPU: 4 PID: 251 at drivers/iommu/dma-iommu.c:451 __iommu_dma_unmap+0xb8/0xc0
-   Modules linked in: ath10k_snoc ath10k_core fuse msm ath mac80211 uvcvideo cfg80211 videobuf2_vmalloc videobuf2_memops vide
-   CPU: 4 PID: 251 Comm: kworker/u16:4 Tainted: G        W         5.2.0-rc5-next-20190619+ #2317
-   Hardware name: LENOVO 81JL/LNVNB161216, BIOS 9UCN23WW(V1.06) 10/25/2018
-   Workqueue: msm msm_gem_free_work [msm]
-   pstate: 80c00005 (Nzcv daif +PAN +UAO)
-   pc : __iommu_dma_unmap+0xb8/0xc0
-   lr : __iommu_dma_unmap+0x54/0xc0
-   sp : ffff0000119abce0
-   x29: ffff0000119abce0 x28: 0000000000000000
-   x27: ffff8001f9946648 x26: ffff8001ec271068
-   x25: 0000000000000000 x24: ffff8001ea3580a8
-   x23: ffff8001f95ba010 x22: ffff80018e83ba88
-   x21: ffff8001e548f000 x20: fffffffffffff000
-   x19: 0000000000001000 x18: 00000000c00001fe
-   x17: 0000000000000000 x16: 0000000000000000
-   x15: ffff000015b70068 x14: 0000000000000005
-   x13: 0003142cc1be1768 x12: 0000000000000001
-   x11: ffff8001f6de9100 x10: 0000000000000009
-   x9 : ffff000015b78000 x8 : 0000000000000000
-   x7 : 0000000000000001 x6 : fffffffffffff000
-   x5 : 0000000000000fff x4 : ffff00001065dbc8
-   x3 : 000000000000000d x2 : 0000000000001000
-   x1 : fffffffffffff000 x0 : 0000000000000000
-   Call trace:
-    __iommu_dma_unmap+0xb8/0xc0
-    iommu_dma_unmap_sg+0x98/0xb8
-    put_pages+0x5c/0xf0 [msm]
-    msm_gem_free_work+0x10c/0x150 [msm]
-    process_one_work+0x1e0/0x330
-    worker_thread+0x40/0x438
-    kthread+0x12c/0x130
-    ret_from_fork+0x10/0x18
-   ---[ end trace afc0dc5ab81a06bf ]---
+drivers/block/drbd/drbd_receiver.c:921:31: error: stack frame size of 1280 bytes in function 'conn_connect'
+      [-Werror,-Wframe-larger-than=]
 
-Not quite sure what triggered that, but we really shouldn't be abusing
-dma_{map,unmap}_sg() for cache maint.
+We already allocate other data dynamically in this function, so
+just do the same for the shash descriptor, which makes up most of
+this memory.
 
-Cc: Stephen Boyd <sboyd@kernel.org>
-Tested-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190630124735.27786-1-robdclark@gmail.com
+Link: https://lore.kernel.org/lkml/20190617132440.2721536-1-arnd@arndb.de/
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Roland Kammerer <roland.kammerer@linbit.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/msm_gem.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/block/drbd/drbd_receiver.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
-index f59ca27a4a357..93b20ad23c23f 100644
---- a/drivers/gpu/drm/msm/msm_gem.c
-+++ b/drivers/gpu/drm/msm/msm_gem.c
-@@ -108,7 +108,7 @@ static struct page **get_pages(struct drm_gem_object *obj)
- 		 * because display controller, GPU, etc. are not coherent:
- 		 */
- 		if (msm_obj->flags & (MSM_BO_WC|MSM_BO_UNCACHED))
--			dma_map_sg(dev->dev, msm_obj->sgt->sgl,
-+			dma_sync_sg_for_device(dev->dev, msm_obj->sgt->sgl,
- 					msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
- 	}
+diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
+index cb919b9640660..3cdadf75c82da 100644
+--- a/drivers/block/drbd/drbd_receiver.c
++++ b/drivers/block/drbd/drbd_receiver.c
+@@ -5240,7 +5240,7 @@ static int drbd_do_auth(struct drbd_connection *connection)
+ 	unsigned int key_len;
+ 	char secret[SHARED_SECRET_MAX]; /* 64 byte */
+ 	unsigned int resp_size;
+-	SHASH_DESC_ON_STACK(desc, connection->cram_hmac_tfm);
++	struct shash_desc *desc;
+ 	struct packet_info pi;
+ 	struct net_conf *nc;
+ 	int err, rv;
+@@ -5253,6 +5253,13 @@ static int drbd_do_auth(struct drbd_connection *connection)
+ 	memcpy(secret, nc->shared_secret, key_len);
+ 	rcu_read_unlock();
  
-@@ -138,7 +138,7 @@ static void put_pages(struct drm_gem_object *obj)
- 			 * GPU, etc. are not coherent:
- 			 */
- 			if (msm_obj->flags & (MSM_BO_WC|MSM_BO_UNCACHED))
--				dma_unmap_sg(obj->dev->dev, msm_obj->sgt->sgl,
-+				dma_sync_sg_for_cpu(obj->dev->dev, msm_obj->sgt->sgl,
- 					     msm_obj->sgt->nents,
- 					     DMA_BIDIRECTIONAL);
++	desc = kmalloc(sizeof(struct shash_desc) +
++		       crypto_shash_descsize(connection->cram_hmac_tfm),
++		       GFP_KERNEL);
++	if (!desc) {
++		rv = -1;
++		goto fail;
++	}
+ 	desc->tfm = connection->cram_hmac_tfm;
+ 	desc->flags = 0;
  
+@@ -5395,7 +5402,10 @@ static int drbd_do_auth(struct drbd_connection *connection)
+ 	kfree(peers_ch);
+ 	kfree(response);
+ 	kfree(right_response);
+-	shash_desc_zero(desc);
++	if (desc) {
++		shash_desc_zero(desc);
++		kfree(desc);
++	}
+ 
+ 	return rv;
+ }
 -- 
 2.20.1
 
