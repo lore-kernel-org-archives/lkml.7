@@ -2,29 +2,29 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78824C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2836AC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53BAA21882
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF32C217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:31:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404442AbfHBNbP (ORCPT
+        id S2404471AbfHBNbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:31:15 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:50602 "EHLO huawei.com"
+        Fri, 2 Aug 2019 09:31:21 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3738 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404401AbfHBNbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:31:10 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 98B08AA14CE5C9058219;
-        Fri,  2 Aug 2019 21:31:07 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Fri, 2 Aug 2019
- 21:30:59 +0800
+        id S2390806AbfHBNbS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:31:18 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 2B2934A726CC38C759D6;
+        Fri,  2 Aug 2019 21:31:15 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Fri, 2 Aug 2019
+ 21:31:07 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <herbert@gondor.apana.org.au>, <lars.persson@axis.com>,
         <jesper.nilsson@axis.com>, <davem@davemloft.net>,
@@ -42,10 +42,12 @@ CC:     <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
         <linux-rockchip@lists.infradead.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 00/12] crypto: use devm_platform_ioremap_resource() to simplify code
-Date:   Fri, 2 Aug 2019 21:27:57 +0800
-Message-ID: <20190802132809.8116-1-yuehaibing@huawei.com>
+Subject: [PATCH -next 02/12] crypto: ccp - use devm_platform_ioremap_resource() to simplify code
+Date:   Fri, 2 Aug 2019 21:27:59 +0800
+Message-ID: <20190802132809.8116-3-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <20190802132809.8116-1-yuehaibing@huawei.com>
+References: <20190802132809.8116-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.133.213.239]
@@ -55,47 +57,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-devm_platform_ioremap_resource() internally have platform_get_resource()
-and devm_ioremap_resource() in it. So instead of calling them separately
-use devm_platform_ioremap_resource() directly.
+Use devm_platform_ioremap_resource() to simplify the code a bit.
+This is detected by coccinelle.
 
-YueHaibing (12):
-  crypto: artpec6 - use devm_platform_ioremap_resource() to simplify
-    code
-  crypto: ccp - use devm_platform_ioremap_resource() to simplify code
-  crypto: exynos - use devm_platform_ioremap_resource() to simplify code
-  crypto: img-hash - use devm_platform_ioremap_resource() to simplify
-    code
-  crypto: inside-secure - use devm_platform_ioremap_resource() to
-    simplify code
-  crypto: mediatek - use devm_platform_ioremap_resource() to simplify
-    code
-  crypto: picoxcell - use devm_platform_ioremap_resource() to simplify
-    code
-  crypto: sunxi-ss - use devm_platform_ioremap_resource() to simplify
-    code
-  crypto: rockchip - use devm_platform_ioremap_resource() to simplify
-    code
-  crypto: stm32 - use devm_platform_ioremap_resource() to simplify code
-  crypto: qce - use devm_platform_ioremap_resource() to simplify code
-  crypto: qcom-rng - use devm_platform_ioremap_resource() to simplify
-    code
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/crypto/ccp/sp-platform.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
- drivers/crypto/axis/artpec6_crypto.c    | 4 +---
- drivers/crypto/ccp/sp-platform.c        | 4 +---
- drivers/crypto/exynos-rng.c             | 4 +---
- drivers/crypto/img-hash.c               | 4 +---
- drivers/crypto/inside-secure/safexcel.c | 4 +---
- drivers/crypto/mediatek/mtk-platform.c  | 3 +--
- drivers/crypto/picoxcell_crypto.c       | 5 ++---
- drivers/crypto/qce/core.c               | 4 +---
- drivers/crypto/qcom-rng.c               | 4 +---
- drivers/crypto/rockchip/rk3288_crypto.c | 4 +---
- drivers/crypto/stm32/stm32-crc32.c      | 4 +---
- drivers/crypto/stm32/stm32-cryp.c       | 4 +---
- drivers/crypto/sunxi-ss/sun4i-ss-core.c | 4 +---
- 13 files changed, 14 insertions(+), 38 deletions(-)
-
+diff --git a/drivers/crypto/ccp/sp-platform.c b/drivers/crypto/ccp/sp-platform.c
+index 1b45236..831aac1 100644
+--- a/drivers/crypto/ccp/sp-platform.c
++++ b/drivers/crypto/ccp/sp-platform.c
+@@ -125,7 +125,6 @@ static int sp_platform_probe(struct platform_device *pdev)
+ 	struct sp_platform *sp_platform;
+ 	struct device *dev = &pdev->dev;
+ 	enum dev_dma_attr attr;
+-	struct resource *ior;
+ 	int ret;
+ 
+ 	ret = -ENOMEM;
+@@ -146,8 +145,7 @@ static int sp_platform_probe(struct platform_device *pdev)
+ 		goto e_err;
+ 	}
+ 
+-	ior = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	sp->io_map = devm_ioremap_resource(dev, ior);
++	sp->io_map = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(sp->io_map)) {
+ 		ret = PTR_ERR(sp->io_map);
+ 		goto e_err;
 -- 
 2.7.4
 
