@@ -2,93 +2,103 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0914C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E9BBC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:32:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A850A2073D
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:32:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1BEA20665
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:32:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564752733;
+	bh=QyJeQ8ZDhZb8D1qFG4o4nHOJ0ZDqIXNBerw2Y22BOL8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=XNFak1ssGInW49ZhkUXVe71v0WRV42OhoQKtmBJP0DatzCydoImv0befsaDHHw+na
+	 gDyDNLn7qBR3qWKzJTvUOGeBrS/Yv7ydrHtPzvnTGkWsH/4jK1FOja5tgMJTu1xUls
+	 Dq4aJnREiv9d925xsHpeDDH+Zuv/LLxYrMW5tYO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404963AbfHBNcC (ORCPT
+        id S2405007AbfHBNcM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:32:02 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3737 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404443AbfHBNbT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:31:19 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 040855C56A2A8F2ACCCA;
-        Fri,  2 Aug 2019 21:31:15 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Fri, 2 Aug 2019
- 21:31:08 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <herbert@gondor.apana.org.au>, <lars.persson@axis.com>,
-        <jesper.nilsson@axis.com>, <davem@davemloft.net>,
-        <thomas.lendacky@amd.com>, <gary.hook@amd.com>, <krzk@kernel.org>,
-        <kgene@kernel.org>, <antoine.tenart@bootlin.com>,
-        <matthias.bgg@gmail.com>, <jamie@jamieiles.com>,
-        <agross@kernel.org>, <heiko@sntech.de>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
-        <clabbe.montjoie@gmail.com>, <mripard@kernel.org>, <wens@csie.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-        <linux-arm-kernel@axis.com>, <linux-samsung-soc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-msm@vger.kernel.org>,
-        <linux-rockchip@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 03/12] crypto: exynos - use devm_platform_ioremap_resource() to simplify code
-Date:   Fri, 2 Aug 2019 21:28:00 +0800
-Message-ID: <20190802132809.8116-4-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-In-Reply-To: <20190802132809.8116-1-yuehaibing@huawei.com>
-References: <20190802132809.8116-1-yuehaibing@huawei.com>
+        Fri, 2 Aug 2019 09:32:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34830 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391003AbfHBNYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:24:10 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20422217D4;
+        Fri,  2 Aug 2019 13:24:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564752249;
+        bh=QyJeQ8ZDhZb8D1qFG4o4nHOJ0ZDqIXNBerw2Y22BOL8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KjDT+fH3LVOl+WMF1QYLyGM5i3en5klyp2BMVcxQOvt1e4tNy9wg4q78kinhqWTaf
+         6BpYXSPvfpD/8MX0Qg40zWZ0DggShmNQnAcYAFuRbXw/ffUAgOx4ReYK89b6xKsTsU
+         YRttPhkRJYDR6JOeU4SG0d9Ruy/0xpiWvuM+60Ck=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 37/42] test_firmware: fix a memory leak bug
+Date:   Fri,  2 Aug 2019 09:22:57 -0400
+Message-Id: <20190802132302.13537-37-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190802132302.13537-1-sashal@kernel.org>
+References: <20190802132302.13537-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource() to simplify the code a bit.
-This is detected by coccinelle.
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+[ Upstream commit d4fddac5a51c378c5d3e68658816c37132611e1f ]
+
+In test_firmware_init(), the buffer pointed to by the global pointer
+'test_fw_config' is allocated through kzalloc(). Then, the buffer is
+initialized in __test_firmware_config_init(). In the case that the
+initialization fails, the following execution in test_firmware_init() needs
+to be terminated with an error code returned to indicate this failure.
+However, the allocated buffer is not freed on this execution path, leading
+to a memory leak bug.
+
+To fix the above issue, free the allocated buffer before returning from
+test_firmware_init().
+
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Link: https://lore.kernel.org/r/1563084696-6865-1-git-send-email-wang6495@umn.edu
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/exynos-rng.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ lib/test_firmware.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/exynos-rng.c b/drivers/crypto/exynos-rng.c
-index 2cfabb9..cbd8ca6 100644
---- a/drivers/crypto/exynos-rng.c
-+++ b/drivers/crypto/exynos-rng.c
-@@ -268,7 +268,6 @@ static struct rng_alg exynos_rng_alg = {
- static int exynos_rng_probe(struct platform_device *pdev)
- {
- 	struct exynos_rng_dev *rng;
--	struct resource *res;
- 	int ret;
+diff --git a/lib/test_firmware.c b/lib/test_firmware.c
+index fd48a15a0710c..a74b1aae74618 100644
+--- a/lib/test_firmware.c
++++ b/lib/test_firmware.c
+@@ -894,8 +894,11 @@ static int __init test_firmware_init(void)
+ 		return -ENOMEM;
  
- 	if (exynos_rng_dev)
-@@ -289,8 +288,7 @@ static int exynos_rng_probe(struct platform_device *pdev)
- 		return PTR_ERR(rng->clk);
- 	}
+ 	rc = __test_firmware_config_init();
+-	if (rc)
++	if (rc) {
++		kfree(test_fw_config);
++		pr_err("could not init firmware test config: %d\n", rc);
+ 		return rc;
++	}
  
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	rng->mem = devm_ioremap_resource(&pdev->dev, res);
-+	rng->mem = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(rng->mem))
- 		return PTR_ERR(rng->mem);
- 
+ 	rc = misc_register(&test_fw_misc_device);
+ 	if (rc) {
 -- 
-2.7.4
-
+2.20.1
 
