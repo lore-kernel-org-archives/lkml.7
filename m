@@ -2,64 +2,107 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9ACC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 02:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D77C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 02:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B92D206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 02:28:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 042262083B
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 02:30:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kiufhAOm";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Mdlrqe1U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730008AbfHBC20 (ORCPT
+        id S1728534AbfHBCak (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 22:28:26 -0400
-Received: from ozlabs.org ([203.11.71.1]:42535 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728729AbfHBC2Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 22:28:24 -0400
-Received: by ozlabs.org (Postfix, from userid 1034)
-        id 460B0k6y1Hz9sDB; Fri,  2 Aug 2019 12:28:22 +1000 (AEST)
-X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: 7440ea8b2a4430eef5120d0a7faac6c39304ae6d
-In-Reply-To: <20190730143704.060a2606@canb.auug.org.au>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>
-From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     Linux kernel Mailing List <linux-kernel@vger.kernel.org>,
-        PowerPC <linuxppc-dev@lists.ozlabs.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH] drivers/macintosh/smu.c: Mark expected switch fall-through
-Message-Id: <460B0k6y1Hz9sDB@ozlabs.org>
-Date:   Fri,  2 Aug 2019 12:28:22 +1000 (AEST)
+        Thu, 1 Aug 2019 22:30:40 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:33094 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726756AbfHBCaj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 22:30:39 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 176CF60CED; Fri,  2 Aug 2019 02:30:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564713038;
+        bh=OZ0F8RORaUhH2iVexwHKq9tgLEmJGbcN3e+e3jjLA1I=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=kiufhAOmCEiVcEp97nEuTYC2w1MGipbICKkEQIdgiLFyR1No3s7yUTkeDqvcr8/oO
+         aBYmxBtCq1UST+hKFViRiw9+jVavDYCRlPNaL/Bqv+6VVoO2Ml6qGAq7jhNZiSOTSh
+         T1gjWhQ7mhiw9k+AOGKZH9vzUVfRtNjDH9fgx2Sc=
+Received: from [10.79.43.141] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A305461FE0;
+        Fri,  2 Aug 2019 02:30:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564713036;
+        bh=OZ0F8RORaUhH2iVexwHKq9tgLEmJGbcN3e+e3jjLA1I=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Mdlrqe1U7jv3NXPMi3YJzB7dSTLfVwftvLyVTVU2F+eszwTmqpI8MOP4Mv4N/0rQh
+         5DIb/5GmekgB+l3I3kLsd9/enQbi/l1ndeRhPkd1uiiWz/0Cskl9MzoFnNx1ffyLfN
+         +nEZOA7rz1rtsy3yRUiObJMALYn50Qax/FRdS67Y=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A305461FE0
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH 2/2] pinctrl: qcom: Add SC7180 pinctrl driver
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, robh+dt@kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jitendra Sharma <shajit@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>
+References: <20190801100717.23333-1-rnayak@codeaurora.org>
+ <20190801100717.23333-2-rnayak@codeaurora.org>
+ <20190801143637.GY7234@tuxbook-pro>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <2f530ba7-684b-156b-5fe3-3577d574a03d@codeaurora.org>
+Date:   Fri, 2 Aug 2019 08:00:31 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190801143637.GY7234@tuxbook-pro>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-07-30 at 04:37:04 UTC, Stephen Rothwell wrote:
-> Mark switch cases where we are expecting to fall through.
-> 
-> This patch fixes the following warning (Building: powerpc):
-> 
-> drivers/macintosh/smu.c: In function 'smu_queue_i2c':
-> drivers/macintosh/smu.c:854:21: warning: this statement may fall through [-=
-> Wimplicit-fallthrough=3D]
->    cmd->info.devaddr &=3D 0xfe;
->    ~~~~~~~~~~~~~~~~~~^~~~~~~
-> drivers/macintosh/smu.c:855:2: note: here
->   case SMU_I2C_TRANSFER_STDSUB:
->   ^~~~
-> 
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 
-Applied to powerpc fixes, thanks.
 
-https://git.kernel.org/powerpc/c/7440ea8b2a4430eef5120d0a7faac6c39304ae6d
+On 8/1/2019 8:06 PM, Bjorn Andersson wrote:
+> On Thu 01 Aug 03:07 PDT 2019, Rajendra Nayak wrote:
+> 
+> [..]
+>> +static const struct msm_pingroup sc7180_groups[] = {
+>> +	[0] = PINGROUP(0, SOUTH, qup01, cri_trng, _, phase_flag, _, _, _, _, _),
+>> +	[1] = PINGROUP(1, SOUTH, qup01, cri_trng, _, phase_flag, _, _, _, _, _),
+>> +	[2] = PINGROUP(2, SOUTH, qup01, cri_trng, _, phase_flag, _, _, _, _, _),
+>> +	[3] = PINGROUP(3, SOUTH, qup01, sp_cmu, dbg_out, qdss_cti, _, _, _, _, _),
+>> +	[4] = PINGROUP(4, NORTH, sdc1_tb, _, qdss_cti, _, _, _, _, _, _), [5] = PINGROUP(5, NORTH, sdc2_tb, _, _, _, _, _, _, _, _),
+>> +	[6] = PINGROUP(6, NORTH, qup11, qup11, _, _, _, _, _, _, _), [7] = PINGROUP(7, NORTH, qup11, qup11, ddr_bist, _, _, _, _, _, _),
+> 
+> 5 and 7 deserve to be on their own line :)
 
-cheers
+Oops, looks like some formatting mess, I'll fix and resend.
+
+> 
+> Apart from that:
+> 
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+thanks for the review.
+
+> 
+> Regards,
+> Bjorn
+> 
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
