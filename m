@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E0AC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D3AC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E05320B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:46:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AD1D2086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:46:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739213;
-	bh=B3N0AF6AE4z8ZzZwJ+atXb29yIaT77y+HGMjF6vy1r4=;
+	s=default; t=1564739215;
+	bh=QnRODtU+IhQ9R5ywnjwo5VAXF8+yANFaGCE63gBLPss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZLR6eUT3XT7kL2JD5po7BodvaxwtBF4/OppskUXlJ8PPkYRvr05qjdV/CeBqVo7XQ
-	 Te0qbwVLG2swUYAu5TU00YPFpaR5oogajTcGnjWQ+DQc3V/XgNm1oUZsaAvJh6caJM
-	 /66D7xg1pHOtoEJvGTED9rwyccNEZbEIWdx3pHXU=
+	b=KP09qWLG59pfUIM4WkhIj90LLQfDhlgGEsMGHw0QJJSACNGFavktSCwULlQe7mFqW
+	 csURkQOA3czpVFQ8tsRTfrWirNI+QSIYTO2DAVndyINOboJmMSP6dTfJCZ8HJp6EZk
+	 n1Sc/tcJa0C/vR+ynFO1gQfMCIBHhck00+RBJ7+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405606AbfHBJqw (ORCPT
+        id S2405618AbfHBJqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:46:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51338 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:46:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392054AbfHBJqr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:46:47 -0400
+        id S2392071AbfHBJqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:46:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 712BB20B7C;
-        Fri,  2 Aug 2019 09:46:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0398C2086A;
+        Fri,  2 Aug 2019 09:46:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739205;
-        bh=B3N0AF6AE4z8ZzZwJ+atXb29yIaT77y+HGMjF6vy1r4=;
+        s=default; t=1564739208;
+        bh=QnRODtU+IhQ9R5ywnjwo5VAXF8+yANFaGCE63gBLPss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gYrNz2ID3j395blOdm5ZdEiTZIvBWyrtbPxFyOhpa8eNCdE4nk6KjEbyzAS/M+oIw
-         qshkig+ykWH2rAJZaVVbfyICn65C2o3q2w/0Uq00VEUMCqyIn1ermftMrUInZHhC9o
-         k25BcE1nHL37fQaS38EBAUUOXgRjjLplHJ4uq1Jo=
+        b=V5yky6alrmucaqX5P7ID953rcxLrx1gUgRdVuo7mJcnncYoaXlxSos1iXFpgZSAcm
+         T/fIqtWvFxxKdTq+/ionSKBRTXCbwjKUubJUKJnuT/+6AT5806W3M3JZQ7Ss0VDQEN
+         tU61AYQDA6addrV92u8w8AQ3uyrflPmat0yA7wOI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sudarsana Reddy Kalluru <skalluru@marvell.com>,
-        "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Przemyslaw Hausman <przemyslaw.hausman@canonical.com>
-Subject: [PATCH 4.9 130/223] bnx2x: Prevent ptp_task to be rescheduled indefinitely
-Date:   Fri,  2 Aug 2019 11:35:55 +0200
-Message-Id: <20190802092247.406615892@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Christoph Paasch <cpaasch@apple.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 147/223] tcp: Reset bytes_acked and bytes_received when disconnecting
+Date:   Fri,  2 Aug 2019 11:36:12 +0200
+Message-Id: <20190802092248.090760100@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -62,144 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+From: Christoph Paasch <cpaasch@apple.com>
 
-[ Upstream commit 3c91f25c2f72ba6001775a5932857c1d2131c531 ]
+[ Upstream commit e858faf556d4e14c750ba1e8852783c6f9520a0e ]
 
-Currently bnx2x ptp worker tries to read a register with timestamp
-information in case of TX packet timestamping and in case it fails,
-the routine reschedules itself indefinitely. This was reported as a
-kworker always at 100% of CPU usage, which was narrowed down to be
-bnx2x ptp_task.
+If an app is playing tricks to reuse a socket via tcp_disconnect(),
+bytes_acked/received needs to be reset to 0. Otherwise tcp_info will
+report the sum of the current and the old connection..
 
-By following the ioctl handler, we could narrow down the problem to
-an NTP tool (chrony) requesting HW timestamping from bnx2x NIC with
-RX filter zeroed; this isn't reproducible for example with ptp4l
-(from linuxptp) since this tool requests a supported RX filter.
-It seems NIC FW timestamp mechanism cannot work well with
-RX_FILTER_NONE - driver's PTP filter init routine skips a register
-write to the adapter if there's not a supported filter request.
-
-This patch addresses the problem of bnx2x ptp thread's everlasting
-reschedule by retrying the register read 10 times; between the read
-attempts the thread sleeps for an increasing amount of time starting
-in 1ms to give FW some time to perform the timestamping. If it still
-fails after all retries, we bail out in order to prevent an unbound
-resource consumption from bnx2x.
-
-The patch also adds an ethtool statistic for accounting the skipped
-TX timestamp packets and it reduces the priority of timestamping
-error messages to prevent log flooding. The code was tested using
-both linuxptp and chrony.
-
-Reported-and-tested-by: Przemyslaw Hausman <przemyslaw.hausman@canonical.com>
-Suggested-by: Sudarsana Reddy Kalluru <skalluru@marvell.com>
-Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
-Acked-by: Sudarsana Reddy Kalluru <skalluru@marvell.com>
+Cc: Eric Dumazet <edumazet@google.com>
+Fixes: 0df48c26d841 ("tcp: add tcpi_bytes_acked to tcp_info")
+Fixes: bdd1f9edacb5 ("tcp: add tcpi_bytes_received to tcp_info")
+Signed-off-by: Christoph Paasch <cpaasch@apple.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c     |    5 ++-
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c |    4 +-
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c    |   33 ++++++++++++++------
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_stats.h   |    3 +
- 4 files changed, 34 insertions(+), 11 deletions(-)
+ net/ipv4/tcp.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
-@@ -3863,9 +3863,12 @@ netdev_tx_t bnx2x_start_xmit(struct sk_b
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -2312,6 +2312,8 @@ int tcp_disconnect(struct sock *sk, int
+ 	dst_release(sk->sk_rx_dst);
+ 	sk->sk_rx_dst = NULL;
+ 	tcp_saved_syn_free(tp);
++	tp->bytes_acked = 0;
++	tp->bytes_received = 0;
  
- 	if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP)) {
- 		if (!(bp->flags & TX_TIMESTAMPING_EN)) {
-+			bp->eth_stats.ptp_skip_tx_ts++;
- 			BNX2X_ERR("Tx timestamping was not enabled, this packet will not be timestamped\n");
- 		} else if (bp->ptp_tx_skb) {
--			BNX2X_ERR("The device supports only a single outstanding packet to timestamp, this packet will not be timestamped\n");
-+			bp->eth_stats.ptp_skip_tx_ts++;
-+			dev_err_once(&bp->dev->dev,
-+					"Device supports only a single outstanding packet to timestamp, this packet won't be timestamped\n");
- 		} else {
- 			skb_shinfo(skb)->tx_flags |= SKBTX_IN_PROGRESS;
- 			/* schedule check for Tx timestamp */
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
-@@ -182,7 +182,9 @@ static const struct {
- 	{ STATS_OFFSET32(driver_filtered_tx_pkt),
- 				4, false, "driver_filtered_tx_pkt" },
- 	{ STATS_OFFSET32(eee_tx_lpi),
--				4, true, "Tx LPI entry count"}
-+				4, true, "Tx LPI entry count"},
-+	{ STATS_OFFSET32(ptp_skip_tx_ts),
-+				4, false, "ptp_skipped_tx_tstamp" },
- };
+ 	WARN_ON(inet->inet_num && !icsk->icsk_bind_hash);
  
- #define BNX2X_NUM_STATS		ARRAY_SIZE(bnx2x_stats_arr)
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-@@ -15261,11 +15261,24 @@ static void bnx2x_ptp_task(struct work_s
- 	u32 val_seq;
- 	u64 timestamp, ns;
- 	struct skb_shared_hwtstamps shhwtstamps;
-+	bool bail = true;
-+	int i;
- 
--	/* Read Tx timestamp registers */
--	val_seq = REG_RD(bp, port ? NIG_REG_P1_TLLH_PTP_BUF_SEQID :
--			 NIG_REG_P0_TLLH_PTP_BUF_SEQID);
--	if (val_seq & 0x10000) {
-+	/* FW may take a while to complete timestamping; try a bit and if it's
-+	 * still not complete, may indicate an error state - bail out then.
-+	 */
-+	for (i = 0; i < 10; i++) {
-+		/* Read Tx timestamp registers */
-+		val_seq = REG_RD(bp, port ? NIG_REG_P1_TLLH_PTP_BUF_SEQID :
-+				 NIG_REG_P0_TLLH_PTP_BUF_SEQID);
-+		if (val_seq & 0x10000) {
-+			bail = false;
-+			break;
-+		}
-+		msleep(1 << i);
-+	}
-+
-+	if (!bail) {
- 		/* There is a valid timestamp value */
- 		timestamp = REG_RD(bp, port ? NIG_REG_P1_TLLH_PTP_BUF_TS_MSB :
- 				   NIG_REG_P0_TLLH_PTP_BUF_TS_MSB);
-@@ -15280,16 +15293,18 @@ static void bnx2x_ptp_task(struct work_s
- 		memset(&shhwtstamps, 0, sizeof(shhwtstamps));
- 		shhwtstamps.hwtstamp = ns_to_ktime(ns);
- 		skb_tstamp_tx(bp->ptp_tx_skb, &shhwtstamps);
--		dev_kfree_skb_any(bp->ptp_tx_skb);
--		bp->ptp_tx_skb = NULL;
- 
- 		DP(BNX2X_MSG_PTP, "Tx timestamp, timestamp cycles = %llu, ns = %llu\n",
- 		   timestamp, ns);
- 	} else {
--		DP(BNX2X_MSG_PTP, "There is no valid Tx timestamp yet\n");
--		/* Reschedule to keep checking for a valid timestamp value */
--		schedule_work(&bp->ptp_task);
-+		DP(BNX2X_MSG_PTP,
-+		   "Tx timestamp is not recorded (register read=%u)\n",
-+		   val_seq);
-+		bp->eth_stats.ptp_skip_tx_ts++;
- 	}
-+
-+	dev_kfree_skb_any(bp->ptp_tx_skb);
-+	bp->ptp_tx_skb = NULL;
- }
- 
- void bnx2x_set_rx_ts(struct bnx2x *bp, struct sk_buff *skb)
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_stats.h
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_stats.h
-@@ -207,6 +207,9 @@ struct bnx2x_eth_stats {
- 	u32 driver_filtered_tx_pkt;
- 	/* src: Clear-on-Read register; Will not survive PMF Migration */
- 	u32 eee_tx_lpi;
-+
-+	/* PTP */
-+	u32 ptp_skip_tx_ts;
- };
- 
- struct bnx2x_eth_q_stats {
 
 
