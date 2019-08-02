@@ -4,50 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B59C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0564CC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B849B217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0116217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:26:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752393;
-	bh=Zlu+FMluWUdLvCE9sgOpTHdimenP8JMa4OO4KuQ0GuE=;
+	s=default; t=1564752395;
+	bh=zB+Z+g3Ay1NKJokH8//VVXoCdVDmA4Yj9TH+lfLHBQQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rV0Il1hFabdHn7nyboxexy77wH7gzZgt69LxQFhhsrzRm3n6ORk9Qh+c6dRxXgwWq
-	 eNR4d5XHRQOUV+trPzIAW+5VcFxjSRTFvh+eG9gL5XnJan2vP+EokF0QB15Yot+GPh
-	 psLnfsS9myCY3JXopSUmuH/0LKJf0zM11iDIUngg=
+	b=ZX+e8kf60soTSI6CLfujkL6xvD+wmk7chNazIl+bCTzmmedledZgbvKBx7ICCCPiP
+	 RdHjd+jN5NC7j99pjArmtN2GHIkPxTXzornkbrB5plXoJ58GDMVnRydXLfMOPkSCL9
+	 anKj5eu8UuGbb9cmeonKbJrdlDm6g1DdFvvOOqK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394595AbfHBN0b (ORCPT
+        id S2394603AbfHBN0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:26:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37228 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:26:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391562AbfHBN01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:26:27 -0400
+        id S2394592AbfHBN0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:26:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BDD8217D4;
-        Fri,  2 Aug 2019 13:26:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D54921851;
+        Fri,  2 Aug 2019 13:26:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752387;
-        bh=Zlu+FMluWUdLvCE9sgOpTHdimenP8JMa4OO4KuQ0GuE=;
+        s=default; t=1564752390;
+        bh=zB+Z+g3Ay1NKJokH8//VVXoCdVDmA4Yj9TH+lfLHBQQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sS9ht+9WTGf79LH2cxq60+Czy3UMBeZx8q3Cq+osxw9XfwTFTgc8zIdVtaKYaQ2Jc
-         2okFuvyI3qXgGUvEbhleetNs09lSY/Jtwd1DlGJ+Rj/G/gZUjFzNaL7Rs5ZehvMvYJ
-         xLDtSke27X9Y5dPde/OKPjjCpG9j6bdDhD6YPOIs=
+        b=TroKNuFTwGzcK377UsYpw43BPaCZapNTRhhSnZxqwmRshud1ishHl16Q2ZTLEesvH
+         crtaTkPZINBPGKTDBDTyegZpy+K9vOfbc5qpExioRaFiVQkDVZhCKzKpWHrA+S5cwf
+         wuYOqZt1SbNM6JyGZUd5khKpe8g+G9/yDa3yNeqU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hannes Reinecke <hare@suse.de>, Hannes Reinecke <hare@suse.com>,
-        Zhangguanghui <zhang.guanghui@h3c.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 20/22] scsi: scsi_dh_alua: always use a 2 second delay before retrying RTPG
-Date:   Fri,  2 Aug 2019 09:25:44 -0400
-Message-Id: <20190802132547.14517-20-sashal@kernel.org>
+Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Frank Li <Frank.li@nxp.com>, Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 22/22] perf/core: Fix creating kernel counters for PMUs that override event->cpu
+Date:   Fri,  2 Aug 2019 09:25:46 -0400
+Message-Id: <20190802132547.14517-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802132547.14517-1-sashal@kernel.org>
 References: <20190802132547.14517-1-sashal@kernel.org>
@@ -60,61 +67,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hannes Reinecke <hare@suse.de>
+From: Leonard Crestez <leonard.crestez@nxp.com>
 
-[ Upstream commit 20122994e38aef0ae50555884d287adde6641c94 ]
+[ Upstream commit 4ce54af8b33d3e21ca935fc1b89b58cbba956051 ]
 
-Retrying immediately after we've received a 'transitioning' sense code is
-pretty much pointless, we should always use a delay before retrying.  So
-ensure the default delay is applied before retrying.
+Some hardware PMU drivers will override perf_event.cpu inside their
+event_init callback. This causes a lockdep splat when initialized through
+the kernel API:
 
-Signed-off-by: Hannes Reinecke <hare@suse.com>
-Tested-by: Zhangguanghui <zhang.guanghui@h3c.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+ WARNING: CPU: 0 PID: 250 at kernel/events/core.c:2917 ctx_sched_out+0x78/0x208
+ pc : ctx_sched_out+0x78/0x208
+ Call trace:
+  ctx_sched_out+0x78/0x208
+  __perf_install_in_context+0x160/0x248
+  remote_function+0x58/0x68
+  generic_exec_single+0x100/0x180
+  smp_call_function_single+0x174/0x1b8
+  perf_install_in_context+0x178/0x188
+  perf_event_create_kernel_counter+0x118/0x160
+
+Fix this by calling perf_install_in_context with event->cpu, just like
+perf_event_open
+
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Frank Li <Frank.li@nxp.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will@kernel.org>
+Link: https://lkml.kernel.org/r/c4ebe0503623066896d7046def4d6b1e06e0eb2e.1563972056.git.leonard.crestez@nxp.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/device_handler/scsi_dh_alua.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ kernel/events/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/device_handler/scsi_dh_alua.c b/drivers/scsi/device_handler/scsi_dh_alua.c
-index d3145799b92fa..98787588247bf 100644
---- a/drivers/scsi/device_handler/scsi_dh_alua.c
-+++ b/drivers/scsi/device_handler/scsi_dh_alua.c
-@@ -53,6 +53,7 @@
- #define ALUA_FAILOVER_TIMEOUT		60
- #define ALUA_FAILOVER_RETRIES		5
- #define ALUA_RTPG_DELAY_MSECS		5
-+#define ALUA_RTPG_RETRY_DELAY		2
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 93d7333c64d89..5bbf7537a6121 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -10130,7 +10130,7 @@ perf_event_create_kernel_counter(struct perf_event_attr *attr, int cpu,
+ 		goto err_unlock;
+ 	}
  
- /* device handler flags */
- #define ALUA_OPTIMIZE_STPG		0x01
-@@ -681,7 +682,7 @@ static int alua_rtpg(struct scsi_device *sdev, struct alua_port_group *pg)
- 	case SCSI_ACCESS_STATE_TRANSITIONING:
- 		if (time_before(jiffies, pg->expiry)) {
- 			/* State transition, retry */
--			pg->interval = 2;
-+			pg->interval = ALUA_RTPG_RETRY_DELAY;
- 			err = SCSI_DH_RETRY;
- 		} else {
- 			struct alua_dh_data *h;
-@@ -809,6 +810,8 @@ static void alua_rtpg_work(struct work_struct *work)
- 				spin_lock_irqsave(&pg->lock, flags);
- 				pg->flags &= ~ALUA_PG_RUNNING;
- 				pg->flags |= ALUA_PG_RUN_RTPG;
-+				if (!pg->interval)
-+					pg->interval = ALUA_RTPG_RETRY_DELAY;
- 				spin_unlock_irqrestore(&pg->lock, flags);
- 				queue_delayed_work(alua_wq, &pg->rtpg_work,
- 						   pg->interval * HZ);
-@@ -820,6 +823,8 @@ static void alua_rtpg_work(struct work_struct *work)
- 		spin_lock_irqsave(&pg->lock, flags);
- 		if (err == SCSI_DH_RETRY || pg->flags & ALUA_PG_RUN_RTPG) {
- 			pg->flags &= ~ALUA_PG_RUNNING;
-+			if (!pg->interval && !(pg->flags & ALUA_PG_RUN_RTPG))
-+				pg->interval = ALUA_RTPG_RETRY_DELAY;
- 			pg->flags |= ALUA_PG_RUN_RTPG;
- 			spin_unlock_irqrestore(&pg->lock, flags);
- 			queue_delayed_work(alua_wq, &pg->rtpg_work,
+-	perf_install_in_context(ctx, event, cpu);
++	perf_install_in_context(ctx, event, event->cpu);
+ 	perf_unpin_context(ctx);
+ 	mutex_unlock(&ctx->mutex);
+ 
 -- 
 2.20.1
 
