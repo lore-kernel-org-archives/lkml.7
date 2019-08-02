@@ -2,74 +2,98 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE823C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 17:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B498C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 17:20:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2E9321783
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 17:20:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564766422;
-	bh=wff88TISwv4kNTmhGtyEipuGD0E7PUtarxD7H8iS0SE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Sn5L9WJwi0JdGR21hpnr9ZlSf581fZaKJ3Ygp17NLRRBoo/phthYNBHBZTlaY7Nbd
-	 nPJ/jh+D7q39h61toISH5IlNMCUyQfErWSs7nWi2aaHXcUYqB+Vg/4v9qySGGpugTw
-	 0xFPI5EQU1lYQSoiGqKWNpooI9axtRpbJdXgtqn0=
+	by mail.kernel.org (Postfix) with ESMTP id 0A2C121773
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 17:20:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391831AbfHBRUV (ORCPT
+        id S2404608AbfHBRUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 13:20:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42316 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 13:20:55 -0400
+Received: from mga09.intel.com ([134.134.136.24]:2727 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388134AbfHBRUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 13:20:20 -0400
-Received: from localhost (unknown [106.51.106.149])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31F5820B7C;
-        Fri,  2 Aug 2019 17:20:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564766420;
-        bh=wff88TISwv4kNTmhGtyEipuGD0E7PUtarxD7H8iS0SE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=E+tR6OQhKe0wWMRkqMN6KQnpI/DTVmFk6QzZqPkddtBsUHhvPPUzYN6L8BR3jPuE7
-         tcbJ8KWr5Pf3vlSnPQyz0HzUkzARjcEJhXYa5Pzhwt/rmTqufeydN74lJ4yrTyCyil
-         9WrtKkDgs504UqUzV6oeNBXNtRGaE4bgLCGLtAF4=
-Date:   Fri, 2 Aug 2019 22:49:06 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+        id S2388134AbfHBRUz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 13:20:55 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Aug 2019 10:20:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,338,1559545200"; 
+   d="scan'208";a="191888588"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 02 Aug 2019 10:20:54 -0700
+Received: from cwhanson-mobl.amr.corp.intel.com (unknown [10.252.133.191])
+        by linux.intel.com (Postfix) with ESMTP id EC81358046F;
+        Fri,  2 Aug 2019 10:20:52 -0700 (PDT)
+Subject: Re: [RFC PATCH 19/40] soundwire: bus: improve dynamic debug comments
+ for enumeration
+To:     Vinod Koul <vkoul@kernel.org>
 Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
         tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
         jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [RFC PATCH 26/40] soundwire: cadence_master: fix divider setting
- in clock register
-Message-ID: <20190802171906.GB12733@vkoul-mobl.Dlink>
+        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>
 References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
- <20190725234032.21152-27-pierre-louis.bossart@linux.intel.com>
+ <20190725234032.21152-20-pierre-louis.bossart@linux.intel.com>
+ <20190802170041.GW12733@vkoul-mobl.Dlink>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <db5b56ff-c6e1-32a8-628c-13b42379c4cb@linux.intel.com>
+Date:   Fri, 2 Aug 2019 12:20:52 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190725234032.21152-27-pierre-louis.bossart@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190802170041.GW12733@vkoul-mobl.Dlink>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25-07-19, 18:40, Pierre-Louis Bossart wrote:
-> From: Rander Wang <rander.wang@linux.intel.com>
+On 8/2/19 12:00 PM, Vinod Koul wrote:
+> On 25-07-19, 18:40, Pierre-Louis Bossart wrote:
+>> update comments to provide better understanding of enumeration flows.
+>>
+>> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+>> ---
+>>   drivers/soundwire/bus.c | 5 ++++-
+>>   1 file changed, 4 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
+>> index bca378806d00..2354675ef104 100644
+>> --- a/drivers/soundwire/bus.c
+>> +++ b/drivers/soundwire/bus.c
+>> @@ -483,7 +483,8 @@ static int sdw_assign_device_num(struct sdw_slave *slave)
+>>   
+>>   	ret = sdw_write(slave, SDW_SCP_DEVNUMBER, dev_num);
+>>   	if (ret < 0) {
+>> -		dev_err(&slave->dev, "Program device_num failed: %d\n", ret);
+>> +		dev_err(&slave->dev, "Program device_num %d failed: %d\n",
+>> +			dev_num, ret);
+>>   		return ret;
+>>   	}
+>>   
+>> @@ -540,6 +541,7 @@ static int sdw_program_device_num(struct sdw_bus *bus)
+>>   	do {
+>>   		ret = sdw_transfer(bus, &msg);
+>>   		if (ret == -ENODATA) { /* end of device id reads */
+>> +			dev_dbg(bus->dev, "No more devices to enumerate\n");
+>>   			ret = 0;
+>>   			break;
+>>   		}
+>> @@ -982,6 +984,7 @@ int sdw_handle_slave_status(struct sdw_bus *bus,
+>>   	int i, ret = 0;
+>>   
+>>   	if (status[0] == SDW_SLAVE_ATTACHED) {
+>> +		dev_err(bus->dev, "Slave attached, programming device number\n");
 > 
-> The existing code uses an OR operation which would mix the original
-> divider setting with the new one, resulting in an invalid
-> configuration that can make codecs hang.
+> This should be debug level
 
-This looked fine but fails to apply, feel free to send as a fix
+yes, good catch, will fix.
 
--- 
-~Vinod
