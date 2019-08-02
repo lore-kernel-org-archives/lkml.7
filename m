@@ -2,236 +2,163 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C41DDC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC9DC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8553E21726
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:06:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="abum6jWt"
+	by mail.kernel.org (Postfix) with ESMTP id 6CBFC20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:07:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390342AbfHBOGW (ORCPT
+        id S2436600AbfHBOHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 10:06:22 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:40731 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728714AbfHBOGV (ORCPT
+        Fri, 2 Aug 2019 10:07:48 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:42448 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727024AbfHBOHr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 10:06:21 -0400
-Received: by mail-ed1-f68.google.com with SMTP id k8so72464428eds.7
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 07:06:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=p1KbwWigVt4fPabp1PFOSuWAjFwg5XXZ5xw32khObXU=;
-        b=abum6jWtI06IzQi92RY7wBkZcRWpAJN9L98U26jHEw7mz51UiJ10czXj1+jLNnKXXH
-         ddW1pa0TIOvUAnwJ4pxNyD8wvPRfV/l8Hg5EWt2f6s1yrLHeFV4JOlesmdS1ik/vkJjJ
-         5DFXSoH6+dVof4FN7sJiaFAIl787oeGMwqdAg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=p1KbwWigVt4fPabp1PFOSuWAjFwg5XXZ5xw32khObXU=;
-        b=XeP0oOaqJ9tgWCfCAm3r8XxAekeiArW0dnBVSCz4K4bNbcJlH3jgfpQbcPyFSHjCw6
-         yUUe0e7dVjyOUCib6RBj2gHnSZVak/fyb+km7YAb17XN2AN0LVLsx4kyr4w6bTJM3T+8
-         ZhuDyLJTwNtF8h2xFj4ol3FW/QHUM+JjjYY2B27rfkTJSpTBOhBkWmB2+IVien6uFEqu
-         A42iPdspPcNnb5TlTmbIwX826zJQiNffB+bnajp6t5pl4toGTKKLErbmeiMhkqYuinTy
-         +eV5ZiYbg7QOkjgoLO0NPkJR/kTMfR3S2iMOHzS0t4925O5xDi+k6HVxKsBkrd6eSTY0
-         5IKw==
-X-Gm-Message-State: APjAAAVrxEVyWWFQYN2rwp76xjcfx7C89yGKOtXh73FXd+y1x5XaNFHs
-        tyu4PgWsUJ/1Jdgf/0wt0qk=
-X-Google-Smtp-Source: APXvYqxIKtpjCYsHchgchG2dJLleNo/WK0qX+MScSUhXnTDIghKPIHG/6otAtiBcYt4kc29kBRcuDA==
-X-Received: by 2002:a17:906:1292:: with SMTP id k18mr106811258ejb.146.1564754779811;
-        Fri, 02 Aug 2019 07:06:19 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id f24sm17778831edt.82.2019.08.02.07.06.18
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 02 Aug 2019 07:06:18 -0700 (PDT)
-Date:   Fri, 2 Aug 2019 16:06:16 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Brian Starkey <Brian.Starkey@arm.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>,
-        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
-        Liviu Dudau <Liviu.Dudau@arm.com>,
-        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "seanpaul@chromium.org" <seanpaul@chromium.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "eric@anholt.net" <eric@anholt.net>,
-        "kieran.bingham+renesas@ideasonboard.com" 
-        <kieran.bingham+renesas@ideasonboard.com>,
-        "sean@poorly.run" <sean@poorly.run>,
-        "laurent.pinchart@ideasonboard.com" 
-        <laurent.pinchart@ideasonboard.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>, nd <nd@arm.com>
-Subject: Re: [PATCH v1 2/2] drm: Clear the fence pointer when writeback job
- signaled
-Message-ID: <20190802140616.GM7444@phenom.ffwll.local>
-Mail-Followup-To: Brian Starkey <Brian.Starkey@arm.com>,
-        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
-        Liviu Dudau <Liviu.Dudau@arm.com>,
-        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
-        "seanpaul@chromium.org" <seanpaul@chromium.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "eric@anholt.net" <eric@anholt.net>,
-        "kieran.bingham+renesas@ideasonboard.com" <kieran.bingham+renesas@ideasonboard.com>,
-        "sean@poorly.run" <sean@poorly.run>,
-        "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
-        nd <nd@arm.com>
-References: <1564571048-15029-1-git-send-email-lowry.li@arm.com>
- <1564571048-15029-3-git-send-email-lowry.li@arm.com>
- <20190731132002.dut5mdsqgh7b75iv@DESKTOP-E1NTVVP.localdomain>
- <20190802092920.4la5cwrltv2m6dke@DESKTOP-E1NTVVP.localdomain>
- <CAKMK7uEZaFEcs90+U3vzgH69+95BD58Dt=J=gT6=n6oah5Nbyg@mail.gmail.com>
- <CAKMK7uH38rxyTyuYRGJ6NBejyUxQ6Qvr1CdjH2kpXiq+3-=t8Q@mail.gmail.com>
- <20190802100904.blnusnieti3pxgxu@DESKTOP-E1NTVVP.localdomain>
+        Fri, 2 Aug 2019 10:07:47 -0400
+Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
+  Allan.Nielsen@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Allan.Nielsen@microchip.com";
+  x-sender="Allan.Nielsen@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa1.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Allan.Nielsen@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa1.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Allan.Nielsen@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: x1LHmedL7ls3R/h6Jw6tQnIb/1X0uBsvLs/st1loJMk/Q/zF0/kX1BBaMGC+RZd1k9di5v+WA9
+ hvHVHZRw/NH1Q2fdbbgmwJ0DmMT/hJn4YCekO78br0LPZ1lni1nRA3QxwN9cIvRdVgOmIBD5FI
+ x5nQIJLRF3oapC76Br8bUFqI3CJWz78cqrG9+GWC0hmYBauxvKjnGto2sFngGPvQP99CONxHzm
+ 68H/lr7+vB5mzBkoOd15On5ZiMI/05eGdOoxHIBv2uOjrHZ7ZnWNqc26Hos9rjGltd87bBBeMt
+ nLM=
+X-IronPort-AV: E=Sophos;i="5.64,338,1559545200"; 
+   d="scan'208";a="45136519"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Aug 2019 07:07:46 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 2 Aug 2019 07:07:46 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Fri, 2 Aug 2019 07:07:44 -0700
+Date:   Fri, 2 Aug 2019 16:07:45 +0200
+From:   "Allan W. Nielsen" <allan.nielsen@microchip.com>
+To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+CC:     Horatiu Vultur <horatiu.vultur@microchip.com>,
+        <idosch@mellanox.com>, <andrew@lunn.ch>, <davem@davemloft.net>,
+        <roopa@cumulusnetworks.com>, <petrm@mellanox.com>,
+        <tglx@linutronix.de>, <fw@strlen.de>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <bridge@lists.linux-foundation.org>
+Subject: Re: [net-next,rfc] net: bridge: mdb: Extend with multicast LLADDR
+Message-ID: <20190802140655.ngbok2ubprhivlhy@lx-anielsen.microsemi.net>
+References: <1564663840-27721-1-git-send-email-horatiu.vultur@microchip.com>
+ <f758fdbf-4e0a-57b3-f13d-23e893ba7458@cumulusnetworks.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <20190802100904.blnusnieti3pxgxu@DESKTOP-E1NTVVP.localdomain>
-X-Operating-System: Linux phenom 4.19.0-5-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <f758fdbf-4e0a-57b3-f13d-23e893ba7458@cumulusnetworks.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 10:09:05AM +0000, Brian Starkey wrote:
-> Hi Daniel,
-> 
-> On Fri, Aug 02, 2019 at 11:45:13AM +0200, Daniel Vetter wrote:
-> > On Fri, Aug 2, 2019 at 11:43 AM Daniel Vetter <daniel@ffwll.ch> wrote:
-> > >
-> > > On Fri, Aug 2, 2019 at 11:29 AM Brian Starkey <Brian.Starkey@arm.com> wrote:
-> > > >
-> > > > Hi Lowry,
-> > > >
-> > > > On Thu, Aug 01, 2019 at 06:34:08AM +0000, Lowry Li (Arm Technology China) wrote:
-> > > > > Hi Brian,
-> > > > >
-> > > > > On Wed, Jul 31, 2019 at 09:20:04PM +0800, Brian Starkey wrote:
-> > > > > > Hi Lowry,
-> > > > > >
-> > > > > > Thanks for this cleanup.
-> > > > > >
-> > > > > > On Wed, Jul 31, 2019 at 11:04:45AM +0000, Lowry Li (Arm Technology China) wrote:
-> > > > > > > During it signals the completion of a writeback job, after releasing
-> > > > > > > the out_fence, we'd clear the pointer.
-> > > > > > >
-> > > > > > > Check if fence left over in drm_writeback_cleanup_job(), release it.
-> > > > > > >
-> > > > > > > Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
-> > > > > > > ---
-> > > > > > >  drivers/gpu/drm/drm_writeback.c | 23 +++++++++++++++--------
-> > > > > > >  1 file changed, 15 insertions(+), 8 deletions(-)
-> > > > > > >
-> > > > > > > diff --git a/drivers/gpu/drm/drm_writeback.c b/drivers/gpu/drm/drm_writeback.c
-> > > > > > > index ff138b6..43d9e3b 100644
-> > > > > > > --- a/drivers/gpu/drm/drm_writeback.c
-> > > > > > > +++ b/drivers/gpu/drm/drm_writeback.c
-> > > > > > > @@ -324,6 +324,9 @@ void drm_writeback_cleanup_job(struct drm_writeback_job *job)
-> > > > > > >   if (job->fb)
-> > > > > > >           drm_framebuffer_put(job->fb);
-> > > > > > >
-> > > > > > > + if (job->out_fence)
-> > > > > >
-> > > > > > I'm thinking it might be a good idea to signal the fence with an error
-> > > > > > here, if it's not already signaled. Otherwise, if there's someone
-> > > > > > waiting (which there shouldn't be), they're going to be waiting a very
-> > > > > > long time :-)
-> > > > > >
-> > > > > > Thanks,
-> > > > > > -Brian
-> > > > > >
-> > > > > Here it happened at atomic_check failed and test only commit. For both
-> > > > > cases, the commit has been dropped and it's only a clean up. So here better
-> > > > > not be treated as an error case:)
-> > > >
-> > > > If anyone else has a reference on the fence, then IMO it absolutely is
-> > > > an error to reach this point without the fence being signaled -
-> > > > because it means that the fence will never be signaled.
-> > > >
-> > > > I don't think the API gives you a way to check if this is the last
-> > > > reference, so it's safest to just make sure the fence is signalled
-> > > > before dropping the reference.
-> > > >
-> > > > It just feels wrong to me to have the possibility of a dangling fence
-> > > > which is never going to get signalled; and it's an easy defensive step
-> > > > to make sure it can never happen.
-> > > >
-> > > > I know it _shouldn't_ happen, but we often put in handling for cases
-> > > > which shouldn't happen, because they frequently do happen :-)
-> > >
-> > > We're not as paranoid with the vblank fences either, so not sure why
-> > > we need to be this paranoid with writeback fences. If your driver
-> > > grabs anything from the atomic state in ->atomic_check it's buggy
-> > > anyway.
-> > >
-> > > If you want to fix this properly I think we need to move the call to
-> > > prepare_signalling() in between atomic_check and atomic_commit. Then I
-> > > think it makes sense to also force-complete the fence on error ...
-> 
-> Well, fair enough. I'm struggling with "that's too paranoid" vs "fix
-> it properly" though? Is it a "problem" worth fixing or not?
-
-Up to you to decide that.
-
-> It seems natural to me to do the fence cleanup in the cleanup function
-> for the object which owns the fence.
-> 
-> > >
-> > > > > Since for userspace, it should have been failed or a test only case, so
-> > > > > writebace fence should not be signaled.
-> > > >
-> > > > It's not only userspace that can wait on fences (and in fact this
-> > > > fence will never even reach userspace if the commit fails), the driver
-> > > > may have taken a copy to use for "something".
+The 08/01/2019 17:07, Nikolay Aleksandrov wrote:
+> > To create a group for two of the front ports the following entries can
+> > be added:
+> > bridge mdb add dev br0 port eth0 grp 01:00:00:00:00:04 permanent vid 1
+> > bridge mdb add dev br0 port eth1 grp 01:00:00:00:00:04 permanent vid 1
 > > 
-> > I forgot to add: you can check this by looking at the fence reference
-> > count. A WARN_ON if that's more than 1 on cleanup (but also for the
-> > out fences) could be a nice addition.
-> 
-> Do we really want to be looking at the fence internals directly like
-> that?
+> > Now the entries will be display as following:
+> > dev br0 port eth0 grp 01:00:00:00:00:04 permanent offload vid 1
+> > dev br0 port eth1 grp 01:00:00:00:00:04 permanent offload vid 1
+> > 
+> > This requires changes to iproute2 as well, see the follogin patch for that.
+> > 
+> > Now if frame with dmac '01:00:00:00:00:04' will arrive at one of the front
+> > ports. If we have HW offload support, then the frame will be forwarded by
+> > the switch, and need not to go to the CPU. In a pure SW world, the frame is
+> > forwarded by the SW bridge, which will flooded it only the ports which are
+> > part of the group.
+> > 
+> > So far so good. This is an important part of the problem we wanted to solve.
+> > 
+> > But, there is one drawback of this approach. If you want to add two of the
+> > front ports and br0 to receive the frame then I can't see a way of doing it
+> > with the bridge mdb command. To do that it requireds many more changes to
+> > the existing code.
+> > 
+> > Example:
+> > bridge mdb add dev br0 port eth0 grp 01:00:00:00:00:04 permanent vid 1
+> > bridge mdb add dev br0 port eth1 grp 01:00:00:00:00:04 permanent vid 1
+> > bridge mdb add dev br0 port br0 grp 01:00:00:00:00:04 permanent vid 1 // This looks wrong.
+> > 
+> > We believe we come a long way by re-using the facilities in MDB (thanks for
+> > convincing us in doing this), but we are still not completely happy with
+> > the result.
+> Just add self argument for the bridge mdb command, no need to specify it twice.
+Like this:
+bridge mdb add dev br0 port eth1 grp 01:00:00:00:00:04 permanent vid self
 
-Wrap it up in a helper like dma_fence_release_private or whatever, which
-combines the check and (hopefully final) _put(). Might need a better name.
--Daniel
+Then if I want to remove br0 rom the group, should I then have a no-self, and
+then it becomes even more strange what to write in the port.
 
-> 
-> Cheers,
-> -Brian
-> 
-> > -Daniel
-> > -- 
-> > Daniel Vetter
-> > Software Engineer, Intel Corporation
-> > +41 (0) 79 365 57 48 - http://blog.ffwll.ch
+bridge mdb add dev br0 port ?? grp 01:00:00:00:00:04 permanent vid no-self
+                            ^^
+And, what if it is a group with only br0 (the traffic should go to br0 and
+not any of the slave interfaces)?
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Also, the 'self' keyword has different meanings in the 'bridge vlan' and the
+'bridge fdb' commands where it refres to if the offload rule should be install
+in HW - or only in the SW bridge.
+
+The proposed does not look pretty bad, but at least it will be possible to
+configured the different scenarios:
+
+bridge mdb add dev br0 port br0 grp 01:00:00:00:00:04 permanent vid 1
+bridge mdb del dev br0 port br0 grp 01:00:00:00:00:04 permanent vid 1
+
+The more I look at the "bridge mdb { add | del } dev DEV port PORT" command, the
+less I understand why do we have both 'dev' and 'port'? The implementation will
+only allow this if 'port' has become enslaved to the switch represented by
+'dev'. Anyway, what is done is done, and we need to stay backwards compatible,
+but we could make it optional, and then it looks a bit less strange to allow the
+port to specify a br0.
+
+Like this:
+
+bridge mdb { add | del } [dev DEV] port PORT grp GROUP [ permanent | temp ] [ vid VID ]
+
+bridge mdb add port eth0 grp 01:00:00:00:00:04 permanent vid 1
+bridge mdb add port eth1 grp 01:00:00:00:00:04 permanent vid 1
+bridge mdb add port br0  grp 01:00:00:00:00:04 permanent vid 1 // Add br0 to the gruop
+bridge mdb del port br0  grp 01:00:00:00:00:04 permanent vid 1 // Delete it again
+
+Alternative we could also make the port optional:
+
+bridge mdb { add | del } dev DEV [port PORT] grp GROUP [ permanent | temp ] [ vid VID ]
+
+bridge mdb add dev br0 port eth0 grp 01:00:00:00:00:04 permanent vid 1
+bridge mdb add dev br0 port eth1 grp 01:00:00:00:00:04 permanent vid 1
+bridge mdb add dev br0           grp 01:00:00:00:00:04 permanent vid 1 // Add br0 to the gruop
+bridge mdb del dev br0           grp 01:00:00:00:00:04 permanent vid 1 // Delete it again
+
+Any preferences?
+
+/Allan
+
+
