@@ -2,81 +2,98 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDBEC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 00:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7086C19759
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 00:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FB1C2084C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 00:48:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B24382083B
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 00:52:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iavBX5VU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390564AbfHBAs4 (ORCPT
+        id S2390578AbfHBAv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 20:48:56 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:49502 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388597AbfHBAsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 20:48:55 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 380B879A79CC01A16C7;
-        Fri,  2 Aug 2019 08:48:54 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.203) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Fri, 2 Aug 2019
- 08:48:46 +0800
-Subject: Re: [PATCH v3 00/10] implement KASLR for powerpc/fsl_booke/32
-To:     Diana Madalina Craciun <diana.craciun@nxp.com>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "paulus@samba.org" <paulus@samba.org>,
-        "npiggin@gmail.com" <npiggin@gmail.com>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "kernel-hardening@lists.openwall.com" 
-        <kernel-hardening@lists.openwall.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "wangkefeng.wang@huawei.com" <wangkefeng.wang@huawei.com>,
-        "yebin10@huawei.com" <yebin10@huawei.com>,
-        "thunder.leizhen@huawei.com" <thunder.leizhen@huawei.com>,
-        "jingxiangfeng@huawei.com" <jingxiangfeng@huawei.com>,
-        "fanchengyang@huawei.com" <fanchengyang@huawei.com>,
-        "zhaohongjiang@huawei.com" <zhaohongjiang@huawei.com>
-References: <20190731094318.26538-1-yanaijie@huawei.com>
- <VI1PR0401MB2463844DD4A35EB3F0959C22FFDE0@VI1PR0401MB2463.eurprd04.prod.outlook.com>
-From:   Jason Yan <yanaijie@huawei.com>
-Message-ID: <bc30b426-d7c6-c839-ebd2-a404465079a3@huawei.com>
-Date:   Fri, 2 Aug 2019 08:48:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Thu, 1 Aug 2019 20:51:59 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:46374 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390549AbfHBAv7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 20:51:59 -0400
+Received: by mail-ot1-f68.google.com with SMTP id z23so48012059ote.13;
+        Thu, 01 Aug 2019 17:51:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MKtmBE9da7Bw1V+smHoYvGcwbbIS/1PsJuf/DHA7EGc=;
+        b=iavBX5VUTp+3S1HbFEs0fbaR7/q0aj9QeEkYqmPAahkEvEb9XGvoWneyMxuH+HHKkh
+         Px/9SwjBN8nP0Bf/3gWhZ2bM9/P20gL/9Gm3aQi6vm1uUulg3In8NY1YY+kgialSB89f
+         vnhSK6GfSFwbjI/lQnggGQPwkISAXV8fDAkpfup65dOI5Cjo/UH4TbOf/21H+Ru/bZm8
+         z+o1eU1wrmWs0FthskPQbjxy3UjlxzmpFAr2RW3dOSHxVu8C8eMIiOqzqDzEh+zG9JzL
+         ZgCzKmlFHSKIdbQ6DB1rn5yp64rhwrZoSQCqiigUbqZoKG1Mbqx9iXnaGAbb64JWTNml
+         g/OQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MKtmBE9da7Bw1V+smHoYvGcwbbIS/1PsJuf/DHA7EGc=;
+        b=M3YMwJNzwxOPgQbhhKFkvBInWcWGbnfrL06wWpgvu7tjxDSpnhzpZ9hzNjKIZntwy2
+         nypNTJbJFhx/DhaGslSy8QvOC7THt3PhT8anLHgTU23kYhNCYGK5NOLeYRscOWBJF7Xz
+         lbDnOod1d4nmOuX1SzFyeQgljSFB45fMTqmUfnpqOpqtklO0Au6eF0R8hQ8bVyC1uJqL
+         B03uxYwwLfOR6mSjFPmST8lt9VUb3bNi+bJHtEE5AuBAGrsqJo4Hiz6fAhaMFCNtFcB/
+         pBchUt37UA2QzCrQkD7M7yo40m+DiQjOL2VC3ggXhqlu4IFMyRyoeEBDjV6E65CdW5Pf
+         71Iw==
+X-Gm-Message-State: APjAAAUdHlsMdFipR0dd1Fxv+g8B+E9TJriorg9nUYGryEK1EytELkHJ
+        O80HrvYLze1qIEMH+xeOfAMdPeL7drVFJ0MC3KyCGVcj
+X-Google-Smtp-Source: APXvYqzh1wL2IbrQbsHM6VXimh98RM1D3HiCeB5kdIxHY/I9XBbRACItyy8iPaFArrxjDDZB+2GnUJ5PURmY1UtAeE4=
+X-Received: by 2002:a9d:738b:: with SMTP id j11mr11966250otk.185.1564707118010;
+ Thu, 01 Aug 2019 17:51:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <VI1PR0401MB2463844DD4A35EB3F0959C22FFDE0@VI1PR0401MB2463.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.96.203]
-X-CFilter-Loop: Reflected
+References: <1564479235-25074-1-git-send-email-wanpengli@tencent.com> <04700afaf68114b5ab329f5a5182e21578c15795.camel@suse.com>
+In-Reply-To: <04700afaf68114b5ab329f5a5182e21578c15795.camel@suse.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Fri, 2 Aug 2019 08:51:39 +0800
+Message-ID: <CANRm+CwYC=rpEbe_OD+H6tDAFy4xYP6+JKRN2YHeH0TWt5234Q@mail.gmail.com>
+Subject: Re: [PATCH] KVM: Disable wake-affine vCPU process to mitigate lock
+ holder preemption
+To:     Dario Faggioli <dfaggioli@suse.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 1 Aug 2019 at 20:57, Dario Faggioli <dfaggioli@suse.com> wrote:
+>
+> On Tue, 2019-07-30 at 17:33 +0800, Wanpeng Li wrote:
+> > However, in multiple VMs over-subscribe virtualization scenario, it
+> > increases
+> > the probability to incur vCPU stacking which means that the sibling
+> > vCPUs from
+> > the same VM will be stacked on one pCPU. I test three 80 vCPUs VMs
+> > running on
+> > one 80 pCPUs Skylake server(PLE is supported), the ebizzy score can
+> > increase 17%
+> > after disabling wake-affine for vCPU process.
+> >
+> Can't we achieve this by removing SD_WAKE_AFFINE from the relevant
+> scheduling domains? By acting on
+> /proc/sys/kernel/sched_domain/cpuX/domainY/flags, I mean?
+>
+> Of course this will impact all tasks, not only KVM vcpus. But if the
+> host does KVM only anyway...
 
+Yes, not only kvm host and dedicated kvm host, unless introduce
+per-process flags, otherwise can't appeal to both.
 
-On 2019/8/1 22:36, Diana Madalina Craciun wrote:
-> Hi Jason,
-> 
-> I have tested these series on a P4080 platform.
-> 
-> Regards,
-> Diana
-
-Diana, thank you so much.
-
-So can you take a look at the code of this version and give a 
-Reviewed-by or Tested-by?
-
-Thanks,
-Jason
-
+Regards,
+Wanpeng Li
