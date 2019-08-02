@@ -2,118 +2,95 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA10C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 21:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F027C41514
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 21:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01E54206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 21:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B69B21773
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 21:50:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zW3PTB/W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395174AbfHBVj4 (ORCPT
+        id S2395190AbfHBVuq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 17:39:56 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:39529 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726052AbfHBVjz (ORCPT
+        Fri, 2 Aug 2019 17:50:46 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46913 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2395179AbfHBVup (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 17:39:55 -0400
-Received: from callcc.thunk.org (96-72-84-49-static.hfc.comcastbusiness.net [96.72.84.49] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x72LdipO023483
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 2 Aug 2019 17:39:45 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 33EB64202F5; Fri,  2 Aug 2019 17:39:44 -0400 (EDT)
-Date:   Fri, 2 Aug 2019 17:39:44 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>
-Subject: Re: [PATCH 09/20] ext4: Initialize timestamps limits
-Message-ID: <20190802213944.GE4308@mit.edu>
-Mail-Followup-To: "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>
-References: <20190730014924.2193-1-deepa.kernel@gmail.com>
- <20190730014924.2193-10-deepa.kernel@gmail.com>
- <20190731152609.GB7077@magnolia>
- <CABeXuvpiom9eQi0y7PAwAypUP1ezKKRfbh-Yqr8+Sbio=QtUJQ@mail.gmail.com>
- <20190801224344.GC17372@mit.edu>
- <CAK8P3a3nqmWBXBiFL1kGmJ7yQ_=5S4Kok0YVB3VMFVBuYjFGOQ@mail.gmail.com>
- <20190802154341.GB4308@mit.edu>
- <CAK8P3a1Z+nuvBA92K2ORpdjQ+i7KrjOXCFud7fFg4n73Fqx_8Q@mail.gmail.com>
+        Fri, 2 Aug 2019 17:50:45 -0400
+Received: by mail-lj1-f194.google.com with SMTP id v24so74308230ljg.13
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 14:50:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/+6NeIcL7nIjmDGVLWabC3vXM+Jl0SVqaRvJgDEpCqw=;
+        b=zW3PTB/WFvF+k/aMp2lt6zvwPsJOXSOWNvK4f2fEkcHmPImTWcM4t8CfbJgvDztVZ/
+         Q+X25hSkndasM80otX/J5yTNL1FNvqXYEEENQp55f7PNUAmfF/Qla14xP/qKRF4Qx+D/
+         iueJUlhJ3B7BrHzJ5hRmFEKtPiZg15ap+2+26eJNzIXV2BBDtR0xeosrH8TRq4UJM69t
+         zanGCNJ+48SzWEfcaDnw+Cjsyspsuy2lF1QzxAuEiJT7JbsnmH3KhH5U71qNyJfVPJGG
+         15m+snrj+nLwv+GjsSqpSaOpRl2y0XxF9Q3ceTMk10LLo6Mtb2+D8gruB8NTkqL+xrHF
+         yVhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/+6NeIcL7nIjmDGVLWabC3vXM+Jl0SVqaRvJgDEpCqw=;
+        b=kG/zqhbBzdVZLeycFcRDe2azEyANfUMWSqcdB2OorH9FLDIYGgmvzLfaeWFM5Addav
+         08dOBh3BNETtSgpHIWj3WnX9ymv987JlvMlZfaFV7KE+g3qFBjv8THmEr12+2m+vXgfF
+         iK8ZJrXaHEnWRRE2UhWJqm3LugbgJFcg8iFg6R6Db2amJhStKE9CIocfvE5V5VNOZQff
+         JFdjjlzH4Za1/cPV4pDZvpb1g+PySnwav+kJl+CrtcpfWUtRrXvxEmAC+HCp63wvaDJ+
+         frOkOQft9CHSIXY3bwJiqozAq2aJdKgd8XV8AYubv4luca4YUj+0bFANnb/yrn8HALfl
+         mOhQ==
+X-Gm-Message-State: APjAAAXiN4FgzNWTexaZgbnFU+AccAyN9SoRPjyF/cIm6cdTU+/Z3b7W
+        ZSy/Phi7pRHJ8xdo4BZaMrcglAhEj9vUmmMRK0npAA==
+X-Google-Smtp-Source: APXvYqyBjPR9tsFzJkl8sdRatkgQDGJTpofe1VtOni4strgFOm/fAXU02CWmWIzEblvJBHgoefzqjSHWEou+yWPYBLs=
+X-Received: by 2002:a05:651c:28c:: with SMTP id b12mr7977275ljo.69.1564782643699;
+ Fri, 02 Aug 2019 14:50:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a1Z+nuvBA92K2ORpdjQ+i7KrjOXCFud7fFg4n73Fqx_8Q@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190717141848.31116-1-yuehaibing@huawei.com>
+In-Reply-To: <20190717141848.31116-1-yuehaibing@huawei.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 2 Aug 2019 23:50:32 +0200
+Message-ID: <CACRpkdYvzWA0iZad4yamjhnwbA4rm6FgCQBP3nr1gKCg8_kRAA@mail.gmail.com>
+Subject: Re: [PATCH v2] power: supply: ab8500: remove set but not used
+ variables 'vbup33_vrtcn' and 'bup_vch_range'
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Loic PALLARDY <loic.pallardy@st.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 09:00:52PM +0200, Arnd Bergmann wrote:
-> 
-> I must have misunderstood what the field says. I expected that
-> with s_min_extra_isize set beyond the nanosecond fields, there
-> would be a guarantee that all inodes have at least as many
-> extra bytes already allocated. What circumstances would lead to
-> an i_extra_isize smaller than s_min_extra_isize?
+On Wed, Jul 17, 2019 at 4:19 PM YueHaibing <yuehaibing@huawei.com> wrote:
 
-When allocating new inodes, i_extra_isize is set to
-s_want_extra_isize.  When modifying existing inodes, if i_extra_isize
-is less than s_min_extra_isize, then we will attempt to move out
-extended attribute(s) to the external xattr block.  So the
-s_min_extra_isize field is not a guarantee, but rather an aspirationa
-goal.  The idea is that at some point when we want to enable a new
-feature, which needs more extra inode space, we can adjust
-s_min_extra_size and s_want_extra_size, and the file system will
-migrate things to meet these constraints.
+> Fixes gcc '-Wunused-but-set-variable' warnings:
+>
+> drivers/power/supply/ab8500_charger.c:
+>  In function ab8500_charger_init_hw_registers:
+> drivers/power/supply/ab8500_charger.c:3013:24: warning:
+>  variable vbup33_vrtcn set but not used [-Wunused-but-set-variable]
+> drivers/power/supply/ab8500_charger.c:3013:5: warning:
+>  variable bup_vch_range set but not used [-Wunused-but-set-variable]
+>
+> They are not used since commit 4c4268dc97c4 ("power:
+> supply: ab8500: Drop AB8540/9540 support")
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-The plan was to teach e2fsck how to fix all of the inodes to meet theh
-s_min_extra_size value, but that never got implemented, and we even
-then, e2fsck would have to deal with the case where tit couldn't move
-the extended attribute(s) in the inode out, because there was no place
-to put them.
+Thanks for fixing my forgotten codepaths!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-In practice, this hasn't been that much of a limitation because we
-haven't been adding that many extra inode fields.  Keep in mind that
-Red Hat for example, has explicitly said they will *never* support
-adding new features to an existing file system.  Their only supported
-method is back up the file system, reformat it with the new file
-system features, and then restore the file system.
-
-Of course, if the backup/restore includes backing up the extended
-attributes, and then restoring them, the xattr restore could fail,
-unless the user also increased the inode size (e.g., from 256 bytes to
-512 bytes).
-
-Getting this right in the general case is *hard*.  Fortunately, the
-corner cases really don't happen that often in practice, at least not
-for pure Linux workloads.  Windows which can have arbitrarily large
-security id's and ACL's might make this harder, of course --- although
-ext4's EA in inode feature would make this better, modulo needing to
-write more complex file system code to handle moving xattrs around.
-
-Since the extended timestamps were one of the first extra inode fields
-to be added, I strongly suggest that we not try to borrow trouble.
-Solving the general case problem is *hard*.
-
-					- Ted
+Yours,
+Linus Walleij
