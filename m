@@ -2,123 +2,113 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39FDFC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 06:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0E8C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 06:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F644206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 06:13:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C36EF20880
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 06:15:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AIOHUpof";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AIOHUpof"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="PgP7focY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388554AbfHBGNe (ORCPT
+        id S2388594AbfHBGPO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 02:13:34 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:33842 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730060AbfHBGNd (ORCPT
+        Fri, 2 Aug 2019 02:15:14 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:37879 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730060AbfHBGPN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 02:13:33 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id BFC296083C; Fri,  2 Aug 2019 06:13:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564726412;
-        bh=glIM38y3+Njxa7zJSCHLYPzXsz9PiLzkjioQ1AjybJw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=AIOHUpofaCW9WVIq9EhOhcWNcUniiiMBKXuSHR86Kj2XfOGZ20Ooch3LXAGmMGJVl
-         0a9z2g5RvNzPjuT1/WfCcRpjpNLCAbW2UvPbYBAwzJPvYX2L6Sd+ui3Dpx+MCqrZVM
-         +h9V6vCVVh556bpatTo0kQUz8P6jNr3LfGol4C+M=
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id ECE75607B9;
-        Fri,  2 Aug 2019 06:13:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564726412;
-        bh=glIM38y3+Njxa7zJSCHLYPzXsz9PiLzkjioQ1AjybJw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=AIOHUpofaCW9WVIq9EhOhcWNcUniiiMBKXuSHR86Kj2XfOGZ20Ooch3LXAGmMGJVl
-         0a9z2g5RvNzPjuT1/WfCcRpjpNLCAbW2UvPbYBAwzJPvYX2L6Sd+ui3Dpx+MCqrZVM
-         +h9V6vCVVh556bpatTo0kQUz8P6jNr3LfGol4C+M=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org ECE75607B9
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
-Received: by mail-ed1-f51.google.com with SMTP id w13so71361613eds.4;
-        Thu, 01 Aug 2019 23:13:31 -0700 (PDT)
-X-Gm-Message-State: APjAAAUM3ETOvffHwMGlYTYyLqTUc1Im5e/HUj0BGarW5tPJJNEB+QNh
-        xZQehBsrcrlNlamE28bbGUYD00lvSAgiXHAff/I=
-X-Google-Smtp-Source: APXvYqxJ5J+Kl4Ow20mbj1jqpkh4wO4uZDw1bBJ6e9VZGCKbz4hjX/5bF1KjrQmSZJSn0mG8VRG00kfvWhhfPHNpKsY=
-X-Received: by 2002:aa7:d68e:: with SMTP id d14mr117447530edr.253.1564726410672;
- Thu, 01 Aug 2019 23:13:30 -0700 (PDT)
+        Fri, 2 Aug 2019 02:15:13 -0400
+Received: by mail-qt1-f196.google.com with SMTP id y26so72823811qto.4;
+        Thu, 01 Aug 2019 23:15:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NJK0vgby3QC9u2a5qKlpfOibBVA+YhLUqRUYNCsX67s=;
+        b=PgP7focY6IphrJ0Ka6VBAFp34SGs4AFVlbQ8h+T5hEgGjrsGAtyfS5VtWYxuf1fB3m
+         G+G/whb1JuWvP8jS5gKDkp8csr8jyEVbEGfMgycCRW987rpX71qlDCuF5C+foPZpnr8s
+         eFjM9tysfTKhL3Cuoj+drO25SsCwBeC4Ja5tw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NJK0vgby3QC9u2a5qKlpfOibBVA+YhLUqRUYNCsX67s=;
+        b=ELgrDPtevRM/zBUmIavoRZo3FMuFTn4AjbwFMRWvgenUaZ15AL90b7IAYxqE8HLTVm
+         QU/RuuJ4aRkrMDwVWq4kDsnHtPEb9o7mk/bkzXjJ/qsqXrSpoL4CATCrw1kVRl7mCW7R
+         ffq4fC5jE7+faHGlANTdDdM+bELggSXmcwBERYHjHVJ92Rr/pWnramX9OCPXjn642sfq
+         eYQqpTmQW68T2mhOKa8e9srhZ4LvpRx6CXw3htt4paLB9nSmnBgZ+QlxcyvDp57EOQDG
+         kX4DQ/E2QB2Au5PVyZQ4QrB3B11j3Uut7acoSRqRZxmyBdBa6nB0oGVy1LlMuGdNMuzu
+         2URw==
+X-Gm-Message-State: APjAAAXru2bQlGvZndZTQIRM0iyHpURCJF4HPpLjTdXE8xCzJyu3NWC2
+        qvDUd7EoY9s4tOp+v0uEpONWn28pe1u56WKAcx0=
+X-Google-Smtp-Source: APXvYqxWVuZjhzsME6hUNKy4bA2amIPVfDbn9cMpQvV9ctZBzTD1Uxuckz0CHPM+oREl2o6o08TXkm81e59OxjE6k6I=
+X-Received: by 2002:ac8:1887:: with SMTP id s7mr94164225qtj.220.1564726512547;
+ Thu, 01 Aug 2019 23:15:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190718130238.11324-1-vivek.gautam@codeaurora.org>
-In-Reply-To: <20190718130238.11324-1-vivek.gautam@codeaurora.org>
-From:   Vivek Gautam <vivek.gautam@codeaurora.org>
-Date:   Fri, 2 Aug 2019 11:43:19 +0530
-X-Gmail-Original-Message-ID: <CAFp+6iE7224G4k8XE6Oz1S82iMgSza-n_zMN-ppOUWnuz+hFLQ@mail.gmail.com>
-Message-ID: <CAFp+6iE7224G4k8XE6Oz1S82iMgSza-n_zMN-ppOUWnuz+hFLQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] soc: qcom: llcc cleanups
-To:     Andy Gross <agross@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Jordan Crouse <jcrouse@codeaurora.org>, rishabhb@codeaurora.org,
-        Evan Green <evgreen@chromium.org>,
-        open list <linux-kernel@vger.kernel.org>
+References: <20190724081313.12934-1-andrew@aj.id.au> <CACRpkdapypySGPrLgSMSNy1fzkca2BfMUGzf3koFWQZ-M5VOvg@mail.gmail.com>
+ <9d0f2b20-e6f6-419c-a866-c4a0dd92aa63@www.fastmail.com> <3691f6cb-2451-43f7-9f00-d5693071ba59@www.fastmail.com>
+In-Reply-To: <3691f6cb-2451-43f7-9f00-d5693071ba59@www.fastmail.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Fri, 2 Aug 2019 06:15:01 +0000
+Message-ID: <CACPK8XcWK9Gf=pW5ds=3muoXHAWnyYfHcVSVh+anaTigtMO8yA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] ARM: dts: aspeed: Deprecate g[45]-style compatibles
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 6:33 PM Vivek Gautam
-<vivek.gautam@codeaurora.org> wrote:
+On Thu, 1 Aug 2019 at 05:45, Andrew Jeffery <andrew@aj.id.au> wrote:
 >
-> To better support future versions of llcc, consolidating the
-> driver to llcc-qcom driver file, and taking care of the dependencies.
-> v1 series is availale at:
-> https://lore.kernel.org/patchwork/patch/1099573/
 >
-> Changes since v1:
-> Addressing Bjorn's comments -
->  * Not using llcc-plat as the platform driver rather using a single
->    driver file now - llcc-qcom.
->  * Removed SCT_ENTRY macro.
->  * Moved few structure definitions from include/linux path to llcc-qcom
->    driver as they are not exposed to other subsystems.
+>
+> On Tue, 30 Jul 2019, at 10:27, Andrew Jeffery wrote:
+> >
+> >
+> > On Tue, 30 Jul 2019, at 07:23, Linus Walleij wrote:
+> > > On Wed, Jul 24, 2019 at 10:13 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+> > >
+> > > > It's probably best if we push the three patches all through one tree rather
+> > > > than fragmenting. Is everyone happy if Joel applies them to the aspeed tree?
+> > >
+> > > If you are sure it will not collide with parallell work in the
+> > > pinctrl tree, yes.
+> > > Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> > >
+> > > (If it does collide I'd prefer to take the pinctrl patches and fix the
+> > > conflicts in my tree.)
+> >
+> > Fair enough, I don't know the answer so I'll poke around. I don't
+> > really mind
+> > where the series goes in, I just want to avoid landing only part of it
+> > if I split it up.
+>
+> Okay, it currently conflicts with my cleanup-devicetree-warnings series.
+>
+> Joel, do you mind if Linus takes this series through the pinctrl tree, given
+> the fix to the devicetrees is patch 1/3?
 
-Hi Bjorn,
+It depends if you plan more changes to that part of the device tree
+this merge window :)
 
-How does this cleanup look now? Let me know if there are any
-improvements to make here.
+Linus, perhaps the safer option is for me to take 1/3 through my tree
+and you can take the rest through yours?
 
-Best Regards
-Vivek
->
-> Vivek Gautam (3):
->   soc: qcom: llcc cleanup to get rid of sdm845 specific driver file
->   soc: qcom: Rename llcc-slice to llcc-qcom
->   soc: qcom: Make llcc-qcom a generic driver
->
->  drivers/soc/qcom/Kconfig                       |  14 +--
->  drivers/soc/qcom/Makefile                      |   3 +-
->  drivers/soc/qcom/{llcc-slice.c => llcc-qcom.c} | 155 +++++++++++++++++++++++--
->  drivers/soc/qcom/llcc-sdm845.c                 | 100 ----------------
->  include/linux/soc/qcom/llcc-qcom.h             | 104 -----------------
->  5 files changed, 152 insertions(+), 224 deletions(-)
->  rename drivers/soc/qcom/{llcc-slice.c => llcc-qcom.c} (64%)
->  delete mode 100644 drivers/soc/qcom/llcc-sdm845.c
->
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
->
+Cheers,
 
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Joel
