@@ -4,28 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91AF6C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAEEC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7496720657
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:55:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0CEE2064A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:55:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392789AbfHBMzw (ORCPT
+        id S2404350AbfHBMyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 08:55:52 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:47922 "EHLO huawei.com"
+        Fri, 2 Aug 2019 08:54:37 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3706 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404663AbfHBMyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 08:54:39 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id BA042C9631EA1034E85B;
-        Fri,  2 Aug 2019 20:54:37 +0800 (CST)
+        id S2392662AbfHBMyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 08:54:31 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 78B68DCB631E8EB2DDAC;
+        Fri,  2 Aug 2019 20:54:22 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 2 Aug 2019
- 20:54:30 +0800
+ 20:54:16 +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     Alexander Viro <viro@zeniv.linux.org.uk>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +45,9 @@ CC:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
         Li Guifu <bluce.liguifu@huawei.com>,
         Fang Wei <fangwei1@huawei.com>,
         Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v6 17/24] erofs: introduce per-CPU buffers implementation
-Date:   Fri, 2 Aug 2019 20:53:40 +0800
-Message-ID: <20190802125347.166018-18-gaoxiang25@huawei.com>
+Subject: [PATCH v6 07/24] erofs: add directory operations
+Date:   Fri, 2 Aug 2019 20:53:30 +0800
+Message-ID: <20190802125347.166018-8-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190802125347.166018-1-gaoxiang25@huawei.com>
 References: <20190802125347.166018-1-gaoxiang25@huawei.com>
@@ -61,107 +60,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch introduces per-CPU buffers in order for
-the upcoming generic decompression framework to use.
-
-Note that I tried to use in-kernel per-CPU buffer or
-per-CPU page approaches to clean up further, however
-noticeable performanace regression (about 2% for
-sequential read) was observed.
-
-Let's leave it as-is for now.
+This adds functions for directory, mainly readdir.
 
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- fs/erofs/Kconfig    | 14 ++++++++++++++
- fs/erofs/internal.h | 21 +++++++++++++++++++++
- fs/erofs/utils.c    | 12 ++++++++++++
- 3 files changed, 47 insertions(+)
+ fs/erofs/dir.c | 147 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 147 insertions(+)
+ create mode 100644 fs/erofs/dir.c
 
-diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
-index a475fbebb831..5f8787c0cf89 100644
---- a/fs/erofs/Kconfig
-+++ b/fs/erofs/Kconfig
-@@ -81,3 +81,17 @@ config EROFS_FS_ZIP
- 
- 	  If you don't want to enable compression feature, say N.
- 
-+config EROFS_FS_CLUSTER_PAGE_LIMIT
-+	int "EROFS Cluster Pages Hard Limit"
-+	depends on EROFS_FS_ZIP
-+	range 1 256
-+	default "1"
-+	help
-+	  Indicates maximum # of pages of a compressed
-+	  physical cluster.
+diff --git a/fs/erofs/dir.c b/fs/erofs/dir.c
+new file mode 100644
+index 000000000000..7cf7da8574c4
+--- /dev/null
++++ b/fs/erofs/dir.c
+@@ -0,0 +1,147 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * linux/fs/erofs/dir.c
++ *
++ * Copyright (C) 2017-2018 HUAWEI, Inc.
++ *             http://www.huawei.com/
++ * Created by Gao Xiang <gaoxiang25@huawei.com>
++ */
++#include "internal.h"
 +
-+	  For example, if files in a image were compressed
-+	  into 8k-unit, hard limit should not be configured
-+	  less than 2. Otherwise, the image will be refused
-+	  to mount on this kernel.
++static const unsigned char erofs_filetype_table[EROFS_FT_MAX] = {
++	[EROFS_FT_UNKNOWN]	= DT_UNKNOWN,
++	[EROFS_FT_REG_FILE]	= DT_REG,
++	[EROFS_FT_DIR]		= DT_DIR,
++	[EROFS_FT_CHRDEV]	= DT_CHR,
++	[EROFS_FT_BLKDEV]	= DT_BLK,
++	[EROFS_FT_FIFO]		= DT_FIFO,
++	[EROFS_FT_SOCK]		= DT_SOCK,
++	[EROFS_FT_SYMLINK]	= DT_LNK,
++};
 +
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 6f0384c3f07a..19694886dda9 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -223,6 +223,12 @@ static inline int erofs_wait_on_workgroup_freezed(struct erofs_workgroup *grp)
- 	return v;
- }
- #endif	/* !CONFIG_SMP */
-+
-+/* hard limit of pages per compressed cluster */
-+#define Z_EROFS_CLUSTER_MAX_PAGES       (CONFIG_EROFS_FS_CLUSTER_PAGE_LIMIT)
-+#define EROFS_PCPUBUF_NR_PAGES          Z_EROFS_CLUSTER_MAX_PAGES
-+#else
-+#define EROFS_PCPUBUF_NR_PAGES          0
- #endif	/* !CONFIG_EROFS_FS_ZIP */
- 
- /* we strictly follow PAGE_SIZE and no buffer head yet */
-@@ -483,6 +489,21 @@ int erofs_namei(struct inode *dir, struct qstr *name,
- extern const struct file_operations erofs_dir_fops;
- 
- /* utils.c */
-+#if (EROFS_PCPUBUF_NR_PAGES > 0)
-+void *erofs_get_pcpubuf(unsigned int pagenr);
-+#define erofs_put_pcpubuf(buf) do { \
-+	(void)&(buf);	\
-+	preempt_enable();	\
-+} while (0)
-+#else
-+static inline void *erofs_get_pcpubuf(unsigned int pagenr)
++static void debug_one_dentry(unsigned char d_type, const char *de_name,
++			     unsigned int de_namelen)
 +{
-+	return ERR_PTR(-ENOTSUPP);
++#ifdef CONFIG_EROFS_FS_DEBUG
++	/* since the on-disk name could not have the trailing '\0' */
++	unsigned char dbg_namebuf[EROFS_NAME_LEN + 1];
++
++	memcpy(dbg_namebuf, de_name, de_namelen);
++	dbg_namebuf[de_namelen] = '\0';
++
++	debugln("found dirent %s de_len %u d_type %d", dbg_namebuf,
++		de_namelen, d_type);
++#endif
 +}
 +
-+#define erofs_put_pcpubuf(buf) do {} while (0)
-+#endif
-+
- #ifdef CONFIG_EROFS_FS_ZIP
- int erofs_workgroup_put(struct erofs_workgroup *grp);
- struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
-diff --git a/fs/erofs/utils.c b/fs/erofs/utils.c
-index 628178261056..f3eed9af24d6 100644
---- a/fs/erofs/utils.c
-+++ b/fs/erofs/utils.c
-@@ -9,6 +9,18 @@
- #include "internal.h"
- #include <linux/pagevec.h>
- 
-+#if (EROFS_PCPUBUF_NR_PAGES > 0)
-+static struct {
-+	u8 data[PAGE_SIZE * EROFS_PCPUBUF_NR_PAGES];
-+} ____cacheline_aligned_in_smp erofs_pcpubuf[NR_CPUS];
-+
-+void *erofs_get_pcpubuf(unsigned int pagenr)
++static int erofs_fill_dentries(struct dir_context *ctx,
++			       void *dentry_blk, unsigned int *ofs,
++			       unsigned int nameoff, unsigned int maxsize)
 +{
-+	preempt_disable();
-+	return &erofs_pcpubuf[smp_processor_id()].data[pagenr * PAGE_SIZE];
-+}
-+#endif
++	struct erofs_dirent *de = dentry_blk + *ofs;
++	const struct erofs_dirent *end = dentry_blk + nameoff;
 +
- #ifdef CONFIG_EROFS_FS_ZIP
- /* global shrink count (for all mounted EROFS instances) */
- static atomic_long_t erofs_global_shrink_cnt;
++	while (de < end) {
++		const char *de_name;
++		unsigned int de_namelen;
++		unsigned char d_type;
++
++		if (de->file_type < EROFS_FT_MAX)
++			d_type = erofs_filetype_table[de->file_type];
++		else
++			d_type = DT_UNKNOWN;
++
++		nameoff = le16_to_cpu(de->nameoff);
++		de_name = (char *)dentry_blk + nameoff;
++
++		/* the last dirent in the block? */
++		if (de + 1 >= end)
++			de_namelen = strnlen(de_name, maxsize - nameoff);
++		else
++			de_namelen = le16_to_cpu(de[1].nameoff) - nameoff;
++
++		/* a corrupted entry is found */
++		if (unlikely(nameoff + de_namelen > maxsize ||
++			     de_namelen > EROFS_NAME_LEN)) {
++			DBG_BUGON(1);
++			return -EIO;
++		}
++
++		debug_one_dentry(d_type, de_name, de_namelen);
++		if (!dir_emit(ctx, de_name, de_namelen,
++			      le64_to_cpu(de->nid), d_type))
++			/* stopped by some reason */
++			return 1;
++		++de;
++		*ofs += sizeof(struct erofs_dirent);
++	}
++	*ofs = maxsize;
++	return 0;
++}
++
++static int erofs_readdir(struct file *f, struct dir_context *ctx)
++{
++	struct inode *dir = file_inode(f);
++	struct address_space *mapping = dir->i_mapping;
++	const size_t dirsize = i_size_read(dir);
++	unsigned int i = ctx->pos / EROFS_BLKSIZ;
++	unsigned int ofs = ctx->pos % EROFS_BLKSIZ;
++	int err = 0;
++	bool initial = true;
++
++	while (ctx->pos < dirsize) {
++		struct page *dentry_page;
++		struct erofs_dirent *de;
++		unsigned int nameoff, maxsize;
++
++		dentry_page = read_mapping_page(mapping, i, NULL);
++		if (IS_ERR(dentry_page))
++			continue;
++
++		de = (struct erofs_dirent *)kmap(dentry_page);
++
++		nameoff = le16_to_cpu(de->nameoff);
++
++		if (unlikely(nameoff < sizeof(struct erofs_dirent) ||
++			     nameoff >= PAGE_SIZE)) {
++			errln("%s, invalid de[0].nameoff %u",
++			      __func__, nameoff);
++
++			err = -EIO;
++			goto skip_this;
++		}
++
++		maxsize = min_t(unsigned int,
++				dirsize - ctx->pos + ofs, PAGE_SIZE);
++
++		/* search dirents at the arbitrary position */
++		if (unlikely(initial)) {
++			initial = false;
++
++			ofs = roundup(ofs, sizeof(struct erofs_dirent));
++			if (unlikely(ofs >= nameoff))
++				goto skip_this;
++		}
++
++		err = erofs_fill_dentries(ctx, de, &ofs, nameoff, maxsize);
++skip_this:
++		kunmap(dentry_page);
++
++		put_page(dentry_page);
++
++		ctx->pos = blknr_to_addr(i) + ofs;
++
++		if (unlikely(err))
++			break;
++		++i;
++		ofs = 0;
++	}
++	return err < 0 ? err : 0;
++}
++
++const struct file_operations erofs_dir_fops = {
++	.llseek		= generic_file_llseek,
++	.read		= generic_read_dir,
++	.iterate_shared	= erofs_readdir,
++};
++
 -- 
 2.17.1
 
