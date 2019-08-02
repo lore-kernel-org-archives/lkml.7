@@ -2,167 +2,113 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87476C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:35:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5601AC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D73D2087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:35:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21A682087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:38:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="NNFWM0oi"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="K4zfPaqu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731679AbfHBQfB (ORCPT
+        id S1731663AbfHBQiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 12:35:01 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41824 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730828AbfHBQfA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 12:35:00 -0400
-Received: by mail-wr1-f67.google.com with SMTP id c2so74591880wrm.8
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 09:34:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=8jC0z1URQ1H0xyCXJDkfPMve8cjcGKBfDhT0uA7E2TE=;
-        b=NNFWM0oiXe3g6Tvx832q3/DBNG02GtBddw+kxX1llCJb6LxKU1n/Z12IJayyJmwQh+
-         ioSvXI2JhwCCpA+Bac8E8FCRPFVXcM2ynwZt3JBpWummRyWWVxNcD/kPgWBuT08TI2uR
-         37bP/6Kwn/b/ZawR10nz2Q/4B35trsqTn/YvPDYJPq5iWXyPsXkmk/iBKAzttuT8JtJl
-         PbAV96hUimt9te6/4ZgsVl9enJolBKcBVsURes7sQCsGB0BVwAi0180ZKO1bb2PHVysr
-         8r/gjoUrp0RgADrvQVTHWstLp94XuCRCRAghBCeRIwRj7+m2Cfdft/Lh4cfp2g+zFf+J
-         JVuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=8jC0z1URQ1H0xyCXJDkfPMve8cjcGKBfDhT0uA7E2TE=;
-        b=B6AJSzYLSokh+ZD8dhuVjreuwSfqE9zK+4ACJGf9ZujVR2OYp2Df/8CZx8wbxDUbrx
-         XNePFBRTVUXiQsYgeqdgzCLPTmfaN2lemTudAIY+4iTScCmaY16cwUXiC5gjrBrwI+az
-         5N12cCJp+TDd1seser/ahJYRRRCD5Us9VnPpxji3b3niqaCxFM/Flm7mfMc2h7Uh7E1r
-         Bqza1xrmICce7XS9vS61xaSYRLpL2ijUm6joTQDmAyPeeK3+Jfa5mWaXXvSgc1apUep1
-         AQLQvH9NK3wS3XktGNNfYq4QySf7FhcC3jJNLYEOmuPs4ywFw+FEJWFvGK5jJu9ZNyx3
-         OabA==
-X-Gm-Message-State: APjAAAXUsGazkGiZ6sF8r1Vael/p2Wjwgj8oNQmTH+Ga7MnrZD6Jg2vk
-        Ib8nZ0EivK19KfHmLXPudd8=
-X-Google-Smtp-Source: APXvYqyWWjzH2TRcQ0z7dDiznv1D2CaqThzDnGFdT7KCn0cU0KREvikpfdYkHrnSYM1MoarafBqWjw==
-X-Received: by 2002:adf:b195:: with SMTP id q21mr3999407wra.2.1564763698721;
-        Fri, 02 Aug 2019 09:34:58 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id j10sm134938738wrd.26.2019.08.02.09.34.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 02 Aug 2019 09:34:58 -0700 (PDT)
-Message-ID: <5d446632.1c69fb81.e9bbc.28ff@mx.google.com>
-Date:   Fri, 02 Aug 2019 09:34:58 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Fri, 2 Aug 2019 12:38:17 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:57416 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729353AbfHBQiR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 12:38:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=vxCsCNQWqLeWrA3y8RCekTBrHa/5LhPIa+3s2OFLSmI=; b=K4zfPaquorQ1qToZfbnPnAHCjJ
+        gowUkVGA0TobpliIakmVAGlTfhhaDct7irgPiZNi818VclwpD8b6E+FgUw+lIqadzrf14EXvfNr6/
+        Hr/SJ32kpgmGGnvTFCMSbZreAMvuSGcW7pn9Jg7J7CtAeRBI/9H0WrFn1vydtCCg6pA8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1htaZG-0002JS-Jr; Fri, 02 Aug 2019 18:38:10 +0200
+Date:   Fri, 2 Aug 2019 18:38:10 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v4 2/4] net: phy: Add function to retrieve LED
+ configuration from the DT
+Message-ID: <20190802163810.GL2099@lunn.ch>
+References: <20190801190759.28201-1-mka@chromium.org>
+ <20190801190759.28201-3-mka@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Kernel: v4.9.186-224-g5380ded2525d
-X-Kernelci-Branch: linux-4.9.y
-X-Kernelci-Report-Type: boot
-In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
-References: <20190802092238.692035242@linuxfoundation.org>
-Subject: Re: [PATCH 4.9 000/223] 4.9.187-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190801190759.28201-3-mka@chromium.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.9.y boot: 101 boots: 0 failed, 66 passed with 35 offline =
-(v4.9.186-224-g5380ded2525d)
+On Thu, Aug 01, 2019 at 12:07:57PM -0700, Matthias Kaehlcke wrote:
+> Add a phylib function for retrieving PHY LED configuration that
+> is specified in the device tree using the generic binding. LEDs
+> can be configured to be 'on' for a certain link speed or to blink
+> when there is TX/RX activity.
+> 
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+> Changes in v4:
+> - patch added to the series
+> ---
+>  drivers/net/phy/phy_device.c | 50 ++++++++++++++++++++++++++++++++++++
+>  include/linux/phy.h          | 15 +++++++++++
+>  2 files changed, 65 insertions(+)
+> 
+> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+> index 6b5cb87f3866..b4b48de45712 100644
+> --- a/drivers/net/phy/phy_device.c
+> +++ b/drivers/net/phy/phy_device.c
+> @@ -2188,6 +2188,56 @@ static bool phy_drv_supports_irq(struct phy_driver *phydrv)
+>  	return phydrv->config_intr && phydrv->ack_interrupt;
+>  }
+>  
+> +int of_get_phy_led_cfg(struct phy_device *phydev, int led,
+> +		       struct phy_led_config *cfg)
+> +{
+> +	struct device_node *np, *child;
+> +	const char *trigger;
+> +	int ret;
+> +
+> +	if (!IS_ENABLED(CONFIG_OF_MDIO))
+> +		return -ENOENT;
+> +
+> +	np = of_find_node_by_name(phydev->mdio.dev.of_node, "leds");
+> +	if (!np)
+> +		return -ENOENT;
+> +
+> +	for_each_child_of_node(np, child) {
+> +		u32 val;
+> +
+> +		if (!of_property_read_u32(child, "reg", &val)) {
+> +			if (val == (u32)led)
+> +				break;
+> +		}
+> +	}
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.9.y/kernel/v4.9.186-224-g5380ded2525d/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.9.y=
-/kernel/v4.9.186-224-g5380ded2525d/
+Hi Matthias
 
-Tree: stable-rc
-Branch: linux-4.9.y
-Git Describe: v4.9.186-224-g5380ded2525d
-Git Commit: 5380ded2525da1be5103e3f0f33129dcbffa3add
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 50 unique boards, 23 SoC families, 15 builds out of 197
+This is leaking references to np and child. In the past we have not
+cared about this too much, but we are now getting patches adding the
+missing releases. So it would be good to fix this.
 
-Offline Platforms:
-
-arm64:
-
-    defconfig:
-        gcc-8
-            meson-gxbb-odroidc2: 1 offline lab
-
-arm:
-
-    tegra_defconfig:
-        gcc-8
-            tegra20-iris-512: 1 offline lab
-
-    exynos_defconfig:
-        gcc-8
-            exynos5250-arndale: 1 offline lab
-            exynos5420-arndale-octa: 1 offline lab
-            exynos5800-peach-pi: 1 offline lab
-
-    multi_v7_defconfig:
-        gcc-8
-            bcm72521-bcm97252sffe: 1 offline lab
-            bcm7445-bcm97445c: 1 offline lab
-            exynos5250-arndale: 1 offline lab
-            exynos5420-arndale-octa: 1 offline lab
-            exynos5800-peach-pi: 1 offline lab
-            imx6dl-wandboard_dual: 1 offline lab
-            imx6dl-wandboard_solo: 1 offline lab
-            imx6q-wandboard: 1 offline lab
-            imx7s-warp: 1 offline lab
-            meson8b-odroidc1: 1 offline lab
-            omap3-beagle: 1 offline lab
-            omap4-panda: 1 offline lab
-            qcom-apq8064-ifc6410: 1 offline lab
-            stih410-b2120: 1 offline lab
-            sun4i-a10-cubieboard: 1 offline lab
-            sun7i-a20-bananapi: 1 offline lab
-            tegra20-iris-512: 1 offline lab
-            vf610-colibri-eval-v3: 1 offline lab
-
-    omap2plus_defconfig:
-        gcc-8
-            omap3-beagle: 1 offline lab
-            omap4-panda: 1 offline lab
-
-    qcom_defconfig:
-        gcc-8
-            qcom-apq8064-ifc6410: 1 offline lab
-
-    davinci_all_defconfig:
-        gcc-8
-            da850-evm: 1 offline lab
-            dm365evm,legacy: 1 offline lab
-
-    imx_v6_v7_defconfig:
-        gcc-8
-            imx6dl-wandboard_dual: 1 offline lab
-            imx6dl-wandboard_solo: 1 offline lab
-            imx6q-wandboard: 1 offline lab
-            imx7s-warp: 1 offline lab
-            vf610-colibri-eval-v3: 1 offline lab
-
-    sunxi_defconfig:
-        gcc-8
-            sun4i-a10-cubieboard: 1 offline lab
-            sun7i-a20-bananapi: 1 offline lab
-
----
-For more info write to <info@kernelci.org>
+	Andrew
