@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9C5C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 534F4C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A250D20679
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:43:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 238442087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:44:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739039;
-	bh=T22cdQWK5a/PAaS4hKVglKPJaPKjkRVL1RkhOvh+v18=;
+	s=default; t=1564739042;
+	bh=7/qV78p8l5fI474YoV9NADyoLn8956SNp2ctzFU4Kcc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S66FxhIDeOsCVvl6AGOwbbWV4vKfhGdN6uI7nuQ1paOyu1IECv9mrcMICl1bGQ1gC
-	 U8uzCoA8jML4yXj9sXNztMZUIqbK6+1DjnaAsSx9PsbBsyuNoP+49ehdIP74dC9PGO
-	 JMQ6SV92I8nLZt5owxvyveLuKlyQYDu78JBHdmJw=
+	b=lFJRHRhlkfr3u6CrUmxkqQ062b6FSroOlim2ULYhojiAYz9yN+/NjlHe3paZi1Gfi
+	 G+8Uq7gTG9tThtr8XMw/cu3tOBs3vKAJgDDYTFHrYsN6ldN1mOavWSKdq1OrRXMW+p
+	 I3fnVp2lk0rENtaqeZRjacaupyP1dNuLRIsQTLcU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403915AbfHBJn5 (ORCPT
+        id S2405158AbfHBJoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:43:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46960 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:44:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405132AbfHBJnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:43:53 -0400
+        id S2404801AbfHBJn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:43:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61CF320679;
-        Fri,  2 Aug 2019 09:43:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 745C120679;
+        Fri,  2 Aug 2019 09:43:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739031;
-        bh=T22cdQWK5a/PAaS4hKVglKPJaPKjkRVL1RkhOvh+v18=;
+        s=default; t=1564739037;
+        bh=7/qV78p8l5fI474YoV9NADyoLn8956SNp2ctzFU4Kcc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xV6E7fQhCRByQeL995nIR7f+KLqV33YK8FfgbrQwtsWOB8zA39fbl9GrdbMpUlYdo
-         nZlaZrflO841sy4datvZuBXlAm/TF0q4LrlVmZ8JZ1SQm1HFoSmarnCigSZ74QAXFf
-         XPtOmh5apc1EK2lGSvYsrxLZo3XkKYzd/AZH8gDI=
+        b=hx6s2/ZaaRtzELCjaZiDOHGjGU/5XS7hx/qyqULLBThBdQu1SfPCVyE9Dkm5iWHBl
+         3g/jWlX4GGmchiyu/4kt2804Wm09qtLJy4j7YIhhiBs6mw5eyjxsqjq/Jzy8VNZCmr
+         kNIGBBKBrh2w4INHIRARqIK4jL2m3tl1sMHtLaJU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Carey Sonsino <csonsino@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
+        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Eiichi Tsukata <devel@etsukata.com>,
+        Tony Luck <tony.luck@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 071/223] Bluetooth: validate BLE connection interval updates
-Date:   Fri,  2 Aug 2019 11:34:56 +0200
-Message-Id: <20190802092243.409765671@linuxfoundation.org>
+Subject: [PATCH 4.9 063/223] EDAC: Fix global-out-of-bounds write when setting edac_mc_poll_msec
+Date:   Fri,  2 Aug 2019 11:34:48 +0200
+Message-Id: <20190802092242.925718960@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -60,90 +61,157 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c49a8682fc5d298d44e8d911f4fa14690ea9485e ]
+[ Upstream commit d8655e7630dafa88bc37f101640e39c736399771 ]
 
-Problem: The Linux Bluetooth stack yields complete control over the BLE
-connection interval to the remote device.
+Commit 9da21b1509d8 ("EDAC: Poll timeout cannot be zero, p2") assumes
+edac_mc_poll_msec to be unsigned long, but the type of the variable still
+remained as int. Setting edac_mc_poll_msec can trigger out-of-bounds
+write.
 
-The Linux Bluetooth stack provides access to the BLE connection interval
-min and max values through /sys/kernel/debug/bluetooth/hci0/
-conn_min_interval and /sys/kernel/debug/bluetooth/hci0/conn_max_interval.
-These values are used for initial BLE connections, but the remote device
-has the ability to request a connection parameter update. In the event
-that the remote side requests to change the connection interval, the Linux
-kernel currently only validates that the desired value is within the
-acceptable range in the Bluetooth specification (6 - 3200, corresponding to
-7.5ms - 4000ms). There is currently no validation that the desired value
-requested by the remote device is within the min/max limits specified in
-the conn_min_interval/conn_max_interval configurations. This essentially
-leads to Linux yielding complete control over the connection interval to
-the remote device.
+Reproducer:
 
-The proposed patch adds a verification step to the connection parameter
-update mechanism, ensuring that the desired value is within the min/max
-bounds of the current connection. If the desired value is outside of the
-current connection min/max values, then the connection parameter update
-request is rejected and the negative response is returned to the remote
-device. Recall that the initial connection is established using the local
-conn_min_interval/conn_max_interval values, so this allows the Linux
-administrator to retain control over the BLE connection interval.
+  # echo 1001 > /sys/module/edac_core/parameters/edac_mc_poll_msec
 
-The one downside that I see is that the current default Linux values for
-conn_min_interval and conn_max_interval typically correspond to 30ms and
-50ms respectively. If this change were accepted, then it is feasible that
-some devices would no longer be able to negotiate to their desired
-connection interval values. This might be remedied by setting the default
-Linux conn_min_interval and conn_max_interval values to the widest
-supported range (6 - 3200 / 7.5ms - 4000ms). This could lead to the same
-behavior as the current implementation, where the remote device could
-request to change the connection interval value to any value that is
-permitted by the Bluetooth specification, and Linux would accept the
-desired value.
+KASAN report:
 
-Signed-off-by: Carey Sonsino <csonsino@gmail.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+  BUG: KASAN: global-out-of-bounds in edac_set_poll_msec+0x140/0x150
+  Write of size 8 at addr ffffffffb91b2d00 by task bash/1996
+
+  CPU: 1 PID: 1996 Comm: bash Not tainted 5.2.0-rc6+ #23
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-2.fc30 04/01/2014
+  Call Trace:
+   dump_stack+0xca/0x13e
+   print_address_description.cold+0x5/0x246
+   __kasan_report.cold+0x75/0x9a
+   ? edac_set_poll_msec+0x140/0x150
+   kasan_report+0xe/0x20
+   edac_set_poll_msec+0x140/0x150
+   ? dimmdev_location_show+0x30/0x30
+   ? vfs_lock_file+0xe0/0xe0
+   ? _raw_spin_lock+0x87/0xe0
+   param_attr_store+0x1b5/0x310
+   ? param_array_set+0x4f0/0x4f0
+   module_attr_store+0x58/0x80
+   ? module_attr_show+0x80/0x80
+   sysfs_kf_write+0x13d/0x1a0
+   kernfs_fop_write+0x2bc/0x460
+   ? sysfs_kf_bin_read+0x270/0x270
+   ? kernfs_notify+0x1f0/0x1f0
+   __vfs_write+0x81/0x100
+   vfs_write+0x1e1/0x560
+   ksys_write+0x126/0x250
+   ? __ia32_sys_read+0xb0/0xb0
+   ? do_syscall_64+0x1f/0x390
+   do_syscall_64+0xc1/0x390
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  RIP: 0033:0x7fa7caa5e970
+  Code: 73 01 c3 48 8b 0d 28 d5 2b 00 f7 d8 64 89 01 48 83 c8 ff c3 66 0f 1f 44 00 00 83 3d 99 2d 2c 00 00 75 10 b8 01 00 00 00 04
+  RSP: 002b:00007fff6acfdfe8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+  RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 00007fa7caa5e970
+  RDX: 0000000000000005 RSI: 0000000000e95c08 RDI: 0000000000000001
+  RBP: 0000000000e95c08 R08: 00007fa7cad1e760 R09: 00007fa7cb36a700
+  R10: 0000000000000073 R11: 0000000000000246 R12: 0000000000000005
+  R13: 0000000000000001 R14: 00007fa7cad1d600 R15: 0000000000000005
+
+  The buggy address belongs to the variable:
+   edac_mc_poll_msec+0x0/0x40
+
+  Memory state around the buggy address:
+   ffffffffb91b2c00: 00 00 00 00 fa fa fa fa 00 00 00 00 fa fa fa fa
+   ffffffffb91b2c80: 00 00 00 00 fa fa fa fa 00 00 00 00 fa fa fa fa
+  >ffffffffb91b2d00: 04 fa fa fa fa fa fa fa 04 fa fa fa fa fa fa fa
+                     ^
+   ffffffffb91b2d80: 04 fa fa fa fa fa fa fa 00 00 00 00 00 00 00 00
+   ffffffffb91b2e00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+
+Fix it by changing the type of edac_mc_poll_msec to unsigned int.
+The reason why this patch adopts unsigned int rather than unsigned long
+is msecs_to_jiffies() assumes arg to be unsigned int. We can avoid
+integer conversion bugs and unsigned int will be large enough for
+edac_mc_poll_msec.
+
+Reviewed-by: James Morse <james.morse@arm.com>
+Fixes: 9da21b1509d8 ("EDAC: Poll timeout cannot be zero, p2")
+Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/hci_event.c  | 5 +++++
- net/bluetooth/l2cap_core.c | 9 ++++++++-
- 2 files changed, 13 insertions(+), 1 deletion(-)
+ drivers/edac/edac_mc_sysfs.c | 16 ++++++++--------
+ drivers/edac/edac_module.h   |  2 +-
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index 6f78489fdb13..163a239bda91 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -5089,6 +5089,11 @@ static void hci_le_remote_conn_param_req_evt(struct hci_dev *hdev,
- 		return send_conn_param_neg_reply(hdev, handle,
- 						 HCI_ERROR_UNKNOWN_CONN_ID);
+diff --git a/drivers/edac/edac_mc_sysfs.c b/drivers/edac/edac_mc_sysfs.c
+index 203ebe348b77..d59641194860 100644
+--- a/drivers/edac/edac_mc_sysfs.c
++++ b/drivers/edac/edac_mc_sysfs.c
+@@ -26,7 +26,7 @@
+ static int edac_mc_log_ue = 1;
+ static int edac_mc_log_ce = 1;
+ static int edac_mc_panic_on_ue;
+-static int edac_mc_poll_msec = 1000;
++static unsigned int edac_mc_poll_msec = 1000;
  
-+	if (min < hcon->le_conn_min_interval ||
-+	    max > hcon->le_conn_max_interval)
-+		return send_conn_param_neg_reply(hdev, handle,
-+						 HCI_ERROR_INVALID_LL_PARAMS);
-+
- 	if (hci_check_conn_params(min, max, latency, timeout))
- 		return send_conn_param_neg_reply(hdev, handle,
- 						 HCI_ERROR_INVALID_LL_PARAMS);
-diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
-index 48d23abfe799..4912e80dacef 100644
---- a/net/bluetooth/l2cap_core.c
-+++ b/net/bluetooth/l2cap_core.c
-@@ -5277,7 +5277,14 @@ static inline int l2cap_conn_param_update_req(struct l2cap_conn *conn,
+ /* Getter functions for above */
+ int edac_mc_get_log_ue(void)
+@@ -45,30 +45,30 @@ int edac_mc_get_panic_on_ue(void)
+ }
  
- 	memset(&rsp, 0, sizeof(rsp));
+ /* this is temporary */
+-int edac_mc_get_poll_msec(void)
++unsigned int edac_mc_get_poll_msec(void)
+ {
+ 	return edac_mc_poll_msec;
+ }
  
--	err = hci_check_conn_params(min, max, latency, to_multiplier);
-+	if (min < hcon->le_conn_min_interval ||
-+	    max > hcon->le_conn_max_interval) {
-+		BT_DBG("requested connection interval exceeds current bounds.");
-+		err = -EINVAL;
-+	} else {
-+		err = hci_check_conn_params(min, max, latency, to_multiplier);
-+	}
-+
- 	if (err)
- 		rsp.result = cpu_to_le16(L2CAP_CONN_PARAM_REJECTED);
- 	else
+ static int edac_set_poll_msec(const char *val, struct kernel_param *kp)
+ {
+-	unsigned long l;
++	unsigned int i;
+ 	int ret;
+ 
+ 	if (!val)
+ 		return -EINVAL;
+ 
+-	ret = kstrtoul(val, 0, &l);
++	ret = kstrtouint(val, 0, &i);
+ 	if (ret)
+ 		return ret;
+ 
+-	if (l < 1000)
++	if (i < 1000)
+ 		return -EINVAL;
+ 
+-	*((unsigned long *)kp->arg) = l;
++	*((unsigned int *)kp->arg) = i;
+ 
+ 	/* notify edac_mc engine to reset the poll period */
+-	edac_mc_reset_delay_period(l);
++	edac_mc_reset_delay_period(i);
+ 
+ 	return 0;
+ }
+@@ -82,7 +82,7 @@ MODULE_PARM_DESC(edac_mc_log_ue,
+ module_param(edac_mc_log_ce, int, 0644);
+ MODULE_PARM_DESC(edac_mc_log_ce,
+ 		 "Log correctable error to console: 0=off 1=on");
+-module_param_call(edac_mc_poll_msec, edac_set_poll_msec, param_get_int,
++module_param_call(edac_mc_poll_msec, edac_set_poll_msec, param_get_uint,
+ 		  &edac_mc_poll_msec, 0644);
+ MODULE_PARM_DESC(edac_mc_poll_msec, "Polling period in milliseconds");
+ 
+diff --git a/drivers/edac/edac_module.h b/drivers/edac/edac_module.h
+index cfaacb99c973..c36f9f721fb2 100644
+--- a/drivers/edac/edac_module.h
++++ b/drivers/edac/edac_module.h
+@@ -33,7 +33,7 @@ extern int edac_mc_get_log_ue(void);
+ extern int edac_mc_get_log_ce(void);
+ extern int edac_mc_get_panic_on_ue(void);
+ extern int edac_get_poll_msec(void);
+-extern int edac_mc_get_poll_msec(void);
++extern unsigned int edac_mc_get_poll_msec(void);
+ 
+ unsigned edac_dimm_info_location(struct dimm_info *dimm, char *buf,
+ 				 unsigned len);
 -- 
 2.20.1
 
