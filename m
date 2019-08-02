@@ -2,102 +2,236 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34BDDC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:22:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BDB2C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ED6921911
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:22:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="FLdvB3uy"
+	by mail.kernel.org (Postfix) with ESMTP id 6FA2621911
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:24:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404087AbfHBIWN (ORCPT
+        id S2404099AbfHBIYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 04:22:13 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:43708 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727008AbfHBIWN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 04:22:13 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 50D4CCC;
-        Fri,  2 Aug 2019 10:22:11 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1564734131;
-        bh=VgdL0PFfWAynREcrc/v61AFgKdHD544UedHtCeN9bZE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FLdvB3uy+1uzNO8J9YA5iR7kxx0IWo1rTINLSEmUQ30eeqchNTDSt5ogc2k+VDQDP
-         I/8yjwzd20GMDpmyRP48GAOZE+DUKa3EtR9s6C1yHageiAp/F660EPmnZ6POXu7Jge
-         UHGKOxlfvqY8yBRgMNfA/HqiGtPvnmtNFQ6yqu34=
-Date:   Fri, 2 Aug 2019 11:22:09 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>
-Subject: Re: [PATCH/RFC 08/12] drm: rcar-du: lvds: Fix bridge_to_rcar_lvds
-Message-ID: <20190802082209.GI5008@pendragon.ideasonboard.com>
-References: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1564731249-22671-9-git-send-email-fabrizio.castro@bp.renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1564731249-22671-9-git-send-email-fabrizio.castro@bp.renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 2 Aug 2019 04:24:02 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39196 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726164AbfHBIYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 04:24:01 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5BDC3AE6D;
+        Fri,  2 Aug 2019 08:23:59 +0000 (UTC)
+Date:   Fri, 02 Aug 2019 10:24:02 +0200
+Message-ID: <s5hh870rn4t.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Takashi Iwai <tiwai@suse.de>, iommu@lists.linux-foundation.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-xtensa@linux-xtensa.org, Michal Simek <monstr@monstr.eu>,
+        linux-parisc@vger.kernel.org, linux-sh@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 5/5] dma-mapping: remove ARCH_NO_COHERENT_DMA_MMAP
+In-Reply-To: <20190802070354.GA8280@lst.de>
+References: <20190725063401.29904-1-hch@lst.de>
+        <20190725063401.29904-6-hch@lst.de>
+        <20190802070354.GA8280@lst.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fabrizio,
-
-Thank you for the patch.
-
-On Fri, Aug 02, 2019 at 08:34:05AM +0100, Fabrizio Castro wrote:
-> Using name "bridge" for macro bridge_to_rcar_lvds argument doesn't
-> work when the pointer name used by the caller is not "bridge".
-> Rename the argument to "bridge_ptr" to allow for any pointer
-> name.
+On Fri, 02 Aug 2019 09:03:54 +0200,
+Christoph Hellwig wrote:
 > 
-> Fixes: c6a27fa41fab ("drm: rcar-du: Convert LVDS encoder code to bridge driver")
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> ---
->  drivers/gpu/drm/rcar-du/rcar_lvds.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Takashi,
 > 
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> index 97c51c2..edd63f5 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> +++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> @@ -72,8 +72,8 @@ struct rcar_lvds {
->  	bool stripe_swap_data;
->  };
->  
-> -#define bridge_to_rcar_lvds(bridge) \
-> -	container_of(bridge, struct rcar_lvds, bridge)
-> +#define bridge_to_rcar_lvds(bridge_ptr) \
-> +	container_of(bridge_ptr, struct rcar_lvds, bridge)
+> any comments on the sounds/ side of this?
 
-How about just 'b' instead of 'bridge_ptr' ? If that's fine with you
-I'll take the modified patch in my tree, no need to resubmit.
+I wasn't careful enough to look at that change, sorry.
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+The code there tries to check whether dma_mmap_coherent() would always
+fail on some platforms.  Then the driver clears the mmap capability
+flag at the device open time and notifies user-space to fall back to
+the dumb read/write mode.
 
->  
->  #define connector_to_rcar_lvds(connector) \
->  	container_of(connector, struct rcar_lvds, connector)
+So I'm afraid that simply dropping the check would cause the behavior
+regression, e.g. on PARISC.
 
--- 
-Regards,
+Is there any simple way to test whether dma_mmap_coherent() would work
+or not in general on the target platform?  It's not necessarily in an
+ifdef at all.
 
-Laurent Pinchart
+
+thanks,
+
+Takashi
+
+> On Thu, Jul 25, 2019 at 08:34:01AM +0200, Christoph Hellwig wrote:
+> > Now that we never use a default ->mmap implementation, and non-coherent
+> > architectures can control the presence of ->mmap support by enabling
+> > ARCH_HAS_DMA_COHERENT_TO_PFN for the dma direct implementation there
+> > is no need for a global config option to control the availability
+> > of dma_common_mmap.
+> > 
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > ---
+> >  arch/Kconfig            |  3 ---
+> >  arch/c6x/Kconfig        |  1 -
+> >  arch/m68k/Kconfig       |  1 -
+> >  arch/microblaze/Kconfig |  1 -
+> >  arch/parisc/Kconfig     |  1 -
+> >  arch/sh/Kconfig         |  1 -
+> >  arch/xtensa/Kconfig     |  1 -
+> >  kernel/dma/mapping.c    |  4 ----
+> >  sound/core/pcm_native.c | 10 +---------
+> >  9 files changed, 1 insertion(+), 22 deletions(-)
+> > 
+> > diff --git a/arch/Kconfig b/arch/Kconfig
+> > index a7b57dd42c26..ec2834206d08 100644
+> > --- a/arch/Kconfig
+> > +++ b/arch/Kconfig
+> > @@ -790,9 +790,6 @@ config COMPAT_32BIT_TIME
+> >  	  This is relevant on all 32-bit architectures, and 64-bit architectures
+> >  	  as part of compat syscall handling.
+> >  
+> > -config ARCH_NO_COHERENT_DMA_MMAP
+> > -	bool
+> > -
+> >  config ARCH_NO_PREEMPT
+> >  	bool
+> >  
+> > diff --git a/arch/c6x/Kconfig b/arch/c6x/Kconfig
+> > index b4fb61c83494..e65e8d82442a 100644
+> > --- a/arch/c6x/Kconfig
+> > +++ b/arch/c6x/Kconfig
+> > @@ -20,7 +20,6 @@ config C6X
+> >  	select OF_EARLY_FLATTREE
+> >  	select GENERIC_CLOCKEVENTS
+> >  	select MODULES_USE_ELF_RELA
+> > -	select ARCH_NO_COHERENT_DMA_MMAP
+> >  	select MMU_GATHER_NO_RANGE if MMU
+> >  
+> >  config MMU
+> > diff --git a/arch/m68k/Kconfig b/arch/m68k/Kconfig
+> > index c518d695c376..614b355ae338 100644
+> > --- a/arch/m68k/Kconfig
+> > +++ b/arch/m68k/Kconfig
+> > @@ -8,7 +8,6 @@ config M68K
+> >  	select ARCH_HAS_DMA_PREP_COHERENT if HAS_DMA && MMU && !COLDFIRE
+> >  	select ARCH_HAS_SYNC_DMA_FOR_DEVICE if HAS_DMA
+> >  	select ARCH_MIGHT_HAVE_PC_PARPORT if ISA
+> > -	select ARCH_NO_COHERENT_DMA_MMAP if !MMU
+> >  	select ARCH_NO_PREEMPT if !COLDFIRE
+> >  	select BINFMT_FLAT_ARGVP_ENVP_ON_STACK
+> >  	select DMA_DIRECT_REMAP if HAS_DMA && MMU && !COLDFIRE
+> > diff --git a/arch/microblaze/Kconfig b/arch/microblaze/Kconfig
+> > index d411de05b628..632c9477a0f6 100644
+> > --- a/arch/microblaze/Kconfig
+> > +++ b/arch/microblaze/Kconfig
+> > @@ -9,7 +9,6 @@ config MICROBLAZE
+> >  	select ARCH_HAS_SYNC_DMA_FOR_CPU
+> >  	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
+> >  	select ARCH_MIGHT_HAVE_PC_PARPORT
+> > -	select ARCH_NO_COHERENT_DMA_MMAP if !MMU
+> >  	select ARCH_WANT_IPC_PARSE_VERSION
+> >  	select BUILDTIME_EXTABLE_SORT
+> >  	select TIMER_OF
+> > diff --git a/arch/parisc/Kconfig b/arch/parisc/Kconfig
+> > index 6d732e451071..e9dd88b7f81e 100644
+> > --- a/arch/parisc/Kconfig
+> > +++ b/arch/parisc/Kconfig
+> > @@ -52,7 +52,6 @@ config PARISC
+> >  	select GENERIC_SCHED_CLOCK
+> >  	select HAVE_UNSTABLE_SCHED_CLOCK if SMP
+> >  	select GENERIC_CLOCKEVENTS
+> > -	select ARCH_NO_COHERENT_DMA_MMAP
+> >  	select CPU_NO_EFFICIENT_FFS
+> >  	select NEED_DMA_MAP_STATE
+> >  	select NEED_SG_DMA_LENGTH
+> > diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
+> > index 6b1b5941b618..f356ee674d89 100644
+> > --- a/arch/sh/Kconfig
+> > +++ b/arch/sh/Kconfig
+> > @@ -5,7 +5,6 @@ config SUPERH
+> >  	select ARCH_HAS_PTE_SPECIAL
+> >  	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+> >  	select ARCH_MIGHT_HAVE_PC_PARPORT
+> > -	select ARCH_NO_COHERENT_DMA_MMAP if !MMU
+> >  	select HAVE_PATA_PLATFORM
+> >  	select CLKDEV_LOOKUP
+> >  	select DMA_DECLARE_COHERENT
+> > diff --git a/arch/xtensa/Kconfig b/arch/xtensa/Kconfig
+> > index ebc135bda921..70653aed3005 100644
+> > --- a/arch/xtensa/Kconfig
+> > +++ b/arch/xtensa/Kconfig
+> > @@ -5,7 +5,6 @@ config XTENSA
+> >  	select ARCH_HAS_BINFMT_FLAT if !MMU
+> >  	select ARCH_HAS_SYNC_DMA_FOR_CPU
+> >  	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
+> > -	select ARCH_NO_COHERENT_DMA_MMAP if !MMU
+> >  	select ARCH_USE_QUEUED_RWLOCKS
+> >  	select ARCH_USE_QUEUED_SPINLOCKS
+> >  	select ARCH_WANT_FRAME_POINTERS
+> > diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
+> > index 7dff1829c8c5..815446f76995 100644
+> > --- a/kernel/dma/mapping.c
+> > +++ b/kernel/dma/mapping.c
+> > @@ -169,7 +169,6 @@ int dma_common_mmap(struct device *dev, struct vm_area_struct *vma,
+> >  		void *cpu_addr, dma_addr_t dma_addr, size_t size,
+> >  		unsigned long attrs)
+> >  {
+> > -#ifndef CONFIG_ARCH_NO_COHERENT_DMA_MMAP
+> >  	unsigned long user_count = vma_pages(vma);
+> >  	unsigned long count = PAGE_ALIGN(size) >> PAGE_SHIFT;
+> >  	unsigned long off = vma->vm_pgoff;
+> > @@ -198,9 +197,6 @@ int dma_common_mmap(struct device *dev, struct vm_area_struct *vma,
+> >  
+> >  	return remap_pfn_range(vma, vma->vm_start, pfn + vma->vm_pgoff,
+> >  			user_count << PAGE_SHIFT, vma->vm_page_prot);
+> > -#else
+> > -	return -ENXIO;
+> > -#endif /* !CONFIG_ARCH_NO_COHERENT_DMA_MMAP */
+> >  }
+> >  
+> >  /**
+> > diff --git a/sound/core/pcm_native.c b/sound/core/pcm_native.c
+> > index 860543a4c840..2dadc708343a 100644
+> > --- a/sound/core/pcm_native.c
+> > +++ b/sound/core/pcm_native.c
+> > @@ -218,15 +218,7 @@ int snd_pcm_info_user(struct snd_pcm_substream *substream,
+> >  
+> >  static bool hw_support_mmap(struct snd_pcm_substream *substream)
+> >  {
+> > -	if (!(substream->runtime->hw.info & SNDRV_PCM_INFO_MMAP))
+> > -		return false;
+> > -	/* architecture supports dma_mmap_coherent()? */
+> > -#if defined(CONFIG_ARCH_NO_COHERENT_DMA_MMAP) || !defined(CONFIG_HAS_DMA)
+> > -	if (!substream->ops->mmap &&
+> > -	    substream->dma_buffer.dev.type == SNDRV_DMA_TYPE_DEV)
+> > -		return false;
+> > -#endif
+> > -	return true;
+> > +	return substream->runtime->hw.info & SNDRV_PCM_INFO_MMAP;
+> >  }
+> >  
+> >  static int constrain_mask_params(struct snd_pcm_substream *substream,
+> > -- 
+> > 2.20.1
+> > 
+> > 
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> ---end quoted text---
+> 
