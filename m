@@ -5,49 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 513EEC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4481EC32753
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B82320B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20647216C8
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:37:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738662;
-	bh=QAmiH7E7EsJeRwCbeiTZ4OFDnlCfVKCElB6zOprTIZw=;
+	s=default; t=1564738665;
+	bh=2iokwITC+I3NWDqkdf26jEzIjBLZs6me/Tt0hsy0/rs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lhQZJo+qUbgOnaEFNvHS9tlKtM/G0WD2gorE6rlXqT/09TsKSF1kmvIbrGo2Rg2rV
-	 tYeLAKct6iM0yGJR0JhA4r9LS7Ts5WMDTsq6sUFHFNyCiws8RvrWuhnWNWq4j67cGD
-	 0/ZZM+PJMosRGlzMwno9wtykvCcAHYUHXoj0eF4M=
+	b=C3TCNum/XSgL7fdV37UGYh+3h8W5D7HlvF57lK9sFnybP91s0n+fsWjQ01Qcqstyj
+	 PI0PWJUxwMQkJy5I+QmgKSOdJ24yesOuXoVGl/9gYvsKL6XZr88EsG64dNlM1r+Z0D
+	 mFew/dsztlkwFEeHJTmuQ6UGS4WO4TTqn4huZqoY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403877AbfHBJfk (ORCPT
+        id S2391678AbfHBJfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:35:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36186 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:35:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730313AbfHBJfg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:35:36 -0400
+        id S2391644AbfHBJfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:35:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1FDB21773;
-        Fri,  2 Aug 2019 09:35:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A70A217D4;
+        Fri,  2 Aug 2019 09:35:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738535;
-        bh=QAmiH7E7EsJeRwCbeiTZ4OFDnlCfVKCElB6zOprTIZw=;
+        s=default; t=1564738522;
+        bh=2iokwITC+I3NWDqkdf26jEzIjBLZs6me/Tt0hsy0/rs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AR5/Z/kmT1IWA+tzWw9YnzDBdpSTRrR2gSgP+56LDdcepz29Mq/HOQhUO6ABM0wf0
-         hP9wjDop1nhiGB/FTZrcyPgYpe8JOukxCHGd85BhDllghIFYd48ekLTminCjap5LN4
-         5OLPMvX5XWVCyuBItoADwpFbDJ14uhv0/SlvKZAo=
+        b=mxAbdBHNjkXOgMaJQVE8WlRcLB0R3L9bZYvVhdOUcpdCbZjiJj6drcewysAVytiTR
+         N6Ubd9x812gIuF8fgZglxOg2kKRI12RVrZepxTy2nNd2b54qpyCb5OBq1wHAoJ6KjN
+         E6bfWXzw5oRaxtCVq/wWwXyW5K3fDg76+b7UCkO0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
-        Richard Weinberger <richard@nod.at>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Yuyang Du <duyuyang@gmail.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>, arnd@arndb.de,
+        frederic@kernel.org, Ingo Molnar <mingo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 125/158] um: Silence lockdep complaint about mmap_sem
-Date:   Fri,  2 Aug 2019 11:29:06 +0200
-Message-Id: <20190802092229.058713818@linuxfoundation.org>
+Subject: [PATCH 4.4 137/158] locking/lockdep: Fix lock used or unused stats error
+Date:   Fri,  2 Aug 2019 11:29:18 +0200
+Message-Id: <20190802092230.893830860@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -60,109 +67,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 80bf6ceaf9310b3f61934c69b382d4912deee049 ]
+[ Upstream commit 68d41d8c94a31dfb8233ab90b9baf41a2ed2da68 ]
 
-When we get into activate_mm(), lockdep complains that we're doing
-something strange:
+The stats variable nr_unused_locks is incremented every time a new lock
+class is register and decremented when the lock is first used in
+__lock_acquire(). And after all, it is shown and checked in lockdep_stats.
 
-    WARNING: possible circular locking dependency detected
-    5.1.0-10252-gb00152307319-dirty #121 Not tainted
-    ------------------------------------------------------
-    inside.sh/366 is trying to acquire lock:
-    (____ptrval____) (&(&p->alloc_lock)->rlock){+.+.}, at: flush_old_exec+0x703/0x8d7
+However, under configurations that either CONFIG_TRACE_IRQFLAGS or
+CONFIG_PROVE_LOCKING is not defined:
 
-    but task is already holding lock:
-    (____ptrval____) (&mm->mmap_sem){++++}, at: flush_old_exec+0x6c5/0x8d7
+The commit:
 
-    which lock already depends on the new lock.
+  091806515124b20 ("locking/lockdep: Consolidate lock usage bit initialization")
 
-    the existing dependency chain (in reverse order) is:
+missed marking the LOCK_USED flag at IRQ usage initialization because
+as mark_usage() is not called. And the commit:
 
-    -> #1 (&mm->mmap_sem){++++}:
-           [...]
-           __lock_acquire+0x12ab/0x139f
-           lock_acquire+0x155/0x18e
-           down_write+0x3f/0x98
-           flush_old_exec+0x748/0x8d7
-           load_elf_binary+0x2ca/0xddb
-           [...]
+  886532aee3cd42d ("locking/lockdep: Move mark_lock() inside CONFIG_TRACE_IRQFLAGS && CONFIG_PROVE_LOCKING")
 
-    -> #0 (&(&p->alloc_lock)->rlock){+.+.}:
-           [...]
-           __lock_acquire+0x12ab/0x139f
-           lock_acquire+0x155/0x18e
-           _raw_spin_lock+0x30/0x83
-           flush_old_exec+0x703/0x8d7
-           load_elf_binary+0x2ca/0xddb
-           [...]
+further made mark_lock() not defined such that the LOCK_USED cannot be
+marked at all when the lock is first acquired.
 
-    other info that might help us debug this:
+As a result, we fix this by not showing and checking the stats under such
+configurations for lockdep_stats.
 
-     Possible unsafe locking scenario:
-
-           CPU0                    CPU1
-           ----                    ----
-      lock(&mm->mmap_sem);
-                                   lock(&(&p->alloc_lock)->rlock);
-                                   lock(&mm->mmap_sem);
-      lock(&(&p->alloc_lock)->rlock);
-
-     *** DEADLOCK ***
-
-    2 locks held by inside.sh/366:
-     #0: (____ptrval____) (&sig->cred_guard_mutex){+.+.}, at: __do_execve_file+0x12d/0x869
-     #1: (____ptrval____) (&mm->mmap_sem){++++}, at: flush_old_exec+0x6c5/0x8d7
-
-    stack backtrace:
-    CPU: 0 PID: 366 Comm: inside.sh Not tainted 5.1.0-10252-gb00152307319-dirty #121
-    Stack:
-     [...]
-    Call Trace:
-     [<600420de>] show_stack+0x13b/0x155
-     [<6048906b>] dump_stack+0x2a/0x2c
-     [<6009ae64>] print_circular_bug+0x332/0x343
-     [<6009c5c6>] check_prev_add+0x669/0xdad
-     [<600a06b4>] __lock_acquire+0x12ab/0x139f
-     [<6009f3d0>] lock_acquire+0x155/0x18e
-     [<604a07e0>] _raw_spin_lock+0x30/0x83
-     [<60151e6a>] flush_old_exec+0x703/0x8d7
-     [<601a8eb8>] load_elf_binary+0x2ca/0xddb
-     [...]
-
-I think it's because in exec_mmap() we have
-
-	down_read(&old_mm->mmap_sem);
-...
-        task_lock(tsk);
-...
-	activate_mm(active_mm, mm);
-	(which does down_write(&mm->mmap_sem))
-
-I'm not really sure why lockdep throws in the whole knowledge
-about the task lock, but it seems that old_mm and mm shouldn't
-ever be the same (and it doesn't deadlock) so tell lockdep that
-they're different.
-
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Reported-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Yuyang Du <duyuyang@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: arnd@arndb.de
+Cc: frederic@kernel.org
+Link: https://lkml.kernel.org/r/20190709101522.9117-1-duyuyang@gmail.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/um/include/asm/mmu_context.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/locking/lockdep_proc.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/um/include/asm/mmu_context.h b/arch/um/include/asm/mmu_context.h
-index 941527e507f7..f618f45fc8e9 100644
---- a/arch/um/include/asm/mmu_context.h
-+++ b/arch/um/include/asm/mmu_context.h
-@@ -42,7 +42,7 @@ static inline void activate_mm(struct mm_struct *old, struct mm_struct *new)
- 	 * when the new ->mm is used for the first time.
- 	 */
- 	__switch_mm(&new->context.id);
--	down_write(&new->mmap_sem);
-+	down_write_nested(&new->mmap_sem, 1);
- 	uml_setup_stubs(new);
- 	up_write(&new->mmap_sem);
- }
+diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
+index dbb61a302548..9778b6701019 100644
+--- a/kernel/locking/lockdep_proc.c
++++ b/kernel/locking/lockdep_proc.c
+@@ -227,6 +227,7 @@ static int lockdep_stats_show(struct seq_file *m, void *v)
+ 		      nr_hardirq_read_safe = 0, nr_hardirq_read_unsafe = 0,
+ 		      sum_forward_deps = 0;
+ 
++#ifdef CONFIG_PROVE_LOCKING
+ 	list_for_each_entry(class, &all_lock_classes, lock_entry) {
+ 
+ 		if (class->usage_mask == 0)
+@@ -258,12 +259,12 @@ static int lockdep_stats_show(struct seq_file *m, void *v)
+ 		if (class->usage_mask & LOCKF_ENABLED_HARDIRQ_READ)
+ 			nr_hardirq_read_unsafe++;
+ 
+-#ifdef CONFIG_PROVE_LOCKING
+ 		sum_forward_deps += lockdep_count_forward_deps(class);
+-#endif
+ 	}
+ #ifdef CONFIG_DEBUG_LOCKDEP
+ 	DEBUG_LOCKS_WARN_ON(debug_atomic_read(nr_unused_locks) != nr_unused);
++#endif
++
+ #endif
+ 	seq_printf(m, " lock-classes:                  %11lu [max: %lu]\n",
+ 			nr_lock_classes, MAX_LOCKDEP_KEYS);
 -- 
 2.20.1
 
