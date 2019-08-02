@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C972C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 670BAC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 686132064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 407562064A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:59:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739962;
-	bh=aukFEtkpuQkA4+TcaUceQB467wd7cnkY7fo7OTdBTYI=;
+	s=default; t=1564739969;
+	bh=PONTyY3yLHjCIEAn1BHbZyw5ZTwVLy9t4JCMTeN57QU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T803FuVkQWIPWrHlvR2XHlSVun+LZKTndBqyPXGr9uYAirzmRoyQK6jGea1CtDB3f
-	 kTeDdXJL0UDojrjxJbXpGZH1yjz4ze+YHmHDCMl+V024jEbK5yc53ImtUliRnL/n+P
-	 ICxR9I8Hk32K2e1lXyWKpjJBlToLggiY7INdyHm0=
+	b=pKhjFlhQeSByaFiuAxh6HnfbeJ0YeaqGfPq5nrJa420EBrCHTna0X0LgvIGQr0h12
+	 uuulWRab5pFlolDr8JSNhSDJDnK+HiUTWYum808OUdAuegUdzSpBwdqc/+vUP2Dzbb
+	 smjNHw9EMiJDy17gJKMtcRQhIc4NL9HM/nwLiLDQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407077AbfHBJ7V (ORCPT
+        id S2407114AbfHBJ72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:59:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38750 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:59:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404831AbfHBJ7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:59:18 -0400
+        id S2406644AbfHBJz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:55:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF4C02064A;
-        Fri,  2 Aug 2019 09:59:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF59C2064A;
+        Fri,  2 Aug 2019 09:55:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739957;
-        bh=aukFEtkpuQkA4+TcaUceQB467wd7cnkY7fo7OTdBTYI=;
+        s=default; t=1564739758;
+        bh=PONTyY3yLHjCIEAn1BHbZyw5ZTwVLy9t4JCMTeN57QU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=06JZs/Zt1dw2VINq0qFgWkXa2JBUkPWz4KHq4tL34MTtjhpROwcsaSu9xcJFZeSMP
-         gJL2+tInDGs8UHPHaunQHg2FS35lvDc9llCz50DjIzgM096pdLziZy91NRd2MCyvE5
-         aSkkwfI3+ryXePpwwKs+uwFIbjj8PE9et9H0r+gY=
+        b=mtxoUGNlWj5u1JT1oHplKRNcbTqh6FWYUkiVfUPuc3yLmjiFXLtQka/xVJSxATXE/
+         i64uxinMr543gODPgpS4jZH+s+ev125aA8cdvjTwOYClwK0xZxTNzbyb8qJJHJ/Yjy
+         kOm49h1Bl2WNNS7MyV8ek0J07UEfiakehI+9wMUo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+79337b501d6aa974d0f6@syzkaller.appspotmail.com,
-        Vladis Dronov <vdronov@redhat.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        "Yu-Chen, Cho" <acho@suse.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.2 13/20] Bluetooth: hci_uart: check for missing tty operations
-Date:   Fri,  2 Aug 2019 11:40:07 +0200
-Message-Id: <20190802092101.527095180@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jack Wang <jinpu.wang@cloud.ionos.com>
+Subject: [PATCH 4.19 21/32] vhost_net: fix possible infinite loop
+Date:   Fri,  2 Aug 2019 11:39:55 +0200
+Message-Id: <20190802092108.665019390@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190802092055.131876977@linuxfoundation.org>
-References: <20190802092055.131876977@linuxfoundation.org>
+In-Reply-To: <20190802092101.913646560@linuxfoundation.org>
+References: <20190802092101.913646560@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,137 +61,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladis Dronov <vdronov@redhat.com>
+From: Jason Wang <jasowang@redhat.com>
 
-commit b36a1552d7319bbfd5cf7f08726c23c5c66d4f73 upstream.
+commit e2412c07f8f3040593dfb88207865a3cd58680c0 upstream.
 
-Certain ttys operations (pty_unix98_ops) lack tiocmget() and tiocmset()
-functions which are called by the certain HCI UART protocols (hci_ath,
-hci_bcm, hci_intel, hci_mrvl, hci_qca) via hci_uart_set_flow_control()
-or directly. This leads to an execution at NULL and can be triggered by
-an unprivileged user. Fix this by adding a helper function and a check
-for the missing tty operations in the protocols code.
+When the rx buffer is too small for a packet, we will discard the vq
+descriptor and retry it for the next packet:
 
-This fixes CVE-2019-10207. The Fixes: lines list commits where calls to
-tiocm[gs]et() or hci_uart_set_flow_control() were added to the HCI UART
-protocols.
+while ((sock_len = vhost_net_rx_peek_head_len(net, sock->sk,
+					      &busyloop_intr))) {
+...
+	/* On overrun, truncate and discard */
+	if (unlikely(headcount > UIO_MAXIOV)) {
+		iov_iter_init(&msg.msg_iter, READ, vq->iov, 1, 1);
+		err = sock->ops->recvmsg(sock, &msg,
+					 1, MSG_DONTWAIT | MSG_TRUNC);
+		pr_debug("Discarded rx packet: len %zd\n", sock_len);
+		continue;
+	}
+...
+}
 
-Link: https://syzkaller.appspot.com/bug?id=1b42faa2848963564a5b1b7f8c837ea7b55ffa50
-Reported-by: syzbot+79337b501d6aa974d0f6@syzkaller.appspotmail.com
-Cc: stable@vger.kernel.org # v2.6.36+
-Fixes: b3190df62861 ("Bluetooth: Support for Atheros AR300x serial chip")
-Fixes: 118612fb9165 ("Bluetooth: hci_bcm: Add suspend/resume PM functions")
-Fixes: ff2895592f0f ("Bluetooth: hci_intel: Add Intel baudrate configuration support")
-Fixes: 162f812f23ba ("Bluetooth: hci_uart: Add Marvell support")
-Fixes: fa9ad876b8e0 ("Bluetooth: hci_qca: Add support for Qualcomm Bluetooth chip wcn3990")
-Signed-off-by: Vladis Dronov <vdronov@redhat.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Reviewed-by: Yu-Chen, Cho <acho@suse.com>
-Tested-by: Yu-Chen, Cho <acho@suse.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+This makes it possible to trigger a infinite while..continue loop
+through the co-opreation of two VMs like:
+
+1) Malicious VM1 allocate 1 byte rx buffer and try to slow down the
+   vhost process as much as possible e.g using indirect descriptors or
+   other.
+2) Malicious VM2 generate packets to VM1 as fast as possible
+
+Fixing this by checking against weight at the end of RX and TX
+loop. This also eliminate other similar cases when:
+
+- userspace is consuming the packets in the meanwhile
+- theoretical TOCTOU attack if guest moving avail index back and forth
+  to hit the continue after vhost find guest just add new buffers
+
+This addresses CVE-2019-3900.
+
+Fixes: d8316f3991d20 ("vhost: fix total length when packets are too short")
+Fixes: 3a4d5c94e9593 ("vhost_net: a kernel-level virtio server")
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+[jwang: backport to 4.19]
+Signed-off-by: Jack Wang <jinpu.wang@cloud.ionos.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/bluetooth/hci_ath.c   |    3 +++
- drivers/bluetooth/hci_bcm.c   |    3 +++
- drivers/bluetooth/hci_intel.c |    3 +++
- drivers/bluetooth/hci_ldisc.c |   13 +++++++++++++
- drivers/bluetooth/hci_mrvl.c  |    3 +++
- drivers/bluetooth/hci_qca.c   |    3 +++
- drivers/bluetooth/hci_uart.h  |    1 +
- 7 files changed, 29 insertions(+)
+ drivers/vhost/net.c |   29 +++++++++++++----------------
+ 1 file changed, 13 insertions(+), 16 deletions(-)
 
---- a/drivers/bluetooth/hci_ath.c
-+++ b/drivers/bluetooth/hci_ath.c
-@@ -98,6 +98,9 @@ static int ath_open(struct hci_uart *hu)
+--- a/drivers/vhost/net.c
++++ b/drivers/vhost/net.c
+@@ -551,7 +551,7 @@ static void handle_tx_copy(struct vhost_
+ 	int err;
+ 	int sent_pkts = 0;
  
- 	BT_DBG("hu %p", hu);
+-	for (;;) {
++	do {
+ 		bool busyloop_intr = false;
  
-+	if (!hci_uart_has_flow_control(hu))
-+		return -EOPNOTSUPP;
-+
- 	ath = kzalloc(sizeof(*ath), GFP_KERNEL);
- 	if (!ath)
- 		return -ENOMEM;
---- a/drivers/bluetooth/hci_bcm.c
-+++ b/drivers/bluetooth/hci_bcm.c
-@@ -406,6 +406,9 @@ static int bcm_open(struct hci_uart *hu)
+ 		head = get_tx_bufs(net, nvq, &msg, &out, &in, &len,
+@@ -592,9 +592,7 @@ static void handle_tx_copy(struct vhost_
+ 				 err, len);
+ 		if (++nvq->done_idx >= VHOST_NET_BATCH)
+ 			vhost_net_signal_used(nvq);
+-		if (vhost_exceeds_weight(vq, ++sent_pkts, total_len))
+-			break;
+-	}
++	} while (likely(!vhost_exceeds_weight(vq, ++sent_pkts, total_len)));
  
- 	bt_dev_dbg(hu->hdev, "hu %p", hu);
+ 	vhost_net_signal_used(nvq);
+ }
+@@ -618,7 +616,7 @@ static void handle_tx_zerocopy(struct vh
+ 	bool zcopy_used;
+ 	int sent_pkts = 0;
  
-+	if (!hci_uart_has_flow_control(hu))
-+		return -EOPNOTSUPP;
-+
- 	bcm = kzalloc(sizeof(*bcm), GFP_KERNEL);
- 	if (!bcm)
- 		return -ENOMEM;
---- a/drivers/bluetooth/hci_intel.c
-+++ b/drivers/bluetooth/hci_intel.c
-@@ -391,6 +391,9 @@ static int intel_open(struct hci_uart *h
+-	for (;;) {
++	do {
+ 		bool busyloop_intr;
  
- 	BT_DBG("hu %p", hu);
- 
-+	if (!hci_uart_has_flow_control(hu))
-+		return -EOPNOTSUPP;
-+
- 	intel = kzalloc(sizeof(*intel), GFP_KERNEL);
- 	if (!intel)
- 		return -ENOMEM;
---- a/drivers/bluetooth/hci_ldisc.c
-+++ b/drivers/bluetooth/hci_ldisc.c
-@@ -284,6 +284,19 @@ static int hci_uart_send_frame(struct hc
- 	return 0;
+ 		/* Release DMAs done buffers first */
+@@ -693,10 +691,7 @@ static void handle_tx_zerocopy(struct vh
+ 		else
+ 			vhost_zerocopy_signal_used(net, vq);
+ 		vhost_net_tx_packet(net);
+-		if (unlikely(vhost_exceeds_weight(vq, ++sent_pkts,
+-						  total_len)))
+-			break;
+-	}
++	} while (likely(!vhost_exceeds_weight(vq, ++sent_pkts, total_len)));
  }
  
-+/* Check the underlying device or tty has flow control support */
-+bool hci_uart_has_flow_control(struct hci_uart *hu)
-+{
-+	/* serdev nodes check if the needed operations are present */
-+	if (hu->serdev)
-+		return true;
-+
-+	if (hu->tty->driver->ops->tiocmget && hu->tty->driver->ops->tiocmset)
-+		return true;
-+
-+	return false;
-+}
-+
- /* Flow control or un-flow control the device */
- void hci_uart_set_flow_control(struct hci_uart *hu, bool enable)
- {
---- a/drivers/bluetooth/hci_mrvl.c
-+++ b/drivers/bluetooth/hci_mrvl.c
-@@ -52,6 +52,9 @@ static int mrvl_open(struct hci_uart *hu
+ /* Expects to be always run from workqueue - which acts as
+@@ -932,8 +927,11 @@ static void handle_rx(struct vhost_net *
+ 		vq->log : NULL;
+ 	mergeable = vhost_has_feature(vq, VIRTIO_NET_F_MRG_RXBUF);
  
- 	BT_DBG("hu %p", hu);
- 
-+	if (!hci_uart_has_flow_control(hu))
-+		return -EOPNOTSUPP;
+-	while ((sock_len = vhost_net_rx_peek_head_len(net, sock->sk,
+-						      &busyloop_intr))) {
++	do {
++		sock_len = vhost_net_rx_peek_head_len(net, sock->sk,
++						      &busyloop_intr);
++		if (!sock_len)
++			break;
+ 		sock_len += sock_hlen;
+ 		vhost_len = sock_len + vhost_hlen;
+ 		headcount = get_rx_bufs(vq, vq->heads + nvq->done_idx,
+@@ -1018,12 +1016,11 @@ static void handle_rx(struct vhost_net *
+ 			vhost_log_write(vq, vq_log, log, vhost_len,
+ 					vq->iov, in);
+ 		total_len += vhost_len;
+-		if (unlikely(vhost_exceeds_weight(vq, ++recv_pkts, total_len)))
+-			goto out;
+-	}
++	} while (likely(!vhost_exceeds_weight(vq, ++recv_pkts, total_len)));
 +
- 	mrvl = kzalloc(sizeof(*mrvl), GFP_KERNEL);
- 	if (!mrvl)
- 		return -ENOMEM;
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -458,6 +458,9 @@ static int qca_open(struct hci_uart *hu)
+ 	if (unlikely(busyloop_intr))
+ 		vhost_poll_queue(&vq->poll);
+-	else
++	else if (!sock_len)
+ 		vhost_net_enable_vq(net, vq);
+ out:
+ 	vhost_net_signal_used(nvq);
+@@ -1105,7 +1102,7 @@ static int vhost_net_open(struct inode *
+ 	}
+ 	vhost_dev_init(dev, vqs, VHOST_NET_VQ_MAX,
+ 		       UIO_MAXIOV + VHOST_NET_BATCH,
+-		       VHOST_NET_WEIGHT, VHOST_NET_PKT_WEIGHT);
++		       VHOST_NET_PKT_WEIGHT, VHOST_NET_WEIGHT);
  
- 	BT_DBG("hu %p qca_open", hu);
- 
-+	if (!hci_uart_has_flow_control(hu))
-+		return -EOPNOTSUPP;
-+
- 	qca = kzalloc(sizeof(struct qca_data), GFP_KERNEL);
- 	if (!qca)
- 		return -ENOMEM;
---- a/drivers/bluetooth/hci_uart.h
-+++ b/drivers/bluetooth/hci_uart.h
-@@ -103,6 +103,7 @@ int hci_uart_tx_wakeup(struct hci_uart *
- int hci_uart_init_ready(struct hci_uart *hu);
- void hci_uart_init_work(struct work_struct *work);
- void hci_uart_set_baudrate(struct hci_uart *hu, unsigned int speed);
-+bool hci_uart_has_flow_control(struct hci_uart *hu);
- void hci_uart_set_flow_control(struct hci_uart *hu, bool enable);
- void hci_uart_set_speeds(struct hci_uart *hu, unsigned int init_speed,
- 			 unsigned int oper_speed);
+ 	vhost_poll_init(n->poll + VHOST_NET_VQ_TX, handle_tx_net, EPOLLOUT, dev);
+ 	vhost_poll_init(n->poll + VHOST_NET_VQ_RX, handle_rx_net, EPOLLIN, dev);
 
 
