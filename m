@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44EEFC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8F4C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 183C52064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:58:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 005E52064A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:58:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739908;
-	bh=Lb/WH7nAb3QrLSpwl5l5ok2QhABYzpciuz1j6ldGmbU=;
+	s=default; t=1564739917;
+	bh=d4yGjujxHP7IOdvqPfhDM8i8eT9d2PmBoGZVERq1gCY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BwCU3A7EqYWD+DYf9xthGHce2QwlT8ZlBeXFZT8kAcoYtATCkjUTLThSduDpyfjrQ
-	 pR9oLSBhqoPBECPdDQXtTaCAOAPLPBvHevtwFyLJ0ogoUMI2j6Pwwx3pFkyXeciS8n
-	 v3gTP05xYHI98Pa0u1NveXDZFFQpKsfCf4YIrcaY=
+	b=h+HcTjcjm9psk+2JRIi9bMrZFja2oTlubEs6r2J7Aa1qUl777/cz1tun5btq1DpAW
+	 mvLF4DIvgSfqAm5LuWvmZLHgRJiaTeGRAf8yrHHXDYESXdq0jybG7gUJaQYiCQcX7Z
+	 2OrsGXvPh50nfvOv1krfOlkOR2z4HwQskYBWUT1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407149AbfHBJ61 (ORCPT
+        id S2407057AbfHBJ6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:58:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37296 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:58:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406993AbfHBJ5x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:57:53 -0400
+        id S2406972AbfHBJ5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:57:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 761DB2064A;
-        Fri,  2 Aug 2019 09:57:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57FDE2067D;
+        Fri,  2 Aug 2019 09:57:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739873;
-        bh=Lb/WH7nAb3QrLSpwl5l5ok2QhABYzpciuz1j6ldGmbU=;
+        s=default; t=1564739867;
+        bh=d4yGjujxHP7IOdvqPfhDM8i8eT9d2PmBoGZVERq1gCY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wazmnBeYRm1vmI/xFOByp9oqwGoYMoRvK1MLcWm4dA3M50k/UpuYm9GG9f5vh9p+u
-         alWWlWqw2iQI3Ov4FuB4EhoGe9Zuk+W7mFZOIIAe22HdBG5qEJC67/Txa341TJlnxc
-         nEHoahPEF7e+UFlwJoAMfQtj4cBnpBTmOHqDLDvA=
+        b=my70lUaaaDwNdl8q9Vut9s5amcMkZvZgUp4fgjUufPBBcgmFgs7ZNFDliUFEUARhU
+         p6HVxuP0xu9m6zYQpzrD/uJIAYuX32GnYRXFoEjE97yDCiZ750qGp4Dr6n8QV/RQ4g
+         fCad5JqK45W5OppVeUyQD687dwYP45MM4zl0lgGw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH 5.2 04/20] bpf: fix NULL deref in btf_type_is_resolve_source_only
-Date:   Fri,  2 Aug 2019 11:39:58 +0200
-Message-Id: <20190802092058.345293259@linuxfoundation.org>
+        stable@vger.kernel.org, "Yan, Zheng" <zyan@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>
+Subject: [PATCH 5.2 20/20] ceph: hold i_ceph_lock when removing caps for freeing inode
+Date:   Fri,  2 Aug 2019 11:40:14 +0200
+Message-Id: <20190802092104.185027321@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092055.131876977@linuxfoundation.org>
 References: <20190802092055.131876977@linuxfoundation.org>
@@ -61,62 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanislav Fomichev <sdf@google.com>
+From: Yan, Zheng <zyan@redhat.com>
 
-commit e4f07120210a1794c1f1ae64d209a2fbc7bd2682 upstream.
+commit d6e47819721ae2d9d090058ad5570a66f3c42e39 upstream.
 
-Commit 1dc92851849c ("bpf: kernel side support for BTF Var and DataSec")
-added invocations of btf_type_is_resolve_source_only before
-btf_type_nosize_or_null which checks for the NULL pointer.
-Swap the order of btf_type_nosize_or_null and
-btf_type_is_resolve_source_only to make sure the do the NULL pointer
-check first.
+ceph_d_revalidate(, LOOKUP_RCU) may call __ceph_caps_issued_mask()
+on a freeing inode.
 
-Fixes: 1dc92851849c ("bpf: kernel side support for BTF Var and DataSec")
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Stanislav Fomichev <sdf@google.com>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: "Yan, Zheng" <zyan@redhat.com>
+Reviewed-by: Jeff Layton <jlayton@redhat.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/bpf/btf.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ fs/ceph/caps.c  |   10 ++++++----
+ fs/ceph/inode.c |    2 +-
+ fs/ceph/super.h |    2 +-
+ 3 files changed, 8 insertions(+), 6 deletions(-)
 
---- a/kernel/bpf/btf.c
-+++ b/kernel/bpf/btf.c
-@@ -1928,8 +1928,8 @@ static int btf_array_resolve(struct btf_
- 	/* Check array->index_type */
- 	index_type_id = array->index_type;
- 	index_type = btf_type_by_id(btf, index_type_id);
--	if (btf_type_is_resolve_source_only(index_type) ||
--	    btf_type_nosize_or_null(index_type)) {
-+	if (btf_type_nosize_or_null(index_type) ||
-+	    btf_type_is_resolve_source_only(index_type)) {
- 		btf_verifier_log_type(env, v->t, "Invalid index");
- 		return -EINVAL;
- 	}
-@@ -1948,8 +1948,8 @@ static int btf_array_resolve(struct btf_
- 	/* Check array->type */
- 	elem_type_id = array->type;
- 	elem_type = btf_type_by_id(btf, elem_type_id);
--	if (btf_type_is_resolve_source_only(elem_type) ||
--	    btf_type_nosize_or_null(elem_type)) {
-+	if (btf_type_nosize_or_null(elem_type) ||
-+	    btf_type_is_resolve_source_only(elem_type)) {
- 		btf_verifier_log_type(env, v->t,
- 				      "Invalid elem");
- 		return -EINVAL;
-@@ -2170,8 +2170,8 @@ static int btf_struct_resolve(struct btf
- 		const struct btf_type *member_type = btf_type_by_id(env->btf,
- 								member_type_id);
+--- a/fs/ceph/caps.c
++++ b/fs/ceph/caps.c
+@@ -1263,20 +1263,22 @@ static int send_cap_msg(struct cap_msg_a
+ }
  
--		if (btf_type_is_resolve_source_only(member_type) ||
--		    btf_type_nosize_or_null(member_type)) {
-+		if (btf_type_nosize_or_null(member_type) ||
-+		    btf_type_is_resolve_source_only(member_type)) {
- 			btf_verifier_log_member(env, v->t, member,
- 						"Invalid member");
- 			return -EINVAL;
+ /*
+- * Queue cap releases when an inode is dropped from our cache.  Since
+- * inode is about to be destroyed, there is no need for i_ceph_lock.
++ * Queue cap releases when an inode is dropped from our cache.
+  */
+-void __ceph_remove_caps(struct inode *inode)
++void __ceph_remove_caps(struct ceph_inode_info *ci)
+ {
+-	struct ceph_inode_info *ci = ceph_inode(inode);
+ 	struct rb_node *p;
+ 
++	/* lock i_ceph_lock, because ceph_d_revalidate(..., LOOKUP_RCU)
++	 * may call __ceph_caps_issued_mask() on a freeing inode. */
++	spin_lock(&ci->i_ceph_lock);
+ 	p = rb_first(&ci->i_caps);
+ 	while (p) {
+ 		struct ceph_cap *cap = rb_entry(p, struct ceph_cap, ci_node);
+ 		p = rb_next(p);
+ 		__ceph_remove_cap(cap, true);
+ 	}
++	spin_unlock(&ci->i_ceph_lock);
+ }
+ 
+ /*
+--- a/fs/ceph/inode.c
++++ b/fs/ceph/inode.c
+@@ -536,7 +536,7 @@ void ceph_evict_inode(struct inode *inod
+ 
+ 	ceph_fscache_unregister_inode_cookie(ci);
+ 
+-	__ceph_remove_caps(inode);
++	__ceph_remove_caps(ci);
+ 
+ 	if (__ceph_has_any_quota(ci))
+ 		ceph_adjust_quota_realms_count(inode, false);
+--- a/fs/ceph/super.h
++++ b/fs/ceph/super.h
+@@ -1000,7 +1000,7 @@ extern void ceph_add_cap(struct inode *i
+ 			 unsigned cap, unsigned seq, u64 realmino, int flags,
+ 			 struct ceph_cap **new_cap);
+ extern void __ceph_remove_cap(struct ceph_cap *cap, bool queue_release);
+-extern void __ceph_remove_caps(struct inode* inode);
++extern void __ceph_remove_caps(struct ceph_inode_info *ci);
+ extern void ceph_put_cap(struct ceph_mds_client *mdsc,
+ 			 struct ceph_cap *cap);
+ extern int ceph_is_any_caps(struct inode *inode);
 
 
