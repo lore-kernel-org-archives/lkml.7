@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6643AC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAAEFC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 357922064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C337620880
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739489;
-	bh=MJtsPeYNZsKq49rZtkuN6dD8y6BQyFpESZtcOqsy/lo=;
+	s=default; t=1564739495;
+	bh=JLeOArumhw3pHEpAq0cX2sLAqcrHiDyam2CGdvxGhxQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sJll7avIZamFPzQx+kQrcjgBNPBflKVY6TLhAbqEhN563Co/Y2iLyoTZZRrzXk2uQ
-	 JxfcmPwZZEXZeSVSD2yjgteYTeuzcyNGyF61sDw+n8YLPgUqEZI9Fgs8Y7VU7k94Go
-	 2zog+4YwdxdlX8SlI4vwsekZ3/7gZkSJbLF0fCDw=
+	b=E3PoBah0d1hszFmLQNfglt5I1vc7xUvRJW23aYmuU3hhPEm5asb7SBw47qiZq6rIZ
+	 m8okHYmBgu5lTz2htJCiptC+YOsv+8ko1mj/ih8yvXfGX35h65ejdhqumAdy0JFYhy
+	 KWQdGM5m/uB0Bjxjhg+lhZ44KoRKswUILsMQUDVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405809AbfHBJv2 (ORCPT
+        id S2405869AbfHBJve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:51:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48116 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:51:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404070AbfHBJol (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:44:41 -0400
+        id S2391547AbfHBJoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:44:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D66A2171F;
-        Fri,  2 Aug 2019 09:44:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9080C206A2;
+        Fri,  2 Aug 2019 09:44:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739080;
-        bh=MJtsPeYNZsKq49rZtkuN6dD8y6BQyFpESZtcOqsy/lo=;
+        s=default; t=1564739078;
+        bh=JLeOArumhw3pHEpAq0cX2sLAqcrHiDyam2CGdvxGhxQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O9Bjhxo1Yqix4fbdkznM9p1Bc3Ffaa/xjO20X/2lWWmd+mqzq3bz1yKBJac7glwT9
-         +zGIPuRathZM88miCfz/MT0dxZvOLsXguwCJ8Ij9ihVwGhZhsCDk6RVr2d4Npkh7IX
-         3XXNTntOY9gtQHylU6uyiIUI1NuZEBI0rFApkptI=
+        b=aC4KywNzdMrEJ4bVo/ofCfFWIvI4cNKZTFtab3+H4yGSSTYbiuyt6bc/HBXdfQePi
+         2v67rjOkaEso70X9B/B1p0VV1at1kKKOU76cUQf5djfVe/RnCk2wLlILF/3RgXi9Zq
+         LxM20/RcChLoBKMfBVrZBjyZxk0/gzdXpGvQYJrU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Elena Petrova <lenaptr@google.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.9 080/223] crypto: arm64/sha2-ce - correct digest for empty data in finup
-Date:   Fri,  2 Aug 2019 11:35:05 +0200
-Message-Id: <20190802092244.096277859@linuxfoundation.org>
+Subject: [PATCH 4.9 089/223] lib/scatterlist: Fix mapping iterator when sg->offset is greater than PAGE_SIZE
+Date:   Fri,  2 Aug 2019 11:35:14 +0200
+Message-Id: <20190802092244.851105063@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -60,41 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Elena Petrova <lenaptr@google.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit 6bd934de1e393466b319d29c4427598fda096c57 upstream.
+commit aeb87246537a83c2aff482f3f34a2e0991e02cbc upstream.
 
-The sha256-ce finup implementation for ARM64 produces wrong digest
-for empty input (len=0). Expected: the actual digest, result: initial
-value of SHA internal state. The error is in sha256_ce_finup:
-for empty data `finalize` will be 1, so the code is relying on
-sha2_ce_transform to make the final round. However, in
-sha256_base_do_update, the block function will not be called when
-len == 0.
+All mapping iterator logic is based on the assumption that sg->offset
+is always lower than PAGE_SIZE.
 
-Fix it by setting finalize to 0 if data is empty.
+But there are situations where sg->offset is such that the SG item
+is on the second page. In that case sg_copy_to_buffer() fails
+properly copying the data into the buffer. One of the reason is
+that the data will be outside the kmapped area used to access that
+data.
 
-Fixes: 03802f6a80b3a ("crypto: arm64/sha2-ce - move SHA-224/256 ARMv8 implementation to base layer")
+This patch fixes the issue by adjusting the mapping iterator
+offset and pgoffset fields such that offset is always lower than
+PAGE_SIZE.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Fixes: 4225fc8555a9 ("lib/scatterlist: use page iterator in the mapping iterator")
 Cc: stable@vger.kernel.org
-Signed-off-by: Elena Petrova <lenaptr@google.com>
-Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/crypto/sha2-ce-glue.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/scatterlist.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/arch/arm64/crypto/sha2-ce-glue.c
-+++ b/arch/arm64/crypto/sha2-ce-glue.c
-@@ -52,7 +52,7 @@ static int sha256_ce_finup(struct shash_
- 			   unsigned int len, u8 *out)
+--- a/lib/scatterlist.c
++++ b/lib/scatterlist.c
+@@ -496,17 +496,18 @@ static bool sg_miter_get_next_page(struc
  {
- 	struct sha256_ce_state *sctx = shash_desc_ctx(desc);
--	bool finalize = !sctx->sst.count && !(len % SHA256_BLOCK_SIZE);
-+	bool finalize = !sctx->sst.count && !(len % SHA256_BLOCK_SIZE) && len;
+ 	if (!miter->__remaining) {
+ 		struct scatterlist *sg;
+-		unsigned long pgoffset;
  
- 	/*
- 	 * Allow the asm code to perform the finalization if there is no
+ 		if (!__sg_page_iter_next(&miter->piter))
+ 			return false;
+ 
+ 		sg = miter->piter.sg;
+-		pgoffset = miter->piter.sg_pgoffset;
+ 
+-		miter->__offset = pgoffset ? 0 : sg->offset;
++		miter->__offset = miter->piter.sg_pgoffset ? 0 : sg->offset;
++		miter->piter.sg_pgoffset += miter->__offset >> PAGE_SHIFT;
++		miter->__offset &= PAGE_SIZE - 1;
+ 		miter->__remaining = sg->offset + sg->length -
+-				(pgoffset << PAGE_SHIFT) - miter->__offset;
++				     (miter->piter.sg_pgoffset << PAGE_SHIFT) -
++				     miter->__offset;
+ 		miter->__remaining = min_t(unsigned long, miter->__remaining,
+ 					   PAGE_SIZE - miter->__offset);
+ 	}
 
 
