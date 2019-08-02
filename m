@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31930C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F34DC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09E562064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70B7520665
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:59:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739978;
-	bh=d0xyB4QEqG0WBfb3xGvbgzZAb+ysRIBs40y9kyOAwy0=;
+	s=default; t=1564739982;
+	bh=QILDKNKUsCB7MGS6pvXRQMzrf1Z7JOKOwAAxfGEIO0w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YPeUqwx33tqJ/zmo5BGoTcVaNnCck7QqjhfARqQ8gdB8xLsOyo66bImAqMWBi9FY1
-	 +F1DwVBYM7rE6QhQ6DN7nEydMfvSRYz87TQeCT7s9GJ6E6Ib9FC5IWq/ONQTMwAgRD
-	 MafFZarOyvb5AKTx1hHUMTDR/oDtJijiHa4juXUc=
+	b=Y5QgFF+Vpzt6G2lVivi79TwBvI38fHUoNbgpawkAZWpWOXyRvizTFUZ8KR2bWh95/
+	 cRufA6V/Qe46YjFprcAMXAOT01RupzGzT6jCiDhFZDg2emG+JYBPs0MPQUMsK1SFup
+	 Q11nX0ti8yqZ/fT8fHUvz6egLD6NXHt1ZmYnHLKo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407151AbfHBJ7g (ORCPT
+        id S2406571AbfHBJze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:59:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34612 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:55:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406611AbfHBJzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:55:54 -0400
+        id S2406557AbfHBJzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:55:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1DF22064A;
-        Fri,  2 Aug 2019 09:55:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C39C2064A;
+        Fri,  2 Aug 2019 09:55:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739753;
-        bh=d0xyB4QEqG0WBfb3xGvbgzZAb+ysRIBs40y9kyOAwy0=;
+        s=default; t=1564739730;
+        bh=QILDKNKUsCB7MGS6pvXRQMzrf1Z7JOKOwAAxfGEIO0w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mrUDq6qchpsea6K6uAEK1PC337bOksWCerCwHa84W8n+9yWjRawpT495QnZA0QHxA
-         QdajqI+6OwFfTOIctVhrw0XNYI66puuV4ntTFoAOJD/E36UiGiMaUUBMSavl/4CMeK
-         AbZkQ6VEub93iTRZE32tsyN0RJb/XYLFXekAnwSI=
+        b=nL10CsxDIdTQy9AwaFpPkXybWXTt7vlhVAv/uBJrHVCdTfne3yJ191gsAM1JYD/JR
+         fB8YgO/+crV85PqZTcX+YMPk56MaRLxuI1vuXQ1oGK7YHwdOS45FtrdeEj1o5ZKBfq
+         wI2ZqYBy5ZB+YpZEFVqTnlcoTGxDPmOrFM6Jjyrk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sunil Muthuswamy <sunilmut@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 02/32] vsock: correct removal of socket from the list
-Date:   Fri,  2 Aug 2019 11:39:36 +0200
-Message-Id: <20190802092102.545376053@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+357d86bcb4cca1a2f572@syzkaller.appspotmail.com,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 4.19 11/32] media: au0828: fix null dereference in error path
+Date:   Fri,  2 Aug 2019 11:39:45 +0200
+Message-Id: <20190802092105.201934828@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092101.913646560@linuxfoundation.org>
 References: <20190802092101.913646560@linuxfoundation.org>
@@ -59,95 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sunil Muthuswamy <sunilmut@microsoft.com>
+From: Sean Young <sean@mess.org>
 
-commit d5afa82c977ea06f7119058fa0eb8519ea501031 upstream.
+commit 6d0d1ff9ff21fbb06b867c13a1d41ce8ddcd8230 upstream.
 
-The current vsock code for removal of socket from the list is both
-subject to race and inefficient. It takes the lock, checks whether
-the socket is in the list, drops the lock and if the socket was on the
-list, deletes it from the list. This is subject to race because as soon
-as the lock is dropped once it is checked for presence, that condition
-cannot be relied upon for any decision. It is also inefficient because
-if the socket is present in the list, it takes the lock twice.
+au0828_usb_disconnect() gets the au0828_dev struct via usb_get_intfdata,
+so it needs to set up for the error paths.
 
-Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: syzbot+357d86bcb4cca1a2f572@syzkaller.appspotmail.com
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/vmw_vsock/af_vsock.c |   38 +++++++-------------------------------
- 1 file changed, 7 insertions(+), 31 deletions(-)
+ drivers/media/usb/au0828/au0828-core.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/net/vmw_vsock/af_vsock.c
-+++ b/net/vmw_vsock/af_vsock.c
-@@ -281,7 +281,8 @@ EXPORT_SYMBOL_GPL(vsock_insert_connected
- void vsock_remove_bound(struct vsock_sock *vsk)
- {
- 	spin_lock_bh(&vsock_table_lock);
--	__vsock_remove_bound(vsk);
-+	if (__vsock_in_bound_table(vsk))
-+		__vsock_remove_bound(vsk);
- 	spin_unlock_bh(&vsock_table_lock);
- }
- EXPORT_SYMBOL_GPL(vsock_remove_bound);
-@@ -289,7 +290,8 @@ EXPORT_SYMBOL_GPL(vsock_remove_bound);
- void vsock_remove_connected(struct vsock_sock *vsk)
- {
- 	spin_lock_bh(&vsock_table_lock);
--	__vsock_remove_connected(vsk);
-+	if (__vsock_in_connected_table(vsk))
-+		__vsock_remove_connected(vsk);
- 	spin_unlock_bh(&vsock_table_lock);
- }
- EXPORT_SYMBOL_GPL(vsock_remove_connected);
-@@ -325,35 +327,10 @@ struct sock *vsock_find_connected_socket
- }
- EXPORT_SYMBOL_GPL(vsock_find_connected_socket);
+--- a/drivers/media/usb/au0828/au0828-core.c
++++ b/drivers/media/usb/au0828/au0828-core.c
+@@ -623,6 +623,12 @@ static int au0828_usb_probe(struct usb_i
+ 	/* Setup */
+ 	au0828_card_setup(dev);
  
--static bool vsock_in_bound_table(struct vsock_sock *vsk)
--{
--	bool ret;
--
--	spin_lock_bh(&vsock_table_lock);
--	ret = __vsock_in_bound_table(vsk);
--	spin_unlock_bh(&vsock_table_lock);
--
--	return ret;
--}
--
--static bool vsock_in_connected_table(struct vsock_sock *vsk)
--{
--	bool ret;
--
--	spin_lock_bh(&vsock_table_lock);
--	ret = __vsock_in_connected_table(vsk);
--	spin_unlock_bh(&vsock_table_lock);
--
--	return ret;
--}
--
- void vsock_remove_sock(struct vsock_sock *vsk)
- {
--	if (vsock_in_bound_table(vsk))
--		vsock_remove_bound(vsk);
--
--	if (vsock_in_connected_table(vsk))
--		vsock_remove_connected(vsk);
-+	vsock_remove_bound(vsk);
-+	vsock_remove_connected(vsk);
- }
- EXPORT_SYMBOL_GPL(vsock_remove_sock);
++	/*
++	 * Store the pointer to the au0828_dev so it can be accessed in
++	 * au0828_usb_disconnect
++	 */
++	usb_set_intfdata(interface, dev);
++
+ 	/* Analog TV */
+ 	retval = au0828_analog_register(dev, interface);
+ 	if (retval) {
+@@ -641,12 +647,6 @@ static int au0828_usb_probe(struct usb_i
+ 	/* Remote controller */
+ 	au0828_rc_register(dev);
  
-@@ -484,8 +461,7 @@ static void vsock_pending_work(struct wo
- 	 * incoming packets can't find this socket, and to reduce the reference
- 	 * count.
- 	 */
--	if (vsock_in_connected_table(vsk))
--		vsock_remove_connected(vsk);
-+	vsock_remove_connected(vsk);
- 
- 	sk->sk_state = TCP_CLOSE;
+-	/*
+-	 * Store the pointer to the au0828_dev so it can be accessed in
+-	 * au0828_usb_disconnect
+-	 */
+-	usb_set_intfdata(interface, dev);
+-
+ 	pr_info("Registered device AU0828 [%s]\n",
+ 		dev->board.name == NULL ? "Unset" : dev->board.name);
  
 
 
