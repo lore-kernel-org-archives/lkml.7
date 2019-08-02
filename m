@@ -2,121 +2,90 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B04D5C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 20:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6F0C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 20:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 894CC206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 20:24:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF106206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 20:30:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T5nj3ozE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436984AbfHBUX7 (ORCPT
+        id S2391865AbfHBUaw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 16:23:59 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:35803 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436954AbfHBUX7 (ORCPT
+        Fri, 2 Aug 2019 16:30:52 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33947 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728855AbfHBUaw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 16:23:59 -0400
-Received: from 162-237-133-238.lightspeed.rcsntx.sbcglobal.net ([162.237.133.238] helo=elm)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <tyhicks@canonical.com>)
-        id 1hte5d-0006JN-66; Fri, 02 Aug 2019 20:23:49 +0000
-Date:   Fri, 2 Aug 2019 15:23:44 -0500
-From:   Tyler Hicks <tyhicks@canonical.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Roberto Sassu <roberto.sassu@huawei.com>, jejb@linux.ibm.com,
-        zohar@linux.ibm.com, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org, crazyt2019+lml@gmail.com,
-        nayna@linux.vnet.ibm.com, silviu.vlasceanu@huawei.com
-Subject: Re: [PATCH] KEYS: trusted: allow module init if TPM is inactive or
- deactivated
-Message-ID: <20190802202343.GE26616@elm>
-References: <20190705163735.11539-1-roberto.sassu@huawei.com>
- <20190711194811.rfsohbfc3a7carpa@linux.intel.com>
- <b4454a78-1f1b-cc75-114a-99926e097b05@huawei.com>
- <20190801163215.mfkagoafkxscesne@linux.intel.com>
- <e50c4cfa-1f0c-6f4d-1910-010a8d874393@huawei.com>
- <20190802142721.GA26616@elm>
- <20190802194226.oiztvme5klkmw6fh@linux.intel.com>
+        Fri, 2 Aug 2019 16:30:52 -0400
+Received: by mail-pl1-f193.google.com with SMTP id i2so34079918plt.1;
+        Fri, 02 Aug 2019 13:30:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=uIv4ooMEd7klhCY0zT5seExgFzJOyNypU0WtuZa/T3g=;
+        b=T5nj3ozEPhXNknpcDcmiad3kRONom8SJGR7CjDLJJbV1c/YoTT9BOW3TTD+6/IH4il
+         Z0+6SQuiQVvOFTl4n546zHvGyBSlaYbgiJvZ5KyhrnXCjbJPIZS79/EuoSjmtmBYeAYQ
+         5wU/4AeQtEeyegE3Jifqt/P3cihOjsUGJl29DGpJJ3CR309HzIOIbWiLWqOgROfCQ/f3
+         lKfNITCM4zNVPbZ2VbpoOpov43A+y8MUcA98xCRul3hQF30DHTCOMxjtdeNa8KpzVBeF
+         F3YT/Do7HieCO/sbJtIGq5V69Ec2ifFJqjLeEE2Rk6lUWt/s8Xj4FTlej0pV/RUSTwkL
+         q18w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=uIv4ooMEd7klhCY0zT5seExgFzJOyNypU0WtuZa/T3g=;
+        b=UzQ06noYL1yGWYfAesp6w0ubts99KU4olX3zv5iI0p7wliv/Wk44cRUdiT86xqLDlz
+         7pfIlM0hxr5mf+IrwkBcOjk1X2TZwglshpTpDNE8nRbS/qrgx8GtD738omxxveT28Gp4
+         SqeMBBr62kW42eVrLqIUrGXoHvhMTjv2oreva3MDydAHgU6yPD8VpOHORNO5mcwpEJe5
+         HgMudU9fsE1j3SSh3NHlq5vWMKFy8DxP7kFeIspi3WBUdYYMqO1Ls2sPYgpFt0ofxgQp
+         zagadCeQyavK4hw7LlgLMGUxxxcmJsenrGwogxPnDdChUtuqHgNQw7CUJE1Q9XDJNU4h
+         NV6Q==
+X-Gm-Message-State: APjAAAWk5TyTxPCkqrzAYMFt8pyRLGCRs/fdaMjhYtLFizZpyPl7QDkZ
+        HzWqUvTXA9L++XorZScv/1qnk2i8QxI=
+X-Google-Smtp-Source: APXvYqyv8inPZIrrT9LI4PEd9q/9Je3cbbG8XA4p5HBkgwb2+OnFCkwSvDYMJymG20qtXXsQvujYyQ==
+X-Received: by 2002:a17:902:f082:: with SMTP id go2mr139448946plb.25.1564777851316;
+        Fri, 02 Aug 2019 13:30:51 -0700 (PDT)
+Received: from [192.168.1.4] (d206-116-172-62.bchsia.telus.net. [206.116.172.62])
+        by smtp.gmail.com with ESMTPSA id r18sm79712514pfg.77.2019.08.02.13.30.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 02 Aug 2019 13:30:50 -0700 (PDT)
+From:   Mark Balantzyan <mbalant3@gmail.com>
+X-Google-Original-From: Mark Balantzyan <mbalantz@exun.local>
+Date:   Fri, 2 Aug 2019 13:30:43 -0700 (PDT)
+To:     Mark Balantzyan <mbalant3@gmail.com>
+cc:     linux@roeck-us.net, wim@linux-watchdog.org,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] watchdog: alim1535: Rewriting of alim1535 driver to
+ use watchdog subsystem
+In-Reply-To: <20190802041218.66127-1-mbalant3@gmail.com>
+Message-ID: <alpine.OSX.2.21.1908021324160.6704@exun.local>
+References: <20190802041218.66127-1-mbalant3@gmail.com>
+User-Agent: Alpine 2.21 (OSX 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190802194226.oiztvme5klkmw6fh@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-08-02 22:42:26, Jarkko Sakkinen wrote:
-> On Fri, Aug 02, 2019 at 09:27:22AM -0500, Tyler Hicks wrote:
-> > On 2019-08-02 10:21:16, Roberto Sassu wrote:
-> > > On 8/1/2019 6:32 PM, Jarkko Sakkinen wrote:
-> > > > On Mon, Jul 15, 2019 at 06:44:28PM +0200, Roberto Sassu wrote:
-> > > > > According to the bug report at https://bugs.archlinux.org/task/62678,
-> > > > > the trusted module is a dependency of the ecryptfs module. We should
-> > > > > load the trusted module even if the TPM is inactive or deactivated.
-> > > > > 
-> > > > > Given that commit 782779b60faa ("tpm: Actually fail on TPM errors during
-> > > > > "get random"") changes the return code of tpm_get_random(), the patch
-> > > > > should be modified to ignore the -EIO error. I will send a new version.
-> > > > 
-> > > > Do you have information where this dependency comes from?
-> > > 
-> > > ecryptfs retrieves the encryption key from encrypted keys (see
-> > > ecryptfs_get_encrypted_key()).
-> > 
-> > That has been there for many years with any problems. It was added
-> > in 2011:
-> > 
-> >  commit 1252cc3b232e582e887623dc5f70979418caaaa2
-> >  Author: Roberto Sassu <roberto.sassu@polito.it>
-> >  Date:   Mon Jun 27 13:45:45 2011 +0200
-> > 
-> >      eCryptfs: added support for the encrypted key type
-> > 
-> > What's recently changed the situation is this patch:
-> > 
-> >  commit 240730437deb213a58915830884e1a99045624dc
-> >  Author: Roberto Sassu <roberto.sassu@huawei.com>
-> >  Date:   Wed Feb 6 17:24:51 2019 +0100
-> > 
-> >      KEYS: trusted: explicitly use tpm_chip structure from tpm_default_chip()
-> > 
-> > Now eCryptfs has a hard dependency on a TPM chip that's working
-> > as expected even if eCryptfs (or the rest of the system) isn't utilizing
-> > the TPM. If the TPM behaves unexpectedly, you can't access your files.
-> > We need to get this straightened out soon.
-> 
-> I agree with this conclusion that eCryptfs needs to be fixed, not
-> another workaround to trusted.ko.
+Dear Ondrej,
 
-That wasn't the conclusion that I came to. I prefer Robert's proposed
-change to trusted.ko.
+As advised by another kernel maintainer, patches for antiquated drivers 
+like these (this one which I test-built successfully) should hang around 
+until someone with the hardware volunteers to test it. Therefore, I would 
+provide the software and the individual would serve as the hardware tester 
+with the provided software. So far, I've worked with Guenter Roeck to 
+conform it to the watchdog subsystem. And now I'm letting it sit until 
+someone with the hardware is able to test it.
 
-How do you propose that this be fixed in eCryptfs?
+Thank you,
+Mark
 
-Removing encrypted_key support from eCryptfs is the only way that I can
-see to fix the bug in eCryptfs. That support has been there since 2011.
-I'm not sure of the number of users that would be broken by removing
-encrypted_key support. I don't think the number is high but I can't say
-that confidently.
-
-Roberto, what was your use case when you added encrypted_key support to
-eCryptfs back then? Are you aware of any users of eCryptfs +
-encrypted_keys?
-
-Jarkko, removing a long-standing feature is potentially more disruptive
-to users than adding a workaround to trusted.ko which already requires a
-similar workaround. I don't think that I agree with you on the proper
-fix here.
-
-Tyler
-
-> 
-> /Jarkko
