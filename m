@@ -2,54 +2,61 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67798C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F02B1C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C1E421726
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:15:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC63121726
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:15:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389385AbfHBPPO (ORCPT
+        id S2390931AbfHBPPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 11:15:14 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32694 "EHLO
+        Fri, 2 Aug 2019 11:15:18 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52152 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732141AbfHBPPJ (ORCPT
+        by vger.kernel.org with ESMTP id S2389312AbfHBPPP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 11:15:09 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x72F8Pu7062470
-        for <linux-kernel@vger.kernel.org>; Fri, 2 Aug 2019 11:15:08 -0400
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2u4p3ev090-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 11:15:08 -0400
-Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Fri, 2 Aug 2019 16:15:07 +0100
-Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 2 Aug 2019 16:15:02 +0100
+        Fri, 2 Aug 2019 11:15:15 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x72F6Xqf078663;
+        Fri, 2 Aug 2019 11:14:36 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2u4ntc54qc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 02 Aug 2019 11:14:36 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x72F6cvD079170;
+        Fri, 2 Aug 2019 11:14:35 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2u4ntc54pv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 02 Aug 2019 11:14:35 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x72FAmTE020270;
+        Fri, 2 Aug 2019 15:14:34 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma01wdc.us.ibm.com with ESMTP id 2u0e875118-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 02 Aug 2019 15:14:34 +0000
 Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x72FF1T450397458
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x72FEYei14811432
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 2 Aug 2019 15:15:01 GMT
+        Fri, 2 Aug 2019 15:14:34 GMT
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 22508B2068;
-        Fri,  2 Aug 2019 15:15:01 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 68EBEB2068;
+        Fri,  2 Aug 2019 15:14:34 +0000 (GMT)
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E39B2B206C;
-        Fri,  2 Aug 2019 15:15:00 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 49D8DB2064;
+        Fri,  2 Aug 2019 15:14:34 +0000 (GMT)
 Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
         by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri,  2 Aug 2019 15:15:00 +0000 (GMT)
+        Fri,  2 Aug 2019 15:14:34 +0000 (GMT)
 Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 2A72E16C9A55; Fri,  2 Aug 2019 08:15:02 -0700 (PDT)
+        id C0A6E16C9993; Fri,  2 Aug 2019 08:14:35 -0700 (PDT)
+Date:   Fri, 2 Aug 2019 08:14:35 -0700
 From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
@@ -57,140 +64,89 @@ Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
         akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
         josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH RFC tip/core/rcu 13/14] rcutorture: Force on tick for readers and callback flooders
-Date:   Fri,  2 Aug 2019 08:15:00 -0700
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190802151435.GA1081@linux.ibm.com>
-References: <20190802151435.GA1081@linux.ibm.com>
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
+Subject: [PATCH tip/core/rcu 0/14] No-CBs bypass addition for v5.4
+Message-ID: <20190802151435.GA1081@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 X-TM-AS-GCONF: 00
-x-cbid: 19080215-2213-0000-0000-000003B904C5
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011538; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000287; SDB=6.01241059; UDB=6.00654494; IPR=6.01022491;
- MB=3.00028010; MTD=3.00000008; XFM=3.00000015; UTC=2019-08-02 15:15:06
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19080215-2214-0000-0000-00005F7E5AAB
-Message-Id: <20190802151501.13069-13-paulmck@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-02_07:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=13 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=647 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1906280000 definitions=main-1908020156
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Readers and callback flooders in the rcutorture stress-test suite run for
-extended time periods by design.  They do take pains to relinquish the
-CPU from time to time, but in some cases this relies on the scheduler
-being active, which in turn relies on the scheduler-clock interrupt
-firing from time to time.
+Hello!
 
-This commit therefore forces scheduling-clock interrupts within
-these loops.  While in the area, this commit also prevents
-rcu_torture_reader()'s occasional timed sleeps from delaying shutdown.
+This series is a sneak preview of additional work for the move of no-CBs
+CPUs to the ->cblist segmented RCU callback list.  This work adds
+a ->nocb_bypass list with its own lock to further reduce contention.
+This series also includes some nascent work to turn the scheduling-clock
+interrupt back on for nohz_full CPUs doing heavy rcutorture work or RCU
+callback invocation, both of which can remain in the kernel for long
+time periods, which in turn can impede CPU hotplug removals.  (On some
+systems "impede" means up to seven minutes for stop-machine to actually
+get things to stop, a problem that has not yet been observed on no-CBs
+CPUs that are not also nohz_full CPUs.)
 
-Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
----
- kernel/rcu/rcutorture.c | 24 ++++++++++++++++++------
- 1 file changed, 18 insertions(+), 6 deletions(-)
+1.	Atomic ->len field in rcu_segcblist structure.
 
-diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index 3c9feca1eab1..bf08aa783ecc 100644
---- a/kernel/rcu/rcutorture.c
-+++ b/kernel/rcu/rcutorture.c
-@@ -44,6 +44,7 @@
- #include <linux/sched/debug.h>
- #include <linux/sched/sysctl.h>
- #include <linux/oom.h>
-+#include <linux/tick.h>
- 
- #include "rcu.h"
- 
-@@ -1363,15 +1364,16 @@ rcu_torture_reader(void *arg)
- 	set_user_nice(current, MAX_NICE);
- 	if (irqreader && cur_ops->irq_capable)
- 		timer_setup_on_stack(&t, rcu_torture_timer, 0);
--
-+	if (IS_ENABLED(CONFIG_NO_HZ_FULL))
-+		tick_dep_set_task(current, TICK_DEP_MASK_RCU);
- 	do {
- 		if (irqreader && cur_ops->irq_capable) {
- 			if (!timer_pending(&t))
- 				mod_timer(&t, jiffies + 1);
- 		}
--		if (!rcu_torture_one_read(&rand))
-+		if (!rcu_torture_one_read(&rand) && !torture_must_stop())
- 			schedule_timeout_interruptible(HZ);
--		if (time_after(jiffies, lastsleep)) {
-+		if (time_after(jiffies, lastsleep) && !torture_must_stop()) {
- 			schedule_timeout_interruptible(1);
- 			lastsleep = jiffies + 10;
- 		}
-@@ -1383,6 +1385,8 @@ rcu_torture_reader(void *arg)
- 		del_timer_sync(&t);
- 		destroy_timer_on_stack(&t);
- 	}
-+	if (IS_ENABLED(CONFIG_NO_HZ_FULL))
-+		tick_dep_clear_task(current, TICK_DEP_MASK_RCU);
- 	torture_kthread_stopping("rcu_torture_reader");
- 	return 0;
- }
-@@ -1729,10 +1733,10 @@ static void rcu_torture_fwd_prog_cond_resched(unsigned long iter)
- 		// Real call_rcu() floods hit userspace, so emulate that.
- 		if (need_resched() || (iter & 0xfff))
- 			schedule();
--	} else {
--		// No userspace emulation: CB invocation throttles call_rcu()
--		cond_resched();
-+		return;
- 	}
-+	// No userspace emulation: CB invocation throttles call_rcu()
-+	cond_resched();
- }
- 
- /*
-@@ -1781,6 +1785,8 @@ static void rcu_torture_fwd_prog_nr(int *tested, int *tested_tries)
- 		init_rcu_head_on_stack(&fcs.rh);
- 		selfpropcb = true;
- 	}
-+	if (IS_ENABLED(CONFIG_NO_HZ_FULL))
-+		tick_dep_set_task(current, TICK_DEP_MASK_RCU);
- 
- 	/* Tight loop containing cond_resched(). */
- 	WRITE_ONCE(rcu_fwd_cb_nodelay, true);
-@@ -1826,6 +1832,8 @@ static void rcu_torture_fwd_prog_nr(int *tested, int *tested_tries)
- 		destroy_rcu_head_on_stack(&fcs.rh);
- 	}
- 	schedule_timeout_uninterruptible(HZ / 10); /* Let kthreads recover. */
-+	if (IS_ENABLED(CONFIG_NO_HZ_FULL))
-+		tick_dep_clear_task(current, TICK_DEP_MASK_RCU);
- 	WRITE_ONCE(rcu_fwd_cb_nodelay, false);
- }
- 
-@@ -1865,6 +1873,8 @@ static void rcu_torture_fwd_prog_cr(void)
- 	cver = READ_ONCE(rcu_torture_current_version);
- 	gps = cur_ops->get_gp_seq();
- 	rcu_launder_gp_seq_start = gps;
-+	if (IS_ENABLED(CONFIG_NO_HZ_FULL))
-+		tick_dep_set_task(current, TICK_DEP_MASK_RCU);
- 	while (time_before(jiffies, stopat) &&
- 	       !shutdown_time_arrived() &&
- 	       !READ_ONCE(rcu_fwd_emergency_stop) && !torture_must_stop()) {
-@@ -1911,6 +1921,8 @@ static void rcu_torture_fwd_prog_cr(void)
- 		rcu_torture_fwd_cb_hist();
- 	}
- 	schedule_timeout_uninterruptible(HZ); /* Let CBs drain. */
-+	if (IS_ENABLED(CONFIG_NO_HZ_FULL))
-+		tick_dep_clear_task(current, TICK_DEP_MASK_RCU);
- 	WRITE_ONCE(rcu_fwd_cb_nodelay, false);
- }
- 
--- 
-2.17.1
+2.	Add bypass callback queueing in ->nocb_bypass with its own
+	->nocb_bypass_lock.
 
+3.	(Experimental) Check use and usefulness of ->nocb_lock_contended.
+
+4.	Print no-CBs diagnostics when rcutorture writer unduly delayed.
+
+5.	Avoid synchronous wakeup in __call_rcu_nocb_wake().
+
+6.	Advance CBs after merge in rcutree_migrate_callbacks() to
+	avoid unnecessary invocation delays.
+
+7.	Reduce nocb_cb_wait() leaf rcu_node ->lock contention.
+
+8.	Reduce __call_rcu_nocb_wake() leaf rcu_node ->lock contention.
+
+9.	Don't wake no-CBs GP kthread if timer posted under overload,
+	thus reducing overhead in the overload case.
+
+10.	Allow rcu_do_batch() to dynamically adjust batch sizes, courtesy
+	of Eric Dumazet.
+
+11.	(Experimental) Add TICK_DEP_BIT_RCU, courtesy of Frederic Weisbecker.
+
+12.	Force on tick when invoking lots of callbacks to reduce the
+	probability of long stop-machine delays.
+
+13.	Force on tick for readers and callback flooders, again to reduce
+	the probability of long stop-machine delays.
+
+14.	(Experimental and likely quite imperfect) Make multi_cpu_stop()
+	enable tick on all online CPUs, yet again to reduce the
+	probability of long stop-machine delays.
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+ include/linux/rcu_segcblist.h |    4 
+ include/linux/tick.h          |    7 
+ kernel/rcu/rcu_segcblist.c    |  116 +++++++++-
+ kernel/rcu/rcu_segcblist.h    |   17 +
+ kernel/rcu/rcutorture.c       |   25 +-
+ kernel/rcu/tree.c             |   41 +++
+ kernel/rcu/tree.h             |   35 ++-
+ kernel/rcu/tree_plugin.h      |  486 +++++++++++++++++++++++++++++++++++++-----
+ kernel/rcu/tree_stall.h       |    5 
+ kernel/stop_machine.c         |    9 
+ kernel/time/tick-sched.c      |    2 
+ 11 files changed, 667 insertions(+), 80 deletions(-)
