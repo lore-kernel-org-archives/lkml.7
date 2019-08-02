@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C441C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C45EC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32EC42064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:54:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA45E2064A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:54:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739686;
-	bh=IT/nPQmLVMr0/q8u+khDrqWAleTbLW533zhfaYi2BZM=;
+	s=default; t=1564739688;
+	bh=CLg68tfzKMVwWEvkzvAmfZIb7/a7kh58NQrcf00uExY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QZRwD3eeJ5UwNorSXr49+2hea+eD2uVvoK6juE5ZGs9GXXOa1q2mpPcW+ZDKHzhuK
-	 p5KIJtxTBFfw2K2OGHL0FZfN5/HaNp/MQmLhAmRQjjFGL6hcMb5bEBue1QOjK3kbZR
-	 vvS5OCrBGeJwe9TjGxOql5H8HG7P49fB1xhGq+3k=
+	b=bzLtlEZT+N43xj4nsqzfqEsAHa69+rUB11T4gKsnpwj9tgnuA4KQ3X9i0dgKlP49Y
+	 nWJbD3tScK7/muU7Nh4dIwYjH/J0npFHGMPBJR68fXlTfAZFQun8zoQBGU8IAdnccC
+	 7laolo8BE2KStAUpiIIk6KOtAOOcuz1hPYey/mhU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406433AbfHBJyo (ORCPT
+        id S2406453AbfHBJyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:54:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33086 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:54:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406234AbfHBJyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:54:41 -0400
+        id S2406233AbfHBJyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:54:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CD9320665;
-        Fri,  2 Aug 2019 09:54:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B85FA2064A;
+        Fri,  2 Aug 2019 09:54:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739680;
-        bh=IT/nPQmLVMr0/q8u+khDrqWAleTbLW533zhfaYi2BZM=;
+        s=default; t=1564739678;
+        bh=CLg68tfzKMVwWEvkzvAmfZIb7/a7kh58NQrcf00uExY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GT+zm7cScVp1K9FsUWXMqweAcszy3/+jLG7l/3/SfMDMgU000HlBPvTHADcCgTlgl
-         6lIAlJ8WxeZDOZaUFLD6vZs1roUekOaLGTL1ArrcHSkyylJ9d/5BBvgisCw3N/FIvZ
-         Cuw/rms5RJ5PnKGRAOxKUBFqeaSV4t0zSoKcx8k0=
+        b=2rXcTmt4CiRlXhmYY059qXJMB9bpKW75qtLk/q5eQJV220A7GRpuNqB9nAvuvlvAC
+         oEQ2t6j1V0M44c09ghHRCouzvWBQJaZEP+7k+6Xm90Oy4hTn7o6Zk4aGOpmYwvVblw
+         mwQP3z80a622rZlIgFCsN5TQmYs0bfcd+7szapx0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stan Hu <stanhu@gmail.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Qian Lu <luqia@amazon.com>
-Subject: [PATCH 4.14 03/25] NFS: Fix dentry revalidation on NFSv4 lookup
-Date:   Fri,  2 Aug 2019 11:39:35 +0200
-Message-Id: <20190802092100.091227808@linuxfoundation.org>
+        stable@vger.kernel.org, Yoshinori Sato <ysato@users.sourceforge.jp>
+Subject: [PATCH 4.14 23/25] Fix allyesconfig output.
+Date:   Fri,  2 Aug 2019 11:39:55 +0200
+Message-Id: <20190802092107.252725314@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092058.428079740@linuxfoundation.org>
 References: <20190802092058.428079740@linuxfoundation.org>
@@ -60,68 +58,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Yoshinori Sato <ysato@users.sourceforge.jp>
 
-commit be189f7e7f03de35887e5a85ddcf39b91b5d7fc1 upstream.
+commit 1b496469d0c020e09124e03e66a81421c21272a7 upstream.
 
-We need to ensure that inode and dentry revalidation occurs correctly
-on reopen of a file that is already open. Currently, we can end up
-not revalidating either in the case of NFSv4.0, due to the 'cached open'
-path.
-Let's fix that by ensuring that we only do cached open for the special
-cases of open recovery and delegation return.
+Conflict JCore-SoC and SolutionEngine 7619.
 
-Reported-by: Stan Hu <stanhu@gmail.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Qian Lu <luqia@amazon.com>
+Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/nfs4proc.c |   15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ arch/sh/boards/Kconfig |   14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
 
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -1317,12 +1317,20 @@ static bool nfs4_mode_match_open_stateid
- 	return false;
- }
+--- a/arch/sh/boards/Kconfig
++++ b/arch/sh/boards/Kconfig
+@@ -8,27 +8,19 @@ config SH_ALPHA_BOARD
+ 	bool
  
--static int can_open_cached(struct nfs4_state *state, fmode_t mode, int open_mode)
-+static int can_open_cached(struct nfs4_state *state, fmode_t mode,
-+		int open_mode, enum open_claim_type4 claim)
- {
- 	int ret = 0;
+ config SH_DEVICE_TREE
+-	bool "Board Described by Device Tree"
++	bool
+ 	select OF
+ 	select OF_EARLY_FLATTREE
+ 	select TIMER_OF
+ 	select COMMON_CLK
+ 	select GENERIC_CALIBRATE_DELAY
+-	help
+-	  Select Board Described by Device Tree to build a kernel that
+-	  does not hard-code any board-specific knowledge but instead uses
+-	  a device tree blob provided by the boot-loader. You must enable
+-	  drivers for any hardware you want to use separately. At this
+-	  time, only boards based on the open-hardware J-Core processors
+-	  have sufficient driver coverage to use this option; do not
+-	  select it if you are using original SuperH hardware.
  
- 	if (open_mode & (O_EXCL|O_TRUNC))
- 		goto out;
-+	switch (claim) {
-+	case NFS4_OPEN_CLAIM_NULL:
-+	case NFS4_OPEN_CLAIM_FH:
-+		goto out;
-+	default:
-+		break;
-+	}
- 	switch (mode & (FMODE_READ|FMODE_WRITE)) {
- 		case FMODE_READ:
- 			ret |= test_bit(NFS_O_RDONLY_STATE, &state->flags) != 0
-@@ -1617,7 +1625,7 @@ static struct nfs4_state *nfs4_try_open_
- 
- 	for (;;) {
- 		spin_lock(&state->owner->so_lock);
--		if (can_open_cached(state, fmode, open_mode)) {
-+		if (can_open_cached(state, fmode, open_mode, claim)) {
- 			update_open_stateflags(state, fmode);
- 			spin_unlock(&state->owner->so_lock);
- 			goto out_return_state;
-@@ -2141,7 +2149,8 @@ static void nfs4_open_prepare(struct rpc
- 	if (data->state != NULL) {
- 		struct nfs_delegation *delegation;
- 
--		if (can_open_cached(data->state, data->o_arg.fmode, data->o_arg.open_flags))
-+		if (can_open_cached(data->state, data->o_arg.fmode,
-+					data->o_arg.open_flags, claim))
- 			goto out_no_action;
- 		rcu_read_lock();
- 		delegation = rcu_dereference(NFS_I(data->state->inode)->delegation);
+ config SH_JCORE_SOC
+ 	bool "J-Core SoC"
+-	depends on SH_DEVICE_TREE && (CPU_SH2 || CPU_J2)
++	select SH_DEVICE_TREE
+ 	select CLKSRC_JCORE_PIT
+ 	select JCORE_AIC
+-	default y if CPU_J2
++	depends on CPU_J2
+ 	help
+ 	  Select this option to include drivers core components of the
+ 	  J-Core SoC, including interrupt controllers and timers.
 
 
