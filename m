@@ -2,111 +2,112 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F23C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D95C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D0D220880
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:40:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F3A1206A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:40:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738836;
-	bh=QWfytG9YLz53AlgWtzrZ87gSCd8TiSKOvSheHr/Jvdc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O191tcjlXsRFRbGsOyGu54g8m8dRVMQtNl0N47g6IOulT0bBVcp+zKi2h6L14GCId
-	 sLWQTsIuIU4EFuKTntmk1PLTHn5/d43Of0i7A/IRfgrsbFEeluhwQKFhBD0X0hj4vF
-	 smb7p+bNAc4BVMW13xYkukoKtv0J7OVninxQVJNQ=
+	s=default; t=1564738841;
+	bh=WL5+6sH1lwj0oDsTjnOW1B1yUe+NEE5VXfDN9nPTh64=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ETiQiyzvi1nKOZ+se7YXetw0q6c3XcUQrZu0W1FHVgqODU7+hG7EfatU+KsdxVely
+	 02e4FJwFRJ51abbFRTdGjKonvskEr2AyPiZEqhUMO3PNuT0XMifpd0h0epGP8Fc/om
+	 2M88MoldGU6Bu+bu8FyPNKuchRt5W/ZaMk3DANmc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391732AbfHBJkf (ORCPT
+        id S2391748AbfHBJkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:40:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41512 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391705AbfHBJk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:40:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AF7020679;
-        Fri,  2 Aug 2019 09:40:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738828;
-        bh=QWfytG9YLz53AlgWtzrZ87gSCd8TiSKOvSheHr/Jvdc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ygzNOJyVohsC8l6Jy3at4aA/xAYG3TA6RR4vzJWFLTltFSc91KPJYx4W98ithNi+y
-         KBAIFMyK8lGh/c7CLb0+b1vxaRtzw4Db93GyXhwx/ZtFsTFASQTARXmaaluGKzhVj9
-         uI9re+MEUNscdbVYXYiTO6+Zrwp6aZhAApnQtgO0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 011/223] crypto: talitos - fix skcipher failure due to wrong output IV
-Date:   Fri,  2 Aug 2019 11:33:56 +0200
-Message-Id: <20190802092239.645236580@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
-References: <20190802092238.692035242@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 2 Aug 2019 05:40:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37470 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2391717AbfHBJkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:40:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 30C32AE50;
+        Fri,  2 Aug 2019 09:40:30 +0000 (UTC)
+Date:   Fri, 2 Aug 2019 11:40:28 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, Vladimir Davydov <vdavydov.dev@gmail.com>
+Subject: Re: [PATCH RFC] mm/memcontrol: reclaim severe usage over high limit
+ in get_user_pages loop
+Message-ID: <20190802094028.GG6461@dhcp22.suse.cz>
+References: <156431697805.3170.6377599347542228221.stgit@buzz>
+ <20190729154952.GC21958@cmpxchg.org>
+ <20190729185509.GI9330@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190729185509.GI9330@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3e03e792865ae48b8cfc69a0b4d65f02f467389f ]
+On Mon 29-07-19 20:55:09, Michal Hocko wrote:
+> On Mon 29-07-19 11:49:52, Johannes Weiner wrote:
+> > On Sun, Jul 28, 2019 at 03:29:38PM +0300, Konstantin Khlebnikov wrote:
+> > > --- a/mm/gup.c
+> > > +++ b/mm/gup.c
+> > > @@ -847,8 +847,11 @@ static long __get_user_pages(struct task_struct *tsk, struct mm_struct *mm,
+> > >  			ret = -ERESTARTSYS;
+> > >  			goto out;
+> > >  		}
+> > > -		cond_resched();
+> > >  
+> > > +		/* Reclaim memory over high limit before stocking too much */
+> > > +		mem_cgroup_handle_over_high(true);
+> > 
+> > I'd rather this remained part of the try_charge() call. The code
+> > comment in try_charge says this:
+> > 
+> > 	 * We can perform reclaim here if __GFP_RECLAIM but let's
+> > 	 * always punt for simplicity and so that GFP_KERNEL can
+> > 	 * consistently be used during reclaim.
+> > 
+> > The simplicity argument doesn't hold true anymore once we have to add
+> > manual calls into allocation sites. We should instead fix try_charge()
+> > to do synchronous reclaim for __GFP_RECLAIM and only punt to userspace
+> > return when actually needed.
+> 
+> Agreed. If we want to do direct reclaim on the high limit breach then it
+> should go into try_charge same way we do hard limit reclaim there. I am
+> not yet sure about how/whether to scale the excess. The only reason to
+> move reclaim to return-to-userspace path was GFP_NOWAIT charges. As you
+> say, maybe we should start by always performing the reclaim for
+> sleepable contexts first and only defer for non-sleeping requests.
 
-Selftests report the following:
+In other words. Something like patch below (completely untested). Could
+you give it a try Konstantin?
 
-[    2.984845] alg: skcipher: cbc-aes-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
-[    2.995377] 00000000: 3d af ba 42 9d 9e b4 30 b4 22 da 80 2c 9f ac 41
-[    3.032673] alg: skcipher: cbc-des-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
-[    3.043185] 00000000: fe dc ba 98 76 54 32 10
-[    3.063238] alg: skcipher: cbc-3des-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
-[    3.073818] 00000000: 7d 33 88 93 0f 93 b2 42
-
-This above dumps show that the actual output IV is indeed the input IV.
-This is due to the IV not being copied back into the request.
-
-This patch fixes that.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/crypto/talitos.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/crypto/talitos.c b/drivers/crypto/talitos.c
-index 5a24a484ecc7..0b12772c7919 100644
---- a/drivers/crypto/talitos.c
-+++ b/drivers/crypto/talitos.c
-@@ -1544,11 +1544,15 @@ static void ablkcipher_done(struct device *dev,
- 			    int err)
- {
- 	struct ablkcipher_request *areq = context;
-+	struct crypto_ablkcipher *cipher = crypto_ablkcipher_reqtfm(areq);
-+	struct talitos_ctx *ctx = crypto_ablkcipher_ctx(cipher);
-+	unsigned int ivsize = crypto_ablkcipher_ivsize(cipher);
- 	struct talitos_edesc *edesc;
- 
- 	edesc = container_of(desc, struct talitos_edesc, desc);
- 
- 	common_nonsnoop_unmap(dev, edesc, areq);
-+	memcpy(areq->info, ctx->iv, ivsize);
- 
- 	kfree(edesc);
- 
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index ba9138a4a1de..53a35c526e43 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -2429,8 +2429,12 @@ static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
+ 				schedule_work(&memcg->high_work);
+ 				break;
+ 			}
+-			current->memcg_nr_pages_over_high += batch;
+-			set_notify_resume(current);
++			if (gfpflags_allow_blocking(gfp_mask)) {
++				reclaim_high(memcg, nr_pages, GFP_KERNEL);
++			} else {
++				current->memcg_nr_pages_over_high += batch;
++				set_notify_resume(current);
++			}
+ 			break;
+ 		}
+ 	} while ((memcg = parent_mem_cgroup(memcg)));
 -- 
-2.20.1
-
-
-
+Michal Hocko
+SUSE Labs
