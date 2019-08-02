@@ -5,50 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB61C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8518C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1B372087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:41:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B29F621726
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:41:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738879;
-	bh=NFkFRIwreOSnCR1vC8YOMvLJ+63nA0WPzzDhF9pxoIc=;
+	s=default; t=1564738883;
+	bh=4Ry8K8H4qf2fv5PifWxooMohERMXh9MUkiHHEwcDOvc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GELcVzWw7GHALhkI/7DGW1aFEBNfbp0Xct2Dw1YOPDdeXsv770uOPbUQeM0jdIq4n
-	 UObRoT+oTATHJqFajWqW54bFkxeKx8wooNE8zgFWgyfLPWp5t1Rj2JenQmsEjFsAh8
-	 ZF2exUKiJ6s2CYJCx2phAHEV+C9SnF04sf3Gadkw=
+	b=Mfe1a6qIGunXhpF1ZrCwLuUurdWOUgUqOcvRaGezTDN+3aZM7ZxbJJ/cVdkB2N6Ek
+	 +FhvbN7/VI55Cn/O4FcF9GlK5t9RqYABbSRUGIXbNJg9xabsyBrl3txkP0mcrH+qXI
+	 ao+PvPX59Y6L+Er6a2+V1ghBFXk7kuhlNtwvEDzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404513AbfHBJlS (ORCPT
+        id S2404541AbfHBJlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:41:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42642 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:41:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391800AbfHBJlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:41:12 -0400
+        id S2391820AbfHBJlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:41:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A50E20B7C;
-        Fri,  2 Aug 2019 09:41:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC69520880;
+        Fri,  2 Aug 2019 09:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738871;
-        bh=NFkFRIwreOSnCR1vC8YOMvLJ+63nA0WPzzDhF9pxoIc=;
+        s=default; t=1564738879;
+        bh=4Ry8K8H4qf2fv5PifWxooMohERMXh9MUkiHHEwcDOvc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bk6ZTt1XLP9CTm+f3KKEomFdua7iekBX3VRP8Vxp/9Uv8Ms6dTPFmcqravVw4jy1v
-         RX2YmCh4YyjR5/bYzA66hfnR21TlNcPQbWL7Kl5yi5zyk1NPc0kqSxdrBwFhg4JTfN
-         ek+rzKbosIHMwj7XlfLJ/Eny1+3wpC1qw24Pn1eM=
+        b=b3zi/xRB8C22n0vuIkvCVy8L30oPOJkUpOi4vVZKMz3nezbOgSd23xf4bc2tYRTSL
+         PwEeu6zc9dC8ItZ2Ud/CNNDIHoUo4aXLE60/eWOAeDX1QwWgEMaY5RgVmTCrrCz/pg
+         MiEb1WFrkxko4ElKciX8tD828qvemYZu1WKPjOcM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Abhishek Goel <huntbag@linux.vnet.ibm.com>,
-        Thomas Renninger <trenn@suse.de>,
-        Shuah Khan <skhan@linuxfoundation.org>,
+        stable@vger.kernel.org, Jose Abreu <joabreu@synopsys.com>,
+        Joao Pinto <jpinto@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 028/223] cpupower : frequency-set -r option misses the last cpu in related cpu list
-Date:   Fri,  2 Aug 2019 11:34:13 +0200
-Message-Id: <20190802092240.839216152@linuxfoundation.org>
+Subject: [PATCH 4.9 016/223] net: stmmac: dwmac4/5: Clear unused address entries
+Date:   Fri,  2 Aug 2019 11:34:01 +0200
+Message-Id: <20190802092240.060441829@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -61,38 +63,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 04507c0a9385cc8280f794a36bfff567c8cc1042 ]
+[ Upstream commit 0620ec6c62a5a07625b65f699adc5d1b90394ee6 ]
 
-To set frequency on specific cpus using cpupower, following syntax can
-be used :
-cpupower -c #i frequency-set -f #f -r
+In case we don't use a given address entry we need to clear it because
+it could contain previous values that are no longer valid.
 
-While setting frequency using cpupower frequency-set command, if we use
-'-r' option, it is expected to set frequency for all cpus related to
-cpu #i. But it is observed to be missing the last cpu in related cpu
-list. This patch fixes the problem.
+Found out while running stmmac selftests.
 
-Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
-Reviewed-by: Thomas Renninger <trenn@suse.de>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Cc: Joao Pinto <jpinto@synopsys.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/cpupower/utils/cpufreq-set.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/tools/power/cpupower/utils/cpufreq-set.c b/tools/power/cpupower/utils/cpufreq-set.c
-index 1eef0aed6423..08a405593a79 100644
---- a/tools/power/cpupower/utils/cpufreq-set.c
-+++ b/tools/power/cpupower/utils/cpufreq-set.c
-@@ -306,6 +306,8 @@ int cmd_freq_set(int argc, char **argv)
- 				bitmask_setbit(cpus_chosen, cpus->cpu);
- 				cpus = cpus->next;
- 			}
-+			/* Set the last cpu in related cpus list */
-+			bitmask_setbit(cpus_chosen, cpus->cpu);
- 			cpufreq_put_related_cpus(cpus);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+index 51019b794be5..f46f2bfc2cc0 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+@@ -173,14 +173,20 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
+ 		 * are required
+ 		 */
+ 		value |= GMAC_PACKET_FILTER_PR;
+-	} else if (!netdev_uc_empty(dev)) {
+-		int reg = 1;
++	} else {
+ 		struct netdev_hw_addr *ha;
++		int reg = 1;
+ 
+ 		netdev_for_each_uc_addr(ha, dev) {
+ 			dwmac4_set_umac_addr(hw, ha->addr, reg);
+ 			reg++;
  		}
++
++		while (reg <= GMAC_MAX_PERFECT_ADDRESSES) {
++			writel(0, ioaddr + GMAC_ADDR_HIGH(reg));
++			writel(0, ioaddr + GMAC_ADDR_LOW(reg));
++			reg++;
++		}
  	}
+ 
+ 	writel(value, ioaddr + GMAC_PACKET_FILTER);
 -- 
 2.20.1
 
