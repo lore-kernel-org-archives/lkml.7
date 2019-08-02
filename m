@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39855C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B02C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06FC820665
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3EE32067D
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:03:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564740212;
-	bh=BVTuedsQanAzFF1VT7DtsxkTC1avlhmQf69i6A1gDVw=;
+	s=default; t=1564740217;
+	bh=/sGJVzo98w2BTi+g1+08yolXgzG0Zb45X9JsulVGuRw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OpE0TOTib3Cdu0QZDAUr1sOVAcvTNP+7aBZnq6mMxRP6AAup+4l62ZmpTYwwLK6Ut
-	 VagYiQ3uQS5i5e+2qRUUjLHUWoP4/m7uV5mlc8wuyWYK2tsX9VDlmlSoKfClz9wGU9
-	 772jUW1rOsobQmaPUXoDALnvqgHAvWUl5lK6M39w=
+	b=ESDU/9+Nn7kfon0RjDKKLuId4fEne0VQSNR6ahGUDbBLD8pDYzqC7ZZg10RFxqLtu
+	 lOGYVgRI69iPtZsCy4X0y5GuUj4l0sw/HJsq0dsT7LeCaNJ8XUii/F9rhY437/b12C
+	 Sfi7Hr3vzvOWdhYXXGr9AnvQkVev7U7Wh0DgH6/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407255AbfHBKDa (ORCPT
+        id S2390335AbfHBJlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 06:03:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43224 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:41:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404601AbfHBJld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:41:33 -0400
+        id S2391809AbfHBJlP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:41:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D104521726;
-        Fri,  2 Aug 2019 09:41:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2AB42087E;
+        Fri,  2 Aug 2019 09:41:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738892;
-        bh=BVTuedsQanAzFF1VT7DtsxkTC1avlhmQf69i6A1gDVw=;
+        s=default; t=1564738874;
+        bh=/sGJVzo98w2BTi+g1+08yolXgzG0Zb45X9JsulVGuRw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q0HSxzC03Ht1PkNAyIVSL4Xz278wKyJ3J9xYw+ejsFdK4VqNvKKsqEJ7CbcfYkRBR
-         3vanJbdBbn0IM7pLfml2vUPBFaij9peodl4vBq9QNmiOKaPiNIc7YJz7r3mgEMSyxV
-         PQEvfMHfQo9/eW4FjLnJatUIsDE/mLBHBbqJSgPk=
+        b=IwjNvxnK6+sNBuBpSx77ck9q6jfykqgGPRIXkStWv5KNcdIUqXMT4eE6jmU76IUDz
+         UIQAJDFbXqDtyymmfAGYdAWR1m7t5yL8iNNa0ez6K/VSJAlAySyz9ia5/ycX68KkHq
+         PQtGYXC38og9DO6DIsd0CsPyYmyQkQh0FPcn09fc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Shailendra Verma <shailendra.v@samsung.com>,
+        stable@vger.kernel.org, Jungo Lin <jungo.lin@mediatek.com>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 021/223] media: staging: media: davinci_vpfe: - Fix for memory leak if decoder initialization fails.
-Date:   Fri,  2 Aug 2019 11:34:06 +0200
-Message-Id: <20190802092240.428275659@linuxfoundation.org>
+Subject: [PATCH 4.9 014/223] media: media_device_enum_links32: clean a reserved field
+Date:   Fri,  2 Aug 2019 11:33:59 +0200
+Message-Id: <20190802092239.891285103@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -61,33 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6995a659101bd4effa41cebb067f9dc18d77520d ]
+[ Upstream commit f49308878d7202e07d8761238e01bd0e5fce2750 ]
 
-Fix to avoid possible memory leak if the decoder initialization
-got failed.Free the allocated memory for file handle object
-before return in case decoder initialization fails.
+In v4l2-compliance utility, test MEDIA_IOC_ENUM_ENTITIES
+will check whether reserved field of media_links_enum filled
+with zero.
 
-Signed-off-by: Shailendra Verma <shailendra.v@samsung.com>
+However, for 32 bit program, the reserved field is missing
+copy from kernel space to user space in media_device_enum_links32
+function.
+
+This patch adds the cleaning a reserved field logic in
+media_device_enum_links32 function.
+
+Signed-off-by: Jungo Lin <jungo.lin@mediatek.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/davinci_vpfe/vpfe_video.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/media/media-device.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/staging/media/davinci_vpfe/vpfe_video.c b/drivers/staging/media/davinci_vpfe/vpfe_video.c
-index 89dd6b989254..e0440807b4ed 100644
---- a/drivers/staging/media/davinci_vpfe/vpfe_video.c
-+++ b/drivers/staging/media/davinci_vpfe/vpfe_video.c
-@@ -423,6 +423,9 @@ static int vpfe_open(struct file *file)
- 	/* If decoder is not initialized. initialize it */
- 	if (!video->initialized && vpfe_update_pipe_state(video)) {
- 		mutex_unlock(&video->lock);
-+		v4l2_fh_del(&handle->vfh);
-+		v4l2_fh_exit(&handle->vfh);
-+		kfree(handle);
- 		return -ENODEV;
- 	}
- 	/* Increment device users counter */
+diff --git a/drivers/media/media-device.c b/drivers/media/media-device.c
+index 6f46c59415fe..6062c0cfa632 100644
+--- a/drivers/media/media-device.c
++++ b/drivers/media/media-device.c
+@@ -474,6 +474,7 @@ static long media_device_enum_links32(struct media_device *mdev,
+ {
+ 	struct media_links_enum links;
+ 	compat_uptr_t pads_ptr, links_ptr;
++	int ret;
+ 
+ 	memset(&links, 0, sizeof(links));
+ 
+@@ -485,7 +486,13 @@ static long media_device_enum_links32(struct media_device *mdev,
+ 	links.pads = compat_ptr(pads_ptr);
+ 	links.links = compat_ptr(links_ptr);
+ 
+-	return media_device_enum_links(mdev, &links);
++	ret = media_device_enum_links(mdev, &links);
++	if (ret)
++		return ret;
++
++	memset(ulinks->reserved, 0, sizeof(ulinks->reserved));
++
++	return 0;
+ }
+ 
+ #define MEDIA_IOC_ENUM_LINKS32		_IOWR('|', 0x02, struct media_links_enum32)
 -- 
 2.20.1
 
