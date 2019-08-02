@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77239C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B560AC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 509D12182B
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:35:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FE7D217D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:35:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738507;
-	bh=1l0EAHHLvUwKDNyHuZOGsTVAkJXPM1btSYpS8ZVJubE=;
+	s=default; t=1564738512;
+	bh=7tUjJMCnonz3h5QbK3ueb5c4qh4LMWMkL26XF54Rwps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vnLx35MAUb3+RaSqCIPfaiqGwwBFTtAHP3mlSe2zbowBCHyCPFpvDkYM2lyvKNHRx
-	 kdefWOVH9m3zguAfzZunTOwLIuZ6yV5bgYvHIVsOUPoQMbJhuICSEuwHrIr9L5KP+h
-	 zyg29+j+Ed66dy5U572hlK9g4YBBtfYVENMJepUQ=
+	b=jXYtF7V8mbZYmL3ng+g70YyN0aVLm8lEEaMSa080eGMUi+2cA/XVs6LuczH62y388
+	 htvnDYPygnff92q7R5KX9skv2hpTiQRxDtqlLa0I8OA16QnoOWI524myuXUNk9dRSv
+	 Dz9tkoQ3nCjMs+UB+F1lSaebmz+zBtB9zsMcLZbU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391603AbfHBJfF (ORCPT
+        id S2391623AbfHBJfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:35:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35240 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:35:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391577AbfHBJfA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:35:00 -0400
+        id S2391607AbfHBJfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:35:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51E3C2182B;
-        Fri,  2 Aug 2019 09:34:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F31BD217D7;
+        Fri,  2 Aug 2019 09:35:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738499;
-        bh=1l0EAHHLvUwKDNyHuZOGsTVAkJXPM1btSYpS8ZVJubE=;
+        s=default; t=1564738507;
+        bh=7tUjJMCnonz3h5QbK3ueb5c4qh4LMWMkL26XF54Rwps=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X9VyMKqO80/RL5UIAzAVhyQ98DRjoeFsbyfXFWLmx+bhWlEz7tWWL1olBoXTSkQiB
-         qPOEsi/l/LZWtEBLb1QPBhovcfo42vn66EtDRTpa7QbaYAV9sbI/nsdlCnd8hURWUL
-         /hjlo7a8VjW29CBuBwqPDVzmKoqfvoAP9Ykdf4/g=
+        b=JHZw6F1iR4rT5UXoI5oXWaSs7P2LD5ZzQyIaU4e43E8ccH7OA7wB2JluFCFADF5bA
+         VWkZJD8p8jHsyoDj2zC8Bp9RUiPytH3+7NryQsLsEiXGBMOoVfp+6pWvSfxTYEYWS9
+         OQ5luBKN8aUCBhtgvJSvWKmNPi9AibTbVfZrk3pk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wang Hai <wanghai26@huawei.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Chris Tracy <ctracy@engr.scu.edu>,
+        "J. Bruce Fields" <bfields@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 111/158] memstick: Fix error cleanup path of memstick_init
-Date:   Fri,  2 Aug 2019 11:28:52 +0200
-Message-Id: <20190802092226.685292116@linuxfoundation.org>
+Subject: [PATCH 4.4 104/158] nfsd: fix performance-limiting session calculation
+Date:   Fri,  2 Aug 2019 11:28:45 +0200
+Message-Id: <20190802092225.622320812@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -61,73 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 65f1a0d39c289bb6fc85635528cd36c4b07f560e ]
+[ Upstream commit c54f24e338ed2a35218f117a4a1afb5f9e2b4e64 ]
 
-If bus_register fails. On its error handling path, it has cleaned up
-what it has done. There is no need to call bus_unregister again.
-Otherwise, if bus_unregister is called, issues such as null-ptr-deref
-will arise.
+We're unintentionally limiting the number of slots per nfsv4.1 session
+to 10.  Often more than 10 simultaneous RPCs are needed for the best
+performance.
 
-Syzkaller report this:
+This calculation was meant to prevent any one client from using up more
+than a third of the limit we set for total memory use across all clients
+and sessions.  Instead, it's limiting the client to a third of the
+maximum for a single session.
 
-kobject_add_internal failed for memstick (error: -12 parent: bus)
-BUG: KASAN: null-ptr-deref in sysfs_remove_file_ns+0x1b/0x40 fs/sysfs/file.c:467
-Read of size 8 at addr 0000000000000078 by task syz-executor.0/4460
+Fix this.
 
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xa9/0x10e lib/dump_stack.c:113
- __kasan_report+0x171/0x18d mm/kasan/report.c:321
- kasan_report+0xe/0x20 mm/kasan/common.c:614
- sysfs_remove_file_ns+0x1b/0x40 fs/sysfs/file.c:467
- sysfs_remove_file include/linux/sysfs.h:519 [inline]
- bus_remove_file+0x6c/0x90 drivers/base/bus.c:145
- remove_probe_files drivers/base/bus.c:599 [inline]
- bus_unregister+0x6e/0x100 drivers/base/bus.c:916 ? 0xffffffffc1590000
- memstick_init+0x7a/0x1000 [memstick]
- do_one_initcall+0xb9/0x3b5 init/main.c:914
- do_init_module+0xe0/0x330 kernel/module.c:3468
- load_module+0x38eb/0x4270 kernel/module.c:3819
- __do_sys_finit_module+0x162/0x190 kernel/module.c:3909
- do_syscall_64+0x72/0x2a0 arch/x86/entry/common.c:298
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Fixes: baf8532a147d ("memstick: initial commit for Sony MemoryStick support")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai26@huawei.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reported-by: Chris Tracy <ctracy@engr.scu.edu>
+Cc: stable@vger.kernel.org
+Fixes: de766e570413 "nfsd: give out fewer session slots as limit approaches"
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/memstick/core/memstick.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ fs/nfsd/nfs4state.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/memstick/core/memstick.c b/drivers/memstick/core/memstick.c
-index 4d673a626db4..1041eb7a6167 100644
---- a/drivers/memstick/core/memstick.c
-+++ b/drivers/memstick/core/memstick.c
-@@ -629,13 +629,18 @@ static int __init memstick_init(void)
- 		return -ENOMEM;
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index eb0f8af5203a..1e1abf1d5769 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -1391,16 +1391,16 @@ static u32 nfsd4_get_drc_mem(struct nfsd4_channel_attrs *ca)
+ {
+ 	u32 slotsize = slot_bytes(ca);
+ 	u32 num = ca->maxreqs;
+-	int avail;
++	unsigned long avail, total_avail;
  
- 	rc = bus_register(&memstick_bus_type);
--	if (!rc)
--		rc = class_register(&memstick_host_class);
-+	if (rc)
-+		goto error_destroy_workqueue;
- 
--	if (!rc)
--		return 0;
-+	rc = class_register(&memstick_host_class);
-+	if (rc)
-+		goto error_bus_unregister;
-+
-+	return 0;
- 
-+error_bus_unregister:
- 	bus_unregister(&memstick_bus_type);
-+error_destroy_workqueue:
- 	destroy_workqueue(workqueue);
- 
- 	return rc;
+ 	spin_lock(&nfsd_drc_lock);
+-	avail = min((unsigned long)NFSD_MAX_MEM_PER_SESSION,
+-		    nfsd_drc_max_mem - nfsd_drc_mem_used);
++	total_avail = nfsd_drc_max_mem - nfsd_drc_mem_used;
++	avail = min((unsigned long)NFSD_MAX_MEM_PER_SESSION, total_avail);
+ 	/*
+ 	 * Never use more than a third of the remaining memory,
+ 	 * unless it's the only way to give this client a slot:
+ 	 */
+-	avail = clamp_t(int, avail, slotsize, avail/3);
++	avail = clamp_t(int, avail, slotsize, total_avail/3);
+ 	num = min_t(int, num, avail / slotsize);
+ 	nfsd_drc_mem_used += num * slotsize;
+ 	spin_unlock(&nfsd_drc_lock);
 -- 
 2.20.1
 
