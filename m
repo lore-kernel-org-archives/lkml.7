@@ -2,54 +2,51 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66260C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE8CC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3484920665
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8685421726
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:34:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752894;
-	bh=UCB85eOHxfzA+lw/aPmFvyb66eypBbWSWN7z8i1UXZU=;
+	s=default; t=1564752896;
+	bh=HPlxUtNwkZHE7h7+b4y2FQxruajmN736XDBowKuRmkY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=of69MKYpUizcYjayYCXfetAZiffzuI6eeq+q+ItwAVRLG6TJNfLV9fD7uyjf+7H+U
-	 MVqdDqjgw6q6o/Zd8q8Gucd2YzCtukmp/LlX+QIpO37cz1cvHS1AdYlYYA20tz6ov1
-	 B6cgBS3NE0GHqqQVvK7jc1BZc96AeFdStF2RYegE=
+	b=h1yKiumsDslpYr+NaRm9yVKSIGMFdSjIEMlGTLI147ZrcklfPPxAeGBttxP576+Kg
+	 PLbtTPUCmQ6avnB56zccUm8g2XT287zN47yOxbx27ZbV6djHpXunESpAVzBxE+8fKH
+	 CQJ1KIN/SQIvGgd9XSU8QrN0w9Cp0YAyTpd0yVSY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393743AbfHBNWV (ORCPT
+        id S2405937AbfHBNez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:22:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60870 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:34:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393723AbfHBNWS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:22:18 -0400
+        id S2393744AbfHBNWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:22:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A64F3217D4;
-        Fri,  2 Aug 2019 13:22:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 165AB20644;
+        Fri,  2 Aug 2019 13:22:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752137;
-        bh=UCB85eOHxfzA+lw/aPmFvyb66eypBbWSWN7z8i1UXZU=;
+        s=default; t=1564752141;
+        bh=HPlxUtNwkZHE7h7+b4y2FQxruajmN736XDBowKuRmkY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wRdhLNmzqonKjExJ8L9PUGpkDD6QR6VBO9FmnC5JbSTksZ6/KJuCCCi0lPKyt3jMb
-         SLn34fG2snBQum27G2mk+wvUO4U2abRh47BjxeAoBRCw9pYpqfzpU6//Am8V8ZRMzF
-         bOztqDyxlZLWcfM2uN3rY7KwXWvPj+6zWDgxMpNw=
+        b=OichDcKQ9NP/k0O1gbCm/l8XxmqDLeCPKhsUF/zJpS2gl6lnWOXeiNhEr21LwqeyG
+         ciIv3jxWX1lpZmH7Ka9yUCzhDv3eJz5uSc9mYtCGJV2jUItopTQG4XMX4e3KdVMknh
+         MY6QPiFujPc+kwNKOo5T0thpTqHlH1AvYJAZUln0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 56/76] perf probe: Avoid calling freeing routine multiple times for same pointer
-Date:   Fri,  2 Aug 2019 09:19:30 -0400
-Message-Id: <20190802131951.11600-56-sashal@kernel.org>
+Cc:     Misha Nasledov <misha@nasledov.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.2 59/76] nvme: ignore subnqn for ADATA SX6000LNP
+Date:   Fri,  2 Aug 2019 09:19:33 -0400
+Message-Id: <20190802131951.11600-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802131951.11600-1-sashal@kernel.org>
 References: <20190802131951.11600-1-sashal@kernel.org>
@@ -62,49 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Misha Nasledov <misha@nasledov.com>
 
-[ Upstream commit d95daf5accf4a72005daa13fbb1d1bd8709f2861 ]
+[ Upstream commit 08b903b5fd0c49e5f224a9bf085b6329ec3c55c0 ]
 
-When perf_add_probe_events() we call cleanup_perf_probe_events() for the
-pev pointer it receives, then, as part of handling this failure the main
-'perf probe' goes on and calls cleanup_params() and that will again call
-cleanup_perf_probe_events()for the same pointer, so just set nevents to
-zero when handling the failure of perf_add_probe_events() to avoid the
-double free.
+The ADATA SX6000LNP NVMe SSDs have the same subnqn and, due to this, a
+system with more than one of these SSDs will only have one usable.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-x8qgma4g813z96dvtw9w219q@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+[ 0.942706] nvme nvme1: ignoring ctrl due to duplicate subnqn (nqn.2018-05.com.example:nvme:nvm-subsystem-OUI00E04C).
+[ 0.943017] nvme nvme1: Removing after probe failure status: -22
+
+02:00.0 Non-Volatile memory controller [0108]: Realtek Semiconductor Co., Ltd. Device [10ec:5762] (rev 01)
+71:00.0 Non-Volatile memory controller [0108]: Realtek Semiconductor Co., Ltd. Device [10ec:5762] (rev 01)
+
+There are no firmware updates available from the vendor, unfortunately.
+Applying the NVME_QUIRK_IGNORE_DEV_SUBNQN quirk for these SSDs resolves
+the issue, and they all work after this patch:
+
+/dev/nvme0n1     2J1120050420         ADATA SX6000LNP [...]
+/dev/nvme1n1     2J1120050540         ADATA SX6000LNP [...]
+
+Signed-off-by: Misha Nasledov <misha@nasledov.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-probe.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/nvme/host/pci.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
-index 8bb124e55c6d2..2c376f5b21200 100644
---- a/tools/perf/builtin-probe.c
-+++ b/tools/perf/builtin-probe.c
-@@ -698,6 +698,16 @@ __cmd_probe(int argc, const char **argv)
- 
- 		ret = perf_add_probe_events(params.events, params.nevents);
- 		if (ret < 0) {
-+
-+			/*
-+			 * When perf_add_probe_events() fails it calls
-+			 * cleanup_perf_probe_events(pevs, npevs), i.e.
-+			 * cleanup_perf_probe_events(params.events, params.nevents), which
-+			 * will call clear_perf_probe_event(), so set nevents to zero
-+			 * to avoid cleanup_params() to call clear_perf_probe_event() again
-+			 * on the same pevs.
-+			 */
-+			params.nevents = 0;
- 			pr_err_with_code("  Error: Failed to add events.", ret);
- 			return ret;
- 		}
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 7fbcd72c438f6..f9959eaaa185e 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -2959,6 +2959,8 @@ static const struct pci_device_id nvme_id_table[] = {
+ 		.driver_data = NVME_QUIRK_LIGHTNVM, },
+ 	{ PCI_DEVICE(0x1d1d, 0x2601),	/* CNEX Granby */
+ 		.driver_data = NVME_QUIRK_LIGHTNVM, },
++	{ PCI_DEVICE(0x10ec, 0x5762),   /* ADATA SX6000LNP */
++		.driver_data = NVME_QUIRK_IGNORE_DEV_SUBNQN, },
+ 	{ PCI_DEVICE_CLASS(PCI_CLASS_STORAGE_EXPRESS, 0xffffff) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_APPLE, 0x2001) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_APPLE, 0x2003) },
 -- 
 2.20.1
 
