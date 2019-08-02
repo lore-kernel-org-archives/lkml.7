@@ -2,133 +2,148 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C21C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E2A3C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F2BC204EC
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:13:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55CF621726
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:14:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lO9QmjHP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730647AbfHBPN6 (ORCPT
+        id S2387637AbfHBPOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 11:13:58 -0400
-Received: from mga18.intel.com ([134.134.136.126]:27126 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730359AbfHBPN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 11:13:57 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Aug 2019 08:13:56 -0700
-X-IronPort-AV: E=Sophos;i="5.64,338,1559545200"; 
-   d="scan'208";a="324597851"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Aug 2019 08:13:56 -0700
-Message-ID: <3f6c133ec1eabb8f4fd5c0277f8af254b934b14f.camel@linux.intel.com>
-Subject: Re: [PATCH v3 0/6] mm / virtio: Provide support for unused page
- reporting
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        kvm@vger.kernel.org, david@redhat.com, mst@redhat.com,
-        dave.hansen@intel.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org
-Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
-        konrad.wilk@oracle.com, willy@infradead.org,
-        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com
-Date:   Fri, 02 Aug 2019 08:13:56 -0700
-In-Reply-To: <9cddf98d-e2ce-0f8a-d46c-e15a54bc7391@redhat.com>
-References: <20190801222158.22190.96964.stgit@localhost.localdomain>
-         <9cddf98d-e2ce-0f8a-d46c-e15a54bc7391@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Fri, 2 Aug 2019 11:14:48 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:38351 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728719AbfHBPOr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 11:14:47 -0400
+Received: by mail-ed1-f67.google.com with SMTP id r12so37901371edo.5;
+        Fri, 02 Aug 2019 08:14:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=txRNymCLa0F2sH7rm1U39uNCjUyxuuiLjvn3rhtof6o=;
+        b=lO9QmjHP6O41ZCS8dtxftVcEU1ZMBi8DcpvUMY0blH5Qwqs9An8SwEtYIu4kI6xBqO
+         ROSjy4jrgZxUHgj+PoMsKXXOnCBPtY5s3OefBgajHeizJfCRzEQMpfJZsxWfs2ziBXQr
+         i8FM3V169K4mBiBVZU798HtbOMxk+zE0F74fIx/mFQP3tKcsbIYJQNMVfDCKLixaXC73
+         nOlcLwXTCJweexIyOsfohKaVuLPfBukqQrOIEHK1aRxxDDXvRW34lsQSzs7tYjyBU7tI
+         35VsEtCMIxfCasrfUvsocJfMQjs6gT5qlNs4oH7gbeoS5iNqtHQ+9CscZuIBYXg+ZC0P
+         1jiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=txRNymCLa0F2sH7rm1U39uNCjUyxuuiLjvn3rhtof6o=;
+        b=mUCERXEelUt/qhezWeh7jdYMOZdTzoMRelgkcaMdPwJ0EmaUKo7jy+IdYMSwC/fJ63
+         abpvUSTxs9tzHw4DzyD1cdsyl7vTWSEFmK1gWkPer8bQFSd8z47DvO2rSdFP2w9QtWhk
+         Hu3fRuuCdtcrRL3gomSvKrD0UF8oB97ZqVckSAODlZGAIAZrDuaf7tu28+A7Muwlz9Ap
+         a6FpnEP87zwO8WJOHbx2qEk03jLUALu7EIll9BuBVLQxtfZanRlMPCDQU6vUc1NyD/yW
+         R7pwlz/HjgqmBPG4TqugVXAInszF0JJgdMX5NKM5iBDPiovQG2HHxQNW6vqYvBIhPfxn
+         oZvA==
+X-Gm-Message-State: APjAAAU9wHdJWuLYjujLz+VKrfShtfsoivmv4stAKO1vICRY6LzxqZFg
+        CsWeqc76Wtbfl76hP59pSK5yE/wAuGDaR7bFxf4=
+X-Google-Smtp-Source: APXvYqzciECXl/Wx8kXkgux/UT3GuFE34O7YmYXV/Xzub/m93Yrtsl0lq1y+r+M8dslWjvKCZukCo7A1uiL7FM5xcDo=
+X-Received: by 2002:a50:a53a:: with SMTP id y55mr122610228edb.147.1564758886126;
+ Fri, 02 Aug 2019 08:14:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20190802083541.12602-1-hslester96@gmail.com> <CA+FuTSc8WBx2PCUhn-sLtYHQR-OROXm2pUN9SDj7P-Bd8432UQ@mail.gmail.com>
+ <CANhBUQ2TRr4RuSmjaRYPXHZpVw_-2awXvWNjjdvV_z1yoGdkXA@mail.gmail.com>
+ <CAF=yD-+3tzufyOnK4suJnovrhX_=4sPqWOsjOcETGG3cA9+MdA@mail.gmail.com> <CANhBUQ2C3OfkC6qDL9=hhXq=C-OMHUwaL7EaMbagVRTt=rc00A@mail.gmail.com>
+In-Reply-To: <CANhBUQ2C3OfkC6qDL9=hhXq=C-OMHUwaL7EaMbagVRTt=rc00A@mail.gmail.com>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Fri, 2 Aug 2019 11:14:10 -0400
+Message-ID: <CAF=yD-K1=4sDmLb0sUaxTHAbVmBXTy4McdBJyVtrZEJx95CqxA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] cxgb4: sched: Use refcount_t for refcount
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Vishal Kulkarni <vishal@chelsio.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-08-02 at 10:41 -0400, Nitesh Narayan Lal wrote:
-> On 8/1/19 6:24 PM, Alexander Duyck wrote:
-> > This series provides an asynchronous means of reporting to a hypervisor
-> > that a guest page is no longer in use and can have the data associated
-> > with it dropped. To do this I have implemented functionality that allows
-> > for what I am referring to as unused page reporting
-> > 
-> > The functionality for this is fairly simple. When enabled it will allocate
-> > statistics to track the number of reported pages in a given free area.
-> > When the number of free pages exceeds this value plus a high water value,
-> > currently 32, it will begin performing page reporting which consists of
-> > pulling pages off of free list and placing them into a scatter list. The
-> > scatterlist is then given to the page reporting device and it will perform
-> > the required action to make the pages "reported", in the case of
-> > virtio-balloon this results in the pages being madvised as MADV_DONTNEED
-> > and as such they are forced out of the guest. After this they are placed
-> > back on the free list, and an additional bit is added if they are not
-> > merged indicating that they are a reported buddy page instead of a
-> > standard buddy page. The cycle then repeats with additional non-reported
-> > pages being pulled until the free areas all consist of reported pages.
-> > 
-> > I am leaving a number of things hard-coded such as limiting the lowest
-> > order processed to PAGEBLOCK_ORDER, and have left it up to the guest to
-> > determine what the limit is on how many pages it wants to allocate to
-> > process the hints. The upper limit for this is based on the size of the
-> > queue used to store the scatterlist.
-> > 
-> > My primary testing has just been to verify the memory is being freed after
-> > allocation by running memhog 40g on a 40g guest and watching the total
-> > free memory via /proc/meminfo on the host. With this I have verified most
-> > of the memory is freed after each iteration. As far as performance I have
-> > been mainly focusing on the will-it-scale/page_fault1 test running with
-> > 16 vcpus. With that I have seen up to a 2% difference between the base
-> > kernel without these patches and the patches with virtio-balloon enabled
-> > or disabled.
-> 
-> A couple of questions:
-> 
-> - The 2% difference which you have mentioned, is this visible for
->   all the 16 cores or just the 16th core?
-> - I am assuming that the difference is seen for both "number of process"
->   and "number of threads" launched by page_fault1. Is that right?
+On Fri, Aug 2, 2019 at 11:10 AM Chuhong Yuan <hslester96@gmail.com> wrote:
+>
+> Willem de Bruijn <willemdebruijn.kernel@gmail.com> =E4=BA=8E2019=E5=B9=B4=
+8=E6=9C=882=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=8810:53=E5=86=99=E9=
+=81=93=EF=BC=9A
+> >
+> > On Fri, Aug 2, 2019 at 10:27 AM Chuhong Yuan <hslester96@gmail.com> wro=
+te:
+> > >
+> > > Willem de Bruijn <willemdebruijn.kernel@gmail.com> =E4=BA=8E2019=E5=
+=B9=B48=E6=9C=882=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=889:40=E5=86=
+=99=E9=81=93=EF=BC=9A
+> > > >
+> > > > On Fri, Aug 2, 2019 at 4:36 AM Chuhong Yuan <hslester96@gmail.com> =
+wrote:
+> > > > >
+> > > > > refcount_t is better for reference counters since its
+> > > > > implementation can prevent overflows.
+> > > > > So convert atomic_t ref counters to refcount_t.
+> > > > >
+> > > > > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> > > > > ---
+> > > > > Changes in v2:
+> > > > >   - Convert refcount from 0-base to 1-base.
+> > > >
+> > > > This changes the initial value from 0 to 1, but does not change the
+> > > > release condition. So this introduces an accounting bug?
+> > >
+> > > I have noticed this problem and have checked other files which use re=
+fcount_t.
+> > > I find although the refcounts are 1-based, they still use
+> > > refcount_dec_and_test()
+> > > to check whether the resource should be released.
+> > > One example is drivers/char/mspec.c.
+> > > Therefore I think this is okay and do not change the release conditio=
+n.
+> >
+> > Indeed it is fine to use refcount_t with a model where the initial
+> > allocation already accounts for the first reference and thus
+> > initializes with refcount_set(.., 1).
+> >
+> > But it is not correct to just change a previously zero initialization
+> > to one. As now an extra refcount_dec will be needed to release state.
+> > But the rest of the code has not changed, so this extra decrement will
+> > not happen.
+> >
+> > For a correct conversion, see for instance commits
+> >
+> >   commit db5bce32fbe19f0c7482fb5a40a33178bbe7b11b
+> >   net: prepare (struct ubuf_info)->refcnt conversion
+> >
+> > and
+> >
+> >   commit c1d1b437816f0afa99202be3cb650c9d174667bc
+> >   net: convert (struct ubuf_info)->refcnt to refcount_t
+> >
+> > The second makes a search-and-replace style API change like your
+> > patches (though also notice the additional required #include).
+> >
+>
+> Thanks for your examples!
+> I will fix the #include in those no base changed patches.
+>
+> > But the other patch is needed first to change both the initial
+> > atomic_set *and* at least one atomic_inc, to maintain the same
+> > reference count over the object's lifetime.
+> >
+> > That change requires understanding of the object's lifecycle, so I
+> > suggest only making those changes when aware of that whole data path.
+>
+> I think I had better focus on the 1-based cases first.
 
-Really, the 2% is bordering on just being noise. Sometimes it is better
-sometimes it is worse. However I think it is just slight variability in
-the tests since it doesn't usually form any specific pattern.
-
-I have been able to tighten it down a bit by actually splitting my guest
-over 2 nodes and pinning the vCPUs so that the nodes in the guest match up
-to the nodes in the host. Doing that I have seen results where I had less
-than 1% variability between with the patches and without.
-
-One thing I am looking at now is modifying the page_fault1 test to use THP
-instead of 4K pages as I suspect there is a fair bit of overhead in
-accessing the pages 4K at a time vs 2M at a time. I am hoping with that I
-can put more pressure on the actual change and see if there are any
-additional spots I should optimize.
-
-> > One side effect of these patches is that the guest becomes much more
-> > resilient in terms of NUMA locality. With the pages being freed and then
-> > reallocated when used it allows for the pages to be much closer to the
-> > active thread, and as a result there can be situations where this patch
-> > set will out-perform the stock kernel when the guest memory is not local
-> > to the guest vCPUs.
-> 
-> Was this the reason because of which you were seeing better results for
-> page_fault1 earlier?
-
-Yes I am thinking so. What I have found is that in the case where the
-patches are not applied on the guest it takes a few runs for the numbers
-to stabilize. What I think was going on is that I was running memhog to
-initially fill the guest and that was placing all the pages on one node or
-the other and as such was causing additional variability as the pages were
-slowly being migrated over to the other node to rebalance the workload.
-One way I tested it was by trying the unpatched case with a direct-
-assigned device since that forces it to pin the memory. In that case I was
-getting bad results consistently as all the memory was forced to come from
-one node during the pre-allocation process.
-
+Yes, sounds good. And please try a single driver first and get that
+accepted, before moving on to multiple concurrent submissions.
