@@ -2,243 +2,141 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC7DCC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D72A0C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3BB1204EC
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:05:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB34E204EC
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:06:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m+qk+DeV"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="HaPxzE3t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403848AbfHBIFs (ORCPT
+        id S2403862AbfHBIGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 04:05:48 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37408 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403825AbfHBIFp (ORCPT
+        Fri, 2 Aug 2019 04:06:18 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:42266 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403767AbfHBIGR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 04:05:45 -0400
-Received: by mail-pg1-f196.google.com with SMTP id d1so2856325pgp.4;
-        Fri, 02 Aug 2019 01:05:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HPa+ZG+Ucx3JNtlF4cB30guHK57ItTJmrqfJq8VvLG0=;
-        b=m+qk+DeVFuYlLnI3EvDzEHtbtpugcKJkgnVgGVsmn/kUmQUQq37uTno78epH130f8a
-         LFGuCLdWYXNtqOl9sQ2iDXkexf5qBuV0LoPD37y3GNFw75t0OD7LReEaZdKuv9zYcDGL
-         Nmngo7XnD5YZKTldX9QYuZ/rGdRMjTE57Z9RJUFLjrDWuLtujEhLsX05cHpZC0vO0Yc7
-         WyTrDMjrvXoR7L/7M0VcAWZ7qVA5SUSL+LlyWX7dG91f3xzbyvGgrNpSB+7jmynRvKlu
-         lik3r49C9FFFNe0880NXOYnUN+WzIM1feLyBE1cvo7pT7blwGeFcWKtvfWcuYPRRD6Vg
-         JIIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HPa+ZG+Ucx3JNtlF4cB30guHK57ItTJmrqfJq8VvLG0=;
-        b=lmp9WJ3bDENtprkb/h6OWsyLPuVzrql62F1HFFLFe7QWrecbG2XnWmvavO3e2SRvXQ
-         X9C1BQfrke+W+aIH6Y1G4WjwqN3EhJ7Vt5oeUUTKlC4G7JoW6cHE88vyHsUHmn1HMNrC
-         4BAec31zkfATzrX7M3kSeXhd5M2ZMda8QTPjMdRW7UTgWnEWyvX0xTnQZSDBEWxdW/VR
-         wAFReBQh3hVB4GXObGJS84aMuYZOsu2tjI9EQjov0CB1nYAVyifcj8R3z/E3LATY1Z8P
-         APH9Ge8jg2J8Gvub3IsRfLkgq3ZncN4TBbhFea0oKUWWsl0T2DGZYZSk8rfLZJrBBr+s
-         UVzw==
-X-Gm-Message-State: APjAAAWZ5QITOaff4MjMI6kUrPZODZtMiDC4pw1LC66QW4miRzOecnbn
-        F8wBTNF/7I6KaDTATh4ekd3Au0SNtoFM+A==
-X-Google-Smtp-Source: APXvYqzoR24ostudhlNUMKWMa0thkbk8KPzLfnK7ACvdL/RfeTLR6q1bLKh1IwvgywloGzuvC9w9xg==
-X-Received: by 2002:a63:5a0a:: with SMTP id o10mr50695395pgb.282.1564733144142;
-        Fri, 02 Aug 2019 01:05:44 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id r2sm92536562pfl.67.2019.08.02.01.05.42
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 02 Aug 2019 01:05:43 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v2 2/2] cnic: Use refcount_t for refcount
-Date:   Fri,  2 Aug 2019 16:05:39 +0800
-Message-Id: <20190802080539.11222-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 2 Aug 2019 04:06:17 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id F01EDCC;
+        Fri,  2 Aug 2019 10:06:14 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1564733175;
+        bh=9+kza4VDTl+eEJMeGT4Xr32idlzQYUeiiTC1I338XCI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HaPxzE3tcMpwuIKBEDqz5x+O0u37NVXKCuNIZj19qLZjuEznLp/d2GRe7HikZT/Ht
+         TKgUIGn+TiSOxzUebfB2WAA0sfY7sbMQhnGsbv8zZE694/vOEL4YU+MqvLB9MgBRqd
+         FkxeHYl5hmdVK2HI3a39AXL4Kug+n6l2TdBN6KAg=
+Date:   Fri, 2 Aug 2019 11:06:13 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>
+Subject: Re: [PATCH/RFC 05/12] drm: rcar-du: lvds: Add data swap support
+Message-ID: <20190802080613.GF5008@pendragon.ideasonboard.com>
+References: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1564731249-22671-6-git-send-email-fabrizio.castro@bp.renesas.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1564731249-22671-6-git-send-email-fabrizio.castro@bp.renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-refcount_t is better for reference counters since its
-implementation can prevent overflows.
-So convert atomic_t ref counters to refcount_t.
+Hi Fabrizio,
 
-This patch depends on the patch:
-"cnic: Explicitly initialize all reference counts to 0."
+Thank you for the patch.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
-Changes in v2:
-  - Convert refcount from 0-base to 1-base.
+On Fri, Aug 02, 2019 at 08:34:02AM +0100, Fabrizio Castro wrote:
+> When in vertical stripe mode of operation, there is the option
+> of swapping even data and odd data on the two LVDS interfaces
+> used to drive the video output.
+> Add data swap support by exposing a new DT property named
+> "renesas,swap-data".
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> ---
+>  drivers/gpu/drm/rcar-du/rcar_lvds.c | 23 ++++++++++++++++-------
+>  1 file changed, 16 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
+> index 3aeaf9e..c306fab 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
+> @@ -69,6 +69,7 @@ struct rcar_lvds {
+>  
+>  	struct drm_bridge *companion;
+>  	bool dual_link;
+> +	bool stripe_swap_data;
+>  };
+>  
+>  #define bridge_to_rcar_lvds(bridge) \
+> @@ -439,12 +440,16 @@ static void rcar_lvds_enable(struct drm_bridge *bridge)
+>  	rcar_lvds_write(lvds, LVDCHCR, lvdhcr);
+>  
+>  	if (lvds->info->quirks & RCAR_LVDS_QUIRK_DUAL_LINK) {
+> -		/*
+> -		 * Configure vertical stripe based on the mode of operation of
+> -		 * the connected device.
+> -		 */
+> -		rcar_lvds_write(lvds, LVDSTRIPE,
+> -				lvds->dual_link ? LVDSTRIPE_ST_ON : 0);
+> +		u32 lvdstripe = 0;
+> +
+> +		if (lvds->dual_link)
+> +			/*
+> +			 * Configure vertical stripe based on the mode of
+> +			 * operation of the connected device.
+> +			 */
+> +			lvdstripe = LVDSTRIPE_ST_ON | (lvds->stripe_swap_data ?
+> +						       LVDSTRIPE_ST_SWAP : 0);
 
- drivers/net/ethernet/broadcom/cnic.c    | 30 ++++++++++++-------------
- drivers/net/ethernet/broadcom/cnic_if.h |  6 ++---
- 2 files changed, 18 insertions(+), 18 deletions(-)
+Would the following be simpler ?
 
-diff --git a/drivers/net/ethernet/broadcom/cnic.c b/drivers/net/ethernet/broadcom/cnic.c
-index 155599dcee76..1f59f9606b85 100644
---- a/drivers/net/ethernet/broadcom/cnic.c
-+++ b/drivers/net/ethernet/broadcom/cnic.c
-@@ -141,22 +141,22 @@ static int cnic_uio_close(struct uio_info *uinfo, struct inode *inode)
- 
- static inline void cnic_hold(struct cnic_dev *dev)
- {
--	atomic_inc(&dev->ref_count);
-+	refcount_inc(&dev->ref_count);
- }
- 
- static inline void cnic_put(struct cnic_dev *dev)
- {
--	atomic_dec(&dev->ref_count);
-+	refcount_dec(&dev->ref_count);
- }
- 
- static inline void csk_hold(struct cnic_sock *csk)
- {
--	atomic_inc(&csk->ref_count);
-+	refcount_inc(&csk->ref_count);
- }
- 
- static inline void csk_put(struct cnic_sock *csk)
- {
--	atomic_dec(&csk->ref_count);
-+	refcount_dec(&csk->ref_count);
- }
- 
- static struct cnic_dev *cnic_from_netdev(struct net_device *netdev)
-@@ -177,12 +177,12 @@ static struct cnic_dev *cnic_from_netdev(struct net_device *netdev)
- 
- static inline void ulp_get(struct cnic_ulp_ops *ulp_ops)
- {
--	atomic_inc(&ulp_ops->ref_count);
-+	refcount_inc(&ulp_ops->ref_count);
- }
- 
- static inline void ulp_put(struct cnic_ulp_ops *ulp_ops)
- {
--	atomic_dec(&ulp_ops->ref_count);
-+	refcount_dec(&ulp_ops->ref_count);
- }
- 
- static void cnic_ctx_wr(struct cnic_dev *dev, u32 cid_addr, u32 off, u32 val)
-@@ -494,7 +494,7 @@ int cnic_register_driver(int ulp_type, struct cnic_ulp_ops *ulp_ops)
- 	}
- 	read_unlock(&cnic_dev_lock);
- 
--	atomic_set(&ulp_ops->ref_count, 0);
-+	refcount_set(&ulp_ops->ref_count, 1);
- 	rcu_assign_pointer(cnic_ulp_tbl[ulp_type], ulp_ops);
- 	mutex_unlock(&cnic_lock);
- 
-@@ -545,12 +545,12 @@ int cnic_unregister_driver(int ulp_type)
- 
- 	mutex_unlock(&cnic_lock);
- 	synchronize_rcu();
--	while ((atomic_read(&ulp_ops->ref_count) != 0) && (i < 20)) {
-+	while ((refcount_read(&ulp_ops->ref_count) != 1) && (i < 20)) {
- 		msleep(100);
- 		i++;
- 	}
- 
--	if (atomic_read(&ulp_ops->ref_count) != 0)
-+	if (refcount_read(&ulp_ops->ref_count) != 1)
- 		pr_warn("%s: Failed waiting for ref count to go to zero\n",
- 			__func__);
- 	return 0;
-@@ -3596,7 +3596,7 @@ static int cnic_cm_create(struct cnic_dev *dev, int ulp_type, u32 cid,
- 	}
- 
- 	csk1 = &cp->csk_tbl[l5_cid];
--	if (atomic_read(&csk1->ref_count))
-+	if (refcount_read(&csk1->ref_count) != 1)
- 		return -EAGAIN;
- 
- 	if (test_and_set_bit(SK_F_INUSE, &csk1->flags))
-@@ -3651,7 +3651,7 @@ static int cnic_cm_destroy(struct cnic_sock *csk)
- 	csk_hold(csk);
- 	clear_bit(SK_F_INUSE, &csk->flags);
- 	smp_mb__after_atomic();
--	while (atomic_read(&csk->ref_count) != 1)
-+	while (refcount_read(&csk->ref_count) != 2)
- 		msleep(1);
- 	cnic_cm_cleanup(csk);
- 
-@@ -4104,7 +4104,7 @@ static int cnic_cm_alloc_mem(struct cnic_dev *dev)
- 		return -ENOMEM;
- 
- 	for (i = 0; i < MAX_CM_SK_TBL_SZ; i++)
--		atomic_set(&cp->csk_tbl[i].ref_count, 0);
-+		refcount_set(&cp->csk_tbl[i].ref_count, 1);
- 
- 	port_id = prandom_u32();
- 	port_id %= CNIC_LOCAL_PORT_RANGE;
-@@ -5436,11 +5436,11 @@ static void cnic_free_dev(struct cnic_dev *dev)
- {
- 	int i = 0;
- 
--	while ((atomic_read(&dev->ref_count) != 0) && i < 10) {
-+	while ((refcount_read(&dev->ref_count) != 1) && i < 10) {
- 		msleep(100);
- 		i++;
- 	}
--	if (atomic_read(&dev->ref_count) != 0)
-+	if (refcount_read(&dev->ref_count) != 1)
- 		netdev_err(dev->netdev, "Failed waiting for ref count to go to zero\n");
- 
- 	netdev_info(dev->netdev, "Removed CNIC device\n");
-@@ -5484,7 +5484,7 @@ static struct cnic_dev *cnic_alloc_dev(struct net_device *dev,
- 	cdev->unregister_device = cnic_unregister_device;
- 	cdev->iscsi_nl_msg_recv = cnic_iscsi_nl_msg_recv;
- 	cdev->get_fc_npiv_tbl = cnic_get_fc_npiv_tbl;
--	atomic_set(&cdev->ref_count, 0);
-+	refcount_set(&cdev->ref_count, 1);
- 
- 	cp = cdev->cnic_priv;
- 	cp->dev = cdev;
-diff --git a/drivers/net/ethernet/broadcom/cnic_if.h b/drivers/net/ethernet/broadcom/cnic_if.h
-index 789e5c7e9311..5232a05ac7ba 100644
---- a/drivers/net/ethernet/broadcom/cnic_if.h
-+++ b/drivers/net/ethernet/broadcom/cnic_if.h
-@@ -300,7 +300,7 @@ struct cnic_sock {
- #define SK_F_CLOSING		7
- #define SK_F_HW_ERR		8
- 
--	atomic_t ref_count;
-+	refcount_t ref_count;
- 	u32 state;
- 	struct kwqe kwqe1;
- 	struct kwqe kwqe2;
-@@ -335,7 +335,7 @@ struct cnic_dev {
- #define CNIC_F_CNIC_UP		1
- #define CNIC_F_BNX2_CLASS	3
- #define CNIC_F_BNX2X_CLASS	4
--	atomic_t	ref_count;
-+	refcount_t	ref_count;
- 	u8		mac_addr[ETH_ALEN];
- 
- 	int		max_iscsi_conn;
-@@ -378,7 +378,7 @@ struct cnic_ulp_ops {
- 				  char *data, u16 data_size);
- 	int (*cnic_get_stats)(void *ulp_ctx);
- 	struct module *owner;
--	atomic_t ref_count;
-+	refcount_t ref_count;
- };
- 
- int cnic_register_driver(int ulp_type, struct cnic_ulp_ops *ulp_ops);
+		lvdstripe = (lvds->dual_link ? LVDSTRIPE_ST_ON : 0)
+			  | (lvds->stripe_swap_data ? LVDSTRIPE_ST_SWAP : 0);
+
+> +		rcar_lvds_write(lvds, LVDSTRIPE, lvdstripe);
+>  	}
+>  
+>  	/*
+> @@ -770,8 +775,12 @@ static int rcar_lvds_parse_dt(struct rcar_lvds *lvds)
+>  		}
+>  	}
+>  
+> -	if (lvds->dual_link)
+> +	if (lvds->dual_link) {
+> +		lvds->stripe_swap_data = of_property_read_bool(
+> +						lvds->dev->of_node,
+> +						"renesas,swap-data");
+>  		ret = rcar_lvds_parse_dt_companion(lvds);
+> +	}
+
+As explained in the review of the corresponding DT bindings, I think
+this should be queried from the remote device rather than specified in
+DT.
+
+>  
+>  done:
+>  	of_node_put(local_output);
+
 -- 
-2.20.1
+Regards,
 
+Laurent Pinchart
