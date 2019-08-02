@@ -2,88 +2,80 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 859C4C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27532C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5985F20679
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF9952087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:18:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564733894;
+	bh=M9Qf34aSZeVC+o3uT6RLeI/FX0v7TbxBw6sAGR+jbXw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AOSPZyar9QJXiyi7l5vS534YJjdlTiR+hLq/Sug0/8tc5xVbxy5HWpqdPqnaITg1a
+	 Eu1yxWUUGX0nBqx6sQKc/g+ZhOk492fUldsEutx+C7WJ4mqN3mD3lqAKFYvrNxqOXr
+	 Owa2CaTxgd5wt7PyvsLH5zzajnps/BjNgvwiKQkA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404065AbfHBIRr (ORCPT
+        id S2404075AbfHBISN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 04:17:47 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36411 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726997AbfHBIRr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 04:17:47 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n4so76303584wrs.3
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 01:17:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=APOXhup+sZGXS5d0UC7uGeTiWB/G8v81K64OFOYtTQY=;
-        b=imgQeg8WKX5elrpnBo5+Jyc+J2wa2D6bHcCGZPczcMLi+Si978q+Pm1oJdvXaBN/sG
-         Go4EDCHwDom1dD+oVVrjxltqgt0kK8H538G0OI7Vd9pQTJ6sD0PusF/sXoxcudd9uGCy
-         aoeQXIrToTU0H4VSLwVAzplkSD3IIZtxj2rHA1SLZkSGR3rpi/ywh0Gp2z/kObf9bIzJ
-         J9Kt8q+xI2+PuYhAAPnpOTDbZaT2KYOQPeTxC+YuiKcwTj4FjiP7qnkJWgVQ+F/30pzK
-         AKnYXDf+a2x4cQO8yWCw16eBnmeiFoQOy52NodztMx3OO42O+C/Gb+r1RamZqGUFdM2d
-         okQA==
-X-Gm-Message-State: APjAAAU9mbrJ8TwNkRMx3SjThoW4j9algHPhR5QWX12e7SIAG7CN/Cei
-        uQvaAnZUSJ5gQW3RAPngCoDSAf1UL7M=
-X-Google-Smtp-Source: APXvYqxouFvTCxPN5ary3LSNHZng7Fu6r6547Mi/qZeNJXWg0W3zH8U/xLY5N3dAloNhdOrtFxV+kg==
-X-Received: by 2002:a5d:4101:: with SMTP id l1mr7547509wrp.202.1564733864909;
-        Fri, 02 Aug 2019 01:17:44 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:4013:e920:9388:c3ff? ([2001:b07:6468:f312:4013:e920:9388:c3ff])
-        by smtp.gmail.com with ESMTPSA id p18sm75207312wrm.16.2019.08.02.01.17.43
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 02 Aug 2019 01:17:44 -0700 (PDT)
-Subject: Re: [RFC PATCH v2 06/19] RISC-V: KVM: Implement VCPU interrupts and
- requests handling
-To:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Radim K <rkrcmar@redhat.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Anup Patel <anup@brainfault.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190802074620.115029-1-anup.patel@wdc.com>
- <20190802074620.115029-7-anup.patel@wdc.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <98eaa917-8270-ecdc-2420-491ed1c903d8@redhat.com>
-Date:   Fri, 2 Aug 2019 10:17:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 2 Aug 2019 04:18:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36704 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727622AbfHBISM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 04:18:12 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D3349AFF1;
+        Fri,  2 Aug 2019 08:18:10 +0000 (UTC)
+Date:   Fri, 2 Aug 2019 10:18:08 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     Masoud Sharbiani <msharbiani@apple.com>, hannes@cmpxchg.org,
+        vdavydov.dev@gmail.com, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: Possible mem cgroup bug in kernels between 4.18.0 and 5.3-rc1.
+Message-ID: <20190802081808.GB6461@dhcp22.suse.cz>
+References: <5659221C-3E9B-44AD-9BBF-F74DE09535CD@apple.com>
+ <20190801181952.GA8425@kroah.com>
+ <7EE30F16-A90B-47DC-A065-3C21881CD1CC@apple.com>
 MIME-Version: 1.0
-In-Reply-To: <20190802074620.115029-7-anup.patel@wdc.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7EE30F16-A90B-47DC-A065-3C21881CD1CC@apple.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/08/19 09:47, Anup Patel wrote:
-> +	/* VCPU interrupts */
-> +	unsigned long irqs_pending;
-> +	unsigned long irqs_pending_mask;
-> +
+[Hillf, your email client or workflow mangles emails. In this case you
+are seem to be reusing the message id from the email you are replying to
+which confuses my email client to assume your email is a duplicate.]
 
-This deserves a comment on the locking policy (none for producer,
-vcpu_lock for consumers).
+On Fri 02-08-19 16:08:01, Hillf Danton wrote:
+[...]
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -2547,8 +2547,12 @@ retry:
+>  	nr_reclaimed = try_to_free_mem_cgroup_pages(mem_over_limit, nr_pages,
+>  						    gfp_mask, may_swap);
+>  
+> -	if (mem_cgroup_margin(mem_over_limit) >= nr_pages)
+> -		goto retry;
+> +	if (mem_cgroup_margin(mem_over_limit) >= nr_pages) {
+> +		if (nr_retries--)
+> +			goto retry;
+> +		/* give up charging memhog */
+> +		return -ENOMEM;
+> +	}
 
-Paolo
+Huh, what? You are effectively saying that we should fail the charge
+when the requested nr_pages would fit in. This doesn't make much sense
+to me. What are you trying to achive here?
+-- 
+Michal Hocko
+SUSE Labs
