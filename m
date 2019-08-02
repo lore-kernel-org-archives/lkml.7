@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 640EBC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF223C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BA16217D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:29:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D8B0217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:29:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752556;
-	bh=q4d4x2lkfsO0GUeJ0SOejnd4a/QA+DlwwvcJ+8ajbZA=;
+	s=default; t=1564752568;
+	bh=klOT8Dk/A7AbbEulTViUj1nTra1jYc05dyDciWVjfvU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NPFnxb0hPj2LC7gYzDPE+Cf8IcSlZuuAPQdGTChIyov8h2KKY//7XmkNR7cIK8iJj
-	 O52UgPJl0+ESRs9ufXwCJ0drbyAIfO5sIwn/bCTL32gg90zV/CUSErQGfMh1wl/mNP
-	 AyZmyuGpDfmy9G1xFTnghpLgeaCsMFqlsLWmIsN0=
+	b=Q+XjgW0MjQVCj2TlIF5jVvGCPrEj2Vbsb8G98rdADOEyW5NyQvhLyZxJy6i88hit8
+	 p3Z9YDfmkpeZurNe+ocswGd7ID993BqGMj1w7PCQ66TMbCfpJkcEbEd7HBADgVMN4e
+	 Gi+p+BX/AdccdmWtDYk6P2ZaWGG5/yygtPKBs8Go=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394900AbfHBN3P (ORCPT
+        id S2394279AbfHBNYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:29:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35954 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:24:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394329AbfHBNZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:25:11 -0400
+        id S2394253AbfHBNYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:24:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 597AA21773;
-        Fri,  2 Aug 2019 13:25:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0B7E21841;
+        Fri,  2 Aug 2019 13:24:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752310;
-        bh=q4d4x2lkfsO0GUeJ0SOejnd4a/QA+DlwwvcJ+8ajbZA=;
+        s=default; t=1564752288;
+        bh=klOT8Dk/A7AbbEulTViUj1nTra1jYc05dyDciWVjfvU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0yLsSAG6evG1eeV6BSuSQOikvJX2HZfOmJt0e8Qj3BOUtPAgRdGNXef4Z5MRfobDn
-         KRDUu1EcrUmS9Vs12paGZTQ0nfu13Mfc48LuH4jO7cMUACHfdCxDvsXHn/p46nGJrH
-         c/rOoomc1shDIAUDw6vwGwQdC/IlvIBLh1v+JRyE=
+        b=hDOyjORfuxtGZLhuiVtB3BhBo49K5gj7kYKg7bba/9imySVDuMDzsNsuRDw4x/q0V
+         pOuIjjvTtxOWkH5mYoOL/MZ/8/KAHOUhyJunjnByuK/3EsWO/LpZ99Tp/PGzbHDjWQ
+         2lB94/dNB9ITrNBV/zWjSSGS69H6sLcYYmEgrZNM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Kees Cook <keescook@chromium.org>,
-        Roland Kammerer <roland.kammerer@linbit.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.14 21/30] drbd: dynamically allocate shash descriptor
-Date:   Fri,  2 Aug 2019 09:24:13 -0400
-Message-Id: <20190802132422.13963-21-sashal@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>, Sean Paul <seanpaul@chromium.org>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 12/30] drm: silence variable 'conn' set but not used
+Date:   Fri,  2 Aug 2019 09:24:04 -0400
+Message-Id: <20190802132422.13963-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802132422.13963-1-sashal@kernel.org>
 References: <20190802132422.13963-1-sashal@kernel.org>
@@ -61,69 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 77ce56e2bfaa64127ae5e23ef136c0168b818777 ]
+[ Upstream commit bbb6fc43f131f77fcb7ae8081f6d7c51396a2120 ]
 
-Building with clang and KASAN, we get a warning about an overly large
-stack frame on 32-bit architectures:
+The "struct drm_connector" iteration cursor from
+"for_each_new_connector_in_state" is never used in atomic_remove_fb()
+which generates a compilation warning,
 
-drivers/block/drbd/drbd_receiver.c:921:31: error: stack frame size of 1280 bytes in function 'conn_connect'
-      [-Werror,-Wframe-larger-than=]
+drivers/gpu/drm/drm_framebuffer.c: In function 'atomic_remove_fb':
+drivers/gpu/drm/drm_framebuffer.c:838:24: warning: variable 'conn' set
+but not used [-Wunused-but-set-variable]
 
-We already allocate other data dynamically in this function, so
-just do the same for the shash descriptor, which makes up most of
-this memory.
+Silence it by marking "conn" __maybe_unused.
 
-Link: https://lore.kernel.org/lkml/20190617132440.2721536-1-arnd@arndb.de/
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Roland Kammerer <roland.kammerer@linbit.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/1563822886-13570-1-git-send-email-cai@lca.pw
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/drbd/drbd_receiver.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/drm_framebuffer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
-index 1aad373da50e2..8fbdfaacc2226 100644
---- a/drivers/block/drbd/drbd_receiver.c
-+++ b/drivers/block/drbd/drbd_receiver.c
-@@ -5237,7 +5237,7 @@ static int drbd_do_auth(struct drbd_connection *connection)
- 	unsigned int key_len;
- 	char secret[SHARED_SECRET_MAX]; /* 64 byte */
- 	unsigned int resp_size;
--	SHASH_DESC_ON_STACK(desc, connection->cram_hmac_tfm);
-+	struct shash_desc *desc;
- 	struct packet_info pi;
- 	struct net_conf *nc;
- 	int err, rv;
-@@ -5250,6 +5250,13 @@ static int drbd_do_auth(struct drbd_connection *connection)
- 	memcpy(secret, nc->shared_secret, key_len);
- 	rcu_read_unlock();
- 
-+	desc = kmalloc(sizeof(struct shash_desc) +
-+		       crypto_shash_descsize(connection->cram_hmac_tfm),
-+		       GFP_KERNEL);
-+	if (!desc) {
-+		rv = -1;
-+		goto fail;
-+	}
- 	desc->tfm = connection->cram_hmac_tfm;
- 	desc->flags = 0;
- 
-@@ -5392,7 +5399,10 @@ static int drbd_do_auth(struct drbd_connection *connection)
- 	kfree(peers_ch);
- 	kfree(response);
- 	kfree(right_response);
--	shash_desc_zero(desc);
-+	if (desc) {
-+		shash_desc_zero(desc);
-+		kfree(desc);
-+	}
- 
- 	return rv;
- }
+diff --git a/drivers/gpu/drm/drm_framebuffer.c b/drivers/gpu/drm/drm_framebuffer.c
+index c21e10c780ac5..af40189cdb60c 100644
+--- a/drivers/gpu/drm/drm_framebuffer.c
++++ b/drivers/gpu/drm/drm_framebuffer.c
+@@ -773,7 +773,7 @@ static int atomic_remove_fb(struct drm_framebuffer *fb)
+ 	struct drm_device *dev = fb->dev;
+ 	struct drm_atomic_state *state;
+ 	struct drm_plane *plane;
+-	struct drm_connector *conn;
++	struct drm_connector *conn __maybe_unused;
+ 	struct drm_connector_state *conn_state;
+ 	int i, ret = 0;
+ 	unsigned plane_mask;
 -- 
 2.20.1
 
