@@ -2,168 +2,186 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06380C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 07:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C019BC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 07:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C85542087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 07:49:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="NLr8yMdX";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="pADWNZ0M"
+	by mail.kernel.org (Postfix) with ESMTP id 9806C2086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 07:51:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564732289;
+	bh=kzEEtbjjrdPAyzxrRRGRUcKmUt5I/OGfmVyN7CZTUMo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=COZs+GB13k12U88TsgHvoziCXjpBbd8tpJP73iJVFHdp2N1arYjsKKhMxfDq7K59N
+	 lGz3dcwZ/SXB2CdnK3Y4SSNOvufp54HdDYqs4yejX7Abn9KTQ3Ft0C9Fy6r4Hy4hUA
+	 lCSVgfsCSYKSdmyRECfqQqjFsbaURKaUtg9fHstc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390483AbfHBHtC (ORCPT
+        id S2389415AbfHBHv3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 03:49:02 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:64843 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388689AbfHBHs5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 03:48:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1564732138; x=1596268138;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=MjMeRXZr0+LctOWO8rZ4gWpwdZSrA2QMVXqEnJfe08M=;
-  b=NLr8yMdX4JIM7z37e/pzVE3s8gvtNIvBOJ3imXfOzLGIyCMfp8Mfl8cT
-   KsUsi45C+lC0gdc2iktWs0Zq5G+goJeJAGr7BBcvFd82vWQ4RAlJ0Lox5
-   38sBchRwJWKQVWj6eh1WYOAquT8VpLJA5B7f2FLCvIitrhTanhKg575dx
-   buVpen0jeB4BktWlMWJT3jL9EkZeMPmNju14lbedvbB2kbi9Am0KkB2Dk
-   F3vKanQsGaiqLDWhlUVwfvEb06IZrBAKcXeiUbMHHQFVKmk4VSxVf+JhN
-   zVlwEGNGGa0jzLMDYC61HIexCzy6jcMnAre06/WVhgrNcdsET9NGlzaGK
-   Q==;
-IronPort-SDR: G+WvJLSJ7MUeWhn8fogQHqWdnMQQpdV6SiLfecks7OmQ1HLIiaLLgOYZpcJvjKVGuEAxPYIrUx
- QCM1iz1mfNsCm6JZPeTNeewjBTxv1bEhRB5tR6tIFtCKqq1FH2WUhUi5oYRnjJ2AIZ0LiR8EIM
- 430u5PxmHfIAEiF27h1jujvgtOJiRB6MQv/V65s6v6KTuvcUhK27yP8v4ksxYAmZmOBeFu784s
- cejV5QZycgJK5LwAmLw0j0UL6K3Iqyc9iUy5doTptFP50avTEuu/S9XQRkYH/RbBD51oiYXK6G
- ZOU=
-X-IronPort-AV: E=Sophos;i="5.64,337,1559491200"; 
-   d="scan'208";a="116382592"
-Received: from mail-sn1nam02lp2057.outbound.protection.outlook.com (HELO NAM02-SN1-obe.outbound.protection.outlook.com) ([104.47.36.57])
-  by ob1.hgst.iphmx.com with ESMTP; 02 Aug 2019 15:48:56 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=K90pM67s0iimmvQEvTLMSWxAaAnf2YxybBwbFFM/nPskQJUolTZmegB8HHXKTRGiVj9BtLmO275MCK4q/2X+jwLjTUr1WHHx+bJjao+MJec0bdI5iFEg3jqqMHGgH6MHIYrzYQ0aVXncGmGEuvOx/fWYjvb/3/i/ydqvsecppzjopthHjLRnjhF1/67MYrcDvvtMhUcZIo3Zrcnuf0OXHGZB8VkWRhvz02CkFSTcmZZ5TSPXlZk+3sXyAJDaRoMYWAZ1vKaKsYqSOTrL7BWcIcIB/1G3hlBu8x/zgvT7FkTGoFxIcbVNge/xnrni09Kk9xloMYVOhH74rsZ6xAISxg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=agg8zROTtmcyh1hyw7c9c5v1fmphsx1gkFLv5DcpvE8=;
- b=e3GsUzXMefUjsYYN2nfTtYYyEWMlPzmQE5gka+6IFPupMuTJ1rQn3mxos5bAY9NPmDaO5Hrnq6vm39PyOwoRhoVLfqj4w2jCjw+CLL+NFaJl6lkBeLFcXjmXwSYg+LPp4XiQmJckfjACB5+nnSOTWVtUXAT750myscfUbrVvky/1jbj256zhib4uopgxyvGy2ihy7ku8/x1HvBksJvDe+IZyO4xtQkNN6UOGe8Wgr7ikUysFl0IIiCtBzXwZUoe4OGIjs7muzPxN+KSpTURyE9XdFntZecpzw9m0XJtwgQfUIbJeNydIOyxHhPiALbzRbWuHh59Eu51qRIR/RzCXTA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=wdc.com;dmarc=pass action=none header.from=wdc.com;dkim=pass
- header.d=wdc.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=agg8zROTtmcyh1hyw7c9c5v1fmphsx1gkFLv5DcpvE8=;
- b=pADWNZ0MXQ9h6UB9sHtbnDJYjxtqqf9cn1ydIMG0D8nXAIcXYj+hMJZxwqcoDVViGxlqL0rJnYiqde2Uof2eU6nH/BtvwsNOlR+JMudoiE0LTNZibPQ0XhFOxnQKSQPvOKdp0encKTvV3fWMAfUennt8gMVR4DN3xwB7yeSE44Y=
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
- MN2PR04MB6208.namprd04.prod.outlook.com (20.178.248.211) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2136.16; Fri, 2 Aug 2019 07:48:55 +0000
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::a815:e61a:b4aa:60c8]) by MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::a815:e61a:b4aa:60c8%7]) with mapi id 15.20.2136.010; Fri, 2 Aug 2019
- 07:48:55 +0000
-From:   Anup Patel <Anup.Patel@wdc.com>
-To:     Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim K <rkrcmar@redhat.com>
-CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Anup Patel <anup@brainfault.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Anup Patel <Anup.Patel@wdc.com>
-Subject: [RFC PATCH v2 19/19] RISC-V: KVM: Add MAINTAINERS entry
-Thread-Topic: [RFC PATCH v2 19/19] RISC-V: KVM: Add MAINTAINERS entry
-Thread-Index: AQHVSQa78OtIKfJx1UCaYU5z6yZ/nQ==
-Date:   Fri, 2 Aug 2019 07:48:54 +0000
-Message-ID: <20190802074620.115029-20-anup.patel@wdc.com>
-References: <20190802074620.115029-1-anup.patel@wdc.com>
-In-Reply-To: <20190802074620.115029-1-anup.patel@wdc.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: PN1PR01CA0111.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c00::27)
- To MN2PR04MB6061.namprd04.prod.outlook.com (2603:10b6:208:d8::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Anup.Patel@wdc.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [106.51.20.161]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3403fe1c-2dd0-4f23-419a-08d7171dde30
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MN2PR04MB6208;
-x-ms-traffictypediagnostic: MN2PR04MB6208:
-x-microsoft-antispam-prvs: <MN2PR04MB6208EFE954389A68FB88814A8DD90@MN2PR04MB6208.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:2201;
-x-forefront-prvs: 011787B9DD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(136003)(39860400002)(396003)(376002)(346002)(199004)(189003)(99286004)(7736002)(305945005)(9456002)(50226002)(2906002)(8936002)(14444005)(256004)(3846002)(14454004)(86362001)(5660300002)(6116002)(478600001)(53936002)(316002)(66446008)(64756008)(66476007)(66946007)(66556008)(6512007)(4744005)(68736007)(81166006)(81156014)(102836004)(55236004)(76176011)(71190400001)(386003)(25786009)(6506007)(54906003)(71200400001)(110136005)(78486014)(476003)(8676002)(446003)(44832011)(66066001)(6436002)(52116002)(2616005)(1076003)(186003)(7416002)(486006)(36756003)(6486002)(4326008)(26005)(11346002);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6208;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: NRWHN22mx2GTw+HQH6wNmhGIqxJ+JmrjgPbZDnTIk9ZeYLJgC2PHYiSHeK5k5yeosHmXYo7bBv9k9FjJO5429yQg9Oh8/egK8XlnyTrDp0Gf8ocBwIMKxeEm3N6seaaJ+v2Wxu28u9IwF2xv8RsOYQ5+VGmamz7ZRfxohcNwvxdDkRMoMAN6ZLyCuWeAQLfgOowAIuqRntuLwXmdl5VYYT/7dSNSDfN8u6JhgHErPa9A4cru5clqQFwJXJxBcDuD1SjmTdYaubskAWQGqWJsAyh+kwtP6pcOMDqxbSotlAc1CfrmKbMspnK9LbJBwOeZK5RhLPAhLDo8Ut0qWayWjswuNwD8yB6nCuW6ME4xM+6WqBIWX0p2UlSP8JTvFHSEFPAMD45cQt+VATBovYxRP9FkIKD2tMSLFkJ1SJmwB1U=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 2 Aug 2019 03:51:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47576 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729283AbfHBHv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 03:51:28 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAAA220644;
+        Fri,  2 Aug 2019 07:51:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564732287;
+        bh=kzEEtbjjrdPAyzxrRRGRUcKmUt5I/OGfmVyN7CZTUMo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KBK3hTK/g/w1aS9eKJB4kyQ5nqJ6ZCuZXyoR+ReQBa1K4Bu7vGSDPSACtOCtfACHo
+         a1B7nFMVv3skMPHQKGVGcFCv4Rbo6B9rHuqN756eyGLeuLaLvYRgs0qCHfIJBDNutS
+         RXDR6sYF4uSLMhhhCLYAW7jWbFfdigVvBzm6JRxw=
+Date:   Fri, 2 Aug 2019 09:51:24 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Ajay Kaher <akaher@vmware.com>
+Cc:     aarcange@redhat.com, jannh@google.com, oleg@redhat.com,
+        peterx@redhat.com, rppt@linux.ibm.com, jgg@mellanox.com,
+        mhocko@suse.com, jglisse@redhat.com, akpm@linux-foundation.org,
+        mike.kravetz@oracle.com, viro@zeniv.linux.org.uk,
+        riandrews@android.com, arve@android.com, yishaih@mellanox.com,
+        dledford@redhat.com, sean.hefty@intel.com,
+        hal.rosenstock@gmail.com, matanb@mellanox.com, leonro@mellanox.com,
+        torvalds@linux-foundation.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, devel@driverdev.osuosl.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, srivatsab@vmware.com, amakhalov@vmware.com
+Subject: Re: [PATCH v5 1/3] [v4.9.y] coredump: fix race condition between
+ mmget_not_zero()/get_task_mm() and core dumping
+Message-ID: <20190802075124.GG26174@kroah.com>
+References: <1562005928-1929-1-git-send-email-akaher@vmware.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3403fe1c-2dd0-4f23-419a-08d7171dde30
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Aug 2019 07:48:55.0076
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Anup.Patel@wdc.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6208
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1562005928-1929-1-git-send-email-akaher@vmware.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add myself as maintainer for KVM RISC-V as Atish as designated reviewer.
+On Tue, Jul 02, 2019 at 12:02:05AM +0530, Ajay Kaher wrote:
+> From: Andrea Arcangeli <aarcange@redhat.com>
+> 
+> commit 04f5866e41fb70690e28397487d8bd8eea7d712a upstream.
+> 
+> The core dumping code has always run without holding the mmap_sem for
+> writing, despite that is the only way to ensure that the entire vma
+> layout will not change from under it.  Only using some signal
+> serialization on the processes belonging to the mm is not nearly enough.
+> This was pointed out earlier.  For example in Hugh's post from Jul 2017:
+> 
+>   https://lkml.kernel.org/r/alpine.LSU.2.11.1707191716030.2055@eggly.anvils
+> 
+>   "Not strictly relevant here, but a related note: I was very surprised
+>    to discover, only quite recently, how handle_mm_fault() may be called
+>    without down_read(mmap_sem) - when core dumping. That seems a
+>    misguided optimization to me, which would also be nice to correct"
+> 
+> In particular because the growsdown and growsup can move the
+> vm_start/vm_end the various loops the core dump does around the vma will
+> not be consistent if page faults can happen concurrently.
+> 
+> Pretty much all users calling mmget_not_zero()/get_task_mm() and then
+> taking the mmap_sem had the potential to introduce unexpected side
+> effects in the core dumping code.
+> 
+> Adding mmap_sem for writing around the ->core_dump invocation is a
+> viable long term fix, but it requires removing all copy user and page
+> faults and to replace them with get_dump_page() for all binary formats
+> which is not suitable as a short term fix.
+> 
+> For the time being this solution manually covers the places that can
+> confuse the core dump either by altering the vma layout or the vma flags
+> while it runs.  Once ->core_dump runs under mmap_sem for writing the
+> function mmget_still_valid() can be dropped.
+> 
+> Allowing mmap_sem protected sections to run in parallel with the
+> coredump provides some minor parallelism advantage to the swapoff code
+> (which seems to be safe enough by never mangling any vma field and can
+> keep doing swapins in parallel to the core dumping) and to some other
+> corner case.
+> 
+> In order to facilitate the backporting I added "Fixes: 86039bd3b4e6"
+> however the side effect of this same race condition in /proc/pid/mem
+> should be reproducible since before 2.6.12-rc2 so I couldn't add any
+> other "Fixes:" because there's no hash beyond the git genesis commit.
+> 
+> Because find_extend_vma() is the only location outside of the process
+> context that could modify the "mm" structures under mmap_sem for
+> reading, by adding the mmget_still_valid() check to it, all other cases
+> that take the mmap_sem for reading don't need the new check after
+> mmget_not_zero()/get_task_mm().  The expand_stack() in page fault
+> context also doesn't need the new check, because all tasks under core
+> dumping are frozen.
+> 
+> Link: http://lkml.kernel.org/r/20190325224949.11068-1-aarcange@redhat.com
+> Fixes: 86039bd3b4e6 ("userfaultfd: add new syscall to provide memory externalization")
+> Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
+> Reported-by: Jann Horn <jannh@google.com>
+> Suggested-by: Oleg Nesterov <oleg@redhat.com>
+> Acked-by: Peter Xu <peterx@redhat.com>
+> Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+> Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+> Reviewed-by: Jann Horn <jannh@google.com>
+> Acked-by: Jason Gunthorpe <jgg@mellanox.com>
+> Acked-by: Michal Hocko <mhocko@suse.com>
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> [akaher@vmware.com: stable 4.9 backport
+> -  handle binder_update_page_range - mhocko@suse.com]
+> Signed-off-by: Ajay Kaher <akaher@vmware.com>
+> ---
+> drivers/android/binder.c |  6 ++++++
+> fs/proc/task_mmu.c       | 18 ++++++++++++++++++
+> fs/userfaultfd.c         |  9 +++++++++
+> include/linux/mm.h       | 21 +++++++++++++++++++++
+> mm/mmap.c                |  6 +++++-
+> 5 files changed, 59 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+> index 80499f4..f05ab8f 100644
+> --- a/drivers/android/binder.c
+> +++ b/drivers/android/binder.c
+> @@ -581,6 +581,12 @@ static int binder_update_page_range(struct binder_proc *proc, int allocate,
+> 	if (mm) {
+> 		down_write(&mm->mmap_sem);
+> +		if (!mmget_still_valid(mm)) {
+> +			if (allocate == 0)
+> +				goto free_range;
+> +			goto err_no_vma;
+> +		}
+> +
+> 		vma = proc->vma;
+> 		if (vma && mm != proc->vma_vm_mm) {
+> 			pr_err("%d: vma mm and task mm mismatch\n",
+> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+> index 5138e78..4b207b1 100644
+> --- a/fs/proc/task_mmu.c
+> +++ b/fs/proc/task_mmu.c
+> @@ -1057,6 +1057,24 @@ static ssize_t clear_refs_write(struct file *file, const char __user *buf,
 
-For time being, we use my GitHub repo as KVM RISC-V gitrepo. We will
-update this once we have common KVM RISC-V gitrepo under kernel.org.
+This patch is oddly corrupted, and I can't figure out how to fix it up.
 
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
-Signed-off-by: Anup Patel <anup.patel@wdc.com>
----
- MAINTAINERS | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+When applying it, I get following error:
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6426db5198f0..3e0e8d7f2db5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8864,6 +8864,16 @@ F:	arch/powerpc/include/asm/kvm*
- F:	arch/powerpc/kvm/
- F:	arch/powerpc/kernel/kvm*
-=20
-+KERNEL VIRTUAL MACHINE FOR RISC-V (KVM/riscv)
-+M:	Anup Patel <anup.patel@wdc.com>
-+R:	Atish Patra <atish.patra@wdc.com>
-+L:	linux-riscv@lists.infradead.org
-+T:	git git://github.com/avpatel/linux.git
-+S:	Maintained
-+F:	arch/riscv/include/uapi/asm/kvm*
-+F:	arch/riscv/include/asm/kvm*
-+F:	arch/riscv/kvm/
-+
- KERNEL VIRTUAL MACHINE for s390 (KVM/s390)
- M:	Christian Borntraeger <borntraeger@de.ibm.com>
- M:	Janosch Frank <frankja@linux.ibm.com>
---=20
-2.17.1
+patching file drivers/android/binder.c
+patch: **** malformed patch at line 102: diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
 
+So something is odd here.
+
+Can you please fix this up, and resend the series so that they can be
+applied?
+
+thanks,
+
+greg k-h
