@@ -2,74 +2,118 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B10C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC9FC0650F
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E9A12087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:36:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A37FB2087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:37:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564785423;
+	bh=k6A88DuQEvAIoLZeKCV5w8lg3gPfOlEbV8DJruVNIvs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yxJ4OW+AGXJr5ODhNDTVBd0mWlYnIh8sdms5yx/PYv3IAMDT1vshGeLHKao1Cv01N
+	 3tcYC8VBjisEpWDIoscTn1u39y1LTTqtwDh6wMEHyl4R6ojGQNIIbIVV0PuPUek80j
+	 V8qtxe+aThtSwI2Xzg8sd65F/W3+iq9kgOEh5HS8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392390AbfHBWgP (ORCPT
+        id S2437241AbfHBWhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 18:36:15 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:36326 "EHLO gloria.sntech.de"
+        Fri, 2 Aug 2019 18:37:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728242AbfHBWgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 18:36:15 -0400
-Received: from p508fd160.dip0.t-ipconnect.de ([80.143.209.96] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1htg9j-0005N8-FP; Sat, 03 Aug 2019 00:36:11 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2] ARM: dts: rockchip: A few fixes for veyron-{fievel,tiger}
-Date:   Sat, 03 Aug 2019 00:36:10 +0200
-Message-ID: <3131503.0ZxQz3Vuye@phil>
-In-Reply-To: <20190731151527.122002-1-mka@chromium.org>
-References: <20190731151527.122002-1-mka@chromium.org>
+        id S1728242AbfHBWhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 18:37:02 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27AA82087E;
+        Fri,  2 Aug 2019 22:37:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564785421;
+        bh=k6A88DuQEvAIoLZeKCV5w8lg3gPfOlEbV8DJruVNIvs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HaEoVLJwSjtIMakvSZXXvIDVQkyQQ7paLq7JQYIOPb1FJyOAa7VrtP77sau3BwOaN
+         YdwpFNHzZRYFWXWZUmN6x6kqK8fhg1q5kxVa44OGLrUCqklfTEciGGZyLOGkcThD0o
+         NnZ5IyDLLbL+gXKEeAjLnTjYJU6FAmQEWNU39SZ0=
+Date:   Fri, 2 Aug 2019 17:36:59 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Anthony Wong <anthony.wong@canonical.com>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>
+Subject: Re: [Regression] Commit "ACPI: PM: Allow transitions to D0 to occur
+ in special cases"
+Message-ID: <20190802223659.GO151852@google.com>
+References: <578BD3F1-B185-471B-A3EB-FF71BA34B822@canonical.com>
+ <20190731213001.GC151852@google.com>
+ <6494680.N7F1gMbocb@kreacher>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6494680.N7F1gMbocb@kreacher>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Mittwoch, 31. Juli 2019, 17:15:27 CEST schrieb Matthias Kaehlcke:
-> Fix/improve a few things for veyron fievel/tiger:
+On Thu, Aug 01, 2019 at 12:26:51AM +0200, Rafael J. Wysocki wrote:
+> On Wednesday, July 31, 2019 11:30:01 PM CEST Bjorn Helgaas wrote:
+> > [+cc Thunderbolt folks, see
+> > https://lore.kernel.org/r/578BD3F1-B185-471B-A3EB-FF71BA34B822@canonical.com
+> > for beginning of thread]
+> > 
+> > On Thu, Aug 01, 2019 at 12:04:29AM +0800, Kai-Heng Feng wrote:
+> > > Hi,
+> > > 
+> > > After commit "ACPI: PM: Allow transitions to D0 to occur in special cases”,
+> > 
+> > This is f850a48a0799 ("ACPI: PM: Allow transitions to D0 to occur in
+> > special cases").
+> > 
+> > > Thunderbolt on XPS 9380 spews the following when it runtime resumes:
+> > > [   36.136554] pci_raw_set_power_state: 25 callbacks suppressed
+> > > [   36.136558] pcieport 0000:03:00.0: Refused to change power state,
+> > > currently in D3
+> > 
+> > We really should be smarter about what we print here, maybe something
+> > like the patch below?
+> > 
+> > pci_raw_set_power_state() prints "Refused to change power state" if
+> > (in this case) the value of (PCI_PM_CTRL & PCI_PM_CTRL_STATE_MASK) is
+> > 0x3.  Most likely we got 0xffff from PCI_PM_CTRL because the device is
+> > in D3cold.  If the device is in D3cold, pci_raw_set_power_state() has
+> > no hope of doing anything because it only uses PCI PM config
+> > registers, and they're inaccessible in D3cold.
+
+> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > index 29ed5ec1ac27..63ca963ebff9 100644
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -851,6 +852,11 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
+> >  		return -EIO;
+> >  
+> >  	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+> > +	if (pmcsr == (u16) ~0) {
 > 
-> - move 'vccsys' regulator from tiger to fievel, both boards
->   have it (and tiger includes the fievel .dtsi)
-> - move 'ext_gmac' node below regulators
-> - fix GPIO ids of vcc5_host1 and vcc5_host2 regulators
-> - remove reset configuration from 'gmac' node, this is already done
->   in rk3288.dtsi
-> - fixed style issues of some multi-line comments
-> - switch 'vcc18_lcdt', 'vdd10_lcd' and 'vcc33_ccd' regulators off
->   during suspend
-> - no pull-up on the Bluetooth wake-up pin, there is an external
->   pull-up. The signal is active low, add the 'bt_host_wake_l'
->   pinctrl config
-> - move BC 1.2 pins up in the pinctrl config to keep 'wake only' pins
->   separate
-> - add BC 1.2 pins to sleep config
+> Is the "device not accessible" the only case in which we can get all ones from this?
 > 
-> Fixes: 0067692b662e ("ARM: dts: rockchip: add veyron-fievel board")
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> If so, the change will be fine by me.
 
-applied for 5.4
+There are several RsvdP bits in that register, so it's not possible to
+read all ones except in error cases.  I'll finish up a patch for it.
 
-Thanks
-Heiko
-
-
+Bjorn
