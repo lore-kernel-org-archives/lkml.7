@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B410C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC92C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4839217D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:31:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 065F2217D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:31:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738264;
-	bh=EYH+wJq5Jh9eumxxBMFQEpp0HWPkNeHhXg02xGdpNlw=;
+	s=default; t=1564738266;
+	bh=txmXiWqj/bOInPP2k72IyR0HEsyLeYtrFYT2lWw1peE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qEjCqJY8tK22UojXHweipuE4uT7tu30a95/RMHzQcmEfty//GYunl5lhmnJxDwkbQ
-	 LtxR4+XcohvF/i1wP18nHph1vMcY2hj9Oa8/prM3RBMBnY2wwtsyw8xAyEdh/w9pbL
-	 z3mGS9iHwrekS7ONbpsfqEsruaIFy3WpwlSEQIiA=
+	b=bHX4la/kDs8L8C633xy31YvIuAv4Mc45Bw07x2ZHPf5hGu8cuYJ1r4l7G4CYuMlpc
+	 FeDysCnaGSh4ZfdMUJ0DkXEP8QaLGg1hM4j681I7YlJGb5T1c9BLKSqIyMBNzR/sJi
+	 185Lk5AbCRXt9KSTyZrLUvhVV4JnkxVsbQMqWQco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390990AbfHBJbC (ORCPT
+        id S2391005AbfHBJbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:31:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56632 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:31:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390933AbfHBJaz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:30:55 -0400
+        id S1729469AbfHBJbC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:31:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEE982182B;
-        Fri,  2 Aug 2019 09:30:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65890217D7;
+        Fri,  2 Aug 2019 09:31:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738254;
-        bh=EYH+wJq5Jh9eumxxBMFQEpp0HWPkNeHhXg02xGdpNlw=;
+        s=default; t=1564738261;
+        bh=txmXiWqj/bOInPP2k72IyR0HEsyLeYtrFYT2lWw1peE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wp7JLMmlnEDYrTp2k04yJz1cjAeUeQqy9efArqPgNiFbILC5q75tqFuCF/5wWUh1V
-         tUmikBRSAxLUA5PhPvHDzi7vqsE7vjOciuria08bkAs7Tk2/frrmY+FcLCem2EQatU
-         KhLEit35WKribvqkzikky+Xa5U1DIbEwGFk+tVOA=
+        b=XrtLNzmnmq8NqbnpXIrHTILwuasjiOa/s2ZPTbtu9bSDmGTsB4FqVqN22rKvA9S4o
+         +7lEqC0edFthghIa3gjkKSh946k/096GT6mtcOXzxsUx895Aa+CozBBwirR0wY2U8J
+         0Tz159Y+C8HbOF7Vhk0UePXgrB/CWFRyAHMWRZv8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+4f0529365f7f2208d9f0@syzkaller.appspotmail.com,
-        Jeremy Sowden <jeremy@azazel.net>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
+        stable@vger.kernel.org, Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 015/158] af_key: fix leaks in key_pol_get_resp and dump_sp.
-Date:   Fri,  2 Aug 2019 11:27:16 +0200
-Message-Id: <20190802092206.551843224@linuxfoundation.org>
+Subject: [PATCH 4.4 018/158] net: phy: Check against net_device being NULL
+Date:   Fri,  2 Aug 2019 11:27:19 +0200
+Message-Id: <20190802092207.168384452@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -62,48 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7c80eb1c7e2b8420477fbc998971d62a648035d9 ]
+[ Upstream commit 82c76aca81187b3d28a6fb3062f6916450ce955e ]
 
-In both functions, if pfkey_xfrm_policy2msg failed we leaked the newly
-allocated sk_buff.  Free it on error.
+In general, we don't want MAC drivers calling phy_attach_direct with the
+net_device being NULL. Add checks against this in all the functions
+calling it: phy_attach() and phy_connect_direct().
 
-Fixes: 55569ce256ce ("Fix conversion between IPSEC_MODE_xxx and XFRM_MODE_xxx.")
-Reported-by: syzbot+4f0529365f7f2208d9f0@syzkaller.appspotmail.com
-Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
+Suggested-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/key/af_key.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/net/phy/phy_device.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/net/key/af_key.c b/net/key/af_key.c
-index 3ba903ff2bb0..36db179d848e 100644
---- a/net/key/af_key.c
-+++ b/net/key/af_key.c
-@@ -2463,8 +2463,10 @@ static int key_pol_get_resp(struct sock *sk, struct xfrm_policy *xp, const struc
- 		goto out;
- 	}
- 	err = pfkey_xfrm_policy2msg(out_skb, xp, dir);
--	if (err < 0)
-+	if (err < 0) {
-+		kfree_skb(out_skb);
- 		goto out;
-+	}
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 70f26b30729c..c6a87834723d 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -472,6 +472,9 @@ int phy_connect_direct(struct net_device *dev, struct phy_device *phydev,
+ {
+ 	int rc;
  
- 	out_hdr = (struct sadb_msg *) out_skb->data;
- 	out_hdr->sadb_msg_version = hdr->sadb_msg_version;
-@@ -2717,8 +2719,10 @@ static int dump_sp(struct xfrm_policy *xp, int dir, int count, void *ptr)
- 		return PTR_ERR(out_skb);
++	if (!dev)
++		return -EINVAL;
++
+ 	rc = phy_attach_direct(dev, phydev, phydev->dev_flags, interface);
+ 	if (rc)
+ 		return rc;
+@@ -704,6 +707,9 @@ struct phy_device *phy_attach(struct net_device *dev, const char *bus_id,
+ 	struct device *d;
+ 	int rc;
  
- 	err = pfkey_xfrm_policy2msg(out_skb, xp, dir);
--	if (err < 0)
-+	if (err < 0) {
-+		kfree_skb(out_skb);
- 		return err;
-+	}
- 
- 	out_hdr = (struct sadb_msg *) out_skb->data;
- 	out_hdr->sadb_msg_version = pfk->dump.msg_version;
++	if (!dev)
++		return ERR_PTR(-EINVAL);
++
+ 	/* Search the list of PHY devices on the mdio bus for the
+ 	 * PHY with the requested name
+ 	 */
 -- 
 2.20.1
 
