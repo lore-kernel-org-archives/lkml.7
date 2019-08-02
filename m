@@ -2,153 +2,143 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E12C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 20:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 112DDC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 20:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 497B320880
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 20:48:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D389020880
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 20:49:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CNUGS0o/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404644AbfHBUs0 (ORCPT
+        id S2437070AbfHBUtz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 16:48:26 -0400
-Received: from mga09.intel.com ([134.134.136.24]:23759 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727848AbfHBUsZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 16:48:25 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Aug 2019 13:48:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,339,1559545200"; 
-   d="scan'208";a="178256598"
-Received: from psathya-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.36.242])
-  by orsmga006.jf.intel.com with ESMTP; 02 Aug 2019 13:48:18 -0700
-Date:   Fri, 2 Aug 2019 23:48:17 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
-        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
-        rientjes@google.com, cedric.xing@intel.com
-Subject: Re: [PATCH v21 08/28] x86/cpu/intel: Detect SGX support and update
- caps appropriately
-Message-ID: <20190802204754.gw4elehzvnjh33jq@linux.intel.com>
-References: <20190713170804.2340-1-jarkko.sakkinen@linux.intel.com>
- <20190713170804.2340-9-jarkko.sakkinen@linux.intel.com>
- <20190724193542.GD25376@linux.intel.com>
+        Fri, 2 Aug 2019 16:49:55 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44058 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726999AbfHBUtz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 16:49:55 -0400
+Received: by mail-pl1-f195.google.com with SMTP id t14so34048105plr.11;
+        Fri, 02 Aug 2019 13:49:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ENSyot+GNdqEsPMj6QXt84UJj5q21aiWLv73xl8tKs0=;
+        b=CNUGS0o/7n6moxYJjoULWtyJ+iM+UwBiq475Ssij85TCMqybZiB1CyjE/um4r/+HvN
+         crlqP1utunGT7etIKLdpxGytiHEVw+DufD9RvGjvAImVSPAQdq8sIPzwmfbSatkmk40y
+         SJrOsKohoLVYqXJJF+fe5pQ/M2HmWmbyC3tcYGJA7HMERERf1PWB6smd0qakgNLUp4mA
+         Z4dNwEbEVV93+GfZJC9Oo26hUQHHTo9iOegGYJ16wdFCzRyMTgrY7jU7vovwT92imhXt
+         wH3+B212dAb1lZbe0vRfLa/7iwyrqs2lKYHmeZUJ5o5rsCfWfbqFYjN7aOU3OUf1wpbg
+         +WWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ENSyot+GNdqEsPMj6QXt84UJj5q21aiWLv73xl8tKs0=;
+        b=lrSr0ivIUOdxtPwg95+dDJKtlxewQLO4FuJzmWtDAmc6lLVimW8ltwOW+VOgOK3Aer
+         Q8K1eRL3B0kQKb0mZ89LdHAu5rDJCY5IUmWRH3NQNEDqnGdM/ELJ11Ij0OX96ILv4lG6
+         wNYkWxMaWSl7c2LQJuPAIJnx0Xr1seWvKkYjQYRQ8dcB24gB54RkUDLLuKR/DTvk8EPu
+         3S763Biae/D7InSxa664p+yPdbK0eCO8R6x0oFRJvXeh40Pab5gqeqqae8ZU9WTACz4n
+         pk7KZbsa0tGFCHXDNa9aRGIIIU6eqp9IGdhgsCoOlSPTFUnZFQi5AEXZCV65gzsj0qVa
+         KEmg==
+X-Gm-Message-State: APjAAAXVotFNqeQqZ52rokN2Y5xOb2xw4gOjTGA9y54ErnjkpIWggp6y
+        gAOkbokJEOCQVxRO1SKIeN0=
+X-Google-Smtp-Source: APXvYqyZdXKq7maDW6xH3Vf3d4ciK+RxU3q3LMnSZKsp8dTn+hEWqB17yBBex/+y7896AM0TfCMylA==
+X-Received: by 2002:a17:902:9a49:: with SMTP id x9mr134370035plv.282.1564778994625;
+        Fri, 02 Aug 2019 13:49:54 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id n128sm31732153pfn.46.2019.08.02.13.49.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 02 Aug 2019 13:49:53 -0700 (PDT)
+Date:   Fri, 2 Aug 2019 13:49:52 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     linux-watchdog@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
+        Rick Ramstetter <rick@anteaterllc.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/5] watchdog: ziirave_wdt: Don't bail out on unexpected
+ timeout value
+Message-ID: <20190802204952.GA6292@roeck-us.net>
+References: <20190731174252.18041-1-andrew.smirnov@gmail.com>
+ <20190731174252.18041-5-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190724193542.GD25376@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190731174252.18041-5-andrew.smirnov@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 12:35:42PM -0700, Sean Christopherson wrote:
-> On Sat, Jul 13, 2019 at 08:07:44PM +0300, Jarkko Sakkinen wrote:
-> >  arch/x86/kernel/cpu/intel.c | 71 +++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 71 insertions(+)
-> > 
-> > diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-> > index 8d6d92ebeb54..1503b251d10f 100644
-> > --- a/arch/x86/kernel/cpu/intel.c
-> > +++ b/arch/x86/kernel/cpu/intel.c
-> > @@ -623,6 +623,72 @@ static void detect_tme(struct cpuinfo_x86 *c)
-> >  	c->x86_phys_bits -= keyid_bits;
-> >  }
-> >  
-> > +static void __maybe_unused detect_sgx(struct cpuinfo_x86 *c)
-> > +{
-> > +	unsigned long long fc;
-> > +
-> > +	rdmsrl(MSR_IA32_FEATURE_CONTROL, fc);
-> > +	if (!(fc & FEATURE_CONTROL_LOCKED)) {
-> > +		pr_err_once("sgx: The feature control MSR is not locked\n");
-> > +		goto err_unsupported;
-> > +	}
-> > +
-> > +	if (!(fc & FEATURE_CONTROL_SGX_ENABLE)) {
-> > +		pr_err_once("sgx: SGX is not enabled in IA32_FEATURE_CONTROL MSR\n");
-> > +		goto err_unsupported;
-> > +	}
-> > +
-> > +	if (!cpu_has(c, X86_FEATURE_SGX1)) {
-> > +		pr_err_once("sgx: SGX1 instruction set is not supported\n");
-> > +		goto err_unsupported;
-> > +	}
-> > +
-> > +	if (!(fc & FEATURE_CONTROL_SGX_LE_WR)) {
-> > +		pr_info_once("sgx: The launch control MSRs are not writable\n");
-> > +		goto err_msrs_rdonly;
-> > +	}
-> > +
-> > +	return;
-> > +
-> > +err_unsupported:
-> > +	setup_clear_cpu_cap(X86_FEATURE_SGX);
-> > +	setup_clear_cpu_cap(X86_FEATURE_SGX1);
-> > +	setup_clear_cpu_cap(X86_FEATURE_SGX2);
-> > +
-> > +err_msrs_rdonly:
-> > +	setup_clear_cpu_cap(X86_FEATURE_SGX_LC);
-> > +}
-> > +
-> > +static void init_intel_energy_perf(struct cpuinfo_x86 *c)
-> > +{
-> > +	u64 epb;
-> > +
-> > +	/*
-> > +	 * Initialize MSR_IA32_ENERGY_PERF_BIAS if not already initialized.
-> > +	 * (x86_energy_perf_policy(8) is available to change it at run-time.)
-> > +	 */
-> > +	if (!cpu_has(c, X86_FEATURE_EPB))
-> > +		return;
-> > +
-> > +	rdmsrl(MSR_IA32_ENERGY_PERF_BIAS, epb);
-> > +	if ((epb & 0xF) != ENERGY_PERF_BIAS_PERFORMANCE)
-> > +		return;
-> > +
-> > +	pr_warn_once("ENERGY_PERF_BIAS: Set to 'normal', was 'performance'\n");
-> > +	pr_warn_once("ENERGY_PERF_BIAS: View and update with x86_energy_perf_policy(8)\n");
-> > +	epb = (epb & ~0xF) | ENERGY_PERF_BIAS_NORMAL;
-> > +	wrmsrl(MSR_IA32_ENERGY_PERF_BIAS, epb);
-> > +}
-> > +
-> > +static void intel_bsp_resume(struct cpuinfo_x86 *c)
-> > +{
-> > +	/*
-> > +	 * MSR_IA32_ENERGY_PERF_BIAS is lost across suspend/resume,
-> > +	 * so reinitialize it properly like during bootup:
-> > +	 */
-> > +	init_intel_energy_perf(c);
-> > +}
-> > +
-> >  static void init_cpuid_fault(struct cpuinfo_x86 *c)
-> >  {
-> >  	u64 msr;
-> > @@ -760,6 +826,11 @@ static void init_intel(struct cpuinfo_x86 *c)
-> >  	if (cpu_has(c, X86_FEATURE_TME))
-> >  		detect_tme(c);
-> >  
-> > +	if (IS_ENABLED(CONFIG_INTEL_SGX) && cpu_has(c, X86_FEATURE_SGX))
-> > +		detect_sgx(c);
-> > +
-> > +	init_intel_energy_perf(c);
+On Wed, Jul 31, 2019 at 10:42:51AM -0700, Andrey Smirnov wrote:
+> Reprogramming bootloader on watchdog MCU will result in reported
+> default timeout value of "0". That in turn will be unnecesarily
+> rejected by the driver as invalid device (-ENODEV). Simplify probe to
+> just read stored timeout value, clamp it to an acceptable range and
+> program the value unconditionally to fix the above.
 > 
-> All of the energy_perf additions are bogus, looks like a rebase gone wrong.
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Rick Ramstetter <rick@anteaterllc.com>
+> Cc: linux-watchdog@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
 
-Thanks for catching this.
+I have not heard back on the question I had about selecting the minimum
+timeout and not a more reasonable default. Since the code itself
+is technically correct, marking the patch as
 
-/Jarkko
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
+Guenter
+
+> ---
+>  drivers/watchdog/ziirave_wdt.c | 22 +++++++++-------------
+>  1 file changed, 9 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/watchdog/ziirave_wdt.c b/drivers/watchdog/ziirave_wdt.c
+> index 89ce6982ba53..33c8d2eadada 100644
+> --- a/drivers/watchdog/ziirave_wdt.c
+> +++ b/drivers/watchdog/ziirave_wdt.c
+> @@ -667,22 +667,18 @@ static int ziirave_wdt_probe(struct i2c_client *client,
+>  			return val;
+>  		}
+>  
+> -		if (val < ZIIRAVE_TIMEOUT_MIN)
+> -			return -ENODEV;
+> -
+> -		w_priv->wdd.timeout = val;
+> -	} else {
+> -		ret = ziirave_wdt_set_timeout(&w_priv->wdd,
+> -					      w_priv->wdd.timeout);
+> -		if (ret) {
+> -			dev_err(&client->dev, "Failed to set timeout\n");
+> -			return ret;
+> -		}
+> +		w_priv->wdd.timeout = clamp(val, ZIIRAVE_TIMEOUT_MIN,
+> +					    ZIIRAVE_TIMEOUT_MAX);
+> +	}
+>  
+> -		dev_info(&client->dev, "Timeout set to %ds\n",
+> -			 w_priv->wdd.timeout);
+> +	ret = ziirave_wdt_set_timeout(&w_priv->wdd, w_priv->wdd.timeout);
+> +	if (ret) {
+> +		dev_err(&client->dev, "Failed to set timeout\n");
+> +		return ret;
+>  	}
+>  
+> +	dev_info(&client->dev, "Timeout set to %ds\n", w_priv->wdd.timeout);
+> +
+>  	watchdog_set_nowayout(&w_priv->wdd, nowayout);
+>  
+>  	i2c_set_clientdata(client, w_priv);
+> -- 
+> 2.21.0
+> 
