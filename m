@@ -2,151 +2,128 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45DE4C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 19:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17035C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 19:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14A7920B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 19:08:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564772898;
-	bh=CsffykniwlTR3rvuw5e4RdykOop71bDHLXneOB9IolA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SOSSfUF9DPVV6FNmxoqIs1drNAbT0PJzSv8zJhlIbh+IlZUx0gnJenfsltfdMuWwk
-	 8v0pIXZf5uZNhNMb2k4bBM2y0arrRfBfiMVh2lLuquEr8N77Ul8bUBOLPzkCJ3GMD9
-	 Fjll6lAQ1Nz7pN5mjVzphPlPj0dxjgWkXaNLcWjA=
+	by mail.kernel.org (Postfix) with ESMTP id E69E22087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 19:08:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391766AbfHBTIR (ORCPT
+        id S2391874AbfHBTIe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 15:08:17 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:35040 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbfHBTIQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 15:08:16 -0400
-Received: by mail-qk1-f194.google.com with SMTP id r21so55700912qke.2;
-        Fri, 02 Aug 2019 12:08:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bg0IYF6s1vKTQqCOaTbUbf6y5ZEAOUzglk0PVhrL/38=;
-        b=glnSl1NWmZ0mA06pxO5NHcGHYLGSDwCYCk/lpygM3hxebdjzwZ5c9BT/0rVS0KRQSO
-         vqi0RMww/iVfyDm53cDgznuv6lJmZSUElxWkFtkwGBC7HXv3MauHjfH1kZBfVno4qqNq
-         Y/5L6tSxXegWmVMoAF0PLhqqO3NaA7vZqe3ZDaEmNZAMRViBgsk1i7sHYjxg4jXlzglN
-         WRkJ1GC+jvZEpr424Rs9LV5Fa6L6Se02pQ8Dkpy4UeuLVvaOmsMnhyY4rrwIr4Cu/34D
-         XatcJnT31nWYAqOxuQhEGnwi/uBE6DuFDvgUaJkBgkrtbHkKL4UG5rFY42lGVPdLUqce
-         OZmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bg0IYF6s1vKTQqCOaTbUbf6y5ZEAOUzglk0PVhrL/38=;
-        b=JIQyOYoBxwwCNCrndDlVUm/zFOiJv8xu8REDo9TBH/QFAwtVxYaq2QUhYmmmE5QR+a
-         drbFc72oYjUBzNe61pnNLNZCittnoRswO/EzyQ16Q5zuo7MVRF2HzEp7E+1gvONf96uk
-         Ebtu7SIa+6219eyRU+VYdfc2y4BmBNWxRjcMaxoW+qZ0aZefGGKSaFlhaB63LHHW6reo
-         K6slMZCxn/REinQFhF/OeFX4FO2e1lxWbK8jyMd2Z2/Gx4oBOnZfaaK3g1vRuZXAPnu0
-         uOuLOc3G81P+V7Og5Aa4wsEqOwbaUtSH2L+84M9QbqLtrY1N78L3jTeMVgUlVDkZUNdt
-         +Rbw==
-X-Gm-Message-State: APjAAAUx8tmiuD0i9R6u2QZwmbSCKZSQEM3ngAy8y9H5oW2khjWyQQOv
-        7f94xBEtJ6sNNs73e9VpTfI=
-X-Google-Smtp-Source: APXvYqxgawn9tHsWo/hnfD4MDtBAftgnXje7tfHbQ08P5aSqCvzWjxnLHZsE1oZzyNlm82t1vBerUg==
-X-Received: by 2002:a37:a142:: with SMTP id k63mr8115850qke.278.1564772895730;
-        Fri, 02 Aug 2019 12:08:15 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::38f0])
-        by smtp.gmail.com with ESMTPSA id f25sm38408246qta.81.2019.08.02.12.08.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 02 Aug 2019 12:08:15 -0700 (PDT)
-Date:   Fri, 2 Aug 2019 12:08:13 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>
-Cc:     linux-block@vger.kernel.org, kernel-team@fb.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH block 2/2] writeback, cgroup: inode_switch_wbs() shouldn't
- give up on wb_switch_rwsem trylock fail
-Message-ID: <20190802190813.GC136335@devbig004.ftw2.facebook.com>
-References: <20190802190738.GB136335@devbig004.ftw2.facebook.com>
+        Fri, 2 Aug 2019 15:08:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34546 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725866AbfHBTIe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 15:08:34 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BD27D89AD0;
+        Fri,  2 Aug 2019 19:08:33 +0000 (UTC)
+Received: from linux-ws.nc.xsintricity.com (ovpn-112-50.rdu2.redhat.com [10.10.112.50])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9F0925D9E2;
+        Fri,  2 Aug 2019 19:08:31 +0000 (UTC)
+Message-ID: <76d6d890c70397d184f8dbc88f9f9de42cb3e567.camel@redhat.com>
+Subject: Re: [PATCH V2] mlx5: Fix formats with line continuation whitespace
+From:   Doug Ledford <dledford@redhat.com>
+To:     Saeed Mahameed <saeedm@mellanox.com>,
+        "joe@perches.com" <joe@perches.com>,
+        "leon@kernel.org" <leon@kernel.org>
+Cc:     "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Fri, 02 Aug 2019 15:08:19 -0400
+In-Reply-To: <910f77ed7f2923206adc8927204c6d759ec18d20.camel@mellanox.com>
+References: <f14db3287b23ed8af9bdbf8001e2e2fe7ae9e43a.camel@perches.com>
+         <20181101073412.GQ3974@mtr-leonro.mtl.com>
+         <ac8361beee5dd80ad6546328dd7457bb6ee1ca5a.camel@redhat.com>
+         <f2b2559865e8bd59202e14b837a522a801d498e2.camel@perches.com>
+         <910f77ed7f2923206adc8927204c6d759ec18d20.camel@mellanox.com>
+Organization: Red Hat, Inc.
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-pzRitbc4Ei4uyzoykOWO"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190802190738.GB136335@devbig004.ftw2.facebook.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 02 Aug 2019 19:08:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As inode wb switching may make sync(2) miss some inodes, they're
-synchronized using wb_switch_rwsem so that no wb switching happens
-while sync(2) is in progress.  In addition to synchronizing the actual
-switching, the rwsem is also used to prevent queueing new switch
-attempts while sync(2) is in progress.  This is to avoid queueing too
-many instances while the rwsem is held by sync(2).  Unfortunately,
-this is too agressive and can block wb switching for a long time if
-sync(2) is frequent.
 
-The goal is avoiding expolding the number of scheduled switches, not
-avoiding scheduling anything.  Let's use wb_switch_rwsem only for
-synchronizing the actual switching and sync(2) and use
-isw_nr_in_flight instead for limiting the maximum number of scheduled
-switches.  The limit is set to 1024 which should be more than enough
-while still avoiding extreme situations.
+--=-pzRitbc4Ei4uyzoykOWO
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
----
- fs/fs-writeback.c |   17 +++++------------
- 1 file changed, 5 insertions(+), 12 deletions(-)
+On Fri, 2019-08-02 at 18:32 +0000, Saeed Mahameed wrote:
+> On Fri, 2019-08-02 at 11:09 -0700, Joe Perches wrote:
+> > On Tue, 2018-11-06 at 16:34 -0500, Doug Ledford wrote:
+> > > On Thu, 2018-11-01 at 09:34 +0200, Leon Romanovsky wrote:
+> > > > On Thu, Nov 01, 2018 at 12:24:08AM -0700, Joe Perches wrote:
+> > > > > The line continuations unintentionally add whitespace so
+> > > > > instead use coalesced formats to remove the whitespace.
+> > > > >=20
+> > > > > Signed-off-by: Joe Perches <joe@perches.com>
+> > > > > ---
+> > > > >=20
+> > > > > v2: Remove excess space after %u
+> > > > >=20
+> > > > >  drivers/net/ethernet/mellanox/mlx5/core/rl.c | 6 ++----
+> > > > >  1 file changed, 2 insertions(+), 4 deletions(-)
+> > > > >=20
+> > > >=20
+> > > > Thanks,
+> > > > Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+> > >=20
+> > > Applied, thanks.
+> >=20
+> > Still not upstream.  How long does it take?
+> >=20
+>=20
+> Doug, Leon, this patch still apply, let me know what happened here ?
+> and if you want me to apply it to one of my branches.
 
---- a/fs/fs-writeback.c
-+++ b/fs/fs-writeback.c
-@@ -237,6 +237,7 @@ static void wb_wait_for_completion(struc
- 					/* if foreign slots >= 8, switch */
- #define WB_FRN_HIST_MAX_SLOTS	(WB_FRN_HIST_THR_SLOTS / 2 + 1)
- 					/* one round can affect upto 5 slots */
-+#define WB_FRN_MAX_IN_FLIGHT	1024	/* don't queue too many concurrently */
- 
- static atomic_t isw_nr_in_flight = ATOMIC_INIT(0);
- static struct workqueue_struct *isw_wq;
-@@ -489,18 +490,13 @@ static void inode_switch_wbs(struct inod
- 	if (inode->i_state & I_WB_SWITCH)
- 		return;
- 
--	/*
--	 * Avoid starting new switches while sync_inodes_sb() is in
--	 * progress.  Otherwise, if the down_write protected issue path
--	 * blocks heavily, we might end up starting a large number of
--	 * switches which will block on the rwsem.
--	 */
--	if (!down_read_trylock(&bdi->wb_switch_rwsem))
-+	/* avoid queueing a new switch if too many are already in flight */
-+	if (atomic_read(&isw_nr_in_flight) > WB_FRN_MAX_IN_FLIGHT)
- 		return;
- 
- 	isw = kzalloc(sizeof(*isw), GFP_ATOMIC);
- 	if (!isw)
--		goto out_unlock;
-+		return;
- 
- 	/* find and pin the new wb */
- 	rcu_read_lock();
-@@ -534,15 +530,12 @@ static void inode_switch_wbs(struct inod
- 	call_rcu(&isw->rcu_head, inode_switch_wbs_rcu_fn);
- 
- 	atomic_inc(&isw_nr_in_flight);
--
--	goto out_unlock;
-+	return;
- 
- out_free:
- 	if (isw->new_wb)
- 		wb_put(isw->new_wb);
- 	kfree(isw);
--out_unlock:
--	up_read(&bdi->wb_switch_rwsem);
- }
- 
- /**
+I'm not entirely sure what happened here.  Obviously I said I had taken
+it, which I don't do under my normal workflow until I've actually
+applied and build tested the patch.  For it to not make it into the tree
+means that I probably applied it to my wip/dl-for-next branch, but prior
+to moving it to for-next, I might have had a rebase and it got lost in
+the shuffle or something like that.  My apologies for letting it slip
+through the cracks.  Anyway, I pulled the patch from patchworks, applied
+it, and pushed it to k.o.
+
+--=20
+Doug Ledford <dledford@redhat.com>
+    GPG KeyID: B826A3330E572FDD
+    Fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
+
+--=-pzRitbc4Ei4uyzoykOWO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl1EiiMACgkQuCajMw5X
+L92JuQ/+LYwoMz5g+dwlMLtnq8MkugbuOW7+2ki/QEYBGJLgsWcvZQlCCogsTBEN
+AvHFwydXoujplix9dCXmCWwu0wM9A+kEgbOnrx7i5Yf6NGljBRNxHBAvga7RtAsy
+zTPd1Ywg5+Y1eNi+eQdIJSNa0Z8BJQd8QTOlBzixXM0kzSW/2qP0gfWY9pmXgaI4
+UNdALPSc7sSO5mnVEGjOiCLN+X8+kJdXMAqh58eTYEvhZMfYhtsjhwtus7iBV0tK
+WUEEdEWu/lCpYtGDdg0XIQQK8/4iO2Qgp+gOUUtcKOjbU68rOFWjOQ8VOUqJSWSs
+Rqo0kKPCbK6XXM7FGJ7/KLOjVWtzIg4I0BOTQlgKffmtniziKd2mARKFbwZGWP2f
+LkuE80rofWj5zoUp+YM+Mgiraak9EK/hD27tY2X6LamaVzXCr+yH9bCqx7cpaRvm
+foUAmk+UMXHacqB9i4MshHLhY2F6JA3b7b+k7Fy6+ZVezmuxxYKEZqhtJCVMhl2C
+2k/vuRC2oMowbQl/YN0kH/c4A88+UKNqGI5PYrGH6NYZusmXX0vjWHQhdlpPox+8
+8zi80QuviijrPBk+HUsGrhuBzTHDn1BhyuLhTNpWV9TJrktGC6JMFO86H5EZyqB0
+lRT02NjTucfdTwIB3dhP1bWENBa2tcqgOIsk5Vc6MqwnphSRJZo=
+=bpdO
+-----END PGP SIGNATURE-----
+
+--=-pzRitbc4Ei4uyzoykOWO--
+
