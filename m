@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11857C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64599C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDC6F2086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A19E2087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:37:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738632;
-	bh=UOlWSdtchKYsBmJqg8duIoQQ3H+xRyAdBrbbFVsXwRg=;
+	s=default; t=1564738638;
+	bh=QiyoHz1/J7kYw21cWpvYTtwsAoA6Tm5hofpol9MaQFQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dHBziAvF5oX6TlbJwZ2ZGerzvFgP0j7oyV4ln9STQ4Z0b64Mk+fvenNkRayZYBIgv
-	 nLRyEBDq79SafhclcLH9GAjgJE2sQyZ19ihQVG+RtnOQxl62Kncb2OG40DHjKd92w9
-	 8YEsG/9vPJnLBfxhTGIkOb5FfzgTfuwobxzPcGIA=
+	b=U/Ue4xuwSnmjzS9wJqZEL5eMD1D3tqYhe2NBUK3OIJXxiyqv0nEKAUOfiz8WJ/WJ/
+	 Z5wPC9EEBs8Bdgolw1ZPwfUqja1QtND5XKNkEV1Gb6j5E9HG3aC675pRjqbANGY3zv
+	 ZC4rIRK/V7g3HYVKXV002fMKV2aeRoXMCLLo87bw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390803AbfHBJhL (ORCPT
+        id S2390850AbfHBJhR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:37:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37096 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:37:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404833AbfHBJgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:36:16 -0400
+        id S1731234AbfHBJhG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:37:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 242122184B;
-        Fri,  2 Aug 2019 09:36:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 072532086A;
+        Fri,  2 Aug 2019 09:37:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738575;
-        bh=UOlWSdtchKYsBmJqg8duIoQQ3H+xRyAdBrbbFVsXwRg=;
+        s=default; t=1564738625;
+        bh=QiyoHz1/J7kYw21cWpvYTtwsAoA6Tm5hofpol9MaQFQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UhNDG1GEQTFaCZjGVB3n3nwhrbg9ULMKKyFIYa8c8u72lNv/aF80inBJJqQrGbkh9
-         Pi6mw0RmBb5bwMBSfFloVroVTYjUcs0qydQX3HiPG2bFZno69zE5u6HQBd0MsGixii
-         4s1IG+4s0j+BKGAYSkkSeFk3McvdEoHdfKzoRA50=
+        b=aRVlLIwYJos2MsNzK/IGXygrnCDdO5TYZ1rnqQdIjIw+qWcVSOfu5bPwINIS0i93W
+         z33xSqSZiU6b6M4tMHAKk87bXGFkmfmwoXUONPaIgy6uNPD/dvYl6c8rLos7/phaGP
+         X4lyQJ/HACCWDGGZss8x2VilrzzzZqR+O91sqXJg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Yan, Zheng" <zyan@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>
-Subject: [PATCH 4.4 158/158] ceph: hold i_ceph_lock when removing caps for freeing inode
-Date:   Fri,  2 Aug 2019 11:29:39 +0200
-Message-Id: <20190802092233.875646888@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+79337b501d6aa974d0f6@syzkaller.appspotmail.com,
+        Vladis Dronov <vdronov@redhat.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        "Yu-Chen, Cho" <acho@suse.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.4 155/158] Bluetooth: hci_uart: check for missing tty operations
+Date:   Fri,  2 Aug 2019 11:29:36 +0200
+Message-Id: <20190802092233.391912438@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -60,49 +63,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yan, Zheng <zyan@redhat.com>
+From: Vladis Dronov <vdronov@redhat.com>
 
-commit d6e47819721ae2d9d090058ad5570a66f3c42e39 upstream.
+commit b36a1552d7319bbfd5cf7f08726c23c5c66d4f73 upstream.
 
-ceph_d_revalidate(, LOOKUP_RCU) may call __ceph_caps_issued_mask()
-on a freeing inode.
+Certain ttys operations (pty_unix98_ops) lack tiocmget() and tiocmset()
+functions which are called by the certain HCI UART protocols (hci_ath,
+hci_bcm, hci_intel, hci_mrvl, hci_qca) via hci_uart_set_flow_control()
+or directly. This leads to an execution at NULL and can be triggered by
+an unprivileged user. Fix this by adding a helper function and a check
+for the missing tty operations in the protocols code.
 
-Signed-off-by: "Yan, Zheng" <zyan@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@redhat.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+This fixes CVE-2019-10207. The Fixes: lines list commits where calls to
+tiocm[gs]et() or hci_uart_set_flow_control() were added to the HCI UART
+protocols.
+
+Link: https://syzkaller.appspot.com/bug?id=1b42faa2848963564a5b1b7f8c837ea7b55ffa50
+Reported-by: syzbot+79337b501d6aa974d0f6@syzkaller.appspotmail.com
+Cc: stable@vger.kernel.org # v2.6.36+
+Fixes: b3190df62861 ("Bluetooth: Support for Atheros AR300x serial chip")
+Fixes: 118612fb9165 ("Bluetooth: hci_bcm: Add suspend/resume PM functions")
+Fixes: ff2895592f0f ("Bluetooth: hci_intel: Add Intel baudrate configuration support")
+Fixes: 162f812f23ba ("Bluetooth: hci_uart: Add Marvell support")
+Fixes: fa9ad876b8e0 ("Bluetooth: hci_qca: Add support for Qualcomm Bluetooth chip wcn3990")
+Signed-off-by: Vladis Dronov <vdronov@redhat.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Reviewed-by: Yu-Chen, Cho <acho@suse.com>
+Tested-by: Yu-Chen, Cho <acho@suse.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ceph/caps.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/bluetooth/hci_ath.c   |    3 +++
+ drivers/bluetooth/hci_bcm.c   |    3 +++
+ drivers/bluetooth/hci_intel.c |    3 +++
+ drivers/bluetooth/hci_ldisc.c |    9 +++++++++
+ drivers/bluetooth/hci_uart.h  |    1 +
+ 5 files changed, 19 insertions(+)
 
---- a/fs/ceph/caps.c
-+++ b/fs/ceph/caps.c
-@@ -1072,20 +1072,23 @@ static int send_cap_msg(struct ceph_mds_
+--- a/drivers/bluetooth/hci_ath.c
++++ b/drivers/bluetooth/hci_ath.c
+@@ -101,6 +101,9 @@ static int ath_open(struct hci_uart *hu)
+ 
+ 	BT_DBG("hu %p", hu);
+ 
++	if (!hci_uart_has_flow_control(hu))
++		return -EOPNOTSUPP;
++
+ 	ath = kzalloc(sizeof(*ath), GFP_KERNEL);
+ 	if (!ath)
+ 		return -ENOMEM;
+--- a/drivers/bluetooth/hci_bcm.c
++++ b/drivers/bluetooth/hci_bcm.c
+@@ -279,6 +279,9 @@ static int bcm_open(struct hci_uart *hu)
+ 
+ 	bt_dev_dbg(hu->hdev, "hu %p", hu);
+ 
++	if (!hci_uart_has_flow_control(hu))
++		return -EOPNOTSUPP;
++
+ 	bcm = kzalloc(sizeof(*bcm), GFP_KERNEL);
+ 	if (!bcm)
+ 		return -ENOMEM;
+--- a/drivers/bluetooth/hci_intel.c
++++ b/drivers/bluetooth/hci_intel.c
+@@ -407,6 +407,9 @@ static int intel_open(struct hci_uart *h
+ 
+ 	BT_DBG("hu %p", hu);
+ 
++	if (!hci_uart_has_flow_control(hu))
++		return -EOPNOTSUPP;
++
+ 	intel = kzalloc(sizeof(*intel), GFP_KERNEL);
+ 	if (!intel)
+ 		return -ENOMEM;
+--- a/drivers/bluetooth/hci_ldisc.c
++++ b/drivers/bluetooth/hci_ldisc.c
+@@ -257,6 +257,15 @@ static int hci_uart_send_frame(struct hc
+ 	return 0;
  }
  
- /*
-- * Queue cap releases when an inode is dropped from our cache.  Since
-- * inode is about to be destroyed, there is no need for i_ceph_lock.
-+ * Queue cap releases when an inode is dropped from our cache.
-  */
- void ceph_queue_caps_release(struct inode *inode)
++/* Check the underlying device or tty has flow control support */
++bool hci_uart_has_flow_control(struct hci_uart *hu)
++{
++	if (hu->tty->driver->ops->tiocmget && hu->tty->driver->ops->tiocmset)
++		return true;
++
++	return false;
++}
++
+ /* Flow control or un-flow control the device */
+ void hci_uart_set_flow_control(struct hci_uart *hu, bool enable)
  {
- 	struct ceph_inode_info *ci = ceph_inode(inode);
- 	struct rb_node *p;
- 
-+	/* lock i_ceph_lock, because ceph_d_revalidate(..., LOOKUP_RCU)
-+	 * may call __ceph_caps_issued_mask() on a freeing inode. */
-+	spin_lock(&ci->i_ceph_lock);
- 	p = rb_first(&ci->i_caps);
- 	while (p) {
- 		struct ceph_cap *cap = rb_entry(p, struct ceph_cap, ci_node);
- 		p = rb_next(p);
- 		__ceph_remove_cap(cap, true);
- 	}
-+	spin_unlock(&ci->i_ceph_lock);
- }
- 
- /*
+--- a/drivers/bluetooth/hci_uart.h
++++ b/drivers/bluetooth/hci_uart.h
+@@ -105,6 +105,7 @@ int hci_uart_tx_wakeup(struct hci_uart *
+ int hci_uart_init_ready(struct hci_uart *hu);
+ void hci_uart_init_tty(struct hci_uart *hu);
+ void hci_uart_set_baudrate(struct hci_uart *hu, unsigned int speed);
++bool hci_uart_has_flow_control(struct hci_uart *hu);
+ void hci_uart_set_flow_control(struct hci_uart *hu, bool enable);
+ void hci_uart_set_speeds(struct hci_uart *hu, unsigned int init_speed,
+ 			 unsigned int oper_speed);
 
 
