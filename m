@@ -2,124 +2,263 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12FC6C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 07:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F74C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 07:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E61EC20449
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 07:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D940B20449
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 07:18:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389403AbfHBHPg (ORCPT
+        id S2389437AbfHBHSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 03:15:36 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:38299 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387657AbfHBHPg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 03:15:36 -0400
-Received: by mail-qt1-f193.google.com with SMTP id n11so72906749qtl.5;
-        Fri, 02 Aug 2019 00:15:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SMXU/Q1UCc6A820QQy1c6BMDY+exoOtiPs0ry5ZLZE4=;
-        b=on9SHantLjGeDOpHD4VHvthdEKHbuIrBX6lLTPBgyH/PLmJum1bFjqg/j7SFs+pUzg
-         8Tul/0miNnOFbiOVvmukqokQAshzyUrtuGKchu6sLnCo/gsfmXZFuJDM0jv6iyKYSWMZ
-         rIuFUQNyZoOtmODJ2RyHM62BwUv8iiaoDJI3OSvLpSs8uUAYCQ2mRQnXKwq7fGu0iO3m
-         moPLyawWr+JZVZb07CEIYdqfitVrlCOe3wH4ORSTqTjQ3csxfJWHyHz6ruAke2003HoM
-         5fwFUgHCCh3c3PVlrGeG3nQRWxj09Hf+Ks1a0gOfD5FOvoNIw0qiJDRHTJpptiwwxjTZ
-         pQTw==
-X-Gm-Message-State: APjAAAXvyzKFcQmkxkgS5t8JzyUWvRfhlrx58JdmyTDSRC32uqsJEhi8
-        BMyozK90RmA9p194shK95yaL8wkCRLmVNShwKcc=
-X-Google-Smtp-Source: APXvYqzqfMW/bMSnK54LXWjk3hHMGCjxM9SuNy+53tZzW6vs/h8P/P3Hx1sP4LmK97Xx1YKvE5PpQWED7TwWBc6OtRY=
-X-Received: by 2002:ac8:f99:: with SMTP id b25mr86332658qtk.142.1564730135063;
- Fri, 02 Aug 2019 00:15:35 -0700 (PDT)
+        Fri, 2 Aug 2019 03:18:32 -0400
+Received: from mga06.intel.com ([134.134.136.31]:18903 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389182AbfHBHSc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 03:18:32 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Aug 2019 00:18:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,337,1559545200"; 
+   d="scan'208";a="184499124"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga002.jf.intel.com with ESMTP; 02 Aug 2019 00:18:29 -0700
+Cc:     baolu.lu@linux.intel.com, kevin.tian@intel.com,
+        ashok.raj@intel.com, dima@arista.com, tmurphy@arista.com,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        jacob.jun.pan@intel.com, David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH v4 12/15] iommu/vt-d: Cleanup get_valid_domain_for_dev()
+To:     Alex Williamson <alex.williamson@redhat.com>
+References: <20190525054136.27810-1-baolu.lu@linux.intel.com>
+ <20190525054136.27810-13-baolu.lu@linux.intel.com>
+ <20190717211226.5ffbf524@x1.home>
+ <9957afdd-4075-e7ee-e1e6-97acb870e17a@linux.intel.com>
+ <20190719092303.751659a0@x1.home> <20190801193013.19444803@x1.home>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <5258f18f-101e-8a43-edea-3f4bb88ca58b@linux.intel.com>
+Date:   Fri, 2 Aug 2019 15:17:45 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190730014924.2193-1-deepa.kernel@gmail.com> <20190730014924.2193-20-deepa.kernel@gmail.com>
- <201907292129.AC796230@keescook> <CAK8P3a2rWEciT=PegCYUww-n-3smQHNjvW4duBqoS2PLSGdhYw@mail.gmail.com>
- <CABeXuvrmNkUOH5ZU59Kg4Ge1cFE9nqp9NhTPJjus5KkCrYeC6w@mail.gmail.com>
-In-Reply-To: <CABeXuvrmNkUOH5ZU59Kg4Ge1cFE9nqp9NhTPJjus5KkCrYeC6w@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 2 Aug 2019 09:15:18 +0200
-Message-ID: <CAK8P3a3DyWcvOpMsc__CZDmG50MXRisbBt+mTtwWCGKaNgg_Gg@mail.gmail.com>
-Subject: Re: [PATCH 19/20] pstore: fs superblock limits
-To:     Deepa Dinamani <deepa.kernel@gmail.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190801193013.19444803@x1.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 2, 2019 at 4:26 AM Deepa Dinamani <deepa.kernel@gmail.com> wrote:
->
-> On Tue, Jul 30, 2019 at 12:36 AM Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > On Tue, Jul 30, 2019 at 6:31 AM Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > On Mon, Jul 29, 2019 at 06:49:23PM -0700, Deepa Dinamani wrote:
-> > > > Also update the gran since pstore has microsecond granularity.
-> > >
-> > > So, I'm fine with this, but technically the granularity depends on the
-> > > backend storage... many have no actual time keeping, though. My point is,
-> > > pstore's timestamps are really mostly a lie, but the most common backend
-> > > (ramoops) is seconds-granularity.
-> > >
-> > > So, I'm fine with this, but it's a lie but it's a lie that doesn't
-> > > matter, so ...
-> > >
-> > > Acked-by: Kees Cook <keescook@chromium.org>
-> > >
-> > > I'm open to suggestions to improve it...
-> >
-> > If we don't care about using sub-second granularity, then setting it
-> > to one second unconditionally here will make it always use that and
-> > report it correctly.
->
-> Should this printf in ramoops_write_kmsg_hdr() also be fixed then?
->
->         RAMOOPS_KERNMSG_HDR "%lld.%06lu-%c\n",
->         (time64_t)record->time.tv_sec,
->         record->time.tv_nsec / 1000,
->         record->compressed ? 'C' : 'D');
->     persistent_ram_write(prz, hdr, len);
->
-> ramoops_read_kmsg_hdr() doesn't read this as microseconds. Seems like
-> a mismatch from above.
+Hi Alex,
 
-Good catch. This seems to go back to commit 3f8f80f0cfeb ("pstore/ram:
-Read and write to the 'compressed' flag of pstore"), which introduced the
-nanosecond read. The write function however has always used
-microseconds, and that was kept when the implementation changed
-from timeval to timespec in commit 1e817fb62cd1 ("time: create
-__getnstimeofday for WARNless calls").
+Thanks for reporting this. I will try to find a machine with a
+pcie-to-pci bridge and get this issue fixed. I will update you
+later.
 
-> If we want to agree that we just want seconds granularity for pstore,
-> we could replace the tv_nsec part to be all 0's if anybody else is
-> depending on this format.
-> I could drop this patch from the series and post that patch seperately.
+Best regards,
+Baolu
 
-We should definitely fix it to not produce a bogus nanosecond value.
-Whether using full seconds or microsecond resolution is better here,
-I don't know. It seems that pstore records generally get created
-with a nanosecond nanosecond accurate timestamp from
-ktime_get_real_fast_ns() and then truncated to the resolution of the
-backend, rather than the normal jiffies-accurate inode timestamps that
-we have for regular file systems.
-
-This might mean that we do want the highest possible resolution
-and not further truncate here, in case that information ends
-up being useful afterwards.
-
-         Arnd
+On 8/2/19 9:30 AM, Alex Williamson wrote:
+> On Fri, 19 Jul 2019 09:23:03 -0600
+> Alex Williamson <alex.williamson@redhat.com> wrote:
+> 
+>> On Fri, 19 Jul 2019 17:04:26 +0800
+>> Lu Baolu <baolu.lu@linux.intel.com> wrote:
+>>
+>>> Hi Alex,
+>>>
+>>> On 7/18/19 11:12 AM, Alex Williamson wrote:
+>>>> On Sat, 25 May 2019 13:41:33 +0800
+>>>> Lu Baolu <baolu.lu@linux.intel.com> wrote:
+>>>>      
+>>>>> Previously, get_valid_domain_for_dev() is used to retrieve the
+>>>>> DMA domain which has been attached to the device or allocate one
+>>>>> if no domain has been attached yet. As we have delegated the DMA
+>>>>> domain management to upper layer, this function is used purely to
+>>>>> allocate a private DMA domain if the default domain doesn't work
+>>>>> for ths device. Cleanup the code for readability.
+>>>>>
+>>>>> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>>>>> ---
+>>>>>    drivers/iommu/intel-iommu.c | 18 ++++++++----------
+>>>>>    include/linux/intel-iommu.h |  1 -
+>>>>>    2 files changed, 8 insertions(+), 11 deletions(-)
+>>>>
+>>>> System fails to boot bisected to this commit:
+>>>
+>>> Is this the same issue as this https://lkml.org/lkml/2019/7/18/840?
+>>
+>> Yes, the above link is after bisecting with all the bugs and fixes
+>> squashed together to avoid landing in local bugs.  Thanks,
+> 
+> Well, it turns out this patch is still broken too.  I was excited that
+> the system booted again with reverting the commit in the link above and
+> didn't notice that VT-d failed and de-initialized itself:
+> 
+> DMAR: No ATSR found
+> DMAR: dmar0: Using Queued invalidation
+> DMAR: dmar1: Using Queued invalidation
+> pci 0000:00:00.0: DMAR: Software identity mapping
+> pci 0000:00:01.0: DMAR: Software identity mapping
+> pci 0000:00:02.0: DMAR: Software identity mapping
+> pci 0000:00:16.0: DMAR: Software identity mapping
+> pci 0000:00:1a.0: DMAR: Software identity mapping
+> pci 0000:00:1b.0: DMAR: Software identity mapping
+> pci 0000:00:1c.0: DMAR: Software identity mapping
+> pci 0000:00:1c.5: DMAR: Software identity mapping
+> pci 0000:00:1c.6: DMAR: Software identity mapping
+> pci 0000:00:1c.7: DMAR: Software identity mapping
+> pci 0000:00:1d.0: DMAR: Software identity mapping
+> pci 0000:00:1f.0: DMAR: Software identity mapping
+> pci 0000:00:1f.2: DMAR: Software identity mapping
+> pci 0000:00:1f.3: DMAR: Software identity mapping
+> pci 0000:01:00.0: DMAR: Software identity mapping
+> pci 0000:01:00.1: DMAR: Software identity mapping
+> pci 0000:03:00.0: DMAR: Software identity mapping
+> pci 0000:04:00.0: DMAR: Software identity mapping
+> DMAR: Setting RMRR:
+> pci 0000:00:02.0: DMAR: Setting identity map [0xbf800000 - 0xcf9fffff]
+> pci 0000:00:1a.0: DMAR: Setting identity map [0xbe8d1000 - 0xbe8dffff]
+> pci 0000:00:1d.0: DMAR: Setting identity map [0xbe8d1000 - 0xbe8dffff]
+> DMAR: Prepare 0-16MiB unity mapping for LPC
+> pci 0000:00:1f.0: DMAR: Setting identity map [0x0 - 0xffffff]
+> pci 0000:00:00.0: Adding to iommu group 0
+> pci 0000:00:00.0: Using iommu direct mapping
+> pci 0000:00:01.0: Adding to iommu group 1
+> pci 0000:00:01.0: Using iommu direct mapping
+> pci 0000:00:02.0: Adding to iommu group 2
+> pci 0000:00:02.0: Using iommu direct mapping
+> pci 0000:00:16.0: Adding to iommu group 3
+> pci 0000:00:16.0: Using iommu direct mapping
+> pci 0000:00:1a.0: Adding to iommu group 4
+> pci 0000:00:1a.0: Using iommu direct mapping
+> pci 0000:00:1b.0: Adding to iommu group 5
+> pci 0000:00:1b.0: Using iommu direct mapping
+> pci 0000:00:1c.0: Adding to iommu group 6
+> pci 0000:00:1c.0: Using iommu direct mapping
+> pci 0000:00:1c.5: Adding to iommu group 7
+> pci 0000:00:1c.5: Using iommu direct mapping
+> pci 0000:00:1c.6: Adding to iommu group 8
+> pci 0000:00:1c.6: Using iommu direct mapping
+> pci 0000:00:1c.7: Adding to iommu group 9
+> pci 0000:00:1c.7: Using iommu direct mapping
+> pci 0000:00:1d.0: Adding to iommu group 10
+> pci 0000:00:1d.0: Using iommu direct mapping
+> pci 0000:00:1f.0: Adding to iommu group 11
+> pci 0000:00:1f.0: Using iommu direct mapping
+> pci 0000:00:1f.2: Adding to iommu group 11
+> pci 0000:00:1f.3: Adding to iommu group 11
+> pci 0000:01:00.0: Adding to iommu group 1
+> pci 0000:01:00.1: Adding to iommu group 1
+> pci 0000:03:00.0: Adding to iommu group 12
+> pci 0000:03:00.0: Using iommu direct mapping
+> pci 0000:04:00.0: Adding to iommu group 13
+> pci 0000:04:00.0: Using iommu direct mapping
+> pci 0000:05:00.0: Adding to iommu group 9
+> pci 0000:05:00.0: DMAR: Failed to get a private domain.
+> ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> pci 0000:00:00.0: Removing from iommu group 0
+> pci 0000:00:01.0: Removing from iommu group 1
+> pci 0000:00:02.0: Removing from iommu group 2
+> pci 0000:00:16.0: Removing from iommu group 3
+> pci 0000:00:1a.0: Removing from iommu group 4
+> pci 0000:00:1b.0: Removing from iommu group 5
+> pci 0000:00:1c.0: Removing from iommu group 6
+> pci 0000:00:1c.5: Removing from iommu group 7
+> pci 0000:00:1c.6: Removing from iommu group 8
+> pci 0000:00:1c.7: Removing from iommu group 9
+> pci 0000:00:1d.0: Removing from iommu group 10
+> pci 0000:00:1f.0: Removing from iommu group 11
+> pci 0000:00:1f.2: Removing from iommu group 11
+> pci 0000:00:1f.3: Removing from iommu group 11
+> pci 0000:01:00.0: Removing from iommu group 1
+> pci 0000:01:00.1: Removing from iommu group 1
+> pci 0000:03:00.0: Removing from iommu group 12
+> pci 0000:04:00.0: Removing from iommu group 13
+> pci 0000:05:00.0: Removing from iommu group 9
+> DMAR: Intel(R) Virtualization Technology for Directed I/O
+> 
+> -[0000:00]-+-00.0  Intel Corporation Xeon E3-1200 v2/Ivy Bridge DRAM Controller
+>             +-01.0-[01]--+-00.0  NVIDIA Corporation GK208 [GeForce GT 635]
+>             |            \-00.1  NVIDIA Corporation GK208 HDMI/DP Audio Controller
+>             +-02.0  Intel Corporation Xeon E3-1200 v2/3rd Gen Core processor Graphics Controller
+>             +-16.0  Intel Corporation 6 Series/C200 Series Chipset Family MEI Controller #1
+>             +-1a.0  Intel Corporation 6 Series/C200 Series Chipset Family USB Enhanced Host Controller #2
+>             +-1b.0  Intel Corporation 6 Series/C200 Series Chipset Family High Definition Audio Controller
+>             +-1c.0-[02]--
+>             +-1c.5-[03]----00.0  ASMedia Technology Inc. ASM1042 SuperSpeed USB Host Controller
+>             +-1c.6-[04]----00.0  Realtek Semiconductor Co., Ltd. RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller
+>             +-1c.7-[05-06]----00.0-[06]--
+>             +-1d.0  Intel Corporation 6 Series/C200 Series Chipset Family USB Enhanced Host Controller #1
+>             +-1f.0  Intel Corporation H67 Express Chipset LPC Controller
+>             +-1f.2  Intel Corporation 6 Series/C200 Series Chipset Family 6 port Desktop SATA AHCI Controller
+>             \-1f.3  Intel Corporation 6 Series/C200 Series Chipset Family SMBus Controller
+> 
+> 05:00.0 PCI bridge: ASMedia Technology Inc. ASM1083/1085 PCIe to PCI Bridge (rev 01) (prog-if 01 [Subtractive decode])
+> 	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx-
+> 	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+> 	Latency: 0, Cache Line Size: 32 bytes
+> 	Interrupt: pin A routed to IRQ 5
+> 	Bus: primary=05, secondary=06, subordinate=06, sec-latency=64
+> 	I/O behind bridge: None
+> 	Memory behind bridge: None
+> 	Prefetchable memory behind bridge: None
+> 	Secondary status: 66MHz+ FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort+ <SERR- <PERR-
+> 	BridgeCtl: Parity- SERR+ NoISA- VGA- VGA16+ MAbort- >Reset- FastB2B-
+> 		PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
+> 	Capabilities: [c0] Subsystem: ASUSTeK Computer Inc. Device 8489
+> 
+> 
+> With commit 4ec066c7b1476e0ca66a7acdb575627a5d1a1ee6 reverted on
+> v5.3-rc2:
+> 
+> DMAR: No ATSR found
+> DMAR: dmar0: Using Queued invalidation
+> DMAR: dmar1: Using Queued invalidation
+> pci 0000:00:00.0: Adding to iommu group 0
+> pci 0000:00:00.0: Using iommu direct mapping
+> pci 0000:00:01.0: Adding to iommu group 1
+> pci 0000:00:01.0: Using iommu direct mapping
+> pci 0000:00:02.0: Adding to iommu group 2
+> pci 0000:00:02.0: Using iommu direct mapping
+> pci 0000:00:16.0: Adding to iommu group 3
+> pci 0000:00:16.0: Using iommu direct mapping
+> pci 0000:00:1a.0: Adding to iommu group 4
+> pci 0000:00:1a.0: Using iommu direct mapping
+> pci 0000:00:1b.0: Adding to iommu group 5
+> pci 0000:00:1b.0: Using iommu direct mapping
+> pci 0000:00:1c.0: Adding to iommu group 6
+> pci 0000:00:1c.0: Using iommu direct mapping
+> pci 0000:00:1c.5: Adding to iommu group 7
+> pci 0000:00:1c.5: Using iommu direct mapping
+> pci 0000:00:1c.6: Adding to iommu group 8
+> pci 0000:00:1c.6: Using iommu direct mapping
+> pci 0000:00:1c.7: Adding to iommu group 9
+> pci 0000:00:1c.7: Using iommu direct mapping
+> pci 0000:00:1d.0: Adding to iommu group 10
+> pci 0000:00:1d.0: Using iommu direct mapping
+> pci 0000:00:1f.0: Adding to iommu group 11
+> pci 0000:00:1f.0: Using iommu direct mapping
+> pci 0000:00:1f.2: Adding to iommu group 11
+> pci 0000:00:1f.3: Adding to iommu group 11
+> pci 0000:01:00.0: Adding to iommu group 1
+> pci 0000:01:00.1: Adding to iommu group 1
+> pci 0000:03:00.0: Adding to iommu group 12
+> pci 0000:03:00.0: Using iommu direct mapping
+> pci 0000:04:00.0: Adding to iommu group 13
+> pci 0000:04:00.0: Using iommu direct mapping
+> pci 0000:05:00.0: Adding to iommu group 9
+> pci 0000:05:00.0: DMAR: Device uses a private dma domain.
+> DMAR: Intel(R) Virtualization Technology for Directed I/O
+> 
+> I'm guessing this series was maybe never tested on and doesn't account
+> for PCIe-to-PCI bridges.  Please fix.  Thanks,
+> 
+> Alex
+> 
