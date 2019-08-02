@@ -2,212 +2,54 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7235BC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 02:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA3DC19759
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 02:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40DF2206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 02:27:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D/j6QNqz"
+	by mail.kernel.org (Postfix) with ESMTP id 0B4522083B
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 02:28:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733295AbfHBC1a (ORCPT
+        id S1726796AbfHBC2Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 22:27:30 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43830 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbfHBCUQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 22:20:16 -0400
-Received: by mail-pl1-f193.google.com with SMTP id 4so26013287pld.10;
-        Thu, 01 Aug 2019 19:20:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=qSYlns3rxzw4u/DyjG2ivKH4pSlvpz3tTvNpv+Vzl0A=;
-        b=D/j6QNqz3yFiYsyeUlBoZoB8rZu5aCb/yvzz1zxOgNp3ybEqPbsxe9btxXQCwNnRiL
-         1hhEXFWz1aCfU0TnFrQv5Hdu1Y4yj+09YOcLKnBgch2wIeWxdJn+CuF7gDQRR3DG86LM
-         Y2SvxC7kLx20v2OT7+JApu4gV5A7mbLpTUBZ6FnTk6beDldtvE5mb/QvfkkyqN0v2VG1
-         9ofVdaCVs4q01OeX0AkhxB3Ji5RomrK0H8nso03ee71VFXG/bdlheK3cdFpHFmb/m/jZ
-         kT41q1q3qFT4PGqgyOwuRL5tvfmQTGDLJg5egH8fWfpo6yuqqIAezax6SWmNi42S34sa
-         BMyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qSYlns3rxzw4u/DyjG2ivKH4pSlvpz3tTvNpv+Vzl0A=;
-        b=AB/lw6eMa1rUvSh0p6aM6g28vbpo0XwBDyHLZx5hKcHRtVIeZZejSSY1MMCtoMw6TG
-         ojCSLjd+JooUj+rtqmp/Q0fejNcGvG7DqgAozu2LuCQ8cs8oOdjebCEisrN3DDaaptdM
-         NV+luL+bv7WQ5z10rzItvTAZPJoWBrii1bTMv5RHBVhO+Bcrjvq8hE/MqTtTdr/gWmWV
-         zbEAhSKTFsQV3JAVSgPUZtBb2auZEjP2x2bxl9ht/W9oIkctfpqOinPtVfov/VzBRsUH
-         kYv3E15jsDPhkqLTemV+E3f3cPfj3/0yqJJdj66phFSjkCcaESx7eMxl6GvJQSxlvngJ
-         cyjA==
-X-Gm-Message-State: APjAAAU6x10O/uYjYHEzF7tyTEw8XCwIBVStYuG9VL98rxfBpH7H4Tdc
-        vM0s7M2pCbQqXyKzRp/p/I4=
-X-Google-Smtp-Source: APXvYqwe/PIHkPn7ZzlBTJ10qqxG8IKfziWCo/9dNIX4ajnyTWnRigA/C0Xc1g8+MHenU4v2W+nK1Q==
-X-Received: by 2002:a17:902:24b:: with SMTP id 69mr123383293plc.250.1564712414959;
-        Thu, 01 Aug 2019 19:20:14 -0700 (PDT)
-Received: from blueforge.nvidia.com (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id u9sm38179744pgc.5.2019.08.01.19.20.13
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 01 Aug 2019 19:20:14 -0700 (PDT)
-From:   john.hubbard@gmail.com
-X-Google-Original-From: jhubbard@nvidia.com
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, ceph-devel@vger.kernel.org,
-        devel@driverdev.osuosl.org, devel@lists.orangefs.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org, linux-xfs@vger.kernel.org,
-        netdev@vger.kernel.org, rds-devel@oss.oracle.com,
-        sparclinux@vger.kernel.org, x86@kernel.org,
-        xen-devel@lists.xenproject.org, John Hubbard <jhubbard@nvidia.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: [PATCH 02/34] net/rds: convert put_page() to put_user_page*()
-Date:   Thu,  1 Aug 2019 19:19:33 -0700
-Message-Id: <20190802022005.5117-3-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190802022005.5117-1-jhubbard@nvidia.com>
-References: <20190802022005.5117-1-jhubbard@nvidia.com>
-MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: 8bit
+        Thu, 1 Aug 2019 22:28:25 -0400
+Received: from ozlabs.org ([203.11.71.1]:43835 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730344AbfHBC2Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 22:28:24 -0400
+Received: by ozlabs.org (Postfix, from userid 1034)
+        id 460B0l2PCPz9sML; Fri,  2 Aug 2019 12:28:23 +1000 (AEST)
+X-powerpc-patch-notification: thanks
+X-powerpc-patch-commit: d7e23b887f67178c4f840781be7a6aa6aeb52ab1
+In-Reply-To: <da89670093651437f27d2975224712e0a130b055.1564552796.git.christophe.leroy@c-s.fr>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>
+From:   Michael Ellerman <patch-notifications@ellerman.id.au>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] powerpc/kasan: fix early boot failure on PPC32
+Message-Id: <460B0l2PCPz9sML@ozlabs.org>
+Date:   Fri,  2 Aug 2019 12:28:23 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Hubbard <jhubbard@nvidia.com>
+On Wed, 2019-07-31 at 06:01:42 UTC, Christophe Leroy wrote:
+> Due to commit 4a6d8cf90017 ("powerpc/mm: don't use pte_alloc_kernel()
+> until slab is available on PPC32"), pte_alloc_kernel() cannot be used
+> during early KASAN init.
+> 
+> Fix it by using memblock_alloc() instead.
+> 
+> Reported-by: Erhard F. <erhard_f@mailbox.org>
+> Fixes: 2edb16efc899 ("powerpc/32: Add KASAN support")
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
-For pages that were retained via get_user_pages*(), release those pages
-via the new put_user_page*() routines, instead of via put_page() or
-release_pages().
+Applied to powerpc fixes, thanks.
 
-This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
-("mm: introduce put_user_page*(), placeholder versions").
+https://git.kernel.org/powerpc/c/d7e23b887f67178c4f840781be7a6aa6aeb52ab1
 
-Cc: Santosh Shilimkar <santosh.shilimkar@oracle.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: netdev@vger.kernel.org
-Cc: linux-rdma@vger.kernel.org
-Cc: rds-devel@oss.oracle.com
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
- net/rds/info.c    |  5 ++---
- net/rds/message.c |  2 +-
- net/rds/rdma.c    | 15 +++++++--------
- 3 files changed, 10 insertions(+), 12 deletions(-)
-
-diff --git a/net/rds/info.c b/net/rds/info.c
-index 03f6fd56d237..ca6af2889adf 100644
---- a/net/rds/info.c
-+++ b/net/rds/info.c
-@@ -162,7 +162,6 @@ int rds_info_getsockopt(struct socket *sock, int optname, char __user *optval,
- 	struct rds_info_lengths lens;
- 	unsigned long nr_pages = 0;
- 	unsigned long start;
--	unsigned long i;
- 	rds_info_func func;
- 	struct page **pages = NULL;
- 	int ret;
-@@ -235,8 +234,8 @@ int rds_info_getsockopt(struct socket *sock, int optname, char __user *optval,
- 		ret = -EFAULT;
- 
- out:
--	for (i = 0; pages && i < nr_pages; i++)
--		put_page(pages[i]);
-+	if (pages)
-+		put_user_pages(pages, nr_pages);
- 	kfree(pages);
- 
- 	return ret;
-diff --git a/net/rds/message.c b/net/rds/message.c
-index 50f13f1d4ae0..d7b0d266c437 100644
---- a/net/rds/message.c
-+++ b/net/rds/message.c
-@@ -404,7 +404,7 @@ static int rds_message_zcopy_from_user(struct rds_message *rm, struct iov_iter *
- 			int i;
- 
- 			for (i = 0; i < rm->data.op_nents; i++)
--				put_page(sg_page(&rm->data.op_sg[i]));
-+				put_user_page(sg_page(&rm->data.op_sg[i]));
- 			mmp = &rm->data.op_mmp_znotifier->z_mmp;
- 			mm_unaccount_pinned_pages(mmp);
- 			ret = -EFAULT;
-diff --git a/net/rds/rdma.c b/net/rds/rdma.c
-index 916f5ec373d8..6762e8696b99 100644
---- a/net/rds/rdma.c
-+++ b/net/rds/rdma.c
-@@ -162,8 +162,7 @@ static int rds_pin_pages(unsigned long user_addr, unsigned int nr_pages,
- 				  pages);
- 
- 	if (ret >= 0 && ret < nr_pages) {
--		while (ret--)
--			put_page(pages[ret]);
-+		put_user_pages(pages, ret);
- 		ret = -EFAULT;
- 	}
- 
-@@ -276,7 +275,7 @@ static int __rds_rdma_map(struct rds_sock *rs, struct rds_get_mr_args *args,
- 
- 	if (IS_ERR(trans_private)) {
- 		for (i = 0 ; i < nents; i++)
--			put_page(sg_page(&sg[i]));
-+			put_user_page(sg_page(&sg[i]));
- 		kfree(sg);
- 		ret = PTR_ERR(trans_private);
- 		goto out;
-@@ -464,9 +463,10 @@ void rds_rdma_free_op(struct rm_rdma_op *ro)
- 		 * to local memory */
- 		if (!ro->op_write) {
- 			WARN_ON(!page->mapping && irqs_disabled());
--			set_page_dirty(page);
-+			put_user_pages_dirty_lock(&page, 1, true);
-+		} else {
-+			put_user_page(page);
- 		}
--		put_page(page);
- 	}
- 
- 	kfree(ro->op_notifier);
-@@ -481,8 +481,7 @@ void rds_atomic_free_op(struct rm_atomic_op *ao)
- 	/* Mark page dirty if it was possibly modified, which
- 	 * is the case for a RDMA_READ which copies from remote
- 	 * to local memory */
--	set_page_dirty(page);
--	put_page(page);
-+	put_user_pages_dirty_lock(&page, 1, true);
- 
- 	kfree(ao->op_notifier);
- 	ao->op_notifier = NULL;
-@@ -867,7 +866,7 @@ int rds_cmsg_atomic(struct rds_sock *rs, struct rds_message *rm,
- 	return ret;
- err:
- 	if (page)
--		put_page(page);
-+		put_user_page(page);
- 	rm->atomic.op_active = 0;
- 	kfree(rm->atomic.op_notifier);
- 
--- 
-2.22.0
-
+cheers
