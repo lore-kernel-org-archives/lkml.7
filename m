@@ -2,118 +2,212 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A925C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C006C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 583412067D
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:55:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D99E22087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:55:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739720;
-	bh=TanoMrW0RE3wWpct4ktbdSwqBpkBitZroHl0GQaa0nQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E6uQrAu0DNe9Cyj+p6Bt64fBJxopDdjgw5VQRUHWqVtNYVgmJaBCDzXFvqFouaKvJ
-	 kNCsDE0WMEVUyFxcxWk1QauS46B5UO4dh3Il+2lMc357pVwptrYcmf3XLS9+RgCJFm
-	 PcnbLytjn7mRPe+M/XhQHRFDaJ0c5FeX7a0nyOOA=
+	s=default; t=1564739723;
+	bh=urSU2xPfyOztJhk9oiDwIpR3lc5OD4nRcbEDawmMOZY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=huVWOq5FjJtXL0kWnuwmusAOqApQpSVqVE7+cHKa5cTmHa+iwTlT+xT/RUaky5Dix
+	 +ee2kwz39GJBX0vp+lvshO9rdUciJTXp4nSFytApehFKU5T9ZPw57QJ/orTzOqKr99
+	 LPWi3zj1ie/ZFU70QcVDNXZmw0MEGz/CwZ3S2XHc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406516AbfHBJzS (ORCPT
+        id S2406527AbfHBJzV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:55:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33728 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:55:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406497AbfHBJzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:55:16 -0400
+        id S2406508AbfHBJzS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:55:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DA2520665;
-        Fri,  2 Aug 2019 09:55:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35BD421726;
+        Fri,  2 Aug 2019 09:55:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739715;
-        bh=TanoMrW0RE3wWpct4ktbdSwqBpkBitZroHl0GQaa0nQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lcJTOmFsmYAaUQXdUi3DXUfRrMDX5XYghdM6Yv4CxXFTtiw8a1sSUC+Dl1+Gxarwk
-         EcmMZf1TF79zZRvp0ksbaHM2VxR1+IJzFlC4Y0NusKoOGc9//z/FSbJ2DaPFcBcBM5
-         QBkztlnGwXPenwzoTea95mgs1NiUFvICdBm7/fDI=
+        s=default; t=1564739717;
+        bh=urSU2xPfyOztJhk9oiDwIpR3lc5OD4nRcbEDawmMOZY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ov5KuPqU6Ne9600Imp8E/iqbRYABViruKvSpvOMOJsD0DaKhgk/fiWaOSrw+WsuCK
+         ENdPpThymiik3xycRA5rivuqMFCkctS/eP9goJ87g1REuiASao8/01ADuOqPw8xLgk
+         9vqMX4mWkNIdHbJIkBsm51lI1Re5wYxi/Mg8nZDQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Todd Kjos <tkjos@google.com>
-Subject: [PATCH 4.14 09/25] binder: fix possible UAF when freeing buffer
-Date:   Fri,  2 Aug 2019 11:39:41 +0200
-Message-Id: <20190802092102.565055165@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.14 00/25] 4.14.136-stable review
+Date:   Fri,  2 Aug 2019 11:39:32 +0200
+Message-Id: <20190802092058.428079740@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190802092058.428079740@linuxfoundation.org>
-References: <20190802092058.428079740@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.136-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.14.136-rc1
+X-KernelTest-Deadline: 2019-08-04T09:21+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Todd Kjos <tkjos@android.com>
+This is the start of the stable review cycle for the 4.14.136 release.
+There are 25 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-commit a370003cc301d4361bae20c9ef615f89bf8d1e8a upstream.
+Responses should be made by Sun 04 Aug 2019 09:19:34 AM UTC.
+Anything received after that time might be too late.
 
-There is a race between the binder driver cleaning
-up a completed transaction via binder_free_transaction()
-and a user calling binder_ioctl(BC_FREE_BUFFER) to
-release a buffer. It doesn't matter which is first but
-they need to be protected against running concurrently
-which can result in a UAF.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.136-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+and the diffstat can be found below.
 
-Signed-off-by: Todd Kjos <tkjos@google.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+thanks,
+
+greg k-h
+
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.14.136-rc1
+
+Yan, Zheng <zyan@redhat.com>
+    ceph: hold i_ceph_lock when removing caps for freeing inode
+
+Yoshinori Sato <ysato@users.sourceforge.jp>
+    Fix allyesconfig output.
+
+Miroslav Lichvar <mlichvar@redhat.com>
+    drivers/pps/pps.c: clear offset flags in PPS_SETPARAMS ioctl
+
+Jann Horn <jannh@google.com>
+    sched/fair: Don't free p->numa_faults with concurrent readers
+
+Vladis Dronov <vdronov@redhat.com>
+    Bluetooth: hci_uart: check for missing tty operations
+
+Sunil Muthuswamy <sunilmut@microsoft.com>
+    hv_sock: Add support for delayed close
+
+Joerg Roedel <jroedel@suse.de>
+    iommu/iova: Fix compilation error with !CONFIG_IOMMU_IOVA
+
+Dmitry Safonov <dima@arista.com>
+    iommu/vt-d: Don't queue_iova() if there is no flush queue
+
+Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
+    media: radio-raremono: change devm_k*alloc to k*alloc
+
+Benjamin Coddington <bcodding@redhat.com>
+    NFS: Cleanup if nfs_match_client is interrupted
+
+Andrey Konovalov <andreyknvl@google.com>
+    media: pvrusb2: use a different format for warnings
+
+Oliver Neukum <oneukum@suse.com>
+    media: cpia2_usb: first wake up, then free in disconnect
+
+Fabio Estevam <festevam@gmail.com>
+    ath10k: Change the warning message string
+
+Sean Young <sean@mess.org>
+    media: au0828: fix null dereference in error path
+
+Phong Tran <tranmanphong@gmail.com>
+    ISDN: hfcsusb: checking idx of ep configuration
+
+Todd Kjos <tkjos@android.com>
+    binder: fix possible UAF when freeing buffer
+
+Will Deacon <will.deacon@arm.com>
+    arm64: compat: Provide definition for COMPAT_SIGMINSTKSZ
+
+Abhishek Sahu <absahu@codeaurora.org>
+    i2c: qup: fixed releasing dma without flush operation completion
+
+allen yan <yanwei@marvell.com>
+    arm64: dts: marvell: Fix A37xx UART0 register size
+
+Trond Myklebust <trond.myklebust@hammerspace.com>
+    NFSv4: Fix lookup revalidate of regular files
+
+Trond Myklebust <trond.myklebust@hammerspace.com>
+    NFS: Refactor nfs_lookup_revalidate()
+
+Trond Myklebust <trond.myklebust@hammerspace.com>
+    NFS: Fix dentry revalidation on NFSv4 lookup
+
+Sunil Muthuswamy <sunilmut@microsoft.com>
+    vsock: correct removal of socket from the list
+
+Stefan Hajnoczi <stefanha@redhat.com>
+    VSOCK: use TCP state constants for sk_state
 
 
+-------------
 
----
- drivers/android/binder.c |   16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+Diffstat:
 
---- a/drivers/android/binder.c
-+++ b/drivers/android/binder.c
-@@ -1903,8 +1903,18 @@ static struct binder_thread *binder_get_
- 
- static void binder_free_transaction(struct binder_transaction *t)
- {
--	if (t->buffer)
--		t->buffer->transaction = NULL;
-+	struct binder_proc *target_proc = t->to_proc;
-+
-+	if (target_proc) {
-+		binder_inner_proc_lock(target_proc);
-+		if (t->buffer)
-+			t->buffer->transaction = NULL;
-+		binder_inner_proc_unlock(target_proc);
-+	}
-+	/*
-+	 * If the transaction has no target_proc, then
-+	 * t->buffer->transaction has already been cleared.
-+	 */
- 	kfree(t);
- 	binder_stats_deleted(BINDER_STAT_TRANSACTION);
- }
-@@ -3426,10 +3436,12 @@ static int binder_thread_write(struct bi
- 				     buffer->debug_id,
- 				     buffer->transaction ? "active" : "finished");
- 
-+			binder_inner_proc_lock(proc);
- 			if (buffer->transaction) {
- 				buffer->transaction->buffer = NULL;
- 				buffer->transaction = NULL;
- 			}
-+			binder_inner_proc_unlock(proc);
- 			if (buffer->async_transaction && buffer->target_node) {
- 				struct binder_node *buf_node;
- 				struct binder_work *w;
+ .../devicetree/bindings/serial/mvebu-uart.txt      |   2 +-
+ Makefile                                           |   4 +-
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi       |   2 +-
+ arch/arm64/include/asm/compat.h                    |   1 +
+ arch/sh/boards/Kconfig                             |  14 +-
+ drivers/android/binder.c                           |  16 +-
+ drivers/bluetooth/hci_ath.c                        |   3 +
+ drivers/bluetooth/hci_bcm.c                        |   3 +
+ drivers/bluetooth/hci_intel.c                      |   3 +
+ drivers/bluetooth/hci_ldisc.c                      |  13 +
+ drivers/bluetooth/hci_mrvl.c                       |   3 +
+ drivers/bluetooth/hci_uart.h                       |   1 +
+ drivers/i2c/busses/i2c-qup.c                       |   2 +
+ drivers/iommu/intel-iommu.c                        |   2 +-
+ drivers/iommu/iova.c                               |  18 +-
+ drivers/isdn/hardware/mISDN/hfcsusb.c              |   3 +
+ drivers/media/radio/radio-raremono.c               |  30 ++-
+ drivers/media/usb/au0828/au0828-core.c             |  12 +-
+ drivers/media/usb/cpia2/cpia2_usb.c                |   3 +-
+ drivers/media/usb/pvrusb2/pvrusb2-hdw.c            |   4 +-
+ drivers/media/usb/pvrusb2/pvrusb2-i2c-core.c       |   6 +-
+ drivers/media/usb/pvrusb2/pvrusb2-std.c            |   2 +-
+ drivers/net/wireless/ath/ath10k/usb.c              |   2 +-
+ drivers/pps/pps.c                                  |   8 +
+ fs/ceph/caps.c                                     |   7 +-
+ fs/exec.c                                          |   2 +-
+ fs/nfs/client.c                                    |   4 +-
+ fs/nfs/dir.c                                       | 295 +++++++++++----------
+ fs/nfs/nfs4proc.c                                  |  15 +-
+ include/linux/iova.h                               |   6 +
+ include/linux/sched/numa_balancing.h               |   4 +-
+ include/net/af_vsock.h                             |   3 -
+ kernel/fork.c                                      |   2 +-
+ kernel/sched/fair.c                                |  24 +-
+ net/vmw_vsock/af_vsock.c                           |  84 +++---
+ net/vmw_vsock/hyperv_transport.c                   | 118 ++++++---
+ net/vmw_vsock/virtio_transport.c                   |   2 +-
+ net/vmw_vsock/virtio_transport_common.c            |  22 +-
+ net/vmw_vsock/vmci_transport.c                     |  34 +--
+ net/vmw_vsock/vmci_transport_notify.c              |   2 +-
+ net/vmw_vsock/vmci_transport_notify_qstate.c       |   2 +-
+ 41 files changed, 472 insertions(+), 311 deletions(-)
 
 
