@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBABC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B41C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96A7B21851
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:30:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E4CA217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:30:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752613;
-	bh=a5PkzckWTg221NMOOt/P5PkDXBIYIDBB3qKCU7mMVE4=;
+	s=default; t=1564752619;
+	bh=2NQfbXr/2flf+VnmDxlQVHz2x3lgkRrjGYvopR5En44=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2QtO/PT4nnPAJc3dtISVfSOcbhs74Etd0Gix4L1qP9EEAHjuyj0Lkq5x+YEihG19o
-	 Av9U8E1XbeK1YbB6xc/E6PRei1RsV4QFSicWe9BNMz3bpvUPNfiuHzXpaUc+lsK9rI
-	 Sg8b14pgXrs/UqJ0oauO2iq1P3D5h7jKeJMnuLSk=
+	b=IGVln3Bw2/27D/gYHQWVoSYL8g9aV2zowxlKR0ts0VXNzv2j7FDtlY3LzREivPvlU
+	 z8GGIP/vGWwffDL20u3Cy7o11PCV7yfmnX3HFaba8E1WvjZVxCSwUWmDEq60O4c6pT
+	 FUUZ9YcB+xVB1sr9G3tpSfxeaqua/jCBVXDB9SPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404020AbfHBNaM (ORCPT
+        id S2404096AbfHBNaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:30:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35218 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:30:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389224AbfHBNY2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:24:28 -0400
+        id S2394542AbfHBN0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:26:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BAC3217D4;
-        Fri,  2 Aug 2019 13:24:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4479621850;
+        Fri,  2 Aug 2019 13:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752268;
-        bh=a5PkzckWTg221NMOOt/P5PkDXBIYIDBB3qKCU7mMVE4=;
+        s=default; t=1564752377;
+        bh=2NQfbXr/2flf+VnmDxlQVHz2x3lgkRrjGYvopR5En44=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=icileZ3pokQibgDsVZBneKXiYQ64K6L2KXtohOFNKJPaiTclHLRuct5+88D70+3ab
-         oDOB+bcMrZ9Tn+gUDPQh9ylG3cABUw/Wx3VRYPaUQ10yjy5/IOs0RrKKZgOmQTr+f4
-         +SNHUWVsuA+LExrRzn0WJAJTnAVUMwnLzUe8Xymo=
+        b=C0In4zmJ4HmUWwh2P6WvrWz+ZgszZZ3Z49YUVafH5T4V50+lIgzVuOdDH+oxN0N5k
+         CRD8L68ldZt1tNbyjOpn/qtiujCRumPXc0Sp6fnp4C6nbbqgU7ZrTtJM88Dk6CfCl/
+         Xt8BXZPqAbP+wKlhTIT1NsJ1alZv8+1nwvV6jzoM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Laura Garcia Liebana <nevola@gmail.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 04/30] netfilter: nft_hash: fix symhash with modulus one
-Date:   Fri,  2 Aug 2019 09:23:56 -0400
-Message-Id: <20190802132422.13963-4-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Sekhar Nori <nsekhar@ti.com>,
+        Olof Johansson <olof@lixom.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 17/22] ARM: davinci: fix sleep.S build error on ARMv4
+Date:   Fri,  2 Aug 2019 09:25:41 -0400
+Message-Id: <20190802132547.14517-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190802132422.13963-1-sashal@kernel.org>
-References: <20190802132422.13963-1-sashal@kernel.org>
+In-Reply-To: <20190802132547.14517-1-sashal@kernel.org>
+References: <20190802132547.14517-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,39 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laura Garcia Liebana <nevola@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 28b1d6ef53e3303b90ca8924bb78f31fa527cafb ]
+[ Upstream commit d64b212ea960db4276a1d8372bd98cb861dfcbb0 ]
 
-The rule below doesn't work as the kernel raises -ERANGE.
+When building a multiplatform kernel that includes armv4 support,
+the default target CPU does not support the blx instruction,
+which leads to a build failure:
 
-nft add rule netdev nftlb lb01 ip daddr set \
-	symhash mod 1 map { 0 : 192.168.0.10 } fwd to "eth0"
+arch/arm/mach-davinci/sleep.S: Assembler messages:
+arch/arm/mach-davinci/sleep.S:56: Error: selected processor does not support `blx ip' in ARM mode
 
-This patch allows to use the symhash modulus with one
-element, in the same way that the other types of hashes and
-algorithms that uses the modulus parameter.
+Add a .arch statement in the sources to make this file build.
 
-Signed-off-by: Laura Garcia Liebana <nevola@gmail.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Link: https://lore.kernel.org/r/20190722145211.1154785-1-arnd@arndb.de
+Acked-by: Sekhar Nori <nsekhar@ti.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Olof Johansson <olof@lixom.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_hash.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/mach-davinci/sleep.S | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/netfilter/nft_hash.c b/net/netfilter/nft_hash.c
-index 24f2f7567ddb7..010a565b40001 100644
---- a/net/netfilter/nft_hash.c
-+++ b/net/netfilter/nft_hash.c
-@@ -131,7 +131,7 @@ static int nft_symhash_init(const struct nft_ctx *ctx,
- 	priv->dreg = nft_parse_register(tb[NFTA_HASH_DREG]);
+diff --git a/arch/arm/mach-davinci/sleep.S b/arch/arm/mach-davinci/sleep.S
+index cd350dee4df37..efcd400b2abb3 100644
+--- a/arch/arm/mach-davinci/sleep.S
++++ b/arch/arm/mach-davinci/sleep.S
+@@ -37,6 +37,7 @@
+ #define DEEPSLEEP_SLEEPENABLE_BIT	BIT(31)
  
- 	priv->modulus = ntohl(nla_get_be32(tb[NFTA_HASH_MODULUS]));
--	if (priv->modulus <= 1)
-+	if (priv->modulus < 1)
- 		return -ERANGE;
- 
- 	if (priv->offset + priv->modulus - 1 < priv->offset)
+ 	.text
++	.arch	armv5te
+ /*
+  * Move DaVinci into deep sleep state
+  *
 -- 
 2.20.1
 
