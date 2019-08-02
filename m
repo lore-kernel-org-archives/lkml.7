@@ -2,54 +2,52 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6580AC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E199C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C5152073D
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 753662067D
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:04:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564740258;
-	bh=R3p3dCNmHTvGfCdSOZN1tQSxOGSpw0enBrS0KkQtjHk=;
+	s=default; t=1564740260;
+	bh=i/RkCux2/qSe+RvX0SoGsoZJJS7duwt+AOFDJsmwiyw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Keev7zG6uIOkxFTdWCwGTnX4Bz//9Bt1CvoWeR0f/IGnnMETkwilpLamqHkO6tQSR
-	 Ay7FaJxeCDLqahKoF7uM6q+qWYeq6TSr2/faP1/Qf/NV+GkxB4aEqGojB0L/14perH
-	 kSFGKEZY4uQyMY/vvbqfER7agrscIpQbMMDKBE/A=
+	b=i1M9pdAnAx0e/NTs1JFMxL8G3uWNpAZ1syn+D7SLzb1yHQme95nf34y8sdGT2f7xk
+	 Zzvv1vliA2/N2YKkzeWZwHJ+GzqKtNnxSl1Vt9ofnQ8fCISQ1dWaY5N8IWb4jmA0mK
+	 n9lDKFIbxurm6DvfDYYQMEWGRjqoEpY0NhnxyLgU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391638AbfHBKER (ORCPT
+        id S2407192AbfHBKDV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 06:04:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41646 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 06:03:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391727AbfHBJkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:40:33 -0400
+        id S2404657AbfHBJli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:41:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7EC420B7C;
-        Fri,  2 Aug 2019 09:40:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01F642171F;
+        Fri,  2 Aug 2019 09:41:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738833;
-        bh=R3p3dCNmHTvGfCdSOZN1tQSxOGSpw0enBrS0KkQtjHk=;
+        s=default; t=1564738897;
+        bh=i/RkCux2/qSe+RvX0SoGsoZJJS7duwt+AOFDJsmwiyw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NxmLVztmuub6ZJThk115EtF9jibgqT1IkaLFY4GJV0+VWjQV8F6+oWPaoEW9TuoAH
-         Sys50IW79YQZI87KwbnrUiy8eqz893sdfV7PSEzcOmDtrazmuXcHO28+ZegI+VZ8mZ
-         Zw/aAM7nHCfCzo0VXkZAtnujFz9F/Mu9be0YHdWI=
+        b=nOebadgWoeXcPIwKPpYN2cCghnIc849L88mivf40130b3g6EJ2pLkHpxkFRM1TSqM
+         VZqMa80RAJT3MDh48mjevHnMMgtW6A1t3b1AZ5eVJETASjmhxk5mfFDO4+2rTo33Xl
+         9JmVMaPla1AmAm7sO11WrKmFkskJf0EPAKWXzPl4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Fangrui Song <maskray@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        Peter Smith <peter.smith@linaro.org>
-Subject: [PATCH 4.9 003/223] arm64/efi: Mark __efistub_stext_offset as an absolute symbol explicitly
-Date:   Fri,  2 Aug 2019 11:33:48 +0200
-Message-Id: <20190802092238.920876502@linuxfoundation.org>
+        stable@vger.kernel.org, Robert Hancock <hancock@sedsystems.ca>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 030/223] net: axienet: Fix race condition causing TX hang
+Date:   Fri,  2 Aug 2019 11:34:15 +0200
+Message-Id: <20190802092240.953467634@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -62,58 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit aa69fb62bea15126e744af2e02acc0d6cf3ed4da ]
+[ Upstream commit 7de44285c1f69ccfbe8be1d6a16fcd956681fee6 ]
 
-After r363059 and r363928 in LLVM, a build using ld.lld as the linker
-with CONFIG_RANDOMIZE_BASE enabled fails like so:
+It is possible that the interrupt handler fires and frees up space in
+the TX ring in between checking for sufficient TX ring space and
+stopping the TX queue in axienet_start_xmit. If this happens, the
+queue wake from the interrupt handler will occur before the queue is
+stopped, causing a lost wakeup and the adapter's transmit hanging.
 
-ld.lld: error: relocation R_AARCH64_ABS32 cannot be used against symbol
-__efistub_stext_offset; recompile with -fPIC
+To avoid this, after stopping the queue, check again whether there is
+sufficient space in the TX ring. If so, wake up the queue again.
 
-Fangrui and Peter figured out that ld.lld is incorrectly considering
-__efistub_stext_offset as a relative symbol because of the order in
-which symbols are evaluated. _text is treated as an absolute symbol
-and stext is a relative symbol, making __efistub_stext_offset a
-relative symbol.
-
-Adding ABSOLUTE will force ld.lld to evalute this expression in the
-right context and does not change ld.bfd's behavior. ld.lld will
-need to be fixed but the developers do not see a quick or simple fix
-without some research (see the linked issue for further explanation).
-Add this simple workaround so that ld.lld can continue to link kernels.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/561
-Link: https://github.com/llvm/llvm-project/commit/025a815d75d2356f2944136269aa5874721ec236
-Link: https://github.com/llvm/llvm-project/commit/249fde85832c33f8b06c6b4ac65d1c4b96d23b83
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Debugged-by: Fangrui Song <maskray@google.com>
-Debugged-by: Peter Smith <peter.smith@linaro.org>
-Suggested-by: Fangrui Song <maskray@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-[will: add comment]
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/image.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ .../net/ethernet/xilinx/xilinx_axienet_main.c | 20 ++++++++++++++++---
+ 1 file changed, 17 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/kernel/image.h b/arch/arm64/kernel/image.h
-index c7fcb232fe47..d3e8c901274d 100644
---- a/arch/arm64/kernel/image.h
-+++ b/arch/arm64/kernel/image.h
-@@ -73,7 +73,11 @@
+diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+index a8afc92cbfca..5f21ddff9e0f 100644
+--- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
++++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+@@ -612,6 +612,10 @@ static void axienet_start_xmit_done(struct net_device *ndev)
  
- #ifdef CONFIG_EFI
+ 	ndev->stats.tx_packets += packets;
+ 	ndev->stats.tx_bytes += size;
++
++	/* Matches barrier in axienet_start_xmit */
++	smp_mb();
++
+ 	netif_wake_queue(ndev);
+ }
  
--__efistub_stext_offset = stext - _text;
-+/*
-+ * Use ABSOLUTE() to avoid ld.lld treating this as a relative symbol:
-+ * https://github.com/ClangBuiltLinux/linux/issues/561
-+ */
-+__efistub_stext_offset = ABSOLUTE(stext - _text);
+@@ -666,9 +670,19 @@ static int axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 	cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
  
- /*
-  * Prevent the symbol aliases below from being emitted into the kallsyms
+ 	if (axienet_check_tx_bd_space(lp, num_frag)) {
+-		if (!netif_queue_stopped(ndev))
+-			netif_stop_queue(ndev);
+-		return NETDEV_TX_BUSY;
++		if (netif_queue_stopped(ndev))
++			return NETDEV_TX_BUSY;
++
++		netif_stop_queue(ndev);
++
++		/* Matches barrier in axienet_start_xmit_done */
++		smp_mb();
++
++		/* Space might have just been freed - check again */
++		if (axienet_check_tx_bd_space(lp, num_frag))
++			return NETDEV_TX_BUSY;
++
++		netif_wake_queue(ndev);
+ 	}
+ 
+ 	if (skb->ip_summed == CHECKSUM_PARTIAL) {
 -- 
 2.20.1
 
