@@ -2,143 +2,114 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5BEC0650F
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 23:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7E7C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 23:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B5642087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 23:05:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3128A2067D
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 23:15:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437334AbfHBXF4 (ORCPT
+        id S2392575AbfHBXPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 19:05:56 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11384 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730376AbfHBXF4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 19:05:56 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x72Mv54r114259;
-        Fri, 2 Aug 2019 19:05:24 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u4t301a6k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 02 Aug 2019 19:05:24 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x72Mvj1W115173;
-        Fri, 2 Aug 2019 19:05:24 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u4t301a64-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 02 Aug 2019 19:05:24 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x72MtMOL016711;
-        Fri, 2 Aug 2019 23:05:22 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma03wdc.us.ibm.com with ESMTP id 2u0e85x46n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 02 Aug 2019 23:05:22 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x72N5Mgh48890274
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 2 Aug 2019 23:05:22 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 40D77B2065;
-        Fri,  2 Aug 2019 23:05:22 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 236B9B205F;
-        Fri,  2 Aug 2019 23:05:22 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri,  2 Aug 2019 23:05:22 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 226FD16C9A3A; Fri,  2 Aug 2019 16:05:24 -0700 (PDT)
-Date:   Fri, 2 Aug 2019 16:05:24 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Ethan Hansen <1ethanhansen@gmail.com>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org
-Subject: Re: [PATCH tip/core/rcu 1/1] rcu: Remove unused function
- hlist_bl_del_init_rcu
-Message-ID: <20190802230524.GT28441@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <1564778278-21186-1-git-send-email-1ethanhansen@gmail.com>
+        Fri, 2 Aug 2019 19:15:25 -0400
+Received: from mga01.intel.com ([192.55.52.88]:52106 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729782AbfHBXPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 19:15:24 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Aug 2019 16:15:23 -0700
+X-IronPort-AV: E=Sophos;i="5.64,339,1559545200"; 
+   d="scan'208";a="184721864"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Aug 2019 16:15:23 -0700
+Message-ID: <c43723f2acdf257309dca55eac900dc71bca31c3.camel@linux.intel.com>
+Subject: Re: [PATCH v3 0/6] mm / virtio: Provide support for unused page
+ reporting
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        kvm@vger.kernel.org, david@redhat.com, mst@redhat.com,
+        dave.hansen@intel.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org
+Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
+        konrad.wilk@oracle.com, willy@infradead.org,
+        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com
+Date:   Fri, 02 Aug 2019 16:15:23 -0700
+In-Reply-To: <ac434f1cad234920c0e75fe809ac05053395524b.camel@linux.intel.com>
+References: <20190801222158.22190.96964.stgit@localhost.localdomain>
+         <9cddf98d-e2ce-0f8a-d46c-e15a54bc7391@redhat.com>
+         <3f6c133ec1eabb8f4fd5c0277f8af254b934b14f.camel@linux.intel.com>
+         <291a1259-fd20-1712-0f0f-5abdefdca95f@redhat.com>
+         <ac434f1cad234920c0e75fe809ac05053395524b.camel@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1564778278-21186-1-git-send-email-1ethanhansen@gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-02_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908020239
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 01:37:58PM -0700, Ethan Hansen wrote:
-> The function hlist_bl_del_init_rcu is declared in rculist_bl.h,
-> but never used. Remove hlist_bl_del_init_rcu to clean code.
-> 
-> Signed-off-by: Ethan Hansen <1ethanhansen@gmail.com>
+On Fri, 2019-08-02 at 10:28 -0700, Alexander Duyck wrote:
+> On Fri, 2019-08-02 at 12:19 -0400, Nitesh Narayan Lal wrote:
+> > On 8/2/19 11:13 AM, Alexander Duyck wrote:
+> > > On Fri, 2019-08-02 at 10:41 -0400, Nitesh Narayan Lal wrote:
+> > > > On 8/1/19 6:24 PM, Alexander Duyck wrote:
+> > > > > 
 
-Queued, thank you!
+<snip>
 
-							Thanx, Paul
+> > > > > One side effect of these patches is that the guest becomes much more
+> > > > > resilient in terms of NUMA locality. With the pages being freed and then
+> > > > > reallocated when used it allows for the pages to be much closer to the
+> > > > > active thread, and as a result there can be situations where this patch
+> > > > > set will out-perform the stock kernel when the guest memory is not local
+> > > > > to the guest vCPUs.
+> > > > Was this the reason because of which you were seeing better results for
+> > > > page_fault1 earlier?
+> > > Yes I am thinking so. What I have found is that in the case where the
+> > > patches are not applied on the guest it takes a few runs for the numbers
+> > > to stabilize. What I think was going on is that I was running memhog to
+> > > initially fill the guest and that was placing all the pages on one node or
+> > > the other and as such was causing additional variability as the pages were
+> > > slowly being migrated over to the other node to rebalance the workload.
+> > > One way I tested it was by trying the unpatched case with a direct-
+> > > assigned device since that forces it to pin the memory. In that case I was
+> > > getting bad results consistently as all the memory was forced to come from
+> > > one node during the pre-allocation process.
+> > > 
+> > 
+> > I have also seen that the page_fault1 values take some time to get stabilize on
+> > an unmodified kernel.
+> > What I am wondering here is that if on a single NUMA guest doing the following
+> > will give the right/better idea or not:
+> > 
+> > 1. Pin the guest to a single NUMA node.
+> > 2. Run memhog so that it touches all the guest memory.
+> > 3. Run will-it-scale/page_fault1.
+> > 
+> > Compare/observe the values for the last core (this is considering the other core
+> > values doesn't drastically differ).
+> 
+> I'll rerun the test with qemu affinitized to one specific socket. It will
+> cut the core/thread count down to 8/16 on my test system. Also I will try
+> with THP and page shuffling enabled.
 
-> ---
->  include/linux/rculist_bl.h | 28 ----------------------------
->  1 file changed, 28 deletions(-)
-> 
-> diff --git a/include/linux/rculist_bl.h b/include/linux/rculist_bl.h
-> index 66e73ec..0b952d0 100644
-> --- a/include/linux/rculist_bl.h
-> +++ b/include/linux/rculist_bl.h
-> @@ -25,34 +25,6 @@ static inline struct hlist_bl_node *hlist_bl_first_rcu(struct hlist_bl_head *h)
->  }
->  
->  /**
-> - * hlist_bl_del_init_rcu - deletes entry from hash list with re-initialization
-> - * @n: the element to delete from the hash list.
-> - *
-> - * Note: hlist_bl_unhashed() on the node returns true after this. It is
-> - * useful for RCU based read lockfree traversal if the writer side
-> - * must know if the list entry is still hashed or already unhashed.
-> - *
-> - * In particular, it means that we can not poison the forward pointers
-> - * that may still be used for walking the hash list and we can only
-> - * zero the pprev pointer so list_unhashed() will return true after
-> - * this.
-> - *
-> - * The caller must take whatever precautions are necessary (such as
-> - * holding appropriate locks) to avoid racing with another
-> - * list-mutation primitive, such as hlist_bl_add_head_rcu() or
-> - * hlist_bl_del_rcu(), running on this same list.  However, it is
-> - * perfectly legal to run concurrently with the _rcu list-traversal
-> - * primitives, such as hlist_bl_for_each_entry_rcu().
-> - */
-> -static inline void hlist_bl_del_init_rcu(struct hlist_bl_node *n)
-> -{
-> -	if (!hlist_bl_unhashed(n)) {
-> -		__hlist_bl_del(n);
-> -		n->pprev = NULL;
-> -	}
-> -}
-> -
-> -/**
->   * hlist_bl_del_rcu - deletes entry from hash list without re-initialization
->   * @n: the element to delete from the hash list.
->   *
-> -- 
-> 1.8.3.1
-> 
+Okay so results with 8/16 all affinitized to one socket, THP enabled
+page_fault1, and shuffling enabled:
+
+With page reporting disabled in the hypervisor there wasn't much
+difference. I saw a range of 0.69% to -1.35% versus baseline, and an
+average of 0.16% improvement. So effectively no change.
+
+With page reporting enabled I saw a range of -2.10% to -4.50%, with an
+average of -3.05% regression. This is much closer to what I would expect
+for this patch set as the page faulting, double zeroing (once in host, and
+once in guest), and hinting process itself should have some overhead.
+
