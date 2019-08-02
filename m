@@ -2,52 +2,60 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE12C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A3CC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AE242087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:52:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD43B206A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:52:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739558;
-	bh=7KFobtlHDoR9gKsRlyN0zb8+wVAHxwIpPxZzne80Xp4=;
+	s=default; t=1564739564;
+	bh=51dwQdeJ27vzn3osMTwYOUqm5QismICrmB7ZLxWYF00=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mYZyUXIdADV3es27Lq2qNMSqTlaj64taJXkVxP3eSHmz0n5CL/iAlcGAN5ktsz1HN
-	 wM5bIHA/x1F1jIczlDVhez3T3o4ErZzrQOi9NbgEPUbqBek4xyI/0UQ/jJXgEE0ohF
-	 CblLPiwz6cOh1KSr2H3kW40mq/og7IiYWAZ4Cmnk=
+	b=zLBopb6jHqzxyE1Uw25aH0OdWqidnKm5HpUez4+SkXENiWEqz6F04THZih0xz9qnP
+	 1yTMSINhFezHyo3vlpoiVyN0w7/Fl/Bn8kibh9xBnl99dyIdEY159kt+zxAxDBUSo+
+	 px5uuUrE+YuyQi+t0C7nYyScUsntaPIr3L9OhwyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406041AbfHBJwh (ORCPT
+        id S2406064AbfHBJwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:52:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58080 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:52:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405999AbfHBJw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:52:27 -0400
+        id S2406031AbfHBJwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:52:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E73F821726;
-        Fri,  2 Aug 2019 09:52:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AABC206A2;
+        Fri,  2 Aug 2019 09:52:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739546;
-        bh=7KFobtlHDoR9gKsRlyN0zb8+wVAHxwIpPxZzne80Xp4=;
+        s=default; t=1564739553;
+        bh=51dwQdeJ27vzn3osMTwYOUqm5QismICrmB7ZLxWYF00=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WpuL+9oANMKihBe9JrCXUJNBY6BgfWDYkA3EmgVTWs86MQ9jNi34fdCZpiViZl5NG
-         M9zvHP6n60gsmNmPUyojTwZJ86nf2+GNMw2e8XfuDl/lPglQStDP3SqxUM5UkVFv1f
-         Az6dxa85xKHO3O1V2MTlW5xnWPIPQxunz00rPuMY=
+        b=0b4C7qBpjxTJhYQjqVwr3UekZUPz/ULaNbsxKDjuFqPECcJ3ZvLolupQXNB1ul+Wu
+         EIyhNijXwHNd24yvXRuJHChwFDsIPxG+xl17ColP+vs8lD6o0UpQDQVDktq34g+QI1
+         TwLOSM14lxn/eSM8qNGXzIvWb+DKJumJb7rS5Uh0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 207/223] ALSA: line6: Fix wrong altsetting for LINE6_PODHD500_1
-Date:   Fri,  2 Aug 2019 11:37:12 +0200
-Message-Id: <20190802092250.377077657@linuxfoundation.org>
+        stable@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Inki Dae <inki.dae@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 196/223] sh: prevent warnings when using iounmap
+Date:   Fri,  2 Aug 2019 11:37:01 +0200
+Message-Id: <20190802092249.948469172@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -60,36 +68,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+[ Upstream commit 733f0025f0fb43e382b84db0930ae502099b7e62 ]
 
-commit 70256b42caaf3e13c2932c2be7903a73fbe8bb8b upstream.
+When building drm/exynos for sh, as part of an allmodconfig build, the
+following warning triggered:
 
-Commit 7b9584fa1c0b ("staging: line6: Move altsetting to properties")
-set a wrong altsetting for LINE6_PODHD500_1 during refactoring.
+  exynos7_drm_decon.c: In function `decon_remove':
+  exynos7_drm_decon.c:769:24: warning: unused variable `ctx'
+    struct decon_context *ctx = dev_get_drvdata(&pdev->dev);
 
-Set the correct altsetting number to fix the issue.
+The ctx variable is only used as argument to iounmap().
 
-BugLink: https://bugs.launchpad.net/bugs/1790595
-Fixes: 7b9584fa1c0b ("staging: line6: Move altsetting to properties")
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+In sh - allmodconfig CONFIG_MMU is not defined
+so it ended up in:
 
+\#define __iounmap(addr)	do { } while (0)
+\#define iounmap		__iounmap
+
+Fix the warning by introducing a static inline function for iounmap.
+
+This is similar to several other architectures.
+
+Link: http://lkml.kernel.org/r/20190622114208.24427-1-sam@ravnborg.org
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Rich Felker <dalias@libc.org>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Inki Dae <inki.dae@samsung.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/line6/podhd.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/sh/include/asm/io.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/sound/usb/line6/podhd.c
-+++ b/sound/usb/line6/podhd.c
-@@ -385,7 +385,7 @@ static const struct line6_properties pod
- 		.name = "POD HD500",
- 		.capabilities	= LINE6_CAP_PCM
- 				| LINE6_CAP_HWMON,
--		.altsetting = 1,
-+		.altsetting = 0,
- 		.ep_ctrl_r = 0x81,
- 		.ep_ctrl_w = 0x01,
- 		.ep_audio_r = 0x86,
+diff --git a/arch/sh/include/asm/io.h b/arch/sh/include/asm/io.h
+index 3280a6bfa503..b2592c3864ad 100644
+--- a/arch/sh/include/asm/io.h
++++ b/arch/sh/include/asm/io.h
+@@ -370,7 +370,11 @@ static inline int iounmap_fixed(void __iomem *addr) { return -EINVAL; }
+ 
+ #define ioremap_nocache	ioremap
+ #define ioremap_uc	ioremap
+-#define iounmap		__iounmap
++
++static inline void iounmap(void __iomem *addr)
++{
++	__iounmap(addr);
++}
+ 
+ /*
+  * Convert a physical pointer to a virtual kernel pointer for /dev/mem
+-- 
+2.20.1
+
 
 
