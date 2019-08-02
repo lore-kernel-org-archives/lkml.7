@@ -2,128 +2,141 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CCC2C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 243C1C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F098C2087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E33BE2087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:59:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C4V0iOrM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a3+xTCfn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406614AbfHBN6w (ORCPT
+        id S2436572AbfHBN7R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:58:52 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45149 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387723AbfHBN6w (ORCPT
+        Fri, 2 Aug 2019 09:59:17 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:37321 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406638AbfHBN7R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:58:52 -0400
-Received: by mail-pf1-f196.google.com with SMTP id r1so36087363pfq.12;
-        Fri, 02 Aug 2019 06:58:51 -0700 (PDT)
+        Fri, 2 Aug 2019 09:59:17 -0400
+Received: by mail-ed1-f67.google.com with SMTP id w13so72525973eds.4;
+        Fri, 02 Aug 2019 06:59:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=nOwrc06TPbA7F+C0PVpjSzC2KO7oYOPAAALxEDCBL7s=;
-        b=C4V0iOrMM/aLpUZOe/CQt9JwyJNhltI7d8uOyfTy8yioMHc8G9olJDRA5QPe3AGDbI
-         gLNNNPi25HBQCpQIsyncib/JBMvi7NoHqipwVr4r+CjWXfM6/n7eBAIcoPplX36le/T+
-         9K7Suagj8jMxLYXlaJ1H3nacJIiZll279PSjUH/drMjoDRtafk2LDvksrcT0jXjNlpUT
-         X4ie6QN95Ar2ujy3u2PiGtK/i3YNkH84zVa2YupnhVw71lJjCVOXtyyqP8k4wWkyAyeR
-         RWdmitbSeAKhzmmZoxn8q8+5mnwNTaXcGHGhtzJ6jt5IxKuDRv61uxSJMgGUOm1t+mqZ
-         zSbw==
+        bh=ToWrIn0UrLCeB4O+yknNl+FqGHjrstRxnZtuAwoDSWY=;
+        b=a3+xTCfnBhxcnkBGCFzCnaKs1WDB2YiQOo/Ju1c4mEfx3uwGMJ+rQyi+diTtcVVx6K
+         EXX9nDGjGo8Doq4Ers0HVr39t/mwzHeupFEhHo1ong0h1mcuGWxm2fFW1lxQUXtMqFY1
+         qbIIbAcBs74p2gzyg973DmloWTLRhy7H37jSacrObC67sCYWzISOaHQkOULgwAwWgdK3
+         8R6Zgyqi+cxHLlde8DVTDPd5qEfGhQbVUuRctng93gYmwi9azqY5GDNNXS4kwcDrsH42
+         WismNF3TNTjmYOZLK+jvx+dGR4eJ0XHUnKe8C/n6od7Jh2BIpDMMLmcnit+kQgKHtvNx
+         mJwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nOwrc06TPbA7F+C0PVpjSzC2KO7oYOPAAALxEDCBL7s=;
-        b=btYHnxXUbSnYk1ldEAaGrTXcQ9kg8FaEiv0M6LLRm7mGwCD93xahwVZSTrdti+bqGK
-         jnkl3t61VDDUP9tDHljzrP3cQs2ojipu4o245oat5lRSEZEi8iy+39ZizK7HXoOY94Cn
-         sATo5NlH/TWWrDFQBzIkKSDWzG6U/fMVk7nXwPV1bYjkqa3XyrJiYkFZW/1kCj5scwVj
-         spKDoMN/V+npII963JEdnLMhiU01srI8253cbRUJUQbm7Y//3Lygf/mcG1cxGOdu3E3F
-         YdgODjO1S1zEWmCqKglEeHRHN/z/z171FvtUkAmGk8f+i0xNPbwqr4MDoFfk3ywMC5Tf
-         m8Zw==
-X-Gm-Message-State: APjAAAWWexUcTWy/1S0QkN1R+lq9auA2SefXWl2JKt1ViYapb8oOWIwE
-        dMuJo/al6K3GajHZNFMEE/k=
-X-Google-Smtp-Source: APXvYqzja+RBNYx14OwEtb69H05qwdxqK4pjco40xyaN80/lTrnM/Qj2O2um/9hqyZHA6P5OGs0emw==
-X-Received: by 2002:a62:1ac8:: with SMTP id a191mr59917280pfa.164.1564754331256;
-        Fri, 02 Aug 2019 06:58:51 -0700 (PDT)
-Received: from icarus ([2001:268:c147:64b2:f351:c489:c6c9:377a])
-        by smtp.gmail.com with ESMTPSA id e5sm5057632pgt.91.2019.08.02.06.58.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 02 Aug 2019 06:58:50 -0700 (PDT)
-Date:   Fri, 2 Aug 2019 22:58:30 +0900
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     David Lechner <david@lechnology.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <jic23@jic23.retrosnub.co.uk>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux PWM List <linux-pwm@vger.kernel.org>
-Subject: Re: [PATCH 1/4] dt-bindings: counter: new bindings for TI eQEP
-Message-ID: <20190802135711.GA27874@icarus>
-References: <20190722154538.5314-1-david@lechnology.com>
- <20190722154538.5314-2-david@lechnology.com>
- <20190727204836.1514265d@archlinux>
- <20190802072513.GA30522@icarus>
- <CAL_JsqLA+m5vKZQ1WwWusnVHwX+nnuApiwKXUnmP6ti-PvMZ-g@mail.gmail.com>
+        bh=ToWrIn0UrLCeB4O+yknNl+FqGHjrstRxnZtuAwoDSWY=;
+        b=DiMx7NqZXQYAUX7dBH3l/kSYBxpSYhzoK64Y3J7RG6+XlkUoSd7UUBQJb65G7gPAoy
+         Ibi8Rmm1pUU+dbWDtuqARd4Mt7Xga7GZ1abC5P8VlF2zwVXlQ8Tjgn9H6kxD0OntwyEZ
+         WPlGW/gt/nh1SP6i69sfKbd33KowUZTLokms7RnEpOvvA2/y9AvuFEaoO+fkd004nb+w
+         3ob2H9owTca1eZpcFg/4kt6En7Eore3i/h6rDWFFDovDzq38/vIcm0g4fhf5hQXMjiMU
+         DiWVifC88FXliRU3JqN/SPeaJut9wn0ArLykS72m39d8ma749p8kF6igxxoi/biGCv1Y
+         00xQ==
+X-Gm-Message-State: APjAAAUEyIOSTI0T2BqpC4CK9oFTonh9idoFRPrVCWdYuGEq4WdpQ6/J
+        cMkm1Wa0DroZVexSSZow530=
+X-Google-Smtp-Source: APXvYqwdz2cNIcN4gAxdwqpRhwJEbu/WlvmlrXDBcLjXHeG0nx8ype3YC7KHJGWg+ZEQNSyEGtUkuQ==
+X-Received: by 2002:a17:907:20db:: with SMTP id qq27mr104912399ejb.30.1564754355133;
+        Fri, 02 Aug 2019 06:59:15 -0700 (PDT)
+Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
+        by smtp.gmail.com with ESMTPSA id j7sm18646749eda.97.2019.08.02.06.59.13
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 02 Aug 2019 06:59:14 -0700 (PDT)
+Date:   Fri, 2 Aug 2019 15:59:13 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 4.14 00/25] 4.14.136-stable review
+Message-ID: <20190802135913.GA10544@ulmo>
+References: <20190802092058.428079740@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="VbJkn9YxBvnuCH5J"
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqLA+m5vKZQ1WwWusnVHwX+nnuApiwKXUnmP6ti-PvMZ-g@mail.gmail.com>
+In-Reply-To: <20190802092058.428079740@linuxfoundation.org>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 07:34:42AM -0600, Rob Herring wrote:
-> On Fri, Aug 2, 2019 at 1:25 AM William Breathitt Gray
-> <vilhelm.gray@gmail.com> wrote:
-> >
-> > On Sat, Jul 27, 2019 at 08:48:36PM +0100, Jonathan Cameron wrote:
-> > > On Mon, 22 Jul 2019 10:45:35 -0500
-> > > David Lechner <david@lechnology.com> wrote:
-> > >
-> > > > This documents device tree binding for the Texas Instruments Enhanced
-> > > > Quadrature Encoder Pulse (eQEP) Module found in various TI SoCs.
-> > > >
-> > > > Signed-off-by: David Lechner <david@lechnology.com>
-> > >
-> > > Up to William given it is a counter binding, (unless Rob overrules)
-> > > but new bindings are generally preferred as yaml.
-> > >
-> > > Content looks fine to me.
-> > >
-> > > Thanks,
-> > >
-> > > Jonathan
-> >
-> > Rob,
-> >
-> > Would you prefer these bindings as yaml, or shall I accept them as they
-> > are now?
-> 
-> Still up to you at this point, but I certainly prefer them to be DT schema.
-> 
-> Rob
 
-I think YAML would be a good idea, it's simple and expressive enough
-while still being human-readable, and if new bindings in other
-subsystems are switching to yaml then we may as well.
+--VbJkn9YxBvnuCH5J
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-David, resubmit this as yaml in version 2 and I'll pick it up.
+On Fri, Aug 02, 2019 at 11:39:32AM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.136 release.
+> There are 25 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>=20
+> Responses should be made by Sun 04 Aug 2019 09:19:34 AM UTC.
+> Anything received after that time might be too late.
+>=20
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.13=
+6-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git=
+ linux-4.14.y
+> and the diffstat can be found below.
+>=20
+> thanks,
+>=20
+> greg k-h
 
-Thanks,
+All tests passing for Tegra...
 
-William Breathitt Gray
+Test results for stable-v4.14:
+    8 builds:   8 pass, 0 fail
+    16 boots:   16 pass, 0 fail
+    24 tests:   24 pass, 0 fail
+
+Linux version:  4.14.136-rc1-g0931704b8bef
+Boards tested:  tegra124-jetson-tk1, tegra20-ventana,
+                tegra210-p2371-2180, tegra30-cardhu-a04
+
+Thierry
+
+--VbJkn9YxBvnuCH5J
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1EQa4ACgkQ3SOs138+
+s6FqaQ//QwDVemUgZZZSPpH1Mx6S6gLbCNUpIcskAuNt1bzH+Dj4qc5fRtt1F1nC
+Oc7BRPDXLcTp+zpjAi0OU4igDk3dZ4d/H2m63d7DAxPfLA22gFiGGK3u4SeL44dj
+MVlaJz0SygZHrVP/N6+6BB6GXVz30O3GoO/dKlRaXJZZLSPowjyvlzHpf6oJFb85
+mWzz8LdeQRstd64Zhw0D7RsqQ3V7AaKVeqHCY9MdFqtrgF/yE/FbwXHzGTZzuowo
+tpjJJuddOHyVlU4H7fHKZFrOgmt8S8rsrwDiTi6n4q6LwG0ucz1JTR4NIFdN9jHQ
+l6cEifZthZPMM0YZukW+RKTk5jxRtBQJApePyMNmCxXyKCoPLjAei/ROjt6Z95nH
+E3Ds5BJqZFPshVm9A2Z2L9Y3BiH+c1rm4qVwB5OQmv6UsXT3ZPSIyBbqByWje5uL
+LIsduGQ/9BH3EZixQmBkv/khYdJZEqdP4P8Zhn9AGFNfcWozp0I8Mq3pzRJ4fUMN
+Bh1wkhi1G56/Oip8fIhGbXO0PqzMC8cD1bty2lyz2tfUt02ZzZp693TgUg4C53lm
+9iiqABQHmuSWY0Can0/w6bsyMI0OnUc9Zqi8MnOx2wzONJtIINTQWKkEO19p6QLm
+qXvEaL30VMeeYQ/ohkvdIVlj25zbIDycIpuGGwhgbLOGxq/xr6M=
+=Hxi+
+-----END PGP SIGNATURE-----
+
+--VbJkn9YxBvnuCH5J--
