@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2605C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8028BC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EF5D20644
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:23:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EFD321873
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:23:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752220;
-	bh=l10GuSudI+FjotOrYmXiH9xEl29VjZLJ0uN7IGgcUyk=;
+	s=default; t=1564752224;
+	bh=zPLz72vRdQQ+nd03SVM/WPAEGpHOT1B5O8fp02BVKSA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g5+5+kDsrAlQpeI97qCBaEo6znc9qJ9Tgc4hb8zuUNtt+4ABdYTmtbYy5+J/S+AH5
-	 8ELlj1BGxZQYmwb+iDMuW6cnDetVXf8x89CivMKTnGkRnsKErjef4yyVFuNCVEqR18
-	 26aPpuPOcwPu1KlXEil/m6hQN+0jxZ+YYxhuwEqs=
+	b=htcisoW6i6tXo/Wfq7TvbX9tlKqS8fpFl1hRcJ6c8D08BPi5AilVkhnZNyQUAcFyU
+	 cPu0Y0ewFJFlbHHUpc0DDnIFune0CwmObtcaXpywvweEWhS9vDdewyTiL8hSp7GLak
+	 XdDIxoA6rtrOvj6g+Aqc+ZxbwB7GBRQg0iLair/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393996AbfHBNXi (ORCPT
+        id S2394018AbfHBNXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:23:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34084 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:23:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388875AbfHBNXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:23:34 -0400
+        id S2393993AbfHBNXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:23:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D46AB20644;
-        Fri,  2 Aug 2019 13:23:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07C4B2182B;
+        Fri,  2 Aug 2019 13:23:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752213;
-        bh=l10GuSudI+FjotOrYmXiH9xEl29VjZLJ0uN7IGgcUyk=;
+        s=default; t=1564752217;
+        bh=zPLz72vRdQQ+nd03SVM/WPAEGpHOT1B5O8fp02BVKSA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C7eSw7g5wb0XBXBsQo+pJ4133ATuetskijrvaH7UVDQ/I7frFQqLSFbPHgwgnt0Ht
-         7r6+gZ78S2INhhdFo49tjPZGDtc9i/3sL5oiRkNVZ9JHLPcsOy/EYg+GP1Ih5DrGke
-         gk3Oeq06ARvWgQ+AqdwiAjJX1D6VoD1wgL3zYPfo=
+        b=Iv+0n2c51kMksIzOn94Xnwh+73wTGjNz1HDuEYaAjTRwNTEEfD2PYPyQL44VaFDh4
+         kJ+nwo+0zbvjLE9CEpPMMIpAiR5aeXlpc0VTBcd8MNmFgQ71FisEkMgHE1UDY8lCqu
+         EXS/wyfWPrUNJA0mZ0raNlHyKkMPm+KZN/ROZ5jQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tai Man <taiman.wong@amd.com>,
-        Joshua Aberback <Joshua.Aberback@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 11/42] drm/amd/display: Increase size of audios array
-Date:   Fri,  2 Aug 2019 09:22:31 -0400
-Message-Id: <20190802132302.13537-11-sashal@kernel.org>
+Cc:     John Crispin <john@phrozen.org>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-wireless@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 13/42] nl80211: fix NL80211_HE_MAX_CAPABILITY_LEN
+Date:   Fri,  2 Aug 2019 09:22:33 -0400
+Message-Id: <20190802132302.13537-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802132302.13537-1-sashal@kernel.org>
 References: <20190802132302.13537-1-sashal@kernel.org>
@@ -62,53 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tai Man <taiman.wong@amd.com>
+From: John Crispin <john@phrozen.org>
 
-[ Upstream commit 7352193a33dfc9b69ba3bf6a8caea925b96243b1 ]
+[ Upstream commit 5edaac063bbf1267260ad2a5b9bb803399343e58 ]
 
-[Why]
-The audios array defined in "struct resource_pool" is only 6 (MAX_PIPES)
-but the max number of audio devices (num_audio) is 7. In some projects,
-it will run out of audios array.
+NL80211_HE_MAX_CAPABILITY_LEN has changed between D2.0 and D4.0. It is now
+MAC (6) + PHY (11) + MCS (12) + PPE (25) = 54.
 
-[How]
-Incraese the audios array size to 7.
-
-Signed-off-by: Tai Man <taiman.wong@amd.com>
-Reviewed-by: Joshua Aberback <Joshua.Aberback@amd.com>
-Acked-by: Leo Li <sunpeng.li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: John Crispin <john@phrozen.org>
+Link: https://lore.kernel.org/r/20190627095832.19445-1-john@phrozen.org
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/inc/core_types.h   | 2 +-
- drivers/gpu/drm/amd/display/dc/inc/hw/hw_shared.h | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ include/uapi/linux/nl80211.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/inc/core_types.h b/drivers/gpu/drm/amd/display/dc/inc/core_types.h
-index c0b9ca13393b6..f4469fa5afb55 100644
---- a/drivers/gpu/drm/amd/display/dc/inc/core_types.h
-+++ b/drivers/gpu/drm/amd/display/dc/inc/core_types.h
-@@ -159,7 +159,7 @@ struct resource_pool {
- 	struct clock_source *clock_sources[MAX_CLOCK_SOURCES];
- 	unsigned int clk_src_count;
+diff --git a/include/uapi/linux/nl80211.h b/include/uapi/linux/nl80211.h
+index 7acc16f349427..fa43dd5a7b3dc 100644
+--- a/include/uapi/linux/nl80211.h
++++ b/include/uapi/linux/nl80211.h
+@@ -2732,7 +2732,7 @@ enum nl80211_attrs {
+ #define NL80211_HT_CAPABILITY_LEN		26
+ #define NL80211_VHT_CAPABILITY_LEN		12
+ #define NL80211_HE_MIN_CAPABILITY_LEN           16
+-#define NL80211_HE_MAX_CAPABILITY_LEN           51
++#define NL80211_HE_MAX_CAPABILITY_LEN           54
+ #define NL80211_MAX_NR_CIPHER_SUITES		5
+ #define NL80211_MAX_NR_AKM_SUITES		2
  
--	struct audio *audios[MAX_PIPES];
-+	struct audio *audios[MAX_AUDIOS];
- 	unsigned int audio_count;
- 	struct audio_support audio_support;
- 
-diff --git a/drivers/gpu/drm/amd/display/dc/inc/hw/hw_shared.h b/drivers/gpu/drm/amd/display/dc/inc/hw/hw_shared.h
-index cf7433ebf91a0..71901743a9387 100644
---- a/drivers/gpu/drm/amd/display/dc/inc/hw/hw_shared.h
-+++ b/drivers/gpu/drm/amd/display/dc/inc/hw/hw_shared.h
-@@ -34,6 +34,7 @@
-  * Data types shared between different Virtual HW blocks
-  ******************************************************************************/
- 
-+#define MAX_AUDIOS 7
- #define MAX_PIPES 6
- 
- struct gamma_curve {
 -- 
 2.20.1
 
