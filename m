@@ -4,123 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B734C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF9E8C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 541F4217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8EF3218A4
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:28:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752472;
-	bh=e6CiO5f/2BKSUvys9sR7WlxW/cPPHgRqaQucp6Tgn1M=;
+	s=default; t=1564752481;
+	bh=VVxsq61HM4FJq2hk/9dtNslDpOfsR3HIn+5Rc34ofNs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mq73hfJh49kbe15iymnlQy22YgE5jBYp/Ipl13eqASWds1zGGqObPYqeyewN1EkYV
-	 yPRlTOU1i4U4cJL91x90khpwyux7QucvI1EYoUAwBrKf1QVYFcZSnr0D4hsUwOMP8a
-	 x3RaAicglWFAPfesngblEtpZomYQYJ25+hAKH0Y4=
+	b=KN3vY7muHnBPZwvzTEeVgga2dbHb8Hp3i+ux4ADMGRnY8cD1LuDkHUujVaX4oWFdU
+	 1hmL4hCFCNAUSwRS3/KAqII0t9CGSSQS6n9eCwqSHzns5Ue/hBrWxSkXBP9BfB9ziz
+	 8HtGGvIyTA7UbHQb6ZHI8IyyiDBZtkJ+bbNfyVUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394797AbfHBN1v (ORCPT
+        id S2394805AbfHBN2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:27:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37618 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:28:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394650AbfHBN0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:26:49 -0400
+        id S2394606AbfHBN0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:26:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B428921873;
-        Fri,  2 Aug 2019 13:26:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D5542182B;
+        Fri,  2 Aug 2019 13:26:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752409;
-        bh=e6CiO5f/2BKSUvys9sR7WlxW/cPPHgRqaQucp6Tgn1M=;
+        s=default; t=1564752406;
+        bh=VVxsq61HM4FJq2hk/9dtNslDpOfsR3HIn+5Rc34ofNs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IR9ZMD0d/Rp6xk2S+rTpbPMb1TbaVydih/b7Xw3CRxQ6MYtXjDQkDIgiKcFFQwTUR
-         cXKd04I4EdVuNCAUYLt1XldCzj82UwlV5WgppuSzwMOvogMz+NlFy/SVaqidXtTN6H
-         Q2g8Cp89Y8kI2etzIoNg72ehOJjtyx2iX+FhK9lU=
+        b=IvXhXHoiUJmjm7JEdyTN6zkLDmK8YDSaMeNedYcd/wscujJa4O9W2/HK2sdEwOHr+
+         qHiSYAng6Aj39Zw0fxoxpQ9MNHN4/Oo6MECnt4SB3joyF7Jlmm5S4GGviH/MiZhCOb
+         RurBjTIv4dMexqcgvcZds0thVQPc67jPh+1GftDA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Joerg Roedel <jroedel@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 06/17] x86/mm: Sync also unmappings in vmalloc_sync_all()
-Date:   Fri,  2 Aug 2019 09:26:23 -0400
-Message-Id: <20190802132635.14885-6-sashal@kernel.org>
+Cc:     =?UTF-8?q?Bj=C3=B6rn=20Gerhart?= <gerhart@posteo.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 04/17] hwmon: (nct6775) Fix register address and added missed tolerance for nct6106
+Date:   Fri,  2 Aug 2019 09:26:21 -0400
+Message-Id: <20190802132635.14885-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802132635.14885-1-sashal@kernel.org>
 References: <20190802132635.14885-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Björn Gerhart <gerhart@posteo.de>
 
-[ Upstream commit 8e998fc24de47c55b47a887f6c95ab91acd4a720 ]
+[ Upstream commit f3d43e2e45fd9d44ba52d20debd12cd4ee9c89bf ]
 
-With huge-page ioremap areas the unmappings also need to be synced between
-all page-tables. Otherwise it can cause data corruption when a region is
-unmapped and later re-used.
+Fixed address of third NCT6106_REG_WEIGHT_DUTY_STEP, and
+added missed NCT6106_REG_TOLERANCE_H.
 
-Make the vmalloc_sync_one() function ready to sync unmappings and make sure
-vmalloc_sync_all() iterates over all page-tables even when an unmapped PMD
-is found.
-
-Fixes: 5d72b4fba40ef ('x86, mm: support huge I/O mapping capability I/F')
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-Link: https://lkml.kernel.org/r/20190719184652.11391-3-joro@8bytes.org
+Fixes: 6c009501ff200 ("hwmon: (nct6775) Add support for NCT6102D/6106D")
+Signed-off-by: Bjoern Gerhart <gerhart@posteo.de>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/fault.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+ drivers/hwmon/nct6775.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index f3511f1a8f0ea..0e498683295b1 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -216,11 +216,12 @@ static inline pmd_t *vmalloc_sync_one(pgd_t *pgd, unsigned long address)
+diff --git a/drivers/hwmon/nct6775.c b/drivers/hwmon/nct6775.c
+index d3c6115f16b90..db38dff3f9867 100644
+--- a/drivers/hwmon/nct6775.c
++++ b/drivers/hwmon/nct6775.c
+@@ -696,7 +696,7 @@ static const u16 NCT6106_REG_TARGET[] = { 0x111, 0x121, 0x131 };
+ static const u16 NCT6106_REG_WEIGHT_TEMP_SEL[] = { 0x168, 0x178, 0x188 };
+ static const u16 NCT6106_REG_WEIGHT_TEMP_STEP[] = { 0x169, 0x179, 0x189 };
+ static const u16 NCT6106_REG_WEIGHT_TEMP_STEP_TOL[] = { 0x16a, 0x17a, 0x18a };
+-static const u16 NCT6106_REG_WEIGHT_DUTY_STEP[] = { 0x16b, 0x17b, 0x17c };
++static const u16 NCT6106_REG_WEIGHT_DUTY_STEP[] = { 0x16b, 0x17b, 0x18b };
+ static const u16 NCT6106_REG_WEIGHT_TEMP_BASE[] = { 0x16c, 0x17c, 0x18c };
+ static const u16 NCT6106_REG_WEIGHT_DUTY_BASE[] = { 0x16d, 0x17d, 0x18d };
  
- 	pmd = pmd_offset(pud, address);
- 	pmd_k = pmd_offset(pud_k, address);
--	if (!pmd_present(*pmd_k))
--		return NULL;
- 
--	if (!pmd_present(*pmd))
-+	if (pmd_present(*pmd) != pmd_present(*pmd_k))
- 		set_pmd(pmd, *pmd_k);
-+
-+	if (!pmd_present(*pmd_k))
-+		return NULL;
- 	else
- 		BUG_ON(pmd_pfn(*pmd) != pmd_pfn(*pmd_k));
- 
-@@ -242,17 +243,13 @@ void vmalloc_sync_all(void)
- 		spin_lock(&pgd_lock);
- 		list_for_each_entry(page, &pgd_list, lru) {
- 			spinlock_t *pgt_lock;
--			pmd_t *ret;
- 
- 			/* the pgt_lock only for Xen */
- 			pgt_lock = &pgd_page_get_mm(page)->page_table_lock;
- 
- 			spin_lock(pgt_lock);
--			ret = vmalloc_sync_one(page_address(page), address);
-+			vmalloc_sync_one(page_address(page), address);
- 			spin_unlock(pgt_lock);
--
--			if (!ret)
--				break;
- 		}
- 		spin_unlock(&pgd_lock);
- 	}
+@@ -3478,6 +3478,7 @@ static int nct6775_probe(struct platform_device *pdev)
+ 		data->REG_FAN_TIME[0] = NCT6106_REG_FAN_STOP_TIME;
+ 		data->REG_FAN_TIME[1] = NCT6106_REG_FAN_STEP_UP_TIME;
+ 		data->REG_FAN_TIME[2] = NCT6106_REG_FAN_STEP_DOWN_TIME;
++		data->REG_TOLERANCE_H = NCT6106_REG_TOLERANCE_H;
+ 		data->REG_PWM[0] = NCT6106_REG_PWM;
+ 		data->REG_PWM[1] = NCT6106_REG_FAN_START_OUTPUT;
+ 		data->REG_PWM[2] = NCT6106_REG_FAN_STOP_OUTPUT;
 -- 
 2.20.1
 
