@@ -7,55 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3524C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D71CC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FC3521726
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0776721726
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:53:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739613;
-	bh=Sus13iWclroigCwhhejUjmR7RmySRV/rrlISLxwdSts=;
+	s=default; t=1564739616;
+	bh=ZD/d7wEanQe31gJ/K5UdbGiLfybN+idHdUps5k0IfR8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B/eJ8B76o8973CmSlZzgpe7JN0hJqKuwwGjBcis4T5Ii0bcNXMXL5K59mJdG9N/QI
-	 1SAfCobGYNHg4dQ+6Q+/Bsu5zAmSGKMN3mIY+IyA0Rnzx/cOQ9IyRdjVfTZrssmjXe
-	 LHAeaeW+A0qpUaDYzZprHikb+kNxaYE6wAAli1Wo=
+	b=qkz6cLEYheXiDAMliWb9jXYwAf0e9W7eACpQKBeNpl5A9+Z1wLS1VY9dYKjCI8pd0
+	 6ztI6CM3D6QntNvcYhQnspKsEdZ2K7JAWhD5+B/e6WH6C/dEw1UaW3GP8O112qINai
+	 HXGL/FftWoYDyP93xwqDbzeqdBgOvDpDqY7ayzb0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406276AbfHBJxc (ORCPT
+        id S2406285AbfHBJxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:53:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59488 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:53:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406262AbfHBJxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:53:24 -0400
+        id S2406198AbfHBJx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:53:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF663206A2;
-        Fri,  2 Aug 2019 09:53:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDCEE2086A;
+        Fri,  2 Aug 2019 09:53:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739603;
-        bh=Sus13iWclroigCwhhejUjmR7RmySRV/rrlISLxwdSts=;
+        s=default; t=1564739608;
+        bh=ZD/d7wEanQe31gJ/K5UdbGiLfybN+idHdUps5k0IfR8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=slAYXma5KMizcHS5AqtgeQ79+XeZ5vNin0103H28nijp+mspC2ssj/72KgoMx0sxX
-         J5xGz1TkjSQgzuy2aycN9K3ST7wXncIseyg5RKbzkHnBM+9dDaoi0Xk2oBuh0kKdCf
-         7xIqwWLCXXDEr5zSo7YKSX0K6Iy5uvtp15tK3hz8=
+        b=bdTov3dQJlhTETZxwZIreIsmzqtDxUlcwZGn1/Tv4phuUbcxOd61TNMxPvjFL64qL
+         OGKwsCNrbhGuWFVTQxeqDSkLzkSxhj0JVteINABOP5SpQx5jwVeA4laBQOP9jxM3yE
+         5qtRKeNUukQwkHU4jhWlLOLtU5Sn1OZMnhvrAmd0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Steve McIntyre <steve.mcintyre@arm.com>,
-        Steve McIntyre <93sam@debian.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 4.9 215/223] arm64: compat: Provide definition for COMPAT_SIGMINSTKSZ
-Date:   Fri,  2 Aug 2019 11:37:20 +0200
-Message-Id: <20190802092250.685349111@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+357d86bcb4cca1a2f572@syzkaller.appspotmail.com,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 4.9 217/223] media: au0828: fix null dereference in error path
+Date:   Fri,  2 Aug 2019 11:37:22 +0200
+Message-Id: <20190802092250.761351262@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -68,39 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will.deacon@arm.com>
+From: Sean Young <sean@mess.org>
 
-commit 24951465cbd279f60b1fdc2421b3694405bcff42 upstream.
+commit 6d0d1ff9ff21fbb06b867c13a1d41ce8ddcd8230 upstream.
 
-arch/arm/ defines a SIGMINSTKSZ of 2k, so we should use the same value
-for compat tasks.
+au0828_usb_disconnect() gets the au0828_dev struct via usb_get_intfdata,
+so it needs to set up for the error paths.
 
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Dominik Brodowski <linux@dominikbrodowski.net>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Reviewed-by: Dave Martin <Dave.Martin@arm.com>
-Reported-by: Steve McIntyre <steve.mcintyre@arm.com>
-Tested-by: Steve McIntyre <93sam@debian.org>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Reported-by: syzbot+357d86bcb4cca1a2f572@syzkaller.appspotmail.com
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/include/asm/compat.h |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/usb/au0828/au0828-core.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/arch/arm64/include/asm/compat.h
-+++ b/arch/arm64/include/asm/compat.h
-@@ -234,6 +234,7 @@ static inline compat_uptr_t ptr_to_compa
- }
+--- a/drivers/media/usb/au0828/au0828-core.c
++++ b/drivers/media/usb/au0828/au0828-core.c
+@@ -630,6 +630,12 @@ static int au0828_usb_probe(struct usb_i
+ 	/* Setup */
+ 	au0828_card_setup(dev);
  
- #define compat_user_stack_pointer() (user_stack_pointer(task_pt_regs(current)))
-+#define COMPAT_MINSIGSTKSZ	2048
++	/*
++	 * Store the pointer to the au0828_dev so it can be accessed in
++	 * au0828_usb_disconnect
++	 */
++	usb_set_intfdata(interface, dev);
++
+ 	/* Analog TV */
+ 	retval = au0828_analog_register(dev, interface);
+ 	if (retval) {
+@@ -647,12 +653,6 @@ static int au0828_usb_probe(struct usb_i
+ 	/* Remote controller */
+ 	au0828_rc_register(dev);
  
- static inline void __user *arch_compat_alloc_user_space(long len)
- {
+-	/*
+-	 * Store the pointer to the au0828_dev so it can be accessed in
+-	 * au0828_usb_disconnect
+-	 */
+-	usb_set_intfdata(interface, dev);
+-
+ 	pr_info("Registered device AU0828 [%s]\n",
+ 		dev->board.name == NULL ? "Unset" : dev->board.name);
+ 
 
 
