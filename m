@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D40ADC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE030C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2AA321850
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:20:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2CFB2173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:20:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752023;
-	bh=ritnmQKeXCNUkl00pdK+bMvgCPeyD/nYb7rU9HK3wAE=;
+	s=default; t=1564752026;
+	bh=Sczlfus0QhQynXrMg+oG23y9TvPE75FgQEDfjZAZOe4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oFORdXaFiFAJuWmQSkMGxrNDAAi4HEXAPjm0X8XxXrgPKd0/jvQvifISAwGocF+ab
-	 MiMOVDE+HvICGuCGSVvWWY+JhRN8co4EkpJUeoMV0Sp55AHYbld1l4oQ+0o3agqyfN
-	 laSwhc9UadpKeczrYIeMDztGG2YMKR/GRD4KjOCw=
+	b=dT4amtP2t8LrDXaT6NYc0tI8TXumr+MR+pvhgkApoOhRb2wfMf5gLFm2HCjJAddLx
+	 G+eQUuzAgPd/+6p1qF4/ptnCcPai+DOpngWqCs3+r75bHo8e6FvWe/5CWUWncf2/SP
+	 wbBlmYrQUgznWuToCEo8nVypiE1fOemNIx6eyiaY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393349AbfHBNUW (ORCPT
+        id S2393360AbfHBNUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:20:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58484 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:20:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393281AbfHBNUJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:20:09 -0400
+        id S2393300AbfHBNUM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:20:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2D19218A3;
-        Fri,  2 Aug 2019 13:20:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 374EF21850;
+        Fri,  2 Aug 2019 13:20:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752008;
-        bh=ritnmQKeXCNUkl00pdK+bMvgCPeyD/nYb7rU9HK3wAE=;
+        s=default; t=1564752011;
+        bh=Sczlfus0QhQynXrMg+oG23y9TvPE75FgQEDfjZAZOe4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KvXV1hSIK+Ae3Gj1VvZ8kwBVeWWfKa+aEfIUNKxDJN5vYfnkuIn+Q7Tegab0RUPxO
-         LssHxI/JAZf7sDnhL7ldvHNBZBVVEpOgepEHn3BN1S8HNxPFP0fDhQlY9FEWiCY/2j
-         rGgVlurPZTj0S2uDxEp6d6x3dxZVoHILsXLHjow4=
+        b=ZmgYkpcZp+BpZiojbdHHnZhhLbhWrdkaKdZtWU9vvNyjq6deYSYqkAU9oIt5jeZSz
+         3ZYdvlmkLGiKY0Tl20P+Vp9ETSUFQXzMkVFvLziLkR6EVGkB9JadJgcI5xUwgYV6gk
+         s7+51srXmp7WBV3vtjwnGpZ9AmXHaDULMMT5LkDE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josef Bacik <josef@toxicpanda.com>,
-        Oleg Nesterov <oleg@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 14/76] rq-qos: use a mb for got_token
-Date:   Fri,  2 Aug 2019 09:18:48 -0400
-Message-Id: <20190802131951.11600-14-sashal@kernel.org>
+Cc:     Harmanprit Tatla <harmanprit.tatla@amd.com>,
+        Aric Cyr <aric.cyr@amd.com>, Anthony Koo <Anthony.Koo@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.2 16/76] drm/amd/display: No audio endpoint for Dell MST display
+Date:   Fri,  2 Aug 2019 09:18:50 -0400
+Message-Id: <20190802131951.11600-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802131951.11600-1-sashal@kernel.org>
 References: <20190802131951.11600-1-sashal@kernel.org>
@@ -59,51 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Harmanprit Tatla <harmanprit.tatla@amd.com>
 
-[ Upstream commit ac38297f7038cd5b80d66f8809c7bbf5b70031f3 ]
+[ Upstream commit 5b25e5f1a97284020abee7348427f89abdb674e8 ]
 
-Oleg noticed that our checking of data.got_token is unsafe in the
-cleanup case, and should really use a memory barrier.  Use a wmb on the
-write side, and a rmb() on the read side.  We don't need one in the main
-loop since we're saved by set_current_state().
+[Why]
+There are certain MST displays (i.e. Dell P2715Q)
+that although have the MST feature set to off may still
+report it is a branch device and a non-zero
+value for downstream port present.
+This can lead to us incorrectly classifying a
+dp dongle connection as being active and
+disabling the audio endpoint for the display.
 
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+[How]
+Modified the placement and
+condition used to assign
+the is_branch_dev bit.
+
+Signed-off-by: Harmanprit Tatla <harmanprit.tatla@amd.com>
+Reviewed-by: Aric Cyr <aric.cyr@amd.com>
+Acked-by: Anthony Koo <Anthony.Koo@amd.com>
+Acked-by: Leo Li <sunpeng.li@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-rq-qos.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/block/blk-rq-qos.c b/block/blk-rq-qos.c
-index e3ab75e4df9ea..06d024204f504 100644
---- a/block/blk-rq-qos.c
-+++ b/block/blk-rq-qos.c
-@@ -202,6 +202,7 @@ static int rq_qos_wake_function(struct wait_queue_entry *curr,
- 		return -1;
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+index 253311864cdd5..966aa3b754c5b 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+@@ -2218,11 +2218,18 @@ static void get_active_converter_info(
+ 		link->dpcd_caps.dongle_type = DISPLAY_DONGLE_NONE;
+ 		ddc_service_set_dongle_type(link->ddc,
+ 				link->dpcd_caps.dongle_type);
++		link->dpcd_caps.is_branch_dev = false;
+ 		return;
+ 	}
  
- 	data->got_token = true;
-+	smp_wmb();
- 	list_del_init(&curr->entry);
- 	wake_up_process(data->task);
- 	return 1;
-@@ -245,6 +246,7 @@ void rq_qos_wait(struct rq_wait *rqw, void *private_data,
+ 	/* DPCD 0x5 bit 0 = 1, it indicate it's branch device */
+-	link->dpcd_caps.is_branch_dev = ds_port.fields.PORT_PRESENT;
++	if (ds_port.fields.PORT_TYPE == DOWNSTREAM_DP) {
++		link->dpcd_caps.is_branch_dev = false;
++	}
++
++	else {
++		link->dpcd_caps.is_branch_dev = ds_port.fields.PORT_PRESENT;
++	}
  
- 	prepare_to_wait_exclusive(&rqw->wait, &data.wq, TASK_UNINTERRUPTIBLE);
- 	do {
-+		/* The memory barrier in set_task_state saves us here. */
- 		if (data.got_token)
- 			break;
- 		if (!has_sleeper && acquire_inflight_cb(rqw, private_data)) {
-@@ -255,6 +257,7 @@ void rq_qos_wait(struct rq_wait *rqw, void *private_data,
- 			 * which means we now have two. Put our local token
- 			 * and wake anyone else potentially waiting for one.
- 			 */
-+			smp_rmb();
- 			if (data.got_token)
- 				cleanup_cb(rqw, private_data);
- 			break;
+ 	switch (ds_port.fields.PORT_TYPE) {
+ 	case DOWNSTREAM_VGA:
 -- 
 2.20.1
 
