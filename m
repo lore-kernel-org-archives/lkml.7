@@ -7,48 +7,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3914C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F202C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C163120679
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 462542064A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739502;
-	bh=goHfdpkyjRkUxgqH3PRtuRUvEVTPWNxCNirmAlAXiTE=;
+	s=default; t=1564739507;
+	bh=9cDALA1zzMGMV1InYqq5Wq4dEbPlxo54pKp1I6AwW6g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NxskhXkuH6nC+v67U85EGIeaRhq0va70DnSMlCbnamYSnQPAz0irTewfRwddYZrWb
-	 6KRSzoXnmfDq3ffHbMGXyqrCEDTwKkYmQe8/bmFOTJ1ROsHepxD37e607slgNXRSkG
-	 En3OuK/UQK1/p95v4YJ0Pe9N3J9/duI7knl4umds=
+	b=brh4nTHbggWvFpMLBXVkGJWk1i3tiF+19qfuMpaByhEHGspnvroLp1Sw/3bYCL5n4
+	 eJ0j4IpzpN/wwAF+/XJpG4doW1KtRvuwYH4OySj7wSgTs4V7ebFj4UJBjwzU4S1YGZ
+	 YdcdQnag2P/xn3ADCZa1R8EQIJuzEON/e5w1eFcQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405900AbfHBJvl (ORCPT
+        id S2405970AbfHBJvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:51:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56854 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:51:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405876AbfHBJvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:51:36 -0400
+        id S2405876AbfHBJvn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:51:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD8872064A;
-        Fri,  2 Aug 2019 09:51:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 489C82064A;
+        Fri,  2 Aug 2019 09:51:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739495;
-        bh=goHfdpkyjRkUxgqH3PRtuRUvEVTPWNxCNirmAlAXiTE=;
+        s=default; t=1564739502;
+        bh=9cDALA1zzMGMV1InYqq5Wq4dEbPlxo54pKp1I6AwW6g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N+F5/N2xS17DE2+KW71cST1dRyNTwfdPsA/svXoYfIznhTmRFB3ox5P6YxhUua6P2
-         8YcpTcrWamBuODt3HZlpJuS9lKDRmERuI55lPmMhgh1myF0S1G+P481LBbw0UCv8Zq
-         S6w7SDfrUOxYHiii8kawOuLaHycytO8lsdsN9iSc=
+        b=OSanWKuDbcYbbVb+LQbfICHCh0eJp34pQq6cjMZofa4T9f5ovBBKLMnbKRSe80tWM
+         PwKD3CDl3/pXI5X/c8v6DGj7jkT35Vx7InIZhz1knqlitGEjuxXm/7avVSwdXGyTRI
+         Ht4fhRVd11jvCtdOMY2fFczaNYQ8mTECbU5yds64=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>, linux-gpio@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 162/223] pinctrl: rockchip: fix leaked of_node references
-Date:   Fri,  2 Aug 2019 11:36:27 +0200
-Message-Id: <20190802092248.664754116@linuxfoundation.org>
+        stable@vger.kernel.org, Numfor Mbiziwo-Tiapo <nums@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
+        Mark Drayton <mbd@fb.com>, Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Stephane Eranian <eranian@google.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 190/223] perf test mmap-thread-lookup: Initialize variable to suppress memory sanitizer warning
+Date:   Fri,  2 Aug 2019 11:36:55 +0200
+Message-Id: <20190802092249.723623054@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -61,40 +66,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3c89c70634bb0b6f48512de873e7a45c7e1fbaa5 ]
+[ Upstream commit 4e4cf62b37da5ff45c904a3acf242ab29ed5881d ]
 
-The call to of_parse_phandle returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+Running the 'perf test' command after building perf with a memory
+sanitizer causes a warning that says:
 
-Detected by coccinelle with the following warnings:
-./drivers/pinctrl/pinctrl-rockchip.c:3221:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3196, but without a corresponding object release within this function.
-./drivers/pinctrl/pinctrl-rockchip.c:3223:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3196, but without a corresponding object release within this function.
+  WARNING: MemorySanitizer: use-of-uninitialized-value... in mmap-thread-lookup.c
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Heiko Stuebner <heiko@sntech.de>
-Cc: linux-gpio@vger.kernel.org
-Cc: linux-rockchip@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Initializing the go variable to 0 silences this harmless warning.
+
+Committer warning:
+
+This was harmless, just a simple test writing whatever was at that
+sizeof(int) memory area just to signal another thread blocked reading
+that file created with pipe(). Initialize it tho so that we don't get
+this warning.
+
+Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Drayton <mbd@fb.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Stephane Eranian <eranian@google.com>
+Link: http://lkml.kernel.org/r/20190702173716.181223-1-nums@google.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-rockchip.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/tests/mmap-thread-lookup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index f826793e972c..417cd3bd7e0c 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -2208,6 +2208,7 @@ static int rockchip_get_bank_data(struct rockchip_pin_bank *bank,
- 						    base,
- 						    &rockchip_regmap_config);
- 		}
-+		of_node_put(node);
- 	}
+diff --git a/tools/perf/tests/mmap-thread-lookup.c b/tools/perf/tests/mmap-thread-lookup.c
+index 0c5ce44f723f..e5d6e6584001 100644
+--- a/tools/perf/tests/mmap-thread-lookup.c
++++ b/tools/perf/tests/mmap-thread-lookup.c
+@@ -49,7 +49,7 @@ static void *thread_fn(void *arg)
+ {
+ 	struct thread_data *td = arg;
+ 	ssize_t ret;
+-	int go;
++	int go = 0;
  
- 	bank->irq = irq_of_parse_and_map(bank->of_node, 0);
+ 	if (thread_init(td))
+ 		return NULL;
 -- 
 2.20.1
 
