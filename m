@@ -2,55 +2,52 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA1F4C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C1E3C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC8172067D
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DA2B2173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:05:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564740328;
-	bh=EZ6ZbTBXxTAbpiSNvuJ3w9RykNN92V91w1w5vu+uuQI=;
+	s=default; t=1564740337;
+	bh=SOHZCKy37fs3IqoZ36GSFFZphzMehdE9/WH9M3jnfJQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hefABQyprl6GvFNvKdbmKOHdH8WC0308xClLzNq69q8DDzw2JN2Jd7PxeJZjmB4/H
-	 xzJi8VTyRoeUQ5gUDk1znZA1O1gVfjGF/DA8Tx7hB1K/e0XwaaeWn5UAGYh6zc04V3
-	 Nou8up1zqtKnTSqg45cydEZswv9bpiPxhQ0aQgPA=
+	b=IAldJZss//yRUnfea8xyX6TI9I9i5GCp/sqXpK4Rf7YIobU77zDpqphoymMh7b/un
+	 XRQblf2sni6GEmtv6Mtfv3kDH/qMzwCpy/tvHFzHU6NsU6FMSYnkRLvS3cy6AlG/Vt
+	 rJUqfGNVe5ohfFwEi7mmtOhytxSpOEDWvE3Je2y0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391245AbfHBJcd (ORCPT
+        id S2391218AbfHBJcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:32:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59420 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:32:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390170AbfHBJc3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:32:29 -0400
+        id S2391197AbfHBJcW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:32:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FD292184D;
-        Fri,  2 Aug 2019 09:32:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E22FE217F5;
+        Fri,  2 Aug 2019 09:32:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738349;
-        bh=EZ6ZbTBXxTAbpiSNvuJ3w9RykNN92V91w1w5vu+uuQI=;
+        s=default; t=1564738341;
+        bh=SOHZCKy37fs3IqoZ36GSFFZphzMehdE9/WH9M3jnfJQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0cVA8Gf2cg7w/fsMTHEsna2OkpX4lCixW+t97qFNdwmllYkzL9XiS4CHxbw+ILDY7
-         rPUE0Z/Wbv4ZcWo2KYtHiQVaJLpi5y3naI+mvZjgOKIihb+dK7rTsbK7qZMy8Zc6FZ
-         gErqRwfrXXKlaQYPWEpVqCtnlf70Uitu/OCWHqO8=
+        b=hTCJJ6Qy91w5jZpD1BVb+WeY9CASsAPuarlNcr+JsxiSd5LW1ZNTqfNXiiVtp1Or9
+         OIxiZFy5fwrzIgVMgEHROO1KBPTyP3BuPkI4LvJCxhzrtn1+c0Rf9eG8QJwOmR0asT
+         SHNVEuvoZos5gQO1/vxzYvoWedYOMZojMfPZ3whE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jukka Rissanen <jukka.rissanen@linux.intel.com>,
-        Michael Scott <mike@foundries.io>,
-        Josua Mayer <josua.mayer@jm0.eu>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 052/158] Bluetooth: 6lowpan: search for destination address in all peers
-Date:   Fri,  2 Aug 2019 11:27:53 +0200
-Message-Id: <20190802092214.694855983@linuxfoundation.org>
+        stable@vger.kernel.org, Joe Perches <joe@perches.com>,
+        Like Xu <like.xu@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.4 066/158] KVM: x86/vPMU: refine kvm_pmu err msg when event creation failed
+Date:   Fri,  2 Aug 2019 11:28:07 +0200
+Message-Id: <20190802092217.488284216@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -63,57 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b188b03270b7f8568fc714101ce82fbf5e811c5a ]
+From: Like Xu <like.xu@linux.intel.com>
 
-Handle overlooked case where the target address is assigned to a peer
-and neither route nor gateway exist.
+commit 6fc3977ccc5d3c22e851f2dce2d3ce2a0a843842 upstream.
 
-For one peer, no checks are performed to see if it is meant to receive
-packets for a given address.
+If a perf_event creation fails due to any reason of the host perf
+subsystem, it has no chance to log the corresponding event for guest
+which may cause abnormal sampling data in guest result. In debug mode,
+this message helps to understand the state of vPMC and we may not
+limit the number of occurrences but not in a spamming style.
 
-As soon as there is a second peer however, checks are performed
-to deal with routes and gateways for handling complex setups with
-multiple hops to a target address.
-This logic assumed that no route and no gateway imply that the
-destination address can not be reached, which is false in case of a
-direct peer.
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Like Xu <like.xu@linux.intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Acked-by: Jukka Rissanen <jukka.rissanen@linux.intel.com>
-Tested-by: Michael Scott <mike@foundries.io>
-Signed-off-by: Josua Mayer <josua.mayer@jm0.eu>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/6lowpan.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ arch/x86/kvm/pmu.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/bluetooth/6lowpan.c b/net/bluetooth/6lowpan.c
-index 795ddd8b2f77..4cd6b8d811ff 100644
---- a/net/bluetooth/6lowpan.c
-+++ b/net/bluetooth/6lowpan.c
-@@ -184,10 +184,16 @@ static inline struct lowpan_peer *peer_lookup_dst(struct lowpan_dev *dev,
+--- a/arch/x86/kvm/pmu.c
++++ b/arch/x86/kvm/pmu.c
+@@ -124,8 +124,8 @@ static void pmc_reprogram_counter(struct
+ 						 intr ? kvm_perf_overflow_intr :
+ 						 kvm_perf_overflow, pmc);
+ 	if (IS_ERR(event)) {
+-		printk_once("kvm_pmu: event creation failed %ld\n",
+-			    PTR_ERR(event));
++		pr_debug_ratelimited("kvm_pmu: event creation failed %ld for pmc->idx = %d\n",
++			    PTR_ERR(event), pmc->idx);
+ 		return;
  	}
  
- 	if (!rt) {
--		nexthop = &lowpan_cb(skb)->gw;
--
--		if (ipv6_addr_any(nexthop))
--			return NULL;
-+		if (ipv6_addr_any(&lowpan_cb(skb)->gw)) {
-+			/* There is neither route nor gateway,
-+			 * probably the destination is a direct peer.
-+			 */
-+			nexthop = daddr;
-+		} else {
-+			/* There is a known gateway
-+			 */
-+			nexthop = &lowpan_cb(skb)->gw;
-+		}
- 	} else {
- 		nexthop = rt6_nexthop(rt, daddr);
- 
--- 
-2.20.1
-
 
 
