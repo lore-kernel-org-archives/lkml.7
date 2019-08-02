@@ -2,100 +2,78 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF9E8C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28450C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8EF3218A4
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:28:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752481;
-	bh=VVxsq61HM4FJq2hk/9dtNslDpOfsR3HIn+5Rc34ofNs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KN3vY7muHnBPZwvzTEeVgga2dbHb8Hp3i+ux4ADMGRnY8cD1LuDkHUujVaX4oWFdU
-	 1hmL4hCFCNAUSwRS3/KAqII0t9CGSSQS6n9eCwqSHzns5Ue/hBrWxSkXBP9BfB9ziz
-	 8HtGGvIyTA7UbHQb6ZHI8IyyiDBZtkJ+bbNfyVUU=
+	by mail.kernel.org (Postfix) with ESMTP id F35BC217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:28:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394805AbfHBN2A (ORCPT
+        id S2394813AbfHBN2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:28:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37570 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:28:04 -0400
+Received: from ms.lwn.net ([45.79.88.28]:49532 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394606AbfHBN0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:26:47 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2390660AbfHBN02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:26:28 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D5542182B;
-        Fri,  2 Aug 2019 13:26:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752406;
-        bh=VVxsq61HM4FJq2hk/9dtNslDpOfsR3HIn+5Rc34ofNs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IvXhXHoiUJmjm7JEdyTN6zkLDmK8YDSaMeNedYcd/wscujJa4O9W2/HK2sdEwOHr+
-         qHiSYAng6Aj39Zw0fxoxpQ9MNHN4/Oo6MECnt4SB3joyF7Jlmm5S4GGviH/MiZhCOb
-         RurBjTIv4dMexqcgvcZds0thVQPc67jPh+1GftDA=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Bj=C3=B6rn=20Gerhart?= <gerhart@posteo.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 04/17] hwmon: (nct6775) Fix register address and added missed tolerance for nct6106
-Date:   Fri,  2 Aug 2019 09:26:21 -0400
-Message-Id: <20190802132635.14885-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190802132635.14885-1-sashal@kernel.org>
-References: <20190802132635.14885-1-sashal@kernel.org>
+        by ms.lwn.net (Postfix) with ESMTPSA id 4C9687DA;
+        Fri,  2 Aug 2019 13:26:27 +0000 (UTC)
+Date:   Fri, 2 Aug 2019 07:26:26 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <chao@kernel.org>, <jaegeuk@kernel.org>
+Subject: Re: [PATCH] mailmap: add entry for Jaegeuk Kim
+Message-ID: <20190802072626.405246e3@lwn.net>
+In-Reply-To: <20190802012135.31419-1-yuchao0@huawei.com>
+References: <20190802012135.31419-1-yuchao0@huawei.com>
+Organization: LWN.net
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Björn Gerhart <gerhart@posteo.de>
+On Fri, 2 Aug 2019 09:21:35 +0800
+Chao Yu <yuchao0@huawei.com> wrote:
 
-[ Upstream commit f3d43e2e45fd9d44ba52d20debd12cd4ee9c89bf ]
+> Add entry to connect all Jaegeuk's email addresses.
+> 
+> Acked-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> ---
+>  .mailmap | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/.mailmap b/.mailmap
+> index 477debe3d960..70d41c86e644 100644
+> --- a/.mailmap
+> +++ b/.mailmap
+> @@ -89,6 +89,9 @@ Henrik Kretzschmar <henne@nachtwindheim.de>
+>  Henrik Rydberg <rydberg@bitmath.org>
+>  Herbert Xu <herbert@gondor.apana.org.au>
+>  Jacob Shin <Jacob.Shin@amd.com>
+> +Jaegeuk Kim <jaegeuk@kernel.org> <jaegeuk@google.com>
+> +Jaegeuk Kim <jaegeuk@kernel.org> <jaegeuk@motorola.com>
+> +Jaegeuk Kim <jaegeuk@kernel.org> <jaegeuk.kim@samsung.com>
 
-Fixed address of third NCT6106_REG_WEIGHT_DUTY_STEP, and
-added missed NCT6106_REG_TOLERANCE_H.
+So as I understand it, the mailmap file is there mostly to ensure that a
+person's changesets are properly collected in 'git shortlog' and such.  As
+documented on the man page, it is used when a person's name is spelled
+differently at different times.
 
-Fixes: 6c009501ff200 ("hwmon: (nct6775) Add support for NCT6102D/6106D")
-Signed-off-by: Bjoern Gerhart <gerhart@posteo.de>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/hwmon/nct6775.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+That doesn't appear to be the case here, and shortlog output is correct
+already.  Given that, do we *really* need to maintain a collection of old
+email addresses in the mailmap file?  What is the benefit of that?
 
-diff --git a/drivers/hwmon/nct6775.c b/drivers/hwmon/nct6775.c
-index d3c6115f16b90..db38dff3f9867 100644
---- a/drivers/hwmon/nct6775.c
-+++ b/drivers/hwmon/nct6775.c
-@@ -696,7 +696,7 @@ static const u16 NCT6106_REG_TARGET[] = { 0x111, 0x121, 0x131 };
- static const u16 NCT6106_REG_WEIGHT_TEMP_SEL[] = { 0x168, 0x178, 0x188 };
- static const u16 NCT6106_REG_WEIGHT_TEMP_STEP[] = { 0x169, 0x179, 0x189 };
- static const u16 NCT6106_REG_WEIGHT_TEMP_STEP_TOL[] = { 0x16a, 0x17a, 0x18a };
--static const u16 NCT6106_REG_WEIGHT_DUTY_STEP[] = { 0x16b, 0x17b, 0x17c };
-+static const u16 NCT6106_REG_WEIGHT_DUTY_STEP[] = { 0x16b, 0x17b, 0x18b };
- static const u16 NCT6106_REG_WEIGHT_TEMP_BASE[] = { 0x16c, 0x17c, 0x18c };
- static const u16 NCT6106_REG_WEIGHT_DUTY_BASE[] = { 0x16d, 0x17d, 0x18d };
- 
-@@ -3478,6 +3478,7 @@ static int nct6775_probe(struct platform_device *pdev)
- 		data->REG_FAN_TIME[0] = NCT6106_REG_FAN_STOP_TIME;
- 		data->REG_FAN_TIME[1] = NCT6106_REG_FAN_STEP_UP_TIME;
- 		data->REG_FAN_TIME[2] = NCT6106_REG_FAN_STEP_DOWN_TIME;
-+		data->REG_TOLERANCE_H = NCT6106_REG_TOLERANCE_H;
- 		data->REG_PWM[0] = NCT6106_REG_PWM;
- 		data->REG_PWM[1] = NCT6106_REG_FAN_START_OUTPUT;
- 		data->REG_PWM[2] = NCT6106_REG_FAN_STOP_OUTPUT;
--- 
-2.20.1
+Thanks,
 
+jon
