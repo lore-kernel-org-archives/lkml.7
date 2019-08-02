@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1FA2C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E5F0C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCD6F2067D
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:07:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28EE52086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:07:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564740426;
-	bh=VgKfAdirD3uxO5u4ONPWgq0IJsZefFAqt1zZ6VWEGbI=;
+	s=default; t=1564740429;
+	bh=hyHtEEnf36iw8vWSqaGWyCQTiEXS0hvNLj9GkU4cGNw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pjuZktwM71Rbhfh0qSS2B6JcZoRQu8NvnBA0cyhRscUJXExCJvAIHlvU2fTM8Fop2
-	 UVxG//wgA1PyCzijLskTMqqxhtGckYlAgN2GBMsX3yiykygCg7jhaShJPRZSBKFQVn
-	 NJGan1EZhXY/1XbOXRenG6oLYSdcL4ySkIWpm6YE=
+	b=fmkZllnZsIb76Y0IlK45Kn91432p2OqkGMV3iLxqIfU4EjpZhnBp4lzTrnyUe2+fs
+	 uyEcy0L8xDYtaajAtj5Dvb2FJDgTAPM7EOY8x7eL7vOCRkwvWnQcfRTbRLAA2HeOdA
+	 RabXgtKkLA91V7VjmhHP8Ov+6DIRfviozrg7KfZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389151AbfHBJaH (ORCPT
+        id S2389013AbfHBJaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:30:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55430 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733176AbfHBJaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 2 Aug 2019 05:30:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55320 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726716AbfHBJaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:30:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29C552183F;
-        Fri,  2 Aug 2019 09:30:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8579121783;
+        Fri,  2 Aug 2019 09:30:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738203;
-        bh=VgKfAdirD3uxO5u4ONPWgq0IJsZefFAqt1zZ6VWEGbI=;
+        s=default; t=1564738201;
+        bh=hyHtEEnf36iw8vWSqaGWyCQTiEXS0hvNLj9GkU4cGNw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KoXCmVu/U0vS5Lm14TG2YJC7VPqGwZ7iNieIjiIKIJjbM9JjbWMb1U0/2UVszLr+W
-         JMTbg/oYEdo6EVof0cViHG60zCDS4BCSf9yXl6PMY4g1WyHDo9+FJ6p+CYgp7PhmhG
-         OkdAiysnQV6alYCi05R045/oCeg5p96tzIeVI8Hc=
+        b=mqYEcH7OUQyYVGSiFBICor2vDEonL9PnVBCaq0Izyycafb4WPSabIDDNfd7dOlBy4
+         MrCREbdTDv6Fgr0tRPzpplnwZapm39d6tSL4Tfy16i9G5+rREoYxVpsnM0X/hdAWwA
+         rJecUigiZhYzGRfDscLY8jZHdxjQ1nR+iuEnSkVg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Van Asbroeck <TheSven73@gmail.com>,
-        Robin Gong <yibin.gong@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+        stable@vger.kernel.org, Jo-Philipp Wich <jo@mein.io>,
+        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
+        Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 003/158] dmaengine: imx-sdma: fix use-after-free on probe error path
-Date:   Fri,  2 Aug 2019 11:27:04 +0200
-Message-Id: <20190802092204.300487250@linuxfoundation.org>
+Subject: [PATCH 4.4 002/158] MIPS: fix build on non-linux hosts
+Date:   Fri,  2 Aug 2019 11:27:03 +0200
+Message-Id: <20190802092204.138268259@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -60,105 +62,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2b8066c3deb9140fdf258417a51479b2aeaa7622 ]
+[ Upstream commit 1196364f21ffe5d1e6d83cafd6a2edb89404a3ae ]
 
-If probe() fails anywhere beyond the point where
-sdma_get_firmware() is called, then a kernel oops may occur.
+calc_vmlinuz_load_addr.c requires SZ_64K to be defined for alignment
+purposes.  It included "../../../../include/linux/sizes.h" to define
+that size, however "sizes.h" tries to include <linux/const.h> which
+assumes linux system headers.  These may not exist eg. the following
+error was encountered when building Linux for OpenWrt under macOS:
 
-Problematic sequence of events:
-1. probe() calls sdma_get_firmware(), which schedules the
-   firmware callback to run when firmware becomes available,
-   using the sdma instance structure as the context
-2. probe() encounters an error, which deallocates the
-   sdma instance structure
-3. firmware becomes available, firmware callback is
-   called with deallocated sdma instance structure
-4. use after free - kernel oops !
+In file included from arch/mips/boot/compressed/calc_vmlinuz_load_addr.c:16:
+arch/mips/boot/compressed/../../../../include/linux/sizes.h:11:10: fatal error: 'linux/const.h' file not found
+         ^~~~~~~~~~
 
-Solution: only attempt to load firmware when we're certain
-that probe() will succeed. This guarantees that the firmware
-callback's context will remain valid.
+Change makefile to force building on local linux headers instead of
+system headers.  Also change eye-watering relative reference in include
+file spec.
 
-Note that the remove() path is unaffected by this issue: the
-firmware loader will increment the driver module's use count,
-ensuring that the module cannot be unloaded while the
-firmware callback is pending or running.
+Thanks to Jo-Philip Wich & Petr Štetiar for assistance in tracking this
+down & fixing.
 
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-Reviewed-by: Robin Gong <yibin.gong@nxp.com>
-[vkoul: fixed braces for if condition]
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Suggested-by: Jo-Philipp Wich <jo@mein.io>
+Signed-off-by: Petr Štetiar <ynezz@true.cz>
+Signed-off-by: Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/imx-sdma.c | 48 ++++++++++++++++++++++++------------------
- 1 file changed, 27 insertions(+), 21 deletions(-)
+ arch/mips/boot/compressed/Makefile                 | 2 ++
+ arch/mips/boot/compressed/calc_vmlinuz_load_addr.c | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 4054747af0cb..dd97dbf6618c 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -1786,27 +1786,6 @@ static int sdma_probe(struct platform_device *pdev)
- 	if (pdata && pdata->script_addrs)
- 		sdma_add_scripts(sdma, pdata->script_addrs);
+diff --git a/arch/mips/boot/compressed/Makefile b/arch/mips/boot/compressed/Makefile
+index d5bdee115f22..d4918a2bca1b 100644
+--- a/arch/mips/boot/compressed/Makefile
++++ b/arch/mips/boot/compressed/Makefile
+@@ -66,6 +66,8 @@ OBJCOPYFLAGS_piggy.o := --add-section=.image=$(obj)/vmlinux.bin.z \
+ $(obj)/piggy.o: $(obj)/dummy.o $(obj)/vmlinux.bin.z FORCE
+ 	$(call if_changed,objcopy)
  
--	if (pdata) {
--		ret = sdma_get_firmware(sdma, pdata->fw_name);
--		if (ret)
--			dev_warn(&pdev->dev, "failed to get firmware from platform data\n");
--	} else {
--		/*
--		 * Because that device tree does not encode ROM script address,
--		 * the RAM script in firmware is mandatory for device tree
--		 * probe, otherwise it fails.
--		 */
--		ret = of_property_read_string(np, "fsl,sdma-ram-script-name",
--					      &fw_name);
--		if (ret)
--			dev_warn(&pdev->dev, "failed to get firmware name\n");
--		else {
--			ret = sdma_get_firmware(sdma, fw_name);
--			if (ret)
--				dev_warn(&pdev->dev, "failed to get firmware from device tree\n");
--		}
--	}
--
- 	sdma->dma_device.dev = &pdev->dev;
- 
- 	sdma->dma_device.device_alloc_chan_resources = sdma_alloc_chan_resources;
-@@ -1848,6 +1827,33 @@ static int sdma_probe(struct platform_device *pdev)
- 		of_node_put(spba_bus);
- 	}
- 
-+	/*
-+	 * Kick off firmware loading as the very last step:
-+	 * attempt to load firmware only if we're not on the error path, because
-+	 * the firmware callback requires a fully functional and allocated sdma
-+	 * instance.
-+	 */
-+	if (pdata) {
-+		ret = sdma_get_firmware(sdma, pdata->fw_name);
-+		if (ret)
-+			dev_warn(&pdev->dev, "failed to get firmware from platform data\n");
-+	} else {
-+		/*
-+		 * Because that device tree does not encode ROM script address,
-+		 * the RAM script in firmware is mandatory for device tree
-+		 * probe, otherwise it fails.
-+		 */
-+		ret = of_property_read_string(np, "fsl,sdma-ram-script-name",
-+					      &fw_name);
-+		if (ret) {
-+			dev_warn(&pdev->dev, "failed to get firmware name\n");
-+		} else {
-+			ret = sdma_get_firmware(sdma, fw_name);
-+			if (ret)
-+				dev_warn(&pdev->dev, "failed to get firmware from device tree\n");
-+		}
-+	}
++HOSTCFLAGS_calc_vmlinuz_load_addr.o += $(LINUXINCLUDE)
 +
- 	return 0;
+ # Calculate the load address of the compressed kernel image
+ hostprogs-y := calc_vmlinuz_load_addr
  
- err_register:
+diff --git a/arch/mips/boot/compressed/calc_vmlinuz_load_addr.c b/arch/mips/boot/compressed/calc_vmlinuz_load_addr.c
+index 542c3ede9722..d14f75ec8273 100644
+--- a/arch/mips/boot/compressed/calc_vmlinuz_load_addr.c
++++ b/arch/mips/boot/compressed/calc_vmlinuz_load_addr.c
+@@ -13,7 +13,7 @@
+ #include <stdint.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+-#include "../../../../include/linux/sizes.h"
++#include <linux/sizes.h>
+ 
+ int main(int argc, char *argv[])
+ {
 -- 
 2.20.1
 
