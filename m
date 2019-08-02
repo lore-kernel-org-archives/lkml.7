@@ -2,104 +2,103 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D9EC0650F
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F7FC0650F
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA5F620449
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:44:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564785884;
-	bh=XdFJVPWRCzB05b6HmXd10/7qO5reXFQcj8PyEcSf0Kw=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=udPaSbSIYrf3E5dX2WAZMGjTOeujdbNkTujoAxVegyf4WUH6UVBQQDSZz8t6ICs7Y
-	 3RErtwX64FeMS+QqtfREAxe+gRoec6Ix4/Rk/P/ZY/DrnXNiBck7/ZQXa9jP21X6R1
-	 Gildh4wYa0ZCMuBZgstxHiUvDtnHbIytGUBWL2n8=
+	by mail.kernel.org (Postfix) with ESMTP id 8CF8B2054F
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:48:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392484AbfHBWon (ORCPT
+        id S2392520AbfHBWsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 18:44:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47084 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 18:48:43 -0400
+Received: from mga07.intel.com ([134.134.136.100]:4182 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732417AbfHBWon (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 18:44:43 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C66E20449;
-        Fri,  2 Aug 2019 22:44:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564785882;
-        bh=XdFJVPWRCzB05b6HmXd10/7qO5reXFQcj8PyEcSf0Kw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=roqsN+cmILPGhhKaCVBDczl8po2NfZxI158HyxGLNRCqF6MZ3H6lEUaxS37AphYhy
-         z1p7tOaWPHynMKkSb+c4KwKYgQuFbWhtwNxTzvpgftBqyhz/UblDJ9HdrwkcIQ+Vm8
-         X770HwEFLU/qEtfZ0rqIckFvz1CbmP5YM8Fsn48o=
-Subject: Re: [PATCH v3 0/2] usbip: Implement SG support
-To:     Suwan Kim <suwan.kim027@gmail.com>, valentina.manea.m@gmail.com,
-        gregkh@linuxfoundation.org, stern@rowland.harvard.edu
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shuah <shuah@kernel.org>
-References: <20190802173651.22247-1-suwan.kim027@gmail.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <1b350c7c-823a-21a8-fc2f-d12dd4b4818d@kernel.org>
-Date:   Fri, 2 Aug 2019 16:44:40 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1728242AbfHBWsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 18:48:43 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Aug 2019 15:48:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,339,1559545200"; 
+   d="scan'208";a="184715679"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga002.jf.intel.com with ESMTP; 02 Aug 2019 15:48:42 -0700
+Date:   Fri, 2 Aug 2019 15:48:42 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KVM: x86: Unconditionally call x86 ops that are always
+ implemented
+Message-ID: <20190802224842.GB23165@linux.intel.com>
+References: <20190801164606.20777-1-sean.j.christopherson@intel.com>
+ <3337d56f-de99-6879-96c2-0255db68541d@oracle.com>
+ <20190801214207.GF6783@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190802173651.22247-1-suwan.kim027@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190801214207.GF6783@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suwan,
-
-On 8/2/19 11:36 AM, Suwan Kim wrote:
-> There are bugs on vhci with usb 3.0 storage device. Currently, vhci
-> doesn't supported SG, so USB storage driver on vhci breaks SG list
-> into multiple URBs and it causes error that a transfer got terminated
-> too early because the transfer length for one of the URBs was not
-> divisible by the maxpacket size.
->   
-> In this patch, vhci supports SG regardless of whether the server's
-> host controller supports SG or not, because stub driver splits SG
-> list into several URBs if the server's host controller doesn't
-> support SG.
->   
-> To support SG, vhci_map_urb_for_dma() sets URB_DMA_MAP_SG flag in
-> urb->transfer_flags if URB has SG list and this flag will tell stub
-> driver to use SG list.
->   
-> vhci sends each SG list entry to stub driver. Then, stub driver sees
-> the total length of the buffer and allocates SG table and pages
-> according to the total buffer length calling sgl_alloc(). After stub
-> driver receives completed URB, it again sends each SG list entry to
-> vhci.
->   
-> If the server's host controller doesn't support SG, stub driver
-> breaks a single SG request into several URBs and submits them to
-> the server's host controller. When all the split URBs are completed,
-> stub driver reassembles the URBs into a single return command and
-> sends it to vhci.
+On Thu, Aug 01, 2019 at 02:42:07PM -0700, Sean Christopherson wrote:
+> On Thu, Aug 01, 2019 at 02:39:38PM -0700, Krish Sadhukhan wrote:
+> > 
+> > 
+> > On 08/01/2019 09:46 AM, Sean Christopherson wrote:
+> > >Remove two stale checks for non-NULL ops now that they're implemented by
+> > >both VMX and SVM.
+> > >
+> > >Fixes: 74f169090b6f ("kvm/svm: Setup MCG_CAP on AMD properly")
+> > >Fixes: b31c114b82b2 ("KVM: X86: Provide a capability to disable PAUSE intercepts")
+> > >Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > >---
+> > >  arch/x86/kvm/x86.c | 8 ++------
+> > >  1 file changed, 2 insertions(+), 6 deletions(-)
+> > >
+> > >diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > >index 01e18caac825..2c25a19d436f 100644
+> > >--- a/arch/x86/kvm/x86.c
+> > >+++ b/arch/x86/kvm/x86.c
+> > >@@ -3506,8 +3506,7 @@ static int kvm_vcpu_ioctl_x86_setup_mce(struct kvm_vcpu *vcpu,
+> > >  	for (bank = 0; bank < bank_num; bank++)
+> > >  		vcpu->arch.mce_banks[bank*4] = ~(u64)0;
+> > >-	if (kvm_x86_ops->setup_mce)
+> > >-		kvm_x86_ops->setup_mce(vcpu);
+> > >+	kvm_x86_ops->setup_mce(vcpu);
+> > >  out:
+> > >  	return r;
+> > >  }
+> > >@@ -9313,10 +9312,7 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+> > >  	kvm_page_track_init(kvm);
+> > >  	kvm_mmu_init_vm(kvm);
+> > >-	if (kvm_x86_ops->vm_init)
+> > >-		return kvm_x86_ops->vm_init(kvm);
+> > >-
+> > >-	return 0;
+> > >+	return kvm_x86_ops->vm_init(kvm);
+> > >  }
+> > >  static void kvm_unload_vcpu_mmu(struct kvm_vcpu *vcpu)
+> > 
+> > The following two ops are also implemented by both VMX and SVM:
+> > 
+> >         update_cr8_intercept
+> >         update_pi_irte
 > 
-> Alan fixed vhci bug with the USB 3.0 storage device by modifying
-> USB storage driver.
-> ("usb-storage: Set virt_boundary_mask to avoid SG overflows")
-> But the fundamental solution of it is to add SG support to vhci.
-> 
-> This patch works well with the USB 3.0 storage devices without Alan's
-> patch, and we can revert Alan's patch if it causes some troubles.
-> 
+> Drat, I didn't think to grep for !kvm_x86_ops.  I'll spin a v2.  Thanks!
 
-Why just 3.0? Please test with lowspeed and VUDC to make sure there are
-no regressions.
+Ah, but update_cr8_intercept is zapped by VMX if hardware doesn't support
+the TPR shadow.
 
-thanks,
--- Shuah
+P.S. I meant to send this before posting v2, but I got distracted...
