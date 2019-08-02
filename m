@@ -5,50 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 669EFC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C91EC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40DC4206A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D75E9206A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:48:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739298;
-	bh=7IWG8TuhT4R5+XGGcFt1xYMtCoyUQsfDNejMvWZnSAA=;
+	s=default; t=1564739304;
+	bh=2OMjR4OVhkOfWDL55i9Z6Nyg3/Of6etqppTqfZ5q5bE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nz9EU5DsPlQWo1yE8hpCKqNiqzJzim3e6YV9RDwMNAdWVP7i5jNPVyEiYbizUgAcL
-	 l+iT94FaUY5I3J/9dc6Cc0OqTo4BUGxYQM2Ubhi333id1NegBtmDUz2eukqg0Ok+0f
-	 66EcLTvX9EFHzGO64Y3BBczLuAx4FQAHjt0nPGrk=
+	b=Euv9A2VGJpr6LGiamdAWmfxkYQWxRyFzVEY1awqn4ZDA+FyS87OtC+wiNnvmeLZ8q
+	 xVviuBbG7enBeJ4W/CvW7In3nkQPaGoRhYvFMkjCuvKilBMSPdRtLuCz8qMJhKLyjQ
+	 XD6KXEj48wTzGN9Y85Gu9o0LZCxp7LVBOpAsaBv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405849AbfHBJsR (ORCPT
+        id S2405828AbfHBJsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:48:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53614 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:48:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405831AbfHBJsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:48:15 -0400
+        id S2405155AbfHBJsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:48:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 730D92086A;
-        Fri,  2 Aug 2019 09:48:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 478552086A;
+        Fri,  2 Aug 2019 09:48:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739294;
-        bh=7IWG8TuhT4R5+XGGcFt1xYMtCoyUQsfDNejMvWZnSAA=;
+        s=default; t=1564739289;
+        bh=2OMjR4OVhkOfWDL55i9Z6Nyg3/Of6etqppTqfZ5q5bE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ACrWCmb5jjPLYBRWZJF0QgH3k26B7KCR3gynniCs9QLbExhoK2UnziXF/ehtgxNIh
-         xWym9v9RkK/2ccWbwYW861X8RbNsUGW7gylRzw8CtjI5buMP+ctX2r/7/K4dxs4kxT
-         OSPWmTYvjAq9gOnpHqbww6EQXHO9/b0mBENhurqw=
+        b=ypvN4iyxrXeiwJaueH2jhYzTPNdjZBj5Rfloj1UoHuHCy9Zp3j/5FT36YG06nYxec
+         zDN2YNapIK96O1PNE4zwaixl8jUlrzpMv2EI7FcWldlxTWsPRuTGFdgS+i/Ilfrj3U
+         coQ0dnDEcVfLgoCNzVwVv9XQOMMriBI8f8z5FH7Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>,
-        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        stable@vger.kernel.org,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Tejun Heo <tj@kernel.org>, Wolfram Sang <wsa@the-dreams.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 178/223] PCI: xilinx-nwl: Fix Multi MSI data programming
-Date:   Fri,  2 Aug 2019 11:36:43 +0200
-Message-Id: <20190802092249.274158991@linuxfoundation.org>
+Subject: [PATCH 4.9 176/223] PCI: sysfs: Ignore lockdep for remove attribute
+Date:   Fri,  2 Aug 2019 11:36:41 +0200
+Message-Id: <20190802092249.198166070@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -61,94 +65,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 181fa434d0514e40ebf6e9721f2b72700287b6e2 ]
+[ Upstream commit dc6b698a86fe40a50525433eb8e92a267847f6f9 ]
 
-According to the PCI Local Bus specification Revision 3.0,
-section 6.8.1.3 (Message Control for MSI), endpoints that
-are Multiple Message Capable as defined by bits [3:1] in
-the Message Control for MSI can request a number of vectors
-that is power of two aligned.
+With CONFIG_PROVE_LOCKING=y, using sysfs to remove a bridge with a device
+below it causes a lockdep warning, e.g.,
 
-As specified in section 6.8.1.6 "Message data for MSI", the Multiple
-Message Enable field (bits [6:4] of the Message Control register)
-defines the number of low order message data bits the function is
-permitted to modify to generate its system software allocated
-vectors.
+  # echo 1 > /sys/class/pci_bus/0000:00/device/0000:00:00.0/remove
+  ============================================
+  WARNING: possible recursive locking detected
+  ...
+  pci_bus 0000:01: busn_res: [bus 01] is released
 
-The MSI controller in the Xilinx NWL PCIe controller supports a number
-of MSI vectors specified through a bitmap and the hwirq number for an
-MSI, that is the value written in the MSI data TLP is determined by
-the bitmap allocation.
+The remove recursively removes the subtree below the bridge.  Each call
+uses a different lock so there's no deadlock, but the locks were all
+created with the same lockdep key so the lockdep checker can't tell them
+apart.
 
-For instance, in a situation where two endpoints sitting on
-the PCI bus request the following MSI configuration, with
-the current PCI Xilinx bitmap allocation code (that does not
-align MSI vector allocation on a power of two boundary):
+Mark the "remove" sysfs attribute with __ATTR_IGNORE_LOCKDEP() as it is
+safe to ignore the lockdep check between different "remove" kernfs
+instances.
 
-Endpoint #1: Requesting 1 MSI vector - allocated bitmap bits 0
-Endpoint #2: Requesting 2 MSI vectors - allocated bitmap bits [1,2]
+There's discussion about a similar issue in USB at [1], which resulted in
+356c05d58af0 ("sysfs: get rid of some lockdep false positives") and
+e9b526fe7048 ("i2c: suppress lockdep warning on delete_device"), which do
+basically the same thing for USB "remove" and i2c "delete_device" files.
 
-The bitmap value(s) corresponds to the hwirq number that is programmed
-into the Message Data for MSI field in the endpoint MSI capability
-and is detected by the root complex to fire the corresponding
-MSI irqs. The value written in Message Data for MSI field corresponds
-to the first bit allocated in the bitmap for Multi MSI vectors.
-
-The current Xilinx NWL MSI allocation code allows a bitmap allocation
-that is not a power of two boundaries, so endpoint #2, is allowed to
-toggle Message Data bit[0] to differentiate between its two vectors
-(meaning that the MSI data will be respectively 0x0 and 0x1 for the two
-vectors allocated to endpoint #2).
-
-This clearly aliases with the Endpoint #1 vector allocation, resulting
-in a broken Multi MSI implementation.
-
-Update the code to allocate MSI bitmap ranges with a power of two
-alignment, fixing the bug.
-
-Fixes: ab597d35ef11 ("PCI: xilinx-nwl: Add support for Xilinx NWL PCIe Host Controller")
-Suggested-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-[lorenzo.pieralisi@arm.com: updated commit log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+[1] https://lore.kernel.org/r/Pine.LNX.4.44L0.1204251436140.1206-100000@iolanthe.rowland.org
+Link: https://lore.kernel.org/r/20190526225151.3865-1-marek.vasut@gmail.com
+Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+[bhelgaas: trim commit log, details at above links]
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Phil Edworthy <phil.edworthy@renesas.com>
+Cc: Simon Horman <horms+renesas@verge.net.au>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/host/pcie-xilinx-nwl.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ drivers/pci/pci-sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/host/pcie-xilinx-nwl.c b/drivers/pci/host/pcie-xilinx-nwl.c
-index 94fdd295aae2..3bba87af0b6b 100644
---- a/drivers/pci/host/pcie-xilinx-nwl.c
-+++ b/drivers/pci/host/pcie-xilinx-nwl.c
-@@ -456,15 +456,13 @@ static int nwl_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
- 	int i;
- 
- 	mutex_lock(&msi->lock);
--	bit = bitmap_find_next_zero_area(msi->bitmap, INT_PCI_MSI_NR, 0,
--					 nr_irqs, 0);
--	if (bit >= INT_PCI_MSI_NR) {
-+	bit = bitmap_find_free_region(msi->bitmap, INT_PCI_MSI_NR,
-+				      get_count_order(nr_irqs));
-+	if (bit < 0) {
- 		mutex_unlock(&msi->lock);
- 		return -ENOSPC;
- 	}
- 
--	bitmap_set(msi->bitmap, bit, nr_irqs);
--
- 	for (i = 0; i < nr_irqs; i++) {
- 		irq_domain_set_info(domain, virq + i, bit + i, &nwl_irq_chip,
- 				domain->host_data, handle_simple_irq,
-@@ -482,7 +480,8 @@ static void nwl_irq_domain_free(struct irq_domain *domain, unsigned int virq,
- 	struct nwl_msi *msi = &pcie->msi;
- 
- 	mutex_lock(&msi->lock);
--	bitmap_clear(msi->bitmap, data->hwirq, nr_irqs);
-+	bitmap_release_region(msi->bitmap, data->hwirq,
-+			      get_count_order(nr_irqs));
- 	mutex_unlock(&msi->lock);
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index e5d8e2e2bd30..717540161223 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -371,7 +371,7 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
+ 		pci_stop_and_remove_bus_device_locked(to_pci_dev(dev));
+ 	return count;
  }
+-static struct device_attribute dev_remove_attr = __ATTR(remove,
++static struct device_attribute dev_remove_attr = __ATTR_IGNORE_LOCKDEP(remove,
+ 							(S_IWUSR|S_IWGRP),
+ 							NULL, remove_store);
  
 -- 
 2.20.1
