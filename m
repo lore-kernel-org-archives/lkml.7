@@ -2,107 +2,167 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA7FC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87476C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:35:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFED2216C8
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:33:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D73D2087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:35:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FgfI9M5Y"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="NNFWM0oi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729931AbfHBQdp (ORCPT
+        id S1731679AbfHBQfB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 12:33:45 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:36528 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726300AbfHBQdp (ORCPT
+        Fri, 2 Aug 2019 12:35:01 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41824 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730828AbfHBQfA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 12:33:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=POb9S0P8wt5FGDQBsksiLIQ4LHAbMykwcFNaxiHaxxk=; b=FgfI9M5YrkQCEuIQlLEUcXuEH
-        aXDrUrgG/bZZK/rYRCwrpoWbDQg/rYNyXQIDgekl8JI8zXmo4L3g7vBMOYyjmc0OAnV2/kpWWmbBm
-        pe48TTWl4lmSEsKrJB6iID/iGBFCdhwX5Rqqhk37hDDzfCH8wHpxOBsXRy2tsFQb6y+Dax/amtbzU
-        7nE0GkJ3oaRzj+loS3URDS8fCOaPJnIHMdKvZebkNmsmaqqIV88eNdcIC8VHXH+wg3he4DqoudqDb
-        La9Xtk2Xr1vIlZqQ/Y7nYivHyCUzxCTKBipIJpG7xGdZUZkiVTxD5Lr6NXSqbNCNvvCyhEIilpFBy
-        NsKUiaWhg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1htaUk-0004ad-Ka; Fri, 02 Aug 2019 16:33:33 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2261F20293EA8; Fri,  2 Aug 2019 18:33:28 +0200 (CEST)
-Date:   Fri, 2 Aug 2019 18:33:28 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>
-Subject: Re: [PATCH] perf/x86/amd: Change NMI latency mitigation to use a
- timestamp
-Message-ID: <20190802163328.GB2349@hirez.programming.kicks-ass.net>
-References: <833ee307989ac6bfb45efe823c5eca4b2b80c7cf.1564685848.git.thomas.lendacky@amd.com>
- <20190801211613.GB3578@hirez.programming.kicks-ass.net>
- <b4597324-6eb8-31fa-e911-63f3b704c974@amd.com>
- <alpine.DEB.2.21.1908012331550.1789@nanos.tec.linutronix.de>
- <20190801214813.GB2332@hirez.programming.kicks-ass.net>
- <alpine.DEB.2.21.1908012352390.1789@nanos.tec.linutronix.de>
- <925c3458-aeae-a44b-ddd5-40a1e173a307@amd.com>
- <20190802162015.GA2349@hirez.programming.kicks-ass.net>
+        Fri, 2 Aug 2019 12:35:00 -0400
+Received: by mail-wr1-f67.google.com with SMTP id c2so74591880wrm.8
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 09:34:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=8jC0z1URQ1H0xyCXJDkfPMve8cjcGKBfDhT0uA7E2TE=;
+        b=NNFWM0oiXe3g6Tvx832q3/DBNG02GtBddw+kxX1llCJb6LxKU1n/Z12IJayyJmwQh+
+         ioSvXI2JhwCCpA+Bac8E8FCRPFVXcM2ynwZt3JBpWummRyWWVxNcD/kPgWBuT08TI2uR
+         37bP/6Kwn/b/ZawR10nz2Q/4B35trsqTn/YvPDYJPq5iWXyPsXkmk/iBKAzttuT8JtJl
+         PbAV96hUimt9te6/4ZgsVl9enJolBKcBVsURes7sQCsGB0BVwAi0180ZKO1bb2PHVysr
+         8r/gjoUrp0RgADrvQVTHWstLp94XuCRCRAghBCeRIwRj7+m2Cfdft/Lh4cfp2g+zFf+J
+         JVuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=8jC0z1URQ1H0xyCXJDkfPMve8cjcGKBfDhT0uA7E2TE=;
+        b=B6AJSzYLSokh+ZD8dhuVjreuwSfqE9zK+4ACJGf9ZujVR2OYp2Df/8CZx8wbxDUbrx
+         XNePFBRTVUXiQsYgeqdgzCLPTmfaN2lemTudAIY+4iTScCmaY16cwUXiC5gjrBrwI+az
+         5N12cCJp+TDd1seser/ahJYRRRCD5Us9VnPpxji3b3niqaCxFM/Flm7mfMc2h7Uh7E1r
+         Bqza1xrmICce7XS9vS61xaSYRLpL2ijUm6joTQDmAyPeeK3+Jfa5mWaXXvSgc1apUep1
+         AQLQvH9NK3wS3XktGNNfYq4QySf7FhcC3jJNLYEOmuPs4ywFw+FEJWFvGK5jJu9ZNyx3
+         OabA==
+X-Gm-Message-State: APjAAAXUsGazkGiZ6sF8r1Vael/p2Wjwgj8oNQmTH+Ga7MnrZD6Jg2vk
+        Ib8nZ0EivK19KfHmLXPudd8=
+X-Google-Smtp-Source: APXvYqyWWjzH2TRcQ0z7dDiznv1D2CaqThzDnGFdT7KCn0cU0KREvikpfdYkHrnSYM1MoarafBqWjw==
+X-Received: by 2002:adf:b195:: with SMTP id q21mr3999407wra.2.1564763698721;
+        Fri, 02 Aug 2019 09:34:58 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id j10sm134938738wrd.26.2019.08.02.09.34.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 02 Aug 2019 09:34:58 -0700 (PDT)
+Message-ID: <5d446632.1c69fb81.e9bbc.28ff@mx.google.com>
+Date:   Fri, 02 Aug 2019 09:34:58 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190802162015.GA2349@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Tree: stable-rc
+X-Kernelci-Kernel: v4.9.186-224-g5380ded2525d
+X-Kernelci-Branch: linux-4.9.y
+X-Kernelci-Report-Type: boot
+In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
+References: <20190802092238.692035242@linuxfoundation.org>
+Subject: Re: [PATCH 4.9 000/223] 4.9.187-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 06:20:15PM +0200, Peter Zijlstra wrote:
-> On Fri, Aug 02, 2019 at 02:33:41PM +0000, Lendacky, Thomas wrote:
+stable-rc/linux-4.9.y boot: 101 boots: 0 failed, 66 passed with 35 offline =
+(v4.9.186-224-g5380ded2525d)
 
-> > Talking to the hardware folks, they say setting CR8 is a serializing
-> > instruction and has to communicate out to the APIC, so it's better to
-> > use CLI/STI.
-> 
-> Bah; the Intel SDM states: "MOV CR* instructions, except for MOV CR8,
-> are serializing instructions", which had given me a little hope.
-> 
-> At the same time, all these chips still have the APIC TPR field too, so
-> much like how the TSC DEADLINE MSR is a hidden APIC write, so too is CR8
-> I suppose :-(
-> 
-> I'll still finish the patches I started, just to see what it would look
-> like.
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.9.y/kernel/v4.9.186-224-g5380ded2525d/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.9.y=
+/kernel/v4.9.186-224-g5380ded2525d/
 
-Another 'fun' issue I ran into while doing these patches; STI has a 1
-instruction shadow, which we rely on, MOV CR8 does not. So things like:
+Tree: stable-rc
+Branch: linux-4.9.y
+Git Describe: v4.9.186-224-g5380ded2525d
+Git Commit: 5380ded2525da1be5103e3f0f33129dcbffa3add
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 50 unique boards, 23 SoC families, 15 builds out of 197
 
-native_safe_halt:
-	sti
-	hlt
+Offline Platforms:
 
-turn into:
+arm64:
 
-native_safe_halt:
-	cli
-	movl $0, %rax
-	movq %rax, %cr8
-	sti
-	hlt
+    defconfig:
+        gcc-8
+            meson-gxbb-odroidc2: 1 offline lab
 
+arm:
 
+    tegra_defconfig:
+        gcc-8
+            tegra20-iris-512: 1 offline lab
+
+    exynos_defconfig:
+        gcc-8
+            exynos5250-arndale: 1 offline lab
+            exynos5420-arndale-octa: 1 offline lab
+            exynos5800-peach-pi: 1 offline lab
+
+    multi_v7_defconfig:
+        gcc-8
+            bcm72521-bcm97252sffe: 1 offline lab
+            bcm7445-bcm97445c: 1 offline lab
+            exynos5250-arndale: 1 offline lab
+            exynos5420-arndale-octa: 1 offline lab
+            exynos5800-peach-pi: 1 offline lab
+            imx6dl-wandboard_dual: 1 offline lab
+            imx6dl-wandboard_solo: 1 offline lab
+            imx6q-wandboard: 1 offline lab
+            imx7s-warp: 1 offline lab
+            meson8b-odroidc1: 1 offline lab
+            omap3-beagle: 1 offline lab
+            omap4-panda: 1 offline lab
+            qcom-apq8064-ifc6410: 1 offline lab
+            stih410-b2120: 1 offline lab
+            sun4i-a10-cubieboard: 1 offline lab
+            sun7i-a20-bananapi: 1 offline lab
+            tegra20-iris-512: 1 offline lab
+            vf610-colibri-eval-v3: 1 offline lab
+
+    omap2plus_defconfig:
+        gcc-8
+            omap3-beagle: 1 offline lab
+            omap4-panda: 1 offline lab
+
+    qcom_defconfig:
+        gcc-8
+            qcom-apq8064-ifc6410: 1 offline lab
+
+    davinci_all_defconfig:
+        gcc-8
+            da850-evm: 1 offline lab
+            dm365evm,legacy: 1 offline lab
+
+    imx_v6_v7_defconfig:
+        gcc-8
+            imx6dl-wandboard_dual: 1 offline lab
+            imx6dl-wandboard_solo: 1 offline lab
+            imx6q-wandboard: 1 offline lab
+            imx7s-warp: 1 offline lab
+            vf610-colibri-eval-v3: 1 offline lab
+
+    sunxi_defconfig:
+        gcc-8
+            sun4i-a10-cubieboard: 1 offline lab
+            sun7i-a20-bananapi: 1 offline lab
+
+---
+For more info write to <info@kernelci.org>
