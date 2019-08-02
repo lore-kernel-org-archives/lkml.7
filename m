@@ -2,117 +2,154 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D30E3C0650F
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A0AC0650F
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A028F2067D
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:38:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564785511;
-	bh=XfJixi4xuzcnFxHwrFJTVHUtmkreXUi87OxBiFEUMKo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=eiJYqAEV3EvUT1xV6VMcJ3gn7DTR+PxHoEuyl2j+smXN5yoegmfCbISsIezeOuFRA
-	 TSJn+qzRpIlq1UBtRWnO+L7J95jROlIpyKCpN2o5eDvGm92G+4lYVQ6SV+n5pshzuR
-	 Kt3lUDagbUWDles0DCWS5/0tlUxVyRXme2AdvBrE=
+	by mail.kernel.org (Postfix) with ESMTP id 28E56206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:39:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="wjV7AbrH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392434AbfHBWia (ORCPT
+        id S2392502AbfHBWj0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 18:38:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45884 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729980AbfHBWia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 18:38:30 -0400
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB68521783;
-        Fri,  2 Aug 2019 22:38:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564785508;
-        bh=XfJixi4xuzcnFxHwrFJTVHUtmkreXUi87OxBiFEUMKo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=aSn893t31UbGBbwVOIjEJFzyTo05qyeU8Z1mVQoWKRKN/V8SKHEt7p8lcu4bhQdoI
-         LGazNnJJ3nnOiQMaYlF+4ZZ7UFOSPAr/X86UuwCexuT9qWvzpaVVgUfRtpyhc82OrR
-         U8FhSJeICQX8MDSwmuXnFtbftTCZliA7haLbg9/w=
-Received: by mail-qk1-f178.google.com with SMTP id t187so3363444qke.8;
-        Fri, 02 Aug 2019 15:38:28 -0700 (PDT)
-X-Gm-Message-State: APjAAAWrXcuNdN7JIox/L4oU/gpgxEq3RXYRhrvJaS23x+LiFkxsFhm4
-        yIMIVuIKesfgmZgJZzGFWnJsz1xd0jbfd4YpRg==
-X-Google-Smtp-Source: APXvYqzvziBgm/niAlkvKF2WYa8Hbu7XGWy01L47nrb5nZ3ZHKliqGHMB7nfWXJln2n9jPWHICNYT9LuhALcS/C0eLI=
-X-Received: by 2002:a37:a48e:: with SMTP id n136mr94788423qke.223.1564785507833;
- Fri, 02 Aug 2019 15:38:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190802194702.30249-1-stefan-gabriel.mirea@nxp.com> <20190802194702.30249-2-stefan-gabriel.mirea@nxp.com>
-In-Reply-To: <20190802194702.30249-2-stefan-gabriel.mirea@nxp.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 2 Aug 2019 16:38:16 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL++GZBxczxePni9ysNq06kObB4EzJEi1e4M=PurPZFgQ@mail.gmail.com>
-Message-ID: <CAL_JsqL++GZBxczxePni9ysNq06kObB4EzJEi1e4M=PurPZFgQ@mail.gmail.com>
-Subject: Re: [PATCH 1/6] dt-bindings: arm: fsl: Add the S32V234-EVB board
-To:     Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
-Cc:     "corbet@lwn.net" <corbet@lwn.net>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "jslaby@suse.com" <jslaby@suse.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Eddy Petrisor <eddy.petrisor@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 2 Aug 2019 18:39:26 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38369 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392438AbfHBWj0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 18:39:26 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y15so36719016pfn.5
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 15:39:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=xtoAGxBdiLOUknlhHTx8GNIb+LMwTi7H97I3neUlIPA=;
+        b=wjV7AbrHhgkT2XLYtZG2ovEdz+FypvUIWsUDlYU4I+0o/z3HbUiLTtxzulJrRuDR66
+         nktecPr/bpd84BXXJsGMZk5npIv/E+gZLaoZ0mvs5lZSIRpEGIXlg2U7S70s5mvwjHQP
+         5I9d8GrxsG/o4PHwwn3Gg7QY+a5LfHlWw8PA+XJba4NTy21/xck7y0xjVkeeyrwM1BBh
+         5oK33sIj7LimA6/2W34ERiPaapWS4J2mKddN9DL1MIR4FiguNq2gnbGtwG4tfRgK76Fp
+         KCZxBmnsQHJ0QZyJB+3rY72fy45osR9GXNG/zG1ZYHGhq7IrL6t8KK7btHKc7vsNx6Oa
+         x9fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=xtoAGxBdiLOUknlhHTx8GNIb+LMwTi7H97I3neUlIPA=;
+        b=nrrccBmGnfr2hTQ8XKQsdKJ7/irvvoZSqq8QSQceEpmy9/U/m1+dWWRKeJeiBkNptC
+         HIFr2z0nn1NuF386/YtkTB7rku9FxjcIthAywZmaNCATjp5o/+FNQLf/mgDH93QtObjC
+         k2oGsmVKFxbnf+5LnBsgw4qebmLUuopK2AQ3fXVqnqBB80Ztcj+nHL9PCCVkf8zivfhL
+         bWg9cWQpT0KITi7Yo7o5KfQmZfCmXtWehHSB3AspIDvvyR9fRrKYj7xDLsyCq1kWQC9q
+         a/i5FEnqYD/FNeO6s/E4BDGoMI//yFMructpBbyTotNo9nmgYTOg2PiTVVBEqmqo38z9
+         1QyQ==
+X-Gm-Message-State: APjAAAU0uR4xTkxcJGEbpGUQcuD4OnC8AnmCgUpQ4nzwSdlU4a6lwYVX
+        ueoY5/pkx8ai+agmppRc+V/ZoQ==
+X-Google-Smtp-Source: APXvYqze8hQUQZYFJxl6Kf/11NwXqpgpVI1uOQzkOUxpW4Lfyk/NrWHTfysYkhemaQk3mYt67WCEqg==
+X-Received: by 2002:a63:595d:: with SMTP id j29mr4211932pgm.134.1564785565245;
+        Fri, 02 Aug 2019 15:39:25 -0700 (PDT)
+Received: from ?IPv6:2600:1010:b06b:6482:694d:11f8:429b:f614? ([2600:1010:b06b:6482:694d:11f8:429b:f614])
+        by smtp.gmail.com with ESMTPSA id v22sm75519122pgk.69.2019.08.02.15.39.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 02 Aug 2019 15:39:24 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (1.0)
+Subject: Re: [patch 2/5] x86/kvm: Handle task_work on VMENTER/EXIT
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16G77)
+In-Reply-To: <alpine.DEB.2.21.1908030015330.4029@nanos.tec.linutronix.de>
+Date:   Fri, 2 Aug 2019 15:39:22 -0700
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Julia Cartwright <julia@ni.com>,
+        Paul McKenney <paulmck@linux.vnet.ibm.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>, kvm@vger.kernel.org,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <89E42BCC-47A8-458B-B06A-D6A20D20512C@amacapital.net>
+References: <20190801143250.370326052@linutronix.de> <20190801143657.887648487@linutronix.de> <20190801162451.GE31538@redhat.com> <alpine.DEB.2.21.1908012025100.1789@nanos.tec.linutronix.de> <20190801213550.GE6783@linux.intel.com> <alpine.DEB.2.21.1908012343530.1789@nanos.tec.linutronix.de> <alpine.DEB.2.21.1908012345000.1789@nanos.tec.linutronix.de> <c8294b01-62d1-95df-6ff6-213f945a434f@redhat.com> <alpine.DEB.2.21.1908030015330.4029@nanos.tec.linutronix.de>
+To:     Thomas Gleixner <tglx@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 2, 2019 at 1:47 PM Stefan-gabriel Mirea
-<stefan-gabriel.mirea@nxp.com> wrote:
->
-> From: Eddy Petri=C8=99or <eddy.petrisor@nxp.com>
->
-> Add entry for the NXP S32V234 Customer Evaluation Board to the board/SoC
-> bindings.
->
-> Signed-off-by: Eddy Petri=C8=99or <eddy.petrisor@nxp.com>
-> Signed-off-by: Stefan-Gabriel Mirea <stefan-gabriel.mirea@nxp.com>
-> ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentati=
-on/devicetree/bindings/arm/fsl.yaml
-> index 7294ac36f4c0..104d60a11177 100644
-> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> @@ -309,4 +309,10 @@ properties:
->                - fsl,ls2088a-rdb
->            - const: fsl,ls2088a
->
-> +      - description: S32V234 Customer Evaluation Board
 
-Most of the entries in this file are for all the boards for an SoC.
 
-> +        items:
-> +          - enum:
-> +              - fsl,s32v234-evb
+> On Aug 2, 2019, at 3:22 PM, Thomas Gleixner <tglx@linutronix.de> wrote:
+>=20
+>> On Fri, 2 Aug 2019, Paolo Bonzini wrote:
+>>> On 01/08/19 23:47, Thomas Gleixner wrote:
+>>> Right you are about cond_resched() being called, but for SRCU this does n=
+ot
+>>> matter unless there is some way to do a synchronize operation on that SR=
+CU
+>>> entity. It might have some other performance side effect though.
+>>=20
+>> I would use srcu_read_unlock/lock around the call.
+>>=20
+>> However, I'm wondering if the API can be improved because basically we
+>> have six functions for three checks of TIF flags.  Does it make sense to
+>> have something like task_has_request_flags and task_do_requests (names
+>> are horrible I know) that can be used like
+>>=20
+>>    if (task_has_request_flags()) {
+>>        int err;
+>>        ...srcu_read_unlock...
+>>        // return -EINTR if signal_pending
+>>        err =3D task_do_requests();
+>>        if (err < 0)
+>>            goto exit_no_srcu_read_unlock;
+>>        ...srcu_read_lock...
+>>    }
+>>=20
+>> taking care of all three cases with a single hook?  This is important
+>> especially because all these checks are done by all KVM architectures in
+>> slightly different ways, and a unified API would be a good reason to
+>> make all architectures look the same.
+>>=20
+>> (Of course I could also define this unified API in virt/kvm/kvm_main.c,
+>> so this is not blocking the series in any way!).
+>=20
+> You're not holding up something. Having a common function for this is
+> definitely the right approach.
+>=20
+> As this is virt specific because it only checks for non arch specific bits=
 
-If that's not going to be the case here, you can use 'const' here.
+> (TIF_NOTIFY_RESUME should be available for all KVM archs) and the TIF bits=
 
-> +          - const: fsl,s32v234
-> +
->  ...
-> --
-> 2.22.0
->
+> are a subset of the available TIF bits because all others do not make any
+> sense there, this really should be a common function for KVM so that all
+> other archs which obviously lack a TIF_NOTIFY_RESUME check, can be fixed u=
+p
+> and consolidated. If we add another TIF check later then we only have to d=
+o
+> it in one place.
+>=20
+>=20
+
+If we add a real API for this, can we make it, or a very similar API, work f=
+or exit_to_usermode_loop() too?  Maybe:
+
+bool usermode_work_pending();
+bool guestmode_work_pending();
+
+void do_usermode_work();
+void do_guestmode_work();
+
+The first two are called with IRQs off.  The latter two are called with IRQs=
+ on.=
