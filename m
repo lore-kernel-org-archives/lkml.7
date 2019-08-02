@@ -2,143 +2,95 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 112DDC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 20:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E15BC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 20:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D389020880
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 20:49:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CNUGS0o/"
+	by mail.kernel.org (Postfix) with ESMTP id 0CA2520880
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 20:51:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437070AbfHBUtz (ORCPT
+        id S2437078AbfHBUvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 16:49:55 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44058 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726999AbfHBUtz (ORCPT
+        Fri, 2 Aug 2019 16:51:19 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:42170 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1729659AbfHBUvT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 16:49:55 -0400
-Received: by mail-pl1-f195.google.com with SMTP id t14so34048105plr.11;
-        Fri, 02 Aug 2019 13:49:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ENSyot+GNdqEsPMj6QXt84UJj5q21aiWLv73xl8tKs0=;
-        b=CNUGS0o/7n6moxYJjoULWtyJ+iM+UwBiq475Ssij85TCMqybZiB1CyjE/um4r/+HvN
-         crlqP1utunGT7etIKLdpxGytiHEVw+DufD9RvGjvAImVSPAQdq8sIPzwmfbSatkmk40y
-         SJrOsKohoLVYqXJJF+fe5pQ/M2HmWmbyC3tcYGJA7HMERERf1PWB6smd0qakgNLUp4mA
-         Z4dNwEbEVV93+GfZJC9Oo26hUQHHTo9iOegGYJ16wdFCzRyMTgrY7jU7vovwT92imhXt
-         wH3+B212dAb1lZbe0vRfLa/7iwyrqs2lKYHmeZUJ5o5rsCfWfbqFYjN7aOU3OUf1wpbg
-         +WWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ENSyot+GNdqEsPMj6QXt84UJj5q21aiWLv73xl8tKs0=;
-        b=lrSr0ivIUOdxtPwg95+dDJKtlxewQLO4FuJzmWtDAmc6lLVimW8ltwOW+VOgOK3Aer
-         Q8K1eRL3B0kQKb0mZ89LdHAu5rDJCY5IUmWRH3NQNEDqnGdM/ELJ11Ij0OX96ILv4lG6
-         wNYkWxMaWSl7c2LQJuPAIJnx0Xr1seWvKkYjQYRQ8dcB24gB54RkUDLLuKR/DTvk8EPu
-         3S763Biae/D7InSxa664p+yPdbK0eCO8R6x0oFRJvXeh40Pab5gqeqqae8ZU9WTACz4n
-         pk7KZbsa0tGFCHXDNa9aRGIIIU6eqp9IGdhgsCoOlSPTFUnZFQi5AEXZCV65gzsj0qVa
-         KEmg==
-X-Gm-Message-State: APjAAAXVotFNqeQqZ52rokN2Y5xOb2xw4gOjTGA9y54ErnjkpIWggp6y
-        gAOkbokJEOCQVxRO1SKIeN0=
-X-Google-Smtp-Source: APXvYqyZdXKq7maDW6xH3Vf3d4ciK+RxU3q3LMnSZKsp8dTn+hEWqB17yBBex/+y7896AM0TfCMylA==
-X-Received: by 2002:a17:902:9a49:: with SMTP id x9mr134370035plv.282.1564778994625;
-        Fri, 02 Aug 2019 13:49:54 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id n128sm31732153pfn.46.2019.08.02.13.49.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 02 Aug 2019 13:49:53 -0700 (PDT)
-Date:   Fri, 2 Aug 2019 13:49:52 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     linux-watchdog@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
-        Rick Ramstetter <rick@anteaterllc.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/5] watchdog: ziirave_wdt: Don't bail out on unexpected
- timeout value
-Message-ID: <20190802204952.GA6292@roeck-us.net>
-References: <20190731174252.18041-1-andrew.smirnov@gmail.com>
- <20190731174252.18041-5-andrew.smirnov@gmail.com>
+        Fri, 2 Aug 2019 16:51:19 -0400
+Received: (qmail 6861 invoked by uid 2102); 2 Aug 2019 16:51:18 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 2 Aug 2019 16:51:18 -0400
+Date:   Fri, 2 Aug 2019 16:51:18 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Oliver Neukum <oneukum@suse.com>,
+        syzbot <syzbot+7bbcbe9c9ff0cd49592a@syzkaller.appspotmail.com>
+cc:     andreyknvl@google.com, <gregkh@linuxfoundation.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>, <miquel@df.uba.ar>,
+        <rio500-users@lists.sourceforge.net>,
+        <syzkaller-bugs@googlegroups.com>
+Subject: Re: possible deadlock in open_rio
+In-Reply-To: <00000000000088af91058f0fe377@google.com>
+Message-ID: <Pine.LNX.4.44L0.1908021647090.1645-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190731174252.18041-5-andrew.smirnov@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 10:42:51AM -0700, Andrey Smirnov wrote:
-> Reprogramming bootloader on watchdog MCU will result in reported
-> default timeout value of "0". That in turn will be unnecesarily
-> rejected by the driver as invalid device (-ENODEV). Simplify probe to
-> just read stored timeout value, clamp it to an acceptable range and
-> program the value unconditionally to fix the above.
+On Thu, 1 Aug 2019, syzbot wrote:
+
+> Hello,
 > 
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: Rick Ramstetter <rick@anteaterllc.com>
-> Cc: linux-watchdog@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-
-I have not heard back on the question I had about selecting the minimum
-timeout and not a more reasonable default. Since the code itself
-is technically correct, marking the patch as
-
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
-Guenter
-
-> ---
->  drivers/watchdog/ziirave_wdt.c | 22 +++++++++-------------
->  1 file changed, 9 insertions(+), 13 deletions(-)
+> syzbot found the following crash on:
 > 
-> diff --git a/drivers/watchdog/ziirave_wdt.c b/drivers/watchdog/ziirave_wdt.c
-> index 89ce6982ba53..33c8d2eadada 100644
-> --- a/drivers/watchdog/ziirave_wdt.c
-> +++ b/drivers/watchdog/ziirave_wdt.c
-> @@ -667,22 +667,18 @@ static int ziirave_wdt_probe(struct i2c_client *client,
->  			return val;
->  		}
->  
-> -		if (val < ZIIRAVE_TIMEOUT_MIN)
-> -			return -ENODEV;
-> -
-> -		w_priv->wdd.timeout = val;
-> -	} else {
-> -		ret = ziirave_wdt_set_timeout(&w_priv->wdd,
-> -					      w_priv->wdd.timeout);
-> -		if (ret) {
-> -			dev_err(&client->dev, "Failed to set timeout\n");
-> -			return ret;
-> -		}
-> +		w_priv->wdd.timeout = clamp(val, ZIIRAVE_TIMEOUT_MIN,
-> +					    ZIIRAVE_TIMEOUT_MAX);
-> +	}
->  
-> -		dev_info(&client->dev, "Timeout set to %ds\n",
-> -			 w_priv->wdd.timeout);
-> +	ret = ziirave_wdt_set_timeout(&w_priv->wdd, w_priv->wdd.timeout);
-> +	if (ret) {
-> +		dev_err(&client->dev, "Failed to set timeout\n");
-> +		return ret;
->  	}
->  
-> +	dev_info(&client->dev, "Timeout set to %ds\n", w_priv->wdd.timeout);
-> +
->  	watchdog_set_nowayout(&w_priv->wdd, nowayout);
->  
->  	i2c_set_clientdata(client, w_priv);
-> -- 
-> 2.21.0
+> HEAD commit:    7f7867ff usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=136b6aec600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=792eb47789f57810
+> dashboard link: https://syzkaller.appspot.com/bug?extid=7bbcbe9c9ff0cd49592a
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 > 
+> Unfortunately, I don't have any reproducer for this crash yet.
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+7bbcbe9c9ff0cd49592a@syzkaller.appspotmail.com
+> 
+> ======================================================
+> WARNING: possible circular locking dependency detected
+> 5.3.0-rc2+ #23 Not tainted
+> ------------------------------------------------------
+> syz-executor.2/20386 is trying to acquire lock:
+> 00000000772249c6 (rio500_mutex){+.+.}, at: open_rio+0x16/0xc0  
+> drivers/usb/misc/rio500.c:64
+> 
+> but task is already holding lock:
+> 00000000d3e8f4b9 (minor_rwsem){++++}, at: usb_open+0x23/0x270  
+> drivers/usb/core/file.c:39
+> 
+> which lock already depends on the new lock.
+> 
+> 
+> the existing dependency chain (in reverse order) is:
+> 
+> -> #1 (minor_rwsem){++++}:
+>         down_write+0x92/0x150 kernel/locking/rwsem.c:1500
+>         usb_register_dev drivers/usb/core/file.c:187 [inline]
+>         usb_register_dev+0x131/0x6a0 drivers/usb/core/file.c:156
+>         probe_rio.cold+0x53/0x21d drivers/usb/misc/rio500.c:468
+
+This was caused by Oliver's commit 3864d33943b4 ("USB: rio500: refuse 
+more than one device at a time").  It added
+
+	mutex_lock(&rio500_mutex);
+
+to probe_rio().  I guess it will be necessary to add another mutex to 
+fix this.
+
+Alan Stern
+
