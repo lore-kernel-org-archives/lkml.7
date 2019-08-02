@@ -2,51 +2,52 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C9CC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD7A8C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7821B217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:34:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98EE4217D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:34:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738443;
-	bh=Nvpk3o6z0JURHwi3kxDN540I1uLy1pmfPguA2yNufLQ=;
+	s=default; t=1564738447;
+	bh=M/w6pbQZL+fnW24VuEi4Y75ZgS7luQn2ZQs5UJ5lGXE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DI6YPJvmfy8x9ESzclHRTSnHVzibrdMuHZ+4FNVgic8Fco81glz76mIVTw3sCqlw5
-	 Ke5/i6xi5kMVeYB5EdM3Ml2oBkn5FfEMP0xRU4Mwngf3dUt8b3UYqV2yLv5oG6F1sc
-	 xWbQh4AVs+P7MG+ktgL4nT++f9Rnv9ii/FOohQS4=
+	b=bj9akmXglXR5pccTXHL/Au8saTMrGeJbhJkLOhgyuleCoShkeT2SicXP848RV0/RB
+	 qjrPOx6ocda6qwF+S0O9OKnZoZzLGaLnDHhPaRiG1Z3TQH25HC+YkJQUUs+Wi9kxyX
+	 zX5zQrDYu65+3cyfye23bMgJwtxsmHdzaUOdP45I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390720AbfHBJeB (ORCPT
+        id S2390489AbfHBJeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:34:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33576 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:34:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391458AbfHBJd4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:33:56 -0400
+        id S2390239AbfHBJd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:33:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86183217D6;
-        Fri,  2 Aug 2019 09:33:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14EA021773;
+        Fri,  2 Aug 2019 09:33:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738436;
-        bh=Nvpk3o6z0JURHwi3kxDN540I1uLy1pmfPguA2yNufLQ=;
+        s=default; t=1564738438;
+        bh=M/w6pbQZL+fnW24VuEi4Y75ZgS7luQn2ZQs5UJ5lGXE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ow7PFFsWxdptMkoJ8GRsSBJ+JdPBmi0grWknCvQVGFb9VUOJJjIcWYePNgIDrlaAz
-         DyXgsLiTYeFVvigOYWQB4Iw3Ui+ieUpn6y61xDmxWiP8CXONj5eYjycXKvuuxBuhDj
-         J2mZFoTvJJ15x+rYs+IvmNJVYyRseo7UWwQIdeGc=
+        b=AUp0PzJj0mV6HcWe3pZy/l/CErpGPgklg+CVoXIgcVltELIGZexF1GTLGGoOY1OIT
+         g079dhsHq7FNwDbPrtN9bbuahYjFBucVpQWono72snQA/ZsfwXzeHB2VD70UB+WEHM
+         izaIw21AtYhwZUEzeBuYZ8XRXoK0nY7rv+j8Ujcc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "J. Bruce Fields" <bfields@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 103/158] nfsd: give out fewer session slots as limit approaches
-Date:   Fri,  2 Aug 2019 11:28:44 +0200
-Message-Id: <20190802092225.478275192@linuxfoundation.org>
+        stable@vger.kernel.org, Justin Chen <justinpopo6@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 089/158] net: bcmgenet: use promisc for unsupported filters
+Date:   Fri,  2 Aug 2019 11:28:30 +0200
+Message-Id: <20190802092222.458945937@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -59,38 +60,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit de766e570413bd0484af0b580299b495ada625c3 ]
+From: Justin Chen <justinpopo6@gmail.com>
 
-Instead of granting client's full requests until we hit our DRC size
-limit and then failing CREATE_SESSIONs (and hence mounts) completely,
-start granting clients smaller slot tables as we approach the limit.
+[ Upstream commit 35cbef9863640f06107144687bd13151bc2e8ce3 ]
 
-The factor chosen here is pretty much arbitrary.
+Currently we silently ignore filters if we cannot meet the filter
+requirements. This will lead to the MAC dropping packets that are
+expected to pass. A better solution would be to set the NIC to promisc
+mode when the required filters cannot be met.
 
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Also correct the number of MDF filters supported. It should be 17,
+not 16.
+
+Signed-off-by: Justin Chen <justinpopo6@gmail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/nfsd/nfs4state.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c |   57 +++++++++++--------------
+ 1 file changed, 26 insertions(+), 31 deletions(-)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index ba27a5ff8677..eb0f8af5203a 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -1396,6 +1396,11 @@ static u32 nfsd4_get_drc_mem(struct nfsd4_channel_attrs *ca)
- 	spin_lock(&nfsd_drc_lock);
- 	avail = min((unsigned long)NFSD_MAX_MEM_PER_SESSION,
- 		    nfsd_drc_max_mem - nfsd_drc_mem_used);
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -3090,39 +3090,42 @@ static void bcmgenet_timeout(struct net_
+ 	netif_tx_wake_all_queues(dev);
+ }
+ 
+-#define MAX_MC_COUNT	16
++#define MAX_MDF_FILTER	17
+ 
+ static inline void bcmgenet_set_mdf_addr(struct bcmgenet_priv *priv,
+ 					 unsigned char *addr,
+-					 int *i,
+-					 int *mc)
++					 int *i)
+ {
+-	u32 reg;
+-
+ 	bcmgenet_umac_writel(priv, addr[0] << 8 | addr[1],
+ 			     UMAC_MDF_ADDR + (*i * 4));
+ 	bcmgenet_umac_writel(priv, addr[2] << 24 | addr[3] << 16 |
+ 			     addr[4] << 8 | addr[5],
+ 			     UMAC_MDF_ADDR + ((*i + 1) * 4));
+-	reg = bcmgenet_umac_readl(priv, UMAC_MDF_CTRL);
+-	reg |= (1 << (MAX_MC_COUNT - *mc));
+-	bcmgenet_umac_writel(priv, reg, UMAC_MDF_CTRL);
+ 	*i += 2;
+-	(*mc)++;
+ }
+ 
+ static void bcmgenet_set_rx_mode(struct net_device *dev)
+ {
+ 	struct bcmgenet_priv *priv = netdev_priv(dev);
+ 	struct netdev_hw_addr *ha;
+-	int i, mc;
++	int i, nfilter;
+ 	u32 reg;
+ 
+ 	netif_dbg(priv, hw, dev, "%s: %08X\n", __func__, dev->flags);
+ 
+-	/* Promiscuous mode */
++	/* Number of filters needed */
++	nfilter = netdev_uc_count(dev) + netdev_mc_count(dev) + 2;
++
 +	/*
-+	 * Never use more than a third of the remaining memory,
-+	 * unless it's the only way to give this client a slot:
-+	 */
-+	avail = clamp_t(int, avail, slotsize, avail/3);
- 	num = min_t(int, num, avail / slotsize);
- 	nfsd_drc_mem_used += num * slotsize;
- 	spin_unlock(&nfsd_drc_lock);
--- 
-2.20.1
-
++	 * Turn on promicuous mode for three scenarios
++	 * 1. IFF_PROMISC flag is set
++	 * 2. IFF_ALLMULTI flag is set
++	 * 3. The number of filters needed exceeds the number filters
++	 *    supported by the hardware.
++	*/
+ 	reg = bcmgenet_umac_readl(priv, UMAC_CMD);
+-	if (dev->flags & IFF_PROMISC) {
++	if ((dev->flags & (IFF_PROMISC | IFF_ALLMULTI)) ||
++	    (nfilter > MAX_MDF_FILTER)) {
+ 		reg |= CMD_PROMISC;
+ 		bcmgenet_umac_writel(priv, reg, UMAC_CMD);
+ 		bcmgenet_umac_writel(priv, 0, UMAC_MDF_CTRL);
+@@ -3132,32 +3135,24 @@ static void bcmgenet_set_rx_mode(struct
+ 		bcmgenet_umac_writel(priv, reg, UMAC_CMD);
+ 	}
+ 
+-	/* UniMac doesn't support ALLMULTI */
+-	if (dev->flags & IFF_ALLMULTI) {
+-		netdev_warn(dev, "ALLMULTI is not supported\n");
+-		return;
+-	}
+-
+ 	/* update MDF filter */
+ 	i = 0;
+-	mc = 0;
+ 	/* Broadcast */
+-	bcmgenet_set_mdf_addr(priv, dev->broadcast, &i, &mc);
++	bcmgenet_set_mdf_addr(priv, dev->broadcast, &i);
+ 	/* my own address.*/
+-	bcmgenet_set_mdf_addr(priv, dev->dev_addr, &i, &mc);
+-	/* Unicast list*/
+-	if (netdev_uc_count(dev) > (MAX_MC_COUNT - mc))
+-		return;
++	bcmgenet_set_mdf_addr(priv, dev->dev_addr, &i);
+ 
+-	if (!netdev_uc_empty(dev))
+-		netdev_for_each_uc_addr(ha, dev)
+-			bcmgenet_set_mdf_addr(priv, ha->addr, &i, &mc);
+-	/* Multicast */
+-	if (netdev_mc_empty(dev) || netdev_mc_count(dev) >= (MAX_MC_COUNT - mc))
+-		return;
++	/* Unicast */
++	netdev_for_each_uc_addr(ha, dev)
++		bcmgenet_set_mdf_addr(priv, ha->addr, &i);
+ 
++	/* Multicast */
+ 	netdev_for_each_mc_addr(ha, dev)
+-		bcmgenet_set_mdf_addr(priv, ha->addr, &i, &mc);
++		bcmgenet_set_mdf_addr(priv, ha->addr, &i);
++
++	/* Enable filters */
++	reg = GENMASK(MAX_MDF_FILTER - 1, MAX_MDF_FILTER - nfilter);
++	bcmgenet_umac_writel(priv, reg, UMAC_MDF_CTRL);
+ }
+ 
+ /* Set the hardware MAC address. */
 
 
