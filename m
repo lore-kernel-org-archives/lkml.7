@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E11C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7688DC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E59182064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:56:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 501692064A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:56:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739789;
-	bh=IBrnpmj4G0HAPtsbrI5Ax2fDDioBBv/uhBTEH6vXM/I=;
+	s=default; t=1564739793;
+	bh=JSb30u6ZZcU6mTVsvJ37BEW+XfA9T4IV9PfS53PeFsY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OY3zrb5KVSk1JngfnejfSLDK9BgDZLhuAs6Pq7/9hbOwtbqbI5cx2DS8dh5HL2liE
-	 Jub8nmrK1nIWch4vvaVMxUvacCeBjobeJWBGQ89N5U1gcey7GG5+6cblM/8a2OCBPp
-	 tQXfMQYsRZU/liPZYSbdqFBTKLFK0ksqIXuCVSMo=
+	b=OQteHvUjYx9XEJjMqwRB67wFyjvtes5gySAJT47/XStqQLeMJ1jw0SshPMdWKP5Vp
+	 3Z0BfyzYaJzsYKsoXuo9ZKGp5+clsLa1ZHiap3k/Wq2SYOO+SyeU+bEwK2+VBsxF6X
+	 Kh8yKVcm/qCr3iZ1zOsLKNLweTyrFF88ZlwuvvX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406705AbfHBJ4O (ORCPT
+        id S2406737AbfHBJ4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:56:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34944 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:56:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406686AbfHBJ4J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:56:09 -0400
+        id S2404798AbfHBJ43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:56:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05BE52064A;
-        Fri,  2 Aug 2019 09:56:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9927020665;
+        Fri,  2 Aug 2019 09:56:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739768;
-        bh=IBrnpmj4G0HAPtsbrI5Ax2fDDioBBv/uhBTEH6vXM/I=;
+        s=default; t=1564739788;
+        bh=JSb30u6ZZcU6mTVsvJ37BEW+XfA9T4IV9PfS53PeFsY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n026s2uFFOooSJnALxJiALqOjvx1zRfIk+LWY6SWO6yl00ntipKeBlWLv3vyymrDB
-         352fQLLsbO3OAW4JmODAlz4kJkBxZ3QRAhxYo6/K43eKO0QGKPl5otffYztA1jrMEg
-         +1X9ug9s9qybLycjLptElAP+nW+9WHqKXBMb0GJ4=
+        b=2MbfF/er/8bXqsiVxyQWg663Y+wiRnv5HjH7Ac3e9FB+tD/TC+04ZvVVurTx7pL1A
+         +tkWTnInv/t+NblgWAJAuiiKtq5ruJEyqFWBjG4ZdNT8eDv5ctXqm4Sj+pAZIrN3YO
+         1BWjdzDfn5ofP0JQZkqEp9jhjbHTbTWL5poeiR9o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Minas Harutyunyan <hminas@synopsys.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Amit Pundir <amit.pundir@linaro.org>
-Subject: [PATCH 4.19 06/32] usb: dwc2: Disable all EPs on disconnect
-Date:   Fri,  2 Aug 2019 11:39:40 +0200
-Message-Id: <20190802092103.571518377@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+79337b501d6aa974d0f6@syzkaller.appspotmail.com,
+        Vladis Dronov <vdronov@redhat.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        "Yu-Chen, Cho" <acho@suse.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 220/223] Bluetooth: hci_uart: check for missing tty operations
+Date:   Fri,  2 Aug 2019 11:37:25 +0200
+Message-Id: <20190802092250.874085831@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190802092101.913646560@linuxfoundation.org>
-References: <20190802092101.913646560@linuxfoundation.org>
+In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
+References: <20190802092238.692035242@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,112 +63,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>
+From: Vladis Dronov <vdronov@redhat.com>
 
-commit dccf1bad4be7eaa096c1f3697bd37883f9a08ecb upstream.
+commit b36a1552d7319bbfd5cf7f08726c23c5c66d4f73 upstream.
 
-Disabling all EP's allow to reset EP's to initial state.
-On disconnect disable all EP's instead of just killing
-all requests. Because of some platform didn't catch
-disconnect event, same stuff added to
-dwc2_hsotg_core_init_disconnected() function when USB
-reset detected on the bus.
+Certain ttys operations (pty_unix98_ops) lack tiocmget() and tiocmset()
+functions which are called by the certain HCI UART protocols (hci_ath,
+hci_bcm, hci_intel, hci_mrvl, hci_qca) via hci_uart_set_flow_control()
+or directly. This leads to an execution at NULL and can be triggered by
+an unprivileged user. Fix this by adding a helper function and a check
+for the missing tty operations in the protocols code.
 
-Changed from version 1:
-Changed lock acquire flow in dwc2_hsotg_ep_disable()
-function.
+This fixes CVE-2019-10207. The Fixes: lines list commits where calls to
+tiocm[gs]et() or hci_uart_set_flow_control() were added to the HCI UART
+protocols.
 
-Signed-off-by: Minas Harutyunyan <hminas@synopsys.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-Signed-off-by: Amit Pundir <amit.pundir@linaro.org>
+Link: https://syzkaller.appspot.com/bug?id=1b42faa2848963564a5b1b7f8c837ea7b55ffa50
+Reported-by: syzbot+79337b501d6aa974d0f6@syzkaller.appspotmail.com
+Cc: stable@vger.kernel.org # v2.6.36+
+Fixes: b3190df62861 ("Bluetooth: Support for Atheros AR300x serial chip")
+Fixes: 118612fb9165 ("Bluetooth: hci_bcm: Add suspend/resume PM functions")
+Fixes: ff2895592f0f ("Bluetooth: hci_intel: Add Intel baudrate configuration support")
+Fixes: 162f812f23ba ("Bluetooth: hci_uart: Add Marvell support")
+Fixes: fa9ad876b8e0 ("Bluetooth: hci_qca: Add support for Qualcomm Bluetooth chip wcn3990")
+Signed-off-by: Vladis Dronov <vdronov@redhat.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Reviewed-by: Yu-Chen, Cho <acho@suse.com>
+Tested-by: Yu-Chen, Cho <acho@suse.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/dwc2/gadget.c |   30 +++++++++++++++++++++++-------
- 1 file changed, 23 insertions(+), 7 deletions(-)
+ drivers/bluetooth/hci_ath.c   |    3 +++
+ drivers/bluetooth/hci_bcm.c   |    3 +++
+ drivers/bluetooth/hci_intel.c |    3 +++
+ drivers/bluetooth/hci_ldisc.c |    9 +++++++++
+ drivers/bluetooth/hci_mrvl.c  |    3 +++
+ drivers/bluetooth/hci_uart.h  |    1 +
+ 6 files changed, 22 insertions(+)
 
---- a/drivers/usb/dwc2/gadget.c
-+++ b/drivers/usb/dwc2/gadget.c
-@@ -3107,6 +3107,8 @@ static void kill_all_requests(struct dwc
- 		dwc2_hsotg_txfifo_flush(hsotg, ep->fifo_index);
- }
+--- a/drivers/bluetooth/hci_ath.c
++++ b/drivers/bluetooth/hci_ath.c
+@@ -101,6 +101,9 @@ static int ath_open(struct hci_uart *hu)
  
-+static int dwc2_hsotg_ep_disable(struct usb_ep *ep);
+ 	BT_DBG("hu %p", hu);
+ 
++	if (!hci_uart_has_flow_control(hu))
++		return -EOPNOTSUPP;
 +
- /**
-  * dwc2_hsotg_disconnect - disconnect service
-  * @hsotg: The device state.
-@@ -3125,13 +3127,12 @@ void dwc2_hsotg_disconnect(struct dwc2_h
- 	hsotg->connected = 0;
- 	hsotg->test_mode = 0;
+ 	ath = kzalloc(sizeof(*ath), GFP_KERNEL);
+ 	if (!ath)
+ 		return -ENOMEM;
+--- a/drivers/bluetooth/hci_bcm.c
++++ b/drivers/bluetooth/hci_bcm.c
+@@ -279,6 +279,9 @@ static int bcm_open(struct hci_uart *hu)
  
-+	/* all endpoints should be shutdown */
- 	for (ep = 0; ep < hsotg->num_of_eps; ep++) {
- 		if (hsotg->eps_in[ep])
--			kill_all_requests(hsotg, hsotg->eps_in[ep],
--					  -ESHUTDOWN);
-+			dwc2_hsotg_ep_disable(&hsotg->eps_in[ep]->ep);
- 		if (hsotg->eps_out[ep])
--			kill_all_requests(hsotg, hsotg->eps_out[ep],
--					  -ESHUTDOWN);
-+			dwc2_hsotg_ep_disable(&hsotg->eps_out[ep]->ep);
- 	}
+ 	bt_dev_dbg(hu->hdev, "hu %p", hu);
  
- 	call_gadget(hsotg, disconnect);
-@@ -3189,13 +3190,23 @@ void dwc2_hsotg_core_init_disconnected(s
- 	u32 val;
- 	u32 usbcfg;
- 	u32 dcfg = 0;
-+	int ep;
- 
- 	/* Kill any ep0 requests as controller will be reinitialized */
- 	kill_all_requests(hsotg, hsotg->eps_out[0], -ECONNRESET);
- 
--	if (!is_usb_reset)
-+	if (!is_usb_reset) {
- 		if (dwc2_core_reset(hsotg, true))
- 			return;
-+	} else {
-+		/* all endpoints should be shutdown */
-+		for (ep = 1; ep < hsotg->num_of_eps; ep++) {
-+			if (hsotg->eps_in[ep])
-+				dwc2_hsotg_ep_disable(&hsotg->eps_in[ep]->ep);
-+			if (hsotg->eps_out[ep])
-+				dwc2_hsotg_ep_disable(&hsotg->eps_out[ep]->ep);
-+		}
-+	}
- 
- 	/*
- 	 * we must now enable ep0 ready for host detection and then
-@@ -3996,6 +4007,7 @@ static int dwc2_hsotg_ep_disable(struct
- 	unsigned long flags;
- 	u32 epctrl_reg;
- 	u32 ctrl;
-+	int locked;
- 
- 	dev_dbg(hsotg->dev, "%s(ep %p)\n", __func__, ep);
- 
-@@ -4011,7 +4023,9 @@ static int dwc2_hsotg_ep_disable(struct
- 
- 	epctrl_reg = dir_in ? DIEPCTL(index) : DOEPCTL(index);
- 
--	spin_lock_irqsave(&hsotg->lock, flags);
-+	locked = spin_is_locked(&hsotg->lock);
-+	if (!locked)
-+		spin_lock_irqsave(&hsotg->lock, flags);
- 
- 	ctrl = dwc2_readl(hsotg, epctrl_reg);
- 
-@@ -4035,7 +4049,9 @@ static int dwc2_hsotg_ep_disable(struct
- 	hs_ep->fifo_index = 0;
- 	hs_ep->fifo_size = 0;
- 
--	spin_unlock_irqrestore(&hsotg->lock, flags);
-+	if (!locked)
-+		spin_unlock_irqrestore(&hsotg->lock, flags);
++	if (!hci_uart_has_flow_control(hu))
++		return -EOPNOTSUPP;
 +
+ 	bcm = kzalloc(sizeof(*bcm), GFP_KERNEL);
+ 	if (!bcm)
+ 		return -ENOMEM;
+--- a/drivers/bluetooth/hci_intel.c
++++ b/drivers/bluetooth/hci_intel.c
+@@ -407,6 +407,9 @@ static int intel_open(struct hci_uart *h
+ 
+ 	BT_DBG("hu %p", hu);
+ 
++	if (!hci_uart_has_flow_control(hu))
++		return -EOPNOTSUPP;
++
+ 	intel = kzalloc(sizeof(*intel), GFP_KERNEL);
+ 	if (!intel)
+ 		return -ENOMEM;
+--- a/drivers/bluetooth/hci_ldisc.c
++++ b/drivers/bluetooth/hci_ldisc.c
+@@ -263,6 +263,15 @@ static int hci_uart_send_frame(struct hc
  	return 0;
  }
  
++/* Check the underlying device or tty has flow control support */
++bool hci_uart_has_flow_control(struct hci_uart *hu)
++{
++	if (hu->tty->driver->ops->tiocmget && hu->tty->driver->ops->tiocmset)
++		return true;
++
++	return false;
++}
++
+ /* Flow control or un-flow control the device */
+ void hci_uart_set_flow_control(struct hci_uart *hu, bool enable)
+ {
+--- a/drivers/bluetooth/hci_mrvl.c
++++ b/drivers/bluetooth/hci_mrvl.c
+@@ -66,6 +66,9 @@ static int mrvl_open(struct hci_uart *hu
+ 
+ 	BT_DBG("hu %p", hu);
+ 
++	if (!hci_uart_has_flow_control(hu))
++		return -EOPNOTSUPP;
++
+ 	mrvl = kzalloc(sizeof(*mrvl), GFP_KERNEL);
+ 	if (!mrvl)
+ 		return -ENOMEM;
+--- a/drivers/bluetooth/hci_uart.h
++++ b/drivers/bluetooth/hci_uart.h
+@@ -109,6 +109,7 @@ int hci_uart_tx_wakeup(struct hci_uart *
+ int hci_uart_init_ready(struct hci_uart *hu);
+ void hci_uart_init_tty(struct hci_uart *hu);
+ void hci_uart_set_baudrate(struct hci_uart *hu, unsigned int speed);
++bool hci_uart_has_flow_control(struct hci_uart *hu);
+ void hci_uart_set_flow_control(struct hci_uart *hu, bool enable);
+ void hci_uart_set_speeds(struct hci_uart *hu, unsigned int init_speed,
+ 			 unsigned int oper_speed);
 
 
