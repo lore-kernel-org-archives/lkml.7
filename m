@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E862DC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2EBC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA86F206A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 647EE2087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:46:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739192;
-	bh=t+dt9i0XkcotkLFFiOBjf8HzBorm0ZgOFiq+RG5jY10=;
+	s=default; t=1564739196;
+	bh=eT8zLHv1T/iAPPjnfrXBuDhstwCh+CrreQQYDntBKLg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qq6lzKqD6McQuEBV7R8tKDumxmulxIUT9sSL0VVX2xrcvbipD3Gvr7qLsxCbwQIzx
-	 sQFZTeRMorPGY19b5+Vay5KQhKVXa/O5U1PyWWwc7E2grFfev68cUh8re7uBPC13aA
-	 /6z+ctYYQt5029jSfx8EW/FBQP1T3JTjBmo6bzfc=
+	b=EtPr+TAcHbpETZtOK4czbaSJmz59HBNSuVRvZg0rNtOAdL1oXJO7Y4dLNsr8vLIiZ
+	 XgLiEVIUzCN2iOAnakQ6ZqtE69ZMwuuqyPEvfYE5aos0PWyLqrbzrDbqjqJIvyZS+X
+	 WvFpBtjcrOOxT2kFeAMy7geyAUu1mJRjfSlSMrmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405561AbfHBJqb (ORCPT
+        id S2405574AbfHBJqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:46:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50652 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:46:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405487AbfHBJqX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:46:23 -0400
+        id S2405559AbfHBJqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:46:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68DDE206A2;
-        Fri,  2 Aug 2019 09:46:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2501A2086A;
+        Fri,  2 Aug 2019 09:46:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739182;
-        bh=t+dt9i0XkcotkLFFiOBjf8HzBorm0ZgOFiq+RG5jY10=;
+        s=default; t=1564739190;
+        bh=eT8zLHv1T/iAPPjnfrXBuDhstwCh+CrreQQYDntBKLg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u/npduaOGMcGzxbNn1kZ9pmYJkV8yPQPoJvCMCTuTotbWrJrbEE1ma07jGNx3127u
-         lE5FEtVZ9RTJrsOh4ZBgfqaVNjwLrQkWHQldF70WA5jW3UhAQG77+vOwEKhRaLElTX
-         6opSS95iMMZuwStlunoCKDtgiH/o+WY4Fnv8jMNo=
+        b=0qsAeaJy7UwmCYSwYbvaENHh0UvykKRN0qDR2h026Iean47T2Q8X48RabxuKvPzuv
+         vjeb2lz05Y3rMazPwHbMKfda7EYabYutgtzWWFCtBO8G3eUN+8uKVcX5BOSD6RYivq
+         ytHbQKLB+W9XGsldEOP8P+eRXUhJbePLQAwtiXSk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        syzbot+622bdabb128acc33427d@syzkaller.appspotmail.com,
-        syzbot+6eaef7158b19e3fec3a0@syzkaller.appspotmail.com,
-        syzbot+9399c158fcc09b21d0d2@syzkaller.appspotmail.com,
-        syzbot+a34e5f3d0300163f0c87@syzkaller.appspotmail.com
-Subject: [PATCH 4.9 145/223] netrom: hold sock when setting skb->destructor
-Date:   Fri,  2 Aug 2019 11:36:10 +0200
-Message-Id: <20190802092248.012612859@linuxfoundation.org>
+        stable@vger.kernel.org, Justin Chen <justinpopo6@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 134/223] net: bcmgenet: use promisc for unsupported filters
+Date:   Fri,  2 Aug 2019 11:35:59 +0200
+Message-Id: <20190802092247.575265474@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -64,39 +60,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Justin Chen <justinpopo6@gmail.com>
 
-[ Upstream commit 4638faac032756f7eab5524be7be56bee77e426b ]
+[ Upstream commit 35cbef9863640f06107144687bd13151bc2e8ce3 ]
 
-sock_efree() releases the sock refcnt, if we don't hold this refcnt
-when setting skb->destructor to it, the refcnt would not be balanced.
-This leads to several bug reports from syzbot.
+Currently we silently ignore filters if we cannot meet the filter
+requirements. This will lead to the MAC dropping packets that are
+expected to pass. A better solution would be to set the NIC to promisc
+mode when the required filters cannot be met.
 
-I have checked other users of sock_efree(), all of them hold the
-sock refcnt.
+Also correct the number of MDF filters supported. It should be 17,
+not 16.
 
-Fixes: c8c8218ec5af ("netrom: fix a memory leak in nr_rx_frame()")
-Reported-and-tested-by: <syzbot+622bdabb128acc33427d@syzkaller.appspotmail.com>
-Reported-and-tested-by: <syzbot+6eaef7158b19e3fec3a0@syzkaller.appspotmail.com>
-Reported-and-tested-by: <syzbot+9399c158fcc09b21d0d2@syzkaller.appspotmail.com>
-Reported-and-tested-by: <syzbot+a34e5f3d0300163f0c87@syzkaller.appspotmail.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: Justin Chen <justinpopo6@gmail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/netrom/af_netrom.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c |   57 +++++++++++--------------
+ 1 file changed, 26 insertions(+), 31 deletions(-)
 
---- a/net/netrom/af_netrom.c
-+++ b/net/netrom/af_netrom.c
-@@ -968,6 +968,7 @@ int nr_rx_frame(struct sk_buff *skb, str
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -3002,39 +3002,42 @@ static void bcmgenet_timeout(struct net_
+ 	netif_tx_wake_all_queues(dev);
+ }
  
- 	window = skb->data[20];
+-#define MAX_MC_COUNT	16
++#define MAX_MDF_FILTER	17
  
-+	sock_hold(make);
- 	skb->sk             = make;
- 	skb->destructor     = sock_efree;
- 	make->sk_state	    = TCP_ESTABLISHED;
+ static inline void bcmgenet_set_mdf_addr(struct bcmgenet_priv *priv,
+ 					 unsigned char *addr,
+-					 int *i,
+-					 int *mc)
++					 int *i)
+ {
+-	u32 reg;
+-
+ 	bcmgenet_umac_writel(priv, addr[0] << 8 | addr[1],
+ 			     UMAC_MDF_ADDR + (*i * 4));
+ 	bcmgenet_umac_writel(priv, addr[2] << 24 | addr[3] << 16 |
+ 			     addr[4] << 8 | addr[5],
+ 			     UMAC_MDF_ADDR + ((*i + 1) * 4));
+-	reg = bcmgenet_umac_readl(priv, UMAC_MDF_CTRL);
+-	reg |= (1 << (MAX_MC_COUNT - *mc));
+-	bcmgenet_umac_writel(priv, reg, UMAC_MDF_CTRL);
+ 	*i += 2;
+-	(*mc)++;
+ }
+ 
+ static void bcmgenet_set_rx_mode(struct net_device *dev)
+ {
+ 	struct bcmgenet_priv *priv = netdev_priv(dev);
+ 	struct netdev_hw_addr *ha;
+-	int i, mc;
++	int i, nfilter;
+ 	u32 reg;
+ 
+ 	netif_dbg(priv, hw, dev, "%s: %08X\n", __func__, dev->flags);
+ 
+-	/* Promiscuous mode */
++	/* Number of filters needed */
++	nfilter = netdev_uc_count(dev) + netdev_mc_count(dev) + 2;
++
++	/*
++	 * Turn on promicuous mode for three scenarios
++	 * 1. IFF_PROMISC flag is set
++	 * 2. IFF_ALLMULTI flag is set
++	 * 3. The number of filters needed exceeds the number filters
++	 *    supported by the hardware.
++	*/
+ 	reg = bcmgenet_umac_readl(priv, UMAC_CMD);
+-	if (dev->flags & IFF_PROMISC) {
++	if ((dev->flags & (IFF_PROMISC | IFF_ALLMULTI)) ||
++	    (nfilter > MAX_MDF_FILTER)) {
+ 		reg |= CMD_PROMISC;
+ 		bcmgenet_umac_writel(priv, reg, UMAC_CMD);
+ 		bcmgenet_umac_writel(priv, 0, UMAC_MDF_CTRL);
+@@ -3044,32 +3047,24 @@ static void bcmgenet_set_rx_mode(struct
+ 		bcmgenet_umac_writel(priv, reg, UMAC_CMD);
+ 	}
+ 
+-	/* UniMac doesn't support ALLMULTI */
+-	if (dev->flags & IFF_ALLMULTI) {
+-		netdev_warn(dev, "ALLMULTI is not supported\n");
+-		return;
+-	}
+-
+ 	/* update MDF filter */
+ 	i = 0;
+-	mc = 0;
+ 	/* Broadcast */
+-	bcmgenet_set_mdf_addr(priv, dev->broadcast, &i, &mc);
++	bcmgenet_set_mdf_addr(priv, dev->broadcast, &i);
+ 	/* my own address.*/
+-	bcmgenet_set_mdf_addr(priv, dev->dev_addr, &i, &mc);
+-	/* Unicast list*/
+-	if (netdev_uc_count(dev) > (MAX_MC_COUNT - mc))
+-		return;
++	bcmgenet_set_mdf_addr(priv, dev->dev_addr, &i);
+ 
+-	if (!netdev_uc_empty(dev))
+-		netdev_for_each_uc_addr(ha, dev)
+-			bcmgenet_set_mdf_addr(priv, ha->addr, &i, &mc);
+-	/* Multicast */
+-	if (netdev_mc_empty(dev) || netdev_mc_count(dev) >= (MAX_MC_COUNT - mc))
+-		return;
++	/* Unicast */
++	netdev_for_each_uc_addr(ha, dev)
++		bcmgenet_set_mdf_addr(priv, ha->addr, &i);
+ 
++	/* Multicast */
+ 	netdev_for_each_mc_addr(ha, dev)
+-		bcmgenet_set_mdf_addr(priv, ha->addr, &i, &mc);
++		bcmgenet_set_mdf_addr(priv, ha->addr, &i);
++
++	/* Enable filters */
++	reg = GENMASK(MAX_MDF_FILTER - 1, MAX_MDF_FILTER - nfilter);
++	bcmgenet_umac_writel(priv, reg, UMAC_MDF_CTRL);
+ }
+ 
+ /* Set the hardware MAC address. */
 
 
