@@ -2,124 +2,71 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E5F0C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90615C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28EE52086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:07:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564740429;
-	bh=hyHtEEnf36iw8vWSqaGWyCQTiEXS0hvNLj9GkU4cGNw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fmkZllnZsIb76Y0IlK45Kn91432p2OqkGMV3iLxqIfU4EjpZhnBp4lzTrnyUe2+fs
-	 uyEcy0L8xDYtaajAtj5Dvb2FJDgTAPM7EOY8x7eL7vOCRkwvWnQcfRTbRLAA2HeOdA
-	 RabXgtKkLA91V7VjmhHP8Ov+6DIRfviozrg7KfZA=
+	by mail.kernel.org (Postfix) with ESMTP id 690122073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:08:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389013AbfHBJaE (ORCPT
+        id S2391154AbfHBKIk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:30:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55320 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 06:08:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:48772 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726716AbfHBJaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:30:01 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8579121783;
-        Fri,  2 Aug 2019 09:30:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738201;
-        bh=hyHtEEnf36iw8vWSqaGWyCQTiEXS0hvNLj9GkU4cGNw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mqYEcH7OUQyYVGSiFBICor2vDEonL9PnVBCaq0Izyycafb4WPSabIDDNfd7dOlBy4
-         MrCREbdTDv6Fgr0tRPzpplnwZapm39d6tSL4Tfy16i9G5+rREoYxVpsnM0X/hdAWwA
-         rJecUigiZhYzGRfDscLY8jZHdxjQ1nR+iuEnSkVg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jo-Philipp Wich <jo@mein.io>,
-        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
-        Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>,
-        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 002/158] MIPS: fix build on non-linux hosts
-Date:   Fri,  2 Aug 2019 11:27:03 +0200
-Message-Id: <20190802092204.138268259@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
-References: <20190802092203.671944552@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1728855AbfHBKIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 06:08:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C9EB344;
+        Fri,  2 Aug 2019 03:08:39 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B1D323F71F;
+        Fri,  2 Aug 2019 03:08:37 -0700 (PDT)
+Date:   Fri, 2 Aug 2019 11:08:35 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Will Deacon <will.deacon@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>
+Subject: Re: [PATCH v6 1/2] arm64: Define
+ Documentation/arm64/tagged-address-abi.rst
+Message-ID: <20190802100835.GA4175@arrakis.emea.arm.com>
+References: <cover.1563904656.git.andreyknvl@google.com>
+ <20190725135044.24381-1-vincenzo.frascino@arm.com>
+ <20190725135044.24381-2-vincenzo.frascino@arm.com>
+ <b74e7ce7-d58a-68a0-2f28-6648ec6302c0@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b74e7ce7-d58a-68a0-2f28-6648ec6302c0@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1196364f21ffe5d1e6d83cafd6a2edb89404a3ae ]
+Hi Dave,
 
-calc_vmlinuz_load_addr.c requires SZ_64K to be defined for alignment
-purposes.  It included "../../../../include/linux/sizes.h" to define
-that size, however "sizes.h" tries to include <linux/const.h> which
-assumes linux system headers.  These may not exist eg. the following
-error was encountered when building Linux for OpenWrt under macOS:
+On Wed, Jul 31, 2019 at 09:43:46AM -0700, Dave Hansen wrote:
+> On 7/25/19 6:50 AM, Vincenzo Frascino wrote:
+> > With the relaxed ABI proposed through this document, it is now possible
+> > to pass tagged pointers to the syscalls, when these pointers are in
+> > memory ranges obtained by an anonymous (MAP_ANONYMOUS) mmap().
+> 
+> I don't see a lot of description of why this restriction is necessary.
+> What's the problem with supporting MAP_SHARED?
 
-In file included from arch/mips/boot/compressed/calc_vmlinuz_load_addr.c:16:
-arch/mips/boot/compressed/../../../../include/linux/sizes.h:11:10: fatal error: 'linux/const.h' file not found
-         ^~~~~~~~~~
+We could support MAP_SHARED | MAP_ANONYMOUS (and based on some internal
+discussions, this would be fine with the hardware memory tagging as
+well). What we don't want in the ABI is to support file mmap() for
+top-byte-ignore (or MTE). If you see a use-case, please let us know.
 
-Change makefile to force building on local linux headers instead of
-system headers.  Also change eye-watering relative reference in include
-file spec.
-
-Thanks to Jo-Philip Wich & Petr Štetiar for assistance in tracking this
-down & fixing.
-
-Suggested-by: Jo-Philipp Wich <jo@mein.io>
-Signed-off-by: Petr Štetiar <ynezz@true.cz>
-Signed-off-by: Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: linux-mips@vger.kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/mips/boot/compressed/Makefile                 | 2 ++
- arch/mips/boot/compressed/calc_vmlinuz_load_addr.c | 2 +-
- 2 files changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/arch/mips/boot/compressed/Makefile b/arch/mips/boot/compressed/Makefile
-index d5bdee115f22..d4918a2bca1b 100644
---- a/arch/mips/boot/compressed/Makefile
-+++ b/arch/mips/boot/compressed/Makefile
-@@ -66,6 +66,8 @@ OBJCOPYFLAGS_piggy.o := --add-section=.image=$(obj)/vmlinux.bin.z \
- $(obj)/piggy.o: $(obj)/dummy.o $(obj)/vmlinux.bin.z FORCE
- 	$(call if_changed,objcopy)
- 
-+HOSTCFLAGS_calc_vmlinuz_load_addr.o += $(LINUXINCLUDE)
-+
- # Calculate the load address of the compressed kernel image
- hostprogs-y := calc_vmlinuz_load_addr
- 
-diff --git a/arch/mips/boot/compressed/calc_vmlinuz_load_addr.c b/arch/mips/boot/compressed/calc_vmlinuz_load_addr.c
-index 542c3ede9722..d14f75ec8273 100644
---- a/arch/mips/boot/compressed/calc_vmlinuz_load_addr.c
-+++ b/arch/mips/boot/compressed/calc_vmlinuz_load_addr.c
-@@ -13,7 +13,7 @@
- #include <stdint.h>
- #include <stdio.h>
- #include <stdlib.h>
--#include "../../../../include/linux/sizes.h"
-+#include <linux/sizes.h>
- 
- int main(int argc, char *argv[])
- {
 -- 
-2.20.1
-
-
-
+Catalin
