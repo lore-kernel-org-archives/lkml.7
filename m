@@ -7,49 +7,53 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2568EC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 075F2C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA49B2087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D294B2173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:56:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739804;
-	bh=fGDfugbvzy5P7KtjTCfMKH4yBsqFsiseJtrhtDRxyrQ=;
+	s=default; t=1564739807;
+	bh=PcsQo1hXT6MNMUhxrEhQkhYoGRVZHbiC+jN1cSetfSQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TQgfPNndcD4bwqVZOToxnnyvqi4G7W7EbM41DYpt93Q1gjAaKuwI4U/Z0jYFnj6+d
-	 P8sPtYH+dEmezmv2HIORmEKeK5ubLzTooL9reOfE3ab4m9Z2Eyhy2OMqS2s14gpx2q
-	 5aAipQUjaA19IXJ1pbY/3snMueCXbHU31ASnv2vA=
+	b=gOKh9as943TbWzNosmDXnlEi2BrwJy5L9eTfC1U/uZtVnQdSTUo61RZw3/lNsd1A+
+	 JMZJnsXAY9DLQ81FbhdUKa45Zl9q2rs06R9pU9LpHwWjEkNaONfbfjXn2YBmHQ8UmG
+	 ICO0tDThrojqGjriq0gmW7tdI4F6n50xf3c7kSWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406768AbfHBJ4m (ORCPT
+        id S2406780AbfHBJ4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:56:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35528 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:56:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406750AbfHBJ4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:56:38 -0400
+        id S2406761AbfHBJ4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:56:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 502532067D;
-        Fri,  2 Aug 2019 09:56:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B953B2067D;
+        Fri,  2 Aug 2019 09:56:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739797;
-        bh=fGDfugbvzy5P7KtjTCfMKH4yBsqFsiseJtrhtDRxyrQ=;
+        s=default; t=1564739800;
+        bh=PcsQo1hXT6MNMUhxrEhQkhYoGRVZHbiC+jN1cSetfSQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ih5jG3idBqFMpXZ4RPpLNLOatQk17olA/44a/Xb7Kt2yfb4SXWzAmFkESTUNrEoDe
-         Be/LPwpQIflg2mnEAXd/zQqehs539sAF2T/yqLjn83Mkq+/KILps5Wtelwa6+5N+jJ
-         NynaZUZEklkZk2d3i6oEbZqzwUXbUYFdVQP2qhdA=
+        b=R7VckPrmFJP85NiRtk/dQxRFazcqOtvt03Dd7+WjN4HMM3c+Mua+tXh43rHYU5E57
+         yue+XTtmOKsRD0WOQhgIsKffp2LjORcc4jD+LgZnTR9ni/NB9trpFO5nWOascU37RE
+         0oOCQk+xm14U/a3QeBky+E1Aa1SKo84aQpcmhAPE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jack Wang <jinpu.wang@cloud.ionos.com>
-Subject: [PATCH 4.19 23/32] vhost: scsi: add weight support
-Date:   Fri,  2 Aug 2019 11:39:57 +0200
-Message-Id: <20190802092109.227507560@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Hannes Reinecke <hare@suse.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Oleksandr Natalenko <oleksandr@natalenko.name>,
+        Martin Steigerwald <martin@lichtvoll.de>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.19 32/32] scsi: core: Avoid that a kernel warning appears during system resume
+Date:   Fri,  2 Aug 2019 11:40:06 +0200
+Message-Id: <20190802092111.551503666@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092101.913646560@linuxfoundation.org>
 References: <20190802092101.913646560@linuxfoundation.org>
@@ -62,59 +66,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Wang <jasowang@redhat.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-commit c1ea02f15ab5efb3e93fc3144d895410bf79fcf2 upstream.
+commit 17605afaae825b0291f80c62a7f6565879edaa8a upstream.
 
-This patch will check the weight and exit the loop if we exceeds the
-weight. This is useful for preventing scsi kthread from hogging cpu
-which is guest triggerable.
+Since scsi_device_quiesce() skips SCSI devices that have another state than
+RUNNING, OFFLINE or TRANSPORT_OFFLINE, scsi_device_resume() should not
+complain about SCSI devices that have been skipped. Hence this patch.  This
+patch avoids that the following warning appears during resume:
 
-This addresses CVE-2019-3900.
+WARNING: CPU: 3 PID: 1039 at blk_clear_pm_only+0x2a/0x30
+CPU: 3 PID: 1039 Comm: kworker/u8:49 Not tainted 5.0.0+ #1
+Hardware name: LENOVO 4180F42/4180F42, BIOS 83ET75WW (1.45 ) 05/10/2013
+Workqueue: events_unbound async_run_entry_fn
+RIP: 0010:blk_clear_pm_only+0x2a/0x30
+Call Trace:
+ ? scsi_device_resume+0x28/0x50
+ ? scsi_dev_type_resume+0x2b/0x80
+ ? async_run_entry_fn+0x2c/0xd0
+ ? process_one_work+0x1f0/0x3f0
+ ? worker_thread+0x28/0x3c0
+ ? process_one_work+0x3f0/0x3f0
+ ? kthread+0x10c/0x130
+ ? __kthread_create_on_node+0x150/0x150
+ ? ret_from_fork+0x1f/0x30
 
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Stefan Hajnoczi <stefanha@redhat.com>
-Fixes: 057cbf49a1f0 ("tcm_vhost: Initial merge for vhost level target fabric driver")
-Signed-off-by: Jason Wang <jasowang@redhat.com>
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-[jwang: backport to 4.19]
-Signed-off-by: Jack Wang <jinpu.wang@cloud.ionos.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: Johannes Thumshirn <jthumshirn@suse.de>
+Cc: Oleksandr Natalenko <oleksandr@natalenko.name>
+Cc: Martin Steigerwald <martin@lichtvoll.de>
+Cc: <stable@vger.kernel.org>
+Reported-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Tested-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Fixes: 3a0a529971ec ("block, scsi: Make SCSI quiesce and resume work reliably") # v4.15
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/vhost/scsi.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/scsi/scsi_lib.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/vhost/scsi.c
-+++ b/drivers/vhost/scsi.c
-@@ -817,7 +817,7 @@ vhost_scsi_handle_vq(struct vhost_scsi *
- 	u64 tag;
- 	u32 exp_data_len, data_direction;
- 	unsigned int out = 0, in = 0;
--	int head, ret, prot_bytes;
-+	int head, ret, prot_bytes, c = 0;
- 	size_t req_size, rsp_size = sizeof(struct virtio_scsi_cmd_resp);
- 	size_t out_size, in_size;
- 	u16 lun;
-@@ -836,7 +836,7 @@ vhost_scsi_handle_vq(struct vhost_scsi *
- 
- 	vhost_disable_notify(&vs->dev, vq);
- 
--	for (;;) {
-+	do {
- 		head = vhost_get_vq_desc(vq, vq->iov,
- 					 ARRAY_SIZE(vq->iov), &out, &in,
- 					 NULL, NULL);
-@@ -1051,7 +1051,7 @@ vhost_scsi_handle_vq(struct vhost_scsi *
- 		 */
- 		INIT_WORK(&cmd->work, vhost_scsi_submission_work);
- 		queue_work(vhost_scsi_workqueue, &cmd->work);
--	}
-+	} while (likely(!vhost_exceeds_weight(vq, ++c, 0)));
- out:
- 	mutex_unlock(&vq->mutex);
- }
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -3102,8 +3102,10 @@ void scsi_device_resume(struct scsi_devi
+ 	 * device deleted during suspend)
+ 	 */
+ 	mutex_lock(&sdev->state_mutex);
+-	sdev->quiesced_by = NULL;
+-	blk_clear_pm_only(sdev->request_queue);
++	if (sdev->quiesced_by) {
++		sdev->quiesced_by = NULL;
++		blk_clear_pm_only(sdev->request_queue);
++	}
+ 	if (sdev->sdev_state == SDEV_QUIESCE)
+ 		scsi_device_set_state(sdev, SDEV_RUNNING);
+ 	mutex_unlock(&sdev->state_mutex);
 
 
