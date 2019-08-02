@@ -2,107 +2,73 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E003BC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64959C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B660C2064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:52:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H62ndNIW"
+	by mail.kernel.org (Postfix) with ESMTP id 3E40A2064A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:52:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732775AbfHBPwO (ORCPT
+        id S2387450AbfHBPwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 11:52:14 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38670 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728853AbfHBPwN (ORCPT
+        Fri, 2 Aug 2019 11:52:23 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:58130 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728853AbfHBPwW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 11:52:13 -0400
-Received: by mail-pg1-f194.google.com with SMTP id f5so27452107pgu.5;
-        Fri, 02 Aug 2019 08:52:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=hChDQjNk8GUmuij0Tgbi8SwYKa1s6wH0+tWWLC518GM=;
-        b=H62ndNIWMkZFY99KdV8g7328EqmF8Cfv2MxDALDkR3AicphGsEBZgREcnS3yRaCURA
-         kwZi/AjaSv3+Ib+0eg3bIdoagdKyi9GWLWTQRvilDY+4oimO1u2s3SleBLxYaIPHhR5P
-         JFCOO7rniPkz8e6JBg+tBJ1ao3ahqTPWjTKO/Z2IFwY4uYY+X0/946l44DdNiQIBcbn4
-         c+xFzWkWjzK/T8qfHW+/GLlPmsaPzsn6BYAfWgcW4dWFFNNPT8fds3SmUcseTtWrl0v+
-         yFgbRryo3YxoylXz6+w1C6OFFC6Fyo5zUIpekT5+V6rrMrpbPQ6E3zJHMy4W8byclf5d
-         Y3pQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=hChDQjNk8GUmuij0Tgbi8SwYKa1s6wH0+tWWLC518GM=;
-        b=KzYHaYSrDZmBBC3JcZmoa/ky6AkYmcH0rWgwcjc2yvFnsShsdvV+b7y2FHIG8NCTPj
-         9+9olkeT0Ytutq84bzj+9sW51FR3k3TBvgLn+LxiB3T6+zJ45d7goibh/0uwgr7S2/Sq
-         OF7UcOK5sG1NXzPFa4j33eOsAyGielFmS/5k2ut7FrLhkZpzHxlm61+XfAJwp1ib3U7X
-         n5FHPQCscm+u5iNo5B5J+Kg4xwxa5PRrWgadQCmsyLORQYFsoi7vHIGGMCQ0nuH37oVl
-         UShVzHeK5IqA4YQppJo3EitcHb+A1TpSpl5I7zyu0sg3o4O0vue9LfMHmABPk8Xyq2mG
-         21Qg==
-X-Gm-Message-State: APjAAAXt8ADbJ73grtX2VIKpAtOCS7EAUCwfVveBI13tEEA4iqO2YcXv
-        Z5sVVqcCU83sLiMpDRyL5S2ksCCX
-X-Google-Smtp-Source: APXvYqxNYR7vQ/Q5dOkKE/cgMjgVMwJinSCWlfNScUZc8Exyjci5HbhrgMoRTSxWlhi2kT2NuKUvgw==
-X-Received: by 2002:a62:1515:: with SMTP id 21mr61833169pfv.100.1564761132988;
-        Fri, 02 Aug 2019 08:52:12 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 64sm77118725pfe.128.2019.08.02.08.52.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 02 Aug 2019 08:52:12 -0700 (PDT)
-Date:   Fri, 2 Aug 2019 08:52:11 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.4 000/158] 4.4.187-stable review
-Message-ID: <20190802155211.GA25315@roeck-us.net>
-References: <20190802092203.671944552@linuxfoundation.org>
+        Fri, 2 Aug 2019 11:52:22 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1htZqr-0002xO-Hi; Fri, 02 Aug 2019 15:52:17 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][net-next] ice: fix potential infinite loop
+Date:   Fri,  2 Aug 2019 16:52:17 +0100
+Message-Id: <20190802155217.16996-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 11:27:01AM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.4.187 release.
-> There are 158 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sun 04 Aug 2019 09:19:34 AM UTC.
-> Anything received after that time might be too late.
-> 
+From: Colin Ian King <colin.king@canonical.com>
 
-Early feedback:
+The loop counter of a for-loop is a u8 however this is being compared
+to an int upper bound and this can lead to an infinite loop if the
+upper bound is greater than 255 since the loop counter will wrap back
+to zero. Fix this potential issue by making the loop counter an int.
 
-Build reference: v4.4.186-159-g26f755a0d3e0
+Addresses-Coverity: ("Infinite loop")
+Fixes: c7aeb4d1b9bf ("ice: Disable VFs until reset is completed")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/net/ethernet/intel/ice/ice_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Building powerpc:defconfig ... failed
+diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
+index c26e6a102dac..088543d50095 100644
+--- a/drivers/net/ethernet/intel/ice/ice_main.c
++++ b/drivers/net/ethernet/intel/ice/ice_main.c
+@@ -488,7 +488,7 @@ static void
+ ice_prepare_for_reset(struct ice_pf *pf)
+ {
+ 	struct ice_hw *hw = &pf->hw;
+-	u8 i;
++	int i;
+ 
+ 	/* already prepared for reset */
+ 	if (test_bit(__ICE_PREPARED_FOR_RESET, pf->state))
+-- 
+2.20.1
 
-arch/powerpc/platforms/pseries/mobility.c: In function ‘post_mobility_fixup’:
-arch/powerpc/platforms/pseries/mobility.c:318:2: error: implicit declaration of function ‘cpus_read_lock’
-arch/powerpc/platforms/pseries/mobility.c:325:2: error: implicit declaration of function ‘cacheinfo_teardown’
-arch/powerpc/platforms/pseries/mobility.c:332:2: error: implicit declaration of function ‘cacheinfo_rebuild’
-arch/powerpc/platforms/pseries/mobility.c:334:2: error: implicit declaration of function ‘cpus_read_unlock’
-
-Culprits:
-
-9d263cc3b7c1 powerpc/pseries/mobility: rebuild cacheinfo hierarchy post-migration
-d4b0908c6289 powerpc/pseries/mobility: prevent cpu hotplug during DT update
-
-Guenter
