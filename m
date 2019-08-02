@@ -2,147 +2,228 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACC5C32753
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A7DC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E74ED205F4
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:20:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564737609;
-	bh=LWEqG1mut2HEw74PR2CZNwe93T7QVLkyCTmHwC/WLsA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LkmYzN1Jft0HHHrfdR/Imm2pERLaFKqwG5Yrt18SrOErQxz+8uoHIYOOCgCja1vJi
-	 Lks7MlWr4swM7cQrrnFq1qDXpKveTE7SF56iCEaBHOkmUkk71si8FI7tiyVQfDbH81
-	 HZGrH6jg2EYICvgCkChZjdGfToWCy9ze4asuJyOw=
+	by mail.kernel.org (Postfix) with ESMTP id CBBFD21773
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:22:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388307AbfHBJUI (ORCPT
+        id S2388338AbfHBJWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:20:08 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41984 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388205AbfHBJUH (ORCPT
+        Fri, 2 Aug 2019 05:22:32 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45666 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728904AbfHBJWb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:20:07 -0400
-Received: by mail-ot1-f65.google.com with SMTP id l15so77442874otn.9;
-        Fri, 02 Aug 2019 02:20:07 -0700 (PDT)
+        Fri, 2 Aug 2019 05:22:31 -0400
+Received: by mail-wr1-f68.google.com with SMTP id f9so76393858wre.12
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 02:22:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3UbKhJdzxseRfEEhuaZ1Vc2y6nK5ipj1f4TUoeR3RRs=;
-        b=mNLoyAHUKrAAZ2x61O0ZYzoqkKMplKd3OTxyam45hRNzNayeBwp91kZwFXvYgfUDIQ
-         VQHD87p9j2MtNATROU8SctnfhzINUHk3RNLDun1X1THU/Edww2aZYUSOLkrz8shFTrzj
-         dodvy5O3FPTU8dVPWH+bF2goyTRmG6WZvmRiOy7xF7JuAa6hMe/fAJ6uLn5E0YHc2lfz
-         GLqr7nnBhlOrDw/Y1uW/A2kqe3PCOahhuOBiLzOwHq4IV0zDO63ZSWGn7M57vFo92Fvp
-         LabPDSFpsSW3C6nVDPWJrQtNuUzLS7sQ1WVGJd+u0nyOnlZKUBll732epIfYqI6sp3Ou
-         2sxw==
-X-Gm-Message-State: APjAAAUlMtJ++O8hp1X+qTVvLPu0j5fPHMnfEnR5WZowvqJ4i1xB/ZAo
-        1c9X/lH3FiRbfZzJxJn4kkzcQjqdu4ed5dW7Bqg=
-X-Google-Smtp-Source: APXvYqx+KsxeXvZ4OMKF/t7Ndf+UqDJzTu9tWTXHHRW/zcGvRuzCMhDu4KnW+31CqDYCVmG65TjFxbr7j093VBGdzcI=
-X-Received: by 2002:a9d:6b96:: with SMTP id b22mr31806475otq.262.1564737606881;
- Fri, 02 Aug 2019 02:20:06 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tCaYIDdP2Ci1Rqrimk/5TgidRQI7nz3EH1dEhZNEucs=;
+        b=Fj4qWu4vUTaoHGiMwZYhyfZjJ+NqSYQtCKzlX1iJ8f1wHUKXO7R345ZZZC278SR90V
+         euv9fkdzX/ut3HGw7JOrio69AonQH5bCtzPCs9GPpfv6E2HDpV6eHCMr6RivI/SgfqNN
+         VD104s065Qa3jUXgw7YEbr//dxXEk+QKWSF5KSMwqV4qdywCsJB+VPDXX4IWW+bUr0wd
+         yhUjydmnjPXhtym7PWCvzoThQYj5FcO9+x+FY9KWxUcJplIFGMeeEW9Nhimj8PuQtENy
+         iPNlasZ9mDWCEPGzhLU4/zVmJYlWhTQWKjvR6ZLkBqz+di8sSrdd0GKJU9x350P5a5+G
+         9UlQ==
+X-Gm-Message-State: APjAAAUFlKn797DLUKS24QznRe3Yubka2vo+UqKdfsX+2lkcJygX2Hu3
+        sW+T+wHQt3d9iq+2d2cAQCMbJEQz960=
+X-Google-Smtp-Source: APXvYqyDQKnln1metCTCY1u5z6hKN9sOh4Pat8nTJ6NPmxbSAUWCt4kokXgFAvLvK7B7D+YkzXAPQw==
+X-Received: by 2002:a05:6000:12c2:: with SMTP id l2mr30757948wrx.65.1564737748423;
+        Fri, 02 Aug 2019 02:22:28 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:4013:e920:9388:c3ff? ([2001:b07:6468:f312:4013:e920:9388:c3ff])
+        by smtp.gmail.com with ESMTPSA id z1sm78098619wrp.51.2019.08.02.02.22.26
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 02 Aug 2019 02:22:27 -0700 (PDT)
+Subject: Re: [RFC PATCH v2 00/19] KVM RISC-V Support
+To:     Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Radim K <rkrcmar@redhat.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Anup Patel <anup@brainfault.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190802074620.115029-1-anup.patel@wdc.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <69900526-8d7d-1ccb-4e8f-262ac1ae078e@redhat.com>
+Date:   Fri, 2 Aug 2019 11:22:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <CAJZ5v0ji+ksapJ4kc2m5UM_O+AShAvJWmYhTQHiXiHnpTq+xRg@mail.gmail.com>
- <000001d54892$a25b86b0$e7129410$@net> <20190802034819.vywlces7rxzfy33f@vireshk-i7>
- <1599417.3YyTWY6lWL@kreacher>
-In-Reply-To: <1599417.3YyTWY6lWL@kreacher>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 2 Aug 2019 11:19:56 +0200
-Message-ID: <CAJZ5v0g3R6WaQJQ7kH_r5bHQO1Q_8hQBruYcZCJSgZJisxRfFA@mail.gmail.com>
-Subject: Re: [PATCH] cpufreq: schedutil: Don't skip freq update when limits change
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Doug Smythies <dsmythies@telus.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "v4 . 18+" <stable@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190802074620.115029-1-anup.patel@wdc.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 2, 2019 at 11:11 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
->
-> On Friday, August 2, 2019 5:48:19 AM CEST Viresh Kumar wrote:
-> > On 01-08-19, 10:57, Doug Smythies wrote:
-> > > On 2019.07.31 23:17 Viresh Kumar wrote:
-> > > > On 31-07-19, 17:20, Doug Smythies wrote:
-> > > >> Summary:
-> > > >>
-> > > >> The old way, using UINT_MAX had two purposes: first,
-> > > >> as a "need to do a frequency update" flag; but also second, to
-> > > >> force any subsequent old/new frequency comparison to NOT be "the same,
-> > > >> so why bother actually updating" (see: sugov_update_next_freq). All
-> > > >> patches so far have been dealing with the flag, but only partially
-> > > >> the comparisons. In a busy system, and when schedutil.c doesn't actually
-> > > >> know the currently set system limits, the new frequency is dominated by
-> > > >> values the same as the old frequency. So, when sugov_fast_switch calls
-> > > >> sugov_update_next_freq, false is usually returned.
-> > > >
-> > > > And finally we know "Why" :)
-> > > >
-> > > > Good work Doug. Thanks for taking it to the end.
-> > > >
-> > > >> However, if we move the resetting of the flag and add another condition
-> > > >> to the "no need to actually update" decision, then perhaps this patch
-> > > >> version 1 will be O.K. It seems to be. (see way later in this e-mail).
-> > > >
-> > > >> With all this new knowledge, how about going back to
-> > > >> version 1 of this patch, and then adding this:
-> > > >>
-> > > >> diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-> > > >> index 808d32b..f9156db 100644
-> > > >> --- a/kernel/sched/cpufreq_schedutil.c
-> > > >> +++ b/kernel/sched/cpufreq_schedutil.c
-> > > >> @@ -100,7 +100,12 @@ static bool sugov_should_update_freq(struct sugov_policy *sg_policy, u64 time)
-> > > >>  static bool sugov_update_next_freq(struct sugov_policy *sg_policy, u64 time,
-> > > >>                                    unsigned int next_freq)
-> > > >>  {
-> > > >> -       if (sg_policy->next_freq == next_freq)
-> > > >> +       /*
-> > > >> +        * Always force an update if the flag is set, regardless.
-> > > >> +        * In some implementations (intel_cpufreq) the frequency is clamped
-> > > >> +        * further downstream, and might not actually be different here.
-> > > >> +        */
-> > > >> +       if (sg_policy->next_freq == next_freq && !sg_policy->need_freq_update)
-> > > >>                 return false;
-> > > >
-> > > > This is not correct because this is an optimization we have in place
-> > > > to make things more efficient. And it was working by luck earlier and
-> > > > my patch broke it for good :)
-> > >
-> > > Disagree.
-> > > All I did was use a flag where it used to be set to UNIT_MAX, to basically
-> > > implement the same thing.
-> >
-> > And the earlier code wasn't fully correct as well, that's why we tried
-> > to fix it earlier.
->
-> Your argument seems to be "There was an earlier problem related to this, which
-> was fixed, so it is fragile and I'd rather avoid it".  Still, you are claiming that the
-> code was in fact incorrect and you are not giving convincing arguments to
-> support that.
->
-> > So introducing the UINT_MAX thing again would be
-> > wrong, even if it fixes the problem for you.
->
-> Would it be wrong, because it would reintroduce the fragile code, or would it
-> be wrong, because it would re-introduce a bug?  What bug if so?
->
-> > Also this won't fix the issue for rest of the governors but just
-> > schedutil. Because this is a driver only problem and there is no point
-> > trying to fix that in a governor.
->
-> Well, I'm not convinced that this is a driver problem yet.
+On 02/08/19 09:46, Anup Patel wrote:
+> This series adds initial KVM RISC-V support. Currently, we are able to boot
+> RISC-V 64bit Linux Guests with multiple VCPUs.
+> 
+> Few key aspects of KVM RISC-V added by this series are:
+> 1. Minimal possible KVM world-switch which touches only GPRs and few CSRs.
+> 2. Full Guest/VM switch is done via vcpu_get/vcpu_put infrastructure.
+> 3. KVM ONE_REG interface for VCPU register access from user-space.
+> 4. PLIC emulation is done in user-space. In-kernel PLIC emulation, will
+>    be added in future.
+> 5. Timer and IPI emuation is done in-kernel.
+> 6. MMU notifiers supported.
+> 7. FP lazy save/restore supported.
+> 8. SBI v0.1 emulation for KVM Guest available.
+> 
+> Here's a brief TODO list which we will work upon after this series:
+> 1. Handle trap from unpriv access in reading Guest instruction
+> 2. Handle trap from unpriv access in SBI v0.1 emulation
+> 3. Implement recursive stage2 page table programing
+> 4. SBI v0.2 emulation in-kernel
+> 5. SBI v0.2 hart hotplug emulation in-kernel
+> 6. In-kernel PLIC emulation
+> 7. ..... and more .....
+> 
+> This series is based upon KVM pre-patches sent by Atish earlier
+> (https://lkml.org/lkml/2019/7/31/1503) and it can be found in
+> riscv_kvm_v2 branch at:
+> https//github.com/avpatel/linux.git
+> 
+> Our work-in-progress KVMTOOL RISC-V port can be found in riscv_v1 branch at:
+> https//github.com/avpatel/kvmtool.git
+> 
+> We need OpenSBI with RISC-V hypervisor extension support which can be
+> found in hyp_ext_changes_v1 branch at:
+> https://github.com/riscv/opensbi.git
+> 
+> The QEMU RISC-V hypervisor emulation is done by Alistair and is available
+> in riscv-hyp-work.next branch at:
+> https://github.com/alistair23/qemu.git
+> 
+> To play around with KVM RISC-V, here are few reference commands:
+> 1) To cross-compile KVMTOOL:
+>    $ make lkvm-static
+> 2) To launch RISC-V Host Linux:
+>    $ qemu-system-riscv64 -monitor null -cpu rv64,h=true -M virt \
+>    -m 512M -display none -serial mon:stdio \
+>    -kernel opensbi/build/platform/qemu/virt/firmware/fw_jump.elf \
+>    -device loader,file=build-riscv64/arch/riscv/boot/Image,addr=0x80200000 \
+>    -initrd ./rootfs_kvm_riscv64.img \
+>    -append "root=/dev/ram rw console=ttyS0 earlycon=sbi"
+> 3) To launch RISC-V Guest Linux with 9P rootfs:
+>    $ ./apps/lkvm-static run -m 128 -c2 --console serial \
+>    -p "console=ttyS0 earlycon=uart8250,mmio,0x3f8" -k ./apps/Image --debug
+> 4) To launch RISC-V Guest Linux with initrd:
+>    $ ./apps/lkvm-static run -m 128 -c2 --console serial \
+>    -p "console=ttyS0 earlycon=uart8250,mmio,0x3f8" -k ./apps/Image \
+>    -i ./apps/rootfs.img --debug
 
-I stand corrected, this is a driver problem, but IMO it needs to be
-addressed differently.
+LGTM apart from the comments I've sent about locking---which was the
+focus of my review this time through---and the bug on reading VSIP).
+
+Please try to have your GPG key signed by some other Linux maintainers
+so that you can use signed pull requests for RISC-V KVM.
+
+Paolo
+
+> Changes since v1:
+> - Fixed compile errors in building KVM RISC-V as module
+> - Removed unused kvm_riscv_halt_guest() and kvm_riscv_resume_guest()
+> - Set KVM_CAP_SYNC_MMU capability only after MMU notifiers are implemented
+> - Made vmid_version as unsigned long instead of atomic
+> - Renamed KVM_REQ_UPDATE_PGTBL to KVM_REQ_UPDATE_HGATP
+> - Renamed kvm_riscv_stage2_update_pgtbl() to kvm_riscv_stage2_update_hgatp()
+> - Configure HIDELEG and HEDELEG in kvm_arch_hardware_enable()
+> - Updated ONE_REG interface for CSR access to user-space
+> - Removed irqs_pending_lock and use atomic bitops instead
+> - Added separate patch for FP ONE_REG interface
+> - Added separate patch for updating MAINTAINERS file
+> 
+> Anup Patel (14):
+>   KVM: RISC-V: Add KVM_REG_RISCV for ONE_REG interface
+>   RISC-V: Add hypervisor extension related CSR defines
+>   RISC-V: Add initial skeletal KVM support
+>   RISC-V: KVM: Implement VCPU create, init and destroy functions
+>   RISC-V: KVM: Implement VCPU interrupts and requests handling
+>   RISC-V: KVM: Implement KVM_GET_ONE_REG/KVM_SET_ONE_REG ioctls
+>   RISC-V: KVM: Implement VCPU world-switch
+>   RISC-V: KVM: Handle MMIO exits for VCPU
+>   RISC-V: KVM: Handle WFI exits for VCPU
+>   RISC-V: KVM: Implement VMID allocator
+>   RISC-V: KVM: Implement stage2 page table programming
+>   RISC-V: KVM: Implement MMU notifiers
+>   RISC-V: Enable VIRTIO drivers in RV64 and RV32 defconfig
+>   RISC-V: KVM: Add MAINTAINERS entry
+> 
+> Atish Patra (5):
+>   RISC-V: Export few kernel symbols
+>   RISC-V: KVM: Add timer functionality
+>   RISC-V: KVM: FP lazy save/restore
+>   RISC-V: KVM: Implement ONE REG interface for FP registers
+>   RISC-V: KVM: Add SBI v0.1 support
+> 
+>  MAINTAINERS                             |  10 +
+>  arch/riscv/Kconfig                      |   2 +
+>  arch/riscv/Makefile                     |   2 +
+>  arch/riscv/configs/defconfig            |  23 +-
+>  arch/riscv/configs/rv32_defconfig       |  13 +
+>  arch/riscv/include/asm/csr.h            |  58 ++
+>  arch/riscv/include/asm/kvm_host.h       | 228 ++++++
+>  arch/riscv/include/asm/kvm_vcpu_timer.h |  32 +
+>  arch/riscv/include/asm/pgtable-bits.h   |   1 +
+>  arch/riscv/include/uapi/asm/kvm.h       |  98 +++
+>  arch/riscv/kernel/asm-offsets.c         | 148 ++++
+>  arch/riscv/kernel/smp.c                 |   2 +-
+>  arch/riscv/kernel/time.c                |   1 +
+>  arch/riscv/kvm/Kconfig                  |  34 +
+>  arch/riscv/kvm/Makefile                 |  14 +
+>  arch/riscv/kvm/main.c                   |  84 +++
+>  arch/riscv/kvm/mmu.c                    | 904 +++++++++++++++++++++++
+>  arch/riscv/kvm/tlb.S                    |  43 ++
+>  arch/riscv/kvm/vcpu.c                   | 936 ++++++++++++++++++++++++
+>  arch/riscv/kvm/vcpu_exit.c              | 554 ++++++++++++++
+>  arch/riscv/kvm/vcpu_sbi.c               | 119 +++
+>  arch/riscv/kvm/vcpu_switch.S            | 368 ++++++++++
+>  arch/riscv/kvm/vcpu_timer.c             | 106 +++
+>  arch/riscv/kvm/vm.c                     |  86 +++
+>  arch/riscv/kvm/vmid.c                   | 124 ++++
+>  drivers/clocksource/timer-riscv.c       |   8 +
+>  include/clocksource/timer-riscv.h       |  16 +
+>  include/uapi/linux/kvm.h                |   1 +
+>  28 files changed, 4009 insertions(+), 6 deletions(-)
+>  create mode 100644 arch/riscv/include/asm/kvm_host.h
+>  create mode 100644 arch/riscv/include/asm/kvm_vcpu_timer.h
+>  create mode 100644 arch/riscv/include/uapi/asm/kvm.h
+>  create mode 100644 arch/riscv/kvm/Kconfig
+>  create mode 100644 arch/riscv/kvm/Makefile
+>  create mode 100644 arch/riscv/kvm/main.c
+>  create mode 100644 arch/riscv/kvm/mmu.c
+>  create mode 100644 arch/riscv/kvm/tlb.S
+>  create mode 100644 arch/riscv/kvm/vcpu.c
+>  create mode 100644 arch/riscv/kvm/vcpu_exit.c
+>  create mode 100644 arch/riscv/kvm/vcpu_sbi.c
+>  create mode 100644 arch/riscv/kvm/vcpu_switch.S
+>  create mode 100644 arch/riscv/kvm/vcpu_timer.c
+>  create mode 100644 arch/riscv/kvm/vm.c
+>  create mode 100644 arch/riscv/kvm/vmid.c
+>  create mode 100644 include/clocksource/timer-riscv.h
+> 
+> --
+> 2.17.1
+> 
+
