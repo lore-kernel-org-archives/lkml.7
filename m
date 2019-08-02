@@ -2,91 +2,98 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D273EC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B45C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9E8220665
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 973A12073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:33:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564752815;
+	bh=tlJvdogyy518dLLLeZtVXiQXd+oZKbGj4D+2v5SsuC4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VZw4vFDKW1rXs/OSrQe+L8T3X/rSLF7m7nS0R1agKsHrdpUuYeLl58g0534AFYMe9
+	 3dKrt2+E20KYsTSYTTfSdHsoiCmyhs7YL6KGmqZDM8A8lrNgyUyVnCSmBf/DvtSGaX
+	 gpXAkKXRhhjWL93sTKBuwukJU7cd/3rlYbDJ7GVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391907AbfHBNdY (ORCPT
+        id S2393948AbfHBNXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:33:24 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:48144 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389830AbfHBNdU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:33:20 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 6C1438037F; Fri,  2 Aug 2019 15:33:06 +0200 (CEST)
-Date:   Fri, 2 Aug 2019 15:33:17 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     syzbot <syzbot+b156665cf4d1b5e00c76@syzkaller.appspotmail.com>
-Cc:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        len.brown@intel.com, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-usb@vger.kernel.org,
-        rjw@rjwysocki.net, syzkaller-bugs@googlegroups.com
-Subject: Re: KASAN: use-after-free Read in __pm_runtime_resume
-Message-ID: <20190802133317.GA5538@amd>
-References: <000000000000cd0435058f21e8c3@google.com>
+        Fri, 2 Aug 2019 09:23:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33750 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387657AbfHBNXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:23:10 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D12D221850;
+        Fri,  2 Aug 2019 13:23:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564752189;
+        bh=tlJvdogyy518dLLLeZtVXiQXd+oZKbGj4D+2v5SsuC4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mwCrmhy3XIqUqOjo3WAPN72cDXuaLjJY4AJd/+qOYxVvLXDdlH8qw1k2EZnws6DgO
+         zMitRT+N3ab7Ih3yrOGWuFyrDXzHTaw+LFqP9cu0Yb/RHafjf20dWnvRDEaPFGReOe
+         8FExksfUM+nRQ75Ne/rYBs0EdqZ45s3ZU6WubJa4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Laura Garcia Liebana <nevola@gmail.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 05/42] netfilter: nft_hash: fix symhash with modulus one
+Date:   Fri,  2 Aug 2019 09:22:25 -0400
+Message-Id: <20190802132302.13537-5-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190802132302.13537-1-sashal@kernel.org>
+References: <20190802132302.13537-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
-Content-Disposition: inline
-In-Reply-To: <000000000000cd0435058f21e8c3@google.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Laura Garcia Liebana <nevola@gmail.com>
 
---qMm9M+Fa2AknHoGS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[ Upstream commit 28b1d6ef53e3303b90ca8924bb78f31fa527cafb ]
 
-On Fri 2019-08-02 05:58:05, syzbot wrote:
-> Hello,
->=20
-> syzbot found the following crash on:
->=20
-> HEAD commit:    e96407b4 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=3D146071b4600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D792eb47789f57=
-810
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3Db156665cf4d1b5e=
-00c76
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->=20
-> Unfortunately, I don't have any reproducer for this crash yet.
+The rule below doesn't work as the kernel raises -ERANGE.
 
-I asked a question, noone bothered to reply, yet you spam me again?
+nft add rule netdev nftlb lb01 ip daddr set \
+	symhash mod 1 map { 0 : 192.168.0.10 } fwd to "eth0"
 
-You are a bad bot. Go away. Come back when your human master is
-willing to communicate.
+This patch allows to use the symhash modulus with one
+element, in the same way that the other types of hashes and
+algorithms that uses the modulus parameter.
 
-								Pavel
-							=09
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Signed-off-by: Laura Garcia Liebana <nevola@gmail.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/netfilter/nft_hash.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---qMm9M+Fa2AknHoGS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+diff --git a/net/netfilter/nft_hash.c b/net/netfilter/nft_hash.c
+index c2d237144f747..b8f23f75aea6c 100644
+--- a/net/netfilter/nft_hash.c
++++ b/net/netfilter/nft_hash.c
+@@ -196,7 +196,7 @@ static int nft_symhash_init(const struct nft_ctx *ctx,
+ 	priv->dreg = nft_parse_register(tb[NFTA_HASH_DREG]);
+ 
+ 	priv->modulus = ntohl(nla_get_be32(tb[NFTA_HASH_MODULUS]));
+-	if (priv->modulus <= 1)
++	if (priv->modulus < 1)
+ 		return -ERANGE;
+ 
+ 	if (priv->offset + priv->modulus - 1 < priv->offset)
+-- 
+2.20.1
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl1EO50ACgkQMOfwapXb+vKYhQCdHY91WvBbV3DB8W3q/3RcVQjz
-/pEAn0cD5LtqdCPW2XZorEGD4M4g0uPN
-=iWNk
------END PGP SIGNATURE-----
-
---qMm9M+Fa2AknHoGS--
