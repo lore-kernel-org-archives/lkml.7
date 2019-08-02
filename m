@@ -6,111 +6,96 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15DCFC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 06:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E058C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 06:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E361A20657
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 06:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ADEB20657
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 06:46:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388871AbfHBGqP (ORCPT
+        id S2388888AbfHBGqY convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 02:46:15 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50272 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388295AbfHBGqP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 02:46:15 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x726bgF2122945
-        for <linux-kernel@vger.kernel.org>; Fri, 2 Aug 2019 02:46:13 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2u4d9mdefu-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 02:46:13 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Fri, 2 Aug 2019 07:46:11 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 2 Aug 2019 07:46:08 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x726k7i752494378
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 2 Aug 2019 06:46:07 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EADDD42045;
-        Fri,  2 Aug 2019 06:46:06 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A743042049;
-        Fri,  2 Aug 2019 06:46:06 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.134])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Fri,  2 Aug 2019 06:46:06 +0000 (GMT)
-Date:   Fri, 2 Aug 2019 08:46:05 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Patrick Steuer <steuer@linux.ibm.com>
-Subject: Re: linux-next: Tree for Jul 31 - s390 crypto build breakage
-References: <20190731163915.3fdfcb14@canb.auug.org.au>
- <20190731085819.GA3488@osiris>
- <20190731110816.GA20753@gondor.apana.org.au>
- <20190731111520.GC3488@osiris>
- <20190731113216.GA21068@gondor.apana.org.au>
- <20190731114453.GD3488@osiris>
- <20190801122849.GB4163@osiris>
- <CAKv+Gu_1HP2NapMk5O_-XpJdga5zyFJDkVudTRT6CWm+tqPndA@mail.gmail.com>
+        Fri, 2 Aug 2019 02:46:24 -0400
+Received: from mga06.intel.com ([134.134.136.31]:16775 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388295AbfHBGqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 02:46:24 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Aug 2019 23:46:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,337,1559545200"; 
+   d="scan'208";a="167149268"
+Received: from orsmsx103.amr.corp.intel.com ([10.22.225.130])
+  by orsmga008.jf.intel.com with ESMTP; 01 Aug 2019 23:46:23 -0700
+Received: from orsmsx157.amr.corp.intel.com (10.22.240.23) by
+ ORSMSX103.amr.corp.intel.com (10.22.225.130) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 1 Aug 2019 23:46:23 -0700
+Received: from orsmsx114.amr.corp.intel.com ([169.254.8.96]) by
+ ORSMSX157.amr.corp.intel.com ([169.254.9.94]) with mapi id 14.03.0439.000;
+ Thu, 1 Aug 2019 23:46:23 -0700
+From:   "Prakhya, Sai Praneeth" <sai.praneeth.prakhya@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: RE: [PATCH] fork: Improve error message for corrupted page tables
+Thread-Topic: [PATCH] fork: Improve error message for corrupted page tables
+Thread-Index: AQHVSCCBTlnukuaks0aiZwfZ/9aV0qbnaerQ
+Date:   Fri, 2 Aug 2019 06:46:23 +0000
+Message-ID: <FFF73D592F13FD46B8700F0A279B802F4F9D61B5@ORSMSX114.amr.corp.intel.com>
+References: <20190730221820.7738-1-sai.praneeth.prakhya@intel.com>
+        <20190731152753.b17d9c4418f4bf6815a27ad8@linux-foundation.org>
+        <a05920e5994fb74af480255471a6c3f090f29b27.camel@intel.com>
+ <20190731212052.5c262ad084cbd6cf475df005@linux-foundation.org>
+In-Reply-To: <20190731212052.5c262ad084cbd6cf475df005@linux-foundation.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZTA1ZTgzNWMtZTdlZS00NjAxLWEzYWEtNDMxMDE2NzU0MDQyIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiXC9vODNtelwvV0pQeHloZ2YzM0czTnRRSVYrRXNoVzlSU3hZWDRPa1RYcmppbkN2NjVUQmRUcVJaSHRGdld4cVljIn0=
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.138]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKv+Gu_1HP2NapMk5O_-XpJdga5zyFJDkVudTRT6CWm+tqPndA@mail.gmail.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19080206-0008-0000-0000-000003039F22
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19080206-0009-0000-0000-00002272A4B9
-Message-Id: <20190802064605.GA4158@osiris>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-02_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908020068
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 08:28:56PM +0300, Ard Biesheuvel wrote:
-> On Thu, 1 Aug 2019 at 15:28, Heiko Carstens <heiko.carstens@de.ibm.com> wrote:
-> > Still not... with linux-next as of today I get this (s390 defconfig):
+> > > > +static const char * const resident_page_types[NR_MM_COUNTERS] = {
+> > > > +	"MM_FILEPAGES",
+> > > > +	"MM_ANONPAGES",
+> > > > +	"MM_SWAPENTS",
+> > > > +	"MM_SHMEMPAGES",
+> > > > +};
+> > >
+> > > But please let's not put this in a header file.  We're asking the
+> > > compiler to put a copy of all of this into every compilation unit
+> > > which includes the header.  Presumably the compiler is smart enough
+> > > not to do that, but it's not good practice.
 > >
-> > ERROR: "crypto_aegis128_decrypt_chunk_simd" [crypto/aegis128.ko] undefined!
-> > ERROR: "crypto_aegis128_update_simd" [crypto/aegis128.ko] undefined!
-> > ERROR: "crypto_aegis128_encrypt_chunk_simd" [crypto/aegis128.ko] undefined!
-> > scripts/Makefile.modpost:105: recipe for target 'modules-modpost' failed
+> > Thanks for the explanation. Makes sense to me.
 > >
+> > Just wanted to check before sending V2, Is it OK if I add this to
+> > kernel/fork.c? or do you have something else in mind?
 > 
-> Hello Heiko,
-> 
-> Apologies for the breakage. The first two fixes addressed obvious
-> shortcomings in my code, but with this issue, I'm a bit puzzled tbh.
-> The calls to these missing functions should be optimized away, since
-> have_simd never gets assigned if CONFIG_CRYPTO_AEGIS128_SIMD is not
-> defined, but for some reason, this isn't working. Which version of GCC
-> are you using?
+> I was thinking somewhere like mm/util.c so the array could be used by other
+> code.  But it seems there is no such code.  Perhaps it's best to just leave fork.c as
+> it is now.
 
-Plain vanilla gcc 9.1.0.
+Ok, so does that mean have the struct in header file itself?
+Sorry! for too many questions. I wanted to check with you before changing 
+because it's *the* fork.c file (I presume random changes will not be encouraged here)
 
-> Also, could you please try whether the patch below fixes the problem? Thanks
-> https://lore.kernel.org/linux-crypto/20190729074434.21064-1-ard.biesheuvel@linaro.org/
+I am not yet clear on what's the right thing to do here :(
+So, could you please help me in deciding.
 
-Yes, with that patch applied the code compiles.
-
+Regards,
+Sai
