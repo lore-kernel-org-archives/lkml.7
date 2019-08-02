@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE0BC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE12C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAE492087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AE242087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:52:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739554;
-	bh=nmPTsWkP88e57Ys91exz3DHHrVrBrLe2/K84VB5KA5U=;
+	s=default; t=1564739558;
+	bh=7KFobtlHDoR9gKsRlyN0zb8+wVAHxwIpPxZzne80Xp4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wR8v3OP+5QcaJ8uWQJwXe6viuO+/syUQ+XGSS6B4YqHqw7EgP+ZgB+FPNJbiMpFsK
-	 cE+mApjtXf3Q/JBt5wdKDUScZ5MSjGC1xup7X7Qc4x30tME9Y0hnlxupJdok5IC/dj
-	 /2zcqx5m3E8vVG1u5VQkx0rlJ5nvpogPZSC7JB3A=
+	b=mYZyUXIdADV3es27Lq2qNMSqTlaj64taJXkVxP3eSHmz0n5CL/iAlcGAN5ktsz1HN
+	 wM5bIHA/x1F1jIczlDVhez3T3o4ErZzrQOi9NbgEPUbqBek4xyI/0UQ/jJXgEE0ohF
+	 CblLPiwz6cOh1KSr2H3kW40mq/og7IiYWAZ4Cmnk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406029AbfHBJwd (ORCPT
+        id S2406041AbfHBJwh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:52:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58018 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:52:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405992AbfHBJwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:52:24 -0400
+        id S2405999AbfHBJw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:52:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FAF720B7C;
-        Fri,  2 Aug 2019 09:52:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E73F821726;
+        Fri,  2 Aug 2019 09:52:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739543;
-        bh=nmPTsWkP88e57Ys91exz3DHHrVrBrLe2/K84VB5KA5U=;
+        s=default; t=1564739546;
+        bh=7KFobtlHDoR9gKsRlyN0zb8+wVAHxwIpPxZzne80Xp4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o9ruawNFTPxLZ9Sce9DOmuJ+aSX7FSer3t9Gwco5sFYmqOqIR8geyB1NUbQ/HpdEv
-         3XYXgZuWqsqqIlcnObnwQYIu4pPtHhCDvhQ1SplFiCiYLRlny6Psm1kkGy09m1YZDo
-         X4LL/QTEomKdMm4x8qzmxmgsumQw23xt9DDzuV1A=
+        b=WpuL+9oANMKihBe9JrCXUJNBY6BgfWDYkA3EmgVTWs86MQ9jNi34fdCZpiViZl5NG
+         M9zvHP6n60gsmNmPUyojTwZJ86nf2+GNMw2e8XfuDl/lPglQStDP3SqxUM5UkVFv1f
+         Az6dxa85xKHO3O1V2MTlW5xnWPIPQxunz00rPuMY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Zhang HongJun <zhanghongjun2@huawei.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 4.9 206/223] hpet: Fix division by zero in hpet_time_div()
-Date:   Fri,  2 Aug 2019 11:37:11 +0200
-Message-Id: <20190802092250.338058159@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 207/223] ALSA: line6: Fix wrong altsetting for LINE6_PODHD500_1
+Date:   Fri,  2 Aug 2019 11:37:12 +0200
+Message-Id: <20190802092250.377077657@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -60,67 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 0c7d37f4d9b8446956e97b7c5e61173cdb7c8522 upstream.
+commit 70256b42caaf3e13c2932c2be7903a73fbe8bb8b upstream.
 
-The base value in do_div() called by hpet_time_div() is truncated from
-unsigned long to uint32_t, resulting in a divide-by-zero exception.
+Commit 7b9584fa1c0b ("staging: line6: Move altsetting to properties")
+set a wrong altsetting for LINE6_PODHD500_1 during refactoring.
 
-UBSAN: Undefined behaviour in ../drivers/char/hpet.c:572:2
-division by zero
-CPU: 1 PID: 23682 Comm: syz-executor.3 Not tainted 4.4.184.x86_64+ #4
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
- 0000000000000000 b573382df1853d00 ffff8800a3287b98 ffffffff81ad7561
- ffff8800a3287c00 ffffffff838b35b0 ffffffff838b3860 ffff8800a3287c20
- 0000000000000000 ffff8800a3287bb0 ffffffff81b8f25e ffffffff838b35a0
-Call Trace:
- [<ffffffff81ad7561>] __dump_stack lib/dump_stack.c:15 [inline]
- [<ffffffff81ad7561>] dump_stack+0xc1/0x120 lib/dump_stack.c:51
- [<ffffffff81b8f25e>] ubsan_epilogue+0x12/0x8d lib/ubsan.c:166
- [<ffffffff81b900cb>] __ubsan_handle_divrem_overflow+0x282/0x2c8 lib/ubsan.c:262
- [<ffffffff823560dd>] hpet_time_div drivers/char/hpet.c:572 [inline]
- [<ffffffff823560dd>] hpet_ioctl_common drivers/char/hpet.c:663 [inline]
- [<ffffffff823560dd>] hpet_ioctl_common.cold+0xa8/0xad drivers/char/hpet.c:577
- [<ffffffff81e63d56>] hpet_ioctl+0xc6/0x180 drivers/char/hpet.c:676
- [<ffffffff81711590>] vfs_ioctl fs/ioctl.c:43 [inline]
- [<ffffffff81711590>] file_ioctl fs/ioctl.c:470 [inline]
- [<ffffffff81711590>] do_vfs_ioctl+0x6e0/0xf70 fs/ioctl.c:605
- [<ffffffff81711eb4>] SYSC_ioctl fs/ioctl.c:622 [inline]
- [<ffffffff81711eb4>] SyS_ioctl+0x94/0xc0 fs/ioctl.c:613
- [<ffffffff82846003>] tracesys_phase2+0x90/0x95
+Set the correct altsetting number to fix the issue.
 
-The main C reproducer autogenerated by syzkaller,
-
-  syscall(__NR_mmap, 0x20000000, 0x1000000, 3, 0x32, -1, 0);
-  memcpy((void*)0x20000100, "/dev/hpet\000", 10);
-  syscall(__NR_openat, 0xffffffffffffff9c, 0x20000100, 0, 0);
-  syscall(__NR_ioctl, r[0], 0x40086806, 0x40000000000000);
-
-Fix it by using div64_ul().
-
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Signed-off-by: Zhang HongJun <zhanghongjun2@huawei.com>
-Cc: stable <stable@vger.kernel.org>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20190711132757.130092-1-wangkefeng.wang@huawei.com
+BugLink: https://bugs.launchpad.net/bugs/1790595
+Fixes: 7b9584fa1c0b ("staging: line6: Move altsetting to properties")
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/hpet.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ sound/usb/line6/podhd.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/char/hpet.c
-+++ b/drivers/char/hpet.c
-@@ -569,8 +569,7 @@ static inline unsigned long hpet_time_di
- 	unsigned long long m;
- 
- 	m = hpets->hp_tick_freq + (dis >> 1);
--	do_div(m, dis);
--	return (unsigned long)m;
-+	return div64_ul(m, dis);
- }
- 
- static int
+--- a/sound/usb/line6/podhd.c
++++ b/sound/usb/line6/podhd.c
+@@ -385,7 +385,7 @@ static const struct line6_properties pod
+ 		.name = "POD HD500",
+ 		.capabilities	= LINE6_CAP_PCM
+ 				| LINE6_CAP_HWMON,
+-		.altsetting = 1,
++		.altsetting = 0,
+ 		.ep_ctrl_r = 0x81,
+ 		.ep_ctrl_w = 0x01,
+ 		.ep_audio_r = 0x86,
 
 
