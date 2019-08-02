@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A840EC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B473C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72E2B2171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA7BE206A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:47:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739229;
-	bh=gcPTCB6UpU4DCzvcOK0j830FQAAPxgXOUQAdiBKoRKc=;
+	s=default; t=1564739231;
+	bh=ub2i0odmx7m8MQjRuWxJMi/W74+GzzJ3ZvokLiAy6yo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CR3GCV0S5lbXrUIz4KvNOPxZO7a80PVYysesl71evas75XfEsf3IyFYpxQQhxRaqv
-	 YsaqgPAiDqmy6dK4J7103oxPKI+JO9+5zL5WPrNvKCDRc/Tm1FLV6s4g2eQLPPXDvm
-	 m6k3N3kOt0rxtaMFP7uIRPEYo3XF8UorGnz6vOd0=
+	b=HUGRg4Lc70ADHkxpN4X9mg1xbB58Pur88OTQRu/D9SqnfRSdfCFUzUyLmtqKZ8UPw
+	 BiTjayrcSLEm1ZmU0/QvOx59DoIunod2NZ4Tv4D/mXZjqL6ZChDDhXweemIk+iAaRQ
+	 IwaqIBiFo3T3SHDvlxIVELlefa+PpjxHa+pO7YwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405638AbfHBJrI (ORCPT
+        id S2405590AbfHBJrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:47:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51798 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:47:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392087AbfHBJrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:47:06 -0400
+        id S2391836AbfHBJrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:47:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4D4120880;
-        Fri,  2 Aug 2019 09:47:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0AE22086A;
+        Fri,  2 Aug 2019 09:46:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739225;
-        bh=gcPTCB6UpU4DCzvcOK0j830FQAAPxgXOUQAdiBKoRKc=;
+        s=default; t=1564739220;
+        bh=ub2i0odmx7m8MQjRuWxJMi/W74+GzzJ3ZvokLiAy6yo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sm4OrvxaeDZC2h9/7F5iiZCa95cS/zgsxDYRu3x1SXtTFQXdt39UJLHh3UKB2UsCh
-         R52z/m7Fqdih5NCjzgBoTgy7w35X2lG2ZbVSdZx5M1dsflfnrz5FF2doELQQ2g8Ej/
-         K2fuKI/EV/5n/S/BW1yWBBrWJt1V+Up2weDRYq/Q=
+        b=aD/S7HUl9rDpBBlEI/uF3eAlWn0bIxAGnrQymTK1zLIzLvKDe+fmEfBkltbNMegD0
+         5XmsSftpqgj1VVpLWlVgbIAm7jD+7Bpsy1/GP9+bmVTZ7jBXwte47cNqojsHOozQRc
+         QBKYtTVO2jnPa9uwCwWujB4i0Uqbb6LoUkD16IV0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Thierry Reding <treding@nvidia.com>,
+        stable@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>,
+        "J. Bruce Fields" <bfields@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 159/223] drm/panel: simple: Fix panel_simple_dsi_probe
-Date:   Fri,  2 Aug 2019 11:36:24 +0200
-Message-Id: <20190802092248.550530661@linuxfoundation.org>
+Subject: [PATCH 4.9 158/223] nfsd: Fix overflow causing non-working mounts on 1 TB machines
+Date:   Fri,  2 Aug 2019 11:36:23 +0200
+Message-Id: <20190802092248.512740385@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -60,39 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7ad9db66fafb0f0ad53fd2a66217105da5ddeffe ]
+[ Upstream commit 3b2d4dcf71c4a91b420f835e52ddea8192300a3b ]
 
-In case mipi_dsi_attach() fails remove the registered panel to avoid added
-panel without corresponding device.
+Since commit 10a68cdf10 (nfsd: fix performance-limiting session
+calculation) (Linux 5.1-rc1 and 4.19.31), shares from NFS servers with
+1 TB of memory cannot be mounted anymore. The mount just hangs on the
+client.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190226081153.31334-1-peter.ujfalusi@ti.com
+The gist of commit 10a68cdf10 is the change below.
+
+    -avail = clamp_t(int, avail, slotsize, avail/3);
+    +avail = clamp_t(int, avail, slotsize, total_avail/3);
+
+Here are the macros.
+
+    #define min_t(type, x, y)       __careful_cmp((type)(x), (type)(y), <)
+    #define clamp_t(type, val, lo, hi) min_t(type, max_t(type, val, lo), hi)
+
+`total_avail` is 8,434,659,328 on the 1 TB machine. `clamp_t()` casts
+the values to `int`, which for 32-bit integers can only hold values
+−2,147,483,648 (−2^31) through 2,147,483,647 (2^31 − 1).
+
+`avail` (in the function signature) is just 65536, so that no overflow
+was happening. Before the commit the assignment would result in 21845,
+and `num = 4`.
+
+When using `total_avail`, it is causing the assignment to be
+18446744072226137429 (printed as %lu), and `num` is then 4164608182.
+
+My next guess is, that `nfsd_drc_mem_used` is then exceeded, and the
+server thinks there is no memory available any more for this client.
+
+Updating the arguments of `clamp_t()` and `min_t()` to `unsigned long`
+fixes the issue.
+
+Now, `avail = 65536` (before commit 10a68cdf10 `avail = 21845`), but
+`num = 4` remains the same.
+
+Fixes: c54f24e338ed (nfsd: fix performance-limiting session calculation)
+Cc: stable@vger.kernel.org
+Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/panel/panel-simple.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ fs/nfsd/nfs4state.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 5b2a9f97ff04..68a2b25deb50 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1944,7 +1944,14 @@ static int panel_simple_dsi_probe(struct mipi_dsi_device *dsi)
- 	dsi->format = desc->format;
- 	dsi->lanes = desc->lanes;
- 
--	return mipi_dsi_attach(dsi);
-+	err = mipi_dsi_attach(dsi);
-+	if (err) {
-+		struct panel_simple *panel = dev_get_drvdata(&dsi->dev);
-+
-+		drm_panel_remove(&panel->base);
-+	}
-+
-+	return err;
- }
- 
- static int panel_simple_dsi_remove(struct mipi_dsi_device *dsi)
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index c4762d8aa9f8..032fcae3a94f 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -1511,7 +1511,7 @@ static u32 nfsd4_get_drc_mem(struct nfsd4_channel_attrs *ca)
+ 	 * Never use more than a third of the remaining memory,
+ 	 * unless it's the only way to give this client a slot:
+ 	 */
+-	avail = clamp_t(int, avail, slotsize, total_avail/3);
++	avail = clamp_t(unsigned long, avail, slotsize, total_avail/3);
+ 	num = min_t(int, num, avail / slotsize);
+ 	nfsd_drc_mem_used += num * slotsize;
+ 	spin_unlock(&nfsd_drc_lock);
 -- 
 2.20.1
 
