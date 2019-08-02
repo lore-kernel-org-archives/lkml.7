@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7AF0C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E2CC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C71742064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:56:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 489632064A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:56:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392818AbfHBM4I (ORCPT
+        id S2392812AbfHBM4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 08:56:08 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3710 "EHLO huawei.com"
+        Fri, 2 Aug 2019 08:56:06 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3711 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2392685AbfHBMyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2392676AbfHBMyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 2 Aug 2019 08:54:35 -0400
 Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 9C60B6925965E2539DDC;
+        by Forcepoint Email with ESMTP id A5F8BAC4DA36A290861E;
         Fri,  2 Aug 2019 20:54:32 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 2 Aug 2019
- 20:54:23 +0800
+ 20:54:26 +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     Alexander Viro <viro@zeniv.linux.org.uk>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -45,9 +45,9 @@ CC:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
         Li Guifu <bluce.liguifu@huawei.com>,
         Fang Wei <fangwei1@huawei.com>,
         Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v6 12/24] erofs: introduce tagged pointer
-Date:   Fri, 2 Aug 2019 20:53:35 +0800
-Message-ID: <20190802125347.166018-13-gaoxiang25@huawei.com>
+Subject: [PATCH v6 14/24] erofs: introduce superblock registration
+Date:   Fri, 2 Aug 2019 20:53:37 +0800
+Message-ID: <20190802125347.166018-15-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190802125347.166018-1-gaoxiang25@huawei.com>
 References: <20190802125347.166018-1-gaoxiang25@huawei.com>
@@ -60,144 +60,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently kernel has scattered tagged pointer usages
-hacked by hand in plain code, without a unique and
-portable functionset to highlight the tagged pointer
-itself and wrap these hacked code in order to clean up
-all over meaningless magic masks.
-
-This patch introduces simple generic methods to fold
-tags into a pointer integer. Currently it supports
-the last n bits of the pointer for tags, which can be
-selected by users.
-
-In addition, it will also be used for the upcoming EROFS
-filesystem, which heavily uses tagged pointer pproach
- to reduce extra memory allocation.
-
-Link: https://en.wikipedia.org/wiki/Tagged_pointer
+In order to introducing shrinker solution for erofs,
+let's manage all mounted erofs instances at first.
 
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- fs/erofs/tagptr.h | 110 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 110 insertions(+)
- create mode 100644 fs/erofs/tagptr.h
+ fs/erofs/Makefile   |  2 +-
+ fs/erofs/internal.h | 13 +++++++++++++
+ fs/erofs/super.c    |  9 +++++++++
+ fs/erofs/utils.c    | 32 ++++++++++++++++++++++++++++++++
+ 4 files changed, 55 insertions(+), 1 deletion(-)
+ create mode 100644 fs/erofs/utils.c
 
-diff --git a/fs/erofs/tagptr.h b/fs/erofs/tagptr.h
+diff --git a/fs/erofs/Makefile b/fs/erofs/Makefile
+index 481a966caf06..930770be124f 100644
+--- a/fs/erofs/Makefile
++++ b/fs/erofs/Makefile
+@@ -5,7 +5,7 @@ EROFS_VERSION = "1.0"
+ ccflags-y += -DEROFS_VERSION=\"$(EROFS_VERSION)\"
+ 
+ obj-$(CONFIG_EROFS_FS) += erofs.o
+-erofs-objs := super.o inode.o data.o namei.o dir.o
++erofs-objs := super.o inode.o data.o namei.o dir.o utils.o
+ erofs-$(CONFIG_EROFS_FS_XATTR) += xattr.o
+ erofs-$(CONFIG_EROFS_FS_ZIP) += zmap.o
+ 
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index d3a703017233..082fa4727c80 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -61,6 +61,10 @@ typedef u64 erofs_off_t;
+ typedef u32 erofs_blk_t;
+ 
+ struct erofs_sb_info {
++#ifdef CONFIG_EROFS_FS_ZIP
++	/* list for all registered superblocks, mainly for shrinker */
++	struct list_head list;
++#endif	/* CONFIG_EROFS_FS_ZIP */
+ 	u32 blocks;
+ 	u32 meta_blkaddr;
+ #ifdef CONFIG_EROFS_FS_XATTR
+@@ -401,5 +405,14 @@ int erofs_namei(struct inode *dir, struct qstr *name,
+ /* dir.c */
+ extern const struct file_operations erofs_dir_fops;
+ 
++/* utils.c */
++#ifdef CONFIG_EROFS_FS_ZIP
++void erofs_shrinker_register(struct super_block *sb);
++void erofs_shrinker_unregister(struct super_block *sb);
++#else
++static inline void erofs_shrinker_register(struct super_block *sb) {}
++static inline void erofs_shrinker_unregister(struct super_block *sb) {}
++#endif	/* !CONFIG_EROFS_FS_ZIP */
++
+ #endif	/* __EROFS_INTERNAL_H */
+ 
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 561ae6f7fe13..2eca3b25db75 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -354,6 +354,8 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
+ 	if (unlikely(!sb->s_root))
+ 		return -ENOMEM;
+ 
++	erofs_shrinker_register(sb);
++
+ 	if (!silent)
+ 		infoln("mounted on %s with opts: %s.", sb->s_id, (char *)data);
+ 	return 0;
+@@ -385,6 +387,12 @@ static void erofs_kill_sb(struct super_block *sb)
+ 	sb->s_fs_info = NULL;
+ }
+ 
++/* called when ->s_root is non-NULL */
++static void erofs_put_super(struct super_block *sb)
++{
++	erofs_shrinker_unregister(sb);
++}
++
+ static struct file_system_type erofs_fs_type = {
+ 	.owner          = THIS_MODULE,
+ 	.name           = "erofs",
+@@ -496,6 +504,7 @@ static int erofs_remount(struct super_block *sb, int *flags, char *data)
+ }
+ 
+ const struct super_operations erofs_sops = {
++	.put_super = erofs_put_super,
+ 	.alloc_inode = alloc_inode,
+ 	.free_inode = free_inode,
+ 	.statfs = erofs_statfs,
+diff --git a/fs/erofs/utils.c b/fs/erofs/utils.c
 new file mode 100644
-index 000000000000..a72897c86744
+index 000000000000..791b2df1f761
 --- /dev/null
-+++ b/fs/erofs/tagptr.h
-@@ -0,0 +1,110 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
++++ b/fs/erofs/utils.c
+@@ -0,0 +1,32 @@
++// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * A tagged pointer implementation
++ * linux/fs/erofs/utils.c
 + *
-+ * Copyright (C) 2018 Gao Xiang <gaoxiang25@huawei.com>
++ * Copyright (C) 2018 HUAWEI, Inc.
++ *             http://www.huawei.com/
++ * Created by Gao Xiang <gaoxiang25@huawei.com>
 + */
-+#ifndef __EROFS_FS_TAGPTR_H
-+#define __EROFS_FS_TAGPTR_H
++#include "internal.h"
 +
-+#include <linux/types.h>
-+#include <linux/build_bug.h>
++#ifdef CONFIG_EROFS_FS_ZIP
++/* protects the mounted 'erofs_sb_list' */
++static DEFINE_SPINLOCK(erofs_sb_list_lock);
++static LIST_HEAD(erofs_sb_list);
 +
-+/*
-+ * the name of tagged pointer types are tagptr{1, 2, 3...}_t
-+ * avoid directly using the internal structs __tagptr{1, 2, 3...}
-+ */
-+#define __MAKE_TAGPTR(n) \
-+typedef struct __tagptr##n {	\
-+	uintptr_t v;	\
-+} tagptr##n##_t;
++void erofs_shrinker_register(struct super_block *sb)
++{
++	struct erofs_sb_info *sbi = EROFS_SB(sb);
 +
-+__MAKE_TAGPTR(1)
-+__MAKE_TAGPTR(2)
-+__MAKE_TAGPTR(3)
-+__MAKE_TAGPTR(4)
++	spin_lock(&erofs_sb_list_lock);
++	list_add(&sbi->list, &erofs_sb_list);
++	spin_unlock(&erofs_sb_list_lock);
++}
 +
-+#undef __MAKE_TAGPTR
-+
-+extern void __compiletime_error("bad tagptr tags")
-+	__bad_tagptr_tags(void);
-+
-+extern void __compiletime_error("bad tagptr type")
-+	__bad_tagptr_type(void);
-+
-+/* fix the broken usage of "#define tagptr2_t tagptr3_t" by users */
-+#define __tagptr_mask_1(ptr, n)	\
-+	__builtin_types_compatible_p(typeof(ptr), struct __tagptr##n) ? \
-+		(1UL << (n)) - 1 :
-+
-+#define __tagptr_mask(ptr)	(\
-+	__tagptr_mask_1(ptr, 1) ( \
-+	__tagptr_mask_1(ptr, 2) ( \
-+	__tagptr_mask_1(ptr, 3) ( \
-+	__tagptr_mask_1(ptr, 4) ( \
-+	__bad_tagptr_type(), 0)))))
-+
-+/* generate a tagged pointer from a raw value */
-+#define tagptr_init(type, val) \
-+	((typeof(type)){ .v = (uintptr_t)(val) })
-+
-+/*
-+ * directly cast a tagged pointer to the native pointer type, which
-+ * could be used for backward compatibility of existing code.
-+ */
-+#define tagptr_cast_ptr(tptr) ((void *)(tptr).v)
-+
-+/* encode tagged pointers */
-+#define tagptr_fold(type, ptr, _tags) ({ \
-+	const typeof(_tags) tags = (_tags); \
-+	if (__builtin_constant_p(tags) && (tags & ~__tagptr_mask(type))) \
-+		__bad_tagptr_tags(); \
-+tagptr_init(type, (uintptr_t)(ptr) | tags); })
-+
-+/* decode tagged pointers */
-+#define tagptr_unfold_ptr(tptr) \
-+	((void *)((tptr).v & ~__tagptr_mask(tptr)))
-+
-+#define tagptr_unfold_tags(tptr) \
-+	((tptr).v & __tagptr_mask(tptr))
-+
-+/* operations for the tagger pointer */
-+#define tagptr_eq(_tptr1, _tptr2) ({ \
-+	typeof(_tptr1) tptr1 = (_tptr1); \
-+	typeof(_tptr2) tptr2 = (_tptr2); \
-+	(void)(&tptr1 == &tptr2); \
-+(tptr1).v == (tptr2).v; })
-+
-+/* lock-free CAS operation */
-+#define tagptr_cmpxchg(_ptptr, _o, _n) ({ \
-+	typeof(_ptptr) ptptr = (_ptptr); \
-+	typeof(_o) o = (_o); \
-+	typeof(_n) n = (_n); \
-+	(void)(&o == &n); \
-+	(void)(&o == ptptr); \
-+tagptr_init(o, cmpxchg(&ptptr->v, o.v, n.v)); })
-+
-+/* wrap WRITE_ONCE if atomic update is needed */
-+#define tagptr_replace_tags(_ptptr, tags) ({ \
-+	typeof(_ptptr) ptptr = (_ptptr); \
-+	*ptptr = tagptr_fold(*ptptr, tagptr_unfold_ptr(*ptptr), tags); \
-+*ptptr; })
-+
-+#define tagptr_set_tags(_ptptr, _tags) ({ \
-+	typeof(_ptptr) ptptr = (_ptptr); \
-+	const typeof(_tags) tags = (_tags); \
-+	if (__builtin_constant_p(tags) && (tags & ~__tagptr_mask(*ptptr))) \
-+		__bad_tagptr_tags(); \
-+	ptptr->v |= tags; \
-+*ptptr; })
-+
-+#define tagptr_clear_tags(_ptptr, _tags) ({ \
-+	typeof(_ptptr) ptptr = (_ptptr); \
-+	const typeof(_tags) tags = (_tags); \
-+	if (__builtin_constant_p(tags) && (tags & ~__tagptr_mask(*ptptr))) \
-+		__bad_tagptr_tags(); \
-+	ptptr->v &= ~tags; \
-+*ptptr; })
-+
-+#endif	/* __EROFS_FS_TAGPTR_H */
++void erofs_shrinker_unregister(struct super_block *sb)
++{
++	spin_lock(&erofs_sb_list_lock);
++	list_del(&EROFS_SB(sb)->list);
++	spin_unlock(&erofs_sb_list_lock);
++}
++#endif	/* !CONFIG_EROFS_FS_ZIP */
 +
 -- 
 2.17.1
