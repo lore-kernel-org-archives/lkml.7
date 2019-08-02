@@ -2,211 +2,231 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1398C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 21:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14551C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 21:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B698720665
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 21:56:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5B9B206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 21:57:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="lh3WCwZH"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JS5WCbbg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395216AbfHBV4p (ORCPT
+        id S2395224AbfHBV5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 17:56:45 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:17642 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729262AbfHBV4o (ORCPT
+        Fri, 2 Aug 2019 17:57:44 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:40955 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730163AbfHBV5o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 17:56:44 -0400
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x72LnGAh023283
-        for <linux-kernel@vger.kernel.org>; Fri, 2 Aug 2019 14:56:43 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=pAXhtSSrymtvNQ1Vuj81KTyaBnvdKVU8ZFfefO5CZ60=;
- b=lh3WCwZHtxkJs8ejmZ6GF+y7JvhVF6qh7sZp2R86f1Cj2G5g3BRy03nik/8VkknJB9+n
- w4S2kksfydvy7nnf5oYBiSQmxjZ72BI1iQCEL2AlOCXbiUfleNjZVJiJ6O4yk7pG5826
- hbVh9Iyme+0MFk5p3JholaF0QMIVWHn7D1o= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2u4qbvsebq-5
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 14:56:43 -0700
-Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 2 Aug 2019 14:56:39 -0700
-Received: by devvm24792.prn1.facebook.com (Postfix, from userid 150176)
-        id B6E6B189AC9D9; Fri,  2 Aug 2019 14:54:20 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Tao Ren <taoren@fb.com>
-Smtp-Origin-Hostname: devvm24792.prn1.facebook.com
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Arun Parameswaran <arun.parameswaran@broadcom.com>,
-        Justin Chen <justinpopo6@gmail.com>,
-        Vladimir Oltean <olteanv@gmail.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <openbmc@lists.ozlabs.org>
-CC:     Tao Ren <taoren@fb.com>
-Smtp-Origin-Cluster: prn1c35
-Subject: [PATCH net-next v3] net: phy: broadcom: add 1000Base-X support for BCM54616S
-Date:   Fri, 2 Aug 2019 14:54:19 -0700
-Message-ID: <20190802215419.313512-1-taoren@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Fri, 2 Aug 2019 17:57:44 -0400
+Received: by mail-oi1-f193.google.com with SMTP id w196so36571942oie.7
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 14:57:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rGuW4tG7YREvM0Tkwd56d78mTsuSaz2wZqP3WJdbo78=;
+        b=JS5WCbbgJ3urA3aE1jNreeG23PyNNrBu5EuDNauGNuCJrtFegQgUqeLFkSkbsKGOYH
+         pvh9Sen+L9CA7iU0/uPc80Y2VrIGgThDoLA9CWPkMmK9zdDHBUyTKJUE2udzdFxpGdzH
+         q3yX2kbeXOppHH36whi5FbxLvQsF1RvceEhIOZIbxjrOQ1IdStcU8n5Kj+1kPfNncxGO
+         C5k7qxldqyCJ3InOq1iLhKCfwEXH7CTG4aw77tgJCBPFmd7GzaEVD17Myl5tX60I/1II
+         pIfFxOYWJWxXH7fg2UtPQ6Ix2nYObRj08Gu1jFUel6COnkLdKzCuj+KtRHmWA/P3QRXp
+         ZChA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rGuW4tG7YREvM0Tkwd56d78mTsuSaz2wZqP3WJdbo78=;
+        b=kgRN0op7fFOEjb4QA2AbDhFXJMKpsz+tWM58Dt5Jo/2lFL8jRtYGgMxd8tn4O6BQmF
+         jeNwRXate7v0tyO/vSJkKfmauVIo7qsJiWUvOBDNXheKNqFOYkwy8zYQOVwtPozEy4FF
+         HT//lvUe5hPVF6J4Gd+tn/N0wLIL5uV0r8L4xlPAIKwYwYqQFVOXrn4TS8PsI/8untbK
+         TpFVHJtD23Ojv+ZftMheWqwE+mTuZx0UdkdRhGB/4kGTZSFlM5V+JvjA32JEmsrQmIG0
+         X/R9bBPLkaJmvaveO5he3DOlYotzzIjtnpkV+YUMQZrY1Qz7P5NAsemJBnb+CGhFbKOm
+         gH+g==
+X-Gm-Message-State: APjAAAWHwOXhr5IbNFTmKiMaaszS7o2Y7HgaG+ryfKBApVvdzdjPShPr
+        CVVw/vr2zSvl1ETCamfibOkbSkhIxZiM/+NKLE420w==
+X-Google-Smtp-Source: APXvYqxPvIExhTr5+5hX20/Em3/RlwrgRTSjNvdYPqA76CZtPvAqwwYH4WeX6OYha37L5xo4AcV22x1g5iGUwq+ifGA=
+X-Received: by 2002:a54:4f95:: with SMTP id g21mr4070854oiy.23.1564783062470;
+ Fri, 02 Aug 2019 14:57:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-02_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=587 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908020230
-X-FB-Internal: deliver
+References: <20190801223556.209184-1-hridya@google.com> <20190802061838.GA10844@kroah.com>
+ <20190802150612.eff7t42256pvxuja@brauner.io>
+In-Reply-To: <20190802150612.eff7t42256pvxuja@brauner.io>
+From:   Hridya Valsaraju <hridya@google.com>
+Date:   Fri, 2 Aug 2019 14:57:06 -0700
+Message-ID: <CA+wgaPPfRiz1RYRyMxX2udhicQGrwNZipPWzbJ--MPWtEXka-w@mail.gmail.com>
+Subject: Re: [PATCH] Add default binder devices through binderfs when configured
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-genphy_read_status() cannot report correct link speed when BCM54616S PHY
-is configured in RGMII->1000Base-KX mode (for example, on Facebook CMM
-BMC platform), and it is because speed-related fields in MII registers
-are assigned different meanings in 1000X register set. Actually there
-is no speed field in 1000X register set because link speed is always
-1000 Mb/s.
+On Fri, Aug 2, 2019 at 8:06 AM Christian Brauner <christian@brauner.io> wrote:
+>
+> On Fri, Aug 02, 2019 at 08:18:38AM +0200, Greg Kroah-Hartman wrote:
+> > On Thu, Aug 01, 2019 at 03:35:56PM -0700, Hridya Valsaraju wrote:
+> > > If CONFIG_ANDROID_BINDERFS is set, the default binder devices
+> > > specified by CONFIG_ANDROID_BINDER_DEVICES are created in each
+> > > binderfs instance instead of global devices being created by
+> > > the binder driver.
+> > >
+> > > Co-developed-by: Christian Brauner <christian.brauner@ubuntu.com>
+> > > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> > > Signed-off-by: Hridya Valsaraju <hridya@google.com>
+> > > ---
+> > >  drivers/android/binder.c   |  3 ++-
+> > >  drivers/android/binderfs.c | 46 ++++++++++++++++++++++++++++++++++----
+> > >  2 files changed, 44 insertions(+), 5 deletions(-)
+> > >
+> > > diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+> > > index 466b6a7f8ab7..65a99ac26711 100644
+> > > --- a/drivers/android/binder.c
+> > > +++ b/drivers/android/binder.c
+> > > @@ -6279,7 +6279,8 @@ static int __init binder_init(void)
+> > >                                 &transaction_log_fops);
+> > >     }
+> > >
+> > > -   if (strcmp(binder_devices_param, "") != 0) {
+> > > +   if (!IS_ENABLED(CONFIG_ANDROID_BINDERFS) &&
+> > > +       strcmp(binder_devices_param, "") != 0) {
+> > >             /*
+> > >             * Copy the module_parameter string, because we don't want to
+> > >             * tokenize it in-place.
+> > > diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
+> > > index e773f45d19d9..9f5ed50ffd70 100644
+> > > --- a/drivers/android/binderfs.c
+> > > +++ b/drivers/android/binderfs.c
+> > > @@ -48,6 +48,10 @@ static dev_t binderfs_dev;
+> > >  static DEFINE_MUTEX(binderfs_minors_mutex);
+> > >  static DEFINE_IDA(binderfs_minors);
+> > >
+> > > +static char *binder_devices_param = CONFIG_ANDROID_BINDER_DEVICES;
+> > > +module_param_named(devices, binder_devices_param, charp, 0444);
+> > > +MODULE_PARM_DESC(devices, "Binder devices to be created by default");
+> > > +
+> >
+> > Why are you creating a module parameter?  That was not in your changelog
+> > :(
+>
+> Yeah, you don't need an additional module parameter. You can just move
+>
+> static char *binder_devices_param = CONFIG_ANDROID_BINDER_DEVICES;
+> module_param_named(devices, binder_devices_param, charp, 0444);
+>
+> from binder.c to binder_internal.h and expose it to binder.c and
+> binderfs.c this way. This will work just fine since binderfs.c doesn't
+> modify the parameter and binder.c makes a copy of it before doing so.
+>
+> >
+> >
+> >
+> > >  /**
+> > >   * binderfs_mount_opts - mount options for binderfs
+> > >   * @max: maximum number of allocatable binderfs binder devices
+> > > @@ -135,7 +139,6 @@ static int binderfs_binder_device_create(struct inode *ref_inode,
+> > >  #else
+> > >     bool use_reserve = true;
+> > >  #endif
+> > > -
+> > >     /* Reserve new minor number for the new device. */
+> > >     mutex_lock(&binderfs_minors_mutex);
+> > >     if (++info->device_count <= info->mount_opts.max)
+> > > @@ -186,8 +189,7 @@ static int binderfs_binder_device_create(struct inode *ref_inode,
+> > >     req->major = MAJOR(binderfs_dev);
+> > >     req->minor = minor;
+> > >
+> > > -   ret = copy_to_user(userp, req, sizeof(*req));
+> > > -   if (ret) {
+> > > +   if (userp && copy_to_user(userp, req, sizeof(*req))) {
+> > >             ret = -EFAULT;
+> > >             goto err;
+> > >     }
+> > > @@ -467,6 +469,9 @@ static int binderfs_fill_super(struct super_block *sb, void *data, int silent)
+> > >     int ret;
+> > >     struct binderfs_info *info;
+> > >     struct inode *inode = NULL;
+> > > +   struct binderfs_device device_info = { 0 };
+> > > +   const char *name;
+> > > +   size_t len;
+> > >
+> > >     sb->s_blocksize = PAGE_SIZE;
+> > >     sb->s_blocksize_bits = PAGE_SHIFT;
+> > > @@ -521,7 +526,28 @@ static int binderfs_fill_super(struct super_block *sb, void *data, int silent)
+> > >     if (!sb->s_root)
+> > >             return -ENOMEM;
+> > >
+> > > -   return binderfs_binder_ctl_create(sb);
+> > > +   ret = binderfs_binder_ctl_create(sb);
+> > > +   if (ret)
+> > > +           return ret;
+> > > +
+> > > +   name = binder_devices_param;
+> > > +   for (len = strcspn(name, ","); len > 0; len = strcspn(name, ",")) {
+> > > +           /*
+> > > +            * init_binderfs() has already checked that the length of
+> > > +            * device_name_entry->name is not greater than device_info.name.
+> > > +            */
+> > > +           strscpy(device_info.name, name, len + 1);
+> > > +           ret = binderfs_binder_device_create(inode, NULL, &device_info);
+> > > +           if (ret)
+> > > +                   return ret;
+> > > +           name += len;
+> > > +           if (*name == ',')
+> > > +                   name++;
+> > > +
+> > > +   }
+> > > +
+> > > +   return 0;
+> > > +
+> > >  }
+> > >
+> > >  static struct dentry *binderfs_mount(struct file_system_type *fs_type,
+> > > @@ -553,6 +579,18 @@ static struct file_system_type binder_fs_type = {
+> > >  int __init init_binderfs(void)
+> > >  {
+> > >     int ret;
+> > > +   const char *name;
+> > > +   size_t len;
+> > > +
+> > > +   /* Verify that the default binderfs device names are valid. */
+> > > +   name = binder_devices_param;
+> > > +   for (len = strcspn(name, ","); len > 0; len = strcspn(name, ",")) {
+> > > +           if (len > BINDERFS_MAX_NAME)
+> > > +                   return -E2BIG;
+> > > +           name += len;
+> > > +           if (*name == ',')
+> > > +                   name++;
+> > > +   }
+> >
+> > This verification should be a separate patch, right?
+> >
+> > But the real issue here is I have no idea _why_ you are wanting this
+> > patch.  The changelog text says _what_ you are doing only, which isn't
+> > ok.
+> >
+> > Please provide more information as to why this is needed, what problem
+> > it is solving, and break this up into a patch series and resend.
 
-The patch adds "probe" callback to detect PHY's operation mode based on
-INTERF_SEL[1:0] pins and 1000X/100FX selection bit in SerDES 100-FX
-Control register. Besides, link speed is manually set to 1000 Mb/s in
-"read_status" callback if PHY-switch link is 1000Base-X.
+Thank you Greg and Christian, I will address all issues in v2 and resend.
 
-Signed-off-by: Tao Ren <taoren@fb.com>
----
- Changes in v3:
-  - rename bcm5482_read_status to bcm54xx_read_status so the callback can
-    be shared by BCM5482 and BCM54616S.
- Changes in v2:
-  - Auto-detect PHY operation mode instead of passing DT node.
-  - move PHY mode auto-detect logic from config_init to probe callback.
-  - only set speed (not including duplex) in read_status callback.
-  - update patch description with more background to avoid confusion.
-  - patch #1 in the series ("net: phy: broadcom: set features explicitly
-    for BCM54616") is dropped: the fix should go to get_features callback
-    which may potentially depend on this patch.
-
- drivers/net/phy/broadcom.c | 41 +++++++++++++++++++++++++++++++++-----
- include/linux/brcmphy.h    | 10 ++++++++--
- 2 files changed, 44 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/net/phy/broadcom.c b/drivers/net/phy/broadcom.c
-index 937d0059e8ac..ecad8a201a09 100644
---- a/drivers/net/phy/broadcom.c
-+++ b/drivers/net/phy/broadcom.c
-@@ -383,9 +383,9 @@ static int bcm5482_config_init(struct phy_device *phydev)
- 		/*
- 		 * Select 1000BASE-X register set (primary SerDes)
- 		 */
--		reg = bcm_phy_read_shadow(phydev, BCM5482_SHD_MODE);
--		bcm_phy_write_shadow(phydev, BCM5482_SHD_MODE,
--				     reg | BCM5482_SHD_MODE_1000BX);
-+		reg = bcm_phy_read_shadow(phydev, BCM54XX_SHD_MODE);
-+		bcm_phy_write_shadow(phydev, BCM54XX_SHD_MODE,
-+				     reg | BCM54XX_SHD_MODE_1000BX);
- 
- 		/*
- 		 * LED1=ACTIVITYLED, LED3=LINKSPD[2]
-@@ -409,7 +409,7 @@ static int bcm5482_config_init(struct phy_device *phydev)
- 	return err;
- }
- 
--static int bcm5482_read_status(struct phy_device *phydev)
-+static int bcm54xx_read_status(struct phy_device *phydev)
- {
- 	int err;
- 
-@@ -464,6 +464,35 @@ static int bcm54616s_config_aneg(struct phy_device *phydev)
- 	return ret;
- }
- 
-+static int bcm54616s_probe(struct phy_device *phydev)
-+{
-+	int val, intf_sel;
-+
-+	val = bcm_phy_read_shadow(phydev, BCM54XX_SHD_MODE);
-+	if (val < 0)
-+		return val;
-+
-+	/* The PHY is strapped in RGMII to fiber mode when INTERF_SEL[1:0]
-+	 * is 01b.
-+	 */
-+	intf_sel = (val & BCM54XX_SHD_INTF_SEL_MASK) >> 1;
-+	if (intf_sel == 1) {
-+		val = bcm_phy_read_shadow(phydev, BCM54616S_SHD_100FX_CTRL);
-+		if (val < 0)
-+			return val;
-+
-+		/* Bit 0 of the SerDes 100-FX Control register, when set
-+		 * to 1, sets the MII/RGMII -> 100BASE-FX configuration.
-+		 * When this bit is set to 0, it sets the GMII/RGMII ->
-+		 * 1000BASE-X configuration.
-+		 */
-+		if (!(val & BCM54616S_100FX_MODE))
-+			phydev->dev_flags |= PHY_BCM_FLAGS_MODE_1000BX;
-+	}
-+
-+	return 0;
-+}
-+
- static int brcm_phy_setbits(struct phy_device *phydev, int reg, int set)
- {
- 	int val;
-@@ -655,6 +684,8 @@ static struct phy_driver broadcom_drivers[] = {
- 	.config_aneg	= bcm54616s_config_aneg,
- 	.ack_interrupt	= bcm_phy_ack_intr,
- 	.config_intr	= bcm_phy_config_intr,
-+	.read_status	= bcm54xx_read_status,
-+	.probe		= bcm54616s_probe,
- }, {
- 	.phy_id		= PHY_ID_BCM5464,
- 	.phy_id_mask	= 0xfffffff0,
-@@ -689,7 +720,7 @@ static struct phy_driver broadcom_drivers[] = {
- 	.name		= "Broadcom BCM5482",
- 	/* PHY_GBIT_FEATURES */
- 	.config_init	= bcm5482_config_init,
--	.read_status	= bcm5482_read_status,
-+	.read_status	= bcm54xx_read_status,
- 	.ack_interrupt	= bcm_phy_ack_intr,
- 	.config_intr	= bcm_phy_config_intr,
- }, {
-diff --git a/include/linux/brcmphy.h b/include/linux/brcmphy.h
-index 6db2d9a6e503..b475e7f20d28 100644
---- a/include/linux/brcmphy.h
-+++ b/include/linux/brcmphy.h
-@@ -200,9 +200,15 @@
- #define BCM5482_SHD_SSD		0x14	/* 10100: Secondary SerDes control */
- #define BCM5482_SHD_SSD_LEDM	0x0008	/* SSD LED Mode enable */
- #define BCM5482_SHD_SSD_EN	0x0001	/* SSD enable */
--#define BCM5482_SHD_MODE	0x1f	/* 11111: Mode Control Register */
--#define BCM5482_SHD_MODE_1000BX	0x0001	/* Enable 1000BASE-X registers */
- 
-+/* 10011: SerDes 100-FX Control Register */
-+#define BCM54616S_SHD_100FX_CTRL	0x13
-+#define	BCM54616S_100FX_MODE		BIT(0)	/* 100-FX SerDes Enable */
-+
-+/* 11111: Mode Control Register */
-+#define BCM54XX_SHD_MODE		0x1f
-+#define BCM54XX_SHD_INTF_SEL_MASK	GENMASK(2, 1)	/* INTERF_SEL[1:0] */
-+#define BCM54XX_SHD_MODE_1000BX		BIT(0)	/* Enable 1000-X registers */
- 
- /*
-  * EXPANSION SHADOW ACCESS REGISTERS.  (PHY REG 0x15, 0x16, and 0x17)
--- 
-2.17.1
-
+> >
+> > thanks,
+> >
+> > greg k-h
+>
+> --
+> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
+>
