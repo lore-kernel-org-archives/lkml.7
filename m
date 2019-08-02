@@ -2,80 +2,94 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4C4C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90616C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B26420679
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:40:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564753227;
-	bh=NPjyN3WS8up8aDkolmRZtNvAOKXL1QR1GuC27tidpqo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ui3S6R8TD7vd4Y39pamReuMpcTsKM9pBgjItpv4Z9eYKrsE2DbfZY5PHFcP5ZW9es
-	 /AK8/HtvxOGhdkeEx5Buzl31BsaWu/eSAvmpbrDfAqMRb7EzCadrK4hzsDP1cfWNQB
-	 4qnwquGHn9/8SunygxMiqOsst2xd1Q5BApPKbikI=
+	by mail.kernel.org (Postfix) with ESMTP id 6053B20679
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:40:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LwXMEarF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406402AbfHBNk0 (ORCPT
+        id S2436530AbfHBNkc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:40:26 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60348 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2391258AbfHBNkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:40:25 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8D6C3B62C;
-        Fri,  2 Aug 2019 13:40:24 +0000 (UTC)
-Date:   Fri, 2 Aug 2019 15:40:21 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Masoud Sharbiani <msharbiani@apple.com>,
-        "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
-        "vdavydov.dev@gmail.com" <vdavydov.dev@gmail.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: Possible mem cgroup bug in kernels between 4.18.0 and 5.3-rc1.
-Message-ID: <20190802134021.GJ6461@dhcp22.suse.cz>
-References: <20190802121059.13192-1-hdanton@sina.com>
+        Fri, 2 Aug 2019 09:40:32 -0400
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:40830 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406490AbfHBNkc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:40:32 -0400
+Received: by mail-yb1-f196.google.com with SMTP id j6so4701068ybm.7
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 06:40:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JnFIxOkpNcZYRay8DKQqQvnlT+t5tL3INkAqh/eYj7U=;
+        b=LwXMEarFcR4Bs/zcWuQ8IJ1fnw5GW8qi7QewqVHSgPtxEMZwFnr70Ww/mfO4fsGMsU
+         vst2cS60sOBdSWQ+ahzOfd/EX0Huk7RSVXUTyR8jJOCema3fcTbIDC91OAE6uQ60jKCN
+         saJRbOOu7t1+twXuZQZ8kdVtoPj5THrS0dZJxlToQ8jPfXwRW5zvJ4gZ1AAfLuvZjwCL
+         5Qe6KtgL2vlpQArknto3oiIGXhIDYndqcmwZyWnEs0tAcA3ggoyZDmj/qd41TDwHBY23
+         fI0R+qIRrWZjaTFDaECoRlkYW3rHOyH68XzDzTagRens4oc9AUXKOAaMZt09TJ2yfIx0
+         ofWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JnFIxOkpNcZYRay8DKQqQvnlT+t5tL3INkAqh/eYj7U=;
+        b=Ln9Ekzhxmqzm8gLdfsNcu51wCkFkOlG+A+AwObYUb8wz1DlviDLs0TZgrjsHGzJ6Na
+         4AFsSccZbu+rbt/5w7VqSoyfT3ESSbEcYVUNv9kt57ZsWwTll+dfGbrcNqZzdosRuJBW
+         WlzS16X6do9/f/RRVvHuD1KUMfqqf9cQ01q3VKKD1wB5WxS0C5xJthG4LXU5GSm6XEmX
+         KN+pKetlaxtqkvq6RmYsfS8LxkMKIdN+G/IW70CHmndt3a97ifNZTXTwEh5XgA2qvQ15
+         xzutSuIADl2iW74COuP+DdLXFFTJ+63QKemoATIdsLvlMWYh+GeW8ELPPBKCT7DeJZVP
+         dkzg==
+X-Gm-Message-State: APjAAAU9+FoizOdrCrH2Jgp5tEjKZYnUgjmdjMZRZ8MdVVWCX2M6BM/C
+        Kn8kBHltLz/D18n32rlifTXIaI3S
+X-Google-Smtp-Source: APXvYqy8FKdeT5aid8DhmNpmzqsYkTh87wGYuv7VWkmczODk9fAjG9eY+voHf018cXZxS+fuzuc9+Q==
+X-Received: by 2002:a25:338b:: with SMTP id z133mr82353257ybz.85.1564753230287;
+        Fri, 02 Aug 2019 06:40:30 -0700 (PDT)
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com. [209.85.219.179])
+        by smtp.gmail.com with ESMTPSA id k64sm17138045ywk.77.2019.08.02.06.40.28
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 02 Aug 2019 06:40:28 -0700 (PDT)
+Received: by mail-yb1-f179.google.com with SMTP id a5so26866857ybo.13
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 06:40:28 -0700 (PDT)
+X-Received: by 2002:a25:5e44:: with SMTP id s65mr77950006ybb.235.1564753227994;
+ Fri, 02 Aug 2019 06:40:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190802121059.13192-1-hdanton@sina.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190802083541.12602-1-hslester96@gmail.com>
+In-Reply-To: <20190802083541.12602-1-hslester96@gmail.com>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Fri, 2 Aug 2019 09:39:51 -0400
+X-Gmail-Original-Message-ID: <CA+FuTSc8WBx2PCUhn-sLtYHQR-OROXm2pUN9SDj7P-Bd8432UQ@mail.gmail.com>
+Message-ID: <CA+FuTSc8WBx2PCUhn-sLtYHQR-OROXm2pUN9SDj7P-Bd8432UQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] cxgb4: sched: Use refcount_t for refcount
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Vishal Kulkarni <vishal@chelsio.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 02-08-19 20:10:58, Hillf Danton wrote:
-> 
-> On Fri, 2 Aug 2019 16:18:40 +0800 Michal Hocko wrote:
-[...]
-> > Huh, what? You are effectively saying that we should fail the charge
-> > when the requested nr_pages would fit in. This doesn't make much sense
-> > to me. What are you trying to achive here?
-> 
-> The report looks like the result of a tight loop.
-> I want to break it and make the end result of do_page_fault unsuccessful
-> if nr_retries rounds of page reclaiming fail to get work done. What made
-> me a bit over stretched is how to determine if the chargee is a memhog
-> in memcg's vocabulary.
-> What I prefer here is that do_page_fault succeeds, even if the chargee
-> exhausts its memory quota/budget granted, as long as more than nr_pages
-> can be reclaimed _within_ nr_retries rounds. IOW the deadline for memhog
-> is nr_retries, and no more.
+On Fri, Aug 2, 2019 at 4:36 AM Chuhong Yuan <hslester96@gmail.com> wrote:
+>
+> refcount_t is better for reference counters since its
+> implementation can prevent overflows.
+> So convert atomic_t ref counters to refcount_t.
+>
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> ---
+> Changes in v2:
+>   - Convert refcount from 0-base to 1-base.
 
-No, this really doesn't really make sense because it leads to pre-mature
-charge failures. The charge path is funadamentally not different from
-the page allocator path. We do try to reclaim and retry the allocation.
-We keep retrying for ever for non-costly order requests in both cases
-(modulo some corner cases like oom victims etc.).
--- 
-Michal Hocko
-SUSE Labs
+This changes the initial value from 0 to 1, but does not change the
+release condition. So this introduces an accounting bug?
