@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B87C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F37E5C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC265217D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C47D0217D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:30:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738233;
-	bh=Tr8aWNKlo2Wgrn6VcEDRPIIWe6L1PIrTNYoas381qJ4=;
+	s=default; t=1564738236;
+	bh=S4nzlfi04NbxGCfTVaubzvWlZlXVEJovnNywx6v/WLo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K7q9sHDOYe/eaRV8UMkO4XBHGn1cLCg3tHmJ185WOT+EB3+F0kDby6/YB/IBnNEdz
-	 M4KlUvDJMqYnHVZENPlsiagttKU3lVArPG4yyQaQbQSUn8OBJ1ZZEJYHVDH4vEsdXe
-	 T/76w0d/SEMrcnVYvMvFyt2oAFtDNBOkZoIDXqQs=
+	b=KwOwmFeooopOOWkR6oCZfYVJCVpony3VttdSMbYsT6CFuf1qmv22h/ZItI2swJHIJ
+	 l7Uxy2PO4C5DcIkmGiCofjxJExh4ARt1OgTzbBMnH1JNnq0rTruqQh9Tu66a3C1UX7
+	 ZRbnQqwFBpM8ZEDfoIUEtVh5nbiF8vsfW3ZKxI+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732639AbfHBJab (ORCPT
+        id S2389785AbfHBJaf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:30:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56002 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:30:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389506AbfHBJa3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:30:29 -0400
+        id S2389621AbfHBJac (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:30:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29BE22184B;
-        Fri,  2 Aug 2019 09:30:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE88621783;
+        Fri,  2 Aug 2019 09:30:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738228;
-        bh=Tr8aWNKlo2Wgrn6VcEDRPIIWe6L1PIrTNYoas381qJ4=;
+        s=default; t=1564738231;
+        bh=S4nzlfi04NbxGCfTVaubzvWlZlXVEJovnNywx6v/WLo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PhEWH/2kLF1GGTv1j7cr4Kkw2fyN67aiCxZ7TNQ1Ue0Qk2Uomdz7sjOtfHWSUmkEu
-         x4hmHjvk/Wf5gsxfH8cqodEG4ZvpFCmyvDG+aX+zst/KnXRZhqA2+V6OTkqqGsKXig
-         jGgKGF17qn71T0VKpB22CHS0HHD11rJ/jkPZjDTU=
+        b=Os9DP/OOHQjl0sX12f1ulAH4tP7luWxuT9qj2msa1xpFzEJPzR++JXwumrrwwZRe0
+         xY4d5SrhZSWgGEwoLDGuw2vRj+QLFCfRN5QGuDpU/uHd5H2a20E/trpSWOKdQr+M5i
+         Q6p3KWx8rrVK0D2kFUCDtTKzUMyAgQE0HZJrzAgk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Abhishek Goel <huntbag@linux.vnet.ibm.com>,
-        Thomas Renninger <trenn@suse.de>,
-        Shuah Khan <skhan@linuxfoundation.org>,
+        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 022/158] cpupower : frequency-set -r option misses the last cpu in related cpu list
-Date:   Fri,  2 Aug 2019 11:27:23 +0200
-Message-Id: <20190802092208.072383980@linuxfoundation.org>
+Subject: [PATCH 4.4 023/158] net: fec: Do not use netdev messages too early
+Date:   Fri,  2 Aug 2019 11:27:24 +0200
+Message-Id: <20190802092208.292397689@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -61,38 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 04507c0a9385cc8280f794a36bfff567c8cc1042 ]
+[ Upstream commit a19a0582363b9a5f8ba812f34f1b8df394898780 ]
 
-To set frequency on specific cpus using cpupower, following syntax can
-be used :
-cpupower -c #i frequency-set -f #f -r
+When a valid MAC address is not found the current messages
+are shown:
 
-While setting frequency using cpupower frequency-set command, if we use
-'-r' option, it is expected to set frequency for all cpus related to
-cpu #i. But it is observed to be missing the last cpu in related cpu
-list. This patch fixes the problem.
+fec 2188000.ethernet (unnamed net_device) (uninitialized): Invalid MAC address: 00:00:00:00:00:00
+fec 2188000.ethernet (unnamed net_device) (uninitialized): Using random MAC address: aa:9f:25:eb:7e:aa
 
-Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
-Reviewed-by: Thomas Renninger <trenn@suse.de>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Since the network device has not been registered at this point, it is better
+to use dev_err()/dev_info() instead, which will provide cleaner log
+messages like these:
+
+fec 2188000.ethernet: Invalid MAC address: 00:00:00:00:00:00
+fec 2188000.ethernet: Using random MAC address: aa:9f:25:eb:7e:aa
+
+Tested on a imx6dl-pico-pi board.
+
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/cpupower/utils/cpufreq-set.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/freescale/fec_main.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/power/cpupower/utils/cpufreq-set.c b/tools/power/cpupower/utils/cpufreq-set.c
-index 0fbd1a22c0a9..2f86935094ca 100644
---- a/tools/power/cpupower/utils/cpufreq-set.c
-+++ b/tools/power/cpupower/utils/cpufreq-set.c
-@@ -306,6 +306,8 @@ int cmd_freq_set(int argc, char **argv)
- 				bitmask_setbit(cpus_chosen, cpus->cpu);
- 				cpus = cpus->next;
- 			}
-+			/* Set the last cpu in related cpus list */
-+			bitmask_setbit(cpus_chosen, cpus->cpu);
- 			cpufreq_put_related_cpus(cpus);
- 		}
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+index ae8e4fc22e7b..0ee164d09f39 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -1699,10 +1699,10 @@ static void fec_get_mac(struct net_device *ndev)
+ 	 */
+ 	if (!is_valid_ether_addr(iap)) {
+ 		/* Report it and use a random ethernet address instead */
+-		netdev_err(ndev, "Invalid MAC address: %pM\n", iap);
++		dev_err(&fep->pdev->dev, "Invalid MAC address: %pM\n", iap);
+ 		eth_hw_addr_random(ndev);
+-		netdev_info(ndev, "Using random MAC address: %pM\n",
+-			    ndev->dev_addr);
++		dev_info(&fep->pdev->dev, "Using random MAC address: %pM\n",
++			 ndev->dev_addr);
+ 		return;
  	}
+ 
 -- 
 2.20.1
 
