@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A01C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8ACCC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CBF9217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:34:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B05E1217F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:34:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738465;
-	bh=S4oTBVZuFHeiVq6QV8mYUwqzth8f1OOuRfK7opNRL30=;
+	s=default; t=1564738468;
+	bh=B3YAsxj1v3i/F2IxYcVkQZBQRn+uNvZ8Psu/Iv43SSs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=beZht5GaZaNrdA92MNN2nvgtJth2W1HUoNUup970YxhZfY6c6DPnE31QJZ3oCqdMo
-	 /jQErDPQMQyutY3+edrfnmicRDQboKlMvfpt+BQgqegEVMjSyQspj+x4toTtDgzh6j
-	 1wWRY53m+AkBUC20KANA8WFjS52HGVfKrmVqErvE=
+	b=SRbqNT9iyZ3qUjdyUNnEyUNuPOzV1ww2SU22s1qTZg7lGEADEQ3c6bbt7/pH0Ptk9
+	 VgujF42XluyREIVudB3NRcxXv/yGEEh4Fi0PUZl31SdXIp3rq4w0/c29kN0M8S+BM7
+	 qmn20aAuFw6ng3rd+oPYUO27v6ObdK9tNx+NSUQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391542AbfHBJeY (ORCPT
+        id S2391554AbfHBJe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:34:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34196 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:34:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391526AbfHBJeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:34:22 -0400
+        id S2391541AbfHBJeY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:34:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6A5721773;
-        Fri,  2 Aug 2019 09:34:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E486217D4;
+        Fri,  2 Aug 2019 09:34:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738461;
-        bh=S4oTBVZuFHeiVq6QV8mYUwqzth8f1OOuRfK7opNRL30=;
+        s=default; t=1564738464;
+        bh=B3YAsxj1v3i/F2IxYcVkQZBQRn+uNvZ8Psu/Iv43SSs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eOAl1SpxwN/6Ku/pkXh9T7w2JbqRDOBMsqBZCPxMpB5kUhwVHp7c0eaQYLTQvNVxj
-         Ivw9ryuCFigpIKl0JplJiVRadOouoSbEU8TuOjCj8s7D4YCZ6ZnuwWNykgrUD+1e8X
-         PuqcYyCPfeA8uReeUyVnKNWeMG6EoZATIivUItJk=
+        b=gSLG28XJXTcqmU4a8FSaGSEKIYfZtRayoXYKbYM1a0GKTxP8UWqJMCqNMNlR93HAU
+         NNTWDKdylbqQ3T/QNguyKBU/QuyUiMM4Rr87hSWsClaOHjqpCy3jqQtq4uL1CkQ/zO
+         ABB5XjP3sPA5l2mnTEzJCP7MXxfZDV/+KJFDlVng=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>,
-        "J. Bruce Fields" <bfields@redhat.com>,
+        stable@vger.kernel.org, David Riley <davidriley@chromium.org>,
+        Gerd Hoffmann <kraxel@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 105/158] nfsd: Fix overflow causing non-working mounts on 1 TB machines
-Date:   Fri,  2 Aug 2019 11:28:46 +0200
-Message-Id: <20190802092225.752747458@linuxfoundation.org>
+Subject: [PATCH 4.4 114/158] drm/virtio: Add memory barriers for capset cache.
+Date:   Fri,  2 Aug 2019 11:28:55 +0200
+Message-Id: <20190802092227.258450827@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -60,65 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3b2d4dcf71c4a91b420f835e52ddea8192300a3b ]
+[ Upstream commit 9ff3a5c88e1f1ab17a31402b96d45abe14aab9d7 ]
 
-Since commit 10a68cdf10 (nfsd: fix performance-limiting session
-calculation) (Linux 5.1-rc1 and 4.19.31), shares from NFS servers with
-1 TB of memory cannot be mounted anymore. The mount just hangs on the
-client.
+After data is copied to the cache entry, atomic_set is used indicate
+that the data is the entry is valid without appropriate memory barriers.
+Similarly the read side was missing the corresponding memory barriers.
 
-The gist of commit 10a68cdf10 is the change below.
-
-    -avail = clamp_t(int, avail, slotsize, avail/3);
-    +avail = clamp_t(int, avail, slotsize, total_avail/3);
-
-Here are the macros.
-
-    #define min_t(type, x, y)       __careful_cmp((type)(x), (type)(y), <)
-    #define clamp_t(type, val, lo, hi) min_t(type, max_t(type, val, lo), hi)
-
-`total_avail` is 8,434,659,328 on the 1 TB machine. `clamp_t()` casts
-the values to `int`, which for 32-bit integers can only hold values
-−2,147,483,648 (−2^31) through 2,147,483,647 (2^31 − 1).
-
-`avail` (in the function signature) is just 65536, so that no overflow
-was happening. Before the commit the assignment would result in 21845,
-and `num = 4`.
-
-When using `total_avail`, it is causing the assignment to be
-18446744072226137429 (printed as %lu), and `num` is then 4164608182.
-
-My next guess is, that `nfsd_drc_mem_used` is then exceeded, and the
-server thinks there is no memory available any more for this client.
-
-Updating the arguments of `clamp_t()` and `min_t()` to `unsigned long`
-fixes the issue.
-
-Now, `avail = 65536` (before commit 10a68cdf10 `avail = 21845`), but
-`num = 4` remains the same.
-
-Fixes: c54f24e338ed (nfsd: fix performance-limiting session calculation)
-Cc: stable@vger.kernel.org
-Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: David Riley <davidriley@chromium.org>
+Link: http://patchwork.freedesktop.org/patch/msgid/20190610211810.253227-5-davidriley@chromium.org
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/nfs4state.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/virtio/virtgpu_ioctl.c | 3 +++
+ drivers/gpu/drm/virtio/virtgpu_vq.c    | 2 ++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 1e1abf1d5769..ea5cb1ba282f 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -1400,7 +1400,7 @@ static u32 nfsd4_get_drc_mem(struct nfsd4_channel_attrs *ca)
- 	 * Never use more than a third of the remaining memory,
- 	 * unless it's the only way to give this client a slot:
- 	 */
--	avail = clamp_t(int, avail, slotsize, total_avail/3);
-+	avail = clamp_t(unsigned long, avail, slotsize, total_avail/3);
- 	num = min_t(int, num, avail / slotsize);
- 	nfsd_drc_mem_used += num * slotsize;
- 	spin_unlock(&nfsd_drc_lock);
+diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+index 6296e9f270ca..0b8f8c10f2ed 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
++++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+@@ -535,6 +535,9 @@ static int virtio_gpu_get_caps_ioctl(struct drm_device *dev,
+ 	ret = wait_event_timeout(vgdev->resp_wq,
+ 				 atomic_read(&cache_ent->is_valid), 5 * HZ);
+ 
++	/* is_valid check must proceed before copy of the cache entry. */
++	smp_rmb();
++
+ 	ptr = cache_ent->caps_cache;
+ 
+ copy_exit:
+diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
+index 52436b3c01bb..a1b3ea1ccb65 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_vq.c
++++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
+@@ -618,6 +618,8 @@ static void virtio_gpu_cmd_capset_cb(struct virtio_gpu_device *vgdev,
+ 		    cache_ent->id == le32_to_cpu(cmd->capset_id)) {
+ 			memcpy(cache_ent->caps_cache, resp->capset_data,
+ 			       cache_ent->size);
++			/* Copy must occur before is_valid is signalled. */
++			smp_wmb();
+ 			atomic_set(&cache_ent->is_valid, 1);
+ 			break;
+ 		}
 -- 
 2.20.1
 
