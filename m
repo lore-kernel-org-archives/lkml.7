@@ -2,73 +2,184 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A83ADC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E248BC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F42821842
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:09:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564747748;
-	bh=eVguHjWk86Hw5IEsVwfh49P+hgbGzKP3Oa7z7KVVRYQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TjEaBl7vj20mh/4dEyZdhv8JypEvMWLvPxLTa9WKZifKj2R5zfOdrezRmH+lPHPT8
-	 fQGJAKTdObjmomzxpCZQqkNLgjCObD8q2w6GHSXAEPg87YvHokAuxD+DxCNTmI4u2I
-	 Mum4MjWC2cxsg79GyUaWOJUROQyXHYYPteVTTNRg=
+	by mail.kernel.org (Postfix) with ESMTP id BDD33217F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:10:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387715AbfHBMJG (ORCPT
+        id S2388334AbfHBMKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 08:09:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58068 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729980AbfHBMJF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 08:09:05 -0400
-Received: from localhost (unknown [122.167.106.83])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 522EC2087C;
-        Fri,  2 Aug 2019 12:09:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564747745;
-        bh=eVguHjWk86Hw5IEsVwfh49P+hgbGzKP3Oa7z7KVVRYQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LPD/PHObEaYLp7Mc5qXaIQNRs31OhOQmDmgl0SDT6i5BHh2C9ufMyiy5qWMmPatXF
-         zx2q53UkGHNF6orYqgdjizHJ9sf7mKfLm/e6uGJ88SJyMy6r+FNZc23bS53R1nPSvA
-         e4iAgrX6CdlwaUq1DEov5NYy9r1sljbalnE23WyY=
-Date:   Fri, 2 Aug 2019 17:37:51 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [RFC PATCH 11/40] soundwire: cadence_master: simplify bus clash
- interrupt clear
-Message-ID: <20190802120751.GM12733@vkoul-mobl.Dlink>
-References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
- <20190725234032.21152-12-pierre-louis.bossart@linux.intel.com>
+        Fri, 2 Aug 2019 08:10:23 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:57160 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729980AbfHBMKX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 08:10:23 -0400
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x72CACt7020957, This message is accepted by code: ctloc85258
+Received: from RS-CAS02.realsil.com.cn (ms1.realsil.com.cn[172.29.17.3](maybeforged))
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x72CACt7020957
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 2 Aug 2019 20:10:13 +0800
+Received: from toshiba (172.29.36.108) by RS-CAS02.realsil.com.cn
+ (172.29.17.3) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 2 Aug 2019
+ 20:10:12 +0800
+Date:   Fri, 2 Aug 2019 20:10:29 +0800
+From:   Alex Lu <alex_lu@realsil.com.cn>
+To:     Marcel Holtmann <marcel@holtmann.org>
+CC:     Johan Hedberg <johan.hedberg@gmail.com>,
+        <linux-bluetooth@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Max Chou <max.chou@realtek.com>
+Subject: [PATCH] Bluetooth: btrtl: Save firmware and config
+Message-ID: <20190802121029.GA8795@toshiba>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20190725234032.21152-12-pierre-louis.bossart@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Originating-IP: [172.29.36.108]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25-07-19, 18:40, Pierre-Louis Bossart wrote:
-> The bus clash interrupts are generated when the status is one, and
-> also cleared by writing a one. It's overkill/useless to use an OR when
-> the bit is already set.
+From: Alex Lu <alex_lu@realsil.com.cn>
 
-IIRC we were supposed to have different variable and that was the reason
-for setting, yes should be removed.
+usb reset resume will cause downloading firmware again and
+requesting firmware may be failed while host is resuming
 
-I have applied this one as well
+Signed-off-by: Alex Lu <alex_lu@realsil.com.cn>
+---
+ drivers/bluetooth/btrtl.c | 77 +++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 73 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/bluetooth/btrtl.c b/drivers/bluetooth/btrtl.c
+index 208feef63de4..69f0c2765443 100644
+--- a/drivers/bluetooth/btrtl.c
++++ b/drivers/bluetooth/btrtl.c
+@@ -56,6 +56,10 @@ struct btrtl_device_info {
+ 	int cfg_len;
+ };
+ 
++static struct btrtl_device_info dev_info = {
++	NULL, 0, NULL, 0, NULL, 0
++};
++
+ static const struct id_table ic_id_table[] = {
+ 	{ IC_MATCH_FL_LMPSUBV, RTL_ROM_LMP_8723A, 0x0,
+ 	  .config_needed = false,
+@@ -553,8 +557,19 @@ struct btrtl_device_info *btrtl_initialize(struct hci_dev *hdev,
+ 			goto err_free;
+ 	}
+ 
+-	btrtl_dev->fw_len = rtl_load_file(hdev, btrtl_dev->ic_info->fw_name,
+-					  &btrtl_dev->fw_data);
++	if (dev_info.ic_info == NULL ||
++	    dev_info.ic_info != btrtl_dev->ic_info) {
++		btrtl_dev->fw_len = rtl_load_file(hdev,
++						  btrtl_dev->ic_info->fw_name,
++						  &btrtl_dev->fw_data);
++	} else {
++		if (dev_info.fw_len)
++			btrtl_dev->fw_data = kmemdup(dev_info.fw_data,
++						     dev_info.fw_len,
++						     GFP_KERNEL);
++		if (btrtl_dev->fw_data)
++			btrtl_dev->fw_len = dev_info.fw_len;
++	}
+ 	if (btrtl_dev->fw_len < 0) {
+ 		rtl_dev_err(hdev, "firmware file %s not found\n",
+ 			    btrtl_dev->ic_info->fw_name);
+@@ -570,8 +585,18 @@ struct btrtl_device_info *btrtl_initialize(struct hci_dev *hdev,
+ 			snprintf(cfg_name, sizeof(cfg_name), "%s.bin",
+ 				 btrtl_dev->ic_info->cfg_name);
+ 		}
+-		btrtl_dev->cfg_len = rtl_load_file(hdev, cfg_name,
+-						   &btrtl_dev->cfg_data);
++		if (dev_info.ic_info == NULL ||
++		    dev_info.ic_info != btrtl_dev->ic_info) {
++			btrtl_dev->cfg_len = rtl_load_file(hdev, cfg_name,
++							&btrtl_dev->cfg_data);
++		} else {
++			if (dev_info.cfg_len)
++				btrtl_dev->cfg_data = kmemdup(dev_info.cfg_data,
++							      dev_info.cfg_len,
++							      GFP_KERNEL);
++			if (btrtl_dev->cfg_data)
++				btrtl_dev->cfg_len = dev_info.cfg_len;
++		}
+ 		if (btrtl_dev->ic_info->config_needed &&
+ 		    btrtl_dev->cfg_len <= 0) {
+ 			rtl_dev_err(hdev, "mandatory config file %s not found\n",
+@@ -620,6 +645,29 @@ int btrtl_download_firmware(struct hci_dev *hdev,
+ }
+ EXPORT_SYMBOL_GPL(btrtl_download_firmware);
+ 
++static void dev_fw_free(void)
++{
++	kfree(dev_info.fw_data);
++	kfree(dev_info.cfg_data);
++	memset(&dev_info, 0, sizeof(dev_info));
++}
++
++static void dev_fw_dup(struct btrtl_device_info *btrtl_dev)
++{
++	dev_info.ic_info = btrtl_dev->ic_info;
++	dev_info.rom_version = btrtl_dev->rom_version;
++
++	dev_info.fw_len = btrtl_dev->fw_len;
++	if (dev_info.fw_len)
++		dev_info.fw_data = kmemdup(btrtl_dev->fw_data,
++					   btrtl_dev->fw_len,
++					   GFP_KERNEL);
++	dev_info.cfg_len = btrtl_dev->cfg_len;
++	if (dev_info.cfg_len)
++		dev_info.cfg_data = kmemdup(btrtl_dev->cfg_data,
++					    btrtl_dev->cfg_len, GFP_KERNEL);
++}
++
+ int btrtl_setup_realtek(struct hci_dev *hdev)
+ {
+ 	struct btrtl_device_info *btrtl_dev;
+@@ -630,6 +678,10 @@ int btrtl_setup_realtek(struct hci_dev *hdev)
+ 		return PTR_ERR(btrtl_dev);
+ 
+ 	ret = btrtl_download_firmware(hdev, btrtl_dev);
++	if (!ret && btrtl_dev->ic_info != dev_info.ic_info) {
++		dev_fw_free();
++		dev_fw_dup(btrtl_dev);
++	}
+ 
+ 	btrtl_free(btrtl_dev);
+ 
+@@ -745,6 +797,23 @@ int btrtl_get_uart_settings(struct hci_dev *hdev,
+ }
+ EXPORT_SYMBOL_GPL(btrtl_get_uart_settings);
+ 
++static int btrtl_module_init(void)
++{
++	BT_INFO("btrtl: init");
++
++	return 0;
++}
++
++static void btrtl_module_exit(void)
++{
++	BT_INFO("btrtl: exit");
++
++	dev_fw_free();
++}
++
++module_init(btrtl_module_init);
++module_exit(btrtl_module_exit)
++
+ MODULE_AUTHOR("Daniel Drake <drake@endlessm.com>");
+ MODULE_DESCRIPTION("Bluetooth support for Realtek devices ver " VERSION);
+ MODULE_VERSION(VERSION);
 -- 
-~Vinod
+2.19.2
+
