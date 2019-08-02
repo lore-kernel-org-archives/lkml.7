@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0942C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55F1CC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB60E21855
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B3D0217F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:36:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738566;
-	bh=nmPTsWkP88e57Ys91exz3DHHrVrBrLe2/K84VB5KA5U=;
+	s=default; t=1564738569;
+	bh=Cd2/CtlMzi0MVSdMVDg8CkFE200fT4o/RHRtNoAlWUo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QP2QLIEwwQ/T20yES/OTa0d/uY8S+uiggluxvZ95VALUPdieiFd+Bo3Vi/i0tqYPw
-	 SAah/nl8fw25CZjTqinrcIpn0f11raUR5qflcgs36R3bTcj2XrgtuRDlc0E+5N93KO
-	 A7qIKREX3O+GDxYZtvap1a/1qUPBg6cqmbuQz6nI=
+	b=srzAw9q3MXzf5oBOHqFgbzXYjwM0JYKxn2AL0lnVtTTAebic54+nYDZt6ZOZnVpNH
+	 rejXQ3JtKHy/hb4qTWQ9vD5T+GEy7c/kIUdWUukqm3kId7uCzKjigwQ1BTVvnKo+jC
+	 zWsBcZIp0P5//Tws/cdk6GSmd3z5hESMIgxw04Qc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404809AbfHBJgF (ORCPT
+        id S2404817AbfHBJgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:36:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36658 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:36:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404092AbfHBJf7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:35:59 -0400
+        id S2404102AbfHBJgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:36:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A76B921773;
-        Fri,  2 Aug 2019 09:35:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30BE3217D7;
+        Fri,  2 Aug 2019 09:36:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738558;
-        bh=nmPTsWkP88e57Ys91exz3DHHrVrBrLe2/K84VB5KA5U=;
+        s=default; t=1564738560;
+        bh=Cd2/CtlMzi0MVSdMVDg8CkFE200fT4o/RHRtNoAlWUo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m3WJvISrOIfsmty87KQjX/l0/qMAELIIVd3wlPuBDag2psry5EEO2tCT8J8KPMuK1
-         xGkCuCkeypjKoEShhjvQbJ0bZZsC9cCZcZ/eiE+cMiYT8X1/X5rrCFBc+BtREMUOSO
-         PjuYG+/e1xJotPoub/ERL7nfQ8Yy2E9ND4RvCn1M=
+        b=iRAVGR9andUmREhK2pFrM9MHqUcjUfODbsv9LTlQzasUdYhKgVsA1knJ99gS8EkKM
+         daV5Rt9FM2ykLmCsK6+GqrrjwFommgFw0o9bkCm7mbdVzFa3lkzfPc/YX+v6fbN2Gu
+         h7N2uKYM0CujfoxaoLW7gWiq8q1eGggJNPAVUPv8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Zhang HongJun <zhanghongjun2@huawei.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 4.4 143/158] hpet: Fix division by zero in hpet_time_div()
-Date:   Fri,  2 Aug 2019 11:29:24 +0200
-Message-Id: <20190802092231.791993826@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+8750abbc3a46ef47d509@syzkaller.appspotmail.com,
+        Phong Tran <tranmanphong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 152/158] ISDN: hfcsusb: checking idx of ep configuration
+Date:   Fri,  2 Aug 2019 11:29:33 +0200
+Message-Id: <20190802092232.945909747@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -60,67 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
+From: Phong Tran <tranmanphong@gmail.com>
 
-commit 0c7d37f4d9b8446956e97b7c5e61173cdb7c8522 upstream.
+commit f384e62a82ba5d85408405fdd6aeff89354deaa9 upstream.
 
-The base value in do_div() called by hpet_time_div() is truncated from
-unsigned long to uint32_t, resulting in a divide-by-zero exception.
+The syzbot test with random endpoint address which made the idx is
+overflow in the table of endpoint configuations.
 
-UBSAN: Undefined behaviour in ../drivers/char/hpet.c:572:2
-division by zero
-CPU: 1 PID: 23682 Comm: syz-executor.3 Not tainted 4.4.184.x86_64+ #4
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
- 0000000000000000 b573382df1853d00 ffff8800a3287b98 ffffffff81ad7561
- ffff8800a3287c00 ffffffff838b35b0 ffffffff838b3860 ffff8800a3287c20
- 0000000000000000 ffff8800a3287bb0 ffffffff81b8f25e ffffffff838b35a0
-Call Trace:
- [<ffffffff81ad7561>] __dump_stack lib/dump_stack.c:15 [inline]
- [<ffffffff81ad7561>] dump_stack+0xc1/0x120 lib/dump_stack.c:51
- [<ffffffff81b8f25e>] ubsan_epilogue+0x12/0x8d lib/ubsan.c:166
- [<ffffffff81b900cb>] __ubsan_handle_divrem_overflow+0x282/0x2c8 lib/ubsan.c:262
- [<ffffffff823560dd>] hpet_time_div drivers/char/hpet.c:572 [inline]
- [<ffffffff823560dd>] hpet_ioctl_common drivers/char/hpet.c:663 [inline]
- [<ffffffff823560dd>] hpet_ioctl_common.cold+0xa8/0xad drivers/char/hpet.c:577
- [<ffffffff81e63d56>] hpet_ioctl+0xc6/0x180 drivers/char/hpet.c:676
- [<ffffffff81711590>] vfs_ioctl fs/ioctl.c:43 [inline]
- [<ffffffff81711590>] file_ioctl fs/ioctl.c:470 [inline]
- [<ffffffff81711590>] do_vfs_ioctl+0x6e0/0xf70 fs/ioctl.c:605
- [<ffffffff81711eb4>] SYSC_ioctl fs/ioctl.c:622 [inline]
- [<ffffffff81711eb4>] SyS_ioctl+0x94/0xc0 fs/ioctl.c:613
- [<ffffffff82846003>] tracesys_phase2+0x90/0x95
+this adds the checking for fixing the error report from
+syzbot
 
-The main C reproducer autogenerated by syzkaller,
+KASAN: stack-out-of-bounds Read in hfcsusb_probe [1]
+The patch tested by syzbot [2]
 
-  syscall(__NR_mmap, 0x20000000, 0x1000000, 3, 0x32, -1, 0);
-  memcpy((void*)0x20000100, "/dev/hpet\000", 10);
-  syscall(__NR_openat, 0xffffffffffffff9c, 0x20000100, 0, 0);
-  syscall(__NR_ioctl, r[0], 0x40086806, 0x40000000000000);
+Reported-by: syzbot+8750abbc3a46ef47d509@syzkaller.appspotmail.com
 
-Fix it by using div64_ul().
+[1]:
+https://syzkaller.appspot.com/bug?id=30a04378dac680c5d521304a00a86156bb913522
+[2]:
+https://groups.google.com/d/msg/syzkaller-bugs/_6HBdge8F3E/OJn7wVNpBAAJ
 
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Signed-off-by: Zhang HongJun <zhanghongjun2@huawei.com>
-Cc: stable <stable@vger.kernel.org>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20190711132757.130092-1-wangkefeng.wang@huawei.com
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/hpet.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/isdn/hardware/mISDN/hfcsusb.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/char/hpet.c
-+++ b/drivers/char/hpet.c
-@@ -569,8 +569,7 @@ static inline unsigned long hpet_time_di
- 	unsigned long long m;
+--- a/drivers/isdn/hardware/mISDN/hfcsusb.c
++++ b/drivers/isdn/hardware/mISDN/hfcsusb.c
+@@ -1963,6 +1963,9 @@ hfcsusb_probe(struct usb_interface *intf
  
- 	m = hpets->hp_tick_freq + (dis >> 1);
--	do_div(m, dis);
--	return (unsigned long)m;
-+	return div64_ul(m, dis);
- }
- 
- static int
+ 				/* get endpoint base */
+ 				idx = ((ep_addr & 0x7f) - 1) * 2;
++				if (idx > 15)
++					return -EIO;
++
+ 				if (ep_addr & 0x80)
+ 					idx++;
+ 				attr = ep->desc.bmAttributes;
 
 
