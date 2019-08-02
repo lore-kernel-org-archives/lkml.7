@@ -2,52 +2,51 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D3AC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2BD4C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AD1D2086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:46:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80DCF217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:46:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739215;
-	bh=QnRODtU+IhQ9R5ywnjwo5VAXF8+yANFaGCE63gBLPss=;
+	s=default; t=1564739218;
+	bh=hysyGQx4S7k2O9c18/c3vaD6tUW6VXFs/jIOKvpRrUc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KP09qWLG59pfUIM4WkhIj90LLQfDhlgGEsMGHw0QJJSACNGFavktSCwULlQe7mFqW
-	 csURkQOA3czpVFQ8tsRTfrWirNI+QSIYTO2DAVndyINOboJmMSP6dTfJCZ8HJp6EZk
-	 n1Sc/tcJa0C/vR+ynFO1gQfMCIBHhck00+RBJ7+s=
+	b=SPabj0REymqD5zZ6GMgnPZPnbteA9SnBzH/KhDXn/P0opryBJxt2LBunexQAnxtUu
+	 4gxwNCQ6xXaOICHU2imXuaDdr9UR4W4AC+witWki0RxHwzzU/llgBgVGBgT6y1vVnk
+	 YdlOH1mIOzxEc7Yc+RISbdtj1Y/iXbo3G75G5H6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405618AbfHBJqy (ORCPT
+        id S2405630AbfHBJq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:46:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51386 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:46:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392071AbfHBJqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:46:48 -0400
+        id S2405590AbfHBJqv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:46:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0398C2086A;
-        Fri,  2 Aug 2019 09:46:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D39320B7C;
+        Fri,  2 Aug 2019 09:46:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739208;
-        bh=QnRODtU+IhQ9R5ywnjwo5VAXF8+yANFaGCE63gBLPss=;
+        s=default; t=1564739211;
+        bh=hysyGQx4S7k2O9c18/c3vaD6tUW6VXFs/jIOKvpRrUc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V5yky6alrmucaqX5P7ID953rcxLrx1gUgRdVuo7mJcnncYoaXlxSos1iXFpgZSAcm
-         T/fIqtWvFxxKdTq+/ionSKBRTXCbwjKUubJUKJnuT/+6AT5806W3M3JZQ7Ss0VDQEN
-         tU61AYQDA6addrV92u8w8AQ3uyrflPmat0yA7wOI=
+        b=h4LxkJflpYq7TP1VOYHxD7FK+sz3sfCVWJ/gb3Pu0Zr3ptfU4/yLvWhJG34neWSJc
+         qk89HpzpbZbLSqvuKNhfJBEDGTH4a95JUiQ0CsRy3OOZAmsjUZsbqNaOWOZZBEA4xY
+         4d7XR26FfcsRJiGCxhdI0W3/3lP1qie6mdxnkAUs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Christoph Paasch <cpaasch@apple.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 147/223] tcp: Reset bytes_acked and bytes_received when disconnecting
-Date:   Fri,  2 Aug 2019 11:36:12 +0200
-Message-Id: <20190802092248.090760100@linuxfoundation.org>
+        stable@vger.kernel.org, "J. Bruce Fields" <bfields@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 156/223] nfsd: give out fewer session slots as limit approaches
+Date:   Fri,  2 Aug 2019 11:36:21 +0200
+Message-Id: <20190802092248.438219254@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -60,35 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Paasch <cpaasch@apple.com>
+[ Upstream commit de766e570413bd0484af0b580299b495ada625c3 ]
 
-[ Upstream commit e858faf556d4e14c750ba1e8852783c6f9520a0e ]
+Instead of granting client's full requests until we hit our DRC size
+limit and then failing CREATE_SESSIONs (and hence mounts) completely,
+start granting clients smaller slot tables as we approach the limit.
 
-If an app is playing tricks to reuse a socket via tcp_disconnect(),
-bytes_acked/received needs to be reset to 0. Otherwise tcp_info will
-report the sum of the current and the old connection..
+The factor chosen here is pretty much arbitrary.
 
-Cc: Eric Dumazet <edumazet@google.com>
-Fixes: 0df48c26d841 ("tcp: add tcpi_bytes_acked to tcp_info")
-Fixes: bdd1f9edacb5 ("tcp: add tcpi_bytes_received to tcp_info")
-Signed-off-by: Christoph Paasch <cpaasch@apple.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/tcp.c |    2 ++
- 1 file changed, 2 insertions(+)
+ fs/nfsd/nfs4state.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -2312,6 +2312,8 @@ int tcp_disconnect(struct sock *sk, int
- 	dst_release(sk->sk_rx_dst);
- 	sk->sk_rx_dst = NULL;
- 	tcp_saved_syn_free(tp);
-+	tp->bytes_acked = 0;
-+	tp->bytes_received = 0;
- 
- 	WARN_ON(inet->inet_num && !icsk->icsk_bind_hash);
- 
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 3656f87d11e3..0aacd1c850c3 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -1507,6 +1507,11 @@ static u32 nfsd4_get_drc_mem(struct nfsd4_channel_attrs *ca)
+ 	spin_lock(&nfsd_drc_lock);
+ 	avail = min((unsigned long)NFSD_MAX_MEM_PER_SESSION,
+ 		    nfsd_drc_max_mem - nfsd_drc_mem_used);
++	/*
++	 * Never use more than a third of the remaining memory,
++	 * unless it's the only way to give this client a slot:
++	 */
++	avail = clamp_t(int, avail, slotsize, avail/3);
+ 	num = min_t(int, num, avail / slotsize);
+ 	nfsd_drc_mem_used += num * slotsize;
+ 	spin_unlock(&nfsd_drc_lock);
+-- 
+2.20.1
+
 
 
