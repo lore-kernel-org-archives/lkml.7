@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 251D9C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D32C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED8F720665
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 735BA20679
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:37:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564753022;
-	bh=RNc3pXcYq5h54k1i2ujyLIyS0AiKBu1iI6KqeB31Jkk=;
+	s=default; t=1564753036;
+	bh=mYtGdZ3bEgDZIU4a5z2Ef2MN1WaWVMHiHfTai+XjY2o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W6vOwQ9ZWylG1FpQAvcCVgGnb/1zXio4M1mh8gpWxEDfIEMpuLHLo+uSxjpJDJxAd
-	 hbqh9J1QTYdZGo7Er4hiARb5w1LkIs5MbwGF5ttrz9UxlNrWYjhpAqEPMNP2dG09wE
-	 R3/zZjJRbOxnJjDQrLdC+DG8UDqKNfB7z2ALMrW4=
+	b=EEjHDibqf44H3+9Tj6ekgRG2FacWvnjuVgZlVM3W46rRC0syI4kkcgs4xbdCQWcEF
+	 60ntwgTMa/NbBuQ4J7/j+KH24IpZXA2zEuzGyBAnV41VV/FIfb7lnVm0GLhmFw/MQo
+	 wsMrAY4gUzUHM4KYwrOIoGKbSBmkpbu4gZqeCZBo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436495AbfHBNhB (ORCPT
+        id S2389789AbfHBNhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:37:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58310 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:37:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393248AbfHBNUB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:20:01 -0400
+        id S2393230AbfHBNT5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:19:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEA12217D6;
-        Fri,  2 Aug 2019 13:19:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44E2B217D6;
+        Fri,  2 Aug 2019 13:19:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752000;
-        bh=RNc3pXcYq5h54k1i2ujyLIyS0AiKBu1iI6KqeB31Jkk=;
+        s=default; t=1564751997;
+        bh=mYtGdZ3bEgDZIU4a5z2Ef2MN1WaWVMHiHfTai+XjY2o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dvqu2KgeE9vXcZ2+Lz485K1UtZ5JkLtDZskvqoGjDv/3vT/+8r+P+b4iCK64Qgz4w
-         jn5OWZUhl9bzgcgawRF7fygBsLGFosxPw/rkMC5HTp6O6Gxs/dy14PARS04o10HepG
-         QXEbD3DSh/ukAkDyochilssSkm1vt1uzB5mn3Bv4=
+        b=HUBOKe1GFHiukTxOh5gjWKJouLCmIM7ApwvDSnXdA630xZvmmkIqN4Zsjlq1tM7Ko
+         DlUi4z4qUfKIz92JA2htrQN6wujHEh7Sb78ORrgv1GVoeW+1UmQ5W8lzKKBDwmO10p
+         WpdtS7J4rops/V/ab0n61hZYybxzsx8oVP3I0cfo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Westphal <fw@strlen.de>,
-        Jakub Jankowski <shasta@toxcorp.com>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 07/76] netfilter: conntrack: always store window size un-scaled
-Date:   Fri,  2 Aug 2019 09:18:41 -0400
-Message-Id: <20190802131951.11600-7-sashal@kernel.org>
+Cc:     Farhan Ali <alifm@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 04/76] vfio-ccw: Don't call cp_free if we are processing a channel program
+Date:   Fri,  2 Aug 2019 09:18:38 -0400
+Message-Id: <20190802131951.11600-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802131951.11600-1-sashal@kernel.org>
 References: <20190802131951.11600-1-sashal@kernel.org>
@@ -63,80 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Farhan Ali <alifm@linux.ibm.com>
 
-[ Upstream commit 959b69ef57db00cb33e9c4777400ae7183ebddd3 ]
+[ Upstream commit f4c9939433bd396d0b08e803b2b880a9d02682b9 ]
 
-Jakub Jankowski reported following oddity:
+There is a small window where it's possible that we could be working
+on an interrupt (queued in the workqueue) and setting up a channel
+program (i.e allocating memory, pinning pages, translating address).
+This can lead to allocating and freeing the channel program at the
+same time and can cause memory corruption.
 
-After 3 way handshake completes, timeout of new connection is set to
-max_retrans (300s) instead of established (5 days).
+Let's not call cp_free if we are currently processing a channel program.
+The only way we know for sure that we don't have a thread setting
+up a channel program is when the state is set to VFIO_CCW_STATE_CP_PENDING.
 
-shortened excerpt from pcap provided:
-25.070622 IP (flags [DF], proto TCP (6), length 52)
-10.8.5.4.1025 > 10.8.1.2.80: Flags [S], seq 11, win 64240, [wscale 8]
-26.070462 IP (flags [DF], proto TCP (6), length 48)
-10.8.1.2.80 > 10.8.5.4.1025: Flags [S.], seq 82, ack 12, win 65535, [wscale 3]
-27.070449 IP (flags [DF], proto TCP (6), length 40)
-10.8.5.4.1025 > 10.8.1.2.80: Flags [.], ack 83, win 512, length 0
-
-Turns out the last_win is of u16 type, but we store the scaled value:
-512 << 8 (== 0x20000) becomes 0 window.
-
-The Fixes tag is not correct, as the bug has existed forever, but
-without that change all that this causes might cause is to mistake a
-window update (to-nonzero-from-zero) for a retransmit.
-
-Fixes: fbcd253d2448b8 ("netfilter: conntrack: lower timeout to RETRANS seconds if window is 0")
-Reported-by: Jakub Jankowski <shasta@toxcorp.com>
-Tested-by: Jakub Jankowski <shasta@toxcorp.com>
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Acked-by: Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: d5afd5d135c8 ("vfio-ccw: add handling for async channel instructions")
+Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Message-Id: <62e87bf67b38dc8d5760586e7c96d400db854ebe.1562854091.git.alifm@linux.ibm.com>
+Reviewed-by: Eric Farman <farman@linux.ibm.com>
+Signed-off-by: Cornelia Huck <cohuck@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_conntrack_proto_tcp.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/s390/cio/vfio_ccw_drv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nf_conntrack_proto_tcp.c b/net/netfilter/nf_conntrack_proto_tcp.c
-index 1e2cc83ff5da8..ae1f8c6b3a974 100644
---- a/net/netfilter/nf_conntrack_proto_tcp.c
-+++ b/net/netfilter/nf_conntrack_proto_tcp.c
-@@ -472,6 +472,7 @@ static bool tcp_in_window(const struct nf_conn *ct,
- 	struct ip_ct_tcp_state *receiver = &state->seen[!dir];
- 	const struct nf_conntrack_tuple *tuple = &ct->tuplehash[dir].tuple;
- 	__u32 seq, ack, sack, end, win, swin;
-+	u16 win_raw;
- 	s32 receiver_offset;
- 	bool res, in_recv_win;
- 
-@@ -480,7 +481,8 @@ static bool tcp_in_window(const struct nf_conn *ct,
- 	 */
- 	seq = ntohl(tcph->seq);
- 	ack = sack = ntohl(tcph->ack_seq);
--	win = ntohs(tcph->window);
-+	win_raw = ntohs(tcph->window);
-+	win = win_raw;
- 	end = segment_seq_plus_len(seq, skb->len, dataoff, tcph);
- 
- 	if (receiver->flags & IP_CT_TCP_FLAG_SACK_PERM)
-@@ -655,14 +657,14 @@ static bool tcp_in_window(const struct nf_conn *ct,
- 			    && state->last_seq == seq
- 			    && state->last_ack == ack
- 			    && state->last_end == end
--			    && state->last_win == win)
-+			    && state->last_win == win_raw)
- 				state->retrans++;
- 			else {
- 				state->last_dir = dir;
- 				state->last_seq = seq;
- 				state->last_ack = ack;
- 				state->last_end = end;
--				state->last_win = win;
-+				state->last_win = win_raw;
- 				state->retrans = 0;
- 			}
- 		}
+diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
+index 9125f7f4e64c9..8a8fbde7e1867 100644
+--- a/drivers/s390/cio/vfio_ccw_drv.c
++++ b/drivers/s390/cio/vfio_ccw_drv.c
+@@ -88,7 +88,7 @@ static void vfio_ccw_sch_io_todo(struct work_struct *work)
+ 		     (SCSW_ACTL_DEVACT | SCSW_ACTL_SCHACT));
+ 	if (scsw_is_solicited(&irb->scsw)) {
+ 		cp_update_scsw(&private->cp, &irb->scsw);
+-		if (is_final)
++		if (is_final && private->state == VFIO_CCW_STATE_CP_PENDING)
+ 			cp_free(&private->cp);
+ 	}
+ 	mutex_lock(&private->io_mutex);
 -- 
 2.20.1
 
