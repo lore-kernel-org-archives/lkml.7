@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF03C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C972C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92A492067D
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:59:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 686132064A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:59:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739953;
-	bh=LukezhkAZexMh9ppuowhCYMemgbZs+ZVpooAd/NlvZk=;
+	s=default; t=1564739962;
+	bh=aukFEtkpuQkA4+TcaUceQB467wd7cnkY7fo7OTdBTYI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FNA192Lfhg5yLDxW96ywYWbRIWX++PXaJZen9yGzUVD1N9eUhLDJFPRFtOrEY5/rk
-	 ucwxsGHokJapV6nIQn1B4IwrJAOfrfP43vzE1I4AkhIBtxis2ZvsKMVgAhmY/LYlaV
-	 sdMBksmgUyoTFBSBqcTJstpnd6KqzhEQQgImxyJo=
+	b=T803FuVkQWIPWrHlvR2XHlSVun+LZKTndBqyPXGr9uYAirzmRoyQK6jGea1CtDB3f
+	 kTeDdXJL0UDojrjxJbXpGZH1yjz4ze+YHmHDCMl+V024jEbK5yc53ImtUliRnL/n+P
+	 ICxR9I8Hk32K2e1lXyWKpjJBlToLggiY7INdyHm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406748AbfHBJ4h (ORCPT
+        id S2407077AbfHBJ7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:56:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35386 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:59:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406067AbfHBJ4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:56:31 -0400
+        id S2404831AbfHBJ7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:59:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EEDC2064A;
-        Fri,  2 Aug 2019 09:56:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF4C02064A;
+        Fri,  2 Aug 2019 09:59:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739790;
-        bh=LukezhkAZexMh9ppuowhCYMemgbZs+ZVpooAd/NlvZk=;
+        s=default; t=1564739957;
+        bh=aukFEtkpuQkA4+TcaUceQB467wd7cnkY7fo7OTdBTYI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FbdTNsyF5Pzc9az3yRhsKbcwP/aPMUQ3KeeB8Ls/9Rx+wTDeO6e5QFW5EPPvbm/gY
-         g0WKS/se8EVMsZR1qvST3g0CvOjSt6Tsxgv0GHDhNZvxmU8nTPgq5uJS+E2YQsulfc
-         I+O9pMkhCXgNKns08jQDQdyy4AVI3Vl+TjKnPlLc=
+        b=06JZs/Zt1dw2VINq0qFgWkXa2JBUkPWz4KHq4tL34MTtjhpROwcsaSu9xcJFZeSMP
+         gJL2+tInDGs8UHPHaunQHg2FS35lvDc9llCz50DjIzgM096pdLziZy91NRd2MCyvE5
+         aSkkwfI3+ryXePpwwKs+uwFIbjj8PE9et9H0r+gY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -48,12 +48,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Marcel Holtmann <marcel@holtmann.org>,
         "Yu-Chen, Cho" <acho@suse.com>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 20/25] Bluetooth: hci_uart: check for missing tty operations
-Date:   Fri,  2 Aug 2019 11:39:52 +0200
-Message-Id: <20190802092106.172147182@linuxfoundation.org>
+Subject: [PATCH 5.2 13/20] Bluetooth: hci_uart: check for missing tty operations
+Date:   Fri,  2 Aug 2019 11:40:07 +0200
+Message-Id: <20190802092101.527095180@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190802092058.428079740@linuxfoundation.org>
-References: <20190802092058.428079740@linuxfoundation.org>
+In-Reply-To: <20190802092055.131876977@linuxfoundation.org>
+References: <20190802092055.131876977@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -99,12 +99,13 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  drivers/bluetooth/hci_intel.c |    3 +++
  drivers/bluetooth/hci_ldisc.c |   13 +++++++++++++
  drivers/bluetooth/hci_mrvl.c  |    3 +++
+ drivers/bluetooth/hci_qca.c   |    3 +++
  drivers/bluetooth/hci_uart.h  |    1 +
- 6 files changed, 26 insertions(+)
+ 7 files changed, 29 insertions(+)
 
 --- a/drivers/bluetooth/hci_ath.c
 +++ b/drivers/bluetooth/hci_ath.c
-@@ -101,6 +101,9 @@ static int ath_open(struct hci_uart *hu)
+@@ -98,6 +98,9 @@ static int ath_open(struct hci_uart *hu)
  
  	BT_DBG("hu %p", hu);
  
@@ -116,7 +117,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  		return -ENOMEM;
 --- a/drivers/bluetooth/hci_bcm.c
 +++ b/drivers/bluetooth/hci_bcm.c
-@@ -305,6 +305,9 @@ static int bcm_open(struct hci_uart *hu)
+@@ -406,6 +406,9 @@ static int bcm_open(struct hci_uart *hu)
  
  	bt_dev_dbg(hu->hdev, "hu %p", hu);
  
@@ -128,7 +129,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  		return -ENOMEM;
 --- a/drivers/bluetooth/hci_intel.c
 +++ b/drivers/bluetooth/hci_intel.c
-@@ -406,6 +406,9 @@ static int intel_open(struct hci_uart *h
+@@ -391,6 +391,9 @@ static int intel_open(struct hci_uart *h
  
  	BT_DBG("hu %p", hu);
  
@@ -140,7 +141,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  		return -ENOMEM;
 --- a/drivers/bluetooth/hci_ldisc.c
 +++ b/drivers/bluetooth/hci_ldisc.c
-@@ -297,6 +297,19 @@ static int hci_uart_send_frame(struct hc
+@@ -284,6 +284,19 @@ static int hci_uart_send_frame(struct hc
  	return 0;
  }
  
@@ -162,7 +163,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  {
 --- a/drivers/bluetooth/hci_mrvl.c
 +++ b/drivers/bluetooth/hci_mrvl.c
-@@ -66,6 +66,9 @@ static int mrvl_open(struct hci_uart *hu
+@@ -52,6 +52,9 @@ static int mrvl_open(struct hci_uart *hu
  
  	BT_DBG("hu %p", hu);
  
@@ -172,11 +173,23 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  	mrvl = kzalloc(sizeof(*mrvl), GFP_KERNEL);
  	if (!mrvl)
  		return -ENOMEM;
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -458,6 +458,9 @@ static int qca_open(struct hci_uart *hu)
+ 
+ 	BT_DBG("hu %p qca_open", hu);
+ 
++	if (!hci_uart_has_flow_control(hu))
++		return -EOPNOTSUPP;
++
+ 	qca = kzalloc(sizeof(struct qca_data), GFP_KERNEL);
+ 	if (!qca)
+ 		return -ENOMEM;
 --- a/drivers/bluetooth/hci_uart.h
 +++ b/drivers/bluetooth/hci_uart.h
-@@ -117,6 +117,7 @@ void hci_uart_unregister_device(struct h
- int hci_uart_tx_wakeup(struct hci_uart *hu);
+@@ -103,6 +103,7 @@ int hci_uart_tx_wakeup(struct hci_uart *
  int hci_uart_init_ready(struct hci_uart *hu);
+ void hci_uart_init_work(struct work_struct *work);
  void hci_uart_set_baudrate(struct hci_uart *hu, unsigned int speed);
 +bool hci_uart_has_flow_control(struct hci_uart *hu);
  void hci_uart_set_flow_control(struct hci_uart *hu, bool enable);
