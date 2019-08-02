@@ -6,83 +6,89 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E5AC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12821C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:52:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88C8B2087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E012B2173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:52:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391418AbfHBQuw (ORCPT
+        id S2391459AbfHBQw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 12:50:52 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39180 "EHLO mx1.redhat.com"
+        Fri, 2 Aug 2019 12:52:29 -0400
+Received: from mga05.intel.com ([192.55.52.43]:4984 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391366AbfHBQuw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 12:50:52 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D3C99B2DDB;
-        Fri,  2 Aug 2019 16:50:51 +0000 (UTC)
-Received: from dcbz.redhat.com (ovpn-116-74.ams2.redhat.com [10.36.116.74])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C72AD5D961;
-        Fri,  2 Aug 2019 16:50:46 +0000 (UTC)
-Date:   Fri, 2 Aug 2019 18:50:44 +0200
-From:   Adrian Reber <areber@redhat.com>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelianov <xemul@virtuozzo.com>,
-        Jann Horn <jannh@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>
-Subject: Re: [PATCH v2 1/2] fork: extend clone3() to support CLONE_SET_TID
-Message-ID: <20190802165044.GF18263@dcbz.redhat.com>
-References: <20190731161223.2928-1-areber@redhat.com>
- <20190731174135.GA30225@redhat.com>
- <20190802072511.GD18263@dcbz.redhat.com>
- <20190802124738.GC20111@redhat.com>
- <20190802132419.GD20111@redhat.com>
- <20190802134611.GF20111@redhat.com>
- <20190802135248.gbtkh5sgjzmbup5h@brauner.io>
+        id S1728856AbfHBQw3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 12:52:29 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Aug 2019 09:52:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,338,1559545200"; 
+   d="scan'208";a="257031873"
+Received: from mvicidom-mobl.amr.corp.intel.com (HELO [10.254.92.34]) ([10.254.92.34])
+  by orsmga001.jf.intel.com with ESMTP; 02 Aug 2019 09:52:27 -0700
+Subject: Re: [alsa-devel] [RFC PATCH 06/40] soundwire: intel: prevent possible
+ dereference in hw_params
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        broonie@kernel.org, srinivas.kandagatla@linaro.org,
+        jank@cadence.com, slawomir.blauciak@intel.com,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
+ <20190725234032.21152-7-pierre-louis.bossart@linux.intel.com>
+ <20190802115537.GI12733@vkoul-mobl.Dlink>
+ <6da5aeef-40bf-c9bb-fc18-4ac0b3961857@linux.intel.com>
+ <20190802155738.GR12733@vkoul-mobl.Dlink>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <884a13fc-08eb-10c9-de9c-50cf38ff533d@linux.intel.com>
+Date:   Fri, 2 Aug 2019 11:52:26 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190802135248.gbtkh5sgjzmbup5h@brauner.io>
-X-Operating-System: Linux (5.1.19-300.fc30.x86_64)
-X-Load-Average: 1.75 1.91 1.91
-X-Unexpected: The Spanish Inquisition
-X-GnuPG-Key: gpg --recv-keys D3C4906A
-Organization: Red Hat
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 02 Aug 2019 16:50:52 +0000 (UTC)
+In-Reply-To: <20190802155738.GR12733@vkoul-mobl.Dlink>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 03:52:49PM +0200, Christian Brauner wrote:
-> On Fri, Aug 02, 2019 at 03:46:11PM +0200, Oleg Nesterov wrote:
-> > On 08/02, Oleg Nesterov wrote:
-> > >
-> > > So Adrian, sorry for confusion, I think your patch is fine.
 
-Good to know.
 
-> > Yes... but do we really need the new CLONE_SET_TID ?
-> > 
-> > set_tid == 0 has no effect, can't we simply check kargs->set_tid != 0
-> > before ns_capable() ?
+On 8/2/19 10:57 AM, Vinod Koul wrote:
+> On 02-08-19, 10:16, Pierre-Louis Bossart wrote:
+>>
+>>
+>> On 8/2/19 6:55 AM, Vinod Koul wrote:
+>>> On 25-07-19, 18:39, Pierre-Louis Bossart wrote:
+>>>> This should not happen in production systems but we should test for
+>>>> all callback arguments before invoking the config_stream callback.
+>>>
+>>> so you are saying callback arg is mandatory, if so please document that
+>>> assumption
+>>
+>> no, what this says is that if a config_stream is provided then it needs to
+>> have a valid argument.
 > 
-> Yeah, I agree that sounds much better and aligns with exit_signal.
+> well typically args are not mandatory..
+> 
+>> I am not sure what you mean by "document that assumption", comment in the
+>> code (where?) or SoundWire documentation?
+> 
+> The callback documentation which in this is in include/linux/soundwire/sdw_intel.h
+> 
 
-Let me remove CLONE_SET_TID from the patch and I will try out
-idr_is_empty().
+/**
+  * struct sdw_intel_ops: Intel audio driver callback ops
+  *
+  * @config_stream: configure the stream with the hw_params
+  */
+struct sdw_intel_ops {
+	int (*config_stream)(void *arg, void *substream,
+			     void *dai, void *hw_params, int stream_num);
+};
 
-I will also address Dmitry's comment about accessing smaller parameter
-structs.
-
-		Adrian
+all parameters are mandatory really, not sure what you are trying to get at.
