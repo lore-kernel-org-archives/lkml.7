@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F20CC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC265C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23DFD2182B
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B437A21871
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:22:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752144;
-	bh=yPrQMS+7RMJW6ZvOmMUVj0WXisOzt31m6mEW5a5WZSk=;
+	s=default; t=1564752146;
+	bh=8G0xjL5wX9rZT733svEXgWfiwMIBLWzgUjruXDyMgRs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PGrs3+qMXtGEqcj0rdPj1TnLuL1MskzJld54coT3+fahW7BedmBrdKhm63XwRi/vA
-	 9f6q2/qIthI5zoUPAlpQ028jkFbeycWhO/SN05oToZ62qFlC42OrttBThLkFLYpC/4
-	 bcKfJ0sRKr/PCO7C2LMf4J0pZFezz/vN0uAFuJAs=
+	b=HWaEiNOX4doxVOcosVxsDxbg3fukQnzw1AkGCzj1BwIrcbvELxqU0CZ9UyjlRffko
+	 OjfdLR4k5aHT2l3weLPoPJ/UcaGrWXqhs9TMkTuQh1vafW99CMDgd6obWbFHWE9vog
+	 1lbrM/mLTqOZ4x3q3BbDbJztDsFzwGwWyclbbOWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393753AbfHBNWW (ORCPT
+        id S2393765AbfHBNWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:22:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60910 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:22:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393726AbfHBNWT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:22:19 -0400
+        id S2393726AbfHBNWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:22:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12EBB2173E;
-        Fri,  2 Aug 2019 13:22:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 396C3217D4;
+        Fri,  2 Aug 2019 13:22:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752139;
-        bh=yPrQMS+7RMJW6ZvOmMUVj0WXisOzt31m6mEW5a5WZSk=;
+        s=default; t=1564752143;
+        bh=8G0xjL5wX9rZT733svEXgWfiwMIBLWzgUjruXDyMgRs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wKg9xc9zlePV3tunDNGhedoyKebzshNPOwg9ZZinIJ3HEvK4f6682t+X5hc8/XVau
-         DGHo9J90IGx8mAW6ZHwETB8Sm2grkaQk0uESNsOKeBOI3vmPIOD7hc41LWtk85WtLd
-         Ub6GW7VsmhkWbps1FketUeJ8ZaWMDb/F640+wmuA=
+        b=b5BU2tSRAjG7mBaSBHlGvHHcVtNCREjq6aY9HQWlQzHu5emRvuM3VPaxh/0KXIulC
+         DGJwYTRN5oatiAdaiLXYqJbaOsUHxHJBsTqI/b7EMe3WNR7JmStrm04Gx1Smwal8f/
+         R8ghwgtP1573GZh6/gWUwo1IwqExj13ujsD8siCY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Kees Cook <keescook@chromium.org>,
-        Roland Kammerer <roland.kammerer@linbit.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.2 57/76] drbd: dynamically allocate shash descriptor
-Date:   Fri,  2 Aug 2019 09:19:31 -0400
-Message-Id: <20190802131951.11600-57-sashal@kernel.org>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.2 60/76] nvme: fix memory leak caused by incorrect subsystem free
+Date:   Fri,  2 Aug 2019 09:19:34 -0400
+Message-Id: <20190802131951.11600-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802131951.11600-1-sashal@kernel.org>
 References: <20190802131951.11600-1-sashal@kernel.org>
@@ -61,69 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit 77ce56e2bfaa64127ae5e23ef136c0168b818777 ]
+[ Upstream commit e654dfd38c1ecf58d8d019f3c053189413484a5b ]
 
-Building with clang and KASAN, we get a warning about an overly large
-stack frame on 32-bit architectures:
+When freeing the subsystem after finding another match with
+__nvme_find_get_subsystem(), use put_device() instead of
+__nvme_release_subsystem() which calls kfree() directly.
 
-drivers/block/drbd/drbd_receiver.c:921:31: error: stack frame size of 1280 bytes in function 'conn_connect'
-      [-Werror,-Wframe-larger-than=]
+Per the documentation, put_device() should always be used
+after device_initialization() is called. Otherwise, leaks
+like the one below which was detected by kmemleak may occur.
 
-We already allocate other data dynamically in this function, so
-just do the same for the shash descriptor, which makes up most of
-this memory.
+Once the call of __nvme_release_subsystem() is removed it no
+longer makes sense to keep the helper, so fold it back
+into nvme_release_subsystem().
 
-Link: https://lore.kernel.org/lkml/20190617132440.2721536-1-arnd@arndb.de/
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Roland Kammerer <roland.kammerer@linbit.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+unreferenced object 0xffff8883d12bfbc0 (size 16):
+  comm "nvme", pid 2635, jiffies 4294933602 (age 739.952s)
+  hex dump (first 16 bytes):
+    6e 76 6d 65 2d 73 75 62 73 79 73 32 00 88 ff ff  nvme-subsys2....
+  backtrace:
+    [<000000007d8fc208>] __kmalloc_track_caller+0x16d/0x2a0
+    [<0000000081169e5f>] kvasprintf+0xad/0x130
+    [<0000000025626f25>] kvasprintf_const+0x47/0x120
+    [<00000000fa66ad36>] kobject_set_name_vargs+0x44/0x120
+    [<000000004881f8b3>] dev_set_name+0x98/0xc0
+    [<000000007124dae3>] nvme_init_identify+0x1995/0x38e0
+    [<000000009315020a>] nvme_loop_configure_admin_queue+0x4fa/0x5e0
+    [<000000001a63e766>] nvme_loop_create_ctrl+0x489/0xf80
+    [<00000000a46ecc23>] nvmf_dev_write+0x1a12/0x2220
+    [<000000002259b3d5>] __vfs_write+0x66/0x120
+    [<000000002f6df81e>] vfs_write+0x154/0x490
+    [<000000007e8cfc19>] ksys_write+0x10a/0x240
+    [<00000000ff5c7b85>] __x64_sys_write+0x73/0xb0
+    [<00000000fee6d692>] do_syscall_64+0xaa/0x470
+    [<00000000997e1ede>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fixes: ab9e00cc72fa ("nvme: track subsystems")
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/drbd/drbd_receiver.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ drivers/nvme/host/core.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
-index 90ebfcae0ce6e..2b3103c308573 100644
---- a/drivers/block/drbd/drbd_receiver.c
-+++ b/drivers/block/drbd/drbd_receiver.c
-@@ -5417,7 +5417,7 @@ static int drbd_do_auth(struct drbd_connection *connection)
- 	unsigned int key_len;
- 	char secret[SHARED_SECRET_MAX]; /* 64 byte */
- 	unsigned int resp_size;
--	SHASH_DESC_ON_STACK(desc, connection->cram_hmac_tfm);
-+	struct shash_desc *desc;
- 	struct packet_info pi;
- 	struct net_conf *nc;
- 	int err, rv;
-@@ -5430,6 +5430,13 @@ static int drbd_do_auth(struct drbd_connection *connection)
- 	memcpy(secret, nc->shared_secret, key_len);
- 	rcu_read_unlock();
- 
-+	desc = kmalloc(sizeof(struct shash_desc) +
-+		       crypto_shash_descsize(connection->cram_hmac_tfm),
-+		       GFP_KERNEL);
-+	if (!desc) {
-+		rv = -1;
-+		goto fail;
-+	}
- 	desc->tfm = connection->cram_hmac_tfm;
- 
- 	rv = crypto_shash_setkey(connection->cram_hmac_tfm, (u8 *)secret, key_len);
-@@ -5571,7 +5578,10 @@ static int drbd_do_auth(struct drbd_connection *connection)
- 	kfree(peers_ch);
- 	kfree(response);
- 	kfree(right_response);
--	shash_desc_zero(desc);
-+	if (desc) {
-+		shash_desc_zero(desc);
-+		kfree(desc);
-+	}
- 
- 	return rv;
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 4a1d2ab4d1612..5deb4deb38209 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -2264,17 +2264,15 @@ static void nvme_init_subnqn(struct nvme_subsystem *subsys, struct nvme_ctrl *ct
+ 	memset(subsys->subnqn + off, 0, sizeof(subsys->subnqn) - off);
  }
+ 
+-static void __nvme_release_subsystem(struct nvme_subsystem *subsys)
++static void nvme_release_subsystem(struct device *dev)
+ {
++	struct nvme_subsystem *subsys =
++		container_of(dev, struct nvme_subsystem, dev);
++
+ 	ida_simple_remove(&nvme_subsystems_ida, subsys->instance);
+ 	kfree(subsys);
+ }
+ 
+-static void nvme_release_subsystem(struct device *dev)
+-{
+-	__nvme_release_subsystem(container_of(dev, struct nvme_subsystem, dev));
+-}
+-
+ static void nvme_destroy_subsystem(struct kref *ref)
+ {
+ 	struct nvme_subsystem *subsys =
+@@ -2429,7 +2427,7 @@ static int nvme_init_subsystem(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
+ 	mutex_lock(&nvme_subsystems_lock);
+ 	found = __nvme_find_get_subsystem(subsys->subnqn);
+ 	if (found) {
+-		__nvme_release_subsystem(subsys);
++		put_device(&subsys->dev);
+ 		subsys = found;
+ 
+ 		if (!nvme_validate_cntlid(subsys, ctrl, id)) {
 -- 
 2.20.1
 
