@@ -7,47 +7,53 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E36CC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8607EC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:44:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F325B2086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D0DB21726
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:44:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739056;
-	bh=SOHZCKy37fs3IqoZ36GSFFZphzMehdE9/WH9M3jnfJQ=;
+	s=default; t=1564739065;
+	bh=aE+CR6HoZfXk0nsZLEeNWPnKxJ0ykrIP8FUejcRW7KY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b80MUFYRH+sgfMccg1dGA3wl30Vu/RaxWKzd5QKkI2GHyksalWrWL7fAyEqJU4LPY
-	 oaVRz9NfdTwL0q2lzlIzsMFcabZ2gjerpxigH7U229soPlVZK7g1kj63sd8RXv7V81
-	 L9/w9l7W4uuywdAgb5qyVgb9gKsv9xiI3afeg9o0=
+	b=Ng7a/wl/3aVeKVueKuyM0SsfcWXvtupPk61BzTSOHoRp3ZvxwgJLi/qz6b8AsgP0v
+	 pQI+Le9oUn883Ldw6fdl2sBGWBGec+w3x76QkJHYrR0eyEexquvEXG+mVd2yTxKDKW
+	 E1om0JBrgVaz8MPG1tDQl2AK8I3SbSyxvtrmJoAs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405198AbfHBJoN (ORCPT
+        id S2404861AbfHBJoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:44:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47450 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:44:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405186AbfHBJoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:44:12 -0400
+        id S2405217AbfHBJoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:44:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD5CB20880;
-        Fri,  2 Aug 2019 09:44:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0FB12086A;
+        Fri,  2 Aug 2019 09:44:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739052;
-        bh=SOHZCKy37fs3IqoZ36GSFFZphzMehdE9/WH9M3jnfJQ=;
+        s=default; t=1564739057;
+        bh=aE+CR6HoZfXk0nsZLEeNWPnKxJ0ykrIP8FUejcRW7KY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pCrWPODHB5LE7zr7+eV6RDR3s0tPCX7AWIU8RXF3LCoGq+vrFWqU6AKnZCKoALKaH
-         gjTRcMXvjsbad5bGh5Osx+TWfPK899GfGs5D8PMjfrysKiBgMGO5DCUGzonFerD6mN
-         DbYDoiYpVArIqwe5ojyIdQE30WK0fkLVKavdpxBs=
+        b=iZ/Ty4D6jJeXVcPdATJRHospV0Nea037XXsd2E8kBsD20V3YNi1EG6gZB8fnjd76X
+         V0K/8oiZCexbwbk6v1wOZSCxR20AgA11ANEffeg39ayizoWwyeO/pVrbLIGg4k6Qo6
+         IYVCWeM3bLaO2JVq00q8g6aI2cl2odG6jFyezsL8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joe Perches <joe@perches.com>,
-        Like Xu <like.xu@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.9 094/223] KVM: x86/vPMU: refine kvm_pmu err msg when event creation failed
-Date:   Fri,  2 Aug 2019 11:35:19 +0200
-Message-Id: <20190802092245.269572642@linuxfoundation.org>
+        stable@vger.kernel.org, Radoslaw Burny <rburny@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Seth Forshee <seth.forshee@canonical.com>,
+        John Sperbeck <jsperbeck@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 096/223] fs/proc/proc_sysctl.c: fix the default values of i_uid/i_gid on /proc/sys inodes.
+Date:   Fri,  2 Aug 2019 11:35:21 +0200
+Message-Id: <20190802092245.395264338@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -60,38 +66,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Like Xu <like.xu@linux.intel.com>
+From: Radoslaw Burny <rburny@google.com>
 
-commit 6fc3977ccc5d3c22e851f2dce2d3ce2a0a843842 upstream.
+commit 5ec27ec735ba0477d48c80561cc5e856f0c5dfaf upstream.
 
-If a perf_event creation fails due to any reason of the host perf
-subsystem, it has no chance to log the corresponding event for guest
-which may cause abnormal sampling data in guest result. In debug mode,
-this message helps to understand the state of vPMC and we may not
-limit the number of occurrences but not in a spamming style.
+Normally, the inode's i_uid/i_gid are translated relative to s_user_ns,
+but this is not a correct behavior for proc.  Since sysctl permission
+check in test_perm is done against GLOBAL_ROOT_[UG]ID, it makes more
+sense to use these values in u_[ug]id of proc inodes.  In other words:
+although uid/gid in the inode is not read during test_perm, the inode
+logically belongs to the root of the namespace.  I have confirmed this
+with Eric Biederman at LPC and in this thread:
+  https://lore.kernel.org/lkml/87k1kzjdff.fsf@xmission.com
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Like Xu <like.xu@linux.intel.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Consequences
+============
+
+Since the i_[ug]id values of proc nodes are not used for permissions
+checks, this change usually makes no functional difference.  However, it
+causes an issue in a setup where:
+
+ * a namespace container is created without root user in container -
+   hence the i_[ug]id of proc nodes are set to INVALID_[UG]ID
+
+ * container creator tries to configure it by writing /proc/sys files,
+   e.g. writing /proc/sys/kernel/shmmax to configure shared memory limit
+
+Kernel does not allow to open an inode for writing if its i_[ug]id are
+invalid, making it impossible to write shmmax and thus - configure the
+container.
+
+Using a container with no root mapping is apparently rare, but we do use
+this configuration at Google.  Also, we use a generic tool to configure
+the container limits, and the inability to write any of them causes a
+failure.
+
+History
+=======
+
+The invalid uids/gids in inodes first appeared due to 81754357770e (fs:
+Update i_[ug]id_(read|write) to translate relative to s_user_ns).
+However, AFAIK, this did not immediately cause any issues.  The
+inability to write to these "invalid" inodes was only caused by a later
+commit 0bd23d09b874 (vfs: Don't modify inodes with a uid or gid unknown
+to the vfs).
+
+Tested: Used a repro program that creates a user namespace without any
+mapping and stat'ed /proc/$PID/root/proc/sys/kernel/shmmax from outside.
+Before the change, it shows the overflow uid, with the change it's 0.
+The overflow uid indicates that the uid in the inode is not correct and
+thus it is not possible to open the file for writing.
+
+Link: http://lkml.kernel.org/r/20190708115130.250149-1-rburny@google.com
+Fixes: 0bd23d09b874 ("vfs: Don't modify inodes with a uid or gid unknown to the vfs")
+Signed-off-by: Radoslaw Burny <rburny@google.com>
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: "Eric W . Biederman" <ebiederm@xmission.com>
+Cc: Seth Forshee <seth.forshee@canonical.com>
+Cc: John Sperbeck <jsperbeck@google.com>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: <stable@vger.kernel.org>	[4.8+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/pmu.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/proc/proc_sysctl.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -124,8 +124,8 @@ static void pmc_reprogram_counter(struct
- 						 intr ? kvm_perf_overflow_intr :
- 						 kvm_perf_overflow, pmc);
- 	if (IS_ERR(event)) {
--		printk_once("kvm_pmu: event creation failed %ld\n",
--			    PTR_ERR(event));
-+		pr_debug_ratelimited("kvm_pmu: event creation failed %ld for pmc->idx = %d\n",
-+			    PTR_ERR(event), pmc->idx);
- 		return;
- 	}
+--- a/fs/proc/proc_sysctl.c
++++ b/fs/proc/proc_sysctl.c
+@@ -500,6 +500,10 @@ static struct inode *proc_sys_make_inode
  
+ 	if (root->set_ownership)
+ 		root->set_ownership(head, table, &inode->i_uid, &inode->i_gid);
++	else {
++		inode->i_uid = GLOBAL_ROOT_UID;
++		inode->i_gid = GLOBAL_ROOT_GID;
++	}
+ 
+ 	return inode;
+ }
 
 
