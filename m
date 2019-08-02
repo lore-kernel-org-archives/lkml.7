@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF922C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07FB7C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE50A2184B
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:36:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA92120679
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:36:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738578;
-	bh=+NZu1zTblNtFFEbvJ0ETvJhrVxJvu44Ilkp3ZcuF8Dc=;
+	s=default; t=1564738584;
+	bh=ypH8/ikrrepBuxnryWfkrCGiNNhMh8PmI7wTcODDPxU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hSCoec2sRZF/PqoJSILM/TnUOzkcH9V/9d5bXg5JhjAUSNywaJ2kLR75Hice1rFDR
-	 OCicZT/V+mD0mLdOKb4BQcuGZjkvM9gKAVFITd1Wv3SoAULVXkERyOUP1IyID4zrKn
-	 O7ck4fbW9ZFsBt9YEythtonH8FLcSdqRWliJE8D8=
+	b=fm+0c1CoL5rPQNmC+HUG91w7hroT9BHxsAfqRjSDW1lVlnARujYjOghoOlCpBHLfl
+	 8OY4VJniJNgU+tEDczha147c0+vgbLAt1eq4Qg4OqKgVF8UmAunt4OdR+q8sqYEjJ8
+	 Vi2KGQILxJ419XeRZtpnHOiH9hFG2FY3gTQVWp5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404840AbfHBJgR (ORCPT
+        id S2390668AbfHBJgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:36:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36966 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:36:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404824AbfHBJgL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:36:11 -0400
+        id S2404845AbfHBJgS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:36:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02BCB217F5;
-        Fri,  2 Aug 2019 09:36:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B32142183F;
+        Fri,  2 Aug 2019 09:36:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738570;
-        bh=+NZu1zTblNtFFEbvJ0ETvJhrVxJvu44Ilkp3ZcuF8Dc=;
+        s=default; t=1564738578;
+        bh=ypH8/ikrrepBuxnryWfkrCGiNNhMh8PmI7wTcODDPxU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bqcLDAhBShXZL4R8ONt71qE6yCLecaHQVlvwVDSjaXk8SY2dimuu6n+3jGI1tn1GP
-         q9azzd+OMIeViiBGlFkQpxLTSafZmBZefIGvbMn0fzYlVMIwnN9PX6B9pa/HNe7dzU
-         u6B8Wx5LOSg/RbKOtMpnjcxKKNGD9HVEamkbtVIg=
+        b=i4AFbmhNu+xPG3m2Y37ySXVkeuYNoWD8Y16pM7knHQxeFnVyRZTA7mP2/G8S6gmjK
+         Wd0FeEb/aVCiLKYQotcCjajl1o3Y3y7wciDXlEquNNe3PITFAGwtaV2znglb3GBwOV
+         EiMN71c7MGbLR6dEEGjQ0+aSGD4x22B6OqfWYjn0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.4 156/158] sched/fair: Dont free p->numa_faults with concurrent readers
-Date:   Fri,  2 Aug 2019 11:29:37 +0200
-Message-Id: <20190802092233.548358426@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.4 144/158] ALSA: line6: Fix wrong altsetting for LINE6_PODHD500_1
+Date:   Fri,  2 Aug 2019 11:29:25 +0200
+Message-Id: <20190802092231.916878684@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -64,131 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 16d51a590a8ce3befb1308e0e7ab77f3b661af33 upstream.
+commit 70256b42caaf3e13c2932c2be7903a73fbe8bb8b upstream.
 
-When going through execve(), zero out the NUMA fault statistics instead of
-freeing them.
+Commit 7b9584fa1c0b ("staging: line6: Move altsetting to properties")
+set a wrong altsetting for LINE6_PODHD500_1 during refactoring.
 
-During execve, the task is reachable through procfs and the scheduler. A
-concurrent /proc/*/sched reader can read data from a freed ->numa_faults
-allocation (confirmed by KASAN) and write it back to userspace.
-I believe that it would also be possible for a use-after-free read to occur
-through a race between a NUMA fault and execve(): task_numa_fault() can
-lead to task_numa_compare(), which invokes task_weight() on the currently
-running task of a different CPU.
+Set the correct altsetting number to fix the issue.
 
-Another way to fix this would be to make ->numa_faults RCU-managed or add
-extra locking, but it seems easier to wipe the NUMA fault statistics on
-execve.
-
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will@kernel.org>
-Fixes: 82727018b0d3 ("sched/numa: Call task_numa_free() from do_execve()")
-Link: https://lkml.kernel.org/r/20190716152047.14424-1-jannh@google.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+BugLink: https://bugs.launchpad.net/bugs/1790595
+Fixes: 7b9584fa1c0b ("staging: line6: Move altsetting to properties")
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/exec.c             |    2 +-
- include/linux/sched.h |    4 ++--
- kernel/fork.c         |    2 +-
- kernel/sched/fair.c   |   24 ++++++++++++++++++++----
- 4 files changed, 24 insertions(+), 8 deletions(-)
+ sound/usb/line6/podhd.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1642,7 +1642,7 @@ static int do_execveat_common(int fd, st
- 	current->fs->in_exec = 0;
- 	current->in_execve = 0;
- 	acct_update_integrals(current);
--	task_numa_free(current);
-+	task_numa_free(current, false);
- 	free_bprm(bprm);
- 	kfree(pathbuf);
- 	putname(filename);
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1860,7 +1860,7 @@ extern int arch_task_struct_size __read_
- extern void task_numa_fault(int last_node, int node, int pages, int flags);
- extern pid_t task_numa_group_id(struct task_struct *p);
- extern void set_numabalancing_state(bool enabled);
--extern void task_numa_free(struct task_struct *p);
-+extern void task_numa_free(struct task_struct *p, bool final);
- extern bool should_numa_migrate_memory(struct task_struct *p, struct page *page,
- 					int src_nid, int dst_cpu);
- #else
-@@ -1875,7 +1875,7 @@ static inline pid_t task_numa_group_id(s
- static inline void set_numabalancing_state(bool enabled)
- {
- }
--static inline void task_numa_free(struct task_struct *p)
-+static inline void task_numa_free(struct task_struct *p, bool final)
- {
- }
- static inline bool should_numa_migrate_memory(struct task_struct *p,
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -254,7 +254,7 @@ void __put_task_struct(struct task_struc
- 	WARN_ON(tsk == current);
- 
- 	cgroup_free(tsk);
--	task_numa_free(tsk);
-+	task_numa_free(tsk, true);
- 	security_task_free(tsk);
- 	exit_creds(tsk);
- 	delayacct_tsk_free(tsk);
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -2054,13 +2054,23 @@ no_join:
- 	return;
- }
- 
--void task_numa_free(struct task_struct *p)
-+/*
-+ * Get rid of NUMA staticstics associated with a task (either current or dead).
-+ * If @final is set, the task is dead and has reached refcount zero, so we can
-+ * safely free all relevant data structures. Otherwise, there might be
-+ * concurrent reads from places like load balancing and procfs, and we should
-+ * reset the data back to default state without freeing ->numa_faults.
-+ */
-+void task_numa_free(struct task_struct *p, bool final)
- {
- 	struct numa_group *grp = p->numa_group;
--	void *numa_faults = p->numa_faults;
-+	unsigned long *numa_faults = p->numa_faults;
- 	unsigned long flags;
- 	int i;
- 
-+	if (!numa_faults)
-+		return;
-+
- 	if (grp) {
- 		spin_lock_irqsave(&grp->lock, flags);
- 		for (i = 0; i < NR_NUMA_HINT_FAULT_STATS * nr_node_ids; i++)
-@@ -2073,8 +2083,14 @@ void task_numa_free(struct task_struct *
- 		put_numa_group(grp);
- 	}
- 
--	p->numa_faults = NULL;
--	kfree(numa_faults);
-+	if (final) {
-+		p->numa_faults = NULL;
-+		kfree(numa_faults);
-+	} else {
-+		p->total_numa_faults = 0;
-+		for (i = 0; i < NR_NUMA_HINT_FAULT_STATS * nr_node_ids; i++)
-+			numa_faults[i] = 0;
-+	}
- }
- 
- /*
+--- a/sound/usb/line6/podhd.c
++++ b/sound/usb/line6/podhd.c
+@@ -155,7 +155,7 @@ static const struct line6_properties pod
+ 		.capabilities	= LINE6_CAP_CONTROL
+ 				| LINE6_CAP_PCM
+ 				| LINE6_CAP_HWMON,
+-		.altsetting = 1,
++		.altsetting = 0,
+ 		.ep_ctrl_r = 0x81,
+ 		.ep_ctrl_w = 0x01,
+ 		.ep_audio_r = 0x86,
 
 
