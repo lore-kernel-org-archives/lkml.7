@@ -2,107 +2,109 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F21C32754
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 17:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F572C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 17:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32F3A2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 17:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A3B62173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 17:06:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564765566;
+	bh=zyFQjXyh3QHHzXm6u/m7sXjNjCXkfXoAXKp3IdMcjwk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mT7FHqhR12pIMtr8UWWS87LX5odKAwN9Lbjg77QFNgQy6gnvYEN9hFNoMWS9mVWnK
+	 2u3Rp2e1DNiJAxOJgCHVbswMSIpZVCK+GOjHmb208Lya43MbA+hlUHqOL8hUQbcYgj
+	 JCDnWPatjsRMfkGGTaEAjUziP/Of1BGeqZc1MVcQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404113AbfHBRFK (ORCPT
+        id S2404172AbfHBRGF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 13:05:10 -0400
-Received: from foss.arm.com ([217.140.110.172]:55252 "EHLO foss.arm.com"
+        Fri, 2 Aug 2019 13:06:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403954AbfHBRFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 13:05:09 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 120ED344;
-        Fri,  2 Aug 2019 10:05:09 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6082D3F575;
-        Fri,  2 Aug 2019 10:05:08 -0700 (PDT)
-Subject: Re: [PATCH v2 15/24] EDAC, ghes: Extract numa node information for
- each dimm
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190624150758.6695-1-rrichter@marvell.com>
- <20190624150758.6695-16-rrichter@marvell.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <f878201f-f8fd-0f2a-5072-ba60c64eefaf@arm.com>
-Date:   Fri, 2 Aug 2019 18:05:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S2403954AbfHBRGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 13:06:04 -0400
+Received: from localhost (unknown [106.51.106.149])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0DE220644;
+        Fri,  2 Aug 2019 17:06:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564765563;
+        bh=zyFQjXyh3QHHzXm6u/m7sXjNjCXkfXoAXKp3IdMcjwk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FZi0aW7hN7atOO49xnVUT7RbRhGIanyxnc5VBG93AS4P3SJ0v/zGLXClQD8S2xJ6z
+         PCJDaMZtexuQbRv6gDsfqWaxRMC7juiESX4QHIRZZO3uGxw5lu0D6fVOOTnDdmcOKn
+         BbpDXMIhg1sJyGfUHJ+ocJxX/PhdGY9uzxb98+h0=
+Date:   Fri, 2 Aug 2019 22:34:50 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        alsa-devel@alsa-project.org, tiwai@suse.de,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        broonie@kernel.org, srinivas.kandagatla@linaro.org,
+        jank@cadence.com, slawomir.blauciak@intel.com,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [alsa-devel] [RFC PATCH 21/40] soundwire: export helpers to find
+ row and column values
+Message-ID: <20190802170450.GY12733@vkoul-mobl.Dlink>
+References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
+ <20190725234032.21152-22-pierre-louis.bossart@linux.intel.com>
+ <20190726144325.GH16003@ubuntu>
+ <d6268a75-b38c-aee5-0463-af8b602286bb@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190624150758.6695-16-rrichter@marvell.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d6268a75-b38c-aee5-0463-af8b602286bb@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robert,
+On 26-07-19, 10:26, Pierre-Louis Bossart wrote:
+> 
+> 
+> On 7/26/19 9:43 AM, Guennadi Liakhovetski wrote:
+> > On Thu, Jul 25, 2019 at 06:40:13PM -0500, Pierre-Louis Bossart wrote:
+> > > Add a prefix for common tables and export 2 helpers to set the frame
+> > > shapes based on row/col values.
+> > > 
+> > > Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> > > ---
+> > >   drivers/soundwire/bus.h    |  7 +++++--
+> > >   drivers/soundwire/stream.c | 14 ++++++++------
+> > >   2 files changed, 13 insertions(+), 8 deletions(-)
+> > > 
+> > > diff --git a/drivers/soundwire/bus.h b/drivers/soundwire/bus.h
+> > > index 06ac4adb0074..c57c9c23f6ca 100644
+> > > --- a/drivers/soundwire/bus.h
+> > > +++ b/drivers/soundwire/bus.h
+> > > @@ -73,8 +73,11 @@ struct sdw_msg {
+> > >   #define SDW_DOUBLE_RATE_FACTOR		2
+> > > -extern int rows[SDW_FRAME_ROWS];
+> > > -extern int cols[SDW_FRAME_COLS];
+> > > +extern int sdw_rows[SDW_FRAME_ROWS];
+> > > +extern int sdw_cols[SDW_FRAME_COLS];
+> > 
+> > So these arrays actually have to be exported? In the current (5.2) sources they
+> > seem to only be used in stream.c, maybe make them static there?
+> > 
+> > > +
+> > > +int sdw_find_row_index(int row);
+> > > +int sdw_find_col_index(int col);
+> 
+> yes, they need to be exported, they are used by the allocation algorithm (in
+> Patch 27).
+> Others will need this for non-Intel solutions, it's really a part of the
+> standard definition and should be shared.
+> I can improve the commit message to make this explicit.
 
-On 24/06/2019 16:09, Robert Richter wrote:
-> In a later patch we want to have one mc device per node. This patch
-> extracts the numa node information for each dimm. This is done by
-> collecting the physical address ranges from the DMI table (Memory
-> Array Mapped Address - Type 19 of SMBIOS spec). The node information
-> for a physical address is already know to a numa aware system (e.g. by
-> using the ACPI _PXM method or the ACPI SRAT table), so based on the PA
-> we can assign the node id to the dimms.
+Yes that would help! And also move it to before it's usage so it clear
+that it is used in next one.
 
-I really don't like the way this depends on the rest of the kernel's NUMA support.
-mm's policies around the placement of data change with these settings, that shouldn't
-matter here. Reporting physical errors shouldn't be influenced by mm's placement policy.
-
-pfn_valid() is a sore subject on arm64, it will return false for random pages that the
-firmware is using, or wrote data to with unusual memory attributes. Depending on it makes
-this code fragile...
-
-
-> A fallback that disables numa is implemented in case the node
-> information is inconsistent.
-
-... which is why you need a fallback.
-
-All this makes it difficult to explain why this things view of memory is as it is.
-Making the RAS/edac code unpredictable like this is a hard sell.
-
-You need to squint through Kconfig, SRAT and the UEFI memory map.
-(due to pfn_valid(): the behaviour here can change over a reboot)
-
-
-Can we 'just' use the type-16 handle to group the DIMMs?
-
-As an illustration:
-http://www.linux-arm.org/git?p=linux-jm.git;a=shortlog;h=refs/heads/edac_ghes_2level_dimms/v0
-
-This reflects the SMBIOS tables on my NUMA desktop, and doesn't depend on any of the
-above. I'd be interested to know what is missing from this approach.
-
-(which numa node? I don't think we need to know the mapping of mcX<->nid up front. We can
-find it from the faulting physical address when we get an error report).
-
-
-N.B, your mail is still arriving base64 encoded. It looks like this:
-https://lore.kernel.org/linux-edac/20190624150758.6695-16-rrichter@marvell.com/raw
-
-Lei Wang found:
-> Ah I found if without explicit "--transfer-encoding=7bit" when do "git
-> send-mail", my ubuntu box sent out base64 by default.
-
-(but his mail didn't get archived for some reason)
-
-
-Thanks,
-
-James
+-- 
+~Vinod
