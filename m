@@ -2,139 +2,165 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1066EC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 03:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4A46C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 04:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA5D8206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 03:58:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6BD5206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 04:00:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="LF8vF2zi";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="NgaeKIaD"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="RJKKjy4l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730998AbfHBD6p (ORCPT
+        id S1729145AbfHBEAN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 23:58:45 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:27264 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730934AbfHBD6p (ORCPT
+        Fri, 2 Aug 2019 00:00:13 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52713 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbfHBEAN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 23:58:45 -0400
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x723sbGK027673;
-        Thu, 1 Aug 2019 20:58:31 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : subject :
- date : message-id : references : in-reply-to : content-type : content-id :
- content-transfer-encoding : mime-version; s=facebook;
- bh=lgYn/GHQ2ve4YnEndOVI+6nM2w3g64fGwXQiboiOO8c=;
- b=LF8vF2zip75ZTdSpKoYTYLXhzg5fMcPWNbVOt8Fn76SDwigXkl0XfbHVaaZsax9/I6Fq
- fcFH7gPKqkCxifymf0JW1+qURPPOaz6UmNvFE752Wi2B4q8/CWeK8eVKJDv5EpmVE9SI
- hK2GuyciwJmIdkcQSE1XGnHEXx7MmM6uKV0= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2u430yt9sa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 01 Aug 2019 20:58:30 -0700
-Received: from ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) by
- ash-exhub204.TheFacebook.com (2620:10d:c0a8:83::4) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 1 Aug 2019 20:58:29 -0700
-Received: from NAM03-BY2-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.173) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 1 Aug 2019 20:58:29 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dq+RN4q+lUSSfvk+ZCKIaSRCXvE00VBeZ2M6xf4h3GTa828qfrQzfDIHFD+fqH4jzaIfhTPJwGN6c5KcWywZp8aPS8C4+MwdSsv3d96U1KslpBb0AdzorZbAQPzfIqkhqWPPKh1wgoq84G1uYe4Kzw6aE2u2zpIE0MyFDl6BLqExEPZaKwCLcCyAH6WXIKpcaEGITYDVozTCNvRhvvvoiruOxkgV8Q8V9zmWupIcNZSnXCN4ocZVOKre69dSgduXU2UB0PJXOtXsUVnQENvPubLJVEDCZXlSgFpJspBpmqrzsOc9WIgcNrA41dXHnEW2sk/Dt3nj3N8l0xAoqlfnOA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lgYn/GHQ2ve4YnEndOVI+6nM2w3g64fGwXQiboiOO8c=;
- b=Mq4hkcJComWFJfL6B+S+NdYIgIHlg6q1BgzDxtKBkLtQVASbFs8SIZBy0xKdPt+SeAB3Bkx08z3sZ0wANXyQxslZbUTvw17N9+/yuJdkN9yBEe2hHat+YjTlmAbk92ABIk/Sj5nSiBp2loxYqPBHVHY6upkDvP7SsL/3GNSw+LCuhB43g2mrtIJU6E/UmJFGFNBIfJgIzUc9JyRgF4sytE/f2zf/4DgJy9g24Q4siF8yc0hxUFqBgOwqPD8JhoqrwiXZOJlyAr/xK7xFkoPOMbmBH0TU0HiG+dj0v+8Ynx2HbNUcn1/K0OvvDFHNk0276KBYx3htD46prmYSxmYgsw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=fb.com;dmarc=pass action=none header.from=fb.com;dkim=pass
- header.d=fb.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lgYn/GHQ2ve4YnEndOVI+6nM2w3g64fGwXQiboiOO8c=;
- b=NgaeKIaDY87Og+i4Nj8edflE3/pj6V+vPemHDPMZy/3kCMc22CpNoPlHe3wIe11jekjVzF4OIZlZ9HAPza7u9ToRX7lOyBHDeupEEYRoGpdqvXFieHlSthnAX6YLz23UbWPais1o9LINntbjGdosyaP7yEZbeKoO9k96ClZl5b4=
-Received: from MWHPR15MB1216.namprd15.prod.outlook.com (10.175.2.17) by
- MWHPR15MB1197.namprd15.prod.outlook.com (10.175.7.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2136.16; Fri, 2 Aug 2019 03:58:28 +0000
-Received: from MWHPR15MB1216.namprd15.prod.outlook.com
- ([fe80::c66:6d60:f6e5:773c]) by MWHPR15MB1216.namprd15.prod.outlook.com
- ([fe80::c66:6d60:f6e5:773c%8]) with mapi id 15.20.2136.010; Fri, 2 Aug 2019
- 03:58:28 +0000
-From:   Tao Ren <taoren@fb.com>
-To:     Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
-Subject: Re: [PATCH] ARM: dts: aspeed: Add Facebook Wedge40 BMC
-Thread-Topic: [PATCH] ARM: dts: aspeed: Add Facebook Wedge40 BMC
-Thread-Index: AQHVSMzi2YI0OqbiWE+Xo4WCtkS/eabnKj4A//+b4gA=
-Date:   Fri, 2 Aug 2019 03:58:27 +0000
-Message-ID: <A7C478FF-F7C9-4877-AC7E-69ADDE2EA144@fb.com>
-References: <20190802005427.467841-1-taoren@fb.com>
- <266be87c-3bf2-4dcb-9d90-8272fbc3b057@www.fastmail.com>
-In-Reply-To: <266be87c-3bf2-4dcb-9d90-8272fbc3b057@www.fastmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Microsoft-MacOutlook/10.1a.0.190609
-x-originating-ip: [2620:10d:c090:180::1:d664]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7f5e8c93-a76c-421a-2f15-08d716fdacf4
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR15MB1197;
-x-ms-traffictypediagnostic: MWHPR15MB1197:
-x-microsoft-antispam-prvs: <MWHPR15MB11978B9C90E42A3131A5D23EB2D90@MWHPR15MB1197.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 011787B9DD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(376002)(346002)(39850400004)(366004)(47680400002)(189003)(199004)(186003)(8936002)(7736002)(86362001)(8676002)(25786009)(6512007)(71190400001)(71200400001)(110136005)(316002)(305945005)(6486002)(76176011)(6436002)(53546011)(99286004)(102836004)(6246003)(2201001)(256004)(6116002)(58126008)(2906002)(229853002)(76116006)(66946007)(66446008)(53936002)(64756008)(66556008)(66476007)(14454004)(6506007)(33656002)(5660300002)(446003)(11346002)(36756003)(476003)(81156014)(2616005)(68736007)(46003)(2501003)(486006)(81166006)(478600001)(4744005);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1197;H:MWHPR15MB1216.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: CbId0CHQWeoVFP8y482rvZHQV8SPARAMRg2QVpAw8Z+zWHe67KMz2YGSkg5HMLR7lQlXRMsEas0OW29tJ4z0z5x7gQHtJjGx4k/pJ9eO75wlpVwaJlz3YXMKJxWZvlQDGQGbWpfZdxwZjEtGgJ53pjxLVt5qhtfvwYrnLRbsv0nUbwMDuZfZ9uxzU+stzZQFLKbU1mfu4jS6o1oxVbmN1BiALF2khDSOJQ6esFWBBA/nd3h5Xg2+CDwfV8xLOEtM5EfI88qWYzrRIk13WpGWpLKYwg9He4mU4BLV2q7YZVTyIoBVO4JtdyYWI8hxAbhMToil7wHH/Zkn6HjbuggBCZenbQRPcoARLaguncHV8OKi7X0O1BxM+Yo2o5NB/tzfKNYkRETuJxR58xA3mtTHnZ/neiy6y9DpeJAkxCNhAuQ=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F5A34078B1920E4FB419DE9990F41BB3@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 2 Aug 2019 00:00:13 -0400
+Received: by mail-wm1-f66.google.com with SMTP id s3so66495724wms.2
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 21:00:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=I/Kfc6ZbOZnKoxJL7rV1rbyTQYfEjNQbR94dlPzKkok=;
+        b=RJKKjy4lH/3bgMCwOjm1J18wa06vOSJLnIfHMmvULIy2YSHW3G15WM/m7+XeVtQwTr
+         UtiihTcbvICV40K4Nt5x73lPEsV6pBUGS2RPKA5G47fKyoSSsc05AlAuvBSyjU7yAX3Z
+         UoEhsAOtv282G86OCYcLO5YN8helw4/uL1qOeUEBiTmpuinXLeVN3veX4kAGMwHIkC65
+         EKZaEk2RjAR5n1/oURiPuFkOL29Vt+pAgswdD0zpyPv3xy2fYhEiWrtIozD6TCcfhHcV
+         OMLP1cmi5mf327NBxa+CEE9sTtQnunCR/GUerMu62fmDkaROt4YIFVsA2qWBl2CNKsLY
+         7Dvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=I/Kfc6ZbOZnKoxJL7rV1rbyTQYfEjNQbR94dlPzKkok=;
+        b=Ocbx4+/uIgn6WaZdf9heHz9Fgf508Pyp4M4lw7E2O3phGOGiIS8H5vdO8aoOD05rZH
+         FHqPS6QyEiD0GmGp35S1tzNAPrkqxdQ+Szjj/oATfqMgNtjaD17g7LNuULT2HilEK5fL
+         kprLxuqH7ak/cVVvVIKWpBAawqMSqCeJsppDCzfLPRBUIQheUdHjzIk83TIohBnFnWrU
+         kA2PS0w6HjPkbqIv2NeVUfo9dXzTSeRvM3yM7hYhk5+xuzyeCI3Fqsp+arqvZNyjD4O0
+         76QI26DMHZHMw/AFesxMDCrOmlAn2ldV4N9ZmLEk//Ewz7RkPRZHmAjLUnyszJPl7WVh
+         6faw==
+X-Gm-Message-State: APjAAAVFqiB+yikQQ2MNmMvqrYApW7HuHPyU3NJ7jEAGSYnwDzGwH9OI
+        /UJvem+Qnczj2H1fu6IgUVP2gdmvkCriGLuLgPcP3g==
+X-Google-Smtp-Source: APXvYqyGKKA06Ook1nC1Ms5baz5sFRFDqfDRQkOGCbnR8q7MWD+Cy/I3+JJpDuoiot2nNz8c8O4OOUXtH5DkcbO6xGI=
+X-Received: by 2002:a1c:cfc5:: with SMTP id f188mr1649160wmg.24.1564718409992;
+ Thu, 01 Aug 2019 21:00:09 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7f5e8c93-a76c-421a-2f15-08d716fdacf4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Aug 2019 03:58:27.8403
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: taoren@fb.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1197
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-02_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=882 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908020040
-X-FB-Internal: deliver
+References: <20190729115544.17895-1-anup.patel@wdc.com> <20190729115544.17895-6-anup.patel@wdc.com>
+ <9f9d09e5-49bc-f8e3-cfe1-bd5221e3b683@redhat.com> <CAAhSdy3JZVEEnPnssALaxvCsyznF=rt=7-d5J_OgQEJv6cPhxQ@mail.gmail.com>
+ <66c4e468-7a69-31e7-778b-228908f0e737@redhat.com> <CAAhSdy3b-o6y1fsYi1iQcCN=9ZuC98TLCqjHCYAzOCx+N+_89w@mail.gmail.com>
+ <828f01a9-2f11-34b6-7753-dc8fa7aa0d18@redhat.com> <CAAhSdy19_dEL7e_sEFYi-hXvhVerm_cr3BdZ-TRw0aTTL-O9ZQ@mail.gmail.com>
+ <816c70e7-0ea3-1dde-510e-f1d5c6a02dd5@redhat.com>
+In-Reply-To: <816c70e7-0ea3-1dde-510e-f1d5c6a02dd5@redhat.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Fri, 2 Aug 2019 09:29:59 +0530
+Message-ID: <CAAhSdy0Er92SCPSyYj-59PAwXvZkgfWbJQwr_qQKGXp3s43xqA@mail.gmail.com>
+Subject: Re: [RFC PATCH 05/16] RISC-V: KVM: Implement VCPU interrupts and
+ requests handling
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Radim K <rkrcmar@redhat.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gOC8xLzE5LCA3OjU2IFBNLCAiQW5kcmV3IEplZmZlcnkiIDxhbmRyZXdAYWouaWQuYXU+IHdy
-b3RlOg0KDQo+ICAgIE9uIEZyaSwgMiBBdWcgMjAxOSwgYXQgMTA6MjQsIFRhbyBSZW4gd3JvdGU6
-IA0KPj4gQWRkIGluaXRpYWwgdmVyc2lvbiBvZiBkZXZpY2UgdHJlZSBmb3IgRmFjZWJvb2sgV2Vk
-Z2U0MCBBU1QyNDAwIEJNQw0KPj4gcGxhdGZvcm0uDQo+PiANCj4+IFNpZ25lZC1vZmYtYnk6IFRh
-byBSZW4gPHRhb3JlbkBmYi5jb20+DQo+ICANCj4gIFJldmlld2VkLWJ5OiBBbmRyZXcgSmVmZmVy
-eSA8YW5kcmV3QGFqLmlkLmF1Pg0KDQpUaGFuayB5b3UgQW5kcmV3IGZvciB0aGUgcXVpY2sgcmV2
-aWV3IChvbiBib3RoIHBhdGNoZXMpIQ0KDQpDaGVlcnMsDQoNClRhbw0KIA0KDQo=
+On Tue, Jul 30, 2019 at 7:38 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 30/07/19 15:35, Anup Patel wrote:
+> > On Tue, Jul 30, 2019 at 6:48 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
+> >>
+> >> On 30/07/19 14:45, Anup Patel wrote:
+> >>> Here's some text from RISC-V spec regarding SIP CSR:
+> >>> "software interrupt-pending (SSIP) bit in the sip register. A pending
+> >>> supervisor-level software interrupt can be cleared by writing 0 to the SSIP bit
+> >>> in sip. Supervisor-level software interrupts are disabled when the SSIE bit in
+> >>> the sie register is clear."
+> >>>
+> >>> Without RISC-V hypervisor extension, the SIP is essentially a restricted
+> >>> view of MIP CSR. Also as-per above, S-mode SW can only write 0 to SSIP
+> >>> bit in SIP CSR whereas it can only be set by M-mode SW or some HW
+> >>> mechanism (such as S-mode CLINT).
+> >>
+> >> But that's not what the spec says.  It just says (just before the
+> >> sentence you quoted):
+> >>
+> >>    A supervisor-level software interrupt is triggered on the current
+> >>    hart by writing 1 to its supervisor software interrupt-pending (SSIP)
+> >>    bit in the sip register.
+> >
+> > Unfortunately, this statement does not state who is allowed to write 1
+> > in SIP.SSIP bit.
+>
+> If it doesn't state who is allowed to write 1, whoever has access to sip
+> can.
+>
+> > I quoted MIP CSR documentation to highlight the fact that only M-mode
+> > SW can set SSIP bit.
+> >
+> > In fact, I had same understanding as you have regarding SSIP bit
+> > until we had MSIP issue in OpenSBI.
+> > (https://github.com/riscv/opensbi/issues/128)
+> >
+> >> and it's not written anywhere that S-mode SW cannot write 1.  In fact
+> >> that text is even under sip, not under mip, so IMO there's no doubt that
+> >> S-mode SW _can_ write 1, and the hypervisor must operate accordingly.
+> >
+> > Without hypervisor support, SIP CSR is nothing but a restricted view of
+> > MIP CSR thats why MIP CSR documentation applies here.
+>
+> But the privileged spec says mip.MSIP is read-only, it cannot be cleared
+> (as in the above OpenSBI issue).  So mip.MSIP and sip.SSIP are already
+> different in that respect, and I don't see how the spec says that S-mode
+> SW cannot set sip.SSIP.
+>
+> (As an aside, why would M-mode even bother using sip and not mip to
+> write 1 to SSIP?).
+>
+> > I think this discussion deserves a Github issue on RISC-V ISA manual.
+>
+> Perhaps, but I think it makes more sense this way.  The question remains
+> of why M-mode is not allowed to write to MSIP/MEIP/MTIP.  My guess is
+> that then MSIP/MEIP/MTIP are simply a read-only view of an external pin,
+> so it simplifies hardware a tiny bit by forcing acks to go through the
+> MMIO registers.
+>
+> > If my interpretation is incorrect then it would be really strange that
+> > HART in S-mode SW can inject IPI to itself by writing 1 to SIP.SSIP bit.
+>
+> Well, it can be useful, for example Windows does it when interrupt
+> handlers want to schedule some work to happen out of interrupt context.
+>  Going through SBI would be unpleasant if it causes an HS-mode trap.
+
+Another way of artificially injecting interrupt would be using interrupt
+controller, where Windows can just write to some pending register of
+interrupt controller.
+
+I have raised a new Github issue on GitHub for clarity on this. You can
+add your comments to this issue as well.
+https://github.com/riscv/riscv-isa-manual/issues/425
+
+Also, I have raised a proposal to support mechanism for external entity
+(such as PLICv2 with virtualization support) to inject virtual interrupts.
+https://github.com/riscv/riscv-isa-manual/issues/429
+
+Regards,
+Anup
