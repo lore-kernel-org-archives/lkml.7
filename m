@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C544C19759
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 00:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF08C19759
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1529B2080C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 00:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63A142080C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:02:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="pjMqlFj9"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="WCROvHiU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390593AbfHBAye (ORCPT
+        id S2390599AbfHBBCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 20:54:34 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:14310 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388445AbfHBAye (ORCPT
+        Thu, 1 Aug 2019 21:02:01 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:27008 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388659AbfHBBCA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 20:54:34 -0400
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x720oTb4020942
-        for <linux-kernel@vger.kernel.org>; Thu, 1 Aug 2019 17:54:33 -0700
+        Thu, 1 Aug 2019 21:02:00 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x720wmRM016312
+        for <linux-kernel@vger.kernel.org>; Thu, 1 Aug 2019 18:01:59 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : mime-version : content-type; s=facebook;
- bh=wSqxGybIKecyyVIsqLECehRQGEaZiy1ZFVNmGqs+abs=;
- b=pjMqlFj9g22sI15tek45YU1Vw21RQIg0DCzhiaS4kPF7fReth2cv1oLWrC8HylBpprso
- c1gPsJaCwZb/nDOPqUVN/guVPgyqIzB39bniUowzitpIJ/pxZMjqsUryy9cMiil50DPl
- AdmIs2Cbd8TxQ5tQfLN4zUvcThV6oywySb0= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2u485k0jkr-4
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 17:54:33 -0700
-Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::130) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Thu, 1 Aug 2019 17:54:31 -0700
+ bh=crcJ24krV4mzoxzFzL1Jhr1fyBYOcOeb0y824pBazZo=;
+ b=WCROvHiUkARVKV4AXmi+h6MXSyTHhaiGD6p/CWlRblBuC8PNAUBhXK7Bb432QdkoyZ+o
+ vJItxrteTSJgN64yjnbvGCZS9KFib7M7AIsqmNfp+8h+X9+NuxJ8fwSOVqYvH7fANVs7
+ 8vHYLLg1T/CEATN9nCLmTRXYdrUWv/FLAj4= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0089730.ppops.net with ESMTP id 2u43h7sqxa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 18:01:59 -0700
+Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 1 Aug 2019 18:01:58 -0700
 Received: by devvm24792.prn1.facebook.com (Postfix, from userid 150176)
-        id 31DA3187F6C4D; Thu,  1 Aug 2019 17:54:29 -0700 (PDT)
+        id 0C260187F7250; Thu,  1 Aug 2019 18:01:57 -0700 (PDT)
 Smtp-Origin-Hostprefix: devvm
 From:   Tao Ren <taoren@fb.com>
 Smtp-Origin-Hostname: devvm24792.prn1.facebook.com
@@ -54,9 +54,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         <openbmc@lists.ozlabs.org>
 CC:     Tao Ren <taoren@fb.com>
 Smtp-Origin-Cluster: prn1c35
-Subject: [PATCH] ARM: dts: aspeed: Add Facebook Wedge40 BMC
-Date:   Thu, 1 Aug 2019 17:54:27 -0700
-Message-ID: <20190802005427.467841-1-taoren@fb.com>
+Subject: [PATCH] ARM: dts: aspeed: Add Facebook Wedge100 BMC
+Date:   Thu, 1 Aug 2019 18:01:55 -0700
+Message-ID: <20190802010155.489238-1-taoren@fb.com>
 X-Mailer: git-send-email 2.17.1
 X-FB-Internal: Safe
 MIME-Version: 1.0
@@ -67,41 +67,41 @@ X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 pri
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908020004
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908020006
 X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add initial version of device tree for Facebook Wedge40 AST2400 BMC
+Add initial version of device tree for Facebook Wedge100 AST2400 BMC
 platform.
 
 Signed-off-by: Tao Ren <taoren@fb.com>
 ---
  arch/arm/boot/dts/Makefile                    |   1 +
- .../boot/dts/aspeed-bmc-facebook-wedge40.dts  | 141 ++++++++++++++++++
- 2 files changed, 142 insertions(+)
- create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts
+ .../boot/dts/aspeed-bmc-facebook-wedge100.dts | 149 ++++++++++++++++++
+ 2 files changed, 150 insertions(+)
+ create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-wedge100.dts
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 39a05a10a2a2..dfc1011eb3f2 100644
+index 39a05a10a2a2..d71504ed82d3 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
 @@ -1273,6 +1273,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
  	aspeed-bmc-facebook-cmm.dtb \
  	aspeed-bmc-facebook-minipack.dtb \
  	aspeed-bmc-facebook-tiogapass.dtb \
-+	aspeed-bmc-facebook-wedge40.dtb \
++	aspeed-bmc-facebook-wedge100.dtb \
  	aspeed-bmc-facebook-yamp.dtb \
  	aspeed-bmc-intel-s2600wf.dtb \
  	aspeed-bmc-inspur-fp5280g2.dtb \
-diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts
+diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-wedge100.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-wedge100.dts
 new file mode 100644
-index 000000000000..764633964ac1
+index 000000000000..ccd700467ea7
 --- /dev/null
-+++ b/arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts
-@@ -0,0 +1,141 @@
++++ b/arch/arm/boot/dts/aspeed-bmc-facebook-wedge100.dts
+@@ -0,0 +1,149 @@
 +// SPDX-License-Identifier: GPL-2.0+
 +// Copyright (c) 2018 Facebook Inc.
 +/dts-v1/;
@@ -109,8 +109,8 @@ index 000000000000..764633964ac1
 +#include "aspeed-g4.dtsi"
 +
 +/ {
-+	model = "Facebook Wedge 40 BMC";
-+	compatible = "facebook,wedge40-bmc", "aspeed,ast2400";
++	model = "Facebook Wedge 100 BMC";
++	compatible = "facebook,wedge100-bmc", "aspeed,ast2400";
 +
 +	aliases {
 +		/*
@@ -139,7 +139,8 @@ index 000000000000..764633964ac1
 +};
 +
 +&wdt2 {
-+	status = "disabled";
++	status = "okay";
++	aspeed,reset-type = "system";
 +};
 +
 +&fmc {
@@ -214,6 +215,13 @@ index 000000000000..764633964ac1
 +
 +&i2c7 {
 +	status = "okay";
++
++	i2c-switch@70 {
++		compatible = "nxp,pca9548";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x70>;
++	};
 +};
 +
 +&i2c8 {
