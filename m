@@ -2,284 +2,108 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE49FC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B12B0C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81A1E21726
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:24:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 839AC21726
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:24:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G2sxycFA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392459AbfHBOYI (ORCPT
+        id S2406636AbfHBOYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 10:24:08 -0400
-Received: from foss.arm.com ([217.140.110.172]:52696 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731067AbfHBOYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 10:24:07 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B06481570;
-        Fri,  2 Aug 2019 07:24:06 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CE5443F575;
-        Fri,  2 Aug 2019 07:24:05 -0700 (PDT)
-Subject: Re: [RFC PATCH] ARM: UNWINDER_FRAME_POINTER implementation for Clang
-To:     Nathan Huckleberry <nhuck@google.com>, linux@armlinux.org.uk
-Cc:     clang-built-linux@googlegroups.com, Tri Vo <trong@google.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20190801231046.105022-1-nhuck@google.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <01222982-4206-9925-0482-639a79384451@arm.com>
-Date:   Fri, 2 Aug 2019 15:24:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 2 Aug 2019 10:24:50 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52950 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731067AbfHBOYt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 10:24:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=jvuzp+6FCROkRR+waxcd/xSBD2jk0LdlEwwlmE/QRVo=; b=G2sxycFAx+YSXemaZWFj5rBoO
+        L5W+suRd87Fzi03i9UbUkz+K/l4OLA7u4vdCzpFKd8kbKkpNT5POJKTjl3Y9NgF+IfuEQiw+Ya9sZ
+        Uz98GhfWAglGYt98RBvfBnca/15T9G/n1hhy4hthNjlrIrfsKUlfX1Lr9suoRAYQ/pICfFJo13kmR
+        L+hbvfVY5BZygvFEilaamnzYAdT/2P4dTNkPPWEPWi3WZyJpk4mE3pZYxvO4hCe5QB9xougEB5c3g
+        IV0U5HMFOk+fqAqk6ui4QqQV5LiDqQxBtFq8kG3bamWa6AZ5dtGBvDFf6uxZiiuQmelcNvOe6qNsg
+        wQg03COuw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1htYU7-0007La-VU; Fri, 02 Aug 2019 14:24:43 +0000
+Date:   Fri, 2 Aug 2019 07:24:43 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Jan Kara <jack@suse.cz>
+Cc:     Michal Hocko <mhocko@kernel.org>, john.hubbard@gmail.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, ceph-devel@vger.kernel.org,
+        devel@driverdev.osuosl.org, devel@lists.orangefs.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org, linux-xfs@vger.kernel.org,
+        netdev@vger.kernel.org, rds-devel@oss.oracle.com,
+        sparclinux@vger.kernel.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org, John Hubbard <jhubbard@nvidia.com>
+Subject: Re: [PATCH 00/34] put_user_pages(): miscellaneous call sites
+Message-ID: <20190802142443.GB5597@bombadil.infradead.org>
+References: <20190802022005.5117-1-jhubbard@nvidia.com>
+ <20190802091244.GD6461@dhcp22.suse.cz>
+ <20190802124146.GL25064@quack2.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20190801231046.105022-1-nhuck@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190802124146.GL25064@quack2.suse.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/08/2019 00:10, Nathan Huckleberry wrote:
-> The stackframe setup when compiled with clang is different.
-> Since the stack unwinder expects the gcc stackframe setup it
-> fails to print backtraces. This patch adds support for the
-> clang stackframe setup.
+On Fri, Aug 02, 2019 at 02:41:46PM +0200, Jan Kara wrote:
+> On Fri 02-08-19 11:12:44, Michal Hocko wrote:
+> > On Thu 01-08-19 19:19:31, john.hubbard@gmail.com wrote:
+> > [...]
+> > > 2) Convert all of the call sites for get_user_pages*(), to
+> > > invoke put_user_page*(), instead of put_page(). This involves dozens of
+> > > call sites, and will take some time.
+> > 
+> > How do we make sure this is the case and it will remain the case in the
+> > future? There must be some automagic to enforce/check that. It is simply
+> > not manageable to do it every now and then because then 3) will simply
+> > be never safe.
+> > 
+> > Have you considered coccinele or some other scripted way to do the
+> > transition? I have no idea how to deal with future changes that would
+> > break the balance though.
 > 
-> Cc: clang-built-linux@googlegroups.com
-> Suggested-by: Tri Vo <trong@google.com>
-> Signed-off-by: Nathan Huckleberry <nhuck@google.com>
-> ---
->   arch/arm/Kconfig.debug   |   4 +-
->   arch/arm/Makefile        |   2 +-
->   arch/arm/lib/backtrace.S | 134 ++++++++++++++++++++++++++++++++++++---
->   3 files changed, 128 insertions(+), 12 deletions(-)
-> 
-> diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-> index 85710e078afb..92fca7463e21 100644
-> --- a/arch/arm/Kconfig.debug
-> +++ b/arch/arm/Kconfig.debug
-> @@ -56,7 +56,7 @@ choice
->   
->   config UNWINDER_FRAME_POINTER
->   	bool "Frame pointer unwinder"
-> -	depends on !THUMB2_KERNEL && !CC_IS_CLANG
-> +	depends on !THUMB2_KERNEL
->   	select ARCH_WANT_FRAME_POINTERS
->   	select FRAME_POINTER
->   	help
-> @@ -1872,7 +1872,7 @@ config DEBUG_UNCOMPRESS
->   	  When this option is set, the selected DEBUG_LL output method
->   	  will be re-used for normal decompressor output on multiplatform
->   	  kernels.
-> -	
-> +
->   
->   config UNCOMPRESS_INCLUDE
->   	string
-> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-> index c3624ca6c0bc..a593d9c4e18a 100644
-> --- a/arch/arm/Makefile
-> +++ b/arch/arm/Makefile
-> @@ -36,7 +36,7 @@ KBUILD_CFLAGS	+= $(call cc-option,-mno-unaligned-access)
->   endif
->   
->   ifeq ($(CONFIG_FRAME_POINTER),y)
-> -KBUILD_CFLAGS	+=-fno-omit-frame-pointer -mapcs -mno-sched-prolog
-> +KBUILD_CFLAGS	+=-fno-omit-frame-pointer $(call cc-option,-mapcs,) $(call cc-option,-mno-sched-prolog,)
->   endif
->   
->   ifeq ($(CONFIG_CPU_BIG_ENDIAN),y)
-> diff --git a/arch/arm/lib/backtrace.S b/arch/arm/lib/backtrace.S
-> index 1d5210eb4776..fd64eec9f6ae 100644
-> --- a/arch/arm/lib/backtrace.S
-> +++ b/arch/arm/lib/backtrace.S
-> @@ -14,10 +14,7 @@
->   @ fp is 0 or stack frame
->   
->   #define frame	r4
-> -#define sv_fp	r5
-> -#define sv_pc	r6
->   #define mask	r7
-> -#define offset	r8
->   
->   ENTRY(c_backtrace)
->   
-> @@ -25,7 +22,8 @@ ENTRY(c_backtrace)
->   		ret	lr
->   ENDPROC(c_backtrace)
->   #else
-> -		stmfd	sp!, {r4 - r8, lr}	@ Save an extra register so we have a location...
-> +		stmfd   sp!, {r4 - r8, fp, lr}	@ Save an extra register
+> Yeah, that's why I've been suggesting at LSF/MM that we may need to create
+> a gup wrapper - say vaddr_pin_pages() - and track which sites dropping
+> references got converted by using this wrapper instead of gup. The
+> counterpart would then be more logically named as unpin_page() or whatever
+> instead of put_user_page().  Sure this is not completely foolproof (you can
+> create new callsite using vaddr_pin_pages() and then just drop refs using
+> put_page()) but I suppose it would be a high enough barrier for missed
+> conversions... Thoughts?
 
-Note that the Procedure Call Standard for EABI requires that SP be 
-8-byte-aligned at a public interface. Pushing an odd number of registers 
-here looks like it will make the subsequent calls to dump_backtrace_* 
-and printk violate that condition.
-
-Robin.
-
-> +						@ so we have a location..
->   		movs	frame, r0		@ if frame pointer is zero
->   		beq	no_frame		@ we have no stack frames
->   
-> @@ -35,11 +33,119 @@ ENDPROC(c_backtrace)
->    THUMB(		orreq	mask, #0x03		)
->   		movne	mask, #0		@ mask for 32-bit
->   
-> -1:		stmfd	sp!, {pc}		@ calculate offset of PC stored
-> -		ldr	r0, [sp], #4		@ by stmfd for this CPU
-> -		adr	r1, 1b
-> -		sub	offset, r0, r1
->   
-> +#if defined(CONFIG_CC_IS_CLANG)
-> +/*
-> + * Clang does not store pc or sp in function prologues
-> + * 		so we don't know exactly where the function
-> + * 		starts.
-> + * We can treat the current frame's lr as the saved pc and the
-> + * 		preceding frame's lr as the lr, but we can't
-> + * 		trace the most recent call.
-> + * Inserting a false stack frame allows us to reference the
-> + * 		function called last in the stacktrace.
-> + * If the call instruction was a bl we can look at the callers
-> + * 		branch instruction to calculate the saved pc.
-> + * We can recover the pc in most cases, but in cases such as
-> + * 		calling function pointers we cannot. In this
-> + * 		case, default to using the lr. This will be
-> + * 		some address in the function, but will not
-> + * 		be the function start.
-> + * Unfortunately due to the stack frame layout we can't dump
-> + *              r0 - r3, but these are less frequently saved.
-> + *
-> + * Stack frame layout:
-> + *             <larger addresses>
-> + *             saved lr
-> + *    frame => saved fp
-> + *             optionally saved caller registers (r4 - r10)
-> + *             optionally saved arguments (r0 - r3)
-> + *             <top of stack frame>
-> + *             <smaller addressses>
-> + *
-> + * Functions start with the following code sequence:
-> + * corrected pc =>  stmfd sp!, {..., fp, lr}
-> + *		    add fp, sp, #x
-> + *		    stmfd sp!, {r0 - r3} (optional)
-> + */
-> +#define sv_fp	r5
-> +#define sv_pc	r6
-> +#define sv_lr   r8
-> +		add     frame, sp, #20          @ switch to false frame
-> +for_each_frame:	tst	frame, mask		@ Check for address exceptions
-> +		bne	no_frame
-> +
-> +1001:		ldr	sv_pc, [frame, #4]	@ get saved 'pc'
-> +1002:		ldr	sv_fp, [frame, #0]	@ get saved fp
-> +
-> +		teq     sv_fp, #0               @ make sure next frame exists
-> +		beq     no_frame
-> +
-> +1003:		ldr     sv_lr, [sv_fp, #4]      @ get saved lr from next frame
-> +
-> +		//try to find function start
-> +		ldr     r0, [sv_lr, #-4]        @ get call instruction
-> +		ldr     r3, .Ldsi+8
-> +		and     r2, r3, r0              @ is this a bl call
-> +		teq     r2, r3
-> +		bne     finished_setup          @ give up if it's not
-> +		and     r0, #0xffffff           @ get call offset 24-bit int
-> +		lsl     r0, r0, #8              @ sign extend offset
-> +		asr     r0, r0, #8
-> +		ldr     sv_pc, [sv_fp, #4]      @ get lr address
-> +		add     sv_pc, sv_pc, #-4	@ get call instruction address
-> +		add     sv_pc, sv_pc, #8        @ take care of prefetch
-> +		add     sv_pc, sv_pc, r0, lsl #2 @ find function start
-> +		b       finished_setup
-> +
-> +finished_setup:
-> +
-> +		bic	sv_pc, sv_pc, mask	@ mask PC/LR for the mode
-> +
-> +1004:		mov     r0, sv_pc
-> +
-> +		mov     r1, sv_lr
-> +		mov	r2, frame
-> +		bic	r1, r1, mask		@ mask PC/LR for the mode
-> +		bl	dump_backtrace_entry
-> +
-> +1005:		ldr	r1, [sv_pc, #0]		@ if stmfd sp!, {..., fp, lr}
-> +		ldr	r3, .Ldsi		@ instruction exists,
-> +		teq	r3, r1, lsr #11
-> +		ldr     r0, [frame]             @ locals are stored in
-> +						@ the preceding frame
-> +		subeq	r0, r0, #4
-> +		bleq	dump_backtrace_stm	@ dump saved registers
-> +
-> +		teq	sv_fp, #0		@ zero saved fp means
-> +		beq	no_frame		@ no further frames
-> +
-> +		cmp	sv_fp, frame		@ next frame must be
-> +		mov	frame, sv_fp		@ above the current frame
-> +		bhi	for_each_frame
-> +
-> +1006:		adr	r0, .Lbad
-> +		mov	r1, frame
-> +		bl	printk
-> +no_frame:	ldmfd	sp!, {r4 - r8, fp, pc}
-> +ENDPROC(c_backtrace)
-> +		.pushsection __ex_table,"a"
-> +		.align	3
-> +		.long	1001b, 1006b
-> +		.long	1002b, 1006b
-> +		.long	1003b, 1006b
-> +		.long	1004b, 1006b
-> +		.popsection
-> +
-> +.Lbad:		.asciz	"Backtrace aborted due to bad frame pointer <%p>\n"
-> +		.align
-> +.Ldsi:		.word	0xe92d4800 >> 11	@ stmfd sp!, {... fp, lr}
-> +		.word	0xe92d0000 >> 11	@ stmfd sp!, {}
-> +		.word   0x0b000000              @ bl if these bits are set
-> +
-> +ENDPROC(c_backtrace)
-> +
-> +#else
->   /*
->    * Stack frame layout:
->    *             optionally saved caller registers (r4 - r10)
-> @@ -55,6 +161,15 @@ ENDPROC(c_backtrace)
->    *                  stmfd sp!, {r0 - r3} (optional)
->    * corrected pc =>  stmfd sp!, {..., fp, ip, lr, pc}
->    */
-> +#define sv_fp	r5
-> +#define sv_pc	r6
-> +#define offset	r8
-> +
-> +1:		stmfd	sp!, {pc}		@ calculate offset of PC stored
-> +		ldr	r0, [sp], #4		@ by stmfd for this CPU
-> +		adr	r1, 1b
-> +		sub	offset, r0, r1
-> +
->   for_each_frame:	tst	frame, mask		@ Check for address exceptions
->   		bne	no_frame
->   
-> @@ -98,7 +213,7 @@ for_each_frame:	tst	frame, mask		@ Check for address exceptions
->   1006:		adr	r0, .Lbad
->   		mov	r1, frame
->   		bl	printk
-> -no_frame:	ldmfd	sp!, {r4 - r8, pc}
-> +no_frame:	ldmfd	sp!, {r4 - r8, fp, pc}
->   ENDPROC(c_backtrace)
->   		
->   		.pushsection __ex_table,"a"
-> @@ -115,3 +230,4 @@ ENDPROC(c_backtrace)
->   		.word	0xe92d0000 >> 11	@ stmfd sp!, {}
->   
->   #endif
-> +#endif
-> 
+I think the API we really need is get_user_bvec() / put_user_bvec(),
+and I know Christoph has been putting some work into that.  That avoids
+doing refcount operations on hundreds of pages if the page in question is
+a huge page.  Once people are switched over to that, they won't be tempted
+to manually call put_page() on the individual constituent pages of a bvec.
