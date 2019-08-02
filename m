@@ -2,120 +2,172 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63357C0650F
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 00:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B90AC41514
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 00:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 366962087E
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 00:34:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E430A2087E
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 00:35:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="RVsqMgpn"
+	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="mSZhvIMy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392754AbfHCAe0 (ORCPT
+        id S2392773AbfHCAf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 20:34:26 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:43720 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390153AbfHCAeZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 20:34:25 -0400
-Received: by mail-qk1-f194.google.com with SMTP id m14so30492817qka.10
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 17:34:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LLAKxpLqE2JOG7T+4J6lk0YiDfUhZaobxgsE/XldIXY=;
-        b=RVsqMgpnRHWgwALhBHcVBGnndl/VzSoDlmqfgWib57Zn0jcxSkd4XD4yxzObfMd0YS
-         Fqn03M75MC1Tog9d1nkglRUddOa+o9mJlbW/oeA31Spb7WXXefVfqkZrLoYrPA0PxhfA
-         30hljXRwqx54SDSSv/8sA37zDBP1jZub9MQaa9+GHURn2RwEBWGHDY2WZq3KSTAPh6SD
-         7sup0nhV9TM1BplSL6IiZHj3JS+uNFxQ59lcN9P0xyu+Qsa3rKayi3yNJXjMYerwil57
-         5wO20fH9vM36kQQN1SaZW9XjdJdRMbLN4g2ehDEs1kmj4hz1djUrdcUCBJT+ug/e++GJ
-         4Zrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LLAKxpLqE2JOG7T+4J6lk0YiDfUhZaobxgsE/XldIXY=;
-        b=ax88qjZItufl+b6h6d5qc7TSMqm99Zpcq0ymOnXrTR3RhKLA6oUPVG/wQz+0BKomeN
-         GrM7h4RyiyhTTZwMYk0ndEO+zwTeU60dhvgPpWa9fRSNdDe34R8qYunUPJhIqrg2h+gJ
-         +VP6CFhYTlb/JwXDXY7DOGjnTJ94QXsCbk/LCGxS7s7rr3C/vODdULOOZbcRQbsj6mc9
-         2ZfqZl63azGt8kUBB9Iepf5tt4aJAmV1R4bPkSLRLAEjUthgV4G08CaWYPTAWk9OXo2s
-         gsAjhgS7m8EY7XvXMObodUwPWBrt+PbHixW9cX9pm5/FUDOF2M0GAEAdLHZ5hwKM2Tu+
-         b54Q==
-X-Gm-Message-State: APjAAAWZrtcy10c6vXaFbTe1f43uy3T2JQlBVvCyDsT7AOumf3uzE4KT
-        BTN1klF2LvQbP0KwjncQhVU1KQ==
-X-Google-Smtp-Source: APXvYqzjSg+1MrgBmSDT/gk953+I4OZ78rE7huZlzArJoL7LkO6N1WmtVgfdsM5tvVCVXs4eUpsfXw==
-X-Received: by 2002:a37:9506:: with SMTP id x6mr95149436qkd.107.1564792464729;
-        Fri, 02 Aug 2019 17:34:24 -0700 (PDT)
-Received: from ovpn-120-69.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id x46sm45986742qtx.96.2019.08.02.17.34.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 02 Aug 2019 17:34:23 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     will@kernel.org, catalin.marinas@arm.com
-Cc:     rrichter@cavium.com, robin.murphy@arm.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH v2] arm64/prefetch: fix a -Wtype-limits warning
-Date:   Fri,  2 Aug 2019 20:33:58 -0400
-Message-Id: <20190803003358.992-1-cai@lca.pw>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
+        Fri, 2 Aug 2019 20:35:27 -0400
+Received: from aibo.runbox.com ([91.220.196.211]:32998 "EHLO aibo.runbox.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390153AbfHCAf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 20:35:26 -0400
+X-Greylist: delayed 2543 seconds by postgrey-1.27 at vger.kernel.org; Fri, 02 Aug 2019 20:35:25 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
+         s=rbselector1; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
+        References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date;
+        bh=TazsGP7cxXXZSH2JMdVr/ycQv/4+Lei21hIYlZrb6xM=; b=mSZhvIMybaEUGW2OxkQfP8J5QB
+        igMTDE0QXHFlO3lb0R+yQULAbE3S+M1bMoVYT8uGb1mWkLiRm7XegpBzkz8DlRLMY5UCGefdlqo2f
+        0mgXs1D/giWOKJlfyzm8+shV6sYdI6cmF6cMDnoILREV66eFRjMRe3V+aOMe7rdAizXGE2WDZ2xiF
+        vxTNK6a/awBRFGvn2hKDUkVWjdxbxfZ/WEm2Ay+6o5BvE2QDbXmXxPEiwplHhhQ+/6nq2IaTprvkF
+        u2uz+j80/xZ338ZrqqrfuFKEHrWmo0me2j0EMZFuVgAITbhu7NFvsOV4B4qlC1vnvSiXlhkDcMGiu
+        MFQ64LQw==;
+Received: from [10.9.9.203] (helo=mailfront21.runbox)
+        by mailtransmit02.runbox with esmtp (Exim 4.86_2)
+        (envelope-from <m.v.b@runbox.com>)
+        id 1hthM4-0003Go-ED; Sat, 03 Aug 2019 01:53:00 +0200
+Received: by mailfront21.runbox with esmtpsa  (uid:769847 )  (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.90_1)
+        id 1hthLu-0002Rb-L9; Sat, 03 Aug 2019 01:52:51 +0200
+Date:   Fri, 2 Aug 2019 19:52:43 -0400
+From:   "M. Vefa Bicakci" <m.v.b@runbox.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-kbuild@vger.kernel.org, joonas.kylmala@iki.fi,
+        ulfalizer@gmail.com, linux-stable <stable@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kconfig: fix missing choice values in auto.conf
+Message-ID: <20190802195243.09a87651@runbox.com>
+In-Reply-To: <20190712060709.20609-1-yamada.masahiro@socionext.com>
+References: <20190712060709.20609-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit d5370f754875 ("arm64: prefetch: add alternative pattern for
-CPUs without a prefetcher") introduced MIDR_IS_CPU_MODEL_RANGE() to be
-used in has_no_hw_prefetch() with rv_min=0 which generates a compilation
-warning from GCC,
+Hello,
 
-In file included from ./arch/arm64/include/asm/cache.h:8,
-                from ./include/linux/cache.h:6,
-                from ./include/linux/printk.h:9,
-                from ./include/linux/kernel.h:15,
-                from ./include/linux/cpumask.h:10,
-                from arch/arm64/kernel/cpufeature.c:11:
-arch/arm64/kernel/cpufeature.c: In function 'has_no_hw_prefetch':
-./arch/arm64/include/asm/cputype.h:59:26: warning: comparison of
-unsigned expression >= 0 is always true [-Wtype-limits]
- _model == (model) && rv >= (rv_min) && rv <= (rv_max);  \
-                         ^~
-arch/arm64/kernel/cpufeature.c:889:9: note: in expansion of macro
-'MIDR_IS_CPU_MODEL_RANGE'
- return MIDR_IS_CPU_MODEL_RANGE(midr, MIDR_THUNDERX,
-        ^~~~~~~~~~~~~~~~~~~~~~~
+> conf_write() must be changed accordingly. Currently, it clears
+> SYMBOL_WRITE after the symbol is written into the .config file. This
+> is needed to prevent it from writing the same symbol multiple times in
+> case the symbol is declared in two or more locations. I added the new
+> flag SYMBOL_WRITTEN, to track the symbols that have been written.
+[snip]
+> diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
+> index cbb6efa4a5a6..e0972b255aac 100644
+> --- a/scripts/kconfig/confdata.c
+> +++ b/scripts/kconfig/confdata.c
+[snip]
+> @@ -903,7 +904,7 @@ int conf_write(const char *name)
+>  				fprintf(out, "\n");
+>  				need_newline = false;
+>  			}
+> -			sym->flags &= ~SYMBOL_WRITE;
+> +			sym->flags |= SYMBOL_WRITTEN;
 
-Fix it by making "rv" a "s32".
+The SYMBOL_WRITTEN flag is never cleared after being set in this
+function, which unfortunately causes data loss to occur when a user
+starts xconfig, gconfig, or nconfig and saves a config file more than
+once. Every save operation after the first one causes the saved .config
+file to contain only comments.
 
-Signed-off-by: Qian Cai <cai@lca.pw>
+I am appending a patch that resolves this issue. The patch is a bit
+ugly because of the code duplication, but it fixes this bug. (I have
+lightly tested the patch.) Even if the patch is not merged, I would
+appreciate it if this bug could be fixed.
+
+Thank you,
+
+Vefa
+
+=== 8< === Patch Follows === >8 ===
+
+From: "M. Vefa Bicakci" <m.v.b@runbox.com>
+Date: Fri, 2 Aug 2019 17:44:40 -0400
+Subject: [PATCH] kconfig: Clear "written" flag to avoid data loss
+
+Prior to this commit, starting nconfig, xconfig or gconfig, and saving
+the .config file more than once caused data loss, where a .config file
+that contained only comments would be written to disk starting from the
+second save operation.
+
+This bug manifests itself because the SYMBOL_WRITTEN flag is never
+cleared after the first call to conf_write, and subsequent calls to
+conf_write then skip all of the configuration symbols due to the
+SYMBOL_WRITTEN flag being set.
+
+This commit resolves this issue by clearing the SYMBOL_WRITTEN flag
+from all symbols before conf_write returns.
+
+Fixes: 8e2442a5f86e ("kconfig: fix missing choice values in auto.conf")
+Cc: linux-stable <stable@vger.kernel.org> # 4.19+
+Signed-off-by: M. Vefa Bicakci <m.v.b@runbox.com>
 ---
+ scripts/kconfig/confdata.c | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-v2: Use "s32" for "rv", so "variant 0/revision 0" can be covered.
-
- arch/arm64/include/asm/cputype.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/include/asm/cputype.h b/arch/arm64/include/asm/cputype.h
-index e7d46631cc42..d52fe8651c2d 100644
---- a/arch/arm64/include/asm/cputype.h
-+++ b/arch/arm64/include/asm/cputype.h
-@@ -54,7 +54,7 @@
- #define MIDR_IS_CPU_MODEL_RANGE(midr, model, rv_min, rv_max)		\
- ({									\
- 	u32 _model = (midr) & MIDR_CPU_MODEL_MASK;			\
--	u32 rv = (midr) & (MIDR_REVISION_MASK | MIDR_VARIANT_MASK);	\
-+	s32 rv = (midr) & (MIDR_REVISION_MASK | MIDR_VARIANT_MASK);	\
- 									\
- 	_model == (model) && rv >= (rv_min) && rv <= (rv_max);		\
-  })
+diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
+index 1134892599da..24fe0c851e8c 100644
+--- a/scripts/kconfig/confdata.c
++++ b/scripts/kconfig/confdata.c
+@@ -840,6 +840,35 @@ int conf_write_defconfig(const char *filename)
+ 	return 0;
+ }
+ 
++static void conf_clear_written_flag(void)
++{
++	struct menu *menu;
++	struct symbol *sym;
++
++	menu = rootmenu.list;
++	while (menu) {
++		sym = menu->sym;
++		if (sym && (sym->flags & SYMBOL_WRITTEN))
++			sym->flags &= ~SYMBOL_WRITTEN;
++
++		if (menu->list) {
++			menu = menu->list;
++			continue;
++		}
++
++		if (menu->next) {
++			menu = menu->next;
++		} else {
++			while ((menu = menu->parent)) {
++				if (menu->next) {
++					menu = menu->next;
++					break;
++				}
++			}
++		}
++	}
++}
++
+ int conf_write(const char *name)
+ {
+ 	FILE *out;
+@@ -930,6 +959,8 @@ int conf_write(const char *name)
+ 	}
+ 	fclose(out);
+ 
++	conf_clear_written_flag();
++
+ 	if (*tmpname) {
+ 		if (is_same(name, tmpname)) {
+ 			conf_message("No change to %s", name);
 -- 
-2.20.1 (Apple Git-117)
+2.21.0
 
