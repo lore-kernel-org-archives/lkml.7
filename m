@@ -4,51 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E47C32753
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5B9C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4DD820679
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A4A320679
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:50:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739454;
-	bh=3rJFkMkaF6i6+N+CP0PMLPJyRCQ20v0GyX5nZVhhU28=;
+	s=default; t=1564739459;
+	bh=NM9zABleW9StZIplu4nj7djsdSzyIEkNozYMoBSBTMA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FK53si2faKg5mBMCbEFqTsfBnTUy0NY0o6r5FMhi5bapUD1T2oVHCDlUB/4FpkAMX
-	 hxSoGRE1rMS+dg9Vptvq+sMTUxBTA2Ck8/S0IFzZ8GZQlkcr9eQS0wTvha0/AT0c3Q
-	 vQOWAp1AdpgFBL0IDOkpD0+UnHDmoWPtAJF0gEtE=
+	b=Gxts3i3xFwJ/p0p1olk0K/TjV6l0PYXl7SokO6rZnsle/jS8lrSF4UksHxmQkjaZO
+	 yXOsdqR/OjdippL6v4ymg7arE2DURACFlKgu41yRCB9M1MXue3PqAd83RXpJayDzbJ
+	 nDEPSvO33Jw3BsJLemUqDiIRfmmOvFktRHSUJdJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405812AbfHBJux (ORCPT
+        id S2405397AbfHBJpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:50:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49042 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:45:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391477AbfHBJpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:45:19 -0400
+        id S2405382AbfHBJpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:45:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 682782087E;
-        Fri,  2 Aug 2019 09:45:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0613F20679;
+        Fri,  2 Aug 2019 09:45:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739118;
-        bh=3rJFkMkaF6i6+N+CP0PMLPJyRCQ20v0GyX5nZVhhU28=;
+        s=default; t=1564739108;
+        bh=NM9zABleW9StZIplu4nj7djsdSzyIEkNozYMoBSBTMA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G5/O5LZhr8DI3kyUMypb2MFOY3WyXctE3UydQwgmVUaIyxwNKjhOB8P0/AavoIgvs
-         6UiLr8YmvX6OIRiHbvKR0LjM0cKYplybhVG7S7qoz+jxzhWqQwOJKqHFJzD0PkYW1Q
-         vFj7F7iaKQnXeb6TwqN47mTF1fbpZe4b/NIpGWrc=
+        b=KpPJcGD0s36foGDsDzu+7XfDZAQSkW7FkH4CD/fHfuUMqQvUJoHm9KLsemi9A9Hf7
+         6wAk65A9Vi6gzeeMHZ4w/vvE25j0U79s1tgrs1J/95K4TVyyeLYnI06OXTMwKE53vw
+         qXrs+Auj5MNPLlmDQ1S2eFsI0qwQiGdz3MQMHG+o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Denis Efremov <efremov@ispras.ru>,
-        Willy Tarreau <w@1wt.eu>,
+        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Jane Chu <jane.chu@oracle.com>, Jeff Moyer <jmoyer@redhat.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Toshi Kani <toshi.kani@hpe.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 106/223] floppy: fix invalid pointer dereference in drive_name
-Date:   Fri,  2 Aug 2019 11:35:31 +0200
-Message-Id: <20190802092246.115916000@linuxfoundation.org>
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+Subject: [PATCH 4.9 102/223] libnvdimm/pfn: fix fsdax-mode namespace info-block zero-fields
+Date:   Fri,  2 Aug 2019 11:35:27 +0200
+Message-Id: <20190802092245.820051507@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -61,77 +75,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9b04609b784027968348796a18f601aed9db3789 ]
+From: Dan Williams <dan.j.williams@intel.com>
 
-This fixes the invalid pointer dereference in the drive_name function of
-the floppy driver.
+commit 7e3e888dfc138089f4c15a81b418e88f0978f744 upstream.
 
-The native_format field of the struct floppy_drive_params is used as
-floppy_type array index in the drive_name function.  Thus, the field
-should be checked the same way as the autodetect field.
+At namespace creation time there is the potential for the "expected to
+be zero" fields of a 'pfn' info-block to be filled with indeterminate
+data.  While the kernel buffer is zeroed on allocation it is immediately
+overwritten by nd_pfn_validate() filling it with the current contents of
+the on-media info-block location.  For fields like, 'flags' and the
+'padding' it potentially means that future implementations can not rely on
+those fields being zero.
 
-To trigger the bug, one could use a value out of range and set the drive
-parameters with the FDSETDRVPRM ioctl.  Next, FDGETDRVTYP ioctl should
-be used to call the drive_name.  A floppy disk is not required to be
-inserted.
+In preparation to stop using the 'start_pad' and 'end_trunc' fields for
+section alignment, arrange for fields that are not explicitly
+initialized to be guaranteed zero.  Bump the minor version to indicate
+it is safe to assume the 'padding' and 'flags' are zero.  Otherwise,
+this corruption is expected to benign since all other critical fields
+are explicitly initialized.
 
-CAP_SYS_ADMIN is required to call FDSETDRVPRM.
+Note The cc: stable is about spreading this new policy to as many
+kernels as possible not fixing an issue in those kernels.  It is not
+until the change titled "libnvdimm/pfn: Stop padding pmem namespaces to
+section alignment" where this improper initialization becomes a problem.
+So if someone decides to backport "libnvdimm/pfn: Stop padding pmem
+namespaces to section alignment" (which is not tagged for stable), make
+sure this pre-requisite is flagged.
 
-The patch adds the check for a value of the native_format field to be in
-the '0 <= x < ARRAY_SIZE(floppy_type)' range of the floppy_type array
-indices.
-
-The bug was found by syzkaller.
-
-Signed-off-by: Denis Efremov <efremov@ispras.ru>
-Tested-by: Willy Tarreau <w@1wt.eu>
+Link: http://lkml.kernel.org/r/156092356065.979959.6681003754765958296.stgit@dwillia2-desk3.amr.corp.intel.com
+Fixes: 32ab0a3f5170 ("libnvdimm, pmem: 'struct page' for pmem")
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Tested-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>	[ppc64]
+Cc: <stable@vger.kernel.org>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Jane Chu <jane.chu@oracle.com>
+Cc: Jeff Moyer <jmoyer@redhat.com>
+Cc: Jérôme Glisse <jglisse@redhat.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Logan Gunthorpe <logang@deltatee.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Toshi Kani <toshi.kani@hpe.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Wei Yang <richardw.yang@linux.intel.com>
+Cc: Jason Gunthorpe <jgg@mellanox.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/block/floppy.c |   11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
 
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -3384,7 +3384,8 @@ static int fd_getgeo(struct block_device
- 	return 0;
+---
+ drivers/nvdimm/dax_devs.c |    2 +-
+ drivers/nvdimm/pfn.h      |    1 +
+ drivers/nvdimm/pfn_devs.c |   18 +++++++++++++++---
+ 3 files changed, 17 insertions(+), 4 deletions(-)
+
+--- a/drivers/nvdimm/dax_devs.c
++++ b/drivers/nvdimm/dax_devs.c
+@@ -118,7 +118,7 @@ int nd_dax_probe(struct device *dev, str
+ 	nvdimm_bus_unlock(&ndns->dev);
+ 	if (!dax_dev)
+ 		return -ENOMEM;
+-	pfn_sb = devm_kzalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
++	pfn_sb = devm_kmalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
+ 	nd_pfn->pfn_sb = pfn_sb;
+ 	rc = nd_pfn_validate(nd_pfn, DAX_SIG);
+ 	dev_dbg(dev, "%s: dax: %s\n", __func__,
+--- a/drivers/nvdimm/pfn.h
++++ b/drivers/nvdimm/pfn.h
+@@ -36,6 +36,7 @@ struct nd_pfn_sb {
+ 	__le32 end_trunc;
+ 	/* minor-version-2 record the base alignment of the mapping */
+ 	__le32 align;
++	/* minor-version-3 guarantee the padding and flags are zero */
+ 	u8 padding[4000];
+ 	__le64 checksum;
+ };
+--- a/drivers/nvdimm/pfn_devs.c
++++ b/drivers/nvdimm/pfn_devs.c
+@@ -349,6 +349,15 @@ struct device *nd_pfn_create(struct nd_r
+ 	return dev;
  }
  
--static bool valid_floppy_drive_params(const short autodetect[8])
-+static bool valid_floppy_drive_params(const short autodetect[8],
-+		int native_format)
++/**
++ * nd_pfn_validate - read and validate info-block
++ * @nd_pfn: fsdax namespace runtime state / properties
++ * @sig: 'devdax' or 'fsdax' signature
++ *
++ * Upon return the info-block buffer contents (->pfn_sb) are
++ * indeterminate when validation fails, and a coherent info-block
++ * otherwise.
++ */
+ int nd_pfn_validate(struct nd_pfn *nd_pfn, const char *sig)
  {
- 	size_t floppy_type_size = ARRAY_SIZE(floppy_type);
- 	size_t i = 0;
-@@ -3395,6 +3396,9 @@ static bool valid_floppy_drive_params(co
- 			return false;
- 	}
+ 	u64 checksum, offset;
+@@ -486,7 +495,7 @@ int nd_pfn_probe(struct device *dev, str
+ 	nvdimm_bus_unlock(&ndns->dev);
+ 	if (!pfn_dev)
+ 		return -ENOMEM;
+-	pfn_sb = devm_kzalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
++	pfn_sb = devm_kmalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
+ 	nd_pfn = to_nd_pfn(pfn_dev);
+ 	nd_pfn->pfn_sb = pfn_sb;
+ 	rc = nd_pfn_validate(nd_pfn, PFN_SIG);
+@@ -584,7 +593,7 @@ static int nd_pfn_init(struct nd_pfn *nd
+ 	u64 checksum;
+ 	int rc;
  
-+	if (native_format < 0 || native_format >= floppy_type_size)
-+		return false;
+-	pfn_sb = devm_kzalloc(&nd_pfn->dev, sizeof(*pfn_sb), GFP_KERNEL);
++	pfn_sb = devm_kmalloc(&nd_pfn->dev, sizeof(*pfn_sb), GFP_KERNEL);
+ 	if (!pfn_sb)
+ 		return -ENOMEM;
+ 
+@@ -593,11 +602,14 @@ static int nd_pfn_init(struct nd_pfn *nd
+ 		sig = DAX_SIG;
+ 	else
+ 		sig = PFN_SIG;
 +
- 	return true;
- }
+ 	rc = nd_pfn_validate(nd_pfn, sig);
+ 	if (rc != -ENODEV)
+ 		return rc;
  
-@@ -3524,7 +3528,8 @@ static int fd_locked_ioctl(struct block_
- 		SUPBOUND(size, strlen((const char *)outparam) + 1);
- 		break;
- 	case FDSETDRVPRM:
--		if (!valid_floppy_drive_params(inparam.dp.autodetect))
-+		if (!valid_floppy_drive_params(inparam.dp.autodetect,
-+				inparam.dp.native_format))
- 			return -EINVAL;
- 		*UDP = inparam.dp;
- 		break;
-@@ -3723,7 +3728,7 @@ static int compat_setdrvprm(int drive,
- 		return -EPERM;
- 	if (copy_from_user(&v, arg, sizeof(struct compat_floppy_drive_params)))
- 		return -EFAULT;
--	if (!valid_floppy_drive_params(v.autodetect))
-+	if (!valid_floppy_drive_params(v.autodetect, v.native_format))
- 		return -EINVAL;
- 	mutex_lock(&floppy_mutex);
- 	UDP->cmos = v.cmos;
+ 	/* no info block, do init */;
++	memset(pfn_sb, 0, sizeof(*pfn_sb));
++
+ 	nd_region = to_nd_region(nd_pfn->dev.parent);
+ 	if (nd_region->ro) {
+ 		dev_info(&nd_pfn->dev,
+@@ -673,7 +685,7 @@ static int nd_pfn_init(struct nd_pfn *nd
+ 	memcpy(pfn_sb->uuid, nd_pfn->uuid, 16);
+ 	memcpy(pfn_sb->parent_uuid, nd_dev_to_uuid(&ndns->dev), 16);
+ 	pfn_sb->version_major = cpu_to_le16(1);
+-	pfn_sb->version_minor = cpu_to_le16(2);
++	pfn_sb->version_minor = cpu_to_le16(3);
+ 	pfn_sb->start_pad = cpu_to_le32(start_pad);
+ 	pfn_sb->end_trunc = cpu_to_le32(end_trunc);
+ 	pfn_sb->align = cpu_to_le32(nd_pfn->align);
 
 
