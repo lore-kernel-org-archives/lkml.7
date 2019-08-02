@@ -2,55 +2,53 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDB9C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8EDC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93BB2206A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B560216C8
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:48:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739319;
-	bh=A8kKjbFSnEC+/QBKfFa7P86LKhVsYi0K7r+xJTwSqLM=;
+	s=default; t=1564739323;
+	bh=DRqAADBqLcXtLVgtN0JsMSaAwPoqmAN3shHdNwWATwc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BhJ/AlXhN2Y21q/Re2nkxYojQQ1YRpZnqvLRCtWdIr4hseASQ/btJOW63oi2xiprw
-	 zmBUBo8fhS6qY1g6X7pDVPWwngXecwnGQYWJhYDj2nW8wXJcQH4Xqx0o4dWi7N8hAr
-	 1zKa0MZ+m9VrJyfFoxGA9rFokfehE6IXXn/Ijdx0=
+	b=s0zskrfXbkZbttEeRHjJXNzu/1jFT/YRERxgAtswQGDc02KwLe+ITLadMB961ItI/
+	 82KENTj9r8SfnKTQg1Mus9lfPFQK4pLkhHlYsMOt0uU84mx3JHhGcz4IU5MH16I+8o
+	 GAdh+gqHjeByRO3GxxJFLWNrcfPPq5xQfFIf54zE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405864AbfHBJsi (ORCPT
+        id S2405884AbfHBJsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:48:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52954 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:48:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405752AbfHBJrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:47:55 -0400
+        id S2390716AbfHBJsj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:48:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02E8B2086A;
-        Fri,  2 Aug 2019 09:47:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94ABA2086A;
+        Fri,  2 Aug 2019 09:48:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739274;
-        bh=A8kKjbFSnEC+/QBKfFa7P86LKhVsYi0K7r+xJTwSqLM=;
+        s=default; t=1564739318;
+        bh=DRqAADBqLcXtLVgtN0JsMSaAwPoqmAN3shHdNwWATwc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UVxj8BTTh+ol0OuL1YyleSdsLQssQYmw/1yhvPBhVI8w/rBO0AJNCMDuB32kCOcoM
-         Rqwu+2BN0M+/QVRLu2Vh5oTKRBBJYsxvc4a6htxDrIW9C61yHIdYiQ5hp0dIHhfMwW
-         6CUGp3kqZwBd3Ia3k3G2oOOzzWGlW6zlQD7L8QVI=
+        b=Z5+QQ17FH/h4hyBjeqOIbr+xeWcHjJoB6db9EmWaS1CNNAX6QGNHXz9nmHoixj9D1
+         ivdWMbPlobhXy89mGJn+cQ/gFwKMcs94fNfc1na+ib7gbDQC3bAJgOzaAaOBSIUWyU
+         ccT2VUP8Ob9bZZo14FcPEb/o2IeXoweKzmtm1l70=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        syzbot+e5be16aa39ad6e755391@syzkaller.appspotmail.com
-Subject: [PATCH 4.9 146/223] bonding: validate ip header before check IPPROTO_IGMP
-Date:   Fri,  2 Aug 2019 11:36:11 +0200
-Message-Id: <20190802092248.052256687@linuxfoundation.org>
+        stable@vger.kernel.org, Jyri Sarha <jsarha@ti.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 165/223] drm/bridge: sii902x: pixel clock unit is 10kHz instead of 1kHz
+Date:   Fri,  2 Aug 2019 11:36:30 +0200
+Message-Id: <20190802092248.780040335@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -63,85 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+[ Upstream commit 8dbfc5b65023b67397aca28e8adb25c819f6398c ]
 
-[ Upstream commit 9d1bc24b52fb8c5d859f9a47084bf1179470e04c ]
+The pixel clock unit in the first two registers (0x00 and 0x01) of
+sii9022 is 10kHz, not 1kHz as in struct drm_display_mode. Division by
+10 fixes the issue.
 
-bond_xmit_roundrobin() checks for IGMP packets but it parses
-the IP header even before checking skb->protocol.
-
-We should validate the IP header with pskb_may_pull() before
-using iph->protocol.
-
-Reported-and-tested-by: syzbot+e5be16aa39ad6e755391@syzkaller.appspotmail.com
-Fixes: a2fd940f4cff ("bonding: fix broken multicast with round-robin mode")
-Cc: Jay Vosburgh <j.vosburgh@gmail.com>
-Cc: Veaceslav Falico <vfalico@gmail.com>
-Cc: Andy Gospodarek <andy@greyhouse.net>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/1a2a8eae0b9d6333e7a5841026bf7fd65c9ccd09.1558964241.git.jsarha@ti.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/bonding/bond_main.c |   37 +++++++++++++++++++++++--------------
- 1 file changed, 23 insertions(+), 14 deletions(-)
+ drivers/gpu/drm/bridge/sii902x.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -3788,8 +3788,8 @@ static u32 bond_rr_gen_slave_id(struct b
- static int bond_xmit_roundrobin(struct sk_buff *skb, struct net_device *bond_dev)
- {
- 	struct bonding *bond = netdev_priv(bond_dev);
--	struct iphdr *iph = ip_hdr(skb);
- 	struct slave *slave;
-+	int slave_cnt;
- 	u32 slave_id;
+diff --git a/drivers/gpu/drm/bridge/sii902x.c b/drivers/gpu/drm/bridge/sii902x.c
+index 9126d0306ab5..51e2d03995a1 100644
+--- a/drivers/gpu/drm/bridge/sii902x.c
++++ b/drivers/gpu/drm/bridge/sii902x.c
+@@ -250,10 +250,11 @@ static void sii902x_bridge_mode_set(struct drm_bridge *bridge,
+ 	struct regmap *regmap = sii902x->regmap;
+ 	u8 buf[HDMI_INFOFRAME_SIZE(AVI)];
+ 	struct hdmi_avi_infoframe frame;
++	u16 pixel_clock_10kHz = adj->clock / 10;
+ 	int ret;
  
- 	/* Start with the curr_active_slave that joined the bond as the
-@@ -3798,23 +3798,32 @@ static int bond_xmit_roundrobin(struct s
- 	 * send the join/membership reports.  The curr_active_slave found
- 	 * will send all of this type of traffic.
- 	 */
--	if (iph->protocol == IPPROTO_IGMP && skb->protocol == htons(ETH_P_IP)) {
--		slave = rcu_dereference(bond->curr_active_slave);
--		if (slave)
--			bond_dev_queue_xmit(bond, skb, slave->dev);
--		else
--			bond_xmit_slave_id(bond, skb, 0);
--	} else {
--		int slave_cnt = ACCESS_ONCE(bond->slave_cnt);
-+	if (skb->protocol == htons(ETH_P_IP)) {
-+		int noff = skb_network_offset(skb);
-+		struct iphdr *iph;
-+
-+		if (unlikely(!pskb_may_pull(skb, noff + sizeof(*iph))))
-+			goto non_igmp;
- 
--		if (likely(slave_cnt)) {
--			slave_id = bond_rr_gen_slave_id(bond);
--			bond_xmit_slave_id(bond, skb, slave_id % slave_cnt);
--		} else {
--			bond_tx_drop(bond_dev, skb);
-+		iph = ip_hdr(skb);
-+		if (iph->protocol == IPPROTO_IGMP) {
-+			slave = rcu_dereference(bond->curr_active_slave);
-+			if (slave)
-+				bond_dev_queue_xmit(bond, skb, slave->dev);
-+			else
-+				bond_xmit_slave_id(bond, skb, 0);
-+			return NETDEV_TX_OK;
- 		}
- 	}
- 
-+non_igmp:
-+	slave_cnt = ACCESS_ONCE(bond->slave_cnt);
-+	if (likely(slave_cnt)) {
-+		slave_id = bond_rr_gen_slave_id(bond);
-+		bond_xmit_slave_id(bond, skb, slave_id % slave_cnt);
-+	} else {
-+		bond_tx_drop(bond_dev, skb);
-+	}
- 	return NETDEV_TX_OK;
- }
- 
+-	buf[0] = adj->clock;
+-	buf[1] = adj->clock >> 8;
++	buf[0] = pixel_clock_10kHz & 0xff;
++	buf[1] = pixel_clock_10kHz >> 8;
+ 	buf[2] = adj->vrefresh;
+ 	buf[3] = 0x00;
+ 	buf[4] = adj->hdisplay;
+-- 
+2.20.1
+
 
 
