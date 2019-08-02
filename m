@@ -2,54 +2,53 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C89C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99880C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6064F21855
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:25:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67B0620880
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:25:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752315;
-	bh=Sgpqeh+NR9SOS+1Y8CwMpjt4Y3oxd/Vxt/b/m5hjxI8=;
+	s=default; t=1564752319;
+	bh=72dxgCU6Zqx8IvobvUYlXOI1lwmxrHw8RA7ve7oLk4g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KrdM2RZh70y4YdgpAq0JO2F+crez4sUtRJst9IKvBtIsZ2WS5HrasuaMkrrx/8JXv
-	 Niure0d0a98FbWTl+TSoZQS/EfyewJVtVtyBGZST2S1QctSLwBcMjs8nqtT3IL7tU9
-	 en9V7/lkHD0jD3/AYNetqhEJ935C19hF44fe4LZY=
+	b=N3AjNy/UD2YOdes6qnaFtEoiku2eJQDREXUFj1fQystDY1mQApvJDlJi5SWoL9xY9
+	 voLD+etUJe1H8lkyrd7h2uqw8kVGGYeVq8ipBzFMukPInG8Nzwm3zwUDZSDVy29jKq
+	 h1cdfvWEoKqHXuR6n+hnsOAx1RmsuVHOKTfzkgWk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394345AbfHBNZO (ORCPT
+        id S2394368AbfHBNZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:25:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35896 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:25:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394324AbfHBNZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:25:09 -0400
+        id S1730769AbfHBNZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:25:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED6AD2183F;
-        Fri,  2 Aug 2019 13:25:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1CF521841;
+        Fri,  2 Aug 2019 13:25:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752308;
-        bh=Sgpqeh+NR9SOS+1Y8CwMpjt4Y3oxd/Vxt/b/m5hjxI8=;
+        s=default; t=1564752314;
+        bh=72dxgCU6Zqx8IvobvUYlXOI1lwmxrHw8RA7ve7oLk4g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XYfXNIZTsZFZWf3ZNHFg7+1yQzn1pLJIJbg/Z5OFbswttdR3EdOdvfxUaicnVqSEs
-         yKUedpNMKhxnMuj4VVIybAgCWqLDgJ7B90uAi1+ptUCzyccmtwwz0fj8mBiCQErdwb
-         NZuzhe6OQ9ZqyVOk8z2fBNZ1MBLgFGA6UVcVKUDs=
+        b=ypV7i5FL9OoSL/N9zIC6K1qc72Bi6IQ1P6CJabwqmH5SGTiZo/Alt3wsPTOqifm2A
+         xvXOSieAgA8sTP+GJHfGG/g7G3h5SErs+Yz8VqAOLWSdogRxf7dn+5Mt4FHs4KqFN3
+         RDvfBR4Gs+DBCrIF/VIw/PWOJChV+ixrDP1nvkHI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 20/30] perf probe: Avoid calling freeing routine multiple times for same pointer
-Date:   Fri,  2 Aug 2019 09:24:12 -0400
-Message-Id: <20190802132422.13963-20-sashal@kernel.org>
+Cc:     Junxiao Bi <junxiao.bi@oracle.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>,
+        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 24/30] scsi: megaraid_sas: fix panic on loading firmware crashdump
+Date:   Fri,  2 Aug 2019 09:24:16 -0400
+Message-Id: <20190802132422.13963-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802132422.13963-1-sashal@kernel.org>
 References: <20190802132422.13963-1-sashal@kernel.org>
@@ -62,49 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Junxiao Bi <junxiao.bi@oracle.com>
 
-[ Upstream commit d95daf5accf4a72005daa13fbb1d1bd8709f2861 ]
+[ Upstream commit 3b5f307ef3cb5022bfe3c8ca5b8f2114d5bf6c29 ]
 
-When perf_add_probe_events() we call cleanup_perf_probe_events() for the
-pev pointer it receives, then, as part of handling this failure the main
-'perf probe' goes on and calls cleanup_params() and that will again call
-cleanup_perf_probe_events()for the same pointer, so just set nevents to
-zero when handling the failure of perf_add_probe_events() to avoid the
-double free.
+While loading fw crashdump in function fw_crash_buffer_show(), left bytes
+in one dma chunk was not checked, if copying size over it, overflow access
+will cause kernel panic.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-x8qgma4g813z96dvtw9w219q@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
+Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-probe.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/scsi/megaraid/megaraid_sas_base.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
-index c0065923a525f..e1ac51aaedcff 100644
---- a/tools/perf/builtin-probe.c
-+++ b/tools/perf/builtin-probe.c
-@@ -712,6 +712,16 @@ __cmd_probe(int argc, const char **argv)
+diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
+index 73acd3e9ded75..8595d83229b77 100644
+--- a/drivers/scsi/megaraid/megaraid_sas_base.c
++++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+@@ -2976,6 +2976,7 @@ megasas_fw_crash_buffer_show(struct device *cdev,
+ 	u32 size;
+ 	unsigned long buff_addr;
+ 	unsigned long dmachunk = CRASH_DMA_BUF_SIZE;
++	unsigned long chunk_left_bytes;
+ 	unsigned long src_addr;
+ 	unsigned long flags;
+ 	u32 buff_offset;
+@@ -3001,6 +3002,8 @@ megasas_fw_crash_buffer_show(struct device *cdev,
+ 	}
  
- 		ret = perf_add_probe_events(params.events, params.nevents);
- 		if (ret < 0) {
-+
-+			/*
-+			 * When perf_add_probe_events() fails it calls
-+			 * cleanup_perf_probe_events(pevs, npevs), i.e.
-+			 * cleanup_perf_probe_events(params.events, params.nevents), which
-+			 * will call clear_perf_probe_event(), so set nevents to zero
-+			 * to avoid cleanup_params() to call clear_perf_probe_event() again
-+			 * on the same pevs.
-+			 */
-+			params.nevents = 0;
- 			pr_err_with_code("  Error: Failed to add events.", ret);
- 			return ret;
- 		}
+ 	size = (instance->fw_crash_buffer_size * dmachunk) - buff_offset;
++	chunk_left_bytes = dmachunk - (buff_offset % dmachunk);
++	size = (size > chunk_left_bytes) ? chunk_left_bytes : size;
+ 	size = (size >= PAGE_SIZE) ? (PAGE_SIZE - 1) : size;
+ 
+ 	src_addr = (unsigned long)instance->crash_buf[buff_offset / dmachunk] +
 -- 
 2.20.1
 
