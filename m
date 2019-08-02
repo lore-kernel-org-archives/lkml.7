@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57156C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E41C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2523820665
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:57:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 711A72067D
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:57:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739870;
-	bh=CLg68tfzKMVwWEvkzvAmfZIb7/a7kh58NQrcf00uExY=;
+	s=default; t=1564739873;
+	bh=mBtojOTp1hg0hXz5A1TBIU10LPdZxGISLBS/m3vpjFk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UV5mDbWyI91uznhYQ7oGUV9NJJ9Hh5R/75381zGM4pecPb9D4aRNhRF7Cvp/9uAPW
-	 Mn9L5CK5eoDe1uGCgKfm2lR5n7E7AKtcSbDOtpXBpLlryA5/8on8GigbWBWp6l8a5A
-	 F9//Dt3k87BKUDylT6JngcXs5oB10zn4blY4cPfo=
+	b=dlwr+0kwdzA7ZaAENFkeE4Aqzjuq/FHu8MzcC/Tl8ycY5agzZIA5nU6FOQGJW61ab
+	 dtgbHj3h4ytUTy/SZ1EiB4k2WlX8QWA/3BXi+Abql3NywP1achhdMLHHNoMgSVX/wu
+	 WI123muDXKmERJB+hmXtKumK3Gx/PFEj5TGJQUrU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406983AbfHBJ5t (ORCPT
+        id S2406458AbfHBJ5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:57:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37096 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:57:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406961AbfHBJ5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:57:43 -0400
+        id S2406642AbfHBJ5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:57:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4538421773;
-        Fri,  2 Aug 2019 09:57:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5C8B2064A;
+        Fri,  2 Aug 2019 09:57:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739862;
-        bh=CLg68tfzKMVwWEvkzvAmfZIb7/a7kh58NQrcf00uExY=;
+        s=default; t=1564739865;
+        bh=mBtojOTp1hg0hXz5A1TBIU10LPdZxGISLBS/m3vpjFk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IbRUiN9t78C3udHm+Fc6n+AeE/eVW53Q0R1P3rdm0EYww8e2zKw4x4/zGM5ugqxfY
-         2xj7/Tmuwut+qjwkBVt+6zMXt9KZWUf//NaUFeGvabHRkDWCKU6llyR/Xy5JPtlr/n
-         jaSQ7KUPXNyD/JuhDaPF93dwUVekyGuH6azpSZyM=
+        b=vUtLbBU70A5DAEluoCvZX8wvtTAXecI+1AJmZj/IuwvV/jDOtv8GsleXjd7SSc5dp
+         g2r7F0Ixrhv7h4/SbVluPUGE4u+dnv2CDq8NR7itTl7uXMcLkBuTG95vf8wYUx7GCI
+         gFKBpSkUNRmVeb5DJqe9SNJSTO3gn0YxisuvsWfw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yoshinori Sato <ysato@users.sourceforge.jp>
-Subject: [PATCH 5.2 19/20] Fix allyesconfig output.
-Date:   Fri,  2 Aug 2019 11:40:13 +0200
-Message-Id: <20190802092103.845130875@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+8750abbc3a46ef47d509@syzkaller.appspotmail.com,
+        Phong Tran <tranmanphong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.2 02/20] ISDN: hfcsusb: checking idx of ep configuration
+Date:   Fri,  2 Aug 2019 11:39:56 +0200
+Message-Id: <20190802092057.454840463@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092055.131876977@linuxfoundation.org>
 References: <20190802092055.131876977@linuxfoundation.org>
@@ -58,51 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshinori Sato <ysato@users.sourceforge.jp>
+From: Phong Tran <tranmanphong@gmail.com>
 
-commit 1b496469d0c020e09124e03e66a81421c21272a7 upstream.
+commit f384e62a82ba5d85408405fdd6aeff89354deaa9 upstream.
 
-Conflict JCore-SoC and SolutionEngine 7619.
+The syzbot test with random endpoint address which made the idx is
+overflow in the table of endpoint configuations.
 
-Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+this adds the checking for fixing the error report from
+syzbot
+
+KASAN: stack-out-of-bounds Read in hfcsusb_probe [1]
+The patch tested by syzbot [2]
+
+Reported-by: syzbot+8750abbc3a46ef47d509@syzkaller.appspotmail.com
+
+[1]:
+https://syzkaller.appspot.com/bug?id=30a04378dac680c5d521304a00a86156bb913522
+[2]:
+https://groups.google.com/d/msg/syzkaller-bugs/_6HBdge8F3E/OJn7wVNpBAAJ
+
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/sh/boards/Kconfig |   14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+ drivers/isdn/hardware/mISDN/hfcsusb.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/arch/sh/boards/Kconfig
-+++ b/arch/sh/boards/Kconfig
-@@ -8,27 +8,19 @@ config SH_ALPHA_BOARD
- 	bool
+--- a/drivers/isdn/hardware/mISDN/hfcsusb.c
++++ b/drivers/isdn/hardware/mISDN/hfcsusb.c
+@@ -1955,6 +1955,9 @@ hfcsusb_probe(struct usb_interface *intf
  
- config SH_DEVICE_TREE
--	bool "Board Described by Device Tree"
-+	bool
- 	select OF
- 	select OF_EARLY_FLATTREE
- 	select TIMER_OF
- 	select COMMON_CLK
- 	select GENERIC_CALIBRATE_DELAY
--	help
--	  Select Board Described by Device Tree to build a kernel that
--	  does not hard-code any board-specific knowledge but instead uses
--	  a device tree blob provided by the boot-loader. You must enable
--	  drivers for any hardware you want to use separately. At this
--	  time, only boards based on the open-hardware J-Core processors
--	  have sufficient driver coverage to use this option; do not
--	  select it if you are using original SuperH hardware.
- 
- config SH_JCORE_SOC
- 	bool "J-Core SoC"
--	depends on SH_DEVICE_TREE && (CPU_SH2 || CPU_J2)
-+	select SH_DEVICE_TREE
- 	select CLKSRC_JCORE_PIT
- 	select JCORE_AIC
--	default y if CPU_J2
-+	depends on CPU_J2
- 	help
- 	  Select this option to include drivers core components of the
- 	  J-Core SoC, including interrupt controllers and timers.
+ 				/* get endpoint base */
+ 				idx = ((ep_addr & 0x7f) - 1) * 2;
++				if (idx > 15)
++					return -EIO;
++
+ 				if (ep_addr & 0x80)
+ 					idx++;
+ 				attr = ep->desc.bmAttributes;
 
 
