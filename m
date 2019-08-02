@@ -7,48 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 493C3C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:34:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBC5C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20CA92182B
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:34:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9799217F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:34:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738482;
-	bh=95BDqyrUZRInmwY3dSA87Q5u20W3DPRPiss9xbF7iT0=;
+	s=default; t=1564738483;
+	bh=zulbU9dXVtXT1AOE50P45ok6/U0P6cq2pq+G5ifMQ94=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ASAAYIbSBp7a7UdhnX0x0J2fyR5rS8ivO8G6UzBnUdJTvTIrRnqTahuHLF1M6PRzw
-	 3DJzeLfaayUf7RLmvQ1hbBcy4l7KHVkDdNwXlhxu/xXAu/+LJlUkFk5u6vVhIddEiE
-	 GU+qPB+eMv/07uRJPpl1lH5swE7e6xaO2zvgKLXs=
+	b=unmH5KG/ESqUgsUWjYBqB3GLYTbwtP7OW91uzmLXEZpod7U296owytz1+VJ2/jrwl
+	 cuAsABEOUHbwl6AZVdlGw4vlFzBOeOzcSYx21u3MxmSHI8IYORaq2lNqLhzotz8Gu0
+	 mYBuZ9KiBcJIku0k5T3ntyWyD5lzlv1Hiet6Z7EI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391358AbfHBJel (ORCPT
+        id S2391387AbfHBJem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:34:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34444 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:34:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390604AbfHBJec (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:34:32 -0400
+        id S2391367AbfHBJej (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:34:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F138217D4;
-        Fri,  2 Aug 2019 09:34:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF2B1217D6;
+        Fri,  2 Aug 2019 09:34:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738471;
-        bh=95BDqyrUZRInmwY3dSA87Q5u20W3DPRPiss9xbF7iT0=;
+        s=default; t=1564738479;
+        bh=zulbU9dXVtXT1AOE50P45ok6/U0P6cq2pq+G5ifMQ94=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WmVH+IBMdyeRhWM9QM94tpsYTuMMeTxZQhdjAppXc/mdm3f1nIbfn2U7CW6OudgrZ
-         3XpY4y+yTSRDb//3x1iU5VS1em1oSEE9JHlXJwDf8gF6QX3fQSNFc60BGskbV/rxl9
-         fgdhYIVVV8IEXgrRnsJZWucAoJBiwrRpgw30jy+w=
+        b=MyAxhf70Wb+dKt/0C1e6b3myHddy9ALslmioft0WoYnR9KXzJO41D2+Kecf2Mmv5F
+         prQPyze1DvzdxzeIgtoK3nigtdgCKkQLwB8sW8uwpsucZ1+jI7R64KmSURFZ0zRGNI
+         OaF3OrsVgUJx1kfOX7DIwCogqvEw8Fhne30hpji4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nathan Lynch <nathanl@linux.ibm.com>,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Tejun Heo <tj@kernel.org>, Wolfram Sang <wsa@the-dreams.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 117/158] powerpc/pseries/mobility: rebuild cacheinfo hierarchy post-migration
-Date:   Fri,  2 Aug 2019 11:28:58 +0200
-Message-Id: <20190802092227.821020474@linuxfoundation.org>
+Subject: [PATCH 4.4 120/158] PCI: sysfs: Ignore lockdep for remove attribute
+Date:   Fri,  2 Aug 2019 11:29:01 +0200
+Message-Id: <20190802092228.312209239@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -61,77 +65,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e610a466d16a086e321f0bd421e2fc75cff28605 ]
+[ Upstream commit dc6b698a86fe40a50525433eb8e92a267847f6f9 ]
 
-It's common for the platform to replace the cache device nodes after a
-migration. Since the cacheinfo code is never informed about this, it
-never drops its references to the source system's cache nodes, causing
-it to wind up in an inconsistent state resulting in warnings and oopses
-as soon as CPU online/offline occurs after the migration, e.g.
+With CONFIG_PROVE_LOCKING=y, using sysfs to remove a bridge with a device
+below it causes a lockdep warning, e.g.,
 
-  cache for /cpus/l3-cache@3113(Unified) refers to cache for /cpus/l2-cache@200d(Unified)
-  WARNING: CPU: 15 PID: 86 at arch/powerpc/kernel/cacheinfo.c:176 release_cache+0x1bc/0x1d0
-  [...]
-  NIP release_cache+0x1bc/0x1d0
-  LR  release_cache+0x1b8/0x1d0
-  Call Trace:
-    release_cache+0x1b8/0x1d0 (unreliable)
-    cacheinfo_cpu_offline+0x1c4/0x2c0
-    unregister_cpu_online+0x1b8/0x260
-    cpuhp_invoke_callback+0x114/0xf40
-    cpuhp_thread_fun+0x270/0x310
-    smpboot_thread_fn+0x2c8/0x390
-    kthread+0x1b8/0x1c0
-    ret_from_kernel_thread+0x5c/0x68
+  # echo 1 > /sys/class/pci_bus/0000:00/device/0000:00:00.0/remove
+  ============================================
+  WARNING: possible recursive locking detected
+  ...
+  pci_bus 0000:01: busn_res: [bus 01] is released
 
-Using device tree notifiers won't work since we want to rebuild the
-hierarchy only after all the removals and additions have occurred and
-the device tree is in a consistent state. Call cacheinfo_teardown()
-before processing device tree updates, and rebuild the hierarchy
-afterward.
+The remove recursively removes the subtree below the bridge.  Each call
+uses a different lock so there's no deadlock, but the locks were all
+created with the same lockdep key so the lockdep checker can't tell them
+apart.
 
-Fixes: 410bccf97881 ("powerpc/pseries: Partition migration in the kernel")
-Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
-Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Mark the "remove" sysfs attribute with __ATTR_IGNORE_LOCKDEP() as it is
+safe to ignore the lockdep check between different "remove" kernfs
+instances.
+
+There's discussion about a similar issue in USB at [1], which resulted in
+356c05d58af0 ("sysfs: get rid of some lockdep false positives") and
+e9b526fe7048 ("i2c: suppress lockdep warning on delete_device"), which do
+basically the same thing for USB "remove" and i2c "delete_device" files.
+
+[1] https://lore.kernel.org/r/Pine.LNX.4.44L0.1204251436140.1206-100000@iolanthe.rowland.org
+Link: https://lore.kernel.org/r/20190526225151.3865-1-marek.vasut@gmail.com
+Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+[bhelgaas: trim commit log, details at above links]
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Phil Edworthy <phil.edworthy@renesas.com>
+Cc: Simon Horman <horms+renesas@verge.net.au>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/mobility.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/pci/pci-sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/platforms/pseries/mobility.c b/arch/powerpc/platforms/pseries/mobility.c
-index fcd1a32267c4..e85767c74e81 100644
---- a/arch/powerpc/platforms/pseries/mobility.c
-+++ b/arch/powerpc/platforms/pseries/mobility.c
-@@ -22,6 +22,7 @@
- #include <asm/machdep.h>
- #include <asm/rtas.h>
- #include "pseries.h"
-+#include "../../kernel/cacheinfo.h"
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index 5fb4ed6ea322..6ac6618c1c10 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -371,7 +371,7 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
+ 		pci_stop_and_remove_bus_device_locked(to_pci_dev(dev));
+ 	return count;
+ }
+-static struct device_attribute dev_remove_attr = __ATTR(remove,
++static struct device_attribute dev_remove_attr = __ATTR_IGNORE_LOCKDEP(remove,
+ 							(S_IWUSR|S_IWGRP),
+ 							NULL, remove_store);
  
- static struct kobject *mobility_kobj;
- 
-@@ -316,11 +317,20 @@ void post_mobility_fixup(void)
- 	 */
- 	cpus_read_lock();
- 
-+	/*
-+	 * It's common for the destination firmware to replace cache
-+	 * nodes.  Release all of the cacheinfo hierarchy's references
-+	 * before updating the device tree.
-+	 */
-+	cacheinfo_teardown();
-+
- 	rc = pseries_devicetree_update(MIGRATION_SCOPE);
- 	if (rc)
- 		printk(KERN_ERR "Post-mobility device tree update "
- 			"failed: %d\n", rc);
- 
-+	cacheinfo_rebuild();
-+
- 	cpus_read_unlock();
- 
- 	/* Possibly switch to a new RFI flush type */
 -- 
 2.20.1
 
