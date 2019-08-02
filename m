@@ -2,112 +2,120 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68CFDC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 21:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E6BC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 21:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32DD3206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 21:08:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 780A420665
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 21:13:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="gkBG/nsk"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FzemUOM6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404768AbfHBVIb (ORCPT
+        id S2405066AbfHBVN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 17:08:31 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:43220 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbfHBVIa (ORCPT
+        Fri, 2 Aug 2019 17:13:27 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:48578 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726052AbfHBVN1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 17:08:30 -0400
-Received: by mail-qt1-f194.google.com with SMTP id w17so31041543qto.10
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 14:08:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=9NIIaoQDA9kYkrN6ojAWfKEQLlIq3Ym3D7SRrnB2/eo=;
-        b=gkBG/nskL7Ggm/hovOQPmbJA7M2IQHtyK1DmYHRcwwHZTjiNrVHZQEhdQnTiqRSf9n
-         33nMpWaXV1lr7o6GYi/Cdug/Y24LvK6WMKNFGvM69pUAQ597RiQhq4w8UTWVFlLH8j/j
-         zZanALJzF45ePOm4It8SU7ESVxPABFEzHFWDE0kkLHFpM+cY7wNk/xJD1bKo3MQ7Rf5n
-         FTh3BDnhIEHfRVfuk+VoqDAmQIiLBc80ujKe3LP65DfIuNF+LwWW0S1EdtuccVYklcMZ
-         l3F/eaQcuroAhKPaSXCSkeBfrC9iplFgAZmvW2W+mLlocXKBjCAOC01rLo6AOI+LCqAo
-         kadQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=9NIIaoQDA9kYkrN6ojAWfKEQLlIq3Ym3D7SRrnB2/eo=;
-        b=D9AOOkJwQl7+D6AtLH4jZ0cMqGSl+Luhvlm+rZLK7H3BoKZgMdaST2TK+X5gWKdfEQ
-         5RMvn2MG5NdMuK9MB9MmZzAlBELAtgvx6zFk5YlBXbn8H3eAtTRETUjpOWku6S/F7vwI
-         FkMMMiN3NhCi33vOr3IohpkKizxjfwvi9tsSplRCcw3PyjuqhfkdbRT86dyAvuJsMyUT
-         2KxwRbXWY38rMVH0ePUzrPMgAznc+B7lkov6K2h0FXwte0IG2nW+rVFTH8vxb5LcGcMY
-         zyKjzmggQ9V0Fr3Kofl69IWbeEZley6afLQMxk823NJYA4PiUXVeA2/1y7ri3aXLquFe
-         1Lyg==
-X-Gm-Message-State: APjAAAU6oyXUv96e4tRolrLY/qlDZbqmC2kNQQ2gVAzau9KJRKAxr2gt
-        oSNfanpL1nJ3h1JzeMQ81ZC7jw==
-X-Google-Smtp-Source: APXvYqx98q11ve5u5ss92wDlkOo+LN9fHXWBmOAGa0/ZdWOJvm4hOs19zMHPqGwyfLmgJk63/0Uqhw==
-X-Received: by 2002:a0c:fa8b:: with SMTP id o11mr99691618qvn.6.1564780109664;
-        Fri, 02 Aug 2019 14:08:29 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id f20sm29011362qkh.15.2019.08.02.14.08.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 02 Aug 2019 14:08:29 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     will@kernel.org, catalin.marinas@arm.com
-Cc:     rrichter@cavium.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH] arm64/prefetch: fix a -Wtype-limits warning
-Date:   Fri,  2 Aug 2019 17:08:04 -0400
-Message-Id: <1564780084-29591-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Fri, 2 Aug 2019 17:13:27 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x72KxZ8R055215;
+        Fri, 2 Aug 2019 21:12:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=TlF04q185lcuzR3fJX9ZXlx2yXo81WJ9iaInWTgL5pg=;
+ b=FzemUOM6e6ylFQIXjyejmzykkHyjJgzalQKhCBE8SDbBg2y4X7dSwrtgfxyyO07MSyzh
+ IuWhbGEsPAFIPenteVaDgeoBrH71xaN9CLrjT+dNM9O/dW+wrOi533vYdCWzwO8N45o3
+ Ni+KGycL6jgcgY5Fh9XCSUBLEV5kQtKP/DG2bMx4xnq3qQvoujYzF7gzpXXKgWi0noDA
+ IAhfGuB51/l7+bctFFkBlA8HBnia30P3vPg9TT6YPiPt47wW7exJCiaRnQFpiTPoetWF
+ HOzHFHJoVppqekaOmd7b8vhvc6ijX5QiWzwIwXcIVi1kKsZC34LeU8VRZ6ykWgwG+Gom FQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2u0f8rmg5e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 02 Aug 2019 21:12:56 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x72LChfF053129;
+        Fri, 2 Aug 2019 21:12:56 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2u49hum3pq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 02 Aug 2019 21:12:55 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x72LCtDa003517;
+        Fri, 2 Aug 2019 21:12:55 GMT
+Received: from dhcp-10-159-253-80.vpn.oracle.com (/10.159.253.80)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 02 Aug 2019 14:12:54 -0700
+Subject: Re: [PATCH 7/7] tracing: Un-export ftrace_set_clr_event
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, Joe Jin <joe.jin@oracle.com>,
+        Aruna Ramakrishna <aruna.ramakrishna@oracle.com>,
+        Srinivas Eeda <srinivas.eeda@oracle.com>
+References: <1564444954-28685-1-git-send-email-divya.indi@oracle.com>
+ <1564444954-28685-8-git-send-email-divya.indi@oracle.com>
+ <20190729205138.689864d2@gandalf.local.home>
+ <8e50d405-a4fb-fadf-509e-157b031d7542@oracle.com>
+ <20190802134229.2a969047@gandalf.local.home>
+ <291a12f6-e1eb-052e-0dd6-0e649dd4a752@oracle.com>
+ <20190802164641.46416744@gandalf.local.home>
+From:   Divya Indi <divya.indi@oracle.com>
+Message-ID: <87e1a9b8-9f72-c240-9b9a-2d454046e2f3@oracle.com>
+Date:   Fri, 2 Aug 2019 14:12:54 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190802164641.46416744@gandalf.local.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9337 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908020225
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9337 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908020224
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit d5370f754875 ("arm64: prefetch: add alternative pattern for
-CPUs without a prefetcher") introduced MIDR_IS_CPU_MODEL_RANGE() to be
-used in has_no_hw_prefetch() with rv_min=0 which generates a compilation
-warning from GCC,
+Hi Steve,
 
-In file included from ./arch/arm64/include/asm/cache.h:8,
-                 from ./include/linux/cache.h:6,
-                 from ./include/linux/printk.h:9,
-                 from ./include/linux/kernel.h:15,
-                 from ./include/linux/cpumask.h:10,
-                 from arch/arm64/kernel/cpufeature.c:11:
-arch/arm64/kernel/cpufeature.c: In function 'has_no_hw_prefetch':
-./arch/arm64/include/asm/cputype.h:59:26: warning: comparison of
-unsigned expression >= 0 is always true [-Wtype-limits]
-  _model == (model) && rv >= (rv_min) && rv <= (rv_max);  \
-                          ^~
-arch/arm64/kernel/cpufeature.c:889:9: note: in expansion of macro
-'MIDR_IS_CPU_MODEL_RANGE'
-  return MIDR_IS_CPU_MODEL_RANGE(midr, MIDR_THUNDERX,
-         ^~~~~~~~~~~~~~~~~~~~~~~
+The first patch would be like a temporary fix in case we need more 
+changes to the patches that add the new function - trace_array_set_clr() 
+and unexport ftrace_set_clr_event() and might take some time. In which 
+case I think it would be good to have this in place (But, not part of 
+this series).
 
-Fix it by making rv_min=1.
+If they all are to go in together as part of the same release ie if all 
+is good with the concerned patches (Patch 6 & Patch 7), then I think 
+having this patch would be meaningless.
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- arch/arm64/kernel/cpufeature.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index f29f36a65175..7d15cf6d62c1 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -883,7 +883,7 @@ static bool has_no_hw_prefetch(const struct arm64_cpu_capabilities *entry, int _
- 
- 	/* Cavium ThunderX pass 1.x and 2.x */
- 	return MIDR_IS_CPU_MODEL_RANGE(midr, MIDR_THUNDERX,
--		MIDR_CPU_VAR_REV(0, 0),
-+		MIDR_CPU_VAR_REV(0, 1),
- 		MIDR_CPU_VAR_REV(1, MIDR_REVISION_MASK));
- }
- 
--- 
-1.8.3.1
+Thanks,
 
+Divya
+
+On 8/2/19 1:46 PM, Steven Rostedt wrote:
+> On Fri, 2 Aug 2019 13:41:20 -0700
+> Divya Indi <divya.indi@oracle.com> wrote:
+>
+>>> As a stand alone patch, the first one may be fine. But as part of a
+>>> series, it doesn't make sense to add it.
+>> I see. Will separate this out from the series.
+> Is that really needed? Do you need to have that patch in the kernel?
+>
+> Do you plan on marking it for stable?
+>
+> -- Steve
