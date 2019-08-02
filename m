@@ -2,94 +2,115 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DB0C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E28C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0F842087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:30:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 092012087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:30:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733128AbfHBPa0 (ORCPT
+        id S1733223AbfHBPaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 11:30:26 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39873 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732277AbfHBPaZ (ORCPT
+        Fri, 2 Aug 2019 11:30:46 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:57690 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733136AbfHBPap (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 11:30:25 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1htZV2-0002wy-PP; Fri, 02 Aug 2019 17:29:45 +0200
-Date:   Fri, 2 Aug 2019 17:29:43 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Jan Kara <jack@suse.cz>
-cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Julia Cartwright <julia@ni.com>, Jan Kara <jack@suse.com>,
-        Theodore Tso <tytso@mit.edu>, Mark Fasheh <mark@fasheh.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Joel Becker <jlbec@evilplan.org>, linux-ext4@vger.kernel.org,
-        Matthew Wilcox <willy@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [patch V2 6/7] fs/jbd2: Make state lock a spinlock
-In-Reply-To: <20190802133714.GN25064@quack2.suse.cz>
-Message-ID: <alpine.DEB.2.21.1908021729120.3924@nanos.tec.linutronix.de>
-References: <20190801010126.245731659@linutronix.de> <20190801010944.457499601@linutronix.de> <20190801175703.GH25064@quack2.suse.cz> <alpine.DEB.2.21.1908012010020.1789@nanos.tec.linutronix.de> <20190802133714.GN25064@quack2.suse.cz>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 2 Aug 2019 11:30:45 -0400
+Received: from 162-237-133-238.lightspeed.rcsntx.sbcglobal.net ([162.237.133.238] helo=elm)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <tyhicks@canonical.com>)
+        id 1htZVr-0001Mo-Ax; Fri, 02 Aug 2019 15:30:35 +0000
+Date:   Fri, 2 Aug 2019 10:30:30 -0500
+From:   Tyler Hicks <tyhicks@canonical.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>
+Cc:     jarkko.sakkinen@linux.intel.com, jejb@linux.ibm.com,
+        zohar@linux.ibm.com, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org, crazyt2019+lml@gmail.com,
+        nayna@linux.vnet.ibm.com, silviu.vlasceanu@huawei.com
+Subject: Re: [PATCH v2] KEYS: trusted: allow module init if TPM is inactive
+ or deactivated
+Message-ID: <20190802153030.GB26616@elm>
+References: <20190802150733.1972-1-roberto.sassu@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190802150733.1972-1-roberto.sassu@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2 Aug 2019, Jan Kara wrote:
+On 2019-08-02 17:07:33, Roberto Sassu wrote:
+> Commit c78719203fc6 ("KEYS: trusted: allow trusted.ko to initialize w/o a
+> TPM") allows the trusted module to be loaded even a TPM is not found to
+                                                   ^ if
 
-> On Thu 01-08-19 20:12:11, Thomas Gleixner wrote:
-> > On Thu, 1 Aug 2019, Jan Kara wrote:
-> > > On Thu 01-08-19 03:01:32, Thomas Gleixner wrote:
-> > > > As almost all functions which use this lock have a journal head pointer
-> > > > readily available, it makes more sense to remove the lock helper inlines
-> > > > and write out spin_*lock() at all call sites.
-> > > > 
-> > > 
-> > > Just a heads up that I didn't miss this patch. Just it has some bugs and I
-> > > figured that rather than explaining to you subtleties of jh lifetime it is
-> > > easier to fix up the problems myself since you're probably not keen on
-> > > becoming jbd2 developer ;)... which was more complex than I thought so I'm
-> > > not completely done yet. Hopefuly tomorrow.
-> > 
-> > I'm curious where I was too naive :)
+> avoid module dependency problems.
 > 
-> Well, the most obvious where places where the result ended up being like
+> However, trusted module initialization can still fail if the TPM is
+> inactive or deactivated. This patch ignores tpm_get_random() errors in
+> init_digests() and returns -EFAULT in pcrlock() if the TPM didn't return
+> random data.
 > 
-> 	jbd2_journal_put_journal_head(jh);
-> 	spin_unlock(&jh->state_lock);
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+
+The code changes look correct to me.
+
+  Reviewed-by: Tyler Hicks <tyhicks@canonical.com>
+
+For whoever takes this patch through their tree, I think that adding the
+following Fixes tag would be useful (as well as cc'ing stable):
+
+  Fixes: 240730437deb ("KEYS: trusted: explicitly use tpm_chip structure...")
+
+I think it is also worth leaving a short note, in the commit message,
+for backporters that commit 782779b60faa ("tpm: Actually fail on TPM
+errors during "get random"") should be included with any backports of
+this patch.
+
+Thanks!
+
+Tyler
+
+> ---
+>  security/keys/trusted.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
 > 
-> That's possible use-after-free.
-
-Duh yes.
-
-> But there were also other more subtle places where
-> jbd2_journal_put_journal_head() was not directly visible as it was hidden
-> inside journal list handling functions such as __jbd2_journal_refile_buffer()
-> or so. And these needed some more work.
+> diff --git a/security/keys/trusted.c b/security/keys/trusted.c
+> index 9a94672e7adc..34f04ffcf2e5 100644
+> --- a/security/keys/trusted.c
+> +++ b/security/keys/trusted.c
+> @@ -389,6 +389,10 @@ static int pcrlock(const int pcrnum)
+>  	if (!capable(CAP_SYS_ADMIN))
+>  		return -EPERM;
+>  
+> +	/* This happens if the TPM didn't return random data */
+> +	if (!digests)
+> +		return -EFAULT;
+> +
+>  	return tpm_pcr_extend(chip, pcrnum, digests) ? -EINVAL : 0;
+>  }
+>  
+> @@ -1233,10 +1237,8 @@ static int __init init_digests(void)
+>  	int i;
+>  
+>  	ret = tpm_get_random(chip, digest, TPM_MAX_DIGEST_SIZE);
+> -	if (ret < 0)
+> -		return ret;
+> -	if (ret < TPM_MAX_DIGEST_SIZE)
+> -		return -EFAULT;
+> +	if (ret < 0 || ret < TPM_MAX_DIGEST_SIZE)
+> +		return 0;
+>  
+>  	digests = kcalloc(chip->nr_allocated_banks, sizeof(*digests),
+>  			  GFP_KERNEL);
+> -- 
+> 2.17.1
 > 
-> Anyway, I'm now done fixing up the patch, doing some xfstests runs to verify
-> things didn't break in any obvious way...
-
-Very appreciated.
-
-Thanks,
-
-	tglx
