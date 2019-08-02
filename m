@@ -2,463 +2,285 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A74C32753
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 20:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDB5C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 20:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EABA5205F4
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 20:13:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ptuAC35a"
+	by mail.kernel.org (Postfix) with ESMTP id DB69F2087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 20:17:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436910AbfHBUN2 (ORCPT
+        id S2436932AbfHBUR1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 16:13:28 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:32989 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406942AbfHBUN2 (ORCPT
+        Fri, 2 Aug 2019 16:17:27 -0400
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:53214 "EHLO
+        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2436921AbfHBUR1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 16:13:28 -0400
-Received: by mail-lf1-f65.google.com with SMTP id x3so53884688lfc.0;
-        Fri, 02 Aug 2019 13:13:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=bfjie2cLm7ldc2URSTPS/I+hdqxaqYMZHkr+LiCjNOs=;
-        b=ptuAC35a7qCeIkbz+oWhB+KaB4Ss20oor+7EIV/arXR6AGqacKVf5Fkc0gwRTt6YpV
-         INj1YLm6/xdBhdB9HiS/NKgUhFXte3bEEkf9Be0Mpa7MX9NMOtQZHtIg53NhNpCH2bR5
-         hOIaQEZawNifZFSprtAlE9mAS44GGaJ7RVD4dt5q56aNXKX29HeF2kOVhZx/FAugZIHy
-         46r/1nRji3PoNiI42wsLA5Q+iZejHx2hVm7qAmNeV3cCDVZ6/Sq1hpJivUyetEQE9lVC
-         yND02nImwWDT3qT//uSJYbsduzgBjAyH7KGSXW9Ps61JDtQcjjlid36DWjd3vmi1kiv7
-         Pjtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bfjie2cLm7ldc2URSTPS/I+hdqxaqYMZHkr+LiCjNOs=;
-        b=h/fT4E0y3aPNJHM7e53OpEUb9dZdcWP0+5yMmatXXx5SvPKthW1rhr6BrHUsl9fADy
-         /oyMrEEuaUA69Qgu8Th6WWc6Nm9JZEHWkwC35AUCrxaSkfHkVLtoNKUwSRECa/+YlMPp
-         ov74vPgO+FikjdYwwPOgXJUVfB037QeWsd2MJT86vM7TyLu/5wX22Zbjuq3UwvpI/Acv
-         llBDSPpIzjb69WB0fUbIeo9IDBuO8Tiikpm+u07fZ0A8Pie1rvCa3eJ76KlCZBwHK3Fs
-         FxKcYvGZx7Z9oofMSoyUFIcDEbuJ/opM8OVyz6lfgYkCg3gWfQWd2Xu2y8bkevKTwYi/
-         V9NQ==
-X-Gm-Message-State: APjAAAXZh4OIUgMCbMvUf7iniEnkU0X9pVdC8CDx63XT/y472sUg5mMO
-        1QaEQhXLv2NdECw6bFCYrjfElkVS
-X-Google-Smtp-Source: APXvYqx83+VsQBD33OwlPe6wix6CuILu3tTx+6mnnDW5kIa+XEpdRARmDRwh8fpOlXSvab+AbLpnlw==
-X-Received: by 2002:ac2:455a:: with SMTP id j26mr14719593lfm.18.1564776803471;
-        Fri, 02 Aug 2019 13:13:23 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.googlemail.com with ESMTPSA id w1sm17692111ljm.81.2019.08.02.13.13.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 02 Aug 2019 13:13:22 -0700 (PDT)
-Subject: Re: [PATCH v7 07/20] clk: tegra: clk-periph: Add save and restore
- support
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
- <1564532424-10449-8-git-send-email-skomatineni@nvidia.com>
- <f90cf34d-c294-b23d-38e3-6de9a8fca7d6@gmail.com>
- <e796e26e-830c-b1be-e368-c7ff177a61dd@gmail.com>
- <67cf6c13-688d-0305-61e2-c63c8e8b4729@nvidia.com>
- <550de191-f982-4544-6fbc-bf16dfeae2c6@nvidia.com>
- <c85ba067-af68-0b4a-d347-501ed7ed0ef9@gmail.com>
- <a81b85a2-5634-cfa2-77c5-94c23c4847bd@nvidia.com>
- <ef9e865f-359b-0873-a414-3d548bd4e590@gmail.com>
- <50bad1d3-df41-d1e5-a7c7-4be9c661ed14@nvidia.com>
- <62a5c6ed-21b1-8403-6fac-9c5d99b5a255@gmail.com>
- <85cd5100-467e-d08e-0ae5-ae57a6de5312@nvidia.com>
- <61652889-2e77-8f1e-9ed4-b7e525a40b10@nvidia.com>
- <9f6fc791-5c76-76d5-98fb-fd8facfd75d7@nvidia.com>
- <8bca50b2-a78c-c6b1-6547-4cec98a3e9cb@gmail.com>
- <314b5572-4113-d5c5-5956-1a55555a573c@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <a64472fd-46b7-5ff9-3140-11f71d5f88ff@gmail.com>
-Date:   Fri, 2 Aug 2019 23:13:18 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <314b5572-4113-d5c5-5956-1a55555a573c@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Fri, 2 Aug 2019 16:17:27 -0400
+Received: from pps.filterd (m0134421.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x72KGAsS012887;
+        Fri, 2 Aug 2019 20:17:13 GMT
+Received: from g4t3427.houston.hpe.com (g4t3427.houston.hpe.com [15.241.140.73])
+        by mx0b-002e3701.pphosted.com with ESMTP id 2u4u1p8bfr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 02 Aug 2019 20:17:13 +0000
+Received: from stormcage.eag.rdlabs.hpecorp.net (stormcage.eag.rdlabs.hpecorp.net [128.162.236.70])
+        by g4t3427.houston.hpe.com (Postfix) with ESMTP id D62765E;
+        Fri,  2 Aug 2019 20:17:11 +0000 (UTC)
+Received: by stormcage.eag.rdlabs.hpecorp.net (Postfix, from userid 48777)
+        id 8A21C203A23E1; Fri,  2 Aug 2019 15:17:11 -0500 (CDT)
+From:   Kyle Meyer <meyerk@hpe.com>
+Cc:     Kyle Meyer <meyerk@hpe.com>, Kyle Meyer <kyle.meyer@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] perf tools: Replace MAX_NR_CPUS with nr_cpus_onln
+Date:   Fri,  2 Aug 2019 15:16:42 -0500
+Message-Id: <20190802201642.124164-1-meyerk@stormcage.eag.rdlabs.hpecorp.net>
+X-Mailer: git-send-email 2.12.3
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-02_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908020215
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-02.08.2019 21:33, Sowjanya Komatineni пишет:
-> 
-> On 8/2/19 5:38 AM, Dmitry Osipenko wrote:
->> 02.08.2019 2:49, Sowjanya Komatineni пишет:
->>> On 8/1/19 4:19 PM, Sowjanya Komatineni wrote:
->>>> On 8/1/19 2:30 PM, Sowjanya Komatineni wrote:
->>>>> On 8/1/19 1:54 PM, Dmitry Osipenko wrote:
->>>>>> 01.08.2019 23:31, Sowjanya Komatineni пишет:
->>>>>>> On 8/1/19 1:17 PM, Dmitry Osipenko wrote:
->>>>>>>> 01.08.2019 22:42, Sowjanya Komatineni пишет:
->>>>>>>>> On 8/1/19 12:00 PM, Dmitry Osipenko wrote:
->>>>>>>>>> 01.08.2019 20:58, Sowjanya Komatineni пишет:
->>>>>>>>>>> On 7/31/19 4:09 PM, Sowjanya Komatineni wrote:
->>>>>>>>>>>> On 7/31/19 3:44 AM, Dmitry Osipenko wrote:
->>>>>>>>>>>>> 31.07.2019 12:50, Dmitry Osipenko пишет:
->>>>>>>>>>>>>> 31.07.2019 3:20, Sowjanya Komatineni пишет:
->>>>>>>>>>>>>>> This patch implements save and restore context for
->>>>>>>>>>>>>>> peripheral
->>>>>>>>>>>>>>> fixed
->>>>>>>>>>>>>>> clock ops, peripheral gate clock ops, sdmmc mux clock
->>>>>>>>>>>>>>> ops, and
->>>>>>>>>>>>>>> peripheral clock ops.
->>>>>>>>>>>>>>>
->>>>>>>>>>>>>>> During system suspend, core power goes off and looses the
->>>>>>>>>>>>>>> settings
->>>>>>>>>>>>>>> of the Tegra CAR controller registers.
->>>>>>>>>>>>>>>
->>>>>>>>>>>>>>> So during suspend entry clock and reset state of
->>>>>>>>>>>>>>> peripherals is
->>>>>>>>>>>>>>> saved
->>>>>>>>>>>>>>> and on resume they are restored to have clocks back to same
->>>>>>>>>>>>>>> rate and
->>>>>>>>>>>>>>> state as before suspend.
->>>>>>>>>>>>>>>
->>>>>>>>>>>>>>> Acked-by: Thierry Reding <treding@nvidia.com>
->>>>>>>>>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>>>>>>>>>>>> ---
->>>>>>>>>>>>>>>       drivers/clk/tegra/clk-periph-fixed.c | 33
->>>>>>>>>>>>>>> ++++++++++++++++++++++++++++++++
->>>>>>>>>>>>>>>       drivers/clk/tegra/clk-periph-gate.c  | 34
->>>>>>>>>>>>>>> +++++++++++++++++++++++++++++++++
->>>>>>>>>>>>>>>       drivers/clk/tegra/clk-periph.c       | 37
->>>>>>>>>>>>>>> ++++++++++++++++++++++++++++++++++++
->>>>>>>>>>>>>>>       drivers/clk/tegra/clk-sdmmc-mux.c    | 28
->>>>>>>>>>>>>>> +++++++++++++++++++++++++++
->>>>>>>>>>>>>>>       drivers/clk/tegra/clk.h              | 6 ++++++
->>>>>>>>>>>>>>>       5 files changed, 138 insertions(+)
->>>>>>>>>>>>>>>
->>>>>>>>>>>>>>> diff --git a/drivers/clk/tegra/clk-periph-fixed.c
->>>>>>>>>>>>>>> b/drivers/clk/tegra/clk-periph-fixed.c
->>>>>>>>>>>>>>> index c088e7a280df..21b24530fa00 100644
->>>>>>>>>>>>>>> --- a/drivers/clk/tegra/clk-periph-fixed.c
->>>>>>>>>>>>>>> +++ b/drivers/clk/tegra/clk-periph-fixed.c
->>>>>>>>>>>>>>> @@ -60,11 +60,44 @@
->>>>>>>>>>>>>>> tegra_clk_periph_fixed_recalc_rate(struct
->>>>>>>>>>>>>>> clk_hw *hw,
->>>>>>>>>>>>>>>           return (unsigned long)rate;
->>>>>>>>>>>>>>>       }
->>>>>>>>>>>>>>>       +static int tegra_clk_periph_fixed_save_context(struct
->>>>>>>>>>>>>>> clk_hw
->>>>>>>>>>>>>>> *hw)
->>>>>>>>>>>>>>> +{
->>>>>>>>>>>>>>> +    struct tegra_clk_periph_fixed *fixed =
->>>>>>>>>>>>>>> to_tegra_clk_periph_fixed(hw);
->>>>>>>>>>>>>>> +    u32 mask = 1 << (fixed->num % 32);
->>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>> +    fixed->enb_ctx = readl_relaxed(fixed->base +
->>>>>>>>>>>>>>> fixed->regs->enb_reg) &
->>>>>>>>>>>>>>> +             mask;
->>>>>>>>>>>>>>> +    fixed->rst_ctx = readl_relaxed(fixed->base +
->>>>>>>>>>>>>>> fixed->regs->rst_reg) &
->>>>>>>>>>>>>>> +             mask;
->>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>> +    return 0;
->>>>>>>>>>>>>>> +}
->>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>> +static void tegra_clk_periph_fixed_restore_context(struct
->>>>>>>>>>>>>>> clk_hw
->>>>>>>>>>>>>>> *hw)
->>>>>>>>>>>>>>> +{
->>>>>>>>>>>>>>> +    struct tegra_clk_periph_fixed *fixed =
->>>>>>>>>>>>>>> to_tegra_clk_periph_fixed(hw);
->>>>>>>>>>>>>>> +    u32 mask = 1 << (fixed->num % 32);
->>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>> +    if (fixed->enb_ctx)
->>>>>>>>>>>>>>> +        writel_relaxed(mask, fixed->base +
->>>>>>>>>>>>>>> fixed->regs->enb_set_reg);
->>>>>>>>>>>>>>> +    else
->>>>>>>>>>>>>>> +        writel_relaxed(mask, fixed->base +
->>>>>>>>>>>>>>> fixed->regs->enb_clr_reg);
->>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>> +    udelay(2);
->>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>> +    if (!fixed->rst_ctx) {
->>>>>>>>>>>>>>> +        udelay(5); /* reset propogation delay */
->>>>>>>>>>>>>>> +        writel_relaxed(mask, fixed->base +
->>>>>>>>>>>>>>> fixed->regs->rst_reg);
->>>>>>>>>>>>>>> +    }
->>>>>>>>>>>>>>> +}
->>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>       static const struct clk_ops tegra_clk_periph_fixed_ops
->>>>>>>>>>>>>>> = {
->>>>>>>>>>>>>>>           .is_enabled = tegra_clk_periph_fixed_is_enabled,
->>>>>>>>>>>>>>>           .enable = tegra_clk_periph_fixed_enable,
->>>>>>>>>>>>>>>           .disable = tegra_clk_periph_fixed_disable,
->>>>>>>>>>>>>>>           .recalc_rate = tegra_clk_periph_fixed_recalc_rate,
->>>>>>>>>>>>>>> +    .save_context = tegra_clk_periph_fixed_save_context,
->>>>>>>>>>>>>>> +    .restore_context =
->>>>>>>>>>>>>>> tegra_clk_periph_fixed_restore_context,
->>>>>>>>>>>>>>>       };
->>>>>>>>>>>>>>>         struct clk *tegra_clk_register_periph_fixed(const
->>>>>>>>>>>>>>> char
->>>>>>>>>>>>>>> *name,
->>>>>>>>>>>>>>> diff --git a/drivers/clk/tegra/clk-periph-gate.c
->>>>>>>>>>>>>>> b/drivers/clk/tegra/clk-periph-gate.c
->>>>>>>>>>>>>>> index 4b31beefc9fc..6ba5b08e0787 100644
->>>>>>>>>>>>>>> --- a/drivers/clk/tegra/clk-periph-gate.c
->>>>>>>>>>>>>>> +++ b/drivers/clk/tegra/clk-periph-gate.c
->>>>>>>>>>>>>>> @@ -25,6 +25,8 @@ static DEFINE_SPINLOCK(periph_ref_lock);
->>>>>>>>>>>>>>>         #define read_rst(gate) \
->>>>>>>>>>>>>>>           readl_relaxed(gate->clk_base +
->>>>>>>>>>>>>>> (gate->regs->rst_reg))
->>>>>>>>>>>>>>> +#define write_rst_set(val, gate) \
->>>>>>>>>>>>>>> +    writel_relaxed(val, gate->clk_base +
->>>>>>>>>>>>>>> (gate->regs->rst_set_reg))
->>>>>>>>>>>>>>>       #define write_rst_clr(val, gate) \
->>>>>>>>>>>>>>>           writel_relaxed(val, gate->clk_base +
->>>>>>>>>>>>>>> (gate->regs->rst_clr_reg))
->>>>>>>>>>>>>>>       @@ -110,10 +112,42 @@ static void
->>>>>>>>>>>>>>> clk_periph_disable(struct
->>>>>>>>>>>>>>> clk_hw *hw)
->>>>>>>>>>>>>>> spin_unlock_irqrestore(&periph_ref_lock, flags);
->>>>>>>>>>>>>>>       }
->>>>>>>>>>>>>>>       +static int clk_periph_gate_save_context(struct clk_hw
->>>>>>>>>>>>>>> *hw)
->>>>>>>>>>>>>>> +{
->>>>>>>>>>>>>>> +    struct tegra_clk_periph_gate *gate =
->>>>>>>>>>>>>>> to_clk_periph_gate(hw);
->>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>> +    gate->clk_state_ctx = read_enb(gate) &
->>>>>>>>>>>>>>> periph_clk_to_bit(gate);
->>>>>>>>>>>>>>> +    gate->rst_state_ctx = read_rst(gate) &
->>>>>>>>>>>>>>> periph_clk_to_bit(gate);
->>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>> +    return 0;
->>>>>>>>>>>>>>> +}
->>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>> +static void clk_periph_gate_restore_context(struct clk_hw
->>>>>>>>>>>>>>> *hw)
->>>>>>>>>>>>>>> +{
->>>>>>>>>>>>>>> +    struct tegra_clk_periph_gate *gate =
->>>>>>>>>>>>>>> to_clk_periph_gate(hw);
->>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>> +    if (gate->clk_state_ctx)
->>>>>>>>>>>>>>> + write_enb_set(periph_clk_to_bit(gate), gate);
->>>>>>>>>>>>>>> +    else
->>>>>>>>>>>>>>> + write_enb_clr(periph_clk_to_bit(gate), gate);
->>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>> +    udelay(5);
->>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>> +    if (!(gate->flags & TEGRA_PERIPH_NO_RESET) &&
->>>>>>>>>>>>>>> +        !(gate->flags & TEGRA_PERIPH_MANUAL_RESET)) {
->>>>>>>>>>>>>>> +        if (gate->rst_state_ctx)
->>>>>>>>>>>>>>> + write_rst_set(periph_clk_to_bit(gate), gate);
->>>>>>>>>>>>>>> +        else
->>>>>>>>>>>>>>> + write_rst_clr(periph_clk_to_bit(gate), gate);
->>>>>>>>>>>>>>> +    }
->>>>>>>>>>>>>>> +}
->>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>       const struct clk_ops tegra_clk_periph_gate_ops = {
->>>>>>>>>>>>>>>           .is_enabled = clk_periph_is_enabled,
->>>>>>>>>>>>>>>           .enable = clk_periph_enable,
->>>>>>>>>>>>>>>           .disable = clk_periph_disable,
->>>>>>>>>>>>>>> +    .save_context = clk_periph_gate_save_context,
->>>>>>>>>>>>>>> +    .restore_context = clk_periph_gate_restore_context,
->>>>>>>>>>>>>>>       };
->>>>>>>>>>>>>>>         struct clk *tegra_clk_register_periph_gate(const
->>>>>>>>>>>>>>> char *name,
->>>>>>>>>>>>>>> diff --git a/drivers/clk/tegra/clk-periph.c
->>>>>>>>>>>>>>> b/drivers/clk/tegra/clk-periph.c
->>>>>>>>>>>>>>> index 58437da25156..06fb62955768 100644
->>>>>>>>>>>>>>> --- a/drivers/clk/tegra/clk-periph.c
->>>>>>>>>>>>>>> +++ b/drivers/clk/tegra/clk-periph.c
->>>>>>>>>>>>>>> @@ -99,6 +99,37 @@ static void clk_periph_disable(struct
->>>>>>>>>>>>>>> clk_hw
->>>>>>>>>>>>>>> *hw)
->>>>>>>>>>>>>>>           gate_ops->disable(gate_hw);
->>>>>>>>>>>>>>>       }
->>>>>>>>>>>>>>>       +static int clk_periph_save_context(struct clk_hw *hw)
->>>>>>>>>>>>>>> +{
->>>>>>>>>>>>>>> +    struct tegra_clk_periph *periph = to_clk_periph(hw);
->>>>>>>>>>>>>>> +    const struct clk_ops *gate_ops = periph->gate_ops;
->>>>>>>>>>>>>>> +    struct clk_hw *gate_hw = &periph->gate.hw;
->>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>> +    if (!(periph->gate.flags & TEGRA_PERIPH_NO_GATE))
->>>>>>>>>>>>>>> +        gate_ops->save_context(gate_hw);
->>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>> +    periph->parent_ctx = clk_periph_get_parent(hw);
->>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>> +    return 0;
->>>>>>>>>>>>>>> +}
->>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>> +static void clk_periph_restore_context(struct clk_hw *hw)
->>>>>>>>>>>>>>> +{
->>>>>>>>>>>>>>> +    struct tegra_clk_periph *periph = to_clk_periph(hw);
->>>>>>>>>>>>>>> +    const struct clk_ops *gate_ops = periph->gate_ops;
->>>>>>>>>>>>>>> +    struct clk_hw *gate_hw = &periph->gate.hw;
->>>>>>>>>>>>>>> +    const struct clk_ops *div_ops = periph->div_ops;
->>>>>>>>>>>>>>> +    struct clk_hw *div_hw = &periph->divider.hw;
->>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>> +    clk_periph_set_parent(hw, periph->parent_ctx);
->>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>> +    if (!(periph->gate.flags & TEGRA_PERIPH_NO_DIV))
->>>>>>>>>>>>>>> + div_ops->restore_context(div_hw);
->>>>>>>>>>>>>> Could you please point to where the divider's save_context()
->>>>>>>>>>>>>> happens?
->>>>>>>>>>>>>> Because I can't see it.
->>>>>>>>>>>>> Ah, I now see that there is no need to save the dividers
->>>>>>>>>>>>> context
->>>>>>>>>>>>> because
->>>>>>>>>>>>> clk itself has enough info that is needed for the context's
->>>>>>>>>>>>> restoring
->>>>>>>>>>>>> (like I pointed in the review to v6).
->>>>>>>>>>>>>
->>>>>>>>>>>>> Looks like you could also implement a new
->>>>>>>>>>>>> clk_hw_get_parent_index()
->>>>>>>>>>>>> generic helper to get the index instead of storing it
->>>>>>>>>>>>> manually.
->>>>>>>>>>>> clk_periph_get_parent basically invokes existing clk_mux_ops
->>>>>>>>>>>> get_parent() which is then saved in tegra_clk_periph.
->>>>>>>>>>>>
->>>>>>>>>>>> All existing drivers are using directly get_parent() from
->>>>>>>>>>>> clk_mux
->>>>>>>>>>>> which actually gets index from the register read.
->>>>>>>>>>>>
->>>>>>>>>>>> To have this more generic w.r.t save/restore context point of
->>>>>>>>>>>> view,
->>>>>>>>>>>> probably instead of implementing new get_parent_index helper,
->>>>>>>>>>>> I think
->>>>>>>>>>>> its better to implement save_context and restore_context to
->>>>>>>>>>>> clk_mux_ops along with creating parent_index field into
->>>>>>>>>>>> clk_mux to
->>>>>>>>>>>> cache index during set_parent.
->>>>>>>>>>>>
->>>>>>>>>>>> So we just need to invoke mux_ops save_context and
->>>>>>>>>>>> restore_context.
->>>>>>>>>>>>
->>>>>>>>>>> I hope its ok to add save/restore context to clk_mux_ops to be
->>>>>>>>>>> more
->>>>>>>>>>> generic w.r.t save/restore context rather than get_parent_index
->>>>>>>>>>> API.
->>>>>>>>>>> Please confirm if you agree.
->>>>>>>>>> Sounds like a good idea. I see that there is a 'restoring'
->>>>>>>>>> helper for
->>>>>>>>>> the generic clk_gate, seems something similar could be done
->>>>>>>>>> for the
->>>>>>>>>> clk_mux. And looks like anyway you'll need to associate the
->>>>>>>>>> parent
->>>>>>>>>> clock
->>>>>>>>>> with the hw index in order to restore the muxing.
->>>>>>>>> by 'restoring' helper for generic clk_gate, are you referring to
->>>>>>>>> clk_gate_restore_context API?
->>>>>>>> Yes.
->>>>>>>>
->>>>>>>>> clk_gate_restore_context is API that's any clk drivers can use for
->>>>>>>>> clk_gate operation restore for custom gate clk_ops.
->>>>>>>>>
->>>>>>>>> But clk-periph is directly using generic clk_mux ops from clk_mux
->>>>>>>>> so I
->>>>>>>>> think we should add .restore_context to clk_mux_ops and then
->>>>>>>>> during
->>>>>>>>> clk-periph restore need to invoke mux_ops->restore_context.
->>>>>>>> I'm not sure whether it will be good for every driver that uses
->>>>>>>> generic
->>>>>>>> clk_mux ops. Should be more flexible to have a generic helper
->>>>>>>> function
->>>>>>>> that any driver could use in order to restore the clock's parent.
->>>>>>>>
->>>>>>>> The clk-periph restoring also includes case of combining divider
->>>>>>>> and
->>>>>>>> parent restoring, so generic helper could be useful in that case
->>>>>>>> as well.
->>>>>>>>
->>>>>>>> It also looks like you could actually use the
->>>>>>>> clk_gate_restore_context()
->>>>>>>> instead of manually saving the clock's enable-state, couldn't you?
->>>>>>> ok for clk_mux, can add generic clk_mux_restore_context API rather
->>>>>>> than
->>>>>>> using restore_context in clk_ops and will invoke that during
->>>>>>> clk_periph
->>>>>>> restore.
->>>>>>>
->>> digging thru looks like for clk_periph source restore instead of
->>> clk_mux_restore_context, i can directly do clk_hw_get_parent and
->>> clk_set_parent with mux_hw as they invoke mux_ops get/set parent anyway.
->>> Will do this for periph clk mux
->>>>>>> Reg clk_gate, looks like we cant use generic
->>>>>>> clk_gate_restore_context
->>>>>>> for clk-periph as it calls enable/disable callbacks and
->>>>>>> clk_periph_enable/disable in clk-periph-gate also updated refcnt and
->>>>>>> depending on that actual enable/disable is set.
->>>>>>>
->>>>>>> During suspend, peripherals that are already enabled have their
->>>>>>> refcnt >
->>>>>>> 1, so they dont go thru enable/disable on restore if we use same
->>>>>>> enable/disable callback.
->>>>>> Looks like you could just decrement the gate's enable_refcnt on
->>>>>> save_context, wouldn't that work?
->>>>>>
->>>> gate->enable_refcnt is within clk-periph-gate which gets updated when
->>>> enable/disable callbacks get execute thru clk_core_enable/disable.
->>>> But actual enable_count used in clk_gate_restore_context is the one
->>>> which gets updated with in the clk core enable/disable functions which
->>>> invokes these callbacks. Depending on this enable_count in clk core it
->>>> invokes enable/disable.
->>>>
->>>> So, this will cause mismatch if we handle refcnt during save/restore
->>>> of tegra_clk_periph_gate_ops and also enable/disable thru this
->>>> clk_gate_restore_context is based on enable_count from clk core.
->>>>
->>>>>>> Also to align exact reset state along with CLK (like for case where
->>>>>>> CLK
->>>>>>> is enabled but peripheral might be in reset state), implemented
->>>>>>> save/restore in tegra specific tegra_clk_periph_gate_ops
->>>>>> I'm wondering whether instead of saving/restoring reset-state of
->>>>>> every
->>>>>> clock, you could simply save/restore the whole RST_DEV_x_SET
->>>>>> register.
->>>>>> Couldn't you?
->>>>> Thats what I was doing in first version of patch. But later as we
->>>>> moved to use clk_save_context and clk_restore_context, peripheral
->>>>> clk_hw RST & CLK enables happen thru its corresponding save/restore
->>>>> after source restore
->>>>
->>>> Also, to align both CLK & RST to the exact state of register, doing
->>>> save/restore in tegra_clk_periph_gate_ops and invoking this after
->>>> source restore for peripheral clock, seems cleaner to avoid any
->>>> misconfiguration b/w rst & clk settings.
->>>>
->> It looks to me that it is very wasteful to store/restore each individual
->> gate and reset state, also given that some of them are shared. I think
->> that the gates and resets should be restored separately for the
->> peripherals by a custom tegra_clk_save/restore_periph_gates/resets().
-> clk_periph_fixed_disable just disables clock only without deasserting
-> the corresponding peripheral.
-> 
-> corresponding peripheral drivers can also issue reset assert/deassert
-> thru reset_control_assert/deassert.
-> 
-> So, we will not get the actual state of clk and rst unless we read and
-> save state of reset and clock separately during save_context.
-> 
-> Currently patch is already using custom
-> tegra_clk_periph_fixed_save/restore_context for corresponding clk_ops.
-> Are you suggesting to do save and restore of complete CLK_ENB/RST_DEV
-> register settings instead of individual peripheral bits? 
+The variables nr_cpus_onln and max_caches are dynamic alternatives for
+MAX_NR_CPUS and MAX_CACHES as they are initialized at runtime. MAX_NR_CPUS
+is still used by DECLARE_BITMAP() at compile time, however, nr_cpus_onln
+replaces it elsewhere throughout perf.
 
-Yes, I'm suggesting to do a complete ungate/reset handling of the
-devices in a separate function. All enabling/deassertion will be done in
-a single hop, hence using 7us delay and four u32 words, which is much
-nicer IMHO.
+This patch was tested using "perf record -a -g" on both an eight socket
+(288 CPUs) system and a single socket (36 CPUs) system. Each system was then
+rebooted single socket (36 CPUs) / eight socket (288 CPUs) and "perf
+report" used to read the perf.data file. "perf report --header" was used to
+confirm that each perf.data had information on 288 CPUs / 36 CPUs.
+
+Signed-off-by: Kyle Meyer <kyle.meyer@hpe.com>
+Cc: Russ Anderson <russ.anderson@hpe.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+---
+ tools/perf/lib/cpumap.c     |  6 +++---
+ tools/perf/perf.c           | 10 ++++++++++
+ tools/perf/perf.h           |  1 +
+ tools/perf/util/header.c    |  7 +++----
+ tools/perf/util/machine.c   | 11 +++++------
+ tools/perf/util/stat.c      |  4 ++--
+ tools/perf/util/svghelper.c | 10 +++++-----
+ 7 files changed, 29 insertions(+), 20 deletions(-)
+
+diff --git a/tools/perf/lib/cpumap.c b/tools/perf/lib/cpumap.c
+index 1ddb69e796e5..327a37c68e73 100644
+--- a/tools/perf/lib/cpumap.c
++++ b/tools/perf/lib/cpumap.c
+@@ -101,7 +101,7 @@ struct perf_cpu_map *perf_cpu_map__read(FILE *file)
+ 			int new_max = nr_cpus + cpu - prev - 1;
+ 
+ 			if (new_max >= max_entries) {
+-				max_entries = new_max + MAX_NR_CPUS / 2;
++				max_entries = new_max + nr_cpus_onln / 2;
+ 				tmp = realloc(tmp_cpus, max_entries * sizeof(int));
+ 				if (tmp == NULL)
+ 					goto out_free_tmp;
+@@ -112,7 +112,7 @@ struct perf_cpu_map *perf_cpu_map__read(FILE *file)
+ 				tmp_cpus[nr_cpus++] = prev;
+ 		}
+ 		if (nr_cpus == max_entries) {
+-			max_entries += MAX_NR_CPUS;
++			max_entries += nr_cpus_onln;
+ 			tmp = realloc(tmp_cpus, max_entries * sizeof(int));
+ 			if (tmp == NULL)
+ 				goto out_free_tmp;
+@@ -199,7 +199,7 @@ struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list)
+ 					goto invalid;
+ 
+ 			if (nr_cpus == max_entries) {
+-				max_entries += MAX_NR_CPUS;
++				max_entries += nr_cpus_onln;
+ 				tmp = realloc(tmp_cpus, max_entries * sizeof(int));
+ 				if (tmp == NULL)
+ 					goto invalid;
+diff --git a/tools/perf/perf.c b/tools/perf/perf.c
+index 97e2628ea5dd..658bf8501bb0 100644
+--- a/tools/perf/perf.c
++++ b/tools/perf/perf.c
+@@ -428,6 +428,16 @@ int main(int argc, const char **argv)
+ 	const char *cmd;
+ 	char sbuf[STRERR_BUFSIZE];
+ 
++	nr_cpus_onln = sysconf(_SC_NPROCESSORS_ONLN);
++	if (nr_cpus_onln < 0) {
++		fprintf(stderr, "Cannot determine the number of CPUs currently online.\n");
++		goto out;
++	}
++	if (nr_cpus_onln > MAX_NR_CPUS) {
++		fprintf(stderr, "The number of CPUs currently online is too large, consider raising MAX_NR_CPUS.\n");
++		nr_cpus_onln = MAX_NR_CPUS;
++	}
++	
+ 	/* libsubcmd init */
+ 	exec_cmd_init("perf", PREFIX, PERF_EXEC_PATH, EXEC_PATH_ENVIRONMENT);
+ 	pager_init(PERF_PAGER_ENVIRONMENT);
+diff --git a/tools/perf/perf.h b/tools/perf/perf.h
+index 74d0124d38f3..603391cac85b 100644
+--- a/tools/perf/perf.h
++++ b/tools/perf/perf.h
+@@ -29,6 +29,7 @@ static inline unsigned long long rdclock(void)
+ #define MAX_NR_CPUS			2048
+ #endif
+ 
++int nr_cpus_onln;
+ extern const char *input_name;
+ extern bool perf_host, perf_guest;
+ extern const char perf_version_string[];
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index b04c2b6b28b3..7983d268eec1 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -1121,16 +1121,15 @@ static int build_caches(struct cpu_cache_level caches[], u32 size, u32 *cntp)
+ 	return 0;
+ }
+ 
+-#define MAX_CACHES (MAX_NR_CPUS * 4)
+-
+ static int write_cache(struct feat_fd *ff,
+ 		       struct evlist *evlist __maybe_unused)
+ {
+-	struct cpu_cache_level caches[MAX_CACHES];
++	u32 max_caches = (nr_cpus_online * 4);
++	struct cpu_cache_level caches[max_caches]
+ 	u32 cnt = 0, i, version = 1;
+ 	int ret;
+ 
+-	ret = build_caches(caches, MAX_CACHES, &cnt);
++	ret = build_caches(caches, max_caches, &cnt);
+ 	if (ret)
+ 		goto out;
+ 
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index f6ee7fbad3e4..3ad77d5e8aab 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -2615,7 +2615,7 @@ int __machine__synthesize_threads(struct machine *machine, struct perf_tool *too
+ 
+ pid_t machine__get_current_tid(struct machine *machine, int cpu)
+ {
+-	if (cpu < 0 || cpu >= MAX_NR_CPUS || !machine->current_tid)
++	if (cpu < 0 || cpu >= nr_cpus_onln || !machine->current_tid)
+ 		return -1;
+ 
+ 	return machine->current_tid[cpu];
+@@ -2632,16 +2632,15 @@ int machine__set_current_tid(struct machine *machine, int cpu, pid_t pid,
+ 	if (!machine->current_tid) {
+ 		int i;
+ 
+-		machine->current_tid = calloc(MAX_NR_CPUS, sizeof(pid_t));
++		machine->current_tid = calloc(nr_cpus_onln, sizeof(pid_t));
+ 		if (!machine->current_tid)
+ 			return -ENOMEM;
+-		for (i = 0; i < MAX_NR_CPUS; i++)
++		for (i = 0; i < nr_cpus_onln; i++)
+ 			machine->current_tid[i] = -1;
+ 	}
+ 
+-	if (cpu >= MAX_NR_CPUS) {
+-		pr_err("Requested CPU %d too large. ", cpu);
+-		pr_err("Consider raising MAX_NR_CPUS\n");
++	if (cpu >= nr_cpus_onln) {
++		pr_err("Requested CPU %d too large, there are %d CPUs currently online.\n", cpu, nr_cpus_onln);
+ 		return -EINVAL;
+ 	}
+ 
+diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+index e4e4e3bf8b2b..42dddbd2f23c 100644
+--- a/tools/perf/util/stat.c
++++ b/tools/perf/util/stat.c
+@@ -208,7 +208,7 @@ void perf_evlist__reset_stats(struct evlist *evlist)
+ static void zero_per_pkg(struct evsel *counter)
+ {
+ 	if (counter->per_pkg_mask)
+-		memset(counter->per_pkg_mask, 0, MAX_NR_CPUS);
++		memset(counter->per_pkg_mask, 0, nr_cpus_onln);
+ }
+ 
+ static int check_per_pkg(struct evsel *counter,
+@@ -227,7 +227,7 @@ static int check_per_pkg(struct evsel *counter,
+ 		return 0;
+ 
+ 	if (!mask) {
+-		mask = zalloc(MAX_NR_CPUS);
++		mask = zalloc(nr_cpus_onln);
+ 		if (!mask)
+ 			return -ENOMEM;
+ 
+diff --git a/tools/perf/util/svghelper.c b/tools/perf/util/svghelper.c
+index ae6a534a7a80..0404bd87812a 100644
+--- a/tools/perf/util/svghelper.c
++++ b/tools/perf/util/svghelper.c
+@@ -706,7 +706,7 @@ static void scan_thread_topology(int *map, struct topology *t, int cpu, int *pos
+ 
+ 		for_each_set_bit(thr,
+ 				 cpumask_bits(&t->sib_thr[i]),
+-				 MAX_NR_CPUS)
++				 nr_cpus_onln)
+ 			if (map[thr] == -1)
+ 				map[thr] = (*pos)++;
+ 	}
+@@ -721,7 +721,7 @@ static void scan_core_topology(int *map, struct topology *t)
+ 	for (i = 0; i < t->sib_core_nr; i++)
+ 		for_each_set_bit(cpu,
+ 				 cpumask_bits(&t->sib_core[i]),
+-				 MAX_NR_CPUS)
++				 nr_cpus_onln)
+ 			scan_thread_topology(map, t, cpu, &pos);
+ }
+ 
+@@ -738,7 +738,7 @@ static int str_to_bitmap(char *s, cpumask_t *b)
+ 
+ 	for (i = 0; i < m->nr; i++) {
+ 		c = m->map[i];
+-		if (c >= MAX_NR_CPUS) {
++		if (c >= nr_cpus_onln) {
+ 			ret = -1;
+ 			break;
+ 		}
+@@ -785,13 +785,13 @@ int svg_build_topology_map(char *sib_core, int sib_core_nr,
+ 		sib_thr += strlen(sib_thr) + 1;
+ 	}
+ 
+-	topology_map = malloc(sizeof(int) * MAX_NR_CPUS);
++	topology_map = malloc(sizeof(int) * nr_cpus_onln);
+ 	if (!topology_map) {
+ 		fprintf(stderr, "topology: no memory\n");
+ 		goto exit;
+ 	}
+ 
+-	for (i = 0; i < MAX_NR_CPUS; i++)
++	for (i = 0; i < nr_cpus_onln; i++)
+ 		topology_map[i] = -1;
+ 
+ 	scan_core_topology(topology_map, &t);
+-- 
+2.12.3
+
