@@ -5,50 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB6CC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2096C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:30:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD9A7217D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5AF22184B
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:30:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738252;
-	bh=aaKY4LCglb1HqXVstfq5nSAHEvyl0XHgLjQjiUuC2Wg=;
+	s=default; t=1564738255;
+	bh=sv9oWjMBxyfhGcn1mrrgVPqG5rXCy9a3m1MYlLe2LW8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VJvli7eHlQ+tdZq9ff6tJXfSCqZqJaaqPsij3RGv+5oFteIABBhHRQ8DQHJrfCEu2
-	 3G6mf95mLRcMVEvh4gXegjI5Yjs8TWljap/XCjg1EmKxMIQL4Ro6BQwcU50unoqpZ+
-	 FbNX672M9Wn8ju2rWPZXFpMlriJqCkngz38imAr8=
+	b=tXcPV5AWXHfqtQaPSzTfpF5hWrh8AsucxuymNFl5TE+hsb1YlbEkPKa/hVk3HqQWU
+	 5We+2Rr3AgvLdFAZT/jt8nlby6g3d9d9JrgrGV863VH2TQv8H6lKD83yPzpJdBLr0d
+	 Mwaei2dEy0E6HmF4fPGFKLzjPbvmhl08JmKhwv3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390942AbfHBJav (ORCPT
+        id S2390953AbfHBJax (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:30:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56422 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:30:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390917AbfHBJar (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:30:47 -0400
+        id S2390933AbfHBJat (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:30:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 116F8217D4;
-        Fri,  2 Aug 2019 09:30:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EC3C21773;
+        Fri,  2 Aug 2019 09:30:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738246;
-        bh=aaKY4LCglb1HqXVstfq5nSAHEvyl0XHgLjQjiUuC2Wg=;
+        s=default; t=1564738249;
+        bh=sv9oWjMBxyfhGcn1mrrgVPqG5rXCy9a3m1MYlLe2LW8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rSHXmU6d2QctfizGUNUtaH7OgyD9Hnqw/cfttV9O8qzYWPLyUFyHSDrv+fslERbxC
-         0HdTNoOuEq4cCGfsNmIcx/6p6BjEKj7Ucu7FG/BUxbHTVk12lnB0XQaAJKJ3nlNOb/
-         I86KeTfBlS1duI/mm8ZXs1NUXCc/Qj6OlqE6Zf3k=
+        b=2XKlKTqdANtJJWyoBrMz68brqXeaOWSC3wE7mUlH+WwdftktAIZoaU3P1GoNmO2UG
+         NP5uvN6lqxUAUuNS1PgOnCOyLX+OGN89Yn/YKSRMg3FwdRd4CYPprSGJHl8wPXRoWL
+         BBzTvnZBt5+kytwY94DQ42Nbmv/d5GB5d8c12Neo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Jose Abreu <joabreu@synopsys.com>,
+        Joao Pinto <jpinto@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 029/158] regmap: fix bulk writes on paged registers
-Date:   Fri,  2 Aug 2019 11:27:30 +0200
-Message-Id: <20190802092209.588033912@linuxfoundation.org>
+Subject: [PATCH 4.4 013/158] net: stmmac: dwmac1000: Clear unused address entries
+Date:   Fri,  2 Aug 2019 11:27:14 +0200
+Message-Id: <20190802092206.178469022@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -61,40 +63,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit db057679de3e9e6a03c1bcd5aee09b0d25fd9f5b ]
+[ Upstream commit 9463c445590091202659cdfdd44b236acadfbd84 ]
 
-On buses like SlimBus and SoundWire which does not support
-gather_writes yet in regmap, A bulk write on paged register
-would be silently ignored after programming page.
-This is because local variable 'ret' value in regmap_raw_write_impl()
-gets reset to 0 once page register is written successfully and the
-code below checks for 'ret' value to be -ENOTSUPP before linearising
-the write buffer to send to bus->write().
+In case we don't use a given address entry we need to clear it because
+it could contain previous values that are no longer valid.
 
-Fix this by resetting the 'ret' value to -ENOTSUPP in cases where
-gather_writes() is not supported or single register write is
-not possible.
+Found out while running stmmac selftests.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Cc: Joao Pinto <jpinto@synopsys.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/regmap/regmap.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
-index fd377b956199..77cabde977ed 100644
---- a/drivers/base/regmap/regmap.c
-+++ b/drivers/base/regmap/regmap.c
-@@ -1358,6 +1358,8 @@ int _regmap_raw_write(struct regmap *map, unsigned int reg,
- 					     map->format.reg_bytes +
- 					     map->format.pad_bytes,
- 					     val, val_len);
-+	else
-+		ret = -ENOTSUPP;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
+index 371a669d69fd..1df84c8de9d7 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
+@@ -187,6 +187,12 @@ static void dwmac1000_set_filter(struct mac_device_info *hw,
+ 					    GMAC_ADDR_LOW(reg));
+ 			reg++;
+ 		}
++
++		while (reg <= perfect_addr_number) {
++			writel(0, ioaddr + GMAC_ADDR_HIGH(reg));
++			writel(0, ioaddr + GMAC_ADDR_LOW(reg));
++			reg++;
++		}
+ 	}
  
- 	/* If that didn't work fall back on linearising by hand. */
- 	if (ret == -ENOTSUPP) {
+ #ifdef FRAME_FILTER_DEBUG
 -- 
 2.20.1
 
