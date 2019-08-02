@@ -2,125 +2,236 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 180A0C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C41DDC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8CB32087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8553E21726
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:06:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Dkl004sr"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="abum6jWt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388317AbfHBOFQ (ORCPT
+        id S2390342AbfHBOGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 10:05:16 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:7870 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728714AbfHBOFP (ORCPT
+        Fri, 2 Aug 2019 10:06:22 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:40731 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728714AbfHBOGV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 10:05:15 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d4443240000>; Fri, 02 Aug 2019 07:05:24 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 02 Aug 2019 07:05:15 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 02 Aug 2019 07:05:15 -0700
-Received: from tbergstrom-lnx.Nvidia.com (172.20.13.39) by
- HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3; Fri, 2 Aug 2019 14:05:14 +0000
-Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
-        id 537EA40DF8; Fri,  2 Aug 2019 17:05:12 +0300 (EEST)
-Date:   Fri, 2 Aug 2019 17:05:12 +0300
-From:   Peter De Schrijver <pdeschrijver@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        "Mark Brown" <broonie@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 3/3] soc/tegra: regulators: Add regulators coupler for
- Tegra30
-Message-ID: <20190802140512.GD3883@pdeschrijver-desktop.Nvidia.com>
-References: <20190725151832.9802-1-digetx@gmail.com>
- <20190725151832.9802-4-digetx@gmail.com>
+        Fri, 2 Aug 2019 10:06:21 -0400
+Received: by mail-ed1-f68.google.com with SMTP id k8so72464428eds.7
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 07:06:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=p1KbwWigVt4fPabp1PFOSuWAjFwg5XXZ5xw32khObXU=;
+        b=abum6jWtI06IzQi92RY7wBkZcRWpAJN9L98U26jHEw7mz51UiJ10czXj1+jLNnKXXH
+         ddW1pa0TIOvUAnwJ4pxNyD8wvPRfV/l8Hg5EWt2f6s1yrLHeFV4JOlesmdS1ik/vkJjJ
+         5DFXSoH6+dVof4FN7sJiaFAIl787oeGMwqdAg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=p1KbwWigVt4fPabp1PFOSuWAjFwg5XXZ5xw32khObXU=;
+        b=XeP0oOaqJ9tgWCfCAm3r8XxAekeiArW0dnBVSCz4K4bNbcJlH3jgfpQbcPyFSHjCw6
+         yUUe0e7dVjyOUCib6RBj2gHnSZVak/fyb+km7YAb17XN2AN0LVLsx4kyr4w6bTJM3T+8
+         ZhuDyLJTwNtF8h2xFj4ol3FW/QHUM+JjjYY2B27rfkTJSpTBOhBkWmB2+IVien6uFEqu
+         A42iPdspPcNnb5TlTmbIwX826zJQiNffB+bnajp6t5pl4toGTKKLErbmeiMhkqYuinTy
+         +eV5ZiYbg7QOkjgoLO0NPkJR/kTMfR3S2iMOHzS0t4925O5xDi+k6HVxKsBkrd6eSTY0
+         5IKw==
+X-Gm-Message-State: APjAAAVrxEVyWWFQYN2rwp76xjcfx7C89yGKOtXh73FXd+y1x5XaNFHs
+        tyu4PgWsUJ/1Jdgf/0wt0qk=
+X-Google-Smtp-Source: APXvYqxIKtpjCYsHchgchG2dJLleNo/WK0qX+MScSUhXnTDIghKPIHG/6otAtiBcYt4kc29kBRcuDA==
+X-Received: by 2002:a17:906:1292:: with SMTP id k18mr106811258ejb.146.1564754779811;
+        Fri, 02 Aug 2019 07:06:19 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id f24sm17778831edt.82.2019.08.02.07.06.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 02 Aug 2019 07:06:18 -0700 (PDT)
+Date:   Fri, 2 Aug 2019 16:06:16 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Brian Starkey <Brian.Starkey@arm.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "eric@anholt.net" <eric@anholt.net>,
+        "kieran.bingham+renesas@ideasonboard.com" 
+        <kieran.bingham+renesas@ideasonboard.com>,
+        "sean@poorly.run" <sean@poorly.run>,
+        "laurent.pinchart@ideasonboard.com" 
+        <laurent.pinchart@ideasonboard.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>, nd <nd@arm.com>
+Subject: Re: [PATCH v1 2/2] drm: Clear the fence pointer when writeback job
+ signaled
+Message-ID: <20190802140616.GM7444@phenom.ffwll.local>
+Mail-Followup-To: Brian Starkey <Brian.Starkey@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "eric@anholt.net" <eric@anholt.net>,
+        "kieran.bingham+renesas@ideasonboard.com" <kieran.bingham+renesas@ideasonboard.com>,
+        "sean@poorly.run" <sean@poorly.run>,
+        "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+        nd <nd@arm.com>
+References: <1564571048-15029-1-git-send-email-lowry.li@arm.com>
+ <1564571048-15029-3-git-send-email-lowry.li@arm.com>
+ <20190731132002.dut5mdsqgh7b75iv@DESKTOP-E1NTVVP.localdomain>
+ <20190802092920.4la5cwrltv2m6dke@DESKTOP-E1NTVVP.localdomain>
+ <CAKMK7uEZaFEcs90+U3vzgH69+95BD58Dt=J=gT6=n6oah5Nbyg@mail.gmail.com>
+ <CAKMK7uH38rxyTyuYRGJ6NBejyUxQ6Qvr1CdjH2kpXiq+3-=t8Q@mail.gmail.com>
+ <20190802100904.blnusnieti3pxgxu@DESKTOP-E1NTVVP.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190725151832.9802-4-digetx@gmail.com>
-X-NVConfidentiality: public
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1564754724; bh=4T40FxzWga3LbNPFV+QKshbSr6vY3IQ06h0Men8HJ24=;
-        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
-         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
-         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
-        b=Dkl004srNhOkuivE2fGUwLql8dZNBYo49DqQdSe6IH0rxWhuzuke+kF25uM/GXm0w
-         JcD+8ygRTNScG2Sdctgvg1KuAbwS/RpKmDp+khLiDU0/dv1FuvMAhWlXqqdazZjI/F
-         SZvtskJ8QXsnqSySjCRekP+iswUqfcFROzP+v6gtuD2NMWgzfCmM0QmaUIJPQLqt/U
-         cP+zScMJzcxCgG5epYh0lZdYoB20161MpAkRyTwzuly0B7UprQw49AE9T2imMIKLyZ
-         AmNbFVblTo6xvb+CvZbOsbOVIIBVHQqSqw3LBib5mh5cSGNbDBcfA7zfmc1u0+Pmyd
-         yfeenziXqPhRQ==
+In-Reply-To: <20190802100904.blnusnieti3pxgxu@DESKTOP-E1NTVVP.localdomain>
+X-Operating-System: Linux phenom 4.19.0-5-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 06:18:32PM +0300, Dmitry Osipenko wrote:
-> Add regulators coupler for Tegra30 SoCs that performs voltage balancing
-> of a coupled regulators and thus provides voltage scaling functionality.
+On Fri, Aug 02, 2019 at 10:09:05AM +0000, Brian Starkey wrote:
+> Hi Daniel,
 > 
-> There are 2 coupled regulators on all Tegra30 SoCs: CORE and CPU. The
-> coupled regulator voltages shall be in a range of 300mV from each other
-> and CORE voltage shall be higher than the CPU by N mV, where N depends
-> on the CPU voltage.
+> On Fri, Aug 02, 2019 at 11:45:13AM +0200, Daniel Vetter wrote:
+> > On Fri, Aug 2, 2019 at 11:43 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+> > >
+> > > On Fri, Aug 2, 2019 at 11:29 AM Brian Starkey <Brian.Starkey@arm.com> wrote:
+> > > >
+> > > > Hi Lowry,
+> > > >
+> > > > On Thu, Aug 01, 2019 at 06:34:08AM +0000, Lowry Li (Arm Technology China) wrote:
+> > > > > Hi Brian,
+> > > > >
+> > > > > On Wed, Jul 31, 2019 at 09:20:04PM +0800, Brian Starkey wrote:
+> > > > > > Hi Lowry,
+> > > > > >
+> > > > > > Thanks for this cleanup.
+> > > > > >
+> > > > > > On Wed, Jul 31, 2019 at 11:04:45AM +0000, Lowry Li (Arm Technology China) wrote:
+> > > > > > > During it signals the completion of a writeback job, after releasing
+> > > > > > > the out_fence, we'd clear the pointer.
+> > > > > > >
+> > > > > > > Check if fence left over in drm_writeback_cleanup_job(), release it.
+> > > > > > >
+> > > > > > > Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
+> > > > > > > ---
+> > > > > > >  drivers/gpu/drm/drm_writeback.c | 23 +++++++++++++++--------
+> > > > > > >  1 file changed, 15 insertions(+), 8 deletions(-)
+> > > > > > >
+> > > > > > > diff --git a/drivers/gpu/drm/drm_writeback.c b/drivers/gpu/drm/drm_writeback.c
+> > > > > > > index ff138b6..43d9e3b 100644
+> > > > > > > --- a/drivers/gpu/drm/drm_writeback.c
+> > > > > > > +++ b/drivers/gpu/drm/drm_writeback.c
+> > > > > > > @@ -324,6 +324,9 @@ void drm_writeback_cleanup_job(struct drm_writeback_job *job)
+> > > > > > >   if (job->fb)
+> > > > > > >           drm_framebuffer_put(job->fb);
+> > > > > > >
+> > > > > > > + if (job->out_fence)
+> > > > > >
+> > > > > > I'm thinking it might be a good idea to signal the fence with an error
+> > > > > > here, if it's not already signaled. Otherwise, if there's someone
+> > > > > > waiting (which there shouldn't be), they're going to be waiting a very
+> > > > > > long time :-)
+> > > > > >
+> > > > > > Thanks,
+> > > > > > -Brian
+> > > > > >
+> > > > > Here it happened at atomic_check failed and test only commit. For both
+> > > > > cases, the commit has been dropped and it's only a clean up. So here better
+> > > > > not be treated as an error case:)
+> > > >
+> > > > If anyone else has a reference on the fence, then IMO it absolutely is
+> > > > an error to reach this point without the fence being signaled -
+> > > > because it means that the fence will never be signaled.
+> > > >
+> > > > I don't think the API gives you a way to check if this is the last
+> > > > reference, so it's safest to just make sure the fence is signalled
+> > > > before dropping the reference.
+> > > >
+> > > > It just feels wrong to me to have the possibility of a dangling fence
+> > > > which is never going to get signalled; and it's an easy defensive step
+> > > > to make sure it can never happen.
+> > > >
+> > > > I know it _shouldn't_ happen, but we often put in handling for cases
+> > > > which shouldn't happen, because they frequently do happen :-)
+> > >
+> > > We're not as paranoid with the vblank fences either, so not sure why
+> > > we need to be this paranoid with writeback fences. If your driver
+> > > grabs anything from the atomic state in ->atomic_check it's buggy
+> > > anyway.
+> > >
+> > > If you want to fix this properly I think we need to move the call to
+> > > prepare_signalling() in between atomic_check and atomic_commit. Then I
+> > > think it makes sense to also force-complete the fence on error ...
 > 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/soc/tegra/Kconfig              |   4 +
->  drivers/soc/tegra/Makefile             |   1 +
->  drivers/soc/tegra/regulators-tegra30.c | 316 +++++++++++++++++++++++++
->  3 files changed, 321 insertions(+)
->  create mode 100644 drivers/soc/tegra/regulators-tegra30.c
+> Well, fair enough. I'm struggling with "that's too paranoid" vs "fix
+> it properly" though? Is it a "problem" worth fixing or not?
+
+Up to you to decide that.
+
+> It seems natural to me to do the fence cleanup in the cleanup function
+> for the object which owns the fence.
 > 
-...
+> > >
+> > > > > Since for userspace, it should have been failed or a test only case, so
+> > > > > writebace fence should not be signaled.
+> > > >
+> > > > It's not only userspace that can wait on fences (and in fact this
+> > > > fence will never even reach userspace if the commit fails), the driver
+> > > > may have taken a copy to use for "something".
+> > 
+> > I forgot to add: you can check this by looking at the fence reference
+> > count. A WARN_ON if that's more than 1 on cleanup (but also for the
+> > out fences) could be a nice addition.
+> 
+> Do we really want to be looking at the fence internals directly like
+> that?
 
-> +
-> +static int tegra30_core_cpu_limit(int cpu_uV)
-> +{
-> +	if (cpu_uV < 800000)
-> +		return 950000;
-> +
-> +	if (cpu_uV < 900000)
-> +		return 1000000;
-> +
-> +	if (cpu_uV < 1000000)
-> +		return 1100000;
-> +
-> +	if (cpu_uV < 1100000)
-> +		return 1200000;
-> +
-> +	if (cpu_uV < 1250000) {
-> +		switch (tegra_sku_info.cpu_speedo_id) {
-> +		case 0 ... 1:
-Aren't we supposed to add /* fall through */ here now?
-> +		case 4:
-> +		case 7 ... 8:
-> +			return 1200000;
-> +
-> +		default:
-> +			return 1300000;
-> +		}
-> +	}
-> +
+Wrap it up in a helper like dma_fence_release_private or whatever, which
+combines the check and (hopefully final) _put(). Might need a better name.
+-Daniel
 
-Other than that, this looks ok to me.
+> 
+> Cheers,
+> -Brian
+> 
+> > -Daniel
+> > -- 
+> > Daniel Vetter
+> > Software Engineer, Intel Corporation
+> > +41 (0) 79 365 57 48 - http://blog.ffwll.ch
 
-Peter.
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
