@@ -2,142 +2,106 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A75C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C909C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7402A2087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:37:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564756637;
-	bh=vd9Dv8dBGevOpOI7ckz0Ps8LNrJ4SV3q4dIJDCwbkTI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rptzAFvDi56+EteXsY4NV4CXCZ6H/aKx/1lMaRazW6GdXFge+a4It45b6J6dCdP0A
-	 AXrMxhZEqnKt3VSxYxprwo5cSGRPZ6oTLvqWyqPSsmA0oFjJ9CNfI7fLOANTTvlxvw
-	 FH1UC17tU4RRi53sJXm53EnLL0CU7FjWUSb7wgUY=
+	by mail.kernel.org (Postfix) with ESMTP id 75B1F20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:39:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394993AbfHBOhQ (ORCPT
+        id S2404211AbfHBOjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 10:37:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45462 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 10:39:04 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35420 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392460AbfHBOhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 10:37:15 -0400
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1731011AbfHBOjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 10:39:03 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C764D21726;
-        Fri,  2 Aug 2019 14:37:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564756634;
-        bh=vd9Dv8dBGevOpOI7ckz0Ps8LNrJ4SV3q4dIJDCwbkTI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=pIh3/U350ApivszFbRNnFktXokXBKr+wTTQmTmkTcXIX77COsAo0TgRe92rHIbR0y
-         AeUVQCIkxbsvc60rImMt90f9Qfk0s+a1NDKQxNR8zuysR3wVis/STJnYCS/0bQnTmz
-         YqAKifhFLFjtFzCsZ+eZ0aQV0tGm9ea1esGFu1Xg=
-Received: by mail-qk1-f179.google.com with SMTP id 201so54907997qkm.9;
-        Fri, 02 Aug 2019 07:37:14 -0700 (PDT)
-X-Gm-Message-State: APjAAAVq7uE1i/XhWmubbBf9vjI07iLLMsLKPO7EtwoVPl6U/O4hvR9a
-        ZpvFcuPTb1Z0Mjz1alEINyJhQ4IhcUIyvhST7Q==
-X-Google-Smtp-Source: APXvYqy2cwj//e24fge1qT8CDOe9Xb/QmIUI69Wrhfjrl0tNCfhoSm7l0dvzzTg52YBKBW6aTsIA+0MW56bbtCA5ys8=
-X-Received: by 2002:a37:a44a:: with SMTP id n71mr25665655qke.393.1564756633987;
- Fri, 02 Aug 2019 07:37:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190801184346.7015-1-dinguyen@kernel.org>
-In-Reply-To: <20190801184346.7015-1-dinguyen@kernel.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 2 Aug 2019 08:37:02 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+PRKGwdozr3VECpk2ugrOuWd4CYnRSR7ChyPOKgheYkw@mail.gmail.com>
-Message-ID: <CAL_Jsq+PRKGwdozr3VECpk2ugrOuWd4CYnRSR7ChyPOKgheYkw@mail.gmail.com>
-Subject: Re: [PATCH] drivers/amba: add reset control to primecell probe
-To:     Dinh Nguyen <dinguyen@kernel.org>
-Cc:     devicetree@vger.kernel.org,
+        by mx1.redhat.com (Postfix) with ESMTPS id CC62183F3B;
+        Fri,  2 Aug 2019 14:39:02 +0000 (UTC)
+Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CCA311001925;
+        Fri,  2 Aug 2019 14:38:59 +0000 (UTC)
+Date:   Fri, 2 Aug 2019 08:38:59 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "kraxel@redhat.com" <kraxel@redhat.com>
+Cc:     "Zhang, Tina" <tina.zhang@intel.com>,
+        "Lu, Kechen" <kechen.lu@intel.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Dinh Nguyen <dinh.nguyen@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "Lv, Zhiyuan" <zhiyuan.lv@intel.com>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Yuan, Hang" <hang.yuan@intel.com>
+Subject: Re: [RFC PATCH v4 2/6] vfio: Introduce vGPU display irq type
+Message-ID: <20190802083859.0fb0f05e@x1.home>
+In-Reply-To: <20190802133531.4zwsjltvjisq4sfz@sirius.home.kraxel.org>
+References: <20190718155640.25928-1-kechen.lu@intel.com>
+        <20190718155640.25928-3-kechen.lu@intel.com>
+        <20190719102516.60af527f@x1.home>
+        <31185F57AF7C4B4F87C41E735C23A6FE64E06F@shsmsx102.ccr.corp.intel.com>
+        <20190722134124.16c55c2f@x1.home>
+        <237F54289DF84E4997F34151298ABEBC876BC9AD@SHSMSX101.ccr.corp.intel.com>
+        <20190722191830.425d1593@x1.home>
+        <20190802133531.4zwsjltvjisq4sfz@sirius.home.kraxel.org>
+Organization: Red Hat
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Fri, 02 Aug 2019 14:39:03 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 1, 2019 at 12:44 PM Dinh Nguyen <dinguyen@kernel.org> wrote:
->
-> From: Dinh Nguyen <dinh.nguyen@intel.com>
->
-> The primecell controller on some SoCs, i.e. SoCFPGA, is held in reset by
-> default. Until recently, the DMA controller was brought out of reset by the
-> bootloader(i.e. U-Boot). But a recent change in U-Boot, the peripherals that
-> are not used are held in reset and are left to Linux to bring them out of
-> reset.
+On Fri, 2 Aug 2019 15:35:31 +0200
+"kraxel@redhat.com" <kraxel@redhat.com> wrote:
 
-You can fix this in the kernel, but any versions before this change
-will remain broken. IMO, the u-boot change should be reverted because
-it is breaking an ABI (though not a good one).
+>   Hi,
+> 
+> > > > Couldn't you expose this as another capability within the IRQ_INFO return
+> > > > data?  If you were to define it as a macro, I assume that means it would be
+> > > > hard coded, in which case this probably becomes an Intel specific IRQ, rather
+> > > > than what appears to be framed as a generic graphics IRQ extension.  A new
+> > > > capability could instead allow the vendor to specify their own value, where
+> > > > we could define how userspace should interpret and make use of this value.
+> > > > Thanks,    
+> > > Good suggestion. Currently, vfio_irq_info is used to save one irq
+> > > info. What we need here is to use it to save several events info.
+> > > Maybe we could figure out a general layout of this capability so that
+> > > it can be leveraged by others, not only for display irq/events.  
+> > 
+> > You could also expose a device specific IRQ with count > 1 (ie. similar
+> > to MSI/X) and avoid munging the eventfd value, which is not something
+> > we do elsewhere, at least in vfio.  Thanks,  
+> 
+> Well, the basic idea is to use the eventfd value to signal the kind of
+> changes which did happen, simliar to IRQ status register bits.
+> 
+> So, when the guest changes the primary plane, the mdev driver notes
+> this.  Same with the cursor plane.  On vblank (when the guests update
+> is actually applied) the mdev driver wakes the eventfd and uses eventfd
+> value to signal whenever primary plane or cursor plane or both did
+> change.
+> 
+> Then userspace knows which planes need an update without an extra
+> VFIO_DEVICE_QUERY_GFX_PLANE roundtrip to the kernel.
+> 
+> Alternatively we could have one eventfd for each change type.  But given
+> that these changes are typically applied at the same time (vblank) we
+> would have multiple eventfds being signaled at the same time.  Which
+> doesn't look ideal to me ...
 
-> Add a mechanism for getting the reset property and de-assert the primecell
-> module from reset if found. This is a not a hard fail if the reset property
-> is not present in the device tree node, so the driver will continue to probe.
+Good point, looking at the bits in the eventfd value seems better than
+a flood of concurrent interrupts.  Thanks,
 
-I think this belongs in the AMBA bus code, not the DT code, as that is
-where we already have clock control code for similar reasons.
-
->
-> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
-> ---
->  drivers/of/platform.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index 7801e25e6895..d8945705313d 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -21,6 +21,7 @@
->  #include <linux/of_irq.h>
->  #include <linux/of_platform.h>
->  #include <linux/platform_device.h>
-> +#include <linux/reset.h>
->
->  const struct of_device_id of_default_bus_match_table[] = {
->         { .compatible = "simple-bus", },
-> @@ -229,6 +230,7 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
->         struct amba_device *dev;
->         const void *prop;
->         int i, ret;
-> +       struct reset_control *rstc;
->
->         pr_debug("Creating amba device %pOF\n", node);
->
-> @@ -270,6 +272,18 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
->                 goto err_free;
->         }
->
-> +       /*
-> +        * reset control of the primecell block is optional
-> +        * and will not fail if the reset property is not found.
-> +        */
-> +       rstc = of_reset_control_get_exclusive(node, "dma");
-
-'dma' doesn't sound very generic.
-
-> +       if (!IS_ERR(rstc)) {
-> +               reset_control_deassert(rstc);
-> +               reset_control_put(rstc);
-> +       } else {
-> +               pr_debug("amba: reset control not found\n");
-> +       }
-> +
->         ret = amba_device_add(dev, &iomem_resource);
->         if (ret) {
->                 pr_err("amba_device_add() failed (%d) for %pOF\n",
-> --
-> 2.20.0
->
+Alex
