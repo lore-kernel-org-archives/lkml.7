@@ -2,113 +2,196 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F58CC32753
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E65C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EAA620679
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:22:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2937420679
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:23:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ClkjwnuA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392370AbfHBOWg (ORCPT
+        id S2390590AbfHBOXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 10:22:36 -0400
-Received: from mga09.intel.com ([134.134.136.24]:45140 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726667AbfHBOWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 10:22:33 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Aug 2019 07:22:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,338,1559545200"; 
-   d="scan'208";a="167245949"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by orsmga008.jf.intel.com with ESMTP; 02 Aug 2019 07:22:29 -0700
-Date:   Fri, 2 Aug 2019 08:19:52 -0600
-From:   Keith Busch <keith.busch@intel.com>
-To:     john.hubbard@gmail.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, ceph-devel@vger.kernel.org,
-        devel@driverdev.osuosl.org, devel@lists.orangefs.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org, linux-xfs@vger.kernel.org,
-        netdev@vger.kernel.org, rds-devel@oss.oracle.com,
-        sparclinux@vger.kernel.org, x86@kernel.org,
-        xen-devel@lists.xenproject.org, John Hubbard <jhubbard@nvidia.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: Re: [PATCH 26/34] mm/gup_benchmark.c: convert put_page() to
- put_user_page*()
-Message-ID: <20190802141952.GA18214@localhost.localdomain>
-References: <20190802022005.5117-1-jhubbard@nvidia.com>
- <20190802022005.5117-27-jhubbard@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190802022005.5117-27-jhubbard@nvidia.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+        Fri, 2 Aug 2019 10:23:40 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:36351 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731067AbfHBOXj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 10:23:39 -0400
+Received: by mail-qk1-f196.google.com with SMTP id g18so54894213qkl.3
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 07:23:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=CWdgiiN/Z+VeLUxPy5NDLjA/glfsWptWvE0Hk0bA4Qc=;
+        b=ClkjwnuAjyQX4RFGsqAZhTjqGMDy7ocP/0TCroEDlhL07SsQmlRYVGn8aIHaHRwUCf
+         utzbV9Rw0J2YHV76T0ve3706m4aR1IZDfRam5C9funveugiRgC8FUpWqlxtq2tFKy7Hd
+         VfsToKr4T96EcEkZOa1EYCPGLYzko/sCPdVXxdcyEjThSesEn1Yukp4qAFEBL8pv9AD7
+         cQ+rtCtxrN7cT7v5yWDPwKLFyjF7Rnrrjf2zLhORo1f2RRy4znki0byJia/elQpyLyRH
+         W9Kr1qkd/1ceoeZGcwQI6LhEwYkuiNtZoZc8nOVzH9lX4xcZnaGp0ETvzemP5soQs71N
+         fvgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=CWdgiiN/Z+VeLUxPy5NDLjA/glfsWptWvE0Hk0bA4Qc=;
+        b=HbnIjTZJmMWlXzrkSrW0NYgbgUfblmMbb04v1kxS/8IOWtxZx2skrabCkSCTGpi3Jv
+         to+2Dmur5pDWNXjHhtqS7ttk1qIxh5ENHnhv/A5g1+xikWeBYQu1rVVh4xjyKYqP4CJP
+         Hess62MlMipr5R4vDvgB4Evy3eSErHg5yOz4UuxuozXWDYtxLWknsQdJVayLhUGvCT+X
+         MRqzYsXLGqi6c9f8EPxoApslmoUCG9OyZlGsvCJ69iiHcDtQMXObhP0yLrcJnzvsu3Ic
+         GuZwAvte5mtKE5KCp+x6jDFyUooHMCKdX1licJlt064ey6MpuoyMJqeqidUtd234JiK7
+         CUnQ==
+X-Gm-Message-State: APjAAAU9M6u8DSJJ8cKZzght9geE2Xonq//iSOjIo9CL7KUuavi2h9Fs
+        NaG8IiMkRtTH6JLem6uUwj41/w==
+X-Google-Smtp-Source: APXvYqz+KxEnFgHjSy1G4Be0JgFETmApxP1tkP5flW/+UvCcQ+n9HdUVJ9MvLVxmfppI//mnB3tdag==
+X-Received: by 2002:a37:2c46:: with SMTP id s67mr92776362qkh.396.1564755818363;
+        Fri, 02 Aug 2019 07:23:38 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id v84sm33042439qkb.0.2019.08.02.07.23.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 02 Aug 2019 07:23:37 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     maz@kernel.org
+Cc:     james.morse@arm.com, julien.thierry.kdev@gmail.com,
+        suzuki.poulose@arm.com, christoffer.dall@linaro.org,
+        drjones@redhat.com, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH] arm64/kvm: fix -Wimplicit-fallthrough warnings
+Date:   Fri,  2 Aug 2019 10:23:08 -0400
+Message-Id: <1564755788-28485-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 07:19:57PM -0700, john.hubbard@gmail.com wrote:
-> From: John Hubbard <jhubbard@nvidia.com>
-> 
-> For pages that were retained via get_user_pages*(), release those pages
-> via the new put_user_page*() routines, instead of via put_page() or
-> release_pages().
-> 
-> This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
-> ("mm: introduce put_user_page*(), placeholder versions").
-> 
-> Cc: Dan Carpenter <dan.carpenter@oracle.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Keith Busch <keith.busch@intel.com>
-> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Cc: Michael S. Tsirkin <mst@redhat.com>
-> Cc: YueHaibing <yuehaibing@huawei.com>
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+The commit a892819560c4 ("KVM: arm64: Prepare to handle deferred
+save/restore of 32-bit registers") introduced vcpu_write_spsr32() but
+seems forgot to add "break" between the switch statements and generates
+compilation warnings below. Also, adding a default statement as in
+vcpu_read_spsr32().
 
-Looks fine.
+In file included from ./arch/arm64/include/asm/kvm_emulate.h:19,
+                 from arch/arm64/kvm/regmap.c:13:
+arch/arm64/kvm/regmap.c: In function 'vcpu_write_spsr32':
+./arch/arm64/include/asm/kvm_hyp.h:31:3: warning: this statement may
+fall through [-Wimplicit-fallthrough=]
+   asm volatile(ALTERNATIVE(__msr_s(r##nvh, "%x0"), \
+   ^~~
+./arch/arm64/include/asm/kvm_hyp.h:46:31: note: in expansion of macro
+'write_sysreg_elx'
+ #define write_sysreg_el1(v,r) write_sysreg_elx(v, r, _EL1, _EL12)
+                               ^~~~~~~~~~~~~~~~
+arch/arm64/kvm/regmap.c:180:3: note: in expansion of macro
+'write_sysreg_el1'
+   write_sysreg_el1(v, SYS_SPSR);
+   ^~~~~~~~~~~~~~~~
+arch/arm64/kvm/regmap.c:181:2: note: here
+  case KVM_SPSR_ABT:
+  ^~~~
+In file included from ./arch/arm64/include/asm/cputype.h:132,
+                 from ./arch/arm64/include/asm/cache.h:8,
+                 from ./include/linux/cache.h:6,
+                 from ./include/linux/printk.h:9,
+                 from ./include/linux/kernel.h:15,
+                 from ./include/asm-generic/bug.h:18,
+                 from ./arch/arm64/include/asm/bug.h:26,
+                 from ./include/linux/bug.h:5,
+                 from ./include/linux/mmdebug.h:5,
+                 from ./include/linux/mm.h:9,
+                 from arch/arm64/kvm/regmap.c:11:
+./arch/arm64/include/asm/sysreg.h:837:2: warning: this statement may
+fall through [-Wimplicit-fallthrough=]
+  asm volatile("msr " __stringify(r) ", %x0"  \
+  ^~~
+arch/arm64/kvm/regmap.c:182:3: note: in expansion of macro
+'write_sysreg'
+   write_sysreg(v, spsr_abt);
+   ^~~~~~~~~~~~
+arch/arm64/kvm/regmap.c:183:2: note: here
+  case KVM_SPSR_UND:
+  ^~~~
+In file included from ./arch/arm64/include/asm/cputype.h:132,
+                 from ./arch/arm64/include/asm/cache.h:8,
+                 from ./include/linux/cache.h:6,
+                 from ./include/linux/printk.h:9,
+                 from ./include/linux/kernel.h:15,
+                 from ./include/asm-generic/bug.h:18,
+                 from ./arch/arm64/include/asm/bug.h:26,
+                 from ./include/linux/bug.h:5,
+                 from ./include/linux/mmdebug.h:5,
+                 from ./include/linux/mm.h:9,
+                 from arch/arm64/kvm/regmap.c:11:
+./arch/arm64/include/asm/sysreg.h:837:2: warning: this statement may
+fall through [-Wimplicit-fallthrough=]
+  asm volatile("msr " __stringify(r) ", %x0"  \
+  ^~~
+arch/arm64/kvm/regmap.c:184:3: note: in expansion of macro
+'write_sysreg'
+   write_sysreg(v, spsr_und);
+   ^~~~~~~~~~~~
+arch/arm64/kvm/regmap.c:185:2: note: here
+  case KVM_SPSR_IRQ:
+  ^~~~
+In file included from ./arch/arm64/include/asm/cputype.h:132,
+                 from ./arch/arm64/include/asm/cache.h:8,
+                 from ./include/linux/cache.h:6,
+                 from ./include/linux/printk.h:9,
+                 from ./include/linux/kernel.h:15,
+                 from ./include/asm-generic/bug.h:18,
+                 from ./arch/arm64/include/asm/bug.h:26,
+                 from ./include/linux/bug.h:5,
+                 from ./include/linux/mmdebug.h:5,
+                 from ./include/linux/mm.h:9,
+                 from arch/arm64/kvm/regmap.c:11:
+./arch/arm64/include/asm/sysreg.h:837:2: warning: this statement may
+fall through [-Wimplicit-fallthrough=]
+  asm volatile("msr " __stringify(r) ", %x0"  \
+  ^~~
+arch/arm64/kvm/regmap.c:186:3: note: in expansion of macro
+'write_sysreg'
+   write_sysreg(v, spsr_irq);
+   ^~~~~~~~~~~~
+arch/arm64/kvm/regmap.c:187:2: note: here
+  case KVM_SPSR_FIQ:
+  ^~~~
 
-Reviewed-by: Keith Busch <keith.busch@intel.com>
+Fixes: a892819560c4 ("KVM: arm64: Prepare to handle deferred save/restore of 32-bit registers")
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ arch/arm64/kvm/regmap.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
->  mm/gup_benchmark.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/gup_benchmark.c b/mm/gup_benchmark.c
-> index 7dd602d7f8db..515ac8eeb6ee 100644
-> --- a/mm/gup_benchmark.c
-> +++ b/mm/gup_benchmark.c
-> @@ -79,7 +79,7 @@ static int __gup_benchmark_ioctl(unsigned int cmd,
->  	for (i = 0; i < nr_pages; i++) {
->  		if (!pages[i])
->  			break;
-> -		put_page(pages[i]);
-> +		put_user_page(pages[i]);
->  	}
->  	end_time = ktime_get();
->  	gup->put_delta_usec = ktime_us_delta(end_time, start_time);
-> -- 
+diff --git a/arch/arm64/kvm/regmap.c b/arch/arm64/kvm/regmap.c
+index 0d60e4f0af66..c94e9bc3e8eb 100644
+--- a/arch/arm64/kvm/regmap.c
++++ b/arch/arm64/kvm/regmap.c
+@@ -178,13 +178,20 @@ void vcpu_write_spsr32(struct kvm_vcpu *vcpu, unsigned long v)
+ 	switch (spsr_idx) {
+ 	case KVM_SPSR_SVC:
+ 		write_sysreg_el1(v, SYS_SPSR);
++		break;
+ 	case KVM_SPSR_ABT:
+ 		write_sysreg(v, spsr_abt);
++		break;
+ 	case KVM_SPSR_UND:
+ 		write_sysreg(v, spsr_und);
++		break;
+ 	case KVM_SPSR_IRQ:
+ 		write_sysreg(v, spsr_irq);
++		break;
+ 	case KVM_SPSR_FIQ:
+ 		write_sysreg(v, spsr_fiq);
++		break;
++	default:
++		BUG();
+ 	}
+ }
+-- 
+1.8.3.1
+
