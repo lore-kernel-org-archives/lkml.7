@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20601C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B7AC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9D5720679
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:50:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6362620679
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:50:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739436;
-	bh=SEWFmYr3x+z3nRgyaUGMWfh3wd0O5TyLhAeLY2PKxhM=;
+	s=default; t=1564739440;
+	bh=gRUh7r/2kagW87k821dT4UvIbhIkwAbcPWIlzXVFqa4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hO9xgIywJySv/GQ0wTGHKugTX5It+/wAz247546V/1YFpfmJqWCzlKfA3yNBDk+aY
-	 SkA6bPZU9vCCoE78Q9ay91FOyqp92QexuIL3xVvPcyIoh8cFcj1EZcPV9Te+ihLdnX
-	 +j+8iYb7rG2tpOteAm8fJ1YVnU19R4urBHITn9+4=
+	b=nHUwrGgS7ztsYz4vgeZY0ooD3oQsYkHDDIDtZH5SbhepyoWkXU7S//K+lEqR149QQ
+	 aU4vEbMG2+RU2LSmfVV4e/xlxuuNS19J4vddFXzh7Ox3mvnldI4FQTnkELUnl0VMM0
+	 KD4Enj318ui1fKwMBf7QCq8MQH+Dz6F7e8w8rca8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405447AbfHBJp3 (ORCPT
+        id S2405701AbfHBJuj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:45:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49150 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:50:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405429AbfHBJpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:45:24 -0400
+        id S2405439AbfHBJp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:45:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9978920880;
-        Fri,  2 Aug 2019 09:45:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 307B420679;
+        Fri,  2 Aug 2019 09:45:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739124;
-        bh=SEWFmYr3x+z3nRgyaUGMWfh3wd0O5TyLhAeLY2PKxhM=;
+        s=default; t=1564739126;
+        bh=gRUh7r/2kagW87k821dT4UvIbhIkwAbcPWIlzXVFqa4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iqXBLz9d7J3ut2CBH2xkjlaAKCW6KVQnPf834MHbPCgXm/KqRmq1lUQdobPyUXVd4
-         b7eT6LbdekAJZGa4NAqUAdbvPcBHefYnZmummVO8Az8RuyXzX4K3Bj4+6nIGNHUeND
-         Gqoo47dmXSn7MJz8471XvYCENt8IMA9IBK8xD2so=
+        b=D+fCngFYz/49lC13YeSkVHBbzSIwLtDzgtKrz0QsZLiKqCkf9nKNXGCMbpcEhHCnx
+         QK0m1q29M8Qa5jeMipAppzrXn9GhDs/R/ohLu7lv3Ma+EWWj6i/Sb+BIdUv7Zu4GJd
+         XDypqNwYij+6G4Mjx8NkvVpmNhbOj8p4L2veGDbA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Alessio Balsini <balsini@android.com>
-Subject: [PATCH 4.9 114/223] um: Allow building and running on older hosts
-Date:   Fri,  2 Aug 2019 11:35:39 +0200
-Message-Id: <20190802092246.611574930@linuxfoundation.org>
+        stable@vger.kernel.org, "Lee, Chiasheng" <chiasheng.lee@intel.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Lee@vger.kernel.org
+Subject: [PATCH 4.9 123/223] usb: Handle USB3 remote wakeup for LPM enabled devices correctly
+Date:   Fri,  2 Aug 2019 11:35:48 +0200
+Message-Id: <20190802092247.109782285@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -60,104 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Lee, Chiasheng <chiasheng.lee@intel.com>
 
-commit 0a987645672ebde7844a9c0732a5a25f3d4bb6c6 upstream.
+commit e244c4699f859cf7149b0781b1894c7996a8a1df upstream.
 
-Commit a78ff1112263 ("um: add extended processor state save/restore
-support") and b6024b21fec8 ("um: extend fpstate to _xstate to support
-YMM registers") forced the use of the x86 FP _xstate and
-PTRACE_GETREGSET/SETREGSET. On older hosts, we would neither be able to
-build UML nor run it anymore with these two commits applied because we
-don't have definitions for struct _xstate nor these two ptrace requests.
+With Link Power Management (LPM) enabled USB3 links transition to low
+power U1/U2 link states from U0 state automatically.
 
-We can determine at build time which fp context structure to check
-against, just like we can keep using the old i387 fp save/restore if
-PTRACE_GETRESET/SETREGSET are not defined.
+Current hub code detects USB3 remote wakeups by checking if the software
+state still shows suspended, but the link has transitioned from suspended
+U3 to enabled U0 state.
 
-Fixes: a78ff1112263 ("um: add extended processor state save/restore support")
-Fixes: b6024b21fec8 ("um: extend fpstate to _xstate to support YMM registers")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
-Signed-off-by: Alessio Balsini <balsini@android.com>
+As it takes some time before the hub thread reads the port link state
+after a USB3 wake notification, the link may have transitioned from U0
+to U1/U2, and wake is not detected by hub code.
+
+Fix this by handling U1/U2 states in the same way as U0 in USB3 wakeup
+handling
+
+This patch should be added to stable kernels since 4.13 where LPM was
+kept enabled during suspend/resume
+
+Cc: <stable@vger.kernel.org> # v4.13+
+Signed-off-by: Lee, Chiasheng <chiasheng.lee@intel.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/um/os-Linux/registers.c |   12 ++++++++----
- arch/x86/um/user-offsets.c       |    4 ++++
- 2 files changed, 12 insertions(+), 4 deletions(-)
+ drivers/usb/core/hub.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/arch/x86/um/os-Linux/registers.c
-+++ b/arch/x86/um/os-Linux/registers.c
-@@ -26,6 +26,7 @@ int save_i387_registers(int pid, unsigne
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -3535,6 +3535,7 @@ static int hub_handle_remote_wakeup(stru
+ 	struct usb_device *hdev;
+ 	struct usb_device *udev;
+ 	int connect_change = 0;
++	u16 link_state;
+ 	int ret;
  
- int save_fp_registers(int pid, unsigned long *fp_regs)
- {
-+#ifdef PTRACE_GETREGSET
- 	struct iovec iov;
+ 	hdev = hub->hdev;
+@@ -3544,9 +3545,11 @@ static int hub_handle_remote_wakeup(stru
+ 			return 0;
+ 		usb_clear_port_feature(hdev, port, USB_PORT_FEAT_C_SUSPEND);
+ 	} else {
++		link_state = portstatus & USB_PORT_STAT_LINK_STATE;
+ 		if (!udev || udev->state != USB_STATE_SUSPENDED ||
+-				 (portstatus & USB_PORT_STAT_LINK_STATE) !=
+-				 USB_SS_PORT_LS_U0)
++				(link_state != USB_SS_PORT_LS_U0 &&
++				 link_state != USB_SS_PORT_LS_U1 &&
++				 link_state != USB_SS_PORT_LS_U2))
+ 			return 0;
+ 	}
  
- 	if (have_xstate_support) {
-@@ -34,9 +35,9 @@ int save_fp_registers(int pid, unsigned
- 		if (ptrace(PTRACE_GETREGSET, pid, NT_X86_XSTATE, &iov) < 0)
- 			return -errno;
- 		return 0;
--	} else {
-+	} else
-+#endif
- 		return save_i387_registers(pid, fp_regs);
--	}
- }
- 
- int restore_i387_registers(int pid, unsigned long *fp_regs)
-@@ -48,6 +49,7 @@ int restore_i387_registers(int pid, unsi
- 
- int restore_fp_registers(int pid, unsigned long *fp_regs)
- {
-+#ifdef PTRACE_SETREGSET
- 	struct iovec iov;
- 
- 	if (have_xstate_support) {
-@@ -56,9 +58,9 @@ int restore_fp_registers(int pid, unsign
- 		if (ptrace(PTRACE_SETREGSET, pid, NT_X86_XSTATE, &iov) < 0)
- 			return -errno;
- 		return 0;
--	} else {
-+	} else
-+#endif
- 		return restore_i387_registers(pid, fp_regs);
--	}
- }
- 
- #ifdef __i386__
-@@ -122,6 +124,7 @@ int put_fp_registers(int pid, unsigned l
- 
- void arch_init_registers(int pid)
- {
-+#ifdef PTRACE_GETREGSET
- 	struct _xstate fp_regs;
- 	struct iovec iov;
- 
-@@ -129,6 +132,7 @@ void arch_init_registers(int pid)
- 	iov.iov_len = sizeof(struct _xstate);
- 	if (ptrace(PTRACE_GETREGSET, pid, NT_X86_XSTATE, &iov) == 0)
- 		have_xstate_support = 1;
-+#endif
- }
- #endif
- 
---- a/arch/x86/um/user-offsets.c
-+++ b/arch/x86/um/user-offsets.c
-@@ -50,7 +50,11 @@ void foo(void)
- 	DEFINE(HOST_GS, GS);
- 	DEFINE(HOST_ORIG_AX, ORIG_EAX);
- #else
-+#if defined(PTRACE_GETREGSET) && defined(PTRACE_SETREGSET)
- 	DEFINE(HOST_FP_SIZE, sizeof(struct _xstate) / sizeof(unsigned long));
-+#else
-+	DEFINE(HOST_FP_SIZE, sizeof(struct _fpstate) / sizeof(unsigned long));
-+#endif
- 	DEFINE_LONGS(HOST_BX, RBX);
- 	DEFINE_LONGS(HOST_CX, RCX);
- 	DEFINE_LONGS(HOST_DI, RDI);
 
 
