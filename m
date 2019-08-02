@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C907C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DF6C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D52EF2073D
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:06:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D85362087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:06:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564740362;
-	bh=RnU/9tf7A4Lo2Bwz/sqCAm/k9EnGY5/sI3XYYGzYzf0=;
+	s=default; t=1564740366;
+	bh=afSZnQ3e+AUamiEgLFFnL1uE0s6b2WzVdeZ2DDPQg98=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tF62NoqpTaX73xI1HotxZJIvSKNwwzBEMSZ76MYe4qm4dywygOccxB07VxbrhajUY
-	 NQG74YmlSDWhFtc7KLzUZ88yljsC9TmmKyRLzK+QZ8cyDHXUQQqHJuIAz1scUqZGxG
-	 bgTTTXCPzDPCXwwHInJJHdFfJpKbbtQPGv55wgBY=
+	b=F58FqXwp/GbbaXZuVjd1oJyRXINngARfoxbWrlBVqe/qTbANYvq+DLCPKwBg1B5Gp
+	 prOkaP2vmyjn0jdjPsOLsc9aA+coNwk8UMUlGRIFDN5MAZ0V4wd+kmQsyY0loD7+xu
+	 5EP9cCg0T4vO1IqpWICFwDCrWqTIYhVPHx9uPyGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391577AbfHBKGB (ORCPT
+        id S2404728AbfHBJbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 06:06:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58266 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:31:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391094AbfHBJbs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:31:48 -0400
+        id S2404710AbfHBJbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:31:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EE58217D6;
-        Fri,  2 Aug 2019 09:31:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E71E2182B;
+        Fri,  2 Aug 2019 09:31:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738308;
-        bh=RnU/9tf7A4Lo2Bwz/sqCAm/k9EnGY5/sI3XYYGzYzf0=;
+        s=default; t=1564738297;
+        bh=afSZnQ3e+AUamiEgLFFnL1uE0s6b2WzVdeZ2DDPQg98=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nGWRjL4GJsdQquGnXXz69qYy2wQxdLV5gS0+xG6pTllEO9rt+wAPoLDv2S+GasOnA
-         5OwGlXYRr9iVUfZwhLzj8bCf0TEj6sK9CmxN1gNDgNgNlJgXuUen0ymDYzO0kSgXOK
-         vzGe1FVBROlEU9oyY8wUcjjrsbdN5lcut5QEqC5s=
+        b=td9g94QCfWFC2ilYw4+NwU7njZ8FOWAgfcBir0j2RoiUpQZY9vLLgH3SUNRsNLy2J
+         G08l2JFSxuKBdxTrU4iYaFdUL9mhebPKiNEqFqPEKgdVJwzyUVS0OUyZgJdF06d0Em
+         73Kyso+mk9ztEa1uVVnlAnQgo76Tpg7PaGZOgfMA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Anirudh Gupta <anirudh.gupta@sophos.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 036/158] media: i2c: fix warning same module names
-Date:   Fri,  2 Aug 2019 11:27:37 +0200
-Message-Id: <20190802092211.217150360@linuxfoundation.org>
+Subject: [PATCH 4.4 032/158] xfrm: fix sa selector validation
+Date:   Fri,  2 Aug 2019 11:27:33 +0200
+Message-Id: <20190802092210.275945645@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -61,58 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b2ce5617dad254230551feda3599f2cc68e53ad8 ]
+[ Upstream commit b8d6d0079757cbd1b69724cfd1c08e2171c68cee ]
 
-When building with CONFIG_VIDEO_ADV7511 and CONFIG_DRM_I2C_ADV7511
-enabled as loadable modules, we see the following warning:
+After commit b38ff4075a80, the following command does not work anymore:
+$ ip xfrm state add src 10.125.0.2 dst 10.125.0.1 proto esp spi 34 reqid 1 \
+  mode tunnel enc 'cbc(aes)' 0xb0abdba8b782ad9d364ec81e3a7d82a1 auth-trunc \
+  'hmac(sha1)' 0xe26609ebd00acb6a4d51fca13e49ea78a72c73e6 96 flag align4
 
-  drivers/gpu/drm/bridge/adv7511/adv7511.ko
-  drivers/media/i2c/adv7511.ko
+In fact, the selector is not mandatory, allow the user to provide an empty
+selector.
 
-Rework so that the file is named adv7511-v4l2.c.
-
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: b38ff4075a80 ("xfrm: Fix xfrm sel prefix length validation")
+CC: Anirudh Gupta <anirudh.gupta@sophos.com>
+Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/Makefile                      | 2 +-
- drivers/media/i2c/{adv7511.c => adv7511-v4l2.c} | 5 +++++
- 2 files changed, 6 insertions(+), 1 deletion(-)
- rename drivers/media/i2c/{adv7511.c => adv7511-v4l2.c} (99%)
+ net/xfrm/xfrm_user.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
-index 07db257abfc1..d5711def1fff 100644
---- a/drivers/media/i2c/Makefile
-+++ b/drivers/media/i2c/Makefile
-@@ -28,7 +28,7 @@ obj-$(CONFIG_VIDEO_ADV7393) += adv7393.o
- obj-$(CONFIG_VIDEO_ADV7604) += adv7604.o
- obj-$(CONFIG_VIDEO_ADV7842) += adv7842.o
- obj-$(CONFIG_VIDEO_AD9389B) += ad9389b.o
--obj-$(CONFIG_VIDEO_ADV7511) += adv7511.o
-+obj-$(CONFIG_VIDEO_ADV7511) += adv7511-v4l2.o
- obj-$(CONFIG_VIDEO_VPX3220) += vpx3220.o
- obj-$(CONFIG_VIDEO_VS6624)  += vs6624.o
- obj-$(CONFIG_VIDEO_BT819) += bt819.o
-diff --git a/drivers/media/i2c/adv7511.c b/drivers/media/i2c/adv7511-v4l2.c
-similarity index 99%
-rename from drivers/media/i2c/adv7511.c
-rename to drivers/media/i2c/adv7511-v4l2.c
-index c24839cfcc35..b35400e4e9af 100644
---- a/drivers/media/i2c/adv7511.c
-+++ b/drivers/media/i2c/adv7511-v4l2.c
-@@ -17,6 +17,11 @@
-  * SOFTWARE.
-  */
+diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
+index 10fda9a39cc2..8cc2a9df84fd 100644
+--- a/net/xfrm/xfrm_user.c
++++ b/net/xfrm/xfrm_user.c
+@@ -166,6 +166,9 @@ static int verify_newsa_info(struct xfrm_usersa_info *p,
+ 	}
  
-+/*
-+ * This file is named adv7511-v4l2.c so it doesn't conflict with the Analog
-+ * Device ADV7511 (config fragment CONFIG_DRM_I2C_ADV7511).
-+ */
+ 	switch (p->sel.family) {
++	case AF_UNSPEC:
++		break;
 +
- 
- #include <linux/kernel.h>
- #include <linux/module.h>
+ 	case AF_INET:
+ 		if (p->sel.prefixlen_d > 32 || p->sel.prefixlen_s > 32)
+ 			goto out;
 -- 
 2.20.1
 
