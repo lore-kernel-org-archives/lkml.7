@@ -7,57 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00817C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7278BC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDB1B21841
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:23:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AC5121852
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:23:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752184;
-	bh=4rdWKrad3A6cYhFaCKEKIkiANKl0SRoiEvMXDqkIEQc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Erjt4KkMMLQIfMu5x7Pj8gjPvtr54QOTRJd2M/Urv01IQmGdpE1bgBkEpF0myjt24
-	 cI81mMaWUBmGDpSmQ4nRMowkoukaNi4Av3y/qM+IuhixC3gBnzQGaK4u0bNxuR0rPc
-	 Vd91FcCw203WFepEMnmKzUReEvLIwBIrDKiLvOfM=
+	s=default; t=1564752189;
+	bh=FiM5YvIzCSvxAqFNHP7gBJ+hf6uOa38n0rEzatyP9WI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=ZoIo6ad/auX2XP5Z22UvRL1Tb4sjG70hMko/gZYXv6ltgRggOwBiN45XqJDn7fLV4
+	 EyDYMhTK2gP7/aZ2AgbMx38kiVFUQUnueF4te3MCWrL9NjnFAh1LjBvMqhub5Y423M
+	 5EtfbdP+gD8SEwmQQmgohd7Xzjj5iUom+qco9kb0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393875AbfHBNWy (ORCPT
+        id S1729989AbfHBNXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:22:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33336 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:23:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393862AbfHBNWu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:22:50 -0400
+        id S1731794AbfHBNXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:23:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DFCE20880;
-        Fri,  2 Aug 2019 13:22:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A298217D4;
+        Fri,  2 Aug 2019 13:23:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752170;
-        bh=4rdWKrad3A6cYhFaCKEKIkiANKl0SRoiEvMXDqkIEQc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0YhucAYX+c5qBSL2l80b1tLM0olO0GQzTT6BdijuCHZp/Uxt+I6+LCg6eKYboAzqP
-         DPL6XEV4cEQ4BXMQZ+i2EO9ibqsQGQAMSFSZhHX3X0m9LUkF67rMNtAM2isQ2/lR1m
-         N+6PbrPaLRJ4sauru1rFAgl9cw5uO0kOH1KMphHU=
+        s=default; t=1564752184;
+        bh=FiM5YvIzCSvxAqFNHP7gBJ+hf6uOa38n0rEzatyP9WI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=O60CUC+rGeSXycwlOIzIfEtsq8EJghQYe5ThkaUm0sndCwzdBYt6W3nXNLZsiJtj0
+         7n5V5MoTq76P7VrHmvVQsck5NyR+w9Fp/famuHasOXaZm3/SzahWnNxXRSVYNXzmuC
+         LUKi+ie88VG8ZjuL6I+Wxjue0H7Lvpaoqu6i0HwQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Frank Li <Frank.li@nxp.com>, Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 74/76] perf/core: Fix creating kernel counters for PMUs that override event->cpu
-Date:   Fri,  2 Aug 2019 09:19:48 -0400
-Message-Id: <20190802131951.11600-74-sashal@kernel.org>
+Cc:     Florian Westphal <fw@strlen.de>,
+        Thomas Jarosch <thomas.jarosch@intra2net.com>,
+        Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 01/42] netfilter: nfnetlink: avoid deadlock due to synchronous request_module
+Date:   Fri,  2 Aug 2019 09:22:21 -0400
+Message-Id: <20190802132302.13537-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190802131951.11600-1-sashal@kernel.org>
-References: <20190802131951.11600-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -67,60 +61,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leonard Crestez <leonard.crestez@nxp.com>
+From: Florian Westphal <fw@strlen.de>
 
-[ Upstream commit 4ce54af8b33d3e21ca935fc1b89b58cbba956051 ]
+[ Upstream commit 1b0890cd60829bd51455dc5ad689ed58c4408227 ]
 
-Some hardware PMU drivers will override perf_event.cpu inside their
-event_init callback. This causes a lockdep splat when initialized through
-the kernel API:
+Thomas and Juliana report a deadlock when running:
 
- WARNING: CPU: 0 PID: 250 at kernel/events/core.c:2917 ctx_sched_out+0x78/0x208
- pc : ctx_sched_out+0x78/0x208
- Call trace:
-  ctx_sched_out+0x78/0x208
-  __perf_install_in_context+0x160/0x248
-  remote_function+0x58/0x68
-  generic_exec_single+0x100/0x180
-  smp_call_function_single+0x174/0x1b8
-  perf_install_in_context+0x178/0x188
-  perf_event_create_kernel_counter+0x118/0x160
+(rmmod nf_conntrack_netlink/xfrm_user)
 
-Fix this by calling perf_install_in_context with event->cpu, just like
-perf_event_open
+  conntrack -e NEW -E &
+  modprobe -v xfrm_user
 
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Frank Li <Frank.li@nxp.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will@kernel.org>
-Link: https://lkml.kernel.org/r/c4ebe0503623066896d7046def4d6b1e06e0eb2e.1563972056.git.leonard.crestez@nxp.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+They provided following analysis:
+
+conntrack -e NEW -E
+    netlink_bind()
+        netlink_lock_table() -> increases "nl_table_users"
+            nfnetlink_bind()
+            # does not unlock the table as it's locked by netlink_bind()
+                __request_module()
+                    call_usermodehelper_exec()
+
+This triggers "modprobe nf_conntrack_netlink" from kernel, netlink_bind()
+won't return until modprobe process is done.
+
+"modprobe xfrm_user":
+    xfrm_user_init()
+        register_pernet_subsys()
+            -> grab pernet_ops_rwsem
+                ..
+                netlink_table_grab()
+                    calls schedule() as "nl_table_users" is non-zero
+
+so modprobe is blocked because netlink_bind() increased
+nl_table_users while also holding pernet_ops_rwsem.
+
+"modprobe nf_conntrack_netlink" runs and inits nf_conntrack_netlink:
+    ctnetlink_init()
+        register_pernet_subsys()
+            -> blocks on "pernet_ops_rwsem" thanks to xfrm_user module
+
+both modprobe processes wait on one another -- neither can make
+progress.
+
+Switch netlink_bind() to "nowait" modprobe -- this releases the netlink
+table lock, which then allows both modprobe instances to complete.
+
+Reported-by: Thomas Jarosch <thomas.jarosch@intra2net.com>
+Reported-by: Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/core.c | 2 +-
+ net/netfilter/nfnetlink.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index f851934d55d48..4bc15cff1026a 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -11266,7 +11266,7 @@ perf_event_create_kernel_counter(struct perf_event_attr *attr, int cpu,
- 		goto err_unlock;
- 	}
- 
--	perf_install_in_context(ctx, event, cpu);
-+	perf_install_in_context(ctx, event, event->cpu);
- 	perf_unpin_context(ctx);
- 	mutex_unlock(&ctx->mutex);
- 
+diff --git a/net/netfilter/nfnetlink.c b/net/netfilter/nfnetlink.c
+index 916913454624f..7f2c1915763f8 100644
+--- a/net/netfilter/nfnetlink.c
++++ b/net/netfilter/nfnetlink.c
+@@ -575,7 +575,7 @@ static int nfnetlink_bind(struct net *net, int group)
+ 	ss = nfnetlink_get_subsys(type << 8);
+ 	rcu_read_unlock();
+ 	if (!ss)
+-		request_module("nfnetlink-subsys-%d", type);
++		request_module_nowait("nfnetlink-subsys-%d", type);
+ 	return 0;
+ }
+ #endif
 -- 
 2.20.1
 
