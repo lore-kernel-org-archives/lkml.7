@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA9FC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B734C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72E41217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 541F4217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:27:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752469;
-	bh=hWwEHFuevGp1O7an+MVFFfzJVMbNQ41keR2NXr10SIc=;
+	s=default; t=1564752472;
+	bh=e6CiO5f/2BKSUvys9sR7WlxW/cPPHgRqaQucp6Tgn1M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PfUze4I9QoiFqWNqKRvR/WRCybTczwsaTgevPWLCICfKiTHeLi5Hv5LGCDKUY+ae3
-	 WiieCCPbuepGVU5BA9Z2m+aBdBvufSbyOICLO0yi2jOoIzjsz21whZagM8YxDchxeV
-	 7sjadekCH1oZztkxfIg4Gk1sfx2cCIkgTepaVuR8=
+	b=mq73hfJh49kbe15iymnlQy22YgE5jBYp/Ipl13eqASWds1zGGqObPYqeyewN1EkYV
+	 yPRlTOU1i4U4cJL91x90khpwyux7QucvI1EYoUAwBrKf1QVYFcZSnr0D4hsUwOMP8a
+	 x3RaAicglWFAPfesngblEtpZomYQYJ25+hAKH0Y4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394648AbfHBN0t (ORCPT
+        id S2394797AbfHBN1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:26:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37558 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:27:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391370AbfHBN0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:26:46 -0400
+        id S2394650AbfHBN0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:26:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FA29217D6;
-        Fri,  2 Aug 2019 13:26:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B428921873;
+        Fri,  2 Aug 2019 13:26:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752405;
-        bh=hWwEHFuevGp1O7an+MVFFfzJVMbNQ41keR2NXr10SIc=;
+        s=default; t=1564752409;
+        bh=e6CiO5f/2BKSUvys9sR7WlxW/cPPHgRqaQucp6Tgn1M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c+QoTHzTbh5++AE5jbpS11QysDfenol8cqkBR0DhgAlcDR9ZveA/6Vgd4OL/yerOj
-         IVr04VnHAw6BjCyrnyaSz09zh52OAqJQ7JjWVpGpXDBrpKxtXvVVyUcyREdzHUN3fM
-         AjUVpnSuABsGnzyuMtSO6iJkwAAE785PzztW9mDM=
+        b=IR9ZMD0d/Rp6xk2S+rTpbPMb1TbaVydih/b7Xw3CRxQ6MYtXjDQkDIgiKcFFQwTUR
+         cXKd04I4EdVuNCAUYLt1XldCzj82UwlV5WgppuSzwMOvogMz+NlFy/SVaqidXtTN6H
+         Q2g8Cp89Y8kI2etzIoNg72ehOJjtyx2iX+FhK9lU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brian Norris <briannorris@chromium.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 03/17] mac80211: don't warn about CW params when not using them
-Date:   Fri,  2 Aug 2019 09:26:20 -0400
-Message-Id: <20190802132635.14885-3-sashal@kernel.org>
+Cc:     Joerg Roedel <jroedel@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 06/17] x86/mm: Sync also unmappings in vmalloc_sync_all()
+Date:   Fri,  2 Aug 2019 09:26:23 -0400
+Message-Id: <20190802132635.14885-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802132635.14885-1-sashal@kernel.org>
 References: <20190802132635.14885-1-sashal@kernel.org>
@@ -60,52 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Norris <briannorris@chromium.org>
+From: Joerg Roedel <jroedel@suse.de>
 
-[ Upstream commit d2b3fe42bc629c2d4002f652b3abdfb2e72991c7 ]
+[ Upstream commit 8e998fc24de47c55b47a887f6c95ab91acd4a720 ]
 
-ieee80211_set_wmm_default() normally sets up the initial CW min/max for
-each queue, except that it skips doing this if the driver doesn't
-support ->conf_tx. We still end up calling drv_conf_tx() in some cases
-(e.g., ieee80211_reconfig()), which also still won't do anything
-useful...except it complains here about the invalid CW parameters.
+With huge-page ioremap areas the unmappings also need to be synced between
+all page-tables. Otherwise it can cause data corruption when a region is
+unmapped and later re-used.
 
-Let's just skip the WARN if we weren't going to do anything useful with
-the parameters.
+Make the vmalloc_sync_one() function ready to sync unmappings and make sure
+vmalloc_sync_all() iterates over all page-tables even when an unmapped PMD
+is found.
 
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Link: https://lore.kernel.org/r/20190718015712.197499-1-briannorris@chromium.org
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 5d72b4fba40ef ('x86, mm: support huge I/O mapping capability I/F')
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+Link: https://lkml.kernel.org/r/20190719184652.11391-3-joro@8bytes.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/driver-ops.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ arch/x86/mm/fault.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
-diff --git a/net/mac80211/driver-ops.c b/net/mac80211/driver-ops.c
-index c258f1041d330..df2e4e3112177 100644
---- a/net/mac80211/driver-ops.c
-+++ b/net/mac80211/driver-ops.c
-@@ -169,11 +169,16 @@ int drv_conf_tx(struct ieee80211_local *local,
- 	if (!check_sdata_in_driver(sdata))
- 		return -EIO;
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index f3511f1a8f0ea..0e498683295b1 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -216,11 +216,12 @@ static inline pmd_t *vmalloc_sync_one(pgd_t *pgd, unsigned long address)
  
--	if (WARN_ONCE(params->cw_min == 0 ||
--		      params->cw_min > params->cw_max,
--		      "%s: invalid CW_min/CW_max: %d/%d\n",
--		      sdata->name, params->cw_min, params->cw_max))
-+	if (params->cw_min == 0 || params->cw_min > params->cw_max) {
-+		/*
-+		 * If we can't configure hardware anyway, don't warn. We may
-+		 * never have initialized the CW parameters.
-+		 */
-+		WARN_ONCE(local->ops->conf_tx,
-+			  "%s: invalid CW_min/CW_max: %d/%d\n",
-+			  sdata->name, params->cw_min, params->cw_max);
- 		return -EINVAL;
-+	}
+ 	pmd = pmd_offset(pud, address);
+ 	pmd_k = pmd_offset(pud_k, address);
+-	if (!pmd_present(*pmd_k))
+-		return NULL;
  
- 	trace_drv_conf_tx(local, sdata, ac, params);
- 	if (local->ops->conf_tx)
+-	if (!pmd_present(*pmd))
++	if (pmd_present(*pmd) != pmd_present(*pmd_k))
+ 		set_pmd(pmd, *pmd_k);
++
++	if (!pmd_present(*pmd_k))
++		return NULL;
+ 	else
+ 		BUG_ON(pmd_pfn(*pmd) != pmd_pfn(*pmd_k));
+ 
+@@ -242,17 +243,13 @@ void vmalloc_sync_all(void)
+ 		spin_lock(&pgd_lock);
+ 		list_for_each_entry(page, &pgd_list, lru) {
+ 			spinlock_t *pgt_lock;
+-			pmd_t *ret;
+ 
+ 			/* the pgt_lock only for Xen */
+ 			pgt_lock = &pgd_page_get_mm(page)->page_table_lock;
+ 
+ 			spin_lock(pgt_lock);
+-			ret = vmalloc_sync_one(page_address(page), address);
++			vmalloc_sync_one(page_address(page), address);
+ 			spin_unlock(pgt_lock);
+-
+-			if (!ret)
+-				break;
+ 		}
+ 		spin_unlock(&pgd_lock);
+ 	}
 -- 
 2.20.1
 
