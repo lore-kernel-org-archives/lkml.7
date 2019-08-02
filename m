@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C602FC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A840EC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9353620880
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:47:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72E2B2171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:47:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739223;
-	bh=iLh6aU/cOBOu4Ut2p12q2FvtYsMgUM1bAlJESk5MVO8=;
+	s=default; t=1564739229;
+	bh=gcPTCB6UpU4DCzvcOK0j830FQAAPxgXOUQAdiBKoRKc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qvkv03feliIlCCnyZXquVT6T0djcj7PEfMYGwh6uVcohXafuy0OKSBVg7jjEa5SRH
-	 J/pEPmxKNumshGl1oVVp6k3KukFJfKz3NnD9+bBGzxXq8ENKvx4VzfFlH3hlz/FDmC
-	 T3oIlTqVw/deLcPYHM36mw+OI0r50AbAyn0I5AbA=
+	b=CR3GCV0S5lbXrUIz4KvNOPxZO7a80PVYysesl71evas75XfEsf3IyFYpxQQhxRaqv
+	 YsaqgPAiDqmy6dK4J7103oxPKI+JO9+5zL5WPrNvKCDRc/Tm1FLV6s4g2eQLPPXDvm
+	 m6k3N3kOt0rxtaMFP7uIRPEYo3XF8UorGnz6vOd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392085AbfHBJrC (ORCPT
+        id S2405638AbfHBJrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:47:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51598 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:47:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405629AbfHBJq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:46:58 -0400
+        id S2392087AbfHBJrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:47:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C110020B7C;
-        Fri,  2 Aug 2019 09:46:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4D4120880;
+        Fri,  2 Aug 2019 09:47:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739217;
-        bh=iLh6aU/cOBOu4Ut2p12q2FvtYsMgUM1bAlJESk5MVO8=;
+        s=default; t=1564739225;
+        bh=gcPTCB6UpU4DCzvcOK0j830FQAAPxgXOUQAdiBKoRKc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W0ZAFfx/50llYBrqBW4BMfemw1mJqevUfg8Eenpn7kP0U591QCLQBn30k4xoI92Gv
-         mXCQd4Rw9egtSUwqqnitCyU1BmopBG1tVwZI+Kl59JdQrpGq2dDlWA/aohjoI/H113
-         X6d1u339Xcm64B6zfSiTcP86al25jbiZG0BDBuP0=
+        b=Sm4OrvxaeDZC2h9/7F5iiZCa95cS/zgsxDYRu3x1SXtTFQXdt39UJLHh3UKB2UsCh
+         R52z/m7Fqdih5NCjzgBoTgy7w35X2lG2ZbVSdZx5M1dsflfnrz5FF2doELQQ2g8Ej/
+         K2fuKI/EV/5n/S/BW1yWBBrWJt1V+Up2weDRYq/Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Tracy <ctracy@engr.scu.edu>,
-        "J. Bruce Fields" <bfields@redhat.com>,
+        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Thierry Reding <treding@nvidia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 157/223] nfsd: fix performance-limiting session calculation
-Date:   Fri,  2 Aug 2019 11:36:22 +0200
-Message-Id: <20190802092248.475502279@linuxfoundation.org>
+Subject: [PATCH 4.9 159/223] drm/panel: simple: Fix panel_simple_dsi_probe
+Date:   Fri,  2 Aug 2019 11:36:24 +0200
+Message-Id: <20190802092248.550530661@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -60,53 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c54f24e338ed2a35218f117a4a1afb5f9e2b4e64 ]
+[ Upstream commit 7ad9db66fafb0f0ad53fd2a66217105da5ddeffe ]
 
-We're unintentionally limiting the number of slots per nfsv4.1 session
-to 10.  Often more than 10 simultaneous RPCs are needed for the best
-performance.
+In case mipi_dsi_attach() fails remove the registered panel to avoid added
+panel without corresponding device.
 
-This calculation was meant to prevent any one client from using up more
-than a third of the limit we set for total memory use across all clients
-and sessions.  Instead, it's limiting the client to a third of the
-maximum for a single session.
-
-Fix this.
-
-Reported-by: Chris Tracy <ctracy@engr.scu.edu>
-Cc: stable@vger.kernel.org
-Fixes: de766e570413 "nfsd: give out fewer session slots as limit approaches"
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190226081153.31334-1-peter.ujfalusi@ti.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/nfs4state.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/panel/panel-simple.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 0aacd1c850c3..c4762d8aa9f8 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -1502,16 +1502,16 @@ static u32 nfsd4_get_drc_mem(struct nfsd4_channel_attrs *ca)
- {
- 	u32 slotsize = slot_bytes(ca);
- 	u32 num = ca->maxreqs;
--	int avail;
-+	unsigned long avail, total_avail;
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 5b2a9f97ff04..68a2b25deb50 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -1944,7 +1944,14 @@ static int panel_simple_dsi_probe(struct mipi_dsi_device *dsi)
+ 	dsi->format = desc->format;
+ 	dsi->lanes = desc->lanes;
  
- 	spin_lock(&nfsd_drc_lock);
--	avail = min((unsigned long)NFSD_MAX_MEM_PER_SESSION,
--		    nfsd_drc_max_mem - nfsd_drc_mem_used);
-+	total_avail = nfsd_drc_max_mem - nfsd_drc_mem_used;
-+	avail = min((unsigned long)NFSD_MAX_MEM_PER_SESSION, total_avail);
- 	/*
- 	 * Never use more than a third of the remaining memory,
- 	 * unless it's the only way to give this client a slot:
- 	 */
--	avail = clamp_t(int, avail, slotsize, avail/3);
-+	avail = clamp_t(int, avail, slotsize, total_avail/3);
- 	num = min_t(int, num, avail / slotsize);
- 	nfsd_drc_mem_used += num * slotsize;
- 	spin_unlock(&nfsd_drc_lock);
+-	return mipi_dsi_attach(dsi);
++	err = mipi_dsi_attach(dsi);
++	if (err) {
++		struct panel_simple *panel = dev_get_drvdata(&dsi->dev);
++
++		drm_panel_remove(&panel->base);
++	}
++
++	return err;
+ }
+ 
+ static int panel_simple_dsi_remove(struct mipi_dsi_device *dsi)
 -- 
 2.20.1
 
