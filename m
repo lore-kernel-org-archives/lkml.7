@@ -2,80 +2,165 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 081ECC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E36C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1083204EC
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:02:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC685204EC
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:03:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="GlIO4h09"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403781AbfHBICu (ORCPT
+        id S2403794AbfHBIDh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 04:02:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44944 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728268AbfHBICu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 04:02:50 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CEE058535D;
-        Fri,  2 Aug 2019 08:02:49 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-81.ams2.redhat.com [10.36.116.81])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5C4FF19C68;
-        Fri,  2 Aug 2019 08:02:48 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id B04BF16E05; Fri,  2 Aug 2019 10:02:45 +0200 (CEST)
-Date:   Fri, 2 Aug 2019 10:02:45 +0200
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     Chia-I Wu <olvaffe@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Fri, 2 Aug 2019 04:03:37 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:42220 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728268AbfHBIDg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 04:03:36 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0013A33E;
+        Fri,  2 Aug 2019 10:03:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1564733014;
+        bh=iESMaiwMfzcHwok5GLi0XmKd4pH/pITjQS3plSb9Z34=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GlIO4h09Z40O9LbRY2FO6XIGflDy1hY2hNm+JpqlfFcT4o1UBbVay+On30qcePB3R
+         XpK6hxFtraFU69VIrNjbWvA7k7S5K3ybAB23zpFl3Uy0bn/8xyo4nBeE98MbJOP/L0
+         BExEJZlMr4sLNiLx+OBcBgfFnhF/L3lxiy98JP1A=
+Date:   Fri, 2 Aug 2019 11:03:32 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/virtio: kick vq outside of the vq lock
-Message-ID: <20190802080245.za2n5rgx763xvhpd@sirius.home.kraxel.org>
-References: <20190711022937.166015-1-olvaffe@gmail.com>
- <20190711023959.170158-1-olvaffe@gmail.com>
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH/RFC 04/12] dt-bindings: display: Add bindings for
+ Advantech IDK-2121WR
+Message-ID: <20190802080332.GE5008@pendragon.ideasonboard.com>
+References: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1564731249-22671-5-git-send-email-fabrizio.castro@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190711023959.170158-1-olvaffe@gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 02 Aug 2019 08:02:50 +0000 (UTC)
+In-Reply-To: <1564731249-22671-5-git-send-email-fabrizio.castro@bp.renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> @@ -291,11 +291,9 @@ static int virtio_gpu_queue_ctrl_buffer_locked(struct virtio_gpu_device *vgdev,
->  		trace_virtio_gpu_cmd_queue(vq,
->  			(struct virtio_gpu_ctrl_hdr *)vbuf->buf);
->  
-> -		virtqueue_kick(vq);
-> +		ret = virtqueue_kick_prepare(vq);
->  	}
->  
-> -	if (!ret)
-> -		ret = vq->num_free;
+Hi Fabrizio,
 
-Hmm.  Change looks unrelated.
+Thank you for the patch.
 
-On a closer look it seems this is basically dead code.
-virtio_gpu_queue_ctrl_buffer_locked is called by
-virtio_gpu_queue_ctrl_buffer and virtio_gpu_queue_fenced_ctrl_buffer.
-The call sites for these two functions all ignore the return value.
+On Fri, Aug 02, 2019 at 08:34:01AM +0100, Fabrizio Castro wrote:
+> This panel is handled through the generic lvds-panel bindings,
+> so only needs its additional compatible specified.
+> 
+> Some panel specific documentation can be found here:
 
-So it is a valid change, but it should go to a separate patch.  And
-while being at it virtio_gpu_queue_ctrl_buffer and
-virtio_gpu_queue_fenced_ctrl_buffer can be changed to return void.
+s/panel specific/panel-specific/
 
-Otherwise the patch looks fine.  Nice analysis btw.
+> https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> ---
+>  .../display/panel/advantech,idk-2121wr.txt         | 62 ++++++++++++++++++++++
+>  1 file changed, 62 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.txt b/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.txt
+> new file mode 100644
+> index 0000000..70b15b6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.txt
+> @@ -0,0 +1,62 @@
+> +Advantech Co., Ltd. IDK-2121WR 21.5" LVDS panel
+> +===============================================
+> +
+> +Required properties:
+> +- compatible: should be "advantech,idk-2121wr" followed by "panel-lvds"
+> +
+> +This binding is compatible with the lvds-panel binding, which is specified
+> +in panel-lvds.txt in this directory.
 
-cheers,
-  Gerd
+How about adding "The panel operates in dual-link mode and thus requires
+two port nodes." ?
 
+> +
+> +Example
+> +-------
+> +
+> +	panel {
+> +		compatible = "advantech,idk-2121wr", "panel-lvds";
+> +
+> +		width-mm = <476>;
+> +		height-mm = <268>;
+> +
+> +		data-mapping = "vesa-24";
+> +
+> +		panel-timing {
+> +			clock-frequency = <148500000>;
+> +			hactive = <1920>;
+> +			vactive = <1080>;
+> +			hsync-len = <44>;
+> +			hfront-porch = <88>;
+> +			hback-porch = <148>;
+> +			vfront-porch = <4>;
+> +			vback-porch = <36>;
+> +			vsync-len = <5>;
+> +		};
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				reg = <0>;
+> +				lvds0_panel_in: endpoint {
+> +					remote-endpoint = <&lvds0_out>;
+> +				};
+> +			};
+> +
+> +			port@1 {
+> +				reg = <1>;
+> +				lvds1_panel_in: endpoint {
+> +					remote-endpoint = <&lvds1_out>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	backlight: backlight {
+> +		compatible = "pwm-backlight";
+> +		pwms = <&pwm5 0 50000>;
+> +
+> +		brightness-levels = <0 4 8 16 32 64 128 255>;
+> +		default-brightness-level = <6>;
+> +
+> +		power-supply = <&reg_12p0v>;
+> +		enable-gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
+> +	};
+
+I think you can drop the backlight here, it's a bit out of scope.
+
+-- 
+Regards,
+
+Laurent Pinchart
