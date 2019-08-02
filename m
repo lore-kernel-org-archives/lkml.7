@@ -2,102 +2,229 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F336C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 06:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F08EC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 06:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41790206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 06:10:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="R3+zgINs"
+	by mail.kernel.org (Postfix) with ESMTP id 4FD2A206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 06:10:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388404AbfHBGKK (ORCPT
+        id S2388529AbfHBGKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 02:10:10 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:33629 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727403AbfHBGKJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 02:10:09 -0400
-Received: by mail-qt1-f195.google.com with SMTP id r6so68565574qtt.0
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 23:10:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aFWaj3cSyAp5cCruqVAXM269R+jXFA+hpQyudleBW8I=;
-        b=R3+zgINs75dLpE9xitGDlrbGtE/wzbCCZrUQRqXd1DkFAauk+rXBs5F/P6isRb82rQ
-         fGCdP+uzBdeSYGqQpFlJB3PO3LQtniJfZDwC7aTY1w7I/MNKmSqPPLN5EwZ2gGwtY3KB
-         /kjIdOGt+CsMNaXLGf9WLJI4inkssBNReoyCg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aFWaj3cSyAp5cCruqVAXM269R+jXFA+hpQyudleBW8I=;
-        b=K0I3LYmKudq7AQ0K1eRe0pbGG2jFk9X1Pivjme5sOX2J/4UIVuWeIpx/qG21zahvJ5
-         TwJz0Yke0o5aT3Rim2/8ceq/JS1oaaEGw5SpvwnsMLU3CoiXuH8jPDVogbvtZxinsQir
-         Kgi95Obcttj3cDAfD20SCHcQMiEyix6bMkRGDEKzhutHeFcdIMUN1q9w66We2xv0HOp3
-         hrboXS1GfhgZJKI/nzY2gsDveyKY6u5y0M0q9OPPY906QVXoTWYNVvHzWan9c14hpNTN
-         9vP9BIXY1BoSIhqK+S8UlNbOkXQr6fyZkZTey/heMVcRd6pDdH6ZbHJf1cg7K/SSjMmo
-         P0xg==
-X-Gm-Message-State: APjAAAXdEyflv555oBi6A7oVVlJqgptUBeovksmHljuDf58TlxHLuK1+
-        Xrp6T3sCxHUMo0AxtwwgK7tYEVp75KPP34Dw4FU=
-X-Google-Smtp-Source: APXvYqz7bb22+a5Wv4AkSi0btb/AAI8H35mfK49hqP0WgDG+Ezce+iETXBjueb2NE8qmF9oHprwt/CYIrmsrIe0PbKY=
-X-Received: by 2002:a05:6214:1306:: with SMTP id a6mr97906903qvv.38.1564726208597;
- Thu, 01 Aug 2019 23:10:08 -0700 (PDT)
+        Fri, 2 Aug 2019 02:10:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33608 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727403AbfHBGKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 02:10:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 95267B634;
+        Fri,  2 Aug 2019 06:10:09 +0000 (UTC)
+Subject: Re: [PATCH 20/34] xen: convert put_page() to put_user_page*()
+To:     John Hubbard <jhubbard@nvidia.com>, john.hubbard@gmail.com,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     devel@driverdev.osuosl.org, Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>, x86@kernel.org,
+        linux-mm@kvack.org, Dave Hansen <dave.hansen@linux.intel.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org, devel@lists.orangefs.org,
+        xen-devel@lists.xenproject.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        rds-devel@oss.oracle.com,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Jan Kara <jack@suse.cz>, ceph-devel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-media@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-xfs@vger.kernel.org,
+        netdev@vger.kernel.org, sparclinux@vger.kernel.org,
+        Jason Gunthorpe <jgg@ziepe.ca>
+References: <20190802022005.5117-1-jhubbard@nvidia.com>
+ <20190802022005.5117-21-jhubbard@nvidia.com>
+ <4471e9dc-a315-42c1-0c3c-55ba4eeeb106@suse.com>
+ <d5140833-e9ee-beb5-ff0a-2d13a4fe819f@nvidia.com>
+From:   Juergen Gross <jgross@suse.com>
+Message-ID: <d4931311-db01-e8c3-0f8c-d64685dc2143@suse.com>
+Date:   Fri, 2 Aug 2019 08:10:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190730081832.271125-1-avifishman70@gmail.com>
-In-Reply-To: <20190730081832.271125-1-avifishman70@gmail.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Fri, 2 Aug 2019 06:09:56 +0000
-Message-ID: <CACPK8XeqDRNYJC+=xC_XySSTX6mHi5r94UDaeMPQv3DFV1HYQw@mail.gmail.com>
-Subject: Re: [PATCH v2] mtd: spi-nor: Add Winbond w25q256jvm
-To:     Avi Fishman <avifishman70@gmail.com>
-Cc:     tudor.ambarus@microchip.com, David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        miquel.raynal@bootlin.com, Richard Weinberger <richard@nod.at>,
-        vigneshr@ti.com, linux-mtd@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <d5140833-e9ee-beb5-ff0a-2d13a4fe819f@nvidia.com>
+Content-Type: multipart/mixed;
+ boundary="------------8BBD3C4A32BE2A4FA02D8356"
+Content-Language: de-DE
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Jul 2019 at 08:19, Avi Fishman <avifishman70@gmail.com> wrote:
->
-> Similar to w25q256 (besides not supporting QPI mode) but with different ID.
-> The "JVM" suffix is in the datasheet.
-> The datasheet indicates DUAL and QUAD are supported.
-> https://www.winbond.com/resource-files/w25q256jv%20spi%20revi%2010232018%20plus.pdf
->
-> Signed-off-by: Avi Fishman <avifishman70@gmail.com>
+This is a multi-part message in MIME format.
+--------------8BBD3C4A32BE2A4FA02D8356
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Reviewed-by: Joel Stanley <joel@jms.id.au>
+On 02.08.19 07:48, John Hubbard wrote:
+> On 8/1/19 9:36 PM, Juergen Gross wrote:
+>> On 02.08.19 04:19, john.hubbard@gmail.com wrote:
+>>> From: John Hubbard <jhubbard@nvidia.com>
+> ...
+>>> diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
+>>> index 2f5ce7230a43..29e461dbee2d 100644
+>>> --- a/drivers/xen/privcmd.c
+>>> +++ b/drivers/xen/privcmd.c
+>>> @@ -611,15 +611,10 @@ static int lock_pages(
+>>>   static void unlock_pages(struct page *pages[], unsigned int nr_pages)
+>>>   {
+>>> -    unsigned int i;
+>>> -
+>>>       if (!pages)
+>>>           return;
+>>> -    for (i = 0; i < nr_pages; i++) {
+>>> -        if (pages[i])
+>>> -            put_page(pages[i]);
+>>> -    }
+>>> +    put_user_pages(pages, nr_pages);
+>>
+>> You are not handling the case where pages[i] is NULL here. Or am I
+>> missing a pending patch to put_user_pages() here?
+>>
+> 
+> Hi Juergen,
+> 
+> You are correct--this no longer handles the cases where pages[i]
+> is NULL. It's intentional, though possibly wrong. :)
+> 
+> I see that I should have added my standard blurb to this
+> commit description. I missed this one, but some of the other patches
+> have it. It makes the following, possibly incorrect claim:
+> 
+> "This changes the release code slightly, because each page slot in the
+> page_list[] array is no longer checked for NULL. However, that check
+> was wrong anyway, because the get_user_pages() pattern of usage here
+> never allowed for NULL entries within a range of pinned pages."
+> 
+> The way I've seen these page arrays used with get_user_pages(),
+> things are either done single page, or with a contiguous range. So
+> unless I'm missing a case where someone is either
+> 
+> a) releasing individual pages within a range (and thus likely messing
+> up their count of pages they have), or
+> 
+> b) allocating two gup ranges within the same pages[] array, with a
+> gap between the allocations,
+> 
+> ...then it should be correct. If so, then I'll add the above blurb
+> to this patch's commit description.
+> 
+> If that's not the case (both here, and in 3 or 4 other patches in this
+> series, then as you said, I should add NULL checks to put_user_pages()
+> and put_user_pages_dirty_lock().
 
-> ---
->  drivers/mtd/spi-nor/spi-nor.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-> index 03cc788511d5..74b41ec92414 100644
-> --- a/drivers/mtd/spi-nor/spi-nor.c
-> +++ b/drivers/mtd/spi-nor/spi-nor.c
-> @@ -2151,6 +2151,8 @@ static const struct flash_info spi_nor_ids[] = {
->         { "w25q80bl", INFO(0xef4014, 0, 64 * 1024,  16, SECT_4K) },
->         { "w25q128", INFO(0xef4018, 0, 64 * 1024, 256, SECT_4K) },
->         { "w25q256", INFO(0xef4019, 0, 64 * 1024, 512, SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
-> +       { "w25q256jvm", INFO(0xef7019, 0, 64 * 1024, 512,
-> +                       SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
->         { "w25m512jv", INFO(0xef7119, 0, 64 * 1024, 1024,
->                         SECT_4K | SPI_NOR_QUAD_READ | SPI_NOR_DUAL_READ) },
->
-> --
-> 2.18.0
->
+In this case it is not correct, but can easily be handled. The NULL case
+can occur only in an error case with the pages array filled partially or
+not at all.
+
+I'd prefer something like the attached patch here.
+
+
+Juergen
+
+--------------8BBD3C4A32BE2A4FA02D8356
+Content-Type: text/x-patch;
+ name="gup.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="gup.patch"
+
+diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
+index 2f5ce7230a43..12bd3154126d 100644
+--- a/drivers/xen/privcmd.c
++++ b/drivers/xen/privcmd.c
+@@ -582,10 +582,11 @@ static long privcmd_ioctl_mmap_batch(
+ 
+ static int lock_pages(
+ 	struct privcmd_dm_op_buf kbufs[], unsigned int num,
+-	struct page *pages[], unsigned int nr_pages)
++	struct page *pages[], unsigned int *nr_pages)
+ {
+-	unsigned int i;
++	unsigned int i, free = *nr_pages;
+ 
++	*nr_pages = 0;
+ 	for (i = 0; i < num; i++) {
+ 		unsigned int requested;
+ 		int pinned;
+@@ -593,35 +594,22 @@ static int lock_pages(
+ 		requested = DIV_ROUND_UP(
+ 			offset_in_page(kbufs[i].uptr) + kbufs[i].size,
+ 			PAGE_SIZE);
+-		if (requested > nr_pages)
++		if (requested > free)
+ 			return -ENOSPC;
+ 
+ 		pinned = get_user_pages_fast(
+ 			(unsigned long) kbufs[i].uptr,
+-			requested, FOLL_WRITE, pages);
++			requested, FOLL_WRITE, pages + *nr_pages);
+ 		if (pinned < 0)
+ 			return pinned;
+ 
+-		nr_pages -= pinned;
+-		pages += pinned;
++		free -= pinned;
++		*nr_pages += pinned;
+ 	}
+ 
+ 	return 0;
+ }
+ 
+-static void unlock_pages(struct page *pages[], unsigned int nr_pages)
+-{
+-	unsigned int i;
+-
+-	if (!pages)
+-		return;
+-
+-	for (i = 0; i < nr_pages; i++) {
+-		if (pages[i])
+-			put_page(pages[i]);
+-	}
+-}
+-
+ static long privcmd_ioctl_dm_op(struct file *file, void __user *udata)
+ {
+ 	struct privcmd_data *data = file->private_data;
+@@ -681,11 +669,12 @@ static long privcmd_ioctl_dm_op(struct file *file, void __user *udata)
+ 
+ 	xbufs = kcalloc(kdata.num, sizeof(*xbufs), GFP_KERNEL);
+ 	if (!xbufs) {
++		nr_pages = 0;
+ 		rc = -ENOMEM;
+ 		goto out;
+ 	}
+ 
+-	rc = lock_pages(kbufs, kdata.num, pages, nr_pages);
++	rc = lock_pages(kbufs, kdata.num, pages, &nr_pages);
+ 	if (rc)
+ 		goto out;
+ 
+@@ -699,7 +688,8 @@ static long privcmd_ioctl_dm_op(struct file *file, void __user *udata)
+ 	xen_preemptible_hcall_end();
+ 
+ out:
+-	unlock_pages(pages, nr_pages);
++	if (pages)
++		put_user_pages(pages, nr_pages);
+ 	kfree(xbufs);
+ 	kfree(pages);
+ 	kfree(kbufs);
+
+--------------8BBD3C4A32BE2A4FA02D8356--
