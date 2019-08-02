@@ -2,117 +2,319 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F772C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 04:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB3FC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 04:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C8992073D
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 04:17:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 370B32073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 04:21:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sn9OgyEw"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="l77Xm6dV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731350AbfHBERe (ORCPT
+        id S1731461AbfHBEVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 00:17:34 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33739 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729806AbfHBERe (ORCPT
+        Fri, 2 Aug 2019 00:21:17 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:36671 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731051AbfHBEVQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 00:17:34 -0400
-Received: by mail-lj1-f194.google.com with SMTP id h10so57651ljg.0;
-        Thu, 01 Aug 2019 21:17:32 -0700 (PDT)
+        Fri, 2 Aug 2019 00:21:16 -0400
+Received: by mail-qk1-f194.google.com with SMTP id g18so53812749qkl.3;
+        Thu, 01 Aug 2019 21:21:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=jms.id.au; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=HOvSoEEyfCl7/x5I1JZTYO9Hs0zY3XihBGSCCeM/KWA=;
-        b=Sn9OgyEwtd1KlJ8Cn2Kvaoug5ShLB8vNk7XVRkJA9i7Fyr9IdwAA3L1Zgk7/ywlP+P
-         /rMF0vY57u1zxXtZJjXA+z6bWM1mSK8a7xIi9Q7N+IYQ+vOdtPdpGTeFsBJHh5zGCYvr
-         utAcfjKq6zN5+vdh3XFS1iPmVa1ZVQXcMs0Aw+x2UWOHbWTDeAUAkgn6cVQ4FEfso2gL
-         hoaZK0uKlKBoWEyTZBGJAzmjN7QMDUAfVZeUS/kdvD44dqGWFQ0WCNS7/4lxzcY+vpau
-         Zp/Hn9xx+/ZlwuVPTj9+J942EdJ5AJX4aQ9s9XMUL7nRntbIWP7UE2r5QfEB0x0Ji+kQ
-         ycyQ==
+         :cc;
+        bh=q9UBcMKtePrtEaomibezEEEJmQ4FGM8GYQb7rZ+rqS0=;
+        b=l77Xm6dVdFosSZz4ISpaeYA7N3fyZ4FrUY6Msp8xRh2WT283dDS5cl5Ph96Lh17ca4
+         1sqbwz0J5Wo2+Hfyw9n1MlhFQZ6Xp2/iNaSYddqSxhO3pMI6shuo+Yr47tn26F1OIeyN
+         0vybk8mv34jD1mv+IIMd50UPndQRhkiafo+WY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=HOvSoEEyfCl7/x5I1JZTYO9Hs0zY3XihBGSCCeM/KWA=;
-        b=M1h3DwSNAxa+1EQoomN0stdEkGaMdtXDb/ffz5y77MDMM7rNHpRDv4H/k8luNdpqSm
-         tV09FOJ6HnJvk4/t0aR4ZwGLhIiq/39EmEQUdUeuL5y4nE70mQEnReDUNhPpgHqFlBxK
-         ZqUlWLtqeHlx5IWDfx+htwb8PF1uUhXMHAIo+eb3UVdoElXrGk63R0+SRmDR55G+YM3i
-         ppz9LzlQF3g8jYlId8FedwhqhoSSX0MdPxMe7MnTw5Hz3D+yplc0qMCSUh9Noav/RpeZ
-         pGj/Zz//eufxlS4X/0Oa4Dd7H8IFmtum7T8KhxU9wSOQuG9uBam2ofiCMr3Lnx7G1fVQ
-         ULZA==
-X-Gm-Message-State: APjAAAWbAcKmGOupDgF7oKzEwfTH7TQWpRT6tqBVF0CgWIjXI3omV4vc
-        dg81IKq6/jJhWr7oIgriWK71RNI4L3cP8c6Fl3I=
-X-Google-Smtp-Source: APXvYqwetgzlQupya9GxhfsPelN+cDfVRLEA0BaIXILs9Yttryy1k0k6TbsVhwkN0EBk8YrwRgtXzPzrXMi7t4lbM3w=
-X-Received: by 2002:a2e:b60f:: with SMTP id r15mr69665450ljn.172.1564719451610;
- Thu, 01 Aug 2019 21:17:31 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=q9UBcMKtePrtEaomibezEEEJmQ4FGM8GYQb7rZ+rqS0=;
+        b=muLWKdBbVGWTFrzUpzlpw6MOuQeDngrwfKPnIBYX++zJa+bcCv8vZIGNpJB1PWXyGn
+         mww/obcHfioyym8VtB2F3+e57AGsD0d3j3upsPIBq06v9wtnkKBjIFwS/dQOEOumhoRI
+         SjpjaUf2QvTVxuWfeKHA33deky49/GVW9wdHcbeMqINuEnHI90BoT62gTCPLSdy5p6LY
+         OJDg6d46GtccZu+SVjNlxiuPYFWTpcrLQ8VqmdZqz8QDv9tQtpzeyeCyrIjZRmJqTCr/
+         LFvMAgVP33f6yLWYzEf7OwNNFoRRMNJE8htQP4OdMHJ/Cq4+/YnREH2U56fgpcviGOaX
+         KSvA==
+X-Gm-Message-State: APjAAAXdDtbwf+Z0I+SnV6XuqD7txb4sms2ILCCMmXlSDPAyIJpw46yB
+        y2FeoorHVmNQVEOy31oudmA0wj6vvfZLCpryWJg=
+X-Google-Smtp-Source: APXvYqx+1KRNUxUimqfzDpoeWfQqVYjpwpMAv6POY1MuPBx01LXJU1p7xULXTW7V3lAp+QMTexKFlSiRSNfwf0S6ye0=
+X-Received: by 2002:a37:b0c6:: with SMTP id z189mr88058946qke.208.1564719675402;
+ Thu, 01 Aug 2019 21:21:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <54a35258-081a-71cc-ef1b-9fffcf5e7f9f@nchc.org.tw>
- <CAB3wodfF=Gc3FbKedU4JBWi8hZLxcBPUtVPipsCVnaHdFXGk8Q@mail.gmail.com> <CAKjSHr0vTK6En1_n6GwArV0N6=kM=Czbx2SYat9vK71HuyzMAA@mail.gmail.com>
-In-Reply-To: <CAKjSHr0vTK6En1_n6GwArV0N6=kM=Czbx2SYat9vK71HuyzMAA@mail.gmail.com>
-From:   Phillip Lougher <phillip.lougher@gmail.com>
-Date:   Fri, 2 Aug 2019 05:17:20 +0100
-Message-ID: <CAB3wodfgHXN7LPojxS+PV6sDieTi2iQG-YUFU6HAmh=ObY45BA@mail.gmail.com>
-Subject: Re: Bug#921146: Program mksquashfs from squashfs-tools 1:4.3-11 does
- not make use all CPU cores
-To:     =?UTF-8?B?TMOhc3psw7MgQsO2c3rDtnJtw6lueWkgKEdDUyk=?= 
-        <gcs@debian.org>
-Cc:     921146@bugs.debian.org, Chris Lamb <lamby@debian.org>,
-        hartmans@debian.org, debian-ctte@lists.debian.org,
-        Alexander Couzens <lynxis@fe80.eu>,
-        linux-fsdevel@vger.kernel.org,
-        linux-embedded <linux-embedded@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20190802041010.1234178-1-taoren@fb.com>
+In-Reply-To: <20190802041010.1234178-1-taoren@fb.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Fri, 2 Aug 2019 04:21:03 +0000
+Message-ID: <CACPK8XcuwNE3aBrsgn-paTZt-EtF6pc6WwYBQef5xc7157bk2g@mail.gmail.com>
+Subject: Re: [PATCH v2] ARM: dts: aspeed: Add Facebook Wedge100 BMC
+To:     Tao Ren <taoren@fb.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed@lists.ozlabs.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 1, 2019 at 11:41 PM L=C3=A1szl=C3=B3 B=C3=B6sz=C3=B6rm=C3=A9nyi=
- (GCS) <gcs@debian.org> wrote:
-
->  Let me add Chris Lamb then the previous Debian Project Leader (also
-> British just like you [as I know] and you may sit down and talk about
-> this in person) who asked for the reproducibility patch / build in the
-> first place.
+On Fri, 2 Aug 2019 at 04:10, Tao Ren <taoren@fb.com> wrote:
 >
-
-If Chris Lamb or anyone else wants a face-to-face meeting I'm more
-than happy to do so.
-
-I coincidentally have a week's holiday (vacation) next week, and I'm
-happy to spend a day of it travelling and meeting to discuss the
-situation.
-
-I do want to de-escalate this situation if possible.
-
-Phillip
-
-> > What else do I have to do to make you stop bad-mouthing Squashfs?  Sue?
->  If you feel yourself better with that, be my guest. I don't know who
-> is the lawyer of Debian, but I'm sure s/he can show you that it's only
-> you who dance this storm.
+> Add initial version of device tree for Facebook Wedge100 AST2400 BMC
+> platform.
 >
-> Regards,
-> Laszlo/GCS
-> [1] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D919207#5
-> [2] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D919207#83
-> [3] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D919207#88
-> [4] https://sourceforge.net/p/squashfs/code/ci/e38956b92f738518c297343996=
-29e7cdb33072d3/log/?path=3D
-> [5] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D921146#75
-> [6] https://github.com/AgentD/squashfs-tools-ng
-> [7] https://lwn.net/Articles/651775/
-> [8] https://github.com/plougher/squashfs-tools/commit/f95864afe8833fe3ad7=
-82d714b41378e860977b1
-> [9] https://github.com/plougher/squashfs-tools/commit/ba215d73e153a6f2370=
-88b4ecb88c702bb4d4183
+> Signed-off-by: Tao Ren <taoren@fb.com>
+> Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+> ---
+>  Changes in v2:
+>  - remove "debug" from bootargs.
+
+Thanks. I applied wedge40 and then this one fails to apply due to
+conflicts in the Makefile. Next time you have two patches, send them
+as a series they apply one atop the other.
+
+The naming of these two files suggests they come from a family. I
+noticed there's very minor differences, a pca9548 switch and the use
+of a watchdog.
+
+Are these device trees complete? If yes, do you think it's worthwhile
+to have a common wedge description in eg.
+aspeed-bmc-facebook-wedge.dtsi, and put the unique description in
+respective dts board files?
+
+The upside of this is reduced duplication.
+
+If you have a reason not to, then that is okay and we can leave it as
+you submitted them.
+
+Cheers,
+
+Joel
+
+--- arch/arm/boot/dts/aspeed-bmc-facebook-wedge100.dts    2019-08-02
+13:44:26.536934502 +0930
++++ arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts    2019-08-02
+13:44:02.980670672 +0930
+@@ -5,8 +5,8 @@
+ #include "aspeed-g4.dtsi"
+
+ / {
+-    model = "Facebook Wedge 100 BMC";
+-    compatible = "facebook,wedge100-bmc", "aspeed,ast2400";
++    model = "Facebook Wedge 40 BMC";
++    compatible = "facebook,wedge40-bmc", "aspeed,ast2400";
+
+     aliases {
+         /*
+@@ -35,8 +35,7 @@
+ };
+
+ &wdt2 {
+-    status = "okay";
+-    aspeed,reset-type = "system";
++    status = "disabled";
+ };
+
+ &fmc {
+@@ -111,13 +110,6 @@
+
+ &i2c7 {
+     status = "okay";
+-
+-    i2c-switch@70 {
+-        compatible = "nxp,pca9548";
+-        #address-cells = <1>;
+-        #size-cells = <0>;
+-        reg = <0x70>;
+-    };
+ };
+
+>
+>  arch/arm/boot/dts/Makefile                    |   1 +
+>  .../boot/dts/aspeed-bmc-facebook-wedge100.dts | 149 ++++++++++++++++++
+>  2 files changed, 150 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-wedge100.dts
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 39a05a10a2a2..d71504ed82d3 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -1273,6 +1273,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
+>         aspeed-bmc-facebook-cmm.dtb \
+>         aspeed-bmc-facebook-minipack.dtb \
+>         aspeed-bmc-facebook-tiogapass.dtb \
+> +       aspeed-bmc-facebook-wedge100.dtb \
+>         aspeed-bmc-facebook-yamp.dtb \
+>         aspeed-bmc-intel-s2600wf.dtb \
+>         aspeed-bmc-inspur-fp5280g2.dtb \
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-wedge100.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-wedge100.dts
+> new file mode 100644
+> index 000000000000..b1e10f0c85c9
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-wedge100.dts
+> @@ -0,0 +1,149 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +// Copyright (c) 2018 Facebook Inc.
+> +/dts-v1/;
+> +
+> +#include "aspeed-g4.dtsi"
+> +
+> +/ {
+> +       model = "Facebook Wedge 100 BMC";
+> +       compatible = "facebook,wedge100-bmc", "aspeed,ast2400";
+> +
+> +       aliases {
+> +               /*
+> +                * Override the default uart aliases to avoid breaking
+> +                * the legacy applications.
+> +                */
+> +               serial0 = &uart5;
+> +               serial1 = &uart1;
+> +               serial2 = &uart3;
+> +               serial3 = &uart4;
+> +       };
+> +
+> +       chosen {
+> +               stdout-path = &uart3;
+> +               bootargs = "console=ttyS2,9600n8 root=/dev/ram rw";
+> +       };
+> +
+> +       memory@40000000 {
+> +               reg = <0x40000000 0x20000000>;
+> +       };
+> +};
+> +
+> +&wdt1 {
+> +       status = "okay";
+> +       aspeed,reset-type = "system";
+> +};
+> +
+> +&wdt2 {
+> +       status = "okay";
+> +       aspeed,reset-type = "system";
+> +};
+> +
+> +&fmc {
+> +       status = "okay";
+> +       flash@0 {
+> +               status = "okay";
+> +               m25p,fast-read;
+> +               label = "fmc0";
+> +#include "facebook-bmc-flash-layout.dtsi"
+> +       };
+> +};
+> +
+> +&uart1 {
+> +       status = "okay";
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_txd1_default
+> +                    &pinctrl_rxd1_default>;
+> +};
+> +
+> +&uart3 {
+> +       status = "okay";
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_txd3_default
+> +                    &pinctrl_rxd3_default>;
+> +};
+> +
+> +&uart4 {
+> +       status = "okay";
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_txd4_default
+> +                    &pinctrl_rxd4_default>;
+> +};
+> +
+> +&uart5 {
+> +       status = "okay";
+> +};
+> +
+> +&mac1 {
+> +       status = "okay";
+> +       no-hw-checksum;
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_rgmii2_default &pinctrl_mdio2_default>;
+> +};
+> +
+> +&i2c0 {
+> +       status = "okay";
+> +};
+> +
+> +&i2c1 {
+> +       status = "okay";
+> +};
+> +
+> +&i2c2 {
+> +       status = "okay";
+> +};
+> +
+> +&i2c3 {
+> +       status = "okay";
+> +};
+> +
+> +&i2c4 {
+> +       status = "okay";
+> +};
+> +
+> +&i2c5 {
+> +       status = "okay";
+> +};
+> +
+> +&i2c6 {
+> +       status = "okay";
+> +};
+> +
+> +&i2c7 {
+> +       status = "okay";
+> +
+> +       i2c-switch@70 {
+> +               compatible = "nxp,pca9548";
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +               reg = <0x70>;
+> +       };
+> +};
+> +
+> +&i2c8 {
+> +       status = "okay";
+> +};
+> +
+> +&i2c9 {
+> +       status = "okay";
+> +};
+> +
+> +&i2c10 {
+> +       status = "okay";
+> +};
+> +
+> +&i2c11 {
+> +       status = "okay";
+> +};
+> +
+> +&i2c12 {
+> +       status = "okay";
+> +};
+> +
+> +&i2c13 {
+> +       status = "okay";
+> +};
+> +
+> +&vhub {
+> +       status = "okay";
+> +};
+> --
+> 2.17.1
+>
