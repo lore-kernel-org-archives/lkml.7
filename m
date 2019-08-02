@@ -2,84 +2,141 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F52C19759
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC13C19759
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 438692083B
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:42:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2371206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:46:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dEBoBePz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731790AbfHBBmb (ORCPT
+        id S1731956AbfHBBqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 21:42:31 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:39435 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731411AbfHBBmb (ORCPT
+        Thu, 1 Aug 2019 21:46:42 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44849 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731827AbfHBBqm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 21:42:31 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=zhang.jia@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TYR759._1564710146;
-Received: from ali-6c96cfd98fb5.local(mailfrom:zhang.jia@linux.alibaba.com fp:SMTPD_---0TYR759._1564710146)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 02 Aug 2019 09:42:27 +0800
-Subject: Re: [PATCH] ima: Allow to import the blacklisted cert signed by
- secondary CA cert
-To:     Mimi Zohar <zohar@linux.ibm.com>, dhowells@redhat.com,
-        dmitry.kasatkin@gmail.com
-Cc:     keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Mark D. Baushke" <mdb@juniper.net>,
-        Petko Manolov <petkan@mip-labs.com>
-References: <1564622625-112173-1-git-send-email-zhang.jia@linux.alibaba.com>
- <1564700229.11223.9.camel@linux.ibm.com>
-From:   Jia Zhang <zhang.jia@linux.alibaba.com>
-Message-ID: <d6a27436-3822-3dda-a3be-4e2dfbe04390@linux.alibaba.com>
-Date:   Fri, 2 Aug 2019 09:42:26 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.6.0
+        Thu, 1 Aug 2019 21:46:42 -0400
+Received: by mail-pf1-f195.google.com with SMTP id t16so35075850pfe.11;
+        Thu, 01 Aug 2019 18:46:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wLrJwcUbAlAZBvbLYx5iZ6fkS9RVbU5U/+b/jH7b5PI=;
+        b=dEBoBePzfzEAhlohTUW9iv6gMd3sE9fXz9Wn6KwHsE/wNdj6o4DM9/n8xD0pqwaxmx
+         PJCtAfjmOuT90vUfaVevnw8d9x7lGTb+5EtyWtxhUrLdxMxuU8UjO63cjpfLE31IXkUQ
+         b+KcYlMnDTTU3qYOZW7engjNYstR37BH6FxddN9NGyo0MMumNcvaWGSFMfQTDBD7veAS
+         sN3IaDtkz5/7FatGlRuJtOjtrXXUOJ3t9MMUQEV83ZS7QWeMEDL2excVRKfDm9bFwz/q
+         2IHO5ncJfLyVGkhJBAeDJOwIjai9euQmFI2c6g2k835SKCIAte4uf9meWK81ogfW8yT1
+         UoXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wLrJwcUbAlAZBvbLYx5iZ6fkS9RVbU5U/+b/jH7b5PI=;
+        b=Q/VSFnsGFc+OlxqZrH3XOvhLGka4GEhVS1e+moXyj2p8W4EtL/t+WMakkDl6/4fsaB
+         Wx+C6V1ny75DdxdlMV8BaMj+xBo1psTaVm9NNARBvpuWw0PPqDx7Kw53GHGX6B5K4spB
+         xedhSNexWdZDQWCnORoXl9CLDIqPVzEORQ+5MY+eS1BqSGvcstsLh5LiPVcNoDdbwZ32
+         CrK6GDAEUdR3xZGQz7diOnGEwNz5Z69pqk0oR3PQ9BOG+7Br2SmJQ7bYs6qtnRes/usB
+         eY12/KR6NwkDc5VI5jzhIw08AX74mzn7S5yH0/S7hu/kcBnyv9+k2fkgEXqzDDG2/6tI
+         /EfA==
+X-Gm-Message-State: APjAAAW8nFZ4YNeEmZ5BrPJ7c6So++xwipc09SMxa7HeyoYdjrq1SddV
+        ecfwMddkK5FHNssvPWknA3w=
+X-Google-Smtp-Source: APXvYqyz72H3jw23ZXyhl3tD28HFBu/J0BdHnsqDx2ZON6i6f+7lLXHmHArzMJBLvP1GkXbUCBbFxg==
+X-Received: by 2002:a63:5550:: with SMTP id f16mr10691565pgm.426.1564710401658;
+        Thu, 01 Aug 2019 18:46:41 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
+        by smtp.gmail.com with ESMTPSA id r15sm79474631pfh.121.2019.08.01.18.46.35
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 01 Aug 2019 18:46:40 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-pm@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH v2 00/10] Replace strncmp with str_has_prefix
+Date:   Fri,  2 Aug 2019 09:46:18 +0800
+Message-Id: <20190802014617.8623-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <1564700229.11223.9.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The commit 72921427d46b
+("string.h: Add str_has_prefix() helper function")
+introduced str_has_prefix() to substitute error-prone
+strncmp(str, const, len).
 
+strncmp(str, const, len) is easy to have error in len
+because of counting error or sizeof(const) without - 1.
 
-On 2019/8/2 上午6:57, Mimi Zohar wrote:
-> Hi Jia,
-> 
-> On Thu, 2019-08-01 at 09:23 +0800, Jia Zhang wrote:
->> Similar to .ima, the cert imported to .ima_blacklist is able to be
->> authenticated by a secondary CA cert.
->>
->> Signed-off-by: Jia Zhang <zhang.jia@linux.alibaba.com>
-> 
-> The IMA blacklist, which is defined as experimental for a reason, was
-> upstreamed prior to the system blacklist.  Any reason you're not using
-> the system blacklist?  Before making this sort of change, I'd like
-> some input from others.
+These patches replace such pattern with str_has_prefix()
+to avoid hard coded constant length and sizeof.
 
-In our trusted cloud service, the IMA private key is controlled by
-tenant for some reason. Some unprofessional operations made by tenant
-may lead to the leakage of IMA private key. So the need for importing
-the blacklisted is necessary，without system/kexec reboot, on the
-contrary, the system blacklist needs a kernel rebuild and system/kexec
-reboot, without runtime and fine-grained control.
+Besides, str_has_prefix() returns the length of prefix
+when the comparison returns true.
+We can use this return value to substitute some hard-coding.
 
-The secondary CA cert has a similar story, but it is not controlled by
-tenant. It is always imported during system/kexec boot to serve
-importing IMA trusted cert and IMA blacklisted cert.
+Changelog:
 
-Jia
+v1 -> v2:
+  - Revise the description.
+  - Use the return value of str_has_prefix() to eliminate
+    hard coding.
+  - Remove possible false positives and add newly detected
+    one in upstream.
 
-> 
-> thanks,
-> 
-> Mimi
-> 
+Chuhong Yuan (10):
+  dma: debug: Replace strncmp with str_has_prefix
+  gcov: Replace strncmp with str_has_prefix
+  locking/locktorture: Replace strncmp with str_has_prefix
+  module: Replace strncmp with str_has_prefix
+  PM / sleep: Replace strncmp with str_has_prefix
+  printk: Replace strncmp with str_has_prefix
+  reboot: Replace strncmp with str_has_prefix
+  sched: Replace strncmp with str_has_prefix
+  userns: Replace strncmp with str_has_prefix
+  watchdog: Replace strncmp with str_has_prefix
+
+ kernel/dma/debug.c           |  2 +-
+ kernel/gcov/fs.c             |  2 +-
+ kernel/locking/locktorture.c |  8 ++++----
+ kernel/module.c              |  2 +-
+ kernel/power/main.c          |  2 +-
+ kernel/printk/braille.c      | 10 ++++++----
+ kernel/printk/printk.c       | 14 ++++++++------
+ kernel/reboot.c              |  6 ++++--
+ kernel/sched/debug.c         |  5 +++--
+ kernel/sched/isolation.c     |  9 +++++----
+ kernel/user_namespace.c      | 10 +++++-----
+ kernel/watchdog.c            |  8 ++++----
+ 12 files changed, 43 insertions(+), 35 deletions(-)
+
+-- 
+2.20.1
+
