@@ -2,197 +2,141 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31AA7C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D563CC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3D7121773
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:18:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACEE920B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:19:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=apple.com header.i=@apple.com header.b="VKB8e4M8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I5R/SbOC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436610AbfHBOSX (ORCPT
+        id S2436657AbfHBOTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 10:18:23 -0400
-Received: from nwk-aaemail-lapp02.apple.com ([17.151.62.67]:58474 "EHLO
-        nwk-aaemail-lapp02.apple.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727485AbfHBOSX (ORCPT
+        Fri, 2 Aug 2019 10:19:08 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:44770 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727485AbfHBOTI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 10:18:23 -0400
-Received: from pps.filterd (nwk-aaemail-lapp02.apple.com [127.0.0.1])
-        by nwk-aaemail-lapp02.apple.com (8.16.0.27/8.16.0.27) with SMTP id x72EHBMP005504;
-        Fri, 2 Aug 2019 07:18:19 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=apple.com; h=sender : content-type
- : mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=20180706;
- bh=2TtxIQqEcQn+lObu8KFXWWIUpGphNyUfyHDO93O7QvY=;
- b=VKB8e4M8vJ8xElL5VcYsUsjf0mb9bFMm5UAqisLnJyWsQjXxGbj9etZVYIhaJtM2q7Vk
- YZLbfGclM6chXEAaMA0P/QHCKAL29n1JC/1d040c3Lp+P/mVjHbYiIN0QWbOvOkeEYdb
- qVjFyzbjfz6Kym9h0q94adCOhkCbbnvLYUD54b9F1niOwQunYkmuHciT3AM7j0yASAhP
- Sm2FUpLDIt9hvM79EMoJt7Mr+50UMAc+lFhxQM1+i4Wlyr9GEl3cXsHlLTaN//xkYmB/
- F3N6B3J/b5mzTrQsD5QBIevWZke+jC1hppiXMVJCil9fur3SsD5WuTOhnpV64YY1TSrg 8Q== 
-Received: from mr2-mtap-s02.rno.apple.com (mr2-mtap-s02.rno.apple.com [17.179.226.134])
-        by nwk-aaemail-lapp02.apple.com with ESMTP id 2u2p72pbfg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Fri, 02 Aug 2019 07:18:19 -0700
-Received: from nwk-mmpp-sz11.apple.com
- (nwk-mmpp-sz11.apple.com [17.128.115.155]) by mr2-mtap-s02.rno.apple.com
- (Oracle Communications Messaging Server 8.0.2.4.20190507 64bit (built May  7
- 2019)) with ESMTPS id <0PVM00EEV52JVZ40@mr2-mtap-s02.rno.apple.com>; Fri,
- 02 Aug 2019 07:18:19 -0700 (PDT)
-Received: from process_milters-daemon.nwk-mmpp-sz11.apple.com by
- nwk-mmpp-sz11.apple.com
- (Oracle Communications Messaging Server 8.0.2.4.20190507 64bit (built May  7
- 2019)) id <0PVM00F004J8MZ00@nwk-mmpp-sz11.apple.com>; Fri,
- 02 Aug 2019 07:18:19 -0700 (PDT)
-X-Va-A: 
-X-Va-T-CD: d66bf338104d7316df20fe4640a3b0ba
-X-Va-E-CD: b03d5acee32fc9f0c9dfd3776592dc73
-X-Va-R-CD: 1835f3c54d533384876758843bc94ede
-X-Va-CD: 0
-X-Va-ID: fc083513-02ff-4ce2-885c-103e48753e84
-X-V-A:  
-X-V-T-CD: d66bf338104d7316df20fe4640a3b0ba
-X-V-E-CD: b03d5acee32fc9f0c9dfd3776592dc73
-X-V-R-CD: 1835f3c54d533384876758843bc94ede
-X-V-CD: 0
-X-V-ID: ab3ee819-e4d3-4ca5-96aa-c7ef1969d272
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,,
- definitions=2019-08-02_06:,, signatures=0
-Received: from [17.150.223.234] (unknown [17.150.223.234])
- by nwk-mmpp-sz11.apple.com
- (Oracle Communications Messaging Server 8.0.2.4.20190507 64bit (built May  7
- 2019)) with ESMTPSA id <0PVM0043452IHJ50@nwk-mmpp-sz11.apple.com>; Fri,
- 02 Aug 2019 07:18:19 -0700 (PDT)
-Content-type: text/plain; charset=utf-8
-MIME-version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: Possible mem cgroup bug in kernels between 4.18.0 and 5.3-rc1.
-From:   Masoud Sharbiani <msharbiani@apple.com>
-In-reply-to: <20190802074047.GQ11627@dhcp22.suse.cz>
-Date:   Fri, 02 Aug 2019 07:18:17 -0700
-Cc:     gregkh@linuxfoundation.org, hannes@cmpxchg.org,
-        vdavydov.dev@gmail.com, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-transfer-encoding: quoted-printable
-Message-id: <7E44073F-9390-414A-B636-B1AE916CC21E@apple.com>
-References: <5659221C-3E9B-44AD-9BBF-F74DE09535CD@apple.com>
- <20190802074047.GQ11627@dhcp22.suse.cz>
-To:     Michal Hocko <mhocko@kernel.org>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-02_06:,,
- signatures=0
+        Fri, 2 Aug 2019 10:19:08 -0400
+Received: by mail-ed1-f67.google.com with SMTP id k8so72487666edr.11;
+        Fri, 02 Aug 2019 07:19:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=S+20xmULIleEgfurI+8J/o6iN60n5mNoEMYMpzqwBn0=;
+        b=I5R/SbOCUyNpGi/j5ETYAUO8K7/Z+fCVItbSmqyN79qPhkMCfaoRZnqC1ZNRtL0/QP
+         YsF0FSkOb75Qgelvv0hD2fQF8hh2Y5lWRg4gYFtpcMZcBrNd6rstIxVNbqeiAfbn/PQy
+         PphA5CmAwCX+3uzCii5HPuO/3QOkqr9+bXOAhxQ4+PMEiSXCOJArrW+qyeD9DO1wf6Qu
+         CzuDPMCXEmere7MHNMEEH8eSfRUolI/g1X8vwtQnaGjvwBYglDxB/NLGtBHv45S28FNS
+         xTmxZt0A6Ff3CYcg9nIXeVQsz05JXDxS1SNbAfXN2owwZFFj/dlpsDRnLWaYSUlksYIR
+         JajA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=S+20xmULIleEgfurI+8J/o6iN60n5mNoEMYMpzqwBn0=;
+        b=UMwOSXXc5Wguv+lGDvCJCFCcsO7jSMWp1+QQrm47E6BxTB339SrevkyyLJZJ71xxMc
+         brxdy1Wz6A1fSG6Ast25hFSmvKWUjV6ajuUq7EKaYdgcP+81mlwFVVNdIxrZIlkC964k
+         lYpHabS/Aa/0iCDACEMBJTf2arn7lPY1AEyxkETvkw2q/9RctkWT5dhYqvasgdUKQ0Eg
+         ZqpoGBD8pbbMzYMYCFWFO2K8q4DzWG/0X47QN48EC8S3j6qbQQQmBqfJCdWEEWVg2NmX
+         MGHazQdL+8EzaEOwDqqACklR+YpJTkwTtlQz0KgGEoz06Co6g1cyWtEPiCg6bSToUke5
+         Tc6Q==
+X-Gm-Message-State: APjAAAW8ID0yKPZnE9oOdfya/K26hGK2hEOHOfdEMZ6FZxS9WZh3PuzI
+        aaDEkzAQ1KEpH930kwqmYgI=
+X-Google-Smtp-Source: APXvYqy5YJPKTxgGPhjH5kwyrm9Ly98QXxCID8DOnXDCaD0/Lm5hWk8MsjiIsiPNPEhadgoxC319rg==
+X-Received: by 2002:a17:906:e2c2:: with SMTP id gr2mr105900563ejb.284.1564755546154;
+        Fri, 02 Aug 2019 07:19:06 -0700 (PDT)
+Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
+        by smtp.gmail.com with ESMTPSA id k5sm13005950eja.41.2019.08.02.07.19.05
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 02 Aug 2019 07:19:05 -0700 (PDT)
+Date:   Fri, 2 Aug 2019 16:19:04 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 4.9 000/223] 4.9.187-stable review
+Message-ID: <20190802141904.GA11962@ulmo>
+References: <20190802092238.692035242@linuxfoundation.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="Dxnq1zWXvFF0Q93v"
+Content-Disposition: inline
+In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=20
 
-> On Aug 2, 2019, at 12:40 AM, Michal Hocko <mhocko@kernel.org> wrote:
+--Dxnq1zWXvFF0Q93v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Aug 02, 2019 at 11:33:45AM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.9.187 release.
+> There are 223 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >=20
-> On Thu 01-08-19 11:04:14, Masoud Sharbiani wrote:
->> Hey folks,
->> I=E2=80=99ve come across an issue that affects most of 4.19, 4.20 and =
-5.2 linux-stable kernels that has only been fixed in 5.3-rc1.
->> It was introduced by
->>=20
->> 29ef680 memcg, oom: move out_of_memory back to the charge path=20
+> Responses should be made by Sun 04 Aug 2019 09:19:34 AM UTC.
+> Anything received after that time might be too late.
 >=20
-> This commit shouldn't really change the OOM behavior for your =
-particular
-> test case. It would have changed MAP_POPULATE behavior but your usage =
-is
-> triggering the standard page fault path. The only difference with
-> 29ef680 is that the OOM killer is invoked during the charge path =
-rather
-> than on the way out of the page fault.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.187=
+-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git=
+ linux-4.9.y
+> and the diffstat can be found below.
 >=20
-> Anyway, I tried to run your test case in a loop and leaker always ends
-> up being killed as expected with 5.2. See the below oom report. There
-> must be something else going on. How much swap do you have on your
-> system?
-
-I do not have swap defined.=20
--m
-
-
+> thanks,
 >=20
-> [337533.314245] leaker invoked oom-killer: =
-gfp_mask=3D0x100cca(GFP_HIGHUSER_MOVABLE), order=3D0, oom_score_adj=3D0
-> [337533.314250] CPU: 3 PID: 23793 Comm: leaker Not tainted 5.2.0-rc7 =
-#54
-> [337533.314251] Hardware name: Dell Inc. Latitude E7470/0T6HHJ, BIOS =
-1.5.3 04/18/2016
-> [337533.314252] Call Trace:
-> [337533.314258]  dump_stack+0x67/0x8e
-> [337533.314262]  dump_header+0x51/0x2e9
-> [337533.314265]  ? preempt_count_sub+0xc6/0xd2
-> [337533.314267]  ? _raw_spin_unlock_irqrestore+0x2c/0x3e
-> [337533.314269]  oom_kill_process+0x90/0x11d
-> [337533.314271]  out_of_memory+0x25c/0x26f
-> [337533.314273]  mem_cgroup_out_of_memory+0x8a/0xa6
-> [337533.314276]  try_charge+0x1d0/0x782
-> [337533.314278]  ? preempt_count_sub+0xc6/0xd2
-> [337533.314280]  mem_cgroup_try_charge+0x1a1/0x207
-> [337533.314282]  __add_to_page_cache_locked+0xf9/0x2dd
-> [337533.314285]  ? memcg_drain_all_list_lrus+0x125/0x125
-> [337533.314286]  add_to_page_cache_lru+0x3c/0x96
-> [337533.314288]  pagecache_get_page.part.7+0x1d6/0x240
-> [337533.314290]  filemap_fault+0x267/0x54a
-> [337533.314292]  ext4_filemap_fault+0x2d/0x41
-> [337533.314294]  ? ext4_page_mkwrite+0x3cd/0x3cd
-> [337533.314296]  __do_fault+0x47/0xa7
-> [337533.314297]  __handle_mm_fault+0xaaa/0xf9d
-> [337533.314300]  handle_mm_fault+0x174/0x1c3
-> [337533.314303]  __do_page_fault+0x309/0x412
-> [337533.314305]  do_page_fault+0x10b/0x131
-> [337533.314307]  ? page_fault+0x8/0x30
-> [337533.314309]  page_fault+0x1e/0x30
-> [337533.314311] RIP: 0033:0x55a806ef8503
-> [337533.314313] Code: 48 89 c6 48 8d 3d 28 0c 00 00 b8 00 00 00 00 e8 =
-73 fb ff ff c7 45 ec 00 00 00 00 eb 36 8b 45 ec 48 63 d0 48 8b 45 c8 48 =
-01 d0 <0f> b6 00 0f be c0 01 45 e4 8b 45 ec 25 ff 0f 00 00 85 c0 75 10 =
-8b
-> [337533.314314] RSP: 002b:00007ffcf6734730 EFLAGS: 00010206
-> [337533.314316] RAX: 00007f2228f74000 RBX: 0000000000000000 RCX: =
-0000000000000000
-> [337533.314317] RDX: 0000000000487000 RSI: 000055a806efc260 RDI: =
-0000000000000000
-> [337533.314318] RBP: 00007ffcf6735780 R08: 0000000000000000 R09: =
-00007ffcf67345fc
-> [337533.314319] R10: 0000000000000000 R11: 0000000000000246 R12: =
-000055a806ef8120
-> [337533.314320] R13: 00007ffcf6735860 R14: 0000000000000000 R15: =
-0000000000000000
-> [337533.314322] memory: usage 524288kB, limit 524288kB, failcnt =
-1240247
-> [337533.314323] memory+swap: usage 2592556kB, limit =
-9007199254740988kB, failcnt 0
-> [337533.314324] kmem: usage 7260kB, limit 9007199254740988kB, failcnt =
-0
-> [337533.314325] Memory cgroup stats for /leaker: cache:80KB =
-rss:516948KB rss_huge:0KB shmem:0KB mapped_file:0KB dirty:0KB =
-writeback:0KB swap:2068268KB inactive_anon:258520KB active_anon:258412KB =
-inactive_file:32KB active_file:12KB unevictable:0KB
-> [337533.314332] Tasks state (memory values in pages):
-> [337533.314333] [  pid  ]   uid  tgid total_vm      rss pgtables_bytes =
-swapents oom_score_adj name
-> [337533.314404] [  23777]     0 23777      596      400    36864       =
- 4             0 sh
-> [337533.314407] [  23793]     0 23793   655928   126942  5226496   =
-519670             0 leaker
-> [337533.314408] =
-oom-kill:constraint=3DCONSTRAINT_MEMCG,nodemask=3D(null),oom_memcg=3D/leak=
-er,task_memcg=3D/leaker,task=3Dleaker,pid=3D23793,uid=3D0
-> [337533.314412] Memory cgroup out of memory: Killed process 23793 =
-(leaker) total-vm:2623712kB, anon-rss:506500kB, file-rss:1268kB, =
-shmem-rss:0kB
-> [337533.418036] oom_reaper: reaped process 23793 (leaker), now =
-anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
-> --=20
-> Michal Hocko
-> SUSE Labs
+> greg k-h
 
+All tests passing for Tegra...
+
+Test results for stable-v4.9:
+    8 builds:   8 pass, 0 fail
+    16 boots:   16 pass, 0 fail
+    24 tests:   24 pass, 0 fail
+
+Linux version:  4.9.187-rc1-g5380ded2525d
+Boards tested:  tegra124-jetson-tk1, tegra20-ventana,
+                tegra210-p2371-2180, tegra30-cardhu-a04
+
+Thierry
+
+--Dxnq1zWXvFF0Q93v
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1ERlMACgkQ3SOs138+
+s6G5vhAAgZZWGODGGHY5R4k9PVj954QvJEyPIf8BK9D016s0YV9ki06E3d9unoMh
+JbOzHZrwCEWP4Af4s1J64DaxA5OVnAx9+6m+WcDjdZHYvNPodb3ILHzLcWGoV+PZ
+yJkTP9WTv+Mk91BOvQqYdRp0CDSSrpDFXNUcP2UPVzo495R61A0qfJAtg5XtmiA9
+FScV4ceQjWpoDA81sThSgNquUinZsGAeV4At7ovvM2XDIU++SIrIugVY0WxqtEc5
+exMwzhNvKNxGoR1rBNYC3k4DfaOtyBpVogK8JsNQoM6bIvrlTHjTucqaSdoCON6n
+Df8a5EiR0X81zIPyeQFROWfL2bcQQt+rK+tcCXjgGEk8ODSZWN7nnwjgfr3iw4ag
+8qSjJnD6jIsgpFvhC5a//c5qSLWy2ResoN5eD5G7pSbTrZmiNDGaW12kcJat9GVV
+sraa9gmIkMcSyHHI1G9r4fMA4ZEQcEaoLr8dHmHexUMI+0KhmCJQ7pXqwKP8txOh
+zWfocPBthLS2hes3JYhOsJDUhMFnxlWRYEBcLxf4kSmMN0G9x+0/7Bp2k24UeufN
+qKGC5b24qiu9Je9EOWOmvRGbVuzi+HXX0CJ5BB4Gj7qUQboIEtXmXIisw8EbYJFM
+9jySs4LwlQHnplX1pV3PymqNPwDxmcl4NqY7/ubrBhzUxDzmZX0=
+=fv1b
+-----END PGP SIGNATURE-----
+
+--Dxnq1zWXvFF0Q93v--
