@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 353C6C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31FFEC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 053D720B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:47:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E35020880
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:48:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739277;
-	bh=dULMVbLsM2Us/w7nK3XKknKq53cj9uoxHhCAqrBHDwU=;
+	s=default; t=1564739280;
+	bh=iZDMvbc6z2rlK3vOdYcs9qXfz+vJdv8lHvMlkM9TD5M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ickASlExtHpFpHw5Z+SGCXkv0vncDThwEqnW8twrV3rPkSWjQLozKmmG/N7maPAS3
-	 VOUzx0T7FXxbEwlQBmnes8r7ypRb8SojYzITK5kWXH73GDrH+4998DjGJBXt7nGvZB
-	 g+30NJIH4PKXmw0RM5qoO50cIyTkeRE5uLJq4+Fo=
+	b=rdUZE/0+7+nDKnqlNbFqZkgBiYmJZ3uX02KHAg2JWfdMTUhhPwGluU0JNi8G7yPqp
+	 jI7UELQV1Risx3d0TmiioJQk2mMmMUlFMh88h3G7N6q+n6RVc7FlOSDYOpbZen66U5
+	 fmP5OU5nURPWwQyAD71/neEi3aQhT0qT9iEbPJT4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405761AbfHBJr4 (ORCPT
+        id S2405772AbfHBJr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:47:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52894 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:47:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405745AbfHBJrw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:47:52 -0400
+        id S2404909AbfHBJr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:47:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 769212086A;
-        Fri,  2 Aug 2019 09:47:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E2142086A;
+        Fri,  2 Aug 2019 09:47:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739272;
-        bh=dULMVbLsM2Us/w7nK3XKknKq53cj9uoxHhCAqrBHDwU=;
+        s=default; t=1564739277;
+        bh=iZDMvbc6z2rlK3vOdYcs9qXfz+vJdv8lHvMlkM9TD5M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u3OvZ7VoOiBy3Nt9miJlFM8WG+1BpH4ytMpIeiYaV4rElaFf70TZkfG+IFNoW+6/5
-         /HG7uZ/wrJaZoJo08wO7kTBTKRD5q+srREb4zaCqC/TxUCdaBh8Z/Kj0zOIUpr1BP0
-         7h7rfma1UWCeuTLMPvwwmGU4fkQ9njvkIsYBsLIA=
+        b=t4Rl/fpH7KPAitA1nr974G9/BnT/wflWaVbwqW8JVGNvbW9jc20iiIrfTrVWlNWNe
+         Y3dvpkl8vZ5zqVqNPYFpwU2KyNaybtzPJ76yyCB9qDCYE3wJ0pEiRz4JMmIGofymsp
+         T9ZueXYdYeVsLyU3ev46JhAOP7u2bPEvofKQM2/M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "J. Bruce Fields" <bfields@redhat.com>,
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 155/223] nfsd: increase DRC cache limit
-Date:   Fri,  2 Aug 2019 11:36:20 +0200
-Message-Id: <20190802092248.400563878@linuxfoundation.org>
+Subject: [PATCH 4.9 163/223] tty: serial: cpm_uart - fix init when SMC is relocated
+Date:   Fri,  2 Aug 2019 11:36:28 +0200
+Message-Id: <20190802092248.702924039@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -59,36 +59,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 44d8660d3bb0a1c8363ebcb906af2343ea8e15f6 ]
+[ Upstream commit 06aaa3d066db87e8478522d910285141d44b1e58 ]
 
-An NFSv4.1+ client negotiates the size of its duplicate reply cache size
-in the initial CREATE_SESSION request.  The server preallocates the
-memory for the duplicate reply cache to ensure that we'll never fail to
-record the response to a nonidempotent operation.
+SMC relocation can also be activated earlier by the bootloader,
+so the driver's behaviour cannot rely on selected kernel config.
 
-To prevent a few CREATE_SESSIONs from consuming all of memory we set an
-upper limit based on nr_free_buffer_pages().  1/2^10 has been too
-limiting in practice; 1/2^7 is still less than one percent.
+When the SMC is relocated, CPM_CR_INIT_TRX cannot be used.
 
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+But the only thing CPM_CR_INIT_TRX does is to clear the
+rstate and tstate registers, so this can be done manually,
+even when SMC is not relocated.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Fixes: 9ab921201444 ("cpm_uart: fix non-console port startup bug")
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/nfssvc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/serial/cpm_uart/cpm_uart_core.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index 5c4800626f13..60291d10f8e4 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -430,7 +430,7 @@ void nfsd_reset_versions(void)
+diff --git a/drivers/tty/serial/cpm_uart/cpm_uart_core.c b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
+index 0040c29f651a..b9e137c03fe3 100644
+--- a/drivers/tty/serial/cpm_uart/cpm_uart_core.c
++++ b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
+@@ -421,7 +421,16 @@ static int cpm_uart_startup(struct uart_port *port)
+ 			clrbits16(&pinfo->sccp->scc_sccm, UART_SCCM_RX);
+ 		}
+ 		cpm_uart_initbd(pinfo);
+-		cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
++		if (IS_SMC(pinfo)) {
++			out_be32(&pinfo->smcup->smc_rstate, 0);
++			out_be32(&pinfo->smcup->smc_tstate, 0);
++			out_be16(&pinfo->smcup->smc_rbptr,
++				 in_be16(&pinfo->smcup->smc_rbase));
++			out_be16(&pinfo->smcup->smc_tbptr,
++				 in_be16(&pinfo->smcup->smc_tbase));
++		} else {
++			cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
++		}
+ 	}
+ 	/* Install interrupt handler. */
+ 	retval = request_irq(port->irq, cpm_uart_int, 0, "cpm_uart", port);
+@@ -875,16 +884,14 @@ static void cpm_uart_init_smc(struct uart_cpm_port *pinfo)
+ 	         (u8 __iomem *)pinfo->tx_bd_base - DPRAM_BASE);
+ 
+ /*
+- *  In case SMC1 is being relocated...
++ *  In case SMC is being relocated...
   */
- static void set_max_drc(void)
- {
--	#define NFSD_DRC_SIZE_SHIFT	10
-+	#define NFSD_DRC_SIZE_SHIFT	7
- 	nfsd_drc_max_mem = (nr_free_buffer_pages()
- 					>> NFSD_DRC_SIZE_SHIFT) * PAGE_SIZE;
- 	nfsd_drc_mem_used = 0;
+-#if defined (CONFIG_I2C_SPI_SMC1_UCODE_PATCH)
+ 	out_be16(&up->smc_rbptr, in_be16(&pinfo->smcup->smc_rbase));
+ 	out_be16(&up->smc_tbptr, in_be16(&pinfo->smcup->smc_tbase));
+ 	out_be32(&up->smc_rstate, 0);
+ 	out_be32(&up->smc_tstate, 0);
+ 	out_be16(&up->smc_brkcr, 1);              /* number of break chars */
+ 	out_be16(&up->smc_brkec, 0);
+-#endif
+ 
+ 	/* Set up the uart parameters in the
+ 	 * parameter ram.
+@@ -898,8 +905,6 @@ static void cpm_uart_init_smc(struct uart_cpm_port *pinfo)
+ 	out_be16(&up->smc_brkec, 0);
+ 	out_be16(&up->smc_brkcr, 1);
+ 
+-	cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
+-
+ 	/* Set UART mode, 8 bit, no parity, one stop.
+ 	 * Enable receive and transmit.
+ 	 */
 -- 
 2.20.1
 
