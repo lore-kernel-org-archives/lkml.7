@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D42EBC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C88C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4523206A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:49:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 652E8206A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:50:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739395;
-	bh=mHJ9LcbmW1LTbkgqUUt/uyMFW02Cmwsg9kH1uzToT/8=;
+	s=default; t=1564739402;
+	bh=RSxo86md8Iroy417st3d8Ja6MLXzxYiLawRSfVwbvy4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0W3bW8KakKKv/a3h1vUU2yX5cRN1kA0iUtLtRr2Ag4PhGyzmDIo0N688cUukl7HDN
-	 qI6yLL4tccHBXAY9hvgaiswJCWZeQq/JIaQeeoLU2Ej0alhEhLP38UTcDkN6LlZauf
-	 GiGcwRD3+cyFxxCS+W4IkXuOp2Qg/exjXgyju/ck=
+	b=BfQTc18JTwXPs+m/9j/VfhFUoUzdIMBEeU6Bj5Vu+X+2wa4MuB1nIYNlD7Tq/qb0m
+	 WxrqSZj/YFQFG2fgHHwt6NPpTV9DiPsjLFbI2g5Y6Hrf9ZZzqFCd9AaKZPJiauvSAq
+	 x62M+Yua3ahxD7MG++guoKsDGKB7htpPG1JpDSBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405514AbfHBJqP (ORCPT
+        id S2405500AbfHBJuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:46:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50188 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:50:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405487AbfHBJqI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:46:08 -0400
+        id S2405499AbfHBJqL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:46:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D502216C8;
-        Fri,  2 Aug 2019 09:46:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8D942171F;
+        Fri,  2 Aug 2019 09:46:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739167;
-        bh=mHJ9LcbmW1LTbkgqUUt/uyMFW02Cmwsg9kH1uzToT/8=;
+        s=default; t=1564739170;
+        bh=RSxo86md8Iroy417st3d8Ja6MLXzxYiLawRSfVwbvy4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VRHLiM1FWd/fMRZ3eSs3T7bmBz9h7aT0DHZPZQlZobs9hIi4SwjXpXbz/4bUd226j
-         M5Dz2HjpdkCgLxpQjdjBI+gvEEo+Hpu8Hm81euvGIhAxFD5IJ1Mm6IQz5XAlGyoVsq
-         5R2CjwKDH0UXm286nxrMB9hqAWI51UUkOy91xh5o=
+        b=mwYQzEytu/kaTjMhtCj97O8oMZfXPduV4cz+Lo7Z6Mv4xMqgkaSr0/ypBNYQOeWXW
+         PFoLSnurOdkOmt7Q18XaGt6g5pwxO+oA+Kn+SwUlyPMRcmoiuqQjrJb6vyMaBwdDUA
+         UyuqJuWrCtv5aOMDKRb9zJssMsZRRK2LHU9VYfS4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 131/223] caif-hsi: fix possible deadlock in cfhsi_exit_module()
-Date:   Fri,  2 Aug 2019 11:35:56 +0200
-Message-Id: <20190802092247.449015600@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Marcus Seyfarth <m.seyfarth@gmail.com>
+Subject: [PATCH 4.9 140/223] sky2: Disable MSI on ASUS P6T
+Date:   Fri,  2 Aug 2019 11:36:05 +0200
+Message-Id: <20190802092247.815563464@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -59,32 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit fdd258d49e88a9e0b49ef04a506a796f1c768a8e ]
+[ Upstream commit a261e3797506bd561700be643fe1a85bf81e9661 ]
 
-cfhsi_exit_module() calls unregister_netdev() under rtnl_lock().
-but unregister_netdev() internally calls rtnl_lock().
-So deadlock would occur.
+The onboard sky2 NIC on ASUS P6T WS PRO doesn't work after PM resume
+due to the infamous IRQ problem.  Disabling MSI works around it, so
+let's add it to the blacklist.
 
-Fixes: c41254006377 ("caif-hsi: Add rtnl support")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Unfortunately the BIOS on the machine doesn't fill the standard
+DMI_SYS_* entry, so we pick up DMI_BOARD_* entries instead.
+
+BugLink: https://bugzilla.suse.com/show_bug.cgi?id=1142496
+Reported-and-tested-by: Marcus Seyfarth <m.seyfarth@gmail.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/caif/caif_hsi.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/marvell/sky2.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/net/caif/caif_hsi.c
-+++ b/drivers/net/caif/caif_hsi.c
-@@ -1464,7 +1464,7 @@ static void __exit cfhsi_exit_module(voi
- 	rtnl_lock();
- 	list_for_each_safe(list_node, n, &cfhsi_list) {
- 		cfhsi = list_entry(list_node, struct cfhsi, list);
--		unregister_netdev(cfhsi->ndev);
-+		unregister_netdevice(cfhsi->ndev);
- 	}
- 	rtnl_unlock();
- }
+--- a/drivers/net/ethernet/marvell/sky2.c
++++ b/drivers/net/ethernet/marvell/sky2.c
+@@ -4939,6 +4939,13 @@ static const struct dmi_system_id msi_bl
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "P-79"),
+ 		},
+ 	},
++	{
++		.ident = "ASUS P6T",
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "ASUSTeK Computer INC."),
++			DMI_MATCH(DMI_BOARD_NAME, "P6T"),
++		},
++	},
+ 	{}
+ };
+ 
 
 
