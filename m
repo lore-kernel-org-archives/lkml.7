@@ -2,197 +2,125 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02589C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E22ADC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF75C21841
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:32:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XLPiUEkd"
+	by mail.kernel.org (Postfix) with ESMTP id C17D721841
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:34:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392629AbfHBMcv (ORCPT
+        id S2392635AbfHBMeW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 08:32:51 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40051 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729267AbfHBMcu (ORCPT
+        Fri, 2 Aug 2019 08:34:22 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:46644 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729267AbfHBMeW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 08:32:50 -0400
-Received: by mail-wm1-f65.google.com with SMTP id v19so66208820wmj.5;
-        Fri, 02 Aug 2019 05:32:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dzUcg2Ik/ydWHD1gpTTQN7qp0Cm5aZCNkk/EL3Y9f5c=;
-        b=XLPiUEkdK+L1GOgSoWoodritZzMqc6objb05zrI7kxLKR5Yo/Sk+ozcuT3AHiyU7kj
-         uYsel7QcWKRq9nZkUfIJZatqTr9Hk04fv0q69bGZ+JbYvWeXRC8tjzTMs+q1WZMoyTKC
-         Apy2EhMzkzZCb6DaAtQeguYQ4iT8yRB2JWHu8Hw9Ajkf7i9KeDMQANul9yr5COaEnKIq
-         awqb7xFcWjUUNe4vJLQOWHV+nP1wccPVu7Q+eRUBpl8kmd4KzOFS6x0XUygqpaG6JJ2V
-         68snS4X0erl2oiPZjeFSiPuSbV+lk4uqOxifPxczp5OwFaXIIaJQEqPllWp6Pe2IeTjV
-         +eQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dzUcg2Ik/ydWHD1gpTTQN7qp0Cm5aZCNkk/EL3Y9f5c=;
-        b=mmTiFTzWtWs7th+t9Y3PKVSCui2QBF1gCBvzTjuUpzV8dnRst4uLpNKR2dVkewlGsz
-         77lJrcz5PhbPpglDJzRQ1EjqoZZ1EF2gyBe+DjI33DoRmHsQd3Xm73w1s9A8i1sWIqNM
-         JsiWaXFhZwGos13UbYkgsnFjM7wjEiaJJBZYketCy43xL7+4b1wLU8psHLlGh8YTOP34
-         xNW6bw08Hw+9LpwdRaBfvCyzcFd8qeVPV+Z+OeMvh00CFKgYJUIiCiPm58JZIq6DEj5/
-         5WeQMJz2qSzUYkhJihrfuk+Jqb1BZGG2aRTOOg17avH/CycS40wKsdpCFcfx5wbu5TKl
-         0PCg==
-X-Gm-Message-State: APjAAAVluMFJ3RXTktVLiVJ8vDpTjtSmwCoK9JDB6onrtpV3VMrWC8ko
-        dp2NF8HZpn5iuVuUxuE2DAFrGh3V
-X-Google-Smtp-Source: APXvYqwrgmzSD203TM2VN0jdQRS3Rn1In9qn9CrUX+kYZPL1PXIqdO+pKDuXMbeQzsH//HjSvTkp7g==
-X-Received: by 2002:a1c:2d8b:: with SMTP id t133mr4401017wmt.57.1564749166741;
-        Fri, 02 Aug 2019 05:32:46 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.googlemail.com with ESMTPSA id v12sm64652341wrr.87.2019.08.02.05.32.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 02 Aug 2019 05:32:45 -0700 (PDT)
-Subject: Re: [PATCH v7 07/20] clk: tegra: clk-periph: Add save and restore
- support
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
- <1564532424-10449-8-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <c703b4fc-9ebb-0fd4-11de-80974b5c3842@gmail.com>
-Date:   Fri, 2 Aug 2019 15:32:43 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 2 Aug 2019 08:34:22 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 3B0A88036F; Fri,  2 Aug 2019 14:34:07 +0200 (CEST)
+Date:   Fri, 2 Aug 2019 14:34:18 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Neil Horman <nhorman@tuxdriver.com>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Joe Perches <joe@perches.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Shawn Landden <shawn@git.icu>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH] compiler_attributes.h: Add 'fallthrough' pseudo
+ keyword for switch/case use
+Message-ID: <20190802123418.GA3722@amd>
+References: <ccc7fa72d0f83ddd62067092b105bd801479004b.camel@perches.com>
+ <765E740C-4259-4835-A58D-432006628BAC@zytor.com>
+ <20190731184832.GZ31381@hirez.programming.kicks-ass.net>
+ <F1AB2846-CA91-41ED-B8E7-3799895DCF06@zytor.com>
+ <CANiq72=s1nu9=R9ypFwL+J4NGT_yUkwahpgOOOXzezvNfDrx5g@mail.gmail.com>
+ <F2529DE6-B500-44DC-AE72-45A304AD719B@zytor.com>
+ <20190801122429.GY31398@hirez.programming.kicks-ass.net>
+ <0BCDEED9-0B72-4412-909F-76C20D54983E@zytor.com>
+ <CANiq72kg+duBe_srpcco-P17=3OC2c1ys=rGMVY8Z9FxZ69sdw@mail.gmail.com>
+ <20190802110042.GA6957@hmswarspite.think-freely.org>
 MIME-Version: 1.0
-In-Reply-To: <1564532424-10449-8-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="LZvS9be/3tNcYl/X"
+Content-Disposition: inline
+In-Reply-To: <20190802110042.GA6957@hmswarspite.think-freely.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-31.07.2019 3:20, Sowjanya Komatineni пишет:
-> This patch implements save and restore context for peripheral fixed
-> clock ops, peripheral gate clock ops, sdmmc mux clock ops, and
-> peripheral clock ops.
-> 
-> During system suspend, core power goes off and looses the settings
-> of the Tegra CAR controller registers.
-> 
-> So during suspend entry clock and reset state of peripherals is saved
-> and on resume they are restored to have clocks back to same rate and
-> state as before suspend.
-> 
-> Acked-by: Thierry Reding <treding@nvidia.com>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/clk/tegra/clk-periph-fixed.c | 33 ++++++++++++++++++++++++++++++++
->  drivers/clk/tegra/clk-periph-gate.c  | 34 +++++++++++++++++++++++++++++++++
->  drivers/clk/tegra/clk-periph.c       | 37 ++++++++++++++++++++++++++++++++++++
->  drivers/clk/tegra/clk-sdmmc-mux.c    | 28 +++++++++++++++++++++++++++
->  drivers/clk/tegra/clk.h              |  6 ++++++
->  5 files changed, 138 insertions(+)
-> 
-> diff --git a/drivers/clk/tegra/clk-periph-fixed.c b/drivers/clk/tegra/clk-periph-fixed.c
-> index c088e7a280df..21b24530fa00 100644
-> --- a/drivers/clk/tegra/clk-periph-fixed.c
-> +++ b/drivers/clk/tegra/clk-periph-fixed.c
-> @@ -60,11 +60,44 @@ tegra_clk_periph_fixed_recalc_rate(struct clk_hw *hw,
->  	return (unsigned long)rate;
->  }
->  
-> +static int tegra_clk_periph_fixed_save_context(struct clk_hw *hw)
-> +{
-> +	struct tegra_clk_periph_fixed *fixed = to_tegra_clk_periph_fixed(hw);
-> +	u32 mask = 1 << (fixed->num % 32);
 
-This could be BIT(fixed->num % 32).
+--LZvS9be/3tNcYl/X
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +	fixed->enb_ctx = readl_relaxed(fixed->base + fixed->regs->enb_reg) &
-> +			 mask;
-> +	fixed->rst_ctx = readl_relaxed(fixed->base + fixed->regs->rst_reg) &
-> +			 mask;
+On Fri 2019-08-02 07:00:42, Neil Horman wrote:
+> On Thu, Aug 01, 2019 at 10:26:29PM +0200, Miguel Ojeda wrote:
+> > On Thu, Aug 1, 2019 at 10:10 PM <hpa@zytor.com> wrote:
+> > >
+> > > I'm not disagreeing... I think using a macro makes sense.
+> >=20
+> > It is either a macro or waiting for 5+ years (while we keep using the
+> > comment style) :-)
+> >=20
+> > In case it helps to make one's mind about whether to go for it or not,
+> > I summarized the advantages and a few other details in the patch I
+> > sent in October:
+> >=20
+> >   https://github.com/ojeda/linux/commit/668f011a2706ea555987e263f609a5d=
+eba9c7fc4
+> >=20
+> > It would be nice, however, to discuss whether we want __fallthrough or
+> > fallthrough. The former is consistent with the rest of compiler
+> > attributes and makes it clear it is not a keyword, the latter is
+> > consistent with "break", "goto" and "return", as Joe's patch explains.
+> >=20
+> I was having this conversation with Joe, and I agree, I like the idea of
+> macroing up the fall through attribute, but naming it __fallthrough seems=
+ more
+> consistent to me with the other attribute macros.  I also feel like its m=
+ore
+> recognizable as a macro.  Naming it fallthrough just makes it look like s=
+omeone
+> forgot to put /**/'s around it to me.
 
-The enb_ctx/rst_ctx are booleans, while you assigning an integer value
-here. You're getting away here because bool is an 32bit unsigned int,
-but you shouldn't rely on it and always explicitly convert to a bool.
+I like the "fallthrough". It looks like "return" and it should, no
+need to have __'s there..
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-> +	return 0;
-> +}
-> +
-> +static void tegra_clk_periph_fixed_restore_context(struct clk_hw *hw)
-> +{
-> +	struct tegra_clk_periph_fixed *fixed = to_tegra_clk_periph_fixed(hw);
-> +	u32 mask = 1 << (fixed->num % 32);
-> +
-> +	if (fixed->enb_ctx)
-> +		writel_relaxed(mask, fixed->base + fixed->regs->enb_set_reg);
-> +	else
-> +		writel_relaxed(mask, fixed->base + fixed->regs->enb_clr_reg);
-> +
-> +	udelay(2);
+--LZvS9be/3tNcYl/X
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Will be better to read out and compare the hardware's state with the
-restored one, then bail out if the state is unchanged.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Shouldn't it be fence_udelay()?
+iEYEARECAAYFAl1ELcoACgkQMOfwapXb+vK1hACffs8mCIfAXurkFvMKZ6v2UemF
+TskAn3GYO/De+EJw1nUoQq6PMRxy3zVb
+=Akck
+-----END PGP SIGNATURE-----
 
-> +	if (!fixed->rst_ctx) {
-> +		udelay(5); /* reset propogation delay */
-
-Why delaying is done before the writing to the reset register?
-
-> +		writel_relaxed(mask, fixed->base + fixed->regs->rst_reg);
-
-I'm not quite sure what's going on here, this looks wrong.
-
-1. rst_reg points to RST_DEVICES_x
-2. Each bit of RST_DEVICES_x represents the reset-assertion state of
-each individual device
-3. By writing to rst_reg, all (!) devices are deasserted, except the one
-device which corresponds to the mask
-4. The reset is asserted for a single device, while !fixed->rst_ctx
-means that it actually should be deasserted (?)
-
-Apparently you should use rst_set_reg / rst_clr_reg.
-
-> +	}
-
-What about the case where rst_ctx=true?
-
-> +}
-
-> @@ -517,6 +517,8 @@ struct tegra_clk_periph_gate {
->  	int			clk_num;
->  	int			*enable_refcnt;
->  	const struct tegra_clk_periph_regs *regs;
-> +	bool			clk_state_ctx;
-> +	bool			rst_state_ctx;
->  };
->  
->  #define to_clk_periph_gate(_hw)					\
-> @@ -543,6 +545,8 @@ struct tegra_clk_periph_fixed {
->  	unsigned int mul;
->  	unsigned int div;
->  	unsigned int num;
-> +	bool enb_ctx;
-> +	bool rst_ctx;
->  };
-
-I'd expect these to be bool:1.
+--LZvS9be/3tNcYl/X--
