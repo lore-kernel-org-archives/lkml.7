@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1367C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9243C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77B462182B
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD7772182B
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:30:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752643;
-	bh=CfgBAbJIDDKPgib/Mq8nzY8ByEm+tIMDRPCTP4hBtCk=;
+	s=default; t=1564752647;
+	bh=dZeEXrzP2FGVY/ahJCjiRXYGxTXCSuAChtIkspnQDrc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tnPH+SZE9cZwCAjUoiBlAHtRvmQ2ZgAJIkSSf/GTLP0h3HKJGpnen+V2bOTvDh9N1
-	 1ljcGI7F/L7klGklsf/jMhG2WgaA7tiO1NGzqYwh+Br4uAMDVTtUS86gAnHYw4PfRu
-	 Q7Znnwufxz0GRCbKHACn3FyBSnG5ebMj1OexTGzE=
+	b=Ft7kYtPAsUwmLnIKOR5fq/yoQQ76UQAIFhDVpCLm1p9XXpZXbgw520B2V1FWvL3x9
+	 ZcT7dKadgY+8pIxqFi7+aFQWyevX4GsjAYEK3G0uc1E+qdEejsfiiLD7/zwc/vyu7E
+	 HmNNz68378fAZLu8IB+ShtuAK1gRKmVN7XNT/AnE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394155AbfHBNYW (ORCPT
+        id S2404257AbfHBNap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:24:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34750 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:30:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394090AbfHBNYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:24:05 -0400
+        id S2394150AbfHBNYV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:24:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6A5F21841;
-        Fri,  2 Aug 2019 13:24:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAF0320644;
+        Fri,  2 Aug 2019 13:24:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752244;
-        bh=CfgBAbJIDDKPgib/Mq8nzY8ByEm+tIMDRPCTP4hBtCk=;
+        s=default; t=1564752261;
+        bh=dZeEXrzP2FGVY/ahJCjiRXYGxTXCSuAChtIkspnQDrc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0AlG0hEVgEoOHqeTBwvip4/+LAPhoxQiIzb10vS5/u7EtHEzqV/NlAPNnGDiCvVOZ
-         cELrNLIXdMSo8ZC+eMF7qA98eoLfOLdG2qEtpXnXEvtU/5bS+B57k0btqcc7+Fv5eo
-         w8mWHvjOIj0JowsJEuOhwAbW/SpLAlfJ0YHm8NZQ=
+        b=KeEtWPhcRxc2NBKfoDV6iatO349wHPAp2ih1bpQDQm0jOGOEMAw68wYwfbDf0rtsi
+         ZjaMLqk2/hMqokDP/Tho9rxLFy4FRVKpmcxPWRpnDhrXGI5tBACanWJbTKvFsVKSN2
+         w82zzR48avbPVT1uCURZD85MwM39sRHX38b+qdfY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
-        Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 35/42] scsi: ibmvfc: fix WARN_ON during event pool release
-Date:   Fri,  2 Aug 2019 09:22:55 -0400
-Message-Id: <20190802132302.13537-35-sashal@kernel.org>
+Cc:     Halil Pasic <pasic@linux.ibm.com>, Petr Tesarik <ptesarik@suse.cz>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 42/42] s390/dma: provide proper ARCH_ZONE_DMA_BITS value
+Date:   Fri,  2 Aug 2019 09:23:02 -0400
+Message-Id: <20190802132302.13537-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802132302.13537-1-sashal@kernel.org>
 References: <20190802132302.13537-1-sashal@kernel.org>
@@ -61,73 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+From: Halil Pasic <pasic@linux.ibm.com>
 
-[ Upstream commit 5578257ca0e21056821e6481bd534ba267b84e58 ]
+[ Upstream commit 1a2dcff881059dedc14fafc8a442664c8dbd60f1 ]
 
-While removing an ibmvfc client adapter a WARN_ON like the following
-WARN_ON is seen in the kernel log:
+On s390 ZONE_DMA is up to 2G, i.e. ARCH_ZONE_DMA_BITS should be 31 bits.
+The current value is 24 and makes __dma_direct_alloc_pages() take a
+wrong turn first (but __dma_direct_alloc_pages() recovers then).
 
-WARNING: CPU: 6 PID: 5421 at ./include/linux/dma-mapping.h:541
-ibmvfc_free_event_pool+0x12c/0x1f0 [ibmvfc]
-CPU: 6 PID: 5421 Comm: rmmod Tainted: G            E     4.17.0-rc1-next-20180419-autotest #1
-NIP:  d00000000290328c LR: d00000000290325c CTR: c00000000036ee20
-REGS: c000000288d1b7e0 TRAP: 0700   Tainted: G            E      (4.17.0-rc1-next-20180419-autotest)
-MSR:  800000010282b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE,TM[E]>  CR: 44008828  XER: 20000000
-CFAR: c00000000036e408 SOFTE: 1
-GPR00: d00000000290325c c000000288d1ba60 d000000002917900 c000000289d75448
-GPR04: 0000000000000071 c0000000ff870000 0000000018040000 0000000000000001
-GPR08: 0000000000000000 c00000000156e838 0000000000000001 d00000000290c640
-GPR12: c00000000036ee20 c00000001ec4dc00 0000000000000000 0000000000000000
-GPR16: 0000000000000000 0000000000000000 00000100276901e0 0000000010020598
-GPR20: 0000000010020550 0000000010020538 0000000010020578 00000000100205b0
-GPR24: 0000000000000000 0000000000000000 0000000010020590 5deadbeef0000100
-GPR28: 5deadbeef0000200 d000000002910b00 0000000000000071 c0000002822f87d8
-NIP [d00000000290328c] ibmvfc_free_event_pool+0x12c/0x1f0 [ibmvfc]
-LR [d00000000290325c] ibmvfc_free_event_pool+0xfc/0x1f0 [ibmvfc]
-Call Trace:
-[c000000288d1ba60] [d00000000290325c] ibmvfc_free_event_pool+0xfc/0x1f0 [ibmvfc] (unreliable)
-[c000000288d1baf0] [d000000002909390] ibmvfc_abort_task_set+0x7b0/0x8b0 [ibmvfc]
-[c000000288d1bb70] [c0000000000d8c68] vio_bus_remove+0x68/0x100
-[c000000288d1bbb0] [c0000000007da7c4] device_release_driver_internal+0x1f4/0x2d0
-[c000000288d1bc00] [c0000000007da95c] driver_detach+0x7c/0x100
-[c000000288d1bc40] [c0000000007d8af4] bus_remove_driver+0x84/0x140
-[c000000288d1bcb0] [c0000000007db6ac] driver_unregister+0x4c/0xa0
-[c000000288d1bd20] [c0000000000d6e7c] vio_unregister_driver+0x2c/0x50
-[c000000288d1bd50] [d00000000290ba0c] cleanup_module+0x24/0x15e0 [ibmvfc]
-[c000000288d1bd70] [c0000000001dadb0] sys_delete_module+0x220/0x2d0
-[c000000288d1be30] [c00000000000b284] system_call+0x58/0x6c
-Instruction dump:
-e8410018 e87f0068 809f0078 e8bf0080 e8df0088 2fa30000 419e008c e9230200
-2fa90000 419e0080 894d098a 794a07e0 <0b0a0000> e9290008 2fa90000 419e0028
+Let's correct ARCH_ZONE_DMA_BITS value and avoid wrong turns.
 
-This is tripped as a result of irqs being disabled during the call to
-dma_free_coherent() by ibmvfc_free_event_pool(). At this point in the code path
-we have quiesced the adapter and its overly paranoid anyways to be holding the
-host lock.
-
-Reported-by: Abdul Haleem <abdhalee@linux.vnet.ibm.com>
-Signed-off-by: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+Reported-by: Petr Tesarik <ptesarik@suse.cz>
+Fixes: c61e9637340e ("dma-direct: add support for allocation from ZONE_DMA and ZONE_DMA32")
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ibmvscsi/ibmvfc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/s390/include/asm/page.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/scsi/ibmvscsi/ibmvfc.c b/drivers/scsi/ibmvscsi/ibmvfc.c
-index b64ca977825df..71d53bb239e25 100644
---- a/drivers/scsi/ibmvscsi/ibmvfc.c
-+++ b/drivers/scsi/ibmvscsi/ibmvfc.c
-@@ -4874,8 +4874,8 @@ static int ibmvfc_remove(struct vio_dev *vdev)
+diff --git a/arch/s390/include/asm/page.h b/arch/s390/include/asm/page.h
+index 41e3908b397f8..0d753291c43c0 100644
+--- a/arch/s390/include/asm/page.h
++++ b/arch/s390/include/asm/page.h
+@@ -176,6 +176,8 @@ static inline int devmem_is_allowed(unsigned long pfn)
+ #define VM_DATA_DEFAULT_FLAGS	(VM_READ | VM_WRITE | \
+ 				 VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC)
  
- 	spin_lock_irqsave(vhost->host->host_lock, flags);
- 	ibmvfc_purge_requests(vhost, DID_ERROR);
--	ibmvfc_free_event_pool(vhost);
- 	spin_unlock_irqrestore(vhost->host->host_lock, flags);
-+	ibmvfc_free_event_pool(vhost);
++#define ARCH_ZONE_DMA_BITS	31
++
+ #include <asm-generic/memory_model.h>
+ #include <asm-generic/getorder.h>
  
- 	ibmvfc_free_mem(vhost);
- 	spin_lock(&ibmvfc_driver_lock);
 -- 
 2.20.1
 
