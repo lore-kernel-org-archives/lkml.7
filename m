@@ -2,103 +2,101 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE8CC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5539EC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8685421726
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:34:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21DE62073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:35:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752896;
-	bh=HPlxUtNwkZHE7h7+b4y2FQxruajmN736XDBowKuRmkY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h1yKiumsDslpYr+NaRm9yVKSIGMFdSjIEMlGTLI147ZrcklfPPxAeGBttxP576+Kg
-	 PLbtTPUCmQ6avnB56zccUm8g2XT287zN47yOxbx27ZbV6djHpXunESpAVzBxE+8fKH
-	 CQJ1KIN/SQIvGgd9XSU8QrN0w9Cp0YAyTpd0yVSY=
+	s=default; t=1564752901;
+	bh=AOM4fOrWcXJ0jseQxBiq/7aKw9Ers/tE8HeByVSd9QE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=lAk4p2ZED2DLL3no1KwCDo5O+G+hqsmMUZ2kxWe0Y/HKsT44GgOCTxdbCyU15JDy+
+	 zo+P6DablPvh5iP+rird0A30KsiYBtvolj8HxEU7eJe1Pu1WKI5+ShYb7iHGnrsJoL
+	 EWIiKMf6cp68kQAxtPoYDlPs+DJGnZn7MaT7lTcw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405937AbfHBNez (ORCPT
+        id S2405986AbfHBNfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:34:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60970 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:35:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393744AbfHBNWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:22:22 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        id S2405938AbfHBNe4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:34:56 -0400
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 165AB20644;
-        Fri,  2 Aug 2019 13:22:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 985B721842;
+        Fri,  2 Aug 2019 13:34:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752141;
-        bh=HPlxUtNwkZHE7h7+b4y2FQxruajmN736XDBowKuRmkY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OichDcKQ9NP/k0O1gbCm/l8XxmqDLeCPKhsUF/zJpS2gl6lnWOXeiNhEr21LwqeyG
-         ciIv3jxWX1lpZmH7Ka9yUCzhDv3eJz5uSc9mYtCGJV2jUItopTQG4XMX4e3KdVMknh
-         MY6QPiFujPc+kwNKOo5T0thpTqHlH1AvYJAZUln0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Misha Nasledov <misha@nasledov.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.2 59/76] nvme: ignore subnqn for ADATA SX6000LNP
-Date:   Fri,  2 Aug 2019 09:19:33 -0400
-Message-Id: <20190802131951.11600-59-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190802131951.11600-1-sashal@kernel.org>
-References: <20190802131951.11600-1-sashal@kernel.org>
+        s=default; t=1564752895;
+        bh=AOM4fOrWcXJ0jseQxBiq/7aKw9Ers/tE8HeByVSd9QE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=NPdPO8QNKIFHyLclnfIENqqo8qqzd5J2DZ9sZ7Xl1c9FNVHe6c95crzwNrqo7EOty
+         dHW/39rLodUwarCNs5QSW5E2JjLbuXcx1MMEE2ukSTUdQMBunSX0DqBS2bF7Y/zEAX
+         IpxS3njbolU9vgEwncAH1+MMasCMnSLGN9Qxvn24=
+Received: by mail-qk1-f173.google.com with SMTP id d15so54752163qkl.4;
+        Fri, 02 Aug 2019 06:34:55 -0700 (PDT)
+X-Gm-Message-State: APjAAAVXvGAJt0YQrTA6Qc4+mBJ339fibdQ+klG8GeQ1N5ji8RU48u9f
+        jZiJj/0nwgtUtYpwmgtwCYRVt4bhptDiyH/89Q==
+X-Google-Smtp-Source: APXvYqygjBn1/EWko56cFZKxIUhfaf9MMi7BKzf/8JqnTcJxDMsyOkDdJi2i2SRjWDVkquDwVn6DCbZfSUuL3VM0CT0=
+X-Received: by 2002:a05:620a:1447:: with SMTP id i7mr91698408qkl.254.1564752894791;
+ Fri, 02 Aug 2019 06:34:54 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20190722154538.5314-1-david@lechnology.com> <20190722154538.5314-2-david@lechnology.com>
+ <20190727204836.1514265d@archlinux> <20190802072513.GA30522@icarus>
+In-Reply-To: <20190802072513.GA30522@icarus>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 2 Aug 2019 07:34:42 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLA+m5vKZQ1WwWusnVHwX+nnuApiwKXUnmP6ti-PvMZ-g@mail.gmail.com>
+Message-ID: <CAL_JsqLA+m5vKZQ1WwWusnVHwX+nnuApiwKXUnmP6ti-PvMZ-g@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: counter: new bindings for TI eQEP
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     David Lechner <david@lechnology.com>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <jic23@jic23.retrosnub.co.uk>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux PWM List <linux-pwm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Misha Nasledov <misha@nasledov.com>
+On Fri, Aug 2, 2019 at 1:25 AM William Breathitt Gray
+<vilhelm.gray@gmail.com> wrote:
+>
+> On Sat, Jul 27, 2019 at 08:48:36PM +0100, Jonathan Cameron wrote:
+> > On Mon, 22 Jul 2019 10:45:35 -0500
+> > David Lechner <david@lechnology.com> wrote:
+> >
+> > > This documents device tree binding for the Texas Instruments Enhanced
+> > > Quadrature Encoder Pulse (eQEP) Module found in various TI SoCs.
+> > >
+> > > Signed-off-by: David Lechner <david@lechnology.com>
+> >
+> > Up to William given it is a counter binding, (unless Rob overrules)
+> > but new bindings are generally preferred as yaml.
+> >
+> > Content looks fine to me.
+> >
+> > Thanks,
+> >
+> > Jonathan
+>
+> Rob,
+>
+> Would you prefer these bindings as yaml, or shall I accept them as they
+> are now?
 
-[ Upstream commit 08b903b5fd0c49e5f224a9bf085b6329ec3c55c0 ]
+Still up to you at this point, but I certainly prefer them to be DT schema.
 
-The ADATA SX6000LNP NVMe SSDs have the same subnqn and, due to this, a
-system with more than one of these SSDs will only have one usable.
-
-[ 0.942706] nvme nvme1: ignoring ctrl due to duplicate subnqn (nqn.2018-05.com.example:nvme:nvm-subsystem-OUI00E04C).
-[ 0.943017] nvme nvme1: Removing after probe failure status: -22
-
-02:00.0 Non-Volatile memory controller [0108]: Realtek Semiconductor Co., Ltd. Device [10ec:5762] (rev 01)
-71:00.0 Non-Volatile memory controller [0108]: Realtek Semiconductor Co., Ltd. Device [10ec:5762] (rev 01)
-
-There are no firmware updates available from the vendor, unfortunately.
-Applying the NVME_QUIRK_IGNORE_DEV_SUBNQN quirk for these SSDs resolves
-the issue, and they all work after this patch:
-
-/dev/nvme0n1     2J1120050420         ADATA SX6000LNP [...]
-/dev/nvme1n1     2J1120050540         ADATA SX6000LNP [...]
-
-Signed-off-by: Misha Nasledov <misha@nasledov.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/nvme/host/pci.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 7fbcd72c438f6..f9959eaaa185e 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -2959,6 +2959,8 @@ static const struct pci_device_id nvme_id_table[] = {
- 		.driver_data = NVME_QUIRK_LIGHTNVM, },
- 	{ PCI_DEVICE(0x1d1d, 0x2601),	/* CNEX Granby */
- 		.driver_data = NVME_QUIRK_LIGHTNVM, },
-+	{ PCI_DEVICE(0x10ec, 0x5762),   /* ADATA SX6000LNP */
-+		.driver_data = NVME_QUIRK_IGNORE_DEV_SUBNQN, },
- 	{ PCI_DEVICE_CLASS(PCI_CLASS_STORAGE_EXPRESS, 0xffffff) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_APPLE, 0x2001) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_APPLE, 0x2003) },
--- 
-2.20.1
-
+Rob
