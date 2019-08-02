@@ -2,106 +2,172 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C909C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25EE4C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75B1F20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:39:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02FFB2087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:39:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404211AbfHBOjE (ORCPT
+        id S2436680AbfHBOjM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 10:39:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35420 "EHLO mx1.redhat.com"
+        Fri, 2 Aug 2019 10:39:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57028 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731011AbfHBOjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 10:39:03 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        id S2404220AbfHBOjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 10:39:09 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CC62183F3B;
-        Fri,  2 Aug 2019 14:39:02 +0000 (UTC)
-Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CCA311001925;
-        Fri,  2 Aug 2019 14:38:59 +0000 (UTC)
-Date:   Fri, 2 Aug 2019 08:38:59 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "kraxel@redhat.com" <kraxel@redhat.com>
-Cc:     "Zhang, Tina" <tina.zhang@intel.com>,
-        "Lu, Kechen" <kechen.lu@intel.com>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "Lv, Zhiyuan" <zhiyuan.lv@intel.com>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Yuan, Hang" <hang.yuan@intel.com>
-Subject: Re: [RFC PATCH v4 2/6] vfio: Introduce vGPU display irq type
-Message-ID: <20190802083859.0fb0f05e@x1.home>
-In-Reply-To: <20190802133531.4zwsjltvjisq4sfz@sirius.home.kraxel.org>
-References: <20190718155640.25928-1-kechen.lu@intel.com>
-        <20190718155640.25928-3-kechen.lu@intel.com>
-        <20190719102516.60af527f@x1.home>
-        <31185F57AF7C4B4F87C41E735C23A6FE64E06F@shsmsx102.ccr.corp.intel.com>
-        <20190722134124.16c55c2f@x1.home>
-        <237F54289DF84E4997F34151298ABEBC876BC9AD@SHSMSX101.ccr.corp.intel.com>
-        <20190722191830.425d1593@x1.home>
-        <20190802133531.4zwsjltvjisq4sfz@sirius.home.kraxel.org>
-Organization: Red Hat
+        by mx1.redhat.com (Postfix) with ESMTPS id 29578307F5E8;
+        Fri,  2 Aug 2019 14:39:08 +0000 (UTC)
+Received: from linux-ws.nc.xsintricity.com (ovpn-112-50.rdu2.redhat.com [10.10.112.50])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 551F360623;
+        Fri,  2 Aug 2019 14:39:07 +0000 (UTC)
+Message-ID: <b64700fda3cd5c3cc19d6bf17c948b63a0413645.camel@redhat.com>
+Subject: [PULL REQUEST] Please pull rdma.git
+From:   Doug Ledford <dledford@redhat.com>
+To:     "Torvalds, Linus" <torvalds@linux-foundation.org>
+Cc:     "Gunthorpe, Jason" <jgg@ziepe.ca>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Fri, 02 Aug 2019 10:39:04 -0400
+Organization: Red Hat, Inc.
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-O0kaqIfdaUKaQSfesLlu"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Fri, 02 Aug 2019 14:39:03 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 02 Aug 2019 14:39:08 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2 Aug 2019 15:35:31 +0200
-"kraxel@redhat.com" <kraxel@redhat.com> wrote:
 
->   Hi,
-> 
-> > > > Couldn't you expose this as another capability within the IRQ_INFO return
-> > > > data?  If you were to define it as a macro, I assume that means it would be
-> > > > hard coded, in which case this probably becomes an Intel specific IRQ, rather
-> > > > than what appears to be framed as a generic graphics IRQ extension.  A new
-> > > > capability could instead allow the vendor to specify their own value, where
-> > > > we could define how userspace should interpret and make use of this value.
-> > > > Thanks,    
-> > > Good suggestion. Currently, vfio_irq_info is used to save one irq
-> > > info. What we need here is to use it to save several events info.
-> > > Maybe we could figure out a general layout of this capability so that
-> > > it can be leveraged by others, not only for display irq/events.  
-> > 
-> > You could also expose a device specific IRQ with count > 1 (ie. similar
-> > to MSI/X) and avoid munging the eventfd value, which is not something
-> > we do elsewhere, at least in vfio.  Thanks,  
-> 
-> Well, the basic idea is to use the eventfd value to signal the kind of
-> changes which did happen, simliar to IRQ status register bits.
-> 
-> So, when the guest changes the primary plane, the mdev driver notes
-> this.  Same with the cursor plane.  On vblank (when the guests update
-> is actually applied) the mdev driver wakes the eventfd and uses eventfd
-> value to signal whenever primary plane or cursor plane or both did
-> change.
-> 
-> Then userspace knows which planes need an update without an extra
-> VFIO_DEVICE_QUERY_GFX_PLANE roundtrip to the kernel.
-> 
-> Alternatively we could have one eventfd for each change type.  But given
-> that these changes are typically applied at the same time (vblank) we
-> would have multiple eventfds being signaled at the same time.  Which
-> doesn't look ideal to me ...
+--=-O0kaqIfdaUKaQSfesLlu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Good point, looking at the bits in the eventfd value seems better than
-a flood of concurrent interrupts.  Thanks,
+Hi Linus,
 
-Alex
+Here's our second -rc pull request.  Nothing particularly special in
+this one.  The client removal deadlock fix is kindy tricky, but we had
+multiple eyes on it and no one could find a fault in it.  A couple
+Spectre V1 fixes too.  Otherwise, all just normal -rc fodder.
+
+Here's the boilerplate:
+
+The following changes since commit b7165bd0d6cbb93732559be6ea8774653b204480=
+:
+
+  IB/mlx5: Fix RSS Toeplitz setup to be aligned with the HW specification (=
+2019-07-25 11:45:48 -0300)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linu=
+s
+
+for you to fetch changes up to 020fb3bebc224dfe9353a56ecbe2d5fac499dffc:
+
+  RDMA/hns: Fix error return code in hns_roce_v1_rsv_lp_qp() (2019-08-01 12=
+:53:53 -0400)
+
+----------------------------------------------------------------
+Pull request for 5.3-rc2
+
+- A couple Spectre V1 fixes (umad, hfi1)
+- Fix a tricky deadlock in the rdma core code with refcounting instead
+  of locks (client removal patches)
+- Build errors (hns)
+- Fix a scheduling while atomic issue (mlx5)
+- Use after free fix (mad)
+- Fix error path return code (hns)
+- Null deref fix (siw_crypto_hash)
+- A few other misc. minor fixes
+
+----------------------------------------------------------------
+Bernard Metzler (1):
+      Do not dereference 'siw_crypto_shash' before checking
+
+Gal Pressman (1):
+      RDMA/restrack: Track driver QP types in resource tracker
+
+Gustavo A. R. Silva (1):
+      IB/hfi1: Fix Spectre v1 vulnerability
+
+Guy Levi (1):
+      IB/mlx5: Fix MR registration flow to use UMR properly
+
+Jack Morgenstein (1):
+      IB/mad: Fix use-after-free in ib mad completion handling
+
+Jason Gunthorpe (2):
+      RDMA/devices: Do not deadlock during client removal
+      RDMA/devices: Remove the lock around remove_client_context
+
+Leon Romanovsky (1):
+      RDMA/mlx5: Release locks during notifier unregister
+
+Michal Kalderon (1):
+      RDMA/qedr: Fix the hca_type and hca_rev returned in device attributes
+
+Tony Luck (1):
+      IB/core: Add mitigation for Spectre V1
+
+Wei Yongjun (1):
+      RDMA/hns: Fix error return code in hns_roce_v1_rsv_lp_qp()
+
+YueHaibing (1):
+      RDMA/hns: Fix build error
+
+ drivers/infiniband/core/core_priv.h        |   5 +-
+ drivers/infiniband/core/device.c           | 102 +++++++++++++++++++------=
+----
+ drivers/infiniband/core/mad.c              |  20 +++---
+ drivers/infiniband/core/user_mad.c         |   6 +-
+ drivers/infiniband/hw/hfi1/verbs.c         |   2 +
+ drivers/infiniband/hw/hns/Kconfig          |   6 +-
+ drivers/infiniband/hw/hns/Makefile         |   8 +--
+ drivers/infiniband/hw/hns/hns_roce_hw_v1.c |   4 +-
+ drivers/infiniband/hw/mlx5/main.c          |   7 +-
+ drivers/infiniband/hw/mlx5/mr.c            |  27 +++-----
+ drivers/infiniband/hw/qedr/main.c          |  10 ++-
+ drivers/infiniband/sw/siw/siw_qp.c         |   6 +-
+ include/rdma/ib_verbs.h                    |   4 +-
+ 13 files changed, 124 insertions(+), 83 deletions(-)
+
+--=20
+Doug Ledford <dledford@redhat.com>
+    GPG KeyID: B826A3330E572FDD
+    Fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
+
+--=-O0kaqIfdaUKaQSfesLlu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl1ESwgACgkQuCajMw5X
+L93gSQ/+MFROUDKYRS8mbAx1kNxOuFvhgbsTZUeDy30Nh8Yl7xy4O7VFvaDJm6Ab
+THdMPD0zQOCXbHdanvDvPOm6Un53hGmTNJpeQEzw/JFblYehjXwfeD2Hw5sR2vqq
+B1Mhc0Ps+ycUTqpLaSqxAYFc7P366Z71Rtbx4yxcnSS3ojSvKigF8JwZb8DkXbW2
+WGkcoKLhseeVJlAb6Vei9R8dnXsPJcuWX94oYZbENKmBYTJk1lBnMW74WLqSLW/A
+0Ur3Q/rKryNfuj8zNN4kYXy9YjD77tTYzqceGJIU2yz/X03sEeLCVvALp4/Bpgau
+O6lDnZqErZXtwK49jKJFC2y3gKkaalodnO9vECOZZwemnpOJ9+p7bYsnMEKSwjcq
+eznuyCCWXmS+zuMjmRnPIcMyYtPeHL5bXmwUC22rAgBy0INZMT1SjmBXAvLs7SSF
+TyYu4tsJ26thdQkgOy46hyiuHN/hwolguqkz9odlMYI+H3laUJQ/s8ovv07dHISV
+Zqi81AyEGKMWe9/psMyx1+4gol7KfXtRSEuvjmfwUhvO09Hpify5K0qGiEWwej0F
+NrLqYzwyuMQxQothvRAh+ktfRUhFK1aP75rMLnwHtLimXKUY5Y+j+vYzZn46L56p
+LlkgHfrEdSaFrJgCxWuMqmYNbQFndAGxQ0D8W5iTqDMMEC29NZA=
+=pYZn
+-----END PGP SIGNATURE-----
+
+--=-O0kaqIfdaUKaQSfesLlu--
+
