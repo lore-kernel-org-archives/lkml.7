@@ -7,51 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B67EC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 800FCC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 378F12064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:54:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CD5920665
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:54:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739671;
-	bh=WemBA79rXocVs9x/gus1yGagQcmQfjF5teAeeXIZULU=;
+	s=default; t=1564739679;
+	bh=A6SMS4Td+ReUT+zVlgBmklIZhFxP34I6rbFV+0gXWoU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JxmxPYjdPUC2In0eKJvRxZyyRaaa1T6yTqdLdXaGs0S0WcuRelZ3yNbeqy9y32JUw
-	 sEcNOUWizTzW0KFuPDxRfeboNe6rQJPJYCMJcpnNSBpCtZzx5y8Nq2vgYl0TDLyvZg
-	 /s8H/aqLiFQEMkux5NehLNw0A8MUvnhyetmZWiE8=
+	b=W7LUNVw//emigEttVDodma74ni0I4BBlMxGDy+zv7FmM0Q8E/gbCY/FmCTNTenMKf
+	 Kbn32z/vlbQhuu5Cv51wrCIwfc1kpazOwv71pJMm9ho4aZHDHi3+CmGWkVXO+MNjtV
+	 uiW+IpINV+rRR4ddipDrhVsuCqJ6GPykpeAde5/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406231AbfHBJya (ORCPT
+        id S2406230AbfHBJyi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:54:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32784 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:54:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406440AbfHBJy0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:54:26 -0400
+        id S2406399AbfHBJyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:54:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCACD20665;
-        Fri,  2 Aug 2019 09:54:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B19D2064A;
+        Fri,  2 Aug 2019 09:54:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739665;
-        bh=WemBA79rXocVs9x/gus1yGagQcmQfjF5teAeeXIZULU=;
+        s=default; t=1564739653;
+        bh=A6SMS4Td+ReUT+zVlgBmklIZhFxP34I6rbFV+0gXWoU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I7d00WcGuHkcS4Ifw7co37EsjrlkmfP1jUSVxIoYQ9uLS68V3t9+HAagsjJuyo4Oj
-         1cMft1+YE37E7sqyrglsx9nvnXZfsFE9krKEnY9Mtz3SVySg9QFk1f0NgVwDfhfia/
-         3vuRWqDfsLEd4FyL47+fZXjrdjbU+9ke5nDkSoPU=
+        b=fC9DsP7+W/wF6qWlMRL2MlcxL6SAk6wBj0T8TY/4ead+s95A5ZCy7GafJGHg2nbbt
+         hY574BlAeuwkIGg2ac9kYTF9l2Fy/kCkje42HIlI4/DM97pdMwUVJ2Sx2OjsFdWAVY
+         iZONX7mI68CkqxzisxtgYQJdt1XVeNE1d5SUGzzg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miroslav Lichvar <mlichvar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rodolfo Giometti <giometti@enneenne.com>,
-        Greg KH <greg@kroah.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 22/25] drivers/pps/pps.c: clear offset flags in PPS_SETPARAMS ioctl
-Date:   Fri,  2 Aug 2019 11:39:54 +0200
-Message-Id: <20190802092106.868255170@linuxfoundation.org>
+        stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>,
+        Dmitry Safonov <dima@arista.com>
+Subject: [PATCH 4.14 18/25] iommu/iova: Fix compilation error with !CONFIG_IOMMU_IOVA
+Date:   Fri,  2 Aug 2019 11:39:50 +0200
+Message-Id: <20190802092105.413174400@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092058.428079740@linuxfoundation.org>
 References: <20190802092058.428079740@linuxfoundation.org>
@@ -64,50 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miroslav Lichvar <mlichvar@redhat.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-commit 5515e9a6273b8c02034466bcbd717ac9f53dab99 upstream.
+commit 201c1db90cd643282185a00770f12f95da330eca upstream.
 
-The PPS assert/clear offset corrections are set by the PPS_SETPARAMS
-ioctl in the pps_ktime structs, which also contain flags.  The flags are
-not initialized by applications (using the timepps.h header) and they
-are not used by the kernel for anything except returning them back in
-the PPS_GETPARAMS ioctl.
+The stub function for !CONFIG_IOMMU_IOVA needs to be
+'static inline'.
 
-Set the flags to zero to make it clear they are unused and avoid leaking
-uninitialized data of the PPS_SETPARAMS caller to other applications
-that have a read access to the PPS device.
-
-Link: http://lkml.kernel.org/r/20190702092251.24303-1-mlichvar@redhat.com
-Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Rodolfo Giometti <giometti@enneenne.com>
-Cc: Greg KH <greg@kroah.com>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: effa467870c76 ('iommu/vt-d: Don't queue_iova() if there is no flush queue')
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Dmitry Safonov <dima@arista.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pps/pps.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ include/linux/iova.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/pps/pps.c
-+++ b/drivers/pps/pps.c
-@@ -166,6 +166,14 @@ static long pps_cdev_ioctl(struct file *
- 			pps->params.mode |= PPS_CANWAIT;
- 		pps->params.api_version = PPS_API_VERS;
+--- a/include/linux/iova.h
++++ b/include/linux/iova.h
+@@ -235,7 +235,7 @@ static inline void init_iova_domain(stru
+ {
+ }
  
-+		/*
-+		 * Clear unused fields of pps_kparams to avoid leaking
-+		 * uninitialized data of the PPS_SETPARAMS caller via
-+		 * PPS_GETPARAMS
-+		 */
-+		pps->params.assert_off_tu.flags = 0;
-+		pps->params.clear_off_tu.flags = 0;
-+
- 		spin_unlock_irq(&pps->lock);
- 
- 		break;
+-bool has_iova_flush_queue(struct iova_domain *iovad)
++static inline bool has_iova_flush_queue(struct iova_domain *iovad)
+ {
+ 	return false;
+ }
 
 
