@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36DDAC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61521C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 107E8206A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:48:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 381272087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:48:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739337;
-	bh=mynAj7Y3t59ITSeNpACTfJEI8DEExoU0wLKW2Kb/djw=;
+	s=default; t=1564739339;
+	bh=xCUjBjZVjtJ9PULEzRtNCnrVM5LuoqkL8P4zCUhfJRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=thpvGeLABKi5ldCdrhYNUxlh2mlUNlI7Ygq/s+F5b7MPMxHPjqc1OiVdqTAe0svUY
-	 ADk7xMOdZbA5KDX3JzS04lkibqIZy681qGrWoenPipfVcDlfiy37PttIiVunpqXDE5
-	 HPzNBIia2tW7YIchYCPvMmtWVIRgRWLKK/7IvWtM=
+	b=om15VFNcy06YPjQrAlok4MyMFJXpLweJqzXjxo4+ISEsYKPYqmBn/7v4gaNEskkR3
+	 B67fXWAubVKMqL5thMha3PdxhoK4qWelGTlvr9QPLC9Syp4jMfYeF/rODHqbKb0LE0
+	 +z4g5EKcPH1g6Dpc8MptyUEdgQTqOHqRbtCwKb18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405948AbfHBJsz (ORCPT
+        id S2405262AbfHBJs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:48:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54474 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:48:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405920AbfHBJsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:48:54 -0400
+        id S2405929AbfHBJsv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:48:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD3D22087E;
-        Fri,  2 Aug 2019 09:48:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CA002087E;
+        Fri,  2 Aug 2019 09:48:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739333;
-        bh=mynAj7Y3t59ITSeNpACTfJEI8DEExoU0wLKW2Kb/djw=;
+        s=default; t=1564739330;
+        bh=xCUjBjZVjtJ9PULEzRtNCnrVM5LuoqkL8P4zCUhfJRo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vnesN/a74WenlpHLbG9vIfO7fL9TUMcKTmfHhvXze7byMThWgalYrOLW1TmjAo54O
-         Edla8TusfsE+S+vVJDavu5dJwIom04Dk9pRnZd05D0peX+mtJ7TidbuALYB27h1syA
-         NxvOnvpoqzrbbYLcqEHSzOKeqUKi8+ig19kZxOv0=
+        b=f5HCjPeveLXn/Etih1smhIEStjRwXPsBwZQqA/5nSyKRCb6jNOGFqlZsIff8VWnoJ
+         Izzf8QFrMpcftB340KlRN9kuzcE4YpkqIYnVxUF0/vywu7LodJr8Pz5T/+BotM1l+/
+         bdaFvHhS3+tPihATl9GJF1WsSbltl1oYelkPSTu8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+        stable@vger.kernel.org, David Riley <davidriley@chromium.org>,
+        Gerd Hoffmann <kraxel@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 171/223] phy: renesas: rcar-gen2: Fix memory leak at error paths
-Date:   Fri,  2 Aug 2019 11:36:36 +0200
-Message-Id: <20190802092249.004731375@linuxfoundation.org>
+Subject: [PATCH 4.9 170/223] drm/virtio: Add memory barriers for capset cache.
+Date:   Fri,  2 Aug 2019 11:36:35 +0200
+Message-Id: <20190802092248.966552546@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -62,42 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d4a36e82924d3305a17ac987a510f3902df5a4b2 ]
+[ Upstream commit 9ff3a5c88e1f1ab17a31402b96d45abe14aab9d7 ]
 
-This patch fixes memory leak at error paths of the probe function.
-In for_each_child_of_node, if the loop returns, the driver should
-call of_put_node() before returns.
+After data is copied to the cache entry, atomic_set is used indicate
+that the data is the entry is valid without appropriate memory barriers.
+Similarly the read side was missing the corresponding memory barriers.
 
-Reported-by: Julia Lawall <julia.lawall@lip6.fr>
-Fixes: 1233f59f745b237 ("phy: Renesas R-Car Gen2 PHY driver")
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: David Riley <davidriley@chromium.org>
+Link: http://patchwork.freedesktop.org/patch/msgid/20190610211810.253227-5-davidriley@chromium.org
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/phy-rcar-gen2.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/virtio/virtgpu_ioctl.c | 3 +++
+ drivers/gpu/drm/virtio/virtgpu_vq.c    | 2 ++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/drivers/phy/phy-rcar-gen2.c b/drivers/phy/phy-rcar-gen2.c
-index 97d4dd6ea924..aa02b19b7e0e 100644
---- a/drivers/phy/phy-rcar-gen2.c
-+++ b/drivers/phy/phy-rcar-gen2.c
-@@ -288,6 +288,7 @@ static int rcar_gen2_phy_probe(struct platform_device *pdev)
- 		error = of_property_read_u32(np, "reg", &channel_num);
- 		if (error || channel_num > 2) {
- 			dev_err(dev, "Invalid \"reg\" property\n");
-+			of_node_put(np);
- 			return error;
+diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+index 54639395aba0..a3559b1a3a0f 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
++++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+@@ -521,6 +521,9 @@ static int virtio_gpu_get_caps_ioctl(struct drm_device *dev,
+ 	ret = wait_event_timeout(vgdev->resp_wq,
+ 				 atomic_read(&cache_ent->is_valid), 5 * HZ);
+ 
++	/* is_valid check must proceed before copy of the cache entry. */
++	smp_rmb();
++
+ 	ptr = cache_ent->caps_cache;
+ 
+ copy_exit:
+diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
+index 52436b3c01bb..a1b3ea1ccb65 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_vq.c
++++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
+@@ -618,6 +618,8 @@ static void virtio_gpu_cmd_capset_cb(struct virtio_gpu_device *vgdev,
+ 		    cache_ent->id == le32_to_cpu(cmd->capset_id)) {
+ 			memcpy(cache_ent->caps_cache, resp->capset_data,
+ 			       cache_ent->size);
++			/* Copy must occur before is_valid is signalled. */
++			smp_wmb();
+ 			atomic_set(&cache_ent->is_valid, 1);
+ 			break;
  		}
- 		channel->select_mask = select_mask[channel_num];
-@@ -303,6 +304,7 @@ static int rcar_gen2_phy_probe(struct platform_device *pdev)
- 						   &rcar_gen2_phy_ops);
- 			if (IS_ERR(phy->phy)) {
- 				dev_err(dev, "Failed to create PHY\n");
-+				of_node_put(np);
- 				return PTR_ERR(phy->phy);
- 			}
- 			phy_set_drvdata(phy->phy, phy);
 -- 
 2.20.1
 
