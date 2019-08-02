@@ -2,102 +2,115 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 432C1C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3350CC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B2582086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:49:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739357;
-	bh=kloS8dWPjjHpT26GjxbcGPstQz99iXmU91eP0LAEW+Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tSliTLIfyEbrwRwZs7x3HJ+DCbVELDyWebnoJx+pcrBoBgEit20To4qmK+cayHHTN
-	 MiD397Vq85mgtA5kFS7fNqdccfFhDmBffdE1UWlJBods9I+2+lEY+5oU7QeoNS43Nk
-	 +gwHd85e1sdrEmQ8Jigo+VX6sub16TdCOXg/nndc=
+	by mail.kernel.org (Postfix) with ESMTP id 12917206A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:49:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405973AbfHBJtP (ORCPT
+        id S2405981AbfHBJt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:49:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54020 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405831AbfHBJsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:48:36 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 056FE206A2;
-        Fri,  2 Aug 2019 09:48:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739315;
-        bh=kloS8dWPjjHpT26GjxbcGPstQz99iXmU91eP0LAEW+Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sFf5zQb9Etdi/MpT4eeqSNtZKzdfztHe2ztnqVMiPY4KIM1IGNNyfps7DuBHXV7Fv
-         ZCt1yjDwT6yFiNxIT00HNeRGUghpb20EodUhU/tqixagWUW1CnTF7wypty+U5+sbeU
-         ZsMJuG/ja1wPWgTFcdhpOLsGfEAYQmJ3Y5KLpNbA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 164/223] drm/bridge: tc358767: read display_props in get_modes()
-Date:   Fri,  2 Aug 2019 11:36:29 +0200
-Message-Id: <20190802092248.740167989@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
-References: <20190802092238.692035242@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 2 Aug 2019 05:49:29 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:64240 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405137AbfHBJt0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:49:26 -0400
+Received: from 79.184.255.110.ipv4.supernova.orange.pl (79.184.255.110) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
+ id e1982bc9eb5b63f9; Fri, 2 Aug 2019 11:49:24 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Sebastian Reichel <sre@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, kernel-team@android.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tri Vo <trong@android.com>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH] power: supply: Init device wakeup after device_add()
+Date:   Fri, 02 Aug 2019 11:49:24 +0200
+Message-ID: <5888477.sfNfyo0UZj@kreacher>
+In-Reply-To: <20190801213330.81079-1-swboyd@chromium.org>
+References: <20190801213330.81079-1-swboyd@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3231573065ad4f4ecc5c9147b24f29f846dc0c2f ]
+On Thursday, August 1, 2019 11:33:30 PM CEST Stephen Boyd wrote:
+> We may want to use the device pointer in device_init_wakeup() with
+> functions that expect the device to already be added with device_add().
+> For example, if we were to link the device initializing wakeup to
+> something in sysfs such as a class for wakeups we'll run into an error.
+> It looks like this code was written with the assumption that the device
+> would be added before initializing wakeup due to the order of operations
+> in power_supply_unregister().
+> 
+> Let's change the order of operations so we don't run into problems here.
+> 
+> Fixes: 948dcf966228 ("power_supply: Prevent suspend until power supply events are processed")
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>                                                                                                                      
+> Cc: Tri Vo <trong@android.com>                                                                                                                                             
+> Cc: Kalesh Singh <kaleshsingh@google.com>      
+> Cc: Ravi Chandra Sadineni <ravisadineni@chromium.org>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+> 
+> See this thread[1] for more information on how this will be necessary.
+> 
+> [1] https://lkml.kernel.org/r/20190731215514.212215-1-trong@android.com
+> 
+> 
+>  drivers/power/supply/power_supply_core.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
+> index 82e84801264c..5c36c430ce8b 100644
+> --- a/drivers/power/supply/power_supply_core.c
+> +++ b/drivers/power/supply/power_supply_core.c
+> @@ -1051,14 +1051,14 @@ __power_supply_register(struct device *parent,
+>  	}
+>  
+>  	spin_lock_init(&psy->changed_lock);
+> -	rc = device_init_wakeup(dev, ws);
+> -	if (rc)
+> -		goto wakeup_init_failed;
+> -
+>  	rc = device_add(dev);
+>  	if (rc)
+>  		goto device_add_failed;
+>  
+> +	rc = device_init_wakeup(dev, ws);
+> +	if (rc)
+> +		goto wakeup_init_failed;
+> +
+>  	rc = psy_register_thermal(psy);
+>  	if (rc)
+>  		goto register_thermal_failed;
+> @@ -1101,8 +1101,8 @@ __power_supply_register(struct device *parent,
+>  	psy_unregister_thermal(psy);
+>  register_thermal_failed:
+>  	device_del(dev);
+> -device_add_failed:
+>  wakeup_init_failed:
+> +device_add_failed:
+>  check_supplies_failed:
+>  dev_set_name_failed:
+>  	put_device(dev);
+> 
 
-We need to know the link bandwidth to filter out modes we cannot
-support, so we need to have read the display props before doing the
-filtering.
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-To ensure we have up to date display props, call tc_get_display_props()
-in the beginning of tc_connector_get_modes().
-
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190528082747.3631-22-tomi.valkeinen@ti.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/bridge/tc358767.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
-index fa3f2f039a74..80993a8734e0 100644
---- a/drivers/gpu/drm/bridge/tc358767.c
-+++ b/drivers/gpu/drm/bridge/tc358767.c
-@@ -1153,6 +1153,13 @@ static int tc_connector_get_modes(struct drm_connector *connector)
- 	struct tc_data *tc = connector_to_tc(connector);
- 	struct edid *edid;
- 	unsigned int count;
-+	int ret;
-+
-+	ret = tc_get_display_props(tc);
-+	if (ret < 0) {
-+		dev_err(tc->dev, "failed to read display props: %d\n", ret);
-+		return 0;
-+	}
- 
- 	if (tc->panel && tc->panel->funcs && tc->panel->funcs->get_modes) {
- 		count = tc->panel->funcs->get_modes(tc->panel);
--- 
-2.20.1
 
 
 
