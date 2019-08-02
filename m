@@ -2,95 +2,85 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E5EAC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F08AC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F01DF20679
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AC4220679
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:48:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564753685;
-	bh=4iyFp3nxxcgWx4F9Y7pzUkBtSH9YEP6qmfh9a+6HKW4=;
+	s=default; t=1564753711;
+	bh=yrUhfboA+pxlwVQceH5hZCnB8tZ8n2uD14vFSNTwoFg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Avu1QUQDeiDx7paKdaSJ9V/WD76a4tSv2mq0xAirCvyNzlU0ruzQvIcbraymyKmp0
-	 pYTg/pNGYnc6LIHbc726TBcNyvdCd4XWWqDrR0ecs7ZsgbstAFg4IoJuFFw2s9f9Xw
-	 /B6ydgz96fnCEqVphY/6a6pY2MONBo3odk/SOelY=
+	b=hrnw31UKN5SBOOX3f80g0tNo833ZiZr+13pdeu89OKcmMBMGb2wOjzJKCVJLZaV2z
+	 Ixtv6CkCLg6r+w5PJGukYcQzFPa9fPyhFoPpKHMFP3i5Qd9aE4LlgZRJWAx4+7RrSw
+	 cVRvJXNlt55VZAjwumgXoBkyiStjuCXzBVoLHChk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394817AbfHBNsE (ORCPT
+        id S2394866AbfHBNsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:48:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48528 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:48:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730199AbfHBNsD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:48:03 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        id S1730199AbfHBNsa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:48:30 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DB5A21726;
-        Fri,  2 Aug 2019 13:48:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85CC920679;
+        Fri,  2 Aug 2019 13:48:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564753682;
-        bh=4iyFp3nxxcgWx4F9Y7pzUkBtSH9YEP6qmfh9a+6HKW4=;
+        s=default; t=1564753709;
+        bh=yrUhfboA+pxlwVQceH5hZCnB8tZ8n2uD14vFSNTwoFg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=G7AjOhrbuHUU3S7qTwJIDv+cj/TPwsihgyZx5wZiqBX7l4XR9h/N3nJqB+Fwct/sK
-         MbSg/HwLELKa+aWkKep5eWxtP9zRjTuYL3CF2WOSizGzhvtsE2BF6WCyA+VFNWT7NL
-         024wiyagXsobyy76ci31cOpFiGXqo3MjvWaxuoig=
-Date:   Fri, 2 Aug 2019 08:48:01 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] PCI: Mark expected switch fall-through
-Message-ID: <20190802134801.GK151852@google.com>
-References: <20190802012248.GA22622@embeddedor>
+        b=0jGh3uFTyMfE0JevXIUjXo4dTNgOjHMJFiFePLYswMhTdzF9QdEKqdS/aNJBzOUlX
+         LQThVc2endYLqXhXno2aXAGbqSV6Dg1GGHiusQNfuWVzT2D/JuCjZvlBrAgrhpwfqn
+         VQ7Fkjdnj5z/Te0a6+I0MjMGqQkgnjBedsQCIJsE=
+Date:   Fri, 2 Aug 2019 09:48:28 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        syzbot+d952e5e28f5fb7718d23@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: Re: [PATCH 5.2 03/20] ALSA: usb-audio: Sanity checks for each pipe
+ and EP types
+Message-ID: <20190802134828.GA797@sasha-vm>
+References: <20190802092055.131876977@linuxfoundation.org>
+ <20190802092058.248343532@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190802012248.GA22622@embeddedor>
+In-Reply-To: <20190802092058.248343532@linuxfoundation.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 08:22:48PM -0500, Gustavo A. R. Silva wrote:
-> Mark switch cases where we are expecting to fall through.
-> 
-> This patch fixes the following warning (Building: allmodconfig i386):
-> 
-> drivers/pci/hotplug/ibmphp_res.c: In function ‘update_bridge_ranges’:
-> drivers/pci/hotplug/ibmphp_res.c:1943:16: warning: this statement may fall through [-Wimplicit-fallthrough=]
->        function = 0x8;
->        ~~~~~~~~~^~~~~
-> drivers/pci/hotplug/ibmphp_res.c:1944:6: note: here
->       case PCI_HEADER_TYPE_MULTIBRIDGE:
->       ^~~~
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+On Fri, Aug 02, 2019 at 11:39:57AM +0200, Greg Kroah-Hartman wrote:
+>From: Takashi Iwai <tiwai@suse.de>
+>
+>commit 801ebf1043ae7b182588554cc9b9ad3c14bc2ab5 upstream.
+>
+>The recent USB core code performs sanity checks for the given pipe and
+>EP types, and it can be hit by manipulated USB descriptors by syzbot.
+>For making syzbot happier, this patch introduces a local helper for a
+>sanity check in the driver side and calls it at each place before the
+>message handling, so that we can avoid the WARNING splats.
+>
+>Reported-by: syzbot+d952e5e28f5fb7718d23@syzkaller.appspotmail.com
+>Signed-off-by: Takashi Iwai <tiwai@suse.de>
+>Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Applied with Kees' reviewed-by to pci/misc for v5.4, thanks, Gustavo!
+This commit has a fix: 5d78e1c2b7f4b ("ALSA: usb-audio: Fix gpf in
+snd_usb_pipe_sanity_check") which was not pulled by Linus yet.
 
-> ---
->  drivers/pci/hotplug/ibmphp_res.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/pci/hotplug/ibmphp_res.c b/drivers/pci/hotplug/ibmphp_res.c
-> index 5e8caf7a4452..1e1ba66cfd1e 100644
-> --- a/drivers/pci/hotplug/ibmphp_res.c
-> +++ b/drivers/pci/hotplug/ibmphp_res.c
-> @@ -1941,6 +1941,7 @@ static int __init update_bridge_ranges(struct bus_node **bus)
->  						break;
->  					case PCI_HEADER_TYPE_BRIDGE:
->  						function = 0x8;
-> +						/* Fall through */
->  					case PCI_HEADER_TYPE_MULTIBRIDGE:
->  						/* We assume here that only 1 bus behind the bridge
->  						   TO DO: add functionality for several:
-> -- 
-> 2.22.0
-> 
+I'm going to drop this commit and re-queue it together with it's fix
+once it makes it upstream.
+
+--
+Thanks,
+Sasha
