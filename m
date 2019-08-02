@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8658C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3947C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7811217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98D85217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:24:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752280;
-	bh=zf98jIThURIzPyBzuwzuyYqGB/35TOYpCG5ZJG94bJQ=;
+	s=default; t=1564752283;
+	bh=U1T719pxBFavE47aqfrtOyDKu+wqDEOi91URDw+I9Xc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hdiDsRl3UuCSG4xzKvWaKSd8aFBHuqNcyUUhLSdpGxF3k6Mk/4jq3rDu/E8yJnhDM
-	 YaxBUGel8z64n8pj391YgzY/ysTjgRhpX2FAuynCq6XohU3xljdef20ZD+zwFrKP47
-	 lo6yrDN6yol6xyfRlDhthzRJalbl5NCLk0Qtzo8k=
+	b=hgJow3U4J4H0OchQ6DihGtVGzhDXIrDxi59OhhrgEP/qUkW4+cOrmF417b/mJy0SL
+	 T9FSbBEg1UY0JJbsYsvw4uiCVWvOG1yy1DdsRrCaCrMptbi2LYKgOCtDi41nuOWl2N
+	 zTE5QK9CK1NYTsbTe8LREdK7uuVc+r34PcutVmKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391100AbfHBNYe (ORCPT
+        id S2391174AbfHBNYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:24:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35170 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:24:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394169AbfHBNY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:24:27 -0400
+        id S2387722AbfHBNYj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:24:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 279D621773;
-        Fri,  2 Aug 2019 13:24:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 316FD20644;
+        Fri,  2 Aug 2019 13:24:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752266;
-        bh=zf98jIThURIzPyBzuwzuyYqGB/35TOYpCG5ZJG94bJQ=;
+        s=default; t=1564752278;
+        bh=U1T719pxBFavE47aqfrtOyDKu+wqDEOi91URDw+I9Xc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0A8KdpP8gsfz5hY4B5jPzSSMwCoWmwQD8uHPppJEUbqHmjTkvSv33z78KCvXK/R+j
-         T9G5GHs/yFXKMRlEZMNbpcB8lYDbLKDDVtfvyPH+NvJn5/4Dolv2h2CtsAKSChCqLO
-         30BAvIn67bDFWrtQfcHm9sgO6h6je4nJxKzC0tCY=
+        b=Cf1CebWWkdtMKmUkaW1MdogevWCQOZ5zkCBAgFEwRfL81Xb9AeNZZF+QANhOods+J
+         hWAk1EOu68jqo53tzfYE2iSPeJ7uA19egnzbGqwFaphxZc41PDg2BDgTLp1rf3Vh06
+         NbYJk+e7xfAXAhmtusYKc3DDws4NrF/r7k5LX2hw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Farhan Ali <alifm@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 02/30] vfio-ccw: Set pa_nr to 0 if memory allocation fails for pa_iova_pfn
-Date:   Fri,  2 Aug 2019 09:23:54 -0400
-Message-Id: <20190802132422.13963-2-sashal@kernel.org>
+Cc:     Thomas Tai <thomas.tai@oracle.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 06/30] iscsi_ibft: make ISCSI_IBFT dependson ACPI instead of ISCSI_IBFT_FIND
+Date:   Fri,  2 Aug 2019 09:23:58 -0400
+Message-Id: <20190802132422.13963-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802132422.13963-1-sashal@kernel.org>
 References: <20190802132422.13963-1-sashal@kernel.org>
@@ -61,39 +59,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Farhan Ali <alifm@linux.ibm.com>
+From: Thomas Tai <thomas.tai@oracle.com>
 
-[ Upstream commit c1ab69268d124ebdbb3864580808188ccd3ea355 ]
+[ Upstream commit 94bccc34071094c165c79b515d21b63c78f7e968 ]
 
-So we don't call try to call vfio_unpin_pages() incorrectly.
+iscsi_ibft can use ACPI to find the iBFT entry during bootup,
+currently, ISCSI_IBFT depends on ISCSI_IBFT_FIND which is
+a X86 legacy way to find the iBFT by searching through the
+low memory. This patch changes the dependency so that other
+arch like ARM64 can use ISCSI_IBFT as long as the arch supports
+ACPI.
 
-Fixes: 0a19e61e6d4c ("vfio: ccw: introduce channel program interfaces")
-Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
-Reviewed-by: Eric Farman <farman@linux.ibm.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Message-Id: <33a89467ad6369196ae6edf820cbcb1e2d8d050c.1562854091.git.alifm@linux.ibm.com>
-Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+ibft_init() needs to use the global variable ibft_addr declared
+in iscsi_ibft_find.c. A #ifndef CONFIG_ISCSI_IBFT_FIND is needed
+to declare the variable if CONFIG_ISCSI_IBFT_FIND is not selected.
+Moving ibft_addr into the iscsi_ibft.c does not work because if
+ISCSI_IBFT is selected as a module, the arch/x86/kernel/setup.c won't
+be able to find the variable at compile time.
+
+Signed-off-by: Thomas Tai <thomas.tai@oracle.com>
+Signed-off-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/vfio_ccw_cp.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/firmware/Kconfig      | 5 +++--
+ drivers/firmware/iscsi_ibft.c | 4 ++++
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/s390/cio/vfio_ccw_cp.c b/drivers/s390/cio/vfio_ccw_cp.c
-index 1419eaea03d84..5a9e457caef33 100644
---- a/drivers/s390/cio/vfio_ccw_cp.c
-+++ b/drivers/s390/cio/vfio_ccw_cp.c
-@@ -119,8 +119,10 @@ static int pfn_array_alloc_pin(struct pfn_array *pa, struct device *mdev,
- 				  sizeof(*pa->pa_iova_pfn) +
- 				  sizeof(*pa->pa_pfn),
- 				  GFP_KERNEL);
--	if (unlikely(!pa->pa_iova_pfn))
-+	if (unlikely(!pa->pa_iova_pfn)) {
-+		pa->pa_nr = 0;
- 		return -ENOMEM;
-+	}
- 	pa->pa_pfn = pa->pa_iova_pfn + pa->pa_nr;
+diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
+index 6e4ed5a9c6fdc..42c4ff75281be 100644
+--- a/drivers/firmware/Kconfig
++++ b/drivers/firmware/Kconfig
+@@ -156,7 +156,7 @@ config DMI_SCAN_MACHINE_NON_EFI_FALLBACK
  
- 	ret = pfn_array_pin(pa, mdev);
+ config ISCSI_IBFT_FIND
+ 	bool "iSCSI Boot Firmware Table Attributes"
+-	depends on X86 && ACPI
++	depends on X86 && ISCSI_IBFT
+ 	default n
+ 	help
+ 	  This option enables the kernel to find the region of memory
+@@ -167,7 +167,8 @@ config ISCSI_IBFT_FIND
+ config ISCSI_IBFT
+ 	tristate "iSCSI Boot Firmware Table Attributes module"
+ 	select ISCSI_BOOT_SYSFS
+-	depends on ISCSI_IBFT_FIND && SCSI && SCSI_LOWLEVEL
++	select ISCSI_IBFT_FIND if X86
++	depends on ACPI && SCSI && SCSI_LOWLEVEL
+ 	default	n
+ 	help
+ 	  This option enables support for detection and exposing of iSCSI
+diff --git a/drivers/firmware/iscsi_ibft.c b/drivers/firmware/iscsi_ibft.c
+index 132b9bae4b6aa..220bbc91cebdb 100644
+--- a/drivers/firmware/iscsi_ibft.c
++++ b/drivers/firmware/iscsi_ibft.c
+@@ -93,6 +93,10 @@ MODULE_DESCRIPTION("sysfs interface to BIOS iBFT information");
+ MODULE_LICENSE("GPL");
+ MODULE_VERSION(IBFT_ISCSI_VERSION);
+ 
++#ifndef CONFIG_ISCSI_IBFT_FIND
++struct acpi_table_ibft *ibft_addr;
++#endif
++
+ struct ibft_hdr {
+ 	u8 id;
+ 	u8 version;
 -- 
 2.20.1
 
