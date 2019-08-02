@@ -2,112 +2,101 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D95C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D6DC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F3A1206A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:40:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1C312086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:40:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738841;
-	bh=WL5+6sH1lwj0oDsTjnOW1B1yUe+NEE5VXfDN9nPTh64=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ETiQiyzvi1nKOZ+se7YXetw0q6c3XcUQrZu0W1FHVgqODU7+hG7EfatU+KsdxVely
-	 02e4FJwFRJ51abbFRTdGjKonvskEr2AyPiZEqhUMO3PNuT0XMifpd0h0epGP8Fc/om
-	 2M88MoldGU6Bu+bu8FyPNKuchRt5W/ZaMk3DANmc=
+	s=default; t=1564738844;
+	bh=Msc2uRSSOXPMVUWr19oTIEq4LSdcdLxSlZSG+XxXY4g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gWWnwTjiTAiAtGq394WVex/OocLOTmkjKRO2cy+/ZjalShWofnqaJDdRiOedcIuKr
+	 3AJCNz3Q5/i68HbuGSrTD7JVaoujT00BxxKOSzgjXXt/RBF15FxAWVxiQ+xfvkMzmB
+	 p6If8PkLScxd12mSw0S1D9PrBglND6xgBfGQbKnY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391748AbfHBJkk (ORCPT
+        id S2404303AbfHBJkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:40:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37470 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2391717AbfHBJkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:40:31 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 30C32AE50;
-        Fri,  2 Aug 2019 09:40:30 +0000 (UTC)
-Date:   Fri, 2 Aug 2019 11:40:28 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, Vladimir Davydov <vdavydov.dev@gmail.com>
-Subject: Re: [PATCH RFC] mm/memcontrol: reclaim severe usage over high limit
- in get_user_pages loop
-Message-ID: <20190802094028.GG6461@dhcp22.suse.cz>
-References: <156431697805.3170.6377599347542228221.stgit@buzz>
- <20190729154952.GC21958@cmpxchg.org>
- <20190729185509.GI9330@dhcp22.suse.cz>
+        Fri, 2 Aug 2019 05:40:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41800 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391736AbfHBJkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:40:39 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F347120679;
+        Fri,  2 Aug 2019 09:40:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564738838;
+        bh=Msc2uRSSOXPMVUWr19oTIEq4LSdcdLxSlZSG+XxXY4g=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ZjhHgTCLIXwrO/O1/orVFUVIJm87RAL8tkXTW3FvnshVWTrtwYV77GDFbwll1Aezk
+         G7Oy0qaGkyvY/9POLAtlk4mT7lPY3eBJg7NHBh/6kSj0I3bslCs5CB//Fl9Wp9DEUN
+         uS07SmY8/kFf7CIVXg+t7CS/wY8EF1aXOeq6/XaE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Surabhi Vishnoi <svishnoi@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 005/223] ath10k: Do not send probe response template for mesh
+Date:   Fri,  2 Aug 2019 11:33:50 +0200
+Message-Id: <20190802092239.094758735@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
+References: <20190802092238.692035242@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190729185509.GI9330@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 29-07-19 20:55:09, Michal Hocko wrote:
-> On Mon 29-07-19 11:49:52, Johannes Weiner wrote:
-> > On Sun, Jul 28, 2019 at 03:29:38PM +0300, Konstantin Khlebnikov wrote:
-> > > --- a/mm/gup.c
-> > > +++ b/mm/gup.c
-> > > @@ -847,8 +847,11 @@ static long __get_user_pages(struct task_struct *tsk, struct mm_struct *mm,
-> > >  			ret = -ERESTARTSYS;
-> > >  			goto out;
-> > >  		}
-> > > -		cond_resched();
-> > >  
-> > > +		/* Reclaim memory over high limit before stocking too much */
-> > > +		mem_cgroup_handle_over_high(true);
-> > 
-> > I'd rather this remained part of the try_charge() call. The code
-> > comment in try_charge says this:
-> > 
-> > 	 * We can perform reclaim here if __GFP_RECLAIM but let's
-> > 	 * always punt for simplicity and so that GFP_KERNEL can
-> > 	 * consistently be used during reclaim.
-> > 
-> > The simplicity argument doesn't hold true anymore once we have to add
-> > manual calls into allocation sites. We should instead fix try_charge()
-> > to do synchronous reclaim for __GFP_RECLAIM and only punt to userspace
-> > return when actually needed.
-> 
-> Agreed. If we want to do direct reclaim on the high limit breach then it
-> should go into try_charge same way we do hard limit reclaim there. I am
-> not yet sure about how/whether to scale the excess. The only reason to
-> move reclaim to return-to-userspace path was GFP_NOWAIT charges. As you
-> say, maybe we should start by always performing the reclaim for
-> sleepable contexts first and only defer for non-sleeping requests.
+[ Upstream commit 97354f2c432788e3163134df6bb144f4b6289d87 ]
 
-In other words. Something like patch below (completely untested). Could
-you give it a try Konstantin?
+Currently mac80211 do not support probe response template for
+mesh point. When WMI_SERVICE_BEACON_OFFLOAD is enabled, host
+driver tries to configure probe response template for mesh, but
+it fails because the interface type is not NL80211_IFTYPE_AP but
+NL80211_IFTYPE_MESH_POINT.
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index ba9138a4a1de..53a35c526e43 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -2429,8 +2429,12 @@ static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
- 				schedule_work(&memcg->high_work);
- 				break;
- 			}
--			current->memcg_nr_pages_over_high += batch;
--			set_notify_resume(current);
-+			if (gfpflags_allow_blocking(gfp_mask)) {
-+				reclaim_high(memcg, nr_pages, GFP_KERNEL);
-+			} else {
-+				current->memcg_nr_pages_over_high += batch;
-+				set_notify_resume(current);
-+			}
- 			break;
- 		}
- 	} while ((memcg = parent_mem_cgroup(memcg)));
+To avoid this failure, skip sending probe response template to
+firmware for mesh point.
+
+Tested HW: WCN3990/QCA6174/QCA9984
+
+Signed-off-by: Surabhi Vishnoi <svishnoi@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/ath/ath10k/mac.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
+index fb632a454fc2..1588fe8110d0 100644
+--- a/drivers/net/wireless/ath/ath10k/mac.c
++++ b/drivers/net/wireless/ath/ath10k/mac.c
+@@ -1596,6 +1596,10 @@ static int ath10k_mac_setup_prb_tmpl(struct ath10k_vif *arvif)
+ 	if (arvif->vdev_type != WMI_VDEV_TYPE_AP)
+ 		return 0;
+ 
++	 /* For mesh, probe response and beacon share the same template */
++	if (ieee80211_vif_is_mesh(vif))
++		return 0;
++
+ 	prb = ieee80211_proberesp_get(hw, vif);
+ 	if (!prb) {
+ 		ath10k_warn(ar, "failed to get probe resp template from mac80211\n");
 -- 
-Michal Hocko
-SUSE Labs
+2.20.1
+
+
+
