@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 229EAC41517
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19539C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0407D216C8
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:46:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB1C0216C8
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:46:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731310AbfHBKpx (ORCPT
+        id S1731055AbfHBKpx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 2 Aug 2019 06:45:53 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:62857 "EHLO
+Received: from cloudserver094114.home.pl ([79.96.170.134]:61369 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729806AbfHBKpu (ORCPT
+        with ESMTP id S1730642AbfHBKpu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 2 Aug 2019 06:45:50 -0400
 Received: from 79.184.255.110.ipv4.supernova.orange.pl (79.184.255.110) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
- id 875f5b7226609c9b; Fri, 2 Aug 2019 12:45:46 +0200
+ id 1df5efcae0810c49; Fri, 2 Aug 2019 12:45:47 +0200
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux ACPI <linux-acpi@vger.kernel.org>
 Cc:     Linux PM <linux-pm@vger.kernel.org>,
@@ -32,9 +32,9 @@ Cc:     Linux PM <linux-pm@vger.kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Mario Limonciello <mario.limonciello@dell.com>,
         Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH v3 8/8] ACPI: PM: s2idle: Execute LPS0 _DSM functions with suspended devices
-Date:   Fri, 02 Aug 2019 12:45:29 +0200
-Message-ID: <74514118.QN1Ey1fWSL@kreacher>
+Subject: [PATCH v3 6/8] ACPI: EC: PM: Consolidate some code depending on PM_SLEEP
+Date:   Fri, 02 Aug 2019 12:43:08 +0200
+Message-ID: <2097262.dE6Kv6hMgP@kreacher>
 In-Reply-To: <5997740.FPbUVk04hV@kreacher>
 References: <5997740.FPbUVk04hV@kreacher>
 MIME-Version: 1.0
@@ -47,173 +47,116 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-According to Section 3.5 of the "Intel Low Power S0 Idle" document [1],
-Function 5 of the LPS0 _DSM is expected to be invoked when the system
-configuration matches the criteria for entering the target low-power
-state of the platform.  In particular, this means that all devices
-should be suspended and in low-power states already when that function
-is invoked.
+Move some routines, including acpi_ec_dispatch_gpe(), that are only
+used if CONFIG_PM_SLEEP is set to the #ifdef block containing the EC
+suspend and resume callbacks, to make the "full EC PM picture" easier
+to follow.
 
-This is not the case currently, however, because Function 5 of the
-LPS0 _DSM is invoked by it before the "noirq" phase of device suspend,
-which means that some devices may not have been put into low-power
-states yet at that point.  That is a consequence of the previous
-design of the suspend-to-idle flow that allowed the "noirq" phase of
-device suspend and the "noirq" phase of device resume to be carried
-out for multiple times while "suspended" (if any spurious wakeup
-events were detected) and the point of the LPS0 _DSM Function 5
-invocation was chosen so as to call it (and LPS0 _DSM Function 6
-analogously) once per suspend-resume cycle (regardless of how many
-times the "noirq" phases of device suspend and resume were carried
-out while "suspended").
+While at it, move the header of acpi_ec_dispatch_gpe() in the
+header file to a CONFIG_PM_SLEEP #ifdef block.
 
-Now that the suspend-to-idle flow has been redesigned to carry out
-the "noirq" phases of device suspend and resume once in each cycle,
-the code can be reordered to follow the specification that it is
-based on more closely.
-
-For this purpose, add ->prepare_late and ->restore_early platform
-callbacks for suspend-to-idle, to be executed, respectively, after
-the "noirq" phase of suspending devices and before the "noirq"
-phase of resuming them and make ACPI use them for the invocation
-of LPS0 _DSM functions as appropriate.
-
-While at it, move the LPS0 entry requirements check to be made
-before invoking Functions 3 and 5 of the LPS0 _DSM (also once
-per cycle) as follows from the specification [1].
-
-Link: https://uefi.org/sites/default/files/resources/Intel_ACPI_Low_Power_S0_Idle.pdf # [1]
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
 
-In v2 this was patch 2.
+In v2 this was patch 7.
 
 ---
- drivers/acpi/sleep.c    |   36 ++++++++++++++++++++++++------------
- include/linux/suspend.h |    2 ++
- kernel/power/suspend.c  |   12 +++++++++---
- 3 files changed, 35 insertions(+), 15 deletions(-)
+ drivers/acpi/ec.c       |   54 +++++++++++++++++++++++-------------------------
+ drivers/acpi/internal.h |    2 -
+ 2 files changed, 27 insertions(+), 29 deletions(-)
 
-Index: linux-pm/drivers/acpi/sleep.c
+Index: linux-pm/drivers/acpi/internal.h
 ===================================================================
---- linux-pm.orig/drivers/acpi/sleep.c
-+++ linux-pm/drivers/acpi/sleep.c
-@@ -954,11 +954,6 @@ static int acpi_s2idle_begin(void)
+--- linux-pm.orig/drivers/acpi/internal.h
++++ linux-pm/drivers/acpi/internal.h
+@@ -194,7 +194,6 @@ void acpi_ec_ecdt_probe(void);
+ void acpi_ec_dsdt_probe(void);
+ void acpi_ec_block_transactions(void);
+ void acpi_ec_unblock_transactions(void);
+-bool acpi_ec_dispatch_gpe(void);
+ int acpi_ec_add_query_handler(struct acpi_ec *ec, u8 query_bit,
+ 			      acpi_handle handle, acpi_ec_query_func func,
+ 			      void *data);
+@@ -202,6 +201,7 @@ void acpi_ec_remove_query_handler(struct
  
- static int acpi_s2idle_prepare(void)
- {
--	if (lps0_device_handle && !sleep_no_lps0) {
--		acpi_sleep_run_lps0_dsm(ACPI_LPS0_SCREEN_OFF);
--		acpi_sleep_run_lps0_dsm(ACPI_LPS0_ENTRY);
--	}
+ #ifdef CONFIG_PM_SLEEP
+ void acpi_ec_flush_work(void);
++bool acpi_ec_dispatch_gpe(void);
+ #endif
+ 
+ 
+Index: linux-pm/drivers/acpi/ec.c
+===================================================================
+--- linux-pm.orig/drivers/acpi/ec.c
++++ linux-pm/drivers/acpi/ec.c
+@@ -1049,33 +1049,6 @@ void acpi_ec_unblock_transactions(void)
+ 		acpi_ec_start(first_ec, true);
+ }
+ 
+-#ifdef CONFIG_PM_SLEEP
+-void acpi_ec_mark_gpe_for_wake(void)
+-{
+-	if (first_ec && !ec_no_wakeup)
+-		acpi_mark_gpe_for_wake(NULL, first_ec->gpe);
+-}
+-EXPORT_SYMBOL_GPL(acpi_ec_mark_gpe_for_wake);
 -
- 	if (acpi_sci_irq_valid())
- 		enable_irq_wake(acpi_sci_irq);
- 
-@@ -972,11 +967,22 @@ static int acpi_s2idle_prepare(void)
+-void acpi_ec_set_gpe_wake_mask(u8 action)
+-{
+-	if (pm_suspend_no_platform() && first_ec && !ec_no_wakeup)
+-		acpi_set_gpe_wake_mask(NULL, first_ec->gpe, action);
+-}
+-EXPORT_SYMBOL_GPL(acpi_ec_set_gpe_wake_mask);
+-#endif
+-
+-bool acpi_ec_dispatch_gpe(void)
+-{
+-	u32 ret;
+-
+-	if (!first_ec)
+-		return false;
+-
+-	ret = acpi_dispatch_gpe(NULL, first_ec->gpe);
+-	return ret == ACPI_INTERRUPT_HANDLED;
+-}
+-
+ /* --------------------------------------------------------------------------
+                                 Event Management
+    -------------------------------------------------------------------------- */
+@@ -1984,7 +1957,32 @@ static int acpi_ec_resume(struct device
+ 	acpi_ec_enable_event(ec);
  	return 0;
  }
- 
--static void acpi_s2idle_wake(void)
-+static int acpi_s2idle_prepare_late(void)
- {
--	if (lps0_device_handle && !sleep_no_lps0 && pm_debug_messages_on)
-+	if (!lps0_device_handle || sleep_no_lps0)
-+		return 0;
+-#endif
 +
-+	if (pm_debug_messages_on)
- 		lpi_check_constraints();
- 
-+	acpi_sleep_run_lps0_dsm(ACPI_LPS0_SCREEN_OFF);
-+	acpi_sleep_run_lps0_dsm(ACPI_LPS0_ENTRY);
-+
-+	return 0;
-+}
-+
-+static void acpi_s2idle_wake(void)
++void acpi_ec_mark_gpe_for_wake(void)
 +{
- 	/*
- 	 * If IRQD_WAKEUP_ARMED is set for the SCI at this point, the SCI has
- 	 * not triggered while suspended, so bail out.
-@@ -1011,6 +1017,15 @@ static void acpi_s2idle_wake(void)
- 	rearm_wake_irq(acpi_sci_irq);
- }
- 
-+static void acpi_s2idle_restore_early(void)
-+{
-+	if (!lps0_device_handle || sleep_no_lps0)
-+		return;
-+
-+	acpi_sleep_run_lps0_dsm(ACPI_LPS0_EXIT);
-+	acpi_sleep_run_lps0_dsm(ACPI_LPS0_SCREEN_ON);
++	if (first_ec && !ec_no_wakeup)
++		acpi_mark_gpe_for_wake(NULL, first_ec->gpe);
 +}
++EXPORT_SYMBOL_GPL(acpi_ec_mark_gpe_for_wake);
 +
- static void acpi_s2idle_restore(void)
- {
- 	s2idle_wakeup = false;
-@@ -1021,11 +1036,6 @@ static void acpi_s2idle_restore(void)
++void acpi_ec_set_gpe_wake_mask(u8 action)
++{
++	if (pm_suspend_no_platform() && first_ec && !ec_no_wakeup)
++		acpi_set_gpe_wake_mask(NULL, first_ec->gpe, action);
++}
++EXPORT_SYMBOL_GPL(acpi_ec_set_gpe_wake_mask);
++
++bool acpi_ec_dispatch_gpe(void)
++{
++	u32 ret;
++
++	if (!first_ec)
++		return false;
++
++	ret = acpi_dispatch_gpe(NULL, first_ec->gpe);
++	return ret == ACPI_INTERRUPT_HANDLED;
++}
++#endif /* CONFIG_PM_SLEEP */
  
- 	if (acpi_sci_irq_valid())
- 		disable_irq_wake(acpi_sci_irq);
--
--	if (lps0_device_handle && !sleep_no_lps0) {
--		acpi_sleep_run_lps0_dsm(ACPI_LPS0_EXIT);
--		acpi_sleep_run_lps0_dsm(ACPI_LPS0_SCREEN_ON);
--	}
- }
- 
- static void acpi_s2idle_end(void)
-@@ -1036,7 +1046,9 @@ static void acpi_s2idle_end(void)
- static const struct platform_s2idle_ops acpi_s2idle_ops = {
- 	.begin = acpi_s2idle_begin,
- 	.prepare = acpi_s2idle_prepare,
-+	.prepare_late = acpi_s2idle_prepare_late,
- 	.wake = acpi_s2idle_wake,
-+	.restore_early = acpi_s2idle_restore_early,
- 	.restore = acpi_s2idle_restore,
- 	.end = acpi_s2idle_end,
- };
-Index: linux-pm/kernel/power/suspend.c
-===================================================================
---- linux-pm.orig/kernel/power/suspend.c
-+++ linux-pm/kernel/power/suspend.c
-@@ -253,13 +253,19 @@ static int platform_suspend_prepare_late
- 
- static int platform_suspend_prepare_noirq(suspend_state_t state)
- {
--	return state != PM_SUSPEND_TO_IDLE && suspend_ops->prepare_late ?
--		suspend_ops->prepare_late() : 0;
-+	if (state == PM_SUSPEND_TO_IDLE) {
-+		if (s2idle_ops && s2idle_ops->prepare_late)
-+			return s2idle_ops->prepare_late();
-+	}
-+	return suspend_ops->prepare_late ? suspend_ops->prepare_late() : 0;
- }
- 
- static void platform_resume_noirq(suspend_state_t state)
- {
--	if (state != PM_SUSPEND_TO_IDLE && suspend_ops->wake)
-+	if (state == PM_SUSPEND_TO_IDLE) {
-+		if (s2idle_ops && s2idle_ops->restore_early)
-+			s2idle_ops->restore_early();
-+	} else if (suspend_ops->wake)
- 		suspend_ops->wake();
- }
- 
-Index: linux-pm/include/linux/suspend.h
-===================================================================
---- linux-pm.orig/include/linux/suspend.h
-+++ linux-pm/include/linux/suspend.h
-@@ -190,7 +190,9 @@ struct platform_suspend_ops {
- struct platform_s2idle_ops {
- 	int (*begin)(void);
- 	int (*prepare)(void);
-+	int (*prepare_late)(void);
- 	void (*wake)(void);
-+	void (*restore_early)(void);
- 	void (*restore)(void);
- 	void (*end)(void);
- };
+ static const struct dev_pm_ops acpi_ec_pm = {
+ 	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(acpi_ec_suspend_noirq, acpi_ec_resume_noirq)
 
 
 
