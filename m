@@ -2,93 +2,97 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20956C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9229CC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3A362171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:37:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B8F420679
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:37:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564753048;
+	bh=/0L4iGPzgOvwzgnXoAgmZHTkRkRMWXkx4P6ckdBfMK0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=oYzwB1cEC0QKL+P0CUM+VkzqDaPPn02wXItpGJR2kt1HwW9grWeyTHWKdWRl0TM2U
+	 SvQEgculmLqnVy/sudH0h804umROqTu1RqrQ2ec9wsSg9GjLFhZGekg5D3BI+aGnID
+	 80SWKDJkldfjbFuzOoRf0mDfnK/83I87zSg60rEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393625AbfHBNhU (ORCPT
+        id S2436504AbfHBNh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:37:20 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59048 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388919AbfHBNhR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:37:17 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id EA545AFA4;
-        Fri,  2 Aug 2019 13:37:15 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 186BF1E433B; Fri,  2 Aug 2019 15:37:15 +0200 (CEST)
-Date:   Fri, 2 Aug 2019 15:37:14 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jan Kara <jack@suse.cz>, LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Julia Cartwright <julia@ni.com>, Jan Kara <jack@suse.com>,
-        Theodore Tso <tytso@mit.edu>, Mark Fasheh <mark@fasheh.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Joel Becker <jlbec@evilplan.org>, linux-ext4@vger.kernel.org,
-        Matthew Wilcox <willy@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [patch V2 6/7] fs/jbd2: Make state lock a spinlock
-Message-ID: <20190802133714.GN25064@quack2.suse.cz>
-References: <20190801010126.245731659@linutronix.de>
- <20190801010944.457499601@linutronix.de>
- <20190801175703.GH25064@quack2.suse.cz>
- <alpine.DEB.2.21.1908012010020.1789@nanos.tec.linutronix.de>
+        Fri, 2 Aug 2019 09:37:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58204 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731146AbfHBNT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:19:56 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F292216C8;
+        Fri,  2 Aug 2019 13:19:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564751995;
+        bh=/0L4iGPzgOvwzgnXoAgmZHTkRkRMWXkx4P6ckdBfMK0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ZVZOHWyOrLhwCddQ0NZYHlbz9XP8rzkrHyNuVleh38J++4kLIcnEMd57kzi12Cl0G
+         +KKltrxsP0+zyuIGYh0aim/zmqNz0NxnvhB5s7Kz7N8JPNxosmKBWtVusgbrE6vFBZ
+         A6yJ5gy+7kDKCJdRuYMga6DehbPixHpOIsjfTJyk=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 03/76] vfio-ccw: Set pa_nr to 0 if memory allocation fails for pa_iova_pfn
+Date:   Fri,  2 Aug 2019 09:18:37 -0400
+Message-Id: <20190802131951.11600-3-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190802131951.11600-1-sashal@kernel.org>
+References: <20190802131951.11600-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1908012010020.1789@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 01-08-19 20:12:11, Thomas Gleixner wrote:
-> On Thu, 1 Aug 2019, Jan Kara wrote:
-> > On Thu 01-08-19 03:01:32, Thomas Gleixner wrote:
-> > > As almost all functions which use this lock have a journal head pointer
-> > > readily available, it makes more sense to remove the lock helper inlines
-> > > and write out spin_*lock() at all call sites.
-> > > 
-> > 
-> > Just a heads up that I didn't miss this patch. Just it has some bugs and I
-> > figured that rather than explaining to you subtleties of jh lifetime it is
-> > easier to fix up the problems myself since you're probably not keen on
-> > becoming jbd2 developer ;)... which was more complex than I thought so I'm
-> > not completely done yet. Hopefuly tomorrow.
-> 
-> I'm curious where I was too naive :)
+From: Farhan Ali <alifm@linux.ibm.com>
 
-Well, the most obvious where places where the result ended up being like
+[ Upstream commit c1ab69268d124ebdbb3864580808188ccd3ea355 ]
 
-	jbd2_journal_put_journal_head(jh);
-	spin_unlock(&jh->state_lock);
+So we don't call try to call vfio_unpin_pages() incorrectly.
 
-That's possible use-after-free.
+Fixes: 0a19e61e6d4c ("vfio: ccw: introduce channel program interfaces")
+Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
+Reviewed-by: Eric Farman <farman@linux.ibm.com>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Message-Id: <33a89467ad6369196ae6edf820cbcb1e2d8d050c.1562854091.git.alifm@linux.ibm.com>
+Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/s390/cio/vfio_ccw_cp.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-But there were also other more subtle places where
-jbd2_journal_put_journal_head() was not directly visible as it was hidden
-inside journal list handling functions such as __jbd2_journal_refile_buffer()
-or so. And these needed some more work.
-
-Anyway, I'm now done fixing up the patch, doing some xfstests runs to verify
-things didn't break in any obvious way...
-
-								Honza
+diff --git a/drivers/s390/cio/vfio_ccw_cp.c b/drivers/s390/cio/vfio_ccw_cp.c
+index 0e79799e9a719..79eb40bdaf9f4 100644
+--- a/drivers/s390/cio/vfio_ccw_cp.c
++++ b/drivers/s390/cio/vfio_ccw_cp.c
+@@ -89,8 +89,10 @@ static int pfn_array_alloc_pin(struct pfn_array *pa, struct device *mdev,
+ 				  sizeof(*pa->pa_iova_pfn) +
+ 				  sizeof(*pa->pa_pfn),
+ 				  GFP_KERNEL);
+-	if (unlikely(!pa->pa_iova_pfn))
++	if (unlikely(!pa->pa_iova_pfn)) {
++		pa->pa_nr = 0;
+ 		return -ENOMEM;
++	}
+ 	pa->pa_pfn = pa->pa_iova_pfn + pa->pa_nr;
+ 
+ 	pa->pa_iova_pfn[0] = pa->pa_iova >> PAGE_SHIFT;
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.20.1
+
