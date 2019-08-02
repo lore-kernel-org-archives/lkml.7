@@ -2,53 +2,52 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 427B2C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE959C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 161072064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:52:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A906820B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:52:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739540;
-	bh=W49HWKwARpa5D/ym3uOo4LYKD8a8lHya8whk1BLO9Ro=;
+	s=default; t=1564739542;
+	bh=5QHtL0XNAjyJtuF2bZOQbdAb4gdb/YztsPUiD+UjgXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a2tsFzDLRci5CVrzOPh1xGtwaTrLqn/0ogdcC8T/I5PwfJEIA3b6/kV9EQ3NEjPgv
-	 0XB8Kt4+i0HQGU7yi9pWprNNTPVGfNrm2mBPRHRiz0NCie/qAFMXq2nE8tATDTBT4U
-	 vMqPP7VwPgs/mQ3LdC/a+6mR3KqX0JB+BrgWbqPg=
+	b=NReTZ84/0jEQaujmV7aQtCcgvimoZyLIYAb7lY5f9ERWAGdTOz3kfy8fF2HyJrGsm
+	 fPoLUV4CotLISlUqbb5QVj9+Tvt+1NxCZOpNe2l7CEKmirLXuKIqa5fNbSnSG10ylp
+	 uJPQl0uo+1DmgCjLDw1DPQGRPoJ83RXv/DsT2U4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405977AbfHBJwT (ORCPT
+        id S2405546AbfHBJwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:52:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57844 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:52:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391927AbfHBJwR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:52:17 -0400
+        id S2405459AbfHBJwO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:52:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC4952064A;
-        Fri,  2 Aug 2019 09:52:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19CCB206A2;
+        Fri,  2 Aug 2019 09:52:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739536;
-        bh=W49HWKwARpa5D/ym3uOo4LYKD8a8lHya8whk1BLO9Ro=;
+        s=default; t=1564739533;
+        bh=5QHtL0XNAjyJtuF2bZOQbdAb4gdb/YztsPUiD+UjgXg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L4HcumaPgAmKWTgZeD/YZn+8WrSgqKPiqtVbuwjha6rRi9RBPpD0Smb3aInXF5ZkO
-         +CGraq8HI0d6sFagmTmLBT66WUXNwD4Dg+AskLEMXW3RjUTssO4PzBROYvr+s/yZwV
-         1+9B/+aNOrAr4DqjV62/M+gsz4o81YaBNsVWywUs=
+        b=yDJkTTpSuiV+trDLZJzhok2pMfVIVtrFUiJJ7VaH5YWxIgN9SQX/PuCMCZBR0s9f6
+         3ZjNHJmGLslCtjsuraVbFpUx6l7qencAyuL+jx+00X9OjHsS84vULCQG1A0d8/dXUW
+         Ebjc4YU4ph1VFR59b2wyZ1zztFaZKttyPTJE4CI8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        Oliver OHalloran <oohall@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Bastien Nocera <hadess@hadess.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 195/223] powerpc/eeh: Handle hugepages in ioremap space
-Date:   Fri,  2 Aug 2019 11:37:00 +0200
-Message-Id: <20190802092249.910684301@linuxfoundation.org>
+Subject: [PATCH 4.9 179/223] iio: iio-utils: Fix possible incorrect mask calculation
+Date:   Fri,  2 Aug 2019 11:36:44 +0200
+Message-Id: <20190802092249.313005775@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -61,66 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 33439620680be5225c1b8806579a291e0d761ca0 ]
+[ Upstream commit 208a68c8393d6041a90862992222f3d7943d44d6 ]
 
-In commit 4a7b06c157a2 ("powerpc/eeh: Handle hugepages in ioremap
-space") support for using hugepages in the vmalloc and ioremap areas was
-enabled for radix. Unfortunately this broke EEH MMIO error checking.
+On some machines, iio-sensor-proxy was returning all 0's for IIO sensor
+values. It turns out that the bits_used for this sensor is 32, which makes
+the mask calculation:
 
-Detection works by inserting a hook which checks the results of the
-ioreadXX() set of functions.  When a read returns a 0xFFs response we
-need to check for an error which we do by mapping the (virtual) MMIO
-address back to a physical address, then mapping physical address to a
-PCI device via an interval tree.
+*mask = (1 << 32) - 1;
 
-When translating virt -> phys we currently assume the ioremap space is
-only populated by PAGE_SIZE mappings. If a hugepage mapping is found we
-emit a WARN_ON(), but otherwise handles the check as though a normal
-page was found. In pathalogical cases such as copying a buffer
-containing a lot of 0xFFs from BAR memory this can result in the system
-not booting because it's too busy printing WARN_ON()s.
+If the compiler interprets the 1 literals as 32-bit ints, it generates
+undefined behavior depending on compiler version and optimization level.
+On my system, it optimizes out the shift, so the mask value becomes
 
-There's no real reason to assume huge pages can't be present and we're
-prefectly capable of handling them, so do that.
+*mask = (1) - 1;
 
-Fixes: 4a7b06c157a2 ("powerpc/eeh: Handle hugepages in ioremap space")
-Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
-Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190710150517.27114-1-oohall@gmail.com
+With a mask value of 0, iio-sensor-proxy will always return 0 for every axis.
+
+Avoid incorrect 0 values caused by compiler optimization.
+
+See original fix by Brett Dutro <brett.dutro@gmail.com> in
+iio-sensor-proxy:
+https://github.com/hadess/iio-sensor-proxy/commit/9615ceac7c134d838660e209726cd86aa2064fd3
+
+Signed-off-by: Bastien Nocera <hadess@hadess.net>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/eeh.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ tools/iio/iio_utils.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/kernel/eeh.c b/arch/powerpc/kernel/eeh.c
-index 8336b9016ca9..a7f229e59892 100644
---- a/arch/powerpc/kernel/eeh.c
-+++ b/arch/powerpc/kernel/eeh.c
-@@ -362,10 +362,19 @@ static inline unsigned long eeh_token_to_phys(unsigned long token)
- 					   NULL, &hugepage_shift);
- 	if (!ptep)
- 		return token;
--	WARN_ON(hugepage_shift);
--	pa = pte_pfn(*ptep) << PAGE_SHIFT;
+diff --git a/tools/iio/iio_utils.c b/tools/iio/iio_utils.c
+index 7a6d61c6c012..55272fef3b50 100644
+--- a/tools/iio/iio_utils.c
++++ b/tools/iio/iio_utils.c
+@@ -159,9 +159,9 @@ int iioutils_get_type(unsigned *is_signed, unsigned *bytes, unsigned *bits_used,
+ 			*be = (endianchar == 'b');
+ 			*bytes = padint / 8;
+ 			if (*bits_used == 64)
+-				*mask = ~0;
++				*mask = ~(0ULL);
+ 			else
+-				*mask = (1ULL << *bits_used) - 1;
++				*mask = (1ULL << *bits_used) - 1ULL;
  
--	return pa | (token & (PAGE_SIZE-1));
-+	pa = pte_pfn(*ptep);
-+
-+	/* On radix we can do hugepage mappings for io, so handle that */
-+	if (hugepage_shift) {
-+		pa <<= hugepage_shift;
-+		pa |= token & ((1ul << hugepage_shift) - 1);
-+	} else {
-+		pa <<= PAGE_SHIFT;
-+		pa |= token & (PAGE_SIZE - 1);
-+	}
-+
-+	return pa;
- }
- 
- /*
+ 			*is_signed = (signchar == 's');
+ 			if (fclose(sysfsfp)) {
 -- 
 2.20.1
 
