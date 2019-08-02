@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF223C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 914E9C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D8B0217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:29:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 604D3217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:29:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752568;
-	bh=klOT8Dk/A7AbbEulTViUj1nTra1jYc05dyDciWVjfvU=;
+	s=default; t=1564752573;
+	bh=wljY2PVzBiL68oT7aSc243FPwrxoFYlTZCI+Xyyx5lI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q+XjgW0MjQVCj2TlIF5jVvGCPrEj2Vbsb8G98rdADOEyW5NyQvhLyZxJy6i88hit8
-	 p3Z9YDfmkpeZurNe+ocswGd7ID993BqGMj1w7PCQ66TMbCfpJkcEbEd7HBADgVMN4e
-	 Gi+p+BX/AdccdmWtDYk6P2ZaWGG5/yygtPKBs8Go=
+	b=fG4th10VNgvh5XXhwl3Z3JwnbyQErrwp53gRMxY35mGexUXmTOfmJ9mLJjDOCU5mY
+	 VHZjjqY6arr7KsoIvYiIRh3Lt2JNkvRKl/sAZAqqCK6GeQqM6Lwe+4/EUUSRalFgq7
+	 EmDd6njLcGkfBEren5enA7icII1XFMCjfJozyVzo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394279AbfHBNYx (ORCPT
+        id S2391829AbfHBN3b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:24:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35536 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:29:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394253AbfHBNYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:24:49 -0400
+        id S2394272AbfHBNYw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:24:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0B7E21841;
-        Fri,  2 Aug 2019 13:24:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C2C421841;
+        Fri,  2 Aug 2019 13:24:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752288;
-        bh=klOT8Dk/A7AbbEulTViUj1nTra1jYc05dyDciWVjfvU=;
+        s=default; t=1564752291;
+        bh=wljY2PVzBiL68oT7aSc243FPwrxoFYlTZCI+Xyyx5lI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hDOyjORfuxtGZLhuiVtB3BhBo49K5gj7kYKg7bba/9imySVDuMDzsNsuRDw4x/q0V
-         pOuIjjvTtxOWkH5mYoOL/MZ/8/KAHOUhyJunjnByuK/3EsWO/LpZ99Tp/PGzbHDjWQ
-         2lB94/dNB9ITrNBV/zWjSSGS69H6sLcYYmEgrZNM=
+        b=tc1o2nLafyyAD/Wdd/kVOwzD+i62gKhN1ew8zEBRg0S+ONrMCm/ZNFQZVx0wUf9bn
+         3PoZ4tDPNBveS+cEppk2jcJthpHoG/I4bK8tzLgEkLb0DxeFMwmcAvQzfQhf+pJwVi
+         fxsQZPauBo6SilMi03+s3yotQPlxSLl5poTcyP+M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>, Sean Paul <seanpaul@chromium.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.14 12/30] drm: silence variable 'conn' set but not used
-Date:   Fri,  2 Aug 2019 09:24:04 -0400
-Message-Id: <20190802132422.13963-12-sashal@kernel.org>
+Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
+        Jens Remus <jremus@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 14/30] s390/qdio: add sanity checks to the fast-requeue path
+Date:   Fri,  2 Aug 2019 09:24:06 -0400
+Message-Id: <20190802132422.13963-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802132422.13963-1-sashal@kernel.org>
 References: <20190802132422.13963-1-sashal@kernel.org>
@@ -59,41 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-[ Upstream commit bbb6fc43f131f77fcb7ae8081f6d7c51396a2120 ]
+[ Upstream commit a6ec414a4dd529eeac5c3ea51c661daba3397108 ]
 
-The "struct drm_connector" iteration cursor from
-"for_each_new_connector_in_state" is never used in atomic_remove_fb()
-which generates a compilation warning,
+If the device driver were to send out a full queue's worth of SBALs,
+current code would end up discovering the last of those SBALs as PRIMED
+and erroneously skip the SIGA-w. This immediately stalls the queue.
 
-drivers/gpu/drm/drm_framebuffer.c: In function 'atomic_remove_fb':
-drivers/gpu/drm/drm_framebuffer.c:838:24: warning: variable 'conn' set
-but not used [-Wunused-but-set-variable]
+Add a check to not attempt fast-requeue in this case. While at it also
+make sure that the state of the previous SBAL was successfully extracted
+before inspecting it.
 
-Silence it by marking "conn" __maybe_unused.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/1563822886-13570-1-git-send-email-cai@lca.pw
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Reviewed-by: Jens Remus <jremus@linux.ibm.com>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_framebuffer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/s390/cio/qdio_main.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_framebuffer.c b/drivers/gpu/drm/drm_framebuffer.c
-index c21e10c780ac5..af40189cdb60c 100644
---- a/drivers/gpu/drm/drm_framebuffer.c
-+++ b/drivers/gpu/drm/drm_framebuffer.c
-@@ -773,7 +773,7 @@ static int atomic_remove_fb(struct drm_framebuffer *fb)
- 	struct drm_device *dev = fb->dev;
- 	struct drm_atomic_state *state;
- 	struct drm_plane *plane;
--	struct drm_connector *conn;
-+	struct drm_connector *conn __maybe_unused;
- 	struct drm_connector_state *conn_state;
- 	int i, ret = 0;
- 	unsigned plane_mask;
+diff --git a/drivers/s390/cio/qdio_main.c b/drivers/s390/cio/qdio_main.c
+index ab8dd81fbc2b1..1a40c73961b83 100644
+--- a/drivers/s390/cio/qdio_main.c
++++ b/drivers/s390/cio/qdio_main.c
+@@ -1577,13 +1577,13 @@ static int handle_outbound(struct qdio_q *q, unsigned int callflags,
+ 		rc = qdio_kick_outbound_q(q, phys_aob);
+ 	} else if (need_siga_sync(q)) {
+ 		rc = qdio_siga_sync_q(q);
++	} else if (count < QDIO_MAX_BUFFERS_PER_Q &&
++		   get_buf_state(q, prev_buf(bufnr), &state, 0) > 0 &&
++		   state == SLSB_CU_OUTPUT_PRIMED) {
++		/* The previous buffer is not processed yet, tack on. */
++		qperf_inc(q, fast_requeue);
+ 	} else {
+-		/* try to fast requeue buffers */
+-		get_buf_state(q, prev_buf(bufnr), &state, 0);
+-		if (state != SLSB_CU_OUTPUT_PRIMED)
+-			rc = qdio_kick_outbound_q(q, 0);
+-		else
+-			qperf_inc(q, fast_requeue);
++		rc = qdio_kick_outbound_q(q, 0);
+ 	}
+ 
+ 	/* in case of SIGA errors we must process the error immediately */
 -- 
 2.20.1
 
