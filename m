@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4DC0C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1FA2C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF1B520665
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCD6F2067D
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:07:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564740420;
-	bh=qTu89DnlrDEO40GD2d4Ph723/8OQeOlqvDbQmfCAhaY=;
+	s=default; t=1564740426;
+	bh=VgKfAdirD3uxO5u4ONPWgq0IJsZefFAqt1zZ6VWEGbI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NhIii7mXUqNy+uAjtbXR9pL2u98hA2CIv4e54QZZWDvTkIf87uGamna2NKd8SY+DX
-	 ABasFN8y9QT/ym3edJQfF5V6GGc4DSonyMa/kZ8Wyj+x+2i4/fiUR2K8/uUVIaRB8F
-	 W8vBiDnEyqKJmYx2trbPpSrnCmrGVIFh0bpxAKvk=
+	b=pjuZktwM71Rbhfh0qSS2B6JcZoRQu8NvnBA0cyhRscUJXExCJvAIHlvU2fTM8Fop2
+	 UVxG//wgA1PyCzijLskTMqqxhtGckYlAgN2GBMsX3yiykygCg7jhaShJPRZSBKFQVn
+	 NJGan1EZhXY/1XbOXRenG6oLYSdcL4ySkIWpm6YE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389259AbfHBJaO (ORCPT
+        id S2389151AbfHBJaH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:30:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55584 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:30:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389203AbfHBJaL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:30:11 -0400
+        id S1733176AbfHBJaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:30:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FE43217D6;
-        Fri,  2 Aug 2019 09:30:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29C552183F;
+        Fri,  2 Aug 2019 09:30:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738211;
-        bh=qTu89DnlrDEO40GD2d4Ph723/8OQeOlqvDbQmfCAhaY=;
+        s=default; t=1564738203;
+        bh=VgKfAdirD3uxO5u4ONPWgq0IJsZefFAqt1zZ6VWEGbI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qcD9cy5VGqhyvb2HUFKmDTO2th1HrcojL0QyoQ6s4c+27A3bHv8DX66dVjCy8Rwaz
-         md480L6eSHc66ImVqI+YVZCIzGlI/BKK4eZr0pZiKRZwIw+DCDaV6IiNq6Qv4wPKQ+
-         Yrvja62/3lRSGQdj+Io89L5IG9YwP6smZ1V5p4KM=
+        b=KoXCmVu/U0vS5Lm14TG2YJC7VPqGwZ7iNieIjiIKIJjbM9JjbWMb1U0/2UVszLr+W
+         JMTbg/oYEdo6EVof0cViHG60zCDS4BCSf9yXl6PMY4g1WyHDo9+FJ6p+CYgp7PhmhG
+         OkdAiysnQV6alYCi05R045/oCeg5p96tzIeVI8Hc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Sven Van Asbroeck <TheSven73@gmail.com>,
+        Robin Gong <yibin.gong@nxp.com>, Vinod Koul <vkoul@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 006/158] ath6kl: add some bounds checking
-Date:   Fri,  2 Aug 2019 11:27:07 +0200
-Message-Id: <20190802092204.832300749@linuxfoundation.org>
+Subject: [PATCH 4.4 003/158] dmaengine: imx-sdma: fix use-after-free on probe error path
+Date:   Fri,  2 Aug 2019 11:27:04 +0200
+Message-Id: <20190802092204.300487250@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -60,60 +60,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5d6751eaff672ea77642e74e92e6c0ac7f9709ab ]
+[ Upstream commit 2b8066c3deb9140fdf258417a51479b2aeaa7622 ]
 
-The "ev->traffic_class" and "reply->ac" variables come from the network
-and they're used as an offset into the wmi->stream_exist_for_ac[] array.
-Those variables are u8 so they can be 0-255 but the stream_exist_for_ac[]
-array only has WMM_NUM_AC (4) elements.  We need to add a couple bounds
-checks to prevent array overflows.
+If probe() fails anywhere beyond the point where
+sdma_get_firmware() is called, then a kernel oops may occur.
 
-I also modified one existing check from "if (traffic_class > 3) {" to
-"if (traffic_class >= WMM_NUM_AC) {" just to make them all consistent.
+Problematic sequence of events:
+1. probe() calls sdma_get_firmware(), which schedules the
+   firmware callback to run when firmware becomes available,
+   using the sdma instance structure as the context
+2. probe() encounters an error, which deallocates the
+   sdma instance structure
+3. firmware becomes available, firmware callback is
+   called with deallocated sdma instance structure
+4. use after free - kernel oops !
 
-Fixes: bdcd81707973 (" Add ath6kl cleaned up driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Solution: only attempt to load firmware when we're certain
+that probe() will succeed. This guarantees that the firmware
+callback's context will remain valid.
+
+Note that the remove() path is unaffected by this issue: the
+firmware loader will increment the driver module's use count,
+ensuring that the module cannot be unloaded while the
+firmware callback is pending or running.
+
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Reviewed-by: Robin Gong <yibin.gong@nxp.com>
+[vkoul: fixed braces for if condition]
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath6kl/wmi.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/dma/imx-sdma.c | 48 ++++++++++++++++++++++++------------------
+ 1 file changed, 27 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath6kl/wmi.c b/drivers/net/wireless/ath/ath6kl/wmi.c
-index a5e1de75a4a3..b2ec254f154e 100644
---- a/drivers/net/wireless/ath/ath6kl/wmi.c
-+++ b/drivers/net/wireless/ath/ath6kl/wmi.c
-@@ -1178,6 +1178,10 @@ static int ath6kl_wmi_pstream_timeout_event_rx(struct wmi *wmi, u8 *datap,
- 		return -EINVAL;
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index 4054747af0cb..dd97dbf6618c 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -1786,27 +1786,6 @@ static int sdma_probe(struct platform_device *pdev)
+ 	if (pdata && pdata->script_addrs)
+ 		sdma_add_scripts(sdma, pdata->script_addrs);
  
- 	ev = (struct wmi_pstream_timeout_event *) datap;
-+	if (ev->traffic_class >= WMM_NUM_AC) {
-+		ath6kl_err("invalid traffic class: %d\n", ev->traffic_class);
-+		return -EINVAL;
-+	}
+-	if (pdata) {
+-		ret = sdma_get_firmware(sdma, pdata->fw_name);
+-		if (ret)
+-			dev_warn(&pdev->dev, "failed to get firmware from platform data\n");
+-	} else {
+-		/*
+-		 * Because that device tree does not encode ROM script address,
+-		 * the RAM script in firmware is mandatory for device tree
+-		 * probe, otherwise it fails.
+-		 */
+-		ret = of_property_read_string(np, "fsl,sdma-ram-script-name",
+-					      &fw_name);
+-		if (ret)
+-			dev_warn(&pdev->dev, "failed to get firmware name\n");
+-		else {
+-			ret = sdma_get_firmware(sdma, fw_name);
+-			if (ret)
+-				dev_warn(&pdev->dev, "failed to get firmware from device tree\n");
+-		}
+-	}
+-
+ 	sdma->dma_device.dev = &pdev->dev;
  
- 	/*
- 	 * When the pstream (fat pipe == AC) timesout, it means there were
-@@ -1519,6 +1523,10 @@ static int ath6kl_wmi_cac_event_rx(struct wmi *wmi, u8 *datap, int len,
- 		return -EINVAL;
- 
- 	reply = (struct wmi_cac_event *) datap;
-+	if (reply->ac >= WMM_NUM_AC) {
-+		ath6kl_err("invalid AC: %d\n", reply->ac);
-+		return -EINVAL;
-+	}
- 
- 	if ((reply->cac_indication == CAC_INDICATION_ADMISSION_RESP) &&
- 	    (reply->status_code != IEEE80211_TSPEC_STATUS_ADMISS_ACCEPTED)) {
-@@ -2631,7 +2639,7 @@ int ath6kl_wmi_delete_pstream_cmd(struct wmi *wmi, u8 if_idx, u8 traffic_class,
- 	u16 active_tsids = 0;
- 	int ret;
- 
--	if (traffic_class > 3) {
-+	if (traffic_class >= WMM_NUM_AC) {
- 		ath6kl_err("invalid traffic class: %d\n", traffic_class);
- 		return -EINVAL;
+ 	sdma->dma_device.device_alloc_chan_resources = sdma_alloc_chan_resources;
+@@ -1848,6 +1827,33 @@ static int sdma_probe(struct platform_device *pdev)
+ 		of_node_put(spba_bus);
  	}
+ 
++	/*
++	 * Kick off firmware loading as the very last step:
++	 * attempt to load firmware only if we're not on the error path, because
++	 * the firmware callback requires a fully functional and allocated sdma
++	 * instance.
++	 */
++	if (pdata) {
++		ret = sdma_get_firmware(sdma, pdata->fw_name);
++		if (ret)
++			dev_warn(&pdev->dev, "failed to get firmware from platform data\n");
++	} else {
++		/*
++		 * Because that device tree does not encode ROM script address,
++		 * the RAM script in firmware is mandatory for device tree
++		 * probe, otherwise it fails.
++		 */
++		ret = of_property_read_string(np, "fsl,sdma-ram-script-name",
++					      &fw_name);
++		if (ret) {
++			dev_warn(&pdev->dev, "failed to get firmware name\n");
++		} else {
++			ret = sdma_get_firmware(sdma, fw_name);
++			if (ret)
++				dev_warn(&pdev->dev, "failed to get firmware from device tree\n");
++		}
++	}
++
+ 	return 0;
+ 
+ err_register:
 -- 
 2.20.1
 
