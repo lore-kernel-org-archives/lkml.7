@@ -2,161 +2,208 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04CF0C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 07:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A895C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 07:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D02CE206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 07:03:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C2BE206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 07:04:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389294AbfHBHDr (ORCPT
+        id S2389318AbfHBHEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 03:03:47 -0400
-Received: from mail1.windriver.com ([147.11.146.13]:55752 "EHLO
-        mail1.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732058AbfHBHDr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 03:03:47 -0400
-Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
-        by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id x723BsMQ006917
-        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-        Thu, 1 Aug 2019 20:11:54 -0700 (PDT)
-Received: from [128.224.162.188] (128.224.162.188) by ALA-HCA.corp.ad.wrs.com
- (147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.468.0; Thu, 1 Aug
- 2019 20:11:53 -0700
-Subject: Re: Bug Report: Btrfs prompts "can't allocate space for delete" when
- block size arounds 512M
-From:   "Hongzhi, Song" <hongzhi.song@windriver.com>
-To:     <linux-btrfs@vger.kernel.org>, <josef@toxicpanda.com>,
-        <linux-kernel@vger.kernel.org>
-CC:     <dsterba@suse.com>, <ltp@lists.linux.it>
-References: <b501bcff-8be0-4303-8789-363fda4658e5@windriver.com>
-Message-ID: <f6795b4b-d70e-491e-e7ce-d235ca1b95ff@windriver.com>
-Date:   Fri, 2 Aug 2019 11:11:50 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 2 Aug 2019 03:04:00 -0400
+Received: from verein.lst.de ([213.95.11.211]:50245 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389182AbfHBHD7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 03:03:59 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 9BBBA68B05; Fri,  2 Aug 2019 09:03:54 +0200 (CEST)
+Date:   Fri, 2 Aug 2019 09:03:54 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Takashi Iwai <tiwai@suse.de>, iommu@lists.linux-foundation.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-xtensa@linux-xtensa.org, Michal Simek <monstr@monstr.eu>,
+        linux-parisc@vger.kernel.org, linux-sh@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 5/5] dma-mapping: remove ARCH_NO_COHERENT_DMA_MMAP
+Message-ID: <20190802070354.GA8280@lst.de>
+References: <20190725063401.29904-1-hch@lst.de> <20190725063401.29904-6-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <b501bcff-8be0-4303-8789-363fda4658e5@windriver.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [128.224.162.188]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190725063401.29904-6-hch@lst.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add linux-kernel@vger.kernel.org.
+Takashi,
 
-Ping...
+any comments on the sounds/ side of this?
 
-
-Thanks,
-
---Hongzhi
-
-
-On 7/17/19 4:34 PM, Hongzhi, Song wrote:
-> Hi friends,
->
-> *Description:*
->
->
->     One LTP testcase, fs_fill.c, fails on btrfs with kernel error when 
-> unlink files on Btrfs device:
->
->     "BTRFS warning (device loop0): could not allocate space for a 
-> delete; will truncate on mount".
->
->
->     I found the loop block device formatted with btrfs roughly rangs 
-> from 460M to 560M will cause the error.
->
->     256M and 1G all pass.
->
->
->     The fs_fill.c source code:
->
-> [https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/fs/fs_fill/fs_fill.c] 
->
->
->     The fs_fill.c calls unlink which triggers the error.
->
-> [https://github.com/linux-test-project/ltp/blob/e3457e42c1b93f54bb81da746eba314fd34ad40e/testcases/kernel/fs/fs_fill/fs_fill.c#L55] 
->
->
-> [https://github.com/linux-test-project/ltp/blob/e3457e42c1b93f54bb81da746eba314fd34ad40e/lib/safe_macros.c#L358] 
->
->
->
-> *Error info:*
->
->     The issue maybe not reproduced everytime but four fifths chance.
->
->     fs_fill.c:53: INFO: Unlinking mntpoint/thread5/file0
->     safe_macros.c:360: BROK: fs_fill.c:55: 
-> unlink(mntpoint/thread10/file0) failed: ENOSPC
->     safe_macros.c:360: BROK: fs_fill.c:55: 
-> unlink(mntpoint/thread11/file0) failed: ENOSPC
->     [62477.378848] BTRFS warning (device loop0): could not allocate 
-> space for a delete; will truncate on mount
->     [62477.378905] BTRFS warning (device loop0): could not allocate 
-> space for a delete; will truncate on mount
->
->
->
-> *Kernel:*
->
->     After v5.2-rc1, qemux86-64
->
->     # make -j40 ARCH=x86_64 CROSS_COMPILE=x86-64-gcc
->     use qemu to bootup kernel
->
->
-> *LTP:*
->
->     master branch: I tested on 20190625
->     Reproduce:
->
->     // build Ltp
->     # cd Ltp-source
->     # ./build.sh
->
->     // copy files to qemu
->     # cp runltp testcases/kernel/fs/fs_fill/fs_fill to qemu
->
->     // login to qemu:
->     // adjust block device size to 512M
->     # vi runltp
->     in function: create_block()
->         dd if=/dev/zero of=${TMP}/test.img bs=1024 count=262144
->         --->
->         dd if=/dev/zero of=${TMP}/test.img bs=1024 count=524288
->
->     // execute testcase
->     # runltp -f fs -s fs_fill
->
->
-> *Analysis:*
->
->     One new kernel commit contained in v5.2-rc1 introduces the issue.
->
->     commit c8eaeac7b734347c3afba7008b7af62f37b9c140
->     Author: Josef Bacik <josef@toxicpanda.com>
->     Date:   Wed Apr 10 15:56:10 2019 -0400
->
->         btrfs: reserve delalloc metadata differently
->         ...
->
->
-> Anyone's reply will be appreciated.
->
-> --Hongzhi
->
->
->
->
->
+On Thu, Jul 25, 2019 at 08:34:01AM +0200, Christoph Hellwig wrote:
+> Now that we never use a default ->mmap implementation, and non-coherent
+> architectures can control the presence of ->mmap support by enabling
+> ARCH_HAS_DMA_COHERENT_TO_PFN for the dma direct implementation there
+> is no need for a global config option to control the availability
+> of dma_common_mmap.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  arch/Kconfig            |  3 ---
+>  arch/c6x/Kconfig        |  1 -
+>  arch/m68k/Kconfig       |  1 -
+>  arch/microblaze/Kconfig |  1 -
+>  arch/parisc/Kconfig     |  1 -
+>  arch/sh/Kconfig         |  1 -
+>  arch/xtensa/Kconfig     |  1 -
+>  kernel/dma/mapping.c    |  4 ----
+>  sound/core/pcm_native.c | 10 +---------
+>  9 files changed, 1 insertion(+), 22 deletions(-)
+> 
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index a7b57dd42c26..ec2834206d08 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -790,9 +790,6 @@ config COMPAT_32BIT_TIME
+>  	  This is relevant on all 32-bit architectures, and 64-bit architectures
+>  	  as part of compat syscall handling.
+>  
+> -config ARCH_NO_COHERENT_DMA_MMAP
+> -	bool
+> -
+>  config ARCH_NO_PREEMPT
+>  	bool
+>  
+> diff --git a/arch/c6x/Kconfig b/arch/c6x/Kconfig
+> index b4fb61c83494..e65e8d82442a 100644
+> --- a/arch/c6x/Kconfig
+> +++ b/arch/c6x/Kconfig
+> @@ -20,7 +20,6 @@ config C6X
+>  	select OF_EARLY_FLATTREE
+>  	select GENERIC_CLOCKEVENTS
+>  	select MODULES_USE_ELF_RELA
+> -	select ARCH_NO_COHERENT_DMA_MMAP
+>  	select MMU_GATHER_NO_RANGE if MMU
+>  
+>  config MMU
+> diff --git a/arch/m68k/Kconfig b/arch/m68k/Kconfig
+> index c518d695c376..614b355ae338 100644
+> --- a/arch/m68k/Kconfig
+> +++ b/arch/m68k/Kconfig
+> @@ -8,7 +8,6 @@ config M68K
+>  	select ARCH_HAS_DMA_PREP_COHERENT if HAS_DMA && MMU && !COLDFIRE
+>  	select ARCH_HAS_SYNC_DMA_FOR_DEVICE if HAS_DMA
+>  	select ARCH_MIGHT_HAVE_PC_PARPORT if ISA
+> -	select ARCH_NO_COHERENT_DMA_MMAP if !MMU
+>  	select ARCH_NO_PREEMPT if !COLDFIRE
+>  	select BINFMT_FLAT_ARGVP_ENVP_ON_STACK
+>  	select DMA_DIRECT_REMAP if HAS_DMA && MMU && !COLDFIRE
+> diff --git a/arch/microblaze/Kconfig b/arch/microblaze/Kconfig
+> index d411de05b628..632c9477a0f6 100644
+> --- a/arch/microblaze/Kconfig
+> +++ b/arch/microblaze/Kconfig
+> @@ -9,7 +9,6 @@ config MICROBLAZE
+>  	select ARCH_HAS_SYNC_DMA_FOR_CPU
+>  	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
+>  	select ARCH_MIGHT_HAVE_PC_PARPORT
+> -	select ARCH_NO_COHERENT_DMA_MMAP if !MMU
+>  	select ARCH_WANT_IPC_PARSE_VERSION
+>  	select BUILDTIME_EXTABLE_SORT
+>  	select TIMER_OF
+> diff --git a/arch/parisc/Kconfig b/arch/parisc/Kconfig
+> index 6d732e451071..e9dd88b7f81e 100644
+> --- a/arch/parisc/Kconfig
+> +++ b/arch/parisc/Kconfig
+> @@ -52,7 +52,6 @@ config PARISC
+>  	select GENERIC_SCHED_CLOCK
+>  	select HAVE_UNSTABLE_SCHED_CLOCK if SMP
+>  	select GENERIC_CLOCKEVENTS
+> -	select ARCH_NO_COHERENT_DMA_MMAP
+>  	select CPU_NO_EFFICIENT_FFS
+>  	select NEED_DMA_MAP_STATE
+>  	select NEED_SG_DMA_LENGTH
+> diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
+> index 6b1b5941b618..f356ee674d89 100644
+> --- a/arch/sh/Kconfig
+> +++ b/arch/sh/Kconfig
+> @@ -5,7 +5,6 @@ config SUPERH
+>  	select ARCH_HAS_PTE_SPECIAL
+>  	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+>  	select ARCH_MIGHT_HAVE_PC_PARPORT
+> -	select ARCH_NO_COHERENT_DMA_MMAP if !MMU
+>  	select HAVE_PATA_PLATFORM
+>  	select CLKDEV_LOOKUP
+>  	select DMA_DECLARE_COHERENT
+> diff --git a/arch/xtensa/Kconfig b/arch/xtensa/Kconfig
+> index ebc135bda921..70653aed3005 100644
+> --- a/arch/xtensa/Kconfig
+> +++ b/arch/xtensa/Kconfig
+> @@ -5,7 +5,6 @@ config XTENSA
+>  	select ARCH_HAS_BINFMT_FLAT if !MMU
+>  	select ARCH_HAS_SYNC_DMA_FOR_CPU
+>  	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
+> -	select ARCH_NO_COHERENT_DMA_MMAP if !MMU
+>  	select ARCH_USE_QUEUED_RWLOCKS
+>  	select ARCH_USE_QUEUED_SPINLOCKS
+>  	select ARCH_WANT_FRAME_POINTERS
+> diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
+> index 7dff1829c8c5..815446f76995 100644
+> --- a/kernel/dma/mapping.c
+> +++ b/kernel/dma/mapping.c
+> @@ -169,7 +169,6 @@ int dma_common_mmap(struct device *dev, struct vm_area_struct *vma,
+>  		void *cpu_addr, dma_addr_t dma_addr, size_t size,
+>  		unsigned long attrs)
+>  {
+> -#ifndef CONFIG_ARCH_NO_COHERENT_DMA_MMAP
+>  	unsigned long user_count = vma_pages(vma);
+>  	unsigned long count = PAGE_ALIGN(size) >> PAGE_SHIFT;
+>  	unsigned long off = vma->vm_pgoff;
+> @@ -198,9 +197,6 @@ int dma_common_mmap(struct device *dev, struct vm_area_struct *vma,
+>  
+>  	return remap_pfn_range(vma, vma->vm_start, pfn + vma->vm_pgoff,
+>  			user_count << PAGE_SHIFT, vma->vm_page_prot);
+> -#else
+> -	return -ENXIO;
+> -#endif /* !CONFIG_ARCH_NO_COHERENT_DMA_MMAP */
+>  }
+>  
+>  /**
+> diff --git a/sound/core/pcm_native.c b/sound/core/pcm_native.c
+> index 860543a4c840..2dadc708343a 100644
+> --- a/sound/core/pcm_native.c
+> +++ b/sound/core/pcm_native.c
+> @@ -218,15 +218,7 @@ int snd_pcm_info_user(struct snd_pcm_substream *substream,
+>  
+>  static bool hw_support_mmap(struct snd_pcm_substream *substream)
+>  {
+> -	if (!(substream->runtime->hw.info & SNDRV_PCM_INFO_MMAP))
+> -		return false;
+> -	/* architecture supports dma_mmap_coherent()? */
+> -#if defined(CONFIG_ARCH_NO_COHERENT_DMA_MMAP) || !defined(CONFIG_HAS_DMA)
+> -	if (!substream->ops->mmap &&
+> -	    substream->dma_buffer.dev.type == SNDRV_DMA_TYPE_DEV)
+> -		return false;
+> -#endif
+> -	return true;
+> +	return substream->runtime->hw.info & SNDRV_PCM_INFO_MMAP;
+>  }
+>  
+>  static int constrain_mask_params(struct snd_pcm_substream *substream,
+> -- 
+> 2.20.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+---end quoted text---
