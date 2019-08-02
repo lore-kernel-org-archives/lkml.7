@@ -2,89 +2,109 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37485C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B94F6C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 100C22087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 976D6217F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:50:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732064AbfHBKtQ (ORCPT
+        id S1732593AbfHBKur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 06:49:16 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:53029 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbfHBKtQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 06:49:16 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id BEC1D20025;
-        Fri,  2 Aug 2019 12:49:12 +0200 (CEST)
-Date:   Fri, 2 Aug 2019 12:49:11 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Inki Dae <inki.dae@samsung.com>
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@01.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: ERROR: "vmf_insert_mixed" [drivers/gpu/drm/exynos/exynosdrm.ko]
- undefined!
-Message-ID: <20190802104911.GA30582@ravnborg.org>
-References: <CGME20190724223620epcas3p35a32100b839a0d545e910e3ed84047ca@epcas3p3.samsung.com>
- <201907250623.Lvc2mgUO%lkp@intel.com>
- <d1ba546e-11d1-3f16-aba8-10ffd318a3f3@samsung.com>
+        Fri, 2 Aug 2019 06:50:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:49624 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725844AbfHBKuq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 06:50:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6CBE3344;
+        Fri,  2 Aug 2019 03:50:45 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9FF973F71F;
+        Fri,  2 Aug 2019 03:50:40 -0700 (PDT)
+Date:   Fri, 2 Aug 2019 11:50:38 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Kevin Brodsky <kevin.brodsky@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Subject: Re: [PATCH v19 02/15] arm64: Introduce prctl() options to control
+ the tagged user addresses ABI
+Message-ID: <20190802105038.GC4175@arrakis.emea.arm.com>
+References: <cover.1563904656.git.andreyknvl@google.com>
+ <1c05651c53f90d07e98ee4973c2786ccf315db12.1563904656.git.andreyknvl@google.com>
+ <7a34470c-73f0-26ac-e63d-161191d4b1e4@intel.com>
+ <2b274c6f-6023-8eb8-5a86-507e6000e13d@arm.com>
+ <88c59d1e-eda9-fcfe-5ee3-64a331f34313@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d1ba546e-11d1-3f16-aba8-10ffd318a3f3@samsung.com>
+In-Reply-To: <88c59d1e-eda9-fcfe-5ee3-64a331f34313@intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=IkcTkHD0fZMA:10 a=Oh2cFVv5AAAA:8
-        a=bt8Zh30PAAAA:8 a=QyXUC8HyAAAA:8 a=VwQbUJbxAAAA:8 a=7gkXJVJtAAAA:8
-        a=JtIW4zDZkoOJZ0rFRgkA:9 a=QEXdDO2ut3YA:10 a=7KeoIwV6GZqOttXkcoxL:22
-        a=AjGcO6oz07-iQ99wixmX:22 a=E9Po1WZjFZOl8hwRPBS3:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Inki
-
-On Fri, Aug 02, 2019 at 05:15:06PM +0900, Inki Dae wrote:
-> Hi,
+On Thu, Aug 01, 2019 at 09:45:05AM -0700, Dave Hansen wrote:
+> On 8/1/19 5:38 AM, Kevin Brodsky wrote:
+> > This patch series only changes what is allowed or not at the syscall
+> > interface. It does not change the address space size. On arm64, TBI (Top
+> > Byte Ignore) has always been enabled for userspace, so it has never been
+> > possible to use the upper 8 bits of user pointers for addressing.
 > 
-> 19. 7. 25. 오전 7:35에 kbuild test robot 이(가) 쓴 글:
-> > tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git master
-> > head:   bed38c3e2dca01b358a62b5e73b46e875742fd75
-> > commit: 156bdac99061b4013c8e47799c6e574f7f84e9f4 drm/exynos: trigger build of all modules
-> > date:   4 weeks ago
-> > config: h8300-allmodconfig (attached as .config)
-> > compiler: h8300-linux-gcc (GCC) 7.4.0
-> > reproduce:
-> >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> >         chmod +x ~/bin/make.cross
-> >         git checkout 156bdac99061b4013c8e47799c6e574f7f84e9f4
-> >         # save the attached .config to linux build tree
-> >         GCC_VERSION=7.4.0 make.cross ARCH=h8300 
-> > 
-> > If you fix the issue, kindly add following tag
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > 
-> > All errors (new ones prefixed by >>):
-> > 
-> >>> ERROR: "vmf_insert_mixed" [drivers/gpu/drm/exynos/exynosdrm.ko] undefined!
+> Oh, so does the address space that's available already chop that out?
+
+Yes. Currently the hardware only supports 52-bit virtual addresses. It
+could be expanded (though it needs a 5th page table level) to 56-bit VA
+but it's not currently on our (hardware) plans. Beyond 56-bit, it cannot
+be done without breaking the software expectations (and hopefully I'll
+retire before we need this ;)).
+
+> > If other architectures were to support a similar functionality, then I
+> > agree that a common and more generic interface (if needed) would be
+> > helpful, but as it stands this is an arm64-specific prctl, and on arm64
+> > the address tag is defined by the architecture as bits [63:56].
 > 
-> With below patch I think the build error reported already will be fixed,
-> https://patchwork.kernel.org/patch/11035147/
+> It should then be an arch_prctl(), no?
 
-I have the exact same patch locally - that I forgot to send out.
-So:
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
+I guess you just want renaming SET_TAGGED_ADDR_CTRL() to
+arch_prctl_tagged_addr_ctrl_set()? (similarly for 'get')
 
-	Sam
+-- 
+Catalin
