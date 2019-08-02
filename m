@@ -2,121 +2,104 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3978C0650F
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D9EC0650F
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72EEF20449
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:42:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ig+gtw/n"
+	by mail.kernel.org (Postfix) with ESMTP id AA5F620449
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:44:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564785884;
+	bh=XdFJVPWRCzB05b6HmXd10/7qO5reXFQcj8PyEcSf0Kw=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=udPaSbSIYrf3E5dX2WAZMGjTOeujdbNkTujoAxVegyf4WUH6UVBQQDSZz8t6ICs7Y
+	 3RErtwX64FeMS+QqtfREAxe+gRoec6Ix4/Rk/P/ZY/DrnXNiBck7/ZQXa9jP21X6R1
+	 Gildh4wYa0ZCMuBZgstxHiUvDtnHbIytGUBWL2n8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437297AbfHBWmC (ORCPT
+        id S2392484AbfHBWon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 18:42:02 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:38910 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437252AbfHBWmA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 18:42:00 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x72Mcsj7121652;
-        Fri, 2 Aug 2019 22:41:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2018-07-02; bh=V+S2cCRMzMkTYxl1DBlk1mcxDep6bRomMR5hspXDz/A=;
- b=ig+gtw/nHmMxdo2vG1ndB2NiEqFfiYcUxaaBUSJx4t41mk4jtfIZQjRxMKN/dFhqn3b5
- XQsuzLmoTDHEQCqi/cbSkIPx12KXT7FhePPM23IFMtCWoFs3MHcr/RL2XeLj7XCh9hrt
- AyBcRTJJW0AQqob8Dj6P3LUnk81ChUJssJVpahmd0Ax318/0mOiMPzywXJfWsFd+BKx9
- O2sZAt/f97yK9exYSXetY3PCHpaDSjSvcfn1twbJUfZdnX2pqJwMU5ylqUYjxJNcBGrA
- vptAdemis7KpqPAfGyaYys7n0jALfXZPnwkzD4orTRXtnc3rKcw7Q1qkiRmqKO1Dvapo Eg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2u0e1ucymc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 02 Aug 2019 22:41:42 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x72Mbq8A062797;
-        Fri, 2 Aug 2019 22:39:41 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2u4vsj1upb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 02 Aug 2019 22:39:41 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x72MdZrw022117;
-        Fri, 2 Aug 2019 22:39:35 GMT
-Received: from monkey.oracle.com (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 02 Aug 2019 15:39:34 -0700
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     Hillf Danton <hdanton@sina.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@kernel.org>, Mel Gorman <mgorman@suse.de>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Subject: [PATCH 0/3] address hugetlb page allocation stalls
-Date:   Fri,  2 Aug 2019 15:39:27 -0700
-Message-Id: <20190802223930.30971-1-mike.kravetz@oracle.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 2 Aug 2019 18:44:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47084 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732417AbfHBWon (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 18:44:43 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C66E20449;
+        Fri,  2 Aug 2019 22:44:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564785882;
+        bh=XdFJVPWRCzB05b6HmXd10/7qO5reXFQcj8PyEcSf0Kw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=roqsN+cmILPGhhKaCVBDczl8po2NfZxI158HyxGLNRCqF6MZ3H6lEUaxS37AphYhy
+         z1p7tOaWPHynMKkSb+c4KwKYgQuFbWhtwNxTzvpgftBqyhz/UblDJ9HdrwkcIQ+Vm8
+         X770HwEFLU/qEtfZ0rqIckFvz1CbmP5YM8Fsn48o=
+Subject: Re: [PATCH v3 0/2] usbip: Implement SG support
+To:     Suwan Kim <suwan.kim027@gmail.com>, valentina.manea.m@gmail.com,
+        gregkh@linuxfoundation.org, stern@rowland.harvard.edu
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shuah <shuah@kernel.org>
+References: <20190802173651.22247-1-suwan.kim027@gmail.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <1b350c7c-823a-21a8-fc2f-d12dd4b4818d@kernel.org>
+Date:   Fri, 2 Aug 2019 16:44:40 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9337 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908020238
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9337 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908020238
+In-Reply-To: <20190802173651.22247-1-suwan.kim027@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allocation of hugetlb pages via sysctl or procfs can stall for minutes
-or hours.  A simple example on a two node system with 8GB of memory is
-as follows:
+Hi Suwan,
 
-echo 4096 > /sys/devices/system/node/node1/hugepages/hugepages-2048kB/nr_hugepages
-echo 4096 > /proc/sys/vm/nr_hugepages
+On 8/2/19 11:36 AM, Suwan Kim wrote:
+> There are bugs on vhci with usb 3.0 storage device. Currently, vhci
+> doesn't supported SG, so USB storage driver on vhci breaks SG list
+> into multiple URBs and it causes error that a transfer got terminated
+> too early because the transfer length for one of the URBs was not
+> divisible by the maxpacket size.
+>   
+> In this patch, vhci supports SG regardless of whether the server's
+> host controller supports SG or not, because stub driver splits SG
+> list into several URBs if the server's host controller doesn't
+> support SG.
+>   
+> To support SG, vhci_map_urb_for_dma() sets URB_DMA_MAP_SG flag in
+> urb->transfer_flags if URB has SG list and this flag will tell stub
+> driver to use SG list.
+>   
+> vhci sends each SG list entry to stub driver. Then, stub driver sees
+> the total length of the buffer and allocates SG table and pages
+> according to the total buffer length calling sgl_alloc(). After stub
+> driver receives completed URB, it again sends each SG list entry to
+> vhci.
+>   
+> If the server's host controller doesn't support SG, stub driver
+> breaks a single SG request into several URBs and submits them to
+> the server's host controller. When all the split URBs are completed,
+> stub driver reassembles the URBs into a single return command and
+> sends it to vhci.
+> 
+> Alan fixed vhci bug with the USB 3.0 storage device by modifying
+> USB storage driver.
+> ("usb-storage: Set virt_boundary_mask to avoid SG overflows")
+> But the fundamental solution of it is to add SG support to vhci.
+> 
+> This patch works well with the USB 3.0 storage devices without Alan's
+> patch, and we can revert Alan's patch if it causes some troubles.
+> 
 
-Obviously, both allocation attempts will fall short of their 8GB goal.
-However, one or both of these commands may stall and not be interruptible.
-The issues were initially discussed in mail thread [1] and RFC code at [2].
+Why just 3.0? Please test with lowspeed and VUDC to make sure there are
+no regressions.
 
-This series addresses the issues causing the stalls.  There are two distinct
-fixes, and an optimization.  The reclaim patch by Hillf and compaction patch
-by Vlasitmil address corner cases in their respective areas.  hugetlb page
-allocation could stall due to either of these issues.  The hugetlb patch by
-Mike is an optimization suggested during the debug and development process.
-
-[1] http://lkml.kernel.org/r/d38a095e-dc39-7e82-bb76-2c9247929f07@oracle.com
-[2] http://lkml.kernel.org/r/20190724175014.9935-1-mike.kravetz@oracle.com
-
-Hillf Danton (1):
-  mm, reclaim: make should_continue_reclaim perform dryrun detection
-
-Mike Kravetz (1):
-  hugetlbfs: don't retry when pool page allocations start to fail
-
-Vlastimil Babka (1):
-  mm, compaction: raise compaction priority after it withdrawns
-
- include/linux/compaction.h | 22 +++++++---
- mm/hugetlb.c               | 86 +++++++++++++++++++++++++++++++++-----
- mm/page_alloc.c            | 16 +++++--
- mm/vmscan.c                | 28 +++++++------
- 4 files changed, 120 insertions(+), 32 deletions(-)
-
--- 
-2.20.1
-
+thanks,
+-- Shuah
