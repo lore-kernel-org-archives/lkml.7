@@ -2,81 +2,114 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4008C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 05:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 148ACC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 05:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ADF12073D
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 05:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF5C92086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 05:10:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TkuE3yuz"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CaFMd9XD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732528AbfHBFDq (ORCPT
+        id S1732568AbfHBFKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 01:03:46 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46233 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726626AbfHBFDp (ORCPT
+        Fri, 2 Aug 2019 01:10:39 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33101 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732271AbfHBFKj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 01:03:45 -0400
-Received: by mail-pg1-f195.google.com with SMTP id k189so16388635pgk.13;
-        Thu, 01 Aug 2019 22:03:45 -0700 (PDT)
+        Fri, 2 Aug 2019 01:10:39 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n190so316716pgn.0
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 22:10:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=PLsx/4tn1KtP1jYMaN33B6Oq9wyWpKhmw6fy97XSp7Q=;
-        b=TkuE3yuzGt58MAj2g0b9+TEZYDKQ5B0CtD4Z/w+cOGpWu3CxLZT7bAijxRoRH55NqA
-         ZACsCOjyEyHorztntjV/PF9wpawc5ofE67ZFDXSbQT4N8W4S01I7kZ9wogzMlSN0ZZXk
-         ZgrvWXMtzBUzGnDsaWsHNXDNgmYVLI1NQSg0czgPrBzokvm7WBwo7mSpKnYCeSB2XO4z
-         n8fc8V5s7UpXNJ4dq5a71JHBBAeQ1sYBuZfOedKauU398Biwl8ya0Mlyg25bT+QiJPEP
-         Bw1gm6NMpjSt9CfleE5g63njrFVHcC9nYm2M4ZhhUNkH6aLdibamnLc1vhcWa+u8cOkr
-         XYog==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=GbN+lyQRwWpMrjAi8gZfqiOdoS1ljZVdsyP197ujcJ8=;
+        b=CaFMd9XDgrGq6GKFNCs7UtRYd500b5XGKxJVTb4lP31xTeB221PAKxwE5Rtw9+kf/F
+         JqKSBJKeNQBFtXNo5hpTDJHZJ6+5pZXBwMVX1eDW6RT9gvRoFOlCq1ljkXAwZFN1Fap+
+         yeAOjBs7P28616iB00784HbRgv2nAqloK9jBs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=PLsx/4tn1KtP1jYMaN33B6Oq9wyWpKhmw6fy97XSp7Q=;
-        b=FvNmexNdbQzpsuYVFy5JmeHPigQTT2QcfhFFT2z/eN+6x6jld+nA8+uYzH7mEKUSN9
-         a+lOh6Nvn47RmGFOC/1LEHAKrGNOuTp9q//XN08naM4GaQf4DawwE0bg6WUHWCnE/xGE
-         NIWgDu8LjgFzt0982j/+lGRGKHXjD210Lj6+QOcAnifGk55vYKt7N/Pb/ZVxae788ILD
-         yRqNIw1+nz3lfUSAaiWX0vZ6pTXYns5xcWF+b+ZEqqUTwbSu2rgu4vSiiZ6g4btSTrGR
-         WwMRZaaVRJbiBA4kY1PBukDvuPMzDbpf/Jt9cM4+NsFY9W/4Dp+QxeU4EYWaSXGVluRP
-         GZOw==
-X-Gm-Message-State: APjAAAUj1YrpC8lrs5n9nBUTrXXuqChXWbpDuHI1JqPSQQsmfiPFQTNt
-        S4pFwlX28w7nkMJXjvSK17g=
-X-Google-Smtp-Source: APXvYqxvaxTQu4MapFsaY7OEEournyukc7qIz8j4d9yHlwAR6d+6iOboTRELkhHyATur6jTL/w0QVw==
-X-Received: by 2002:a17:90a:30e4:: with SMTP id h91mr2364646pjb.37.1564722224831;
-        Thu, 01 Aug 2019 22:03:44 -0700 (PDT)
-Received: from [192.168.1.4] (d206-116-172-62.bchsia.telus.net. [206.116.172.62])
-        by smtp.gmail.com with ESMTPSA id s66sm77417263pfs.8.2019.08.01.22.03.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 01 Aug 2019 22:03:44 -0700 (PDT)
-From:   Mark Balantzyan <mbalant3@gmail.com>
-X-Google-Original-From: Mark Balantzyan <mbalantz@exun.local>
-Date:   Thu, 1 Aug 2019 22:03:39 -0700 (PDT)
-To:     Guenter Roeck <linux@roeck-us.net>
-cc:     Mark Balantzyan <mbalant3@gmail.com>, wim@linux-watchdog.org,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] watchdog: alim1535: Rewriting of alim1535 to use
- watchdog subsystem
-In-Reply-To: <7e17ddd7-e304-67f0-836c-8ba71c5a6778@roeck-us.net>
-Message-ID: <alpine.OSX.2.21.1908012203130.6581@exun.local>
-References: <20190802032655.54758-1-mbalant3@gmail.com> <7e17ddd7-e304-67f0-836c-8ba71c5a6778@roeck-us.net>
-User-Agent: Alpine 2.21 (OSX 202 2017-01-01)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=GbN+lyQRwWpMrjAi8gZfqiOdoS1ljZVdsyP197ujcJ8=;
+        b=PtAKQ1+qQ9q1JhYP6mm5uMhBhBQ9JlUaqUq4cHOq3HA+A5MgWkD/sBOpCOBpizps33
+         py6347pNniQ5iLfrlYWu4f87gDXJ+jmqxFoxc/PR0JWmVlkhAsX3mcmDkTXv2fWR8NJ+
+         GyQnS1tn0rVyuixsZ4hpvorClYgQY9ZLFsPlY3C1b0pbBQIQ4VWYY9sgZW5i58vtcDCy
+         PRXdC0LjLuzSFQiA3h4fQxtFx4NPG54zcOSgRQ7VglvZdk59PbQQL3/o10RjMGPEhTdZ
+         jTMY7VIV/aNH7tfYp/D8he4985S9cu0sjM+K0VEpEu4+E4KEeKBM8dcPOJGHwxSpVzzR
+         OOEw==
+X-Gm-Message-State: APjAAAXoKPKvJAGhtXiyIG64sEWciOVhUHSTBvbRxVCIh6Z1LL/3yXyF
+        3OgM+8CFVSUO28VEUBHwdXLvMQ==
+X-Google-Smtp-Source: APXvYqw6EY3sCwRr17Ar8Ens5WlgHGNu+SiJE6WNtnZfFauoEO0hqdBcN+DPrzLGoo3MwDmVHhsOBg==
+X-Received: by 2002:a65:6281:: with SMTP id f1mr115552688pgv.400.1564722637707;
+        Thu, 01 Aug 2019 22:10:37 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id j6sm64733311pfa.141.2019.08.01.22.10.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 01 Aug 2019 22:10:36 -0700 (PDT)
+Date:   Thu, 1 Aug 2019 22:10:35 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Mark expected switch fall-through
+Message-ID: <201908012210.15191EAD5@keescook>
+References: <20190802012248.GA22622@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190802012248.GA22622@embeddedor>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please see: https://lkml.org/lkml/2019/8/2/6
+On Thu, Aug 01, 2019 at 08:22:48PM -0500, Gustavo A. R. Silva wrote:
+> Mark switch cases where we are expecting to fall through.
+> 
+> This patch fixes the following warning (Building: allmodconfig i386):
+> 
+> drivers/pci/hotplug/ibmphp_res.c: In function ‘update_bridge_ranges’:
+> drivers/pci/hotplug/ibmphp_res.c:1943:16: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>        function = 0x8;
+>        ~~~~~~~~~^~~~~
+> drivers/pci/hotplug/ibmphp_res.c:1944:6: note: here
+>       case PCI_HEADER_TYPE_MULTIBRIDGE:
+>       ^~~~
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Thank you.
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
+-Kees
+
+> ---
+>  drivers/pci/hotplug/ibmphp_res.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/hotplug/ibmphp_res.c b/drivers/pci/hotplug/ibmphp_res.c
+> index 5e8caf7a4452..1e1ba66cfd1e 100644
+> --- a/drivers/pci/hotplug/ibmphp_res.c
+> +++ b/drivers/pci/hotplug/ibmphp_res.c
+> @@ -1941,6 +1941,7 @@ static int __init update_bridge_ranges(struct bus_node **bus)
+>  						break;
+>  					case PCI_HEADER_TYPE_BRIDGE:
+>  						function = 0x8;
+> +						/* Fall through */
+>  					case PCI_HEADER_TYPE_MULTIBRIDGE:
+>  						/* We assume here that only 1 bus behind the bridge
+>  						   TO DO: add functionality for several:
+> -- 
+> 2.22.0
+> 
+
+-- 
+Kees Cook
