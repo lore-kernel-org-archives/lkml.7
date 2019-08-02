@@ -2,58 +2,57 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B51C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F23C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 886772171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:40:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D0D220880
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:40:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738834;
-	bh=HP3/a2oZIL74Jk6LrFo/J/9++kAyvAYs/l+UguAunkM=;
+	s=default; t=1564738836;
+	bh=QWfytG9YLz53AlgWtzrZ87gSCd8TiSKOvSheHr/Jvdc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C8wCQ2QD9CY73lzoXZTLQhr/kZMu0FhTkR3qYBMpoQKH7KOJIMpSse6j8Vhssus99
-	 bxmcStmos7mK/bXFz2JqXHfKDChjeyTI71oP4MNYL64PTlQdH8beRvSNEBRRbw9SAm
-	 2FmIemeacmXDZqbDvPBaZiNZQMbbNSX1IBtSqofw=
+	b=O191tcjlXsRFRbGsOyGu54g8m8dRVMQtNl0N47g6IOulT0bBVcp+zKi2h6L14GCId
+	 sLWQTsIuIU4EFuKTntmk1PLTHn5/d43Of0i7A/IRfgrsbFEeluhwQKFhBD0X0hj4vF
+	 smb7p+bNAc4BVMW13xYkukoKtv0J7OVninxQVJNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391723AbfHBJkd (ORCPT
+        id S2391732AbfHBJkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:40:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41382 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:40:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390998AbfHBJkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:40:24 -0400
+        id S2391705AbfHBJk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:40:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 908D320679;
-        Fri,  2 Aug 2019 09:40:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AF7020679;
+        Fri,  2 Aug 2019 09:40:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738823;
-        bh=HP3/a2oZIL74Jk6LrFo/J/9++kAyvAYs/l+UguAunkM=;
+        s=default; t=1564738828;
+        bh=QWfytG9YLz53AlgWtzrZ87gSCd8TiSKOvSheHr/Jvdc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G3G4Rdy9HP6FPbisan2dQg7eMi2VdnkTvETr+YIFUSCgzRnDuaOvQFRzgPA8Imu+c
-         7eR6FIhivy/gOfozhRHRReKFBdj4lOuSQNTftT89vT3SykKf71+C9xh8D5UT4VjQ7c
-         WBCtO/dCs5prn4PI6/hF9wajh24MfVEDCAm2jeaI=
+        b=ygzNOJyVohsC8l6Jy3at4aA/xAYG3TA6RR4vzJWFLTltFSc91KPJYx4W98ithNi+y
+         KBAIFMyK8lGh/c7CLb0+b1vxaRtzw4Db93GyXhwx/ZtFsTFASQTARXmaaluGKzhVj9
+         uI9re+MEUNscdbVYXYiTO6+Zrwp6aZhAApnQtgO0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Hellermann <stefan@the2masters.de>,
-        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 001/223] MIPS: ath79: fix ar933x uart parity mode
-Date:   Fri,  2 Aug 2019 11:33:46 +0200
-Message-Id: <20190802092238.781314964@linuxfoundation.org>
+Subject: [PATCH 4.9 011/223] crypto: talitos - fix skcipher failure due to wrong output IV
+Date:   Fri,  2 Aug 2019 11:33:56 +0200
+Message-Id: <20190802092239.645236580@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,38 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit db13a5ba2732755cf13320f3987b77cf2a71e790 ]
+[ Upstream commit 3e03e792865ae48b8cfc69a0b4d65f02f467389f ]
 
-While trying to get the uart with parity working I found setting even
-parity enabled odd parity insted. Fix the register settings to match
-the datasheet of AR9331.
+Selftests report the following:
 
-A similar patch was created by 8devices, but not sent upstream.
-https://github.com/8devices/openwrt-8devices/commit/77c5586ade3bb72cda010afad3f209ed0c98ea7c
+[    2.984845] alg: skcipher: cbc-aes-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
+[    2.995377] 00000000: 3d af ba 42 9d 9e b4 30 b4 22 da 80 2c 9f ac 41
+[    3.032673] alg: skcipher: cbc-des-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
+[    3.043185] 00000000: fe dc ba 98 76 54 32 10
+[    3.063238] alg: skcipher: cbc-3des-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
+[    3.073818] 00000000: 7d 33 88 93 0f 93 b2 42
 
-Signed-off-by: Stefan Hellermann <stefan@the2masters.de>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: linux-mips@vger.kernel.org
+This above dumps show that the actual output IV is indeed the input IV.
+This is due to the IV not being copied back into the request.
+
+This patch fixes that.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/include/asm/mach-ath79/ar933x_uart.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/crypto/talitos.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/mips/include/asm/mach-ath79/ar933x_uart.h b/arch/mips/include/asm/mach-ath79/ar933x_uart.h
-index c2917b39966b..bba2c8837951 100644
---- a/arch/mips/include/asm/mach-ath79/ar933x_uart.h
-+++ b/arch/mips/include/asm/mach-ath79/ar933x_uart.h
-@@ -27,8 +27,8 @@
- #define AR933X_UART_CS_PARITY_S		0
- #define AR933X_UART_CS_PARITY_M		0x3
- #define	  AR933X_UART_CS_PARITY_NONE	0
--#define	  AR933X_UART_CS_PARITY_ODD	1
--#define	  AR933X_UART_CS_PARITY_EVEN	2
-+#define	  AR933X_UART_CS_PARITY_ODD	2
-+#define	  AR933X_UART_CS_PARITY_EVEN	3
- #define AR933X_UART_CS_IF_MODE_S	2
- #define AR933X_UART_CS_IF_MODE_M	0x3
- #define	  AR933X_UART_CS_IF_MODE_NONE	0
+diff --git a/drivers/crypto/talitos.c b/drivers/crypto/talitos.c
+index 5a24a484ecc7..0b12772c7919 100644
+--- a/drivers/crypto/talitos.c
++++ b/drivers/crypto/talitos.c
+@@ -1544,11 +1544,15 @@ static void ablkcipher_done(struct device *dev,
+ 			    int err)
+ {
+ 	struct ablkcipher_request *areq = context;
++	struct crypto_ablkcipher *cipher = crypto_ablkcipher_reqtfm(areq);
++	struct talitos_ctx *ctx = crypto_ablkcipher_ctx(cipher);
++	unsigned int ivsize = crypto_ablkcipher_ivsize(cipher);
+ 	struct talitos_edesc *edesc;
+ 
+ 	edesc = container_of(desc, struct talitos_edesc, desc);
+ 
+ 	common_nonsnoop_unmap(dev, edesc, areq);
++	memcpy(areq->info, ctx->iv, ivsize);
+ 
+ 	kfree(edesc);
+ 
 -- 
 2.20.1
 
