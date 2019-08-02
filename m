@@ -2,101 +2,73 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FEE3C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 637B8C32753
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E90C2217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:21:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752104;
-	bh=o3wy5nRhYLcAi7lP2oNchUBAb7gBx8iqR6nIER7hnXM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VZA5OlS/O8BRakbBqLkQXS1Wp/ilTcv5QN8p5aDbLhXERHB23sNJh/rnYs6Xm5A4v
-	 L2laFUq+Yf2eHMoZ7ndVBJeszSfw2q2hKFmPVZ6ecA2De6cKivMaSmGJnvP6U+QwQO
-	 4MWyvVCsFpjkWPpZ8H/L4kfRXn6tzFboGFF0IuT0=
+	by mail.kernel.org (Postfix) with ESMTP id 456D82183F
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:21:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393612AbfHBNVn (ORCPT
+        id S2393624AbfHBNVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:21:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60196 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729866AbfHBNVm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:21:42 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D3862173E;
-        Fri,  2 Aug 2019 13:21:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752101;
-        bh=o3wy5nRhYLcAi7lP2oNchUBAb7gBx8iqR6nIER7hnXM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ENDeIjx/AufWvzT6xj39MfOZdYby+aRZiRU4Ap6elgBYkAtVIpuc/QpJSEpIt4enO
-         qvid6m7y6iRT8d4QKyS+rV9Cw7G8iugmNiHPwgm1ZWzUY9Uon8QAoohLkubfuAshtC
-         jtq55+iudaYCbqOvProZ2M5B7D+X9zle3jzlBzE8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anson Huang <Anson.Huang@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 44/76] arm64: dts: imx8mm: Correct SAI3 RXC/TXFS pin's mux option #1
-Date:   Fri,  2 Aug 2019 09:19:18 -0400
-Message-Id: <20190802131951.11600-44-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190802131951.11600-1-sashal@kernel.org>
-References: <20190802131951.11600-1-sashal@kernel.org>
+        Fri, 2 Aug 2019 09:21:49 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:42092 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2393419AbfHBNUk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:20:40 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 97FAC797D353143E0C00;
+        Fri,  2 Aug 2019 21:20:36 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Fri, 2 Aug 2019
+ 21:20:28 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <agross@kernel.org>, <gregkh@linuxfoundation.org>,
+        <jslaby@suse.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-serial@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] tty: serial: qcom_geni_serial: use devm_platform_ioremap_resource() to simplify code
+Date:   Fri, 2 Aug 2019 21:08:17 +0800
+Message-ID: <20190802130817.16220-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+Use devm_platform_ioremap_resource() to simplify the code a bit.
+This is detected by coccinelle.
 
-[ Upstream commit 52d09014bb104a9157c0f5530700291052d2955c ]
-
-According to i.MX8MM reference manual Rev.1, 03/2019:
-
-SAI3_RXC pin's mux option #1 should be GPT1_CLK, NOT GPT1_CAPTURE2;
-SAI3_TXFS pin's mux option #1 should be GPT1_CAPTURE2, NOT GPT1_CLK.
-
-Fixes: c1c9d41319c3 ("dt-bindings: imx: Add pinctrl binding doc for imx8mm")
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/tty/serial/qcom_geni_serial.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h b/arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h
-index e25f7fcd79975..cffa8991880d1 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h
-@@ -462,7 +462,7 @@
- #define MX8MM_IOMUXC_SAI3_RXFS_GPIO4_IO28                                   0x1CC 0x434 0x000 0x5 0x0
- #define MX8MM_IOMUXC_SAI3_RXFS_TPSMP_HTRANS0                                0x1CC 0x434 0x000 0x7 0x0
- #define MX8MM_IOMUXC_SAI3_RXC_SAI3_RX_BCLK                                  0x1D0 0x438 0x000 0x0 0x0
--#define MX8MM_IOMUXC_SAI3_RXC_GPT1_CAPTURE2                                 0x1D0 0x438 0x000 0x1 0x0
-+#define MX8MM_IOMUXC_SAI3_RXC_GPT1_CLK                                      0x1D0 0x438 0x000 0x1 0x0
- #define MX8MM_IOMUXC_SAI3_RXC_SAI5_RX_BCLK                                  0x1D0 0x438 0x4D0 0x2 0x2
- #define MX8MM_IOMUXC_SAI3_RXC_GPIO4_IO29                                    0x1D0 0x438 0x000 0x5 0x0
- #define MX8MM_IOMUXC_SAI3_RXC_TPSMP_HTRANS1                                 0x1D0 0x438 0x000 0x7 0x0
-@@ -472,7 +472,7 @@
- #define MX8MM_IOMUXC_SAI3_RXD_GPIO4_IO30                                    0x1D4 0x43C 0x000 0x5 0x0
- #define MX8MM_IOMUXC_SAI3_RXD_TPSMP_HDATA0                                  0x1D4 0x43C 0x000 0x7 0x0
- #define MX8MM_IOMUXC_SAI3_TXFS_SAI3_TX_SYNC                                 0x1D8 0x440 0x000 0x0 0x0
--#define MX8MM_IOMUXC_SAI3_TXFS_GPT1_CLK                                     0x1D8 0x440 0x000 0x1 0x0
-+#define MX8MM_IOMUXC_SAI3_TXFS_GPT1_CAPTURE2                                0x1D8 0x440 0x000 0x1 0x0
- #define MX8MM_IOMUXC_SAI3_TXFS_SAI5_RX_DATA1                                0x1D8 0x440 0x4D8 0x2 0x2
- #define MX8MM_IOMUXC_SAI3_TXFS_GPIO4_IO31                                   0x1D8 0x440 0x000 0x5 0x0
- #define MX8MM_IOMUXC_SAI3_TXFS_TPSMP_HDATA1                                 0x1D8 0x440 0x000 0x7 0x0
+diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+index f879710..af695b6 100644
+--- a/drivers/tty/serial/qcom_geni_serial.c
++++ b/drivers/tty/serial/qcom_geni_serial.c
+@@ -198,10 +198,8 @@ static int qcom_geni_serial_request_port(struct uart_port *uport)
+ {
+ 	struct platform_device *pdev = to_platform_device(uport->dev);
+ 	struct qcom_geni_serial_port *port = to_dev_port(uport, uport);
+-	struct resource *res;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	uport->membase = devm_ioremap_resource(&pdev->dev, res);
++	uport->membase = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(uport->membase))
+ 		return PTR_ERR(uport->membase);
+ 	port->se.base = uport->membase;
 -- 
-2.20.1
+2.7.4
+
 
