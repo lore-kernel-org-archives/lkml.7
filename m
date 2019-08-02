@@ -2,69 +2,114 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3ABFC19759
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40FC9C19759
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE1D420644
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1FBC2080C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:23:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="vSUWD0y6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728697AbfHBBWJ (ORCPT
+        id S1730370AbfHBBXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 21:22:09 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:54934 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729345AbfHBBWJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 21:22:09 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id AB44843D26697CDE4409;
-        Fri,  2 Aug 2019 09:22:06 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 2 Aug 2019 09:21:49 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <corbet@lwn.net>
-CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <chao@kernel.org>, <jaegeuk@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] mailmap: add entry for Jaegeuk Kim
-Date:   Fri, 2 Aug 2019 09:21:35 +0800
-Message-ID: <20190802012135.31419-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Thu, 1 Aug 2019 21:23:24 -0400
+Received: from gateway24.websitewelcome.com ([192.185.51.31]:40572 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728112AbfHBBXY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 21:23:24 -0400
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id 60C3573B1
+        for <linux-kernel@vger.kernel.org>; Thu,  1 Aug 2019 20:23:23 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id tMHzhVKJ6iQertMHzhtomJ; Thu, 01 Aug 2019 20:23:23 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=PyIxTuo3Q1FmZoMfrad16Zm5et086ZfT9Fbkw6cUKF8=; b=vSUWD0y67/E+mYWoTLaLfPgtgF
+        vQr+eAzntBM3oJVYsXpEnu/2DdYWkJm/BIjYy2DC7Qbv1NnbkM372ZDMhWOKUSNdtPy7AgNeKBRnL
+        +cIt8tquHHdl24C+DuB5Uylw7VKosqSi5+ezJP9BEJ7LnSkqG58dT17XK9p0ZFhVVxfSow+SYAnXq
+        xqK2W+JeXj9m9tdifMzqx43FR8WVXYNVk/ifpy7o+tDWZxKokg8qpGVEr6tPnOPvq2wtISP7zuicC
+        UnbZkuLiU0zRdRs3gTePfByYAKCB0oiy425jtCBUKC+WHZ/QK68Pb9qRN6MVz4wU5LEXvS1dkYe6C
+        tF3B1Xtw==;
+Received: from [187.192.11.120] (port=53894 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1htMHy-002DcS-Bq; Thu, 01 Aug 2019 20:23:22 -0500
+Date:   Thu, 1 Aug 2019 20:22:48 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] PCI: Mark expected switch fall-through
+Message-ID: <20190802012248.GA22622@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.11.120
+X-Source-L: No
+X-Exim-ID: 1htMHy-002DcS-Bq
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [187.192.11.120]:53894
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add entry to connect all Jaegeuk's email addresses.
+Mark switch cases where we are expecting to fall through.
 
-Acked-by: Jaegeuk Kim <jaegeuk@kernel.org>
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
+This patch fixes the following warning (Building: allmodconfig i386):
+
+drivers/pci/hotplug/ibmphp_res.c: In function ‘update_bridge_ranges’:
+drivers/pci/hotplug/ibmphp_res.c:1943:16: warning: this statement may fall through [-Wimplicit-fallthrough=]
+       function = 0x8;
+       ~~~~~~~~~^~~~~
+drivers/pci/hotplug/ibmphp_res.c:1944:6: note: here
+      case PCI_HEADER_TYPE_MULTIBRIDGE:
+      ^~~~
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- .mailmap | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/pci/hotplug/ibmphp_res.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/.mailmap b/.mailmap
-index 477debe3d960..70d41c86e644 100644
---- a/.mailmap
-+++ b/.mailmap
-@@ -89,6 +89,9 @@ Henrik Kretzschmar <henne@nachtwindheim.de>
- Henrik Rydberg <rydberg@bitmath.org>
- Herbert Xu <herbert@gondor.apana.org.au>
- Jacob Shin <Jacob.Shin@amd.com>
-+Jaegeuk Kim <jaegeuk@kernel.org> <jaegeuk@google.com>
-+Jaegeuk Kim <jaegeuk@kernel.org> <jaegeuk@motorola.com>
-+Jaegeuk Kim <jaegeuk@kernel.org> <jaegeuk.kim@samsung.com>
- James Bottomley <jejb@mulgrave.(none)>
- James Bottomley <jejb@titanic.il.steeleye.com>
- James E Wilson <wilson@specifix.com>
+diff --git a/drivers/pci/hotplug/ibmphp_res.c b/drivers/pci/hotplug/ibmphp_res.c
+index 5e8caf7a4452..1e1ba66cfd1e 100644
+--- a/drivers/pci/hotplug/ibmphp_res.c
++++ b/drivers/pci/hotplug/ibmphp_res.c
+@@ -1941,6 +1941,7 @@ static int __init update_bridge_ranges(struct bus_node **bus)
+ 						break;
+ 					case PCI_HEADER_TYPE_BRIDGE:
+ 						function = 0x8;
++						/* Fall through */
+ 					case PCI_HEADER_TYPE_MULTIBRIDGE:
+ 						/* We assume here that only 1 bus behind the bridge
+ 						   TO DO: add functionality for several:
 -- 
-2.18.0.rc1
+2.22.0
 
