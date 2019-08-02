@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00671C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 856B2C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C20EA2087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60870206A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:42:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738957;
-	bh=dZpLJQa/iNeL7/6UDAIQwxGQuAixpVJtkTlR0A7g43s=;
+	s=default; t=1564738960;
+	bh=erNs80+xO89ji3FxGHqrr4RJNC78SHV0qgHFA/oqA5U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2tPdFDcB9VeAdhEFkKyMOqH/R4wB8SqDlA84KE67GATPwEPJJsLGCH+gKIQ8gkXPz
-	 TUxG3K1qvCt7XnQBBf1+6h+IhubXzA7hm+8cZ20czp8TTEvF4k1MZeeKVu5cxXluHI
-	 1RUbvNB0Q3uwGSy9aZ0dxwYY+O+BOmwBrJknI+es=
+	b=u8MH71RFmOwXPOtXo+X/3ebiramAHYhVOtEmWstgAzyWapfr+0HX/t3i/gCBkJyg5
+	 fCGrkw4XyxdwWzYe0AidONK4ULdbKgQWrB6q71pZ56lYYtBDEdRM3xv/M9KgnHZMky
+	 ixuR3x8HePzb6zO5/cv0py1B3+UQ1BxKSS65hauY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391898AbfHBJmg (ORCPT
+        id S2391353AbfHBJmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:42:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44914 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:42:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391861AbfHBJmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:42:32 -0400
+        id S2391886AbfHBJme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:42:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 001BE206A2;
-        Fri,  2 Aug 2019 09:42:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8695420679;
+        Fri,  2 Aug 2019 09:42:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738951;
-        bh=dZpLJQa/iNeL7/6UDAIQwxGQuAixpVJtkTlR0A7g43s=;
+        s=default; t=1564738954;
+        bh=erNs80+xO89ji3FxGHqrr4RJNC78SHV0qgHFA/oqA5U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f9Sogh46RIax29XB6xyGyaif6OvcgOimDvahnw5t7Zw7X7jmqmjutBZ3pLEncdPtZ
-         qhfb9aCmauQE4VsdIfadGEJpKHUMkcYOStA1T7qGGykVF6uwhIuE2ZnTx7jaUUeQY4
-         exTWnntdTmICUbsW7mamP/m7FyA/Tva1Yh6ldrFw=
+        b=GY4LMujY1+2vJ0EEnrg2jn89pGz4F/Jl0oGDUjvrXW2FyCWV29fAorJBb2ocjdFCD
+         A8tlMfeM1GYuzr0n+JYhRS9MRfA22rof8ph4tLNLauDTn/tbZF60K+lrca7GoOcS6w
+         KfFuRUlbcZsHtAulBQolq8mFhFAd+m7MSt4njO04=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 059/223] rslib: Fix decoding of shortened codes
-Date:   Fri,  2 Aug 2019 11:34:44 +0200
-Message-Id: <20190802092242.686267916@linuxfoundation.org>
+Subject: [PATCH 4.9 060/223] rslib: Fix handling of of caller provided syndrome
+Date:   Fri,  2 Aug 2019 11:34:45 +0200
+Message-Id: <20190802092242.745107649@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -61,42 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2034a42d1747fc1e1eeef2c6f1789c4d0762cb9c ]
+[ Upstream commit ef4d6a8556b637ad27c8c2a2cff1dda3da38e9a9 ]
 
-The decoding of shortenend codes is broken. It only works as expected if
-there are no erasures.
-
-When decoding with erasures, Lambda (the error and erasure locator
-polynomial) is initialized from the given erasure positions. The pad
-parameter is not accounted for by the initialisation code, and hence
-Lambda is initialized from incorrect erasure positions.
-
-The fix is to adjust the erasure positions by the supplied pad.
+Check if the syndrome provided by the caller is zero, and act
+accordingly.
 
 Signed-off-by: Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190620141039.9874-3-ferdinand.blomqvist@gmail.com
+Link: https://lkml.kernel.org/r/20190620141039.9874-6-ferdinand.blomqvist@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/reed_solomon/decode_rs.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ lib/reed_solomon/decode_rs.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
 diff --git a/lib/reed_solomon/decode_rs.c b/lib/reed_solomon/decode_rs.c
-index 0ec3f257ffdf..8eed0f9ac495 100644
+index 8eed0f9ac495..a5d313381539 100644
 --- a/lib/reed_solomon/decode_rs.c
 +++ b/lib/reed_solomon/decode_rs.c
-@@ -99,9 +99,9 @@
- 	if (no_eras > 0) {
- 		/* Init lambda to be the erasure locator polynomial */
- 		lambda[1] = alpha_to[rs_modnn(rs,
--					      prim * (nn - 1 - eras_pos[0]))];
-+					prim * (nn - 1 - (eras_pos[0] + pad)))];
- 		for (i = 1; i < no_eras; i++) {
--			u = rs_modnn(rs, prim * (nn - 1 - eras_pos[i]));
-+			u = rs_modnn(rs, prim * (nn - 1 - (eras_pos[i] + pad)));
- 			for (j = i + 1; j > 0; j--) {
- 				tmp = index_of[lambda[j - 1]];
- 				if (tmp != nn) {
+@@ -42,8 +42,18 @@
+ 	BUG_ON(pad < 0 || pad >= nn);
+ 
+ 	/* Does the caller provide the syndrome ? */
+-	if (s != NULL)
+-		goto decode;
++	if (s != NULL) {
++		for (i = 0; i < nroots; i++) {
++			/* The syndrome is in index form,
++			 * so nn represents zero
++			 */
++			if (s[i] != nn)
++				goto decode;
++		}
++
++		/* syndrome is zero, no errors to correct  */
++		return 0;
++	}
+ 
+ 	/* form the syndromes; i.e., evaluate data(x) at roots of
+ 	 * g(x) */
 -- 
 2.20.1
 
