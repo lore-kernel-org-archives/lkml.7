@@ -7,53 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43848C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C071C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B83321882
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70B94218A6
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:20:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752053;
-	bh=bcoJHee30V1b63jHD1ymaV8AOPOg4oTRH05ezVaKWOo=;
+	s=default; t=1564752055;
+	bh=HTQTGpju1xQA17KyBq0t2+lQ4OHS0+yGSArT1hIXGbw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dVWJD09+n2o7vDeb/IMsThS6YjWyesgdnqWxjOaXepc+8lSB5D42Q7rzbZYjd6FxM
-	 jeetxCb7HShlt0VkqZrqhu7D+lEi7Pyw1pNhlFICdQdDKXfOweg4Oe9o+ks9Qq12Fk
-	 /E/RIVOAtvwuxa2Jp4t6b/p/iGGTxts3ZNDdRQRs=
+	b=jwK7blu8RnlKky5OQTPiRVo6LHc0VyLf4SDAJHPo7d2JUjrTL7YFcDPg3c4EOkbro
+	 7sS0SO4rYDqVXSSLJF7YZJyIx/i6JpKYi6/BeL1+IB56mm1a0JtKUq/LeFboP/agbM
+	 wBY4BWUQfJH5TZCpoMRpeo+cE6Z/ZHYZyQqS7Wo0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393485AbfHBNUw (ORCPT
+        id S2393496AbfHBNUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:20:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59278 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:20:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393451AbfHBNUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:20:49 -0400
+        id S2393483AbfHBNUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:20:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4233D21849;
-        Fri,  2 Aug 2019 13:20:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB3C5218A4;
+        Fri,  2 Aug 2019 13:20:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752048;
-        bh=bcoJHee30V1b63jHD1ymaV8AOPOg4oTRH05ezVaKWOo=;
+        s=default; t=1564752051;
+        bh=HTQTGpju1xQA17KyBq0t2+lQ4OHS0+yGSArT1hIXGbw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PrNZTcBQDkQO1qYNLAJfIrg+50yFhs0ZDhp74rWCvcMxta/4L1GT6Tyscg+/MKpEp
-         w82rS1ieiOsNxzJFuOVHeY8kx1CeItrP4wOmR6VvS4FqUsRdye+ClnYZ2V0tE8i136
-         Q1VC1eBQBF5QjSNucrQnhSgu+mRwT8mNbKA+r0i4=
+        b=oL3sJBFDTAP8sa99dj48LI5VW2ek4Xa8gESKX6Qx3HRzeTmlK5WpqzC5oMFkG0DSs
+         yTiy1ZMoNUJlhWFO4rAZTp5qw1kbUUpKyqT0vmYAuTZAJg/4hfWdfX0ZksEBVARMIw
+         xEzIc2FYaAmqYK15Fhke16Oggl66eo8iwhI3G2aw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
-        <sebastien.szymanski@armadeus.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 33/76] ARM: dts: imx6ul: fix clock frequency property name of I2C buses
-Date:   Fri,  2 Aug 2019 09:19:07 -0400
-Message-Id: <20190802131951.11600-33-sashal@kernel.org>
+Cc:     Joerg Roedel <jroedel@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 35/76] x86/mm: Sync also unmappings in vmalloc_sync_all()
+Date:   Fri,  2 Aug 2019 09:19:09 -0400
+Message-Id: <20190802131951.11600-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802131951.11600-1-sashal@kernel.org>
 References: <20190802131951.11600-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,99 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-[ Upstream commit 2ca99396333999b9b5c5b91b36cbccacfe571aaf ]
+[ Upstream commit 8e998fc24de47c55b47a887f6c95ab91acd4a720 ]
 
-A few boards set clock frequency of their I2C buses with
-"clock_frequency" property. The right property is "clock-frequency".
+With huge-page ioremap areas the unmappings also need to be synced between
+all page-tables. Otherwise it can cause data corruption when a region is
+unmapped and later re-used.
 
-Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Make the vmalloc_sync_one() function ready to sync unmappings and make sure
+vmalloc_sync_all() iterates over all page-tables even when an unmapped PMD
+is found.
+
+Fixes: 5d72b4fba40ef ('x86, mm: support huge I/O mapping capability I/F')
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+Link: https://lkml.kernel.org/r/20190719184652.11391-3-joro@8bytes.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6ul-14x14-evk.dtsi  | 2 +-
- arch/arm/boot/dts/imx6ul-geam.dts        | 2 +-
- arch/arm/boot/dts/imx6ul-isiot.dtsi      | 2 +-
- arch/arm/boot/dts/imx6ul-pico-hobbit.dts | 2 +-
- arch/arm/boot/dts/imx6ul-pico-pi.dts     | 4 ++--
- 5 files changed, 6 insertions(+), 6 deletions(-)
+ arch/x86/mm/fault.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
-index 9207d5d071f11..d556f7c541ce6 100644
---- a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
-@@ -112,7 +112,7 @@
- };
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 499331be9bfe8..26a8b4b1b9ed9 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -194,11 +194,12 @@ static inline pmd_t *vmalloc_sync_one(pgd_t *pgd, unsigned long address)
  
- &i2c2 {
--	clock_frequency = <100000>;
-+	clock-frequency = <100000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c2>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6ul-geam.dts b/arch/arm/boot/dts/imx6ul-geam.dts
-index bc77f26a2f1de..6157a058feec9 100644
---- a/arch/arm/boot/dts/imx6ul-geam.dts
-+++ b/arch/arm/boot/dts/imx6ul-geam.dts
-@@ -156,7 +156,7 @@
- };
+ 	pmd = pmd_offset(pud, address);
+ 	pmd_k = pmd_offset(pud_k, address);
+-	if (!pmd_present(*pmd_k))
+-		return NULL;
  
- &i2c2 {
--	clock_frequency = <100000>;
-+	clock-frequency = <100000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c2>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6ul-isiot.dtsi b/arch/arm/boot/dts/imx6ul-isiot.dtsi
-index 213e802bf35c5..23e6e2e7ace9d 100644
---- a/arch/arm/boot/dts/imx6ul-isiot.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-isiot.dtsi
-@@ -148,7 +148,7 @@
- };
+-	if (!pmd_present(*pmd))
++	if (pmd_present(*pmd) != pmd_present(*pmd_k))
+ 		set_pmd(pmd, *pmd_k);
++
++	if (!pmd_present(*pmd_k))
++		return NULL;
+ 	else
+ 		BUG_ON(pmd_pfn(*pmd) != pmd_pfn(*pmd_k));
  
- &i2c2 {
--	clock_frequency = <100000>;
-+	clock-frequency = <100000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c2>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6ul-pico-hobbit.dts b/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
-index 39eeeddac39e3..09f7ffa9ad8c4 100644
---- a/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
-+++ b/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
-@@ -43,7 +43,7 @@
- };
+@@ -220,17 +221,13 @@ void vmalloc_sync_all(void)
+ 		spin_lock(&pgd_lock);
+ 		list_for_each_entry(page, &pgd_list, lru) {
+ 			spinlock_t *pgt_lock;
+-			pmd_t *ret;
  
- &i2c2 {
--	clock_frequency = <100000>;
-+	clock-frequency = <100000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c2>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6ul-pico-pi.dts b/arch/arm/boot/dts/imx6ul-pico-pi.dts
-index de07357b27fc2..6cd7d5877d20c 100644
---- a/arch/arm/boot/dts/imx6ul-pico-pi.dts
-+++ b/arch/arm/boot/dts/imx6ul-pico-pi.dts
-@@ -43,7 +43,7 @@
- };
+ 			/* the pgt_lock only for Xen */
+ 			pgt_lock = &pgd_page_get_mm(page)->page_table_lock;
  
- &i2c2 {
--	clock_frequency = <100000>;
-+	clock-frequency = <100000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c2>;
- 	status = "okay";
-@@ -58,7 +58,7 @@
- };
- 
- &i2c3 {
--	clock_frequency = <100000>;
-+	clock-frequency = <100000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c3>;
- 	status = "okay";
+ 			spin_lock(pgt_lock);
+-			ret = vmalloc_sync_one(page_address(page), address);
++			vmalloc_sync_one(page_address(page), address);
+ 			spin_unlock(pgt_lock);
+-
+-			if (!ret)
+-				break;
+ 		}
+ 		spin_unlock(&pgd_lock);
+ 	}
 -- 
 2.20.1
 
