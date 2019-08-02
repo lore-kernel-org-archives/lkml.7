@@ -2,85 +2,111 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21EC5C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0FEEC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E867620880
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 715F1206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:06:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392392AbfHBWFJ (ORCPT
+        id S2437170AbfHBWGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 18:05:09 -0400
-Received: from smtprelay0102.hostedemail.com ([216.40.44.102]:48139 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729311AbfHBWFJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 18:05:09 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 669D7100E806B;
-        Fri,  2 Aug 2019 22:05:07 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: swing93_49a7a4bebce5e
-X-Filterd-Recvd-Size: 2071
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf20.hostedemail.com (Postfix) with ESMTPA;
-        Fri,  2 Aug 2019 22:05:06 +0000 (UTC)
-Message-ID: <2ecfbf8dda354fe47912446bf5c3fe30ca905aa0.camel@perches.com>
-Subject: Re: [PATCH] isdn: hysdn: Fix error spaces around '*'
-From:   Joe Perches <joe@perches.com>
-To:     Stephen Hemminger <stephen@networkplumber.org>,
-        Jose Carlos Cazarin Filho <joseespiriki@gmail.com>
-Cc:     isdn@linux-pingi.de, gregkh@linuxfoundation.org,
-        devel@driverdev.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 02 Aug 2019 15:05:05 -0700
-In-Reply-To: <20190802145506.168b576b@hermes.lan>
-References: <20190802195602.28414-1-joseespiriki@gmail.com>
-         <20190802145506.168b576b@hermes.lan>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Fri, 2 Aug 2019 18:06:20 -0400
+Received: from mga04.intel.com ([192.55.52.120]:11278 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732385AbfHBWGT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 18:06:19 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Aug 2019 15:06:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,339,1559545200"; 
+   d="scan'208";a="201806637"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
+  by fmsmga002.fm.intel.com with ESMTP; 02 Aug 2019 15:06:19 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Subject: [PATCH v2] KVM: x86: Unconditionally call x86 ops that are always implemented
+Date:   Fri,  2 Aug 2019 15:06:17 -0700
+Message-Id: <20190802220617.10869-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-08-02 at 14:55 -0700, Stephen Hemminger wrote:
-> On Fri,  2 Aug 2019 19:56:02 +0000
-> Jose Carlos Cazarin Filho <joseespiriki@gmail.com> wrote:
-> 
-> > Fix checkpath error:
-> > CHECK: spaces preferred around that '*' (ctx:WxV)
-> > +extern hysdn_card *card_root;        /* pointer to first card */
-> > 
-> > Signed-off-by: Jose Carlos Cazarin Filho <joseespiriki@gmail.com>
-> 
-> Read the TODO, these drivers are scheduled for removal, so changes
-> are not helpful at this time.
+Remove a few stale checks for non-NULL ops now that the ops in question
+are implemented by both VMX and SVM.
 
-Maybe better to mark the MAINTAINERS entry obsolete so
-checkpatch bleats a message about unnecessary changes.
+Note, this is **not** stable material, the Fixes tags are there purely
+to show when a particular op was first supported by both VMX and SVM.
+
+Fixes: 74f169090b6f ("kvm/svm: Setup MCG_CAP on AMD properly")
+Fixes: b31c114b82b2 ("KVM: X86: Provide a capability to disable PAUSE intercepts")
+Fixes: 411b44ba80ab ("svm: Implements update_pi_irte hook to setup posted interrupt")
+Cc: Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 30bf852e6d6b..b5df91032574 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8628,7 +8628,7 @@ M:	Karsten Keil <isdn@linux-pingi.de>
- L:	isdn4linux@listserv.isdn4linux.de (subscribers-only)
- L:	netdev@vger.kernel.org
- W:	http://www.isdn4linux.de
--S:	Odd Fixes
-+S:	Obsolete
- F:	Documentation/isdn/
- F:	drivers/isdn/capi/
- F:	drivers/staging/isdn/
+v2: Give update_pi_iret the same treatment [Krish].
+
+ arch/x86/kvm/x86.c | 13 +++----------
+ 1 file changed, 3 insertions(+), 10 deletions(-)
+
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 01e18caac825..e7c993f0cbed 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -3506,8 +3506,7 @@ static int kvm_vcpu_ioctl_x86_setup_mce(struct kvm_vcpu *vcpu,
+ 	for (bank = 0; bank < bank_num; bank++)
+ 		vcpu->arch.mce_banks[bank*4] = ~(u64)0;
+ 
+-	if (kvm_x86_ops->setup_mce)
+-		kvm_x86_ops->setup_mce(vcpu);
++	kvm_x86_ops->setup_mce(vcpu);
+ out:
+ 	return r;
+ }
+@@ -9313,10 +9312,7 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+ 	kvm_page_track_init(kvm);
+ 	kvm_mmu_init_vm(kvm);
+ 
+-	if (kvm_x86_ops->vm_init)
+-		return kvm_x86_ops->vm_init(kvm);
+-
+-	return 0;
++	return kvm_x86_ops->vm_init(kvm);
+ }
+ 
+ static void kvm_unload_vcpu_mmu(struct kvm_vcpu *vcpu)
+@@ -9992,7 +9988,7 @@ EXPORT_SYMBOL_GPL(kvm_arch_has_noncoherent_dma);
+ 
+ bool kvm_arch_has_irq_bypass(void)
+ {
+-	return kvm_x86_ops->update_pi_irte != NULL;
++	return true;
+ }
+ 
+ int kvm_arch_irq_bypass_add_producer(struct irq_bypass_consumer *cons,
+@@ -10032,9 +10028,6 @@ void kvm_arch_irq_bypass_del_producer(struct irq_bypass_consumer *cons,
+ int kvm_arch_update_irqfd_routing(struct kvm *kvm, unsigned int host_irq,
+ 				   uint32_t guest_irq, bool set)
+ {
+-	if (!kvm_x86_ops->update_pi_irte)
+-		return -EINVAL;
+-
+ 	return kvm_x86_ops->update_pi_irte(kvm, host_irq, guest_irq, set);
+ }
+ 
+-- 
+2.22.0
 
