@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE0CC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 815CCC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2140120665
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:01:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F3032073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:01:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564740085;
-	bh=5rFg4wi4Wf+7WlkU5Qd2u3AW6e6MuHvRLSEIxRwV5Ac=;
+	s=default; t=1564740090;
+	bh=OEFQhU2Ze2Amd7SGEl4XHKX3kQDzFSZ9JgWc21TmtTY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TarVbnn5sLuswZD1Eb3i2WKO4YoCPw93xJi4gD1yFmRxGblpcwais007YCZbttNhM
-	 dygV2TmZcCoLLFxLINRPKyLbNecSxA5VdpvHVL3JR4RsVyLVUBoi4hfWu445SFxTQ6
-	 LRvQaba8VBhw1+Wx+IFXJ6BVvLQoh4Sbh05T7edI=
+	b=Gdg5N3LnajT4b9HoUv8+nGv32OfIKO4R0cOzAPf7T3iX1kQ1LXGAZEs83k/i3Q1j/
+	 vtf2qkoRwSOkJ8q3CZYIk/eLbN6+F7xGwIYzZi1weUIKrMtJrAR6wq4/sRJh0WNhz3
+	 IvdkY2PhLUItjRNMbvVUij4oqp63cYK3UDJOMkwg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405218AbfHBJoR (ORCPT
+        id S2407101AbfHBKB2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:44:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46130 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 06:01:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392027AbfHBJnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:43:17 -0400
+        id S2405206AbfHBJoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:44:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA37A206A2;
-        Fri,  2 Aug 2019 09:43:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 647AB20880;
+        Fri,  2 Aug 2019 09:44:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738997;
-        bh=5rFg4wi4Wf+7WlkU5Qd2u3AW6e6MuHvRLSEIxRwV5Ac=;
+        s=default; t=1564739054;
+        bh=OEFQhU2Ze2Amd7SGEl4XHKX3kQDzFSZ9JgWc21TmtTY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fx8hrWo4sHfzcNpP0dppfGsaa0iXNaW2p8pOtdomeCmAqH3w400hsLAOSUShwM0Wc
-         7i2UpXBThDtOZRmRugIYoIDcC6I1Uh1EkDLN8BHiQDxphBCXb8wH03eozlUVYPIKuy
-         qEAFaYIm+Kms22Vtz0xyN9+s3Y2MOsU0mUVmDVSg=
+        b=gP76LFp4lPOr2GWv+oJtjJF524EalavaQ7QRSFii321vVQnjaSqnD5Rr0NU/axlkp
+         bNru95xcvLBiDw4UMbe3hHUHXwLH2C1666nk9AIw/KdXyayp5Lo5ZmBzVTaEQ+n96m
+         pAFtNeD482LeLfGT9IlXmuMYHCvWb6NIrKcb16yE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Schmitz <schmitzmic@gmail.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Stan Johnson <userm57@yahoo.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.9 077/223] scsi: mac_scsi: Increase PIO/PDMA transfer length threshold
-Date:   Fri,  2 Aug 2019 11:35:02 +0200
-Message-Id: <20190802092243.877465809@linuxfoundation.org>
+        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH 4.9 095/223] arm64: tegra: Fix AGIC register range
+Date:   Fri,  2 Aug 2019 11:35:20 +0200
+Message-Id: <20190802092245.330532366@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -61,62 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Jon Hunter <jonathanh@nvidia.com>
 
-commit 7398cee4c3e6aea1ba07a6449e5533ecd0b92cdd upstream.
+commit ba24eee6686f6ed3738602b54d959253316a9541 upstream.
 
-Some targets introduce delays when handshaking the response to certain
-commands. For example, a disk may send a 96-byte response to an INQUIRY
-command (or a 24-byte response to a MODE SENSE command) too slowly.
+The Tegra AGIC interrupt controller is an ARM GIC400 interrupt
+controller. Per the ARM GIC device-tree binding, the first address
+region is for the GIC distributor registers and the second address
+region is for the GIC CPU interface registers. The address space for
+the distributor registers is 4kB, but currently this is incorrectly
+defined as 8kB for the Tegra AGIC and overlaps with the CPU interface
+registers. Correct the address space for the distributor to be 4kB.
 
-Apparently the first 12 or 14 bytes are handshaked okay but then the system
-bus error timeout is reached while transferring the next word.
-
-Since the scsi bus phase hasn't changed, the driver then sets the target
-borken flag to prevent further PDMA transfers. The driver also logs the
-warning, "switching to slow handshake".
-
-Raise the PDMA threshold to 512 bytes so that PIO transfers will be used
-for these commands. This default is sufficiently low that PDMA will still
-be used for READ and WRITE commands.
-
-The existing threshold (16 bytes) was chosen more or less at random.
-However, best performance requires the threshold to be as low as possible.
-Those systems that don't need the PIO workaround at all may benefit from
-mac_scsi.setup_use_pdma=1
-
-Cc: Michael Schmitz <schmitzmic@gmail.com>
-Cc: stable@vger.kernel.org # v4.14+
-Fixes: 3a0f64bfa907 ("mac_scsi: Fix pseudo DMA implementation")
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Tested-by: Michael Schmitz <schmitzmic@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Fixes: bcdbde433542 ("arm64: tegra: Add AGIC node for Tegra210")
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/mac_scsi.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/scsi/mac_scsi.c
-+++ b/drivers/scsi/mac_scsi.c
-@@ -54,7 +54,7 @@ static int setup_cmd_per_lun = -1;
- module_param(setup_cmd_per_lun, int, 0);
- static int setup_sg_tablesize = -1;
- module_param(setup_sg_tablesize, int, 0);
--static int setup_use_pdma = -1;
-+static int setup_use_pdma = 512;
- module_param(setup_use_pdma, int, 0);
- static int setup_hostid = -1;
- module_param(setup_hostid, int, 0);
-@@ -325,7 +325,7 @@ static int macscsi_dma_xfer_len(struct S
- 	struct NCR5380_hostdata *hostdata = shost_priv(instance);
- 
- 	if (hostdata->flags & FLAG_NO_PSEUDO_DMA ||
--	    cmd->SCp.this_residual < 16)
-+	    cmd->SCp.this_residual < setup_use_pdma)
- 		return 0;
- 
- 	return cmd->SCp.this_residual;
+--- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+@@ -1020,7 +1020,7 @@
+ 			compatible = "nvidia,tegra210-agic";
+ 			#interrupt-cells = <3>;
+ 			interrupt-controller;
+-			reg = <0x702f9000 0x2000>,
++			reg = <0x702f9000 0x1000>,
+ 			      <0x702fa000 0x2000>;
+ 			interrupts = <GIC_SPI 102 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+ 			clocks = <&tegra_car TEGRA210_CLK_APE>;
 
 
