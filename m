@@ -2,224 +2,191 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE4C5C32753
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:14:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE5FC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C7C020B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:14:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CD8120B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:16:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xh3cexBL"
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="TuHuJ6lP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392241AbfHBOOj (ORCPT
+        id S2392278AbfHBOQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 10:14:39 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:39320 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389092AbfHBOOj (ORCPT
+        Fri, 2 Aug 2019 10:16:31 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:32972 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727776AbfHBOQa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 10:14:39 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x72EEXAw106472;
-        Fri, 2 Aug 2019 09:14:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1564755273;
-        bh=Z5hefhV5hSx26XH6RwN+uY15+AnQr2UXcgts3xZH/Zc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=xh3cexBLd9NglFOKglFA23i+G+4YtAZDXwMIFeLj2+P3/mgVVttlBlzben5wH13uq
-         xQoE4CNoWvJKzCgsNg+y9NHbb0roUPTWDsjo4Y+o3mrOsV/x8+3dEpstgs0+gUMfhr
-         OVKnFLxgPKksuhVGSgYnW3sOqkCWRbiO7Qc1kkog=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x72EEXfs092426
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 2 Aug 2019 09:14:33 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 2 Aug
- 2019 09:14:33 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 2 Aug 2019 09:14:33 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x72EEXJK014427;
-        Fri, 2 Aug 2019 09:14:33 -0500
-Subject: Re: [PATCH v4 6/9] leds: multicolor: Introduce a multicolor class
- definition
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190725182818.29556-1-dmurphy@ti.com>
- <20190725182818.29556-7-dmurphy@ti.com>
- <fa74cc04-61fc-161f-2ce1-6de5921fce2f@gmail.com>
- <f83b0f42-a310-a800-1b78-d5fb89516114@ti.com>
- <f78ee3a4-596c-1b0c-3c91-15aad85ba9b2@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <eefe2541-29d4-e438-eade-6c15f506fc53@ti.com>
-Date:   Fri, 2 Aug 2019 09:14:33 -0500
+        Fri, 2 Aug 2019 10:16:30 -0400
+Received: by mail-wm1-f65.google.com with SMTP id h19so1572621wme.0
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 07:16:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cumulusnetworks.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=VDDZkNoGjBHzfk/3qVVuF7BbecezKv+BHiCbXcdhoC0=;
+        b=TuHuJ6lPEwf33OjXIE9OyePvq6M4VT9I6gVIPovd4eWX0BgxURoww4krQ8F9nzfZvF
+         Z+YdbzXMJ+YgEAws2CURNyb5q6v0k4rExePgS3OXqMgcuCZXt/PuFUw1lGO2sBcqGVlU
+         Da/dCDRUgg/Gp//Ur1XjoZD/vvW9lxmks98MU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=VDDZkNoGjBHzfk/3qVVuF7BbecezKv+BHiCbXcdhoC0=;
+        b=OlH9ooq+LGXp4r6SKfE5FRcEKVmdnlKyDjyPEfX2w9f4g/+/0094xVEjl1f5kHLkGw
+         fbVAhBSpTNOHXR0BrDjvTBEmM/WVc59JPYgTSa4z5N1BMShzCW3UeO0yaK58rX8eisx5
+         HzwxMmzkk5rWqUqudnHbNTVRy+3sBLkwEvGsLKS7Yh0Hn1Ia8+oZMjVUcxzrhFH6OqyZ
+         XnPvc07/qj57IEBm/52VeVDFJF8h5vs28v9FdTQ97D1zbDUQ1y9Ph6MPToNCwEYnzeXc
+         6fXJTDZLRyHiqEM8DvvPzah/XIhspIMtfLE8E4XKzdAw5BEmrD1N6vAPzbG51aMUx5Y3
+         zSRA==
+X-Gm-Message-State: APjAAAU3Il85UmhIpq8xLdqB7lEMRaS7sD0Ks69/e73t8oCmG0bhbd6j
+        XgYjR7Pz6RcgwdO9q/e1+vzf7g==
+X-Google-Smtp-Source: APXvYqxPYYaP1hxY5nwOp+yUMF4ydtrh+mQpZgwUeoYWylD48qeuRuzxTa9OTjfDN/T4ngNQqv1GIQ==
+X-Received: by 2002:a7b:c775:: with SMTP id x21mr4752518wmk.97.1564755387548;
+        Fri, 02 Aug 2019 07:16:27 -0700 (PDT)
+Received: from [192.168.0.107] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
+        by smtp.gmail.com with ESMTPSA id f2sm71007337wrq.48.2019.08.02.07.16.26
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 02 Aug 2019 07:16:26 -0700 (PDT)
+Subject: Re: [net-next,rfc] net: bridge: mdb: Extend with multicast LLADDR
+To:     "Allan W. Nielsen" <allan.nielsen@microchip.com>
+Cc:     Horatiu Vultur <horatiu.vultur@microchip.com>, idosch@mellanox.com,
+        andrew@lunn.ch, davem@davemloft.net, roopa@cumulusnetworks.com,
+        petrm@mellanox.com, tglx@linutronix.de, fw@strlen.de,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bridge@lists.linux-foundation.org
+References: <1564663840-27721-1-git-send-email-horatiu.vultur@microchip.com>
+ <f758fdbf-4e0a-57b3-f13d-23e893ba7458@cumulusnetworks.com>
+ <20190802140655.ngbok2ubprhivlhy@lx-anielsen.microsemi.net>
+From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Message-ID: <fcb0e526-778f-5451-9934-e6c2421e4eb3@cumulusnetworks.com>
+Date:   Fri, 2 Aug 2019 17:16:25 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <f78ee3a4-596c-1b0c-3c91-15aad85ba9b2@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190802140655.ngbok2ubprhivlhy@lx-anielsen.microsemi.net>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
+On 02/08/2019 17:07, Allan W. Nielsen wrote:
+> The 08/01/2019 17:07, Nikolay Aleksandrov wrote:
+>>> To create a group for two of the front ports the following entries can
+>>> be added:
+>>> bridge mdb add dev br0 port eth0 grp 01:00:00:00:00:04 permanent vid 1
+>>> bridge mdb add dev br0 port eth1 grp 01:00:00:00:00:04 permanent vid 1
+>>>
+>>> Now the entries will be display as following:
+>>> dev br0 port eth0 grp 01:00:00:00:00:04 permanent offload vid 1
+>>> dev br0 port eth1 grp 01:00:00:00:00:04 permanent offload vid 1
+>>>
+>>> This requires changes to iproute2 as well, see the follogin patch for that.
+>>>
+>>> Now if frame with dmac '01:00:00:00:00:04' will arrive at one of the front
+>>> ports. If we have HW offload support, then the frame will be forwarded by
+>>> the switch, and need not to go to the CPU. In a pure SW world, the frame is
+>>> forwarded by the SW bridge, which will flooded it only the ports which are
+>>> part of the group.
+>>>
+>>> So far so good. This is an important part of the problem we wanted to solve.
+>>>
+>>> But, there is one drawback of this approach. If you want to add two of the
+>>> front ports and br0 to receive the frame then I can't see a way of doing it
+>>> with the bridge mdb command. To do that it requireds many more changes to
+>>> the existing code.
+>>>
+>>> Example:
+>>> bridge mdb add dev br0 port eth0 grp 01:00:00:00:00:04 permanent vid 1
+>>> bridge mdb add dev br0 port eth1 grp 01:00:00:00:00:04 permanent vid 1
+>>> bridge mdb add dev br0 port br0 grp 01:00:00:00:00:04 permanent vid 1 // This looks wrong.
+>>>
+>>> We believe we come a long way by re-using the facilities in MDB (thanks for
+>>> convincing us in doing this), but we are still not completely happy with
+>>> the result.
+>> Just add self argument for the bridge mdb command, no need to specify it twice.
+> Like this:
+> bridge mdb add dev br0 port eth1 grp 01:00:00:00:00:04 permanent vid self
 
-On 7/31/19 3:44 PM, Jacek Anaszewski wrote:
-> Dan,
->
-[...]
-> +    for (i = 0; i < mcled_cdev->num_leds; i++) {
-> +        ret = sscanf(buf + offset, "%i%n", &value[i], &nrchars);
-> +        if (ret != 1)
-> +            break;
-> +
-> +        offset += nrchars;
-> +    }
-> +
-> +    if (i != mcled_cdev->num_leds) {
->>> Shouldn't we return error if i != mcled_cdev->num_leds - 1 ?
->>> How can we know which color the value will be for if there is less
->>> values passed than the total number of colors in the cluster?
->> Ok so during my testing if I had the monochrome array as <R G B>
->>
->> When I wrote only <R G> and no blue I was getting random values in the
->> array for the
->>
->> remaining indexes and the blue LED would randomly turn on/off at
->> different levels.
->>
->> So if the user passes in less then expected only ids with data will be
->> written and the other colors will be turned off by the for loop below.
->  From what I see it will lead to wrong mapping of given color to the
-> value array element in the following case:
->
-> echo "<green> <blue>" > color_mix
->
-> Then green intensity will be assigned to value[0] (expects red) and blue
-> to value[1] (expects green). Unless I don't get something.
-> Your ABI documentation doesn't mention any way to redefine the color_id
-> returned by <color>/color_id file. And that is good.
->
-This is exactly the issue I had previously brought up.  The user would 
-need to
+What ?! No, that is not what I meant.
+bridge mdb add dev br0 grp 01:00:00:00:00:04 permanent vid self
+bridge mdb del dev br0 grp 01:00:00:00:00:04 permanent vid self
 
-write all leading colors with a value, even if 0, to correctly set the 
-target LEDs.
+Similar to fdb. You don't need no-self..
+I don't mind a different approach, this was just a suggestion. But please
+without "no-self" :)
 
-We can protect against the trailing colors but not leading colors.
+> 
+> Then if I want to remove br0 rom the group, should I then have a no-self, and
+> then it becomes even more strange what to write in the port.
+> 
+> bridge mdb add dev br0 port ?? grp 01:00:00:00:00:04 permanent vid no-self
+>                             ^^
+> And, what if it is a group with only br0 (the traffic should go to br0 and
+> not any of the slave interfaces)?
+> 
+> Also, the 'self' keyword has different meanings in the 'bridge vlan' and the
+> 'bridge fdb' commands where it refres to if the offload rule should be install
+> in HW - or only in the SW bridge.
 
-The expectation is that the user space would read the color_id from the 
-file and align
+No, it shouldn't. Self means act on the device, in this case act on the bridge,
+otherwise master is assumed.
 
-the array accordingly.  This is also why I exposed the intensity under 
-the color so if the
+> 
+> The proposed does not look pretty bad, but at least it will be possible to
+> configured the different scenarios:
+> 
+> bridge mdb add dev br0 port br0 grp 01:00:00:00:00:04 permanent vid 1
+> bridge mdb del dev br0 port br0 grp 01:00:00:00:00:04 permanent vid 1
+> 
 
-user wanted to not use color_mix file they can update the intensity per 
-LED color.
+That works too, but the "port" part is redundant.
 
->>>> +        for (; i < LED_COLOR_ID_MAX; i++)
->>>> +            value[i] = 0;
->>> What use case is it for?
->> See above but this should be
->>
->> for (; i < mcled_cdev->num_leds; i++)
->>
-I might be able to eliminate this loop by initializing the array to 0.
+> The more I look at the "bridge mdb { add | del } dev DEV port PORT" command, the
+> less I understand why do we have both 'dev' and 'port'? The implementation will
+> only allow this if 'port' has become enslaved to the switch represented by
+> 'dev'. Anyway, what is done is done, and we need to stay backwards compatible,
+> but we could make it optional, and then it looks a bit less strange to allow the
+> port to specify a br0.
+> 
+> Like this:
+> 
+> bridge mdb { add | del } [dev DEV] port PORT grp GROUP [ permanent | temp ] [ vid VID ]
+> 
+> bridge mdb add port eth0 grp 01:00:00:00:00:04 permanent vid 1
+> bridge mdb add port eth1 grp 01:00:00:00:00:04 permanent vid 1
+> bridge mdb add port br0  grp 01:00:00:00:00:04 permanent vid 1 // Add br0 to the gruop
+> bridge mdb del port br0  grp 01:00:00:00:00:04 permanent vid 1 // Delete it again
+> 
 
+br0 is not a port, thus the "self" or just dev or whatever you choose..
 
->>>> +    }
->>>> +
->>>> +    list_for_each_entry(priv, &data->color_list, list) {
->>>> +        if (data->cluster_brightness) {
->>>> +            adj_brightness =
->>>> calculate_brightness(data->cluster_brightness,
->>>> +                                  value[priv->color_index],
->>>> +                                 priv->max_intensity);
->>>> +            ret = ops->set_color_brightness(priv->mcled_cdev,
->>>> +                            priv->color_id,
->>>> +                            adj_brightness);
->>>> +            if (ret < 0)
->>>> +                goto done;
->>>> +        }
->>>> +
->>>> +        priv->intensity = value[priv->color_index];
->>>> +    }
->>> Here we could use just brightness_set op as a single call. We should
->>> always write all colors as a result of write to color_mix anyway.
->> I guess what is gained by just passing the array down to the device
->> driver and having it
->>
->> parse the array and do the peripheral call?
-> Those array values would not be directly written to the device,
-> but used for calculating the actual iout intensities. Driver
-> will just have to call calculate_brightness() (sticking to the naming
-> from this patch) and write the results calculated basing on brightness
-> and max_brightness.
+> Alternative we could also make the port optional:
+> 
+> bridge mdb { add | del } dev DEV [port PORT] grp GROUP [ permanent | temp ] [ vid VID ]
+> 
+> bridge mdb add dev br0 port eth0 grp 01:00:00:00:00:04 permanent vid 1
+> bridge mdb add dev br0 port eth1 grp 01:00:00:00:00:04 permanent vid 1
+> bridge mdb add dev br0           grp 01:00:00:00:00:04 permanent vid 1 // Add br0 to the gruop
+> bridge mdb del dev br0           grp 01:00:00:00:00:04 permanent vid 1 // Delete it again
+> 
 
-I would expect that we would do the same behavior for the color_mix file 
-then.
+Right. I read this one later. :)
 
+> Any preferences?
+> 
 
-> [...]
->>>> +
->>>> +    priv->new_intensity = value;
->>>> +
->>>> +    if (data->cluster_brightness) {
->>>> +        adj_value = calculate_brightness(data->cluster_brightness,
->>>> +                    priv->new_intensity,
->>>> +                    priv->max_intensity);
->>>> +        ret = ops->set_color_brightness(priv->mcled_cdev,
->>>> +                        priv->color_id, adj_value);
->>>> +        if (ret < 0) {
->>>> +            priv->new_intensity = priv->intensity;
->>> This is unnecessary complication. Just write the calculated iout
->>> intensity.
->> Not sure what complication you are referring to.
-> The whole need for new_intensity and cluster_brightness, and then
-> bringing back old intensity value on set_color_brightness() failure.
+Not really, up to you. Any of the above seem fine to me.
 
-OK
-
->
->>> We need to highlight it in the documentation that exact requested color
->>> intensity values are written to the hardware only when
->>> brightness == max_brightness.
->> But that is not a true statement.  Thats not really how it was designed.
-> But it probably should be. It would simplify the design.
->
-> So my idea is like I previously described the way I had first understood
-> this design:
->
-> The colors set under colors directory don't reflect the iout
-> intensities, but are only used for calculating them, basing on the
-> brightness and max_intensity values.
->
-> Effectively, after changing the colors/<color>/intensity the global
-> (legacy monochrome) brightness value will be still valid, since iout
-> color will be recalculated basing on it and the new color intensity.
->
-OK.  This this would remove the ops from the driver as it is no longer 
-needed.
-
-The color_mix file will work the same way.
-
-What is the trigger then to update the LEDs?
-
-We cannot write the same brightness value to trigger as the class blocks 
-calling down
-
-to the driver if brightness_in == brightness_current.
-
-Dan
+> /Allan
+> 
+> 
 
