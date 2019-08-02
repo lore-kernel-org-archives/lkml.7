@@ -2,193 +2,116 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74BC7C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D89C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BEE420657
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C433220679
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:58:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="H58UyApo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392883AbfHBM6H (ORCPT
+        id S2392898AbfHBM6V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 08:58:07 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:44493 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727885AbfHBM6H (ORCPT
+        Fri, 2 Aug 2019 08:58:21 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:33564 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726535AbfHBM6U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 08:58:07 -0400
-Received: by mail-io1-f72.google.com with SMTP id s9so83086058iob.11
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 05:58:06 -0700 (PDT)
+        Fri, 2 Aug 2019 08:58:20 -0400
+Received: by mail-ed1-f67.google.com with SMTP id i11so8808900edq.0
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 05:58:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NIGJpky/M+tWccJyj0jIuvGwfPnnsOj0qW0qoHvQA1M=;
+        b=H58UyApoDTDV5XzamdCHn+2haTE0m4o9CWA/XI7+Uxm05zztDbmHLEhVU8W7eDiyLC
+         MZiMM72lRUCaNiUk5F6gHpLGvHSf6lIJVBGhpuGMLTccIdbtEYWuPENmy27Cg7+SwhmQ
+         Tyf5h8MEbh0dZVudwS0LPwls17pDN6hZuyyp/HGTDbrlUXgXT2t7UK4L0iY/FuDFcabu
+         iDjghe+aAJ22Z+KZAa/bL3DmE1u102lTuH25YQIJSjYe8djw/Wyk+ONiEY0vjH6aQyf/
+         dZRQO+TGq2Opkx9hG/jC40qAXB2dqwKVyVL8VbnVg/DEqEcjlpr2EV6si728kHOazzu4
+         tJrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=RSoa+Z/mLU84mAOmRDcZB2JHdOSgpZcn3y0lXZf7bRo=;
-        b=EM/g2N9qAKKJju+4ezOsWBVXGtz3w8dXHsrHeLbA6GlZGn57cMeiSQr0+mhzEI7xYj
-         q2IaftcK765m/o9IADciVY2hk0FfMyuwinrr6usCAvrtzKm5IIrfmUxHEl9aG8Ye7kSG
-         rbJA5HOoxh80kiQKE0lJyKlEPS86I7k4m6tHkyqt8umCZnx/nJszuDAqXfw8HMV3RNoV
-         q963dUprgDTJB6yzAJ+9F2eSsSnkGSG94t/ddnUKtaDcSgkPSalXINqY2nWISOT8b9L0
-         u5QV7V6V2Y0ul0LOEIyEdrAhpb/afStwRoBFqMGZ8RbplYvc8wS8ArlWWx7Kg263LAOB
-         inlw==
-X-Gm-Message-State: APjAAAXvRsTW7cZeT2w3JEu2jh3EzFHkZFq8Xj9JFB1YWG4wbhhCmZun
-        WdcRFPv57cniI2Xryl0lKVQelA33VFSfPqMR3r9CSm2eYFGS
-X-Google-Smtp-Source: APXvYqyyeHrOMbTkBVEDk1EIr31GYrHd31vnnXVxMJ4ISyvwwjaAa93zKNys2pPAFyQE8MvXv+Oe0XxCAcpuksvbDCevQC3AxTxC
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NIGJpky/M+tWccJyj0jIuvGwfPnnsOj0qW0qoHvQA1M=;
+        b=DlzFZykLADRBNq7TMnr6TQ0bOGhqL2z41q+sHIzjVgc7X0nnS9Qi/fFrIPJHeho7kS
+         Cvc9rRxJL71Zj+e3zxrX7an+m9Hr5P8g5XhKhTCTwl9C27QLM2J5SqpWpsFJJSNY/S9Q
+         zy7GF0kdrFhpOhWzTp9uCqE9FynlVcwrqQWUrg67IFGEg0tSgAtZyLDNXmyAAZUc7Ehh
+         pUgO6Y7l+KCkqs5aqkaKgnBz6lsGRrbkb5JjEBMrJKdGWld78cFYAfOJiq5TON42F6vj
+         5BZqxib3rOxIkyvj/qxMaFzx8rkkBnVI6qWetm7r00QePtoee02jj+5zV/gsRj5BN3sI
+         dcYg==
+X-Gm-Message-State: APjAAAWsR/L4YHfePSMI73J8sv4fi3ky9a02Vu1xxcsqbJTBaH3dfk8d
+        pjyhQHZ4S73uKx1t33jjVOGLTgFv
+X-Google-Smtp-Source: APXvYqwSy3cSUIHLuy3erwZOnfhrO5DrTb9cHYBuTqm2WGXAIGyJNktV8t2xfIFCNEOSrC7RDMLDuA==
+X-Received: by 2002:a50:fa42:: with SMTP id c2mr120512049edq.48.1564750698659;
+        Fri, 02 Aug 2019 05:58:18 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id w6sm9863714edq.81.2019.08.02.05.58.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 02 Aug 2019 05:58:17 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 8000B101F60; Fri,  2 Aug 2019 15:58:18 +0300 (+03)
+Date:   Fri, 2 Aug 2019 15:58:18 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     "Luck, Tony" <tony.luck@intel.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        kirill.shutemov@linux.intel.com, linux-kernel@vger.kernel.org,
+        jing.lin@intel.com, bp@alien8.de, x86@kernel.org
+Subject: Re: [PATCH] x86/asm: Add support for MOVDIR64B instruction
+Message-ID: <20190802125818.wvyqsrcfm562bdpp@box>
+References: <20190801194348.GA6059@avx2>
+ <20190801194947.GA12033@agluck-desk2.amr.corp.intel.com>
+ <20190802081533.GE2332@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-X-Received: by 2002:a02:b713:: with SMTP id g19mr138123528jam.77.1564750685994;
- Fri, 02 Aug 2019 05:58:05 -0700 (PDT)
-Date:   Fri, 02 Aug 2019 05:58:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000cd0435058f21e8c3@google.com>
-Subject: KASAN: use-after-free Read in __pm_runtime_resume
-From:   syzbot <syzbot+b156665cf4d1b5e00c76@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        len.brown@intel.com, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-usb@vger.kernel.org, pavel@ucw.cz,
-        rjw@rjwysocki.net, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190802081533.GE2332@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, Aug 02, 2019 at 10:15:33AM +0200, Peter Zijlstra wrote:
+> On Thu, Aug 01, 2019 at 12:49:48PM -0700, Luck, Tony wrote:
+> > On Thu, Aug 01, 2019 at 10:43:48PM +0300, Alexey Dobriyan wrote:
+> > > > +static inline void movdir64b(void *dst, const void *src)
+> > > > +{
+> > > > +	/* movdir64b [rdx], rax */
+> > > > +	asm volatile(".byte 0x66, 0x0f, 0x38, 0xf8, 0x02"
+> > > > +			: "=m" (*(char *)dst)
+> > >                                ^^^^^^^^^^
+> > > 
+> > > > +			: "d" (src), "a" (dst));
+> > > > +}
+> > > 
+> > > Probably needs fake 64-byte type, so that compiler knows what is dirty.
+> > 
+> > Would that be something like this?
+> > 
+> > static inline void movdir64b(void *dst, const void *src)
+> > {
+> > 	struct dstbytes {
+> > 		char pad[64];
+> > 	};
+> > 
+> > 	/* movdir64b [rdx], rax */
+> > 	asm volatile(".byte 0x66, 0x0f, 0x38, 0xf8, 0x02"
+> > 		     : "=m" (*(struct dstbytes *)dst)
+> > 		     : "d" (src), "a" (dst));
+> > }
+> 
+> Can the source and destination overlap? The SDM doesn't seem to mention
+> this.
 
-syzbot found the following crash on:
+Good question. I'll ask to clarify this.
 
-HEAD commit:    e96407b4 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=146071b4600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=792eb47789f57810
-dashboard link: https://syzkaller.appspot.com/bug?extid=b156665cf4d1b5e00c76
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+b156665cf4d1b5e00c76@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: use-after-free in __pm_runtime_resume+0x162/0x180  
-drivers/base/power/runtime.c:1069
-Read of size 1 at addr ffff8881c775b671 by task syz-executor.4/5918
-
-CPU: 1 PID: 5918 Comm: syz-executor.4 Not tainted 5.3.0-rc2+ #24
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  print_address_description+0x6a/0x32c mm/kasan/report.c:351
-  __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
-  kasan_report+0xe/0x12 mm/kasan/common.c:612
-  __pm_runtime_resume+0x162/0x180 drivers/base/power/runtime.c:1069
-  pm_runtime_get_sync include/linux/pm_runtime.h:226 [inline]
-  usb_autopm_get_interface+0x1b/0x50 drivers/usb/core/driver.c:1707
-  usbhid_power+0x7c/0xe0 drivers/hid/usbhid/hid-core.c:1234
-  hid_hw_power include/linux/hid.h:1038 [inline]
-  hidraw_open+0x20d/0x740 drivers/hid/hidraw.c:282
-  chrdev_open+0x219/0x5c0 fs/char_dev.c:414
-  do_dentry_open+0x494/0x1120 fs/open.c:797
-  do_last fs/namei.c:3416 [inline]
-  path_openat+0x1430/0x3f50 fs/namei.c:3533
-  do_filp_open+0x1a1/0x280 fs/namei.c:3563
-  do_sys_open+0x3c0/0x580 fs/open.c:1089
-  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x413711
-Code: 75 14 b8 02 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 19 00 00 c3 48  
-83 ec 08 e8 0a fa ff ff 48 89 04 24 b8 02 00 00 00 0f 05 <48> 8b 3c 24 48  
-89 c2 e8 53 fa ff ff 48 89 d0 48 83 c4 08 48 3d 01
-RSP: 002b:00007fa3309ef7a0 EFLAGS: 00000293 ORIG_RAX: 0000000000000002
-RAX: ffffffffffffffda RBX: 6666666666666667 RCX: 0000000000413711
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00007fa3309ef850
-RBP: 000000000075bf20 R08: 000000000000000f R09: 0000000000000000
-R10: ffffffffffffffff R11: 0000000000000293 R12: 00007fa3309f06d4
-R13: 00000000004c8c02 R14: 00000000004dfa80 R15: 00000000ffffffff
-
-Allocated by task 103:
-  save_stack+0x1b/0x80 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc mm/kasan/common.c:487 [inline]
-  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:460
-  kmalloc include/linux/slab.h:552 [inline]
-  kzalloc include/linux/slab.h:748 [inline]
-  usb_set_configuration+0x2c4/0x1670 drivers/usb/core/message.c:1846
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x650 drivers/base/dd.c:548
-  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:882
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2114
-  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
-  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Freed by task 103:
-  save_stack+0x1b/0x80 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:449
-  slab_free_hook mm/slub.c:1423 [inline]
-  slab_free_freelist_hook mm/slub.c:1470 [inline]
-  slab_free mm/slub.c:3012 [inline]
-  kfree+0xe4/0x2f0 mm/slub.c:3953
-  device_release+0x71/0x200 drivers/base/core.c:1064
-  kobject_cleanup lib/kobject.c:693 [inline]
-  kobject_release lib/kobject.c:722 [inline]
-  kref_put include/linux/kref.h:65 [inline]
-  kobject_put+0x171/0x280 lib/kobject.c:739
-  put_device+0x1b/0x30 drivers/base/core.c:2213
-  usb_disable_device+0x2ce/0x690 drivers/usb/core/message.c:1244
-  usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2199
-  hub_port_connect drivers/usb/core/hub.c:4949 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x1454/0x3640 drivers/usb/core/hub.c:5441
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-  process_scheduled_works kernel/workqueue.c:2331 [inline]
-  worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-The buggy address belongs to the object at ffff8881c775b300
-  which belongs to the cache kmalloc-2k of size 2048
-The buggy address is located 881 bytes inside of
-  2048-byte region [ffff8881c775b300, ffff8881c775bb00)
-The buggy address belongs to the page:
-page:ffffea00071dd600 refcount:1 mapcount:0 mapping:ffff8881da00c000  
-index:0x0 compound_mapcount: 0
-flags: 0x200000000010200(slab|head)
-raw: 0200000000010200 ffffea0007541a00 0000000300000003 ffff8881da00c000
-raw: 0000000000000000 00000000000f000f 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8881c775b500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881c775b580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff8881c775b600: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                              ^
-  ffff8881c775b680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881c775b700: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+-- 
+ Kirill A. Shutemov
