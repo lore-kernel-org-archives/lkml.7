@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF3DC32753
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6725C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98B7A206A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:54:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1AEB206A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:54:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739662;
-	bh=HGRbB6D5A9Z4ltOekFW9DHOd9lQMBMc61GLbiY7DoxA=;
+	s=default; t=1564739664;
+	bh=JdmM0h11XKGI//MComHgva4g0M6lgwdu1zWCGSxrjoU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vZDwVpTqle+8NwqgF6Y1NaUep54jGlzRDI8vuRivEugSHyducmIreIXupCeKGraid
-	 3cvCIfOTMTUMaRnHwK55ZBhce5PZqDGt8xkCX6R3m/zI6bChgHKZH78sFNiGA6vteP
-	 af+11Rzkn0+y+ZSYp517gDDwSeNjoyXyK9VhOmP8=
+	b=FQuRh+AskqZ+uJIsfUKvTzQGsz5wwpziYJax9e4riDfPQbF4HhowE6AZIXu1HODmW
+	 fYEF0A9QdAXWR56QXhvi8pzOKgztzfN0pFX9EVGk3r0ITJmHE1F94rPLFlmZbAzKaO
+	 CWvBU+YbC59pTfSIlOXyAku9ed1JBYP2oX72NdPM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406424AbfHBJyV (ORCPT
+        id S2406435AbfHBJyX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:54:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60732 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:54:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405324AbfHBJyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:54:16 -0400
+        id S2406416AbfHBJyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:54:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C05D2064A;
-        Fri,  2 Aug 2019 09:54:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C5482064A;
+        Fri,  2 Aug 2019 09:54:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739655;
-        bh=HGRbB6D5A9Z4ltOekFW9DHOd9lQMBMc61GLbiY7DoxA=;
+        s=default; t=1564739658;
+        bh=JdmM0h11XKGI//MComHgva4g0M6lgwdu1zWCGSxrjoU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Losq+u1SBghNd5qqpho+w5BA0i5CTzoIUOU177eyOhD/0UH2UxfRaUR7tvUnpSSxd
-         cNbsmMwbf9OHhsrP/Ith8Fy8RP4fTE4agwb7NwxHdevfNitonSf3n9g74F3Wxc53S2
-         khIAASRJjvlP1tOALaJUcs3ZUSesbk+yuctMBiuQ=
+        b=YVUgDRkTVKz/qwDQ2jky3jQ3EcfKb4H4rgp0q96rb2x9CZHzQMAOL7mBuw/VbYb/m
+         neOa6fHIC3DSihHKZys4bAET6JN2gCr1VbYMar+nyz51Na/qZrJgGrfAcqnF6so4V6
+         GeCRJLFIkJR4pWPwl98YoJIPgnsiOmDt+Xij5eE8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 19/25] hv_sock: Add support for delayed close
-Date:   Fri,  2 Aug 2019 11:39:51 +0200
-Message-Id: <20190802092105.809404259@linuxfoundation.org>
+Subject: [PATCH 4.14 02/25] vsock: correct removal of socket from the list
+Date:   Fri,  2 Aug 2019 11:39:34 +0200
+Message-Id: <20190802092059.689248414@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092058.428079740@linuxfoundation.org>
 References: <20190802092058.428079740@linuxfoundation.org>
@@ -62,190 +61,93 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sunil Muthuswamy <sunilmut@microsoft.com>
 
-commit a9eeb998c28d5506616426bd3a216bd5735a18b8 upstream.
+commit d5afa82c977ea06f7119058fa0eb8519ea501031 upstream.
 
-Currently, hvsock does not implement any delayed or background close
-logic. Whenever the hvsock socket is closed, a FIN is sent to the peer, and
-the last reference to the socket is dropped, which leads to a call to
-.destruct where the socket can hang indefinitely waiting for the peer to
-close it's side. The can cause the user application to hang in the close()
-call.
-
-This change implements proper STREAM(TCP) closing handshake mechanism by
-sending the FIN to the peer and the waiting for the peer's FIN to arrive
-for a given timeout. On timeout, it will try to terminate the connection
-(i.e. a RST). This is in-line with other socket providers such as virtio.
-
-This change does not address the hang in the vmbus_hvsock_device_unregister
-where it waits indefinitely for the host to rescind the channel. That
-should be taken up as a separate fix.
+The current vsock code for removal of socket from the list is both
+subject to race and inefficient. It takes the lock, checks whether
+the socket is in the list, drops the lock and if the socket was on the
+list, deletes it from the list. This is subject to race because as soon
+as the lock is dropped once it is checked for presence, that condition
+cannot be relied upon for any decision. It is also inefficient because
+if the socket is present in the list, it takes the lock twice.
 
 Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
-Reviewed-by: Dexuan Cui <decui@microsoft.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/vmw_vsock/hyperv_transport.c |  110 +++++++++++++++++++++++++++------------
- 1 file changed, 78 insertions(+), 32 deletions(-)
+ net/vmw_vsock/af_vsock.c |   38 +++++++-------------------------------
+ 1 file changed, 7 insertions(+), 31 deletions(-)
 
---- a/net/vmw_vsock/hyperv_transport.c
-+++ b/net/vmw_vsock/hyperv_transport.c
-@@ -35,6 +35,9 @@
- /* The MTU is 16KB per the host side's design */
- #define HVS_MTU_SIZE		(1024 * 16)
- 
-+/* How long to wait for graceful shutdown of a connection */
-+#define HVS_CLOSE_TIMEOUT (8 * HZ)
-+
- struct vmpipe_proto_header {
- 	u32 pkt_type;
- 	u32 data_size;
-@@ -290,19 +293,32 @@ static void hvs_channel_cb(void *ctx)
- 		sk->sk_write_space(sk);
- }
- 
--static void hvs_close_connection(struct vmbus_channel *chan)
-+static void hvs_do_close_lock_held(struct vsock_sock *vsk,
-+				   bool cancel_timeout)
+--- a/net/vmw_vsock/af_vsock.c
++++ b/net/vmw_vsock/af_vsock.c
+@@ -288,7 +288,8 @@ EXPORT_SYMBOL_GPL(vsock_insert_connected
+ void vsock_remove_bound(struct vsock_sock *vsk)
  {
--	struct sock *sk = get_per_channel_state(chan);
--	struct vsock_sock *vsk = vsock_sk(sk);
--
--	lock_sock(sk);
-+	struct sock *sk = sk_vsock(vsk);
- 
--	sk->sk_state = TCP_CLOSE;
- 	sock_set_flag(sk, SOCK_DONE);
--	vsk->peer_shutdown |= SEND_SHUTDOWN | RCV_SHUTDOWN;
--
-+	vsk->peer_shutdown = SHUTDOWN_MASK;
-+	if (vsock_stream_has_data(vsk) <= 0)
-+		sk->sk_state = TCP_CLOSING;
- 	sk->sk_state_change(sk);
-+	if (vsk->close_work_scheduled &&
-+	    (!cancel_timeout || cancel_delayed_work(&vsk->close_work))) {
-+		vsk->close_work_scheduled = false;
-+		vsock_remove_sock(vsk);
-+
-+		/* Release the reference taken while scheduling the timeout */
-+		sock_put(sk);
-+	}
-+}
-+
-+static void hvs_close_connection(struct vmbus_channel *chan)
-+{
-+	struct sock *sk = get_per_channel_state(chan);
- 
-+	lock_sock(sk);
-+	hvs_do_close_lock_held(vsock_sk(sk), true);
- 	release_sock(sk);
+ 	spin_lock_bh(&vsock_table_lock);
+-	__vsock_remove_bound(vsk);
++	if (__vsock_in_bound_table(vsk))
++		__vsock_remove_bound(vsk);
+ 	spin_unlock_bh(&vsock_table_lock);
  }
- 
-@@ -446,50 +462,80 @@ static int hvs_connect(struct vsock_sock
- 	return vmbus_send_tl_connect_request(&h->vm_srv_id, &h->host_srv_id);
- }
- 
-+static void hvs_shutdown_lock_held(struct hvsock *hvs, int mode)
-+{
-+	struct vmpipe_proto_header hdr;
-+
-+	if (hvs->fin_sent || !hvs->chan)
-+		return;
-+
-+	/* It can't fail: see hvs_channel_writable_bytes(). */
-+	(void)hvs_send_data(hvs->chan, (struct hvs_send_buf *)&hdr, 0);
-+	hvs->fin_sent = true;
-+}
-+
- static int hvs_shutdown(struct vsock_sock *vsk, int mode)
+ EXPORT_SYMBOL_GPL(vsock_remove_bound);
+@@ -296,7 +297,8 @@ EXPORT_SYMBOL_GPL(vsock_remove_bound);
+ void vsock_remove_connected(struct vsock_sock *vsk)
  {
- 	struct sock *sk = sk_vsock(vsk);
--	struct vmpipe_proto_header hdr;
--	struct hvs_send_buf *send_buf;
--	struct hvsock *hvs;
- 
- 	if (!(mode & SEND_SHUTDOWN))
- 		return 0;
- 
- 	lock_sock(sk);
--
--	hvs = vsk->trans;
--	if (hvs->fin_sent)
--		goto out;
--
--	send_buf = (struct hvs_send_buf *)&hdr;
--
--	/* It can't fail: see hvs_channel_writable_bytes(). */
--	(void)hvs_send_data(hvs->chan, send_buf, 0);
--
--	hvs->fin_sent = true;
--out:
-+	hvs_shutdown_lock_held(vsk->trans, mode);
- 	release_sock(sk);
- 	return 0;
+ 	spin_lock_bh(&vsock_table_lock);
+-	__vsock_remove_connected(vsk);
++	if (__vsock_in_connected_table(vsk))
++		__vsock_remove_connected(vsk);
+ 	spin_unlock_bh(&vsock_table_lock);
  }
+ EXPORT_SYMBOL_GPL(vsock_remove_connected);
+@@ -332,35 +334,10 @@ struct sock *vsock_find_connected_socket
+ }
+ EXPORT_SYMBOL_GPL(vsock_find_connected_socket);
  
--static void hvs_release(struct vsock_sock *vsk)
-+static void hvs_close_timeout(struct work_struct *work)
+-static bool vsock_in_bound_table(struct vsock_sock *vsk)
+-{
+-	bool ret;
+-
+-	spin_lock_bh(&vsock_table_lock);
+-	ret = __vsock_in_bound_table(vsk);
+-	spin_unlock_bh(&vsock_table_lock);
+-
+-	return ret;
+-}
+-
+-static bool vsock_in_connected_table(struct vsock_sock *vsk)
+-{
+-	bool ret;
+-
+-	spin_lock_bh(&vsock_table_lock);
+-	ret = __vsock_in_connected_table(vsk);
+-	spin_unlock_bh(&vsock_table_lock);
+-
+-	return ret;
+-}
+-
+ void vsock_remove_sock(struct vsock_sock *vsk)
  {
-+	struct vsock_sock *vsk =
-+		container_of(work, struct vsock_sock, close_work.work);
- 	struct sock *sk = sk_vsock(vsk);
--	struct hvsock *hvs = vsk->trans;
--	struct vmbus_channel *chan;
- 
-+	sock_hold(sk);
- 	lock_sock(sk);
-+	if (!sock_flag(sk, SOCK_DONE))
-+		hvs_do_close_lock_held(vsk, false);
- 
--	sk->sk_state = TCP_CLOSING;
--	vsock_remove_sock(vsk);
+-	if (vsock_in_bound_table(vsk))
+-		vsock_remove_bound(vsk);
 -
-+	vsk->close_work_scheduled = false;
- 	release_sock(sk);
-+	sock_put(sk);
-+}
- 
--	chan = hvs->chan;
--	if (chan)
--		hvs_shutdown(vsk, RCV_SHUTDOWN | SEND_SHUTDOWN);
-+/* Returns true, if it is safe to remove socket; false otherwise */
-+static bool hvs_close_lock_held(struct vsock_sock *vsk)
-+{
-+	struct sock *sk = sk_vsock(vsk);
-+
-+	if (!(sk->sk_state == TCP_ESTABLISHED ||
-+	      sk->sk_state == TCP_CLOSING))
-+		return true;
-+
-+	if ((sk->sk_shutdown & SHUTDOWN_MASK) != SHUTDOWN_MASK)
-+		hvs_shutdown_lock_held(vsk->trans, SHUTDOWN_MASK);
-+
-+	if (sock_flag(sk, SOCK_DONE))
-+		return true;
-+
-+	/* This reference will be dropped by the delayed close routine */
-+	sock_hold(sk);
-+	INIT_DELAYED_WORK(&vsk->close_work, hvs_close_timeout);
-+	vsk->close_work_scheduled = true;
-+	schedule_delayed_work(&vsk->close_work, HVS_CLOSE_TIMEOUT);
-+	return false;
-+}
- 
-+static void hvs_release(struct vsock_sock *vsk)
-+{
-+	struct sock *sk = sk_vsock(vsk);
-+	bool remove_sock;
-+
-+	lock_sock(sk);
-+	remove_sock = hvs_close_lock_held(vsk);
-+	release_sock(sk);
-+	if (remove_sock)
-+		vsock_remove_sock(vsk);
+-	if (vsock_in_connected_table(vsk))
+-		vsock_remove_connected(vsk);
++	vsock_remove_bound(vsk);
++	vsock_remove_connected(vsk);
  }
+ EXPORT_SYMBOL_GPL(vsock_remove_sock);
  
- static void hvs_destruct(struct vsock_sock *vsk)
+@@ -491,8 +468,7 @@ static void vsock_pending_work(struct wo
+ 	 * incoming packets can't find this socket, and to reduce the reference
+ 	 * count.
+ 	 */
+-	if (vsock_in_connected_table(vsk))
+-		vsock_remove_connected(vsk);
++	vsock_remove_connected(vsk);
+ 
+ 	sk->sk_state = TCP_CLOSE;
+ 
 
 
