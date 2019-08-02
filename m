@@ -3,99 +3,106 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E195AC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51192C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B86392087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:11:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22BD921726
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:11:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390213AbfHBQLM (ORCPT
+        id S2390264AbfHBQL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 12:11:12 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:33111 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732543AbfHBQLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 12:11:11 -0400
-Received: from LHREML714-CAH.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id C1C8DC64785C6836DBC4;
-        Fri,  2 Aug 2019 17:11:09 +0100 (IST)
-Received: from [10.220.135.74] (10.220.135.74) by smtpsuk.huawei.com
- (10.201.108.37) with Microsoft SMTP Server (TLS) id 14.3.408.0; Fri, 2 Aug
- 2019 17:11:03 +0100
-Subject: Re: [PATCH v2] KEYS: trusted: allow module init if TPM is inactive or
- deactivated
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     Tyler Hicks <tyhicks@canonical.com>
-CC:     <jarkko.sakkinen@linux.intel.com>, <jejb@linux.ibm.com>,
-        <zohar@linux.ibm.com>, <jgg@ziepe.ca>,
-        <linux-integrity@vger.kernel.org>,
-        <linux-security-module@vger.kernel.org>,
-        <keyrings@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <crazyt2019+lml@gmail.com>, <nayna@linux.vnet.ibm.com>,
-        <silviu.vlasceanu@huawei.com>
-References: <20190802150733.1972-1-roberto.sassu@huawei.com>
- <20190802153030.GB26616@elm>
- <3222714a-a280-0708-f4c0-5db6d342d8dc@huawei.com>
-Message-ID: <8baf1c39-ad04-5cd6-bc67-341e7411db16@huawei.com>
-Date:   Fri, 2 Aug 2019 18:11:09 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Fri, 2 Aug 2019 12:11:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48184 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732543AbfHBQL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 12:11:27 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F61120449;
+        Fri,  2 Aug 2019 16:11:25 +0000 (UTC)
+Date:   Fri, 2 Aug 2019 12:11:24 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Jiping Ma <jiping.ma2@windriver.com>
+Cc:     <mingo@redhat.com>, <catalin.marinas@arm.com>,
+        <will.deacon@arm.com>, <joel@joelfernandes.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3] tracing: Function stack size and its name mismatch
+ in arm64
+Message-ID: <20190802121124.6b41f26a@gandalf.local.home>
+In-Reply-To: <20190802120920.3b1f4351@gandalf.local.home>
+References: <20190802094103.163576-1-jiping.ma2@windriver.com>
+        <20190802112259.0530a648@gandalf.local.home>
+        <20190802120920.3b1f4351@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <3222714a-a280-0708-f4c0-5db6d342d8dc@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.220.135.74]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/2/2019 5:34 PM, Roberto Sassu wrote:
-> On 8/2/2019 5:30 PM, Tyler Hicks wrote:
->> On 2019-08-02 17:07:33, Roberto Sassu wrote:
->>> Commit c78719203fc6 ("KEYS: trusted: allow trusted.ko to initialize 
->>> w/o a
->>> TPM") allows the trusted module to be loaded even a TPM is not found to
->>                                                     ^ if
->>
->>> avoid module dependency problems.
->>>
->>> However, trusted module initialization can still fail if the TPM is
->>> inactive or deactivated. This patch ignores tpm_get_random() errors in
->>> init_digests() and returns -EFAULT in pcrlock() if the TPM didn't return
->>> random data.
->>>
->>> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
->>
->> The code changes look correct to me.
->>
->>    Reviewed-by: Tyler Hicks <tyhicks@canonical.com>
->>
->> For whoever takes this patch through their tree, I think that adding the
->> following Fixes tag would be useful (as well as cc'ing stable):
->>
->>    Fixes: 240730437deb ("KEYS: trusted: explicitly use tpm_chip 
->> structure...")
->>
->> I think it is also worth leaving a short note, in the commit message,
->> for backporters that commit 782779b60faa ("tpm: Actually fail on TPM
->> errors during "get random"") should be included with any backports of
->> this patch.
+On Fri, 2 Aug 2019 12:09:20 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> On Fri, 2 Aug 2019 11:22:59 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
 > 
-> Right, thanks. I wait for Jarkko's comments and I add both the Fixes tag
-> and the short note in the next version of the patch.
+> > I think you are not explaining the issue correctly. From looking at the
+> > document, I think what you want to say is that the LR is saved *after*
+> > the data for the function. Is that correct? If so, then yes, it would
+> > cause the stack tracing algorithm to be incorrect.
+> > 
+> 
+> [..]
+> 
+> > Can someone confirm that this is the real issue?
+> 
+> Does this patch fix your issue?
+>
 
-Uhm, I was thinking that maybe it is not necessary to mention commit
-782779b60faa. This patch would still return 0 even if that commit is not
-backported (TPM_ERR_DISABLED < TPM_MAX_DIGEST_SIZE).
+Bah, I hit "attach" instead of "insert" (I wondered why it didn't
+insert). Here's the patch without the attachment.
 
-Roberto
+-- Steve
 
--- 
-HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
-Managing Director: Li Peng, Li Jian, Shi Yanli
+diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
+index 5ab5200b2bdc..13a4832cfb00 100644
+--- a/arch/arm64/include/asm/ftrace.h
++++ b/arch/arm64/include/asm/ftrace.h
+@@ -13,6 +13,7 @@
+ #define HAVE_FUNCTION_GRAPH_FP_TEST
+ #define MCOUNT_ADDR		((unsigned long)_mcount)
+ #define MCOUNT_INSN_SIZE	AARCH64_INSN_SIZE
++#define ARCH_RET_ADDR_AFTER_LOCAL_VARS 1
+ 
+ #ifndef __ASSEMBLY__
+ #include <linux/compat.h>
+diff --git a/kernel/trace/trace_stack.c b/kernel/trace/trace_stack.c
+index 5d16f73898db..050c6bd9beac 100644
+--- a/kernel/trace/trace_stack.c
++++ b/kernel/trace/trace_stack.c
+@@ -158,6 +158,18 @@ static void check_stack(unsigned long ip, unsigned long *stack)
+ 			i++;
+ 	}
+ 
++#ifdef ARCH_RET_ADDR_AFTER_LOCAL_VARS
++	/*
++	 * Most archs store the return address before storing the
++	 * function's local variables. But some archs do this backwards.
++	 */
++	if (x > 1) {
++		memmove(&stack_trace_index[0], &stack_trace_index[1],
++			sizeof(stack_trace_index[0]) * (x - 1));
++		x--;
++	}
++#endif
++
+ 	stack_trace_nr_entries = x;
+ 
+ 	if (task_stack_end_corrupted(current)) {
