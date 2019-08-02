@@ -2,121 +2,138 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DCA0C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E493C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 095732173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F64D2173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:51:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395082AbfHBOvP (ORCPT
+        id S2395099AbfHBOvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 10:51:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:53272 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436764AbfHBOul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 10:50:41 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 98F0615A2;
-        Fri,  2 Aug 2019 07:50:40 -0700 (PDT)
-Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B2C8E3F575;
-        Fri,  2 Aug 2019 07:50:38 -0700 (PDT)
-From:   Steven Price <steven.price@arm.com>
-Cc:     Steven Price <steven.price@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Will Deacon <will@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 5/9] KVM: Allow kvm_device_ops to be const
-Date:   Fri,  2 Aug 2019 15:50:13 +0100
-Message-Id: <20190802145017.42543-6-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190802145017.42543-1-steven.price@arm.com>
-References: <20190802145017.42543-1-steven.price@arm.com>
+        Fri, 2 Aug 2019 10:51:19 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:53233 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2395080AbfHBOvR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 10:51:17 -0400
+Received: from [167.98.27.226] (helo=[10.35.6.253])
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1htYti-0008AU-Oe; Fri, 02 Aug 2019 15:51:10 +0100
+Subject: Re: [alsa-devel] [PATCH v2 3/3] ASoC: TDA7802: Add turn-on diagnostic
+ routine
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        alsa-devel@alsa-project.org,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Kirill Marinushkin <kmarinushkin@birdec.tech>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Annaliese McDermond <nh6z@nh6z.net>,
+        Takashi Iwai <tiwai@suse.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        linux-kernel@vger.kernel.org,
+        Cheng-Yi Chiang <cychiang@chromium.org>
+References: <20190730120937.16271-1-thomas.preston@codethink.co.uk>
+ <20190730120937.16271-4-thomas.preston@codethink.co.uk>
+ <20190730141935.GF4264@sirena.org.uk>
+ <45156592-a90f-b4f8-4d30-9631c03f1280@codethink.co.uk>
+ <20190730155027.GJ4264@sirena.org.uk>
+ <9b47a360-3b62-b968-b8d5-8639dc4b468d@codethink.co.uk>
+ <20190801234241.GG5488@sirena.org.uk>
+ <472cc4ee-2e80-8b08-d842-79c65df572f3@codethink.co.uk>
+ <20190802111036.GB5387@sirena.org.uk>
+From:   Thomas Preston <thomas.preston@codethink.co.uk>
+Message-ID: <ab0a2d14-90c0-6c28-2c80-351fccd85e68@codethink.co.uk>
+Date:   Fri, 2 Aug 2019 15:51:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20190802111036.GB5387@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently a kvm_device_ops structure cannot be const without triggering
-compiler warnings. However the structure doesn't need to be written to
-and, by marking it const, it can be read-only in memory. Add some more
-const keywords to allow this.
+On 02/08/2019 12:10, Mark Brown wrote:
+> On Fri, Aug 02, 2019 at 09:32:17AM +0100, Thomas Preston wrote:
+>> On 02/08/2019 00:42, Mark Brown wrote:
+> 
+>>> Yes, that's definitely doable - we've got some other drivers with
+>>> similar things like calibration triggers exposed that way.
+> 
+>> One problem with using a kcontrol as a trigger for the turn-on diagnostic
+>> is that the diagnostic routine has a "return value".
+> 
+> You can use a read only control for the readback, or just have it be
+> triggered by overwriting the readback value.  You can cache the result.
+> 
 
-Signed-off-by: Steven Price <steven.price@arm.com>
----
- include/linux/kvm_host.h | 4 ++--
- virt/kvm/kvm_main.c      | 6 +++---
- 2 files changed, 5 insertions(+), 5 deletions(-)
+Keeping the trigger and result together like that would be better I think,
+although the routine isn't supposed to run mid way through playback. If
+we're mid playback the debugfs routine has to turn off AMP_ON, take the
+device back to a known state, run diagnostics, then restore. Which causes
+a gap in the audible sound.
 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 5c5b5867024c..be31a6f8351a 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -1236,7 +1236,7 @@ extern unsigned int halt_poll_ns_grow_start;
- extern unsigned int halt_poll_ns_shrink;
- 
- struct kvm_device {
--	struct kvm_device_ops *ops;
-+	const struct kvm_device_ops *ops;
- 	struct kvm *kvm;
- 	void *private;
- 	struct list_head vm_node;
-@@ -1289,7 +1289,7 @@ struct kvm_device_ops {
- void kvm_device_get(struct kvm_device *dev);
- void kvm_device_put(struct kvm_device *dev);
- struct kvm_device *kvm_device_from_filp(struct file *filp);
--int kvm_register_device_ops(struct kvm_device_ops *ops, u32 type);
-+int kvm_register_device_ops(const struct kvm_device_ops *ops, u32 type);
- void kvm_unregister_device_ops(u32 type);
- 
- extern struct kvm_device_ops kvm_mpic_ops;
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 887f3b0c2b60..8c12110ec87a 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -3035,14 +3035,14 @@ struct kvm_device *kvm_device_from_filp(struct file *filp)
- 	return filp->private_data;
- }
- 
--static struct kvm_device_ops *kvm_device_ops_table[KVM_DEV_TYPE_MAX] = {
-+static const struct kvm_device_ops *kvm_device_ops_table[KVM_DEV_TYPE_MAX] = {
- #ifdef CONFIG_KVM_MPIC
- 	[KVM_DEV_TYPE_FSL_MPIC_20]	= &kvm_mpic_ops,
- 	[KVM_DEV_TYPE_FSL_MPIC_42]	= &kvm_mpic_ops,
- #endif
- };
- 
--int kvm_register_device_ops(struct kvm_device_ops *ops, u32 type)
-+int kvm_register_device_ops(const struct kvm_device_ops *ops, u32 type)
- {
- 	if (type >= ARRAY_SIZE(kvm_device_ops_table))
- 		return -ENOSPC;
-@@ -3063,7 +3063,7 @@ void kvm_unregister_device_ops(u32 type)
- static int kvm_ioctl_create_device(struct kvm *kvm,
- 				   struct kvm_create_device *cd)
- {
--	struct kvm_device_ops *ops = NULL;
-+	const struct kvm_device_ops *ops = NULL;
- 	struct kvm_device *dev;
- 	bool test = cd->flags & KVM_CREATE_DEVICE_TEST;
- 	int type;
--- 
-2.20.1
+>> Hm, maybe a better idea is to have the turn on diagnostic only run on
+>> device probe (as its name suggests!), and print something to dmesg:
+> 
+>> 	modprobe tda7802 turn_on_diagnostic=1
+> 
+>> 	tda7802-codec i2c-TDA7802:00: Turn on diagnostic 04 04 04 04
+> 
+>> Kirill Marinushkin mentioned this in the first review [0], it just didn't
+>> really sink in until now!
+> 
+> You could do that too, yeah.  Depends on what this is diagnosing and if
+> that'd be useful.
+> 
 
+The diagnostic status bits describe situations such as:
+- open load (no speaker connected)
+- short to GND
+- short to VCC
+- etc
+
+The intention is to test if all the speakers are connected. So, one might 
+have a self test which runs the diagnostic and verifies it outputs:
+
+	00 00 00 00
+
+For example, on my test rig there is only one speaker connected. So it
+reads:
+
+	04 04 00 04
+
+Where the second bit is "open load". So this would fail the test.
+
+So in the kcontrol case the test would be something like:
+
+	amixer sset "AMP1 turn on diagnostic" on
+	amixer sget "AMP1 diagnostic"
+
+And the module parameter case:
+
+	rmmod tda7802
+	modprobe tda7802 turn_on_diagnostic=1
+	dmesg | grep "Turn on diagnostic 04 04 04 04"
+	rmmod tda7802
+	modprobe tda7802
+
+I think the module parameter method is more appropriate for a
+"Turn-on diagnostic", even though I don't really like grepping dmesg
+for the result. I'll go ahead and implement that unless anyone has a
+particular preference for the kcontrol-trigger.
+
+Thanks
