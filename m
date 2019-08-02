@@ -2,120 +2,110 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A59BC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 17:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 281AEC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 17:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8D1820880
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 17:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEDF32173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 17:11:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564765890;
+	bh=QX8zarL9xs/sdJj6CwsMrJvzbNZlO0B+Y3GtFRwGZWA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Q/METk+bzf56WaULw416fvJ5Lw7LK06uZEhrvqLzW8LTVi/oj782YNanrg4EoPHzT
+	 D/j3/FAET/NJNpRQ0gpNmgcfsb0jEUUWpvEbhtO3l7v7bFPTTvEFk7jIVnPjptDtUe
+	 +WlPf6SuxwIEnkx8rZzJqeBhMnWZKfmd1ovX7xw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404346AbfHBRH1 convert rfc822-to-8bit (ORCPT
+        id S2404400AbfHBRL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 13:07:27 -0400
-Received: from mga07.intel.com ([134.134.136.100]:47035 "EHLO mga07.intel.com"
+        Fri, 2 Aug 2019 13:11:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403807AbfHBRH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 13:07:26 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Aug 2019 10:07:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,338,1559545200"; 
-   d="scan'208";a="201720256"
-Received: from orsmsx108.amr.corp.intel.com ([10.22.240.6])
-  by fmsmga002.fm.intel.com with ESMTP; 02 Aug 2019 10:07:25 -0700
-Received: from orsmsx126.amr.corp.intel.com (10.22.240.126) by
- ORSMSX108.amr.corp.intel.com (10.22.240.6) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 2 Aug 2019 10:07:25 -0700
-Received: from orsmsx122.amr.corp.intel.com ([169.254.11.68]) by
- ORSMSX126.amr.corp.intel.com ([169.254.4.77]) with mapi id 14.03.0439.000;
- Fri, 2 Aug 2019 10:07:24 -0700
-From:   "Allan, Bruce W" <bruce.w.allan@intel.com>
-To:     Colin King <colin.king@canonical.com>,
-        "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [Intel-wired-lan] [PATCH][net-next] ice: fix potential infinite
- loop
-Thread-Topic: [Intel-wired-lan] [PATCH][net-next] ice: fix potential
- infinite loop
-Thread-Index: AQHVSUpMQyMMSydwckqiAxGJUhtvkKboBjCA
-Date:   Fri, 2 Aug 2019 17:07:24 +0000
-Message-ID: <804857E1F29AAC47BF68C404FC60A18401096DB0DF@ORSMSX122.amr.corp.intel.com>
-References: <20190802155217.16996-1-colin.king@canonical.com>
-In-Reply-To: <20190802155217.16996-1-colin.king@canonical.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiODEwYjE0OTYtMjlkZS00MDlmLTk2YTMtMWU0Y2QxOTc5ZDhhIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiM1lmQzhFaHFodmkwbXoxUWhFRk95ZE5EV1NBd3pkRlZDV1RuYVZoMzZnNFFvZ0RxMjFnTmNwTDdcLysrOHZRcVUifQ==
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1731936AbfHBRL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 13:11:28 -0400
+Received: from localhost (unknown [106.51.106.149])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6530820880;
+        Fri,  2 Aug 2019 17:11:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564765887;
+        bh=QX8zarL9xs/sdJj6CwsMrJvzbNZlO0B+Y3GtFRwGZWA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VT+JmgKbJKSnvIX98qfvmzfwNnnvVDBIyqpghg/xYPlHM20pKmU8bCzwI6o2ziHet
+         oRFUexQ+r1aXOggFwINFoNlptA94kbem7TtOZb8kiGRkH+V5wLOdhsUnJZ9l+LgIlB
+         ZA947UbeHau7rzjIhmygZk4j+cfo1aEV1inEj7T0=
+Date:   Fri, 2 Aug 2019 22:40:14 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [RFC PATCH 24/40] soundwire: cadence_master: use BIOS defaults
+ for frame shape
+Message-ID: <20190802171014.GZ12733@vkoul-mobl.Dlink>
+References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
+ <20190725234032.21152-25-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190725234032.21152-25-pierre-louis.bossart@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Intel-wired-lan [mailto:intel-wired-lan-bounces@osuosl.org] On Behalf
-> Of Colin King
-> Sent: Friday, August 02, 2019 8:52 AM
-> To: Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>; David S . Miller
-> <davem@davemloft.net>; intel-wired-lan@lists.osuosl.org;
-> netdev@vger.kernel.org
-> Cc: kernel-janitors@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: [Intel-wired-lan] [PATCH][net-next] ice: fix potential infinite loop
-> 
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The loop counter of a for-loop is a u8 however this is being compared
-> to an int upper bound and this can lead to an infinite loop if the
-> upper bound is greater than 255 since the loop counter will wrap back
-> to zero. Fix this potential issue by making the loop counter an int.
-> 
-> Addresses-Coverity: ("Infinite loop")
+On 25-07-19, 18:40, Pierre-Louis Bossart wrote:
+> Remove hard-coding and use BIOS values. If they are wrong use default
 
-Actually, num_alloc_vfs should probably be a u16 instead of an int since num_alloc_vfs cannot exceed 256.
+BIOS :) this is cadence, am sure this can be used outside BIOS :D
 
-Which Coverity scan reported this and what options are used in the analysis?
+It would be better to say firmware (ACPI/DT)
 
-> Fixes: c7aeb4d1b9bf ("ice: Disable VFs until reset is completed")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> 48x2 frame shape.
+> 
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 > ---
->  drivers/net/ethernet/intel/ice/ice_main.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/soundwire/cadence_master.c | 19 +++++++++++++++++--
+>  1 file changed, 17 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/net/ethernet/intel/ice/ice_main.c
-> b/drivers/net/ethernet/intel/ice/ice_main.c
-> index c26e6a102dac..088543d50095 100644
-> --- a/drivers/net/ethernet/intel/ice/ice_main.c
-> +++ b/drivers/net/ethernet/intel/ice/ice_main.c
-> @@ -488,7 +488,7 @@ static void
->  ice_prepare_for_reset(struct ice_pf *pf)
->  {
->  	struct ice_hw *hw = &pf->hw;
-> -	u8 i;
-> +	int i;
-> 
->  	/* already prepared for reset */
->  	if (test_bit(__ICE_PREPARED_FOR_RESET, pf->state))
-> --
-> 2.20.1
-> 
-> _______________________________________________
-> Intel-wired-lan mailing list
-> Intel-wired-lan@osuosl.org
-> https://lists.osuosl.org/mailman/listinfo/intel-wired-lan
+> diff --git a/drivers/soundwire/cadence_master.c b/drivers/soundwire/cadence_master.c
+> index 442f78c00f09..d84344e29f71 100644
+> --- a/drivers/soundwire/cadence_master.c
+> +++ b/drivers/soundwire/cadence_master.c
+> @@ -175,7 +175,6 @@
+>  /* Driver defaults */
+>  
+>  #define CDNS_DEFAULT_CLK_DIVIDER		0
+> -#define CDNS_DEFAULT_FRAME_SHAPE		0x30
+>  #define CDNS_DEFAULT_SSP_INTERVAL		0x18
+>  #define CDNS_TX_TIMEOUT				2000
+>  
+> @@ -954,6 +953,20 @@ int sdw_cdns_pdi_init(struct sdw_cdns *cdns,
+>  }
+>  EXPORT_SYMBOL(sdw_cdns_pdi_init);
+>  
+> +static u32 cdns_set_default_frame_shape(int n_rows, int n_cols)
+> +{
+> +	u32 val;
+> +	int c;
+> +	int r;
+
+This can be in single line!
+
+> +
+> +	r = sdw_find_row_index(n_rows);
+> +	c = sdw_find_col_index(n_cols);
+> +
+> +	val = (r << 3) | c;
+
+Magic 3?
+
+-- 
+~Vinod
