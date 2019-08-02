@@ -2,101 +2,92 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFD1C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B073BC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB8F620679
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ED6320679
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:50:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564739449;
+	bh=1/vSu47XxfxHWe8LSsnNcXGnkLkLJeUJO2WfGf8+5Rk=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=D0Vme6uk/UdCc1jJlJxYZrfYFfO19AL8gDPiU0Vc5+qlUf6H20jJJ0cNaIFzNmnta
+	 bbndhBArbs4HAkbJX7uZUp4GIzdFKh3vii/zVNtOnX2UIaZUg3t5e35y3EDotGUG5a
+	 sGkBCfzFEQK3A560UcbpRn7FnpiTUJBKYKNqy/ts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405875AbfHBJuo (ORCPT
+        id S2405415AbfHBJpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:50:44 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39175 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404933AbfHBJuf (ORCPT
+        Fri, 2 Aug 2019 05:45:20 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:41215 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405386AbfHBJpP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:50:35 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1htUCg-0001sw-HD; Fri, 02 Aug 2019 11:50:26 +0200
-Date:   Fri, 2 Aug 2019 11:50:20 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-cc:     Qais Yousef <qais.yousef@arm.com>, mingo@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 0/5] Fix FIFO-99 abuse
-In-Reply-To: <20190802093244.GF2332@hirez.programming.kicks-ass.net>
-Message-ID: <alpine.DEB.2.21.1908021149110.3924@nanos.tec.linutronix.de>
-References: <20190801111348.530242235@infradead.org> <20190801131707.5rpyydznnhz474la@e107158-lin.cambridge.arm.com> <20190802093244.GF2332@hirez.programming.kicks-ass.net>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 2 Aug 2019 05:45:15 -0400
+Received: by mail-ot1-f67.google.com with SMTP id o101so77510787ota.8;
+        Fri, 02 Aug 2019 02:45:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=SIowbSyyRLa8kaPpGYFd2/TLvoMN+6bid3yfLLFVdbc=;
+        b=Une64RcEBB8g8ZhWmlTDhjip6lr0q8lw6a6dXpvmLR0WBC189Qk3jkXzIWrls39bnl
+         xdqomLhjNqOWBAl1YuLi2bPc4tOJVbrXBIvQfoyIJOCyXTEKg5q3Tfg8x18I4uFqXVx0
+         jXqJYPWDMcPvEuWexo7iRrehTn9ZbqrNwbuIMWz/63SNG+z1x0Z1ckbVwr4uPV1lZG3R
+         UNOD0uyl21PIafqSSS0HTCjg35a85s0wW1Y3jtcaSZT8QU6EHoXFpk3EvHAZFVw0GOG2
+         Ag0TYC4iIWbU1P4THLEU6kQYAN4q2YpkpLkvrXF0ctyEtVCkjo79Md4rnfLMNgcrPqi3
+         GchA==
+X-Gm-Message-State: APjAAAWxQ+eTTUmE8DnVgDJz39FLT440o2lzAJjaTGshW6xySRdW+MUW
+        Te6RJD0mt2Qr8iN7jm30SgH1snNKmz1EuT0Tmn07fpjo
+X-Google-Smtp-Source: APXvYqxo93Yl4vmPUr6mRr+3EBhZW4gSNFTKEYcIn760n+OBzQDV0oxl23NPUILTh0tZyODqwvAEFBDhHnP3GGcMLsk=
+X-Received: by 2002:a05:6830:8a:: with SMTP id a10mr69081583oto.167.1564739114618;
+ Fri, 02 Aug 2019 02:45:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 2 Aug 2019 11:45:03 +0200
+Message-ID: <CAJZ5v0i+ZJEdVw=sZfB1KUuqJFWA=mSfB6jL66c1HFfZN9MR6g@mail.gmail.com>
+Subject: [GIT PULL] Power management fix for v5.3-rc3
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2 Aug 2019, Peter Zijlstra wrote:
-> On Thu, Aug 01, 2019 at 02:17:07PM +0100, Qais Yousef wrote:
-> > On 08/01/19 13:13, Peter Zijlstra wrote:
-> > > I noticed a bunch of kthreads defaulted to FIFO-99, fix them.
-> > > 
-> > > The generic default is FIFO-50, the admin will have to configure the system
-> > > anyway.
-> > > 
-> > > For some the purpose is to be above OTHER and then FIFO-1 really is sufficient.
-> > 
-> > I was looking in this area too and was thinking of a way to consolidate the
-> > creation of RT/DL tasks in the kernel and the way we set the priority.
-> > 
-> > Does it make sense to create a new header for RT priorities for kthreads
-> > created in the kernel so that we can easily track and rationale about the
-> > relative priorities of in-kernel RT tasks?
-> > 
-> > When working in the FW world such a header helped a lot in understanding what
-> > runs at each priority level and how to reason about what priority level makes
-> > sense for a new item. It could be a nice single point of reference; even for
-> > admins.
-> 
-> Well, SCHED_FIFO is a broken scheduler model; that is, it is
-> fundamentally incapable of resource management, which is the one thing
-> an OS really should be doing.
-> 
-> This is of course the reason it is limited to privileged users only.
-> 
-> Worse still; it is fundamentally impossible to compose static priority
-> workloads. You cannot take two correctly working static prio workloads
-> and smash them together and still expect them to work.
-> 
-> For this reason 'all' FIFO tasks the kernel creates are basically at:
-> 
->   MAX_RT_PRIO / 2
-> 
-> The administrator _MUST_ configure the system, the kernel simply doesn't
-> know enough information to make a sensible choice.
-> 
-> Now, Geert suggested so make make a define for that, but how about we do
-> something like:
-> 
-> /*
->  * ${the above explanation}
->  */
-> int kernel_setscheduler_fifo(struct task_struct *p)
-> {
-> 	struct sched_param sp = { .sched_priority = MAX_RT_PRIO / 2 };
-> 	return sched_setscheduler_nocheck(p, SCHED_FIFO, &sp);
-> }
-> 
-> And then take away sched_setscheduler*().
+Hi Linus,
 
-Yes, please.
+Please pull from the tag
 
-     tglx
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ pm-5.3-rc3
 
+with top-most commit 42787ed79638dc7f0f8d5c164caba1e87bfab50f
+
+ ACPI: PM: Fix regression in acpi_device_set_power()
+
+on top of commit 609488bc979f99f805f34e9a32c1e3b71179d10b
+
+ Linux 5.3-rc2
+
+to receive a power management fix for 5.3-rc3.
+
+This fixes a recent regression affecting ACPI device power management.
+
+Thanks!
+
+
+---------------
+
+Rafael J. Wysocki (1):
+      ACPI: PM: Fix regression in acpi_device_set_power()
+
+---------------
+
+ drivers/acpi/device_pm.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
