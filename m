@@ -4,63 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C73E9C32753
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E50C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 977542064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:53:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62E272064A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:53:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739631;
-	bh=Sm0PfBeQceiwqseCtOSoS8UIGDHm40DFx14/1Oj12PQ=;
+	s=default; t=1564739636;
+	bh=Cd2/CtlMzi0MVSdMVDg8CkFE200fT4o/RHRtNoAlWUo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TvTIfyO9Pc/TigQkQmYL+D0EJK5/W6txgxK4ABOKfgpeFg9gtRJqhEogHW9bkK2Tw
-	 QsYNb85MOYtof7p3Owd9g3jKOspgOfLyMQB/WLVWOs3jvDqvqzgwJn9/AT/G9YBeVX
-	 E508Zo1cB7Uv48Uu4O68U2CjulIozv8wl87NIyqI=
+	b=tX7HbQZKsFF7xnCasuYNKctA/is5Cc9+kGQV32XtTSUdgVyMnreasv13qVUEIhprk
+	 NIV8XGqJ25Aq4LIccFBwS9w3Zd5Y0ed0WHAkoD+PRXepd3YvhTazTAvaI8UVzOJe/S
+	 Xq3lGGpa5IZjPWF9hUG15LhiT3jw4/9ie7vkzxns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406311AbfHBJxl (ORCPT
+        id S2406345AbfHBJxy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:53:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59836 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:53:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406287AbfHBJxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:53:37 -0400
+        id S2406309AbfHBJxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:53:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FD212064A;
-        Fri,  2 Aug 2019 09:53:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 952492086A;
+        Fri,  2 Aug 2019 09:53:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739616;
-        bh=Sm0PfBeQceiwqseCtOSoS8UIGDHm40DFx14/1Oj12PQ=;
+        s=default; t=1564739621;
+        bh=Cd2/CtlMzi0MVSdMVDg8CkFE200fT4o/RHRtNoAlWUo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wG/CU7libzsDJu67gArl15r5SSjXXcjQrazmbx6PjvpbbRnJWFqrPsq2z2nX5Yy3s
-         a1TNdkmiO0u7mHaoGrhQCcxkmA35onibitGsYVEI7EqgERZIz8f0Zm6ttcCYTctbTF
-         MMMYdwSiZiIRBXYvDDAn8IeClD2hBBqct7aWujrA=
+        b=ZXoysYs2WKumYYv2gnpyl4Hm+pbVlnYqZZGRRXzuirHEXepJGXZTMJ6CYWlau5ik3
+         evL+nONGUb8+AxoKKycRT0cAgmU/tPaX2lDhdfn4tuiznbzTNA1yxcv4F8LEKVopOA
+         b1+94Lk2iIL7aEJopM41PcQnPGxPx3pdtOvwoNbw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Eric Dumazet <edumazet@google.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Jan Glauber <jglauber@marvell.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
-        Greg KH <greg@kroah.com>, Kees Cook <keescook@chromium.org>,
-        David Howells <dhowells@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 210/223] access: avoid the RCU grace period for the temporary subjective credentials
-Date:   Fri,  2 Aug 2019 11:37:15 +0200
-Message-Id: <20190802092250.490319974@linuxfoundation.org>
+        syzbot+8750abbc3a46ef47d509@syzkaller.appspotmail.com,
+        Phong Tran <tranmanphong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 10/25] ISDN: hfcsusb: checking idx of ep configuration
+Date:   Fri,  2 Aug 2019 11:39:42 +0200
+Message-Id: <20190802092102.954442606@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
-References: <20190802092238.692035242@linuxfoundation.org>
+In-Reply-To: <20190802092058.428079740@linuxfoundation.org>
+References: <20190802092058.428079740@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -70,174 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Phong Tran <tranmanphong@gmail.com>
 
-commit d7852fbd0f0423937fa287a598bfde188bb68c22 upstream.
+commit f384e62a82ba5d85408405fdd6aeff89354deaa9 upstream.
 
-It turns out that 'access()' (and 'faccessat()') can cause a lot of RCU
-work because it installs a temporary credential that gets allocated and
-freed for each system call.
+The syzbot test with random endpoint address which made the idx is
+overflow in the table of endpoint configuations.
 
-The allocation and freeing overhead is mostly benign, but because
-credentials can be accessed under the RCU read lock, the freeing
-involves a RCU grace period.
+this adds the checking for fixing the error report from
+syzbot
 
-Which is not a huge deal normally, but if you have a lot of access()
-calls, this causes a fair amount of seconday damage: instead of having a
-nice alloc/free patterns that hits in hot per-CPU slab caches, you have
-all those delayed free's, and on big machines with hundreds of cores,
-the RCU overhead can end up being enormous.
+KASAN: stack-out-of-bounds Read in hfcsusb_probe [1]
+The patch tested by syzbot [2]
 
-But it turns out that all of this is entirely unnecessary.  Exactly
-because access() only installs the credential as the thread-local
-subjective credential, the temporary cred pointer doesn't actually need
-to be RCU free'd at all.  Once we're done using it, we can just free it
-synchronously and avoid all the RCU overhead.
+Reported-by: syzbot+8750abbc3a46ef47d509@syzkaller.appspotmail.com
 
-So add a 'non_rcu' flag to 'struct cred', which can be set by users that
-know they only use it in non-RCU context (there are other potential
-users for this).  We can make it a union with the rcu freeing list head
-that we need for the RCU case, so this doesn't need any extra storage.
+[1]:
+https://syzkaller.appspot.com/bug?id=30a04378dac680c5d521304a00a86156bb913522
+[2]:
+https://groups.google.com/d/msg/syzkaller-bugs/_6HBdge8F3E/OJn7wVNpBAAJ
 
-Note that this also makes 'get_current_cred()' clear the new non_rcu
-flag, in case we have filesystems that take a long-term reference to the
-cred and then expect the RCU delayed freeing afterwards.  It's not
-entirely clear that this is required, but it makes for clear semantics:
-the subjective cred remains non-RCU as long as you only access it
-synchronously using the thread-local accessors, but you _can_ use it as
-a generic cred if you want to.
-
-It is possible that we should just remove the whole RCU markings for
-->cred entirely.  Only ->real_cred is really supposed to be accessed
-through RCU, and the long-term cred copies that nfs uses might want to
-explicitly re-enable RCU freeing if required, rather than have
-get_current_cred() do it implicitly.
-
-But this is a "minimal semantic changes" change for the immediate
-problem.
-
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Eric Dumazet <edumazet@google.com>
-Acked-by: Paul E. McKenney <paulmck@linux.ibm.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Jan Glauber <jglauber@marvell.com>
-Cc: Jiri Kosina <jikos@kernel.org>
-Cc: Jayachandran Chandrasekharan Nair <jnair@marvell.com>
-Cc: Greg KH <greg@kroah.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Miklos Szeredi <miklos@szeredi.hu>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/open.c            |   19 +++++++++++++++++++
- include/linux/cred.h |    7 ++++++-
- kernel/cred.c        |   21 +++++++++++++++++++--
- 3 files changed, 44 insertions(+), 3 deletions(-)
+ drivers/isdn/hardware/mISDN/hfcsusb.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -380,6 +380,25 @@ SYSCALL_DEFINE3(faccessat, int, dfd, con
- 				override_cred->cap_permitted;
- 	}
+--- a/drivers/isdn/hardware/mISDN/hfcsusb.c
++++ b/drivers/isdn/hardware/mISDN/hfcsusb.c
+@@ -1963,6 +1963,9 @@ hfcsusb_probe(struct usb_interface *intf
  
-+	/*
-+	 * The new set of credentials can *only* be used in
-+	 * task-synchronous circumstances, and does not need
-+	 * RCU freeing, unless somebody then takes a separate
-+	 * reference to it.
-+	 *
-+	 * NOTE! This is _only_ true because this credential
-+	 * is used purely for override_creds() that installs
-+	 * it as the subjective cred. Other threads will be
-+	 * accessing ->real_cred, not the subjective cred.
-+	 *
-+	 * If somebody _does_ make a copy of this (using the
-+	 * 'get_current_cred()' function), that will clear the
-+	 * non_rcu field, because now that other user may be
-+	 * expecting RCU freeing. But normal thread-synchronous
-+	 * cred accesses will keep things non-RCY.
-+	 */
-+	override_cred->non_rcu = 1;
+ 				/* get endpoint base */
+ 				idx = ((ep_addr & 0x7f) - 1) * 2;
++				if (idx > 15)
++					return -EIO;
 +
- 	old_cred = override_creds(override_cred);
- retry:
- 	res = user_path_at(dfd, filename, lookup_flags, &path);
---- a/include/linux/cred.h
-+++ b/include/linux/cred.h
-@@ -144,7 +144,11 @@ struct cred {
- 	struct user_struct *user;	/* real user ID subscription */
- 	struct user_namespace *user_ns; /* user_ns the caps and keyrings are relative to. */
- 	struct group_info *group_info;	/* supplementary groups for euid/fsgid */
--	struct rcu_head	rcu;		/* RCU deletion hook */
-+	/* RCU deletion */
-+	union {
-+		int non_rcu;			/* Can we skip RCU deletion? */
-+		struct rcu_head	rcu;		/* RCU deletion hook */
-+	};
- };
- 
- extern void __put_cred(struct cred *);
-@@ -242,6 +246,7 @@ static inline const struct cred *get_cre
- {
- 	struct cred *nonconst_cred = (struct cred *) cred;
- 	validate_creds(cred);
-+	nonconst_cred->non_rcu = 0;
- 	return get_new_cred(nonconst_cred);
- }
- 
---- a/kernel/cred.c
-+++ b/kernel/cred.c
-@@ -146,7 +146,10 @@ void __put_cred(struct cred *cred)
- 	BUG_ON(cred == current->cred);
- 	BUG_ON(cred == current->real_cred);
- 
--	call_rcu(&cred->rcu, put_cred_rcu);
-+	if (cred->non_rcu)
-+		put_cred_rcu(&cred->rcu);
-+	else
-+		call_rcu(&cred->rcu, put_cred_rcu);
- }
- EXPORT_SYMBOL(__put_cred);
- 
-@@ -257,6 +260,7 @@ struct cred *prepare_creds(void)
- 	old = task->cred;
- 	memcpy(new, old, sizeof(struct cred));
- 
-+	new->non_rcu = 0;
- 	atomic_set(&new->usage, 1);
- 	set_cred_subscribers(new, 0);
- 	get_group_info(new->group_info);
-@@ -536,7 +540,19 @@ const struct cred *override_creds(const
- 
- 	validate_creds(old);
- 	validate_creds(new);
--	get_cred(new);
-+
-+	/*
-+	 * NOTE! This uses 'get_new_cred()' rather than 'get_cred()'.
-+	 *
-+	 * That means that we do not clear the 'non_rcu' flag, since
-+	 * we are only installing the cred into the thread-synchronous
-+	 * '->cred' pointer, not the '->real_cred' pointer that is
-+	 * visible to other threads under RCU.
-+	 *
-+	 * Also note that we did validate_creds() manually, not depending
-+	 * on the validation in 'get_cred()'.
-+	 */
-+	get_new_cred((struct cred *)new);
- 	alter_cred_subscribers(new, 1);
- 	rcu_assign_pointer(current->cred, new);
- 	alter_cred_subscribers(old, -1);
-@@ -619,6 +635,7 @@ struct cred *prepare_kernel_cred(struct
- 	validate_creds(old);
- 
- 	*new = *old;
-+	new->non_rcu = 0;
- 	atomic_set(&new->usage, 1);
- 	set_cred_subscribers(new, 0);
- 	get_uid(new->user);
+ 				if (ep_addr & 0x80)
+ 					idx++;
+ 				attr = ep->desc.bmAttributes;
 
 
