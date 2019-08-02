@@ -2,139 +2,251 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 018CCC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 04:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDF5C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 04:07:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE994206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 04:04:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E94FB2086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 04:07:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="onz3slll"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729936AbfHBEEW (ORCPT
+        id S1730275AbfHBEHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 00:04:22 -0400
-Received: from mail1.windriver.com ([147.11.146.13]:54431 "EHLO
-        mail1.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729150AbfHBEEW (ORCPT
+        Fri, 2 Aug 2019 00:07:01 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:55078 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725787AbfHBEHB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 00:04:22 -0400
-Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
-        by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id x722h7or006793
-        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-        Thu, 1 Aug 2019 19:43:07 -0700 (PDT)
-Received: from [128.224.162.237] (128.224.162.237) by ALA-HCA.corp.ad.wrs.com
- (147.11.189.50) with Microsoft SMTP Server id 14.3.468.0; Thu, 1 Aug 2019
- 19:43:06 -0700
-Subject: Re: [PATCH v2] tracing: Function stack size and its name mismatch in
- arm64
-To:     Will Deacon <will@kernel.org>
-CC:     <rostedt@goodmis.org>, <mingo@redhat.com>,
-        <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <joel@joelfernandes.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190801083340.57075-1-jiping.ma2@windriver.com>
- <20190801094156.emo36ekvrm74nndl@willie-the-truck>
-From:   Jiping Ma <Jiping.Ma2@windriver.com>
-Message-ID: <47e90170-e971-c2f5-b6c9-d3c6a694a4a7@windriver.com>
-Date:   Fri, 2 Aug 2019 10:43:03 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.0
+        Fri, 2 Aug 2019 00:07:01 -0400
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x7246nSN008250
+        for <linux-kernel@vger.kernel.org>; Thu, 1 Aug 2019 21:06:56 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=/JGpj5xaIqABlRNKSRJRUdgMyRc4OpMWr0QtO1VevWQ=;
+ b=onz3slllYo8MESWYShIb/EGwAuE4C4aWnH+fyHBGBapjltSy7YoxSa8z5rf6gRRJE3JW
+ SkKrUxBXtMO/JQ50ispRMGhUgS/sjQ42mYx05jsGGcFtmX3sFKhBK0WvduuJCJMnTP9z
+ EPLNGLe0EsPG9E0S+ZJ1zI/rzrl2xMRn0Ic= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by m0001303.ppops.net with ESMTP id 2u449ghw4y-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 21:06:56 -0700
+Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
+ mail.thefacebook.com (2620:10d:c081:35::130) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
+ Thu, 1 Aug 2019 21:06:54 -0700
+Received: by devvm24792.prn1.facebook.com (Postfix, from userid 150176)
+        id E273C1888669A; Thu,  1 Aug 2019 21:06:52 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Tao Ren <taoren@fb.com>
+Smtp-Origin-Hostname: devvm24792.prn1.facebook.com
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+        <openbmc@lists.ozlabs.org>
+CC:     Tao Ren <taoren@fb.com>
+Smtp-Origin-Cluster: prn1c35
+Subject: [PATCH v2] ARM: dts: aspeed: Add Facebook Wedge40 BMC
+Date:   Thu, 1 Aug 2019 21:06:50 -0700
+Message-ID: <20190802040650.1224903-1-taoren@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-In-Reply-To: <20190801094156.emo36ekvrm74nndl@willie-the-truck>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-02_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908020042
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add initial version of device tree for Facebook Wedge40 AST2400 BMC
+platform.
 
+Signed-off-by: Tao Ren <taoren@fb.com>
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+---
+ Changes in v2:
+ - remove "debug" from bootargs.
 
-On 2019年08月01日 17:41, Will Deacon wrote:
-> On Thu, Aug 01, 2019 at 04:33:40PM +0800, Jiping Ma wrote:
->> In arm64, the PC of the frame is matched to the last frame function,
->> rather than the function of his frame. For the following example, the
->> stack size of occupy_stack_init function should be 3376, rather than 176.
->>
->> Wrong info:
->> Depth Size Location (16 entries)
->> ----- ---- --------
->> 0) 5400 16 __update_load_avg_se.isra.2+0x28/0x220
->> 1) 5384 96 put_prev_entity+0x250/0x338
->> 2) 5288 80 pick_next_task_fair+0x4c4/0x508
->> 3) 5208 72 __schedule+0x100/0x600
->> 4) 5136 184 preempt_schedule_common+0x28/0x48
->> 5) 4952 32 preempt_schedule+0x28/0x30
->> 6) 4920 16 vprintk_emit+0x170/0x1f8
->> 7) 4904 128 vprintk_default+0x48/0x58
->> 8) 4776 64 vprintk_func+0xf8/0x1c8
->> 9) 4712 112 printk+0x70/0x90
->> 10) 4600 176 occupy_stack_init+0x64/0xc0 [kernel_stack]
->> 11) 4424 3376 do_one_initcall+0x68/0x248
->> 12) 1048 144 do_init_module+0x60/0x1f0
->> 13) 904 48 load_module+0x1d50/0x2340
->> 14) 856 352 sys_finit_module+0xd0/0xe8
->> 15) 504 504 el0_svc_naked+0x30/0x34
->>
->> Correct info:
->> Depth Size Location (18 entries)
->> ----- ---- --------
->> 0) 5464 48 cgroup_rstat_updated+0x20/0x100
->> 1) 5416 32 cgroup_base_stat_cputime_account_end.isra.0+0x30/0x60
->> 2) 5384 32 __cgroup_account_cputime+0x3c/0x48
->> 3) 5352 64 update_curr+0xc4/0x1d0
->> 4) 5288 72 pick_next_task_fair+0x444/0x508
->> 5) 5216 184 __schedule+0x100/0x600
->> 6) 5032 32 preempt_schedule_common+0x28/0x48
->> 7) 5000 16 preempt_schedule+0x28/0x30
->> 8) 4984 128 vprintk_emit+0x170/0x1f8
->> 9) 4856 64 vprintk_default+0x48/0x58
->> 10) 4792 112 vprintk_func+0xf8/0x1c8
->> 11) 4680 176 printk+0x70/0x90
->> 12) 4504 80 func_test+0x7c/0xb8 [kernel_stack]
->> 13) 4424 3376 occupy_stack_init+0x7c/0xc0 [kernel_stack]
->> 14) 1048 144 do_one_initcall+0x68/0x248
->> 15) 904 48 do_init_module+0x60/0x1f0
->> 16) 856 352 load_module+0x1d50/0x2340
->> 17) 504 504 sys_finit_module+0xd0/0xe8
->>
->> Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
->> ---
->>   kernel/trace/trace_stack.c | 28 ++++++++++++++++++++++++++--
->>   1 file changed, 26 insertions(+), 2 deletions(-)
->>
->> diff --git a/kernel/trace/trace_stack.c b/kernel/trace/trace_stack.c
->> index 5d16f73898db..ed80b95abf06 100644
->> --- a/kernel/trace/trace_stack.c
->> +++ b/kernel/trace/trace_stack.c
->> @@ -40,16 +40,28 @@ static void print_max_stack(void)
->>   
->>   	pr_emerg("        Depth    Size   Location    (%d entries)\n"
->>   			   "        -----    ----   --------\n",
->> +#ifdef CONFIG_ARM64
->> +			   stack_trace_nr_entries - 1);
->> +#else
->>   			   stack_trace_nr_entries);
-> Sorry, but I have no idea what the problem is here. All I know is that the
-> solution looks highly dubious and I find it very hard to believe that the
-> arm64 backtracing code is uniquely special as to deserve being called out
-> like this. I suspect there's a bug lurking somewhere, but you really need
-> to do a better job of explaining the issue rather than simply providing a
-> couple of backtraces with no context.
->
-> *Why* does the frame appear to be off-by-one?
-Because the PC is LR in ARM64 stack actually.  Following is ARM64 stack 
-layout. Please refer to the figure 3 in 
-http://infocenter.arm.com/help/topic/com.arm.doc.ihi0055b/IHI0055B_aapcs64.pdf
-             LR
-             FP
-             ......
-             LR
-             FP
-Jiping
->
-> Will
+ arch/arm/boot/dts/Makefile                    |   1 +
+ .../boot/dts/aspeed-bmc-facebook-wedge40.dts  | 141 ++++++++++++++++++
+ 2 files changed, 142 insertions(+)
+ create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 39a05a10a2a2..dfc1011eb3f2 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -1273,6 +1273,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
+ 	aspeed-bmc-facebook-cmm.dtb \
+ 	aspeed-bmc-facebook-minipack.dtb \
+ 	aspeed-bmc-facebook-tiogapass.dtb \
++	aspeed-bmc-facebook-wedge40.dtb \
+ 	aspeed-bmc-facebook-yamp.dtb \
+ 	aspeed-bmc-intel-s2600wf.dtb \
+ 	aspeed-bmc-inspur-fp5280g2.dtb \
+diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts
+new file mode 100644
+index 000000000000..aaa77a597d1a
+--- /dev/null
++++ b/arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts
+@@ -0,0 +1,141 @@
++// SPDX-License-Identifier: GPL-2.0+
++// Copyright (c) 2018 Facebook Inc.
++/dts-v1/;
++
++#include "aspeed-g4.dtsi"
++
++/ {
++	model = "Facebook Wedge 40 BMC";
++	compatible = "facebook,wedge40-bmc", "aspeed,ast2400";
++
++	aliases {
++		/*
++		 * Override the default uart aliases to avoid breaking
++		 * the legacy applications.
++		 */
++		serial0 = &uart5;
++		serial1 = &uart1;
++		serial2 = &uart3;
++		serial3 = &uart4;
++	};
++
++	chosen {
++		stdout-path = &uart3;
++		bootargs = "console=ttyS2,9600n8 root=/dev/ram rw";
++	};
++
++	memory@40000000 {
++		reg = <0x40000000 0x20000000>;
++	};
++};
++
++&wdt1 {
++	status = "okay";
++	aspeed,reset-type = "system";
++};
++
++&wdt2 {
++	status = "disabled";
++};
++
++&fmc {
++	status = "okay";
++	flash@0 {
++		status = "okay";
++		m25p,fast-read;
++		label = "fmc0";
++#include "facebook-bmc-flash-layout.dtsi"
++	};
++};
++
++&uart1 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_txd1_default
++		     &pinctrl_rxd1_default>;
++};
++
++&uart3 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_txd3_default
++		     &pinctrl_rxd3_default>;
++};
++
++&uart4 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_txd4_default
++		     &pinctrl_rxd4_default>;
++};
++
++&uart5 {
++	status = "okay";
++};
++
++&mac1 {
++	status = "okay";
++	no-hw-checksum;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_rgmii2_default &pinctrl_mdio2_default>;
++};
++
++&i2c0 {
++	status = "okay";
++};
++
++&i2c1 {
++	status = "okay";
++};
++
++&i2c2 {
++	status = "okay";
++};
++
++&i2c3 {
++	status = "okay";
++};
++
++&i2c4 {
++	status = "okay";
++};
++
++&i2c5 {
++	status = "okay";
++};
++
++&i2c6 {
++	status = "okay";
++};
++
++&i2c7 {
++	status = "okay";
++};
++
++&i2c8 {
++	status = "okay";
++};
++
++&i2c9 {
++	status = "okay";
++};
++
++&i2c10 {
++	status = "okay";
++};
++
++&i2c11 {
++	status = "okay";
++};
++
++&i2c12 {
++	status = "okay";
++};
++
++&i2c13 {
++	status = "okay";
++};
++
++&vhub {
++	status = "okay";
++};
+-- 
+2.17.1
 
