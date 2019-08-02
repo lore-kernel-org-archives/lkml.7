@@ -2,53 +2,52 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E47C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA08FC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F82C2073D
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:01:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8386E2064A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:01:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564740103;
-	bh=02lJq1r0mBN4D9aZrTeZswREr3BnLBzB9N1Q5gXdA7Q=;
+	s=default; t=1564740109;
+	bh=9H4D2zV7TSgSKq4UzQXIqE+FNeo85jU3HULh/FQEAcU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zgan3Wu5XgP3Mtb/uBk7A2Iv06R7xngy3kQvD8q1c60eGmST0P1IJmF8KDE8AiqRz
-	 HcG8SJ+Yx1VQf8SKIlkVQAzICiQiDvMKP+bWOZelDrxu7Ye7RICS3RmPIyPRWyPKAF
-	 p5pUjlc0Of8EQhtSyu5HPEE2WvLW76Dwh2wSZwJQ=
+	b=QASnfrzOmgVA1YLyVTmhiwQO0i8kx3EqIxSY8NmpC57sLWAAfiOi5bdxLZ0haDuAJ
+	 bbnf5uD+mdliWg/cLvqVn/CvbWxv2Xx+VlIqpvaiQDa2bJgAErtUNkQE8SQvv8bFGK
+	 WWdZBwNXJc1mZULw5o7QZC7kn35p1OKa6TPK6sPA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405168AbfHBJoE (ORCPT
+        id S2407111AbfHBKBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:44:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47218 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 06:01:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404801AbfHBJoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:44:02 -0400
+        id S2405127AbfHBJnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:43:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A07C2086A;
-        Fri,  2 Aug 2019 09:44:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E274820679;
+        Fri,  2 Aug 2019 09:43:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739042;
-        bh=02lJq1r0mBN4D9aZrTeZswREr3BnLBzB9N1Q5gXdA7Q=;
+        s=default; t=1564739034;
+        bh=9H4D2zV7TSgSKq4UzQXIqE+FNeo85jU3HULh/FQEAcU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BEpBmLjMGmCEUsukSIagzWBvIfqjTeEXF2Hh+hbpcEAXMOeKcfdxYcjhiwG/W23PN
-         Rh0uEUOksm2D5kv+uUlM04S2bnWtI1izXBmA/MgvzdHH5KPP07POzMgbGw1+CxuUbn
-         XlAAZgbeGChCS8rWCi3mrjHfqv6lLo+VBDLm1zdc=
+        b=Epk5Zr1B51WE+9swIuR2EvRGMwa64g8gHgkYkHLroUDg6SskfXUmcVOGA479642R2
+         IwkMXzzwHo6Viw+64aNsrCHvqNPReoXId63Df4/PMNv6oHDHnWHs6AjncnPNGyVDvt
+         gLne+2h6vEZBUzL8tKqYfLgobeapW+rhaypuzvKI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+97aae04ce27e39cbfca9@syzkaller.appspotmail.com,
-        syzbot+4c595632b98bb8ffcc66@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 090/223] ALSA: seq: Break too long mutex context in the write loop
-Date:   Fri,  2 Aug 2019 11:35:15 +0200
-Message-Id: <20190802092244.929519789@linuxfoundation.org>
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 072/223] gtp: fix Illegal context switch in RCU read-side critical section.
+Date:   Fri,  2 Aug 2019 11:34:57 +0200
+Message-Id: <20190802092243.480529444@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -61,73 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+[ Upstream commit 3f167e1921865b379a9becf03828e7202c7b4917 ]
 
-commit ede34f397ddb063b145b9e7d79c6026f819ded13 upstream.
+ipv4_pdp_add() is called in RCU read-side critical section.
+So GFP_KERNEL should not be used in the function.
+This patch make ipv4_pdp_add() to use GFP_ATOMIC instead of GFP_KERNEL.
 
-The fix for the racy writes and ioctls to sequencer widened the
-application of client->ioctl_mutex to the whole write loop.  Although
-it does unlock/relock for the lengthy operation like the event dup,
-the loop keeps the ioctl_mutex for the whole time in other
-situations.  This may take quite long time if the user-space would
-give a huge buffer, and this is a likely cause of some weird behavior
-spotted by syzcaller fuzzer.
+Test commands:
+gtp-link add gtp1 &
+gtp-tunnel add gtp1 v1 100 200 1.1.1.1 2.2.2.2
 
-This patch puts a simple workaround, just adding a mutex break in the
-loop when a large number of events have been processed.  This
-shouldn't hit any performance drop because the threshold is set high
-enough for usual operations.
+Splat looks like:
+[  130.618881] =============================
+[  130.626382] WARNING: suspicious RCU usage
+[  130.626994] 5.2.0-rc6+ #50 Not tainted
+[  130.627622] -----------------------------
+[  130.628223] ./include/linux/rcupdate.h:266 Illegal context switch in RCU read-side critical section!
+[  130.629684]
+[  130.629684] other info that might help us debug this:
+[  130.629684]
+[  130.631022]
+[  130.631022] rcu_scheduler_active = 2, debug_locks = 1
+[  130.632136] 4 locks held by gtp-tunnel/1025:
+[  130.632925]  #0: 000000002b93c8b7 (cb_lock){++++}, at: genl_rcv+0x15/0x40
+[  130.634159]  #1: 00000000f17bc999 (genl_mutex){+.+.}, at: genl_rcv_msg+0xfb/0x130
+[  130.635487]  #2: 00000000c644ed8e (rtnl_mutex){+.+.}, at: gtp_genl_new_pdp+0x18c/0x1150 [gtp]
+[  130.636936]  #3: 0000000007a1cde7 (rcu_read_lock){....}, at: gtp_genl_new_pdp+0x187/0x1150 [gtp]
+[  130.638348]
+[  130.638348] stack backtrace:
+[  130.639062] CPU: 1 PID: 1025 Comm: gtp-tunnel Not tainted 5.2.0-rc6+ #50
+[  130.641318] Call Trace:
+[  130.641707]  dump_stack+0x7c/0xbb
+[  130.642252]  ___might_sleep+0x2c0/0x3b0
+[  130.642862]  kmem_cache_alloc_trace+0x1cd/0x2b0
+[  130.643591]  gtp_genl_new_pdp+0x6c5/0x1150 [gtp]
+[  130.644371]  genl_family_rcv_msg+0x63a/0x1030
+[  130.645074]  ? mutex_lock_io_nested+0x1090/0x1090
+[  130.645845]  ? genl_unregister_family+0x630/0x630
+[  130.646592]  ? debug_show_all_locks+0x2d0/0x2d0
+[  130.647293]  ? check_flags.part.40+0x440/0x440
+[  130.648099]  genl_rcv_msg+0xa3/0x130
+[ ... ]
 
-Fixes: 7bd800915677 ("ALSA: seq: More protection for concurrent write and ioctl races")
-Reported-by: syzbot+97aae04ce27e39cbfca9@syzkaller.appspotmail.com
-Reported-by: syzbot+4c595632b98bb8ffcc66@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 459aa660eb1d ("gtp: add initial driver for datapath of GPRS Tunneling Protocol (GTP-U)")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/seq/seq_clientmgr.c |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/net/gtp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/core/seq/seq_clientmgr.c
-+++ b/sound/core/seq/seq_clientmgr.c
-@@ -1001,7 +1001,7 @@ static ssize_t snd_seq_write(struct file
- {
- 	struct snd_seq_client *client = file->private_data;
- 	int written = 0, len;
--	int err;
-+	int err, handled;
- 	struct snd_seq_event event;
+diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
+index cb206e5526c4..60df6e391ad2 100644
+--- a/drivers/net/gtp.c
++++ b/drivers/net/gtp.c
+@@ -952,7 +952,7 @@ static int ipv4_pdp_add(struct net_device *dev, struct genl_info *info)
  
- 	if (!(snd_seq_file_flags(file) & SNDRV_SEQ_LFLG_OUTPUT))
-@@ -1014,6 +1014,8 @@ static ssize_t snd_seq_write(struct file
- 	if (!client->accept_output || client->pool == NULL)
- 		return -ENXIO;
- 
-+ repeat:
-+	handled = 0;
- 	/* allocate the pool now if the pool is not allocated yet */ 
- 	mutex_lock(&client->ioctl_mutex);
- 	if (client->pool->size > 0 && !snd_seq_write_pool_allocated(client)) {
-@@ -1073,12 +1075,19 @@ static ssize_t snd_seq_write(struct file
- 						   0, 0, &client->ioctl_mutex);
- 		if (err < 0)
- 			break;
-+		handled++;
- 
- 	__skip_event:
- 		/* Update pointers and counts */
- 		count -= len;
- 		buf += len;
- 		written += len;
-+
-+		/* let's have a coffee break if too many events are queued */
-+		if (++handled >= 200) {
-+			mutex_unlock(&client->ioctl_mutex);
-+			goto repeat;
-+		}
  	}
  
-  out:
+-	pctx = kmalloc(sizeof(struct pdp_ctx), GFP_KERNEL);
++	pctx = kmalloc(sizeof(*pctx), GFP_ATOMIC);
+ 	if (pctx == NULL)
+ 		return -ENOMEM;
+ 
+-- 
+2.20.1
+
 
 
