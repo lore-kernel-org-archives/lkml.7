@@ -5,53 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96BCDC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2338FC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71BA22184D
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0645217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:35:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738527;
-	bh=uHZHfjJtUWc+mrMGGjekpwtVMwWSmtYBS8YZx8R0QgM=;
+	s=default; t=1564738531;
+	bh=aMw5OEOfuvqaK4/8eH+FqTlovkkEXzLycm8UxsZWlJw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hELgwSEE4YGw1qq/y7nMvkYeUOQ+4NXXbWzm3jqsveGmFB3yuHWr1n51CtqzbCm5M
-	 zowZ8fZNdoKlo37qtYMYlG3gVQC7mVsdF8lqYy8W8CZHdR3Zdg8w+k/Nk/zYd76g6O
-	 mIoXXLHGBu0RPY12TBAd8MFEQzrJTt9eiF2u+mGU=
+	b=VTOkOw7KZhdjrQa4pzLaeqRj4wDl/gUZL7OrE2B4iGjLc6Uos9uwTsuhBZGDwHOIm
+	 2X9vmZ22zGz7qZLW3w3HrbFHuioEV39fPklJE+Odxuka6oWvlybBpYjzWU3Xv9cfRa
+	 xjSNqITssLV80avXOnD+a6Oh7bCRpAvDAZgcvWNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390688AbfHBJfZ (ORCPT
+        id S2391668AbfHBJf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:35:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35796 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:35:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403845AbfHBJfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:35:20 -0400
+        id S2391655AbfHBJfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:35:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF67721773;
-        Fri,  2 Aug 2019 09:35:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F9D4217D6;
+        Fri,  2 Aug 2019 09:35:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738520;
-        bh=uHZHfjJtUWc+mrMGGjekpwtVMwWSmtYBS8YZx8R0QgM=;
+        s=default; t=1564738524;
+        bh=aMw5OEOfuvqaK4/8eH+FqTlovkkEXzLycm8UxsZWlJw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RQq2LQcLn6zhYfq3TP1g5V3BNI+FkmLJ86IXuqq/WAJvjkuOfaL8ZW+0ZhtZX2pCT
-         i3ujYVCglwJYqlKofJLdHCCVTvFVCw0Fl2HLBv7yzLvJMkUc1bCEAEN0wnweRipLW1
-         so+MsQ2FQSYBU7t50U9pI6rnEJlLred9WAtJyK0w=
+        b=LAox6Nw9Kv3aI/nnsF9GYy9ZoRm3ae7HE7tuQSbxj8ElX+CmZ/zKoINOY+y1IAV5I
+         YS4iGGVqlh9e+ohCXQ7kVkHZZaAJVWjPJtR2Trq+VdyHO1V0fpbSz8GPiZjJfm0YoV
+         VEysy10x+M2n9CaPjqWHXjmyQyXip8+CoRmqm11w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Andrew Morton <akpm@linux-foundation.org>,
+        Bart Van Assche <bvanassche@acm.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Qian Cai <cai@lca.pw>, Thomas Gleixner <tglx@linutronix.de>,
+        Waiman Long <longman@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Will Deacon <will@kernel.org>, Yuyang Du <duyuyang@gmail.com>,
+        frederic@kernel.org, Ingo Molnar <mingo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 136/158] mm/mmu_notifier: use hlist_add_head_rcu()
-Date:   Fri,  2 Aug 2019 11:29:17 +0200
-Message-Id: <20190802092230.781546358@linuxfoundation.org>
+Subject: [PATCH 4.4 138/158] locking/lockdep: Hide unused class variable
+Date:   Fri,  2 Aug 2019 11:29:19 +0200
+Message-Id: <20190802092231.013094782@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -64,64 +69,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 543bdb2d825fe2400d6e951f1786d92139a16931 ]
+[ Upstream commit 68037aa78208f34bda4e5cd76c357f718b838cbb ]
 
-Make mmu_notifier_register() safer by issuing a memory barrier before
-registering a new notifier.  This fixes a theoretical bug on weakly
-ordered CPUs.  For example, take this simplified use of notifiers by a
-driver:
+The usage is now hidden in an #ifdef, so we need to move
+the variable itself in there as well to avoid this warning:
 
-	my_struct->mn.ops = &my_ops; /* (1) */
-	mmu_notifier_register(&my_struct->mn, mm)
-		...
-		hlist_add_head(&mn->hlist, &mm->mmu_notifiers); /* (2) */
-		...
+  kernel/locking/lockdep_proc.c:203:21: error: unused variable 'class' [-Werror,-Wunused-variable]
 
-Once mmu_notifier_register() releases the mm locks, another thread can
-invalidate a range:
-
-	mmu_notifier_invalidate_range()
-		...
-		hlist_for_each_entry_rcu(mn, &mm->mmu_notifiers, hlist) {
-			if (mn->ops->invalidate_range)
-
-The read side relies on the data dependency between mn and ops to ensure
-that the pointer is properly initialized.  But the write side doesn't have
-any dependency between (1) and (2), so they could be reordered and the
-readers could dereference an invalid mn->ops.  mmu_notifier_register()
-does take all the mm locks before adding to the hlist, but those have
-acquire semantics which isn't sufficient.
-
-By calling hlist_add_head_rcu() instead of hlist_add_head() we update the
-hlist using a store-release, ensuring that readers see prior
-initialization of my_struct.  This situation is better illustated by
-litmus test MP+onceassign+derefonce.
-
-Link: http://lkml.kernel.org/r/20190502133532.24981-1-jean-philippe.brucker@arm.com
-Fixes: cddb8a5c14aa ("mmu-notifiers: core")
-Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Bart Van Assche <bvanassche@acm.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Qian Cai <cai@lca.pw>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Waiman Long <longman@redhat.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Yuyang Du <duyuyang@gmail.com>
+Cc: frederic@kernel.org
+Fixes: 68d41d8c94a3 ("locking/lockdep: Fix lock used or unused stats error")
+Link: https://lkml.kernel.org/r/20190715092809.736834-1-arnd@arndb.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/mmu_notifier.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/locking/lockdep_proc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
-index 5fbdd367bbed..ad90b8f85223 100644
---- a/mm/mmu_notifier.c
-+++ b/mm/mmu_notifier.c
-@@ -286,7 +286,7 @@ static int do_mmu_notifier_register(struct mmu_notifier *mn,
- 	 * thanks to mm_take_all_locks().
- 	 */
- 	spin_lock(&mm->mmu_notifier_mm->lock);
--	hlist_add_head(&mn->hlist, &mm->mmu_notifier_mm->list);
-+	hlist_add_head_rcu(&mn->hlist, &mm->mmu_notifier_mm->list);
- 	spin_unlock(&mm->mmu_notifier_mm->lock);
+diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
+index 9778b6701019..35b34eccdd10 100644
+--- a/kernel/locking/lockdep_proc.c
++++ b/kernel/locking/lockdep_proc.c
+@@ -217,7 +217,6 @@ static void lockdep_stats_debug_show(struct seq_file *m)
  
- 	mm_drop_all_locks(mm);
+ static int lockdep_stats_show(struct seq_file *m, void *v)
+ {
+-	struct lock_class *class;
+ 	unsigned long nr_unused = 0, nr_uncategorized = 0,
+ 		      nr_irq_safe = 0, nr_irq_unsafe = 0,
+ 		      nr_softirq_safe = 0, nr_softirq_unsafe = 0,
+@@ -228,6 +227,8 @@ static int lockdep_stats_show(struct seq_file *m, void *v)
+ 		      sum_forward_deps = 0;
+ 
+ #ifdef CONFIG_PROVE_LOCKING
++	struct lock_class *class;
++
+ 	list_for_each_entry(class, &all_lock_classes, lock_entry) {
+ 
+ 		if (class->usage_mask == 0)
 -- 
 2.20.1
 
