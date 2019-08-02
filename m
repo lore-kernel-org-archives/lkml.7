@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51317C32753
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F2EC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 228A62086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:38:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF6E820880
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:38:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738697;
-	bh=aEJf6KCW5crpWfxYJqdtY135r5x4Qx1nMJ6a1u3C6iM=;
+	s=default; t=1564738701;
+	bh=Yxkhd8vgdJkIqin5i+jkN2F53wiVwz0QIvJYZ2yzvv4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SxwQiM2SMNDgygoqXQzQDSHjVT6yHZOFFGfKpW2wC5MHxA2CLaltLLNYDIbfpItnz
-	 vBzP9h0Qa4J3taRYq4UJQc8o7PS40Za43pPYCE/10K2YjxnZPc8vBFxKRvKhHmGv2V
-	 DjKOYWViwwBb8X0OtmWYrodP1nOLmcFi4GDhQAd8=
+	b=ULzsWoD+8JTjOEizgDk+fUcR2nW0u/VkyZoNNcVA/RGls1pk4r+eKBBTXFiMMQCW2
+	 9p1eMu5CoX4ev8shIsLqoLJuRkgX4mE50ctE2nfx6DgpNQNFX+F4JxI92AusWl6YAY
+	 U7M+ELDv6AXoC1egH+XXOEHBz3e/NjY/rE19DrVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391612AbfHBJfJ (ORCPT
+        id S2391670AbfHBJiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:35:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35364 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:38:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391601AbfHBJfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:35:05 -0400
+        id S2391596AbfHBJfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:35:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C8C02182B;
-        Fri,  2 Aug 2019 09:35:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D919D217D4;
+        Fri,  2 Aug 2019 09:35:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738504;
-        bh=aEJf6KCW5crpWfxYJqdtY135r5x4Qx1nMJ6a1u3C6iM=;
+        s=default; t=1564738502;
+        bh=Yxkhd8vgdJkIqin5i+jkN2F53wiVwz0QIvJYZ2yzvv4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CAqM0mLUd3mNx9sMMnKTkq/4dwmz39urGKic3wh1u6PKDdNM2iRK9M/WB8Ryx1yq+
-         PUnNXR8tvNjFvEXt8rp01QJXwyKj2svk2YRYdpr4A6aziGtT998aYWYaBU/FyT2EDB
-         mgn0b0V2iRJbBH3xH071feszpZCvzZhyU46fdGto=
+        b=xTrN+iC8rHaCrRtoxyRpmrVuXk1z/LJqFoQR5n3OTLW1yxSj0/QoMxt1BDWZ3Yobp
+         mSx1fqBddC2ZvI12ToeJ7CpcUZ2n7CuNBVgdUbvTKLQHuqyfCvuBG26hcvJvFjGvsJ
+         dOVrll8kP3N0nt5CzYwLSSekRB+cQ4pdf9rIvAg4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Baruch Siach <baruch@tkos.co.il>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 113/158] tty: serial: msm_serial: avoid system lockup condition
-Date:   Fri,  2 Aug 2019 11:28:54 +0200
-Message-Id: <20190802092227.032983819@linuxfoundation.org>
+Subject: [PATCH 4.4 112/158] tty/serial: digicolor: Fix digicolor-usart already registered warning
+Date:   Fri,  2 Aug 2019 11:28:53 +0200
+Message-Id: <20190802092226.824877116@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -60,41 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ba3684f99f1b25d2a30b6956d02d339d7acb9799 ]
+[ Upstream commit c7ad9ba0611c53cfe194223db02e3bca015f0674 ]
 
-The function msm_wait_for_xmitr can be taken with interrupts
-disabled. In order to avoid a potential system lockup - demonstrated
-under stress testing conditions on SoC QCS404/5 - make sure we wait
-for a bounded amount of time.
+When modprobe/rmmod/modprobe module, if platform_driver_register() fails,
+the kernel complained,
 
-Tested on SoC QCS404.
+  proc_dir_entry 'driver/digicolor-usart' already registered
+  WARNING: CPU: 1 PID: 5636 at fs/proc/generic.c:360 proc_register+0x19d/0x270
 
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Fix this by adding uart_unregister_driver() when platform_driver_register() fails.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Acked-by: Baruch Siach <baruch@tkos.co.il>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/msm_serial.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/tty/serial/digicolor-usart.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
-index 5f0ded6fc4e9..eaeb098b5d6a 100644
---- a/drivers/tty/serial/msm_serial.c
-+++ b/drivers/tty/serial/msm_serial.c
-@@ -222,10 +222,14 @@ static void msm_request_rx_dma(struct msm_port *msm_port, resource_size_t base)
+diff --git a/drivers/tty/serial/digicolor-usart.c b/drivers/tty/serial/digicolor-usart.c
+index a80cdad114f3..d8cb94997487 100644
+--- a/drivers/tty/serial/digicolor-usart.c
++++ b/drivers/tty/serial/digicolor-usart.c
+@@ -544,7 +544,11 @@ static int __init digicolor_uart_init(void)
+ 	if (ret)
+ 		return ret;
  
- static inline void msm_wait_for_xmitr(struct uart_port *port)
- {
-+	unsigned int timeout = 500000;
+-	return platform_driver_register(&digicolor_uart_platform);
++	ret = platform_driver_register(&digicolor_uart_platform);
++	if (ret)
++		uart_unregister_driver(&digicolor_uart);
 +
- 	while (!(msm_read(port, UART_SR) & UART_SR_TX_EMPTY)) {
- 		if (msm_read(port, UART_ISR) & UART_ISR_TX_READY)
- 			break;
- 		udelay(1);
-+		if (!timeout--)
-+			break;
- 	}
- 	msm_write(port, UART_CR_CMD_RESET_TX_READY, UART_CR);
++	return ret;
  }
+ module_init(digicolor_uart_init);
+ 
 -- 
 2.20.1
 
