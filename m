@@ -2,149 +2,113 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A59C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 11:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F19C7C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 11:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A4D720665
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 11:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDEED20880
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 11:20:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392315AbfHBLMN (ORCPT
+        id S2392324AbfHBLUN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 07:12:13 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:30430 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731258AbfHBLMN (ORCPT
+        Fri, 2 Aug 2019 07:20:13 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:33004 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729311AbfHBLUN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 07:12:13 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x72B82oQ029853
-        for <linux-kernel@vger.kernel.org>; Fri, 2 Aug 2019 07:12:11 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u4jprksc5-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 07:12:11 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
-        Fri, 2 Aug 2019 12:12:09 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 2 Aug 2019 12:12:05 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x72BC42n38994170
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 2 Aug 2019 11:12:04 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B5EBD11C058;
-        Fri,  2 Aug 2019 11:12:04 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D08CA11C050;
-        Fri,  2 Aug 2019 11:12:01 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.102.31.193])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  2 Aug 2019 11:12:01 +0000 (GMT)
-Subject: Re: [RFC v4 0/8] TurboSched: A scheduler for sustaining Turbo
- Frequencies for longer durations
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     peterz@infradead.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        patrick.bellasi@arm.com, dietmar.eggemann@arm.com,
-        daniel.lezcano@linaro.org, subhra.mazumdar@oracle.com
-References: <20190725070857.6639-1-parth@linux.ibm.com>
- <20190728133102.GD8718@xo-6d-61-c0.localdomain>
- <4fcd3488-6ba0-bc22-a08d-ceebbce1c120@linux.ibm.com>
- <20190731173225.GB24222@amd>
-From:   Parth Shah <parth@linux.ibm.com>
-Date:   Fri, 2 Aug 2019 16:42:00 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.0
+        Fri, 2 Aug 2019 07:20:13 -0400
+Received: by mail-qt1-f194.google.com with SMTP id r6so69212912qtt.0;
+        Fri, 02 Aug 2019 04:20:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6svSKUB8W/2vAHAY5YVCqR8+83bHvMbbXUyJ8GuWHhs=;
+        b=Vl32TDMoJGrn//dSjae8BtiiQXbK1GVk/KIbMF3jNGRWYACaHiYHpsZfap3j31W4oW
+         1BA2ejxnYg2JRRwI0gLIoyFsHc67h+13SAY00sQX8udn4tjIu/HINcaKSY81kZga1S8t
+         Z96q1ZqfPotvz1gM8G2zfUCt8ExscRW1F+h0PNErKwUa17Di67EyRfK3i11QcIwrMbg9
+         UF4CXKQ8dj4VEjWIcB3WleofB9bgdF13cUL1B7ycOfdu2iwYzk1KZqn4GgwyAXd3pEqp
+         ZyJk+a63FwkjXR3xmi2n7mIjzg1WtgsxYAO6/htVZuth3A95S1NsrU6cwDkhpCwGjOfc
+         17OQ==
+X-Gm-Message-State: APjAAAUdUndDAUq0W8zUuGURS4swB4p+GxBZ8r9A6fPJkOw5lclCpg3H
+        rr+b//tj0sGqReIzV6FkE2Lpr4My2TzBF+YvrTk=
+X-Google-Smtp-Source: APXvYqzzEMPL706zJeruFWjyPx3W7qLTYqQ+nPflILZAKmqIvcLEpD7XRJHi8zMXFo3sUO3koJwU4XNqk+rw0f5qJV4=
+X-Received: by 2002:aed:3e7c:: with SMTP id m57mr95077214qtf.204.1564744811845;
+ Fri, 02 Aug 2019 04:20:11 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190731173225.GB24222@amd>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19080211-0008-0000-0000-00000303B0EB
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19080211-0009-0000-0000-00002272B768
-Message-Id: <7a7c5c57-0337-6733-e494-b0759cf83931@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-02_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908020115
+References: <20190731195713.3150463-1-arnd@arndb.de> <20190731195713.3150463-6-arnd@arndb.de>
+ <CAMpxmJWFfT_vrDas2fzW5tnxskk9kmgHQpGnGQ-_C20UaS_jhA@mail.gmail.com>
+In-Reply-To: <CAMpxmJWFfT_vrDas2fzW5tnxskk9kmgHQpGnGQ-_C20UaS_jhA@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 2 Aug 2019 13:19:55 +0200
+Message-ID: <CAK8P3a3KpKvRKXY72toE_5eAp4ER_Mre0GX3guwGeQgsY2HX+g@mail.gmail.com>
+Subject: Re: [PATCH 05/14] gpio: lpc32xx: allow building on non-lpc32xx targets
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     soc@kernel.org, arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>, linux-serial@vger.kernel.org,
+        USB list <linux-usb@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Aug 2, 2019 at 9:10 AM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+> > -#include <mach/hardware.h>
+> > -#include <mach/platform.h>
+> > +#define _GPREG(x)                              (x)
+>
+> What purpose does this macro serve?
+>
+> >
+> >  #define LPC32XX_GPIO_P3_INP_STATE              _GPREG(0x000)
+> >  #define LPC32XX_GPIO_P3_OUTP_SET               _GPREG(0x004)
 
+In the existing code base, this macro converts a register offset to
+an __iomem pointer for a gpio register. I changed the definition of the
+macro here to keep the number of changes down, but I it's just
+as easy to remove it if you prefer.
 
-On 7/31/19 11:02 PM, Pavel Machek wrote:
-> Hi!
-> 
->>>> Abstract
->>>> ========
->>>>
->>>> The modern servers allows multiple cores to run at range of frequencies
->>>> higher than rated range of frequencies. But the power budget of the system
->>>> inhibits sustaining these higher frequencies for longer durations.
->>>
->>> Thermal budget?
->>
->> Right, it is a good point, and there can be possibility of Thermal throttling
->> which is not covered here.
->> But the thermal throttling is less often seen in the servers than the throttling
->> due to the Power budget constraints. Also one can change the power cap which leads
->> to increase in the throttling and task packing can handle in such
->> cases.
-> 
-> Ok. I thought you are doing this due to thermals. If I understand
-> things correctly, you can go over thermal limits for a few seconds
-> before the silicon heats up. What is the timescale for power budget?
-> 
+> > @@ -167,14 +166,26 @@ struct lpc32xx_gpio_chip {
+> >         struct gpio_regs        *gpio_grp;
+> >  };
+> >
+> > +void __iomem *gpio_reg_base;
+>
+> Any reason why this can't be made part of struct lpc32xx_gpio_chip?
 
-I guess it varies across architectures.
-AFAIK, in the POWER systems, the frequency is throttled down instantaneously as we exceed
-the power budget.
-If an idle core is woken up and the power budget is exceeded then the system throttles
-down to the frequency value that is know to be sustainable with that many busy cores.
+It could be, but it's the same for each instance, and not known until
+probe() time, so the same pointer would need to be copied into each
+instance that is otherwise read-only.
 
->> BTW, Task packing allows few more cores to remain idle for longer time, so
->> shouldn't this decrease thermal throttles upto certain extent?
-> 
-> I guess so, yes.
-> 
->>>>> These numbers are w.r.t. `turbo_bench.c` multi-threaded test benchmark
->>>> which can create two kinds of tasks: CPU bound (High Utilization) and
->>>> Jitters (Low Utilization). N in X-axis represents N-CPU bound and N-Jitter
->>>> tasks spawned.
->>>
->>> Ok, so you have description how it causes 13% improvements. Do you also have metrics how
->>> it harms performance.. how much delay is added to unimportant tasks etc...?
->>>
->>
->> Yes, if we try to pack the tasks despite of no frequency throttling, we see a regression
->> around 5%. For instance, in the synthetic benchmark I used to show performance benefit,
->> for lower count of CPU intensive threads (N=2) there is -5% performance drop.
->>
->> Talking about the delay added to an unimportant tasks, the result can be lower throughput
->> or higher latency for such tasks.
-> 
-> Thanks. I believe it would be good to mention disadvantages in the
-> documentation, too.
+Let me know if you'd prefer me to rework these two things or leave
+them as they are.
 
-Sure, I will add the mentioned possible regression on jitter tasks in the documentation
-somewhere.
+> > +static inline u32 gpreg_read(unsigned long offset)
+>
+> Here and elsewhere: could you please keep the lpc32xx_gpio prefix for
+> all symbols?
 
+Sure.
 
-Thanks,
-Parth
-
+      Arnd
