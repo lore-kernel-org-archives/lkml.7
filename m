@@ -2,52 +2,52 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08500C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0942C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:36:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5B4021773
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:36:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB60E21855
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:36:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738561;
-	bh=8hNcU2/YruSlTsxfKXdmj3zugrN0AYsWwLBaCccHRoQ=;
+	s=default; t=1564738566;
+	bh=nmPTsWkP88e57Ys91exz3DHHrVrBrLe2/K84VB5KA5U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uRzfwLNK1JJD2NAThIrGQqoEZmO7gt/8R4lLEWUOHVhjBzSzQvRGN8aHHcXg4eiyT
-	 /OYOAKlsVjQrx2AvLmJihMgOWItZHzfQcxB+yYcVzXeTRR9fyowRNQox4ued27W3Jf
-	 e4752TxShfpFDykKDh0j4BD4YfvIuyTIH/hluThQ=
+	b=QP2QLIEwwQ/T20yES/OTa0d/uY8S+uiggluxvZ95VALUPdieiFd+Bo3Vi/i0tqYPw
+	 SAah/nl8fw25CZjTqinrcIpn0f11raUR5qflcgs36R3bTcj2XrgtuRDlc0E+5N93KO
+	 A7qIKREX3O+GDxYZtvap1a/1qUPBg6cqmbuQz6nI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404794AbfHBJgA (ORCPT
+        id S2404809AbfHBJgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:36:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36610 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:36:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404102AbfHBJf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:35:56 -0400
+        id S2404092AbfHBJf7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:35:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21111217D7;
-        Fri,  2 Aug 2019 09:35:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A76B921773;
+        Fri,  2 Aug 2019 09:35:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738555;
-        bh=8hNcU2/YruSlTsxfKXdmj3zugrN0AYsWwLBaCccHRoQ=;
+        s=default; t=1564738558;
+        bh=nmPTsWkP88e57Ys91exz3DHHrVrBrLe2/K84VB5KA5U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z/K7epDnQzQ4nRq+td6rXviw58Rq54T9XdizEjgJ4h24EkAGl+hQ1MSQTSTzwpnXj
-         aa/RhPkQvZTJGScOd/m9F1y5OIFAkMd8uRryuKegbZEPseShCnQcA9+q1RY+0xIjRJ
-         YioxxynrpyGDhW6mknggJtiBsff6eC2gdzBRBh6g=
+        b=m3WJvISrOIfsmty87KQjX/l0/qMAELIIVd3wlPuBDag2psry5EEO2tCT8J8KPMuK1
+         xGkCuCkeypjKoEShhjvQbJ0bZZsC9cCZcZ/eiE+cMiYT8X1/X5rrCFBc+BtREMUOSO
+         PjuYG+/e1xJotPoub/ERL7nfQ8Yy2E9ND4RvCn1M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robert Hancock <hancock@sedsystems.ca>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 123/158] mfd: core: Set fwnode for created devices
-Date:   Fri,  2 Aug 2019 11:29:04 +0200
-Message-Id: <20190802092228.758008951@linuxfoundation.org>
+        stable@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Zhang HongJun <zhanghongjun2@huawei.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 4.4 143/158] hpet: Fix division by zero in hpet_time_div()
+Date:   Fri,  2 Aug 2019 11:29:24 +0200
+Message-Id: <20190802092231.791993826@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -60,34 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c176c6d7e932662668bcaec2d763657096589d85 ]
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-The logic for setting the of_node on devices created by mfd did not set
-the fwnode pointer to match, which caused fwnode-based APIs to
-malfunction on these devices since the fwnode pointer was null. Fix
-this.
+commit 0c7d37f4d9b8446956e97b7c5e61173cdb7c8522 upstream.
 
-Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The base value in do_div() called by hpet_time_div() is truncated from
+unsigned long to uint32_t, resulting in a divide-by-zero exception.
+
+UBSAN: Undefined behaviour in ../drivers/char/hpet.c:572:2
+division by zero
+CPU: 1 PID: 23682 Comm: syz-executor.3 Not tainted 4.4.184.x86_64+ #4
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
+ 0000000000000000 b573382df1853d00 ffff8800a3287b98 ffffffff81ad7561
+ ffff8800a3287c00 ffffffff838b35b0 ffffffff838b3860 ffff8800a3287c20
+ 0000000000000000 ffff8800a3287bb0 ffffffff81b8f25e ffffffff838b35a0
+Call Trace:
+ [<ffffffff81ad7561>] __dump_stack lib/dump_stack.c:15 [inline]
+ [<ffffffff81ad7561>] dump_stack+0xc1/0x120 lib/dump_stack.c:51
+ [<ffffffff81b8f25e>] ubsan_epilogue+0x12/0x8d lib/ubsan.c:166
+ [<ffffffff81b900cb>] __ubsan_handle_divrem_overflow+0x282/0x2c8 lib/ubsan.c:262
+ [<ffffffff823560dd>] hpet_time_div drivers/char/hpet.c:572 [inline]
+ [<ffffffff823560dd>] hpet_ioctl_common drivers/char/hpet.c:663 [inline]
+ [<ffffffff823560dd>] hpet_ioctl_common.cold+0xa8/0xad drivers/char/hpet.c:577
+ [<ffffffff81e63d56>] hpet_ioctl+0xc6/0x180 drivers/char/hpet.c:676
+ [<ffffffff81711590>] vfs_ioctl fs/ioctl.c:43 [inline]
+ [<ffffffff81711590>] file_ioctl fs/ioctl.c:470 [inline]
+ [<ffffffff81711590>] do_vfs_ioctl+0x6e0/0xf70 fs/ioctl.c:605
+ [<ffffffff81711eb4>] SYSC_ioctl fs/ioctl.c:622 [inline]
+ [<ffffffff81711eb4>] SyS_ioctl+0x94/0xc0 fs/ioctl.c:613
+ [<ffffffff82846003>] tracesys_phase2+0x90/0x95
+
+The main C reproducer autogenerated by syzkaller,
+
+  syscall(__NR_mmap, 0x20000000, 0x1000000, 3, 0x32, -1, 0);
+  memcpy((void*)0x20000100, "/dev/hpet\000", 10);
+  syscall(__NR_openat, 0xffffffffffffff9c, 0x20000100, 0, 0);
+  syscall(__NR_ioctl, r[0], 0x40086806, 0x40000000000000);
+
+Fix it by using div64_ul().
+
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Zhang HongJun <zhanghongjun2@huawei.com>
+Cc: stable <stable@vger.kernel.org>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20190711132757.130092-1-wangkefeng.wang@huawei.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/mfd/mfd-core.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/char/hpet.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-index 022c9374ce8b..215bb5eeb5ac 100644
---- a/drivers/mfd/mfd-core.c
-+++ b/drivers/mfd/mfd-core.c
-@@ -178,6 +178,7 @@ static int mfd_add_device(struct device *parent, int id,
- 		for_each_child_of_node(parent->of_node, np) {
- 			if (of_device_is_compatible(np, cell->of_compatible)) {
- 				pdev->dev.of_node = np;
-+				pdev->dev.fwnode = &np->fwnode;
- 				break;
- 			}
- 		}
--- 
-2.20.1
-
+--- a/drivers/char/hpet.c
++++ b/drivers/char/hpet.c
+@@ -569,8 +569,7 @@ static inline unsigned long hpet_time_di
+ 	unsigned long long m;
+ 
+ 	m = hpets->hp_tick_freq + (dis >> 1);
+-	do_div(m, dis);
+-	return (unsigned long)m;
++	return div64_ul(m, dis);
+ }
+ 
+ static int
 
 
