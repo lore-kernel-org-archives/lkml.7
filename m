@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD1D4C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A456C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94E712086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:57:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C82F920B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:58:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739877;
-	bh=MmQFR9nW3lLglYcyNkyalTFjgmjOqs3o5NdCYhQBnAY=;
+	s=default; t=1564739881;
+	bh=/olJjJNhyVcDYFTUTY7lY3OozBfTbmMUD5nzSvABxKc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ara6qPEk+K3awOWT8LjER7W/jXt0Ylym5hef1JKMag83M6z5JPAb1eEwKRMU5rUEp
-	 M9DnPEIVU2+4PTSrSPM9gCwidldzW3Zsr83XYV/IuG6i1G+GHhJmTLIUYZHSDLdBGp
-	 RwhbRNytiGUGXsnd/sBq9+TwitxdorDwbtd40CRQ=
+	b=hD/D7DMT5l/Oj0o209YIu6S0QAG3L3TtuRi9aOIA/fhmeZTdrVuxdoblEhuIdezf8
+	 r8lSQgJdJF9QK0rWSpTZpAeA6hotn/qa2cTfxcXVhKYGFOvgpfLydUFMr2V68/JHiA
+	 eSxI647wtZ/ntZjnelomcvBGYizcEoksw4/j2LQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407003AbfHBJ5z (ORCPT
+        id S2407022AbfHBJ6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:57:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37254 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:58:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406988AbfHBJ5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:57:51 -0400
+        id S2406632AbfHBJ56 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:57:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E311E2064A;
-        Fri,  2 Aug 2019 09:57:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A81FB20B7C;
+        Fri,  2 Aug 2019 09:57:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739870;
-        bh=MmQFR9nW3lLglYcyNkyalTFjgmjOqs3o5NdCYhQBnAY=;
+        s=default; t=1564739878;
+        bh=/olJjJNhyVcDYFTUTY7lY3OozBfTbmMUD5nzSvABxKc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pzYBXvki7bO1exrVqM/fv1dN5WI2Xzbiee35vtkjnMIxf2UCGHPgjvJX6pio1dHFU
-         eEaLRtvFv+w7ohlYvzC7QBT+/PR1cCmUv3RZKFXRZ+p9/tymgp8i7jIEDN2CjvoAPg
-         r5L6DzjOP2WacfGjZ3pm1shMMr86sLaPD3hPzt/8=
+        b=hfdhBwuOwoRvb7y1RiLT1KmyZK9Uz01aBI5pUKTS1ase87ZY+sxd8dsmU2uXOYmdd
+         KkhTQIbQzFtBJN7s7WH1HDoFZmmMfVzC4Q5o0yvJHh3ZnHm1rXmXFm92oBuo/eShUO
+         Q9js57tzkoJVEQelOo60QD/vZZpp3p7APYdjFiYE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+d952e5e28f5fb7718d23@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.2 03/20] ALSA: usb-audio: Sanity checks for each pipe and EP types
-Date:   Fri,  2 Aug 2019 11:39:57 +0200
-Message-Id: <20190802092058.248343532@linuxfoundation.org>
+        syzbot+c1b25598aa60dcd47e78@syzkaller.appspotmail.com,
+        Fabio Estevam <festevam@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.2 06/20] ath10k: Change the warning message string
+Date:   Fri,  2 Aug 2019 11:40:00 +0200
+Message-Id: <20190802092058.774755456@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092055.131876977@linuxfoundation.org>
 References: <20190802092055.131876977@linuxfoundation.org>
@@ -60,126 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Fabio Estevam <festevam@gmail.com>
 
-commit 801ebf1043ae7b182588554cc9b9ad3c14bc2ab5 upstream.
+commit 265df32eae5845212ad9f55f5ae6b6dcb68b187b upstream.
 
-The recent USB core code performs sanity checks for the given pipe and
-EP types, and it can be hit by manipulated USB descriptors by syzbot.
-For making syzbot happier, this patch introduces a local helper for a
-sanity check in the driver side and calls it at each place before the
-message handling, so that we can avoid the WARNING splats.
+The "WARNING" string confuses syzbot, which thinks it found
+a crash [1].
 
-Reported-by: syzbot+d952e5e28f5fb7718d23@syzkaller.appspotmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Change the string to avoid such problem.
+
+[1] https://lkml.org/lkml/2019/5/9/243
+
+Reported-by: syzbot+c1b25598aa60dcd47e78@syzkaller.appspotmail.com
+Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/helper.c |   17 +++++++++++++++++
- sound/usb/helper.h |    1 +
- sound/usb/quirks.c |   18 +++++++++++++++---
- 3 files changed, 33 insertions(+), 3 deletions(-)
+ drivers/net/wireless/ath/ath10k/usb.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/usb/helper.c
-+++ b/sound/usb/helper.c
-@@ -63,6 +63,20 @@ void *snd_usb_find_csint_desc(void *buff
- 	return NULL;
- }
+--- a/drivers/net/wireless/ath/ath10k/usb.c
++++ b/drivers/net/wireless/ath/ath10k/usb.c
+@@ -1016,7 +1016,7 @@ static int ath10k_usb_probe(struct usb_i
+ 	}
  
-+/* check the validity of pipe and EP types */
-+int snd_usb_pipe_sanity_check(struct usb_device *dev, unsigned int pipe)
-+{
-+	static const int pipetypes[4] = {
-+		PIPE_CONTROL, PIPE_ISOCHRONOUS, PIPE_BULK, PIPE_INTERRUPT
-+	};
-+	struct usb_host_endpoint *ep;
-+
-+	ep = usb_pipe_endpoint(dev, pipe);
-+	if (usb_pipetype(pipe) != pipetypes[usb_endpoint_type(&ep->desc)])
-+		return -EINVAL;
-+	return 0;
-+}
-+
- /*
-  * Wrapper for usb_control_msg().
-  * Allocates a temp buffer to prevent dmaing from/to the stack.
-@@ -75,6 +89,9 @@ int snd_usb_ctl_msg(struct usb_device *d
- 	void *buf = NULL;
- 	int timeout;
+ 	/* TODO: remove this once USB support is fully implemented */
+-	ath10k_warn(ar, "WARNING: ath10k USB support is incomplete, don't expect anything to work!\n");
++	ath10k_warn(ar, "Warning: ath10k USB support is incomplete, don't expect anything to work!\n");
  
-+	if (snd_usb_pipe_sanity_check(dev, pipe))
-+		return -EINVAL;
-+
- 	if (size > 0) {
- 		buf = kmemdup(data, size, GFP_KERNEL);
- 		if (!buf)
---- a/sound/usb/helper.h
-+++ b/sound/usb/helper.h
-@@ -7,6 +7,7 @@ unsigned int snd_usb_combine_bytes(unsig
- void *snd_usb_find_desc(void *descstart, int desclen, void *after, u8 dtype);
- void *snd_usb_find_csint_desc(void *descstart, int desclen, void *after, u8 dsubtype);
+ 	return 0;
  
-+int snd_usb_pipe_sanity_check(struct usb_device *dev, unsigned int pipe);
- int snd_usb_ctl_msg(struct usb_device *dev, unsigned int pipe,
- 		    __u8 request, __u8 requesttype, __u16 value, __u16 index,
- 		    void *data, __u16 size);
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -828,11 +828,13 @@ static int snd_usb_novation_boot_quirk(s
- static int snd_usb_accessmusic_boot_quirk(struct usb_device *dev)
- {
- 	int err, actual_length;
--
- 	/* "midi send" enable */
- 	static const u8 seq[] = { 0x4e, 0x73, 0x52, 0x01 };
-+	void *buf;
- 
--	void *buf = kmemdup(seq, ARRAY_SIZE(seq), GFP_KERNEL);
-+	if (snd_usb_pipe_sanity_check(dev, usb_sndintpipe(dev, 0x05)))
-+		return -EINVAL;
-+	buf = kmemdup(seq, ARRAY_SIZE(seq), GFP_KERNEL);
- 	if (!buf)
- 		return -ENOMEM;
- 	err = usb_interrupt_msg(dev, usb_sndintpipe(dev, 0x05), buf,
-@@ -857,7 +859,11 @@ static int snd_usb_accessmusic_boot_quir
- 
- static int snd_usb_nativeinstruments_boot_quirk(struct usb_device *dev)
- {
--	int ret = usb_control_msg(dev, usb_sndctrlpipe(dev, 0),
-+	int ret;
-+
-+	if (snd_usb_pipe_sanity_check(dev, usb_sndctrlpipe(dev, 0)))
-+		return -EINVAL;
-+	ret = usb_control_msg(dev, usb_sndctrlpipe(dev, 0),
- 				  0xaf, USB_TYPE_VENDOR | USB_RECIP_DEVICE,
- 				  1, 0, NULL, 0, 1000);
- 
-@@ -964,6 +970,8 @@ static int snd_usb_axefx3_boot_quirk(str
- 
- 	dev_dbg(&dev->dev, "Waiting for Axe-Fx III to boot up...\n");
- 
-+	if (snd_usb_pipe_sanity_check(dev, usb_sndctrlpipe(dev, 0)))
-+		return -EINVAL;
- 	/* If the Axe-Fx III has not fully booted, it will timeout when trying
- 	 * to enable the audio streaming interface. A more generous timeout is
- 	 * used here to detect when the Axe-Fx III has finished booting as the
-@@ -996,6 +1004,8 @@ static int snd_usb_motu_microbookii_comm
- {
- 	int err, actual_length;
- 
-+	if (snd_usb_pipe_sanity_check(dev, usb_sndintpipe(dev, 0x01)))
-+		return -EINVAL;
- 	err = usb_interrupt_msg(dev, usb_sndintpipe(dev, 0x01), buf, *length,
- 				&actual_length, 1000);
- 	if (err < 0)
-@@ -1006,6 +1016,8 @@ static int snd_usb_motu_microbookii_comm
- 
- 	memset(buf, 0, buf_size);
- 
-+	if (snd_usb_pipe_sanity_check(dev, usb_rcvintpipe(dev, 0x82)))
-+		return -EINVAL;
- 	err = usb_interrupt_msg(dev, usb_rcvintpipe(dev, 0x82), buf, buf_size,
- 				&actual_length, 1000);
- 	if (err < 0)
 
 
