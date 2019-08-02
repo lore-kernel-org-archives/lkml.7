@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44389C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB1CC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F2F52086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A97D92087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739516;
-	bh=sj7trxfS9zf6pgZfptpJ+kanUgEfuUOnNltiHE6tFRQ=;
+	s=default; t=1564739518;
+	bh=PvcT+3ynpcSEWsklJgvIPEQZHgA+Nk4rLOp4AnKgNJk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gjo3mOvu9tjvmMisLbSK/h8ZMgwFGNpXctNDNs9aMa0HL+tYKNyBilkcMpfdysWcj
-	 3R1uHmFGyk6GwOHvh0iYQT/atRYc73UxC/Ix+J/Axi2+hkBXgNcYxMSogdkPGXjrvV
-	 oW6NxsMNlrFLUn8Kj0j2OdgU8jOJTNyOPae1Ehy8=
+	b=Ck+2A93tbHCgOgV094cLr9t0+ItZLa2TwIaoT2JdyatdSX5thRfm1bxDJ1Yd3odTc
+	 ndrQpwSI+lODDnjplaQLXvuIlRcx+Eotpj9k1PilihVb5muZCpsaA2JHE2shz5dOlw
+	 wMA1FJhVJSiwhWr6esJJiX+Hz4qY7G9TUmJfH2NM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392117AbfHBJvy (ORCPT
+        id S2390208AbfHBJv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:51:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57198 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:51:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392043AbfHBJvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:51:50 -0400
+        id S2392043AbfHBJv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:51:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEB7A2064A;
-        Fri,  2 Aug 2019 09:51:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18CAB2064A;
+        Fri,  2 Aug 2019 09:51:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739510;
-        bh=sj7trxfS9zf6pgZfptpJ+kanUgEfuUOnNltiHE6tFRQ=;
+        s=default; t=1564739515;
+        bh=PvcT+3ynpcSEWsklJgvIPEQZHgA+Nk4rLOp4AnKgNJk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c4w7ukpvEP93CGQJITfGGKOwYtqxomxL7CWCKA95duvcGzdpqbZUSRHnW437pSjrD
-         kP60u9+0N5r0G7R3X6uplYzjOLxRtD8j3zvwE9HjXtIppKlXSQ8WOjtT6490tmZls8
-         pdfrqFg69M1Z8R+yBiBlIKjWq5+lS1vfiLOLvkKo=
+        b=tXyM61CLPxDLbnPAMei8vu85qTjjcfUIiYGGOwSpNlIgqLBMa4n6nFso1kvfq0dlI
+         VnHnWUJWgtxr2K1I8wfNiUGN90ZP0NokPe32959O6D5PpxgpG6e4S2XN4PQCMeAYZB
+         FvmG50vlNkQnrLc8thz2DhKmgza3Eg/ibEvpgp78=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ocean Chen <oceanchen@google.com>,
-        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 193/223] f2fs: avoid out-of-range memory access
-Date:   Fri,  2 Aug 2019 11:36:58 +0200
-Message-Id: <20190802092249.833766176@linuxfoundation.org>
+Subject: [PATCH 4.9 182/223] mfd: arizona: Fix undefined behavior
+Date:   Fri,  2 Aug 2019 11:36:47 +0200
+Message-Id: <20190802092249.427081370@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -60,37 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 56f3ce675103e3fb9e631cfb4131fc768bc23e9a ]
+[ Upstream commit 5da6cbcd2f395981aa9bfc571ace99f1c786c985 ]
 
-blkoff_off might over 512 due to fs corrupt or security
-vulnerability. That should be checked before being using.
+When the driver is used with a subdevice that is disabled in the
+kernel configuration, clang gets a little confused about the
+control flow and fails to notice that n_subdevs is only
+uninitialized when subdevs is NULL, and we check for that,
+leading to a false-positive warning:
 
-Use ENTRIES_IN_SUM to protect invalid value in cur_data_blkoff.
+drivers/mfd/arizona-core.c:1423:19: error: variable 'n_subdevs' is uninitialized when used here
+      [-Werror,-Wuninitialized]
+                              subdevs, n_subdevs, NULL, 0, NULL);
+                                       ^~~~~~~~~
+drivers/mfd/arizona-core.c:999:15: note: initialize the variable 'n_subdevs' to silence this warning
+        int n_subdevs, ret, i;
+                     ^
+                      = 0
 
-Signed-off-by: Ocean Chen <oceanchen@google.com>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Ideally, we would rearrange the code to avoid all those early
+initializations and have an explicit exit in each disabled case,
+but it's much easier to chicken out and add one more initialization
+here to shut up the warning.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/segment.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/mfd/arizona-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 2fb99a081de8..c983f7d28f03 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -1709,6 +1709,11 @@ static int read_compacted_summaries(struct f2fs_sb_info *sbi)
- 		seg_i = CURSEG_I(sbi, i);
- 		segno = le32_to_cpu(ckpt->cur_data_segno[i]);
- 		blk_off = le16_to_cpu(ckpt->cur_data_blkoff[i]);
-+		if (blk_off > ENTRIES_IN_SUM) {
-+			f2fs_bug_on(sbi, 1);
-+			f2fs_put_page(page, 1);
-+			return -EFAULT;
-+		}
- 		seg_i->next_segno = segno;
- 		reset_curseg(sbi, i, 0);
- 		seg_i->alloc_type = ckpt->alloc_type[i];
+diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
+index 41767f7239bb..0556a9749dbe 100644
+--- a/drivers/mfd/arizona-core.c
++++ b/drivers/mfd/arizona-core.c
+@@ -1038,7 +1038,7 @@ int arizona_dev_init(struct arizona *arizona)
+ 	unsigned int reg, val, mask;
+ 	int (*apply_patch)(struct arizona *) = NULL;
+ 	const struct mfd_cell *subdevs = NULL;
+-	int n_subdevs, ret, i;
++	int n_subdevs = 0, ret, i;
+ 
+ 	dev_set_drvdata(arizona->dev, arizona);
+ 	mutex_init(&arizona->clk_lock);
 -- 
 2.20.1
 
