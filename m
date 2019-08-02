@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67CF3C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E595C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:32:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 401EC2182B
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:32:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 276B821773
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:32:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738373;
-	bh=wCN9HXtJSNEkJX/RR8719ZXt4WF6bm9SR0FQgJQhU0k=;
+	s=default; t=1564738378;
+	bh=dg/nd8gUc/mCwBuYYAFvPTCsQgqIaD1nsvIGnXvcSow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u0PFkWNf6GtDHyeEpjpUO7xXTuF7qfy6m6rUi5g6jqJB4Q398Wni5YkWrSS3S+M2K
-	 jzeMvrSuMXrw1d78eFhzlH7RVyo1f5Ke5JwauUKUmO1zpMGK2UqiebJNJOdET06g4f
-	 Muv7jqrvgFqTBIwZM+TTz+FMKlST04K3QgOMmUeQ=
+	b=rApGeVqFfh+lCISx5gHxHgybga45Jy8WOf7IilRwK9epqraiGYPFSpUnNfdKuw/nu
+	 oS+dFPPoNe40nVleDODc6lB7TOY2gGxMLP/2NYujhV3H2Dye8qsXhFmHrOtrrxKN+b
+	 T63bLP7rK4+QQfT8obVywZtsMf6Nj40sf1ygbocw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391288AbfHBJcv (ORCPT
+        id S2404770AbfHBJc5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:32:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59872 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:32:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391265AbfHBJcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:32:45 -0400
+        id S2391265AbfHBJcx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:32:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D884F217D7;
-        Fri,  2 Aug 2019 09:32:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84CFA217D6;
+        Fri,  2 Aug 2019 09:32:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738364;
-        bh=wCN9HXtJSNEkJX/RR8719ZXt4WF6bm9SR0FQgJQhU0k=;
+        s=default; t=1564738372;
+        bh=dg/nd8gUc/mCwBuYYAFvPTCsQgqIaD1nsvIGnXvcSow=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hMOxl+NhvjH2aRpo49u5cD1Sn1WlU4wtfbn4BlxUxMMEDJN+B4i1h2RoPU6BjS5zy
-         v4lExqwQHGMHdzINHw43vg26vYauUJadw8hA0Yr2Uk/ZPZkdaOsFEEg4rzUtBBp7AY
-         SrpaMNCdlUViH9k51uR1Ia8uveo2Qrk6522/hDEQ=
+        b=xm5Zx+cRDuNF4S6DSQOawrk01HGFR1cL0FOOKX3mrYtUViaNDdWAFf5BEHP8x07Uz
+         w5j+/0H2DIXvry5UqLM2iMRQoFg14YeGs2FBcZ6rjRDALQ9huZVpeAyhLWFLsrDco2
+         QnuBDDUJU2bOcFDED9MnHm6oM1uDHD71TQ6eqScE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Grant Hernandez <granthernandez@google.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.4 058/158] Input: gtco - bounds check collection indent level
-Date:   Fri,  2 Aug 2019 11:27:59 +0200
-Message-Id: <20190802092215.847417263@linuxfoundation.org>
+        stable@vger.kernel.org, Jeroen Roovers <jer@gentoo.org>,
+        Rolf Eike Beer <eike-kernel@sf-tec.de>,
+        Helge Deller <deller@gmx.de>
+Subject: [PATCH 4.4 078/158] parisc: Fix kernel panic due invalid values in IAOQ0 or IAOQ1
+Date:   Fri,  2 Aug 2019 11:28:19 +0200
+Message-Id: <20190802092219.938510291@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -60,79 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grant Hernandez <granthernandez@google.com>
+From: Helge Deller <deller@gmx.de>
 
-commit 2a017fd82c5402b3c8df5e3d6e5165d9e6147dc1 upstream.
+commit 10835c854685393a921b68f529bf740fa7c9984d upstream.
 
-The GTCO tablet input driver configures itself from an HID report sent
-via USB during the initial enumeration process. Some debugging messages
-are generated during the parsing. A debugging message indentation
-counter is not bounds checked, leading to the ability for a specially
-crafted HID report to cause '-' and null bytes be written past the end
-of the indentation array. As long as the kernel has CONFIG_DYNAMIC_DEBUG
-enabled, this code will not be optimized out.  This was discovered
-during code review after a previous syzkaller bug was found in this
-driver.
+On parisc the privilege level of a process is stored in the lowest two bits of
+the instruction pointers (IAOQ0 and IAOQ1). On Linux we use privilege level 0
+for the kernel and privilege level 3 for user-space. So userspace should not be
+allowed to modify IAOQ0 or IAOQ1 of a ptraced process to change it's privilege
+level to e.g. 0 to try to gain kernel privileges.
 
-Signed-off-by: Grant Hernandez <granthernandez@google.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+This patch prevents such modifications by always setting the two lowest bits to
+one (which relates to privilege level 3 for user-space) if IAOQ0 or IAOQ1 are
+modified via ptrace calls in the native and compat ptrace paths.
+
+Link: https://bugs.gentoo.org/481768
+Reported-by: Jeroen Roovers <jer@gentoo.org>
+Cc: <stable@vger.kernel.org>
+Tested-by: Rolf Eike Beer <eike-kernel@sf-tec.de>
+Signed-off-by: Helge Deller <deller@gmx.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/tablet/gtco.c |   20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+ arch/parisc/kernel/ptrace.c |   28 ++++++++++++++++++----------
+ 1 file changed, 18 insertions(+), 10 deletions(-)
 
---- a/drivers/input/tablet/gtco.c
-+++ b/drivers/input/tablet/gtco.c
-@@ -78,6 +78,7 @@ Scott Hill shill@gtcocalcomp.com
+--- a/arch/parisc/kernel/ptrace.c
++++ b/arch/parisc/kernel/ptrace.c
+@@ -156,6 +156,9 @@ long arch_ptrace(struct task_struct *chi
+ 		if ((addr & (sizeof(unsigned long)-1)) ||
+ 		     addr >= sizeof(struct pt_regs))
+ 			break;
++		if (addr == PT_IAOQ0 || addr == PT_IAOQ1) {
++			data |= 3; /* ensure userspace privilege */
++		}
+ 		if ((addr >= PT_GR1 && addr <= PT_GR31) ||
+ 				addr == PT_IAOQ0 || addr == PT_IAOQ1 ||
+ 				(addr >= PT_FR0 && addr <= PT_FR31 + 4) ||
+@@ -189,16 +192,18 @@ long arch_ptrace(struct task_struct *chi
  
- /* Max size of a single report */
- #define REPORT_MAX_SIZE       10
-+#define MAX_COLLECTION_LEVELS  10
- 
- 
- /* Bitmask whether pen is in range */
-@@ -224,8 +225,7 @@ static void parse_hid_report_descriptor(
- 	char  maintype = 'x';
- 	char  globtype[12];
- 	int   indent = 0;
--	char  indentstr[10] = "";
--
-+	char  indentstr[MAX_COLLECTION_LEVELS + 1] = { 0 };
- 
- 	dev_dbg(ddev, "======>>>>>>PARSE<<<<<<======\n");
- 
-@@ -351,6 +351,13 @@ static void parse_hid_report_descriptor(
- 			case TAG_MAIN_COL_START:
- 				maintype = 'S';
- 
-+				if (indent == MAX_COLLECTION_LEVELS) {
-+					dev_err(ddev, "Collection level %d would exceed limit of %d\n",
-+						indent + 1,
-+						MAX_COLLECTION_LEVELS);
-+					break;
-+				}
+ static compat_ulong_t translate_usr_offset(compat_ulong_t offset)
+ {
+-	if (offset < 0)
+-		return sizeof(struct pt_regs);
+-	else if (offset <= 32*4)	/* gr[0..31] */
+-		return offset * 2 + 4;
+-	else if (offset <= 32*4+32*8)	/* gr[0..31] + fr[0..31] */
+-		return offset + 32*4;
+-	else if (offset < sizeof(struct pt_regs)/2 + 32*4)
+-		return offset * 2 + 4 - 32*8;
++	compat_ulong_t pos;
 +
- 				if (data == 0) {
- 					dev_dbg(ddev, "======>>>>>> Physical\n");
- 					strcpy(globtype, "Physical");
-@@ -370,8 +377,15 @@ static void parse_hid_report_descriptor(
++	if (offset < 32*4)	/* gr[0..31] */
++		pos = offset * 2 + 4;
++	else if (offset < 32*4+32*8)	/* fr[0] ... fr[31] */
++		pos = (offset - 32*4) + PT_FR0;
++	else if (offset < sizeof(struct pt_regs)/2 + 32*4) /* sr[0] ... ipsw */
++		pos = (offset - 32*4 - 32*8) * 2 + PT_SR0 + 4;
+ 	else
+-		return sizeof(struct pt_regs);
++		pos = sizeof(struct pt_regs);
++
++	return pos;
+ }
+ 
+ long compat_arch_ptrace(struct task_struct *child, compat_long_t request,
+@@ -242,9 +247,12 @@ long compat_arch_ptrace(struct task_stru
+ 			addr = translate_usr_offset(addr);
+ 			if (addr >= sizeof(struct pt_regs))
  				break;
- 
- 			case TAG_MAIN_COL_END:
--				dev_dbg(ddev, "<<<<<<======\n");
- 				maintype = 'E';
-+
-+				if (indent == 0) {
-+					dev_err(ddev, "Collection level already at zero\n");
-+					break;
-+				}
-+
-+				dev_dbg(ddev, "<<<<<<======\n");
-+
- 				indent--;
- 				for (x = 0; x < indent; x++)
- 					indentstr[x] = '-';
++			if (addr == PT_IAOQ0+4 || addr == PT_IAOQ1+4) {
++				data |= 3; /* ensure userspace privilege */
++			}
+ 			if (addr >= PT_FR0 && addr <= PT_FR31 + 4) {
+ 				/* Special case, fp regs are 64 bits anyway */
+-				*(__u64 *) ((char *) task_regs(child) + addr) = data;
++				*(__u32 *) ((char *) task_regs(child) + addr) = data;
+ 				ret = 0;
+ 			}
+ 			else if ((addr >= PT_GR1+4 && addr <= PT_GR31+4) ||
 
 
