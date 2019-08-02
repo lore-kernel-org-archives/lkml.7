@@ -2,201 +2,115 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 511E5C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 06:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92509C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 06:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 282AC2086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 06:18:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564726724;
-	bh=S2K3wR2YDF5jGxl+ayK0HwksDCL5fZX4E5bkNRkkw6w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Oty3RKTkPE8fHxH7bfIpggDxATyivKzRwvB4V+Rkfgj1XOjfqw9OlfiK9ZQ1T7l5P
-	 gzRQqSGcBaRT+8SsXqEP8/3DE+rU6L2khDWy8PLB7u49pyHS8fP7dRddQsYzd3Jdhq
-	 6pAhwmc27hG0f/N31Whyh1jRbXJ7smxAsn8NbBL8=
+	by mail.kernel.org (Postfix) with ESMTP id 662B6206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 06:20:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730931AbfHBGSm (ORCPT
+        id S1731663AbfHBGUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 02:18:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55016 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726667AbfHBGSm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 02:18:42 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B53C2206A3;
-        Fri,  2 Aug 2019 06:18:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564726721;
-        bh=S2K3wR2YDF5jGxl+ayK0HwksDCL5fZX4E5bkNRkkw6w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wt2hZUnBBuDeU0ylH1gYzOMkO4yaW+uABg2cFnjUn+tsd/HWksAiDtDVZ0+/EUIgy
-         JNYSiv1BEA8r9iewfHHSg3Z0lIBLnXlLOUVn9kFHtfthFrprIMCJEAnLgnw6TOeZ7j
-         AwG0fVWgtT6LV87aqZ4NHRslk6GvazxhCpnFG+CQ=
-Date:   Fri, 2 Aug 2019 08:18:38 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Hridya Valsaraju <hridya@google.com>
-Cc:     Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: Re: [PATCH] Add default binder devices through binderfs when
- configured
-Message-ID: <20190802061838.GA10844@kroah.com>
-References: <20190801223556.209184-1-hridya@google.com>
+        Fri, 2 Aug 2019 02:20:55 -0400
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:32997 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729316AbfHBGUy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 02:20:54 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R771e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=kerneljasonxing@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0TYSHu-K_1564726826;
+Received: from ali-6c96cfdd2b5d.local(mailfrom:kerneljasonxing@linux.alibaba.com fp:SMTPD_---0TYSHu-K_1564726826)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 02 Aug 2019 14:20:52 +0800
+Subject: Re: [PATCH v2] psi: get poll_work to run when calling poll syscall
+ next time
+To:     hannes@cmpxchg.org, surenb@google.com
+Cc:     dennis@kernel.org, mingo@redhat.com, axboe@kernel.dk,
+        lizefan@huawei.com, peterz@infradead.org, tj@kernel.org,
+        linux-kernel@vger.kernel.org, caspar@linux.alibaba.com,
+        joseph.qi@linux.alibaba.com
+References: <1563864339-2621-1-git-send-email-kerneljasonxing@linux.alibaba.com>
+ <1564463819-120014-1-git-send-email-kerneljasonxing@linux.alibaba.com>
+From:   Jason Xing <kerneljasonxing@linux.alibaba.com>
+Message-ID: <63ac943a-dc9a-f987-3580-6a0d3192e1dd@linux.alibaba.com>
+Date:   Fri, 2 Aug 2019 14:20:26 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190801223556.209184-1-hridya@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <1564463819-120014-1-git-send-email-kerneljasonxing@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 03:35:56PM -0700, Hridya Valsaraju wrote:
-> If CONFIG_ANDROID_BINDERFS is set, the default binder devices
-> specified by CONFIG_ANDROID_BINDER_DEVICES are created in each
-> binderfs instance instead of global devices being created by
-> the binder driver.
+Hi all,
+
+According to the reviews from Johoannes, I've changed the old patch and 
+then submitted the version 2 patch a few days ago.
+
+Please let me know if all this sounds good, or if there are any issues.
+
+Thanks,
+Jason
+
+On 2019/7/30 下午1:16, Jason Xing wrote:
+> Only when calling the poll syscall the first time can user
+> receive POLLPRI correctly. After that, user always fails to
+> acquire the event signal.
 > 
-> Co-developed-by: Christian Brauner <christian.brauner@ubuntu.com>
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> Signed-off-by: Hridya Valsaraju <hridya@google.com>
+> Reproduce case:
+> 1. Get the monitor code in Documentation/accounting/psi.txt
+> 2. Run it, and wait for the event triggered.
+> 3. Kill and restart the process.
+> 
+> If the user doesn't kill the monitor process, it seems the
+> poll_work works fine. After killing and restarting the monitor,
+> the poll_work in kernel will never run again due to the wrong
+> value of poll_scheduled. Therefore, we should reset the value
+> as group_init() does after the last trigger is destroyed.
+> 
+> [PATCH V2]
+> In the patch v2, I put the atomic_set(&group->poll_scheduled, 0);
+> into the right place.
+> Here I quoted from Johannes as the best explaination:
+> "The question is why we can end up with poll_scheduled = 1 but the work
+> not running (which would reset it to 0). And the answer is because the
+> scheduling side sees group->poll_kworker under RCU protection and then
+> schedules it, but here we cancel the work and destroy the worker. The
+> cancel needs to pair with resetting the poll_scheduled flag."
+> 
+> Signed-off-by: Jason Xing <kerneljasonxing@linux.alibaba.com>
+> Reviewed-by: Caspar Zhang <caspar@linux.alibaba.com>
+> Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+> Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
 > ---
->  drivers/android/binder.c   |  3 ++-
->  drivers/android/binderfs.c | 46 ++++++++++++++++++++++++++++++++++----
->  2 files changed, 44 insertions(+), 5 deletions(-)
+>   kernel/sched/psi.c | 7 +++++++
+>   1 file changed, 7 insertions(+)
 > 
-> diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-> index 466b6a7f8ab7..65a99ac26711 100644
-> --- a/drivers/android/binder.c
-> +++ b/drivers/android/binder.c
-> @@ -6279,7 +6279,8 @@ static int __init binder_init(void)
->  				    &transaction_log_fops);
->  	}
->  
-> -	if (strcmp(binder_devices_param, "") != 0) {
-> +	if (!IS_ENABLED(CONFIG_ANDROID_BINDERFS) &&
-> +	    strcmp(binder_devices_param, "") != 0) {
->  		/*
->  		* Copy the module_parameter string, because we don't want to
->  		* tokenize it in-place.
-> diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
-> index e773f45d19d9..9f5ed50ffd70 100644
-> --- a/drivers/android/binderfs.c
-> +++ b/drivers/android/binderfs.c
-> @@ -48,6 +48,10 @@ static dev_t binderfs_dev;
->  static DEFINE_MUTEX(binderfs_minors_mutex);
->  static DEFINE_IDA(binderfs_minors);
->  
-> +static char *binder_devices_param = CONFIG_ANDROID_BINDER_DEVICES;
-> +module_param_named(devices, binder_devices_param, charp, 0444);
-> +MODULE_PARM_DESC(devices, "Binder devices to be created by default");
-> +
-
-Why are you creating a module parameter?  That was not in your changelog
-:(
-
-
-
->  /**
->   * binderfs_mount_opts - mount options for binderfs
->   * @max: maximum number of allocatable binderfs binder devices
-> @@ -135,7 +139,6 @@ static int binderfs_binder_device_create(struct inode *ref_inode,
->  #else
->  	bool use_reserve = true;
->  #endif
-> -
->  	/* Reserve new minor number for the new device. */
->  	mutex_lock(&binderfs_minors_mutex);
->  	if (++info->device_count <= info->mount_opts.max)
-> @@ -186,8 +189,7 @@ static int binderfs_binder_device_create(struct inode *ref_inode,
->  	req->major = MAJOR(binderfs_dev);
->  	req->minor = minor;
->  
-> -	ret = copy_to_user(userp, req, sizeof(*req));
-> -	if (ret) {
-> +	if (userp && copy_to_user(userp, req, sizeof(*req))) {
->  		ret = -EFAULT;
->  		goto err;
->  	}
-> @@ -467,6 +469,9 @@ static int binderfs_fill_super(struct super_block *sb, void *data, int silent)
->  	int ret;
->  	struct binderfs_info *info;
->  	struct inode *inode = NULL;
-> +	struct binderfs_device device_info = { 0 };
-> +	const char *name;
-> +	size_t len;
->  
->  	sb->s_blocksize = PAGE_SIZE;
->  	sb->s_blocksize_bits = PAGE_SHIFT;
-> @@ -521,7 +526,28 @@ static int binderfs_fill_super(struct super_block *sb, void *data, int silent)
->  	if (!sb->s_root)
->  		return -ENOMEM;
->  
-> -	return binderfs_binder_ctl_create(sb);
-> +	ret = binderfs_binder_ctl_create(sb);
-> +	if (ret)
-> +		return ret;
-> +
-> +	name = binder_devices_param;
-> +	for (len = strcspn(name, ","); len > 0; len = strcspn(name, ",")) {
+> diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+> index 7acc632..acdada0 100644
+> --- a/kernel/sched/psi.c
+> +++ b/kernel/sched/psi.c
+> @@ -1131,7 +1131,14 @@ static void psi_trigger_destroy(struct kref *ref)
+>   	 * deadlock while waiting for psi_poll_work to acquire trigger_lock
+>   	 */
+>   	if (kworker_to_destroy) {
 > +		/*
-> +		 * init_binderfs() has already checked that the length of
-> +		 * device_name_entry->name is not greater than device_info.name.
+> +		 * After the RCU grace period has expired, the worker
+> +		 * can no longer be found through group->poll_kworker.
+> +		 * But it might have been already scheduled before
+> +		 * that - deschedule it cleanly before destroying it.
 > +		 */
-> +		strscpy(device_info.name, name, len + 1);
-> +		ret = binderfs_binder_device_create(inode, NULL, &device_info);
-> +		if (ret)
-> +			return ret;
-> +		name += len;
-> +		if (*name == ',')
-> +			name++;
-> +
-> +	}
-> +
-> +	return 0;
-> +
->  }
->  
->  static struct dentry *binderfs_mount(struct file_system_type *fs_type,
-> @@ -553,6 +579,18 @@ static struct file_system_type binder_fs_type = {
->  int __init init_binderfs(void)
->  {
->  	int ret;
-> +	const char *name;
-> +	size_t len;
-> +
-> +	/* Verify that the default binderfs device names are valid. */
-> +	name = binder_devices_param;
-> +	for (len = strcspn(name, ","); len > 0; len = strcspn(name, ",")) {
-> +		if (len > BINDERFS_MAX_NAME)
-> +			return -E2BIG;
-> +		name += len;
-> +		if (*name == ',')
-> +			name++;
-> +	}
-
-This verification should be a separate patch, right?
-
-But the real issue here is I have no idea _why_ you are wanting this
-patch.  The changelog text says _what_ you are doing only, which isn't
-ok.
-
-Please provide more information as to why this is needed, what problem
-it is solving, and break this up into a patch series and resend.
-
-thanks,
-
-greg k-h
+>   		kthread_cancel_delayed_work_sync(&group->poll_work);
+> +		atomic_set(&group->poll_scheduled, 0);
+>   		kthread_destroy_worker(kworker_to_destroy);
+>   	}
+>   	kfree(t);
+> 
