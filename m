@@ -2,98 +2,123 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC3F6C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 05:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5472FC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 05:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C841216C8
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 05:24:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2821920880
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 05:25:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="H6KogFeO";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="UEzbIyle"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="Q4E3j8UI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731974AbfHBFY5 (ORCPT
+        id S1732805AbfHBFZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 01:24:57 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:49226 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727403AbfHBFY5 (ORCPT
+        Fri, 2 Aug 2019 01:25:57 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:46254 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727403AbfHBFZ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 01:24:57 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 8F2C360863; Fri,  2 Aug 2019 05:24:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564723495;
-        bh=GmtpdBoo6eVMwIaIkrqBsggdRCm4FRqn1B21zm7FHhk=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=H6KogFeOFD+WxPdDxqKBaLP4LPiBAi5Su86umjwRcTK2yF/hjSTjM0kwpwIsmwWk5
-         B0w8I7qB46YMmVQ+r91dt2l8urFaWxS+rlHz8vPI9zgyHJyJqrcugIqQ8R8bOF9B5M
-         3ipP3T8ZzmqMU1waSH73rrkGrte5SYcSm6iVsaOg=
-Received: from [10.79.168.112] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9424C601D4;
-        Fri,  2 Aug 2019 05:24:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564723494;
-        bh=GmtpdBoo6eVMwIaIkrqBsggdRCm4FRqn1B21zm7FHhk=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=UEzbIyleUppNe0OYQUhAacWLr03GWhq5WuZqOE4mJ5tHuvf+pfNaBUziBkCMv/Da0
-         l2vXpseaj/ZvL8D/kSZQfLqfwZZM26BU2B08K4Hfou+9fic579ee9Zr5zHQPnN3DJu
-         ppjT9vn+2CVsTM1LgpDgJGeM3NgbPvrNdZGX+thA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9424C601D4
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] perf tools: Fix a typo in Makefile
-To:     Masanari Iida <standby24x7@gmail.com>,
-        linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org
-References: <20190801032812.25018-1-standby24x7@gmail.com>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <b9d6455f-4d9c-35b5-5a4a-863ba6a1d0f4@codeaurora.org>
-Date:   Fri, 2 Aug 2019 10:54:28 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 2 Aug 2019 01:25:56 -0400
+Received: by mail-qk1-f193.google.com with SMTP id r4so53810550qkm.13;
+        Thu, 01 Aug 2019 22:25:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z32U+47NlX9GSdYxrOMIJkrmirJtRbWII8nnxF0TuFc=;
+        b=Q4E3j8UI4qdvR1yVPLhpbG1bb2LoSf+oJmdOKYrZ3l9Nzeyu1LLSDKLj9UFAKvfJaI
+         800cjW7JoCr+RIUKPQLGO6ejfXvXGY6mKepHIVWH5rn5JdR2KUX8ztVmw3dnJRU4YSec
+         29wmTpZyk9irZGeI4aKHHK4rPfezHs2y0YY5U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z32U+47NlX9GSdYxrOMIJkrmirJtRbWII8nnxF0TuFc=;
+        b=F1XDG4vJSh3YpnxQLIj9PxVNxaXkQTIwQjdtu/VMkOIb1MbN8bOQ+YjSx68oMboB2Y
+         Oe3idESpuNOOIek9mj2DlbRw4rYGLtCwfghthVVbW3/SPZmisSTK1299W81/kTOH/m8I
+         DOuCFkdJ7M6YMBtxb3U5AG7ynFZTrTaumqJi2DbD/AvnEDl5PJszrvIqNLFcEA6YEDv3
+         Y4OLDXn0OsuKIexUfq5ALberSSJExToNEvBLUEptGezlf8gTnw2bbKkKuC9fRto5J1TH
+         qx4QpFrhzx4NCXtPGhC1NV1xQqq6PwbF6qWL1CiNGQbf8Bd+ozN4DWP/K/Fh7CzO/pFQ
+         PbNA==
+X-Gm-Message-State: APjAAAUpM/qc4SZrzpKMfMkFxCy+3CLmnwymT4N+mheoXsjaxpxUSOq5
+        XDQSCCy7VlD/8YivYQbcNkbkGtLpP8DKLfmT5Fs=
+X-Google-Smtp-Source: APXvYqzKiJhQDXPLqDJ46c7VaRVieOmVC318o/1JxlUNJBBaxdRAWAOc7PQX4AhfQELWZtZ71FDimyPfqFOf5XX5BVw=
+X-Received: by 2002:a05:620a:16d6:: with SMTP id a22mr89485291qkn.414.1564723555381;
+ Thu, 01 Aug 2019 22:25:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190801032812.25018-1-standby24x7@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20190802041010.1234178-1-taoren@fb.com> <CACPK8XcuwNE3aBrsgn-paTZt-EtF6pc6WwYBQef5xc7157bk2g@mail.gmail.com>
+ <606273F4-E021-4AAF-9F59-F363E4FFF92A@fb.com>
+In-Reply-To: <606273F4-E021-4AAF-9F59-F363E4FFF92A@fb.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Fri, 2 Aug 2019 05:25:43 +0000
+Message-ID: <CACPK8Xc-vjJJ_kbe_KGss+RDMdhRVw-YDj9Cdux8iERSvE0_GQ@mail.gmail.com>
+Subject: Re: [PATCH v2] ARM: dts: aspeed: Add Facebook Wedge100 BMC
+To:     Tao Ren <taoren@fb.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 8/1/2019 8:58 AM, Masanari Iida wrote:
-> This patch fix a spelling typo in Makefile.
+On Fri, 2 Aug 2019 at 05:20, Tao Ren <taoren@fb.com> wrote:
 >
-> Signed-off-by: Masanari Iida <standby24x7@gmail.com>
-
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-
--Mukesh
-
-> ---
->   tools/perf/Documentation/Makefile | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+> On 8/1/19, 9:21 PM, "Joel Stanley" <joel@jms.id.au> wrote:
 >
-> diff --git a/tools/perf/Documentation/Makefile b/tools/perf/Documentation/Makefile
-> index 6d148a40551c..adc5a7e44b98 100644
-> --- a/tools/perf/Documentation/Makefile
-> +++ b/tools/perf/Documentation/Makefile
-> @@ -242,7 +242,7 @@ $(OUTPUT)doc.dep : $(wildcard *.txt) build-docdep.perl
->   	$(PERL_PATH) ./build-docdep.perl >$@+ $(QUIET_STDERR) && \
->   	mv $@+ $@
->   
-> --include $(OUPTUT)doc.dep
-> +-include $(OUTPUT)doc.dep
->   
->   _cmds_txt = cmds-ancillaryinterrogators.txt \
->   	cmds-ancillarymanipulators.txt \
+> >  On Fri, 2 Aug 2019 at 04:10, Tao Ren <taoren@fb.com> wrote:
+> >>
+> >> Add initial version of device tree for Facebook Wedge100 AST2400 BMC
+> >> platform.
+> >>
+> >> Signed-off-by: Tao Ren <taoren@fb.com>
+> >> Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+> >> ---
+> >>  Changes in v2:
+> >>  - remove "debug" from bootargs.
+> >
+> > Thanks. I applied wedge40 and then this one fails to apply due to
+> > conflicts in the Makefile. Next time you have two patches, send them
+> > as a series they apply one atop the other.
+>
+> I thought about asking you if I should send them as a series although they are logically independent patches..
+> Sorry about that and I will do so for future patches.
+>
+> >  The naming of these two files suggests they come from a family. I
+> >  noticed there's very minor differences, a pca9548 switch and the use
+> >  of a watchdog.
+> >
+> >  Are these device trees complete? If yes, do you think it's worthwhile
+> >  to have a common wedge description in eg.
+> >  aspeed-bmc-facebook-wedge.dtsi, and put the unique description in
+> >  respective dts board files?
+> >
+> >  The upside of this is reduced duplication.
+> >
+> >  If you have a reason not to, then that is okay and we can leave it as
+> >  you submitted them.
+>
+> Thank you for the suggestion. I'm also considering moving common stuff into "dtsi" file, but let me take care of it in a separate patch, mainly because:
+>   1) I have one more BMC platform (galaxy100) which is also similar to wedge.
+>       I haven't started the platform, but once I have galaxy100 device tree ready, it would be easier for me to extract common part.
+>   2) the device tree is not complete yet.
+>       For example, all the i2c devices are still created from userspace.
+>       I'm trying to move the logic from userspace to device tree but I haven't decided what to do with those cpld/fpga devices.
+
+Okay, thanks.
+
+I've applied both of these to the aspeed tree for 5.4.
+
+Cheers,
+
+Joel
