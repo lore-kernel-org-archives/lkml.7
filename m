@@ -4,28 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3DC3C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0914C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACAD82183F
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:31:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A850A2073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:32:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404918AbfHBNbw (ORCPT
+        id S2404963AbfHBNcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:31:52 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:52068 "EHLO huawei.com"
+        Fri, 2 Aug 2019 09:32:02 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3737 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404641AbfHBNbc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:31:32 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B88493E7E23E4170A517;
-        Fri,  2 Aug 2019 21:31:30 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Fri, 2 Aug 2019
- 21:31:21 +0800
+        id S2404443AbfHBNbT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:31:19 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 040855C56A2A8F2ACCCA;
+        Fri,  2 Aug 2019 21:31:15 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Fri, 2 Aug 2019
+ 21:31:08 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <herbert@gondor.apana.org.au>, <lars.persson@axis.com>,
         <jesper.nilsson@axis.com>, <davem@davemloft.net>,
@@ -43,9 +42,9 @@ CC:     <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
         <linux-rockchip@lists.infradead.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 09/12] crypto: rockchip - use devm_platform_ioremap_resource() to simplify code
-Date:   Fri, 2 Aug 2019 21:28:06 +0800
-Message-ID: <20190802132809.8116-10-yuehaibing@huawei.com>
+Subject: [PATCH -next 03/12] crypto: exynos - use devm_platform_ioremap_resource() to simplify code
+Date:   Fri, 2 Aug 2019 21:28:00 +0800
+Message-ID: <20190802132809.8116-4-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20190802132809.8116-1-yuehaibing@huawei.com>
 References: <20190802132809.8116-1-yuehaibing@huawei.com>
@@ -64,31 +63,31 @@ This is detected by coccinelle.
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/crypto/rockchip/rk3288_crypto.c | 4 +---
+ drivers/crypto/exynos-rng.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/crypto/rockchip/rk3288_crypto.c b/drivers/crypto/rockchip/rk3288_crypto.c
-index 8d7e254..e5714ef 100644
---- a/drivers/crypto/rockchip/rk3288_crypto.c
-+++ b/drivers/crypto/rockchip/rk3288_crypto.c
-@@ -311,7 +311,6 @@ MODULE_DEVICE_TABLE(of, crypto_of_id_table);
- 
- static int rk_crypto_probe(struct platform_device *pdev)
+diff --git a/drivers/crypto/exynos-rng.c b/drivers/crypto/exynos-rng.c
+index 2cfabb9..cbd8ca6 100644
+--- a/drivers/crypto/exynos-rng.c
++++ b/drivers/crypto/exynos-rng.c
+@@ -268,7 +268,6 @@ static struct rng_alg exynos_rng_alg = {
+ static int exynos_rng_probe(struct platform_device *pdev)
  {
+ 	struct exynos_rng_dev *rng;
 -	struct resource *res;
- 	struct device *dev = &pdev->dev;
- 	struct rk_crypto_info *crypto_info;
- 	int err = 0;
-@@ -339,8 +338,7 @@ static int rk_crypto_probe(struct platform_device *pdev)
+ 	int ret;
  
- 	spin_lock_init(&crypto_info->lock);
+ 	if (exynos_rng_dev)
+@@ -289,8 +288,7 @@ static int exynos_rng_probe(struct platform_device *pdev)
+ 		return PTR_ERR(rng->clk);
+ 	}
  
 -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	crypto_info->reg = devm_ioremap_resource(&pdev->dev, res);
-+	crypto_info->reg = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(crypto_info->reg)) {
- 		err = PTR_ERR(crypto_info->reg);
- 		goto err_crypto;
+-	rng->mem = devm_ioremap_resource(&pdev->dev, res);
++	rng->mem = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(rng->mem))
+ 		return PTR_ERR(rng->mem);
+ 
 -- 
 2.7.4
 
