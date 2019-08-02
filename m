@@ -8,61 +8,61 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17FB5C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 764D2C19759
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE859206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48A42206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:47:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e2yaFF4R"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tP/9nOuQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390638AbfHBBrp (ORCPT
+        id S2390646AbfHBBr5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 21:47:45 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45545 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727630AbfHBBrp (ORCPT
+        Thu, 1 Aug 2019 21:47:57 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:38042 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727630AbfHBBr4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 21:47:45 -0400
-Received: by mail-pg1-f193.google.com with SMTP id o13so35178134pgp.12
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 18:47:45 -0700 (PDT)
+        Thu, 1 Aug 2019 21:47:56 -0400
+Received: by mail-pg1-f196.google.com with SMTP id f5so26375403pgu.5
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 18:47:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=iq2Oofr0Gl/QXG71RCvyorbUHlM5X2J3tGq+6DkFErQ=;
-        b=e2yaFF4RWbkfUO1QTe/GDUHUpJSDfgDyYAIWk48MdUvp5QrvvaUQ6P/FVAQDGa+299
-         JOljzkOXkDdiCitVXPbnl+Ck0/SO4chaRleTHKKlGV8WVVCUn9aBOfk/i102nO37OrgF
-         278Xh/W+vjFHrksBgLaRfT302DmiCnZrW89qLs3Of2eMCG6H58gm7wo8xqT3XS309JH+
-         LBG7rfz8JPA9gkiRjfJC5Gy/UR3j4Gxc7h8m0UQbfwpfa477PBa4K1oWxStVlAZg5jWm
-         bl5+a0DUnWxqzX+MrzFNxTCPCKvMS9snPerBRUyXrNx7yUG9JP3dR+GLNqlCoGY0gqd5
-         0CBg==
+        bh=HuvGrEKDwaYDxNsylZRH3iXO6ZMXYnOP7mztNqR4E2A=;
+        b=tP/9nOuQALgghPmYXazr8/2p2rD1ahGSBrjFT9OAg2J9ptUwaPuknyOCQulWk6g0Fx
+         LpbdhrNAahm6NsQif5PJ76o7KNrjqKSQAREjJEmsMvroMpBTdASZ9EE/3oo0+J2LkZoi
+         dq4VMKhaZTEDcXbzmXCQbtgNpvR2IvME5JZLb/M7ASsNRWeXuJfgBB9jyQ71lFeq1r4d
+         elZ0elm4LEdLsUPPnNn2nE94dKhfZZuey/6sM+0JUn3BF7lhMaozB49omj5h+5FFCGCQ
+         RZsaYfkp+Jv9CMvFmO4QyAlTzPP+Bh4+c3xDccxa36mU+8DJq/i25gxAOw1T/LR4cmfe
+         OIiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=iq2Oofr0Gl/QXG71RCvyorbUHlM5X2J3tGq+6DkFErQ=;
-        b=DCkm6/OZ7Yo7uKElXkxKUzyLJL/5rL4VTuJBiAmsRicSIsh2s46TdG1a+HbSPcpR2r
-         zaIjeu23W+6QSFjGmLiBg3QZDMNocSjHriwqWPs5BWVyrrOH/pW3fItGsgYRcoMYe+eg
-         y3/VAryEAkH3X7Sb6r0PymKYR0jcG6xflayTcNNBpsW8JzoVbu4wiH9Ko/39G8OpYsfI
-         eQXjja+o6yrqJo5nbv+ySTY143Fq0AKbsF6PseZ9ZAJBDf+KxOfkoGuFOStVb75A95SL
-         dcyGYny7H0QpxPs51fHlHQjTgnqE0a/HaXeA7HLdgmaQdsvf8Aa7t/LZyPpmeAziAq0R
-         3Scw==
-X-Gm-Message-State: APjAAAUUPsPM22WvmBYlOsvuJXhgxa2JM1tkJd37UoHF49O6eIQfM1wp
-        fo7YdaEs2htCI33O+hQQCYksiZ8BIY2jfg==
-X-Google-Smtp-Source: APXvYqylsE993p8HGmSRYjY+kGu9oOVZpU+iKAj7W9WmiHyNUNaM2KM1gYLrbUtmFLBOzkTT6PIRtA==
-X-Received: by 2002:a62:6d84:: with SMTP id i126mr55568288pfc.129.1564710464729;
-        Thu, 01 Aug 2019 18:47:44 -0700 (PDT)
+        bh=HuvGrEKDwaYDxNsylZRH3iXO6ZMXYnOP7mztNqR4E2A=;
+        b=khz8CJZFarqoFrgIsBgmpW2sQJXplSjONyAxBap++HAhaddcD25sRbBWsTWrVcu8Nd
+         K5JDmjtNlKsvP5Yy+SmgS+M507lMfYYCmmhtp97R8oDvWU/H3izSTsaS+SgQ6Pk51mg/
+         6885UjcvqzTXN4YXIGCyWvjczYpdd7fDMgeWoUxjvyOgTKfawC+6tz63Q7NFqzePKDp9
+         mIk6pNPIb5S/fZwgkUtD2cenJZp2fRInt1MUE9dSZvJFFyM5ZVLSU5bO6dlKRkXwv5Lr
+         /iKEDeNrj9/0Y17EQfaiWE135DEYPEniy7dCMBwIXqVkOrrLpR+z3mu8UZlMvjuSU6Mn
+         80+g==
+X-Gm-Message-State: APjAAAWWMFch1GrtGHeslDAMclPPe7EiKsYNW5NXD1P3n9LQLaI3ncFF
+        ho8RcoT2heEc8uyYCsx2xxE=
+X-Google-Smtp-Source: APXvYqwVC7IZr4lSx8p4kHbb9tbFWG45uW//usuBK49r9xH8es13XIBJGRoIlnS3CTGvmXRTH/JGrQ==
+X-Received: by 2002:a62:64d4:: with SMTP id y203mr56380968pfb.91.1564710476079;
+        Thu, 01 Aug 2019 18:47:56 -0700 (PDT)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id w2sm63002010pgc.32.2019.08.01.18.47.42
+        by smtp.gmail.com with ESMTPSA id p1sm78437616pff.74.2019.08.01.18.47.53
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 01 Aug 2019 18:47:44 -0700 (PDT)
+        Thu, 01 Aug 2019 18:47:55 -0700 (PDT)
 From:   Chuhong Yuan <hslester96@gmail.com>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v2 09/10] userns: Replace strncmp with str_has_prefix
-Date:   Fri,  2 Aug 2019 09:47:39 +0800
-Message-Id: <20190802014739.9114-1-hslester96@gmail.com>
+Subject: [PATCH v2 10/10] watchdog: Replace strncmp with str_has_prefix
+Date:   Fri,  2 Aug 2019 09:47:49 +0800
+Message-Id: <20190802014749.9168-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -83,41 +83,32 @@ Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
 Changes in v2:
   - Revise the description.
-  - Utilize str_has_prefix's return value to
-    eliminate some hard codes.
 
- kernel/user_namespace.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ kernel/watchdog.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/user_namespace.c b/kernel/user_namespace.c
-index 8eadadc478f9..e231e902df8a 100644
---- a/kernel/user_namespace.c
-+++ b/kernel/user_namespace.c
-@@ -1138,6 +1138,7 @@ ssize_t proc_setgroups_write(struct file *file, const char __user *buf,
- 	char kbuf[8], *pos;
- 	bool setgroups_allowed;
- 	ssize_t ret;
-+	size_t len;
+diff --git a/kernel/watchdog.c b/kernel/watchdog.c
+index 7f9e7b9306fe..ac7a4b5f856e 100644
+--- a/kernel/watchdog.c
++++ b/kernel/watchdog.c
+@@ -70,13 +70,13 @@ void __init hardlockup_detector_disable(void)
  
- 	/* Only allow a very narrow range of strings to be written */
- 	ret = -EINVAL;
-@@ -1153,12 +1154,11 @@ ssize_t proc_setgroups_write(struct file *file, const char __user *buf,
- 
- 	/* What is being requested? */
- 	ret = -EINVAL;
--	if (strncmp(pos, "allow", 5) == 0) {
--		pos += 5;
-+	if ((len = str_has_prefix(pos, "allow"))) {
-+		pos += len;
- 		setgroups_allowed = true;
--	}
--	else if (strncmp(pos, "deny", 4) == 0) {
--		pos += 4;
-+	} else if ((len = str_has_prefix(pos, "deny"))) {
-+		pos += len;
- 		setgroups_allowed = false;
- 	}
- 	else
+ static int __init hardlockup_panic_setup(char *str)
+ {
+-	if (!strncmp(str, "panic", 5))
++	if (str_has_prefix(str, "panic"))
+ 		hardlockup_panic = 1;
+-	else if (!strncmp(str, "nopanic", 7))
++	else if (str_has_prefix(str, "nopanic"))
+ 		hardlockup_panic = 0;
+-	else if (!strncmp(str, "0", 1))
++	else if (str_has_prefix(str, "0"))
+ 		nmi_watchdog_user_enabled = 0;
+-	else if (!strncmp(str, "1", 1))
++	else if (str_has_prefix(str, "1"))
+ 		nmi_watchdog_user_enabled = 1;
+ 	return 1;
+ }
 -- 
 2.20.1
 
