@@ -5,50 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBCBC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A97C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 938282067D
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3AFA2067D
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:06:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564740386;
-	bh=m0veZ928HW1xnDYIdXCyZ4xPhGJ5yXnzbvu42gwoLrQ=;
+	s=default; t=1564740389;
+	bh=hySi3g5PbPPfDu0V+Ire/cYrt9qZkP9YXusABX/zMVQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rKDE8howT29sET03/lbwK5rWnGxipG1bOIA/EZw1PDtJtlpW4lwhfEE7QNsvjWlyT
-	 yfAJsb5UWrurQHEsnLI/SaESTc6dyEFOgz2yiJ5VQA7hzwXa6wNk7yeMquXxSh0uTN
-	 rWZZvcrhDX0QlwstiigIXqFYuBstCdBbyjxO2ymk=
+	b=MrxBHswnLaOgfQz4rGSlKiQC6QOtgdAOn+Sf74+gzO09FlQ7W+o1kkRZJwqTWkSoG
+	 5AbZTbgZsbZHWUkXXgqQXxl6esZNoIvn/whlERDaJoj7dNW6XcA+cL4bd7tVhffsD7
+	 PD+fc1tPQf91nLqW1HOfVPvD+apzHwFrtRYie3os=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404661AbfHBJbN (ORCPT
+        id S2391034AbfHBJbL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:31:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57060 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:31:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391023AbfHBJbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:31:10 -0400
+        id S2391016AbfHBJbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:31:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1094D21855;
-        Fri,  2 Aug 2019 09:31:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E47D217D6;
+        Fri,  2 Aug 2019 09:31:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738269;
-        bh=m0veZ928HW1xnDYIdXCyZ4xPhGJ5yXnzbvu42gwoLrQ=;
+        s=default; t=1564738267;
+        bh=hySi3g5PbPPfDu0V+Ire/cYrt9qZkP9YXusABX/zMVQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UgKtqriw4zS0MKKZ/9l8ZpIfSWcDwEgLYPqPuJRQ2HsVIjnv4u9KwdHsjQOG+5Obu
-         QbDk3YoPN3WGhy6TvOREdnhwBm5F4MxaY0yvpWFV7eFZHny0XQbFp89lOCsxRt6x+z
-         gVe+lQ4s/pqr670bHIN8WFEyuwi3YNviBC6JRxcE=
+        b=fiySdEi7wvLm5lE8lCX6tXe/YcKs6UMGGYPlONrkMMWw4BX89zoHolEI5mihyp/PJ
+         arbO1+c7OkdfebLBA162G+EDvcmQ1M4/MyQfT6rlpBhOF5OViQBPVWWqZV4e9BXoX/
+         1RR2uof7xcj6CFjffngdk37+35S/QAorcmNl4ods=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 011/158] media: marvell-ccic: fix DMA s/g desc number calculation
-Date:   Fri,  2 Aug 2019 11:27:12 +0200
-Message-Id: <20190802092205.749399064@linuxfoundation.org>
+        stable@vger.kernel.org, Imre Deak <imre.deak@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 020/158] locking/lockdep: Fix merging of hlocks with non-zero references
+Date:   Fri,  2 Aug 2019 11:27:21 +0200
+Message-Id: <20190802092207.615648131@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -61,62 +65,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0c7aa32966dab0b8a7424e1b34c7f206817953ec ]
+[ Upstream commit d9349850e188b8b59e5322fda17ff389a1c0cd7d ]
 
-The commit d790b7eda953 ("[media] vb2-dma-sg: move dma_(un)map_sg here")
-left dma_desc_nent unset. It previously contained the number of DMA
-descriptors as returned from dma_map_sg().
+The sequence
 
-We can now (since the commit referred to above) obtain the same value from
-the sg_table and drop dma_desc_nent altogether.
+	static DEFINE_WW_CLASS(test_ww_class);
 
-Tested on OLPC XO-1.75 machine. Doesn't affect the OLPC XO-1's Cafe
-driver, since that one doesn't do DMA.
+	struct ww_acquire_ctx ww_ctx;
+	struct ww_mutex ww_lock_a;
+	struct ww_mutex ww_lock_b;
+	struct ww_mutex ww_lock_c;
+	struct mutex lock_c;
 
-[mchehab+samsung@kernel.org: fix a checkpatch warning]
+	ww_acquire_init(&ww_ctx, &test_ww_class);
 
-Fixes: d790b7eda953 ("[media] vb2-dma-sg: move dma_(un)map_sg here")
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+	ww_mutex_init(&ww_lock_a, &test_ww_class);
+	ww_mutex_init(&ww_lock_b, &test_ww_class);
+	ww_mutex_init(&ww_lock_c, &test_ww_class);
+
+	mutex_init(&lock_c);
+
+	ww_mutex_lock(&ww_lock_a, &ww_ctx);
+
+	mutex_lock(&lock_c);
+
+	ww_mutex_lock(&ww_lock_b, &ww_ctx);
+	ww_mutex_lock(&ww_lock_c, &ww_ctx);
+
+	mutex_unlock(&lock_c);	(*)
+
+	ww_mutex_unlock(&ww_lock_c);
+	ww_mutex_unlock(&ww_lock_b);
+	ww_mutex_unlock(&ww_lock_a);
+
+	ww_acquire_fini(&ww_ctx); (**)
+
+will trigger the following error in __lock_release() when calling
+mutex_release() at **:
+
+	DEBUG_LOCKS_WARN_ON(depth <= 0)
+
+The problem is that the hlock merging happening at * updates the
+references for test_ww_class incorrectly to 3 whereas it should've
+updated it to 4 (representing all the instances for ww_ctx and
+ww_lock_[abc]).
+
+Fix this by updating the references during merging correctly taking into
+account that we can have non-zero references (both for the hlock that we
+merge into another hlock or for the hlock we are merging into).
+
+Signed-off-by: Imre Deak <imre.deak@intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will.deacon@arm.com>
+Link: https://lkml.kernel.org/r/20190524201509.9199-2-imre.deak@intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/marvell-ccic/mcam-core.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ kernel/locking/lockdep.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/media/platform/marvell-ccic/mcam-core.c b/drivers/media/platform/marvell-ccic/mcam-core.c
-index aa2b44041d3f..22fe771d4dd2 100644
---- a/drivers/media/platform/marvell-ccic/mcam-core.c
-+++ b/drivers/media/platform/marvell-ccic/mcam-core.c
-@@ -209,7 +209,6 @@ struct mcam_vb_buffer {
- 	struct list_head queue;
- 	struct mcam_dma_desc *dma_desc;	/* Descriptor virtual address */
- 	dma_addr_t dma_desc_pa;		/* Descriptor physical address */
--	int dma_desc_nent;		/* Number of mapped descriptors */
- };
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 774ab79d3ec7..f2df5f86af28 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -3128,17 +3128,17 @@ static int __lock_acquire(struct lockdep_map *lock, unsigned int subclass,
+ 	if (depth) {
+ 		hlock = curr->held_locks + depth - 1;
+ 		if (hlock->class_idx == class_idx && nest_lock) {
+-			if (hlock->references) {
+-				/*
+-				 * Check: unsigned int references:12, overflow.
+-				 */
+-				if (DEBUG_LOCKS_WARN_ON(hlock->references == (1 << 12)-1))
+-					return 0;
++			if (!references)
++				references++;
  
- static inline struct mcam_vb_buffer *vb_to_mvb(struct vb2_v4l2_buffer *vb)
-@@ -616,9 +615,11 @@ static void mcam_dma_contig_done(struct mcam_camera *cam, int frame)
- static void mcam_sg_next_buffer(struct mcam_camera *cam)
- {
- 	struct mcam_vb_buffer *buf;
-+	struct sg_table *sg_table;
++			if (!hlock->references)
+ 				hlock->references++;
+-			} else {
+-				hlock->references = 2;
+-			}
++
++			hlock->references += references;
++
++			/* Overflow */
++			if (DEBUG_LOCKS_WARN_ON(hlock->references < references))
++				return 0;
  
- 	buf = list_first_entry(&cam->buffers, struct mcam_vb_buffer, queue);
- 	list_del_init(&buf->queue);
-+	sg_table = vb2_dma_sg_plane_desc(&buf->vb_buf.vb2_buf, 0);
- 	/*
- 	 * Very Bad Not Good Things happen if you don't clear
- 	 * C1_DESC_ENA before making any descriptor changes.
-@@ -626,7 +627,7 @@ static void mcam_sg_next_buffer(struct mcam_camera *cam)
- 	mcam_reg_clear_bit(cam, REG_CTRL1, C1_DESC_ENA);
- 	mcam_reg_write(cam, REG_DMA_DESC_Y, buf->dma_desc_pa);
- 	mcam_reg_write(cam, REG_DESC_LEN_Y,
--			buf->dma_desc_nent*sizeof(struct mcam_dma_desc));
-+			sg_table->nents * sizeof(struct mcam_dma_desc));
- 	mcam_reg_write(cam, REG_DESC_LEN_U, 0);
- 	mcam_reg_write(cam, REG_DESC_LEN_V, 0);
- 	mcam_reg_set_bit(cam, REG_CTRL1, C1_DESC_ENA);
+ 			return 1;
+ 		}
 -- 
 2.20.1
 
