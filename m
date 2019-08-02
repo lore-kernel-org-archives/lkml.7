@@ -2,108 +2,143 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 066D1C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A3AC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1BEB2184E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:39:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C54392064A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:41:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BeiakVZ/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404360AbfHBIjp (ORCPT
+        id S2404374AbfHBIlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 04:39:45 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:51256 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730941AbfHBIjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 04:39:45 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 87B9E8EEDC29BFAD1BF8;
-        Fri,  2 Aug 2019 16:39:43 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.96) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Fri, 2 Aug 2019
- 16:39:42 +0800
-Subject: Re: [PATCH net-next] net: can: Fix compiling warning
-To:     Oliver Hartkopp <socketcan@hartkopp.net>, <davem@davemloft.net>,
-        <netdev@vger.kernel.org>
-References: <20190802033643.84243-1-maowenan@huawei.com>
- <0050efdb-af9f-49b9-8d83-f574b3d46a2e@hartkopp.net>
-CC:     <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-From:   maowenan <maowenan@huawei.com>
-Message-ID: <78f7288e-08bc-41cd-d5b3-668d10903528@huawei.com>
-Date:   Fri, 2 Aug 2019 16:39:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Fri, 2 Aug 2019 04:41:14 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41672 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729530AbfHBIlO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 04:41:14 -0400
+Received: by mail-pl1-f193.google.com with SMTP id m9so33252471pls.8;
+        Fri, 02 Aug 2019 01:41:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZAc60zmmWfJUPJOxztGC1Zo0QcSwvZnWidwh1YadQW4=;
+        b=BeiakVZ/69l0C40HpLypKpjGyqlbjMzm3PySNszVR6EOhpT+j+PH0BIMvvQ0zkGlHX
+         XQUQVOiygfbQ8ydDOxejN7p02EyZXsb3q0gOkdztKAR7Dk/HUtjFg3/RtrnSWI2yVIAb
+         vJEJ43TRr17U0CfYB5o5ZfJQr53fqKZc4AOCYc8kFRIfsueek7PpKPr98juBm7CLFL0y
+         gfR9xAHxL7qkohnOof48JG6GrmP1SbEPVBZ2NiMRzYpaFk1+SJj3ZPsQSdCUEhRpXar6
+         /m0ZGUsruQNrXq9oPdRJibQZokvrdGLYI+oOUiPIWZ925shzg/8WT3lGM6DDAtCcv9Ln
+         nA8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZAc60zmmWfJUPJOxztGC1Zo0QcSwvZnWidwh1YadQW4=;
+        b=CVS9OYHyDh0EvyISAYxDoG6Yo2uisP/oPBzKrLETkeiCBGhjOQ7OtZvlNH4URxaOSA
+         L7czBIO8EnrnlHPvnisxnLXeG6lw+8Mt8BXsHCI3cvalIiCprjtZUXhogwG4nFAODQN4
+         DvV07HtArvF+iA6iX+pEJQr3P7icrEK6F09xAqv4LmlTMYWbMRC4AALavvPLAjqMOv43
+         ZWyIuUZUR0P0nZjnOn2aZgbXcEUaCKN+X1uVsIY883mvSk7rvm76C+XcItKlq6iaPx94
+         2C0Sf7lxTuiQBWQ9HjwCDx2YIva8i4ALVBgAGdnjYu8eGAtJzkMNzwVrYrK81BamFT5L
+         HyPQ==
+X-Gm-Message-State: APjAAAVXoBjF2Z9GZ5gF8HIyuAwa8/bKGpWvyOpE3iBlc/CkscNLJsDI
+        0nncFt8/60VhzGmfh2iL+6A=
+X-Google-Smtp-Source: APXvYqzNE1bewwsx9D1UZc8lGoqthGwl6qcode52EkBnUpn1dSdl6cReLdopztd1bcNFRzL18bEziA==
+X-Received: by 2002:a17:902:7687:: with SMTP id m7mr76984090pll.310.1564735273710;
+        Fri, 02 Aug 2019 01:41:13 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
+        by smtp.gmail.com with ESMTPSA id q7sm81671983pff.2.2019.08.02.01.41.11
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 02 Aug 2019 01:41:13 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Vishal Kulkarni <vishal@chelsio.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH v2 1/2] cxgb4: sched: Use refcount_t for refcount
+Date:   Fri,  2 Aug 2019 16:41:08 +0800
+Message-Id: <20190802084108.13005-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <0050efdb-af9f-49b9-8d83-f574b3d46a2e@hartkopp.net>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.96.96]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+refcount_t is better for reference counters since its
+implementation can prevent overflows.
+So convert atomic_t ref counters to refcount_t.
 
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+Changes in v2:
+  - Convert refcount from 0-base to 1-base.
 
-On 2019/8/2 16:10, Oliver Hartkopp wrote:
-> On 02/08/2019 05.36, Mao Wenan wrote:
->> There are two warings in net/can, fix them by setting bcm_sock_no_ioctlcmd
->> and raw_sock_no_ioctlcmd as static.
->>
->> net/can/bcm.c:1683:5: warning: symbol 'bcm_sock_no_ioctlcmd' was not declared. Should it be static?
->> net/can/raw.c:840:5: warning: symbol 'raw_sock_no_ioctlcmd' was not declared. Should it be static?
->>
->> Fixes: 473d924d7d46 ("can: fix ioctl function removal")
->>
->> Signed-off-by: Mao Wenan <maowenan@huawei.com>
-> 
-> Acked-by: Oliver Hartkopp <socketcan@hartkopp.net>
-> 
-> Thanks Mao!
-> 
-> Btw. what kind of compiler/make switches are you using so that I can see these warnings myself the next time?
-> 
+ drivers/net/ethernet/chelsio/cxgb4/sched.c | 8 ++++----
+ drivers/net/ethernet/chelsio/cxgb4/sched.h | 2 +-
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-I use ARCH=mips CROSS_COMPILE=mips-linux-gnu- .
-
-> Best regards,
-> Oliver
-> 
->> ---
->>   net/can/bcm.c | 2 +-
->>   net/can/raw.c | 2 +-
->>   2 files changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/net/can/bcm.c b/net/can/bcm.c
->> index bf1d0bbecec8..b8a32b4ac368 100644
->> --- a/net/can/bcm.c
->> +++ b/net/can/bcm.c
->> @@ -1680,7 +1680,7 @@ static int bcm_recvmsg(struct socket *sock, struct msghdr *msg, size_t size,
->>       return size;
->>   }
->>   -int bcm_sock_no_ioctlcmd(struct socket *sock, unsigned int cmd,
->> +static int bcm_sock_no_ioctlcmd(struct socket *sock, unsigned int cmd,
->>                unsigned long arg)
->>   {
->>       /* no ioctls for socket layer -> hand it down to NIC layer */
->> diff --git a/net/can/raw.c b/net/can/raw.c
->> index da386f1fa815..a01848ff9b12 100644
->> --- a/net/can/raw.c
->> +++ b/net/can/raw.c
->> @@ -837,7 +837,7 @@ static int raw_recvmsg(struct socket *sock, struct msghdr *msg, size_t size,
->>       return size;
->>   }
->>   -int raw_sock_no_ioctlcmd(struct socket *sock, unsigned int cmd,
->> +static int raw_sock_no_ioctlcmd(struct socket *sock, unsigned int cmd,
->>                unsigned long arg)
->>   {
->>       /* no ioctls for socket layer -> hand it down to NIC layer */
->>
-> 
-> .
-> 
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/sched.c b/drivers/net/ethernet/chelsio/cxgb4/sched.c
+index 60218dc676a8..0d902d125be4 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/sched.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/sched.c
+@@ -173,7 +173,7 @@ static int t4_sched_queue_unbind(struct port_info *pi, struct ch_sched_queue *p)
+ 
+ 		list_del(&qe->list);
+ 		kvfree(qe);
+-		if (atomic_dec_and_test(&e->refcnt)) {
++		if (refcount_dec_and_test(&e->refcnt)) {
+ 			e->state = SCHED_STATE_UNUSED;
+ 			memset(&e->info, 0, sizeof(e->info));
+ 		}
+@@ -216,7 +216,7 @@ static int t4_sched_queue_bind(struct port_info *pi, struct ch_sched_queue *p)
+ 		goto out_err;
+ 
+ 	list_add_tail(&qe->list, &e->queue_list);
+-	atomic_inc(&e->refcnt);
++	refcount_inc(&e->refcnt);
+ 	return err;
+ 
+ out_err:
+@@ -434,7 +434,7 @@ static struct sched_class *t4_sched_class_alloc(struct port_info *pi,
+ 		if (err)
+ 			return NULL;
+ 		memcpy(&e->info, &np, sizeof(e->info));
+-		atomic_set(&e->refcnt, 0);
++		refcount_set(&e->refcnt, 1);
+ 		e->state = SCHED_STATE_ACTIVE;
+ 	}
+ 
+@@ -488,7 +488,7 @@ struct sched_table *t4_init_sched(unsigned int sched_size)
+ 		s->tab[i].idx = i;
+ 		s->tab[i].state = SCHED_STATE_UNUSED;
+ 		INIT_LIST_HEAD(&s->tab[i].queue_list);
+-		atomic_set(&s->tab[i].refcnt, 0);
++		refcount_set(&s->tab[i].refcnt, 1);
+ 	}
+ 	return s;
+ }
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/sched.h b/drivers/net/ethernet/chelsio/cxgb4/sched.h
+index 168fb4ce3759..23a6ca1e6d3e 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/sched.h
++++ b/drivers/net/ethernet/chelsio/cxgb4/sched.h
+@@ -69,7 +69,7 @@ struct sched_class {
+ 	u8 idx;
+ 	struct ch_sched_params info;
+ 	struct list_head queue_list;
+-	atomic_t refcnt;
++	refcount_t refcnt;
+ };
+ 
+ struct sched_table {      /* per port scheduling table */
+-- 
+2.20.1
 
