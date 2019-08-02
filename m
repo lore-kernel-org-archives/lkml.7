@@ -2,85 +2,117 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55895C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 04:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F772C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 04:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2D072073D
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 04:15:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C8992073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 04:17:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WcuzDmE0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sn9OgyEw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731277AbfHBEPq (ORCPT
+        id S1731350AbfHBERe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 00:15:46 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41448 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731216AbfHBEPp (ORCPT
+        Fri, 2 Aug 2019 00:17:34 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:33739 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729806AbfHBERe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 00:15:45 -0400
-Received: by mail-pg1-f194.google.com with SMTP id x15so25029135pgg.8;
-        Thu, 01 Aug 2019 21:15:45 -0700 (PDT)
+        Fri, 2 Aug 2019 00:17:34 -0400
+Received: by mail-lj1-f194.google.com with SMTP id h10so57651ljg.0;
+        Thu, 01 Aug 2019 21:17:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=cfDg+mKiZ0HuXQrp/Fkf3c0LIbGGqs1IU/MvMa1VQT8=;
-        b=WcuzDmE0zluIFzPuQx0tOrDFaspGNwNkiiAUShmEgjBJt3kraSMVzeZPcs1OjtcoUw
-         4sgBtxcVSfBnyQj7Su6+XCx6v0ZBVC0WzbYYzigVY77o1Tpa92q9qT34T7/eP2H5Gp0a
-         JBVNrVI2841Rakg5W9PActLrgsgd0SQMQi4CRaj8h9LipoLq8vmqtUKAef2maT8XCSQf
-         5J21X0rH9BQLz9XLXQ1fHHQNIT2owYVfrfOROjtVFIAcHiNvFEkUUJ/g6La5lu61Yipk
-         ZMn7/e5cW+EE8KU+BvQ0y4wGfo2EWNeSzq0EnXnNma179aepgabAukCZKC1l+n8gEulK
-         KjrQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=HOvSoEEyfCl7/x5I1JZTYO9Hs0zY3XihBGSCCeM/KWA=;
+        b=Sn9OgyEwtd1KlJ8Cn2Kvaoug5ShLB8vNk7XVRkJA9i7Fyr9IdwAA3L1Zgk7/ywlP+P
+         /rMF0vY57u1zxXtZJjXA+z6bWM1mSK8a7xIi9Q7N+IYQ+vOdtPdpGTeFsBJHh5zGCYvr
+         utAcfjKq6zN5+vdh3XFS1iPmVa1ZVQXcMs0Aw+x2UWOHbWTDeAUAkgn6cVQ4FEfso2gL
+         hoaZK0uKlKBoWEyTZBGJAzmjN7QMDUAfVZeUS/kdvD44dqGWFQ0WCNS7/4lxzcY+vpau
+         Zp/Hn9xx+/ZlwuVPTj9+J942EdJ5AJX4aQ9s9XMUL7nRntbIWP7UE2r5QfEB0x0Ji+kQ
+         ycyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=cfDg+mKiZ0HuXQrp/Fkf3c0LIbGGqs1IU/MvMa1VQT8=;
-        b=UGNzvAl4ObU8bPY6h8I+nq72OXo4eDlXnKhYBn4ncPB/pbr/yJXmgQWDYrvIRZoqST
-         B6sSY7Q5jM/+pECtwsF3rPT7yoi5RvoNb8/xTdjuwySnHUSQ3hPQpYVbEdji+XXherhE
-         FrWArc8wGZK99Tc8BICKR3KhxIPOKppjbmPeVDxiH1blyPBTrCQC7bOodaEMoagKZqBQ
-         +Ac3NnBKY9u/dKSUcimPogjcZk6wc+ogtg6X1r4tKrMZlxHfj5wRj6pZiSbxad+tgFyw
-         BWxMsy7vSIjpfOyIFPxWD+mVJa1RLZL3K2n1h9KG39HbiDyNB9u5h5pDywKKzjBlxqYK
-         002Q==
-X-Gm-Message-State: APjAAAWnXaH3mEnlUp+Hd+PXI7iPnpLkIO0dmwhT9yINRx36cpOQjAhy
-        45zavLRZ3bHyyXxfRNMGo5s=
-X-Google-Smtp-Source: APXvYqyaZyBBz2OF0r4sMPZNdrkSj6+3GOMT5EcMdF65SXHq6nuJJ2KcNSG1JahEMCto1z4CBisZxg==
-X-Received: by 2002:a17:90a:8985:: with SMTP id v5mr2256366pjn.136.1564719344921;
-        Thu, 01 Aug 2019 21:15:44 -0700 (PDT)
-Received: from mbalantz-desktop (d206-116-172-62.bchsia.telus.net. [206.116.172.62])
-        by smtp.gmail.com with ESMTPSA id k14sm3489292pgb.78.2019.08.01.21.15.44
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 01 Aug 2019 21:15:44 -0700 (PDT)
-From:   Mark Balantzyan <mbalant3@gmail.com>
-X-Google-Original-From: Mark Balantzyan <mbalantz@mbalantz-desktop>
-Date:   Thu, 1 Aug 2019 21:15:41 -0700 (PDT)
-To:     Guenter Roeck <linux@roeck-us.net>
-cc:     Mark Balantzyan <mbalant3@gmail.com>, wim@linux-watchdog.org,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] watchdog: alim1535: Rewriting of alim1535 to use
- watchdog subsystem
-In-Reply-To: <7e17ddd7-e304-67f0-836c-8ba71c5a6778@roeck-us.net>
-Message-ID: <alpine.DEB.2.21.1908012113390.66405@mbalantz-desktop>
-References: <20190802032655.54758-1-mbalant3@gmail.com> <7e17ddd7-e304-67f0-836c-8ba71c5a6778@roeck-us.net>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=HOvSoEEyfCl7/x5I1JZTYO9Hs0zY3XihBGSCCeM/KWA=;
+        b=M1h3DwSNAxa+1EQoomN0stdEkGaMdtXDb/ffz5y77MDMM7rNHpRDv4H/k8luNdpqSm
+         tV09FOJ6HnJvk4/t0aR4ZwGLhIiq/39EmEQUdUeuL5y4nE70mQEnReDUNhPpgHqFlBxK
+         ZqUlWLtqeHlx5IWDfx+htwb8PF1uUhXMHAIo+eb3UVdoElXrGk63R0+SRmDR55G+YM3i
+         ppz9LzlQF3g8jYlId8FedwhqhoSSX0MdPxMe7MnTw5Hz3D+yplc0qMCSUh9Noav/RpeZ
+         pGj/Zz//eufxlS4X/0Oa4Dd7H8IFmtum7T8KhxU9wSOQuG9uBam2ofiCMr3Lnx7G1fVQ
+         ULZA==
+X-Gm-Message-State: APjAAAWbAcKmGOupDgF7oKzEwfTH7TQWpRT6tqBVF0CgWIjXI3omV4vc
+        dg81IKq6/jJhWr7oIgriWK71RNI4L3cP8c6Fl3I=
+X-Google-Smtp-Source: APXvYqwetgzlQupya9GxhfsPelN+cDfVRLEA0BaIXILs9Yttryy1k0k6TbsVhwkN0EBk8YrwRgtXzPzrXMi7t4lbM3w=
+X-Received: by 2002:a2e:b60f:: with SMTP id r15mr69665450ljn.172.1564719451610;
+ Thu, 01 Aug 2019 21:17:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+References: <54a35258-081a-71cc-ef1b-9fffcf5e7f9f@nchc.org.tw>
+ <CAB3wodfF=Gc3FbKedU4JBWi8hZLxcBPUtVPipsCVnaHdFXGk8Q@mail.gmail.com> <CAKjSHr0vTK6En1_n6GwArV0N6=kM=Czbx2SYat9vK71HuyzMAA@mail.gmail.com>
+In-Reply-To: <CAKjSHr0vTK6En1_n6GwArV0N6=kM=Czbx2SYat9vK71HuyzMAA@mail.gmail.com>
+From:   Phillip Lougher <phillip.lougher@gmail.com>
+Date:   Fri, 2 Aug 2019 05:17:20 +0100
+Message-ID: <CAB3wodfgHXN7LPojxS+PV6sDieTi2iQG-YUFU6HAmh=ObY45BA@mail.gmail.com>
+Subject: Re: Bug#921146: Program mksquashfs from squashfs-tools 1:4.3-11 does
+ not make use all CPU cores
+To:     =?UTF-8?B?TMOhc3psw7MgQsO2c3rDtnJtw6lueWkgKEdDUyk=?= 
+        <gcs@debian.org>
+Cc:     921146@bugs.debian.org, Chris Lamb <lamby@debian.org>,
+        hartmans@debian.org, debian-ctte@lists.debian.org,
+        Alexander Couzens <lynxis@fe80.eu>,
+        linux-fsdevel@vger.kernel.org,
+        linux-embedded <linux-embedded@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There was some sort of filesystem error that cause the wrong file to be 
-saved. Hence, yes, possibly there was no difference betwee the v2 and the 
-'v4' (which should have been the 'v3'). Since the last one, though 
-unchanged from v2, was a changelog-less 'v3', THIS is an actual 'v4'.
+On Thu, Aug 1, 2019 at 11:41 PM L=C3=A1szl=C3=B3 B=C3=B6sz=C3=B6rm=C3=A9nyi=
+ (GCS) <gcs@debian.org> wrote:
 
-Thank you,
-Mark
+>  Let me add Chris Lamb then the previous Debian Project Leader (also
+> British just like you [as I know] and you may sit down and talk about
+> this in person) who asked for the reproducibility patch / build in the
+> first place.
+>
 
+If Chris Lamb or anyone else wants a face-to-face meeting I'm more
+than happy to do so.
+
+I coincidentally have a week's holiday (vacation) next week, and I'm
+happy to spend a day of it travelling and meeting to discuss the
+situation.
+
+I do want to de-escalate this situation if possible.
+
+Phillip
+
+> > What else do I have to do to make you stop bad-mouthing Squashfs?  Sue?
+>  If you feel yourself better with that, be my guest. I don't know who
+> is the lawyer of Debian, but I'm sure s/he can show you that it's only
+> you who dance this storm.
+>
+> Regards,
+> Laszlo/GCS
+> [1] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D919207#5
+> [2] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D919207#83
+> [3] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D919207#88
+> [4] https://sourceforge.net/p/squashfs/code/ci/e38956b92f738518c297343996=
+29e7cdb33072d3/log/?path=3D
+> [5] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D921146#75
+> [6] https://github.com/AgentD/squashfs-tools-ng
+> [7] https://lwn.net/Articles/651775/
+> [8] https://github.com/plougher/squashfs-tools/commit/f95864afe8833fe3ad7=
+82d714b41378e860977b1
+> [9] https://github.com/plougher/squashfs-tools/commit/ba215d73e153a6f2370=
+88b4ecb88c702bb4d4183
