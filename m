@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31FFEC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0976EC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E35020880
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:48:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D31A020880
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:48:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739280;
-	bh=iZDMvbc6z2rlK3vOdYcs9qXfz+vJdv8lHvMlkM9TD5M=;
+	s=default; t=1564739283;
+	bh=cZx6DrEAeYsD+7q65I58DvXIk8m/IOX9Is9tpEABRqg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rdUZE/0+7+nDKnqlNbFqZkgBiYmJZ3uX02KHAg2JWfdMTUhhPwGluU0JNi8G7yPqp
-	 jI7UELQV1Risx3d0TmiioJQk2mMmMUlFMh88h3G7N6q+n6RVc7FlOSDYOpbZen66U5
-	 fmP5OU5nURPWwQyAD71/neEi3aQhT0qT9iEbPJT4=
+	b=uekmQMzVtDt+YOvzSjXZSif0MpyLNmYfeMI7RgSjFyc3kpDhC56NDIIaF12WJJRPx
+	 1YFO7NkpmCLkWyrqP0+y8h6311eXEvQEdfoQRhG8uznQL/JteKKq9cJ4CYhpR/06cd
+	 2rIVj1ze7ZWMd6/9Xm6i5v4ITp/wnv4cVT19/0gY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405772AbfHBJr7 (ORCPT
+        id S2405784AbfHBJsC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:47:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53048 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:48:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404909AbfHBJr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:47:57 -0400
+        id S2404909AbfHBJr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:47:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E2142086A;
-        Fri,  2 Aug 2019 09:47:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E62020B7C;
+        Fri,  2 Aug 2019 09:47:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739277;
-        bh=iZDMvbc6z2rlK3vOdYcs9qXfz+vJdv8lHvMlkM9TD5M=;
+        s=default; t=1564739279;
+        bh=cZx6DrEAeYsD+7q65I58DvXIk8m/IOX9Is9tpEABRqg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t4Rl/fpH7KPAitA1nr974G9/BnT/wflWaVbwqW8JVGNvbW9jc20iiIrfTrVWlNWNe
-         Y3dvpkl8vZ5zqVqNPYFpwU2KyNaybtzPJ76yyCB9qDCYE3wJ0pEiRz4JMmIGofymsp
-         T9ZueXYdYeVsLyU3ev46JhAOP7u2bPEvofKQM2/M=
+        b=qCEJ2pidvqT/wScK91cRmIA5I8OsLCY5nH4Vw5OPJ5kVsvZfTCx7xfcZ2vhKW2D9b
+         ziNxPTDV2W8YW1jjdpSg2mLnku3fHT4JKAqPKLm7A2DlPkaID6RuqxJVJArTFNykYU
+         UVS8UnEINhjsL9XaVbvMLQoJy/HP2zFxQ5Z8kfKM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Yakir Yang <ykk@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 163/223] tty: serial: cpm_uart - fix init when SMC is relocated
-Date:   Fri,  2 Aug 2019 11:36:28 +0200
-Message-Id: <20190802092248.702924039@linuxfoundation.org>
+Subject: [PATCH 4.9 172/223] drm/rockchip: Properly adjust to a true clock in adjusted_mode
+Date:   Fri,  2 Aug 2019 11:36:37 +0200
+Message-Id: <20190802092249.043812255@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -59,74 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 06aaa3d066db87e8478522d910285141d44b1e58 ]
+[ Upstream commit 99b9683f2142b20bad78e61f7f829e8714e45685 ]
 
-SMC relocation can also be activated earlier by the bootloader,
-so the driver's behaviour cannot rely on selected kernel config.
+When fixing up the clock in vop_crtc_mode_fixup() we're not doing it
+quite correctly.  Specifically if we've got the true clock 266666667 Hz,
+we'll perform this calculation:
+   266666667 / 1000 => 266666
 
-When the SMC is relocated, CPM_CR_INIT_TRX cannot be used.
+Later when we try to set the clock we'll do clk_set_rate(266666 *
+1000).  The common clock framework won't actually pick the proper clock
+in this case since it always wants clocks <= the specified one.
 
-But the only thing CPM_CR_INIT_TRX does is to clear the
-rstate and tstate registers, so this can be done manually,
-even when SMC is not relocated.
+Let's solve this by using DIV_ROUND_UP.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Fixes: 9ab921201444 ("cpm_uart: fix non-console port startup bug")
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: b59b8de31497 ("drm/rockchip: return a true clock rate to adjusted_mode")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Reviewed-by: Yakir Yang <ykk@rock-chips.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190614224730.98622-1-dianders@chromium.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/cpm_uart/cpm_uart_core.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/cpm_uart/cpm_uart_core.c b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-index 0040c29f651a..b9e137c03fe3 100644
---- a/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-+++ b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-@@ -421,7 +421,16 @@ static int cpm_uart_startup(struct uart_port *port)
- 			clrbits16(&pinfo->sccp->scc_sccm, UART_SCCM_RX);
- 		}
- 		cpm_uart_initbd(pinfo);
--		cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
-+		if (IS_SMC(pinfo)) {
-+			out_be32(&pinfo->smcup->smc_rstate, 0);
-+			out_be32(&pinfo->smcup->smc_tstate, 0);
-+			out_be16(&pinfo->smcup->smc_rbptr,
-+				 in_be16(&pinfo->smcup->smc_rbase));
-+			out_be16(&pinfo->smcup->smc_tbptr,
-+				 in_be16(&pinfo->smcup->smc_tbase));
-+		} else {
-+			cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
-+		}
- 	}
- 	/* Install interrupt handler. */
- 	retval = request_irq(port->irq, cpm_uart_int, 0, "cpm_uart", port);
-@@ -875,16 +884,14 @@ static void cpm_uart_init_smc(struct uart_cpm_port *pinfo)
- 	         (u8 __iomem *)pinfo->tx_bd_base - DPRAM_BASE);
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+index 32d87c6035c9..5bed63eee5f0 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+@@ -865,7 +865,8 @@ static bool vop_crtc_mode_fixup(struct drm_crtc *crtc,
+ 	struct vop *vop = to_vop(crtc);
  
- /*
-- *  In case SMC1 is being relocated...
-+ *  In case SMC is being relocated...
-  */
--#if defined (CONFIG_I2C_SPI_SMC1_UCODE_PATCH)
- 	out_be16(&up->smc_rbptr, in_be16(&pinfo->smcup->smc_rbase));
- 	out_be16(&up->smc_tbptr, in_be16(&pinfo->smcup->smc_tbase));
- 	out_be32(&up->smc_rstate, 0);
- 	out_be32(&up->smc_tstate, 0);
- 	out_be16(&up->smc_brkcr, 1);              /* number of break chars */
- 	out_be16(&up->smc_brkec, 0);
--#endif
+ 	adjusted_mode->clock =
+-		clk_round_rate(vop->dclk, mode->clock * 1000) / 1000;
++		DIV_ROUND_UP(clk_round_rate(vop->dclk, mode->clock * 1000),
++			     1000);
  
- 	/* Set up the uart parameters in the
- 	 * parameter ram.
-@@ -898,8 +905,6 @@ static void cpm_uart_init_smc(struct uart_cpm_port *pinfo)
- 	out_be16(&up->smc_brkec, 0);
- 	out_be16(&up->smc_brkcr, 1);
- 
--	cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
--
- 	/* Set UART mode, 8 bit, no parity, one stop.
- 	 * Enable receive and transmit.
- 	 */
+ 	return true;
+ }
 -- 
 2.20.1
 
