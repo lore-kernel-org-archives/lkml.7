@@ -2,142 +2,198 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A394C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB989C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A7842087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:41:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0DF32087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:45:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732864AbfHBQlK (ORCPT
+        id S2387852AbfHBQpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 12:41:10 -0400
-Received: from mga04.intel.com ([192.55.52.120]:52979 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729353AbfHBQlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 12:41:08 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Aug 2019 09:41:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,338,1559545200"; 
-   d="scan'208";a="175637656"
-Received: from vivekcha-mobl1.amr.corp.intel.com (HELO [10.251.131.115]) ([10.251.131.115])
-  by orsmga003.jf.intel.com with ESMTP; 02 Aug 2019 09:41:06 -0700
-Subject: Re: [RFC PATCH 15/40] soundwire: cadence_master: handle multiple
- status reports per Slave
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>
-References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
- <20190725234032.21152-16-pierre-louis.bossart@linux.intel.com>
- <20190802122003.GQ12733@vkoul-mobl.Dlink>
- <c4d31804-48af-30e3-4b4f-4b03dac6addd@linux.intel.com>
- <20190802160115.GS12733@vkoul-mobl.Dlink>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <1326bf1d-8289-2838-e2bd-48dba78b4a6c@linux.intel.com>
-Date:   Fri, 2 Aug 2019 11:41:05 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 2 Aug 2019 12:45:07 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:37284 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726300AbfHBQpH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 12:45:07 -0400
+Received: by mail-io1-f71.google.com with SMTP id v3so83765885ios.4
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 09:45:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=UA45qRYC5K8T4QSrCN5nW+v8qYL3F1Jg1eJKai+z9Uk=;
+        b=GFsaPnvG/czXsZsWQwT4EP/PfcyWbRJuNl2jvKlEEUiQoXaAQjNrZS6WDtY7JkoxAL
+         OAdAUgS50trN0K7BjJ6IRZgVMUdUyx1LGv5Qz1yagS6WGPmhnRqgd72QHsT5McLmr+PT
+         Wii/P0GvcfXO5ByBrvS1IokdPVyg40+0RwGYwGgQ2Gi4JfuNjKPqyS0K7dWPRkQ92VpJ
+         kulRflBXO2QF/aEZYYBYtVfbiuQoqTXczRxK1Of7D1nsl1asFiHlav9WcUDMQC6pdcjA
+         9eoCkqBKDQcYJEqJmq1fCpWMulbd7EVnZpeAM/cuUUpWetFCcTM3s0wl3ivU6HZLCYK6
+         iXLQ==
+X-Gm-Message-State: APjAAAVbp39a1jmvfsSF1tXAbfY6TtsorOG28BpINJCO1h/V+1E1jJmR
+        HIiZ0mibkJxM5UIHm0jzW4M+lm2WE9nE2s5jhk7EYHpQS2/E
+X-Google-Smtp-Source: APXvYqxiTbiTo9aYM5HaVlxqYEyQKJfZPhpQvK4Ko5Qyke8npJSk6xT5Phqo4afTc8Eg38skhIqM09IV89Mj0PZFy+Q0xqZmXqyK
 MIME-Version: 1.0
-In-Reply-To: <20190802160115.GS12733@vkoul-mobl.Dlink>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a6b:d008:: with SMTP id x8mr1372310ioa.129.1564764306330;
+ Fri, 02 Aug 2019 09:45:06 -0700 (PDT)
+Date:   Fri, 02 Aug 2019 09:45:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a2db16058f2514fa@google.com>
+Subject: KASAN: use-after-free Read in blkdev_direct_IO
+From:   syzbot <syzbot+0a0e5f37746013dc7476@syzkaller.appspotmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    1e78030e Merge tag 'mmc-v5.3-rc1' of git://git.kernel.org/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=172e72dc600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4c7b914a2680c9c6
+dashboard link: https://syzkaller.appspot.com/bug?extid=0a0e5f37746013dc7476
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11fa7830600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12f31c8a600000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+0a0e5f37746013dc7476@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in __blkdev_direct_IO fs/block_dev.c:468 [inline]
+BUG: KASAN: use-after-free in blkdev_direct_IO+0x13cd/0x1590  
+fs/block_dev.c:518
+Read of size 4 at addr ffff8880a3115f28 by task syz-executor964/10331
+
+CPU: 0 PID: 10331 Comm: syz-executor964 Not tainted 5.3.0-rc2+ #112
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_address_description.cold+0xd4/0x306 mm/kasan/report.c:351
+  __kasan_report.cold+0x1b/0x36 mm/kasan/report.c:482
+  kasan_report+0x12/0x17 mm/kasan/common.c:612
+  __asan_report_load4_noabort+0x14/0x20 mm/kasan/generic_report.c:131
+  __blkdev_direct_IO fs/block_dev.c:468 [inline]
+  blkdev_direct_IO+0x13cd/0x1590 fs/block_dev.c:518
+  generic_file_direct_write+0x20a/0x4a0 mm/filemap.c:3230
+  __generic_file_write_iter+0x2ee/0x630 mm/filemap.c:3413
+  blkdev_write_iter fs/block_dev.c:1993 [inline]
+  blkdev_write_iter+0x23a/0x440 fs/block_dev.c:1970
+  call_write_iter include/linux/fs.h:1870 [inline]
+  new_sync_write+0x4d3/0x770 fs/read_write.c:483
+  __vfs_write+0xe1/0x110 fs/read_write.c:496
+  vfs_write+0x268/0x5d0 fs/read_write.c:558
+  ksys_write+0x14f/0x290 fs/read_write.c:611
+  __do_sys_write fs/read_write.c:623 [inline]
+  __se_sys_write fs/read_write.c:620 [inline]
+  __x64_sys_write+0x73/0xb0 fs/read_write.c:620
+  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x44d8f9
+Code: e8 7c e6 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 3b c9 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f85ed575ce8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00000000006e0c98 RCX: 000000000044d8f9
+RDX: 0000000052698b21 RSI: 0000000020000000 RDI: 0000000000000006
+RBP: 00000000006e0c90 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006e0c9c
+R13: 00007ffc4e9d0e7f R14: 00007f85ed5769c0 R15: 0000000000000016
+
+Allocated by task 10331:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc mm/kasan/common.c:487 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:460
+  kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:495
+  slab_post_alloc_hook mm/slab.h:520 [inline]
+  slab_alloc mm/slab.c:3319 [inline]
+  kmem_cache_alloc+0x121/0x710 mm/slab.c:3483
+  mempool_alloc_slab+0x47/0x60 mm/mempool.c:513
+  mempool_alloc+0x169/0x380 mm/mempool.c:393
+  bio_alloc_bioset+0x3b9/0x680 block/bio.c:477
+  bio_alloc include/linux/bio.h:400 [inline]
+  __blkdev_direct_IO fs/block_dev.c:470 [inline]
+  blkdev_direct_IO+0x8b0/0x1590 fs/block_dev.c:518
+  generic_file_direct_write+0x20a/0x4a0 mm/filemap.c:3230
+  __generic_file_write_iter+0x2ee/0x630 mm/filemap.c:3413
+  blkdev_write_iter fs/block_dev.c:1993 [inline]
+  blkdev_write_iter+0x23a/0x440 fs/block_dev.c:1970
+  call_write_iter include/linux/fs.h:1870 [inline]
+  new_sync_write+0x4d3/0x770 fs/read_write.c:483
+  __vfs_write+0xe1/0x110 fs/read_write.c:496
+  vfs_write+0x268/0x5d0 fs/read_write.c:558
+  ksys_write+0x14f/0x290 fs/read_write.c:611
+  __do_sys_write fs/read_write.c:623 [inline]
+  __se_sys_write fs/read_write.c:620 [inline]
+  __x64_sys_write+0x73/0xb0 fs/read_write.c:620
+  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 9:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:449
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:457
+  __cache_free mm/slab.c:3425 [inline]
+  kmem_cache_free+0x86/0x320 mm/slab.c:3693
+  mempool_free_slab+0x1e/0x30 mm/mempool.c:520
+  mempool_free+0xeb/0x370 mm/mempool.c:502
+  bio_free+0x267/0x420 block/bio.c:255
+  bio_put+0xda/0x110 block/bio.c:549
+  blkdev_bio_end_io+0x338/0x4b0 fs/block_dev.c:333
+  bio_endio+0x611/0xaf0 block/bio.c:1830
+  req_bio_endio block/blk-core.c:239 [inline]
+  blk_update_request+0x32e/0xc10 block/blk-core.c:1424
+  blk_mq_end_request+0x5b/0x560 block/blk-mq.c:557
+  blk_flush_complete_seq+0x558/0x1030 block/blk-flush.c:196
+  flush_end_io+0x3d1/0x6d0 block/blk-flush.c:237
+  __blk_mq_end_request block/blk-mq.c:548 [inline]
+  blk_mq_end_request+0x32e/0x560 block/blk-mq.c:559
+  lo_complete_rq+0x210/0x2e0 drivers/block/loop.c:485
+  blk_done_softirq+0x2fe/0x4d0 block/blk-softirq.c:37
+  __do_softirq+0x262/0x98c kernel/softirq.c:292
+
+The buggy address belongs to the object at ffff8880a3115f00
+  which belongs to the cache bio-0 of size 192
+The buggy address is located 40 bytes inside of
+  192-byte region [ffff8880a3115f00, ffff8880a3115fc0)
+The buggy address belongs to the page:
+page:ffffea00028c4540 refcount:1 mapcount:0 mapping:ffff88821b2978c0  
+index:0x0
+flags: 0x1fffc0000000200(slab)
+raw: 01fffc0000000200 ffffea0002a16f08 ffff8880a7833a48 ffff88821b2978c0
+raw: 0000000000000000 ffff8880a3115000 0000000100000010 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff8880a3115e00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8880a3115e80: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+> ffff8880a3115f00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                   ^
+  ffff8880a3115f80: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+  ffff8880a3116000: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+==================================================================
 
 
-On 8/2/19 11:01 AM, Vinod Koul wrote:
-> On 02-08-19, 10:29, Pierre-Louis Bossart wrote:
->> On 8/2/19 7:20 AM, Vinod Koul wrote:
->>> On 25-07-19, 18:40, Pierre-Louis Bossart wrote:
-> 
->>>> +				status[i] = SDW_SLAVE_UNATTACHED;
->>>> +				break;
->>>> +			case 1:
->>>> +				status[i] = SDW_SLAVE_ATTACHED;
->>>> +				break;
->>>> +			case 2:
->>>> +				status[i] = SDW_SLAVE_ALERT;
->>>> +				break;
->>>> +			default:
->>>> +				status[i] = SDW_SLAVE_RESERVED;
->>>> +				break;
->>>> +			}
->>>
->>> we have same logic in the code block preceding this, maybe good idea to
->>> write a helper and use for both
->>
->> Yes, I am thinking about this. There are multiple cases where we want to
->> re-check the status and clear some bits, so helpers would be good.
->>
->>>
->>> Also IIRC we can have multiple status set right?
->>
->> Yes, the status bits are sticky and mirror all values reported in PING
->> frames. I am still working on how to clear those bits, there are cases where
->> we clear bits and end-up never hearing from that device ever again. classic
->> edge/level issue I suppose.
-> 
-> Then the case logic above doesn't work, it should be like the code block
-> preceding this..
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-what I was referring to already is a problem even in single status mode.
-
-Let's say for example that a device shows up as Device0, then we try to 
-enumerate it and program a non-zero device number. If that fails, we 
-currently clear the Attached status for Device0, so will never have an 
-interrupt ever again. The device is there, attached as Device0, but 
-we've lost the single opportunity to make it usable. The link is in most 
-cases going to be extremely reliable, but if we know of state machines 
-that lead to a terminal state then we should proactively have a recovery 
-mechanism to avoid complicated debug down the road for cases where the 
-hardware has transient issues.
-
-For the multiple status case, we will have to look at the details and 
-figure out which of the flags get cleared and which ones don't.
-
-One certainty is that we absolutely have to track IO errors in interrupt 
-context. They are recoverable in regular context but not quite in 
-interrupt context if we clear the status bits unconditionally.
-
-Maybe a tangent here but to be transparent there are really multiple 
-topics we are tracking at the moment:
-
-1. error handling in interrupts. I found a leak where if a device goes 
-in the weeds while we program its device number and resynchronizes then 
-we allocate a new device number instead of reusing the initial one. The 
-bit clearing is also to be checked as explained above.
-
-2. module dependencies: there is a race condition leading to a kernel 
-oops if the Slave probe is not complete before the .update_status is 
-invoked.
-
-3. jack detection. The jack detection routine is called as a result of 
-an imp-def Slave interrupt. We never documented the assumption that if 
-this jack detection takes time then it needs to be done offline, e.g. in 
-a work queue. Or if we still want it to be done in a the interrupt 
-thread then we need to re-enable interrupts earlier, otherwise one 
-device can stop interrupt handling for a fairly long duration.
-
-4. streaming stop on link errors. We've seen in tests that if you reset 
-the link or a Slave device with debugfs while audio is playing then 
-streaming continues. This condition could happen if a device loses sync, 
-and the spec says the Slave needs to reset its channel enable bits. At 
-the command level, we handle this situation and will recover, but there 
-is no notification to the ALSA layers to try and recover on the PCM side 
-of things (as if it were an underflow condition). We also try to disable 
-a stream but get all kinds of errors since it's lost state.
-
-All of those points are corner cases but they are important to solve for 
-actual products.
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
