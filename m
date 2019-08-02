@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C117C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB07C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E00922067D
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:56:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E989B2067D
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:56:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739763;
-	bh=O3b6AWdvaSqOp8BlDgCp16cgkNYzBI0X7NIaVsC3sHo=;
+	s=default; t=1564739766;
+	bh=fh67569taokks1NPrgvCBZB0YNH4cT+KhsOvC3qqKTI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1GJWUYo4cUbBwX34N6RGMgHLIogJEPe7rjgqi5+nAUUhX48roVfGKDb2e6QcOwjru
-	 zNGJ62FuEwQmgEh+bw4XDAcgGIozQUmCbBXrrjOJuRQdlksAxZ0HDWbYftsNTQKqkI
-	 txGTEpkAoQQFAqrBlegOdZlm953QNaYbDw8VpRIw=
+	b=R6cX/xoPSsV1ljWCKRrELcnIz2z/GQLVN6kU+sSLbqd0hU6lVHwkFYI4y1pEt3hWp
+	 prxMUDViLse72uYb1efkFZt0YAgRyPQwTYIKfCF83OolC3HJLJh3iwRQnVfIkgyQ6m
+	 ZOi4CFrd7W5OK8Xbo8p6qrtRb0gDqnHUjkCa7E1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406661AbfHBJ4B (ORCPT
+        id S2406670AbfHBJ4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:56:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34686 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:56:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406401AbfHBJz5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:55:57 -0400
+        id S2406660AbfHBJ4B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:56:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 647B82067D;
-        Fri,  2 Aug 2019 09:55:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E0022064A;
+        Fri,  2 Aug 2019 09:56:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739755;
-        bh=O3b6AWdvaSqOp8BlDgCp16cgkNYzBI0X7NIaVsC3sHo=;
+        s=default; t=1564739760;
+        bh=fh67569taokks1NPrgvCBZB0YNH4cT+KhsOvC3qqKTI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uruc8EjxQZSK6avpuiy9YhghZWk0ANR7AhGyFeVgiz9AcNeAbtOrZAK3Hoap8W46x
-         XQtm6wp0Hm7y8H9A6321hafhKtgvgtNT/GDedFbYIOd8csfuKXau51tsJw57+HFqs+
-         591TRWQdi4WQhM1wRCE0wl2z5p9COt6jS2Nreq1s=
+        b=ld94uKc/7MTfwojI/kFbzHJCFm83Nv6G3IU+NHBJWc2fp35mwHNwKRUU0ETaeGyzj
+         ARb8yxaQyO7ZtWnc2lby370WtTx2Q5MCvQbrx48MzyBYENweP7uHQOiCTL5TuOxl1u
+         HyuxplrwGwQbmEOqcSO0tVZM22Y+CRYx8Qu2/w7k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jack Wang <jinpu.wang@cloud.ionos.com>
-Subject: [PATCH 4.19 20/32] vhost: introduce vhost_exceeds_weight()
-Date:   Fri,  2 Aug 2019 11:39:54 +0200
-Message-Id: <20190802092108.342085976@linuxfoundation.org>
+        stable@vger.kernel.org, Stan Hu <stanhu@gmail.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Qian Lu <luqia@amazon.com>
+Subject: [PATCH 4.19 03/32] NFS: Fix dentry revalidation on NFSv4 lookup
+Date:   Fri,  2 Aug 2019 11:39:37 +0200
+Message-Id: <20190802092102.892371637@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092101.913646560@linuxfoundation.org>
 References: <20190802092101.913646560@linuxfoundation.org>
@@ -61,203 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Wang <jasowang@redhat.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-commit e82b9b0727ff6d665fff2d326162b460dded554d upstream.
+commit be189f7e7f03de35887e5a85ddcf39b91b5d7fc1 upstream.
 
-We used to have vhost_exceeds_weight() for vhost-net to:
+We need to ensure that inode and dentry revalidation occurs correctly
+on reopen of a file that is already open. Currently, we can end up
+not revalidating either in the case of NFSv4.0, due to the 'cached open'
+path.
+Let's fix that by ensuring that we only do cached open for the special
+cases of open recovery and delegation return.
 
-- prevent vhost kthread from hogging the cpu
-- balance the time spent between TX and RX
-
-This function could be useful for vsock and scsi as well. So move it
-to vhost.c. Device must specify a weight which counts the number of
-requests, or it can also specific a byte_weight which counts the
-number of bytes that has been processed.
-
-Signed-off-by: Jason Wang <jasowang@redhat.com>
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-[jwang: backport to 4.19, fix conflict in net.c]
-Signed-off-by: Jack Wang <jinpu.wang@cloud.ionos.com>
+Reported-by: Stan Hu <stanhu@gmail.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Qian Lu <luqia@amazon.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/vhost/net.c   |   22 ++++++----------------
- drivers/vhost/scsi.c  |    9 ++++++++-
- drivers/vhost/vhost.c |   20 +++++++++++++++++++-
- drivers/vhost/vhost.h |    5 ++++-
- drivers/vhost/vsock.c |   12 +++++++++++-
- 5 files changed, 48 insertions(+), 20 deletions(-)
+ fs/nfs/nfs4proc.c |   15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -497,12 +497,6 @@ static size_t init_iov_iter(struct vhost
- 	return iov_iter_count(iter);
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -1355,12 +1355,20 @@ static bool nfs4_mode_match_open_stateid
+ 	return false;
  }
  
--static bool vhost_exceeds_weight(int pkts, int total_len)
--{
--	return total_len >= VHOST_NET_WEIGHT ||
--	       pkts >= VHOST_NET_PKT_WEIGHT;
--}
--
- static int get_tx_bufs(struct vhost_net *net,
- 		       struct vhost_net_virtqueue *nvq,
- 		       struct msghdr *msg,
-@@ -598,10 +592,8 @@ static void handle_tx_copy(struct vhost_
- 				 err, len);
- 		if (++nvq->done_idx >= VHOST_NET_BATCH)
- 			vhost_net_signal_used(nvq);
--		if (vhost_exceeds_weight(++sent_pkts, total_len)) {
--			vhost_poll_queue(&vq->poll);
-+		if (vhost_exceeds_weight(vq, ++sent_pkts, total_len))
- 			break;
--		}
- 	}
- 
- 	vhost_net_signal_used(nvq);
-@@ -701,10 +693,9 @@ static void handle_tx_zerocopy(struct vh
- 		else
- 			vhost_zerocopy_signal_used(net, vq);
- 		vhost_net_tx_packet(net);
--		if (unlikely(vhost_exceeds_weight(++sent_pkts, total_len))) {
--			vhost_poll_queue(&vq->poll);
-+		if (unlikely(vhost_exceeds_weight(vq, ++sent_pkts,
-+						  total_len)))
- 			break;
--		}
- 	}
- }
- 
-@@ -1027,10 +1018,8 @@ static void handle_rx(struct vhost_net *
- 			vhost_log_write(vq, vq_log, log, vhost_len,
- 					vq->iov, in);
- 		total_len += vhost_len;
--		if (unlikely(vhost_exceeds_weight(++recv_pkts, total_len))) {
--			vhost_poll_queue(&vq->poll);
-+		if (unlikely(vhost_exceeds_weight(vq, ++recv_pkts, total_len)))
- 			goto out;
--		}
- 	}
- 	if (unlikely(busyloop_intr))
- 		vhost_poll_queue(&vq->poll);
-@@ -1115,7 +1104,8 @@ static int vhost_net_open(struct inode *
- 		vhost_net_buf_init(&n->vqs[i].rxq);
- 	}
- 	vhost_dev_init(dev, vqs, VHOST_NET_VQ_MAX,
--		       UIO_MAXIOV + VHOST_NET_BATCH);
-+		       UIO_MAXIOV + VHOST_NET_BATCH,
-+		       VHOST_NET_WEIGHT, VHOST_NET_PKT_WEIGHT);
- 
- 	vhost_poll_init(n->poll + VHOST_NET_VQ_TX, handle_tx_net, EPOLLOUT, dev);
- 	vhost_poll_init(n->poll + VHOST_NET_VQ_RX, handle_rx_net, EPOLLIN, dev);
---- a/drivers/vhost/scsi.c
-+++ b/drivers/vhost/scsi.c
-@@ -57,6 +57,12 @@
- #define VHOST_SCSI_PREALLOC_UPAGES 2048
- #define VHOST_SCSI_PREALLOC_PROT_SGLS 2048
- 
-+/* Max number of requests before requeueing the job.
-+ * Using this limit prevents one virtqueue from starving others with
-+ * request.
-+ */
-+#define VHOST_SCSI_WEIGHT 256
-+
- struct vhost_scsi_inflight {
- 	/* Wait for the flush operation to finish */
- 	struct completion comp;
-@@ -1398,7 +1404,8 @@ static int vhost_scsi_open(struct inode
- 		vqs[i] = &vs->vqs[i].vq;
- 		vs->vqs[i].vq.handle_kick = vhost_scsi_handle_kick;
- 	}
--	vhost_dev_init(&vs->dev, vqs, VHOST_SCSI_MAX_VQ, UIO_MAXIOV);
-+	vhost_dev_init(&vs->dev, vqs, VHOST_SCSI_MAX_VQ, UIO_MAXIOV,
-+		       VHOST_SCSI_WEIGHT, 0);
- 
- 	vhost_scsi_init_inflight(vs, NULL);
- 
---- a/drivers/vhost/vhost.c
-+++ b/drivers/vhost/vhost.c
-@@ -413,8 +413,24 @@ static void vhost_dev_free_iovecs(struct
- 		vhost_vq_free_iovecs(dev->vqs[i]);
- }
- 
-+bool vhost_exceeds_weight(struct vhost_virtqueue *vq,
-+			  int pkts, int total_len)
-+{
-+	struct vhost_dev *dev = vq->dev;
-+
-+	if ((dev->byte_weight && total_len >= dev->byte_weight) ||
-+	    pkts >= dev->weight) {
-+		vhost_poll_queue(&vq->poll);
-+		return true;
-+	}
-+
-+	return false;
-+}
-+EXPORT_SYMBOL_GPL(vhost_exceeds_weight);
-+
- void vhost_dev_init(struct vhost_dev *dev,
--		    struct vhost_virtqueue **vqs, int nvqs, int iov_limit)
-+		    struct vhost_virtqueue **vqs, int nvqs,
-+		    int iov_limit, int weight, int byte_weight)
+-static int can_open_cached(struct nfs4_state *state, fmode_t mode, int open_mode)
++static int can_open_cached(struct nfs4_state *state, fmode_t mode,
++		int open_mode, enum open_claim_type4 claim)
  {
- 	struct vhost_virtqueue *vq;
- 	int i;
-@@ -428,6 +444,8 @@ void vhost_dev_init(struct vhost_dev *de
- 	dev->mm = NULL;
- 	dev->worker = NULL;
- 	dev->iov_limit = iov_limit;
-+	dev->weight = weight;
-+	dev->byte_weight = byte_weight;
- 	init_llist_head(&dev->work_list);
- 	init_waitqueue_head(&dev->wait);
- 	INIT_LIST_HEAD(&dev->read_list);
---- a/drivers/vhost/vhost.h
-+++ b/drivers/vhost/vhost.h
-@@ -171,10 +171,13 @@ struct vhost_dev {
- 	struct list_head pending_list;
- 	wait_queue_head_t wait;
- 	int iov_limit;
-+	int weight;
-+	int byte_weight;
- };
+ 	int ret = 0;
  
-+bool vhost_exceeds_weight(struct vhost_virtqueue *vq, int pkts, int total_len);
- void vhost_dev_init(struct vhost_dev *, struct vhost_virtqueue **vqs,
--		    int nvqs, int iov_limit);
-+		    int nvqs, int iov_limit, int weight, int byte_weight);
- long vhost_dev_set_owner(struct vhost_dev *dev);
- bool vhost_dev_has_owner(struct vhost_dev *dev);
- long vhost_dev_check_owner(struct vhost_dev *);
---- a/drivers/vhost/vsock.c
-+++ b/drivers/vhost/vsock.c
-@@ -21,6 +21,14 @@
- #include "vhost.h"
+ 	if (open_mode & (O_EXCL|O_TRUNC))
+ 		goto out;
++	switch (claim) {
++	case NFS4_OPEN_CLAIM_NULL:
++	case NFS4_OPEN_CLAIM_FH:
++		goto out;
++	default:
++		break;
++	}
+ 	switch (mode & (FMODE_READ|FMODE_WRITE)) {
+ 		case FMODE_READ:
+ 			ret |= test_bit(NFS_O_RDONLY_STATE, &state->flags) != 0
+@@ -1753,7 +1761,7 @@ static struct nfs4_state *nfs4_try_open_
  
- #define VHOST_VSOCK_DEFAULT_HOST_CID	2
-+/* Max number of bytes transferred before requeueing the job.
-+ * Using this limit prevents one virtqueue from starving others. */
-+#define VHOST_VSOCK_WEIGHT 0x80000
-+/* Max number of packets transferred before requeueing the job.
-+ * Using this limit prevents one virtqueue from starving others with
-+ * small pkts.
-+ */
-+#define VHOST_VSOCK_PKT_WEIGHT 256
+ 	for (;;) {
+ 		spin_lock(&state->owner->so_lock);
+-		if (can_open_cached(state, fmode, open_mode)) {
++		if (can_open_cached(state, fmode, open_mode, claim)) {
+ 			update_open_stateflags(state, fmode);
+ 			spin_unlock(&state->owner->so_lock);
+ 			goto out_return_state;
+@@ -2282,7 +2290,8 @@ static void nfs4_open_prepare(struct rpc
+ 	if (data->state != NULL) {
+ 		struct nfs_delegation *delegation;
  
- enum {
- 	VHOST_VSOCK_FEATURES = VHOST_FEATURES,
-@@ -531,7 +539,9 @@ static int vhost_vsock_dev_open(struct i
- 	vsock->vqs[VSOCK_VQ_TX].handle_kick = vhost_vsock_handle_tx_kick;
- 	vsock->vqs[VSOCK_VQ_RX].handle_kick = vhost_vsock_handle_rx_kick;
- 
--	vhost_dev_init(&vsock->dev, vqs, ARRAY_SIZE(vsock->vqs), UIO_MAXIOV);
-+	vhost_dev_init(&vsock->dev, vqs, ARRAY_SIZE(vsock->vqs),
-+		       UIO_MAXIOV, VHOST_VSOCK_PKT_WEIGHT,
-+		       VHOST_VSOCK_WEIGHT);
- 
- 	file->private_data = vsock;
- 	spin_lock_init(&vsock->send_pkt_list_lock);
+-		if (can_open_cached(data->state, data->o_arg.fmode, data->o_arg.open_flags))
++		if (can_open_cached(data->state, data->o_arg.fmode,
++					data->o_arg.open_flags, claim))
+ 			goto out_no_action;
+ 		rcu_read_lock();
+ 		delegation = rcu_dereference(NFS_I(data->state->inode)->delegation);
 
 
