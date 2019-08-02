@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E8FC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF02C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91B56206A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 366492086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:45:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739112;
-	bh=MELHc7NeFRTV+Rr8aDeE6buDLVahjTTMClWcgX8JTqg=;
+	s=default; t=1564739123;
+	bh=viojl1Wh9riP/rQAtRHoMpxVkEnfhYOshj1b+skoEmE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CTo8myjvEdiavUUfd9Hqb2QAmgNu37ayL4jumV7QOINuIyFffYUMYQ60wGU+NGF+p
-	 BQOHV0yT7aSRVE60HZ42rz56DiesmnFFAfSmXkp2CzLK+VcdxXB+OPnwkKRNezVCT6
-	 nJC3+FdVkjaqUrZP1JrrTn2FimTCXHUGeaPNP6h8=
+	b=INpIcesEEkAwsisCllJq0nX4T5s20EPJjcbcfPF8sLwqT6GokVUmFgpV3ZnjqeJwF
+	 oCtafgIzHYgolNAQWup0jHgJrStgHjZ/4Dx/1Iev9jw6lfYKS2wcYuGaKH6ecxC+vr
+	 llGV35ZkYdiyG4AHWf1ksNOwEQQyzcpyp67XjOuY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405371AbfHBJpH (ORCPT
+        id S2405426AbfHBJpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:45:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48676 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:45:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405353AbfHBJpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:45:04 -0400
+        id S2403831AbfHBJpR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:45:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06C8A20679;
-        Fri,  2 Aug 2019 09:45:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D144221726;
+        Fri,  2 Aug 2019 09:45:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739103;
-        bh=MELHc7NeFRTV+Rr8aDeE6buDLVahjTTMClWcgX8JTqg=;
+        s=default; t=1564739116;
+        bh=viojl1Wh9riP/rQAtRHoMpxVkEnfhYOshj1b+skoEmE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1TouRBO28FhsGi1CLcAwZyMLMJO2sgWgUQGYVUzZoXGvbbV7VYfvqFhA8yba6adrp
-         L8MW/adEiIsovjeVZbCP3XnP1FT39XKorWPX/8lHMc0a2r3wXo4WvAzVOVYQS8CLGj
-         mlH2sZG7WG0vbYhohHhVXdaU0sN28xVzUpz1wGqo=
+        b=0vauINYqPeGCvejJReZtDNi9M1pKNgDIQP0ur5XhR3vCCSsNgO5D7tiWsnMspc+BK
+         6686xCyOTLYGq7s/Hh6C7XOuZl2EKd8zI+YeUhBcNJEOD+sVtWlEmM7LvTTP6Sd1S3
+         MXL4c5M97qsZTgq2pFlfqFfJUfMy1zQBwG+nLxAM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.9 100/223] PCI: Do not poll for PME if the device is in D3cold
-Date:   Fri,  2 Aug 2019 11:35:25 +0200
-Message-Id: <20190802092245.666205344@linuxfoundation.org>
+        stable@vger.kernel.org, Denis Efremov <efremov@ispras.ru>,
+        Willy Tarreau <w@1wt.eu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 105/223] floppy: fix out-of-bounds read in next_valid_format
+Date:   Fri,  2 Aug 2019 11:35:30 +0200
+Message-Id: <20190802092246.036345213@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -61,56 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+[ Upstream commit 5635f897ed83fd539df78e98ba69ee91592f9bb8 ]
 
-commit 000dd5316e1c756a1c028f22e01d06a38249dd4d upstream.
+This fixes a global out-of-bounds read access in the next_valid_format
+function of the floppy driver.
 
-PME polling does not take into account that a device that is directly
-connected to the host bridge may go into D3cold as well. This leads to a
-situation where the PME poll thread reads from a config space of a
-device that is in D3cold and gets incorrect information because the
-config space is not accessible.
+The values from autodetect field of the struct floppy_drive_params are
+used as indices for the floppy_type array in the next_valid_format
+function 'floppy_type[DP->autodetect[probed_format]].sect'.
 
-Here is an example from Intel Ice Lake system where two PCIe root ports
-are in D3cold (I've instrumented the kernel to log the PMCSR register
-contents):
+To trigger the bug, one could use a value out of range and set the drive
+parameters with the FDSETDRVPRM ioctl.  A floppy disk is not required to
+be inserted.
 
-  [   62.971442] pcieport 0000:00:07.1: Check PME status, PMCSR=0xffff
-  [   62.971504] pcieport 0000:00:07.0: Check PME status, PMCSR=0xffff
+CAP_SYS_ADMIN is required to call FDSETDRVPRM.
 
-Since 0xffff is interpreted so that PME is pending, the root ports will
-be runtime resumed. This repeats over and over again essentially
-blocking all runtime power management.
+The patch adds the check for values of the autodetect field to be in the
+'0 <= x < ARRAY_SIZE(floppy_type)' range of the floppy_type array indices.
 
-Prevent this from happening by checking whether the device is in D3cold
-before its PME status is read.
+The bug was found by syzkaller.
 
-Fixes: 71a83bd727cc ("PCI/PM: add runtime PM support to PCIe port")
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Lukas Wunner <lukas@wunner.de>
-Cc: 3.6+ <stable@vger.kernel.org> # v3.6+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Denis Efremov <efremov@ispras.ru>
+Tested-by: Willy Tarreau <w@1wt.eu>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/pci/pci.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/block/floppy.c |   18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1786,6 +1786,13 @@ static void pci_pme_list_scan(struct wor
- 			 */
- 			if (bridge && bridge->current_state != PCI_D0)
- 				continue;
-+			/*
-+			 * If the device is in D3cold it should not be
-+			 * polled either.
-+			 */
-+			if (pme_dev->dev->current_state == PCI_D3cold)
-+				continue;
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -3384,6 +3384,20 @@ static int fd_getgeo(struct block_device
+ 	return 0;
+ }
+ 
++static bool valid_floppy_drive_params(const short autodetect[8])
++{
++	size_t floppy_type_size = ARRAY_SIZE(floppy_type);
++	size_t i = 0;
 +
- 			pci_pme_wakeup(pme_dev->dev, NULL);
- 		} else {
- 			list_del(&pme_dev->list);
++	for (i = 0; i < 8; ++i) {
++		if (autodetect[i] < 0 ||
++		    autodetect[i] >= floppy_type_size)
++			return false;
++	}
++
++	return true;
++}
++
+ static int fd_locked_ioctl(struct block_device *bdev, fmode_t mode, unsigned int cmd,
+ 		    unsigned long param)
+ {
+@@ -3510,6 +3524,8 @@ static int fd_locked_ioctl(struct block_
+ 		SUPBOUND(size, strlen((const char *)outparam) + 1);
+ 		break;
+ 	case FDSETDRVPRM:
++		if (!valid_floppy_drive_params(inparam.dp.autodetect))
++			return -EINVAL;
+ 		*UDP = inparam.dp;
+ 		break;
+ 	case FDGETDRVPRM:
+@@ -3707,6 +3723,8 @@ static int compat_setdrvprm(int drive,
+ 		return -EPERM;
+ 	if (copy_from_user(&v, arg, sizeof(struct compat_floppy_drive_params)))
+ 		return -EFAULT;
++	if (!valid_floppy_drive_params(v.autodetect))
++		return -EINVAL;
+ 	mutex_lock(&floppy_mutex);
+ 	UDP->cmos = v.cmos;
+ 	UDP->max_dtr = v.max_dtr;
 
 
