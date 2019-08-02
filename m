@@ -2,106 +2,101 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B0CC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9BB4C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9C212184E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:24:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92DAA20644
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:26:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="nZ+shzg3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404113AbfHBIYw (ORCPT
+        id S2404133AbfHBI0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 04:24:52 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:40577 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726164AbfHBIYv (ORCPT
+        Fri, 2 Aug 2019 04:26:17 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:45218 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726164AbfHBI0Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 04:24:51 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1htSrk-0001JP-AM; Fri, 02 Aug 2019 10:24:44 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1htSrh-0000NT-R6; Fri, 02 Aug 2019 10:24:41 +0200
-Date:   Fri, 2 Aug 2019 10:24:41 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Schrempf Frieder <frieder.schrempf@kontron.de>
-Cc:     "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        "geert+renesas@glider.be" <geert+renesas@glider.be>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        Jiri Slaby <jslaby@suse.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 1/3] serial: mctrl_gpio: Avoid probe failures in case
- of missing gpiolib
-Message-ID: <20190802082441.udsrc5ev4nwj7abz@pengutronix.de>
-References: <20190801184505.17239-1-frieder.schrempf@kontron.de>
- <20190801203316.7ntlv6hequmddfxu@pengutronix.de>
- <011ac0ac-571e-b898-2b2d-89b9a771b0c1@kontron.de>
+        Fri, 2 Aug 2019 04:26:16 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 81181CC;
+        Fri,  2 Aug 2019 10:26:14 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1564734374;
+        bh=aXNoGd0TIT84e+iwneFaYQWdhIReu4dkQnr3NUBLRCk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nZ+shzg3mcQSFxFZwnqlvNLlnhfbaRE3XAmO8zsEreBXfQu8PqTmKQ5oU163razhL
+         gn2rDMncaNtYUnm+5ymz+/pl6CeXmBsbjvqsDkOF2Vqb+znPLbQGT1Uec/8Kn3Ogx0
+         QR7QGGr6JFBrXWl6HRO5c01rdOTwj8UZYL1rE9zo=
+Date:   Fri, 2 Aug 2019 11:26:13 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>
+Subject: Re: [PATCH/RFC 09/12] drm: rcar-du: lvds: Fix companion's mode
+Message-ID: <20190802082613.GJ5008@pendragon.ideasonboard.com>
+References: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1564731249-22671-10-git-send-email-fabrizio.castro@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <011ac0ac-571e-b898-2b2d-89b9a771b0c1@kontron.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <1564731249-22671-10-git-send-email-fabrizio.castro@bp.renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Fabrizio,
 
-On Fri, Aug 02, 2019 at 07:56:54AM +0000, Schrempf Frieder wrote:
-> On 01.08.19 22:33, Uwe Kleine-König wrote:
-> > On Thu, Aug 01, 2019 at 06:45:21PM +0000, Schrempf Frieder wrote:
-> >> diff --git a/drivers/tty/serial/serial_mctrl_gpio.c b/drivers/tty/serial/serial_mctrl_gpio.c
-> >> index 2b400189be91..54c43e02e375 100644
-> >> --- a/drivers/tty/serial/serial_mctrl_gpio.c
-> >> +++ b/drivers/tty/serial/serial_mctrl_gpio.c
-> >> @@ -61,6 +61,9 @@ EXPORT_SYMBOL_GPL(mctrl_gpio_set);
-> >>   struct gpio_desc *mctrl_gpio_to_gpiod(struct mctrl_gpios *gpios,
-> >>   				      enum mctrl_gpio_idx gidx)
-> >>   {
-> >> +	if (gpios == NULL)
-> >> +		return NULL;
-> >> +
-> > 
-> > I wonder why you need this. If GPIOLIB is off this code isn't active and
-> > with GPIOLIB calling mctrl_gpio_to_gpiod with a gpios == NULL is a bug
-> > that IMHO should not be silently ignored.
-> > 
-> > Am I missing something (again)?
+Thank you for the patch.
+
+On Fri, Aug 02, 2019 at 08:34:06AM +0100, Fabrizio Castro wrote:
+> The companion encoder needs to be told to use the same
+> mode as the primary encoder.
 > 
-> No, you're right. My thoughts were, that if the mctrl_gpio functions are 
-> allowed to be passed a NULL pointer in general, they all should have a 
-> NULL check, even if in the current context (GPIOLIB disabled) this code 
-> is not active. Apparently there are other cases when a NULL pointer is 
-> passed, see [1]. So you can't really consider gpios == NULL to be a bug 
-> as this seems to be allowed in general.
+> Fixes: e9e8798ab7b8 ("drm: rcar-du: lvds: Add support for dual-link mode")
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> ---
+>  drivers/gpu/drm/rcar-du/rcar_lvds.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
+> index edd63f5..7944ae9 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
+> @@ -415,8 +415,12 @@ static void rcar_lvds_enable(struct drm_bridge *bridge)
+>  		return;
+>  
+>  	/* Enable the companion LVDS encoder in dual-link mode. */
+> -	if (lvds->dual_link && lvds->companion)
+> +	if (lvds->dual_link && lvds->companion) {
+> +		struct rcar_lvds *companion_lvds = bridge_to_rcar_lvds(
+> +							lvds->companion);
+> +		companion_lvds->mode = lvds->mode;
+>  		lvds->companion->funcs->enable(lvds->companion);
+> +	}
 
-OK, then this is another separate commit, right? Preferably with a
-comment pointing to drivers that use mctrl_gpio before being
-initialized.
+Would it make sense to do this in rcar_lvds_mode_set() instead, to keep
+the mode set code grouped in a single place ?
 
-Best regards
-Uwe
+>  
+>  	/*
+>  	 * Hardcode the channels and control signals routing for now.
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Regards,
+
+Laurent Pinchart
