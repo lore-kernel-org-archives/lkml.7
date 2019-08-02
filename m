@@ -4,54 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 164DDC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A378DC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E37BA20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D5AC217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:57:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739839;
-	bh=V5MJKdWxbvfMHveL83rIHKBwqsovD/stD4vavj7+vSk=;
+	s=default; t=1564739843;
+	bh=xhLlzz4sxOyEY/CgzEGQiFoiUeSdMsl0KG0hWp+nAC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=drQlq0AK3msdQOA9Tl4h5uTT+hwrdUmt2XJ3soq3JumuUuV8BV3XR3W2eUMtR7GZ4
-	 eNhAPK3U/d9uQVev5uY+uivxLwpbZsnB7102j27CyVsdgODGuq+rMRryWTEfFGsYVN
-	 LjV2/gMoXY27yrXIfgXuFtC0xF25V16EgOkOjDIc=
+	b=jCprqCNZeBrmVJ/NZ+Vq2U2ORmZwifgsjoOKGFHUZazANuhqSRmLsBthxxRJ64vVH
+	 ef/ZoQCISWhmPp3aTo1NGe+CM5JdeQVLcfIEGF2sUaXwLCwhbTDWWPnPlGDAe4c1or
+	 QxaB1biTHShd6MujXDgE9gBPJo5O/rHPiecCG12I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406873AbfHBJ5R (ORCPT
+        id S2406585AbfHBJ5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:57:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36398 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:57:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406859AbfHBJ5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:57:16 -0400
+        id S2406871AbfHBJ5S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:57:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8236721773;
-        Fri,  2 Aug 2019 09:57:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07E132087E;
+        Fri,  2 Aug 2019 09:57:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739835;
-        bh=V5MJKdWxbvfMHveL83rIHKBwqsovD/stD4vavj7+vSk=;
+        s=default; t=1564739837;
+        bh=xhLlzz4sxOyEY/CgzEGQiFoiUeSdMsl0KG0hWp+nAC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NZkO6vRZjCW+7Lzz0/6GYwqIIHSWmxv+2i6fawve+93Y/VkwWlGl3eAK/QnnEkBfL
-         ojAhLxzVQovIQYibpTuvtg/92yhnwMmO1JfeJUZ51wWARWoQ9B/9thElX+WBGUXIol
-         cUXxkz03PzmYcx4+6cR1fkjw2rE9OqMD0tKebJAk=
+        b=YSoaHmI25OtdMFO50eMgPxn+vxEIlLtw1wP2YWEtCEaQZDbFs7P+e28N//UnuhEIN
+         /X22DIQ9nFLkBOBs3Fk9nlKc1Ma/8o+zJ/iB3dwoWRVWPaMBmpgQF6NpwS8ZcxTkow
+         dX/+PSYjvPBsO+MrtUGYIiM8TltWzeL6AR6cFkQo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Hajnoczi <stefanha@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Subject: [PATCH 4.19 22/32] vhost: vsock: add weight support
-Date:   Fri,  2 Aug 2019 11:39:56 +0200
-Message-Id: <20190802092108.961740258@linuxfoundation.org>
+        stable@vger.kernel.org, Sunil Muthuswamy <sunilmut@microsoft.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.2 01/20] vsock: correct removal of socket from the list
+Date:   Fri,  2 Aug 2019 11:39:55 +0200
+Message-Id: <20190802092057.155486507@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190802092101.913646560@linuxfoundation.org>
-References: <20190802092101.913646560@linuxfoundation.org>
+In-Reply-To: <20190802092055.131876977@linuxfoundation.org>
+References: <20190802092055.131876977@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,91 +61,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Wang <jasowang@redhat.com>
+From: Sunil Muthuswamy <sunilmut@microsoft.com>
 
-commit e79b431fb901ba1106670bcc80b9b617b25def7d upstream.
+commit d5afa82c977ea06f7119058fa0eb8519ea501031 upstream.
 
-This patch will check the weight and exit the loop if we exceeds the
-weight. This is useful for preventing vsock kthread from hogging cpu
-which is guest triggerable. The weight can help to avoid starving the
-request from on direction while another direction is being processed.
+The current vsock code for removal of socket from the list is both
+subject to race and inefficient. It takes the lock, checks whether
+the socket is in the list, drops the lock and if the socket was on the
+list, deletes it from the list. This is subject to race because as soon
+as the lock is dropped once it is checked for presence, that condition
+cannot be relied upon for any decision. It is also inefficient because
+if the socket is present in the list, it takes the lock twice.
 
-The value of weight is picked from vhost-net.
-
-This addresses CVE-2019-3900.
-
-Cc: Stefan Hajnoczi <stefanha@redhat.com>
-Fixes: 433fc58e6bf2 ("VSOCK: Introduce vhost_vsock.ko")
-Signed-off-by: Jason Wang <jasowang@redhat.com>
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/vhost/vsock.c |   16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ net/vmw_vsock/af_vsock.c |   38 +++++++-------------------------------
+ 1 file changed, 7 insertions(+), 31 deletions(-)
 
---- a/drivers/vhost/vsock.c
-+++ b/drivers/vhost/vsock.c
-@@ -86,6 +86,7 @@ vhost_transport_do_send_pkt(struct vhost
- 			    struct vhost_virtqueue *vq)
+--- a/net/vmw_vsock/af_vsock.c
++++ b/net/vmw_vsock/af_vsock.c
+@@ -274,7 +274,8 @@ EXPORT_SYMBOL_GPL(vsock_insert_connected
+ void vsock_remove_bound(struct vsock_sock *vsk)
  {
- 	struct vhost_virtqueue *tx_vq = &vsock->vqs[VSOCK_VQ_TX];
-+	int pkts = 0, total_len = 0;
- 	bool added = false;
- 	bool restart_tx = false;
+ 	spin_lock_bh(&vsock_table_lock);
+-	__vsock_remove_bound(vsk);
++	if (__vsock_in_bound_table(vsk))
++		__vsock_remove_bound(vsk);
+ 	spin_unlock_bh(&vsock_table_lock);
+ }
+ EXPORT_SYMBOL_GPL(vsock_remove_bound);
+@@ -282,7 +283,8 @@ EXPORT_SYMBOL_GPL(vsock_remove_bound);
+ void vsock_remove_connected(struct vsock_sock *vsk)
+ {
+ 	spin_lock_bh(&vsock_table_lock);
+-	__vsock_remove_connected(vsk);
++	if (__vsock_in_connected_table(vsk))
++		__vsock_remove_connected(vsk);
+ 	spin_unlock_bh(&vsock_table_lock);
+ }
+ EXPORT_SYMBOL_GPL(vsock_remove_connected);
+@@ -318,35 +320,10 @@ struct sock *vsock_find_connected_socket
+ }
+ EXPORT_SYMBOL_GPL(vsock_find_connected_socket);
  
-@@ -97,7 +98,7 @@ vhost_transport_do_send_pkt(struct vhost
- 	/* Avoid further vmexits, we're already processing the virtqueue */
- 	vhost_disable_notify(&vsock->dev, vq);
+-static bool vsock_in_bound_table(struct vsock_sock *vsk)
+-{
+-	bool ret;
+-
+-	spin_lock_bh(&vsock_table_lock);
+-	ret = __vsock_in_bound_table(vsk);
+-	spin_unlock_bh(&vsock_table_lock);
+-
+-	return ret;
+-}
+-
+-static bool vsock_in_connected_table(struct vsock_sock *vsk)
+-{
+-	bool ret;
+-
+-	spin_lock_bh(&vsock_table_lock);
+-	ret = __vsock_in_connected_table(vsk);
+-	spin_unlock_bh(&vsock_table_lock);
+-
+-	return ret;
+-}
+-
+ void vsock_remove_sock(struct vsock_sock *vsk)
+ {
+-	if (vsock_in_bound_table(vsk))
+-		vsock_remove_bound(vsk);
+-
+-	if (vsock_in_connected_table(vsk))
+-		vsock_remove_connected(vsk);
++	vsock_remove_bound(vsk);
++	vsock_remove_connected(vsk);
+ }
+ EXPORT_SYMBOL_GPL(vsock_remove_sock);
  
--	for (;;) {
-+	do {
- 		struct virtio_vsock_pkt *pkt;
- 		struct iov_iter iov_iter;
- 		unsigned out, in;
-@@ -182,8 +183,9 @@ vhost_transport_do_send_pkt(struct vhost
- 		 */
- 		virtio_transport_deliver_tap_pkt(pkt);
+@@ -477,8 +454,7 @@ static void vsock_pending_work(struct wo
+ 	 * incoming packets can't find this socket, and to reduce the reference
+ 	 * count.
+ 	 */
+-	if (vsock_in_connected_table(vsk))
+-		vsock_remove_connected(vsk);
++	vsock_remove_connected(vsk);
  
-+		total_len += pkt->len;
- 		virtio_transport_free_pkt(pkt);
--	}
-+	} while(likely(!vhost_exceeds_weight(vq, ++pkts, total_len)));
- 	if (added)
- 		vhost_signal(&vsock->dev, vq);
+ 	sk->sk_state = TCP_CLOSE;
  
-@@ -358,7 +360,7 @@ static void vhost_vsock_handle_tx_kick(s
- 	struct vhost_vsock *vsock = container_of(vq->dev, struct vhost_vsock,
- 						 dev);
- 	struct virtio_vsock_pkt *pkt;
--	int head;
-+	int head, pkts = 0, total_len = 0;
- 	unsigned int out, in;
- 	bool added = false;
- 
-@@ -368,7 +370,7 @@ static void vhost_vsock_handle_tx_kick(s
- 		goto out;
- 
- 	vhost_disable_notify(&vsock->dev, vq);
--	for (;;) {
-+	do {
- 		u32 len;
- 
- 		if (!vhost_vsock_more_replies(vsock)) {
-@@ -409,9 +411,11 @@ static void vhost_vsock_handle_tx_kick(s
- 		else
- 			virtio_transport_free_pkt(pkt);
- 
--		vhost_add_used(vq, head, sizeof(pkt->hdr) + len);
-+		len += sizeof(pkt->hdr);
-+		vhost_add_used(vq, head, len);
-+		total_len += len;
- 		added = true;
--	}
-+	} while(likely(!vhost_exceeds_weight(vq, ++pkts, total_len)));
- 
- no_more_replies:
- 	if (added)
 
 
