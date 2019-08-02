@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5021C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43848C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 903BC218A4
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:20:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B83321882
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:20:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752050;
-	bh=9FaxuvGlL/MM4rTlmObzREzC0/lIE6SRjkWENMXn1M8=;
+	s=default; t=1564752053;
+	bh=bcoJHee30V1b63jHD1ymaV8AOPOg4oTRH05ezVaKWOo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SRLsKftg8croxKD6yhu+kqCIx3GNpqy23pHUq7RDrTkxzZM6xcDnbY8Gzo0aeChWM
-	 Jj9rOhDpWcZxwjPPxyNqO7rlt1fLWXjdqrNqTvzgEi2IKbfAjQTvXZl4EkAAzbsV3B
-	 F7PU1o7Nk0AUFmAD5PhTm2zVFEmCZe1JnpM4fml8=
+	b=dVWJD09+n2o7vDeb/IMsThS6YjWyesgdnqWxjOaXepc+8lSB5D42Q7rzbZYjd6FxM
+	 jeetxCb7HShlt0VkqZrqhu7D+lEi7Pyw1pNhlFICdQdDKXfOweg4Oe9o+ks9Qq12Fk
+	 /E/RIVOAtvwuxa2Jp4t6b/p/iGGTxts3ZNDdRQRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393459AbfHBNUq (ORCPT
+        id S2393485AbfHBNUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:20:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59150 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:20:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393444AbfHBNUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:20:43 -0400
+        id S2393451AbfHBNUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:20:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8B9B2173E;
-        Fri,  2 Aug 2019 13:20:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4233D21849;
+        Fri,  2 Aug 2019 13:20:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752042;
-        bh=9FaxuvGlL/MM4rTlmObzREzC0/lIE6SRjkWENMXn1M8=;
+        s=default; t=1564752048;
+        bh=bcoJHee30V1b63jHD1ymaV8AOPOg4oTRH05ezVaKWOo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gb4Gq7tOVfjwJQouIXTRWcm06Pc4TDFLr6M7SHbNufeHjWua1oHELMG16rG7MrO5c
-         jtQcjXUs9yI51yqQw5CSj2otXdhfPVoAY9m9qEUhV4LmKfCMYXNAUt4FW7DDWjLnfc
-         041Ja5iKkFewzxtNatf/bpdqjI5R/05peZAqQZys=
+        b=PrNZTcBQDkQO1qYNLAJfIrg+50yFhs0ZDhp74rWCvcMxta/4L1GT6Tyscg+/MKpEp
+         w82rS1ieiOsNxzJFuOVHeY8kx1CeItrP4wOmR6VvS4FqUsRdye+ClnYZ2V0tE8i136
+         Q1VC1eBQBF5QjSNucrQnhSgu+mRwT8mNbKA+r0i4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lei YU <mine260309@gmail.com>, Eddie James <eajames@linux.ibm.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 31/76] hwmon: (occ) Fix division by zero issue
-Date:   Fri,  2 Aug 2019 09:19:05 -0400
-Message-Id: <20190802131951.11600-31-sashal@kernel.org>
+Cc:     =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
+        <sebastien.szymanski@armadeus.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 33/76] ARM: dts: imx6ul: fix clock frequency property name of I2C buses
+Date:   Fri,  2 Aug 2019 09:19:07 -0400
+Message-Id: <20190802131951.11600-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802131951.11600-1-sashal@kernel.org>
 References: <20190802131951.11600-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,43 +62,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lei YU <mine260309@gmail.com>
+From: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
 
-[ Upstream commit 211186cae14de09573b062e478eb9fe215aed8d9 ]
+[ Upstream commit 2ca99396333999b9b5c5b91b36cbccacfe571aaf ]
 
-The code in occ_get_powr_avg() invokes div64_u64() without checking the
-divisor. In case the divisor is zero, kernel gets an "Division by zero
-in kernel" error.
+A few boards set clock frequency of their I2C buses with
+"clock_frequency" property. The right property is "clock-frequency".
 
-Check the divisor and make it return 0 if the divisor is 0.
-
-Fixes: c10e753d43eb ("hwmon (occ): Add sensor types and versions")
-Signed-off-by: Lei YU <mine260309@gmail.com>
-Reviewed-by: Eddie James <eajames@linux.ibm.com>
-Link: https://lore.kernel.org/r/1562813088-23708-1-git-send-email-mine260309@gmail.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/occ/common.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx6ul-14x14-evk.dtsi  | 2 +-
+ arch/arm/boot/dts/imx6ul-geam.dts        | 2 +-
+ arch/arm/boot/dts/imx6ul-isiot.dtsi      | 2 +-
+ arch/arm/boot/dts/imx6ul-pico-hobbit.dts | 2 +-
+ arch/arm/boot/dts/imx6ul-pico-pi.dts     | 4 ++--
+ 5 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/hwmon/occ/common.c b/drivers/hwmon/occ/common.c
-index 13a6290c8d254..f02aa403332c2 100644
---- a/drivers/hwmon/occ/common.c
-+++ b/drivers/hwmon/occ/common.c
-@@ -402,8 +402,10 @@ static ssize_t occ_show_power_1(struct device *dev,
+diff --git a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
+index 9207d5d071f11..d556f7c541ce6 100644
+--- a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
++++ b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
+@@ -112,7 +112,7 @@
+ };
  
- static u64 occ_get_powr_avg(u64 *accum, u32 *samples)
- {
--	return div64_u64(get_unaligned_be64(accum) * 1000000ULL,
--			 get_unaligned_be32(samples));
-+	u64 divisor = get_unaligned_be32(samples);
-+
-+	return (divisor == 0) ? 0 :
-+		div64_u64(get_unaligned_be64(accum) * 1000000ULL, divisor);
- }
+ &i2c2 {
+-	clock_frequency = <100000>;
++	clock-frequency = <100000>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c2>;
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/imx6ul-geam.dts b/arch/arm/boot/dts/imx6ul-geam.dts
+index bc77f26a2f1de..6157a058feec9 100644
+--- a/arch/arm/boot/dts/imx6ul-geam.dts
++++ b/arch/arm/boot/dts/imx6ul-geam.dts
+@@ -156,7 +156,7 @@
+ };
  
- static ssize_t occ_show_power_2(struct device *dev,
+ &i2c2 {
+-	clock_frequency = <100000>;
++	clock-frequency = <100000>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c2>;
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/imx6ul-isiot.dtsi b/arch/arm/boot/dts/imx6ul-isiot.dtsi
+index 213e802bf35c5..23e6e2e7ace9d 100644
+--- a/arch/arm/boot/dts/imx6ul-isiot.dtsi
++++ b/arch/arm/boot/dts/imx6ul-isiot.dtsi
+@@ -148,7 +148,7 @@
+ };
+ 
+ &i2c2 {
+-	clock_frequency = <100000>;
++	clock-frequency = <100000>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c2>;
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/imx6ul-pico-hobbit.dts b/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
+index 39eeeddac39e3..09f7ffa9ad8c4 100644
+--- a/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
++++ b/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
+@@ -43,7 +43,7 @@
+ };
+ 
+ &i2c2 {
+-	clock_frequency = <100000>;
++	clock-frequency = <100000>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c2>;
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/imx6ul-pico-pi.dts b/arch/arm/boot/dts/imx6ul-pico-pi.dts
+index de07357b27fc2..6cd7d5877d20c 100644
+--- a/arch/arm/boot/dts/imx6ul-pico-pi.dts
++++ b/arch/arm/boot/dts/imx6ul-pico-pi.dts
+@@ -43,7 +43,7 @@
+ };
+ 
+ &i2c2 {
+-	clock_frequency = <100000>;
++	clock-frequency = <100000>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c2>;
+ 	status = "okay";
+@@ -58,7 +58,7 @@
+ };
+ 
+ &i2c3 {
+-	clock_frequency = <100000>;
++	clock-frequency = <100000>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c3>;
+ 	status = "okay";
 -- 
 2.20.1
 
