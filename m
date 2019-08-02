@@ -2,111 +2,205 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B434C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 18:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC76C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 18:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 401D9216C8
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 18:38:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACBC420665
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 18:43:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="pVaBTL+p"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="oE+GXtGl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406822AbfHBSiR (ORCPT
+        id S1727124AbfHBSnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 14:38:17 -0400
-Received: from mail-eopbgr40071.outbound.protection.outlook.com ([40.107.4.71]:8834
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2406031AbfHBSiQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 14:38:16 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mTIH055eiU2C7FZIj0m7SsgCbVlQupE0ul8vmQKVCiXJztQEJtq0ZYk/5jwv7vzzKj5qs3AD/Ua/hfDd4labyPH3jTrz6NMO3ZrbnTRRLpaU5kvnm2SyOr2EmR8BUaLu8I5akqNswsWNHUAXXOcS3cd5dhWRZKsSgHIAVgRoaGu6QgMVByg4uZcsLUEkElugNgJofLzc9T1+XlFFV+Xm6vs7T/+Hd4w2HndL1HoiAOPuwglOigyafYnsPlNzYLrj3SXwHnC/jrD2AN1kreIo6HarzEpff6jfQZmGIQIodY2FFMFbv1YA8nQTDPp3MrSuLtLS/6QwG2wddb1G7ZOdJA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ay4ogoaFsUTMsLjNg9Ch0n/oxQIV0FIoDzD3AkToIFw=;
- b=MUov6SqK1Mu5u3miDmULXPeyL7kfId6BTBIReXRh6GQtipM/TdB0lFfvwQRBfs0KYIi/ULOeOmO9KgQIFgTV5L5vu8LIAp4Jr4SC6dYB/ALoVy+gInIS4FgPyoVs+mnSRNxOtQ2YY7IVqb4GvO4j4k8KaWByInQlVaWiarVIf1hFYwtKHX9Wb39RsJZkc/ZxlV0mwvb9YAHrcKgIn11/Y9LsjYtnonBVzaZT675blkDjTgvxYq5BMXEnnCU/cgg19sX8yJqCvL49psTC7MlYgFrL/dhKvEF/2NCxct0ULnisPzh7+cjtWPPuIsdDmxpOQG3gzw7muZs4z5VXDVmY2g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=mellanox.com;dmarc=pass action=none
- header.from=mellanox.com;dkim=pass header.d=mellanox.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ay4ogoaFsUTMsLjNg9Ch0n/oxQIV0FIoDzD3AkToIFw=;
- b=pVaBTL+ptviGYzugTZi5ZykKr/0udyzy1bC/CKulJfpV94N056U7cZgSZJzvz7hbszQXejGQjUrwV892PMsJSy1KgVAsOMNvMuMSUmSh0upli0+s53gQ40TkXGEHmfTyQRNdq+8TEfRT9LrL3wVvUmqyDQt4icRuq/sXVW4Dn0I=
-Received: from DB6PR0501MB2759.eurprd05.prod.outlook.com (10.172.227.7) by
- DB6PR0501MB2357.eurprd05.prod.outlook.com (10.168.56.24) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2136.13; Fri, 2 Aug 2019 18:38:12 +0000
-Received: from DB6PR0501MB2759.eurprd05.prod.outlook.com
- ([fe80::3c28:c77d:55b0:15b2]) by DB6PR0501MB2759.eurprd05.prod.outlook.com
- ([fe80::3c28:c77d:55b0:15b2%5]) with mapi id 15.20.2136.010; Fri, 2 Aug 2019
- 18:38:12 +0000
-From:   Saeed Mahameed <saeedm@mellanox.com>
-To:     "hslester96@gmail.com" <hslester96@gmail.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH] net/mlx4_core: Use refcount_t for refcount
-Thread-Topic: [PATCH] net/mlx4_core: Use refcount_t for refcount
-Thread-Index: AQHVSStMLiVN2iFTN0GUnSwRdh0TSaboB10AgAApK4A=
-Date:   Fri, 2 Aug 2019 18:38:12 +0000
-Message-ID: <47bb83d0111f1132bbf532c16be483c5efbe839f.camel@mellanox.com>
-References: <20190802121020.1181-1-hslester96@gmail.com>
-         <CANhBUQ1chO0Q6wHJwbKMvp6LkD7qLBRw57xwf1QkBAKaewHs5w@mail.gmail.com>
-In-Reply-To: <CANhBUQ1chO0Q6wHJwbKMvp6LkD7qLBRw57xwf1QkBAKaewHs5w@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.32.4 (3.32.4-1.fc30) 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=saeedm@mellanox.com; 
-x-originating-ip: [209.116.155.178]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5528a7e7-8373-4247-f0fd-08d71778932f
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB6PR0501MB2357;
-x-ms-traffictypediagnostic: DB6PR0501MB2357:
-x-microsoft-antispam-prvs: <DB6PR0501MB2357699A8453B14BBF577565BED90@DB6PR0501MB2357.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 011787B9DD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(39860400002)(376002)(346002)(136003)(199004)(189003)(2351001)(1361003)(68736007)(7736002)(478600001)(4744005)(66066001)(26005)(66946007)(99286004)(3846002)(66556008)(91956017)(6116002)(102836004)(76116006)(5660300002)(81156014)(305945005)(6436002)(6512007)(53936002)(118296001)(6506007)(71190400001)(64756008)(5640700003)(229853002)(2616005)(476003)(486006)(11346002)(66446008)(76176011)(81166006)(446003)(2906002)(256004)(186003)(36756003)(6486002)(6916009)(4326008)(71200400001)(2501003)(66476007)(25786009)(8676002)(1411001)(86362001)(58126008)(316002)(54906003)(14454004)(6246003)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0501MB2357;H:DB6PR0501MB2759.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: fSm71Wz9d+kzHxepVq3nJcWNmYsjIwMGKPb+w5EKNMc3L/GHsyD4GQNYuiRSE8f6K5iBfEVQV7txma/ZJIkXCplCH2+SbUNza7VFcsS6KqdOzJ/PnGJ8Ol0PaZqs9mdoZ6lN/W+GwSJcRVOiddT5ZavdR2kbpNzLQ2VbGQ2vISUbfJMQ+40dLP7G+fpnOxsoJQfOaolSHTPgaM3TpK/HEGRHFPlyudRswWaVcT4ZQ1E7BTj0fEbNLof3UP104VXQxjEZHuqIlr0UMTbX2MmZh5Pnj5wQeVJEiUGmM4YPJ/V3geTvH6J4fLmfKru3nPn1Fjd9jmCHbLbnl1iCudHHbCOakitjHJIcy/8DHwaekSqu+M8/yJhQkdNzdTgRUsBXBOSiuxB2FPRBKXfAvTWEBaqaHR6kRs1zXnOftXOto5U=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1D8B334C94E5324196A324D59583A0A7@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 2 Aug 2019 14:43:41 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:16223 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725866AbfHBSnk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 14:43:40 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d44845b0002>; Fri, 02 Aug 2019 11:43:39 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 02 Aug 2019 11:43:38 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 02 Aug 2019 11:43:38 -0700
+Received: from [10.2.165.119] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 2 Aug
+ 2019 18:43:36 +0000
+Subject: Re: [PATCH v7 07/20] clk: tegra: clk-periph: Add save and restore
+ support
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
+        <linus.walleij@linaro.org>, <stefan@agner.ch>,
+        <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
+        <josephl@nvidia.com>, <talho@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
+ <1564532424-10449-8-git-send-email-skomatineni@nvidia.com>
+ <c703b4fc-9ebb-0fd4-11de-80974b5c3842@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <614e3fec-cfa2-9e49-6130-d6de253acf03@nvidia.com>
+Date:   Fri, 2 Aug 2019 11:43:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5528a7e7-8373-4247-f0fd-08d71778932f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Aug 2019 18:38:12.7692
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: saeedm@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0501MB2357
+In-Reply-To: <c703b4fc-9ebb-0fd4-11de-80974b5c3842@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1564771419; bh=Kbrh1J6jb4kOgZCg/eEabXhEFnoc7+ZrgplPPRc9fRM=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=oE+GXtGlYqP7gJPYHtFjGyLisqcTTy4TWY28VxBtQ0J/+up/ybowHqzDZNJHT15iZ
+         K/fBFd7mCh7PaV7lLvMstQ1ngVqI+SRLC4cLDYYZMUPQ7dWaYyrGdzxO5B2q74YKti
+         ZTmwl8UOnZU/wQLkjzw/Or4cn3+g9jhJU0n7jnZOyEgBCJW8fgc7137tJ+W9EjhbyU
+         mY0RIMB7Tpcf8IKcSSo7fZsIAEYxf2QqoISAUulaeOAgKXdGFRuQVJv7DK2eilIO2n
+         p/vKcDvNh1eEM4DnyapnpCVIyJWjqbZo8oBQPOVyreqMWLuyGh3eeRI2Hkq1UwNmUv
+         rlK54RzMzDeSg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gU2F0LCAyMDE5LTA4LTAzIGF0IDAwOjEwICswODAwLCBDaHVob25nIFl1YW4gd3JvdGU6DQo+
-IENodWhvbmcgWXVhbiA8aHNsZXN0ZXI5NkBnbWFpbC5jb20+IOS6jjIwMTnlubQ45pyIMuaXpeWR
-qOS6lCDkuIvljYg4OjEw5YaZ6YGT77yaDQo+ID4gcmVmY291bnRfdCBpcyBiZXR0ZXIgZm9yIHJl
-ZmVyZW5jZSBjb3VudGVycyBzaW5jZSBpdHMNCj4gPiBpbXBsZW1lbnRhdGlvbiBjYW4gcHJldmVu
-dCBvdmVyZmxvd3MuDQo+ID4gU28gY29udmVydCBhdG9taWNfdCByZWYgY291bnRlcnMgdG8gcmVm
-Y291bnRfdC4NCj4gPiANCj4gPiBBbHNvIGNvbnZlcnQgcmVmY291bnQgZnJvbSAwLWJhc2VkIHRv
-IDEtYmFzZWQuDQo+ID4gDQo+IA0KPiBJdCBzZWVtcyB0aGF0IGRpcmVjdGx5IGNvbnZlcnRpbmcg
-cmVmY291bnQgZnJvbSAwLWJhc2VkDQo+IHRvIDEtYmFzZWQgaXMgaW5mZWFzaWJsZS4NCj4gSSBh
-bSBzb3JyeSBmb3IgdGhpcyBtaXN0YWtlLg0KDQpKdXN0IGN1cmlvdXMsIHdoeSBub3Qga2VlcCBp
-dCAwIGJhc2VkIGFuZCB1c2UgcmVmY291dF90ID8NCg0KcmVmY291bnQgQVBJIHNob3VsZCBoYXZl
-IHRoZSBzYW1lIHNlbWFudGljcyBhcyBhdG9taWNfdCBBUEkgLi4gbm8gPw0K
+
+On 8/2/19 5:32 AM, Dmitry Osipenko wrote:
+> 31.07.2019 3:20, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> This patch implements save and restore context for peripheral fixed
+>> clock ops, peripheral gate clock ops, sdmmc mux clock ops, and
+>> peripheral clock ops.
+>>
+>> During system suspend, core power goes off and looses the settings
+>> of the Tegra CAR controller registers.
+>>
+>> So during suspend entry clock and reset state of peripherals is saved
+>> and on resume they are restored to have clocks back to same rate and
+>> state as before suspend.
+>>
+>> Acked-by: Thierry Reding <treding@nvidia.com>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>   drivers/clk/tegra/clk-periph-fixed.c | 33 ++++++++++++++++++++++++++++=
+++++
+>>   drivers/clk/tegra/clk-periph-gate.c  | 34 ++++++++++++++++++++++++++++=
++++++
+>>   drivers/clk/tegra/clk-periph.c       | 37 ++++++++++++++++++++++++++++=
+++++++++
+>>   drivers/clk/tegra/clk-sdmmc-mux.c    | 28 +++++++++++++++++++++++++++
+>>   drivers/clk/tegra/clk.h              |  6 ++++++
+>>   5 files changed, 138 insertions(+)
+>>
+>> diff --git a/drivers/clk/tegra/clk-periph-fixed.c b/drivers/clk/tegra/cl=
+k-periph-fixed.c
+>> index c088e7a280df..21b24530fa00 100644
+>> --- a/drivers/clk/tegra/clk-periph-fixed.c
+>> +++ b/drivers/clk/tegra/clk-periph-fixed.c
+>> @@ -60,11 +60,44 @@ tegra_clk_periph_fixed_recalc_rate(struct clk_hw *hw=
+,
+>>   	return (unsigned long)rate;
+>>   }
+>>  =20
+>> +static int tegra_clk_periph_fixed_save_context(struct clk_hw *hw)
+>> +{
+>> +	struct tegra_clk_periph_fixed *fixed =3D to_tegra_clk_periph_fixed(hw)=
+;
+>> +	u32 mask =3D 1 << (fixed->num % 32);
+> This could be BIT(fixed->num % 32).
+>
+>> +	fixed->enb_ctx =3D readl_relaxed(fixed->base + fixed->regs->enb_reg) &
+>> +			 mask;
+>> +	fixed->rst_ctx =3D readl_relaxed(fixed->base + fixed->regs->rst_reg) &
+>> +			 mask;
+> The enb_ctx/rst_ctx are booleans, while you assigning an integer value
+> here. You're getting away here because bool is an 32bit unsigned int,
+> but you shouldn't rely on it and always explicitly convert to a bool.
+>
+>> +	return 0;
+>> +}
+>> +
+>> +static void tegra_clk_periph_fixed_restore_context(struct clk_hw *hw)
+>> +{
+>> +	struct tegra_clk_periph_fixed *fixed =3D to_tegra_clk_periph_fixed(hw)=
+;
+>> +	u32 mask =3D 1 << (fixed->num % 32);
+>> +
+>> +	if (fixed->enb_ctx)
+>> +		writel_relaxed(mask, fixed->base + fixed->regs->enb_set_reg);
+>> +	else
+>> +		writel_relaxed(mask, fixed->base + fixed->regs->enb_clr_reg);
+>> +
+>> +	udelay(2);
+> Will be better to read out and compare the hardware's state with the
+> restored one, then bail out if the state is unchanged.
+>
+> Shouldn't it be fence_udelay()?
+>
+>> +	if (!fixed->rst_ctx) {
+>> +		udelay(5); /* reset propogation delay */
+> Why delaying is done before the writing to the reset register?
+
+During SC7 exit, peripheral reset state is set to POR state. So some=20
+peripherals will already be in reset state and making sure of=20
+propagation delay before releasing from reset.
+
+It should be rst_clr_reg. will fix in next rev
+
+>
+>> +		writel_relaxed(mask, fixed->base + fixed->regs->rst_reg);
+> I'm not quite sure what's going on here, this looks wrong.
+>
+> 1. rst_reg points to RST_DEVICES_x
+> 2. Each bit of RST_DEVICES_x represents the reset-assertion state of
+> each individual device
+> 3. By writing to rst_reg, all (!) devices are deasserted, except the one
+> device which corresponds to the mask
+> 4. The reset is asserted for a single device, while !fixed->rst_ctx
+> means that it actually should be deasserted (?)
+>
+> Apparently you should use rst_set_reg / rst_clr_reg.
+Yes, It should be rst_clr_reg. will fix in next rev
+>> +	}
+> What about the case where rst_ctx=3Dtrue?
+
+ON SC7 exit, state of RST_DEV will be POR state where most peripherals=20
+will already be in reset state.
+
+Few of them which are not in reset state in POR values are those that=20
+need to stay de-asserted across the boot states anyway.
+
+>
+>> +}
+>> @@ -517,6 +517,8 @@ struct tegra_clk_periph_gate {
+>>   	int			clk_num;
+>>   	int			*enable_refcnt;
+>>   	const struct tegra_clk_periph_regs *regs;
+>> +	bool			clk_state_ctx;
+>> +	bool			rst_state_ctx;
+>>   };
+>>  =20
+>>   #define to_clk_periph_gate(_hw)					\
+>> @@ -543,6 +545,8 @@ struct tegra_clk_periph_fixed {
+>>   	unsigned int mul;
+>>   	unsigned int div;
+>>   	unsigned int num;
+>> +	bool enb_ctx;
+>> +	bool rst_ctx;
+>>   };
+> I'd expect these to be bool:1.
