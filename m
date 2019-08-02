@@ -2,105 +2,74 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9F3C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 567EFC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FAB1206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:19:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MPDKQ7pD"
+	by mail.kernel.org (Postfix) with ESMTP id 3AEB72086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:20:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390419AbfHBKTs (ORCPT
+        id S2390987AbfHBKUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 06:19:48 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37907 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730509AbfHBKTr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 06:19:47 -0400
-Received: by mail-lj1-f196.google.com with SMTP id r9so72319579ljg.5;
-        Fri, 02 Aug 2019 03:19:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fGBuTFqAyAj2SvbKj/G2jivACOslP7MbhI6gu5H3H9I=;
-        b=MPDKQ7pD9hLCaB4mMrjjDD4pDd5I1b0v86GUrdk+9H51jnm2oDXwo37FqTFWTgsZ84
-         RMB6ALfrxUdW6R/f+flRuhuYV1Xpo843krtmq0d3TdhL6KIAgPkV8SLJmh2lAzITNwuE
-         Fte5IKFXZmElEo9bLC7S9syxay5R4u+qJCkVd/iUpQ8goLajV54hdbOUWO3WAiYNoL3P
-         7zvfES4AZ4beDbi46U99a0tz2CNnwUKqkIVtLrp0JqAmkb6/lGwTmQGjljJ7nO/enbMM
-         rHsVwLlytDQK6Tc0TmRlObyQxYLj0kW1rdVBtspdUIomaoxFXPfJDC2OnZc/Yt7xhM7I
-         OOog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fGBuTFqAyAj2SvbKj/G2jivACOslP7MbhI6gu5H3H9I=;
-        b=B/7JF2qd+iZSBzR+W/Din8ht8iBVC9hRyTS7KFMmFedXea3GOYfBXW5c7Ho5cysjHb
-         OdEzlV8mO+rVD+ShFpvRC3/GMfByGjhyDN3L9ax5eiHh74V5MhOev2SCG36MH5NF4jrr
-         x6rFLoRV7fEHX3iBgKeo6nUT8LMEmQMHDtTciTKMlt8vxszZvgHaZdvWbYQ+D/3LnrIY
-         nfGRlqXPpfFbgCgkvXaaC4yyPuqBUL+MhhEgNiLFzqcT4UoS12VH3diLEK1ZQ+KfCCmq
-         wyrUxmzdr12YqgU63wo/H6dQfxLF/hsjWxhqMYL/NIY/Q7tKy2pCd0HlKtrIZ0O7u8ZR
-         hHiw==
-X-Gm-Message-State: APjAAAXFuekID4k9MWmTsonD2HeyhVIpejV1EeCjML4DI/ZZlIytlKVC
-        itMZlaKpeM5lktBNkPniZeCxX/mufZ8I0z2HpvKM9mC1
-X-Google-Smtp-Source: APXvYqzzKlttQbwJtenbmXL7wZ9ffMLL+Cel02QakOlRtlFS2m8PpyPnLg15CyLpoJT0GFJPQPVlfYezNARFbzNMjfo=
-X-Received: by 2002:a2e:9198:: with SMTP id f24mr72249856ljg.221.1564741185385;
- Fri, 02 Aug 2019 03:19:45 -0700 (PDT)
+        Fri, 2 Aug 2019 06:20:35 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54846 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389243AbfHBKUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 06:20:35 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4649EAE03;
+        Fri,  2 Aug 2019 10:20:34 +0000 (UTC)
+Subject: Re: [RFC PATCH 2/3] mm, compaction: use MIN_COMPACT_COSTLY_PRIORITY
+ everywhere for costly orders
+To:     Mike Kravetz <mike.kravetz@oracle.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Cc:     Hillf Danton <hdanton@sina.com>, Michal Hocko <mhocko@kernel.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20190724175014.9935-1-mike.kravetz@oracle.com>
+ <20190724175014.9935-3-mike.kravetz@oracle.com>
+ <278da9d8-6781-b2bc-8de6-6a71e879513c@suse.cz>
+ <0942e0c2-ac06-948e-4a70-a29829cbcd9c@oracle.com>
+ <89ba8e07-b0f8-4334-070e-02fbdfc361e3@suse.cz>
+ <2f1d6779-2b87-4699-abf7-0aa59a2e74d9@oracle.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <a0f01341-a5d8-d015-c37e-4932eaafd868@suse.cz>
+Date:   Fri, 2 Aug 2019 12:20:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <259986242.BvXPX32bHu@devpool35> <20190606185900.GA19937@kroah.com>
- <CANiq72n2E4Ue0MU5mWitSbsscizPQKML0QQx_DBwJVni+eWMHQ@mail.gmail.com> <4007272.nJfEYfeqza@devpool35>
-In-Reply-To: <4007272.nJfEYfeqza@devpool35>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Fri, 2 Aug 2019 12:19:33 +0200
-Message-ID: <CANiq72=T8nH3HHkYvWF+vPMscgwXki1Ugiq6C9PhVHJUHAwDYw@mail.gmail.com>
-Subject: =?UTF-8?Q?Re=3A_Linux_4=2E9=2E180_build_fails_with_gcc_9_and_=27cleanu?=
-        =?UTF-8?Q?p=5Fmodule=27_specifies_less_restrictive_attribute_than_its_targ?=
-        =?UTF-8?Q?et_=E2=80=A6?=
-To:     Rolf Eike Beer <eb@emlix.com>
-Cc:     Greg KH <greg@kroah.com>, stable@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <2f1d6779-2b87-4699-abf7-0aa59a2e74d9@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 2, 2019 at 10:17 AM Rolf Eike Beer <eb@emlix.com> wrote:
->
-> Am Samstag, 8. Juni 2019, 14:00:34 CEST schrieb Miguel Ojeda:
-> > On Thu, Jun 6, 2019 at 8:59 PM Greg KH <greg@kroah.com> wrote:
-> > > "manually fixing it up" means "hacked it to pieces" to me, I have no
-> > > idea what the end result really was :)
-> > >
-> > > If someone wants to send me some patches I can actually apply, that
-> > > would be best...
-> >
-> > I will give it a go whenever I get some free time :)
->
-> I fear this has never happened, did it?
+On 8/1/19 10:33 PM, Mike Kravetz wrote:
+> On 8/1/19 6:01 AM, Vlastimil Babka wrote:
+>> Could you try testing the patch below instead? It should hopefully
+>> eliminate the stalls. If it makes hugepage allocation give up too early,
+>> we'll know we have to involve __GFP_RETRY_MAYFAIL in allowing the
+>> MIN_COMPACT_PRIORITY priority. Thanks!
+> 
+> Thanks.  This patch does eliminate the stalls I was seeing.
 
-No. Between summer, holidays and a conference I didn't get to do it.
+Great, thanks! I'll send a proper patch then.
 
-Done the minimal approach here:
+> In my testing, there is little difference in how many hugetlb pages are
+> allocated.  It does not appear to be giving up/failing too early.  But,
+> this is only with __GFP_RETRY_MAYFAIL.  The real concern would with THP
+> requests.  Any suggestions on how to test that?
 
-  https://github.com/ojeda/linux/commits/compiler-attributes-backport
+AFAICS the default THP defrag mode is unaffected, as GFP_TRANSHUGE_LIGHT doesn't
+include __GFP_DIRECT_RECLAIM, so it never reaches this code. Madvised THP
+allocations will be affected, which should best be tested the same way as Andrea
+and Mel did in the __GFP_THISNODE debate.
 
-Tested building a handful of drivers with gcc 4.6.4, 8.3.0 and 9.1.1.
-
-Greg, I could backport the entire compiler_attributes.h, but given
-this is stable, we are supposed to minimize changes, right?
-
-I tried to imitate what you do in other stable patches, please check
-the Cc:, Link: lines and the "commit ... upstream" just in case.
-
-HTH,
-
-Cheers,
-Miguel
