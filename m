@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE77C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 430DEC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CD0420880
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:47:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 138CC20880
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:47:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739250;
-	bh=NNRDplPKVWxRB5lwH3Z2zjZpvOOx1czUX2WfBcdDDKE=;
+	s=default; t=1564739254;
+	bh=NZBYPz9/upGof+pf+7aPQwh2oUQ15oTbaqLDqA5xc1U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iq2eIk/5ga9IrUeeGctblXpPj528bgdwvhGImDrxvpZ3LH51FIAo6pVUkVuVsbDHI
-	 FTD6hrbVp8E2BsjBYuUm87hH9ELF6GYDLqHvOdKOiyzalNyJzO9psCas0f4O6oVJMD
-	 c/YPaIOgCz+S7j3sVyNQSAKtnjLku/aH5HWmoI9g=
+	b=k57cUQYrnuNxDlOpJwWitCgpRLAkmyXnoyBqdpDO3RlpYjC4ux9/Tm8VRD84V8tNG
+	 j9dPIgVa/Wqj1rpAo0DvoU0RBMh/CsFvx7zcfko28VQUBW7dQO4MpzKYxE9Dh40rdC
+	 IXYMTBS9bwjRV4V7nlDsSZa2AFo46vSVBTqTgHz8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405685AbfHBJr2 (ORCPT
+        id S2392081AbfHBJqu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:47:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52260 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:46:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405660AbfHBJr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:47:26 -0400
+        id S2405599AbfHBJql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:46:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9826921726;
-        Fri,  2 Aug 2019 09:47:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60CEE2086A;
+        Fri,  2 Aug 2019 09:46:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739245;
-        bh=NNRDplPKVWxRB5lwH3Z2zjZpvOOx1czUX2WfBcdDDKE=;
+        s=default; t=1564739200;
+        bh=NZBYPz9/upGof+pf+7aPQwh2oUQ15oTbaqLDqA5xc1U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j2J8oZ9CQnsUMvbkHFRRhit6Yaol1ZNIaqR2Lg6Eu+8ShFyxQkBFFJw6dKK0CMezu
-         FINoXNodwm7PgMk3+YugvErNVqv8nRyPyJBeG0HPFboO5eM232Dj0LGCflLuKlKJpS
-         x1ZeKlwTH6RJpPIM48eFlWnKcIw6IoQlinYIrmr4=
+        b=tRQOhlXoNdQIRTUzn/zfkE3k7dYCGQz0hfzCJh0zxPW8FrBGzkbd26zOiKLzXAMpd
+         UzSp06/hae9/sWjqUxBt/qdoTx8BUlXtgN+DmuwBWo3/P5gQYZpNf8b0FS58pxTLLH
+         iCx+YaP51l/dYk9u52nC0Pvmg1E3Q0kCFTWd6TmE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        Martin Weinelt <martin@linuxlounge.net>,
+        stable@vger.kernel.org, Yang Wei <albin_yang@163.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 149/223] net: bridge: mcast: fix stale ipv6 hdr pointer when handling v6 query
-Date:   Fri,  2 Aug 2019 11:36:14 +0200
-Message-Id: <20190802092248.165485757@linuxfoundation.org>
+Subject: [PATCH 4.9 138/223] nfc: fix potential illegal memory access
+Date:   Fri,  2 Aug 2019 11:36:03 +0200
+Message-Id: <20190802092247.734370576@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -61,41 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+From: Yang Wei <albin_yang@163.com>
 
-[ Upstream commit 3b26a5d03d35d8f732d75951218983c0f7f68dff ]
+[ Upstream commit dd006fc434e107ef90f7de0db9907cbc1c521645 ]
 
-We get a pointer to the ipv6 hdr in br_ip6_multicast_query but we may
-call pskb_may_pull afterwards and end up using a stale pointer.
-So use the header directly, it's just 1 place where it's needed.
+The frags_q is not properly initialized, it may result in illegal memory
+access when conn_info is NULL.
+The "goto free_exit" should be replaced by "goto exit".
 
-Fixes: 08b202b67264 ("bridge br_multicast: IPv6 MLD support.")
-Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Tested-by: Martin Weinelt <martin@linuxlounge.net>
+Signed-off-by: Yang Wei <albin_yang@163.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/bridge/br_multicast.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ net/nfc/nci/data.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/bridge/br_multicast.c
-+++ b/net/bridge/br_multicast.c
-@@ -1379,7 +1379,6 @@ static int br_ip6_multicast_query(struct
- 				  struct sk_buff *skb,
- 				  u16 vid)
- {
--	const struct ipv6hdr *ip6h = ipv6_hdr(skb);
- 	struct mld_msg *mld;
- 	struct net_bridge_mdb_entry *mp;
- 	struct mld2_query *mld2q;
-@@ -1423,7 +1422,7 @@ static int br_ip6_multicast_query(struct
+--- a/net/nfc/nci/data.c
++++ b/net/nfc/nci/data.c
+@@ -119,7 +119,7 @@ static int nci_queue_tx_data_frags(struc
+ 	conn_info = nci_get_conn_info_by_conn_id(ndev, conn_id);
+ 	if (!conn_info) {
+ 		rc = -EPROTO;
+-		goto free_exit;
++		goto exit;
+ 	}
  
- 	if (is_general_query) {
- 		saddr.proto = htons(ETH_P_IPV6);
--		saddr.u.ip6 = ip6h->saddr;
-+		saddr.u.ip6 = ipv6_hdr(skb)->saddr;
- 
- 		br_multicast_query_received(br, port, &br->ip6_other_query,
- 					    &saddr, max_delay);
+ 	__skb_queue_head_init(&frags_q);
 
 
