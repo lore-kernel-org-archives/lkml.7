@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A90C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6290BC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DF33217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:27:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AC88217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:27:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752459;
-	bh=oBD8mlOmTqr2lwydNzzevb3/qEoAgt12d1ygqhPtN/w=;
+	s=default; t=1564752464;
+	bh=WD8uFfEWETkAisJ6XIBjHcAWVdKdNeQEPQgBfAWWJcc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ntKP0O1VEgaYP6qp4L+KCS47PUUgr4srCw/Dhfgc1ezgyecUU6SA6xuHphh+JR4Ez
-	 faP6FuUsZli8tS/BMDCWRgGJkyg1QExShl96Whm+5Kt4QByRcNz3A0K06OlvocH13w
-	 Wz8aLxosQ1jzTS0F6HdmqpgDtifJ7BH/f+UZ8i48=
+	b=HbwbUSAMIZRVfsKXS9cNqWV5VenxpYsz5H4jmEquch7AHaNXnWtG2IX8MBV6Pkqo5
+	 9eCCT125KEsRN/eA0tlprt4uAvOLhV670xZx00jXtbkMu1OiCPZCtzKDd9uP+xBQF0
+	 567ix06FySVX+Lc2RFY/AAG9G64MXUMsm4izU2jY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394796AbfHBN1h (ORCPT
+        id S2394673AbfHBN0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:27:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37694 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:26:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394692AbfHBN0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:26:55 -0400
+        id S2394638AbfHBN0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:26:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66FD521855;
-        Fri,  2 Aug 2019 13:26:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F735217D4;
+        Fri,  2 Aug 2019 13:26:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752415;
-        bh=oBD8mlOmTqr2lwydNzzevb3/qEoAgt12d1ygqhPtN/w=;
+        s=default; t=1564752408;
+        bh=WD8uFfEWETkAisJ6XIBjHcAWVdKdNeQEPQgBfAWWJcc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k1TYU0XuBNnTL1Ufsh+8OsRzs5Nr6o0h6erBV13kKZUWoEjySY+Mwd40dOVvqfhWU
-         eac779JBMQFOoqxKQ+tRDwQERmmoGK/IK6GX5RoNX5v+HZPIbRocJrtDQmTDpbu9nb
-         YQftTz5P2LL4RrJgVuwsfrL6fliwbquPm3l1I3es=
+        b=joQ51rshCZ+Rnd3Vy6+CFBMzHt9NOLxTUlVGnlgpO3Zq+3/0NIlS/sl1OgZUux2He
+         Kz+NmjbxXSEK7O/v+eyjNp6+Nv3BcN/Tk3En8k62iFKt+05pSkvO2ZrQL1tduM0iBC
+         h5JsLwY+8OA4R/8gnSAYJHxY13xXtYUtlZ10KpsM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Vinod Koul <vkoul@kernel.org>, Takashi Iwai <tiwai@suse.de>,
+Cc:     Joerg Roedel <jroedel@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 10/17] ALSA: compress: Prevent bypasses of set_params
-Date:   Fri,  2 Aug 2019 09:26:27 -0400
-Message-Id: <20190802132635.14885-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 05/17] x86/mm: Check for pfn instead of page in vmalloc_sync_one()
+Date:   Fri,  2 Aug 2019 09:26:22 -0400
+Message-Id: <20190802132635.14885-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802132635.14885-1-sashal@kernel.org>
 References: <20190802132635.14885-1-sashal@kernel.org>
@@ -59,83 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-[ Upstream commit 26c3f1542f5064310ad26794c09321780d00c57d ]
+[ Upstream commit 51b75b5b563a2637f9d8dc5bd02a31b2ff9e5ea0 ]
 
-Currently, whilst in SNDRV_PCM_STATE_OPEN it is possible to call
-snd_compr_stop, snd_compr_drain and snd_compr_partial_drain, which
-allow a transition to SNDRV_PCM_STATE_SETUP. The stream should
-only be able to move to the setup state once it has received a
-SNDRV_COMPRESS_SET_PARAMS ioctl. Fix this issue by not allowing
-those ioctls whilst in the open state.
+Do not require a struct page for the mapped memory location because it
+might not exist. This can happen when an ioremapped region is mapped with
+2MB pages.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Acked-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 5d72b4fba40ef ('x86, mm: support huge I/O mapping capability I/F')
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+Link: https://lkml.kernel.org/r/20190719184652.11391-2-joro@8bytes.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/compress_offload.c | 30 ++++++++++++++++++++++++------
- 1 file changed, 24 insertions(+), 6 deletions(-)
+ arch/x86/mm/fault.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
-index 16269e7ff3904..d0a21a5867673 100644
---- a/sound/core/compress_offload.c
-+++ b/sound/core/compress_offload.c
-@@ -688,9 +688,15 @@ static int snd_compr_stop(struct snd_compr_stream *stream)
- {
- 	int retval;
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 462c5c30b9a21..f3511f1a8f0ea 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -222,7 +222,7 @@ static inline pmd_t *vmalloc_sync_one(pgd_t *pgd, unsigned long address)
+ 	if (!pmd_present(*pmd))
+ 		set_pmd(pmd, *pmd_k);
+ 	else
+-		BUG_ON(pmd_page(*pmd) != pmd_page(*pmd_k));
++		BUG_ON(pmd_pfn(*pmd) != pmd_pfn(*pmd_k));
  
--	if (stream->runtime->state == SNDRV_PCM_STATE_PREPARED ||
--			stream->runtime->state == SNDRV_PCM_STATE_SETUP)
-+	switch (stream->runtime->state) {
-+	case SNDRV_PCM_STATE_OPEN:
-+	case SNDRV_PCM_STATE_SETUP:
-+	case SNDRV_PCM_STATE_PREPARED:
- 		return -EPERM;
-+	default:
-+		break;
-+	}
-+
- 	retval = stream->ops->trigger(stream, SNDRV_PCM_TRIGGER_STOP);
- 	if (!retval) {
- 		snd_compr_drain_notify(stream);
-@@ -739,9 +745,14 @@ static int snd_compr_drain(struct snd_compr_stream *stream)
- {
- 	int retval;
- 
--	if (stream->runtime->state == SNDRV_PCM_STATE_PREPARED ||
--			stream->runtime->state == SNDRV_PCM_STATE_SETUP)
-+	switch (stream->runtime->state) {
-+	case SNDRV_PCM_STATE_OPEN:
-+	case SNDRV_PCM_STATE_SETUP:
-+	case SNDRV_PCM_STATE_PREPARED:
- 		return -EPERM;
-+	default:
-+		break;
-+	}
- 
- 	retval = stream->ops->trigger(stream, SND_COMPR_TRIGGER_DRAIN);
- 	if (retval) {
-@@ -778,9 +789,16 @@ static int snd_compr_next_track(struct snd_compr_stream *stream)
- static int snd_compr_partial_drain(struct snd_compr_stream *stream)
- {
- 	int retval;
--	if (stream->runtime->state == SNDRV_PCM_STATE_PREPARED ||
--			stream->runtime->state == SNDRV_PCM_STATE_SETUP)
-+
-+	switch (stream->runtime->state) {
-+	case SNDRV_PCM_STATE_OPEN:
-+	case SNDRV_PCM_STATE_SETUP:
-+	case SNDRV_PCM_STATE_PREPARED:
- 		return -EPERM;
-+	default:
-+		break;
-+	}
-+
- 	/* stream can be drained only when next track has been signalled */
- 	if (stream->next_track == false)
- 		return -EPERM;
+ 	return pmd_k;
+ }
 -- 
 2.20.1
 
