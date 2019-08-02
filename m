@@ -4,66 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA524C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 23:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A85CBC0650F
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 23:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E0A32087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 23:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AD192087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 23:20:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564788004;
-	bh=w7pLLNi5wooNeDeJ/x3nTG9XxghUGlex9IME0/qMU04=;
+	s=default; t=1564788014;
+	bh=3lPqaAxly1FD9PM4K5DpOANPnWOJvGrh2mV6GDIZ+wc=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=KDU0gFINIvgYPg269UNyVtjdzhuTaFslE4YlzShRzvCsACEX8PWEXel8JegoOQjYb
-	 mW5EXUG08OnBl3uqpdCb8JQrflZ8sEp9CgsMZKGShRIdOTUz1q7fMitTTBpGhBmWFE
-	 xvGkF/KJM5JP3cSycjljPJKah5zvfnR2Q2sONM7E=
+	b=Jc+dmsZw38TmGB0vz55Qm04ufF2HqsqLc+BBgJ+0qFzpYVTvJP4EWFPjIXZsULn/k
+	 lUZplNQ4HG9xs7FjjCZooZY7qw5ZD/20S0p7BtbwfaOFuFSMrEsMt5V6Ni9mQE8lxE
+	 hQE3rKyiHwd/SX+VqefElo0e9Om6I8nGjeD/B15M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437445AbfHBXUD (ORCPT
+        id S2437470AbfHBXUN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 19:20:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59406 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 19:20:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388599AbfHBXUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 19:20:02 -0400
-Subject: Re: [GIT PULL] parisc architecture fixes for kernel v5.3-rc3
+        id S2437454AbfHBXUM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 19:20:12 -0400
+Subject: Re: [GIT PULL] xen: fixes for 5.3-rc3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564788001;
-        bh=w7pLLNi5wooNeDeJ/x3nTG9XxghUGlex9IME0/qMU04=;
+        s=default; t=1564788011;
+        bh=3lPqaAxly1FD9PM4K5DpOANPnWOJvGrh2mV6GDIZ+wc=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=xolDVK0+9DslIG3/7r77C+chHLfLf6LUTYtKDXdgLEOXKXyzlMVABJWFfogyRSBmx
-         P191Ne3tSBeRe60f/9LfuIQYRqEcSZnJtpIo91p9PWKppk24XA1MDTdcrwA23hIGxw
-         /Uf0okfpfoi5it4dLX6/9CzJbEbU0rNtJNgRD2SI=
+        b=MtMFjuTrBaMA/B28MsUqFszAeQEc8Fm4TCfcb2J6Sw/6+vOpjFLFK/kECSPiJFKF9
+         zb9sIJb22aFtSqACU+AdW9y9JIFFOhWqQ/uHnvjN5buMmbZEKcze1P91E77lhPlk4q
+         3WP47gLVD1n7XRPdTF+wwM9wV9INWjcZpoG5bxMU=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190802160447.GA27285@ls3530.fritz.box>
-References: <20190802160447.GA27285@ls3530.fritz.box>
-X-PR-Tracked-List-Id: <linux-parisc.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190802160447.GA27285@ls3530.fritz.box>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git
- parisc-5.3-4
-X-PR-Tracked-Commit-Id: f2c5ed0dd5004c2cff5c0e3d430a107576fcc17f
+In-Reply-To: <20190802144746.18653-1-jgross@suse.com>
+References: <20190802144746.18653-1-jgross@suse.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190802144746.18653-1-jgross@suse.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git
+ for-linus-5.3a-rc3-tag
+X-PR-Tracked-Commit-Id: b877ac9815a8fe7e5f6d7fdde3dc34652408840a
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 9100fc5ae83e64d99fd3300104893ef0e0b0aadb
-Message-Id: <156478800176.22769.2117525589731444415.pr-tracker-bot@kernel.org>
-Date:   Fri, 02 Aug 2019 23:20:01 +0000
-To:     Helge Deller <deller@gmx.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        John David Anglin <dave.anglin@bell.net>,
-        Sven Schnelle <svens@stackframe.org>
+X-PR-Merge-Commit-Id: dcb8cfbd8fe9e62c7d64e82288d3ffe2502b7371
+Message-Id: <156478801106.22769.3689998217625205699.pr-tracker-bot@kernel.org>
+Date:   Fri, 02 Aug 2019 23:20:11 +0000
+To:     Juergen Gross <jgross@suse.com>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        xen-devel@lists.xenproject.org, boris.ostrovsky@oracle.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 2 Aug 2019 18:04:47 +0200:
+The pull request you sent on Fri,  2 Aug 2019 16:47:46 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git parisc-5.3-4
+> git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git for-linus-5.3a-rc3-tag
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/9100fc5ae83e64d99fd3300104893ef0e0b0aadb
+https://git.kernel.org/torvalds/c/dcb8cfbd8fe9e62c7d64e82288d3ffe2502b7371
 
 Thank you!
 
