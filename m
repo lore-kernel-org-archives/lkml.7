@@ -4,50 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDCBC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32CC8C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00875206A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D359206A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739474;
-	bh=k7QKfa6LAB3aq55137f4pRDRtYGr0cL0lak7C6T98mM=;
+	s=default; t=1564739483;
+	bh=PioM6E1DLBvXX0KAILLLE8843voALZ6piJ4Mw3YYv8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=acwgSyd0BrePtbJPY/2BIgB8XJg2mqbi129aqQWv6j8TXTOyPe1zO20m67uGUvZxm
-	 tL+0Z80d4wfWxGqdi9DDMTe13peLiTMPMegC8t8kXcckcqklZGEPOzzEX2gNUAQ3/k
-	 is1HnfhdPS3BMDRiqOyuxjX/zPi4SNbG/rhoM0HE=
+	b=IEf6mMaT5A+KxTmb1FhSxHkX6wlkNkGS9+QOYmtKshlGmdT0Vax1SmxQKxYF8PDZv
+	 FMoyX/Q/6/uaq+3voECb3jvp8MYiFfxxvZ/H5I/aYki7dOKFODo5G6/5f/2+dooizN
+	 vHz/b4UHjOP7mIDmLxa3Fbo5nFATxFgcvvSj1wTk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405327AbfHBJo5 (ORCPT
+        id S2392063AbfHBJvV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:44:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48410 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:51:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405311AbfHBJox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:44:53 -0400
+        id S2405293AbfHBJot (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:44:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E7BF20B7C;
-        Fri,  2 Aug 2019 09:44:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78B3B206A2;
+        Fri,  2 Aug 2019 09:44:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739093;
-        bh=k7QKfa6LAB3aq55137f4pRDRtYGr0cL0lak7C6T98mM=;
+        s=default; t=1564739088;
+        bh=PioM6E1DLBvXX0KAILLLE8843voALZ6piJ4Mw3YYv8U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DYx/41GA0pdepIRr6YdDVpocvMTgBvud8j4i/Br6be5252BVMS9kqO1c0lX2JdmZk
-         dUufi4D/qDng0Z11nffYaO3yzzSu5KzUm5IVehxm+oe7Uyp+q2EgEz6e64OrVww8yo
-         fob1rDpG0ajTCI8WkJvDyDbMAVL+ysBzmr7QsLw0=
+        b=uLFIhCqrJPQ8MXGFv9z/PPWHe3uhZQqN39utvccb1qi7hmS0G3pWmdyDME4IW9iIY
+         4XVkswfB1Pfwrh4AGa3aVRkDkbRpewt4KuQtGre5Lz2LaP77U49F6AAcEmMl18qUZf
+         6A0mM0aIsryqoyyerVxN76YQCVs30f8iqCW00s3A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cfir Cohen <cfir@google.com>,
-        Gary R Hook <gary.hook@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.9 110/223] crypto: ccp - Validate the the error value used to index error messages
-Date:   Fri,  2 Aug 2019 11:35:35 +0200
-Message-Id: <20190802092246.372422602@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Harkes <jaharkes@cs.cmu.edu>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Colin Ian King <colin.king@canonical.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        David Howells <dhowells@redhat.com>,
+        Fabian Frederick <fabf@skynet.be>,
+        Mikko Rapeli <mikko.rapeli@iki.fi>,
+        Sam Protsenko <semen.protsenko@linaro.org>,
+        Yann Droneaud <ydroneaud@opteya.com>,
+        Zhouyang Jia <jiazhouyang09@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 108/223] coda: pass the host file in vma->vm_file on mmap
+Date:   Fri,  2 Aug 2019 11:35:33 +0200
+Message-Id: <20190802092246.248764414@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -60,151 +69,160 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hook, Gary <Gary.Hook@amd.com>
+From: Jan Harkes <jaharkes@cs.cmu.edu>
 
-commit 52393d617af7b554f03531e6756facf2ea687d2e upstream.
+commit 7fa0a1da3dadfd9216df7745a1331fdaa0940d1c upstream.
 
-The error code read from the queue status register is only 6 bits wide,
-but we need to verify its value is within range before indexing the error
-messages.
+Patch series "Coda updates".
 
-Fixes: 81422badb3907 ("crypto: ccp - Make syslog errors human-readable")
+The following patch series is a collection of various fixes for Coda,
+most of which were collected from linux-fsdevel or linux-kernel but
+which have as yet not found their way upstream.
+
+This patch (of 22):
+
+Various file systems expect that vma->vm_file points at their own file
+handle, several use file_inode(vma->vm_file) to get at their inode or
+use vma->vm_file->private_data.  However the way Coda wrapped mmap on a
+host file broke this assumption, vm_file was still pointing at the Coda
+file and the host file systems would scribble over Coda's inode and
+private file data.
+
+This patch fixes the incorrect expectation and wraps vm_ops->open and
+vm_ops->close to allow Coda to track when the vm_area_struct is
+destroyed so we still release the reference on the Coda file handle at
+the right time.
+
+[This patch differs from the original upstream patch because older stable
+ kernels do not have the call_mmap vfs helper so we call f_ops->mmap
+ directly.]
+
+Link: http://lkml.kernel.org/r/0e850c6e59c0b147dc2dcd51a3af004c948c3697.1558117389.git.jaharkes@cs.cmu.edu
+Signed-off-by: Jan Harkes <jaharkes@cs.cmu.edu>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Colin Ian King <colin.king@canonical.com>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Fabian Frederick <fabf@skynet.be>
+Cc: Mikko Rapeli <mikko.rapeli@iki.fi>
+Cc: Sam Protsenko <semen.protsenko@linaro.org>
+Cc: Yann Droneaud <ydroneaud@opteya.com>
+Cc: Zhouyang Jia <jiazhouyang09@gmail.com>
 Cc: <stable@vger.kernel.org>
-Reported-by: Cfir Cohen <cfir@google.com>
-Signed-off-by: Gary R Hook <gary.hook@amd.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Jan Harkes <jaharkes@cs.cmu.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- drivers/crypto/ccp/ccp-dev.c |  102 ++++++++++++++++++++++---------------------
- drivers/crypto/ccp/ccp-dev.h |    2 
- 2 files changed, 55 insertions(+), 49 deletions(-)
+ fs/coda/file.c |   69 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 68 insertions(+), 1 deletion(-)
 
---- a/drivers/crypto/ccp/ccp-dev.c
-+++ b/drivers/crypto/ccp/ccp-dev.c
-@@ -40,57 +40,63 @@ struct ccp_tasklet_data {
- 	struct ccp_cmd *cmd;
- };
- 
--/* Human-readable error strings */
--char *ccp_error_codes[] = {
--	"",
--	"ERR 01: ILLEGAL_ENGINE",
--	"ERR 02: ILLEGAL_KEY_ID",
--	"ERR 03: ILLEGAL_FUNCTION_TYPE",
--	"ERR 04: ILLEGAL_FUNCTION_MODE",
--	"ERR 05: ILLEGAL_FUNCTION_ENCRYPT",
--	"ERR 06: ILLEGAL_FUNCTION_SIZE",
--	"ERR 07: Zlib_MISSING_INIT_EOM",
--	"ERR 08: ILLEGAL_FUNCTION_RSVD",
--	"ERR 09: ILLEGAL_BUFFER_LENGTH",
--	"ERR 10: VLSB_FAULT",
--	"ERR 11: ILLEGAL_MEM_ADDR",
--	"ERR 12: ILLEGAL_MEM_SEL",
--	"ERR 13: ILLEGAL_CONTEXT_ID",
--	"ERR 14: ILLEGAL_KEY_ADDR",
--	"ERR 15: 0xF Reserved",
--	"ERR 16: Zlib_ILLEGAL_MULTI_QUEUE",
--	"ERR 17: Zlib_ILLEGAL_JOBID_CHANGE",
--	"ERR 18: CMD_TIMEOUT",
--	"ERR 19: IDMA0_AXI_SLVERR",
--	"ERR 20: IDMA0_AXI_DECERR",
--	"ERR 21: 0x15 Reserved",
--	"ERR 22: IDMA1_AXI_SLAVE_FAULT",
--	"ERR 23: IDMA1_AIXI_DECERR",
--	"ERR 24: 0x18 Reserved",
--	"ERR 25: ZLIBVHB_AXI_SLVERR",
--	"ERR 26: ZLIBVHB_AXI_DECERR",
--	"ERR 27: 0x1B Reserved",
--	"ERR 27: ZLIB_UNEXPECTED_EOM",
--	"ERR 27: ZLIB_EXTRA_DATA",
--	"ERR 30: ZLIB_BTYPE",
--	"ERR 31: ZLIB_UNDEFINED_SYMBOL",
--	"ERR 32: ZLIB_UNDEFINED_DISTANCE_S",
--	"ERR 33: ZLIB_CODE_LENGTH_SYMBOL",
--	"ERR 34: ZLIB _VHB_ILLEGAL_FETCH",
--	"ERR 35: ZLIB_UNCOMPRESSED_LEN",
--	"ERR 36: ZLIB_LIMIT_REACHED",
--	"ERR 37: ZLIB_CHECKSUM_MISMATCH0",
--	"ERR 38: ODMA0_AXI_SLVERR",
--	"ERR 39: ODMA0_AXI_DECERR",
--	"ERR 40: 0x28 Reserved",
--	"ERR 41: ODMA1_AXI_SLVERR",
--	"ERR 42: ODMA1_AXI_DECERR",
--	"ERR 43: LSB_PARITY_ERR",
-+ /* Human-readable error strings */
-+#define CCP_MAX_ERROR_CODE	64
-+ static char *ccp_error_codes[] = {
-+ 	"",
-+	"ILLEGAL_ENGINE",
-+	"ILLEGAL_KEY_ID",
-+	"ILLEGAL_FUNCTION_TYPE",
-+	"ILLEGAL_FUNCTION_MODE",
-+	"ILLEGAL_FUNCTION_ENCRYPT",
-+	"ILLEGAL_FUNCTION_SIZE",
-+	"Zlib_MISSING_INIT_EOM",
-+	"ILLEGAL_FUNCTION_RSVD",
-+	"ILLEGAL_BUFFER_LENGTH",
-+	"VLSB_FAULT",
-+	"ILLEGAL_MEM_ADDR",
-+	"ILLEGAL_MEM_SEL",
-+	"ILLEGAL_CONTEXT_ID",
-+	"ILLEGAL_KEY_ADDR",
-+	"0xF Reserved",
-+	"Zlib_ILLEGAL_MULTI_QUEUE",
-+	"Zlib_ILLEGAL_JOBID_CHANGE",
-+	"CMD_TIMEOUT",
-+	"IDMA0_AXI_SLVERR",
-+	"IDMA0_AXI_DECERR",
-+	"0x15 Reserved",
-+	"IDMA1_AXI_SLAVE_FAULT",
-+	"IDMA1_AIXI_DECERR",
-+	"0x18 Reserved",
-+	"ZLIBVHB_AXI_SLVERR",
-+	"ZLIBVHB_AXI_DECERR",
-+	"0x1B Reserved",
-+	"ZLIB_UNEXPECTED_EOM",
-+	"ZLIB_EXTRA_DATA",
-+	"ZLIB_BTYPE",
-+	"ZLIB_UNDEFINED_SYMBOL",
-+	"ZLIB_UNDEFINED_DISTANCE_S",
-+	"ZLIB_CODE_LENGTH_SYMBOL",
-+	"ZLIB _VHB_ILLEGAL_FETCH",
-+	"ZLIB_UNCOMPRESSED_LEN",
-+	"ZLIB_LIMIT_REACHED",
-+	"ZLIB_CHECKSUM_MISMATCH0",
-+	"ODMA0_AXI_SLVERR",
-+	"ODMA0_AXI_DECERR",
-+	"0x28 Reserved",
-+	"ODMA1_AXI_SLVERR",
-+	"ODMA1_AXI_DECERR",
- };
- 
--void ccp_log_error(struct ccp_device *d, int e)
-+void ccp_log_error(struct ccp_device *d, unsigned int e)
- {
--	dev_err(d->dev, "CCP error: %s (0x%x)\n", ccp_error_codes[e], e);
-+	if (WARN_ON(e >= CCP_MAX_ERROR_CODE))
-+		return;
-+
-+	if (e < ARRAY_SIZE(ccp_error_codes))
-+		dev_err(d->dev, "CCP error %d: %s\n", e, ccp_error_codes[e]);
-+	else
-+		dev_err(d->dev, "CCP error %d: Unknown Error\n", e);
+--- a/fs/coda/file.c
++++ b/fs/coda/file.c
+@@ -60,6 +60,41 @@ coda_file_write_iter(struct kiocb *iocb,
+ 	return ret;
  }
  
- /* List of CCPs, CCP count, read-write access lock, and access functions
---- a/drivers/crypto/ccp/ccp-dev.h
-+++ b/drivers/crypto/ccp/ccp-dev.h
-@@ -607,7 +607,7 @@ void ccp_platform_exit(void);
- void ccp_add_device(struct ccp_device *ccp);
- void ccp_del_device(struct ccp_device *ccp);
++struct coda_vm_ops {
++	atomic_t refcnt;
++	struct file *coda_file;
++	const struct vm_operations_struct *host_vm_ops;
++	struct vm_operations_struct vm_ops;
++};
++
++static void
++coda_vm_open(struct vm_area_struct *vma)
++{
++	struct coda_vm_ops *cvm_ops =
++		container_of(vma->vm_ops, struct coda_vm_ops, vm_ops);
++
++	atomic_inc(&cvm_ops->refcnt);
++
++	if (cvm_ops->host_vm_ops && cvm_ops->host_vm_ops->open)
++		cvm_ops->host_vm_ops->open(vma);
++}
++
++static void
++coda_vm_close(struct vm_area_struct *vma)
++{
++	struct coda_vm_ops *cvm_ops =
++		container_of(vma->vm_ops, struct coda_vm_ops, vm_ops);
++
++	if (cvm_ops->host_vm_ops && cvm_ops->host_vm_ops->close)
++		cvm_ops->host_vm_ops->close(vma);
++
++	if (atomic_dec_and_test(&cvm_ops->refcnt)) {
++		vma->vm_ops = cvm_ops->host_vm_ops;
++		fput(cvm_ops->coda_file);
++		kfree(cvm_ops);
++	}
++}
++
+ static int
+ coda_file_mmap(struct file *coda_file, struct vm_area_struct *vma)
+ {
+@@ -67,6 +102,8 @@ coda_file_mmap(struct file *coda_file, s
+ 	struct coda_inode_info *cii;
+ 	struct file *host_file;
+ 	struct inode *coda_inode, *host_inode;
++	struct coda_vm_ops *cvm_ops;
++	int ret;
  
--extern void ccp_log_error(struct ccp_device *, int);
-+extern void ccp_log_error(struct ccp_device *, unsigned int);
+ 	cfi = CODA_FTOC(coda_file);
+ 	BUG_ON(!cfi || cfi->cfi_magic != CODA_MAGIC);
+@@ -75,6 +112,13 @@ coda_file_mmap(struct file *coda_file, s
+ 	if (!host_file->f_op->mmap)
+ 		return -ENODEV;
  
- struct ccp_device *ccp_alloc_struct(struct device *dev);
- bool ccp_queues_suspended(struct ccp_device *ccp);
++	if (WARN_ON(coda_file != vma->vm_file))
++		return -EIO;
++
++	cvm_ops = kmalloc(sizeof(struct coda_vm_ops), GFP_KERNEL);
++	if (!cvm_ops)
++		return -ENOMEM;
++
+ 	coda_inode = file_inode(coda_file);
+ 	host_inode = file_inode(host_file);
+ 
+@@ -88,6 +132,7 @@ coda_file_mmap(struct file *coda_file, s
+ 	 * the container file on us! */
+ 	else if (coda_inode->i_mapping != host_inode->i_mapping) {
+ 		spin_unlock(&cii->c_lock);
++		kfree(cvm_ops);
+ 		return -EBUSY;
+ 	}
+ 
+@@ -96,7 +141,29 @@ coda_file_mmap(struct file *coda_file, s
+ 	cfi->cfi_mapcount++;
+ 	spin_unlock(&cii->c_lock);
+ 
+-	return host_file->f_op->mmap(host_file, vma);
++	vma->vm_file = get_file(host_file);
++	ret = host_file->f_op->mmap(host_file, vma);
++
++	if (ret) {
++		/* if call_mmap fails, our caller will put coda_file so we
++		 * should drop the reference to the host_file that we got.
++		 */
++		fput(host_file);
++		kfree(cvm_ops);
++	} else {
++		/* here we add redirects for the open/close vm_operations */
++		cvm_ops->host_vm_ops = vma->vm_ops;
++		if (vma->vm_ops)
++			cvm_ops->vm_ops = *vma->vm_ops;
++
++		cvm_ops->vm_ops.open = coda_vm_open;
++		cvm_ops->vm_ops.close = coda_vm_close;
++		cvm_ops->coda_file = coda_file;
++		atomic_set(&cvm_ops->refcnt, 1);
++
++		vma->vm_ops = &cvm_ops->vm_ops;
++	}
++	return ret;
+ }
+ 
+ int coda_open(struct inode *coda_inode, struct file *coda_file)
 
 
