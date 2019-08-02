@@ -2,107 +2,114 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D77C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 02:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA86EC19759
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 02:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 042262083B
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 02:30:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kiufhAOm";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Mdlrqe1U"
+	by mail.kernel.org (Postfix) with ESMTP id B03A920665
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 02:38:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728534AbfHBCak (ORCPT
+        id S1727720AbfHBCiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 22:30:40 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:33094 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726756AbfHBCaj (ORCPT
+        Thu, 1 Aug 2019 22:38:07 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:49069 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726654AbfHBCiH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 22:30:39 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 176CF60CED; Fri,  2 Aug 2019 02:30:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564713038;
-        bh=OZ0F8RORaUhH2iVexwHKq9tgLEmJGbcN3e+e3jjLA1I=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=kiufhAOmCEiVcEp97nEuTYC2w1MGipbICKkEQIdgiLFyR1No3s7yUTkeDqvcr8/oO
-         aBYmxBtCq1UST+hKFViRiw9+jVavDYCRlPNaL/Bqv+6VVoO2Ml6qGAq7jhNZiSOTSh
-         T1gjWhQ7mhiw9k+AOGKZH9vzUVfRtNjDH9fgx2Sc=
-Received: from [10.79.43.141] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A305461FE0;
-        Fri,  2 Aug 2019 02:30:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564713036;
-        bh=OZ0F8RORaUhH2iVexwHKq9tgLEmJGbcN3e+e3jjLA1I=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Mdlrqe1U7jv3NXPMi3YJzB7dSTLfVwftvLyVTVU2F+eszwTmqpI8MOP4Mv4N/0rQh
-         5DIb/5GmekgB+l3I3kLsd9/enQbi/l1ndeRhPkd1uiiWz/0Cskl9MzoFnNx1ffyLfN
-         +nEZOA7rz1rtsy3yRUiObJMALYn50Qax/FRdS67Y=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A305461FE0
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH 2/2] pinctrl: qcom: Add SC7180 pinctrl driver
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, robh+dt@kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jitendra Sharma <shajit@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>
-References: <20190801100717.23333-1-rnayak@codeaurora.org>
- <20190801100717.23333-2-rnayak@codeaurora.org>
- <20190801143637.GY7234@tuxbook-pro>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <2f530ba7-684b-156b-5fe3-3577d574a03d@codeaurora.org>
-Date:   Fri, 2 Aug 2019 08:00:31 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 1 Aug 2019 22:38:07 -0400
+Received: by mail-io1-f69.google.com with SMTP id z19so81582743ioi.15
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 19:38:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=rO6MbK94gQtYTmOiAsJqIF2aYQbASQz+L1wIGnaGIBI=;
+        b=ruFbYwsHQMGSCJnykWfyJrbV4v4i9hjAjNa0OYTnQcuksRJ2mIanSNi5m/nLFxseZx
+         PNMhLFsdmEywAv+CEylnjmuF0Uwi8gKYyo34KoqyPHZ5KK+cLgXqMynNAt+gcel0ucCf
+         Lj6hNLf26y2TSgOzarTjgW6TIL8UjH9rhJ+lD6joIB00BsbRX5ZoVut2FEv6OHqO08Qd
+         r4qTuTjAjfa5otySLIlDK6KXMX9MBqwc+tVLn37XP0jd+qvjf1feD2rDv+NAflLB8xGG
+         c/noH61apEwc/4gkT5snjWF9wn/a8c0GSSixhveLfoWDkup8r+Xx/0hdgh/oGtAZM83E
+         NgOA==
+X-Gm-Message-State: APjAAAXewciVdk+TOCr7+DVqgcRxWnDJCtEyYwEzmylX2HNFe3tOAYyS
+        BLRdsJQjCMJ5d5B9F3RHTBxdCLpZt1hb9whNbp7IlAgqOF+U
+X-Google-Smtp-Source: APXvYqw4UbVp0XBzF5ccVCATxBEoJFs5z/rYI+i8vKJqCyFB1j877TyGerAHkt09pKyyg4l9Smm9pOYOzYsjdAIS8Rnb/bOX+RAc
 MIME-Version: 1.0
-In-Reply-To: <20190801143637.GY7234@tuxbook-pro>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a6b:3102:: with SMTP id j2mr8770688ioa.5.1564713486354;
+ Thu, 01 Aug 2019 19:38:06 -0700 (PDT)
+Date:   Thu, 01 Aug 2019 19:38:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000879057058f193fb5@google.com>
+Subject: memory leak in tipc_group_create_member
+From:   syzbot <syzbot+f95d90c454864b3b5bc9@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jon.maloy@ericsson.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        tipc-discussion@lists.sourceforge.net, ying.xue@windriver.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    a9815a4f Merge branch 'x86-urgent-for-linus' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=12a6dbf0600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=37c48fb52e3789e6
+dashboard link: https://syzkaller.appspot.com/bug?extid=f95d90c454864b3b5bc9
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13be3ecc600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11c992b4600000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+f95d90c454864b3b5bc9@syzkaller.appspotmail.com
+
+executing program
+BUG: memory leak
+unreferenced object 0xffff888122bca200 (size 128):
+   comm "syz-executor232", pid 7065, jiffies 4294943817 (age 8.880s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+     00 00 00 00 00 00 00 00 18 a2 bc 22 81 88 ff ff  ..........."....
+   backtrace:
+     [<000000005bada299>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<000000005bada299>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<000000005bada299>] slab_alloc mm/slab.c:3319 [inline]
+     [<000000005bada299>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3548
+     [<00000000e7bcdc9f>] kmalloc include/linux/slab.h:552 [inline]
+     [<00000000e7bcdc9f>] kzalloc include/linux/slab.h:748 [inline]
+     [<00000000e7bcdc9f>] tipc_group_create_member+0x3c/0x190  
+net/tipc/group.c:306
+     [<0000000005f56f40>] tipc_group_add_member+0x34/0x40  
+net/tipc/group.c:327
+     [<0000000044406683>] tipc_nametbl_build_group+0x9b/0xf0  
+net/tipc/name_table.c:600
+     [<000000009f71e803>] tipc_sk_join net/tipc/socket.c:2901 [inline]
+     [<000000009f71e803>] tipc_setsockopt+0x170/0x490 net/tipc/socket.c:3006
+     [<000000007f61cbc2>] __sys_setsockopt+0x10f/0x220 net/socket.c:2084
+     [<00000000cc630372>] __do_sys_setsockopt net/socket.c:2100 [inline]
+     [<00000000cc630372>] __se_sys_setsockopt net/socket.c:2097 [inline]
+     [<00000000cc630372>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2097
+     [<00000000ec30be33>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:296
+     [<00000000271be3e6>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
 
-On 8/1/2019 8:06 PM, Bjorn Andersson wrote:
-> On Thu 01 Aug 03:07 PDT 2019, Rajendra Nayak wrote:
-> 
-> [..]
->> +static const struct msm_pingroup sc7180_groups[] = {
->> +	[0] = PINGROUP(0, SOUTH, qup01, cri_trng, _, phase_flag, _, _, _, _, _),
->> +	[1] = PINGROUP(1, SOUTH, qup01, cri_trng, _, phase_flag, _, _, _, _, _),
->> +	[2] = PINGROUP(2, SOUTH, qup01, cri_trng, _, phase_flag, _, _, _, _, _),
->> +	[3] = PINGROUP(3, SOUTH, qup01, sp_cmu, dbg_out, qdss_cti, _, _, _, _, _),
->> +	[4] = PINGROUP(4, NORTH, sdc1_tb, _, qdss_cti, _, _, _, _, _, _), [5] = PINGROUP(5, NORTH, sdc2_tb, _, _, _, _, _, _, _, _),
->> +	[6] = PINGROUP(6, NORTH, qup11, qup11, _, _, _, _, _, _, _), [7] = PINGROUP(7, NORTH, qup11, qup11, ddr_bist, _, _, _, _, _, _),
-> 
-> 5 and 7 deserve to be on their own line :)
 
-Oops, looks like some formatting mess, I'll fix and resend.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-> 
-> Apart from that:
-> 
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-thanks for the review.
-
-> 
-> Regards,
-> Bjorn
-> 
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
