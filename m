@@ -2,127 +2,63 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11CCEC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 19:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0AD8C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 19:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D749021726
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 19:14:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84D482087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 19:14:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564773275;
-	bh=Be4RFL9klFdtTpbs86urDYxAxB98BlniUU6+5Db4oas=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pfDxsFHPvKeyx+mVH4BiIIVntEHn48lhZS8MhgP5pUR9+2UOA5+vECKe4OacLoAAT
-	 AzQESqAZYH0TftXPYMbQFbabtJ0B3kdAJ0AIca9KU9eQEQJKheKY13WrtKTg+95TE+
-	 yh+AlwptFUayIx5D++jSaHML5xcYEoW2T2ORBRLE=
+	s=default; t=1564773279;
+	bh=GZmKRwd1hiEBI9hDEpVPA6jfQBqpbxDVlwwUngeaEUo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=dl2oQaskADuUDdEeBTl0M8iQ5mhQH3zrUHYT1H0V6bRl9LHYAfciLzO7pmRB9ysOl
+	 NZmifkpcsIBGspTZUjmp02tbQ01CZRjE4FON+wmwyNYziCQQm1ltgoTi439cl3jLmA
+	 5uvjlsxtKDFwjsOCxOejnNNyIzltPZFMcsL1Bnmo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391929AbfHBTOe (ORCPT
+        id S2391966AbfHBTOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 15:14:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36546 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725866AbfHBTOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 15:14:34 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id BAA03AD43;
-        Fri,  2 Aug 2019 19:14:32 +0000 (UTC)
-Date:   Fri, 2 Aug 2019 21:14:30 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Masoud Sharbiani <msharbiani@apple.com>
-Cc:     gregkh@linuxfoundation.org, hannes@cmpxchg.org,
-        vdavydov.dev@gmail.com, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Possible mem cgroup bug in kernels between 4.18.0 and 5.3-rc1.
-Message-ID: <20190802191430.GO6461@dhcp22.suse.cz>
-References: <5659221C-3E9B-44AD-9BBF-F74DE09535CD@apple.com>
- <20190802074047.GQ11627@dhcp22.suse.cz>
- <7E44073F-9390-414A-B636-B1AE916CC21E@apple.com>
- <20190802144110.GL6461@dhcp22.suse.cz>
- <5DE6F4AE-F3F9-4C52-9DFC-E066D9DD5EDC@apple.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5DE6F4AE-F3F9-4C52-9DFC-E066D9DD5EDC@apple.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 2 Aug 2019 15:14:38 -0400
+Received: from mail.linuxfoundation.org ([140.211.169.12]:35484 "EHLO
+        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725866AbfHBTOg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 15:14:36 -0400
+Received: from X1 (unknown [76.191.170.112])
+        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 973AE174C;
+        Fri,  2 Aug 2019 19:14:34 +0000 (UTC)
+Date:   Fri, 2 Aug 2019 12:14:31 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     dan.j.williams@intel.com, linux-mm@kvack.org,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] memremap: move from kernel/ to mm/
+Message-Id: <20190802121431.3ef9d271c40703b4145d364e@linux-foundation.org>
+In-Reply-To: <20190802083230.GB11000@lst.de>
+References: <20190722094143.18387-1-hch@lst.de>
+        <20190802083230.GB11000@lst.de>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 02-08-19 11:00:55, Masoud Sharbiani wrote:
-> 
-> 
-> > On Aug 2, 2019, at 7:41 AM, Michal Hocko <mhocko@kernel.org> wrote:
-> > 
-> > On Fri 02-08-19 07:18:17, Masoud Sharbiani wrote:
-> >> 
-> >> 
-> >>> On Aug 2, 2019, at 12:40 AM, Michal Hocko <mhocko@kernel.org> wrote:
-> >>> 
-> >>> On Thu 01-08-19 11:04:14, Masoud Sharbiani wrote:
-> >>>> Hey folks,
-> >>>> I’ve come across an issue that affects most of 4.19, 4.20 and 5.2 linux-stable kernels that has only been fixed in 5.3-rc1.
-> >>>> It was introduced by
-> >>>> 
-> >>>> 29ef680 memcg, oom: move out_of_memory back to the charge path 
-> >>> 
-> >>> This commit shouldn't really change the OOM behavior for your particular
-> >>> test case. It would have changed MAP_POPULATE behavior but your usage is
-> >>> triggering the standard page fault path. The only difference with
-> >>> 29ef680 is that the OOM killer is invoked during the charge path rather
-> >>> than on the way out of the page fault.
-> >>> 
-> >>> Anyway, I tried to run your test case in a loop and leaker always ends
-> >>> up being killed as expected with 5.2. See the below oom report. There
-> >>> must be something else going on. How much swap do you have on your
-> >>> system?
-> >> 
-> >> I do not have swap defined. 
-> > 
-> > OK, I have retested with swap disabled and again everything seems to be
-> > working as expected. The oom happens earlier because I do not have to
-> > wait for the swap to get full.
-> > 
-> 
-> In my tests (with the script provided), it only loops 11 iterations before hanging, and uttering the soft lockup message.
-> 
-> 
-> > Which fs do you use to write the file that you mmap?
-> 
-> /dev/sda3 on / type xfs (rw,relatime,seclabel,attr2,inode64,logbufs=8,logbsize=32k,noquota)
-> 
-> Part of the soft lockup path actually specifies that it is going through __xfs_filemap_fault():
+On Fri, 2 Aug 2019 10:32:30 +0200 Christoph Hellwig <hch@lst.de> wrote:
 
-Right, I have just missed that.
+> Andrew,
+> 
+> I've seen you've queued this up in -mm, but the explicit intent here was
+> to quickly merge this after -rc1 so that the move doesn't conflict with
+> further development for 5.3.
 
-[...]
+Didn't know that.
 
-> If I switch the backing file to a ext4 filesystem (separate hard drive), it OOMs.
-> 
-> 
-> If I switch the file used to /dev/zero, it OOMs: 
-> …
-> Todal sum was 0. Loop count is 11
-> Buffer is @ 0x7f2b66c00000
-> ./test-script-devzero.sh: line 16:  3561 Killed                  ./leaker -p 10240 -c 100000
-> 
-> 
-> > Or could you try to
-> > simplify your test even further? E.g. does everything work as expected
-> > when doing anonymous mmap rather than file backed one?
-> 
-> It also OOMs with MAP_ANON. 
-> 
-> Hope that helps.
+>  Any chance you could send this patch on to Linus?
 
-It helps to focus more on the xfs reclaim path. Just to be sure, is
-there any difference if you use cgroup v2? I do not expect to be but
-just to be sure there are no v1 artifacts.
--- 
-Michal Hocko
-SUSE Labs
+Sure, I'll add it to today's batch.
