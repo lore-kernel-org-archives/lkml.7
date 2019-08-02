@@ -2,86 +2,118 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04021C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1701DC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:16:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7A042184B
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5E052184B
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:16:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392396AbfHBMQB (ORCPT
+        id S2392605AbfHBMQI convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 08:16:01 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:51873 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732085AbfHBMQB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 08:16:01 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1htWTU-00081H-RR; Fri, 02 Aug 2019 14:15:56 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1htWTT-000728-QG; Fri, 02 Aug 2019 14:15:55 +0200
-Date:   Fri, 2 Aug 2019 14:15:55 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Schrempf Frieder <frieder.schrempf@kontron.de>
-Cc:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>,
-        "geert+renesas@glider.be" <geert+renesas@glider.be>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 4/4] serial: 8250: Don't check for mctrl_gpio_init()
- returning -ENOSYS
-Message-ID: <20190802121555.dl6rpjphgaxdvcke@pengutronix.de>
-References: <20190802100349.8659-1-frieder.schrempf@kontron.de>
- <20190802100349.8659-4-frieder.schrempf@kontron.de>
+        Fri, 2 Aug 2019 08:16:08 -0400
+Received: from ozlabs.org ([203.11.71.1]:36859 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732155AbfHBMQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 08:16:06 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 460R2p1xsMz9sBF;
+        Fri,  2 Aug 2019 22:16:02 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Chuhong Yuan <hslester96@gmail.com>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joe Perches <joe@perches.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH 01/12] rdmacg: Replace strncmp with str_has_prefix
+In-Reply-To: <CANhBUQ3pYGwKng-wxsGn3tBj3z_kN-CZQL__5YTwwJuco=fH0w@mail.gmail.com>
+References: <20190729151346.9280-1-hslester96@gmail.com> <201907292117.DA40CA7D@keescook> <CANhBUQ3V2A-TBVizVh+eMLSi5Gzw5sMBY7C-0a8=-z15qyQ75w@mail.gmail.com> <CANhBUQ3pYGwKng-wxsGn3tBj3z_kN-CZQL__5YTwwJuco=fH0w@mail.gmail.com>
+Date:   Fri, 02 Aug 2019 22:16:00 +1000
+Message-ID: <87y30bkbjz.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190802100349.8659-4-frieder.schrempf@kontron.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 10:04:11AM +0000, Schrempf Frieder wrote:
-> From: Frieder Schrempf <frieder.schrempf@kontron.de>
-> 
-> Now that the mctrl_gpio code returns NULL instead of ERR_PTR(-ENOSYS)
-> if CONFIG_GPIOLIB is disabled, we can safely remove this check.
-> 
-> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Chuhong Yuan <hslester96@gmail.com> writes:
+> Chuhong Yuan <hslester96@gmail.com> 于2019年7月30日周二 下午2:39写道：
+>> Kees Cook <keescook@chromium.org> 于2019年7月30日周二 下午12:26写道：
+>> > On Mon, Jul 29, 2019 at 11:13:46PM +0800, Chuhong Yuan wrote:
+>> > > strncmp(str, const, len) is error-prone.
+>> > > We had better use newly introduced
+>> > > str_has_prefix() instead of it.
+>> >
+>> > Wait, stop. :) After Laura called my attention to your conversion series,
+>> > mpe pointed out that str_has_prefix() is almost redundant to strstarts()
+>> > (from 2009), and the latter has many more users. Let's fix strstarts()
+>> > match str_has_prefix()'s return behavior (all the existing callers are
+>> > doing boolean tests, so the change in return value won't matter), and
+>> > then we can continue with this replacement. (And add some documentation
+>> > to Documenation/process/deprecated.rst along with a checkpatch.pl test
+>> > maybe too?)
+>> >
+>>
+>> Thanks for your advice!
+>> Does that mean replacing strstarts()'s implementation with
+>> str_has_prefix()'s and then use strstarts() to substitute
+>> strncmp?
+>>
+>> I am not very clear about how to add the test into checkpatch.pl.
+>> Should I write a check for this pattern or directly add strncmp into
+>> deprecated_apis?
+>>
+>> > Actually I'd focus first on the actually broken cases first (sizeof()
+>> > without the "-1", etc):
+>> >
+>> > $ git grep strncmp.*sizeof | grep -v -- '-' | wc -l
+>> > 17
+>> >
+>> > I expect the "copy/paste" changes could just be a Coccinelle script that
+>> > Linus could run to fix all the cases (and should be added to the kernel
+>> > source's list of Coccinelle scripts). Especially since the bulk of the
+>> > usage pattern are doing literals like this:
+>> >
+>>
+>> Actually I am using a Coccinelle script to detect the cases and
+>> have found 800+ places of strncmp(str, const, len).
+>> But the script still needs some improvement since it has false
+>> negatives and only focuses on detecting, not replacement.
+>> I can upload it after improvement.
+>> In which form should I upload it? In a patch's description or put it
+>> in coccinelle scripts?
+>>
+>> > arch/alpha/kernel/setup.c:   if (strncmp(p, "mem=", 4) == 0) {
+>> >
+>> > $ git grep -E 'strncmp.*(sizeof|, *[0-9]*)' | wc -l
+>> > 2565
+>> >
+>> > And some cases are weirdly backwards:
+>> >
+>> > tools/perf/util/callchain.c:  if (!strncmp(tok, "none", strlen(tok))) {
+>
+> I find there are cases of this pattern are not wrong.
+> One example is kernel/irq/debugfs.c: if (!strncmp(buf, "trigger", size)) {
+>
+> Thus I do not know whether I should include these cases in my script.
 
-Acked-by: Uwe Kleine-K�nig <u.kleine-koenig@pengutronix.de>
+That case isn't looking for a prefix AFAICS, so you should skip it.
 
-@greg: This patch doesn't depend on patch 2; ditto for patch 3. So only
-taking patches 1, 3 and 4 should be fine. This way Frieder's v4 only
-have to care for patch 2. (Assuming noone objects to 1, 3 and 4 of
-course.)
+I think Kees regexp was just slightly wrong, it should be:
 
-Best regards
-Uwe
+ git grep -E 'strncmp.*(sizeof|, *[0-9]+)'
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-K�nig            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+ie. either literal "sizeof" or *at least one* digit.
+
+cheers
