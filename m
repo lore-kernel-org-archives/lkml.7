@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C45EC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFD5C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA45E2064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:54:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF1682064A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:55:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739688;
-	bh=CLg68tfzKMVwWEvkzvAmfZIb7/a7kh58NQrcf00uExY=;
+	s=default; t=1564739700;
+	bh=OufKD8J6lv8iRq2T8OhHfNlKOq+SpB83ycK3WdKvSvI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bzLtlEZT+N43xj4nsqzfqEsAHa69+rUB11T4gKsnpwj9tgnuA4KQ3X9i0dgKlP49Y
-	 nWJbD3tScK7/muU7Nh4dIwYjH/J0npFHGMPBJR68fXlTfAZFQun8zoQBGU8IAdnccC
-	 7laolo8BE2KStAUpiIIk6KOtAOOcuz1hPYey/mhU=
+	b=H28O9vGYimemyFOqSFR4g4NZ2FX/DxPle/NUPVraHES4Nz1/PqWLQJO2PDLgfcukj
+	 wJwgC+qwBIjkx5tgtk8SjXah8ZXQD9+1+7+0A1MOhzgL3/Mr/zxppB430uPb5wGjMq
+	 RKQPHHskucHsdbVu8e0XvXAobYP6rWcl9S7ERIL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406453AbfHBJyr (ORCPT
+        id S2406461AbfHBJy7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:54:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33012 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:54:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406233AbfHBJyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:54:39 -0400
+        id S2405891AbfHBJxb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:53:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B85FA2064A;
-        Fri,  2 Aug 2019 09:54:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 842442064A;
+        Fri,  2 Aug 2019 09:53:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739678;
-        bh=CLg68tfzKMVwWEvkzvAmfZIb7/a7kh58NQrcf00uExY=;
+        s=default; t=1564739611;
+        bh=OufKD8J6lv8iRq2T8OhHfNlKOq+SpB83ycK3WdKvSvI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2rXcTmt4CiRlXhmYY059qXJMB9bpKW75qtLk/q5eQJV220A7GRpuNqB9nAvuvlvAC
-         oEQ2t6j1V0M44c09ghHRCouzvWBQJaZEP+7k+6Xm90Oy4hTn7o6Zk4aGOpmYwvVblw
-         mwQP3z80a622rZlIgFCsN5TQmYs0bfcd+7szapx0=
+        b=D53CHPRL651MrdOzMmNlsmbziWtMk1zjKowI07qqJ31GsV+TFC/4xSez8+5nOUtHi
+         6hH52l3+0JL5AGmuxvKVFgfY99Oz0aX3d8EQoopoNIFiUKSvwNqy161rUCyTGZa2Y0
+         6j+G2jATkQjF9i3GP7MbKc6mVTWE68tN0TXiT7JE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yoshinori Sato <ysato@users.sourceforge.jp>
-Subject: [PATCH 4.14 23/25] Fix allyesconfig output.
-Date:   Fri,  2 Aug 2019 11:39:55 +0200
-Message-Id: <20190802092107.252725314@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        syzbot+0c90fc937c84f97d0aa6@syzkaller.appspotmail.com,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 4.9 218/223] media: cpia2_usb: first wake up, then free in disconnect
+Date:   Fri,  2 Aug 2019 11:37:23 +0200
+Message-Id: <20190802092250.799616900@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190802092058.428079740@linuxfoundation.org>
-References: <20190802092058.428079740@linuxfoundation.org>
+In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
+References: <20190802092238.692035242@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,51 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshinori Sato <ysato@users.sourceforge.jp>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit 1b496469d0c020e09124e03e66a81421c21272a7 upstream.
+commit eff73de2b1600ad8230692f00bc0ab49b166512a upstream.
 
-Conflict JCore-SoC and SolutionEngine 7619.
+Kasan reported a use after free in cpia2_usb_disconnect()
+It first freed everything and then woke up those waiting.
+The reverse order is correct.
 
-Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+Fixes: 6c493f8b28c67 ("[media] cpia2: major overhaul to get it in a working state again")
+
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Reported-by: syzbot+0c90fc937c84f97d0aa6@syzkaller.appspotmail.com
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/sh/boards/Kconfig |   14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+ drivers/media/usb/cpia2/cpia2_usb.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/arch/sh/boards/Kconfig
-+++ b/arch/sh/boards/Kconfig
-@@ -8,27 +8,19 @@ config SH_ALPHA_BOARD
- 	bool
+--- a/drivers/media/usb/cpia2/cpia2_usb.c
++++ b/drivers/media/usb/cpia2/cpia2_usb.c
+@@ -909,7 +909,6 @@ static void cpia2_usb_disconnect(struct
+ 	cpia2_unregister_camera(cam);
+ 	v4l2_device_disconnect(&cam->v4l2_dev);
+ 	mutex_unlock(&cam->v4l2_lock);
+-	v4l2_device_put(&cam->v4l2_dev);
  
- config SH_DEVICE_TREE
--	bool "Board Described by Device Tree"
-+	bool
- 	select OF
- 	select OF_EARLY_FLATTREE
- 	select TIMER_OF
- 	select COMMON_CLK
- 	select GENERIC_CALIBRATE_DELAY
--	help
--	  Select Board Described by Device Tree to build a kernel that
--	  does not hard-code any board-specific knowledge but instead uses
--	  a device tree blob provided by the boot-loader. You must enable
--	  drivers for any hardware you want to use separately. At this
--	  time, only boards based on the open-hardware J-Core processors
--	  have sufficient driver coverage to use this option; do not
--	  select it if you are using original SuperH hardware.
+ 	if(cam->buffers) {
+ 		DBG("Wakeup waiting processes\n");
+@@ -921,6 +920,8 @@ static void cpia2_usb_disconnect(struct
+ 	DBG("Releasing interface\n");
+ 	usb_driver_release_interface(&cpia2_driver, intf);
  
- config SH_JCORE_SOC
- 	bool "J-Core SoC"
--	depends on SH_DEVICE_TREE && (CPU_SH2 || CPU_J2)
-+	select SH_DEVICE_TREE
- 	select CLKSRC_JCORE_PIT
- 	select JCORE_AIC
--	default y if CPU_J2
-+	depends on CPU_J2
- 	help
- 	  Select this option to include drivers core components of the
- 	  J-Core SoC, including interrupt controllers and timers.
++	v4l2_device_put(&cam->v4l2_dev);
++
+ 	LOG("CPiA2 camera disconnected.\n");
+ }
+ 
 
 
