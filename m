@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE49C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44389C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C74742087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F2F52086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739512;
-	bh=TNKOL0Nje0Z/X0kAaBQh3f1RgID2/jSJGzhcYJnRLWo=;
+	s=default; t=1564739516;
+	bh=sj7trxfS9zf6pgZfptpJ+kanUgEfuUOnNltiHE6tFRQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EFczrP48SsVlYH40CHb1QCMCm3I7s0xSA9LhyPYS7RUzOB8uYkP5pL8XaWq1YRTzS
-	 GX9nHCG5qzAIanaKG9hhMyVTGn84k0+1N1eNX2KlV+U7kJxvq06bI0IcOwHcjYkicj
-	 o/od0889hC7Pdulfz6gTHBXvRpCpwsOu9H73u1Qs=
+	b=gjo3mOvu9tjvmMisLbSK/h8ZMgwFGNpXctNDNs9aMa0HL+tYKNyBilkcMpfdysWcj
+	 3R1uHmFGyk6GwOHvh0iYQT/atRYc73UxC/Ix+J/Axi2+hkBXgNcYxMSogdkPGXjrvV
+	 oW6NxsMNlrFLUn8Kj0j2OdgU8jOJTNyOPae1Ehy8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392104AbfHBJvv (ORCPT
+        id S2392117AbfHBJvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:51:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57158 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:51:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391833AbfHBJvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:51:48 -0400
+        id S2392043AbfHBJvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:51:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BE5220880;
-        Fri,  2 Aug 2019 09:51:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEB7A2064A;
+        Fri,  2 Aug 2019 09:51:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739507;
-        bh=TNKOL0Nje0Z/X0kAaBQh3f1RgID2/jSJGzhcYJnRLWo=;
+        s=default; t=1564739510;
+        bh=sj7trxfS9zf6pgZfptpJ+kanUgEfuUOnNltiHE6tFRQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P1+gazA7Lin7G86Z5IRiDQggbJkET7VqFXmv4pkdih4u8S4/xdA/TCNJyly95m5h5
-         m85bDp3uEAXHwHUJ9Wybc3JJsJbDk6FI9soYSvpRb27uA0rmXCBtQOv1YjkJQx2TtW
-         u/1JvmBSD3L0D7wAvYBNM/F7d+ZFp9Dnq3Ht+96Q=
+        b=c4w7ukpvEP93CGQJITfGGKOwYtqxomxL7CWCKA95duvcGzdpqbZUSRHnW437pSjrD
+         kP60u9+0N5r0G7R3X6uplYzjOLxRtD8j3zvwE9HjXtIppKlXSQ8WOjtT6490tmZls8
+         pdfrqFg69M1Z8R+yBiBlIKjWq5+lS1vfiLOLvkKo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Ocean Chen <oceanchen@google.com>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 192/223] powerpc/boot: add {get, put}_unaligned_be32 to xz_config.h
-Date:   Fri,  2 Aug 2019 11:36:57 +0200
-Message-Id: <20190802092249.796833364@linuxfoundation.org>
+Subject: [PATCH 4.9 193/223] f2fs: avoid out-of-range memory access
+Date:   Fri,  2 Aug 2019 11:36:58 +0200
+Message-Id: <20190802092249.833766176@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -61,100 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9e005b761e7ad153dcf40a6cba1d681fe0830ac6 ]
+[ Upstream commit 56f3ce675103e3fb9e631cfb4131fc768bc23e9a ]
 
-The next commit will make the way of passing CONFIG options more robust.
-Unfortunately, it would uncover another hidden issue; without this
-commit, skiroot_defconfig would be broken like this:
+blkoff_off might over 512 due to fs corrupt or security
+vulnerability. That should be checked before being using.
 
-|   WRAP    arch/powerpc/boot/zImage.pseries
-| arch/powerpc/boot/wrapper.a(decompress.o): In function `bcj_powerpc.isra.10':
-| decompress.c:(.text+0x720): undefined reference to `get_unaligned_be32'
-| decompress.c:(.text+0x7a8): undefined reference to `put_unaligned_be32'
-| make[1]: *** [arch/powerpc/boot/Makefile;383: arch/powerpc/boot/zImage.pseries] Error 1
-| make: *** [arch/powerpc/Makefile;295: zImage] Error 2
+Use ENTRIES_IN_SUM to protect invalid value in cur_data_blkoff.
 
-skiroot_defconfig is the only defconfig that enables CONFIG_KERNEL_XZ
-for ppc, which has never been correctly built before.
-
-I figured out the root cause in lib/decompress_unxz.c:
-
-| #ifdef CONFIG_PPC
-| #      define XZ_DEC_POWERPC
-| #endif
-
-CONFIG_PPC is undefined here in the ppc bootwrapper because autoconf.h
-is not included except by arch/powerpc/boot/serial.c
-
-XZ_DEC_POWERPC is not defined, therefore, bcj_powerpc() is not compiled
-for the bootwrapper.
-
-With the next commit passing CONFIG_PPC correctly, we would realize that
-{get,put}_unaligned_be32 was missing.
-
-Unlike the other decompressors, the ppc bootwrapper duplicates all the
-necessary helpers in arch/powerpc/boot/.
-
-The other architectures define __KERNEL__ and pull in helpers for
-building the decompressors.
-
-If ppc bootwrapper had defined __KERNEL__, lib/xz/xz_private.h would
-have included <asm/unaligned.h>:
-
-| #ifdef __KERNEL__
-| #       include <linux/xz.h>
-| #       include <linux/kernel.h>
-| #       include <asm/unaligned.h>
-
-However, doing so would cause tons of definition conflicts since the
-bootwrapper has duplicated everything.
-
-I just added copies of {get,put}_unaligned_be32, following the
-bootwrapper coding convention.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190705100144.28785-1-yamada.masahiro@socionext.com
+Signed-off-by: Ocean Chen <oceanchen@google.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/boot/xz_config.h | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ fs/f2fs/segment.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/powerpc/boot/xz_config.h b/arch/powerpc/boot/xz_config.h
-index 5c6afdbca642..21b52c15aafc 100644
---- a/arch/powerpc/boot/xz_config.h
-+++ b/arch/powerpc/boot/xz_config.h
-@@ -19,10 +19,30 @@ static inline uint32_t swab32p(void *p)
- 
- #ifdef __LITTLE_ENDIAN__
- #define get_le32(p) (*((uint32_t *) (p)))
-+#define cpu_to_be32(x) swab32(x)
-+static inline u32 be32_to_cpup(const u32 *p)
-+{
-+	return swab32p((u32 *)p);
-+}
- #else
- #define get_le32(p) swab32p(p)
-+#define cpu_to_be32(x) (x)
-+static inline u32 be32_to_cpup(const u32 *p)
-+{
-+	return *p;
-+}
- #endif
- 
-+static inline uint32_t get_unaligned_be32(const void *p)
-+{
-+	return be32_to_cpup(p);
-+}
-+
-+static inline void put_unaligned_be32(u32 val, void *p)
-+{
-+	*((u32 *)p) = cpu_to_be32(val);
-+}
-+
- #define memeq(a, b, size) (memcmp(a, b, size) == 0)
- #define memzero(buf, size) memset(buf, 0, size)
- 
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 2fb99a081de8..c983f7d28f03 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -1709,6 +1709,11 @@ static int read_compacted_summaries(struct f2fs_sb_info *sbi)
+ 		seg_i = CURSEG_I(sbi, i);
+ 		segno = le32_to_cpu(ckpt->cur_data_segno[i]);
+ 		blk_off = le16_to_cpu(ckpt->cur_data_blkoff[i]);
++		if (blk_off > ENTRIES_IN_SUM) {
++			f2fs_bug_on(sbi, 1);
++			f2fs_put_page(page, 1);
++			return -EFAULT;
++		}
+ 		seg_i->next_segno = segno;
+ 		reset_curseg(sbi, i, 0);
+ 		seg_i->alloc_type = ckpt->alloc_type[i];
 -- 
 2.20.1
 
