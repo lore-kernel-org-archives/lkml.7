@@ -2,92 +2,131 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE4DC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70DA6C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09E8121851
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:26:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564748788;
-	bh=kIIZtblZbuCqo9WjiJ5UtNU7pGxfSPAyt6llS1XpeDA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rOeHZew8apUh/fQT21tlEgizSpshC9s52xrGnF/UgJD854hjF9Mc37Pg+Jz46owI/
-	 +FNuM7sp6Smt3oxZlvJlu1dZ2y3LM7WSH5hlBEn8ON1MWE6/N5oc/OhbeeRj9zRgbg
-	 DlJns9M+DGmCXSB7I10c0SZQIkf46YJh2wiNCH/M=
+	by mail.kernel.org (Postfix) with ESMTP id 4D8B0216C8
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:26:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389064AbfHBM00 (ORCPT
+        id S2392526AbfHBM0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 08:26:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36320 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 08:26:53 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:57911 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388599AbfHBM00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 08:26:26 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2388599AbfHBM0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 08:26:52 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC0FE216C8;
-        Fri,  2 Aug 2019 12:26:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564748785;
-        bh=kIIZtblZbuCqo9WjiJ5UtNU7pGxfSPAyt6llS1XpeDA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1i6+doQ/3AOnD2X9uXKlqS4o84ghqoa7PcKwYwDLDHYODITX9nuK5skmW84+YeBUY
-         X+OnOcBA3HtRVTfvUMIQmdCA0VxUiCbWGwhxlewdEGFsp6g9WXI7KcjdG4uVWn7Tzr
-         E2mU+rqr8v4Xrfrch4f+GW7oJJlFWcqm7yNG3x6U=
-Date:   Fri, 2 Aug 2019 14:26:23 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Schrempf Frieder <frieder.schrempf@kontron.de>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>,
-        "geert+renesas@glider.be" <geert+renesas@glider.be>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 4/4] serial: 8250: Don't check for mctrl_gpio_init()
- returning -ENOSYS
-Message-ID: <20190802122623.GA25281@kroah.com>
-References: <20190802100349.8659-1-frieder.schrempf@kontron.de>
- <20190802100349.8659-4-frieder.schrempf@kontron.de>
- <20190802121555.dl6rpjphgaxdvcke@pengutronix.de>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 460RHF4fMDz9sBF;
+        Fri,  2 Aug 2019 22:26:49 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Leonardo Bras <leonardo@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc:     Leonardo Bras <leonardo@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/1] pseries/hotplug-memory.c: Replace nested ifs by switch-case
+In-Reply-To: <20190801225251.17864-1-leonardo@linux.ibm.com>
+References: <20190801225251.17864-1-leonardo@linux.ibm.com>
+Date:   Fri, 02 Aug 2019 22:26:48 +1000
+Message-ID: <87sgqjkb1z.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190802121555.dl6rpjphgaxdvcke@pengutronix.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 02:15:55PM +0200, Uwe Kleine-König wrote:
-> On Fri, Aug 02, 2019 at 10:04:11AM +0000, Schrempf Frieder wrote:
-> > From: Frieder Schrempf <frieder.schrempf@kontron.de>
-> > 
-> > Now that the mctrl_gpio code returns NULL instead of ERR_PTR(-ENOSYS)
-> > if CONFIG_GPIOLIB is disabled, we can safely remove this check.
-> > 
-> > Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-> 
-> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> 
-> @greg: This patch doesn't depend on patch 2; ditto for patch 3. So only
-> taking patches 1, 3 and 4 should be fine. This way Frieder's v4 only
-> have to care for patch 2. (Assuming noone objects to 1, 3 and 4 of
-> course.)
+Leonardo Bras <leonardo@linux.ibm.com> writes:
+> I noticed these nested ifs can be easily replaced by switch-cases,
+> which can improve readability.
+>
+> Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
+> ---
+>  .../platforms/pseries/hotplug-memory.c        | 26 +++++++++++++------
+>  1 file changed, 18 insertions(+), 8 deletions(-)
 
-Sounds good, I'll do that, thanks.
+Thanks, this looks sensible.
 
-greg k-h
+Please use "powerpc/" as the prefix on your patches, eg. in this case:
+
+"powerpc/pseries/hotplug-memory.c: Replace nested ifs by switch-case"
+
+I'll fix it up this time when I apply.
+
+cheers
+
+> diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/powerpc/platforms/pseries/hotplug-memory.c
+> index 46d0d35b9ca4..8e700390f3d6 100644
+> --- a/arch/powerpc/platforms/pseries/hotplug-memory.c
+> +++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
+> @@ -880,34 +880,44 @@ int dlpar_memory(struct pseries_hp_errorlog *hp_elog)
+>  
+>  	switch (hp_elog->action) {
+>  	case PSERIES_HP_ELOG_ACTION_ADD:
+> -		if (hp_elog->id_type == PSERIES_HP_ELOG_ID_DRC_COUNT) {
+> +		switch (hp_elog->id_type) {
+> +		case PSERIES_HP_ELOG_ID_DRC_COUNT:
+>  			count = hp_elog->_drc_u.drc_count;
+>  			rc = dlpar_memory_add_by_count(count);
+> -		} else if (hp_elog->id_type == PSERIES_HP_ELOG_ID_DRC_INDEX) {
+> +			break;
+> +		case PSERIES_HP_ELOG_ID_DRC_INDEX:
+>  			drc_index = hp_elog->_drc_u.drc_index;
+>  			rc = dlpar_memory_add_by_index(drc_index);
+> -		} else if (hp_elog->id_type == PSERIES_HP_ELOG_ID_DRC_IC) {
+> +			break;
+> +		case PSERIES_HP_ELOG_ID_DRC_IC:
+>  			count = hp_elog->_drc_u.ic.count;
+>  			drc_index = hp_elog->_drc_u.ic.index;
+>  			rc = dlpar_memory_add_by_ic(count, drc_index);
+> -		} else {
+> +			break;
+> +		default:
+>  			rc = -EINVAL;
+> +			break;
+>  		}
+>  
+>  		break;
+>  	case PSERIES_HP_ELOG_ACTION_REMOVE:
+> -		if (hp_elog->id_type == PSERIES_HP_ELOG_ID_DRC_COUNT) {
+> +		switch (hp_elog->id_type) {
+> +		case PSERIES_HP_ELOG_ID_DRC_COUNT:
+>  			count = hp_elog->_drc_u.drc_count;
+>  			rc = dlpar_memory_remove_by_count(count);
+> -		} else if (hp_elog->id_type == PSERIES_HP_ELOG_ID_DRC_INDEX) {
+> +			break;
+> +		case PSERIES_HP_ELOG_ID_DRC_INDEX:
+>  			drc_index = hp_elog->_drc_u.drc_index;
+>  			rc = dlpar_memory_remove_by_index(drc_index);
+> -		} else if (hp_elog->id_type == PSERIES_HP_ELOG_ID_DRC_IC) {
+> +			break;
+> +		case PSERIES_HP_ELOG_ID_DRC_IC:
+>  			count = hp_elog->_drc_u.ic.count;
+>  			drc_index = hp_elog->_drc_u.ic.index;
+>  			rc = dlpar_memory_remove_by_ic(count, drc_index);
+> -		} else {
+> +			break;
+> +		default:
+>  			rc = -EINVAL;
+> +			break;
+>  		}
+>  
+>  		break;
+> -- 
+> 2.20.1
