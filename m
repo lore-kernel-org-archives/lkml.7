@@ -2,53 +2,52 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D21BBC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1FFDC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AABA22067D
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:05:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B9E32073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:05:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564740308;
-	bh=EjCqMw438dGh28G+V+wXBoY400gG1gDaUNH2Pxe3Kns=;
+	s=default; t=1564740312;
+	bh=7mB6TSh+m+BZ9KYn1jsLGOIEawZuEpcJPnsXQvye5SU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HBE6+1zgHulKzHIzKQfH5LH6zMfspXiNV2Dz6y0d7u8+MRs9P8UT2STKIyj9LezbZ
-	 HN/4RZ9ALsVty/SYqN6KdSTZA3WY0JwxgAI5wy2QrpQeEAkZ3zylbNyBhnCAizBALT
-	 +hF1TjDkXGtJqKvu7o3yPvVzMYF1exgs28uecflE=
+	b=UqG7kpu/viCauv4zqEu7iJrRWfC4lqWlhObbf8867+ucI7TkRUxgGpTZfcGE2hqfr
+	 d1TBn8GXZ15n77JNC6IOtPK2P39Ws2qGjHQ7zhVybLCz9hF1Mw+GhP1fEDaY734wYD
+	 UpTZxu1wiSRkvsKHWvyKeU0HLQIQktX2FKzvDO64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404758AbfHBJcu (ORCPT
+        id S2407285AbfHBKFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:32:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59932 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 06:05:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731970AbfHBJcs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:32:48 -0400
+        id S2404751AbfHBJcu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:32:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 678F32184B;
-        Fri,  2 Aug 2019 09:32:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDFF921773;
+        Fri,  2 Aug 2019 09:32:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738366;
-        bh=EjCqMw438dGh28G+V+wXBoY400gG1gDaUNH2Pxe3Kns=;
+        s=default; t=1564738369;
+        bh=7mB6TSh+m+BZ9KYn1jsLGOIEawZuEpcJPnsXQvye5SU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PlcPdebwqUWlXHgvVhzZEjHCtNy8aBM8uR7SJYJ0D13ogdBhqQUMvcRs+sf43ll5f
-         3mtCN+ARD31lHKRz43fWCODO4+ZANXNJR14B9/NpybZT9UF/VOe5GL8y4Sfw56LBBz
-         PGLCSqwpA7aHT4G5YgJpgCwuC6ZayhYJA8Bnu+UY=
+        b=KwqB92ZJQlgeclpB5MsGbzd/P4BE1fEcROaA4y1gxpB+JsRp8ZILXJaBA4Og34bsk
+         Dn02yRob9p9yiz8bA3TNL0OgiYf/hn1w0F3Qv8g5SJcuJYdq/CmGq8+o1LOqKpp8r9
+         4Kck1pIPvAXbtTQ5XDLZ9ITdD+JfUpTCKdMgsKU8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Eiichi Tsukata <devel@etsukata.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 049/158] EDAC: Fix global-out-of-bounds write when setting edac_mc_poll_msec
-Date:   Fri,  2 Aug 2019 11:27:50 +0200
-Message-Id: <20190802092214.045389262@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Dominique Martinet <dominique.martinet@cea.fr>
+Subject: [PATCH 4.4 069/158] 9p/virtio: Add cleanup path in p9_virtio_init
+Date:   Fri,  2 Aug 2019 11:28:10 +0200
+Message-Id: <20190802092217.998565661@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -61,159 +60,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d8655e7630dafa88bc37f101640e39c736399771 ]
+From: YueHaibing <yuehaibing@huawei.com>
 
-Commit 9da21b1509d8 ("EDAC: Poll timeout cannot be zero, p2") assumes
-edac_mc_poll_msec to be unsigned long, but the type of the variable still
-remained as int. Setting edac_mc_poll_msec can trigger out-of-bounds
-write.
+commit d4548543fc4ece56c6f04b8586f435fb4fd84c20 upstream.
 
-Reproducer:
+KASAN report this:
 
-  # echo 1001 > /sys/module/edac_core/parameters/edac_mc_poll_msec
+BUG: unable to handle kernel paging request at ffffffffa0097000
+PGD 3870067 P4D 3870067 PUD 3871063 PMD 2326e2067 PTE 0
+Oops: 0000 [#1
+CPU: 0 PID: 5340 Comm: modprobe Not tainted 5.1.0-rc7+ #25
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
+RIP: 0010:__list_add_valid+0x10/0x70
+Code: c3 48 8b 06 55 48 89 e5 5d 48 39 07 0f 94 c0 0f b6 c0 c3 90 90 90 90 90 90 90 55 48 89 d0 48 8b 52 08 48 89 e5 48 39 f2 75 19 <48> 8b 32 48 39 f0 75 3a
 
-KASAN report:
+RSP: 0018:ffffc90000e23c68 EFLAGS: 00010246
+RAX: ffffffffa00ad000 RBX: ffffffffa009d000 RCX: 0000000000000000
+RDX: ffffffffa0097000 RSI: ffffffffa0097000 RDI: ffffffffa009d000
+RBP: ffffc90000e23c68 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: ffffffffa0097000
+R13: ffff888231797180 R14: 0000000000000000 R15: ffffc90000e23e78
+FS:  00007fb215285540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffa0097000 CR3: 000000022f144000 CR4: 00000000000006f0
+Call Trace:
+ v9fs_register_trans+0x2f/0x60 [9pnet
+ ? 0xffffffffa0087000
+ p9_virtio_init+0x25/0x1000 [9pnet_virtio
+ do_one_initcall+0x6c/0x3cc
+ ? kmem_cache_alloc_trace+0x248/0x3b0
+ do_init_module+0x5b/0x1f1
+ load_module+0x1db1/0x2690
+ ? m_show+0x1d0/0x1d0
+ __do_sys_finit_module+0xc5/0xd0
+ __x64_sys_finit_module+0x15/0x20
+ do_syscall_64+0x6b/0x1d0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x7fb214d8e839
+Code: 00 f3 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01
 
-  BUG: KASAN: global-out-of-bounds in edac_set_poll_msec+0x140/0x150
-  Write of size 8 at addr ffffffffb91b2d00 by task bash/1996
+RSP: 002b:00007ffc96554278 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+RAX: ffffffffffffffda RBX: 000055e67eed2aa0 RCX: 00007fb214d8e839
+RDX: 0000000000000000 RSI: 000055e67ce95c2e RDI: 0000000000000003
+RBP: 000055e67ce95c2e R08: 0000000000000000 R09: 000055e67eed2aa0
+R10: 0000000000000003 R11: 0000000000000246 R12: 0000000000000000
+R13: 000055e67eeda500 R14: 0000000000040000 R15: 000055e67eed2aa0
+Modules linked in: 9pnet_virtio(+) 9pnet gre rfkill vmw_vsock_virtio_transport_common vsock [last unloaded: 9pnet_virtio
+CR2: ffffffffa0097000
+---[ end trace 4a52bb13ff07b761
 
-  CPU: 1 PID: 1996 Comm: bash Not tainted 5.2.0-rc6+ #23
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-2.fc30 04/01/2014
-  Call Trace:
-   dump_stack+0xca/0x13e
-   print_address_description.cold+0x5/0x246
-   __kasan_report.cold+0x75/0x9a
-   ? edac_set_poll_msec+0x140/0x150
-   kasan_report+0xe/0x20
-   edac_set_poll_msec+0x140/0x150
-   ? dimmdev_location_show+0x30/0x30
-   ? vfs_lock_file+0xe0/0xe0
-   ? _raw_spin_lock+0x87/0xe0
-   param_attr_store+0x1b5/0x310
-   ? param_array_set+0x4f0/0x4f0
-   module_attr_store+0x58/0x80
-   ? module_attr_show+0x80/0x80
-   sysfs_kf_write+0x13d/0x1a0
-   kernfs_fop_write+0x2bc/0x460
-   ? sysfs_kf_bin_read+0x270/0x270
-   ? kernfs_notify+0x1f0/0x1f0
-   __vfs_write+0x81/0x100
-   vfs_write+0x1e1/0x560
-   ksys_write+0x126/0x250
-   ? __ia32_sys_read+0xb0/0xb0
-   ? do_syscall_64+0x1f/0x390
-   do_syscall_64+0xc1/0x390
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  RIP: 0033:0x7fa7caa5e970
-  Code: 73 01 c3 48 8b 0d 28 d5 2b 00 f7 d8 64 89 01 48 83 c8 ff c3 66 0f 1f 44 00 00 83 3d 99 2d 2c 00 00 75 10 b8 01 00 00 00 04
-  RSP: 002b:00007fff6acfdfe8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-  RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 00007fa7caa5e970
-  RDX: 0000000000000005 RSI: 0000000000e95c08 RDI: 0000000000000001
-  RBP: 0000000000e95c08 R08: 00007fa7cad1e760 R09: 00007fa7cb36a700
-  R10: 0000000000000073 R11: 0000000000000246 R12: 0000000000000005
-  R13: 0000000000000001 R14: 00007fa7cad1d600 R15: 0000000000000005
+If register_virtio_driver() fails in p9_virtio_init,
+we should call v9fs_unregister_trans() to do cleanup.
 
-  The buggy address belongs to the variable:
-   edac_mc_poll_msec+0x0/0x40
+Link: http://lkml.kernel.org/r/20190430115942.41840-1-yuehaibing@huawei.com
+Cc: stable@vger.kernel.org
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: b530cc794024 ("9p: add virtio transport")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-  Memory state around the buggy address:
-   ffffffffb91b2c00: 00 00 00 00 fa fa fa fa 00 00 00 00 fa fa fa fa
-   ffffffffb91b2c80: 00 00 00 00 fa fa fa fa 00 00 00 00 fa fa fa fa
-  >ffffffffb91b2d00: 04 fa fa fa fa fa fa fa 04 fa fa fa fa fa fa fa
-                     ^
-   ffffffffb91b2d80: 04 fa fa fa fa fa fa fa 00 00 00 00 00 00 00 00
-   ffffffffb91b2e00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-
-Fix it by changing the type of edac_mc_poll_msec to unsigned int.
-The reason why this patch adopts unsigned int rather than unsigned long
-is msecs_to_jiffies() assumes arg to be unsigned int. We can avoid
-integer conversion bugs and unsigned int will be large enough for
-edac_mc_poll_msec.
-
-Reviewed-by: James Morse <james.morse@arm.com>
-Fixes: 9da21b1509d8 ("EDAC: Poll timeout cannot be zero, p2")
-Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/edac_mc_sysfs.c | 16 ++++++++--------
- drivers/edac/edac_module.h   |  2 +-
- 2 files changed, 9 insertions(+), 9 deletions(-)
+ net/9p/trans_virtio.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/edac/edac_mc_sysfs.c b/drivers/edac/edac_mc_sysfs.c
-index 0c53f2d54765..d459cf4b8579 100644
---- a/drivers/edac/edac_mc_sysfs.c
-+++ b/drivers/edac/edac_mc_sysfs.c
-@@ -26,7 +26,7 @@
- static int edac_mc_log_ue = 1;
- static int edac_mc_log_ce = 1;
- static int edac_mc_panic_on_ue;
--static int edac_mc_poll_msec = 1000;
-+static unsigned int edac_mc_poll_msec = 1000;
- 
- /* Getter functions for above */
- int edac_mc_get_log_ue(void)
-@@ -45,30 +45,30 @@ int edac_mc_get_panic_on_ue(void)
- }
- 
- /* this is temporary */
--int edac_mc_get_poll_msec(void)
-+unsigned int edac_mc_get_poll_msec(void)
+--- a/net/9p/trans_virtio.c
++++ b/net/9p/trans_virtio.c
+@@ -767,10 +767,16 @@ static struct p9_trans_module p9_virtio_
+ /* The standard init function */
+ static int __init p9_virtio_init(void)
  {
- 	return edac_mc_poll_msec;
++	int rc;
++
+ 	INIT_LIST_HEAD(&virtio_chan_list);
+ 
+ 	v9fs_register_trans(&p9_virtio_trans);
+-	return register_virtio_driver(&p9_virtio_drv);
++	rc = register_virtio_driver(&p9_virtio_drv);
++	if (rc)
++		v9fs_unregister_trans(&p9_virtio_trans);
++
++	return rc;
  }
  
- static int edac_set_poll_msec(const char *val, struct kernel_param *kp)
- {
--	unsigned long l;
-+	unsigned int i;
- 	int ret;
- 
- 	if (!val)
- 		return -EINVAL;
- 
--	ret = kstrtoul(val, 0, &l);
-+	ret = kstrtouint(val, 0, &i);
- 	if (ret)
- 		return ret;
- 
--	if (l < 1000)
-+	if (i < 1000)
- 		return -EINVAL;
- 
--	*((unsigned long *)kp->arg) = l;
-+	*((unsigned int *)kp->arg) = i;
- 
- 	/* notify edac_mc engine to reset the poll period */
--	edac_mc_reset_delay_period(l);
-+	edac_mc_reset_delay_period(i);
- 
- 	return 0;
- }
-@@ -82,7 +82,7 @@ MODULE_PARM_DESC(edac_mc_log_ue,
- module_param(edac_mc_log_ce, int, 0644);
- MODULE_PARM_DESC(edac_mc_log_ce,
- 		 "Log correctable error to console: 0=off 1=on");
--module_param_call(edac_mc_poll_msec, edac_set_poll_msec, param_get_int,
-+module_param_call(edac_mc_poll_msec, edac_set_poll_msec, param_get_uint,
- 		  &edac_mc_poll_msec, 0644);
- MODULE_PARM_DESC(edac_mc_poll_msec, "Polling period in milliseconds");
- 
-diff --git a/drivers/edac/edac_module.h b/drivers/edac/edac_module.h
-index b95a48fc723d..c7a7a0891eb6 100644
---- a/drivers/edac/edac_module.h
-+++ b/drivers/edac/edac_module.h
-@@ -33,7 +33,7 @@ extern int edac_mc_get_log_ue(void);
- extern int edac_mc_get_log_ce(void);
- extern int edac_mc_get_panic_on_ue(void);
- extern int edac_get_poll_msec(void);
--extern int edac_mc_get_poll_msec(void);
-+extern unsigned int edac_mc_get_poll_msec(void);
- 
- unsigned edac_dimm_info_location(struct dimm_info *dimm, char *buf,
- 				 unsigned len);
--- 
-2.20.1
-
+ static void __exit p9_virtio_cleanup(void)
 
 
