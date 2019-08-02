@@ -2,134 +2,104 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D76AC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 03:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF87C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 03:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EE6F206A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 03:04:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C042206A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 03:06:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728662AbfHBDE3 (ORCPT
+        id S1728746AbfHBDGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 23:04:29 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:41902 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726825AbfHBDE2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 23:04:28 -0400
-X-UUID: c92cdbe318cf414695363abda4ef831d-20190802
-X-UUID: c92cdbe318cf414695363abda4ef831d-20190802
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 160514836; Fri, 02 Aug 2019 11:04:20 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 2 Aug 2019 11:04:19 +0800
-Received: from [172.21.84.99] (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 2 Aug 2019 11:04:19 +0800
-Message-ID: <1564715059.4231.6.camel@mtksdccf07>
-Subject: Re: [PATCH v3] kasan: add memory corruption identification for
- software tag-based mode
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
-CC:     Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Vasily Gorbik" <gor@linux.ibm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>,
-        Miles Chen <miles.chen@mediatek.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>
-Date:   Fri, 2 Aug 2019 11:04:19 +0800
-In-Reply-To: <f29ee964-cf12-1b5d-e570-1d5baa49a580@virtuozzo.com>
-References: <20190613081357.1360-1-walter-zh.wu@mediatek.com>
-         <da7591c9-660d-d380-d59e-6d70b39eaa6b@virtuozzo.com>
-         <1560447999.15814.15.camel@mtksdccf07>
-         <1560479520.15814.34.camel@mtksdccf07>
-         <1560744017.15814.49.camel@mtksdccf07>
-         <CACT4Y+Y3uS59rXf92ByQuFK_G4v0H8NNnCY1tCbr4V+PaZF3ag@mail.gmail.com>
-         <1560774735.15814.54.camel@mtksdccf07>
-         <1561974995.18866.1.camel@mtksdccf07>
-         <CACT4Y+aMXTBE0uVkeZz+MuPx3X1nESSBncgkScWvAkciAxP1RA@mail.gmail.com>
-         <ebc99ee1-716b-0b18-66ab-4e93de02ce50@virtuozzo.com>
-         <1562640832.9077.32.camel@mtksdccf07>
-         <d9fd1d5b-9516-b9b9-0670-a1885e79f278@virtuozzo.com>
-         <1562839579.5846.12.camel@mtksdccf07>
-         <37897fb7-88c1-859a-dfcc-0a5e89a642e0@virtuozzo.com>
-         <1563160001.4793.4.camel@mtksdccf07>
-         <9ab1871a-2605-ab34-3fd3-4b44a0e17ab7@virtuozzo.com>
-         <1563789162.31223.3.camel@mtksdccf07>
-         <e62da62a-2a63-3a1c-faeb-9c5561a5170c@virtuozzo.com>
-         <1564144097.515.3.camel@mtksdccf07>
-         <71df2bd5-7bc8-2c82-ee31-3f68c3b6296d@virtuozzo.com>
-         <1564147164.515.10.camel@mtksdccf07>
-         <f29ee964-cf12-1b5d-e570-1d5baa49a580@virtuozzo.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Thu, 1 Aug 2019 23:06:15 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3698 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726467AbfHBDGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 23:06:15 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 0B309FFFDDE6338C5C4F;
+        Fri,  2 Aug 2019 11:06:10 +0800 (CST)
+Received: from huawei.com (10.175.102.38) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Fri, 2 Aug 2019
+ 11:06:03 +0800
+From:   Tan Xiaojun <tanxiaojun@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
+        <namhyung@kernel.org>, <songliubraving@fb.com>,
+        <rostedt@goodmis.org>, <kan.liang@linux.intel.com>,
+        <tz.stoyanov@gmail.com>, <alexey.budankov@linux.intel.com>
+CC:     <linux-kernel@vger.kernel.org>, <tanxiaojun@huawei.com>
+Subject: [PATCH] perf record: Support aarch64 random socket_id assignment
+Date:   Fri, 2 Aug 2019 11:48:57 +0800
+Message-ID: <1564717737-21602-1-git-send-email-tanxiaojun@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: EFC55C8D8568410C5734BD4FCFD4848B3C4EE4673A27E15E32FD2B157FABFEE12000:8
-X-MTK:  N
+Content-Type: text/plain
+X-Originating-IP: [10.175.102.38]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-07-31 at 20:04 +0300, Andrey Ryabinin wrote:
-> 
-> On 7/26/19 4:19 PM, Walter Wu wrote:
-> > On Fri, 2019-07-26 at 15:52 +0300, Andrey Ryabinin wrote:
-> >>
-> >> On 7/26/19 3:28 PM, Walter Wu wrote:
-> >>> On Fri, 2019-07-26 at 15:00 +0300, Andrey Ryabinin wrote:
-> >>>>
-> >>>
-> >>>>>
-> >>>>>
-> >>>>> I remember that there are already the lists which you concern. Maybe we
-> >>>>> can try to solve those problems one by one.
-> >>>>>
-> >>>>> 1. deadlock issue? cause by kmalloc() after kfree()?
-> >>>>
-> >>>> smp_call_on_cpu()
-> >>>
-> >>>>> 2. decrease allocation fail, to modify GFP_NOWAIT flag to GFP_KERNEL?
-> >>>>
-> >>>> No, this is not gonna work. Ideally we shouldn't have any allocations there.
-> >>>> It's not reliable and it hurts performance.
-> >>>>
-> >>> I dont know this meaning, we need create a qobject and put into
-> >>> quarantine, so may need to call kmem_cache_alloc(), would you agree this
-> >>> action?
-> >>>
-> >>
-> >> How is this any different from what you have now?
-> > 
-> > I originally thought you already agreed the free-list(tag-based
-> > quarantine) after fix those issue. If no allocation there,
-> 
-> If no allocation there, than it must be somewhere else.
-> We known exactly the amount of memory we need, so it's possible to preallocate it in advance.
-> 
-I see. We will implement an extend slub to record five free backtrack
-and free pointer tag, and determine whether it is oob or uaf by the free
-pointer tag. If you have other ideas, please tell me. Thanks.
+Same as the commit 01766229533f ("perf record: Support s390 random
+socket_id assignment"), aarch64 also have this problem.
 
+Without this fix:
+  [root@localhost perf]# ./perf report --header -I -v
+  ...
+  socket_id number is too big.You may need to upgrade the perf tool.
+
+  # ========
+  # captured on    : Thu Aug  1 22:58:38 2019
+  # header version : 1
+  ...
+  # Core ID and Socket ID information is not available
+  ...
+
+With this fix:
+  [root@localhost perf]# ./perf report --header -I -v
+  ...
+  cpumask list: 0-31
+  cpumask list: 32-63
+  cpumask list: 64-95
+  cpumask list: 96-127
+
+  # ========
+  # captured on    : Thu Aug  1 22:58:38 2019
+  # header version : 1
+  ...
+  # CPU 0: Core ID 0, Socket ID 36
+  # CPU 1: Core ID 1, Socket ID 36
+  ...
+  # CPU 126: Core ID 126, Socket ID 8442
+  # CPU 127: Core ID 127, Socket ID 8442
+  ...
+
+Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
+---
+ tools/perf/util/header.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 20111f8..d57fb74 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -2251,8 +2251,10 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
+ 	/* On s390 the socket_id number is not related to the numbers of cpus.
+ 	 * The socket_id number might be higher than the numbers of cpus.
+ 	 * This depends on the configuration.
++	 * AArch64 is the same.
+ 	 */
+-	if (ph->env.arch && !strncmp(ph->env.arch, "s390", 4))
++	if (ph->env.arch && (!strncmp(ph->env.arch, "s390", 4)
++			  || !strncmp(ph->env.arch, "aarch64", 7)))
+ 		do_core_id_test = false;
  
+ 	for (i = 0; i < (u32)cpu_nr; i++) {
+-- 
+2.7.4
 
