@@ -2,109 +2,108 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC9EC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0746C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22F082173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:58:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KfNlPhD/"
+	by mail.kernel.org (Postfix) with ESMTP id B166C2173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:59:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404543AbfHBI63 (ORCPT
+        id S1732238AbfHBI7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 04:58:29 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59442 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730713AbfHBI63 (ORCPT
+        Fri, 2 Aug 2019 04:59:39 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39975 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728232AbfHBI7j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 04:58:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=/G68ut9V+Igim0AzrVXEipFOU/9WLiFOX2nUkkTzcHQ=; b=KfNlPhD/w0UbDGnpbQ/REn0g5
-        6oaHKUks286tOKhZrh0THjEFBcX0GnWm4wlc7dM/dE/tQt/QinHekViEpxBHAU31xJYisJ1ImvD+u
-        IqpEAalcoLdPcKZmnjch3UmCNRFXiYYEIyWVAXxuzpRYq7wGWCpdodB3sl596Oi8B8hbx4wfjUce+
-        IysR9ne7zYm5MkQSf+qwkFNx6qguUN7IGAqVbbdib3hW3k1mKdN3YbEBD+2ABgfIYhuD4CRQ1BL/p
-        KxK3a5Q2hejzudSbGl5ltFHV8NY5bJcueUNA3dmbjdcRMaevhFG8QlFFzqEH3eDnhnJdVgTqSfRAb
-        F8fcXznWw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1htTOK-0005K4-Bu; Fri, 02 Aug 2019 08:58:24 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9C8C32029F4CB; Fri,  2 Aug 2019 10:58:22 +0200 (CEST)
-Date:   Fri, 2 Aug 2019 10:58:22 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andy Walls <andy@silverblocksystems.net>
-Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org,
-        Andy Walls <awalls@md.metrocast.net>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 4/5] media/ivtv: Reduce default FIFO priority
-Message-ID: <20190802085822.GA2386@hirez.programming.kicks-ass.net>
-References: <20190801111348.530242235@infradead.org>
- <20190801111541.858088180@infradead.org>
- <7970f0e30d1eb83e7067225d07b923863bf1ac50.camel@silverblocksystems.net>
- <20190801123806.GA31398@hirez.programming.kicks-ass.net>
+        Fri, 2 Aug 2019 04:59:39 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v19so65612605wmj.5
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 01:59:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JgbbmoU8mRwQDt1oX8O7FGI/YFBQIrkxghclZVXxh9E=;
+        b=MsRNW8goS0rD0UMxxxHoJAeLTzPo2ZgY6+yCKnkI+80WuU2yMmhCnrkofcLMqY4Eew
+         qV63A3oPxc0DGYvhqbhVnlz07gRi/dg981aaHd6xmDeFwtIvusGQcDoRVmhXs6UzlHB4
+         DdUJV8wFsnJwyL+1msFASYVjcMqhTqRNd0J2jSYStR+Pmj2MmXdQNaI2XMbr25Pi+Ob6
+         kpXIcLHpXoL0HnaJ9JtmaEO9hOGe4RsB9++53rdBQeIyYAbAElDAPJFRN+ucXO4y8Azu
+         rqcHBk475UdV9zDXy7m3nann/1TgIGFr37OAZrLxb0ocxmVVqsg3DGTS1eCnjQa7Rw1T
+         ipMg==
+X-Gm-Message-State: APjAAAU6QJgrGLe79gCeFTATezMFcjwL1mJ4Q5pn/jS93CKRrgux4Ohp
+        AUdHFv62CVOLsIxsNNtVaMilhlDVnJM=
+X-Google-Smtp-Source: APXvYqxJwRjyVgdn+EYXPUb8lVj+sHz60T4z7O9Y/MtbR/5gy1f516YgcK5v2luTrVMoSW/i85kDyA==
+X-Received: by 2002:a1c:4184:: with SMTP id o126mr3410562wma.68.1564736377101;
+        Fri, 02 Aug 2019 01:59:37 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:4013:e920:9388:c3ff? ([2001:b07:6468:f312:4013:e920:9388:c3ff])
+        by smtp.gmail.com with ESMTPSA id f1sm50649557wml.28.2019.08.02.01.59.36
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 02 Aug 2019 01:59:36 -0700 (PDT)
+Subject: Re: [RFC PATCH v2 08/19] RISC-V: KVM: Implement VCPU world-switch
+To:     Anup Patel <anup@brainfault.org>
+Cc:     Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Radim K <rkrcmar@redhat.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190802074620.115029-1-anup.patel@wdc.com>
+ <20190802074620.115029-9-anup.patel@wdc.com>
+ <72d8efbf-ec62-ab1e-68bf-e0c5f0bc256e@redhat.com>
+ <CAAhSdy2_ZsnT7gSKb624r9wzuJSx+1TnKxgW6srtqvXV1Ri9Aw@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <f9dee99d-f536-e351-f637-b5098d53be22@redhat.com>
+Date:   Fri, 2 Aug 2019 10:59:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190801123806.GA31398@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAAhSdy2_ZsnT7gSKb624r9wzuJSx+1TnKxgW6srtqvXV1Ri9Aw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 02:38:06PM +0200, Peter Zijlstra wrote:
-> If the consumer of the data are RT tasks as well (I hadn't expected that
-> from a TV capture device) then I'd propose to use FIFO-50 as default.
+On 02/08/19 10:43, Anup Patel wrote:
+>> A possible optimization: if these cannot change while Linux runs (I am
+>> thinking especially of STVEC and HSTATUS, but perhaps SSCRATCH can be
+>> saved on kvm_arch_vcpu_load too) you can avoid the csrr and store.
+> Actual exception vector of Host Linux is different so we switch STVEC
+> every time.
 > 
-> The thing is, the moment you're doing actual proper RT, the admin needs
-> to configure things anyway, which then very much includes setting the
-> priority of interrupt threads and the like.
+> HSTATUS.SPV is set whenever we come back from Guest world so
+> while we are in in-kernel run loop with interrupts enabled we can get
+> external interrupt and HSTATUS.SPV bit can affect SRET of interrupt
+> handler. To handle this we switch HSTATUS every time.
 > 
-> (that is exacty why pretty much everything defaults to FIFO-50)
+> The world switch code uses SSCRATCH to save vcpu->arch pointer
+> which is later used on return path. Now, I did not want to restrict Host
+> Linux from using SSCRATCH for some other purpose hence we
+> switch SSCRATCH every time.
 
-Is the below acceptible?
+Right, I'm not saying not to save these registers.  I'm saying not to
+read the host value on every world switch, instead load it in
+hardware_enable (if it's the same for all physical CPUs) or
+kvm_arch_vcpu_load (if it's different for every physical CPU).
 
----
-Subject: media/ivtv: Reduce default FIFO priority
-From: Peter Zijlstra <peterz@infradead.org>
-Date: Thu Aug  1 12:56:40 CEST 2019
+IIUC Linux does not use SSCRATCH while in the kernel (it must be zero
+while handling an exception, but handle_exception takes care of that).
+I think it's okay if you make this assumption, but if you don't want to
+make it, you can still save it in kvm_arch_vcpu_load rather than here
+since you "own" the thread while in KVM_RUN.
 
-The ivtv driver creates a FIFO-99 thread by default, reduce this to
-FIFO-50.
-
-FIFO-99 is the very highest priority available to SCHED_FIFO and
-it not a suitable default; it would indicate the ivtv work is the
-most important work on the machine.
-
-Cc: Andy Walls <awalls@md.metrocast.net>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-media@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- drivers/media/pci/ivtv/ivtv-driver.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/drivers/media/pci/ivtv/ivtv-driver.c
-+++ b/drivers/media/pci/ivtv/ivtv-driver.c
-@@ -738,7 +738,7 @@ static void ivtv_process_options(struct
-  */
- static int ivtv_init_struct1(struct ivtv *itv)
- {
--	struct sched_param param = { .sched_priority = 99 };
-+	struct sched_param param = { .sched_priority = MAX_RT_PRIO / 2 };
- 
- 	itv->base_addr = pci_resource_start(itv->pdev, 0);
- 	itv->enc_mbox.max_mbox = 2; /* the encoder has 3 mailboxes (0-2) */
+Paolo
