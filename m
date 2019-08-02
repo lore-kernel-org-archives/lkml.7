@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97DFAC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E132AC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72B682064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:00:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B89D42064A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:00:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564740054;
-	bh=StWGtf6NFIgHwX2qfupd9JDopZuhlJkjQUoTCK9jBNU=;
+	s=default; t=1564740058;
+	bh=l/sJq6+Pylog6bAJK4LtJ4uRslCufPgEYAPgL41//NY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pqY762GIQC+FMm1Qx+QWKdC8oONweARB4UBUapXLomGJUD6NIIgxkpdBwjRQ1B2SP
-	 c8HdHFhD8+wenWu5UEMs3RbuMy/Wvz5tJ2yqSyhLdHTSWQOMnLglFEV2mItvHbmqrD
-	 cbG89JQ/m5xD4e/LyIHkos0YwBR/TuZDBo8pEE/c=
+	b=Vi7UDSdg2GhkgqhcX0T5GFniqRHPd6VtrmQKAx6gdC9alqdSJ95zvyLDccZCgUc/e
+	 x4YyGHd/LuFPhAjEqutaNUUIoANObxrvcjnsx+yfhk6j5qYWpO6aVO0X40XUTohh4g
+	 bNSX3iqTEbE5zoytlqI0Cy9BqqoPLe83SxK5cLnE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392089AbfHBJvt (ORCPT
+        id S2405922AbfHBJvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:51:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57088 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:51:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405977AbfHBJvq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:51:46 -0400
+        id S2405897AbfHBJvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:51:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D640A20679;
-        Fri,  2 Aug 2019 09:51:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DECCC2064A;
+        Fri,  2 Aug 2019 09:51:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739505;
-        bh=StWGtf6NFIgHwX2qfupd9JDopZuhlJkjQUoTCK9jBNU=;
+        s=default; t=1564739500;
+        bh=l/sJq6+Pylog6bAJK4LtJ4uRslCufPgEYAPgL41//NY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s0U5H0Utkpmum+1GSYt1wUnZn2fmTtMWSsQvZIt8J0finCLrPk0cRiXHOUnPhF8mC
-         E+S2lDiyPfRscnDHTbkNZb93L50E457sFqAJM04g9RXpf/XHfPDJHd9cEnpQjrfd+k
-         kqMlahBbvMJmq475jnXzydBfKl1m9Pf8Vf76tTd4=
+        b=tejIZFyAC2MIcf13bIvOfwGDbkZ7VHt0nFY5vDunV1OiOnAPFKUie0cncdUiLlaLc
+         bGuWs4ueWgcr3Z9Pw0mC+4ac+07LzWHcrKM09RPxkqLEWYQsTfHPFPN9qSZROXT5G3
+         FsAywI4wS8MWM4kuICQYZdTUkMfCQ6qmp8+Qs1LA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Konstantin Taranov <konstantin.taranov@inf.ethz.ch>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 191/223] RDMA/rxe: Fill in wc byte_len with IB_WC_RECV_RDMA_WITH_IMM
-Date:   Fri,  2 Aug 2019 11:36:56 +0200
-Message-Id: <20190802092249.759374311@linuxfoundation.org>
+Subject: [PATCH 4.9 189/223] kallsyms: exclude kasan local symbols on s390
+Date:   Fri,  2 Aug 2019 11:36:54 +0200
+Message-Id: <20190802092249.687452392@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -61,59 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bdce1290493caa3f8119f24b5dacc3fb7ca27389 ]
+[ Upstream commit 33177f01ca3fe550146bb9001bec2fd806b2f40c ]
 
-Calculate the correct byte_len on the receiving side when a work
-completion is generated with IB_WC_RECV_RDMA_WITH_IMM opcode.
+gcc asan instrumentation emits the following sequence to store frame pc
+when the kernel is built with CONFIG_RELOCATABLE:
+debug/vsprintf.s:
+        .section        .data.rel.ro.local,"aw"
+        .align  8
+.LC3:
+        .quad   .LASANPC4826@GOTOFF
+.text
+        .align  8
+        .type   number, @function
+number:
+.LASANPC4826:
 
-According to the IBA byte_len must indicate the number of written bytes,
-whereas it was always equal to zero for the IB_WC_RECV_RDMA_WITH_IMM
-opcode, even though data was transferred.
+and in case reloc is issued for LASANPC label it also gets into .symtab
+with the same address as actual function symbol:
+$ nm -n vmlinux | grep 0000000001397150
+0000000001397150 t .LASANPC4826
+0000000001397150 t number
 
-Fixes: 8700e3e7c485 ("Soft RoCE driver")
-Signed-off-by: Konstantin Taranov <konstantin.taranov@inf.ethz.ch>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+In the end kernel backtraces are almost unreadable:
+[  143.748476] Call Trace:
+[  143.748484] ([<000000002da3e62c>] .LASANPC2671+0x114/0x190)
+[  143.748492]  [<000000002eca1a58>] .LASANPC2612+0x110/0x160
+[  143.748502]  [<000000002de9d830>] print_address_description+0x80/0x3b0
+[  143.748511]  [<000000002de9dd64>] __kasan_report+0x15c/0x1c8
+[  143.748521]  [<000000002ecb56d4>] strrchr+0x34/0x60
+[  143.748534]  [<000003ff800a9a40>] kasan_strings+0xb0/0x148 [test_kasan]
+[  143.748547]  [<000003ff800a9bba>] kmalloc_tests_init+0xe2/0x528 [test_kasan]
+[  143.748555]  [<000000002da2117c>] .LASANPC4069+0x354/0x748
+[  143.748563]  [<000000002dbfbb16>] do_init_module+0x136/0x3b0
+[  143.748571]  [<000000002dbff3f4>] .LASANPC3191+0x2164/0x25d0
+[  143.748580]  [<000000002dbffc4c>] .LASANPC3196+0x184/0x1b8
+[  143.748587]  [<000000002ecdf2ec>] system_call+0xd8/0x2d8
+
+Since LASANPC labels are not even unique and get into .symtab only due
+to relocs filter them out in kallsyms.
+
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/rxe/rxe_resp.c  | 5 ++++-
- drivers/infiniband/sw/rxe/rxe_verbs.h | 1 +
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ scripts/kallsyms.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_resp.c b/drivers/infiniband/sw/rxe/rxe_resp.c
-index 297653ab4004..5bfea23f3b60 100644
---- a/drivers/infiniband/sw/rxe/rxe_resp.c
-+++ b/drivers/infiniband/sw/rxe/rxe_resp.c
-@@ -432,6 +432,7 @@ static enum resp_states check_rkey(struct rxe_qp *qp,
- 			qp->resp.va = reth_va(pkt);
- 			qp->resp.rkey = reth_rkey(pkt);
- 			qp->resp.resid = reth_len(pkt);
-+			qp->resp.length = reth_len(pkt);
- 		}
- 		access = (pkt->mask & RXE_READ_MASK) ? IB_ACCESS_REMOTE_READ
- 						     : IB_ACCESS_REMOTE_WRITE;
-@@ -841,7 +842,9 @@ static enum resp_states do_complete(struct rxe_qp *qp,
- 				pkt->mask & RXE_WRITE_MASK) ?
- 					IB_WC_RECV_RDMA_WITH_IMM : IB_WC_RECV;
- 		wc->vendor_err = 0;
--		wc->byte_len = wqe->dma.length - wqe->dma.resid;
-+		wc->byte_len = (pkt->mask & RXE_IMMDT_MASK &&
-+				pkt->mask & RXE_WRITE_MASK) ?
-+					qp->resp.length : wqe->dma.length - wqe->dma.resid;
+diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
+index 1f22a186c18c..2c8b8c662da5 100644
+--- a/scripts/kallsyms.c
++++ b/scripts/kallsyms.c
+@@ -161,6 +161,9 @@ static int read_symbol(FILE *in, struct sym_entry *s)
+ 	/* exclude debugging symbols */
+ 	else if (stype == 'N')
+ 		return -1;
++	/* exclude s390 kasan local symbols */
++	else if (!strncmp(sym, ".LASANPC", 8))
++		return -1;
  
- 		/* fields after byte_len are different between kernel and user
- 		 * space
-diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
-index cac1d52a08f0..47003d2a4a46 100644
---- a/drivers/infiniband/sw/rxe/rxe_verbs.h
-+++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
-@@ -209,6 +209,7 @@ struct rxe_resp_info {
- 	struct rxe_mem		*mr;
- 	u32			resid;
- 	u32			rkey;
-+	u32			length;
- 	u64			atomic_orig;
- 
- 	/* SRQ only */
+ 	/* include the type field in the symbol name, so that it gets
+ 	 * compressed together */
 -- 
 2.20.1
 
