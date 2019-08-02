@@ -2,293 +2,438 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D631AC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A009C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1C572087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:41:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9E412087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:43:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="n1wxS/PU";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="n1wxS/PU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730190AbfHBKly (ORCPT
+        id S1730561AbfHBKne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 06:41:54 -0400
-Received: from mail-oln040092068077.outbound.protection.outlook.com ([40.92.68.77]:3206
+        Fri, 2 Aug 2019 06:43:34 -0400
+Received: from mail-eopbgr10067.outbound.protection.outlook.com ([40.107.1.67]:60741
         "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726170AbfHBKlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 06:41:53 -0400
+        id S1730424AbfHBKnd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 06:43:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ANgFG8PZXsUB8pWmTSAbt5YsgDPbPzmCo2SWsQdt5aA=;
+ b=n1wxS/PUdLnMz9JmYvELMl7V21OmQuFsn7UYQ0eCgkeaUc2C5DmGbOS48to8TphhxECV1zQEZdURTguUSKzfrwRwGWtMDH/NKNbPGX8ke6ZtifM8daSd6q+JycE50cdpIpopKQ2u7h97syYmx6cgBuv+SKFCS/f9yBANamC0JDE=
+Received: from AM6PR08CA0020.eurprd08.prod.outlook.com (2603:10a6:20b:b2::32)
+ by VI1PR0801MB1855.eurprd08.prod.outlook.com (2603:10a6:800:59::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2136.14; Fri, 2 Aug
+ 2019 10:43:21 +0000
+Received: from DB5EUR03FT045.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e0a::204) by AM6PR08CA0020.outlook.office365.com
+ (2603:10a6:20b:b2::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2136.14 via Frontend
+ Transport; Fri, 2 Aug 2019 10:43:20 +0000
+Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=temperror action=none
+ header.from=arm.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of arm.com: DNS Timeout)
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ DB5EUR03FT045.mail.protection.outlook.com (10.152.21.164) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2052.18 via Frontend Transport; Fri, 2 Aug 2019 10:43:19 +0000
+Received: ("Tessian outbound cc8a947d4660:v26"); Fri, 02 Aug 2019 10:43:13 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: a8c2a9e9b6e00623
+X-CR-MTA-TID: 64aa7808
+Received: from ffac1cd95e13.1 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.2.54])
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id AB70A217-5F17-4984-AE95-4A686845B8F5.1;
+        Fri, 02 Aug 2019 10:43:07 +0000
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com (mail-db5eur01lp2054.outbound.protection.outlook.com [104.47.2.54])
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id ffac1cd95e13.1
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Fri, 02 Aug 2019 10:43:07 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=J56xZ8izTONrXMh+616pJiyR+CRHaC9Pe1u9S4+2I2zCBYb0vO4Cfmi4XvsPFhIYNoknwwztgkGGwFwWljr2NmRLJKglJyTowLlFmOiC1lK0ruSGI5j8eXD+vo46AQuxw/94mEbbMvomwE4AfVm/RZE9CF3rnAGxJb2s7y1k2KXVRASxSedNc4YvsiO2jRXNWXabPw91C7ihFRds06USAe15QvEergJlU7ivFS+pLLDlanLLyv8lReuRWhZECTWRd3EYtGgOMoFERw9YckOGxnMswqI5tXCBpsPp77GLbJtUe5qi0h8l5uYO3DU+9t+mEIPK+Ty7LyYnGCHfVLp9+g==
+ b=MwTA+K7qjKAvQl64ZGVWVoiaoPqAqU9qcSYOoCgKpj86szG5efim6GJbGEgAOts+K2sRm2MGbkzIOqcua9M/Y/Lgef65uh7RoROWd4WV/cZW/xvC0lqymIxOowFvuadIL4sk5jUwvtwqj67VXIx2ppFTeMmLH3oH5JWbCRbiUbEg4zA9Fq6FAStjARfrYwLHCn4zvSll7qLn0rfFys3IJbv/mSJ5zhzkCUpyoGLCDAQPTXtdNMrPDaD2BMejo3UcNx327+lMdZDgYZ6liofPGY8JZH39fyDyzLQYlkVLvUbf440GvwEPWuW12nbzssf8Q4TykW8+47I5Z02Hb7xt1w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TkvKV6zXKmp14fmzmQhwg6dwo2LPVkTAAo8BQNZ60eU=;
- b=BKBn7A86dPuubtgz9GVPuvQIAhBIlpq0opCrMdSwZWhG7YbymPEkJoL+B7cCsOmQg381hT1LNunyT9E5k7gPnr22Q3Se84UkDr5LOIWkHOzq6eNirp7AutAMKPAgtQqfyztSC+2Qc5hGNNpqfL0esxjDUeee9O5paB+rvPfLRdSBW9Qa/O0VNqgLaEZDTmbhBMciFOR5CcNbnopQubyY1W4+aoWhqglDoxD6PkpnEJRGUV4Lw6u1VtMQqzC4OVxo5WWhjrhlQhxE2mSnQshEXbqPqh+V+NHbc+KOMo4S5Byihz39vsaFwpVrJR83FjpkA9jn+GMsmyQ+EFTzayNd/w==
-ARC-Authentication-Results: i=1; mx.microsoft.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-Received: from VE1EUR02FT010.eop-EUR02.prod.protection.outlook.com
- (10.152.12.56) by VE1EUR02HT136.eop-EUR02.prod.protection.outlook.com
- (10.152.13.164) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2136.14; Fri, 2 Aug
- 2019 10:41:44 +0000
-Received: from VI1PR0601MB2111.eurprd06.prod.outlook.com (10.152.12.57) by
- VE1EUR02FT010.mail.protection.outlook.com (10.152.12.126) with Microsoft SMTP
+ bh=ANgFG8PZXsUB8pWmTSAbt5YsgDPbPzmCo2SWsQdt5aA=;
+ b=ZhBq7JS8VaZ0ZSt8TCjery+edRh4LDzJ/4jNEHGzz/MffWxZSaGRicPx1q89YUsaE68OOMCiy6LSXI7U32yj+5aRgwVps/UpICaT64BzRTLeGd85SRI3yuHFEb6SbAr4EDsZcCPLdkpKA2nAdDS/NXSBVJF5+yHSFgglIOoadBTjkxJmuplujpdu2A2fBfvVjr3a0DlOpbX88Al7pD05qZ5/NXoxpySkH00fDJm5vGNDKtkDzD4d0+lHv+UbyerpUPceGKaVIaKSQ2f8TriYxT7DsdnJ1OsOUwK2Z/Sr6ZpRqUFknk/it8ywy27wqxUj8J2E+WKJ+ibl4lW6sSq7qQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=arm.com;dmarc=pass action=none header.from=arm.com;dkim=pass
+ header.d=arm.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ANgFG8PZXsUB8pWmTSAbt5YsgDPbPzmCo2SWsQdt5aA=;
+ b=n1wxS/PUdLnMz9JmYvELMl7V21OmQuFsn7UYQ0eCgkeaUc2C5DmGbOS48to8TphhxECV1zQEZdURTguUSKzfrwRwGWtMDH/NKNbPGX8ke6ZtifM8daSd6q+JycE50cdpIpopKQ2u7h97syYmx6cgBuv+SKFCS/f9yBANamC0JDE=
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
+ VE1PR08MB4990.eurprd08.prod.outlook.com (10.255.158.216) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2136.14 via Frontend Transport; Fri, 2 Aug 2019 10:41:44 +0000
-Received: from VI1PR0601MB2111.eurprd06.prod.outlook.com
- ([fe80::3d9e:8552:bf80:7fd3]) by VI1PR0601MB2111.eurprd06.prod.outlook.com
- ([fe80::3d9e:8552:bf80:7fd3%7]) with mapi id 15.20.2136.010; Fri, 2 Aug 2019
- 10:41:44 +0000
-From:   Morten Borup Petersen <morten_bp@live.dk>
-To:     Jassi Brar <jassisinghbrar@gmail.com>
-CC:     Tushar Khandelwal <tushar.khandelwal@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "tushar.2nov@gmail.com" <tushar.2nov@gmail.com>,
-        "nd@arm.com" <nd@arm.com>,
-        Morten Borup Petersen <morten.petersen@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Devicetree List <devicetree@vger.kernel.org>
-Subject: Re: [PATCH 1/4] mailbox: arm_mhuv2: add device tree binding
- documentation
-Thread-Topic: [PATCH 1/4] mailbox: arm_mhuv2: add device tree binding
- documentation
-Thread-Index: AQHVPNWNd6JCWqzMLU+ICO6Dznhc26bVpRIAgAU62ACABb0YAIADzVgAgANZuIA=
-Date:   Fri, 2 Aug 2019 10:41:43 +0000
-Message-ID: <VI1PR0601MB2111A5A4E951F011D389A8978FD90@VI1PR0601MB2111.eurprd06.prod.outlook.com>
-References: <20190717192616.1731-1-tushar.khandelwal@arm.com>
- <20190717192616.1731-2-tushar.khandelwal@arm.com>
- <CABb+yY04vW-i35N6P57KSKgmMAYkrA2CDyUvA-bLCZMxiZaocw@mail.gmail.com>
- <CABb+yY1SeHTgZQNAHJW+dZG=khah5c5igtKy+MrjADnZF29Aow@mail.gmail.com>
- <VI1PR0601MB21113C48E719B2C79EC2FE508FC20@VI1PR0601MB2111.eurprd06.prod.outlook.com>
- <CABb+yY3yMWbUiQnJgfQhwnW1OM3aoFL3ZFc018E-fxGichi-4Q@mail.gmail.com>
-In-Reply-To: <CABb+yY3yMWbUiQnJgfQhwnW1OM3aoFL3ZFc018E-fxGichi-4Q@mail.gmail.com>
-Accept-Language: da-DK, en-US
+ 15.20.2136.15; Fri, 2 Aug 2019 10:43:04 +0000
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::2151:f0b1:3ea7:c134]) by VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::2151:f0b1:3ea7:c134%6]) with mapi id 15.20.2136.010; Fri, 2 Aug 2019
+ 10:43:04 +0000
+From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+To:     Mihail Atanassov <Mihail.Atanassov@arm.com>
+CC:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nd <nd@arm.com>
+Subject: Re: [PATCH] drm/komeda: Adds error event print functionality
+Thread-Topic: [PATCH] drm/komeda: Adds error event print functionality
+Thread-Index: AQHVSRayAboXOjuz1kKxLGlCvtrW0abnoVcAgAAKlAA=
+Date:   Fri, 2 Aug 2019 10:43:04 +0000
+Message-ID: <20190802104258.GA26890@jamwan02-TSP300>
+References: <1564738954-6101-1-git-send-email-lowry.li@arm.com>
+ <1646739.69SqAVYMUr@e123338-lin>
+In-Reply-To: <1646739.69SqAVYMUr@e123338-lin>
+Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR1001CA0006.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:3:f7::16) To VI1PR0601MB2111.eurprd06.prod.outlook.com
- (2603:10a6:800:2d::26)
-x-incomingtopheadermarker: OriginalChecksum:5C84F22779F90D45EBFF22EF6EF061EE2BDEF496A4B1F1E8D1CEDF647B2AB937;UpperCasedChecksum:FEAECED739CC2AB798ECA8AAB8EDCAA59A3A2510FB2944DC10C1ADC58FCEA065;SizeAsReceived:8176;Count:49
+user-agent: Mutt/1.10.1 (2018-07-13)
+x-originating-ip: [113.29.88.7]
+x-clientproxiedby: HK2PR02CA0221.apcprd02.prod.outlook.com
+ (2603:1096:201:20::33) To VE1PR08MB5006.eurprd08.prod.outlook.com
+ (2603:10a6:803:113::31)
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
 x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [hDbhJZVQLy3xMwO9jwbFIxiJVxdqiGz2]
-x-microsoft-original-message-id: <28841e5d-f03b-1a5d-5a63-19c7351a054f@live.dk>
 x-ms-publictraffictype: Email
-x-incomingheadercount: 49
-x-eopattributedmessage: 0
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031322404)(2017031323274)(2017031324274)(1601125500)(1603101475)(1701031045);SRVR:VE1EUR02HT136;
-x-ms-traffictypediagnostic: VE1EUR02HT136:
-x-microsoft-antispam-message-info: v0fpgOPuD/EWvnfev2S6Qsc0hLHyFlE05zQu/YjbgCclB4aK4KVX4vPiEQvee4VgI7ZJiH9q6PDyW1OAiboq3JaXM/7RlNckQ+v8bS79SILLdelCp5awI/BhJ57opH8xohTi6ev4qFpQpcY2zF1TQuUPVRkx3s00DsqgX2HeIKKB+I7LjlFb2Ki+79AAbGGv
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <FCBD86F971861D4C8F616D866C321703@eurprd06.prod.outlook.com>
-Content-Transfer-Encoding: base64
+X-MS-Office365-Filtering-Correlation-Id: c4319e35-b1c0-4c89-d475-08d717363bfa
+X-MS-Office365-Filtering-HT: Tenant
+X-Microsoft-Antispam-Untrusted: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR08MB4990;
+X-MS-TrafficTypeDiagnostic: VE1PR08MB4990:|VI1PR0801MB1855:
+X-Microsoft-Antispam-PRVS: <VI1PR0801MB18551181366E9193934C77CAB3D90@VI1PR0801MB1855.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:7219;OLM:7219;
+x-forefront-prvs: 011787B9DD
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(39860400002)(346002)(376002)(366004)(396003)(136003)(199004)(189003)(52116002)(68736007)(76176011)(446003)(11346002)(3846002)(6116002)(8936002)(1076003)(229853002)(8676002)(6486002)(66066001)(5660300002)(81166006)(186003)(476003)(486006)(81156014)(316002)(26005)(2906002)(256004)(14444005)(58126008)(6862004)(33656002)(6636002)(6506007)(33716001)(66446008)(386003)(6436002)(7736002)(66556008)(66476007)(305945005)(55236004)(14454004)(478600001)(71190400001)(71200400001)(66946007)(25786009)(4326008)(53936002)(64756008)(6512007)(86362001)(9686003)(99286004)(102836004)(54906003)(6246003);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB4990;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info-Original: jjs5jKTJm56Air+QL7FkcGR6jsI+nLWNsFPaQSPxqopAbKlI2ZrKICjZa3zKnfLn6DiF44b/REs0QmXfTvF/NXzw0/4/o4yd7UEx89Z8mlJsQYg+qygFPxAyWKGz1Qx2o6PyF/LH5Ibyccn7VeCt1YGIFbx0/mmrU0ZePbPMWTt036FtPgIW+cYb1OTSkL/SSaKS49WiLbkl9mQu9hSQ+RuKz8nsEKBbuPrGSVlDq+zRtZx9ttSK/GO5ej1utQNMjKyins7kpHJzWUWWdSCeje24MoMJkrt6ZG/mQCP6WbJWCAvtW32Ds9iWy1ZGLveSvFqarolAFPpLxcNJegOYSrwSlklSAJgb578Z5iwpwLhdyxCUAJXJwWn1nRBBmD9BocZUZBL/zw9tRU33SxXa9oOJVmS2kFRDij1VgLJq12Q=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <F5EA93DE92B50744B9EE44FCE38E02E1@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 33c8ce96-2ef0-4b8e-5d9f-08d7173602a0
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Aug 2019 10:41:43.9829
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB4990
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT045.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(7916004)(4636009)(39860400002)(346002)(396003)(136003)(376002)(2980300002)(199004)(189003)(102836004)(6512007)(14454004)(63350400001)(2906002)(446003)(76176011)(9686003)(476003)(126002)(14444005)(23726003)(4326008)(70206006)(22756006)(3846002)(11346002)(478600001)(86362001)(486006)(386003)(26826003)(6862004)(63370400001)(97756001)(50466002)(6116002)(8746002)(336012)(1076003)(316002)(47776003)(6486002)(76130400001)(46406003)(6246003)(70586007)(25786009)(33656002)(229853002)(66066001)(54906003)(6506007)(26005)(99286004)(305945005)(33716001)(6636002)(356004)(5660300002)(81166006)(58126008)(8936002)(7736002)(8676002)(186003)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0801MB1855;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: fc20b74c-f2d0-4d30-e86f-08d7173632b6
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(710020)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR0801MB1855;
+NoDisclaimer: True
+X-Forefront-PRVS: 011787B9DD
+X-Microsoft-Antispam-Message-Info: pyF+DjMcDag1a0eIAHVFta+dV89BzILGRyCDAK1ZUMkYKDCD3dPipJZObOAmVTmq/Str7hplgC+69etuShdiH1DvKkr2lQBQFSq4hwQDNb3kXPpBwautlfZDAM/cXAqNi5Be/9oVLxqfwZEUr4wbCe6S8huHJk0qSuyMnF4rbsR1Xh49C1Eup+T0wqAMmMOIYE6xjCvXN/eY35Oh5XzG1djdoCMQTeAy0NW2S2p0mfhqHizpwrmXqqnhFFc09jAo2Phd67/ea3qhL9pfC37WdKJUruIctfjrT8gdMVxLFIPiao0g5dSGTR3y8mxWLZVh2PYwh1sWUxqruissO6BIO/3JSY9G9CVrWcXKGME5HmZFIRbP4dxJenuiMaRTR56Wl410pcqpRnsk5QNe9AQhvHDTiis/fbiEM4hv6Y7D8Go=
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Aug 2019 10:43:19.7280
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1EUR02HT136
+X-MS-Exchange-CrossTenant-Network-Message-Id: c4319e35-b1c0-4c89-d475-08d717363bfa
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0801MB1855
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDcvMzEvMTkgOTozMSBBTSwgSmFzc2kgQnJhciB3cm90ZToNCj4gT24gU3VuLCBKdWwg
-MjgsIDIwMTkgYXQgNDoyOCBQTSBNb3J0ZW4gQm9ydXAgUGV0ZXJzZW4gPG1vcnRlbl9icEBsaXZl
-LmRrPiB3cm90ZToNCj4+DQo+Pg0KPj4NCj4+IE9uIDcvMjUvMTkgNzo0OSBBTSwgSmFzc2kgQnJh
-ciB3cm90ZToNCj4+PiBPbiBTdW4sIEp1bCAyMSwgMjAxOSBhdCA0OjU4IFBNIEphc3NpIEJyYXIg
-PGphc3Npc2luZ2hicmFyQGdtYWlsLmNvbT4gd3JvdGU6DQo+Pj4+DQo+Pj4+IE9uIFdlZCwgSnVs
-IDE3LCAyMDE5IGF0IDI6MjYgUE0gVHVzaGFyIEtoYW5kZWx3YWwNCj4+Pj4gPHR1c2hhci5raGFu
-ZGVsd2FsQGFybS5jb20+IHdyb3RlOg0KPj4+Pg0KPj4+Pj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tYWlsYm94L2FybSxtaHV2Mi50eHQgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWFpbGJveC9hcm0sbWh1djIudHh0DQo+Pj4+PiBu
-ZXcgZmlsZSBtb2RlIDEwMDY0NA0KPj4+Pj4gaW5kZXggMDAwMDAwMDAwMDAwLi4zYTA1NTkzNDE0
-YmMNCj4+Pj4+IC0tLSAvZGV2L251bGwNCj4+Pj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9tYWlsYm94L2FybSxtaHV2Mi50eHQNCj4+Pj4+IEBAIC0wLDAgKzEsMTA4
-IEBADQo+Pj4+PiArQXJtIE1IVXYyIE1haWxib3ggRHJpdmVyDQo+Pj4+PiArPT09PT09PT09PT09
-PT09PT09PT09PT09DQo+Pj4+PiArDQo+Pj4+PiArVGhlIEFybSBNZXNzYWdlLUhhbmRsaW5nLVVu
-aXQgKE1IVSkgVmVyc2lvbiAyIGlzIGEgbWFpbGJveCBjb250cm9sbGVyIHRoYXQgaGFzDQo+Pj4+
-PiArYmV0d2VlbiAxIGFuZCAxMjQgY2hhbm5lbCB3aW5kb3dzIHRvIHByb3ZpZGUgdW5pZGlyZWN0
-aW9uYWwgY29tbXVuaWNhdGlvbiB3aXRoDQo+Pj4+PiArcmVtb3RlIHByb2Nlc3NvcihzKS4NCj4+
-Pj4+ICsNCj4+Pj4+ICtHaXZlbiB0aGUgdW5pZGlyZWN0aW9uYWwgbmF0dXJlIG9mIHRoZSBkZXZp
-Y2UsIGFuIE1IVXYyIG1haWxib3ggbWF5IG9ubHkgYmUNCj4+Pj4+ICt3cml0dGVuIHRvIG9yIHJl
-YWQgZnJvbS4gSWYgYSBwYWlyIG9mIE1IVSBkZXZpY2VzIGlzIGltcGxlbWVudGVkIGJldHdlZW4g
-dHdvDQo+Pj4+PiArcHJvY2Vzc2luZyBlbGVtZW50cyB0byBwcm92aWRlIGJpZGlyZWN0aW9uYWwg
-Y29tbXVuaWNhdGlvbiwgdGhlc2UgbXVzdCBiZQ0KPj4+Pj4gK3NwZWNpZmllZCBhcyB0d28gc2Vw
-YXJhdGUgbWFpbGJveGVzLg0KPj4+Pj4gKw0KPj4+Pj4gK0EgZGV2aWNlIHRyZWUgbm9kZSBmb3Ig
-YW4gQXJtIE1IVXYyIGRldmljZSBtdXN0IHNwZWNpZnkgZWl0aGVyIGEgcmVjZWl2ZXIgZnJhbWUN
-Cj4+Pj4+ICtvciBhIHNlbmRlciBmcmFtZSwgaW5kaWNhdGluZyB3aGljaCBlbmQgb2YgdGhlIHVu
-aWRpcmVjdGlvbmFsIE1IVSBkZXZpY2Ugd2hpY2gNCj4+Pj4+ICt0aGUgZGV2aWNlIG5vZGUgZW50
-cnkgZGVzY3JpYmVzLg0KPj4+Pj4gKw0KPj4+Pj4gK0FuIE1IVSBkZXZpY2UgbXVzdCBiZSBzcGVj
-aWZpZWQgd2l0aCBhIHRyYW5zcG9ydCBwcm90b2NvbC4gVGhlIHRyYW5zcG9ydA0KPj4+Pj4gK3By
-b3RvY29sIG9mIGFuIE1IVSBkZXZpY2UgZGV0ZXJtaW5lcyB0aGUgbWV0aG9kIG9mIGRhdGEgdHJh
-bnNtaXNzaW9uIGFzIHdlbGwgYXMNCj4+Pj4+ICt0aGUgbnVtYmVyIG9mIHByb3ZpZGVkIG1haWxi
-b3hlcy4NCj4+Pj4+ICtGb2xsb3dpbmcgYXJlIHRoZSBwb3NzaWJsZSB0cmFuc3BvcnQgcHJvdG9j
-b2wgdHlwZXM6DQo+Pj4+PiArLSBTaW5nbGUtd29yZDogQW4gTUhVIGRldmljZSBpbXBsZW1lbnRz
-IGFzIG1hbnkgbWFpbGJveGVzIGFzIGl0DQo+Pj4+PiArICAgICAgICAgICAgICAgcHJvdmlkZXMg
-Y2hhbm5lbCB3aW5kb3dzLiBEYXRhIGlzIHRyYW5zbWl0dGVkIHRocm91Z2gNCj4+Pj4+ICsgICAg
-ICAgICAgICAgICB0aGUgTUhVIHJlZ2lzdGVycy4NCj4+Pj4+ICstIE11bHRpLXdvcmQ6ICBBbiBN
-SFUgZGV2aWNlIGltcGxlbWVudHMgYSBzaW5nbGUgbWFpbGJveC4gQWxsIGNoYW5uZWwgd2luZG93
-cw0KPj4+Pj4gKyAgICAgICAgICAgICAgIHdpbGwgYmUgdXNlZCBkdXJpbmcgdHJhbnNtaXNzaW9u
-LiBEYXRhIGlzIHRyYW5zbWl0dGVkIHRocm91Z2gNCj4+Pj4+ICsgICAgICAgICAgICAgICB0aGUg
-TUhVIHJlZ2lzdGVycy4NCj4+Pj4+ICstIERvb3JiZWxsOiAgICBBbiBNSFUgZGV2aWNlIGltcGxl
-bWVudHMgYXMgbWFueSBtYWlsYm94ZXMgYXMgdGhlcmUgYXJlIGZsYWcNCj4+Pj4+ICsgICAgICAg
-ICAgICAgICBiaXRzIGF2YWlsYWJsZSBpbiBpdHMgY2hhbm5lbCB3aW5kb3dzLiBPcHRpb25hbGx5
-LCBkYXRhIG1heQ0KPj4+Pj4gKyAgICAgICAgICAgICAgIGJlIHRyYW5zbWl0dGVkIHRocm91Z2gg
-YSBzaGFyZWQgbWVtb3J5IHJlZ2lvbiwgd2hlcmVpbiB0aGUgTUhVDQo+Pj4+PiArICAgICAgICAg
-ICAgICAgaXMgdXNlZCBzdHJpY3RseSBhcyBhbiBpbnRlcnJ1cHQgZ2VuZXJhdGlvbiBtZWNoYW5p
-c20uDQo+Pj4+PiArDQo+Pj4+PiArTWFpbGJveCBEZXZpY2UgTm9kZToNCj4+Pj4+ICs9PT09PT09
-PT09PT09PT09PT09PQ0KPj4+Pj4gKw0KPj4+Pj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+Pj4+
-PiArLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4+Pj4+ICstIGNvbXBhdGlibGU6ICBTaGFsbCBiZSAi
-YXJtLG1odXYyIiAmICJhcm0scHJpbWVjZWxsIg0KPj4+Pj4gKy0gcmVnOiAgICAgICAgIENvbnRh
-aW5zIHRoZSBtYWlsYm94IHJlZ2lzdGVyIGFkZHJlc3MgcmFuZ2UgKGJhc2UNCj4+Pj4+ICsgICAg
-ICAgICAgICAgICBhZGRyZXNzIGFuZCBsZW5ndGgpDQo+Pj4+PiArLSAjbWJveC1jZWxscyAgU2hh
-bGwgYmUgMSAtIHRoZSBpbmRleCBvZiB0aGUgY2hhbm5lbCBuZWVkZWQuDQo+Pj4+PiArLSBtaHUt
-ZnJhbWUgICAgRnJhbWUgdHlwZSBvZiB0aGUgZGV2aWNlLg0KPj4+Pj4gKyAgICAgICAgICAgICAg
-IFNoYWxsIGJlIGVpdGhlciAic2VuZGVyIiBvciAicmVjZWl2ZXIiDQo+Pj4+PiArLSBtaHUtcHJv
-dG9jb2wgVHJhbnNwb3J0IHByb3RvY29sIG9mIHRoZSBkZXZpY2UuIFNoYWxsIGJlIG9uZSBvZiB0
-aGUNCj4+Pj4+ICsgICAgICAgICAgICAgICBmb2xsb3dpbmc6ICJzaW5nbGUtd29yZCIsICJtdWx0
-aS13b3JkIiwgImRvb3JiZWxsIg0KPj4+Pj4gKw0KPj4+Pj4gK1JlcXVpcmVkIHByb3BlcnRpZXMg
-KHJlY2VpdmVyIGZyYW1lKToNCj4+Pj4+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tDQo+Pj4+PiArLSBpbnRlcnJ1cHRzOiAgQ29udGFpbnMgdGhlIGludGVycnVwdCBpbmZv
-cm1hdGlvbiBjb3JyZXNwb25kaW5nIHRvIHRoZQ0KPj4+Pj4gKyAgICAgICAgICAgICAgIGNvbWJp
-bmVkIGludGVycnVwdCBvZiB0aGUgcmVjZWl2ZXIgZnJhbWUNCj4+Pj4+ICsNCj4+Pj4+ICtFeGFt
-cGxlOg0KPj4+Pj4gKy0tLS0tLS0tDQo+Pj4+PiArDQo+Pj4+PiArICAgICAgIG1ib3hfbXdfdHg6
-IG1odUAxMDAwMDAwMCB7DQo+Pj4+PiArICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJhcm0s
-bWh1djIiLCJhcm0scHJpbWVjZWxsIjsNCj4+Pj4+ICsgICAgICAgICAgICAgICByZWcgPSA8MHgx
-MDAwMDAwMCAweDEwMDA+Ow0KPj4+Pj4gKyAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmcmVmY2xr
-MTAwbWh6PjsNCj4+Pj4+ICsgICAgICAgICAgICAgICBjbG9jay1uYW1lcyA9ICJhcGJfcGNsayI7
-DQo+Pj4+PiArICAgICAgICAgICAgICAgI21ib3gtY2VsbHMgPSA8MT47DQo+Pj4+PiArICAgICAg
-ICAgICAgICAgbWh1LXByb3RvY29sID0gIm11bHRpLXdvcmQiOw0KPj4+Pj4gKyAgICAgICAgICAg
-ICAgIG1odS1mcmFtZSA9ICJzZW5kZXIiOw0KPj4+Pj4gKyAgICAgICB9Ow0KPj4+Pj4gKw0KPj4+
-Pj4gKyAgICAgICBtYm94X3N3X3R4OiBtaHVAMTAwMDAwMDAgew0KPj4+Pj4gKyAgICAgICAgICAg
-ICAgIGNvbXBhdGlibGUgPSAiYXJtLG1odXYyIiwiYXJtLHByaW1lY2VsbCI7DQo+Pj4+PiArICAg
-ICAgICAgICAgICAgcmVnID0gPDB4MTEwMDAwMDAgMHgxMDAwPjsNCj4+Pj4+ICsgICAgICAgICAg
-ICAgICBjbG9ja3MgPSA8JnJlZmNsazEwMG1oej47DQo+Pj4+PiArICAgICAgICAgICAgICAgY2xv
-Y2stbmFtZXMgPSAiYXBiX3BjbGsiOw0KPj4+Pj4gKyAgICAgICAgICAgICAgICNtYm94LWNlbGxz
-ID0gPDE+Ow0KPj4+Pj4gKyAgICAgICAgICAgICAgIG1odS1wcm90b2NvbCA9ICJzaW5nbGUtd29y
-ZCI7DQo+Pj4+PiArICAgICAgICAgICAgICAgbWh1LWZyYW1lID0gInNlbmRlciI7DQo+Pj4+PiAr
-ICAgICAgIH07DQo+Pj4+PiArDQo+Pj4+PiArICAgICAgIG1ib3hfZGJfcng6IG1odUAxMDAwMDAw
-MCB7DQo+Pj4+PiArICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJhcm0sbWh1djIiLCJhcm0s
-cHJpbWVjZWxsIjsNCj4+Pj4+ICsgICAgICAgICAgICAgICByZWcgPSA8MHgxMjAwMDAwMCAweDEw
-MDA+Ow0KPj4+Pj4gKyAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmcmVmY2xrMTAwbWh6PjsNCj4+
-Pj4+ICsgICAgICAgICAgICAgICBjbG9jay1uYW1lcyA9ICJhcGJfcGNsayI7DQo+Pj4+PiArICAg
-ICAgICAgICAgICAgI21ib3gtY2VsbHMgPSA8MT47DQo+Pj4+PiArICAgICAgICAgICAgICAgaW50
-ZXJydXB0cyA9IDwwIDQ1IDQ+Ow0KPj4+Pj4gKyAgICAgICAgICAgICAgIGludGVycnVwdC1uYW1l
-cyA9ICJtaHVfcngiOw0KPj4+Pj4gKyAgICAgICAgICAgICAgIG1odS1wcm90b2NvbCA9ICJkb29y
-YmVsbCI7DQo+Pj4+PiArICAgICAgICAgICAgICAgbWh1LWZyYW1lID0gInJlY2VpdmVyIjsNCj4+
-Pj4+ICsgICAgICAgfTsNCj4+Pj4+ICsNCj4+Pj4+ICsgICAgICAgbWh1X2NsaWVudDogc2NiQDJl
-MDAwMDAwIHsNCj4+Pj4+ICsgICAgICAgY29tcGF0aWJsZSA9ICJmdWppdHN1LG1iODZzNzAtc2Ni
-LTEuMCI7DQo+Pj4+PiArICAgICAgIHJlZyA9IDwwIDB4MmUwMDAwMDAgMHg0MDAwPjsNCj4+Pj4+
-ICsgICAgICAgbWJveGVzID0NCj4+Pj4+ICsgICAgICAgICAgICAgICAvLyBGb3IgbXVsdGktd29y
-ZCBmcmFtZXMsIGNsaWVudCBtYXkgb25seSBpbnN0YW50aWF0ZSBhIHNpbmdsZQ0KPj4+Pj4gKyAg
-ICAgICAgICAgICAgIC8vIG1haWxib3ggZm9yIGEgbWFpbGJveCBjb250cm9sbGVyDQo+Pj4+PiAr
-ICAgICAgICAgICAgICAgPCZtYm94X213X3R4IDA+LA0KPj4+Pj4gKw0KPj4+Pj4gKyAgICAgICAg
-ICAgICAgIC8vIEZvciBzaW5nbGUtd29yZCBmcmFtZXMsIGNsaWVudCBtYXkgaW5zdGFudGlhdGUg
-YXMgbWFueQ0KPj4+Pj4gKyAgICAgICAgICAgICAgIC8vIG1haWxib3hlcyBhcyB0aGVyZSBhcmUg
-Y2hhbm5lbCB3aW5kb3dzIGluIHRoZSBNSFUNCj4+Pj4+ICsgICAgICAgICAgICAgICAgPCZtYm94
-X3N3X3R4IDA+LA0KPj4+Pj4gKyAgICAgICAgICAgICAgICA8Jm1ib3hfc3dfdHggMT4sDQo+Pj4+
-PiArICAgICAgICAgICAgICAgIDwmbWJveF9zd190eCAyPiwNCj4+Pj4+ICsgICAgICAgICAgICAg
-ICAgPCZtYm94X3N3X3R4IDM+LA0KPj4+Pj4gKw0KPj4+Pj4gKyAgICAgICAgICAgICAgIC8vIEZv
-ciBkb29yYmVsbCBmcmFtZXMsIGNsaWVudCBtYXkgaW5zdGFudGlhdGUgYXMgbWFueSBtYWlsYm94
-ZXMNCj4+Pj4+ICsgICAgICAgICAgICAgICAvLyBhcyB0aGVyZSBhcmUgYml0cyBhdmFpbGFibGUg
-aW4gdGhlIGNvbWJpbmVkIG51bWJlciBvZiBjaGFubmVsDQo+Pj4+PiArICAgICAgICAgICAgICAg
-Ly8gd2luZG93cyAoKGNoYW5uZWwgd2luZG93cyAqIDMyKSBtYWlsYm94ZXMpDQo+Pj4+PiArICAg
-ICAgICAgICAgICAgIDxtYm94X2RiX3J4IDA+LA0KPj4+Pj4gKyAgICAgICAgICAgICAgICA8bWJv
-eF9kYl9yeCAxPiwNCj4+Pj4+ICsgICAgICAgICAgICAgICAgLi4uDQo+Pj4+PiArICAgICAgICAg
-ICAgICAgIDxtYm94X2RiX3J4IDE3PjsNCj4+Pj4+ICsgICAgICAgfTsNCj4+Pj4NCj4+Pj4gSWYg
-dGhlIG1odXYyIGluc3RhbmNlIGltcGxlbWVudHMsIHNheSwgMyBjaGFubmVsIHdpbmRvd3MgYmV0
-d2Vlbg0KPj4+PiBzZW5kZXIgKGxpbnV4KSBhbmQgcmVjZWl2ZXIgKGZpcm13YXJlKSwgYW5kIExp
-bnV4IHJ1bnMgdHdvIHByb3RvY29scw0KPj4+PiBlYWNoIHJlcXVpcmluZyAxIGFuZCAyLXdvcmQg
-c2l6ZWQgbWVzc2FnZXMgcmVzcGVjdGl2ZWx5LiBUaGUgaGFyZHdhcmUNCj4+Pj4gc3VwcG9ydHMg
-dGhhdCBieSBhc3NpZ25pbmcgd2luZG93cyBbMF0gYW5kIFsxLDJdIHRvIGVhY2ggcHJvdG9jb2wu
-DQo+Pj4+IEhvd2V2ZXIsIEkgZG9uJ3QgdGhpbmsgdGhlIGRyaXZlciBjYW4gc3VwcG9ydCB0aGF0
-LiBPciBkb2VzIGl0Pw0KPj4+Pg0KPj4+IFRoaW5raW5nIGFib3V0IGl0LCBJTU8sIHRoZSBtYm94
-LWNlbGwgc2hvdWxkIGNhcnJ5IGEgMTI4ICg0eDMyKSBiaXQNCj4+PiBtYXNrIHNwZWNpZnlpbmcg
-dGhlIHNldCBvZiB3aW5kb3dzIChjb3JyZXNwb25kaW5nIHRvIHRoZSBiaXRzIHNldCBpbg0KPj4+
-IHRoZSBtYXNrKSBhc3NvY2lhdGVkIHdpdGggdGhlIGNoYW5uZWwuDQo+Pj4gQW5kIHRoZSBjb250
-cm9sbGVyIGRyaXZlciBzaG91bGQgc2VlIGFueSBjaGFubmVsIGFzIGFzc29jaWF0ZWQgd2l0aA0K
-Pj4+IHZhcmlhYmxlIG51bWJlciBvZiB3aW5kb3dzICdOJywgd2hlcmUgTiBpcyBbMCwxMjRdDQo+
-Pj4NCj4+PiBtaHVfY2xpZW50MTogcHJvdG8xQDJlMDAwMDAwIHsNCj4+PiAgICAgICAgLi4uLi4N
-Cj4+PiAgICAgICAgbWJveGVzID0gPCZtYm94IDB4MCAweDAgMHgwIDB4MT4NCj4+PiB9DQo+Pj4N
-Cj4+PiBtaHVfY2xpZW50MjogcHJvdG8yQDJmMDAwMDAwIHsNCj4+PiAgICAgICAgLi4uLi4NCj4+
-PiAgICAgICAgbWJveGVzID0gPCZtYm94IDB4MCAweDAgMHgwIDB4Nj4NCj4+PiB9DQo+Pj4NCj4+
-PiBDaGVlcnMhDQo+Pj4NCj4+DQo+PiBBcyBtZW50aW9uZWQgaW4gdGhlIHJlc3BvbnNlIHRvIHlv
-dXIgaW5pdGlhbCBjb21tZW50LCB0aGUgZHJpdmVyIGRvZXMNCj4+IG5vdCBjdXJyZW50bHkgc3Vw
-cG9ydCBtaXhpbmcgcHJvdG9jb2xzLg0KPj4NCj4gVGhhbmtzIGZvciBhY2tub3dsZWRnaW5nIHRo
-YXQgbGltaXRhdGlvbi4gQnV0IGxldHMgYWxzbyBhZGRyZXNzIGl0Lg0KPiANCg0KV2UgYXJlIGhl
-c2l0YW50IHRvIGRlZGljYXRlIHRpbWUgdG8gZGV2ZWxvcGluZyBtaXhpbmcgcHJvdG9jb2xzIGdp
-dmVuDQp0aGF0IHdlIGRvbid0IGhhdmUgYW55IGN1cnJlbnQgdXNlY2FzZSBub3IgYW55IGN1cnJl
-bnQgcGxhdGZvcm0gd2hpY2gNCndvdWxkIHN1cHBvcnQgdGhpcy4NCg0KPj4gSWYgbWl4aW5nIHBy
-b3RvY29scyBpcyB0byBiZSBzdXBwb3J0ZWQgaW4gdGhlIGZ1dHVyZSwgdGhlbiB0aGlzIHNlZW1z
-DQo+PiBsaWtlIGEgc3VpdGFibGUgd2F5IG9mIHNwZWNpZnlpbmcgd2hpY2ggY2hhbm5lbHMgYXJl
-IGFzc29jaWF0ZWQgd2l0aA0KPj4gd2hpY2ggbWFpbGJveGVzIChlc3BlY2lhbGx5IGZvciBtaXhp
-bmcgc2luZ2xlLSBhbmQgbXVsdGktd29yZCBtb2RlcykuDQo+Pg0KPiBXZSBjYW4gbm90IGNoYW5n
-ZSBEVCBiaW5kaW5ncyBhZ2FpbiB3aGVuIHdlIGZlZWwgbGlrZSB1cGRhdGluZyB0aGUgZHJpdmVy
-Lg0KPiBUaGUgYmluZGluZ3Mgc2hvdWxkIHByZWNpc2VseSBhbmQgY29tcGxldGVseSBkZWZpbmUg
-dGhlIGgvdywgbm90IHdoYXQNCj4gbW9kZSB3ZSBjdXJyZW50bHkgaW1wbGVtZW50Lg0KPiBJdCBp
-cyBub3QgZm9yIHB1cmUgaWRlYWxpc20sIGl0IGFjdHVhbGx5IG1ha2VzIHRoZSBjb2RlIHNpbXBs
-ZXIgYW5kIGZ1dHVyZXByb29mLg0KPiANCj4+IEhvd2V2ZXIsIHRoZXJlIHN0aWxsIGlzIGFuIGlz
-c3VlIGluIHRoYXQgYm90aCBzaW5nbGUtd29yZCBhbmQgZG9vcmJlbGwNCj4+IHJlcXVpcmVzIG9u
-bHkgMSBjaGFubmVsIHdpbmRvdyAtIGFuZCBhcyBzdWNoLCB0aGUgdHJhbnNwb3J0IHByb3RvY29s
-DQo+PiBjYW5ub3QgYmUgZGVkdWNlZCBmcm9tIG1lcmVseSB0aGUgbnVtYmVyIG9mIG1hc2tlZCBj
-aGFubmVsIHdpbmRvd3MuDQo+Pg0KPiBJIGRvbid0IHNlZSB3aHkgdGhlIGRyaXZlciBzaG91bGQg
-d29ycnkgLS0gdGhlIGNoYW5uZWwgY2FycmllcyAzMi1iaXQNCj4gbWVzc2FnZSBvciBzb21lIHJh
-bmRvbSB2YWx1ZSBqdXN0IHRvIHRyaWdnZXIgYW4gaW50ZXJydXB0IGlzIHB1cmVseQ0KPiB1cHRv
-IHRoZSBjbGllbnQgZHJpdmVyLg0KPiANCg0KV2l0aCB0aGUgY3VycmVudCBkZXNpZ24sIGl0IGlz
-IG5vdCB1cCB0byB0aGUgY2xpZW50IGRyaXZlciB0bw0KZGlzdGluZ3Vpc2ggd2hpY2ggYml0IHdh
-cyBzZXQgd2l0aGluIGEgY2hhbm5lbCB3aW5kb3cgd2hlbiBhbiBpbnRlcnJ1cHQNCndhcyByYWlz
-ZWQgaW4gZG9vcmJlbGwgbW9kZS4gQ3VycmVudGx5LCBpbiBkb29yYmVsbCBtb2RlLCBlYWNoIGJp
-dA0Kd2l0aGluIGEgY2hhbm5lbCBpc3NwZWNpZmllZCB0byBiZSBhIGRpc3RpbmN0IG1haWxib3gu
-IEhhdmluZyB0aGlzLA0KZGlmZmVyZW50IG1haWxib3ggY2xpZW50cyBtYXkgcmVnaXN0ZXIgbWFp
-bGJveGVzIGZvciBkaWZmZXJlbnQgYml0cw0Kd2l0aGluIGEgc2luZ2xlIE1IVSBkZXZpY2UuDQp3
-aXRoIHRoZSBjdXJyZW50IGRlc2lnbiwgd2hlbiBhbiBpbnRlcnJ1cHQgaXMgcmFpc2VkIGFuZCBh
-biBNSFUgaXMgaW4NCmRvb3JiZWxsIG1vZGUsICB0aGUgTUhVIGRyaXZlciB3aWxsIGJlIHJlc3Bv
-bnNpYmxlIGZvciBkZWR1Y2luZyB3aGljaA0KZmxhZyBiaXQgd2FzIHNldCBhbmQgZnJvbSB0aGlz
-IHNldCBiaXQgZGVjaWRlIHdoaWNoIG1haWxib3ggdG8gdHJpZ2dlciBhDQpjYWxsYmFjayBvbi4N
-ClRoaXMgaXMgd2h5IHdlIG5lZWQgdG8gYmUgYWJsZSB0byBzcGVjaWZ5IHRoZSBiaXQgbnVtYmVy
-IHdoZW4gaW4NCmRvb3JiZWxsIG1vZGUsIGluIHRoZSBkZXZpY2UgdHJlZS4NCg0KPj4gRnVydGhl
-cm1vcmUsIGZvciBkb29yYmVsbCwgYSBtYm94IG1heSBiZSByZWdpc3RlcmVkIGZvciBfZWFjaF8g
-YXZhaWxhYmxlDQo+PiBiaXQgd2l0aGluIGEgY2hhbm5lbCB3aW5kb3cgKGZ1cnRoZXIgY29tcGxp
-Y2F0aW5nIHRoaW5ncyBpZiB3ZSB3ZXJlIHRvDQo+PiBpbmNsdWRlIG1peGluZyBwcm90b2NvbHMg
-aW4gdGhpcyBpbml0aWFsIGRyaXZlciB2ZXJzaW9uKSwgbWFraW5nDQo+PiBhc3NpZ25pbmcgY2hh
-bm5lbCB3aW5kb3dzIHRvIG1haWxib3hlcyBzZW1hbnRpY2FsbHkgZGlmZmVyZW50IGZyb20gd2hl
-bg0KPj4gYXNzaWduaW5nIHRvIHNpbmdsZS0gb3IgbXVsdGktd29yZC4NCj4+DQo+IE5vdCBzdXJl
-IGFib3V0IHRoYXQsIHRoYXQgd291bGQgYmUgaW1wbGVtZW50aW5nIHZpcnR1YWwgY2hhbm5lbHMu
-IEVhY2gNCj4gd2luZG93IGNhcnJpZXMgb25lIHNpZ25hbCwgYW5kIHRoYXQgaXMgdGhlIG1pbmlt
-dW0gYmFuZHdpZHRoIGFzc2lnbmVkDQo+IHRvIGEgY2hhbm5lbC4NCj4gDQo+IFRoYW5rcw0KPg0K
-SWYgaW1wbGVtZW50aW5nIHRyYW5zcG9ydCBwcm90b2NvbCBtaXhpbmcgd291bGQgYmUgYSByZXF1
-aXJlbWVudCBmb3IgdGhlDQphY2NlcHRhbmNlIG9mIHRoZSBkcml2ZXIsIHRoZW4gd2UgYWdyZWUg
-b24gdGhhdCB0aGUgZm9ybWF0IHdoaWNoIHlvdSd2ZQ0Kc3VnZ2VzdGVkIHdvdWxkIGJlIGEgY2xl
-YW4gc29sdXRpb24uIEhvd2V2ZXIsIGdpdmVuIHRoYXQgd2Ugd291bGQgbGlrZQ0KdG8ga2VlcCB0
-aGUgYWJpbGl0eSB0byBzcGVjaWZ5IGRvb3JiZWxsIG1haWxib3hlcyBpbiB0aGUgZGV2aWNlIHRy
-ZWUsIHdlDQpzdWdnZXN0IGEgZm9ybWF0IHN1Y2ggYXMgdGhlIGZvbGxvd2luZzoNCg0KbWh1X2Ns
-aWVudDE6IHByb3RvMkAyZjAwMDAwMCB7DQogICAgICAgLi4uLi4NCiAgICAgICAvKiBSZXF1ZXN0
-aW5nIHRvIHVzZSBjaGFubmVsIHdpbmRvdyAwIG9mICZtYm94LCByZWdpc3RlcmluZw0KICAgICAg
-ICAgIGEgbWFpbGJveCBpbiBzaW5nZS13b3JkIG1vZGUuICovDQogICAgICAgbWJveGVzID0gPCZt
-Ym94IDB4MCAweDAgMHgwIDB4MT4NCn0NCg0KDQptaHVfY2xpZW50MjogcHJvdG8xQDJlMDAwMDAw
-IHsNCiAgICAgICAgLi4uLi4NCgkvKiBSZXF1ZXN0aW5nIHRvIHVzZSBjaGFubmVsIHdpbmRvdyAx
-IG9mICZtYm94LCByZWdpc3RlcmluZw0KICAgICAgICAgICBtYWlsYm94ZXMgaW4gZG9vcmJlbGwg
-bW9kZSwgdXNpbmcgYml0cyAzIGFuZCA1LiBUaGUgTUhVDQogICAgICAgICAgIGRyaXZlciBpcyBh
-YmxlIHRvIGRpc2Nlcm4gYmV0d2VlbiBwdXR0aW5nIGNoYW5uZWwgd2luZG93IDENCiAgICAgICAg
-ICAgaW50byBkb29yYmVsbCBtb2RlIG92ZXIgc2luZ2xlIHdvcmQgbW9kZSwgZ2l2ZW4gdGhlDQog
-ICAgICAgICAgIHByZXNlbmNlIG9mIHRoZSBleHRyYSBhcmd1bWVudC4gKi8NCiAgICAgICAgbWJv
-eGVzID0gPCZtYm94IDB4MCAweDAgMHgwIDB4MiAzPiwNCiAgICAgICAgICAgICAgICAgPCZtYm94
-IDB4MCAweDAgMHgwIDB4MiA1Pg0KfQ0KDQpUaGlzIHdvdWxkIHJlbW92ZSB0aGUgYW1iaWd1aXR5
-IGFyb3VuZCBkZWR1Y2luZyBhIG1haWxib3ggdG8gYmUgaW4NCnNpbmdsZS13b3JkIG9yIGRvb3Ji
-ZWxsIG1vZGUuDQpEZWNpZGluZyB0byBwdXQgY2hhbm5lbCB3aW5kb3cocykgaW50byBtdWx0aS13
-b3JkIG1vZGUgd291bGQgYmUsIGFzIHlvdQ0KcHJvcG9zZWQsIHRvIG1hc2sgbW9yZSB0aGFuIG9u
-ZSBjaGFubmVsIGZvciBhIG1haWxib3gsIGllOg0KDQptaHVfY2xpZW50MzogcHJvdG8yQDJmMDAw
-MDAwIHsNCiAgICAgICAuLi4uLg0KICAgICAgIC8qIFJlcXVlc3RpbmcgdG8gdXNlIGNoYW5uZWwg
-d2luZG93IDItMyBvZiAmbWJveCwgcmVnaXN0ZXJpbmcNCiAgICAgICAgICBhIG1haWxib3ggaW4g
-bXVsdGktd29yZCBtb2RlLiAqLw0KICAgICAgIG1ib3hlcyA9IDwmbWJveCAweDAgMHgwIDB4MCAw
-eEM+DQp9DQoNCg0KVGhhbmtzLA0KDQpNb3J0ZW4NCg==
+On Fri, Aug 02, 2019 at 06:05:08PM +0800, Mihail Atanassov wrote:
+> On Friday, 2 August 2019 10:43:10 BST Lowry Li (Arm Technology China) wro=
+te:
+> > From: "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+> >=20
+> > Adds to print the event message when error happens and the same event
+> > will not be printed until next vsync.
+> >=20
+> > Changes since v2:
+> > 1. Refine komeda_sprintf();
+> > 2. Not using STR_SZ macro for the string size in komeda_print_events().
+> >=20
+> > Changes since v1:
+> > 1. Handling the event print by CONFIG_KOMEDA_ERROR_PRINT;
+> > 2. Changing the max string size to 256.
+> >=20
+> > Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
+>=20
+> Reviewed-by: Mihail Atanassov <mihail.atanassov@arm.com>
+>=20
+> BR,
+> Mihail
+
+looks good to me.
+
+Reviewed-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.co=
+m>
+
+>=20
+> > ---
+> >  drivers/gpu/drm/arm/display/Kconfig               |   6 +
+> >  drivers/gpu/drm/arm/display/komeda/Makefile       |   2 +
+> >  drivers/gpu/drm/arm/display/komeda/komeda_dev.h   |  15 +++
+> >  drivers/gpu/drm/arm/display/komeda/komeda_event.c | 140
+> > ++++++++++++++++++++++ drivers/gpu/drm/arm/display/komeda/komeda_kms.c =
+  |=20
+> >  4 +
+> >  5 files changed, 167 insertions(+)
+> >  create mode 100644 drivers/gpu/drm/arm/display/komeda/komeda_event.c
+> >=20
+> > diff --git a/drivers/gpu/drm/arm/display/Kconfig
+> > b/drivers/gpu/drm/arm/display/Kconfig index cec0639..e87ff86 100644
+> > --- a/drivers/gpu/drm/arm/display/Kconfig
+> > +++ b/drivers/gpu/drm/arm/display/Kconfig
+> > @@ -12,3 +12,9 @@ config DRM_KOMEDA
+> >  	  Processor driver. It supports the D71 variants of the hardware.
+> >=20
+> >  	  If compiled as a module it will be called komeda.
+> > +
+> > +config DRM_KOMEDA_ERROR_PRINT
+> > +	bool "Enable komeda error print"
+> > +	depends on DRM_KOMEDA
+> > +	help
+> > +	  Choose this option to enable error printing.
+> > diff --git a/drivers/gpu/drm/arm/display/komeda/Makefile
+> > b/drivers/gpu/drm/arm/display/komeda/Makefile index 5c3900c..f095a1c 10=
+0644
+> > --- a/drivers/gpu/drm/arm/display/komeda/Makefile
+> > +++ b/drivers/gpu/drm/arm/display/komeda/Makefile
+> > @@ -22,4 +22,6 @@ komeda-y +=3D \
+> >  	d71/d71_dev.o \
+> >  	d71/d71_component.o
+> >=20
+> > +komeda-$(CONFIG_DRM_KOMEDA_ERROR_PRINT) +=3D komeda_event.o
+> > +
+> >  obj-$(CONFIG_DRM_KOMEDA) +=3D komeda.o
+> > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
+> > b/drivers/gpu/drm/arm/display/komeda/komeda_dev.h index d1c86b6..e28e7e=
+6
+> > 100644
+> > --- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
+> > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
+> > @@ -40,6 +40,17 @@
+> >  #define KOMEDA_ERR_TTNG			BIT_ULL(30)
+> >  #define KOMEDA_ERR_TTF			BIT_ULL(31)
+> >=20
+> > +#define KOMEDA_ERR_EVENTS	\
+> > +	(KOMEDA_EVENT_URUN	| KOMEDA_EVENT_IBSY	| KOMEDA_EVENT_OVR |
+> \
+> > +	KOMEDA_ERR_TETO		| KOMEDA_ERR_TEMR	|=20
+> KOMEDA_ERR_TITR |\
+> > +	KOMEDA_ERR_CPE		| KOMEDA_ERR_CFGE	|=20
+> KOMEDA_ERR_AXIE |\
+> > +	KOMEDA_ERR_ACE0		| KOMEDA_ERR_ACE1	|=20
+> KOMEDA_ERR_ACE2 |\
+> > +	KOMEDA_ERR_ACE3		| KOMEDA_ERR_DRIFTTO	|=20
+> KOMEDA_ERR_FRAMETO |\
+> > +	KOMEDA_ERR_ZME		| KOMEDA_ERR_MERR	|=20
+> KOMEDA_ERR_TCF |\
+> > +	KOMEDA_ERR_TTNG		| KOMEDA_ERR_TTF)
+> > +
+> > +#define KOMEDA_WARN_EVENTS	KOMEDA_ERR_CSCE
+> > +
+> >  /* malidp device id */
+> >  enum {
+> >  	MALI_D71 =3D 0,
+> > @@ -207,4 +218,8 @@ struct komeda_dev {
+> >=20
+> >  struct komeda_dev *dev_to_mdev(struct device *dev);
+> >=20
+> > +#ifdef CONFIG_DRM_KOMEDA_ERROR_PRINT
+> > +void komeda_print_events(struct komeda_events *evts);
+> > +#endif
+> > +
+> >  #endif /*_KOMEDA_DEV_H_*/
+> > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_event.c
+> > b/drivers/gpu/drm/arm/display/komeda/komeda_event.c new file mode 10064=
+4
+> > index 0000000..a36fb86
+> > --- /dev/null
+> > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_event.c
+> > @@ -0,0 +1,140 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * (C) COPYRIGHT 2019 ARM Limited. All rights reserved.
+> > + * Author: James.Qian.Wang <james.qian.wang@arm.com>
+> > + *
+> > + */
+> > +#include <drm/drm_print.h>
+> > +
+> > +#include "komeda_dev.h"
+> > +
+> > +struct komeda_str {
+> > +	char *str;
+> > +	u32 sz;
+> > +	u32 len;
+> > +};
+> > +
+> > +/* return 0 on success,  < 0 on no space.
+> > + */
+> > +static int komeda_sprintf(struct komeda_str *str, const char *fmt, ...=
+)
+> > +{
+> > +	va_list args;
+> > +	int num, free_sz;
+> > +	int err;
+> > +
+> > +	free_sz =3D str->sz - str->len - 1;
+> > +	if (free_sz <=3D 0)
+> > +		return -ENOSPC;
+> > +
+> > +	va_start(args, fmt);
+> > +
+> > +	num =3D vsnprintf(str->str + str->len, free_sz, fmt, args);
+> > +
+> > +	va_end(args);
+> > +
+> > +	if (num < free_sz) {
+> > +		str->len +=3D num;
+> > +		err =3D 0;
+> > +	} else {
+> > +		str->len =3D str->sz - 1;
+> > +		err =3D -ENOSPC;
+> > +	}
+> > +
+> > +	return err;
+> > +}
+> > +
+> > +static void evt_sprintf(struct komeda_str *str, u64 evt, const char *m=
+sg)
+> > +{
+> > +	if (evt)
+> > +		komeda_sprintf(str, msg);
+> > +}
+> > +
+> > +static void evt_str(struct komeda_str *str, u64 events)
+> > +{
+> > +	if (events =3D=3D 0ULL) {
+> > +		komeda_sprintf(str, "None");
+> > +		return;
+> > +	}
+> > +
+> > +	evt_sprintf(str, events & KOMEDA_EVENT_VSYNC, "VSYNC|");
+> > +	evt_sprintf(str, events & KOMEDA_EVENT_FLIP, "FLIP|");
+> > +	evt_sprintf(str, events & KOMEDA_EVENT_EOW, "EOW|");
+> > +	evt_sprintf(str, events & KOMEDA_EVENT_MODE, "OP-MODE|");
+> > +
+> > +	evt_sprintf(str, events & KOMEDA_EVENT_URUN, "UNDERRUN|");
+> > +	evt_sprintf(str, events & KOMEDA_EVENT_OVR, "OVERRUN|");
+> > +
+> > +	/* GLB error */
+> > +	evt_sprintf(str, events & KOMEDA_ERR_MERR, "MERR|");
+> > +	evt_sprintf(str, events & KOMEDA_ERR_FRAMETO, "FRAMETO|");
+> > +
+> > +	/* DOU error */
+> > +	evt_sprintf(str, events & KOMEDA_ERR_DRIFTTO, "DRIFTTO|");
+> > +	evt_sprintf(str, events & KOMEDA_ERR_FRAMETO, "FRAMETO|");
+> > +	evt_sprintf(str, events & KOMEDA_ERR_TETO, "TETO|");
+> > +	evt_sprintf(str, events & KOMEDA_ERR_CSCE, "CSCE|");
+> > +
+> > +	/* LPU errors or events */
+> > +	evt_sprintf(str, events & KOMEDA_EVENT_IBSY, "IBSY|");
+> > +	evt_sprintf(str, events & KOMEDA_ERR_AXIE, "AXIE|");
+> > +	evt_sprintf(str, events & KOMEDA_ERR_ACE0, "ACE0|");
+> > +	evt_sprintf(str, events & KOMEDA_ERR_ACE1, "ACE1|");
+> > +	evt_sprintf(str, events & KOMEDA_ERR_ACE2, "ACE2|");
+> > +	evt_sprintf(str, events & KOMEDA_ERR_ACE3, "ACE3|");
+> > +
+> > +	/* LPU TBU errors*/
+> > +	evt_sprintf(str, events & KOMEDA_ERR_TCF, "TCF|");
+> > +	evt_sprintf(str, events & KOMEDA_ERR_TTNG, "TTNG|");
+> > +	evt_sprintf(str, events & KOMEDA_ERR_TITR, "TITR|");
+> > +	evt_sprintf(str, events & KOMEDA_ERR_TEMR, "TEMR|");
+> > +	evt_sprintf(str, events & KOMEDA_ERR_TTF, "TTF|");
+> > +
+> > +	/* CU errors*/
+> > +	evt_sprintf(str, events & KOMEDA_ERR_CPE, "COPROC|");
+> > +	evt_sprintf(str, events & KOMEDA_ERR_ZME, "ZME|");
+> > +	evt_sprintf(str, events & KOMEDA_ERR_CFGE, "CFGE|");
+> > +	evt_sprintf(str, events & KOMEDA_ERR_TEMR, "TEMR|");
+> > +
+> > +	if (str->len > 0 && (str->str[str->len - 1] =3D=3D '|')) {
+> > +		str->str[str->len - 1] =3D 0;
+> > +		str->len--;
+> > +	}
+> > +}
+> > +
+> > +static bool is_new_frame(struct komeda_events *a)
+> > +{
+> > +	return (a->pipes[0] | a->pipes[1]) &
+> > +	       (KOMEDA_EVENT_FLIP | KOMEDA_EVENT_EOW);
+> > +}
+> > +
+> > +void komeda_print_events(struct komeda_events *evts)
+> > +{
+> > +	u64 print_evts =3D KOMEDA_ERR_EVENTS;
+> > +	static bool en_print =3D true;
+> > +
+> > +	/* reduce the same msg print, only print the first evt for one=20
+> frame */
+> > +	if (evts->global || is_new_frame(evts))
+> > +		en_print =3D true;
+> > +	if (!en_print)
+> > +		return;
+> > +
+> > +	if ((evts->global | evts->pipes[0] | evts->pipes[1]) & print_evts)=20
+> {
+> > +		char msg[256];
+> > +		struct komeda_str str;
+> > +
+> > +		str.str =3D msg;
+> > +		str.sz  =3D sizeof(msg);
+> > +		str.len =3D 0;
+> > +
+> > +		komeda_sprintf(&str, "gcu: ");
+> > +		evt_str(&str, evts->global);
+> > +		komeda_sprintf(&str, ", pipes[0]: ");
+> > +		evt_str(&str, evts->pipes[0]);
+> > +		komeda_sprintf(&str, ", pipes[1]: ");
+> > +		evt_str(&str, evts->pipes[1]);
+> > +
+> > +		DRM_ERROR("err detect: %s\n", msg);
+> > +
+> > +		en_print =3D false;
+> > +	}
+> > +}
+> > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
+> > b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c index 419a8b0..0fafc3=
+6
+> > 100644
+> > --- a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
+> > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
+> > @@ -47,6 +47,10 @@ static irqreturn_t komeda_kms_irq_handler(int irq, v=
+oid
+> > *data) memset(&evts, 0, sizeof(evts));
+> >  	status =3D mdev->funcs->irq_handler(mdev, &evts);
+> >=20
+> > +#ifdef CONFIG_DRM_KOMEDA_ERROR_PRINT
+> > +	komeda_print_events(&evts);
+> > +#endif
+> > +
+> >  	/* Notify the crtc to handle the events */
+> >  	for (i =3D 0; i < kms->n_crtcs; i++)
+> >  		komeda_crtc_handle_event(&kms->crtcs[i], &evts);
+>=20
+>=20
+>=20
