@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 914E9C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6483DC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 604D3217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D26B217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:29:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752573;
-	bh=wljY2PVzBiL68oT7aSc243FPwrxoFYlTZCI+Xyyx5lI=;
+	s=default; t=1564752586;
+	bh=UICCrWcWaYqSDn+1mUBzxkoemCypfH+4cUefkJzJVyM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fG4th10VNgvh5XXhwl3Z3JwnbyQErrwp53gRMxY35mGexUXmTOfmJ9mLJjDOCU5mY
-	 VHZjjqY6arr7KsoIvYiIRh3Lt2JNkvRKl/sAZAqqCK6GeQqM6Lwe+4/EUUSRalFgq7
-	 EmDd6njLcGkfBEren5enA7icII1XFMCjfJozyVzo=
+	b=pwEZB/8r4ENRxyM4eqAA8yQC7Gurjnpflec5zRAExrS0W55Gqcjw3HD4PjuLK2eC9
+	 QOoXnM2tCqdectOojm0V2+vb6DNS8v8wgICuB7KRc6KXT0I3yewcifsNp3/1rUsACY
+	 8BKx7HeY+DUB5IB3S3ZRzTiI9d/loev6KbGiLMCQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391829AbfHBN3b (ORCPT
+        id S2394254AbfHBNYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:29:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35582 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:24:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394272AbfHBNYw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:24:52 -0400
+        id S2394232AbfHBNYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:24:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C2C421841;
-        Fri,  2 Aug 2019 13:24:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 653BF20880;
+        Fri,  2 Aug 2019 13:24:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752291;
-        bh=wljY2PVzBiL68oT7aSc243FPwrxoFYlTZCI+Xyyx5lI=;
+        s=default; t=1564752285;
+        bh=UICCrWcWaYqSDn+1mUBzxkoemCypfH+4cUefkJzJVyM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tc1o2nLafyyAD/Wdd/kVOwzD+i62gKhN1ew8zEBRg0S+ONrMCm/ZNFQZVx0wUf9bn
-         3PoZ4tDPNBveS+cEppk2jcJthpHoG/I4bK8tzLgEkLb0DxeFMwmcAvQzfQhf+pJwVi
-         fxsQZPauBo6SilMi03+s3yotQPlxSLl5poTcyP+M=
+        b=oL4uUu7x4Fop61Jfyx8vg44xl4Nw1Qb7Z5ChJ/o3Pgq5ZnymNL65gLCtC+/QS7brS
+         Q7Fn04VKuRD0pXzMjgWbzlU4iloY5i7c9B/659jhSGiW0b1bfHkWSbLz0KEjYq1f3a
+         ASHdixcDC3Rfnk2R602uVC/MvUM0ttkfra0EzDEM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
-        Jens Remus <jremus@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 14/30] s390/qdio: add sanity checks to the fast-requeue path
-Date:   Fri,  2 Aug 2019 09:24:06 -0400
-Message-Id: <20190802132422.13963-14-sashal@kernel.org>
+Cc:     Joerg Roedel <jroedel@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 10/30] x86/mm: Sync also unmappings in vmalloc_sync_all()
+Date:   Fri,  2 Aug 2019 09:24:02 -0400
+Message-Id: <20190802132422.13963-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802132422.13963-1-sashal@kernel.org>
 References: <20190802132422.13963-1-sashal@kernel.org>
@@ -60,50 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-[ Upstream commit a6ec414a4dd529eeac5c3ea51c661daba3397108 ]
+[ Upstream commit 8e998fc24de47c55b47a887f6c95ab91acd4a720 ]
 
-If the device driver were to send out a full queue's worth of SBALs,
-current code would end up discovering the last of those SBALs as PRIMED
-and erroneously skip the SIGA-w. This immediately stalls the queue.
+With huge-page ioremap areas the unmappings also need to be synced between
+all page-tables. Otherwise it can cause data corruption when a region is
+unmapped and later re-used.
 
-Add a check to not attempt fast-requeue in this case. While at it also
-make sure that the state of the previous SBAL was successfully extracted
-before inspecting it.
+Make the vmalloc_sync_one() function ready to sync unmappings and make sure
+vmalloc_sync_all() iterates over all page-tables even when an unmapped PMD
+is found.
 
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Jens Remus <jremus@linux.ibm.com>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Fixes: 5d72b4fba40ef ('x86, mm: support huge I/O mapping capability I/F')
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+Link: https://lkml.kernel.org/r/20190719184652.11391-3-joro@8bytes.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/qdio_main.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/x86/mm/fault.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/s390/cio/qdio_main.c b/drivers/s390/cio/qdio_main.c
-index ab8dd81fbc2b1..1a40c73961b83 100644
---- a/drivers/s390/cio/qdio_main.c
-+++ b/drivers/s390/cio/qdio_main.c
-@@ -1577,13 +1577,13 @@ static int handle_outbound(struct qdio_q *q, unsigned int callflags,
- 		rc = qdio_kick_outbound_q(q, phys_aob);
- 	} else if (need_siga_sync(q)) {
- 		rc = qdio_siga_sync_q(q);
-+	} else if (count < QDIO_MAX_BUFFERS_PER_Q &&
-+		   get_buf_state(q, prev_buf(bufnr), &state, 0) > 0 &&
-+		   state == SLSB_CU_OUTPUT_PRIMED) {
-+		/* The previous buffer is not processed yet, tack on. */
-+		qperf_inc(q, fast_requeue);
- 	} else {
--		/* try to fast requeue buffers */
--		get_buf_state(q, prev_buf(bufnr), &state, 0);
--		if (state != SLSB_CU_OUTPUT_PRIMED)
--			rc = qdio_kick_outbound_q(q, 0);
--		else
--			qperf_inc(q, fast_requeue);
-+		rc = qdio_kick_outbound_q(q, 0);
- 	}
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 407522db3d9ea..27cab342a0b25 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -260,11 +260,12 @@ static inline pmd_t *vmalloc_sync_one(pgd_t *pgd, unsigned long address)
  
- 	/* in case of SIGA errors we must process the error immediately */
+ 	pmd = pmd_offset(pud, address);
+ 	pmd_k = pmd_offset(pud_k, address);
+-	if (!pmd_present(*pmd_k))
+-		return NULL;
+ 
+-	if (!pmd_present(*pmd))
++	if (pmd_present(*pmd) != pmd_present(*pmd_k))
+ 		set_pmd(pmd, *pmd_k);
++
++	if (!pmd_present(*pmd_k))
++		return NULL;
+ 	else
+ 		BUG_ON(pmd_pfn(*pmd) != pmd_pfn(*pmd_k));
+ 
+@@ -286,17 +287,13 @@ void vmalloc_sync_all(void)
+ 		spin_lock(&pgd_lock);
+ 		list_for_each_entry(page, &pgd_list, lru) {
+ 			spinlock_t *pgt_lock;
+-			pmd_t *ret;
+ 
+ 			/* the pgt_lock only for Xen */
+ 			pgt_lock = &pgd_page_get_mm(page)->page_table_lock;
+ 
+ 			spin_lock(pgt_lock);
+-			ret = vmalloc_sync_one(page_address(page), address);
++			vmalloc_sync_one(page_address(page), address);
+ 			spin_unlock(pgt_lock);
+-
+-			if (!ret)
+-				break;
+ 		}
+ 		spin_unlock(&pgd_lock);
+ 	}
 -- 
 2.20.1
 
