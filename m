@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5ED8C32753
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13186C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D02D21726
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAA162073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:35:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752950;
-	bh=giRhtxYzRCKHMP2+BeUpS3xr1ScaCTAL0Qv/EhoWJ+Q=;
+	s=default; t=1564752953;
+	bh=wR+477MA7YqEAkVVTxtZJpAaDsvuJGS+RBbhAOuOmHw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SGWyNQY+l4t1UAgTez1jXnB7pYRbf7AouOvqUyxQ1Z3tjNC+tPasrOZg7MmkNyOdR
-	 L9sHnC6jrRLp0SANGmcmaAgYNdHILzGBt7ImypPJkky5bb+cMMK8IxIz4A8dCiVyvD
-	 kx3ur7BqHVmrt1EzQMh1QLMBhkvYRGr9px037hBU=
+	b=QVsJQoFo4zfxeBa12UAiIhpoyE5DabS/txGiAwRZfyH3IzHMHExTYu5B/35acwKAa
+	 va5/kafBGQABKGpzDUJKB3A/n8DO5xCjlTQrLBk/YIwj3rOx4dASEHIOt32NbzWBc+
+	 5YGAM79tT420F5nwwB9QWZAaxrv/77ZG6cSuKvv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393398AbfHBNUf (ORCPT
+        id S2393385AbfHBNUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:20:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58820 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:20:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393366AbfHBNU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:20:27 -0400
+        id S2393329AbfHBNUT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:20:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 195C721849;
-        Fri,  2 Aug 2019 13:20:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB03D2173E;
+        Fri,  2 Aug 2019 13:20:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752026;
-        bh=giRhtxYzRCKHMP2+BeUpS3xr1ScaCTAL0Qv/EhoWJ+Q=;
+        s=default; t=1564752018;
+        bh=wR+477MA7YqEAkVVTxtZJpAaDsvuJGS+RBbhAOuOmHw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AYReBZ9ypar9TTmqZ6r1bskKK++EVSTODJt1njosat08sW4QkwVPPSSnBK5n40Dor
-         umCWHNDs61yb24kh7z3ZQ1fjG+JJeP68bMeXHKep31fyHONgbTU2hPQnPFZzHotFyc
-         qJX5+MXONVNqR0yaUqe4zDTvF0o3Dtf7ND6Ty8f8=
+        b=T+cQ4j0KxBSq09VdYSv0/HlemOO/XuoK7Dtdp93BFlE4y0m+StlPxMozpYbdf9OHZ
+         QL7z6jWnHplj+lNN3G/Mtf+MK9GgHaRu7xrxXx5XaOxQlZe+hEx+GFi3BSybRnkAyq
+         dJgF4bZtXsMJk01r6EPZMi72pcC1oQRkq0vf81S8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julian Parkin <julian.parkin@amd.com>,
-        Charlene Liu <Charlene.Liu@amd.com>,
+Cc:     Tai Man <taiman.wong@amd.com>, Charlene Liu <Charlene.Liu@amd.com>,
         Leo Li <sunpeng.li@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.2 23/76] drm/amd/display: Fix dc_create failure handling and 666 color depths
-Date:   Fri,  2 Aug 2019 09:18:57 -0400
-Message-Id: <20190802131951.11600-23-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 20/76] drm/amd/display: use encoder's engine id to find matched free audio device
+Date:   Fri,  2 Aug 2019 09:18:54 -0400
+Message-Id: <20190802131951.11600-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802131951.11600-1-sashal@kernel.org>
 References: <20190802131951.11600-1-sashal@kernel.org>
@@ -62,63 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Parkin <julian.parkin@amd.com>
+From: Tai Man <taiman.wong@amd.com>
 
-[ Upstream commit 0905f32977268149f06e3ce6ea4bd6d374dd891f ]
+[ Upstream commit 74eda776d7a4e69ec7aa1ce30a87636f14220fbb ]
 
 [Why]
-It is possible (but very unlikely) that constructing dc fails
-before current_state is created.
-
-We support 666 color depth in some scenarios, but this
-isn't handled in get_norm_pix_clk. It uses exactly the
-same pixel clock as the 888 case.
+On some platforms, the encoder id 3 is not populated. So the encoders
+are not stored in right order as index (id: 0, 1, 2, 4, 5) at pool. This
+would cause encoders id 4 & id 5 to fail when finding corresponding
+audio device, defaulting to the first available audio device. As result,
+we cannot stream audio into two DP ports with encoders id 4 & id 5.
 
 [How]
-Check for non null current_state before destructing.
+It need to create enough audio device objects (0 - 5) to perform matching.
+Then use encoder engine id to find matched audio device.
 
-Add case for 666 color depth to get_norm_pix_clk to
-avoid assertion.
-
-Signed-off-by: Julian Parkin <julian.parkin@amd.com>
+Signed-off-by: Tai Man <taiman.wong@amd.com>
 Reviewed-by: Charlene Liu <Charlene.Liu@amd.com>
 Acked-by: Leo Li <sunpeng.li@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc.c          | 6 ++++--
- drivers/gpu/drm/amd/display/dc/core/dc_resource.c | 1 +
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/display/dc/core/dc_resource.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
-index ee6b646180b66..0a7adc2925e35 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
-@@ -608,8 +608,10 @@ const struct dc_link_settings *dc_link_get_link_cap(
- 
- static void destruct(struct dc *dc)
- {
--	dc_release_state(dc->current_state);
--	dc->current_state = NULL;
-+	if (dc->current_state) {
-+		dc_release_state(dc->current_state);
-+		dc->current_state = NULL;
-+	}
- 
- 	destroy_links(dc);
- 
 diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_resource.c b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
-index ad82906b99db9..b87e8d80bb6a8 100644
+index eac7186e4f084..ad82906b99db9 100644
 --- a/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
 +++ b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
-@@ -1872,6 +1872,7 @@ static int get_norm_pix_clk(const struct dc_crtc_timing *timing)
- 		pix_clk /= 2;
- 	if (timing->pixel_encoding != PIXEL_ENCODING_YCBCR422) {
- 		switch (timing->display_color_depth) {
-+		case COLOR_DEPTH_666:
- 		case COLOR_DEPTH_888:
- 			normalized_pix_clk = pix_clk;
- 			break;
+@@ -254,7 +254,7 @@ bool resource_construct(
+ 		 * PORT_CONNECTIVITY == 1 (as instructed by HW team).
+ 		 */
+ 		update_num_audio(&straps, &num_audio, &pool->audio_support);
+-		for (i = 0; i < pool->pipe_count && i < num_audio; i++) {
++		for (i = 0; i < caps->num_audio; i++) {
+ 			struct audio *aud = create_funcs->create_audio(ctx, i);
+ 
+ 			if (aud == NULL) {
+@@ -1702,6 +1702,12 @@ static struct audio *find_first_free_audio(
+ 			return pool->audios[i];
+ 		}
+ 	}
++
++    /* use engine id to find free audio */
++	if ((id < pool->audio_count) && (res_ctx->is_audio_acquired[id] == false)) {
++		return pool->audios[id];
++	}
++
+ 	/*not found the matching one, first come first serve*/
+ 	for (i = 0; i < pool->audio_count; i++) {
+ 		if (res_ctx->is_audio_acquired[i] == false) {
 -- 
 2.20.1
 
