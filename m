@@ -5,53 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41481C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0365CC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 194AD2064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D061F20665
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:00:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564740014;
-	bh=cc+PpYXY8wQ9cF1G23aXSTEdh27NousCqZZ3bCOIbro=;
+	s=default; t=1564740020;
+	bh=sjU39/06cAWp44DyUMSwwUya99C8wbkAQnuEq44IuLc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QJMa47Oboilem3LxLphvV/2FJyzyq+qgrC3f+38qUO3Dw/dXkftZNYlLfTaZ4rQBj
-	 Lf6dZEKZO0tEztza3V2Dt/iRJbB4XzfSEQMV3a4p1BHtmsyd8ZeFOkMewR115X2ljt
-	 znkrlL6SbrDlZxITTjEyGi93Mn2sAmkWL6AXZd/E=
+	b=JNtksKUGpIGeCqUby5ThOElC2zUrhGKMc60G4u2YvJm6L3azXa5+IqNWDRwH4bTU3
+	 TGO8q2EwsV/tLs35nuGIg6t6W38JXbnlZsZYQN3uGHvCOEnG9OubK1DA/GUNcDD+rA
+	 n1JdokZpuuEUHMbssLIMn6ZZFXj9SToLEq+Gtjr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405389AbfHBJwx (ORCPT
+        id S2407051AbfHBKAT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:52:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58472 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 06:00:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406056AbfHBJwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:52:42 -0400
+        id S2406065AbfHBJwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:52:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F3B620665;
-        Fri,  2 Aug 2019 09:52:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 802ED20880;
+        Fri,  2 Aug 2019 09:52:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739561;
-        bh=cc+PpYXY8wQ9cF1G23aXSTEdh27NousCqZZ3bCOIbro=;
+        s=default; t=1564739564;
+        bh=sjU39/06cAWp44DyUMSwwUya99C8wbkAQnuEq44IuLc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y87zscoWsUZRMjiuEuFUHQ9/4o7X80NTPotYrUs1zSsITlkKHfvRHO9g0CDW+X55Z
-         DuFHrslkIyHbTTipP6p/O6QxDkXrCWZtsKmvRv0l3I+avXWJX7MmP5dIf1c8Eb76Nh
-         UFKMSDTsV8NmBFO/HgiAc2GrJEMKk95W0wFfuenQ=
+        b=eY6wPkYup9bzX/ceEPQjirBE/GPKzS1EosiGw572J4gMrcILZr0Pmm7VfaRxazrF+
+         riD0A25TF3CCBf6HjCGbGFdSIwYOq53fa12C2t7oh6ZRyKQfDND/r372F3BfdrEI45
+         I5a4qnH2vbmVIos6zC4BdoB+NqidjvqRB9PNWkuc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Yuyang Du <duyuyang@gmail.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>, arnd@arndb.de,
+        frederic@kernel.org, Ingo Molnar <mingo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 199/223] mm/mmu_notifier: use hlist_add_head_rcu()
-Date:   Fri,  2 Aug 2019 11:37:04 +0200
-Message-Id: <20190802092250.064816132@linuxfoundation.org>
+Subject: [PATCH 4.9 200/223] locking/lockdep: Fix lock used or unused stats error
+Date:   Fri,  2 Aug 2019 11:37:05 +0200
+Message-Id: <20190802092250.101586900@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -64,64 +67,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 543bdb2d825fe2400d6e951f1786d92139a16931 ]
+[ Upstream commit 68d41d8c94a31dfb8233ab90b9baf41a2ed2da68 ]
 
-Make mmu_notifier_register() safer by issuing a memory barrier before
-registering a new notifier.  This fixes a theoretical bug on weakly
-ordered CPUs.  For example, take this simplified use of notifiers by a
-driver:
+The stats variable nr_unused_locks is incremented every time a new lock
+class is register and decremented when the lock is first used in
+__lock_acquire(). And after all, it is shown and checked in lockdep_stats.
 
-	my_struct->mn.ops = &my_ops; /* (1) */
-	mmu_notifier_register(&my_struct->mn, mm)
-		...
-		hlist_add_head(&mn->hlist, &mm->mmu_notifiers); /* (2) */
-		...
+However, under configurations that either CONFIG_TRACE_IRQFLAGS or
+CONFIG_PROVE_LOCKING is not defined:
 
-Once mmu_notifier_register() releases the mm locks, another thread can
-invalidate a range:
+The commit:
 
-	mmu_notifier_invalidate_range()
-		...
-		hlist_for_each_entry_rcu(mn, &mm->mmu_notifiers, hlist) {
-			if (mn->ops->invalidate_range)
+  091806515124b20 ("locking/lockdep: Consolidate lock usage bit initialization")
 
-The read side relies on the data dependency between mn and ops to ensure
-that the pointer is properly initialized.  But the write side doesn't have
-any dependency between (1) and (2), so they could be reordered and the
-readers could dereference an invalid mn->ops.  mmu_notifier_register()
-does take all the mm locks before adding to the hlist, but those have
-acquire semantics which isn't sufficient.
+missed marking the LOCK_USED flag at IRQ usage initialization because
+as mark_usage() is not called. And the commit:
 
-By calling hlist_add_head_rcu() instead of hlist_add_head() we update the
-hlist using a store-release, ensuring that readers see prior
-initialization of my_struct.  This situation is better illustated by
-litmus test MP+onceassign+derefonce.
+  886532aee3cd42d ("locking/lockdep: Move mark_lock() inside CONFIG_TRACE_IRQFLAGS && CONFIG_PROVE_LOCKING")
 
-Link: http://lkml.kernel.org/r/20190502133532.24981-1-jean-philippe.brucker@arm.com
-Fixes: cddb8a5c14aa ("mmu-notifiers: core")
-Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+further made mark_lock() not defined such that the LOCK_USED cannot be
+marked at all when the lock is first acquired.
+
+As a result, we fix this by not showing and checking the stats under such
+configurations for lockdep_stats.
+
+Reported-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Yuyang Du <duyuyang@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: arnd@arndb.de
+Cc: frederic@kernel.org
+Link: https://lkml.kernel.org/r/20190709101522.9117-1-duyuyang@gmail.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/mmu_notifier.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/locking/lockdep_proc.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
-index f4259e496f83..7a66e37efb4d 100644
---- a/mm/mmu_notifier.c
-+++ b/mm/mmu_notifier.c
-@@ -286,7 +286,7 @@ static int do_mmu_notifier_register(struct mmu_notifier *mn,
- 	 * thanks to mm_take_all_locks().
- 	 */
- 	spin_lock(&mm->mmu_notifier_mm->lock);
--	hlist_add_head(&mn->hlist, &mm->mmu_notifier_mm->list);
-+	hlist_add_head_rcu(&mn->hlist, &mm->mmu_notifier_mm->list);
- 	spin_unlock(&mm->mmu_notifier_mm->lock);
+diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
+index a0f61effad25..c482de6f5262 100644
+--- a/kernel/locking/lockdep_proc.c
++++ b/kernel/locking/lockdep_proc.c
+@@ -229,6 +229,7 @@ static int lockdep_stats_show(struct seq_file *m, void *v)
+ 		      nr_hardirq_read_safe = 0, nr_hardirq_read_unsafe = 0,
+ 		      sum_forward_deps = 0;
  
- 	mm_drop_all_locks(mm);
++#ifdef CONFIG_PROVE_LOCKING
+ 	list_for_each_entry(class, &all_lock_classes, lock_entry) {
+ 
+ 		if (class->usage_mask == 0)
+@@ -260,12 +261,12 @@ static int lockdep_stats_show(struct seq_file *m, void *v)
+ 		if (class->usage_mask & LOCKF_ENABLED_HARDIRQ_READ)
+ 			nr_hardirq_read_unsafe++;
+ 
+-#ifdef CONFIG_PROVE_LOCKING
+ 		sum_forward_deps += lockdep_count_forward_deps(class);
+-#endif
+ 	}
+ #ifdef CONFIG_DEBUG_LOCKDEP
+ 	DEBUG_LOCKS_WARN_ON(debug_atomic_read(nr_unused_locks) != nr_unused);
++#endif
++
+ #endif
+ 	seq_printf(m, " lock-classes:                  %11lu [max: %lu]\n",
+ 			nr_lock_classes, MAX_LOCKDEP_KEYS);
 -- 
 2.20.1
 
