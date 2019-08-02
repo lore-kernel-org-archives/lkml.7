@@ -2,86 +2,78 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D6A3C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1516EC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37B022064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:01:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dwXW3sQ1"
+	by mail.kernel.org (Postfix) with ESMTP id E764B2064A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:01:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403896AbfHBNB0 (ORCPT
+        id S2403995AbfHBNBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:01:26 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34251 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbfHBNB0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:01:26 -0400
-Received: by mail-lf1-f68.google.com with SMTP id b29so45658062lfq.1;
-        Fri, 02 Aug 2019 06:01:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XPjbHLrTX3WXA9Ntzf5RZ9TssASBW6mGGuFC8KEUjyw=;
-        b=dwXW3sQ1gZHh+gRq6qCK5o3eZJpyhGlJgFFZayH/Sya/bRwtGnN4CZqKyF+rKZku/P
-         udMzRXLJ7pEPcXL7stFEsO47l0qXmt920GmdWDAMVDj18RfIPqn3pQ1y0QlrdLo1ArCK
-         uavw0gIWYA1LuPoZYwcLgbvRIRwuz+vCT5+LNq2RpaEjv9OjwgrGKbiO/tkpurZW3svz
-         1OZynV3nZj7x2TH+6swuahUxFAANgqT+irGrMK1f+X12Q0DlfRN4zbJ5QH8E8xOrTDb8
-         e3/eG5XaEyNjVAUo+W3h1jZmIWKc44WXRaZumTyqyN/PWbCnt+xltuWeDj+uJcXe2R7u
-         eq5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XPjbHLrTX3WXA9Ntzf5RZ9TssASBW6mGGuFC8KEUjyw=;
-        b=C8AYtRdqoUTdOaWHWLW+Bkxdk4K6/yrQ12JI4EL18Im1aQeRt8uVJQPd44IkFm8AaG
-         KvjBevzQ9Rd/d4l1EizQXpmaH7fQFQDJpTaIVMg7byezH1QBzZNpv2yFAUHpvHiHMj9A
-         hFS0zmkgzILrdWOZ7Zb8yC9ZuE2Dow8/4AO56Vgyn+nvg8Rl3+6p0jVFIgLkrGTIqOW/
-         DPUWWXs5s2yPkhFsaIfEhj4fXw4Nk4b9hM2kPIZGbj55WXZDraBux2UMMhMgeJeMMFmD
-         ENwX5UxTzLsU7Vq/vDDb+mKNmE5rTWaNRthpZnf7Hyeg8pp0vjNfzBJ2A76aDGb6s/6l
-         IoAA==
-X-Gm-Message-State: APjAAAXzm8H1thMIWu9AYlhDapL68I0RL8GneWepIoS/9BfTvPm+oagW
-        xD3fO+mz3QxwLB1vXZjmuPDNmsreaJptPW/juAd3MUIR
-X-Google-Smtp-Source: APXvYqxiKkwBi4xLTfvgUAojfGuzhW4u7kOwlwxiEYsHNcEGsyCBb4vsdI8em1/OEli/xASVhzr7eSFPuDI0ByvqFpQ=
-X-Received: by 2002:a19:e006:: with SMTP id x6mr63042828lfg.165.1564750884322;
- Fri, 02 Aug 2019 06:01:24 -0700 (PDT)
+        Fri, 2 Aug 2019 09:01:37 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3719 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726535AbfHBNBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:01:37 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id A6BF4CA39BF771809092;
+        Fri,  2 Aug 2019 21:01:35 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Fri, 2 Aug 2019
+ 21:01:27 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] usb: dwc3: keystone: use devm_platform_ioremap_resource() to simplify code
+Date:   Fri, 2 Aug 2019 21:01:04 +0800
+Message-ID: <20190802130104.62276-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-References: <259986242.BvXPX32bHu@devpool35> <20190606185900.GA19937@kroah.com>
- <CANiq72n2E4Ue0MU5mWitSbsscizPQKML0QQx_DBwJVni+eWMHQ@mail.gmail.com>
- <4007272.nJfEYfeqza@devpool35> <CANiq72=T8nH3HHkYvWF+vPMscgwXki1Ugiq6C9PhVHJUHAwDYw@mail.gmail.com>
- <20190802103346.GA14255@kroah.com> <CANiq72kcZZwp2MRVF5Ls+drXCzVbCfZ7wZ8Y+rU93oGohVAGsQ@mail.gmail.com>
- <20190802112542.GA29534@kroah.com>
-In-Reply-To: <20190802112542.GA29534@kroah.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Fri, 2 Aug 2019 15:01:13 +0200
-Message-ID: <CANiq72mSLmP-EaOgY0m2qgTMVsAnyE6iuW5Kjdw5mSy1ZH0y-A@mail.gmail.com>
-Subject: =?UTF-8?Q?Re=3A_Linux_4=2E9=2E180_build_fails_with_gcc_9_and_=27cleanu?=
-        =?UTF-8?Q?p=5Fmodule=27_specifies_less_restrictive_attribute_than_its_targ?=
-        =?UTF-8?Q?et_=E2=80=A6?=
-To:     Greg KH <greg@kroah.com>
-Cc:     Rolf Eike Beer <eb@emlix.com>, stable@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 2, 2019 at 1:25 PM Greg KH <greg@kroah.com> wrote:
->
-> But it still doesn't work for 4.14.y and 4.19.y, so we are probably
-> missing something there.  So if you want to fix that up, I'd appreciate
-> patches to do so :)
+Use devm_platform_ioremap_resource() to simplify the code a bit.
+This is detected by coccinelle.
 
-Hm... For 4.19.y and 4.14.y, I cannot see the init/exit_module
-warnings under GCC 9.1.1. What do you mean it does not work?
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/usb/dwc3/dwc3-keystone.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Cheers,
-Miguel
+diff --git a/drivers/usb/dwc3/dwc3-keystone.c b/drivers/usb/dwc3/dwc3-keystone.c
+index a69eb4a..1e14a6f 100644
+--- a/drivers/usb/dwc3/dwc3-keystone.c
++++ b/drivers/usb/dwc3/dwc3-keystone.c
+@@ -81,7 +81,6 @@ static int kdwc3_probe(struct platform_device *pdev)
+ 	struct device		*dev = &pdev->dev;
+ 	struct device_node	*node = pdev->dev.of_node;
+ 	struct dwc3_keystone	*kdwc;
+-	struct resource		*res;
+ 	int			error, irq;
+ 
+ 	kdwc = devm_kzalloc(dev, sizeof(*kdwc), GFP_KERNEL);
+@@ -92,8 +91,7 @@ static int kdwc3_probe(struct platform_device *pdev)
+ 
+ 	kdwc->dev = dev;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	kdwc->usbss = devm_ioremap_resource(dev, res);
++	kdwc->usbss = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(kdwc->usbss))
+ 		return PTR_ERR(kdwc->usbss);
+ 
+-- 
+2.7.4
+
+
