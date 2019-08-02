@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C230CC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A73C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 906FA20679
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:38:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85E6120679
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:38:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738733;
-	bh=pgIazXNOnkGpteM4RHQyFzjHISWzCTtxmcmsMF/noBo=;
+	s=default; t=1564738737;
+	bh=2XwdYcvuR1Zdq936dhGMg0cuBMr5jLmnhKag/WIbxJQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F5Qcj7fzc20NIVQPauDo2W9q8kVe3nWugZObxkYb9UTTaDB1DAZ3KvpKcnoRu4Adg
-	 RI9EQowBYH7K7EAKcXUoVKIdRiX5KIWxWwFhC6qMFY/Qxg2xm5yvd0/ispCUWKSNv3
-	 obt+/pk7rXAHM09uvaazYgITHg2Wev+Nm7Js+asY=
+	b=HWX0GYonM1tNywjWsnzjdpqRWcpStoRnpCGVn2rCRhzeoUpYLfLuiQg9cxW+aFUua
+	 KoNGQ9JznhE00suvCtntvaHvK7o0P8YpA7uVFhMZS9zvKCYCY13et/zt87dCSPmwJi
+	 mBGRvZNAfRkU6Pr0U35vHNVFK/4NHHagZL5Tfvu4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390594AbfHBJeX (ORCPT
+        id S2390051AbfHBJeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:34:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34148 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:34:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390357AbfHBJeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:34:19 -0400
+        id S2391499AbfHBJeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:34:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5938521773;
-        Fri,  2 Aug 2019 09:34:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B7A6217D4;
+        Fri,  2 Aug 2019 09:34:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738458;
-        bh=pgIazXNOnkGpteM4RHQyFzjHISWzCTtxmcmsMF/noBo=;
+        s=default; t=1564738453;
+        bh=2XwdYcvuR1Zdq936dhGMg0cuBMr5jLmnhKag/WIbxJQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zLFy6ilNQnbuNqQLnXpcRBk+KGGhesOWu3AdF94M7SgVXAhDFD6xfhUe65LzRh7pO
-         q0TQa26oa/DS+GhkOHQLg/92UY0JeqXMtYMdOpO0W8fbRYEVcT6t8+7kc6Y2OOt9xb
-         jCEfJT0jxAtfxaVSKAvIOjC58xwkszTHajW/TY0E=
+        b=H7Cu2A4/++buXgCnWRiTerMkFrt6igjRpL+LsIQd1m0WOsKVSYHu2BeJ3zi+fIEEE
+         G3B4JMwSY7KrDrlmXhpm/MSyMfx0y7wIPQ3vjTvm/Vm9JKb+YBSjZco0tczW/wLXjc
+         nLohQI6X27hKoWmvMI7V9WQo71NCL8onpmS+aoGU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Christoph Paasch <cpaasch@apple.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 087/158] caif-hsi: fix possible deadlock in cfhsi_exit_module()
-Date:   Fri,  2 Aug 2019 11:28:28 +0200
-Message-Id: <20190802092222.008978031@linuxfoundation.org>
+Subject: [PATCH 4.4 095/158] tcp: Reset bytes_acked and bytes_received when disconnecting
+Date:   Fri,  2 Aug 2019 11:28:36 +0200
+Message-Id: <20190802092223.684416709@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -59,32 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Christoph Paasch <cpaasch@apple.com>
 
-[ Upstream commit fdd258d49e88a9e0b49ef04a506a796f1c768a8e ]
+[ Upstream commit e858faf556d4e14c750ba1e8852783c6f9520a0e ]
 
-cfhsi_exit_module() calls unregister_netdev() under rtnl_lock().
-but unregister_netdev() internally calls rtnl_lock().
-So deadlock would occur.
+If an app is playing tricks to reuse a socket via tcp_disconnect(),
+bytes_acked/received needs to be reset to 0. Otherwise tcp_info will
+report the sum of the current and the old connection..
 
-Fixes: c41254006377 ("caif-hsi: Add rtnl support")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Cc: Eric Dumazet <edumazet@google.com>
+Fixes: 0df48c26d841 ("tcp: add tcpi_bytes_acked to tcp_info")
+Fixes: bdd1f9edacb5 ("tcp: add tcpi_bytes_received to tcp_info")
+Signed-off-by: Christoph Paasch <cpaasch@apple.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/caif/caif_hsi.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv4/tcp.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/net/caif/caif_hsi.c
-+++ b/drivers/net/caif/caif_hsi.c
-@@ -1467,7 +1467,7 @@ static void __exit cfhsi_exit_module(voi
- 	rtnl_lock();
- 	list_for_each_safe(list_node, n, &cfhsi_list) {
- 		cfhsi = list_entry(list_node, struct cfhsi, list);
--		unregister_netdev(cfhsi->ndev);
-+		unregister_netdevice(cfhsi->ndev);
- 	}
- 	rtnl_unlock();
- }
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -2272,6 +2272,8 @@ int tcp_disconnect(struct sock *sk, int
+ 	dst_release(sk->sk_rx_dst);
+ 	sk->sk_rx_dst = NULL;
+ 	tcp_saved_syn_free(tp);
++	tp->bytes_acked = 0;
++	tp->bytes_received = 0;
+ 
+ 	WARN_ON(inet->inet_num && !icsk->icsk_bind_hash);
+ 
 
 
