@@ -2,97 +2,74 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A148C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AB9C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E07F20679
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:27:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Iqz2OamA"
+	by mail.kernel.org (Postfix) with ESMTP id D49A621726
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:32:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564756351;
+	bh=7IdaB/Ghuyv4Cj8yhU/Am5uia2oxMEzSJaJfa45BtFk=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=T/dN75vTkjNH7sacIsmnQvyIknEZLGEkPeqka9vnygqX+91wnnBVxoOATJ8TygJH5
+	 Vf5mwyk9hEDffhKkrQ2Czb/ho2ih/HchtEaKiYTkLG6Am063qB/8gPNj4s9zzSDl0x
+	 +XkBvQifOLjRZ7h4N95wDccvmdqL+puljxwXYx8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394940AbfHBO1z (ORCPT
+        id S2394949AbfHBOca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 10:27:55 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:40506 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730999AbfHBO1y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 10:27:54 -0400
-Received: by mail-ed1-f67.google.com with SMTP id k8so72525233eds.7;
-        Fri, 02 Aug 2019 07:27:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=C9LPjwmpCbhIG9fa404OYjDh216Z1i9HjOGON92MWYk=;
-        b=Iqz2OamAaYolMP2nQ42QOA+OqHFEvmp+/aHWq5wTA0vcNcHZzeEc0ykVqbJfNgQYbQ
-         wHFuVsEDpuuPoeNMnJJcaAaYj2y43eyKCNk3NkxakxTXkwzNzp1hKPTDZX1JjICdNQPd
-         GS9QwXTdV92L8zl/BcOHze2ejPClmNiknhHIqDYNQZGQzKF+e5TxQoWvQNirqTIZW+wH
-         P20M2Tvxuc5JCJ+H5KsXYIhJZ7icjDGLzc16jOeYzOu3RWJBAWqY506d5i3gxsGh3GfZ
-         /zUowVXzWV4SiT894PKjJovd8YteDxA9COu/P10KC7n4J2efS94S27kvA82fhxX0tGYU
-         /CRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=C9LPjwmpCbhIG9fa404OYjDh216Z1i9HjOGON92MWYk=;
-        b=Yshgt4rROfcAH8OvwuCqR3mqY0/FEJDhUnnY0JHd4Jlhjh5LEDavqeAkf+Mj2+tj0I
-         UMFjN5tD58BpvcKqIw1SH7rUpTldH+ugAnpjaOILj6YMRyPDmd3k2/LeOc96lWqQ1PGe
-         k07VAg3fHILZKIUcF8GVEtc1gPlJcF/Zs52Nu0wDI/XZiDR2rOZqFnGWn+RQl1wQmqQA
-         v69XeyKGZhn5OY5bjNhLzMnUNXdiF3wFj3vW2P6q9FgMD8gD2+ZvKzza+Ig2zfNpdJAy
-         Mcuty2vdZ3S63Vfrxlob51roQY1kuX3tN9y8O1A6U064XbfOE2ySuHl5/MVpwXavgUTN
-         sCVw==
-X-Gm-Message-State: APjAAAXLc0toG00WnYFi/Rc8OAqxuE2SB5AvEpLYTdQnmBd7pSC+0sNz
-        DOl4fzQbnKNvOXribGBC3hEnqH1tOYo6wAvudgE=
-X-Google-Smtp-Source: APXvYqx+n4u9oJJMuDA0ns2aDhTyoGkwwKiA4D4tHIfuVxnjL9ix5kO3F+lS+1evpIh5xhMhcwgVnx9sHpvKvTblzcM=
-X-Received: by 2002:a05:6402:896:: with SMTP id e22mr115658449edy.202.1564756073161;
- Fri, 02 Aug 2019 07:27:53 -0700 (PDT)
+        Fri, 2 Aug 2019 10:32:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:52840 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389189AbfHBOca (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 10:32:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B82AF1570;
+        Fri,  2 Aug 2019 07:32:29 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4FE283F575;
+        Fri,  2 Aug 2019 07:32:28 -0700 (PDT)
+Subject: Re: [PATCH] arm64/kvm: fix -Wimplicit-fallthrough warnings
+To:     Qian Cai <cai@lca.pw>
+Cc:     james.morse@arm.com, julien.thierry.kdev@gmail.com,
+        suzuki.poulose@arm.com, christoffer.dall@linaro.org,
+        drjones@redhat.com, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
+References: <1564755788-28485-1-git-send-email-cai@lca.pw>
+From:   Marc Zyngier <maz@kernel.org>
+Organization: Approximate
+Message-ID: <0361d2e8-e57c-5cac-f0ff-5e56675ba71d@kernel.org>
+Date:   Fri, 2 Aug 2019 15:32:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190802083541.12602-1-hslester96@gmail.com> <CA+FuTSc8WBx2PCUhn-sLtYHQR-OROXm2pUN9SDj7P-Bd8432UQ@mail.gmail.com>
-In-Reply-To: <CA+FuTSc8WBx2PCUhn-sLtYHQR-OROXm2pUN9SDj7P-Bd8432UQ@mail.gmail.com>
-From:   Chuhong Yuan <hslester96@gmail.com>
-Date:   Fri, 2 Aug 2019 22:27:42 +0800
-Message-ID: <CANhBUQ2TRr4RuSmjaRYPXHZpVw_-2awXvWNjjdvV_z1yoGdkXA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] cxgb4: sched: Use refcount_t for refcount
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc:     Vishal Kulkarni <vishal@chelsio.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1564755788-28485-1-git-send-email-cai@lca.pw>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Willem de Bruijn <willemdebruijn.kernel@gmail.com> =E4=BA=8E2019=E5=B9=B48=
-=E6=9C=882=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=889:40=E5=86=99=E9=81=
-=93=EF=BC=9A
->
-> On Fri, Aug 2, 2019 at 4:36 AM Chuhong Yuan <hslester96@gmail.com> wrote:
-> >
-> > refcount_t is better for reference counters since its
-> > implementation can prevent overflows.
-> > So convert atomic_t ref counters to refcount_t.
-> >
-> > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> > ---
-> > Changes in v2:
-> >   - Convert refcount from 0-base to 1-base.
->
-> This changes the initial value from 0 to 1, but does not change the
-> release condition. So this introduces an accounting bug?
+On 02/08/2019 15:23, Qian Cai wrote:
+> The commit a892819560c4 ("KVM: arm64: Prepare to handle deferred
+> save/restore of 32-bit registers") introduced vcpu_write_spsr32() but
+> seems forgot to add "break" between the switch statements and generates
+> compilation warnings below. Also, adding a default statement as in
+> vcpu_read_spsr32().
 
-I have noticed this problem and have checked other files which use refcount=
-_t.
-I find although the refcounts are 1-based, they still use
-refcount_dec_and_test()
-to check whether the resource should be released.
-One example is drivers/char/mspec.c.
-Therefore I think this is okay and do not change the release condition.
+See
+https://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm.git/commit/?id=3d584a3c85d6fe2cf878f220d4ad7145e7f89218
+
+The default statement is pretty pointless by construction.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead, it just smells funny...
