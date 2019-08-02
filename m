@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FC5C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08034C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC1BA20644
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5F2B20644
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:23:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752193;
-	bh=lgIcao1FUsYr2I98X1TWGI5JBvZiDsyIgND5NxpgbiQ=;
+	s=default; t=1564752203;
+	bh=UurlDe7i5B6n4JttlHhN5xV2ui01PpBCGDYbfiv+K80=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xQwV6Gd4fHZsm4kv3IyL1Uqg675FnDvJ4dnFgmGx1GsnEwQULTSBkVnvF1N18gvaX
-	 zF174sHIzpV1dFPoMUoSFgvutaAsPeiwmyhh5udZ21MuT8b8/aaZW3awmSgd3Zxk2w
-	 d5BY1e7pYbmhVfjOaIj5z+UEWkw2LXFsuIbJwh/M=
+	b=ALy+lmIDIOLSoxfY1BF8An/xXUUFn/yLb0H17pMssQU/YxMcQVoONPmcl6N6220/H
+	 SLneHdAhssA6LXfOyjEofzpCzSJb9v/vzDIrs5p0wwC3IeDjzK6u/5Mu1FXU16C6av
+	 6kFBo3jFSXbE3z/h8SIgkryD9BlbkTQsBq5LcANk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387835AbfHBNXM (ORCPT
+        id S2393967AbfHBNXW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:23:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33662 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:23:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731618AbfHBNXG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:23:06 -0400
+        id S2393936AbfHBNXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:23:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8D9720880;
-        Fri,  2 Aug 2019 13:23:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CF9120644;
+        Fri,  2 Aug 2019 13:23:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752185;
-        bh=lgIcao1FUsYr2I98X1TWGI5JBvZiDsyIgND5NxpgbiQ=;
+        s=default; t=1564752195;
+        bh=UurlDe7i5B6n4JttlHhN5xV2ui01PpBCGDYbfiv+K80=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YaUPpmLdYBi5ATqml64cPdG5xGqsS8+fYVViScC75/4JPJg5fUzsFNtTmKs6QCREo
-         ym2nGcShAVwf51V+ZcYoYst19yLQjF3WKvAhVCOXtDOErr0BIk+LVYifR64K3kVmi3
-         ySYsZ3cBGkS/m6074LYgS8qm9q+aLyBEOROVL2rY=
+        b=oHvZzE7mgpCkKsyTyHF5fopY8G54FwAlgDrCy/P0f6bc+sqDu/lxSh5/qFbofSf7I
+         5l58509lkfF0swGxJ1QA+nSJzrDnfdH9zgml7sZFlwOJArX+cTIq5qMIt91fuLAWOz
+         EJmRLhGH6F0h5LGtEXd4KBeOFNHEazVKrpZd+Keg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Farhan Ali <alifm@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 02/42] vfio-ccw: Set pa_nr to 0 if memory allocation fails for pa_iova_pfn
-Date:   Fri,  2 Aug 2019 09:22:22 -0400
-Message-Id: <20190802132302.13537-2-sashal@kernel.org>
+Cc:     SivapiriyanKumarasamy <sivapiriyan.kumarasamy@amd.com>,
+        Anthony Koo <Anthony.Koo@amd.com>, Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 07/42] drm/amd/display: Wait for backlight programming completion in set backlight level
+Date:   Fri,  2 Aug 2019 09:22:27 -0400
+Message-Id: <20190802132302.13537-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802132302.13537-1-sashal@kernel.org>
 References: <20190802132302.13537-1-sashal@kernel.org>
@@ -61,39 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Farhan Ali <alifm@linux.ibm.com>
+From: SivapiriyanKumarasamy <sivapiriyan.kumarasamy@amd.com>
 
-[ Upstream commit c1ab69268d124ebdbb3864580808188ccd3ea355 ]
+[ Upstream commit c7990daebe71d11a9e360b5c3b0ecd1846a3a4bb ]
 
-So we don't call try to call vfio_unpin_pages() incorrectly.
+[WHY]
+Currently we don't wait for blacklight programming completion in DMCU
+when setting backlight level. Some sequences such as PSR static screen
+event trigger reprogramming requires it to be complete.
 
-Fixes: 0a19e61e6d4c ("vfio: ccw: introduce channel program interfaces")
-Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
-Reviewed-by: Eric Farman <farman@linux.ibm.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Message-Id: <33a89467ad6369196ae6edf820cbcb1e2d8d050c.1562854091.git.alifm@linux.ibm.com>
-Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+[How]
+Add generic wait for dmcu command completion in set backlight level.
+
+Signed-off-by: SivapiriyanKumarasamy <sivapiriyan.kumarasamy@amd.com>
+Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
+Acked-by: Leo Li <sunpeng.li@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/vfio_ccw_cp.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/dc/dce/dce_abm.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/s390/cio/vfio_ccw_cp.c b/drivers/s390/cio/vfio_ccw_cp.c
-index 70a006ba4d050..4fe06ff7b2c8b 100644
---- a/drivers/s390/cio/vfio_ccw_cp.c
-+++ b/drivers/s390/cio/vfio_ccw_cp.c
-@@ -89,8 +89,10 @@ static int pfn_array_alloc_pin(struct pfn_array *pa, struct device *mdev,
- 				  sizeof(*pa->pa_iova_pfn) +
- 				  sizeof(*pa->pa_pfn),
- 				  GFP_KERNEL);
--	if (unlikely(!pa->pa_iova_pfn))
-+	if (unlikely(!pa->pa_iova_pfn)) {
-+		pa->pa_nr = 0;
- 		return -ENOMEM;
-+	}
- 	pa->pa_pfn = pa->pa_iova_pfn + pa->pa_nr;
+diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_abm.c b/drivers/gpu/drm/amd/display/dc/dce/dce_abm.c
+index 070ab56a8aca7..da8b198538e5f 100644
+--- a/drivers/gpu/drm/amd/display/dc/dce/dce_abm.c
++++ b/drivers/gpu/drm/amd/display/dc/dce/dce_abm.c
+@@ -242,6 +242,10 @@ static void dmcu_set_backlight_level(
+ 	s2 |= (level << ATOM_S2_CURRENT_BL_LEVEL_SHIFT);
  
- 	pa->pa_iova_pfn[0] = pa->pa_iova >> PAGE_SHIFT;
+ 	REG_WRITE(BIOS_SCRATCH_2, s2);
++
++	/* waitDMCUReadyForCmd */
++	REG_WAIT(MASTER_COMM_CNTL_REG, MASTER_COMM_INTERRUPT,
++			0, 1, 80000);
+ }
+ 
+ static void dce_abm_init(struct abm *abm)
 -- 
 2.20.1
 
