@@ -2,111 +2,99 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 790F8C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC6AC32753
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:27:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52A7421726
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:27:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BF0E20679
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:27:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394921AbfHBO1c (ORCPT
+        id S2436672AbfHBO1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 10:27:32 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:36741 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394891AbfHBO1a (ORCPT
+        Fri, 2 Aug 2019 10:27:40 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:55132 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394891AbfHBO1h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 10:27:30 -0400
-Received: by mail-qt1-f194.google.com with SMTP id z4so74112853qtc.3
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 07:27:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=P2Hb3FZglhIdbXiYdjxjKY7R3yX7bFoilggrVili8pk=;
-        b=dTO1RrBT0AmR+or5s/dX5RSfma2Z5HNSTLsqeVxps4b20s/T8MA6r2mCGVazOI6oHz
-         ae52Bmxqg3XhM59zjWyUS8em1vK/X8aV+E8mo76U0NvuP8UT6dwRLZoNQigEy+2EDkam
-         aalkhDehqysq4owAPRbmCvOJM6PPuFvy02IGVjdTUZoCMs8Kajn270RBJKSiVah3f4Zc
-         02UQbjPX5fBM/5z5qf+Tp0r68qfKh3BSAiEo8vjQTYmX3VkNIpK/dzDZfIrPdBRIgVeh
-         FTS8humK1u7zXIK3ymCv0qI59ZpJzRAXB3WL6ncssgf+HTHy1OLzaUXWElzcYtusc3yp
-         TppQ==
-X-Gm-Message-State: APjAAAVn1h4F2euF3NXRV9rGfSxZ78aU4IuRmsa/jgKQomvPNh+NG2VU
-        p9n8SE/nalY/Spiab+8MJoj6Qw==
-X-Google-Smtp-Source: APXvYqw3KBnCa3P7200Yn0foGxB3Mb3u607NCRK+HftBdUxylQNUOizF39tGc/1MfSlJjVQ6mmiQyA==
-X-Received: by 2002:aed:3944:: with SMTP id l62mr96389184qte.34.1564756049676;
-        Fri, 02 Aug 2019 07:27:29 -0700 (PDT)
-Received: from redhat.com ([147.234.38.1])
-        by smtp.gmail.com with ESMTPSA id d20sm30304231qto.59.2019.08.02.07.27.25
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 02 Aug 2019 07:27:28 -0700 (PDT)
-Date:   Fri, 2 Aug 2019 10:27:21 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH V2 7/9] vhost: do not use RCU to synchronize MMU notifier
- with worker
-Message-ID: <20190802100414-mutt-send-email-mst@kernel.org>
-References: <20190731084655.7024-1-jasowang@redhat.com>
- <20190731084655.7024-8-jasowang@redhat.com>
- <20190731123935.GC3946@ziepe.ca>
- <7555c949-ae6f-f105-6e1d-df21ddae9e4e@redhat.com>
- <20190731193057.GG3946@ziepe.ca>
- <a3bde826-6329-68e4-2826-8a9de4c5bd1e@redhat.com>
- <20190801141512.GB23899@ziepe.ca>
- <42ead87b-1749-4c73-cbe4-29dbeb945041@redhat.com>
- <20190802124613.GA11245@ziepe.ca>
+        Fri, 2 Aug 2019 10:27:37 -0400
+Received: from 162-237-133-238.lightspeed.rcsntx.sbcglobal.net ([162.237.133.238] helo=elm)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <tyhicks@canonical.com>)
+        id 1htYWl-0002GM-Bi; Fri, 02 Aug 2019 14:27:27 +0000
+Date:   Fri, 2 Aug 2019 09:27:22 -0500
+From:   Tyler Hicks <tyhicks@canonical.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     jejb@linux.ibm.com, zohar@linux.ibm.com, jgg@ziepe.ca,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org, crazyt2019+lml@gmail.com,
+        nayna@linux.vnet.ibm.com, silviu.vlasceanu@huawei.com
+Subject: Re: [PATCH] KEYS: trusted: allow module init if TPM is inactive or
+ deactivated
+Message-ID: <20190802142721.GA26616@elm>
+References: <20190705163735.11539-1-roberto.sassu@huawei.com>
+ <20190711194811.rfsohbfc3a7carpa@linux.intel.com>
+ <b4454a78-1f1b-cc75-114a-99926e097b05@huawei.com>
+ <20190801163215.mfkagoafkxscesne@linux.intel.com>
+ <e50c4cfa-1f0c-6f4d-1910-010a8d874393@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190802124613.GA11245@ziepe.ca>
+In-Reply-To: <e50c4cfa-1f0c-6f4d-1910-010a8d874393@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 09:46:13AM -0300, Jason Gunthorpe wrote:
-> On Fri, Aug 02, 2019 at 05:40:07PM +0800, Jason Wang wrote:
-> > > This must be a proper barrier, like a spinlock, mutex, or
-> > > synchronize_rcu.
+On 2019-08-02 10:21:16, Roberto Sassu wrote:
+> On 8/1/2019 6:32 PM, Jarkko Sakkinen wrote:
+> > On Mon, Jul 15, 2019 at 06:44:28PM +0200, Roberto Sassu wrote:
+> > > According to the bug report at https://bugs.archlinux.org/task/62678,
+> > > the trusted module is a dependency of the ecryptfs module. We should
+> > > load the trusted module even if the TPM is inactive or deactivated.
+> > > 
+> > > Given that commit 782779b60faa ("tpm: Actually fail on TPM errors during
+> > > "get random"") changes the return code of tpm_get_random(), the patch
+> > > should be modified to ignore the -EIO error. I will send a new version.
 > > 
-> > 
-> > I start with synchronize_rcu() but both you and Michael raise some
-> > concern.
+> > Do you have information where this dependency comes from?
 > 
-> I've also idly wondered if calling synchronize_rcu() under the various
-> mm locks is a deadlock situation.
+> ecryptfs retrieves the encryption key from encrypted keys (see
+> ecryptfs_get_encrypted_key()).
+
+That has been there for many years with any problems. It was added
+in 2011:
+
+ commit 1252cc3b232e582e887623dc5f70979418caaaa2
+ Author: Roberto Sassu <roberto.sassu@polito.it>
+ Date:   Mon Jun 27 13:45:45 2011 +0200
+
+     eCryptfs: added support for the encrypted key type
+
+What's recently changed the situation is this patch:
+
+ commit 240730437deb213a58915830884e1a99045624dc
+ Author: Roberto Sassu <roberto.sassu@huawei.com>
+ Date:   Wed Feb 6 17:24:51 2019 +0100
+
+     KEYS: trusted: explicitly use tpm_chip structure from tpm_default_chip()
+
+Now eCryptfs has a hard dependency on a TPM chip that's working
+as expected even if eCryptfs (or the rest of the system) isn't utilizing
+the TPM. If the TPM behaves unexpectedly, you can't access your files.
+We need to get this straightened out soon.
+
+Tyler
+
 > 
-> > Then I try spinlock and mutex:
-> > 
-> > 1) spinlock: add lots of overhead on datapath, this leads 0 performance
-> > improvement.
+> Roberto
 > 
-> I think the topic here is correctness not performance improvement
-
-The topic is whether we should revert
-commit 7f466032dc9 ("vhost: access vq metadata through kernel virtual address")
-
-or keep it in. The only reason to keep it is performance.
-
-Now as long as all this code is disabled anyway, we can experiment a
-bit.
-
-I personally feel we would be best served by having two code paths:
-
-- Access to VM memory directly mapped into kernel
-- Access to userspace
-
-
-Having it all cleanly split will allow a bunch of optimizations, for
-example for years now we planned to be able to process an incoming short
-packet directly on softirq path, or an outgoing on directly within
-eventfd.
-
-
--- 
-MST
+> -- 
+> HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
+> Managing Director: Li Peng, Li Jian, Shi Yanli
