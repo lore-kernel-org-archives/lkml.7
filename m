@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8B5C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA90BC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB345216C8
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81CBD2171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:48:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739330;
-	bh=hjbSRFzdfQItJcpLRHVb44r4ie7HipYVZUAKLFrgu8Q=;
+	s=default; t=1564739333;
+	bh=uaG/nocy+VuJbNmkPLj0hukthBq5FUvJyceyfyA9W0w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RfhHNkaXWXDBPAb6NBm13ZMu99MN/iTskRz4UjGSJoccdvjD53VxLNVbV+V/7yim/
-	 I4aDWBoGUM0q2sQS/IidZWXraavNKFwKyk5bybSOs1ONWTimeUUP9aDQGE17BWH30C
-	 vyLQ5cN8z/plN6WHvmeVrYxjXyoVzkimAS7F1k9o=
+	b=NI83H1zPPK+6lu3srkF6EXlajwpNJ+XqZpY6XTjuB3g89Q/C/9Ap7WD4oDrhzkthx
+	 LxL+WIOWdPRJzRyGRC6J7wcuBwZtJo4vk6Lttrw2lIVNoQN1QTKBcB4moAbXQA/ErQ
+	 g/iR+KFI1ooaV4XjzNXQYaHIV6Ez5NozKoJBIt84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405927AbfHBJst (ORCPT
+        id S2405936AbfHBJsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:48:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54290 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:48:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405878AbfHBJsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:48:46 -0400
+        id S2405920AbfHBJss (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:48:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43C342171F;
-        Fri,  2 Aug 2019 09:48:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7A9F206A2;
+        Fri,  2 Aug 2019 09:48:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739325;
-        bh=hjbSRFzdfQItJcpLRHVb44r4ie7HipYVZUAKLFrgu8Q=;
+        s=default; t=1564739328;
+        bh=uaG/nocy+VuJbNmkPLj0hukthBq5FUvJyceyfyA9W0w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fl+SV6jCMUdV5JlqG9BaIYCoY5vmdG/FbBZTa0A9JBORAb3eDblWQZih0BaD5f4wY
-         WXb6G3WvJrK3WmeivulGokT3i4kqn8HZ5lh0jfZqmEw20vIVD7rL5tz0AQb0pFkY3o
-         wBYSqwYi18Y0YvQwOWdzmBYNLVbrO01rUOrQ602A=
+        b=TJeiyNCzW1XhKUdvExY6ipGTM+i2qfl7q9VzlMVTO+ZPtzShyQ7xu2tCGwubsGx9a
+         9LgXdS62sr5D++FyMm1oc+ExbXhCvOFPFa99KNLawxHl+mDU3NMEWFUyGGgOYfEtgc
+         1q1FdCRqOtSyo9zCIAc1i0q1pZRdM1/n4raXPerQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Kimmo Rautkoski <ext-kimmo.rautkoski@vaisala.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 168/223] tty: serial: msm_serial: avoid system lockup condition
-Date:   Fri,  2 Aug 2019 11:36:33 +0200
-Message-Id: <20190802092248.892943564@linuxfoundation.org>
+Subject: [PATCH 4.9 169/223] serial: 8250: Fix TX interrupt handling condition
+Date:   Fri,  2 Aug 2019 11:36:34 +0200
+Message-Id: <20190802092248.929363205@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -60,41 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ba3684f99f1b25d2a30b6956d02d339d7acb9799 ]
+[ Upstream commit db1b5bc047b3cadaedab3826bba82c3d9e023c4b ]
 
-The function msm_wait_for_xmitr can be taken with interrupts
-disabled. In order to avoid a potential system lockup - demonstrated
-under stress testing conditions on SoC QCS404/5 - make sure we wait
-for a bounded amount of time.
+Interrupt handler checked THRE bit (transmitter holding register
+empty) in LSR to detect if TX fifo is empty.
+In case when there is only receive interrupts the TX handling
+got called because THRE bit in LSR is set when there is no
+transmission (FIFO empty). TX handling caused TX stop, which in
+RS-485 half-duplex mode actually resets receiver FIFO. This is not
+desired during reception because of possible data loss.
 
-Tested on SoC QCS404.
+The fix is to check if THRI is set in IER in addition of the TX
+fifo status. THRI in IER is set when TX is started and cleared
+when TX is stopped.
+This ensures that TX handling is only called when there is really
+transmission on going and an interrupt for THRE and not when there
+are only RX interrupts.
 
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Signed-off-by: Kimmo Rautkoski <ext-kimmo.rautkoski@vaisala.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/msm_serial.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/tty/serial/8250/8250_port.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
-index 7dc8272c6b15..9027455c6be1 100644
---- a/drivers/tty/serial/msm_serial.c
-+++ b/drivers/tty/serial/msm_serial.c
-@@ -391,10 +391,14 @@ static void msm_request_rx_dma(struct msm_port *msm_port, resource_size_t base)
- 
- static inline void msm_wait_for_xmitr(struct uart_port *port)
- {
-+	unsigned int timeout = 500000;
-+
- 	while (!(msm_read(port, UART_SR) & UART_SR_TX_EMPTY)) {
- 		if (msm_read(port, UART_ISR) & UART_ISR_TX_READY)
- 			break;
- 		udelay(1);
-+		if (!timeout--)
-+			break;
+diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+index 84474f06dbcf..8f1233324586 100644
+--- a/drivers/tty/serial/8250/8250_port.c
++++ b/drivers/tty/serial/8250/8250_port.c
+@@ -1819,7 +1819,8 @@ int serial8250_handle_irq(struct uart_port *port, unsigned int iir)
+ 			status = serial8250_rx_chars(up, status);
  	}
- 	msm_write(port, UART_CR_CMD_RESET_TX_READY, UART_CR);
- }
+ 	serial8250_modem_status(up);
+-	if ((!up->dma || up->dma->tx_err) && (status & UART_LSR_THRE))
++	if ((!up->dma || up->dma->tx_err) && (status & UART_LSR_THRE) &&
++		(up->ier & UART_IER_THRI))
+ 		serial8250_tx_chars(up);
+ 
+ 	spin_unlock_irqrestore(&port->lock, flags);
 -- 
 2.20.1
 
