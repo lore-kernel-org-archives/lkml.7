@@ -5,49 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D10D2C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A629CC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA09C206A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:40:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C34F20679
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:40:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738850;
-	bh=+FscWZkdh9uMdn3W9uvS6iNch3jLwAvtN/W2voZBgkM=;
+	s=default; t=1564738855;
+	bh=PNDWx3XNzQ1K62lbT5otTzo/qHp1YKmQ0pKCdaSERUM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0U0Lfdj6fOfJsVnfySXngC29JI8wMg9fr2HJVrmFmppai/juo8aeWD6iVwO4KhdCr
-	 B9vhgNMZKmNsESQMjQAR3Oeh5GYEsn21yjPvHUqL74NXMHoQ5qK9IZQm1QQC+6uVBA
-	 masPLFKUdIUQc75qkb6F0DO9afDY3LoMIa2LQNgA=
+	b=qTaFtyRz5UwyHe2dX8dnVvyKFpUKf75OPgAEkkh7yIfChP2KoUnK9GiE88Ncl6/Z9
+	 R+VbRPFCqx1+D2ojYTGLgAdAyYw5GDEELnahE7TaGjba3wFvLGtA+UXDQJIAO2lMq9
+	 kAF/qdJ8vWnlmczopuET9s63fHyVSCCdqW1LUBps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404427AbfHBJkt (ORCPT
+        id S2404439AbfHBJkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:40:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41856 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:40:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391751AbfHBJkm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:40:42 -0400
+        id S2404417AbfHBJkt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:40:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84C5720679;
-        Fri,  2 Aug 2019 09:40:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49A9E20679;
+        Fri,  2 Aug 2019 09:40:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738841;
-        bh=+FscWZkdh9uMdn3W9uvS6iNch3jLwAvtN/W2voZBgkM=;
+        s=default; t=1564738848;
+        bh=PNDWx3XNzQ1K62lbT5otTzo/qHp1YKmQ0pKCdaSERUM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ASp1lCRA1SQSUv/2i86IXBbdfEC0lQXYIxNcyXuHgyfA+Kk47p68CgUCUQliQRWeN
-         oiXzhzVoxXIi79qiTZtQtvfp1cxcxn4Z4j/qGSQKqaQ7j2ne1c0jwrNYgbC+YKc6g4
-         7XSAgwZpasSL2a32Wyx8VOAughPL2E8VL31f9qSk=
+        b=nPtOQgh8xk9xE3Aup8uYCsc2ja1gxo2lWOu0ev1XplVroqHiMSWnrhl3l79ZfSM7D
+         gidWCau4SWS19Srq7kNDGUOX7BNO9yxpM89wBZPCtAQW8H7E65gEcwqPLwO2gPhGtH
+         VCMW3zi3CC5m2m914PRGYGiFkKAN9GYm4LToFuNw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tim Schumacher <timschumi@gmx.de>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org,
+        syzbot+d454a826e670502484b8@syzkaller.appspotmail.com,
+        Jeremy Sowden <jeremy@azazel.net>,
+        Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 006/223] ath9k: Check for errors when reading SREV register
-Date:   Fri,  2 Aug 2019 11:33:51 +0200
-Message-Id: <20190802092239.188121339@linuxfoundation.org>
+Subject: [PATCH 4.9 009/223] batman-adv: fix for leaked TVLV handler.
+Date:   Fri,  2 Aug 2019 11:33:54 +0200
+Message-Id: <20190802092239.449388086@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -60,119 +63,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2f90c7e5d09437a4d8d5546feaae9f1cf48cfbe1 ]
+[ Upstream commit 17f78dd1bd624a4dd78ed5db3284a63ee807fcc3 ]
 
-Right now, if an error is encountered during the SREV register
-read (i.e. an EIO in ath9k_regread()), that error code gets
-passed all the way to __ath9k_hw_init(), where it is visible
-during the "Chip rev not supported" message.
+A handler for BATADV_TVLV_ROAM was being registered when the
+translation-table was initialized, but not unregistered when the
+translation-table was freed.  Unregister it.
 
-    ath9k_htc 1-1.4:1.0: ath9k_htc: HTC initialized with 33 credits
-    ath: phy2: Mac Chip Rev 0x0f.3 is not supported by this driver
-    ath: phy2: Unable to initialize hardware; initialization status: -95
-    ath: phy2: Unable to initialize hardware; initialization status: -95
-    ath9k_htc: Failed to initialize the device
-
-Check for -EIO explicitly in ath9k_hw_read_revisions() and return
-a boolean based on the success of the operation. Check for that in
-__ath9k_hw_init() and abort with a more debugging-friendly message
-if reading the revisions wasn't successful.
-
-    ath9k_htc 1-1.4:1.0: ath9k_htc: HTC initialized with 33 credits
-    ath: phy2: Failed to read SREV register
-    ath: phy2: Could not read hardware revision
-    ath: phy2: Unable to initialize hardware; initialization status: -95
-    ath: phy2: Unable to initialize hardware; initialization status: -95
-    ath9k_htc: Failed to initialize the device
-
-This helps when debugging by directly showing the first point of
-failure and it could prevent possible errors if a 0x0f.3 revision
-is ever supported.
-
-Signed-off-by: Tim Schumacher <timschumi@gmx.de>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: 122edaa05940 ("batman-adv: tvlv - convert roaming adv packet to use tvlv unicast packets")
+Reported-by: syzbot+d454a826e670502484b8@syzkaller.appspotmail.com
+Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath9k/hw.c | 32 +++++++++++++++++++++--------
- 1 file changed, 23 insertions(+), 9 deletions(-)
+ net/batman-adv/translation-table.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath9k/hw.c b/drivers/net/wireless/ath/ath9k/hw.c
-index 951bac2caf12..e7fca78cdd96 100644
---- a/drivers/net/wireless/ath/ath9k/hw.c
-+++ b/drivers/net/wireless/ath/ath9k/hw.c
-@@ -250,8 +250,9 @@ void ath9k_hw_get_channel_centers(struct ath_hw *ah,
- /* Chip Revisions */
- /******************/
+diff --git a/net/batman-adv/translation-table.c b/net/batman-adv/translation-table.c
+index af4a02ad8503..1fab9bcf535d 100644
+--- a/net/batman-adv/translation-table.c
++++ b/net/batman-adv/translation-table.c
+@@ -3700,6 +3700,8 @@ static void batadv_tt_purge(struct work_struct *work)
  
--static void ath9k_hw_read_revisions(struct ath_hw *ah)
-+static bool ath9k_hw_read_revisions(struct ath_hw *ah)
+ void batadv_tt_free(struct batadv_priv *bat_priv)
  {
-+	u32 srev;
- 	u32 val;
- 
- 	if (ah->get_mac_revision)
-@@ -267,25 +268,33 @@ static void ath9k_hw_read_revisions(struct ath_hw *ah)
- 			val = REG_READ(ah, AR_SREV);
- 			ah->hw_version.macRev = MS(val, AR_SREV_REVISION2);
- 		}
--		return;
-+		return true;
- 	case AR9300_DEVID_AR9340:
- 		ah->hw_version.macVersion = AR_SREV_VERSION_9340;
--		return;
-+		return true;
- 	case AR9300_DEVID_QCA955X:
- 		ah->hw_version.macVersion = AR_SREV_VERSION_9550;
--		return;
-+		return true;
- 	case AR9300_DEVID_AR953X:
- 		ah->hw_version.macVersion = AR_SREV_VERSION_9531;
--		return;
-+		return true;
- 	case AR9300_DEVID_QCA956X:
- 		ah->hw_version.macVersion = AR_SREV_VERSION_9561;
--		return;
-+		return true;
- 	}
- 
--	val = REG_READ(ah, AR_SREV) & AR_SREV_ID;
-+	srev = REG_READ(ah, AR_SREV);
++	batadv_tvlv_handler_unregister(bat_priv, BATADV_TVLV_ROAM, 1);
 +
-+	if (srev == -EIO) {
-+		ath_err(ath9k_hw_common(ah),
-+			"Failed to read SREV register");
-+		return false;
-+	}
-+
-+	val = srev & AR_SREV_ID;
+ 	batadv_tvlv_container_unregister(bat_priv, BATADV_TVLV_TT, 1);
+ 	batadv_tvlv_handler_unregister(bat_priv, BATADV_TVLV_TT, 1);
  
- 	if (val == 0xFF) {
--		val = REG_READ(ah, AR_SREV);
-+		val = srev;
- 		ah->hw_version.macVersion =
- 			(val & AR_SREV_VERSION2) >> AR_SREV_TYPE2_S;
- 		ah->hw_version.macRev = MS(val, AR_SREV_REVISION2);
-@@ -304,6 +313,8 @@ static void ath9k_hw_read_revisions(struct ath_hw *ah)
- 		if (ah->hw_version.macVersion == AR_SREV_VERSION_5416_PCIE)
- 			ah->is_pciexpress = true;
- 	}
-+
-+	return true;
- }
- 
- /************************************/
-@@ -557,7 +568,10 @@ static int __ath9k_hw_init(struct ath_hw *ah)
- 	struct ath_common *common = ath9k_hw_common(ah);
- 	int r = 0;
- 
--	ath9k_hw_read_revisions(ah);
-+	if (!ath9k_hw_read_revisions(ah)) {
-+		ath_err(common, "Could not read hardware revisions");
-+		return -EOPNOTSUPP;
-+	}
- 
- 	switch (ah->hw_version.macVersion) {
- 	case AR_SREV_VERSION_5416_PCI:
 -- 
 2.20.1
 
