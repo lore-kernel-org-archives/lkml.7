@@ -2,108 +2,119 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD20C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BD9C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3C2921726
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:17:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B809F20644
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:17:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="gv/Y1onS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390560AbfHBQRO (ORCPT
+        id S2390663AbfHBQRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 2 Aug 2019 12:17:17 -0400
+Received: from vern.gendns.com ([98.142.107.122]:43374 "EHLO vern.gendns.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728853AbfHBQRO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 2 Aug 2019 12:17:14 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:58957 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727758AbfHBQRN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 12:17:13 -0400
-X-Originating-IP: 90.76.143.236
-Received: from localhost (lfbn-1-2078-236.w90-76.abo.wanadoo.fr [90.76.143.236])
-        (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id E0A5DFF807;
-        Fri,  2 Aug 2019 16:17:03 +0000 (UTC)
-Date:   Fri, 2 Aug 2019 18:17:01 +0200
-From:   Antoine Tenart <antoine.tenart@bootlin.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     herbert@gondor.apana.org.au, lars.persson@axis.com,
-        jesper.nilsson@axis.com, davem@davemloft.net,
-        thomas.lendacky@amd.com, gary.hook@amd.com, krzk@kernel.org,
-        kgene@kernel.org, antoine.tenart@bootlin.com,
-        matthias.bgg@gmail.com, jamie@jamieiles.com, agross@kernel.org,
-        heiko@sntech.de, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, clabbe.montjoie@gmail.com,
-        mripard@kernel.org, wens@csie.org, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-arm-kernel@axis.com,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH -next 05/12] crypto: inside-secure - use
- devm_platform_ioremap_resource() to simplify code
-Message-ID: <20190802161701.GD14470@kwain>
-References: <20190802132809.8116-1-yuehaibing@huawei.com>
- <20190802132809.8116-6-yuehaibing@huawei.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Xh1krsXQ4OmAr0IgdObgohDnJErEyjk90MXL/lKpUtU=; b=gv/Y1onS6VrRWH9/CW7Ne05LMF
+        wJhlJRZa/KUY8yP3RquMvvTs6/O6A7lxwbHkyk3XGYXmHtpt6yFPBY26EuNU64NgiXhCDBqp6YPrH
+        8MFusQmZ+r9o+osnzLGO8PWtNFTGB2r+Hhp9s8vHwtbVmr9/qc0jTO+NRxZHmc4sIvz0mu3Hid2id
+        k9WzyavVm4airyryyTmbwPq0eYvJjfBA+UQCwUYRO1hhNfDvNx+7s4rwmxnGvWKAxX+u9jxBYTO3J
+        kwM5CYs5Oqbkf6ASOoGXYTCbSV8e3avp65xKQxjtesq0TPxxEH2n7CAxGoVGnS80fNqRgc3dqw0Yh
+        XrVsq8PA==;
+Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:42876 helo=[192.168.0.134])
+        by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <david@lechnology.com>)
+        id 1htaEy-004w7U-Ps; Fri, 02 Aug 2019 12:17:12 -0400
+Subject: Re: [PATCH 2/4] counter: new TI eQEP driver
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     linux-iio@vger.kernel.org, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+References: <20190722154538.5314-1-david@lechnology.com>
+ <20190722154538.5314-3-david@lechnology.com> <20190802092727.GB30522@icarus>
+From:   David Lechner <david@lechnology.com>
+Message-ID: <680ed555-c5db-6640-8fd3-121422077eff@lechnology.com>
+Date:   Fri, 2 Aug 2019 11:17:11 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190802132809.8116-6-yuehaibing@huawei.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190802092727.GB30522@icarus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 8/2/19 4:27 AM, William Breathitt Gray wrote:
+>> +static const struct counter_ops ti_eqep_counter_ops = {
+>> +	.count_read	= ti_eqep_count_read,
+>> +	.count_write	= ti_eqep_count_write,
+>> +	.function_get	= ti_eqep_function_get,
+>> +	.function_set	= ti_eqep_function_set,
+>> +};
+> Are you able to provide a signal_read function, or are the Signals not
+> exposed to the user by this device? Sometimes quadrature encoder devices
+> provide an instanteous read of the signal lines to tell whether they are
+> high or low, so I figured I'd ask.
 
-On Fri, Aug 02, 2019 at 09:28:02PM +0800, YueHaibing wrote:
-> Use devm_platform_ioremap_resource() to simplify the code a bit.
-> This is detected by coccinelle.
+No, it does not look like these signals can be read directly.
+
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-
-Acked-by: Antoine Tenart <antoine.tenart@bootlin.com>
-
-Thanks,
-Antoine
-
-> ---
->  drivers/crypto/inside-secure/safexcel.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+> You should define an action_get function as well along with Synapses
+> corresponding to each Signal. This will allow users to know whether the
+> Synapse fires on a rising edge, falling edge, no edge, or both edges.
 > 
-> diff --git a/drivers/crypto/inside-secure/safexcel.c b/drivers/crypto/inside-secure/safexcel.c
-> index d1f60fd..822744d 100644
-> --- a/drivers/crypto/inside-secure/safexcel.c
-> +++ b/drivers/crypto/inside-secure/safexcel.c
-> @@ -999,7 +999,6 @@ static void safexcel_init_register_offsets(struct safexcel_crypto_priv *priv)
->  static int safexcel_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> -	struct resource *res;
->  	struct safexcel_crypto_priv *priv;
->  	int i, ret;
->  
-> @@ -1015,8 +1014,7 @@ static int safexcel_probe(struct platform_device *pdev)
->  
->  	safexcel_init_register_offsets(priv);
->  
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	priv->base = devm_ioremap_resource(dev, res);
-> +	priv->base = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(priv->base)) {
->  		dev_err(dev, "failed to get resource\n");
->  		return PTR_ERR(priv->base);
-> -- 
-> 2.7.4
+> For example, consider the drivers/counter/104-quad-8.c file. Each count
+> register has three associated signal lines: Quadrature A, Quadrature B,
+> and Index.
 > 
+> Quadrature A and B are your typical quadrature encoder lines and
+> depending on the function mode selected (quadrature x4, pulse-direction,
+> etc.) could have a Synapse action mode of none, rising edge, falling
+> edge, or both edges; see the quad8_synapse_actions_list array.
+> 
+> In contrast, the Index signal line only has two Synapse action modes:
+> rising edge (in the case preset functionality is enabled) or none.
+
+The encoders I have don't use the index or strobe signals, so I was
+thinking maybe I should omit those two signals from the driver for the
+time being since I don't have a way of testing.
+
+> 
+> For the TI eQEP driver, there will be four Synapses corresponding to the
+> four Signals: QEPA, QEPB, QEPI, and QEPS. See if you are able to
+> implement the Synapses and action_get function by using the 104-quad-8.c
+> file as a reference. That file does have a lot of extra functionality
+> tossed in compared to yours, so if you have trouble groking it, just let
+> me know and I'll try to help.
 > 
 
--- 
-Antoine Ténart, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
