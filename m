@@ -2,181 +2,240 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7688DC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F14AAC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 501692064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:56:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C28C82087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:56:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739793;
-	bh=JSb30u6ZZcU6mTVsvJ37BEW+XfA9T4IV9PfS53PeFsY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OQteHvUjYx9XEJjMqwRB67wFyjvtes5gySAJT47/XStqQLeMJ1jw0SshPMdWKP5Vp
-	 3Z0BfyzYaJzsYKsoXuo9ZKGp5+clsLa1ZHiap3k/Wq2SYOO+SyeU+bEwK2+VBsxF6X
-	 Kh8yKVcm/qCr3iZ1zOsLKNLweTyrFF88ZlwuvvX4=
+	s=default; t=1564739800;
+	bh=3/ftI1F64L7MU50EZ4JrnQm3j9tTyy3fmxX/xmaM7Ao=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Cd8Ke+EJEt7U+V76bweo7Imm2sTaO6F6/ef66tiBK+/v9NYdV28UyTfn/JU/Qfmk4
+	 qoNwLMTXiVT6rtG3nAo9LpHOFr/xnAVEcG5i9G21TEeYvNMXNaYOKjX3CjJzYGy2Rs
+	 XKAK1+IL2Q0PfPW5kK6D/G3wVV4S4N2e52hNJGp0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406737AbfHBJ4c (ORCPT
+        id S2406758AbfHBJ4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:56:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35316 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:56:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404798AbfHBJ43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:56:29 -0400
+        id S2406739AbfHBJ4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:56:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9927020665;
-        Fri,  2 Aug 2019 09:56:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4AF22064A;
+        Fri,  2 Aug 2019 09:56:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739788;
-        bh=JSb30u6ZZcU6mTVsvJ37BEW+XfA9T4IV9PfS53PeFsY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2MbfF/er/8bXqsiVxyQWg663Y+wiRnv5HjH7Ac3e9FB+tD/TC+04ZvVVurTx7pL1A
-         +tkWTnInv/t+NblgWAJAuiiKtq5ruJEyqFWBjG4ZdNT8eDv5ctXqm4Sj+pAZIrN3YO
-         1BWjdzDfn5ofP0JQZkqEp9jhjbHTbTWL5poeiR9o=
+        s=default; t=1564739795;
+        bh=3/ftI1F64L7MU50EZ4JrnQm3j9tTyy3fmxX/xmaM7Ao=;
+        h=From:To:Cc:Subject:Date:From;
+        b=VCRKDxChSS7J9OjnbcfosKNt9AMRxcNTj8Z1fOBJ+vcgBb9F7IrsOnd4S19fZ/rKB
+         2rLjWfk6WpJ+DQHrDSLVy+avnyLWiyIAlcCW1rVLaT4G7SxrDAb8Gi9mcOglNvK3FO
+         gSCohE0JWLiJIwndc03xoH3Se6h2lNzdRMTUQlwE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+79337b501d6aa974d0f6@syzkaller.appspotmail.com,
-        Vladis Dronov <vdronov@redhat.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        "Yu-Chen, Cho" <acho@suse.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 220/223] Bluetooth: hci_uart: check for missing tty operations
-Date:   Fri,  2 Aug 2019 11:37:25 +0200
-Message-Id: <20190802092250.874085831@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.19 00/32] 4.19.64-stable review
+Date:   Fri,  2 Aug 2019 11:39:34 +0200
+Message-Id: <20190802092101.913646560@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
-References: <20190802092238.692035242@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.64-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.19.64-rc1
+X-KernelTest-Deadline: 2019-08-04T09:21+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladis Dronov <vdronov@redhat.com>
+This is the start of the stable review cycle for the 4.19.64 release.
+There are 32 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-commit b36a1552d7319bbfd5cf7f08726c23c5c66d4f73 upstream.
+Responses should be made by Sun 04 Aug 2019 09:19:34 AM UTC.
+Anything received after that time might be too late.
 
-Certain ttys operations (pty_unix98_ops) lack tiocmget() and tiocmset()
-functions which are called by the certain HCI UART protocols (hci_ath,
-hci_bcm, hci_intel, hci_mrvl, hci_qca) via hci_uart_set_flow_control()
-or directly. This leads to an execution at NULL and can be triggered by
-an unprivileged user. Fix this by adding a helper function and a check
-for the missing tty operations in the protocols code.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.64-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+and the diffstat can be found below.
 
-This fixes CVE-2019-10207. The Fixes: lines list commits where calls to
-tiocm[gs]et() or hci_uart_set_flow_control() were added to the HCI UART
-protocols.
+thanks,
 
-Link: https://syzkaller.appspot.com/bug?id=1b42faa2848963564a5b1b7f8c837ea7b55ffa50
-Reported-by: syzbot+79337b501d6aa974d0f6@syzkaller.appspotmail.com
-Cc: stable@vger.kernel.org # v2.6.36+
-Fixes: b3190df62861 ("Bluetooth: Support for Atheros AR300x serial chip")
-Fixes: 118612fb9165 ("Bluetooth: hci_bcm: Add suspend/resume PM functions")
-Fixes: ff2895592f0f ("Bluetooth: hci_intel: Add Intel baudrate configuration support")
-Fixes: 162f812f23ba ("Bluetooth: hci_uart: Add Marvell support")
-Fixes: fa9ad876b8e0 ("Bluetooth: hci_qca: Add support for Qualcomm Bluetooth chip wcn3990")
-Signed-off-by: Vladis Dronov <vdronov@redhat.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Reviewed-by: Yu-Chen, Cho <acho@suse.com>
-Tested-by: Yu-Chen, Cho <acho@suse.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+greg k-h
 
----
- drivers/bluetooth/hci_ath.c   |    3 +++
- drivers/bluetooth/hci_bcm.c   |    3 +++
- drivers/bluetooth/hci_intel.c |    3 +++
- drivers/bluetooth/hci_ldisc.c |    9 +++++++++
- drivers/bluetooth/hci_mrvl.c  |    3 +++
- drivers/bluetooth/hci_uart.h  |    1 +
- 6 files changed, 22 insertions(+)
+-------------
+Pseudo-Shortlog of commits:
 
---- a/drivers/bluetooth/hci_ath.c
-+++ b/drivers/bluetooth/hci_ath.c
-@@ -101,6 +101,9 @@ static int ath_open(struct hci_uart *hu)
- 
- 	BT_DBG("hu %p", hu);
- 
-+	if (!hci_uart_has_flow_control(hu))
-+		return -EOPNOTSUPP;
-+
- 	ath = kzalloc(sizeof(*ath), GFP_KERNEL);
- 	if (!ath)
- 		return -ENOMEM;
---- a/drivers/bluetooth/hci_bcm.c
-+++ b/drivers/bluetooth/hci_bcm.c
-@@ -279,6 +279,9 @@ static int bcm_open(struct hci_uart *hu)
- 
- 	bt_dev_dbg(hu->hdev, "hu %p", hu);
- 
-+	if (!hci_uart_has_flow_control(hu))
-+		return -EOPNOTSUPP;
-+
- 	bcm = kzalloc(sizeof(*bcm), GFP_KERNEL);
- 	if (!bcm)
- 		return -ENOMEM;
---- a/drivers/bluetooth/hci_intel.c
-+++ b/drivers/bluetooth/hci_intel.c
-@@ -407,6 +407,9 @@ static int intel_open(struct hci_uart *h
- 
- 	BT_DBG("hu %p", hu);
- 
-+	if (!hci_uart_has_flow_control(hu))
-+		return -EOPNOTSUPP;
-+
- 	intel = kzalloc(sizeof(*intel), GFP_KERNEL);
- 	if (!intel)
- 		return -ENOMEM;
---- a/drivers/bluetooth/hci_ldisc.c
-+++ b/drivers/bluetooth/hci_ldisc.c
-@@ -263,6 +263,15 @@ static int hci_uart_send_frame(struct hc
- 	return 0;
- }
- 
-+/* Check the underlying device or tty has flow control support */
-+bool hci_uart_has_flow_control(struct hci_uart *hu)
-+{
-+	if (hu->tty->driver->ops->tiocmget && hu->tty->driver->ops->tiocmset)
-+		return true;
-+
-+	return false;
-+}
-+
- /* Flow control or un-flow control the device */
- void hci_uart_set_flow_control(struct hci_uart *hu, bool enable)
- {
---- a/drivers/bluetooth/hci_mrvl.c
-+++ b/drivers/bluetooth/hci_mrvl.c
-@@ -66,6 +66,9 @@ static int mrvl_open(struct hci_uart *hu
- 
- 	BT_DBG("hu %p", hu);
- 
-+	if (!hci_uart_has_flow_control(hu))
-+		return -EOPNOTSUPP;
-+
- 	mrvl = kzalloc(sizeof(*mrvl), GFP_KERNEL);
- 	if (!mrvl)
- 		return -ENOMEM;
---- a/drivers/bluetooth/hci_uart.h
-+++ b/drivers/bluetooth/hci_uart.h
-@@ -109,6 +109,7 @@ int hci_uart_tx_wakeup(struct hci_uart *
- int hci_uart_init_ready(struct hci_uart *hu);
- void hci_uart_init_tty(struct hci_uart *hu);
- void hci_uart_set_baudrate(struct hci_uart *hu, unsigned int speed);
-+bool hci_uart_has_flow_control(struct hci_uart *hu);
- void hci_uart_set_flow_control(struct hci_uart *hu, bool enable);
- void hci_uart_set_speeds(struct hci_uart *hu, unsigned int init_speed,
- 			 unsigned int oper_speed);
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.19.64-rc1
+
+Bart Van Assche <bvanassche@acm.org>
+    scsi: core: Avoid that a kernel warning appears during system resume
+
+Bart Van Assche <bvanassche@acm.org>
+    block, scsi: Change the preempt-only flag into a counter
+
+Yan, Zheng <zyan@redhat.com>
+    ceph: hold i_ceph_lock when removing caps for freeing inode
+
+Yoshinori Sato <ysato@users.sourceforge.jp>
+    Fix allyesconfig output.
+
+Miroslav Lichvar <mlichvar@redhat.com>
+    drivers/pps/pps.c: clear offset flags in PPS_SETPARAMS ioctl
+
+Linus Torvalds <torvalds@linux-foundation.org>
+    /proc/<pid>/cmdline: add back the setproctitle() special case
+
+Linus Torvalds <torvalds@linux-foundation.org>
+    /proc/<pid>/cmdline: remove all the special cases
+
+Jann Horn <jannh@google.com>
+    sched/fair: Use RCU accessors consistently for ->numa_group
+
+Jann Horn <jannh@google.com>
+    sched/fair: Don't free p->numa_faults with concurrent readers
+
+Jason Wang <jasowang@redhat.com>
+    vhost: scsi: add weight support
+
+Jason Wang <jasowang@redhat.com>
+    vhost: vsock: add weight support
+
+Jason Wang <jasowang@redhat.com>
+    vhost_net: fix possible infinite loop
+
+Jason Wang <jasowang@redhat.com>
+    vhost: introduce vhost_exceeds_weight()
+
+Vladis Dronov <vdronov@redhat.com>
+    Bluetooth: hci_uart: check for missing tty operations
+
+Joerg Roedel <jroedel@suse.de>
+    iommu/iova: Fix compilation error with !CONFIG_IOMMU_IOVA
+
+Dmitry Safonov <dima@arista.com>
+    iommu/vt-d: Don't queue_iova() if there is no flush queue
+
+Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
+    media: radio-raremono: change devm_k*alloc to k*alloc
+
+Benjamin Coddington <bcodding@redhat.com>
+    NFS: Cleanup if nfs_match_client is interrupted
+
+Andrey Konovalov <andreyknvl@google.com>
+    media: pvrusb2: use a different format for warnings
+
+Oliver Neukum <oneukum@suse.com>
+    media: cpia2_usb: first wake up, then free in disconnect
+
+Fabio Estevam <festevam@gmail.com>
+    ath10k: Change the warning message string
+
+Sean Young <sean@mess.org>
+    media: au0828: fix null dereference in error path
+
+Phong Tran <tranmanphong@gmail.com>
+    ISDN: hfcsusb: checking idx of ep configuration
+
+Todd Kjos <tkjos@android.com>
+    binder: fix possible UAF when freeing buffer
+
+Will Deacon <will.deacon@arm.com>
+    arm64: compat: Provide definition for COMPAT_SIGMINSTKSZ
+
+Minas Harutyunyan <minas.harutyunyan@synopsys.com>
+    usb: dwc2: Fix disable all EP's on disconnect
+
+Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>
+    usb: dwc2: Disable all EP's on disconnect
+
+Trond Myklebust <trond.myklebust@hammerspace.com>
+    NFSv4: Fix lookup revalidate of regular files
+
+Trond Myklebust <trond.myklebust@hammerspace.com>
+    NFS: Refactor nfs_lookup_revalidate()
+
+Trond Myklebust <trond.myklebust@hammerspace.com>
+    NFS: Fix dentry revalidation on NFSv4 lookup
+
+Sunil Muthuswamy <sunilmut@microsoft.com>
+    vsock: correct removal of socket from the list
+
+Sunil Muthuswamy <sunilmut@microsoft.com>
+    hv_sock: Add support for delayed close
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                     |   4 +-
+ arch/arm64/include/asm/compat.h              |   1 +
+ arch/sh/boards/Kconfig                       |  14 +-
+ block/blk-core.c                             |  35 ++--
+ block/blk-mq-debugfs.c                       |  10 +-
+ drivers/android/binder.c                     |  16 +-
+ drivers/bluetooth/hci_ath.c                  |   3 +
+ drivers/bluetooth/hci_bcm.c                  |   3 +
+ drivers/bluetooth/hci_intel.c                |   3 +
+ drivers/bluetooth/hci_ldisc.c                |  13 ++
+ drivers/bluetooth/hci_mrvl.c                 |   3 +
+ drivers/bluetooth/hci_qca.c                  |   3 +
+ drivers/bluetooth/hci_uart.h                 |   1 +
+ drivers/iommu/intel-iommu.c                  |   2 +-
+ drivers/iommu/iova.c                         |  18 +-
+ drivers/isdn/hardware/mISDN/hfcsusb.c        |   3 +
+ drivers/media/radio/radio-raremono.c         |  30 ++-
+ drivers/media/usb/au0828/au0828-core.c       |  12 +-
+ drivers/media/usb/cpia2/cpia2_usb.c          |   3 +-
+ drivers/media/usb/pvrusb2/pvrusb2-hdw.c      |   4 +-
+ drivers/media/usb/pvrusb2/pvrusb2-i2c-core.c |   6 +-
+ drivers/media/usb/pvrusb2/pvrusb2-std.c      |   2 +-
+ drivers/net/wireless/ath/ath10k/usb.c        |   2 +-
+ drivers/pps/pps.c                            |   8 +
+ drivers/scsi/scsi_lib.c                      |  15 +-
+ drivers/usb/dwc2/gadget.c                    |  41 +++-
+ drivers/vhost/net.c                          |  41 ++--
+ drivers/vhost/scsi.c                         |  15 +-
+ drivers/vhost/vhost.c                        |  20 +-
+ drivers/vhost/vhost.h                        |   5 +-
+ drivers/vhost/vsock.c                        |  28 ++-
+ fs/ceph/caps.c                               |   7 +-
+ fs/exec.c                                    |   2 +-
+ fs/nfs/client.c                              |   4 +-
+ fs/nfs/dir.c                                 | 295 +++++++++++++++------------
+ fs/nfs/nfs4proc.c                            |  15 +-
+ fs/proc/base.c                               | 132 ++++++------
+ include/linux/blkdev.h                       |  14 +-
+ include/linux/iova.h                         |   6 +
+ include/linux/sched.h                        |  10 +-
+ include/linux/sched/numa_balancing.h         |   4 +-
+ kernel/fork.c                                |   2 +-
+ kernel/sched/fair.c                          | 144 +++++++++----
+ net/vmw_vsock/af_vsock.c                     |  38 +---
+ net/vmw_vsock/hyperv_transport.c             | 108 +++++++---
+ 45 files changed, 719 insertions(+), 426 deletions(-)
 
 
