@@ -2,46 +2,129 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CABC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED83C32753
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DCBC218BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:32:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2BCC218BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:35:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IkK+vXPs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404267AbfHBIce (ORCPT
+        id S2404300AbfHBIfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 04:32:34 -0400
-Received: from verein.lst.de ([213.95.11.211]:50925 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729866AbfHBIcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 04:32:33 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 86EAE68C7B; Fri,  2 Aug 2019 10:32:30 +0200 (CEST)
-Date:   Fri, 2 Aug 2019 10:32:30 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     dan.j.williams@intel.com, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] memremap: move from kernel/ to mm/
-Message-ID: <20190802083230.GB11000@lst.de>
-References: <20190722094143.18387-1-hch@lst.de>
+        Fri, 2 Aug 2019 04:35:47 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:44042 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726505AbfHBIfr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 04:35:47 -0400
+Received: by mail-pg1-f194.google.com with SMTP id i18so35712698pgl.11;
+        Fri, 02 Aug 2019 01:35:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4v0SFKFIyHNGxiP45uXkSofHjrZsAC9JDmEkGPGixBs=;
+        b=IkK+vXPsrqt/iHc2+lbvYH0BrN5OvdBCeDxrd51b/yxwzx4oXMq9Zd8fnMvp7nJocQ
+         QBK+aDGaGER3rDmlrVBPS9zgmGyMkF/sCNTwf6GO8zUKmNoKIHTrf/pnJaZjkcZ1HTEN
+         dOG6IGK8SX7eUi4rElZZco4KfgirV1wQ+QwJxm7ZNS8BWZQQFn/cg0KKrbAEpebmdBOk
+         g3w6+MBjSvt8WdFUv62YtZjgjt45IYgtJiFNH+xDJyq6jwfCguUDHQZkVGh3JYJcDcZC
+         zt0mjKj/ouzJtvbSVqh+e53n0UDolwA2XBLDfrs0eXFm1tZL9V4K+fv42RU7opn492ol
+         y8oQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4v0SFKFIyHNGxiP45uXkSofHjrZsAC9JDmEkGPGixBs=;
+        b=iyldemuYZyBM9mRWPZnyYcr1Jk17tQARCvLD3rDAJ9pcIOJ0X1ElN/acQ63kpNal56
+         UqQQoJ1JHCv0GtZDkV/GyfozCrKAlEIyJraK0oSAd0XoHJUhCvTRsmT5oT1LHdjBijxQ
+         R28nqCP/QQ/9/syZB0eLPrqSd5xe9errf3IS/QxzhRXhD/1pWNd9FaHVQYXjNutJNw2R
+         sORazPmPWwtKSU87FWWmcpsn+02abYXT7lTomR7eLEJ5RCG7++15uqSI5VGNN5bzHZSG
+         EqSGVZ/P5JA/23J0HkAckMrXvGqwT4jOB2Oiut2O4/x7hmlTI7XRX1iJn1CWDU13Vcyi
+         UhYw==
+X-Gm-Message-State: APjAAAVGcjMVP7GdZ84v/1jXA7Z2iXPsDXo3HgbuUnaPI1bkgo4oC25A
+        H1s1y8EYDFylrHDLOx/BJ4GwDmk/V697bQ==
+X-Google-Smtp-Source: APXvYqzkCBz788klMubzO3NpoJemAOZ0SwXI8KmyMXDQ8wSLB8BuOKuBxYbG8F9aq1fb22kK3I1iXw==
+X-Received: by 2002:a17:90a:b908:: with SMTP id p8mr3256342pjr.94.1564734946718;
+        Fri, 02 Aug 2019 01:35:46 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
+        by smtp.gmail.com with ESMTPSA id r12sm53251778pgb.73.2019.08.02.01.35.44
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 02 Aug 2019 01:35:45 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Vishal Kulkarni <vishal@chelsio.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH v2 1/2] cxgb4: sched: Use refcount_t for refcount
+Date:   Fri,  2 Aug 2019 16:35:41 +0800
+Message-Id: <20190802083541.12602-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190722094143.18387-1-hch@lst.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew,
+refcount_t is better for reference counters since its
+implementation can prevent overflows.
+So convert atomic_t ref counters to refcount_t.
 
-I've seen you've queued this up in -mm, but the explicit intent here was
-to quickly merge this after -rc1 so that the move doesn't conflict with
-further development for 5.3.  Any chance you could send this patch on
-to Linus?
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+Changes in v2:
+  - Convert refcount from 0-base to 1-base.
+
+ drivers/net/ethernet/chelsio/cxgb4/sched.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/sched.c b/drivers/net/ethernet/chelsio/cxgb4/sched.c
+index 60218dc676a8..0d902d125be4 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/sched.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/sched.c
+@@ -173,7 +173,7 @@ static int t4_sched_queue_unbind(struct port_info *pi, struct ch_sched_queue *p)
+ 
+ 		list_del(&qe->list);
+ 		kvfree(qe);
+-		if (atomic_dec_and_test(&e->refcnt)) {
++		if (refcount_dec_and_test(&e->refcnt)) {
+ 			e->state = SCHED_STATE_UNUSED;
+ 			memset(&e->info, 0, sizeof(e->info));
+ 		}
+@@ -216,7 +216,7 @@ static int t4_sched_queue_bind(struct port_info *pi, struct ch_sched_queue *p)
+ 		goto out_err;
+ 
+ 	list_add_tail(&qe->list, &e->queue_list);
+-	atomic_inc(&e->refcnt);
++	refcount_inc(&e->refcnt);
+ 	return err;
+ 
+ out_err:
+@@ -434,7 +434,7 @@ static struct sched_class *t4_sched_class_alloc(struct port_info *pi,
+ 		if (err)
+ 			return NULL;
+ 		memcpy(&e->info, &np, sizeof(e->info));
+-		atomic_set(&e->refcnt, 0);
++		refcount_set(&e->refcnt, 1);
+ 		e->state = SCHED_STATE_ACTIVE;
+ 	}
+ 
+@@ -488,7 +488,7 @@ struct sched_table *t4_init_sched(unsigned int sched_size)
+ 		s->tab[i].idx = i;
+ 		s->tab[i].state = SCHED_STATE_UNUSED;
+ 		INIT_LIST_HEAD(&s->tab[i].queue_list);
+-		atomic_set(&s->tab[i].refcnt, 0);
++		refcount_set(&s->tab[i].refcnt, 1);
+ 	}
+ 	return s;
+ }
+-- 
+2.20.1
+
