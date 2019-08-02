@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F058C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:02:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A39C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 365952073D
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:02:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3E712067D
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:02:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564740132;
-	bh=ZuvzeOkifbdFscsE+cpqtwRqHwkkieq9DjYijZJAm2M=;
+	s=default; t=1564740142;
+	bh=FjKxljAzNCZ8/Q1mr/jvpiOJoPO07xVhPRPdIySrwUk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2t/+gptbFQGhPNx1dMxnaASCKBY4I0Jg0uWUQ0smWTle5taJBOBvc6YFyDJ44IZ/3
-	 0VxdyL4VPY3vUtADCbm8Y5jI1XZa0D+PusNr3VB6DgDFbADz9P0uy3fpAqy/5NCkzO
-	 G8i34twH1krlHmaroImsE/lZGnR4z5owF20PmUyk=
+	b=0DPZ83e2ap5VTe+yiRh8dSGqckaUG9SWNGkByqGBvbdeO4GjU4c+lGuXB8X9LSsQr
+	 xGGZ2RXd8VqDbprFgbqSeYrLLW7FiC8hxAuWsNtbV0d6K+o+EeLsO9Wvvhb8+V81/z
+	 Tihb91NS2XOMjpZJBJ8DFtNN/uelmT55D5aOeSVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407131AbfHBKCL (ORCPT
+        id S2406026AbfHBKCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 06:02:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46306 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 06:02:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404213AbfHBJn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:43:26 -0400
+        id S2404804AbfHBJmz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:42:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEB4220B7C;
-        Fri,  2 Aug 2019 09:43:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08C5220679;
+        Fri,  2 Aug 2019 09:42:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739005;
-        bh=ZuvzeOkifbdFscsE+cpqtwRqHwkkieq9DjYijZJAm2M=;
+        s=default; t=1564738974;
+        bh=FjKxljAzNCZ8/Q1mr/jvpiOJoPO07xVhPRPdIySrwUk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e6l+sG0pv/xJIfAiUTBK4RNM0ikSmzKtFAy3C1TBPaefahRJviX3ZZBO0wn25ktxc
-         7j67pzePCXLtRnFPh0Kf2w5nSDBDgsxAzos8OSKJu+pI/QT+kZoOV56IqfRlvcNCqc
-         AC6qSCtNun7Vvk9iLvXxPD6pgW1lQvJurDNjmAvs=
+        b=kfDM2WM4TyPBEvllm2Npz6HE2++KHIvk9eIzVIyMbttixDIhIQ4RcyXFHIsJVoPuK
+         0N6bgWJSQeW6aVYM2jQ3+Ph2XAnnpWFJJBwLaJ2gx0JuM+uS4xFjW3UjMry7YGNrRt
+         J+VvIk0HD0r9frAeslgUum39zid0/ZN1/0+S+seU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Andrei Otcheretianski <andrei.otcheretianski@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 065/223] iwlwifi: mvm: Drop large non sta frames
-Date:   Fri,  2 Aug 2019 11:34:50 +0200
-Message-Id: <20190802092243.047447500@linuxfoundation.org>
+Subject: [PATCH 4.9 053/223] x86/build: Add set -e to mkcapflags.sh to delete broken capflags.c
+Date:   Fri,  2 Aug 2019 11:34:38 +0200
+Message-Id: <20190802092242.320495629@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -61,36 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ac70499ee97231a418dc1a4d6c9dc102e8f64631 ]
+[ Upstream commit bc53d3d777f81385c1bb08b07bd1c06450ecc2c1 ]
 
-In some buggy scenarios we could possible attempt to transmit frames larger
-than maximum MSDU size. Since our devices don't know how to handle this,
-it may result in asserts, hangs etc.
-This can happen, for example, when we receive a large multicast frame
-and try to transmit it back to the air in AP mode.
-Since in a legal scenario this should never happen, drop such frames and
-warn about it.
+Without 'set -e', shell scripts continue running even after any
+error occurs. The missed 'set -e' is a typical bug in shell scripting.
 
-Signed-off-by: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+For example, when a disk space shortage occurs while this script is
+running, it actually ends up with generating a truncated capflags.c.
+
+Yet, mkcapflags.sh continues running and exits with 0. So, the build
+system assumes it has succeeded.
+
+It will not be re-generated in the next invocation of Make since its
+timestamp is newer than that of any of the source files.
+
+Add 'set -e' so that any error in this script is caught and propagated
+to the build system.
+
+Since 9c2af1c7377a ("kbuild: add .DELETE_ON_ERROR special target"),
+make automatically deletes the target on any failure. So, the broken
+capflags.c will be deleted automatically.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Link: https://lkml.kernel.org/r/20190625072622.17679-1-yamada.masahiro@socionext.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/tx.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/kernel/cpu/mkcapflags.sh | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
-index bd7ff562d82d..1aa74b87599f 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
-@@ -551,6 +551,9 @@ int iwl_mvm_tx_skb_non_sta(struct iwl_mvm *mvm, struct sk_buff *skb)
+diff --git a/arch/x86/kernel/cpu/mkcapflags.sh b/arch/x86/kernel/cpu/mkcapflags.sh
+index 6988c74409a8..711b74e0e623 100644
+--- a/arch/x86/kernel/cpu/mkcapflags.sh
++++ b/arch/x86/kernel/cpu/mkcapflags.sh
+@@ -3,6 +3,8 @@
+ # Generate the x86_cap/bug_flags[] arrays from include/asm/cpufeatures.h
+ #
  
- 	memcpy(&info, skb->cb, sizeof(info));
- 
-+	if (WARN_ON_ONCE(skb->len > IEEE80211_MAX_DATA_LEN + hdrlen))
-+		return -1;
++set -e
 +
- 	if (WARN_ON_ONCE(info.flags & IEEE80211_TX_CTL_AMPDU))
- 		return -1;
+ IN=$1
+ OUT=$2
  
 -- 
 2.20.1
