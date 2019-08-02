@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F2EC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBF3C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF6E820880
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:38:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0606920679
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:38:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738701;
-	bh=Yxkhd8vgdJkIqin5i+jkN2F53wiVwz0QIvJYZ2yzvv4=;
+	s=default; t=1564738706;
+	bh=q/29Jbth6u3Ubvo6nPlxna4U4R/QbmAK8WQwSdMJKJA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ULzsWoD+8JTjOEizgDk+fUcR2nW0u/VkyZoNNcVA/RGls1pk4r+eKBBTXFiMMQCW2
-	 9p1eMu5CoX4ev8shIsLqoLJuRkgX4mE50ctE2nfx6DgpNQNFX+F4JxI92AusWl6YAY
-	 U7M+ELDv6AXoC1egH+XXOEHBz3e/NjY/rE19DrVA=
+	b=XF2Pt2cwYa7kBlYWugeom3i3Rd3ekTfmv/2ER521qY2uby1Ju4G+uzNFAPwjf3I3T
+	 2VYqrmdBPILwYYsGZnPq0zIFv5rqx2ZIRod9Xxu4sQZNFZmI8/5+i1Av2x6ZNTHpI1
+	 JErn2PzzzrZ12k6y+6Jikb3HgGed3iug4AJkNCd4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391670AbfHBJiT (ORCPT
+        id S1727008AbfHBJe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:38:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35282 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:34:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391596AbfHBJfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:35:03 -0400
+        id S2391577AbfHBJex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:34:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D919D217D4;
-        Fri,  2 Aug 2019 09:35:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6CBF217F5;
+        Fri,  2 Aug 2019 09:34:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738502;
-        bh=Yxkhd8vgdJkIqin5i+jkN2F53wiVwz0QIvJYZ2yzvv4=;
+        s=default; t=1564738492;
+        bh=q/29Jbth6u3Ubvo6nPlxna4U4R/QbmAK8WQwSdMJKJA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xTrN+iC8rHaCrRtoxyRpmrVuXk1z/LJqFoQR5n3OTLW1yxSj0/QoMxt1BDWZ3Yobp
-         mSx1fqBddC2ZvI12ToeJ7CpcUZ2n7CuNBVgdUbvTKLQHuqyfCvuBG26hcvJvFjGvsJ
-         dOVrll8kP3N0nt5CzYwLSSekRB+cQ4pdf9rIvAg4=
+        b=qFglj4G9CAdYtt49Szfv0PbSOLxn28ucuY33RlT/x48KHPPajzZ3uqNpyxNQlx6Ro
+         jSoWYQwvRgA0bxN7T5AAtCI6maF8HSy207wkFLvyZPDKMfneK9xzgOep1HLUiWCl/O
+         iOeiu6UHM8gZxgER08JmDVw9/ub8rWYkA7lrFOZ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Baruch Siach <baruch@tkos.co.il>,
+        stable@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 112/158] tty/serial: digicolor: Fix digicolor-usart already registered warning
-Date:   Fri,  2 Aug 2019 11:28:53 +0200
-Message-Id: <20190802092226.824877116@linuxfoundation.org>
+Subject: [PATCH 4.4 108/158] tty: max310x: Fix invalid baudrate divisors calculator
+Date:   Fri,  2 Aug 2019 11:28:49 +0200
+Message-Id: <20190802092226.215542295@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -61,42 +59,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c7ad9ba0611c53cfe194223db02e3bca015f0674 ]
+[ Upstream commit 35240ba26a932b279a513f66fa4cabfd7af55221 ]
 
-When modprobe/rmmod/modprobe module, if platform_driver_register() fails,
-the kernel complained,
+Current calculator doesn't do it' job quite correct. First of all the
+max310x baud-rates generator supports the divisor being less than 16.
+In this case the x2/x4 modes can be used to double or quadruple
+the reference frequency. But the current baud-rate setter function
+just filters all these modes out by the first condition and setups
+these modes only if there is a clocks-baud division remainder. The former
+doesn't seem right at all, since enabling the x2/x4 modes causes the line
+noise tolerance reduction and should be only used as a last resort to
+enable a requested too high baud-rate.
 
-  proc_dir_entry 'driver/digicolor-usart' already registered
-  WARNING: CPU: 1 PID: 5636 at fs/proc/generic.c:360 proc_register+0x19d/0x270
+Finally the fraction is supposed to be calculated from D = Fref/(c*baud)
+formulae, but not from D % 16, which causes the precision loss. So to speak
+the current baud-rate calculator code works well only if the baud perfectly
+fits to the uart reference input frequency.
 
-Fix this by adding uart_unregister_driver() when platform_driver_register() fails.
+Lets fix the calculator by implementing the algo fully compliant with
+the fractional baud-rate generator described in the datasheet:
+D = Fref / (c*baud), where c={16,8,4} is the x1/x2/x4 rate mode
+respectively, Fref - reference input frequency. The divisor fraction is
+calculated from the same formulae, but making sure it is found with a
+resolution of 0.0625 (four bits).
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Acked-by: Baruch Siach <baruch@tkos.co.il>
+Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/digicolor-usart.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/tty/serial/max310x.c | 51 ++++++++++++++++++++++--------------
+ 1 file changed, 31 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/tty/serial/digicolor-usart.c b/drivers/tty/serial/digicolor-usart.c
-index a80cdad114f3..d8cb94997487 100644
---- a/drivers/tty/serial/digicolor-usart.c
-+++ b/drivers/tty/serial/digicolor-usart.c
-@@ -544,7 +544,11 @@ static int __init digicolor_uart_init(void)
- 	if (ret)
- 		return ret;
+diff --git a/drivers/tty/serial/max310x.c b/drivers/tty/serial/max310x.c
+index 0ac0c618954e..a66fb7afecc7 100644
+--- a/drivers/tty/serial/max310x.c
++++ b/drivers/tty/serial/max310x.c
+@@ -486,37 +486,48 @@ static bool max310x_reg_precious(struct device *dev, unsigned int reg)
  
--	return platform_driver_register(&digicolor_uart_platform);
-+	ret = platform_driver_register(&digicolor_uart_platform);
-+	if (ret)
-+		uart_unregister_driver(&digicolor_uart);
+ static int max310x_set_baud(struct uart_port *port, int baud)
+ {
+-	unsigned int mode = 0, clk = port->uartclk, div = clk / baud;
++	unsigned int mode = 0, div = 0, frac = 0, c = 0, F = 0;
+ 
+-	/* Check for minimal value for divider */
+-	if (div < 16)
+-		div = 16;
+-
+-	if (clk % baud && (div / 16) < 0x8000) {
++	/*
++	 * Calculate the integer divisor first. Select a proper mode
++	 * in case if the requested baud is too high for the pre-defined
++	 * clocks frequency.
++	 */
++	div = port->uartclk / baud;
++	if (div < 8) {
++		/* Mode x4 */
++		c = 4;
++		mode = MAX310X_BRGCFG_4XMODE_BIT;
++	} else if (div < 16) {
+ 		/* Mode x2 */
++		c = 8;
+ 		mode = MAX310X_BRGCFG_2XMODE_BIT;
+-		clk = port->uartclk * 2;
+-		div = clk / baud;
+-
+-		if (clk % baud && (div / 16) < 0x8000) {
+-			/* Mode x4 */
+-			mode = MAX310X_BRGCFG_4XMODE_BIT;
+-			clk = port->uartclk * 4;
+-			div = clk / baud;
+-		}
++	} else {
++		c = 16;
+ 	}
+ 
+-	max310x_port_write(port, MAX310X_BRGDIVMSB_REG, (div / 16) >> 8);
+-	max310x_port_write(port, MAX310X_BRGDIVLSB_REG, div / 16);
+-	max310x_port_write(port, MAX310X_BRGCFG_REG, (div % 16) | mode);
++	/* Calculate the divisor in accordance with the fraction coefficient */
++	div /= c;
++	F = c*baud;
 +
-+	return ret;
- }
- module_init(digicolor_uart_init);
++	/* Calculate the baud rate fraction */
++	if (div > 0)
++		frac = (16*(port->uartclk % F)) / F;
++	else
++		div = 1;
++
++	max310x_port_write(port, MAX310X_BRGDIVMSB_REG, div >> 8);
++	max310x_port_write(port, MAX310X_BRGDIVLSB_REG, div);
++	max310x_port_write(port, MAX310X_BRGCFG_REG, frac | mode);
  
+-	return DIV_ROUND_CLOSEST(clk, div);
++	/* Return the actual baud rate we just programmed */
++	return (16*port->uartclk) / (c*(16*div + frac));
+ }
+ 
+ static int max310x_update_best_err(unsigned long f, long *besterr)
+ {
+ 	/* Use baudrate 115200 for calculate error */
+-	long err = f % (115200 * 16);
++	long err = f % (460800 * 16);
+ 
+ 	if ((*besterr < 0) || (*besterr > err)) {
+ 		*besterr = err;
 -- 
 2.20.1
 
