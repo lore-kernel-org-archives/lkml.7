@@ -2,148 +2,155 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14AF0C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C8FC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:51:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF5B8205F4
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4392D2189E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:51:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="bhv7PrpZ"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YNva9S8c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404496AbfHBIv2 (ORCPT
+        id S2404508AbfHBIvc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 04:51:28 -0400
-Received: from mail.kmu-office.ch ([178.209.48.109]:44730 "EHLO
-        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731648AbfHBIv2 (ORCPT
+        Fri, 2 Aug 2019 04:51:32 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:9624 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731648AbfHBIva (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 04:51:28 -0400
-Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
-        by mail.kmu-office.ch (Postfix) with ESMTPSA id 397875C004F;
-        Fri,  2 Aug 2019 10:51:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
-        t=1564735885;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ViFlUbZIH2j98+ivvpISqsxLBF3nyNE80C/Y7Lye+Lo=;
-        b=bhv7PrpZGNeJpxcSV8U7HrJBJjE+RstPAgkir7If8M/JOcUoCmodOqFKKwLPdU2CqGqmdA
-        2p5XggEf7tQZAZAEAZAC9QuoYmX0x5VNWJbaKQA7/mkg7YkjzZqtPxzGSdCDuOdO+7/dWp
-        gxQfUYOjUEL4NMo5yA0o/R+Y9A9+rC8=
+        Fri, 2 Aug 2019 04:51:30 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d43f9920000>; Fri, 02 Aug 2019 01:51:30 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 02 Aug 2019 01:51:29 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 02 Aug 2019 01:51:29 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 2 Aug
+ 2019 08:51:26 +0000
+Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     Sameer Pujar <spujar@nvidia.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        <dan.j.williams@intel.com>, <tiwai@suse.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
+        <mkumard@nvidia.com>
+References: <09929edf-ddec-b70e-965e-cbc9ba4ffe6a@nvidia.com>
+ <20190618043308.GJ2962@vkoul-mobl>
+ <23474b74-3c26-3083-be21-4de7731a0e95@nvidia.com>
+ <20190624062609.GV2962@vkoul-mobl>
+ <e9e822da-1cb9-b510-7639-43407fda8321@nvidia.com>
+ <75be49ac-8461-0798-b673-431ec527d74f@nvidia.com>
+ <20190719050459.GM12733@vkoul-mobl.Dlink>
+ <3e7f795d-56fb-6a71-b844-2fc2b85e099e@nvidia.com>
+ <20190729061010.GC12733@vkoul-mobl.Dlink>
+ <98954eb3-21f1-6008-f8e1-f9f9b82f87fb@nvidia.com>
+ <20190731151610.GT12733@vkoul-mobl.Dlink>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <c0f4de86-423a-35df-3744-40db89f2fdfe@nvidia.com>
+Date:   Fri, 2 Aug 2019 09:51:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190731151610.GT12733@vkoul-mobl.Dlink>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Fri, 02 Aug 2019 10:51:25 +0200
-From:   Stefan Agner <stefan@agner.ch>
-To:     Philippe Schenker <philippe.schenker@toradex.com>
-Cc:     festevam@gmail.com, s.hauer@pengutronix.de,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        kernel@pengutronix.de,
-        Max Krummenacher <max.krummenacher@toradex.com>,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        michal.vokac@ysoft.com, shawnguo@kernel.org,
-        Stefan Agner <stefan.agner@toradex.com>,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 07/20] ARM: dts: imx7-colibri: fix 1.8V/UHS support
-In-Reply-To: <723f191c5893984c8fbe711163524dc7ebf09a5b.camel@toradex.com>
-References: <20190731123750.25670-1-philippe.schenker@toradex.com>
- <20190731123750.25670-8-philippe.schenker@toradex.com>
- <CAOMZO5B5HnqpLrDjyGtqSQpVXmcoZuGLvCzKVUhwLb-_ZO_Xog@mail.gmail.com>
- <723f191c5893984c8fbe711163524dc7ebf09a5b.camel@toradex.com>
-Message-ID: <de6bec64012876c07267024cd4b2d2d5@agner.ch>
-X-Sender: stefan@agner.ch
-User-Agent: Roundcube Webmail/1.3.9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1564735890; bh=nax2DgzaAlHPRJRFGWdL5FItacr7F1m1EM0UoJ50c+s=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=YNva9S8cHTX6x7/kDHvIx5AZm7Y0xkUCrnDBsGEfdcQ9Nfb/HmvB6ygs8nk7mdnfn
+         LZclFQOatOHmGwsMb/2RQem/VwN02paSzuf/gjQJuzotmrR4bvjwdwq92Rva5VY3mM
+         lLGSiakKAxkhcSsQ71/8qsjelkpAurHhi7C/yBjTO35s2L6i+saTC1NN8SV28L7h3t
+         /5P9ago0B6kOwPiHFhm4oxzry22WWZxT/b9X9ny8vTdbcYHEAV7oT0SXKFfaxgp8hM
+         8r6ywsVlUXfe3pP+eL5AGTMXLrVUgPzGgAD09BR+UaSGq9h93EouK+w4tC6/s4OYLr
+         q1WMJOurs6trw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-07-31 16:52, Philippe Schenker wrote:
-> On Wed, 2019-07-31 at 09:56 -0300, Fabio Estevam wrote:
->> On Wed, Jul 31, 2019 at 9:38 AM Philippe Schenker
->> <philippe.schenker@toradex.com> wrote:
->> > From: Stefan Agner <stefan.agner@toradex.com>
->> >
->> > Add pinmuxing and do not specify voltage restrictions in the
->> > module level device tree.
+
+On 31/07/2019 16:16, Vinod Koul wrote:
+> On 31-07-19, 10:48, Jon Hunter wrote:
 >>
->> It would be nice to explain the reason for doing this.
-> 
-> This commit is in preparation of another patch that didn't made into this
-> patchset (downstream stuff in there). But I will do another patch on top that
-> will use this patch here. That should anyway be in mainline.
-
-I guess what Fabio meant here is explain this patch.
-
-The commit message really could be improved, e.g.:
-
-Add pinmuxing and do not specify voltage restrictions for the usdhc
-instance
-available on the modules edge connector. This allows to use SD-cards
-with
-higher transfer modes if supported by the carrier board.
-
---
-Stefan
-
-> 
-> Philippe
-> 
+>> On 29/07/2019 07:10, Vinod Koul wrote:
+>>> On 23-07-19, 11:24, Sameer Pujar wrote:
+>>>>
+>>>> On 7/19/2019 10:34 AM, Vinod Koul wrote:
+>>>>> On 05-07-19, 11:45, Sameer Pujar wrote:
+>>>>>> Hi Vinod,
+>>>>>>
+>>>>>> What are your final thoughts regarding this?
+>>>>> Hi sameer,
+>>>>>
+>>>>> Sorry for the delay in replying
+>>>>>
+>>>>> On this, I am inclined to think that dma driver should not be involved.
+>>>>> The ADMAIF needs this configuration and we should take the path of
+>>>>> dma_router for this piece and add features like this to it
+>>>>
+>>>> Hi Vinod,
+>>>>
+>>>> The configuration is needed by both ADMA and ADMAIF. The size is
+>>>> configurable
+>>>> on ADMAIF side. ADMA needs to know this info and program accordingly.
+>>>
+>>> Well I would say client decides the settings for both DMA, DMAIF and
+>>> sets the peripheral accordingly as well, so client communicates the two
+>>> sets of info to two set of drivers
 >>
->> > Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
->> > Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
->> > ---
->> >
->> > Changes in v2: None
->> >
->> >  arch/arm/boot/dts/imx7-colibri.dtsi | 23 ++++++++++++++++++++++-
->> >  1 file changed, 22 insertions(+), 1 deletion(-)
->> >
->> > diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-
->> > colibri.dtsi
->> > index 16d1a1ed1aff..67f5e0c87fdc 100644
->> > --- a/arch/arm/boot/dts/imx7-colibri.dtsi
->> > +++ b/arch/arm/boot/dts/imx7-colibri.dtsi
->> > @@ -326,7 +326,6 @@
->> >  &usdhc1 {
->> >         pinctrl-names = "default";
->> >         pinctrl-0 = <&pinctrl_usdhc1 &pinctrl_cd_usdhc1>;
->> > -       no-1-8-v;
->> >         cd-gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
->> >         disable-wp;
->> >         vqmmc-supply = <&reg_LDO2>;
->> > @@ -671,6 +670,28 @@
->> >                 >;
->> >         };
->> >
->> > +       pinctrl_usdhc1_100mhz: usdhc1grp_100mhz {
->> > +               fsl,pins = <
->> > +                       MX7D_PAD_SD1_CMD__SD1_CMD       0x5a
->> > +                       MX7D_PAD_SD1_CLK__SD1_CLK       0x1a
->> > +                       MX7D_PAD_SD1_DATA0__SD1_DATA0   0x5a
->> > +                       MX7D_PAD_SD1_DATA1__SD1_DATA1   0x5a
->> > +                       MX7D_PAD_SD1_DATA2__SD1_DATA2   0x5a
->> > +                       MX7D_PAD_SD1_DATA3__SD1_DATA3   0x5a
->> > +               >;
->> > +       };
->> > +
->> > +       pinctrl_usdhc1_200mhz: usdhc1grp_200mhz {
->> > +               fsl,pins = <
->> > +                       MX7D_PAD_SD1_CMD__SD1_CMD       0x5b
->> > +                       MX7D_PAD_SD1_CLK__SD1_CLK       0x1b
->> > +                       MX7D_PAD_SD1_DATA0__SD1_DATA0   0x5b
->> > +                       MX7D_PAD_SD1_DATA1__SD1_DATA1   0x5b
->> > +                       MX7D_PAD_SD1_DATA2__SD1_DATA2   0x5b
->> > +                       MX7D_PAD_SD1_DATA3__SD1_DATA3   0x5b
->> > +               >;
->> > +       };
->>
->> You add the entries for 100MHz and 200MHz, but I don't see them being
->> referenced anywhere.
+>> That maybe, but I still don't see how the information is passed from the
+>> client in the first place. The current problem is that there is no means
+>> to pass both a max-burst size and fifo-size to the DMA driver from the
+>> client.
+> 
+> So one thing not clear to me is why ADMA needs fifo-size, I thought it
+> was to program ADMAIF and if we have client programme the max-burst
+> size to ADMA and fifo-size to ADMAIF we wont need that. Can you please
+> confirm if my assumption is valid?
+
+Let me see if I can clarify ...
+
+1. The FIFO we are discussing here resides in the ADMAIF module which is
+   a separate hardware block the ADMA (although the naming make this
+   unclear).
+
+2. The size of FIFO in the ADMAIF is configurable and it this is
+   configured via the ADMAIF registers. This allows different channels
+   to use different FIFO sizes. Think of this as a shared memory that is
+   divided into n FIFOs shared between all channels.
+
+3. The ADMA, not the ADMAIF, manages the flow to the FIFO and this is
+   because the ADMAIF only tells the ADMA when a word has been
+   read/written (depending on direction), the ADMAIF does not indicate
+   if the FIFO is full, empty, etc. Hence, the ADMA needs to know the
+   total FIFO size.
+
+So the ADMA needs to know the FIFO size so that it does not overrun the
+FIFO and we can also set a burst size (less than the total FIFO size)
+indicating how many words to transfer at a time. Hence, the two parameters.
+
+Even if we were to use some sort of router between the ADMA and ADMAIF,
+the client still needs to indicate to the ADMA what FIFO size and burst
+size, if I am following you correctly.
+
+Let me know if this is clearer.
+
+Thanks
+Jon
+
+-- 
+nvpublic
