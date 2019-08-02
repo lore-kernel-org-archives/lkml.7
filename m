@@ -2,157 +2,103 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E10C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 19:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB15C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 19:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE3212087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 19:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 473342087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 19:56:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ScRD9wbQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393817AbfHBTzV (ORCPT
+        id S2394029AbfHBT4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 15:55:21 -0400
-Received: from smtp4-g21.free.fr ([212.27.42.4]:59716 "EHLO smtp4-g21.free.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732050AbfHBTzV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 15:55:21 -0400
-Received: from [192.168.1.91] (unknown [77.207.133.132])
-        (Authenticated sender: marc.w.gonzalez)
-        by smtp4-g21.free.fr (Postfix) with ESMTPSA id 9469819F59E;
-        Fri,  2 Aug 2019 21:54:57 +0200 (CEST)
-Subject: Re: [PATCH] phy: qcom-qmp: Correct READY_STATUS poll break condition
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-References: <20190604232443.3417-1-bjorn.andersson@linaro.org>
- <619d2559-6d88-e795-76e0-3078236933ef@free.fr>
- <20190612172501.GY4814@minitux>
- <3570d880-2b76-88ae-8721-e75cf5acec4c@free.fr>
- <5b252fe6-9435-2aad-d0db-f6170a07b5e9@free.fr>
- <f52774d3-d1ad-9cc4-af23-feb10d9f4b9f@free.fr>
-Message-ID: <bdf95b27-6ff1-8cc0-83cb-b3ec5986a08e@free.fr>
-Date:   Fri, 2 Aug 2019 21:54:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 2 Aug 2019 15:56:08 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:35008 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393087AbfHBT4H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 15:56:07 -0400
+Received: by mail-qt1-f194.google.com with SMTP id d23so75193820qto.2;
+        Fri, 02 Aug 2019 12:56:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+BctC5jWKogaVe7+UbMIlXNT7jLhgV51cvWIOtS6af4=;
+        b=ScRD9wbQ/omA/d9fsFfShN0M+dsAUZ5uFcVWUV/FkR5YEkPwKafqHoZKaiORu33iyv
+         zV4NRZwB8jn0KdmrkfcD8EpZsYDsZuBGcHo6sSIitZDoPbpRjhUvpe0xaMwG1RtWpxmQ
+         RDpWAK65t3sA3WwaMAwmXD4Y9NsdEV5Sp1XWuXs/6oYubqxKlRHLT0/yyS06r+uGjuAS
+         P0PkxmVb3Z2EWuHieWsA46prIenNaG+ouxYrslGbGjK36dMKne6VhChJR3Q/0IaEABMY
+         MqW3tHzL17upAK1vGEXppDwdLc5bqzZtQsD+W0Jf8M2NJCDA+d5jFDRPMYOi4Xx1z7yo
+         G1Cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+BctC5jWKogaVe7+UbMIlXNT7jLhgV51cvWIOtS6af4=;
+        b=WZAYe3cy9NlK2rdocTqTLvW0VU/2t5Q8lFBydjlurkJX5VMA6JjlzmHFWhL0pADV3Y
+         mymV+5pWcTOx+C0kK/4wMK7/m0bsGoqqCAIwTvtuB866DfItz645dLaa4guj9oTPtZdv
+         3t93sS73lbQPaLw3imhOoY/5aV1ogHarxBneoSdPCMVsvEFvZyuJCfdKfIPfd2kZ5JPp
+         GKJueVoaunUmTh5JkIJ0XdUa6boqaKA+Cw2EUbcZTR4aItjbOG9KsDIkghF5M/a+/JBJ
+         n+UIfbfGWX8ehULM7CZttlUbzBCi3GE4t0X+pGI6I99fKeLA8HLdA3Xjc7dByx2F1Dn7
+         Y0/A==
+X-Gm-Message-State: APjAAAXxa242SwgDl8b77QiqF3rHBcAg7LHPxvJ7YTILgO9k7BQI68Ho
+        XMyi4+qu35Eow8Spf+dbR0E=
+X-Google-Smtp-Source: APXvYqxKRujYjipBlqcoCW5qnSeveADtV9x9i/nbKHoKSeB55C2OFv2s/SASRVRL1PQ5ui8wuVElfQ==
+X-Received: by 2002:ac8:27d4:: with SMTP id x20mr94666394qtx.138.1564775766288;
+        Fri, 02 Aug 2019 12:56:06 -0700 (PDT)
+Received: from 0366fb520575.ime.usp.br ([143.107.45.1])
+        by smtp.gmail.com with ESMTPSA id q56sm38597831qtq.64.2019.08.02.12.56.04
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 02 Aug 2019 12:56:05 -0700 (PDT)
+From:   Jose Carlos Cazarin Filho <joseespiriki@gmail.com>
+To:     isdn@linux-pingi.de, gregkh@linuxfoundation.org
+Cc:     netdev@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] isdn: hysdn: Fix error spaces around '*'
+Date:   Fri,  2 Aug 2019 19:56:02 +0000
+Message-Id: <20190802195602.28414-1-joseespiriki@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <f52774d3-d1ad-9cc4-af23-feb10d9f4b9f@free.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/07/2019 12:31, Marc Gonzalez wrote:
+Fix checkpath error:
+CHECK: spaces preferred around that '*' (ctx:WxV)
++extern hysdn_card *card_root;        /* pointer to first card */
 
-> On 19/07/2019 17:50, Marc Gonzalez wrote:
-> 
->> On 13/06/2019 11:10, Marc Gonzalez wrote:
->>
->>> Here are my observations for a 8998 board:
->>>
->>> 1) If I apply only the readl_poll_timeout() fix (not the mask_pcs_ready fixup)
->>> qcom_pcie_probe() fails with a timeout in phy_init.
->>> => this is in line with your regression analysis.
->>>
->>> 2) Your patch also fixes a long-standing bug in UFS init whereby sending
->>> lots of information to the console during phy init would lead to an
->>> incorrectly diagnosed time-out.
->>>
->>> Good stuff!
->>>
->>> Reviewed-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
->>> Tested-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
->>
->> It looks like this patch fixed UFS, but broke PCIe and USB3 ^_^
->>
->> qcom-qmp-phy 1c06000.phy: Registered Qcom-QMP phy
->> qcom-qmp-phy c010000.phy: Registered Qcom-QMP phy
->> qcom-qmp-phy 1da7000.phy: Registered Qcom-QMP phy
->>
->> qcom-qmp-phy 1c06000.phy: BEFORE=000000a6 AFTER=000000a6
->> qcom-qmp-phy 1c06000.phy: phy initialization timed-out
->> phy phy-1c06000.phy.0: phy init failed --> -110
->> qcom-pcie: probe of 1c00000.pci failed with error -110
->>
->> qcom-qmp-phy 1da7000.phy: BEFORE=00000040 AFTER=0000000d
->>
->> qcom-qmp-phy c010000.phy: BEFORE=69696969 AFTER=b7b7b7b7
->> qcom-qmp-phy c010000.phy: phy initialization timed-out
->> phy phy-c010000.phy.1: phy init failed --> -110
->> dwc3 a800000.dwc3: failed to initialize core: -110
->> dwc3: probe of a800000.dwc3 failed with error -110
->>
->>
->> Downstream code for PCIe is:
->>
->> static bool pcie_phy_is_ready(struct msm_pcie_dev_t *dev)
->> {
->> 	if (dev->phy_ver >= 0x20) {
->> 		if (readl_relaxed(dev->phy + PCIE_N_PCS_STATUS(dev->rc_idx, dev->common_phy)) &	BIT(6))
->> 			return false;
->> 		else
->> 			return true;
->> 	}
->>
->> 	if (!(readl_relaxed(dev->phy + PCIE_COM_PCS_READY_STATUS) & 0x1))
->> 		return false;
->> 	else
->> 		return true;
->> }
->>
->> AFAICT:
->> PCIe and USB3 QMP PHYs are ready when PHYSTATUS=BIT(6) goes to 0.
->> But UFS is ready when PCS_READY=BIT(0) goes to 1.
->>
->>
->> Can someone verify that USB3 is broken on 845 with 885bd765963b?
-> 
-> Suggested fix:
-> 
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> index 34ff6434da8f..11c1b02f0206 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> @@ -1447,6 +1447,11 @@ static int qcom_qmp_phy_com_exit(struct qcom_qmp *qmp)
->  	return 0;
->  }
->  
-> +static bool phy_is_ready(unsigned int val, unsigned int mask)
-> +{
-> +	return mask == PCS_READY ? val & mask : !(val & mask);
-> +}
-> +
->  static int qcom_qmp_phy_enable(struct phy *phy)
->  {
->  	struct qmp_phy *qphy = phy_get_drvdata(phy);
-> @@ -1548,7 +1553,7 @@ static int qcom_qmp_phy_enable(struct phy *phy)
->  	status = pcs + cfg->regs[QPHY_PCS_READY_STATUS];
->  	mask = cfg->mask_pcs_ready;
->  
-> -	ret = readl_poll_timeout(status, val, val & mask, 10,
-> +	ret = readl_poll_timeout(status, val, phy_is_ready(val, mask), 10,
->  				 PHY_INIT_COMPLETE_TIMEOUT);
->  	if (ret) {
->  		dev_err(qmp->dev, "phy initialization timed-out\n");
-> 
+Signed-off-by: Jose Carlos Cazarin Filho <joseespiriki@gmail.com>
+---
+ Hello all!
+ This is my first commit to the Linux Kernel, I'm doing this to learn and be able
+ to contribute more in the future
+ Peace all! 
 
-It seems there is a problem. This patch made its way to stable,
-even though it appears to break (at least) msm8998, and possibly
-sdm845. Could someone with access to one or both platforms confirm
-that the patch broke something, and that the proposed fix actually
-fixes the issue?
+ drivers/staging/isdn/hysdn/hysdn_defs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Regards.
+diff --git a/drivers/staging/isdn/hysdn/hysdn_defs.h b/drivers/staging/isdn/hysdn/hysdn_defs.h
+index cdac46a21..f20150d62 100644
+--- a/drivers/staging/isdn/hysdn/hysdn_defs.h
++++ b/drivers/staging/isdn/hysdn/hysdn_defs.h
+@@ -220,7 +220,7 @@ typedef struct hycapictrl_info hycapictrl_info;
+ /*****************/
+ /* exported vars */
+ /*****************/
+-extern hysdn_card *card_root;	/* pointer to first card */
++extern hysdn_card * card_root;	/* pointer to first card */
+ 
+ 
+ 
+-- 
+2.20.1
+
