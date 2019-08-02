@@ -2,119 +2,117 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17502C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 17:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E6BC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 17:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E98CF217F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 17:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D3612183F
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 17:51:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564768281;
+	bh=khpD6S32XLryQTWPY6MaNlqlYYAxW/nyOe/CxIuALW0=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=HiVW5ZEX9XPU2ey3k2yJnSC7bg9nB7lsePpJ+sMBdVfUMjZjGtwplzaVBcxUobHjv
+	 mchaSp3d9HA1jcRhcnyLp75vX5OuULlcZ/YiUwAqzB88V4t9+QY5bkb6x4YBwtDewe
+	 odlfKBkW8zDlsMgZ3QazNmKiGGWxhZPF4sod5/yg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436524AbfHBRvF (ORCPT
+        id S2436600AbfHBRvU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 13:51:05 -0400
-Received: from charlotte.tuxdriver.com ([70.61.120.58]:40228 "EHLO
-        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388634AbfHBRvF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 13:51:05 -0400
-Received: from cpe-2606-a000-111b-6140-0-0-0-162e.dyn6.twc.com ([2606:a000:111b:6140::162e] helo=localhost)
-        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
-        (Exim 4.63)
-        (envelope-from <nhorman@tuxdriver.com>)
-        id 1htbhe-0003l5-MV; Fri, 02 Aug 2019 13:50:59 -0400
-Date:   Fri, 2 Aug 2019 13:50:22 -0400
-From:   Neil Horman <nhorman@tuxdriver.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Vlad Yasevich <vyasevich@gmail.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: sctp: Rename fallthrough label to unhandled
-Message-ID: <20190802175022.GB6957@hmswarspite.think-freely.org>
-References: <e0dd3af448e38e342c1ac6e7c0c802696eb77fd6.1564549413.git.joe@perches.com>
+        Fri, 2 Aug 2019 13:51:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52326 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405813AbfHBRvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 13:51:20 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E401217F5;
+        Fri,  2 Aug 2019 17:51:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564768279;
+        bh=khpD6S32XLryQTWPY6MaNlqlYYAxW/nyOe/CxIuALW0=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=nVMzMboHgX7MfU68J36ZEXxGcflYB3IxcBADYek55/bDOP0TvrlbwsWtm43Uib6VU
+         6ToxJ3+HaIUab5BjNhzKKK9UaZbWpk4/iSgR7ofeeaSqBRMzRNVRZCwUFjyWMae0h8
+         JFO9WCQuyom8dCf8+VvJeJ5xdeEcdWdVW+TIo4aI=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e0dd3af448e38e342c1ac6e7c0c802696eb77fd6.1564549413.git.joe@perches.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <8c259511-d8ea-51b2-0b1d-c85b964bc44c@gmail.com>
+References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com> <1563738060-30213-15-git-send-email-skomatineni@nvidia.com> <e683b417-66fb-38dc-c16b-dab616583a88@gmail.com> <88da46d2-b90d-f57e-7611-b8653b56bdf6@nvidia.com> <ceedb802-7561-488f-3a89-67bee19f2fea@gmail.com> <e2d0e8cc-b4ea-1148-4af1-fee6bb266cca@nvidia.com> <5054f178-db27-9286-d123-3e2b2a885717@gmail.com> <8c259511-d8ea-51b2-0b1d-c85b964bc44c@gmail.com>
+Subject: Re: [PATCH V6 14/21] clk: tegra210: Add suspend and resume support
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        jason@lakedaemon.net, jonathanh@nvidia.com,
+        linus.walleij@linaro.org, marc.zyngier@arm.com,
+        mark.rutland@arm.com, stefan@agner.ch, tglx@linutronix.de,
+        thierry.reding@gmail.com
+User-Agent: alot/0.8.1
+Date:   Fri, 02 Aug 2019 10:51:18 -0700
+Message-Id: <20190802175119.1E401217F5@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 10:04:37PM -0700, Joe Perches wrote:
-> fallthrough may become a pseudo reserved keyword so this only use of
-> fallthrough is better renamed to allow it.
-> 
-> Signed-off-by: Joe Perches <joe@perches.com>
-> ---
->  net/sctp/sm_make_chunk.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/net/sctp/sm_make_chunk.c b/net/sctp/sm_make_chunk.c
-> index 36bd8a6e82df..3fdcaa2fbf12 100644
-> --- a/net/sctp/sm_make_chunk.c
-> +++ b/net/sctp/sm_make_chunk.c
-> @@ -2152,7 +2152,7 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
->  	case SCTP_PARAM_SET_PRIMARY:
->  		if (net->sctp.addip_enable)
->  			break;
-> -		goto fallthrough;
-> +		goto unhandled;
->  
->  	case SCTP_PARAM_HOST_NAME_ADDRESS:
->  		/* Tell the peer, we won't support this param.  */
-> @@ -2163,11 +2163,11 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
->  	case SCTP_PARAM_FWD_TSN_SUPPORT:
->  		if (ep->prsctp_enable)
->  			break;
-> -		goto fallthrough;
-> +		goto unhandled;
->  
->  	case SCTP_PARAM_RANDOM:
->  		if (!ep->auth_enable)
-> -			goto fallthrough;
-> +			goto unhandled;
->  
->  		/* SCTP-AUTH: Secion 6.1
->  		 * If the random number is not 32 byte long the association
-> @@ -2184,7 +2184,7 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
->  
->  	case SCTP_PARAM_CHUNKS:
->  		if (!ep->auth_enable)
-> -			goto fallthrough;
-> +			goto unhandled;
->  
->  		/* SCTP-AUTH: Section 3.2
->  		 * The CHUNKS parameter MUST be included once in the INIT or
-> @@ -2200,7 +2200,7 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
->  
->  	case SCTP_PARAM_HMAC_ALGO:
->  		if (!ep->auth_enable)
-> -			goto fallthrough;
-> +			goto unhandled;
->  
->  		hmacs = (struct sctp_hmac_algo_param *)param.p;
->  		n_elt = (ntohs(param.p->length) -
-> @@ -2223,7 +2223,7 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
->  			retval = SCTP_IERROR_ABORT;
->  		}
->  		break;
-> -fallthrough:
-> +unhandled:
->  	default:
->  		pr_debug("%s: unrecognized param:%d for chunk:%d\n",
->  			 __func__, ntohs(param.p->type), cid);
-> -- 
-> 2.15.0
-> 
-> 
-Yeah, it seems reasonable to me, though I'm still not comfortable with defining
-fallthrough as a macrotized keyword, but thats a debate for another thread
+Quoting Dmitry Osipenko (2019-07-22 00:12:17)
+> 22.07.2019 10:09, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > 22.07.2019 9:52, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> >>
+> >> On 7/21/19 11:10 PM, Dmitry Osipenko wrote:
+> >>> 22.07.2019 1:45, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> >>>> On 7/21/19 2:38 PM, Dmitry Osipenko wrote:
+> >>>>> 21.07.2019 22:40, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=
+=82:
+> >>>>>> @@ -2853,9 +2859,8 @@ static int tegra210_enable_pllu(void)
+> >>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg |=3D PLL_ENABLE;
+> >>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 writel(reg, clk_base + PLLU_B=
+ASE);
+> >>>>>> =C2=A0=C2=A0 -=C2=A0=C2=A0=C2=A0 readl_relaxed_poll_timeout_atomic=
+(clk_base + PLLU_BASE, reg,
+> >>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg & PLL_B=
+ASE_LOCK, 2, 1000);
+> >>>>>> -=C2=A0=C2=A0=C2=A0 if (!(reg & PLL_BASE_LOCK)) {
+> >>>>>> +=C2=A0=C2=A0=C2=A0 ret =3D tegra210_wait_for_mask(&pllu, PLLU_BAS=
+E, PLL_BASE_LOCK);
+> >>>>>> +=C2=A0=C2=A0=C2=A0 if (ret) {
+> >>>>> Why this is needed? Was there a bug?
+> >>>>>
+> >>>> during resume pllu init is needed and to use same terga210_init_pllu,
+> >>>> poll_timeout_atomic can't be used as its ony for atomic context.
+> >>>>
+> >>>> So changed to use wait_for_mask which should work in both cases.
+> >>> Atomic variant could be used from any context, not sure what do you
+> >>> mean. The 'atomic' part only means that function won't cause scheduli=
+ng
+> >>> and that's it.
+> >>
+> >> Sorry, replied incorrect. readx_poll_timeout_atomic uses ktime_get() a=
+nd
+> >> during resume timekeeping suspend/resume happens later than clock
+> >> suspend/resume. So using tegra210_wait_for_mask.
+> >>
+> >> both timekeeping and clk-tegra210 drivers are registered as syscore but
+> >> not ordered.
+> >=20
+> > Okay, thank you for the clarification.
+> >=20
+> > [snip]
+> >=20
+>=20
+> You should remove the 'iopoll.h' then, since it's not used anymore.
 
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
+And also add a comment to this location in the code because it's
+non-obvious that we can't use iopoll here.
 
