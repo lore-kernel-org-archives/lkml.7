@@ -2,130 +2,151 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D74C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D30C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D55ED2087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A89902173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:58:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NyHt/M5L"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WwXCd/VQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404525AbfHBOxH (ORCPT
+        id S2391167AbfHBO6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 10:53:07 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:41369 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389271AbfHBOxG (ORCPT
+        Fri, 2 Aug 2019 10:58:12 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:35209 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726505AbfHBO6M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 10:53:06 -0400
-Received: by mail-ed1-f66.google.com with SMTP id p15so72587665eds.8;
-        Fri, 02 Aug 2019 07:53:05 -0700 (PDT)
+        Fri, 2 Aug 2019 10:58:12 -0400
+Received: by mail-yw1-f65.google.com with SMTP id g19so26707559ywe.2
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 07:58:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=QIu6AOZDQPSwSkKbdFHn0frmIgLwRCOuURVK8auyHQM=;
-        b=NyHt/M5L29n1iQkZndWNpPNswdOq91izgxSejynGG86Ffu7elIHzHSlKgPuQNqoVGw
-         6TWYkMAY8w2NG/K8sjl9HWM9MrWhJZHSw+zTLXe2JQIRJCgVMediiUnBxpx2mwenF+9E
-         WqqjvlNs8qlZ6XO7aqhGqRoCIyDBi6l+ECO5MKp+M9haRgr8QejI+G5r+17tc09e1iwG
-         vzkvktdFS/zdRD/56pMqmuZyBdbhCBDwVuIgTNhhJtIKqctqp2t6iftLk5mw/7rZu2yT
-         /pB4qh+ydaR+xSk1CYaYdu1qC1N0oGvEHfe+k8e8LT048FU8yjpDw1U49BHXhZkgSe3D
-         btvA==
+         :cc;
+        bh=2t7kh32IlRdOx8sjdsjf2HQN2zHlz2OSPNUjrRGAcBA=;
+        b=WwXCd/VQmyFg2yNmEMZgERJNaq7Y0Jobb+bFuDYPe2UfvjZBD9TSI62E4neWS7QEZT
+         uHq9yMdYv3Z46RbWESTbN/WX90CrDR2Z5UpoDui5TtKW3MpOXr6BtwNKRVyV4OYPaMSR
+         F8CDJ4IAWxZL9IDpZfdjsR2BexcPo3ebtA1e3dBhwimbwjtA5Buf0lmpFvIZb9QiglrY
+         qMP2bv7tUizrHHhoJtnoXHnVxyd+j7ET7QCuCSv5fJv/LRzQc8LZto4amVBv5yiVfEAw
+         Y3Vutaofi3fQpY79BtKP+tCuu6oFNAZ6Ewww+xwheDvMI+VfBoFlv6KYUZ178XFqRlCC
+         YctA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=QIu6AOZDQPSwSkKbdFHn0frmIgLwRCOuURVK8auyHQM=;
-        b=aeh7pVaUYSK4JCOakRlq2fBvCB47//UNdWsV5ONkaC7Yn7c8jC3tmPdSYJz34L7t2P
-         6kA/NNNwGDkDaWOkXdW9W77UpniPqXFyuKH/jsfIdrY2CNqtu+rfttBsvpgtoCPSBgW1
-         yWyeiJLh1cTU5q4Wp/q+BsJ40UWlxqb/H928WrlZTt1TA0pd4spZsxAhrxP0h0up4U6O
-         wDqLyf3I5DYtIPGlHSC6Qpv1vpQoOfMjFsqB3M7fKVUloZOChjkBQxy6+qLuTEvRivGU
-         srEGeuchHWJ14F7v+/5RaMUHXYLo+tiZG8Rz293eyB5kl12MkY7go7Yl7gVqlOT5QdJv
-         Etrw==
-X-Gm-Message-State: APjAAAWztuA6hH1c7i9zUb3xU0ynyQundN4Lnl5wfzFmFiFak3w9bvty
-        eGHQfDHOb/Qz9gkf4S59Ij+URugXXdDoqIl7IK8nLA==
-X-Google-Smtp-Source: APXvYqxb+xzmh1F/T6KvvrZWb0KfigpV7UQwtcfFojlVTxGQvTgo+nz6TccuBiWaJHGvk7omKf/GeTXYvYHsUm8ijn4=
-X-Received: by 2002:a17:906:6492:: with SMTP id e18mr59313520ejm.133.1564757584890;
- Fri, 02 Aug 2019 07:53:04 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=2t7kh32IlRdOx8sjdsjf2HQN2zHlz2OSPNUjrRGAcBA=;
+        b=kmyxXCX5CFLVxs4sCjuBHz2vzNQsa+ltYsdQ+x92vbafgPUUeoJAireHjB0EMHF6TX
+         HzgRYpiq8EcYzIMnO74qw9IQ70QovdN06E6PvVNpF650yFogNmmC3NhlcuxiNH+NyB6I
+         vbVWPBU68uCYDeI/7c3bNQK7ye6LG1qQYdj+fCS0gI3Q5f38XHa94CXL0YeiVHeTrQvG
+         DxTm2QJy0SJvwj3FE2zxwytf3eDZaFpqtPsyP+lSnZkxfqvUFsbsTffJyJydrhhgIElZ
+         Mr3ltGWXaWsPlBdwhyUOfFgsmpb3m+2S9R9y//4ypkUGniVa5CNdo8kmw0jws1F/vJ7a
+         dLfg==
+X-Gm-Message-State: APjAAAW4UZEM29cpJJvzS2y7/av1snejm/2QkOCCJOL8aT/NETkKC0+J
+        2jrZ8dbGY4xTW9L5+hvMwEXGYouWGA1Zndt7vKqF+A==
+X-Google-Smtp-Source: APXvYqziJBGMCJKD3omPwQE75QPtI6KDdt2k628cv9E1FLN7w8SIXTvJSwkub5MihjDofyGVsiLOfAZqkBTnN49l58U=
+X-Received: by 2002:a81:ae0e:: with SMTP id m14mr86597121ywh.308.1564757891251;
+ Fri, 02 Aug 2019 07:58:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190802083541.12602-1-hslester96@gmail.com> <CA+FuTSc8WBx2PCUhn-sLtYHQR-OROXm2pUN9SDj7P-Bd8432UQ@mail.gmail.com>
- <CANhBUQ2TRr4RuSmjaRYPXHZpVw_-2awXvWNjjdvV_z1yoGdkXA@mail.gmail.com>
-In-Reply-To: <CANhBUQ2TRr4RuSmjaRYPXHZpVw_-2awXvWNjjdvV_z1yoGdkXA@mail.gmail.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Fri, 2 Aug 2019 10:52:28 -0400
-Message-ID: <CAF=yD-+3tzufyOnK4suJnovrhX_=4sPqWOsjOcETGG3cA9+MdA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] cxgb4: sched: Use refcount_t for refcount
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Vishal Kulkarni <vishal@chelsio.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20190802015332.229322-1-henryburns@google.com>
+In-Reply-To: <20190802015332.229322-1-henryburns@google.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Fri, 2 Aug 2019 07:58:00 -0700
+Message-ID: <CALvZod414sVwwKg0KAsHC2vhqdkrzLeQ+nV3wiAKvOoFyu8NAQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mm/zsmalloc.c: Migration can leave pages in ZS_EMPTY indefinitely
+To:     Henry Burns <henryburns@google.com>
+Cc:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Jonathan Adams <jwadams@google.com>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 2, 2019 at 10:27 AM Chuhong Yuan <hslester96@gmail.com> wrote:
+On Thu, Aug 1, 2019 at 6:53 PM Henry Burns <henryburns@google.com> wrote:
 >
-> Willem de Bruijn <willemdebruijn.kernel@gmail.com> =E4=BA=8E2019=E5=B9=B4=
-8=E6=9C=882=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=889:40=E5=86=99=E9=
-=81=93=EF=BC=9A
-> >
-> > On Fri, Aug 2, 2019 at 4:36 AM Chuhong Yuan <hslester96@gmail.com> wrot=
-e:
-> > >
-> > > refcount_t is better for reference counters since its
-> > > implementation can prevent overflows.
-> > > So convert atomic_t ref counters to refcount_t.
-> > >
-> > > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> > > ---
-> > > Changes in v2:
-> > >   - Convert refcount from 0-base to 1-base.
-> >
-> > This changes the initial value from 0 to 1, but does not change the
-> > release condition. So this introduces an accounting bug?
+> In zs_page_migrate() we call putback_zspage() after we have finished
+> migrating all pages in this zspage. However, the return value is ignored.
+> If a zs_free() races in between zs_page_isolate() and zs_page_migrate(),
+> freeing the last object in the zspage, putback_zspage() will leave the page
+> in ZS_EMPTY for potentially an unbounded amount of time.
 >
-> I have noticed this problem and have checked other files which use refcou=
-nt_t.
-> I find although the refcounts are 1-based, they still use
-> refcount_dec_and_test()
-> to check whether the resource should be released.
-> One example is drivers/char/mspec.c.
-> Therefore I think this is okay and do not change the release condition.
+> To fix this, we need to do the same thing as zs_page_putback() does:
+> schedule free_work to occur.  To avoid duplicated code, move the
+> sequence to a new putback_zspage_deferred() function which both
+> zs_page_migrate() and zs_page_putback() call.
+>
+> Signed-off-by: Henry Burns <henryburns@google.com>
 
-Indeed it is fine to use refcount_t with a model where the initial
-allocation already accounts for the first reference and thus
-initializes with refcount_set(.., 1).
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
 
-But it is not correct to just change a previously zero initialization
-to one. As now an extra refcount_dec will be needed to release state.
-But the rest of the code has not changed, so this extra decrement will
-not happen.
-
-For a correct conversion, see for instance commits
-
-  commit db5bce32fbe19f0c7482fb5a40a33178bbe7b11b
-  net: prepare (struct ubuf_info)->refcnt conversion
-
-and
-
-  commit c1d1b437816f0afa99202be3cb650c9d174667bc
-  net: convert (struct ubuf_info)->refcnt to refcount_t
-
-The second makes a search-and-replace style API change like your
-patches (though also notice the additional required #include).
-
-But the other patch is needed first to change both the initial
-atomic_set *and* at least one atomic_inc, to maintain the same
-reference count over the object's lifetime.
-
-That change requires understanding of the object's lifecycle, so I
-suggest only making those changes when aware of that whole data path.
+> ---
+>  mm/zsmalloc.c | 30 ++++++++++++++++++++----------
+>  1 file changed, 20 insertions(+), 10 deletions(-)
+>
+> diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
+> index 1cda3fe0c2d9..efa660a87787 100644
+> --- a/mm/zsmalloc.c
+> +++ b/mm/zsmalloc.c
+> @@ -1901,6 +1901,22 @@ static void dec_zspage_isolation(struct zspage *zspage)
+>         zspage->isolated--;
+>  }
+>
+> +static void putback_zspage_deferred(struct zs_pool *pool,
+> +                                   struct size_class *class,
+> +                                   struct zspage *zspage)
+> +{
+> +       enum fullness_group fg;
+> +
+> +       fg = putback_zspage(class, zspage);
+> +       /*
+> +        * Due to page_lock, we cannot free zspage immediately
+> +        * so let's defer.
+> +        */
+> +       if (fg == ZS_EMPTY)
+> +               schedule_work(&pool->free_work);
+> +
+> +}
+> +
+>  static void replace_sub_page(struct size_class *class, struct zspage *zspage,
+>                                 struct page *newpage, struct page *oldpage)
+>  {
+> @@ -2070,7 +2086,7 @@ static int zs_page_migrate(struct address_space *mapping, struct page *newpage,
+>          * the list if @page is final isolated subpage in the zspage.
+>          */
+>         if (!is_zspage_isolated(zspage))
+> -               putback_zspage(class, zspage);
+> +               putback_zspage_deferred(pool, class, zspage);
+>
+>         reset_page(page);
+>         put_page(page);
+> @@ -2115,15 +2131,9 @@ static void zs_page_putback(struct page *page)
+>
+>         spin_lock(&class->lock);
+>         dec_zspage_isolation(zspage);
+> -       if (!is_zspage_isolated(zspage)) {
+> -               fg = putback_zspage(class, zspage);
+> -               /*
+> -                * Due to page_lock, we cannot free zspage immediately
+> -                * so let's defer.
+> -                */
+> -               if (fg == ZS_EMPTY)
+> -                       schedule_work(&pool->free_work);
+> -       }
+> +       if (!is_zspage_isolated(zspage))
+> +               putback_zspage_deferred(pool, class, zspage);
+> +
+>         spin_unlock(&class->lock);
+>  }
+>
+> --
+> 2.22.0.770.g0f2c4a37fd-goog
+>
