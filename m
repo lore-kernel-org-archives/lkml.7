@@ -2,123 +2,101 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FEAFC0650F
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52171C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D71E620B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:50:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TS9vAWJI"
+	by mail.kernel.org (Postfix) with ESMTP id 276FF2087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:59:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392543AbfHBWuu (ORCPT
+        id S2392554AbfHBW7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 18:50:50 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37947 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392522AbfHBWuu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 18:50:50 -0400
-Received: by mail-pg1-f195.google.com with SMTP id f5so27928928pgu.5
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 15:50:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:from:cc:to:user-agent:date;
-        bh=sXQ0BKzSp5Bptj9KeGCTuwE2we871dDx6C7SldYlGLw=;
-        b=TS9vAWJI7uCOK3lIDDY06BHC2SU9jVPvgGZh7ucSu1sPJkLeahqYiuIv9WsuM9tIhO
-         eu43t4v19IQjoosdxhPYVAdhJnI6xkDmRO4boUEedx5RIjIH8HaCS4NaZ8+BzQlJpojR
-         R5IfJBexqJsJ6dAeReSg6ssv8fBlHY+RM7MXc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
-         :user-agent:date;
-        bh=sXQ0BKzSp5Bptj9KeGCTuwE2we871dDx6C7SldYlGLw=;
-        b=ufxxOcmjpk9Hn+5bfO1fC6HP4E6ODkie6d7125LIfclQjY5T0Agt0QXGPizCzImiiL
-         Z7NyqTa+9CUtu4SbE5sUrBTRFfZGaXH3gajS1C6xTJaupAXz77LQW3oZMluby9wYVeL1
-         gRAM7VGuKncOr1QWm9JVuvpnkGUH7LNEswfCRREM+is8ZZ3Qneh9fs6+LY8nBeLUhWF+
-         8i0quhKRQx7SNEmqtfvQQaAtqrd65U+cqgVIyBxD6fI3mIuD4chQ3DqYiG3rT++vjU2M
-         tqUdURZryiMbUuSjeNOQBGEZgGXZWlA86pi9EfQDihmf/Ft4N12mEm8dPF5aw+AYuBuw
-         JGHw==
-X-Gm-Message-State: APjAAAVqOAm8hx78r+sVduejU2Aq+w2FcZz8M2km3LHl8Z+L7UHpK50F
-        CEnDLujMymUidVnN4PD5Bp3Y4XQrqSc=
-X-Google-Smtp-Source: APXvYqyoiPnSF1BqK7yJw4hJLDH4R41i/VJWmhEUS/PRtoalaM4/f8sPwAojO9sGngCZ9vk5FcfxdQ==
-X-Received: by 2002:a65:6093:: with SMTP id t19mr46551080pgu.79.1564786249619;
-        Fri, 02 Aug 2019 15:50:49 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id 143sm117330886pgc.6.2019.08.02.15.50.48
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 02 Aug 2019 15:50:49 -0700 (PDT)
-Message-ID: <5d44be49.1c69fb81.8078a.4d08@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Fri, 2 Aug 2019 18:59:42 -0400
+Received: from mga09.intel.com ([134.134.136.24]:36996 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729782AbfHBW7m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 18:59:42 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Aug 2019 15:59:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,339,1559545200"; 
+   d="scan'208";a="191942944"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga001.fm.intel.com with ESMTP; 02 Aug 2019 15:59:41 -0700
+Date:   Fri, 2 Aug 2019 15:59:40 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] KVM: x86: Unconditionally call x86 ops that are
+ always implemented
+Message-ID: <20190802225940.GC23165@linux.intel.com>
+References: <20190802220617.10869-1-sean.j.christopherson@intel.com>
+ <c2ebed86-9342-ab88-3751-318d2a256173@oracle.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <5d2f54db.1c69fb81.5720c.dc05@mx.google.com>
-References: <20190716224518.62556-1-swboyd@chromium.org> <20190716224518.62556-2-swboyd@chromium.org> <20190717113956.GA12119@ziepe.ca> <5d2f4ff9.1c69fb81.3c314.ab00@mx.google.com> <20190717165011.GI12119@ziepe.ca> <5d2f54db.1c69fb81.5720c.dc05@mx.google.com>
-Subject: Re: [PATCH v2 1/6] hwrng: core: Freeze khwrng thread during suspend
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org,
-        Andrey Pronin <apronin@chromium.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-User-Agent: alot/0.8.1
-Date:   Fri, 02 Aug 2019 15:50:48 -0700
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c2ebed86-9342-ab88-3751-318d2a256173@oracle.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Stephen Boyd (2019-07-17 10:03:22)
-> Quoting Jason Gunthorpe (2019-07-17 09:50:11)
-> > On Wed, Jul 17, 2019 at 09:42:32AM -0700, Stephen Boyd wrote:
->=20
-> Yes. That's exactly my point. A hwrng that's suspended will fail here
-> and it's better to just not try until it's guaranteed to have resumed.
->=20
-> >=20
-> > It just seems weird to do this, what about all the other tpm API
-> > users? Do they have a racy problem with suspend too?
->=20
-> I haven't looked at them. Are they being called from suspend/resume
-> paths? I don't think anything for the userspace API can be a problem
-> because those tasks are all frozen. The only problem would be some
-> kernel internal API that TPM API exposes. I did a quick grep and I see
-> things like IMA or the trusted keys APIs that might need a closer look.
->=20
-> Either way, trying to hold off a TPM operation from the TPM API when
-> we're suspended isn't really possible. If something like IMA needs to
-> get TPM data from deep suspend path and it fails because the device is
-> suspended, all we can do is return an error from TPM APIs and hope the
-> caller can recover. The fix is probably going to be to change the code
-> to not call into the TPM API until the hardware has resumed by avoiding
-> doing anything with the TPM until resume is over. So we're at best able
-> to make same sort of band-aid here in the TPM API where all we can do is
-> say -EAGAIN but we can't tell the caller when to try again.
->=20
+On Fri, Aug 02, 2019 at 03:48:27PM -0700, Krish Sadhukhan wrote:
+> 
+> On 08/02/2019 03:06 PM, Sean Christopherson wrote:
+> >Remove a few stale checks for non-NULL ops now that the ops in question
+> >are implemented by both VMX and SVM.
+> >
+> >Note, this is **not** stable material, the Fixes tags are there purely
+> >to show when a particular op was first supported by both VMX and SVM.
+> >
+> >Fixes: 74f169090b6f ("kvm/svm: Setup MCG_CAP on AMD properly")
+> >Fixes: b31c114b82b2 ("KVM: X86: Provide a capability to disable PAUSE intercepts")
+> >Fixes: 411b44ba80ab ("svm: Implements update_pi_irte hook to setup posted interrupt")
+> >Cc: Krish Sadhukhan <krish.sadhukhan@oracle.com>
+> >Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> >---
+> >
+> >v2: Give update_pi_iret the same treatment [Krish].
+> >
+> >  arch/x86/kvm/x86.c | 13 +++----------
+> >  1 file changed, 3 insertions(+), 10 deletions(-)
+> >
+> >diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> >index 01e18caac825..e7c993f0cbed 100644
+> >--- a/arch/x86/kvm/x86.c
+> >+++ b/arch/x86/kvm/x86.c
+> >@@ -3506,8 +3506,7 @@ static int kvm_vcpu_ioctl_x86_setup_mce(struct kvm_vcpu *vcpu,
+> >  	for (bank = 0; bank < bank_num; bank++)
+> >  		vcpu->arch.mce_banks[bank*4] = ~(u64)0;
+> >-	if (kvm_x86_ops->setup_mce)
+> >-		kvm_x86_ops->setup_mce(vcpu);
+> >+	kvm_x86_ops->setup_mce(vcpu);
+> >  out:
+> >  	return r;
+> >  }
+> >@@ -9313,10 +9312,7 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+> >  	kvm_page_track_init(kvm);
+> >  	kvm_mmu_init_vm(kvm);
+> >-	if (kvm_x86_ops->vm_init)
+> >-		return kvm_x86_ops->vm_init(kvm);
+> >-
+> >-	return 0;
+> >+	return kvm_x86_ops->vm_init(kvm);
+> >  }
+> >  static void kvm_unload_vcpu_mmu(struct kvm_vcpu *vcpu)
+> >@@ -9992,7 +9988,7 @@ EXPORT_SYMBOL_GPL(kvm_arch_has_noncoherent_dma);
+> >  bool kvm_arch_has_irq_bypass(void)
+> 
+> Now that this is returning true always and that this is called only in
+> kvm_irqfd_assign(), this can perhaps be removed altogether ?
 
-Andrey talked to me a little about this today. Andrey would prefer we
-don't just let the TPM go into a wonky state if it's used during
-suspend/resume so that it can stay resilient to errors. Sounds OK to me,
-but my point still stands that we need to fix the callers.
-
-I'll resurrect the IS_SUSPENDED flag and make it set generically by the
-tpm_pm_suspend() and tpm_pm_resume() functions and then spit out a big
-WARN_ON() and return an error value like -EAGAIN if the TPM functions
-are called when the TPM is suspended. I hope we don't hit the warning
-message, but if we do then at least we can track it down rather quickly
-and figure out how to fix the caller instead of just silently returning
--EAGAIN and hoping for that to be visible to the user.
-
-This patch will still be required to avoid the WARN message, so I'll
-resend with the Cc to crypto list so it can be picked up.
-
+No go, PowerPC has a conditional implementation.
