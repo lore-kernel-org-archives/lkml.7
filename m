@@ -2,105 +2,85 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8040DC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC7EC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:26:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59A9F206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:23:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 426A620665
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:26:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oxpTNQ7g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388874AbfHBWXX (ORCPT
+        id S2389136AbfHBW0n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 18:23:23 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:40613 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730633AbfHBWXX (ORCPT
+        Fri, 2 Aug 2019 18:26:43 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38045 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729919AbfHBW0m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 18:23:23 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1htfwv-0002gc-Jk; Sat, 03 Aug 2019 00:22:57 +0200
-Date:   Sat, 3 Aug 2019 00:22:54 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Julia Cartwright <julia@ni.com>,
-        Paul McKenney <paulmck@linux.vnet.ibm.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>, kvm@vger.kernel.org,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: Re: [patch 2/5] x86/kvm: Handle task_work on VMENTER/EXIT
-In-Reply-To: <c8294b01-62d1-95df-6ff6-213f945a434f@redhat.com>
-Message-ID: <alpine.DEB.2.21.1908030015330.4029@nanos.tec.linutronix.de>
-References: <20190801143250.370326052@linutronix.de> <20190801143657.887648487@linutronix.de> <20190801162451.GE31538@redhat.com> <alpine.DEB.2.21.1908012025100.1789@nanos.tec.linutronix.de> <20190801213550.GE6783@linux.intel.com>
- <alpine.DEB.2.21.1908012343530.1789@nanos.tec.linutronix.de> <alpine.DEB.2.21.1908012345000.1789@nanos.tec.linutronix.de> <c8294b01-62d1-95df-6ff6-213f945a434f@redhat.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 2 Aug 2019 18:26:42 -0400
+Received: by mail-lj1-f196.google.com with SMTP id r9so74219653ljg.5
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 15:26:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=i4Q1OSMkrMbEKT1SoZ4uAd7NwlonfJaRZEODg93BKD0=;
+        b=oxpTNQ7gA0BmCDZGSRq43NuTKanPemgUpnkI3okDP8pIxB8ySGXHO48Y1+rEItwZau
+         lP0qcd15ser5ufk1fOSMnebTB7O5ufFXe0auLaKhRSiW7JKialmBF87F778SVNvwuZOp
+         Dcf7QoihmGWpFdwQIi9Jj/cTmxQSTjceh8nXNw9fQIxGIy4HtKwvynvtEobr06TKAu8g
+         zd8O2nd6DNrUL2yUi7hHjq2p91elcxV7IIOxzmNv9zZNMwpLMwwRbxBwxGzqaQJjaosx
+         HzpdCt00QNPGIXtSKTa0hb/5xr+ZUAf7N9HgOD8DlTWaVX0Ix1CnRfxQbt53NZ+bUQGs
+         Go+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=i4Q1OSMkrMbEKT1SoZ4uAd7NwlonfJaRZEODg93BKD0=;
+        b=QoOTFizfvslBLgKfjaUjphDRu8UB4uYkNmm1DUx+CEZYfvrh+qgFhGWeyhAQHf3phy
+         TPrQZYFyjxAF13k1VBCQbIWfq2gGlFKQFNcCzRW8WdLdG88d4IbprPr7HvVmEfh28VwU
+         ZQufvX3psyrimsiT7X+KzbDDJXZUGKlbPZSKfnc8o3WcmMxXXDKEYc3Nxy3OiFUKrfFj
+         291ISar6QXuagoCsqbtwTVVUzyaDF/cTVN9L2HNUjQ0u5WwsbEFcwhBXl6eOK+40s/pY
+         sH2m7+XqEI9AEDUMgihLOflhm2xCCqmY+eifVTaW2J3ZGtkt4Gs0HsfddWqBk7Fuwmvy
+         0sQQ==
+X-Gm-Message-State: APjAAAUgSr51RDCi6uy94X1/MWPjrMxguLJBedaTM91+bklflMJIwNqz
+        BlvHrXyLN9oje6C75h/hpehT6Kgg/5/ustvRB9C2xw==
+X-Google-Smtp-Source: APXvYqw9LAsN6ED2iWwyLwLi0Sm06Cw60jz7RgJL+Vw+t+Lf221RYZpuzJ4xgBO4yMiWKl5h9G6pyVCUsX+JICP1VXs=
+X-Received: by 2002:a05:651c:28c:: with SMTP id b12mr8040694ljo.69.1564784800470;
+ Fri, 02 Aug 2019 15:26:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20190718065101.26994-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190718065101.26994-1-yamada.masahiro@socionext.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 3 Aug 2019 00:26:29 +0200
+Message-ID: <CACRpkdbOnVEfoPNnUES+EE2CN00dXRUhO6HuCUhyaQkEUvWmcA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: refactor gpiochip_allocate_mask() with bitmap_alloc()
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2 Aug 2019, Paolo Bonzini wrote:
-> On 01/08/19 23:47, Thomas Gleixner wrote:
-> > Right you are about cond_resched() being called, but for SRCU this does not
-> > matter unless there is some way to do a synchronize operation on that SRCU
-> > entity. It might have some other performance side effect though.
-> 
-> I would use srcu_read_unlock/lock around the call.
-> 
-> However, I'm wondering if the API can be improved because basically we
-> have six functions for three checks of TIF flags.  Does it make sense to
-> have something like task_has_request_flags and task_do_requests (names
-> are horrible I know) that can be used like
-> 
-> 	if (task_has_request_flags()) {
-> 		int err;
-> 		...srcu_read_unlock...
-> 		// return -EINTR if signal_pending
-> 		err = task_do_requests();
-> 		if (err < 0)
-> 			goto exit_no_srcu_read_unlock;
-> 		...srcu_read_lock...
-> 	}
-> 
-> taking care of all three cases with a single hook?  This is important
-> especially because all these checks are done by all KVM architectures in
-> slightly different ways, and a unified API would be a good reason to
-> make all architectures look the same.
-> 
-> (Of course I could also define this unified API in virt/kvm/kvm_main.c,
-> so this is not blocking the series in any way!).
+On Thu, Jul 18, 2019 at 8:51 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
 
-You're not holding up something. Having a common function for this is
-definitely the right approach.
+> Refactor gpiochip_allocate_mask() slightly by using bitmap_alloc().
+>
+> I used bitmap_free() for the corresponding free parts. Actually,
+> bitmap_free() is a wrapper of kfree(), but I did this for consistency.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-As this is virt specific because it only checks for non arch specific bits
-(TIF_NOTIFY_RESUME should be available for all KVM archs) and the TIF bits
-are a subset of the available TIF bits because all others do not make any
-sense there, this really should be a common function for KVM so that all
-other archs which obviously lack a TIF_NOTIFY_RESUME check, can be fixed up
-and consolidated. If we add another TIF check later then we only have to do
-it in one place.
+Patch applied with Stephen's ACK.
 
-Thanks,
-
-	tglx
+Yours,
+Linus Walleij
