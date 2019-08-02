@@ -2,131 +2,122 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB15C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25853C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDF0420665
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:30:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T7vtdHxl"
+	by mail.kernel.org (Postfix) with ESMTP id 05D4520665
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:31:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392008AbfHBKaD (ORCPT
+        id S2392083AbfHBKbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 06:30:03 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42263 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730143AbfHBKaD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 06:30:03 -0400
-Received: by mail-pl1-f196.google.com with SMTP id ay6so33529584plb.9;
-        Fri, 02 Aug 2019 03:30:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=B6ThXTdLqQnYtFH4Sq6DQYOhXAfMjbsowfx2ATZ6RaA=;
-        b=T7vtdHxlHDoWWbMDsMpp4A0KhFa9XY5Zi8XGuYS4AM38N9jbmQzJRMRambMleJGfc5
-         +1jPzgP6T0SBoAAbgDtPqttfjvVY6G5IbjZqpUq8aGFi7jJBQqk3qxlM3r73ooqf6sKo
-         dN8JKzkxfGTq2jiAfTWDF0DsT/h0JOg96rtcAVT9CpiVaZd2lAIaLAJEt2Bkt/IoQwyb
-         OJqwjnDEzouXItsCGfuCwu5wdy5P/eaZTMIHRdfwN3saU8BVQNwIYQRh43hsoqZPhi6K
-         rQL9C7H1raeEPqFM6n2KNOexIJNtle/Vdt6notrRNQsr+Nk7qZzg40Qd5rwWzYEMaRTU
-         GEvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=B6ThXTdLqQnYtFH4Sq6DQYOhXAfMjbsowfx2ATZ6RaA=;
-        b=SuQVy2i/veSnHmI7Z0utNs/5gTGPNdtIMD98ZSOa36oh8YzOfpabgtIYoyMZtJKZPL
-         /4EjgMKahLxTVPYV2usbkehZQpdf9HHwjcgFFM1gMSvuX7N4DKGg5wyTqUKa2Ru+a7pf
-         d/BQ9/0Rsyx6qP5/63k1hDNRFVjPJERnEyszZ2tqz9fPact4s3ZsyfDfVzsxhMQTIddE
-         kElZiOPWFW2qXh7YfuZiQ5bEZbstai71XuF0uKwtjImymhRpWwRNiFeEKbqVYvcCoaW3
-         igeuKOop6bpgVLr8Y/cmuZYg52CpbwyXkX5ZLphAhi9NOmNTjZfeKwB+Kr3O1wUIOAim
-         PiuA==
-X-Gm-Message-State: APjAAAWJbQ5K7tSEpJaGTbCCSjFVOXoQ3xUwHb8o/CZbay/09FqMHbO/
-        kNInDCAks0MHQlfOX7AX9BI=
-X-Google-Smtp-Source: APXvYqwk2G89WFkms0GDbxvkH3iDt3WeAC2IhYzei5wzMGpQV+Mu4UKICIEnKEQfiMvVjaGdDdK+CA==
-X-Received: by 2002:a17:902:f213:: with SMTP id gn19mr134302687plb.35.1564741802356;
-        Fri, 02 Aug 2019 03:30:02 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id j5sm64742881pgp.59.2019.08.02.03.30.00
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 02 Aug 2019 03:30:01 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Madalin Bucur <madalin.bucur@nxp.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] dpaa_eth: Use refcount_t for refcount
-Date:   Fri,  2 Aug 2019 18:29:56 +0800
-Message-Id: <20190802102956.14867-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 2 Aug 2019 06:31:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48598 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730143AbfHBKbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 06:31:16 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D090981F07;
+        Fri,  2 Aug 2019 10:31:15 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.136])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 043E860925;
+        Fri,  2 Aug 2019 10:31:13 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Fri,  2 Aug 2019 12:31:15 +0200 (CEST)
+Date:   Fri, 2 Aug 2019 12:31:13 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "matthew.wilcox@oracle.com" <matthew.wilcox@oracle.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        Kernel Team <Kernel-team@fb.com>,
+        "william.kucharski@oracle.com" <william.kucharski@oracle.com>,
+        "srikar@linux.vnet.ibm.com" <srikar@linux.vnet.ibm.com>
+Subject: Re: [PATCH v2 1/2] khugepaged: enable collapse pmd for pte-mapped THP
+Message-ID: <20190802103112.GA20111@redhat.com>
+References: <20190731183331.2565608-1-songliubraving@fb.com>
+ <20190731183331.2565608-2-songliubraving@fb.com>
+ <20190801145032.GB31538@redhat.com>
+ <36D3C0F0-17CE-42B9-9661-B376D608FA7D@fb.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <36D3C0F0-17CE-42B9-9661-B376D608FA7D@fb.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 02 Aug 2019 10:31:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-refcount_t is better for reference counters since its
-implementation can prevent overflows.
-So convert atomic_t ref counters to refcount_t.
+On 08/01, Song Liu wrote:
+>
+>
+> > On Aug 1, 2019, at 7:50 AM, Oleg Nesterov <oleg@redhat.com> wrote:
+> >
+> > On 07/31, Song Liu wrote:
+> >>
+> >> +static int khugepaged_add_pte_mapped_thp(struct mm_struct *mm,
+> >> +					 unsigned long addr)
+> >> +{
+> >> +	struct mm_slot *mm_slot;
+> >> +	int ret = 0;
+> >> +
+> >> +	/* hold mmap_sem for khugepaged_test_exit() */
+> >> +	VM_BUG_ON_MM(!rwsem_is_locked(&mm->mmap_sem), mm);
+> >> +	VM_BUG_ON(addr & ~HPAGE_PMD_MASK);
+> >> +
+> >> +	if (unlikely(khugepaged_test_exit(mm)))
+> >> +		return 0;
+> >> +
+> >> +	if (!test_bit(MMF_VM_HUGEPAGE, &mm->flags) &&
+> >> +	    !test_bit(MMF_DISABLE_THP, &mm->flags)) {
+> >> +		ret = __khugepaged_enter(mm);
+> >> +		if (ret)
+> >> +			return ret;
+> >> +	}
+> >
+> > could you explain why do we need mm->mmap_sem, khugepaged_test_exit() check
+> > and __khugepaged_enter() ?
+>
+> If the mm doesn't have a mm_slot, we would like to create one here (by
+> calling __khugepaged_enter()).
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/net/ethernet/freescale/dpaa/dpaa_eth.c | 6 +++---
- drivers/net/ethernet/freescale/dpaa/dpaa_eth.h | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+I can be easily wrong, I never read this code before, but this doesn't
+look correct.
 
-diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-index f38c3fa7d705..2df6e745cb3f 100644
---- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-+++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-@@ -485,7 +485,7 @@ static struct dpaa_bp *dpaa_bpid2pool(int bpid)
- static bool dpaa_bpid2pool_use(int bpid)
- {
- 	if (dpaa_bpid2pool(bpid)) {
--		atomic_inc(&dpaa_bp_array[bpid]->refs);
-+		refcount_inc(&dpaa_bp_array[bpid]->refs);
- 		return true;
- 	}
- 
-@@ -496,7 +496,7 @@ static bool dpaa_bpid2pool_use(int bpid)
- static void dpaa_bpid2pool_map(int bpid, struct dpaa_bp *dpaa_bp)
- {
- 	dpaa_bp_array[bpid] = dpaa_bp;
--	atomic_set(&dpaa_bp->refs, 1);
-+	refcount_set(&dpaa_bp->refs, 1);
- }
- 
- static int dpaa_bp_alloc_pool(struct dpaa_bp *dpaa_bp)
-@@ -584,7 +584,7 @@ static void dpaa_bp_free(struct dpaa_bp *dpaa_bp)
- 	if (!bp)
- 		return;
- 
--	if (!atomic_dec_and_test(&bp->refs))
-+	if (!refcount_dec_and_test(&bp->refs))
- 		return;
- 
- 	if (bp->free_buf_cb)
-diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.h b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.h
-index af320f83c742..acc3fcdf730a 100644
---- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.h
-+++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.h
-@@ -99,7 +99,7 @@ struct dpaa_bp {
- 	int (*seed_cb)(struct dpaa_bp *);
- 	/* bpool can be emptied before freeing by this cb */
- 	void (*free_buf_cb)(const struct dpaa_bp *, struct bm_buffer *);
--	atomic_t refs;
-+	refcount_t refs;
- };
- 
- struct dpaa_rx_errors {
--- 
-2.20.1
+Firstly, mm->mmap_sem cam ONLY help if a) the task already has mm_slot
+and b) this mm_slot is khugepaged_scan.mm_slot. Otherwise khugepaged_exit()
+won't take mmap_sem for writing and thus we can't rely on test_exit().
+
+and this means that down_read(mmap_sem) before khugepaged_add_pte_mapped_thp()
+is pointless and can't help; this mm was found by vma_interval_tree_foreach().
+
+so __khugepaged_enter() can race with khugepaged_exit() and this is wrong
+in any case.
+
+> This happens when the THP is created by another mm, or by tmpfs with
+> "huge=always"; and then page table of this mm got split by split_huge_pmd().
+> With current kernel, this happens when we attach/detach uprobe to a file
+> in tmpfs with huge=always.
+
+Well. In this particular case khugepaged_enter() was likely already called
+by shmem_mmap() or khugepaged_enter_vma_merge(), or madvise.
+
+(in fact I think do_set_pmd() or shmem_fault() should call _enter() too,
+ like do_huge_pmd_anonymous_page() does, but this is another story).
+
+
+And I forgot to mention... I don't understand why
+khugepaged_collapse_pte_mapped_thps() has to be called with khugepaged_mm_lock.
+
+Oleg.
 
