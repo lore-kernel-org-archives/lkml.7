@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9401FC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F31C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A72E2064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:58:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2281920665
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:58:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739921;
-	bh=aCsAj4VSIaCi9vpGKy72frkWmv4EWg5QJPP+3n0Zw54=;
+	s=default; t=1564739936;
+	bh=lpySsXp3nInyhS+g20TznSRkPQDULGp/A/Gs1UqHMSk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wFDhJKlxSHEugGs/DKPsoYyFlJcyljQ7iNleo1QK3f66GgQXwJ5E05CMKKX5ukqXC
-	 76V519WtMXOzZ2n24BRA3AMSCGuRkMZ21vkfgFCGkzMMhQBrga9kTHgQ1M3QbN7Gh5
-	 qiyWLmsLvrB3oYqnO5a4++04gDA1/6x9WPCUoebE=
+	b=nRBMFPOSELLlqvJoJluOuauswoK0/KGBpXvxlQ+ZX4TsI2WEXdLQA2Uq1lS8d0G/L
+	 Wa7DTuxpgbmjlwNDffGyA/imhObNG08ZlDg6PY+5OBoNS6A3lf5dqfldsWPGOgMSbV
+	 voMzljP7sHfm/hSmkWgNBkH8ABJM4h8NSYwZ8ijM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406939AbfHBJ5h (ORCPT
+        id S2407066AbfHBJ6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:57:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36802 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:58:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406608AbfHBJ5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:57:33 -0400
+        id S2406871AbfHBJ5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:57:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE16A2173E;
-        Fri,  2 Aug 2019 09:57:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2296B20B7C;
+        Fri,  2 Aug 2019 09:57:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739852;
-        bh=aCsAj4VSIaCi9vpGKy72frkWmv4EWg5QJPP+3n0Zw54=;
+        s=default; t=1564739842;
+        bh=lpySsXp3nInyhS+g20TznSRkPQDULGp/A/Gs1UqHMSk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yyaec76tea6m60PZkT2MKaJFzjaoS10cmJHVNhlUAbdArahXkWk7+cdvRt8ZyLTjh
-         NORPXSuGBf6GkCJPAl3BlDznbRatoORhAjYRiWsApZGmh5Hk7oabjjGWKNNe54LEvW
-         UEv1/zpQyNunw/5bBq57FbpOoTz4w+Fo5WdmgnJY=
+        b=QhU6t3AlpXL7tDy6W69FRvc+ec7eYpveA+Sv18u2c/h5mFeEhddjLmI5atUUix8Hq
+         GYcTEIuTckrCaUqc6dPnwJxH+IL39ZHsXA/ReX4gjtQt/7wrIcmBRluBG2bGGNrV4n
+         s2rwu0ySjwJ73ALFmyroZbkfPHjAqjJR1AGczHz4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 5.2 15/20] sched/fair: Use RCU accessors consistently for ->numa_group
-Date:   Fri,  2 Aug 2019 11:40:09 +0200
-Message-Id: <20190802092102.928273691@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+0165480d4ef07360eeda@syzkaller.appspotmail.com,
+        Florian Westphal <fw@strlen.de>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH 5.2 11/20] xfrm: policy: fix bydst hlist corruption on hash rebuild
+Date:   Fri,  2 Aug 2019 11:40:05 +0200
+Message-Id: <20190802092100.481389776@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092055.131876977@linuxfoundation.org>
 References: <20190802092055.131876977@linuxfoundation.org>
@@ -64,386 +61,150 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Florian Westphal <fw@strlen.de>
 
-commit cb361d8cdef69990f6b4504dc1fd9a594d983c97 upstream.
+commit fd709721352dd5239056eacaded00f2244e6ef58 upstream.
 
-The old code used RCU annotations and accessors inconsistently for
-->numa_group, which can lead to use-after-frees and NULL dereferences.
+syzbot reported following spat:
 
-Let all accesses to ->numa_group use proper RCU helpers to prevent such
-issues.
+BUG: KASAN: use-after-free in __write_once_size include/linux/compiler.h:221
+BUG: KASAN: use-after-free in hlist_del_rcu include/linux/rculist.h:455
+BUG: KASAN: use-after-free in xfrm_hash_rebuild+0xa0d/0x1000 net/xfrm/xfrm_policy.c:1318
+Write of size 8 at addr ffff888095e79c00 by task kworker/1:3/8066
+Workqueue: events xfrm_hash_rebuild
+Call Trace:
+ __write_once_size include/linux/compiler.h:221 [inline]
+ hlist_del_rcu include/linux/rculist.h:455 [inline]
+ xfrm_hash_rebuild+0xa0d/0x1000 net/xfrm/xfrm_policy.c:1318
+ process_one_work+0x814/0x1130 kernel/workqueue.c:2269
+Allocated by task 8064:
+ __kmalloc+0x23c/0x310 mm/slab.c:3669
+ kzalloc include/linux/slab.h:742 [inline]
+ xfrm_hash_alloc+0x38/0xe0 net/xfrm/xfrm_hash.c:21
+ xfrm_policy_init net/xfrm/xfrm_policy.c:4036 [inline]
+ xfrm_net_init+0x269/0xd60 net/xfrm/xfrm_policy.c:4120
+ ops_init+0x336/0x420 net/core/net_namespace.c:130
+ setup_net+0x212/0x690 net/core/net_namespace.c:316
 
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will@kernel.org>
-Fixes: 8c8a743c5087 ("sched/numa: Use {cpu, pid} to create task groups for shared faults")
-Link: https://lkml.kernel.org/r/20190716152047.14424-3-jannh@google.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+The faulting address is the address of the old chain head,
+free'd by xfrm_hash_resize().
+
+In xfrm_hash_rehash(), chain heads get re-initialized without
+any hlist_del_rcu:
+
+ for (i = hmask; i >= 0; i--)
+    INIT_HLIST_HEAD(odst + i);
+
+Then, hlist_del_rcu() gets called on the about to-be-reinserted policy
+when iterating the per-net list of policies.
+
+hlist_del_rcu() will then make chain->first be nonzero again:
+
+static inline void __hlist_del(struct hlist_node *n)
+{
+   struct hlist_node *next = n->next;   // address of next element in list
+   struct hlist_node **pprev = n->pprev;// location of previous elem, this
+                                        // can point at chain->first
+        WRITE_ONCE(*pprev, next);       // chain->first points to next elem
+        if (next)
+                next->pprev = pprev;
+
+Then, when we walk chainlist to find insertion point, we may find a
+non-empty list even though we're supposedly reinserting the first
+policy to an empty chain.
+
+To fix this first unlink all exact and inexact policies instead of
+zeroing the list heads.
+
+Add the commands equivalent to the syzbot reproducer to xfrm_policy.sh,
+without fix KASAN catches the corruption as it happens, SLUB poisoning
+detects it a bit later.
+
+Reported-by: syzbot+0165480d4ef07360eeda@syzkaller.appspotmail.com
+Fixes: 1548bc4e0512 ("xfrm: policy: delete inexact policies from inexact list on hash rebuild")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/sched.h |   10 +++-
- kernel/sched/fair.c   |  120 +++++++++++++++++++++++++++++++++-----------------
- 2 files changed, 90 insertions(+), 40 deletions(-)
+ net/xfrm/xfrm_policy.c                     |   12 +++++++-----
+ tools/testing/selftests/net/xfrm_policy.sh |   27 ++++++++++++++++++++++++++-
+ 2 files changed, 33 insertions(+), 6 deletions(-)
 
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1026,7 +1026,15 @@ struct task_struct {
- 	u64				last_sum_exec_runtime;
- 	struct callback_head		numa_work;
+--- a/net/xfrm/xfrm_policy.c
++++ b/net/xfrm/xfrm_policy.c
+@@ -1280,13 +1280,17 @@ static void xfrm_hash_rebuild(struct wor
  
--	struct numa_group		*numa_group;
-+	/*
-+	 * This pointer is only modified for current in syscall and
-+	 * pagefault context (and for tasks being destroyed), so it can be read
-+	 * from any of the following contexts:
-+	 *  - RCU read-side critical section
-+	 *  - current->numa_group from everywhere
-+	 *  - task's runqueue locked, task not running
-+	 */
-+	struct numa_group __rcu		*numa_group;
+ 		hlist_for_each_entry_safe(policy, n,
+ 					  &net->xfrm.policy_inexact[dir],
+-					  bydst_inexact_list)
++					  bydst_inexact_list) {
++			hlist_del_rcu(&policy->bydst);
+ 			hlist_del_init(&policy->bydst_inexact_list);
++		}
  
- 	/*
- 	 * numa_faults is an array split into four regions:
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -1067,6 +1067,21 @@ struct numa_group {
- 	unsigned long faults[0];
- };
+ 		hmask = net->xfrm.policy_bydst[dir].hmask;
+ 		odst = net->xfrm.policy_bydst[dir].table;
+-		for (i = hmask; i >= 0; i--)
+-			INIT_HLIST_HEAD(odst + i);
++		for (i = hmask; i >= 0; i--) {
++			hlist_for_each_entry_safe(policy, n, odst + i, bydst)
++				hlist_del_rcu(&policy->bydst);
++		}
+ 		if ((dir & XFRM_POLICY_MASK) == XFRM_POLICY_OUT) {
+ 			/* dir out => dst = remote, src = local */
+ 			net->xfrm.policy_bydst[dir].dbits4 = rbits4;
+@@ -1315,8 +1319,6 @@ static void xfrm_hash_rebuild(struct wor
+ 		chain = policy_hash_bysel(net, &policy->selector,
+ 					  policy->family, dir);
  
-+/*
-+ * For functions that can be called in multiple contexts that permit reading
-+ * ->numa_group (see struct task_struct for locking rules).
-+ */
-+static struct numa_group *deref_task_numa_group(struct task_struct *p)
+-		hlist_del_rcu(&policy->bydst);
+-
+ 		if (!chain) {
+ 			void *p = xfrm_policy_inexact_insert(policy, dir, 0);
+ 
+--- a/tools/testing/selftests/net/xfrm_policy.sh
++++ b/tools/testing/selftests/net/xfrm_policy.sh
+@@ -257,6 +257,29 @@ check_exceptions()
+ 	return $lret
+ }
+ 
++check_hthresh_repeat()
 +{
-+	return rcu_dereference_check(p->numa_group, p == current ||
-+		(lockdep_is_held(&task_rq(p)->lock) && !READ_ONCE(p->on_cpu)));
++	local log=$1
++	i=0
++
++	for i in $(seq 1 10);do
++		ip -net ns1 xfrm policy update src e000:0001::0000 dst ff01::0014:0000:0001 dir in tmpl src :: dst :: proto esp mode tunnel priority 100 action allow || break
++		ip -net ns1 xfrm policy set hthresh6 0 28 || break
++
++		ip -net ns1 xfrm policy update src e000:0001::0000 dst ff01::01 dir in tmpl src :: dst :: proto esp mode tunnel priority 100 action allow || break
++		ip -net ns1 xfrm policy set hthresh6 0 28 || break
++	done
++
++	if [ $i -ne 10 ] ;then
++		echo "FAIL: $log" 1>&2
++		ret=1
++		return 1
++	fi
++
++	echo "PASS: $log"
++	return 0
 +}
 +
-+static struct numa_group *deref_curr_numa_group(struct task_struct *p)
-+{
-+	return rcu_dereference_protected(p->numa_group, p == current);
-+}
+ #check for needed privileges
+ if [ "$(id -u)" -ne 0 ];then
+ 	echo "SKIP: Need root privileges"
+@@ -404,7 +427,9 @@ for n in ns3 ns4;do
+ 	ip -net $n xfrm policy set hthresh4 32 32 hthresh6 128 128
+ 	sleep $((RANDOM%5))
+ done
+-check_exceptions "exceptions and block policies after hresh change to normal"
++check_exceptions "exceptions and block policies after htresh change to normal"
 +
- static inline unsigned long group_faults_priv(struct numa_group *ng);
- static inline unsigned long group_faults_shared(struct numa_group *ng);
++check_hthresh_repeat "policies with repeated htresh change"
  
-@@ -1110,10 +1125,12 @@ static unsigned int task_scan_start(stru
- {
- 	unsigned long smin = task_scan_min(p);
- 	unsigned long period = smin;
-+	struct numa_group *ng;
+ for i in 1 2 3 4;do ip netns del ns$i;done
  
- 	/* Scale the maximum scan period with the amount of shared memory. */
--	if (p->numa_group) {
--		struct numa_group *ng = p->numa_group;
-+	rcu_read_lock();
-+	ng = rcu_dereference(p->numa_group);
-+	if (ng) {
- 		unsigned long shared = group_faults_shared(ng);
- 		unsigned long private = group_faults_priv(ng);
- 
-@@ -1121,6 +1138,7 @@ static unsigned int task_scan_start(stru
- 		period *= shared + 1;
- 		period /= private + shared + 1;
- 	}
-+	rcu_read_unlock();
- 
- 	return max(smin, period);
- }
-@@ -1129,13 +1147,14 @@ static unsigned int task_scan_max(struct
- {
- 	unsigned long smin = task_scan_min(p);
- 	unsigned long smax;
-+	struct numa_group *ng;
- 
- 	/* Watch for min being lower than max due to floor calculations */
- 	smax = sysctl_numa_balancing_scan_period_max / task_nr_scan_windows(p);
- 
- 	/* Scale the maximum scan period with the amount of shared memory. */
--	if (p->numa_group) {
--		struct numa_group *ng = p->numa_group;
-+	ng = deref_curr_numa_group(p);
-+	if (ng) {
- 		unsigned long shared = group_faults_shared(ng);
- 		unsigned long private = group_faults_priv(ng);
- 		unsigned long period = smax;
-@@ -1167,7 +1186,7 @@ void init_numa_balancing(unsigned long c
- 	p->numa_scan_period		= sysctl_numa_balancing_scan_delay;
- 	p->numa_work.next		= &p->numa_work;
- 	p->numa_faults			= NULL;
--	p->numa_group			= NULL;
-+	RCU_INIT_POINTER(p->numa_group, NULL);
- 	p->last_task_numa_placement	= 0;
- 	p->last_sum_exec_runtime	= 0;
- 
-@@ -1214,7 +1233,16 @@ static void account_numa_dequeue(struct
- 
- pid_t task_numa_group_id(struct task_struct *p)
- {
--	return p->numa_group ? p->numa_group->gid : 0;
-+	struct numa_group *ng;
-+	pid_t gid = 0;
-+
-+	rcu_read_lock();
-+	ng = rcu_dereference(p->numa_group);
-+	if (ng)
-+		gid = ng->gid;
-+	rcu_read_unlock();
-+
-+	return gid;
- }
- 
- /*
-@@ -1239,11 +1267,13 @@ static inline unsigned long task_faults(
- 
- static inline unsigned long group_faults(struct task_struct *p, int nid)
- {
--	if (!p->numa_group)
-+	struct numa_group *ng = deref_task_numa_group(p);
-+
-+	if (!ng)
- 		return 0;
- 
--	return p->numa_group->faults[task_faults_idx(NUMA_MEM, nid, 0)] +
--		p->numa_group->faults[task_faults_idx(NUMA_MEM, nid, 1)];
-+	return ng->faults[task_faults_idx(NUMA_MEM, nid, 0)] +
-+		ng->faults[task_faults_idx(NUMA_MEM, nid, 1)];
- }
- 
- static inline unsigned long group_faults_cpu(struct numa_group *group, int nid)
-@@ -1381,12 +1411,13 @@ static inline unsigned long task_weight(
- static inline unsigned long group_weight(struct task_struct *p, int nid,
- 					 int dist)
- {
-+	struct numa_group *ng = deref_task_numa_group(p);
- 	unsigned long faults, total_faults;
- 
--	if (!p->numa_group)
-+	if (!ng)
- 		return 0;
- 
--	total_faults = p->numa_group->total_faults;
-+	total_faults = ng->total_faults;
- 
- 	if (!total_faults)
- 		return 0;
-@@ -1400,7 +1431,7 @@ static inline unsigned long group_weight
- bool should_numa_migrate_memory(struct task_struct *p, struct page * page,
- 				int src_nid, int dst_cpu)
- {
--	struct numa_group *ng = p->numa_group;
-+	struct numa_group *ng = deref_curr_numa_group(p);
- 	int dst_nid = cpu_to_node(dst_cpu);
- 	int last_cpupid, this_cpupid;
- 
-@@ -1583,13 +1614,14 @@ static bool load_too_imbalanced(long src
- static void task_numa_compare(struct task_numa_env *env,
- 			      long taskimp, long groupimp, bool maymove)
- {
-+	struct numa_group *cur_ng, *p_ng = deref_curr_numa_group(env->p);
- 	struct rq *dst_rq = cpu_rq(env->dst_cpu);
-+	long imp = p_ng ? groupimp : taskimp;
- 	struct task_struct *cur;
- 	long src_load, dst_load;
--	long load;
--	long imp = env->p->numa_group ? groupimp : taskimp;
--	long moveimp = imp;
- 	int dist = env->dist;
-+	long moveimp = imp;
-+	long load;
- 
- 	if (READ_ONCE(dst_rq->numa_migrate_on))
- 		return;
-@@ -1628,21 +1660,22 @@ static void task_numa_compare(struct tas
- 	 * If dst and source tasks are in the same NUMA group, or not
- 	 * in any group then look only at task weights.
- 	 */
--	if (cur->numa_group == env->p->numa_group) {
-+	cur_ng = rcu_dereference(cur->numa_group);
-+	if (cur_ng == p_ng) {
- 		imp = taskimp + task_weight(cur, env->src_nid, dist) -
- 		      task_weight(cur, env->dst_nid, dist);
- 		/*
- 		 * Add some hysteresis to prevent swapping the
- 		 * tasks within a group over tiny differences.
- 		 */
--		if (cur->numa_group)
-+		if (cur_ng)
- 			imp -= imp / 16;
- 	} else {
- 		/*
- 		 * Compare the group weights. If a task is all by itself
- 		 * (not part of a group), use the task weight instead.
- 		 */
--		if (cur->numa_group && env->p->numa_group)
-+		if (cur_ng && p_ng)
- 			imp += group_weight(cur, env->src_nid, dist) -
- 			       group_weight(cur, env->dst_nid, dist);
- 		else
-@@ -1740,11 +1773,12 @@ static int task_numa_migrate(struct task
- 		.best_imp = 0,
- 		.best_cpu = -1,
- 	};
-+	unsigned long taskweight, groupweight;
- 	struct sched_domain *sd;
-+	long taskimp, groupimp;
-+	struct numa_group *ng;
- 	struct rq *best_rq;
--	unsigned long taskweight, groupweight;
- 	int nid, ret, dist;
--	long taskimp, groupimp;
- 
- 	/*
- 	 * Pick the lowest SD_NUMA domain, as that would have the smallest
-@@ -1790,7 +1824,8 @@ static int task_numa_migrate(struct task
- 	 *   multiple NUMA nodes; in order to better consolidate the group,
- 	 *   we need to check other locations.
- 	 */
--	if (env.best_cpu == -1 || (p->numa_group && p->numa_group->active_nodes > 1)) {
-+	ng = deref_curr_numa_group(p);
-+	if (env.best_cpu == -1 || (ng && ng->active_nodes > 1)) {
- 		for_each_online_node(nid) {
- 			if (nid == env.src_nid || nid == p->numa_preferred_nid)
- 				continue;
-@@ -1823,7 +1858,7 @@ static int task_numa_migrate(struct task
- 	 * A task that migrated to a second choice node will be better off
- 	 * trying for a better one later. Do not set the preferred node here.
- 	 */
--	if (p->numa_group) {
-+	if (ng) {
- 		if (env.best_cpu == -1)
- 			nid = env.src_nid;
- 		else
-@@ -2118,6 +2153,7 @@ static void task_numa_placement(struct t
- 	unsigned long total_faults;
- 	u64 runtime, period;
- 	spinlock_t *group_lock = NULL;
-+	struct numa_group *ng;
- 
- 	/*
- 	 * The p->mm->numa_scan_seq field gets updated without
-@@ -2135,8 +2171,9 @@ static void task_numa_placement(struct t
- 	runtime = numa_get_avg_runtime(p, &period);
- 
- 	/* If the task is part of a group prevent parallel updates to group stats */
--	if (p->numa_group) {
--		group_lock = &p->numa_group->lock;
-+	ng = deref_curr_numa_group(p);
-+	if (ng) {
-+		group_lock = &ng->lock;
- 		spin_lock_irq(group_lock);
- 	}
- 
-@@ -2177,7 +2214,7 @@ static void task_numa_placement(struct t
- 			p->numa_faults[cpu_idx] += f_diff;
- 			faults += p->numa_faults[mem_idx];
- 			p->total_numa_faults += diff;
--			if (p->numa_group) {
-+			if (ng) {
- 				/*
- 				 * safe because we can only change our own group
- 				 *
-@@ -2185,14 +2222,14 @@ static void task_numa_placement(struct t
- 				 * nid and priv in a specific region because it
- 				 * is at the beginning of the numa_faults array.
- 				 */
--				p->numa_group->faults[mem_idx] += diff;
--				p->numa_group->faults_cpu[mem_idx] += f_diff;
--				p->numa_group->total_faults += diff;
--				group_faults += p->numa_group->faults[mem_idx];
-+				ng->faults[mem_idx] += diff;
-+				ng->faults_cpu[mem_idx] += f_diff;
-+				ng->total_faults += diff;
-+				group_faults += ng->faults[mem_idx];
- 			}
- 		}
- 
--		if (!p->numa_group) {
-+		if (!ng) {
- 			if (faults > max_faults) {
- 				max_faults = faults;
- 				max_nid = nid;
-@@ -2203,8 +2240,8 @@ static void task_numa_placement(struct t
- 		}
- 	}
- 
--	if (p->numa_group) {
--		numa_group_count_active_nodes(p->numa_group);
-+	if (ng) {
-+		numa_group_count_active_nodes(ng);
- 		spin_unlock_irq(group_lock);
- 		max_nid = preferred_group_nid(p, max_nid);
- 	}
-@@ -2238,7 +2275,7 @@ static void task_numa_group(struct task_
- 	int cpu = cpupid_to_cpu(cpupid);
- 	int i;
- 
--	if (unlikely(!p->numa_group)) {
-+	if (unlikely(!deref_curr_numa_group(p))) {
- 		unsigned int size = sizeof(struct numa_group) +
- 				    4*nr_node_ids*sizeof(unsigned long);
- 
-@@ -2274,7 +2311,7 @@ static void task_numa_group(struct task_
- 	if (!grp)
- 		goto no_join;
- 
--	my_grp = p->numa_group;
-+	my_grp = deref_curr_numa_group(p);
- 	if (grp == my_grp)
- 		goto no_join;
- 
-@@ -2345,7 +2382,8 @@ no_join:
-  */
- void task_numa_free(struct task_struct *p, bool final)
- {
--	struct numa_group *grp = p->numa_group;
-+	/* safe: p either is current or is being freed by current */
-+	struct numa_group *grp = rcu_dereference_raw(p->numa_group);
- 	unsigned long *numa_faults = p->numa_faults;
- 	unsigned long flags;
- 	int i;
-@@ -2425,7 +2463,7 @@ void task_numa_fault(int last_cpupid, in
- 	 * actively using should be counted as local. This allows the
- 	 * scan rate to slow down when a workload has settled down.
- 	 */
--	ng = p->numa_group;
-+	ng = deref_curr_numa_group(p);
- 	if (!priv && !local && ng && ng->active_nodes > 1 &&
- 				numa_is_active_node(cpu_node, ng) &&
- 				numa_is_active_node(mem_node, ng))
-@@ -10724,18 +10762,22 @@ void show_numa_stats(struct task_struct
- {
- 	int node;
- 	unsigned long tsf = 0, tpf = 0, gsf = 0, gpf = 0;
-+	struct numa_group *ng;
- 
-+	rcu_read_lock();
-+	ng = rcu_dereference(p->numa_group);
- 	for_each_online_node(node) {
- 		if (p->numa_faults) {
- 			tsf = p->numa_faults[task_faults_idx(NUMA_MEM, node, 0)];
- 			tpf = p->numa_faults[task_faults_idx(NUMA_MEM, node, 1)];
- 		}
--		if (p->numa_group) {
--			gsf = p->numa_group->faults[task_faults_idx(NUMA_MEM, node, 0)],
--			gpf = p->numa_group->faults[task_faults_idx(NUMA_MEM, node, 1)];
-+		if (ng) {
-+			gsf = ng->faults[task_faults_idx(NUMA_MEM, node, 0)],
-+			gpf = ng->faults[task_faults_idx(NUMA_MEM, node, 1)];
- 		}
- 		print_numa_stats(m, node, tsf, tpf, gsf, gpf);
- 	}
-+	rcu_read_unlock();
- }
- #endif /* CONFIG_NUMA_BALANCING */
- #endif /* CONFIG_SCHED_DEBUG */
 
 
