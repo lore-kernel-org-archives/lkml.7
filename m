@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C596AC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2C8C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F0F920665
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:53:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D85DA206A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:53:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739587;
-	bh=gRW/TUv2wOdygcATenJ4M9ZSJJ7BWq/OFn9IQuJUfq4=;
+	s=default; t=1564739591;
+	bh=wQTbVWD0hWehFQRGaYAw0lN9RAc85xx/ByvIBOS072w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rzm2JeF3p1OS0hyg9DWH9EbgixBlBzU7vBZ6OHPaOxjIJ6h0gUeWpgZJTf2eUYfZg
-	 eE3JCGj9RqcHIPK/uDRdRREEMYwGfABsfmzoF67VbhX2Dl32t9LJa6ED9GHlSIRhlp
-	 DGy0ltnn06Jurv3O/sPCLkFS7i5YxSbkxj6VxSrA=
+	b=Z2rP3490LpqfzAynf0pKZzA1DRDKeH1WOwZIPt2zZxD48VaBCBa9fSmBRUFRyKkwZ
+	 f4AY066Sh8qiOUE/kN+GHnI2ZjXUK+KNtYa6BNsiwS9l5bKouoCWZIy1EQ5rF1arHP
+	 lkprilfIpl/7PdOmFEegBiKSJB91DYgijtQnsZug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406149AbfHBJxG (ORCPT
+        id S2406162AbfHBJxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:53:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58946 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:53:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406136AbfHBJxE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:53:04 -0400
+        id S2406136AbfHBJxI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:53:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D71092064A;
-        Fri,  2 Aug 2019 09:53:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F9642064A;
+        Fri,  2 Aug 2019 09:53:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739583;
-        bh=gRW/TUv2wOdygcATenJ4M9ZSJJ7BWq/OFn9IQuJUfq4=;
+        s=default; t=1564739588;
+        bh=wQTbVWD0hWehFQRGaYAw0lN9RAc85xx/ByvIBOS072w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AvuwEXJoHRaQwliR0Dqs0TV0kM5xsDlkQSjPJNZIVz0Ah8f7iDnqMVKm2zvSm9T0U
-         6GwrliQMjgRW1LG9jrxx/yQuxjmjDuynIPcMATKQYYVw1b5MfMCrKL9ShKR8tegWXE
-         2IhdyLe+wF6uwtmC1LK5zBKXimH+tzosOEFKYnXc=
+        b=jD189B9n/v0qLA8sT86VMSfxMuWcBdQW8vWevvz834Ey6WfV9E/UAosDt2SBQ2st8
+         2ab9qxJqDHuiZ+r+rNXp/CEtoNQWE3JosSP+/+/sk7WxkN8HAFuMqHkyXEvLKAySb5
+         V85hMY3p3QlINMaYa7aWJ9F0zS4EnD6SvWkCrfEc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 211/223] ipv6: check sk sk_type and protocol early in ip_mroute_set/getsockopt
-Date:   Fri,  2 Aug 2019 11:37:16 +0200
-Message-Id: <20190802092250.528687530@linuxfoundation.org>
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.9 221/223] sched/fair: Dont free p->numa_faults with concurrent readers
+Date:   Fri,  2 Aug 2019 11:37:26 +0200
+Message-Id: <20190802092250.912173369@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -60,62 +64,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 99253eb750fda6a644d5188fb26c43bad8d5a745 ]
+From: Jann Horn <jannh@google.com>
 
-Commit 5e1859fbcc3c ("ipv4: ipmr: various fixes and cleanups") fixed
-the issue for ipv4 ipmr:
+commit 16d51a590a8ce3befb1308e0e7ab77f3b661af33 upstream.
 
-  ip_mroute_setsockopt() & ip_mroute_getsockopt() should not
-  access/set raw_sk(sk)->ipmr_table before making sure the socket
-  is a raw socket, and protocol is IGMP
+When going through execve(), zero out the NUMA fault statistics instead of
+freeing them.
 
-The same fix should be done for ipv6 ipmr as well.
+During execve, the task is reachable through procfs and the scheduler. A
+concurrent /proc/*/sched reader can read data from a freed ->numa_faults
+allocation (confirmed by KASAN) and write it back to userspace.
+I believe that it would also be possible for a use-after-free read to occur
+through a race between a NUMA fault and execve(): task_numa_fault() can
+lead to task_numa_compare(), which invokes task_weight() on the currently
+running task of a different CPU.
 
-This patch can fix the panic caused by overwriting the same offset
-as ipmr_table as in raw_sk(sk) when accessing other type's socket
-by ip_mroute_setsockopt().
+Another way to fix this would be to make ->numa_faults RCU-managed or add
+extra locking, but it seems easier to wipe the NUMA fault statistics on
+execve.
 
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will@kernel.org>
+Fixes: 82727018b0d3 ("sched/numa: Call task_numa_free() from do_execve()")
+Link: https://lkml.kernel.org/r/20190716152047.14424-1-jannh@google.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv6/ip6mr.c |   11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
 
---- a/net/ipv6/ip6mr.c
-+++ b/net/ipv6/ip6mr.c
-@@ -1668,6 +1668,10 @@ int ip6_mroute_setsockopt(struct sock *s
- 	struct net *net = sock_net(sk);
- 	struct mr6_table *mrt;
+---
+ fs/exec.c             |    2 +-
+ include/linux/sched.h |    4 ++--
+ kernel/fork.c         |    2 +-
+ kernel/sched/fair.c   |   24 ++++++++++++++++++++----
+ 4 files changed, 24 insertions(+), 8 deletions(-)
+
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1790,7 +1790,7 @@ static int do_execveat_common(int fd, st
+ 	current->fs->in_exec = 0;
+ 	current->in_execve = 0;
+ 	acct_update_integrals(current);
+-	task_numa_free(current);
++	task_numa_free(current, false);
+ 	free_bprm(bprm);
+ 	kfree(pathbuf);
+ 	putname(filename);
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -2044,7 +2044,7 @@ static inline bool in_vfork(struct task_
+ extern void task_numa_fault(int last_node, int node, int pages, int flags);
+ extern pid_t task_numa_group_id(struct task_struct *p);
+ extern void set_numabalancing_state(bool enabled);
+-extern void task_numa_free(struct task_struct *p);
++extern void task_numa_free(struct task_struct *p, bool final);
+ extern bool should_numa_migrate_memory(struct task_struct *p, struct page *page,
+ 					int src_nid, int dst_cpu);
+ #else
+@@ -2059,7 +2059,7 @@ static inline pid_t task_numa_group_id(s
+ static inline void set_numabalancing_state(bool enabled)
+ {
+ }
+-static inline void task_numa_free(struct task_struct *p)
++static inline void task_numa_free(struct task_struct *p, bool final)
+ {
+ }
+ static inline bool should_numa_migrate_memory(struct task_struct *p,
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -389,7 +389,7 @@ void __put_task_struct(struct task_struc
+ 	WARN_ON(tsk == current);
  
-+	if (sk->sk_type != SOCK_RAW ||
-+	    inet_sk(sk)->inet_num != IPPROTO_ICMPV6)
-+		return -EOPNOTSUPP;
+ 	cgroup_free(tsk);
+-	task_numa_free(tsk);
++	task_numa_free(tsk, true);
+ 	security_task_free(tsk);
+ 	exit_creds(tsk);
+ 	delayacct_tsk_free(tsk);
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -2257,13 +2257,23 @@ no_join:
+ 	return;
+ }
+ 
+-void task_numa_free(struct task_struct *p)
++/*
++ * Get rid of NUMA staticstics associated with a task (either current or dead).
++ * If @final is set, the task is dead and has reached refcount zero, so we can
++ * safely free all relevant data structures. Otherwise, there might be
++ * concurrent reads from places like load balancing and procfs, and we should
++ * reset the data back to default state without freeing ->numa_faults.
++ */
++void task_numa_free(struct task_struct *p, bool final)
+ {
+ 	struct numa_group *grp = p->numa_group;
+-	void *numa_faults = p->numa_faults;
++	unsigned long *numa_faults = p->numa_faults;
+ 	unsigned long flags;
+ 	int i;
+ 
++	if (!numa_faults)
++		return;
 +
- 	mrt = ip6mr_get_table(net, raw6_sk(sk)->ip6mr_table ? : RT6_TABLE_DFLT);
- 	if (!mrt)
- 		return -ENOENT;
-@@ -1679,9 +1683,6 @@ int ip6_mroute_setsockopt(struct sock *s
+ 	if (grp) {
+ 		spin_lock_irqsave(&grp->lock, flags);
+ 		for (i = 0; i < NR_NUMA_HINT_FAULT_STATS * nr_node_ids; i++)
+@@ -2276,8 +2286,14 @@ void task_numa_free(struct task_struct *
+ 		put_numa_group(grp);
+ 	}
  
- 	switch (optname) {
- 	case MRT6_INIT:
--		if (sk->sk_type != SOCK_RAW ||
--		    inet_sk(sk)->inet_num != IPPROTO_ICMPV6)
--			return -EOPNOTSUPP;
- 		if (optlen < sizeof(int))
- 			return -EINVAL;
+-	p->numa_faults = NULL;
+-	kfree(numa_faults);
++	if (final) {
++		p->numa_faults = NULL;
++		kfree(numa_faults);
++	} else {
++		p->total_numa_faults = 0;
++		for (i = 0; i < NR_NUMA_HINT_FAULT_STATS * nr_node_ids; i++)
++			numa_faults[i] = 0;
++	}
+ }
  
-@@ -1818,6 +1819,10 @@ int ip6_mroute_getsockopt(struct sock *s
- 	struct net *net = sock_net(sk);
- 	struct mr6_table *mrt;
- 
-+	if (sk->sk_type != SOCK_RAW ||
-+	    inet_sk(sk)->inet_num != IPPROTO_ICMPV6)
-+		return -EOPNOTSUPP;
-+
- 	mrt = ip6mr_get_table(net, raw6_sk(sk)->ip6mr_table ? : RT6_TABLE_DFLT);
- 	if (!mrt)
- 		return -ENOENT;
+ /*
 
 
