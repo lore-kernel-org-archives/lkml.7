@@ -2,250 +2,136 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A263C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 818B7C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE45F20657
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:55:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 600F4216C8
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:55:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405527AbfHBMz1 (ORCPT
+        id S2390337AbfHBMzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 08:55:27 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:48040 "EHLO huawei.com"
+        Fri, 2 Aug 2019 08:55:33 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40050 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404801AbfHBMyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 08:54:41 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id CBEF7DEA75231DA92A06;
-        Fri,  2 Aug 2019 20:54:37 +0800 (CST)
-Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
- (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 2 Aug 2019
- 20:54:31 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Theodore Ts'o <tytso@mit.edu>, "Pavel Machek" <pavel@denx.de>,
-        David Sterba <dsterba@suse.cz>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        "Jaegeuk Kim" <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-CC:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v6 18/24] erofs: introduce pagevec for decompression subsystem
-Date:   Fri, 2 Aug 2019 20:53:41 +0800
-Message-ID: <20190802125347.166018-19-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190802125347.166018-1-gaoxiang25@huawei.com>
-References: <20190802125347.166018-1-gaoxiang25@huawei.com>
+        id S2404801AbfHBMz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 08:55:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C4AA9AD85;
+        Fri,  2 Aug 2019 12:55:27 +0000 (UTC)
+Date:   Fri, 2 Aug 2019 14:55:26 +0200
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Linux I2C <linux-i2c@vger.kernel.org>
+Cc:     Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org,
+        Andrew Cooks <acooks@rationali.st>, linux-acpi@vger.kernel.org,
+        platypus-sw@opengear.com, "Tobin C . Harding" <me@tobin.cc>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Will Wagner <willw@carallon.com>
+Subject: [PATCH v5 3/3] i2c: piix4: Add ACPI support
+Message-ID: <20190802145526.6edba0a6@endymion>
+In-Reply-To: <20190802145109.38dd4045@endymion>
+References: <20190802145109.38dd4045@endymion>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.140.130.215]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For each physical cluster, there is a straight-forward
-way of allocating a fixed or variable-sized array to
-record the corresponding file pages for its decompression
-if we decide to decompress these pages asynchronously
-(eg. read-ahead case), however it will take variable-sized
-on-heap memory compared with traditional uncompressed
-filesystems.
+Enable the i2c-piix4 SMBus controller driver to enumerate I2C slave
+devices using ACPI. It builds on the related I2C mux device work
+in commit 8eb5c87a92c0 ("i2c: add ACPI support for I2C mux ports")
 
-This patch introduces a pagevec solution to reuse some
-allocated file page in the time-sharing approach to store
-parts of the array itself in order to minimize the extra
-memory overhead, thus only a small-sized constant array
-used for booting the whole array itself up will be needed.
+In the i2c-piix4 driver the adapters are enumerated as:
+ Main SMBus adapter Port 0, Port 2, ..., aux port (i.e., ASF adapter)
 
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+However, in the AMD BKDG documentation[1], the implied order of ports is:
+ Main SMBus adapter Port 0, ASF adapter, Port 2, Port 3, ...
+
+This ordering difference is unfortunate. We assume that ACPI
+developers will use the AMD documentation ordering, so we have to
+pass an extra parameter to piix4_add_adapter().
+
+[1] 52740 BIOS and Kernel Developer's Guide (BKDG) for AMD Family 16h
+Models 30h-3Fh Processors
+
+Based on earlier work by Andrew Cooks.
+
+Reported-by: Andrew Cooks <andrew.cooks@opengear.com>
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
 ---
- fs/erofs/zpvec.h | 159 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 159 insertions(+)
- create mode 100644 fs/erofs/zpvec.h
+Changes since v4:
+ * Fix code alignment (reported by Tobin C. Harding)
+ * Adjust to changes in previous patch
+ * Use the SMBus numbering documented by AMD
 
-diff --git a/fs/erofs/zpvec.h b/fs/erofs/zpvec.h
-new file mode 100644
-index 000000000000..bb7689e67836
---- /dev/null
-+++ b/fs/erofs/zpvec.h
-@@ -0,0 +1,159 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * linux/fs/erofs/zpvec.h
-+ *
-+ * Copyright (C) 2018 HUAWEI, Inc.
-+ *             http://www.huawei.com/
-+ * Created by Gao Xiang <gaoxiang25@huawei.com>
-+ */
-+#ifndef __EROFS_FS_ZPVEC_H
-+#define __EROFS_FS_ZPVEC_H
-+
-+#include "tagptr.h"
-+
-+/* page type in pagevec for decompress subsystem */
-+enum z_erofs_page_type {
-+	/* including Z_EROFS_VLE_PAGE_TAIL_EXCLUSIVE */
-+	Z_EROFS_PAGE_TYPE_EXCLUSIVE,
-+
-+	Z_EROFS_VLE_PAGE_TYPE_TAIL_SHARED,
-+
-+	Z_EROFS_VLE_PAGE_TYPE_HEAD,
-+	Z_EROFS_VLE_PAGE_TYPE_MAX
-+};
-+
-+extern void __compiletime_error("Z_EROFS_PAGE_TYPE_EXCLUSIVE != 0")
-+	__bad_page_type_exclusive(void);
-+
-+/* pagevec tagged pointer */
-+typedef tagptr2_t	erofs_vtptr_t;
-+
-+/* pagevec collector */
-+struct z_erofs_pagevec_ctor {
-+	struct page *curr, *next;
-+	erofs_vtptr_t *pages;
-+
-+	unsigned int nr, index;
-+};
-+
-+static inline void z_erofs_pagevec_ctor_exit(struct z_erofs_pagevec_ctor *ctor,
-+					     bool atomic)
-+{
-+	if (!ctor->curr)
-+		return;
-+
-+	if (atomic)
-+		kunmap_atomic(ctor->pages);
-+	else
-+		kunmap(ctor->curr);
-+}
-+
-+static inline struct page *
-+z_erofs_pagevec_ctor_next_page(struct z_erofs_pagevec_ctor *ctor,
-+			       unsigned int nr)
-+{
-+	unsigned int index;
-+
-+	/* keep away from occupied pages */
-+	if (ctor->next)
-+		return ctor->next;
-+
-+	for (index = 0; index < nr; ++index) {
-+		const erofs_vtptr_t t = ctor->pages[index];
-+		const unsigned int tags = tagptr_unfold_tags(t);
-+
-+		if (tags == Z_EROFS_PAGE_TYPE_EXCLUSIVE)
-+			return tagptr_unfold_ptr(t);
-+	}
-+	DBG_BUGON(nr >= ctor->nr);
-+	return NULL;
-+}
-+
-+static inline void
-+z_erofs_pagevec_ctor_pagedown(struct z_erofs_pagevec_ctor *ctor,
-+			      bool atomic)
-+{
-+	struct page *next = z_erofs_pagevec_ctor_next_page(ctor, ctor->nr);
-+
-+	z_erofs_pagevec_ctor_exit(ctor, atomic);
-+
-+	ctor->curr = next;
-+	ctor->next = NULL;
-+	ctor->pages = atomic ?
-+		kmap_atomic(ctor->curr) : kmap(ctor->curr);
-+
-+	ctor->nr = PAGE_SIZE / sizeof(struct page *);
-+	ctor->index = 0;
-+}
-+
-+static inline void z_erofs_pagevec_ctor_init(struct z_erofs_pagevec_ctor *ctor,
-+					     unsigned int nr,
-+					     erofs_vtptr_t *pages,
-+					     unsigned int i)
-+{
-+	ctor->nr = nr;
-+	ctor->curr = ctor->next = NULL;
-+	ctor->pages = pages;
-+
-+	if (i >= nr) {
-+		i -= nr;
-+		z_erofs_pagevec_ctor_pagedown(ctor, false);
-+		while (i > ctor->nr) {
-+			i -= ctor->nr;
-+			z_erofs_pagevec_ctor_pagedown(ctor, false);
-+		}
-+	}
-+	ctor->next = z_erofs_pagevec_ctor_next_page(ctor, i);
-+	ctor->index = i;
-+}
-+
-+static inline bool z_erofs_pagevec_enqueue(struct z_erofs_pagevec_ctor *ctor,
-+					   struct page *page,
-+					   enum z_erofs_page_type type,
-+					   bool *occupied)
-+{
-+	*occupied = false;
-+	if (unlikely(!ctor->next && type))
-+		if (ctor->index + 1 == ctor->nr)
-+			return false;
-+
-+	if (unlikely(ctor->index >= ctor->nr))
-+		z_erofs_pagevec_ctor_pagedown(ctor, false);
-+
-+	/* exclusive page type must be 0 */
-+	if (Z_EROFS_PAGE_TYPE_EXCLUSIVE != (uintptr_t)NULL)
-+		__bad_page_type_exclusive();
-+
-+	/* should remind that collector->next never equal to 1, 2 */
-+	if (type == (uintptr_t)ctor->next) {
-+		ctor->next = page;
-+		*occupied = true;
-+	}
-+	ctor->pages[ctor->index++] = tagptr_fold(erofs_vtptr_t, page, type);
-+	return true;
-+}
-+
-+static inline struct page *
-+z_erofs_pagevec_dequeue(struct z_erofs_pagevec_ctor *ctor,
-+			enum z_erofs_page_type *type)
-+{
-+	erofs_vtptr_t t;
-+
-+	if (unlikely(ctor->index >= ctor->nr)) {
-+		DBG_BUGON(!ctor->next);
-+		z_erofs_pagevec_ctor_pagedown(ctor, true);
+ drivers/i2c/busses/i2c-piix4.c |   18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
+
+--- linux-5.2.orig/drivers/i2c/busses/i2c-piix4.c	2019-08-02 14:26:02.197346075 +0200
++++ linux-5.2/drivers/i2c/busses/i2c-piix4.c	2019-08-02 14:40:40.990505068 +0200
+@@ -811,7 +811,8 @@ static int piix4_adapter_count;
+ 
+ static int piix4_add_adapter(struct pci_dev *dev, unsigned short smba,
+ 			     bool sb800_main, u8 port, bool notify_imc,
+-			     const char *name, struct i2c_adapter **padap)
++			     u8 hw_port_nr, const char *name,
++			     struct i2c_adapter **padap)
+ {
+ 	struct i2c_adapter *adap;
+ 	struct i2c_piix4_adapdata *adapdata;
+@@ -843,6 +844,12 @@ static int piix4_add_adapter(struct pci_
+ 	/* set up the sysfs linkage to our parent device */
+ 	adap->dev.parent = &dev->dev;
+ 
++	if (has_acpi_companion(&dev->dev)) {
++		acpi_preset_companion(&adap->dev,
++				      ACPI_COMPANION(&dev->dev),
++				      hw_port_nr);
 +	}
 +
-+	t = ctor->pages[ctor->index];
+ 	snprintf(adap->name, sizeof(adap->name),
+ 		"SMBus PIIX4 adapter%s at %04x", name, smba);
+ 
+@@ -876,7 +883,10 @@ static int piix4_add_adapters_sb800(stru
+ 	}
+ 
+ 	for (port = 0; port < piix4_adapter_count; port++) {
++		u8 hw_port_nr = port == 0 ? 0 : port + 1;
 +
-+	*type = tagptr_unfold_tags(t);
-+
-+	/* should remind that collector->next never equal to 1, 2 */
-+	if (*type == (uintptr_t)ctor->next)
-+		ctor->next = tagptr_unfold_ptr(t);
-+
-+	ctor->pages[ctor->index++] = tagptr_fold(erofs_vtptr_t, NULL, 0);
-+	return tagptr_unfold_ptr(t);
-+}
-+#endif
-+
+ 		retval = piix4_add_adapter(dev, smba, true, port, notify_imc,
++					   hw_port_nr,
+ 					   piix4_main_port_names_sb800[port],
+ 					   &piix4_main_adapters[port]);
+ 		if (retval < 0)
+@@ -947,8 +957,8 @@ static int piix4_probe(struct pci_dev *d
+ 			return retval;
+ 
+ 		/* Try to register main SMBus adapter, give up if we can't */
+-		retval = piix4_add_adapter(dev, retval, false, 0, false, "",
+-					   &piix4_main_adapters[0]);
++		retval = piix4_add_adapter(dev, retval, false, 0, false, 0,
++					   "", &piix4_main_adapters[0]);
+ 		if (retval < 0)
+ 			return retval;
+ 	}
+@@ -974,7 +984,7 @@ static int piix4_probe(struct pci_dev *d
+ 	if (retval > 0) {
+ 		/* Try to add the aux adapter if it exists,
+ 		 * piix4_add_adapter will clean up if this fails */
+-		piix4_add_adapter(dev, retval, false, 0, false,
++		piix4_add_adapter(dev, retval, false, 0, false, 1,
+ 				  is_sb800 ? piix4_aux_port_name_sb800 : "",
+ 				  &piix4_aux_adapter);
+ 	}
+
 -- 
-2.17.1
-
+Jean Delvare
+SUSE L3 Support
