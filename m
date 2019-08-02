@@ -2,132 +2,479 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CABFC19759
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 03:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF4FC32753
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 03:25:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5587C20679
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 03:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F7DC20679
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 03:25:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="KbKIog0d"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LsD/Qt4+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729641AbfHBDZC (ORCPT
+        id S1729765AbfHBDZb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 23:25:02 -0400
-Received: from mail-eopbgr60049.outbound.protection.outlook.com ([40.107.6.49]:14581
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729012AbfHBDZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 23:25:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=c4YCgF9np39tsq1fvfuQH25gkKSty8kwG5Uy8HgYqgxTIMoPm9IPhM0SxffyiWbj25QPKuXmweX3Q8WzYoZCaGanT7yYCjry/wdZCIHz6PCHFMJklh7isZvKhxVLJ+KbQ52GSOXT+rCdjN2acxz5ctPxxm3E4TJGuFKt/qCrw0xYbhnO2GC/lkl3e+UsLyclmR1N4VedSSbBzOIFUqZ9vWL7q6MknaOQQ4dSRXMbJX2Z0qGcUnFvLmSjzSTvbnKBBKzXAr7NrDljpkc206rsq85gCjzRbef6JCg95Si+0I5hPQcRFGYwyfXJfkUZ+MR7OkLjj8QnPtPsogPJkvYmZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oiaA9NV6JrFsDl50HPScvL6VtJJVNrWzH34JU4CcAqo=;
- b=WSIsPEPXPbN5dWNMFTz3zCqd5yZD4nrzB/LSJpvCnLsNwPaBncuQLp7wnI5Se0H/2tWX5lwBSub+uds3VlvuwGLNskZpCaYmwUmG4Kt5W/P2oU3u/k9y6ihhaTOiiVU+ZTe4EESdw4sYqGcxu+FUst9tq+OD/ZLCR7sgvPmTRd0i72EQlU6oRMm9HqFUiK1wy9/r2HA/swV3Eldki4EwuSNmWTtIFEAF9EQiRtvRGssjIRmIbrySb2iMIELCndw4ur96ZdBnJmbXsxhl/jvtwx47sG0+ruE+XrKnkb2bDb735pwvqG/pXj2/LhpycmIZCqNyCeCyEWmDlyv23imW7w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
- header.d=nxp.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oiaA9NV6JrFsDl50HPScvL6VtJJVNrWzH34JU4CcAqo=;
- b=KbKIog0dXBelPoMathNmLOZDk+mP0qBghJT7BwVEMRJYDfwpSzbLHF+mLomRE1Kz2SalzpjQ/XjrBYFoMgiSbSheimwzYod81MADmfHusN9o0BmsdDy1QS0O2NXSGZ6Xt27C7mea2+WIPzSOL8NlnCexCAnIBxBnqCpHb7MXJpA=
-Received: from AM0PR0402MB3570.eurprd04.prod.outlook.com (52.133.46.11) by
- AM0PR0402MB3810.eurprd04.prod.outlook.com (52.133.39.26) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.14; Fri, 2 Aug 2019 03:24:16 +0000
-Received: from AM0PR0402MB3570.eurprd04.prod.outlook.com
- ([fe80::19ee:c210:d6cd:561f]) by AM0PR0402MB3570.eurprd04.prod.outlook.com
- ([fe80::19ee:c210:d6cd:561f%6]) with mapi id 15.20.2136.010; Fri, 2 Aug 2019
- 03:24:16 +0000
-From:   Richard Zhu <hongxing.zhu@nxp.com>
-To:     Daniel Baluta <daniel.baluta@gmail.com>
-CC:     "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [EXT] Re: [PATCH v3] mailbox: imx: add support for imx v1 mu
-Thread-Topic: [EXT] Re: [PATCH v3] mailbox: imx: add support for imx v1 mu
-Thread-Index: AQHVR4BTcg+IJWjJWkmRXLNrIcnNiKbmYQaAgADM5XA=
-Date:   Fri, 2 Aug 2019 03:24:16 +0000
-Message-ID: <AM0PR0402MB3570B875F7104A31BB2E3C518CD90@AM0PR0402MB3570.eurprd04.prod.outlook.com>
-References: <1564563107-23736-1-git-send-email-hongxing.zhu@nxp.com>
- <CAEnQRZCz=fu7-2PmH+RGgnRgzeDCeR+A+wPbhjq2wQ2CZ3oQYg@mail.gmail.com>
-In-Reply-To: <CAEnQRZCz=fu7-2PmH+RGgnRgzeDCeR+A+wPbhjq2wQ2CZ3oQYg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=hongxing.zhu@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d1d42969-0ca2-4feb-3f1e-08d716f8e63c
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR0402MB3810;
-x-ms-traffictypediagnostic: AM0PR0402MB3810:
-x-microsoft-antispam-prvs: <AM0PR0402MB3810023B34B6EFC188D269198CD90@AM0PR0402MB3810.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 011787B9DD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(39860400002)(346002)(376002)(396003)(51914003)(13464003)(189003)(199004)(4326008)(3846002)(76116006)(66446008)(64756008)(66556008)(66476007)(66946007)(486006)(476003)(25786009)(5024004)(2906002)(102836004)(86362001)(66066001)(6916009)(256004)(14444005)(11346002)(33656002)(6506007)(446003)(15650500001)(52536014)(55016002)(186003)(54906003)(478600001)(68736007)(76176011)(99286004)(6246003)(7696005)(53546011)(74316002)(9686003)(71200400001)(71190400001)(5660300002)(81156014)(81166006)(8936002)(316002)(305945005)(7736002)(8676002)(6436002)(53936002)(229853002)(26005)(6116002)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR0402MB3810;H:AM0PR0402MB3570.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: FU0hcxrNhnbbpuQgvFQMxZIr+EdNC/W4ZRBfZzdaqFfdSaE6KWYVmzUq5y8CmnrCrNsjkg74WRhDjKq+fy27VMuck+bmBXh0EgdT4Jm6BWfMTJjdm9/qKXrw1gp+xug7e1xpFLZqn6igaiZ4Ubp/eXmYSS8qwPOIH7lipRg/p7o5ygfSjLfSFfdxvC/wLvi/1neMrhE9DIx08I6AAvyQ46UgNZTkZyD/Oy3UuJgb28BQj84cYnfXltifjfnh/txIndC4LTGpPdqma6ttyJcWsx5uCe80Wewp/kJ18RdUxEqfqjTYBlaXb0c3MBUPnn8S2NWraqmvX+7CBCwmIz7lpRENKykNf+F6tS5tHVuMfQTPr8dXiMVqhEADfjwDP6YFirhJrUYpixSYbvdQiwT3bPVJ8N07jk2AgZJdmSGQR2U=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d1d42969-0ca2-4feb-3f1e-08d716f8e63c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Aug 2019 03:24:16.5933
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: hongxing.zhu@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0402MB3810
+        Thu, 1 Aug 2019 23:25:31 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:42568 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729012AbfHBDZa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 23:25:30 -0400
+Received: by mail-pl1-f194.google.com with SMTP id ay6so33118022plb.9;
+        Thu, 01 Aug 2019 20:25:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=UYEB0BQIRVXD1XNZ3rz266XuYRNpewSe3Y3JR+XnCb0=;
+        b=LsD/Qt4+9BLTxeZuEdDmcOdlHqRKlXhdAUYcO8Kwzaffz4hBGG6OyHKJSO8p1e0nqy
+         fJYiWg3lIBYlE/zRzM+y9jFzEzs/BF7Fv967/bpC0heUlEFNK7QOIPsQ4DnB0UqpPgao
+         k3BQlOaE8K2mEq3Ob6cy7glPQkOQGU34v/9funRor6wQZOXtGc8hirSROBQ2D3xsTvMp
+         1EgGJujeP+jTs1it4L1MyQYNx4ZtECjTe4ddVK+fxjc3hVLk+p3WRqG4v4w4c81V/iIB
+         0o2OB+U9PJDl2i9i5UTSI+fqrn4h1oourcJqRJBGuLxjPZUAf7+I0KuTd+MtGDBAw49g
+         sAqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=UYEB0BQIRVXD1XNZ3rz266XuYRNpewSe3Y3JR+XnCb0=;
+        b=qlPGyPbYQDXAk7NJ1RG54ENm8pcZygT5xXdNxZtL3H/8m3wuBsO7jdOMYmWi4pnLZi
+         WxKsAoAka91Pvp5Jd7ot6BvFmjzU125ubNRJ/RaVEEU2ChM+pCxY+mrZDvc8/jVytgyO
+         sHAC7j0eM7wYxZqoX5imG5RQl0LhvynImFZZBjoO5JGrTFqrwAafO3r9Keb3LTy6kNSA
+         0uNN9dsFhd1i+wmTqVgRQcgfhZvZIytPuevS3EndKLD38iVStLJoKDfUWmH1TcAQRdcz
+         SK/SzEVsGxyLMJFNujEhaLUeg6tYJRnteE+CvjVJV+k2TUgpgHqeyfOAU7NySjQLsUcc
+         ut1Q==
+X-Gm-Message-State: APjAAAWjd1OXVGEnIQC+Wdvqd5JmdrqdAulxRlRcu/6OEmCg0+tZY5iM
+        yPGaKQSM8NqnekiqWxkeSrA=
+X-Google-Smtp-Source: APXvYqx2Xz5tNT1hPYzngdpmDM5eLZq3s0pCnzZyr6Pst5bjVAy5kk6rY0V489F7bHE5YpfDokGUvw==
+X-Received: by 2002:a17:902:ac85:: with SMTP id h5mr130559599plr.198.1564716329613;
+        Thu, 01 Aug 2019 20:25:29 -0700 (PDT)
+Received: from localhost.localdomain (d206-116-172-62.bchsia.telus.net. [206.116.172.62])
+        by smtp.gmail.com with ESMTPSA id t9sm70553759pgj.89.2019.08.01.20.25.28
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 01 Aug 2019 20:25:29 -0700 (PDT)
+From:   Mark Balantzyan <mbalant3@gmail.com>
+To:     linux@roeck-us.net
+Cc:     mbalant3@gmail.com, wim@linux-watchdog.org,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] Rewriting of alim1535 to use watchdog subsystem
+Date:   Thu,  1 Aug 2019 20:25:23 -0700
+Message-Id: <20190802032523.53513-1-mbalant3@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBEYW5pZWwgQmFsdXRhIDxkYW5p
-ZWwuYmFsdXRhQGdtYWlsLmNvbT4NCj4gU2VudDogMjAxOeW5tDjmnIgx5pelIDIyOjQ3DQo+IFRv
-OiBSaWNoYXJkIFpodSA8aG9uZ3hpbmcuemh1QG54cC5jb20+DQo+IENjOiBqYXNzaXNpbmdoYnJh
-ckBnbWFpbC5jb207IE9sZWtzaWogUmVtcGVsIDxvLnJlbXBlbEBwZW5ndXRyb25peC5kZT47DQo+
-IEFpc2hlbmcgRG9uZyA8YWlzaGVuZy5kb25nQG54cC5jb20+OyBMaW51eCBLZXJuZWwgTWFpbGlu
-ZyBMaXN0DQo+IDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgbGludXgtYXJtLWtlcm5l
-bA0KPiA8bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnPjsgZGwtbGludXgtaW14
-IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogW0VYVF0gUmU6IFtQQVRDSCB2M10gbWFp
-bGJveDogaW14OiBhZGQgc3VwcG9ydCBmb3IgaW14IHYxIG11DQo+IA0KPiBIaSBSaWNoYXJkLA0K
-PiANCj4gVGhhbmtzIGZvciB0aGUgcGF0Y2guIFBsZWFzZSBhbHdheXMgYWRkIGxpbnV4LWlteEBu
-eHAuY29tIG1haWxpbmcgbGlzdCBmb3IgaW14DQo+IHJlbGF0ZWQgcGF0Y2hlcy4gSSBtaXNzZWQg
-aXQuDQo+IA0KW1JpY2hhcmQgWmh1XSBPa2F5LCByb2dlciB0aGF0Lg0KDQo+IEZldyBjb21tZW50
-cyBpbmxpbmUuDQo+IA0KPiBQbGVhc2UgYWxzbyB1cGRhdGUgaW4gYSBzZXBhcmF0ZSBwYXRjaCBh
-dHRhY2hlZCB0byB0aGlzIHNlcmllcyB0aGUgZGV2aWN0cmVlDQo+IGJpbmRpbmdzIGRvYyBEb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWFpbGJveC9mc2wsbXUudHh0DQo+IGJ5IGFk
-ZGluZyBkZXNjcmlwdGlvbiBmb3IgbXg3dWxwLW11DQo+IA0KPiA8c25pcD4NCltSaWNoYXJkIFpo
-dV0gT2theSwgdGhlIGJpbmRpbmcgZG9jIHdvdWxkIGJlIGFkZGVkIGxhdGVyLg0KPiANCj4gPiBU
-aGVyZSBpcyBhIHZlcnNpb24xLjAgTVUgb24gaS5NWDdVTFAgcGxhdGZvcm0uDQo+IA0KPiBzcGFj
-ZSBiZXR3ZWVuIHZlcnNpb24gYW5kIDEuMA0KPiANCltSaWNoYXJkIFpodV0gT2theS4NCg0KPiA+
-IE9uZSBuZXcgdmVyc2lvbiBJRCByZWdpc3RlciBpcyBhZGRlZCwgYW5kIGl0J3Mgb2Zmc2V0IGlz
-IDAuDQo+ID4gVFJuIHJlZ2lzdGVycyBhcmUgZGVmaW5lZCBhdCB0aGUgb2Zmc2V0IDB4MjAgfiAw
-eDJDLg0KPiA+IFJSbiByZWdpc3RlcnMgYXJlIGRlZmluZWQgYXQgdGhlIG9mZnNldCAweDQwIH4g
-MHg0Qy4NCj4gPiBTUi9DUiByZWdpc3RlcnMgYXJlIGRlZmluZWQgYXQgMHg2MC8weDY0Lg0KPiA+
-IEV4dGVuZCB0aGlzIGRyaXZlciB0byBzdXBwb3J0IGl0Lg0KPiANCj4gRG8geW91IGhhdmUgYSBs
-aXR0bGUgYml0IG9mIGhpc3RvcnkgYWJvdXQgTVUgdmVyc2lvbmluZz8gU28gdGhlcmUgd2FzOg0K
-PiANCj4gKiB2ZXJzaW9uIDAuNSBvbiBpLk1YNi1lcw0KPiAqIHZlcnNpb24gMS4wIG9uIGkuTVg3
-VUxQDQo+IA0KPiBOZXh0LCBpcyB0aGlzIDEuMCBjb21wYXRiaWxlIHdpdGggaS5NWDggcmlnaHQ/
-DQo+IA0KW1JpY2hhcmQgWmh1XSBPbmx5IGkuTVg3VUxQIGhhcyB0aGUgdmVyc2lvbiAxLjAgTVUu
-DQppLk1YOCBoYXMgdGhlIHNhbWUgdmVyc2lvbiBNVSB0aGF0IGkuTVg2LWVzIGhhdmUuDQpJTUhP
-LCBJIGRvbid0IGtub3cgd2h5IGRlc2lnbiB0ZWFtIGRvIGl0IHRoaXMgd2F5Lg0KDQo+IEFsc28s
-IGNhbiB5b3UgcGxlYXNlIHJlYmFzZSB5b3VyIHBhdGNoIG9uIG15IDIgYnVnZml4ZXMgYXR0YWNo
-ZWQ/DQpbUmljaGFyZCBaaHVdIE9rYXksIG5vIHByb2JsZW0uIEkgd291bGQgc2VuZCB0aGUgdjQg
-dmVyc2lvbiBvdXQgbGF0ZXIgYWZ0ZXIgcmViYXNlIHlvdXIgMiBidWdmaXhlcyBwYXRjaGVzLg0K
-PiANCj4gdGhhbmtzLA0KPiBEYW5pZWwuDQo=
+This patch rewrites the alim1535_wdt driver to use the watchdog subsystem. 
+By virtue of this, it also fixes a (theoretical) race condition between the
+formerly arranged ali_timeout_bits and ali_settimer() interoperation.
+
+Signed-off-by: Mark Balantzyan <mbalant3@gmail.com>
+
+---
+ drivers/watchdog/Kconfig        |   1 +
+ drivers/watchdog/alim1535_wdt.c | 275 +++++---------------------------
+ 2 files changed, 37 insertions(+), 239 deletions(-)
+
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index 9af07fd9..980b0c90 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -853,6 +853,7 @@ config ADVANTECH_WDT
+ 
+ config ALIM1535_WDT
+ 	tristate "ALi M1535 PMU Watchdog Timer"
++	select WATCHDOG_CORE
+ 	depends on X86 && PCI
+ 	---help---
+ 	  This is the driver for the hardware watchdog on the ALi M1535 PMU.
+diff --git a/drivers/watchdog/alim1535_wdt.c b/drivers/watchdog/alim1535_wdt.c
+index 60f0c2eb..55648ba8 100644
+--- a/drivers/watchdog/alim1535_wdt.c
++++ b/drivers/watchdog/alim1535_wdt.c
+@@ -12,26 +12,18 @@
+ #include <linux/module.h>
+ #include <linux/moduleparam.h>
+ #include <linux/types.h>
+-#include <linux/miscdevice.h>
+ #include <linux/watchdog.h>
+ #include <linux/ioport.h>
+-#include <linux/notifier.h>
+-#include <linux/reboot.h>
+-#include <linux/init.h>
+-#include <linux/fs.h>
+-#include <linux/pci.h>
+ #include <linux/uaccess.h>
+ #include <linux/io.h>
++#include <linux/pci.h>
+ 
+ #define WATCHDOG_NAME "ALi_M1535"
+ #define WATCHDOG_TIMEOUT 60	/* 60 sec default timeout */
+ 
+ /* internal variables */
+-static unsigned long ali_is_open;
+-static char ali_expect_release;
+ static struct pci_dev *ali_pci;
+ static u32 ali_timeout_bits;		/* stores the computed timeout */
+-static DEFINE_SPINLOCK(ali_lock);	/* Guards the hardware */
+ 
+ /* module parameters */
+ static int timeout = WATCHDOG_TIMEOUT;
+@@ -53,18 +45,15 @@ MODULE_PARM_DESC(nowayout,
+  *	configuration set.
+  */
+ 
+-static void ali_start(void)
++static int ali_start(struct watchdog_device *wdd)
+ {
+ 	u32 val;
+ 
+-	spin_lock(&ali_lock);
+-
+ 	pci_read_config_dword(ali_pci, 0xCC, &val);
+ 	val &= ~0x3F;	/* Mask count */
+ 	val |= (1 << 25) | ali_timeout_bits;
+ 	pci_write_config_dword(ali_pci, 0xCC, val);
+-
+-	spin_unlock(&ali_lock);
++	return 0;
+ }
+ 
+ /*
+@@ -73,18 +62,15 @@ static void ali_start(void)
+  *	Stop the ALi watchdog countdown
+  */
+ 
+-static void ali_stop(void)
++static int ali_stop(struct watchdog_device *wdd)
+ {
+ 	u32 val;
+ 
+-	spin_lock(&ali_lock);
+-
+ 	pci_read_config_dword(ali_pci, 0xCC, &val);
+ 	val &= ~0x3F;		/* Mask count to zero (disabled) */
+ 	val &= ~(1 << 25);	/* and for safety mask the reset enable */
+ 	pci_write_config_dword(ali_pci, 0xCC, val);
+-
+-	spin_unlock(&ali_lock);
++	return 0;
+ }
+ 
+ /*
+@@ -93,32 +79,24 @@ static void ali_stop(void)
+  *	Send a keepalive to the timer (actually we restart the timer).
+  */
+ 
+-static void ali_keepalive(void)
++static int ali_keepalive(struct watchdog_device *wdd)
+ {
+-	ali_start();
++	ali_start(wdd);
++	return 0;
+ }
+ 
+ /*
+- *	ali_settimer	-	compute the timer reload value
++ *	ali_set_timeout	-	compute the timer reload value
+  *	@t: time in seconds
+  *
+  *	Computes the timeout values needed
+  */
+ 
+-static int ali_settimer(int t)
++static int ali_set_timeout(struct watchdog_device *wdd, unsigned int t)
+ {
+-	if (t < 0)
+-		return -EINVAL;
+-	else if (t < 60)
+-		ali_timeout_bits = t|(1 << 6);
+-	else if (t < 3600)
+-		ali_timeout_bits = (t / 60)|(1 << 7);
+-	else if (t < 18000)
+-		ali_timeout_bits = (t / 300)|(1 << 6)|(1 << 7);
+-	else
+-		return -EINVAL;
+-
+-	timeout = t;
++	wdd->max_timeout = 60;
++	wdd->min_timeout = 1;
++	wdd->timeout = t;
+ 	return 0;
+ }
+ 
+@@ -126,172 +104,6 @@ static int ali_settimer(int t)
+  *	/dev/watchdog handling
+  */
+ 
+-/*
+- *	ali_write	-	writes to ALi watchdog
+- *	@file: file from VFS
+- *	@data: user address of data
+- *	@len: length of data
+- *	@ppos: pointer to the file offset
+- *
+- *	Handle a write to the ALi watchdog. Writing to the file pings
+- *	the watchdog and resets it. Writing the magic 'V' sequence allows
+- *	the next close to turn off the watchdog.
+- */
+-
+-static ssize_t ali_write(struct file *file, const char __user *data,
+-						size_t len, loff_t *ppos)
+-{
+-	/* See if we got the magic character 'V' and reload the timer */
+-	if (len) {
+-		if (!nowayout) {
+-			size_t i;
+-
+-			/* note: just in case someone wrote the
+-			   magic character five months ago... */
+-			ali_expect_release = 0;
+-
+-			/* scan to see whether or not we got
+-			   the magic character */
+-			for (i = 0; i != len; i++) {
+-				char c;
+-				if (get_user(c, data + i))
+-					return -EFAULT;
+-				if (c == 'V')
+-					ali_expect_release = 42;
+-			}
+-		}
+-
+-		/* someone wrote to us, we should reload the timer */
+-		ali_start();
+-	}
+-	return len;
+-}
+-
+-/*
+- *	ali_ioctl	-	handle watchdog ioctls
+- *	@file: VFS file pointer
+- *	@cmd: ioctl number
+- *	@arg: arguments to the ioctl
+- *
+- *	Handle the watchdog ioctls supported by the ALi driver. Really
+- *	we want an extension to enable irq ack monitoring and the like
+- */
+-
+-static long ali_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+-{
+-	void __user *argp = (void __user *)arg;
+-	int __user *p = argp;
+-	static const struct watchdog_info ident = {
+-		.options =		WDIOF_KEEPALIVEPING |
+-					WDIOF_SETTIMEOUT |
+-					WDIOF_MAGICCLOSE,
+-		.firmware_version =	0,
+-		.identity =		"ALi M1535 WatchDog Timer",
+-	};
+-
+-	switch (cmd) {
+-	case WDIOC_GETSUPPORT:
+-		return copy_to_user(argp, &ident, sizeof(ident)) ? -EFAULT : 0;
+-
+-	case WDIOC_GETSTATUS:
+-	case WDIOC_GETBOOTSTATUS:
+-		return put_user(0, p);
+-	case WDIOC_SETOPTIONS:
+-	{
+-		int new_options, retval = -EINVAL;
+-
+-		if (get_user(new_options, p))
+-			return -EFAULT;
+-		if (new_options & WDIOS_DISABLECARD) {
+-			ali_stop();
+-			retval = 0;
+-		}
+-		if (new_options & WDIOS_ENABLECARD) {
+-			ali_start();
+-			retval = 0;
+-		}
+-		return retval;
+-	}
+-	case WDIOC_KEEPALIVE:
+-		ali_keepalive();
+-		return 0;
+-	case WDIOC_SETTIMEOUT:
+-	{
+-		int new_timeout;
+-		if (get_user(new_timeout, p))
+-			return -EFAULT;
+-		if (ali_settimer(new_timeout))
+-			return -EINVAL;
+-		ali_keepalive();
+-	}
+-		/* fall through */
+-	case WDIOC_GETTIMEOUT:
+-		return put_user(timeout, p);
+-	default:
+-		return -ENOTTY;
+-	}
+-}
+-
+-/*
+- *	ali_open	-	handle open of ali watchdog
+- *	@inode: inode from VFS
+- *	@file: file from VFS
+- *
+- *	Open the ALi watchdog device. Ensure only one person opens it
+- *	at a time. Also start the watchdog running.
+- */
+-
+-static int ali_open(struct inode *inode, struct file *file)
+-{
+-	/* /dev/watchdog can only be opened once */
+-	if (test_and_set_bit(0, &ali_is_open))
+-		return -EBUSY;
+-
+-	/* Activate */
+-	ali_start();
+-	return nonseekable_open(inode, file);
+-}
+-
+-/*
+- *	ali_release	-	close an ALi watchdog
+- *	@inode: inode from VFS
+- *	@file: file from VFS
+- *
+- *	Close the ALi watchdog device. Actual shutdown of the timer
+- *	only occurs if the magic sequence has been set.
+- */
+-
+-static int ali_release(struct inode *inode, struct file *file)
+-{
+-	/*
+-	 *      Shut off the timer.
+-	 */
+-	if (ali_expect_release == 42)
+-		ali_stop();
+-	else {
+-		pr_crit("Unexpected close, not stopping watchdog!\n");
+-		ali_keepalive();
+-	}
+-	clear_bit(0, &ali_is_open);
+-	ali_expect_release = 0;
+-	return 0;
+-}
+-
+-/*
+- *	ali_notify_sys	-	System down notifier
+- *
+- *	Notifier for system down
+- */
+-
+-
+-static int ali_notify_sys(struct notifier_block *this,
+-					unsigned long code, void *unused)
+-{
+-	if (code == SYS_DOWN || code == SYS_HALT)
+-		ali_stop();		/* Turn the WDT off */
+-	return NOTIFY_DONE;
+-}
+-
+ /*
+  *	Data for PCI driver interface
+  *
+@@ -361,23 +173,17 @@ static int __init ali_find_watchdog(void)
+  *	Kernel Interfaces
+  */
+ 
+-static const struct file_operations ali_fops = {
+-	.owner		=	THIS_MODULE,
+-	.llseek		=	no_llseek,
+-	.write		=	ali_write,
+-	.unlocked_ioctl =	ali_ioctl,
+-	.open		=	ali_open,
+-	.release	=	ali_release,
++static struct watchdog_ops alim1535wdt_ops = {
++	.owner = THIS_MODULE,
++	.start = ali_start,
++	.stop = ali_stop,
++	.ping = ali_keepalive,
++	.set_timeout = ali_set_timeout,
+ };
+ 
+-static struct miscdevice ali_miscdev = {
+-	.minor =	WATCHDOG_MINOR,
+-	.name =		"watchdog",
+-	.fops =		&ali_fops,
+-};
+-
+-static struct notifier_block ali_notifier = {
+-	.notifier_call =	ali_notify_sys,
++static struct watchdog_device alim1535wdt_wdd = {
++	.ops = &alim1535wdt_ops,
++	.status = WATCHDOG_NOWAYOUT_INIT_STATUS,
+ };
+ 
+ /*
+@@ -403,30 +209,25 @@ static int __init watchdog_init(void)
+ 			timeout);
+ 	}
+ 
+-	/* Calculate the watchdog's timeout */
+-	ali_settimer(timeout);
++	watchdog_stop_on_reboot(&alim1535wdt_wdd);
++
++	watchdog_init_timeout(&alim1535wdt_wdd, timeout, NULL);
++
++	watchdog_set_nowayout(&alim1535wdt_wdd, nowayout);
+ 
+-	ret = register_reboot_notifier(&ali_notifier);
+-	if (ret != 0) {
+-		pr_err("cannot register reboot notifier (err=%d)\n", ret);
+-		goto out;
+-	}
++	ret = watchdog_register_device(&alim1535wdt_wdd);
+ 
+-	ret = misc_register(&ali_miscdev);
+ 	if (ret != 0) {
+-		pr_err("cannot register miscdev on minor=%d (err=%d)\n",
+-		       WATCHDOG_MINOR, ret);
+-		goto unreg_reboot;
++		goto reboot_unreg;
+ 	}
+ 
+-	pr_info("initialized. timeout=%d sec (nowayout=%d)\n",
+-		timeout, nowayout);
++	/* Calculate the watchdog's timeout */
++	ali_set_timeout(&alim1535wdt_wdd, timeout);
++
++	return 0;
+ 
+-out:
++reboot_unreg:
+ 	return ret;
+-unreg_reboot:
+-	unregister_reboot_notifier(&ali_notifier);
+-	goto out;
+ }
+ 
+ /*
+@@ -437,12 +238,8 @@ unreg_reboot:
+ 
+ static void __exit watchdog_exit(void)
+ {
+-	/* Stop the timer before we leave */
+-	ali_stop();
+-
+ 	/* Deregister */
+-	misc_deregister(&ali_miscdev);
+-	unregister_reboot_notifier(&ali_notifier);
++	watchdog_unregister_device(&alim1535wdt_wdd);
+ 	pci_dev_put(ali_pci);
+ }
+ 
+@@ -451,4 +248,4 @@ module_exit(watchdog_exit);
+ 
+ MODULE_AUTHOR("Alan Cox");
+ MODULE_DESCRIPTION("ALi M1535 PMU Watchdog Timer driver");
+-MODULE_LICENSE("GPL");
++MODULE_LICENSE("GPL");
+-- 
+2.17.1
+
