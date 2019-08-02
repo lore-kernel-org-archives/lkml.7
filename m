@@ -2,109 +2,87 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48CF7C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC283C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F5FE20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:56:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="MLt9L/b5";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gsMrauo6"
+	by mail.kernel.org (Postfix) with ESMTP id 87A8021773
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:59:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564761544;
+	bh=E21+I1H59V6MsCfH6Fg5TnD0nRNFBekeAOLaNaiXMhc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VjFl+iqzhcpg6jwUOsWy4usDeeW//PtNXIHr4IXjswcF+JzCl3DvVgQ1GFq+CvxkX
+	 77TcIxsRn4lSa6yDgHNz2vtYcreNrzUwKZWtW1gH5p7EWA0z3rHG45ud1MZ16+Z7Ya
+	 eZjzJAeIAWwICrlXym3lJ2Uv7WX2kWqcGkbyDGX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388249AbfHBP4d (ORCPT
+        id S2388413AbfHBP7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 11:56:33 -0400
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:49467 "EHLO
-        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731112AbfHBP4d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 11:56:33 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id BB5AC3FF;
-        Fri,  2 Aug 2019 11:56:31 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Fri, 02 Aug 2019 11:56:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=PkUXgLQlD09oEzY3GdKpU9DI7Cs
-        MAGiCOb8Se7FDCdY=; b=MLt9L/b5dqdmde++l8o2G+ndFrHypcTz4RppB8rwMfU
-        GEOWaaDwwa+a1FVZZxzg+pDotPj/XIUdJ3zuE5KNvFUwVXgix6HaotHMP5KhkR7+
-        Aac1+Wyj7shlLrppkQtMRkecZc+oxQz62S4oO2uLp6buXdApRs9EEiq7BC7srswr
-        ca6C4J30mWfscXE3Ee42Fv5HRXUbn5MTgKNK39B5iUdX1XjlBUi7P4ZVMvrzXBcY
-        N+Ix34b1dtDyBFzrB1iJ07QW6uoiv7mdJ1IFNCZkGLCx2qIJWX6rjZWQBM2EySGe
-        0GI3xWjZoMSh1jvw1H43hA6OWPvnGR42da0MjvXgRUw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=PkUXgL
-        QlD09oEzY3GdKpU9DI7CsMAGiCOb8Se7FDCdY=; b=gsMrauo6lYuY2qD/y9+Egx
-        QRBYdd9MvaXevZ5u57X3sHRgP8DxhGfb9zN8EmsWsM1POHqga0md7st3o2p8rhX0
-        oHzh+U54mu6Ydo0tAfMuHmARi8z5s/fHsFjo3iOB2Hktbk4if0ZOO9LGWGMrR/Ee
-        1OYSlWwrVO1YxeYpAwzqLYj83yH2jjVYw40XgMT4p+DTS2dmGZlL82KAPFxhvKwu
-        d710wRMxXPCaiV8jf5NevS8AxePIFIOQMIB9/iJrf3CootHApUOOigemxvm+Z7vT
-        VSYL5Kpa+lShQ03dap2y16Nstz6qNZ/ek3k6o+OgsDPmcQYmEAgv/0W0yxM6eOmg
-        ==
-X-ME-Sender: <xms:Ll1EXQo6PUzXfBFGQ5f6I9gAnNm9m757ZGuFn1XRNX346Tes5WTa2g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrleelgdeikecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
-    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
-    lhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:Ll1EXa6nk0Y0q_xchL-usSYU9y4yjmGJIt9mgZK5CD01yElgtoeFDA>
-    <xmx:Ll1EXQOml-_Y3sD7gZH7IKuPBz6OLDbi-mcMJudG5GK6OgjgRAzDQQ>
-    <xmx:Ll1EXcNqe_ZlJOQwDO-Rg2PG-bYmVoh4YWKATGVx-ZFwks6Fw0SX5Q>
-    <xmx:L11EXR51v3XObDe4qDp4W_hQlF3XKAmBI9jCiDEatzLqr4QV4DOArw>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 4E381380085;
-        Fri,  2 Aug 2019 11:56:30 -0400 (EDT)
-Date:   Fri, 2 Aug 2019 17:56:27 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     Rolf Eike Beer <eb@emlix.com>, stable@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 4.9.180 build fails =?utf-8?Q?wi?=
- =?utf-8?Q?th_gcc_9_and_'cleanup=5Fmodule'_specifies_less_restrictive_attr?=
- =?utf-8?Q?ibute_than_its_target_=E2=80=A6?=
-Message-ID: <20190802155627.GB28398@kroah.com>
-References: <259986242.BvXPX32bHu@devpool35>
- <20190606185900.GA19937@kroah.com>
- <CANiq72n2E4Ue0MU5mWitSbsscizPQKML0QQx_DBwJVni+eWMHQ@mail.gmail.com>
- <4007272.nJfEYfeqza@devpool35>
- <CANiq72=T8nH3HHkYvWF+vPMscgwXki1Ugiq6C9PhVHJUHAwDYw@mail.gmail.com>
- <20190802103346.GA14255@kroah.com>
- <CANiq72kcZZwp2MRVF5Ls+drXCzVbCfZ7wZ8Y+rU93oGohVAGsQ@mail.gmail.com>
- <20190802112542.GA29534@kroah.com>
- <CANiq72mSLmP-EaOgY0m2qgTMVsAnyE6iuW5Kjdw5mSy1ZH0y-A@mail.gmail.com>
+        Fri, 2 Aug 2019 11:59:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42774 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388260AbfHBP7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 11:59:02 -0400
+Received: from localhost (unknown [122.167.106.83])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71CC020B7C;
+        Fri,  2 Aug 2019 15:59:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564761542;
+        bh=E21+I1H59V6MsCfH6Fg5TnD0nRNFBekeAOLaNaiXMhc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=i07x/1lHjnA1/3bX90ONRyLaOlC349ccqPsirmEZhaaII6jwBVQO7oOAhanUx1tD9
+         dxTwA5wvpLpxSehkUn8snlb+JVRCdYIoFX/IyEOL9zUCbsyouQA1oFUgLSvhFzwixj
+         VhRZboa1ONpanDiL9lANnGP9pDoNPZun7UgZzPXA=
+Date:   Fri, 2 Aug 2019 21:27:38 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        broonie@kernel.org, srinivas.kandagatla@linaro.org,
+        jank@cadence.com, slawomir.blauciak@intel.com,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [alsa-devel] [RFC PATCH 06/40] soundwire: intel: prevent
+ possible dereference in hw_params
+Message-ID: <20190802155738.GR12733@vkoul-mobl.Dlink>
+References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
+ <20190725234032.21152-7-pierre-louis.bossart@linux.intel.com>
+ <20190802115537.GI12733@vkoul-mobl.Dlink>
+ <6da5aeef-40bf-c9bb-fc18-4ac0b3961857@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CANiq72mSLmP-EaOgY0m2qgTMVsAnyE6iuW5Kjdw5mSy1ZH0y-A@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <6da5aeef-40bf-c9bb-fc18-4ac0b3961857@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 03:01:13PM +0200, Miguel Ojeda wrote:
-> On Fri, Aug 2, 2019 at 1:25 PM Greg KH <greg@kroah.com> wrote:
-> >
-> > But it still doesn't work for 4.14.y and 4.19.y, so we are probably
-> > missing something there.  So if you want to fix that up, I'd appreciate
-> > patches to do so :)
+On 02-08-19, 10:16, Pierre-Louis Bossart wrote:
 > 
-> Hm... For 4.19.y and 4.14.y, I cannot see the init/exit_module
-> warnings under GCC 9.1.1. What do you mean it does not work?
+> 
+> On 8/2/19 6:55 AM, Vinod Koul wrote:
+> > On 25-07-19, 18:39, Pierre-Louis Bossart wrote:
+> > > This should not happen in production systems but we should test for
+> > > all callback arguments before invoking the config_stream callback.
+> > 
+> > so you are saying callback arg is mandatory, if so please document that
+> > assumption
+> 
+> no, what this says is that if a config_stream is provided then it needs to
+> have a valid argument.
 
-I see a ton of warnings on those kernels today.  I'll look into it next
-week after I apply your patches to see what's missing.
+well typically args are not mandatory..
 
-thanks,
+> I am not sure what you mean by "document that assumption", comment in the
+> code (where?) or SoundWire documentation?
 
-greg k-h
+The callback documentation which in this is in include/linux/soundwire/sdw_intel.h
+
+-- 
+~Vinod
