@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E612C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 761FEC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E83A920B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:32:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B2A620665
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:32:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752748;
-	bh=2NQfbXr/2flf+VnmDxlQVHz2x3lgkRrjGYvopR5En44=;
+	s=default; t=1564752754;
+	bh=TFQRTj3/7D8jnoe4BJv+m0z7LgOh2e78JsSqRuTuDww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mFGvcjQ1oYsYzhLK4EDPL6kx7ww6UtavKKez4l0sIpPY134wOHaMPPq04c34SOdQa
-	 puaFdN3Jzhh+aRr4QswT4IW2g8dBnbAq1jY7xRcGvGvCaeQ13KkhPKwGkWE/cNYoFw
-	 dJri7Hak0lAuVx3SfwWw+Q5EVP5mr7GJmzNJbgC8=
+	b=HeusiHTfxlcapy4F8RkAE6sV/TRIyQ85/xfDtu9xF0hi6pENdQpFSVfx7baKD9jco
+	 cyzdxMWtUnsdDTJkJTXLbak3nzVX23FTUVfrOjf7PLxahsjjWtNJMxIGe1INF7ePuj
+	 arCO/I7N1vCfZEFi8mMmFotGN1P1YgGm1bVslbRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405082AbfHBNcW (ORCPT
+        id S2394074AbfHBNX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:32:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34676 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:23:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389897AbfHBNYC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:24:02 -0400
+        id S2389361AbfHBNXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:23:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6508E2182B;
-        Fri,  2 Aug 2019 13:24:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AAB021871;
+        Fri,  2 Aug 2019 13:23:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752241;
-        bh=2NQfbXr/2flf+VnmDxlQVHz2x3lgkRrjGYvopR5En44=;
+        s=default; t=1564752224;
+        bh=TFQRTj3/7D8jnoe4BJv+m0z7LgOh2e78JsSqRuTuDww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jI8axtLi83/CIXPe3FGhlsHlgJ+frewfL4EsNLoAMtTsQ0Cm19+1GDnQa4eXQ9+s8
-         GW/1tvEQQn8EYpd7Ka/wY4w/RGmSlTKSLgqawwQZr3AwAX52i85xMvmT4pCt+RDL1i
-         4vJJDp4zg0dP2qpWdcUI5qciT1B9zni1xuze/SPE=
+        b=hRlXPbebioBADVedI644SfVZgP4CbpUoPqpWMcf+VD3dol0nCRuoC3nRPRBMGE0aa
+         IYOLi+pWEWMrU28x3Z4h8se851GzMi8yUbsL2o9IDh0y1w9hpAB1PZ2FcQNSOhaPhn
+         6KjeKH6I25kqRekrQPyCG5yZ0NgrDSmPK15bSvhU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Sekhar Nori <nsekhar@ti.com>,
-        Olof Johansson <olof@lixom.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 32/42] ARM: davinci: fix sleep.S build error on ARMv4
-Date:   Fri,  2 Aug 2019 09:22:52 -0400
-Message-Id: <20190802132302.13537-32-sashal@kernel.org>
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 19/42] drm/msm: stop abusing dma_map/unmap for cache
+Date:   Fri,  2 Aug 2019 09:22:39 -0400
+Message-Id: <20190802132302.13537-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802132302.13537-1-sashal@kernel.org>
 References: <20190802132302.13537-1-sashal@kernel.org>
@@ -59,40 +63,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Rob Clark <robdclark@chromium.org>
 
-[ Upstream commit d64b212ea960db4276a1d8372bd98cb861dfcbb0 ]
+[ Upstream commit 0036bc73ccbe7e600a3468bf8e8879b122252274 ]
 
-When building a multiplatform kernel that includes armv4 support,
-the default target CPU does not support the blx instruction,
-which leads to a build failure:
+Recently splats like this started showing up:
 
-arch/arm/mach-davinci/sleep.S: Assembler messages:
-arch/arm/mach-davinci/sleep.S:56: Error: selected processor does not support `blx ip' in ARM mode
+   WARNING: CPU: 4 PID: 251 at drivers/iommu/dma-iommu.c:451 __iommu_dma_unmap+0xb8/0xc0
+   Modules linked in: ath10k_snoc ath10k_core fuse msm ath mac80211 uvcvideo cfg80211 videobuf2_vmalloc videobuf2_memops vide
+   CPU: 4 PID: 251 Comm: kworker/u16:4 Tainted: G        W         5.2.0-rc5-next-20190619+ #2317
+   Hardware name: LENOVO 81JL/LNVNB161216, BIOS 9UCN23WW(V1.06) 10/25/2018
+   Workqueue: msm msm_gem_free_work [msm]
+   pstate: 80c00005 (Nzcv daif +PAN +UAO)
+   pc : __iommu_dma_unmap+0xb8/0xc0
+   lr : __iommu_dma_unmap+0x54/0xc0
+   sp : ffff0000119abce0
+   x29: ffff0000119abce0 x28: 0000000000000000
+   x27: ffff8001f9946648 x26: ffff8001ec271068
+   x25: 0000000000000000 x24: ffff8001ea3580a8
+   x23: ffff8001f95ba010 x22: ffff80018e83ba88
+   x21: ffff8001e548f000 x20: fffffffffffff000
+   x19: 0000000000001000 x18: 00000000c00001fe
+   x17: 0000000000000000 x16: 0000000000000000
+   x15: ffff000015b70068 x14: 0000000000000005
+   x13: 0003142cc1be1768 x12: 0000000000000001
+   x11: ffff8001f6de9100 x10: 0000000000000009
+   x9 : ffff000015b78000 x8 : 0000000000000000
+   x7 : 0000000000000001 x6 : fffffffffffff000
+   x5 : 0000000000000fff x4 : ffff00001065dbc8
+   x3 : 000000000000000d x2 : 0000000000001000
+   x1 : fffffffffffff000 x0 : 0000000000000000
+   Call trace:
+    __iommu_dma_unmap+0xb8/0xc0
+    iommu_dma_unmap_sg+0x98/0xb8
+    put_pages+0x5c/0xf0 [msm]
+    msm_gem_free_work+0x10c/0x150 [msm]
+    process_one_work+0x1e0/0x330
+    worker_thread+0x40/0x438
+    kthread+0x12c/0x130
+    ret_from_fork+0x10/0x18
+   ---[ end trace afc0dc5ab81a06bf ]---
 
-Add a .arch statement in the sources to make this file build.
+Not quite sure what triggered that, but we really shouldn't be abusing
+dma_{map,unmap}_sg() for cache maint.
 
-Link: https://lore.kernel.org/r/20190722145211.1154785-1-arnd@arndb.de
-Acked-by: Sekhar Nori <nsekhar@ti.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Olof Johansson <olof@lixom.net>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Tested-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190630124735.27786-1-robdclark@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-davinci/sleep.S | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/msm/msm_gem.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/mach-davinci/sleep.S b/arch/arm/mach-davinci/sleep.S
-index cd350dee4df37..efcd400b2abb3 100644
---- a/arch/arm/mach-davinci/sleep.S
-+++ b/arch/arm/mach-davinci/sleep.S
-@@ -37,6 +37,7 @@
- #define DEEPSLEEP_SLEEPENABLE_BIT	BIT(31)
+diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
+index f59ca27a4a357..93b20ad23c23f 100644
+--- a/drivers/gpu/drm/msm/msm_gem.c
++++ b/drivers/gpu/drm/msm/msm_gem.c
+@@ -108,7 +108,7 @@ static struct page **get_pages(struct drm_gem_object *obj)
+ 		 * because display controller, GPU, etc. are not coherent:
+ 		 */
+ 		if (msm_obj->flags & (MSM_BO_WC|MSM_BO_UNCACHED))
+-			dma_map_sg(dev->dev, msm_obj->sgt->sgl,
++			dma_sync_sg_for_device(dev->dev, msm_obj->sgt->sgl,
+ 					msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
+ 	}
  
- 	.text
-+	.arch	armv5te
- /*
-  * Move DaVinci into deep sleep state
-  *
+@@ -138,7 +138,7 @@ static void put_pages(struct drm_gem_object *obj)
+ 			 * GPU, etc. are not coherent:
+ 			 */
+ 			if (msm_obj->flags & (MSM_BO_WC|MSM_BO_UNCACHED))
+-				dma_unmap_sg(obj->dev->dev, msm_obj->sgt->sgl,
++				dma_sync_sg_for_cpu(obj->dev->dev, msm_obj->sgt->sgl,
+ 					     msm_obj->sgt->nents,
+ 					     DMA_BIDIRECTIONAL);
+ 
 -- 
 2.20.1
 
