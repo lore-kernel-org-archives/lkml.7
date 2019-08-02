@@ -2,165 +2,117 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E36C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CDAAC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:04:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC685204EC
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:03:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="GlIO4h09"
+	by mail.kernel.org (Postfix) with ESMTP id D7E3B204EC
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:04:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564733067;
+	bh=wvf0PiugaCURGdxEwCafgHMn3ZBYyBaQT2iMFPxYXYI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=y00owavtm6C34Iyw6o/7uf1ExRjYBKsru1I8YVHfC+hTREHtUqlaHA5u5LMXbMx97
+	 SiRer36Et0NS3coWjmEhj9XuoDh5ZkG8452em0gFx50IOy/lMSBBR0LkQmfuhRurbO
+	 QGwcL2Xi+3x9gYZBSoyqMcqI0BcIwO7pbiu3ptVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403794AbfHBIDh (ORCPT
+        id S2403807AbfHBIE0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 04:03:37 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:42220 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728268AbfHBIDg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 04:03:36 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0013A33E;
-        Fri,  2 Aug 2019 10:03:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1564733014;
-        bh=iESMaiwMfzcHwok5GLi0XmKd4pH/pITjQS3plSb9Z34=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GlIO4h09Z40O9LbRY2FO6XIGflDy1hY2hNm+JpqlfFcT4o1UBbVay+On30qcePB3R
-         XpK6hxFtraFU69VIrNjbWvA7k7S5K3ybAB23zpFl3Uy0bn/8xyo4nBeE98MbJOP/L0
-         BExEJZlMr4sLNiLx+OBcBgfFnhF/L3lxiy98JP1A=
-Date:   Fri, 2 Aug 2019 11:03:32 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH/RFC 04/12] dt-bindings: display: Add bindings for
- Advantech IDK-2121WR
-Message-ID: <20190802080332.GE5008@pendragon.ideasonboard.com>
-References: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1564731249-22671-5-git-send-email-fabrizio.castro@bp.renesas.com>
+        Fri, 2 Aug 2019 04:04:26 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60822 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726974AbfHBIE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 04:04:26 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C636EAE35;
+        Fri,  2 Aug 2019 08:04:24 +0000 (UTC)
+Date:   Fri, 2 Aug 2019 10:04:22 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCH] mm: memcontrol: switch to rcu protection in
+ drain_all_stock()
+Message-ID: <20190802080422.GA6461@dhcp22.suse.cz>
+References: <20190801233513.137917-1-guro@fb.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1564731249-22671-5-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <20190801233513.137917-1-guro@fb.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fabrizio,
-
-Thank you for the patch.
-
-On Fri, Aug 02, 2019 at 08:34:01AM +0100, Fabrizio Castro wrote:
-> This panel is handled through the generic lvds-panel bindings,
-> so only needs its additional compatible specified.
+On Thu 01-08-19 16:35:13, Roman Gushchin wrote:
+> Commit 72f0184c8a00 ("mm, memcg: remove hotplug locking from try_charge")
+> introduced css_tryget()/css_put() calls in drain_all_stock(),
+> which are supposed to protect the target memory cgroup from being
+> released during the mem_cgroup_is_descendant() call.
 > 
-> Some panel specific documentation can be found here:
+> However, it's not completely safe. In theory, memcg can go away
+> between reading stock->cached pointer and calling css_tryget().
 
-s/panel specific/panel-specific/
+I have to remember how is this whole thing supposed to work, it's been
+some time since I've looked into that.
 
-> https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> So, let's read the stock->cached pointer and evaluate the memory
+> cgroup inside a rcu read section, and get rid of
+> css_tryget()/css_put() calls.
+
+Could you be more specific why does RCU help here?
+
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> Cc: Michal Hocko <mhocko@suse.com>
 > ---
->  .../display/panel/advantech,idk-2121wr.txt         | 62 ++++++++++++++++++++++
->  1 file changed, 62 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.txt
+>  mm/memcontrol.c | 17 +++++++++--------
+>  1 file changed, 9 insertions(+), 8 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.txt b/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.txt
-> new file mode 100644
-> index 0000000..70b15b6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.txt
-> @@ -0,0 +1,62 @@
-> +Advantech Co., Ltd. IDK-2121WR 21.5" LVDS panel
-> +===============================================
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 5c7b9facb0eb..d856b64426b7 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -2235,21 +2235,22 @@ static void drain_all_stock(struct mem_cgroup *root_memcg)
+>  	for_each_online_cpu(cpu) {
+>  		struct memcg_stock_pcp *stock = &per_cpu(memcg_stock, cpu);
+>  		struct mem_cgroup *memcg;
+> +		bool flush = false;
+>  
+> +		rcu_read_lock();
+>  		memcg = stock->cached;
+> -		if (!memcg || !stock->nr_pages || !css_tryget(&memcg->css))
+> -			continue;
+> -		if (!mem_cgroup_is_descendant(memcg, root_memcg)) {
+> -			css_put(&memcg->css);
+> -			continue;
+> -		}
+> -		if (!test_and_set_bit(FLUSHING_CACHED_CHARGE, &stock->flags)) {
+> +		if (memcg && stock->nr_pages &&
+> +		    mem_cgroup_is_descendant(memcg, root_memcg))
+> +			flush = true;
+> +		rcu_read_unlock();
 > +
-> +Required properties:
-> +- compatible: should be "advantech,idk-2121wr" followed by "panel-lvds"
-> +
-> +This binding is compatible with the lvds-panel binding, which is specified
-> +in panel-lvds.txt in this directory.
-
-How about adding "The panel operates in dual-link mode and thus requires
-two port nodes." ?
-
-> +
-> +Example
-> +-------
-> +
-> +	panel {
-> +		compatible = "advantech,idk-2121wr", "panel-lvds";
-> +
-> +		width-mm = <476>;
-> +		height-mm = <268>;
-> +
-> +		data-mapping = "vesa-24";
-> +
-> +		panel-timing {
-> +			clock-frequency = <148500000>;
-> +			hactive = <1920>;
-> +			vactive = <1080>;
-> +			hsync-len = <44>;
-> +			hfront-porch = <88>;
-> +			hback-porch = <148>;
-> +			vfront-porch = <4>;
-> +			vback-porch = <36>;
-> +			vsync-len = <5>;
-> +		};
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +				lvds0_panel_in: endpoint {
-> +					remote-endpoint = <&lvds0_out>;
-> +				};
-> +			};
-> +
-> +			port@1 {
-> +				reg = <1>;
-> +				lvds1_panel_in: endpoint {
-> +					remote-endpoint = <&lvds1_out>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	backlight: backlight {
-> +		compatible = "pwm-backlight";
-> +		pwms = <&pwm5 0 50000>;
-> +
-> +		brightness-levels = <0 4 8 16 32 64 128 255>;
-> +		default-brightness-level = <6>;
-> +
-> +		power-supply = <&reg_12p0v>;
-> +		enable-gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
-> +	};
-
-I think you can drop the backlight here, it's a bit out of scope.
+> +		if (flush &&
+> +		    !test_and_set_bit(FLUSHING_CACHED_CHARGE, &stock->flags)) {
+>  			if (cpu == curcpu)
+>  				drain_local_stock(&stock->work);
+>  			else
+>  				schedule_work_on(cpu, &stock->work);
+>  		}
+> -		css_put(&memcg->css);
+>  	}
+>  	put_cpu();
+>  	mutex_unlock(&percpu_charge_mutex);
+> -- 
+> 2.21.0
 
 -- 
-Regards,
-
-Laurent Pinchart
+Michal Hocko
+SUSE Labs
