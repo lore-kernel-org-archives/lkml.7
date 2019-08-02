@@ -5,52 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD3EC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC89C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D84E21783
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:31:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0483D2184B
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:31:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738312;
-	bh=6QaYj1hwO9X8cYBYVzsZl8PDnGSMIwF31I8yblWNh2E=;
+	s=default; t=1564738316;
+	bh=82hX1kXZNLsS5Uy/nQH8yCkmAJVT3xaHc0R6NmO/Tag=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EUyfzRPuIzvlf+7xA+es6GzcYNUdzE/kdp95IcYcVkkJChe44l05E9J8CwHhRNT5m
-	 wGnI/5IHFhZ6dPsGvFzAko1CQL+tW+PeSV2mSJf92OjJkR1/KcObi5ghnHa6IaEfO8
-	 jImArZ00f/320PYFgIPAyKXzp081EyuNrKr8XumM=
+	b=WCcJvNVUt+58ZM7USHPfBsxGxwH3E8wZLaABc3CGtmS0vBhfcFOT2WILAZA8ZVbQO
+	 cjX25MM8uhE34T44jvqHWzfXjFXSEQ+1oj/uf4/kBnPMg16qzjdXMzeEBXiF8nZBTD
+	 ZY/vMID82aAexHwdu3EiB2sE4B7ePXCcm+x8DcPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391103AbfHBJbv (ORCPT
+        id S2389896AbfHBJby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:31:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58178 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:31:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404743AbfHBJbq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:31:46 -0400
+        id S2391099AbfHBJbv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:31:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 138B821783;
-        Fri,  2 Aug 2019 09:31:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 345F4217F5;
+        Fri,  2 Aug 2019 09:31:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738305;
-        bh=6QaYj1hwO9X8cYBYVzsZl8PDnGSMIwF31I8yblWNh2E=;
+        s=default; t=1564738310;
+        bh=82hX1kXZNLsS5Uy/nQH8yCkmAJVT3xaHc0R6NmO/Tag=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E4jn3+rEv8de0zJoZckzkAm/jQnpXmvKFs+yI8+QXThd0KuaS0xmTdr08eCGq+tEo
-         tX9Jr/duAZQL10vr2sihL48opsPltAsjrgl67NpSV0RO8mmdeZ9tiI6Qb/QU2/fYP7
-         ayPgNrnusbqpm1fAulysec/V57zUn3D0xxrivLqo=
+        b=Rk6va0c5LElzn+z9MZPK9foRo5knxY6eJt5n67TBNEhBhUCBY40f3Ub892ShnvwpM
+         CpT2a/Z24Hh9ScXP8g2CLnzs8eXbFHnnnmW3fpmF+UjwSQaS9dLdSryagtx68G6FU/
+         gLVmTJJCRTC7TibY5nhAhekJMA8nploLqoJ7PZLA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
-        Borislav Petkov <bp@suse.de>,
-        James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
+        stable@vger.kernel.org, Weikang shi <swkhack@gmail.com>,
+        Miroslav Lichvar <mlichvar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Prarit Bhargava <prarit@redhat.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 035/158] EDAC/sysfs: Fix memory leak when creating a csrow object
-Date:   Fri,  2 Aug 2019 11:27:36 +0200
-Message-Id: <20190802092210.979107422@linuxfoundation.org>
+Subject: [PATCH 4.4 037/158] ntp: Limit TAI-UTC offset
+Date:   Fri,  2 Aug 2019 11:27:38 +0200
+Message-Id: <20190802092211.481388707@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -63,50 +65,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 585fb3d93d32dbe89e718b85009f9c322cc554cd ]
+[ Upstream commit d897a4ab11dc8a9fda50d2eccc081a96a6385998 ]
 
-In edac_create_csrow_object(), the reference to the object is not
-released when adding the device to the device hierarchy fails
-(device_add()). This may result in a memory leak.
+Don't allow the TAI-UTC offset of the system clock to be set by adjtimex()
+to a value larger than 100000 seconds.
 
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: James Morse <james.morse@arm.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Link: https://lkml.kernel.org/r/1555554438-103953-1-git-send-email-bianpan2016@163.com
+This prevents an overflow in the conversion to int, prevents the CLOCK_TAI
+clock from getting too far ahead of the CLOCK_REALTIME clock, and it is
+still large enough to allow leap seconds to be inserted at the maximum rate
+currently supported by the kernel (once per day) for the next ~270 years,
+however unlikely it is that someone can survive a catastrophic event which
+slowed down the rotation of the Earth so much.
+
+Reported-by: Weikang shi <swkhack@gmail.com>
+Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Prarit Bhargava <prarit@redhat.com>
+Cc: Richard Cochran <richardcochran@gmail.com>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Link: https://lkml.kernel.org/r/20190618154713.20929-1-mlichvar@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/edac_mc_sysfs.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ kernel/time/ntp.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/edac/edac_mc_sysfs.c b/drivers/edac/edac_mc_sysfs.c
-index 3c8f19f5ac81..0c53f2d54765 100644
---- a/drivers/edac/edac_mc_sysfs.c
-+++ b/drivers/edac/edac_mc_sysfs.c
-@@ -426,6 +426,8 @@ static inline int nr_pages_per_csrow(struct csrow_info *csrow)
- static int edac_create_csrow_object(struct mem_ctl_info *mci,
- 				    struct csrow_info *csrow, int index)
- {
-+	int err;
-+
- 	csrow->dev.type = &csrow_attr_type;
- 	csrow->dev.bus = mci->bus;
- 	csrow->dev.groups = csrow_dev_groups;
-@@ -438,7 +440,11 @@ static int edac_create_csrow_object(struct mem_ctl_info *mci,
- 	edac_dbg(0, "creating (virtual) csrow node %s\n",
- 		 dev_name(&csrow->dev));
+diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
+index 0e0dc5d89911..bbe767b1f454 100644
+--- a/kernel/time/ntp.c
++++ b/kernel/time/ntp.c
+@@ -39,6 +39,7 @@ static u64			tick_length_base;
+ #define MAX_TICKADJ		500LL		/* usecs */
+ #define MAX_TICKADJ_SCALED \
+ 	(((MAX_TICKADJ * NSEC_PER_USEC) << NTP_SCALE_SHIFT) / NTP_INTERVAL_FREQ)
++#define MAX_TAI_OFFSET		100000
  
--	return device_add(&csrow->dev);
-+	err = device_add(&csrow->dev);
-+	if (err)
-+		put_device(&csrow->dev);
-+
-+	return err;
- }
+ /*
+  * phase-lock loop variables
+@@ -633,7 +634,8 @@ static inline void process_adjtimex_modes(struct timex *txc,
+ 		time_constant = max(time_constant, 0l);
+ 	}
  
- /* Create a CSROW object under specifed edac_mc_device */
+-	if (txc->modes & ADJ_TAI && txc->constant >= 0)
++	if (txc->modes & ADJ_TAI &&
++			txc->constant >= 0 && txc->constant <= MAX_TAI_OFFSET)
+ 		*time_tai = txc->constant;
+ 
+ 	if (txc->modes & ADJ_OFFSET)
 -- 
 2.20.1
 
