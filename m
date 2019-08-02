@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C602C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D362EC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 162EA20880
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0455206A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:45:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739127;
-	bh=C3mhXCl2ZWYBLwyb38j1K9FbAQ3C3952L957kgeENwA=;
+	s=default; t=1564739135;
+	bh=SipdAuyC52gfeobWDnLZNj0rO8IMaAtTeLAVQJI1mFg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pyvLn6z46r4js44Gc+4V0sMwnf9wMuAjrf7JyK7Qmy2LVp+zOugmeovTH8Jm1O0v2
-	 omvgVVm3lrCY6YoGq8wk9SwizsJVk6Z6I2iUs4Kf2BWC8pZwznC/H//UwfSSaCjyv1
-	 FI9LxsngjxK1I2gULC05r6TTndcQplTVZbQ8RrPw=
+	b=Aa77uHuIusVh7NA0f2QbOZQsCE0MfLIlaJBIPea7yM53EIbplHuy/BxNBbdW369IY
+	 hRZa8GKp4dlCSs3oBXQQl6YppllMSXR99Mrpy2XsD3gaxqQJPzW0SeCKhaGEmnR8yF
+	 yFKN399E3G1WUDYdZ/Mv7gn/cE7JiT0ws4Gx6Zcc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405298AbfHBJp0 (ORCPT
+        id S2391297AbfHBJpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:45:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49076 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:45:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405424AbfHBJpW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:45:22 -0400
+        id S2405370AbfHBJp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:45:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 077592086A;
-        Fri,  2 Aug 2019 09:45:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B800720679;
+        Fri,  2 Aug 2019 09:45:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739121;
-        bh=C3mhXCl2ZWYBLwyb38j1K9FbAQ3C3952L957kgeENwA=;
+        s=default; t=1564739129;
+        bh=SipdAuyC52gfeobWDnLZNj0rO8IMaAtTeLAVQJI1mFg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yszODwNow/TFRm4BxiJJLxhZz2/xUndyjiwjIQnfT+wfxftU16O23XIMzlb89VhaL
-         ycMNAfSUhG1vWBdU5BvZxiCATa+IrLbrNs1R55f80RexOWyqO3rgk2sdfztKPtsTAv
-         VUsqrXUvGV0swybYs0WVogsNJ3Ac0PYMIo9CbGes=
+        b=RyVItj122ALPHJ3/LZR3rNOTM+28FfOEh5yvRGIWNjFMO0JXmmapTTOnTQSzTr87q
+         X1dRInHXsiETxM6I1exttu6p0joZ0EdCY9hMUnyCpPrFpa1XCQpvD1E2R8yuwbTIJt
+         M1Nsm5RQQ3cshNh4FEhSHqr56+xv5F4Vj/QLFy+o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
-        Marc Meledandri <m.meledandri@gmail.com>,
-        Ben Skeggs <bskeggs@redhat.com>
-Subject: [PATCH 4.9 097/223] drm/nouveau/i2c: Enable i2c pads & busses during preinit
-Date:   Fri,  2 Aug 2019 11:35:22 +0200
-Message-Id: <20190802092245.461973137@linuxfoundation.org>
+        stable@vger.kernel.org, Junxiao Bi <junxiao.bi@oracle.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 4.9 124/223] dm bufio: fix deadlock with loop device
+Date:   Fri,  2 Aug 2019 11:35:49 +0200
+Message-Id: <20190802092247.153499892@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -60,78 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lyude Paul <lyude@redhat.com>
+From: Junxiao Bi <junxiao.bi@oracle.com>
 
-commit 7cb95eeea6706c790571042a06782e378b2561ea upstream.
+commit bd293d071ffe65e645b4d8104f9d8fe15ea13862 upstream.
 
-It turns out that while disabling i2c bus access from software when the
-GPU is suspended was a step in the right direction with:
+When thin-volume is built on loop device, if available memory is low,
+the following deadlock can be triggered:
 
-commit 342406e4fbba ("drm/nouveau/i2c: Disable i2c bus access after
-->fini()")
+One process P1 allocates memory with GFP_FS flag, direct alloc fails,
+memory reclaim invokes memory shrinker in dm_bufio, dm_bufio_shrink_scan()
+runs, mutex dm_bufio_client->lock is acquired, then P1 waits for dm_buffer
+IO to complete in __try_evict_buffer().
 
-We also ended up accidentally breaking the vbios init scripts on some
-older Tesla GPUs, as apparently said scripts can actually use the i2c
-bus. Since these scripts are executed before initializing any
-subdevices, we end up failing to acquire access to the i2c bus which has
-left a number of cards with their fan controllers uninitialized. Luckily
-this doesn't break hardware - it just means the fan gets stuck at 100%.
+But this IO may never complete if issued to an underlying loop device
+that forwards it using direct-IO, which allocates memory using
+GFP_KERNEL (see: do_blockdev_direct_IO()).  If allocation fails, memory
+reclaim will invoke memory shrinker in dm_bufio, dm_bufio_shrink_scan()
+will be invoked, and since the mutex is already held by P1 the loop
+thread will hang, and IO will never complete.  Resulting in ABBA
+deadlock.
 
-This also means that we've always been using our i2c busses before
-initializing them during the init scripts for older GPUs, we just didn't
-notice it until we started preventing them from being used until init.
-It's pretty impressive this never caused us any issues before!
-
-So, fix this by initializing our i2c pad and busses during subdev
-pre-init. We skip initializing aux busses during pre-init, as those are
-guaranteed to only ever be used by nouveau for DP aux transactions.
-
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Tested-by: Marc Meledandri <m.meledandri@gmail.com>
-Fixes: 342406e4fbba ("drm/nouveau/i2c: Disable i2c bus access after ->fini()")
 Cc: stable@vger.kernel.org
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c |   20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ drivers/md/dm-bufio.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c
-@@ -185,6 +185,25 @@ nvkm_i2c_fini(struct nvkm_subdev *subdev
- }
+--- a/drivers/md/dm-bufio.c
++++ b/drivers/md/dm-bufio.c
+@@ -1585,9 +1585,7 @@ dm_bufio_shrink_scan(struct shrinker *sh
+ 	unsigned long freed;
  
- static int
-+nvkm_i2c_preinit(struct nvkm_subdev *subdev)
-+{
-+	struct nvkm_i2c *i2c = nvkm_i2c(subdev);
-+	struct nvkm_i2c_bus *bus;
-+	struct nvkm_i2c_pad *pad;
-+
-+	/*
-+	 * We init our i2c busses as early as possible, since they may be
-+	 * needed by the vbios init scripts on some cards
-+	 */
-+	list_for_each_entry(pad, &i2c->pad, head)
-+		nvkm_i2c_pad_init(pad);
-+	list_for_each_entry(bus, &i2c->bus, head)
-+		nvkm_i2c_bus_init(bus);
-+
-+	return 0;
-+}
-+
-+static int
- nvkm_i2c_init(struct nvkm_subdev *subdev)
- {
- 	struct nvkm_i2c *i2c = nvkm_i2c(subdev);
-@@ -238,6 +257,7 @@ nvkm_i2c_dtor(struct nvkm_subdev *subdev
- static const struct nvkm_subdev_func
- nvkm_i2c = {
- 	.dtor = nvkm_i2c_dtor,
-+	.preinit = nvkm_i2c_preinit,
- 	.init = nvkm_i2c_init,
- 	.fini = nvkm_i2c_fini,
- 	.intr = nvkm_i2c_intr,
+ 	c = container_of(shrink, struct dm_bufio_client, shrinker);
+-	if (sc->gfp_mask & __GFP_FS)
+-		dm_bufio_lock(c);
+-	else if (!dm_bufio_trylock(c))
++	if (!dm_bufio_trylock(c))
+ 		return SHRINK_STOP;
+ 
+ 	freed  = __scan(c, sc->nr_to_scan, sc->gfp_mask);
 
 
