@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D08C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F36C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4D732086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8852721726
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:43:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739001;
-	bh=BPj6Fqs5ZKIFZ+NOohujAGFUyRkC3VRVPwhMr31csK0=;
+	s=default; t=1564739005;
+	bh=d8J/eyduV+erwOk2PgEXLcSJfL3INtQfXul//p44UDE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XyodVz1sPlz90NkoS1dmVK5ptOLnRb4GwYMdvyWeI3eW4yuVEBYJGIeghId5jutXC
-	 m0Jsah9glbG7b/0ifpSwxH1TDhv+c3mmde2xdsEKcWgSvXRXJKRx/2mMhzDl4nsYxp
-	 cwSn08ww6xu4Ow2awu4qss8YKrYSHNBx07+X8B5Q=
+	b=mZJNf03VrlMJ+vrWZsu7DJ1ACKB2wyha+Yl2HlcDw1OAipb7+IspEvKD3l1lRQIqU
+	 Rb+BWtH/0cwbTj+/v5l86jlwyh1rU7RkPnvjAL5CmFtX36SXFkTlh+5gW7WfaFZQYP
+	 p/29meQu9x6LfrrDhn+aCQ5qj/NpE5vuzsPX8CG0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405018AbfHBJnE (ORCPT
+        id S2405045AbfHBJnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:43:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45696 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:43:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404847AbfHBJnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:43:01 -0400
+        id S2404042AbfHBJnI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:43:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A89720880;
-        Fri,  2 Aug 2019 09:42:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A835520679;
+        Fri,  2 Aug 2019 09:43:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738979;
-        bh=BPj6Fqs5ZKIFZ+NOohujAGFUyRkC3VRVPwhMr31csK0=;
+        s=default; t=1564738987;
+        bh=d8J/eyduV+erwOk2PgEXLcSJfL3INtQfXul//p44UDE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KLOS+XIx9TEYvuBpD/cM0piV/Vw30KOfdZ8GmFDWMw/bDrAQMzllJxjP91Rhmuryj
-         oNXTo2m1mrRwKTy1JSN4U2SKm4n9J03XWySa1M8VyH9U0SEKWDejkG43OrvtTV1t59
-         f+lOift6QvVsTJHKRIpN2wog2sya0sa3uqS9WfRM=
+        b=nlN9Syh9mhaSofPKQY2zhq5JQ3OPxjydmkZ8Kcu3pYPTc0HcxKFI90UNvy5C/Wm+b
+         EtSXi70pdcJbCjN0pyFdm6eJsIzVyMLUdtvgSHupjZXV6raC3UakggOOdif83dcpSb
+         MQsbEUqFvOZJT6TJ6uQehc6GQrhOEGpsvlb+gAQc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miaoqing Pan <miaoqing@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 055/223] ath10k: fix PCIE device wake up failed
-Date:   Fri,  2 Aug 2019 11:34:40 +0200
-Message-Id: <20190802092242.450580701@linuxfoundation.org>
+Subject: [PATCH 4.9 073/223] gtp: fix use-after-free in gtp_newlink()
+Date:   Fri,  2 Aug 2019 11:34:58 +0200
+Message-Id: <20190802092243.571212596@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -60,47 +60,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 011d4111c8c602ea829fa4917af1818eb0500a90 ]
+[ Upstream commit a2bed90704c68d3763bf24decb1b781a45395de8 ]
 
-Observed PCIE device wake up failed after ~120 iterations of
-soft-reboot test. The error message is
-"ath10k_pci 0000:01:00.0: failed to wake up device : -110"
+Current gtp_newlink() could be called after unregister_pernet_subsys().
+gtp_newlink() uses gtp_net but it can be destroyed by
+unregister_pernet_subsys().
+So unregister_pernet_subsys() should be called after
+rtnl_link_unregister().
 
-The call trace as below:
-ath10k_pci_probe -> ath10k_pci_force_wake -> ath10k_pci_wake_wait ->
-ath10k_pci_is_awake
+Test commands:
+   #SHELL 1
+   while :
+   do
+	   for i in {1..5}
+	   do
+		./gtp-link add gtp$i &
+	   done
+	   killall gtp-link
+   done
 
-Once trigger the device to wake up, we will continuously check the RTC
-state until it returns RTC_STATE_V_ON or timeout.
+   #SHELL 2
+   while :
+   do
+	modprobe -rv gtp
+   done
 
-But for QCA99x0 chips, we use wrong value for RTC_STATE_V_ON.
-Occasionally, we get 0x7 on the fist read, we thought as a failure
-case, but actually is the right value, also verified with the spec.
-So fix the issue by changing RTC_STATE_V_ON from 0x5 to 0x7, passed
-~2000 iterations.
+Splat looks like:
+[  753.176631] BUG: KASAN: use-after-free in gtp_newlink+0x9b4/0xa5c [gtp]
+[  753.177722] Read of size 8 at addr ffff8880d48f2458 by task gtp-link/7126
+[  753.179082] CPU: 0 PID: 7126 Comm: gtp-link Tainted: G        W         5.2.0-rc6+ #50
+[  753.185801] Call Trace:
+[  753.186264]  dump_stack+0x7c/0xbb
+[  753.186863]  ? gtp_newlink+0x9b4/0xa5c [gtp]
+[  753.187583]  print_address_description+0xc7/0x240
+[  753.188382]  ? gtp_newlink+0x9b4/0xa5c [gtp]
+[  753.189097]  ? gtp_newlink+0x9b4/0xa5c [gtp]
+[  753.189846]  __kasan_report+0x12a/0x16f
+[  753.190542]  ? gtp_newlink+0x9b4/0xa5c [gtp]
+[  753.191298]  kasan_report+0xe/0x20
+[  753.191893]  gtp_newlink+0x9b4/0xa5c [gtp]
+[  753.192580]  ? __netlink_ns_capable+0xc3/0xf0
+[  753.193370]  __rtnl_newlink+0xb9f/0x11b0
+[ ... ]
+[  753.241201] Allocated by task 7186:
+[  753.241844]  save_stack+0x19/0x80
+[  753.242399]  __kasan_kmalloc.constprop.3+0xa0/0xd0
+[  753.243192]  __kmalloc+0x13e/0x300
+[  753.243764]  ops_init+0xd6/0x350
+[  753.244314]  register_pernet_operations+0x249/0x6f0
+[ ... ]
+[  753.251770] Freed by task 7178:
+[  753.252288]  save_stack+0x19/0x80
+[  753.252833]  __kasan_slab_free+0x111/0x150
+[  753.253962]  kfree+0xc7/0x280
+[  753.254509]  ops_free_list.part.11+0x1c4/0x2d0
+[  753.255241]  unregister_pernet_operations+0x262/0x390
+[ ... ]
+[  753.285883] list_add corruption. next->prev should be prev (ffff8880d48f2458), but was ffff8880d497d878. (next.
+[  753.287241] ------------[ cut here ]------------
+[  753.287794] kernel BUG at lib/list_debug.c:25!
+[  753.288364] invalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
+[  753.289099] CPU: 0 PID: 7126 Comm: gtp-link Tainted: G    B   W         5.2.0-rc6+ #50
+[  753.291036] RIP: 0010:__list_add_valid+0x74/0xd0
+[  753.291589] Code: 48 39 da 75 27 48 39 f5 74 36 48 39 dd 74 31 48 83 c4 08 b8 01 00 00 00 5b 5d c3 48 89 d9 48b
+[  753.293779] RSP: 0018:ffff8880cae8f398 EFLAGS: 00010286
+[  753.294401] RAX: 0000000000000075 RBX: ffff8880d497d878 RCX: 0000000000000000
+[  753.296260] RDX: 0000000000000075 RSI: 0000000000000008 RDI: ffffed10195d1e69
+[  753.297070] RBP: ffff8880cd250ae0 R08: ffffed101b4bff21 R09: ffffed101b4bff21
+[  753.297899] R10: 0000000000000001 R11: ffffed101b4bff20 R12: ffff8880d497d878
+[  753.298703] R13: 0000000000000000 R14: ffff8880cd250ae0 R15: ffff8880d48f2458
+[  753.299564] FS:  00007f5f79805740(0000) GS:ffff8880da400000(0000) knlGS:0000000000000000
+[  753.300533] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  753.301231] CR2: 00007fe8c7ef4f10 CR3: 00000000b71a6006 CR4: 00000000000606f0
+[  753.302183] Call Trace:
+[  753.302530]  gtp_newlink+0x5f6/0xa5c [gtp]
+[  753.303037]  ? __netlink_ns_capable+0xc3/0xf0
+[  753.303576]  __rtnl_newlink+0xb9f/0x11b0
+[  753.304092]  ? rtnl_link_unregister+0x230/0x230
 
-Tested HW: QCA9984
-
-Signed-off-by: Miaoqing Pan <miaoqing@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: 459aa660eb1d ("gtp: add initial driver for datapath of GPRS Tunneling Protocol (GTP-U)")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/hw.c | 2 +-
+ drivers/net/gtp.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/hw.c b/drivers/net/wireless/ath/ath10k/hw.c
-index 675e75d66db2..14dc6548701c 100644
---- a/drivers/net/wireless/ath/ath10k/hw.c
-+++ b/drivers/net/wireless/ath/ath10k/hw.c
-@@ -157,7 +157,7 @@ const struct ath10k_hw_values qca6174_values = {
- };
+diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
+index 60df6e391ad2..7e1df403a37d 100644
+--- a/drivers/net/gtp.c
++++ b/drivers/net/gtp.c
+@@ -1358,9 +1358,9 @@ late_initcall(gtp_init);
  
- const struct ath10k_hw_values qca99x0_values = {
--	.rtc_state_val_on		= 5,
-+	.rtc_state_val_on		= 7,
- 	.ce_count			= 12,
- 	.msi_assign_ce_max		= 12,
- 	.num_target_ce_config_wlan	= 10,
+ static void __exit gtp_fini(void)
+ {
+-	unregister_pernet_subsys(&gtp_net_ops);
+ 	genl_unregister_family(&gtp_genl_family);
+ 	rtnl_link_unregister(&gtp_link_ops);
++	unregister_pernet_subsys(&gtp_net_ops);
+ 
+ 	pr_info("GTP module unloaded\n");
+ }
 -- 
 2.20.1
 
