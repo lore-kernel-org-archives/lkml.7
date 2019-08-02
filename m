@@ -2,150 +2,92 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA7BC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5323C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D223420B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:15:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564784143;
-	bh=0VIAzOo4zb+swZnODQr4hpD7QckO3wZdHQ/+75GTF1U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ryMM9+7J8XrWLWfeUDV3xZ8oSntFhuawULSA5ngeuTWolyvQNGDo5+NJzCyuNHkEV
-	 g6nJ5dH1POV2/IGTottDrkr5T42pzNdoj+JpG7wVH/bRjUplxpcBSrCeLtfwIN6Gj0
-	 A/fOB9YOs12hy48Q47yDXphMoTrkhdfvJE6Hr42Y=
+	by mail.kernel.org (Postfix) with ESMTP id B4A402087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:20:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c11DsE6x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730991AbfHBWPm (ORCPT
+        id S2388026AbfHBWUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 18:15:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41410 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727884AbfHBWPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 18:15:42 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FAC92087C;
-        Fri,  2 Aug 2019 22:15:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564784141;
-        bh=0VIAzOo4zb+swZnODQr4hpD7QckO3wZdHQ/+75GTF1U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uKqTme8pWjp2pFS3sAbNjLV/ACQVZk5uy3e4F7mchlG8JEQKkiMhiZALaWbrk9dTF
-         PIZ+QsF9kwvw77M+BSZBGxYm/mPQD5HFsDY/DsHx0F1SVUB4RXpIp0jCG2gTlP88Gv
-         KFks3NVPUOXw2b//d5n6Fhj08gxat8oPs+x8imWQ=
-Date:   Fri, 2 Aug 2019 17:15:40 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     Stephen Hemminger <sthemmin@microsoft.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "driverdev-devel@linuxdriverproject.org" 
-        <driverdev-devel@linuxdriverproject.org>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        "jackm@mellanox.com" <jackm@mellanox.com>
-Subject: Re: [PATCH] PCI: hv: Fix panic by calling hv_pci_remove_slots()
- earlier
-Message-ID: <20190802221540.GN151852@google.com>
-References: <PU1P153MB0169DBCFEE7257F5BB93580ABFD90@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
- <20190802194053.GL151852@google.com>
- <PU1P153MB01698F51FE22C39086CC8353BFD90@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+        Fri, 2 Aug 2019 18:20:12 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45301 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732371AbfHBWUM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 18:20:12 -0400
+Received: by mail-lj1-f195.google.com with SMTP id m23so74128619lje.12
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 15:20:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IZ48FMZQTs4uLcOa+ewd+uatrSZkDn8qdysdEWbOPPM=;
+        b=c11DsE6xhXFUkGZOKxS0st145dWqvewhcd3fQlz6reUM8JMeFAhgV6u4i+TozRJvOo
+         sKH5UKHncsWaB2Xjfz8zRmJm8YpIFS1WpghI8V66dbRbM/YCMrbRdoOOGFjkAw2VUDd4
+         XeMVfXUsMg2le9LZ2rOUIV+hapnOY1oM85zlQapDge4ELyVgXchMO4Mc74KZbF1gXQRw
+         CqbrPqC0Tx7XdvggiEfEoGga6UZEwaZsbj3bN4hJ7QMGjvdm5rhbcl77SyloCyw7b5BN
+         SODi1TlVZcC/IVLwZydxi5Vx7TJZ2gKURa+2D9HfIPnftiW4ftpjrvsCVhZinnnEtmf8
+         s7OQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IZ48FMZQTs4uLcOa+ewd+uatrSZkDn8qdysdEWbOPPM=;
+        b=UFmZNw4kkyMmW7YnoiJNM9+mj+rEkrhnTCrt4pJlQlSGjn2/L9AOZTFDjxO55HM3bp
+         Yt1dy/evCHC4Xm2v2ab0yb+mlUWAVos2+uE8nFuFlwVRKh91AkNtaRoaN3lw8TIfMYdN
+         E//XMklhZAyUO1BJh5GX6H9rs78kk+qYcc/Gf/1WuFpjfuiFDeWmmjD7SdykA04s2o+E
+         0z0XJlOLmkGB0P0JOeTlYBWp+LVyU5vzr7ozPza27wNsh7s+l+TlSZppAJHkEXzgf0wQ
+         YGXfqzsemy1/E3+XnUQxdzdhIHJkw8rMkmI73XkC8t7sYBaFQ/pcZtN1u4WDppf8Ivve
+         g6ZA==
+X-Gm-Message-State: APjAAAWPUmEPvndfOSYjP84Dna23nbL3vYj8wSzk0H/DBBcNKN0lrzOJ
+        90yHbNrEaPxrB8aOP3Shso9J66c+tNa1MHeiWjA3Hg==
+X-Google-Smtp-Source: APXvYqzlGf0tKCzKwDLVMNReMvQcDY2AOLHnYQ7fYCG4kMKmoHKNejXmOFBQGqIQflfBg5mRKfTF8g1MtfHSnrhNYSs=
+X-Received: by 2002:a2e:8756:: with SMTP id q22mr73630699ljj.108.1564784410398;
+ Fri, 02 Aug 2019 15:20:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PU1P153MB01698F51FE22C39086CC8353BFD90@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190718094902.15562-1-hui.song_1@nxp.com> <20190718094902.15562-2-hui.song_1@nxp.com>
+In-Reply-To: <20190718094902.15562-2-hui.song_1@nxp.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 3 Aug 2019 00:19:59 +0200
+Message-ID: <CACRpkdYRg8mMe5yxu=+tC1uz_usyNyVjn7NFobSUZi0rR5uGjw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: mpc8xxx: Add ls1028a device specify function.
+To:     Hui Song <hui.song_1@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 08:31:26PM +0000, Dexuan Cui wrote:
-> > From: Bjorn Helgaas <helgaas@kernel.org>
-> > Sent: Friday, August 2, 2019 12:41 PM
-> > The subject line only describes the mechanical code change, which is
-> > obvious from the patch.  It would be better if we could say something
-> > about *why* we need this.
-> 
-> Hi Bjorn,
-> Sorry. I'll try to write a better changelog in v2. :-)
->  
-> > On Fri, Aug 02, 2019 at 01:32:28AM +0000, Dexuan Cui wrote:
-> > >
-> > > When a slot is removed, the pci_dev must still exist.
-> > >
-> > > pci_remove_root_bus() removes and free all the pci_devs, so
-> > > hv_pci_remove_slots() must be called before pci_remove_root_bus(),
-> > > otherwise a general protection fault can happen, if the kernel is built
-> > 
-> > "general protection fault" is an x86 term that doesn't really say what
-> > the issue is.  I suspect this would be a "use-after-free" problem.
-> 
-> Yes, it's use-after-free. I'll fix the the wording.
->  
-> > > --- a/drivers/pci/controller/pci-hyperv.c
-> > > +++ b/drivers/pci/controller/pci-hyperv.c
-> > > @@ -2757,8 +2757,8 @@ static int hv_pci_remove(struct hv_device *hdev)
-> > >  		/* Remove the bus from PCI's point of view. */
-> > >  		pci_lock_rescan_remove();
-> > >  		pci_stop_root_bus(hbus->pci_bus);
-> > > -		pci_remove_root_bus(hbus->pci_bus);
-> > >  		hv_pci_remove_slots(hbus);
-> > > +		pci_remove_root_bus(hbus->pci_bus);
-> > 
-> > I'm curious about why we need hv_pci_remove_slots() at all.  None of
-> > the other callers of pci_stop_root_bus() and pci_remove_root_bus() do
-> > anything similar to hv_pci_remove_slots().
-> > 
-> > Surely some of those callers also support slots, so there must be some
-> > other path that calls pci_destroy_slot() in those cases.  Can we use a
-> > similar strategy here?
-> 
-> Originally Stephen Heminger added the slot code for pci-hyperv.c:
-> a15f2c08c708 ("PCI: hv: support reporting serial number as slot information")
-> So he may know this better. My understanding is: we can not use the similar
-> stragegy used in the 2 other users of pci_create_slot():
-> 
-> drivers/pci/hotplug/pci_hotplug_core.c calls pci_create_slot().
-> It looks drivers/pci/hotplug/ is quite different from pci-hyperv.c because
-> pci-hyper-v uses a simple *private* hot-plug protocol, making it impossible
-> to use the API pci_hp_register() and pci_hp_destroy() -> pci_destroy_slot().
-> 
-> drivers/acpi/pci_slot.c calls pci_create_slot(), and saves the created slots in
-> the static "slot_list" list in the same file. Again, since pci-hyper-v uses a private
-> PCI-device-discovery protocol (which is based on VMBus rather the emulated
-> ACPI and PCI), acpi_pci_slot_enumerate() can not find the PCI devices that are
-> discovered by pci-hyperv, so we can not use the standard register_slot() ->
-> pci_create_slot() to create the slots and hence acpi_pci_slot_remove() -> 
-> pci_destroy_slot() can not work for pci-hyperv.
+On Thu, Jul 18, 2019 at 11:58 AM Hui Song <hui.song_1@nxp.com> wrote:
 
-Hmm, ok.  This still doesn't seem right to me, but I think the bottom
-line will be that the current slot registration interfaces just don't
-work quite right for all the cases we want them to.
+> From: Song Hui <hui.song_1@nxp.com>
+>
+> There is a device specify register(named GPIO_IBE)
+> on ls1028a need to enable in initial stage.
+>
+> Signed-off-by: Song Hui <hui.song_1@nxp.com>
 
-Maybe it would be a good project for somebody to rethink them, but it
-doesn't seem practical for *this* patch.  Thanks for looking into it
-this far!
+Patch applied.
 
-> I think I can use this as the v2 changelog:
-> 
-> The slot must be removed before the pci_dev is removed, otherwise a panic
-> can happen due to use-after-free.
+As noted on patch 1/2, send a separate patch to add the
+device tree bindings in Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
 
-Sounds good.
-
-Bjorn
+Yours,
+Linus Walleij
