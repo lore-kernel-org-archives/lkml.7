@@ -2,92 +2,96 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76917C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 04:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A33B9C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 04:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DF4B206A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 04:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F93E206A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 04:29:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731562AbfHBEXn (ORCPT
+        id S1731638AbfHBE3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 00:23:43 -0400
-Received: from smtprelay0250.hostedemail.com ([216.40.44.250]:50045 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728157AbfHBEXn (ORCPT
+        Fri, 2 Aug 2019 00:29:46 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:51441 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728791AbfHBE3q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 00:23:43 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id AD9EA837F24D;
-        Fri,  2 Aug 2019 04:23:41 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: plot37_7776b4afd1f61
-X-Filterd-Recvd-Size: 1675
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf05.hostedemail.com (Postfix) with ESMTPA;
-        Fri,  2 Aug 2019 04:23:40 +0000 (UTC)
-Message-ID: <7a06b8e9acf87a871642166370ac50ec6c734ce8.camel@perches.com>
-Subject: linux kernel sources: more misspellings/tyops of <foo>iton words
-From:   Joe Perches <joe@perches.com>
-To:     kernel-janitors <kernel-janitors@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Colin King <colin.king@canonical.com>
-Date:   Thu, 01 Aug 2019 21:23:39 -0700
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Fri, 2 Aug 2019 00:29:46 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1htPCI-0004kg-U4; Fri, 02 Aug 2019 06:29:42 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1htPCG-0000hC-To; Fri, 02 Aug 2019 06:29:40 +0200
+Date:   Fri, 2 Aug 2019 06:29:40 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Daniel Baluta <daniel.baluta@gmail.com>
+Cc:     Richard Zhu <hongxing.zhu@nxp.com>, jassisinghbrar@gmail.com,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3] mailbox: imx: add support for imx v1 mu
+Message-ID: <20190802042940.5rhmrwr3dxona4kr@pengutronix.de>
+References: <1564563107-23736-1-git-send-email-hongxing.zhu@nxp.com>
+ <CAEnQRZBJTCMYXwBz9pDVGD+7-gE_Jba-5kwXYC8qOPkEBiVT=g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEnQRZBJTCMYXwBz9pDVGD+7-gE_Jba-5kwXYC8qOPkEBiVT=g@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 06:27:45 up 76 days, 10:45, 46 users,  load average: 0.05, 0.03,
+ 0.03
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If any feels like it, here are some more typos from:
+On Fri, Aug 02, 2019 at 06:54:27AM +0300, Daniel Baluta wrote:
+> One more thing. See below:
+> 
+> On Wed, Jul 31, 2019 at 12:14 PM Richard Zhu <hongxing.zhu@nxp.com> wrote:
+> 
+> <snip>
+> 
+> > -/* Control Register */
+> > -#define IMX_MU_xCR             0x24
+> >  /* General Purpose Interrupt Enable */
+> >  #define IMX_MU_xCR_GIEn(x)     BIT(28 + (3 - (x)))
+> >  /* Receive Interrupt Enable */
+> > @@ -44,6 +36,13 @@ enum imx_mu_chan_type {
+> >         IMX_MU_TYPE_RXDB,       /* Rx doorbell */
+> >  };
+> >
+> > +struct imx_mu_dcfg {
+> 
+> Can you rename this into imx_mu_regs ?
 
-$ git grep -P '\b\w+itons?' | grep -ohP '\b\w+itons?' | sort | uniq -c | sort -rn
-      7 additon
-      6 definitons
-      5 Prediciton
-      5 instruciton
-      4 conditon
-      3 partititon
-      3 notificaiton
-      3 implementaiton
-      3 definiton
-      3 Additon
-      2 veriton
-      2 unconditon
-      2 poriton
-      2 parititon
-      2 initializaiton
-      2 defininitons
-      2 conneciton
-      2 configuraiton
-      1 translaiton
-      1 Transisitons
-      1 traditon
-      1 quesiton
-      1 positon
-      1 posiiton
-      1 partiton
-      1 moniton
-      1 inspeciton
-      1 infomraiton
-      1 implicaitons
-      1 identificaiton
-      1 generaiton
-      1 encrypiton
-      1 destinaiton
-      1 declariton
-      1 confirmaiton
-      1 Configuraiton
-      1 conditons
-      1 calculaiton
-      1 applicaiton
-      1 allocaiton
+I decided not blame this part. Otherwise adding other type of quirks
+will lead to more refactoring work.
 
+> > +       u32     xTR[4];         /* Transmit Registers */
+> > +       u32     xRR[4];         /* Receive Registers */
+> > +       u32     xSR;            /* Status Register */
+> > +       u32     xCR;            /* Control Register */
+> > +};
+> 
 
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
