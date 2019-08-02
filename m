@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61521C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6ACC32753
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 381272087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A0622087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:49:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739339;
-	bh=xCUjBjZVjtJ9PULEzRtNCnrVM5LuoqkL8P4zCUhfJRo=;
+	s=default; t=1564739350;
+	bh=sw7NaxbdxmEM6aRee2IGjhr908nG873HqFG3gLRoZso=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=om15VFNcy06YPjQrAlok4MyMFJXpLweJqzXjxo4+ISEsYKPYqmBn/7v4gaNEskkR3
-	 B67fXWAubVKMqL5thMha3PdxhoK4qWelGTlvr9QPLC9Syp4jMfYeF/rODHqbKb0LE0
-	 +z4g5EKcPH1g6Dpc8MptyUEdgQTqOHqRbtCwKb18=
+	b=Zu8iVtdk2dtKuaEhayMqK2kAqEhoU+Psy0XF3yxuscO1pcB896AKM2If+2HfHqwZn
+	 aod9bgTNHEJtmqaoseU9yZiY2Ttm8kOvuhiID2dz6EiwwpdD2lFQlxnPqJ53behJ7J
+	 Z7mZNc/2V8PVR+j/+Sr8B/sNZtVhZ92K/ekC8J/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405262AbfHBJs6 (ORCPT
+        id S2405963AbfHBJtJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:48:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54424 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:49:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405929AbfHBJsv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:48:51 -0400
+        id S2405300AbfHBJsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:48:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CA002087E;
-        Fri,  2 Aug 2019 09:48:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B91F8206A2;
+        Fri,  2 Aug 2019 09:48:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739330;
-        bh=xCUjBjZVjtJ9PULEzRtNCnrVM5LuoqkL8P4zCUhfJRo=;
+        s=default; t=1564739323;
+        bh=sw7NaxbdxmEM6aRee2IGjhr908nG873HqFG3gLRoZso=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f5HCjPeveLXn/Etih1smhIEStjRwXPsBwZQqA/5nSyKRCb6jNOGFqlZsIff8VWnoJ
-         Izzf8QFrMpcftB340KlRN9kuzcE4YpkqIYnVxUF0/vywu7LodJr8Pz5T/+BotM1l+/
-         bdaFvHhS3+tPihATl9GJF1WsSbltl1oYelkPSTu8=
+        b=MJY+GaKRG4x5D+BqA/u0Nbg/IFkEojDdm5ZtUHQ8sf8YoASB/gUroMORqjcf9C8ZO
+         x+s8i2KSMwxGXHMDgLHsYb9h8HYaPGhpuhaAa4+KWdxbkRdpepDdtFZ0r61IclRIYS
+         +DfWhRPPIWUAVK9g3YUsiW03HAhwG41AtbG++53E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Riley <davidriley@chromium.org>,
-        Gerd Hoffmann <kraxel@redhat.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Baruch Siach <baruch@tkos.co.il>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 170/223] drm/virtio: Add memory barriers for capset cache.
-Date:   Fri,  2 Aug 2019 11:36:35 +0200
-Message-Id: <20190802092248.966552546@linuxfoundation.org>
+Subject: [PATCH 4.9 167/223] tty/serial: digicolor: Fix digicolor-usart already registered warning
+Date:   Fri,  2 Aug 2019 11:36:32 +0200
+Message-Id: <20190802092248.856080642@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -60,48 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9ff3a5c88e1f1ab17a31402b96d45abe14aab9d7 ]
+[ Upstream commit c7ad9ba0611c53cfe194223db02e3bca015f0674 ]
 
-After data is copied to the cache entry, atomic_set is used indicate
-that the data is the entry is valid without appropriate memory barriers.
-Similarly the read side was missing the corresponding memory barriers.
+When modprobe/rmmod/modprobe module, if platform_driver_register() fails,
+the kernel complained,
 
-Signed-off-by: David Riley <davidriley@chromium.org>
-Link: http://patchwork.freedesktop.org/patch/msgid/20190610211810.253227-5-davidriley@chromium.org
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+  proc_dir_entry 'driver/digicolor-usart' already registered
+  WARNING: CPU: 1 PID: 5636 at fs/proc/generic.c:360 proc_register+0x19d/0x270
+
+Fix this by adding uart_unregister_driver() when platform_driver_register() fails.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Acked-by: Baruch Siach <baruch@tkos.co.il>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/virtio/virtgpu_ioctl.c | 3 +++
- drivers/gpu/drm/virtio/virtgpu_vq.c    | 2 ++
- 2 files changed, 5 insertions(+)
+ drivers/tty/serial/digicolor-usart.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-index 54639395aba0..a3559b1a3a0f 100644
---- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-@@ -521,6 +521,9 @@ static int virtio_gpu_get_caps_ioctl(struct drm_device *dev,
- 	ret = wait_event_timeout(vgdev->resp_wq,
- 				 atomic_read(&cache_ent->is_valid), 5 * HZ);
+diff --git a/drivers/tty/serial/digicolor-usart.c b/drivers/tty/serial/digicolor-usart.c
+index 02ad6953b167..50ec5f1ac77f 100644
+--- a/drivers/tty/serial/digicolor-usart.c
++++ b/drivers/tty/serial/digicolor-usart.c
+@@ -545,7 +545,11 @@ static int __init digicolor_uart_init(void)
+ 	if (ret)
+ 		return ret;
  
-+	/* is_valid check must proceed before copy of the cache entry. */
-+	smp_rmb();
+-	return platform_driver_register(&digicolor_uart_platform);
++	ret = platform_driver_register(&digicolor_uart_platform);
++	if (ret)
++		uart_unregister_driver(&digicolor_uart);
 +
- 	ptr = cache_ent->caps_cache;
++	return ret;
+ }
+ module_init(digicolor_uart_init);
  
- copy_exit:
-diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
-index 52436b3c01bb..a1b3ea1ccb65 100644
---- a/drivers/gpu/drm/virtio/virtgpu_vq.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
-@@ -618,6 +618,8 @@ static void virtio_gpu_cmd_capset_cb(struct virtio_gpu_device *vgdev,
- 		    cache_ent->id == le32_to_cpu(cmd->capset_id)) {
- 			memcpy(cache_ent->caps_cache, resp->capset_data,
- 			       cache_ent->size);
-+			/* Copy must occur before is_valid is signalled. */
-+			smp_wmb();
- 			atomic_set(&cache_ent->is_valid, 1);
- 			break;
- 		}
 -- 
 2.20.1
 
