@@ -2,80 +2,106 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27532C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A127CC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF9952087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:18:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564733894;
-	bh=M9Qf34aSZeVC+o3uT6RLeI/FX0v7TbxBw6sAGR+jbXw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AOSPZyar9QJXiyi7l5vS534YJjdlTiR+hLq/Sug0/8tc5xVbxy5HWpqdPqnaITg1a
-	 Eu1yxWUUGX0nBqx6sQKc/g+ZhOk492fUldsEutx+C7WJ4mqN3mD3lqAKFYvrNxqOXr
-	 Owa2CaTxgd5wt7PyvsLH5zzajnps/BjNgvwiKQkA=
+	by mail.kernel.org (Postfix) with ESMTP id 7B6FC21851
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:20:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="IHYpmQM8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404075AbfHBISN (ORCPT
+        id S2390836AbfHBIUY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 04:18:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36704 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727622AbfHBISM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 04:18:12 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D3349AFF1;
-        Fri,  2 Aug 2019 08:18:10 +0000 (UTC)
-Date:   Fri, 2 Aug 2019 10:18:08 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Masoud Sharbiani <msharbiani@apple.com>, hannes@cmpxchg.org,
-        vdavydov.dev@gmail.com, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: Possible mem cgroup bug in kernels between 4.18.0 and 5.3-rc1.
-Message-ID: <20190802081808.GB6461@dhcp22.suse.cz>
-References: <5659221C-3E9B-44AD-9BBF-F74DE09535CD@apple.com>
- <20190801181952.GA8425@kroah.com>
- <7EE30F16-A90B-47DC-A065-3C21881CD1CC@apple.com>
+        Fri, 2 Aug 2019 04:20:24 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:42756 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727738AbfHBIUX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 04:20:23 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id BA4D2CC;
+        Fri,  2 Aug 2019 10:20:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1564734021;
+        bh=pvbdZIWzjzR/LxKyDLxztUTUtujs0Qx/v3CAnr+6Zr4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IHYpmQM8X1BQ3If4zZnaVavrylWcJsO7Q7Mj4RnoggvAyLn7DFA9j7FrYSuAVIgEB
+         acgddoRooMGR6pU7/SIw571qLpE/NOhuBoJ0Zv2XFt+04jPWevQ9CMK3PnBGNrosCN
+         bHAHKhXsiAinRECu0Ha7FRkCT6QRPl2yGRfOj1SI=
+Date:   Fri, 2 Aug 2019 11:20:20 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>
+Subject: Re: [PATCH/RFC 07/12] drm: rcar-du: lvds: Add support for dual link
+ panels
+Message-ID: <20190802082020.GH5008@pendragon.ideasonboard.com>
+References: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1564731249-22671-8-git-send-email-fabrizio.castro@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <7EE30F16-A90B-47DC-A065-3C21881CD1CC@apple.com>
+In-Reply-To: <1564731249-22671-8-git-send-email-fabrizio.castro@bp.renesas.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Hillf, your email client or workflow mangles emails. In this case you
-are seem to be reusing the message id from the email you are replying to
-which confuses my email client to assume your email is a duplicate.]
+Hi Fabrizio,
 
-On Fri 02-08-19 16:08:01, Hillf Danton wrote:
-[...]
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -2547,8 +2547,12 @@ retry:
->  	nr_reclaimed = try_to_free_mem_cgroup_pages(mem_over_limit, nr_pages,
->  						    gfp_mask, may_swap);
+Thank you for the patch.
+
+On Fri, Aug 02, 2019 at 08:34:04AM +0100, Fabrizio Castro wrote:
+> If the display comes with two ports, assume it supports dual
+> link.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> ---
+>  drivers/gpu/drm/rcar-du/rcar_lvds.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
+> index 2d54ae5..97c51c2 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
+> @@ -751,6 +751,9 @@ static int rcar_lvds_parse_dt(struct rcar_lvds *lvds)
+>  			ret = -EPROBE_DEFER;
+>  			goto done;
+>  		}
+> +		if (lvds->info->quirks & RCAR_LVDS_QUIRK_DUAL_LINK)
+> +			lvds->dual_link = of_graph_get_endpoint_count(remote)
+> +					== 2;
+
+This is a bit of a hack, as I think the information should be queried
+from the panel, like we do for bridges. I'd say we can live with this
+for now, but as the data swap flag should come from the panel as well,
+we will need infrastructure for that, and we can as well through the
+dual link flag there at the same time.
+
+I think we should use the drm_bridge_timings structure for this purpose,
+as it would make life more difficult for users of drm_bridge and
+drm_panel to have two different structures (especially when wrapping a
+drm_panel with drm_panel_bridge_add()). The structure could be renamed
+if desired.
+
+>  	}
 >  
-> -	if (mem_cgroup_margin(mem_over_limit) >= nr_pages)
-> -		goto retry;
-> +	if (mem_cgroup_margin(mem_over_limit) >= nr_pages) {
-> +		if (nr_retries--)
-> +			goto retry;
-> +		/* give up charging memhog */
-> +		return -ENOMEM;
-> +	}
+>  	if (lvds->dual_link) {
 
-Huh, what? You are effectively saying that we should fail the charge
-when the requested nr_pages would fit in. This doesn't make much sense
-to me. What are you trying to achive here?
 -- 
-Michal Hocko
-SUSE Labs
+Regards,
+
+Laurent Pinchart
