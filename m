@@ -2,304 +2,98 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D69DC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 07:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE3CC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 07:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AC6920449
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 07:59:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564732752;
-	bh=Lmj4hiCQa82CThA1R47tJYqTe4VJRuGWVY3hoaY/DEs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nfQEVxbYieOd5a/AQzfGKTwcRGA4vQV8SOj7PQ8vAg9iUEfs/XNEzRvcv926jK2Q8
-	 j7/K6mFpAQJGPSsnSxDt8aqcL9GGjjG87gGLM8bh6EZAfdGo1HJtSpFVMIrPNklFx+
-	 FFTZV/fMIS0nAH52LOE9GJWOXhwaky+AORijRLko=
+	by mail.kernel.org (Postfix) with ESMTP id 8E69520449
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 07:59:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390609AbfHBH7L (ORCPT
+        id S2390626AbfHBH7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 03:59:11 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34525 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728268AbfHBH7K (ORCPT
+        Fri, 2 Aug 2019 03:59:48 -0400
+Received: from skedge04.snt-world.com ([91.208.41.69]:56232 "EHLO
+        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728268AbfHBH7s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 03:59:10 -0400
-Received: by mail-wr1-f68.google.com with SMTP id 31so76203520wrm.1;
-        Fri, 02 Aug 2019 00:59:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mDo7p75xMOujQk/V2A1la918Hsts2w3sSJwRBgcjfjY=;
-        b=a32AeCRZIARmfokJQnVpbKosdsHDsNtIPcEnW986iL4vycmp65CtpfXe3iL5DW2Jec
-         oYXS7BN4y87wKM2+5B5pmmXpqo5u1mzkLEpGScmPUUInsMkS0ra7XClOZrC7M9XI81Pq
-         rAetzEBjUNNSo8Kse2lxL1RNoUoLeuPe9eMFCr8FDDYiMTVT1X1OysVvhtT6eGvf6AuT
-         /F6La2cQTX5ScGRDT8lEOZ3qbLjNwqrjK7VTr/n/mcXpRmc+qMta7NdBzDA143oFlmyI
-         K4ctNCQ6zH+P0p5dGZcbKG9dWqpsDSke0+TFtChtyJo/3Zxdoxeb7d2QjOMyTioGx286
-         raCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mDo7p75xMOujQk/V2A1la918Hsts2w3sSJwRBgcjfjY=;
-        b=D/stEw5CcUM0G66J3d+OPiGxTdGyQlvtAq4HvNlt7/S/0pJK7kX0TAlcxwWaI1NaM1
-         xKngwNJijqnNLy4DHiAwivLhVazdovgoAs0FHGSd2mDAtzn5PyXApftnvXwC4WhCZ+PB
-         gNuG+DdIDNwdc7peCE38WHhK6/+HN0/DwjE1UcE6cKkBhvsHFMZw0c4AzvYlwUh99AIh
-         KvoO4dDcYxM1jF5x8TCJ8HHNLUvwK5Dyj9qJBSj70lwA5lECSNcff39KupU66U5VnT54
-         e1228ZE/hG9nG6oJyJNJX9nsBn8bg3Nl8kd/aNSatbQNJXLVUu/z84R9SK497bfxTd6t
-         1ScA==
-X-Gm-Message-State: APjAAAVpySSduHBVuuSVltZ859GVqjqVYd0aDZOfxI3JD9l/cQWUqneN
-        kXNjGOvJLjeYwo6euPv041A=
-X-Google-Smtp-Source: APXvYqyo1MuWKJz5qxkb4XwptLgqmq38QbqQQDDXgwbGMe1uFVxfiPYXjiT5WcBfcVbnX9+RqZmqQQ==
-X-Received: by 2002:a5d:4a4e:: with SMTP id v14mr53938738wrs.200.1564732747352;
-        Fri, 02 Aug 2019 00:59:07 -0700 (PDT)
-Received: from rric.localdomain (x4e375ad3.dyn.telefonica.de. [78.55.90.211])
-        by smtp.gmail.com with ESMTPSA id t15sm65935260wrx.84.2019.08.02.00.59.06
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 02 Aug 2019 00:59:06 -0700 (PDT)
-Date:   Fri, 2 Aug 2019 09:58:55 +0200
-From:   Robert Richter <rric@kernel.org>
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     Borislav Petkov <bp@alien8.de>, James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 00/24] EDAC, mc, ghes: Fixes and updates to improve
- memory error reporting
-Message-ID: <20190802075854.ydrlufwvdxcjk7jj@rric.localdomain>
-References: <20190624150758.6695-1-rrichter@marvell.com>
+        Fri, 2 Aug 2019 03:59:48 -0400
+Received: from sntmail10s.snt-is.com (unknown [10.203.32.183])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by skedge04.snt-world.com (Postfix) with ESMTPS id 4D06467A8D8;
+        Fri,  2 Aug 2019 09:59:45 +0200 (CEST)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail10s.snt-is.com
+ (10.203.32.183) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 2 Aug 2019
+ 09:59:44 +0200
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1713.004; Fri, 2 Aug 2019 09:59:44 +0200
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
+        <u.kleine-koenig@pengutronix.de>
+CC:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "geert+renesas@glider.be" <geert+renesas@glider.be>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 2/3] serial: sh-sci: Remove check for specific
+ mctrl_gpio_init() return value
+Thread-Topic: [PATCH v2 2/3] serial: sh-sci: Remove check for specific
+ mctrl_gpio_init() return value
+Thread-Index: AQHVSJlHEoc0h/HtdUeNtLGwgfHXXKbmn5QAgAC+MAA=
+Date:   Fri, 2 Aug 2019 07:59:44 +0000
+Message-ID: <75b5875d-fa88-3995-6776-ac9a67a3de3c@kontron.de>
+References: <20190801184505.17239-1-frieder.schrempf@kontron.de>
+ <20190801184505.17239-2-frieder.schrempf@kontron.de>
+ <20190801203902.xie5dexnsoqxxlat@pengutronix.de>
+In-Reply-To: <20190801203902.xie5dexnsoqxxlat@pengutronix.de>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8DB2351A1567814DB91DE6E1D595A641@snt-world.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190624150758.6695-1-rrichter@marvell.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: 4D06467A8D8.AF499
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: festevam@gmail.com, geert+renesas@glider.be,
+        gregkh@linuxfoundation.org, jslaby@suse.com, kernel@pengutronix.de,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+        s.hauer@pengutronix.de, shawnguo@kernel.org,
+        u.kleine-koenig@pengutronix.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
-
-this is a friendly ping for review of this series.
-
-Thanks,
-
--Robert
-
-On 24.06.19 15:08:52, Robert Richter wrote:
-> Current arm64 systems that use the ghes driver lack kernel support for
-> a proper memory error reporting. Following issues are seen:
-> 
->  * Error record shows insufficient data, such as "EDAC MC0: 1 CE
->    unknown error on unknown label",
-> 
->  * DMI DIMM labels are not decoded for error reporting,
-> 
->  * No memory hierarchy known (NUMA topology),
-> 
->  * No per layer reporting,
-> 
->  * Significant differences to x86 error reports.
-> 
-> This patch set addresses all the above involving a rework of the
-> ghes_edac and edac_mc driver.
-> 
-> Patch #1-#4: Fix of grain calculation in edac_mc.c (#1) and
-> ghes_edac.c (#2) including unification of trace_mc_event() code (#3,
-> #4).
-> 
-> Patches #5-#12: General fixes and improvements of the ghes and mc
-> drivers. Most of it is a rework of existing code without functional
-> changes to improve, ease, cleanup and join common code. The changes
-> are in preparation of and a requirment for the following patches that
-> improve ghes error reports.
-> 
-> Patches #13-#22: Improve error memory reporting of the ghes driver
-> including:
-> 
->  * support for legacy API (patch #12),
-> 
->  * NUMA detection, one mc device per node (patches #13-#16),
-> 
->  * support for DMI DIMM label information (patch #17),
-> 
->  * per-layer reporting (patches #18-#20).
-> 
-> Patch #23: Documentation updates.
-> 
-> Patch #24: Disable legacy API for ARM64 ghes driver (optional, need to
-> be ack'ed by James, I vote for not applying it).
-> 
-> All changes should keep existing systems working as before. All
-> systems that are using ghes will also benefit from the update. There
-> is a fallback in the ghes driver that disables NUMA or enters a fake
-> mode if some of the NUMA or DIMM information is inconsistent. So it
-> should not break existing systems that provide broken firmware tables.
-> 
-> The series has been tested on a Marvell/Cavium ThunderX2 system. Here
-> some example logs and sysfs entries:
-> 
-> Boot log of memory hierarchy and dimm detection:
-> 
->  EDAC DEBUG: mem_info_setup: DIMM0: Found mem range [0x0000008800000000-0x0000009ffcffffff] on node 0, handle: 0x0038, label: N0 DIMM_A0
->  EDAC DEBUG: mem_info_setup: DIMM1: Found mem range [0x0000008800000000-0x0000009ffcffffff] on node 0, handle: 0x0039, label: N0 DIMM_B0
->  EDAC DEBUG: mem_info_setup: DIMM2: Found mem range [0x0000008800000000-0x0000009ffcffffff] on node 0, handle: 0x003a, label: N0 DIMM_C0
->  EDAC DEBUG: mem_info_setup: DIMM3: Found mem range [0x0000008800000000-0x0000009ffcffffff] on node 0, handle: 0x003b, label: N0 DIMM_D0
->  EDAC DEBUG: mem_info_setup: DIMM4: Found mem range [0x0000008800000000-0x0000009ffcffffff] on node 0, handle: 0x003c, label: N0 DIMM_E0
->  EDAC DEBUG: mem_info_setup: DIMM5: Found mem range [0x0000008800000000-0x0000009ffcffffff] on node 0, handle: 0x003d, label: N0 DIMM_F0
->  EDAC DEBUG: mem_info_setup: DIMM6: Found mem range [0x0000008800000000-0x0000009ffcffffff] on node 0, handle: 0x003e, label: N0 DIMM_G0
->  EDAC DEBUG: mem_info_setup: DIMM7: Found mem range [0x0000008800000000-0x0000009ffcffffff] on node 0, handle: 0x003f, label: N0 DIMM_H0
->  EDAC DEBUG: mem_info_setup: DIMM8: Found mem range [0x0000009ffd000000-0x000000bffcffffff] on node 1, handle: 0x004f, label: N1 DIMM_I0
->  EDAC DEBUG: mem_info_setup: DIMM9: Found mem range [0x0000009ffd000000-0x000000bffcffffff] on node 1, handle: 0x0050, label: N1 DIMM_J0
->  EDAC DEBUG: mem_info_setup: DIMM10: Found mem range [0x0000009ffd000000-0x000000bffcffffff] on node 1, handle: 0x0051, label: N1 DIMM_K0
->  EDAC DEBUG: mem_info_setup: DIMM11: Found mem range [0x0000009ffd000000-0x000000bffcffffff] on node 1, handle: 0x0052, label: N1 DIMM_L0
->  EDAC DEBUG: mem_info_setup: DIMM12: Found mem range [0x0000009ffd000000-0x000000bffcffffff] on node 1, handle: 0x0053, label: N1 DIMM_M0
->  EDAC DEBUG: mem_info_setup: DIMM13: Found mem range [0x0000009ffd000000-0x000000bffcffffff] on node 1, handle: 0x0054, label: N1 DIMM_N0
->  EDAC DEBUG: mem_info_setup: DIMM14: Found mem range [0x0000009ffd000000-0x000000bffcffffff] on node 1, handle: 0x0055, label: N1 DIMM_O0
->  EDAC DEBUG: mem_info_setup: DIMM15: Found mem range [0x0000009ffd000000-0x000000bffcffffff] on node 1, handle: 0x0056, label: N1 DIMM_P0
-> 
-> DIMM label entries in sysfs:
-> 
->  # grep . /sys/devices/system/edac/mc/mc*/dimm*/dimm_label
->  /sys/devices/system/edac/mc/mc0/dimm0/dimm_label:N0 DIMM_A0
->  /sys/devices/system/edac/mc/mc0/dimm1/dimm_label:N0 DIMM_B0
->  /sys/devices/system/edac/mc/mc0/dimm2/dimm_label:N0 DIMM_C0
->  /sys/devices/system/edac/mc/mc0/dimm3/dimm_label:N0 DIMM_D0
->  /sys/devices/system/edac/mc/mc0/dimm4/dimm_label:N0 DIMM_E0
->  /sys/devices/system/edac/mc/mc0/dimm5/dimm_label:N0 DIMM_F0
->  /sys/devices/system/edac/mc/mc0/dimm6/dimm_label:N0 DIMM_G0
->  /sys/devices/system/edac/mc/mc0/dimm7/dimm_label:N0 DIMM_H0
->  /sys/devices/system/edac/mc/mc1/dimm0/dimm_label:N1 DIMM_I0
->  /sys/devices/system/edac/mc/mc1/dimm1/dimm_label:N1 DIMM_J0
->  /sys/devices/system/edac/mc/mc1/dimm2/dimm_label:N1 DIMM_K0
->  /sys/devices/system/edac/mc/mc1/dimm3/dimm_label:N1 DIMM_L0
->  /sys/devices/system/edac/mc/mc1/dimm4/dimm_label:N1 DIMM_M0
->  /sys/devices/system/edac/mc/mc1/dimm5/dimm_label:N1 DIMM_N0
->  /sys/devices/system/edac/mc/mc1/dimm6/dimm_label:N1 DIMM_O0
->  /sys/devices/system/edac/mc/mc1/dimm7/dimm_label:N1 DIMM_P0
-> 
-> Memory error reports in the kernel log:
-> 
->  {1}[Hardware Error]:  Error 4, type: corrected
->  {1}[Hardware Error]:   section_type: memory error
->  {1}[Hardware Error]:   error_status: 0x0000000000000400
->  {1}[Hardware Error]:   physical_address: 0x000000bd0db44000
->  {1}[Hardware Error]:   node: 1 card: 3 module: 0 rank: 0 bank: 256 column: 10 bit_position: 16 
->  {1}[Hardware Error]:   DIMM location: N1 DIMM_L0 
->  EDAC MC1: 1 CE ghes_mc on N1 DIMM_L0 (card:3 module:0 page:0xbd0db44 offset:0x0 grain:0 syndrome:0x0 - APEI location: node:1 card:3 module:0 rank:0 bank:256 col:10 bit_pos:16 handle:0x0052 status(0x0000000000000400): Storage error in DRAM memory)
-> 
-> Error counters in sysfs (zero counters dropped):
-> 
->  # find /sys/devices/system/edac/mc/ -name \*count | sort -V | xargs grep . | sed -e '/:0/d'
->  /sys/devices/system/edac/mc/mc0/ce_count:5
->  /sys/devices/system/edac/mc/mc0/csrow0/ce_count:1
->  /sys/devices/system/edac/mc/mc0/csrow0/ch0_ce_count:1
->  /sys/devices/system/edac/mc/mc0/csrow3/ce_count:1
->  /sys/devices/system/edac/mc/mc0/csrow3/ch0_ce_count:1
->  /sys/devices/system/edac/mc/mc0/csrow4/ce_count:1
->  /sys/devices/system/edac/mc/mc0/csrow4/ch0_ce_count:1
->  /sys/devices/system/edac/mc/mc0/csrow6/ce_count:2
->  /sys/devices/system/edac/mc/mc0/csrow6/ch0_ce_count:2
->  /sys/devices/system/edac/mc/mc0/dimm0/dimm_ce_count:1
->  /sys/devices/system/edac/mc/mc0/dimm3/dimm_ce_count:1
->  /sys/devices/system/edac/mc/mc0/dimm4/dimm_ce_count:1
->  /sys/devices/system/edac/mc/mc0/dimm6/dimm_ce_count:2
->  /sys/devices/system/edac/mc/mc1/ce_count:4
->  /sys/devices/system/edac/mc/mc1/csrow0/ce_count:1
->  /sys/devices/system/edac/mc/mc1/csrow0/ch0_ce_count:1
->  /sys/devices/system/edac/mc/mc1/csrow3/ce_count:1
->  /sys/devices/system/edac/mc/mc1/csrow3/ch0_ce_count:1
->  /sys/devices/system/edac/mc/mc1/csrow6/ce_count:2
->  /sys/devices/system/edac/mc/mc1/csrow6/ch0_ce_count:2
->  /sys/devices/system/edac/mc/mc1/dimm0/dimm_ce_count:1
->  /sys/devices/system/edac/mc/mc1/dimm3/dimm_ce_count:1
->  /sys/devices/system/edac/mc/mc1/dimm6/dimm_ce_count:2
-> 
-> 
-> v2 updates:
-> 
->  * rebased onto bp/for-next (b2572772d13e: EDAC: Make
->    edac_debugfs_create_x*() return void),
-> 
->  * added patches to fix grain calculation (put this at the beginning
->    of the series to apply them separately),
-> 
->  * modified sysfs init functions based (EDAC, mc: Fix and improve
->    sysfs init functions) on Greg's fixes (f5d59da9663d EDAC/sysfs:
->    Drop device references properly),
-> 
->  * removed duplicate code for mem_info_setup*() by moving it to
->    ghes_dimm_info_init(),
-> 
->  * fix bisecting of series,
-> 
->  * made mem_info static,
-> 
->  * renamed function mci_add_dimm_info() to mem_info_prepare_mci(),
-> 
->  * added patch to move struct member smbios_handle to struct
->    ghes_dimm_info,
-> 
->  * renamed ghes_mem_info.num_per_node[] to
->    ghes_mem_info.dimms_per_node[],
-> 
->  * removed unused mem_info.enable_numa,
-> 
->  * removed unused mem_info.num_nodes,
-> 
->  * fixed dimm counters after sysfs reset_counters.
-> 
-> 
-> Robert Richter (24):
->   EDAC, mc: Fix grain_bits calculation
->   EDAC, ghes: Fix grain calculation
->   EDAC, ghes: Remove pvt->detail_location string
->   EDAC, ghes: Unify trace_mc_event() code with edac_mc driver
->   EDAC, mc: Fix and improve sysfs init functions
->   EDAC: Kill EDAC_DIMM_PTR() macro
->   EDAC: Kill EDAC_DIMM_OFF() macro
->   EDAC: Introduce mci_for_each_dimm() iterator
->   EDAC, mc: Cleanup _edac_mc_free() code
->   EDAC, mc: Remove per layer counters
->   EDAC, mc: Rework edac_raw_mc_handle_error() to use struct dimm_info
->   EDAC, ghes: Use standard kernel macros for page calculations
->   EDAC, ghes: Add support for legacy API counters
->   EDAC, ghes: Rework memory hierarchy detection
->   EDAC, ghes: Extract numa node information for each dimm
->   EDAC, ghes: Moving code around ghes_edac_register()
->   EDAC, ghes: Create one memory controller device per node
->   EDAC, ghes: Fill sysfs with the DMI DIMM label information
->   EDAC, mc: Introduce edac_mc_alloc_by_dimm() for per dimm allocation
->   EDAC, ghes: Identify dimm by node, card, module and handle
->   EDAC, ghes: Enable per-layer reporting based on card/module
->   EDAC, ghes: Move struct member smbios_handle to struct ghes_dimm_info
->   EDAC, Documentation: Describe CPER module definition and DIMM ranks
->   EDAC, ghes: Disable legacy API for ARM64
-> 
->  Documentation/admin-guide/ras.rst |  31 +-
->  drivers/edac/edac_mc.c            | 385 ++++++++++---------
->  drivers/edac/edac_mc.h            |  33 +-
->  drivers/edac/edac_mc_sysfs.c      |  95 ++---
->  drivers/edac/ghes_edac.c          | 609 +++++++++++++++++++++++-------
->  drivers/edac/i10nm_base.c         |   3 +-
->  drivers/edac/i3200_edac.c         |   3 +-
->  drivers/edac/i5000_edac.c         |   5 +-
->  drivers/edac/i5100_edac.c         |  14 +-
->  drivers/edac/i5400_edac.c         |   4 +-
->  drivers/edac/i7300_edac.c         |   3 +-
->  drivers/edac/i7core_edac.c        |   3 +-
->  drivers/edac/ie31200_edac.c       |   7 +-
->  drivers/edac/pnd2_edac.c          |   4 +-
->  drivers/edac/sb_edac.c            |   2 +-
->  drivers/edac/skx_base.c           |   3 +-
->  drivers/edac/ti_edac.c            |   2 +-
->  include/linux/edac.h              | 141 ++++---
->  18 files changed, 842 insertions(+), 505 deletions(-)
-> 
-> -- 
-> 2.20.1
-> 
+T24gMDEuMDguMTkgMjI6MzksIFV3ZSBLbGVpbmUtS8O2bmlnIHdyb3RlOg0KPiBPbiBUaHUsIEF1
+ZyAwMSwgMjAxOSBhdCAwNjo0NToyNFBNICswMDAwLCBTY2hyZW1wZiBGcmllZGVyIHdyb3RlOg0K
+Pj4gRnJvbTogRnJpZWRlciBTY2hyZW1wZiA8ZnJpZWRlci5zY2hyZW1wZkBrb250cm9uLmRlPg0K
+Pj4NCj4+IE5vdyB0aGF0IHRoZSBtY3RybF9ncGlvIGNvZGUgcmV0dXJucyBOVUxMIGluc3RlYWQg
+b2YgRVJSX1BUUigtRU5PU1lTKQ0KPj4gaW4gY2FzZXMgd2hlbiBDT05GSUdfR1BJT0xJQiBpcyBk
+aXNhYmxlZCwgd2UgY2FuIHNhZmVseSByZW1vdmUgdGhpcw0KPj4gY2hlY2suDQo+IA0KPiBJIHdv
+dWxkIG1lbnRpb24gLUVOT1NZUyBpbiB0aGUgU3ViamVjdCBsaW5lLiBTb21ldGhpbmcgbGlrZToN
+Cj4gDQo+IAlzZXJpYWw6IHNoLXNjaTogZG9uJ3QgY2hlY2sgZm9yIG1jdHJsX2dwaW9faW5pdCBy
+ZXR1cm5pbmcgLUVOT1NZUw0KPiANCj4gCU5vdyB0aGF0IHRoZSBtY3RybF9ncGlvIGNvZGUgcmV0
+dXJucyBOVUxMIGluc3RlYWQgb2YNCj4gCUVSUl9QVFIoLUVOT1NZUykgaWYgQ09ORklHX0dQSU9M
+SUIgaXMgZGlzYWJsZWQsIHdlIGNhbiBzYWZlbHkNCj4gCXJlbW92ZSB0aGlzIGNoZWNrLg0KDQpJ
+bmRlZWQsIEkgZmFpbGVkIHRvIGNvbWUgdXAgd2l0aCBhIGJldHRlciBzdWJqZWN0IGxpbmUuIEkg
+d2lsbCBhZG9wdCANCnlvdXIgcHJvcG9zYWwuDQoNCj4gVGhhbmtzDQo+IFV3ZQ0KPiA=
