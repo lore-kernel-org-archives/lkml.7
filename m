@@ -4,28 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 070E5C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7AF0C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2A962064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C71742064A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:56:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392691AbfHBMyf (ORCPT
+        id S2392818AbfHBM4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 08:54:35 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:48210 "EHLO huawei.com"
+        Fri, 2 Aug 2019 08:56:08 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3710 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2392656AbfHBMyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 08:54:31 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id AC64E2FA7D55EF2803DE;
-        Fri,  2 Aug 2019 20:54:27 +0800 (CST)
+        id S2392685AbfHBMyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 08:54:35 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 9C60B6925965E2539DDC;
+        Fri,  2 Aug 2019 20:54:32 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 2 Aug 2019
- 20:54:19 +0800
+ 20:54:23 +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     Alexander Viro <viro@zeniv.linux.org.uk>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +45,9 @@ CC:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
         Li Guifu <bluce.liguifu@huawei.com>,
         Fang Wei <fangwei1@huawei.com>,
         Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v6 09/24] erofs: support tracepoint
-Date:   Fri, 2 Aug 2019 20:53:32 +0800
-Message-ID: <20190802125347.166018-10-gaoxiang25@huawei.com>
+Subject: [PATCH v6 12/24] erofs: introduce tagged pointer
+Date:   Fri, 2 Aug 2019 20:53:35 +0800
+Message-ID: <20190802125347.166018-13-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190802125347.166018-1-gaoxiang25@huawei.com>
 References: <20190802125347.166018-1-gaoxiang25@huawei.com>
@@ -61,262 +60,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add basic tracepoints for ->readpage{,s}, ->lookup,
-->destroy_inode, fill_inode and map_blocks.
+Currently kernel has scattered tagged pointer usages
+hacked by hand in plain code, without a unique and
+portable functionset to highlight the tagged pointer
+itself and wrap these hacked code in order to clean up
+all over meaningless magic masks.
+
+This patch introduces simple generic methods to fold
+tags into a pointer integer. Currently it supports
+the last n bits of the pointer for tags, which can be
+selected by users.
+
+In addition, it will also be used for the upcoming EROFS
+filesystem, which heavily uses tagged pointer pproach
+ to reduce extra memory allocation.
+
+Link: https://en.wikipedia.org/wiki/Tagged_pointer
 
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- include/trace/events/erofs.h | 241 +++++++++++++++++++++++++++++++++++
- 1 file changed, 241 insertions(+)
- create mode 100644 include/trace/events/erofs.h
+ fs/erofs/tagptr.h | 110 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 110 insertions(+)
+ create mode 100644 fs/erofs/tagptr.h
 
-diff --git a/include/trace/events/erofs.h b/include/trace/events/erofs.h
+diff --git a/fs/erofs/tagptr.h b/fs/erofs/tagptr.h
 new file mode 100644
-index 000000000000..0c5847c54b60
+index 000000000000..a72897c86744
 --- /dev/null
-+++ b/include/trace/events/erofs.h
-@@ -0,0 +1,241 @@
++++ b/fs/erofs/tagptr.h
+@@ -0,0 +1,110 @@
 +/* SPDX-License-Identifier: GPL-2.0-only */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM erofs
++/*
++ * A tagged pointer implementation
++ *
++ * Copyright (C) 2018 Gao Xiang <gaoxiang25@huawei.com>
++ */
++#ifndef __EROFS_FS_TAGPTR_H
++#define __EROFS_FS_TAGPTR_H
 +
-+#if !defined(_TRACE_EROFS_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_EROFS_H
++#include <linux/types.h>
++#include <linux/build_bug.h>
 +
-+#include <linux/tracepoint.h>
++/*
++ * the name of tagged pointer types are tagptr{1, 2, 3...}_t
++ * avoid directly using the internal structs __tagptr{1, 2, 3...}
++ */
++#define __MAKE_TAGPTR(n) \
++typedef struct __tagptr##n {	\
++	uintptr_t v;	\
++} tagptr##n##_t;
 +
-+#define show_dev(dev)		MAJOR(dev), MINOR(dev)
-+#define show_dev_nid(entry)	show_dev(entry->dev), entry->nid
++__MAKE_TAGPTR(1)
++__MAKE_TAGPTR(2)
++__MAKE_TAGPTR(3)
++__MAKE_TAGPTR(4)
 +
-+#define show_file_type(type)						\
-+	__print_symbolic(type,						\
-+		{ 0,		"FILE" },				\
-+		{ 1,		"DIR" })
++#undef __MAKE_TAGPTR
 +
-+#define show_map_flags(flags) __print_flags(flags, "|",	\
-+	{ EROFS_GET_BLOCKS_RAW,	"RAW" })
++extern void __compiletime_error("bad tagptr tags")
++	__bad_tagptr_tags(void);
 +
-+#define show_mflags(flags) __print_flags(flags, "",	\
-+	{ EROFS_MAP_MAPPED,	"M" },			\
-+	{ EROFS_MAP_META,	"I" })
++extern void __compiletime_error("bad tagptr type")
++	__bad_tagptr_type(void);
 +
-+TRACE_EVENT(erofs_lookup,
++/* fix the broken usage of "#define tagptr2_t tagptr3_t" by users */
++#define __tagptr_mask_1(ptr, n)	\
++	__builtin_types_compatible_p(typeof(ptr), struct __tagptr##n) ? \
++		(1UL << (n)) - 1 :
 +
-+	TP_PROTO(struct inode *dir, struct dentry *dentry, unsigned int flags),
++#define __tagptr_mask(ptr)	(\
++	__tagptr_mask_1(ptr, 1) ( \
++	__tagptr_mask_1(ptr, 2) ( \
++	__tagptr_mask_1(ptr, 3) ( \
++	__tagptr_mask_1(ptr, 4) ( \
++	__bad_tagptr_type(), 0)))))
 +
-+	TP_ARGS(dir, dentry, flags),
++/* generate a tagged pointer from a raw value */
++#define tagptr_init(type, val) \
++	((typeof(type)){ .v = (uintptr_t)(val) })
 +
-+	TP_STRUCT__entry(
-+		__field(dev_t,		dev	)
-+		__field(erofs_nid_t,	nid	)
-+		__field(const char *,	name	)
-+		__field(unsigned int,	flags	)
-+	),
++/*
++ * directly cast a tagged pointer to the native pointer type, which
++ * could be used for backward compatibility of existing code.
++ */
++#define tagptr_cast_ptr(tptr) ((void *)(tptr).v)
 +
-+	TP_fast_assign(
-+		__entry->dev	= dir->i_sb->s_dev;
-+		__entry->nid	= EROFS_V(dir)->nid;
-+		__entry->name	= dentry->d_name.name;
-+		__entry->flags	= flags;
-+	),
++/* encode tagged pointers */
++#define tagptr_fold(type, ptr, _tags) ({ \
++	const typeof(_tags) tags = (_tags); \
++	if (__builtin_constant_p(tags) && (tags & ~__tagptr_mask(type))) \
++		__bad_tagptr_tags(); \
++tagptr_init(type, (uintptr_t)(ptr) | tags); })
 +
-+	TP_printk("dev = (%d,%d), pnid = %llu, name:%s, flags:%x",
-+		show_dev_nid(__entry),
-+		__entry->name,
-+		__entry->flags)
-+);
++/* decode tagged pointers */
++#define tagptr_unfold_ptr(tptr) \
++	((void *)((tptr).v & ~__tagptr_mask(tptr)))
 +
-+TRACE_EVENT(erofs_fill_inode,
-+	TP_PROTO(struct inode *inode, int isdir),
-+	TP_ARGS(inode, isdir),
++#define tagptr_unfold_tags(tptr) \
++	((tptr).v & __tagptr_mask(tptr))
 +
-+	TP_STRUCT__entry(
-+		__field(dev_t,		dev	)
-+		__field(erofs_nid_t,	nid	)
-+		__field(erofs_blk_t,	blkaddr )
-+		__field(unsigned int,	ofs	)
-+		__field(int,		isdir	)
-+	),
++/* operations for the tagger pointer */
++#define tagptr_eq(_tptr1, _tptr2) ({ \
++	typeof(_tptr1) tptr1 = (_tptr1); \
++	typeof(_tptr2) tptr2 = (_tptr2); \
++	(void)(&tptr1 == &tptr2); \
++(tptr1).v == (tptr2).v; })
 +
-+	TP_fast_assign(
-+		__entry->dev		= inode->i_sb->s_dev;
-+		__entry->nid		= EROFS_V(inode)->nid;
-+		__entry->blkaddr	= erofs_blknr(iloc(EROFS_I_SB(inode), __entry->nid));
-+		__entry->ofs		= erofs_blkoff(iloc(EROFS_I_SB(inode), __entry->nid));
-+		__entry->isdir		= isdir;
-+	),
++/* lock-free CAS operation */
++#define tagptr_cmpxchg(_ptptr, _o, _n) ({ \
++	typeof(_ptptr) ptptr = (_ptptr); \
++	typeof(_o) o = (_o); \
++	typeof(_n) n = (_n); \
++	(void)(&o == &n); \
++	(void)(&o == ptptr); \
++tagptr_init(o, cmpxchg(&ptptr->v, o.v, n.v)); })
 +
-+	TP_printk("dev = (%d,%d), nid = %llu, blkaddr %u ofs %u, isdir %d",
-+		  show_dev_nid(__entry),
-+		  __entry->blkaddr, __entry->ofs,
-+		  __entry->isdir)
-+);
++/* wrap WRITE_ONCE if atomic update is needed */
++#define tagptr_replace_tags(_ptptr, tags) ({ \
++	typeof(_ptptr) ptptr = (_ptptr); \
++	*ptptr = tagptr_fold(*ptptr, tagptr_unfold_ptr(*ptptr), tags); \
++*ptptr; })
 +
-+TRACE_EVENT(erofs_readpage,
++#define tagptr_set_tags(_ptptr, _tags) ({ \
++	typeof(_ptptr) ptptr = (_ptptr); \
++	const typeof(_tags) tags = (_tags); \
++	if (__builtin_constant_p(tags) && (tags & ~__tagptr_mask(*ptptr))) \
++		__bad_tagptr_tags(); \
++	ptptr->v |= tags; \
++*ptptr; })
 +
-+	TP_PROTO(struct page *page, bool raw),
++#define tagptr_clear_tags(_ptptr, _tags) ({ \
++	typeof(_ptptr) ptptr = (_ptptr); \
++	const typeof(_tags) tags = (_tags); \
++	if (__builtin_constant_p(tags) && (tags & ~__tagptr_mask(*ptptr))) \
++		__bad_tagptr_tags(); \
++	ptptr->v &= ~tags; \
++*ptptr; })
 +
-+	TP_ARGS(page, raw),
++#endif	/* __EROFS_FS_TAGPTR_H */
 +
-+	TP_STRUCT__entry(
-+		__field(dev_t,		dev	)
-+		__field(erofs_nid_t,    nid     )
-+		__field(int,		dir	)
-+		__field(pgoff_t,	index	)
-+		__field(int,		uptodate)
-+		__field(bool,		raw	)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->dev	= page->mapping->host->i_sb->s_dev;
-+		__entry->nid	= EROFS_V(page->mapping->host)->nid;
-+		__entry->dir	= S_ISDIR(page->mapping->host->i_mode);
-+		__entry->index	= page->index;
-+		__entry->uptodate = PageUptodate(page);
-+		__entry->raw = raw;
-+	),
-+
-+	TP_printk("dev = (%d,%d), nid = %llu, %s, index = %lu, uptodate = %d "
-+		"raw = %d",
-+		show_dev_nid(__entry),
-+		show_file_type(__entry->dir),
-+		(unsigned long)__entry->index,
-+		__entry->uptodate,
-+		__entry->raw)
-+);
-+
-+TRACE_EVENT(erofs_readpages,
-+
-+	TP_PROTO(struct inode *inode, struct page *page, unsigned int nrpage,
-+		bool raw),
-+
-+	TP_ARGS(inode, page, nrpage, raw),
-+
-+	TP_STRUCT__entry(
-+		__field(dev_t,		dev	)
-+		__field(erofs_nid_t,	nid	)
-+		__field(pgoff_t,	start	)
-+		__field(unsigned int,	nrpage	)
-+		__field(bool,		raw	)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->dev	= inode->i_sb->s_dev;
-+		__entry->nid	= EROFS_V(inode)->nid;
-+		__entry->start	= page->index;
-+		__entry->nrpage	= nrpage;
-+		__entry->raw	= raw;
-+	),
-+
-+	TP_printk("dev = (%d,%d), nid = %llu, start = %lu nrpage = %u raw = %d",
-+		show_dev_nid(__entry),
-+		(unsigned long)__entry->start,
-+		__entry->nrpage,
-+		__entry->raw)
-+);
-+
-+DECLARE_EVENT_CLASS(erofs__map_blocks_enter,
-+	TP_PROTO(struct inode *inode, struct erofs_map_blocks *map,
-+		 unsigned int flags),
-+
-+	TP_ARGS(inode, map, flags),
-+
-+	TP_STRUCT__entry(
-+		__field(	dev_t,		dev		)
-+		__field(	erofs_nid_t,	nid		)
-+		__field(	erofs_off_t,	la		)
-+		__field(	u64,		llen		)
-+		__field(	unsigned int,	flags		)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->dev    = inode->i_sb->s_dev;
-+		__entry->nid    = EROFS_V(inode)->nid;
-+		__entry->la	= map->m_la;
-+		__entry->llen	= map->m_llen;
-+		__entry->flags	= flags;
-+	),
-+
-+	TP_printk("dev = (%d,%d), nid = %llu, la %llu llen %llu flags %s",
-+		  show_dev_nid(__entry),
-+		  __entry->la, __entry->llen,
-+		  __entry->flags ? show_map_flags(__entry->flags) : "NULL")
-+);
-+
-+DEFINE_EVENT(erofs__map_blocks_enter, erofs_map_blocks_flatmode_enter,
-+	TP_PROTO(struct inode *inode, struct erofs_map_blocks *map,
-+		 unsigned flags),
-+
-+	TP_ARGS(inode, map, flags)
-+);
-+
-+DECLARE_EVENT_CLASS(erofs__map_blocks_exit,
-+	TP_PROTO(struct inode *inode, struct erofs_map_blocks *map,
-+		 unsigned int flags, int ret),
-+
-+	TP_ARGS(inode, map, flags, ret),
-+
-+	TP_STRUCT__entry(
-+		__field(	dev_t,		dev		)
-+		__field(	erofs_nid_t,	nid		)
-+		__field(        unsigned int,   flags           )
-+		__field(	erofs_off_t,	la		)
-+		__field(	erofs_off_t,	pa		)
-+		__field(	u64,		llen		)
-+		__field(	u64,		plen		)
-+		__field(        unsigned int,	mflags		)
-+		__field(	int,		ret		)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->dev    = inode->i_sb->s_dev;
-+		__entry->nid    = EROFS_V(inode)->nid;
-+		__entry->flags	= flags;
-+		__entry->la	= map->m_la;
-+		__entry->pa	= map->m_pa;
-+		__entry->llen	= map->m_llen;
-+		__entry->plen	= map->m_plen;
-+		__entry->mflags	= map->m_flags;
-+		__entry->ret	= ret;
-+	),
-+
-+	TP_printk("dev = (%d,%d), nid = %llu, flags %s "
-+		  "la %llu pa %llu llen %llu plen %llu mflags %s ret %d",
-+		  show_dev_nid(__entry),
-+		  __entry->flags ? show_map_flags(__entry->flags) : "NULL",
-+		  __entry->la, __entry->pa, __entry->llen, __entry->plen,
-+		  show_mflags(__entry->mflags), __entry->ret)
-+);
-+
-+DEFINE_EVENT(erofs__map_blocks_exit, erofs_map_blocks_flatmode_exit,
-+	TP_PROTO(struct inode *inode, struct erofs_map_blocks *map,
-+		 unsigned flags, int ret),
-+
-+	TP_ARGS(inode, map, flags, ret)
-+);
-+
-+TRACE_EVENT(erofs_destroy_inode,
-+	TP_PROTO(struct inode *inode),
-+
-+	TP_ARGS(inode),
-+
-+	TP_STRUCT__entry(
-+		__field(	dev_t,		dev		)
-+		__field(	erofs_nid_t,	nid		)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->dev	= inode->i_sb->s_dev;
-+		__entry->nid	= EROFS_V(inode)->nid;
-+	),
-+
-+	TP_printk("dev = (%d,%d), nid = %llu", show_dev_nid(__entry))
-+);
-+
-+#endif /* _TRACE_EROFS_H */
-+
-+ /* This part must be outside protection */
-+#include <trace/define_trace.h>
 -- 
 2.17.1
 
