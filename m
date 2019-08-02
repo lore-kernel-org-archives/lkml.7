@@ -2,185 +2,85 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A58F3C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 106D8C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:12:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80D28205F4
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5415205F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564737129;
-	bh=3jZzQbJ/HOjW17ETLV41djxa0DcfUnd4QEoSS7qsTMc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dZrxQxsfQtrSnsWkJG78Egj/xRYoMUWBU1qF3Hk0VIhjqQbS5mVBTJQmm/JHCJUni
-	 qrgAZBTKAg4D3riqIGlV0eEAPRJsYmKXD+OIYmKtlfO8MaQ+lNRDeAct7lhp1w6yEk
-	 iOllmtSdjmgLH87t9sNLFahemk4WWIOcZZuVNp9Y=
+	s=default; t=1564737172;
+	bh=JrP72r6LstQeI6Dz9wti4WjfN6tNHcW2sHlVYyQng/I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Z2yt5nEdvNzKruWu527OiGR+8Ok8FYLCbzvEkVPZbiT+wnIMmyLWrfbo8Oyu4gtgG
+	 Amkva43VMOviSY+TT+wUX7G6GszzfgAnc9HMzs0AG1ADlu2N1wRP1UOgmw5zRbpVpC
+	 4gQs+isdjBTbNUeVkfIJOaBtMp8uuQKmjhB6oRKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732524AbfHBJMI (ORCPT
+        id S2387799AbfHBJMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:12:08 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:44541 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728211AbfHBJMH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:12:07 -0400
-Received: by mail-ot1-f66.google.com with SMTP id b7so27257091otl.11;
-        Fri, 02 Aug 2019 02:12:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=abG3po4zp9c8UuzkODHbdu2ibw0Ez70ol3ic6n5iN0A=;
-        b=hOu7/iHSbRCBpM+ARpptmKQWfNxYRBRx+ng0GPGhyro7ovVB1DpC+O8YuFt2V36mfd
-         KoD66O783eLyqT8mo5MdiYjA7gJFqSwGG9qPISqF3du1SHj/lg+Isbnu3O42EnPpPLJy
-         rslAFj///pU45GQ7a01r2S0GvyjWmSnP81zRCeTfm3tvT2A3p53eS1kBX3cgewrxfNQW
-         /Pa+8O8OOWpWIEGgilkKGmQ/jjm/tsRGTYqugMc3XtpYWF7WouyM0H+WifLN4XigI+vv
-         +9eWj6xunaH8vidkviTqGBjuA+Aexlk2XyNj7M4qA9BmdIKZHT+RBcDd/xP/8qubGUMD
-         yahA==
-X-Gm-Message-State: APjAAAU+jr/MYsDQzoi5pVvWK6Ze16C99dT36PAYwBa78kG8gA8vzzTJ
-        XXgD2uh9RjjLA3urQr0B0DLJFM94gRSn3CuNzv4=
-X-Google-Smtp-Source: APXvYqwu/rzc+VgpWJHddMl0wT0GWxmDQPke0wlrjccwsyrUdcsO95Yc99v7js/L501HBAcETbUpboHeFKlB4yaCWd8=
-X-Received: by 2002:a9d:7a51:: with SMTP id z17mr14030375otm.266.1564737126640;
- Fri, 02 Aug 2019 02:12:06 -0700 (PDT)
+        Fri, 2 Aug 2019 05:12:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54294 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727127AbfHBJMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:12:50 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4990DAFE2;
+        Fri,  2 Aug 2019 09:12:47 +0000 (UTC)
+Date:   Fri, 2 Aug 2019 11:12:44 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     john.hubbard@gmail.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, ceph-devel@vger.kernel.org,
+        devel@driverdev.osuosl.org, devel@lists.orangefs.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org, linux-xfs@vger.kernel.org,
+        netdev@vger.kernel.org, rds-devel@oss.oracle.com,
+        sparclinux@vger.kernel.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org, John Hubbard <jhubbard@nvidia.com>
+Subject: Re: [PATCH 00/34] put_user_pages(): miscellaneous call sites
+Message-ID: <20190802091244.GD6461@dhcp22.suse.cz>
+References: <20190802022005.5117-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
-References: <7dedb6bd157b8183c693bb578e25e313cf4f451d.1564724511.git.viresh.kumar@linaro.org>
-In-Reply-To: <7dedb6bd157b8183c693bb578e25e313cf4f451d.1564724511.git.viresh.kumar@linaro.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 2 Aug 2019 11:11:55 +0200
-Message-ID: <CAJZ5v0g=zXWps29EiFJBPozyw4b9z0YOhtU-UV6hfyu8NbVKNw@mail.gmail.com>
-Subject: Re: [PATCH V3 1/2] cpufreq: schedutil: Don't skip freq update when
- limits change
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Rafael Wysocki <rjw@rjwysocki.net>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "v4 . 18+" <stable@vger.kernel.org>,
-        Doug Smythies <doug.smythies@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190802022005.5117-1-jhubbard@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 2, 2019 at 7:44 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> To avoid reducing the frequency of a CPU prematurely, we skip reducing
-> the frequency if the CPU had been busy recently.
->
-> This should not be done when the limits of the policy are changed, for
-> example due to thermal throttling. We should always get the frequency
-> within the new limits as soon as possible.
->
-> Trying to fix this by using only one flag, i.e. need_freq_update, can
-> lead to a race condition where the flag gets cleared without forcing us
-> to change the frequency at least once. And so this patch introduces
-> another flag to avoid that race condition.
->
-> Fixes: ecd288429126 ("cpufreq: schedutil: Don't set next_freq to UINT_MAX")
-> Cc: v4.18+ <stable@vger.kernel.org> # v4.18+
-> Reported-by: Doug Smythies <doug.smythies@gmail.com>
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
-> V2->V3:
-> - Updated commit log.
->
-> V1->V2:
-> - Fixed the race condition using a different flag.
->
-> @Doug: I haven't changed the code since you last tested these. Your
-> Tested-by tag can be useful while applying the patches. Thanks.
->
->  kernel/sched/cpufreq_schedutil.c | 17 ++++++++++++-----
->  1 file changed, 12 insertions(+), 5 deletions(-)
->
-> diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-> index 636ca6f88c8e..2f382b0959e5 100644
-> --- a/kernel/sched/cpufreq_schedutil.c
-> +++ b/kernel/sched/cpufreq_schedutil.c
-> @@ -40,6 +40,7 @@ struct sugov_policy {
->         struct task_struct      *thread;
->         bool                    work_in_progress;
->
-> +       bool                    limits_changed;
->         bool                    need_freq_update;
->  };
->
-> @@ -89,8 +90,11 @@ static bool sugov_should_update_freq(struct sugov_policy *sg_policy, u64 time)
->             !cpufreq_this_cpu_can_update(sg_policy->policy))
->                 return false;
->
-> -       if (unlikely(sg_policy->need_freq_update))
-> +       if (unlikely(sg_policy->limits_changed)) {
-> +               sg_policy->limits_changed = false;
-> +               sg_policy->need_freq_update = true;
->                 return true;
-> +       }
->
->         delta_ns = time - sg_policy->last_freq_update_time;
->
-> @@ -437,7 +441,7 @@ static inline bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu) { return false; }
->  static inline void ignore_dl_rate_limit(struct sugov_cpu *sg_cpu, struct sugov_policy *sg_policy)
->  {
->         if (cpu_bw_dl(cpu_rq(sg_cpu->cpu)) > sg_cpu->bw_dl)
-> -               sg_policy->need_freq_update = true;
-> +               sg_policy->limits_changed = true;
->  }
->
->  static void sugov_update_single(struct update_util_data *hook, u64 time,
-> @@ -447,7 +451,7 @@ static void sugov_update_single(struct update_util_data *hook, u64 time,
->         struct sugov_policy *sg_policy = sg_cpu->sg_policy;
->         unsigned long util, max;
->         unsigned int next_f;
-> -       bool busy;
-> +       bool busy = false;
+On Thu 01-08-19 19:19:31, john.hubbard@gmail.com wrote:
+[...]
+> 2) Convert all of the call sites for get_user_pages*(), to
+> invoke put_user_page*(), instead of put_page(). This involves dozens of
+> call sites, and will take some time.
 
-This shouldn't be necessary ->
+How do we make sure this is the case and it will remain the case in the
+future? There must be some automagic to enforce/check that. It is simply
+not manageable to do it every now and then because then 3) will simply
+be never safe.
 
->
->         sugov_iowait_boost(sg_cpu, time, flags);
->         sg_cpu->last_update = time;
-> @@ -457,7 +461,9 @@ static void sugov_update_single(struct update_util_data *hook, u64 time,
->         if (!sugov_should_update_freq(sg_policy, time))
->                 return;
->
-> -       busy = sugov_cpu_is_busy(sg_cpu);
-> +       /* Limits may have changed, don't skip frequency update */
-> +       if (!sg_policy->need_freq_update)
-> +               busy = sugov_cpu_is_busy(sg_cpu);
-
--> if this is rewritten as
-
-busy = !sg_policy->need_freq_update && sugov_cpu_is_busy(sg_cpu);
-
-which is simpler and avoids the extra branch.
-
-
->
->         util = sugov_get_util(sg_cpu);
->         max = sg_cpu->max;
-> @@ -831,6 +837,7 @@ static int sugov_start(struct cpufreq_policy *policy)
->         sg_policy->last_freq_update_time        = 0;
->         sg_policy->next_freq                    = 0;
->         sg_policy->work_in_progress             = false;
-> +       sg_policy->limits_changed               = false;
->         sg_policy->need_freq_update             = false;
->         sg_policy->cached_raw_freq              = 0;
->
-> @@ -879,7 +886,7 @@ static void sugov_limits(struct cpufreq_policy *policy)
->                 mutex_unlock(&sg_policy->work_lock);
->         }
->
-> -       sg_policy->need_freq_update = true;
-> +       sg_policy->limits_changed = true;
->  }
->
->  struct cpufreq_governor schedutil_gov = {
-> --
-> 2.21.0.rc0.269.g1a574e7a288b
->
+Have you considered coccinele or some other scripted way to do the
+transition? I have no idea how to deal with future changes that would
+break the balance though.
+-- 
+Michal Hocko
+SUSE Labs
