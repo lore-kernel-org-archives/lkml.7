@@ -7,109 +7,88 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 758E9C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB13EC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2185C204EC
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FDCF21726
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:16:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rZiBBdb/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oYUAnuQW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395161AbfHBPQt (ORCPT
+        id S2395163AbfHBPQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 11:16:49 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:41773 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729945AbfHBPQs (ORCPT
+        Fri, 2 Aug 2019 11:16:56 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:46686 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731569AbfHBPQz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 11:16:48 -0400
-Received: by mail-ua1-f66.google.com with SMTP id 34so29808059uar.8
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 08:16:47 -0700 (PDT)
+        Fri, 2 Aug 2019 11:16:55 -0400
+Received: by mail-vs1-f65.google.com with SMTP id r3so51518327vsr.13
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 08:16:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ibE55GDU+SxEkKvtlHBsrRqPQaV4WJm8A3ik/UgIVGc=;
-        b=rZiBBdb/2E6Ta8tCVL9hDihq2rRZlTv1MM9xG+XBsJIjay2b5Oa+Z+pzilE0JcExPs
-         uO9yNEFq0b+CXd1MEaMVB9sojW9W9fltrhV2de9/cTYEm+rNDn6B/VbP4wq/te7nzGJ8
-         oTDHSjna8klMSGgonj8bU0Pbv6Qnp82M55I8+GGREvsBhOyJN6/iY11z2SPczevj6Zmx
-         4J4DYHOFterztoDSw09wfhO3ATh9znPmOTVBficZWViC3ZdWcH2zpU7xXweRSDgrLxjs
-         l8vSwVOVOmvUopLCFOZ/3bNiuhDRfV6XgCJ4iu3kFuWnR1aGGFYR+nNIgIBtdrYBBh9/
-         FbBA==
+        bh=02PgarY9hGDl326q3KdZGpdoyG2z5/gmo/+lY6dtD7w=;
+        b=oYUAnuQWpvva0ER9slPuzWKzdTne6KE9auRNZju1J7VZo8/tHk+wk0xJM+50nei02Y
+         38hMOnGMQSIFHpkFKcPCJxox7C6uYkv00OtYM7S4GqK7EHFzOWIKvrV16H8v60WHEp61
+         Dh4owbAJLrdIjAKcpCeZboNCniSCCpn4N5zlfljQsWHfLl1TYdTkFPdcXpeOUxzvrPXD
+         dKdbSQf4dhgmQyqpZ2DYDkxDvJzxXQJtyeXqILY5UzeQiCzYcc1ddpCYwTWYlOPJX+35
+         4ETaSN3mcWdXxxd3kJApgEb/0rPdyFdo+wB5En1GfY22RwfImLkeFCzQ3V18PRVSofDI
+         VYmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ibE55GDU+SxEkKvtlHBsrRqPQaV4WJm8A3ik/UgIVGc=;
-        b=AxHrJfiCs1GWaTVfMcKiSK7VCkwnmaucK3f/VEwkBbdXZ5fHRLvBbaOk/YI2h36KTJ
-         nxjFIc0K5+OGA1nWpHEHC52yqFJQ50I1ru01hN7CgCGo6VuJAXcCJ0i1R9KLwSCoZYpG
-         k5gDjQCnfulyIR5kbtaz/XXzjipVgoYptJu+05ibGWSCqKX7HHib5eZaZSJ8itKyFnCm
-         pEcz6tlyi9NmaettG1jHNp0SoqMyXewymRfNNw+k7xN1qHikRDuR1xnAsVHKMFV7E72u
-         g/nvfnLhMnAi3jnP4pIvPkye3zI9cuGgegjAywuPmIYg35LsCcz4RAjPg6S7dUSqnOWI
-         a/Aw==
-X-Gm-Message-State: APjAAAUdtatPgFxuK2+DMJ1rPucS3ZQ8EulBynwVpWPKEilBAvbOGn27
-        /Att1AlNxuMMLoiVxI/QxQqgUDFDLeozA4R7ascczg==
-X-Google-Smtp-Source: APXvYqxpsVToQ4BqlxQUMtlFn0CtpTI58hDhBgXctUiO7lD3N7RTazeWbU1axOrRVo/ImsBu2Y3ji5H4cR/ZOSwyoig=
-X-Received: by 2002:a9f:31a2:: with SMTP id v31mr4058265uad.15.1564759007060;
- Fri, 02 Aug 2019 08:16:47 -0700 (PDT)
+        bh=02PgarY9hGDl326q3KdZGpdoyG2z5/gmo/+lY6dtD7w=;
+        b=r+nuakaAZaSslCmWNeOtfB048/ttQ7k4Lqun8hhmpy6k52fpzufyEhDx5BI0WmszyN
+         6iUgRrZlySbMuOOkRszin/0ezj9cbWCXUCeS2LaTC+4TjNhOzJlIQGkUVvui870muN4v
+         csXY+crZi+yfNnodEqUV5BEnoP1SSu23k+nR8SgdvvsdBACrX2XktDrBOex+JjcgzO9a
+         /jvgF/j/XiN2fUH1oLSAbBTajAaoYnGu8tWWJE5NvMJb+Zqv3nfjVF/UkXuDAkNw3nGa
+         IU9Z1OkMFYmZrCDLxSEBBsGZaER8rkNnonc1032pUFhpeanpCTwSe9GZhMFYFdfKvbrn
+         CEaw==
+X-Gm-Message-State: APjAAAWwbvlL8wZiBXls79n1izYU8NCiIJVg10qkAyYBauuVRVNppg/5
+        YN839vWRL+3UMxk/un9zCjvLWrCYR2g4sgyj/TMZZg==
+X-Google-Smtp-Source: APXvYqwoy4HVJG+PFUlM8UABxT8+fEnJlhCe2cFSBeGIXL/cFE3IS8ytrhzDhqLehfiGAH1qqaGRCFWDqNb60AZHaeo=
+X-Received: by 2002:a67:6203:: with SMTP id w3mr19595138vsb.200.1564759014867;
+ Fri, 02 Aug 2019 08:16:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190730181557.90391-1-swboyd@chromium.org> <20190730181557.90391-30-swboyd@chromium.org>
-In-Reply-To: <20190730181557.90391-30-swboyd@chromium.org>
+References: <20190729000259.GA24022@embeddedor>
+In-Reply-To: <20190729000259.GA24022@embeddedor>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 2 Aug 2019 17:16:10 +0200
-Message-ID: <CAPDyKFpgMioHCLbwJ7+koZw13UqXTEXE+cnO8+AeT2s-nj-OTQ@mail.gmail.com>
-Subject: Re: [PATCH v6 29/57] mmc: Remove dev_err() usage after platform_get_irq()
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+Date:   Fri, 2 Aug 2019 17:16:18 +0200
+Message-ID: <CAPDyKFpv0CW2G9ServNX9UKEtGrHRK=u9KoQWfZ8LyQ6Gy3-KQ@mail.gmail.com>
+Subject: Re: [PATCH] mmc: sdhci-s3c: Mark expected switch fall-through
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Ben Dooks <ben-linux@fluff.org>,
+        Jaehoon Chung <jh80.chung@samsung.com>,
         "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Kees Cook <keescook@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Jul 2019 at 20:16, Stephen Boyd <swboyd@chromium.org> wrote:
+On Mon, 29 Jul 2019 at 02:03, Gustavo A. R. Silva
+<gustavo@embeddedor.com> wrote:
 >
-> We don't need dev_err() messages when platform_get_irq() fails now that
-> platform_get_irq() prints an error message itself when something goes
-> wrong. Let's remove these prints with a simple semantic patch.
+> Mark switch cases where we are expecting to fall through.
 >
-> // <smpl>
-> @@
-> expression ret;
-> struct platform_device *E;
-> @@
+> This patch fixes the following warnings:
 >
-> ret =
-> (
-> platform_get_irq(E, ...)
-> |
-> platform_get_irq_byname(E, ...)
-> );
+> drivers/mmc/host/sdhci-s3c.c: In function 'sdhci_s3c_probe':
+> drivers/mmc/host/sdhci-s3c.c:613:19: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    host->mmc->caps |= MMC_CAP_8_BIT_DATA;
+> drivers/mmc/host/sdhci-s3c.c:614:2: note: here
+>   case 4:
+>   ^~~~
 >
-> if ( \( ret < 0 \| ret <= 0 \) )
-> {
-> (
-> -if (ret != -EPROBE_DEFER)
-> -{ ...
-> -dev_err(...);
-> -... }
-> |
-> ...
-> -dev_err(...);
-> )
-> ...
-> }
-> // </smpl>
->
-> While we're here, remove braces on if statements that only have one
-> statement (manually).
->
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: linux-mmc@vger.kernel.org
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
 Applied for next, thanks!
 
@@ -118,158 +97,21 @@ Uffe
 
 
 > ---
+>  drivers/mmc/host/sdhci-s3c.c | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> Please apply directly to subsystem trees
->
->  drivers/mmc/host/bcm2835.c       | 1 -
->  drivers/mmc/host/jz4740_mmc.c    | 1 -
->  drivers/mmc/host/meson-gx-mmc.c  | 1 -
->  drivers/mmc/host/mxcmmc.c        | 4 +---
->  drivers/mmc/host/s3cmci.c        | 1 -
->  drivers/mmc/host/sdhci-msm.c     | 2 --
->  drivers/mmc/host/sdhci-pltfm.c   | 1 -
->  drivers/mmc/host/sdhci-s3c.c     | 4 +---
->  drivers/mmc/host/sdhci_f_sdh30.c | 4 +---
->  drivers/mmc/host/uniphier-sd.c   | 4 +---
->  10 files changed, 4 insertions(+), 19 deletions(-)
->
-> diff --git a/drivers/mmc/host/bcm2835.c b/drivers/mmc/host/bcm2835.c
-> index 7e0d3a49c06d..e1b7757c48fe 100644
-> --- a/drivers/mmc/host/bcm2835.c
-> +++ b/drivers/mmc/host/bcm2835.c
-> @@ -1409,7 +1409,6 @@ static int bcm2835_probe(struct platform_device *pdev)
->
->         host->irq = platform_get_irq(pdev, 0);
->         if (host->irq <= 0) {
-> -               dev_err(dev, "get IRQ failed\n");
->                 ret = -EINVAL;
->                 goto err;
->         }
-> diff --git a/drivers/mmc/host/jz4740_mmc.c b/drivers/mmc/host/jz4740_mmc.c
-> index ffdbfaadd3f2..672708543a11 100644
-> --- a/drivers/mmc/host/jz4740_mmc.c
-> +++ b/drivers/mmc/host/jz4740_mmc.c
-> @@ -969,7 +969,6 @@ static int jz4740_mmc_probe(struct platform_device* pdev)
->         host->irq = platform_get_irq(pdev, 0);
->         if (host->irq < 0) {
->                 ret = host->irq;
-> -               dev_err(&pdev->dev, "Failed to get platform irq: %d\n", ret);
->                 goto err_free_host;
->         }
->
-> diff --git a/drivers/mmc/host/meson-gx-mmc.c b/drivers/mmc/host/meson-gx-mmc.c
-> index 037311db3551..e712315c7e8d 100644
-> --- a/drivers/mmc/host/meson-gx-mmc.c
-> +++ b/drivers/mmc/host/meson-gx-mmc.c
-> @@ -1091,7 +1091,6 @@ static int meson_mmc_probe(struct platform_device *pdev)
->
->         host->irq = platform_get_irq(pdev, 0);
->         if (host->irq <= 0) {
-> -               dev_err(&pdev->dev, "failed to get interrupt resource.\n");
->                 ret = -EINVAL;
->                 goto free_host;
->         }
-> diff --git a/drivers/mmc/host/mxcmmc.c b/drivers/mmc/host/mxcmmc.c
-> index 750604f7fac9..011b59a3602e 100644
-> --- a/drivers/mmc/host/mxcmmc.c
-> +++ b/drivers/mmc/host/mxcmmc.c
-> @@ -1010,10 +1010,8 @@ static int mxcmci_probe(struct platform_device *pdev)
->
->         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->         irq = platform_get_irq(pdev, 0);
-> -       if (irq < 0) {
-> -               dev_err(&pdev->dev, "failed to get IRQ: %d\n", irq);
-> +       if (irq < 0)
->                 return irq;
-> -       }
->
->         mmc = mmc_alloc_host(sizeof(*host), &pdev->dev);
->         if (!mmc)
-> diff --git a/drivers/mmc/host/s3cmci.c b/drivers/mmc/host/s3cmci.c
-> index ccc5f095775f..bce9c33bc4b5 100644
-> --- a/drivers/mmc/host/s3cmci.c
-> +++ b/drivers/mmc/host/s3cmci.c
-> @@ -1614,7 +1614,6 @@ static int s3cmci_probe(struct platform_device *pdev)
->
->         host->irq = platform_get_irq(pdev, 0);
->         if (host->irq <= 0) {
-> -               dev_err(&pdev->dev, "failed to get interrupt resource.\n");
->                 ret = -EINVAL;
->                 goto probe_iounmap;
->         }
-> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> index 9cf14b359c14..b75c82d8d6c1 100644
-> --- a/drivers/mmc/host/sdhci-msm.c
-> +++ b/drivers/mmc/host/sdhci-msm.c
-> @@ -1917,8 +1917,6 @@ static int sdhci_msm_probe(struct platform_device *pdev)
->         /* Setup IRQ for handling power/voltage tasks with PMIC */
->         msm_host->pwr_irq = platform_get_irq_byname(pdev, "pwr_irq");
->         if (msm_host->pwr_irq < 0) {
-> -               dev_err(&pdev->dev, "Get pwr_irq failed (%d)\n",
-> -                       msm_host->pwr_irq);
->                 ret = msm_host->pwr_irq;
->                 goto clk_disable;
->         }
-> diff --git a/drivers/mmc/host/sdhci-pltfm.c b/drivers/mmc/host/sdhci-pltfm.c
-> index d268b3b8850a..caf0ad5de604 100644
-> --- a/drivers/mmc/host/sdhci-pltfm.c
-> +++ b/drivers/mmc/host/sdhci-pltfm.c
-> @@ -131,7 +131,6 @@ struct sdhci_host *sdhci_pltfm_init(struct platform_device *pdev,
->
->         irq = platform_get_irq(pdev, 0);
->         if (irq < 0) {
-> -               dev_err(&pdev->dev, "failed to get IRQ number\n");
->                 ret = irq;
->                 goto err;
->         }
 > diff --git a/drivers/mmc/host/sdhci-s3c.c b/drivers/mmc/host/sdhci-s3c.c
-> index 8e4a8ba33f05..3d7fa948b4c3 100644
+> index 8e4a8ba33f05..cefa0fb8cfde 100644
 > --- a/drivers/mmc/host/sdhci-s3c.c
 > +++ b/drivers/mmc/host/sdhci-s3c.c
-> @@ -490,10 +490,8 @@ static int sdhci_s3c_probe(struct platform_device *pdev)
->         }
->
->         irq = platform_get_irq(pdev, 0);
-> -       if (irq < 0) {
-> -               dev_err(dev, "no irq specified\n");
-> +       if (irq < 0)
->                 return irq;
-> -       }
->
->         host = sdhci_alloc_host(dev, sizeof(struct sdhci_s3c));
->         if (IS_ERR(host)) {
-> diff --git a/drivers/mmc/host/sdhci_f_sdh30.c b/drivers/mmc/host/sdhci_f_sdh30.c
-> index e369cbf1ff02..f8b939e63e02 100644
-> --- a/drivers/mmc/host/sdhci_f_sdh30.c
-> +++ b/drivers/mmc/host/sdhci_f_sdh30.c
-> @@ -119,10 +119,8 @@ static int sdhci_f_sdh30_probe(struct platform_device *pdev)
->         u32 reg = 0;
->
->         irq = platform_get_irq(pdev, 0);
-> -       if (irq < 0) {
-> -               dev_err(dev, "%s: no irq specified\n", __func__);
-> +       if (irq < 0)
->                 return irq;
-> -       }
->
->         host = sdhci_alloc_host(dev, sizeof(struct f_sdhost_priv));
->         if (IS_ERR(host))
-> diff --git a/drivers/mmc/host/uniphier-sd.c b/drivers/mmc/host/uniphier-sd.c
-> index 49aad9a79c18..e09336f9166d 100644
-> --- a/drivers/mmc/host/uniphier-sd.c
-> +++ b/drivers/mmc/host/uniphier-sd.c
-> @@ -557,10 +557,8 @@ static int uniphier_sd_probe(struct platform_device *pdev)
->         int irq, ret;
->
->         irq = platform_get_irq(pdev, 0);
-> -       if (irq < 0) {
-> -               dev_err(dev, "failed to get IRQ number");
-> +       if (irq < 0)
->                 return irq;
-> -       }
->
->         priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
->         if (!priv)
+> @@ -611,6 +611,7 @@ static int sdhci_s3c_probe(struct platform_device *pdev)
+>         switch (pdata->max_width) {
+>         case 8:
+>                 host->mmc->caps |= MMC_CAP_8_BIT_DATA;
+> +               /* Fall through */
+>         case 4:
+>                 host->mmc->caps |= MMC_CAP_4_BIT_DATA;
+>                 break;
 > --
-> Sent by a computer through tubes
+> 2.22.0
 >
