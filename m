@@ -4,59 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32CC8C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6643AC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D359206A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 357922064A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739483;
-	bh=PioM6E1DLBvXX0KAILLLE8843voALZ6piJ4Mw3YYv8U=;
+	s=default; t=1564739489;
+	bh=MJtsPeYNZsKq49rZtkuN6dD8y6BQyFpESZtcOqsy/lo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IEf6mMaT5A+KxTmb1FhSxHkX6wlkNkGS9+QOYmtKshlGmdT0Vax1SmxQKxYF8PDZv
-	 FMoyX/Q/6/uaq+3voECb3jvp8MYiFfxxvZ/H5I/aYki7dOKFODo5G6/5f/2+dooizN
-	 vHz/b4UHjOP7mIDmLxa3Fbo5nFATxFgcvvSj1wTk=
+	b=sJll7avIZamFPzQx+kQrcjgBNPBflKVY6TLhAbqEhN563Co/Y2iLyoTZZRrzXk2uQ
+	 JxfcmPwZZEXZeSVSD2yjgteYTeuzcyNGyF61sDw+n8YLPgUqEZI9Fgs8Y7VU7k94Go
+	 2zog+4YwdxdlX8SlI4vwsekZ3/7gZkSJbLF0fCDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392063AbfHBJvV (ORCPT
+        id S2405809AbfHBJv2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:51:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48294 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:51:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405293AbfHBJot (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:44:49 -0400
+        id S2404070AbfHBJol (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:44:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78B3B206A2;
-        Fri,  2 Aug 2019 09:44:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D66A2171F;
+        Fri,  2 Aug 2019 09:44:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739088;
-        bh=PioM6E1DLBvXX0KAILLLE8843voALZ6piJ4Mw3YYv8U=;
+        s=default; t=1564739080;
+        bh=MJtsPeYNZsKq49rZtkuN6dD8y6BQyFpESZtcOqsy/lo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uLFIhCqrJPQ8MXGFv9z/PPWHe3uhZQqN39utvccb1qi7hmS0G3pWmdyDME4IW9iIY
-         4XVkswfB1Pfwrh4AGa3aVRkDkbRpewt4KuQtGre5Lz2LaP77U49F6AAcEmMl18qUZf
-         6A0mM0aIsryqoyyerVxN76YQCVs30f8iqCW00s3A=
+        b=O9Bjhxo1Yqix4fbdkznM9p1Bc3Ffaa/xjO20X/2lWWmd+mqzq3bz1yKBJac7glwT9
+         +zGIPuRathZM88miCfz/MT0dxZvOLsXguwCJ8Ij9ihVwGhZhsCDk6RVr2d4Npkh7IX
+         3XXNTntOY9gtQHylU6uyiIUI1NuZEBI0rFApkptI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Harkes <jaharkes@cs.cmu.edu>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Colin Ian King <colin.king@canonical.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        David Howells <dhowells@redhat.com>,
-        Fabian Frederick <fabf@skynet.be>,
-        Mikko Rapeli <mikko.rapeli@iki.fi>,
-        Sam Protsenko <semen.protsenko@linaro.org>,
-        Yann Droneaud <ydroneaud@opteya.com>,
-        Zhouyang Jia <jiazhouyang09@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 108/223] coda: pass the host file in vma->vm_file on mmap
-Date:   Fri,  2 Aug 2019 11:35:33 +0200
-Message-Id: <20190802092246.248764414@linuxfoundation.org>
+        stable@vger.kernel.org, Elena Petrova <lenaptr@google.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.9 080/223] crypto: arm64/sha2-ce - correct digest for empty data in finup
+Date:   Fri,  2 Aug 2019 11:35:05 +0200
+Message-Id: <20190802092244.096277859@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -69,160 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Harkes <jaharkes@cs.cmu.edu>
+From: Elena Petrova <lenaptr@google.com>
 
-commit 7fa0a1da3dadfd9216df7745a1331fdaa0940d1c upstream.
+commit 6bd934de1e393466b319d29c4427598fda096c57 upstream.
 
-Patch series "Coda updates".
+The sha256-ce finup implementation for ARM64 produces wrong digest
+for empty input (len=0). Expected: the actual digest, result: initial
+value of SHA internal state. The error is in sha256_ce_finup:
+for empty data `finalize` will be 1, so the code is relying on
+sha2_ce_transform to make the final round. However, in
+sha256_base_do_update, the block function will not be called when
+len == 0.
 
-The following patch series is a collection of various fixes for Coda,
-most of which were collected from linux-fsdevel or linux-kernel but
-which have as yet not found their way upstream.
+Fix it by setting finalize to 0 if data is empty.
 
-This patch (of 22):
-
-Various file systems expect that vma->vm_file points at their own file
-handle, several use file_inode(vma->vm_file) to get at their inode or
-use vma->vm_file->private_data.  However the way Coda wrapped mmap on a
-host file broke this assumption, vm_file was still pointing at the Coda
-file and the host file systems would scribble over Coda's inode and
-private file data.
-
-This patch fixes the incorrect expectation and wraps vm_ops->open and
-vm_ops->close to allow Coda to track when the vm_area_struct is
-destroyed so we still release the reference on the Coda file handle at
-the right time.
-
-[This patch differs from the original upstream patch because older stable
- kernels do not have the call_mmap vfs helper so we call f_ops->mmap
- directly.]
-
-Link: http://lkml.kernel.org/r/0e850c6e59c0b147dc2dcd51a3af004c948c3697.1558117389.git.jaharkes@cs.cmu.edu
-Signed-off-by: Jan Harkes <jaharkes@cs.cmu.edu>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Colin Ian King <colin.king@canonical.com>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Fabian Frederick <fabf@skynet.be>
-Cc: Mikko Rapeli <mikko.rapeli@iki.fi>
-Cc: Sam Protsenko <semen.protsenko@linaro.org>
-Cc: Yann Droneaud <ydroneaud@opteya.com>
-Cc: Zhouyang Jia <jiazhouyang09@gmail.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Jan Harkes <jaharkes@cs.cmu.edu>
+Fixes: 03802f6a80b3a ("crypto: arm64/sha2-ce - move SHA-224/256 ARMv8 implementation to base layer")
+Cc: stable@vger.kernel.org
+Signed-off-by: Elena Petrova <lenaptr@google.com>
+Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/coda/file.c |   69 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 68 insertions(+), 1 deletion(-)
+ arch/arm64/crypto/sha2-ce-glue.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/coda/file.c
-+++ b/fs/coda/file.c
-@@ -60,6 +60,41 @@ coda_file_write_iter(struct kiocb *iocb,
- 	return ret;
- }
- 
-+struct coda_vm_ops {
-+	atomic_t refcnt;
-+	struct file *coda_file;
-+	const struct vm_operations_struct *host_vm_ops;
-+	struct vm_operations_struct vm_ops;
-+};
-+
-+static void
-+coda_vm_open(struct vm_area_struct *vma)
-+{
-+	struct coda_vm_ops *cvm_ops =
-+		container_of(vma->vm_ops, struct coda_vm_ops, vm_ops);
-+
-+	atomic_inc(&cvm_ops->refcnt);
-+
-+	if (cvm_ops->host_vm_ops && cvm_ops->host_vm_ops->open)
-+		cvm_ops->host_vm_ops->open(vma);
-+}
-+
-+static void
-+coda_vm_close(struct vm_area_struct *vma)
-+{
-+	struct coda_vm_ops *cvm_ops =
-+		container_of(vma->vm_ops, struct coda_vm_ops, vm_ops);
-+
-+	if (cvm_ops->host_vm_ops && cvm_ops->host_vm_ops->close)
-+		cvm_ops->host_vm_ops->close(vma);
-+
-+	if (atomic_dec_and_test(&cvm_ops->refcnt)) {
-+		vma->vm_ops = cvm_ops->host_vm_ops;
-+		fput(cvm_ops->coda_file);
-+		kfree(cvm_ops);
-+	}
-+}
-+
- static int
- coda_file_mmap(struct file *coda_file, struct vm_area_struct *vma)
+--- a/arch/arm64/crypto/sha2-ce-glue.c
++++ b/arch/arm64/crypto/sha2-ce-glue.c
+@@ -52,7 +52,7 @@ static int sha256_ce_finup(struct shash_
+ 			   unsigned int len, u8 *out)
  {
-@@ -67,6 +102,8 @@ coda_file_mmap(struct file *coda_file, s
- 	struct coda_inode_info *cii;
- 	struct file *host_file;
- 	struct inode *coda_inode, *host_inode;
-+	struct coda_vm_ops *cvm_ops;
-+	int ret;
+ 	struct sha256_ce_state *sctx = shash_desc_ctx(desc);
+-	bool finalize = !sctx->sst.count && !(len % SHA256_BLOCK_SIZE);
++	bool finalize = !sctx->sst.count && !(len % SHA256_BLOCK_SIZE) && len;
  
- 	cfi = CODA_FTOC(coda_file);
- 	BUG_ON(!cfi || cfi->cfi_magic != CODA_MAGIC);
-@@ -75,6 +112,13 @@ coda_file_mmap(struct file *coda_file, s
- 	if (!host_file->f_op->mmap)
- 		return -ENODEV;
- 
-+	if (WARN_ON(coda_file != vma->vm_file))
-+		return -EIO;
-+
-+	cvm_ops = kmalloc(sizeof(struct coda_vm_ops), GFP_KERNEL);
-+	if (!cvm_ops)
-+		return -ENOMEM;
-+
- 	coda_inode = file_inode(coda_file);
- 	host_inode = file_inode(host_file);
- 
-@@ -88,6 +132,7 @@ coda_file_mmap(struct file *coda_file, s
- 	 * the container file on us! */
- 	else if (coda_inode->i_mapping != host_inode->i_mapping) {
- 		spin_unlock(&cii->c_lock);
-+		kfree(cvm_ops);
- 		return -EBUSY;
- 	}
- 
-@@ -96,7 +141,29 @@ coda_file_mmap(struct file *coda_file, s
- 	cfi->cfi_mapcount++;
- 	spin_unlock(&cii->c_lock);
- 
--	return host_file->f_op->mmap(host_file, vma);
-+	vma->vm_file = get_file(host_file);
-+	ret = host_file->f_op->mmap(host_file, vma);
-+
-+	if (ret) {
-+		/* if call_mmap fails, our caller will put coda_file so we
-+		 * should drop the reference to the host_file that we got.
-+		 */
-+		fput(host_file);
-+		kfree(cvm_ops);
-+	} else {
-+		/* here we add redirects for the open/close vm_operations */
-+		cvm_ops->host_vm_ops = vma->vm_ops;
-+		if (vma->vm_ops)
-+			cvm_ops->vm_ops = *vma->vm_ops;
-+
-+		cvm_ops->vm_ops.open = coda_vm_open;
-+		cvm_ops->vm_ops.close = coda_vm_close;
-+		cvm_ops->coda_file = coda_file;
-+		atomic_set(&cvm_ops->refcnt, 1);
-+
-+		vma->vm_ops = &cvm_ops->vm_ops;
-+	}
-+	return ret;
- }
- 
- int coda_open(struct inode *coda_inode, struct file *coda_file)
+ 	/*
+ 	 * Allow the asm code to perform the finalization if there is no
 
 
