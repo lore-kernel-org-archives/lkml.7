@@ -2,230 +2,138 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D2CC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD0AAC19759
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2762A206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53536206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:41:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="CXijuyKL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731300AbfHBBkJ convert rfc822-to-8bit (ORCPT
+        id S1731394AbfHBBlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 21:40:09 -0400
-Received: from mx1.mail.vl.ru ([80.92.161.250]:50990 "EHLO mx1.mail.vl.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731233AbfHBBkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 21:40:08 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mx1.mail.vl.ru (Postfix) with ESMTP id 84B721860D71;
-        Fri,  2 Aug 2019 01:40:04 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at mail.vl.ru
-Received: from mx1.mail.vl.ru ([127.0.0.1])
-        by localhost (smtp1.srv.loc [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id jI4WmwLbDOxx; Fri,  2 Aug 2019 11:40:03 +1000 (+10)
-Received: from [10.125.1.12] (unknown [109.126.62.18])
-        (Authenticated sender: turchanov@vl.ru)
-        by mx1.mail.vl.ru (Postfix) with ESMTPSA id 016AB184BFDD;
-        Fri,  2 Aug 2019 11:40:02 +1000 (+10)
-Subject: Re: [BUG] lseek on /proc/meminfo is broken in 4.19.59 maybe due to
- commit 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code and
- interface")
-To:     NeilBrown <neilb@suse.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-References: <3bd775ab-9e31-c6b3-374e-7a9982a9a8cd@farpost.com>
- <5c4c0648-2a96-4132-9d22-91c22e7c7d4d@huawei.com>
- <eab812ef-ba79-11d6-0a4e-232872f0fcc4@farpost.com>
- <877e7xl029.fsf@notabene.neil.brown.name>
-From:   Sergei Turchanov <turchanov@farpost.com>
-Organization: FarPost
-Message-ID: <2d54ca59-9c22-0b75-3087-3718b30b8d11@farpost.com>
-Date:   Fri, 2 Aug 2019 11:40:02 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 1 Aug 2019 21:41:22 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:30781 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731302AbfHBBlV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 21:41:21 -0400
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x721fF1U029735
+        for <linux-kernel@vger.kernel.org>; Fri, 2 Aug 2019 10:41:16 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x721fF1U029735
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1564710076;
+        bh=aKdLE8wx2u+7odpbXwBHXRxWu+Y7lWABFR3kwATccXQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=CXijuyKLs8ctwH3VGs+HPUQvGdo8SZCX7MREYXCiDRGwPYdRta04qxr0gEly7ImUi
+         9bXe5B7ZwkmRHB2xxI6PbFfJDX2zpV3lg15jyvQ5y4zqW9aTv3ctINUh9Gjl7fF6/9
+         a8BDMM3X1JFvYCdy6M8hjoj4RLK0egrkk7QKMiV4W2NMDCrRZxkipYhsROmJwjYVae
+         q98YSwaT6OvtVX4VxWN6TjpPy/JewnMbICRSQJ0CkypW4PNZLv3KDQ4qAmzI9YhlZh
+         YSlC0dL027hPAP3e8Mxcp0ECjyfjFgpUYUoh2cV3Vio2EiNg2bKNYGG1Q7SwcOeDBk
+         VKq7/WLr4ODrQ==
+X-Nifty-SrcIP: [209.85.217.54]
+Received: by mail-vs1-f54.google.com with SMTP id j26so50295098vsn.10
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 18:41:15 -0700 (PDT)
+X-Gm-Message-State: APjAAAW3YmZ1IXyw0nv0D8FHDYeImqhsXyClASLopCcae9AuKPSdPllx
+        yopgxHsIBkKv0Pvxsm5hxpk/aZ5zFVC47MaYo+s=
+X-Google-Smtp-Source: APXvYqyf3mlA1z4uJLvTfK/fP3la3aeojoOD6X0fqAy+/dt1FXcmPLHdoIx0GBxxus9X5oO/Uji+SVjFlSOggdXM0Tg=
+X-Received: by 2002:a67:fc45:: with SMTP id p5mr22842997vsq.179.1564710074722;
+ Thu, 01 Aug 2019 18:41:14 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <877e7xl029.fsf@notabene.neil.brown.name>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: ru-RU
-Content-Transfer-Encoding: 8BIT
+References: <0306bec0ec270b01b09441da3200252396abed27.camel@perches.com>
+ <20190731190309.19909-1-rikard.falkeborn@gmail.com> <47d29791addc075431737aff4b64531a668d4c1b.camel@perches.com>
+In-Reply-To: <47d29791addc075431737aff4b64531a668d4c1b.camel@perches.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 2 Aug 2019 10:40:38 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQdgUOsjWtWFnXm66DPnYFRp=i69DMyr+q4+NT+SPCQxA@mail.gmail.com>
+Message-ID: <CAK7LNAQdgUOsjWtWFnXm66DPnYFRp=i69DMyr+q4+NT+SPCQxA@mail.gmail.com>
+Subject: Re: [PATCH] linux/bits.h: Add compile time sanity check of GENMASK inputs
+To:     Joe Perches <joe@perches.com>
+Cc:     Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+On Thu, Aug 1, 2019 at 4:27 AM Joe Perches <joe@perches.com> wrote:
+>
+> On Wed, 2019-07-31 at 21:03 +0200, Rikard Falkeborn wrote:
+> > GENMASK() and GENMASK_ULL() are supposed to be called with the high bit
+> > as the first argument and the low bit as the second argument. Mixing
+> > them will return a mask with zero bits set.
+> >
+> > Recent commits show getting this wrong is not uncommon, see e.g.
+> > commit aa4c0c9091b0 ("net: stmmac: Fix misuses of GENMASK macro") and
+> > commit 9bdd7bb3a844 ("clocksource/drivers/npcm: Fix misuse of GENMASK
+> > macro").
+> >
+> > To prevent such mistakes from appearing again, add compile time sanity
+> > checking to the arguments of GENMASK() and GENMASK_ULL(). If both the
+> > arguments are known at compile time, and the low bit is higher than the
+> > high bit, break the build to detect the mistake immediately.
+> >
+> > Since GENMASK() is used in declarations, BUILD_BUG_OR_ZERO() must be
+> > used instead of BUILD_BUG_ON(), and __is_constexpr() must be used instead
+> > of __builtin_constant_p().
+> >
+> > Commit 95b980d62d52 ("linux/bits.h: make BIT(), GENMASK(), and friends
+> > available in assembly") made the macros in linux/bits.h available in
+> > assembly. Since neither BUILD_BUG_OR_ZERO() or __is_constexpr() are asm
+> > compatible, disable the checks if the file is included in an asm file.
+> >
+> > Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+> > ---
+> > Joe Perches sent a series to fix the existing misuses of GENMASK() that
+> > needs to be merged before this to avoid build failures. Currently, 7 of
+> > the patches were not in Linus tree, and 2 were not in linux-next.
+> >
+> > Also, there's currently no asm users of bits.h, but since it was made
+> > asm-compatible just two weeks ago it would be a shame to break it right
+> > away...
+> []
+> > diff --git a/include/linux/bits.h b/include/linux/bits.h
+> []
+> > @@ -18,12 +18,22 @@
+> >   * position @h. For example
+> >   * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
+> >   */
+> > +#ifndef __ASSEMBLY__
+> > +#include <linux/build_bug.h>
+> > +#define GENMASK_INPUT_CHECK(h, l)  BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+> > +             __is_constexpr(h) && __is_constexpr(l), (l) > (h), 0))
+> > +#else
+> > +#define GENMASK_INPUT_CHECK(h, l) 0
+>
+> A few things:
+>
+> o Reading the final code is a bit confusing.
+>   Perhaps add a comment description saying it's not checked
+>   in asm .h uses.
+>
+> o Maybe use:
+>   #define GENMASK_INPUT_CHECK(h, l) UL(0)
 
-Yes, your patch fixed this bug.
-Thank you very much!
-
-With best regards,
-Sergei.
-
-On 01.08.2019 19:14, NeilBrown wrote:
-> On Thu, Aug 01 2019, Sergei Turchanov wrote:
->
->> Hello!
->>
->> [
->>    As suggested in previous discussion this behavior may be caused by your
->>    commit 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code and interface")
->> ]
-> Yes.... I think I can see what happened.
->   removing:
-> -               if (!m->count) {
-> -                       m->from = 0;
-> -                       m->index++;
-> -               }
->
-> from seq_read meant that ->index didn't get updated in a case that it
-> needs to be.
->
-> Please confirm that the following patch fixes the problem.
-> I think it is correct, but I need to look it over more carefully in the
-> morning, and see if I can explain why it is correct.
->
-> Thanks for the report.
-> NeilBrown
->
-> diff --git a/fs/seq_file.c b/fs/seq_file.c
-> index 04f09689cd6d..1600034a929b 100644
-> --- a/fs/seq_file.c
-> +++ b/fs/seq_file.c
-> @@ -119,6 +119,7 @@ static int traverse(struct seq_file *m, loff_t offset)
->   		}
->   		if (seq_has_overflowed(m))
->   			goto Eoverflow;
-> +		p = m->op->next(m, p, &m->index);
->   		if (pos + m->count > offset) {
->   			m->from = offset - pos;
->   			m->count -= m->from;
-> @@ -126,7 +127,6 @@ static int traverse(struct seq_file *m, loff_t offset)
->   		}
->   		pos += m->count;
->   		m->count = 0;
-> -		p = m->op->next(m, p, &m->index);
->   		if (pos == offset)
->   			break;
->   	}
->
->
->> Original bug report:
->>
->> Seeking (to an offset within file size) in /proc/meminfo is broken in 4.19.59. It does seek to a desired position, but reading from that position returns the remainder of file and then a whole copy of file. This doesn't happen with /proc/vmstat or /proc/self/maps for example.
->>
->> Seeking did work correctly in kernel 4.14.47. So it seems something broke in the way.
->>
->> Background: this kind of access pattern (seeking to /proc/meminfo) is used by libvirt-lxc fuse driver for virtualized view of /proc/meminfo. So that /proc/meminfo is broken in guests when running kernel 4.19.x.
->>
->>   > On 01.08.2019 17:11, Gao Xiang wrote:
->>> Hi,
->>>
->>> I just took a glance, maybe due to
->>> commit 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code and interface")
->>>
->>> I simply reverted it just now and it seems fine... but I haven't digged into this commit.
->>>
->>> Maybe you could Cc NeilBrown <neilb@suse.com> for some more advice and
->>> I have no idea whether it's an expected behavior or not...
->>>
->>> Thanks,
->>> Gao Xiang
->>>
->>> On 2019/8/1 14:16, Sergei Turchanov wrote:
->>
->> $ ./test /proc/meminfo 0        # Works as expected
->>
->> MemTotal:       394907728 kB
->> MemFree:        173738328 kB
->> ...
->> DirectMap2M:    13062144 kB
->> DirectMap1G:    390070272 kB
->>
->> -----------------------------------------------------------------------
->>
->> $ ./test /proc/meminfo 1024     # returns a copy of file after the remainder
->>
->> Will seek to 1024
->>
->>
->> Data read at offset 1024
->> gePages:         0 kB
->> ShmemHugePages:        0 kB
->> ShmemPmdMapped:        0 kB
->> HugePages_Total:       0
->> HugePages_Free:        0
->> HugePages_Rsvd:        0
->> HugePages_Surp:        0
->> Hugepagesize:       2048 kB
->> Hugetlb:               0 kB
->> DirectMap4k:      245204 kB
->> DirectMap2M:    13062144 kB
->> DirectMap1G:    390070272 kB
->> MemTotal:       394907728 kB
->> MemFree:        173738328 kB
->> MemAvailable:   379989680 kB
->> Buffers:          355812 kB
->> Cached:         207216224 kB
->> ...
->> DirectMap2M:    13062144 kB
->> DirectMap1G:    390070272 kB
->>
->> As you see, after "DirectMap1G:" line, a whole copy of /proc/meminfo returned by "read".
->>
->> Test program:
->>
->> #include <sys/types.h>
->> #include <sys/stat.h>
->> #include <unistd.h>
->> #include <fcntl.h>
->> #include <stdio.h>
->> #include <stdlib.h>
->>
->> #define SIZE 1024
->> char buf[SIZE + 1];
->>
->> int main(int argc, char *argv[]) {
->>       int     fd;
->>       ssize_t rd;
->>       off_t   ofs = 0;
->>
->>       if (argc < 2) {
->>           printf("Usage: test <file> [<offset>]\n");
->>           exit(1);
->>       }
->>
->>       if (-1 == (fd = open(argv[1], O_RDONLY))) {
->>           perror("open failed");
->>           exit(1);
->>       }
->>
->>       if (argc > 2) {
->>           ofs = atol(argv[2]);
->>       }
->>       printf("Will seek to %ld\n", ofs);
->>
->>       if (-1 == (lseek(fd, ofs, SEEK_SET))) {
->>           perror("lseek failed");
->>           exit(1);
->>       }
->>
->>       for (;; ofs += rd) {
->>           printf("\n\nData read at offset %ld\n", ofs);
->>           if (-1 == (rd = read(fd, buf, SIZE))) {
->>               perror("read failed");
->>               exit(1);
->>           }
->>           buf[rd] = '\0';
->>           printf(buf);
->>           if (rd < SIZE) {
->>               break;
->>           }
->>       }
->>
->>       return 0;
->> }
+Why?
 
 
+> o The compiler error message when the arguments are in the
+>   wrong order isn't obvious.  Is there some way to improve
+>   the compiler error output, maybe by using BUILD_BUG_ON_MSG
+>   or some other mechanism?
+>
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
