@@ -6,50 +6,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CDC1C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67798C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B53D204EC
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C1E421726
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:15:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389113AbfHBPPL (ORCPT
+        id S2389385AbfHBPPO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 11:15:11 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44018 "EHLO
+        Fri, 2 Aug 2019 11:15:14 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32694 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387683AbfHBPPJ (ORCPT
+        by vger.kernel.org with ESMTP id S1732141AbfHBPPJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 2 Aug 2019 11:15:09 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x72F7iLW182825
-        for <linux-kernel@vger.kernel.org>; Fri, 2 Aug 2019 11:15:07 -0400
-Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2u4nckp7wk-1
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x72F8Pu7062470
+        for <linux-kernel@vger.kernel.org>; Fri, 2 Aug 2019 11:15:08 -0400
+Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2u4p3ev090-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 11:15:07 -0400
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 11:15:08 -0400
 Received: from localhost
-        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Fri, 2 Aug 2019 16:15:06 +0100
-Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
-        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Fri, 2 Aug 2019 16:15:07 +0100
+Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
+        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 2 Aug 2019 16:15:01 +0100
+        Fri, 2 Aug 2019 16:15:02 +0100
 Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x72FF0Im48234838
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x72FF1T450397458
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 2 Aug 2019 15:15:00 GMT
+        Fri, 2 Aug 2019 15:15:01 GMT
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 92235B206E;
-        Fri,  2 Aug 2019 15:15:00 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 22508B2068;
+        Fri,  2 Aug 2019 15:15:01 +0000 (GMT)
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 63F2CB205F;
+        by IMSVA (Postfix) with ESMTP id E39B2B206C;
         Fri,  2 Aug 2019 15:15:00 +0000 (GMT)
 Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
         by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
         Fri,  2 Aug 2019 15:15:00 +0000 (GMT)
 Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id DED7C16C9993; Fri,  2 Aug 2019 08:15:01 -0700 (PDT)
+        id 2A72E16C9A55; Fri,  2 Aug 2019 08:15:02 -0700 (PDT)
 From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
@@ -59,20 +59,20 @@ Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH RFC tip/core/rcu 01/14] rcu/nocb: Atomic ->len field in rcu_segcblist structure
-Date:   Fri,  2 Aug 2019 08:14:48 -0700
+Subject: [PATCH RFC tip/core/rcu 13/14] rcutorture: Force on tick for readers and callback flooders
+Date:   Fri,  2 Aug 2019 08:15:00 -0700
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190802151435.GA1081@linux.ibm.com>
 References: <20190802151435.GA1081@linux.ibm.com>
 X-TM-AS-GCONF: 00
-x-cbid: 19080215-0052-0000-0000-000003E80574
+x-cbid: 19080215-2213-0000-0000-000003B904C5
 X-IBM-SpamModules-Scores: 
 X-IBM-SpamModules-Versions: BY=3.00011538; HX=3.00000242; KW=3.00000007;
  PH=3.00000004; SC=3.00000287; SDB=6.01241059; UDB=6.00654494; IPR=6.01022491;
  MB=3.00028010; MTD=3.00000008; XFM=3.00000015; UTC=2019-08-02 15:15:06
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19080215-0053-0000-0000-000061F15F14
-Message-Id: <20190802151501.13069-1-paulmck@linux.ibm.com>
+x-cbparentid: 19080215-2214-0000-0000-00005F7E5AAB
+Message-Id: <20190802151501.13069-13-paulmck@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-02_07:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
@@ -85,213 +85,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Upcoming ->nocb_lock contention-reduction work requires that the
-rcu_segcblist structure's ->len field be concurrently manipulated,
-but only if there are no-CBs CPUs in the kernel.  This commit
-therefore makes this ->len field be an atomic_long_t, but only
-in CONFIG_RCU_NOCB_CPU=y kernels.
+Readers and callback flooders in the rcutorture stress-test suite run for
+extended time periods by design.  They do take pains to relinquish the
+CPU from time to time, but in some cases this relies on the scheduler
+being active, which in turn relies on the scheduler-clock interrupt
+firing from time to time.
+
+This commit therefore forces scheduling-clock interrupts within
+these loops.  While in the area, this commit also prevents
+rcu_torture_reader()'s occasional timed sleeps from delaying shutdown.
 
 Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 ---
- include/linux/rcu_segcblist.h |  4 ++
- kernel/rcu/rcu_segcblist.c    | 86 ++++++++++++++++++++++++++++++++---
- kernel/rcu/rcu_segcblist.h    | 12 ++++-
- 3 files changed, 94 insertions(+), 8 deletions(-)
+ kernel/rcu/rcutorture.c | 24 ++++++++++++++++++------
+ 1 file changed, 18 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/rcu_segcblist.h b/include/linux/rcu_segcblist.h
-index 82977726da29..38e4b811af9b 100644
---- a/include/linux/rcu_segcblist.h
-+++ b/include/linux/rcu_segcblist.h
-@@ -65,7 +65,11 @@ struct rcu_segcblist {
- 	struct rcu_head *head;
- 	struct rcu_head **tails[RCU_CBLIST_NSEGS];
- 	unsigned long gp_seq[RCU_CBLIST_NSEGS];
-+#ifdef CONFIG_RCU_NOCB_CPU
-+	atomic_long_t len;
-+#else
- 	long len;
-+#endif
- 	long len_lazy;
- 	u8 enabled;
- 	u8 offloaded;
-diff --git a/kernel/rcu/rcu_segcblist.c b/kernel/rcu/rcu_segcblist.c
-index 92968b856593..ff431cc83037 100644
---- a/kernel/rcu/rcu_segcblist.c
-+++ b/kernel/rcu/rcu_segcblist.c
-@@ -23,6 +23,19 @@ void rcu_cblist_init(struct rcu_cblist *rclp)
- 	rclp->len_lazy = 0;
- }
+diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+index 3c9feca1eab1..bf08aa783ecc 100644
+--- a/kernel/rcu/rcutorture.c
++++ b/kernel/rcu/rcutorture.c
+@@ -44,6 +44,7 @@
+ #include <linux/sched/debug.h>
+ #include <linux/sched/sysctl.h>
+ #include <linux/oom.h>
++#include <linux/tick.h>
  
-+/*
-+ * Enqueue an rcu_head structure onto the specified callback list.
-+ * This function assumes that the callback is non-lazy because it
-+ * is intended for use by no-CBs CPUs, which do not distinguish
-+ * between lazy and non-lazy RCU callbacks.
-+ */
-+void rcu_cblist_enqueue(struct rcu_cblist *rclp, struct rcu_head *rhp)
-+{
-+	*rclp->tail = rhp;
-+	rclp->tail = &rhp->next;
-+	WRITE_ONCE(rclp->len, rclp->len + 1);
-+}
-+
- /*
-  * Dequeue the oldest rcu_head structure from the specified callback
-  * list.  This function assumes that the callback is non-lazy, but
-@@ -44,6 +57,67 @@ struct rcu_head *rcu_cblist_dequeue(struct rcu_cblist *rclp)
- 	return rhp;
- }
+ #include "rcu.h"
  
-+/* Set the length of an rcu_segcblist structure. */
-+void rcu_segcblist_set_len(struct rcu_segcblist *rsclp, long v)
-+{
-+#ifdef CONFIG_RCU_NOCB_CPU
-+	atomic_long_set(&rsclp->len, v);
-+#else
-+	WRITE_ONCE(rsclp->len, v);
-+#endif
-+}
-+
-+/*
-+ * Increase the numeric length of an rcu_segcblist structure by the
-+ * specified amount, which can be negative.  This can cause the ->len
-+ * field to disagree with the actual number of callbacks on the structure.
-+ * This increase is fully ordered with respect to the callers accesses
-+ * both before and after.
-+ */
-+void rcu_segcblist_add_len(struct rcu_segcblist *rsclp, long v)
-+{
-+#ifdef CONFIG_RCU_NOCB_CPU
-+	smp_mb__before_atomic(); /* Up to the caller! */
-+	atomic_long_add(v, &rsclp->len);
-+	smp_mb__after_atomic(); /* Up to the caller! */
-+#else
-+	smp_mb(); /* Up to the caller! */
-+	WRITE_ONCE(rsclp->len, rsclp->len + v);
-+	smp_mb(); /* Up to the caller! */
-+#endif
-+}
-+
-+/*
-+ * Increase the numeric length of an rcu_segcblist structure by one.
-+ * This can cause the ->len field to disagree with the actual number of
-+ * callbacks on the structure.  This increase is fully ordered with respect
-+ * to the callers accesses both before and after.
-+ */
-+void rcu_segcblist_inc_len(struct rcu_segcblist *rsclp)
-+{
-+	rcu_segcblist_add_len(rsclp, 1);
-+}
-+
-+/*
-+ * Exchange the numeric length of the specified rcu_segcblist structure
-+ * with the specified value.  This can cause the ->len field to disagree
-+ * with the actual number of callbacks on the structure.  This exchange is
-+ * fully ordered with respect to the callers accesses both before and after.
-+ */
-+long rcu_segcblist_xchg_len(struct rcu_segcblist *rsclp, long v)
-+{
-+#ifdef CONFIG_RCU_NOCB_CPU
-+	return atomic_long_xchg(&rsclp->len, v);
-+#else
-+	long ret = rsclp->len;
-+
-+	smp_mb(); /* Up to the caller! */
-+	WRITE_ONCE(rsclp->len, v);
-+	smp_mb(); /* Up to the caller! */
-+	return ret;
-+#endif
-+}
-+
- /*
-  * Initialize an rcu_segcblist structure.
-  */
-@@ -56,7 +130,7 @@ void rcu_segcblist_init(struct rcu_segcblist *rsclp)
- 	rsclp->head = NULL;
- 	for (i = 0; i < RCU_CBLIST_NSEGS; i++)
- 		rsclp->tails[i] = &rsclp->head;
--	rsclp->len = 0;
-+	rcu_segcblist_set_len(rsclp, 0);
- 	rsclp->len_lazy = 0;
- 	rsclp->enabled = 1;
+@@ -1363,15 +1364,16 @@ rcu_torture_reader(void *arg)
+ 	set_user_nice(current, MAX_NICE);
+ 	if (irqreader && cur_ops->irq_capable)
+ 		timer_setup_on_stack(&t, rcu_torture_timer, 0);
+-
++	if (IS_ENABLED(CONFIG_NO_HZ_FULL))
++		tick_dep_set_task(current, TICK_DEP_MASK_RCU);
+ 	do {
+ 		if (irqreader && cur_ops->irq_capable) {
+ 			if (!timer_pending(&t))
+ 				mod_timer(&t, jiffies + 1);
+ 		}
+-		if (!rcu_torture_one_read(&rand))
++		if (!rcu_torture_one_read(&rand) && !torture_must_stop())
+ 			schedule_timeout_interruptible(HZ);
+-		if (time_after(jiffies, lastsleep)) {
++		if (time_after(jiffies, lastsleep) && !torture_must_stop()) {
+ 			schedule_timeout_interruptible(1);
+ 			lastsleep = jiffies + 10;
+ 		}
+@@ -1383,6 +1385,8 @@ rcu_torture_reader(void *arg)
+ 		del_timer_sync(&t);
+ 		destroy_timer_on_stack(&t);
+ 	}
++	if (IS_ENABLED(CONFIG_NO_HZ_FULL))
++		tick_dep_clear_task(current, TICK_DEP_MASK_RCU);
+ 	torture_kthread_stopping("rcu_torture_reader");
+ 	return 0;
  }
-@@ -151,7 +225,7 @@ bool rcu_segcblist_nextgp(struct rcu_segcblist *rsclp, unsigned long *lp)
- void rcu_segcblist_enqueue(struct rcu_segcblist *rsclp,
- 			   struct rcu_head *rhp, bool lazy)
- {
--	WRITE_ONCE(rsclp->len, rsclp->len + 1); /* ->len sampled locklessly. */
-+	rcu_segcblist_inc_len(rsclp);
- 	if (lazy)
- 		rsclp->len_lazy++;
- 	smp_mb(); /* Ensure counts are updated before callback is enqueued. */
-@@ -177,7 +251,7 @@ bool rcu_segcblist_entrain(struct rcu_segcblist *rsclp,
- 
- 	if (rcu_segcblist_n_cbs(rsclp) == 0)
- 		return false;
--	WRITE_ONCE(rsclp->len, rsclp->len + 1);
-+	rcu_segcblist_inc_len(rsclp);
- 	if (lazy)
- 		rsclp->len_lazy++;
- 	smp_mb(); /* Ensure counts are updated before callback is entrained. */
-@@ -204,9 +278,8 @@ void rcu_segcblist_extract_count(struct rcu_segcblist *rsclp,
- 					       struct rcu_cblist *rclp)
- {
- 	rclp->len_lazy += rsclp->len_lazy;
--	rclp->len += rsclp->len;
- 	rsclp->len_lazy = 0;
--	WRITE_ONCE(rsclp->len, 0); /* ->len sampled locklessly. */
-+	rclp->len = rcu_segcblist_xchg_len(rsclp, 0);
+@@ -1729,10 +1733,10 @@ static void rcu_torture_fwd_prog_cond_resched(unsigned long iter)
+ 		// Real call_rcu() floods hit userspace, so emulate that.
+ 		if (need_resched() || (iter & 0xfff))
+ 			schedule();
+-	} else {
+-		// No userspace emulation: CB invocation throttles call_rcu()
+-		cond_resched();
++		return;
+ 	}
++	// No userspace emulation: CB invocation throttles call_rcu()
++	cond_resched();
  }
  
  /*
-@@ -259,8 +332,7 @@ void rcu_segcblist_insert_count(struct rcu_segcblist *rsclp,
- 				struct rcu_cblist *rclp)
- {
- 	rsclp->len_lazy += rclp->len_lazy;
--	/* ->len sampled locklessly. */
--	WRITE_ONCE(rsclp->len, rsclp->len + rclp->len);
-+	rcu_segcblist_add_len(rsclp, rclp->len);
- 	rclp->len_lazy = 0;
- 	rclp->len = 0;
- }
-diff --git a/kernel/rcu/rcu_segcblist.h b/kernel/rcu/rcu_segcblist.h
-index db38f0a512c4..1ff996647d3c 100644
---- a/kernel/rcu/rcu_segcblist.h
-+++ b/kernel/rcu/rcu_segcblist.h
-@@ -9,6 +9,12 @@
+@@ -1781,6 +1785,8 @@ static void rcu_torture_fwd_prog_nr(int *tested, int *tested_tries)
+ 		init_rcu_head_on_stack(&fcs.rh);
+ 		selfpropcb = true;
+ 	}
++	if (IS_ENABLED(CONFIG_NO_HZ_FULL))
++		tick_dep_set_task(current, TICK_DEP_MASK_RCU);
  
- #include <linux/rcu_segcblist.h>
- 
-+/* Return number of callbacks in the specified callback list. */
-+static inline long rcu_cblist_n_cbs(struct rcu_cblist *rclp)
-+{
-+	return READ_ONCE(rclp->len);
-+}
-+
- /*
-  * Account for the fact that a previously dequeued callback turned out
-  * to be marked as lazy.
-@@ -42,7 +48,11 @@ static inline bool rcu_segcblist_empty(struct rcu_segcblist *rsclp)
- /* Return number of callbacks in segmented callback list. */
- static inline long rcu_segcblist_n_cbs(struct rcu_segcblist *rsclp)
- {
-+#ifdef CONFIG_RCU_NOCB_CPU
-+	return atomic_long_read(&rsclp->len);
-+#else
- 	return READ_ONCE(rsclp->len);
-+#endif
+ 	/* Tight loop containing cond_resched(). */
+ 	WRITE_ONCE(rcu_fwd_cb_nodelay, true);
+@@ -1826,6 +1832,8 @@ static void rcu_torture_fwd_prog_nr(int *tested, int *tested_tries)
+ 		destroy_rcu_head_on_stack(&fcs.rh);
+ 	}
+ 	schedule_timeout_uninterruptible(HZ / 10); /* Let kthreads recover. */
++	if (IS_ENABLED(CONFIG_NO_HZ_FULL))
++		tick_dep_clear_task(current, TICK_DEP_MASK_RCU);
+ 	WRITE_ONCE(rcu_fwd_cb_nodelay, false);
  }
  
- /* Return number of lazy callbacks in segmented callback list. */
-@@ -54,7 +64,7 @@ static inline long rcu_segcblist_n_lazy_cbs(struct rcu_segcblist *rsclp)
- /* Return number of lazy callbacks in segmented callback list. */
- static inline long rcu_segcblist_n_nonlazy_cbs(struct rcu_segcblist *rsclp)
- {
--	return rsclp->len - rsclp->len_lazy;
-+	return rcu_segcblist_n_cbs(rsclp) - rsclp->len_lazy;
+@@ -1865,6 +1873,8 @@ static void rcu_torture_fwd_prog_cr(void)
+ 	cver = READ_ONCE(rcu_torture_current_version);
+ 	gps = cur_ops->get_gp_seq();
+ 	rcu_launder_gp_seq_start = gps;
++	if (IS_ENABLED(CONFIG_NO_HZ_FULL))
++		tick_dep_set_task(current, TICK_DEP_MASK_RCU);
+ 	while (time_before(jiffies, stopat) &&
+ 	       !shutdown_time_arrived() &&
+ 	       !READ_ONCE(rcu_fwd_emergency_stop) && !torture_must_stop()) {
+@@ -1911,6 +1921,8 @@ static void rcu_torture_fwd_prog_cr(void)
+ 		rcu_torture_fwd_cb_hist();
+ 	}
+ 	schedule_timeout_uninterruptible(HZ); /* Let CBs drain. */
++	if (IS_ENABLED(CONFIG_NO_HZ_FULL))
++		tick_dep_clear_task(current, TICK_DEP_MASK_RCU);
+ 	WRITE_ONCE(rcu_fwd_cb_nodelay, false);
  }
  
- /*
 -- 
 2.17.1
 
