@@ -2,77 +2,87 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05656C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74ABFC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEB0320657
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:44:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QMntMBRp"
+	by mail.kernel.org (Postfix) with ESMTP id 4E36B20657
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:47:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404434AbfHBIoy (ORCPT
+        id S2404438AbfHBIrj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 04:44:54 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:56166 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730872AbfHBIoy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 04:44:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=v00Ip7tFTxfOW7ci2f67H952n7pZPTilSNtqWzGu0Kc=; b=QMntMBRpF4JmUY3VNLhxAr9gu
-        9J7x8c1UZJylRbJCbHSbhFuOCugKaSW/zMuZ0MKqz3y9tQ7LCKVDIVgkb7mNgNgtBHuttyvui9yFC
-        10dYHUbbA2H8or9294FPrr9iobMHCelDY/LmJxnT7JH11SpB9uSMxJi7cpoOCbdHhzp1Dra+R9gfk
-        6BL2aH04Qh5ls+AZ1N9Xo5gxGTOBystLL95Khj4l99Qk1jH/VzMlPx1115zqRMBx5fHuDFXB6w263
-        T6BWWDcHTWE0XuYw6Lghmff+d9Kg6tDfMN0kHuGp/d1Uec+uQtYmgrAVOIf8FTEx+CwbvQmwEPr1C
-        v/TQhHBfQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1htTBF-0000mV-5w; Fri, 02 Aug 2019 08:44:53 +0000
-Date:   Fri, 2 Aug 2019 01:44:53 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Alexandre Ghiti <alex@ghiti.fr>
-Subject: Re: [PATCH] riscv: kbuild: add virtual memory system selection
-Message-ID: <20190802084453.GA1410@infradead.org>
-References: <alpine.DEB.2.21.9999.1907261259420.26670@viisi.sifive.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.9999.1907261259420.26670@viisi.sifive.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Fri, 2 Aug 2019 04:47:39 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:37000 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726703AbfHBIri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 04:47:38 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BF5B5200C4E;
+        Fri,  2 Aug 2019 10:47:36 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B356420007A;
+        Fri,  2 Aug 2019 10:47:36 +0200 (CEST)
+Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 732D4205E3;
+        Fri,  2 Aug 2019 10:47:36 +0200 (CEST)
+From:   Iuliana Prodan <iuliana.prodan@nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx <linux-imx@nxp.com>
+Subject: [PATCH v5] crypto: gcm - restrict assoclen for rfc4543
+Date:   Fri,  2 Aug 2019 11:47:33 +0300
+Message-Id: <1564735653-7262-1-git-send-email-iuliana.prodan@nxp.com>
+X-Mailer: git-send-email 2.1.0
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 01:00:49PM -0700, Paul Walmsley wrote:
-> 
-> The RISC-V specifications currently define three virtual memory
-> translation systems: Sv32, Sv39, and Sv48.  Sv32 is currently specific
-> to 32-bit systems; Sv39 and Sv48 are currently specific to 64-bit
-> systems.  The current kernel only supports Sv32 and Sv39, but we'd
-> like to start preparing for Sv48.  As an initial step, allow the
-> virtual memory translation system to be selected via kbuild, and stop
-> the build if an option is selected that the kernel doen't currently
-> support.
-> 
-> This patch currently has no functional impact.
+Based on seqiv, IPsec ESP and rfc4543/rfc4106 the assoclen can be 16 or
+20 bytes.
 
-It cause the user to be able to select a config which thus won't build.
-So it is not just useless, which already is a reason not to merge it,
-but actively harmful, which is even worse.
+From esp4/esp6, assoclen is sizeof IP Header. This includes spi, seq_no
+and extended seq_no, that is 8 or 12 bytes.
+In seqiv, to asscolen is added the IV size (8 bytes).
+Therefore, the assoclen, for rfc4543, should be restricted to 16 or 20
+bytes, as for rfc4106.
 
-Even if we assume we want to implement Sv48 eventually (which seems
-to be a bit off), we need to make this a runtime choice and not a
-compile time one to not balloon the number of configs that distributions
-(and kernel developers) need to support.
+Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+Reviewed-by: Horia Geanta <horia.geanta@nxp.com>
+---
+Changes since v4:
+- alignment.
+---
+ crypto/gcm.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/crypto/gcm.c b/crypto/gcm.c
+index 2f3b50f..7388420 100644
+--- a/crypto/gcm.c
++++ b/crypto/gcm.c
+@@ -1034,12 +1034,14 @@ static int crypto_rfc4543_copy_src_to_dst(struct aead_request *req, bool enc)
+ 
+ static int crypto_rfc4543_encrypt(struct aead_request *req)
+ {
+-	return crypto_rfc4543_crypt(req, true);
++	return crypto_ipsec_check_assoclen(req->assoclen) ?:
++	       crypto_rfc4543_crypt(req, true);
+ }
+ 
+ static int crypto_rfc4543_decrypt(struct aead_request *req)
+ {
+-	return crypto_rfc4543_crypt(req, false);
++	return crypto_ipsec_check_assoclen(req->assoclen) ?:
++	       crypto_rfc4543_crypt(req, false);
+ }
+ 
+ static int crypto_rfc4543_init_tfm(struct crypto_aead *tfm)
+-- 
+2.1.0
+
