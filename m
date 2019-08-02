@@ -2,107 +2,284 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F23C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE49FC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 383812173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:24:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564755846;
-	bh=TgNcbo6TXcLbjq5+6OYqRgo/Qoe3xOKUkbU920IR4iE=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=JhywICtWRViLN555aJiZJZt0IPSqvXV9/wBAahnElytYzb+zzlZ7UgmpwfPKkacHS
-	 taDBWRH9dbT6rD7HqvIz86BFWkanV4A73eX6B4GlyAfw8K/tGRHjoHaPOduRUwBzIb
-	 MVEaFGRGdIK94+p7LcRbd2p7fci+XIYYdD4y+nQA=
+	by mail.kernel.org (Postfix) with ESMTP id 81A1E21726
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:24:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392377AbfHBOYE (ORCPT
+        id S2392459AbfHBOYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 10:24:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37488 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 10:24:08 -0400
+Received: from foss.arm.com ([217.140.110.172]:52696 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731067AbfHBOYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 10:24:04 -0400
-Received: from [192.168.0.101] (unknown [180.111.32.87])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA07F20679;
-        Fri,  2 Aug 2019 14:24:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564755843;
-        bh=TgNcbo6TXcLbjq5+6OYqRgo/Qoe3xOKUkbU920IR4iE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=QdJbHI4QqAf5coM6w57j/GQ9wNbAmk57r70Ay5RmCr8gUGhWlTy5PBEM5C4Q9zS5b
-         BYxLuLKi1vFk7ymoVG9ICyvdZuUyI3H3IT5y+uj/bvDjvExZo9yOtoEANv0ymSdKIS
-         3Ev9S/1AokA1xrp+CoDJCxpYvVX/4paPncNoZs1k=
-Subject: Re: [PATCH] mailmap: add entry for Jaegeuk Kim
-To:     Jonathan Corbet <corbet@lwn.net>, Chao Yu <yuchao0@huawei.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jaegeuk@kernel.org
-References: <20190802012135.31419-1-yuchao0@huawei.com>
- <20190802072626.405246e3@lwn.net>
-From:   Chao Yu <chao@kernel.org>
-Message-ID: <fe9cd2bc-76ed-5371-e0c3-b538e7a805e7@kernel.org>
-Date:   Fri, 2 Aug 2019 22:23:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1731067AbfHBOYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 10:24:07 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B06481570;
+        Fri,  2 Aug 2019 07:24:06 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CE5443F575;
+        Fri,  2 Aug 2019 07:24:05 -0700 (PDT)
+Subject: Re: [RFC PATCH] ARM: UNWINDER_FRAME_POINTER implementation for Clang
+To:     Nathan Huckleberry <nhuck@google.com>, linux@armlinux.org.uk
+Cc:     clang-built-linux@googlegroups.com, Tri Vo <trong@google.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20190801231046.105022-1-nhuck@google.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <01222982-4206-9925-0482-639a79384451@arm.com>
+Date:   Fri, 2 Aug 2019 15:24:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190802072626.405246e3@lwn.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20190801231046.105022-1-nhuck@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-8-2 21:26, Jonathan Corbet wrote:
-> On Fri, 2 Aug 2019 09:21:35 +0800
-> Chao Yu <yuchao0@huawei.com> wrote:
+On 02/08/2019 00:10, Nathan Huckleberry wrote:
+> The stackframe setup when compiled with clang is different.
+> Since the stack unwinder expects the gcc stackframe setup it
+> fails to print backtraces. This patch adds support for the
+> clang stackframe setup.
 > 
->> Add entry to connect all Jaegeuk's email addresses.
->>
->> Acked-by: Jaegeuk Kim <jaegeuk@kernel.org>
->> Signed-off-by: Chao Yu <yuchao0@huawei.com>
->> ---
->>  .mailmap | 3 +++
->>  1 file changed, 3 insertions(+)
->>
->> diff --git a/.mailmap b/.mailmap
->> index 477debe3d960..70d41c86e644 100644
->> --- a/.mailmap
->> +++ b/.mailmap
->> @@ -89,6 +89,9 @@ Henrik Kretzschmar <henne@nachtwindheim.de>
->>  Henrik Rydberg <rydberg@bitmath.org>
->>  Herbert Xu <herbert@gondor.apana.org.au>
->>  Jacob Shin <Jacob.Shin@amd.com>
->> +Jaegeuk Kim <jaegeuk@kernel.org> <jaegeuk@google.com>
->> +Jaegeuk Kim <jaegeuk@kernel.org> <jaegeuk@motorola.com>
->> +Jaegeuk Kim <jaegeuk@kernel.org> <jaegeuk.kim@samsung.com>
+> Cc: clang-built-linux@googlegroups.com
+> Suggested-by: Tri Vo <trong@google.com>
+> Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+> ---
+>   arch/arm/Kconfig.debug   |   4 +-
+>   arch/arm/Makefile        |   2 +-
+>   arch/arm/lib/backtrace.S | 134 ++++++++++++++++++++++++++++++++++++---
+>   3 files changed, 128 insertions(+), 12 deletions(-)
 > 
-> So as I understand it, the mailmap file is there mostly to ensure that a
-> person's changesets are properly collected in 'git shortlog' and such.  As
-> documented on the man page, it is used when a person's name is spelled
-> differently at different times.
-> 
-> That doesn't appear to be the case here, and shortlog output is correct
-> already.  Given that, do we *really* need to maintain a collection of old
-> email addresses in the mailmap file?  What is the benefit of that?
+> diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+> index 85710e078afb..92fca7463e21 100644
+> --- a/arch/arm/Kconfig.debug
+> +++ b/arch/arm/Kconfig.debug
+> @@ -56,7 +56,7 @@ choice
+>   
+>   config UNWINDER_FRAME_POINTER
+>   	bool "Frame pointer unwinder"
+> -	depends on !THUMB2_KERNEL && !CC_IS_CLANG
+> +	depends on !THUMB2_KERNEL
+>   	select ARCH_WANT_FRAME_POINTERS
+>   	select FRAME_POINTER
+>   	help
+> @@ -1872,7 +1872,7 @@ config DEBUG_UNCOMPRESS
+>   	  When this option is set, the selected DEBUG_LL output method
+>   	  will be re-used for normal decompressor output on multiplatform
+>   	  kernels.
+> -	
+> +
+>   
+>   config UNCOMPRESS_INCLUDE
+>   	string
+> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+> index c3624ca6c0bc..a593d9c4e18a 100644
+> --- a/arch/arm/Makefile
+> +++ b/arch/arm/Makefile
+> @@ -36,7 +36,7 @@ KBUILD_CFLAGS	+= $(call cc-option,-mno-unaligned-access)
+>   endif
+>   
+>   ifeq ($(CONFIG_FRAME_POINTER),y)
+> -KBUILD_CFLAGS	+=-fno-omit-frame-pointer -mapcs -mno-sched-prolog
+> +KBUILD_CFLAGS	+=-fno-omit-frame-pointer $(call cc-option,-mapcs,) $(call cc-option,-mno-sched-prolog,)
+>   endif
+>   
+>   ifeq ($(CONFIG_CPU_BIG_ENDIAN),y)
+> diff --git a/arch/arm/lib/backtrace.S b/arch/arm/lib/backtrace.S
+> index 1d5210eb4776..fd64eec9f6ae 100644
+> --- a/arch/arm/lib/backtrace.S
+> +++ b/arch/arm/lib/backtrace.S
+> @@ -14,10 +14,7 @@
+>   @ fp is 0 or stack frame
+>   
+>   #define frame	r4
+> -#define sv_fp	r5
+> -#define sv_pc	r6
+>   #define mask	r7
+> -#define offset	r8
+>   
+>   ENTRY(c_backtrace)
+>   
+> @@ -25,7 +22,8 @@ ENTRY(c_backtrace)
+>   		ret	lr
+>   ENDPROC(c_backtrace)
+>   #else
+> -		stmfd	sp!, {r4 - r8, lr}	@ Save an extra register so we have a location...
+> +		stmfd   sp!, {r4 - r8, fp, lr}	@ Save an extra register
 
-IMO, when we use git-blame to find out who is response for specified code, w/o
-mailmap we may just found old obsolete email address in the related commit; even
-we can search full name for his/her new email address, how can we make sure they
-are the same person... so anyway, it can help to find last valid/canonical email
-address of someone.
+Note that the Procedure Call Standard for EABI requires that SP be 
+8-byte-aligned at a public interface. Pushing an odd number of registers 
+here looks like it will make the subsequent calls to dump_backtrace_* 
+and printk violate that condition.
 
-Thanks,
+Robin.
 
-> 
-> Thanks,
-> 
-> jon
+> +						@ so we have a location..
+>   		movs	frame, r0		@ if frame pointer is zero
+>   		beq	no_frame		@ we have no stack frames
+>   
+> @@ -35,11 +33,119 @@ ENDPROC(c_backtrace)
+>    THUMB(		orreq	mask, #0x03		)
+>   		movne	mask, #0		@ mask for 32-bit
+>   
+> -1:		stmfd	sp!, {pc}		@ calculate offset of PC stored
+> -		ldr	r0, [sp], #4		@ by stmfd for this CPU
+> -		adr	r1, 1b
+> -		sub	offset, r0, r1
+>   
+> +#if defined(CONFIG_CC_IS_CLANG)
+> +/*
+> + * Clang does not store pc or sp in function prologues
+> + * 		so we don't know exactly where the function
+> + * 		starts.
+> + * We can treat the current frame's lr as the saved pc and the
+> + * 		preceding frame's lr as the lr, but we can't
+> + * 		trace the most recent call.
+> + * Inserting a false stack frame allows us to reference the
+> + * 		function called last in the stacktrace.
+> + * If the call instruction was a bl we can look at the callers
+> + * 		branch instruction to calculate the saved pc.
+> + * We can recover the pc in most cases, but in cases such as
+> + * 		calling function pointers we cannot. In this
+> + * 		case, default to using the lr. This will be
+> + * 		some address in the function, but will not
+> + * 		be the function start.
+> + * Unfortunately due to the stack frame layout we can't dump
+> + *              r0 - r3, but these are less frequently saved.
+> + *
+> + * Stack frame layout:
+> + *             <larger addresses>
+> + *             saved lr
+> + *    frame => saved fp
+> + *             optionally saved caller registers (r4 - r10)
+> + *             optionally saved arguments (r0 - r3)
+> + *             <top of stack frame>
+> + *             <smaller addressses>
+> + *
+> + * Functions start with the following code sequence:
+> + * corrected pc =>  stmfd sp!, {..., fp, lr}
+> + *		    add fp, sp, #x
+> + *		    stmfd sp!, {r0 - r3} (optional)
+> + */
+> +#define sv_fp	r5
+> +#define sv_pc	r6
+> +#define sv_lr   r8
+> +		add     frame, sp, #20          @ switch to false frame
+> +for_each_frame:	tst	frame, mask		@ Check for address exceptions
+> +		bne	no_frame
+> +
+> +1001:		ldr	sv_pc, [frame, #4]	@ get saved 'pc'
+> +1002:		ldr	sv_fp, [frame, #0]	@ get saved fp
+> +
+> +		teq     sv_fp, #0               @ make sure next frame exists
+> +		beq     no_frame
+> +
+> +1003:		ldr     sv_lr, [sv_fp, #4]      @ get saved lr from next frame
+> +
+> +		//try to find function start
+> +		ldr     r0, [sv_lr, #-4]        @ get call instruction
+> +		ldr     r3, .Ldsi+8
+> +		and     r2, r3, r0              @ is this a bl call
+> +		teq     r2, r3
+> +		bne     finished_setup          @ give up if it's not
+> +		and     r0, #0xffffff           @ get call offset 24-bit int
+> +		lsl     r0, r0, #8              @ sign extend offset
+> +		asr     r0, r0, #8
+> +		ldr     sv_pc, [sv_fp, #4]      @ get lr address
+> +		add     sv_pc, sv_pc, #-4	@ get call instruction address
+> +		add     sv_pc, sv_pc, #8        @ take care of prefetch
+> +		add     sv_pc, sv_pc, r0, lsl #2 @ find function start
+> +		b       finished_setup
+> +
+> +finished_setup:
+> +
+> +		bic	sv_pc, sv_pc, mask	@ mask PC/LR for the mode
+> +
+> +1004:		mov     r0, sv_pc
+> +
+> +		mov     r1, sv_lr
+> +		mov	r2, frame
+> +		bic	r1, r1, mask		@ mask PC/LR for the mode
+> +		bl	dump_backtrace_entry
+> +
+> +1005:		ldr	r1, [sv_pc, #0]		@ if stmfd sp!, {..., fp, lr}
+> +		ldr	r3, .Ldsi		@ instruction exists,
+> +		teq	r3, r1, lsr #11
+> +		ldr     r0, [frame]             @ locals are stored in
+> +						@ the preceding frame
+> +		subeq	r0, r0, #4
+> +		bleq	dump_backtrace_stm	@ dump saved registers
+> +
+> +		teq	sv_fp, #0		@ zero saved fp means
+> +		beq	no_frame		@ no further frames
+> +
+> +		cmp	sv_fp, frame		@ next frame must be
+> +		mov	frame, sv_fp		@ above the current frame
+> +		bhi	for_each_frame
+> +
+> +1006:		adr	r0, .Lbad
+> +		mov	r1, frame
+> +		bl	printk
+> +no_frame:	ldmfd	sp!, {r4 - r8, fp, pc}
+> +ENDPROC(c_backtrace)
+> +		.pushsection __ex_table,"a"
+> +		.align	3
+> +		.long	1001b, 1006b
+> +		.long	1002b, 1006b
+> +		.long	1003b, 1006b
+> +		.long	1004b, 1006b
+> +		.popsection
+> +
+> +.Lbad:		.asciz	"Backtrace aborted due to bad frame pointer <%p>\n"
+> +		.align
+> +.Ldsi:		.word	0xe92d4800 >> 11	@ stmfd sp!, {... fp, lr}
+> +		.word	0xe92d0000 >> 11	@ stmfd sp!, {}
+> +		.word   0x0b000000              @ bl if these bits are set
+> +
+> +ENDPROC(c_backtrace)
+> +
+> +#else
+>   /*
+>    * Stack frame layout:
+>    *             optionally saved caller registers (r4 - r10)
+> @@ -55,6 +161,15 @@ ENDPROC(c_backtrace)
+>    *                  stmfd sp!, {r0 - r3} (optional)
+>    * corrected pc =>  stmfd sp!, {..., fp, ip, lr, pc}
+>    */
+> +#define sv_fp	r5
+> +#define sv_pc	r6
+> +#define offset	r8
+> +
+> +1:		stmfd	sp!, {pc}		@ calculate offset of PC stored
+> +		ldr	r0, [sp], #4		@ by stmfd for this CPU
+> +		adr	r1, 1b
+> +		sub	offset, r0, r1
+> +
+>   for_each_frame:	tst	frame, mask		@ Check for address exceptions
+>   		bne	no_frame
+>   
+> @@ -98,7 +213,7 @@ for_each_frame:	tst	frame, mask		@ Check for address exceptions
+>   1006:		adr	r0, .Lbad
+>   		mov	r1, frame
+>   		bl	printk
+> -no_frame:	ldmfd	sp!, {r4 - r8, pc}
+> +no_frame:	ldmfd	sp!, {r4 - r8, fp, pc}
+>   ENDPROC(c_backtrace)
+>   		
+>   		.pushsection __ex_table,"a"
+> @@ -115,3 +230,4 @@ ENDPROC(c_backtrace)
+>   		.word	0xe92d0000 >> 11	@ stmfd sp!, {}
+>   
+>   #endif
+> +#endif
 > 
