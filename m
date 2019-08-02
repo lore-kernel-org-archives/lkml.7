@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0285C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0EAEC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 701AC2086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:52:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8BD82064A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:52:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739521;
-	bh=IKJcfRjPMajeHXKC6TDQ4SxdtUiUJ9zQpwIxrdeF1t8=;
+	s=default; t=1564739524;
+	bh=dfXs1z5XmGDEC3fDgVnCAUbO9RAXsb+CwBDGcx1hE2k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2IPQHEBVtBs2Z5hp1YHX4Ygm7XBPA/eb36p/8fOqIPatrwfIQFaqduHF6xtujSfZo
-	 lj18JMrJUgQQjkQLcKVUoQBvk4aWR/KSq6iFLpSbxNqkMG29DVemhJ/+TR61Lj8KgF
-	 xTjPSavgTSucJZtyq6aHS/yBXAsQIEGXWeagw6Ww=
+	b=S1gClkN0LfnYuwNwTMjLWDS6AJTP1pXn/dkfKRh6YebwG6PpaEzd5G4Wp2O7zJhs8
+	 1kH3EzUUxEj1tScgugPf/Qwf+1kwnvdWY7s5mJg0PWA7DFBuxfR+H3+RuEXokwg82v
+	 nKgFTegVqrjg9GXl7dYfRq52oFMJn5QV6JrUIeO8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392142AbfHBJwA (ORCPT
+        id S2392153AbfHBJwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:52:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57366 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:52:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392043AbfHBJv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:51:58 -0400
+        id S2392043AbfHBJwC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:52:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8A142086A;
-        Fri,  2 Aug 2019 09:51:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 487932064A;
+        Fri,  2 Aug 2019 09:52:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739518;
-        bh=IKJcfRjPMajeHXKC6TDQ4SxdtUiUJ9zQpwIxrdeF1t8=;
+        s=default; t=1564739520;
+        bh=dfXs1z5XmGDEC3fDgVnCAUbO9RAXsb+CwBDGcx1hE2k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yRosXGx4s6CCPHGkoN/qfJaocbykRpCLNvTPm4cyNRBDY5YYwWijzGtyCYw1YPXa6
-         25WDbswyHoMsomhyXtOiOaaC0wsXnFbEAA48qEssZx9MyVyt4Usiyf90JgCzJ2g+RL
-         cipXFOE9ciB2CzEkTJM7gjrp9bhERLI2guPcIjmU=
+        b=IDPfM2eX+JtHMJGpPCY+G2N81exO0jIxLOyAmjjYJOwqkwErG9K8yFeC3LpgyTLms
+         HMhXpsF9RmgfHIPNo465JectXssWcqA2Hh40Nh7Mqwh2IIjnHhBA/kzMs2fJMv+oPm
+         IUrN37hGXgumIZp4R+oMyFHpLUsGttB7UDvuzSZQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        Lee Jones <lee.jones@linaro.org>,
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
+        Richard Weinberger <richard@nod.at>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 183/223] mfd: hi655x-pmic: Fix missing return value check for devm_regmap_init_mmio_clk
-Date:   Fri,  2 Aug 2019 11:36:48 +0200
-Message-Id: <20190802092249.464387097@linuxfoundation.org>
+Subject: [PATCH 4.9 184/223] um: Silence lockdep complaint about mmap_sem
+Date:   Fri,  2 Aug 2019 11:36:49 +0200
+Message-Id: <20190802092249.501566231@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -61,31 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7efd105c27fd2323789b41b64763a0e33ed79c08 ]
+[ Upstream commit 80bf6ceaf9310b3f61934c69b382d4912deee049 ]
 
-Since devm_regmap_init_mmio_clk can fail, add return value checking.
+When we get into activate_mm(), lockdep complains that we're doing
+something strange:
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Acked-by: Chen Feng <puck.chen@hisilicon.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+    WARNING: possible circular locking dependency detected
+    5.1.0-10252-gb00152307319-dirty #121 Not tainted
+    ------------------------------------------------------
+    inside.sh/366 is trying to acquire lock:
+    (____ptrval____) (&(&p->alloc_lock)->rlock){+.+.}, at: flush_old_exec+0x703/0x8d7
+
+    but task is already holding lock:
+    (____ptrval____) (&mm->mmap_sem){++++}, at: flush_old_exec+0x6c5/0x8d7
+
+    which lock already depends on the new lock.
+
+    the existing dependency chain (in reverse order) is:
+
+    -> #1 (&mm->mmap_sem){++++}:
+           [...]
+           __lock_acquire+0x12ab/0x139f
+           lock_acquire+0x155/0x18e
+           down_write+0x3f/0x98
+           flush_old_exec+0x748/0x8d7
+           load_elf_binary+0x2ca/0xddb
+           [...]
+
+    -> #0 (&(&p->alloc_lock)->rlock){+.+.}:
+           [...]
+           __lock_acquire+0x12ab/0x139f
+           lock_acquire+0x155/0x18e
+           _raw_spin_lock+0x30/0x83
+           flush_old_exec+0x703/0x8d7
+           load_elf_binary+0x2ca/0xddb
+           [...]
+
+    other info that might help us debug this:
+
+     Possible unsafe locking scenario:
+
+           CPU0                    CPU1
+           ----                    ----
+      lock(&mm->mmap_sem);
+                                   lock(&(&p->alloc_lock)->rlock);
+                                   lock(&mm->mmap_sem);
+      lock(&(&p->alloc_lock)->rlock);
+
+     *** DEADLOCK ***
+
+    2 locks held by inside.sh/366:
+     #0: (____ptrval____) (&sig->cred_guard_mutex){+.+.}, at: __do_execve_file+0x12d/0x869
+     #1: (____ptrval____) (&mm->mmap_sem){++++}, at: flush_old_exec+0x6c5/0x8d7
+
+    stack backtrace:
+    CPU: 0 PID: 366 Comm: inside.sh Not tainted 5.1.0-10252-gb00152307319-dirty #121
+    Stack:
+     [...]
+    Call Trace:
+     [<600420de>] show_stack+0x13b/0x155
+     [<6048906b>] dump_stack+0x2a/0x2c
+     [<6009ae64>] print_circular_bug+0x332/0x343
+     [<6009c5c6>] check_prev_add+0x669/0xdad
+     [<600a06b4>] __lock_acquire+0x12ab/0x139f
+     [<6009f3d0>] lock_acquire+0x155/0x18e
+     [<604a07e0>] _raw_spin_lock+0x30/0x83
+     [<60151e6a>] flush_old_exec+0x703/0x8d7
+     [<601a8eb8>] load_elf_binary+0x2ca/0xddb
+     [...]
+
+I think it's because in exec_mmap() we have
+
+	down_read(&old_mm->mmap_sem);
+...
+        task_lock(tsk);
+...
+	activate_mm(active_mm, mm);
+	(which does down_write(&mm->mmap_sem))
+
+I'm not really sure why lockdep throws in the whole knowledge
+about the task lock, but it seems that old_mm and mm shouldn't
+ever be the same (and it doesn't deadlock) so tell lockdep that
+they're different.
+
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/hi655x-pmic.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/um/include/asm/mmu_context.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/hi655x-pmic.c b/drivers/mfd/hi655x-pmic.c
-index 11347a3e6d40..c311b869be38 100644
---- a/drivers/mfd/hi655x-pmic.c
-+++ b/drivers/mfd/hi655x-pmic.c
-@@ -111,6 +111,8 @@ static int hi655x_pmic_probe(struct platform_device *pdev)
- 
- 	pmic->regmap = devm_regmap_init_mmio_clk(dev, NULL, base,
- 						 &hi655x_regmap_config);
-+	if (IS_ERR(pmic->regmap))
-+		return PTR_ERR(pmic->regmap);
- 
- 	regmap_read(pmic->regmap, HI655X_BUS_ADDR(HI655X_VER_REG), &pmic->ver);
- 	if ((pmic->ver < PMU_VER_START) || (pmic->ver > PMU_VER_END)) {
+diff --git a/arch/um/include/asm/mmu_context.h b/arch/um/include/asm/mmu_context.h
+index 1a60e1328e2f..6aca4c90aa1a 100644
+--- a/arch/um/include/asm/mmu_context.h
++++ b/arch/um/include/asm/mmu_context.h
+@@ -56,7 +56,7 @@ static inline void activate_mm(struct mm_struct *old, struct mm_struct *new)
+ 	 * when the new ->mm is used for the first time.
+ 	 */
+ 	__switch_mm(&new->context.id);
+-	down_write(&new->mmap_sem);
++	down_write_nested(&new->mmap_sem, 1);
+ 	uml_setup_stubs(new);
+ 	up_write(&new->mmap_sem);
+ }
 -- 
 2.20.1
 
