@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5339C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D11C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1EFD217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:57:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 814A521773
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:57:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739849;
-	bh=TZIj1XO9MgEwWteHdZaf3ynD/LvR36ZM79MeKGbyz9M=;
+	s=default; t=1564739853;
+	bh=ZjDcXP0Wz/sTUK16guHwPbb1e26Bau2spHDEwnTu/GA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=stOHrR6FlLisWzf5xJY3uXQVAhFvnlBvkiuNr9ITPVITadAiAda7UG1Oo7yq/6oIQ
-	 +jV7+Dc+js7ObSGumg/eO3cLBoGohoLAEzJ2RyygYCjiDRM1Gqfypl0aslxZZMIIKF
-	 QtwMOpgS1H038zdArVCbi0IKmBYgvVUvuO+baM+o=
+	b=eG4kebyGCzBiHafIYbE86Kojq6wGPQchsMQAnlb0LjZQkwPRBkCAOlRYvTqQxiNrc
+	 +1zmF0mN1nc4Hu1NuGe30gkUpRS8p6DR1nbFxSfKj57OA+lzD2UadfRp+IOrfT/6L6
+	 fHx4waj4Zi/0cSliZgsijsD1jI/UrxqFBLll5O5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406911AbfHBJ52 (ORCPT
+        id S2406899AbfHBJ50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:57:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36640 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406895AbfHBJ50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 2 Aug 2019 05:57:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36510 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406875AbfHBJ5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:57:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B15E52087E;
-        Fri,  2 Aug 2019 09:57:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89B1C2087E;
+        Fri,  2 Aug 2019 09:57:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739845;
-        bh=TZIj1XO9MgEwWteHdZaf3ynD/LvR36ZM79MeKGbyz9M=;
+        s=default; t=1564739840;
+        bh=ZjDcXP0Wz/sTUK16guHwPbb1e26Bau2spHDEwnTu/GA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jjlJj1EC5OEwmYnNhS2TZo1irD4m3auWZjVVCsoDJxUTSBUZFIu9mA9mY+XQNdlDU
-         ktS/T6UxEg8SscBQGOeSry7Yc3Vpi1dAusrUSjolqe1E8seUHRhJqNNyytinlNMRWS
-         6suY1SumxnNad4x6si6bgoOd2x6Ck1Q0j8gtFX0k=
+        b=v9vOoiHEi3TUBe3RSYrdcP4Py74o/ISuHx+ryTHjkuf6u06fJVk2QFxYch35OKjel
+         kjX2ZBMz1epWA1tN+kyKX3qEA96O4CSNGYnKMcy9BeIk4xTNQfZ1oCXd4nXdcaTqEq
+         vr5wjgk7cwxnTf2bATHUP0k6SldpAcYGjKNoRUAc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Marta Rybczynska <marta.rybczynska@kalray.eu>,
-        Jean-Baptiste Riaux <jbriaux@kalray.eu>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 5.2 12/20] nvme: fix multipath crash when ANA is deactivated
-Date:   Fri,  2 Aug 2019 11:40:06 +0200
-Message-Id: <20190802092100.642491391@linuxfoundation.org>
+        Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        syzbot+a4387f5b6b799f6becbf@syzkaller.appspotmail.com
+Subject: [PATCH 5.2 10/20] media: radio-raremono: change devm_k*alloc to k*alloc
+Date:   Fri,  2 Aug 2019 11:40:04 +0200
+Message-Id: <20190802092100.285432717@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092055.131876977@linuxfoundation.org>
 References: <20190802092055.131876977@linuxfoundation.org>
@@ -61,121 +62,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marta Rybczynska <mrybczyn@kalray.eu>
+From: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
 
-commit 66b20ac0a1a10769d059d6903202f53494e3d902 upstream.
+commit c666355e60ddb4748ead3bdd983e3f7f2224aaf0 upstream.
 
-Fix a crash with multipath activated. It happends when ANA log
-page is larger than MDTS and because of that ANA is disabled.
-The driver then tries to access unallocated buffer when connecting
-to a nvme target. The signature is as follows:
+Change devm_k*alloc to k*alloc to manually allocate memory
 
-[  300.433586] nvme nvme0: ANA log page size (8208) larger than MDTS (8192).
-[  300.435387] nvme nvme0: disabling ANA support.
-[  300.437835] nvme nvme0: creating 4 I/O queues.
-[  300.459132] nvme nvme0: new ctrl: NQN "nqn.0.0.0", addr 10.91.0.1:8009
-[  300.464609] BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
-[  300.466342] #PF error: [normal kernel read fault]
-[  300.467385] PGD 0 P4D 0
-[  300.467987] Oops: 0000 [#1] SMP PTI
-[  300.468787] CPU: 3 PID: 50 Comm: kworker/u8:1 Not tainted 5.0.20kalray+ #4
-[  300.470264] Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
-[  300.471532] Workqueue: nvme-wq nvme_scan_work [nvme_core]
-[  300.472724] RIP: 0010:nvme_parse_ana_log+0x21/0x140 [nvme_core]
-[  300.474038] Code: 45 01 d2 d8 48 98 c3 66 90 0f 1f 44 00 00 41 57 41 56 41 55 41 54 55 53 48 89 fb 48 83 ec 08 48 8b af 20 0a 00 00 48 89 34 24 <66> 83 7d 08 00 0f 84 c6 00 00 00 44 8b 7d 14 49 89 d5 8b 55 10 48
-[  300.477374] RSP: 0018:ffffa50e80fd7cb8 EFLAGS: 00010296
-[  300.478334] RAX: 0000000000000001 RBX: ffff9130f1872258 RCX: 0000000000000000
-[  300.479784] RDX: ffffffffc06c4c30 RSI: ffff9130edad4280 RDI: ffff9130f1872258
-[  300.481488] RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000044
-[  300.483203] R10: 0000000000000220 R11: 0000000000000040 R12: ffff9130f18722c0
-[  300.484928] R13: ffff9130f18722d0 R14: ffff9130edad4280 R15: ffff9130f18722c0
-[  300.486626] FS:  0000000000000000(0000) GS:ffff9130f7b80000(0000) knlGS:0000000000000000
-[  300.488538] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  300.489907] CR2: 0000000000000008 CR3: 00000002365e6000 CR4: 00000000000006e0
-[  300.491612] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  300.493303] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  300.494991] Call Trace:
-[  300.495645]  nvme_mpath_add_disk+0x5c/0xb0 [nvme_core]
-[  300.496880]  nvme_validate_ns+0x2ef/0x550 [nvme_core]
-[  300.498105]  ? nvme_identify_ctrl.isra.45+0x6a/0xb0 [nvme_core]
-[  300.499539]  nvme_scan_work+0x2b4/0x370 [nvme_core]
-[  300.500717]  ? __switch_to_asm+0x35/0x70
-[  300.501663]  process_one_work+0x171/0x380
-[  300.502340]  worker_thread+0x49/0x3f0
-[  300.503079]  kthread+0xf8/0x130
-[  300.503795]  ? max_active_store+0x80/0x80
-[  300.504690]  ? kthread_bind+0x10/0x10
-[  300.505502]  ret_from_fork+0x35/0x40
-[  300.506280] Modules linked in: nvme_tcp nvme_rdma rdma_cm iw_cm ib_cm ib_core nvme_fabrics nvme_core xt_physdev ip6table_raw ip6table_mangle ip6table_filter ip6_tables xt_comment iptable_nat nf_nat_ipv4 nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 xt_CHECKSUM iptable_mangle iptable_filter veth ebtable_filter ebtable_nat ebtables iptable_raw vxlan ip6_udp_tunnel udp_tunnel sunrpc joydev pcspkr virtio_balloon br_netfilter bridge stp llc ip_tables xfs libcrc32c ata_generic pata_acpi virtio_net virtio_console net_failover virtio_blk failover ata_piix serio_raw libata virtio_pci virtio_ring virtio
-[  300.514984] CR2: 0000000000000008
-[  300.515569] ---[ end trace faa2eefad7e7f218 ]---
-[  300.516354] RIP: 0010:nvme_parse_ana_log+0x21/0x140 [nvme_core]
-[  300.517330] Code: 45 01 d2 d8 48 98 c3 66 90 0f 1f 44 00 00 41 57 41 56 41 55 41 54 55 53 48 89 fb 48 83 ec 08 48 8b af 20 0a 00 00 48 89 34 24 <66> 83 7d 08 00 0f 84 c6 00 00 00 44 8b 7d 14 49 89 d5 8b 55 10 48
-[  300.520353] RSP: 0018:ffffa50e80fd7cb8 EFLAGS: 00010296
-[  300.521229] RAX: 0000000000000001 RBX: ffff9130f1872258 RCX: 0000000000000000
-[  300.522399] RDX: ffffffffc06c4c30 RSI: ffff9130edad4280 RDI: ffff9130f1872258
-[  300.523560] RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000044
-[  300.524734] R10: 0000000000000220 R11: 0000000000000040 R12: ffff9130f18722c0
-[  300.525915] R13: ffff9130f18722d0 R14: ffff9130edad4280 R15: ffff9130f18722c0
-[  300.527084] FS:  0000000000000000(0000) GS:ffff9130f7b80000(0000) knlGS:0000000000000000
-[  300.528396] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  300.529440] CR2: 0000000000000008 CR3: 00000002365e6000 CR4: 00000000000006e0
-[  300.530739] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  300.531989] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  300.533264] Kernel panic - not syncing: Fatal exception
-[  300.534338] Kernel Offset: 0x17c00000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-[  300.536227] ---[ end Kernel panic - not syncing: Fatal exception ]---
+The manual allocation and freeing of memory is necessary because when
+the USB radio is disconnected, the memory associated with devm_k*alloc
+is freed. Meaning if we still have unresolved references to the radio
+device, then we get use-after-free errors.
 
-Condition check refactoring from Christoph Hellwig.
+This patch fixes this by manually allocating memory, and freeing it in
+the v4l2.release callback that gets called when the last radio device
+exits.
 
-Signed-off-by: Marta Rybczynska <marta.rybczynska@kalray.eu>
-Tested-by: Jean-Baptiste Riaux <jbriaux@kalray.eu>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reported-and-tested-by: syzbot+a4387f5b6b799f6becbf@syzkaller.appspotmail.com
+
+Signed-off-by: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+[hverkuil-cisco@xs4all.nl: cleaned up two small checkpatch.pl warnings]
+[hverkuil-cisco@xs4all.nl: prefix subject with driver name]
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/nvme/host/multipath.c |    8 ++------
- drivers/nvme/host/nvme.h      |    6 +++++-
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/media/radio/radio-raremono.c |   30 +++++++++++++++++++++++-------
+ 1 file changed, 23 insertions(+), 7 deletions(-)
 
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -12,11 +12,6 @@ module_param(multipath, bool, 0444);
- MODULE_PARM_DESC(multipath,
- 	"turn on native support for multiple controllers per subsystem");
+--- a/drivers/media/radio/radio-raremono.c
++++ b/drivers/media/radio/radio-raremono.c
+@@ -271,6 +271,14 @@ static int vidioc_g_frequency(struct fil
+ 	return 0;
+ }
  
--inline bool nvme_ctrl_use_ana(struct nvme_ctrl *ctrl)
--{
--	return multipath && ctrl->subsys && (ctrl->subsys->cmic & (1 << 3));
--}
--
- /*
-  * If multipathing is enabled we need to always use the subsystem instance
-  * number for numbering our devices to avoid conflicts between subsystems that
-@@ -614,7 +609,8 @@ int nvme_mpath_init(struct nvme_ctrl *ct
- {
- 	int error;
- 
--	if (!nvme_ctrl_use_ana(ctrl))
-+	/* check if multipath is enabled and we have the capability */
-+	if (!multipath || !ctrl->subsys || !(ctrl->subsys->cmic & (1 << 3)))
- 		return 0;
- 
- 	ctrl->anacap = id->anacap;
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -472,7 +472,11 @@ extern const struct attribute_group *nvm
- extern const struct block_device_operations nvme_ns_head_ops;
- 
- #ifdef CONFIG_NVME_MULTIPATH
--bool nvme_ctrl_use_ana(struct nvme_ctrl *ctrl);
-+static inline bool nvme_ctrl_use_ana(struct nvme_ctrl *ctrl)
++static void raremono_device_release(struct v4l2_device *v4l2_dev)
 +{
-+	return ctrl->ana_log_buf != NULL;
++	struct raremono_device *radio = to_raremono_dev(v4l2_dev);
++
++	kfree(radio->buffer);
++	kfree(radio);
 +}
 +
- void nvme_set_disk_name(char *disk_name, struct nvme_ns *ns,
- 			struct nvme_ctrl *ctrl, int *flags);
- void nvme_failover_req(struct request *req);
+ /* File system interface */
+ static const struct v4l2_file_operations usb_raremono_fops = {
+ 	.owner		= THIS_MODULE,
+@@ -295,12 +303,14 @@ static int usb_raremono_probe(struct usb
+ 	struct raremono_device *radio;
+ 	int retval = 0;
+ 
+-	radio = devm_kzalloc(&intf->dev, sizeof(struct raremono_device), GFP_KERNEL);
+-	if (radio)
+-		radio->buffer = devm_kmalloc(&intf->dev, BUFFER_LENGTH, GFP_KERNEL);
+-
+-	if (!radio || !radio->buffer)
++	radio = kzalloc(sizeof(*radio), GFP_KERNEL);
++	if (!radio)
++		return -ENOMEM;
++	radio->buffer = kmalloc(BUFFER_LENGTH, GFP_KERNEL);
++	if (!radio->buffer) {
++		kfree(radio);
+ 		return -ENOMEM;
++	}
+ 
+ 	radio->usbdev = interface_to_usbdev(intf);
+ 	radio->intf = intf;
+@@ -324,7 +334,8 @@ static int usb_raremono_probe(struct usb
+ 	if (retval != 3 ||
+ 	    (get_unaligned_be16(&radio->buffer[1]) & 0xfff) == 0x0242) {
+ 		dev_info(&intf->dev, "this is not Thanko's Raremono.\n");
+-		return -ENODEV;
++		retval = -ENODEV;
++		goto free_mem;
+ 	}
+ 
+ 	dev_info(&intf->dev, "Thanko's Raremono connected: (%04X:%04X)\n",
+@@ -333,7 +344,7 @@ static int usb_raremono_probe(struct usb
+ 	retval = v4l2_device_register(&intf->dev, &radio->v4l2_dev);
+ 	if (retval < 0) {
+ 		dev_err(&intf->dev, "couldn't register v4l2_device\n");
+-		return retval;
++		goto free_mem;
+ 	}
+ 
+ 	mutex_init(&radio->lock);
+@@ -345,6 +356,7 @@ static int usb_raremono_probe(struct usb
+ 	radio->vdev.ioctl_ops = &usb_raremono_ioctl_ops;
+ 	radio->vdev.lock = &radio->lock;
+ 	radio->vdev.release = video_device_release_empty;
++	radio->v4l2_dev.release = raremono_device_release;
+ 
+ 	usb_set_intfdata(intf, &radio->v4l2_dev);
+ 
+@@ -360,6 +372,10 @@ static int usb_raremono_probe(struct usb
+ 	}
+ 	dev_err(&intf->dev, "could not register video device\n");
+ 	v4l2_device_unregister(&radio->v4l2_dev);
++
++free_mem:
++	kfree(radio->buffer);
++	kfree(radio);
+ 	return retval;
+ }
+ 
 
 
