@@ -7,53 +7,59 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B018FC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55501C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ECC02067D
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:59:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22B4B2067D
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:59:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739992;
-	bh=YYYz1aKx97Ii5R7lI2bmjC8XYExlbd+kK6xQ8flCFfc=;
+	s=default; t=1564739999;
+	bh=Sus13iWclroigCwhhejUjmR7RmySRV/rrlISLxwdSts=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sjHcwpX9wb3+/3vXg/TWIC+r73Pxz+x94t1ZkG/OT4nhAFEJx3OVq39UhW/rq6Z/2
-	 wo/1J/Bmv4D8ixKdt+oqLn4fl7NPqRXKjSriv0TKELbRB4UruONpNv2PeTertb4rgg
-	 uHEY+OsJjSKJf4RhTJGBPQeei3ZzNykq0Nj+4mdE=
+	b=hXswf3VzSkKs/l38ufthhwhckcHDGVdgkTsRS7Pwg93RUjFw1mtL9QLBo2CTDQ13h
+	 98tPVfH9dZB6k0fr/pdCOp5aBgPQVy0uQBA6TttiEZt1JtpNvWBztCkdqYRveCbKKU
+	 9zdVL+/KIql52LPJiD/8pgDpmo0ByXq5EiQQd7ws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406990AbfHBJ7v (ORCPT
+        id S2407152AbfHBJ75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:59:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34000 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:59:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406528AbfHBJz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:55:26 -0400
+        id S2406473AbfHBJzN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:55:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC8442086A;
-        Fri,  2 Aug 2019 09:55:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 193542064A;
+        Fri,  2 Aug 2019 09:55:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739725;
-        bh=YYYz1aKx97Ii5R7lI2bmjC8XYExlbd+kK6xQ8flCFfc=;
+        s=default; t=1564739712;
+        bh=Sus13iWclroigCwhhejUjmR7RmySRV/rrlISLxwdSts=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oIuScfaImV8vANWwcpYIYbd0sjUzV7NyZ3KLDWPAJUp6CGzrKPYWGqhTupES1aT0B
-         behDjNmey0UC+SZqAVwQOThoiUfce44VnHVdqeKY//sFsGr7Yt/lUuphDlHAVG5VBJ
-         sqcNRHR27PpxCvTSC6VGY7CzYlaXHfHuRJTXcHBs=
+        b=llh4ey3vgA0xZMxapsyJxpXN0WCBjAAzx39k3ZN2ZawDDFSCJkVRPOAZ0+uZ2Y+UM
+         8eyUymIfCRWYwePTs1hhl8+5KbCRgFuhLG9NKOHE9+3cyfpaDXltOM5SpV1J9Ap/Ug
+         0IA93hMSeydbLsbmsBZTzBO6Y0JyubWrn0UlYU+0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 01/32] hv_sock: Add support for delayed close
-Date:   Fri,  2 Aug 2019 11:39:35 +0200
-Message-Id: <20190802092102.084353778@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Steve McIntyre <steve.mcintyre@arm.com>,
+        Steve McIntyre <93sam@debian.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH 4.14 08/25] arm64: compat: Provide definition for COMPAT_SIGMINSTKSZ
+Date:   Fri,  2 Aug 2019 11:39:40 +0200
+Message-Id: <20190802092101.747842064@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190802092101.913646560@linuxfoundation.org>
-References: <20190802092101.913646560@linuxfoundation.org>
+In-Reply-To: <20190802092058.428079740@linuxfoundation.org>
+References: <20190802092058.428079740@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,192 +68,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sunil Muthuswamy <sunilmut@microsoft.com>
+From: Will Deacon <will.deacon@arm.com>
 
-commit a9eeb998c28d5506616426bd3a216bd5735a18b8 upstream.
+commit 24951465cbd279f60b1fdc2421b3694405bcff42 upstream.
 
-Currently, hvsock does not implement any delayed or background close
-logic. Whenever the hvsock socket is closed, a FIN is sent to the peer, and
-the last reference to the socket is dropped, which leads to a call to
-.destruct where the socket can hang indefinitely waiting for the peer to
-close it's side. The can cause the user application to hang in the close()
-call.
+arch/arm/ defines a SIGMINSTKSZ of 2k, so we should use the same value
+for compat tasks.
 
-This change implements proper STREAM(TCP) closing handshake mechanism by
-sending the FIN to the peer and the waiting for the peer's FIN to arrive
-for a given timeout. On timeout, it will try to terminate the connection
-(i.e. a RST). This is in-line with other socket providers such as virtio.
-
-This change does not address the hang in the vmbus_hvsock_device_unregister
-where it waits indefinitely for the host to rescind the channel. That
-should be taken up as a separate fix.
-
-Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
-Reviewed-by: Dexuan Cui <decui@microsoft.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Dominik Brodowski <linux@dominikbrodowski.net>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Reviewed-by: Dave Martin <Dave.Martin@arm.com>
+Reported-by: Steve McIntyre <steve.mcintyre@arm.com>
+Tested-by: Steve McIntyre <93sam@debian.org>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/vmw_vsock/hyperv_transport.c |  110 +++++++++++++++++++++++++++------------
- 1 file changed, 78 insertions(+), 32 deletions(-)
+ arch/arm64/include/asm/compat.h |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/vmw_vsock/hyperv_transport.c
-+++ b/net/vmw_vsock/hyperv_transport.c
-@@ -35,6 +35,9 @@
- /* The MTU is 16KB per the host side's design */
- #define HVS_MTU_SIZE		(1024 * 16)
- 
-+/* How long to wait for graceful shutdown of a connection */
-+#define HVS_CLOSE_TIMEOUT (8 * HZ)
-+
- struct vmpipe_proto_header {
- 	u32 pkt_type;
- 	u32 data_size;
-@@ -290,19 +293,32 @@ static void hvs_channel_cb(void *ctx)
- 		sk->sk_write_space(sk);
+--- a/arch/arm64/include/asm/compat.h
++++ b/arch/arm64/include/asm/compat.h
+@@ -234,6 +234,7 @@ static inline compat_uptr_t ptr_to_compa
  }
  
--static void hvs_close_connection(struct vmbus_channel *chan)
-+static void hvs_do_close_lock_held(struct vsock_sock *vsk,
-+				   bool cancel_timeout)
+ #define compat_user_stack_pointer() (user_stack_pointer(task_pt_regs(current)))
++#define COMPAT_MINSIGSTKSZ	2048
+ 
+ static inline void __user *arch_compat_alloc_user_space(long len)
  {
--	struct sock *sk = get_per_channel_state(chan);
--	struct vsock_sock *vsk = vsock_sk(sk);
--
--	lock_sock(sk);
-+	struct sock *sk = sk_vsock(vsk);
- 
--	sk->sk_state = TCP_CLOSE;
- 	sock_set_flag(sk, SOCK_DONE);
--	vsk->peer_shutdown |= SEND_SHUTDOWN | RCV_SHUTDOWN;
--
-+	vsk->peer_shutdown = SHUTDOWN_MASK;
-+	if (vsock_stream_has_data(vsk) <= 0)
-+		sk->sk_state = TCP_CLOSING;
- 	sk->sk_state_change(sk);
-+	if (vsk->close_work_scheduled &&
-+	    (!cancel_timeout || cancel_delayed_work(&vsk->close_work))) {
-+		vsk->close_work_scheduled = false;
-+		vsock_remove_sock(vsk);
-+
-+		/* Release the reference taken while scheduling the timeout */
-+		sock_put(sk);
-+	}
-+}
-+
-+static void hvs_close_connection(struct vmbus_channel *chan)
-+{
-+	struct sock *sk = get_per_channel_state(chan);
- 
-+	lock_sock(sk);
-+	hvs_do_close_lock_held(vsock_sk(sk), true);
- 	release_sock(sk);
- }
- 
-@@ -445,50 +461,80 @@ static int hvs_connect(struct vsock_sock
- 	return vmbus_send_tl_connect_request(&h->vm_srv_id, &h->host_srv_id);
- }
- 
-+static void hvs_shutdown_lock_held(struct hvsock *hvs, int mode)
-+{
-+	struct vmpipe_proto_header hdr;
-+
-+	if (hvs->fin_sent || !hvs->chan)
-+		return;
-+
-+	/* It can't fail: see hvs_channel_writable_bytes(). */
-+	(void)hvs_send_data(hvs->chan, (struct hvs_send_buf *)&hdr, 0);
-+	hvs->fin_sent = true;
-+}
-+
- static int hvs_shutdown(struct vsock_sock *vsk, int mode)
- {
- 	struct sock *sk = sk_vsock(vsk);
--	struct vmpipe_proto_header hdr;
--	struct hvs_send_buf *send_buf;
--	struct hvsock *hvs;
- 
- 	if (!(mode & SEND_SHUTDOWN))
- 		return 0;
- 
- 	lock_sock(sk);
--
--	hvs = vsk->trans;
--	if (hvs->fin_sent)
--		goto out;
--
--	send_buf = (struct hvs_send_buf *)&hdr;
--
--	/* It can't fail: see hvs_channel_writable_bytes(). */
--	(void)hvs_send_data(hvs->chan, send_buf, 0);
--
--	hvs->fin_sent = true;
--out:
-+	hvs_shutdown_lock_held(vsk->trans, mode);
- 	release_sock(sk);
- 	return 0;
- }
- 
--static void hvs_release(struct vsock_sock *vsk)
-+static void hvs_close_timeout(struct work_struct *work)
- {
-+	struct vsock_sock *vsk =
-+		container_of(work, struct vsock_sock, close_work.work);
- 	struct sock *sk = sk_vsock(vsk);
--	struct hvsock *hvs = vsk->trans;
--	struct vmbus_channel *chan;
- 
-+	sock_hold(sk);
- 	lock_sock(sk);
-+	if (!sock_flag(sk, SOCK_DONE))
-+		hvs_do_close_lock_held(vsk, false);
- 
--	sk->sk_state = TCP_CLOSING;
--	vsock_remove_sock(vsk);
--
-+	vsk->close_work_scheduled = false;
- 	release_sock(sk);
-+	sock_put(sk);
-+}
- 
--	chan = hvs->chan;
--	if (chan)
--		hvs_shutdown(vsk, RCV_SHUTDOWN | SEND_SHUTDOWN);
-+/* Returns true, if it is safe to remove socket; false otherwise */
-+static bool hvs_close_lock_held(struct vsock_sock *vsk)
-+{
-+	struct sock *sk = sk_vsock(vsk);
-+
-+	if (!(sk->sk_state == TCP_ESTABLISHED ||
-+	      sk->sk_state == TCP_CLOSING))
-+		return true;
-+
-+	if ((sk->sk_shutdown & SHUTDOWN_MASK) != SHUTDOWN_MASK)
-+		hvs_shutdown_lock_held(vsk->trans, SHUTDOWN_MASK);
-+
-+	if (sock_flag(sk, SOCK_DONE))
-+		return true;
-+
-+	/* This reference will be dropped by the delayed close routine */
-+	sock_hold(sk);
-+	INIT_DELAYED_WORK(&vsk->close_work, hvs_close_timeout);
-+	vsk->close_work_scheduled = true;
-+	schedule_delayed_work(&vsk->close_work, HVS_CLOSE_TIMEOUT);
-+	return false;
-+}
- 
-+static void hvs_release(struct vsock_sock *vsk)
-+{
-+	struct sock *sk = sk_vsock(vsk);
-+	bool remove_sock;
-+
-+	lock_sock(sk);
-+	remove_sock = hvs_close_lock_held(vsk);
-+	release_sock(sk);
-+	if (remove_sock)
-+		vsock_remove_sock(vsk);
- }
- 
- static void hvs_destruct(struct vsock_sock *vsk)
 
 
