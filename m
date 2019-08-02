@@ -2,138 +2,306 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D287C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BD8C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF15820679
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:52:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F01FB2064A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:54:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389914AbfHBMwu (ORCPT
+        id S2390095AbfHBMyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 08:52:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39136 "EHLO mx1.suse.de"
+        Fri, 2 Aug 2019 08:54:16 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:47756 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726225AbfHBMwu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 08:52:50 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1C873B01C;
-        Fri,  2 Aug 2019 12:52:48 +0000 (UTC)
-Date:   Fri, 2 Aug 2019 14:52:46 +0200
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Linux I2C <linux-i2c@vger.kernel.org>
-Cc:     Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org,
-        Andrew Cooks <acooks@rationali.st>, linux-acpi@vger.kernel.org,
-        platypus-sw@opengear.com, "Tobin C . Harding" <me@tobin.cc>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Will Wagner <willw@carallon.com>
-Subject: [PATCH v5 1/3] i2c: piix4: Fix port selection for AMD Family 16h
- Model 30h
-Message-ID: <20190802145246.76c90f20@endymion>
-In-Reply-To: <20190802145109.38dd4045@endymion>
-References: <20190802145109.38dd4045@endymion>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        id S1726422AbfHBMyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 08:54:16 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 5F0E59919106D3CF8E46;
+        Fri,  2 Aug 2019 20:54:12 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 2 Aug 2019
+ 20:54:06 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Theodore Ts'o <tytso@mit.edu>, "Pavel Machek" <pavel@denx.de>,
+        David Sterba <dsterba@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        "Jaegeuk Kim" <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+CC:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH v6 00/24] erofs: promote erofs from staging
+Date:   Fri, 2 Aug 2019 20:53:23 +0800
+Message-ID: <20190802125347.166018-1-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.140.130.215]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Cooks <andrew.cooks@opengear.com>
+Hi folks,
 
-Family 16h Model 30h SMBus controller needs the same port selection fix
-as described and fixed in commit 0fe16195f891 ("i2c: piix4: Fix SMBus port
-selection for AMD Family 17h chips")
+We'd like to hear if there are potential suggestions or
+maybe objections of EROFS upstreaming stuffs. If any,
+we still have time and we can improve it in this round.
 
-commit 6befa3fde65f ("i2c: piix4: Support alternative port selection
-register") also fixed the port selection for Hudson2, but unfortunately
-this is not the exact same device and the AMD naming and PCI Device IDs
-aren't particularly helpful here.
+As related materials mentioned before, the goal of EROFS
+filesystem is to save extra storage space with guaranteed
+end-to-end performance for read-only files, which has better
+performance over exist Linux compression filesystems based
+on fixed-sized output compression and inplace decompression.
+It even has better performance in a large compression ratio
+range compared with generic uncompressed filesystems with
+proper CPU-storage combinations. And we think this direction
+is right and we have a dedicated kernel team working on it,
+enough testers and beta / end users using it.
 
-The SMBus port selection register is common to the following Families
-and models, as documented in AMD's publicly available BIOS and Kernel
-Developer Guides:
+EROFS has been applied to 10+ million HUAWEI mobile phones 
+(Yes, the number is still increasing by time) and it seems
+like a success. It can be used in more wider scenarios.
+We think it's useful for Linux / Android OS community and
+it's the time moving out of staging.
 
- 50742 - Family 15h Model 60h-6Fh (PCI_DEVICE_ID_AMD_KERNCZ_SMBUS)
- 55072 - Family 15h Model 70h-7Fh (PCI_DEVICE_ID_AMD_KERNCZ_SMBUS)
- 52740 - Family 16h Model 30h-3Fh (PCI_DEVICE_ID_AMD_HUDSON2_SMBUS)
+EROFS is a self-contained filesystem driver. Although there
+are still some TODOs, we will keep on developping / tuning
+EROFS with the evolution of Linux kernel as the other
+in-kernel filesystems.
 
-The Hudson2 PCI Device ID (PCI_DEVICE_ID_AMD_HUDSON2_SMBUS) is shared
-between Bolton FCH and Family 16h Model 30h, but the location of the
-SmBus0Sel port selection bits are different:
+Kindly share your comments about EROFS. Thank you in advance!
 
- 51192 - Bolton Register Reference Guide
+Thanks,
+Gao Xiang
 
-We distinguish between Bolton and Family 16h Model 30h using the PCI
-Revision ID:
+Changelog from v5:
+ o keep up with "[PATCH v2] staging: erofs: updates according to erofs-outofstaging v4"
+    https://lore.kernel.org/lkml/20190731155752.210602-1-gaoxiang25@huawei.com/
+   which mainly addresses review comments from Chao:
+  - keep the marco EROFS_IO_MAX_RETRIES_NOFAIL in internal.h;
+  - kill a redundant NULL check in "__stagingpage_alloc";
+  - add some descriptions in document about "use_vmap";
+  - rearrange erofs_vmap of "staging: erofs: kill CONFIG_EROFS_FS_USE_VM_MAP_RAM";
 
-  Bolton is device 0x780b, revision 0x15
-  Family 16h Model 30h is device 0x780b, revision 0x1F
-  Family 15h Model 60h and 70h are both device 0x790b, revision 0x4A.
+ o all changes have been merged into staging tree, which are under staging-testing:
+    https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git/log/?h=staging-testing
 
-The following additional public AMD BKDG documents were checked and do
-not share the same port selection register:
+It can also be found in git at tag "erofs_2019-08-02" at:
+ https://git.kernel.org/pub/scm/linux/kernel/git/xiang/linux.git/
 
- 42301 - Family 15h Model 00h-0Fh doesn't mention any
- 42300 - Family 15h Model 10h-1Fh doesn't mention any
- 49125 - Family 15h Model 30h-3Fh doesn't mention any
+and the latest fs code is available at:
+ https://git.kernel.org/pub/scm/linux/kernel/git/xiang/linux.git/tree/fs/erofs?h=erofs-outofstaging
 
- 48751 - Family 16h Model 00h-0Fh uses the previously supported
-         index register SB800_PIIX4_PORT_IDX_ALT at 0x2e
+Changelog from v4:
+ o rebase on Linus 5.3-rc1;
 
-Signed-off-by: Andrew Cooks <andrew.cooks@opengear.com>
-Signed-off-by: Jean Delvare <jdelvare@suse.de>
-Cc: stable@vger.kernel.org [v4.6+]
----
-Changes since v4:
- * Removed unneeded parentheses (reported by Tobin C. Harding)
+ o keep up with "staging: erofs: updates according to erofs-outofstaging v4"
+   in order to get main code bit-for-bit identical with staging tree:
+    https://lore.kernel.org/lkml/20190729065159.62378-1-gaoxiang25@huawei.com/
 
- drivers/i2c/busses/i2c-piix4.c |   12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+Changelog from v3:
+ o use GPL-2.0-only for SPDX-License-Identifier suggested by Stephen;
 
---- linux-5.2.orig/drivers/i2c/busses/i2c-piix4.c	2019-07-28 21:57:05.337228192 +0200
-+++ linux-5.2/drivers/i2c/busses/i2c-piix4.c	2019-08-02 13:53:33.222597706 +0200
-@@ -91,7 +91,7 @@
- #define SB800_PIIX4_PORT_IDX_MASK	0x06
- #define SB800_PIIX4_PORT_IDX_SHIFT	1
- 
--/* On kerncz, SmBus0Sel is at bit 20:19 of PMx00 DecodeEn */
-+/* On kerncz and Hudson2, SmBus0Sel is at bit 20:19 of PMx00 DecodeEn */
- #define SB800_PIIX4_PORT_IDX_KERNCZ		0x02
- #define SB800_PIIX4_PORT_IDX_MASK_KERNCZ	0x18
- #define SB800_PIIX4_PORT_IDX_SHIFT_KERNCZ	3
-@@ -358,18 +358,16 @@ static int piix4_setup_sb800(struct pci_
- 	/* Find which register is used for port selection */
- 	if (PIIX4_dev->vendor == PCI_VENDOR_ID_AMD ||
- 	    PIIX4_dev->vendor == PCI_VENDOR_ID_HYGON) {
--		switch (PIIX4_dev->device) {
--		case PCI_DEVICE_ID_AMD_KERNCZ_SMBUS:
-+		if (PIIX4_dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS ||
-+		    (PIIX4_dev->device == PCI_DEVICE_ID_AMD_HUDSON2_SMBUS &&
-+		     PIIX4_dev->revision >= 0x1F)) {
- 			piix4_port_sel_sb800 = SB800_PIIX4_PORT_IDX_KERNCZ;
- 			piix4_port_mask_sb800 = SB800_PIIX4_PORT_IDX_MASK_KERNCZ;
- 			piix4_port_shift_sb800 = SB800_PIIX4_PORT_IDX_SHIFT_KERNCZ;
--			break;
--		case PCI_DEVICE_ID_AMD_HUDSON2_SMBUS:
--		default:
-+		} else {
- 			piix4_port_sel_sb800 = SB800_PIIX4_PORT_IDX_ALT;
- 			piix4_port_mask_sb800 = SB800_PIIX4_PORT_IDX_MASK;
- 			piix4_port_shift_sb800 = SB800_PIIX4_PORT_IDX_SHIFT;
--			break;
- 		}
- 	} else {
- 		if (!request_muxed_region(SB800_PIIX4_SMB_IDX, 2,
+ o kill all kconfig cache strategies and turn them into mount options
+   "cache_strategy={disable|readahead|readaround}" suggested by Ted.
+   As the first step, cached pages can still be usable after cache is
+   disabled by remounting, and these pages will be fallen out over
+   time, which can be refined in the later version if some requirement
+   is needed. Update related document as well;
 
+ o turn on CONFIG_EROFS_FS_SECURITY by default suggested by David;
+
+ o kill CONFIG_EROFS_FS_IO_MAX_RETRIES and fold it into code; turn
+   EROFS_FS_USE_VM_MAP_RAM into a module parameter ("use_vmap")
+   suggested by David.
+
+Changelog from v2:
+ o kill sbi->dev_name and clean up all failure handling in
+   fill_super() suggested by Al.
+   Note that the initialzation of managed_cache is now moved
+   after s_root is assigned since it's more preferred to iput()
+   in .put_super() and all inodes should be evicted before
+   the end of generic_shutdown_super(sb);
+
+ o fold in the following staging patches (and thanks):
+   staging: erofs:converting all 'unsigned' to 'unsigned int'
+   staging: erofs: Remove function erofs_kill_sb()
+    - However it was revoked due to erofs_kill_sb reused...
+   staging: erofs: avoid opened loop codes
+   staging: erofs: support bmap
+
+ o move EROFS_SUPER_MAGIC_V1 from linux/fs/erofs/erofs_fs.h to
+   include/uapi/linux/magic.h for userspace utilities.
+
+Changelog from v1:
+ o resend the whole filesystem into a patchset suggested by Greg;
+ o code is more cleaner, especially for decompression frontend.
+
+--8<----(original cover)----
+
+Hi,
+
+EROFS file system has been in Linux-staging for about a year.
+It has been proved to be stable enough to move out of staging
+by 10+ millions of HUAWEI Android mobile phones on the market
+from EMUI 9.0.1, and it was promoted as one of the key features
+of EMUI 9.1 [1], including P30(pro).
+
+EROFS is a read-only file system designed to save extra storage
+space with guaranteed end-to-end performance by applying
+fixed-size output compression, inplace I/O and decompression
+inplace technologies [2] to Linux filesystem.
+
+In our observation, EROFS is one of the fastest Linux compression
+filesystem using buffered I/O in the world. It will support
+direct I/O in the future if needed. EROFS even has better read
+performance in a large CR range compared with generic uncompressed
+file systems with proper CPU-storage combination, which is
+a reason why EROFS can be landed to speed up mobile phone
+performance, and which can be probably used for other use cases
+such as LiveCD and Docker image as well.
+
+Currently EROFS supports 4k LZ4 fixed-size output compression
+since LZ4 is the fastest widely-used decompression solution in
+the world and 4k leads to unnoticable read amplification for
+the worst case. More compression algorithms and cluster sizes
+could be added later, which depends on the real requirement.
+
+More information about EROFS itself are available at:
+ Documentation/filesystems/erofs.txt
+ https://kccncosschn19eng.sched.com/event/Nru2/erofs-an-introduction-and-our-smartphone-practice-xiang-gao-huawei
+
+erofs-utils (mainly mkfs.erofs now) is available at
+git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git
+
+Preliminary iomap support has been pending in EROFS mailing
+list by Chao Yu. The key issue is that current iomap doesn't
+support tail-end packing inline data yet, it should be
+resolved later.
+
+Thanks to many contributors in the last year, the code is more
+clean and improved. We hope EROFS can be used in wider use cases
+so let's promote erofs out of staging and enhance it more actively.
+
+Kindly share comments about EROFS! We think EROFS is useful to
+community as a part of Linux upstream.
+
+Thank you very much,
+Gao Xiang
+
+[1] http://web.archive.org/web/20190627021241/https://consumer.huawei.com/en/emui/
+[2] https://lore.kernel.org/lkml/20190624072258.28362-1-hsiangkao@aol.com/
+
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Theodore Ts'o <tytso@mit.edu>
+Cc: Pavel Machek <pavel@denx.de>
+Cc: David Sterba <dsterba@suse.cz>
+Cc: Amir Goldstein <amir73il@gmail.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Darrick J . Wong <darrick.wong@oracle.com>
+Cc: Dave Chinner <david@fromorbit.com>
+Cc: Jaegeuk Kim <jaegeuk@kernel.org>
+Cc: Jan Kara <jack@suse.cz> 
+Cc: Chao Yu <yuchao0@huawei.com>
+Cc: Miao Xie <miaoxie@huawei.com>
+Cc: Li Guifu <bluce.liguifu@huawei.com>
+Cc: Fang Wei <fangwei1@huawei.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+
+Gao Xiang (24):
+  erofs: add on-disk layout
+  erofs: add erofs in-memory stuffs
+  erofs: add super block operations
+  erofs: add raw address_space operations
+  erofs: add inode operations
+  erofs: support special inode
+  erofs: add directory operations
+  erofs: add namei functions
+  erofs: support tracepoint
+  erofs: update Kconfig and Makefile
+  erofs: introduce xattr & posixacl support
+  erofs: introduce tagged pointer
+  erofs: add compression indexes support
+  erofs: introduce superblock registration
+  erofs: introduce erofs shrinker
+  erofs: introduce workstation for decompression
+  erofs: introduce per-CPU buffers implementation
+  erofs: introduce pagevec for decompression subsystem
+  erofs: add erofs_allocpage()
+  erofs: introduce generic decompression backend
+  erofs: introduce LZ4 decompression inplace
+  erofs: introduce the decompression frontend
+  erofs: introduce cached decompression
+  erofs: add document
+
+ Documentation/filesystems/erofs.txt |  225 +++++
+ fs/Kconfig                          |    1 +
+ fs/Makefile                         |    1 +
+ fs/erofs/Kconfig                    |   98 ++
+ fs/erofs/Makefile                   |   11 +
+ fs/erofs/compress.h                 |   62 ++
+ fs/erofs/data.c                     |  429 ++++++++
+ fs/erofs/decompressor.c             |  360 +++++++
+ fs/erofs/dir.c                      |  147 +++
+ fs/erofs/erofs_fs.h                 |  316 ++++++
+ fs/erofs/inode.c                    |  326 +++++++
+ fs/erofs/internal.h                 |  554 +++++++++++
+ fs/erofs/namei.c                    |  251 +++++
+ fs/erofs/super.c                    |  666 +++++++++++++
+ fs/erofs/tagptr.h                   |  110 +++
+ fs/erofs/utils.c                    |  335 +++++++
+ fs/erofs/xattr.c                    |  700 +++++++++++++
+ fs/erofs/xattr.h                    |   94 ++
+ fs/erofs/zdata.c                    | 1405 +++++++++++++++++++++++++++
+ fs/erofs/zdata.h                    |  195 ++++
+ fs/erofs/zmap.c                     |  462 +++++++++
+ fs/erofs/zpvec.h                    |  159 +++
+ include/trace/events/erofs.h        |  256 +++++
+ include/uapi/linux/magic.h          |    1 +
+ 24 files changed, 7164 insertions(+)
+ create mode 100644 Documentation/filesystems/erofs.txt
+ create mode 100644 fs/erofs/Kconfig
+ create mode 100644 fs/erofs/Makefile
+ create mode 100644 fs/erofs/compress.h
+ create mode 100644 fs/erofs/data.c
+ create mode 100644 fs/erofs/decompressor.c
+ create mode 100644 fs/erofs/dir.c
+ create mode 100644 fs/erofs/erofs_fs.h
+ create mode 100644 fs/erofs/inode.c
+ create mode 100644 fs/erofs/internal.h
+ create mode 100644 fs/erofs/namei.c
+ create mode 100644 fs/erofs/super.c
+ create mode 100644 fs/erofs/tagptr.h
+ create mode 100644 fs/erofs/utils.c
+ create mode 100644 fs/erofs/xattr.c
+ create mode 100644 fs/erofs/xattr.h
+ create mode 100644 fs/erofs/zdata.c
+ create mode 100644 fs/erofs/zdata.h
+ create mode 100644 fs/erofs/zmap.c
+ create mode 100644 fs/erofs/zpvec.h
+ create mode 100644 include/trace/events/erofs.h
 
 -- 
-Jean Delvare
-SUSE L3 Support
+2.17.1
+
