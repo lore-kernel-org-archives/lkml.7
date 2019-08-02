@@ -4,70 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E34C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B40F5C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BBA9217D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B4BA216C8
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:05:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564761919;
-	bh=igOIKq+ei4WvgHi1Gds5jsfkB5shN0k2mShOFzB380g=;
+	s=default; t=1564761923;
+	bh=3rMZaXbQ41/dbreVvWj6reoVXIkk+yBfu5l630T1gKY=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=UN1LemtKuQXgWaIl7mzR6G6+xmEFO/WjdqRm5rzQuu6MozowIjGook5MsiyafoP0+
-	 PIqxA5f8MjzNlBTGmsL+6S+2yiSCXsJlfdwCxOdCDF7J4Iu6z1tFLm4Q7jwi6wV2Po
-	 kRgjpXPs1x2/nO/q5VZb/pkQHSufCdnqolomSQbg=
+	b=JSR1G3qlXGQpJEbfRPSBwq7dF1K6peUWdhELxRaxaBpkXSRz8GVUqZN20WEXXY04C
+	 DKAG1Re7PT3dlQYD+LQZG9NqUnCQaKgj+P75Vrx+eppHtwSiso4168S0uTA+XBcXPe
+	 imj6k5MHS2dwRBvsGsZvpRLfNiDwCvcTrMNj+zvI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389039AbfHBQFO (ORCPT
+        id S2389187AbfHBQFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 12:05:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44852 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 12:05:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728904AbfHBQFL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 12:05:11 -0400
-Subject: Re: [GIT PULL] arm highmem block I/O regression fix for 5.3
+        id S2388999AbfHBQFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 12:05:14 -0400
+Subject: Re: [GIT PULL] Power management fix for v5.3-rc3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564761911;
-        bh=igOIKq+ei4WvgHi1Gds5jsfkB5shN0k2mShOFzB380g=;
+        s=default; t=1564761913;
+        bh=3rMZaXbQ41/dbreVvWj6reoVXIkk+yBfu5l630T1gKY=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=jRVohKBXeeWNbS0W3As0dvqjmdj0qIYL5CFkx8sJEGkCu1COe4jQWrJhZz3s60XXC
-         e03tJGP79djfnsLoXSieyAftA7sEJE6URVamcP4bTmYJ5NakXLH20fGQTl0ZsXFjso
-         I9tlAWUzZJ9Mi8SYIMHRbAP8G1gxAXwJeQcn22yA=
+        b=vEpwfarRPNtcJ/ojIlXH1CthZUvzPjolvFJDkSMPiLq/GgYRbENby6zmo3otakS17
+         xt75TK5D/3MupqGg1hR/wzCPLzFxjNXGpyB1eyzPW7tOWJhQMc/7fn2dk3weoqYrXp
+         pX9+2qEGeAOvanMb7xJhXahtiS/GDSOOEZUIn7RA=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190801164702.GA26365@infradead.org>
-References: <20190801164702.GA26365@infradead.org>
+In-Reply-To: <CAJZ5v0i+ZJEdVw=sZfB1KUuqJFWA=mSfB6jL66c1HFfZN9MR6g@mail.gmail.com>
+References: <CAJZ5v0i+ZJEdVw=sZfB1KUuqJFWA=mSfB6jL66c1HFfZN9MR6g@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190801164702.GA26365@infradead.org>
-X-PR-Tracked-Remote: git://git.infradead.org/users/hch/dma-mapping.git
- tags/arm-swiotlb-5.3
-X-PR-Tracked-Commit-Id: ad3c7b18c5b362be5dbd0f2c0bcf1fd5fd659315
+X-PR-Tracked-Message-Id: <CAJZ5v0i+ZJEdVw=sZfB1KUuqJFWA=mSfB6jL66c1HFfZN9MR6g@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-5.3-rc3
+X-PR-Tracked-Commit-Id: 42787ed79638dc7f0f8d5c164caba1e87bfab50f
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 234172f6bbf8e26fa8407c4bbbf2a36da30d7913
-Message-Id: <156476191100.27663.8840208654309225219.pr-tracker-bot@kernel.org>
-Date:   Fri, 02 Aug 2019 16:05:11 +0000
-To:     Christoph Hellwig <hch@infradead.org>
+X-PR-Merge-Commit-Id: 755f1fed27f4b1d57dd8b2856c06086636cd7284
+Message-Id: <156476191344.27663.6822076135265555352.pr-tracker-bot@kernel.org>
+Date:   Fri, 02 Aug 2019 16:05:13 +0000
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Roger Quadros <rogerq@ti.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 1 Aug 2019 19:47:02 +0300:
+The pull request you sent on Fri, 2 Aug 2019 11:45:03 +0200:
 
-> git://git.infradead.org/users/hch/dma-mapping.git tags/arm-swiotlb-5.3
+> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-5.3-rc3
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/234172f6bbf8e26fa8407c4bbbf2a36da30d7913
+https://git.kernel.org/torvalds/c/755f1fed27f4b1d57dd8b2856c06086636cd7284
 
 Thank you!
 
