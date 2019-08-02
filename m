@@ -7,46 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36102C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C32C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04CB521850
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 197E921851
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:31:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752657;
-	bh=J/c2lN83G3C0M26qnZBF3MO8yw9JzY3KeF7k6i+XeFE=;
+	s=default; t=1564752661;
+	bh=k6TQx6bLxozyYUaY1iC9e7S1UT4ztpVBJ0ouMvqc9pI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d9cPFuYoaYucAwg0RFFH9uZqPPoB68tFk6Msd3IHABU6G3K6OcwQOnKQ+YsDdoXVn
-	 CY41ijTvfUczrthmqDz+Hu6ppKcNddz2IfTEV14BG7J/xidFGclYOHJTqNIOVe+M12
-	 vEH8Qes1qYKQBAGsufeeU7OhI1Ii74/R3M3F0XNg=
+	b=db3ysH6CkfgDPh7kc0CJKBknkWefd1AwWv24u3DpIXmsqy5BJuOgTRCk6MqN0shWf
+	 9H4IvQpqYsxju6CN3WnDXVdNNW43Cg+t1MU1i7B7R8/0B5/fwn49JNVAOpmEAWnKg6
+	 0dYbJkEi9/uEDmtGobuO8xxZYRaocQrhMRJr1sks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394138AbfHBNYT (ORCPT
+        id S2404337AbfHBNa7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:24:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34700 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:30:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728363AbfHBNYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:24:03 -0400
+        id S2391007AbfHBNYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:24:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EFE621773;
-        Fri,  2 Aug 2019 13:24:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CA8B2182B;
+        Fri,  2 Aug 2019 13:24:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752242;
-        bh=J/c2lN83G3C0M26qnZBF3MO8yw9JzY3KeF7k6i+XeFE=;
+        s=default; t=1564752259;
+        bh=k6TQx6bLxozyYUaY1iC9e7S1UT4ztpVBJ0ouMvqc9pI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QNTGYDLZ3dYWHvLTdFOBfDb64hRx9ROHhK+OJRXbLLpciwGKfbr4VtQ1Mj6SVSB7Y
-         S8+/fIwIVkjdulYsNQjktdtOdxazVO0sKDHSMt5D3KZP4A5d/4enAG96YSekyE1WW5
-         KDctmLYGFtRg5Fp4CjYSJAhvSio00B27k+A/b5uE=
+        b=0H0DhqL4xLxSd9Jd8iPa5wXeLmhHyDnKSybcIaJuBGN8V7pV24fpfLa6rM0+2WULb
+         M46e88F6N86GsKxx5FDU+oxrNnlmwzmAUIK9VGXcRQWmj6J5mGX4rJH9JHkpqVXLCg
+         Kp8MnVT2VGZwc5XmWxjexOUL+EIaxWnGbZCJGnIo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 33/42] ARM: dts: bcm: bcm47094: add missing #cells for mdio-bus-mux
-Date:   Fri,  2 Aug 2019 09:22:53 -0400
-Message-Id: <20190802132302.13537-33-sashal@kernel.org>
+Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Frank Li <Frank.li@nxp.com>, Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 41/42] perf/core: Fix creating kernel counters for PMUs that override event->cpu
+Date:   Fri,  2 Aug 2019 09:23:01 -0400
+Message-Id: <20190802132302.13537-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802132302.13537-1-sashal@kernel.org>
 References: <20190802132302.13537-1-sashal@kernel.org>
@@ -59,45 +67,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Leonard Crestez <leonard.crestez@nxp.com>
 
-[ Upstream commit 3a9d2569e45cb02769cda26fee4a02126867c934 ]
+[ Upstream commit 4ce54af8b33d3e21ca935fc1b89b58cbba956051 ]
 
-The mdio-bus-mux has no #address-cells/#size-cells property,
-which causes a few dtc warnings:
+Some hardware PMU drivers will override perf_event.cpu inside their
+event_init callback. This causes a lockdep splat when initialized through
+the kernel API:
 
-arch/arm/boot/dts/bcm47094-linksys-panamera.dts:129.4-18: Warning (reg_format): /mdio-bus-mux/mdio@200:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
-arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warning (avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #address-cells value
-arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warning (avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #size-cells value
+ WARNING: CPU: 0 PID: 250 at kernel/events/core.c:2917 ctx_sched_out+0x78/0x208
+ pc : ctx_sched_out+0x78/0x208
+ Call trace:
+  ctx_sched_out+0x78/0x208
+  __perf_install_in_context+0x160/0x248
+  remote_function+0x58/0x68
+  generic_exec_single+0x100/0x180
+  smp_call_function_single+0x174/0x1b8
+  perf_install_in_context+0x178/0x188
+  perf_event_create_kernel_counter+0x118/0x160
 
-Add the normal cell numbers.
+Fix this by calling perf_install_in_context with event->cpu, just like
+perf_event_open
 
-Link: https://lore.kernel.org/r/20190722145618.1155492-1-arnd@arndb.de
-Fixes: 2bebdfcdcd0f ("ARM: dts: BCM5301X: Add support for Linksys EA9500")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Olof Johansson <olof@lixom.net>
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Frank Li <Frank.li@nxp.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will@kernel.org>
+Link: https://lkml.kernel.org/r/c4ebe0503623066896d7046def4d6b1e06e0eb2e.1563972056.git.leonard.crestez@nxp.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/bcm47094-linksys-panamera.dts | 3 +++
- 1 file changed, 3 insertions(+)
+ kernel/events/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/bcm47094-linksys-panamera.dts b/arch/arm/boot/dts/bcm47094-linksys-panamera.dts
-index 36efe410dcd71..9e33c41f54112 100644
---- a/arch/arm/boot/dts/bcm47094-linksys-panamera.dts
-+++ b/arch/arm/boot/dts/bcm47094-linksys-panamera.dts
-@@ -125,6 +125,9 @@
- 	};
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index e8979c72514be..7ca44b8523c81 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -10957,7 +10957,7 @@ perf_event_create_kernel_counter(struct perf_event_attr *attr, int cpu,
+ 		goto err_unlock;
+ 	}
  
- 	mdio-bus-mux {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
- 		/* BIT(9) = 1 => external mdio */
- 		mdio_ext: mdio@200 {
- 			reg = <0x200>;
+-	perf_install_in_context(ctx, event, cpu);
++	perf_install_in_context(ctx, event, event->cpu);
+ 	perf_unpin_context(ctx);
+ 	mutex_unlock(&ctx->mutex);
+ 
 -- 
 2.20.1
 
