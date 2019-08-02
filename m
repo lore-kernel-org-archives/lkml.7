@@ -2,255 +2,131 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF08C19759
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1744AC19759
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63A142080C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:02:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="WCROvHiU"
+	by mail.kernel.org (Postfix) with ESMTP id E7FEB2080C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:05:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390599AbfHBBCB (ORCPT
+        id S2390611AbfHBBFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 21:02:01 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:27008 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388659AbfHBBCA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 21:02:00 -0400
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x720wmRM016312
-        for <linux-kernel@vger.kernel.org>; Thu, 1 Aug 2019 18:01:59 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=crcJ24krV4mzoxzFzL1Jhr1fyBYOcOeb0y824pBazZo=;
- b=WCROvHiUkARVKV4AXmi+h6MXSyTHhaiGD6p/CWlRblBuC8PNAUBhXK7Bb432QdkoyZ+o
- vJItxrteTSJgN64yjnbvGCZS9KFib7M7AIsqmNfp+8h+X9+NuxJ8fwSOVqYvH7fANVs7
- 8vHYLLg1T/CEATN9nCLmTRXYdrUWv/FLAj4= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0089730.ppops.net with ESMTP id 2u43h7sqxa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 18:01:59 -0700
-Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:83::5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 1 Aug 2019 18:01:58 -0700
-Received: by devvm24792.prn1.facebook.com (Postfix, from userid 150176)
-        id 0C260187F7250; Thu,  1 Aug 2019 18:01:57 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Tao Ren <taoren@fb.com>
-Smtp-Origin-Hostname: devvm24792.prn1.facebook.com
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-        <openbmc@lists.ozlabs.org>
-CC:     Tao Ren <taoren@fb.com>
-Smtp-Origin-Cluster: prn1c35
-Subject: [PATCH] ARM: dts: aspeed: Add Facebook Wedge100 BMC
-Date:   Thu, 1 Aug 2019 18:01:55 -0700
-Message-ID: <20190802010155.489238-1-taoren@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Thu, 1 Aug 2019 21:05:46 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51406 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388659AbfHBBFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 21:05:46 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D9D1430C1953;
+        Fri,  2 Aug 2019 01:05:45 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-80.pek2.redhat.com [10.72.12.80])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6A06E19C4F;
+        Fri,  2 Aug 2019 01:05:42 +0000 (UTC)
+Date:   Fri, 2 Aug 2019 09:05:38 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     lijiang <lijiang@redhat.com>
+Cc:     "Lendacky, Thomas" <thomas.lendacky@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dave Anderson <anderson@redhat.com>, kexec@lists.infradead.org,
+        vgoyal@redhat.com, bhe@redhat.com, ebiederm@xmission.com
+Subject: Re: crash: `kmem -s` reported "kmem: dma-kmalloc-512: slab:
+ ffffe192c0001000 invalid freepointer: e5ffef4e9a040b7e" on a dumped vmcore
+Message-ID: <20190802010538.GA2202@dhcp-128-65.nay.redhat.com>
+References: <e640b50a-a962-8e56-33a2-2ba2eb76e813@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-01_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908020006
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e640b50a-a962-8e56-33a2-2ba2eb76e813@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 02 Aug 2019 01:05:45 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add initial version of device tree for Facebook Wedge100 AST2400 BMC
-platform.
-
-Signed-off-by: Tao Ren <taoren@fb.com>
----
- arch/arm/boot/dts/Makefile                    |   1 +
- .../boot/dts/aspeed-bmc-facebook-wedge100.dts | 149 ++++++++++++++++++
- 2 files changed, 150 insertions(+)
- create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-wedge100.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 39a05a10a2a2..d71504ed82d3 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1273,6 +1273,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
- 	aspeed-bmc-facebook-cmm.dtb \
- 	aspeed-bmc-facebook-minipack.dtb \
- 	aspeed-bmc-facebook-tiogapass.dtb \
-+	aspeed-bmc-facebook-wedge100.dtb \
- 	aspeed-bmc-facebook-yamp.dtb \
- 	aspeed-bmc-intel-s2600wf.dtb \
- 	aspeed-bmc-inspur-fp5280g2.dtb \
-diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-wedge100.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-wedge100.dts
-new file mode 100644
-index 000000000000..ccd700467ea7
---- /dev/null
-+++ b/arch/arm/boot/dts/aspeed-bmc-facebook-wedge100.dts
-@@ -0,0 +1,149 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+// Copyright (c) 2018 Facebook Inc.
-+/dts-v1/;
-+
-+#include "aspeed-g4.dtsi"
-+
-+/ {
-+	model = "Facebook Wedge 100 BMC";
-+	compatible = "facebook,wedge100-bmc", "aspeed,ast2400";
-+
-+	aliases {
-+		/*
-+		 * Override the default uart aliases to avoid breaking
-+		 * the legacy applications.
-+		 */
-+		serial0 = &uart5;
-+		serial1 = &uart1;
-+		serial2 = &uart3;
-+		serial3 = &uart4;
-+	};
-+
-+	chosen {
-+		stdout-path = &uart3;
-+		bootargs = "debug console=ttyS2,9600n8 root=/dev/ram rw";
-+	};
-+
-+	memory@40000000 {
-+		reg = <0x40000000 0x20000000>;
-+	};
-+};
-+
-+&wdt1 {
-+	status = "okay";
-+	aspeed,reset-type = "system";
-+};
-+
-+&wdt2 {
-+	status = "okay";
-+	aspeed,reset-type = "system";
-+};
-+
-+&fmc {
-+	status = "okay";
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+		label = "fmc0";
-+#include "facebook-bmc-flash-layout.dtsi"
-+	};
-+};
-+
-+&uart1 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_txd1_default
-+		     &pinctrl_rxd1_default>;
-+};
-+
-+&uart3 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_txd3_default
-+		     &pinctrl_rxd3_default>;
-+};
-+
-+&uart4 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_txd4_default
-+		     &pinctrl_rxd4_default>;
-+};
-+
-+&uart5 {
-+	status = "okay";
-+};
-+
-+&mac1 {
-+	status = "okay";
-+	no-hw-checksum;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_rgmii2_default &pinctrl_mdio2_default>;
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	status = "okay";
-+};
-+
-+&i2c3 {
-+	status = "okay";
-+};
-+
-+&i2c4 {
-+	status = "okay";
-+};
-+
-+&i2c5 {
-+	status = "okay";
-+};
-+
-+&i2c6 {
-+	status = "okay";
-+};
-+
-+&i2c7 {
-+	status = "okay";
-+
-+	i2c-switch@70 {
-+		compatible = "nxp,pca9548";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x70>;
-+	};
-+};
-+
-+&i2c8 {
-+	status = "okay";
-+};
-+
-+&i2c9 {
-+	status = "okay";
-+};
-+
-+&i2c10 {
-+	status = "okay";
-+};
-+
-+&i2c11 {
-+	status = "okay";
-+};
-+
-+&i2c12 {
-+	status = "okay";
-+};
-+
-+&i2c13 {
-+	status = "okay";
-+};
-+
-+&vhub {
-+	status = "okay";
-+};
--- 
-2.17.1
-
+Add kexec cc list.
+On 08/01/19 at 11:02pm, lijiang wrote:
+> Hi, Tom
+> 
+> Recently, i ran into a problem about SME and used crash tool to check the vmcore as follow: 
+> 
+> crash> kmem -s | grep -i invalid
+> kmem: dma-kmalloc-512: slab: ffffe192c0001000 invalid freepointer: e5ffef4e9a040b7e
+> kmem: dma-kmalloc-512: slab: ffffe192c0001000 invalid freepointer: e5ffef4e9a040b7e
+> 
+> And the crash tool reported the above error, probably, the main reason is that kernel does not
+> correctly handle the first 640k region when SME is enabled.
+> 
+> When SME is enabled, the kernel and initramfs images are loaded into the decrypted memory, and
+> the backup area(first 640k) is also mapped as decrypted, but the first 640k data is copied to
+> the backup area in purgatory(). Please refer to this file: arch/x86/purgatory/purgatory.c
+> ......
+> static int copy_backup_region(void)
+> {
+>         if (purgatory_backup_dest) {
+>                 memcpy((void *)purgatory_backup_dest,
+>                        (void *)purgatory_backup_src, purgatory_backup_sz);
+>         }
+>         return 0;
+> }
+> ......
+> 
+> arch/x86/kernel/machine_kexec_64.c
+> ......
+> machine_kexec_prepare()->
+> arch_update_purgatory()->
+> .....
+> 
+> Actually, the firs 640k area is encrypted in the first kernel when SME is enabled, here kernel
+> copies the first 640k data to the backup area in purgatory(), because the backup area is mapped
+> as decrypted, this copying operation makes that the first 640k data is decrypted(decoded) and
+> saved to the backup area, but probably kernel can not aware of SME in purgatory(), which causes
+> kernel mistakenly read out the first 640k.
+> 
+> In addition, i hacked kernel code as follow:
+> 
+> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+> index 7bcc92add72c..a51631d36a7a 100644
+> --- a/fs/proc/vmcore.c
+> +++ b/fs/proc/vmcore.c
+> @@ -377,6 +378,16 @@ static ssize_t __read_vmcore(char *buffer, size_t buflen, loff_t *fpos,
+>                                             m->offset + m->size - *fpos,
+>                                             buflen);
+>                         start = m->paddr + *fpos - m->offset;
+> +                       if (m->paddr == 0x73f60000) {//the backup area's start address:0x73f60000
+> +                               tmp = read_from_oldmem(buffer, tsz, &start,
+> +                                               userbuf, false);
+> +                       } else
+>                                 tmp = read_from_oldmem(buffer, tsz, &start,
+>                                                userbuf, mem_encrypt_active());
+>                         if (tmp < 0)
+> 
+> Here, i used the crash tool to check the vmcore, i can see that the backup area is decrypted,
+> except for the dma-kmalloc-512. So i suspect that kernel did not correctly read out the first
+> 640k data to backup area. Do you happen to know how to deal with the first 640k area in purgatory()
+> when SME is enabled? Any idea?
+> 
+> BTW: I' curious the reason why the address of dma-kmalloc-512k always falls into the first 640k
+> region, and i did not see the same issue on another machine.
+> 
+> Machine:
+> Serial Number 	diesel-sys9079-0001
+> Model           AMD Diesel (A0C)
+> CPU             AMD EPYC 7601 32-Core Processor
+> 
+> 
+> Background:
+> On x86_64, the first 640k region is special because of some historical reasons. And kdump kernel will
+> reuse the first 640k region, so kernel will back up(copy) the first 640k region to a backup area in
+> purgatory(), in order not to rewrite the old region(640k) in kdump kernel, which makes sure that kdump
+> can read out the old memory from vmcore.
+> 
+> 
+> Thanks.
+> Lianbo
