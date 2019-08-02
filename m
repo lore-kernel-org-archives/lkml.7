@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C486C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7867C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 571872086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:39:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C35F52086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:39:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738788;
-	bh=viojl1Wh9riP/rQAtRHoMpxVkEnfhYOshj1b+skoEmE=;
+	s=default; t=1564738793;
+	bh=3rJFkMkaF6i6+N+CP0PMLPJyRCQ20v0GyX5nZVhhU28=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vOMqstP+BFeP1kdu8E0W487Yj/mXcBJWM4o5mq/oUNT8FM4exrH3A5kUd+1qfdXwx
-	 VFFYwijabFBlARGsXONVVNkh33/ufc+L+Ui3przSnGh1KJRzsg9KEavmU82PfSvSRv
-	 Cx8UR7bVI+5rrQOb7/KDI7THhp6JDgAeY+2Buf1w=
+	b=v47fcwvErnN3VuRT/LtpugauKccZiN6WwYdDTA3/Iz8xqHeZ4LnVXCXC3gCLqgkbO
+	 3mjDiCLcYVTJiccI4spNTtmNg55nW7R10XxZaCZrJ+McYrxl6B8es/WyqplYozJa39
+	 2FC/Bg7t3uGosLlKmVQzCTGkNhStuVw1Gl4gMx7I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391400AbfHBJd2 (ORCPT
+        id S2389285AbfHBJjw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:33:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60916 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:39:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729945AbfHBJdX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:33:23 -0400
+        id S2391384AbfHBJd0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:33:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D264217D6;
-        Fri,  2 Aug 2019 09:33:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 009D0217F5;
+        Fri,  2 Aug 2019 09:33:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738402;
-        bh=viojl1Wh9riP/rQAtRHoMpxVkEnfhYOshj1b+skoEmE=;
+        s=default; t=1564738405;
+        bh=3rJFkMkaF6i6+N+CP0PMLPJyRCQ20v0GyX5nZVhhU28=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tPnVBwQEKw61djGWx+M+c3XFuGIE5Ixj4+6XlSsnM+IHyzG9u1n3wbYck2lXCMZXH
-         hATDunROlhgoCPWgRy+Vn2Ldr2xfyABb4LfrYPM54tU3O7MfCWCmvSOCA5g/LHr7Wd
-         NSEjKrLkQ8GYiIIfRgs1UsevF9WOI48iExk1yPAM=
+        b=rfDUOPBD5Og3qPk1xELJQoG/Z8/u/CCmvz6eugWikuOjz8U9N7roiSo/3G/1H+8gj
+         nWiKk7j+zj6saH2XfYLKO5YXpfRHoZypIX4mdYz3Mn0ETDU7bSTsm7gReK83jKM/NB
+         um+8QAPsE1IV1y4l+K5Paj4C83J5Yn0HRhHOeeHU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Willy Tarreau <w@1wt.eu>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 073/158] floppy: fix out-of-bounds read in next_valid_format
-Date:   Fri,  2 Aug 2019 11:28:14 +0200
-Message-Id: <20190802092218.834975005@linuxfoundation.org>
+Subject: [PATCH 4.4 074/158] floppy: fix invalid pointer dereference in drive_name
+Date:   Fri,  2 Aug 2019 11:28:15 +0200
+Message-Id: <20190802092219.064495599@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -61,23 +61,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5635f897ed83fd539df78e98ba69ee91592f9bb8 ]
+[ Upstream commit 9b04609b784027968348796a18f601aed9db3789 ]
 
-This fixes a global out-of-bounds read access in the next_valid_format
-function of the floppy driver.
+This fixes the invalid pointer dereference in the drive_name function of
+the floppy driver.
 
-The values from autodetect field of the struct floppy_drive_params are
-used as indices for the floppy_type array in the next_valid_format
-function 'floppy_type[DP->autodetect[probed_format]].sect'.
+The native_format field of the struct floppy_drive_params is used as
+floppy_type array index in the drive_name function.  Thus, the field
+should be checked the same way as the autodetect field.
 
 To trigger the bug, one could use a value out of range and set the drive
-parameters with the FDSETDRVPRM ioctl.  A floppy disk is not required to
-be inserted.
+parameters with the FDSETDRVPRM ioctl.  Next, FDGETDRVTYP ioctl should
+be used to call the drive_name.  A floppy disk is not required to be
+inserted.
 
 CAP_SYS_ADMIN is required to call FDSETDRVPRM.
 
-The patch adds the check for values of the autodetect field to be in the
-'0 <= x < ARRAY_SIZE(floppy_type)' range of the floppy_type array indices.
+The patch adds the check for a value of the native_format field to be in
+the '0 <= x < ARRAY_SIZE(floppy_type)' range of the floppy_type array
+indices.
 
 The bug was found by syzkaller.
 
@@ -87,49 +89,49 @@ Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/block/floppy.c |   18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/block/floppy.c |   11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
 --- a/drivers/block/floppy.c
 +++ b/drivers/block/floppy.c
-@@ -3384,6 +3384,20 @@ static int fd_getgeo(struct block_device
+@@ -3384,7 +3384,8 @@ static int fd_getgeo(struct block_device
  	return 0;
  }
  
-+static bool valid_floppy_drive_params(const short autodetect[8])
-+{
-+	size_t floppy_type_size = ARRAY_SIZE(floppy_type);
-+	size_t i = 0;
-+
-+	for (i = 0; i < 8; ++i) {
-+		if (autodetect[i] < 0 ||
-+		    autodetect[i] >= floppy_type_size)
-+			return false;
-+	}
-+
-+	return true;
-+}
-+
- static int fd_locked_ioctl(struct block_device *bdev, fmode_t mode, unsigned int cmd,
- 		    unsigned long param)
+-static bool valid_floppy_drive_params(const short autodetect[8])
++static bool valid_floppy_drive_params(const short autodetect[8],
++		int native_format)
  {
-@@ -3510,6 +3524,8 @@ static int fd_locked_ioctl(struct block_
+ 	size_t floppy_type_size = ARRAY_SIZE(floppy_type);
+ 	size_t i = 0;
+@@ -3395,6 +3396,9 @@ static bool valid_floppy_drive_params(co
+ 			return false;
+ 	}
+ 
++	if (native_format < 0 || native_format >= floppy_type_size)
++		return false;
++
+ 	return true;
+ }
+ 
+@@ -3524,7 +3528,8 @@ static int fd_locked_ioctl(struct block_
  		SUPBOUND(size, strlen((const char *)outparam) + 1);
  		break;
  	case FDSETDRVPRM:
-+		if (!valid_floppy_drive_params(inparam.dp.autodetect))
-+			return -EINVAL;
+-		if (!valid_floppy_drive_params(inparam.dp.autodetect))
++		if (!valid_floppy_drive_params(inparam.dp.autodetect,
++				inparam.dp.native_format))
+ 			return -EINVAL;
  		*UDP = inparam.dp;
  		break;
- 	case FDGETDRVPRM:
-@@ -3707,6 +3723,8 @@ static int compat_setdrvprm(int drive,
+@@ -3723,7 +3728,7 @@ static int compat_setdrvprm(int drive,
  		return -EPERM;
  	if (copy_from_user(&v, arg, sizeof(struct compat_floppy_drive_params)))
  		return -EFAULT;
-+	if (!valid_floppy_drive_params(v.autodetect))
-+		return -EINVAL;
+-	if (!valid_floppy_drive_params(v.autodetect))
++	if (!valid_floppy_drive_params(v.autodetect, v.native_format))
+ 		return -EINVAL;
  	mutex_lock(&floppy_mutex);
  	UDP->cmos = v.cmos;
- 	UDP->max_dtr = v.max_dtr;
 
 
