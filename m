@@ -2,125 +2,157 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C656C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DD8C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:30:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D70E2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:29:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5B552087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:30:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564759805;
+	bh=exi+9OQEtZ7oI8S+4n8aYHHOqvpX9ctCa2KPyOEi70c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=F58WxtFWMNnhz+bZv0qcfU1j4q8rwfFU1zEainWptJYtN2t8H7W9tzbswNdIWa1W0
+	 hllPxkYzR29nwoWC5sIT3xTwu4HQWciImALhNpNgSUZr4AqeUQcEQYM9/ixFQwIrxV
+	 zY3IjK3JK9fJt3miMtMXhg4PtLdjL26VACvhLr5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732972AbfHBP33 (ORCPT
+        id S1733047AbfHBPaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 11:29:29 -0400
-Received: from mga03.intel.com ([134.134.136.65]:33602 "EHLO mga03.intel.com"
+        Fri, 2 Aug 2019 11:30:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732701AbfHBP33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 11:29:29 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Aug 2019 08:29:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,338,1559545200"; 
-   d="scan'208";a="175612955"
-Received: from vivekcha-mobl1.amr.corp.intel.com (HELO [10.251.131.115]) ([10.251.131.115])
-  by orsmga003.jf.intel.com with ESMTP; 02 Aug 2019 08:29:27 -0700
-Subject: Re: [RFC PATCH 15/40] soundwire: cadence_master: handle multiple
- status reports per Slave
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>
-References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
- <20190725234032.21152-16-pierre-louis.bossart@linux.intel.com>
- <20190802122003.GQ12733@vkoul-mobl.Dlink>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <c4d31804-48af-30e3-4b4f-4b03dac6addd@linux.intel.com>
-Date:   Fri, 2 Aug 2019 10:29:26 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1732277AbfHBPaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 11:30:04 -0400
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E14021783;
+        Fri,  2 Aug 2019 15:30:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564759803;
+        bh=exi+9OQEtZ7oI8S+4n8aYHHOqvpX9ctCa2KPyOEi70c=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=AwJ+Y8vA75d/vMycBEhTJYNB+zLZA65/L8ndELebOL1ft/DqAQHcTHqtXoNjI+hyR
+         wnANR3KMbhOl9eMeXeGdtg+otBpea3bxFK1TSVs6k6IAs/alHczr0U0oMWEdOm9fCU
+         TrwwVTqLcoHrMnL8pt5ifUmEnAxO22zPH+lKfUOg=
+Received: by mail-qt1-f182.google.com with SMTP id d23so74320206qto.2;
+        Fri, 02 Aug 2019 08:30:03 -0700 (PDT)
+X-Gm-Message-State: APjAAAWhEbJgIPOKpRnLV/XmmQ/qExZorShaNg1bOYaRfzZjF3jUsc14
+        Vh3Zl45VOIxA9XOuapYzUVmORcXmQSZTEY7L8w==
+X-Google-Smtp-Source: APXvYqzityF7o7KUO1Njby8yuDCjj0HJCmvW0poZGiH53DOdLh77y5Ia90Sp+PIkYjkjHRHG/c/ZknfJJgTyRKPgjJw=
+X-Received: by 2002:a0c:b627:: with SMTP id f39mr99725316qve.72.1564759802191;
+ Fri, 02 Aug 2019 08:30:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190802122003.GQ12733@vkoul-mobl.Dlink>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190801184346.7015-1-dinguyen@kernel.org> <CAL_Jsq+PRKGwdozr3VECpk2ugrOuWd4CYnRSR7ChyPOKgheYkw@mail.gmail.com>
+ <92009928-3df1-1573-7d67-40e79d77c77e@kernel.org>
+In-Reply-To: <92009928-3df1-1573-7d67-40e79d77c77e@kernel.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 2 Aug 2019 09:29:50 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+XfAO5BFnmhekUv1gKSOeVn03k7KtWWp2DgomxFL+UMQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+XfAO5BFnmhekUv1gKSOeVn03k7KtWWp2DgomxFL+UMQ@mail.gmail.com>
+Subject: Re: [PATCH] drivers/amba: add reset control to primecell probe
+To:     Dinh Nguyen <dinguyen@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Dinh Nguyen <dinh.nguyen@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Aug 2, 2019 at 8:42 AM Dinh Nguyen <dinguyen@kernel.org> wrote:
+>
+>
+>
+> On 8/2/19 9:37 AM, Rob Herring wrote:
+> > On Thu, Aug 1, 2019 at 12:44 PM Dinh Nguyen <dinguyen@kernel.org> wrote:
+> >>
+> >> From: Dinh Nguyen <dinh.nguyen@intel.com>
+> >>
+> >> The primecell controller on some SoCs, i.e. SoCFPGA, is held in reset by
+> >> default. Until recently, the DMA controller was brought out of reset by the
+> >> bootloader(i.e. U-Boot). But a recent change in U-Boot, the peripherals that
+> >> are not used are held in reset and are left to Linux to bring them out of
+> >> reset.
+> >
+> > You can fix this in the kernel, but any versions before this change
+> > will remain broken. IMO, the u-boot change should be reverted because
+> > it is breaking an ABI (though not a good one).
+> >
+>
+> Right, there exists in U-Boot to support legacy platforms before this
+> recent change. This would be for future versions.
+>
+> >> Add a mechanism for getting the reset property and de-assert the primecell
+> >> module from reset if found. This is a not a hard fail if the reset property
+> >> is not present in the device tree node, so the driver will continue to probe.
+> >
+> > I think this belongs in the AMBA bus code, not the DT code, as that is
+> > where we already have clock control code for similar reasons.
+> >
+>
+> Ok.
+>
+> >>
+> >> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+> >> ---
+> >>  drivers/of/platform.c | 14 ++++++++++++++
+> >>  1 file changed, 14 insertions(+)
+> >>
+> >> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> >> index 7801e25e6895..d8945705313d 100644
+> >> --- a/drivers/of/platform.c
+> >> +++ b/drivers/of/platform.c
+> >> @@ -21,6 +21,7 @@
+> >>  #include <linux/of_irq.h>
+> >>  #include <linux/of_platform.h>
+> >>  #include <linux/platform_device.h>
+> >> +#include <linux/reset.h>
+> >>
+> >>  const struct of_device_id of_default_bus_match_table[] = {
+> >>         { .compatible = "simple-bus", },
+> >> @@ -229,6 +230,7 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
+> >>         struct amba_device *dev;
+> >>         const void *prop;
+> >>         int i, ret;
+> >> +       struct reset_control *rstc;
+> >>
+> >>         pr_debug("Creating amba device %pOF\n", node);
+> >>
+> >> @@ -270,6 +272,18 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
+> >>                 goto err_free;
+> >>         }
+> >>
+> >> +       /*
+> >> +        * reset control of the primecell block is optional
+> >> +        * and will not fail if the reset property is not found.
+> >> +        */
+> >> +       rstc = of_reset_control_get_exclusive(node, "dma");
+> >
+> > 'dma' doesn't sound very generic.
+> >
+>
+> how about 'primecell' ?
 
+It should be based on what is in the TRMs. Unlike pclk, there doesn't
+appear to be a standard name or number of resets:
 
-On 8/2/19 7:20 AM, Vinod Koul wrote:
-> On 25-07-19, 18:40, Pierre-Louis Bossart wrote:
->> When a Slave reports multiple status in the sticky bits, find the
->> latest configuration from the mirror of the PING frame status and
->> update the status directly.
->>
->> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
->> ---
->>   drivers/soundwire/cadence_master.c | 34 ++++++++++++++++++++++++------
->>   1 file changed, 28 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/soundwire/cadence_master.c b/drivers/soundwire/cadence_master.c
->> index 889fa2cd49ae..25d5c7267c15 100644
->> --- a/drivers/soundwire/cadence_master.c
->> +++ b/drivers/soundwire/cadence_master.c
->> @@ -643,13 +643,35 @@ static int cdns_update_slave_status(struct sdw_cdns *cdns,
->>   
->>   		/* first check if Slave reported multiple status */
->>   		if (set_status > 1) {
->> +			u32 val;
->> +
->>   			dev_warn_ratelimited(cdns->dev,
->> -					     "Slave reported multiple Status: %d\n",
->> -					     mask);
->> -			/*
->> -			 * TODO: we need to reread the status here by
->> -			 * issuing a PING cmd
->> -			 */
->> +					     "Slave %d reported multiple Status: %d\n",
->> +					     i, mask);
->> +
->> +			/* re-check latest status extracted from PING commands */
->> +			val = cdns_readl(cdns, CDNS_MCP_SLAVE_STAT);
->> +			val >>= (i * 2);
->> +
->> +			switch (val & 0x3) {
->> +			case 0:
-> 
-> why not case CDNS_MCP_SLAVE_INTSTAT_NPRESENT:
+pl011: PRESETn and nUARTRST
+pl330: ARESETn
 
-ok
+Can't you just retrieve all of them and deassert them all and ignore the name?
 
-> 
->> +				status[i] = SDW_SLAVE_UNATTACHED;
->> +				break;
->> +			case 1:
->> +				status[i] = SDW_SLAVE_ATTACHED;
->> +				break;
->> +			case 2:
->> +				status[i] = SDW_SLAVE_ALERT;
->> +				break;
->> +			default:
->> +				status[i] = SDW_SLAVE_RESERVED;
->> +				break;
->> +			}
-> 
-> we have same logic in the code block preceding this, maybe good idea to
-> write a helper and use for both
+Also, you might need to use the shared variant as the core code has to
+work for either dedicated or shared resets.
 
-Yes, I am thinking about this. There are multiple cases where we want to 
-re-check the status and clear some bits, so helpers would be good.
-
-> 
-> Also IIRC we can have multiple status set right?
-
-Yes, the status bits are sticky and mirror all values reported in PING 
-frames. I am still working on how to clear those bits, there are cases 
-where we clear bits and end-up never hearing from that device ever 
-again. classic edge/level issue I suppose.
+Rob
