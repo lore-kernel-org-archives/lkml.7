@@ -2,109 +2,121 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9E9C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC39C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D13A821852
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:21:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BFng/ii5"
+	by mail.kernel.org (Postfix) with ESMTP id A40C821850
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:21:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564748480;
+	bh=SQAMv/GjRtBugvtxOJvDkEzBbx5en47q4GkvzPSXWfA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=F5NS2BD/P2mqMfqyT2wpB5AxvTTvCjywNiMt1KVx9+ukAXPertNec1lR9ecG1wppw
+	 tH8+KJUvTbgDl6WearAl2OiKTYZKrWnf7CBxH3zVIKkHwduKqxMDnsr/gXs/kx1Pe7
+	 t8T2A9gzL1ZUoy/B14gl3T9CEDNyJW8pj7pbSmVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732514AbfHBMVQ (ORCPT
+        id S2388518AbfHBMVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 08:21:16 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37163 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729422AbfHBMVP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 08:21:15 -0400
-Received: by mail-wr1-f66.google.com with SMTP id n9so51884764wrr.4
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 05:21:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=H5wGh69dp/2MC7doWK21wK95kqVnSSNKp+yReUaFMfw=;
-        b=BFng/ii5ClHBf1j1zpaCDA5IzvC99gvtcgwdudRhLryKG6xIUyU9jDeLLixoNyvf/B
-         ixf/kgetSJEvj3F0WY3AGf1a4QSlN0zXBU5B10YKflkzqLpq6TH+Y+fk0tGT0u4oe6Rx
-         Nh1yBs2HgyGjOoN00wDW73WDIqtCQyDEhMI+cOqYBUqyCFAAQmwdHPv5RAaAtgG+3PZl
-         3lbtMZl6nZQcY6Y9QipEhJFrv1Q9gnxHnsZAmwZ84CwgSYsRVnlobDOfxt0WotLodijs
-         IkZOKAZf/4fVuX7kXJhVsArdgSO7DkbilnpByIQ9omEPIKpFIAWQ2abShToFNQbduEcq
-         vs6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=H5wGh69dp/2MC7doWK21wK95kqVnSSNKp+yReUaFMfw=;
-        b=al0yfM5WPHnG07uDErpfRr9H6Im7l4j30Vbco9RKk8q0uDchtOwMjEOLVZ3m4Bm13s
-         D8yTRxvHMjS2sVXiRNYeQKM8Z5SF9CcRYIunjeuPYBiSQBO9u7DvnMAuxLMgIWDOsSO2
-         uNl9x9Ze5lfdBeEcjP9qAJgCH0NKGUS5my3PiaDQHYk8eXzrUaCZiXxUbPQHe0ZxPc6y
-         stw/5iGOFgPsYWKq241bbJyddcK570jTC041IEjxwLSelTRvbgngxlayqEZxWFig4sbX
-         UiSlYlc0hgeZSyT/BeHQY3e5etjT6cqMxxizk6+ld2Lw9jLESsqY9UpftuitRG+TOxdJ
-         p8rg==
-X-Gm-Message-State: APjAAAWh8EvsHj/Jl3j3CXo8t9bMC7nsTuVsfpy5V3VhmC3/g9uiMI/1
-        XA4KTAB8JjemUhQo7Eaag6TGkRaOyOPZRg==
-X-Google-Smtp-Source: APXvYqy+ImRfcO++8pTE4rtugXo1crID7Pxh+mRV5Xz2OkfmY1enRlxel8RpiDgIXD3i69edDA16dw==
-X-Received: by 2002:a5d:46d1:: with SMTP id g17mr92750552wrs.160.1564748472965;
-        Fri, 02 Aug 2019 05:21:12 -0700 (PDT)
-Received: from localhost.localdomain (62-178-82-229.cable.dynamic.surfer.at. [62.178.82.229])
-        by smtp.gmail.com with ESMTPSA id n9sm120612691wrp.54.2019.08.02.05.21.11
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 02 Aug 2019 05:21:12 -0700 (PDT)
-From:   Christian Gmeiner <christian.gmeiner@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     etnaviv@lists.freedesktop.org,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] arm64: defconfig: CONFIG_DRM_ETNAVIV=m
-Date:   Fri,  2 Aug 2019 14:20:28 +0200
-Message-Id: <20190802122102.3932-1-christian.gmeiner@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Fri, 2 Aug 2019 08:21:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34782 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729422AbfHBMVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 08:21:17 -0400
+Received: from localhost (unknown [122.167.106.83])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8BC32184B;
+        Fri,  2 Aug 2019 12:21:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564748476;
+        bh=SQAMv/GjRtBugvtxOJvDkEzBbx5en47q4GkvzPSXWfA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BekoZ6qtwpJXcE8GkxJd8wDRfQ56P5nTr4BJmBMzke7A8zAcU5VhQjNje/C4YtZ6c
+         Fkcd3MFuAxUnTC0pfqp6TjQ3WD8OA8jNLs1JIOu33/eY4KnoJhxejAPG0HgtNXJ0v4
+         +/l2hUDYGTOsVbLu6Tkc2xyL43SxP8dbIT6kKs6k=
+Date:   Fri, 2 Aug 2019 17:50:03 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [RFC PATCH 15/40] soundwire: cadence_master: handle multiple
+ status reports per Slave
+Message-ID: <20190802122003.GQ12733@vkoul-mobl.Dlink>
+References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
+ <20190725234032.21152-16-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190725234032.21152-16-pierre-louis.bossart@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For imx8 we want to enable etnaviv, let's enable it
-in defconfig, it will be useful to have it enabled for KernelCI
-boot and runtime testing.
+On 25-07-19, 18:40, Pierre-Louis Bossart wrote:
+> When a Slave reports multiple status in the sticky bits, find the
+> latest configuration from the mirror of the PING frame status and
+> update the status directly.
+> 
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> ---
+>  drivers/soundwire/cadence_master.c | 34 ++++++++++++++++++++++++------
+>  1 file changed, 28 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/soundwire/cadence_master.c b/drivers/soundwire/cadence_master.c
+> index 889fa2cd49ae..25d5c7267c15 100644
+> --- a/drivers/soundwire/cadence_master.c
+> +++ b/drivers/soundwire/cadence_master.c
+> @@ -643,13 +643,35 @@ static int cdns_update_slave_status(struct sdw_cdns *cdns,
+>  
+>  		/* first check if Slave reported multiple status */
+>  		if (set_status > 1) {
+> +			u32 val;
+> +
+>  			dev_warn_ratelimited(cdns->dev,
+> -					     "Slave reported multiple Status: %d\n",
+> -					     mask);
+> -			/*
+> -			 * TODO: we need to reread the status here by
+> -			 * issuing a PING cmd
+> -			 */
+> +					     "Slave %d reported multiple Status: %d\n",
+> +					     i, mask);
+> +
+> +			/* re-check latest status extracted from PING commands */
+> +			val = cdns_readl(cdns, CDNS_MCP_SLAVE_STAT);
+> +			val >>= (i * 2);
+> +
+> +			switch (val & 0x3) {
+> +			case 0:
 
-Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+why not case CDNS_MCP_SLAVE_INTSTAT_NPRESENT:
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 0e58ef02880c..ae5bbbce8a30 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -531,6 +531,7 @@ CONFIG_DRM_PANEL_SIMPLE=m
- CONFIG_DRM_SII902X=m
- CONFIG_DRM_I2C_ADV7511=m
- CONFIG_DRM_VC4=m
-+CONFIG_DRM_ETNAVIV=m
- CONFIG_DRM_HISI_HIBMC=m
- CONFIG_DRM_HISI_KIRIN=m
- CONFIG_DRM_MESON=m
+> +				status[i] = SDW_SLAVE_UNATTACHED;
+> +				break;
+> +			case 1:
+> +				status[i] = SDW_SLAVE_ATTACHED;
+> +				break;
+> +			case 2:
+> +				status[i] = SDW_SLAVE_ALERT;
+> +				break;
+> +			default:
+> +				status[i] = SDW_SLAVE_RESERVED;
+> +				break;
+> +			}
+
+we have same logic in the code block preceding this, maybe good idea to
+write a helper and use for both
+
+Also IIRC we can have multiple status set right?
+
 -- 
-2.21.0
-
+~Vinod
