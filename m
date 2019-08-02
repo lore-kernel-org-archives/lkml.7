@@ -2,138 +2,121 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E493C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BDBCC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:51:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F64D2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:51:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A2F02171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:51:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395099AbfHBOvT (ORCPT
+        id S2395051AbfHBOud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 10:51:19 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:53233 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2395080AbfHBOvR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 10:51:17 -0400
-Received: from [167.98.27.226] (helo=[10.35.6.253])
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1htYti-0008AU-Oe; Fri, 02 Aug 2019 15:51:10 +0100
-Subject: Re: [alsa-devel] [PATCH v2 3/3] ASoC: TDA7802: Add turn-on diagnostic
- routine
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        alsa-devel@alsa-project.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Kirill Marinushkin <kmarinushkin@birdec.tech>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Annaliese McDermond <nh6z@nh6z.net>,
-        Takashi Iwai <tiwai@suse.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        linux-kernel@vger.kernel.org,
-        Cheng-Yi Chiang <cychiang@chromium.org>
-References: <20190730120937.16271-1-thomas.preston@codethink.co.uk>
- <20190730120937.16271-4-thomas.preston@codethink.co.uk>
- <20190730141935.GF4264@sirena.org.uk>
- <45156592-a90f-b4f8-4d30-9631c03f1280@codethink.co.uk>
- <20190730155027.GJ4264@sirena.org.uk>
- <9b47a360-3b62-b968-b8d5-8639dc4b468d@codethink.co.uk>
- <20190801234241.GG5488@sirena.org.uk>
- <472cc4ee-2e80-8b08-d842-79c65df572f3@codethink.co.uk>
- <20190802111036.GB5387@sirena.org.uk>
-From:   Thomas Preston <thomas.preston@codethink.co.uk>
-Message-ID: <ab0a2d14-90c0-6c28-2c80-351fccd85e68@codethink.co.uk>
-Date:   Fri, 2 Aug 2019 15:51:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 2 Aug 2019 10:50:33 -0400
+Received: from foss.arm.com ([217.140.110.172]:53178 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731205AbfHBOuc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 10:50:32 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C9FD11596;
+        Fri,  2 Aug 2019 07:50:29 -0700 (PDT)
+Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E2E0B3F575;
+        Fri,  2 Aug 2019 07:50:27 -0700 (PDT)
+From:   Steven Price <steven.price@arm.com>
+Cc:     Steven Price <steven.price@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Will Deacon <will@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/9] arm64: Stolen time support
+Date:   Fri,  2 Aug 2019 15:50:08 +0100
+Message-Id: <20190802145017.42543-1-steven.price@arm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190802111036.GB5387@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/08/2019 12:10, Mark Brown wrote:
-> On Fri, Aug 02, 2019 at 09:32:17AM +0100, Thomas Preston wrote:
->> On 02/08/2019 00:42, Mark Brown wrote:
-> 
->>> Yes, that's definitely doable - we've got some other drivers with
->>> similar things like calibration triggers exposed that way.
-> 
->> One problem with using a kcontrol as a trigger for the turn-on diagnostic
->> is that the diagnostic routine has a "return value".
-> 
-> You can use a read only control for the readback, or just have it be
-> triggered by overwriting the readback value.  You can cache the result.
-> 
+This series add support for paravirtualized time for arm64 guests and
+KVM hosts following the specification in Arm's document DEN 0057A:
 
-Keeping the trigger and result together like that would be better I think,
-although the routine isn't supposed to run mid way through playback. If
-we're mid playback the debugfs routine has to turn off AMP_ON, take the
-device back to a known state, run diagnostics, then restore. Which causes
-a gap in the audible sound.
+https://developer.arm.com/docs/den0057/a
 
->> Hm, maybe a better idea is to have the turn on diagnostic only run on
->> device probe (as its name suggests!), and print something to dmesg:
-> 
->> 	modprobe tda7802 turn_on_diagnostic=1
-> 
->> 	tda7802-codec i2c-TDA7802:00: Turn on diagnostic 04 04 04 04
-> 
->> Kirill Marinushkin mentioned this in the first review [0], it just didn't
->> really sink in until now!
-> 
-> You could do that too, yeah.  Depends on what this is diagnosing and if
-> that'd be useful.
-> 
+It implements support for stolen time, allowing the guest to
+identify time when it is forcibly not executing.
 
-The diagnostic status bits describe situations such as:
-- open load (no speaker connected)
-- short to GND
-- short to VCC
-- etc
+It doesn't implement support for Live Physical Time (LPT) as there are
+some concerns about the overheads and approach in the above
+specification, and I expect an updated version of the specification to
+be released soon with just the stolen time parts.
 
-The intention is to test if all the speakers are connected. So, one might 
-have a self test which runs the diagnostic and verifies it outputs:
+I previously posted a series including LPT (as well as stolen time):
+https://lore.kernel.org/kvmarm/20181212150226.38051-1-steven.price@arm.com/
 
-	00 00 00 00
+Patches 2, 5, 7 and 8 are cleanup patches and could be taken separately.
 
-For example, on my test rig there is only one speaker connected. So it
-reads:
+Christoffer Dall (1):
+  KVM: arm/arm64: Factor out hypercall handling from PSCI code
 
-	04 04 00 04
+Steven Price (8):
+  KVM: arm64: Document PV-time interface
+  KVM: arm64: Implement PV_FEATURES call
+  KVM: arm64: Support stolen time reporting via shared structure
+  KVM: Allow kvm_device_ops to be const
+  KVM: arm64: Provide a PV_TIME device to user space
+  arm/arm64: Provide a wrapper for SMCCC 1.1 calls
+  arm/arm64: Make use of the SMCCC 1.1 wrapper
+  arm64: Retrieve stolen time as paravirtualized guest
 
-Where the second bit is "open load". So this would fail the test.
+ Documentation/virtual/kvm/arm/pvtime.txt | 107 +++++++++++++
+ arch/arm/kvm/Makefile                    |   2 +-
+ arch/arm/kvm/handle_exit.c               |   2 +-
+ arch/arm/mm/proc-v7-bugs.c               |  13 +-
+ arch/arm64/include/asm/kvm_host.h        |  13 +-
+ arch/arm64/include/asm/kvm_mmu.h         |   2 +
+ arch/arm64/include/asm/pvclock-abi.h     |  20 +++
+ arch/arm64/include/uapi/asm/kvm.h        |   6 +
+ arch/arm64/kernel/Makefile               |   1 +
+ arch/arm64/kernel/cpu_errata.c           |  80 ++++------
+ arch/arm64/kernel/kvm.c                  | 155 ++++++++++++++++++
+ arch/arm64/kvm/Kconfig                   |   1 +
+ arch/arm64/kvm/Makefile                  |   2 +
+ arch/arm64/kvm/handle_exit.c             |   4 +-
+ include/kvm/arm_hypercalls.h             |  44 ++++++
+ include/kvm/arm_psci.h                   |   2 +-
+ include/linux/arm-smccc.h                |  58 +++++++
+ include/linux/cpuhotplug.h               |   1 +
+ include/linux/kvm_host.h                 |   4 +-
+ include/linux/kvm_types.h                |   2 +
+ include/uapi/linux/kvm.h                 |   2 +
+ virt/kvm/arm/arm.c                       |  18 +++
+ virt/kvm/arm/hypercalls.c                | 138 ++++++++++++++++
+ virt/kvm/arm/mmu.c                       |  44 ++++++
+ virt/kvm/arm/psci.c                      |  84 +---------
+ virt/kvm/arm/pvtime.c                    | 190 +++++++++++++++++++++++
+ virt/kvm/kvm_main.c                      |   6 +-
+ 27 files changed, 848 insertions(+), 153 deletions(-)
+ create mode 100644 Documentation/virtual/kvm/arm/pvtime.txt
+ create mode 100644 arch/arm64/include/asm/pvclock-abi.h
+ create mode 100644 arch/arm64/kernel/kvm.c
+ create mode 100644 include/kvm/arm_hypercalls.h
+ create mode 100644 virt/kvm/arm/hypercalls.c
+ create mode 100644 virt/kvm/arm/pvtime.c
 
-So in the kcontrol case the test would be something like:
+-- 
+2.20.1
 
-	amixer sset "AMP1 turn on diagnostic" on
-	amixer sget "AMP1 diagnostic"
-
-And the module parameter case:
-
-	rmmod tda7802
-	modprobe tda7802 turn_on_diagnostic=1
-	dmesg | grep "Turn on diagnostic 04 04 04 04"
-	rmmod tda7802
-	modprobe tda7802
-
-I think the module parameter method is more appropriate for a
-"Turn-on diagnostic", even though I don't really like grepping dmesg
-for the result. I'll go ahead and implement that unless anyone has a
-particular preference for the kcontrol-trigger.
-
-Thanks
