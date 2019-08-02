@@ -2,59 +2,51 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0365CC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C86EC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D061F20665
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D1A620665
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:00:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564740020;
-	bh=sjU39/06cAWp44DyUMSwwUya99C8wbkAQnuEq44IuLc=;
+	s=default; t=1564740023;
+	bh=co30g/jq4olQsJE+balnUC9/AIYcYBjcjkhhdBOkyuA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JNtksKUGpIGeCqUby5ThOElC2zUrhGKMc60G4u2YvJm6L3azXa5+IqNWDRwH4bTU3
-	 TGO8q2EwsV/tLs35nuGIg6t6W38JXbnlZsZYQN3uGHvCOEnG9OubK1DA/GUNcDD+rA
-	 n1JdokZpuuEUHMbssLIMn6ZZFXj9SToLEq+Gtjr4=
+	b=FgtU3C1iLnVecCJFYNXpuCpTWFR3mfU2GGwOwr52SjuRVEUXpgfetZlzDEZsBPoqm
+	 jcRF9BiikoH7/FAY+VCOK+B7K96vkTetN0qB4SObrEtV430v1yI+dmmsuVaDYn7JiX
+	 m+q9Tjr1dy7t6xJkttJ7+LgFKLc3QEWe1FL6LTcM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407051AbfHBKAT (ORCPT
+        id S2406053AbfHBJwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 06:00:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58526 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:52:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406065AbfHBJwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:52:44 -0400
+        id S2406008AbfHBJw3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:52:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 802ED20880;
-        Fri,  2 Aug 2019 09:52:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76617206A2;
+        Fri,  2 Aug 2019 09:52:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739564;
-        bh=sjU39/06cAWp44DyUMSwwUya99C8wbkAQnuEq44IuLc=;
+        s=default; t=1564739549;
+        bh=co30g/jq4olQsJE+balnUC9/AIYcYBjcjkhhdBOkyuA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eY6wPkYup9bzX/ceEPQjirBE/GPKzS1EosiGw572J4gMrcILZr0Pmm7VfaRxazrF+
-         riD0A25TF3CCBf6HjCGbGFdSIwYOq53fa12C2t7oh6ZRyKQfDND/r372F3BfdrEI45
-         I5a4qnH2vbmVIos6zC4BdoB+NqidjvqRB9PNWkuc=
+        b=HUQOubPna1mx/XGybeWBHETlxaGUYzMdNnWJUtuuZ5JgdjpyDANJ9shqqR6iQhBoJ
+         a5xDWxev2ytnZ6QiIUsHkeqifLXCK1qvkdeEUrxfejNGitsQ9jFt0e3MV3or0FyPTZ
+         aTnozQtUWKUIUmMGZpEhUEN5vJpwXuwMudI7k+nE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Yuyang Du <duyuyang@gmail.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>, arnd@arndb.de,
-        frederic@kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 200/223] locking/lockdep: Fix lock used or unused stats error
-Date:   Fri,  2 Aug 2019 11:37:05 +0200
-Message-Id: <20190802092250.101586900@linuxfoundation.org>
+        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 208/223] ALSA: hda - Add a conexant codec entry to let mute led work
+Date:   Fri,  2 Aug 2019 11:37:13 +0200
+Message-Id: <20190802092250.415271634@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -67,77 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 68d41d8c94a31dfb8233ab90b9baf41a2ed2da68 ]
+From: Hui Wang <hui.wang@canonical.com>
 
-The stats variable nr_unused_locks is incremented every time a new lock
-class is register and decremented when the lock is first used in
-__lock_acquire(). And after all, it is shown and checked in lockdep_stats.
+commit 3f8809499bf02ef7874254c5e23fc764a47a21a0 upstream.
 
-However, under configurations that either CONFIG_TRACE_IRQFLAGS or
-CONFIG_PROVE_LOCKING is not defined:
+This conexant codec isn't in the supported codec list yet, the hda
+generic driver can drive this codec well, but on a Lenovo machine
+with mute/mic-mute leds, we need to apply CXT_FIXUP_THINKPAD_ACPI
+to make the leds work. After adding this codec to the list, the
+driver patch_conexant.c will apply THINKPAD_ACPI to this machine.
 
-The commit:
+Cc: stable@vger.kernel.org
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-  091806515124b20 ("locking/lockdep: Consolidate lock usage bit initialization")
-
-missed marking the LOCK_USED flag at IRQ usage initialization because
-as mark_usage() is not called. And the commit:
-
-  886532aee3cd42d ("locking/lockdep: Move mark_lock() inside CONFIG_TRACE_IRQFLAGS && CONFIG_PROVE_LOCKING")
-
-further made mark_lock() not defined such that the LOCK_USED cannot be
-marked at all when the lock is first acquired.
-
-As a result, we fix this by not showing and checking the stats under such
-configurations for lockdep_stats.
-
-Reported-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Yuyang Du <duyuyang@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: arnd@arndb.de
-Cc: frederic@kernel.org
-Link: https://lkml.kernel.org/r/20190709101522.9117-1-duyuyang@gmail.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/locking/lockdep_proc.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ sound/pci/hda/patch_conexant.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
-index a0f61effad25..c482de6f5262 100644
---- a/kernel/locking/lockdep_proc.c
-+++ b/kernel/locking/lockdep_proc.c
-@@ -229,6 +229,7 @@ static int lockdep_stats_show(struct seq_file *m, void *v)
- 		      nr_hardirq_read_safe = 0, nr_hardirq_read_unsafe = 0,
- 		      sum_forward_deps = 0;
+--- a/sound/pci/hda/patch_conexant.c
++++ b/sound/pci/hda/patch_conexant.c
+@@ -1011,6 +1011,7 @@ static int patch_conexant_auto(struct hd
+  */
  
-+#ifdef CONFIG_PROVE_LOCKING
- 	list_for_each_entry(class, &all_lock_classes, lock_entry) {
- 
- 		if (class->usage_mask == 0)
-@@ -260,12 +261,12 @@ static int lockdep_stats_show(struct seq_file *m, void *v)
- 		if (class->usage_mask & LOCKF_ENABLED_HARDIRQ_READ)
- 			nr_hardirq_read_unsafe++;
- 
--#ifdef CONFIG_PROVE_LOCKING
- 		sum_forward_deps += lockdep_count_forward_deps(class);
--#endif
- 	}
- #ifdef CONFIG_DEBUG_LOCKDEP
- 	DEBUG_LOCKS_WARN_ON(debug_atomic_read(nr_unused_locks) != nr_unused);
-+#endif
-+
- #endif
- 	seq_printf(m, " lock-classes:                  %11lu [max: %lu]\n",
- 			nr_lock_classes, MAX_LOCKDEP_KEYS);
--- 
-2.20.1
-
+ static const struct hda_device_id snd_hda_id_conexant[] = {
++	HDA_CODEC_ENTRY(0x14f11f86, "CX8070", patch_conexant_auto),
+ 	HDA_CODEC_ENTRY(0x14f12008, "CX8200", patch_conexant_auto),
+ 	HDA_CODEC_ENTRY(0x14f15045, "CX20549 (Venice)", patch_conexant_auto),
+ 	HDA_CODEC_ENTRY(0x14f15047, "CX20551 (Waikiki)", patch_conexant_auto),
 
 
