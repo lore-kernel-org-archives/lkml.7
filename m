@@ -2,116 +2,107 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD2BC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 06:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25768C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 06:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D59DE20657
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 06:49:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wEwvBGxN"
+	by mail.kernel.org (Postfix) with ESMTP id 01B6120657
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 06:49:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388980AbfHBGti (ORCPT
+        id S2389011AbfHBGtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 02:49:38 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55672 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728904AbfHBGti (ORCPT
+        Fri, 2 Aug 2019 02:49:43 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25614 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388947AbfHBGtj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 02:49:38 -0400
-Received: by mail-wm1-f68.google.com with SMTP id a15so66803707wmj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 23:49:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TGAJsFow4oMvJoAyzqu9xKkKaxXn/I4Jnuo/cQmMpV0=;
-        b=wEwvBGxNylDsfl9AU2tOnTAPUMbIDlu6bC+58eAtIsa40xrYNdeuTn1ddqtNAgjlSk
-         5rsXEjvTvjyS79ODllf/c6mf1/2f8yCnY4/+UFyT3ZnCljrJXd0USXCO+5leq7bQnaDr
-         8iUZMycfQNC506+0SQn6jGhkDdHBbL6PconATmJRZfO+bNXsJAorp2D+ziMTnT2SD7Mr
-         4f1Ly6JB34OEsNbZz2JXJfn+VlwGi/3QOP9g4n5/Rs+oFj8A4vBzHX/59IlREVI+3wSY
-         CbtyBpvfjkmVStkWOVZru8MGgvYScxyN5BZ4ug6nXnlFHekzTYs9qTeTvUX0c5gERKng
-         +U9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TGAJsFow4oMvJoAyzqu9xKkKaxXn/I4Jnuo/cQmMpV0=;
-        b=I9R+639rnxmAn50d5ekEUfu4z2rWbwXCsg+f3lxMIRRtjl6UmouSwSqGiNteumnTtV
-         eWKx0CRjoa6piUfgIcvZ6eP9Y1Lurap9HR6/P3KioQNFs6QpxdVEUEiCRjEfwvbTIm96
-         N9zpykcJUYE7IdP6pxpcktwtDdLhE2mdO9d7lu/wuyGxFqvtL01F6FrGRbwhQbC8CXZ1
-         LXQpTnC4rB+e7IasSUCEQoRcrcifAJk4rpvUhPtPn9C6yX6Og6DVE6SryDkg1OtzFBhI
-         5RNxjf7rp5kSd+8zQWrzRp+AoVN6SD6WHLGYxjvP1HVnIlJmk+BTTtX2WO9CYV1PQby/
-         98vQ==
-X-Gm-Message-State: APjAAAW1f0yJkfKawt69lBX0ZzIgv+oOTeyRw3iapJVaIHyGJgs2M4Hq
-        h4Mg3OYEd5MwPzJYUzlGWzSJx7ACFXeSI4Y9Z90Kxw==
-X-Google-Smtp-Source: APXvYqzcN4vVQQ+dUrE17LULjD0uo7QmMWsTOc9nAoC4+6efRgoyLv9ZsqyERMEFFhMXp/U1ZBYlncyaBqnmLJI7QiA=
-X-Received: by 2002:a7b:c0d0:: with SMTP id s16mr2548964wmh.136.1564728576312;
- Thu, 01 Aug 2019 23:49:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190731163915.3fdfcb14@canb.auug.org.au> <20190731085819.GA3488@osiris>
- <20190731110816.GA20753@gondor.apana.org.au> <20190731111520.GC3488@osiris>
- <20190731113216.GA21068@gondor.apana.org.au> <20190731114453.GD3488@osiris>
- <20190801122849.GB4163@osiris> <CAKv+Gu_1HP2NapMk5O_-XpJdga5zyFJDkVudTRT6CWm+tqPndA@mail.gmail.com>
- <20190802064605.GA4158@osiris>
-In-Reply-To: <20190802064605.GA4158@osiris>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Fri, 2 Aug 2019 09:49:25 +0300
-Message-ID: <CAKv+Gu_66Lrhrju_mUiONq_rxmBq-n0AyaFqeese5T2T=x3RJg@mail.gmail.com>
-Subject: Re: linux-next: Tree for Jul 31 - s390 crypto build breakage
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>
+        Fri, 2 Aug 2019 02:49:39 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x726bDL9137783
+        for <linux-kernel@vger.kernel.org>; Fri, 2 Aug 2019 02:49:37 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2u4fjq9fr8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 02:49:37 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Fri, 2 Aug 2019 07:49:35 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 2 Aug 2019 07:49:33 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x726nVj962128176
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 2 Aug 2019 06:49:31 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6B3C4A405C;
+        Fri,  2 Aug 2019 06:49:31 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1D96FA405F;
+        Fri,  2 Aug 2019 06:49:31 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.134])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri,  2 Aug 2019 06:49:31 +0000 (GMT)
+Date:   Fri, 2 Aug 2019 08:49:29 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
 Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-s390 <linux-s390@vger.kernel.org>,
         Harald Freudenberger <freude@linux.ibm.com>,
-        Patrick Steuer <steuer@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+        Patrick Steuer <steuer@linux.ibm.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>
+Subject: Re: linux-next: Tree for Jul 31 - s390 crypto build breakage
+References: <20190731085819.GA3488@osiris>
+ <20190731110816.GA20753@gondor.apana.org.au>
+ <20190731111520.GC3488@osiris>
+ <20190731113216.GA21068@gondor.apana.org.au>
+ <20190731114453.GD3488@osiris>
+ <20190801122849.GB4163@osiris>
+ <CAKv+Gu_1HP2NapMk5O_-XpJdga5zyFJDkVudTRT6CWm+tqPndA@mail.gmail.com>
+ <20190802102019.6a789c51@canb.auug.org.au>
+ <20190802031414.GB14879@gondor.apana.org.au>
+ <20190802144844.43508be1@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190802144844.43508be1@canb.auug.org.au>
+X-TM-AS-GCONF: 00
+x-cbid: 19080206-0012-0000-0000-00000338AB23
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19080206-0013-0000-0000-000021725A68
+Message-Id: <20190802064929.GB4158@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-02_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908020068
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2 Aug 2019 at 09:46, Heiko Carstens <heiko.carstens@de.ibm.com> wrote:
->
-> On Thu, Aug 01, 2019 at 08:28:56PM +0300, Ard Biesheuvel wrote:
-> > On Thu, 1 Aug 2019 at 15:28, Heiko Carstens <heiko.carstens@de.ibm.com> wrote:
-> > > Still not... with linux-next as of today I get this (s390 defconfig):
-> > >
-> > > ERROR: "crypto_aegis128_decrypt_chunk_simd" [crypto/aegis128.ko] undefined!
-> > > ERROR: "crypto_aegis128_update_simd" [crypto/aegis128.ko] undefined!
-> > > ERROR: "crypto_aegis128_encrypt_chunk_simd" [crypto/aegis128.ko] undefined!
-> > > scripts/Makefile.modpost:105: recipe for target 'modules-modpost' failed
-> > >
+On Fri, Aug 02, 2019 at 02:48:44PM +1000, Stephen Rothwell wrote:
+> Hi Herbert,
+> 
+> On Fri, 2 Aug 2019 13:14:14 +1000 Herbert Xu <herbert@gondor.apana.org.au> wrote:
 > >
-> > Hello Heiko,
-> >
-> > Apologies for the breakage. The first two fixes addressed obvious
-> > shortcomings in my code, but with this issue, I'm a bit puzzled tbh.
-> > The calls to these missing functions should be optimized away, since
-> > have_simd never gets assigned if CONFIG_CRYPTO_AEGIS128_SIMD is not
-> > defined, but for some reason, this isn't working. Which version of GCC
-> > are you using?
->
-> Plain vanilla gcc 9.1.0.
->
-> > Also, could you please try whether the patch below fixes the problem? Thanks
-> > https://lore.kernel.org/linux-crypto/20190729074434.21064-1-ard.biesheuvel@linaro.org/
->
-> Yes, with that patch applied the code compiles.
->
+> > For now I'm going to back out those two specific patches as the
+> > rest seem to be valid by themselves.
+> 
+> I have applied the top commit from your tree to linux-next today just
+> to help with building and testing over the weekend (I had already
+> merged your tree before you added the revert).
 
-Thanks for confirming.
+Thanks Stephen! We don't have any automatic testing coverage on s390
+for any linux-next release this week due to the build breakage(s).
 
-Since Voldis is reporting GCC 9.1.x as well, this might be a compiler
-regression (and it explains why I did not see the issue locally)
-
-In any case, the patches have been reverted now, so I will resubmit
-them with the above change folded in.
-
-Thanks,
-Ard.
