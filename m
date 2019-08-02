@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6E4C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE45C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22FC221726
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AA3B21726
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:36:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752991;
-	bh=MyptE6f8k+92LRAEm6ghXCPrsdPU0qjbt9hN9P9BSic=;
+	s=default; t=1564752995;
+	bh=a7cc0qIF7OBAKtAeI32olxn86HEJddZqs8H8D7st0jE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IEoIshQz/sMqzQ0NT62hPuw/NcQ4TWd52lNRqH7OrlcsOFNn9xZU7c0y58XwexqMc
-	 nuAhdH9d89pMn8/q3bnR6MTHzUY6TpU0I8XhkzUZQkRipQVSsvcemqRxhL6rFDtX3z
-	 d0C40Q1He+fUHucFMxHD3+lhwyl9rNzuyTrnOIg8=
+	b=jze6Bj5Y0EDvukDxKd6BU65hUxjyXi5lqvAQXr3FMsFNtMsZlofNPJuztSWZcSV2d
+	 uGFZejXjx14kgE1AKx/WdABagQwtiTPmB1RRvDEYwJXrfF+enaZEfwwcBxl3KYYE/Y
+	 2a7ES4vn6F62bAk3FkbMDwEDfApDVDCBLb4c38n4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406348AbfHBNg3 (ORCPT
+        id S2406369AbfHBNge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:36:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58576 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:36:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393311AbfHBNUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:20:15 -0400
+        id S2393305AbfHBNUN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:20:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68BE821849;
-        Fri,  2 Aug 2019 13:20:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD0FC2173E;
+        Fri,  2 Aug 2019 13:20:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752014;
-        bh=MyptE6f8k+92LRAEm6ghXCPrsdPU0qjbt9hN9P9BSic=;
+        s=default; t=1564752012;
+        bh=a7cc0qIF7OBAKtAeI32olxn86HEJddZqs8H8D7st0jE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zk2qVf0Y8IHNjJh3bXA9+FLNCZ0dvxweamFczIF0OQZK5J2ywrS2cOKdsgH5JmUyn
-         X2LTowJ+iCGmstPN8uUhPd8TFr6ExitEkgbKHBXPq4DpHtrBw5d2ia/JZrowmKaAQj
-         7Es1Vs+U3ENH+heuzkby/0uYlICrXKWOn7EEigSo=
+        b=xHXcOvUXOk/NwkpZ0gx+/8tqLoGauvB577sISgKzdT5lKaaizg/yzpWE4+OeHGRfY
+         t4cBHoR78aJqRfM3ixppV8jDfRV1DpvzkL4aA8haCuP+MBlQtXsmthByTJTSoD/a8H
+         gPkkufRPZuNK61pL7baPUyoKu5lxNqrFErnhETJA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     SivapiriyanKumarasamy <sivapiriyan.kumarasamy@amd.com>,
-        Anthony Koo <Anthony.Koo@amd.com>, Leo Li <sunpeng.li@amd.com>,
+Cc:     Murton Liu <murton.liu@amd.com>, Tony Cheng <Tony.Cheng@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        Sasha Levin <sashal@kernel.org>,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.2 18/76] drm/amd/display: Wait for backlight programming completion in set backlight level
-Date:   Fri,  2 Aug 2019 09:18:52 -0400
-Message-Id: <20190802131951.11600-18-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 17/76] drm/amd/display: Clock does not lower in Updateplanes
+Date:   Fri,  2 Aug 2019 09:18:51 -0400
+Message-Id: <20190802131951.11600-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802131951.11600-1-sashal@kernel.org>
 References: <20190802131951.11600-1-sashal@kernel.org>
@@ -61,42 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SivapiriyanKumarasamy <sivapiriyan.kumarasamy@amd.com>
+From: Murton Liu <murton.liu@amd.com>
 
-[ Upstream commit c7990daebe71d11a9e360b5c3b0ecd1846a3a4bb ]
+[ Upstream commit 492d9ec244923420af96db6b69ad7d575859aa92 ]
 
-[WHY]
-Currently we don't wait for blacklight programming completion in DMCU
-when setting backlight level. Some sequences such as PSR static screen
-event trigger reprogramming requires it to be complete.
+[why]
+We reset the optimized_required in atomic_plane_disable
+flag immediately after it is set in atomic_plane_disconnect, causing us to
+never have flag set during next flip in UpdatePlanes.
 
-[How]
-Add generic wait for dmcu command completion in set backlight level.
+[how]
+Optimize directly after each time plane is removed.
 
-Signed-off-by: SivapiriyanKumarasamy <sivapiriyan.kumarasamy@amd.com>
-Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
+Signed-off-by: Murton Liu <murton.liu@amd.com>
+Reviewed-by: Tony Cheng <Tony.Cheng@amd.com>
 Acked-by: Leo Li <sunpeng.li@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dce/dce_abm.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_abm.c b/drivers/gpu/drm/amd/display/dc/dce/dce_abm.c
-index 2959c3c9390b9..da30ae04e82bb 100644
---- a/drivers/gpu/drm/amd/display/dc/dce/dce_abm.c
-+++ b/drivers/gpu/drm/amd/display/dc/dce/dce_abm.c
-@@ -234,6 +234,10 @@ static void dmcu_set_backlight_level(
- 	s2 |= (backlight_8_bit << ATOM_S2_CURRENT_BL_LEVEL_SHIFT);
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
+index 9e4d70a0055e1..c7b4c3048b71d 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
+@@ -2416,6 +2416,12 @@ static void dcn10_apply_ctx_for_surface(
+ 		if (removed_pipe[i])
+ 			dcn10_disable_plane(dc, &dc->current_state->res_ctx.pipe_ctx[i]);
  
- 	REG_WRITE(BIOS_SCRATCH_2, s2);
++	for (i = 0; i < dc->res_pool->pipe_count; i++)
++		if (removed_pipe[i]) {
++			dc->hwss.optimize_bandwidth(dc, context);
++			break;
++		}
 +
-+	/* waitDMCUReadyForCmd */
-+	REG_WAIT(MASTER_COMM_CNTL_REG, MASTER_COMM_INTERRUPT,
-+			0, 1, 80000);
+ 	if (dc->hwseq->wa.DEGVIDCN10_254)
+ 		hubbub1_wm_change_req_wa(dc->res_pool->hubbub);
  }
- 
- static void dce_abm_init(struct abm *abm)
 -- 
 2.20.1
 
