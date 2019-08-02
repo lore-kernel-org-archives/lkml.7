@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4502C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D071C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B1B9217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:23:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 576DE217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:23:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752206;
-	bh=/VUQXObd5d36mN8buAAx0ArPY1wAc9/+9jzjFmMUX6E=;
+	s=default; t=1564752213;
+	bh=VZQBL92ZJGz/N1uRlmfqfAhaBiRo7q83x8xS/zUMAds=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CiVD0t1D57AEXlLidDWeW3lk/kusm1rBypTK74vdv08VIGVp6tq1JGMhrHvFasDJn
-	 pwrkQw4C9JwcXAGdgc4edlsfzy7oPdSMCNQSW7DoYaY8I+lB9+ZpExQTL50P9LLNyr
-	 x/+CaJn56uaveqSknTPV+mgf+RYD6rDlaViw2TgE=
+	b=BTBdom+rpPUdc8QXFpfVLIOo4WL/5JppQHIgxTgiJo7ssSSCblCo/VOlflIPeZTjM
+	 9PQwudi60EXpH737QmpKTYgwzvfEn1X7OtuTigqTjEUDRp0nobS/2VSptZZ5y83RwE
+	 0as8e60qYSdEGMiQCE9bk6zh5tuN3tpLQjqUNH7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393972AbfHBNXY (ORCPT
+        id S2393987AbfHBNXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:23:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33862 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:23:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393952AbfHBNXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:23:19 -0400
+        id S2393978AbfHBNX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:23:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C709520644;
-        Fri,  2 Aug 2019 13:23:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1D7620644;
+        Fri,  2 Aug 2019 13:23:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752198;
-        bh=/VUQXObd5d36mN8buAAx0ArPY1wAc9/+9jzjFmMUX6E=;
+        s=default; t=1564752208;
+        bh=VZQBL92ZJGz/N1uRlmfqfAhaBiRo7q83x8xS/zUMAds=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jCYgquac5Xt6g1UWPMEeyNpObQlE8tsz4RPqcfZwCD299WsnedYS+8qudOhGb+MjJ
-         NlAre2OgLBZZipNXhriX6GBoT1gKmvLE99QtziZYOejpwtlu6sQ8vjxHyjJtjRLY+K
-         9YVgNjV/+KcodYfmiQDyRYUsgoT/kl/nDsya6/PI=
+        b=1hFxsnQv09M7HwkZCc36/Lt30Uz1K/P8JZHsRjfOqUWGnifZV64ztkm9K0x5y/X09
+         AK5IBTctaaIEj1vpygU5paBKKUgYKWGqi/rk1/WfFhkV8Km8OWkIpLMntmTES25ykV
+         FNOPNq5TQJERTYAeXtG6l3ci6kLIPjXCEAgascwg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tai Man <taiman.wong@amd.com>, Charlene Liu <Charlene.Liu@amd.com>,
+Cc:     Alvin Lee <alvin.lee2@amd.com>, Jun Lei <Jun.Lei@amd.com>,
         Leo Li <sunpeng.li@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 08/42] drm/amd/display: use encoder's engine id to find matched free audio device
-Date:   Fri,  2 Aug 2019 09:22:28 -0400
-Message-Id: <20190802132302.13537-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 10/42] drm/amd/display: Only enable audio if speaker allocation exists
+Date:   Fri,  2 Aug 2019 09:22:30 -0400
+Message-Id: <20190802132302.13537-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802132302.13537-1-sashal@kernel.org>
 References: <20190802132302.13537-1-sashal@kernel.org>
@@ -61,56 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tai Man <taiman.wong@amd.com>
+From: Alvin Lee <alvin.lee2@amd.com>
 
-[ Upstream commit 74eda776d7a4e69ec7aa1ce30a87636f14220fbb ]
+[ Upstream commit 6ac25e6d5b2fbf251e9fa2f4131d42c815b43867 ]
 
 [Why]
-On some platforms, the encoder id 3 is not populated. So the encoders
-are not stored in right order as index (id: 0, 1, 2, 4, 5) at pool. This
-would cause encoders id 4 & id 5 to fail when finding corresponding
-audio device, defaulting to the first available audio device. As result,
-we cannot stream audio into two DP ports with encoders id 4 & id 5.
+
+In dm_helpers_parse_edid_caps, there is a corner case where no speakers
+can be allocated even though the audio mode count is greater than 0.
+Enabling audio when no speaker allocations exists can cause issues in
+the video stream.
 
 [How]
-It need to create enough audio device objects (0 - 5) to perform matching.
-Then use encoder engine id to find matched audio device.
 
-Signed-off-by: Tai Man <taiman.wong@amd.com>
-Reviewed-by: Charlene Liu <Charlene.Liu@amd.com>
+Add a check to not enable audio unless one or more speaker allocations
+exist (since doing this can cause issues in the video stream).
+
+Signed-off-by: Alvin Lee <alvin.lee2@amd.com>
+Reviewed-by: Jun Lei <Jun.Lei@amd.com>
 Acked-by: Leo Li <sunpeng.li@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc_resource.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/dc/core/dc_resource.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_resource.c b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
-index e0a96abb3c46c..06d5988dff723 100644
+index 19a951e5818ac..f0d68aa7c8fcc 100644
 --- a/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
 +++ b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
-@@ -222,7 +222,7 @@ bool resource_construct(
- 		 * PORT_CONNECTIVITY == 1 (as instructed by HW team).
- 		 */
- 		update_num_audio(&straps, &num_audio, &pool->audio_support);
--		for (i = 0; i < pool->pipe_count && i < num_audio; i++) {
-+		for (i = 0; i < caps->num_audio; i++) {
- 			struct audio *aud = create_funcs->create_audio(ctx, i);
+@@ -1956,7 +1956,7 @@ enum dc_status resource_map_pool_resources(
+ 	/* TODO: Add check if ASIC support and EDID audio */
+ 	if (!stream->sink->converter_disable_audio &&
+ 	    dc_is_audio_capable_signal(pipe_ctx->stream->signal) &&
+-	    stream->audio_info.mode_count) {
++	    stream->audio_info.mode_count && stream->audio_info.flags.all) {
+ 		pipe_ctx->stream_res.audio = find_first_free_audio(
+ 		&context->res_ctx, pool, pipe_ctx->stream_res.stream_enc->id);
  
- 			if (aud == NULL) {
-@@ -1713,6 +1713,12 @@ static struct audio *find_first_free_audio(
- 			return pool->audios[i];
- 		}
- 	}
-+
-+    /* use engine id to find free audio */
-+	if ((id < pool->audio_count) && (res_ctx->is_audio_acquired[id] == false)) {
-+		return pool->audios[id];
-+	}
-+
- 	/*not found the matching one, first come first serve*/
- 	for (i = 0; i < pool->audio_count; i++) {
- 		if (res_ctx->is_audio_acquired[i] == false) {
 -- 
 2.20.1
 
