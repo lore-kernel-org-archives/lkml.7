@@ -4,48 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E49E6C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A89C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1CCA2073D
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:33:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66D5A2073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:33:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752821;
-	bh=FI1AbKWqa1YCKS4h18fkWOJkMmVId5M0OrgX9gzHDWU=;
+	s=default; t=1564752831;
+	bh=luGPwrsMzBhqsBsjmDOagWeS2+zn0+WUsPIMCrUf+ek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PUs7LHf9JBnQmeUDs8jOMjLKIjwU2gg48ZJV4UgPsOQH3w/t8X6A6OzAm/sZkxo87
-	 Dxo8wz3+6UflkWAfOzHNPNLKuNUNnbeVf2iaRy0DhSvHcGeyPybO+djrPYkhAiCzdL
-	 MfuG+soSY2HtyCYhu15SriTomhsOEYGGpxIHPq3s=
+	b=O4/9BsJCwG9Ks9oax4MdktgFjRQrQY7owpqFBle4J3fi53wCNG/rwKoupgMa9zd4r
+	 mX7boacbqr9mfcmp1XZeor28UAs9x01yxgIlo1yf4XmBAkWkxhif79StK/qfozpIK6
+	 XEnEtK6/zB3aTOCUbt9RqYuVjynlPpP+vy6/s20w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393944AbfHBNXQ (ORCPT
+        id S2405577AbfHBNdu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:23:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33770 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:33:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393915AbfHBNXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:23:12 -0400
+        id S1732368AbfHBNXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:23:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9050D20644;
-        Fri,  2 Aug 2019 13:23:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 683F1217D4;
+        Fri,  2 Aug 2019 13:23:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752192;
-        bh=FI1AbKWqa1YCKS4h18fkWOJkMmVId5M0OrgX9gzHDWU=;
+        s=default; t=1564752188;
+        bh=luGPwrsMzBhqsBsjmDOagWeS2+zn0+WUsPIMCrUf+ek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rnCEAWzB5V6dku66gbJ/YhGrnqRKTjx4POEzcvf2mPkY1vEFD8OJb/CC0tZypKU9h
-         br3oNshM79Rr5jSU1uZyD2NMWVfVtlQhi8Jqg4sp2+QlJTJFV4rWxTpw6mYHVGaNba
-         VksdMJhnwl0CpKzaQmHEJZsEgETsba9Ywem3JZ6Y=
+        b=IcDq8NHDwgNXWO2A4JXS5/mZGzyrBAZN0eOy4G87/fPxPKF8oxoVvZnXsFd+/tfk7
+         3r1bY59tU23JiLeZkKsSLGgg7NRTMEPb9PYCB220EQ5LwlQrnHRhJeqY3W3ExZzPx1
+         +weWoBhG8fe65bmLzIcclTnSXP74wbgNTrIM3bBk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 06/42] scripts/sphinx-pre-install: fix script for RHEL/CentOS
-Date:   Fri,  2 Aug 2019 09:22:26 -0400
-Message-Id: <20190802132302.13537-6-sashal@kernel.org>
+Cc:     Florian Westphal <fw@strlen.de>,
+        Jakub Jankowski <shasta@toxcorp.com>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 04/42] netfilter: conntrack: always store window size un-scaled
+Date:   Fri,  2 Aug 2019 09:22:24 -0400
+Message-Id: <20190802132302.13537-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802132302.13537-1-sashal@kernel.org>
 References: <20190802132302.13537-1-sashal@kernel.org>
@@ -58,34 +63,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+From: Florian Westphal <fw@strlen.de>
 
-[ Upstream commit b308467c916aa7acc5069802ab76a9f657434701 ]
+[ Upstream commit 959b69ef57db00cb33e9c4777400ae7183ebddd3 ]
 
-There's a missing parenthesis at the script, with causes it to
-fail to detect non-Fedora releases (e. g. RHEL/CentOS).
+Jakub Jankowski reported following oddity:
 
-Tested with Centos 7.6.1810.
+After 3 way handshake completes, timeout of new connection is set to
+max_retrans (300s) instead of established (5 days).
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+shortened excerpt from pcap provided:
+25.070622 IP (flags [DF], proto TCP (6), length 52)
+10.8.5.4.1025 > 10.8.1.2.80: Flags [S], seq 11, win 64240, [wscale 8]
+26.070462 IP (flags [DF], proto TCP (6), length 48)
+10.8.1.2.80 > 10.8.5.4.1025: Flags [S.], seq 82, ack 12, win 65535, [wscale 3]
+27.070449 IP (flags [DF], proto TCP (6), length 40)
+10.8.5.4.1025 > 10.8.1.2.80: Flags [.], ack 83, win 512, length 0
+
+Turns out the last_win is of u16 type, but we store the scaled value:
+512 << 8 (== 0x20000) becomes 0 window.
+
+The Fixes tag is not correct, as the bug has existed forever, but
+without that change all that this causes might cause is to mistake a
+window update (to-nonzero-from-zero) for a retransmit.
+
+Fixes: fbcd253d2448b8 ("netfilter: conntrack: lower timeout to RETRANS seconds if window is 0")
+Reported-by: Jakub Jankowski <shasta@toxcorp.com>
+Tested-by: Jakub Jankowski <shasta@toxcorp.com>
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Acked-by: Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/sphinx-pre-install | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/netfilter/nf_conntrack_proto_tcp.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
-index 067459760a7b0..3524dbc313163 100755
---- a/scripts/sphinx-pre-install
-+++ b/scripts/sphinx-pre-install
-@@ -301,7 +301,7 @@ sub give_redhat_hints()
- 	#
- 	# Checks valid for RHEL/CentOS version 7.x.
- 	#
--	if (! $system_release =~ /Fedora/) {
-+	if (!($system_release =~ /Fedora/)) {
- 		$map{"virtualenv"} = "python-virtualenv";
- 	}
+diff --git a/net/netfilter/nf_conntrack_proto_tcp.c b/net/netfilter/nf_conntrack_proto_tcp.c
+index 842f3f86fb2e7..7011ab27c4371 100644
+--- a/net/netfilter/nf_conntrack_proto_tcp.c
++++ b/net/netfilter/nf_conntrack_proto_tcp.c
+@@ -480,6 +480,7 @@ static bool tcp_in_window(const struct nf_conn *ct,
+ 	struct ip_ct_tcp_state *receiver = &state->seen[!dir];
+ 	const struct nf_conntrack_tuple *tuple = &ct->tuplehash[dir].tuple;
+ 	__u32 seq, ack, sack, end, win, swin;
++	u16 win_raw;
+ 	s32 receiver_offset;
+ 	bool res, in_recv_win;
  
+@@ -488,7 +489,8 @@ static bool tcp_in_window(const struct nf_conn *ct,
+ 	 */
+ 	seq = ntohl(tcph->seq);
+ 	ack = sack = ntohl(tcph->ack_seq);
+-	win = ntohs(tcph->window);
++	win_raw = ntohs(tcph->window);
++	win = win_raw;
+ 	end = segment_seq_plus_len(seq, skb->len, dataoff, tcph);
+ 
+ 	if (receiver->flags & IP_CT_TCP_FLAG_SACK_PERM)
+@@ -663,14 +665,14 @@ static bool tcp_in_window(const struct nf_conn *ct,
+ 			    && state->last_seq == seq
+ 			    && state->last_ack == ack
+ 			    && state->last_end == end
+-			    && state->last_win == win)
++			    && state->last_win == win_raw)
+ 				state->retrans++;
+ 			else {
+ 				state->last_dir = dir;
+ 				state->last_seq = seq;
+ 				state->last_ack = ack;
+ 				state->last_end = end;
+-				state->last_win = win;
++				state->last_win = win_raw;
+ 				state->retrans = 0;
+ 			}
+ 		}
 -- 
 2.20.1
 
