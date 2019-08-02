@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA54C32753
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BFBC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F2B320B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:55:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1960020B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:55:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739742;
-	bh=AheveygCk3NLRuq5nuFyvZqnsaEBbuW4UtWleZNUYkA=;
+	s=default; t=1564739747;
+	bh=cK7N5Yfv+VC+WSKZs/UDgLrFtnhOVaEJChSHV+Xe8TU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eiCsLpbSeFO0eWHb3w06/zwk7VvwzCsBMws/dPdv8ypT6YVTZLUZzetemA3G2MXNP
-	 4/Dl0l4y9wIc/8QAYVJGze4xkhWy6t7fTdYQljN4c5EG90p86x6GYq9taiMU+m4V+g
-	 hkcmaw7+ZTQHqAmEhWYCHrWvXtPMBtlq28JSrRuA=
+	b=jAGqMvxjvGK+U6Vk/WQ+Crob5f7iS5xIqOFBdeTBxs6/8jxegqhZIMsyNk/JmajHf
+	 OC0c4gzAIX9Luza0QRFHXvv8wUpzzaQFWy1bk0jWv05DvK83ZrkVvEwe/z22n1ubpX
+	 eE9cXInM2HgHgrwX5cxi1/fYQm7EXYhr9puwh+mw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406595AbfHBJzl (ORCPT
+        id S2406364AbfHBJzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:55:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34192 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:55:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406583AbfHBJzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:55:36 -0400
+        id S2406567AbfHBJzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:55:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 725B32064A;
-        Fri,  2 Aug 2019 09:55:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 052CB2086A;
+        Fri,  2 Aug 2019 09:55:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739735;
-        bh=AheveygCk3NLRuq5nuFyvZqnsaEBbuW4UtWleZNUYkA=;
+        s=default; t=1564739738;
+        bh=cK7N5Yfv+VC+WSKZs/UDgLrFtnhOVaEJChSHV+Xe8TU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oj+eoCfeVkd4Tbxuo2Vror+K3llvsDaMlNAOZNtKryap/qsO/6qBppF2rdUfiAO7a
-         BrkrnpRoKIHdfpr23L7cVextHIjgGxX1+ijaTl9nJemFYtINjVAZT6W6SxY7FcHLBL
-         b1Az6d15USxMlZe+/GXwEI9+vqjEDF+ZCGtyUJbE=
+        b=QwXFv4RYTHk+29LafLqxr0XlyZNAsc6hsxBGFc8uT85F2wKDWHJgec0PIeqbN24K5
+         Q/4gqOY8EVqCQQqPCy0yt3UlQGJ1tJHHwPvfnP+NP/S3UNSPI5PbAV6ufW/qUdP7rN
+         XUbd3by1ld6QMz5tzbA0MNvqkNJ0HFJiMftlCyOs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        syzbot+0c90fc937c84f97d0aa6@syzkaller.appspotmail.com,
+        stable@vger.kernel.org,
+        syzbot+af8f8d2ac0d39b0ed3a0@syzkaller.appspotmail.com,
+        syzbot+170a86bf206dd2c6217e@syzkaller.appspotmail.com,
+        Andrey Konovalov <andreyknvl@google.com>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.19 13/32] media: cpia2_usb: first wake up, then free in disconnect
-Date:   Fri,  2 Aug 2019 11:39:47 +0200
-Message-Id: <20190802092105.851008120@linuxfoundation.org>
+Subject: [PATCH 4.19 14/32] media: pvrusb2: use a different format for warnings
+Date:   Fri,  2 Aug 2019 11:39:48 +0200
+Message-Id: <20190802092106.126101554@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092101.913646560@linuxfoundation.org>
 References: <20190802092101.913646560@linuxfoundation.org>
@@ -61,44 +63,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Andrey Konovalov <andreyknvl@google.com>
 
-commit eff73de2b1600ad8230692f00bc0ab49b166512a upstream.
+commit 1753c7c4367aa1201e1e5d0a601897ab33444af1 upstream.
 
-Kasan reported a use after free in cpia2_usb_disconnect()
-It first freed everything and then woke up those waiting.
-The reverse order is correct.
+When the pvrusb2 driver detects that there's something wrong with the
+device, it prints a warning message. Right now those message are
+printed in two different formats:
 
-Fixes: 6c493f8b28c67 ("[media] cpia2: major overhaul to get it in a working state again")
+1. ***WARNING*** message here
+2. WARNING: message here
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Reported-by: syzbot+0c90fc937c84f97d0aa6@syzkaller.appspotmail.com
+There's an issue with the second format. Syzkaller recognizes it as a
+message produced by a WARN_ON(), which is used to indicate a bug in the
+kernel. However pvrusb2 prints those warnings to indicate an issue with
+the device, not the bug in the kernel.
+
+This patch changes the pvrusb2 driver to consistently use the first
+warning message format. This will unblock syzkaller testing of this
+driver.
+
+Reported-by: syzbot+af8f8d2ac0d39b0ed3a0@syzkaller.appspotmail.com
+Reported-by: syzbot+170a86bf206dd2c6217e@syzkaller.appspotmail.com
+Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/cpia2/cpia2_usb.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/media/usb/pvrusb2/pvrusb2-hdw.c      |    4 ++--
+ drivers/media/usb/pvrusb2/pvrusb2-i2c-core.c |    6 +++---
+ drivers/media/usb/pvrusb2/pvrusb2-std.c      |    2 +-
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
---- a/drivers/media/usb/cpia2/cpia2_usb.c
-+++ b/drivers/media/usb/cpia2/cpia2_usb.c
-@@ -902,7 +902,6 @@ static void cpia2_usb_disconnect(struct
- 	cpia2_unregister_camera(cam);
- 	v4l2_device_disconnect(&cam->v4l2_dev);
- 	mutex_unlock(&cam->v4l2_lock);
--	v4l2_device_put(&cam->v4l2_dev);
- 
- 	if(cam->buffers) {
- 		DBG("Wakeup waiting processes\n");
-@@ -911,6 +910,8 @@ static void cpia2_usb_disconnect(struct
- 		wake_up_interruptible(&cam->wq_stream);
+--- a/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
++++ b/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
+@@ -1680,7 +1680,7 @@ static int pvr2_decoder_enable(struct pv
  	}
+ 	if (!hdw->flag_decoder_missed) {
+ 		pvr2_trace(PVR2_TRACE_ERROR_LEGS,
+-			   "WARNING: No decoder present");
++			   "***WARNING*** No decoder present");
+ 		hdw->flag_decoder_missed = !0;
+ 		trace_stbit("flag_decoder_missed",
+ 			    hdw->flag_decoder_missed);
+@@ -2366,7 +2366,7 @@ struct pvr2_hdw *pvr2_hdw_create(struct
+ 	if (hdw_desc->flag_is_experimental) {
+ 		pvr2_trace(PVR2_TRACE_INFO, "**********");
+ 		pvr2_trace(PVR2_TRACE_INFO,
+-			   "WARNING: Support for this device (%s) is experimental.",
++			   "***WARNING*** Support for this device (%s) is experimental.",
+ 							      hdw_desc->description);
+ 		pvr2_trace(PVR2_TRACE_INFO,
+ 			   "Important functionality might not be entirely working.");
+--- a/drivers/media/usb/pvrusb2/pvrusb2-i2c-core.c
++++ b/drivers/media/usb/pvrusb2/pvrusb2-i2c-core.c
+@@ -343,11 +343,11 @@ static int i2c_hack_cx25840(struct pvr2_
  
-+	v4l2_device_put(&cam->v4l2_dev);
-+
- 	LOG("CPiA2 camera disconnected.\n");
- }
+ 	if ((ret != 0) || (*rdata == 0x04) || (*rdata == 0x0a)) {
+ 		pvr2_trace(PVR2_TRACE_ERROR_LEGS,
+-			   "WARNING: Detected a wedged cx25840 chip; the device will not work.");
++			   "***WARNING*** Detected a wedged cx25840 chip; the device will not work.");
+ 		pvr2_trace(PVR2_TRACE_ERROR_LEGS,
+-			   "WARNING: Try power cycling the pvrusb2 device.");
++			   "***WARNING*** Try power cycling the pvrusb2 device.");
+ 		pvr2_trace(PVR2_TRACE_ERROR_LEGS,
+-			   "WARNING: Disabling further access to the device to prevent other foul-ups.");
++			   "***WARNING*** Disabling further access to the device to prevent other foul-ups.");
+ 		// This blocks all further communication with the part.
+ 		hdw->i2c_func[0x44] = NULL;
+ 		pvr2_hdw_render_useless(hdw);
+--- a/drivers/media/usb/pvrusb2/pvrusb2-std.c
++++ b/drivers/media/usb/pvrusb2/pvrusb2-std.c
+@@ -353,7 +353,7 @@ struct v4l2_standard *pvr2_std_create_en
+ 		bcnt = pvr2_std_id_to_str(buf,sizeof(buf),fmsk);
+ 		pvr2_trace(
+ 			PVR2_TRACE_ERROR_LEGS,
+-			"WARNING: Failed to classify the following standard(s): %.*s",
++			"***WARNING*** Failed to classify the following standard(s): %.*s",
+ 			bcnt,buf);
+ 	}
  
 
 
