@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F19C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D759C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8A2221855
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29852217D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:26:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752380;
-	bh=GBkxAE6ZenMIaib6Hgv4wKxi80SCOK4Va/wOiXJWcHw=;
+	s=default; t=1564752387;
+	bh=5wgPZ+W4CzVVq5BmNgcLGnpm16g3N7jg1W05xm13t8k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qG6VmhYVohIMcR/XFk+muooQwX95eRIUZxv9PapAsYzo3TQuXHcBXAYercbhXiByY
-	 SInGDFCFlZ6nd0ZK7Mt+OVSv6eOMDuuMgEmtbzahkQkVxrSCY9ZOmWSA4Rx28pdFUd
-	 IGbfED9aYqetyjgD9oxalIGWGs/6Qxj4qCmxO+GQ=
+	b=uKt38hqur+2O3w9TNz3JdbwpRawKagsIc2A1JOWLll46sb5m6b66x9JqPxf5arwLW
+	 /FcvKOIIX3QtQ4qKX4cJ/SpVDMYTIWiUws7B5YAi1v9G9DsBm87+bbZeJ3IsRjKGoR
+	 GPIoe7gXf0tqXLbajBYOcJPkMH762rAdJW+hJDkk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394548AbfHBN0S (ORCPT
+        id S2394581AbfHBN0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:26:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36972 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:26:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390272AbfHBN0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:26:13 -0400
+        id S2394551AbfHBN0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:26:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F07E721841;
-        Fri,  2 Aug 2019 13:26:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EB3621851;
+        Fri,  2 Aug 2019 13:26:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752372;
-        bh=GBkxAE6ZenMIaib6Hgv4wKxi80SCOK4Va/wOiXJWcHw=;
+        s=default; t=1564752379;
+        bh=5wgPZ+W4CzVVq5BmNgcLGnpm16g3N7jg1W05xm13t8k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u2pY+Avtooi+fYB8aNiWFX62Kuf8XwV1BAgOISGd2rZvIzBAvwWCKLMk5s9cVhuU9
-         302+7AvBXvT1lq0gF1n8lfD8LV147YE7DFX3VDJl+GjAXeSXhfT+v5NKoAvdAqDMxj
-         j7rNr/iRtcEbA/we6Wnbp6/dN/6uXdTaMOf9Awnc=
+        b=Ek6iciKMoyfPvqPaGq+OkyzrQTFx6/f+dzKQIffGtw87iM17UBDSfOTpnV17RiTux
+         It9b4TZst2S+5iDx4U8IMzXAWWBIMxHfbFsDlCFLjjyeBGRYcb6R0GPJvg8RlVMiC5
+         C+B9gshYqtSTXm8K0VAXqErVaK+XhVswFNQ8vUe8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Vinod Koul <vkoul@kernel.org>, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 13/22] ALSA: compress: Be more restrictive about when a drain is allowed
-Date:   Fri,  2 Aug 2019 09:25:37 -0400
-Message-Id: <20190802132547.14517-13-sashal@kernel.org>
+Cc:     Junxiao Bi <junxiao.bi@oracle.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>,
+        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 18/22] scsi: megaraid_sas: fix panic on loading firmware crashdump
+Date:   Fri,  2 Aug 2019 09:25:42 -0400
+Message-Id: <20190802132547.14517-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802132547.14517-1-sashal@kernel.org>
 References: <20190802132547.14517-1-sashal@kernel.org>
@@ -59,49 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
+From: Junxiao Bi <junxiao.bi@oracle.com>
 
-[ Upstream commit 3b8179944cb0dd53e5223996966746cdc8a60657 ]
+[ Upstream commit 3b5f307ef3cb5022bfe3c8ca5b8f2114d5bf6c29 ]
 
-Draining makes little sense in the situation of hardware overrun, as the
-hardware will have consumed all its available samples. Additionally,
-draining whilst the stream is paused would presumably get stuck as no
-data is being consumed on the DSP side.
+While loading fw crashdump in function fw_crash_buffer_show(), left bytes
+in one dma chunk was not checked, if copying size over it, overflow access
+will cause kernel panic.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Acked-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
+Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/compress_offload.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/scsi/megaraid/megaraid_sas_base.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
-index b4f1536b17cb5..2e2d184684911 100644
---- a/sound/core/compress_offload.c
-+++ b/sound/core/compress_offload.c
-@@ -812,7 +812,10 @@ static int snd_compr_drain(struct snd_compr_stream *stream)
- 	case SNDRV_PCM_STATE_OPEN:
- 	case SNDRV_PCM_STATE_SETUP:
- 	case SNDRV_PCM_STATE_PREPARED:
-+	case SNDRV_PCM_STATE_PAUSED:
- 		return -EPERM;
-+	case SNDRV_PCM_STATE_XRUN:
-+		return -EPIPE;
- 	default:
- 		break;
+diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
+index 5b1c37e3913cd..d90693b2767fd 100644
+--- a/drivers/scsi/megaraid/megaraid_sas_base.c
++++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+@@ -2847,6 +2847,7 @@ megasas_fw_crash_buffer_show(struct device *cdev,
+ 	u32 size;
+ 	unsigned long buff_addr;
+ 	unsigned long dmachunk = CRASH_DMA_BUF_SIZE;
++	unsigned long chunk_left_bytes;
+ 	unsigned long src_addr;
+ 	unsigned long flags;
+ 	u32 buff_offset;
+@@ -2872,6 +2873,8 @@ megasas_fw_crash_buffer_show(struct device *cdev,
  	}
-@@ -861,7 +864,10 @@ static int snd_compr_partial_drain(struct snd_compr_stream *stream)
- 	case SNDRV_PCM_STATE_OPEN:
- 	case SNDRV_PCM_STATE_SETUP:
- 	case SNDRV_PCM_STATE_PREPARED:
-+	case SNDRV_PCM_STATE_PAUSED:
- 		return -EPERM;
-+	case SNDRV_PCM_STATE_XRUN:
-+		return -EPIPE;
- 	default:
- 		break;
- 	}
+ 
+ 	size = (instance->fw_crash_buffer_size * dmachunk) - buff_offset;
++	chunk_left_bytes = dmachunk - (buff_offset % dmachunk);
++	size = (size > chunk_left_bytes) ? chunk_left_bytes : size;
+ 	size = (size >= PAGE_SIZE) ? (PAGE_SIZE - 1) : size;
+ 
+ 	src_addr = (unsigned long)instance->crash_buf[buff_offset / dmachunk] +
 -- 
 2.20.1
 
