@@ -2,113 +2,92 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5601AC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB0F2C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21A682087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93FFF2087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:39:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="K4zfPaqu"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l/jo0wtW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731663AbfHBQiR (ORCPT
+        id S1731936AbfHBQjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 12:38:17 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:57416 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729353AbfHBQiR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 12:38:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=vxCsCNQWqLeWrA3y8RCekTBrHa/5LhPIa+3s2OFLSmI=; b=K4zfPaquorQ1qToZfbnPnAHCjJ
-        gowUkVGA0TobpliIakmVAGlTfhhaDct7irgPiZNi818VclwpD8b6E+FgUw+lIqadzrf14EXvfNr6/
-        Hr/SJ32kpgmGGnvTFCMSbZreAMvuSGcW7pn9Jg7J7CtAeRBI/9H0WrFn1vydtCCg6pA8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1htaZG-0002JS-Jr; Fri, 02 Aug 2019 18:38:10 +0200
-Date:   Fri, 2 Aug 2019 18:38:10 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v4 2/4] net: phy: Add function to retrieve LED
- configuration from the DT
-Message-ID: <20190802163810.GL2099@lunn.ch>
-References: <20190801190759.28201-1-mka@chromium.org>
- <20190801190759.28201-3-mka@chromium.org>
+        Fri, 2 Aug 2019 12:39:02 -0400
+Received: from mail-io1-f53.google.com ([209.85.166.53]:32832 "EHLO
+        mail-io1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729353AbfHBQjC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 12:39:02 -0400
+Received: by mail-io1-f53.google.com with SMTP id z3so12370755iog.0
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 09:39:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=BG6pD3ylPrqGYChsYLSsxBPUz1G1ZRk1VbjazqRF+2s=;
+        b=l/jo0wtWA0AY+2SQTOgHtkTU0Kua0NVFYDkdtEZe616wtEJoD2UD1ninnTSmhzDTr1
+         oVaLCG1ldA+eeOZMpo6OsTzamiWSaNSppqBaqCc0su2ISzGRKORs5fse5RURU/cRPT2a
+         44SdzQthyN8cIjwIPWb+7VEZnilVc5MfQeBuVIlp4JHoLrVKnwP7TR7rtTL/DctzSzEv
+         3wAY8TjP/bFkh6wak6EZnGG2HqoXQQvQlOzoEAGAhKHUga8fEUIFN9Vflel2vlmfTm45
+         Ml14IpvOpAI8WU1unyA96X+I3qh8sDwimPdPOktz6GzeoEZ8bkihfj0XlzRcuwzdN1Ll
+         SQFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=BG6pD3ylPrqGYChsYLSsxBPUz1G1ZRk1VbjazqRF+2s=;
+        b=HHugMSm8dKffi7KP7q7ijZ45B4oCiS9/9DCdc+uX7/pqjBAL2XQOl7sVwWpAsjs+hu
+         2usdsUjLXIfzQ+PAAX4oTzgueUEtdb6pPY9ezZNd5TF0zX86Ufu3UJxUUusjoiOxnD4o
+         eHMeVCJ+sjRGJYVrTW0XgzRmY/YLd7ZUe4mtm7yvfJnQAbSuiTOD49SNfKZy/zdqKAcl
+         zZEXcTjHzXcgrROupTsy8grQ8lOxoEj/896YEQBubu3Laqwy2abdyTGQKi9+JvQWcDFM
+         3fM1iEy6UwLBLTSRmZxmIHSARz8gY+ZHQgTaPn7laKKvWUruC88HDJv97ete3wgdjPwW
+         fv/g==
+X-Gm-Message-State: APjAAAWLEZFk+O1D1QQz7OhW4nhiLB1yDHPAgOdCL9+nhw+WxmzzUwS6
+        +eFT/Qbd7ehxEGDQr1+YkFOsPSiBp3Qbgv8Cawjg/VdgM7bVkw==
+X-Google-Smtp-Source: APXvYqxttYbruAnCsrIrNhYVinmIrq1x/si7xGcfeyFEmfDOOYJGSDove0lS6wfsnWzTcuewYuAXh2sL7xS/goFY3q8=
+X-Received: by 2002:a6b:d008:: with SMTP id x8mr1345796ioa.129.1564763940947;
+ Fri, 02 Aug 2019 09:39:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190801190759.28201-3-mka@chromium.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+From:   Stephane Eranian <eranian@google.com>
+Date:   Fri, 2 Aug 2019 09:38:49 -0700
+Message-ID: <CABPqkBQtnYM6E2F3JiZ2A5z8iR+MvxM5DH4L6KyAeSaBfnGEPw@mail.gmail.com>
+Subject: [BUG] perf report: segfault with --no-group in pipe mode
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 12:07:57PM -0700, Matthias Kaehlcke wrote:
-> Add a phylib function for retrieving PHY LED configuration that
-> is specified in the device tree using the generic binding. LEDs
-> can be configured to be 'on' for a certain link speed or to blink
-> when there is TX/RX activity.
-> 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
-> Changes in v4:
-> - patch added to the series
-> ---
->  drivers/net/phy/phy_device.c | 50 ++++++++++++++++++++++++++++++++++++
->  include/linux/phy.h          | 15 +++++++++++
->  2 files changed, 65 insertions(+)
-> 
-> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-> index 6b5cb87f3866..b4b48de45712 100644
-> --- a/drivers/net/phy/phy_device.c
-> +++ b/drivers/net/phy/phy_device.c
-> @@ -2188,6 +2188,56 @@ static bool phy_drv_supports_irq(struct phy_driver *phydrv)
->  	return phydrv->config_intr && phydrv->ack_interrupt;
->  }
->  
-> +int of_get_phy_led_cfg(struct phy_device *phydev, int led,
-> +		       struct phy_led_config *cfg)
-> +{
-> +	struct device_node *np, *child;
-> +	const char *trigger;
-> +	int ret;
-> +
-> +	if (!IS_ENABLED(CONFIG_OF_MDIO))
-> +		return -ENOENT;
-> +
-> +	np = of_find_node_by_name(phydev->mdio.dev.of_node, "leds");
-> +	if (!np)
-> +		return -ENOENT;
-> +
-> +	for_each_child_of_node(np, child) {
-> +		u32 val;
-> +
-> +		if (!of_property_read_u32(child, "reg", &val)) {
-> +			if (val == (u32)led)
-> +				break;
-> +		}
-> +	}
+Hi,
 
-Hi Matthias
+When trying the following command line with perf from tip,git, I got:
 
-This is leaking references to np and child. In the past we have not
-cared about this too much, but we are now getting patches adding the
-missing releases. So it would be good to fix this.
+$ perf record --group -c 100000 -e '{branch-misses,branches}' -a -o -
+sleep 1| perf report --no-group -F sample,cpu,period -i -
+# To display the perf.data header info, please use
+--header/--header-only options.
+#
+Segmentation fault (core dumped)
 
-	Andrew
+(gdb) r report --no-group -F sample,cpu,period -i - < tt
+Starting program: /export/hda3/perftest/perf.tip report --no-group -F
+sample,cpu,period -i - < tt
+# To display the perf.data header info, please use
+--header/--header-only options.
+#
+
+Program received signal SIGSEGV, Segmentation fault.
+hlist_add_head (h=0xeb9ed8, n=0xebdfd0) at
+/usr/local/google/home/eranian/G/bnw.tip/tools/include/linux/list.h:644
+644 /usr/local/google/home/eranian/G/bnw.tip/tools/include/linux/list.h:
+No such file or directory.
+(gdb)
+
+Can you reproduce this?
+Thanks.
