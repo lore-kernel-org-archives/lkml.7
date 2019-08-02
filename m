@@ -2,104 +2,81 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37EA4C19759
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 00:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDBEC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 00:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04ED42083B
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 00:46:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gxLOwZ9r"
+	by mail.kernel.org (Postfix) with ESMTP id 6FB1C2084C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 00:48:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403866AbfHBAqb (ORCPT
+        id S2390564AbfHBAs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 20:46:31 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:45752 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388445AbfHBAqa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 20:46:30 -0400
-Received: by mail-ot1-f65.google.com with SMTP id x21so10856697otq.12;
-        Thu, 01 Aug 2019 17:46:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=CDFD46ut81E8VwlqLjeuyvzxSwZjo8F7gM2/ZFXswBY=;
-        b=gxLOwZ9riE7793zK9fk23yKTiEUO9gK9RGH62fXyYY638iwz7Kx2gM7FJV3kIR6VSq
-         Jxj0w9iTO6LHbisVugKd3b5rCJA/M0qm5DNwL6v6TAh+sryfOt2bGopy1/Ua/MgWbZHl
-         VzbwNDoW84HXeF+Ex8dNpDqU+GbE5y7mARy5v92TXaaS1LbOMWn2pYu2TqyvJq1ucAn0
-         /l/rIc/oanU39m0Vtl28mzBUKEwpbcqdvuu/B1x1J/hUfc8QNhSayOZQyTUjf/m2udzH
-         Noqg77gH815OcnAWGtOCf85DWwWDeEaSzts6QBLlnU1reoXtS4IwvaZZt6rWdV1iGWQX
-         0fGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=CDFD46ut81E8VwlqLjeuyvzxSwZjo8F7gM2/ZFXswBY=;
-        b=Utg9AQAdueeX1RIaRApSBMsH6y3Q+H5QpSjB6NlYVP1XUr1l+FJGdfO9JXxr7hny7J
-         YCu+/EXO0gA95YcsnsSDVGeK+XjHptWtQYP8nX69qFbv/TnjZJONt9w+M4/eycrWEo3G
-         JuG686FwXniGVaDiT+8jLiKkDUvhPDGqEOjpFqu8EYkc7gUBHnkHOQ3UAI4pR008WBUv
-         Lbk6kKmOp+uWCe2yigo9N4zUT5ZQSH4bAysNxQwn7HyFQo6tU15hTkBa+zcBEVRtHPWx
-         Um4CoDet9RH/0EbPl+IMZuXc0TgxEKPG5Qc6FD/MncTPIdtyxkFcBl2uC8Y9BJdjcaPI
-         fgzg==
-X-Gm-Message-State: APjAAAUeV32asdgSibIGCHrOmZfJ7bwtxM5uLONkFDul/gEiugjCN1KM
-        cCQ4NtfDBJgqzkXznlnd9hvqNeFGHyfGhsQHiy4=
-X-Google-Smtp-Source: APXvYqzhD3YpXIGxB6FHMwt9IWh9FBRrgHSvj6HDzjm7u8XqADLVKWFaW/xHw9haPVsRAJ86ZuKbeMMezkUr1WqyiI8=
-X-Received: by 2002:a9d:62c4:: with SMTP id z4mr93889061otk.56.1564706789925;
- Thu, 01 Aug 2019 17:46:29 -0700 (PDT)
+        Thu, 1 Aug 2019 20:48:56 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:49502 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388597AbfHBAsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 20:48:55 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 380B879A79CC01A16C7;
+        Fri,  2 Aug 2019 08:48:54 +0800 (CST)
+Received: from [127.0.0.1] (10.177.96.203) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Fri, 2 Aug 2019
+ 08:48:46 +0800
+Subject: Re: [PATCH v3 00/10] implement KASLR for powerpc/fsl_booke/32
+To:     Diana Madalina Craciun <diana.craciun@nxp.com>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "paulus@samba.org" <paulus@samba.org>,
+        "npiggin@gmail.com" <npiggin@gmail.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "kernel-hardening@lists.openwall.com" 
+        <kernel-hardening@lists.openwall.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "wangkefeng.wang@huawei.com" <wangkefeng.wang@huawei.com>,
+        "yebin10@huawei.com" <yebin10@huawei.com>,
+        "thunder.leizhen@huawei.com" <thunder.leizhen@huawei.com>,
+        "jingxiangfeng@huawei.com" <jingxiangfeng@huawei.com>,
+        "fanchengyang@huawei.com" <fanchengyang@huawei.com>,
+        "zhaohongjiang@huawei.com" <zhaohongjiang@huawei.com>
+References: <20190731094318.26538-1-yanaijie@huawei.com>
+ <VI1PR0401MB2463844DD4A35EB3F0959C22FFDE0@VI1PR0401MB2463.eurprd04.prod.outlook.com>
+From:   Jason Yan <yanaijie@huawei.com>
+Message-ID: <bc30b426-d7c6-c839-ebd2-a404465079a3@huawei.com>
+Date:   Fri, 2 Aug 2019 08:48:44 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-References: <1564630214-28442-1-git-send-email-wanpengli@tencent.com> <20190801133133.955E4216C8@mail.kernel.org>
-In-Reply-To: <20190801133133.955E4216C8@mail.kernel.org>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Fri, 2 Aug 2019 08:46:11 +0800
-Message-ID: <CANRm+Cy1wWSwn7HH-dNWeR6FX1TT_M7t_9vvRMdCKFATmvFDkA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] KVM: Fix leak vCPU's VMCS value into other pCPU
-To:     Sasha Levin <sashal@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Marc Zyngier <Marc.Zyngier@arm.com>,
-        "# v3 . 10+" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <VI1PR0401MB2463844DD4A35EB3F0959C22FFDE0@VI1PR0401MB2463.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.96.203]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 1 Aug 2019 at 21:31, Sasha Levin <sashal@kernel.org> wrote:
->
-> Hi,
->
-> [This is an automated email]
->
-> This commit has been processed because it contains a "Fixes:" tag,
-> fixing commit: 98f4a1467612 KVM: add kvm_arch_vcpu_runnable() test to kvm=
-_vcpu_on_spin() loop.
->
-> The bot has tested the following trees: v5.2.4, v5.1.21, v4.19.62, v4.14.=
-134, v4.9.186, v4.4.186.
->
-> v5.2.4: Build failed! Errors:
->     arch/arm64/kvm/../../../virt/kvm/kvm_main.c:2483:31: error: =E2=80=98=
-struct kvm_vcpu=E2=80=99 has no member named =E2=80=98async_pf=E2=80=99
->
-> v5.1.21: Build failed! Errors:
->     arch/arm64/kvm/../../../virt/kvm/kvm_main.c:2415:31: error: =E2=80=98=
-struct kvm_vcpu=E2=80=99 has no member named =E2=80=98async_pf=E2=80=99
 
-Thanks for reporting this, after more grep, it seems that just x86 and
-s390 enable async_pf in their Makefile. So I can move 'if
-(!list_empty_careful(&vcpu->async_pf.done))' checking to
-kvm_arch_dy_runnable(), Paolo, do you have more comments to v3 before
-I send a new version?
 
-Regards,
-Wanpeng Li
+On 2019/8/1 22:36, Diana Madalina Craciun wrote:
+> Hi Jason,
+> 
+> I have tested these series on a P4080 platform.
+> 
+> Regards,
+> Diana
+
+Diana, thank you so much.
+
+So can you take a look at the code of this version and give a 
+Reviewed-by or Tested-by?
+
+Thanks,
+Jason
+
