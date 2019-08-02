@@ -2,51 +2,52 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E6FC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8882FC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90A2E2087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58B3E2087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:47:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739242;
-	bh=50K1ZzXDdHnX5+9sEl77HOhXGLmH5cGNDfUEmnxYg34=;
+	s=default; t=1564739246;
+	bh=MF9yq5HJRtTSML04tXVFwEo57KRqn5sJFHApfteUETo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FecZKfzKrAWLZkluyHWwmQTmYbJ8pQae9041n6QkSXSHUCdFV6OhXzcF84RHJU00f
-	 OChZC7yrxUkp5v8oi29w/P5ekb1OOyfUrvOrBaxBwSVlvFMx3txEpqHYVNQrAa60Wy
-	 h/AeGlF0L+S8UCHtO3e2heT3gRkdj/bgVIiIEwnM=
+	b=afY5/bZAZow1tSbxsega094oTPlLX33A4knrg7J9v5EEMmmrk8pTGGPY6muEkPWGr
+	 2FCHBp6qQq8d+ktPmQ/8vj3tLaI5f95Vd42nQHTq54klUqqSYlg3+FbJgPDtWNZfUx
+	 ++OpU4Vg5eXSYsB3XUiOJ++4iU1PsmyXmoXWN1xA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405663AbfHBJrV (ORCPT
+        id S2405673AbfHBJrZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:47:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52072 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:47:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404462AbfHBJrR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:47:17 -0400
+        id S2405660AbfHBJrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:47:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C23A52086A;
-        Fri,  2 Aug 2019 09:47:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86C6C2086A;
+        Fri,  2 Aug 2019 09:47:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739237;
-        bh=50K1ZzXDdHnX5+9sEl77HOhXGLmH5cGNDfUEmnxYg34=;
+        s=default; t=1564739240;
+        bh=MF9yq5HJRtTSML04tXVFwEo57KRqn5sJFHApfteUETo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ngb5cfTiHjROk7ASuP73df3WxyQxMtbW/v4yIXVzHDETWDfSw7Fj3SsgtM0poDzid
-         8Za6nIvkyjYT7fAljKhOUD3QsGGpY4+C1cBy7mfNL8dNQikswatgOHB3A5wFRAwW9o
-         8huZunnmxO+Z0lXFvi98C2fA1zqNsCVzSPddBlNs=
+        b=wZFiMtGaeCgjU0fXeTjrkkvL1OM5g8nR93FicmF0o2nL+LtEo2avOWVb8uE8BkUNg
+         fBbmszxCM5GJMpO+hWCNgnlIU1vpgkmAXttqRoh21sxlPfhfz8AvsnJW/vR3Ekpe7w
+         ZhZ76rfYNvPVCShSbryQY7S4mgJuXmQhMpgk5RWM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 161/223] tty: max310x: Fix invalid baudrate divisors calculator
-Date:   Fri,  2 Aug 2019 11:36:26 +0200
-Message-Id: <20190802092248.627574886@linuxfoundation.org>
+        stable@vger.kernel.org, Martin Weinelt <martin@linuxlounge.net>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 148/223] net: bridge: mcast: fix stale nsrcs pointer in igmp3/mld2 report handling
+Date:   Fri,  2 Aug 2019 11:36:13 +0200
+Message-Id: <20190802092248.128317122@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -59,112 +60,173 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 35240ba26a932b279a513f66fa4cabfd7af55221 ]
+From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 
-Current calculator doesn't do it' job quite correct. First of all the
-max310x baud-rates generator supports the divisor being less than 16.
-In this case the x2/x4 modes can be used to double or quadruple
-the reference frequency. But the current baud-rate setter function
-just filters all these modes out by the first condition and setups
-these modes only if there is a clocks-baud division remainder. The former
-doesn't seem right at all, since enabling the x2/x4 modes causes the line
-noise tolerance reduction and should be only used as a last resort to
-enable a requested too high baud-rate.
+[ Upstream commit e57f61858b7cf478ed6fa23ed4b3876b1c9625c4 ]
 
-Finally the fraction is supposed to be calculated from D = Fref/(c*baud)
-formulae, but not from D % 16, which causes the precision loss. So to speak
-the current baud-rate calculator code works well only if the baud perfectly
-fits to the uart reference input frequency.
+We take a pointer to grec prior to calling pskb_may_pull and use it
+afterwards to get nsrcs so record nsrcs before the pull when handling
+igmp3 and we get a pointer to nsrcs and call pskb_may_pull when handling
+mld2 which again could lead to reading 2 bytes out-of-bounds.
 
-Lets fix the calculator by implementing the algo fully compliant with
-the fractional baud-rate generator described in the datasheet:
-D = Fref / (c*baud), where c={16,8,4} is the x1/x2/x4 rate mode
-respectively, Fref - reference input frequency. The divisor fraction is
-calculated from the same formulae, but making sure it is found with a
-resolution of 0.0625 (four bits).
+ ==================================================================
+ BUG: KASAN: use-after-free in br_multicast_rcv+0x480c/0x4ad0 [bridge]
+ Read of size 2 at addr ffff8880421302b4 by task ksoftirqd/1/16
 
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+ CPU: 1 PID: 16 Comm: ksoftirqd/1 Tainted: G           OE     5.2.0-rc6+ #1
+ Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+ Call Trace:
+  dump_stack+0x71/0xab
+  print_address_description+0x6a/0x280
+  ? br_multicast_rcv+0x480c/0x4ad0 [bridge]
+  __kasan_report+0x152/0x1aa
+  ? br_multicast_rcv+0x480c/0x4ad0 [bridge]
+  ? br_multicast_rcv+0x480c/0x4ad0 [bridge]
+  kasan_report+0xe/0x20
+  br_multicast_rcv+0x480c/0x4ad0 [bridge]
+  ? br_multicast_disable_port+0x150/0x150 [bridge]
+  ? ktime_get_with_offset+0xb4/0x150
+  ? __kasan_kmalloc.constprop.6+0xa6/0xf0
+  ? __netif_receive_skb+0x1b0/0x1b0
+  ? br_fdb_update+0x10e/0x6e0 [bridge]
+  ? br_handle_frame_finish+0x3c6/0x11d0 [bridge]
+  br_handle_frame_finish+0x3c6/0x11d0 [bridge]
+  ? br_pass_frame_up+0x3a0/0x3a0 [bridge]
+  ? virtnet_probe+0x1c80/0x1c80 [virtio_net]
+  br_handle_frame+0x731/0xd90 [bridge]
+  ? select_idle_sibling+0x25/0x7d0
+  ? br_handle_frame_finish+0x11d0/0x11d0 [bridge]
+  __netif_receive_skb_core+0xced/0x2d70
+  ? virtqueue_get_buf_ctx+0x230/0x1130 [virtio_ring]
+  ? do_xdp_generic+0x20/0x20
+  ? virtqueue_napi_complete+0x39/0x70 [virtio_net]
+  ? virtnet_poll+0x94d/0xc78 [virtio_net]
+  ? receive_buf+0x5120/0x5120 [virtio_net]
+  ? __netif_receive_skb_one_core+0x97/0x1d0
+  __netif_receive_skb_one_core+0x97/0x1d0
+  ? __netif_receive_skb_core+0x2d70/0x2d70
+  ? _raw_write_trylock+0x100/0x100
+  ? __queue_work+0x41e/0xbe0
+  process_backlog+0x19c/0x650
+  ? _raw_read_lock_irq+0x40/0x40
+  net_rx_action+0x71e/0xbc0
+  ? __switch_to_asm+0x40/0x70
+  ? napi_complete_done+0x360/0x360
+  ? __switch_to_asm+0x34/0x70
+  ? __switch_to_asm+0x40/0x70
+  ? __schedule+0x85e/0x14d0
+  __do_softirq+0x1db/0x5f9
+  ? takeover_tasklets+0x5f0/0x5f0
+  run_ksoftirqd+0x26/0x40
+  smpboot_thread_fn+0x443/0x680
+  ? sort_range+0x20/0x20
+  ? schedule+0x94/0x210
+  ? __kthread_parkme+0x78/0xf0
+  ? sort_range+0x20/0x20
+  kthread+0x2ae/0x3a0
+  ? kthread_create_worker_on_cpu+0xc0/0xc0
+  ret_from_fork+0x35/0x40
+
+ The buggy address belongs to the page:
+ page:ffffea0001084c00 refcount:0 mapcount:-128 mapping:0000000000000000 index:0x0
+ flags: 0xffffc000000000()
+ raw: 00ffffc000000000 ffffea0000cfca08 ffffea0001098608 0000000000000000
+ raw: 0000000000000000 0000000000000003 00000000ffffff7f 0000000000000000
+ page dumped because: kasan: bad access detected
+
+ Memory state around the buggy address:
+ ffff888042130180: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ ffff888042130200: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ > ffff888042130280: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                                     ^
+ ffff888042130300: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ ffff888042130380: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ ==================================================================
+ Disabling lock debugging due to kernel taint
+
+Fixes: bc8c20acaea1 ("bridge: multicast: treat igmpv3 report with INCLUDE and no sources as a leave")
+Reported-by: Martin Weinelt <martin@linuxlounge.net>
+Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Tested-by: Martin Weinelt <martin@linuxlounge.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/max310x.c | 51 ++++++++++++++++++++++--------------
- 1 file changed, 31 insertions(+), 20 deletions(-)
+ net/bridge/br_multicast.c |   27 ++++++++++++++++-----------
+ 1 file changed, 16 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/tty/serial/max310x.c b/drivers/tty/serial/max310x.c
-index ec3db8d8306c..bacc7e284c0c 100644
---- a/drivers/tty/serial/max310x.c
-+++ b/drivers/tty/serial/max310x.c
-@@ -494,37 +494,48 @@ static bool max310x_reg_precious(struct device *dev, unsigned int reg)
+--- a/net/bridge/br_multicast.c
++++ b/net/bridge/br_multicast.c
+@@ -1036,6 +1036,7 @@ static int br_ip4_multicast_igmp3_report
+ 	int type;
+ 	int err = 0;
+ 	__be32 group;
++	u16 nsrcs;
  
- static int max310x_set_baud(struct uart_port *port, int baud)
- {
--	unsigned int mode = 0, clk = port->uartclk, div = clk / baud;
-+	unsigned int mode = 0, div = 0, frac = 0, c = 0, F = 0;
+ 	ih = igmpv3_report_hdr(skb);
+ 	num = ntohs(ih->ngrec);
+@@ -1049,8 +1050,9 @@ static int br_ip4_multicast_igmp3_report
+ 		grec = (void *)(skb->data + len - sizeof(*grec));
+ 		group = grec->grec_mca;
+ 		type = grec->grec_type;
++		nsrcs = ntohs(grec->grec_nsrcs);
  
--	/* Check for minimal value for divider */
--	if (div < 16)
--		div = 16;
--
--	if (clk % baud && (div / 16) < 0x8000) {
-+	/*
-+	 * Calculate the integer divisor first. Select a proper mode
-+	 * in case if the requested baud is too high for the pre-defined
-+	 * clocks frequency.
-+	 */
-+	div = port->uartclk / baud;
-+	if (div < 8) {
-+		/* Mode x4 */
-+		c = 4;
-+		mode = MAX310X_BRGCFG_4XMODE_BIT;
-+	} else if (div < 16) {
- 		/* Mode x2 */
-+		c = 8;
- 		mode = MAX310X_BRGCFG_2XMODE_BIT;
--		clk = port->uartclk * 2;
--		div = clk / baud;
--
--		if (clk % baud && (div / 16) < 0x8000) {
--			/* Mode x4 */
--			mode = MAX310X_BRGCFG_4XMODE_BIT;
--			clk = port->uartclk * 4;
--			div = clk / baud;
--		}
-+	} else {
-+		c = 16;
- 	}
+-		len += ntohs(grec->grec_nsrcs) * 4;
++		len += nsrcs * 4;
+ 		if (!pskb_may_pull(skb, len))
+ 			return -EINVAL;
  
--	max310x_port_write(port, MAX310X_BRGDIVMSB_REG, (div / 16) >> 8);
--	max310x_port_write(port, MAX310X_BRGDIVLSB_REG, div / 16);
--	max310x_port_write(port, MAX310X_BRGCFG_REG, (div % 16) | mode);
-+	/* Calculate the divisor in accordance with the fraction coefficient */
-+	div /= c;
-+	F = c*baud;
+@@ -1070,7 +1072,7 @@ static int br_ip4_multicast_igmp3_report
+ 
+ 		if ((type == IGMPV3_CHANGE_TO_INCLUDE ||
+ 		     type == IGMPV3_MODE_IS_INCLUDE) &&
+-		    ntohs(grec->grec_nsrcs) == 0) {
++		    nsrcs == 0) {
+ 			br_ip4_multicast_leave_group(br, port, group, vid);
+ 		} else {
+ 			err = br_ip4_multicast_add_group(br, port, group, vid);
+@@ -1103,23 +1105,26 @@ static int br_ip6_multicast_mld2_report(
+ 	len = skb_transport_offset(skb) + sizeof(*icmp6h);
+ 
+ 	for (i = 0; i < num; i++) {
+-		__be16 *nsrcs, _nsrcs;
++		__be16 *_nsrcs, __nsrcs;
++		u16 nsrcs;
+ 
+-		nsrcs = skb_header_pointer(skb,
+-					   len + offsetof(struct mld2_grec,
+-							  grec_nsrcs),
+-					   sizeof(_nsrcs), &_nsrcs);
+-		if (!nsrcs)
++		_nsrcs = skb_header_pointer(skb,
++					    len + offsetof(struct mld2_grec,
++							   grec_nsrcs),
++					    sizeof(__nsrcs), &__nsrcs);
++		if (!_nsrcs)
+ 			return -EINVAL;
+ 
++		nsrcs = ntohs(*_nsrcs);
 +
-+	/* Calculate the baud rate fraction */
-+	if (div > 0)
-+		frac = (16*(port->uartclk % F)) / F;
-+	else
-+		div = 1;
-+
-+	max310x_port_write(port, MAX310X_BRGDIVMSB_REG, div >> 8);
-+	max310x_port_write(port, MAX310X_BRGDIVLSB_REG, div);
-+	max310x_port_write(port, MAX310X_BRGCFG_REG, frac | mode);
+ 		if (!pskb_may_pull(skb,
+ 				   len + sizeof(*grec) +
+-				   sizeof(struct in6_addr) * ntohs(*nsrcs)))
++				   sizeof(struct in6_addr) * nsrcs))
+ 			return -EINVAL;
  
--	return DIV_ROUND_CLOSEST(clk, div);
-+	/* Return the actual baud rate we just programmed */
-+	return (16*port->uartclk) / (c*(16*div + frac));
- }
+ 		grec = (struct mld2_grec *)(skb->data + len);
+ 		len += sizeof(*grec) +
+-		       sizeof(struct in6_addr) * ntohs(*nsrcs);
++		       sizeof(struct in6_addr) * nsrcs;
  
- static int max310x_update_best_err(unsigned long f, long *besterr)
- {
- 	/* Use baudrate 115200 for calculate error */
--	long err = f % (115200 * 16);
-+	long err = f % (460800 * 16);
+ 		/* We treat these as MLDv1 reports for now. */
+ 		switch (grec->grec_type) {
+@@ -1137,7 +1142,7 @@ static int br_ip6_multicast_mld2_report(
  
- 	if ((*besterr < 0) || (*besterr > err)) {
- 		*besterr = err;
--- 
-2.20.1
-
+ 		if ((grec->grec_type == MLD2_CHANGE_TO_INCLUDE ||
+ 		     grec->grec_type == MLD2_MODE_IS_INCLUDE) &&
+-		    ntohs(*nsrcs) == 0) {
++		    nsrcs == 0) {
+ 			br_ip6_multicast_leave_group(br, port, &grec->grec_mca,
+ 						     vid);
+ 		} else {
 
 
