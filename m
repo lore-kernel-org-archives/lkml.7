@@ -2,208 +2,289 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01C74C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 11:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82DCCC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 11:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4DC4206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 11:04:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564743864;
-	bh=+UUhvWOiQOoMMsBf8o97nKDGuGBXbSDJ1OlPHZDsmdY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Woq2tgrWq+mDzbw6sWR3KQ7KO5V2jA60SMN87Fex2GOOv2OmoLn3cLYUxtFbVFptp
-	 T4E8MYyMNgfanb37JvJgNqhNY995i3PzZRIxLxlG832Bc07vck6qYmgMO49i7Z93hU
-	 2vc30ywudD4qxbFVEj9FRILLjALRihG9/FgPLI2Q=
+	by mail.kernel.org (Postfix) with ESMTP id 40631206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 11:05:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=cs.msu.ru header.i=@cs.msu.ru header.b="lHdDpSlD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392292AbfHBLEX convert rfc822-to-8bit (ORCPT
+        id S2392304AbfHBLFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 07:04:23 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45786 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729311AbfHBLEX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 07:04:23 -0400
-Received: by mail-ot1-f68.google.com with SMTP id x21so12226400otq.12;
-        Fri, 02 Aug 2019 04:04:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=w0DyH4xksTCHeFXBznMTiBORDsUdB4NA4Cc7BNCtCH8=;
-        b=Sj/WWVU1rdZoZMfSAETgl2WwKAikqaRZaNpUlyz3VpQhHB2XqWSteGljhCSlYfrKb+
-         HnRAm2QrCE02FrIrzcbv2uScIMiA4R4Z1CcC1L+uv+u2mAgU0CcoDYvza3zPBmlvmaku
-         fZ71zEopli2QaBk9w8ZNpH3t6Cx/Ip/T3qiIEe0BfdWkwTwXRCf5GDagRlG/T1AFM9Ti
-         ybQw/RLPc94xAJDeWtqIaeuVMC3ZL70sR1bbYk8I2XMndO8mlDXL1yBmQjhnIyeZD5RB
-         toUnur1C/I5OfMz/5GIUqvjwHvJiF4RgNYnghVrjIpQaNS7r8wprXlQgpQ/8kpyS88Lo
-         kjzw==
-X-Gm-Message-State: APjAAAX/BJSz9a6OaGE686PBJ3251axVoHuWj3Mdp0QokMde86GG7w+9
-        KBHCsop78v6lDYT6vCd9T02rGIvHJa1au3sHlEk=
-X-Google-Smtp-Source: APXvYqz/YAfVVpOT1+gorX7uqK+xUCSw3KhSVS8Oct1H0bKTEnpnV/SUZnEVKAT3kOXN9vMIb+xvv7QaWE3Ovjg8g10=
-X-Received: by 2002:a05:6830:8a:: with SMTP id a10mr69319291oto.167.1564743861921;
- Fri, 02 Aug 2019 04:04:21 -0700 (PDT)
+        Fri, 2 Aug 2019 07:05:14 -0400
+Received: from mx.cs.msu.ru ([188.44.42.42]:51437 "EHLO mail.cs.msu.ru"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729311AbfHBLFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 07:05:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=cs.msu.ru;
+         s=dkim; h=Subject:In-Reply-To:Content-Type:MIME-Version:References:
+        Message-ID:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=5K7Qo9L17o0/PSIv3rUFl7w3E/K9IJf30Sp9E3V6WDo=; b=lHdDpSlDb6djzTf7Ly+7MUNoZm
+        +EAzQTeFpVoGjA+kOYyFu9GGQ2GAnTlqv/E60CENbLIgq0EgURCeBroJxzuXxpS9tU3DTeABXVNwc
+        7kwIXrMIG/4jWmPxENMJPHrxcRKKPHUxs/t0La3Oqf382PC7V8nd8GAlwB6GFNXOO7MDBJYIgfLIZ
+        qoLThz7YeBon2GAeJukCW9+UTXohdUdI/leBcL605Jv7MaUt4LiEUvEhsW4ixMYVhZ3AJND2tgNIA
+        0uzaSEI8wnIYF5V920QMoTeKkrV3Hvr4yAN26hfhNPIOLBhX2IGLfG4WT3/aBGs0ZG7MIUMXcx8rz
+        wQQhql4w==;
+Received: from [37.204.119.143] (port=45400 helo=cello)
+        by mail.cs.msu.ru with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92 (FreeBSD))
+        (envelope-from <ar@cs.msu.ru>)
+        id 1htVMj-000NcY-SW; Fri, 02 Aug 2019 14:04:54 +0300
+Date:   Fri, 2 Aug 2019 14:04:52 +0300
+From:   Arseny Maslennikov <ar@cs.msu.ru>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jiri Slaby <jslaby@suse.com>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Vladimir D. Seleznev" <vseleznv@altlinux.org>,
+        Rob Landley <rob@landley.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Pavel Machek <pavel@ucw.cz>
+Message-ID: <20190802110450.GC20574@cello>
+References: <20190625161153.29811-1-ar@cs.msu.ru>
+ <20190625161153.29811-8-ar@cs.msu.ru>
+ <20190730161940.GA15798@kroah.com>
+ <20190731222359.GA20574@cello>
+ <20190801092020.GB19329@kroah.com>
 MIME-Version: 1.0
-References: <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM>
- <CAJZ5v0iDQ4=kTUgW94tKGt7oJzA_3uVU_M6HAMbNCRXwp_do8A@mail.gmail.com>
- <47415939.KV5G6iaeJG@kreacher> <20190730144134.GA12844@localhost.localdomain>
- <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM>
- <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com> <20190730191934.GD13948@localhost.localdomain>
- <7d3e0b8ba1444194a153c93faa1cabb3@AUSX13MPC105.AMER.DELL.COM>
- <20190730213114.GK13948@localhost.localdomain> <CAJZ5v0gxfeMN8eCNRjcXmUOkReVsdozb3EccaYMpnmSHu3771g@mail.gmail.com>
- <20190731221956.GB15795@localhost.localdomain> <CAJZ5v0hxYGBXau39sb80MQ8jbZZCzH0JU2DYZvn9JOtYT2+30g@mail.gmail.com>
- <70D536BE-8DC7-4CA2-84A9-AFB067BA520E@canonical.com> <CAJZ5v0hFYEv_+vFkrxaCn_pNAbyqmO_cLb5GOLNn_xxRRwjh2g@mail.gmail.com>
- <38d4b4b107154454a932781acde0fa5a@AUSX13MPC105.AMER.DELL.COM>
- <CAJZ5v0jmO4FMOVYs62wkvPrUW81scD2H7cJyRc+tfoj+vODVbQ@mail.gmail.com> <43A8DF53-8463-4314-9E8E-47A7D3C5A709@canonical.com>
-In-Reply-To: <43A8DF53-8463-4314-9E8E-47A7D3C5A709@canonical.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 2 Aug 2019 13:04:09 +0200
-Message-ID: <CAJZ5v0ipG-MJjERBL9fjx29QktaYEKSmMCbWiEGPHsbF=Xfxtw@mail.gmail.com>
-Subject: Re: [Regression] Commit "nvme/pci: Use host managed power state for
- suspend" has problems
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="VywGB/WGlW4DM4P8"
+Content-Disposition: inline
+In-Reply-To: <20190801092020.GB19329@kroah.com>
+OpenPGP: url=http://grep.cs.msu.ru/~ar/pgp-key.asc
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 37.204.119.143
+X-SA-Exim-Mail-From: ar@cs.msu.ru
+Subject: Re: [PATCH v2 7/7] n_tty: Provide an informational line on VSTATUS
+ receipt
+X-SA-Exim-Version: 4.2
+X-SA-Exim-Scanned: Yes (on mail.cs.msu.ru)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 2, 2019 at 12:55 PM Kai-Heng Feng
-<kai.heng.feng@canonical.com> wrote:
->
-> at 06:26, Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> > On Thu, Aug 1, 2019 at 9:05 PM <Mario.Limonciello@dell.com> wrote:
-> >>> -----Original Message-----
-> >>> From: Rafael J. Wysocki <rafael@kernel.org>
-> >>> Sent: Thursday, August 1, 2019 12:30 PM
-> >>> To: Kai-Heng Feng; Keith Busch; Limonciello, Mario
-> >>> Cc: Keith Busch; Christoph Hellwig; Sagi Grimberg; linux-nvme; Linux
-> >>> PM; Linux
-> >>> Kernel Mailing List; Rajat Jain
-> >>> Subject: Re: [Regression] Commit "nvme/pci: Use host managed power
-> >>> state for
-> >>> suspend" has problems
-> >>>
-> >>>
-> >>> [EXTERNAL EMAIL]
-> >>>
-> >>> On Thu, Aug 1, 2019 at 11:06 AM Kai-Heng Feng
-> >>> <kai.heng.feng@canonical.com> wrote:
-> >>>> at 06:33, Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >>>>
-> >>>>> On Thu, Aug 1, 2019 at 12:22 AM Keith Busch <kbusch@kernel.org> wrote:
-> >>>>>> On Wed, Jul 31, 2019 at 11:25:51PM +0200, Rafael J. Wysocki wrote:
-> >>>>>>> A couple of remarks if you will.
-> >>>>>>>
-> >>>>>>> First, we don't know which case is the majority at this point.  For
-> >>>>>>> now, there is one example of each, but it may very well turn out that
-> >>>>>>> the SK Hynix BC501 above needs to be quirked.
-> >>>>>>>
-> >>>>>>> Second, the reference here really is 5.2, so if there are any systems
-> >>>>>>> that are not better off with 5.3-rc than they were with 5.2, well, we
-> >>>>>>> have not made progress.  However, if there are systems that are worse
-> >>>>>>> off with 5.3, that's bad.  In the face of the latest findings the
-> >>>>>>> only
-> >>>>>>> way to avoid that is to be backwards compatible with 5.2 and that's
-> >>>>>>> where my patch is going.  That cannot be achieved by quirking all
-> >>>>>>> cases that are reported as "bad", because there still may be
-> >>>>>>> unreported ones.
-> >>>>>>
-> >>>>>> I have to agree. I think your proposal may allow PCI D3cold,
-> >>>>>
-> >>>>> Yes, it may.
-> >>>>
-> >>>> Somehow the 9380 with Toshiba NVMe never hits SLP_S0 with or without
-> >>>> Rafael’s patch.
-> >>>> But the “real” s2idle power consumption does improve with the patch.
-> >>>
-> >>> Do you mean this patch:
-> >>>
-> >>> https://lore.kernel.org/linux-pm/70D536BE-8DC7-4CA2-84A9-
-> >>> AFB067BA520E@canonical.com/T/#m456aa5c69973a3b68f2cdd4713a1ce83be5145
-> >>> 8f
-> >>>
-> >>> or the $subject one without the above?
-> >>>
-> >>>> Can we use a DMI based quirk for this platform? It seems like a platform
-> >>>> specific issue.
-> >>>
-> >>> We seem to see too many "platform-specific issues" here. :-)
-> >>>
-> >>> To me, the status quo (ie. what we have in 5.3-rc2) is not defensible.
-> >>> Something needs to be done to improve the situation.
-> >>
-> >> Rafael, would it be possible to try popping out PC401 from the 9380 and
-> >> into a 9360 to
-> >> confirm there actually being a platform impact or not?
-> >
-> > Not really, sorry.
-> >
-> >> I was hoping to have something useful from Hynix by now before
-> >> responding, but oh well.
-> >>
-> >> In terms of what is the majority, I do know that between folks at Dell,
-> >> Google, Compal,
-> >> Wistron, Canonical, Micron, Hynix, Toshiba, LiteOn, and Western Digital
-> >> we tested a wide
-> >> variety of SSDs with this patch series.  I would like to think that they
-> >> are representative of
-> >> what's being manufactured into machines now.
-> >
-> > Well, what about drives already in the field?  My concern is mostly
-> > about those ones.
-> >
-> >> Notably the LiteOn CL1 was tested with the HMB flushing support and
-> >> and Hynix PC401 was tested with older firmware though.
-> >>
-> >>>>>> In which case we do need to reintroduce the HMB handling.
-> >>>>>
-> >>>>> Right.
-> >>>>
-> >>>> The patch alone doesn’t break HMB Toshiba NVMe I tested. But I think
-> >>>> it’s
-> >>>> still safer to do proper HMB handling.
-> >>>
-> >>> Well, so can anyone please propose something specific?  Like an
-> >>> alternative patch?
-> >>
-> >> This was proposed a few days ago:
-> >> http://lists.infradead.org/pipermail/linux-nvme/2019-July/026056.html
-> >>
-> >> However we're still not sure why it is needed, and it will take some
-> >> time to get
-> >> a proper failure analysis from LiteOn  regarding the CL1.
-> >
-> > Thanks for the update, but IMO we still need to do something before
-> > final 5.3 while the investigation continues.
-> >
-> > Honestly, at this point I would vote for going back to the 5.2
-> > behavior at least by default and only running the new code on the
-> > drives known to require it (because they will block PC10 otherwise).
-> >
-> > Possibly (ideally) with an option for users who can't get beyond PC3
-> > to test whether or not the new code helps them.
->
-> I just found out that the XPS 9380 at my hand never reaches SLP_S0 but only
-> PC10.
 
-That's the case for me too.
+--VywGB/WGlW4DM4P8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> This happens with or without putting the device to D3.
+Sorry for the delay, yesterday was rough.
 
-On my system, though, it only can get to PC3 without putting the NVMe
-into D3 (as reported previously).
+On Thu, Aug 01, 2019 at 11:20:20AM +0200, Greg Kroah-Hartman wrote:
+> On Thu, Aug 01, 2019 at 01:23:59AM +0300, Arseny Maslennikov wrote:
+> > On Tue, Jul 30, 2019 at 06:19:40PM +0200, Greg Kroah-Hartman wrote:
+> > > On Tue, Jun 25, 2019 at 07:11:53PM +0300, Arseny Maslennikov wrote:
+> > > > If the three termios local flags isig, icanon, iexten are enabled
+> > > > and the local flag nokerninfo is disabled for a tty governed
+> > > > by the n_tty line discipline, then on receiving the keyboard status
+> > > > character n_tty will generate a status message and write it out to
+> > > > the tty before sending SIGINFO to the tty's foreground process grou=
+p.
+> > > >=20
+> > > > <...>
+> > >=20
+> > > Why is this really all needed as we have the SysRq handlers that repo=
+rt
+> > > all of this today?
+> >=20
+> > Different use-cases have different needs; SysRq is targeted at a differ=
+ent
+> > audience; see below.
+> >=20
+> > > > The "most interesting" process is chosen as follows:
+> > > >  - runnables over everything
+> > > >  - uninterruptibles over everything else
+> > > >  - among 2 runnables pick the biggest utime + stime
+> > > >  - any unresolved ties are decided in favour of greatest PID.
+> > >=20
+> > > This does not feel like something that the tty core code should be do=
+ing
+> > > at all.
+> >=20
+> > Yes, this selection part is quite clumsy. In defense of it, one could
+> > argue that we already have the whole n_tty implemented in kernel-space.
+>=20
+> One could argue that :)
+>=20
+> > One way we could get rid of this is to display a summarized statistic
+> > for the whole pgrp: pgid, oldest real time, cumulative utime and stime,
+> > cumulative memory usage. Would this be more acceptable? Are there any
+> > other ideas?
+>=20
+> Given that I really think you are just making something up here that no
+> one really is needing for their workflow, but would just be "cool to
+> have", I say do whatever you think is right.
+>=20
+> And there is nothing wrong with "cool to have" things, I'm not trying to
+> dismiss this, it's just that all new features come with the "you must
+> support this until the end of time" requirement that we must balance it
+> with.
+>=20
+
+To be fair, the kerninfo line itself is intended for the user's eyes; it
+can't even be programmatically read by anyone in a Linux system except
+pty masters, so I don't feel it has to be particularly stable, since
+changing its contents won't break anyone.
+So IMO we could still tweak something about it after we merge this.
+Of course this cannot be said about the signal part of the patch series,
+which interfaces with processes and is a proper part of the outward
+kernel API, thus subject to the kernel's policy.
+
+> > > > While the kerninfo line is not very useful for debugging the kernel
+> > > > itself, since we have much more powerful debugging tools, it still =
+gives
+> > > > the user behind the terminal some meaningful feedback to a VSTATUS =
+that
+> > > > works even if no processes respond.
+> > >=20
+> > > That's what SysRq is for.  If there's a specific set of values that we
+> > > don't currently report in that facility, why not just add the
+> > > information there?  It's much simpler and "safer" that way.
+> >=20
+> > SysRq is intended for the person either administrating the system to be=
+ used in
+> > emergency (e.g. f for the oom kill, the famous s-u-b combo also comes to
+> > mind) or debugging the kernel, and it indeed does a much better job for
+> > those purposes.  In both use-cases mentioned the person has access to
+> > the system console, where the sysrq button handlers produce all their
+> > output, if any, and to either a physical keyboard / serial console or to
+> > /proc/sysrq-trigger, whose mode is 0200 (writable by uid 0 only).
+> >=20
+> > The use-case for this is different: the ^T-line as proposed by this
+> > patch is for the user that interacts with a system through a terminal, =
+who
+> > wants to be informed not about the whole system (sort of what SysRq-t
+> > tells you), but about what they run on that particular tty.
+>=20
+> Ok, fair enough, although if you just add a new sysrq option for "what
+> is running on this tty", would that help resolve this?
+>=20
+
+I see at least two problems here:
+1) sysrq is not accessible by unprivileged users (and here goes the
+   whole idea of sysrq being designed for different purposes, etc.)
+2) Even if we fix it and somehow allow unpriv users to do the equivalent
+   of `echo $letter > /proc/sysrq-trigger' for a particular letter,
+   there still are UI issues.  (yes, UI issues are better dealt with
+   outside the kernel, but that's not the point) It still has to dump
+   info to the particular tty (let's remember, console is unaccessible
+   and shared to the whole system), that is a novelty for sysrq. There
+   still is the open question about how to make a VSTATUS press trigger
+   that sysrq button in addition to signalling fg pgrp without shoving
+   this bit into every other userspace program.
+
+To sum up, this looks worse to me than integrating with n_tty.
+
+In general, the main appeal of the feature is in it being activated by a
+single keypress handled by the line discipline, from any tty.
+
+> > This is much less about "why does my system/kernel seem to hang?" or
+> > exposing low-level internals (registers, hrtimers, locks, ...), and more
+> > about "is my SSH terminal session unresponsive?" and "I ran a command,
+> > it doesn't finish, how's it doing?".
+> > e.g. A user might want to know if their SSH connection is alive without
+> > interrupting anything, while having no access both to SysRq and console,
+> > and no one in fg pgrp actually handles SIGINFO.
+>=20
+> If you have access to a tty, you should have access to sysrq, right?
+>=20
+
+No.
+SSH gives you access to a pty, which doesn't seem to handle BREAK; the
+BREAK SysRq activation method does not work there.
+As Pavel correctly noted, if the user is unprivileged, they can't use
+/proc/sysrq-trigger as well.
+
+> > SysRq is system-wide, whereas this is per-terminal and only cares about
+> > one tty which the status char is pressed at and its foreground pgrp
+> > (most likely it's the foreground shell job).
+> >=20
+> > I hope this is clear enough.
+>=20
+> It is, yes.  My big objection is the crazy code I point out above, as
+> well as the "create a totally new interface when we might be able to use
+> an existing one" that you need to convince me is really required :)
+>=20
+
+The signal part (patches [1-4]/7) is not really new, since we've had
+Unix-like signals for ages.
+(You've probably meant the [5-7]/7, but there's no such thing as a too
+detailed explanation).
+The compelling reasons for a new signal are:
+- it provides asynchronous process notification, as opposed to e. g. a
+  POLLIN on a file descriptor, which is not noticed by the recipient
+  until they poll(2);
+- to make use of the mechanism, an existing app does not have to be
+  rewritten in a certain way =E2=80=94 a signal handler just gets called, i=
+f the
+  signal is not blocked =E2=80=94 so it's easy to use from applications.
+- it aligns well with the current practice of the line discipline
+  relaying user requests to processes via signals.
+
+As for the line: before I started writing the patch I thought a lot
+about how we could move the status line logic away from n_tty and, when
+^T is pressed, have it notify someone in userspace, who would look up
+all the pieces in /proc and write() the line to the tty. Obviously this
+approach should be much more flexible and easier to maintain from the
+kernel perspective.  One candidate for this could actually be the tty's
+session leader (most often that's the interactive shell).
+
+To be convenient, the feature needs to have at least the following
+qualities:
+- the status line has to come first, since it's the only invariant; this
+  way it's easy to visually find if needed and just as easy to ignore
+  otherwise;
+- the reaction to VSTATUS has to be as responsive as it can reasonably
+  be and as the system load allows. (btw, SysRq does well in this
+  regard, but the drawbacks outweigh this, see above)
+The only way we can secure the first point is to signal a process, wait
+for it to get scheduled, wait a little more for it to compose and send
+output, and only then to signal the pgrp and be done. This is
+potentially slow and might lock up the tty's input receive queue for
+sizable amounts of time. What if the session leader opts-in to do this
+and then ignores this kind of request / never responds altogether? This
+gets messy fast. So we can't guarantee the second point.
+If we focus on responsiveness, we can't wait for processes at all, so we
+ping them and be done with it. This means no output ordering guarantees,
+it all gets interleaved and, consequently, less readable and less useful
+overall.
+Further tweaking the protocol gives the risk of making it too complicated.
+
+So I gave up on the idea and went with this patch, which ticks both boxes
+mentioned above. Of course, I'd love to have an ideal solution, and a
+pony too. :)
+
+(Or perhaps I'm thinking inside the box and missing a clue and someone
+reading this does not. This is a public list, anyway)
+
+--VywGB/WGlW4DM4P8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE56JD3UKTLEu/ddrm9dQjyAYL01AFAl1EGMsACgkQ9dQjyAYL
+01DGFg/9EBepEaQmqLdWaczAJcvHnDDAXSgR3U+hDHJM7RBqroz6At87S1eL15NH
+S0xx7d0JD6S5ARfcAGNR7SbkDhF7jpTJDwBm4g+Yzty/awPZ/9NpOSqK7qalzWU2
+rLWMwAWjKJwO6GciEQxFjBKgeblSuHijbNVHPMkOwAoMRS+4ywQh4qVHWc0mSesc
+w5IffG7sphmDWHc8BJxnQL/CVn0jcApt0ny3z021fwiLFIMBnarcZBtTI9axHfrd
+sWLUPup2RcABqRAtTVk+mYhIS8ajpgcjlwJrgQAH54EzKYU3GfnThsbEE4xUyNtc
+CSW6eawn9zNHLFmoOevZoYOZZ9Xn924vvXXQYzqxPcsXgmQgIA+xGCaqhMPIZBN/
+yRBOY5mszbzlAfUMAsDjEg2sfUUj0H+zpJzlz7a/Ex1ZyfEA0EzK0A38pS6fchc5
+ceTI/6Pb6Vg9+roNgH48Yxpq9X101PJFO4qhrv9E1a9vPTx2ERjMGVEL+MS3MVBT
+gnMOvVRH9englf/UQlOZDuZjt1Rdo7+gFKYD06zelBcyUfLC+5Lo5fcGI9CQXvOf
+u36nF+w8YIY3+T76MheIHluX1kmJvPK2QRpHb1Mz8WMw2wKGtctKBg+CanlWWaOD
+Ho1vkyE3a+TDzvLlYH+4q8u/2F+zCNoiR/0ic7AqEfb3bW7ErHs=
+=txBO
+-----END PGP SIGNATURE-----
+
+--VywGB/WGlW4DM4P8--
