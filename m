@@ -8,62 +8,61 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BBCBC19759
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17FB5C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F834206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE859206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:47:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uehjDwMt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e2yaFF4R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388931AbfHBBri (ORCPT
+        id S2390638AbfHBBrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 21:47:38 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41902 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727630AbfHBBrh (ORCPT
+        Thu, 1 Aug 2019 21:47:45 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45545 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727630AbfHBBrp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 21:47:37 -0400
-Received: by mail-pf1-f194.google.com with SMTP id m30so35119385pff.8
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 18:47:37 -0700 (PDT)
+        Thu, 1 Aug 2019 21:47:45 -0400
+Received: by mail-pg1-f193.google.com with SMTP id o13so35178134pgp.12
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 18:47:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=QNqYVJSJQaKqgrs//XJVX+Bi7rBtMitLuSGPIbLMf+A=;
-        b=uehjDwMtucPY7a0/Xzh17QwaBhRz2LVB4y1KguITSTUcYtz+b4RSsg3BJAEj+q5To9
-         dudTlC4IyW7IeR9jEZjRTPUGRvK63k254Bee6d6lkpKCyPGrxzrH3cr40HuQUtaL6ldy
-         XEA3KQsNqyEqrlh36sIHz/csRuGPediAfABOAeUnHpldTyU2gNI1/9PCry+ec+jy9lDF
-         R24UOTOuLjSj6BA7Bd/v6rcfS7nnd9HrnbCOgrEwQyazbYjLEoJ02GnjWAvlr4XQ7ZoX
-         UQgTnbQLdaJd8rYV+egqEfwSutUgBmK7TwexVBrBBJUv+ZFqCOy2nGUTx+mKz4hXuahJ
-         JZzw==
+        bh=iq2Oofr0Gl/QXG71RCvyorbUHlM5X2J3tGq+6DkFErQ=;
+        b=e2yaFF4RWbkfUO1QTe/GDUHUpJSDfgDyYAIWk48MdUvp5QrvvaUQ6P/FVAQDGa+299
+         JOljzkOXkDdiCitVXPbnl+Ck0/SO4chaRleTHKKlGV8WVVCUn9aBOfk/i102nO37OrgF
+         278Xh/W+vjFHrksBgLaRfT302DmiCnZrW89qLs3Of2eMCG6H58gm7wo8xqT3XS309JH+
+         LBG7rfz8JPA9gkiRjfJC5Gy/UR3j4Gxc7h8m0UQbfwpfa477PBa4K1oWxStVlAZg5jWm
+         bl5+a0DUnWxqzX+MrzFNxTCPCKvMS9snPerBRUyXrNx7yUG9JP3dR+GLNqlCoGY0gqd5
+         0CBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=QNqYVJSJQaKqgrs//XJVX+Bi7rBtMitLuSGPIbLMf+A=;
-        b=kOtxYewCmFlcnud+/AeUBQk5K7nVnN7x7CmEg+otgJhyNrWTA9jkfbUXeJSVKUQXJw
-         lD00kE3NK6t7E3XcFhC7LlPJlIhZ5MmvdMUH2YPOkyDHqGdHyBV4MfaU/W2wPki+oKIm
-         lcHp6DVHGZk9sweKNhtVVVI8YUtiCZFA/Gv9N6PjIpFQmPwXZYWXKA+rbhjcKi1RjDGt
-         C2Fg3sv+DFyrZF1nIktuADalXpDlingDWJyCPCfsx6gvapQ9ujERxSoAIhrTyk0/59KN
-         uT9VTQHRHHWW9Evm/neTtWS0Z1R3et7uLOgrn2sQT8nAD4u+Jcb3MDKgGOwOK10Ke++E
-         CGQg==
-X-Gm-Message-State: APjAAAXXQZUKl94Gu2XCa9fyCPkwF2pdOKeVpKb8KaXzt1f8Bq7xVNe2
-        5xxVbYvt5N3g7EeleyQrkjI=
-X-Google-Smtp-Source: APXvYqyY/ai6BzVKMoBfplCMCFRVPU4dJ3Px0qedM83U0hsY4sZbQyHE61lDElJqxYitswCWXC+sUw==
-X-Received: by 2002:a63:36cc:: with SMTP id d195mr80467080pga.157.1564710457178;
-        Thu, 01 Aug 2019 18:47:37 -0700 (PDT)
+        bh=iq2Oofr0Gl/QXG71RCvyorbUHlM5X2J3tGq+6DkFErQ=;
+        b=DCkm6/OZ7Yo7uKElXkxKUzyLJL/5rL4VTuJBiAmsRicSIsh2s46TdG1a+HbSPcpR2r
+         zaIjeu23W+6QSFjGmLiBg3QZDMNocSjHriwqWPs5BWVyrrOH/pW3fItGsgYRcoMYe+eg
+         y3/VAryEAkH3X7Sb6r0PymKYR0jcG6xflayTcNNBpsW8JzoVbu4wiH9Ko/39G8OpYsfI
+         eQXjja+o6yrqJo5nbv+ySTY143Fq0AKbsF6PseZ9ZAJBDf+KxOfkoGuFOStVb75A95SL
+         dcyGYny7H0QpxPs51fHlHQjTgnqE0a/HaXeA7HLdgmaQdsvf8Aa7t/LZyPpmeAziAq0R
+         3Scw==
+X-Gm-Message-State: APjAAAUUPsPM22WvmBYlOsvuJXhgxa2JM1tkJd37UoHF49O6eIQfM1wp
+        fo7YdaEs2htCI33O+hQQCYksiZ8BIY2jfg==
+X-Google-Smtp-Source: APXvYqylsE993p8HGmSRYjY+kGu9oOVZpU+iKAj7W9WmiHyNUNaM2KM1gYLrbUtmFLBOzkTT6PIRtA==
+X-Received: by 2002:a62:6d84:: with SMTP id i126mr55568288pfc.129.1564710464729;
+        Thu, 01 Aug 2019 18:47:44 -0700 (PDT)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id b30sm102489036pfr.117.2019.08.01.18.47.35
+        by smtp.gmail.com with ESMTPSA id w2sm63002010pgc.32.2019.08.01.18.47.42
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 01 Aug 2019 18:47:36 -0700 (PDT)
+        Thu, 01 Aug 2019 18:47:44 -0700 (PDT)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v2 08/10] sched: Replace strncmp with str_has_prefix
-Date:   Fri,  2 Aug 2019 09:47:32 +0800
-Message-Id: <20190802014732.9060-1-hslester96@gmail.com>
+Subject: [PATCH v2 09/10] userns: Replace strncmp with str_has_prefix
+Date:   Fri,  2 Aug 2019 09:47:39 +0800
+Message-Id: <20190802014739.9114-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -87,54 +86,38 @@ Changes in v2:
   - Utilize str_has_prefix's return value to
     eliminate some hard codes.
 
- kernel/sched/debug.c     | 5 +++--
- kernel/sched/isolation.c | 9 +++++----
- 2 files changed, 8 insertions(+), 6 deletions(-)
+ kernel/user_namespace.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-index f7e4579e746c..43983ff325b7 100644
---- a/kernel/sched/debug.c
-+++ b/kernel/sched/debug.c
-@@ -102,10 +102,11 @@ static int sched_feat_set(char *cmp)
- {
- 	int i;
- 	int neg = 0;
+diff --git a/kernel/user_namespace.c b/kernel/user_namespace.c
+index 8eadadc478f9..e231e902df8a 100644
+--- a/kernel/user_namespace.c
++++ b/kernel/user_namespace.c
+@@ -1138,6 +1138,7 @@ ssize_t proc_setgroups_write(struct file *file, const char __user *buf,
+ 	char kbuf[8], *pos;
+ 	bool setgroups_allowed;
+ 	ssize_t ret;
 +	size_t len;
  
--	if (strncmp(cmp, "NO_", 3) == 0) {
-+	if ((len = str_has_prefix(cmp, "NO_"))) {
- 		neg = 1;
--		cmp += 3;
-+		cmp += len;
+ 	/* Only allow a very narrow range of strings to be written */
+ 	ret = -EINVAL;
+@@ -1153,12 +1154,11 @@ ssize_t proc_setgroups_write(struct file *file, const char __user *buf,
+ 
+ 	/* What is being requested? */
+ 	ret = -EINVAL;
+-	if (strncmp(pos, "allow", 5) == 0) {
+-		pos += 5;
++	if ((len = str_has_prefix(pos, "allow"))) {
++		pos += len;
+ 		setgroups_allowed = true;
+-	}
+-	else if (strncmp(pos, "deny", 4) == 0) {
+-		pos += 4;
++	} else if ((len = str_has_prefix(pos, "deny"))) {
++		pos += len;
+ 		setgroups_allowed = false;
  	}
- 
- 	i = match_string(sched_feat_names, __SCHED_FEAT_NR, cmp);
-diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-index ccb28085b114..f528bb5996f4 100644
---- a/kernel/sched/isolation.c
-+++ b/kernel/sched/isolation.c
-@@ -141,16 +141,17 @@ __setup("nohz_full=", housekeeping_nohz_full_setup);
- static int __init housekeeping_isolcpus_setup(char *str)
- {
- 	unsigned int flags = 0;
-+	size_t len;
- 
- 	while (isalpha(*str)) {
--		if (!strncmp(str, "nohz,", 5)) {
--			str += 5;
-+		if ((len = str_has_prefix(str, "nohz,"))) {
-+			str += len;
- 			flags |= HK_FLAG_TICK;
- 			continue;
- 		}
- 
--		if (!strncmp(str, "domain,", 7)) {
--			str += 7;
-+		if ((len = str_has_prefix(str, "domain,"))) {
-+			str += len;
- 			flags |= HK_FLAG_DOMAIN;
- 			continue;
- 		}
+ 	else
 -- 
 2.20.1
 
