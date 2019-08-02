@@ -2,115 +2,114 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3350CC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB8CC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12917206A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:49:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98B21206A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:49:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564739384;
+	bh=F9f8+XQ9K6uxWrdp5WlnfE4VLwtyVaBH0OGVXCRB8DI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=MZGwhFic9DdxYcAVM7vMYw4UgLUiQ1kzqtRo8mOX1Ii384U7tdkstSA7yaMe1VN51
+	 +H9Cfb2FqRmkQI9wgwWPA4+vFeBsZjBZsdj86Jt3/SYXWk+7n4b5hmU4gn1g3E4Ei2
+	 KmiIxre09A1UdzzaFC3O6stNm3GvSXhkAWNOvt80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405981AbfHBJt3 (ORCPT
+        id S2391984AbfHBJtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:49:29 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:64240 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405137AbfHBJt0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:49:26 -0400
-Received: from 79.184.255.110.ipv4.supernova.orange.pl (79.184.255.110) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
- id e1982bc9eb5b63f9; Fri, 2 Aug 2019 11:49:24 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Sebastian Reichel <sre@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, kernel-team@android.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tri Vo <trong@android.com>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH] power: supply: Init device wakeup after device_add()
-Date:   Fri, 02 Aug 2019 11:49:24 +0200
-Message-ID: <5888477.sfNfyo0UZj@kreacher>
-In-Reply-To: <20190801213330.81079-1-swboyd@chromium.org>
-References: <20190801213330.81079-1-swboyd@chromium.org>
+        Fri, 2 Aug 2019 05:49:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50810 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392041AbfHBJq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:46:29 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8418A2086A;
+        Fri,  2 Aug 2019 09:46:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564739188;
+        bh=F9f8+XQ9K6uxWrdp5WlnfE4VLwtyVaBH0OGVXCRB8DI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=euEVrLxa2ASBB9HiZqfQdyNoihKpJ9cim9f5AWpJW8WMGerKTBTdMJ5e7fbRp0wCp
+         goRJ75Oq6knWC/Q3Lg8oMtv4ijTTERzoBsVHpuOTOQR0Xi7GmbfiS7nzXaLhSfB2RQ
+         SNLVh3eeakOdBXhbsOY5DCjob9ODECPL/oiQYjNY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Matteo Croce <mcroce@redhat.com>,
+        David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 133/223] ipv4: dont set IPv6 only flags to IPv4 addresses
+Date:   Fri,  2 Aug 2019 11:35:58 +0200
+Message-Id: <20190802092247.529407536@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
+References: <20190802092238.692035242@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday, August 1, 2019 11:33:30 PM CEST Stephen Boyd wrote:
-> We may want to use the device pointer in device_init_wakeup() with
-> functions that expect the device to already be added with device_add().
-> For example, if we were to link the device initializing wakeup to
-> something in sysfs such as a class for wakeups we'll run into an error.
-> It looks like this code was written with the assumption that the device
-> would be added before initializing wakeup due to the order of operations
-> in power_supply_unregister().
-> 
-> Let's change the order of operations so we don't run into problems here.
-> 
-> Fixes: 948dcf966228 ("power_supply: Prevent suspend until power supply events are processed")
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>                                                                                                                      
-> Cc: Tri Vo <trong@android.com>                                                                                                                                             
-> Cc: Kalesh Singh <kaleshsingh@google.com>      
-> Cc: Ravi Chandra Sadineni <ravisadineni@chromium.org>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
-> 
-> See this thread[1] for more information on how this will be necessary.
-> 
-> [1] https://lkml.kernel.org/r/20190731215514.212215-1-trong@android.com
-> 
-> 
->  drivers/power/supply/power_supply_core.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
-> index 82e84801264c..5c36c430ce8b 100644
-> --- a/drivers/power/supply/power_supply_core.c
-> +++ b/drivers/power/supply/power_supply_core.c
-> @@ -1051,14 +1051,14 @@ __power_supply_register(struct device *parent,
->  	}
->  
->  	spin_lock_init(&psy->changed_lock);
-> -	rc = device_init_wakeup(dev, ws);
-> -	if (rc)
-> -		goto wakeup_init_failed;
-> -
->  	rc = device_add(dev);
->  	if (rc)
->  		goto device_add_failed;
->  
-> +	rc = device_init_wakeup(dev, ws);
-> +	if (rc)
-> +		goto wakeup_init_failed;
-> +
->  	rc = psy_register_thermal(psy);
->  	if (rc)
->  		goto register_thermal_failed;
-> @@ -1101,8 +1101,8 @@ __power_supply_register(struct device *parent,
->  	psy_unregister_thermal(psy);
->  register_thermal_failed:
->  	device_del(dev);
-> -device_add_failed:
->  wakeup_init_failed:
-> +device_add_failed:
->  check_supplies_failed:
->  dev_set_name_failed:
->  	put_device(dev);
-> 
+From: Matteo Croce <mcroce@redhat.com>
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+[ Upstream commit 2e60546368165c2449564d71f6005dda9205b5fb ]
 
+Avoid the situation where an IPV6 only flag is applied to an IPv4 address:
 
+    # ip addr add 192.0.2.1/24 dev dummy0 nodad home mngtmpaddr noprefixroute
+    # ip -4 addr show dev dummy0
+    2: dummy0: <BROADCAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
+        inet 192.0.2.1/24 scope global noprefixroute dummy0
+           valid_lft forever preferred_lft forever
+
+Or worse, by sending a malicious netlink command:
+
+    # ip -4 addr show dev dummy0
+    2: dummy0: <BROADCAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
+        inet 192.0.2.1/24 scope global nodad optimistic dadfailed home tentative mngtmpaddr noprefixroute stable-privacy dummy0
+           valid_lft forever preferred_lft forever
+
+Signed-off-by: Matteo Croce <mcroce@redhat.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/ipv4/devinet.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+--- a/net/ipv4/devinet.c
++++ b/net/ipv4/devinet.c
+@@ -67,6 +67,11 @@
+ 
+ #include "fib_lookup.h"
+ 
++#define IPV6ONLY_FLAGS	\
++		(IFA_F_NODAD | IFA_F_OPTIMISTIC | IFA_F_DADFAILED | \
++		 IFA_F_HOMEADDRESS | IFA_F_TENTATIVE | \
++		 IFA_F_MANAGETEMPADDR | IFA_F_STABLE_PRIVACY)
++
+ static struct ipv4_devconf ipv4_devconf = {
+ 	.data = {
+ 		[IPV4_DEVCONF_ACCEPT_REDIRECTS - 1] = 1,
+@@ -453,6 +458,9 @@ static int __inet_insert_ifa(struct in_i
+ 	ifa->ifa_flags &= ~IFA_F_SECONDARY;
+ 	last_primary = &in_dev->ifa_list;
+ 
++	/* Don't set IPv6 only flags to IPv4 addresses */
++	ifa->ifa_flags &= ~IPV6ONLY_FLAGS;
++
+ 	for (ifap = &in_dev->ifa_list; (ifa1 = *ifap) != NULL;
+ 	     ifap = &ifa1->ifa_next) {
+ 		if (!(ifa1->ifa_flags & IFA_F_SECONDARY) &&
 
 
