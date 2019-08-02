@@ -2,85 +2,79 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F08AC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E676CC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AC4220679
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:48:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564753711;
-	bh=yrUhfboA+pxlwVQceH5hZCnB8tZ8n2uD14vFSNTwoFg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hrnw31UKN5SBOOX3f80g0tNo833ZiZr+13pdeu89OKcmMBMGb2wOjzJKCVJLZaV2z
-	 Ixtv6CkCLg6r+w5PJGukYcQzFPa9fPyhFoPpKHMFP3i5Qd9aE4LlgZRJWAx4+7RrSw
-	 cVRvJXNlt55VZAjwumgXoBkyiStjuCXzBVoLHChk=
+	by mail.kernel.org (Postfix) with ESMTP id C330120679
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:48:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394866AbfHBNsa (ORCPT
+        id S2436549AbfHBNsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:48:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48674 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730199AbfHBNsa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:48:30 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85CC920679;
-        Fri,  2 Aug 2019 13:48:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564753709;
-        bh=yrUhfboA+pxlwVQceH5hZCnB8tZ8n2uD14vFSNTwoFg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0jGh3uFTyMfE0JevXIUjXo4dTNgOjHMJFiFePLYswMhTdzF9QdEKqdS/aNJBzOUlX
-         LQThVc2endYLqXhXno2aXAGbqSV6Dg1GGHiusQNfuWVzT2D/JuCjZvlBrAgrhpwfqn
-         VQ7Fkjdnj5z/Te0a6+I0MjMGqQkgnjBedsQCIJsE=
-Date:   Fri, 2 Aug 2019 09:48:28 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        syzbot+d952e5e28f5fb7718d23@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: Re: [PATCH 5.2 03/20] ALSA: usb-audio: Sanity checks for each pipe
- and EP types
-Message-ID: <20190802134828.GA797@sasha-vm>
-References: <20190802092055.131876977@linuxfoundation.org>
- <20190802092058.248343532@linuxfoundation.org>
+        Fri, 2 Aug 2019 09:48:36 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3739 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728326AbfHBNsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:48:36 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 66BA2FA07B734FF7568F;
+        Fri,  2 Aug 2019 21:48:34 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Fri, 2 Aug 2019
+ 21:48:26 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <zbr@ioremap.net>, <kstewart@linuxfoundation.org>,
+        <tglx@linutronix.de>, <gregkh@linuxfoundation.org>,
+        <rfontana@redhat.com>
+CC:     <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] w1: mxc_w1: use devm_platform_ioremap_resource() to simplify code
+Date:   Fri, 2 Aug 2019 21:48:19 +0800
+Message-ID: <20190802134819.9088-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190802092058.248343532@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 11:39:57AM +0200, Greg Kroah-Hartman wrote:
->From: Takashi Iwai <tiwai@suse.de>
->
->commit 801ebf1043ae7b182588554cc9b9ad3c14bc2ab5 upstream.
->
->The recent USB core code performs sanity checks for the given pipe and
->EP types, and it can be hit by manipulated USB descriptors by syzbot.
->For making syzbot happier, this patch introduces a local helper for a
->sanity check in the driver side and calls it at each place before the
->message handling, so that we can avoid the WARNING splats.
->
->Reported-by: syzbot+d952e5e28f5fb7718d23@syzkaller.appspotmail.com
->Signed-off-by: Takashi Iwai <tiwai@suse.de>
->Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Use devm_platform_ioremap_resource() to simplify the code a bit.
+This is detected by coccinelle.
 
-This commit has a fix: 5d78e1c2b7f4b ("ALSA: usb-audio: Fix gpf in
-snd_usb_pipe_sanity_check") which was not pulled by Linus yet.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/w1/masters/mxc_w1.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-I'm going to drop this commit and re-queue it together with it's fix
-once it makes it upstream.
+diff --git a/drivers/w1/masters/mxc_w1.c b/drivers/w1/masters/mxc_w1.c
+index c3b2095..1ca880e 100644
+--- a/drivers/w1/masters/mxc_w1.c
++++ b/drivers/w1/masters/mxc_w1.c
+@@ -92,7 +92,6 @@ static int mxc_w1_probe(struct platform_device *pdev)
+ {
+ 	struct mxc_w1_device *mdev;
+ 	unsigned long clkrate;
+-	struct resource *res;
+ 	unsigned int clkdiv;
+ 	int err;
+ 
+@@ -120,8 +119,7 @@ static int mxc_w1_probe(struct platform_device *pdev)
+ 		dev_warn(&pdev->dev,
+ 			 "Incorrect time base frequency %lu Hz\n", clkrate);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	mdev->regs = devm_ioremap_resource(&pdev->dev, res);
++	mdev->regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(mdev->regs)) {
+ 		err = PTR_ERR(mdev->regs);
+ 		goto out_disable_clk;
+-- 
+2.7.4
 
---
-Thanks,
-Sasha
+
