@@ -2,151 +2,127 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E47F1C19759
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 00:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB618C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 00:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 954D0206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 00:24:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=verimatrix.com header.i=@verimatrix.com header.b="qwk2KhKz"
+	by mail.kernel.org (Postfix) with ESMTP id A1BC02084C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 00:24:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564705489;
+	bh=KzNocgptr3atsBh5WELd0hq9znXO426VvX/fm+IJhug=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jf2kwAk+4lVoq8yKAz2K2/Xh1JTfft5dXc5hum0eFsqnUSI8JrCxPDo1YSoH0j45G
+	 PX7MgUswc+JHM9lEPKWe9TIBhK7E9/N/19B5P/HTGAmrYo4CiBgYWgrb1nZFD3CDLW
+	 feD6LmRScYDjMzQk/hjwUlMOGdMgifdpCMz8sWVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733284AbfHBAYI (ORCPT
+        id S2388041AbfHBAYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 20:24:08 -0400
-Received: from mail-eopbgr770049.outbound.protection.outlook.com ([40.107.77.49]:9699
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729359AbfHBAYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 20:24:07 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ofqiR0aH5P7bQwt+EWwqX35PQiOQnr/q0MpNdzBCOo8V944/C3WjzFXAbWiorKxIKCV8FzKVt1uvpfiHilyHyC1p7/X+WWStsqGTY/q6iZR0UpmYMAoKeEfVYCVZs29I8Di0peMiqoUpKWzoWeOezJcQEISrd1QWT1wDXlQaZaUaf4AWZCFIUFtMwgafdxD78vwbq2bzIHAPuq5gZTSQAsLWtiUFF2xaPUCsVdswDVVxL/H4otDiWZlvD69rL575ir/4CH5o1tRQqXC0Uc+kMODbaviK9BBGEJtz6Tykxa9IONEhxwkZtSFGSxtkhohYmvMw3AX8vJauNPWWy/wSKw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5nwFhwPpZm/41poRA13bAhifEH9AncNH3+pNYzi3ED8=;
- b=PCRtWXiTdLWpViPslv+scHwx4XCzTlcJ7GTLNQFdgZw4+KtUoXnlHWRu9Yc+C56B31042M5kddGY5scqgJx1/WYwFN41yGrcx/umnz++sB+kByroH9Ktf1yopFmorQ1/8McwXsQYAsbU0MjtQpQ2ib4+kgU1Lf6xRBk3Xm5uBDOPesCGQePonNZleut5h9yZnY8b22kGWE3iucYEMzuXQ2hNl7pEQL0Qn4RU/5/uP2LVFoqrUZw+eCmcos4edn/spki2UsMZJFeqpTWqiCp4VnGvKMwYbs6f46VKbDlSrfk/XbCmS0jREmN45uRDI2DE1PNy+7xgLznBqZxiRv1Taw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=verimatrix.com;dmarc=pass action=none
- header.from=verimatrix.com;dkim=pass header.d=verimatrix.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=verimatrix.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5nwFhwPpZm/41poRA13bAhifEH9AncNH3+pNYzi3ED8=;
- b=qwk2KhKzw573/Sgh2iMZy3c8BAnqgssbDKcyd0p2tvn86ZHkbiXXSvwdnLqBnpZR+mok/rhBYlRMfWLxvC3rm9eYDN656fpxO+n/sOmABenOPlF2xM0lLiOyNFHQBKWFjC8/QTwrjRbfv0dwgHN5vkeUbBIHmKaxqnNwrRn0tf4=
-Received: from MN2PR20MB2973.namprd20.prod.outlook.com (52.132.172.146) by
- MN2PR20MB3120.namprd20.prod.outlook.com (52.132.174.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2136.17; Fri, 2 Aug 2019 00:24:04 +0000
-Received: from MN2PR20MB2973.namprd20.prod.outlook.com
- ([fe80::d96f:39b2:19f4:c7c1]) by MN2PR20MB2973.namprd20.prod.outlook.com
- ([fe80::d96f:39b2:19f4:c7c1%7]) with mapi id 15.20.2115.005; Fri, 2 Aug 2019
- 00:24:04 +0000
-From:   Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>
-To:     Corentin Labbe <clabbe.montjoie@gmail.com>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: Need help with failling gcm_base(ctr,ghash-generic) selftest
-Thread-Topic: Need help with failling gcm_base(ctr,ghash-generic) selftest
-Thread-Index: AQHVSKFY6oVMoifWy0S5Dl262GlQMabm/nnw
-Date:   Fri, 2 Aug 2019 00:24:04 +0000
-Message-ID: <MN2PR20MB297372F8FB158C59BF4F6F2FCAD90@MN2PR20MB2973.namprd20.prod.outlook.com>
-References: <20190801194249.GA18705@Red>
-In-Reply-To: <20190801194249.GA18705@Red>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pvanleeuwen@verimatrix.com; 
-x-originating-ip: [188.204.2.113]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4384dd67-989a-4ef9-dca2-08d716dfb981
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR20MB3120;
-x-ms-traffictypediagnostic: MN2PR20MB3120:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <MN2PR20MB3120F5BDFA1C78B40D3C9925CAD90@MN2PR20MB3120.namprd20.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 011787B9DD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39850400004)(396003)(346002)(366004)(136003)(376002)(13464003)(199004)(189003)(33656002)(68736007)(6436002)(476003)(2501003)(11346002)(446003)(9686003)(14454004)(486006)(55016002)(229853002)(478600001)(66066001)(2201001)(6116002)(71200400001)(71190400001)(2906002)(25786009)(3846002)(256004)(8676002)(7696005)(4326008)(86362001)(52536014)(15974865002)(316002)(66476007)(66946007)(66446008)(102836004)(5660300002)(6246003)(64756008)(186003)(81156014)(26005)(305945005)(66556008)(53936002)(7736002)(110136005)(81166006)(6506007)(99286004)(74316002)(53546011)(8936002)(76176011)(76116006)(41533002)(142933001)(18886075002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR20MB3120;H:MN2PR20MB2973.namprd20.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: verimatrix.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: IB7EpWyN2rgLSCNMR3gFfaSCK/OfpXQ9JBK1YimKioHbIQga+8o+joZGQ0o78/Ts7vdt7uO6RNG7HBnCQlt65UQxrPtMlyF95qw1gzknMx3whDZmTdhn+Y5tAq5rut39wI0jj+xYoWEOm6vEC9ExsuMKreZX2blr/Q/3+01Sh/lguRdNEstsvQM1IvCQn+/4vy1I6zKPs/UQ903a/HhZbrBGyAYzbh7VVaXW/8ykOPalVape9SrJpD06vLjkAyiHNh9Aec20q2aUdR6PQ6qJkCEO6jSu41T1KcAzePKgKt8ZVHyGAn/vgZhp1LMCBsKJvEGYihE+oNtkLDR5v1hehhv3Si9vv82kNGRgUQ7KSwwnk0NK408wYxdUYwMDqK/SXzy0zekOe2LF4IB/tzACIsLhUrw0e9T8vJSarDSx2IA=
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 1 Aug 2019 20:24:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45812 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729359AbfHBAYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 20:24:47 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A82D6206A3;
+        Fri,  2 Aug 2019 00:24:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564705486;
+        bh=KzNocgptr3atsBh5WELd0hq9znXO426VvX/fm+IJhug=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0gfrH+8bYUaQB8OB0qSm3FlVb3htQnV+rWVUqsP+TFG8vjmBkEKezzIKpxRHIk5fn
+         nb90R7GKv+gsx0jiSw3DQ4DbzwuTwNLJS8C/oDaFoQzpqTBa0UKoyyX2grc/OyME6r
+         cQ2fW+8mkqBsyrZiTkQsv8c04PGCTQ0r+ARBjK/s=
+Date:   Thu, 1 Aug 2019 19:24:42 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Megha Dey <megha.dey@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, marc.zyngier@arm.com, ashok.raj@intel.com,
+        jacob.jun.pan@linux.intel.com, megha.dey@intel.com
+Subject: Re: [RFC V1 RESEND 0/6] Introduce dynamic allocation/freeing of
+ MSI-X vectors
+Message-ID: <20190802002442.GI151852@google.com>
+References: <1561162778-12669-1-git-send-email-megha.dey@linux.intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: verimatrix.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4384dd67-989a-4ef9-dca2-08d716dfb981
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Aug 2019 00:24:04.0908
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: dcb260f9-022d-4495-8602-eae51035a0d0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pvanleeuwen@verimatrix.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR20MB3120
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1561162778-12669-1-git-send-email-megha.dey@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: linux-crypto-owner@vger.kernel.org <linux-crypto-owner@vger.kernel.=
-org> On Behalf Of
-> Corentin Labbe
-> Sent: Thursday, August 1, 2019 9:43 PM
-> To: herbert@gondor.apana.org.au; linux-crypto@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Subject: Need help with failling gcm_base(ctr,ghash-generic) selftest
->=20
-> Hello
->=20
-> I am writing the Allwinner sun8i-ce driver and when running tcrypt I got
-> [   30.201739] alg: aead: gcm_base(ctr-aes-sun8i-ce,ghash-generic) decryp=
-tion failed on test
-> vector 3; expected_error=3D0, actual_error=3D-74, cfg=3D\"random: may_sle=
-ep use_digest
-> src_divs=3D[100.0%@+2614] dst_divs=3D[5.90%@alignmask+3015, 60.56%@+3996,=
- 17.92%@+865,
-> 15.62%@+10]\"
-> or
->
-The decryption reports only an -EBADMSG here, which means the decryption it=
-self went
-fine, but the authentication tag mismatched.
+Hi Megha,
 
+On Fri, Jun 21, 2019 at 05:19:32PM -0700, Megha Dey wrote:
+> Currently, MSI-X vector enabling and allocation for a PCIe device is
+> static i.e. a device driver gets only one chance to enable a specific
+> number of MSI-X vectors, usually during device probe. Also, in many
+> cases, drivers usually reserve more than required number of vectors
+> anticipating their use, which unnecessarily blocks resources that
+> could have been made available to other devices. Lastly, there is no
+> way for drivers to reserve more vectors, if the MSI-x has already been
+> enabled for that device.
+>  
+> Hence, a dynamic MSI-X kernel infrastructure can benefit drivers by
+> deferring MSI-X allocation to post probe phase, where actual demand
+> information is available.
+>  
+> This patchset enables the dynamic allocation/de-allocation of MSI-X
+> vectors by introducing 2 new APIs:
+> pci_alloc_irq_vectors_dyn() and pci_free_irq_vectors_grp():
+> 
+> We have had requests from some of the NIC/RDMA users who have lots of
+> interrupt resources and would like to allocate them on demand,
+> instead of using an all or none approach.
+> 
+> The APIs are fairly well tested (multiple allocations/deallocations),
+> but we have no early adopters yet. Hence, sending this series as an
+> RFC for review and comments.
+> 
+> The patches are based out of Linux 5.2-rc5.
+> 
+> Megha Dey (6):
+>   PCI/MSI: New structures/macros for dynamic MSI-X allocation
+>   PCI/MSI: Dynamic allocation of MSI-X vectors by group
+>   x86: Introduce the dynamic teardown function
+>   PCI/MSI: Introduce new structure to manage MSI-x entries
 
-> [  148.613537] alg: aead: gcm_base(ctr-aes-sun8i-ce,ghash-generic) encryp=
-tion test failed
-> (wrong result) on test vector 2, cfg=3D\"random: may_sleep use_final src_=
-divs=3D[100.0%@+0]
-> iv_offset=3D20\"
->=20
-Can't say for sure, but considering the decrypt error, this is most likely =
-just a
-mismatch on the appended authentication tag.
+s/MSI-x/MSI-X/
+If "entries" here means the same as "vectors" above, please use the
+same word.
 
-> Since ctr-aes-sun8i-ce is passing the ctr(aes) selftest, I dont understan=
-d what could be
-> wrong.
->=20
-That is possible, as this appears to be a problem with the authentication p=
-art,
-not the encryption part. So possibly a problem with the way you setup the=20
-authentication key (which is actually derived from the encryption key, but =
-I don't
-know if your hardware does this autonomously, mine doesn't) and/or operatio=
-n?
+>   PCI/MSI: Free MSI-X resources by group
 
-> Thanks
-> Regards
+Is "resources" the same as "vectors"?
 
+>   Documentation: PCI/MSI: Document dynamic MSI-X infrastructure
 
-Regards,
-Pascal van Leeuwen
-Silicon IP Architect, Multi-Protocol Engines @ Verimatrix
-www.insidesecure.com
+When you post a v2 after addressing Thomas' comments, please make
+these subject lines imperative sentences beginning with a descriptive
+verb.  You can run "git log --oneline drivers/pci" to see the style.
+If you're adding a specific interface or structure, mention it by name
+in the subject if it's practical.  The "x86" line needs a little more
+context; I assume it should include "IRQ", "MSI-X", or something.
+
+>  Documentation/PCI/MSI-HOWTO.txt |  38 +++++
+>  arch/x86/include/asm/x86_init.h |   1 +
+>  arch/x86/kernel/x86_init.c      |   6 +
+>  drivers/pci/msi.c               | 363 +++++++++++++++++++++++++++++++++++++---
+>  drivers/pci/probe.c             |   9 +
+>  include/linux/device.h          |   3 +
+>  include/linux/msi.h             |  13 ++
+>  include/linux/pci.h             |  61 +++++++
+>  kernel/irq/msi.c                |  34 +++-
+>  9 files changed, 497 insertions(+), 31 deletions(-)
+> 
+> -- 
+> 2.7.4
+> 
