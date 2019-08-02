@@ -2,164 +2,105 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DEC2C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 07:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B807C32753
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 07:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 744362086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 07:33:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F12AB2086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 07:34:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389709AbfHBHdD (ORCPT
+        id S2389730AbfHBHed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 03:33:03 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40354 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389673AbfHBHdC (ORCPT
+        Fri, 2 Aug 2019 03:34:33 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:28820 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727656AbfHBHed (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 03:33:02 -0400
-Received: by mail-wm1-f65.google.com with SMTP id v19so65376522wmj.5
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 00:33:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=az1IxEpXm+/nTRc6bpZgirA2qd9wXqQdWBN/PugKfmg=;
-        b=WudLoJyeaEV6eRCqA+E5wpsnjYCEip2jAVf+xFxPfYQD6Gfqj5kaNob7KxXDLE5egh
-         mbt0bNoRWRIbcn75CNRkpbMT+8C8kLFn6B99srn1wpcWeZwbBF4IKgFjRGCuLaKWyjFN
-         YK9YHzlniWqYuJKeGsT65QSSgmW28e3p9Bs0BKR8L4ABEgBT0VMIU/8V0VsdMkYoIOAL
-         SvyFxsyMGR5UprwLwCqqEwmHbStKxPV3HA4tWBsPncn7H2O7o/l1Zek4zi/PoISpC1LT
-         zgiURaTLIEdEMemqCpPNQNn4rMzYnZouEYqUnbYMJqSDwX1h84CETS5u2cazyLiZJG18
-         gPRA==
-X-Gm-Message-State: APjAAAUZ9MxO9AOapxhva1K6Dx1sQ0gd5Hou9mxOXjBJzX117lcxxL01
-        U1JiP+e32DAOXyVxjz7Ww+YPzjeBFDQ=
-X-Google-Smtp-Source: APXvYqzp+8DIf7b6mdG7siZa+rCZOnsy1DLUOoS9P01kip4gjk4saikQTzaNcndQu5yjBuZ1POd6zw==
-X-Received: by 2002:a1c:cfc7:: with SMTP id f190mr2772941wmg.85.1564731180735;
-        Fri, 02 Aug 2019 00:33:00 -0700 (PDT)
-Received: from vitty.brq.redhat.com (ip-89-176-127-93.net.upcbroadband.cz. [89.176.127.93])
-        by smtp.gmail.com with ESMTPSA id s15sm57975838wrw.21.2019.08.02.00.32.59
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 02 Aug 2019 00:33:00 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Branden Bonaby <brandonbonaby94@gmail.com>, kys@microsoft.com,
-        haiyangz@microsoft.com, sthemmin@microsoft.com, sashal@kernel.org
-Cc:     Branden Bonaby <brandonbonaby94@gmail.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] drivers: hv: vmbus: Introduce latency testing
-In-Reply-To: <18193677a879c402d00955c445ae7ce461b4198f.1564527684.git.brandonbonaby94@gmail.com>
-References: <cover.1564527684.git.brandonbonaby94@gmail.com> <18193677a879c402d00955c445ae7ce461b4198f.1564527684.git.brandonbonaby94@gmail.com>
-Date:   Fri, 02 Aug 2019 09:32:59 +0200
-Message-ID: <87d0hoggyc.fsf@vitty.brq.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Fri, 2 Aug 2019 03:34:33 -0400
+X-IronPort-AV: E=Sophos;i="5.64,337,1559487600"; 
+   d="scan'208";a="22931900"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 02 Aug 2019 16:34:30 +0900
+Received: from fabrizio-dev.ree.adwin.renesas.com (unknown [10.226.36.196])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id D292D4007528;
+        Fri,  2 Aug 2019 16:34:25 +0900 (JST)
+From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        linux-kernel@vger.kernel.org, ebiharaml@si-linux.co.jp
+Subject: [PATCH/RFC 00/12] Add dual-LVDS panel support to EK874
+Date:   Fri,  2 Aug 2019 08:33:57 +0100
+Message-Id: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Branden Bonaby <brandonbonaby94@gmail.com> writes:
+Dear All,
 
-> Introduce user specified latency in the packet reception path.
->
-> Signed-off-by: Branden Bonaby <brandonbonaby94@gmail.com>
-> ---
->  drivers/hv/connection.c  |  5 +++++
->  drivers/hv/ring_buffer.c | 10 ++++++++++
->  include/linux/hyperv.h   | 14 ++++++++++++++
->  3 files changed, 29 insertions(+)
->
-> diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
-> index 09829e15d4a0..2a2c22f5570e 100644
-> --- a/drivers/hv/connection.c
-> +++ b/drivers/hv/connection.c
-> @@ -354,9 +354,14 @@ void vmbus_on_event(unsigned long data)
->  {
->  	struct vmbus_channel *channel = (void *) data;
->  	unsigned long time_limit = jiffies + 2;
-> +	struct vmbus_channel *test_channel = !channel->primary_channel ?
-> +						channel :
-> +						channel->primary_channel;
->  
->  	trace_vmbus_on_event(channel);
->  
-> +	if (unlikely(test_channel->fuzz_testing_buffer_delay > 0))
-> +		udelay(test_channel->fuzz_testing_buffer_delay);
->  	do {
->  		void (*callback_fn)(void *);
->  
-> diff --git a/drivers/hv/ring_buffer.c b/drivers/hv/ring_buffer.c
-> index 9a03b163cbbd..d7627c9023d6 100644
-> --- a/drivers/hv/ring_buffer.c
-> +++ b/drivers/hv/ring_buffer.c
-> @@ -395,7 +395,12 @@ struct vmpacket_descriptor *hv_pkt_iter_first(struct vmbus_channel *channel)
->  {
->  	struct hv_ring_buffer_info *rbi = &channel->inbound;
->  	struct vmpacket_descriptor *desc;
-> +	struct vmbus_channel *test_channel = !channel->primary_channel ?
-> +						channel :
-> +						channel->primary_channel;
->  
-> +	if (unlikely(test_channel->fuzz_testing_message_delay > 0))
-> +		udelay(test_channel->fuzz_testing_message_delay);
->  	if (hv_pkt_iter_avail(rbi) < sizeof(struct vmpacket_descriptor))
->  		return NULL;
->  
-> @@ -420,7 +425,12 @@ __hv_pkt_iter_next(struct vmbus_channel *channel,
->  	struct hv_ring_buffer_info *rbi = &channel->inbound;
->  	u32 packetlen = desc->len8 << 3;
->  	u32 dsize = rbi->ring_datasize;
-> +	struct vmbus_channel *test_channel = !channel->primary_channel ?
-> +						channel :
-> +						channel->primary_channel;
+this series adds support for dual-LVDS panel IDK-2121WR
+from Advantech:
+https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
+Dual link support is very recent for R-Car Gen3, and I couldn't
+find much on dual link panels in the kernel either, therefore
+comments are very welcome to get this right.
 
-This pattern is repeated 3 times so a define is justified. I would also
-reversed the logic:
+The panel doesn't come with the EK874 kit, but it's advertised as
+supported, therefore this series adds a new dts file to support
+the configuration of the EK874 + IDK-2121WR.
 
-   test_channel = channel->primary_channel ? channel->primary_channel : channel;
+Finally, this series depends on a fix that's still pending:
+https://patchwork.kernel.org/patch/11054755/
 
->  
-> +	if (unlikely(test_channel->fuzz_testing_message_delay > 0))
-> +		udelay(test_channel->fuzz_testing_message_delay);
+Thanks,
+Fab
 
-unlikely() is good but if it was under #ifdef it would've been even better.
+Fabrizio Castro (12):
+  dt-bindings: display: renesas: lvds: RZ/G2E needs renesas,companion
+    too
+  dt-bindings: display: renesas: lvds: Document renesas,swap-data
+  dt-bindings: panel: lvds: Add dual-link LVDS display support
+  dt-bindings: display: Add bindings for Advantech IDK-2121WR
+  drm: rcar-du: lvds: Add data swap support
+  drm: rcar-du: lvds: Do not look at ports for identifying bridges
+  drm: rcar-du: lvds: Add support for dual link panels
+  drm: rcar-du: lvds: Fix bridge_to_rcar_lvds
+  drm: rcar-du: lvds: Fix companion's mode
+  arm64: dts: renesas: r8a774c0: Point LVDS0 to its companion LVDS1
+  arm64: dts: renesas: cat874: Add definition for 12V regulator
+  arm64: dts: renesas: Add EK874 board with idk-2121wr display support
 
->  	/* bump offset to next potential packet */
->  	rbi->priv_read_index += packetlen + VMBUS_PKT_TRAILER;
->  	if (rbi->priv_read_index >= dsize)
-> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-> index 6256cc34c4a6..8d068956dd67 100644
-> --- a/include/linux/hyperv.h
-> +++ b/include/linux/hyperv.h
-> @@ -23,6 +23,7 @@
->  #include <linux/mod_devicetable.h>
->  #include <linux/interrupt.h>
->  #include <linux/reciprocal_div.h>
-> +#include <linux/delay.h>
->  
->  #define MAX_PAGE_BUFFER_COUNT				32
->  #define MAX_MULTIPAGE_BUFFER_COUNT			32 /* 128K */
-> @@ -926,6 +927,19 @@ struct vmbus_channel {
->  	 * full outbound ring buffer.
->  	 */
->  	u64 out_full_first;
-> +
-> +	/* enabling/disabling fuzz testing on the channel (default is false)*/
-> +	bool fuzz_testing_state;
-> +
-> +	/* Buffer delay will delay the guest from emptying the ring buffer
-> +	 * for a specific amount of time. The delay is in microseconds and will
-> +	 * be between 1 to a maximum of 1000, its default is 0 (no delay).
-> +	 * The  Message delay will delay guest reading on a per message basis
-> +	 * in microseconds between 1 to 1000 with the default being 0
-> +	 * (no delay).
-> +	 */
-> +	u32 fuzz_testing_buffer_delay;
-> +	u32 fuzz_testing_message_delay;
->  };
->  
->  static inline bool is_hvsock_channel(const struct vmbus_channel *c)
+ .../bindings/display/bridge/renesas,lvds.txt       |  11 +-
+ .../display/panel/advantech,idk-2121wr.txt         |  62 ++++++++++++
+ .../bindings/display/panel/panel-lvds.txt          |  91 ++++++++++++-----
+ arch/arm64/boot/dts/renesas/Makefile               |   3 +-
+ arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts    |   9 ++
+ .../boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts | 112 +++++++++++++++++++++
+ arch/arm64/boot/dts/renesas/r8a774c0.dtsi          |   2 +
+ drivers/gpu/drm/rcar-du/rcar_lvds.c                |  65 ++++++------
+ 8 files changed, 291 insertions(+), 64 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.txt
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts
 
 -- 
-Vitaly
+2.7.4
+
