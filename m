@@ -2,68 +2,150 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2808DC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA7BC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E96662087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D223420B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:15:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564783827;
-	bh=0ADvaENQ+brKEvELvSqXvOMv47PciEcB7jt9Ddc06OY=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=y3TWxuH3BKSTfiZ5o7Sr8i7v1LGrlNIOyAd4OTjdM3aX2k+CtvbeQQv9rtYb0i0SW
-	 VZV43fwBBe6JDotsR4jx4NPUeSh9Y2BT0sRLx67Ei+ABvha/BVkr4GLFgyXlAiRYqc
-	 iuDqkPPemjeQzc3zveCy/9jB142rdlmmgx+Z+d7E=
+	s=default; t=1564784143;
+	bh=0VIAzOo4zb+swZnODQr4hpD7QckO3wZdHQ/+75GTF1U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ryMM9+7J8XrWLWfeUDV3xZ8oSntFhuawULSA5ngeuTWolyvQNGDo5+NJzCyuNHkEV
+	 g6nJ5dH1POV2/IGTottDrkr5T42pzNdoj+JpG7wVH/bRjUplxpcBSrCeLtfwIN6Gj0
+	 A/fOB9YOs12hy48Q47yDXphMoTrkhdfvJE6Hr42Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437237AbfHBWKZ (ORCPT
+        id S1730991AbfHBWPm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 18:10:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40612 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 18:15:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730633AbfHBWKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 18:10:12 -0400
-Subject: Re: [GIT PULL] Btrfs fixes for 5.3-rc3
+        id S1727884AbfHBWPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 18:15:42 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FAC92087C;
+        Fri,  2 Aug 2019 22:15:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564783812;
-        bh=0ADvaENQ+brKEvELvSqXvOMv47PciEcB7jt9Ddc06OY=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=mfdpYtRI3yYscPVSqG9g3qwe7n8wrUY/fj2P9ZWADfEv9RsUF1gJrZE3uq/cKkMQs
-         wKVb0OskQ7rbZdS+2UvTghvC/oEc+n+qqf8MM1YWGBZkeKs46no1LAcQIoBwGZNB4X
-         uFaBXnp5F4pfSM2mAsp6nULs7W3EMEr6xJV/5ab8=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <cover.1564757308.git.dsterba@suse.com>
-References: <cover.1564757308.git.dsterba@suse.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <cover.1564757308.git.dsterba@suse.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.3-rc2-tag
-X-PR-Tracked-Commit-Id: a6d155d2e363f26290ffd50591169cb96c2a609e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: d38c3fa6f959b8b5b167f120d70d66418714dbe4
-Message-Id: <156478381210.28292.4383010166227745942.pr-tracker-bot@kernel.org>
-Date:   Fri, 02 Aug 2019 22:10:12 +0000
-To:     David Sterba <dsterba@suse.com>
-Cc:     torvalds@linux-foundation.org, David Sterba <dsterba@suse.com>,
-        clm@fb.com, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        s=default; t=1564784141;
+        bh=0VIAzOo4zb+swZnODQr4hpD7QckO3wZdHQ/+75GTF1U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uKqTme8pWjp2pFS3sAbNjLV/ACQVZk5uy3e4F7mchlG8JEQKkiMhiZALaWbrk9dTF
+         PIZ+QsF9kwvw77M+BSZBGxYm/mPQD5HFsDY/DsHx0F1SVUB4RXpIp0jCG2gTlP88Gv
+         KFks3NVPUOXw2b//d5n6Fhj08gxat8oPs+x8imWQ=
+Date:   Fri, 2 Aug 2019 17:15:40 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     Stephen Hemminger <sthemmin@microsoft.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "driverdev-devel@linuxdriverproject.org" 
+        <driverdev-devel@linuxdriverproject.org>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        "jackm@mellanox.com" <jackm@mellanox.com>
+Subject: Re: [PATCH] PCI: hv: Fix panic by calling hv_pci_remove_slots()
+ earlier
+Message-ID: <20190802221540.GN151852@google.com>
+References: <PU1P153MB0169DBCFEE7257F5BB93580ABFD90@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <20190802194053.GL151852@google.com>
+ <PU1P153MB01698F51FE22C39086CC8353BFD90@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PU1P153MB01698F51FE22C39086CC8353BFD90@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri,  2 Aug 2019 18:50:19 +0200:
+On Fri, Aug 02, 2019 at 08:31:26PM +0000, Dexuan Cui wrote:
+> > From: Bjorn Helgaas <helgaas@kernel.org>
+> > Sent: Friday, August 2, 2019 12:41 PM
+> > The subject line only describes the mechanical code change, which is
+> > obvious from the patch.  It would be better if we could say something
+> > about *why* we need this.
+> 
+> Hi Bjorn,
+> Sorry. I'll try to write a better changelog in v2. :-)
+>  
+> > On Fri, Aug 02, 2019 at 01:32:28AM +0000, Dexuan Cui wrote:
+> > >
+> > > When a slot is removed, the pci_dev must still exist.
+> > >
+> > > pci_remove_root_bus() removes and free all the pci_devs, so
+> > > hv_pci_remove_slots() must be called before pci_remove_root_bus(),
+> > > otherwise a general protection fault can happen, if the kernel is built
+> > 
+> > "general protection fault" is an x86 term that doesn't really say what
+> > the issue is.  I suspect this would be a "use-after-free" problem.
+> 
+> Yes, it's use-after-free. I'll fix the the wording.
+>  
+> > > --- a/drivers/pci/controller/pci-hyperv.c
+> > > +++ b/drivers/pci/controller/pci-hyperv.c
+> > > @@ -2757,8 +2757,8 @@ static int hv_pci_remove(struct hv_device *hdev)
+> > >  		/* Remove the bus from PCI's point of view. */
+> > >  		pci_lock_rescan_remove();
+> > >  		pci_stop_root_bus(hbus->pci_bus);
+> > > -		pci_remove_root_bus(hbus->pci_bus);
+> > >  		hv_pci_remove_slots(hbus);
+> > > +		pci_remove_root_bus(hbus->pci_bus);
+> > 
+> > I'm curious about why we need hv_pci_remove_slots() at all.  None of
+> > the other callers of pci_stop_root_bus() and pci_remove_root_bus() do
+> > anything similar to hv_pci_remove_slots().
+> > 
+> > Surely some of those callers also support slots, so there must be some
+> > other path that calls pci_destroy_slot() in those cases.  Can we use a
+> > similar strategy here?
+> 
+> Originally Stephen Heminger added the slot code for pci-hyperv.c:
+> a15f2c08c708 ("PCI: hv: support reporting serial number as slot information")
+> So he may know this better. My understanding is: we can not use the similar
+> stragegy used in the 2 other users of pci_create_slot():
+> 
+> drivers/pci/hotplug/pci_hotplug_core.c calls pci_create_slot().
+> It looks drivers/pci/hotplug/ is quite different from pci-hyperv.c because
+> pci-hyper-v uses a simple *private* hot-plug protocol, making it impossible
+> to use the API pci_hp_register() and pci_hp_destroy() -> pci_destroy_slot().
+> 
+> drivers/acpi/pci_slot.c calls pci_create_slot(), and saves the created slots in
+> the static "slot_list" list in the same file. Again, since pci-hyper-v uses a private
+> PCI-device-discovery protocol (which is based on VMBus rather the emulated
+> ACPI and PCI), acpi_pci_slot_enumerate() can not find the PCI devices that are
+> discovered by pci-hyperv, so we can not use the standard register_slot() ->
+> pci_create_slot() to create the slots and hence acpi_pci_slot_remove() -> 
+> pci_destroy_slot() can not work for pci-hyperv.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.3-rc2-tag
+Hmm, ok.  This still doesn't seem right to me, but I think the bottom
+line will be that the current slot registration interfaces just don't
+work quite right for all the cases we want them to.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/d38c3fa6f959b8b5b167f120d70d66418714dbe4
+Maybe it would be a good project for somebody to rethink them, but it
+doesn't seem practical for *this* patch.  Thanks for looking into it
+this far!
 
-Thank you!
+> I think I can use this as the v2 changelog:
+> 
+> The slot must be removed before the pci_dev is removed, otherwise a panic
+> can happen due to use-after-free.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Sounds good.
+
+Bjorn
