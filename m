@@ -2,89 +2,129 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F5BDC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 17:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 938D2C32753
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 17:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D894421773
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 17:04:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564765472;
-	bh=VO6eqvz9WhBLXxyWQo85qGFVHXdYBUZ2uTSISiN3Ihg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Zcx3myE8UJLfQJcq5+Zd2XdjLkudXD3Gi/Hlxc15VKNV5MCs8Xn9zO5CztThzEEh7
-	 CWHjfv7lNnKZv9oqO1FXSKb3a1/xHvBcHsv4U6r9H4T0aKM/6ijjUrJXvDrHhvc4Uv
-	 EXCldBZU9HeAHSN4wO13/45oR0vXwYXCQEKHq9dI=
+	by mail.kernel.org (Postfix) with ESMTP id 7508220644
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 17:04:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403938AbfHBREb (ORCPT
+        id S2404010AbfHBREt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 13:04:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36032 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 13:04:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:55210 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731663AbfHBREb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 13:04:31 -0400
-Received: from localhost (unknown [106.51.106.149])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BC8A20644;
-        Fri,  2 Aug 2019 17:04:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564765470;
-        bh=VO6eqvz9WhBLXxyWQo85qGFVHXdYBUZ2uTSISiN3Ihg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YQDbj8wG/ufaXEdOl+bf2Eb2Z8ZRYFMh1EdsbLiNzSrEOtoQiRSxpRzW1zUaj6AQ5
-         0XT3pTOdkVez6GJ1utET8ijTVr4LLRbaINqDvgIIYFrSJKc4MJ5ncwtU/oMfuYNbs4
-         2xsgFL0zNKu02J41eosP8f3ocVzu0J8H9V9TLFPU=
-Date:   Fri, 2 Aug 2019 22:33:17 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [RFC PATCH 20/40] soundwire: prototypes for suspend/resume
-Message-ID: <20190802170317.GX12733@vkoul-mobl.Dlink>
-References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
- <20190725234032.21152-21-pierre-louis.bossart@linux.intel.com>
+        id S1731663AbfHBREt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 13:04:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4A9D2344;
+        Fri,  2 Aug 2019 10:04:48 -0700 (PDT)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 983793F575;
+        Fri,  2 Aug 2019 10:04:47 -0700 (PDT)
+Subject: Re: [PATCH v2 03/24] EDAC, ghes: Remove pvt->detail_location string
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190624150758.6695-1-rrichter@marvell.com>
+ <20190624150758.6695-4-rrichter@marvell.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <abbab8fd-d87e-d37d-b077-9f43474beaf8@arm.com>
+Date:   Fri, 2 Aug 2019 18:04:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190725234032.21152-21-pierre-louis.bossart@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190624150758.6695-4-rrichter@marvell.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25-07-19, 18:40, Pierre-Louis Bossart wrote:
+Hi Robert,
 
-Please do provide the changelog on why this change is needed.
-
-> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> ---
->  drivers/soundwire/cadence_master.h | 3 +++
->  1 file changed, 3 insertions(+)
+On 24/06/2019 16:08, Robert Richter wrote:
+> The detail_location[] string in struct ghes_edac_pvt is complete
+> useless and data is just copied around. Put everything into
+> e->other_detail from the beginning.
 > 
-> diff --git a/drivers/soundwire/cadence_master.h b/drivers/soundwire/cadence_master.h
-> index c0bf6ff00a44..d375bbfead18 100644
-> --- a/drivers/soundwire/cadence_master.h
-> +++ b/drivers/soundwire/cadence_master.h
-> @@ -165,6 +165,9 @@ int sdw_cdns_enable_interrupt(struct sdw_cdns *cdns);
->  
->  void sdw_cdns_debugfs_init(struct sdw_cdns *cdns, struct dentry *root);
->  
-> +int sdw_cdns_suspend(struct sdw_cdns *cdns);
-> +bool sdw_cdns_check_resume_status(struct sdw_cdns *cdns);
-> +
->  int sdw_cdns_get_stream(struct sdw_cdns *cdns,
->  			struct sdw_cdns_streams *stream,
->  			u32 ch, u32 dir);
-> -- 
-> 2.20.1
+> Signed-off-by: Robert Richter <rrichter@marvell.com>
+> ---
 
--- 
-~Vinod
+
+> diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
+> index d095d98d6a8d..049de73c3bad 100644
+> --- a/drivers/edac/ghes_edac.c
+> +++ b/drivers/edac/ghes_edac.c
+> @@ -21,8 +21,7 @@ struct ghes_edac_pvt {
+>  	struct mem_ctl_info *mci;
+>  
+>  	/* Buffers for the error handling routine */
+> -	char detail_location[240];
+> -	char other_detail[160];
+> +	char other_detail[400];
+>  	char msg[80];
+>  };
+>  
+> @@ -224,13 +223,14 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
+>  	e->error_count = 1;
+>  	e->grain = 1;
+>  	strcpy(e->label, "unknown label");
+> -	e->msg = pvt->msg;
+> -	e->other_detail = pvt->other_detail;
+>  	e->top_layer = -1;
+>  	e->mid_layer = -1;
+>  	e->low_layer = -1;
+> -	*pvt->other_detail = '\0';
+> +	e->msg = pvt->msg;
+> +	e->other_detail = pvt->other_detail;
+> +
+>  	*pvt->msg = '\0';
+> +	*pvt->other_detail = '\0';
+>  
+>  	switch (sev) {
+>  	case GHES_SEV_CORRECTED:
+> @@ -361,6 +361,8 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
+>  
+>  	/* All other fields are mapped on e->other_detail */
+>  	p = pvt->other_detail;
+> +	p += snprintf(p, sizeof(pvt->other_detail),
+> +		"APEI location: %s ", e->location);
+>  	if (mem_err->validation_bits & CPER_MEM_VALID_ERROR_STATUS) {
+>  		u64 status = mem_err->error_status;
+>  
+> @@ -443,12 +445,10 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
+>  	grain_bits = fls_long(e->grain - 1);
+>  
+>  	/* Generate the trace event */
+> -	snprintf(pvt->detail_location, sizeof(pvt->detail_location),
+> -		 "APEI location: %s %s", e->location, e->other_detail);
+>  	trace_mc_event(type, e->msg, e->label, e->error_count,
+>  		       mci->mc_idx, e->top_layer, e->mid_layer, e->low_layer,
+>  		       (e->page_frame_number << PAGE_SHIFT) | e->offset_in_page,
+> -		       grain_bits, e->syndrome, pvt->detail_location);
+> +		       grain_bits, e->syndrome, e->other_detail);
+>  
+>  	edac_raw_mc_handle_error(type, mci, e);
+>  	spin_unlock_irqrestore(&ghes_lock, flags);
+
+After a game of spot-the-difference: you added a newline.
+Reviewed-by: James Morse <james.morse@arm.com>
+
+Previously here:
+https://lore.kernel.org/linux-edac/7017c91e-8923-c8d2-26ca-875328ab855a@arm.com/
+
+Please pick up tags when posting a new version.
+
+
+Thanks,
+
+James
