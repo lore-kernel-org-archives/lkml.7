@@ -2,304 +2,207 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B29C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A887C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEDAF2087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:17:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C7662087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:19:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403790AbfHBNRN (ORCPT
+        id S2393173AbfHBNTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:17:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42676 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726030AbfHBNRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:17:13 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2AC83308FC22;
-        Fri,  2 Aug 2019 13:17:12 +0000 (UTC)
-Received: from krava (ovpn-204-20.brq.redhat.com [10.40.204.20])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 6D39C5C207;
-        Fri,  2 Aug 2019 13:17:08 +0000 (UTC)
-Date:   Fri, 2 Aug 2019 15:17:07 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Kyle Meyer <meyerk@hpe.com>
-Cc:     Kyle Meyer <kyle.meyer@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf tools: Replace MAX_NR_CPUS with nr_cpus_onln
-Message-ID: <20190802131707.GD27223@krava>
-References: <20190726195139.178560-1-meyerk@stormcage.eag.rdlabs.hpecorp.net>
+        Fri, 2 Aug 2019 09:19:12 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:12368 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2390134AbfHBNTM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:19:12 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x72DCRAQ081222
+        for <linux-kernel@vger.kernel.org>; Fri, 2 Aug 2019 09:19:11 -0400
+Received: from e32.co.us.ibm.com (e32.co.us.ibm.com [32.97.110.150])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2u4ntc0bhx-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 09:19:10 -0400
+Received: from localhost
+        by e32.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <leonardo@linux.ibm.com>;
+        Fri, 2 Aug 2019 14:19:09 +0100
+Received: from b03cxnp08025.gho.boulder.ibm.com (9.17.130.17)
+        by e32.co.us.ibm.com (192.168.1.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 2 Aug 2019 14:19:05 +0100
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x72DJ4FD54919644
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 2 Aug 2019 13:19:05 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D14A478064;
+        Fri,  2 Aug 2019 13:19:04 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0FEF27806E;
+        Fri,  2 Aug 2019 13:19:01 +0000 (GMT)
+Received: from leobras.br.ibm.com (unknown [9.18.235.147])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri,  2 Aug 2019 13:19:01 +0000 (GMT)
+Subject: Re: [PATCH 1/1] pseries/hotplug-memory.c: Replace nested ifs by
+ switch-case
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc:     Nathan Lynch <nathanl@linux.ibm.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        David Hildenbrand <david@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Rob Herring <robh@kernel.org>
+Date:   Fri, 02 Aug 2019 10:18:57 -0300
+In-Reply-To: <87sgqjkb1z.fsf@concordia.ellerman.id.au>
+References: <20190801225251.17864-1-leonardo@linux.ibm.com>
+         <87sgqjkb1z.fsf@concordia.ellerman.id.au>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-vwPnc5uZh7PN20LCHdZJ"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190726195139.178560-1-meyerk@stormcage.eag.rdlabs.hpecorp.net>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 02 Aug 2019 13:17:12 +0000 (UTC)
+X-TM-AS-GCONF: 00
+x-cbid: 19080213-0004-0000-0000-0000153200A1
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011537; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000287; SDB=6.01241021; UDB=6.00654470; IPR=6.01022452;
+ MB=3.00028007; MTD=3.00000008; XFM=3.00000015; UTC=2019-08-02 13:19:08
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19080213-0005-0000-0000-00008CB8077D
+Message-Id: <e076cff01d58c8b4031f2dfd4eeb0883d71ff495.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-02_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908020136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 02:51:39PM -0500, Kyle Meyer wrote:
-> The variables nr_cpus_onln and max_caches are dynamic alternatives for
-> MAX_NR_CPUS and MAX_CACHES as they are initialized at runtime. MAX_NR_CPUS
-> is still used by DECLARE_BITMAP() at compile time, however, nr_cpus_onln
-> replaces it elsewhere throughout perf.
-> 
-> This patch was tested using "perf record -a -g" on both an eight socket
-> (288 CPUs) system and a single socket (36 CPUs) system. Each system was then
-> rebooted single socket (36 CPUs) / eight socket (288 CPUs) and "perf
-> report" used to read the perf.data file. "perf report --header" was used to
-> confirm that each perf.data had information on 288 CPUs / 36 CPUs.
-> 
-> This patch is meant to be built against perf tools: Increase MAX_NR_CPUS and
-> MAX_CACHES (commit 9f94c7f947e919c343b30f080285af53d0fa9902).
 
-hi,
-could you please rebase to latest Arnaldo's perf/core,
-the cpumap.c got changed recently and I can't apply
-your patch anymore:
+--=-vwPnc5uZh7PN20LCHdZJ
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-	patching file perf.c
-	patching file perf.h
-	patching file util/cpumap.c
-	Hunk #1 FAILED at 72.
-	Hunk #2 FAILED at 83.
-	Hunk #3 FAILED at 170.
-	3 out of 3 hunks FAILED -- saving rejects to file util/cpumap.c.rej
-	patching file util/header.c
-	Hunk #1 succeeded at 1126 with fuzz 2 (offset 1 line).
-	patching file util/machine.c
-	patching file util/stat.c
-	Hunk #1 succeeded at 208 with fuzz 1.
-	patching file util/svghelper.c
-	Hunk #1 succeeded at 706 (offset 1 line).
-	Hunk #2 succeeded at 721 (offset 1 line).
-	Hunk #3 succeeded at 738 (offset 1 line).
-	Hunk #4 succeeded at 785 (offset 1 line).
+On Fri, 2019-08-02 at 22:26 +1000, Michael Ellerman wrote:
+> Leonardo Bras <leonardo@linux.ibm.com> writes:
+> > I noticed these nested ifs can be easily replaced by switch-cases,
+> > which can improve readability.
+> >=20
+> > Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
+> > ---
+> >  .../platforms/pseries/hotplug-memory.c        | 26 +++++++++++++------
+> >  1 file changed, 18 insertions(+), 8 deletions(-)
+>=20
+> Thanks, this looks sensible.
+>=20
+> Please use "powerpc/" as the prefix on your patches, eg. in this case:
+>=20
+> "powerpc/pseries/hotplug-memory.c: Replace nested ifs by switch-case"
+>=20
+Ok, I will make sure to do that next time.
+Thanks!
 
-thanks,
-jirka
+> I'll fix it up this time when I apply.
+>=20
+> cheers
+>=20
+> > diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/pow=
+erpc/platforms/pseries/hotplug-memory.c
+> > index 46d0d35b9ca4..8e700390f3d6 100644
+> > --- a/arch/powerpc/platforms/pseries/hotplug-memory.c
+> > +++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
+> > @@ -880,34 +880,44 @@ int dlpar_memory(struct pseries_hp_errorlog *hp_e=
+log)
+> > =20
+> >  	switch (hp_elog->action) {
+> >  	case PSERIES_HP_ELOG_ACTION_ADD:
+> > -		if (hp_elog->id_type =3D=3D PSERIES_HP_ELOG_ID_DRC_COUNT) {
+> > +		switch (hp_elog->id_type) {
+> > +		case PSERIES_HP_ELOG_ID_DRC_COUNT:
+> >  			count =3D hp_elog->_drc_u.drc_count;
+> >  			rc =3D dlpar_memory_add_by_count(count);
+> > -		} else if (hp_elog->id_type =3D=3D PSERIES_HP_ELOG_ID_DRC_INDEX) {
+> > +			break;
+> > +		case PSERIES_HP_ELOG_ID_DRC_INDEX:
+> >  			drc_index =3D hp_elog->_drc_u.drc_index;
+> >  			rc =3D dlpar_memory_add_by_index(drc_index);
+> > -		} else if (hp_elog->id_type =3D=3D PSERIES_HP_ELOG_ID_DRC_IC) {
+> > +			break;
+> > +		case PSERIES_HP_ELOG_ID_DRC_IC:
+> >  			count =3D hp_elog->_drc_u.ic.count;
+> >  			drc_index =3D hp_elog->_drc_u.ic.index;
+> >  			rc =3D dlpar_memory_add_by_ic(count, drc_index);
+> > -		} else {
+> > +			break;
+> > +		default:
+> >  			rc =3D -EINVAL;
+> > +			break;
+> >  		}
+> > =20
+> >  		break;
+> >  	case PSERIES_HP_ELOG_ACTION_REMOVE:
+> > -		if (hp_elog->id_type =3D=3D PSERIES_HP_ELOG_ID_DRC_COUNT) {
+> > +		switch (hp_elog->id_type) {
+> > +		case PSERIES_HP_ELOG_ID_DRC_COUNT:
+> >  			count =3D hp_elog->_drc_u.drc_count;
+> >  			rc =3D dlpar_memory_remove_by_count(count);
+> > -		} else if (hp_elog->id_type =3D=3D PSERIES_HP_ELOG_ID_DRC_INDEX) {
+> > +			break;
+> > +		case PSERIES_HP_ELOG_ID_DRC_INDEX:
+> >  			drc_index =3D hp_elog->_drc_u.drc_index;
+> >  			rc =3D dlpar_memory_remove_by_index(drc_index);
+> > -		} else if (hp_elog->id_type =3D=3D PSERIES_HP_ELOG_ID_DRC_IC) {
+> > +			break;
+> > +		case PSERIES_HP_ELOG_ID_DRC_IC:
+> >  			count =3D hp_elog->_drc_u.ic.count;
+> >  			drc_index =3D hp_elog->_drc_u.ic.index;
+> >  			rc =3D dlpar_memory_remove_by_ic(count, drc_index);
+> > -		} else {
+> > +			break;
+> > +		default:
+> >  			rc =3D -EINVAL;
+> > +			break;
+> >  		}
+> > =20
+> >  		break;
+> > --=20
+> > 2.20.1
 
-> 
-> Signed-off-by: Kyle Meyer <kyle.meyer@hpe.com>
-> Cc: Russ Anderson <russ.anderson@hpe.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  tools/perf/perf.c           | 10 ++++++++++
->  tools/perf/perf.h           |  1 +
->  tools/perf/util/cpumap.c    |  6 +++---
->  tools/perf/util/header.c    |  5 +++--
->  tools/perf/util/machine.c   | 11 +++++------
->  tools/perf/util/stat.c      |  4 ++--
->  tools/perf/util/svghelper.c | 10 +++++-----
->  7 files changed, 29 insertions(+), 18 deletions(-)
-> 
-> diff --git a/tools/perf/perf.c b/tools/perf/perf.c
-> index 97e2628ea5dd..0d0162fb4e24 100644
-> --- a/tools/perf/perf.c
-> +++ b/tools/perf/perf.c
-> @@ -428,6 +428,16 @@ int main(int argc, const char **argv)
->  	const char *cmd;
->  	char sbuf[STRERR_BUFSIZE];
->  
-> +	nr_cpus_onln = sysconf(_SC_NPROCESSORS_ONLN);
-> +	if (nr_cpus_onln < 0) {
-> +		fprintf(stderr, "Cannot determine the number of CPUs currently online.\n");
-> +		goto out;
-> +	} 
-> +	if (nr_cpus_onln > MAX_NR_CPUS) {
-> +		fprintf(stderr, "The number of CPUs currently online is too large, consider raising MAX_NR_CPUS.\n");
-> +		nr_cpus_onln = MAX_NR_CPUS;
-> +	}
-> +
->  	/* libsubcmd init */
->  	exec_cmd_init("perf", PREFIX, PERF_EXEC_PATH, EXEC_PATH_ENVIRONMENT);
->  	pager_init(PERF_PAGER_ENVIRONMENT);
-> diff --git a/tools/perf/perf.h b/tools/perf/perf.h
-> index 74d0124d38f3..603391cac85b 100644
-> --- a/tools/perf/perf.h
-> +++ b/tools/perf/perf.h
-> @@ -29,6 +29,7 @@ static inline unsigned long long rdclock(void)
->  #define MAX_NR_CPUS			2048
->  #endif
->  
-> +int nr_cpus_onln;
->  extern const char *input_name;
->  extern bool perf_host, perf_guest;
->  extern const char perf_version_string[];
-> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-> index 3acfbe34ebaf..f634c56b1388 100644
-> --- a/tools/perf/util/cpumap.c
-> +++ b/tools/perf/util/cpumap.c
-> @@ -72,7 +72,7 @@ struct cpu_map *cpu_map__read(FILE *file)
->  			int new_max = nr_cpus + cpu - prev - 1;
->  
->  			if (new_max >= max_entries) {
-> -				max_entries = new_max + MAX_NR_CPUS / 2;
-> +				max_entries = new_max + nr_cpus_onln / 2;
->  				tmp = realloc(tmp_cpus, max_entries * sizeof(int));
->  				if (tmp == NULL)
->  					goto out_free_tmp;
-> @@ -83,7 +83,7 @@ struct cpu_map *cpu_map__read(FILE *file)
->  				tmp_cpus[nr_cpus++] = prev;
->  		}
->  		if (nr_cpus == max_entries) {
-> -			max_entries += MAX_NR_CPUS;
-> +			max_entries += nr_cpus_onln;
->  			tmp = realloc(tmp_cpus, max_entries * sizeof(int));
->  			if (tmp == NULL)
->  				goto out_free_tmp;
-> @@ -170,7 +170,7 @@ struct cpu_map *cpu_map__new(const char *cpu_list)
->  					goto invalid;
->  
->  			if (nr_cpus == max_entries) {
-> -				max_entries += MAX_NR_CPUS;
-> +				max_entries += nr_cpus_onln;
->  				tmp = realloc(tmp_cpus, max_entries * sizeof(int));
->  				if (tmp == NULL)
->  					goto invalid;
-> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> index c24db7f4909c..030c0a8f6664 100644
-> --- a/tools/perf/util/header.c
-> +++ b/tools/perf/util/header.c
-> @@ -1125,11 +1125,12 @@ static int build_caches(struct cpu_cache_level caches[], u32 size, u32 *cntp)
->  static int write_cache(struct feat_fd *ff,
->  		       struct perf_evlist *evlist __maybe_unused)
->  {
-> -	struct cpu_cache_level caches[MAX_CACHES];
-> +	u32 max_caches = (nr_cpus_onln * 4);
-> +	struct cpu_cache_level caches[max_caches];
->  	u32 cnt = 0, i, version = 1;
->  	int ret;
->  
-> -	ret = build_caches(caches, MAX_CACHES, &cnt);
-> +	ret = build_caches(caches, max_caches, &cnt);
->  	if (ret)
->  		goto out;
->  
-> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> index cf826eca3aaf..92720240676d 100644
-> --- a/tools/perf/util/machine.c
-> +++ b/tools/perf/util/machine.c
-> @@ -2615,7 +2615,7 @@ int __machine__synthesize_threads(struct machine *machine, struct perf_tool *too
->  
->  pid_t machine__get_current_tid(struct machine *machine, int cpu)
->  {
-> -	if (cpu < 0 || cpu >= MAX_NR_CPUS || !machine->current_tid)
-> +	if (cpu < 0 || cpu >= nr_cpus_onln || !machine->current_tid)
->  		return -1;
->  
->  	return machine->current_tid[cpu];
-> @@ -2632,16 +2632,15 @@ int machine__set_current_tid(struct machine *machine, int cpu, pid_t pid,
->  	if (!machine->current_tid) {
->  		int i;
->  
-> -		machine->current_tid = calloc(MAX_NR_CPUS, sizeof(pid_t));
-> +		machine->current_tid = calloc(nr_cpus_onln, sizeof(pid_t));
->  		if (!machine->current_tid)
->  			return -ENOMEM;
-> -		for (i = 0; i < MAX_NR_CPUS; i++)
-> +		for (i = 0; i < nr_cpus_onln; i++)
->  			machine->current_tid[i] = -1;
->  	}
->  
-> -	if (cpu >= MAX_NR_CPUS) {
-> -		pr_err("Requested CPU %d too large. ", cpu);
-> -		pr_err("Consider raising MAX_NR_CPUS\n");
-> +	if (cpu >= nr_cpus_onln) {
-> +		pr_err("Requested CPU %d too large, there are %d CPUs currently online.\n", cpu, nr_cpus_onln);
->  		return -EINVAL;
->  	}
->  
-> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-> index db8a6cf336be..f87bdc140a4b 100644
-> --- a/tools/perf/util/stat.c
-> +++ b/tools/perf/util/stat.c
-> @@ -208,7 +208,7 @@ void perf_evlist__reset_stats(struct perf_evlist *evlist)
->  static void zero_per_pkg(struct perf_evsel *counter)
->  {
->  	if (counter->per_pkg_mask)
-> -		memset(counter->per_pkg_mask, 0, MAX_NR_CPUS);
-> +		memset(counter->per_pkg_mask, 0, nr_cpus_onln);
->  }
->  
->  static int check_per_pkg(struct perf_evsel *counter,
-> @@ -227,7 +227,7 @@ static int check_per_pkg(struct perf_evsel *counter,
->  		return 0;
->  
->  	if (!mask) {
-> -		mask = zalloc(MAX_NR_CPUS);
-> +		mask = zalloc(nr_cpus_onln);
->  		if (!mask)
->  			return -ENOMEM;
->  
-> diff --git a/tools/perf/util/svghelper.c b/tools/perf/util/svghelper.c
-> index 76cc54000483..4c38f70520c5 100644
-> --- a/tools/perf/util/svghelper.c
-> +++ b/tools/perf/util/svghelper.c
-> @@ -705,7 +705,7 @@ static void scan_thread_topology(int *map, struct topology *t, int cpu, int *pos
->  
->  		for_each_set_bit(thr,
->  				 cpumask_bits(&t->sib_thr[i]),
-> -				 MAX_NR_CPUS)
-> +				 nr_cpus_onln)
->  			if (map[thr] == -1)
->  				map[thr] = (*pos)++;
->  	}
-> @@ -720,7 +720,7 @@ static void scan_core_topology(int *map, struct topology *t)
->  	for (i = 0; i < t->sib_core_nr; i++)
->  		for_each_set_bit(cpu,
->  				 cpumask_bits(&t->sib_core[i]),
-> -				 MAX_NR_CPUS)
-> +				 nr_cpus_onln)
->  			scan_thread_topology(map, t, cpu, &pos);
->  }
->  
-> @@ -737,7 +737,7 @@ static int str_to_bitmap(char *s, cpumask_t *b)
->  
->  	for (i = 0; i < m->nr; i++) {
->  		c = m->map[i];
-> -		if (c >= MAX_NR_CPUS) {
-> +		if (c >= nr_cpus_onln) {
->  			ret = -1;
->  			break;
->  		}
-> @@ -784,13 +784,13 @@ int svg_build_topology_map(char *sib_core, int sib_core_nr,
->  		sib_thr += strlen(sib_thr) + 1;
->  	}
->  
-> -	topology_map = malloc(sizeof(int) * MAX_NR_CPUS);
-> +	topology_map = malloc(sizeof(int) * nr_cpus_onln);
->  	if (!topology_map) {
->  		fprintf(stderr, "topology: no memory\n");
->  		goto exit;
->  	}
->  
-> -	for (i = 0; i < MAX_NR_CPUS; i++)
-> +	for (i = 0; i < nr_cpus_onln; i++)
->  		topology_map[i] = -1;
->  
->  	scan_core_topology(topology_map, &t);
-> -- 
-> 2.12.3
-> 
+--=-vwPnc5uZh7PN20LCHdZJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl1EOEEACgkQlQYWtz9S
+ttTIKg/+JCnJgwlUWHjkDC27RbrkjW0/tUdtQFNZomWZkyZ7C28vj7wOJzREpQ9O
+04+Opsnw0/cpuwdrq86Lpb4KulHMhCXA0vODqiCsBsxpaG5qBqzuqckX5KCk+3RS
+GqlDu93XjqZhUIeLLNot9ibMOw4QZAeYBxiimpBz75KprEjjuk8cjXZdzIG+L8uz
+3XCa+vSuNfE7gdk1mpS9HoGRwbh/JfRhL1w4kn69CEmPHYirZqd5rC89dJ91hcMo
+bh2DYQRqWBJcmpFJJ7UNfTdLtwqF0Xs8w0VheLtuC45WnIaYobIp/EaMFDiVWI/+
+bDi+BzI7jUdiGckP3IDFrXH4X2WWoP7lccHyDnORdlmDxLMnsm3KWlIFniHzGg7d
+nhUKBuPXuO6M+ETxYOnVEUufuZPel9rZUCEtPQI2ml0Oz4rPPxm7f5uk1WbtA8DS
+HhgzStxJZQURS8WJ+6wkPYmXHeQbdq0ZIaRdOyyUo8hHA3JUtiuryH9Ns7reOFrZ
+RhToWUU1DuRcFJFSaygPU34Ku1Iq5tR/76dgIMCgBfxBvV3LZ/HDpwPfM6jDTQiv
+jK/DD0aD1to5TN3GhLNv3dUMuT1xli2B7m8YHlIhl6Bl4lBiqjyy6aHdQnBgJYSR
+telNhvd4x+4M009L5J2/7BVJaYIIaRFw0cmcfId9ZwHRfrDj8G8=
+=oLlr
+-----END PGP SIGNATURE-----
+
+--=-vwPnc5uZh7PN20LCHdZJ--
+
