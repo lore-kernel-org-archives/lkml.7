@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A41C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB492C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9D3B216C8
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A70672171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:46:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739169;
-	bh=MjP5+T4QgA4Dko0e4aMo16WA7kdWEodafDQJ+oqDRZ4=;
+	s=default; t=1564739173;
+	bh=QqxshE2Taf0k0xIZzot/QuHMTD8P80Zaz6m6QpJn0Sk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XIK0tVMWkwO4lqxRvDhO4E4yOf0AzaVLNjqDfRaMgv94yFq6hc6U37wrLGbshUkTR
-	 0pJGrch3EWGBPOOdLmK5u8uaMTvef0uXy4+jnMS1qXCqnoN0Eq+gVVs90MTWc4aD12
-	 ffvzLwZgK1em2+fKdhPibh5Cf2mHxzGKa5yZyr2g=
+	b=YLOVBUaqVjNXj72qrdvR6QqDuFG5Fe45czV8zAc/QaRYnqyWQo7UpLTXWLXqXgINp
+	 WnzkahxX3MD6mm7eSXD4B0PDNwg8q7Vgf2MgaKnlnf1lD5ga58O8TglUJclvLCKaoZ
+	 Ml9BRyHcZIffGdF6yLquQgmx0DxqoX4Pj8N1E2FI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405475AbfHBJqD (ORCPT
+        id S2405491AbfHBJqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:46:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49994 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:46:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405460AbfHBJqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:46:00 -0400
+        id S2405486AbfHBJqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:46:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F66F2087E;
-        Fri,  2 Aug 2019 09:45:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0B122086A;
+        Fri,  2 Aug 2019 09:46:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739160;
-        bh=MjP5+T4QgA4Dko0e4aMo16WA7kdWEodafDQJ+oqDRZ4=;
+        s=default; t=1564739165;
+        bh=QqxshE2Taf0k0xIZzot/QuHMTD8P80Zaz6m6QpJn0Sk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=alv3ZO7VApeSEGp+G9U/NNko0Dei9xZHiIJfMeK0xMIVVYKJCcW2hXVB8gp0XTReO
-         g+gaCD3bf9cCKfHqxqx38LHAKlarzjyMwRCcLCBWHIrm7TS5cwiVtOmMkXxPxtFmta
-         QW+iRPa5i1GYUEbooQFGfyIuDdiYSgTeVHOxFEzs=
+        b=fkkOJau1YfO38NLpoejlH/hs+zOlxzL1BNo4WGV+uKjry0XdXyash88drIaHXFQS8
+         IZrU4yXnRDS+p0yGFlJER2cPjytUFs2UiHUvg4m+59MTTU7Cd82hEol0XrHOCTD6Rl
+         06BDdSjM51rPrO1wpFAn9eyp0iG7FDqPawUKjhOg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Ammy Yi <ammy.yi@intel.com>
-Subject: [PATCH 4.9 121/223] intel_th: msu: Fix single mode with disabled IOMMU
-Date:   Fri,  2 Aug 2019 11:35:46 +0200
-Message-Id: <20190802092247.012932813@linuxfoundation.org>
+        stable@vger.kernel.org, Horia Geanta <horia.geanta@nxp.com>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.9 113/223] crypto: caam - limit output IV to CBC to work around CTR mode DMA issue
+Date:   Fri,  2 Aug 2019 11:35:38 +0200
+Message-Id: <20190802092246.560585727@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -61,40 +62,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-commit 918b8646497b5dba6ae82d4a7325f01b258972b9 upstream.
+commit ed527b13d800dd515a9e6c582f0a73eca65b2e1b upstream.
 
-Commit 4e0eaf239fb3 ("intel_th: msu: Fix single mode with IOMMU") switched
-the single mode code to use dma mapping pages obtained from the page
-allocator, but with IOMMU disabled, that may lead to using SWIOTLB bounce
-buffers and without additional sync'ing, produces empty trace buffers.
+The CAAM driver currently violates an undocumented and slightly
+controversial requirement imposed by the crypto stack that a buffer
+referred to by the request structure via its virtual address may not
+be modified while any scatterlists passed via the same request
+structure are mapped for inbound DMA.
 
-Fix this by using a DMA32 GFP flag to the page allocation in single mode,
-as the device supports full 32-bit DMA addressing.
+This may result in errors like
 
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Fixes: 4e0eaf239fb3 ("intel_th: msu: Fix single mode with IOMMU")
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reported-by: Ammy Yi <ammy.yi@intel.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20190621161930.60785-4-alexander.shishkin@linux.intel.com
+  alg: aead: decryption failed on test 1 for gcm_base(ctr-aes-caam,ghash-generic): ret=74
+  alg: aead: Failed to load transform for gcm(aes): -2
+
+on non-cache coherent systems, due to the fact that the GCM driver
+passes an IV buffer by virtual address which shares a cacheline with
+the auth_tag buffer passed via a scatterlist, resulting in corruption
+of the auth_tag when the IV is updated while the DMA mapping is live.
+
+Since the IV that is returned to the caller is only valid for CBC mode,
+and given that the in-kernel users of CBC (such as CTS) don't trigger the
+same issue as the GCM driver, let's just disable the output IV generation
+for all modes except CBC for the time being.
+
+Fixes: 854b06f76879 ("crypto: caam - properly set IV after {en,de}crypt")
+Cc: Horia Geanta <horia.geanta@nxp.com>
+Cc: Iuliana Prodan <iuliana.prodan@nxp.com>
+Reported-by: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Reviewed-by: Horia Geanta <horia.geanta@nxp.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+[ Horia: backported to 4.9 ]
+Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwtracing/intel_th/msu.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/crypto/caam/caamalg.c |   16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
---- a/drivers/hwtracing/intel_th/msu.c
-+++ b/drivers/hwtracing/intel_th/msu.c
-@@ -638,7 +638,7 @@ static int msc_buffer_contig_alloc(struc
- 		goto err_out;
+--- a/drivers/crypto/caam/caamalg.c
++++ b/drivers/crypto/caam/caamalg.c
+@@ -2015,6 +2015,7 @@ static void ablkcipher_encrypt_done(stru
+ 	struct ablkcipher_request *req = context;
+ 	struct ablkcipher_edesc *edesc;
+ 	struct crypto_ablkcipher *ablkcipher = crypto_ablkcipher_reqtfm(req);
++	struct caam_ctx *ctx = crypto_ablkcipher_ctx(ablkcipher);
+ 	int ivsize = crypto_ablkcipher_ivsize(ablkcipher);
  
- 	ret = -ENOMEM;
--	page = alloc_pages(GFP_KERNEL | __GFP_ZERO, order);
-+	page = alloc_pages(GFP_KERNEL | __GFP_ZERO | GFP_DMA32, order);
- 	if (!page)
- 		goto err_free_sgt;
+ #ifdef DEBUG
+@@ -2040,10 +2041,11 @@ static void ablkcipher_encrypt_done(stru
+ 
+ 	/*
+ 	 * The crypto API expects us to set the IV (req->info) to the last
+-	 * ciphertext block. This is used e.g. by the CTS mode.
++	 * ciphertext block when running in CBC mode.
+ 	 */
+-	scatterwalk_map_and_copy(req->info, req->dst, req->nbytes - ivsize,
+-				 ivsize, 0);
++	if ((ctx->class1_alg_type & OP_ALG_AAI_MASK) == OP_ALG_AAI_CBC)
++		scatterwalk_map_and_copy(req->info, req->dst, req->nbytes -
++					 ivsize, ivsize, 0);
+ 
+ 	kfree(edesc);
+ 
+@@ -2056,6 +2058,7 @@ static void ablkcipher_decrypt_done(stru
+ 	struct ablkcipher_request *req = context;
+ 	struct ablkcipher_edesc *edesc;
+ 	struct crypto_ablkcipher *ablkcipher = crypto_ablkcipher_reqtfm(req);
++	struct caam_ctx *ctx = crypto_ablkcipher_ctx(ablkcipher);
+ 	int ivsize = crypto_ablkcipher_ivsize(ablkcipher);
+ 
+ #ifdef DEBUG
+@@ -2080,10 +2083,11 @@ static void ablkcipher_decrypt_done(stru
+ 
+ 	/*
+ 	 * The crypto API expects us to set the IV (req->info) to the last
+-	 * ciphertext block.
++	 * ciphertext block when running in CBC mode.
+ 	 */
+-	scatterwalk_map_and_copy(req->info, req->src, req->nbytes - ivsize,
+-				 ivsize, 0);
++	if ((ctx->class1_alg_type & OP_ALG_AAI_MASK) == OP_ALG_AAI_CBC)
++		scatterwalk_map_and_copy(req->info, req->src, req->nbytes -
++					 ivsize, ivsize, 0);
+ 
+ 	kfree(edesc);
  
 
 
