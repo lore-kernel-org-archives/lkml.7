@@ -2,55 +2,52 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF11C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7BE3C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B64D42064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:01:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2CB52064A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:01:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564740064;
-	bh=MW5r1T5Jv+fgOBh4dB5YLMTC+scbJI543u0fy1TGH+U=;
+	s=default; t=1564740067;
+	bh=9eaYUajJCWUORYIELbRhhwap7w2FWbuSby3EDs7IJEg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yZ6drimNp0yJzsxpr8+uO2hzTYfqK71a1y1TxFu7l9Y8N4tCfwfYqnoWvhE0+ZeoR
-	 hOmR/0p85oabKSKEsAowhaZnbDKdW2L1Htj6q6i9RbkcZZPfI7jLpyfdijTf6MfrHb
-	 oVD9Fhd5mjandSpBsmf+eE7+ol/It2GsLceww3vQ=
+	b=Km7wkaovrGYW8JHHdGHCrBSa0Y4t02seFDePexme3tF4UYzlzt2uIPTVTe/hxApYq
+	 Xt1I1BKWaOZ9AjSoN0P8Fo0aCeqvENrb2UAcz2TENLyPIHx71BKFNIw9Lx0lKtrxXr
+	 Ydrl34hlpVpxiv3qFOgop47GW8RmPar6BqP8lJQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407067AbfHBKBD (ORCPT
+        id S2405228AbfHBJoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 06:01:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56940 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:44:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405655AbfHBJvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:51:38 -0400
+        id S2391488AbfHBJnM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:43:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C4D020B7C;
-        Fri,  2 Aug 2019 09:51:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCB112086A;
+        Fri,  2 Aug 2019 09:43:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739497;
-        bh=MW5r1T5Jv+fgOBh4dB5YLMTC+scbJI543u0fy1TGH+U=;
+        s=default; t=1564738992;
+        bh=9eaYUajJCWUORYIELbRhhwap7w2FWbuSby3EDs7IJEg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yCw8i8AqDI55SF7o6JUEEcrKE7mk4hHe/oi6U1cfT+NtDXgdw68Yqz+Br76ZAOpg3
-         Hkg9PrQmjl8qHftHNZYnh4ru70+aHATO4yQuWY5ZTUNUcmJAsVFU4HJfWd4paT+B/A
-         L//u3JjwoRFFDcv3aCOQ7Uj9af4AOyZGehl6tq7I=
+        b=IOV54WcEcqMp5K9TJqCqm3f4yTtvTVRxzKV8R/qmkYJJtximGhWBOGe74i00qQjit
+         mEZQ7vIK3vS8F3SbhRwGu4JR55Xq/tYsywZz8D+bXI2tjVjq+sAAkafwBUTygzH+8i
+         zBH3VvPuF/aZfXYJbfRFR1pISulGELKX6VadEUSY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 180/223] recordmcount: Fix spurious mcount entries on powerpc
-Date:   Fri,  2 Aug 2019 11:36:45 +0200
-Message-Id: <20190802092249.350290510@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Schmitz <schmitzmic@gmail.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.9 075/223] scsi: NCR5380: Reduce goto statements in NCR5380_select()
+Date:   Fri,  2 Aug 2019 11:35:00 +0200
+Message-Id: <20190802092243.696800783@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -63,94 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 80e5302e4bc85a6b685b7668c36c6487b5f90e9a ]
+From: Finn Thain <fthain@telegraphics.com.au>
 
-An impending change to enable HAVE_C_RECORDMCOUNT on powerpc leads to
-warnings such as the following:
+commit 6a162836997c10bbefb7c7ca772201cc45c0e4a6 upstream.
 
-  # modprobe kprobe_example
-  ftrace-powerpc: Not expected bl: opcode is 3c4c0001
-  WARNING: CPU: 0 PID: 227 at kernel/trace/ftrace.c:2001 ftrace_bug+0x90/0x318
-  Modules linked in:
-  CPU: 0 PID: 227 Comm: modprobe Not tainted 5.2.0-rc6-00678-g1c329100b942 #2
-  NIP:  c000000000264318 LR: c00000000025d694 CTR: c000000000f5cd30
-  REGS: c000000001f2b7b0 TRAP: 0700   Not tainted  (5.2.0-rc6-00678-g1c329100b942)
-  MSR:  900000010282b033 <SF,HV,VEC,VSX,EE,FP,ME,IR,DR,RI,LE,TM[E]>  CR: 28228222  XER: 00000000
-  CFAR: c0000000002642fc IRQMASK: 0
-  <snip>
-  NIP [c000000000264318] ftrace_bug+0x90/0x318
-  LR [c00000000025d694] ftrace_process_locs+0x4f4/0x5e0
-  Call Trace:
-  [c000000001f2ba40] [0000000000000004] 0x4 (unreliable)
-  [c000000001f2bad0] [c00000000025d694] ftrace_process_locs+0x4f4/0x5e0
-  [c000000001f2bb90] [c00000000020ff10] load_module+0x25b0/0x30c0
-  [c000000001f2bd00] [c000000000210cb0] sys_finit_module+0xc0/0x130
-  [c000000001f2be20] [c00000000000bda4] system_call+0x5c/0x70
-  Instruction dump:
-  419e0018 2f83ffff 419e00bc 2f83ffea 409e00cc 4800001c 0fe00000 3c62ff96
-  39000001 39400000 386386d0 480000c4 <0fe00000> 3ce20003 39000001 3c62ff96
-  ---[ end trace 4c438d5cebf78381 ]---
-  ftrace failed to modify
-  [<c0080000012a0008>] 0xc0080000012a0008
-   actual:   01:00:4c:3c
-  Initializing ftrace call sites
-  ftrace record flags: 2000000
-   (0)
-   expected tramp: c00000000006af4c
+Replace a 'goto' statement with a simple 'return' where possible.  This
+improves readability. No functional change.
 
-Looking at the relocation records in __mcount_loc shows a few spurious
-entries:
+Tested-by: Michael Schmitz <schmitzmic@gmail.com>
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-  RELOCATION RECORDS FOR [__mcount_loc]:
-  OFFSET           TYPE              VALUE
-  0000000000000000 R_PPC64_ADDR64    .text.unlikely+0x0000000000000008
-  0000000000000008 R_PPC64_ADDR64    .text.unlikely+0x0000000000000014
-  0000000000000010 R_PPC64_ADDR64    .text.unlikely+0x0000000000000060
-  0000000000000018 R_PPC64_ADDR64    .text.unlikely+0x00000000000000b4
-  0000000000000020 R_PPC64_ADDR64    .init.text+0x0000000000000008
-  0000000000000028 R_PPC64_ADDR64    .init.text+0x0000000000000014
-
-The first entry in each section is incorrect. Looking at the
-relocation records, the spurious entries correspond to the
-R_PPC64_ENTRY records:
-
-  RELOCATION RECORDS FOR [.text.unlikely]:
-  OFFSET           TYPE              VALUE
-  0000000000000000 R_PPC64_REL64     .TOC.-0x0000000000000008
-  0000000000000008 R_PPC64_ENTRY     *ABS*
-  0000000000000014 R_PPC64_REL24     _mcount
-  <snip>
-
-The problem is that we are not validating the return value from
-get_mcountsym() in sift_rel_mcount(). With this entry, mcountsym is 0,
-but Elf_r_sym(relp) also ends up being 0. Fix this by ensuring
-mcountsym is valid before processing the entry.
-
-Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Tested-by: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/recordmcount.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/scsi/NCR5380.c |   21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
-diff --git a/scripts/recordmcount.h b/scripts/recordmcount.h
-index b9897e2be404..04151ede8043 100644
---- a/scripts/recordmcount.h
-+++ b/scripts/recordmcount.h
-@@ -326,7 +326,8 @@ static uint_t *sift_rel_mcount(uint_t *mlocp,
- 		if (!mcountsym)
- 			mcountsym = get_mcountsym(sym0, relp, str0);
+--- a/drivers/scsi/NCR5380.c
++++ b/drivers/scsi/NCR5380.c
+@@ -1086,7 +1086,7 @@ static struct scsi_cmnd *NCR5380_select(
+ 	if (!hostdata->selecting) {
+ 		/* Command was aborted */
+ 		NCR5380_write(MODE_REG, MR_BASE);
+-		goto out;
++		return NULL;
+ 	}
+ 	if (err < 0) {
+ 		NCR5380_write(MODE_REG, MR_BASE);
+@@ -1135,7 +1135,7 @@ static struct scsi_cmnd *NCR5380_select(
+ 	if (!hostdata->selecting) {
+ 		NCR5380_write(MODE_REG, MR_BASE);
+ 		NCR5380_write(INITIATOR_COMMAND_REG, ICR_BASE);
+-		goto out;
++		return NULL;
+ 	}
  
--		if (mcountsym == Elf_r_sym(relp) && !is_fake_mcount(relp)) {
-+		if (mcountsym && mcountsym == Elf_r_sym(relp) &&
-+				!is_fake_mcount(relp)) {
- 			uint_t const addend =
- 				_w(_w(relp->r_offset) - recval + mcount_adjust);
- 			mrelp->r_offset = _w(offbase
--- 
-2.20.1
-
+ 	dsprintk(NDEBUG_ARBITRATION, instance, "won arbitration\n");
+@@ -1218,13 +1218,16 @@ static struct scsi_cmnd *NCR5380_select(
+ 		spin_lock_irq(&hostdata->lock);
+ 		NCR5380_write(INITIATOR_COMMAND_REG, ICR_BASE);
+ 		NCR5380_write(SELECT_ENABLE_REG, hostdata->id_mask);
++
+ 		/* Can't touch cmd if it has been reclaimed by the scsi ML */
+-		if (hostdata->selecting) {
+-			cmd->result = DID_BAD_TARGET << 16;
+-			complete_cmd(instance, cmd);
+-			dsprintk(NDEBUG_SELECTION, instance, "target did not respond within 250ms\n");
+-			cmd = NULL;
+-		}
++		if (!hostdata->selecting)
++			return NULL;
++
++		cmd->result = DID_BAD_TARGET << 16;
++		complete_cmd(instance, cmd);
++		dsprintk(NDEBUG_SELECTION, instance,
++			"target did not respond within 250ms\n");
++		cmd = NULL;
+ 		goto out;
+ 	}
+ 
+@@ -1257,7 +1260,7 @@ static struct scsi_cmnd *NCR5380_select(
+ 	}
+ 	if (!hostdata->selecting) {
+ 		do_abort(instance);
+-		goto out;
++		return NULL;
+ 	}
+ 
+ 	dsprintk(NDEBUG_SELECTION, instance, "target %d selected, going into MESSAGE OUT phase.\n",
 
 
