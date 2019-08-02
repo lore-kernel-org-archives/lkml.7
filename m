@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8FBC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF139C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B603B20880
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B25762087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:43:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738981;
-	bh=qiZyexXI4P6OMxrJGIs9V73wOdKT5EZ3n3HEMRrOAww=;
+	s=default; t=1564738987;
+	bh=BlEdPilXp9d7jLs4b/BFZL+lQ7YBoX8RWs64fzT+mww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ee1KXyjFAYJu6mBZanBeFp/nvV5hqSIY0B21Y6UPTjdnfDukHwGkMTMg9Mj5rxdbn
-	 A0dnYBR7sdXRusUv8pT4j5cvCORo2lf/7x54MZ3QraP1iHfF4kPFWDwJ7wudAYZ0za
-	 toOt8mwl2JetsgLr853aqsSOFhOMpOviskCu4BjA=
+	b=hgtsaFPTnmF8SqSQtDHGfb5Y0hCasWRAJyg2U1zN4om65VwnQ2RsgBfJtC0qtOMu4
+	 2ZuOoEM4DoAb36+kLc4ALDsaKUcfL6DOKWVINNojCPoLCUqj2SOSJQVOFu9b/uJcQ6
+	 8S8gI5XdsXGcOUKTI2x9TJZk0tsgLHE4/SBvbZCk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405009AbfHBJnB (ORCPT
+        id S2405031AbfHBJnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:43:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45616 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:43:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391937AbfHBJm5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:42:57 -0400
+        id S2404322AbfHBJnD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:43:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 831332087E;
-        Fri,  2 Aug 2019 09:42:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AF8A2087E;
+        Fri,  2 Aug 2019 09:43:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738977;
-        bh=qiZyexXI4P6OMxrJGIs9V73wOdKT5EZ3n3HEMRrOAww=;
+        s=default; t=1564738982;
+        bh=BlEdPilXp9d7jLs4b/BFZL+lQ7YBoX8RWs64fzT+mww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PiwGhkfm5sKutTo+TJNhkiWwPYQGFRSteK0fAVfK9t3upG3Z9jSQRr9rP3b/Uuz5M
-         yZzr3qbeTJSIJUSfSsrRPGaV/THErzFP1CxZ50E42v4j8UP6dwRd+kjlIqxuvGz+wY
-         2cVw/LnH7yqrwiBkN+0SMJjMpvagD+L+P5LQiWfo=
+        b=mQpVV3fFywUXmyVh1HdrHekZNRiIV3XbnJZmPpw0U62z27tGyw4rwv0nrozTnzAm0
+         ah/yY77EKtCILan6a6gtsDY6kEnRhUI131soqlbqHC2IlHKW1YoD1mTXyDjN0lDLCo
+         sckMnmgDg3GhXQa/JrMIWfG+RZVUIP8duUtXRspU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Kicinski <kubakici@wp.pl>,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 054/223] mt7601u: fix possible memory leak when the device is disconnected
-Date:   Fri,  2 Aug 2019 11:34:39 +0200
-Message-Id: <20190802092242.380186076@linuxfoundation.org>
+Subject: [PATCH 4.9 046/223] media: i2c: fix warning same module names
+Date:   Fri,  2 Aug 2019 11:34:31 +0200
+Message-Id: <20190802092241.921660572@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -61,123 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 23377c200b2eb48a60d0f228b2a2e75ed6ee6060 ]
+[ Upstream commit b2ce5617dad254230551feda3599f2cc68e53ad8 ]
 
-When the device is disconnected while passing traffic it is possible
-to receive out of order urbs causing a memory leak since the skb linked
-to the current tx urb is not removed. Fix the issue deallocating the skb
-cleaning up the tx ring. Moreover this patch fixes the following kernel
-warning
+When building with CONFIG_VIDEO_ADV7511 and CONFIG_DRM_I2C_ADV7511
+enabled as loadable modules, we see the following warning:
 
-[   57.480771] usb 1-1: USB disconnect, device number 2
-[   57.483451] ------------[ cut here ]------------
-[   57.483462] TX urb mismatch
-[   57.483481] WARNING: CPU: 1 PID: 32 at drivers/net/wireless/mediatek/mt7601u/dma.c:245 mt7601u_complete_tx+0x165/00
-[   57.483483] Modules linked in:
-[   57.483496] CPU: 1 PID: 32 Comm: kworker/1:1 Not tainted 5.2.0-rc1+ #72
-[   57.483498] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.12.0-2.fc30 04/01/2014
-[   57.483502] Workqueue: usb_hub_wq hub_event
-[   57.483507] RIP: 0010:mt7601u_complete_tx+0x165/0x1e0
-[   57.483510] Code: 8b b5 10 04 00 00 8b 8d 14 04 00 00 eb 8b 80 3d b1 cb e1 00 00 75 9e 48 c7 c7 a4 ea 05 82 c6 05 f
-[   57.483513] RSP: 0000:ffffc900000a0d28 EFLAGS: 00010092
-[   57.483516] RAX: 000000000000000f RBX: ffff88802c0a62c0 RCX: ffffc900000a0c2c
-[   57.483518] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff810a8371
-[   57.483520] RBP: ffff88803ced6858 R08: 0000000000000000 R09: 0000000000000001
-[   57.483540] R10: 0000000000000002 R11: 0000000000000000 R12: 0000000000000046
-[   57.483542] R13: ffff88802c0a6c88 R14: ffff88803baab540 R15: ffff88803a0cc078
-[   57.483548] FS:  0000000000000000(0000) GS:ffff88803eb00000(0000) knlGS:0000000000000000
-[   57.483550] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   57.483552] CR2: 000055e7f6780100 CR3: 0000000028c86000 CR4: 00000000000006a0
-[   57.483554] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   57.483556] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   57.483559] Call Trace:
-[   57.483561]  <IRQ>
-[   57.483565]  __usb_hcd_giveback_urb+0x77/0xe0
-[   57.483570]  xhci_giveback_urb_in_irq.isra.0+0x8b/0x140
-[   57.483574]  handle_cmd_completion+0xf5b/0x12c0
-[   57.483577]  xhci_irq+0x1f6/0x1810
-[   57.483581]  ? lockdep_hardirqs_on+0x9e/0x180
-[   57.483584]  ? _raw_spin_unlock_irq+0x24/0x30
-[   57.483588]  __handle_irq_event_percpu+0x3a/0x260
-[   57.483592]  handle_irq_event_percpu+0x1c/0x60
-[   57.483595]  handle_irq_event+0x2f/0x4c
-[   57.483599]  handle_edge_irq+0x7e/0x1a0
-[   57.483603]  handle_irq+0x17/0x20
-[   57.483607]  do_IRQ+0x54/0x110
-[   57.483610]  common_interrupt+0xf/0xf
-[   57.483612]  </IRQ>
+  drivers/gpu/drm/bridge/adv7511/adv7511.ko
+  drivers/media/i2c/adv7511.ko
 
-Acked-by: Jakub Kicinski <kubakici@wp.pl>
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Rework so that the file is named adv7511-v4l2.c.
+
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt7601u/dma.c | 21 ++++++++++++++++-----
- drivers/net/wireless/mediatek/mt7601u/tx.c  |  4 ++--
- 2 files changed, 18 insertions(+), 7 deletions(-)
+ drivers/media/i2c/Makefile                      | 2 +-
+ drivers/media/i2c/{adv7511.c => adv7511-v4l2.c} | 5 +++++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+ rename drivers/media/i2c/{adv7511.c => adv7511-v4l2.c} (99%)
 
-diff --git a/drivers/net/wireless/mediatek/mt7601u/dma.c b/drivers/net/wireless/mediatek/mt7601u/dma.c
-index 838ad9a4be51..56cad16e70ca 100644
---- a/drivers/net/wireless/mediatek/mt7601u/dma.c
-+++ b/drivers/net/wireless/mediatek/mt7601u/dma.c
-@@ -241,14 +241,25 @@ static void mt7601u_complete_tx(struct urb *urb)
- 	struct sk_buff *skb;
- 	unsigned long flags;
+diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
+index 92773b2e6225..bfe0afc209b8 100644
+--- a/drivers/media/i2c/Makefile
++++ b/drivers/media/i2c/Makefile
+@@ -29,7 +29,7 @@ obj-$(CONFIG_VIDEO_ADV7393) += adv7393.o
+ obj-$(CONFIG_VIDEO_ADV7604) += adv7604.o
+ obj-$(CONFIG_VIDEO_ADV7842) += adv7842.o
+ obj-$(CONFIG_VIDEO_AD9389B) += ad9389b.o
+-obj-$(CONFIG_VIDEO_ADV7511) += adv7511.o
++obj-$(CONFIG_VIDEO_ADV7511) += adv7511-v4l2.o
+ obj-$(CONFIG_VIDEO_VPX3220) += vpx3220.o
+ obj-$(CONFIG_VIDEO_VS6624)  += vs6624.o
+ obj-$(CONFIG_VIDEO_BT819) += bt819.o
+diff --git a/drivers/media/i2c/adv7511.c b/drivers/media/i2c/adv7511-v4l2.c
+similarity index 99%
+rename from drivers/media/i2c/adv7511.c
+rename to drivers/media/i2c/adv7511-v4l2.c
+index 5f1c8ee8a50e..b87c9e7ff146 100644
+--- a/drivers/media/i2c/adv7511.c
++++ b/drivers/media/i2c/adv7511-v4l2.c
+@@ -17,6 +17,11 @@
+  * SOFTWARE.
+  */
  
--	spin_lock_irqsave(&dev->tx_lock, flags);
-+	switch (urb->status) {
-+	case -ECONNRESET:
-+	case -ESHUTDOWN:
-+	case -ENOENT:
-+		return;
-+	default:
-+		dev_err_ratelimited(dev->dev, "tx urb failed: %d\n",
-+				    urb->status);
-+		/* fall through */
-+	case 0:
-+		break;
-+	}
++/*
++ * This file is named adv7511-v4l2.c so it doesn't conflict with the Analog
++ * Device ADV7511 (config fragment CONFIG_DRM_I2C_ADV7511).
++ */
++
  
--	if (mt7601u_urb_has_error(urb))
--		dev_err(dev->dev, "Error: TX urb failed:%d\n", urb->status);
-+	spin_lock_irqsave(&dev->tx_lock, flags);
- 	if (WARN_ONCE(q->e[q->start].urb != urb, "TX urb mismatch"))
- 		goto out;
- 
- 	skb = q->e[q->start].skb;
-+	q->e[q->start].skb = NULL;
- 	trace_mt_tx_dma_done(dev, skb);
- 
- 	__skb_queue_tail(&dev->tx_skb_done, skb);
-@@ -448,10 +459,10 @@ static void mt7601u_free_tx_queue(struct mt7601u_tx_queue *q)
- {
- 	int i;
- 
--	WARN_ON(q->used);
--
- 	for (i = 0; i < q->entries; i++)  {
- 		usb_poison_urb(q->e[i].urb);
-+		if (q->e[i].skb)
-+			mt7601u_tx_status(q->dev, q->e[i].skb);
- 		usb_free_urb(q->e[i].urb);
- 	}
- }
-diff --git a/drivers/net/wireless/mediatek/mt7601u/tx.c b/drivers/net/wireless/mediatek/mt7601u/tx.c
-index ad77bec1ba0f..2cb1883c0d33 100644
---- a/drivers/net/wireless/mediatek/mt7601u/tx.c
-+++ b/drivers/net/wireless/mediatek/mt7601u/tx.c
-@@ -117,9 +117,9 @@ void mt7601u_tx_status(struct mt7601u_dev *dev, struct sk_buff *skb)
- 	info->status.rates[0].idx = -1;
- 	info->flags |= IEEE80211_TX_STAT_ACK;
- 
--	spin_lock(&dev->mac_lock);
-+	spin_lock_bh(&dev->mac_lock);
- 	ieee80211_tx_status(dev->hw, skb);
--	spin_unlock(&dev->mac_lock);
-+	spin_unlock_bh(&dev->mac_lock);
- }
- 
- static int mt7601u_skb_rooms(struct mt7601u_dev *dev, struct sk_buff *skb)
+ #include <linux/kernel.h>
+ #include <linux/module.h>
 -- 
 2.20.1
 
