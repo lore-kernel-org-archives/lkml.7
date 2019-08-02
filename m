@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FADBC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F27EC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35D9B2073D
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B2BC2073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:35:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752906;
-	bh=0sQNgAbA3k40cYUsm78R8zzZxIyE2gGXZudo8B3EjzY=;
+	s=default; t=1564752909;
+	bh=uNA+mGTVxaUDqpL+jM1PMaWa2FEDc+RSUb4fLqVBUik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kjDp4vCCi6H7oHuqCKhJEdMqcCNQ1sKvkWuZLs9YDnSqYlgvup+nvYNVaro+hK0+G
-	 hwtl1K/mxM4oPt5j80/AifrYARnByrM3GfBQCmciO999Qyt3LWgOh5baJ9bRK4poef
-	 TL050J/HYG5Ya9/6pO2Slj4Qnt2ZY24rsgR5k1c4=
+	b=t+pb/c6uo3QBytcotJjPkg1M1/2LT0F7gMWJtxbxATXb9nfzHfGXncg4hnxLbo95u
+	 Qe6M69pSYRD79rtpLcnC9JcUti6LZ+RWAolD6nVQdm/2QqRJjiQhIBYgWrMpl2hDS9
+	 nhSpWJ0m2Z7heraX6gb34wn1rPolh4vom9FEaqZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393734AbfHBNWU (ORCPT
+        id S2406040AbfHBNfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:22:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60838 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:35:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393693AbfHBNWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:22:16 -0400
+        id S2393735AbfHBNWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:22:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42A5E20644;
-        Fri,  2 Aug 2019 13:22:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93D0E21851;
+        Fri,  2 Aug 2019 13:22:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752136;
-        bh=0sQNgAbA3k40cYUsm78R8zzZxIyE2gGXZudo8B3EjzY=;
+        s=default; t=1564752140;
+        bh=uNA+mGTVxaUDqpL+jM1PMaWa2FEDc+RSUb4fLqVBUik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n4AiHgIAl99xlwQMNwRxMVr0LVbRTCp4w4d6NyPM9avvD6vnXLuTIGrLaqlBJvjp/
-         oUyjRo9u0dUJ0wHjB9r8KU10OgqerN6kwAu5dYdRPbdfdcj+Y2WcaQiKTTbF0l6GVT
-         FTqNmdafTWwsYgO6r/Ri40vRsg7y+0b0wBlAxr/8=
+        b=NPyiYNqNZlU0zJ5Eandd+7PW6VL9ROPe9RKaHPqo0YRwqJ7+iKf2tUTKRhl/N+F59
+         /PZBhhlES6awu2txp6oUnvsRIkzAg9RhUyXOyV7XMIMJMGAz5xe9riYPBcnaO1NrXu
+         gpnWvVNmA9yGet6IPPyvRaJhFTmhGoXIEzKi2wjE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 55/76] perf session: Fix loading of compressed data split across adjacent records
-Date:   Fri,  2 Aug 2019 09:19:29 -0400
-Message-Id: <20190802131951.11600-55-sashal@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 58/76] ACPI/IORT: Fix off-by-one check in iort_dev_find_its_id()
+Date:   Fri,  2 Aug 2019 09:19:32 -0400
+Message-Id: <20190802131951.11600-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802131951.11600-1-sashal@kernel.org>
 References: <20190802131951.11600-1-sashal@kernel.org>
@@ -64,133 +64,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Budankov <alexey.budankov@linux.intel.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 
-[ Upstream commit 872c8ee8f0f47222f7b10da96eea84d0486540a3 ]
+[ Upstream commit 5a46d3f71d5e5a9f82eabc682f996f1281705ac7 ]
 
-Fix decompression failure found during the loading of compressed trace
-collected on larger scale systems (>48 cores).
+Static analysis identified that index comparison against ITS entries in
+iort_dev_find_its_id() is off by one.
 
-The error happened due to lack of decompression space for a mmaped
-buffer data chunk split across adjacent PERF_RECORD_COMPRESSED records.
+Update the comparison condition and clarify the resulting error
+message.
 
-  $ perf report -i bt.16384.data --stats
-  failed to decompress (B): 63869 -> 0 : Destination buffer is too small
-  user stack dump failure
-  Can't parse sample, err = -14
-  0x2637e436 [0x4080]: failed to process type: 9
-  Error:
-  failed to process sample
-
-  $ perf test 71
-  71: Zstd perf.data compression/decompression              : Ok
-
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/4d839e1b-9c48-89c4-9702-a12217420611@linux.intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 4bf2efd26d76 ("ACPI: Add new IORT functions to support MSI domain handling")
+Link: https://lore.kernel.org/linux-arm-kernel/20190613065410.GB16334@mwanda/
+Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Hanjun Guo <guohanjun@huawei.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/session.c | 22 ++++++++++++++--------
- tools/perf/util/session.h |  1 +
- tools/perf/util/zstd.c    |  4 ++--
- 3 files changed, 17 insertions(+), 10 deletions(-)
+ drivers/acpi/arm64/iort.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 2e61dd6a3574e..d789840960444 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -36,10 +36,16 @@ static int perf_session__process_compressed_event(struct perf_session *session,
- 	void *src;
- 	size_t decomp_size, src_size;
- 	u64 decomp_last_rem = 0;
--	size_t decomp_len = session->header.env.comp_mmap_len;
-+	size_t mmap_len, decomp_len = session->header.env.comp_mmap_len;
- 	struct decomp *decomp, *decomp_last = session->decomp_last;
+diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+index d4551e33fa716..8569b79e8b581 100644
+--- a/drivers/acpi/arm64/iort.c
++++ b/drivers/acpi/arm64/iort.c
+@@ -611,8 +611,8 @@ static int iort_dev_find_its_id(struct device *dev, u32 req_id,
  
--	decomp = mmap(NULL, sizeof(struct decomp) + decomp_len, PROT_READ|PROT_WRITE,
-+	if (decomp_last) {
-+		decomp_last_rem = decomp_last->size - decomp_last->head;
-+		decomp_len += decomp_last_rem;
-+	}
-+
-+	mmap_len = sizeof(struct decomp) + decomp_len;
-+	decomp = mmap(NULL, mmap_len, PROT_READ|PROT_WRITE,
- 		      MAP_ANONYMOUS|MAP_PRIVATE, -1, 0);
- 	if (decomp == MAP_FAILED) {
- 		pr_err("Couldn't allocate memory for decompression\n");
-@@ -47,10 +53,10 @@ static int perf_session__process_compressed_event(struct perf_session *session,
+ 	/* Move to ITS specific data */
+ 	its = (struct acpi_iort_its_group *)node->node_data;
+-	if (idx > its->its_count) {
+-		dev_err(dev, "requested ITS ID index [%d] is greater than available [%d]\n",
++	if (idx >= its->its_count) {
++		dev_err(dev, "requested ITS ID index [%d] overruns ITS entries [%d]\n",
+ 			idx, its->its_count);
+ 		return -ENXIO;
  	}
- 
- 	decomp->file_pos = file_offset;
-+	decomp->mmap_len = mmap_len;
- 	decomp->head = 0;
- 
--	if (decomp_last) {
--		decomp_last_rem = decomp_last->size - decomp_last->head;
-+	if (decomp_last_rem) {
- 		memcpy(decomp->data, &(decomp_last->data[decomp_last->head]), decomp_last_rem);
- 		decomp->size = decomp_last_rem;
- 	}
-@@ -61,7 +67,7 @@ static int perf_session__process_compressed_event(struct perf_session *session,
- 	decomp_size = zstd_decompress_stream(&(session->zstd_data), src, src_size,
- 				&(decomp->data[decomp_last_rem]), decomp_len - decomp_last_rem);
- 	if (!decomp_size) {
--		munmap(decomp, sizeof(struct decomp) + decomp_len);
-+		munmap(decomp, mmap_len);
- 		pr_err("Couldn't decompress data\n");
- 		return -1;
- 	}
-@@ -255,15 +261,15 @@ static void perf_session__delete_threads(struct perf_session *session)
- static void perf_session__release_decomp_events(struct perf_session *session)
- {
- 	struct decomp *next, *decomp;
--	size_t decomp_len;
-+	size_t mmap_len;
- 	next = session->decomp;
--	decomp_len = session->header.env.comp_mmap_len;
- 	do {
- 		decomp = next;
- 		if (decomp == NULL)
- 			break;
- 		next = decomp->next;
--		munmap(decomp, decomp_len + sizeof(struct decomp));
-+		mmap_len = decomp->mmap_len;
-+		munmap(decomp, mmap_len);
- 	} while (1);
- }
- 
-diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
-index dd8920b745bce..863dbad878496 100644
---- a/tools/perf/util/session.h
-+++ b/tools/perf/util/session.h
-@@ -46,6 +46,7 @@ struct perf_session {
- struct decomp {
- 	struct decomp *next;
- 	u64 file_pos;
-+	size_t mmap_len;
- 	u64 head;
- 	size_t size;
- 	char data[];
-diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
-index 23bdb98845760..d2202392ffdbb 100644
---- a/tools/perf/util/zstd.c
-+++ b/tools/perf/util/zstd.c
-@@ -99,8 +99,8 @@ size_t zstd_decompress_stream(struct zstd_data *data, void *src, size_t src_size
- 	while (input.pos < input.size) {
- 		ret = ZSTD_decompressStream(data->dstream, &output, &input);
- 		if (ZSTD_isError(ret)) {
--			pr_err("failed to decompress (B): %ld -> %ld : %s\n",
--			       src_size, output.size, ZSTD_getErrorName(ret));
-+			pr_err("failed to decompress (B): %ld -> %ld, dst_size %ld : %s\n",
-+			       src_size, output.size, dst_size, ZSTD_getErrorName(ret));
- 			break;
- 		}
- 		output.dst  = dst + output.pos;
 -- 
 2.20.1
 
