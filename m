@@ -2,187 +2,127 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D59C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B63C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 11:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84B06206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:59:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DF90206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 11:00:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aOmSVpS+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392076AbfHBK7n (ORCPT
+        id S2392244AbfHBLAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 06:59:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:49810 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725954AbfHBK7n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 06:59:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 36FD5344;
-        Fri,  2 Aug 2019 03:59:42 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B9DAF3F71F;
-        Fri,  2 Aug 2019 03:59:40 -0700 (PDT)
-Date:   Fri, 2 Aug 2019 11:59:38 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Jassi Brar <jassisinghbrar@gmail.com>
-Cc:     Tushar Khandelwal <tushar.khandelwal@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        tushar.2nov@gmail.com, morten_bp@live.dk, nd@arm.com,
-        Morten Borup Petersen <morten.petersen@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 1/4] mailbox: arm_mhuv2: add device tree binding
- documentation
-Message-ID: <20190802105938.GG23424@e107155-lin>
-References: <20190717192616.1731-1-tushar.khandelwal@arm.com>
- <20190717192616.1731-2-tushar.khandelwal@arm.com>
- <CABb+yY04vW-i35N6P57KSKgmMAYkrA2CDyUvA-bLCZMxiZaocw@mail.gmail.com>
+        Fri, 2 Aug 2019 07:00:45 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:34421 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392192AbfHBLAo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 07:00:44 -0400
+Received: by mail-lf1-f67.google.com with SMTP id b29so45414274lfq.1;
+        Fri, 02 Aug 2019 04:00:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Wt7WxlfN5bbYMzTthies6t41pinYZ4q+vA57T6gnbAE=;
+        b=aOmSVpS+bt+ekMUqTL+Y7tH2ieGGr7Jw/44h5Faq2JU1dAWaMKr6ii9PaA5NX+GT6T
+         GtnVvKBnz6ksdtz0RiDwdZS3ZJYNzsuKxh/KNSFVTjvMe4578A2frIbLs+0TpqwRydcJ
+         ds1PDJ7rwGAyvDn4tVj3r9v6pKSqkePEc5HpjQpzZAMSiWII60O2+dfjrSDvrMgNhEIj
+         yrfvFPaJjbuj0zPj+0IxYMpOrp5q7So2wU1W03lhMdiFRfDtcRo+mRE6FTTEIt8yeQZF
+         wO72V1ijDl/1vM29+m1InFFAfM52dLwprShMVE+SgsTvI8yIOCdfUDAH5hl7qUcpOn06
+         fNiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Wt7WxlfN5bbYMzTthies6t41pinYZ4q+vA57T6gnbAE=;
+        b=fs3lBAzIuIxBsIA1jXwHNgk6PZ0J8jNiLhoN02dvqQjy3sKyzpNAtFpIiiSid6Q2Eg
+         G7WHJkKAeZet/v9wgnCzykarSwlBbQhFiP8IBg0pEVkQ7FCB7DF35s4fuiaPdV3QTNGm
+         AuMQbpENufdO32t5eVmOg2rAXMD8u2jdle+gS0pWhVtNLde2KROkrOSFH2alKsRz5hYX
+         PiSCvkrrFppIGabS2PjlhEdfNrQux8RAYTycMDt8vh6p2naUaT7iQUN+Vh5ZIfUWheFX
+         AJ17x7WZ9QEr1mJAPvFAtAjBLhHLlF5T7H5rScIQ1j44wQPUxpsdOMipjso0aSaVHgHb
+         9bwQ==
+X-Gm-Message-State: APjAAAUjfRpNXyF810IN1VDsL4P+Y9GdkbiXkTGFydJ7mNhHMLfnGY4u
+        OJyNOlKHA/oIZL0IKM5reERajubU4Tb5AIt3240=
+X-Google-Smtp-Source: APXvYqxjOsmMp4j5kcGBFe67+JYL7mzTR5TgnpPp282kSrMxiiv8w4drdi258b3Om8fsOuoNBtaTTKdaKWsTJKZyVS0=
+X-Received: by 2002:a05:6512:1d2:: with SMTP id f18mr24187779lfp.173.1564743642396;
+ Fri, 02 Aug 2019 04:00:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABb+yY04vW-i35N6P57KSKgmMAYkrA2CDyUvA-bLCZMxiZaocw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <259986242.BvXPX32bHu@devpool35> <20190606185900.GA19937@kroah.com>
+ <CANiq72n2E4Ue0MU5mWitSbsscizPQKML0QQx_DBwJVni+eWMHQ@mail.gmail.com>
+ <4007272.nJfEYfeqza@devpool35> <CANiq72=T8nH3HHkYvWF+vPMscgwXki1Ugiq6C9PhVHJUHAwDYw@mail.gmail.com>
+ <20190802103346.GA14255@kroah.com>
+In-Reply-To: <20190802103346.GA14255@kroah.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Fri, 2 Aug 2019 13:00:30 +0200
+Message-ID: <CANiq72kcZZwp2MRVF5Ls+drXCzVbCfZ7wZ8Y+rU93oGohVAGsQ@mail.gmail.com>
+Subject: =?UTF-8?Q?Re=3A_Linux_4=2E9=2E180_build_fails_with_gcc_9_and_=27cleanu?=
+        =?UTF-8?Q?p=5Fmodule=27_specifies_less_restrictive_attribute_than_its_targ?=
+        =?UTF-8?Q?et_=E2=80=A6?=
+To:     Greg KH <greg@kroah.com>
+Cc:     Rolf Eike Beer <eb@emlix.com>, stable@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 21, 2019 at 04:58:04PM -0500, Jassi Brar wrote:
-> On Wed, Jul 17, 2019 at 2:26 PM Tushar Khandelwal
-> <tushar.khandelwal@arm.com> wrote:
+On Fri, Aug 2, 2019 at 12:33 PM Greg KH <greg@kroah.com> wrote:
 >
-> > diff --git a/Documentation/devicetree/bindings/mailbox/arm,mhuv2.txt b/Documentation/devicetree/bindings/mailbox/arm,mhuv2.txt
-> > new file mode 100644
-> > index 000000000000..3a05593414bc
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mailbox/arm,mhuv2.txt
-> > @@ -0,0 +1,108 @@
-> > +Arm MHUv2 Mailbox Driver
-> > +========================
-> > +
-> > +The Arm Message-Handling-Unit (MHU) Version 2 is a mailbox controller that has
-> > +between 1 and 124 channel windows to provide unidirectional communication with
-> > +remote processor(s).
-> > +
-> > +Given the unidirectional nature of the device, an MHUv2 mailbox may only be
-> > +written to or read from. If a pair of MHU devices is implemented between two
-> > +processing elements to provide bidirectional communication, these must be
-> > +specified as two separate mailboxes.
-> > +
-> > +A device tree node for an Arm MHUv2 device must specify either a receiver frame
-> > +or a sender frame, indicating which end of the unidirectional MHU device which
-> > +the device node entry describes.
-> > +
-> > +An MHU device must be specified with a transport protocol. The transport
-> > +protocol of an MHU device determines the method of data transmission as well as
-> > +the number of provided mailboxes.
-> > +Following are the possible transport protocol types:
-> > +- Single-word: An MHU device implements as many mailboxes as it
-> > +               provides channel windows. Data is transmitted through
-> > +               the MHU registers.
-> > +- Multi-word:  An MHU device implements a single mailbox. All channel windows
-> > +               will be used during transmission. Data is transmitted through
-> > +               the MHU registers.
-> > +- Doorbell:    An MHU device implements as many mailboxes as there are flag
-> > +               bits available in its channel windows. Optionally, data may
-> > +               be transmitted through a shared memory region, wherein the MHU
-> > +               is used strictly as an interrupt generation mechanism.
-> > +
-> > +Mailbox Device Node:
-> > +====================
-> > +
-> > +Required properties:
-> > +--------------------
-> > +- compatible:  Shall be "arm,mhuv2" & "arm,primecell"
-> > +- reg:         Contains the mailbox register address range (base
-> > +               address and length)
-> > +- #mbox-cells  Shall be 1 - the index of the channel needed.
-> > +- mhu-frame    Frame type of the device.
-> > +               Shall be either "sender" or "receiver"
-> > +- mhu-protocol Transport protocol of the device. Shall be one of the
-> > +               following: "single-word", "multi-word", "doorbell"
-> > +
-> > +Required properties (receiver frame):
-> > +-------------------------------------
-> > +- interrupts:  Contains the interrupt information corresponding to the
-> > +               combined interrupt of the receiver frame
-> > +
-> > +Example:
-> > +--------
-> > +
-> > +       mbox_mw_tx: mhu@10000000 {
-> > +               compatible = "arm,mhuv2","arm,primecell";
-> > +               reg = <0x10000000 0x1000>;
-> > +               clocks = <&refclk100mhz>;
-> > +               clock-names = "apb_pclk";
-> > +               #mbox-cells = <1>;
-> > +               mhu-protocol = "multi-word";
-> > +               mhu-frame = "sender";
-> > +       };
-> > +
-> > +       mbox_sw_tx: mhu@10000000 {
-> > +               compatible = "arm,mhuv2","arm,primecell";
-> > +               reg = <0x11000000 0x1000>;
-> > +               clocks = <&refclk100mhz>;
-> > +               clock-names = "apb_pclk";
-> > +               #mbox-cells = <1>;
-> > +               mhu-protocol = "single-word";
-> > +               mhu-frame = "sender";
-> > +       };
-> > +
-> > +       mbox_db_rx: mhu@10000000 {
-> > +               compatible = "arm,mhuv2","arm,primecell";
-> > +               reg = <0x12000000 0x1000>;
-> > +               clocks = <&refclk100mhz>;
-> > +               clock-names = "apb_pclk";
-> > +               #mbox-cells = <1>;
-> > +               interrupts = <0 45 4>;
-> > +               interrupt-names = "mhu_rx";
-> > +               mhu-protocol = "doorbell";
-> > +               mhu-frame = "receiver";
-> > +       };
-> > +
-> > +       mhu_client: scb@2e000000 {
-> > +       compatible = "fujitsu,mb86s70-scb-1.0";
-> > +       reg = <0 0x2e000000 0x4000>;
-> > +       mboxes =
-> > +               // For multi-word frames, client may only instantiate a single
-> > +               // mailbox for a mailbox controller
-> > +               <&mbox_mw_tx 0>,
-> > +
-> > +               // For single-word frames, client may instantiate as many
-> > +               // mailboxes as there are channel windows in the MHU
-> > +                <&mbox_sw_tx 0>,
-> > +                <&mbox_sw_tx 1>,
-> > +                <&mbox_sw_tx 2>,
-> > +                <&mbox_sw_tx 3>,
-> > +
-> > +               // For doorbell frames, client may instantiate as many mailboxes
-> > +               // as there are bits available in the combined number of channel
-> > +               // windows ((channel windows * 32) mailboxes)
-> > +                <mbox_db_rx 0>,
-> > +                <mbox_db_rx 1>,
-> > +                ...
-> > +                <mbox_db_rx 17>;
-> > +       };
+> On Fri, Aug 02, 2019 at 12:19:33PM +0200, Miguel Ojeda wrote:
+> > On Fri, Aug 2, 2019 at 10:17 AM Rolf Eike Beer <eb@emlix.com> wrote:
+> > >
+> > > Am Samstag, 8. Juni 2019, 14:00:34 CEST schrieb Miguel Ojeda:
+> > > > On Thu, Jun 6, 2019 at 8:59 PM Greg KH <greg@kroah.com> wrote:
+> > > > > "manually fixing it up" means "hacked it to pieces" to me, I have no
+> > > > > idea what the end result really was :)
+> > > > >
+> > > > > If someone wants to send me some patches I can actually apply, that
+> > > > > would be best...
+> > > >
+> > > > I will give it a go whenever I get some free time :)
+> > >
+> > > I fear this has never happened, did it?
+> >
+> > No. Between summer, holidays and a conference I didn't get to do it.
+> >
+> > Done the minimal approach here:
+> >
+> >   https://github.com/ojeda/linux/commits/compiler-attributes-backport
+> >
+> > Tested building a handful of drivers with gcc 4.6.4, 8.3.0 and 9.1.1.
+> >
+> > Greg, I could backport the entire compiler_attributes.h, but given
+> > this is stable, we are supposed to minimize changes, right?
+> >
+> > I tried to imitate what you do in other stable patches, please check
+> > the Cc:, Link: lines and the "commit ... upstream" just in case.
 >
-> If the mhuv2 instance implements, say, 3 channel windows between
-> sender (linux) and receiver (firmware), and Linux runs two protocols
-> each requiring 1 and 2-word sized messages respectively. The hardware
-> supports that by assigning windows [0] and [1,2] to each protocol.
-> However, I don't think the driver can support that. Or does it?
->
+> If only those 2 patches are all that is needed, nice!  I'll gladly take
+> them, can you send them to me (and cc: the stable list) in email so I
+> can queue them up for the next round of releases after this one?
 
-FWIW, the IP is designed to cover wide range of usecase from IoT to servers
-with variable window length. I don't see the need to complicate the driver
-supporting mix-n-match at the cost of latency. Each platform choose one
-transport protocol for all it's use.
+At least for that particular problem, yeah -- I haven't done a full allmod.
 
---
-Regards,
-Sudeep
+By the way, I just checked 4.14.y and I noticed you had already
+backported it, although going for another solution:
+
++#if GCC_VERSION >= 90100
++#define __copy(symbol)                 __attribute__((__copy__(symbol)))
++#endif
+
+and then:
+
++#ifndef __copy
++# define __copy(symbol)
++#endif
+
+Cheers,
+Miguel
