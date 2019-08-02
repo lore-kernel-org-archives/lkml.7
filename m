@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E44C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E02B5C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6187D217F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC2332182B
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:34:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738495;
-	bh=ocQmBY7ln6jzENd+ILNFkARdD73rtI5W8ETL4JwjVkM=;
+	s=default; t=1564738498;
+	bh=eMxvh7HKLHPsPGv0ZcRpw8z8yGLE8wSn056NqJIAtQQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yxj8D8ff+s/rGdSawFuT+Ftra6s8W4QVybrGysqZT9cIgGlYNAiGt9JwKgYU9/raS
-	 jA4aUIjx/hgpgP7gpaDVqJpNKU/xGQB29TkX2Prj9e9N1mTqzacB5W5IBi5KKo5f6B
-	 0TbdskkT0unp6osV1mtlh+1ma+F2IdLW9eSjlHc4=
+	b=z33ZSGz1qO5w5T+bLFwuuJEzyHqL/5wGu0CA110dwQxvIXSMyR4KF6hnmgRlEzMp7
+	 J4OeiS5zu48TrMbictv9xE2mpRfp5+9gsNq/fNxXZCHLrdaHdywNPKtIWOxG/saN9I
+	 yC9FR62zCox/1NUiRyO+BQVIHoRwT2fiixvY/lZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391580AbfHBJey (ORCPT
+        id S2403792AbfHBJe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:34:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34912 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:34:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391567AbfHBJer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:34:47 -0400
+        id S2390418AbfHBJeu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:34:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97DDD217F5;
-        Fri,  2 Aug 2019 09:34:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3135B217F5;
+        Fri,  2 Aug 2019 09:34:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738487;
-        bh=ocQmBY7ln6jzENd+ILNFkARdD73rtI5W8ETL4JwjVkM=;
+        s=default; t=1564738489;
+        bh=eMxvh7HKLHPsPGv0ZcRpw8z8yGLE8wSn056NqJIAtQQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W9WlkOK+4DKefVdhxYuX+u6IDlUgPO9yYYjbOczeUos5o0yVucJhQg7fsoORBdSk2
-         pgdqURuZBel/xhezLgJFuFKGpTiPGSSMShagIKLzH2THde1Q1NhyIiq5xX/2MiZ9m5
-         iM6P6ImRkPWKdtvvSKLN1+br5rxLOCVyL6GqOexU=
+        b=ASgXvx5HfHSLPYqZHuvP9LtCkqAlA4EAYRlU25dQGKPfG//66KM653HeW3kWAt+rK
+         M7Tm8WQkptEP1BuipjiFryIeBwEardO4YLl5Z13U1Q7mdF5At2rddh4ZrRzpAF9Tal
+         aBb7mx4HAbhy9/pzhEfIpkfFY2iQjXPZQqtdb3IM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Thierry Reding <treding@nvidia.com>,
+        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 106/158] drm/panel: simple: Fix panel_simple_dsi_probe
-Date:   Fri,  2 Aug 2019 11:28:47 +0200
-Message-Id: <20190802092225.889845082@linuxfoundation.org>
+Subject: [PATCH 4.4 107/158] usb: core: hub: Disable hub-initiated U1/U2
+Date:   Fri,  2 Aug 2019 11:28:48 +0200
+Message-Id: <20190802092226.068021261@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -60,39 +59,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7ad9db66fafb0f0ad53fd2a66217105da5ddeffe ]
+[ Upstream commit 561759292774707b71ee61aecc07724905bb7ef1 ]
 
-In case mipi_dsi_attach() fails remove the registered panel to avoid added
-panel without corresponding device.
+If the device rejects the control transfer to enable device-initiated
+U1/U2 entry, then the device will not initiate U1/U2 transition. To
+improve the performance, the downstream port should not initate
+transition to U1/U2 to avoid the delay from the device link command
+response (no packet can be transmitted while waiting for a response from
+the device). If the device has some quirks and does not implement U1/U2,
+it may reject all the link state change requests, and the downstream
+port may resend and flood the bus with more requests. This will affect
+the device performance even further. This patch disables the
+hub-initated U1/U2 if the device-initiated U1/U2 entry fails.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190226081153.31334-1-peter.ujfalusi@ti.com
+Reference: USB 3.2 spec 7.2.4.2.3
+
+Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/panel/panel-simple.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/usb/core/hub.c | 28 ++++++++++++++++------------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index f418c002d323..ecad4d7c6cd1 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1389,7 +1389,14 @@ static int panel_simple_dsi_probe(struct mipi_dsi_device *dsi)
- 	dsi->format = desc->format;
- 	dsi->lanes = desc->lanes;
- 
--	return mipi_dsi_attach(dsi);
-+	err = mipi_dsi_attach(dsi);
-+	if (err) {
-+		struct panel_simple *panel = dev_get_drvdata(&dsi->dev);
-+
-+		drm_panel_remove(&panel->base);
+diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+index 3d714da96ce1..5c274c5440da 100644
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -3823,6 +3823,9 @@ static int usb_set_lpm_timeout(struct usb_device *udev,
+  * control transfers to set the hub timeout or enable device-initiated U1/U2
+  * will be successful.
+  *
++ * If the control transfer to enable device-initiated U1/U2 entry fails, then
++ * hub-initiated U1/U2 will be disabled.
++ *
+  * If we cannot set the parent hub U1/U2 timeout, we attempt to let the xHCI
+  * driver know about it.  If that call fails, it should be harmless, and just
+  * take up more slightly more bus bandwidth for unnecessary U1/U2 exit latency.
+@@ -3877,23 +3880,24 @@ static void usb_enable_link_state(struct usb_hcd *hcd, struct usb_device *udev,
+ 		 * host know that this link state won't be enabled.
+ 		 */
+ 		hcd->driver->disable_usb3_lpm_timeout(hcd, udev, state);
+-	} else {
+-		/* Only a configured device will accept the Set Feature
+-		 * U1/U2_ENABLE
+-		 */
+-		if (udev->actconfig)
+-			usb_set_device_initiated_lpm(udev, state, true);
++		return;
 +	}
-+
-+	return err;
+ 
+-		/* As soon as usb_set_lpm_timeout(timeout) returns 0, the
+-		 * hub-initiated LPM is enabled. Thus, LPM is enabled no
+-		 * matter the result of usb_set_device_initiated_lpm().
+-		 * The only difference is whether device is able to initiate
+-		 * LPM.
+-		 */
++	/* Only a configured device will accept the Set Feature
++	 * U1/U2_ENABLE
++	 */
++	if (udev->actconfig &&
++	    usb_set_device_initiated_lpm(udev, state, true) == 0) {
+ 		if (state == USB3_LPM_U1)
+ 			udev->usb3_lpm_u1_enabled = 1;
+ 		else if (state == USB3_LPM_U2)
+ 			udev->usb3_lpm_u2_enabled = 1;
++	} else {
++		/* Don't request U1/U2 entry if the device
++		 * cannot transition to U1/U2.
++		 */
++		usb_set_lpm_timeout(udev, state, 0);
++		hcd->driver->disable_usb3_lpm_timeout(hcd, udev, state);
+ 	}
  }
  
- static int panel_simple_dsi_remove(struct mipi_dsi_device *dsi)
 -- 
 2.20.1
 
