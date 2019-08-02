@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A81C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05462C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB2D020665
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:03:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1BB420665
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:04:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564740236;
-	bh=Zmwopr/24pAQwUduIhpFzQx5huUTsu1JiX7uxykUQaE=;
+	s=default; t=1564740240;
+	bh=8GoT/nTBFzfCKVir7EOLLm1T0BtOMXfPe2pI+qONsTA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J+4ttBc3tP5VjhfJ1gk8R5pINpbIf5TxPgwoBq2m7ZTIORHYsEKQaspLh6jX9QpId
-	 WpGVEYJNVwcjumH7hG/T6vVGDeCoJgv5ApXJMeLMcVvZZThvPH7T8Y1TdzkT6hpgNg
-	 pMeE30KvhQwAwYOcMIU5buhBC+P7VSoQC1xdJBcg=
+	b=yKoG8RJSo7w2EtrZ3UDryqLhah+HuTAURcgxZfvemmaJurFYR6Xd5BA6U9D4Oap5w
+	 GZdwHkS5Prf22wPVfIGe2PBJPmgF8ZCe99PuMlSA5Cgm5z8r67hWnytWvPrwgCaOmX
+	 lJwaQ8+J1yOWAq8zYWIp9mhgPx1o/6bjqnWBK9Bg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405059AbfHBKDz (ORCPT
+        id S2404333AbfHBJkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 06:03:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42262 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:40:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391757AbfHBJk7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:40:59 -0400
+        id S2404320AbfHBJko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:40:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EF492086A;
-        Fri,  2 Aug 2019 09:40:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C4E6206A2;
+        Fri,  2 Aug 2019 09:40:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738858;
-        bh=Zmwopr/24pAQwUduIhpFzQx5huUTsu1JiX7uxykUQaE=;
+        s=default; t=1564738843;
+        bh=8GoT/nTBFzfCKVir7EOLLm1T0BtOMXfPe2pI+qONsTA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T4McB9JZlanVYA6Z3uHY6cU49GlmLFu4+dgF+3KVuj6Rvi6TEOfwstwkz7q7Lw/Wp
-         7NlxR4HxrClv+f5iR5JQlxcdrG7Tff0Q/Tf1trU1+w/U7M7wP/x0dO+wNtkGmxAk3m
-         Y69Hd0CDwgY7gZtkCJn569YdKllsmkcgNC9h+8UE=
+        b=VuhQEK+obDtXmyKz8/AB+ymrHVtM2tnTobDKGRvaxjzrNFjAsNjqhtYokqsB7F4Tk
+         VwJNkxBQbxik1svHzSPqZJVhFdDulhCMi3i3SIuCuX0qpIlJH90XnditxRRG3a1jBU
+         gkqfzw9MGt83TDMbRR/LHOK1/6iJgYwSNxsz2nmA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 023/223] crypto: talitos - properly handle split ICV.
-Date:   Fri,  2 Aug 2019 11:34:08 +0200
-Message-Id: <20190802092240.536064002@linuxfoundation.org>
+Subject: [PATCH 4.9 007/223] ath6kl: add some bounds checking
+Date:   Fri,  2 Aug 2019 11:33:52 +0200
+Message-Id: <20190802092239.268580614@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -60,95 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit eae55a586c3c8b50982bad3c3426e9c9dd7a0075 ]
+[ Upstream commit 5d6751eaff672ea77642e74e92e6c0ac7f9709ab ]
 
-The driver assumes that the ICV is as a single piece in the last
-element of the scatterlist. This assumption is wrong.
+The "ev->traffic_class" and "reply->ac" variables come from the network
+and they're used as an offset into the wmi->stream_exist_for_ac[] array.
+Those variables are u8 so they can be 0-255 but the stream_exist_for_ac[]
+array only has WMM_NUM_AC (4) elements.  We need to add a couple bounds
+checks to prevent array overflows.
 
-This patch ensures that the ICV is properly handled regardless of
-the scatterlist layout.
+I also modified one existing check from "if (traffic_class > 3) {" to
+"if (traffic_class >= WMM_NUM_AC) {" just to make them all consistent.
 
-Fixes: 9c4a79653b35 ("crypto: talitos - Freescale integrated security engine (SEC) driver")
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: bdcd81707973 (" Add ath6kl cleaned up driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/talitos.c | 26 +++++++++++++++-----------
- 1 file changed, 15 insertions(+), 11 deletions(-)
+ drivers/net/wireless/ath/ath6kl/wmi.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/talitos.c b/drivers/crypto/talitos.c
-index 0b12772c7919..e7864aa494a1 100644
---- a/drivers/crypto/talitos.c
-+++ b/drivers/crypto/talitos.c
-@@ -984,7 +984,6 @@ static void ipsec_esp_encrypt_done(struct device *dev,
- 	struct crypto_aead *authenc = crypto_aead_reqtfm(areq);
- 	unsigned int authsize = crypto_aead_authsize(authenc);
- 	struct talitos_edesc *edesc;
--	struct scatterlist *sg;
- 	void *icvdata;
+diff --git a/drivers/net/wireless/ath/ath6kl/wmi.c b/drivers/net/wireless/ath/ath6kl/wmi.c
+index 3fd1cc98fd2f..55609fc4e50e 100644
+--- a/drivers/net/wireless/ath/ath6kl/wmi.c
++++ b/drivers/net/wireless/ath/ath6kl/wmi.c
+@@ -1178,6 +1178,10 @@ static int ath6kl_wmi_pstream_timeout_event_rx(struct wmi *wmi, u8 *datap,
+ 		return -EINVAL;
  
- 	edesc = container_of(desc, struct talitos_edesc, desc);
-@@ -998,9 +997,8 @@ static void ipsec_esp_encrypt_done(struct device *dev,
- 		else
- 			icvdata = &edesc->link_tbl[edesc->src_nents +
- 						   edesc->dst_nents + 2];
--		sg = sg_last(areq->dst, edesc->dst_nents);
--		memcpy((char *)sg_virt(sg) + sg->length - authsize,
--		       icvdata, authsize);
-+		sg_pcopy_from_buffer(areq->dst, edesc->dst_nents ? : 1, icvdata,
-+				     authsize, areq->assoclen + areq->cryptlen);
+ 	ev = (struct wmi_pstream_timeout_event *) datap;
++	if (ev->traffic_class >= WMM_NUM_AC) {
++		ath6kl_err("invalid traffic class: %d\n", ev->traffic_class);
++		return -EINVAL;
++	}
+ 
+ 	/*
+ 	 * When the pstream (fat pipe == AC) timesout, it means there were
+@@ -1519,6 +1523,10 @@ static int ath6kl_wmi_cac_event_rx(struct wmi *wmi, u8 *datap, int len,
+ 		return -EINVAL;
+ 
+ 	reply = (struct wmi_cac_event *) datap;
++	if (reply->ac >= WMM_NUM_AC) {
++		ath6kl_err("invalid AC: %d\n", reply->ac);
++		return -EINVAL;
++	}
+ 
+ 	if ((reply->cac_indication == CAC_INDICATION_ADMISSION_RESP) &&
+ 	    (reply->status_code != IEEE80211_TSPEC_STATUS_ADMISS_ACCEPTED)) {
+@@ -2635,7 +2643,7 @@ int ath6kl_wmi_delete_pstream_cmd(struct wmi *wmi, u8 if_idx, u8 traffic_class,
+ 	u16 active_tsids = 0;
+ 	int ret;
+ 
+-	if (traffic_class > 3) {
++	if (traffic_class >= WMM_NUM_AC) {
+ 		ath6kl_err("invalid traffic class: %d\n", traffic_class);
+ 		return -EINVAL;
  	}
- 
- 	kfree(edesc);
-@@ -1016,7 +1014,6 @@ static void ipsec_esp_decrypt_swauth_done(struct device *dev,
- 	struct crypto_aead *authenc = crypto_aead_reqtfm(req);
- 	unsigned int authsize = crypto_aead_authsize(authenc);
- 	struct talitos_edesc *edesc;
--	struct scatterlist *sg;
- 	char *oicv, *icv;
- 	struct talitos_private *priv = dev_get_drvdata(dev);
- 	bool is_sec1 = has_ftr_sec1(priv);
-@@ -1026,9 +1023,18 @@ static void ipsec_esp_decrypt_swauth_done(struct device *dev,
- 	ipsec_esp_unmap(dev, edesc, req);
- 
- 	if (!err) {
-+		char icvdata[SHA512_DIGEST_SIZE];
-+		int nents = edesc->dst_nents ? : 1;
-+		unsigned int len = req->assoclen + req->cryptlen;
-+
- 		/* auth check */
--		sg = sg_last(req->dst, edesc->dst_nents ? : 1);
--		icv = (char *)sg_virt(sg) + sg->length - authsize;
-+		if (nents > 1) {
-+			sg_pcopy_to_buffer(req->dst, nents, icvdata, authsize,
-+					   len - authsize);
-+			icv = icvdata;
-+		} else {
-+			icv = (char *)sg_virt(req->dst) + len - authsize;
-+		}
- 
- 		if (edesc->dma_len) {
- 			if (is_sec1)
-@@ -1458,7 +1464,6 @@ static int aead_decrypt(struct aead_request *req)
- 	struct talitos_ctx *ctx = crypto_aead_ctx(authenc);
- 	struct talitos_private *priv = dev_get_drvdata(ctx->dev);
- 	struct talitos_edesc *edesc;
--	struct scatterlist *sg;
- 	void *icvdata;
- 
- 	req->cryptlen -= authsize;
-@@ -1493,9 +1498,8 @@ static int aead_decrypt(struct aead_request *req)
- 	else
- 		icvdata = &edesc->link_tbl[0];
- 
--	sg = sg_last(req->src, edesc->src_nents ? : 1);
--
--	memcpy(icvdata, (char *)sg_virt(sg) + sg->length - authsize, authsize);
-+	sg_pcopy_to_buffer(req->src, edesc->src_nents ? : 1, icvdata, authsize,
-+			   req->assoclen + req->cryptlen - authsize);
- 
- 	return ipsec_esp(edesc, req, ipsec_esp_decrypt_swauth_done);
- }
 -- 
 2.20.1
 
