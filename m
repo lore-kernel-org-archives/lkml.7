@@ -2,496 +2,279 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB04C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 04:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 831A3C32759
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 04:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3204C2073D
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 04:12:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D78F2086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 04:15:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LteB0cYY"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="IBug6s+1";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CYSJp6FK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731025AbfHBEMZ (ORCPT
+        id S1731096AbfHBEPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 00:12:25 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45169 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729531AbfHBEMZ (ORCPT
+        Fri, 2 Aug 2019 00:15:19 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:60100 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729531AbfHBEPT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 00:12:25 -0400
-Received: by mail-pf1-f194.google.com with SMTP id r1so35291296pfq.12;
-        Thu, 01 Aug 2019 21:12:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=pl1xBiXQddy0n6Vatcuj8yww3WNhjnv49ZabwrJJpaE=;
-        b=LteB0cYYPa4x1GcXjRILApmB8u/Md/yCnCyKQBaWg9MqUt4Sechz+rY63XlCGPxc5j
-         NiZ0PHzDEic7N+dvE+vriMi7SLP4Rv4+Y3jyWW0dYnzahwz32PysuMYBYYat9z+mEgHB
-         7K6X8lMBPecKRyE/b4QLKc8Hcew6nRNKBkPmLyus99+4AcEYV1jHGdsiiYgqC0qxrtUl
-         H62wtBuR/K/kpnRjPpFhH8rzNfY+rnD4kTBqfDJpRFwbiOE0D4H1exOQrOrvV4xw0ggb
-         RsD9M8zw8/jhxDvfY3s/MPJIDIzDwaKlYwgyoWQuFBzxGEEwElvq7fbVyTLYkm6clHJ+
-         Y1jQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=pl1xBiXQddy0n6Vatcuj8yww3WNhjnv49ZabwrJJpaE=;
-        b=Q76pyVau/xfXTeeWGtGJ9Y1TsrK9I+EMmqDITVaZMnntBpQvsnTswlvW3qQyKwXtpF
-         7Kelbi12gVtVAipN0DT27BFW/9zFl9XSeh1h1rWRuQa+rQPDjuVaKSkXMZ1CASww1G/k
-         GRSX6Rdp72GvLCTRUXo3coggQyGm+b6uWLR7tIUZP3mpg6xTQkztIunO3JCJrshkQ1TS
-         mcIROVfHctkjM4pswkEGnBSt26I6rfc+b+p5UOvycuOZe1vd8uTV41xyHTjWEpmTgVU4
-         2cLIWGlLW/9WN6qEwk8NaprmbecBuZYznxiyJq1zu1LpdYyqoSARX5S/lc7UqoE03Uiw
-         ABSA==
-X-Gm-Message-State: APjAAAWS+UKF0qM0HjG8w50J535cnLQAIXc6mi97QsvJBEYxBGUfH+3M
-        s/fJKM5Y0IPX/He6tU8xUHk=
-X-Google-Smtp-Source: APXvYqyN7aNnW5eShqcyYemjFQ6CB8eMgot41TXqUNDFx1OoZkz4+ucWvGP32k+D4DTj7SkA68XPmQ==
-X-Received: by 2002:a63:c748:: with SMTP id v8mr91349551pgg.418.1564719143837;
-        Thu, 01 Aug 2019 21:12:23 -0700 (PDT)
-Received: from localhost.localdomain (d206-116-172-62.bchsia.telus.net. [206.116.172.62])
-        by smtp.gmail.com with ESMTPSA id w18sm92797061pfj.37.2019.08.01.21.12.22
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 01 Aug 2019 21:12:23 -0700 (PDT)
-From:   Mark Balantzyan <mbalant3@gmail.com>
-To:     linux@roeck-us.net
-Cc:     mbalant3@gmail.com, wim@linux-watchdog.org,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4] watchdog: alim1535: Rewriting of alim1535 driver to use watchdog subsystem
-Date:   Thu,  1 Aug 2019 21:12:18 -0700
-Message-Id: <20190802041218.66127-1-mbalant3@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 2 Aug 2019 00:15:19 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id F1E5060DB6; Fri,  2 Aug 2019 04:15:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564719317;
+        bh=R6qY6VHdtZvVib56RaWwEaUzmY8sLeNrIaHNO1viqEE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=IBug6s+1cEvyTTXygv78t6cS1kcR/08QtNFx2OangJtvz5Qan8DedtMtEtrI4ABkQ
+         w9fb6iKWKsp+yAIO4szoEYsCnN4zA3q9W/MMBfTEyiwKycMXZx/RHHCwJQOnU5Q3TC
+         bJZ+03KXgd75/kCFp6/FlTDLWZlyEGLgkgGWPmZc=
+Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D071F60734;
+        Fri,  2 Aug 2019 04:15:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564719315;
+        bh=R6qY6VHdtZvVib56RaWwEaUzmY8sLeNrIaHNO1viqEE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=CYSJp6FK8LwbzVwixB4LC5LjWCmbZvmcHR27X3LGIhIcT/m/DQYmEWUIootX+GOCI
+         weSGlzV5R8U7+Kr2u+4fVDpsb6EH4ejvym+Cp/awSkiFP5u5bomEJhYzvW0yGkWNEF
+         Z05thaWH9H5E3BLEAPZMeKHVdwH5yowN42LPaFY8=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D071F60734
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     linus.walleij@linaro.org, bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, agross@kernel.org,
+        robh+dt@kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jitendra Sharma <shajit@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH v2 1/2] dt-bindings: pinctrl: qcom: Add SC7180 pinctrl binding
+Date:   Fri,  2 Aug 2019 09:45:06 +0530
+Message-Id: <20190802041507.12365-1-rnayak@codeaurora.org>
+X-Mailer: git-send-email 2.22.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch rewrites the alim1535_wdt driver to use the watchdog subsystem.
-By virtue of this, it also fixes a (theoretical) race condition between the
-formerly arranged ali_timeout_bits and ali_settimer() interoperation.
+From: Jitendra Sharma <shajit@codeaurora.org>
 
-Signed-off-by: Mark Balantzyan <mbalant3@gmail.com>
+Add the binding for the TLMM pinctrl block found in the SC7180 platform
 
+Signed-off-by: Jitendra Sharma <shajit@codeaurora.org>
+Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+[rnayak: Fix some copy-paste issues, sort and fix functions]
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- drivers/watchdog/Kconfig        |   1 +
- drivers/watchdog/alim1535_wdt.c | 294 ++++++--------------------------
- 2 files changed, 50 insertions(+), 245 deletions(-)
+ .../bindings/pinctrl/qcom,sc7180-pinctrl.txt  | 186 ++++++++++++++++++
+ 1 file changed, 186 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.txt
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 9af07fd9..980b0c90 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -853,6 +853,7 @@ config ADVANTECH_WDT
- 
- config ALIM1535_WDT
- 	tristate "ALi M1535 PMU Watchdog Timer"
-+	select WATCHDOG_CORE
- 	depends on X86 && PCI
- 	---help---
- 	  This is the driver for the hardware watchdog on the ALi M1535 PMU.
-diff --git a/drivers/watchdog/alim1535_wdt.c b/drivers/watchdog/alim1535_wdt.c
-index 60f0c2eb..747ba12c 100644
---- a/drivers/watchdog/alim1535_wdt.c
-+++ b/drivers/watchdog/alim1535_wdt.c
-@@ -12,29 +12,20 @@
- #include <linux/module.h>
- #include <linux/moduleparam.h>
- #include <linux/types.h>
--#include <linux/miscdevice.h>
- #include <linux/watchdog.h>
- #include <linux/ioport.h>
--#include <linux/notifier.h>
--#include <linux/reboot.h>
--#include <linux/init.h>
--#include <linux/fs.h>
- #include <linux/pci.h>
--#include <linux/uaccess.h>
--#include <linux/io.h>
- 
- #define WATCHDOG_NAME "ALi_M1535"
- #define WATCHDOG_TIMEOUT 60	/* 60 sec default timeout */
- 
- /* internal variables */
--static unsigned long ali_is_open;
--static char ali_expect_release;
- static struct pci_dev *ali_pci;
- static u32 ali_timeout_bits;		/* stores the computed timeout */
- static DEFINE_SPINLOCK(ali_lock);	/* Guards the hardware */
- 
- /* module parameters */
--static int timeout = WATCHDOG_TIMEOUT;
-+static int timeout;
- module_param(timeout, int, 0);
- MODULE_PARM_DESC(timeout,
- 		"Watchdog timeout in seconds. (0 < timeout < 18000, default="
-@@ -53,18 +44,15 @@ MODULE_PARM_DESC(nowayout,
-  *	configuration set.
-  */
- 
--static void ali_start(void)
-+static int ali_start(struct watchdog_device *wdd)
- {
- 	u32 val;
- 
--	spin_lock(&ali_lock);
--
- 	pci_read_config_dword(ali_pci, 0xCC, &val);
- 	val &= ~0x3F;	/* Mask count */
- 	val |= (1 << 25) | ali_timeout_bits;
- 	pci_write_config_dword(ali_pci, 0xCC, val);
--
--	spin_unlock(&ali_lock);
-+	return 0;
- }
- 
- /*
-@@ -73,225 +61,53 @@ static void ali_start(void)
-  *	Stop the ALi watchdog countdown
-  */
- 
--static void ali_stop(void)
-+static int ali_stop(struct watchdog_device *wdd)
- {
- 	u32 val;
- 
--	spin_lock(&ali_lock);
--
- 	pci_read_config_dword(ali_pci, 0xCC, &val);
- 	val &= ~0x3F;		/* Mask count to zero (disabled) */
- 	val &= ~(1 << 25);	/* and for safety mask the reset enable */
- 	pci_write_config_dword(ali_pci, 0xCC, val);
--
--	spin_unlock(&ali_lock);
--}
--
--/*
-- *	ali_keepalive	-	send a keepalive to the watchdog
-- *
-- *	Send a keepalive to the timer (actually we restart the timer).
-- */
--
--static void ali_keepalive(void)
--{
--	ali_start();
-+	return 0;
- }
- 
- /*
-- *	ali_settimer	-	compute the timer reload value
-+ *	ali_set_timeout	-	compute the timer reload value
-  *	@t: time in seconds
-  *
-  *	Computes the timeout values needed
-  */
- 
--static int ali_settimer(int t)
-+static int ali_set_timeout(struct watchdog_device *wdd, unsigned int t)
- {
--	if (t < 0)
--		return -EINVAL;
--	else if (t < 60)
--		ali_timeout_bits = t|(1 << 6);
--	else if (t < 3600)
--		ali_timeout_bits = (t / 60)|(1 << 7);
--	else if (t < 18000)
--		ali_timeout_bits = (t / 300)|(1 << 6)|(1 << 7);
--	else
-+	spin_lock(&ali_lock);
-+	if (t < 0) {
-+		spin_unlock(&ali_lock);
- 		return -EINVAL;
--
--	timeout = t;
--	return 0;
--}
--
--/*
-- *	/dev/watchdog handling
-- */
--
--/*
-- *	ali_write	-	writes to ALi watchdog
-- *	@file: file from VFS
-- *	@data: user address of data
-- *	@len: length of data
-- *	@ppos: pointer to the file offset
-- *
-- *	Handle a write to the ALi watchdog. Writing to the file pings
-- *	the watchdog and resets it. Writing the magic 'V' sequence allows
-- *	the next close to turn off the watchdog.
-- */
--
--static ssize_t ali_write(struct file *file, const char __user *data,
--						size_t len, loff_t *ppos)
--{
--	/* See if we got the magic character 'V' and reload the timer */
--	if (len) {
--		if (!nowayout) {
--			size_t i;
--
--			/* note: just in case someone wrote the
--			   magic character five months ago... */
--			ali_expect_release = 0;
--
--			/* scan to see whether or not we got
--			   the magic character */
--			for (i = 0; i != len; i++) {
--				char c;
--				if (get_user(c, data + i))
--					return -EFAULT;
--				if (c == 'V')
--					ali_expect_release = 42;
--			}
--		}
--
--		/* someone wrote to us, we should reload the timer */
--		ali_start();
- 	}
--	return len;
--}
--
--/*
-- *	ali_ioctl	-	handle watchdog ioctls
-- *	@file: VFS file pointer
-- *	@cmd: ioctl number
-- *	@arg: arguments to the ioctl
-- *
-- *	Handle the watchdog ioctls supported by the ALi driver. Really
-- *	we want an extension to enable irq ack monitoring and the like
-- */
--
--static long ali_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
--{
--	void __user *argp = (void __user *)arg;
--	int __user *p = argp;
--	static const struct watchdog_info ident = {
--		.options =		WDIOF_KEEPALIVEPING |
--					WDIOF_SETTIMEOUT |
--					WDIOF_MAGICCLOSE,
--		.firmware_version =	0,
--		.identity =		"ALi M1535 WatchDog Timer",
--	};
--
--	switch (cmd) {
--	case WDIOC_GETSUPPORT:
--		return copy_to_user(argp, &ident, sizeof(ident)) ? -EFAULT : 0;
--
--	case WDIOC_GETSTATUS:
--	case WDIOC_GETBOOTSTATUS:
--		return put_user(0, p);
--	case WDIOC_SETOPTIONS:
--	{
--		int new_options, retval = -EINVAL;
--
--		if (get_user(new_options, p))
--			return -EFAULT;
--		if (new_options & WDIOS_DISABLECARD) {
--			ali_stop();
--			retval = 0;
--		}
--		if (new_options & WDIOS_ENABLECARD) {
--			ali_start();
--			retval = 0;
--		}
--		return retval;
-+	} else if (t < 60) {
-+		ali_timeout_bits = t | (1 << 6);
- 	}
--	case WDIOC_KEEPALIVE:
--		ali_keepalive();
--		return 0;
--	case WDIOC_SETTIMEOUT:
--	{
--		int new_timeout;
--		if (get_user(new_timeout, p))
--			return -EFAULT;
--		if (ali_settimer(new_timeout))
--			return -EINVAL;
--		ali_keepalive();
-+	} else if (t < 3600) {
-+		ali_timeout_bits = (t / 60) | (1 << 7);
- 	}
--		/* fall through */
--	case WDIOC_GETTIMEOUT:
--		return put_user(timeout, p);
--	default:
--		return -ENOTTY;
-+	} else if (t < 18000) {
-+		ali_timeout_bits = (t / 300) | (1 << 6) | (1 << 7);
- 	}
--}
--
--/*
-- *	ali_open	-	handle open of ali watchdog
-- *	@inode: inode from VFS
-- *	@file: file from VFS
-- *
-- *	Open the ALi watchdog device. Ensure only one person opens it
-- *	at a time. Also start the watchdog running.
-- */
--
--static int ali_open(struct inode *inode, struct file *file)
--{
--	/* /dev/watchdog can only be opened once */
--	if (test_and_set_bit(0, &ali_is_open))
--		return -EBUSY;
--
--	/* Activate */
--	ali_start();
--	return nonseekable_open(inode, file);
--}
--
--/*
-- *	ali_release	-	close an ALi watchdog
-- *	@inode: inode from VFS
-- *	@file: file from VFS
-- *
-- *	Close the ALi watchdog device. Actual shutdown of the timer
-- *	only occurs if the magic sequence has been set.
-- */
--
--static int ali_release(struct inode *inode, struct file *file)
--{
--	/*
--	 *      Shut off the timer.
--	 */
--	if (ali_expect_release == 42)
--		ali_stop();
- 	else {
--		pr_crit("Unexpected close, not stopping watchdog!\n");
--		ali_keepalive();
-+		spin_unlock(&ali_lock);
-+		return -EINVAL;
- 	}
--	clear_bit(0, &ali_is_open);
--	ali_expect_release = 0;
-+	wdd->timeout = t;
-+	spin_unlock(&ali_lock);
- 	return 0;
- }
- 
- /*
-- *	ali_notify_sys	-	System down notifier
-- *
-- *	Notifier for system down
-+ *	/dev/watchdog handling
-  */
- 
--
--static int ali_notify_sys(struct notifier_block *this,
--					unsigned long code, void *unused)
--{
--	if (code == SYS_DOWN || code == SYS_HALT)
--		ali_stop();		/* Turn the WDT off */
--	return NOTIFY_DONE;
--}
--
- /*
-  *	Data for PCI driver interface
-  *
-@@ -361,23 +177,25 @@ static int __init ali_find_watchdog(void)
-  *	Kernel Interfaces
-  */
- 
--static const struct file_operations ali_fops = {
--	.owner		=	THIS_MODULE,
--	.llseek		=	no_llseek,
--	.write		=	ali_write,
--	.unlocked_ioctl =	ali_ioctl,
--	.open		=	ali_open,
--	.release	=	ali_release,
-+static struct watchdog_ops alim1535wdt_ops = {
-+	.owner = THIS_MODULE,
-+	.start = ali_start,
-+	.stop = ali_stop,
-+	.set_timeout = ali_set_timeout,
- };
- 
--static struct miscdevice ali_miscdev = {
--	.minor =	WATCHDOG_MINOR,
--	.name =		"watchdog",
--	.fops =		&ali_fops,
--};
--
--static struct notifier_block ali_notifier = {
--	.notifier_call =	ali_notify_sys,
-+static const struct watchdog_info alim1535wdt_ident = {
-+	.firmware_version =	0,
-+	.identity         =	"ALi M1535 Watchdog",
-+ };
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.txt
+new file mode 100644
+index 000000000000..948cd56cfab7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.txt
+@@ -0,0 +1,186 @@
++Qualcomm Technologies, Inc. SC7180 TLMM block
 +
-+static struct watchdog_device alim1535wdt_wdd = {
-+	.ops = &alim1535wdt_ops,
-+	.info = &alim1535wdt_ident,
-+	.status = WATCHDOG_NOWAYOUT_INIT_STATUS,
-+	.min_timeout = 1,
-+	.max_timeout = 18000,
++This binding describes the Top Level Mode Multiplexer block found in the
++SC7180 platform.
 +
- };
- 
- /*
-@@ -403,30 +221,20 @@ static int __init watchdog_init(void)
- 			timeout);
- 	}
- 
--	/* Calculate the watchdog's timeout */
--	ali_settimer(timeout);
-+	watchdog_stop_on_reboot(&alim1535wdt_wdd);
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be "qcom,sc7180-pinctrl"
 +
-+	watchdog_init_timeout(&alim1535wdt_wdd, timeout, NULL);
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: the base address and size of the north, south and west
++		    TLMM tiles
 +
-+	watchdog_set_nowayout(&alim1535wdt_wdd, nowayout);
- 
--	ret = register_reboot_notifier(&ali_notifier);
--	if (ret != 0) {
--		pr_err("cannot register reboot notifier (err=%d)\n", ret);
--		goto out;
--	}
-+	ret = watchdog_register_device(&alim1535wdt_wdd);
- 
--	ret = misc_register(&ali_miscdev);
- 	if (ret != 0) {
--		pr_err("cannot register miscdev on minor=%d (err=%d)\n",
--		       WATCHDOG_MINOR, ret);
--		goto unreg_reboot;
-+		return ret;
- 	}
++- reg-names:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Defintiion: names for the cells of reg, must contain "north", "south"
++		    and "west".
 +
-+	return 0;
- 
--	pr_info("initialized. timeout=%d sec (nowayout=%d)\n",
--		timeout, nowayout);
--
--out:
--	return ret;
--unreg_reboot:
--	unregister_reboot_notifier(&ali_notifier);
--	goto out;
- }
- 
- /*
-@@ -437,12 +245,8 @@ unreg_reboot:
- 
- static void __exit watchdog_exit(void)
- {
--	/* Stop the timer before we leave */
--	ali_stop();
--
- 	/* Deregister */
--	misc_deregister(&ali_miscdev);
--	unregister_reboot_notifier(&ali_notifier);
-+	watchdog_unregister_device(&alim1535wdt_wdd);
- 	pci_dev_put(ali_pci);
- }
- 
-@@ -451,4 +255,4 @@ module_exit(watchdog_exit);
- 
- MODULE_AUTHOR("Alan Cox");
- MODULE_DESCRIPTION("ALi M1535 PMU Watchdog Timer driver");
--MODULE_LICENSE("GPL");
-+MODULE_LICENSE("GPL");
++- interrupts:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: should specify the TLMM summary IRQ.
++
++- interrupt-controller:
++	Usage: required
++	Value type: <none>
++	Definition: identifies this node as an interrupt controller
++
++- #interrupt-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: must be 2. Specifying the pin number and flags, as defined
++		    in <dt-bindings/interrupt-controller/irq.h>
++
++- gpio-controller:
++	Usage: required
++	Value type: <none>
++	Definition: identifies this node as a gpio controller
++
++- #gpio-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: must be 2. Specifying the pin number and flags, as defined
++		    in <dt-bindings/gpio/gpio.h>
++
++- gpio-ranges:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition:  see ../gpio/gpio.txt
++
++- gpio-reserved-ranges:
++	Usage: optional
++	Value type: <prop-encoded-array>
++	Definition: see ../gpio/gpio.txt
++
++Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
++a general description of GPIO and interrupt bindings.
++
++Please refer to pinctrl-bindings.txt in this directory for details of the
++common pinctrl bindings used by client devices, including the meaning of the
++phrase "pin configuration node".
++
++The pin configuration nodes act as a container for an arbitrary number of
++subnodes. Each of these subnodes represents some desired configuration for a
++pin, a group, or a list of pins or groups. This configuration can include the
++mux function to select on those pin(s)/group(s), and various pin configuration
++parameters, such as pull-up, drive strength, etc.
++
++
++PIN CONFIGURATION NODES:
++
++The name of each subnode is not important; all subnodes should be enumerated
++and processed purely based on their content.
++
++Each subnode only affects those parameters that are explicitly listed. In
++other words, a subnode that lists a mux function but no pin configuration
++parameters implies no information about any pin configuration parameters.
++Similarly, a pin subnode that describes a pullup parameter implies no
++information about e.g. the mux function.
++
++
++The following generic properties as defined in pinctrl-bindings.txt are valid
++to specify in a pin configuration subnode:
++
++- pins:
++	Usage: required
++	Value type: <string-array>
++	Definition: List of gpio pins affected by the properties specified in
++		    this subnode.
++
++		    Valid pins are:
++		      gpio0-gpio118
++		        Supports mux, bias and drive-strength
++
++		      sdc1_clk, sdc1_cmd, sdc1_data sdc2_clk, sdc2_cmd,
++		      sdc2_data sdc1_rclk
++		        Supports bias and drive-strength
++
++		      ufs_reset
++			Supports bias and drive-strength
++
++- function:
++	Usage: required
++	Value type: <string>
++	Definition: Specify the alternative function to be configured for the
++		    specified pins. Functions are only valid for gpio pins.
++		    Valid values are:
++
++		    adsp_ext, agera_pll, aoss_cti, atest_char, atest_char0,
++		    atest_char1, atest_char2, atest_char3, atest_tsens,
++		    atest_tsens2, atest_usb1, atest_usb10, atest_usb11,
++		    atest_usb12, atest_usb13, atest_usb2, atest_usb20,
++		    atest_usb21, atest_usb22, atest_usb23, audio_ref,
++		    btfm_slimbus, cam_mclk, cci_async, cci_i2c, cci_timer0,
++		    cci_timer1, cci_timer2, cci_timer3, cci_timer4,
++		    cri_trng, dbg_out, ddr_bist, ddr_pxi0, ddr_pxi1,
++		    ddr_pxi2, ddr_pxi3, dp_hot, edp_lcd, gcc_gp1, gcc_gp2,
++		    gcc_gp3, gpio, gp_pdm0, gp_pdm1, gp_pdm2, gps_tx,
++		    jitter_bist, ldo_en, ldo_update, lpass_ext, mdp_vsync,
++		    mdp_vsync0, mdp_vsync1, mdp_vsync2, mdp_vsync3, mi2s_0,
++		    mi2s_1, mi2s_2, mss_lte, m_voc, pa_indicator, phase_flag,
++		    PLL_BIST, pll_bypassnl, pll_reset, prng_rosc, qdss,
++		    qdss_cti, qlink_enable, qlink_request, qspi_clk, qspi_cs,
++		    qspi_data, qup00, qup01, qup02, qup03, qup04, qup05,
++		    qup10, qup11, qup12, qup13, qup14, qup15, sdc1_tb,
++		    sdc2_tb, sd_write, sp_cmu, tgu_ch0, tgu_ch1, tgu_ch2,
++		    tgu_ch3, tsense_pwm1, tsense_pwm2, uim1, uim2, uim_batt,
++		    usb_phy, vfr_1, _V_GPIO, _V_PPS_IN, _V_PPS_OUT,
++		    vsense_trigger, wlan1_adc0, wlan1_adc1, wlan2_adc0,
++		    wlan2_adc1,
++
++- bias-disable:
++	Usage: optional
++	Value type: <none>
++	Definition: The specified pins should be configured as no pull.
++
++- bias-pull-down:
++	Usage: optional
++	Value type: <none>
++	Definition: The specified pins should be configured as pull down.
++
++- bias-pull-up:
++	Usage: optional
++	Value type: <none>
++	Definition: The specified pins should be configured as pull up.
++
++- output-high:
++	Usage: optional
++	Value type: <none>
++	Definition: The specified pins are configured in output mode, driven
++		    high.
++		    Not valid for sdc pins.
++
++- output-low:
++	Usage: optional
++	Value type: <none>
++	Definition: The specified pins are configured in output mode, driven
++		    low.
++		    Not valid for sdc pins.
++
++- drive-strength:
++	Usage: optional
++	Value type: <u32>
++	Definition: Selects the drive strength for the specified pins, in mA.
++		    Valid values are: 2, 4, 6, 8, 10, 12, 14 and 16
++
++Example:
++
++	tlmm: pinctrl@3000000 {
++		compatible = "qcom,sc7180-pinctrl";
++		reg = <0x3500000 0x300000>,
++		      <0x3900000 0x300000>,
++		      <0x3D00000 0x300000>;
++		reg-names = "west", "north", "south";
++		interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		gpio-ranges = <&tlmm 0 0 119>;
++		gpio-reserved-ranges = <0 4>, <106 4>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
 -- 
-2.17.1
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
