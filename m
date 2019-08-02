@@ -4,73 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0777C0650F
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 23:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5BEC0650F
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 23:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84AF72087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 23:05:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B5642087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 23:05:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437321AbfHBXFH (ORCPT
+        id S2437334AbfHBXF4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 19:05:07 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23218 "EHLO
+        Fri, 2 Aug 2019 19:05:56 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11384 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730376AbfHBXFH (ORCPT
+        by vger.kernel.org with ESMTP id S1730376AbfHBXF4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 19:05:07 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x72Mv1EP022517;
-        Fri, 2 Aug 2019 19:05:02 -0400
+        Fri, 2 Aug 2019 19:05:56 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x72Mv54r114259;
+        Fri, 2 Aug 2019 19:05:24 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u4vbvm5qm-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u4t301a6k-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 02 Aug 2019 19:05:02 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x72Mv3Z6022785;
-        Fri, 2 Aug 2019 19:05:02 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u4vbvm5pr-1
+        Fri, 02 Aug 2019 19:05:24 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x72Mvj1W115173;
+        Fri, 2 Aug 2019 19:05:24 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u4t301a64-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 02 Aug 2019 19:05:01 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x72MtJ5R004813;
-        Fri, 2 Aug 2019 23:05:00 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma04dal.us.ibm.com with ESMTP id 2u0e87hgdu-1
+        Fri, 02 Aug 2019 19:05:24 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x72MtMOL016711;
+        Fri, 2 Aug 2019 23:05:22 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma03wdc.us.ibm.com with ESMTP id 2u0e85x46n-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 02 Aug 2019 23:05:00 +0000
+        Fri, 02 Aug 2019 23:05:22 +0000
 Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x72N4xTO53150118
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x72N5Mgh48890274
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 2 Aug 2019 23:04:59 GMT
+        Fri, 2 Aug 2019 23:05:22 GMT
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B780FB206B;
-        Fri,  2 Aug 2019 23:04:59 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 40D77B2065;
+        Fri,  2 Aug 2019 23:05:22 +0000 (GMT)
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9AD1CB2068;
-        Fri,  2 Aug 2019 23:04:59 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 236B9B205F;
+        Fri,  2 Aug 2019 23:05:22 +0000 (GMT)
 Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
         by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri,  2 Aug 2019 23:04:59 +0000 (GMT)
+        Fri,  2 Aug 2019 23:05:22 +0000 (GMT)
 Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 96AA116C9A3A; Fri,  2 Aug 2019 16:05:01 -0700 (PDT)
-Date:   Fri, 2 Aug 2019 16:05:01 -0700
+        id 226FD16C9A3A; Fri,  2 Aug 2019 16:05:24 -0700 (PDT)
+Date:   Fri, 2 Aug 2019 16:05:24 -0700
 From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 03/10] locking/locktorture: Replace strncmp with
- str_has_prefix
-Message-ID: <20190802230501.GS28441@linux.ibm.com>
+To:     Ethan Hansen <1ethanhansen@gmail.com>
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        josh@joshtriplett.org, rostedt@goodmis.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        joel@joelfernandes.org
+Subject: Re: [PATCH tip/core/rcu 1/1] rcu: Remove unused function
+ hlist_bl_del_init_rcu
+Message-ID: <20190802230524.GT28441@linux.ibm.com>
 Reply-To: paulmck@linux.ibm.com
-References: <20190802014656.8789-1-hslester96@gmail.com>
+References: <1564778278-21186-1-git-send-email-1ethanhansen@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190802014656.8789-1-hslester96@gmail.com>
+In-Reply-To: <1564778278-21186-1-git-send-email-1ethanhansen@gmail.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-02_10:,,
@@ -85,60 +86,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 09:46:56AM +0800, Chuhong Yuan wrote:
-> strncmp(str, const, len) is error-prone because len
-> is easy to have typo.
-> The example is the hard-coded len has counting error
-> or sizeof(const) forgets - 1.
-> So we prefer using newly introduced str_has_prefix
-> to substitute such strncmp.
+On Fri, Aug 02, 2019 at 01:37:58PM -0700, Ethan Hansen wrote:
+> The function hlist_bl_del_init_rcu is declared in rculist_bl.h,
+> but never used. Remove hlist_bl_del_init_rcu to clean code.
 > 
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> Signed-off-by: Ethan Hansen <1ethanhansen@gmail.com>
 
-Queued, thank you!  I updated the commit log as follows.  Please let
-me know if I messed anything up.
+Queued, thank you!
 
 							Thanx, Paul
 
-------------------------------------------------------------------------
-
-commit e2be525371b2f6790f6c1ab712c3d273fb1f2bea
-Author: Chuhong Yuan <hslester96@gmail.com>
-Date:   Fri Aug 2 09:46:56 2019 +0800
-
-    locktorture: Replace strncmp() with str_has_prefix()
-    
-    The strncmp() function is error-prone because it is easy to get the
-    length wrong, especially if the string is subject to change, especially
-    given the need to account for the terminating nul byte.  This commit
-    therefore substitutes the newly introduced str_has_prefix(), which
-    does not require a separately specified length.
-    
-    Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-    Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
-
-diff --git a/kernel/locking/locktorture.c b/kernel/locking/locktorture.c
-index c513031cd7e3..8dd900247205 100644
---- a/kernel/locking/locktorture.c
-+++ b/kernel/locking/locktorture.c
-@@ -889,16 +889,16 @@ static int __init lock_torture_init(void)
- 		cxt.nrealwriters_stress = 2 * num_online_cpus();
- 
- #ifdef CONFIG_DEBUG_MUTEXES
--	if (strncmp(torture_type, "mutex", 5) == 0)
-+	if (str_has_prefix(torture_type, "mutex"))
- 		cxt.debug_lock = true;
- #endif
- #ifdef CONFIG_DEBUG_RT_MUTEXES
--	if (strncmp(torture_type, "rtmutex", 7) == 0)
-+	if (str_has_prefix(torture_type, "rtmutex"))
- 		cxt.debug_lock = true;
- #endif
- #ifdef CONFIG_DEBUG_SPINLOCK
--	if ((strncmp(torture_type, "spin", 4) == 0) ||
--	    (strncmp(torture_type, "rw_lock", 7) == 0))
-+	if ((str_has_prefix(torture_type, "spin")) ||
-+	    (str_has_prefix(torture_type, "rw_lock")))
- 		cxt.debug_lock = true;
- #endif
- 
+> ---
+>  include/linux/rculist_bl.h | 28 ----------------------------
+>  1 file changed, 28 deletions(-)
+> 
+> diff --git a/include/linux/rculist_bl.h b/include/linux/rculist_bl.h
+> index 66e73ec..0b952d0 100644
+> --- a/include/linux/rculist_bl.h
+> +++ b/include/linux/rculist_bl.h
+> @@ -25,34 +25,6 @@ static inline struct hlist_bl_node *hlist_bl_first_rcu(struct hlist_bl_head *h)
+>  }
+>  
+>  /**
+> - * hlist_bl_del_init_rcu - deletes entry from hash list with re-initialization
+> - * @n: the element to delete from the hash list.
+> - *
+> - * Note: hlist_bl_unhashed() on the node returns true after this. It is
+> - * useful for RCU based read lockfree traversal if the writer side
+> - * must know if the list entry is still hashed or already unhashed.
+> - *
+> - * In particular, it means that we can not poison the forward pointers
+> - * that may still be used for walking the hash list and we can only
+> - * zero the pprev pointer so list_unhashed() will return true after
+> - * this.
+> - *
+> - * The caller must take whatever precautions are necessary (such as
+> - * holding appropriate locks) to avoid racing with another
+> - * list-mutation primitive, such as hlist_bl_add_head_rcu() or
+> - * hlist_bl_del_rcu(), running on this same list.  However, it is
+> - * perfectly legal to run concurrently with the _rcu list-traversal
+> - * primitives, such as hlist_bl_for_each_entry_rcu().
+> - */
+> -static inline void hlist_bl_del_init_rcu(struct hlist_bl_node *n)
+> -{
+> -	if (!hlist_bl_unhashed(n)) {
+> -		__hlist_bl_del(n);
+> -		n->pprev = NULL;
+> -	}
+> -}
+> -
+> -/**
+>   * hlist_bl_del_rcu - deletes entry from hash list without re-initialization
+>   * @n: the element to delete from the hash list.
+>   *
+> -- 
+> 1.8.3.1
+> 
