@@ -2,147 +2,149 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F70BC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 11:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 042C7C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 11:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66A372087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 11:22:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564744940;
-	bh=9hZqin77rtPyyMq+Cq/E8Qg5N98zMVEUjdyaGHFNBsY=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=pw7v9cX0eIA1xgy/erPeVF27QQCJP6StahWtswUJAhjQoFZf4QcNqGpdZk5g6Ns+p
-	 eFUssiPdERYN2OPe/dyeIo0iOD0uTZXrqet8DHE8pdiccJAodoJZZGVq/1g1inGpqT
-	 i/05DiagbRr8k+YFb3yx/vH0MwkuOputj3rYbSGA=
+	by mail.kernel.org (Postfix) with ESMTP id CF69F2087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 11:25:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="WFQGR81d";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IS/7bF+B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392373AbfHBLWT (ORCPT
+        id S1732141AbfHBLZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 07:22:19 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33018 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392351AbfHBLWP (ORCPT
+        Fri, 2 Aug 2019 07:25:46 -0400
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:39613 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726626AbfHBLZq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 07:22:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=/0utpff7Aq7Pr1XYXi2joLJCHy84GZ7jgMJz+VSBcWQ=; b=TSj3c1mTizB8
-        zUuJLE4dXE/0AVlESUUAtDxCuZzODlJBUM/ELNcuwEB55bJ+ACQi9F6J/kKoU2N7mCKVUApN9OPhh
-        vy0Ou9pEx/gGKq0+u0rJSTU7W4DtpkKw5xLc/QlV9/rA6CQZnZa/G5S4Vj2iJRqLgPfUGZVVMlqAy
-        xzYHQ=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1htVdS-0007S8-0W; Fri, 02 Aug 2019 11:22:10 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 5A97A2742E8F; Fri,  2 Aug 2019 12:22:09 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, mingo@kernel.org,
-        Peter Zijlstra (Intel) <peterz@infradead.org>,
-        peterz@infradead.org
-Subject: Applied "spi: Reduce kthread priority" to the spi tree
-In-Reply-To: <20190801111541.917256884@infradead.org>
-X-Patchwork-Hint: ignore
-Message-Id: <20190802112209.5A97A2742E8F@ypsilon.sirena.org.uk>
-Date:   Fri,  2 Aug 2019 12:22:09 +0100 (BST)
+        Fri, 2 Aug 2019 07:25:46 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id 659A640A;
+        Fri,  2 Aug 2019 07:25:45 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Fri, 02 Aug 2019 07:25:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=Ux/SSLzm70zAXQcCzmf+pfPz1OX
+        DFyZddlkc33KjE7Y=; b=WFQGR81dor7POR821qbY95pBzPW4EHIi/MQTxLdLvkg
+        tmzqfwkarYLjAhNYN8t5WyRgAH1PywxgAsBUu2GorZaMRUFZHjvtdVje1g/II0kL
+        oyaiDYg3X6rYTIKH2BGaaLtmbn8Q/08znhWbO6LGTL/h+0TrLN6sVtKd+so91Dsj
+        jfNErCRLLhhqPA/kB20O3sw1CQQDFbyJFW0wy8XS3BuEswS/Azqq6MRKHJvXEqkF
+        BcQyg/hikleLRudoDz++QiiMrcxSQiCjzGFavzlv7ZlmL+wNYQsi7TbbgDWyYhr+
+        8uAj+z9C0S6/Uw2JpHUzQX4K1+zauB14ozQilm/G8mg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=Ux/SSL
+        zm70zAXQcCzmf+pfPz1OXDFyZddlkc33KjE7Y=; b=IS/7bF+BZQp+wNgIMgbs4P
+        Hw8KtC3sokkyFmq+b9DLAo9h39KATWqAvqD1+FYIAR+6KszCINIvkh7OGA45e4Sb
+        DQK42SHWQJso9FMQAALXZRR0YkVClc9tCRPF0YjjUhZUmBbfiO+t0XcKUt2a3Z3M
+        TrwYavgHtBjJJYvRcXD62I9phi5duUVxBW13taEKmYvXwA9OrCkvp0XgwtCuO33+
+        0aAT5jWyMmnxdN6jRXhWv+F/qZDRn369osKOdc4mHJrH+oxcQM1CHU6vkOPt4yQv
+        qCutdS157sFLS5txycoyhF1lNsn1ACaASPqWsDUSZSmLi5HHysWiWCke7a+F/7Sg
+        ==
+X-ME-Sender: <xms:uB1EXaHmDuRik5od-9fbMKz4_IO-QuDAid51c6L8-m_uSVvONboQmA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrleelgddugecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucffohhmrghinhepghhithhhuhgsrd
+    gtohhmnecukfhppeekfedrkeeirdekledruddtjeenucfrrghrrghmpehmrghilhhfrhho
+    mhepghhrvghgsehkrhhorghhrdgtohhmnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:uB1EXfnNHVlNtqjRmnTBIaitEIJlBQwYYqu0kJ2KOSdlQOcYSCIWhg>
+    <xmx:uB1EXfJV9UmmvZILe2JwEnIURtvLn_3XaADiDRpGaPaZHwe3ZnhfBw>
+    <xmx:uB1EXYYNxA6w5-jcS-JYNkNpOTizTNFf1lR1ETTRC-RRrxlQ5Nzq_A>
+    <xmx:uR1EXe2Toyor378gHG_1Rh0B8qSDm0YNRHQHig8bgNIOrkchNjkHcg>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 3C1E080059;
+        Fri,  2 Aug 2019 07:25:44 -0400 (EDT)
+Date:   Fri, 2 Aug 2019 13:25:42 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Rolf Eike Beer <eb@emlix.com>, stable@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: Linux 4.9.180 build fails =?utf-8?Q?wi?=
+ =?utf-8?Q?th_gcc_9_and_'cleanup=5Fmodule'_specifies_less_restrictive_attr?=
+ =?utf-8?Q?ibute_than_its_target_=E2=80=A6?=
+Message-ID: <20190802112542.GA29534@kroah.com>
+References: <259986242.BvXPX32bHu@devpool35>
+ <20190606185900.GA19937@kroah.com>
+ <CANiq72n2E4Ue0MU5mWitSbsscizPQKML0QQx_DBwJVni+eWMHQ@mail.gmail.com>
+ <4007272.nJfEYfeqza@devpool35>
+ <CANiq72=T8nH3HHkYvWF+vPMscgwXki1Ugiq6C9PhVHJUHAwDYw@mail.gmail.com>
+ <20190802103346.GA14255@kroah.com>
+ <CANiq72kcZZwp2MRVF5Ls+drXCzVbCfZ7wZ8Y+rU93oGohVAGsQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANiq72kcZZwp2MRVF5Ls+drXCzVbCfZ7wZ8Y+rU93oGohVAGsQ@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Fri, Aug 02, 2019 at 01:00:30PM +0200, Miguel Ojeda wrote:
+> On Fri, Aug 2, 2019 at 12:33 PM Greg KH <greg@kroah.com> wrote:
+> >
+> > On Fri, Aug 02, 2019 at 12:19:33PM +0200, Miguel Ojeda wrote:
+> > > On Fri, Aug 2, 2019 at 10:17 AM Rolf Eike Beer <eb@emlix.com> wrote:
+> > > >
+> > > > Am Samstag, 8. Juni 2019, 14:00:34 CEST schrieb Miguel Ojeda:
+> > > > > On Thu, Jun 6, 2019 at 8:59 PM Greg KH <greg@kroah.com> wrote:
+> > > > > > "manually fixing it up" means "hacked it to pieces" to me, I have no
+> > > > > > idea what the end result really was :)
+> > > > > >
+> > > > > > If someone wants to send me some patches I can actually apply, that
+> > > > > > would be best...
+> > > > >
+> > > > > I will give it a go whenever I get some free time :)
+> > > >
+> > > > I fear this has never happened, did it?
+> > >
+> > > No. Between summer, holidays and a conference I didn't get to do it.
+> > >
+> > > Done the minimal approach here:
+> > >
+> > >   https://github.com/ojeda/linux/commits/compiler-attributes-backport
+> > >
+> > > Tested building a handful of drivers with gcc 4.6.4, 8.3.0 and 9.1.1.
+> > >
+> > > Greg, I could backport the entire compiler_attributes.h, but given
+> > > this is stable, we are supposed to minimize changes, right?
+> > >
+> > > I tried to imitate what you do in other stable patches, please check
+> > > the Cc:, Link: lines and the "commit ... upstream" just in case.
+> >
+> > If only those 2 patches are all that is needed, nice!  I'll gladly take
+> > them, can you send them to me (and cc: the stable list) in email so I
+> > can queue them up for the next round of releases after this one?
+> 
+> At least for that particular problem, yeah -- I haven't done a full allmod.
+> 
+> By the way, I just checked 4.14.y and I noticed you had already
+> backported it, although going for another solution:
+> 
+> +#if GCC_VERSION >= 90100
+> +#define __copy(symbol)                 __attribute__((__copy__(symbol)))
+> +#endif
+> 
+> and then:
+> 
+> +#ifndef __copy
+> +# define __copy(symbol)
+> +#endif
 
-   spi: Reduce kthread priority
+But it still doesn't work for 4.14.y and 4.19.y, so we are probably
+missing something there.  So if you want to fix that up, I'd appreciate
+patches to do so :)
 
-has been applied to the spi tree at
+thanks,
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.4
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 4ff13d00ebd5533947b083c66d44da3243a2d559 Mon Sep 17 00:00:00 2001
-From: Peter Zijlstra <peterz@infradead.org>
-Date: Thu, 1 Aug 2019 13:13:53 +0200
-Subject: [PATCH] spi: Reduce kthread priority
-
-The SPI thingies request FIFO-99 by default, reduce this to FIFO-50.
-
-FIFO-99 is the very highest priority available to SCHED_FIFO and
-it not a suitable default; it would indicate the SPI work is the
-most important work on the machine.
-
-Cc: Benson Leung <bleung@chromium.org>
-Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: Guenter Roeck <groeck@chromium.org>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: linux-spi@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Link: https://lore.kernel.org/r/20190801111541.917256884@infradead.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/platform/chrome/cros_ec_spi.c | 2 +-
- drivers/spi/spi.c                     | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/chrome/cros_ec_spi.c b/drivers/platform/chrome/cros_ec_spi.c
-index 006a8ff64057..714306bc3f79 100644
---- a/drivers/platform/chrome/cros_ec_spi.c
-+++ b/drivers/platform/chrome/cros_ec_spi.c
-@@ -706,7 +706,7 @@ static int cros_ec_spi_devm_high_pri_alloc(struct device *dev,
- 					   struct cros_ec_spi *ec_spi)
- {
- 	struct sched_param sched_priority = {
--		.sched_priority = MAX_RT_PRIO - 1,
-+		.sched_priority = MAX_RT_PRIO / 2,
- 	};
- 	int err;
- 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 9fd7926e80c0..8e83c9567353 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -1434,7 +1434,7 @@ static void spi_pump_messages(struct kthread_work *work)
-  */
- static void spi_set_thread_rt(struct spi_controller *ctlr)
- {
--	struct sched_param param = { .sched_priority = MAX_RT_PRIO - 1 };
-+	struct sched_param param = { .sched_priority = MAX_RT_PRIO / 2 };
- 
- 	dev_info(&ctlr->dev,
- 		"will run message pump with realtime priority\n");
--- 
-2.20.1
-
+greg k-h
