@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD09C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F74BC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B2E821871
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:20:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D921D21871
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:20:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752014;
-	bh=dHperu63nYS8UK5KTdZoHxwDBf0maf/PLEgDFchR0oU=;
+	s=default; t=1564752018;
+	bh=Ox3OSVFSSuA8AE3wsWrSZiJu9cLwjfZISkLaYsNRfHQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xIZD4tuElfXjrPhO7pcb5kNaCNxFtvd8V409Dvbi/buC907VtUpMEx+C8v8ksZlfu
-	 oFX4VCttm9sBMy+KGS3eU8/45FEeha1YGBS5x1N404qqcdem7xP7xnbPdiboJs9QHn
-	 jQ1jlercR+D1oCm9AV7pRDnQlGW1yXyz7u7Muvlk=
+	b=Za3gIEAvX4q+ekYNC8X6+5sUAnAoX8hCOpYoXBnwTI9zpK4kp9SE5kbaeRRKExuiO
+	 zqo+wVmbQ3NQJ8yGNmcqtxGv0nU83WmSFmZ6cbmRoj+yYCKIQhKBP93L6oMPlEtgjy
+	 jXh/kUVMN52HT7OAc8jnfDQGTkpX2wOBHfDXNWDE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393304AbfHBNUM (ORCPT
+        id S2393325AbfHBNUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:20:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58392 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:20:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393219AbfHBNUG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:20:06 -0400
+        id S2393279AbfHBNUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:20:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A7C121850;
-        Fri,  2 Aug 2019 13:20:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4F3721849;
+        Fri,  2 Aug 2019 13:20:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752005;
-        bh=dHperu63nYS8UK5KTdZoHxwDBf0maf/PLEgDFchR0oU=;
+        s=default; t=1564752004;
+        bh=Ox3OSVFSSuA8AE3wsWrSZiJu9cLwjfZISkLaYsNRfHQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KIXk3N11YxW/5OorTHk/yAqZQTLnSFptneabjynS/Z/uUTxBr0TSGQdfgzcWaxUbD
-         zCa4QPDtx3Hk0r5RrWFVqOWwaIj6yZRP6vFItaR/y2YF4BvmDoxDcgZD0yIRUc5UgN
-         wMY22/rXNakv/5Ym5xl3iMUorn6IlHn8BNgAHk74=
+        b=2OCPTeE89DyrgcKDxX0T+Yt2htFCNmYv32XNJ3SMO2V8kDQcMX4tMKj5rdIEZfYp6
+         xRWy0uc0z4upqtOqEukwAWg02L1FbhMeIG6IN1Cp0+A77a4HSQgs7pMrHVNlqn0vqQ
+         gEss4CECa4cRyixnBRNHHNaebiqdwQ9uIPXkv3iE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 11/76] scripts/sphinx-pre-install: fix latexmk dependencies
-Date:   Fri,  2 Aug 2019 09:18:45 -0400
-Message-Id: <20190802131951.11600-11-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 10/76] scripts/sphinx-pre-install: don't use LaTeX with CentOS 7
+Date:   Fri,  2 Aug 2019 09:18:44 -0400
+Message-Id: <20190802131951.11600-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802131951.11600-1-sashal@kernel.org>
 References: <20190802131951.11600-1-sashal@kernel.org>
@@ -60,41 +60,164 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-[ Upstream commit 353290a9eb5362a80bc8e52fcd7eb77a30f48afc ]
+[ Upstream commit 56e5a633923793b31515795ad30156a307572c1e ]
 
-The name of the package with carries latexmk is different
-on two distros:
-
-- On OpenSUSE, latexmk is packaged as "texlive-latexmk-bin"
-- On Mageia, latexmk is packaged at "texlive-collection-basic"
+There aren't enough texlive packages for LaTeX-based builds
+to work on CentOS/RHEL <= 7.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/sphinx-pre-install | 4 ++++
- 1 file changed, 4 insertions(+)
+ scripts/sphinx-pre-install | 68 ++++++++++++++++++++++++++++----------
+ 1 file changed, 50 insertions(+), 18 deletions(-)
 
 diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
-index 4cc2b3ee5209f..1f9f0a334c24f 100755
+index 778f3ae918775..4cc2b3ee5209f 100755
 --- a/scripts/sphinx-pre-install
 +++ b/scripts/sphinx-pre-install
-@@ -447,6 +447,8 @@ sub give_opensuse_hints()
+@@ -77,6 +77,17 @@ sub check_missing(%)
+ 	foreach my $prog (sort keys %missing) {
+ 		my $is_optional = $missing{$prog};
+ 
++		# At least on some LTS distros like CentOS 7, texlive doesn't
++		# provide all packages we need. When such distros are
++		# detected, we have to disable PDF output.
++		#
++		# So, we need to ignore the packages that distros would
++		# need for LaTeX to work
++		if ($is_optional == 2 && !$pdf) {
++			$optional--;
++			next;
++		}
++
+ 		if ($is_optional) {
+ 			print "Warning: better to also install \"$prog\".\n";
+ 		} else {
+@@ -326,10 +337,10 @@ sub give_debian_hints()
+ 
+ 	if ($pdf) {
+ 		check_missing_file("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+-				   "fonts-dejavu", 1);
++				   "fonts-dejavu", 2);
+ 	}
+ 
+-	check_program("dvipng", 1) if ($pdf);
++	check_program("dvipng", 2) if ($pdf);
+ 	check_missing(\%map);
+ 
+ 	return if (!$need && !$optional);
+@@ -364,22 +375,40 @@ sub give_redhat_hints()
+ 	#
+ 	# Checks valid for RHEL/CentOS version 7.x.
+ 	#
++	my $old = 0;
++	my $rel;
++	$rel = $1 if ($system_release =~ /release\s+(\d+)/);
++
+ 	if (!($system_release =~ /Fedora/)) {
+ 		$map{"virtualenv"} = "python-virtualenv";
+-	}
+ 
+-	my $release;
++		if ($rel && $rel < 8) {
++			$old = 1;
++			$pdf = 0;
+ 
+-	$release = $1 if ($system_release =~ /Fedora\s+release\s+(\d+)/);
++			printf("Note: texlive packages on RHEL/CENTOS <= 7 are incomplete. Can't support PDF output\n");
++			printf("If you want to build PDF, please read:\n");
++			printf("\thttps://www.systutorials.com/241660/how-to-install-tex-live-on-centos-7-linux/\n");
++		}
++	} else {
++		if ($rel && $rel < 26) {
++			$old = 1;
++		}
++	}
++	if (!$rel) {
++		printf("Couldn't identify release number\n");
++		$old = 1;
++		$pdf = 0;
++	}
+ 
+-	check_rpm_missing(\@fedora26_opt_pkgs, 1) if ($pdf && $release >= 26);
+-	check_rpm_missing(\@fedora_tex_pkgs, 1) if ($pdf);
+-	check_missing_tex(1) if ($pdf);
++	check_rpm_missing(\@fedora26_opt_pkgs, 2) if ($pdf && !$old);
++	check_rpm_missing(\@fedora_tex_pkgs, 2) if ($pdf);
++	check_missing_tex(2) if ($pdf);
+ 	check_missing(\%map);
+ 
+ 	return if (!$need && !$optional);
+ 
+-	if ($release >= 18) {
++	if (!$old) {
+ 		# dnf, for Fedora 18+
+ 		printf("You should run:\n\n\tsudo dnf install -y $install\n");
+ 	} else {
+@@ -418,8 +447,8 @@ sub give_opensuse_hints()
  		"texlive-zapfding",
  	);
  
-+	$map{"latexmk"} = "texlive-latexmk-bin";
-+
- 	check_rpm_missing(\@suse_tex_pkgs, 2) if ($pdf);
- 	check_missing_tex(2) if ($pdf);
+-	check_rpm_missing(\@suse_tex_pkgs, 1) if ($pdf);
+-	check_missing_tex(1) if ($pdf);
++	check_rpm_missing(\@suse_tex_pkgs, 2) if ($pdf);
++	check_missing_tex(2) if ($pdf);
  	check_missing(\%map);
-@@ -472,6 +474,8 @@ sub give_mageia_hints()
+ 
+ 	return if (!$need && !$optional);
+@@ -443,7 +472,7 @@ sub give_mageia_hints()
  		"texlive-fontsextra",
  	);
  
-+	$map{"latexmk"} = "texlive-collection-basic";
-+
- 	check_rpm_missing(\@tex_pkgs, 2) if ($pdf);
+-	check_rpm_missing(\@tex_pkgs, 1) if ($pdf);
++	check_rpm_missing(\@tex_pkgs, 2) if ($pdf);
  	check_missing(\%map);
+ 
+ 	return if (!$need && !$optional);
+@@ -466,7 +495,8 @@ sub give_arch_linux_hints()
+ 		"texlive-latexextra",
+ 		"ttf-dejavu",
+ 	);
+-	check_pacman_missing(\@archlinux_tex_pkgs, 1) if ($pdf);
++	check_pacman_missing(\@archlinux_tex_pkgs, 2) if ($pdf);
++
+ 	check_missing(\%map);
+ 
+ 	return if (!$need && !$optional);
+@@ -485,7 +515,7 @@ sub give_gentoo_hints()
+ 	);
+ 
+ 	check_missing_file("/usr/share/fonts/dejavu/DejaVuSans.ttf",
+-			   "media-fonts/dejavu", 1) if ($pdf);
++			   "media-fonts/dejavu", 2) if ($pdf);
+ 
+ 	check_missing(\%map);
+ 
+@@ -553,7 +583,7 @@ sub check_distros()
+ 	my %map = (
+ 		"sphinx-build" => "sphinx"
+ 	);
+-	check_missing_tex(1) if ($pdf);
++	check_missing_tex(2) if ($pdf);
+ 	check_missing(\%map);
+ 	print "I don't know distro $system_release.\n";
+ 	print "So, I can't provide you a hint with the install procedure.\n";
+@@ -591,11 +621,13 @@ sub check_needs()
+ 	check_program("make", 0);
+ 	check_program("gcc", 0);
+ 	check_python_module("sphinx_rtd_theme", 1) if (!$virtualenv);
+-	check_program("xelatex", 1) if ($pdf);
+ 	check_program("dot", 1);
+ 	check_program("convert", 1);
+-	check_program("rsvg-convert", 1) if ($pdf);
+-	check_program("latexmk", 1) if ($pdf);
++
++	# Extra PDF files - should use 2 for is_optional
++	check_program("xelatex", 2) if ($pdf);
++	check_program("rsvg-convert", 2) if ($pdf);
++	check_program("latexmk", 2) if ($pdf);
+ 
+ 	check_distros();
  
 -- 
 2.20.1
