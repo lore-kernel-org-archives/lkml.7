@@ -2,121 +2,131 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B24DC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB15C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:30:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 290DD20665
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:28:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDF0420665
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:30:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T7vtdHxl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391990AbfHBK2a (ORCPT
+        id S2392008AbfHBKaD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 06:28:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56750 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730941AbfHBK2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 06:28:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 55B5CAE03;
-        Fri,  2 Aug 2019 10:28:28 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 460861E3F4D; Fri,  2 Aug 2019 12:28:27 +0200 (CEST)
-Date:   Fri, 2 Aug 2019 12:28:27 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc:     Jan Kara <jack@suse.cz>, Roald Strauss <mr_lou@dewfall.dk>,
-        "Steven J. Magnani" <steve.magnani@digidescorp.com>,
-        Jan Kara <jack@suse.com>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: UDF filesystem image with Write-Once UDF Access Type
-Message-ID: <20190802102827.GI25064@quack2.suse.cz>
-References: <20190712100224.s2chparxszlbnill@pali>
- <20190801073530.GA25064@quack2.suse.cz>
- <20190801083800.GC25064@quack2.suse.cz>
- <20190801085755.amohgsxdcmzf2nzc@pali>
+        Fri, 2 Aug 2019 06:30:03 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42263 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730143AbfHBKaD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 06:30:03 -0400
+Received: by mail-pl1-f196.google.com with SMTP id ay6so33529584plb.9;
+        Fri, 02 Aug 2019 03:30:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=B6ThXTdLqQnYtFH4Sq6DQYOhXAfMjbsowfx2ATZ6RaA=;
+        b=T7vtdHxlHDoWWbMDsMpp4A0KhFa9XY5Zi8XGuYS4AM38N9jbmQzJRMRambMleJGfc5
+         +1jPzgP6T0SBoAAbgDtPqttfjvVY6G5IbjZqpUq8aGFi7jJBQqk3qxlM3r73ooqf6sKo
+         dN8JKzkxfGTq2jiAfTWDF0DsT/h0JOg96rtcAVT9CpiVaZd2lAIaLAJEt2Bkt/IoQwyb
+         OJqwjnDEzouXItsCGfuCwu5wdy5P/eaZTMIHRdfwN3saU8BVQNwIYQRh43hsoqZPhi6K
+         rQL9C7H1raeEPqFM6n2KNOexIJNtle/Vdt6notrRNQsr+Nk7qZzg40Qd5rwWzYEMaRTU
+         GEvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=B6ThXTdLqQnYtFH4Sq6DQYOhXAfMjbsowfx2ATZ6RaA=;
+        b=SuQVy2i/veSnHmI7Z0utNs/5gTGPNdtIMD98ZSOa36oh8YzOfpabgtIYoyMZtJKZPL
+         /4EjgMKahLxTVPYV2usbkehZQpdf9HHwjcgFFM1gMSvuX7N4DKGg5wyTqUKa2Ru+a7pf
+         d/BQ9/0Rsyx6qP5/63k1hDNRFVjPJERnEyszZ2tqz9fPact4s3ZsyfDfVzsxhMQTIddE
+         kElZiOPWFW2qXh7YfuZiQ5bEZbstai71XuF0uKwtjImymhRpWwRNiFeEKbqVYvcCoaW3
+         igeuKOop6bpgVLr8Y/cmuZYg52CpbwyXkX5ZLphAhi9NOmNTjZfeKwB+Kr3O1wUIOAim
+         PiuA==
+X-Gm-Message-State: APjAAAWJbQ5K7tSEpJaGTbCCSjFVOXoQ3xUwHb8o/CZbay/09FqMHbO/
+        kNInDCAks0MHQlfOX7AX9BI=
+X-Google-Smtp-Source: APXvYqwk2G89WFkms0GDbxvkH3iDt3WeAC2IhYzei5wzMGpQV+Mu4UKICIEnKEQfiMvVjaGdDdK+CA==
+X-Received: by 2002:a17:902:f213:: with SMTP id gn19mr134302687plb.35.1564741802356;
+        Fri, 02 Aug 2019 03:30:02 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
+        by smtp.gmail.com with ESMTPSA id j5sm64742881pgp.59.2019.08.02.03.30.00
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 02 Aug 2019 03:30:01 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Madalin Bucur <madalin.bucur@nxp.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] dpaa_eth: Use refcount_t for refcount
+Date:   Fri,  2 Aug 2019 18:29:56 +0800
+Message-Id: <20190802102956.14867-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190801085755.amohgsxdcmzf2nzc@pali>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 01-08-19 10:57:55, Pali Rohár wrote:
-> On Thursday 01 August 2019 10:38:00 Jan Kara wrote:
-> > Hum, looks like a problem with mkudffs. Relevant debug messages look like:
-> > 
-> > UDF-fs: fs/udf/super.c:671:udf_check_vsd: Starting at sector 16 (2048 byte sectors)
-> > UDF-fs: fs/udf/super.c:824:udf_load_pvoldesc: recording time 2019/08/01 09:47 (1078)
-> > UDF-fs: fs/udf/super.c:836:udf_load_pvoldesc: volIdent[] = 'LinuxUDF'
-> > UDF-fs: fs/udf/super.c:844:udf_load_pvoldesc: volSetIdent[] = '1564645645200563LinuxUDF'
-> > UDF-fs: fs/udf/super.c:1462:udf_load_logicalvol: Partition (0:0) type 1 on volume 1
-> > UDF-fs: fs/udf/super.c:1462:udf_load_logicalvol: Partition (1:0) type 2 on volume 1
-> > UDF-fs: fs/udf/super.c:1471:udf_load_logicalvol: FileSet found in LogicalVolDesc at block=0, partition=1
-> > UDF-fs: fs/udf/super.c:1218:udf_load_partdesc: Searching map: (0 == 0)
-> > UDF-fs: fs/udf/super.c:1060:udf_fill_partdesc_info: Partition (0 type 1511) starts at physical 288, block length 524000
-> > UDF-fs: fs/udf/super.c:1060:udf_fill_partdesc_info: Partition (1 type 2012) starts at physical 288, block length 524000
-> > UDF-fs: fs/udf/misc.c:223:udf_read_tagged: location mismatch block 524287, tag 0 != 523999
-> > UDF-fs: error (device ubdb): udf_read_inode: (ino 524287) failed !bh
-> > 
-> > So the fact that location tag was 0 in block 524287 (which should contain
-> > VAT inode) suggests there's something fishy with how / where mkudffs
-> > creates the VAT inode. Can you have a look?
-> > 
-> > BTW, mkudffs messages look like:
-> > filename=/tmp/image
-> > label=LinuxUDF
-> > uuid=1564645645200563
-> > blocksize=2048
-> > blocks=524288
-> > udfrev=2.01
-> > vatblock=319
-> > start=0, blocks=16, type=RESERVED 
-> > start=16, blocks=4, type=VRS 
-> > start=20, blocks=76, type=USPACE 
-> > start=96, blocks=16, type=MVDS 
-> > start=112, blocks=16, type=USPACE 
-> > start=128, blocks=1, type=LVID 
-> > start=129, blocks=95, type=USPACE 
-> > start=224, blocks=16, type=RVDS 
-> > start=240, blocks=16, type=USPACE 
-> > start=256, blocks=1, type=ANCHOR 
-> > start=257, blocks=31, type=USPACE 
-> > start=288, blocks=524000, type=PSPACE 
-> > 
-> > which suggests that VAT was indeed allocated somewhere in the beginning of
-> > the partition.
-> 
-> For write-once media you are not able to modify size of UDF partition.
-> So if you are creating image for CD-R disc, you need to specify size of
-> UDF filesystem to match size of CD-R disc. VAT is always burned to the
-> last block of current track on CD-R.
-> 
-> Therefore if you had pre-allocated big image file for CD-R and then you
-> run mkudffs for cdr on it, you lost information what is the last used
-> block on that cdr image. Normally for optical drivers kernel use mmc
-> commands to retrieve last block of current session and based on it find
-> VAT. But image files loaded via /dev/loop are not optical drivers and
-> therefore do not have ability "hardware" ability to ask where is the
-> last used block. IIRC in this case kernel just fallback to the last
-> block of block device for VAT, which in this case is not correct.
-> 
-> What should help is to truncate image file to "correct" size after
-> running mkudffs with --media-type=cdr. Maybe mkudffs itself should do it
-> when was asked to create UDF filesystem for CD-R on existing image file.
+refcount_t is better for reference counters since its
+implementation can prevent overflows.
+So convert atomic_t ref counters to refcount_t.
 
-Ah, right. Thanks for explanation. I somehow assumed that mkudffs will be
-considering the last block of the "device file" the last block that it has
-to record but you're right that on second though that doesn't really make
-sense.
-								Honza
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ drivers/net/ethernet/freescale/dpaa/dpaa_eth.c | 6 +++---
+ drivers/net/ethernet/freescale/dpaa/dpaa_eth.h | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+index f38c3fa7d705..2df6e745cb3f 100644
+--- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
++++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+@@ -485,7 +485,7 @@ static struct dpaa_bp *dpaa_bpid2pool(int bpid)
+ static bool dpaa_bpid2pool_use(int bpid)
+ {
+ 	if (dpaa_bpid2pool(bpid)) {
+-		atomic_inc(&dpaa_bp_array[bpid]->refs);
++		refcount_inc(&dpaa_bp_array[bpid]->refs);
+ 		return true;
+ 	}
+ 
+@@ -496,7 +496,7 @@ static bool dpaa_bpid2pool_use(int bpid)
+ static void dpaa_bpid2pool_map(int bpid, struct dpaa_bp *dpaa_bp)
+ {
+ 	dpaa_bp_array[bpid] = dpaa_bp;
+-	atomic_set(&dpaa_bp->refs, 1);
++	refcount_set(&dpaa_bp->refs, 1);
+ }
+ 
+ static int dpaa_bp_alloc_pool(struct dpaa_bp *dpaa_bp)
+@@ -584,7 +584,7 @@ static void dpaa_bp_free(struct dpaa_bp *dpaa_bp)
+ 	if (!bp)
+ 		return;
+ 
+-	if (!atomic_dec_and_test(&bp->refs))
++	if (!refcount_dec_and_test(&bp->refs))
+ 		return;
+ 
+ 	if (bp->free_buf_cb)
+diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.h b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.h
+index af320f83c742..acc3fcdf730a 100644
+--- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.h
++++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.h
+@@ -99,7 +99,7 @@ struct dpaa_bp {
+ 	int (*seed_cb)(struct dpaa_bp *);
+ 	/* bpool can be emptied before freeing by this cb */
+ 	void (*free_buf_cb)(const struct dpaa_bp *, struct bm_buffer *);
+-	atomic_t refs;
++	refcount_t refs;
+ };
+ 
+ struct dpaa_rx_errors {
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.20.1
+
