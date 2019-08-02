@@ -2,113 +2,371 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3905BC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04537C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C3F32064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:56:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OBpDVFZI"
+	by mail.kernel.org (Postfix) with ESMTP id CD8642064A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:56:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390621AbfHBM4V (ORCPT
+        id S2392654AbfHBMy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 08:56:21 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:56083 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390382AbfHBM4S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 08:56:18 -0400
-Received: by mail-wm1-f66.google.com with SMTP id a15so67867512wmj.5
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 05:56:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=yjEMe5wuk6zRJXQKT5fhkZ+36XC9uZHCWgmdHyE58XY=;
-        b=OBpDVFZIBBIkpNcqE4jGwaWXitaI6CuguZip4iFoAXWKm8LSDhYbAE2Tm8Nm5hOu6L
-         n6+Bj0rHVMZID2sbxyEjT06dzgqarhID7D5J4TgPbZnrR4nLHu85F3T6erUeUBYxWem8
-         KuR1vdqRSZL0Gcp5K/CRMXc08PUyBFewGyU2a6QjSrX4UN1wDbgskMuq9ZGCAJRO2OCb
-         7mG0uTSaTgH6rrMb8aEJFxBUZT44+m2tMxAjau92B2RwttZFGM2Hej5S6Ilb8QtoN2r4
-         XYr3ftU3MdtxrjNUnRv6bXNEddH/aH5QCL3D8x0DyiIaN+rbrwotL4yoHzK5FNpUZEj1
-         v+Qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=yjEMe5wuk6zRJXQKT5fhkZ+36XC9uZHCWgmdHyE58XY=;
-        b=QzxfZe3JjluSIOXU1usct+ixYTLFeF5uitlk9IXTRuNhsVF0qNciHE6AS8gVEWCi9+
-         UhG6NunviSOO3qkDoqWiBYPyXa6PzIxKPudV4CrrMVRl2RsiUsr8WR2BbC93AT3VobjG
-         h1AGTq1O7dwgBiEXM6K1EqymHJCgMLyE0FfkfTA+aKtM02p4Zw4cDLnyXa5mvxniQKjJ
-         QjUJOH/mH+hzK3CxaHm1RaSOKcCSayiFpGMW3FwxDQMDMojNH+DNtc4YnmSQrOtcbaou
-         bA131ixGH0ogxkREqok6XRo82j/cMs4SdPKai6FyRupsp5CTsef4V8sPSJTwNxIZL56T
-         FCrA==
-X-Gm-Message-State: APjAAAWVTc/d25EfN3/I9sIj4HkX2cOAqh8mwp6sf9kt24ZYzBF0gOyb
-        gRk6P9YW3TUdpNd5LDDv4RZ8v/TO5wg=
-X-Google-Smtp-Source: APXvYqyxJYBXSeg7k/KW2FWFciZ8HrfRdGOIn8Juel+e3FPcNzJpzc0sn9K7d6Pj7Awoh+u+XFLLTQ==
-X-Received: by 2002:a1c:3:: with SMTP id 3mr4569287wma.6.1564750575947;
-        Fri, 02 Aug 2019 05:56:15 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e0a:f:6020:dfa:cc47:b267:2a71])
-        by smtp.gmail.com with ESMTPSA id i6sm69543930wrv.47.2019.08.02.05.56.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 02 Aug 2019 05:56:15 -0700 (PDT)
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-To:     linux-kernel@vger.kernel.org, mingo@redhat.com,
-        peterz@infradead.org
-Cc:     pauld@redhat.com, valentin.schneider@arm.com,
-        srikar@linux.vnet.ibm.com, quentin.perret@arm.com,
-        dietmar.eggemann@arm.com, Morten.Rasmussen@arm.com,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH v3] sched/fair: use utilization to select misfit task
-Date:   Fri,  2 Aug 2019 14:56:12 +0200
-Message-Id: <1564750572-20251-1-git-send-email-vincent.guittot@linaro.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1564670424-26023-9-git-send-email-vincent.guittot@linaro.org>
-References: <1564670424-26023-9-git-send-email-vincent.guittot@linaro.org>
+        Fri, 2 Aug 2019 08:54:28 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3707 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726422AbfHBMyY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 08:54:24 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 81E3B7A961402BD23EBB;
+        Fri,  2 Aug 2019 20:54:22 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 2 Aug 2019
+ 20:54:13 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Theodore Ts'o <tytso@mit.edu>, "Pavel Machek" <pavel@denx.de>,
+        David Sterba <dsterba@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        "Jaegeuk Kim" <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+CC:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH v6 05/24] erofs: add inode operations
+Date:   Fri, 2 Aug 2019 20:53:28 +0800
+Message-ID: <20190802125347.166018-6-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190802125347.166018-1-gaoxiang25@huawei.com>
+References: <20190802125347.166018-1-gaoxiang25@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.140.130.215]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-utilization is used to detect a misfit task but the load is then used to
-select the task on the CPU which can lead to select a small task with
-high weight instead of the task that triggered the misfit migration.
+This adds core functions to get, read an inode.
+It adds statx support as well.
 
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
-Keep tracking load instead of utilization but check that 
-task doesn't fit CPU's capacity when selecting the task to detach as
-suggested by Valentin 
+ fs/erofs/inode.c | 291 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 291 insertions(+)
+ create mode 100644 fs/erofs/inode.c
 
- kernel/sched/fair.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 53e64a7..8496118 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -7487,15 +7487,9 @@ static int detach_tasks(struct lb_env *env)
- 			break;
- 
- 		case migrate_misfit:
--			load = task_h_load(p);
--
--			/*
--			 * utilization of misfit task might decrease a bit
--			 * since it has been recorded. Be conservative in the
--			 * condition.
--			 */
--			if (load < env->imbalance)
--				goto next;
-+			/* This is not a misfit task */
-+                       if (task_fits_capacity(p, capacity_of(env->src_cpu)))
-+			       goto next;
- 
- 			env->imbalance = 0;
- 			break;
+diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+new file mode 100644
+index 000000000000..b6ea997bc4ae
+--- /dev/null
++++ b/fs/erofs/inode.c
+@@ -0,0 +1,291 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * linux/fs/erofs/inode.c
++ *
++ * Copyright (C) 2017-2018 HUAWEI, Inc.
++ *             http://www.huawei.com/
++ * Created by Gao Xiang <gaoxiang25@huawei.com>
++ */
++#include "internal.h"
++
++#include <trace/events/erofs.h>
++
++/* no locking */
++static int read_inode(struct inode *inode, void *data)
++{
++	struct erofs_vnode *vi = EROFS_V(inode);
++	struct erofs_inode_v1 *v1 = data;
++	const unsigned int advise = le16_to_cpu(v1->i_advise);
++	erofs_blk_t nblks = 0;
++
++	vi->datamode = __inode_data_mapping(advise);
++
++	if (unlikely(vi->datamode >= EROFS_INODE_LAYOUT_MAX)) {
++		errln("unsupported data mapping %u of nid %llu",
++		      vi->datamode, vi->nid);
++		DBG_BUGON(1);
++		return -EIO;
++	}
++
++	if (__inode_version(advise) == EROFS_INODE_LAYOUT_V2) {
++		struct erofs_inode_v2 *v2 = data;
++
++		vi->inode_isize = sizeof(struct erofs_inode_v2);
++		vi->xattr_isize = ondisk_xattr_ibody_size(v2->i_xattr_icount);
++
++		inode->i_mode = le16_to_cpu(v2->i_mode);
++		vi->raw_blkaddr = le32_to_cpu(v2->i_u.raw_blkaddr);
++
++		i_uid_write(inode, le32_to_cpu(v2->i_uid));
++		i_gid_write(inode, le32_to_cpu(v2->i_gid));
++		set_nlink(inode, le32_to_cpu(v2->i_nlink));
++
++		/* ns timestamp */
++		inode->i_mtime.tv_sec = inode->i_ctime.tv_sec =
++			le64_to_cpu(v2->i_ctime);
++		inode->i_mtime.tv_nsec = inode->i_ctime.tv_nsec =
++			le32_to_cpu(v2->i_ctime_nsec);
++
++		inode->i_size = le64_to_cpu(v2->i_size);
++
++		/* total blocks for compressed files */
++		if (is_inode_layout_compression(inode))
++			nblks = le32_to_cpu(v2->i_u.compressed_blocks);
++	} else if (__inode_version(advise) == EROFS_INODE_LAYOUT_V1) {
++		struct erofs_sb_info *sbi = EROFS_SB(inode->i_sb);
++
++		vi->inode_isize = sizeof(struct erofs_inode_v1);
++		vi->xattr_isize = ondisk_xattr_ibody_size(v1->i_xattr_icount);
++
++		inode->i_mode = le16_to_cpu(v1->i_mode);
++		vi->raw_blkaddr = le32_to_cpu(v1->i_u.raw_blkaddr);
++
++		i_uid_write(inode, le16_to_cpu(v1->i_uid));
++		i_gid_write(inode, le16_to_cpu(v1->i_gid));
++		set_nlink(inode, le16_to_cpu(v1->i_nlink));
++
++		/* use build time to derive all file time */
++		inode->i_mtime.tv_sec = inode->i_ctime.tv_sec =
++			sbi->build_time;
++		inode->i_mtime.tv_nsec = inode->i_ctime.tv_nsec =
++			sbi->build_time_nsec;
++
++		inode->i_size = le32_to_cpu(v1->i_size);
++		if (is_inode_layout_compression(inode))
++			nblks = le32_to_cpu(v1->i_u.compressed_blocks);
++	} else {
++		errln("unsupported on-disk inode version %u of nid %llu",
++		      __inode_version(advise), vi->nid);
++		DBG_BUGON(1);
++		return -EIO;
++	}
++
++	if (!nblks)
++		/* measure inode.i_blocks as generic filesystems */
++		inode->i_blocks = roundup(inode->i_size, EROFS_BLKSIZ) >> 9;
++	else
++		inode->i_blocks = nblks << LOG_SECTORS_PER_BLOCK;
++	return 0;
++}
++
++/*
++ * try_lock can be required since locking order is:
++ *   file data(fs_inode)
++ *        meta(bd_inode)
++ * but the majority of the callers is "iget",
++ * in that case we are pretty sure no deadlock since
++ * no data operations exist. However I tend to
++ * try_lock since it takes no much overhead and
++ * will success immediately.
++ */
++static int fill_inline_data(struct inode *inode, void *data,
++			    unsigned int m_pofs)
++{
++	struct erofs_vnode *vi = EROFS_V(inode);
++	struct erofs_sb_info *sbi = EROFS_I_SB(inode);
++
++	/* should be inode inline C */
++	if (!is_inode_flat_inline(inode))
++		return 0;
++
++	/* fast symlink (following ext4) */
++	if (S_ISLNK(inode->i_mode) && inode->i_size < PAGE_SIZE) {
++		char *lnk = erofs_kmalloc(sbi, inode->i_size + 1, GFP_KERNEL);
++
++		if (unlikely(!lnk))
++			return -ENOMEM;
++
++		m_pofs += vi->inode_isize + vi->xattr_isize;
++
++		/* inline symlink data shouldn't across page boundary as well */
++		if (unlikely(m_pofs + inode->i_size > PAGE_SIZE)) {
++			DBG_BUGON(1);
++			kfree(lnk);
++			return -EIO;
++		}
++
++		/* get in-page inline data */
++		memcpy(lnk, data + m_pofs, inode->i_size);
++		lnk[inode->i_size] = '\0';
++
++		inode->i_link = lnk;
++		set_inode_fast_symlink(inode);
++	}
++	return 0;
++}
++
++static int fill_inode(struct inode *inode, int isdir)
++{
++	struct erofs_sb_info *sbi = EROFS_SB(inode->i_sb);
++	struct erofs_vnode *vi = EROFS_V(inode);
++	struct page *page;
++	void *data;
++	int err;
++	erofs_blk_t blkaddr;
++	unsigned int ofs;
++
++	trace_erofs_fill_inode(inode, isdir);
++
++	blkaddr = erofs_blknr(iloc(sbi, vi->nid));
++	ofs = erofs_blkoff(iloc(sbi, vi->nid));
++
++	debugln("%s, reading inode nid %llu at %u of blkaddr %u",
++		__func__, vi->nid, ofs, blkaddr);
++
++	page = erofs_get_meta_page(inode->i_sb, blkaddr, isdir);
++
++	if (IS_ERR(page)) {
++		errln("failed to get inode (nid: %llu) page, err %ld",
++		      vi->nid, PTR_ERR(page));
++		return PTR_ERR(page);
++	}
++
++	DBG_BUGON(!PageUptodate(page));
++	data = page_address(page);
++
++	err = read_inode(inode, data + ofs);
++	if (!err) {
++		/* setup the new inode */
++		if (S_ISREG(inode->i_mode)) {
++			inode->i_op = &erofs_generic_iops;
++			inode->i_fop = &generic_ro_fops;
++		} else if (S_ISDIR(inode->i_mode)) {
++			inode->i_op = &erofs_dir_iops;
++			inode->i_fop = &erofs_dir_fops;
++		} else if (S_ISLNK(inode->i_mode)) {
++			/* by default, page_get_link is used for symlink */
++			inode->i_op = &erofs_symlink_iops;
++			inode_nohighmem(inode);
++		} else {
++			err = -EIO;
++			goto out_unlock;
++		}
++
++		if (is_inode_layout_compression(inode)) {
++			err = -ENOTSUPP;
++			goto out_unlock;
++		}
++
++		inode->i_mapping->a_ops = &erofs_raw_access_aops;
++
++		/* fill last page if inline data is available */
++		err = fill_inline_data(inode, data, ofs);
++	}
++
++out_unlock:
++	unlock_page(page);
++	put_page(page);
++	return err;
++}
++
++/*
++ * erofs nid is 64bits, but i_ino is 'unsigned long', therefore
++ * we should do more for 32-bit platform to find the right inode.
++ */
++#if BITS_PER_LONG == 32
++static int erofs_ilookup_test_actor(struct inode *inode, void *opaque)
++{
++	const erofs_nid_t nid = *(erofs_nid_t *)opaque;
++
++	return EROFS_V(inode)->nid == nid;
++}
++
++static int erofs_iget_set_actor(struct inode *inode, void *opaque)
++{
++	const erofs_nid_t nid = *(erofs_nid_t *)opaque;
++
++	inode->i_ino = erofs_inode_hash(nid);
++	return 0;
++}
++#endif
++
++static inline struct inode *erofs_iget_locked(struct super_block *sb,
++					      erofs_nid_t nid)
++{
++	const unsigned long hashval = erofs_inode_hash(nid);
++
++#if BITS_PER_LONG >= 64
++	/* it is safe to use iget_locked for >= 64-bit platform */
++	return iget_locked(sb, hashval);
++#else
++	return iget5_locked(sb, hashval, erofs_ilookup_test_actor,
++		erofs_iget_set_actor, &nid);
++#endif
++}
++
++struct inode *erofs_iget(struct super_block *sb,
++			 erofs_nid_t nid,
++			 bool isdir)
++{
++	struct inode *inode = erofs_iget_locked(sb, nid);
++
++	if (unlikely(!inode))
++		return ERR_PTR(-ENOMEM);
++
++	if (inode->i_state & I_NEW) {
++		int err;
++		struct erofs_vnode *vi = EROFS_V(inode);
++
++		vi->nid = nid;
++
++		err = fill_inode(inode, isdir);
++		if (likely(!err))
++			unlock_new_inode(inode);
++		else {
++			iget_failed(inode);
++			inode = ERR_PTR(err);
++		}
++	}
++	return inode;
++}
++
++int erofs_getattr(const struct path *path, struct kstat *stat,
++		  u32 request_mask, unsigned int query_flags)
++{
++	struct inode *const inode = d_inode(path->dentry);
++
++	if (is_inode_layout_compression(inode))
++		stat->attributes |= STATX_ATTR_COMPRESSED;
++
++	stat->attributes |= STATX_ATTR_IMMUTABLE;
++	stat->attributes_mask |= (STATX_ATTR_COMPRESSED |
++				  STATX_ATTR_IMMUTABLE);
++
++	generic_fillattr(inode, stat);
++	return 0;
++}
++
++const struct inode_operations erofs_generic_iops = {
++	.getattr = erofs_getattr,
++};
++
++const struct inode_operations erofs_symlink_iops = {
++	.get_link = page_get_link,
++	.getattr = erofs_getattr,
++};
++
++const struct inode_operations erofs_fast_symlink_iops = {
++	.get_link = simple_get_link,
++	.getattr = erofs_getattr,
++};
++
 -- 
-2.7.4
+2.17.1
 
