@@ -2,100 +2,130 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B3FAC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 05:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49BD5C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 05:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 017692073D
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 05:50:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E7F72073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 05:51:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X3oq7lAk"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="ZlXyZ6zt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388243AbfHBFuX (ORCPT
+        id S2388278AbfHBFvg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 01:50:23 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:40166 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388175AbfHBFuW (ORCPT
+        Fri, 2 Aug 2019 01:51:36 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:35961 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728724AbfHBFvf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 01:50:22 -0400
-Received: by mail-lj1-f194.google.com with SMTP id m8so38062291lji.7
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 22:50:21 -0700 (PDT)
+        Fri, 2 Aug 2019 01:51:35 -0400
+Received: by mail-qt1-f193.google.com with SMTP id z4so72832811qtc.3;
+        Thu, 01 Aug 2019 22:51:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=jms.id.au; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Vwz8Yfm4Cow2GeEvNxlf9aEZE7OVt1rKT7raAjp8VpA=;
-        b=X3oq7lAkHf3gv2MqFLGGzBIFgglHgG5rRPhA3IA/fycv6qEgWi/E/L84U6E0mZJF5k
-         HaeRuMoGJlD1AnH/ujS8Un7jZdQyUMaemOE5kq531tVfuOAnjD/LU5AJx52J+CGFad+M
-         jFedj9VOB/NnqbRUoJFCIu0uLsAjmh4zr0n2QpQes0qqSw36DYgPoBTlCdlefz4yPDzf
-         ZDHoh285WC5GUXxkKWfRJJJ/jy4JL86Kqy8qWDtY1HoxHInqDQbFsced+bOAVZGpUwdZ
-         Gcz9jma3dRlxxMCgIJpxiWALuPHaN0nxFpjSnOh3TSquP4VcgUfapw+xPsm/8Iv003js
-         NRVQ==
+        bh=5ITQyJRBl7ht1TYk00a4jNJ9PbzaX8Bwy7nVWaA9ibU=;
+        b=ZlXyZ6ztAsHkWX/gNtW3rbHVMXIy8YlD4tZkfmEg2K2GZWwrJbhbsffFVc4OaXLrg9
+         4tTqk4gATmYjzkZBvV6sH+07OauO8iQOl7F9IrPpZzBS6Z/6Juf2gv2baaqlQJdyWdqq
+         U2PcA4vf7asSgaO+0RaIZUlir57+Jn+ToB2VE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Vwz8Yfm4Cow2GeEvNxlf9aEZE7OVt1rKT7raAjp8VpA=;
-        b=iC8Ra8zWK8LNPs9r1RKRaLCpVoEFJNiilspyHnb0DCe+kgWBaUNo/QRAebwuzwZuQM
-         pWHzTCfOgYcFJkrHMdjh7JKvbN8onqFBsc5rB3LyX1EfGs1nwpbYE6uUSlxdE5v0hrRe
-         X3XtEBDHObbiRD3UuzjCzX5NB3AhDi+up3S0e+gwWoSLa46dVnvyMPdK1+M7IhB8MgD1
-         QQ45ir/1TbxXJXohL74sKlcWP/1Iuh6JU/MxlbyKERDC4BNv8iA7L/LsTQHjjnrlKodY
-         WPb22f6T72OPstyCzLCVUcaiVFhFoknByJ68KMufdPGIfanjYcAv0Hl9F+EoNQeGeFG7
-         sQtA==
-X-Gm-Message-State: APjAAAVsjSm1aLG6ziBNshQQ6UXCguaJFIKMqrmDKA9hJNWLDrCQ6bAM
-        CnYpXEKZFE1X8PVOu/3prIYDGGokN3clLf7v97W3RQ==
-X-Google-Smtp-Source: APXvYqxa1pCtNqv5a9orx+jqYo5gAuz4nI99d0UZk2C8opZTrYtKmFiLmrw+zaVFcZxMgM+dWW013yJe1zTceqVxnvo=
-X-Received: by 2002:a2e:301a:: with SMTP id w26mr68823438ljw.76.1564725020734;
- Thu, 01 Aug 2019 22:50:20 -0700 (PDT)
+        bh=5ITQyJRBl7ht1TYk00a4jNJ9PbzaX8Bwy7nVWaA9ibU=;
+        b=a19PE+OfZKpGHR3zdgzAJXNdvzdf3NO8Xt7IlIOm4akZWv3yfJXYZ44HnUBcLTp+Ms
+         x3BUrWR24qOoilE4mRvH+LNyrwG97g7DgInyZDdA5QPfkaoVkUTR5ewvUHGa9fXE5n5A
+         4A9t5l0tXTkAinJOTZh0W1c3TLLILkJNg9H26dqvwslaFPdmtGaQIBgumdOHlWnF9TWL
+         4HZrmuKxNgEh14YOpcdFGiPplmPiRcH1lmRlq6MzBKOlMaDw3LNUeV3uQRSgDObCn+/X
+         6O5qTqdgTD9a+9fNth4AW+UmK2clfKtIALD7Yl/ChVZ7CbRng4ZXTSzhjirLHRdyAubz
+         r/eg==
+X-Gm-Message-State: APjAAAWV28DqtAXg09f4DGgh0htZ9UOf6G6Bb0Rsz6I64XL9y/3VWo4Y
+        uhU6aUUczLhvod3V4jjsvAjmn9gAVHdUpAwGcB8=
+X-Google-Smtp-Source: APXvYqxO7iXCAjOTakLYUnlXhbQV3QpIiWAYTjbetNNaVVixnu8M5TKpFH8tA3QT0jtpa2v4Vzycy56QBDbI0RnB0tU=
+X-Received: by 2002:a05:6214:1306:: with SMTP id a6mr97854130qvv.38.1564725094592;
+ Thu, 01 Aug 2019 22:51:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <1563449086-13183-1-git-send-email-sumit.garg@linaro.org>
- <1563449086-13183-2-git-send-email-sumit.garg@linaro.org> <20190801172310.cldcftfdoh5vyfjg@linux.intel.com>
-In-Reply-To: <20190801172310.cldcftfdoh5vyfjg@linux.intel.com>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Fri, 2 Aug 2019 11:20:09 +0530
-Message-ID: <CAFA6WYM+FQuXA9Saj5+ffOGsc-shhiF5Uos4g14Qndvu6w97Sg@mail.gmail.com>
-Subject: Re: [RFC/RFT v2 1/2] KEYS: trusted: create trusted keys subsystem
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        linux-security-module@vger.kernel.org, dhowells@redhat.com,
-        Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net,
-        jejb@linux.ibm.com, Mimi Zohar <zohar@linux.ibm.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
+References: <20190726053959.2003-1-andrew@aj.id.au> <CAL_JsqJ+sFDG8eKbV3gvmqVHx+otWbki4dY213apzXgfhbXXEw@mail.gmail.com>
+ <fd8e57f0-aee2-403e-b6fb-76d0c18fe306@www.fastmail.com>
+In-Reply-To: <fd8e57f0-aee2-403e-b6fb-76d0c18fe306@www.fastmail.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Fri, 2 Aug 2019 05:51:23 +0000
+Message-ID: <CACPK8Xc4Vigeu1B1Su5392BSCSKfoEDqt_tiDtgKmNH5ucAvAg@mail.gmail.com>
+Subject: Re: [RFC-ish PATCH 00/17] Clean up ASPEED devicetree warnings
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     Rob Herring <robh+dt@kernel.org>, linux-aspeed@lists.ozlabs.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Adriana Kobylak <anoo@us.ibm.com>,
+        "Alexander A. Filippov" <a.filippov@yadro.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        =?UTF-8?B?WWFuZ0JyaWFuQy5XIOaliuWYieWBiSBUQU8=?= 
+        <yang.brianc.w@inventec.com>, Corey Minyard <minyard@acm.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Haiyue Wang <haiyue.wang@linux.intel.com>,
+        John Wang <wangzqbj@inspur.com>,
+        Ken Chen <chen.kenyy@inventec.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        openipmi-developer@lists.sourceforge.net,
+        Patrick Venture <venture@google.com>,
+        Stefan M Schaeckeler <sschaeck@cisco.com>,
+        Tao Ren <taoren@fb.com>, Xo Wang <xow@google.com>,
+        yao.yuan@linaro.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 1 Aug 2019 at 22:54, Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
->
-> On Thu, Jul 18, 2019 at 04:54:45PM +0530, Sumit Garg wrote:
-> > Move existing code to trusted keys subsystem. Also, rename files with
-> > "tpm" as suffix which provides the underlying implementation.
+On Tue, 30 Jul 2019 at 01:09, Andrew Jeffery <andrew@aj.id.au> wrote:
+
+> > > The bang-for-buck is in fixing up the KCS bindings which removes all-but-two of
+> > > the remaining warnings (which we can't feasibly remove), but doing so forces
+> > > code changes (which I'd avoided up until this point).
+> > >
+> > > Reflecting broadly on the fixes, I think I've made a mistake way back by using
+> > > syscon/simple-mfds to expose the innards of the SCU and LPC controllers in the
+> > > devicetree. This series cleans up what's currently there, but I have half a
+> > > mind to rev the SCU and LPC bindings to not use simple-mfd and instead have a
+> > > driver implementation that uses `platform_device_register_full()` or similar to
+> > > deal with the mess.
+> > >
+> > > Rob - I'm looking for your thoughts here and on the series, I've never felt
+> > > entirely comfortable with what I cooked up. Your advice would be appreciated.
 > >
-> > Suggested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> > The series generally looks fine to me from a quick scan. As far as
+> > dropping 'simple-mfd', having less fine grained description in DT is
+> > generally my preference. It comes down to whether what you have
+> > defined is maintainable. As most of it is just additions, I think what
+> > you have is fine. Maybe keep all this in mind for the next chip
+> > depending how the SCU and LPC change.
 >
-> What about TPM2 trusted keys code?
-
-Isn't TPM2 code located here: "drivers/char/tpm/"? Would you like to
-move that code under trusted keys subsystem only?
-
--Sumit
-
+> Okay, I think the timing of that suggestion is good given where things are with
+> the AST2600. I'll keep that in mind.
 >
-> /Jarkko
+> Consensus so far seems to be that the series is fine. I'll split it up and send out
+> the sub-series to the relevant lists with the acks accumulated here.
+
+The series look good. I suggest posting the KCS bindings and driver
+changes as their own series to go through the IPMI tree.
+
+Please add my tag to all the patches except the OCC one, which I need
+to do some investigation in to.
+
+Reviewed-by: Joel Stanley <joel@jms.id.au>
+
+The others can go via the aspeed tree. Perhaps post them as their own
+series too so I don't get confused and apply the wrong ones. That way
+if Rob wants to send his reviewed-by he can.
+
+Cheers,
+
+Joel
