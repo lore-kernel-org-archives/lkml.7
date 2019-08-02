@@ -2,104 +2,91 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF87C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 03:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2488AC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 03:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C042206A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 03:06:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED558206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 03:13:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728746AbfHBDGP (ORCPT
+        id S1728170AbfHBDNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 23:06:15 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3698 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726467AbfHBDGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 23:06:15 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 0B309FFFDDE6338C5C4F;
-        Fri,  2 Aug 2019 11:06:10 +0800 (CST)
-Received: from huawei.com (10.175.102.38) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Fri, 2 Aug 2019
- 11:06:03 +0800
-From:   Tan Xiaojun <tanxiaojun@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
-        <namhyung@kernel.org>, <songliubraving@fb.com>,
-        <rostedt@goodmis.org>, <kan.liang@linux.intel.com>,
-        <tz.stoyanov@gmail.com>, <alexey.budankov@linux.intel.com>
-CC:     <linux-kernel@vger.kernel.org>, <tanxiaojun@huawei.com>
-Subject: [PATCH] perf record: Support aarch64 random socket_id assignment
-Date:   Fri, 2 Aug 2019 11:48:57 +0800
-Message-ID: <1564717737-21602-1-git-send-email-tanxiaojun@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 1 Aug 2019 23:13:10 -0400
+Received: from smtprelay0078.hostedemail.com ([216.40.44.78]:47735 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726014AbfHBDNK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 23:13:10 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id B6B4B180295BD;
+        Fri,  2 Aug 2019 03:13:08 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: bone24_5581e2d354449
+X-Filterd-Recvd-Size: 2113
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf16.hostedemail.com (Postfix) with ESMTPA;
+        Fri,  2 Aug 2019 03:13:07 +0000 (UTC)
+Message-ID: <df75fa45950ab7bb67da52fe4b711209790e52ef.camel@perches.com>
+Subject: Re: [PATCH v2 06/10] printk: Replace strncmp with str_has_prefix
+From:   Joe Perches <joe@perches.com>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 01 Aug 2019 20:13:06 -0700
+In-Reply-To: <20190802014718.8952-1-hslester96@gmail.com>
+References: <20190802014718.8952-1-hslester96@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.102.38]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Same as the commit 01766229533f ("perf record: Support s390 random
-socket_id assignment"), aarch64 also have this problem.
+On Fri, 2019-08-02 at 09:47 +0800, Chuhong Yuan wrote:
+> strncmp(str, const, len) is error-prone because len
+> is easy to have typo.
+> The example is the hard-coded len has counting error
+> or sizeof(const) forgets - 1.
+> So we prefer using newly introduced str_has_prefix
+> to substitute such strncmp.
+[]
+> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+[]
+> @@ -118,18 +118,20 @@ static unsigned int __read_mostly devkmsg_log = DEVKMSG_LOG_MASK_DEFAULT;
+>  
+>  static int __control_devkmsg(char *str)
+>  {
+> +	size_t len;
+> +
+>  	if (!str)
+>  		return -EINVAL;
+>  
+> -	if (!strncmp(str, "on", 2)) {
+> +	if ((len = str_has_prefix(str, "on"))) {
+>  		devkmsg_log = DEVKMSG_LOG_MASK_ON;
+> -		return 2;
+> -	} else if (!strncmp(str, "off", 3)) {
+> +		return len;
+> +	} else if ((len = str_has_prefix(str, "off"))) {
+>  		devkmsg_log = DEVKMSG_LOG_MASK_OFF;
+> -		return 3;
+> -	} else if (!strncmp(str, "ratelimit", 9)) {
+> +		return len;
+> +	} else if ((len = str_has_prefix(str, "ratelimit"))) {
+>  		devkmsg_log = DEVKMSG_LOG_MASK_DEFAULT;
+> -		return 9;
+> +		return len;
+>  	}
+>  	return -EINVAL;
+>  }
 
-Without this fix:
-  [root@localhost perf]# ./perf report --header -I -v
-  ...
-  socket_id number is too big.You may need to upgrade the perf tool.
-
-  # ========
-  # captured on    : Thu Aug  1 22:58:38 2019
-  # header version : 1
-  ...
-  # Core ID and Socket ID information is not available
-  ...
-
-With this fix:
-  [root@localhost perf]# ./perf report --header -I -v
-  ...
-  cpumask list: 0-31
-  cpumask list: 32-63
-  cpumask list: 64-95
-  cpumask list: 96-127
-
-  # ========
-  # captured on    : Thu Aug  1 22:58:38 2019
-  # header version : 1
-  ...
-  # CPU 0: Core ID 0, Socket ID 36
-  # CPU 1: Core ID 1, Socket ID 36
-  ...
-  # CPU 126: Core ID 126, Socket ID 8442
-  # CPU 127: Core ID 127, Socket ID 8442
-  ...
-
-Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
----
- tools/perf/util/header.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 20111f8..d57fb74 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -2251,8 +2251,10 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
- 	/* On s390 the socket_id number is not related to the numbers of cpus.
- 	 * The socket_id number might be higher than the numbers of cpus.
- 	 * This depends on the configuration.
-+	 * AArch64 is the same.
- 	 */
--	if (ph->env.arch && !strncmp(ph->env.arch, "s390", 4))
-+	if (ph->env.arch && (!strncmp(ph->env.arch, "s390", 4)
-+			  || !strncmp(ph->env.arch, "aarch64", 7)))
- 		do_core_id_test = false;
- 
- 	for (i = 0; i < (u32)cpu_nr; i++) {
--- 
-2.7.4
+All of the else uses above could also be removed.
 
