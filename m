@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74BADC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 02:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7235BC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 02:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CD402083B
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 02:27:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40DF2206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 02:27:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fX9VH11/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D/j6QNqz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389926AbfHBC04 (ORCPT
+        id S1733295AbfHBC1a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 22:26:56 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:47071 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389188AbfHBCUT (ORCPT
+        Thu, 1 Aug 2019 22:27:30 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43830 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726796AbfHBCUQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 22:20:19 -0400
-Received: by mail-pg1-f195.google.com with SMTP id k189so16189094pgk.13;
-        Thu, 01 Aug 2019 19:20:18 -0700 (PDT)
+        Thu, 1 Aug 2019 22:20:16 -0400
+Received: by mail-pl1-f193.google.com with SMTP id 4so26013287pld.10;
+        Thu, 01 Aug 2019 19:20:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=8SOviSW3O4erJ4o/T7vOdTDRu8uyyXM9kIDmKsHyj7c=;
-        b=fX9VH11/xtmCZY5ktyfRXv+8oFT24qnzRAke9R5fEGSeD2IzOy84ZG8im/eaEUg8Lt
-         YkXZtAgFC41AXSsr/ysnzaRAFRybM7sVVSGjTeMscCtwe6TgKQtIwxVTNVhX+CyOlaHj
-         zyT65gbiAfpxTAt1YaJp886/lI6PgypiCjw7omXplGhR0qwXivcLAeNmtsNmtXQS2+4w
-         xqKa+JcZGRrR5eWJB589WBbm/hXzKEauxkOa/UURNDAyCoi6UPYtZRE7atesr45WwiIq
-         ErXdMxUJmMSia9/QMT7Nme9zP4x0BmIDxW3018QpZobBFVGv7P1VjjU6MaObsA2EybjP
-         VU2g==
+        bh=qSYlns3rxzw4u/DyjG2ivKH4pSlvpz3tTvNpv+Vzl0A=;
+        b=D/j6QNqz3yFiYsyeUlBoZoB8rZu5aCb/yvzz1zxOgNp3ybEqPbsxe9btxXQCwNnRiL
+         1hhEXFWz1aCfU0TnFrQv5Hdu1Y4yj+09YOcLKnBgch2wIeWxdJn+CuF7gDQRR3DG86LM
+         Y2SvxC7kLx20v2OT7+JApu4gV5A7mbLpTUBZ6FnTk6beDldtvE5mb/QvfkkyqN0v2VG1
+         9ofVdaCVs4q01OeX0AkhxB3Ji5RomrK0H8nso03ee71VFXG/bdlheK3cdFpHFmb/m/jZ
+         kT41q1q3qFT4PGqgyOwuRL5tvfmQTGDLJg5egH8fWfpo6yuqqIAezax6SWmNi42S34sa
+         BMyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=8SOviSW3O4erJ4o/T7vOdTDRu8uyyXM9kIDmKsHyj7c=;
-        b=S2w39fBaMY8v73QttlijAC0XCs0iaov8gNEPbDZt0WyuqtShS7CIag26kpdqqx1voF
-         D240ogntSv4/TTTH7Mla+CmhjrmxwjKk661RVED0y5vVKBf6mwQvoqY3cpAWcPablz+S
-         ICZcoiWSmBd4eddFzTCVv576dnxZBbPTcIuT+ymv59XZGB2ACXqblqdgKF944/NNDHbe
-         ejWPSnfZIdBMob5NdcmFFRXniF2InJzIjrfV7+k4hsIxSEzx4N0k8KmdNtdT2RL+3Rb4
-         s/ehcWPUC2HDOH5xNuWMO9YnYS6CCHhIA21tQcgL6bzebbjv2bMiY7o2t7mFQ2A0j/2i
-         Famg==
-X-Gm-Message-State: APjAAAVGj5OB9ojCcI44+0s/TTVcnrwJsiZ8qMPU9LTYcvSXPJtSMJ8k
-        V5VN+aGkddo2ctsqpbJgogI=
-X-Google-Smtp-Source: APXvYqy6SxWBaLdRR2vg6Lx/woJAETS/7eDG5dTzML6C7DLLIiEKJ1wWpgVv8K7hxMNjNoQ+Y+s8Dw==
-X-Received: by 2002:a17:90a:8c92:: with SMTP id b18mr1836391pjo.97.1564712418017;
-        Thu, 01 Aug 2019 19:20:18 -0700 (PDT)
+        bh=qSYlns3rxzw4u/DyjG2ivKH4pSlvpz3tTvNpv+Vzl0A=;
+        b=AB/lw6eMa1rUvSh0p6aM6g28vbpo0XwBDyHLZx5hKcHRtVIeZZejSSY1MMCtoMw6TG
+         ojCSLjd+JooUj+rtqmp/Q0fejNcGvG7DqgAozu2LuCQ8cs8oOdjebCEisrN3DDaaptdM
+         NV+luL+bv7WQ5z10rzItvTAZPJoWBrii1bTMv5RHBVhO+Bcrjvq8hE/MqTtTdr/gWmWV
+         zbEAhSKTFsQV3JAVSgPUZtBb2auZEjP2x2bxl9ht/W9oIkctfpqOinPtVfov/VzBRsUH
+         kYv3E15jsDPhkqLTemV+E3f3cPfj3/0yqJJdj66phFSjkCcaESx7eMxl6GvJQSxlvngJ
+         cyjA==
+X-Gm-Message-State: APjAAAU6x10O/uYjYHEzF7tyTEw8XCwIBVStYuG9VL98rxfBpH7H4Tdc
+        vM0s7M2pCbQqXyKzRp/p/I4=
+X-Google-Smtp-Source: APXvYqwe/PIHkPn7ZzlBTJ10qqxG8IKfziWCo/9dNIX4ajnyTWnRigA/C0Xc1g8+MHenU4v2W+nK1Q==
+X-Received: by 2002:a17:902:24b:: with SMTP id 69mr123383293plc.250.1564712414959;
+        Thu, 01 Aug 2019 19:20:14 -0700 (PDT)
 Received: from blueforge.nvidia.com (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id u9sm38179744pgc.5.2019.08.01.19.20.16
+        by smtp.gmail.com with ESMTPSA id u9sm38179744pgc.5.2019.08.01.19.20.13
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 01 Aug 2019 19:20:17 -0700 (PDT)
+        Thu, 01 Aug 2019 19:20:14 -0700 (PDT)
 From:   john.hubbard@gmail.com
 X-Google-Original-From: jhubbard@nvidia.com
 To:     Andrew Morton <akpm@linux-foundation.org>
@@ -80,20 +80,15 @@ Cc:     Christoph Hellwig <hch@infradead.org>,
         netdev@vger.kernel.org, rds-devel@oss.oracle.com,
         sparclinux@vger.kernel.org, x86@kernel.org,
         xen-devel@lists.xenproject.org, John Hubbard <jhubbard@nvidia.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH 04/34] x86/kvm: convert put_page() to put_user_page*()
-Date:   Thu,  1 Aug 2019 19:19:35 -0700
-Message-Id: <20190802022005.5117-5-jhubbard@nvidia.com>
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: [PATCH 02/34] net/rds: convert put_page() to put_user_page*()
+Date:   Thu,  1 Aug 2019 19:19:33 -0700
+Message-Id: <20190802022005.5117-3-jhubbard@nvidia.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802022005.5117-1-jhubbard@nvidia.com>
 References: <20190802022005.5117-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-NVConfidentiality: public
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -104,68 +99,114 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 From: John Hubbard <jhubbard@nvidia.com>
 
 For pages that were retained via get_user_pages*(), release those pages
-via the new put_user_page*() routines, instead of via put_page().
+via the new put_user_page*() routines, instead of via put_page() or
+release_pages().
 
 This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
 ("mm: introduce put_user_page*(), placeholder versions").
 
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: "Radim Krčmář" <rkrcmar@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: x86@kernel.org
-Cc: kvm@vger.kernel.org
+Cc: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: netdev@vger.kernel.org
+Cc: linux-rdma@vger.kernel.org
+Cc: rds-devel@oss.oracle.com
 Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 ---
- arch/x86/kvm/svm.c  | 4 ++--
- virt/kvm/kvm_main.c | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ net/rds/info.c    |  5 ++---
+ net/rds/message.c |  2 +-
+ net/rds/rdma.c    | 15 +++++++--------
+ 3 files changed, 10 insertions(+), 12 deletions(-)
 
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 7eafc6907861..ff93c923ed36 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -1827,7 +1827,7 @@ static struct page **sev_pin_memory(struct kvm *kvm, unsigned long uaddr,
+diff --git a/net/rds/info.c b/net/rds/info.c
+index 03f6fd56d237..ca6af2889adf 100644
+--- a/net/rds/info.c
++++ b/net/rds/info.c
+@@ -162,7 +162,6 @@ int rds_info_getsockopt(struct socket *sock, int optname, char __user *optval,
+ 	struct rds_info_lengths lens;
+ 	unsigned long nr_pages = 0;
+ 	unsigned long start;
+-	unsigned long i;
+ 	rds_info_func func;
+ 	struct page **pages = NULL;
+ 	int ret;
+@@ -235,8 +234,8 @@ int rds_info_getsockopt(struct socket *sock, int optname, char __user *optval,
+ 		ret = -EFAULT;
  
- err:
- 	if (npinned > 0)
--		release_pages(pages, npinned);
-+		put_user_pages(pages, npinned);
+ out:
+-	for (i = 0; pages && i < nr_pages; i++)
+-		put_page(pages[i]);
++	if (pages)
++		put_user_pages(pages, nr_pages);
+ 	kfree(pages);
  
- 	kvfree(pages);
- 	return NULL;
-@@ -1838,7 +1838,7 @@ static void sev_unpin_memory(struct kvm *kvm, struct page **pages,
- {
- 	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
+ 	return ret;
+diff --git a/net/rds/message.c b/net/rds/message.c
+index 50f13f1d4ae0..d7b0d266c437 100644
+--- a/net/rds/message.c
++++ b/net/rds/message.c
+@@ -404,7 +404,7 @@ static int rds_message_zcopy_from_user(struct rds_message *rm, struct iov_iter *
+ 			int i;
  
--	release_pages(pages, npages);
-+	put_user_pages(pages, npages);
- 	kvfree(pages);
- 	sev->pages_locked -= npages;
- }
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 887f3b0c2b60..4b6a596ea8e9 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -1499,7 +1499,7 @@ static int hva_to_pfn_slow(unsigned long addr, bool *async, bool write_fault,
+ 			for (i = 0; i < rm->data.op_nents; i++)
+-				put_page(sg_page(&rm->data.op_sg[i]));
++				put_user_page(sg_page(&rm->data.op_sg[i]));
+ 			mmp = &rm->data.op_mmp_znotifier->z_mmp;
+ 			mm_unaccount_pinned_pages(mmp);
+ 			ret = -EFAULT;
+diff --git a/net/rds/rdma.c b/net/rds/rdma.c
+index 916f5ec373d8..6762e8696b99 100644
+--- a/net/rds/rdma.c
++++ b/net/rds/rdma.c
+@@ -162,8 +162,7 @@ static int rds_pin_pages(unsigned long user_addr, unsigned int nr_pages,
+ 				  pages);
  
- 		if (__get_user_pages_fast(addr, 1, 1, &wpage) == 1) {
- 			*writable = true;
--			put_page(page);
-+			put_user_page(page);
- 			page = wpage;
- 		}
+ 	if (ret >= 0 && ret < nr_pages) {
+-		while (ret--)
+-			put_page(pages[ret]);
++		put_user_pages(pages, ret);
+ 		ret = -EFAULT;
  	}
-@@ -1831,7 +1831,7 @@ EXPORT_SYMBOL_GPL(kvm_release_page_clean);
- void kvm_release_pfn_clean(kvm_pfn_t pfn)
- {
- 	if (!is_error_noslot_pfn(pfn) && !kvm_is_reserved_pfn(pfn))
--		put_page(pfn_to_page(pfn));
-+		put_user_page(pfn_to_page(pfn));
- }
- EXPORT_SYMBOL_GPL(kvm_release_pfn_clean);
+ 
+@@ -276,7 +275,7 @@ static int __rds_rdma_map(struct rds_sock *rs, struct rds_get_mr_args *args,
+ 
+ 	if (IS_ERR(trans_private)) {
+ 		for (i = 0 ; i < nents; i++)
+-			put_page(sg_page(&sg[i]));
++			put_user_page(sg_page(&sg[i]));
+ 		kfree(sg);
+ 		ret = PTR_ERR(trans_private);
+ 		goto out;
+@@ -464,9 +463,10 @@ void rds_rdma_free_op(struct rm_rdma_op *ro)
+ 		 * to local memory */
+ 		if (!ro->op_write) {
+ 			WARN_ON(!page->mapping && irqs_disabled());
+-			set_page_dirty(page);
++			put_user_pages_dirty_lock(&page, 1, true);
++		} else {
++			put_user_page(page);
+ 		}
+-		put_page(page);
+ 	}
+ 
+ 	kfree(ro->op_notifier);
+@@ -481,8 +481,7 @@ void rds_atomic_free_op(struct rm_atomic_op *ao)
+ 	/* Mark page dirty if it was possibly modified, which
+ 	 * is the case for a RDMA_READ which copies from remote
+ 	 * to local memory */
+-	set_page_dirty(page);
+-	put_page(page);
++	put_user_pages_dirty_lock(&page, 1, true);
+ 
+ 	kfree(ao->op_notifier);
+ 	ao->op_notifier = NULL;
+@@ -867,7 +866,7 @@ int rds_cmsg_atomic(struct rds_sock *rs, struct rds_message *rm,
+ 	return ret;
+ err:
+ 	if (page)
+-		put_page(page);
++		put_user_page(page);
+ 	rm->atomic.op_active = 0;
+ 	kfree(rm->atomic.op_notifier);
  
 -- 
 2.22.0
