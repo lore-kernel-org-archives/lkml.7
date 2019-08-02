@@ -2,142 +2,155 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B68C6C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 323ABC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8791A20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEA002087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:40:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QPOtpmT3"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="zrtVrD9c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436689AbfHBOja (ORCPT
+        id S2436697AbfHBOkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 10:39:30 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46334 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404220AbfHBOj2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 10:39:28 -0400
-Received: by mail-lf1-f66.google.com with SMTP id z15so48835671lfh.13;
-        Fri, 02 Aug 2019 07:39:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=SpNFo9StfmwwHxpdy9OKgPMJoL/SjVvfZYNNHX88rJw=;
-        b=QPOtpmT3sc6xjB4gDOxj9miQ/x3G/LgS39VjsELPa71DYtG+tFNXMqX9s+7fcEJfJf
-         VYwbaO4yrMQcjFwCKESj1OYt5VvTMkXM2/mnNxLQCEvgpfCgpbXOO8uoKOsS4UVHwgi4
-         t+updFHtg680hN9BOyEmdettYP06MNUthz/QpYGLsMaA6AflYiYWH3yRfv32vyZOII+F
-         fZcatd1GIWmbwA6xBE2wOgQOCZ+M5LB6dK8I3Iw0JP9anUqcIFZg4XzQwWcVPwPbbnNi
-         5iXtaRvfxenOAkVk0YFUzheKbsfmvwMU3R4quQWT502/JnXb4660jdzHYICxDrpuA/ZF
-         mK0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SpNFo9StfmwwHxpdy9OKgPMJoL/SjVvfZYNNHX88rJw=;
-        b=KlJQ5gebA0P2c44UtF4Yjbp5FqBq7TBLealTMIZPEQJLxUR8YI84MBMkjI611C+Rl9
-         V/qTRc7RoeymLjwZ3lFuA0/G+k5TzwMAaGU56xGgCILjuRXDO6JUqbJ2mZzT+kg2qcg7
-         kx3qceuPv4MabNKWt1Xrtu4jPB3xOCYDhGy98ktZCKYxjNRnR/RuyX17QsMCjG19YIKA
-         UwR6BQPjRG1NftkyPc2eA58iQnnNHMp5JkdOjUSC5YiNYAaBmASWH4LAiUsA0W1hK0OG
-         SJI5RmKJO/vfniC8/ZTqqEv7jsR3Dw4HZik5TRLiQcOkvZKelU8xOjgF3PW0rOC3rdIr
-         LEGA==
-X-Gm-Message-State: APjAAAUnbhCUQYi8y04VcZpusX16EPyuGPLv6DrIxHUI4z622QcChBiS
-        XtHqAjHgPPFV3dNSQhmpMXzJwJeL
-X-Google-Smtp-Source: APXvYqwok89bRyI+iWSvz2czFFM3YXHk+pef6YyvCjiXtiyXhcYcEfD3Zep26M3u5pT6DWSi9v4NIA==
-X-Received: by 2002:a19:ca1e:: with SMTP id a30mr63329282lfg.163.1564756765327;
-        Fri, 02 Aug 2019 07:39:25 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.googlemail.com with ESMTPSA id a15sm12868970lfl.44.2019.08.02.07.39.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 02 Aug 2019 07:39:24 -0700 (PDT)
-Subject: Re: [PATCH v2 3/3] soc/tegra: regulators: Add regulators coupler for
- Tegra30
-To:     Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190725151832.9802-1-digetx@gmail.com>
- <20190725151832.9802-4-digetx@gmail.com>
- <20190802140512.GD3883@pdeschrijver-desktop.Nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <c537fbea-5884-03db-305f-6ab3d553f7ab@gmail.com>
-Date:   Fri, 2 Aug 2019 17:39:23 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190802140512.GD3883@pdeschrijver-desktop.Nvidia.com>
-Content-Type: text/plain; charset=utf-8
+        Fri, 2 Aug 2019 10:40:25 -0400
+Received: from mail-eopbgr150074.outbound.protection.outlook.com ([40.107.15.74]:21219
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730713AbfHBOkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 10:40:25 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bLFB/iS2fVIEt72V6gkZDDDhIv32XMCnv8dyiHw6rjXLksbVdB5UPCirv7AbX1zC9s88yan8TZNfGzsx3Rm1pLMUqBTd4tt4DVfxEBzcYdy4Pg6LPDcmOwtBx/u86/RJoDTnjqAXIjq0P7Lfs0Bm0v6nSLH9qQR2wIaAXsVCYAkvCffkQvjBKdzH+UnxYuZ3tvsj6Em1dkFKWKb4ms6mnvyAYkNQ6aJJC2Qf52x3Db/z8V+06GgYAQC1HBgbmIqhO0S6/MWoPgaBUzhyYy34oqWyGvpAioQsrZClkGQMY0zgOtWZGMjl3GoGwis1rqfUc4tm9X/rF6xNbEsVE/+Xdg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pKflRdF3ZHOj+Fw+e8VmHrkQct3AZoD+12aEAYJ/TZU=;
+ b=eUNMvorqYhmG3GVpdmBy4xQKm6Lb8XRSFlqC0Y9NVFhwu8eRD6K0XyERJixJpE12/3EWLSjz8MMdl29QcA1mH2xMvXbYCYuZ5/Gu2GpIqdKrn/qDuY/AIf6YjGzEweCvcbdYC1ZKWuYK6dWxKlbLe3mzi/M6X8kFYrTz/sRZCpFAxxObt+eJpIqgsSo/4tI/0WFbynTu49n36PVk7s5zer1SnKIsaLDx22rxOYEKEzRljIyVzj8GZYHM/Aow3R+3qzRNzS+o/N0EqdVa+RqHdoiEW75JCYzwQptGjgmOxgMKOPqhLoeqXuwStz/IWyX9/pth2RuatxPNw3ip2r7nAw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=arm.com;dmarc=pass action=none header.from=arm.com;dkim=pass
+ header.d=arm.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pKflRdF3ZHOj+Fw+e8VmHrkQct3AZoD+12aEAYJ/TZU=;
+ b=zrtVrD9cNmRY3nO/rJ+Z6IpAPLgak3Hlxg3aN7W1Pc4dMDKWmbw6TQZ6kBqY4EHhHe5I4kHf5bs0VG0WcsoZIPTBo/D6sUCIYf02Q5bYFRqjFXwhR2TlBz6+s+ljaBQyYblH81q6XhST2T4BTKsh6R4O+S4u6CxSRLOuXuO8z6U=
+Received: from VI1PR08MB4078.eurprd08.prod.outlook.com (20.178.127.92) by
+ VI1PR08MB2878.eurprd08.prod.outlook.com (10.170.239.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2136.17; Fri, 2 Aug 2019 14:40:19 +0000
+Received: from VI1PR08MB4078.eurprd08.prod.outlook.com
+ ([fe80::c8dd:d1c6:5044:a888]) by VI1PR08MB4078.eurprd08.prod.outlook.com
+ ([fe80::c8dd:d1c6:5044:a888%3]) with mapi id 15.20.2115.005; Fri, 2 Aug 2019
+ 14:40:19 +0000
+From:   Mihail Atanassov <Mihail.Atanassov@arm.com>
+To:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+CC:     Mihail Atanassov <Mihail.Atanassov@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH] drm/komeda: Add support for 'memory-region' DT node property
+Thread-Topic: [PATCH] drm/komeda: Add support for 'memory-region' DT node
+ property
+Thread-Index: AQHVSUA0/7/jB3Z3jkicHuuMk5vdZA==
+Date:   Fri, 2 Aug 2019 14:40:19 +0000
+Message-ID: <20190802143951.4436-1-mihail.atanassov@arm.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [217.140.106.52]
+x-clientproxiedby: LNXP265CA0068.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:5d::32) To VI1PR08MB4078.eurprd08.prod.outlook.com
+ (2603:10a6:803:e5::28)
+x-mailer: git-send-email 2.22.0
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Mihail.Atanassov@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c5b891fc-7b5a-413a-aca3-08d71757575c
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR08MB2878;
+x-ms-traffictypediagnostic: VI1PR08MB2878:
+x-microsoft-antispam-prvs: <VI1PR08MB2878110CB4C45BAA212E6EAF8FD90@VI1PR08MB2878.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:357;
+x-forefront-prvs: 011787B9DD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(39860400002)(346002)(396003)(366004)(40434004)(189003)(199004)(3846002)(6116002)(68736007)(2906002)(2501003)(256004)(5024004)(86362001)(14444005)(6436002)(6486002)(6916009)(5640700003)(25786009)(1076003)(4326008)(478600001)(5660300002)(44832011)(71190400001)(102836004)(6512007)(305945005)(71200400001)(2616005)(54906003)(2351001)(53936002)(7736002)(386003)(6506007)(476003)(66946007)(66066001)(52116002)(186003)(316002)(50226002)(81156014)(81166006)(8676002)(26005)(66476007)(66556008)(64756008)(66446008)(486006)(36756003)(99286004)(14454004)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB2878;H:VI1PR08MB4078.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ChCoQwDvNMJhJ2ED1KsDY5J3/XR5CB1OPT4Amn7fOxAOs4CLkzW7zHbreS/VdWOzxTV9U6b0A21eBtP3kGWA4FVNbQSkb2UaIPCaOwk9QedJVdiAGdvxB1rD2JtqtJp2In3xLAc5vXTX1wl5q3lDuPWDFVSuVWkY24D7bx3SmdbL4ByAuf42EfOJ7yZFiWzn1rffr/tClQc1BP4oZaSJT1kP1sxNNDAm+9l/g7/hnIY5Y6EUDTU543QRbRGtNMlgBqpnY4ozkQnMq2vnlud0PwaUs5/APtygdh+ERzOMbzLza9cppRyc9sptwidYh44I/fglMa43ccFKJJCSl/nGdcVwI/ucGCxlMG8ISJSHE9KWpchkFkX7rGAZ0CpoGd1JDevCnwvb7MJrT5MrIni6ZCauoyx43DqLgyxvoCjjEuk=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c5b891fc-7b5a-413a-aca3-08d71757575c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Aug 2019 14:40:19.3438
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Mihail.Atanassov@arm.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB2878
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-02.08.2019 17:05, Peter De Schrijver пишет:
-> On Thu, Jul 25, 2019 at 06:18:32PM +0300, Dmitry Osipenko wrote:
->> Add regulators coupler for Tegra30 SoCs that performs voltage balancing
->> of a coupled regulators and thus provides voltage scaling functionality.
->>
->> There are 2 coupled regulators on all Tegra30 SoCs: CORE and CPU. The
->> coupled regulator voltages shall be in a range of 300mV from each other
->> and CORE voltage shall be higher than the CPU by N mV, where N depends
->> on the CPU voltage.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  drivers/soc/tegra/Kconfig              |   4 +
->>  drivers/soc/tegra/Makefile             |   1 +
->>  drivers/soc/tegra/regulators-tegra30.c | 316 +++++++++++++++++++++++++
->>  3 files changed, 321 insertions(+)
->>  create mode 100644 drivers/soc/tegra/regulators-tegra30.c
->>
-> ...
-> 
->> +
->> +static int tegra30_core_cpu_limit(int cpu_uV)
->> +{
->> +	if (cpu_uV < 800000)
->> +		return 950000;
->> +
->> +	if (cpu_uV < 900000)
->> +		return 1000000;
->> +
->> +	if (cpu_uV < 1000000)
->> +		return 1100000;
->> +
->> +	if (cpu_uV < 1100000)
->> +		return 1200000;
->> +
->> +	if (cpu_uV < 1250000) {
->> +		switch (tegra_sku_info.cpu_speedo_id) {
->> +		case 0 ... 1:
-> Aren't we supposed to add /* fall through */ here now?
+The 'memory-region' property of the komeda display driver DT binding
+allows the use of a 'reserved-memory' node for buffer allocations. Add
+the requisite of_reserved_mem_device_{init,release} calls to actually
+make use of the memory if present.
 
-There is no compiler warning if there is nothing in-between of the
-case-switches, so annotation isn't really necessary here. Of course it
-is possible to add an explicit annotation just to make clear the
-fall-through intention.
+Signed-off-by: Mihail Atanassov <mihail.atanassov@arm.com>
+---
+ drivers/gpu/drm/arm/display/komeda/komeda_drv.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
->> +		case 4:
->> +		case 7 ... 8:
->> +			return 1200000;
->> +
->> +		default:
->> +			return 1300000;
->> +		}
->> +	}
->> +
-> 
-> Other than that, this looks ok to me.
+diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_drv.c b/drivers/gpu/=
+drm/arm/display/komeda/komeda_drv.c
+index cfa5068d9d1e..2ec877ad260a 100644
+--- a/drivers/gpu/drm/arm/display/komeda/komeda_drv.c
++++ b/drivers/gpu/drm/arm/display/komeda/komeda_drv.c
+@@ -6,6 +6,7 @@
+  */
+ #include <linux/module.h>
+ #include <linux/kernel.h>
++#include <linux/of_reserved_mem.h>
+ #include <linux/platform_device.h>
+ #include <linux/component.h>
+ #include <drm/drm_of.h>
+@@ -32,6 +33,7 @@ static void komeda_unbind(struct device *dev)
+ return;
 
-Awesome, thank you very much! Explicit ACK will be appreciated as well.
+ komeda_kms_detach(mdrv->kms);
++of_reserved_mem_device_release(dev);
+ komeda_dev_destroy(mdrv->mdev);
+
+ dev_set_drvdata(dev, NULL);
+@@ -53,6 +55,11 @@ static int komeda_bind(struct device *dev)
+ goto free_mdrv;
+ }
+
++/* Get the optional framebuffer memory resource */
++err =3D of_reserved_mem_device_init(dev);
++if (err && err !=3D -ENODEV)
++goto destroy_mdev;
++
+ mdrv->kms =3D komeda_kms_attach(mdrv->mdev);
+ if (IS_ERR(mdrv->kms)) {
+ err =3D PTR_ERR(mdrv->kms);
+--
+2.22.0
+
+IMPORTANT NOTICE: The contents of this email and any attachments are confid=
+ential and may also be privileged. If you are not the intended recipient, p=
+lease notify the sender immediately and do not disclose the contents to any=
+ other person, use it for any purpose, or store or copy the information in =
+any medium. Thank you.
