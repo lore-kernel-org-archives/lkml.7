@@ -2,148 +2,129 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E2A3C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB019C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55CF621726
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:14:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lO9QmjHP"
+	by mail.kernel.org (Postfix) with ESMTP id B8D9E21773
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 15:15:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387637AbfHBPOs (ORCPT
+        id S2388420AbfHBPPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 11:14:48 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:38351 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728719AbfHBPOr (ORCPT
+        Fri, 2 Aug 2019 11:15:08 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:5948 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387655AbfHBPPI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 11:14:47 -0400
-Received: by mail-ed1-f67.google.com with SMTP id r12so37901371edo.5;
-        Fri, 02 Aug 2019 08:14:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=txRNymCLa0F2sH7rm1U39uNCjUyxuuiLjvn3rhtof6o=;
-        b=lO9QmjHP6O41ZCS8dtxftVcEU1ZMBi8DcpvUMY0blH5Qwqs9An8SwEtYIu4kI6xBqO
-         ROSjy4jrgZxUHgj+PoMsKXXOnCBPtY5s3OefBgajHeizJfCRzEQMpfJZsxWfs2ziBXQr
-         i8FM3V169K4mBiBVZU798HtbOMxk+zE0F74fIx/mFQP3tKcsbIYJQNMVfDCKLixaXC73
-         nOlcLwXTCJweexIyOsfohKaVuLPfBukqQrOIEHK1aRxxDDXvRW34lsQSzs7tYjyBU7tI
-         35VsEtCMIxfCasrfUvsocJfMQjs6gT5qlNs4oH7gbeoS5iNqtHQ+9CscZuIBYXg+ZC0P
-         1jiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=txRNymCLa0F2sH7rm1U39uNCjUyxuuiLjvn3rhtof6o=;
-        b=mUCERXEelUt/qhezWeh7jdYMOZdTzoMRelgkcaMdPwJ0EmaUKo7jy+IdYMSwC/fJ63
-         abpvUSTxs9tzHw4DzyD1cdsyl7vTWSEFmK1gWkPer8bQFSd8z47DvO2rSdFP2w9QtWhk
-         Hu3fRuuCdtcrRL3gomSvKrD0UF8oB97ZqVckSAODlZGAIAZrDuaf7tu28+A7Muwlz9Ap
-         a6FpnEP87zwO8WJOHbx2qEk03jLUALu7EIll9BuBVLQxtfZanRlMPCDQU6vUc1NyD/yW
-         R7pwlz/HjgqmBPG4TqugVXAInszF0JJgdMX5NKM5iBDPiovQG2HHxQNW6vqYvBIhPfxn
-         oZvA==
-X-Gm-Message-State: APjAAAU9wHdJWuLYjujLz+VKrfShtfsoivmv4stAKO1vICRY6LzxqZFg
-        CsWeqc76Wtbfl76hP59pSK5yE/wAuGDaR7bFxf4=
-X-Google-Smtp-Source: APXvYqzciECXl/Wx8kXkgux/UT3GuFE34O7YmYXV/Xzub/m93Yrtsl0lq1y+r+M8dslWjvKCZukCo7A1uiL7FM5xcDo=
-X-Received: by 2002:a50:a53a:: with SMTP id y55mr122610228edb.147.1564758886126;
- Fri, 02 Aug 2019 08:14:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190802083541.12602-1-hslester96@gmail.com> <CA+FuTSc8WBx2PCUhn-sLtYHQR-OROXm2pUN9SDj7P-Bd8432UQ@mail.gmail.com>
- <CANhBUQ2TRr4RuSmjaRYPXHZpVw_-2awXvWNjjdvV_z1yoGdkXA@mail.gmail.com>
- <CAF=yD-+3tzufyOnK4suJnovrhX_=4sPqWOsjOcETGG3cA9+MdA@mail.gmail.com> <CANhBUQ2C3OfkC6qDL9=hhXq=C-OMHUwaL7EaMbagVRTt=rc00A@mail.gmail.com>
-In-Reply-To: <CANhBUQ2C3OfkC6qDL9=hhXq=C-OMHUwaL7EaMbagVRTt=rc00A@mail.gmail.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Fri, 2 Aug 2019 11:14:10 -0400
-Message-ID: <CAF=yD-K1=4sDmLb0sUaxTHAbVmBXTy4McdBJyVtrZEJx95CqxA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] cxgb4: sched: Use refcount_t for refcount
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Vishal Kulkarni <vishal@chelsio.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 2 Aug 2019 11:15:08 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x72F7cOx004338
+        for <linux-kernel@vger.kernel.org>; Fri, 2 Aug 2019 11:15:06 -0400
+Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2u4nqd5fd5-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 11:15:06 -0400
+Received: from localhost
+        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Fri, 2 Aug 2019 16:15:06 +0100
+Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
+        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 2 Aug 2019 16:15:02 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x72FF1uN12452104
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 2 Aug 2019 15:15:01 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ED372B2070;
+        Fri,  2 Aug 2019 15:15:00 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D01CCB2065;
+        Fri,  2 Aug 2019 15:15:00 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri,  2 Aug 2019 15:15:00 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 07F2C16C9A4A; Fri,  2 Aug 2019 08:15:02 -0700 (PDT)
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Subject: [PATCH RFC tip/core/rcu 07/14] rcu/nocb: Reduce nocb_cb_wait() leaf rcu_node ->lock contention
+Date:   Fri,  2 Aug 2019 08:14:54 -0700
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190802151435.GA1081@linux.ibm.com>
+References: <20190802151435.GA1081@linux.ibm.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19080215-0060-0000-0000-000003680564
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011538; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000287; SDB=6.01241060; UDB=6.00654494; IPR=6.01022491;
+ MB=3.00028010; MTD=3.00000008; XFM=3.00000015; UTC=2019-08-02 15:15:05
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19080215-0061-0000-0000-00004A6567C9
+Message-Id: <20190802151501.13069-7-paulmck@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-02_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=13 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908020156
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 2, 2019 at 11:10 AM Chuhong Yuan <hslester96@gmail.com> wrote:
->
-> Willem de Bruijn <willemdebruijn.kernel@gmail.com> =E4=BA=8E2019=E5=B9=B4=
-8=E6=9C=882=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=8810:53=E5=86=99=E9=
-=81=93=EF=BC=9A
-> >
-> > On Fri, Aug 2, 2019 at 10:27 AM Chuhong Yuan <hslester96@gmail.com> wro=
-te:
-> > >
-> > > Willem de Bruijn <willemdebruijn.kernel@gmail.com> =E4=BA=8E2019=E5=
-=B9=B48=E6=9C=882=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=889:40=E5=86=
-=99=E9=81=93=EF=BC=9A
-> > > >
-> > > > On Fri, Aug 2, 2019 at 4:36 AM Chuhong Yuan <hslester96@gmail.com> =
-wrote:
-> > > > >
-> > > > > refcount_t is better for reference counters since its
-> > > > > implementation can prevent overflows.
-> > > > > So convert atomic_t ref counters to refcount_t.
-> > > > >
-> > > > > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> > > > > ---
-> > > > > Changes in v2:
-> > > > >   - Convert refcount from 0-base to 1-base.
-> > > >
-> > > > This changes the initial value from 0 to 1, but does not change the
-> > > > release condition. So this introduces an accounting bug?
-> > >
-> > > I have noticed this problem and have checked other files which use re=
-fcount_t.
-> > > I find although the refcounts are 1-based, they still use
-> > > refcount_dec_and_test()
-> > > to check whether the resource should be released.
-> > > One example is drivers/char/mspec.c.
-> > > Therefore I think this is okay and do not change the release conditio=
-n.
-> >
-> > Indeed it is fine to use refcount_t with a model where the initial
-> > allocation already accounts for the first reference and thus
-> > initializes with refcount_set(.., 1).
-> >
-> > But it is not correct to just change a previously zero initialization
-> > to one. As now an extra refcount_dec will be needed to release state.
-> > But the rest of the code has not changed, so this extra decrement will
-> > not happen.
-> >
-> > For a correct conversion, see for instance commits
-> >
-> >   commit db5bce32fbe19f0c7482fb5a40a33178bbe7b11b
-> >   net: prepare (struct ubuf_info)->refcnt conversion
-> >
-> > and
-> >
-> >   commit c1d1b437816f0afa99202be3cb650c9d174667bc
-> >   net: convert (struct ubuf_info)->refcnt to refcount_t
-> >
-> > The second makes a search-and-replace style API change like your
-> > patches (though also notice the additional required #include).
-> >
->
-> Thanks for your examples!
-> I will fix the #include in those no base changed patches.
->
-> > But the other patch is needed first to change both the initial
-> > atomic_set *and* at least one atomic_inc, to maintain the same
-> > reference count over the object's lifetime.
-> >
-> > That change requires understanding of the object's lifecycle, so I
-> > suggest only making those changes when aware of that whole data path.
->
-> I think I had better focus on the 1-based cases first.
+Currently, nocb_cb_wait() advances callbacks on each pass through its
+loop, though only if it succeeds in conditionally acquiring its leaf
+rcu_node structure's ->lock.  Despite the conditional acquisition of
+->lock, this does increase contention.  This commit therefore avoids
+advancing callbacks unless there are callbacks in ->cblist whose grace
+period has completed.
 
-Yes, sounds good. And please try a single driver first and get that
-accepted, before moving on to multiple concurrent submissions.
+Note that nocb_cb_wait() doesn't worry about callbacks that have not
+yet been assigned a grace period.  The idea is that the only reason for
+nocb_cb_wait() to advance callbacks is to allow it to continue invoking
+callbacks.  Time will tell whether this is the correct choice.
+
+Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+---
+ kernel/rcu/tree_plugin.h | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index 5db39ce1cae1..02739366ef5d 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -2076,6 +2076,7 @@ static int rcu_nocb_gp_kthread(void *arg)
+  */
+ static void nocb_cb_wait(struct rcu_data *rdp)
+ {
++	unsigned long cur_gp_seq;
+ 	unsigned long flags;
+ 	bool needwake_gp = false;
+ 	struct rcu_node *rnp = rdp->mynode;
+@@ -2088,7 +2089,9 @@ static void nocb_cb_wait(struct rcu_data *rdp)
+ 	local_bh_enable();
+ 	lockdep_assert_irqs_enabled();
+ 	rcu_nocb_lock_irqsave(rdp, flags);
+-	if (raw_spin_trylock_rcu_node(rnp)) { /* irqs already disabled. */
++	if (rcu_segcblist_nextgp(&rdp->cblist, &cur_gp_seq) &&
++	    rcu_seq_done(&rnp->gp_seq, cur_gp_seq) &&
++	    raw_spin_trylock_rcu_node(rnp)) { /* irqs already disabled. */
+ 		needwake_gp = rcu_advance_cbs(rdp->mynode, rdp);
+ 		raw_spin_unlock_rcu_node(rnp); /* irqs remain disabled. */
+ 	}
+-- 
+2.17.1
+
