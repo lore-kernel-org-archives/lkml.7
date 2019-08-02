@@ -2,321 +2,107 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB461C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DBF5C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B50D221872
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:26:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAE36218B0
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:28:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="KcUUMxUr";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FwEcrlj5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404145AbfHBI0f (ORCPT
+        id S2404169AbfHBI20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 04:26:35 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:37440 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726164AbfHBI0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 04:26:34 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id DD0BF8DE98F471CEA2A0;
-        Fri,  2 Aug 2019 16:26:32 +0800 (CST)
-Received: from [127.0.0.1] (10.184.52.56) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Fri, 2 Aug 2019
- 16:26:27 +0800
-Subject: Re: [PATCH] pciehp: fix a race between pciehp and removing operations
- by sysfs
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1519648875-38196-1-git-send-email-wangxiongfeng2@huawei.com>
- <20190802003618.GJ151852@google.com>
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Message-ID: <0c0512fd-e95a-74be-09c2-1576844d9c97@huawei.com>
-Date:   Fri, 2 Aug 2019 16:23:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.6.0
+        Fri, 2 Aug 2019 04:28:26 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:59267 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2404153AbfHBI2Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 04:28:25 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id C7AC5381;
+        Fri,  2 Aug 2019 04:28:23 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Fri, 02 Aug 2019 04:28:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=lXKpENl8wyg6SU2P0UYyhWDjFJG
+        fkJ1PSJo5X7cF/QQ=; b=KcUUMxUrK5sVDjjJ97JC1y3cj6v4feq54L0gIxp4/B4
+        4tFDm/NPqY6M1PaYJ8yrXaktSMw6qWAg7QYcVoeXlYewNnttgV6tXQDNT32Vo200
+        w/rqm7jh+8hw6IQvui8WhzgPmDJurtA/SOqlX55yMJBjd+DEiXzKeAwGHl5WPRYu
+        6wmvKjUGO6/v4tsDVYvN5hVqHWA/IsSzlhcTBF+zDKAzN9fm9lc1iyzHsThEKM4r
+        hf9y2rrqOM0A7FakKucxFlBb2+Li2yXeB0xAbWJaXv9tS19OlHiJbNTNM24Vx2U0
+        ke6jHYGhs1DQQ3b3M+ndWgyX/1kDS7jSn3V+9khrOVQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=lXKpEN
+        l8wyg6SU2P0UYyhWDjFJGfkJ1PSJo5X7cF/QQ=; b=FwEcrlj5oyDSLS4wwC0wPn
+        Bmh3RGOlt3Xk8HlNqhCdu31NYmptPtTME3IVrrASKVfZdAFjQA7r1QW/DUa3pMu5
+        LG1eelF3dHH4xyxBV9gp8tX1Xigj3/24KsZszOynOQy5smlsaNSlgfBBGrpjaeBH
+        AzULZXRqXH+72DU9xv+eRh8sKRhe6rdpmzHDvENwBqG3mlmSuka+ZKSu9couCHXS
+        EWTidfR4qB252UF+O23h33gcs0H4LyI1xaiWPUef2ZyKkAJurTR249reqIIozgmB
+        +tRX8p2ODFjXd6YGOq9P1Wx+f5+lqERBi9kPXr4Zl1+eWdNLlCvl3bnr4zhPdofQ
+        ==
+X-ME-Sender: <xms:J_RDXW7j2qt8NB4CHo9meH19pvwJCs2pvGPA4U_UQ6auLOO55hYyxw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrleekgddufedvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledrud
+    dtjeenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhmnecu
+    vehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:J_RDXeXGgH-czWHc_AuIQRrz90rsF61fRYj7SiJtWwwwMTudw1u-6A>
+    <xmx:J_RDXYEdch3gDTkuCHKWzhrAXf7WXOwIhg3My-hFWGjbGqszZpFKCQ>
+    <xmx:J_RDXeeLeSssjnzebQ8u_viHC4hELuke1_wXJ19vpbQllKQVXvzXWw>
+    <xmx:J_RDXT-sw3SS9AgiqaRvJQ3fUtXMDdkQ24uPKukaONmvGai06aE0Qw>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 9732080064;
+        Fri,  2 Aug 2019 04:28:22 -0400 (EDT)
+Date:   Fri, 2 Aug 2019 10:28:20 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Rolf Eike Beer <eb@emlix.com>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        stable@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: Linux 4.9.180 build fails =?utf-8?Q?wi?=
+ =?utf-8?Q?th_gcc_9_and_'cleanup=5Fmodule'_specifies_less_restrictive_attr?=
+ =?utf-8?Q?ibute_than_its_target_=E2=80=A6?=
+Message-ID: <20190802082820.GA30928@kroah.com>
+References: <259986242.BvXPX32bHu@devpool35>
+ <20190606185900.GA19937@kroah.com>
+ <CANiq72n2E4Ue0MU5mWitSbsscizPQKML0QQx_DBwJVni+eWMHQ@mail.gmail.com>
+ <4007272.nJfEYfeqza@devpool35>
 MIME-Version: 1.0
-In-Reply-To: <20190802003618.GJ151852@google.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.52.56]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4007272.nJfEYfeqza@devpool35>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/8/2 8:36, Bjorn Helgaas wrote:
-> On Mon, Feb 26, 2018 at 08:41:15PM +0800, Xiongfeng Wang wrote:
->> From: Xiongfeng Wang <xiongfeng.wang@linaro.com>
->>
->> When I run a stress test about pcie hotplug and removing operations by
->> sysfs, I got a hange task, and the following call trace is printed.
+On Fri, Aug 02, 2019 at 10:17:04AM +0200, Rolf Eike Beer wrote:
+> Am Samstag, 8. Juni 2019, 14:00:34 CEST schrieb Miguel Ojeda:
+> > On Thu, Jun 6, 2019 at 8:59 PM Greg KH <greg@kroah.com> wrote:
+> > > "manually fixing it up" means "hacked it to pieces" to me, I have no
+> > > idea what the end result really was :)
+> > > 
+> > > If someone wants to send me some patches I can actually apply, that
+> > > would be best...
+> > 
+> > I will give it a go whenever I get some free time :)
 > 
-> It's been so long that I'm embarrassed to even respond to this, but
-> this patch doesn't apply cleanly to v5.3-rc1.  If this is still a
-> problem, would you mind refreshing it and reposting it?  Thanks.
+> I fear this has never happened, did it?
 
-Thanks for your reply. Yes, it's still a problem, but the calltrace
-is different. I will refresh it and repost it.
+I do not think so, I'm still building 4.9.y and 4.14.y and 4.19.y with
+gcc8 because of these issues :(
 
-If I use a global flag to mark if any pci device is being rescaned or
-removed, the problem is that we can't remove two devices belonging to
-two root ports at the same time.
-Since a root port produces a pci tree, so I was planning to make the
-flag per root port slot. I mean add the flag in 'struct slot'.
- But in some situation, the root port doesn't support hotplug and the
-downport below the root port support hotplug. I am not sure if it's
-better to add the flag in 'struct pci_dev' of the root port.
-Do you have any suggests?
-Anyway, I will send the global flag version out.
+thanks,
 
-Thanks,
-Xiongfeng
-
-> 
->>  INFO: task kworker/0:2:4413 blocked for more than 120 seconds.
->>        Tainted: P        W  O    4.12.0-rc1 #1
->>  "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
->>  kworker/0:2     D    0  4413      2 0x00000000
->>  Workqueue: pciehp-0 pciehp_power_thread
->>  Call trace:
->>  [<ffff0000080861d4>] __switch_to+0x94/0xa8
->>  [<ffff000008bea9c0>] __schedule+0x1b0/0x708
->>  [<ffff000008beaf58>] schedule+0x40/0xa4
->>  [<ffff000008beb33c>] schedule_preempt_disabled+0x28/0x40
->>  [<ffff000008bec1dc>] __mutex_lock.isra.8+0x148/0x50c
->>  [<ffff000008bec5c4>] __mutex_lock_slowpath+0x24/0x30
->>  [<ffff000008bec618>] mutex_lock+0x48/0x54
->>  [<ffff0000084d8188>] pci_lock_rescan_remove+0x20/0x28
->>  [<ffff0000084f87c0>] pciehp_unconfigure_device+0x54/0x1cc
->>  [<ffff0000084f8260>] pciehp_disable_slot+0x4c/0xbc
->>  [<ffff0000084f8370>] pciehp_power_thread+0xa0/0xb8
->>  [<ffff0000080e9ce8>] process_one_work+0x13c/0x3f8
->>  [<ffff0000080ea004>] worker_thread+0x60/0x3e4
->>  [<ffff0000080f0814>] kthread+0x10c/0x138
->>  [<ffff0000080836c0>] ret_from_fork+0x10/0x50
->>  INFO: task bash:31732 blocked for more than 120 seconds.
->>        Tainted: P        W  O    4.12.0-rc1 #1
->>  "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
->>  bash            D    0 31732      1 0x00000009
->>  Call trace:
->>  [<ffff0000080861d4>] __switch_to+0x94/0xa8
->>  [<ffff000008bea9c0>] __schedule+0x1b0/0x708
->>  [<ffff000008beaf58>] schedule+0x40/0xa4
->>  [<ffff000008bee7b4>] schedule_timeout+0x1a0/0x340
->>  [<ffff000008bebb88>] wait_for_common+0x108/0x1bc
->>  [<ffff000008bebc64>] wait_for_completion+0x28/0x34
->>  [<ffff0000080e7594>] flush_workqueue+0x130/0x488
->>  [<ffff0000080e79b0>] drain_workqueue+0xc4/0x164
->>  [<ffff0000080ec3cc>] destroy_workqueue+0x28/0x1f4
->>  [<ffff0000084fa094>] pciehp_release_ctrl+0x34/0xe0
->>  [<ffff0000084f75b0>] pciehp_remove+0x30/0x3c
->>  [<ffff0000084f24d8>] pcie_port_remove_service+0x3c/0x54
->>  [<ffff00000876b1e4>] device_release_driver_internal+0x150/0x1d0
->>  [<ffff00000876b28c>] device_release_driver+0x28/0x34
->>  [<ffff00000876a018>] bus_remove_device+0xe0/0x11c
->>  [<ffff000008766348>] device_del+0x200/0x304
->>  [<ffff00000876646c>] device_unregister+0x20/0x38
->>  [<ffff0000084f2560>] remove_iter+0x44/0x54
->>  [<ffff000008765230>] device_for_each_child+0x4c/0x90
->>  [<ffff0000084f2c98>] pcie_port_device_remove+0x2c/0x48
->>  [<ffff0000084f2f48>] pcie_portdrv_remove+0x60/0x6c
->>  [<ffff0000084e3de4>] pci_device_remove+0x48/0x110
->>  [<ffff00000876b1e4>] device_release_driver_internal+0x150/0x1d0
->>  [<ffff00000876b28c>] device_release_driver+0x28/0x34
->>  [<ffff0000084db028>] pci_stop_bus_device+0x9c/0xac
->>  [<ffff0000084db190>] pci_stop_and_remove_bus_device_locked+0x24/0x3c
->>  [<ffff0000084e5eb0>] remove_store+0x74/0x80
->>  [<ffff000008764680>] dev_attr_store+0x44/0x5c
->>  [<ffff0000082e7e1c>] sysfs_kf_write+0x5c/0x74
->>  [<ffff0000082e7014>] kernfs_fop_write+0xcc/0x1dc
->>  [<ffff0000082602e0>] __vfs_write+0x48/0x13c
->>  [<ffff00000826174c>] vfs_write+0xa8/0x198
->>  [<ffff000008262ce8>] SyS_write+0x54/0xb0
->>  [<ffff000008083730>] el0_svc_naked+0x24/0x28
->>
->> There is a race condition between these two kinds of operations.
->> When the Attention button on a PCIE slot is pressed, 5 seconds later,
->> pciehp_power_thread() will be scheduled on slot->wq. This function will
->> call pciehp_unconfigure_device(), which will try to get a global mutex
->> lock 'pci_rescan_remove_lock'.
->>
->> At the same time, we remove the pcie port by sysfs, which results in
->> pci_stop_and_remove_bus_device_locked() called. This function will get
->> the global mutex lock 'pci_rescan_remove_lock', and then release the
->> struct 'ctrl', which will wait until the work_struct on slot->wq is
->> finished.
->>
->> If pci_stop_and_remove_bus_device_locked() got the mutex lock, and
->> before it drains workqueue slot->wq, pciehp_power_thread() is scheduled
->> on slot->wq and tries to get the mutex lock but failed, so it will just
->> wait. Then pci_stop_and_remove_bus_device_locked() tries to drain workqueue
->> slot->wq and wait until work struct 'pciehp_power_thread()' is finished.
->> Then a hung_task occurs.
->>
->> So this two kinds of operation, removing through attention buttion and
->> removing through /sys/devices/pci***/remove, should not be excuted at the
->> same time. This patch add a global variable to mark that one of these
->> operations is under processing. When this variable is set,  if another
->> operation is requested, it will be rejected.
->>
->> At first, I want to add a flag for each pci slot to record whether a
->> removing operation is under processing. When a bridge is being removed,
->> the flags of all the slots below the bridge need to be checked. But it
->> is hard for us to guarantee the atomic access. So I just use a global
->> flag.
->>
->> Signed-off-by: Xiongfeng Wang <xiongfeng.wang@linaro.org>
->> ---
->>  drivers/pci/hotplug/pciehp_ctrl.c |  7 +++++++
->>  drivers/pci/hotplug/pciehp_hpc.c  | 12 +++++++++++-
->>  drivers/pci/pci-sysfs.c           | 11 +++++++++--
->>  drivers/pci/remove.c              |  6 ++++++
->>  include/linux/pci.h               |  3 +++
->>  5 files changed, 36 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
->> index c684faa..e6fc5d7 100644
->> --- a/drivers/pci/hotplug/pciehp_ctrl.c
->> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
->> @@ -30,6 +30,7 @@ void pciehp_queue_interrupt_event(struct slot *p_slot, u32 event_type)
->>  	info = kmalloc(sizeof(*info), GFP_ATOMIC);
->>  	if (!info) {
->>  		ctrl_err(p_slot->ctrl, "dropped event %d (ENOMEM)\n", event_type);
->> +		slot_being_removed_rescanned = 0;
->>  		return;
->>  	}
->>  
->> @@ -174,6 +175,7 @@ static void pciehp_power_thread(struct work_struct *work)
->>  		mutex_lock(&p_slot->lock);
->>  		p_slot->state = STATIC_STATE;
->>  		mutex_unlock(&p_slot->lock);
->> +		slot_being_removed_rescanned = 0;
->>  		break;
->>  	case ENABLE_REQ:
->>  		mutex_lock(&p_slot->hotplug_lock);
->> @@ -184,6 +186,7 @@ static void pciehp_power_thread(struct work_struct *work)
->>  		mutex_lock(&p_slot->lock);
->>  		p_slot->state = STATIC_STATE;
->>  		mutex_unlock(&p_slot->lock);
->> +		slot_being_removed_rescanned = 0;
->>  		break;
->>  	default:
->>  		break;
->> @@ -202,6 +205,7 @@ static void pciehp_queue_power_work(struct slot *p_slot, int req)
->>  	if (!info) {
->>  		ctrl_err(p_slot->ctrl, "no memory to queue %s request\n",
->>  			 (req == ENABLE_REQ) ? "poweron" : "poweroff");
->> +		slot_being_removed_rescanned = 0;
->>  		return;
->>  	}
->>  	info->p_slot = p_slot;
->> @@ -270,6 +274,7 @@ static void handle_button_press_event(struct slot *p_slot)
->>  		ctrl_info(ctrl, "Slot(%s): Action canceled due to button press\n",
->>  			  slot_name(p_slot));
->>  		p_slot->state = STATIC_STATE;
->> +		slot_being_removed_rescanned = 0;
->>  		break;
->>  	case POWEROFF_STATE:
->>  	case POWERON_STATE:
->> @@ -280,10 +285,12 @@ static void handle_button_press_event(struct slot *p_slot)
->>  		 */
->>  		ctrl_info(ctrl, "Slot(%s): Button ignored\n",
->>  			  slot_name(p_slot));
->> +		slot_being_removed_rescanned = 0;
->>  		break;
->>  	default:
->>  		ctrl_err(ctrl, "Slot(%s): Ignoring invalid state %#x\n",
->>  			 slot_name(p_slot), p_slot->state);
->> +		slot_being_removed_rescanned = 0;
->>  		break;
->>  	}
->>  }
->> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
->> index 18a42f8..5ef5387 100644
->> --- a/drivers/pci/hotplug/pciehp_hpc.c
->> +++ b/drivers/pci/hotplug/pciehp_hpc.c
->> @@ -608,7 +608,17 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
->>  	if (events & PCI_EXP_SLTSTA_ABP) {
->>  		ctrl_info(ctrl, "Slot(%s): Attention button pressed\n",
->>  			  slot_name(slot));
->> -		pciehp_queue_interrupt_event(slot, INT_BUTTON_PRESS);
->> +
->> +		if (!test_and_set_bit(0, &slot_being_removed_rescanned))
->> +			pciehp_queue_interrupt_event(slot, INT_BUTTON_PRESS);
->> +		else {
->> +			if (slot->state == BLINKINGOFF_STATE || slot->state == BLINKINGON_STATE)
->> +				pciehp_queue_interrupt_event(slot, INT_BUTTON_PRESS);
->> +			else
->> +				ctrl_info(ctrl, "Slot(%s): Slot operation failed because a remove or"
->> +					" rescan operation is under processing, please try later!\n",
->> +					slot_name(slot));
->> +		}
->>  	}
->>  
->>  	/*
->> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
->> index eb6bee8..9fd1699 100644
->> --- a/drivers/pci/pci-sysfs.c
->> +++ b/drivers/pci/pci-sysfs.c
->> @@ -499,8 +499,15 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
->>  	if (kstrtoul(buf, 0, &val) < 0)
->>  		return -EINVAL;
->>  
->> -	if (val && device_remove_file_self(dev, attr))
->> -		pci_stop_and_remove_bus_device_locked(to_pci_dev(dev));
->> +	if (val && device_remove_file_self(dev, attr)) {
->> +		if (!test_and_set_bit(0, &slot_being_removed_rescanned)) {
->> +			pci_stop_and_remove_bus_device_locked(to_pci_dev(dev));
->> +			slot_being_removed_rescanned = 0;
->> +		} else {
->> +			pr_info("Slot is being removed or rescanned, please try later!\n");
->> +			return -EPERM;
->> +		}
->> +	}
->>  	return count;
->>  }
->>  static struct device_attribute dev_remove_attr = __ATTR(remove,
->> diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
->> index 6f072ea..6d36d53 100644
->> --- a/drivers/pci/remove.c
->> +++ b/drivers/pci/remove.c
->> @@ -4,6 +4,12 @@
->>  #include <linux/pci-aspm.h>
->>  #include "pci.h"
->>  
->> +/*
->> + * When a slot is being hotplug through Attention Button or being
->> + * removed/rescanned through sysfs, this flag is set.
->> + */
->> +unsigned long slot_being_removed_rescanned;
->> +
->>  static void pci_free_resources(struct pci_dev *dev)
->>  {
->>  	int i;
->> diff --git a/include/linux/pci.h b/include/linux/pci.h
->> index 024a1be..e1711ce 100644
->> --- a/include/linux/pci.h
->> +++ b/include/linux/pci.h
->> @@ -846,6 +846,9 @@ enum pcie_bus_config_types {
->>  /* Do NOT directly access these two variables, unless you are arch-specific PCI
->>   * code, or PCI core code. */
->>  extern struct list_head pci_root_buses;	/* List of all known PCI buses */
->> +
->> +extern unsigned long slot_being_removed_rescanned;
->> +
->>  /* Some device drivers need know if PCI is initiated */
->>  int no_pci_devices(void);
->>  
->> -- 
->> 1.7.12.4
->>
-> 
-> .
-> 
-
+greg k-h
