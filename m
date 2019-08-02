@@ -2,122 +2,125 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25853C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4FB3C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:33:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05D4520665
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:31:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DDAA2086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:33:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="HAXqxdhe";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YhkceHBe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392083AbfHBKbQ (ORCPT
+        id S2392113AbfHBKdv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 06:31:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48598 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730143AbfHBKbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 06:31:16 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D090981F07;
-        Fri,  2 Aug 2019 10:31:15 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.136])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 043E860925;
-        Fri,  2 Aug 2019 10:31:13 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Fri,  2 Aug 2019 12:31:15 +0200 (CEST)
-Date:   Fri, 2 Aug 2019 12:31:13 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "matthew.wilcox@oracle.com" <matthew.wilcox@oracle.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        Kernel Team <Kernel-team@fb.com>,
-        "william.kucharski@oracle.com" <william.kucharski@oracle.com>,
-        "srikar@linux.vnet.ibm.com" <srikar@linux.vnet.ibm.com>
-Subject: Re: [PATCH v2 1/2] khugepaged: enable collapse pmd for pte-mapped THP
-Message-ID: <20190802103112.GA20111@redhat.com>
-References: <20190731183331.2565608-1-songliubraving@fb.com>
- <20190731183331.2565608-2-songliubraving@fb.com>
- <20190801145032.GB31538@redhat.com>
- <36D3C0F0-17CE-42B9-9661-B376D608FA7D@fb.com>
+        Fri, 2 Aug 2019 06:33:51 -0400
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:48201 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730143AbfHBKdv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 06:33:51 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id A582E400;
+        Fri,  2 Aug 2019 06:33:49 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Fri, 02 Aug 2019 06:33:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=rzS6XuNYwD34+UrvpJIGC8ldeuz
+        lzqnOgE995Y09X0s=; b=HAXqxdheLUb0v1xy7RsVcMERiwRQw9+/2fCE/xKL4ID
+        giu2MuieuVNtOGh8l++quWR5CyMPR07Fu5Zz8UHMQHBbB+g9lH2LeXDJbsbiMIvE
+        tYLXZC9Jsmg4amXKRJm2F2t6YgBiy5Wu+ZQOA6W9a43t3OdEi7A7yqsb2NRdvySP
+        nTZLG0DatKAIohty5UjarljaCw2wanoYiyGiFmp3t6rIqxIwaaIggeze7RxgnkZq
+        7LrBezrtqp3SeIfINycf5VhVjLyG9Ot6GuBQZhw4xSO15EX9wTT1ZUEqjK9i5M+U
+        rUlZ1gK1hrlRDs449k11Weo2XONXVXsS3icqBFG8yww==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=rzS6Xu
+        NYwD34+UrvpJIGC8ldeuzlzqnOgE995Y09X0s=; b=YhkceHBe2Brk8kOCIAP54v
+        uZ/1MG/PvFltjRk3NgVE+4N9DdzOn55f+wei/g0tASO4lFA4PL/ta/ZbHrizHAwI
+        R8TjHWpyJRhah5566j5VRB0EoSYWho25/57evwjPviiHX1ZHKKJoslrQwQMdfScL
+        TGEdI4b/LIB4jwwvSOKQ3AsELNbAKM7i8VAyJVDalw6Brl0SlyfmpE9Rlt3iAjhv
+        vHlSgwZwuVFo33ct29/QdqRPXh884oNTMsMLjpvWUpR8Xh91xzBqsS+6tu4Ldhlz
+        Xb7IXwSytmZmAs7bhATu2cnElYzF84dEmmx1+J8q3+Yfo4I4kmt8a4PxZIowUsyA
+        ==
+X-ME-Sender: <xms:jBFEXXXNGhcnx20SJIrw0TDkF2sS1mQSci0A17pUzeZDV0Z5_g2S1g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrleelgddtfecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucffohhmrghinhepghhithhhuhgsrd
+    gtohhmnecukfhppeekfedrkeeirdekledruddtjeenucfrrghrrghmpehmrghilhhfrhho
+    mhepghhrvghgsehkrhhorghhrdgtohhmnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:jBFEXbYX_9cRUn_20MDE9utlQuGkCebgFcnLtV0dEqmYhNR7QW2A2Q>
+    <xmx:jBFEXavKjxFEWVUVsHjtEK3kGjoegVtKwDueN7K_ye-gKqFu3xQFGQ>
+    <xmx:jBFEXVnQfce666uwWEzS2fYezCh1ohc3lovO9XsT4C7T2ejpEII0WQ>
+    <xmx:jRFEXfPKTmDnMbKKxY9zHJ_-V9-3aOVZffeOBKJISt6cHP-1I2qDbA>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 84F178005C;
+        Fri,  2 Aug 2019 06:33:48 -0400 (EDT)
+Date:   Fri, 2 Aug 2019 12:33:46 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Rolf Eike Beer <eb@emlix.com>, stable@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: Linux 4.9.180 build fails =?utf-8?Q?wi?=
+ =?utf-8?Q?th_gcc_9_and_'cleanup=5Fmodule'_specifies_less_restrictive_attr?=
+ =?utf-8?Q?ibute_than_its_target_=E2=80=A6?=
+Message-ID: <20190802103346.GA14255@kroah.com>
+References: <259986242.BvXPX32bHu@devpool35>
+ <20190606185900.GA19937@kroah.com>
+ <CANiq72n2E4Ue0MU5mWitSbsscizPQKML0QQx_DBwJVni+eWMHQ@mail.gmail.com>
+ <4007272.nJfEYfeqza@devpool35>
+ <CANiq72=T8nH3HHkYvWF+vPMscgwXki1Ugiq6C9PhVHJUHAwDYw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <36D3C0F0-17CE-42B9-9661-B376D608FA7D@fb.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 02 Aug 2019 10:31:15 +0000 (UTC)
+In-Reply-To: <CANiq72=T8nH3HHkYvWF+vPMscgwXki1Ugiq6C9PhVHJUHAwDYw@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/01, Song Liu wrote:
->
->
-> > On Aug 1, 2019, at 7:50 AM, Oleg Nesterov <oleg@redhat.com> wrote:
+On Fri, Aug 02, 2019 at 12:19:33PM +0200, Miguel Ojeda wrote:
+> On Fri, Aug 2, 2019 at 10:17 AM Rolf Eike Beer <eb@emlix.com> wrote:
 > >
-> > On 07/31, Song Liu wrote:
-> >>
-> >> +static int khugepaged_add_pte_mapped_thp(struct mm_struct *mm,
-> >> +					 unsigned long addr)
-> >> +{
-> >> +	struct mm_slot *mm_slot;
-> >> +	int ret = 0;
-> >> +
-> >> +	/* hold mmap_sem for khugepaged_test_exit() */
-> >> +	VM_BUG_ON_MM(!rwsem_is_locked(&mm->mmap_sem), mm);
-> >> +	VM_BUG_ON(addr & ~HPAGE_PMD_MASK);
-> >> +
-> >> +	if (unlikely(khugepaged_test_exit(mm)))
-> >> +		return 0;
-> >> +
-> >> +	if (!test_bit(MMF_VM_HUGEPAGE, &mm->flags) &&
-> >> +	    !test_bit(MMF_DISABLE_THP, &mm->flags)) {
-> >> +		ret = __khugepaged_enter(mm);
-> >> +		if (ret)
-> >> +			return ret;
-> >> +	}
+> > Am Samstag, 8. Juni 2019, 14:00:34 CEST schrieb Miguel Ojeda:
+> > > On Thu, Jun 6, 2019 at 8:59 PM Greg KH <greg@kroah.com> wrote:
+> > > > "manually fixing it up" means "hacked it to pieces" to me, I have no
+> > > > idea what the end result really was :)
+> > > >
+> > > > If someone wants to send me some patches I can actually apply, that
+> > > > would be best...
+> > >
+> > > I will give it a go whenever I get some free time :)
 > >
-> > could you explain why do we need mm->mmap_sem, khugepaged_test_exit() check
-> > and __khugepaged_enter() ?
->
-> If the mm doesn't have a mm_slot, we would like to create one here (by
-> calling __khugepaged_enter()).
+> > I fear this has never happened, did it?
+> 
+> No. Between summer, holidays and a conference I didn't get to do it.
+> 
+> Done the minimal approach here:
+> 
+>   https://github.com/ojeda/linux/commits/compiler-attributes-backport
+> 
+> Tested building a handful of drivers with gcc 4.6.4, 8.3.0 and 9.1.1.
+> 
+> Greg, I could backport the entire compiler_attributes.h, but given
+> this is stable, we are supposed to minimize changes, right?
+> 
+> I tried to imitate what you do in other stable patches, please check
+> the Cc:, Link: lines and the "commit ... upstream" just in case.
 
-I can be easily wrong, I never read this code before, but this doesn't
-look correct.
+If only those 2 patches are all that is needed, nice!  I'll gladly take
+them, can you send them to me (and cc: the stable list) in email so I
+can queue them up for the next round of releases after this one?
 
-Firstly, mm->mmap_sem cam ONLY help if a) the task already has mm_slot
-and b) this mm_slot is khugepaged_scan.mm_slot. Otherwise khugepaged_exit()
-won't take mmap_sem for writing and thus we can't rely on test_exit().
+thanks,
 
-and this means that down_read(mmap_sem) before khugepaged_add_pte_mapped_thp()
-is pointless and can't help; this mm was found by vma_interval_tree_foreach().
-
-so __khugepaged_enter() can race with khugepaged_exit() and this is wrong
-in any case.
-
-> This happens when the THP is created by another mm, or by tmpfs with
-> "huge=always"; and then page table of this mm got split by split_huge_pmd().
-> With current kernel, this happens when we attach/detach uprobe to a file
-> in tmpfs with huge=always.
-
-Well. In this particular case khugepaged_enter() was likely already called
-by shmem_mmap() or khugepaged_enter_vma_merge(), or madvise.
-
-(in fact I think do_set_pmd() or shmem_fault() should call _enter() too,
- like do_huge_pmd_anonymous_page() does, but this is another story).
-
-
-And I forgot to mention... I don't understand why
-khugepaged_collapse_pte_mapped_thps() has to be called with khugepaged_mm_lock.
-
-Oleg.
-
+greg k-h
