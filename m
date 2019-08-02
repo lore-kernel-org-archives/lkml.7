@@ -2,127 +2,138 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB618C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 00:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B4EC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 00:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1BC02084C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 00:24:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564705489;
-	bh=KzNocgptr3atsBh5WELd0hq9znXO426VvX/fm+IJhug=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jf2kwAk+4lVoq8yKAz2K2/Xh1JTfft5dXc5hum0eFsqnUSI8JrCxPDo1YSoH0j45G
-	 PX7MgUswc+JHM9lEPKWe9TIBhK7E9/N/19B5P/HTGAmrYo4CiBgYWgrb1nZFD3CDLW
-	 feD6LmRScYDjMzQk/hjwUlMOGdMgifdpCMz8sWVs=
+	by mail.kernel.org (Postfix) with ESMTP id 1B4A3206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 00:28:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388041AbfHBAYs (ORCPT
+        id S2388324AbfHBA2b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 20:24:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45812 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729359AbfHBAYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 20:24:47 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A82D6206A3;
-        Fri,  2 Aug 2019 00:24:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564705486;
-        bh=KzNocgptr3atsBh5WELd0hq9znXO426VvX/fm+IJhug=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0gfrH+8bYUaQB8OB0qSm3FlVb3htQnV+rWVUqsP+TFG8vjmBkEKezzIKpxRHIk5fn
-         nb90R7GKv+gsx0jiSw3DQ4DbzwuTwNLJS8C/oDaFoQzpqTBa0UKoyyX2grc/OyME6r
-         cQ2fW+8mkqBsyrZiTkQsv8c04PGCTQ0r+ARBjK/s=
-Date:   Thu, 1 Aug 2019 19:24:42 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Megha Dey <megha.dey@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, marc.zyngier@arm.com, ashok.raj@intel.com,
-        jacob.jun.pan@linux.intel.com, megha.dey@intel.com
-Subject: Re: [RFC V1 RESEND 0/6] Introduce dynamic allocation/freeing of
- MSI-X vectors
-Message-ID: <20190802002442.GI151852@google.com>
-References: <1561162778-12669-1-git-send-email-megha.dey@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1561162778-12669-1-git-send-email-megha.dey@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 1 Aug 2019 20:28:31 -0400
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:57172 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726825AbfHBA2b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 20:28:31 -0400
+Received: by kvm5.telegraphics.com.au (Postfix, from userid 502)
+        id 4C16129C8C; Thu,  1 Aug 2019 20:28:30 -0400 (EDT)
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     "Michael Schmitz" <schmitzmic@gmail.com>,
+        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
+Message-Id: <9ec2190f5be1c4e676a803901200364578662b6d.1564704625.git.fthain@telegraphics.com.au>
+From:   Finn Thain <fthain@telegraphics.com.au>
+Subject: [PATCH] m68k: Prevent some compiler warnings in coldfire builds
+Date:   Fri, 02 Aug 2019 10:10:25 +1000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Megha,
+Since commit d3b41b6bb49e ("m68k: Dispatch nvram_ops calls to Atari or
+Mac functions"), Coldfire builds generate compiler warnings due to the
+unconditional inclusion of asm/atarihw.h and asm/macintosh.h.
 
-On Fri, Jun 21, 2019 at 05:19:32PM -0700, Megha Dey wrote:
-> Currently, MSI-X vector enabling and allocation for a PCIe device is
-> static i.e. a device driver gets only one chance to enable a specific
-> number of MSI-X vectors, usually during device probe. Also, in many
-> cases, drivers usually reserve more than required number of vectors
-> anticipating their use, which unnecessarily blocks resources that
-> could have been made available to other devices. Lastly, there is no
-> way for drivers to reserve more vectors, if the MSI-x has already been
-> enabled for that device.
->  
-> Hence, a dynamic MSI-X kernel infrastructure can benefit drivers by
-> deferring MSI-X allocation to post probe phase, where actual demand
-> information is available.
->  
-> This patchset enables the dynamic allocation/de-allocation of MSI-X
-> vectors by introducing 2 new APIs:
-> pci_alloc_irq_vectors_dyn() and pci_free_irq_vectors_grp():
-> 
-> We have had requests from some of the NIC/RDMA users who have lots of
-> interrupt resources and would like to allocate them on demand,
-> instead of using an all or none approach.
-> 
-> The APIs are fairly well tested (multiple allocations/deallocations),
-> but we have no early adopters yet. Hence, sending this series as an
-> RFC for review and comments.
-> 
-> The patches are based out of Linux 5.2-rc5.
-> 
-> Megha Dey (6):
->   PCI/MSI: New structures/macros for dynamic MSI-X allocation
->   PCI/MSI: Dynamic allocation of MSI-X vectors by group
->   x86: Introduce the dynamic teardown function
->   PCI/MSI: Introduce new structure to manage MSI-x entries
+The inclusion of asm/atarihw.h causes warnings like this:
 
-s/MSI-x/MSI-X/
-If "entries" here means the same as "vectors" above, please use the
-same word.
+In file included from ./arch/m68k/include/asm/atarihw.h:25:0,
+                 from arch/m68k/kernel/setup_mm.c:41,
+                 from arch/m68k/kernel/setup.c:3:
+./arch/m68k/include/asm/raw_io.h:39:0: warning: "__raw_readb" redefined
+ #define __raw_readb in_8
 
->   PCI/MSI: Free MSI-X resources by group
+In file included from ./arch/m68k/include/asm/io.h:6:0,
+                 from arch/m68k/kernel/setup_mm.c:36,
+                 from arch/m68k/kernel/setup.c:3:
+./arch/m68k/include/asm/io_no.h:16:0: note: this is the location of the previous definition
+ #define __raw_readb(addr) \
+...
 
-Is "resources" the same as "vectors"?
+This issue is resolved by dropping the asm/raw_io.h include. It turns out
+that asm/io_mm.h already includes that header file.
 
->   Documentation: PCI/MSI: Document dynamic MSI-X infrastructure
+Moving the relevant macro definitions helps to clarify this dependency
+and make it safe to include asm/atarihw.h.
 
-When you post a v2 after addressing Thomas' comments, please make
-these subject lines imperative sentences beginning with a descriptive
-verb.  You can run "git log --oneline drivers/pci" to see the style.
-If you're adding a specific interface or structure, mention it by name
-in the subject if it's practical.  The "x86" line needs a little more
-context; I assume it should include "IRQ", "MSI-X", or something.
+The other warnings look like this:
 
->  Documentation/PCI/MSI-HOWTO.txt |  38 +++++
->  arch/x86/include/asm/x86_init.h |   1 +
->  arch/x86/kernel/x86_init.c      |   6 +
->  drivers/pci/msi.c               | 363 +++++++++++++++++++++++++++++++++++++---
->  drivers/pci/probe.c             |   9 +
->  include/linux/device.h          |   3 +
->  include/linux/msi.h             |  13 ++
->  include/linux/pci.h             |  61 +++++++
->  kernel/irq/msi.c                |  34 +++-
->  9 files changed, 497 insertions(+), 31 deletions(-)
-> 
-> -- 
-> 2.7.4
-> 
+In file included from arch/m68k/kernel/setup_mm.c:48:0,
+                 from arch/m68k/kernel/setup.c:3:
+./arch/m68k/include/asm/macintosh.h:19:35: warning: 'struct irq_data' declared inside parameter list will not be visible outside of this definition or declaration
+ extern void mac_irq_enable(struct irq_data *data);
+                                   ^~~~~~~~
+...
+
+This issue is resolved by adding the missing linux/irq.h include.
+
+Cc: Michael Schmitz <schmitzmic@gmail.com>
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+---
+ arch/m68k/include/asm/atarihw.h   | 9 ---------
+ arch/m68k/include/asm/io_mm.h     | 6 +++++-
+ arch/m68k/include/asm/macintosh.h | 1 +
+ 3 files changed, 6 insertions(+), 10 deletions(-)
+
+diff --git a/arch/m68k/include/asm/atarihw.h b/arch/m68k/include/asm/atarihw.h
+index 533008262b69..5e5601c382b8 100644
+--- a/arch/m68k/include/asm/atarihw.h
++++ b/arch/m68k/include/asm/atarihw.h
+@@ -22,7 +22,6 @@
+ 
+ #include <linux/types.h>
+ #include <asm/bootinfo-atari.h>
+-#include <asm/raw_io.h>
+ #include <asm/kmap.h>
+ 
+ extern u_long atari_mch_cookie;
+@@ -132,14 +131,6 @@ extern struct atari_hw_present atari_hw_present;
+  */
+ 
+ 
+-#define atari_readb   raw_inb
+-#define atari_writeb  raw_outb
+-
+-#define atari_inb_p   raw_inb
+-#define atari_outb_p  raw_outb
+-
+-
+-
+ #include <linux/mm.h>
+ #include <asm/cacheflush.h>
+ 
+diff --git a/arch/m68k/include/asm/io_mm.h b/arch/m68k/include/asm/io_mm.h
+index 6c03ca5bc436..819f611dccf2 100644
+--- a/arch/m68k/include/asm/io_mm.h
++++ b/arch/m68k/include/asm/io_mm.h
+@@ -29,7 +29,11 @@
+ #include <asm-generic/iomap.h>
+ 
+ #ifdef CONFIG_ATARI
+-#include <asm/atarihw.h>
++#define atari_readb   raw_inb
++#define atari_writeb  raw_outb
++
++#define atari_inb_p   raw_inb
++#define atari_outb_p  raw_outb
+ #endif
+ 
+ 
+diff --git a/arch/m68k/include/asm/macintosh.h b/arch/m68k/include/asm/macintosh.h
+index 8f0698bca3dc..8a43babcf53a 100644
+--- a/arch/m68k/include/asm/macintosh.h
++++ b/arch/m68k/include/asm/macintosh.h
+@@ -4,6 +4,7 @@
+ 
+ #include <linux/seq_file.h>
+ #include <linux/interrupt.h>
++#include <linux/irq.h>
+ 
+ #include <asm/bootinfo-mac.h>
+ 
+-- 
+2.21.0
+
