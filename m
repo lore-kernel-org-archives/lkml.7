@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B947BC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA61C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86E1620665
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7EB72067D
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:55:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739707;
-	bh=cAoUcOjnmzMRNF1VPYweVorQUEoaXhXYKXN/g31bwFM=;
+	s=default; t=1564739711;
+	bh=KnL52czhTwoQgfh2BOIyytCGrb9DytRCRH8F1nik/kg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jIB6rOtofcmsjwaO7H7VlxBbkWr2gbUSVNxg42im+6D3fVEZqrSOIaJXUIoPEufbA
-	 LFFkAgCuHBtw36rDJB81cGKv0iaNZyLcbvS9lk+DG3rkPCn/14qtyj9iFd6xQq258t
-	 ppwnGl4IHiXuqRq4OGnqW+D1YtvuFhZ/51/++1Iw=
+	b=FejkU5YinBAvM7edspv4qZs7wJfHNLNxb960uBEiX4p11DdWzG8MDY3QHmgnPotW3
+	 0D47fENbXRn3O7PrD+kxt0eYT/qqX7Ilke2NrjyxwJpIhcDAWYrEE6Z4GMBmw5R++e
+	 wdFPhw/l0L6lIXGkosT3YXkcPzXBbAOkS8MFim1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406472AbfHBJzG (ORCPT
+        id S2406482AbfHBJzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:55:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33440 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:55:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405891AbfHBJzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:55:03 -0400
+        id S2406469AbfHBJzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:55:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8BD22064A;
-        Fri,  2 Aug 2019 09:55:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75D052064A;
+        Fri,  2 Aug 2019 09:55:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739702;
-        bh=cAoUcOjnmzMRNF1VPYweVorQUEoaXhXYKXN/g31bwFM=;
+        s=default; t=1564739705;
+        bh=KnL52czhTwoQgfh2BOIyytCGrb9DytRCRH8F1nik/kg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AV5b50SmiyH8LqvveeqonMBBuDZdwsF15ANHMSefMhkU6aAulVMOqA97kI+6VL3PM
-         vFJL6/kY0Wpwspy6Hf89G58wdbL06DUsupzcZjho6iqgC24FD2iDABTap6yPpTl0H0
-         /ZjdadUh0GXq7uWKq7weauLvtvR99nYh155q0JBs=
+        b=xZlv9h9heAL4hA+HXrmMGm+NReI9a36E8FuO0Vnr/QTz6jpwNjdf6HAw7fn5FS2L1
+         BWLlKEQ0UKqt375K82fuCdSUyHdSjNAzHBGXhZBC5MfVeEjPH6j4NoCsQ7WSInaQkV
+         ja+RlcWT1B7lK+kGsEgvl7xXsrmiOo341z0d5dGg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
         Qian Lu <luqia@amazon.com>
-Subject: [PATCH 4.14 04/25] NFS: Refactor nfs_lookup_revalidate()
-Date:   Fri,  2 Aug 2019 11:39:36 +0200
-Message-Id: <20190802092100.188767748@linuxfoundation.org>
+Subject: [PATCH 4.14 05/25] NFSv4: Fix lookup revalidate of regular files
+Date:   Fri,  2 Aug 2019 11:39:37 +0200
+Message-Id: <20190802092100.316537743@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092058.428079740@linuxfoundation.org>
 References: <20190802092058.428079740@linuxfoundation.org>
@@ -62,293 +62,149 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-commit 5ceb9d7fdaaf6d8ced6cd7861cf1deb9cd93fa47 upstream.
+commit c7944ebb9ce9461079659e9e6ec5baaf73724b3b upstream.
 
-Refactor the code in nfs_lookup_revalidate() as a stepping stone towards
-optimising and fixing nfs4_lookup_revalidate().
+If we're revalidating an existing dentry in order to open a file, we need
+to ensure that we check the directory has not changed before we optimise
+away the lookup.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Qian Lu <luqia@amazon.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/nfs/dir.c |  222 +++++++++++++++++++++++++++++++++--------------------------
- 1 file changed, 126 insertions(+), 96 deletions(-)
+ fs/nfs/dir.c |   79 +++++++++++++++++++++++++++++------------------------------
+ 1 file changed, 39 insertions(+), 40 deletions(-)
 
 --- a/fs/nfs/dir.c
 +++ b/fs/nfs/dir.c
-@@ -1059,6 +1059,100 @@ int nfs_neg_need_reval(struct inode *dir
- 	return !nfs_check_verifier(dir, dentry, flags & LOOKUP_RCU);
+@@ -1218,7 +1218,8 @@ out_bad:
  }
  
-+static int
-+nfs_lookup_revalidate_done(struct inode *dir, struct dentry *dentry,
-+			   struct inode *inode, int error)
-+{
-+	switch (error) {
-+	case 1:
-+		dfprintk(LOOKUPCACHE, "NFS: %s(%pd2) is valid\n",
-+			__func__, dentry);
-+		return 1;
-+	case 0:
-+		nfs_mark_for_revalidate(dir);
-+		if (inode && S_ISDIR(inode->i_mode)) {
-+			/* Purge readdir caches. */
-+			nfs_zap_caches(inode);
-+			/*
-+			 * We can't d_drop the root of a disconnected tree:
-+			 * its d_hash is on the s_anon list and d_drop() would hide
-+			 * it from shrink_dcache_for_unmount(), leading to busy
-+			 * inodes on unmount and further oopses.
-+			 */
-+			if (IS_ROOT(dentry))
-+				return 1;
-+		}
-+		dfprintk(LOOKUPCACHE, "NFS: %s(%pd2) is invalid\n",
-+				__func__, dentry);
-+		return 0;
-+	}
-+	dfprintk(LOOKUPCACHE, "NFS: %s(%pd2) lookup returned error %d\n",
-+				__func__, dentry, error);
-+	return error;
-+}
-+
-+static int
-+nfs_lookup_revalidate_negative(struct inode *dir, struct dentry *dentry,
-+			       unsigned int flags)
-+{
-+	int ret = 1;
-+	if (nfs_neg_need_reval(dir, dentry, flags)) {
-+		if (flags & LOOKUP_RCU)
-+			return -ECHILD;
-+		ret = 0;
-+	}
-+	return nfs_lookup_revalidate_done(dir, dentry, NULL, ret);
-+}
-+
-+static int
-+nfs_lookup_revalidate_delegated(struct inode *dir, struct dentry *dentry,
-+				struct inode *inode)
-+{
-+	nfs_set_verifier(dentry, nfs_save_change_attribute(dir));
-+	return nfs_lookup_revalidate_done(dir, dentry, inode, 1);
-+}
-+
-+static int
-+nfs_lookup_revalidate_dentry(struct inode *dir, struct dentry *dentry,
-+			     struct inode *inode)
-+{
-+	struct nfs_fh *fhandle;
-+	struct nfs_fattr *fattr;
-+	struct nfs4_label *label;
-+	int ret;
-+
-+	ret = -ENOMEM;
-+	fhandle = nfs_alloc_fhandle();
-+	fattr = nfs_alloc_fattr();
-+	label = nfs4_label_alloc(NFS_SERVER(inode), GFP_KERNEL);
-+	if (fhandle == NULL || fattr == NULL || IS_ERR(label))
-+		goto out;
-+
-+	ret = NFS_PROTO(dir)->lookup(dir, &dentry->d_name, fhandle, fattr, label);
-+	if (ret < 0) {
-+		if (ret == -ESTALE || ret == -ENOENT)
-+			ret = 0;
-+		goto out;
-+	}
-+	ret = 0;
-+	if (nfs_compare_fh(NFS_FH(inode), fhandle))
-+		goto out;
-+	if (nfs_refresh_inode(inode, fattr) < 0)
-+		goto out;
-+
-+	nfs_setsecurity(inode, fattr, label);
-+	nfs_set_verifier(dentry, nfs_save_change_attribute(dir));
-+
-+	/* set a readdirplus hint that we had a cache miss */
-+	nfs_force_use_readdirplus(dir);
-+	ret = 1;
-+out:
-+	nfs_free_fattr(fattr);
-+	nfs_free_fhandle(fhandle);
-+	nfs4_label_free(label);
-+	return nfs_lookup_revalidate_done(dir, dentry, inode, ret);
-+}
-+
- /*
-  * This is called every time the dcache has a lookup hit,
-  * and we should check whether we can really trust that
-@@ -1070,58 +1164,36 @@ int nfs_neg_need_reval(struct inode *dir
-  * If the parent directory is seen to have changed, we throw out the
-  * cached dentry and do a new lookup.
-  */
--static int nfs_lookup_revalidate(struct dentry *dentry, unsigned int flags)
-+static int
-+nfs_do_lookup_revalidate(struct inode *dir, struct dentry *dentry,
-+			 unsigned int flags)
+ static int
+-nfs_lookup_revalidate(struct dentry *dentry, unsigned int flags)
++__nfs_lookup_revalidate(struct dentry *dentry, unsigned int flags,
++			int (*reval)(struct inode *, struct dentry *, unsigned int))
  {
--	struct inode *dir;
- 	struct inode *inode;
--	struct dentry *parent;
--	struct nfs_fh *fhandle = NULL;
--	struct nfs_fattr *fattr = NULL;
--	struct nfs4_label *label = NULL;
- 	int error;
- 
--	if (flags & LOOKUP_RCU) {
--		parent = ACCESS_ONCE(dentry->d_parent);
--		dir = d_inode_rcu(parent);
--		if (!dir)
--			return -ECHILD;
--	} else {
--		parent = dget_parent(dentry);
--		dir = d_inode(parent);
--	}
- 	nfs_inc_stats(dir, NFSIOS_DENTRYREVALIDATE);
- 	inode = d_inode(dentry);
- 
--	if (!inode) {
--		if (nfs_neg_need_reval(dir, dentry, flags)) {
--			if (flags & LOOKUP_RCU)
--				return -ECHILD;
--			goto out_bad;
--		}
--		goto out_valid;
--	}
-+	if (!inode)
-+		return nfs_lookup_revalidate_negative(dir, dentry, flags);
- 
- 	if (is_bad_inode(inode)) {
--		if (flags & LOOKUP_RCU)
--			return -ECHILD;
- 		dfprintk(LOOKUPCACHE, "%s: %pd2 has dud inode\n",
- 				__func__, dentry);
- 		goto out_bad;
- 	}
- 
- 	if (NFS_PROTO(dir)->have_delegation(inode, FMODE_READ))
--		goto out_set_verifier;
-+		return nfs_lookup_revalidate_delegated(dir, dentry, inode);
- 
- 	/* Force a full look up iff the parent directory has changed */
- 	if (!nfs_is_exclusive_create(dir, flags) &&
- 	    nfs_check_verifier(dir, dentry, flags & LOOKUP_RCU)) {
- 		error = nfs_lookup_verify_inode(inode, flags);
- 		if (error) {
--			if (flags & LOOKUP_RCU)
--				return -ECHILD;
- 			if (error == -ESTALE)
--				goto out_zap_parent;
--			goto out_error;
-+				nfs_zap_caches(dir);
-+			goto out_bad;
- 		}
- 		nfs_advise_use_readdirplus(dir);
- 		goto out_valid;
-@@ -1133,81 +1205,39 @@ static int nfs_lookup_revalidate(struct
- 	if (NFS_STALE(inode))
- 		goto out_bad;
- 
--	error = -ENOMEM;
--	fhandle = nfs_alloc_fhandle();
--	fattr = nfs_alloc_fattr();
--	if (fhandle == NULL || fattr == NULL)
--		goto out_error;
--
--	label = nfs4_label_alloc(NFS_SERVER(inode), GFP_NOWAIT);
--	if (IS_ERR(label))
--		goto out_error;
--
- 	trace_nfs_lookup_revalidate_enter(dir, dentry, flags);
--	error = NFS_PROTO(dir)->lookup(dir, &dentry->d_name, fhandle, fattr, label);
-+	error = nfs_lookup_revalidate_dentry(dir, dentry, inode);
- 	trace_nfs_lookup_revalidate_exit(dir, dentry, flags, error);
--	if (error == -ESTALE || error == -ENOENT)
--		goto out_bad;
--	if (error)
--		goto out_error;
--	if (nfs_compare_fh(NFS_FH(inode), fhandle))
--		goto out_bad;
--	if ((error = nfs_refresh_inode(inode, fattr)) != 0)
--		goto out_bad;
--
--	nfs_setsecurity(inode, fattr, label);
--
--	nfs_free_fattr(fattr);
--	nfs_free_fhandle(fhandle);
--	nfs4_label_free(label);
-+	return error;
-+out_valid:
-+	return nfs_lookup_revalidate_done(dir, dentry, inode, 1);
-+out_bad:
-+	if (flags & LOOKUP_RCU)
-+		return -ECHILD;
-+	return nfs_lookup_revalidate_done(dir, dentry, inode, 0);
-+}
- 
--	/* set a readdirplus hint that we had a cache miss */
--	nfs_force_use_readdirplus(dir);
-+static int
-+nfs_lookup_revalidate(struct dentry *dentry, unsigned int flags)
-+{
-+	struct dentry *parent;
-+	struct inode *dir;
-+	int ret;
- 
--out_set_verifier:
--	nfs_set_verifier(dentry, nfs_save_change_attribute(dir));
-- out_valid:
- 	if (flags & LOOKUP_RCU) {
-+		parent = ACCESS_ONCE(dentry->d_parent);
-+		dir = d_inode_rcu(parent);
-+		if (!dir)
-+			return -ECHILD;
-+		ret = nfs_do_lookup_revalidate(dir, dentry, flags);
+ 	struct dentry *parent;
+ 	struct inode *dir;
+@@ -1229,17 +1230,22 @@ nfs_lookup_revalidate(struct dentry *den
+ 		dir = d_inode_rcu(parent);
+ 		if (!dir)
+ 			return -ECHILD;
+-		ret = nfs_do_lookup_revalidate(dir, dentry, flags);
++		ret = reval(dir, dentry, flags);
  		if (parent != ACCESS_ONCE(dentry->d_parent))
  			return -ECHILD;
--	} else
-+	} else {
-+		parent = dget_parent(dentry);
-+		ret = nfs_do_lookup_revalidate(d_inode(parent), dentry, flags);
+ 	} else {
+ 		parent = dget_parent(dentry);
+-		ret = nfs_do_lookup_revalidate(d_inode(parent), dentry, flags);
++		ret = reval(d_inode(parent), dentry, flags);
  		dput(parent);
--	dfprintk(LOOKUPCACHE, "NFS: %s(%pd2) is valid\n",
--			__func__, dentry);
--	return 1;
--out_zap_parent:
--	nfs_zap_caches(dir);
-- out_bad:
--	WARN_ON(flags & LOOKUP_RCU);
--	nfs_free_fattr(fattr);
--	nfs_free_fhandle(fhandle);
--	nfs4_label_free(label);
--	nfs_mark_for_revalidate(dir);
--	if (inode && S_ISDIR(inode->i_mode)) {
--		/* Purge readdir caches. */
--		nfs_zap_caches(inode);
--		/*
--		 * We can't d_drop the root of a disconnected tree:
--		 * its d_hash is on the s_anon list and d_drop() would hide
--		 * it from shrink_dcache_for_unmount(), leading to busy
--		 * inodes on unmount and further oopses.
--		 */
--		if (IS_ROOT(dentry))
--			goto out_valid;
  	}
--	dput(parent);
--	dfprintk(LOOKUPCACHE, "NFS: %s(%pd2) is invalid\n",
--			__func__, dentry);
--	return 0;
--out_error:
--	WARN_ON(flags & LOOKUP_RCU);
--	nfs_free_fattr(fattr);
--	nfs_free_fhandle(fhandle);
--	nfs4_label_free(label);
--	dput(parent);
--	dfprintk(LOOKUPCACHE, "NFS: %s(%pd2) lookup returned error %d\n",
--			__func__, dentry, error);
--	return error;
-+	return ret;
+ 	return ret;
  }
  
++static int nfs_lookup_revalidate(struct dentry *dentry, unsigned int flags)
++{
++	return __nfs_lookup_revalidate(dentry, flags, nfs_do_lookup_revalidate);
++}
++
  /*
+  * A weaker form of d_revalidate for revalidating just the d_inode(dentry)
+  * when we don't really care about the dentry name. This is called when a
+@@ -1590,62 +1596,55 @@ no_open:
+ }
+ EXPORT_SYMBOL_GPL(nfs_atomic_open);
+ 
+-static int nfs4_lookup_revalidate(struct dentry *dentry, unsigned int flags)
++static int
++nfs4_do_lookup_revalidate(struct inode *dir, struct dentry *dentry,
++			  unsigned int flags)
+ {
+ 	struct inode *inode;
+-	int ret = 0;
+ 
+ 	if (!(flags & LOOKUP_OPEN) || (flags & LOOKUP_DIRECTORY))
+-		goto no_open;
++		goto full_reval;
+ 	if (d_mountpoint(dentry))
+-		goto no_open;
+-	if (NFS_SB(dentry->d_sb)->caps & NFS_CAP_ATOMIC_OPEN_V1)
+-		goto no_open;
++		goto full_reval;
+ 
+ 	inode = d_inode(dentry);
+ 
+ 	/* We can't create new files in nfs_open_revalidate(), so we
+ 	 * optimize away revalidation of negative dentries.
+ 	 */
+-	if (inode == NULL) {
+-		struct dentry *parent;
+-		struct inode *dir;
+-
+-		if (flags & LOOKUP_RCU) {
+-			parent = ACCESS_ONCE(dentry->d_parent);
+-			dir = d_inode_rcu(parent);
+-			if (!dir)
+-				return -ECHILD;
+-		} else {
+-			parent = dget_parent(dentry);
+-			dir = d_inode(parent);
+-		}
+-		if (!nfs_neg_need_reval(dir, dentry, flags))
+-			ret = 1;
+-		else if (flags & LOOKUP_RCU)
+-			ret = -ECHILD;
+-		if (!(flags & LOOKUP_RCU))
+-			dput(parent);
+-		else if (parent != ACCESS_ONCE(dentry->d_parent))
+-			return -ECHILD;
+-		goto out;
+-	}
++	if (inode == NULL)
++		goto full_reval;
++
++	if (NFS_PROTO(dir)->have_delegation(inode, FMODE_READ))
++		return nfs_lookup_revalidate_delegated(dir, dentry, inode);
+ 
+ 	/* NFS only supports OPEN on regular files */
+ 	if (!S_ISREG(inode->i_mode))
+-		goto no_open;
++		goto full_reval;
++
+ 	/* We cannot do exclusive creation on a positive dentry */
+-	if (flags & LOOKUP_EXCL)
+-		goto no_open;
++	if (flags & (LOOKUP_EXCL | LOOKUP_REVAL))
++		goto reval_dentry;
++
++	/* Check if the directory changed */
++	if (!nfs_check_verifier(dir, dentry, flags & LOOKUP_RCU))
++		goto reval_dentry;
+ 
+ 	/* Let f_op->open() actually open (and revalidate) the file */
+-	ret = 1;
++	return 1;
++reval_dentry:
++	if (flags & LOOKUP_RCU)
++		return -ECHILD;
++	return nfs_lookup_revalidate_dentry(dir, dentry, inode);;
+ 
+-out:
+-	return ret;
++full_reval:
++	return nfs_do_lookup_revalidate(dir, dentry, flags);
++}
+ 
+-no_open:
+-	return nfs_lookup_revalidate(dentry, flags);
++static int nfs4_lookup_revalidate(struct dentry *dentry, unsigned int flags)
++{
++	return __nfs_lookup_revalidate(dentry, flags,
++			nfs4_do_lookup_revalidate);
+ }
+ 
+ #endif /* CONFIG_NFSV4 */
 
 
