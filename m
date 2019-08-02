@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BEEDC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B07FDC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8CDB217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:26:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83B35217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:26:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752403;
-	bh=mCkc4uu9nUwQFBTMLNVRopvyPSS0b6Geurf5ZV8j4qI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=bTx0+NYUJYp5oYYVUyhMedF0OGmcIX4raEXEqLGST5LI+1yqnejmSJil3nmvZPjxZ
-	 OxwLTlaIJ/G2eeYxyngmEFrbvpUD4NHZBq8RvUKxGu1L3sWIFUQGRFniiGGT7olIsd
-	 WGq2pto6mIBiiXXHGU3bYUdZe4EOtKiAQA0wCbjw=
+	s=default; t=1564752415;
+	bh=4oWQDHZFwKM0CyiLtzfXQIeFDTAs45D2SNwezf9ahlY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=lSMRqld9HrO5fEqtsOM7FM80HDI3+sKhIaAvECNuPR+7aa0KILs09UWGXKBHOyzXq
+	 /NcM6mV+sRxkpfqKeNNVadRHg0NatRTer6pdbjkZJbVuKLihdO7ikQHKAP3Er8ka57
+	 e1AWAvUVJdn+YeDjIoR+B/EDkTgzD3rUj9J85HZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394628AbfHBN0m (ORCPT
+        id S2394684AbfHBN0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:26:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37458 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:26:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394606AbfHBN0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:26:38 -0400
+        id S2394661AbfHBN0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:26:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06C53217D4;
-        Fri,  2 Aug 2019 13:26:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36B89217D6;
+        Fri,  2 Aug 2019 13:26:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752398;
-        bh=mCkc4uu9nUwQFBTMLNVRopvyPSS0b6Geurf5ZV8j4qI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=DiZnM0prMkO1SDPlVTq4WQil1dNTuss7zTpg+it2rsrcphDcnSX/HDK6hX/e0e1M+
-         xNUciC0TYVYo8CoWWzYfP66mVGQan6kuKxou5xQMwEEQUjYvdArSwRKYInNkMX7iVB
-         XKboOzFS/vV16kRXBOEtT2yCu8WSxP3BZNZ2l/kk=
+        s=default; t=1564752411;
+        bh=4oWQDHZFwKM0CyiLtzfXQIeFDTAs45D2SNwezf9ahlY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YulxduCOMV5trFe1cn70Q7UtmaENreF+G7gO7xQsm8G4TXPZ98GhGzwoTCeb4DBqA
+         xc8H55RaX8m8HKDBoNg/yxM06oJqkR0Wf6DH/yDWzGpQCQXiZkqzJX3XUfgXroH0RE
+         x4MmYNCt5uAjNg7LEhqKx61d/mNLzF/PKhKwAl+o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Westphal <fw@strlen.de>,
-        Thomas Jarosch <thomas.jarosch@intra2net.com>,
-        Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 01/17] netfilter: nfnetlink: avoid deadlock due to synchronous request_module
-Date:   Fri,  2 Aug 2019 09:26:18 -0400
-Message-Id: <20190802132635.14885-1-sashal@kernel.org>
+Cc:     Wen Yang <wen.yang99@zte.com.cn>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 07/17] cpufreq/pasemi: fix use-after-free in pas_cpufreq_cpu_init()
+Date:   Fri,  2 Aug 2019 09:26:24 -0400
+Message-Id: <20190802132635.14885-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190802132635.14885-1-sashal@kernel.org>
+References: <20190802132635.14885-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,74 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-[ Upstream commit 1b0890cd60829bd51455dc5ad689ed58c4408227 ]
+[ Upstream commit e0a12445d1cb186d875410d093a00d215bec6a89 ]
 
-Thomas and Juliana report a deadlock when running:
+The cpu variable is still being used in the of_get_property() call
+after the of_node_put() call, which may result in use-after-free.
 
-(rmmod nf_conntrack_netlink/xfrm_user)
-
-  conntrack -e NEW -E &
-  modprobe -v xfrm_user
-
-They provided following analysis:
-
-conntrack -e NEW -E
-    netlink_bind()
-        netlink_lock_table() -> increases "nl_table_users"
-            nfnetlink_bind()
-            # does not unlock the table as it's locked by netlink_bind()
-                __request_module()
-                    call_usermodehelper_exec()
-
-This triggers "modprobe nf_conntrack_netlink" from kernel, netlink_bind()
-won't return until modprobe process is done.
-
-"modprobe xfrm_user":
-    xfrm_user_init()
-        register_pernet_subsys()
-            -> grab pernet_ops_rwsem
-                ..
-                netlink_table_grab()
-                    calls schedule() as "nl_table_users" is non-zero
-
-so modprobe is blocked because netlink_bind() increased
-nl_table_users while also holding pernet_ops_rwsem.
-
-"modprobe nf_conntrack_netlink" runs and inits nf_conntrack_netlink:
-    ctnetlink_init()
-        register_pernet_subsys()
-            -> blocks on "pernet_ops_rwsem" thanks to xfrm_user module
-
-both modprobe processes wait on one another -- neither can make
-progress.
-
-Switch netlink_bind() to "nowait" modprobe -- this releases the netlink
-table lock, which then allows both modprobe instances to complete.
-
-Reported-by: Thomas Jarosch <thomas.jarosch@intra2net.com>
-Reported-by: Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: a9acc26b75f6 ("cpufreq/pasemi: fix possible object reference leak")
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nfnetlink.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/cpufreq/pasemi-cpufreq.c | 23 +++++++++--------------
+ 1 file changed, 9 insertions(+), 14 deletions(-)
 
-diff --git a/net/netfilter/nfnetlink.c b/net/netfilter/nfnetlink.c
-index 9adedba78eeac..044559c10e98e 100644
---- a/net/netfilter/nfnetlink.c
-+++ b/net/netfilter/nfnetlink.c
-@@ -495,7 +495,7 @@ static int nfnetlink_bind(struct net *net, int group)
- 	ss = nfnetlink_get_subsys(type << 8);
- 	rcu_read_unlock();
- 	if (!ss)
--		request_module("nfnetlink-subsys-%d", type);
-+		request_module_nowait("nfnetlink-subsys-%d", type);
- 	return 0;
- }
- #endif
+diff --git a/drivers/cpufreq/pasemi-cpufreq.c b/drivers/cpufreq/pasemi-cpufreq.c
+index 58c933f483004..991b6a3062c4f 100644
+--- a/drivers/cpufreq/pasemi-cpufreq.c
++++ b/drivers/cpufreq/pasemi-cpufreq.c
+@@ -145,10 +145,18 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+ 	int err = -ENODEV;
+ 
+ 	cpu = of_get_cpu_node(policy->cpu, NULL);
++	if (!cpu)
++		goto out;
+ 
++	max_freqp = of_get_property(cpu, "clock-frequency", NULL);
+ 	of_node_put(cpu);
+-	if (!cpu)
++	if (!max_freqp) {
++		err = -EINVAL;
+ 		goto out;
++	}
++
++	/* we need the freq in kHz */
++	max_freq = *max_freqp / 1000;
+ 
+ 	dn = of_find_compatible_node(NULL, NULL, "1682m-sdc");
+ 	if (!dn)
+@@ -185,16 +193,6 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+ 	}
+ 
+ 	pr_debug("init cpufreq on CPU %d\n", policy->cpu);
+-
+-	max_freqp = of_get_property(cpu, "clock-frequency", NULL);
+-	if (!max_freqp) {
+-		err = -EINVAL;
+-		goto out_unmap_sdcpwr;
+-	}
+-
+-	/* we need the freq in kHz */
+-	max_freq = *max_freqp / 1000;
+-
+ 	pr_debug("max clock-frequency is at %u kHz\n", max_freq);
+ 	pr_debug("initializing frequency table\n");
+ 
+@@ -212,9 +210,6 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+ 
+ 	return cpufreq_generic_init(policy, pas_freqs, get_gizmo_latency());
+ 
+-out_unmap_sdcpwr:
+-	iounmap(sdcpwr_mapbase);
+-
+ out_unmap_sdcasr:
+ 	iounmap(sdcasr_mapbase);
+ out:
 -- 
 2.20.1
 
