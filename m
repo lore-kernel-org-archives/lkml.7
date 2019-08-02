@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5267AC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C296C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C45A2171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:45:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14163206A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:45:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739104;
-	bh=OY+91MKtSZnZ3yssxtV2nRN8MoHpRHSeDC9Cun9Lo0w=;
+	s=default; t=1564739110;
+	bh=vKf32q65zRrUqXjgTIshNmaH5u4Af8xf9cCTJw1iZ6A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oNf+5bsFv8+tnBh3wIP9PVzmqmu+UP08Hkiy7DK5Nf56YxoN1u5FCATpDbSEBg6By
-	 jHE3YwKSL1kc4pKiFCkbqoYc2uMxQ0C58gD1jM3eDH48ktlzh4xyhyyfQc/I81dv7z
-	 kTmNpDqhuhbfpG/Xc8sVW2w4a/RfyEC0g2NccT68=
+	b=XgmPMoJSgGAP+gb4vw2k1DXWsmf9it8G0fdjPM4eqyB/k8Mi1VQucI/BoioKPPwvh
+	 6db3rQbUDGLB84ZKs0FCqs0+tsqddFJn6hru2xjphd4EYEavZ/FYnxu3S0a6DqOwGo
+	 2ll0FU4CovQEVfVlPutN1rrNCqZsACP4vEDS+S0I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405350AbfHBJpD (ORCPT
+        id S2405381AbfHBJpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:45:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48536 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:45:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405331AbfHBJo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:44:59 -0400
+        id S2391427AbfHBJpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:45:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFE602086A;
-        Fri,  2 Aug 2019 09:44:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96C16206A2;
+        Fri,  2 Aug 2019 09:45:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739098;
-        bh=OY+91MKtSZnZ3yssxtV2nRN8MoHpRHSeDC9Cun9Lo0w=;
+        s=default; t=1564739106;
+        bh=vKf32q65zRrUqXjgTIshNmaH5u4Af8xf9cCTJw1iZ6A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P1XT+u8Tq05RJoKzG3fX/EJB2HUBzc4i5x02EqU1pfmb+xWzASR+d+xcBHsGtCijn
-         wvVNtRwYUUVIAImlw8K4S1xCCn4L0hr3LoITW34n8E9nbvRsgbQR0Z3MOGCjQyUlAN
-         i2JDG/CAH0hZQ6RTf0CpTgLl0UOybBvT0oI1ebYo=
+        b=FRzZyLne6G5HedSRtuIf8U9645h2Nmc5cynPrnUFwdRMX5boysROvFksm+vDNlRQs
+         tWTHS41I/UUNUDnf8QJG2Lk7inuWMIU1jPU3X+wFXVrbv/njNeuv6cAwah1xa5ZnEF
+         rskqKlSA9UTI92teu91eXM+sxInxRLZdn+WKGgOE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: [PATCH 4.9 112/223] PCI: hv: Fix a use-after-free bug in hv_eject_device_work()
-Date:   Fri,  2 Aug 2019 11:35:37 +0200
-Message-Id: <20190802092246.500364347@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.9 101/223] Btrfs: add missing inode version, ctime and mtime updates when punching hole
+Date:   Fri,  2 Aug 2019 11:35:26 +0200
+Message-Id: <20190802092245.727999924@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -60,80 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit 4df591b20b80cb77920953812d894db259d85bd7 upstream.
+commit 179006688a7e888cbff39577189f2e034786d06a upstream.
 
-Fix a use-after-free in hv_eject_device_work().
+If the range for which we are punching a hole covers only part of a page,
+we end up updating the inode item but we skip the update of the inode's
+iversion, mtime and ctime. Fix that by ensuring we update those properties
+of the inode.
 
-Fixes: 05f151a73ec2 ("PCI: hv: Fix a memory leak in hv_eject_device_work()")
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Cc: stable@vger.kernel.org
+A patch for fstests test case generic/059 that tests this as been sent
+along with this fix.
+
+Fixes: 2aaa66558172b0 ("Btrfs: add hole punching")
+Fixes: e8c1c76e804b18 ("Btrfs: add missing inode update when punching hole")
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- drivers/pci/host/pci-hyperv.c |   15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ fs/btrfs/file.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/pci/host/pci-hyperv.c
-+++ b/drivers/pci/host/pci-hyperv.c
-@@ -1575,6 +1575,7 @@ static void hv_pci_devices_present(struc
- static void hv_eject_device_work(struct work_struct *work)
- {
- 	struct pci_eject_response *ejct_pkt;
-+	struct hv_pcibus_device *hbus;
- 	struct hv_pci_dev *hpdev;
- 	struct pci_dev *pdev;
- 	unsigned long flags;
-@@ -1585,6 +1586,7 @@ static void hv_eject_device_work(struct
- 	} ctxt;
- 
- 	hpdev = container_of(work, struct hv_pci_dev, wrk);
-+	hbus = hpdev->hbus;
- 
- 	if (hpdev->state != hv_pcichild_ejecting) {
- 		put_pcichild(hpdev, hv_pcidev_ref_pnp);
-@@ -1598,8 +1600,7 @@ static void hv_eject_device_work(struct
- 	 * because hbus->pci_bus may not exist yet.
- 	 */
- 	wslot = wslot_to_devfn(hpdev->desc.win_slot.slot);
--	pdev = pci_get_domain_bus_and_slot(hpdev->hbus->sysdata.domain, 0,
--					   wslot);
-+	pdev = pci_get_domain_bus_and_slot(hbus->sysdata.domain, 0, wslot);
- 	if (pdev) {
- 		pci_lock_rescan_remove();
- 		pci_stop_and_remove_bus_device(pdev);
-@@ -1607,22 +1608,24 @@ static void hv_eject_device_work(struct
- 		pci_unlock_rescan_remove();
- 	}
- 
--	spin_lock_irqsave(&hpdev->hbus->device_list_lock, flags);
-+	spin_lock_irqsave(&hbus->device_list_lock, flags);
- 	list_del(&hpdev->list_entry);
--	spin_unlock_irqrestore(&hpdev->hbus->device_list_lock, flags);
-+	spin_unlock_irqrestore(&hbus->device_list_lock, flags);
- 
- 	memset(&ctxt, 0, sizeof(ctxt));
- 	ejct_pkt = (struct pci_eject_response *)&ctxt.pkt.message;
- 	ejct_pkt->message_type.type = PCI_EJECTION_COMPLETE;
- 	ejct_pkt->wslot.slot = hpdev->desc.win_slot.slot;
--	vmbus_sendpacket(hpdev->hbus->hdev->channel, ejct_pkt,
-+	vmbus_sendpacket(hbus->hdev->channel, ejct_pkt,
- 			 sizeof(*ejct_pkt), (unsigned long)&ctxt.pkt,
- 			 VM_PKT_DATA_INBAND, 0);
- 
- 	put_pcichild(hpdev, hv_pcidev_ref_childlist);
- 	put_pcichild(hpdev, hv_pcidev_ref_initial);
- 	put_pcichild(hpdev, hv_pcidev_ref_pnp);
--	put_hvpcibus(hpdev->hbus);
+--- a/fs/btrfs/file.c
++++ b/fs/btrfs/file.c
+@@ -2646,6 +2646,11 @@ out_only_mutex:
+ 		 * for detecting, at fsync time, if the inode isn't yet in the
+ 		 * log tree or it's there but not up to date.
+ 		 */
++		struct timespec now = current_time(inode);
 +
-+	/* hpdev has been freed. Do not use it any more. */
-+	put_hvpcibus(hbus);
- }
- 
- /**
++		inode_inc_iversion(inode);
++		inode->i_mtime = now;
++		inode->i_ctime = now;
+ 		trans = btrfs_start_transaction(root, 1);
+ 		if (IS_ERR(trans)) {
+ 			err = PTR_ERR(trans);
 
 
