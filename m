@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A8E1C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:34:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F0B6C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 036DB217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:34:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60E85217D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:34:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738452;
-	bh=RSxo86md8Iroy417st3d8Ja6MLXzxYiLawRSfVwbvy4=;
+	s=default; t=1564738455;
+	bh=t+dt9i0XkcotkLFFiOBjf8HzBorm0ZgOFiq+RG5jY10=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X7vWsvW+32HqEeKqcN27e8kVdGXOD3tkB+HFYLK7QhAAmUgBuqtHTkFIWWqvlpZKb
-	 1zPb3j1BI8fumyHnKemUucMWNApCOpg7+J+JQm4hCOxcEiuOfEOExcBjPC4c+Xhcy0
-	 N6BAzShOriZxhMLsCmQlRPl4Xmds71TCw0j4Y7o4=
+	b=lr7Z1FH27ulvq4+JwneVyjrXDiCOy0e4wwSWM051VedFnCUya9Mqf9WbaT5yksnIQ
+	 T71JTnB5XN8k5trGtMkpck1tHJaTL6hkH8On8j/r0OcbG08S1wII5IPAu5c6Vb24wC
+	 NhgNaPNqKDTCAqa7tRJBbwug1SGVAriZbPHAilfI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391492AbfHBJeK (ORCPT
+        id S2391498AbfHBJeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:34:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33812 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:34:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390206AbfHBJeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:34:06 -0400
+        id S2390206AbfHBJeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:34:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDCA4217D4;
-        Fri,  2 Aug 2019 09:34:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDAD421773;
+        Fri,  2 Aug 2019 09:34:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738446;
-        bh=RSxo86md8Iroy417st3d8Ja6MLXzxYiLawRSfVwbvy4=;
+        s=default; t=1564738451;
+        bh=t+dt9i0XkcotkLFFiOBjf8HzBorm0ZgOFiq+RG5jY10=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AFFQEqdAjaEFmPZzZyQwDqsUX4K9IpA8mVBDrdAyiBSe66njpvPwZlC4/16tVn+1X
-         +a/rX73bC51VPU/Qsbq3ZqljNI1nVBr7Jn/VkMPejQzlncYyvx8VqtKarEV9LZjun1
-         oYl/tCHyJ2jdR5lk37XXv9B4ox4BHmyyx4lSJ6SA=
+        b=BVAFoGws6aWrsvSoTFiFsyyC4F5nW3hppDac+GY9puSU/bmNbRH1XWnFqs1T/GWlR
+         JWOZcIf61CgjPHF5Lij1O9BHfBcRgX2VzgXVbrxTJPX0Y8fLfoX/vZRBHbT9Yld6G3
+         JWOUhqmazt9EbXqqo1XykZ4TORgtM6C/RwUL2TvQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        stable@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Marcus Seyfarth <m.seyfarth@gmail.com>
-Subject: [PATCH 4.4 092/158] sky2: Disable MSI on ASUS P6T
-Date:   Fri,  2 Aug 2019 11:28:33 +0200
-Message-Id: <20190802092223.135511870@linuxfoundation.org>
+        syzbot+622bdabb128acc33427d@syzkaller.appspotmail.com,
+        syzbot+6eaef7158b19e3fec3a0@syzkaller.appspotmail.com,
+        syzbot+9399c158fcc09b21d0d2@syzkaller.appspotmail.com,
+        syzbot+a34e5f3d0300163f0c87@syzkaller.appspotmail.com
+Subject: [PATCH 4.4 094/158] netrom: hold sock when setting skb->destructor
+Date:   Fri,  2 Aug 2019 11:28:35 +0200
+Message-Id: <20190802092223.511536567@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -60,41 +64,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit a261e3797506bd561700be643fe1a85bf81e9661 ]
+[ Upstream commit 4638faac032756f7eab5524be7be56bee77e426b ]
 
-The onboard sky2 NIC on ASUS P6T WS PRO doesn't work after PM resume
-due to the infamous IRQ problem.  Disabling MSI works around it, so
-let's add it to the blacklist.
+sock_efree() releases the sock refcnt, if we don't hold this refcnt
+when setting skb->destructor to it, the refcnt would not be balanced.
+This leads to several bug reports from syzbot.
 
-Unfortunately the BIOS on the machine doesn't fill the standard
-DMI_SYS_* entry, so we pick up DMI_BOARD_* entries instead.
+I have checked other users of sock_efree(), all of them hold the
+sock refcnt.
 
-BugLink: https://bugzilla.suse.com/show_bug.cgi?id=1142496
-Reported-and-tested-by: Marcus Seyfarth <m.seyfarth@gmail.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: c8c8218ec5af ("netrom: fix a memory leak in nr_rx_frame()")
+Reported-and-tested-by: <syzbot+622bdabb128acc33427d@syzkaller.appspotmail.com>
+Reported-and-tested-by: <syzbot+6eaef7158b19e3fec3a0@syzkaller.appspotmail.com>
+Reported-and-tested-by: <syzbot+9399c158fcc09b21d0d2@syzkaller.appspotmail.com>
+Reported-and-tested-by: <syzbot+a34e5f3d0300163f0c87@syzkaller.appspotmail.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/marvell/sky2.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ net/netrom/af_netrom.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/ethernet/marvell/sky2.c
-+++ b/drivers/net/ethernet/marvell/sky2.c
-@@ -4939,6 +4939,13 @@ static const struct dmi_system_id msi_bl
- 			DMI_MATCH(DMI_PRODUCT_NAME, "P-79"),
- 		},
- 	},
-+	{
-+		.ident = "ASUS P6T",
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "ASUSTeK Computer INC."),
-+			DMI_MATCH(DMI_BOARD_NAME, "P6T"),
-+		},
-+	},
- 	{}
- };
+--- a/net/netrom/af_netrom.c
++++ b/net/netrom/af_netrom.c
+@@ -968,6 +968,7 @@ int nr_rx_frame(struct sk_buff *skb, str
  
+ 	window = skb->data[20];
+ 
++	sock_hold(make);
+ 	skb->sk             = make;
+ 	skb->destructor     = sock_efree;
+ 	make->sk_state	    = TCP_ESTABLISHED;
 
 
