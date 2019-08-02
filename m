@@ -3,96 +3,112 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68529C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A47DC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF6D62073D
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:43:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8CAD20657
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:44:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="VgRGuQWU"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="eVWg8TPm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404405AbfHBInM (ORCPT
+        id S2404415AbfHBIoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 04:43:12 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:61191 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729756AbfHBInM (ORCPT
+        Fri, 2 Aug 2019 04:44:05 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40277 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726703AbfHBIoF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 04:43:12 -0400
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x728h6K2001670;
-        Fri, 2 Aug 2019 17:43:07 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x728h6K2001670
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1564735387;
-        bh=wardMXZhqHfzRdaUlSRopeNLdww/l/rmzyPDmUhlXoo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=VgRGuQWUqhWhXTBkiq4DIonh2QCcj/QII79U1nOFS+0JcL4bpKDpYrxykm3tnyvll
-         n1Ee5JP7t9W00qU/H9nOYEcFZbHArDCHE3NoTVMNBbbXXy9Zzot4keYIQKUyaCCjDC
-         gq0jZaiJHoB51JXyk7csyKde3gmsp0uCjNBBQ9Btz9CJTv0B1KvZ1IQU34rWuhIUMr
-         Vmaj6IZ8GyWFf5XQlbjF1xMXJFsfYsfFGZF6e1krbFxMtAPFF+z+Wsw/wM17JAV7VD
-         MFT7kpGiY6fEzGGpB3/qeCdQ7X21CIqyyPVOB5LJ0Go3YJEP5ZGU+1en/oOXY2ed+8
-         5rBEWfAnGzDTg==
-X-Nifty-SrcIP: [209.85.217.47]
-Received: by mail-vs1-f47.google.com with SMTP id h28so50790795vsl.12;
-        Fri, 02 Aug 2019 01:43:07 -0700 (PDT)
-X-Gm-Message-State: APjAAAVPpNcPs9acSAhXYvK7ueGc7sLMrO+qy5LqtZUz4MzC+L0Ss+jx
-        JHlKPc5zlFyutq8VsiRp3mTNWW1zgjEFADoZo7I=
-X-Google-Smtp-Source: APXvYqxb7HdOEocm1IkNIV8cZl+5shkbOoifQs/U/sfBj+Ev+87riBEz7Tu/XQyoeC1AxLbAnSyV3St7fc8y/cJtAOw=
-X-Received: by 2002:a67:8e0a:: with SMTP id q10mr61970449vsd.215.1564735386265;
- Fri, 02 Aug 2019 01:43:06 -0700 (PDT)
+        Fri, 2 Aug 2019 04:44:05 -0400
+Received: by mail-wr1-f67.google.com with SMTP id r1so76271675wrl.7
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 01:44:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4fvZtEUHzSAKzVrV5AOyqmz39HB0VJQNW+QYwyaRSP8=;
+        b=eVWg8TPmTdTRpDNDCOsjC4/KOvtHtbA59TBmQpqBTpEAcbGe1sHWV9Ml4O0/GHWjIC
+         TIk0QMnDFaqET3emtRhSQaQHsG2RAbId4A2KPGGTXL7s29NqSW0K7GhCoMcmZ+KZ8dKI
+         PwC6FuSYrrbGPGJf7mkFuicfKeymU78FbY7saknYYNLWo+vqWdXIxb2vNEl+c/oSo1vJ
+         D72TyjVS2XCILOUSIqknYw+d+6Lri7hcad32mztop9cmXfd93VlHjoizzJNNbHW94HmX
+         c5BZ/dtEwOAoDlwI85Byw8UHZh49hT1dy6qXDhYaW/bYdZh16X7zSNGwUAWBPXZVo3k4
+         lV6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4fvZtEUHzSAKzVrV5AOyqmz39HB0VJQNW+QYwyaRSP8=;
+        b=fN1CKO0LT0zpLZLx+N9qIlZ1zXUf6RBS7yR8REUZQN1FXyQMj4hET7YzysIfnNaNkt
+         5pFsgg6rygZMaEoFSEUCw2aTS+uNvzQw2OfHThVp5gDXuj5rfSFudZvo26qerDbJdKwi
+         sO8R0OUBcrdlxnpDi833fRFpAmh63AvcmZOAKOrIR9D4D68OYVpcxCIry5enR24oR+tQ
+         ySV17t4fOcx61IbXNh50c5qB1PMpdC3gYZfoipZDXui/k4rtPliFSjmRr08ITV6VVbOn
+         iCtDlbbtqRLZp2pQ99OUv2Wz6YNVRBVExI9sCkVdqUd3sJTPH5rFOXT6tpqdHGQm6/x+
+         0RUg==
+X-Gm-Message-State: APjAAAU2V5+IgeYsJGW9JiLj2B8Dx3ZNEmN3NLDpzqxufF7X8Rc8c0jf
+        TT2cY652zng/NFo+oviDJ6JJSQatW+8q6zCfcRE=
+X-Google-Smtp-Source: APXvYqxas7y2Zc7v8qVSPU0beTBrHfoNVyfQR6SsOerqrYpig1rTc8AZXwSt8FqQnA9mXGGMe0nRqgvYh5el8Os44GI=
+X-Received: by 2002:adf:b1cb:: with SMTP id r11mr136837207wra.328.1564735442789;
+ Fri, 02 Aug 2019 01:44:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190728161304.32022-1-yamada.masahiro@socionext.com> <20190729105125.GA4787@sirena.org.uk>
-In-Reply-To: <20190729105125.GA4787@sirena.org.uk>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 2 Aug 2019 17:42:29 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASq-WB5zJ+3uFHtzxtc2Vhmv5SKRXA2JwwFGrR5q9uMnw@mail.gmail.com>
-Message-ID: <CAK7LNASq-WB5zJ+3uFHtzxtc2Vhmv5SKRXA2JwwFGrR5q9uMnw@mail.gmail.com>
-Subject: Re: [RFC PATCH] spi: tle620x: remove stale driver
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-spi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190802074620.115029-1-anup.patel@wdc.com> <20190802074620.115029-9-anup.patel@wdc.com>
+ <72d8efbf-ec62-ab1e-68bf-e0c5f0bc256e@redhat.com>
+In-Reply-To: <72d8efbf-ec62-ab1e-68bf-e0c5f0bc256e@redhat.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Fri, 2 Aug 2019 14:13:52 +0530
+Message-ID: <CAAhSdy2_ZsnT7gSKb624r9wzuJSx+1TnKxgW6srtqvXV1Ri9Aw@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 08/19] RISC-V: KVM: Implement VCPU world-switch
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Radim K <rkrcmar@redhat.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 7:51 PM Mark Brown <broonie@kernel.org> wrote:
+On Fri, Aug 2, 2019 at 2:00 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
 >
-> On Mon, Jul 29, 2019 at 01:13:04AM +0900, Masahiro Yamada wrote:
-> > This driver seems obsolte because this driver needs platform data
-> > but no one in upstream passes it.
+> On 02/08/19 09:47, Anup Patel wrote:
+> > +     /* Save Host SSTATUS, HSTATUS, SCRATCH and STVEC */
+> > +     csrr    t0, CSR_SSTATUS
+> > +     REG_S   t0, (KVM_ARCH_HOST_SSTATUS)(a0)
+> > +     csrr    t1, CSR_HSTATUS
+> > +     REG_S   t1, (KVM_ARCH_HOST_HSTATUS)(a0)
+> > +     csrr    t2, CSR_SSCRATCH
+> > +     REG_S   t2, (KVM_ARCH_HOST_SSCRATCH)(a0)
+> > +     csrr    t3, CSR_STVEC
+> > +     REG_S   t3, (KVM_ARCH_HOST_STVEC)(a0)
+> > +
 >
-> I've not noticed this driver getting in the way of anything?
+> A possible optimization: if these cannot change while Linux runs (I am
+> thinking especially of STVEC and HSTATUS, but perhaps SSCRATCH can be
+> saved on kvm_arch_vcpu_load too) you can avoid the csrr and store.
 
+Actual exception vector of Host Linux is different so we switch STVEC
+every time.
 
-I just happened to take a look at include/linux/spi/tle62x0.h
-when I was working on my header-test feature of Kbuild.
+HSTATUS.SPV is set whenever we come back from Guest world so
+while we are in in-kernel run loop with interrupts enabled we can get
+external interrupt and HSTATUS.SPV bit can affect SRET of interrupt
+handler. To handle this we switch HSTATUS every time.
 
-Then, I asked this in ML, and Arnd was positive
-for deleting this.
+The world switch code uses SSCRATCH to save vcpu->arch pointer
+which is later used on return path. Now, I did not want to restrict Host
+Linux from using SSCRATCH for some other purpose hence we
+switch SSCRATCH every time.
 
-https://lkml.org/lkml/2019/7/21/19
-
-
-IMHO, stale code should be cleaned away periodically.
-
-Yet, if you are happy with keeping this driver,
-that is fine.
-
-If we could get comments from Ben Books,
-that would be helpful.
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+Regards,
+Anup
