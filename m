@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 075F2C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17191C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D294B2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:56:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC00D2173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:56:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739807;
-	bh=PcsQo1hXT6MNMUhxrEhQkhYoGRVZHbiC+jN1cSetfSQ=;
+	s=default; t=1564739812;
+	bh=En0khg62uyPDqpo+kVYZkPk9xA5PYZSxFVJOjQfNSMc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gOKh9as943TbWzNosmDXnlEi2BrwJy5L9eTfC1U/uZtVnQdSTUo61RZw3/lNsd1A+
-	 JMZJnsXAY9DLQ81FbhdUKa45Zl9q2rs06R9pU9LpHwWjEkNaONfbfjXn2YBmHQ8UmG
-	 ICO0tDThrojqGjriq0gmW7tdI4F6n50xf3c7kSWc=
+	b=GkH9Han3TBPlBguQs9QnDKzbi99v86Pv7wAr5SmdRauLKA0bVFyYqZoTep/EdyurM
+	 GlZ41Jl6Or8snc8Q3KDTmGIBGZ6cxyERlCp0apQ8al4r0A7uKFSX8S4O4Xi9tEcHH/
+	 j2VKZYXHhBakzannZBJH+L/phLdIS3h7WQcWwI+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406780AbfHBJ4p (ORCPT
+        id S2406798AbfHBJ4u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:56:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35594 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:56:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406761AbfHBJ4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:56:41 -0400
+        id S2406770AbfHBJ4o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:56:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B953B2067D;
-        Fri,  2 Aug 2019 09:56:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73BE520B7C;
+        Fri,  2 Aug 2019 09:56:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739800;
-        bh=PcsQo1hXT6MNMUhxrEhQkhYoGRVZHbiC+jN1cSetfSQ=;
+        s=default; t=1564739802;
+        bh=En0khg62uyPDqpo+kVYZkPk9xA5PYZSxFVJOjQfNSMc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R7VckPrmFJP85NiRtk/dQxRFazcqOtvt03Dd7+WjN4HMM3c+Mua+tXh43rHYU5E57
-         yue+XTtmOKsRD0WOQhgIsKffp2LjORcc4jD+LgZnTR9ni/NB9trpFO5nWOascU37RE
-         0oOCQk+xm14U/a3QeBky+E1Aa1SKo84aQpcmhAPE=
+        b=r5kd2UR6zYx0aIELZdLjuFiXfXnXIR9L0WuEU7yfeTt4oHdQ5nowbkxzdN2txzJXI
+         MRyoRI+T0QX75D4h14sMijfSEV+zV0zEXhh9ZQrpQz5zKjXPi1voBT0IVLusdrcZdC
+         6/xMUmdoyXjNJwA//keS/aKUtuUZG//K8fdGbi+0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Hannes Reinecke <hare@suse.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Oleksandr Natalenko <oleksandr@natalenko.name>,
-        Martin Steigerwald <martin@lichtvoll.de>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 32/32] scsi: core: Avoid that a kernel warning appears during system resume
-Date:   Fri,  2 Aug 2019 11:40:06 +0200
-Message-Id: <20190802092111.551503666@linuxfoundation.org>
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.19 24/32] sched/fair: Dont free p->numa_faults with concurrent readers
+Date:   Fri,  2 Aug 2019 11:39:58 +0200
+Message-Id: <20190802092109.441126804@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092101.913646560@linuxfoundation.org>
 References: <20190802092101.913646560@linuxfoundation.org>
@@ -66,63 +64,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Jann Horn <jannh@google.com>
 
-commit 17605afaae825b0291f80c62a7f6565879edaa8a upstream.
+commit 16d51a590a8ce3befb1308e0e7ab77f3b661af33 upstream.
 
-Since scsi_device_quiesce() skips SCSI devices that have another state than
-RUNNING, OFFLINE or TRANSPORT_OFFLINE, scsi_device_resume() should not
-complain about SCSI devices that have been skipped. Hence this patch.  This
-patch avoids that the following warning appears during resume:
+When going through execve(), zero out the NUMA fault statistics instead of
+freeing them.
 
-WARNING: CPU: 3 PID: 1039 at blk_clear_pm_only+0x2a/0x30
-CPU: 3 PID: 1039 Comm: kworker/u8:49 Not tainted 5.0.0+ #1
-Hardware name: LENOVO 4180F42/4180F42, BIOS 83ET75WW (1.45 ) 05/10/2013
-Workqueue: events_unbound async_run_entry_fn
-RIP: 0010:blk_clear_pm_only+0x2a/0x30
-Call Trace:
- ? scsi_device_resume+0x28/0x50
- ? scsi_dev_type_resume+0x2b/0x80
- ? async_run_entry_fn+0x2c/0xd0
- ? process_one_work+0x1f0/0x3f0
- ? worker_thread+0x28/0x3c0
- ? process_one_work+0x3f0/0x3f0
- ? kthread+0x10c/0x130
- ? __kthread_create_on_node+0x150/0x150
- ? ret_from_fork+0x1f/0x30
+During execve, the task is reachable through procfs and the scheduler. A
+concurrent /proc/*/sched reader can read data from a freed ->numa_faults
+allocation (confirmed by KASAN) and write it back to userspace.
+I believe that it would also be possible for a use-after-free read to occur
+through a race between a NUMA fault and execve(): task_numa_fault() can
+lead to task_numa_compare(), which invokes task_weight() on the currently
+running task of a different CPU.
 
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Ming Lei <ming.lei@redhat.com>
-Cc: Johannes Thumshirn <jthumshirn@suse.de>
-Cc: Oleksandr Natalenko <oleksandr@natalenko.name>
-Cc: Martin Steigerwald <martin@lichtvoll.de>
-Cc: <stable@vger.kernel.org>
-Reported-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Tested-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Fixes: 3a0a529971ec ("block, scsi: Make SCSI quiesce and resume work reliably") # v4.15
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Another way to fix this would be to make ->numa_faults RCU-managed or add
+extra locking, but it seems easier to wipe the NUMA fault statistics on
+execve.
+
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will@kernel.org>
+Fixes: 82727018b0d3 ("sched/numa: Call task_numa_free() from do_execve()")
+Link: https://lkml.kernel.org/r/20190716152047.14424-1-jannh@google.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/scsi_lib.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/exec.c                            |    2 +-
+ include/linux/sched/numa_balancing.h |    4 ++--
+ kernel/fork.c                        |    2 +-
+ kernel/sched/fair.c                  |   24 ++++++++++++++++++++----
+ 4 files changed, 24 insertions(+), 8 deletions(-)
 
---- a/drivers/scsi/scsi_lib.c
-+++ b/drivers/scsi/scsi_lib.c
-@@ -3102,8 +3102,10 @@ void scsi_device_resume(struct scsi_devi
- 	 * device deleted during suspend)
- 	 */
- 	mutex_lock(&sdev->state_mutex);
--	sdev->quiesced_by = NULL;
--	blk_clear_pm_only(sdev->request_queue);
-+	if (sdev->quiesced_by) {
-+		sdev->quiesced_by = NULL;
-+		blk_clear_pm_only(sdev->request_queue);
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1826,7 +1826,7 @@ static int __do_execve_file(int fd, stru
+ 	membarrier_execve(current);
+ 	rseq_execve(current);
+ 	acct_update_integrals(current);
+-	task_numa_free(current);
++	task_numa_free(current, false);
+ 	free_bprm(bprm);
+ 	kfree(pathbuf);
+ 	if (filename)
+--- a/include/linux/sched/numa_balancing.h
++++ b/include/linux/sched/numa_balancing.h
+@@ -19,7 +19,7 @@
+ extern void task_numa_fault(int last_node, int node, int pages, int flags);
+ extern pid_t task_numa_group_id(struct task_struct *p);
+ extern void set_numabalancing_state(bool enabled);
+-extern void task_numa_free(struct task_struct *p);
++extern void task_numa_free(struct task_struct *p, bool final);
+ extern bool should_numa_migrate_memory(struct task_struct *p, struct page *page,
+ 					int src_nid, int dst_cpu);
+ #else
+@@ -34,7 +34,7 @@ static inline pid_t task_numa_group_id(s
+ static inline void set_numabalancing_state(bool enabled)
+ {
+ }
+-static inline void task_numa_free(struct task_struct *p)
++static inline void task_numa_free(struct task_struct *p, bool final)
+ {
+ }
+ static inline bool should_numa_migrate_memory(struct task_struct *p,
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -679,7 +679,7 @@ void __put_task_struct(struct task_struc
+ 	WARN_ON(tsk == current);
+ 
+ 	cgroup_free(tsk);
+-	task_numa_free(tsk);
++	task_numa_free(tsk, true);
+ 	security_task_free(tsk);
+ 	exit_creds(tsk);
+ 	delayacct_tsk_free(tsk);
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -2345,13 +2345,23 @@ no_join:
+ 	return;
+ }
+ 
+-void task_numa_free(struct task_struct *p)
++/*
++ * Get rid of NUMA staticstics associated with a task (either current or dead).
++ * If @final is set, the task is dead and has reached refcount zero, so we can
++ * safely free all relevant data structures. Otherwise, there might be
++ * concurrent reads from places like load balancing and procfs, and we should
++ * reset the data back to default state without freeing ->numa_faults.
++ */
++void task_numa_free(struct task_struct *p, bool final)
+ {
+ 	struct numa_group *grp = p->numa_group;
+-	void *numa_faults = p->numa_faults;
++	unsigned long *numa_faults = p->numa_faults;
+ 	unsigned long flags;
+ 	int i;
+ 
++	if (!numa_faults)
++		return;
++
+ 	if (grp) {
+ 		spin_lock_irqsave(&grp->lock, flags);
+ 		for (i = 0; i < NR_NUMA_HINT_FAULT_STATS * nr_node_ids; i++)
+@@ -2364,8 +2374,14 @@ void task_numa_free(struct task_struct *
+ 		put_numa_group(grp);
+ 	}
+ 
+-	p->numa_faults = NULL;
+-	kfree(numa_faults);
++	if (final) {
++		p->numa_faults = NULL;
++		kfree(numa_faults);
++	} else {
++		p->total_numa_faults = 0;
++		for (i = 0; i < NR_NUMA_HINT_FAULT_STATS * nr_node_ids; i++)
++			numa_faults[i] = 0;
 +	}
- 	if (sdev->sdev_state == SDEV_QUIESCE)
- 		scsi_device_set_state(sdev, SDEV_RUNNING);
- 	mutex_unlock(&sdev->state_mutex);
+ }
+ 
+ /*
 
 
