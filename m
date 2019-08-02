@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF369C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B39C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6FA221773
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1F12217D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:35:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738553;
-	bh=67+98XHyVYgzKjT/ujjwfb+1qc0Z7sd6t2xbM2uUTZ4=;
+	s=default; t=1564738559;
+	bh=4e7K11PfMIhXOu7QlSmT0dlreo4YuwrOLP/AMEUugM4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j32Ns4MVT46alGebrMsF0JcioY9IXWxGqf0RRfpCJtG36rnl+X6/LqKp3tU3oNcVc
-	 i94M2IO69LXi0bABmzepq2qC/uxtokPRvs8RAVii5sKTpeOx4HNRb5WWBnGuzJwHyl
-	 JyTN5UN531XWQ1Ey+8gX0dJNihE0q2saFlDvKCEo=
+	b=VBnFpnR7rm/bdF5pa2iCCJ2n5EUWeGOKlWU8IlG4wgYv7Sz/GRSKEl9GrILy6s30l
+	 0tK2ahhvjR5o4zTbdwBXvAHoUMUtLCCNlPHYSsPSEwnQ/XY6+5XP/H+oz4eYqbJJBU
+	 fCDdDg3xfGOb8fKy4DuzuswhR4gqIvxHuXb/tkJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404010AbfHBJfv (ORCPT
+        id S2404792AbfHBJf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:35:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36320 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:35:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403912AbfHBJfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:35:43 -0400
+        id S2404041AbfHBJfy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:35:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E7CB217D4;
-        Fri,  2 Aug 2019 09:35:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E67B217D4;
+        Fri,  2 Aug 2019 09:35:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738542;
-        bh=67+98XHyVYgzKjT/ujjwfb+1qc0Z7sd6t2xbM2uUTZ4=;
+        s=default; t=1564738553;
+        bh=4e7K11PfMIhXOu7QlSmT0dlreo4YuwrOLP/AMEUugM4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QjSZsfl8zCXgtdDmlqlfbQPK8n+l1OBg7FIWbL1LDVr0H0i0j7GLyJV31eWTTwkXZ
-         mM01pZId+Z7GoXEVLQ3+K52m7OqoSekq8qAmXHHpyLPASvisshKGQckecr8pvsnnSj
-         DcmYgV/NCHEkeMnbJpUDCKvG5TEqL/ih8XQy8Amc=
+        b=uoit9m0mXCo9DBxljWwBqKHWX+xsg0fkw7DE/Hcsjys/QyHnlzWUT14r3ovU/WQ5V
+         6VIPxLV4kdZupRWVRWmisQb65Gt2aCo27LExMdW/5o/f2fhZu+3YpXZ12pu3JKFNa1
+         YmArtb7MroRcu4aFBd+Y69vsI0tmzpQzAoozNh/E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        stable@vger.kernel.org, Sachin Sant <sachinp@linux.vnet.ibm.com>,
+        Oliver OHalloran <oohall@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 128/158] kallsyms: exclude kasan local symbols on s390
-Date:   Fri,  2 Aug 2019 11:29:09 +0200
-Message-Id: <20190802092229.574146790@linuxfoundation.org>
+Subject: [PATCH 4.4 132/158] powerpc/eeh: Handle hugepages in ioremap space
+Date:   Fri,  2 Aug 2019 11:29:13 +0200
+Message-Id: <20190802092230.213182896@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -60,66 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 33177f01ca3fe550146bb9001bec2fd806b2f40c ]
+[ Upstream commit 33439620680be5225c1b8806579a291e0d761ca0 ]
 
-gcc asan instrumentation emits the following sequence to store frame pc
-when the kernel is built with CONFIG_RELOCATABLE:
-debug/vsprintf.s:
-        .section        .data.rel.ro.local,"aw"
-        .align  8
-.LC3:
-        .quad   .LASANPC4826@GOTOFF
-.text
-        .align  8
-        .type   number, @function
-number:
-.LASANPC4826:
+In commit 4a7b06c157a2 ("powerpc/eeh: Handle hugepages in ioremap
+space") support for using hugepages in the vmalloc and ioremap areas was
+enabled for radix. Unfortunately this broke EEH MMIO error checking.
 
-and in case reloc is issued for LASANPC label it also gets into .symtab
-with the same address as actual function symbol:
-$ nm -n vmlinux | grep 0000000001397150
-0000000001397150 t .LASANPC4826
-0000000001397150 t number
+Detection works by inserting a hook which checks the results of the
+ioreadXX() set of functions.  When a read returns a 0xFFs response we
+need to check for an error which we do by mapping the (virtual) MMIO
+address back to a physical address, then mapping physical address to a
+PCI device via an interval tree.
 
-In the end kernel backtraces are almost unreadable:
-[  143.748476] Call Trace:
-[  143.748484] ([<000000002da3e62c>] .LASANPC2671+0x114/0x190)
-[  143.748492]  [<000000002eca1a58>] .LASANPC2612+0x110/0x160
-[  143.748502]  [<000000002de9d830>] print_address_description+0x80/0x3b0
-[  143.748511]  [<000000002de9dd64>] __kasan_report+0x15c/0x1c8
-[  143.748521]  [<000000002ecb56d4>] strrchr+0x34/0x60
-[  143.748534]  [<000003ff800a9a40>] kasan_strings+0xb0/0x148 [test_kasan]
-[  143.748547]  [<000003ff800a9bba>] kmalloc_tests_init+0xe2/0x528 [test_kasan]
-[  143.748555]  [<000000002da2117c>] .LASANPC4069+0x354/0x748
-[  143.748563]  [<000000002dbfbb16>] do_init_module+0x136/0x3b0
-[  143.748571]  [<000000002dbff3f4>] .LASANPC3191+0x2164/0x25d0
-[  143.748580]  [<000000002dbffc4c>] .LASANPC3196+0x184/0x1b8
-[  143.748587]  [<000000002ecdf2ec>] system_call+0xd8/0x2d8
+When translating virt -> phys we currently assume the ioremap space is
+only populated by PAGE_SIZE mappings. If a hugepage mapping is found we
+emit a WARN_ON(), but otherwise handles the check as though a normal
+page was found. In pathalogical cases such as copying a buffer
+containing a lot of 0xFFs from BAR memory this can result in the system
+not booting because it's too busy printing WARN_ON()s.
 
-Since LASANPC labels are not even unique and get into .symtab only due
-to relocs filter them out in kallsyms.
+There's no real reason to assume huge pages can't be present and we're
+prefectly capable of handling them, so do that.
 
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Fixes: 4a7b06c157a2 ("powerpc/eeh: Handle hugepages in ioremap space")
+Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
+Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190710150517.27114-1-oohall@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/kallsyms.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/powerpc/kernel/eeh.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
-index 8fa81e84e295..d117c68d1607 100644
---- a/scripts/kallsyms.c
-+++ b/scripts/kallsyms.c
-@@ -158,6 +158,9 @@ static int read_symbol(FILE *in, struct sym_entry *s)
- 	/* exclude debugging symbols */
- 	else if (stype == 'N')
- 		return -1;
-+	/* exclude s390 kasan local symbols */
-+	else if (!strncmp(sym, ".LASANPC", 8))
-+		return -1;
+diff --git a/arch/powerpc/kernel/eeh.c b/arch/powerpc/kernel/eeh.c
+index 6696c1986844..16193d7b0635 100644
+--- a/arch/powerpc/kernel/eeh.c
++++ b/arch/powerpc/kernel/eeh.c
+@@ -363,10 +363,19 @@ static inline unsigned long eeh_token_to_phys(unsigned long token)
+ 					   NULL, &hugepage_shift);
+ 	if (!ptep)
+ 		return token;
+-	WARN_ON(hugepage_shift);
+-	pa = pte_pfn(*ptep) << PAGE_SHIFT;
  
- 	/* include the type field in the symbol name, so that it gets
- 	 * compressed together */
+-	return pa | (token & (PAGE_SIZE-1));
++	pa = pte_pfn(*ptep);
++
++	/* On radix we can do hugepage mappings for io, so handle that */
++	if (hugepage_shift) {
++		pa <<= hugepage_shift;
++		pa |= token & ((1ul << hugepage_shift) - 1);
++	} else {
++		pa <<= PAGE_SHIFT;
++		pa |= token & (PAGE_SIZE - 1);
++	}
++
++	return pa;
+ }
+ 
+ /*
 -- 
 2.20.1
 
