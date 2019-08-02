@@ -6,105 +6,100 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B94F6C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 175D6C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 976D6217F4
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:50:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDBB2206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:54:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732593AbfHBKur (ORCPT
+        id S1732790AbfHBKyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 06:50:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:49624 "EHLO foss.arm.com"
+        Fri, 2 Aug 2019 06:54:01 -0400
+Received: from foss.arm.com ([217.140.110.172]:49682 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725844AbfHBKuq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 06:50:46 -0400
+        id S1725844AbfHBKyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 06:54:01 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6CBE3344;
-        Fri,  2 Aug 2019 03:50:45 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9FF973F71F;
-        Fri,  2 Aug 2019 03:50:40 -0700 (PDT)
-Date:   Fri, 2 Aug 2019 11:50:38 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Kevin Brodsky <kevin.brodsky@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B49BF344;
+        Fri,  2 Aug 2019 03:54:00 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 44BBD3F71F;
+        Fri,  2 Aug 2019 03:53:59 -0700 (PDT)
+Date:   Fri, 2 Aug 2019 11:53:57 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Jassi Brar <jassisinghbrar@gmail.com>
+Cc:     Tushar Khandelwal <tushar.khandelwal@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        tushar.2nov@gmail.com, morten_bp@live.dk, nd@arm.com,
+        Morten Borup Petersen <morten.petersen@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Subject: Re: [PATCH v19 02/15] arm64: Introduce prctl() options to control
- the tagged user addresses ABI
-Message-ID: <20190802105038.GC4175@arrakis.emea.arm.com>
-References: <cover.1563904656.git.andreyknvl@google.com>
- <1c05651c53f90d07e98ee4973c2786ccf315db12.1563904656.git.andreyknvl@google.com>
- <7a34470c-73f0-26ac-e63d-161191d4b1e4@intel.com>
- <2b274c6f-6023-8eb8-5a86-507e6000e13d@arm.com>
- <88c59d1e-eda9-fcfe-5ee3-64a331f34313@intel.com>
+        Devicetree List <devicetree@vger.kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 1/4] mailbox: arm_mhuv2: add device tree binding
+ documentation
+Message-ID: <20190802105357.GF23424@e107155-lin>
+References: <20190717192616.1731-1-tushar.khandelwal@arm.com>
+ <20190717192616.1731-2-tushar.khandelwal@arm.com>
+ <CABb+yY04vW-i35N6P57KSKgmMAYkrA2CDyUvA-bLCZMxiZaocw@mail.gmail.com>
+ <CABb+yY1SeHTgZQNAHJW+dZG=khah5c5igtKy+MrjADnZF29Aow@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <88c59d1e-eda9-fcfe-5ee3-64a331f34313@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CABb+yY1SeHTgZQNAHJW+dZG=khah5c5igtKy+MrjADnZF29Aow@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 09:45:05AM -0700, Dave Hansen wrote:
-> On 8/1/19 5:38 AM, Kevin Brodsky wrote:
-> > This patch series only changes what is allowed or not at the syscall
-> > interface. It does not change the address space size. On arm64, TBI (Top
-> > Byte Ignore) has always been enabled for userspace, so it has never been
-> > possible to use the upper 8 bits of user pointers for addressing.
-> 
-> Oh, so does the address space that's available already chop that out?
+On Thu, Jul 25, 2019 at 12:49:58AM -0500, Jassi Brar wrote:
+> On Sun, Jul 21, 2019 at 4:58 PM Jassi Brar <jassisinghbrar@gmail.com> wrote:
+> >
 
-Yes. Currently the hardware only supports 52-bit virtual addresses. It
-could be expanded (though it needs a 5th page table level) to 56-bit VA
-but it's not currently on our (hardware) plans. Beyond 56-bit, it cannot
-be done without breaking the software expectations (and hopefully I'll
-retire before we need this ;)).
+[...]
 
-> > If other architectures were to support a similar functionality, then I
-> > agree that a common and more generic interface (if needed) would be
-> > helpful, but as it stands this is an arm64-specific prctl, and on arm64
-> > the address tag is defined by the architecture as bits [63:56].
-> 
-> It should then be an arch_prctl(), no?
+> > If the mhuv2 instance implements, say, 3 channel windows between
+> > sender (linux) and receiver (firmware), and Linux runs two protocols
+> > each requiring 1 and 2-word sized messages respectively. The hardware
+> > supports that by assigning windows [0] and [1,2] to each protocol.
+> > However, I don't think the driver can support that. Or does it?
+> >
+> Thinking about it, IMO, the mbox-cell should carry a 128 (4x32) bit
+> mask specifying the set of windows (corresponding to the bits set in
+> the mask) associated with the channel.
+> And the controller driver should see any channel as associated with
+> variable number of windows 'N', where N is [0,124]
+>
+> mhu_client1: proto1@2e000000 {
+>        .....
+>        mboxes = <&mbox 0x0 0x0 0x0 0x1>
+> }
+>
+> mhu_client2: proto2@2f000000 {
+>        .....
+>        mboxes = <&mbox 0x0 0x0 0x0 0x6>
+> }
+>
 
-I guess you just want renaming SET_TAGGED_ADDR_CTRL() to
-arch_prctl_tagged_addr_ctrl_set()? (similarly for 'get')
+This still doesn't address the overhead I mentioned in my arm_mhu_v1
+series.
 
--- 
-Catalin
+As per you suggestion, we will have one channel with all possible
+bit mask value to specify the window. Let's imagine that 2 protocols
+share the same channel, then the requests are serialised.
+E.g. if bits 0 and 1 are allocated for say protocol#1 and bits 2 and 3
+for protocol#2.
+
+Further protocol#1 has higher latency requirements like sched-governor
+DVFS and there are 3-4 pending requests on protocol#2, then the incoming
+requests for protocol#1 is blocked.
+
+This is definitely overhead and I have seen lots of issue around this
+and hence I was requesting that we need to create individual channels
+for each of these. Having abstraction on top to multiplex or arbitrate
+won't help.
+
+--
+Regards,
+Sudeep
