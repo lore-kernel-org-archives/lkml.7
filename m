@@ -2,143 +2,142 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58ACDC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 17:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34715C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 17:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21779217D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 17:32:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10908217D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 17:35:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="CsrqDGhG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LAdAuboH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405420AbfHBRcd (ORCPT
+        id S2405475AbfHBRfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 13:32:33 -0400
-Received: from mail-eopbgr760121.outbound.protection.outlook.com ([40.107.76.121]:1799
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2405327AbfHBRca (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 13:32:30 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JdOeKK/vwv1YXj2F4UmkcIjuTal4ibDSj/hUrhp7URH7u2YhNQfrT4l/b3jkvy95yC48bW8KiZs41M/qt43+r7MzuKDLjFAry2v+WOngL/g4LOo1sznJK/hnHATqCe6OVzQBBkMKT6yjnYsm7+GgafKO04w4N3Z4hsWP2wgmTEJAAC7O/hT7XEfSLRjfPrCuB75DEdBK5L+uHcBrwdZZhHKD2PBDlxPzfSh+Cu/HNA6MkN2LnoN8mFA/Xm0BCKA7pn3MAZ7fFrsle0rHOsaU9ioUgQSLseNDDnVC8vCbKUxbELgXlh4Euu2qIKTibT+78HuYl5VhzZ7+EwaIOqu+OQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7ILc9msuj8DU2fRxreRHzyE9gasYLe/Aqy8La8gbcBQ=;
- b=FI3nOI2scXrzj+SYEQ4JrXxPr8jcmUnPNJF41xOA/3bI7YZ+M71gQh/cF8Dqel36qmB+oZdFob87HOZMKWU0bFee/M9jPJrC+BPEwm3SHsaKJKTsHg2iM2m80icbKJWDHPL/8GNp0oMCzh9omnP4ihNidkmyVtuFGHts0aoMMPrJc86NTKmYaPI8+21u4szarFiGwu7/1ojAf2RVeT+EaGj2xVDx8e2GB+wY0I5dR/m6p37iLSv9zK3Lkx+V84YY9gIbsIWxbOm31nJW/R3eVSpKHxNXLG7Ywi6+2qmT8sSPPq+yieIzbTVy9uaLLfts6eHhHyU0FH/0icQF6877UA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=wavecomp.com;dmarc=pass action=none
- header.from=mips.com;dkim=pass header.d=mips.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7ILc9msuj8DU2fRxreRHzyE9gasYLe/Aqy8La8gbcBQ=;
- b=CsrqDGhG97QsFsHqj9b1pf2TYikBGJTfffVtcMF923v0mxwc4cPQlt3+TcL3LWAymymhIAn1dqMx/jj1p8dLYdoCkiKg7wv0mVKDrciFNDZIFcliwMWXdbyc1IVw0uyc5KIa/u6rvogBV47MAUHU6YOwwdMhSqgXjMRtSv2SKfA=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
- MWHPR2201MB1551.namprd22.prod.outlook.com (10.174.170.164) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.15; Fri, 2 Aug 2019 17:32:26 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::f566:bf1f:dcd:862c]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::f566:bf1f:dcd:862c%10]) with mapi id 15.20.2136.010; Fri, 2 Aug 2019
- 17:32:26 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Paul Cercueil <paul@crapouillou.net>
-CC:     Zhou Yanjie <zhouyanjie@zoho.com>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "ralf@linux-mips.org" <ralf@linux-mips.org>,
-        "jhogan@kernel.org" <jhogan@kernel.org>,
-        "malat@debian.org" <malat@debian.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "allison@lohutok.net" <allison@lohutok.net>,
-        "syq@debian.org" <syq@debian.org>,
-        "chenhc@lemote.com" <chenhc@lemote.com>,
-        "jiaxun.yang@flygoat.com" <jiaxun.yang@flygoat.com>
-Subject: Re: [PATCH 2/2 v3] MIPS: Ingenic: Fix bugs when calculate
- bogomips/lpj.
-Thread-Topic: [PATCH 2/2 v3] MIPS: Ingenic: Fix bugs when calculate
- bogomips/lpj.
-Thread-Index: AQHVSVhAQknKRTzKSky3qlsaUU9P+g==
-Date:   Fri, 2 Aug 2019 17:32:26 +0000
-Message-ID: <20190802173142.avzg4qn733ju4kqf@pburton-laptop>
-References: <1564498510-3751-1-git-send-email-zhouyanjie@zoho.com>
- <1564661791-47731-1-git-send-email-zhouyanjie@zoho.com>
- <1564661791-47731-3-git-send-email-zhouyanjie@zoho.com>
- <1564709169.1988.0@crapouillou.net>
-In-Reply-To: <1564709169.1988.0@crapouillou.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR01CA0036.prod.exchangelabs.com (2603:10b6:a02:80::49)
- To MWHPR2201MB1277.namprd22.prod.outlook.com (2603:10b6:301:18::12)
-user-agent: NeoMutt/20180716
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [50.238.188.242]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 31a39178-43a8-40de-ba0a-08d7176f62cd
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1551;
-x-ms-traffictypediagnostic: MWHPR2201MB1551:
-x-microsoft-antispam-prvs: <MWHPR2201MB15513E10EB9F462D399C43CDC1D90@MWHPR2201MB1551.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 011787B9DD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(376002)(346002)(366004)(136003)(396003)(39840400004)(189003)(199004)(6916009)(446003)(11346002)(9686003)(14454004)(186003)(6512007)(54906003)(1076003)(6436002)(102836004)(6246003)(58126008)(5660300002)(6506007)(7416002)(316002)(44832011)(8936002)(386003)(81166006)(99286004)(33716001)(8676002)(81156014)(2906002)(4326008)(26005)(66476007)(66556008)(66946007)(53936002)(66446008)(68736007)(486006)(305945005)(478600001)(64756008)(229853002)(42882007)(66066001)(3846002)(14444005)(6116002)(256004)(71190400001)(7736002)(52116002)(476003)(71200400001)(76176011)(25786009)(6486002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1551;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 38n/UtVlBMutw5IJ/00kOO3s/pU3NIQB5WjMuKXmb/xNeXh8hLgJYOKDmoWqxQdd+gHHvI0yi4lPmqv3TthA96v1Ldpin6WiZ7TR6K85vTwsn6yu0xLM0cBzylnPTFyWeQdXfKKfYeh0v0BtEns3c0/Wp3lhx7dZ/IJ42XX3422DOwuYQQwbEn4zESuaLB6nDyGFNVT5NkMc76Bgu8/3FnkmDY3I1d7KUGZmgFD+fnIjI6FDOOmFgF1ZhKwWYJw1FUhFda+oWhSBjl1qxAsFc4ggEHftlEVUmLqn3mE0vnOOVLjAqDkky2HazKm7Lai1wTV2z76vgzqT8dndSgnGrjrqWRupd2K8EGH3x9UpqwSXY2FS1OJ5FJA4du3l/vi5RpIg3T2tE75PuMG98rYKnNyjosytwy8b7wDmfuJ7q9Q=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <405530610D283C41A16881AF221E5790@namprd22.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 2 Aug 2019 13:35:31 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:37246 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405108AbfHBRfa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 13:35:30 -0400
+Received: by mail-lf1-f65.google.com with SMTP id c9so53435169lfh.4;
+        Fri, 02 Aug 2019 10:35:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=m01E/00kIIUrZ+us6qTkntaWmvfO8MGjTN9DZjqTTM4=;
+        b=LAdAuboHztw2JZLafdgtT4UzeS6mncq1WKhvo7JyiSvSF0vyS3isLkwFQqzG0jKKpk
+         ZghWSAlT/5CZGGwhFgXqGtPeZ/LfjQlgTx3E5AghaB5qUdQ2WllUyvxX/dowJBtNzVUF
+         LFPJAZox16R/ZWpDSEC7NHXsBN6PZ/GKBTdLJho0tEIWT25IPgejuqKDLabN5Oduz5W9
+         J+NyLp1voKwSQg7PL832WiDwrty7Ea7e/JIL8zXVZi8+0azrxZ/SaJl3NnRYEOqC0Q2T
+         kitin+A76BSUfE/SmIkMmNN7vsk/R+p/oEvwqRn0PS1Bmn7/FfSWmtkm6jj996+GQ/vO
+         Znpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=m01E/00kIIUrZ+us6qTkntaWmvfO8MGjTN9DZjqTTM4=;
+        b=MdsEwqFyq51tlP5dAb9bd6aO14lQA7WrbHVNkEdb9KpM3Kqvk8Ji1wmnE0sX/0Wc5V
+         ubWvNluJinZ2R/wtgfps+nH0t/pCU0OZwjVQjcnSiuIDKR+FEDgwyOXymcNy1A+bIckQ
+         +iXhkue4Eg5JsqOyViuLyeh5sjKlDtL141tWwQbQKCuJszwtPS5+idZm88jgvsEbA1XK
+         Lbd7J1HJrDzzIzm0VPM6HmcVpjCwR+ZswuVCBh0PV4A/21LoGFz022ElmxyuwiSc+IqH
+         h4HbknOCSyMzhMUHYd0kFmKNKypiEHX/Aw23Qtzdk5yIJ95YhYfiJSkMyqy2XzyI7RC2
+         +OGA==
+X-Gm-Message-State: APjAAAVV3jzPiImSAD0Em0NK8btqk/mNmHp2+sPUuvlDbPo31w5NNdb4
+        0AZFczMrLA5E2OAUmZpIvtvSPwN2
+X-Google-Smtp-Source: APXvYqzEH57oEFNxugmY7hPZFcpHs6jb6KCEOBcB2f3QbbxjctMfhdkQqcRF4ctLUWfk5cCLSA/tLg==
+X-Received: by 2002:ac2:50c4:: with SMTP id h4mr62216920lfm.104.1564767327937;
+        Fri, 02 Aug 2019 10:35:27 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.googlemail.com with ESMTPSA id k12sm12901127lfc.8.2019.08.02.10.35.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 02 Aug 2019 10:35:26 -0700 (PDT)
+Subject: Re: [PATCH V6 01/21] irqchip: tegra: Do not disable COP IRQ during
+ suspend
+To:     Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com,
+        pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
+        talho@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
+        spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
+ <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
+ <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
+ <20190725095502.GM12715@pdeschrijver-desktop.Nvidia.com>
+ <dd01be5d-bab9-1329-c7ac-c3c893d49dd1@gmail.com>
+ <20190725103348.GN12715@pdeschrijver-desktop.Nvidia.com>
+ <20190725103813.GO12715@pdeschrijver-desktop.Nvidia.com>
+ <de1723df-8580-32fb-eb9d-e4c02f2b4306@gmail.com>
+ <20190802130537.GB3883@pdeschrijver-desktop.Nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <ba3924fe-d632-7bcb-5353-bc7668957661@gmail.com>
+Date:   Fri, 2 Aug 2019 20:35:25 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 31a39178-43a8-40de-ba0a-08d7176f62cd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Aug 2019 17:32:26.3977
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1551
+In-Reply-To: <20190802130537.GB3883@pdeschrijver-desktop.Nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+02.08.2019 16:05, Peter De Schrijver пишет:
+> On Thu, Jul 25, 2019 at 01:59:09PM +0300, Dmitry Osipenko wrote:
+>> 25.07.2019 13:38, Peter De Schrijver пишет:
+>>> On Thu, Jul 25, 2019 at 01:33:48PM +0300, Peter De Schrijver wrote:
+>>>> On Thu, Jul 25, 2019 at 01:05:13PM +0300, Dmitry Osipenko wrote:
+>>>>> 25.07.2019 12:55, Peter De Schrijver пишет:
+>>>>>> On Mon, Jul 22, 2019 at 12:54:51PM +0300, Dmitry Osipenko wrote:
+>>>>>>>
+>>>>>>> All Tegra SoCs support SC7, hence the 'supports_sc7' and the comment
+>>>>>>> doesn't sound correct to me. Something like 'firmware_sc7' should suit
+>>>>>>> better here.
+>>>>>>>
+>>>>>>>> +			writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
+>>>>>>>
+>>>>>>> Secondly, I'm also not sure why COP interrupts need to be disabled for
+>>>>>>> pre-T210 at all, since COP is unused. This looks to me like it was
+>>>>>>> cut-n-pasted from downstream kernel without a good reason and could be
+>>>>>>> simply removed.
+>>>>>>
+>>>>>> I don't think we can rely on the fact that COP is unused. People can
+>>>>>> write their own code to run on COP.
+>>>>>
+>>>>> 1. Not upstream - doesn't matter.
+>>>>>
+>>>>
+>>>> The code is not part of the kernel, so obviously it's not upstream?
+>>>>
+>>>>> 2. That's not very good if something unknown is running on COP and then
+>>>>> kernel suddenly intervenes, don't you think so?
+>>>>
+>>>> Unless the code was written with this in mind.
+>>>>
+>>
+>> In that case, please see 1. ;)
+>>
+> 
+> In general the kernel should not touch the COP interrupts I think.
+> 
+>>>
+>>> Looking at this again, I don't think we need to enable the IRQ at all.
+>>
+>> Could you please clarify? The code only saves/restores COP's interrupts
+>> context across suspend-resume.
+> 
+> The sc7 entry firmware doesn't use interrupts.
 
-On Thu, Aug 01, 2019 at 09:26:09PM -0400, Paul Cercueil wrote:
-> > diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.=
-c
-> > index eb527a1..2bdd3e1 100644
-> > --- a/arch/mips/kernel/cpu-probe.c
-> > +++ b/arch/mips/kernel/cpu-probe.c
-> > @@ -1964,6 +1964,13 @@ static inline void cpu_probe_ingenic(struct
-> > cpuinfo_mips *c, unsigned int cpu)
-> >  		c->cputype =3D CPU_XBURST;
-> >  		c->writecombine =3D _CACHE_UNCACHED_ACCELERATED;
-> >  		__cpu_name[cpu] =3D "Ingenic XBurst";
-> > +		/*
-> > +		 * The XBurst core by default attempts to avoid branch target
-> > +		 * buffer lookups by detecting & special casing loops. This
-> > +		 * feature will cause BogoMIPS and lpj calculate in error.
-> > +		 * Set cp0 config7 bit 4 to disable this feature.
-> > +		 */
-> > +		set_c0_config7(MIPS_CONF7_BTB_LOOP_EN);
->=20
-> Shouldn't it be MIPS_CONF7_BTB_LOOP_DIS then?
-> Since the feature is disabled when the bit is set.
-
-The name comes from the fact that we're enabling loops to use the BTB,
-in contrast to the default state where this bit is zero & the bad
-optimization kicks in causing loops not to use the BTB.
-
-Thanks,
-    Paul
+Okay, it shouldn't hurt to clean up the LIC's code a tad by removing the
+COP's bits, will make a patch.
