@@ -2,119 +2,136 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 612D6C32753
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52772C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39A91217F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:11:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OnZhIIcz"
+	by mail.kernel.org (Postfix) with ESMTP id 26E3D2183F
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:11:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564747893;
+	bh=ImImKWjCHy4YFIgagVeKR9W5LMcs+2219UOfhty+Q2s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=omW65dcdAScZ5fkVQvmKP1t0wYv6mKXl++61M94UabLJNeg6v+zIvwMA5UkdzhfR5
+	 YCTS6bZYh3+WwS+/LOTBnh91W6OhDDBmBOsdENXBDyzZRyMeHEmoszVzf/Y3cc8NNs
+	 FmoDjoNbmayVAwi/lWFwipv+gch4BCt104yvHxDc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392574AbfHBMLK (ORCPT
+        id S2389110AbfHBMLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 08:11:10 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39933 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727884AbfHBMLK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 08:11:10 -0400
-Received: by mail-pg1-f196.google.com with SMTP id u17so35990184pgi.6;
-        Fri, 02 Aug 2019 05:11:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dBxG4FOJ9DD9Cx5lh35bmxbfWydS0WqQT7U1r29fUWs=;
-        b=OnZhIIczB687wVyPg13SbjSYXsSeklMmxlhBksetJU72HEqthGT8Vm0Lwjdm82fO/c
-         +GO98ncrNnPT+DJphQ5Wrak5JxReJUPCS7L3OZLxbsLExMvus77vBLjflGQaIHZybrhX
-         SblvfEyij5qNwUZYldR9W5Bm3aBeoHqj/lEMgdyIrRqSQ14SGYiA7N6R01OFonkaja2k
-         8ySEloGCbSwmg+FqtnoX4oPm5GHCSIYOoJqFoh3V4MH1qLY6JE8xUNXtFuR6GB8WRS0T
-         RmVtGjrk8EpIMjUxU6r7FLUyD8a8i70QOyoT8Fp5n8j8H/GQJPkEArg1BGVj9zWxV/V5
-         ML7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dBxG4FOJ9DD9Cx5lh35bmxbfWydS0WqQT7U1r29fUWs=;
-        b=bV2FIp6UiXpR+AU+eGRTfQIyFjM9svhyYlwHuw9LIXkO/dAg+ZULKU1DJu+wFSXVB9
-         Per+EwkUHWQyI5BOWUrMdFQRRRNzo3i+IWKwg+XfZ/fIp3K1TZtvGEyCA+95cACzByzS
-         wPHTU1CoKdUyv9PYw1R76+3DEpM5Gorhs+f7AEhz5wWNPuEX2y/kIeGnbwfEy24Bv6fi
-         Ha+hACIUTaOhBCR+nXKwnvT9kibd4PPBxSqCnogXGBEjEFW8IEmiGOPDD9JbrJq6bied
-         I4pgFTT49hSEzhupN3nhqwQHBonDlI3Ov2EmfUvWD8cVvtuGBqI20x6pwOUsSEufFNJS
-         CT2A==
-X-Gm-Message-State: APjAAAX0WSebEi+lWdeCG32NwvH138fB9xpo4XESs/w1r6TLnfwsvORn
-        Md+pyQcGCCWcotn2a7b8ef/etF3QvlDLnw==
-X-Google-Smtp-Source: APXvYqwncBG8jexi3vyTdDOj9AzySHzYVQMdIwI7HY1xN+cwAk48joKEkHEYYMRYnK9dfv1Pp8d82Q==
-X-Received: by 2002:a65:4507:: with SMTP id n7mr16054961pgq.86.1564747869964;
-        Fri, 02 Aug 2019 05:11:09 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id s67sm8162531pjb.8.2019.08.02.05.11.07
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 02 Aug 2019 05:11:09 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH 3/3] IB/mlx5: Use refcount_() APIs
-Date:   Fri,  2 Aug 2019 20:11:04 +0800
-Message-Id: <20190802121104.1483-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 2 Aug 2019 08:11:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58812 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387812AbfHBMLb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 08:11:31 -0400
+Received: from localhost (unknown [122.167.106.83])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7084D217D7;
+        Fri,  2 Aug 2019 12:11:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564747890;
+        bh=ImImKWjCHy4YFIgagVeKR9W5LMcs+2219UOfhty+Q2s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WG0uqqW9SfKCzRmNjQdogBNzU9ZcXwEU97C4iAJKIyb5GU0bs7811iIC78ZY1dAcS
+         KZKu59+7PfBeQWcsS0FsO0LUt7+c6AYr+is2uEOjn+POKJu734cfjXWlkfBaKuyUvp
+         J68e1VrRBaDOxlf6mTzmy8pKu16vAFRpuLkkikl0=
+Date:   Fri, 2 Aug 2019 17:40:16 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        slawomir.blauciak@intel.com,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [RFC PATCH 12/40] soundwire: cadence_master: revisit interrupt
+ settings
+Message-ID: <20190802121016.GN12733@vkoul-mobl.Dlink>
+References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
+ <20190725234032.21152-13-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190725234032.21152-13-pierre-louis.bossart@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch depends on PATCH 1/3.
+On 25-07-19, 18:40, Pierre-Louis Bossart wrote:
+> Adding missing interrupt masks (parity, etc) and missing checks.
+> Clarify which masks are for which usage.
+> 
+> Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> ---
+>  drivers/soundwire/cadence_master.c | 25 ++++++++++++++++++++++---
+>  1 file changed, 22 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/soundwire/cadence_master.c b/drivers/soundwire/cadence_master.c
+> index bdc3ed844829..0f3b9c160b01 100644
+> --- a/drivers/soundwire/cadence_master.c
+> +++ b/drivers/soundwire/cadence_master.c
+> @@ -76,9 +76,12 @@
+>  #define CDNS_MCP_INT_DPINT			BIT(11)
+>  #define CDNS_MCP_INT_CTRL_CLASH			BIT(10)
+>  #define CDNS_MCP_INT_DATA_CLASH			BIT(9)
+> +#define CDNS_MCP_INT_PARITY			BIT(8)
+>  #define CDNS_MCP_INT_CMD_ERR			BIT(7)
+> +#define CDNS_MCP_INT_RX_NE			BIT(3)
+>  #define CDNS_MCP_INT_RX_WL			BIT(2)
+>  #define CDNS_MCP_INT_TXE			BIT(1)
+> +#define CDNS_MCP_INT_TXF			BIT(0)
+>  
+>  #define CDNS_MCP_INTSET				0x4C
+>  
+> @@ -689,6 +692,11 @@ irqreturn_t sdw_cdns_irq(int irq, void *dev_id)
+>  		}
+>  	}
+>  
+> +	if (int_status & CDNS_MCP_INT_PARITY) {
+> +		/* Parity error detected by Master */
+> +		dev_err_ratelimited(cdns->dev, "Parity error\n");
+> +	}
+> +
+>  	if (int_status & CDNS_MCP_INT_CTRL_CLASH) {
+>  		/* Slave is driving bit slot during control word */
+>  		dev_err_ratelimited(cdns->dev, "Bus clash for control word\n");
+> @@ -761,10 +769,21 @@ int sdw_cdns_enable_interrupt(struct sdw_cdns *cdns)
+>  	cdns_writel(cdns, CDNS_MCP_SLAVE_INTMASK1,
+>  		    CDNS_MCP_SLAVE_INTMASK1_MASK);
+>  
+> +	/* enable detection of slave state changes */
+>  	mask = CDNS_MCP_INT_SLAVE_RSVD | CDNS_MCP_INT_SLAVE_ALERT |
+> -		CDNS_MCP_INT_SLAVE_ATTACH | CDNS_MCP_INT_SLAVE_NATTACH |
+> -		CDNS_MCP_INT_CTRL_CLASH | CDNS_MCP_INT_DATA_CLASH |
+> -		CDNS_MCP_INT_RX_WL | CDNS_MCP_INT_IRQ | CDNS_MCP_INT_DPINT;
+> +		CDNS_MCP_INT_SLAVE_ATTACH | CDNS_MCP_INT_SLAVE_NATTACH;
+> +
+> +	/* enable detection of bus issues */
+> +	mask |= CDNS_MCP_INT_CTRL_CLASH | CDNS_MCP_INT_DATA_CLASH |
+> +		CDNS_MCP_INT_PARITY;
+> +
+> +	/* no detection of port interrupts for now */
+> +
+> +	/* enable detection of RX fifo level */
+> +	mask |= CDNS_MCP_INT_RX_WL;
+> +
+> +	/* now enable all of the above */
 
-After converting refcount to refcount_t, use
-refcount_() APIs to operate it.
+I think this comment seems is at wrong line..?
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/infiniband/hw/mlx5/srq_cmd.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> +	mask |= CDNS_MCP_INT_IRQ;
+>  
+>  	cdns_writel(cdns, CDNS_MCP_INTMASK, mask);
+>  
+> -- 
+> 2.20.1
 
-diff --git a/drivers/infiniband/hw/mlx5/srq_cmd.c b/drivers/infiniband/hw/mlx5/srq_cmd.c
-index b0d0687c7a68..8fc3630a9d4c 100644
---- a/drivers/infiniband/hw/mlx5/srq_cmd.c
-+++ b/drivers/infiniband/hw/mlx5/srq_cmd.c
-@@ -86,7 +86,7 @@ struct mlx5_core_srq *mlx5_cmd_get_srq(struct mlx5_ib_dev *dev, u32 srqn)
- 	xa_lock(&table->array);
- 	srq = xa_load(&table->array, srqn);
- 	if (srq)
--		atomic_inc(&srq->common.refcount);
-+		refcount_inc(&srq->common.refcount);
- 	xa_unlock(&table->array);
- 
- 	return srq;
-@@ -592,7 +592,7 @@ int mlx5_cmd_create_srq(struct mlx5_ib_dev *dev, struct mlx5_core_srq *srq,
- 	if (err)
- 		return err;
- 
--	atomic_set(&srq->common.refcount, 1);
-+	refcount_set(&srq->common.refcount, 1);
- 	init_completion(&srq->common.free);
- 
- 	err = xa_err(xa_store_irq(&table->array, srq->srqn, srq, GFP_KERNEL));
-@@ -675,7 +675,7 @@ static int srq_event_notifier(struct notifier_block *nb,
- 	xa_lock(&table->array);
- 	srq = xa_load(&table->array, srqn);
- 	if (srq)
--		atomic_inc(&srq->common.refcount);
-+		refcount_inc(&srq->common.refcount);
- 	xa_unlock(&table->array);
- 
- 	if (!srq)
 -- 
-2.20.1
-
+~Vinod
