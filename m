@@ -2,55 +2,51 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1570C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C230CC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCE7720679
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:38:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 906FA20679
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:38:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738724;
-	bh=dgyyw8WrSvL4+ce7P28orvVO79Zv55hbBeY3pBe39GY=;
+	s=default; t=1564738733;
+	bh=pgIazXNOnkGpteM4RHQyFzjHISWzCTtxmcmsMF/noBo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=blJA/KmkbeC7U90BX4gorRJTxEbsrFqOSzhgoXu5Dlwz9TApjQ1WRWOudFzleX7JP
-	 TjnBVslSAShsbOMgwjcAGZ+rnvw7GdM1DGX99q2A4bzQIp0xa/itw82WvnopZkvlCY
-	 uHZqq0n6w6GYDhDLxChgdv9e9WvE8jjASG1sIH08=
+	b=F5Qcj7fzc20NIVQPauDo2W9q8kVe3nWugZObxkYb9UTTaDB1DAZ3KvpKcnoRu4Adg
+	 RI9EQowBYH7K7EAKcXUoVKIdRiX5KIWxWwFhC6qMFY/Qxg2xm5yvd0/ispCUWKSNv3
+	 obt+/pk7rXAHM09uvaazYgITHg2Wev+Nm7Js+asY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391596AbfHBJin (ORCPT
+        id S2390594AbfHBJeX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:38:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34614 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:34:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731165AbfHBJeh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:34:37 -0400
+        id S2390357AbfHBJeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:34:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B47B21773;
-        Fri,  2 Aug 2019 09:34:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5938521773;
+        Fri,  2 Aug 2019 09:34:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738476;
-        bh=dgyyw8WrSvL4+ce7P28orvVO79Zv55hbBeY3pBe39GY=;
+        s=default; t=1564738458;
+        bh=pgIazXNOnkGpteM4RHQyFzjHISWzCTtxmcmsMF/noBo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gj5i+eDaV9fGJ98a+z/L1GnRcgSeW/6SwPSiFMmcDGNG6Pf1jT7vNfcpNR/R4FvJq
-         B46nmfOdVBmCw2JkiKUPwGzo6Z3hnGGfegFJaxmSZRo5sSwJ5xofc69qlt/mOltTut
-         MsBJAqoZjWWeejczXwd5hqVylFwnMj6CQWIUadpA=
+        b=zLFy6ilNQnbuNqQLnXpcRBk+KGGhesOWu3AdF94M7SgVXAhDFD6xfhUe65LzRh7pO
+         q0TQa26oa/DS+GhkOHQLg/92UY0JeqXMtYMdOpO0W8fbRYEVcT6t8+7kc6Y2OOt9xb
+         jCEfJT0jxAtfxaVSKAvIOjC58xwkszTHajW/TY0E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Sam Bobroff <sbobroff@linux.ibm.com>,
-        Oliver OHalloran <oohall@gmail.com>,
-        Shawn Anastasio <shawn@anastas.io>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 119/158] powerpc/pci/of: Fix OF flags parsing for 64bit BARs
-Date:   Fri,  2 Aug 2019 11:29:00 +0200
-Message-Id: <20190802092228.148352829@linuxfoundation.org>
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 087/158] caif-hsi: fix possible deadlock in cfhsi_exit_module()
+Date:   Fri,  2 Aug 2019 11:28:28 +0200
+Message-Id: <20190802092222.008978031@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -63,65 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit df5be5be8735ef2ae80d5ae1f2453cd81a035c4b ]
+From: Taehee Yoo <ap420073@gmail.com>
 
-When the firmware does PCI BAR resource allocation, it passes the assigned
-addresses and flags (prefetch/64bit/...) via the "reg" property of
-a PCI device device tree node so the kernel does not need to do
-resource allocation.
+[ Upstream commit fdd258d49e88a9e0b49ef04a506a796f1c768a8e ]
 
-The flags are stored in resource::flags - the lower byte stores
-PCI_BASE_ADDRESS_SPACE/etc bits and the other bytes are IORESOURCE_IO/etc.
-Some flags from PCI_BASE_ADDRESS_xxx and IORESOURCE_xxx are duplicated,
-such as PCI_BASE_ADDRESS_MEM_PREFETCH/PCI_BASE_ADDRESS_MEM_TYPE_64/etc.
-When parsing the "reg" property, we copy the prefetch flag but we skip
-on PCI_BASE_ADDRESS_MEM_TYPE_64 which leaves the flags out of sync.
+cfhsi_exit_module() calls unregister_netdev() under rtnl_lock().
+but unregister_netdev() internally calls rtnl_lock().
+So deadlock would occur.
 
-The missing IORESOURCE_MEM_64 flag comes into play under 2 conditions:
-1. we remove PCI_PROBE_ONLY for pseries (by hacking pSeries_setup_arch()
-or by passing "/chosen/linux,pci-probe-only");
-2. we request resource alignment (by passing pci=resource_alignment=
-via the kernel cmd line to request PAGE_SIZE alignment or defining
-ppc_md.pcibios_default_alignment which returns anything but 0). Note that
-the alignment requests are ignored if PCI_PROBE_ONLY is enabled.
-
-With 1) and 2), the generic PCI code in the kernel unconditionally
-decides to:
-- reassign the BARs in pci_specified_resource_alignment() (works fine)
-- write new BARs to the device - this fails for 64bit BARs as the generic
-code looks at IORESOURCE_MEM_64 (not set) and writes only lower 32bits
-of the BAR and leaves the upper 32bit unmodified which breaks BAR mapping
-in the hypervisor.
-
-This fixes the issue by copying the flag. This is useful if we want to
-enforce certain BAR alignment per platform as handling subpage sized BARs
-is proven to cause problems with hotplug (SLOF already aligns BARs to 64k).
-
-Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Reviewed-by: Sam Bobroff <sbobroff@linux.ibm.com>
-Reviewed-by: Oliver O'Halloran <oohall@gmail.com>
-Reviewed-by: Shawn Anastasio <shawn@anastas.io>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: c41254006377 ("caif-hsi: Add rtnl support")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/powerpc/kernel/pci_of_scan.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/caif/caif_hsi.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/pci_of_scan.c b/arch/powerpc/kernel/pci_of_scan.c
-index 2e710c15893f..a38d7293460d 100644
---- a/arch/powerpc/kernel/pci_of_scan.c
-+++ b/arch/powerpc/kernel/pci_of_scan.c
-@@ -45,6 +45,8 @@ static unsigned int pci_parse_of_flags(u32 addr0, int bridge)
- 	if (addr0 & 0x02000000) {
- 		flags = IORESOURCE_MEM | PCI_BASE_ADDRESS_SPACE_MEMORY;
- 		flags |= (addr0 >> 22) & PCI_BASE_ADDRESS_MEM_TYPE_64;
-+		if (flags & PCI_BASE_ADDRESS_MEM_TYPE_64)
-+			flags |= IORESOURCE_MEM_64;
- 		flags |= (addr0 >> 28) & PCI_BASE_ADDRESS_MEM_TYPE_1M;
- 		if (addr0 & 0x40000000)
- 			flags |= IORESOURCE_PREFETCH
--- 
-2.20.1
-
+--- a/drivers/net/caif/caif_hsi.c
++++ b/drivers/net/caif/caif_hsi.c
+@@ -1467,7 +1467,7 @@ static void __exit cfhsi_exit_module(voi
+ 	rtnl_lock();
+ 	list_for_each_safe(list_node, n, &cfhsi_list) {
+ 		cfhsi = list_entry(list_node, struct cfhsi, list);
+-		unregister_netdev(cfhsi->ndev);
++		unregister_netdevice(cfhsi->ndev);
+ 	}
+ 	rtnl_unlock();
+ }
 
 
