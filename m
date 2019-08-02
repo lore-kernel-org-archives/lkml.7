@@ -2,120 +2,146 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA738C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24491C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 902E92087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:04:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E58212067D
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:04:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="T9qHyHp4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391926AbfHBKEV convert rfc822-to-8bit (ORCPT
+        id S2407241AbfHBKE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 06:04:21 -0400
-Received: from skedge04.snt-world.com ([91.208.41.69]:60964 "EHLO
-        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391560AbfHBKES (ORCPT
+        Fri, 2 Aug 2019 06:04:27 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:44198 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2391927AbfHBKEZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 06:04:18 -0400
-Received: from sntmail12r.snt-is.com (unknown [10.203.32.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by skedge04.snt-world.com (Postfix) with ESMTPS id 999FD67A8D8;
-        Fri,  2 Aug 2019 12:04:11 +0200 (CEST)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail12r.snt-is.com
- (10.203.32.182) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 2 Aug 2019
- 12:04:11 +0200
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1713.004; Fri, 2 Aug 2019 12:04:11 +0200
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "geert+renesas@glider.be" <geert+renesas@glider.be>,
-        Schrempf Frieder <frieder.schrempf@kontron.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 4/4] serial: 8250: Don't check for mctrl_gpio_init()
- returning -ENOSYS
-Thread-Topic: [PATCH v3 4/4] serial: 8250: Don't check for mctrl_gpio_init()
- returning -ENOSYS
-Thread-Index: AQHVSRmhIxHe9MI46E6+p88Y1S0NjQ==
-Date:   Fri, 2 Aug 2019 10:04:11 +0000
-Message-ID: <20190802100349.8659-4-frieder.schrempf@kontron.de>
-References: <20190802100349.8659-1-frieder.schrempf@kontron.de>
-In-Reply-To: <20190802100349.8659-1-frieder.schrempf@kontron.de>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        Fri, 2 Aug 2019 06:04:25 -0400
+Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x72A2Q7Y016079;
+        Fri, 2 Aug 2019 06:03:41 -0400
+Received: from nam02-cy1-obe.outbound.protection.outlook.com (mail-cys01nam02lp2059.outbound.protection.outlook.com [104.47.37.59])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2u3vjx3wb9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 02 Aug 2019 06:03:40 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GUFRjYtJeAXyFE2+pi9iNJzCch5HUqJiIRB3GSzOylHahum0Xq2x8WnD9gZdbeYIgCxIhm4hk02EyJ9VmMOm307072rwmk2ylacuFY/J4lR/xJqc9VQ55ymynv1cQY7Nzj+w8txRrPrh7YqG25/uyLmtxEB+65EG+LDVybAUL3Jm83wo8P56xRFdnEcMGtkEd+uJKlrrAsXGnZc5xx0tQXX3q1xfnQCrjv57FL4U+PRp/RbxBXSyhjE3RyBK0vSQPPSW1SXufn04dlDLQfzQmp5gkOuAzgRJLVQBZotcnjqhcuioop7PfFFk2s4l0XykugNtc4lsUDtMWQODDIRTkQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6GQvgKnWudeg7pa12x9iU/vW0nLNy4M8vHLuzwgWGd8=;
+ b=GeBchfxbmP/5ZiO4GJYcx3/yNJGDqYdqEA+qjAQkpFUp8gXTJ/oyyGbJeJIqEu8WpBCORVqgiGhXQ7l7dUVYgDm8IaZUL4EM6yRjdfNcWriR4ytbafJPRQpIIlAdf2/8FGrcax11t94rck0UCFChFFhw+Zx8H4x/7HYdPmFS8yEeHFdhffZq0RCIsDPvkNKzxmU6oJmUQR3XqJ5AFrGvw9Da/scWkDM9tm1d29FB3/T8zzIA6Tdlj4A5h+ioaJWcqkeZtrtxWkyKg90PtqmkgftBDGB1jbJ0dMUtMDMz8kFZkWE1KZyQAXBuT/tfpHbNfDo+y3GPz+QleAHrDPItmA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass (sender ip is
+ 137.71.25.57) smtp.rcpttodomain=vger.kernel.org
+ smtp.mailfrom=analog.com;dmarc=bestguesspass action=none
+ header.from=analog.com;dkim=none (message not signed);arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6GQvgKnWudeg7pa12x9iU/vW0nLNy4M8vHLuzwgWGd8=;
+ b=T9qHyHp4wIhLunEjtPDBd4ZMmPLYqPeT74ZmZKietyB0PQNCxLWoBrW7d7fVwCHVOLf15u7S87Jpu8ZYj3zSK6ga4YY/8PBWXa3TSshbLY70Iwsoyk4pRboPUtxyyPcCxLbitAnbJFsgBJjk3zYLY6xKf3dWCJOtILql2znuIeI=
+Received: from BN3PR03CA0101.namprd03.prod.outlook.com (2603:10b6:400:4::19)
+ by CY4PR03MB2807.namprd03.prod.outlook.com (2603:10b6:903:130::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2115.14; Fri, 2 Aug
+ 2019 10:03:39 +0000
+Received: from BL2NAM02FT011.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::202) by BN3PR03CA0101.outlook.office365.com
+ (2603:10b6:400:4::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2136.14 via Frontend
+ Transport; Fri, 2 Aug 2019 10:03:38 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
+Received: from nwd2mta2.analog.com (137.71.25.57) by
+ BL2NAM02FT011.mail.protection.outlook.com (10.152.77.5) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2136.14
+ via Frontend Transport; Fri, 2 Aug 2019 10:03:38 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x72A3cWA025310
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Fri, 2 Aug 2019 03:03:38 -0700
+Received: from ben-Latitude-E6540.ad.analog.com (10.48.65.163) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Fri, 2 Aug 2019 06:03:37 -0400
+From:   Beniamin Bia <beniamin.bia@analog.com>
+To:     <jic23@kernel.org>
+CC:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
+        <gregkh@linuxfoundation.org>, <linux-iio@vger.kernel.org>,
+        <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
+        <mark.rutland@arm.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <paulmck@linux.ibm.com>,
+        <mchehab+samsung@kernel.org>, <linus.walleij@linaro.org>,
+        <nicolas.ferre@microchip.com>, <biabeniamin@outlook.com>,
+        Beniamin Bia <beniamin.bia@analog.com>
+Subject: [PATCH 2/4] MAINTAINERS: Add Beniamin Bia for AD7606 driver
+Date:   Fri, 2 Aug 2019 13:03:02 +0300
+Message-ID: <20190802100304.15899-2-beniamin.bia@analog.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190802100304.15899-1-beniamin.bia@analog.com>
+References: <20190802100304.15899-1-beniamin.bia@analog.com>
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 999FD67A8D8.A10A8
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: festevam@gmail.com, geert+renesas@glider.be,
-        gregkh@linuxfoundation.org, jslaby@suse.com, kernel@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-        s.hauer@pengutronix.de, shawnguo@kernel.org,
-        u.kleine-koenig@pengutronix.de
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(346002)(136003)(396003)(39850400004)(2980300002)(189003)(199004)(107886003)(50466002)(16586007)(2906002)(966005)(8936002)(70586007)(54906003)(47776003)(36756003)(7636002)(126002)(336012)(478600001)(106002)(305945005)(70206006)(1076003)(356004)(316002)(11346002)(4744005)(5660300002)(6916009)(186003)(4326008)(446003)(76176011)(426003)(7416002)(50226002)(7696005)(86362001)(476003)(246002)(2351001)(44832011)(51416003)(6306002)(8676002)(26005)(486006)(2616005)(6666004)(48376002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR03MB2807;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 84ba5a29-432c-4c3a-fcdb-08d71730b0d6
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:CY4PR03MB2807;
+X-MS-TrafficTypeDiagnostic: CY4PR03MB2807:
+X-MS-Exchange-PUrlCount: 1
+X-Microsoft-Antispam-PRVS: <CY4PR03MB2807118966A34384E61B3985F0D90@CY4PR03MB2807.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1303;
+X-Forefront-PRVS: 011787B9DD
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: DeKyz6kxyN7hpeUb+3tvsZ2rAOiYxXaZ5ux+0JYwdeXnTj0fffXXALD9FTjXdHcwaiOKTldjA8j1oLzHk2XcZnMfaInYdO1jo5//PQNxU0QgpDrgWjjdRJYRaPUOwtSM77rnStHRPj9BMOmPLPtxG7mr6K5qD+WdMaXnj1t0TYGcSiG2/qhzDDy7lzNsbqBoN0oyKRsoEG4NeaumSVC7EnbwPrtU0UtfjHX2WF5WHY1f2WySgokPgvB8bN75z9S8v+UptTyNYoyUTZNqGL+vlgtBKggNBsFjN+jqj+bkdU+ua8UyZ9HhwE6cIDXN6Mp2Tk3U8w9SiTnfJH707o0tMv//5JsZH2KWtpfYndYYvacv92rroLmWn4IIqDdJgb114Xf7FZb7IXt18v4td4ZP/8Vo285CQ90ibJoRJDlP+y0=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Aug 2019 10:03:38.7962
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 84ba5a29-432c-4c3a-fcdb-08d71730b0d6
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR03MB2807
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-02_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908020102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+Add Beniamin Bia as maintainer for AD7606 driver.
 
-Now that the mctrl_gpio code returns NULL instead of ERR_PTR(-ENOSYS)
-if CONFIG_GPIOLIB is disabled, we can safely remove this check.
-
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
 ---
-Changes in v3
-=============
-* Adjust the commit message and subject line
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-Changes in v2
-=============
-* Add a patch for the 8250 driver
----
- drivers/tty/serial/8250/8250_core.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
-index df3bcc0b2d74..e682390ce0de 100644
---- a/drivers/tty/serial/8250/8250_core.c
-+++ b/drivers/tty/serial/8250/8250_core.c
-@@ -1026,10 +1026,8 @@ int serial8250_register_8250_port(struct uart_8250_port *up)
- 		if (!has_acpi_companion(uart->port.dev)) {
- 			gpios = mctrl_gpio_init(&uart->port, 0);
- 			if (IS_ERR(gpios)) {
--				if (PTR_ERR(gpios) != -ENOSYS) {
--					ret = PTR_ERR(gpios);
--					goto out_unlock;
--				}
-+				ret = PTR_ERR(gpios);
-+				goto out_unlock;
- 			} else {
- 				uart->gpios = gpios;
- 			}
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ad498428b38c..052d7a8591fb 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -895,6 +895,7 @@ F:	Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
+ 
+ ANALOG DEVICES INC AD7606 DRIVER
+ M:	Stefan Popa <stefan.popa@analog.com>
++M:	Beniamin Bia <beniamin.bia@analog.com>
+ L:	linux-iio@vger.kernel.org
+ W:	http://ez.analog.com/community/linux-device-drivers
+ S:	Supported
 -- 
 2.17.1
+
