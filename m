@@ -2,55 +2,52 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64599C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9B2C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A19E2087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:37:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DDFC20679
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:37:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738638;
-	bh=QiyoHz1/J7kYw21cWpvYTtwsAoA6Tm5hofpol9MaQFQ=;
+	s=default; t=1564738649;
+	bh=OUGUO0e+lXuz6UbyOXgjAs7U4He5TLLHmXXW2HhV4Eo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U/Ue4xuwSnmjzS9wJqZEL5eMD1D3tqYhe2NBUK3OIJXxiyqv0nEKAUOfiz8WJ/WJ/
-	 Z5wPC9EEBs8Bdgolw1ZPwfUqja1QtND5XKNkEV1Gb6j5E9HG3aC675pRjqbANGY3zv
-	 ZC4rIRK/V7g3HYVKXV002fMKV2aeRoXMCLLo87bw=
+	b=H/uijt0BtJCliS81W3YesCMfCDxvX98EkMG7wzBGyXSpoU9P3bAazrPoq/+Uamj5V
+	 ZgwYRja6WT6zWMnK6LiAnGPQ8AAvngEXnVk+kT3npJMzHG+Rw48oHkdo8R1xPaOeHc
+	 OaNNP1epcWeo0OKNiGfyLxFsuKD4HuU57HMQC3jw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390850AbfHBJhR (ORCPT
+        id S2404782AbfHBJf4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:37:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38112 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:35:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731234AbfHBJhG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:37:06 -0400
+        id S1730760AbfHBJfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:35:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 072532086A;
-        Fri,  2 Aug 2019 09:37:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC07721773;
+        Fri,  2 Aug 2019 09:35:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738625;
-        bh=QiyoHz1/J7kYw21cWpvYTtwsAoA6Tm5hofpol9MaQFQ=;
+        s=default; t=1564738550;
+        bh=OUGUO0e+lXuz6UbyOXgjAs7U4He5TLLHmXXW2HhV4Eo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aRVlLIwYJos2MsNzK/IGXygrnCDdO5TYZ1rnqQdIjIw+qWcVSOfu5bPwINIS0i93W
-         z33xSqSZiU6b6M4tMHAKk87bXGFkmfmwoXUONPaIgy6uNPD/dvYl6c8rLos7/phaGP
-         X4lyQJ/HACCWDGGZss8x2VilrzzzZqR+O91sqXJg=
+        b=KSQxtKIvF6Ssjjn0xqYf6UKwjD7Fyrn8F8Hu+kz1pnqQM6h5pEYHDw3mz5lP42khH
+         WJx2yUTCEt+VfWbqfvWNq1j9wx6+EuYWC/F5+XPqQDCvqu+5hpPrWj+COnXkdrHqyz
+         jnNec+BHWSN7qVkiylZoTNcFNDhRy77FxmHZu/HE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+79337b501d6aa974d0f6@syzkaller.appspotmail.com,
-        Vladis Dronov <vdronov@redhat.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        "Yu-Chen, Cho" <acho@suse.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.4 155/158] Bluetooth: hci_uart: check for missing tty operations
-Date:   Fri,  2 Aug 2019 11:29:36 +0200
-Message-Id: <20190802092233.391912438@linuxfoundation.org>
+        stable@vger.kernel.org, Morten Borup Petersen <morten_bp@live.dk>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 131/158] mailbox: handle failed named mailbox channel request
+Date:   Fri,  2 Aug 2019 11:29:12 +0200
+Message-Id: <20190802092230.058902630@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -63,107 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladis Dronov <vdronov@redhat.com>
+[ Upstream commit 25777e5784a7b417967460d4fcf9660d05a0c320 ]
 
-commit b36a1552d7319bbfd5cf7f08726c23c5c66d4f73 upstream.
+Previously, if mbox_request_channel_byname was used with a name
+which did not exist in the "mbox-names" property of a mailbox
+client, the mailbox corresponding to the last entry in the
+"mbox-names" list would be incorrectly selected.
+With this patch, -EINVAL is returned if the named mailbox is
+not found.
 
-Certain ttys operations (pty_unix98_ops) lack tiocmget() and tiocmset()
-functions which are called by the certain HCI UART protocols (hci_ath,
-hci_bcm, hci_intel, hci_mrvl, hci_qca) via hci_uart_set_flow_control()
-or directly. This leads to an execution at NULL and can be triggered by
-an unprivileged user. Fix this by adding a helper function and a check
-for the missing tty operations in the protocols code.
-
-This fixes CVE-2019-10207. The Fixes: lines list commits where calls to
-tiocm[gs]et() or hci_uart_set_flow_control() were added to the HCI UART
-protocols.
-
-Link: https://syzkaller.appspot.com/bug?id=1b42faa2848963564a5b1b7f8c837ea7b55ffa50
-Reported-by: syzbot+79337b501d6aa974d0f6@syzkaller.appspotmail.com
-Cc: stable@vger.kernel.org # v2.6.36+
-Fixes: b3190df62861 ("Bluetooth: Support for Atheros AR300x serial chip")
-Fixes: 118612fb9165 ("Bluetooth: hci_bcm: Add suspend/resume PM functions")
-Fixes: ff2895592f0f ("Bluetooth: hci_intel: Add Intel baudrate configuration support")
-Fixes: 162f812f23ba ("Bluetooth: hci_uart: Add Marvell support")
-Fixes: fa9ad876b8e0 ("Bluetooth: hci_qca: Add support for Qualcomm Bluetooth chip wcn3990")
-Signed-off-by: Vladis Dronov <vdronov@redhat.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Reviewed-by: Yu-Chen, Cho <acho@suse.com>
-Tested-by: Yu-Chen, Cho <acho@suse.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Morten Borup Petersen <morten_bp@live.dk>
+Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/hci_ath.c   |    3 +++
- drivers/bluetooth/hci_bcm.c   |    3 +++
- drivers/bluetooth/hci_intel.c |    3 +++
- drivers/bluetooth/hci_ldisc.c |    9 +++++++++
- drivers/bluetooth/hci_uart.h  |    1 +
- 5 files changed, 19 insertions(+)
+ drivers/mailbox/mailbox.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/bluetooth/hci_ath.c
-+++ b/drivers/bluetooth/hci_ath.c
-@@ -101,6 +101,9 @@ static int ath_open(struct hci_uart *hu)
+diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
+index 9cf826df89b1..b4ad85251cf7 100644
+--- a/drivers/mailbox/mailbox.c
++++ b/drivers/mailbox/mailbox.c
+@@ -389,11 +389,13 @@ struct mbox_chan *mbox_request_channel_byname(struct mbox_client *cl,
  
- 	BT_DBG("hu %p", hu);
+ 	of_property_for_each_string(np, "mbox-names", prop, mbox_name) {
+ 		if (!strncmp(name, mbox_name, strlen(name)))
+-			break;
++			return mbox_request_channel(cl, index);
+ 		index++;
+ 	}
  
-+	if (!hci_uart_has_flow_control(hu))
-+		return -EOPNOTSUPP;
-+
- 	ath = kzalloc(sizeof(*ath), GFP_KERNEL);
- 	if (!ath)
- 		return -ENOMEM;
---- a/drivers/bluetooth/hci_bcm.c
-+++ b/drivers/bluetooth/hci_bcm.c
-@@ -279,6 +279,9 @@ static int bcm_open(struct hci_uart *hu)
- 
- 	bt_dev_dbg(hu->hdev, "hu %p", hu);
- 
-+	if (!hci_uart_has_flow_control(hu))
-+		return -EOPNOTSUPP;
-+
- 	bcm = kzalloc(sizeof(*bcm), GFP_KERNEL);
- 	if (!bcm)
- 		return -ENOMEM;
---- a/drivers/bluetooth/hci_intel.c
-+++ b/drivers/bluetooth/hci_intel.c
-@@ -407,6 +407,9 @@ static int intel_open(struct hci_uart *h
- 
- 	BT_DBG("hu %p", hu);
- 
-+	if (!hci_uart_has_flow_control(hu))
-+		return -EOPNOTSUPP;
-+
- 	intel = kzalloc(sizeof(*intel), GFP_KERNEL);
- 	if (!intel)
- 		return -ENOMEM;
---- a/drivers/bluetooth/hci_ldisc.c
-+++ b/drivers/bluetooth/hci_ldisc.c
-@@ -257,6 +257,15 @@ static int hci_uart_send_frame(struct hc
- 	return 0;
+-	return mbox_request_channel(cl, index);
++	dev_err(cl->dev, "%s() could not locate channel named \"%s\"\n",
++		__func__, name);
++	return ERR_PTR(-EINVAL);
  }
+ EXPORT_SYMBOL_GPL(mbox_request_channel_byname);
  
-+/* Check the underlying device or tty has flow control support */
-+bool hci_uart_has_flow_control(struct hci_uart *hu)
-+{
-+	if (hu->tty->driver->ops->tiocmget && hu->tty->driver->ops->tiocmset)
-+		return true;
-+
-+	return false;
-+}
-+
- /* Flow control or un-flow control the device */
- void hci_uart_set_flow_control(struct hci_uart *hu, bool enable)
- {
---- a/drivers/bluetooth/hci_uart.h
-+++ b/drivers/bluetooth/hci_uart.h
-@@ -105,6 +105,7 @@ int hci_uart_tx_wakeup(struct hci_uart *
- int hci_uart_init_ready(struct hci_uart *hu);
- void hci_uart_init_tty(struct hci_uart *hu);
- void hci_uart_set_baudrate(struct hci_uart *hu, unsigned int speed);
-+bool hci_uart_has_flow_control(struct hci_uart *hu);
- void hci_uart_set_flow_control(struct hci_uart *hu, bool enable);
- void hci_uart_set_speeds(struct hci_uart *hu, unsigned int init_speed,
- 			 unsigned int oper_speed);
+-- 
+2.20.1
+
 
 
