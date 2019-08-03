@@ -2,61 +2,80 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1ACC433FF
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 07:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D00EC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 07:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5EB720578
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 07:41:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C2F82087C
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 07:43:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387401AbfHCHln (ORCPT
+        id S2387438AbfHCHnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 3 Aug 2019 03:41:43 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:40824 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727490AbfHCHln (ORCPT
+        Sat, 3 Aug 2019 03:43:02 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:50909 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387405AbfHCHnB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 3 Aug 2019 03:41:43 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1htofT-0001g9-Sd; Sat, 03 Aug 2019 09:41:32 +0200
-Date:   Sat, 3 Aug 2019 09:41:30 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Radim Krm <rkrcmar@redhat.com>, kvm@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] KVM: remove kvm_arch_has_vcpu_debugfs()
-In-Reply-To: <6ddc98b6-67d9-1ea4-77d8-dcaf0b5a94cc@redhat.com>
-Message-ID: <alpine.DEB.2.21.1908030939530.4029@nanos.tec.linutronix.de>
-References: <20190731185556.GA703@kroah.com> <6ddc98b6-67d9-1ea4-77d8-dcaf0b5a94cc@redhat.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sat, 3 Aug 2019 03:43:01 -0400
+Received: by mail-io1-f69.google.com with SMTP id m26so85869009ioh.17
+        for <linux-kernel@vger.kernel.org>; Sat, 03 Aug 2019 00:43:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=yMorIrW4ay3tdK2qTcsDnVE/Pjijxze3b99wXe/WPcY=;
+        b=OkTYuMUgOddbrmvENdtegQkrZr64pw9YQW600hHe1x7DlpEDJh71Ta9VIeiE1YJmWM
+         d8ChvRyFeu0rGQ3lpfqPta2DQMprJ7IFt8QdyFcmHOQfBsnBwVcazYadrU+zvjffYreQ
+         lsntvVFSKUrigDBstq7A8CG+kvjQL7hH8dIFhpl6qwX9qmg3W4srXHvCq659wvRMZDwA
+         c2yskv53nwsvjGgDhI9nLo0qJ2ejY57Y3Z8Rm1Ux1zzz1xizLBe8t9y6ja+vvM7B2Ie+
+         PquT010In9I2jMDAZlat0rO3m0hnYMAqUAAtojFUIf/mE03oQWEd++41idFE3iFd/0n0
+         afig==
+X-Gm-Message-State: APjAAAVJEt4kA5fpRBeT7jXHTG86jcLJlSxEXNCinRUWICoH0M8bQx/D
+        yiRnIBFzov1cfna0yV2VItIwuWv3xDJO7XlyChbuN0GYMQPy
+X-Google-Smtp-Source: APXvYqyODxVlDnjmRqYXt2tj0Z1xEFiKx4T/bWkQb1PzdLwDQuMC91pWxkePCa7Pu2aTkOoYz58Kc11H06whknBe3wOWUzTFH6uy
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-Received: by 2002:a6b:b804:: with SMTP id i4mr5520996iof.119.1564818180769;
+ Sat, 03 Aug 2019 00:43:00 -0700 (PDT)
+Date:   Sat, 03 Aug 2019 00:43:00 -0700
+In-Reply-To: <000000000000a2db16058f2514fa@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000cd8e92058f319f8c@google.com>
+Subject: Re: KASAN: use-after-free Read in blkdev_direct_IO
+From:   syzbot <syzbot+0a0e5f37746013dc7476@syzkaller.appspotmail.com>
+To:     arvid.brodin@alten.se, davem@davemloft.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk, xiyou.wangcong@gmail.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 3 Aug 2019, Paolo Bonzini wrote:
-> On 31/07/19 20:55, Greg KH wrote:
-> > There is no need for this function as all arches have to implement
-> > kvm_arch_create_vcpu_debugfs() no matter what, so just remove this call
-> > as it is pointless.
-> 
-> Let's remove kvm_arch_arch_create_vcpu_debugfs too for non-x86 arches.
+syzbot has bisected this bug to:
 
-Can't we remove _all_ that virt muck? That would solve a lot more problems
-in one go.
+commit b9a1e627405d68d475a3c1f35e685ccfb5bbe668
+Author: Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Thu Jul 4 00:21:13 2019 +0000
 
-/me ducks
+     hsr: implement dellink to clean up resources
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1589f3e8600000
+start commit:   1e78030e Merge tag 'mmc-v5.3-rc1' of git://git.kernel.org/..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=1789f3e8600000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1389f3e8600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4c7b914a2680c9c6
+dashboard link: https://syzkaller.appspot.com/bug?extid=0a0e5f37746013dc7476
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11fa7830600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12f31c8a600000
+
+Reported-by: syzbot+0a0e5f37746013dc7476@syzkaller.appspotmail.com
+Fixes: b9a1e627405d ("hsr: implement dellink to clean up resources")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
