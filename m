@@ -2,113 +2,109 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F59C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 10:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5655C31E40
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 10:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92DBE206C1
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 10:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA5CE21773
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 10:08:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="kXg+/nu/"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="LCcVlSoB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388343AbfHCKCi (ORCPT
+        id S2388369AbfHCKIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 3 Aug 2019 06:02:38 -0400
-Received: from aibo.runbox.com ([91.220.196.211]:53114 "EHLO aibo.runbox.com"
+        Sat, 3 Aug 2019 06:08:50 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:40076 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388294AbfHCKCi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 3 Aug 2019 06:02:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
-         s=rbselector1; h=Content-Transfer-Encoding:MIME-Version:References:
-        In-Reply-To:Message-Id:Date:Subject:Cc:To:From;
-        bh=h+gdKezhnZxQ2ykgMTawflCtKVKbt31AwdXjqem/yp4=; b=kXg+/nu/KXVcgabR+VYTZ+FOFH
-        B5CRSmbOda9oLmMjdFY1MNMZ11kdtIUJ/kPzxLxXdomCwbcIiaGYMXGUsaXesn9utWvJb8jvJ7+Vf
-        7lQSjRURki80BihrM2Lf2+vSDHGH0JAiTmFnIiS6ZOTlZcxmLZ4zb/ZvtOcc1Y08961aiCcGc/LVX
-        CKFIjG539a+5BPXBE15P6WZlLpvv4yw9kpGSHcEKJw6i9alPqchZRmDnmH8t9B9DEZIYlwYcURZDh
-        2T35Jk+MHD8KTqKDJy5mTrskGTb4KJzm+g/7xv4qGU8yElM0gn7yaUvgyVQ/+Q6MTJkY/80TBq4pa
-        8mgtGCZg==;
-Received: from [10.9.9.203] (helo=mailfront21.runbox)
-        by mailtransmit03.runbox with esmtp (Exim 4.86_2)
-        (envelope-from <m.v.b@runbox.com>)
-        id 1htqrv-0006ih-Ou; Sat, 03 Aug 2019 12:02:31 +0200
-Received: by mailfront21.runbox with esmtpsa  (uid:769847 )  (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.90_1)
-        id 1htqrj-0007Lk-4g; Sat, 03 Aug 2019 12:02:19 +0200
-From:   "M. Vefa Bicakci" <m.v.b@runbox.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     =?UTF-8?q?Joonas=20Kylm=C3=A4l=C3=A4?= <joonas.kylmala@iki.fi>,
-        Ulf Magnusson <ulfalizer@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        linux-stable <stable@vger.kernel.org>,
-        "M. Vefa Bicakci" <m.v.b@runbox.com>
-Subject: [PATCH v2] kconfig: Clear "written" flag to avoid data loss
-Date:   Sat,  3 Aug 2019 06:02:12 -0400
-Message-Id: <20190803100212.8227-1-m.v.b@runbox.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <CAK7LNASPib2GUgjUEwmNYcO9_NgvjyjKSpqwJVZSNhFOJ7Lkfw@mail.gmail.com>
-References: <CAK7LNASPib2GUgjUEwmNYcO9_NgvjyjKSpqwJVZSNhFOJ7Lkfw@mail.gmail.com>
+        id S2388201AbfHCKIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 3 Aug 2019 06:08:49 -0400
+Received: from zn.tnic (p200300EC2F2082007166E282E47B3C81.dip0.t-ipconnect.de [IPv6:2003:ec:2f20:8200:7166:e282:e47b:3c81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 56E051EC04CD;
+        Sat,  3 Aug 2019 12:08:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1564826927;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=ddSwU1R0yyWs4XLmHgJ7K3+4ljBdUQ98umBmarQFLs4=;
+        b=LCcVlSoBqaYKny0xghcwy9UF6y6M0s4KR8hU2qjqQkMh+K6LIsaGqJTV9ShwmhzAXI7Uf2
+        46Lq+A7s/WS11dOR2++HqtP5DOByN18wVirV5065sGhWrw4QPXgMzVm1cMd8E26zl+IX62
+        JuVVv/1qxufQ9k/oszkz6gGgcT2yfKA=
+Date:   Sat, 3 Aug 2019 12:08:37 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     James Morse <james.morse@arm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 01/24] EDAC, mc: Fix grain_bits calculation
+Message-ID: <20190803100837.GB2100@zn.tnic>
+References: <20190624150758.6695-1-rrichter@marvell.com>
+ <20190624150758.6695-2-rrichter@marvell.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190624150758.6695-2-rrichter@marvell.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prior to this commit, starting nconfig, xconfig or gconfig, and saving
-the .config file more than once caused data loss, where a .config file
-that contained only comments would be written to disk starting from the
-second save operation.
+On Mon, Jun 24, 2019 at 03:08:55PM +0000, Robert Richter wrote:
+> The grain in edac is defined as "minimum granularity for an error
+> report, in bytes". The following calculation of the grain_bits in
+> edac_mc is wrong:
+> 
+> 	grain_bits = fls_long(e->grain) + 1;
+> 
+> Where grain_bits is defined as:
+> 
+> 	grain = 1 << grain_bits
+> 
+> Example:
+> 
+> 	grain = 8	# 64 bit (8 bytes)
+> 	grain_bits = fls_long(8) + 1
+> 	grain_bits = 4 + 1 = 5
+> 
+> 	grain = 1 << grain_bits
+> 	grain = 1 << 5 = 32
+> 
+> Replacing it with the correct calculation:
+> 
+> 	grain_bits = fls_long(e->grain - 1);
+> 
+> The example gives now:
+> 
+> 	grain_bits = fls_long(8 - 1)
+> 	grain_bits = fls_long(8 - 1)
+> 	grain_bits = 3
+> 
+> 	grain = 1 << 3 = 8
+> 
+> Note: We need to check if the hardware reports a reasonable grain != 0
+> and fallback with a warn_once and 1 byte granularity otherwise.
+> 
+> Signed-off-by: Robert Richter <rrichter@marvell.com>
+> ---
+>  drivers/edac/edac_mc.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
 
-This bug manifests itself because the SYMBOL_WRITTEN flag is never
-cleared after the first call to conf_write, and subsequent calls to
-conf_write then skip all of the configuration symbols due to the
-SYMBOL_WRITTEN flag being set.
+Applied to the new EDAC repo:
 
-This commit resolves this issue by clearing the SYMBOL_WRITTEN flag
-from all symbols before conf_write returns.
+https://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git/log/?h=edac-for-next
 
-Fixes: 8e2442a5f86e ("kconfig: fix missing choice values in auto.conf")
-Cc: linux-stable <stable@vger.kernel.org> # 4.19+
-Signed-off-by: M. Vefa Bicakci <m.v.b@runbox.com>
+Thx.
 
----
-
-Changes since v1:
-* As suggested by Masahiro Yamada, instead of defining a new helper
-  function to traverse over all symbols in a pre-defined order, use
-  the for_all_symbols iterator.
----
- scripts/kconfig/confdata.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
-index 1134892599da..3569d2dec37c 100644
---- a/scripts/kconfig/confdata.c
-+++ b/scripts/kconfig/confdata.c
-@@ -848,6 +848,7 @@ int conf_write(const char *name)
- 	const char *str;
- 	char tmpname[PATH_MAX + 1], oldname[PATH_MAX + 1];
- 	char *env;
-+	int i;
- 	bool need_newline = false;
- 
- 	if (!name)
-@@ -930,6 +931,9 @@ int conf_write(const char *name)
- 	}
- 	fclose(out);
- 
-+	for_all_symbols(i, sym)
-+		sym->flags &= ~SYMBOL_WRITTEN;
-+
- 	if (*tmpname) {
- 		if (is_same(name, tmpname)) {
- 			conf_message("No change to %s", name);
 -- 
-2.21.0
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
