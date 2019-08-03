@@ -2,87 +2,121 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C37C3C31E40
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 17:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C2DC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 17:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99C7120679
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 17:34:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564853669;
-	bh=bx09sU0odmrKWlcv+dufqUQnT28Goo0TWyeKBPwhXDs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=2bCn/c2fHE7Gsdre8Q2T65oy1waNFYHa4aLNNqXNiL64mOiifDQFUwr8YYwOXxpWi
-	 BpcTu9pGTXpHF0Eg+0qXkav4nnXQyH+IqFJMfU7dc2r6OLdUUyq5wzGcC9lWZImjt1
-	 Pccpwk4uRCmHjEHsRsaA+64HdbUi45g7F8dtVfqg=
+	by mail.kernel.org (Postfix) with ESMTP id 0DE6D2087C
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 17:41:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mRhuawTP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbfHCRe2 (ORCPT
+        id S1728157AbfHCRkq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 3 Aug 2019 13:34:28 -0400
-Received: from inca-roads.misterjones.org ([213.251.177.50]:32912 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725886AbfHCRe2 (ORCPT
+        Sat, 3 Aug 2019 13:40:46 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45872 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725886AbfHCRkp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 3 Aug 2019 13:34:28 -0400
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
-        (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1htxvC-0001u7-Ep; Sat, 03 Aug 2019 19:34:22 +0200
-Date:   Sat, 3 Aug 2019 18:34:20 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Steven Price <steven.price@arm.com>
-Cc:     kvm@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-        linux-doc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu
-Subject: Re: [PATCH 6/9] KVM: arm64: Provide a PV_TIME device to user space
-Message-ID: <20190803183335.149e0113@why>
-In-Reply-To: <20190803135113.6cdf500c@why>
-References: <20190802145017.42543-1-steven.price@arm.com>
-        <20190802145017.42543-7-steven.price@arm.com>
-        <20190803135113.6cdf500c@why>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 3 Aug 2019 13:40:45 -0400
+Received: by mail-pl1-f194.google.com with SMTP id y8so34867421plr.12
+        for <linux-kernel@vger.kernel.org>; Sat, 03 Aug 2019 10:40:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=f5jHl+J1mvXUnH10CMkpOjLBtqZC1foXc9If20oTVtg=;
+        b=mRhuawTPUIPR89SZbRUgtxNYHZbVDH6JC25i41nMw8z6/JVaoGB71Nl0nr4UUMrpuE
+         1O+TQoV8Mb+DYOKYnkqVLFK1l9uZVB5p+DDQ04xBtocj7/Ug6Ca8p8YYAzBKpFUB5tna
+         xa7D+l8b2CO6+vr2IaMng3G9e72eRvV7rkMjtnke01svp2D3TwiiGeztVwE40cYfswcT
+         J36jkC62sMiguhNEs1Fs3ZmOdjSp3jgzmAiWydRcAZa5rjPeW+2QgW2+qyiRhGSp+QFr
+         jdm1OkvWu9AfoAtRorhzkU8c2y1obDPKa6JmtS0GdrIv7RV5dxiSHWwrXn8eFnD4nVVw
+         0a+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=f5jHl+J1mvXUnH10CMkpOjLBtqZC1foXc9If20oTVtg=;
+        b=GRdqhN2O/b6CCDCeNxcJe+B1waAuq36/mwYhHZI2ztMMJhlH2E9yF/++TzygQNWSFo
+         Qc3NCWonoGy2oNoXyJ2iClYhcgw0GmY/yaftcjjZUG5oDQTG9vElVVmfhxLxGL8beRnX
+         CEWznm181L4H2XLSHDxczj6p5kY9zEEjhUjOF3Ap9WognGf5aGMwVTS/knffRfNxR/UG
+         UUW8zVmbS7VEQ/LAlhzt0sLoYDKpvAQreMhDUt0FyaGknmORr3WSTEfLpf4DMN7Fp4H5
+         PzSsAtDgOKzY4m96BK6P72pu3+UPr7oHPd8B6Zp6qaMY1qnV7Ja3ob5KqB5X1CGWmWmV
+         ktGw==
+X-Gm-Message-State: APjAAAUvvQq8WJXqKzUoeFxQhFtjjqXPMYYA1aOCthwjlEisnu2bDQGH
+        FtEbPKclDBkh6lycpuP2zp8=
+X-Google-Smtp-Source: APXvYqzq2R6gwb9NkEU2Ntm9Lg5/yUSnqsMI5FNrcMXh9a4raqwmWJv5phEyhCLIoTmjWxHXzu6mWA==
+X-Received: by 2002:a17:902:1004:: with SMTP id b4mr139285953pla.325.1564854045051;
+        Sat, 03 Aug 2019 10:40:45 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.86.126])
+        by smtp.gmail.com with ESMTPSA id r1sm88834898pfq.100.2019.08.03.10.40.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 03 Aug 2019 10:40:44 -0700 (PDT)
+Date:   Sat, 3 Aug 2019 23:10:38 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Himadri Pandya <himadri18.07@gmail.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Michiel Schuurmans <michielschuurmans@gmail.com>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: rtl8192e: Make use kmemdup
+Message-ID: <20190803174038.GA10454@hari-Inspiron-1545>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: steven.price@arm.com, kvm@vger.kernel.org, catalin.marinas@arm.com, linux-doc@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, pbonzini@redhat.com, will@kernel.org, kvmarm@lists.cs.columbia.edu
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 3 Aug 2019 13:51:13 +0100
-Marc Zyngier <maz@kernel.org> wrote:
+As kmemdup API does kmalloc + memcpy . We can make use of it instead of
+calling kmalloc and memcpy independetly.
 
-[forgot that one]
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/staging/rtl8192e/rtllib_softmac.c | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
 
-> On Fri,  2 Aug 2019 15:50:14 +0100
-> Steven Price <steven.price@arm.com> wrote:
-
-[...]
-
-> > +static int __init kvm_pvtime_init(void)
-> > +{
-> > +	kvm_register_device_ops(&pvtime_ops, KVM_DEV_TYPE_ARM_PV_TIME);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +late_initcall(kvm_pvtime_init);
-
-Why is it an initcall? So far, the only initcall we've used is the one
-that initializes KVM itself. Can't we just the device_ops just like we
-do for the vgic?
-
-	M.
+diff --git a/drivers/staging/rtl8192e/rtllib_softmac.c b/drivers/staging/rtl8192e/rtllib_softmac.c
+index e29e8d6..9b8b301 100644
+--- a/drivers/staging/rtl8192e/rtllib_softmac.c
++++ b/drivers/staging/rtl8192e/rtllib_softmac.c
+@@ -1382,10 +1382,8 @@ rtllib_association_req(struct rtllib_network *beacon,
+ 	ieee->assocreq_ies = NULL;
+ 	ies = &(hdr->info_element[0].id);
+ 	ieee->assocreq_ies_len = (skb->data + skb->len) - ies;
+-	ieee->assocreq_ies = kmalloc(ieee->assocreq_ies_len, GFP_ATOMIC);
+-	if (ieee->assocreq_ies)
+-		memcpy(ieee->assocreq_ies, ies, ieee->assocreq_ies_len);
+-	else {
++	ieee->assocreq_ies = kmemdup(ies, ieee->assocreq_ies_len, GFP_ATOMIC);
++	if (!ieee->assocreq_ies) {
+ 		netdev_info(ieee->dev,
+ 			    "%s()Warning: can't alloc memory for assocreq_ies\n",
+ 			    __func__);
+@@ -2259,12 +2257,10 @@ rtllib_rx_assoc_resp(struct rtllib_device *ieee, struct sk_buff *skb,
+ 			ieee->assocresp_ies = NULL;
+ 			ies = &(assoc_resp->info_element[0].id);
+ 			ieee->assocresp_ies_len = (skb->data + skb->len) - ies;
+-			ieee->assocresp_ies = kmalloc(ieee->assocresp_ies_len,
++			ieee->assocresp_ies = kmemdup(ies,
++						      ieee->assocresp_ies_len,
+ 						      GFP_ATOMIC);
+-			if (ieee->assocresp_ies)
+-				memcpy(ieee->assocresp_ies, ies,
+-				       ieee->assocresp_ies_len);
+-			else {
++			if (!ieee->assocresp_ies) {
+ 				netdev_info(ieee->dev,
+ 					    "%s()Warning: can't alloc memory for assocresp_ies\n",
+ 					    __func__);
 -- 
-Without deviation from the norm, progress is not possible.
+2.7.4
+
