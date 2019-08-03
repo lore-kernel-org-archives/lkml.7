@@ -2,133 +2,98 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1C4C31E40
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 14:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB4DC31E40
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 14:17:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DED6206C1
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 14:16:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA92D206C1
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 14:17:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727686AbfHCOQn (ORCPT
+        id S1727715AbfHCORs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 3 Aug 2019 10:16:43 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:37809 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727650AbfHCOQn (ORCPT
+        Sat, 3 Aug 2019 10:17:48 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:51690 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727650AbfHCORr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 3 Aug 2019 10:16:43 -0400
-Received: by mail-ed1-f68.google.com with SMTP id w13so74924083eds.4
-        for <linux-kernel@vger.kernel.org>; Sat, 03 Aug 2019 07:16:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vbKcpktamOEnlA0qNqnc/w2735gi7G17BJHK0idUG/w=;
-        b=p14GV9DP9Cuous8tfRGy/tQYreoZNRwxAtAUxxHB7GeFEvWsw8BbiLTaI/8TKjpBlD
-         I0slwk/+PBp1fJnSseHytNned7oaYD7iU6KG3QzrDY1SFJ1TN+Io+Y7UPTLqpQjcejaf
-         EvnSW4wzOc5M/CEhjhmV8ICrSaqDy5IoQtqFTs3JRa8ya46HBuKCxvaUoehlzkoxE3O8
-         A97vXaKKGeiqqUfT+xhzCD29KHLPNmRiUW0SqZFNRYzVjwUtq3ty+yzv4dHqKs/7LkgX
-         Evj1BVxRizsez97PJFqFbWyUwpZv1p0cwLY6qFsUnmlIUvvewQYCmdIP7WJx7wh8L/8f
-         +ZCw==
-X-Gm-Message-State: APjAAAXcurJ1+nV5MZD/SkKumLhyLub1kjah7V0/p9ljZ6ztiC8vU84T
-        xzWP9E2qdZw0trQzdYpNQOPYekKfrTk=
-X-Google-Smtp-Source: APXvYqwtLECPm/zSSRGyPy9t8lacqRtMGr7zWFmp/ap4I1TvbwfhW8Zps0Kfh4Pka5jx4+uk4hj1ig==
-X-Received: by 2002:a17:906:3d69:: with SMTP id r9mr55137822ejf.28.1564841801189;
-        Sat, 03 Aug 2019 07:16:41 -0700 (PDT)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id m32sm18744055edc.89.2019.08.03.07.16.39
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Sat, 03 Aug 2019 07:16:40 -0700 (PDT)
-Subject: Re: [PATCH] platform/x86: silead_dmi: Add touchscreen platform data
- for the Chuwi Surbook Mini tablet.
-To:     Giang Le <ohaibuzzle@gmail.com>
-Cc:     dvhart@infradead.org, andy@infradead.org,
-        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190803141222.9460-1-ohaibuzzle@gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <3c8b8c8c-0674-9fb2-a28e-ceaea58fcece@redhat.com>
-Date:   Sat, 3 Aug 2019 16:16:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sat, 3 Aug 2019 10:17:47 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 56B8820024;
+        Sat,  3 Aug 2019 16:17:43 +0200 (CEST)
+Date:   Sat, 3 Aug 2019 16:17:42 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     John Stultz <john.stultz@linaro.org>,
+        Xinliang Liu <z.liuxinliang@hisilicon.com>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Rongrong Zou <zourongrong@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH v3 00/26] drm: Kirin driver cleanups to prep for Kirin960
+ support
+Message-ID: <20190803141742.GA21935@ravnborg.org>
+References: <20190801034439.98227-1-john.stultz@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20190803141222.9460-1-ohaibuzzle@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190801034439.98227-1-john.stultz@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=KKAkSRfTAAAA:8
+        a=pGLkceISAAAA:8 a=e5mUnYsNAAAA:8 a=7gkXJVJtAAAA:8 a=BTeA3XvPAAAA:8
+        a=mm5y-ppz5zUS1jQs-MMA:9 a=CjuIK1q_8ugA:10 a=cvBusfyB2V15izCimMoJ:22
+        a=Vxmtnl_E_bksehYqCbjh:22 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=tafbbOV3vt1XuEhzTjGK:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi John.
 
-On 03-08-19 16:12, Giang Le wrote:
-
-Hmm, could have used a somewhat more verbose commit message above
-the Signed-off-by line, but I guess there is not that much to write
-about this patch.
-
-> Signed-off-by: Giang Le <ohaibuzzle@gmail.com>
-
-Patch looks good to me:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
-
-> ---
->   drivers/platform/x86/touchscreen_dmi.c | 24 ++++++++++++++++++++++++
->   1 file changed, 24 insertions(+)
+On Thu, Aug 01, 2019 at 03:44:13AM +0000, John Stultz wrote:
+> I was reminded I had sent this out a few months ago, but forgot
+> all about it! Apologies! Anyway, I wanted to resubmit this patch
+> set so I didn't have to continue carrying it forever to keep the
+> HiKey960 board running.
 > 
-> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-> index 4370e4add83a..72535b0268eb 100644
-> --- a/drivers/platform/x86/touchscreen_dmi.c
-> +++ b/drivers/platform/x86/touchscreen_dmi.c
-> @@ -136,6 +136,22 @@ static const struct ts_dmi_data chuwi_vi10_data = {
->   	.properties     = chuwi_vi10_props,
->   };
->   
-> +static const struct property_entry chuwi_surbook_mini_props[] = {
-> +	PROPERTY_ENTRY_U32("touchscreen-min-x", 88),
-> +	PROPERTY_ENTRY_U32("touchscreen-min-y", 13),
-> +	PROPERTY_ENTRY_U32("touchscreen-size-x", 2040),
-> +	PROPERTY_ENTRY_U32("touchscreen-size-y", 1524),
-> +	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-chuwi-surbook-mini.fw"),
-> +	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-> +	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
-> +	{ }
-> +};
-> +
-> +static const struct ts_dmi_data chuwi_surbook_mini_data = {
-> +	.acpi_name      = "MSSL1680:00",
-> +	.properties     = chuwi_surbook_mini_props,
-> +};
-> +
->   static const struct property_entry connect_tablet9_props[] = {
->   	PROPERTY_ENTRY_U32("touchscreen-min-x", 9),
->   	PROPERTY_ENTRY_U32("touchscreen-min-y", 10),
-> @@ -646,6 +662,14 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
->   			DMI_MATCH(DMI_PRODUCT_NAME, "S165"),
->   		},
->   	},
-> +	{
-> +		/* Chuwi Surbook Mini (CWI540) */
-> +		.driver_data = (void *)&chuwi_surbook_mini_data,
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "Hampoo"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "C3W6_AP108_4G"),
-> +		},
-> +	},
->   	{
->   		/* Connect Tablet 9 */
->   		.driver_data = (void *)&connect_tablet9_data,
+> This patchset contains one fix (in the front, so its easier to
+> eventually backport), and a series of changes from YiPing to
+> refactor the kirin drm driver so that it can be used on both
+> kirin620 based devices (like the original HiKey board) as well
+> as kirin960 based devices (like the HiKey960 board).
 > 
+> The full kirin960 drm support is still being refactored, but as
+> this base kirin rework was getting to be substantial, I wanted
+> to send out the first chunk for some initial review, so that the
+> review burden wasn't overwhelming.
+> 
+> The full HiKey960 patch stack can be found here:
+>   https://git.linaro.org/people/john.stultz/android-dev.git/log/?h=dev/hikey960-mainline-WIP
+> 
+> 
+> Feedback would be greatly appreciated!
+> 
+> thanks
+> -john
+> 
+> Cc: Rongrong Zou <zourongrong@gmail.com>
+> Cc: David Airlie <airlied@linux.ie>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: dri-devel <dri-devel@lists.freedesktop.org>
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+
+I am missing: Xinliang Liu <z.liuxinliang@hisilicon.com>
+in your list of recipients.
+
+Xinliang is listed at one of the maintainers of
+hisilicon/
+
+	Sam
