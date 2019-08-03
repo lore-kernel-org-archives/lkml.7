@@ -2,96 +2,114 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B6BC433FF
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 16:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBBBC31E40
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 16:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28D9020679
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 16:00:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P23R6vcE"
+	by mail.kernel.org (Postfix) with ESMTP id 7189420679
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 16:03:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387683AbfHCQAO (ORCPT
+        id S2387769AbfHCQDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 3 Aug 2019 12:00:14 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35727 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726300AbfHCQAO (ORCPT
+        Sat, 3 Aug 2019 12:03:17 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:50491 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387464AbfHCQDR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 3 Aug 2019 12:00:14 -0400
-Received: by mail-pf1-f193.google.com with SMTP id u14so37532568pfn.2;
-        Sat, 03 Aug 2019 09:00:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yTadWe86gKjo9vnan4joaBeNoEwdwBddX6AmXeDPPnk=;
-        b=P23R6vcEPbH7WU3Ildsh+a2PH4O0CM6bPHIz/f8xqiz2+k+8yfsr6vKYxNx+JiVqmH
-         Zmp8bHEMDNP0AaG2aCd1gFjaxku2PkNZxfpMp13NMtHxFJdEr7cEwcv2uijxknq58b4d
-         9XbzIAt/6viyI6Z9k2l0G3KgNMXL5rR8o2z06vO8Ccn6Gmij4MC+pkV6p1HppHg9BOTo
-         ++dfSSjbx+KYG7bNI0iKJ1//GAUhtF4x44+h3J8FHKGNv2pqsZUwWXrR5p+nQnWMJubF
-         Jhg+oRkUjIROEBzOaLlMyR0AZeCZbzI6brQBAKuLrb5gqp63ZHy40qlSMlmSHOSL4BjM
-         6WmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yTadWe86gKjo9vnan4joaBeNoEwdwBddX6AmXeDPPnk=;
-        b=U7jmhERifJixxSDfmjZfuRaOJbfzITASq9xi3QSK/yON0xMIpna9x1mZRGU1Pt/wpZ
-         4jgeLkbLIZiQmFL6aFCG0z74n+cqlM1yYqbddnTBilJFvB/PHeHRZ0nWIjEf1jVDMUfH
-         NO5vwwhLGi5hhy6zvD//AGWFvEbu1fSNEBbZkNzMXlIciSnHsO0rFJufBs5itsYTar1J
-         G+sCWvVLb9BK7Aj04YK4gQmuEwGylB1bLFC6FD58fL6o8uqYuy4IOC+/Q7arulnGga4U
-         ypDUIWgl+BVDElJDVbWnmdVzQBKWe9lbTWOVVdSFKeEwozRZ2d6OX/TUJzRzv8eSs5tx
-         U8KQ==
-X-Gm-Message-State: APjAAAXG34o+kcf/xHzc9uKxc0fLryTlRU7IkJNwXbpe/ZEicrz4ECGu
-        abmMNrWJ4vHupwtMrPak/pYgD2hJ
-X-Google-Smtp-Source: APXvYqxCvcYpOCV/sU7Hj00YTUEvZToGSzLWs5hHFJyjSUJ9Uw9+OyJLg8DHn5EMMtY/6kgWSaDPrg==
-X-Received: by 2002:a65:6846:: with SMTP id q6mr90826502pgt.150.1564848013058;
-        Sat, 03 Aug 2019 09:00:13 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id cx22sm10630030pjb.25.2019.08.03.09.00.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 03 Aug 2019 09:00:12 -0700 (PDT)
-Subject: Re: [PATCH 5.2 00/20] 5.2.6-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20190802092055.131876977@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <9492210e-e617-f636-d0f6-6a6381ad9461@roeck-us.net>
-Date:   Sat, 3 Aug 2019 09:00:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sat, 3 Aug 2019 12:03:17 -0400
+Received: from callcc.thunk.org ([199.116.115.135])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x73G2wIF010152
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 3 Aug 2019 12:03:00 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id DE3914202F5; Sat,  3 Aug 2019 12:02:57 -0400 (EDT)
+Date:   Sat, 3 Aug 2019 12:02:57 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>
+Subject: Re: [PATCH 09/20] ext4: Initialize timestamps limits
+Message-ID: <20190803160257.GG4308@mit.edu>
+Mail-Followup-To: "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>
+References: <20190730014924.2193-1-deepa.kernel@gmail.com>
+ <20190730014924.2193-10-deepa.kernel@gmail.com>
+ <20190731152609.GB7077@magnolia>
+ <CABeXuvpiom9eQi0y7PAwAypUP1ezKKRfbh-Yqr8+Sbio=QtUJQ@mail.gmail.com>
+ <20190801224344.GC17372@mit.edu>
+ <CAK8P3a3nqmWBXBiFL1kGmJ7yQ_=5S4Kok0YVB3VMFVBuYjFGOQ@mail.gmail.com>
+ <20190802154341.GB4308@mit.edu>
+ <CAK8P3a1Z+nuvBA92K2ORpdjQ+i7KrjOXCFud7fFg4n73Fqx_8Q@mail.gmail.com>
+ <20190802213944.GE4308@mit.edu>
+ <CAK8P3a2z+ZpyONnC+KE1eDbtQ7m2m3xifDhfWe6JTCPPRB0S=g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190802092055.131876977@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a2z+ZpyONnC+KE1eDbtQ7m2m3xifDhfWe6JTCPPRB0S=g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/2/19 2:39 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.2.6 release.
-> There are 20 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Sat, Aug 03, 2019 at 11:30:22AM +0200, Arnd Bergmann wrote:
 > 
-> Responses should be made by Sun 04 Aug 2019 09:19:34 AM UTC.
-> Anything received after that time might be too late.
-> 
+> I see in the ext4 code that we always try to expand i_extra_size
+> to s_want_extra_isize in ext4_mark_inode_dirty(), and that
+> s_want_extra_isize is always at least  s_min_extra_isize, so
+> we constantly try to expand the inode to fit.
 
-Build results:
-	total: 159 pass: 159 fail: 0
-Qemu test results:
-	total: 364 pass: 364 fail: 0
+Yes, we *try*.  But we may not succeed.  There may actually be a
+problem here if the cause is due to there simply is no space in the
+external xattr block, so we might try and try every time we try to
+modify that inode, and it would be a performance mess.  If it's due to
+there being no room in the current transaction, then it's highly
+likely it will succeed the next time.
 
-Guenter
+> Did older versions of ext4 or ext3 ignore s_min_extra_isize
+> when creating inodes despite
+> EXT4_FEATURE_RO_COMPAT_EXTRA_ISIZE,
+> or is there another possibility I'm missing?
+
+s_min_extra_isize could get changed in order to make room for some new
+file system feature --- such as extended timestamps.  That's how we
+might take an old ext3 file system with an inode size > 128, and try
+to evacuate space for extended timestamps, on a best efforts basis.
+And since it's best efforts is why Red Hat refuses to support that
+case.  It'll work 99.9% of the time, but they don't want to deal with
+the 0.01% cases showing up at their help desk.
+
+If you want to pretend that file systems never get upgraded, then life
+is much simpler.  The general approach is that for less-sophisticated
+customers (e.g., most people running enterprise distros) file system
+upgrades are not a thing.  But for sophisticated users, we do try to
+make thing work for people who are aware of the risks / caveats /
+rough edges.  Google won't have been able to upgrade thousands and
+thousands of servers in data centers all over the world if we limited
+ourselves to Red Hat's support restrictions.  Backup / reformat /
+restore really isn't a practical rollout strategy for many exabytes of
+file systems.
+
+It sounds like your safety checks / warnings are mostly targeted at
+low-information customers, no?
+
+					- Ted
