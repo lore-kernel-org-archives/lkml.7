@@ -2,157 +2,87 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C3CC31E40
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 17:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C37C3C31E40
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 17:34:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FA5920679
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 17:34:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="KJgjf/Ze"
+	by mail.kernel.org (Postfix) with ESMTP id 99C7120679
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 17:34:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564853669;
+	bh=bx09sU0odmrKWlcv+dufqUQnT28Goo0TWyeKBPwhXDs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=2bCn/c2fHE7Gsdre8Q2T65oy1waNFYHa4aLNNqXNiL64mOiifDQFUwr8YYwOXxpWi
+	 BpcTu9pGTXpHF0Eg+0qXkav4nnXQyH+IqFJMfU7dc2r6OLdUUyq5wzGcC9lWZImjt1
+	 Pccpwk4uRCmHjEHsRsaA+64HdbUi45g7F8dtVfqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbfHCRd5 (ORCPT
+        id S1728132AbfHCRe2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 3 Aug 2019 13:33:57 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40419 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725886AbfHCRd4 (ORCPT
+        Sat, 3 Aug 2019 13:34:28 -0400
+Received: from inca-roads.misterjones.org ([213.251.177.50]:32912 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725886AbfHCRe2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 3 Aug 2019 13:33:56 -0400
-Received: by mail-ot1-f66.google.com with SMTP id l15so24131509oth.7;
-        Sat, 03 Aug 2019 10:33:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=a73iM0e1gPWjjRBi3/LsFQbixuEHj+TrPlcXhkLNbHk=;
-        b=KJgjf/Ze0bomvSK3eoP82aftItOEt2KoT40KuFK+E3nFGSuDP4ADawxFdJ7mYutbCB
-         FIPgRWYB6oNloDOv12BXfCdjKLoSmiS7Z3L7G+OoctWtODsfW3fkQqfhMHUIINz4LM9B
-         nw9xgemXYy9JUhYCMs/+WQJ6p0KkG5frwJFTxGYZ5OpiyNpL8LdVAbdM15ntZXDA0ggg
-         DhpmVnDNM4ORl++VVkFzt26gybaaL2kCQujfhV8z+1hYheqnPj2jUG797DLjffdeXArv
-         aEfECj2pAXhgjOLuZSw6FrxB3jC1TX8r6LNWCiqnL3450QT2dZRDFKuq01CkAlaqDD63
-         j3xQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=a73iM0e1gPWjjRBi3/LsFQbixuEHj+TrPlcXhkLNbHk=;
-        b=BlzJSDfc9q0jgqbsiR070lVpD82eb/UTJ/GadFhtpC+YqMqPArkI7hzRnPqnWFLrte
-         wbE6xPKNx3Fk/MFVU4S7va1Lq3RmeYissg/u0tvrzGmRtvN0auuYGTrM/YCImxFCzN2r
-         JkQ4O6xITtpoLbiejRbUe5F/47WNg+h1M64ziOW+NrWBsqK8Swz6krWI97+sMOyxO4p5
-         iOd5iJ2QCgd9rAURuXueushmWwOm8+Z4wU/hOIP98cWfJvlzh2M65WJerfujvgoKDJP2
-         vqQRw659FifP9SJo3XGTgjTKOnnwj6ZcOv8ceWO3NiWxipiZbEnhP7F19JG9AmpuqiG+
-         4gRA==
-X-Gm-Message-State: APjAAAUG9aPz3Z/nHQzqmGUnRlJYEZbBk/k2y4UAcSNAsnK+poGnWNde
-        Qgj6JzPeAn7TXip07u+83cpXYs4+uL1/VzoO7iw=
-X-Google-Smtp-Source: APXvYqzARiKQOmIFeC82NX4vTy2Cl293F6MvbG/RYu/jrYovez6E9n9htWgDtFz/z9hUSB0GpMAo/P02OBy1FSW61Lk=
-X-Received: by 2002:a9d:6d8d:: with SMTP id x13mr36621465otp.6.1564853635352;
- Sat, 03 Aug 2019 10:33:55 -0700 (PDT)
+        Sat, 3 Aug 2019 13:34:28 -0400
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1htxvC-0001u7-Ep; Sat, 03 Aug 2019 19:34:22 +0200
+Date:   Sat, 3 Aug 2019 18:34:20 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Steven Price <steven.price@arm.com>
+Cc:     kvm@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
+        linux-doc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu
+Subject: Re: [PATCH 6/9] KVM: arm64: Provide a PV_TIME device to user space
+Message-ID: <20190803183335.149e0113@why>
+In-Reply-To: <20190803135113.6cdf500c@why>
+References: <20190802145017.42543-1-steven.price@arm.com>
+        <20190802145017.42543-7-steven.price@arm.com>
+        <20190803135113.6cdf500c@why>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190727175315.28834-1-martin.blumenstingl@googlemail.com>
- <20190727175315.28834-4-martin.blumenstingl@googlemail.com>
- <86y30imq9p.wl-marc.zyngier@arm.com> <CAFBinCCb4aTfuxaSrUp8xbUjjefi_qHOUJLjzH+acUTLY+6Geg@mail.gmail.com>
- <86o916mx2m.wl-maz@kernel.org>
-In-Reply-To: <86o916mx2m.wl-maz@kernel.org>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Sat, 3 Aug 2019 19:33:44 +0200
-Message-ID: <CAFBinCDRBmG39Pa4XBa2Bu8K6GH7iz_YyKoJ795XKTnEz2b4VQ@mail.gmail.com>
-Subject: Re: [PATCH 3/5] MIPS: lantiq: add an irq_domain and irq_chip for EBU
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     tglx@linutronix.de, jason@lakedaemon.net, ralf@linux-mips.org,
-        paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org,
-        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        john@phrozen.org, Hauke Mehrtens <hauke@hauke-m.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: steven.price@arm.com, kvm@vger.kernel.org, catalin.marinas@arm.com, linux-doc@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, pbonzini@redhat.com, will@kernel.org, kvmarm@lists.cs.columbia.edu
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+On Sat, 3 Aug 2019 13:51:13 +0100
+Marc Zyngier <maz@kernel.org> wrote:
 
-On Sat, Aug 3, 2019 at 11:12 AM Marc Zyngier <maz@kernel.org> wrote:
->
-> Hi Martin,
->
-> On Thu, 01 Aug 2019 18:42:42 +0100,
-> Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
->
-> [...]
->
-> > > > +static void ltq_ebu_irq_handler(struct irq_desc *desc)
-> > > > +{
-> > > > +     struct irq_domain *domain = irq_desc_get_handler_data(desc);
-> > > > +     struct irq_chip *irqchip = irq_desc_get_chip(desc);
-> > > > +
-> > > > +     chained_irq_enter(irqchip, desc);
-> > > > +
-> > > > +     generic_handle_irq(irq_find_mapping(domain, 0));
-> > >
-> > > Having an irqdomain for a single interrupt is a bit over the top... Is
-> > > that for the convenience of the DT infrastructure?
-> > yes, I did it to get DT support
-> > please let me know if there's a "better" way (preferably with another
-> > driver as example)
->
-> To be honest, the chained handler is what troubles me the most. You
-> normally would use such a construct if you had a multiplexer. In your
-> case, you have a 1:1 relationship between input and output. It is just
-> that this irqchip allows the trigger to be adapted, which normally
-> calls for a hierarchical implementation.
->
-> In your case, with only a single interrupt, it doesn't matter much
-> though.
-I see, thank you for the explanation
+[forgot that one]
 
-can you name a driver for a hierarchical irqchip driver that you
-consider "clean" which I could use as reference?
-I am considering to still convert it to a hierarchical irqchip driver
-to keep it consistent with at least two more upcoming Lantiq irqchip
-drivers (which both seem to be similar use-cases as this one, they
-just provide more than one interrupt):
-- there's a PCI legacy interrupt controller in the PCIe controller's
-app registers. it takes 4 parent interrupts and provides
-PCI_INT{A,B,C,D}. the interrupts need to be enabled and ACK'ed in the
-PCIe app registers as well as in the parent interrupt controller
-- the EIU (External Interrupt Unit) in my own words is the GPIO
-interrupt controller. it takes up to 6 parent interrupts and provides
-one interrupt for each "EXIN GPIO". setting the IRQ type and ACK need
-to happen through the EIU registers as well as the parent interrupt
-controller
+> On Fri,  2 Aug 2019 15:50:14 +0100
+> Steven Price <steven.price@arm.com> wrote:
 
-my initial thought is that it's best to follow one programming model
-(which based on your suggestion would be a hierarchical irqchip) for
-all three IRQ controllers
+[...]
 
-> >
-> > [...]
-> > > > +     irq_create_mapping(domain, 0);
-> > >
-> > > Why do you need to perform this eagerly? I'd expect this interrupt to
-> > > be mapped when it is actually claimed by a driver.
-> > I don't remember why I added it, it may be left-over from copying from
-> > another driver
-> > in v2 I'll try to drop it
-> >
-> > > > +
-> > > > +     irq_set_chained_handler_and_data(irq, ltq_ebu_irq_handler, domain);
-> > >
-> > > And there is no HW initialisation whatsoever? I'd expect, at the very
-> > > least, the sole interrupt to be configured as disabled/masked.
-> > I can add that. is there any "best practice" on what I should
-> > initialize (just disable it or also set a "default" mode like
-> > LEVEL_LOW)?
->
-> Whichever default state makes sense. What you want to avoid is to boot
-> the kernel with a screaming interrupt because some firmware has left
-> it enabled.
-noted, thank you
+> > +static int __init kvm_pvtime_init(void)
+> > +{
+> > +	kvm_register_device_ops(&pvtime_ops, KVM_DEV_TYPE_ARM_PV_TIME);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +late_initcall(kvm_pvtime_init);
 
+Why is it an initcall? So far, the only initcall we've used is the one
+that initializes KVM itself. Can't we just the device_ops just like we
+do for the vgic?
 
-Martin
+	M.
+-- 
+Without deviation from the norm, progress is not possible.
