@@ -2,140 +2,98 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E07AC0650F
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 02:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B35CC0650F
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 02:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D34AB2086A
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 02:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2212720880
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 02:42:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VvHc2KZk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391625AbfHCChC (ORCPT
+        id S2390960AbfHCCmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 22:37:02 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:52549 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390442AbfHCChC (ORCPT
+        Fri, 2 Aug 2019 22:42:45 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:44154 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387492AbfHCCmo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 22:37:02 -0400
-Received: from fsav401.sakura.ne.jp (fsav401.sakura.ne.jp [133.242.250.100])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x732aiRI033406;
-        Sat, 3 Aug 2019 11:36:44 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav401.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav401.sakura.ne.jp);
- Sat, 03 Aug 2019 11:36:44 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav401.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x732aeeh033387
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Sat, 3 Aug 2019 11:36:44 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Subject: Re: Possible mem cgroup bug in kernels between 4.18.0 and 5.3-rc1.
-To:     Masoud Sharbiani <msharbiani@apple.com>,
-        Michal Hocko <mhocko@kernel.org>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, hannes@cmpxchg.org,
-        vdavydov.dev@gmail.com, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <5659221C-3E9B-44AD-9BBF-F74DE09535CD@apple.com>
- <20190802074047.GQ11627@dhcp22.suse.cz>
- <7E44073F-9390-414A-B636-B1AE916CC21E@apple.com>
- <20190802144110.GL6461@dhcp22.suse.cz>
- <5DE6F4AE-F3F9-4C52-9DFC-E066D9DD5EDC@apple.com>
- <20190802191430.GO6461@dhcp22.suse.cz>
- <A06C5313-B021-4ADA-9897-CE260A9011CC@apple.com>
-From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Message-ID: <f7733773-35bc-a1f6-652f-bca01ea90078@I-love.SAKURA.ne.jp>
-Date:   Sat, 3 Aug 2019 11:36:36 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 2 Aug 2019 22:42:44 -0400
+Received: by mail-ed1-f66.google.com with SMTP id k8so73977004edr.11;
+        Fri, 02 Aug 2019 19:42:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=o1vMxhl+4Xe8qt/aHo+GhoXoYmWQszbPFJSU0NitREQ=;
+        b=VvHc2KZkDBdebb6X8/gGkQvTDaYUvh/XU5tP/42xt6NVPTfjJOyNyL7/9fNgAZrgih
+         4bryokS8g7RSJX8RY9r/PeWkPp029rbVwLGpnPHk9eJjZJaAERVj/a/Qz044hf+rfumc
+         8phV03Gl/qpN2BKLJUZlHL+psH+2XaTBVG5UVIGmhXKk8atykWK4GNYigxYmyYFZPmnT
+         DBsENi0ZOO8AfcUmET3/yFiCQi+/ZGrB2YQ1Hp6cEGTCFRI9AhDpnDYIkTwvweQ5g8dZ
+         LwWvPDUdixr4iznREIccOOtKVx8W2x1PG8RCDWlKjfu2EslcUlR5c6fmhizqCJCR3Txh
+         Xb1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=o1vMxhl+4Xe8qt/aHo+GhoXoYmWQszbPFJSU0NitREQ=;
+        b=ogt5up4vX/Glo3QVlnXztfmlllrFnOtV5AOwhWO1PZGyaqJVm/Sk/BeNKkdZx3mB67
+         4sHcAMLaE1Oq04P97uz1KGGYmwduaupBYHagl7H71MTKxhoND/Ksu1s1+4bryNhW7YWg
+         +K/AeJOgoMhqvk5lZBy4rbp+3doxYFeZQ+uNGQ+lfNNxGv4EtrS7t8/WXTqNFzKbZ9ev
+         s01K0X9IXHOlo0Z9Yb+y2IEY4wIFPoHev+p3iTgabTeIUGe7QB/JJfG6huln0qZzjoCr
+         hXXtpQ/qA8irI5LEjTPwVZQnXa270DATAu2JgFOkPDK/2h6PIjL23WBXiTL9/8cL3zpg
+         IsxA==
+X-Gm-Message-State: APjAAAWnV38dtcVntxBKky+sRGsLX/kMApM6UMCvBNCdU/1NMUKu/0Zz
+        uw4bxF3/o8/Vt4COt3+mo9fFJTIyioRjnqoOK+k=
+X-Google-Smtp-Source: APXvYqwz6jft7qzAaK2FHh0KFWud0KyfK29vGPe8vQ99QQ21veviaWlDirto/7DeK2h37wXASAXva3yGfsaunlGCWg8=
+X-Received: by 2002:a17:906:32c2:: with SMTP id k2mr15739979ejk.147.1564800162874;
+ Fri, 02 Aug 2019 19:42:42 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <A06C5313-B021-4ADA-9897-CE260A9011CC@apple.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190802121020.1181-1-hslester96@gmail.com> <CANhBUQ1chO0Q6wHJwbKMvp6LkD7qLBRw57xwf1QkBAKaewHs5w@mail.gmail.com>
+ <47bb83d0111f1132bbf532c16be483c5efbe839f.camel@mellanox.com>
+In-Reply-To: <47bb83d0111f1132bbf532c16be483c5efbe839f.camel@mellanox.com>
+From:   Chuhong Yuan <hslester96@gmail.com>
+Date:   Sat, 3 Aug 2019 10:42:31 +0800
+Message-ID: <CANhBUQ1wZPinWicu2c_VZjpTtP_9+AxB=7zn+ymPyYVo_rsxZQ@mail.gmail.com>
+Subject: Re: [PATCH] net/mlx4_core: Use refcount_t for refcount
+To:     Saeed Mahameed <saeedm@mellanox.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Well, while mem_cgroup_oom() is actually called, due to hitting
+Saeed Mahameed <saeedm@mellanox.com> =E4=BA=8E2019=E5=B9=B48=E6=9C=883=E6=
+=97=A5=E5=91=A8=E5=85=AD =E4=B8=8A=E5=8D=882:38=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Sat, 2019-08-03 at 00:10 +0800, Chuhong Yuan wrote:
+> > Chuhong Yuan <hslester96@gmail.com> =E4=BA=8E2019=E5=B9=B48=E6=9C=882=
+=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=888:10=E5=86=99=E9=81=93=EF=BC=
+=9A
+> > > refcount_t is better for reference counters since its
+> > > implementation can prevent overflows.
+> > > So convert atomic_t ref counters to refcount_t.
+> > >
+> > > Also convert refcount from 0-based to 1-based.
+> > >
+> >
+> > It seems that directly converting refcount from 0-based
+> > to 1-based is infeasible.
+> > I am sorry for this mistake.
+>
+> Just curious, why not keep it 0 based and use refcout_t ?
+>
+> refcount API should have the same semantics as atomic_t API .. no ?
 
-        /*
-         * The OOM killer does not compensate for IO-less reclaim.
-         * pagefault_out_of_memory lost its gfp context so we have to
-         * make sure exclude 0 mask - all other users should have at least
-         * ___GFP_DIRECT_RECLAIM to get here.
-         */
-        if (oc->gfp_mask && !(oc->gfp_mask & __GFP_FS))
-                return true;
-
-path inside out_of_memory(), OOM_SUCCESS is returned and retrying without
-making forward progress...
-
-----------------------------------------
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -2447,6 +2447,8 @@ static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
-         */
-        oom_status = mem_cgroup_oom(mem_over_limit, gfp_mask,
-                       get_order(nr_pages * PAGE_SIZE));
-+       printk("mem_cgroup_oom(%pGg)=%u\n", &gfp_mask, oom_status);
-+       dump_stack();
-        switch (oom_status) {
-        case OOM_SUCCESS:
-                nr_retries = MEM_CGROUP_RECLAIM_RETRIES;
-----------------------------------------
-
-----------------------------------------
-[   55.208578][ T2798] mem_cgroup_oom(GFP_NOFS)=0
-[   55.210424][ T2798] CPU: 3 PID: 2798 Comm: leaker Not tainted 5.3.0-rc2+ #637
-[   55.212985][ T2798] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 04/13/2018
-[   55.217260][ T2798] Call Trace:
-[   55.218597][ T2798]  dump_stack+0x67/0x95
-[   55.220200][ T2798]  try_charge+0x4ca/0x6d0
-[   55.221843][ T2798]  ? get_mem_cgroup_from_mm+0x1ff/0x2c0
-[   55.223855][ T2798]  mem_cgroup_try_charge+0x88/0x2d0
-[   55.225723][ T2798]  __add_to_page_cache_locked+0x27e/0x4c0
-[   55.227784][ T2798]  ? scan_shadow_nodes+0x30/0x30
-[   55.229577][ T2798]  add_to_page_cache_lru+0x72/0x180
-[   55.231467][ T2798]  iomap_readpages_actor+0xeb/0x1e0
-[   55.233376][ T2798]  ? iomap_migrate_page+0x120/0x120
-[   55.235382][ T2798]  iomap_apply+0xaf/0x150
-[   55.237049][ T2798]  iomap_readpages+0x9f/0x160
-[   55.239061][ T2798]  ? iomap_migrate_page+0x120/0x120
-[   55.241013][ T2798]  xfs_vm_readpages+0x54/0x130 [xfs]
-[   55.242960][ T2798]  read_pages+0x63/0x160
-[   55.244613][ T2798]  __do_page_cache_readahead+0x1cd/0x200
-[   55.246699][ T2798]  ondemand_readahead+0x201/0x4d0
-[   55.248562][ T2798]  page_cache_async_readahead+0x16e/0x2e0
-[   55.250740][ T2798]  ? page_cache_async_readahead+0xa5/0x2e0
-[   55.252881][ T2798]  filemap_fault+0x3f3/0xc20
-[   55.254813][ T2798]  ? xfs_ilock+0x1de/0x2c0 [xfs]
-[   55.256858][ T2798]  ? __xfs_filemap_fault+0x7f/0x270 [xfs]
-[   55.259118][ T2798]  ? down_read_nested+0x98/0x170
-[   55.261123][ T2798]  ? xfs_ilock+0x1de/0x2c0 [xfs]
-[   55.263146][ T2798]  __xfs_filemap_fault+0x92/0x270 [xfs]
-[   55.265210][ T2798]  xfs_filemap_fault+0x27/0x30 [xfs]
-[   55.267164][ T2798]  __do_fault+0x33/0xd0
-[   55.268784][ T2798]  do_fault+0x3be/0x5c0
-[   55.270390][ T2798]  __handle_mm_fault+0x462/0xc00
-[   55.272251][ T2798]  handle_mm_fault+0x17c/0x380
-[   55.274055][ T2798]  ? handle_mm_fault+0x46/0x380
-[   55.275877][ T2798]  __do_page_fault+0x24a/0x4c0
-[   55.277676][ T2798]  do_page_fault+0x27/0x1b0
-[   55.279399][ T2798]  page_fault+0x34/0x40
-[   55.281053][ T2798] RIP: 0033:0x4009f0
-[   55.282564][ T2798] Code: 03 00 00 00 e8 71 fd ff ff 48 83 f8 ff 49 89 c6 74 74 48 89 c6 bf c0 0c 40 00 31 c0 e8 69 fd ff ff 45 85 ff 7e 21 31 c9 66 90 <41> 0f be 14 0e 01 d3 f7 c1 ff 0f 00 00 75 05 41 c6 04 0e 2a 48 83
-[   55.289631][ T2798] RSP: 002b:00007fff1804ec00 EFLAGS: 00010206
-[   55.291835][ T2798] RAX: 000000000000001b RBX: 0000000000000000 RCX: 0000000001a1a000
-[   55.294745][ T2798] RDX: 0000000000000000 RSI: 000000007fffffe5 RDI: 0000000000000000
-[   55.297500][ T2798] RBP: 000000000000000c R08: 0000000000000000 R09: 00007f4e7392320d
-[   55.300225][ T2798] R10: 0000000000000002 R11: 0000000000000246 R12: 00000000000186a0
-[   55.303047][ T2798] R13: 0000000000000003 R14: 00007f4e530d6000 R15: 0000000002800000
-----------------------------------------
-
-
+refcount API will warn when increase a 0 refcount.
+It regards this as a use-after-free.
