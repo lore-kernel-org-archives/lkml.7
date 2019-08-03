@@ -2,79 +2,113 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02513C32750
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 06:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B52C31E40
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 06:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D62C42087C
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 06:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5887F21726
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 06:24:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564813481;
+	bh=fpNScs+MHTf7w01QKi3dsBPtHieQZxhSWLqi9kwhYkw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rKXDs+8hbD5ej6VOcsxLiMVbnJ3iLybQD/fqNF6TpWfgJFg0paKOsS4KI8hTMel9q
+	 1DvJbbvbSuJyA6kkrxAHmsUJAF9kJ8RLO4nglLeEt9A7/SYF+FkLicCM+SEtrz03/Z
+	 VeCh6bg+SYgxy73h/eE+nfenTiVJMGD+pzfRQ920=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbfHCGYe (ORCPT
+        id S1726779AbfHCGYk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 3 Aug 2019 02:24:34 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33794 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726709AbfHCGYe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 3 Aug 2019 02:24:34 -0400
-Received: by mail-wm1-f65.google.com with SMTP id w9so2855166wmd.1
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 23:24:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qQrXRWbiVzCgKkWpGh8Bph8KJod9P3yHKaFNvkh79S8=;
-        b=KoiTi7wbtrsx28zI6sTCnbxHFsBTJ+NGdi1xx7Vn4IiX0uHwZYFFZc57ZGA3EYYdjf
-         rn214r1VjxIX69dI4WbaT+kiOkrqjqhaWHdEgMPBFtTVCskLcA5hOV95XFhmfNsUCCsk
-         V2wvqIXJHW2H6d9vNCcWu23eWhgmCWmqb5ifAroRo44qVReRUJskoE4DhY4YToSm943q
-         IBE48Eyd6AYOCIBD7CUrPnXwl9REeAN6+TX3wNp1aqygZq4mFi7g1Ey9RkCFIacuZiN5
-         jBMD2RAnFvSSW9yN3+NGsYZ28PK3UM7lMCOVnYeMuwuvIY9F9/MGBB8DsMvmDlknFhyE
-         uuOg==
-X-Gm-Message-State: APjAAAWH3fFwMpKKe0R1+CStH+XDNo35dJRepB9a8GO1yjLIoRnVNAJp
-        TAFOxxysQEg5/stbsOaz4Q/G4Fvw3Y8=
-X-Google-Smtp-Source: APXvYqzefN/OOM3ZIIp9IhluMM+RtXq/dKJtM7YYpcswrSjVtlCw7yJ0+dAr6aKQu/XR/JmQm+g3ag==
-X-Received: by 2002:a1c:cb0a:: with SMTP id b10mr7637972wmg.41.1564813472287;
-        Fri, 02 Aug 2019 23:24:32 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:4013:e920:9388:c3ff? ([2001:b07:6468:f312:4013:e920:9388:c3ff])
-        by smtp.gmail.com with ESMTPSA id s2sm61976309wmj.33.2019.08.02.23.24.31
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 02 Aug 2019 23:24:31 -0700 (PDT)
-Subject: Re: [PATCH] KVM: selftests: Update gitignore file for latest changes
-To:     shuah <shuah@kernel.org>, Thomas Huth <thuth@redhat.com>,
-        kvm@vger.kernel.org
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190731142851.9793-1-thuth@redhat.com>
- <20c43c74-09f9-8f0b-64e4-a481a40387cb@kernel.org>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <d96b6e7b-d091-59c3-60ed-a1bcd21fd549@redhat.com>
-Date:   Sat, 3 Aug 2019 08:24:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sat, 3 Aug 2019 02:24:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57274 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726709AbfHCGYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 3 Aug 2019 02:24:38 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7C4E2087C;
+        Sat,  3 Aug 2019 06:24:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564813477;
+        bh=fpNScs+MHTf7w01QKi3dsBPtHieQZxhSWLqi9kwhYkw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kbrugMEiFk0q6RUBzHE2KRiLg/W1FI7A/GJVyZkXxWNR6Njw4Q0n6i4Tq2ohlrWIf
+         ujUGCJYikOZGyTdGtyGpNhJ9vADWPA86BM+ouzKyvcesZnxyvsW3VVk+KFIWGyMQFD
+         WIbGQuK/eWGbb+ryLb75czFA+MyRyrab5myWduZM=
+Date:   Sat, 3 Aug 2019 08:24:34 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jose Carlos Cazarin Filho <joseespiriki@gmail.com>
+Cc:     Larry Finger <Larry.Finger@lwfinger.net>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        lkcamp@lists.libreplanetbr.org
+Subject: Re: [PATCH] rtl8188eu: hal: phy.c
+Message-ID: <20190803062434.GA9160@kroah.com>
+References: <20190802210018.29251-1-joseespiriki@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20c43c74-09f9-8f0b-64e4-a481a40387cb@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190802210018.29251-1-joseespiriki@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/08/19 15:58, shuah wrote:
->>
+On Fri, Aug 02, 2019 at 09:00:18PM +0000, Jose Carlos Cazarin Filho wrote:
+> Fix a lot of checkpath errors of the type:
+> 	-CHECK: spaces preferred around that
+> 	-CHECK: Alignment should match open parenthesis
 > 
-> Hi Paolo,
-> 
-> Let me know if you need me to take any of these patches. In any
-> case:
-> 
-> Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+> Signed-off-by: Jose Carlos Cazarin Filho <joseespiriki@gmail.com>
+> ---
+>  My second commit to the kernel, I know you ppl don't like these kind of commits
+>  fixing style-only erros pointed by the checkpath, but I'm doing this just to learn
+>  Thanks!
+>  drivers/staging/rtl8188eu/hal/phy.c | 54 ++++++++++++++---------------
+>  1 file changed, 27 insertions(+), 27 deletions(-)
 
-Thanks, I've queued these in the KVM tree.
+Hi,
 
-Paolo
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
+
+You are receiving this message because of the following common error(s)
+as indicated below:
+
+- Your patch did many different things all at once, making it difficult
+  to review.  All Linux kernel patches need to only do one thing at a
+  time.  If you need to do multiple things (such as clean up all coding
+  style issues in a file/driver), do it in a sequence of patches, each
+  one doing only one thing.  This will make it easier to review the
+  patches to ensure that they are correct, and to help alleviate any
+  merge issues that larger patches can cause.
+
+- You did not specify a description of why the patch is needed, or
+  possibly, any description at all, in the email body.  Please read the
+  section entitled "The canonical patch format" in the kernel file,
+  Documentation/SubmittingPatches for what is needed in order to
+  properly describe the change.
+
+- You did not write a descriptive Subject: for the patch, allowing Greg,
+  and everyone else, to know what this patch is all about.  Please read
+  the section entitled "The canonical patch format" in the kernel file,
+  Documentation/SubmittingPatches for what a proper Subject: line should
+  look like.
+
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
+
+thanks,
+
+greg k-h's patch email bot
