@@ -2,141 +2,124 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5A7C31E40
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 04:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD8ACC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 04:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44C5C2087C
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 04:18:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9816D21726
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 04:27:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="pU8/lDul"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="B1V8eWAD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388875AbfHCESN (ORCPT
+        id S1725974AbfHCE1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 3 Aug 2019 00:18:13 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33128 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbfHCESN (ORCPT
+        Sat, 3 Aug 2019 00:27:24 -0400
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:20709 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbfHCE1Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 3 Aug 2019 00:18:13 -0400
-Received: by mail-pf1-f194.google.com with SMTP id g2so36981413pfq.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 21:18:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zKeANEK6kwb2S9kHR576jpELFbbuT/gI7mLvYDstxwE=;
-        b=pU8/lDulM8iSQPrAjU5DtefQ2mIw/LZFnBGddE91KmjOmHKwrNuWUZ/2Vk50txGhQK
-         Ujcg+He8rFleQCPwytmVXhSKS97AWX3pIuQg17tigcsWDlGZgTPFEtz+t0KWnUnZG0UZ
-         3khuTo2E5Yki6GKDEs9Q9KZmXxv5bxVba110fofYN/RnI8Pq+1yl/Dvv7zG7levNKsJi
-         FnYUzbvghMUlpP2WIoPhi6kr7mf8NAjP/UAB5mpj3u/mo/ySjzS9UmNL3tnZqS/XsnEA
-         p1VqQBeVoqj+dIbgIGl0TFOmnq4mM92daOw1ktPWKIXCSvB78ZUfrlucB2yhdIDKyxBO
-         MP1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zKeANEK6kwb2S9kHR576jpELFbbuT/gI7mLvYDstxwE=;
-        b=EUZkzZgAZIY8hBtyodf5/8iK4ZGX/DL/Bke+qol5N0ZIaSFmNHNRZJva6q6hBbUa+1
-         x5CAVQIc/RwYSZjP5i8TLUKMpvXY9aYRiySVR5d0qYXyM0NZq3ozSFOlgukJ5rxG73mD
-         45Y0XNXFaHKUtJIFTYVmS2ppkRh98auDVdlxwdwlhfaM/9zpy7iXgImZHe00Uuz17OJz
-         rvsTbICWHBbD1OAnIX8Il0Mu0JopJAiMz4tetQ4Mlmt/nLYbRhPyngtG4YH/xzLtCvxl
-         y3UAZ62T5RPBx0ROLyIsndlAt5K2o/SlPxvxwHOwlKCgQOUwQyl6nNYQoDBXTeNvLDDE
-         5odQ==
-X-Gm-Message-State: APjAAAVsHdgvNoh+XR5k3lNECmuIL81GuQtIlD1qb+qyqC8bvEDCLbAh
-        p1+n8YrgiqrcDb7ALWl/RZg/zvncDH4=
-X-Google-Smtp-Source: APXvYqxJzcrHnxPcFtpDnZX41o71Cp0mTb86Tl9SxUJJArUP0wE47own42NZ6ZKd3+Y86tz0w3vl8Q==
-X-Received: by 2002:a17:90a:d80b:: with SMTP id a11mr7105400pjv.53.1564805892582;
-        Fri, 02 Aug 2019 21:18:12 -0700 (PDT)
-Received: from [192.168.86.24] (cpe-75-85-219-51.dc.res.rr.com. [75.85.219.51])
-        by smtp.gmail.com with ESMTPSA id z13sm8593480pjn.32.2019.08.02.21.18.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 02 Aug 2019 21:18:11 -0700 (PDT)
-Subject: Re: [PATCH 1/1] block: Use bits.h macros to improve readability
-To:     Leonardo Bras <leonardo@linux.ibm.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Dennis Zhou <dennis@kernel.org>, Hannes Reinecke <hare@suse.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Tejun Heo <tj@kernel.org>,
-        "Dennis Zhou (Facebook)" <dennisszhou@gmail.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Sagi Grimberg <sagi@grimberg.me>
-References: <20190802000041.24513-1-leonardo@linux.ibm.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <a41b5530-f2e1-0932-1f39-0ce66ce902ae@kernel.dk>
-Date:   Fri, 2 Aug 2019 21:18:10 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sat, 3 Aug 2019 00:27:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1564806444; x=1596342444;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=WGA9LNHmgoVjWNUYeIrs9rW619vN81TklxixEztnNLM=;
+  b=B1V8eWADGSkrYUFDZ/ZMQ4w74tGGF9Dvc25CT3aLYn+T0BfWDG0H289q
+   WRif4C5kykvgneWStJzh7Vz3C3bPwz0qH6hrDh94s96Nk1gnlFuSuIaXP
+   1D55lAj1sSH+JNczuQRhh7s+Pa+/O3QiZgj1FlcwPBMse0obZO92yRchr
+   CeKzIDDUrTWE8yoEDTEszdFbRbG21lNSvPAon2l6v7t6L3xqyDFgVEQXK
+   ulC/f89rBFISw+G2+HrbeWqj4MKTqzK3iT8YUdD5Nd7GJ8voY7dI6NOkO
+   PgQNYUB7HuuG9vWuuN9fZrTnhSlpK9SxuMUWqipTfvAsPKdrLE9S8IB3t
+   Q==;
+IronPort-SDR: ce8LwsTAQqL3CR+9JjjbjNIKjXHvg3d7bgM6FESm97RdhPH8DAlpwVpUmMovz3VjRwao46lLya
+ cNih3AeXaQRU6ZPdQrbHHtAyiRtMbetMRgQFDSo+o5UkM8ml4iWYuhlrvBx9t2/1O5FtnL7W0M
+ l/SusShq4C2SoHROR+31MVk88HySM06u6rpU57ZbTYFLD425mp+cGpDLr0QNyceJl2jHsRApXr
+ jU5foArlEEUuQ7J2C5M4Kq3CfuZ75QsyOmF544VuQKJe7rB4cPOzjJNOqdHz8ZKU1BamrQC/pp
+ yaE=
+X-IronPort-AV: E=Sophos;i="5.64,340,1559491200"; 
+   d="scan'208";a="114857027"
+Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 03 Aug 2019 12:27:24 +0800
+IronPort-SDR: swoI6hO3CerZebrmSrcWFGTWXXQtgwgacSgtib9t9Zlh7JdRSmpfk3wNiHb9ghvSFDkAvX99vN
+ FTIUFN9vAUqVgrDCc0oUHFOiGw3a4mMU2LTmAFaYup0Vk466Y7rxCMFGk0sgFbWQFemnEJ2nUA
+ MniMfw+sZs1AvTM+KHIbe5k1o+V4atg/NJoP9ZXERlpdzslBwZ7NFA/VxASwRsUCHZsZe/Tk3t
+ KJPJ4r6gGLEtJvad+jzfz4ukkR/HDsZSk08P8ngDsYSUmL0c736w+Juypk14ftAInqxf+72+z2
+ kMDI61Vty4q/LtJycTSqiAOf
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2019 21:25:18 -0700
+IronPort-SDR: QXW8xcKK5nFNUmRNgUr/m0wldyNbVndOvpTNiNeTvE0moFFjOp9Ub+Ee/L6VfiNmNggTMwmJ8r
+ CAnVg8TA3d6xkLB09DKJSy1uEesSSnvhvMVmIxH4+RdqkiOB1A12LwDgeehVptgUm67QfvOSmh
+ uNnwGrUbMFPuhFp7iLEIkXNCZjxNhxNYDZbefXEnjJNCSxZgt0FZrY7M/JLZle4OChfDFUyFN0
+ Uso741IWCnJefG04G+bZP47adDLO8zj/3CseWcC6JAXEea+X1u485icJhcOasvBTR2/PQmBeGM
+ ilw=
+Received: from jedi-01.sdcorp.global.sandisk.com (HELO jedi-01.int.fusionio.com) ([10.11.143.218])
+  by uls-op-cesaip01.wdc.com with ESMTP; 02 Aug 2019 21:27:24 -0700
+From:   Atish Patra <atish.patra@wdc.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Alan Kao <alankao@andestech.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <anup.patel@wdc.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        devicetree@vger.kernel.org, Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>,
+        linux-riscv@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH v4 0/4] Miscellaneous fixes 
+Date:   Fri,  2 Aug 2019 21:27:19 -0700
+Message-Id: <20190803042723.7163-1-atish.patra@wdc.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20190802000041.24513-1-leonardo@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/1/19 6:00 PM, Leonardo Bras wrote:
-> Applies some bits.h macros in order to improve readability of
-> linux/blk_types.h.
-> 
-> Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
-> ---
->   include/linux/blk_types.h | 55 ++++++++++++++++++++-------------------
->   1 file changed, 28 insertions(+), 27 deletions(-)
-> 
-> diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
-> index 95202f80676c..31c8c6d274f6 100644
-> --- a/include/linux/blk_types.h
-> +++ b/include/linux/blk_types.h
-> @@ -9,6 +9,7 @@
->   #include <linux/types.h>
->   #include <linux/bvec.h>
->   #include <linux/ktime.h>
-> +#include <linux/bits.h>
->   
->   struct bio_set;
->   struct bio;
-> @@ -101,13 +102,13 @@ static inline bool blk_path_error(blk_status_t error)
->   #define BIO_ISSUE_SIZE_BITS     12
->   #define BIO_ISSUE_RES_SHIFT     (64 - BIO_ISSUE_RES_BITS)
->   #define BIO_ISSUE_SIZE_SHIFT    (BIO_ISSUE_RES_SHIFT - BIO_ISSUE_SIZE_BITS)
-> -#define BIO_ISSUE_TIME_MASK     ((1ULL << BIO_ISSUE_SIZE_SHIFT) - 1)
-> +#define BIO_ISSUE_TIME_MASK     GENMASK_ULL(BIO_ISSUE_SIZE_SHIFT - 1, 0)
+This patch series have some unrelated fixes related
+to clocksource, dt-bindings and isa strings.
 
-Not sure why we even have these helpers, I'd argue that patches like
-this HURT readability, not improve it. When I see
+I combined them into series as most of them are
+prerequisite for kvm patch series.
 
-((1ULL << SOME_SHIFT) - 1)
+Changes from v3->v4:
+1. Removed export module patch.
+2. Updated dt binding description.
 
-I know precisely what that does, whereas I have to think about the other
-one, maybe even look it up to be sure. For instance, without looking
-now, I have no idea what the second argument is. Looking at the git log,
-I see numerous instances of:
+Changes from v2->v3:
+1. Updated commit text of dt binding patch.
+2. Removed couple of remaining uppercase usage.
 
-"xxx: Fix misuses of GENMASK macro
+Changes from v1->v2:
 
- Arguments are supposed to be ordered high then low."
+1. Dropped the case-insensitive support patch and added a dt-bindings
+   update patch.
+2. Added a export symbol patch.
 
-Hence it seems GENMASK_ULL is easy to misuse or get wrong, the very
-opposite of what you'd want in a helper. How is it helping readability
-if the helper is easy to misuse?
+Anup Patel (1):
+RISC-V: Add riscv_isa reprensenting ISA features common across CPUs
 
-Ditto with
+Atish Patra (3):
+RISC-V: Remove per cpu clocksource
+RISC-V: Fix unsupported isa string info.
+dt-bindings: Update the riscv,isa string description
 
-(1ULL << SOME_SHIFT)
+.../devicetree/bindings/riscv/cpus.yaml       |  4 ++
+arch/riscv/include/asm/hwcap.h                | 16 +++++++
+arch/riscv/kernel/cpu.c                       | 47 +++++++++++++++----
+arch/riscv/kernel/cpufeature.c                | 39 +++++++++++++--
+drivers/clocksource/timer-riscv.c             |  6 +--
+5 files changed, 95 insertions(+), 17 deletions(-)
 
-vs BIT_ULL. But at least that one doesn't have a mysterious 2nd
-argument.
-
-Hence I'm not inclined to apply this patch.
-
--- 
-Jens Axboe
+--
+2.21.0
 
