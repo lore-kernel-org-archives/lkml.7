@@ -2,141 +2,131 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B6A0C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 00:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC79C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 00:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 014552087E
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 00:45:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E72652087E
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 00:49:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O9jHmein"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="O4KgGjLt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392862AbfHCApR (ORCPT
+        id S2388139AbfHCAte (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 20:45:17 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44549 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388048AbfHCApR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 20:45:17 -0400
-Received: by mail-wr1-f65.google.com with SMTP id p17so78835039wrf.11;
-        Fri, 02 Aug 2019 17:45:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=p2nPvXeiMRCbIp019RSfslQHC+wLOXTRda/OBXWWDLk=;
-        b=O9jHmeinzFdk0HUuIlJYgzDWnzM0u/x89eydbjc0Ghqs9dQwrVClCrv9PxjAO+nOgc
-         UOhhFPzo1owoGQIYIbwtLNbSohjjCktGzuHET0iRF2QA2d7mzBqYX5Lub0aXtTk7KCBH
-         5Tq0YAeLRgjykjvHLZFq6LbX21DCzAx/ZZ6ZA72t94EC6LrZ2T3w8YHLFTvBlzdk1Fkv
-         cMDYxoepav+xVwtYSk5C5gClah5xHmXVYLncS/ZqKkmiYw5QYMot3pnZtGB89pH8fGfi
-         PpwhR1YAdNMBP6PvYzcU3lI6yYINT4r0v7cQ3Ml4rUX7CMXfAaqchh909fzszg+/c1D1
-         YDlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p2nPvXeiMRCbIp019RSfslQHC+wLOXTRda/OBXWWDLk=;
-        b=knFA99sDtWbxyE41VFtk1Hp0SgyUO/ZRfUa/c23maYcRN7zQcRhCMQPcakUZ70RW4f
-         yMvGC1YMqpG7x7ifNPyp5w1Ax/iXleP6kWvrLPYY71J6I5QIPnjxQBRwz9acyShJMLrl
-         TDldhyD2CSsXb1jR0Fg4RqzmlXjwfafytrHYkPb49g++07/EVsAuy14Tc3QWc+NREKBH
-         hy3HwztlqD+Ei3ojR1rxsoRRH7vGcsi3kD/VWIJXo9/HGMp2uX6SJ86EtFmCOqAM2N1D
-         hQqOd6GdHW5OsBHNkHo9mFM+pnETcdboTlzwC9lHAKtE+AUeJo97YRMvt3syUzWtszOf
-         wEuQ==
-X-Gm-Message-State: APjAAAVUfbEanzh2fJsrYi82JeKr6UwE6siKRpMpGGlfGrsDyyZalHUX
-        t8vMmmlQmtE7CRsppHIJu5GnXiDNBeD2YUvkWllUdFAhfa0=
-X-Google-Smtp-Source: APXvYqycYdpO8LrjkPFP5CxL4/LTWJJoR+m/XspgpFNdlVEJi3FOAxMCgZIZIQCoyJqzoMZul1a4qVtyziPxQ0M2MTA=
-X-Received: by 2002:a5d:50d1:: with SMTP id f17mr17510387wrt.124.1564793115204;
- Fri, 02 Aug 2019 17:45:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190702080123.904399496@linuxfoundation.org> <20190702080126.138655706@linuxfoundation.org>
- <0f105a3696611dc10aa4d7c5c22ffac031b3c098.camel@nokia.com>
- <20190802072834.GC26174@kroah.com> <88c88ec44e93c07170891bdf391d2b6251c7041a.camel@nokia.com>
-In-Reply-To: <88c88ec44e93c07170891bdf391d2b6251c7041a.camel@nokia.com>
-From:   Xin Long <lucien.xin@gmail.com>
-Date:   Sat, 3 Aug 2019 08:45:03 +0800
-Message-ID: <CADvbK_cOU00xqML35NMf3jk+S81kRLteHODf6Y-OsxPRDurSoQ@mail.gmail.com>
-Subject: Re: [PATCH 4.14 43/43] tipc: pass tunnel dev as NULL to udp_tunnel(6)_xmit_skb
-To:     "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>
-Cc:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "syzbot+a43d8d4e7e8a7a9e149e@syzkaller.appspotmail.com" 
-        <syzbot+a43d8d4e7e8a7a9e149e@syzkaller.appspotmail.com>,
-        "syzbot+c4c4b2bb358bb936ad7e@syzkaller.appspotmail.com" 
-        <syzbot+c4c4b2bb358bb936ad7e@syzkaller.appspotmail.com>,
-        "syzbot+a47c5f4c6c00fc1ed16e@syzkaller.appspotmail.com" 
-        <syzbot+a47c5f4c6c00fc1ed16e@syzkaller.appspotmail.com>,
-        "syzbot+a9e23ea2aa21044c2798@syzkaller.appspotmail.com" 
-        <syzbot+a9e23ea2aa21044c2798@syzkaller.appspotmail.com>,
+        Fri, 2 Aug 2019 20:49:34 -0400
+Received: from mail-eopbgr1320110.outbound.protection.outlook.com ([40.107.132.110]:31824
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387829AbfHCAte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 20:49:34 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lPjaWNyJuI+REJsiHXhz8tOH1URf4MQj04LNUnu1qUJFr6+nAXFe6D06fSY1haXwa8nHBGJv4eDHgLczH13c8PAq4jAEazC8xGjGb51nL4aUxCKxgGCPWxgxUniylqSPTSxwHigRiav5yJhX8cM+Sqmiz/f5sZszyCAbgkpEmebouPadjJx0MJzUYpeqnKPNH4BU9m6nzpcqpyNppD2kj3KPye9eLDQJWWy8WFmZraeu9dsL1UMl22mW5aEQ4sf0rB5IMAt2FBcKeX22DeDP1Gw8IPEQ0O912nktamsPwZUjpt7lE6dgjmLhAHDlnwObbqXvQasRQcgBwQz6X1qiZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ql61G2A40Y+EmB0DIC9iiOc63uH2G5u5JDZy7f98Jvw=;
+ b=ezjKFEG/Eqwqm4Iamas8rXGUDuVy7iw9pTom0XBRzacrtYvQ4SnOuXk1waIRNnPzpPb7few+pyYF4wVF+4O31wJhqOcaDL6cRu09qwFv0mR1LXwGfUe3IJMTIpYpAx0xT/5fInEsT3OrvESNvkGGWB10hLD5THvS/+QREPArG9Jb0RQO1FpeEnCxKtPRBa6ZqiwY5FBrQS0Eq9sJH3p9SuyoTiiugGYk02KpitYOJh7Ixha9HwOJVykaSIcSwkSAP5xoyOBw9aSwBD8tNN5nfm3/V4U96EyygAuAmkqgpC4Sl9tdz8SkRZJJ5uAlod4O6Q2VWgYVbE6253HA6Frk/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ql61G2A40Y+EmB0DIC9iiOc63uH2G5u5JDZy7f98Jvw=;
+ b=O4KgGjLt49B8jkY4AbWNg/0tVgB82i5VzIbLH6qFRI3AP/QZmNYBuj8Nf4fd9K8tnZdSex1IptZtr4laEgznIgvgUmbvZn725e/f59VjlokUA3iRQI8yeB8r5MobEfo+2AFm0aOS34xJeN+rYxFbNkj3ZDTssuKEUaGBcCmeLuA=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0186.APCP153.PROD.OUTLOOK.COM (10.170.187.144) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.2; Sat, 3 Aug 2019 00:49:10 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::d44e:57b7:d8fc:e91c]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::d44e:57b7:d8fc:e91c%7]) with mapi id 15.20.2157.001; Sat, 3 Aug 2019
+ 00:49:10 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     David Miller <davem@davemloft.net>
+CC:     Sunil Muthuswamy <sunilmut@microsoft.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "syzbot+0290d2290a607e035ba1@syzkaller.appspotmail.com" 
-        <syzbot+0290d2290a607e035ba1@syzkaller.appspotmail.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "syzbot+9d4c12bfd45a58738d0a@syzkaller.appspotmail.com" 
-        <syzbot+9d4c12bfd45a58738d0a@syzkaller.appspotmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>
+Subject: RE: [PATCH v2 net] hv_sock: Fix hang when a connection is closed
+Thread-Topic: [PATCH v2 net] hv_sock: Fix hang when a connection is closed
+Thread-Index: AdVHPmu2nCw89Ds2Tx6HccJLUcFnXgCU8/SAAACnvcA=
+Date:   Sat, 3 Aug 2019 00:49:10 +0000
+Message-ID: <PU1P153MB0169BE2A2E4EAD2AF1D7CA66BFD80@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <PU1P153MB01696DDD3A3F601370701DD2BFDF0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <20190802.172729.1656276508211556851.davem@davemloft.net>
+In-Reply-To: <20190802.172729.1656276508211556851.davem@davemloft.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-03T00:49:07.3776738Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=47561fa4-db4d-420d-ae70-f9252915535a;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:1760:71c8:ee0a:27d:d7aa]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ebbaf1db-4954-479f-3865-08d717ac65ed
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0186;
+x-ms-traffictypediagnostic: PU1P153MB0186:|PU1P153MB0186:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <PU1P153MB01866716B75B20F3FC1F6EC2BFD80@PU1P153MB0186.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0118CD8765
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(376002)(136003)(39860400002)(396003)(366004)(199004)(189003)(71190400001)(256004)(229853002)(486006)(54906003)(4326008)(9686003)(8990500004)(558084003)(6116002)(102836004)(22452003)(33656002)(10290500003)(66946007)(10090500001)(74316002)(316002)(7416002)(6246003)(52536014)(66556008)(66446008)(64756008)(76116006)(6916009)(66476007)(478600001)(25786009)(71200400001)(76176011)(446003)(186003)(305945005)(5660300002)(81166006)(81156014)(7696005)(2906002)(8936002)(86362001)(53936002)(46003)(99286004)(6506007)(55016002)(68736007)(6436002)(14454004)(8676002)(476003)(11346002)(7736002);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0186;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: BBm+fM8ojWTpepvAa3xolZ6DC6IGqmo3Tic9hm/Nhw1p4lSbQuYkhGHb0u8CSckiP5s4wr2628KPLVamsi9/jdzZ3GNEYhm7GNb3CkSr+Ok4umBjKp3QBEz1exFSPTq56Wjpx1MkDbAzDJxF5tOdY0MZVX8WqL6LAf+ZJa2f69qINi8wmyFMeIW44AvsIoB9cq0nfugbEo1WLsZqU7kfZ5m4TU58SBYYnfXTinRGGrxrhSAqlmVFjy0d6nUPVQVCfGVhtPQbQAL/II6sdq4A90k4txwGFaVSLVPY37gsBtSRMg6p2hiD3GJEDUIHKACtodNe+BZvHdMV2amQ0Y+DhPv3SkiZmIt15+C2bKi6rIaAty4Nb7uOxl2DWtX2KLd4/eiEKnlxCEcMUVsfQGAKkbBdFTOQGrt2I8IyfsWuu3I=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ebbaf1db-4954-479f-3865-08d717ac65ed
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Aug 2019 00:49:10.3566
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7FQ1fYYfaqwAwnRpcE4r5R40bwP/rxb0F+nakqQqFHE99ZPtm0O02PYqSaDL/SfK0YF7IasHVfSvmqGCAlnsdw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0186
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 2, 2019 at 7:03 PM Rantala, Tommi T. (Nokia - FI/Espoo)
-<tommi.t.rantala@nokia.com> wrote:
->
-> On Fri, 2019-08-02 at 09:28 +0200, gregkh@linuxfoundation.org wrote:
-> > On Thu, Aug 01, 2019 at 10:17:30AM +0000, Rantala, Tommi T. (Nokia -
-> > FI/Espoo) wrote:
-> > > Hi,
-> > >
-> > > This tipc patch added in 4.14.132 is triggering a crash for me,
-> > > revert
-> > > fixes it.
-> > >
-> > > Anyone have ideas if some other commits missing in 4.14.x to make
-> > > this
-> > > work...?
-> >
-> > Do you also hav a problem with 4.19.y?  How about 5.2.y?  If not, can
-> > you do 'git bisect' to find the patch that fixes the issue?
-> >
-> > thanks,
-> >
-> > greg k-h
->
-> Hi, please pick this to 4.14.y and 4.19.y, tested that it fixes the
-> crash in both:
->
-> commit 5684abf7020dfc5f0b6ba1d68eda3663871fce52
-> Author: Xin Long <lucien.xin@gmail.com>
-> Date:   Mon Jun 17 21:34:13 2019 +0800
->
->     ip_tunnel: allow not to count pkts on tstats by setting skb's dev
-> to NULL
-Thanks Rantala,
+> From: linux-hyperv-owner@vger.kernel.org
+> Sent: Friday, August 2, 2019 5:27 PM
+> ...
+> Applied and queued up for -stable.
+>=20
+> Do not ever CC: stable for networking patches, we submit to -stable manua=
+lly.
+=20
+Thanks, David!
+I'll remember to not add the stable tag for network patches.
 
-sorry for late, I was in a trip.
-
-The patch belongs to a patchset:
-
-https://www.spinics.net/lists/netdev/msg578674.html
-
-So this commit should also be included:
-
-commit 6f6a8622057c92408930c31698394fae1557b188
-Author: Xin Long <lucien.xin@gmail.com>
-Date:   Mon Jun 17 21:34:14 2019 +0800
-
-    ip6_tunnel: allow not to count pkts on tstats by passing dev as NULL
-
-Next time I think I should put "Fixes:" flag into each patch.
-
->
->
-> For 5.2.y nothing is needed, these commits were in v5.2-rc6 already.
->
-> -Tommi
->
+Thanks,
+-- Dexuan
