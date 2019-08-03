@@ -2,124 +2,145 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB6AC0650F
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 01:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55030C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 01:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FCA12087E
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 01:23:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A48A20880
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 01:27:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NHlX7VGZ"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IUli3Vr4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390188AbfHCBWu (ORCPT
+        id S2390425AbfHCB1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 21:22:50 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35070 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388638AbfHCBWu (ORCPT
+        Fri, 2 Aug 2019 21:27:41 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:14799 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388638AbfHCB1k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 21:22:50 -0400
-Received: by mail-pf1-f193.google.com with SMTP id u14so36860414pfn.2;
-        Fri, 02 Aug 2019 18:22:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rfhcFrsiK1eMaZLWOciK6JmRLSFVHvQ33G78MdUQfZ8=;
-        b=NHlX7VGZmc9BoM7wwbp/Yy4E6TQZxfo/YxmYkjzOHGORl4muICxAXGWHf4OLJKaUVr
-         qOTT5JGhZoDV2AHJqmMLrla9IADnvu1C1PsvyCHqdYg2pWYqFhGtQaq6B0fS+42wmNmr
-         VeQVuFLlfCnwIKJK9+D6KDpxPokxEIWnL+xapq+v9HEVMfLfrMs+1jACBqEPROjB4duO
-         GkjnP88xuC/J5SrQIK4NzUq0Vx0ZyDZeIWE6MP6rfgimQa4BPhx+1+q0w2rHXKBrqUGF
-         ebcAHiMNlxqx2ZdUQoB+JH/0BzXFHMCQEHUCOYww871JebiUkQCAc6YTB/mxs9EAqI3U
-         uz0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rfhcFrsiK1eMaZLWOciK6JmRLSFVHvQ33G78MdUQfZ8=;
-        b=JZCw0kOFOf+sMq7GFrVxMmxea0bK7qh2GZ8GyGD96wAOdmygog60lJku5XsNWb8cj4
-         yQ7dLk5y0qmU/m2cPb/VWyquVsDw029kVPz7Tq0Sm8D/vPG8iQyc/CnbBFJMsE9R8Qz5
-         Scwdoo3EpOm2PCQfly6hH0WJlucv89IajK263dL4aivkoAqx1A6NTqZScNRBVa/YUR+l
-         enhw9GyYExxtXo2g1UHj2dCzrEvz2cQGxbmnbR4Dxo7uwqK8vXxmJfHM7caMsvG1mL3r
-         +hdb6fOf37lLFrBJOy8C2+bwo4OSt7yI3egGoPzy95Jo4/H8iwa0m9x3mGSksyCx+MnQ
-         yMIg==
-X-Gm-Message-State: APjAAAUMq25Nm3pk2vSw4E5x8Lerw5Pf8gJcyxhHjqMSXevxLlWc9yG1
-        xHslfqDG9ZYxsIUy0XSXGrE=
-X-Google-Smtp-Source: APXvYqygOaJazj0lXej17ALNUYq/e5ccMUDgntSQuV0UINMXcEWEZJJOdl9Xw+VzuzYfXbIHtuazig==
-X-Received: by 2002:aa7:9293:: with SMTP id j19mr64203812pfa.90.1564795369236;
-        Fri, 02 Aug 2019 18:22:49 -0700 (PDT)
-Received: from localhost.localdomain ([2001:ee0:491f:d660:1bb4:8d5c:97bb:479d])
-        by smtp.gmail.com with ESMTPSA id c98sm10064941pje.1.2019.08.02.18.22.46
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 02 Aug 2019 18:22:48 -0700 (PDT)
-From:   ohaibuzzle@gmail.com
-To:     hdegoede@redhat.com
-Cc:     dvhart@infradead.org, andy@infradead.org,
-        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Buzzle <ohaibuzzle@gmail.com>
-Subject: [PATCH] platform/x86: silead_dmi: Add touchscreen platform data for the Chuwi Surbook Mini tablet
-Date:   Sat,  3 Aug 2019 08:22:38 +0700
-Message-Id: <20190803012238.4099-1-ohaibuzzle@gmail.com>
-X-Mailer: git-send-email 2.22.0
+        Fri, 2 Aug 2019 21:27:40 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d44e30c0000>; Fri, 02 Aug 2019 18:27:40 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 02 Aug 2019 18:27:39 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 02 Aug 2019 18:27:39 -0700
+Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 3 Aug
+ 2019 01:27:39 +0000
+From:   John Hubbard <jhubbard@nvidia.com>
+Subject: NFSv4: rare bug *and* root cause captured in the wild
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        <linux-nfs@vger.kernel.org>, <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+X-Nvconfidentiality: public
+Message-ID: <dba47642-1ff2-81d0-14d7-fd2fa397770e@nvidia.com>
+Date:   Fri, 2 Aug 2019 18:27:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1564795660; bh=VkF+dYkLEMuE38OO7xSjtD6Jc/mXTWO+u/A2pmORYbE=;
+        h=X-PGP-Universal:From:Subject:To:X-Nvconfidentiality:Message-ID:
+         Date:User-Agent:MIME-Version:X-Originating-IP:X-ClientProxiedBy:
+         Content-Type:Content-Language:Content-Transfer-Encoding;
+        b=IUli3Vr4a+380i4BjZeED+in6na0AfJPULPkKh1SiEdYEEvNKXegT5wSX8YzPMJCX
+         USmQ9ypArQRY6X0LI+T7xbKskyRjia8AAbrdVZHxoAMIWIlFl3pc9zYu6cjGEqp8uA
+         1t1pzosFbC/5CBGvGeRcHnTajXcdKvbhKx/eVoppy+oLh2MDmI965SMPmvrBBp5ItF
+         kNcuHV5nTKp3AQ2w1SpL+jm0xoBIICiqD+GqFpKU+ITc0d4wDaRhv4lxWX6zkCO7Xq
+         RAefjT0f1Qxv1iV4s2RwG27S56BabsbF73rPp2Za5aNZGj4SPPrtU08wD0+kh81EL/
+         BLpB8bzpDXtXw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Buzzle <ohaibuzzle@gmail.com>
+Hi,
 
----
- drivers/platform/x86/touchscreen_dmi.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+While testing unrelated (put_user_pages) work on Linux 5.3-rc2+,
+I rebooted the NFS *server*, tried to ssh to the client, and the
+client dumped a backtrace as shown below.
 
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-index 4370e4add83a..72535b0268eb 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -136,6 +136,22 @@ static const struct ts_dmi_data chuwi_vi10_data = {
- 	.properties     = chuwi_vi10_props,
- };
- 
-+static const struct property_entry chuwi_surbook_mini_props[] = {
-+	PROPERTY_ENTRY_U32("touchscreen-min-x", 88),
-+	PROPERTY_ENTRY_U32("touchscreen-min-y", 13),
-+	PROPERTY_ENTRY_U32("touchscreen-size-x", 2040),
-+	PROPERTY_ENTRY_U32("touchscreen-size-y", 1524),
-+	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-chuwi-surbook-mini.fw"),
-+	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-+	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
-+	{ }
-+};
-+
-+static const struct ts_dmi_data chuwi_surbook_mini_data = {
-+	.acpi_name      = "MSSL1680:00",
-+	.properties     = chuwi_surbook_mini_props,
-+};
-+
- static const struct property_entry connect_tablet9_props[] = {
- 	PROPERTY_ENTRY_U32("touchscreen-min-x", 9),
- 	PROPERTY_ENTRY_U32("touchscreen-min-y", 10),
-@@ -646,6 +662,14 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "S165"),
- 		},
- 	},
-+	{
-+		/* Chuwi Surbook Mini (CWI540) */
-+		.driver_data = (void *)&chuwi_surbook_mini_data,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "Hampoo"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "C3W6_AP108_4G"),
-+		},
-+	},
- 	{
- 		/* Connect Tablet 9 */
- 		.driver_data = (void *)&connect_tablet9_data,
+Good news: I found that I can reliably reproduce it with those steps, 
+at commit 1e78030e5e5b (in linux.git) plus my 34-patch series [1], which
+off course is completely unrelated. :) Anyway, I'm making a note of the 
+exact repro commit, so I don't lose the repro.
+
+I see what's wrong, but I do *not* see an easy fix. Can one of the
+designers please recommend an approach to fixing this?
+
+This is almost certainly caused by commit 7e0a0e38fcfe ("SUNRPC: 
+Replace the queue timer with a delayed work function"), which changed 
+over to running things in process (kthread) context. The commit is dated
+May 1, 2019, but I've only been running NFSv4 for a couple days, so
+the problem has likely been there all along, not specific to 5.3.
+
+The call stack starts off in atomic context, so we get the bug:
+
+nfs4_do_reclaim
+    rcu_read_lock /* we are now in_atomic() and must not sleep */
+        nfs4_purge_state_owners
+            nfs4_free_state_owner
+                nfs4_destroy_seqid_counter
+                    rpc_destroy_wait_queue
+                        cancel_delayed_work_sync
+                            __cancel_work_timer
+                                __flush_work
+                                    start_flush_work
+                                        might_sleep: 
+                                         (kernel/workqueue.c:2975: BUG)
+
+Details: actual backtrace I am seeing:
+
+BUG: sleeping function called from invalid context at kernel/workqueue.c:2975
+in_atomic(): 1, irqs_disabled(): 0, pid: 2224, name: 10.110.48.28-ma
+1 lock held by 10.110.48.28-ma/2224:
+ #0: 00000000d338d2ec (rcu_read_lock){....}, at: nfs4_do_reclaim+0x22/0x6b0 [nfsv4]
+CPU: 8 PID: 2224 Comm: 10.110.48.28-ma Not tainted 5.3.0-rc2-hubbard-github+ #52
+Hardware name: ASUS X299-A/PRIME X299-A, BIOS 1704 02/14/2019
+Call Trace:
+ dump_stack+0x46/0x60
+ ___might_sleep.cold+0x8e/0x9b
+ __flush_work+0x61/0x370
+ ? find_held_lock+0x2b/0x80
+ ? add_timer+0x100/0x200
+ ? _raw_spin_lock_irqsave+0x35/0x40
+ __cancel_work_timer+0xfb/0x180
+ ? nfs4_purge_state_owners+0xf4/0x170 [nfsv4]
+ nfs4_free_state_owner+0x10/0x50 [nfsv4]
+ nfs4_purge_state_owners+0x139/0x170 [nfsv4]
+ nfs4_do_reclaim+0x7a/0x6b0 [nfsv4]
+ ? pnfs_destroy_layouts_byclid+0xc4/0x100 [nfsv4]
+ nfs4_state_manager+0x6be/0x7f0 [nfsv4]
+ nfs4_run_state_manager+0x1b/0x40 [nfsv4]
+ kthread+0xfb/0x130
+ ? nfs4_state_manager+0x7f0/0x7f0 [nfsv4]
+ ? kthread_bind+0x20/0x20
+ ret_from_fork+0x35/0x40
+
+And last but not least, some words of encouragement: the reason I moved 
+from NFSv3 to NFSv4 is that the easy authentication (matching UIDs on
+client and server) now works perfectly. Yea! So I'm enjoying v4, despite 
+the occasional minor glitch. :)
+
+[1] https://lore.kernel.org/r/20190802022005.5117-1-jhubbard@nvidia.com
+
+thanks,
 -- 
-2.22.0
-
+John Hubbard
+NVIDIA
