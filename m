@@ -2,66 +2,69 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 743F6C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 16:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4948FC31E40
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 16:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 463CF2073D
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 16:30:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B39F2073D
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 16:33:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388333AbfHCQas (ORCPT
+        id S2388415AbfHCQdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 3 Aug 2019 12:30:48 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:36860 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387950AbfHCQas (ORCPT
+        Sat, 3 Aug 2019 12:33:04 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44907 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388338AbfHCQdE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 3 Aug 2019 12:30:48 -0400
-Received: by mail-lf1-f66.google.com with SMTP id j17so1015769lfp.3
-        for <linux-kernel@vger.kernel.org>; Sat, 03 Aug 2019 09:30:47 -0700 (PDT)
+        Sat, 3 Aug 2019 12:33:04 -0400
+Received: by mail-lj1-f194.google.com with SMTP id k18so75618965ljc.11
+        for <linux-kernel@vger.kernel.org>; Sat, 03 Aug 2019 09:33:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+goFXgRydoF0Nytz+3tqWtRVYqT94UgPa9SdXNQXXHA=;
-        b=i0BojyXH9utbrrxcMcamSiZzepZBPIKHDyhiYaALOOczvgnlygWllvf0L6D2JmRRwT
-         LuPHFer9FiqSYfK1MyqhDJIJWcfx8lO69dRkdDqG5TUXSx/mOvoWVpL2k4+ejGn5fRiG
-         2jP7L1GBpnMi/bndZNgw9ehnJbimnR5kSwRkf6OwcTvVrXFGpBu5YGoFeMTef0Bosswl
-         YfhIQiaaf0X2cCPnR5ecdUjTEiRlxo2VjCqYMAC48MYLptdRafy+ODEMd9jl84gmNy6V
-         l1VMxb6VENTiXgORgzOcOFImZeagJIPH4X8Nmmu5f6LcAyLT5J2JfpgIkfhvXIG8Iyj6
-         ovuA==
-X-Gm-Message-State: APjAAAX5GmLt4xdeCxisgKF9HX5bS/bPVhFdd0HWti7XwLSW3o4X42Fx
-        DyiEp1tNJuLm0s7LEaoFJx8KR5mMZdqgWWQtBi9fklwO
-X-Google-Smtp-Source: APXvYqx+VB0QAC6kmWuKlAikeaFaQIk0KrPicf404ZLNQbGTLRUW9RHGytWfBeqwiBO9+gXWja+Z8GfOsiiGIi6mKgI=
-X-Received: by 2002:a19:48c5:: with SMTP id v188mr65928213lfa.69.1564849846235;
- Sat, 03 Aug 2019 09:30:46 -0700 (PDT)
+        bh=AQfaZwDpkzhFsFszNkjuubHRjVzMl/HqNoRRjbmG/v4=;
+        b=Jm3kjSokiQ7/ryr/LTSjR/8xCTixdPt6y2jzKi5QHonNpODFZssAv3M2nMLpRfWVlC
+         a1lc7BhoLEHJXjjWivQnmCJYYepIFTM5iKQFyBv95x0N9IhqKDsKU+Nvj5gyqlcGCxvJ
+         b7f3yV3u1sEc4DvaJh1HswvOKGOlXrWrCp183lYx0hAJ6vg2jPE5JVZZcNbvhXbJGlYd
+         +lGMjDc5G+gXf9aqgH/YF1ae33VW0KofDPqARg4cSg6UvaDnwe/2bJEbAKstCFXTNZFx
+         rOpGHwChvPlP2Mg9Yhs655OFNC7Bbx7H/yaflgTrqlY9aftmZ9Bo3+HxfW71zyLMSvco
+         pjNw==
+X-Gm-Message-State: APjAAAX/QoY9kQu47J7kAUW8WhiPxvFODCjX+yyCEzuoY6C7NtpGg5/2
+        iK5zBkgn7HV94wy4SjCvaQW+wmyE3B7kwce1D9dWk/l0Quo=
+X-Google-Smtp-Source: APXvYqz+X/hbyp2RNPPLatngwO30fCAolala+/4tI7HD6qhxVT1TZM9nYzegsYPhORzOWz3VD6AFWtzQWUnKriBaPlE=
+X-Received: by 2002:a2e:89ca:: with SMTP id c10mr58628253ljk.106.1564849982187;
+ Sat, 03 Aug 2019 09:33:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190728182300.3169-1-mcroce@redhat.com>
-In-Reply-To: <20190728182300.3169-1-mcroce@redhat.com>
+References: <20190728182029.2893-1-mcroce@redhat.com>
+In-Reply-To: <20190728182029.2893-1-mcroce@redhat.com>
 From:   Matteo Croce <mcroce@redhat.com>
-Date:   Sat, 3 Aug 2019 18:30:10 +0200
-Message-ID: <CAGnkfhzyrNrAogARDu=-uV+UGXg5j8oksyt76HsScTUtSkmp0g@mail.gmail.com>
-Subject: Re: [PATCH] kconfig: ignore auto-generated file
-To:     LKML <linux-kernel@vger.kernel.org>, linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sat, 3 Aug 2019 18:32:26 +0200
+Message-ID: <CAGnkfhxedte7iQ_4eOVSUzXK3nOWcXSkOQtfp3X3wogOtkX9VQ@mail.gmail.com>
+Subject: Re: [PATCH] kernel: ignore auto-generated file
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 28, 2019 at 8:23 PM Matteo Croce <mcroce@redhat.com> wrote:
+On Sun, Jul 28, 2019 at 8:20 PM Matteo Croce <mcroce@redhat.com> wrote:
 >
-> scripts/kconfig/zconf.hash.c is autogenerated during the build,
-> let's add it to the directory .gitignore.
+> kernel/config_data.h is autogenerated during the build, let's add it to
+> the directory .gitignore.
 >
 > Signed-off-by: Matteo Croce <mcroce@redhat.com>
 >
 
-Sorry, forgot to CC the maintainer and the relevant mailing list
+CCing people as `scripts/get_maintainer.pl kernel/.gitignore` suggests
 
 -- 
 Matteo Croce
