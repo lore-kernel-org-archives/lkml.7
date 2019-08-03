@@ -2,75 +2,163 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 382ABC31E40
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 16:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48FF2C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 16:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10E882073D
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 16:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BB9E20679
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 16:38:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388676AbfHCQer (ORCPT
+        id S2388712AbfHCQiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 3 Aug 2019 12:34:47 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:38783 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388570AbfHCQer (ORCPT
+        Sat, 3 Aug 2019 12:38:14 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41001 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388205AbfHCQiN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 3 Aug 2019 12:34:47 -0400
-Received: by mail-lf1-f65.google.com with SMTP id h28so55003042lfj.5
-        for <linux-kernel@vger.kernel.org>; Sat, 03 Aug 2019 09:34:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eyxZxTomFfPbWiAetqtPgtMLib3xCsrhPFW0Jq8wnRg=;
-        b=ByGliOBNf2MJ9nGx9SrHlT9ciAT2kc8o52wCYqX4cALI7L4j0umm8/nBaHqAOTfZhg
-         S3w3nC8P+nO4/5KRes5mBvLCWYU3XoYzBkb97/DOnY6mjr5Uykib4b1V86koWvZiVf1E
-         MT90sxnNI96IMmUl0jZTEKbxVJZpjDMHzkPykUFUcyaP1IxxUeNUetuetmDROi53aXY9
-         FwUTo6ECvJ12oivAYi7xaMBPxej04hanqszuccMOUopfEDlDQq7UNaA9Mm/h6K1m7Oon
-         aqtT0XX5YhJsPzV8USo53dp2885CHSZ+SztuBbiMGAc/c+wur7AG/8t/Rg/XLcQgDZ2i
-         siag==
-X-Gm-Message-State: APjAAAVoHup+W24dFI0so+Cwub0JXzkpPBdEKLIDsMpPvwpq+sbAgowL
-        5/FCpmIiso1tua3ZXM0TT9SlieF4RVkLbPHJh8d4MHfU
-X-Google-Smtp-Source: APXvYqy2Yn4aNBXqRTmW3Ppvae/bzICtUWoK0tK6vCVVBLGba1dgdveQnO4z/rXVFxBcOKGNWGfaP8kwPA571wDc03U=
-X-Received: by 2002:a19:ed07:: with SMTP id y7mr28943779lfy.56.1564850085457;
- Sat, 03 Aug 2019 09:34:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190723012303.2221-1-mcroce@redhat.com>
-In-Reply-To: <20190723012303.2221-1-mcroce@redhat.com>
-From:   Matteo Croce <mcroce@redhat.com>
-Date:   Sat, 3 Aug 2019 18:34:09 +0200
-Message-ID: <CAGnkfhwen3p9T3mNL3w6dQcLFFDUtfn4g-j=6yoda2o+TpGR5w@mail.gmail.com>
-Subject: Re: [PATCH net-next] netfilter: conntrack: use shared sysctl constants
-To:     netdev <netdev@vger.kernel.org>, netfilter-devel@vger.kernel.org
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tonghao Zhang <xiangxia.m.yue@gmail.com>,
-        Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 3 Aug 2019 12:38:13 -0400
+Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1htx2o-0000oY-ML; Sat, 03 Aug 2019 18:38:10 +0200
+Date:   Sat, 03 Aug 2019 16:36:53 -0000
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: [GIT pull] irq/urgent for 5.3-rc3
+Message-ID: <156485021326.28964.12573754498454150320.tglx@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 3:23 AM Matteo Croce <mcroce@redhat.com> wrote:
->
-> Use shared sysctl variables for zero and one constants, as in commit
-> eec4844fae7c ("proc/sysctl: add shared variables for range check")
->
-> Fixes: 8f14c99c7eda ("netfilter: conntrack: limit sysctl setting for boolean options")
-> Signed-off-by: Matteo Croce <mcroce@redhat.com>
->
+Linus,
 
-followup, can anyone review it?
+please pull the latest irq-urgent-for-linus git tree from:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq-urgent-for-linus
+
+up to:  a5dbba8f443e: Merge tag 'irqchip-fixes-5.3' of git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms into irq/urgent
+
+A small bunch of fixes from the irqchip department:
+    
+  - Fix a couple of UAF on error paths (RZA1, GICv3 ITS)
+  - Fix iMX GPCv2 trigger setting
+  - Add missing of_node_put() on error path in MBIGEN
+  - Add another bunch of /* fall-through */ to silence warnings
 
 Thanks,
--- 
-Matteo Croce
-per aspera ad upstream
+
+	tglx
+
+------------------>
+Anders Roxell (1):
+      irqchip/gic-v3: Mark expected switch fall-through
+
+Lucas Stach (1):
+      irqchip/irq-imx-gpcv2: Forward irq type to parent
+
+Nianyao Tang (1):
+      irqchip/gic-v3-its: Free unused vpt_page when alloc vpe table fail
+
+Nishka Dasgupta (1):
+      irqchip/irq-mbigen: Add of_node_put() before return
+
+Wen Yang (1):
+      irqchip/renesas-rza1: Fix an use-after-free in rza1_irqc_probe()
+
+
+ drivers/irqchip/irq-gic-v3-its.c | 2 +-
+ drivers/irqchip/irq-gic-v3.c     | 4 ++++
+ drivers/irqchip/irq-imx-gpcv2.c  | 1 +
+ drivers/irqchip/irq-mbigen.c     | 9 +++++++--
+ 4 files changed, 13 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index 730fbe0e2a9d..1b5c3672aea2 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -3010,7 +3010,7 @@ static int its_vpe_init(struct its_vpe *vpe)
+ 
+ 	if (!its_alloc_vpe_table(vpe_id)) {
+ 		its_vpe_id_free(vpe_id);
+-		its_free_pending_table(vpe->vpt_page);
++		its_free_pending_table(vpt_page);
+ 		return -ENOMEM;
+ 	}
+ 
+diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+index 9bca4896fa6f..96d927f0f91a 100644
+--- a/drivers/irqchip/irq-gic-v3.c
++++ b/drivers/irqchip/irq-gic-v3.c
+@@ -771,8 +771,10 @@ static void gic_cpu_sys_reg_init(void)
+ 		case 7:
+ 			write_gicreg(0, ICC_AP0R3_EL1);
+ 			write_gicreg(0, ICC_AP0R2_EL1);
++		/* Fall through */
+ 		case 6:
+ 			write_gicreg(0, ICC_AP0R1_EL1);
++		/* Fall through */
+ 		case 5:
+ 		case 4:
+ 			write_gicreg(0, ICC_AP0R0_EL1);
+@@ -786,8 +788,10 @@ static void gic_cpu_sys_reg_init(void)
+ 	case 7:
+ 		write_gicreg(0, ICC_AP1R3_EL1);
+ 		write_gicreg(0, ICC_AP1R2_EL1);
++		/* Fall through */
+ 	case 6:
+ 		write_gicreg(0, ICC_AP1R1_EL1);
++		/* Fall through */
+ 	case 5:
+ 	case 4:
+ 		write_gicreg(0, ICC_AP1R0_EL1);
+diff --git a/drivers/irqchip/irq-imx-gpcv2.c b/drivers/irqchip/irq-imx-gpcv2.c
+index bf2237ac5d09..4f74c15c4755 100644
+--- a/drivers/irqchip/irq-imx-gpcv2.c
++++ b/drivers/irqchip/irq-imx-gpcv2.c
+@@ -131,6 +131,7 @@ static struct irq_chip gpcv2_irqchip_data_chip = {
+ 	.irq_unmask		= imx_gpcv2_irq_unmask,
+ 	.irq_set_wake		= imx_gpcv2_irq_set_wake,
+ 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
++	.irq_set_type		= irq_chip_set_type_parent,
+ #ifdef CONFIG_SMP
+ 	.irq_set_affinity	= irq_chip_set_affinity_parent,
+ #endif
+diff --git a/drivers/irqchip/irq-mbigen.c b/drivers/irqchip/irq-mbigen.c
+index 3dd28382d5f5..3f09f658e8e2 100644
+--- a/drivers/irqchip/irq-mbigen.c
++++ b/drivers/irqchip/irq-mbigen.c
+@@ -241,12 +241,15 @@ static int mbigen_of_create_domain(struct platform_device *pdev,
+ 
+ 		parent = platform_bus_type.dev_root;
+ 		child = of_platform_device_create(np, NULL, parent);
+-		if (!child)
++		if (!child) {
++			of_node_put(np);
+ 			return -ENOMEM;
++		}
+ 
+ 		if (of_property_read_u32(child->dev.of_node, "num-pins",
+ 					 &num_pins) < 0) {
+ 			dev_err(&pdev->dev, "No num-pins property\n");
++			of_node_put(np);
+ 			return -EINVAL;
+ 		}
+ 
+@@ -254,8 +257,10 @@ static int mbigen_of_create_domain(struct platform_device *pdev,
+ 							   mbigen_write_msg,
+ 							   &mbigen_domain_ops,
+ 							   mgn_chip);
+-		if (!domain)
++		if (!domain) {
++			of_node_put(np);
+ 			return -ENOMEM;
++		}
+ 	}
+ 
+ 	return 0;
+
