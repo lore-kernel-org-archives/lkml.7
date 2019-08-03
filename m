@@ -2,96 +2,166 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B75C32750
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 14:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7617C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 14:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 422B4214AE
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 14:44:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B209E2075C
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 14:47:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XkrM0lj/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbfHCOoq (ORCPT
+        id S1726974AbfHCOrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 3 Aug 2019 10:44:46 -0400
-Received: from mga14.intel.com ([192.55.52.115]:31834 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725844AbfHCOop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 3 Aug 2019 10:44:45 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Aug 2019 07:44:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,342,1559545200"; 
-   d="scan'208";a="164212471"
-Received: from xinpan-mobl1.ger.corp.intel.com ([10.249.33.239])
-  by orsmga007.jf.intel.com with ESMTP; 03 Aug 2019 07:44:39 -0700
-Message-ID: <aff3502c598fb76a1517795edaacd8c8ea330051.camel@linux.intel.com>
-Subject: Re: [PATCH] KEYS: trusted: allow module init if TPM is inactive or
- deactivated
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Tyler Hicks <tyhicks@canonical.com>
-Cc:     Roberto Sassu <roberto.sassu@huawei.com>, jejb@linux.ibm.com,
-        zohar@linux.ibm.com, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org, crazyt2019+lml@gmail.com,
-        nayna@linux.vnet.ibm.com, silviu.vlasceanu@huawei.com
-Date:   Sat, 03 Aug 2019 17:44:37 +0300
-In-Reply-To: <20190802202343.GE26616@elm>
-References: <20190705163735.11539-1-roberto.sassu@huawei.com>
-         <20190711194811.rfsohbfc3a7carpa@linux.intel.com>
-         <b4454a78-1f1b-cc75-114a-99926e097b05@huawei.com>
-         <20190801163215.mfkagoafkxscesne@linux.intel.com>
-         <e50c4cfa-1f0c-6f4d-1910-010a8d874393@huawei.com>
-         <20190802142721.GA26616@elm>
-         <20190802194226.oiztvme5klkmw6fh@linux.intel.com>
-         <20190802202343.GE26616@elm>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1-2 
+        Sat, 3 Aug 2019 10:47:21 -0400
+Received: from mail-io1-f47.google.com ([209.85.166.47]:38596 "EHLO
+        mail-io1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbfHCOrV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 3 Aug 2019 10:47:21 -0400
+Received: by mail-io1-f47.google.com with SMTP id j6so38837645ioa.5
+        for <linux-kernel@vger.kernel.org>; Sat, 03 Aug 2019 07:47:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MMP3XKfq/hVIdegHeWON3FjgCQoKuCyDOKRrc6VbHEg=;
+        b=XkrM0lj/1vIfMQv9DtntirhXSAHlyvsnrKsI7ibOyW2d811N+fVzdc98V94Fvvaddo
+         E2cVbOUFjkbLELYw1oJFMbJO9uTF/X/wNoB/ehY3m9j/OZazv4Lx8zaY3Roje6I3JQKQ
+         tyS32CqFgdfKHfJ8DYN6Kj3mwVYHiJg+xNla4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MMP3XKfq/hVIdegHeWON3FjgCQoKuCyDOKRrc6VbHEg=;
+        b=DyFOIfulWAiwgQ5bsnFy5f5CW/hXWfOnCjVcOZiKbDQYLiwdpSSG2JJE6D3ofzMolQ
+         BeShNjETuRBZtMgaqu5WZe8dqUI9wO5wa5cbXn7euOafq7eiYhyc38oPOm84IJrnHbAt
+         LjqScBmNbT8sgHBkJYiTTvhaRhcPC568siPdf6ILxuL1o3ZaVYjbr3RaEOWDozvadfBL
+         T1fAPMXSvZ1FqumbmJOS6zIFZiOBJU70U6egf8JZJul10glHQeCLgWDfmQMTpKRPDoic
+         jrzNOrRR20VMGdHOTN7fvA4Iqce9VXIRWpbP6iGkk+oipgGqNxLgUrsOZLK+vlIkueNp
+         UTdw==
+X-Gm-Message-State: APjAAAUiWW67FHGVj+o1Mu3FGSPJSHfML+e3RWBDzkxvMgcGMcQdwYcN
+        frAHPUp4+In5iberNAiW5t80ox7f/tIEHtlTJoqPrA==
+X-Google-Smtp-Source: APXvYqwA8gHeBOJ1xj6OCVE6XCHSbym6IKdiWAB8Hjqrg0fEQo3v4WmqHisVkKXXXTcF7ID7nGDNzh22d99fwAEKpWk=
+X-Received: by 2002:a5e:9747:: with SMTP id h7mr9539731ioq.299.1564843639974;
+ Sat, 03 Aug 2019 07:47:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20190802213756.GA20033@lst.de> <CAJs_Fx45VtKe52eTuAUcqSUTrY=892OwhCZNrLGoQHHBwETCdQ@mail.gmail.com>
+ <20190803061916.GA29348@lst.de>
+In-Reply-To: <20190803061916.GA29348@lst.de>
+From:   Rob Clark <robdclark@chromium.org>
+Date:   Sat, 3 Aug 2019 07:47:08 -0700
+Message-ID: <CAJs_Fx5r0qbtJPC+roiXaWz0SbPVtnDyWun6TB6a3HhQAEfk3A@mail.gmail.com>
+Subject: Re: please revert "drm/msm: Use the correct dma_sync calls in msm_gem"
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Stephan Gerhold <stephan@gerhold.net>,
+        Sean Paul <seanpaul@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        torvalds@linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-08-02 at 15:23 -0500, Tyler Hicks wrote:
-> That wasn't the conclusion that I came to. I prefer Robert's proposed
-> change to trusted.ko.
-> 
-> How do you propose that this be fixed in eCryptfs?
-> 
-> Removing encrypted_key support from eCryptfs is the only way that I can
-> see to fix the bug in eCryptfs. That support has been there since 2011.
-> I'm not sure of the number of users that would be broken by removing
-> encrypted_key support. I don't think the number is high but I can't say
-> that confidently.
+On Fri, Aug 2, 2019 at 11:19 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Fri, Aug 02, 2019 at 03:06:10PM -0700, Rob Clark wrote:
+> > Sorry, this is just a temporary band-aid for v5.3 to get things
+> > working again.  Yes, I realize it is a complete hack.
+>
+> My main problem is here that you badly hack a around a problem without
+> talking to the relevant maintainers, and by abusing even more internal
+> APIs.  As said get_dma_ops isn't really for driver use (although we
+> have a few that use it for not quite as bad reason we are trying to get
+> rid off).  And as also said your abuse of the DMA API will blow up
+> with dma-debug use quite badly.  You might also corrupt the dma_address
+> in the scatterlist in ways that aren't intended - as the call to
+> dma_map_sg will allocate new iova space you are getting different
+> results from whatever you expect to actually get from your iommu API
+> usage.  This might or might no matter in the end, but you really should
+> consult the maintainers first.
+>
+> > The root problem is that I'm using the DMA API in the first place.  I
+> > don't actually use the DMA API to map buffers, for various reasons,
+> > but instead manage the iommu_domain directly.
+>
+> Yes, and this has been going on for years, without any obvious attempt
+> to address it at the API level before..
 
-Looking at the documentation [1] it is stated that
+99% of my time goes to mesa and r/e, so having the argument about
+dealing w/ cache directly simply wasn't a big enough fire to deal with
+until now, unfortunately.
 
-"Encrypted keys do not depend on a TPM, and are faster, as they use AES
-for encryption/decryption."
+(Admittedly, there is room here for someone with more bandwidth to
+take on drm/msm maintainer role.. but someone needs to do it.  Sean
+has been pitching in on the display side more recently, which has been
+a big help.)
 
-Why would you need to remove support for encrypted keys? Isn't it a
-regression in encrypted keys to hard depend on trusted keys given
-what the documentation says?
+> > Because arm/arm64 cache ops are not exported to modules, so currently
+> > I need to abuse the DMA API for cache operations (really just to clean
+> > pages if I need to mmap them uncached/writecombine).  Originally I was
+> > doing that w/ dma_{map,unmap}_sg.  But to avoid debug splats I
+> > switched that to dma_sync_sg (see
+> > 0036bc73ccbe7e600a3468bf8e8879b122252274).  But now it seems the
+> > dma-direct ops are unhappy w/ dma_sync without a dma_map (AFAICT).
+>
+> Russell has been very strict about not exporting the cache ops, and all
+> for the right reasons.  Cache maintainance for not dma coherent devices
+> is hard, and without a proper API that has arch input for even which
+> calls are used for cache flushing chances of bugs are extremely high.
+>
+> I see two proper ways out of this mess:  either we actually make msm
+> use the DMA API, so I'd be curious of what is missing that forces you
+> to use the low-level iommu API.  Or we need to enhance the iommu API
+> with a similar ownership concepts as the DMA API.  Which probably is
+> a good thing even if we move msm over to the DMA API.
 
-> Roberto, what was your use case when you added encrypted_key support to
-> eCryptfs back then? Are you aware of any users of eCryptfs +
-> encrypted_keys?
-> 
-> Jarkko, removing a long-standing feature is potentially more disruptive
-> to users than adding a workaround to trusted.ko which already requires a
-> similar workaround. I don't think that I agree with you on the proper
-> fix here.
+There are a few reasons we need to manage the GPU's address space
+directly, most of which are stalled on some iommu changes, that I wish
+I had more time to push for.  In particular, we need to move to
+per-context pagetables (so each GL context has it's own GPU address
+space).  Once we get there, we'd also like to enable SVM/SVA so GPU
+can share address space with the userspace process (which requires
+stall/resume and iommu fault handler to run in a context that can
+sleep).
 
-There is nothing to disagree or agree. I just try to get the picture
-since ecryptfs is relatively alien to me.
+Fitting that into the DMA API doesn't really make sense to me.
 
-[1] https://www.kernel.org/doc/html/v4.13/security/keys/trusted-encrypted.html
+I'm not entirely sure that fitting cache maintenance into the IOMMU
+makes a huge amount of sense either, since the issue is really about
+the CPU cache.  And I doubt the GPU is going to fit into a nice policy
+of page ownership.  There are a number of cases where both CPU and GPU
+are accessing the same buffers, and unmapping/remapping to iommu is
+either not possible (because GPU is actively accessing another part of
+the buffer) or prohibitive from a performance standpoint.
 
-/Jarkko
+As far as cache maintenance being hard, I'm not really sure I buy
+that.. at least not for arm64.  (And probably not even w/ the limited
+# of armv7 cores that can be paired with drm/msm.)
 
+> > (On some generations of hw, the iommu is attached to the device node
+> > that maps to the drm device, which is passed to dma_map/dma_sync.  On
+> > other generations the iommu is attached to a sub-device.  Changing
+> > this would break dtb compatibility.. so for now I need to handle both
+> > iommu-ops and direct-ops cases.)
+>
+> Or you always call call on a struct device that has the iommu, that
+> is match on the generic, and pick a different device.  That would in
+> many ways seem preferably over the current hack, even if that also is
+> just a horribly band-aid.
+
+I suppose picking a device w/ iommu would *mostly* work, except for
+a2xx (which has no IOMMU, but has it's own internal GPUMMU instead..
+so there is no device with iommu ops)
+
+We could perhaps, based on compatible, set a flag to use either
+dma_sync_* or dma_map_* which would avoid using get_dma_ops() (but
+otherwise doesn't seem like much of an improvement, I guess)
+
+BR,
+-R
