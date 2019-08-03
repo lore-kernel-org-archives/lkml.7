@@ -2,225 +2,182 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F6B5C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 06:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 694EAC31E40
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 07:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59A4121726
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 06:50:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EB232166E
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 07:00:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564815005;
-	bh=Lzpaf0fT+3P5MIbOZ+f2EMdo28tWa/VdkEImGwDc5mc=;
+	s=default; t=1564815651;
+	bh=Mx/SnMcesaBhJ/+1aNzTVEStgY0PLbFq0Cn9fzUKZFI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mcwlkuD2DRQTpoK0X3d/xqQgxlnq2ehidVOZ+4GbzKmqoCDYBbE8B2pIpccMfN5AQ
-	 D7yuyTn4v3djM4Kjseyrbhr9osr7HQkmSV8UOemlDGVnNHxYxILGrYQAKI42liWfg2
-	 yZpjlHgCrjDmmfJgsvS49OUay/aLCnGaEC3Q9fpM=
+	b=bf5OQqjXSkkv8zt+4zLsl4I4CkBGXnHEeuZoyUFhbnGYPwfnX4AHxAdHDbZiA9eBQ
+	 T10TkMOv4QgsFc28hno0xn9OKF1aSuDGJ/4Y4UbomdGb0M7ZyGc3557umFGzTxl2mO
+	 ABFUWVPmmZQJzfe/xXGOPSTpQctKbDD2CX1Rzn0I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727038AbfHCGuE (ORCPT
+        id S1727090AbfHCHAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 3 Aug 2019 02:50:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35392 "EHLO mail.kernel.org"
+        Sat, 3 Aug 2019 03:00:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726797AbfHCGuE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 3 Aug 2019 02:50:04 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726797AbfHCHAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 3 Aug 2019 03:00:43 -0400
+Received: from X250 (cm-84.211.118.175.getinternet.no [84.211.118.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D36FA2073D;
-        Sat,  3 Aug 2019 06:50:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B039C206A2;
+        Sat,  3 Aug 2019 07:00:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564815002;
-        bh=Lzpaf0fT+3P5MIbOZ+f2EMdo28tWa/VdkEImGwDc5mc=;
+        s=default; t=1564815641;
+        bh=Mx/SnMcesaBhJ/+1aNzTVEStgY0PLbFq0Cn9fzUKZFI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yKnroWdXx4XD++Zom3yVMUYj4Fl1ZENz6nPPDOSJpzY00gTzdTqbELtfWN1ebm2C6
-         ewHR9y2vQVsDVYQ35mUoRI/ENOijpLAHkYvygSodhMnTiXmXD5223otIutoCHm84Vh
-         ww67bk90uIeMKtF/UoekjV0JbhgHV4cy1gQGBMjM=
-Date:   Sat, 3 Aug 2019 08:50:00 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Justin Forbes <jmforbes@linuxtx.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 5.2 123/413] PCI: Add missing link delays required by the
- PCIe spec
-Message-ID: <20190803065000.GE10855@kroah.com>
-References: <20190724191735.096702571@linuxfoundation.org>
- <20190724191743.977277445@linuxfoundation.org>
- <CAFxkdApc6V=7qS+XEVSLy-v0AgqUQ8faKbjFXv18Px7VcxHgBw@mail.gmail.com>
+        b=vWTFmpNiA2iV7ZADM/jQQhVG5dxH6s50eBykNukiLwZrXMbI2ko+4YJkraKc9h4yW
+         gT+yK/FSFzC75LF3yqEeynkMqLQyXvE33dYZLg1buqojNtCOFSu2Dvxvg+bslfwk7h
+         Twg4iLQQdO3eXemoEAKcsbTuppqe/TK1g5ve9Ot8=
+Date:   Sat, 3 Aug 2019 09:00:34 +0200
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Yinbo Zhu <yinbo.zhu@nxp.com>
+Cc:     Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+        xiaobo.xie@nxp.com, Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+        yangbo.lu@nxp.com, jiafei.pan@nxp.com,
+        Ashish Kumar <Ashish.Kumar@nxp.com>
+Subject: Re: [PATCH v3] arm64: dts: ls1028a: Add esdhc node in dts
+Message-ID: <20190803070033.GA5627@X250>
+References: <20190515084925.30155-1-yinbo.zhu@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAFxkdApc6V=7qS+XEVSLy-v0AgqUQ8faKbjFXv18Px7VcxHgBw@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190515084925.30155-1-yinbo.zhu@nxp.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 12:06:39PM -0500, Justin Forbes wrote:
-> On Wed, Jul 24, 2019 at 3:31 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > [ Upstream commit c2bf1fc212f7e6f25ace1af8f0b3ac061ea48ba5 ]
-> >
-> > Currently Linux does not follow PCIe spec regarding the required delays
-> > after reset. A concrete example is a Thunderbolt add-in-card that
-> > consists of a PCIe switch and two PCIe endpoints:
-> >
-> >   +-1b.0-[01-6b]----00.0-[02-6b]--+-00.0-[03]----00.0 TBT controller
-> >                                   +-01.0-[04-36]-- DS hotplug port
-> >                                   +-02.0-[37]----00.0 xHCI controller
-> >                                   \-04.0-[38-6b]-- DS hotplug port
-> >
-> > The root port (1b.0) and the PCIe switch downstream ports are all PCIe
-> > gen3 so they support 8GT/s link speeds.
-> >
-> > We wait for the PCIe hierarchy to enter D3cold (runtime):
-> >
-> >   pcieport 0000:00:1b.0: power state changed by ACPI to D3cold
-> >
-> > When it wakes up from D3cold, according to the PCIe 4.0 section 5.8 the
-> > PCIe switch is put to reset and its power is re-applied. This means that
-> > we must follow the rules in PCIe 4.0 section 6.6.1.
-> >
-> > For the PCIe gen3 ports we are dealing with here, the following applies:
-> >
-> >   With a Downstream Port that supports Link speeds greater than 5.0
-> >   GT/s, software must wait a minimum of 100 ms after Link training
-> >   completes before sending a Configuration Request to the device
-> >   immediately below that Port. Software can determine when Link training
-> >   completes by polling the Data Link Layer Link Active bit or by setting
-> >   up an associated interrupt (see Section 6.7.3.3).
-> >
-> > Translating this into the above topology we would need to do this (DLLLA
-> > stands for Data Link Layer Link Active):
-> >
-> >   pcieport 0000:00:1b.0: wait for 100ms after DLLLA is set before access to 0000:01:00.0
-> >   pcieport 0000:02:00.0: wait for 100ms after DLLLA is set before access to 0000:03:00.0
-> >   pcieport 0000:02:02.0: wait for 100ms after DLLLA is set before access to 0000:37:00.0
-> >
-> > I've instrumented the kernel with additional logging so we can see the
-> > actual delays the kernel performs:
-> >
-> >   pcieport 0000:00:1b.0: power state changed by ACPI to D0
-> >   pcieport 0000:00:1b.0: waiting for D3cold delay of 100 ms
-> >   pcieport 0000:00:1b.0: waking up bus
-> >   pcieport 0000:00:1b.0: waiting for D3hot delay of 10 ms
-> >   pcieport 0000:00:1b.0: restoring config space at offset 0x2c (was 0x60, writing 0x60)
-> >   ...
-> >   pcieport 0000:00:1b.0: PME# disabled
-> >   pcieport 0000:01:00.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
-> >   ...
-> >   pcieport 0000:01:00.0: PME# disabled
-> >   pcieport 0000:02:00.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
-> >   ...
-> >   pcieport 0000:02:00.0: PME# disabled
-> >   pcieport 0000:02:01.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
-> >   ...
-> >   pcieport 0000:02:01.0: restoring config space at offset 0x4 (was 0x100000, writing 0x100407)
-> >   pcieport 0000:02:01.0: PME# disabled
-> >   pcieport 0000:02:02.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
-> >   ...
-> >   pcieport 0000:02:02.0: PME# disabled
-> >   pcieport 0000:02:04.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
-> >   ...
-> >   pcieport 0000:02:04.0: PME# disabled
-> >   pcieport 0000:02:01.0: PME# enabled
-> >   pcieport 0000:02:01.0: waiting for D3hot delay of 10 ms
-> >   pcieport 0000:02:04.0: PME# enabled
-> >   pcieport 0000:02:04.0: waiting for D3hot delay of 10 ms
-> >   thunderbolt 0000:03:00.0: restoring config space at offset 0x14 (was 0x0, writing 0x8a040000)
-> >   ...
-> >   thunderbolt 0000:03:00.0: PME# disabled
-> >   xhci_hcd 0000:37:00.0: restoring config space at offset 0x10 (was 0x0, writing 0x73f00000)
-> >   ...
-> >   xhci_hcd 0000:37:00.0: PME# disabled
-> >
-> > For the switch upstream port (01:00.0) we wait for 100ms but not taking
-> > into account the DLLLA requirement. We then wait 10ms for D3hot -> D0
-> > transition of the root port and the two downstream hotplug ports. This
-> > means that we deviate from what the spec requires.
-> >
-> > Performing the same check for system sleep (s2idle) transitions we can
-> > see following when resuming from s2idle:
-> >
-> >   pcieport 0000:00:1b.0: power state changed by ACPI to D0
-> >   pcieport 0000:00:1b.0: restoring config space at offset 0x2c (was 0x60, writing 0x60)
-> >   ...
-> >   pcieport 0000:01:00.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
-> >   ...
-> >   pcieport 0000:02:02.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
-> >   pcieport 0000:02:02.0: restoring config space at offset 0x2c (was 0x0, writing 0x0)
-> >   pcieport 0000:02:01.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
-> >   pcieport 0000:02:04.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
-> >   pcieport 0000:02:02.0: restoring config space at offset 0x28 (was 0x0, writing 0x0)
-> >   pcieport 0000:02:00.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
-> >   pcieport 0000:02:02.0: restoring config space at offset 0x24 (was 0x10001, writing 0x1fff1)
-> >   pcieport 0000:02:01.0: restoring config space at offset 0x2c (was 0x0, writing 0x60)
-> >   pcieport 0000:02:02.0: restoring config space at offset 0x20 (was 0x0, writing 0x73f073f0)
-> >   pcieport 0000:02:04.0: restoring config space at offset 0x2c (was 0x0, writing 0x60)
-> >   pcieport 0000:02:01.0: restoring config space at offset 0x28 (was 0x0, writing 0x60)
-> >   pcieport 0000:02:00.0: restoring config space at offset 0x2c (was 0x0, writing 0x0)
-> >   pcieport 0000:02:02.0: restoring config space at offset 0x1c (was 0x101, writing 0x1f1)
-> >   pcieport 0000:02:04.0: restoring config space at offset 0x28 (was 0x0, writing 0x60)
-> >   pcieport 0000:02:01.0: restoring config space at offset 0x24 (was 0x10001, writing 0x1ff10001)
-> >   pcieport 0000:02:00.0: restoring config space at offset 0x28 (was 0x0, writing 0x0)
-> >   pcieport 0000:02:02.0: restoring config space at offset 0x18 (was 0x0, writing 0x373702)
-> >   pcieport 0000:02:04.0: restoring config space at offset 0x24 (was 0x10001, writing 0x49f12001)
-> >   pcieport 0000:02:01.0: restoring config space at offset 0x20 (was 0x0, writing 0x73e05c00)
-> >   pcieport 0000:02:00.0: restoring config space at offset 0x24 (was 0x10001, writing 0x1fff1)
-> >   pcieport 0000:02:04.0: restoring config space at offset 0x20 (was 0x0, writing 0x89f07400)
-> >   pcieport 0000:02:01.0: restoring config space at offset 0x1c (was 0x101, writing 0x5151)
-> >   pcieport 0000:02:00.0: restoring config space at offset 0x20 (was 0x0, writing 0x8a008a00)
-> >   pcieport 0000:02:02.0: restoring config space at offset 0xc (was 0x10000, writing 0x10020)
-> >   pcieport 0000:02:04.0: restoring config space at offset 0x1c (was 0x101, writing 0x6161)
-> >   pcieport 0000:02:01.0: restoring config space at offset 0x18 (was 0x0, writing 0x360402)
-> >   pcieport 0000:02:00.0: restoring config space at offset 0x1c (was 0x101, writing 0x1f1)
-> >   pcieport 0000:02:04.0: restoring config space at offset 0x18 (was 0x0, writing 0x6b3802)
-> >   pcieport 0000:02:02.0: restoring config space at offset 0x4 (was 0x100000, writing 0x100407)
-> >   pcieport 0000:02:00.0: restoring config space at offset 0x18 (was 0x0, writing 0x30302)
-> >   pcieport 0000:02:01.0: restoring config space at offset 0xc (was 0x10000, writing 0x10020)
-> >   pcieport 0000:02:04.0: restoring config space at offset 0xc (was 0x10000, writing 0x10020)
-> >   pcieport 0000:02:00.0: restoring config space at offset 0xc (was 0x10000, writing 0x10020)
-> >   pcieport 0000:02:01.0: restoring config space at offset 0x4 (was 0x100000, writing 0x100407)
-> >   pcieport 0000:02:04.0: restoring config space at offset 0x4 (was 0x100000, writing 0x100407)
-> >   pcieport 0000:02:00.0: restoring config space at offset 0x4 (was 0x100000, writing 0x100407)
-> >   xhci_hcd 0000:37:00.0: restoring config space at offset 0x10 (was 0x0, writing 0x73f00000)
-> >   ...
-> >   thunderbolt 0000:03:00.0: restoring config space at offset 0x14 (was 0x0, writing 0x8a040000)
-> >
-> > This is even worse. None of the mandatory delays are performed. If this
-> > would be S3 instead of s2idle then according to PCI FW spec 3.2 section
-> > 4.6.8.  there is a specific _DSM that allows the OS to skip the delays
-> > but this platform does not provide the _DSM and does not go to S3 anyway
-> > so no firmware is involved that could already handle these delays.
-> >
-> > In this particular Intel Coffee Lake platform these delays are not
-> > actually needed because there is an additional delay as part of the ACPI
-> > power resource that is used to turn on power to the hierarchy but since
-> > that additional delay is not required by any of standards (PCIe, ACPI)
-> > it is not present in the Intel Ice Lake, for example where missing the
-> > mandatory delays causes pciehp to start tearing down the stack too early
-> > (links are not yet trained).
-> >
-> > For this reason, change the PCIe portdrv PM resume hooks so that they
-> > perform the mandatory delays before the downstream component gets
-> > resumed. We perform the delays before port services are resumed because
-> > otherwise pciehp might find that the link is not up (even if it is just
-> > training) and tears-down the hierarchy.
-> >
+On Wed, May 15, 2019 at 04:49:25PM +0800, Yinbo Zhu wrote:
+> From: Ashish Kumar <Ashish.Kumar@nxp.com>
 > 
-> We have gotten multiple reports in Fedora that this patch has broken
-> suspend for users of 5.1.20 and 5.2 stable kernels.
+> This patch is to add esdhc node and enable SD UHS-I,
+> eMMC HS200 for ls1028ardb/ls1028aqds board.
+> 
+> Signed-off-by: Ashish Kumar <Ashish.Kumar@nxp.com>
+> Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+> ---
+> Change in v3:
+> 		replace "esdhc@" with "mmc@"
+> 
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts |    8 ++++++
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts |   13 ++++++++++
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi    |   27 +++++++++++++++++++++
+>  3 files changed, 48 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+> index 14c79f4..180e5d2 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+> @@ -42,6 +42,14 @@
+>  	status = "okay";
+>  };
+>  
+> +&esdhc {
+> +	status = "okay";
+> +};
+> +
+> +&esdhc1 {
+> +	status = "okay";
+> +};
+> +
+>  &i2c0 {
+>  	status = "okay";
+>  
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+> index f86b054..1bfaf42 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+> @@ -30,6 +30,19 @@
+>  	};
+>  };
+>  
+> +&esdhc {
+> +	status = "okay";
 
-And is the issue also in 5.3-rcX kernels?  If so, can we either get this
-reverted there, or find the fix for it?
+We usually put 'status' at end of property list.
 
-thanks,
+> +	sd-uhs-sdr104;
+> +	sd-uhs-sdr50;
+> +	sd-uhs-sdr25;
+> +	sd-uhs-sdr12;
+> +	};
 
-greg k-h
+Please follow the indent style of closing parentheses in the file.
+
+> +
+> +&esdhc1 {
+> +	status = "okay";
+> +	mmc-hs200-1_8v;
+> +	};
+
+Ditto
+
+> +
+>  &i2c0 {
+>  	status = "okay";
+>  
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> index 2896bbc..462833c 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> @@ -274,6 +274,33 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		esdhc: mmc@2140000 {
+
+Please sort the nodes in unit-address.  From what I see, it should go
+before device serial@21c0500.
+
+> +			compatible = "fsl,ls1028a-esdhc", "fsl,esdhc";
+> +			reg = <0x0 0x2140000 0x0 0x10000>;
+> +			interrupts = <0 28 0x4>; /* Level high type */
+
+Use IRQ_TYPE_LEVEL_HIGH, then you can drop the comment.
+
+Shawn
+
+> +			clock-frequency = <0>; /* fixed up by bootloader */
+> +			clocks = <&clockgen 2 1>;
+> +			voltage-ranges = <1800 1800 3300 3300>;
+> +			sdhci,auto-cmd12;
+> +			little-endian;
+> +			bus-width = <4>;
+> +			status = "disabled";
+> +		};
+> +
+> +		esdhc1: mmc@2150000 {
+> +			compatible = "fsl,ls1028a-esdhc", "fsl,esdhc";
+> +			reg = <0x0 0x2150000 0x0 0x10000>;
+> +			interrupts = <0 63 0x4>; /* Level high type */
+> +			clock-frequency = <0>; /* fixed up by bootloader */
+> +			clocks = <&clockgen 2 1>;
+> +			voltage-ranges = <1800 1800 3300 3300>;
+> +			sdhci,auto-cmd12;
+> +			broken-cd;
+> +			little-endian;
+> +			bus-width = <4>;
+> +			status = "disabled";
+> +		};
+> +
+>  		sata: sata@3200000 {
+>  			compatible = "fsl,ls1028a-ahci";
+>  			reg = <0x0 0x3200000 0x0 0x10000>,
+> -- 
+> 1.7.1
+> 
