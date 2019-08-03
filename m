@@ -2,136 +2,121 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13113C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 09:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B928BC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 09:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF5632087C
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 09:20:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ptvr43dy"
+	by mail.kernel.org (Postfix) with ESMTP id 957E42085B
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 09:30:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388122AbfHCJUA (ORCPT
+        id S2388189AbfHCJak (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 3 Aug 2019 05:20:00 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38211 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387945AbfHCJUA (ORCPT
+        Sat, 3 Aug 2019 05:30:40 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:41912 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388140AbfHCJak (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 3 Aug 2019 05:20:00 -0400
-Received: by mail-pl1-f196.google.com with SMTP id az7so34524468plb.5
-        for <linux-kernel@vger.kernel.org>; Sat, 03 Aug 2019 02:19:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=sTbQB+VsKCHhUtNcj2pWgbGTC92dmneZIV20ww0P/GA=;
-        b=Ptvr43dyAwRTJFjdQ46Q5UJRR3WgPxjCpPpAjd6xGriBSCteIUzFlOoUWc3fCEvnKb
-         fEcujK2zHXBktLD25UvZz5gWdJasFYke+5F2JdMBcyYwAQakJENftwGEvIUp2Dqc9JWE
-         nJkcZP0uIRK51V8AWwdL7MizTSzBHXEX7hguvWSKMwAb3EB6Fm6K2ga7NznP7iwDrV+z
-         F1aauptJ9+1ElBxHu7Iy4VbSxRatYSNJclwIjrs/U/Jp41zLs8pyXbofIN42ZBac4Vce
-         K0TFDXuOzVW3/0olqO1xYOc4ntEoG69p9Avv4+UCv8k3tSquaN71AzLQsGFDuId7dIiP
-         35GA==
+        Sat, 3 Aug 2019 05:30:40 -0400
+Received: by mail-qt1-f196.google.com with SMTP id d17so76331326qtj.8;
+        Sat, 03 Aug 2019 02:30:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=sTbQB+VsKCHhUtNcj2pWgbGTC92dmneZIV20ww0P/GA=;
-        b=OGKG1rKiNEOdv9kRrwAwU9pN3Vg/TyAQHtQXb58FLtNCOmw8EZPbkYrYG0ykX4Fnlx
-         RPCOmAmrqkchNxTPDer1R8A2eNR1bf6+ZuP5oNGZZMxmgCGhqLoORHnB0tJV0rnJcT43
-         v0meCvf+f5V4FMblmtuiq/o14iEifLNgHQR08TpF7Hd79SkHvGF/fPtLRL/qL6S7i27e
-         3BrB5WOdaNOtmzT6pSmbHCJecMKnU8NTGVmxXxV/XLytnW1zYkn4YdKHNpL2C5/GEYxr
-         IHui63LCsj9Ttd7/kGiUpl0cFAlS7ux6KSGp2SCyTlYrlv+99L1bluj4v8AvTeoJjeAt
-         C/eA==
-X-Gm-Message-State: APjAAAWNQztb6f+TRznZcT6ze0Ju7/sDSLuIdLPK4cQGrH5NtnkbRjvS
-        3l9lOypE4csHhdEvk5vvA0De+Q==
-X-Google-Smtp-Source: APXvYqx2Q+kPZ0ijXEICO0VwuKwto0+SwFiX/JVQedWqNZh5AXZETxTBQ+tGP7fFaB1yNQ3767o2mw==
-X-Received: by 2002:a17:902:4643:: with SMTP id o61mr106674408pld.101.1564823998979;
-        Sat, 03 Aug 2019 02:19:58 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id a3sm11758412pje.3.2019.08.03.02.19.57
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 03 Aug 2019 02:19:58 -0700 (PDT)
-Date:   Sat, 3 Aug 2019 02:19:57 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Laura Abbott <labbott@redhat.com>
-cc:     Alexander Potapenko <glider@google.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Christoph Lameter <cl@linux.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Sandeep Patil <sspatil@android.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jann Horn <jannh@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marco Elver <elver@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, LKP <lkp@01.org>,
-        linux-mm@kvack.org
-Subject: Re: [PATCH] mm: slub: Fix slab walking for init_on_free
-In-Reply-To: <20190731193240.29477-1-labbott@redhat.com>
-Message-ID: <alpine.DEB.2.21.1908030219420.112263@chino.kir.corp.google.com>
-References:  <20190731193240.29477-1-labbott@redhat.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=BUfh4NxGQN1WIWZ152CfoTRhLbNLi4Uy13kK/K7CPCc=;
+        b=LzDMYFyJ0ECBB1Ekk7q+iNNfQOQXEA8DPlWve+Bl6fIhzdMP52n1tRw4ntu04cKFlj
+         LsJoDxumS6xwI0LfDBKS+lhTvyJQeU7Wh6D21Ii+v0klSAD3QKfSOcGpzEYnYoBaIWPs
+         wIijOEJ7xHES4YNQhqDx31NjLg+eAA05Kk4bsCQ0T0RRO3FwyLkD42VD92zipWqsyYRl
+         Q0ELXjDfIT160D2lL7ugT3wMj7bUomkQU4NI64PW3VEn9XbKQRos5/GwtTNHO8K5BbS8
+         5YZOksRSHrDLK+3KV0t1RngK1AYlszX7YGKC918sEct6KZ74F45/utl9iRfk4FtzjchD
+         HIKA==
+X-Gm-Message-State: APjAAAUlZ6G+/Q0LtkCUbAgXyz+T7d1ehA6J+lezKsHtDRUZP7LVZZF9
+        DB0+hLdmpTJHL3D5GCgVTQfQIxU8QP5d570b0HM=
+X-Google-Smtp-Source: APXvYqyXtfQi0lUgu2D3IFo2YqBiZxJux1z3dlGHPMbfRF4H4JO7dlKXPH9YSzYE67/+Rg7dimTjiwQeNxG5iuCt60k=
+X-Received: by 2002:aed:33a4:: with SMTP id v33mr96576727qtd.18.1564824638551;
+ Sat, 03 Aug 2019 02:30:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20190730014924.2193-1-deepa.kernel@gmail.com> <20190730014924.2193-10-deepa.kernel@gmail.com>
+ <20190731152609.GB7077@magnolia> <CABeXuvpiom9eQi0y7PAwAypUP1ezKKRfbh-Yqr8+Sbio=QtUJQ@mail.gmail.com>
+ <20190801224344.GC17372@mit.edu> <CAK8P3a3nqmWBXBiFL1kGmJ7yQ_=5S4Kok0YVB3VMFVBuYjFGOQ@mail.gmail.com>
+ <20190802154341.GB4308@mit.edu> <CAK8P3a1Z+nuvBA92K2ORpdjQ+i7KrjOXCFud7fFg4n73Fqx_8Q@mail.gmail.com>
+ <20190802213944.GE4308@mit.edu>
+In-Reply-To: <20190802213944.GE4308@mit.edu>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Sat, 3 Aug 2019 11:30:22 +0200
+Message-ID: <CAK8P3a2z+ZpyONnC+KE1eDbtQ7m2m3xifDhfWe6JTCPPRB0S=g@mail.gmail.com>
+Subject: Re: [PATCH 09/20] ext4: Initialize timestamps limits
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>, Arnd Bergmann <arnd@arndb.de>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 31 Jul 2019, Laura Abbott wrote:
+On Fri, Aug 2, 2019 at 11:39 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
+>
+> On Fri, Aug 02, 2019 at 09:00:52PM +0200, Arnd Bergmann wrote:
+> >
+> > I must have misunderstood what the field says. I expected that
+> > with s_min_extra_isize set beyond the nanosecond fields, there
+> > would be a guarantee that all inodes have at least as many
+> > extra bytes already allocated. What circumstances would lead to
+> > an i_extra_isize smaller than s_min_extra_isize?
+>
+> When allocating new inodes, i_extra_isize is set to
+> s_want_extra_isize.  When modifying existing inodes, if i_extra_isize
+> is less than s_min_extra_isize, then we will attempt to move out
+> extended attribute(s) to the external xattr block.  So the
+> s_min_extra_isize field is not a guarantee, but rather an aspirationa
+> goal.  The idea is that at some point when we want to enable a new
+> feature, which needs more extra inode space, we can adjust
+> s_min_extra_size and s_want_extra_size, and the file system will
+> migrate things to meet these constraints.
 
-> To properly clear the slab on free with slab_want_init_on_free,
-> we walk the list of free objects using get_freepointer/set_freepointer.
-> The value we get from get_freepointer may not be valid. This
-> isn't an issue since an actual value will get written later
-> but this means there's a chance of triggering a bug if we use
-> this value with set_freepointer:
-> 
-> [    4.478342] kernel BUG at mm/slub.c:306!
-> [    4.482437] invalid opcode: 0000 [#1] PREEMPT PTI
-> [    4.485750] CPU: 0 PID: 0 Comm: swapper Not tainted 5.2.0-05754-g6471384a #4
-> [    4.490635] RIP: 0010:kfree+0x58a/0x5c0
-> [    4.493679] Code: 48 83 05 78 37 51 02 01 0f 0b 48 83 05 7e 37 51 02 01 48 83 05 7e 37 51 02 01 48 83 05 7e 37 51 02 01 48 83 05 d6 37 51 02 01 <0f> 0b 48 83 05 d4 37 51 02 01 48 83 05 d4 37 51 02 01 48 83 05 d4
-> [    4.506827] RSP: 0000:ffffffff82603d90 EFLAGS: 00010002
-> [    4.510475] RAX: ffff8c3976c04320 RBX: ffff8c3976c04300 RCX: 0000000000000000
-> [    4.515420] RDX: ffff8c3976c04300 RSI: 0000000000000000 RDI: ffff8c3976c04320
-> [    4.520331] RBP: ffffffff82603db8 R08: 0000000000000000 R09: 0000000000000000
-> [    4.525288] R10: ffff8c3976c04320 R11: ffffffff8289e1e0 R12: ffffd52cc8db0100
-> [    4.530180] R13: ffff8c3976c01a00 R14: ffffffff810f10d4 R15: ffff8c3976c04300
-> [    4.535079] FS:  0000000000000000(0000) GS:ffffffff8266b000(0000) knlGS:0000000000000000
-> [    4.540628] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    4.544593] CR2: ffff8c397ffff000 CR3: 0000000125020000 CR4: 00000000000406b0
-> [    4.549558] Call Trace:
-> [    4.551266]  apply_wqattrs_prepare+0x154/0x280
-> [    4.554357]  apply_workqueue_attrs_locked+0x4e/0xe0
-> [    4.557728]  apply_workqueue_attrs+0x36/0x60
-> [    4.560654]  alloc_workqueue+0x25a/0x6d0
-> [    4.563381]  ? kmem_cache_alloc_trace+0x1e3/0x500
-> [    4.566628]  ? __mutex_unlock_slowpath+0x44/0x3f0
-> [    4.569875]  workqueue_init_early+0x246/0x348
-> [    4.573025]  start_kernel+0x3c7/0x7ec
-> [    4.575558]  x86_64_start_reservations+0x40/0x49
-> [    4.578738]  x86_64_start_kernel+0xda/0xe4
-> [    4.581600]  secondary_startup_64+0xb6/0xc0
-> [    4.584473] Modules linked in:
-> [    4.586620] ---[ end trace f67eb9af4d8d492b ]---
-> 
-> Fix this by ensuring the value we set with set_freepointer is either NULL
-> or another value in the chain.
-> 
-> Reported-by: kernel test robot <rong.a.chen@intel.com>
-> Signed-off-by: Laura Abbott <labbott@redhat.com>
+I see in the ext4 code that we always try to expand i_extra_size
+to s_want_extra_isize in ext4_mark_inode_dirty(), and that
+s_want_extra_isize is always at least  s_min_extra_isize, so
+we constantly try to expand the inode to fit.
 
-Acked-by: David Rientjes <rientjes@google.com>
+What I still don't see is how any inode on the file system
+image could have ended up with less than s_min_extra_isize
+in the first place if s_min_extra_isize is never modified and
+all inodes in the file system would have originally been
+created with  i_extra_isize >= s_min_extra_isize if
+EXT4_FEATURE_RO_COMPAT_EXTRA_ISIZE is set.
+
+Did older versions of ext4 or ext3 ignore s_min_extra_isize
+when creating inodes despite
+EXT4_FEATURE_RO_COMPAT_EXTRA_ISIZE,
+or is there another possibility I'm missing?
+
+> Since the extended timestamps were one of the first extra inode fields
+> to be added, I strongly suggest that we not try to borrow trouble.
+> Solving the general case problem is *hard*.
+
+As I said before, I absolutely don't suggest we solve the problem
+of reliably setting the timestamps, I'm just trying to find out if there
+is a way to know for sure that it cannot happen and alert the user
+otherwise. So far I think we have concluded
+
+- just checking s_inode_size is not sufficient because ext3
+  may have created inodes with s_extra_isize too small
+- checking s_min_extra_isize may not be sufficient either, for
+  similar reasons I don't yet fully understand (see above).
+
+If there is any other way to be sure that the file system
+has never been mounted as a writable ext3, maybe that can
+be used instead?
+
+        Arnd
