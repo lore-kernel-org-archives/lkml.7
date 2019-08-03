@@ -2,109 +2,73 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F9EC433FF
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 15:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA667C31E40
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 15:39:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A04E02073D
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 15:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76426214AE
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 15:39:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KaJpknF6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727941AbfHCPQB (ORCPT
+        id S1727961AbfHCPjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 3 Aug 2019 11:16:01 -0400
-Received: from tartarus.angband.pl ([54.37.238.230]:33818 "EHLO
-        tartarus.angband.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbfHCPQA (ORCPT
+        Sat, 3 Aug 2019 11:39:15 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50660 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727652AbfHCPjO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 3 Aug 2019 11:16:00 -0400
-Received: from kilobyte by tartarus.angband.pl with local (Exim 4.92)
-        (envelope-from <kilobyte@angband.pl>)
-        id 1htvlE-0002YB-QL; Sat, 03 Aug 2019 17:15:56 +0200
-Date:   Sat, 3 Aug 2019 17:15:56 +0200
-From:   Adam Borowski <kilobyte@angband.pl>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Paul Menzel <pmenzel@molgen.mpg.de>, linux-serial@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Donald Buczek <buczek@molgen.mpg.de>
-Subject: Re: Device to write to all (serial) consoles
-Message-ID: <20190803151556.GA9187@angband.pl>
-References: <32c2d26f-ec4a-b9a6-b42c-07b27f99ea28@molgen.mpg.de>
- <20190802160243.GA15484@kroah.com>
- <cab1fe06-0dc7-e7c1-50ac-cc01773c5ef5@molgen.mpg.de>
- <20190803132323.GB6703@angband.pl>
- <20190803135537.GA1743@kroah.com>
+        Sat, 3 Aug 2019 11:39:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=I1NrYHa+YaTrMj4UyPPBH/9wAm+dfInLgj5QDmyuYaQ=; b=KaJpknF6oyKuFSUS8QpoeQZ0+
+        oO5lkFotXCzO34i1rtC888bSh5w4VMe2rdcZBVoXwym+9Z2lnOXcg7ahfBEQgWj2kRSUeUDo5wJl9
+        HSLC4OoX/h7Z9Cn5OLIexQxK0GxaECorGHjmgRx8p/vDhIndP9vCdDwrVq65o6FYbdXLU5+ns974a
+        Ch4goXJuQGZ1Lu88yLYcUIUx9TcU4+kY3/EfLCjDFs2A6onYOsSm+vJbUG8F+Zhq/fbGwjG5IfqnI
+        Sawk07uOmPsZ28vxchbJ+ghXjXuRAP1ztosFlofvodsJeD162SaAT4XcqMyY9YqKHDJix3Ky8Mv4f
+        tIWSGaB0Q==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1htw7g-0003BI-H1; Sat, 03 Aug 2019 15:39:08 +0000
+Date:   Sat, 3 Aug 2019 08:39:08 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     axboe@kernel.dk, jack@suse.cz, hannes@cmpxchg.org,
+        mhocko@kernel.org, vdavydov.dev@gmail.com, cgroups@vger.kernel.org,
+        linux-mm@kvack.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, guro@fb.com,
+        akpm@linux-foundation.org
+Subject: Re: [PATCH 2/4] bdi: Add bdi->id
+Message-ID: <20190803153908.GA932@bombadil.infradead.org>
+References: <20190803140155.181190-1-tj@kernel.org>
+ <20190803140155.181190-3-tj@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190803135537.GA1743@kroah.com>
-X-Junkbait: aaron@angband.pl, zzyx@angband.pl
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Mail-From: kilobyte@angband.pl
-X-SA-Exim-Scanned: No (on tartarus.angband.pl); SAEximRunCond expanded to false
+In-Reply-To: <20190803140155.181190-3-tj@kernel.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 03, 2019 at 03:55:37PM +0200, Greg Kroah-Hartman wrote:
-> On Sat, Aug 03, 2019 at 03:23:23PM +0200, Adam Borowski wrote:
-> > On Fri, Aug 02, 2019 at 09:59:06PM +0200, Paul Menzel wrote:
-> > > Because the cable is always connected to the port on the back side, and
-> > > sometimes the port in the front has ID 0, and the one in the back 1, and
-> > > other times vice versa. We do not want to track that, and it would be
-> > > convenient to just write to both ports.
-> > 
-> > Sounds like an XY problem then: what you want is not writing to all ports,
-> > but to have the port assignments stable (see also: disk device reordering).
+On Sat, Aug 03, 2019 at 07:01:53AM -0700, Tejun Heo wrote:
+> There currently is no way to universally identify and lookup a bdi
+> without holding a reference and pointer to it.  This patch adds an
+> non-recycling bdi->id and implements bdi_get_by_id() which looks up
+> bdis by their ids.  This will be used by memcg foreign inode flushing.
 > 
-> You can get that information from the symlinks in /dev/serial/ which
-> udev creates.
+> I left bdi_list alone for simplicity and because while rb_tree does
+> support rcu assignment it doesn't seem to guarantee lossless walk when
+> walk is racing aginst tree rebalance operations.
 
-Doesn't seem to work for me, for any ttyS0 ttyS1 ttySAC1 device:
+This would seem like the perfect use for an allocating xarray.  That
+does guarantee lossless walk under the RCU lock.  You could get rid of the
+bdi_list too.
 
-Box one, PCIe card + one USB dongle:
-07:00.0 Serial controller: MosChip Semiconductor Technology Ltd. MCS9922 PCIe Multi-I/O Controller
-07:00.1 Serial controller: MosChip Semiconductor Technology Ltd. MCS9922 PCIe Multi-I/O Controller
-Bus 003 Device 004: ID 1a86:7523 QinHeng Electronics HL-340 USB-Serial adapter
-
-/dev/serial/by-id/usb-1a86_USB2.0-Serial-if00-port0
-/dev/serial/by-path/pci-0000:0b:00.3-usb-0:4:1.0-port0
-
-Only ttyUSB0 is there.
-
-
-Box two, on-board + one USB dongle:
-[    3.404340] Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
-[    3.431287] 00:01: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a 16550A
-Bus 001 Device 002: ID 10c4:ea60 Cygnal Integrated Products, Inc. CP2102/CP2109 UART Bridge Controller [CP210x family]
-
-/dev/serial/by-id/usb-Silicon_Labs_CP2104_USB_to_UART_Bridge_Controller_00DB1604-if00-port0
-/dev/serial/by-path/pci-0000:00:14.0-usb-0:1:1.0-port0
-
-
-Box three: RockPro64, euler + USB dongle, kernel 4.4.
-Box four: Pine64, euler.
-Box five: Odroid-U2, something GPIOish (ttySAC1), kernel 5.0.
-
-
-Most are running kernel 5.2, Debian unstable.
-
-And indeed, in /lib/udev/rules.d/60-serial.rules :
-# /dev/serial/by-path/, /dev/serial/by-id/ for USB devices
-KERNEL!="ttyUSB[0-9]*|ttyACM[0-9]*", GOTO="serial_end"
-
-
-Like me, Paul is using ttyS0 for server-side.
-
-
-Meow!
--- 
-⢀⣴⠾⠻⢶⣦⠀ 
-⣾⠁⢰⠒⠀⣿⡁ 10 people enter a bar: 1 who understands binary,
-⢿⡄⠘⠷⠚⠋⠀ 1 who doesn't, D who prefer to write it as hex,
-⠈⠳⣄⠀⠀⠀⠀ and 1 who narrowly avoided an off-by-one error.
