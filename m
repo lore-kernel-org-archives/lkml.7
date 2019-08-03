@@ -2,122 +2,119 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USB_DRIVES autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A122C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 09:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA102C31E40
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 09:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 506E02087C
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 09:10:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=lucidpixels.com header.i=@lucidpixels.com header.b="pA4I0CsY"
+	by mail.kernel.org (Postfix) with ESMTP id A09082087C
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 09:12:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564823574;
+	bh=898MJseAbFbCgzhbtWdeteGDnAtJpOyDw4CtY+p0YQs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=CplLBK+/83DvIZRMj0lArCd8iCc6xM4iunQ/8dA65p2vhziqM3pkoFcgIxlnoDcwH
+	 qul/Z1bjsPGlq3KhFNeN57zqN+9DqNKZQGfLJX58FHFnHCdlXtZoAjUDucY18Z0CdX
+	 1IbPvo8X6O/j+oSJxn++MuQBam0hVP75b3kZ3SZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388030AbfHCJKt (ORCPT
+        id S2388068AbfHCJMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 3 Aug 2019 05:10:49 -0400
-Received: from mail-qt1-f172.google.com ([209.85.160.172]:46321 "EHLO
-        mail-qt1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387945AbfHCJKs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 3 Aug 2019 05:10:48 -0400
-Received: by mail-qt1-f172.google.com with SMTP id h21so76382220qtn.13
-        for <linux-kernel@vger.kernel.org>; Sat, 03 Aug 2019 02:10:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lucidpixels.com; s=google;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding:thread-index:content-language;
-        bh=Gm2dij4mV6+WhXehQstbnX0dBMHnBu3lMZ3v1HK+VF4=;
-        b=pA4I0CsYbQ+1vLeL6j5N0qmwVK3vbQr2ROu+0WMjBCrIvw7i/qLoLhpL3gZC5oFyvo
-         D8InH/VnZPlEW4W1kJUW3kFYpLkX3pi8AU++fS4+Lwqc4TIOT/KZL2sOR58GuxfjhXBD
-         cq2oU8Y+w0SuGEdWQF6o3suq0FHJegLcPsyFg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding:thread-index:content-language;
-        bh=Gm2dij4mV6+WhXehQstbnX0dBMHnBu3lMZ3v1HK+VF4=;
-        b=VLZr+ohhrr0Nlb8apqCp9id6c18kujB/JQxy06zgaFe37o8ENRRYhqmyPl0+Zrx7Kj
-         tRB4PjyqbHbdlubw9xtydfT7TdDCanAvP9csu3wuqujLp3az+MAR6UOBHMvB3bWK9Wrh
-         TJaVOPp2JnYBNq7DmQMUKv1r9n1EDj2r10sLXbTMsd3/OLWzaudVKZ3EpurJhLoAA3pU
-         Y0fjxuC2eoX991wqgv6BXszxVoRPVnFAx+3ynM15PqB6EY77oyOWRSoKsLPJCyur56sz
-         LP0mKy5u3DWvoqvuooFUN4qWP6/09qkl6JfrmmuxwQcrmRtj+u+7Mj21JOlOpsGJ1HVf
-         bCig==
-X-Gm-Message-State: APjAAAXmOIRZNS1gxCnyYf6uKVkTLeEKuNEDHlEmludrioHMq3+tuJky
-        z0OLOpEx9g1jCwbiib7Eu1WxvTPAI6w=
-X-Google-Smtp-Source: APXvYqwiXp4Sjrh3NZUnIYNLnPEbwcdhIRnDFNn+4raq2CSzD+Awp8dA7fUTsyR3/qdX9I+x+Ah6pw==
-X-Received: by 2002:ac8:2baa:: with SMTP id m39mr100092554qtm.242.1564823447119;
-        Sat, 03 Aug 2019 02:10:47 -0700 (PDT)
-Received: from WARPC (pool-173-72-201-135.clppva.fios.verizon.net. [173.72.201.135])
-        by smtp.gmail.com with ESMTPSA id r17sm35011821qtf.26.2019.08.03.02.10.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 03 Aug 2019 02:10:46 -0700 (PDT)
-From:   "Justin Piszcz" <jpiszcz@lucidpixels.com>
-To:     "'LKML'" <linux-kernel@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-scsi@vger.kernel.org>
-Subject: 5.2.x kernel: WD 8TB USB Drives: Unaligned partial completion (resid=78, sector_sz=512)
-Date:   Sat, 3 Aug 2019 05:10:44 -0400
-Message-ID: <006d01d549db$54e42140$feac63c0$@lucidpixels.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 14.0
-Thread-Index: AdVJ2z/+9mq0jIkOQpG4zabX2Rwi3A==
-Content-Language: en-us
+        Sat, 3 Aug 2019 05:12:53 -0400
+Received: from foss.arm.com ([217.140.110.172]:59726 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387945AbfHCJMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 3 Aug 2019 05:12:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BCF71344;
+        Sat,  3 Aug 2019 02:12:52 -0700 (PDT)
+Received: from big-swifty.misterjones.org (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 41F533F694;
+        Sat,  3 Aug 2019 02:12:48 -0700 (PDT)
+Date:   Sat, 03 Aug 2019 10:12:49 +0100
+Message-ID: <86o916mx2m.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     tglx@linutronix.de, jason@lakedaemon.net, ralf@linux-mips.org,
+        paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org,
+        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        john@phrozen.org, Hauke Mehrtens <hauke@hauke-m.de>
+Subject: Re: [PATCH 3/5] MIPS: lantiq: add an irq_domain and irq_chip for EBU
+In-Reply-To: <CAFBinCCb4aTfuxaSrUp8xbUjjefi_qHOUJLjzH+acUTLY+6Geg@mail.gmail.com>
+References: <20190727175315.28834-1-martin.blumenstingl@googlemail.com>
+        <20190727175315.28834-4-martin.blumenstingl@googlemail.com>
+        <86y30imq9p.wl-marc.zyngier@arm.com>
+        <CAFBinCCb4aTfuxaSrUp8xbUjjefi_qHOUJLjzH+acUTLY+6Geg@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Organization: Approximate
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Attached 2 x brand new Western Digital 8TB USB 3.0 drives awhile back =
-and
-ran some file copy tests and was getting these warnings-- is there any =
-way
-to avoid these warnings?=A0 I did confirm with parted that the partition =
-was
-aligned but this appears to be something related to the firmware on the
-device according to [1] and [2]?
+Hi Martin,
 
-[1]=A0https://patchwork.kernel.org/patch/9573203/
-[2] https://patchwork.kernel.org/patch/9597797/
+On Thu, 01 Aug 2019 18:42:42 +0100,
+Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
 
-Part of the patch in [2] - if the firmware is buggy is there a patch or
-workaround for these drives (when used in the USB enclosures) to avoid =
-this
-issue?
+[...]
 
-+	default:
-+		/*
-+		 * In case of bogus fw or device, we could end up having
-+		 * an unaligned partial completion. Check this here and
-force
-+		 * alignment.
-+		 */
-+		resid =3D scsi_get_resid(SCpnt);
-+		if (resid & (sector_size - 1)) {
-+			sd_printk(KERN_INFO, sdkp,
-+				"Unaligned partial completion (resid=3D%u,
-sector_sz=3D%u)\n",
-+				resid, sector_size);
-+			resid =3D min(scsi_bufflen(SCpnt),
-+				    round_up(resid, sector_size));
-+			scsi_set_resid(SCpnt, resid);
-+		}
+> > > +static void ltq_ebu_irq_handler(struct irq_desc *desc)
+> > > +{
+> > > +     struct irq_domain *domain = irq_desc_get_handler_data(desc);
+> > > +     struct irq_chip *irqchip = irq_desc_get_chip(desc);
+> > > +
+> > > +     chained_irq_enter(irqchip, desc);
+> > > +
+> > > +     generic_handle_irq(irq_find_mapping(domain, 0));
+> >
+> > Having an irqdomain for a single interrupt is a bit over the top... Is
+> > that for the convenience of the DT infrastructure?
+> yes, I did it to get DT support
+> please let me know if there's a "better" way (preferably with another
+> driver as example)
 
-Errors:
+To be honest, the chained handler is what troubles me the most. You
+normally would use such a construct if you had a multiplexer. In your
+case, you have a 1:1 relationship between input and output. It is just
+that this irqchip allows the trigger to be adapted, which normally
+calls for a hierarchical implementation.
 
-Jul 18 16:25:02 name kernel: [87305.605993] sd 8:0:0:0: [sdg] Unaligned
-partial completion (resid=3D78, sector_sz=3D512)
-Jul 18 16:25:02 name=A0kernel: [87305.605993] sd 8:0:0:0: [sdg] =
-Unaligned
-partial completion (resid=3D78, sector_sz=3D512)
+In your case, with only a single interrupt, it doesn't matter much
+though.
 
-Jul 18 16:25:15 name=A0kernel: [87318.292262] sd 7:0:0:0: [sdf] =
-Unaligned
-partial completion (resid=3D78, sector_sz=3D512)
-Jul 18 16:25:15 name=A0kernel: [87318.292262] sd 7:0:0:0: [sdf] =
-Unaligned
-partial completion (resid=3D78, sector_sz=3D512)
+> 
+> [...]
+> > > +     irq_create_mapping(domain, 0);
+> >
+> > Why do you need to perform this eagerly? I'd expect this interrupt to
+> > be mapped when it is actually claimed by a driver.
+> I don't remember why I added it, it may be left-over from copying from
+> another driver
+> in v2 I'll try to drop it
+> 
+> > > +
+> > > +     irq_set_chained_handler_and_data(irq, ltq_ebu_irq_handler, domain);
+> >
+> > And there is no HW initialisation whatsoever? I'd expect, at the very
+> > least, the sole interrupt to be configured as disabled/masked.
+> I can add that. is there any "best practice" on what I should
+> initialize (just disable it or also set a "default" mode like
+> LEVEL_LOW)?
 
+Whichever default state makes sense. What you want to avoid is to boot
+the kernel with a screaming interrupt because some firmware has left
+it enabled.
 
+Thanks,
+
+	M.
+
+-- 
+Jazz is not dead, it just smells funny.
