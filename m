@@ -2,165 +2,444 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF28C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 00:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A514AC0650F
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 00:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A7622086A
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 00:14:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MLkWEGvk"
+	by mail.kernel.org (Postfix) with ESMTP id 720662087E
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 00:25:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729088AbfHCAOr (ORCPT
+        id S2390834AbfHCAZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 20:14:47 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:35439 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726694AbfHCAOr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 20:14:47 -0400
-Received: by mail-io1-f66.google.com with SMTP id m24so155900476ioo.2
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 17:14:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h4x/c6aFCerGwW46+jAJx/0xkBWsbbCj8p2s7VTuzx8=;
-        b=MLkWEGvkkIkdnTVe/Yq9GekUC+t7Ci3fj98xN5HfkXiOvm/MMg784R24yCjHSu8K0h
-         AW6wNE43CTPQ3HnsY09vnm7ebuGXirzQWPSNRbN6TDV+yMRx6wt4mBurzmx7Lfu7xfWd
-         wvOc91VHRIKLo1B9aqILfav2Bz8i3r18qHvWo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h4x/c6aFCerGwW46+jAJx/0xkBWsbbCj8p2s7VTuzx8=;
-        b=X+hrCWpABGH7UdeRMssx+XDUVrPA+Tat+QHlBavsp8Iq9tSJqPNhtv6TjUH9YWk6GF
-         MgDkSUVQtNKHxFcntBujkCN10/7cldwsXD1UF7N7I8dkfpqQWFpsHu8P91FM8+ByQr0k
-         svazNOP9yA7etvm2hUinB2lVxavKkjnQwCJquW8L6DBJhSCzWDazwBXdsqgtD0w4X22p
-         hEPcrN/nre7dpxCKJ3pJSDQxV5HuX5ggfB0qcigBE2nbQDVRdG0+X60KIzmy5Xtp04se
-         /nZTSx6B8QnsTyx+Aalb75mvQW/qvP/EVkyuq3cFXnddVBPE+c2oXXlGSZkKDRDNWA9C
-         CItQ==
-X-Gm-Message-State: APjAAAWzAoQVPDR8VtutJBQZ9yjTziJDPgDiRNS3bPLxh4PDfPOun6an
-        BU5EduPMN8Ch1IRTuItJ58GqU7NZKxJy70yIJN8Ohw==
-X-Google-Smtp-Source: APXvYqzf+8HF1jNb9DEf6l4Ve9OqBkgZcoiA7Q7ZK26p9D3udPa2BQT1369JwNyXg+EZvobWAJFoHF0bH17R4/EaURY=
-X-Received: by 2002:a02:c916:: with SMTP id t22mr3605894jao.24.1564791286556;
- Fri, 02 Aug 2019 17:14:46 -0700 (PDT)
+        Fri, 2 Aug 2019 20:25:00 -0400
+Received: from gofer.mess.org ([88.97.38.141]:33735 "EHLO gofer.mess.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390047AbfHCAZA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 20:25:00 -0400
+Received: by gofer.mess.org (Postfix, from userid 1000)
+        id D299660A54; Sat,  3 Aug 2019 01:24:57 +0100 (BST)
+Date:   Sat, 3 Aug 2019 01:24:57 +0100
+From:   Sean Young <sean@mess.org>
+To:     Vandana BN <bnvandana@gmail.com>
+Cc:     Michael Ira Krufky <mkrufky@linuxtv.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, tskd08@gmail.com,
+        skhan@linuxfoundation.org, gregkh@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH v2] media:dvb-frontends:Remove dvb_pll_devcount and id
+ module parameters.
+Message-ID: <20190803002457.2mq27h7e4p7toxyx@gofer.mess.org>
+References: <20190717141204.19433-1-bnvandana@gmail.com>
+ <20190720061302.24047-1-bnvandana@gmail.com>
+ <20190724053635.4pl44glggvcnton2@gofer.mess.org>
+ <CAOcJUbzqA9wVJtAaND+Rbpx_RjZNmVWzXMXZgaLT49YhMePo5Q@mail.gmail.com>
+ <49af405b-40c0-7b04-e2bb-52e98400d0e7@gmail.com>
 MIME-Version: 1.0
-References: <20190802131951.11600-1-sashal@kernel.org> <20190802131951.11600-42-sashal@kernel.org>
-In-Reply-To: <20190802131951.11600-42-sashal@kernel.org>
-From:   Rob Clark <robdclark@chromium.org>
-Date:   Fri, 2 Aug 2019 17:14:35 -0700
-Message-ID: <CAJs_Fx4ddE-85uA3S+YLPat4uX8Mk9zRU2SFm2xmGgmAFWPEyg@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 5.2 42/76] drm/msm: stop abusing dma_map/unmap for cache
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
-        Stephen Boyd <sboyd@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        freedreno <freedreno@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <49af405b-40c0-7b04-e2bb-52e98400d0e7@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sasha,
+On Fri, Aug 02, 2019 at 12:20:19PM +0530, Vandana BN wrote:
+> 
+> On 01/08/19 2:31 PM, Michael Ira Krufky wrote:
+> > Sean,
+> >
+> > Please pardon the late reply.   See my responses inline below:
+> >
+> > On Wed, Jul 24, 2019 at 1:36 AM Sean Young <sean@mess.org> wrote:
+> >> On Sat, Jul 20, 2019 at 11:43:02AM +0530, Vandana BN wrote:
+> >>> Syzbot reported global-out-of-bounds Read in dvb_pll_attach, while
+> >>> accessing id[dvb_pll_devcount], because dvb_pll_devcount was 65,
+> >>> that is more than size of 'id' which is DVB_PLL_MAX(64).
+> >>>
+> >>> Fix would be to check if DVB_PLL_MAX devices are attached and if so return
+> >>> NULL from dvb_pll_attach(). But this will put a limit on the number of
+> >>> devices that can be attached.
+> >>> Also dvb_pll_devcount and "id" module parameter are used for debugging
+> >>> purpose to override/force PLL type.
+> >>> So this patch removes these module parameters.
+> >>>
+> >>> Reported-by: syz...@syzkaller.appspotmail.com
+> >>>
+> >>> usb 1-1: dvb_usb_v2: will pass the complete MPEG2 transport stream to the
+> >>> software demuxer
+> >>> dvbdev: DVB: registering new adapter (774 Friio White ISDB-T USB2.0)
+> >>> usb 1-1: media controller created
+> >>> dvbdev: dvb_create_media_entity: media entity 'dvb-demux' registered.
+> >>> tc90522 0-0018: Toshiba TC90522 attached.
+> >>> usb 1-1: DVB: registering adapter 0 frontend 0 (Toshiba TC90522 ISDB-T
+> >>> module)...
+> >>> dvbdev: dvb_create_media_entity: media entity 'Toshiba TC90522 ISDB-T
+> >>> module' registered.
+> >>> ==================================================================
+> >>> BUG: KASAN: global-out-of-bounds in dvb_pll_attach+0x6c5/0x830
+> >>> drivers/media/dvb-frontends/dvb-pll.c:798
+> >>> Read of size 4 at addr ffffffff89c9e5e0 by task kworker/0:1/12
+> >>>
+> >>> CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.2.0-rc6+ #13
+> >>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> >>> Google 01/01/2011
+> >>> Workqueue: usb_hub_wq hub_event
+> >>> Call Trace:
+> >>>   __dump_stack lib/dump_stack.c:77 [inline]
+> >>>   dump_stack+0xca/0x13e lib/dump_stack.c:113
+> >>>   print_address_description+0x67/0x231 mm/kasan/report.c:188
+> >>>   __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:317
+> >>>   kasan_report+0xe/0x20 mm/kasan/common.c:614
+> >>>   dvb_pll_attach+0x6c5/0x830 drivers/media/dvb-frontends/dvb-pll.c:798
+> >>>   dvb_pll_probe+0xfe/0x174 drivers/media/dvb-frontends/dvb-pll.c:877
+> >>>   i2c_device_probe+0x790/0xaa0 drivers/i2c/i2c-core-base.c:389
+> >>>   really_probe+0x281/0x660 drivers/base/dd.c:509
+> >>>   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+> >>>   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+> >>>   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+> >>>   __device_attach+0x217/0x360 drivers/base/dd.c:843
+> >>>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+> >>>   device_add+0xae6/0x16f0 drivers/base/core.c:2111
+> >>>   i2c_new_client_device+0x5b3/0xc40 drivers/i2c/i2c-core-base.c:778
+> >>>   i2c_new_device+0x19/0x50 drivers/i2c/i2c-core-base.c:821
+> >>>   dvb_module_probe+0xf9/0x220 drivers/media/dvb-core/dvbdev.c:985
+> >>>   friio_tuner_attach+0x125/0x1d0 drivers/media/usb/dvb-usb-v2/gl861.c:536
+> >>>   dvb_usbv2_adapter_frontend_init
+> >>> drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:675 [inline]
+> >>>   dvb_usbv2_adapter_init drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:804
+> >>> [inline]
+> >>>   dvb_usbv2_init drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:865 [inline]
+> >>>   dvb_usbv2_probe.cold+0x24dc/0x255d
+> >>> drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:980
+> >>>   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+> >>>   really_probe+0x281/0x660 drivers/base/dd.c:509
+> >>>   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+> >>>   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+> >>>   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+> >>>   __device_attach+0x217/0x360 drivers/base/dd.c:843
+> >>>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+> >>>   device_add+0xae6/0x16f0 drivers/base/core.c:2111
+> >>>   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+> >>>   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+> >>>   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+> >>>   really_probe+0x281/0x660 drivers/base/dd.c:509
+> >>>   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+> >>>   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+> >>>   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+> >>>   __device_attach+0x217/0x360 drivers/base/dd.c:843
+> >>>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+> >>>   device_add+0xae6/0x16f0 drivers/base/core.c:2111
+> >>>   usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2534
+> >>>   hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+> >>>   hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+> >>>   port_event drivers/usb/core/hub.c:5350 [inline]
+> >>>   hub_event+0x1ada/0x3590 drivers/usb/core/hub.c:5432
+> >>>   process_one_work+0x905/0x1570 kernel/workqueue.c:2269
+> >>>   process_scheduled_works kernel/workqueue.c:2331 [inline]
+> >>>   worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
+> >>>   kthread+0x30b/0x410 kernel/kthread.c:255
+> >>>   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> >>>
+> >>> The buggy address belongs to the variable:
+> >>>   id+0x100/0x120
+> >>>
+> >>> Memory state around the buggy address:
+> >>>   ffffffff89c9e480: fa fa fa fa 00 00 fa fa fa fa fa fa 00 00 00 00
+> >>>   ffffffff89c9e500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> >>>> ffffffff89c9e580: 00 00 00 00 00 00 00 00 00 00 00 00 fa fa fa fa
+> >>>                                                         ^
+> >>>   ffffffff89c9e600: 04 fa fa fa fa fa fa fa 04 fa fa fa fa fa fa fa
+> >>>   ffffffff89c9e680: 04 fa fa fa fa fa fa fa 04 fa fa fa fa fa fa fa
+> >>> ==================================================================
+> >>>
+> >>> Signed-off-by: Vandana BN <bnvandana@gmail.com>
+> >>> ---
+> >>>  drivers/media/dvb-frontends/dvb-pll.c | 19 +++----------------
+> >>>  1 file changed, 3 insertions(+), 16 deletions(-)
+> >>>
+> >>> diff --git a/drivers/media/dvb-frontends/dvb-pll.c b/drivers/media/dvb-frontends/dvb-pll.c
+> >>> index ba0c49107bd2..c3a04751e9cf 100644
+> >>> --- a/drivers/media/dvb-frontends/dvb-pll.c
+> >>> +++ b/drivers/media/dvb-frontends/dvb-pll.c
+> >>> @@ -33,19 +33,11 @@ struct dvb_pll_priv {
+> >>>       u32 bandwidth;
+> >>>  };
+> >>>
+> >>> -#define DVB_PLL_MAX 64
+> >>> -
+> >>> -static unsigned int dvb_pll_devcount;
+> >>>
+> >>>  static int debug;
+> >>>  module_param(debug, int, 0644);
+> >>>  MODULE_PARM_DESC(debug, "enable verbose debug messages");
+> >>>
+> >>> -static unsigned int id[DVB_PLL_MAX] =
+> >>> -     { [ 0 ... (DVB_PLL_MAX-1) ] = DVB_PLL_UNDEFINED };
+> >>> -module_param_array(id, int, NULL, 0644);
+> >>> -MODULE_PARM_DESC(id, "force pll id to use (DEBUG ONLY)");
+> >>> -
+> >> Mike, you introduced this module parameter in:
+> >>
+> >> commit 05a4611b5d71ad6f968fdeef092c24914570898b
+> >> Author:     Michael Krufky <mkrufky@linuxtv.org>
+> >> AuthorDate: Fri Sep 7 18:19:57 2007 -0300
+> >>
+> >>     V4L/DVB (6228): dvb-pll: add module option to specify rf input
+> >>
+> >>     Add a module option to dvb-pll, called "input" to specify which rf
+> >>     input to use on devices with multiple rf inputs.  If the module option
+> >>     is not specified, then the driver will autoselect the rf input, as per
+> >>     previous behavior.
+> >>
+> >>     Signed-off-by: Michael Krufky <mkrufky@linuxtv.org>
+> >>     Signed-off-by: Mauro Carvalho Chehab <mchehab@infradead.org>
+> >>
+> >> What was your motivation?
+> > Sean,
+> >
+> > This was to support DVB-T/C & ATSC/QAM-B cards that had multiple RF
+> > input options intended to be used to connect an aerial and a Cable TV
+> > input source simultaneously.  It should not be removed.
+> 
+> Hi Mike,
+> 
+> Thanks for clarifying.
+> 
+> This patch tries to fix global out of bounds reported by syzbot.
+> 
+> 1st patch i submitted, checked for DVB_MAX_PLL before adding the device in dvb_pll_attach(), Akihiro pointed that this would put a limit on number of devices that can be attached.
+> 
+> 2nd patch, was to remove the module parameters, as per suggestion from Akihiro.
+> 
+> Should the module parameters use DEFINE_IDA and ida simple_get,ida_simple_remove, as suggested by Sean.
+> 
+> Can you please suggest on how to fix it.
 
-It's probably best *not* to backport this patch.. drm/msm abuses the
-DMA API in a way that it is not intended be used, to work around the
-lack of cache sync API exported to kernel modules on arm/arm64.  I
-couldn't really guarantee that this patch does the right thing on
-older versions of DMA API, so best to leave things as they were.
+I had something like this in mind. This is compile-tested only.
 
-BR,
--R
+Thanks,
+Sean
 
-On Fri, Aug 2, 2019 at 6:21 AM Sasha Levin <sashal@kernel.org> wrote:
->
-> From: Rob Clark <robdclark@chromium.org>
->
-> [ Upstream commit 0036bc73ccbe7e600a3468bf8e8879b122252274 ]
->
-> Recently splats like this started showing up:
->
->    WARNING: CPU: 4 PID: 251 at drivers/iommu/dma-iommu.c:451 __iommu_dma_unmap+0xb8/0xc0
->    Modules linked in: ath10k_snoc ath10k_core fuse msm ath mac80211 uvcvideo cfg80211 videobuf2_vmalloc videobuf2_memops vide
->    CPU: 4 PID: 251 Comm: kworker/u16:4 Tainted: G        W         5.2.0-rc5-next-20190619+ #2317
->    Hardware name: LENOVO 81JL/LNVNB161216, BIOS 9UCN23WW(V1.06) 10/25/2018
->    Workqueue: msm msm_gem_free_work [msm]
->    pstate: 80c00005 (Nzcv daif +PAN +UAO)
->    pc : __iommu_dma_unmap+0xb8/0xc0
->    lr : __iommu_dma_unmap+0x54/0xc0
->    sp : ffff0000119abce0
->    x29: ffff0000119abce0 x28: 0000000000000000
->    x27: ffff8001f9946648 x26: ffff8001ec271068
->    x25: 0000000000000000 x24: ffff8001ea3580a8
->    x23: ffff8001f95ba010 x22: ffff80018e83ba88
->    x21: ffff8001e548f000 x20: fffffffffffff000
->    x19: 0000000000001000 x18: 00000000c00001fe
->    x17: 0000000000000000 x16: 0000000000000000
->    x15: ffff000015b70068 x14: 0000000000000005
->    x13: 0003142cc1be1768 x12: 0000000000000001
->    x11: ffff8001f6de9100 x10: 0000000000000009
->    x9 : ffff000015b78000 x8 : 0000000000000000
->    x7 : 0000000000000001 x6 : fffffffffffff000
->    x5 : 0000000000000fff x4 : ffff00001065dbc8
->    x3 : 000000000000000d x2 : 0000000000001000
->    x1 : fffffffffffff000 x0 : 0000000000000000
->    Call trace:
->     __iommu_dma_unmap+0xb8/0xc0
->     iommu_dma_unmap_sg+0x98/0xb8
->     put_pages+0x5c/0xf0 [msm]
->     msm_gem_free_work+0x10c/0x150 [msm]
->     process_one_work+0x1e0/0x330
->     worker_thread+0x40/0x438
->     kthread+0x12c/0x130
->     ret_from_fork+0x10/0x18
->    ---[ end trace afc0dc5ab81a06bf ]---
->
-> Not quite sure what triggered that, but we really shouldn't be abusing
-> dma_{map,unmap}_sg() for cache maint.
->
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Tested-by: Stephen Boyd <swboyd@chromium.org>
-> Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-> Signed-off-by: Sean Paul <seanpaul@chromium.org>
-> Link: https://patchwork.freedesktop.org/patch/msgid/20190630124735.27786-1-robdclark@gmail.com
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/gpu/drm/msm/msm_gem.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
-> index 49a019939ccdc..a3b5fe1a13944 100644
-> --- a/drivers/gpu/drm/msm/msm_gem.c
-> +++ b/drivers/gpu/drm/msm/msm_gem.c
-> @@ -97,7 +97,7 @@ static struct page **get_pages(struct drm_gem_object *obj)
->                  * because display controller, GPU, etc. are not coherent:
->                  */
->                 if (msm_obj->flags & (MSM_BO_WC|MSM_BO_UNCACHED))
-> -                       dma_map_sg(dev->dev, msm_obj->sgt->sgl,
-> +                       dma_sync_sg_for_device(dev->dev, msm_obj->sgt->sgl,
->                                         msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
->         }
->
-> @@ -127,7 +127,7 @@ static void put_pages(struct drm_gem_object *obj)
->                          * GPU, etc. are not coherent:
->                          */
->                         if (msm_obj->flags & (MSM_BO_WC|MSM_BO_UNCACHED))
-> -                               dma_unmap_sg(obj->dev->dev, msm_obj->sgt->sgl,
-> +                               dma_sync_sg_for_cpu(obj->dev->dev, msm_obj->sgt->sgl,
->                                              msm_obj->sgt->nents,
->                                              DMA_BIDIRECTIONAL);
->
-> --
-> 2.20.1
->
+
+From b6a9118b8c306898add0707e334d29cca5573c78 Mon Sep 17 00:00:00 2001
+From: Sean Young <sean@mess.org>
+Date: Thu, 1 Aug 2019 14:02:21 +0900
+Subject: [PATCH] media: dvb-frontends: use ida for pll number
+
+KASAN: global-out-of-bounds Read in dvb_pll_attach
+
+Syzbot reported global-out-of-bounds Read in dvb_pll_attach, while
+accessing id[dvb_pll_devcount], because dvb_pll_devcount was 65,
+that is more than size of 'id' which is DVB_PLL_MAX(64).
+
+Rather than increasing dvb_pll_devcount every time, use ida so that
+numbers are allocated correctly. This does mean that no more than
+64 devices can be attached at the same time, but this is more than
+sufficient.
+
+Reported-by: syz...@syzkaller.appspotmail.com
+
+usb 1-1: dvb_usb_v2: will pass the complete MPEG2 transport stream to the
+software demuxer
+dvbdev: DVB: registering new adapter (774 Friio White ISDB-T USB2.0)
+usb 1-1: media controller created
+dvbdev: dvb_create_media_entity: media entity 'dvb-demux' registered.
+tc90522 0-0018: Toshiba TC90522 attached.
+usb 1-1: DVB: registering adapter 0 frontend 0 (Toshiba TC90522 ISDB-T
+module)...
+dvbdev: dvb_create_media_entity: media entity 'Toshiba TC90522 ISDB-T
+module' registered.
+==================================================================
+BUG: KASAN: global-out-of-bounds in dvb_pll_attach+0x6c5/0x830
+drivers/media/dvb-frontends/dvb-pll.c:798
+Read of size 4 at addr ffffffff89c9e5e0 by task kworker/0:1/12
+
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.2.0-rc6+ #13
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  print_address_description+0x67/0x231 mm/kasan/report.c:188
+  __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:317
+  kasan_report+0xe/0x20 mm/kasan/common.c:614
+  dvb_pll_attach+0x6c5/0x830 drivers/media/dvb-frontends/dvb-pll.c:798
+  dvb_pll_probe+0xfe/0x174 drivers/media/dvb-frontends/dvb-pll.c:877
+  i2c_device_probe+0x790/0xaa0 drivers/i2c/i2c-core-base.c:389
+  really_probe+0x281/0x660 drivers/base/dd.c:509
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:843
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2111
+  i2c_new_client_device+0x5b3/0xc40 drivers/i2c/i2c-core-base.c:778
+  i2c_new_device+0x19/0x50 drivers/i2c/i2c-core-base.c:821
+  dvb_module_probe+0xf9/0x220 drivers/media/dvb-core/dvbdev.c:985
+  friio_tuner_attach+0x125/0x1d0 drivers/media/usb/dvb-usb-v2/gl861.c:536
+  dvb_usbv2_adapter_frontend_init
+drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:675 [inline]
+  dvb_usbv2_adapter_init drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:804
+[inline]
+  dvb_usbv2_init drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:865 [inline]
+  dvb_usbv2_probe.cold+0x24dc/0x255d
+drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:980
+  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+  really_probe+0x281/0x660 drivers/base/dd.c:509
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:843
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2111
+  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+  really_probe+0x281/0x660 drivers/base/dd.c:509
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:843
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2111
+  usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2534
+  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x1ada/0x3590 drivers/usb/core/hub.c:5432
+  process_one_work+0x905/0x1570 kernel/workqueue.c:2269
+  process_scheduled_works kernel/workqueue.c:2331 [inline]
+  worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
+  kthread+0x30b/0x410 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+The buggy address belongs to the variable:
+  id+0x100/0x120
+
+Memory state around the buggy address:
+  ffffffff89c9e480: fa fa fa fa 00 00 fa fa fa fa fa fa 00 00 00 00
+  ffffffff89c9e500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> ffffffff89c9e580: 00 00 00 00 00 00 00 00 00 00 00 00 fa fa fa fa
+                                                        ^
+  ffffffff89c9e600: 04 fa fa fa fa fa fa fa 04 fa fa fa fa fa fa fa
+  ffffffff89c9e680: 04 fa fa fa fa fa fa fa 04 fa fa fa fa fa fa fa
+==================================================================
+
+Signed-off-by: Sean Young <sean@mess.org>
+---
+ drivers/media/dvb-frontends/dvb-pll.c | 41 ++++++++++++++++-----------
+ 1 file changed, 25 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/media/dvb-frontends/dvb-pll.c b/drivers/media/dvb-frontends/dvb-pll.c
+index ba0c49107bd2..ec0c1c93c9ef 100644
+--- a/drivers/media/dvb-frontends/dvb-pll.c
++++ b/drivers/media/dvb-frontends/dvb-pll.c
+@@ -9,6 +9,7 @@
+ 
+ #include <linux/slab.h>
+ #include <linux/module.h>
++#include <linux/idr.h>
+ #include <linux/dvb/frontend.h>
+ #include <asm/types.h>
+ 
+@@ -34,8 +35,7 @@ struct dvb_pll_priv {
+ };
+ 
+ #define DVB_PLL_MAX 64
+-
+-static unsigned int dvb_pll_devcount;
++static DEFINE_IDA(pll_ida);
+ 
+ static int debug;
+ module_param(debug, int, 0644);
+@@ -787,6 +787,7 @@ struct dvb_frontend *dvb_pll_attach(struct dvb_frontend *fe, int pll_addr,
+ 	struct dvb_pll_priv *priv = NULL;
+ 	int ret;
+ 	const struct dvb_pll_desc *desc;
++	int nr;
+ 
+ 	b1 = kmalloc(1, GFP_KERNEL);
+ 	if (!b1)
+@@ -795,9 +796,15 @@ struct dvb_frontend *dvb_pll_attach(struct dvb_frontend *fe, int pll_addr,
+ 	b1[0] = 0;
+ 	msg.buf = b1;
+ 
+-	if ((id[dvb_pll_devcount] > DVB_PLL_UNDEFINED) &&
+-	    (id[dvb_pll_devcount] < ARRAY_SIZE(pll_list)))
+-		pll_desc_id = id[dvb_pll_devcount];
++	nr = ida_simple_get(&pll_ida, 0, DVB_PLL_MAX, GFP_KERNEL);
++	if (nr < 0) {
++		kfree(b1);
++		return NULL;
++	}
++
++	if ((id[nr] > DVB_PLL_UNDEFINED) &&
++	    (id[nr] < ARRAY_SIZE(pll_list)))
++		pll_desc_id = id[nr];
+ 
+ 	BUG_ON(pll_desc_id < 1 || pll_desc_id >= ARRAY_SIZE(pll_list));
+ 
+@@ -808,24 +815,20 @@ struct dvb_frontend *dvb_pll_attach(struct dvb_frontend *fe, int pll_addr,
+ 			fe->ops.i2c_gate_ctrl(fe, 1);
+ 
+ 		ret = i2c_transfer (i2c, &msg, 1);
+-		if (ret != 1) {
+-			kfree(b1);
+-			return NULL;
+-		}
++		if (ret != 1)
++			goto out;
+ 		if (fe->ops.i2c_gate_ctrl)
+ 			     fe->ops.i2c_gate_ctrl(fe, 0);
+ 	}
+ 
+ 	priv = kzalloc(sizeof(struct dvb_pll_priv), GFP_KERNEL);
+-	if (!priv) {
+-		kfree(b1);
+-		return NULL;
+-	}
++	if (!priv)
++		goto out;
+ 
+ 	priv->pll_i2c_address = pll_addr;
+ 	priv->i2c = i2c;
+ 	priv->pll_desc = desc;
+-	priv->nr = dvb_pll_devcount++;
++	priv->nr = nr;
+ 
+ 	memcpy(&fe->ops.tuner_ops, &dvb_pll_tuner_ops,
+ 	       sizeof(struct dvb_tuner_ops));
+@@ -858,6 +861,11 @@ struct dvb_frontend *dvb_pll_attach(struct dvb_frontend *fe, int pll_addr,
+ 	kfree(b1);
+ 
+ 	return fe;
++out:
++	kfree(b1);
++	ida_simple_remove(&pll_ida, nr);
++
++	return NULL;
+ }
+ EXPORT_SYMBOL(dvb_pll_attach);
+ 
+@@ -894,9 +902,10 @@ dvb_pll_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 
+ static int dvb_pll_remove(struct i2c_client *client)
+ {
+-	struct dvb_frontend *fe;
++	struct dvb_frontend *fe = i2c_get_clientdata(client);
++	struct dvb_pll_priv *priv = fe->tuner_priv;
+ 
+-	fe = i2c_get_clientdata(client);
++	ida_simple_remove(&pll_ida, priv->nr);
+ 	dvb_pll_release(fe);
+ 	return 0;
+ }
+-- 
+2.21.0
+
