@@ -2,80 +2,101 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A674C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 06:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F464C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 06:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65B262166E
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 06:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 553562166E
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 06:46:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564814804;
+	bh=1dLxmQz7MmTPHPcPV2oG34M03+qQWgSoagR/hWotRvs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QiLTl/X6+i1MqiKOzMFLKPcYdD110Ef6zpBpstu0INi+/ixvZHLSO/y63DxZkidBz
+	 n09RhaWY9qj3WMna+rQxv7rBL3tvOp8qKkgRf44MKhoTBmOX4syrQ+XpsAsm0sw5r8
+	 +u3T6GjOlRljCR/FIOdoY55mqMpQIyTfw9nay8NA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbfHCGla (ORCPT
+        id S1726979AbfHCGqn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 3 Aug 2019 02:41:30 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42245 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726797AbfHCGla (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 3 Aug 2019 02:41:30 -0400
-Received: by mail-wr1-f68.google.com with SMTP id x1so29402762wrr.9
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 23:41:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bCAARCxw6zb522vIF1/F1TsSvMa3dI/ciDgyTzIdOx4=;
-        b=U1L7fsMK2xNC56RfO8Oj0JT9g2kMeOxqO59VaXpRfZ2/lUlT4OkUwl7h/f/NbBafxL
-         KebDbYZbtUBYYUZMVuO2BmA23ptJqJK1EHGyzYHqZhUOf6ROK1bCHIDOR+X4b63elgYH
-         QXV3rb/Y9KdrqRGhEh9alHE3bzk0wfKzqRsLuPOWqQbs3HFjmIcz/7bXHusn/HKYrtNP
-         Fe1HISk8AWyFk81do/bg1iqJFKlpQTeyTEWo0xCqCfqU/h9oWY800h6l1HPT6+j0b+tB
-         LSsrFrV6tUpo8ZpzWSSf0ouGWBGF/XQB9gp4oQ5hSHL+Cwe6qBN2vCj0DyAQNx+wy1ec
-         eghg==
-X-Gm-Message-State: APjAAAWC0wZ8/dC0QcV9THfxw0F+MekFvPCznAayosR+Mv2I2/BHs8e+
-        ZhBM/GT4Nkbe67OYU548sp+P8f95o1E=
-X-Google-Smtp-Source: APXvYqy7OSGxNl0+EgJQYDBAzWv2iXpLXjLUXVT0UHiSR68dXLvHmgd68cVQXfzTdbdnNdl7ggLLLQ==
-X-Received: by 2002:adf:ed4a:: with SMTP id u10mr66202962wro.284.1564814487966;
-        Fri, 02 Aug 2019 23:41:27 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:4013:e920:9388:c3ff? ([2001:b07:6468:f312:4013:e920:9388:c3ff])
-        by smtp.gmail.com with ESMTPSA id 17sm64589032wmx.47.2019.08.02.23.41.27
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 02 Aug 2019 23:41:27 -0700 (PDT)
-Subject: Re: [PATCH v3 1/3] KVM: Fix leak vCPU's VMCS value into other pCPU
-To:     Wanpeng Li <kernellwp@gmail.com>, Sasha Levin <sashal@kernel.org>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Marc Zyngier <Marc.Zyngier@arm.com>,
-        "# v3 . 10+" <stable@vger.kernel.org>
-References: <1564630214-28442-1-git-send-email-wanpengli@tencent.com>
- <20190801133133.955E4216C8@mail.kernel.org>
- <CANRm+Cy1wWSwn7HH-dNWeR6FX1TT_M7t_9vvRMdCKFATmvFDkA@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <c96d6707-87bd-1794-331e-6fa1a2d562f8@redhat.com>
-Date:   Sat, 3 Aug 2019 08:41:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sat, 3 Aug 2019 02:46:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33778 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726797AbfHCGqn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 3 Aug 2019 02:46:43 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AB442073D;
+        Sat,  3 Aug 2019 06:46:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564814802;
+        bh=1dLxmQz7MmTPHPcPV2oG34M03+qQWgSoagR/hWotRvs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Zl5KxrQADXPvOXSf+wD/mMgSWRM4Ge//olN9LaRqJpmDbYYiHpoJRmtpWK+odXpvT
+         KYTI2X3tp8nwOSlWxEgHhU2xridzXyOSHxC89hGtFcEn8np+zthHcIHdNgRJLAPXZs
+         SoaoPJa9Dp+7JGChVBpUIB1hZIHoYK5PKg16J424=
+Date:   Sat, 3 Aug 2019 08:46:39 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+Cc:     linux-serial@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Donald Buczek <buczek@molgen.mpg.de>
+Subject: Re: Device to write to all (serial) consoles
+Message-ID: <20190803064639.GB10855@kroah.com>
+References: <32c2d26f-ec4a-b9a6-b42c-07b27f99ea28@molgen.mpg.de>
+ <20190802160243.GA15484@kroah.com>
+ <cab1fe06-0dc7-e7c1-50ac-cc01773c5ef5@molgen.mpg.de>
 MIME-Version: 1.0
-In-Reply-To: <CANRm+Cy1wWSwn7HH-dNWeR6FX1TT_M7t_9vvRMdCKFATmvFDkA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cab1fe06-0dc7-e7c1-50ac-cc01773c5ef5@molgen.mpg.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/08/19 02:46, Wanpeng Li wrote:
-> Thanks for reporting this, after more grep, it seems that just x86 and
-> s390 enable async_pf in their Makefile. So I can move 'if
-> (!list_empty_careful(&vcpu->async_pf.done))' checking to
-> kvm_arch_dy_runnable()
+On Fri, Aug 02, 2019 at 09:59:06PM +0200, Paul Menzel wrote:
+> Dear Greg,
+> 
+> 
+> On 02.08.19 18:02, Greg Kroah-Hartman wrote:
+> > On Fri, Aug 02, 2019 at 03:23:08PM +0200, Paul Menzel wrote:
+> 
+> > > On a lot of devices, like servers, you have more than one serial console,
+> > > and you do not always know, how they are numbered. Therefore, we start a
+> > > console on ttyS0 and ttyS1.
+> > > 
+> > > In user space, we also would like to write to both consoles to not worry
+> > > about the numbering. Writing to `/dev/console` only write to the active
+> > > console.
+> > 
+> > So the same data to multiple console devices with just one userspace
+> > call?  Why?
+> 
+> Because the cable is always connected to the port on the back side, and
+> sometimes the port in the front has ID 0, and the one in the back 1, and
+> other times vice versa. We do not want to track that, and it would be
+> convenient to just write to both ports.
+> 
+> > >      $ more /proc/consoles # I think
+> > >      tty0                 -WU (EC p  )    4:1
+> > >      ttyS0                -W- (E  p a)    4:65
+> > >      ttyS1                -W- (E  p a)    4:65
+> > > 
+> > > Does a device exist, or can a device be configured so you can write to
+> > > all (serial) consoles from user space?
+> > 
+> > With one syscall, not that I know of, sorry.
+> 
+> Can such a device be created with udev or so?
 
-No, wrap it with #ifdef CONFIG_KVM_ASYNC_PF instead.  Thanks!
+No, a single device node can not reference multiple device nodes at the
+same time, sorry.  That's just not how they work at all.
 
-Paolo
+thanks,
+
+greg k-h
