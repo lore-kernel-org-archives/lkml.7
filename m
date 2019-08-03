@@ -2,111 +2,96 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6B3C31E40
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 14:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B75C32750
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 14:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D80B2073D
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 14:22:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="MWNahO31"
+	by mail.kernel.org (Postfix) with ESMTP id 422B4214AE
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 14:44:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbfHCOW1 (ORCPT
+        id S1726751AbfHCOoq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 3 Aug 2019 10:22:27 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:38741 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbfHCOW1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 3 Aug 2019 10:22:27 -0400
-Received: by mail-io1-f67.google.com with SMTP id j6so38756249ioa.5
-        for <linux-kernel@vger.kernel.org>; Sat, 03 Aug 2019 07:22:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
-        bh=+SFySWHmm4UbfytF/hIo7gNQJRXwrgC9uVAmtCspVNk=;
-        b=MWNahO31L4f/fjhIguRqPGLj3CcevEAS+JmBUiYNJSbWsfzos/g4vEz4RU/+MWqwsW
-         1u8aZ5Iy04L2wkDGSIyYNxs8aebr6RugGvwGQslWwp9VWiXKuQAM2ZCoa/JXRfJBlRG2
-         hIHpCc2OKt/+oyPoMHhCeP51lxrhgoYEqo4CzK3lNieSpxYrbRYXgh1X6lfrdjVBC2wK
-         awzgLSbWmkP1g3Sp5wdOWjsFtSRzAQLsY2TOCBllGzi2GfNrKZW7ytbGGQJwYFDgBvNf
-         yZYOoncN5IexND8mqdAoP66/SliWb2wKF7YGOpxVxVhwnD42Ly2d5yYRyLXUUeFNMmHH
-         PwbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=+SFySWHmm4UbfytF/hIo7gNQJRXwrgC9uVAmtCspVNk=;
-        b=OCs9AvKluy/K+4y9zAmQrTtawIKnBI7Mw9tbUjFSXy8+ou4B/FmtAiO7mjHKGveNCE
-         0rb/XL65glQcsrZtyz8oMPO9BJjrFbOlyDs6LzsTEL6o/QtvoNRTXuDwMNXA/+ELKM/a
-         +AU7IfWYaxllje/+rlc+2i/gpe5DAiEAFr0wF/PlL6N7Mph5eT5PfeYFDli/l1Id4aPw
-         UqBHuyLrFj1Bc4cvwmqf/IJhJYMjpXOA4Zmb+J+ItisQBvjE66trz0N+mOHeHuKMVc0c
-         Wl9cEAjwgH0cUIuzWKE9lRGavinnUfQJ0Gx9TGtgw5qleon5DvFtHK2wjmIRS9HWBxh3
-         ZIwQ==
-X-Gm-Message-State: APjAAAURlg4V2P2zH9qOIKxzwfhXPYXZvfVjGKPOivLVzO8ISdZBi/Xl
-        W6hg7exK58LOjZ5EHC+83GCmW3h3His=
-X-Google-Smtp-Source: APXvYqyq0xQ7FCCAQais7Dvc2x+AXN/25pbNDPArr3AzFzS/SJM4W2dzNvaJgBUdHKdad/5AfUC+Tw==
-X-Received: by 2002:a02:230a:: with SMTP id u10mr63091978jau.117.1564842146406;
-        Sat, 03 Aug 2019 07:22:26 -0700 (PDT)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id v10sm74104437iob.43.2019.08.03.07.22.25
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 03 Aug 2019 07:22:25 -0700 (PDT)
-Date:   Sat, 3 Aug 2019 07:22:25 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     torvalds@linux-foundation.org
-cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: [GIT PULL] RISC-V updates for v5.3-rc3
-Message-ID: <alpine.DEB.2.21.9999.1908030720490.3783@viisi.sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Sat, 3 Aug 2019 10:44:46 -0400
+Received: from mga14.intel.com ([192.55.52.115]:31834 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725844AbfHCOop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 3 Aug 2019 10:44:45 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Aug 2019 07:44:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,342,1559545200"; 
+   d="scan'208";a="164212471"
+Received: from xinpan-mobl1.ger.corp.intel.com ([10.249.33.239])
+  by orsmga007.jf.intel.com with ESMTP; 03 Aug 2019 07:44:39 -0700
+Message-ID: <aff3502c598fb76a1517795edaacd8c8ea330051.camel@linux.intel.com>
+Subject: Re: [PATCH] KEYS: trusted: allow module init if TPM is inactive or
+ deactivated
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Tyler Hicks <tyhicks@canonical.com>
+Cc:     Roberto Sassu <roberto.sassu@huawei.com>, jejb@linux.ibm.com,
+        zohar@linux.ibm.com, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org, crazyt2019+lml@gmail.com,
+        nayna@linux.vnet.ibm.com, silviu.vlasceanu@huawei.com
+Date:   Sat, 03 Aug 2019 17:44:37 +0300
+In-Reply-To: <20190802202343.GE26616@elm>
+References: <20190705163735.11539-1-roberto.sassu@huawei.com>
+         <20190711194811.rfsohbfc3a7carpa@linux.intel.com>
+         <b4454a78-1f1b-cc75-114a-99926e097b05@huawei.com>
+         <20190801163215.mfkagoafkxscesne@linux.intel.com>
+         <e50c4cfa-1f0c-6f4d-1910-010a8d874393@huawei.com>
+         <20190802142721.GA26616@elm>
+         <20190802194226.oiztvme5klkmw6fh@linux.intel.com>
+         <20190802202343.GE26616@elm>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Fri, 2019-08-02 at 15:23 -0500, Tyler Hicks wrote:
+> That wasn't the conclusion that I came to. I prefer Robert's proposed
+> change to trusted.ko.
+> 
+> How do you propose that this be fixed in eCryptfs?
+> 
+> Removing encrypted_key support from eCryptfs is the only way that I can
+> see to fix the bug in eCryptfs. That support has been there since 2011.
+> I'm not sure of the number of users that would be broken by removing
+> encrypted_key support. I don't think the number is high but I can't say
+> that confidently.
 
-The following changes since commit 609488bc979f99f805f34e9a32c1e3b71179d10b:
+Looking at the documentation [1] it is stated that
 
-  Linux 5.3-rc2 (2019-07-28 12:47:02 -0700)
+"Encrypted keys do not depend on a TPM, and are faster, as they use AES
+for encryption/decryption."
 
-are available in the Git repository at:
+Why would you need to remove support for encrypted keys? Isn't it a
+regression in encrypted keys to hard depend on trusted keys given
+what the documentation says?
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv/for-v5.3-rc3
+> Roberto, what was your use case when you added encrypted_key support to
+> eCryptfs back then? Are you aware of any users of eCryptfs +
+> encrypted_keys?
+> 
+> Jarkko, removing a long-standing feature is potentially more disruptive
+> to users than adding a workaround to trusted.ko which already requires a
+> similar workaround. I don't think that I agree with you on the proper
+> fix here.
 
-for you to fetch changes up to b7edabfe843805b7ab8a91396b0782042a289308:
+There is nothing to disagree or agree. I just try to get the picture
+since ecryptfs is relatively alien to me.
 
-  riscv: defconfig: align RV64 defconfig to the output of "make savedefconfig" (2019-07-31 12:26:10 -0700)
+[1] https://www.kernel.org/doc/html/v4.13/security/keys/trusted-encrypted.html
 
-----------------------------------------------------------------
-RISC-V updates for v5.3-rc3
+/Jarkko
 
-Three minor RISC-V-related changes for v5.3-rc3:
-
-- Add build ID to VDSO builds to avoid a double-free in perf when
-  libelf isn't used
-
-- Align the RV64 defconfig to the output of "make savedefconfig" so
-  subsequent defconfig patches don't get out of hand
-
-- Drop a superfluous DT property from the FU540 SoC DT data (since it
-  must be already set in board data that includes it)
-
-----------------------------------------------------------------
-Mao Han (1):
-      riscv: Fix perf record without libelf support
-
-Paul Walmsley (2):
-      riscv: dts: fu540-c000: drop "timebase-frequency"
-      riscv: defconfig: align RV64 defconfig to the output of "make savedefconfig"
-
- arch/riscv/boot/dts/sifive/fu540-c000.dtsi |  1 -
- arch/riscv/configs/defconfig               | 10 +++++-----
- arch/riscv/kernel/vdso/Makefile            |  2 +-
- 3 files changed, 6 insertions(+), 7 deletions(-)
