@@ -2,136 +2,99 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A707DC0650F
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 00:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01644C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 00:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E451206C1
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 00:01:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB836206C1
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 00:01:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="CdVDYEfk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F4YnsZ29"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392636AbfHCAA7 (ORCPT
+        id S2392656AbfHCABd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 20:00:59 -0400
-Received: from cmta18.telus.net ([209.171.16.91]:38182 "EHLO cmta18.telus.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392600AbfHCAA6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 20:00:58 -0400
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id thTihsw9n7TgTthTjhTKWb; Fri, 02 Aug 2019 18:00:57 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1564790457; bh=F7V2+VOnHcn4fwkSv3TDF+F7RNbW/H8xyC92UEWKRsA=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=CdVDYEfk7QJlV0gtGvNT85cgLKsjA2t90Yb7Nc1WY6rSD+vadt4kysBxKbLrDIY1Z
-         Jg0z9h6xrsXhUhFsGHV6DsDf+21kXUnccX5iUjF3g7XM9T8Zj0rqg5GDJvA583Rda8
-         QIUk5CHMyMlpNmlXzTQx94ZA9ch9bIkuv7KEXHgScSzeePOwkkE0l7PWwh90NHsHry
-         7SXSpIx4Po+5rgQ2clD4UaLeBD0VRs0RyEtKNvE/DpFfwOrOI+062T7/Yf+uZ8QPbk
-         m0kOEbG8tanKt9FJ81bHlv1OhA52qLKVTNrgfJi4vxaiEBCAumTeQqloghBKPeNf3j
-         YLDYf/sP089dg==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=e6N4tph/ c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
- a=IkcTkHD0fZMA:10 a=KKAkSRfTAAAA:8 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8
- a=aatUQebYAAAA:8 a=EKkws6boqHGLJ_gLzfMA:9 a=QEXdDO2ut3YA:10
- a=cvBusfyB2V15izCimMoJ:22 a=AjGcO6oz07-iQ99wixmX:22 a=7715FyvI7WU-l6oqrZBK:22
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Rafael J. Wysocki'" <rafael@kernel.org>,
-        "'Viresh Kumar'" <viresh.kumar@linaro.org>
-Cc:     "'Rafael Wysocki'" <rjw@rjwysocki.net>,
-        "'Ingo Molnar'" <mingo@redhat.com>,
-        "'Peter Zijlstra'" <peterz@infradead.org>,
-        "'Linux PM'" <linux-pm@vger.kernel.org>,
-        "'Vincent Guittot'" <vincent.guittot@linaro.org>,
-        "'v4 . 18+'" <stable@vger.kernel.org>,
-        "'Doug Smythies'" <doug.smythies@gmail.com>,
-        "'Linux Kernel Mailing List'" <linux-kernel@vger.kernel.org>
-References: <7dedb6bd157b8183c693bb578e25e313cf4f451d.1564724511.git.viresh.kumar@linaro.org> <CAJZ5v0g=zXWps29EiFJBPozyw4b9z0YOhtU-UV6hfyu8NbVKNw@mail.gmail.com>
-In-Reply-To: <CAJZ5v0g=zXWps29EiFJBPozyw4b9z0YOhtU-UV6hfyu8NbVKNw@mail.gmail.com>
-Subject: RE: [PATCH V3 1/2] cpufreq: schedutil: Don't skip freq update when limits change
-Date:   Fri, 2 Aug 2019 17:00:52 -0700
-Message-ID: <000701d5498e$85bf7b40$913e71c0$@net>
+        Fri, 2 Aug 2019 20:01:33 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:39555 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390433AbfHCABc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 20:01:32 -0400
+Received: by mail-pg1-f194.google.com with SMTP id u17so36811493pgi.6;
+        Fri, 02 Aug 2019 17:01:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RQSuZnTRPWf3T6mX0Bl3o8p4nBqzmIPdjBmsGPDs5Ss=;
+        b=F4YnsZ29X2gWKSDDvhAtTfNbM1UYZzHWDlWpXTtEwjuN0Rq4Joazw6bbgOqFA1NdrP
+         6p369qRjvxmoRRqIQZpr+o1dLExbD3pu9yBp8esIHTulKYcRIXshStIa+InVDAnLTWkD
+         HS5m/y3BRNKfe9k/UxeTjmiaTH3wADlqnxxsoV4N7kxOFZubkFBT2Cf2gRC9BOOd3MB9
+         HbpgOSLuRbybor9tJztVxSg2sN7nw4yBHFq5VuEUzI29f4CyYH5+DqY+A9XOQ0YmmOGP
+         7Fd/V7i/SjFt2njtF73P+NRWKgzNOFjTt3FLu8bDMQai2wdLFIJgyTWmd6XkFMHe0K51
+         6vyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RQSuZnTRPWf3T6mX0Bl3o8p4nBqzmIPdjBmsGPDs5Ss=;
+        b=O2/FhqJMp+1mcaSG40upWevJYUDfOjzZ9qm7tESbzJEzg7sypShW8ZyoPPtMfMt4GG
+         bn1m0+3DFlO4v8ar2NZ0LPRMS/1L202OvhEbRwdoLg5/xAwqSrdM4yd+CXvnQLfgBcn4
+         6JEbLeABfuSbORACMI1VWH8iBFFaojeagFR+K8eiZ87/WxBrSTpm9prSWCxMg2NG+bnw
+         xHqTAGmN3+GtxxyL8lU479Pzla8TfhMKr3QNMz5RYVx+RhdR0KYY6E+gICEfadQnXYEn
+         tkW28cfoBAodG++Qz8xSAT/Bgg5orxcmsBfuQnU+dNgcFWpzTuc7leAGVs9FNWod+LxK
+         SqTg==
+X-Gm-Message-State: APjAAAWLWK9vojh5+ax5Kc7mUwotNNG6PCUlaJj1hmoDEe4ik2/KRWTD
+        YIdItz5GFw4GfkgvAOS8ZaQ=
+X-Google-Smtp-Source: APXvYqwVJqlRISlzSjmzSAYihmfc6AS7Yul0pLQ7909Ek4fR8PXArcr/fCwDSZCj5M4psvMFGXwE0g==
+X-Received: by 2002:a17:90a:23ce:: with SMTP id g72mr6720670pje.77.1564790491865;
+        Fri, 02 Aug 2019 17:01:31 -0700 (PDT)
+Received: from masabert (i118-21-156-233.s30.a048.ap.plala.or.jp. [118.21.156.233])
+        by smtp.gmail.com with ESMTPSA id v13sm89529582pfe.105.2019.08.02.17.01.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 02 Aug 2019 17:01:31 -0700 (PDT)
+Received: by masabert (Postfix, from userid 1000)
+        id 7FB00201237; Sat,  3 Aug 2019 09:01:28 +0900 (JST)
+From:   Masanari Iida <standby24x7@gmail.com>
+To:     linux-kernel@vger.kernel.org, shuah@kernel.org,
+        rostedt@goodmis.org, mingo@redhat.com,
+        linux-kselftest@vger.kernel.org
+Cc:     Masanari Iida <standby24x7@gmail.com>
+Subject: [PATCH] selftest/ftrace: Fix typo in trigger-snapshot.tc
+Date:   Sat,  3 Aug 2019 09:01:26 +0900
+Message-Id: <20190803000126.23200-1-standby24x7@gmail.com>
+X-Mailer: git-send-email 2.23.0.rc0
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Office Outlook 12.0
-Content-Language: en-ca
-Thread-Index: AdVJEl0/y7b0nLfcROucUfHaff8dzAAegK7Q
-X-CMAE-Envelope: MS4wfP0b9oNOCGiMJ+jjHYWyvLDFO6aTm0NLjTpKkuh8/Ay5GQANsLiWSUW1s+gZhY6+Cql9wTcEuYPZkoXdoCdlU15YNiWXQkkZoBD/1r7xcFGXHbmIiUtP
- conQucH9aVp2Q981TbV3u/20CUth4gFX5vKTAS4XaUmul8IgKDC15tvPNmNsQlZFibpNjx/2vB0+cklD62aRb8Ly5nAA685oFCAfH89u/1iXG2MVpe8zSolL
- w6SFdfdtCiHZ1wzbYEDkyB/NjF29WISYLOO5wn5C6wkg2n6Q5dtyo4e1rrQVtHVQLpAq8Pj/EVE7qq8Vm+GrLJZNfuXkiJxrDNdZAdIpIJu93DZcdYxV2Tyq
- 8cF6zABqjLllOl8t1SWDIXXT83NIwNzq3NH06ua0aUUErb/bPpOSOwtVI++t3KJ0necZ9SljjCf37ugs28zt3zaN/+MIOZ/4VBxNAEN+DNrJ4yCmG5c=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019.08.02 02:12 Rafael J. Wysocki wrote:
-> On Fri, Aug 2, 2019 at 7:44 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->>
->> To avoid reducing the frequency of a CPU prematurely, we skip reducing
->> the frequency if the CPU had been busy recently.
->>
->> This should not be done when the limits of the policy are changed, for
->> example due to thermal throttling. We should always get the frequency
->> within the new limits as soon as possible.
->>
->> Trying to fix this by using only one flag, i.e. need_freq_update, can
->> lead to a race condition where the flag gets cleared without forcing us
->> to change the frequency at least once. And so this patch introduces
->>  another flag to avoid that race condition.
->>
->> Fixes: ecd288429126 ("cpufreq: schedutil: Don't set next_freq to UINT_MAX")
->> Cc: v4.18+ <stable@vger.kernel.org> # v4.18+
->> Reported-by: Doug Smythies <doug.smythies@gmail.com>
->> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
->> ---
->> V2->V3:
->> - Updated commit log.
->>
->> V1->V2:
->> - Fixed the race condition using a different flag.
->>
->> @Doug: I haven't changed the code since you last tested these. Your
->> Tested-by tag can be useful while applying the patches. Thanks.
+This patch fixes a spelling typo in tigger-snapshot.tc
 
-Tested-by: Doug Smythies <dsmythies@telus.net>
-For acpi-cpufreq/schedutil only (which we already know).
+Signed-off-by: Masanari Iida <standby24x7@gmail.com>
+---
+ .../testing/selftests/ftrace/test.d/trigger/trigger-snapshot.tc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I tested including Rafael's suggested change.
-I.E.
-
-diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-index 592ff72..ae3ec77 100644
---- a/kernel/sched/cpufreq_schedutil.c
-+++ b/kernel/sched/cpufreq_schedutil.c
-@@ -441,7 +441,7 @@ static void sugov_update_single(struct update_util_data *hook, u64 time,
-        struct sugov_policy *sg_policy = sg_cpu->sg_policy;
-        unsigned long util, max;
-        unsigned int next_f;
--       bool busy = false;
-+       bool busy;
-
-        sugov_iowait_boost(sg_cpu, time, flags);
-        sg_cpu->last_update = time;
-@@ -452,8 +452,7 @@ static void sugov_update_single(struct update_util_data *hook, u64 time,
-                return;
-
-        /* Limits may have changed, don't skip frequency update */
--       if (!sg_policy->need_freq_update)
--               busy = sugov_cpu_is_busy(sg_cpu);
-+       busy = !sg_policy->need_freq_update && sugov_cpu_is_busy(sg_cpu);
-
-        util = sugov_get_util(sg_cpu);
-        max = sg_cpu->max;
-
-... Doug
-
+diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-snapshot.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-snapshot.tc
+index 7717c0a09686..ac738500d17f 100644
+--- a/tools/testing/selftests/ftrace/test.d/trigger/trigger-snapshot.tc
++++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-snapshot.tc
+@@ -28,7 +28,7 @@ if [ -z "$FEATURE" ]; then
+     exit_unsupported
+ fi
+ 
+-echo "Test snapshot tigger"
++echo "Test snapshot trigger"
+ echo 0 > snapshot
+ echo 1 > events/sched/sched_process_fork/enable
+ ( echo "forked")
+-- 
+2.23.0.rc0
 
