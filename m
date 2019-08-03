@@ -2,70 +2,93 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4948FC31E40
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 16:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FC7C31E40
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 16:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B39F2073D
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 16:33:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD0702073D
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 16:33:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564849995;
+	bh=Zq9cTSiVMosbKCMzFpNpaoqOufJyrLHKeVK5CLX2yQQ=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=K8KsNuK7+vqDxky8cdTjkoKGpuXrgWoNdZ8TjQpXkmkBCTQbSS9Gn/GgtYesk7C+a
+	 tRL3c+qExoxbSyfknBXi9LpAkyGCTnzuWRKGi3SJJosM4vGXqNw/hkc81s7N6uPh9j
+	 ripDnxCxV7su57JOQsirBiwilj2ttApuYh9tcMu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388415AbfHCQdE (ORCPT
+        id S2388518AbfHCQdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 3 Aug 2019 12:33:04 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44907 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388338AbfHCQdE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 3 Aug 2019 12:33:04 -0400
-Received: by mail-lj1-f194.google.com with SMTP id k18so75618965ljc.11
-        for <linux-kernel@vger.kernel.org>; Sat, 03 Aug 2019 09:33:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AQfaZwDpkzhFsFszNkjuubHRjVzMl/HqNoRRjbmG/v4=;
-        b=Jm3kjSokiQ7/ryr/LTSjR/8xCTixdPt6y2jzKi5QHonNpODFZssAv3M2nMLpRfWVlC
-         a1lc7BhoLEHJXjjWivQnmCJYYepIFTM5iKQFyBv95x0N9IhqKDsKU+Nvj5gyqlcGCxvJ
-         b7f3yV3u1sEc4DvaJh1HswvOKGOlXrWrCp183lYx0hAJ6vg2jPE5JVZZcNbvhXbJGlYd
-         +lGMjDc5G+gXf9aqgH/YF1ae33VW0KofDPqARg4cSg6UvaDnwe/2bJEbAKstCFXTNZFx
-         rOpGHwChvPlP2Mg9Yhs655OFNC7Bbx7H/yaflgTrqlY9aftmZ9Bo3+HxfW71zyLMSvco
-         pjNw==
-X-Gm-Message-State: APjAAAX/QoY9kQu47J7kAUW8WhiPxvFODCjX+yyCEzuoY6C7NtpGg5/2
-        iK5zBkgn7HV94wy4SjCvaQW+wmyE3B7kwce1D9dWk/l0Quo=
-X-Google-Smtp-Source: APXvYqz+X/hbyp2RNPPLatngwO30fCAolala+/4tI7HD6qhxVT1TZM9nYzegsYPhORzOWz3VD6AFWtzQWUnKriBaPlE=
-X-Received: by 2002:a2e:89ca:: with SMTP id c10mr58628253ljk.106.1564849982187;
- Sat, 03 Aug 2019 09:33:02 -0700 (PDT)
+        Sat, 3 Aug 2019 12:33:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50736 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387950AbfHCQdO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 3 Aug 2019 12:33:14 -0400
+Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B1462073D;
+        Sat,  3 Aug 2019 16:33:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564849993;
+        bh=Zq9cTSiVMosbKCMzFpNpaoqOufJyrLHKeVK5CLX2yQQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=PbFAz9it4jvXL6TxJwBTB1ezowQE+Yy40kQ+9rodirjcIpgDYLCHpPTDDg8z9p/Hn
+         0Bm5uZxz1iabnnbiJedczHLAilndNl8asKsFnckqWo7VsAhPzctQriEshSDBRPAWAm
+         10m6xgR/PNvPBFi6z91V+SmmTupmNbJZK/mMdHyA=
+Date:   Sat, 3 Aug 2019 09:33:12 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        david@fromorbit.com, linux-kernel@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de
+Subject: [GIT PULL] xfs: cleanups for 5.3-rc3
+Message-ID: <20190803163312.GK7138@magnolia>
 MIME-Version: 1.0
-References: <20190728182029.2893-1-mcroce@redhat.com>
-In-Reply-To: <20190728182029.2893-1-mcroce@redhat.com>
-From:   Matteo Croce <mcroce@redhat.com>
-Date:   Sat, 3 Aug 2019 18:32:26 +0200
-Message-ID: <CAGnkfhxedte7iQ_4eOVSUzXK3nOWcXSkOQtfp3X3wogOtkX9VQ@mail.gmail.com>
-Subject: Re: [PATCH] kernel: ignore auto-generated file
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 28, 2019 at 8:20 PM Matteo Croce <mcroce@redhat.com> wrote:
->
-> kernel/config_data.h is autogenerated during the build, let's add it to
-> the directory .gitignore.
->
-> Signed-off-by: Matteo Croce <mcroce@redhat.com>
->
+Hi Linus,
 
-CCing people as `scripts/get_maintainer.pl kernel/.gitignore` suggests
+Here are a couple more bug fixes that trickled in since -rc1.  It's
+survived the usual xfstests runs and merges cleanly with this morning's
+master.  Please let me know if anything strange happens.
 
--- 
-Matteo Croce
-per aspera ad upstream
+--D
+
+The following changes since commit 609488bc979f99f805f34e9a32c1e3b71179d10b:
+
+  Linux 5.3-rc2 (2019-07-28 12:47:02 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.3-fixes-1
+
+for you to fetch changes up to afa1d96d1430c2138c545fb76e6dcb21222098d4:
+
+  xfs: Fix possible null-pointer dereferences in xchk_da_btree_block_check_sibling() (2019-07-30 11:28:20 -0700)
+
+----------------------------------------------------------------
+Changes since last update:
+- Avoid leaking kernel stack contents to userspace.
+- Fix a potential null pointer dereference in the dabtree scrub code.
+
+----------------------------------------------------------------
+Darrick J. Wong (1):
+      xfs: fix stack contents leakage in the v1 inumber ioctls
+
+Jia-Ju Bai (1):
+      xfs: Fix possible null-pointer dereferences in xchk_da_btree_block_check_sibling()
+
+ fs/xfs/scrub/dabtree.c | 6 +++++-
+ fs/xfs/xfs_itable.c    | 3 +++
+ 2 files changed, 8 insertions(+), 1 deletion(-)
