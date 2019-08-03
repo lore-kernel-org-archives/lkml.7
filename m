@@ -2,64 +2,108 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 413DDC31E40
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 10:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA41C41514
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 10:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21FB12166E
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 10:30:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 237372166E
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 10:32:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ur/qYbkc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388467AbfHCKaa (ORCPT
+        id S2388511AbfHCKcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 3 Aug 2019 06:30:30 -0400
-Received: from verein.lst.de ([213.95.11.211]:59810 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388432AbfHCKa3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 3 Aug 2019 06:30:29 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 4321A227A81; Sat,  3 Aug 2019 12:30:24 +0200 (CEST)
-Date:   Sat, 3 Aug 2019 12:30:24 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-xtensa@linux-xtensa.org, Michal Simek <monstr@monstr.eu>,
-        linux-parisc@vger.kernel.org, linux-sh@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 5/5] dma-mapping: remove ARCH_NO_COHERENT_DMA_MMAP
-Message-ID: <20190803103024.GA32624@lst.de>
-References: <20190725063401.29904-1-hch@lst.de> <20190725063401.29904-6-hch@lst.de> <20190802070354.GA8280@lst.de> <s5hh870rn4t.wl-tiwai@suse.de>
+        Sat, 3 Aug 2019 06:32:09 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:45992 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388475AbfHCKcI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 3 Aug 2019 06:32:08 -0400
+Received: by mail-io1-f65.google.com with SMTP id g20so157813780ioc.12;
+        Sat, 03 Aug 2019 03:32:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=da8KRfbEJR8oI6dph8pOWFJBoDpxiOlghod0qc29YNk=;
+        b=ur/qYbkcaFRigMcGfbkyjRR9Ci5OFfz0p10SpbaNfXAmmnb9wpvLL8S4f2ZNI/jmNZ
+         6eIBV5C8Z+/tACC+UbCUzLIU8FPTtwXk3dV6HObjGOoG35sn6Dg052XlOMvZjMYwzjkz
+         J5A6QgQMoDPTnNcyOW95JxPNDdP/0edmzBfHy/sYJ4MkwTUl1PhvJ37ovhDa6+ewwGDN
+         szW3GR4HQymM5s6V0juJjUrowXyKKWmiEhUuTrUKpjPjKcbcCTyy5t1j8hNDp4RMBpuo
+         5MFzIskuDabtL0c7QLP/EV6pqbbSxe5QT86nGicesRe8cYkpaVzt3xm3FN83vhcAucaQ
+         qHWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=da8KRfbEJR8oI6dph8pOWFJBoDpxiOlghod0qc29YNk=;
+        b=gvvtHQD5nIZN8GMFiLo9eSJVqlptIQOgd30kFGMaANMKF8L21tG2hGzveB0Y98cc8s
+         JsmY+4cQwgHnRtbzPJfB5ivA2owTCS1YrhcMW4Zbak66+fm2LzDud8zifXYAw8dJow7s
+         wYQofm3s2neqWrjk3ohefQShvKetS/aEKE2W2ubtZD4tda1RKJ1IOf+THxylzi7CUr8P
+         k/skl3OJj7nN0GhkSlpiwgih8fb4S2Ov2k/mLxs8eq+ew+0t8XVs1kS7S8xCxhSoQFKt
+         jFUWNOjaGxgSFqbKjswkf2KMucHP0Vr+i/5Rdr+unIflmRFNh+NwvsHE8zLxDnS4oX0o
+         8Ubw==
+X-Gm-Message-State: APjAAAUJst/MHZdVz+purngQ69OXgSkZ0M8Gp1+C69zuofZdS/hvWqLQ
+        xCBciWYwDw4vFgT4o/5yojaH5zHYEA5lNjAdlMs=
+X-Google-Smtp-Source: APXvYqzSb8j1fq6O7rFD2jXQWgqNHP8qtISFgYusBlZIk6vclAhRo2eNMoWvK0QqcKjrGqHabWe+DdWtHQ55dYrGmVo=
+X-Received: by 2002:a5e:8209:: with SMTP id l9mr126332553iom.303.1564828327694;
+ Sat, 03 Aug 2019 03:32:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <s5hh870rn4t.wl-tiwai@suse.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <20190802132302.13537-1-sashal@kernel.org> <20190802132302.13537-6-sashal@kernel.org>
+In-Reply-To: <20190802132302.13537-6-sashal@kernel.org>
+From:   Alexander Kapshuk <alexander.kapshuk@gmail.com>
+Date:   Sat, 3 Aug 2019 13:31:30 +0300
+Message-ID: <CAJ1xhMWb6OG0xdBtAQZkX-T0XNmMNaMaS=ScJ4ZRwpv9eHXmCQ@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 4.19 06/42] scripts/sphinx-pre-install: fix script
+ for RHEL/CentOS
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        "# 3.9+" <stable@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 10:24:02AM +0200, Takashi Iwai wrote:
-> I wasn't careful enough to look at that change, sorry.
-> 
-> The code there tries to check whether dma_mmap_coherent() would always
-> fail on some platforms.  Then the driver clears the mmap capability
-> flag at the device open time and notifies user-space to fall back to
-> the dumb read/write mode.
-> 
-> So I'm afraid that simply dropping the check would cause the behavior
-> regression, e.g. on PARISC.
-> 
-> Is there any simple way to test whether dma_mmap_coherent() would work
-> or not in general on the target platform?  It's not necessarily in an
-> ifdef at all.
+On Sat, Aug 3, 2019 at 11:19 AM Sasha Levin <sashal@kernel.org> wrote:
+>
+> From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+>
+> [ Upstream commit b308467c916aa7acc5069802ab76a9f657434701 ]
+>
+> There's a missing parenthesis at the script, with causes it to
+> fail to detect non-Fedora releases (e. g. RHEL/CentOS).
+>
+> Tested with Centos 7.6.1810.
+>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  scripts/sphinx-pre-install | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
+> index 067459760a7b0..3524dbc313163 100755
+> --- a/scripts/sphinx-pre-install
+> +++ b/scripts/sphinx-pre-install
+> @@ -301,7 +301,7 @@ sub give_redhat_hints()
+>         #
+>         # Checks valid for RHEL/CentOS version 7.x.
+>         #
+> -       if (! $system_release =~ /Fedora/) {
+> +       if (!($system_release =~ /Fedora/)) {
+>                 $map{"virtualenv"} = "python-virtualenv";
+>         }
+>
+> --
+> 2.20.1
+>
 
-This isn't really a platform, but a per-device question.  I can add a
-"bool dma_can_mmap(struct device *dev)" helper to check that.  But how
-do I get at a suitable struct device in hw_support_mmap()?
+The negated binding operator '!~' could be used here as well, and it
+does not require the use of extra parenthesis.
+Just a thought.
