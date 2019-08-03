@@ -2,411 +2,200 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7DEC32750
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 17:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 145C5C41514
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 17:42:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 211082087C
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 17:41:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D645721726
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 17:42:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="PBWAelOc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=apple.com header.i=@apple.com header.b="atDS6def"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728177AbfHCRlb (ORCPT
+        id S1728195AbfHCRmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 3 Aug 2019 13:41:31 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34438 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725886AbfHCRlb (ORCPT
+        Sat, 3 Aug 2019 13:42:47 -0400
+Received: from nwk-aaemail-lapp02.apple.com ([17.151.62.67]:42714 "EHLO
+        nwk-aaemail-lapp02.apple.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725886AbfHCRmr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 3 Aug 2019 13:41:31 -0400
-Received: by mail-pg1-f194.google.com with SMTP id n9so31405445pgc.1
-        for <linux-kernel@vger.kernel.org>; Sat, 03 Aug 2019 10:41:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Eqe0jo6oWvHCtdfAFOdxdsyP1aAj3Ti7HkefwkqRcYc=;
-        b=PBWAelOc6a31GMyf6OK4PlVyVkGZqs7fvdv3stJDwJr9uOglewfSI3bqkiH0Dahpxr
-         J0cv9TtxiGll49zKmGylA44SuhfGuo3Lbyke7FMULlMCSbP971pKTIg2ZQ9eSxs/lTl8
-         M6JTc3P/Z9GhT0qheNuV/WnRCrgEe411gAA1g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Eqe0jo6oWvHCtdfAFOdxdsyP1aAj3Ti7HkefwkqRcYc=;
-        b=JFNV1zo/L5VkqEqH2/MS305Ei9mIGeaJpAc2ziiLI/7ML88fuY+LVgXOjcW3siwC2r
-         oJJHeqaPLVMGHH2QDs6BuE1KjohJ1K4eFnAem0HF9RL6GcbpgT1CwS0tqodb82IB+81P
-         vtgsvzzh1mvVxUMCzV+BaLYkA3pWMlsSiTtqHKbuAmaySNRI1koCI7jSQ0sEO6gCdXhP
-         99QWKYEbcwHlY64oPq2qW0gEUrKvCXYb29jWaSV0Zaw1quWObPW/yTQsnSTZ8lucIQOz
-         ZU6gtsf2pO+Ocu3CCks82Ylu8WAZ+FJID6TTfLIOZbtLJU22ApUZb6uQg54fMXONAUQ2
-         AhXw==
-X-Gm-Message-State: APjAAAWwWZt2t8kLTFQA+6i9NFlrQx7wi6w5xCevTKuCRO6xycteWZw4
-        YOSjIkQr1ln0f9jnjifdJJ8=
-X-Google-Smtp-Source: APXvYqyxeFlbuxTKisMQ7tMQO5fg8wzr49VCerD7zIwEqZzcViilzD39PchJPC+zZzd3Ej60KYEKeg==
-X-Received: by 2002:a62:cec4:: with SMTP id y187mr64899524pfg.84.1564854090339;
-        Sat, 03 Aug 2019 10:41:30 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id e124sm126833785pfh.181.2019.08.03.10.41.28
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 03 Aug 2019 10:41:29 -0700 (PDT)
-Date:   Sat, 3 Aug 2019 13:41:27 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com
-Subject: Re: [PATCH tip/core/rcu 03/11] rcu/nocb: Provide separate no-CBs
- grace-period kthreads
-Message-ID: <20190803174127.GA83025@google.com>
-References: <20190801225009.GA17155@linux.ibm.com>
- <20190801225028.18225-3-paulmck@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190801225028.18225-3-paulmck@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sat, 3 Aug 2019 13:42:47 -0400
+Received: from pps.filterd (nwk-aaemail-lapp02.apple.com [127.0.0.1])
+        by nwk-aaemail-lapp02.apple.com (8.16.0.27/8.16.0.27) with SMTP id x73Hg31I061797;
+        Sat, 3 Aug 2019 10:42:40 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=apple.com; h=sender : content-type
+ : mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to; s=20180706;
+ bh=bRkkC/ntl093lal8PH707LIzyeDQRUxXglb6XCpCp5g=;
+ b=atDS6defcl+FOy7rii078Ax6ErNtRNuaV05osswNbt377/LhCv9iReo3Ig5SL0oohxEX
+ 34pTSV/vqUCGQjeDwxeQ9bto2hQzvkBJOJy+mJXEXlHfamDJ+U/phgU8vC8qwq5rgzWT
+ CKQFCVwA7VKDxEFHTZuQwmuf+jA14sKY/gDZuuvJ/IrER4xGmxld46m0Vn/x6/KYLiYP
+ 9ONqVEcP4T97iAIRtBVlRqKRHUppPyreqPgx9S3A6wCJhKDrxjIFd/FXQXJy7tqcc2tM
+ EGLJe05byUEnw0MN+z4t155hWgN3dE5X5nyKqTLt1Ir5nNyl7bvu1cUsvEnefiY+9aHs TQ== 
+Received: from ma1-mtap-s01.corp.apple.com (ma1-mtap-s01.corp.apple.com [17.40.76.5])
+        by nwk-aaemail-lapp02.apple.com with ESMTP id 2u56ujx5h7-17
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Sat, 03 Aug 2019 10:42:40 -0700
+Received: from nwk-mmpp-sz11.apple.com
+ (nwk-mmpp-sz11.apple.com [17.128.115.155]) by ma1-mtap-s01.corp.apple.com
+ (Oracle Communications Messaging Server 8.0.2.4.20190507 64bit (built May  7
+ 2019)) with ESMTPS id <0PVO00L5I96Z2T40@ma1-mtap-s01.corp.apple.com>; Sat,
+ 03 Aug 2019 10:42:38 -0700 (PDT)
+Received: from process_milters-daemon.nwk-mmpp-sz11.apple.com by
+ nwk-mmpp-sz11.apple.com
+ (Oracle Communications Messaging Server 8.0.2.4.20190507 64bit (built May  7
+ 2019)) id <0PVO00K0095HH200@nwk-mmpp-sz11.apple.com>; Sat,
+ 03 Aug 2019 10:42:37 -0700 (PDT)
+X-Va-A: 
+X-Va-T-CD: 2af4e3c096f98bec7d308668f2184085
+X-Va-E-CD: b03d5acee32fc9f0c9dfd3776592dc73
+X-Va-R-CD: 1835f3c54d533384876758843bc94ede
+X-Va-CD: 0
+X-Va-ID: 25033930-1b8f-487f-8f89-4f239138e815
+X-V-A:  
+X-V-T-CD: 2af4e3c096f98bec7d308668f2184085
+X-V-E-CD: b03d5acee32fc9f0c9dfd3776592dc73
+X-V-R-CD: 1835f3c54d533384876758843bc94ede
+X-V-CD: 0
+X-V-ID: 8093249f-89b7-424f-898d-6a35440e7308
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,,
+ definitions=2019-08-03_09:,, signatures=0
+Received: from [17.150.210.108] (unknown [17.150.210.108])
+ by nwk-mmpp-sz11.apple.com
+ (Oracle Communications Messaging Server 8.0.2.4.20190507 64bit (built May  7
+ 2019)) with ESMTPSA id <0PVO008PZ95GJO50@nwk-mmpp-sz11.apple.com>; Sat,
+ 03 Aug 2019 10:41:41 -0700 (PDT)
+Content-type: text/plain; charset=utf-8
+MIME-version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: Possible mem cgroup bug in kernels between 4.18.0 and 5.3-rc1.
+From:   Masoud Sharbiani <msharbiani@apple.com>
+In-reply-to: <d7efccf4-7f07-10da-077d-a58dafbf627e@I-love.SAKURA.ne.jp>
+Date:   Sat, 03 Aug 2019 10:41:40 -0700
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>, hannes@cmpxchg.org,
+        vdavydov.dev@gmail.com, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-transfer-encoding: quoted-printable
+Message-id: <77568CFC-280C-4C0F-85FC-92F1212BC6FC@apple.com>
+References: <5659221C-3E9B-44AD-9BBF-F74DE09535CD@apple.com>
+ <20190802074047.GQ11627@dhcp22.suse.cz>
+ <7E44073F-9390-414A-B636-B1AE916CC21E@apple.com>
+ <20190802144110.GL6461@dhcp22.suse.cz>
+ <5DE6F4AE-F3F9-4C52-9DFC-E066D9DD5EDC@apple.com>
+ <20190802191430.GO6461@dhcp22.suse.cz>
+ <A06C5313-B021-4ADA-9897-CE260A9011CC@apple.com>
+ <f7733773-35bc-a1f6-652f-bca01ea90078@I-love.SAKURA.ne.jp>
+ <d7efccf4-7f07-10da-077d-a58dafbf627e@I-love.SAKURA.ne.jp>
+To:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-03_09:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 03:50:20PM -0700, Paul E. McKenney wrote:
-> Currently, there is one no-CBs rcuo kthread per CPU, and these kthreads
-> are divided into groups.  The first rcuo kthread to come online in a
-> given group is that group's leader, and the leader both waits for grace
-> periods and invokes its CPU's callbacks.  The non-leader rcuo kthreads
-> only invoke callbacks.
-> 
-> This works well in the real-time/embedded environments for which it was
-> intended because such environments tend not to generate all that many
-> callbacks.  However, given huge floods of callbacks, it is possible for
-> the leader kthread to be stuck invoking callbacks while its followers
-> wait helplessly while their callbacks pile up.  This is a good recipe
-> for an OOM, and rcutorture's new callback-flood capability does generate
-> such OOMs.
-> 
-> One strategy would be to wait until such OOMs start happening in
-> production, but similar OOMs have in fact happened starting in 2018.
-> It would therefore be wise to take a more proactive approach.
-
-I haven't looked much into nocbs/nohz_full stuff (yet). In particular, I did
-not even know that the rcuo threads do grace period life-cycle management and
-waiting, I thought only the RCU GP threads did :-/. however, it seems this is
-a completely separate grace-period management state machine outside of the
-RCU GP thread right?
-
-I was wondering for this patch, could we also just have the rcuo
-leader handle both callback execution and waking other non-leader threads at
-the same time? So like, execute few callbacks, then do the wake up of the
-non-leaders to execute their callbacks, the get back to executing their own
-callbacks, etc. That way we don't need a separate rcuog thread to wait for
-grace period, would that not work?
-
-If you don't mind could you share with me a kvm.sh command (which has config,
-boot parameters etc) that can produce the OOM without this patch? I'd
-like to take a closer look at it.
-
-Is there also a short answer for my the RCU GP thread cannot do the job of
-these new rcuog threads?
-
-thanks a lot,
-
- - Joel
 
 
-> This commit therefore features per-CPU rcuo kthreads that do nothing
-> but invoke callbacks.  Instead of having one of these kthreads act as
-> leader, each group has a separate rcog kthread that handles grace periods
-> for its group.  Because these rcuog kthreads do not invoke callbacks,
-> callback floods on one CPU no longer block callbacks from reaching the
-> rcuc callback-invocation kthreads on other CPUs.
-> 
-> This change does introduce additional kthreads, however:
-> 
-> 1.	The number of additional kthreads is about the square root of
-> 	the number of CPUs, so that a 4096-CPU system would have only
-> 	about 64 additional kthreads.  Note that recent changes
-> 	decreased the number of rcuo kthreads by a factor of two
-> 	(CONFIG_PREEMPT=n) or even three (CONFIG_PREEMPT=y), so
-> 	this still represents a significant improvement on most systems.
-> 
-> 2.	The leading "rcuo" of the rcuog kthreads should allow existing
-> 	scripting to affinity these additional kthreads as needed, the
-> 	same as for the rcuop and rcuos kthreads.  (There are no longer
-> 	any rcuob kthreads.)
-> 
-> 3.	A state-machine approach was considered and rejected.  Although
-> 	this would allow the rcuo kthreads to continue their dual
-> 	leader/follower roles, it complicates callback invocation
-> 	and makes it more difficult to consolidate rcuo callback
-> 	invocation with existing softirq callback invocation.
-> 
-> The introduction of rcuog kthreads should thus be acceptable.
-> 
-> Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+> On Aug 3, 2019, at 8:51 AM, Tetsuo Handa =
+<penguin-kernel@I-love.SAKURA.ne.jp> wrote:
+>=20
+> Masoud, will you try this patch?
+
+Gladly.
+It looks like it is working (and OOMing properly).
+
+
+>=20
+> By the way, is /sys/fs/cgroup/memory/leaker/memory.usage_in_bytes =
+remains non-zero
+> despite /sys/fs/cgroup/memory/leaker/tasks became empty due to memcg =
+OOM killer expected?
+> Deleting big-data-file.bin after memcg OOM killer reduces some, but =
+still remains
+> non-zero.
+
+Yes. I had not noticed that:
+
+[ 1114.190477] oom_reaper: reaped process 1942 (leaker), now =
+anon-rss:0kB, file-
+rss:0kB, shmem-rss:0kB
+./test-script.sh: line 16:  1942 Killed                  ./leaker -p =
+10240 -c 100000
+
+[root@localhost laleaker]# cat  =
+/sys/fs/cgroup/memory/leaker/memory.usage_in_bytes
+3194880
+[root@localhost laleaker]# cat  =
+/sys/fs/cgroup/memory/leaker/memory.limit_in_bytes
+536870912
+[root@localhost laleaker]# rm -f big-data-file.bin
+[root@localhost laleaker]# cat  =
+/sys/fs/cgroup/memory/leaker/memory.usage_in_bytes
+2838528
+
+Thanks!
+Masoud
+
+PS: Tried hand-back-porting it to 4.19-y and it didn=E2=80=99t work. I =
+think there are other patches between 4.19.0 and 5.3 that could be =
+necessary=E2=80=A6
+
+
+>=20
+> ----------------------------------------
+> =46rom 2f92c70f390f42185c6e2abb8dda98b1b7d02fa9 Mon Sep 17 00:00:00 =
+2001
+> From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+> Date: Sun, 4 Aug 2019 00:41:30 +0900
+> Subject: [PATCH] memcg, oom: don't require __GFP_FS when invoking =
+memcg OOM killer
+>=20
+> Masoud Sharbiani noticed that commit 29ef680ae7c21110 ("memcg, oom: =
+move
+> out_of_memory back to the charge path") broke memcg OOM called from
+> __xfs_filemap_fault() path. It turned out that try_chage() is retrying
+> forever without making forward progress because =
+mem_cgroup_oom(GFP_NOFS)
+> cannot invoke the OOM killer due to commit 3da88fb3bacfaa33 ("mm, oom:
+> move GFP_NOFS check to out_of_memory"). Regarding memcg OOM, we need =
+to
+> bypass GFP_NOFS check in order to guarantee forward progress.
+>=20
+> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+> Reported-by: Masoud Sharbiani <msharbiani@apple.com>
+> Bisected-by: Masoud Sharbiani <msharbiani@apple.com>
+> Fixes: 29ef680ae7c21110 ("memcg, oom: move out_of_memory back to the =
+charge path")
 > ---
->  kernel/rcu/tree.h        |   6 +-
->  kernel/rcu/tree_plugin.h | 115 +++++++++++++++++++--------------------
->  2 files changed, 61 insertions(+), 60 deletions(-)
-> 
-> diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
-> index 32b3348d3a4d..dc3c53cb9608 100644
-> --- a/kernel/rcu/tree.h
-> +++ b/kernel/rcu/tree.h
-> @@ -200,8 +200,8 @@ struct rcu_data {
->  	atomic_long_t nocb_q_count_lazy; /*  invocation (all stages). */
->  	struct rcu_head *nocb_cb_head;	/* CBs ready to invoke. */
->  	struct rcu_head **nocb_cb_tail;
-> -	struct swait_queue_head nocb_wq; /* For nocb kthreads to sleep on. */
-> -	struct task_struct *nocb_cb_kthread;
-> +	struct swait_queue_head nocb_cb_wq; /* For nocb kthreads to sleep on. */
-> +	struct task_struct *nocb_gp_kthread;
->  	raw_spinlock_t nocb_lock;	/* Guard following pair of fields. */
->  	int nocb_defer_wakeup;		/* Defer wakeup of nocb_kthread. */
->  	struct timer_list nocb_timer;	/* Enforce finite deferral. */
-> @@ -211,6 +211,8 @@ struct rcu_data {
->  					/* CBs waiting for GP. */
->  	struct rcu_head **nocb_gp_tail;
->  	bool nocb_gp_sleep;		/* Is the nocb GP thread asleep? */
-> +	struct swait_queue_head nocb_gp_wq; /* For nocb kthreads to sleep on. */
-> +	struct task_struct *nocb_cb_kthread;
->  	struct rcu_data *nocb_next_cb_rdp;
->  					/* Next rcu_data in wakeup chain. */
->  
-> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> index 5a72700c3a32..c3b6493313ab 100644
-> --- a/kernel/rcu/tree_plugin.h
-> +++ b/kernel/rcu/tree_plugin.h
-> @@ -1531,7 +1531,7 @@ static void __wake_nocb_leader(struct rcu_data *rdp, bool force,
->  	struct rcu_data *rdp_leader = rdp->nocb_gp_rdp;
->  
->  	lockdep_assert_held(&rdp->nocb_lock);
-> -	if (!READ_ONCE(rdp_leader->nocb_cb_kthread)) {
-> +	if (!READ_ONCE(rdp_leader->nocb_gp_kthread)) {
->  		raw_spin_unlock_irqrestore(&rdp->nocb_lock, flags);
->  		return;
->  	}
-> @@ -1541,7 +1541,7 @@ static void __wake_nocb_leader(struct rcu_data *rdp, bool force,
->  		del_timer(&rdp->nocb_timer);
->  		raw_spin_unlock_irqrestore(&rdp->nocb_lock, flags);
->  		smp_mb(); /* ->nocb_gp_sleep before swake_up_one(). */
-> -		swake_up_one(&rdp_leader->nocb_wq);
-> +		swake_up_one(&rdp_leader->nocb_gp_wq);
->  	} else {
->  		raw_spin_unlock_irqrestore(&rdp->nocb_lock, flags);
->  	}
-> @@ -1646,7 +1646,7 @@ static void __call_rcu_nocb_enqueue(struct rcu_data *rdp,
->  	smp_mb__after_atomic(); /* Store *old_rhpp before _wake test. */
->  
->  	/* If we are not being polled and there is a kthread, awaken it ... */
-> -	t = READ_ONCE(rdp->nocb_cb_kthread);
-> +	t = READ_ONCE(rdp->nocb_gp_kthread);
->  	if (rcu_nocb_poll || !t) {
->  		trace_rcu_nocb_wake(rcu_state.name, rdp->cpu,
->  				    TPS("WakeNotPoll"));
-> @@ -1786,7 +1786,7 @@ static void rcu_nocb_wait_gp(struct rcu_data *rdp)
->   * No-CBs GP kthreads come here to wait for additional callbacks to show up.
->   * This function does not return until callbacks appear.
->   */
-> -static void nocb_leader_wait(struct rcu_data *my_rdp)
-> +static void nocb_gp_wait(struct rcu_data *my_rdp)
->  {
->  	bool firsttime = true;
->  	unsigned long flags;
-> @@ -1794,12 +1794,10 @@ static void nocb_leader_wait(struct rcu_data *my_rdp)
->  	struct rcu_data *rdp;
->  	struct rcu_head **tail;
->  
-> -wait_again:
-> -
->  	/* Wait for callbacks to appear. */
->  	if (!rcu_nocb_poll) {
->  		trace_rcu_nocb_wake(rcu_state.name, my_rdp->cpu, TPS("Sleep"));
-> -		swait_event_interruptible_exclusive(my_rdp->nocb_wq,
-> +		swait_event_interruptible_exclusive(my_rdp->nocb_gp_wq,
->  				!READ_ONCE(my_rdp->nocb_gp_sleep));
->  		raw_spin_lock_irqsave(&my_rdp->nocb_lock, flags);
->  		my_rdp->nocb_gp_sleep = true;
-> @@ -1838,7 +1836,7 @@ static void nocb_leader_wait(struct rcu_data *my_rdp)
->  			trace_rcu_nocb_wake(rcu_state.name, my_rdp->cpu,
->  					    TPS("WokeEmpty"));
->  		}
-> -		goto wait_again;
-> +		return;
->  	}
->  
->  	/* Wait for one grace period. */
-> @@ -1862,34 +1860,47 @@ static void nocb_leader_wait(struct rcu_data *my_rdp)
->  		rdp->nocb_cb_tail = rdp->nocb_gp_tail;
->  		*tail = rdp->nocb_gp_head;
->  		raw_spin_unlock_irqrestore(&rdp->nocb_lock, flags);
-> -		if (rdp != my_rdp && tail == &rdp->nocb_cb_head) {
-> +		if (tail == &rdp->nocb_cb_head) {
->  			/* List was empty, so wake up the kthread.  */
-> -			swake_up_one(&rdp->nocb_wq);
-> +			swake_up_one(&rdp->nocb_cb_wq);
->  		}
->  	}
-> +}
->  
-> -	/* If we (the GP kthreads) don't have CBs, go wait some more. */
-> -	if (!my_rdp->nocb_cb_head)
-> -		goto wait_again;
-> +/*
-> + * No-CBs grace-period-wait kthread.  There is one of these per group
-> + * of CPUs, but only once at least one CPU in that group has come online
-> + * at least once since boot.  This kthread checks for newly posted
-> + * callbacks from any of the CPUs it is responsible for, waits for a
-> + * grace period, then awakens all of the rcu_nocb_cb_kthread() instances
-> + * that then have callback-invocation work to do.
-> + */
-> +static int rcu_nocb_gp_kthread(void *arg)
-> +{
-> +	struct rcu_data *rdp = arg;
-> +
-> +	for (;;)
-> +		nocb_gp_wait(rdp);
-> +	return 0;
->  }
->  
->  /*
->   * No-CBs CB kthreads come here to wait for additional callbacks to show up.
-> - * This function does not return until callbacks appear.
-> + * This function returns true ("keep waiting") until callbacks appear and
-> + * then false ("stop waiting") when callbacks finally do appear.
->   */
-> -static void nocb_follower_wait(struct rcu_data *rdp)
-> +static bool nocb_follower_wait(struct rcu_data *rdp)
->  {
-> -	for (;;) {
-> -		trace_rcu_nocb_wake(rcu_state.name, rdp->cpu, TPS("FollowerSleep"));
-> -		swait_event_interruptible_exclusive(rdp->nocb_wq,
-> -					 READ_ONCE(rdp->nocb_cb_head));
-> -		if (smp_load_acquire(&rdp->nocb_cb_head)) {
-> -			/* ^^^ Ensure CB invocation follows _head test. */
-> -			return;
-> -		}
-> -		WARN_ON(signal_pending(current));
-> -		trace_rcu_nocb_wake(rcu_state.name, rdp->cpu, TPS("WokeEmpty"));
-> +	trace_rcu_nocb_wake(rcu_state.name, rdp->cpu, TPS("FollowerSleep"));
-> +	swait_event_interruptible_exclusive(rdp->nocb_cb_wq,
-> +				 READ_ONCE(rdp->nocb_cb_head));
-> +	if (smp_load_acquire(&rdp->nocb_cb_head)) { /* VVV */
-> +		/* ^^^ Ensure CB invocation follows _head test. */
-> +		return false;
->  	}
-> +	WARN_ON(signal_pending(current));
-> +	trace_rcu_nocb_wake(rcu_state.name, rdp->cpu, TPS("WokeEmpty"));
-> +	return true;
->  }
->  
->  /*
-> @@ -1899,7 +1910,7 @@ static void nocb_follower_wait(struct rcu_data *rdp)
->   * have to do quite so many wakeups (as in they only need to wake the
->   * no-CBs GP kthreads, not the CB kthreads).
->   */
-> -static int rcu_nocb_kthread(void *arg)
-> +static int rcu_nocb_cb_kthread(void *arg)
->  {
->  	int c, cl;
->  	unsigned long flags;
-> @@ -1911,10 +1922,8 @@ static int rcu_nocb_kthread(void *arg)
->  	/* Each pass through this loop invokes one batch of callbacks */
->  	for (;;) {
->  		/* Wait for callbacks. */
-> -		if (rdp->nocb_gp_rdp == rdp)
-> -			nocb_leader_wait(rdp);
-> -		else
-> -			nocb_follower_wait(rdp);
-> +		while (nocb_follower_wait(rdp))
-> +			continue;
->  
->  		/* Pull the ready-to-invoke callbacks onto local list. */
->  		raw_spin_lock_irqsave(&rdp->nocb_lock, flags);
-> @@ -2048,7 +2057,8 @@ void __init rcu_init_nohz(void)
->  static void __init rcu_boot_init_nocb_percpu_data(struct rcu_data *rdp)
->  {
->  	rdp->nocb_tail = &rdp->nocb_head;
-> -	init_swait_queue_head(&rdp->nocb_wq);
-> +	init_swait_queue_head(&rdp->nocb_cb_wq);
-> +	init_swait_queue_head(&rdp->nocb_gp_wq);
->  	rdp->nocb_cb_tail = &rdp->nocb_cb_head;
->  	raw_spin_lock_init(&rdp->nocb_lock);
->  	timer_setup(&rdp->nocb_timer, do_nocb_deferred_wakeup_timer, 0);
-> @@ -2056,50 +2066,39 @@ static void __init rcu_boot_init_nocb_percpu_data(struct rcu_data *rdp)
->  
->  /*
->   * If the specified CPU is a no-CBs CPU that does not already have its
-> - * rcuo kthread, spawn it.  If the CPUs are brought online out of order,
-> - * this can require re-organizing the GP-CB relationships.
-> + * rcuo CB kthread, spawn it.  Additionally, if the rcuo GP kthread
-> + * for this CPU's group has not yet been created, spawn it as well.
->   */
->  static void rcu_spawn_one_nocb_kthread(int cpu)
->  {
-> -	struct rcu_data *rdp;
-> -	struct rcu_data *rdp_last;
-> -	struct rcu_data *rdp_old_leader;
-> -	struct rcu_data *rdp_spawn = per_cpu_ptr(&rcu_data, cpu);
-> +	struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
-> +	struct rcu_data *rdp_gp;
->  	struct task_struct *t;
->  
->  	/*
->  	 * If this isn't a no-CBs CPU or if it already has an rcuo kthread,
->  	 * then nothing to do.
->  	 */
-> -	if (!rcu_is_nocb_cpu(cpu) || rdp_spawn->nocb_cb_kthread)
-> +	if (!rcu_is_nocb_cpu(cpu) || rdp->nocb_cb_kthread)
->  		return;
->  
->  	/* If we didn't spawn the GP kthread first, reorganize! */
-> -	rdp_old_leader = rdp_spawn->nocb_gp_rdp;
-> -	if (rdp_old_leader != rdp_spawn && !rdp_old_leader->nocb_cb_kthread) {
-> -		rdp_last = NULL;
-> -		rdp = rdp_old_leader;
-> -		do {
-> -			rdp->nocb_gp_rdp = rdp_spawn;
-> -			if (rdp_last && rdp != rdp_spawn)
-> -				rdp_last->nocb_next_cb_rdp = rdp;
-> -			if (rdp == rdp_spawn) {
-> -				rdp = rdp->nocb_next_cb_rdp;
-> -			} else {
-> -				rdp_last = rdp;
-> -				rdp = rdp->nocb_next_cb_rdp;
-> -				rdp_last->nocb_next_cb_rdp = NULL;
-> -			}
-> -		} while (rdp);
-> -		rdp_spawn->nocb_next_cb_rdp = rdp_old_leader;
-> +	rdp_gp = rdp->nocb_gp_rdp;
-> +	if (!rdp_gp->nocb_gp_kthread) {
-> +		t = kthread_run(rcu_nocb_gp_kthread, rdp_gp,
-> +				"rcuog/%d", rdp_gp->cpu);
-> +		if (WARN_ONCE(IS_ERR(t), "%s: Could not start rcuo GP kthread, OOM is now expected behavior\n", __func__))
-> +			return;
-> +		WRITE_ONCE(rdp_gp->nocb_gp_kthread, t);
->  	}
->  
->  	/* Spawn the kthread for this CPU. */
-> -	t = kthread_run(rcu_nocb_kthread, rdp_spawn,
-> +	t = kthread_run(rcu_nocb_cb_kthread, rdp,
->  			"rcuo%c/%d", rcu_state.abbr, cpu);
-> -	if (WARN_ONCE(IS_ERR(t), "%s: Could not start rcuo kthread, OOM is now expected behavior\n", __func__))
-> +	if (WARN_ONCE(IS_ERR(t), "%s: Could not start rcuo CB kthread, OOM is now expected behavior\n", __func__))
->  		return;
-> -	WRITE_ONCE(rdp_spawn->nocb_cb_kthread, t);
-> +	WRITE_ONCE(rdp->nocb_cb_kthread, t);
-> +	WRITE_ONCE(rdp->nocb_gp_kthread, rdp_gp->nocb_gp_kthread);
->  }
->  
->  /*
-> -- 
-> 2.17.1
-> 
+> mm/oom_kill.c | 5 +++--
+> 1 file changed, 3 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+> index eda2e2a..26804ab 100644
+> --- a/mm/oom_kill.c
+> +++ b/mm/oom_kill.c
+> @@ -1068,9 +1068,10 @@ bool out_of_memory(struct oom_control *oc)
+> 	 * The OOM killer does not compensate for IO-less reclaim.
+> 	 * pagefault_out_of_memory lost its gfp context so we have to
+> 	 * make sure exclude 0 mask - all other users should have at =
+least
+> -	 * ___GFP_DIRECT_RECLAIM to get here.
+> +	 * ___GFP_DIRECT_RECLAIM to get here. But mem_cgroup_oom() has =
+to
+> +	 * invoke the OOM killer even if it is a GFP_NOFS allocation.
+> 	 */
+> -	if (oc->gfp_mask && !(oc->gfp_mask & __GFP_FS))
+> +	if (oc->gfp_mask && !(oc->gfp_mask & __GFP_FS) && =
+!is_memcg_oom(oc))
+> 		return true;
+>=20
+> 	/*
+> --=20
+> 1.8.3.1
+>=20
+>=20
+
