@@ -2,160 +2,128 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81638C0650F
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 01:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E32BDC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 01:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 564FF2166E
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 01:41:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADEA320679
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 01:55:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OLRFKsHo"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BXUIyNQS";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Ucwu/vBd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404024AbfHCBlm (ORCPT
+        id S2391321AbfHCBzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 21:41:42 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:14532 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387864AbfHCBll (ORCPT
+        Fri, 2 Aug 2019 21:55:16 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:54856 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387606AbfHCBzQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 21:41:41 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d44e6540001>; Fri, 02 Aug 2019 18:41:40 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 02 Aug 2019 18:41:39 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 02 Aug 2019 18:41:39 -0700
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 3 Aug
- 2019 01:41:38 +0000
-Subject: Re: [PATCH 31/34] nfs: convert put_page() to put_user_page*()
-To:     Calum Mackay <calum.mackay@oracle.com>, <john.hubbard@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-CC:     Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <amd-gfx@lists.freedesktop.org>, <ceph-devel@vger.kernel.org>,
-        <devel@driverdev.osuosl.org>, <devel@lists.orangefs.org>,
-        <dri-devel@lists.freedesktop.org>,
-        <intel-gfx@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-block@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-        <linux-fbdev@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-nfs@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-rpi-kernel@lists.infradead.org>,
-        <linux-xfs@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <rds-devel@oss.oracle.com>, <sparclinux@vger.kernel.org>,
-        <x86@kernel.org>, <xen-devel@lists.xenproject.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-References: <20190802022005.5117-1-jhubbard@nvidia.com>
- <20190802022005.5117-32-jhubbard@nvidia.com>
- <1738cb1e-15d8-0bbe-5362-341664f6efc8@oracle.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <db136399-ed87-56ea-bd6e-e5d29b145eda@nvidia.com>
-Date:   Fri, 2 Aug 2019 18:41:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 2 Aug 2019 21:55:16 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 46F0C60237; Sat,  3 Aug 2019 01:55:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564797315;
+        bh=LZ1ta87Qax2VkqikccB74yTpa7ZyloFDO1ei/2bubGw=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=BXUIyNQSnkLOmhq2CF2udSHlGFcMNsYUBFC0HMD6YxzZbROVzlEL17qejQnJa2QZE
+         cx0ZxHFhmpcvx81Z6cH2IkteDmHPuo7y74h+PBniVraKrrid2grMty+Q5/oSXAcYNV
+         TfAQWrXhIliglBg7sRJzJ7cl8dSM+uavCZRXPs3E=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E5D7E60237;
+        Sat,  3 Aug 2019 01:55:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564797314;
+        bh=LZ1ta87Qax2VkqikccB74yTpa7ZyloFDO1ei/2bubGw=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=Ucwu/vBdeyEyLr7N8E4e14EfrC5/e2Lk48nl81YJQJlSa6QXcY1gX0nQWKzpeIh7Z
+         9lxSGtXLIPKzIl+6FWQeZhMROkzJ+1VAAnxQSp27itg80PoV/PuM6zu0pGQDwEtkXB
+         T1OBk+Bdg7QfxwJ6OQd8UUc1To1CqsuFfTv1I478=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E5D7E60237
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Brian Norris <briannorris@chromium.org>
+Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        Ganapathi Bhat <gbhat@marvell.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jeffy Chen <jeffy.chen@rock-chips.com>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [RFC PATCH] Revert "mwifiex: fix system hang problem after resume"
+References: <20170331202136.100342-1-briannorris@chromium.org>
+        <20190803010641.GA22848@google.com>
+Date:   Sat, 03 Aug 2019 04:55:08 +0300
+In-Reply-To: <20190803010641.GA22848@google.com> (Brian Norris's message of
+        "Fri, 2 Aug 2019 18:06:42 -0700")
+Message-ID: <875znfhv2b.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <1738cb1e-15d8-0bbe-5362-341664f6efc8@oracle.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1564796500; bh=zc1wJBCk6oa4TZJ5kpnxYLs8I/mCQFC0KqXiV/MQqAc=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=OLRFKsHoXBw1TGfx4yjE0Mz6/NwSHjUP/99RYZUV8BmAJcU3vy970b00AWaqBbqwn
-         eDliId8mLescIf+v3MwQ2SrvN7VrnEwLTirEIw8jXzAjeXgqN3dtxI2Suyrp0L+f3G
-         YPfLBq5YLuEzykUeYyNQ/IXUTk0ew3pKoxF86cxfpvc0Iih+8axjrF9wmXCYOssEh/
-         dFyCupj1u3LqFaTu0iXYZzaL8I/Fkdd+Hdao45WQIFetVoCK43sV9CCZfHZ6uY+1an
-         0Rm4XSFjiP2H1hfdLpXkesSoEJK75cPPtD+8sANcEv6R5DjbxYeg7dbcB8wnnzerOG
-         BX10+9E+Fxe0Q==
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/2/19 6:27 PM, Calum Mackay wrote:
-> On 02/08/2019 3:20 am, john.hubbard@gmail.com wrote:
-...=20
-> Since it's static, and only called twice, might it be better to change it=
-s two callers [nfs_direct_{read,write}_schedule_iovec()] to call put_user_p=
-ages() directly, and remove nfs_direct_release_pages() entirely?
->=20
-> thanks,
-> calum.
->=20
->=20
->> =C2=A0 =C2=A0 void nfs_init_cinfo_from_dreq(struct nfs_commit_info *cinf=
-o,
->>
-=20
-Hi Calum,
+Brian Norris <briannorris@chromium.org> writes:
 
-Absolutely! Is it OK to add your reviewed-by, with the following incrementa=
-l
-patch made to this one?
+> + Doug, Matthias, who are seeing problems (or, failure to try to
+> recover, as predicted below)
+> + Amit's new email
+> + new maintainers
+>
+> Perhaps it's my fault for marking this RFC. But I changed the status
+> back to "New" in Patchwork, in case that helps:
 
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index b00b89dda3c5..c0c1b9f2c069 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -276,11 +276,6 @@ ssize_t nfs_direct_IO(struct kiocb *iocb, struct iov_i=
-ter *iter)
-        return nfs_file_direct_write(iocb, iter);
- }
-=20
--static void nfs_direct_release_pages(struct page **pages, unsigned int npa=
-ges)
--{
--       put_user_pages(pages, npages);
--}
--
- void nfs_init_cinfo_from_dreq(struct nfs_commit_info *cinfo,
-                              struct nfs_direct_req *dreq)
- {
-@@ -510,7 +505,7 @@ static ssize_t nfs_direct_read_schedule_iovec(struct nf=
-s_direct_req *dreq,
-                        pos +=3D req_len;
-                        dreq->bytes_left -=3D req_len;
-                }
--               nfs_direct_release_pages(pagevec, npages);
-+               put_user_pages(pagevec, npages);
-                kvfree(pagevec);
-                if (result < 0)
-                        break;
-@@ -933,7 +928,7 @@ static ssize_t nfs_direct_write_schedule_iovec(struct n=
-fs_direct_req *dreq,
-                        pos +=3D req_len;
-                        dreq->bytes_left -=3D req_len;
-                }
--               nfs_direct_release_pages(pagevec, npages);
-+               put_user_pages(pagevec, npages);
-                kvfree(pagevec);
-                if (result < 0)
-                        break;
+But I still see it marked as RFC. So the patch in question is:
 
+https://patchwork.kernel.org/patch/9657277/
 
+Changing the patchwork state to RFC means that it's dropped and out of
+my radar. Also, if I see "RFC" in the subject I assume that's a patch
+which I should not apply by default.
 
-thanks,
---=20
-John Hubbard
-NVIDIA
+> On Fri, Mar 31, 2017 at 01:21:36PM -0700, Brian Norris wrote:
+>> This reverts commit 437322ea2a36d112e20aa7282c869bf924b3a836.
+>> 
+>> This above-mentioned "fix" does not actually do anything to prevent a
+>> race condition. It simply papers over it so that the issue doesn't
+>> appear.
+>> 
+>> If this is a real problem, it should be explained better than the above
+>> commit does, and an alternative, non-racy solution should be found.
+>> 
+>> For further reason to revert this: there's ot reason we can't try
+>
+> s/ot/no/
+>
+> ...oops.
+>
+>> resetting the card when it's *actually* stuck in host-sleep mode. So
+>> instead, this is unnecessarily creating scenarios where we can't recover
+>> Wifi.
+>> 
+>> Cc: Amitkumar Karwar <akarwar@marvell.com>
+>> Signed-off-by: Brian Norris <briannorris@chromium.org>
+>> ---
+>> Amit, please take a look. AIUI, your "fix" is wrong, and quite racy. If you
+>> still think it's needed, can you please propose an alternative? Or at least
+>> explain more why this is needed? Thanks.
+>
+> FWIW, I got an Acked-by from Amit when he was still at Marvell. And
+> another Reviewed-by from Dmitry. This still applies. Should I resend?
+> (I'll do that if I don't hear a response within a few days.)
+
+This patch is from 2017 so better to resend, and without RFC markings.
+
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
