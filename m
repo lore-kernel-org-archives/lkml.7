@@ -2,70 +2,97 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A03C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 20:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1306C31E40
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 20:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D31E21726
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 20:05:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564862713;
-	bh=FjyjyZ1Clfn22rPLS3gRsdKII6LdhChMG61ut9EZZ+E=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=R9JIqcb1dR6Mnh5mxzDNOvOdXhORhHJBkNWRW4syBFOydkuqDLidGkDyz/SnKe7SD
-	 Jq5gNackXmDeR3RlsNug/PZAnsJHXqIXmUbNxEi/aF24T2yoPpuwv0B/z/j+jUwpm5
-	 +QqQCROt3Ko6Ob86+jg2cBDorECLzXMZk/Mg093U=
+	by mail.kernel.org (Postfix) with ESMTP id ACE6C2073D
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 20:21:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729034AbfHCUFM (ORCPT
+        id S1729041AbfHCUVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 3 Aug 2019 16:05:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59330 "EHLO mail.kernel.org"
+        Sat, 3 Aug 2019 16:21:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54994 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726409AbfHCUFL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 3 Aug 2019 16:05:11 -0400
-Subject: Re: [PULL REQUEST] i2c for 5.3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564862710;
-        bh=FjyjyZ1Clfn22rPLS3gRsdKII6LdhChMG61ut9EZZ+E=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=YIYd0ddYlmqX4IlQXQQ3Go2OFVYmiJlSfTE2NCOLgnIrX/aXp3Sdh4GuopcpF08Be
-         HCpI6AvaIDENk7CPKtgD6XAG0UEnD5ZfDJIEsUKSlyYwe2JndO4bomSpmdQX/rBUXC
-         Wes3y2g0s8+/8SYl0Wg7+1hEKrRHzBwHOCkiOiuM=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190803190200.GA1126@ninjato>
-References: <20190803190200.GA1126@ninjato>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190803190200.GA1126@ninjato>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git
- i2c/for-current-fixed
-X-PR-Tracked-Commit-Id: 8eb9a2dff019055e4ff307bb7f8c64a7a20e79c8
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: cf6c8aef16cc0cd15e91a930befd8e312d5703f5
-Message-Id: <156486271067.16255.969459821966791615.pr-tracker-bot@kernel.org>
-Date:   Sat, 03 Aug 2019 20:05:10 +0000
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Rosin <peda@axentia.se>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
+        id S1728906AbfHCUVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 3 Aug 2019 16:21:36 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B8EC0A4D31;
+        Sat,  3 Aug 2019 20:21:35 +0000 (UTC)
+Received: from amt.cnet (ovpn-112-2.gru2.redhat.com [10.97.112.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 17FC25C22B;
+        Sat,  3 Aug 2019 20:21:35 +0000 (UTC)
+Received: from amt.cnet (localhost [127.0.0.1])
+        by amt.cnet (Postfix) with ESMTP id C4ED6105135;
+        Sat,  3 Aug 2019 17:21:05 -0300 (BRT)
+Received: (from marcelo@localhost)
+        by amt.cnet (8.14.7/8.14.7/Submit) id x73KL24Q009531;
+        Sat, 3 Aug 2019 17:21:02 -0300
+Date:   Sat, 3 Aug 2019 17:21:01 -0300
+From:   Marcelo Tosatti <mtosatti@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Linux PM <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH] cpuidle-haltpoll: Enable kvm guest polling when
+ dedicated physical CPUs are available
+Message-ID: <20190803202058.GA9316@amt.cnet>
+References: <1564643196-7797-1-git-send-email-wanpengli@tencent.com>
+ <7b1e3025-f513-7068-32ac-4830d67b65ac@intel.com>
+ <c3fe182f-627f-88ad-cb4d-a4189202b438@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c3fe182f-627f-88ad-cb4d-a4189202b438@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Sat, 03 Aug 2019 20:21:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 3 Aug 2019 21:02:06 +0200:
+On Thu, Aug 01, 2019 at 06:54:49PM +0200, Paolo Bonzini wrote:
+> On 01/08/19 18:51, Rafael J. Wysocki wrote:
+> > On 8/1/2019 9:06 AM, Wanpeng Li wrote:
+> >> From: Wanpeng Li <wanpengli@tencent.com>
+> >>
+> >> The downside of guest side polling is that polling is performed even
+> >> with other runnable tasks in the host. However, even if poll in kvm
+> >> can aware whether or not other runnable tasks in the same pCPU, it
+> >> can still incur extra overhead in over-subscribe scenario. Now we can
+> >> just enable guest polling when dedicated pCPUs are available.
+> >>
+> >> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> >> Cc: Radim Krčmář <rkrcmar@redhat.com>
+> >> Cc: Marcelo Tosatti <mtosatti@redhat.com>
+> >> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > 
+> > Paolo, Marcelo, any comments?
+> 
+> Yes, it's a good idea.
+> 
+> Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+> 
+> Paolo
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-current-fixed
+I think KVM_HINTS_REALTIME is being abused somewhat.
+It has no clear meaning and used in different locations 
+for different purposes.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/cf6c8aef16cc0cd15e91a930befd8e312d5703f5
+For example, i think that using pv queued spinlocks and 
+haltpoll is a desired scenario, which the patch below disallows.
 
-Thank you!
+Wanpeng Li, currently the driver does not autoload. So polling in 
+the guest has to be enabled manually. Isnt that sufficient?
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+
