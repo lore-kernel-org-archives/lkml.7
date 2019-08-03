@@ -7,72 +7,71 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C8FC31E40
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 08:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED70AC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 08:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6851D21773
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 08:12:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C363821773
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 08:13:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564819967;
-	bh=a2J0v8e+/AWM39xyNxp3MzGW8JzBaiCUVYVkkw6B6Zk=;
+	s=default; t=1564820033;
+	bh=xRf3PhzKfClVfWXbj3OVmFX6p7PLIiziHpTBekdtiCA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=abXzmhjDsTAo8YxSTzcAS594OYsVXP5jU+ihCpRRq/crEyw77jTI2G/tcssWnxbwX
-	 yScy8z70pbqs3sxrYa21wTPP96pxRCKJ1keVQgBEJGfNxkeN1iVTixn/jTSJ3tq2/J
-	 XG9dXR3crqICD6OuysJTOxNwKBzQJ7vAYXM4knQs=
+	b=nb9rVZvS5c/j06tQNH2/SLtPYmlFwjkt3Ueldcgu7fR+Y5xwKS1MTqlxWF3Cr6EtB
+	 YK6RHJpj1+3hs6RIc4wHEeMviVon007ra1Lcg5weXgru2HU3AiPKrs2lSekbhO5y9Z
+	 xewPhGDAZ56MUCWIVY6zTDi3NApCKa7rBgA0fkRM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387602AbfHCIMq (ORCPT
+        id S2387631AbfHCINw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 3 Aug 2019 04:12:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57590 "EHLO mail.kernel.org"
+        Sat, 3 Aug 2019 04:13:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387532AbfHCIMp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 3 Aug 2019 04:12:45 -0400
+        id S2387532AbfHCINw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 3 Aug 2019 04:13:52 -0400
 Received: from X250.getinternet.no (98.142.130.235.16clouds.com [98.142.130.235])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2FCD21726;
-        Sat,  3 Aug 2019 08:12:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CBC321726;
+        Sat,  3 Aug 2019 08:13:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564819965;
-        bh=a2J0v8e+/AWM39xyNxp3MzGW8JzBaiCUVYVkkw6B6Zk=;
+        s=default; t=1564820031;
+        bh=xRf3PhzKfClVfWXbj3OVmFX6p7PLIiziHpTBekdtiCA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kIcbZcbzzvqKJBO6kQmBP4DuKeO76LrO5nFNdH3XUpzRv57FXYnKpSPsjSUv2fcAC
-         xXHT3ZXWcKgoKlthJ30bHsEunacxbuOOKMAfs6TiEvU9S2czV1z9WDvtzMTqcw7cwb
-         PNN50UoYgBKxv9W4fkv1bYjNDBStm/5dMmZ6R1v0=
-Date:   Sat, 3 Aug 2019 10:12:36 +0200
+        b=Ss9AepiccoCuwp3jI5V+AvCYwJ22kCiRaDT5KOS6xQIatNXunmHVenhgXnMD80Qc7
+         TqOSBRs+EXOFgBBij2U6aNxOn0caKeWWE6vXq6w/NSBgOCx27W/Ng3JVTPvTg/Eryz
+         5i7jnRf79SbA0CzZKOO5R8mlymy/qdjEkCD2L+vU=
+Date:   Sat, 3 Aug 2019 10:13:44 +0200
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson.Huang@nxp.com
-Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com,
-        p.zabel@pengutronix.de, ping.bai@nxp.com, daniel.baluta@nxp.com,
-        l.stach@pengutronix.de, abel.vesa@nxp.com, angus@akkea.ca,
-        andrew.smirnov@gmail.com, ccaione@baylibre.com, agx@sigxcpu.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH V2 4/4] arm64: dts: imx8mm: Add opp-suspend property to
- OPP table
-Message-ID: <20190803081235.GC8870@X250.getinternet.no>
-References: <20190709080015.43442-1-Anson.Huang@nxp.com>
- <20190709080015.43442-4-Anson.Huang@nxp.com>
+To:     Abel Vesa <abel.vesa@nxp.com>
+Cc:     Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] clk: imx8mm: Switch to platform driver
+Message-ID: <20190803081344.GD8870@X250.getinternet.no>
+References: <1562682003-20951-1-git-send-email-abel.vesa@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190709080015.43442-4-Anson.Huang@nxp.com>
+In-Reply-To: <1562682003-20951-1-git-send-email-abel.vesa@nxp.com>
 User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 09, 2019 at 04:00:15PM +0800, Anson.Huang@nxp.com wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
+On Tue, Jul 09, 2019 at 05:20:03PM +0300, Abel Vesa wrote:
+> There is no strong reason for this to use CLK_OF_DECLARE instead
+> of being a platform driver. Plus, this will now be aligned with the
+> other i.MX8M clock drivers which are platform drivers.
 > 
-> Add opp-suspend property to each OPP, the of opp core will
-> select the OPP HW supported and with highest rate to be
-> suspend opp, it will speed up the suspend/resume process.
+> In order to make the clock provider a platform driver
+> all the data and code needs to be outside of .init section.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
 
 Applied, thanks.
