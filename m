@@ -2,228 +2,96 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63436C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 05:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC94C31E40
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 06:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 396DD2073D
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 05:52:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kn1nTjqW"
+	by mail.kernel.org (Postfix) with ESMTP id 2D0A8206A2
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 06:20:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbfHCFwx (ORCPT
+        id S1726679AbfHCGTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 3 Aug 2019 01:52:53 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34452 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbfHCFww (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 3 Aug 2019 01:52:52 -0400
-Received: by mail-lj1-f195.google.com with SMTP id p17so74774154ljg.1
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 22:52:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=YSlBGcAw76C1VbyShzFIB1RRXoIsjlJxCaN4hmv3Z0o=;
-        b=kn1nTjqW1CDvMNVfyVZ1RFxz7eLrebdgvcaXz0Ie/RRx0XQtObtmO6CtmebRpq2tVp
-         ypDfIGfP27oDK067dBJS0RV1EGduDyD/ojA6avUQHzg+X4rgyDsbS/qLlWbz4UNC6PZe
-         IZE6GfQA+lsGSeaIekPXiOqeS5m79+ZVy+GQzHnzyXnUeZfZ9IGqPMBphEhqtqV32RqA
-         KnChsLyFhYanGJomU8UwqI+Ymr38lsAoplx36D/NIKFYbbbegTCf1E3fwLho+dZqW3Ts
-         XuyWViUgL5+LP20FuSmZz9OrpTaCN7vSzVKrGOE/YfPDqgxiAPFwaL10AotfB0DLMT4o
-         CcaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=YSlBGcAw76C1VbyShzFIB1RRXoIsjlJxCaN4hmv3Z0o=;
-        b=EocKcUeMXPNrGPHcWWpT295Y6/B+ZjmRswcBcExQNqeJvr2saN20IwJHMknEcLOYIi
-         ALTakGVCgorVDVHeiUXD7XLCvF2RsJzIhc6JrMe8xjVCuMmwIVoW1JAwnOTp5nanmJOi
-         Vb7mrbS4OCwrTEeFRMybPA4wiuhrK+QqT5RLIa+OgcWyTK2Fvbg4m53+zytEYdWhUDmR
-         8YAapKdOLexLe/c9ZwvTHSfz5UCpU6wU+xIVMMtRExYJwRFeg2f9nvZyOQsbddm2lGR/
-         k8BesUlwolsFyR8gpqBsbZs1IUNwa6Wlxde9hHqiU/NUuEcVePrmY/rXxhocgEpfG+4u
-         dIrQ==
-X-Gm-Message-State: APjAAAX9SU+3Ml8qk/CjARMRth100gvaqf9nlrVCpuMe8fVElCrhBVRK
-        Ed2I2aB6QTNQg0iF2P4auJMFqkdL8huTNqBDqkIkHA==
-X-Google-Smtp-Source: APXvYqzBTHcDTJcNUArxB1an2THOo2mV4dUYt14d6AZgygv729jMZVU955uQ0T+lDSrF9Rzu5h5oZ9Tn0fJ2/Z121qI=
-X-Received: by 2002:a2e:b0f0:: with SMTP id h16mr49592222ljl.21.1564811570612;
- Fri, 02 Aug 2019 22:52:50 -0700 (PDT)
+        Sat, 3 Aug 2019 02:19:20 -0400
+Received: from verein.lst.de ([213.95.11.211]:58559 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726659AbfHCGTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 3 Aug 2019 02:19:19 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 8283268BFE; Sat,  3 Aug 2019 08:19:16 +0200 (CEST)
+Date:   Sat, 3 Aug 2019 08:19:16 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Rob Clark <robdclark@chromium.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Sean Paul <seanpaul@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        torvalds@linux-foundation.org
+Subject: Re: please revert "drm/msm: Use the correct dma_sync calls in
+ msm_gem"
+Message-ID: <20190803061916.GA29348@lst.de>
+References: <20190802213756.GA20033@lst.de> <CAJs_Fx45VtKe52eTuAUcqSUTrY=892OwhCZNrLGoQHHBwETCdQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190802092203.671944552@linuxfoundation.org>
-In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Sat, 3 Aug 2019 11:22:37 +0530
-Message-ID: <CA+G9fYttF9BsfGJennzfrPzVk=H+xGDM9vpFE9gb4vYbhMDWhw@mail.gmail.com>
-Subject: Re: [PATCH 4.4 000/158] 4.4.187-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJs_Fx45VtKe52eTuAUcqSUTrY=892OwhCZNrLGoQHHBwETCdQ@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2 Aug 2019 at 15:00, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.4.187 release.
-> There are 158 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sun 04 Aug 2019 09:19:34 AM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.4.187-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Fri, Aug 02, 2019 at 03:06:10PM -0700, Rob Clark wrote:
+> Sorry, this is just a temporary band-aid for v5.3 to get things
+> working again.  Yes, I realize it is a complete hack.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+My main problem is here that you badly hack a around a problem without
+talking to the relevant maintainers, and by abusing even more internal
+APIs.  As said get_dma_ops isn't really for driver use (although we
+have a few that use it for not quite as bad reason we are trying to get
+rid off).  And as also said your abuse of the DMA API will blow up
+with dma-debug use quite badly.  You might also corrupt the dma_address
+in the scatterlist in ways that aren't intended - as the call to
+dma_map_sg will allocate new iova space you are getting different
+results from whatever you expect to actually get from your iommu API
+usage.  This might or might no matter in the end, but you really should
+consult the maintainers first.
 
-Summary
-------------------------------------------------------------------------
+> The root problem is that I'm using the DMA API in the first place.  I
+> don't actually use the DMA API to map buffers, for various reasons,
+> but instead manage the iommu_domain directly.
 
-kernel: 4.4.187-rc2
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.4.y
-git commit: d9815060e3ec2433dfffc8a3dcaed9842b1798c7
-git describe: v4.4.186-157-gd9815060e3ec
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.4-oe/bui=
-ld/v4.4.186-157-gd9815060e3ec
+Yes, and this has been going on for years, without any obvious attempt
+to address it at the API level before..
 
+> Because arm/arm64 cache ops are not exported to modules, so currently
+> I need to abuse the DMA API for cache operations (really just to clean
+> pages if I need to mmap them uncached/writecombine).  Originally I was
+> doing that w/ dma_{map,unmap}_sg.  But to avoid debug splats I
+> switched that to dma_sync_sg (see
+> 0036bc73ccbe7e600a3468bf8e8879b122252274).  But now it seems the
+> dma-direct ops are unhappy w/ dma_sync without a dma_map (AFAICT).
 
-No regressions (compared to build v4.4.186)
+Russell has been very strict about not exporting the cache ops, and all
+for the right reasons.  Cache maintainance for not dma coherent devices
+is hard, and without a proper API that has arch input for even which
+calls are used for cache flushing chances of bugs are extremely high.
 
+I see two proper ways out of this mess:  either we actually make msm
+use the DMA API, so I'd be curious of what is missing that forces you
+to use the low-level iommu API.  Or we need to enhance the iommu API
+with a similar ownership concepts as the DMA API.  Which probably is
+a good thing even if we move msm over to the DMA API.
 
-No fixes (compared to build v4.4.186)
+> (On some generations of hw, the iommu is attached to the device node
+> that maps to the drm device, which is passed to dma_map/dma_sync.  On
+> other generations the iommu is attached to a sub-device.  Changing
+> this would break dtb compatibility.. so for now I need to handle both
+> iommu-ops and direct-ops cases.)
 
-Ran 13277 total tests in the following environments and test suites.
-
-Environments
---------------
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* kselftest
-* kvm-unit-tests
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-open-posix-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* network-basic-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* install-android-platform-tools-r2600
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.4.187-rc2
-git repo: https://git.linaro.org/lkft/arm64-stable-rc.git
-git branch: 4.4.187-rc2-hikey-20190802-517
-git commit: 83e555c108c2c8fc5cc0af29c02f47cc2676fb88
-git describe: 4.4.187-rc2-hikey-20190802-517
-Test details: https://qa-reports.linaro.org/lkft/linaro-hikey-stable-rc-4.4=
--oe/build/4.4.187-rc2-hikey-20190802-517
-
-
-No regressions (compared to build 4.4.187-rc1-hikey-20190802-516)
-
-
-No fixes (compared to build 4.4.187-rc1-hikey-20190802-516)
-
-Ran 1549 total tests in the following environments and test suites.
-
-Environments
---------------
-- hi6220-hikey - arm64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+Or you always call call on a struct device that has the iommu, that
+is match on the generic, and pick a different device.  That would in
+many ways seem preferably over the current hack, even if that also is
+just a horribly band-aid.
