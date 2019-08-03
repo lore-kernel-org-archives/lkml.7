@@ -2,66 +2,124 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D88C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 01:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB6AC0650F
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 01:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAE0120665
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 01:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FCA12087E
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 01:23:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NHlX7VGZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389450AbfHCBPj (ORCPT
+        id S2390188AbfHCBWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 21:15:39 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:53096 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387606AbfHCBPj (ORCPT
+        Fri, 2 Aug 2019 21:22:50 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35070 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388638AbfHCBWu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 21:15:39 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 02B6E12B88C0D;
-        Fri,  2 Aug 2019 18:15:38 -0700 (PDT)
-Date:   Fri, 02 Aug 2019 18:15:38 -0700 (PDT)
-Message-Id: <20190802.181538.1597809800435251162.davem@davemloft.net>
-To:     yuehaibing@huawei.com
-Cc:     claudiu.manoil@nxp.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH] enetc: Select PHYLIB while CONFIG_FSL_ENETC_VF is set
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190801012419.9728-1-yuehaibing@huawei.com>
-References: <20190801012419.9728-1-yuehaibing@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 02 Aug 2019 18:15:39 -0700 (PDT)
+        Fri, 2 Aug 2019 21:22:50 -0400
+Received: by mail-pf1-f193.google.com with SMTP id u14so36860414pfn.2;
+        Fri, 02 Aug 2019 18:22:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rfhcFrsiK1eMaZLWOciK6JmRLSFVHvQ33G78MdUQfZ8=;
+        b=NHlX7VGZmc9BoM7wwbp/Yy4E6TQZxfo/YxmYkjzOHGORl4muICxAXGWHf4OLJKaUVr
+         qOTT5JGhZoDV2AHJqmMLrla9IADnvu1C1PsvyCHqdYg2pWYqFhGtQaq6B0fS+42wmNmr
+         VeQVuFLlfCnwIKJK9+D6KDpxPokxEIWnL+xapq+v9HEVMfLfrMs+1jACBqEPROjB4duO
+         GkjnP88xuC/J5SrQIK4NzUq0Vx0ZyDZeIWE6MP6rfgimQa4BPhx+1+q0w2rHXKBrqUGF
+         ebcAHiMNlxqx2ZdUQoB+JH/0BzXFHMCQEHUCOYww871JebiUkQCAc6YTB/mxs9EAqI3U
+         uz0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rfhcFrsiK1eMaZLWOciK6JmRLSFVHvQ33G78MdUQfZ8=;
+        b=JZCw0kOFOf+sMq7GFrVxMmxea0bK7qh2GZ8GyGD96wAOdmygog60lJku5XsNWb8cj4
+         yQ7dLk5y0qmU/m2cPb/VWyquVsDw029kVPz7Tq0Sm8D/vPG8iQyc/CnbBFJMsE9R8Qz5
+         Scwdoo3EpOm2PCQfly6hH0WJlucv89IajK263dL4aivkoAqx1A6NTqZScNRBVa/YUR+l
+         enhw9GyYExxtXo2g1UHj2dCzrEvz2cQGxbmnbR4Dxo7uwqK8vXxmJfHM7caMsvG1mL3r
+         +hdb6fOf37lLFrBJOy8C2+bwo4OSt7yI3egGoPzy95Jo4/H8iwa0m9x3mGSksyCx+MnQ
+         yMIg==
+X-Gm-Message-State: APjAAAUMq25Nm3pk2vSw4E5x8Lerw5Pf8gJcyxhHjqMSXevxLlWc9yG1
+        xHslfqDG9ZYxsIUy0XSXGrE=
+X-Google-Smtp-Source: APXvYqygOaJazj0lXej17ALNUYq/e5ccMUDgntSQuV0UINMXcEWEZJJOdl9Xw+VzuzYfXbIHtuazig==
+X-Received: by 2002:aa7:9293:: with SMTP id j19mr64203812pfa.90.1564795369236;
+        Fri, 02 Aug 2019 18:22:49 -0700 (PDT)
+Received: from localhost.localdomain ([2001:ee0:491f:d660:1bb4:8d5c:97bb:479d])
+        by smtp.gmail.com with ESMTPSA id c98sm10064941pje.1.2019.08.02.18.22.46
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 02 Aug 2019 18:22:48 -0700 (PDT)
+From:   ohaibuzzle@gmail.com
+To:     hdegoede@redhat.com
+Cc:     dvhart@infradead.org, andy@infradead.org,
+        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Buzzle <ohaibuzzle@gmail.com>
+Subject: [PATCH] platform/x86: silead_dmi: Add touchscreen platform data for the Chuwi Surbook Mini tablet
+Date:   Sat,  3 Aug 2019 08:22:38 +0700
+Message-Id: <20190803012238.4099-1-ohaibuzzle@gmail.com>
+X-Mailer: git-send-email 2.22.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Thu, 1 Aug 2019 09:24:19 +0800
+From: Buzzle <ohaibuzzle@gmail.com>
 
-> Like FSL_ENETC, when CONFIG_FSL_ENETC_VF is set,
-> we should select PHYLIB, otherwise building still fails:
-> 
-> drivers/net/ethernet/freescale/enetc/enetc.o: In function `enetc_open':
-> enetc.c:(.text+0x2744): undefined reference to `phy_start'
-> enetc.c:(.text+0x282c): undefined reference to `phy_disconnect'
-> drivers/net/ethernet/freescale/enetc/enetc.o: In function `enetc_close':
-> enetc.c:(.text+0x28f8): undefined reference to `phy_stop'
-> enetc.c:(.text+0x2904): undefined reference to `phy_disconnect'
-> drivers/net/ethernet/freescale/enetc/enetc_ethtool.o:(.rodata+0x3f8): undefined reference to `phy_ethtool_get_link_ksettings'
-> drivers/net/ethernet/freescale/enetc/enetc_ethtool.o:(.rodata+0x400): undefined reference to `phy_ethtool_set_link_ksettings'
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: d4fd0404c1c9 ("enetc: Introduce basic PF and VF ENETC ethernet drivers")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/platform/x86/touchscreen_dmi.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-Applied.
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+index 4370e4add83a..72535b0268eb 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -136,6 +136,22 @@ static const struct ts_dmi_data chuwi_vi10_data = {
+ 	.properties     = chuwi_vi10_props,
+ };
+ 
++static const struct property_entry chuwi_surbook_mini_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-min-x", 88),
++	PROPERTY_ENTRY_U32("touchscreen-min-y", 13),
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 2040),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 1524),
++	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-chuwi-surbook-mini.fw"),
++	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
++	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
++	{ }
++};
++
++static const struct ts_dmi_data chuwi_surbook_mini_data = {
++	.acpi_name      = "MSSL1680:00",
++	.properties     = chuwi_surbook_mini_props,
++};
++
+ static const struct property_entry connect_tablet9_props[] = {
+ 	PROPERTY_ENTRY_U32("touchscreen-min-x", 9),
+ 	PROPERTY_ENTRY_U32("touchscreen-min-y", 10),
+@@ -646,6 +662,14 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "S165"),
+ 		},
+ 	},
++	{
++		/* Chuwi Surbook Mini (CWI540) */
++		.driver_data = (void *)&chuwi_surbook_mini_data,
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "Hampoo"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "C3W6_AP108_4G"),
++		},
++	},
+ 	{
+ 		/* Connect Tablet 9 */
+ 		.driver_data = (void *)&connect_tablet9_data,
+-- 
+2.22.0
+
