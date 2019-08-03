@@ -2,226 +2,223 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B212C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 13:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB746C41514
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 13:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D536A2166E
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 13:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A11ED21726
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 13:49:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vOP3h4+x"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y7YbIfLE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390910AbfHCNfA (ORCPT
+        id S1727578AbfHCNtV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 3 Aug 2019 09:35:00 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39539 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388206AbfHCNe7 (ORCPT
+        Sat, 3 Aug 2019 09:49:21 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:46894 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726170AbfHCNtU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 3 Aug 2019 09:34:59 -0400
-Received: by mail-wm1-f67.google.com with SMTP id u25so58608032wmc.4;
-        Sat, 03 Aug 2019 06:34:57 -0700 (PDT)
+        Sat, 3 Aug 2019 09:49:20 -0400
+Received: by mail-ed1-f65.google.com with SMTP id d4so74870885edr.13;
+        Sat, 03 Aug 2019 06:49:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DkNcRnL8FH3VgmR1dnBTegTNAsdwg0XzETSqbm2zevw=;
-        b=vOP3h4+xTMO+2jauN1ZAUs3m7oypXxniShWBjKDmhd8oH3QDdjAdi95G96YYL7VNLK
-         zYGkxywv//1wAiMGReBo1Z3HdMhhqrNOfXY9hSDT+h74SGOVQt3PCfj2ay2XGYKOzQPf
-         Ru+508YBMf+WGW1Gl4hNPREEwmbhwWPMWM6oaXEtB4I/VA9Fe9paJn/Q6pgl4ZgEtgtZ
-         L0w1toPaEjpG130t2wEVMaEc9aReGSeChLS88NzPag2MG/JHWv8LqBcxJC3rnIXK9JM+
-         1OWBqwy06WvDz5FQ4o6UYYCqGCMh1ef+DQxyKjaZJee7R5TRbl2cegphjcomqLkVF1C8
-         VMtA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q9IYzXzeSG4lP61BIGe+9K600R3iR4YK5dngtIf1XZw=;
+        b=Y7YbIfLEVEkeURkI7Si54tkA2K1z2oH3rnNRWxGtq/queELL96TXwddImkkxPD/5Q/
+         1wzJrIy7LIsA25Bqy8rHkQQmW7/oV1+v1VqHFH2yRxG3Cj3t5xza/a6YcEeviuyomwov
+         8/vnb2dyJtBcF6GJL3Ne4hxV0Q1yxIYUV+ejYM1cHeKuNGMEF4THnATi2t4UqD3sNrYY
+         2elZ5gAaNmbLDbZrdZwCOlXwfVwMbq7uPfKLJRMF3u0OBvfQ8BKZ3spYIA18uwo1f3hP
+         GMqOSWuQQX+jk8RALpXFFoEfn4rTsWo4BYVUl4+EWmZcSksvIJebP6I4H5n+kwP5JAQd
+         0RJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DkNcRnL8FH3VgmR1dnBTegTNAsdwg0XzETSqbm2zevw=;
-        b=WHg5RlptqGvPDzLCXNr5sGUsz0kL3AugV2hRBiL5KDpN7TpAR3cVY44qeYO9xiO4FY
-         J1VPqWw/YZmWpIyPHV43wc7HbMx+ncoRO3+POfwlyr4MFPeBg0pg8R86V1zFua9YmGqL
-         m478fcVxgEp82MDT3sFP3RAQ64SclL8aetaUHr8LMlEUaSp8uNbHdZZq6C9pjFbEX2V/
-         cX1DS4VGrMVJbcG6FMYyfMbxkmr2jR+mxlHL4DjyLHx2dQNIULJhaT1mhuDZ1ewjMFDZ
-         UX/m9Ihu24kq1VFc4SMF9LozW02qeyqHtSQtnpJB7eIBmWOhG5dfVZ3SG3AUctyGxr/A
-         m4Ug==
-X-Gm-Message-State: APjAAAVBN+YIf5lJEafqu1iH0Pe/ub4zO6cKHkxHS14di+sm76p4EjNc
-        yRmddhck930LapICUy9/DCg=
-X-Google-Smtp-Source: APXvYqzSkMZT4D9FhJSp/xY/wj3jkBfduIluCC7ztOUTt3ZOpsHDc2hIzlGY7FYSiOUglW5aakv/0Q==
-X-Received: by 2002:a1c:6454:: with SMTP id y81mr9513848wmb.105.1564839296440;
-        Sat, 03 Aug 2019 06:34:56 -0700 (PDT)
-Received: from localhost.localdomain ([141.226.31.91])
-        by smtp.gmail.com with ESMTPSA id f3sm63118428wrt.56.2019.08.03.06.34.54
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 03 Aug 2019 06:34:55 -0700 (PDT)
-From:   Ramon Fried <rfried.dev@gmail.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Ramon Fried <rfried.dev@gmail.com>
-Subject: [PATCH] gpiolib: Take MUX usage into account
-Date:   Sat,  3 Aug 2019 16:34:36 +0300
-Message-Id: <20190803133436.15016-1-rfried.dev@gmail.com>
-X-Mailer: git-send-email 2.22.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q9IYzXzeSG4lP61BIGe+9K600R3iR4YK5dngtIf1XZw=;
+        b=FVupv5GKMDgX3mX8s+PXxEQDtfBTLlknFkxgEHB46i5M8F6Bo8sIk8VifcbD+QCYT0
+         Bw/kdzr6y6LqcTMGeOCxXyPS53c3BjxFLN//CfNUaXMihehRgzmaog53m8k+IgqH2fs4
+         nBNnLBb38/dSA8KbNlaf3GA7GzyROqM/qBPH7NnJ81hr4/yl6O4N+4lt15aeu5TzKK8V
+         x1X2oL4rhH5hREIvQWZV7uAHdrXZLg0M0LNboMiaz1ng1fwPXqTCVhoyGkjb5d4AGsn0
+         WlIxMB+6vWx+rRvGU3SyI/LsEjJYLazBz6fL/OeQ7+Dzo5G9GiIzARaDh7ANHvlyBKkp
+         WStg==
+X-Gm-Message-State: APjAAAUPH+DdTi+sZEtbkU0kIp6SzdbkFk524DCAbBmlflDQr/iJUdI7
+        uC+jW8tBEr86qcLljyhh0KmlLj6HQO4sKHnI7DU=
+X-Google-Smtp-Source: APXvYqx5YKskBh9c+q1I8ptCGQnTFpUAYjm/PTRVHjoweEcJhII/GJDreTqzlPy6JVujHosI1xHxryk9oOTWq0p4D8A=
+X-Received: by 2002:a05:6402:1351:: with SMTP id y17mr41719081edw.18.1564840157544;
+ Sat, 03 Aug 2019 06:49:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190802215419.313512-1-taoren@fb.com>
+In-Reply-To: <20190802215419.313512-1-taoren@fb.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Sat, 3 Aug 2019 16:49:06 +0300
+Message-ID: <CA+h21hrOEape89MTqCUyGFt=f6ba7Q-2KcOsN_Vw2Qv8iq86jw@mail.gmail.com>
+Subject: Re: [PATCH net-next v3] net: phy: broadcom: add 1000Base-X support
+ for BCM54616S
+To:     Tao Ren <taoren@fb.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Arun Parameswaran <arun.parameswaran@broadcom.com>,
+        Justin Chen <justinpopo6@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, openbmc@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Wahren <stefan.wahren@i2se.com>
+Hi Tao,
 
-The user space like gpioinfo only see the GPIO usage but not the
-MUX usage (e.g. I2C or SPI usage) of a pin. As a user we want to know which
-pin is free/safe to use. So take the MUX usage of strict pinmux controllers
-into account to get a more realistic view for ioctl GPIO_GET_LINEINFO_IOCTL.
+On Sat, 3 Aug 2019 at 00:56, Tao Ren <taoren@fb.com> wrote:
+>
+> genphy_read_status() cannot report correct link speed when BCM54616S PHY
+> is configured in RGMII->1000Base-KX mode (for example, on Facebook CMM
+> BMC platform), and it is because speed-related fields in MII registers
+> are assigned different meanings in 1000X register set. Actually there
+> is no speed field in 1000X register set because link speed is always
+> 1000 Mb/s.
+>
+> The patch adds "probe" callback to detect PHY's operation mode based on
+> INTERF_SEL[1:0] pins and 1000X/100FX selection bit in SerDES 100-FX
+> Control register. Besides, link speed is manually set to 1000 Mb/s in
+> "read_status" callback if PHY-switch link is 1000Base-X.
+>
+> Signed-off-by: Tao Ren <taoren@fb.com>
+> ---
+>  Changes in v3:
+>   - rename bcm5482_read_status to bcm54xx_read_status so the callback can
+>     be shared by BCM5482 and BCM54616S.
+>  Changes in v2:
+>   - Auto-detect PHY operation mode instead of passing DT node.
+>   - move PHY mode auto-detect logic from config_init to probe callback.
+>   - only set speed (not including duplex) in read_status callback.
+>   - update patch description with more background to avoid confusion.
+>   - patch #1 in the series ("net: phy: broadcom: set features explicitly
+>     for BCM54616") is dropped: the fix should go to get_features callback
+>     which may potentially depend on this patch.
+>
+>  drivers/net/phy/broadcom.c | 41 +++++++++++++++++++++++++++++++++-----
+>  include/linux/brcmphy.h    | 10 ++++++++--
+>  2 files changed, 44 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/net/phy/broadcom.c b/drivers/net/phy/broadcom.c
+> index 937d0059e8ac..ecad8a201a09 100644
+> --- a/drivers/net/phy/broadcom.c
+> +++ b/drivers/net/phy/broadcom.c
+> @@ -383,9 +383,9 @@ static int bcm5482_config_init(struct phy_device *phydev)
+>                 /*
+>                  * Select 1000BASE-X register set (primary SerDes)
+>                  */
+> -               reg = bcm_phy_read_shadow(phydev, BCM5482_SHD_MODE);
+> -               bcm_phy_write_shadow(phydev, BCM5482_SHD_MODE,
+> -                                    reg | BCM5482_SHD_MODE_1000BX);
+> +               reg = bcm_phy_read_shadow(phydev, BCM54XX_SHD_MODE);
+> +               bcm_phy_write_shadow(phydev, BCM54XX_SHD_MODE,
+> +                                    reg | BCM54XX_SHD_MODE_1000BX);
+>
+>                 /*
+>                  * LED1=ACTIVITYLED, LED3=LINKSPD[2]
+> @@ -409,7 +409,7 @@ static int bcm5482_config_init(struct phy_device *phydev)
+>         return err;
+>  }
+>
+> -static int bcm5482_read_status(struct phy_device *phydev)
+> +static int bcm54xx_read_status(struct phy_device *phydev)
+>  {
+>         int err;
+>
+> @@ -464,6 +464,35 @@ static int bcm54616s_config_aneg(struct phy_device *phydev)
+>         return ret;
+>  }
+>
+> +static int bcm54616s_probe(struct phy_device *phydev)
+> +{
+> +       int val, intf_sel;
+> +
+> +       val = bcm_phy_read_shadow(phydev, BCM54XX_SHD_MODE);
+> +       if (val < 0)
+> +               return val;
+> +
+> +       /* The PHY is strapped in RGMII to fiber mode when INTERF_SEL[1:0]
+> +        * is 01b.
+> +        */
+> +       intf_sel = (val & BCM54XX_SHD_INTF_SEL_MASK) >> 1;
+> +       if (intf_sel == 1) {
+> +               val = bcm_phy_read_shadow(phydev, BCM54616S_SHD_100FX_CTRL);
+> +               if (val < 0)
+> +                       return val;
+> +
+> +               /* Bit 0 of the SerDes 100-FX Control register, when set
+> +                * to 1, sets the MII/RGMII -> 100BASE-FX configuration.
+> +                * When this bit is set to 0, it sets the GMII/RGMII ->
+> +                * 1000BASE-X configuration.
+> +                */
+> +               if (!(val & BCM54616S_100FX_MODE))
+> +                       phydev->dev_flags |= PHY_BCM_FLAGS_MODE_1000BX;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+>  static int brcm_phy_setbits(struct phy_device *phydev, int reg, int set)
+>  {
+>         int val;
+> @@ -655,6 +684,8 @@ static struct phy_driver broadcom_drivers[] = {
+>         .config_aneg    = bcm54616s_config_aneg,
+>         .ack_interrupt  = bcm_phy_ack_intr,
+>         .config_intr    = bcm_phy_config_intr,
+> +       .read_status    = bcm54xx_read_status,
+> +       .probe          = bcm54616s_probe,
+>  }, {
+>         .phy_id         = PHY_ID_BCM5464,
+>         .phy_id_mask    = 0xfffffff0,
+> @@ -689,7 +720,7 @@ static struct phy_driver broadcom_drivers[] = {
+>         .name           = "Broadcom BCM5482",
+>         /* PHY_GBIT_FEATURES */
+>         .config_init    = bcm5482_config_init,
+> -       .read_status    = bcm5482_read_status,
+> +       .read_status    = bcm54xx_read_status,
+>         .ack_interrupt  = bcm_phy_ack_intr,
+>         .config_intr    = bcm_phy_config_intr,
+>  }, {
+> diff --git a/include/linux/brcmphy.h b/include/linux/brcmphy.h
+> index 6db2d9a6e503..b475e7f20d28 100644
+> --- a/include/linux/brcmphy.h
+> +++ b/include/linux/brcmphy.h
+> @@ -200,9 +200,15 @@
+>  #define BCM5482_SHD_SSD                0x14    /* 10100: Secondary SerDes control */
+>  #define BCM5482_SHD_SSD_LEDM   0x0008  /* SSD LED Mode enable */
+>  #define BCM5482_SHD_SSD_EN     0x0001  /* SSD enable */
+> -#define BCM5482_SHD_MODE       0x1f    /* 11111: Mode Control Register */
+> -#define BCM5482_SHD_MODE_1000BX        0x0001  /* Enable 1000BASE-X registers */
+>
+> +/* 10011: SerDes 100-FX Control Register */
+> +#define BCM54616S_SHD_100FX_CTRL       0x13
+> +#define        BCM54616S_100FX_MODE            BIT(0)  /* 100-FX SerDes Enable */
+> +
+> +/* 11111: Mode Control Register */
+> +#define BCM54XX_SHD_MODE               0x1f
+> +#define BCM54XX_SHD_INTF_SEL_MASK      GENMASK(2, 1)   /* INTERF_SEL[1:0] */
+> +#define BCM54XX_SHD_MODE_1000BX                BIT(0)  /* Enable 1000-X registers */
+>
+>  /*
+>   * EXPANSION SHADOW ACCESS REGISTERS.  (PHY REG 0x15, 0x16, and 0x17)
+> --
+> 2.17.1
+>
 
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-Tested-By: Ramon Fried <rfried.dev@gmail.com>
-Signed-off-by: Ramon Fried <rfried.dev@gmail.com>
----
-Sending Stefan's RFC as patch, as I tested it and it seems to work,
-additionally, an accompanying fix was made by me to gpiolibd to fix a
-display error of the actual result:
-https://patchwork.ozlabs.org/patch/1139923/
+The patchset looks better now. But is it ok, I wonder, to keep
+PHY_BCM_FLAGS_MODE_1000BX in phydev->dev_flags, considering that
+phy_attach_direct is overwriting it?
 
- drivers/gpio/gpiolib.c           |  3 ++-
- drivers/pinctrl/core.c           | 23 +++++++++++++++++++++++
- drivers/pinctrl/pinmux.c         | 18 ++++++++++++++++++
- drivers/pinctrl/pinmux.h         |  7 +++++++
- include/linux/pinctrl/consumer.h |  6 ++++++
- 5 files changed, 56 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index e013d417a936..2fd9eee0b98c 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1082,7 +1082,8 @@ static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- 		    test_bit(FLAG_IS_HOGGED, &desc->flags) ||
- 		    test_bit(FLAG_USED_AS_IRQ, &desc->flags) ||
- 		    test_bit(FLAG_EXPORT, &desc->flags) ||
--		    test_bit(FLAG_SYSFS, &desc->flags))
-+		    test_bit(FLAG_SYSFS, &desc->flags) ||
-+		    pinctrl_gpio_is_in_use(chip->base + lineinfo.line_offset))
- 			lineinfo.flags |= GPIOLINE_FLAG_KERNEL;
- 		if (test_bit(FLAG_IS_OUT, &desc->flags))
- 			lineinfo.flags |= GPIOLINE_FLAG_IS_OUT;
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index a64849a9d1b0..0dd00c175eed 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -759,6 +759,29 @@ int pinctrl_get_group_selector(struct pinctrl_dev *pctldev,
- 	return -EINVAL;
- }
- 
-+bool pinctrl_gpio_is_in_use(unsigned gpio)
-+{
-+	struct pinctrl_dev *pctldev;
-+	struct pinctrl_gpio_range *range;
-+	bool result;
-+	int pin;
-+
-+	if (pinctrl_get_device_gpio_range(gpio, &pctldev, &range))
-+		return false;
-+
-+	mutex_lock(&pctldev->mutex);
-+
-+	/* Convert to the pin controllers number space */
-+	pin = gpio_to_pin(range, gpio);
-+
-+	result = pinmux_is_in_use(pctldev, pin);
-+
-+	mutex_unlock(&pctldev->mutex);
-+
-+	return result;
-+}
-+EXPORT_SYMBOL_GPL(pinctrl_gpio_is_in_use);
-+
- /**
-  * pinctrl_gpio_request() - request a single pin to be used as GPIO
-  * @gpio: the GPIO pin number from the GPIO subsystem number space
-diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
-index 020e54f843f9..02d2751a4884 100644
---- a/drivers/pinctrl/pinmux.c
-+++ b/drivers/pinctrl/pinmux.c
-@@ -70,6 +70,24 @@ int pinmux_validate_map(const struct pinctrl_map *map, int i)
- 	return 0;
- }
- 
-+bool pinmux_is_in_use(struct pinctrl_dev *pctldev, unsigned pin)
-+{
-+	struct pin_desc *desc = pin_desc_get(pctldev, pin);
-+	const struct pinmux_ops *ops = pctldev->desc->pmxops;
-+
-+	if (!desc) {
-+		dev_err(pctldev->dev,
-+			"pin %u is not registered so it cannot be requested\n",
-+			pin);
-+		return false;
-+	}
-+
-+	if (ops->strict && desc->mux_usecount)
-+		return true;
-+
-+	return ops->strict && !!desc->gpio_owner;
-+}
-+
- /**
-  * pin_request() - request a single pin to be muxed in, typically for GPIO
-  * @pin: the pin number in the global pin space
-diff --git a/drivers/pinctrl/pinmux.h b/drivers/pinctrl/pinmux.h
-index 794cb3a003ff..24ae61136803 100644
---- a/drivers/pinctrl/pinmux.h
-+++ b/drivers/pinctrl/pinmux.h
-@@ -15,6 +15,8 @@ int pinmux_check_ops(struct pinctrl_dev *pctldev);
- 
- int pinmux_validate_map(const struct pinctrl_map *map, int i);
- 
-+bool pinmux_is_in_use(struct pinctrl_dev *pctldev, unsigned pin);
-+
- int pinmux_request_gpio(struct pinctrl_dev *pctldev,
- 			struct pinctrl_gpio_range *range,
- 			unsigned pin, unsigned gpio);
-@@ -42,6 +44,11 @@ static inline int pinmux_validate_map(const struct pinctrl_map *map, int i)
- 	return 0;
- }
- 
-+static inline bool pinmux_is_in_use(struct pinctrl_dev *pctldev, unsigned pin)
-+{
-+	return false;
-+}
-+
- static inline int pinmux_request_gpio(struct pinctrl_dev *pctldev,
- 			struct pinctrl_gpio_range *range,
- 			unsigned pin, unsigned gpio)
-diff --git a/include/linux/pinctrl/consumer.h b/include/linux/pinctrl/consumer.h
-index 86720a5a384f..d26826b057a1 100644
---- a/include/linux/pinctrl/consumer.h
-+++ b/include/linux/pinctrl/consumer.h
-@@ -24,6 +24,7 @@ struct device;
- #ifdef CONFIG_PINCTRL
- 
- /* External interface to pin control */
-+extern bool pinctrl_gpio_is_in_use(unsigned gpio);
- extern int pinctrl_gpio_request(unsigned gpio);
- extern void pinctrl_gpio_free(unsigned gpio);
- extern int pinctrl_gpio_direction_input(unsigned gpio);
-@@ -61,6 +62,11 @@ static inline int pinctrl_pm_select_idle_state(struct device *dev)
- 
- #else /* !CONFIG_PINCTRL */
- 
-+static inline bool pinctrl_gpio_is_in_use(unsigned gpio)
-+{
-+	return 0;
-+}
-+
- static inline int pinctrl_gpio_request(unsigned gpio)
- {
- 	return 0;
--- 
-2.22.0
-
+Regards,
+-Vladimir
