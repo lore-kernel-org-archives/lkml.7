@@ -2,87 +2,142 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF018C31E40
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 16:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D25EC31E40
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 16:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 838052075C
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 16:17:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YTMLQb4x"
+	by mail.kernel.org (Postfix) with ESMTP id 5E6EC2075C
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 16:17:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564849077;
+	bh=7LuoxuTmgxKLJEUZnRn7hNP2L5TkeUXj0Gxbss1n3Y8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=dsH665UYIWt5NeYmjUO5iX0JwGcSl9ZSdbBWnr4xFB634utjUOwFOvjV6+MFtAvtb
+	 bVEPc3OP56XgqCTI6zYyxmQ2DU5uZ2tpWLLrNGJJWsvyT8W9b8EmonoPsmbxP4YcWL
+	 zaEHztX/5IVc4fcq/xiux1PCOXIEoi7YRFRPkIkw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388068AbfHCQRs (ORCPT
+        id S2388205AbfHCQR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 3 Aug 2019 12:17:48 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33636 "EHLO
+        Sat, 3 Aug 2019 12:17:56 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33660 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387958AbfHCQRs (ORCPT
+        with ESMTP id S2387958AbfHCQRz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 3 Aug 2019 12:17:48 -0400
+        Sat, 3 Aug 2019 12:17:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=/X3WDI0mWhLkrrAZYpOBF14jsWJC/LWwN2nM68m2FXE=; b=YTMLQb4x9LXJC64dxUjr6v4Xk
-        GMXQsTaDR1vmYROgRuPGQmcgEYe76/aACMQQWCtkZimsYaMoot1ZvwPQDm2Ihc2qq7OidsOSLkgi5
-        5h4VKxOmA9p2bsT/wyW0eiE02ATnGIGZFQZ1DcJKqPFLLhndN++tne2fJkGXmLxkZ5sdM7ADQfEHj
-        ZUnzIYOL2jqDrOkrkXILUmtHBpDlM7HqH5QWkJ6gkEmQSJSg1PFxAP5KxYT78scR0A+zv9wLYi74s
-        ucUhUJiJLtSFE9BZiIREAP1CItRqGkb5o5/6a4VXeKUPosSTon4rRzJYDNgxMmGjhEAcUMcDZEnKr
-        HD/miYdsw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1htwj1-0007V1-Ge; Sat, 03 Aug 2019 16:17:43 +0000
-Date:   Sat, 3 Aug 2019 09:17:43 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     axboe@kernel.dk, jack@suse.cz, hannes@cmpxchg.org,
-        mhocko@kernel.org, vdavydov.dev@gmail.com, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, guro@fb.com,
-        akpm@linux-foundation.org
-Subject: Re: [PATCH 2/4] bdi: Add bdi->id
-Message-ID: <20190803161743.GB932@bombadil.infradead.org>
-References: <20190803140155.181190-1-tj@kernel.org>
- <20190803140155.181190-3-tj@kernel.org>
- <20190803153908.GA932@bombadil.infradead.org>
- <20190803155349.GD136335@devbig004.ftw2.facebook.com>
+         bh=Gu8G8y6Ne0ryjTmF9kVNzse2VVG5LtflJsXjD47kfSE=; b=jXX1dtoyVtUHxbYohmvnyEjxf
+        M5gRSf7KQbRDdCt1G2xrGgvnfzeGaUODS73jlHhuEQ+xeIu8nGV7fxTj1zAvjWc2/saKM+EV/msqc
+        5ME2bZ5WJnFe4pPUZZyNyDBiP+IPqwVCzKSYPP+swO6xyt5g5FeinAejTBl32oLx1JiCHxNExUHfh
+        0Piel9GlHhmG0h2esCM7M25c6G1dThsWOeXoFwEbWCfyiRJ8chZuKcHuDGJKWlp/iS4iTmnUzsi1Z
+        8HSDL0HfhUewmzZkdy7O+9OOghZDpuzoDN95i2wZYCgGDMLk8NYLlZvwEfK8VriDMWMgm25VIqXfk
+        Y7vqHlUjw==;
+Received: from [191.33.150.100] (helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1htwjB-0007VE-PE; Sat, 03 Aug 2019 16:17:54 +0000
+Date:   Sat, 3 Aug 2019 13:17:49 -0300
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-i2c@vger.kernel.org, Sean Young <sean@mess.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] media: ir-kbd-i2c: convert to
+ i2c_new_dummy_device()
+Message-ID: <20190803131749.4d6517ab@coco.lan>
+In-Reply-To: <20190730175555.14098-2-wsa+renesas@sang-engineering.com>
+References: <20190730175555.14098-1-wsa+renesas@sang-engineering.com>
+        <20190730175555.14098-2-wsa+renesas@sang-engineering.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190803155349.GD136335@devbig004.ftw2.facebook.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 03, 2019 at 08:53:49AM -0700, Tejun Heo wrote:
-> Hey, Matthew.
-> 
-> On Sat, Aug 03, 2019 at 08:39:08AM -0700, Matthew Wilcox wrote:
-> > On Sat, Aug 03, 2019 at 07:01:53AM -0700, Tejun Heo wrote:
-> > > There currently is no way to universally identify and lookup a bdi
-> > > without holding a reference and pointer to it.  This patch adds an
-> > > non-recycling bdi->id and implements bdi_get_by_id() which looks up
-> > > bdis by their ids.  This will be used by memcg foreign inode flushing.
-> > > 
-> > > I left bdi_list alone for simplicity and because while rb_tree does
-> > > support rcu assignment it doesn't seem to guarantee lossless walk when
-> > > walk is racing aginst tree rebalance operations.
-> > 
-> > This would seem like the perfect use for an allocating xarray.  That
-> > does guarantee lossless walk under the RCU lock.  You could get rid of the
-> > bdi_list too.
-> 
-> It definitely came to mind but there's a bunch of downsides to
-> recycling IDs or using radix tree for non-compacting allocations.
+Em Tue, 30 Jul 2019 19:55:54 +0200
+Wolfram Sang <wsa+renesas@sang-engineering.com> escreveu:
 
-Ah, I wasn't sure what would happen if you recycled an ID.  I agree, the
-radix tree is pretty horrid for monotonically increasing IDs.  I'm still
-working on the maple tree to replace it, but that's going slower than
-I would like, so I can't in good conscience ask you to wait for it to
-be ready.
+> Convert this driver to use the new i2c_new_dummy_device() call and bail
+> out if the dummy device cannot be registered to make failure more
+> visible to the user.
+> 
+
+Please don't do that.
+
+At first glance, devm_* sounds a good idea, but we had enough issues
+using it on media system.
+
+I don't mind mind much if some SoC specific would use it, but doing
+it on generic drivers is a very bad idea. We have removed almost all
+devm_* calls from the media system.
+
+The problem with devm is that it the de-allocation routines aren't
+called during device unbind. They happen a way later, only when the
+device itself is physically removed, or the driver is removed.
+
+That caused lots of headaches to debug memory lifetime issues on
+media.
+
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> ---
+> 
+> Change since v1:
+> 
+> * reworded commit message because there was no NULL ptr access
+> 
+>  drivers/media/i2c/ir-kbd-i2c.c | 13 +++++--------
+>  1 file changed, 5 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/ir-kbd-i2c.c b/drivers/media/i2c/ir-kbd-i2c.c
+> index 876d7587a1da..f46717052efc 100644
+> --- a/drivers/media/i2c/ir-kbd-i2c.c
+> +++ b/drivers/media/i2c/ir-kbd-i2c.c
+> @@ -885,9 +885,12 @@ static int ir_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>  	INIT_DELAYED_WORK(&ir->work, ir_work);
+>  
+>  	if (probe_tx) {
+> -		ir->tx_c = i2c_new_dummy(client->adapter, 0x70);
+> -		if (!ir->tx_c) {
+> +		ir->tx_c = devm_i2c_new_dummy_device(&client->dev,
+> +						     client->adapter, 0x70);
+> +		if (IS_ERR(ir->tx_c)) {
+>  			dev_err(&client->dev, "failed to setup tx i2c address");
+> +			err = PTR_ERR(ir->tx_c);
+> +			goto err_out_free;
+>  		} else if (!zilog_init(ir)) {
+>  			ir->carrier = 38000;
+>  			ir->duty_cycle = 40;
+> @@ -904,9 +907,6 @@ static int ir_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>  	return 0;
+>  
+>   err_out_free:
+> -	if (ir->tx_c)
+> -		i2c_unregister_device(ir->tx_c);
+> -
+>  	/* Only frees rc if it were allocated internally */
+>  	rc_free_device(rc);
+>  	return err;
+> @@ -919,9 +919,6 @@ static int ir_remove(struct i2c_client *client)
+>  	/* kill outstanding polls */
+>  	cancel_delayed_work_sync(&ir->work);
+>  
+> -	if (ir->tx_c)
+> -		i2c_unregister_device(ir->tx_c);
+> -
+>  	/* unregister device */
+>  	rc_unregister_device(ir->rc);
+>  
+
+
+
+Thanks,
+Mauro
