@@ -2,160 +2,141 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E62EC0650F
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 00:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B6A0C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 00:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2472420880
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 00:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 014552087E
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 00:45:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="lZ5qrQFE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O9jHmein"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392842AbfHCAmY (ORCPT
+        id S2392862AbfHCApR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 20:42:24 -0400
-Received: from gateway21.websitewelcome.com ([192.185.45.38]:35663 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2392809AbfHCAmX (ORCPT
+        Fri, 2 Aug 2019 20:45:17 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44549 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388048AbfHCApR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 20:42:23 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id C5DDB400C4DF8
-        for <linux-kernel@vger.kernel.org>; Fri,  2 Aug 2019 19:42:20 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id ti7ohzARp4FKpti7oh8Bnx; Fri, 02 Aug 2019 19:42:20 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=WyPuaCbgvCNMKXOP5A5Wsd450rELADSqBb9nVHXw1Gs=; b=lZ5qrQFEb/UQ3FJU8UrK70QdKZ
-        RI/LMynvrZzxaFTC9B/jx8OfBNGVkqiVfXkWDD+X6A44BFytyHbwu57tC04ZkqZRWJCgW71Zoui6U
-        G+6ezTqjlrf8aeptqy56W3w7iDoaN4l68ZlYP1xF/0xEccxZ0ko9lhw+nX1vhEC5ukp6+CVjJ1CTE
-        G7Z4N6zlihGxQXkmFj3BxrY9bAhu5gIFJLPaW6P2J5J0TmtyX8gOmyCHFZ4Urnk7fTMFV8X365KwA
-        AmG8WAtRx62r27cX2M5dKrwLNIyfRsz9XNOgmTFok1Ajvs8kfIp9Tr39gZyT5z4YhcH/N+EgDXZwz
-        29uRW6Og==;
-Received: from [187.192.11.120] (port=51980 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hti7o-0014vt-FT; Fri, 02 Aug 2019 19:42:20 -0500
-Subject: Re: [PATCH] atm: iphase: Fix Spectre v1 vulnerability
-To:     David Miller <davem@davemloft.net>
-Cc:     3chas3@gmail.com, linux-atm-general@lists.sourceforge.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190731032141.GA30246@embeddedor>
- <20190802.173125.399771294364845553.davem@davemloft.net>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <dc1804fc-a7bf-acd3-5460-40d70e419501@embeddedor.com>
-Date:   Fri, 2 Aug 2019 19:42:12 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 2 Aug 2019 20:45:17 -0400
+Received: by mail-wr1-f65.google.com with SMTP id p17so78835039wrf.11;
+        Fri, 02 Aug 2019 17:45:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=p2nPvXeiMRCbIp019RSfslQHC+wLOXTRda/OBXWWDLk=;
+        b=O9jHmeinzFdk0HUuIlJYgzDWnzM0u/x89eydbjc0Ghqs9dQwrVClCrv9PxjAO+nOgc
+         UOhhFPzo1owoGQIYIbwtLNbSohjjCktGzuHET0iRF2QA2d7mzBqYX5Lub0aXtTk7KCBH
+         5Tq0YAeLRgjykjvHLZFq6LbX21DCzAx/ZZ6ZA72t94EC6LrZ2T3w8YHLFTvBlzdk1Fkv
+         cMDYxoepav+xVwtYSk5C5gClah5xHmXVYLncS/ZqKkmiYw5QYMot3pnZtGB89pH8fGfi
+         PpwhR1YAdNMBP6PvYzcU3lI6yYINT4r0v7cQ3Ml4rUX7CMXfAaqchh909fzszg+/c1D1
+         YDlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=p2nPvXeiMRCbIp019RSfslQHC+wLOXTRda/OBXWWDLk=;
+        b=knFA99sDtWbxyE41VFtk1Hp0SgyUO/ZRfUa/c23maYcRN7zQcRhCMQPcakUZ70RW4f
+         yMvGC1YMqpG7x7ifNPyp5w1Ax/iXleP6kWvrLPYY71J6I5QIPnjxQBRwz9acyShJMLrl
+         TDldhyD2CSsXb1jR0Fg4RqzmlXjwfafytrHYkPb49g++07/EVsAuy14Tc3QWc+NREKBH
+         hy3HwztlqD+Ei3ojR1rxsoRRH7vGcsi3kD/VWIJXo9/HGMp2uX6SJ86EtFmCOqAM2N1D
+         hQqOd6GdHW5OsBHNkHo9mFM+pnETcdboTlzwC9lHAKtE+AUeJo97YRMvt3syUzWtszOf
+         wEuQ==
+X-Gm-Message-State: APjAAAVUfbEanzh2fJsrYi82JeKr6UwE6siKRpMpGGlfGrsDyyZalHUX
+        t8vMmmlQmtE7CRsppHIJu5GnXiDNBeD2YUvkWllUdFAhfa0=
+X-Google-Smtp-Source: APXvYqycYdpO8LrjkPFP5CxL4/LTWJJoR+m/XspgpFNdlVEJi3FOAxMCgZIZIQCoyJqzoMZul1a4qVtyziPxQ0M2MTA=
+X-Received: by 2002:a5d:50d1:: with SMTP id f17mr17510387wrt.124.1564793115204;
+ Fri, 02 Aug 2019 17:45:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190802.173125.399771294364845553.davem@davemloft.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.11.120
-X-Source-L: No
-X-Exim-ID: 1hti7o-0014vt-FT
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [187.192.11.120]:51980
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20190702080123.904399496@linuxfoundation.org> <20190702080126.138655706@linuxfoundation.org>
+ <0f105a3696611dc10aa4d7c5c22ffac031b3c098.camel@nokia.com>
+ <20190802072834.GC26174@kroah.com> <88c88ec44e93c07170891bdf391d2b6251c7041a.camel@nokia.com>
+In-Reply-To: <88c88ec44e93c07170891bdf391d2b6251c7041a.camel@nokia.com>
+From:   Xin Long <lucien.xin@gmail.com>
+Date:   Sat, 3 Aug 2019 08:45:03 +0800
+Message-ID: <CADvbK_cOU00xqML35NMf3jk+S81kRLteHODf6Y-OsxPRDurSoQ@mail.gmail.com>
+Subject: Re: [PATCH 4.14 43/43] tipc: pass tunnel dev as NULL to udp_tunnel(6)_xmit_skb
+To:     "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>
+Cc:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "syzbot+a43d8d4e7e8a7a9e149e@syzkaller.appspotmail.com" 
+        <syzbot+a43d8d4e7e8a7a9e149e@syzkaller.appspotmail.com>,
+        "syzbot+c4c4b2bb358bb936ad7e@syzkaller.appspotmail.com" 
+        <syzbot+c4c4b2bb358bb936ad7e@syzkaller.appspotmail.com>,
+        "syzbot+a47c5f4c6c00fc1ed16e@syzkaller.appspotmail.com" 
+        <syzbot+a47c5f4c6c00fc1ed16e@syzkaller.appspotmail.com>,
+        "syzbot+a9e23ea2aa21044c2798@syzkaller.appspotmail.com" 
+        <syzbot+a9e23ea2aa21044c2798@syzkaller.appspotmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "syzbot+0290d2290a607e035ba1@syzkaller.appspotmail.com" 
+        <syzbot+0290d2290a607e035ba1@syzkaller.appspotmail.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "syzbot+9d4c12bfd45a58738d0a@syzkaller.appspotmail.com" 
+        <syzbot+9d4c12bfd45a58738d0a@syzkaller.appspotmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
+On Fri, Aug 2, 2019 at 7:03 PM Rantala, Tommi T. (Nokia - FI/Espoo)
+<tommi.t.rantala@nokia.com> wrote:
+>
+> On Fri, 2019-08-02 at 09:28 +0200, gregkh@linuxfoundation.org wrote:
+> > On Thu, Aug 01, 2019 at 10:17:30AM +0000, Rantala, Tommi T. (Nokia -
+> > FI/Espoo) wrote:
+> > > Hi,
+> > >
+> > > This tipc patch added in 4.14.132 is triggering a crash for me,
+> > > revert
+> > > fixes it.
+> > >
+> > > Anyone have ideas if some other commits missing in 4.14.x to make
+> > > this
+> > > work...?
+> >
+> > Do you also hav a problem with 4.19.y?  How about 5.2.y?  If not, can
+> > you do 'git bisect' to find the patch that fixes the issue?
+> >
+> > thanks,
+> >
+> > greg k-h
+>
+> Hi, please pick this to 4.14.y and 4.19.y, tested that it fixes the
+> crash in both:
+>
+> commit 5684abf7020dfc5f0b6ba1d68eda3663871fce52
+> Author: Xin Long <lucien.xin@gmail.com>
+> Date:   Mon Jun 17 21:34:13 2019 +0800
+>
+>     ip_tunnel: allow not to count pkts on tstats by setting skb's dev
+> to NULL
+Thanks Rantala,
 
-On 8/2/19 7:31 PM, David Miller wrote:
-> From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-> Date: Tue, 30 Jul 2019 22:21:41 -0500
-> 
->> board is controlled by user-space, hence leading to a potential
->> exploitation of the Spectre variant 1 vulnerability.
->>
->> This issue was detected with the help of Smatch:
-> 
-> Applied and queued up for -stable.
-> 
-> Do not CC: -stable for networking fixes, we take care of the stable
-> submissions manually for this subsystem.
-> 
+sorry for late, I was in a trip.
 
-Yeah. I'm aware of that. The thing is that you don't appear
-as a maintainer of this file:
+The patch belongs to a patchset:
 
-$ scripts/get_maintainer.pl --nokeywords --nogit --nogit-fallback -f drivers/atm/iphase.c
-Chas Williams <3chas3@gmail.com> (maintainer:ATM)
-linux-atm-general@lists.sourceforge.net (moderated list:ATM)
-netdev@vger.kernel.org (open list:ATM)
-linux-kernel@vger.kernel.org (open list)
+https://www.spinics.net/lists/netdev/msg578674.html
 
-so, I didn't know this patch would be applied to net.
+So this commit should also be included:
 
-Thanks
---
-Gustavo
+commit 6f6a8622057c92408930c31698394fae1557b188
+Author: Xin Long <lucien.xin@gmail.com>
+Date:   Mon Jun 17 21:34:14 2019 +0800
+
+    ip6_tunnel: allow not to count pkts on tstats by passing dev as NULL
+
+Next time I think I should put "Fixes:" flag into each patch.
+
+>
+>
+> For 5.2.y nothing is needed, these commits were in v5.2-rc6 already.
+>
+> -Tommi
+>
