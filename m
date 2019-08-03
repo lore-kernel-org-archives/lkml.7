@@ -2,242 +2,214 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46425C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 18:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79586C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 18:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 078A82087C
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 18:13:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564856010;
-	bh=D0z2r6EWv1e/lghqPM5vGvBhL/Zo36zLLZqM7auKaNc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=rorKHJWBZaxo+3lpDXQhhvHDGSh0pYdliusbC7CJdThZxbX/BZlrfcgkcwqO6BOrF
-	 mGV6kNN6ajSNS8LjMlBKw/NIdqqFsFGLJh/WFCXOsRos1FfTxUu8MNZDm7o0oJ/bJO
-	 GhW0LQ6kqKiFyE3SXvnvQJ7Tn55p4h4uwmuQ9FYE=
+	by mail.kernel.org (Postfix) with ESMTP id 4D6C7206A2
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 18:24:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=apple.com header.i=@apple.com header.b="f4Qnm3OD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728552AbfHCSN0 (ORCPT
+        id S1728663AbfHCSYq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 3 Aug 2019 14:13:26 -0400
-Received: from inca-roads.misterjones.org ([213.251.177.50]:41448 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728366AbfHCSN0 (ORCPT
+        Sat, 3 Aug 2019 14:24:46 -0400
+Received: from nwk-aaemail-lapp02.apple.com ([17.151.62.67]:53750 "EHLO
+        nwk-aaemail-lapp02.apple.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728600AbfHCSYq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 3 Aug 2019 14:13:26 -0400
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
-        (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1htyWw-0002Em-AQ; Sat, 03 Aug 2019 20:13:22 +0200
-Date:   Sat, 3 Aug 2019 19:13:19 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Steven Price <steven.price@arm.com>
-Cc:     kvm@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-        linux-doc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu
-Subject: Re: [PATCH 4/9] KVM: arm64: Support stolen time reporting via
- shared structure
-Message-ID: <20190803191303.02e9bcc9@why>
-In-Reply-To: <20190803185817.11285b2a@why>
-References: <20190802145017.42543-1-steven.price@arm.com>
-        <20190802145017.42543-5-steven.price@arm.com>
-        <20190803185817.11285b2a@why>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: steven.price@arm.com, kvm@vger.kernel.org, catalin.marinas@arm.com, linux-doc@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, pbonzini@redhat.com, will@kernel.org, kvmarm@lists.cs.columbia.edu
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+        Sat, 3 Aug 2019 14:24:46 -0400
+Received: from pps.filterd (nwk-aaemail-lapp02.apple.com [127.0.0.1])
+        by nwk-aaemail-lapp02.apple.com (8.16.0.27/8.16.0.27) with SMTP id x73IMIEi044183;
+        Sat, 3 Aug 2019 11:24:39 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=apple.com; h=sender : content-type
+ : mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to; s=20180706;
+ bh=TsJz3OUo2WROq2nv/KDSlpoFx4edCT2XPw2Br1eBQ6Q=;
+ b=f4Qnm3ODL1wAWmRXb6oQDjtVtLketIu79BacRVZ073C/QBz0u0+yFkjxkLQPfwN2B7cI
+ glQ6sdc6r/rXbX+d/HS/8p79FYdQwiedwSE06/76VVqvAHHMD1RW0PFKhBVQaqTudXwZ
+ 1haM67pSkIDoYgzKGDdMzvJE6ltHsGMQmtLdolSuXZru862QBb0ygHAjQnvDmGPnJqlE
+ T5HPQfNredWYW+ftIBSBlAPg7x+hSh8po4YtUc63xENMDOMjG+v4XttMJkQhCAnvRtH/
+ VwHZDPCmnyorabSVSWKgvB8lsXWoKY3BW6XMyBENROIG+AXXBuA+90QEJzEAXQCClzK/ MA== 
+Received: from mr2-mtap-s01.rno.apple.com (mr2-mtap-s01.rno.apple.com [17.179.226.133])
+        by nwk-aaemail-lapp02.apple.com with ESMTP id 2u56ujxkmw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Sat, 03 Aug 2019 11:24:39 -0700
+Received: from nwk-mmpp-sz11.apple.com
+ (nwk-mmpp-sz11.apple.com [17.128.115.155]) by mr2-mtap-s01.rno.apple.com
+ (Oracle Communications Messaging Server 8.0.2.4.20190507 64bit (built May  7
+ 2019)) with ESMTPS id <0PVO00AK2B52XB40@mr2-mtap-s01.rno.apple.com>; Sat,
+ 03 Aug 2019 11:24:39 -0700 (PDT)
+Received: from process_milters-daemon.nwk-mmpp-sz11.apple.com by
+ nwk-mmpp-sz11.apple.com
+ (Oracle Communications Messaging Server 8.0.2.4.20190507 64bit (built May  7
+ 2019)) id <0PVO00J00B3Y2V00@nwk-mmpp-sz11.apple.com>; Sat,
+ 03 Aug 2019 11:24:38 -0700 (PDT)
+X-Va-A: 
+X-Va-T-CD: 2af4e3c096f98bec7d308668f2184085
+X-Va-E-CD: b03d5acee32fc9f0c9dfd3776592dc73
+X-Va-R-CD: 1835f3c54d533384876758843bc94ede
+X-Va-CD: 0
+X-Va-ID: 05f595ff-0561-4b61-9c78-29a92582d91d
+X-V-A:  
+X-V-T-CD: 2af4e3c096f98bec7d308668f2184085
+X-V-E-CD: b03d5acee32fc9f0c9dfd3776592dc73
+X-V-R-CD: 1835f3c54d533384876758843bc94ede
+X-V-CD: 0
+X-V-ID: d3ac2986-9aa4-4db4-bc76-2493a767f397
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,,
+ definitions=2019-08-03_09:,, signatures=0
+Received: from [17.150.210.108] (unknown [17.150.210.108])
+ by nwk-mmpp-sz11.apple.com
+ (Oracle Communications Messaging Server 8.0.2.4.20190507 64bit (built May  7
+ 2019)) with ESMTPSA id <0PVO0087WB52JO80@nwk-mmpp-sz11.apple.com>; Sat,
+ 03 Aug 2019 11:24:38 -0700 (PDT)
+Content-type: text/plain; charset=utf-8
+MIME-version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: Possible mem cgroup bug in kernels between 4.18.0 and 5.3-rc1.
+From:   Masoud Sharbiani <msharbiani@apple.com>
+In-reply-to: <77568CFC-280C-4C0F-85FC-92F1212BC6FC@apple.com>
+Date:   Sat, 03 Aug 2019 11:24:37 -0700
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>, hannes@cmpxchg.org,
+        vdavydov.dev@gmail.com, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-transfer-encoding: quoted-printable
+Message-id: <9B718E2A-FE3B-453E-9426-1E1880351765@apple.com>
+References: <5659221C-3E9B-44AD-9BBF-F74DE09535CD@apple.com>
+ <20190802074047.GQ11627@dhcp22.suse.cz>
+ <7E44073F-9390-414A-B636-B1AE916CC21E@apple.com>
+ <20190802144110.GL6461@dhcp22.suse.cz>
+ <5DE6F4AE-F3F9-4C52-9DFC-E066D9DD5EDC@apple.com>
+ <20190802191430.GO6461@dhcp22.suse.cz>
+ <A06C5313-B021-4ADA-9897-CE260A9011CC@apple.com>
+ <f7733773-35bc-a1f6-652f-bca01ea90078@I-love.SAKURA.ne.jp>
+ <d7efccf4-7f07-10da-077d-a58dafbf627e@I-love.SAKURA.ne.jp>
+ <77568CFC-280C-4C0F-85FC-92F1212BC6FC@apple.com>
+To:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-03_09:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 3 Aug 2019 18:58:17 +0100
-Marc Zyngier <maz@kernel.org> wrote:
 
-> On Fri,  2 Aug 2019 15:50:12 +0100
-> Steven Price <steven.price@arm.com> wrote:
-> 
-> > Implement the service call for configuring a shared structre between a
-> > VCPU and the hypervisor in which the hypervisor can write the time
-> > stolen from the VCPU's execution time by other tasks on the host.
-> > 
-> > The hypervisor allocates memory which is placed at an IPA chosen by user
-> > space. The hypervisor then uses WRITE_ONCE() to update the shared
-> > structre ensuring single copy atomicity of the 64-bit unsigned value
-> > that reports stolen time in nanoseconds.
-> > 
-> > Whenever stolen time is enabled by the guest, the stolen time counter is
-> > reset.
-> > 
-> > The stolen time itself is retrieved from the sched_info structure
-> > maintained by the Linux scheduler code. We enable SCHEDSTATS when
-> > selecting KVM Kconfig to ensure this value is meaningful.
-> > 
-> > Signed-off-by: Steven Price <steven.price@arm.com>
-> > ---
-> >  arch/arm64/include/asm/kvm_host.h | 13 +++++-
-> >  arch/arm64/kvm/Kconfig            |  1 +
-> >  include/kvm/arm_hypercalls.h      |  1 +
-> >  include/linux/kvm_types.h         |  2 +
-> >  virt/kvm/arm/arm.c                | 18 ++++++++
-> >  virt/kvm/arm/hypercalls.c         | 70 +++++++++++++++++++++++++++++++
-> >  6 files changed, 104 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-> > index f656169db8c3..78f270190d43 100644
-> > --- a/arch/arm64/include/asm/kvm_host.h
-> > +++ b/arch/arm64/include/asm/kvm_host.h
-> > @@ -44,6 +44,7 @@
-> >  	KVM_ARCH_REQ_FLAGS(0, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
-> >  #define KVM_REQ_IRQ_PENDING	KVM_ARCH_REQ(1)
-> >  #define KVM_REQ_VCPU_RESET	KVM_ARCH_REQ(2)
-> > +#define KVM_REQ_RECORD_STEAL	KVM_ARCH_REQ(3)
-> >  
-> >  DECLARE_STATIC_KEY_FALSE(userspace_irqchip_in_use);
-> >  
-> > @@ -83,6 +84,11 @@ struct kvm_arch {
-> >  
-> >  	/* Mandated version of PSCI */
-> >  	u32 psci_version;
-> > +
-> > +	struct kvm_arch_pvtime {
-> > +		void *st;
-> > +		gpa_t st_base;
-> > +	} pvtime;
-> >  };
-> >  
-> >  #define KVM_NR_MEM_OBJS     40
-> > @@ -338,8 +344,13 @@ struct kvm_vcpu_arch {
-> >  	/* True when deferrable sysregs are loaded on the physical CPU,
-> >  	 * see kvm_vcpu_load_sysregs and kvm_vcpu_put_sysregs. */
-> >  	bool sysregs_loaded_on_cpu;
-> > -};
-> >  
-> > +	/* Guest PV state */
-> > +	struct {
-> > +		u64 steal;
-> > +		u64 last_steal;
-> > +	} steal;
-> > +};
-> >  /* Pointer to the vcpu's SVE FFR for sve_{save,load}_state() */
-> >  #define vcpu_sve_pffr(vcpu) ((void *)((char *)((vcpu)->arch.sve_state) + \
-> >  				      sve_ffr_offset((vcpu)->arch.sve_max_vl)))
-> > diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
-> > index a67121d419a2..d8b88e40d223 100644
-> > --- a/arch/arm64/kvm/Kconfig
-> > +++ b/arch/arm64/kvm/Kconfig
-> > @@ -39,6 +39,7 @@ config KVM
-> >  	select IRQ_BYPASS_MANAGER
-> >  	select HAVE_KVM_IRQ_BYPASS
-> >  	select HAVE_KVM_VCPU_RUN_PID_CHANGE
-> > +	select SCHEDSTATS
-> >  	---help---
-> >  	  Support hosting virtualized guest machines.
-> >  	  We don't support KVM with 16K page tables yet, due to the multiple
-> > diff --git a/include/kvm/arm_hypercalls.h b/include/kvm/arm_hypercalls.h
-> > index 35a5abcc4ca3..9f0710ab4292 100644
-> > --- a/include/kvm/arm_hypercalls.h
-> > +++ b/include/kvm/arm_hypercalls.h
-> > @@ -7,6 +7,7 @@
-> >  #include <asm/kvm_emulate.h>
-> >  
-> >  int kvm_hvc_call_handler(struct kvm_vcpu *vcpu);
-> > +int kvm_update_stolen_time(struct kvm_vcpu *vcpu);
-> >  
-> >  static inline u32 smccc_get_function(struct kvm_vcpu *vcpu)
-> >  {
-> > diff --git a/include/linux/kvm_types.h b/include/linux/kvm_types.h
-> > index bde5374ae021..1c88e69db3d9 100644
-> > --- a/include/linux/kvm_types.h
-> > +++ b/include/linux/kvm_types.h
-> > @@ -35,6 +35,8 @@ typedef unsigned long  gva_t;
-> >  typedef u64            gpa_t;
-> >  typedef u64            gfn_t;
-> >  
-> > +#define GPA_INVALID	(~(gpa_t)0)
-> > +
-> >  typedef unsigned long  hva_t;
-> >  typedef u64            hpa_t;
-> >  typedef u64            hfn_t;
-> > diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
-> > index f645c0fbf7ec..ebd963d2580b 100644
-> > --- a/virt/kvm/arm/arm.c
-> > +++ b/virt/kvm/arm/arm.c
-> > @@ -40,6 +40,10 @@
-> >  #include <asm/kvm_coproc.h>
-> >  #include <asm/sections.h>
-> >  
-> > +#include <kvm/arm_hypercalls.h>
-> > +#include <kvm/arm_pmu.h>
-> > +#include <kvm/arm_psci.h>
-> > +
-> >  #ifdef REQUIRES_VIRT
-> >  __asm__(".arch_extension	virt");
-> >  #endif
-> > @@ -135,6 +139,7 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
-> >  	kvm->arch.max_vcpus = vgic_present ?
-> >  				kvm_vgic_get_max_vcpus() : KVM_MAX_VCPUS;
-> >  
-> > +	kvm->arch.pvtime.st_base = GPA_INVALID;
-> >  	return ret;
-> >  out_free_stage2_pgd:
-> >  	kvm_free_stage2_pgd(kvm);
-> > @@ -371,6 +376,7 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
-> >  	kvm_vcpu_load_sysregs(vcpu);
-> >  	kvm_arch_vcpu_load_fp(vcpu);
-> >  	kvm_vcpu_pmu_restore_guest(vcpu);
-> > +	kvm_make_request(KVM_REQ_RECORD_STEAL, vcpu);
-> >  
-> >  	if (single_task_running())
-> >  		vcpu_clear_wfe_traps(vcpu);
-> > @@ -617,6 +623,15 @@ static void vcpu_req_sleep(struct kvm_vcpu *vcpu)
-> >  	smp_rmb();
-> >  }
-> >  
-> > +static void vcpu_req_record_steal(struct kvm_vcpu *vcpu)
-> > +{
-> > +	int idx;
-> > +
-> > +	idx = srcu_read_lock(&vcpu->kvm->srcu);
-> > +	kvm_update_stolen_time(vcpu);
-> > +	srcu_read_unlock(&vcpu->kvm->srcu, idx);
-> > +}
-> > +
-> >  static int kvm_vcpu_initialized(struct kvm_vcpu *vcpu)
-> >  {
-> >  	return vcpu->arch.target >= 0;
-> > @@ -636,6 +651,9 @@ static void check_vcpu_requests(struct kvm_vcpu *vcpu)
-> >  		 * that a VCPU sees new virtual interrupts.
-> >  		 */
-> >  		kvm_check_request(KVM_REQ_IRQ_PENDING, vcpu);
-> > +
-> > +		if (kvm_check_request(KVM_REQ_RECORD_STEAL, vcpu))
-> > +			vcpu_req_record_steal(vcpu);  
-> 
-> Something troubles me. Here, you've set the request on load. But you
-> can be preempted at any time (preemption gets disabled just after).
-> 
-> I have the feeling that should you get preempted right here, you'll
-> end-up having accumulated the wrong amount of steal time, as the
-> request put via load when you'll get scheduled back in will only get
-> processed after a full round of entry/exit/entry, which doesn't look
-> great.
 
-Ah, no. We're saved by the check for pending requests right before we
-jump in the guest, causing an early exit and the whole shebang to be
-restarted.
+> On Aug 3, 2019, at 10:41 AM, Masoud Sharbiani <msharbiani@apple.com> =
+wrote:
+>=20
+>=20
+>=20
+>> On Aug 3, 2019, at 8:51 AM, Tetsuo Handa =
+<penguin-kernel@I-love.SAKURA.ne.jp> wrote:
+>>=20
+>> Masoud, will you try this patch?
+>=20
+> Gladly.
+> It looks like it is working (and OOMing properly).
+>=20
+>=20
+>>=20
+>> By the way, is /sys/fs/cgroup/memory/leaker/memory.usage_in_bytes =
+remains non-zero
+>> despite /sys/fs/cgroup/memory/leaker/tasks became empty due to memcg =
+OOM killer expected?
+>> Deleting big-data-file.bin after memcg OOM killer reduces some, but =
+still remains
+>> non-zero.
+>=20
+> Yes. I had not noticed that:
+>=20
+> [ 1114.190477] oom_reaper: reaped process 1942 (leaker), now =
+anon-rss:0kB, file-
+> rss:0kB, shmem-rss:0kB
+> ./test-script.sh: line 16:  1942 Killed                  ./leaker -p =
+10240 -c 100000
+>=20
+> [root@localhost laleaker]# cat  =
+/sys/fs/cgroup/memory/leaker/memory.usage_in_bytes
+> 3194880
+> [root@localhost laleaker]# cat  =
+/sys/fs/cgroup/memory/leaker/memory.limit_in_bytes
+> 536870912
+> [root@localhost laleaker]# rm -f big-data-file.bin
+> [root@localhost laleaker]# cat  =
+/sys/fs/cgroup/memory/leaker/memory.usage_in_bytes
+> 2838528
+>=20
+> Thanks!
+> Masoud
+>=20
+> PS: Tried hand-back-porting it to 4.19-y and it didn=E2=80=99t work. I =
+think there are other patches between 4.19.0 and 5.3 that could be =
+necessary=E2=80=A6
+>=20
 
-	M.
--- 
-Without deviation from the norm, progress is not possible.
+Please ignore this last part. It works on 4.19-y branch as well.=20
+
+Masoud
+
+>=20
+>>=20
+>> ----------------------------------------
+>> =46rom 2f92c70f390f42185c6e2abb8dda98b1b7d02fa9 Mon Sep 17 00:00:00 =
+2001
+>> From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+>> Date: Sun, 4 Aug 2019 00:41:30 +0900
+>> Subject: [PATCH] memcg, oom: don't require __GFP_FS when invoking =
+memcg OOM killer
+>>=20
+>> Masoud Sharbiani noticed that commit 29ef680ae7c21110 ("memcg, oom: =
+move
+>> out_of_memory back to the charge path") broke memcg OOM called from
+>> __xfs_filemap_fault() path. It turned out that try_chage() is =
+retrying
+>> forever without making forward progress because =
+mem_cgroup_oom(GFP_NOFS)
+>> cannot invoke the OOM killer due to commit 3da88fb3bacfaa33 ("mm, =
+oom:
+>> move GFP_NOFS check to out_of_memory"). Regarding memcg OOM, we need =
+to
+>> bypass GFP_NOFS check in order to guarantee forward progress.
+>>=20
+>> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+>> Reported-by: Masoud Sharbiani <msharbiani@apple.com>
+>> Bisected-by: Masoud Sharbiani <msharbiani@apple.com>
+>> Fixes: 29ef680ae7c21110 ("memcg, oom: move out_of_memory back to the =
+charge path")
+>> ---
+>> mm/oom_kill.c | 5 +++--
+>> 1 file changed, 3 insertions(+), 2 deletions(-)
+>>=20
+>> diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+>> index eda2e2a..26804ab 100644
+>> --- a/mm/oom_kill.c
+>> +++ b/mm/oom_kill.c
+>> @@ -1068,9 +1068,10 @@ bool out_of_memory(struct oom_control *oc)
+>> 	 * The OOM killer does not compensate for IO-less reclaim.
+>> 	 * pagefault_out_of_memory lost its gfp context so we have to
+>> 	 * make sure exclude 0 mask - all other users should have at =
+least
+>> -	 * ___GFP_DIRECT_RECLAIM to get here.
+>> +	 * ___GFP_DIRECT_RECLAIM to get here. But mem_cgroup_oom() has =
+to
+>> +	 * invoke the OOM killer even if it is a GFP_NOFS allocation.
+>> 	 */
+>> -	if (oc->gfp_mask && !(oc->gfp_mask & __GFP_FS))
+>> +	if (oc->gfp_mask && !(oc->gfp_mask & __GFP_FS) && =
+!is_memcg_oom(oc))
+>> 		return true;
+>>=20
+>> 	/*
+>> --=20
+>> 1.8.3.1
+>>=20
+>>=20
+>=20
+
