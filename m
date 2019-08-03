@@ -2,109 +2,92 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB80DC433FF
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 15:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63BFBC31E40
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 15:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78980206C1
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 15:02:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PMPGtK8U"
+	by mail.kernel.org (Postfix) with ESMTP id 3A2042166E
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 15:04:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564844685;
+	bh=ZtnQiHcTsMI4Da/gZ9Elzfs6xppHV2apA6OfklfbEJM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jYOkxiFjiwiJvKRbwFJRlkeaKJzhxnuKzZob22AS48xBTEayFd0krlSMJ7PCYIu/+
+	 bwV9J+Q+JXfDHyvR8neIBgZqiRgqqXym1ugxWQ6wpyHnHVEDQI/v6WzujdSHNcyU8G
+	 nFAQloBcxvys67bEFA6ccofyYSQYGUbrTROoAo2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbfHCPCt (ORCPT
+        id S1727901AbfHCPEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 3 Aug 2019 11:02:49 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:36531 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727854AbfHCPCt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 3 Aug 2019 11:02:49 -0400
-Received: by mail-io1-f65.google.com with SMTP id o9so55109541iom.3;
-        Sat, 03 Aug 2019 08:02:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Fo/kv+brWQ1flp7Vdkb8WoUBvAMa5Whd0L9OkVELuTQ=;
-        b=PMPGtK8UFs07wgyVwxnfAQyx3EFb0wXBwNBqjDExProlToHDrO8vJ1hKOZY4+mtnY6
-         EK1ULx/2yyTfRyW9lgo5KJwuJInKH2ClW5dsywvBbP+XNueqGOhItEYmxJNtP/DihL3j
-         elV0Eh6W7RGnsfDsdt6UEcjakmGtslXbd3KiADHYYA+eGl2ne/yQJn0fJtvRFYrAysdc
-         iJuLr3jxvoTZdXNjRUq60+UxbKic/xv1cG+Ph0uhlKsk45vC/7P8RTm/CmUkgMX+9qVS
-         7pgB+Hi9W/JvahVts2rVeUCj3cf4QrWmrZt4Do/UV3DFbVDMZwwP5SO9eMKY8ZSUkb+t
-         yq8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Fo/kv+brWQ1flp7Vdkb8WoUBvAMa5Whd0L9OkVELuTQ=;
-        b=Erh04UxC24116R9oFA/aP+VpEpTOVqY/aSFHC0qQLuqSyGK0P3Z0b1b6oLUOWYU81D
-         0wK1PLucb5pM6hiVon+lSeYLLAbvRIc7VA6i27kE/7Xw2z3ZNxbhRp6D+hTAdTt3kshX
-         aTd87x2dYl6PQXmZnPWMWp0pLxoVK6Hp7/jemE82+O/+1shVdvyNh6y5oB1qgnWvwZaH
-         Cl/+U7pSabiWVHS38kabH1FH32nN54L1/rOJJhWvHULXzrHWvWn1Gy9QrGrFcecMT3tk
-         9xzD0qnkH9LuxDICS5ZVOxHMXnJWvepXPZbWjhHZAlfbDRMl47umVzRIMT923rb+/qIo
-         BKAg==
-X-Gm-Message-State: APjAAAW17REctFgznjxIqvuznV1dbubB2BU0hYl+g6hM0BgXs070ylD1
-        Hu+XjGKdXj3RCjKHLKEKXBQlNGzZvkzWX34V5MJntY/g
-X-Google-Smtp-Source: APXvYqxcf3eS9deQHUBrGtW7fFUKmTKrSFL7EwRO762escS+44kEsee8qFfmBQ4ZGsZsDRuvdb/3GYwhCE5lb9mohnE=
-X-Received: by 2002:a5d:968b:: with SMTP id m11mr84322526ion.16.1564844567923;
- Sat, 03 Aug 2019 08:02:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190802151316.16011-1-colin.king@canonical.com>
-In-Reply-To: <20190802151316.16011-1-colin.king@canonical.com>
-From:   Parav Pandit <pandit.parav@gmail.com>
-Date:   Sat, 3 Aug 2019 20:32:37 +0530
-Message-ID: <CAG53R5VvSwYYVhSLpLpGyrPt6emLy_YCDBPjzWSng9EpVcQDoQ@mail.gmail.com>
-Subject: Re: [PATCH][net-next][V2] net/mlx5: remove self-assignment on esw->dev
-To:     Colin King <colin.king@canonical.com>
-Cc:     Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
+        Sat, 3 Aug 2019 11:04:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60854 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725844AbfHCPEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 3 Aug 2019 11:04:44 -0400
+Received: from X250.getinternet.no (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 013F6206C1;
+        Sat,  3 Aug 2019 15:04:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564844683;
+        bh=ZtnQiHcTsMI4Da/gZ9Elzfs6xppHV2apA6OfklfbEJM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=h8lOkzoJfFXGZDwMchIHpOc6AQo8qhjpkejNS5dA0LNgWnClZe/2sk04GzEYdg5AK
+         dXFkrgALO3S2hGAXZLdq256kTh3n9cZXeBnjSsLmqFYLR1ZlsnBsXNIUXb8+PhTgmk
+         HxOIDtoDO6/IDwmHa/2RuUlaD2kxDtC2eE2DS6ug=
+Date:   Sat, 3 Aug 2019 17:04:36 +0200
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Abel Vesa <abel.vesa@nxp.com>
+Cc:     Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Guido Gunther <agx@sigxcpu.org>,
+        Anson Huang <anson.huang@nxp.com>, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v3] clk: imx8mq: Mark AHB clock as critical
+Message-ID: <20190803150432.GP8870@X250.getinternet.no>
+References: <1564471375-6736-1-git-send-email-abel.vesa@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1564471375-6736-1-git-send-email-abel.vesa@nxp.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 3, 2019 at 7:54 PM Colin King <colin.king@canonical.com> wrote:
->
-> From: Colin Ian King <colin.king@canonical.com>
->
-> There is a self assignment of esw->dev to itself, clean this up by
-> removing it. Also make dev a const pointer.
->
-> Addresses-Coverity: ("Self assignment")
-> Fixes: 6cedde451399 ("net/mlx5: E-Switch, Verify support QoS element type")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->
-> V2: make dev const
->
-> ---
->  drivers/net/ethernet/mellanox/mlx5/core/eswitch.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-> index f4ace5f8e884..de0894b695e3 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-> @@ -1413,7 +1413,7 @@ static int esw_vport_egress_config(struct mlx5_eswitch *esw,
->
->  static bool element_type_supported(struct mlx5_eswitch *esw, int type)
->  {
-> -       struct mlx5_core_dev *dev = esw->dev = esw->dev;
-> +       const struct mlx5_core_dev *dev = esw->dev;
->
->         switch (type) {
->         case SCHEDULING_CONTEXT_ELEMENT_TYPE_TSAR:
-> --
-> 2.20.1
->
-Reviewed-by: Parav Pandit <parav@mellanox.com>
+On Tue, Jul 30, 2019 at 10:22:55AM +0300, Abel Vesa wrote:
+> Initially, the TMU_ROOT clock was marked as critical, which automatically
+> made the AHB clock to stay always on. Since the TMU_ROOT clock is not
+> marked as critical anymore, following commit:
+> 
+> 431bdd1df48e ("clk: imx8mq: Remove CLK_IS_CRITICAL flag for IMX8MQ_CLK_TMU_ROOT")
+
+The commit ID is not stable before the commit actually lands mainline.
+I could possibly rebase the branch.
+
+> 
+> all the clocks that derive from ipg_root clock (and implicitly ahb clock)
+> would also have to enable, along with their own gate, the AHB clock.
+> 
+> But considering that AHB is actually a bus that has to be always on, we mark
+> it as critical in the clock provider driver and then all the clocks that
+> derive from it can be controlled through the dedicated per IP gate which
+> follows after the ipg_root clock.
+> 
+> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> Tested-by: Daniel Baluta <daniel.baluta@nxp.com>
+> Fixes: 431bdd1df48e ("clk: imx8mq: Remove CLK_IS_CRITICAL flag for IMX8MQ_CLK_TMU_ROOT")
+
+Dropped commit ID above and Fixes tag here, and applied the patch. 
+
+Thanks for the fixing.
+
+Shawn
