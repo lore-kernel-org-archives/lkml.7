@@ -2,82 +2,105 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E8EC31E40
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 10:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62075C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 10:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80D642166E
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 10:37:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564828672;
-	bh=rvSy+DkFHfJJQs5FO+ssGpIcVBdH8oyIwHeTL/q+uTg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=tmRoTBBsqOjyOOY0TZwTKWnZr0DdCzRbBC66BatAhKpWV5VGNd2mbc0col1Tw6y+F
-	 y/e2cJ8zHOpmfjxmnF4feF3Ck1kpOiGJClaZ+XoaicivtoaZBpD6va7/M4AdBd9Mvv
-	 EyCQH+r1CJDe7yhePZ2iYoIA8+azGAI+67LH3cO8=
+	by mail.kernel.org (Postfix) with ESMTP id 3FB092166E
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 10:48:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388779AbfHCKhv (ORCPT
+        id S2389236AbfHCKsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 3 Aug 2019 06:37:51 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:34224 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727123AbfHCKhv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 3 Aug 2019 06:37:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=lywWmB/x6WbRdpUR+L/zPjYp7f410Ry0vDhEqZpMJ/k=; b=d4ITvMeDkSKOXJwam4ra61CqS
-        iuKUqsdOSxinJjOOD3VVqWDyCZc7kJhqHwu4GfGknWgBBu3KS+8Z7Duh0YeGJLZcUp5ltD8TpyjLU
-        s/XFlugPeKmxePZ7c+zUJbBAQlZl9iR50W4GTw2dn+4E2EG9KTk0nsArYmGLPWyK+ah9paSIZiKjW
-        yc3DpgBv8Bz/ZOaArTm7Vy2JM4ye0CvLj22EENhzhBMYEXFFXSfXJre4gM5TBZ85J0IGJMKPGnqIE
-        jW3gYNq5ZTDRKnv5UP8GaVcJDNlZEznVTdz+wFJQoL0i6X+QDtuCP3/ZIXmqnIQFCeV1sba0ZtePs
-        t/NJN9uFA==;
-Received: from [191.33.150.100] (helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1htrQ5-0003zU-PL; Sat, 03 Aug 2019 10:37:50 +0000
-Date:   Sat, 3 Aug 2019 07:37:44 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Alexander Kapshuk <alexander.kapshuk@gmail.com>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "# 3.9+" <stable@vger.kernel.org>
-Subject: Re: [PATCH AUTOSEL 4.19 06/42] scripts/sphinx-pre-install: fix
- script for RHEL/CentOS
-Message-ID: <20190803073744.39412f73@coco.lan>
-In-Reply-To: <CAJ1xhMWb6OG0xdBtAQZkX-T0XNmMNaMaS=ScJ4ZRwpv9eHXmCQ@mail.gmail.com>
-References: <20190802132302.13537-1-sashal@kernel.org>
-        <20190802132302.13537-6-sashal@kernel.org>
-        <CAJ1xhMWb6OG0xdBtAQZkX-T0XNmMNaMaS=ScJ4ZRwpv9eHXmCQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Sat, 3 Aug 2019 06:48:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:60062 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389184AbfHCKsf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 3 Aug 2019 06:48:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BD29F344;
+        Sat,  3 Aug 2019 03:48:34 -0700 (PDT)
+Received: from iMac.local (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A39443F71F;
+        Sat,  3 Aug 2019 03:48:33 -0700 (PDT)
+Date:   Sat, 3 Aug 2019 11:48:31 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
+        Qian Cai <cai@lca.pw>
+Subject: Re: [PATCH v2] mm: kmemleak: Use mempool allocations for kmemleak
+ objects
+Message-ID: <20190803104830.GB58477@iMac.local>
+References: <20190727132334.9184-1-catalin.marinas@arm.com>
+ <20190730130215.919b31c19df935cc5f1483e6@linux-foundation.org>
+ <20190731154450.GB17773@arrakis.emea.arm.com>
+ <20190801064153.GD11627@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190801064153.GD11627@dhcp22.suse.cz>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Sat, 3 Aug 2019 13:31:30 +0300
-Alexander Kapshuk <alexander.kapshuk@gmail.com> escreveu:
-
-> > -       if (! $system_release =~ /Fedora/) {
-> > +       if (!($system_release =~ /Fedora/)) {
-> >                 $map{"virtualenv"} = "python-virtualenv";
-> >         }
+On Thu, Aug 01, 2019 at 08:41:53AM +0200, Michal Hocko wrote:
+> On Wed 31-07-19 16:44:50, Catalin Marinas wrote:
+> > On Tue, Jul 30, 2019 at 01:02:15PM -0700, Andrew Morton wrote:
+> > > On Sat, 27 Jul 2019 14:23:33 +0100 Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > > > Add mempool allocations for struct kmemleak_object and
+> > > > kmemleak_scan_area as slightly more resilient than kmem_cache_alloc()
+> > > > under memory pressure. Additionally, mask out all the gfp flags passed
+> > > > to kmemleak other than GFP_KERNEL|GFP_ATOMIC.
+> > > > 
+> > > > A boot-time tuning parameter (kmemleak.mempool) is added to allow a
+> > > > different minimum pool size (defaulting to NR_CPUS * 4).
+> > > 
+> > > btw, the checkpatch warnings are valid:
+> > > 
+> > > WARNING: usage of NR_CPUS is often wrong - consider using cpu_possible(), num_possible_cpus(), for_each_possible_cpu(), etc
+> > > #70: FILE: mm/kmemleak.c:197:
+> > > +static int min_object_pool = NR_CPUS * 4;
+> > > 
+> > > WARNING: usage of NR_CPUS is often wrong - consider using cpu_possible(), num_possible_cpus(), for_each_possible_cpu(), etc
+> > > #71: FILE: mm/kmemleak.c:198:
+> > > +static int min_scan_area_pool = NR_CPUS * 1;
+> > > 
+> > > There can be situations where NR_CPUS is much larger than
+> > > num_possible_cpus().  Can we initialize these tunables within
+> > > kmemleak_init()?
+> > 
+> > We could and, at least on arm64, cpu_possible_mask is already
+> > initialised at that point. However, that's a totally made up number. I
+> > think we would better go for a Kconfig option (defaulting to, say, 1024)
+> > similar to the CONFIG_DEBUG_KMEMLEAK_EARLY_LOG_SIZE and we grow it if
+> > people report better values in the future.
 > 
-> The negated binding operator '!~' could be used here as well, and it
-> does not require the use of extra parenthesis.
-> Just a thought.
+> If you really want/need to make this configurable then the command line
+> parameter makes more sense - think of distribution kernel users for
+> example.
 
-Thanks for the tip! Never used such operator. Will start using
-next time we need to handle a pattern like that.
+I doubt you'd have pre-built distribution kernels with kmemleak enabled.
 
-Thanks,
-Mauro
+> But I am still not sure why this is really needed. The initial
+> size is a "made up" number of course. There is no good estimation to
+> make (without a crystal ball). The value might be increased based on
+> real life usage.
+
+We had a similar situation with the early log buffer (before slab is
+initialised), initially 400 which was good enough for my needs (embedded
+systems) but others had entirely different requirements. A configurable
+(cmdline, Kconfig) option would make it easier for people to change,
+especially if coupled with a meaningful suggestion in dmesg.
+
+Another option is to use the early log as an emergency pool after
+initialisation instead of freeing it (it's currently __initdata) and
+drop the mempool idea. I may give this a go, at least we only have a
+single Kconfig option.
+
+-- 
+Catalin
