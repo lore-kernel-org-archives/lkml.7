@@ -2,92 +2,119 @@ Return-Path: <SRS0=Iotr=V7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F381C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 17:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F29CCC31E40
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 17:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 421A22087C
-	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 17:52:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB4EE20679
+	for <linux-kernel@archiver.kernel.org>; Sat,  3 Aug 2019 17:52:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="AqJbCsXD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728409AbfHCRwJ (ORCPT
+        id S1728367AbfHCRwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 3 Aug 2019 13:52:09 -0400
-Received: from smtprelay0191.hostedemail.com ([216.40.44.191]:42232 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728389AbfHCRwI (ORCPT
+        Sat, 3 Aug 2019 13:52:40 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:34702 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728389AbfHCRwi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 3 Aug 2019 13:52:08 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id F006E837F24D;
-        Sat,  3 Aug 2019 17:52:06 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: snake40_699c1332f931f
-X-Filterd-Recvd-Size: 2725
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf09.hostedemail.com (Postfix) with ESMTPA;
-        Sat,  3 Aug 2019 17:52:05 +0000 (UTC)
-Message-ID: <774ade692f5e64ab1f4fc7b35b9eeae69e11cf71.camel@perches.com>
-Subject: Re: [PATCH] staging: rtl8192e: Make use kmemdup
-From:   Joe Perches <joe@perches.com>
-To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Himadri Pandya <himadri18.07@gmail.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Michiel Schuurmans <michielschuurmans@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Date:   Sat, 03 Aug 2019 10:52:04 -0700
-In-Reply-To: <20190803174038.GA10454@hari-Inspiron-1545>
-References: <20190803174038.GA10454@hari-Inspiron-1545>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Sat, 3 Aug 2019 13:52:38 -0400
+Received: by mail-oi1-f196.google.com with SMTP id l12so59250628oil.1;
+        Sat, 03 Aug 2019 10:52:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=giFFxAwzHVZcTDv5cDCIurtf5E8rD1w0AM4tyzYzsnQ=;
+        b=AqJbCsXDWob/b1bzOngByMcRxPfvkbkLz4G34Vbw2MZRlyroyApUC5Yw87zvK1Fur+
+         ApIUWtaYUtyP4jsJhLc+gdiuuNvpHs9jHIzxCAp91ZlfGebQMuEfPKgOhEWoSqbDqinM
+         3YB973dJ2gsupR7H4uAehDFoKZ1fLBkDf88snzFgsNMMy7LP8S6V1Su/qea2eX6LY5Bt
+         Mc6LCYXIshNWNXUKtet/Mh2yuJdoqwCUDVkt+1FRiqqMLXrb6YtQA9OZYz3dM3MX/M9n
+         vQ3zQo6Y/m6jnWotG6iMVH6ooG0O9XcBCoDO1up9zhMyWlMXB4Fb3B3GP4rc4bjb0ox3
+         3rQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=giFFxAwzHVZcTDv5cDCIurtf5E8rD1w0AM4tyzYzsnQ=;
+        b=FpbYxujpCJTsMzFZAPUjNAMswInY0YLzPMevTlgUq3jU9T+PUY0WFTZ9BHmLr3o4aj
+         d2GpInraScqm5qqoKHlwrqTqAra6pZ5h8hc10GMhmBJJd10rflOKzaLLkzzVBdjTNFfl
+         VpWfbbYV08jZzgmUeJjiegoak3e/MWWyeJlsc8h2ORfA+tPfMYRfwXMKjeX5P86EYnGa
+         +O7HHp3HUHfNy4HFejhzw6FWOTkdcwCQndSttA3WwQfG2XTetrZrf5o7FVHFR4I8+goC
+         i7m0RCK0lHrxmTn0tlDgfetAi6hxXW40HufDLYASaVtSf7R5hF23PtJY9ZjPyMTQJ5/G
+         yUNg==
+X-Gm-Message-State: APjAAAWsX83Um/775s0DJSl2ws8qkGD4rA2kAIEOmw/kAXKaPwchJteh
+        nU60tCspBoQvuxnStpPS0qxPD35TLX8fIMqU+pxaTdBP
+X-Google-Smtp-Source: APXvYqxqdM5pIwO1f3rZx14fWOmsfcgj0wzLh+wItwhmdI2TFmrHh+uLmQVwCG+sWXsST/bisXbSaeQf/oOwXtq+xYQ=
+X-Received: by 2002:a05:6808:3d6:: with SMTP id o22mr6383634oie.140.1564854757760;
+ Sat, 03 Aug 2019 10:52:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20190731153529.30159-1-glaroque@baylibre.com> <20190731153529.30159-4-glaroque@baylibre.com>
+In-Reply-To: <20190731153529.30159-4-glaroque@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Sat, 3 Aug 2019 19:52:26 +0200
+Message-ID: <CAFBinCBYPiLgmTNk+7Db3EPSPePwbnAshCbomYPXWdse8i0oJw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/6] arm64: dts: amlogic: g12: add temperature sensor
+To:     Guillaume La Roque <glaroque@baylibre.com>
+Cc:     daniel.lezcano@linaro.org, khilman@baylibre.com,
+        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-08-03 at 23:10 +0530, Hariprasad Kelam wrote:
-> As kmemdup API does kmalloc + memcpy . We can make use of it instead of
-> calling kmalloc and memcpy independetly.
-[]
-> diff --git a/drivers/staging/rtl8192e/rtllib_softmac.c b/drivers/staging/rtl8192e/rtllib_softmac.c
-[]
-> @@ -1382,10 +1382,8 @@ rtllib_association_req(struct rtllib_network *beacon,
->  	ieee->assocreq_ies = NULL;
->  	ies = &(hdr->info_element[0].id);
->  	ieee->assocreq_ies_len = (skb->data + skb->len) - ies;
-> -	ieee->assocreq_ies = kmalloc(ieee->assocreq_ies_len, GFP_ATOMIC);
-> -	if (ieee->assocreq_ies)
-> -		memcpy(ieee->assocreq_ies, ies, ieee->assocreq_ies_len);
-> -	else {
-> +	ieee->assocreq_ies = kmemdup(ies, ieee->assocreq_ies_len, GFP_ATOMIC);
-> +	if (!ieee->assocreq_ies) {
->  		netdev_info(ieee->dev,
->  			    "%s()Warning: can't alloc memory for assocreq_ies\n",
->  			    __func__);
-> @@ -2259,12 +2257,10 @@ rtllib_rx_assoc_resp(struct rtllib_device *ieee, struct sk_buff *skb,
->  			ieee->assocresp_ies = NULL;
->  			ies = &(assoc_resp->info_element[0].id);
->  			ieee->assocresp_ies_len = (skb->data + skb->len) - ies;
-> -			ieee->assocresp_ies = kmalloc(ieee->assocresp_ies_len,
-> +			ieee->assocresp_ies = kmemdup(ies,
-> +						      ieee->assocresp_ies_len,
->  						      GFP_ATOMIC);
-> -			if (ieee->assocresp_ies)
-> -				memcpy(ieee->assocresp_ies, ies,
-> -				       ieee->assocresp_ies_len);
-> -			else {
-> +			if (!ieee->assocresp_ies) {
->  				netdev_info(ieee->dev,
->  					    "%s()Warning: can't alloc memory for assocresp_ies\n",
->  					    __func__);
+Hi Guillaume,
 
-Could also remove the netdev_info() uses for allocation failures.
-These are redundant as a dump_stack() is already done when OOM.
+On Wed, Jul 31, 2019 at 5:36 PM Guillaume La Roque
+<glaroque@baylibre.com> wrote:
+>
+> Add cpu and ddr temperature sensors for G12 Socs
+>
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+with the nit-pick below addressed:
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+
+> ---
+>  .../boot/dts/amlogic/meson-g12-common.dtsi    | 22 +++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+> index 06e186ca41e3..7f862a3490fb 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+> @@ -1353,6 +1353,28 @@
+>                                 };
+>                         };
+>
+> +                       cpu_temp: temperature-sensor@34800 {
+> +                               compatible = "amlogic,g12-cpu-thermal",
+> +                                            "amlogic,g12-thermal";
+> +                               reg = <0x0 0x34800 0x0 0x50>;
+> +                               interrupts = <GIC_SPI 35 IRQ_TYPE_EDGE_RISING>;
+> +                               clocks = <&clkc CLKID_TS>;
+> +                               status = "okay";
+I believe nodes are enabled automatically if they don't have a status property
+
+> +                               #thermal-sensor-cells = <0>;
+> +                               amlogic,ao-secure = <&sec_AO>;
+> +                       };
+> +
+> +                       ddr_temp: temperature-sensor@34c00 {
+> +                               compatible = "amlogic,g12-ddr-thermal",
+> +                                            "amlogic,g12-thermal";
+> +                               reg = <0x0 0x34c00 0x0 0x50>;
+> +                               interrupts = <GIC_SPI 36 IRQ_TYPE_EDGE_RISING>;
+> +                               clocks = <&clkc CLKID_TS>;
+> +                               status = "okay";
+same here
 
 
+Martin
