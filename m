@@ -2,169 +2,100 @@ Return-Path: <SRS0=geQ9=WA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A6CC19759
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 20:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E945C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 20:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAE292070D
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 20:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFE252070D
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 20:37:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D7Zvh7ZP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="udRZwvBy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726727AbfHDUhl (ORCPT
+        id S1726774AbfHDUh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 4 Aug 2019 16:37:41 -0400
-Received: from mail-wr1-f47.google.com ([209.85.221.47]:44492 "EHLO
-        mail-wr1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbfHDUhk (ORCPT
+        Sun, 4 Aug 2019 16:37:57 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39379 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbfHDUh5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 4 Aug 2019 16:37:40 -0400
-Received: by mail-wr1-f47.google.com with SMTP id p17so82326651wrf.11
-        for <linux-kernel@vger.kernel.org>; Sun, 04 Aug 2019 13:37:38 -0700 (PDT)
+        Sun, 4 Aug 2019 16:37:57 -0400
+Received: by mail-wm1-f65.google.com with SMTP id u25so60740367wmc.4;
+        Sun, 04 Aug 2019 13:37:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=iWNx36oE65qDX237zR+lZS9AWYsuEyWJDxjNBY9blK0=;
-        b=D7Zvh7ZPBd4iqC/Q5Wm6OwoJ/awGKA0wkPMXwPfGBh4FNPvqRoXckuqzpmqlK5f4Tm
-         AlYyfd2TbJEvfKiQ8FaPU/QQti2R3A1MVghi0W9a05BC6BbvjUN4etE09sF2gvZMPLbW
-         GYcN3NQ3nE5niIOPulwOCnSzO/8/BxwEB2G024DbnyfeqzbjzmHdQyPJDMgCTR7ovDpJ
-         Uje9XQm7xfhdcIaMMdcJqvnJI7shyLbJoyvB6cWuUuw6SwAgyiOVfXa/iz48Nh/yRmUM
-         qTTOZT7oC0CGfBV89kUK8dVAXbLbtFduJTuvgjFH6m63FrET47cIDFPAcJv7S6340f1D
-         K6dg==
+        bh=614oQfNECnBl76zZMuP6DD7lsJ4uFIehr7gg2GuUSuc=;
+        b=udRZwvBy56EHj8w5FiQd5HmvHtoeIayI3x/yvR6sDJ+Ewn7z6yi6mu6NWlwcZAmS8D
+         WtiBRgG2YRRcKwLv9ELIX1/WwhbIuGA3JDAmeEeDqydM0Qigb41mROG+XqaZs6JgDKeG
+         aZiHbcZzbbtS3Wdmk4sivf6kI0cuBaeOc/0YiFZYn2QEy71YOfDiE0YTlvXUHcoKXwga
+         yqY9MZsRA5iUHQvgvqyw31kKMRL5MRmOT8Ub3f3s79jEmAj0QJagrIvlYSpnyA6irJRo
+         tY+ILDpiR09VHgcAF5dmquq+hnRhMYccvKffAcSmQB+ZW+z04xOzeor4jZU8bKwMAdFP
+         vauw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=iWNx36oE65qDX237zR+lZS9AWYsuEyWJDxjNBY9blK0=;
-        b=eYW3WlEku2C45eyLtujBmMDekxrHgEk5ebCu1kTa/oFUCy0miQSZ4FZ0LgyNSrGA2j
-         sUBBzJICGfZrbJnI4y3hABi51fdbRbGY1v27hXc3OfYu73N+Oialy27dNVObIRfHnWip
-         FcRWWrt9dk2l7gQXoT/7dZ4kvu2D7OjZyd6yweokyUlzoRu2jcituTC71I6vRfsOCEcy
-         gvPyzRWiXoAYibVx/X+6v3Ox+rO2EMIX9gnIOdqZJJ6rUSyGiXFyp8cbimvZ7Uwpqmro
-         vj4XMaEZFMewEN4IZUWSqrK6nfz+hRSLlYvxozUx6VVJXlniLPxSTGg13xgcPP0ZRh8f
-         KIXg==
-X-Gm-Message-State: APjAAAXtEl99aSvAGVSpBNxPMQ2oAtbglrp56qUfEmTDt7s4hl2D4fbf
-        4huT9m/EJwaKdOuOG0yUc7U=
-X-Google-Smtp-Source: APXvYqyTWB9R4tRJdC9jjgJogZyHbfXuKMw5tdVoyIAdZaN3t6ehoi+AxW2zKM6Cdriqqr4H15qsTA==
-X-Received: by 2002:adf:e444:: with SMTP id t4mr55585602wrm.262.1564951056732;
-        Sun, 04 Aug 2019 13:37:36 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id c30sm160412887wrb.15.2019.08.04.13.37.35
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 04 Aug 2019 13:37:35 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>
-Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] drm/amd/powerplay: Zero initialize some variables
-Date:   Sun,  4 Aug 2019 13:37:13 -0700
-Message-Id: <20190804203713.13724-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.23.0.rc1
+        bh=614oQfNECnBl76zZMuP6DD7lsJ4uFIehr7gg2GuUSuc=;
+        b=pphna/jYAuwTopmwpiDJVYAfrsQits0d1rFDQPSxZSGiw5HDN845vR5LpHZ1+raJ6C
+         5OjVB4KjhKBDSUahKrqLtLXPj5V+RLX/QKpHNWW4fbnCwO436259geUR6IspVVooJcD6
+         GY9BkwnGI/56HcoJpV0qyOhnNzqpkbyTMz9PAo6pP+TpDce4BkbalJUcqft1kYN34mDu
+         AenWoughFsReyaktXJb5GMuZNSPBsIe8HTRT7ZiMCKyaClvAainHYmpND9wEssFSzbAy
+         hapqp454xHytnKyv8fhGwDlrWB4zOQpTF6BTTy0ld3BCMEE6b1acKBjI5yfWMBFDncLB
+         zPMQ==
+X-Gm-Message-State: APjAAAU/rHir25pqAH7SIWM0+0/exJ28gLXSInbABnrfwDcE251XTwj+
+        SeZiljmsDS53wuXdoqzJdVY=
+X-Google-Smtp-Source: APXvYqxWQqaUp9OfLwLuDJf120aVTFuhjtTQ9WayyTg2GRXAT9S11eHNFLdnTlvX3jYer7/a2+NswA==
+X-Received: by 2002:a05:600c:2146:: with SMTP id v6mr14194434wml.59.1564951074997;
+        Sun, 04 Aug 2019 13:37:54 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.gmail.com with ESMTPSA id v16sm75542601wrn.28.2019.08.04.13.37.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 04 Aug 2019 13:37:54 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1] drm/tegra: dc: Turn off and reset hardware across suspend-resume
+Date:   Sun,  4 Aug 2019 23:37:02 +0300
+Message-Id: <20190804203702.16073-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns (only Navi warning shown but Arcturus warns as well):
+The drivers core bumps runtime PM refcount during of entering into
+suspend to workaround some problem where parent device may become turned
+off before its children. For now CRTCs are only getting disabled on
+suspend and in order to actually suspend the display controllers hardware,
+the runtime PM needed to be "forced" into suspend mode.
 
-drivers/gpu/drm/amd/amdgpu/../powerplay/navi10_ppt.c:1534:4: warning:
-variable 'asic_default_power_limit' is used uninitialized whenever '?:'
-condition is false [-Wsometimes-uninitialized]
-                        smu_read_smc_arg(smu, &asic_default_power_limit);
-                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/gpu/drm/amd/amdgpu/../powerplay/inc/amdgpu_smu.h:588:3: note:
-expanded from macro 'smu_read_smc_arg'
-        ((smu)->funcs->read_smc_arg? (smu)->funcs->read_smc_arg((smu), (arg)) : 0)
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/gpu/drm/amd/amdgpu/../powerplay/navi10_ppt.c:1550:30: note:
-uninitialized use occurs here
-                smu->default_power_limit = asic_default_power_limit;
-                                           ^~~~~~~~~~~~~~~~~~~~~~~~
-drivers/gpu/drm/amd/amdgpu/../powerplay/navi10_ppt.c:1534:4: note:
-remove the '?:' if its condition is always true
-                        smu_read_smc_arg(smu, &asic_default_power_limit);
-                        ^
-drivers/gpu/drm/amd/amdgpu/../powerplay/inc/amdgpu_smu.h:588:3: note:
-expanded from macro 'smu_read_smc_arg'
-        ((smu)->funcs->read_smc_arg? (smu)->funcs->read_smc_arg((smu), (arg)) : 0)
-         ^
-drivers/gpu/drm/amd/amdgpu/../powerplay/navi10_ppt.c:1517:35: note:
-initialize the variable 'asic_default_power_limit' to silence this
-warning
-        uint32_t asic_default_power_limit;
-                                         ^
-                                          = 0
-1 warning generated.
-
-As the code is currently written, if read_smc_arg were ever NULL, arg
-would fail to be initialized but the code would continue executing as
-normal because the return value would just be zero.
-
-There are a few different possible solutions to resolve this class
-of warnings which have appeared in these drivers before:
-
-1. Assume the function pointer will never be NULL and eliminate the
-   wrapper macros.
-
-2. Have the wrapper macros initialize arg when the function pointer is
-   NULL.
-
-3. Have the wrapper macros return an error code instead of 0 when the
-   function pointer is NULL so that the callsites can properly bail out
-   before arg can be used.
-
-4. Initialize arg at the top of its function.
-
-Number four is the path of least resistance right now as every other
-change will be driver wide so do that here. I only make the comment
-now as food for thought.
-
-Fixes: b4af964e75c4 ("drm/amd/powerplay: make power limit retrieval as asic specific")
-Link: https://github.com/ClangBuiltLinux/linux/issues/627
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/gpu/drm/amd/powerplay/arcturus_ppt.c | 2 +-
- drivers/gpu/drm/amd/powerplay/navi10_ppt.c   | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/tegra/dc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/arcturus_ppt.c b/drivers/gpu/drm/amd/powerplay/arcturus_ppt.c
-index 215f7173fca8..b92eded7374f 100644
---- a/drivers/gpu/drm/amd/powerplay/arcturus_ppt.c
-+++ b/drivers/gpu/drm/amd/powerplay/arcturus_ppt.c
-@@ -1326,7 +1326,7 @@ static int arcturus_get_power_limit(struct smu_context *smu,
- 				     bool asic_default)
- {
- 	PPTable_t *pptable = smu->smu_table.driver_pptable;
--	uint32_t asic_default_power_limit;
-+	uint32_t asic_default_power_limit = 0;
- 	int ret = 0;
- 	int power_src;
+diff --git a/drivers/gpu/drm/tegra/dc.c b/drivers/gpu/drm/tegra/dc.c
+index 4a75d149e368..6c8f5222d558 100644
+--- a/drivers/gpu/drm/tegra/dc.c
++++ b/drivers/gpu/drm/tegra/dc.c
+@@ -2572,6 +2572,8 @@ static int tegra_dc_resume(struct device *dev)
  
-diff --git a/drivers/gpu/drm/amd/powerplay/navi10_ppt.c b/drivers/gpu/drm/amd/powerplay/navi10_ppt.c
-index 106352a4fb82..d844bc8411aa 100644
---- a/drivers/gpu/drm/amd/powerplay/navi10_ppt.c
-+++ b/drivers/gpu/drm/amd/powerplay/navi10_ppt.c
-@@ -1514,7 +1514,7 @@ static int navi10_get_power_limit(struct smu_context *smu,
- 				     bool asic_default)
- {
- 	PPTable_t *pptable = smu->smu_table.driver_pptable;
--	uint32_t asic_default_power_limit;
-+	uint32_t asic_default_power_limit = 0;
- 	int ret = 0;
- 	int power_src;
+ static const struct dev_pm_ops tegra_dc_pm_ops = {
+ 	SET_RUNTIME_PM_OPS(tegra_dc_suspend, tegra_dc_resume, NULL)
++	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
++				pm_runtime_force_resume)
+ };
  
+ struct platform_driver tegra_dc_driver = {
 -- 
-2.23.0.rc1
+2.22.0
 
