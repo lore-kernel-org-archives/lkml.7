@@ -2,155 +2,104 @@ Return-Path: <SRS0=geQ9=WA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B19FC433FF
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 08:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56BF3C19759
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 09:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 441A620665
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 08:40:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F82F2075C
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 09:24:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lyNBhwGX"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="e5thmEDf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726134AbfHDIkm (ORCPT
+        id S1726078AbfHDJXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 4 Aug 2019 04:40:42 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39379 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbfHDIkl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 4 Aug 2019 04:40:41 -0400
-Received: by mail-wr1-f68.google.com with SMTP id x4so28179261wrt.6;
-        Sun, 04 Aug 2019 01:40:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jHyKGF97oHLx8vmo+i9ilQ31BEkYlwMC/EOcdvIhgqE=;
-        b=lyNBhwGX5ZVs5N1BzYhR5twQUujSfeUmpa3GT3UkR6qqvj1K6bs6A73sPMrbEdvqtJ
-         zzdl5BCbieNZOFM5ygUemTkC95MVTIlId3hfBDZEuaCZSt13Rmn00kg+nXLyxPx37hjE
-         cPY6fy6oYr32L6CWic8KzbbC7KyS7QQmnytJICt/tml5O9yjXN6ehNd3xAPR2KdZclP+
-         BnBAa8QvDPlzCSHHOYHRZrEnN7lCqRHAz4S7HaKNcOwoNzFQyah9zNPL/I1s5GnzWGXu
-         JFWwYORk2NPxYjvTPP8DEke97JyhEp5YQgi5wyyMbJbkCECpdv5ac2lPfqn8p7fibzkW
-         bSBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jHyKGF97oHLx8vmo+i9ilQ31BEkYlwMC/EOcdvIhgqE=;
-        b=QMTCRbNboiel2OuTuNQ6k4VoIKHrutY8elA+5YzeV4v+4F/YNA6aZ85QsSKCsyRJVh
-         fLTk7dH8/3uI+yqwpqrGkYJyx3gy1Q2DCh047qTGSOeLiHBbk1RB/DHule4C/zsdGwug
-         eWQ4fZzRX+K2aETrKUbF1B+8s0MvJDQ6Y1LJ4Ioje1OBeGXpF9GrDB31eqx+XNYALFeL
-         FU4KaK4ryfwOR1AniHriDd4M1KdEnK1IxI4g0Egom3nkWtnFjOc+OLZ5gxdtfQzDjJ5q
-         pB7GP8JtNvSDAVesemq24cMXw8iS5u8vhbYlJrTb355jb0aFq+Idzf813dItpJQzt+rE
-         taeA==
-X-Gm-Message-State: APjAAAXaHeEzxNU+41aFTfIdHN4C6XRhtGdjvorgqkgrkYATH919+k33
-        zM+uyIlw8Ws8LdmK9gzq9nHnjmDp
-X-Google-Smtp-Source: APXvYqxSpGppNunbyzWK5brcrf+R0WbZ6FVxWzIhSdZvwM7dj6yTTDJiQs1yMkZW3ZKA1He0pg8ZWA==
-X-Received: by 2002:adf:b195:: with SMTP id q21mr11938356wra.2.1564908039280;
-        Sun, 04 Aug 2019 01:40:39 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f28:9900:d80f:58c5:990d:c59b? (p200300EA8F289900D80F58C5990DC59B.dip0.t-ipconnect.de. [2003:ea:8f28:9900:d80f:58c5:990d:c59b])
-        by smtp.googlemail.com with ESMTPSA id o20sm213884416wrh.8.2019.08.04.01.40.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 04 Aug 2019 01:40:38 -0700 (PDT)
-Subject: Re: [PATCH net-next 1/2] net: phy: broadcom: set features explicitly
- for BCM54616S
-To:     Tao Ren <taoren@fb.com>, Andrew Lunn <andrew@lunn.ch>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Arun Parameswaran <arun.parameswaran@broadcom.com>,
-        Justin Chen <justinpopo6@gmail.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
-References: <20190730002532.85509-1-taoren@fb.com>
- <20190730033558.GB20628@lunn.ch>
- <aff2728d-5db1-50fd-767c-29b355890323@fb.com>
- <bdfe07d3-66b4-061a-a149-aa2aef94b9b7@gmail.com>
- <f59c2ae9-ef44-1e1b-4ae2-216eb911e92e@fb.com>
- <41c1f898-aee8-d73a-386d-c3ce280c5a1b@gmail.com>
- <fd179662-b9f9-4813-b9b5-91dbd796596e@fb.com>
- <88f4d709-d9bb-943c-37a9-aeebe8ca0ebc@fb.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <e4eb6ef6-5536-612e-49c8-d144fc8eb386@gmail.com>
-Date:   Sun, 4 Aug 2019 10:40:33 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 4 Aug 2019 05:23:21 -0400
+Received: from mout.gmx.net ([212.227.17.20]:42269 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725987AbfHDJXV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 4 Aug 2019 05:23:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1564910600;
+        bh=Oi0qBKpS1zpZHZDbRB9bx40ZA2YAz8/lccg36x6bvPc=;
+        h=X-UI-Sender-Class:To:From:Subject:Date;
+        b=e5thmEDfpO8kWK7Jmax/X65Tb4o2QvDHjGjVo9n7n4AQsFI8e2KZQKKlfbS6q2ORG
+         XVFPXY0dTX4k5C/eUtlxGmQWfO2ero51Qu1nPz1SYAc4t3nqg1PimdeFqcU2rRv9nh
+         CnsSkwgwNFZaTaHNahIdjxlMAQYz86/8dj0UPdcg=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [10.94.10.6] ([196.52.84.45]) by mail.gmx.com (mrgmx101
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 0MWwp6-1hokiJ3xhs-00Vuv9 for
+ <linux-kernel@vger.kernel.org>; Sun, 04 Aug 2019 11:23:20 +0200
+To:     linux-kernel@vger.kernel.org
+From:   "Artem S. Tashkinov" <aros@gmx.com>
+Subject: Let's talk about the elephant in the room - the Linux kernel's
+ inability to gracefully handle low memory pressure
+Message-ID: <d9802b6a-949b-b327-c4a6-3dbca485ec20@gmx.com>
+Date:   Sun, 4 Aug 2019 09:23:17 +0000
 MIME-Version: 1.0
-In-Reply-To: <88f4d709-d9bb-943c-37a9-aeebe8ca0ebc@fb.com>
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:U4wRXzSlCtkm8rZ0+8o5Wpc4SJsu0+V9HYAcEx9jEZqrapstOM2
+ 8OCTO4n2U/XRawDtcDPZ5zSFFGWqTsJKNynqXYjVU6M0Kcd0AxEFNF19m3o6DlC4IFAvXDJ
+ iRgqbER8qi3vWRgL/V+3wd2Bg1t4pAvT7XBqjmPQ0ccPPHyzixpowsD/LRwEOc1df2TFrXs
+ dsJwYx9xNHUdnFiHm2dMw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:qpzRUryDTmw=:05lDcR6Xen2/KZkcJgskV2
+ D5ccfdiahpB1VbMzJ283uIsd97R8QxGtne33NBGtEhZEwo9FU7UsYZTLvIj+afbEUs6xaWvZ+
+ 4wjLzJ7OdgFsqCRGj13sJjzSvzM0sK8MDrBp8a9/QvsQAvKdRi6gilhM/ZQPrDXfEhCIUe8ix
+ nmVG0XUoYgM7SA/pJjTVjwXH+kZLQ32IWYXusL96eaQ3oOYdoDsF6pe+aBedXwlyBuOoRjjgU
+ Yfag8V6MHaOvk16L1m2HATk834cBm71HnjPKlPDskqjkXDHkZfOQDGbpX8rnMb/ZAeCdqc74n
+ c9E2COHxKN4Ry9idtvvvGOyCLQvNR+D2j/ZiMAd4J86QWpQjuv92LQ/lUAcHRrc/oCwo0F9Rn
+ y/K9wO4IIlUrnn40YTjYaLLbMsqivuA07NVT5K6JiPe6+CFviH+qoILo8ZRSFwO8P+ZlJTCFS
+ iQykh4n6wN9abmh3LBpLK7J+WPa4JERQZn4H/MRfnbys+rG7T6EKNf3xqgu3neGAVqbAqAzq9
+ jUam1HxBRO/k2dpufDnUHTtrdInsHNPiLuPRg0+sx/O3CE9hCnBlKHEbsw+C9v7JQwXh77pd1
+ Rdaisd+BKoH+4HxntrvGxXZ+Au4E+VACCO32suTgG4/ygjpK4A1bu2HilmYzpY+TLCP39Y14f
+ 6Mnbq5xJJFJjOBO3roh/bmtu/ZA+SKKtJ5+6BO0IA03sbqKDi+hgdh9F04w+qQDARM0C+oWAH
+ hBt2GxZpv39Ea6Beaxip99sQBK8vhsgSis0J9dRaZugEQeLVfncpD42h+IhJ5gPzXi9vr1Uwv
+ xseYP9zjzLRkxOVVwba3wTBvdx1R8WyGHEhpaPiNvPrWnpmyWhxxv9PYRX6+HmGBfxMgD1Ks8
+ lRAw60yN5wldQqvvVbihdsw4cg6A79TpB94vfhY6RznT8zHlihkMgopVrVp+Nx4Puu/iUBoo6
+ PFd9Yijh3C83/zq744WQN2+wKr6OGqCkZgCh49ce9wat/NZZR/eNnVpj3PgzBf4PRwYpaGZlV
+ 1XveWyYEeWpNw0kp4Itp1sSIFEZbl6WfsBKdQKVYtmUtswLKxPEuNMilVZl39/HDvwBHdPHO/
+ ySs/G0cR7M1EOTFpfe0k3xJ7HWAyQW62y+EwJ+RfTw8tBdz453IedNDqGNwm4NxxJc4rszMvi
+ aFbes=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01.08.2019 07:20, Tao Ren wrote:
-> On 7/30/19 11:00 PM, Tao Ren wrote:
->> On 7/30/19 10:53 PM, Heiner Kallweit wrote:
->>> On 31.07.2019 02:12, Tao Ren wrote:
->>>> On 7/29/19 11:00 PM, Heiner Kallweit wrote:
->>>>> On 30.07.2019 07:05, Tao Ren wrote:
->>>>>> On 7/29/19 8:35 PM, Andrew Lunn wrote:
->>>>>>> On Mon, Jul 29, 2019 at 05:25:32PM -0700, Tao Ren wrote:
->>>>>>>> BCM54616S feature "PHY_GBIT_FEATURES" was removed by commit dcdecdcfe1fc
->>>>>>>> ("net: phy: switch drivers to use dynamic feature detection"). As dynamic
->>>>>>>> feature detection doesn't work when BCM54616S is working in RGMII-Fiber
->>>>>>>> mode (different sets of MII Control/Status registers being used), let's
->>>>>>>> set "PHY_GBIT_FEATURES" for BCM54616S explicitly.
->>>>>>>
->>>>>>> Hi Tao
->>>>>>>
->>>>>>> What exactly does it get wrong?
->>>>>>>
->>>>>>>      Thanks
->>>>>>> 	Andrew
->>>>>>
->>>>>> Hi Andrew,
->>>>>>
->>>>>> BCM54616S is set to RGMII-Fiber (1000Base-X) mode on my platform, and none of the features (1000BaseT/100BaseT/10BaseT) can be detected by genphy_read_abilities(), because the PHY only reports 1000BaseX_Full|Half ability in this mode.
->>>>>>
->>>>> Are you going to use the PHY in copper or fibre mode?
->>>>> In case you use fibre mode, why do you need the copper modes set as supported?
->>>>> Or does the PHY just start in fibre mode and you want to switch it to copper mode?
->>>>
->>>> Hi Heiner,
->>>>
->>>> The phy starts in fiber mode and that's the mode I want.
->>>> My observation is: phydev->link is always 0 (Link status bit is never set in MII_BMSR) by using dynamic ability detection on my machine. I checked phydev->supported and it's set to "AutoNeg | TP | MII | Pause | Asym_Pause" by dynamic ability detection. Is it normal/expected? Or maybe the fix should go to different places? Thank you for your help.
->>>>
->>>
->>> Not sure whether you stated already which kernel version you're using.
->>> There's a brand-new extension to auto-detect 1000BaseX:
->>> f30e33bcdab9 ("net: phy: Add more 1000BaseX support detection")
->>> It's included in the 5.3-rc series.
->>
->> I'm running kernel 5.2.0. Thank you for the sharing and I didn't know the patch. Let me check it out.
-> 
-> I applied above patch and ca72efb6bdc7 ("net: phy: Add detection of 1000BaseX link mode support") to my 5.2.0 tree but got following warning when booting up my machine:
-> 
-> "PHY advertising (0,00000200,000062c0) more modes than genphy supports, some modes not advertised".
-> 
-It's genphy_config_advert complaining which is called from genphy_config_aneg.
-genphy_config_aneg deals with the standard Base-T modes. Therefore in your case
-most likely you want to provide an own config_aneg callback (in case autoneg
-is applicable at all).
+Hello,
 
-> The BCM54616S PHY on my machine only reports 1000-X features in RGMII->1000Base-KX mode. Is it a known problem?
-> 
-> Anyways let me see if I missed some dependency/follow-up patches..
-> 
-> 
-> Cheers,
-> 
-> Tao
-> 
+There's this bug which has been bugging many people for many years
+already and which is reproducible in less than a few minutes under the
+latest and greatest kernel, 5.2.6. All the kernel parameters are set to
+defaults.
 
-Heiner
+Steps to reproduce:
+
+1) Boot with mem=3D4G
+2) Disable swap to make everything faster (sudo swapoff -a)
+3) Launch a web browser, e.g. Chrome/Chromium or/and Firefox
+4) Start opening tabs in either of them and watch your free RAM decrease
+
+Once you hit a situation when opening a new tab requires more RAM than
+is currently available, the system will stall hard. You will barely  be
+able to move the mouse pointer. Your disk LED will be flashing
+incessantly (I'm not entirely sure why). You will not be able to run new
+applications or close currently running ones.
+
+This little crisis may continue for minutes or even longer. I think
+that's not how the system should behave in this situation. I believe
+something must be done about that to avoid this stall.
+
+I'm almost sure some sysctl parameters could be changed to avoid this
+situation but something tells me this could be done for everyone and
+made default because some non tech-savvy users will just give up on
+Linux if they ever get in a situation like this and they won't be keen
+or even be able to Google for solutions.
+
+
+Best regards,
+Artem
