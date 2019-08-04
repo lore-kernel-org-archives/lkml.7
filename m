@@ -2,234 +2,134 @@ Return-Path: <SRS0=geQ9=WA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 858DAC19759
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 19:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B49ADC19759
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 19:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 611A82086D
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 19:22:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8133020844
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 19:22:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gPsfzmbW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbfHDTWI (ORCPT
+        id S1726717AbfHDTWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 4 Aug 2019 15:22:08 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:51718 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726392AbfHDTWH (ORCPT
+        Sun, 4 Aug 2019 15:22:14 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:38433 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726392AbfHDTWO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 4 Aug 2019 15:22:07 -0400
-Received: by mail-io1-f71.google.com with SMTP id c5so89242953iom.18
-        for <linux-kernel@vger.kernel.org>; Sun, 04 Aug 2019 12:22:07 -0700 (PDT)
+        Sun, 4 Aug 2019 15:22:14 -0400
+Received: by mail-ed1-f67.google.com with SMTP id r12so41966962edo.5;
+        Sun, 04 Aug 2019 12:22:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pj0ikRyiM2M9/CD5d5FXd58Pei1+6t41sEsA8s09Pcw=;
+        b=gPsfzmbWFNebo/r/tjyKdRsMpRqU7/GEJfVm12iwmr3CNve3wsyxGbCCPz/l4auW7j
+         JPHC/iGCWCazjhXUo/D9KqaSGNBR1FDgiuaMKXJ7csIm6LSP9oPszFw2+rn5MwDyTxes
+         8RkOp2C3q/x1XIognnm732OGX1WYSZVsDKzM0Ct+yCeSh5C79g8D/sS5rphnKHMvFmkx
+         LTZkHNeAr3L62qSi4W6sgffugyxMDLgSu1QnB4jR6VZsLDcA4i1j82xcpWm8Yswl5T6P
+         khPBEn4QQNyuy+ZXFDUDoarTya3UGTurgdSA6k/salgjZ7FMA22rOKhSfc1U8YbQ90ib
+         GvKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=K2bVT6ZOOjGyOLIQG171mN/PwJP9OKv/BhNIfDVNcCk=;
-        b=hKbjZc7DKPN6cpjRKWErUmZfFZlJ3OMm+zBS6nBdgeH2K+RIWdSALyEhzLeYU4R40n
-         /Mjtq2tZ0OVniZGC61OwsnR2qj7u0Dd9T+uBtdMaH+DyE6fvhMC6ej78ZD24UQdmQP9V
-         /TKvJ5uLxaZHAppJ4KIB12UPJsn9GWAfVyEGsC/oomo3HDSNDN7ED21C41x4qe8JlxJx
-         o47lQmZxxH6p4CKY6I256IIMP/mE/K6BOry5/wl1etIp2SLysKNvayaMPO6avjQ1Q/kq
-         ZD/sdJS7L2Xli3qKf4IkIKUk3Siit1hgocsfiKdfAlRq3k7JkVGIM2ANo9IMmDjIsOnu
-         VQ3Q==
-X-Gm-Message-State: APjAAAXuUKQnbfYJPnsbwIvaS3nqM4c4qbwraU29GKPFcy8BAQ4tjq6a
-        t/kfU0eLCHYb0CztzetQCwhkZe0LXtuzO7pr/YDMRZG1XNJR
-X-Google-Smtp-Source: APXvYqzGqhkkjXSUI8RwOm5HArT3svauh5bcbgoBZIYieqX9CivgXfkdNgixm/CpzILB0LF/+QUR35jH48+ccdClMpKfKG9pqH1L
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pj0ikRyiM2M9/CD5d5FXd58Pei1+6t41sEsA8s09Pcw=;
+        b=QUXMb9W0Av9gKH/ASswsfJglmGG/vTWZPWuhsSg+Km5vyz/bj6F1e/kLC9c+JjvkBo
+         95aiAT8D5wqv0WpjY7M/nmoFL1x5lkfRkUvMQ77mMw6TvQ38EI5y2ZoqFB8acTakTUUp
+         7DHDlwJgUEBR9KmiX/7j3u+6K3YYKQDfC8c075DfHd7MgSxTh62MqcfdcLQAxKZlaHfv
+         E3+6t+0PDBNfeDcvnE/H4u5Yv4K8W2vygiaeIDMHNU/unUzHnPSYObjtk9THbdirvVNB
+         6id684Gk3l7+kATYxUVzeZIfJzrla78J9G+KjDzBfQ5leOy/d2X+KNggQrjFXV23GB9m
+         qPQQ==
+X-Gm-Message-State: APjAAAUSCJRZ5FG50CzcEDTUQFE2pO8ArFOUB9TMiREJmUzstxbdgjnk
+        s8qnCMOzE/kkLEo6GvdKJw5OEKj63ZleecvQHSM=
+X-Google-Smtp-Source: APXvYqySJFhDQZLNHXF8JQtrbX7ltOk9v6vkJxguWkKjYjXZq6sNO150ER/Wv1dGCfkPRz29WtcXiXs6SnoLaT60K5s=
+X-Received: by 2002:a17:906:19d3:: with SMTP id h19mr13839881ejd.300.1564946532348;
+ Sun, 04 Aug 2019 12:22:12 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:114:: with SMTP id s20mr14096981iot.122.1564946526539;
- Sun, 04 Aug 2019 12:22:06 -0700 (PDT)
-Date:   Sun, 04 Aug 2019 12:22:06 -0700
-In-Reply-To: <00000000000091efa6058f0fe3d9@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ce99fb058f4f81bc@google.com>
-Subject: Re: KASAN: use-after-free Read in hiddev_release
-From:   syzbot <syzbot+62a1e04fd3ec2abf099e@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, benjamin.tissoires@redhat.com,
-        jikos@kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20190802215419.313512-1-taoren@fb.com> <CA+h21hrOEape89MTqCUyGFt=f6ba7Q-2KcOsN_Vw2Qv8iq86jw@mail.gmail.com>
+ <53e18a01-3d08-3023-374f-2c712c4ee9ea@fb.com> <20190804145152.GA6800@lunn.ch>
+ <CA+h21hrUDaSxKpsy9TuWqwgaxKYaoXHyhgS=xSoAcPwxXzvrHg@mail.gmail.com> <f8de2514-081a-0e6e-fbe2-bcafcd459646@gmail.com>
+In-Reply-To: <f8de2514-081a-0e6e-fbe2-bcafcd459646@gmail.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Sun, 4 Aug 2019 22:22:01 +0300
+Message-ID: <CA+h21hov3WzqYSUcxOnH0DOMO2dYdh_Q30Q_GQJpxa4nFM7MsQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v3] net: phy: broadcom: add 1000Base-X support
+ for BCM54616S
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>, Tao Ren <taoren@fb.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Arun Parameswaran <arun.parameswaran@broadcom.com>,
+        Justin Chen <justinpopo6@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+On Sun, 4 Aug 2019 at 19:07, Heiner Kallweit <hkallweit1@gmail.com> wrote:
+>
+> On 04.08.2019 17:59, Vladimir Oltean wrote:
+> > On Sun, 4 Aug 2019 at 17:52, Andrew Lunn <andrew@lunn.ch> wrote:
+> >>
+> >>>> The patchset looks better now. But is it ok, I wonder, to keep
+> >>>> PHY_BCM_FLAGS_MODE_1000BX in phydev->dev_flags, considering that
+> >>>> phy_attach_direct is overwriting it?
+> >>>
+> >>
+> >>> I checked ftgmac100 driver (used on my machine) and it calls
+> >>> phy_connect_direct which passes phydev->dev_flags when calling
+> >>> phy_attach_direct: that explains why the flag is not cleared in my
+> >>> case.
+> >>
+> >> Yes, that is the way it is intended to be used. The MAC driver can
+> >> pass flags to the PHY. It is a fragile API, since the MAC needs to
+> >> know what PHY is being used, since the flags are driver specific.
+> >>
+> >> One option would be to modify the assignment in phy_attach_direct() to
+> >> OR in the flags passed to it with flags which are already in
+> >> phydev->dev_flags.
+> >>
+> >>         Andrew
+> >
+> > Even if that were the case (patching phy_attach_direct to apply a
+> > logical-or to dev_flags), it sounds fishy to me that the genphy code
+> > is unable to determine that this PHY is running in 1000Base-X mode.
+> >
+> > In my opinion it all boils down to this warning:
+> >
+> > "PHY advertising (0,00000200,000062c0) more modes than genphy
+> > supports, some modes not advertised".
+> >
+> The genphy code deals with Clause 22 + Gigabit BaseT only.
+> Question is whether you want aneg at all in 1000Base-X mode and
+> what you want the config_aneg callback to do.
+> There may be some inspiration in the Marvel PHY drivers.
+>
 
-HEAD commit:    e96407b4 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=16f6f53a600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cfa2c18fb6a8068e
-dashboard link: https://syzkaller.appspot.com/bug?extid=62a1e04fd3ec2abf099e
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15394cfc600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16f0da8a600000
+AN for 1000Base-X still gives you duplex and pause frame settings. I
+thought the base page format for exchanging that info is standardized
+in clause 37.
+Does genphy cover only copper media by design, or is it desirable to
+augment genphy_read_status?
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+62a1e04fd3ec2abf099e@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: use-after-free in __lock_acquire+0x302a/0x3b50  
-kernel/locking/lockdep.c:3753
-Read of size 8 at addr ffff8881d60d1c88 by task syz-executor289/2034
-
-CPU: 0 PID: 2034 Comm: syz-executor289 Not tainted 5.3.0-rc2+ #25
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  print_address_description+0x6a/0x32c mm/kasan/report.c:351
-  __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
-  kasan_report+0xe/0x12 mm/kasan/common.c:612
-  __lock_acquire+0x302a/0x3b50 kernel/locking/lockdep.c:3753
-  lock_acquire+0x127/0x320 kernel/locking/lockdep.c:4412
-  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-  _raw_spin_lock_irqsave+0x32/0x50 kernel/locking/spinlock.c:159
-  hiddev_release+0x82/0x520 drivers/hid/usbhid/hiddev.c:221
-  __fput+0x2d7/0x840 fs/file_table.c:280
-  task_work_run+0x13f/0x1c0 kernel/task_work.c:113
-  exit_task_work include/linux/task_work.h:22 [inline]
-  do_exit+0x8ef/0x2c50 kernel/exit.c:878
-  do_group_exit+0x125/0x340 kernel/exit.c:982
-  __do_sys_exit_group kernel/exit.c:993 [inline]
-  __se_sys_exit_group kernel/exit.c:991 [inline]
-  __x64_sys_exit_group+0x3a/0x50 kernel/exit.c:991
-  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x444618
-Code: Bad RIP value.
-RSP: 002b:00007ffd1e60a0d8 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000444618
-RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
-RBP: 00000000004c4270 R08: 00000000000000e7 R09: ffffffffffffffd0
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
-R13: 00000000006d6180 R14: 0000000000000000 R15: 0000000000000000
-
-Allocated by task 21:
-  save_stack+0x1b/0x80 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc mm/kasan/common.c:487 [inline]
-  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:460
-  kmalloc include/linux/slab.h:552 [inline]
-  kzalloc include/linux/slab.h:748 [inline]
-  hiddev_connect+0x242/0x5b0 drivers/hid/usbhid/hiddev.c:900
-  hid_connect+0x239/0xbb0 drivers/hid/hid-core.c:1882
-  hid_hw_start drivers/hid/hid-core.c:1981 [inline]
-  hid_hw_start+0xa2/0x130 drivers/hid/hid-core.c:1972
-  appleir_probe+0x13e/0x1a0 drivers/hid/hid-appleir.c:308
-  hid_device_probe+0x2be/0x3f0 drivers/hid/hid-core.c:2209
-  really_probe+0x281/0x650 drivers/base/dd.c:548
-  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:882
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2114
-  hid_add_device+0x33c/0x990 drivers/hid/hid-core.c:2365
-  usbhid_probe+0xa81/0xfa0 drivers/hid/usbhid/hid-core.c:1386
-  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x281/0x650 drivers/base/dd.c:548
-  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:882
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2114
-  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x650 drivers/base/dd.c:548
-  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:882
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2114
-  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
-  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-  process_scheduled_works kernel/workqueue.c:2331 [inline]
-  worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Freed by task 21:
-  save_stack+0x1b/0x80 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:449
-  slab_free_hook mm/slub.c:1423 [inline]
-  slab_free_freelist_hook mm/slub.c:1470 [inline]
-  slab_free mm/slub.c:3012 [inline]
-  kfree+0xe4/0x2f0 mm/slub.c:3953
-  hiddev_connect.cold+0x45/0x5c drivers/hid/usbhid/hiddev.c:914
-  hid_connect+0x239/0xbb0 drivers/hid/hid-core.c:1882
-  hid_hw_start drivers/hid/hid-core.c:1981 [inline]
-  hid_hw_start+0xa2/0x130 drivers/hid/hid-core.c:1972
-  appleir_probe+0x13e/0x1a0 drivers/hid/hid-appleir.c:308
-  hid_device_probe+0x2be/0x3f0 drivers/hid/hid-core.c:2209
-  really_probe+0x281/0x650 drivers/base/dd.c:548
-  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:882
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2114
-  hid_add_device+0x33c/0x990 drivers/hid/hid-core.c:2365
-  usbhid_probe+0xa81/0xfa0 drivers/hid/usbhid/hid-core.c:1386
-  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x281/0x650 drivers/base/dd.c:548
-  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:882
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2114
-  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x650 drivers/base/dd.c:548
-  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:882
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2114
-  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
-  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-  process_scheduled_works kernel/workqueue.c:2331 [inline]
-  worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-The buggy address belongs to the object at ffff8881d60d1b80
-  which belongs to the cache kmalloc-512 of size 512
-The buggy address is located 264 bytes inside of
-  512-byte region [ffff8881d60d1b80, ffff8881d60d1d80)
-The buggy address belongs to the page:
-page:ffffea0007583400 refcount:1 mapcount:0 mapping:ffff8881da002500  
-index:0x0 compound_mapcount: 0
-flags: 0x200000000010200(slab|head)
-raw: 0200000000010200 ffffea000765a980 0000000800000008 ffff8881da002500
-raw: 0000000000000000 00000000000c000c 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8881d60d1b80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881d60d1c00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff8881d60d1c80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                       ^
-  ffff8881d60d1d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881d60d1d80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
-
+> > You see, the 0x200 in the above advertising mask corresponds exactly
+> > to this definition from ethtool.h:
+> >     ETHTOOL_LINK_MODE_1000baseX_Full_BIT    = 41,
+> >
+> > But it gets truncated and hence lost.
+> >
+> > Regards,
+> > -Vladimir
+> >
+> Heiner
