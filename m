@@ -2,160 +2,137 @@ Return-Path: <SRS0=geQ9=WA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE81C19759
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 19:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E4B1C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 19:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 012422067D
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 19:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B8082067D
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 19:38:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CyGi5mVO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KwAep6Ug"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbfHDThV (ORCPT
+        id S1726722AbfHDTiN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 4 Aug 2019 15:37:21 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:33631 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726392AbfHDThV (ORCPT
+        Sun, 4 Aug 2019 15:38:13 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:39093 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726392AbfHDTiN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 4 Aug 2019 15:37:21 -0400
-Received: by mail-ed1-f65.google.com with SMTP id i11so13279270edq.0;
-        Sun, 04 Aug 2019 12:37:20 -0700 (PDT)
+        Sun, 4 Aug 2019 15:38:13 -0400
+Received: by mail-lj1-f196.google.com with SMTP id v18so77328054ljh.6
+        for <linux-kernel@vger.kernel.org>; Sun, 04 Aug 2019 12:38:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=uu9ggnEL8pscFuPcI8b5MtS4sG4ftBvqhUKxW+eJ/v8=;
-        b=CyGi5mVOYhNseg8wVhyBX7z1WKM4QRvNO7eVbej4F59kZn6RS3e7bXCRkChJn97+Oq
-         +CLYtXCR7jrJ8fkRgEsKu80VmcJ9EG37RTTJKqBzZ93kJMgY0AMi/JlWG3EpypyOVwsl
-         DAA5KoQc4jw4BOehb+HFTdj0mUN4R5/8nMGtBPqr314d/a65Oss/3AdTJ+dGa5wYOITz
-         r4L0H5lztKUGK6e+xXN7cJIhrV0DZ1Bnsm7JvbJ2HJ8Mpr5SJZtg4obU/hW77MZSSV2t
-         iYpyy/eiyYK6aRdR83P0IAtVBWXEZ+q/kSvZRTkyf4w9oymtRQ4gl+JRe54acnVaBNU7
-         m32Q==
+        bh=1FFHYtKFMV/2rUVBEWqxxlBuT8jt7JwtVpdGxJtcgL0=;
+        b=KwAep6UgDtrWClq1iSze66fD1WTuPx7njizz33IgGpTcps71ljHk13Az4yKAN49n/n
+         mco7jTJfboxs3ck3xyaHfWT3TmkNMx13/W8BVaQPJZtfhIqHRxxBp1XIA15swvRs6yqw
+         KSFZFOlCPRaE++pDwNCC/H62dZ7sOsmCJBfzvUFLi5DpD8igKAR4iMLSSMAKannTHM8k
+         rM4TzAw8lAPt3TRDxv7vOYcmYOMCpU1MvQeJTpiux6e/A3PFR3ExVoFkhRTuxiJN0hy4
+         iVJnDrHZqv0/JlHafd1RSXkQJbJrnOg09+jHRuJ2hcD4DqRrGwB5FORANLJ7PcgbU/AQ
+         P+0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=uu9ggnEL8pscFuPcI8b5MtS4sG4ftBvqhUKxW+eJ/v8=;
-        b=GkYdw8wZCUNygFMHbA7ZlbMLcPkRhqM8h0ur/f4Kvl3mBr8qDYmGdozkGAVaelTkua
-         XZOXV8Bk3K8XqCWWfKB3Hm/VGuH22wnUpfxwhF/j9enGQEEfD0FicHs4JOMLWRLb5yaU
-         nYLthKEdz8Tr0KMXAXQT8MoVSw5wHVRfaL5Oos3zPI+XXK2gImHMg1dImzx1jtY0hhAa
-         /PR1WKiR5VkKrbRDZZ/CQR8pA/rloJqtUPt8oofvi1Zol2IBxOeBNOrZZA+04YYojhIS
-         8KLcOnuKYYTmeHC1ELGBVIjUq55Ywn3DJizRYrLQwOE+iZvG73F3OZFdmMfUkeDHFj9o
-         ITKg==
-X-Gm-Message-State: APjAAAUCuHgdbxpmLkLOBcs817QWD7cjXyyyLjnkmq4h+SnqP/rBHt22
-        OiWq9J6O40ASnbL24/qAQSLkz1lvHFvfMxzrX5Y=
-X-Google-Smtp-Source: APXvYqw2sv5K1GmCBhppj8uRXdoWOaN4uGMlMGxEiMQHOMCpDYIXUZNis+bWd16dS4x1XChpiD6flKKBh822UFNXvOc=
-X-Received: by 2002:a50:ba19:: with SMTP id g25mr129729243edc.123.1564947439502;
- Sun, 04 Aug 2019 12:37:19 -0700 (PDT)
+        bh=1FFHYtKFMV/2rUVBEWqxxlBuT8jt7JwtVpdGxJtcgL0=;
+        b=IGmEog2nOjr0V7VUfLt9l42zAoJ/c0knPhTAeV4Yn0DKpY5ubcOsok91K9EQBoL28n
+         V6yO/lNHbTfU1QAdxEPrbuVQHkZFF0N7YgSBf2dm9FJfgLryGeqwMsbIHBCBozbvK5xS
+         6PGwE6lV2blhGvv2RuuYoyI4B3QyTew9+fBcFaOBil1vK06CkgJUrfmg7CoLiCOcHFHo
+         ixYNm0pFI02hcEE/V69D9Xq0R3ZGLDVpNUzI1457p3Tggn5KpLO6Swzkxa5BKqZV1Nrh
+         IKpvtJYTFsdE3w8JVzuq5HB0OskJXjghJVW27fBRKGp+9vbXmfPdY636cy1c58kYoLNo
+         kSPA==
+X-Gm-Message-State: APjAAAVCoCuK5k02fDL3c2jBC1dhp4TnP+BEtOw/LgRGZgLcOpYd/+1O
+        UqIkBWhNnHxdfP842hU+1lx+9KtHFXiZ7RF1fho=
+X-Google-Smtp-Source: APXvYqzZJmqm0gaD6fs8mo9F9MzAw3Cm7VK9UivC4XwoQpM704ZlEnb1pnIlHpWDhBVjw7Drqg99/iQMaKLT9iaV/Aw=
+X-Received: by 2002:a2e:8849:: with SMTP id z9mr37043598ljj.203.1564947491487;
+ Sun, 04 Aug 2019 12:38:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190731154239.19270-1-h.feurstein@gmail.com>
-In-Reply-To: <20190731154239.19270-1-h.feurstein@gmail.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Sun, 4 Aug 2019 22:37:08 +0300
-Message-ID: <CA+h21hqqP0kMpt47GhStCPq2Yt1d_7JuFaoqVyWbFZrh4Am4hw@mail.gmail.com>
-Subject: Re: [PATCH net] net: dsa: mv88e6xxx: drop adjust_link to enabled phylink
-To:     Hubert Feurstein <h.feurstein@gmail.com>
-Cc:     netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>
+References: <e0dd3af448e38e342c1ac6e7c0c802696eb77fd6.1564549413.git.joe@perches.com>
+ <1d2830aadbe9d8151728a7df5b88528fc72a0095.1564549413.git.joe@perches.com>
+ <c0669a7130645a20e99915385b7e712360c31ed9.camel@perches.com> <CAHk-=wg1PAJR6ChVXE7O_H2wEG=1mWxi2uc0fH5bthOC_81uTA@mail.gmail.com>
+In-Reply-To: <CAHk-=wg1PAJR6ChVXE7O_H2wEG=1mWxi2uc0fH5bthOC_81uTA@mail.gmail.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Sun, 4 Aug 2019 21:38:00 +0200
+Message-ID: <CANiq72=JadupKyLa09ABG_xAPe85gjTvy4joMQb5ZE21cEZn1g@mail.gmail.com>
+Subject: Re: [RFC PATCH] compiler_attributes.h: Add 'fallthrough' pseudo
+ keyword for switch/case use
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Joe Perches <joe@perches.com>, Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Shawn Landden <shawn@git.icu>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        David Miller <davem@davemloft.net>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 31 Jul 2019 at 18:43, Hubert Feurstein <h.feurstein@gmail.com> wrote:
+On Sun, Aug 4, 2019 at 8:09 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-> We have to drop the adjust_link callback in order to finally migrate to
-> phylink.
+> So my only real concern is that the comment approach has always been
+> the really traditional one, going back all the way to 'lint' days.
 >
-> Otherwise we get the following warning during startup:
->   "mv88e6xxx 2188000.ethernet-1:10: Using legacy PHYLIB callbacks. Please
->    migrate to PHYLINK!"
+> And you obviously cannot use a #define to create a comment, so this
+> whole keyword model will never be able to do that.
 >
-> The warning is generated in the function dsa_port_link_register_of in
-> dsa/port.c:
->
->   int dsa_port_link_register_of(struct dsa_port *dp)
->   {
->         struct dsa_switch *ds = dp->ds;
->
->         if (!ds->ops->adjust_link)
->                 return dsa_port_phylink_register(dp);
->
->         dev_warn(ds->dev,
->                  "Using legacy PHYLIB callbacks. Please migrate to PHYLINK!\n");
->         [...]
->   }
->
-> Signed-off-by: Hubert Feurstein <h.feurstein@gmail.com>
-> ---
+> At the same time, all the modern tools we care about do seem to be
+> happy with it, either through the gcc attribute, the clang
+> [[clang:fallthrough]] or the (eventual) standard C [[fallthrough]]
+> model.
 
-Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
+Quick note regarding C2x: fallthrough didn't make it yet into the
+draft (other attributes already did), but it may still be added.
 
->  drivers/net/dsa/mv88e6xxx/chip.c | 26 --------------------------
->  1 file changed, 26 deletions(-)
+> So I'm ok with just saying "the comment model may be traditional, but
+> it's not very good".
 >
-> diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
-> index 366f70bfe055..37e8babd035f 100644
-> --- a/drivers/net/dsa/mv88e6xxx/chip.c
-> +++ b/drivers/net/dsa/mv88e6xxx/chip.c
-> @@ -27,7 +27,6 @@
->  #include <linux/platform_data/mv88e6xxx.h>
->  #include <linux/netdevice.h>
->  #include <linux/gpio/consumer.h>
-> -#include <linux/phy.h>
->  #include <linux/phylink.h>
->  #include <net/dsa.h>
+> I didn't look at all the patches, but the one I *did* see had a few issues:
 >
-> @@ -482,30 +481,6 @@ static int mv88e6xxx_phy_is_internal(struct dsa_switch *ds, int port)
->         return port < chip->info->num_internal_phys;
->  }
->
-> -/* We expect the switch to perform auto negotiation if there is a real
-> - * phy. However, in the case of a fixed link phy, we force the port
-> - * settings from the fixed link settings.
-> - */
-> -static void mv88e6xxx_adjust_link(struct dsa_switch *ds, int port,
-> -                                 struct phy_device *phydev)
-> -{
-> -       struct mv88e6xxx_chip *chip = ds->priv;
-> -       int err;
-> -
-> -       if (!phy_is_pseudo_fixed_link(phydev) &&
-> -           mv88e6xxx_phy_is_internal(ds, port))
-> -               return;
-> -
-> -       mv88e6xxx_reg_lock(chip);
-> -       err = mv88e6xxx_port_setup_mac(chip, port, phydev->link, phydev->speed,
-> -                                      phydev->duplex, phydev->pause,
-> -                                      phydev->interface);
-> -       mv88e6xxx_reg_unlock(chip);
-> -
-> -       if (err && err != -EOPNOTSUPP)
-> -               dev_err(ds->dev, "p%d: failed to configure MAC\n", port);
-> -}
-> -
->  static void mv88e6065_phylink_validate(struct mv88e6xxx_chip *chip, int port,
->                                        unsigned long *mask,
->                                        struct phylink_link_state *state)
-> @@ -4755,7 +4730,6 @@ static int mv88e6xxx_port_egress_floods(struct dsa_switch *ds, int port,
->  static const struct dsa_switch_ops mv88e6xxx_switch_ops = {
->         .get_tag_protocol       = mv88e6xxx_get_tag_protocol,
->         .setup                  = mv88e6xxx_setup,
-> -       .adjust_link            = mv88e6xxx_adjust_link,
->         .phylink_validate       = mv88e6xxx_validate,
->         .phylink_mac_link_state = mv88e6xxx_link_state,
->         .phylink_mac_config     = mv88e6xxx_mac_config,
-> --
-> 2.22.0
->
+>  - it didn't seem to handle clang
+
+Hmm... Not sure what this refers to, but note that Clang will likely
+get support in the next release (they are working on it at the
+moment). As far as I understand, we do not yet establish a minimum
+version for Clang since they still solving several issues, no?
+
+>  - we'd need to make -Wimplicit-fallthrough be dependent on the
+> compiler actually supporting the attribute, not just on supporting the
+> flag.
+
+If the above is correct (i.e. if we do not care about a specific
+version of Clang just yet), and since gcc got support for the warning
+at the same time as the attribute (7.1), I think we don't need to do
+special handing for the warning; but if someone knows about a case
+where we do have an issue with it either with GCC or Clang, please let
+me know.
+
+> without those changes, nobody can actually start doing any
+> conversions. But I assume such patches exist somewhere, and I've just
+> missed them.
+
+I think the primary concern has always been the tooling (e.g. Coverity
+was mentioned in October and also this time, and well as some
+IDEs/text editors), not the compilers themselves.
+
+Cheers,
+Miguel
