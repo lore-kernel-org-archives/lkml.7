@@ -2,129 +2,234 @@ Return-Path: <SRS0=geQ9=WA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF70C32750
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 18:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 858DAC19759
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 19:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99BE820844
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 18:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 611A82086D
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 19:22:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbfHDSqC (ORCPT
+        id S1726689AbfHDTWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 4 Aug 2019 14:46:02 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:8684 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726392AbfHDSqC (ORCPT
+        Sun, 4 Aug 2019 15:22:08 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:51718 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726392AbfHDTWH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 4 Aug 2019 14:46:02 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x74IfgLK045267;
-        Sun, 4 Aug 2019 14:45:24 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u62ccv76w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 04 Aug 2019 14:45:23 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x74IgQNK046657;
-        Sun, 4 Aug 2019 14:45:23 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u62ccv76k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 04 Aug 2019 14:45:23 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x74Iev10032704;
-        Sun, 4 Aug 2019 18:45:22 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma02dal.us.ibm.com with ESMTP id 2u51w6194f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 04 Aug 2019 18:45:22 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x74IjLsv46137682
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 4 Aug 2019 18:45:21 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A16AAB205F;
-        Sun,  4 Aug 2019 18:45:21 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7F927B2064;
-        Sun,  4 Aug 2019 18:45:21 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.85.150.228])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Sun,  4 Aug 2019 18:45:21 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id D18CB16C9A4A; Sun,  4 Aug 2019 11:45:23 -0700 (PDT)
-Date:   Sun, 4 Aug 2019 11:45:23 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, rostedt@goodmis.org,
-        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
-        oleg@redhat.com, joel@joelfernandes.org
-Subject: Re: [PATCH RFC tip/core/rcu 01/14] rcu/nocb: Atomic ->len field in
- rcu_segcblist structure
-Message-ID: <20190804184523.GE28441@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <20190802151435.GA1081@linux.ibm.com>
- <20190802151501.13069-1-paulmck@linux.ibm.com>
- <20190804145051.GG2349@hirez.programming.kicks-ass.net>
- <20190804145246.GC2386@hirez.programming.kicks-ass.net>
+        Sun, 4 Aug 2019 15:22:07 -0400
+Received: by mail-io1-f71.google.com with SMTP id c5so89242953iom.18
+        for <linux-kernel@vger.kernel.org>; Sun, 04 Aug 2019 12:22:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=K2bVT6ZOOjGyOLIQG171mN/PwJP9OKv/BhNIfDVNcCk=;
+        b=hKbjZc7DKPN6cpjRKWErUmZfFZlJ3OMm+zBS6nBdgeH2K+RIWdSALyEhzLeYU4R40n
+         /Mjtq2tZ0OVniZGC61OwsnR2qj7u0Dd9T+uBtdMaH+DyE6fvhMC6ej78ZD24UQdmQP9V
+         /TKvJ5uLxaZHAppJ4KIB12UPJsn9GWAfVyEGsC/oomo3HDSNDN7ED21C41x4qe8JlxJx
+         o47lQmZxxH6p4CKY6I256IIMP/mE/K6BOry5/wl1etIp2SLysKNvayaMPO6avjQ1Q/kq
+         ZD/sdJS7L2Xli3qKf4IkIKUk3Siit1hgocsfiKdfAlRq3k7JkVGIM2ANo9IMmDjIsOnu
+         VQ3Q==
+X-Gm-Message-State: APjAAAXuUKQnbfYJPnsbwIvaS3nqM4c4qbwraU29GKPFcy8BAQ4tjq6a
+        t/kfU0eLCHYb0CztzetQCwhkZe0LXtuzO7pr/YDMRZG1XNJR
+X-Google-Smtp-Source: APXvYqzGqhkkjXSUI8RwOm5HArT3svauh5bcbgoBZIYieqX9CivgXfkdNgixm/CpzILB0LF/+QUR35jH48+ccdClMpKfKG9pqH1L
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190804145246.GC2386@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-04_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908040217
+X-Received: by 2002:a05:6602:114:: with SMTP id s20mr14096981iot.122.1564946526539;
+ Sun, 04 Aug 2019 12:22:06 -0700 (PDT)
+Date:   Sun, 04 Aug 2019 12:22:06 -0700
+In-Reply-To: <00000000000091efa6058f0fe3d9@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ce99fb058f4f81bc@google.com>
+Subject: Re: KASAN: use-after-free Read in hiddev_release
+From:   syzbot <syzbot+62a1e04fd3ec2abf099e@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, benjamin.tissoires@redhat.com,
+        jikos@kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 04, 2019 at 04:52:46PM +0200, Peter Zijlstra wrote:
-> On Sun, Aug 04, 2019 at 04:50:51PM +0200, Peter Zijlstra wrote:
-> > On Fri, Aug 02, 2019 at 08:14:48AM -0700, Paul E. McKenney wrote:
-> > > +/*
-> > > + * Exchange the numeric length of the specified rcu_segcblist structure
-> > > + * with the specified value.  This can cause the ->len field to disagree
-> > > + * with the actual number of callbacks on the structure.  This exchange is
-> > > + * fully ordered with respect to the callers accesses both before and after.
-> > > + */
-> > > +long rcu_segcblist_xchg_len(struct rcu_segcblist *rsclp, long v)
-> > > +{
-> > > +#ifdef CONFIG_RCU_NOCB_CPU
-> > > +	return atomic_long_xchg(&rsclp->len, v);
-> > > +#else
-> > > +	long ret = rsclp->len;
-> > > +
-> > > +	smp_mb(); /* Up to the caller! */
-> > > +	WRITE_ONCE(rsclp->len, v);
-> > > +	smp_mb(); /* Up to the caller! */
-> > > +	return ret;
-> > > +#endif
-> > > +}
-> > 
-> > That one's weird; for matching semantics the load needs to be between
-> > the memory barriers.
-> 
-> Also, since you WRITE_ONCE() the thing, the load needs to be a
-> READ_ONCE().
+syzbot has found a reproducer for the following crash on:
 
-Not in this case, because ->len is written only by the CPU in question
-in the !RCU_NOCB_CPU case.
+HEAD commit:    e96407b4 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=16f6f53a600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cfa2c18fb6a8068e
+dashboard link: https://syzkaller.appspot.com/bug?extid=62a1e04fd3ec2abf099e
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15394cfc600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16f0da8a600000
 
-It would not be hard to convince me that adding READ_ONCE() would be
-cheap and easy future-proofing, but Linus has objected to that sort of
-thing in the past.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+62a1e04fd3ec2abf099e@syzkaller.appspotmail.com
 
-							Thanx, Paul
+==================================================================
+BUG: KASAN: use-after-free in __lock_acquire+0x302a/0x3b50  
+kernel/locking/lockdep.c:3753
+Read of size 8 at addr ffff8881d60d1c88 by task syz-executor289/2034
+
+CPU: 0 PID: 2034 Comm: syz-executor289 Not tainted 5.3.0-rc2+ #25
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  print_address_description+0x6a/0x32c mm/kasan/report.c:351
+  __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
+  kasan_report+0xe/0x12 mm/kasan/common.c:612
+  __lock_acquire+0x302a/0x3b50 kernel/locking/lockdep.c:3753
+  lock_acquire+0x127/0x320 kernel/locking/lockdep.c:4412
+  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+  _raw_spin_lock_irqsave+0x32/0x50 kernel/locking/spinlock.c:159
+  hiddev_release+0x82/0x520 drivers/hid/usbhid/hiddev.c:221
+  __fput+0x2d7/0x840 fs/file_table.c:280
+  task_work_run+0x13f/0x1c0 kernel/task_work.c:113
+  exit_task_work include/linux/task_work.h:22 [inline]
+  do_exit+0x8ef/0x2c50 kernel/exit.c:878
+  do_group_exit+0x125/0x340 kernel/exit.c:982
+  __do_sys_exit_group kernel/exit.c:993 [inline]
+  __se_sys_exit_group kernel/exit.c:991 [inline]
+  __x64_sys_exit_group+0x3a/0x50 kernel/exit.c:991
+  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x444618
+Code: Bad RIP value.
+RSP: 002b:00007ffd1e60a0d8 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000444618
+RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
+RBP: 00000000004c4270 R08: 00000000000000e7 R09: ffffffffffffffd0
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
+R13: 00000000006d6180 R14: 0000000000000000 R15: 0000000000000000
+
+Allocated by task 21:
+  save_stack+0x1b/0x80 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc mm/kasan/common.c:487 [inline]
+  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:460
+  kmalloc include/linux/slab.h:552 [inline]
+  kzalloc include/linux/slab.h:748 [inline]
+  hiddev_connect+0x242/0x5b0 drivers/hid/usbhid/hiddev.c:900
+  hid_connect+0x239/0xbb0 drivers/hid/hid-core.c:1882
+  hid_hw_start drivers/hid/hid-core.c:1981 [inline]
+  hid_hw_start+0xa2/0x130 drivers/hid/hid-core.c:1972
+  appleir_probe+0x13e/0x1a0 drivers/hid/hid-appleir.c:308
+  hid_device_probe+0x2be/0x3f0 drivers/hid/hid-core.c:2209
+  really_probe+0x281/0x650 drivers/base/dd.c:548
+  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
+  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:882
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2114
+  hid_add_device+0x33c/0x990 drivers/hid/hid-core.c:2365
+  usbhid_probe+0xa81/0xfa0 drivers/hid/usbhid/hid-core.c:1386
+  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+  really_probe+0x281/0x650 drivers/base/dd.c:548
+  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
+  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:882
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2114
+  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+  really_probe+0x281/0x650 drivers/base/dd.c:548
+  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
+  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:882
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2114
+  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
+  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+  port_event drivers/usb/core/hub.c:5359 [inline]
+  hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
+  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+  process_scheduled_works kernel/workqueue.c:2331 [inline]
+  worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
+  kthread+0x318/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+Freed by task 21:
+  save_stack+0x1b/0x80 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:449
+  slab_free_hook mm/slub.c:1423 [inline]
+  slab_free_freelist_hook mm/slub.c:1470 [inline]
+  slab_free mm/slub.c:3012 [inline]
+  kfree+0xe4/0x2f0 mm/slub.c:3953
+  hiddev_connect.cold+0x45/0x5c drivers/hid/usbhid/hiddev.c:914
+  hid_connect+0x239/0xbb0 drivers/hid/hid-core.c:1882
+  hid_hw_start drivers/hid/hid-core.c:1981 [inline]
+  hid_hw_start+0xa2/0x130 drivers/hid/hid-core.c:1972
+  appleir_probe+0x13e/0x1a0 drivers/hid/hid-appleir.c:308
+  hid_device_probe+0x2be/0x3f0 drivers/hid/hid-core.c:2209
+  really_probe+0x281/0x650 drivers/base/dd.c:548
+  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
+  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:882
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2114
+  hid_add_device+0x33c/0x990 drivers/hid/hid-core.c:2365
+  usbhid_probe+0xa81/0xfa0 drivers/hid/usbhid/hid-core.c:1386
+  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+  really_probe+0x281/0x650 drivers/base/dd.c:548
+  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
+  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:882
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2114
+  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+  really_probe+0x281/0x650 drivers/base/dd.c:548
+  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
+  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:882
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2114
+  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
+  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+  port_event drivers/usb/core/hub.c:5359 [inline]
+  hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
+  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+  process_scheduled_works kernel/workqueue.c:2331 [inline]
+  worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
+  kthread+0x318/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+The buggy address belongs to the object at ffff8881d60d1b80
+  which belongs to the cache kmalloc-512 of size 512
+The buggy address is located 264 bytes inside of
+  512-byte region [ffff8881d60d1b80, ffff8881d60d1d80)
+The buggy address belongs to the page:
+page:ffffea0007583400 refcount:1 mapcount:0 mapping:ffff8881da002500  
+index:0x0 compound_mapcount: 0
+flags: 0x200000000010200(slab|head)
+raw: 0200000000010200 ffffea000765a980 0000000800000008 ffff8881da002500
+raw: 0000000000000000 00000000000c000c 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff8881d60d1b80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8881d60d1c00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ffff8881d60d1c80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                       ^
+  ffff8881d60d1d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8881d60d1d80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+==================================================================
+
