@@ -2,140 +2,146 @@ Return-Path: <SRS0=geQ9=WA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74DECC19759
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 21:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C49F8C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 21:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46D8E20880
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 21:40:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HKywskhQ"
+	by mail.kernel.org (Postfix) with ESMTP id 637F620880
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 21:45:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbfHDVk4 (ORCPT
+        id S1726798AbfHDVpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 4 Aug 2019 17:40:56 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33591 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726869AbfHDVku (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 4 Aug 2019 17:40:50 -0400
-Received: by mail-pf1-f193.google.com with SMTP id g2so38554760pfq.0;
-        Sun, 04 Aug 2019 14:40:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=GHzc1obwFKwJgG7nswfPGhmCYytguM8zaNUDmj5ciqU=;
-        b=HKywskhQFfCisurHq0YN1aLN2VuiPqiZvr/Y0yCqSOvBpKBB6dfn1Ks85FkIOYLagt
-         IEjEo2P7HBbsv7VlhjnKuygjXzMpnPaIGsP10h9HDIdzZHjUPIC3xbgsZDjtJvPBVGli
-         Q0JbJ4saQdgIeAacaN8voYvTrpABTrxgQ2M5TdIqar+aiYV4J+PYrFEofW0vtuiB1W8d
-         opC4ViUFAQNDeWpOVJhlcHdA/+i8Qx8dpZcNxVU8J71QwLdaBiQj1o1QAdYA4aqniQge
-         UufbAYoYs/svUAkwE0+PqikjTcfydpE8p7sULH9rSBFGj62Li+L68qWV/CJi6vPwTNy0
-         c48Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GHzc1obwFKwJgG7nswfPGhmCYytguM8zaNUDmj5ciqU=;
-        b=S+2vXdcCSZ2oKqQg3wmkUMWHyUhrOaFQcPYlboSJA6hRiZxdnV9jlMyLPcpL3kAezp
-         9aqf4YrcO9IDGp+8mMgDAehH3P3r0QuOOTJzjrxuZo9bXclGBvPDDApS8E0iBk3Thq38
-         +at3fS+/fIOU4ieU9/becpJIjfBUygjELF3YNML3+1FtkqfDSYeZT/iQv4kYiuBBXJMW
-         8LF+fiT63rDNG2vHr78kfjG6+McRuD0La3+6h2GYweqWum+Lh5Nm5N51pCcvRiVOophq
-         hJj9STlyBlXK+CXi+YEQmqUyvvcGA7VdpnUBkzQ71rmsxkLbeMoxSTUIqOetAvmhy/pm
-         GbqA==
-X-Gm-Message-State: APjAAAUdAO2c/xSChLm17Ki+JeFuOcZ/ERlrYgL4wr5QXyou2NvvVMvL
-        NAiBNrIm5OmYIHSLDB83k+Y=
-X-Google-Smtp-Source: APXvYqy8FgpOqv4dwZxEbnr2U6myskz4yWgwHk7iGYAw3xfiu+D0Vw5P3EnbA0kXFBgzC5qKDZtyLg==
-X-Received: by 2002:a17:90a:bf08:: with SMTP id c8mr15109867pjs.75.1564954849997;
-        Sun, 04 Aug 2019 14:40:49 -0700 (PDT)
-Received: from blueforge.nvidia.com (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id 143sm123751024pgc.6.2019.08.04.14.40.48
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 04 Aug 2019 14:40:49 -0700 (PDT)
-From:   john.hubbard@gmail.com
-X-Google-Original-From: jhubbard@nvidia.com
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Boaz Harrosh <boaz@plexistor.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ilya Dryomov <idryomov@gmail.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Ming Lei <ming.lei@redhat.com>, Sage Weil <sage@redhat.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        Yan Zheng <zyan@redhat.com>, netdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
-        linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH v6 3/3] net/xdp: convert put_page() to put_user_page*()
-Date:   Sun,  4 Aug 2019 14:40:42 -0700
-Message-Id: <20190804214042.4564-4-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190804214042.4564-1-jhubbard@nvidia.com>
-References: <20190804214042.4564-1-jhubbard@nvidia.com>
+        Sun, 4 Aug 2019 17:45:00 -0400
+Received: from mga03.intel.com ([134.134.136.65]:4039 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726346AbfHDVo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 4 Aug 2019 17:44:59 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Aug 2019 14:44:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,347,1559545200"; 
+   d="scan'208";a="173712234"
+Received: from chenghao-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.36.2])
+  by fmsmga008.fm.intel.com with ESMTP; 04 Aug 2019 14:44:28 -0700
+Date:   Mon, 5 Aug 2019 00:44:28 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     peterhuewe@gmx.de, jgg@ziepe.ca, corbet@lwn.net,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-kernel@microsoft.com,
+        thiruan@microsoft.com, bryankel@microsoft.com,
+        tee-dev@lists.linaro.org, ilias.apalodimas@linaro.org,
+        sumit.garg@linaro.org, rdunlap@infradead.org
+Subject: Re: [PATCH v8 0/2] fTPM: firmware TPM running in TEE
+Message-ID: <20190804214218.vdv2sn4oc4cityy2@linux.intel.com>
+References: <20190705204746.27543-1-sashal@kernel.org>
+ <20190711200858.xydm3wujikufxjcw@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-NVConfidentiality: public
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190711200858.xydm3wujikufxjcw@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Hubbard <jhubbard@nvidia.com>
+On Thu, Jul 11, 2019 at 11:08:58PM +0300, Jarkko Sakkinen wrote:
+> On Fri, Jul 05, 2019 at 04:47:44PM -0400, Sasha Levin wrote:
+> > Changes from v7:
+> > 
+> >  - Address Jarkko's comments.
+> > 
+> > Sasha Levin (2):
+> >   fTPM: firmware TPM running in TEE
+> >   fTPM: add documentation for ftpm driver
+> > 
+> >  Documentation/security/tpm/index.rst        |   1 +
+> >  Documentation/security/tpm/tpm_ftpm_tee.rst |  27 ++
+> >  drivers/char/tpm/Kconfig                    |   5 +
+> >  drivers/char/tpm/Makefile                   |   1 +
+> >  drivers/char/tpm/tpm_ftpm_tee.c             | 350 ++++++++++++++++++++
+> >  drivers/char/tpm/tpm_ftpm_tee.h             |  40 +++
+> >  6 files changed, 424 insertions(+)
+> >  create mode 100644 Documentation/security/tpm/tpm_ftpm_tee.rst
+> >  create mode 100644 drivers/char/tpm/tpm_ftpm_tee.c
+> >  create mode 100644 drivers/char/tpm/tpm_ftpm_tee.h
+> > 
+> > -- 
+> > 2.20.1
+> > 
+> 
+> I applied the patches now. Appreciate a lot the patience with these.
+> Thank you.
 
-For pages that were retained via get_user_pages*(), release those pages
-via the new put_user_page*() routines, instead of via put_page() or
-release_pages().
+Hi, can you possibly fix these:
 
-This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
-("mm: introduce put_user_page*(), placeholder versions").
+005-tpm-tpm_ftpm_tee-A-driver-for-firmware-TPM-running-i.patch
+---------------------------------------------------------------
+WARNING: Possible unwrapped commit description (prefer a maximum 75 chars per line)
+#10:
+https://www.microsoft.com/en-us/research/publication/ftpm-software-implementation-tpm-chip/ .
 
-Acked-by: Björn Töpel <bjorn.topel@intel.com>
-Cc: Magnus Karlsson <magnus.karlsson@intel.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: netdev@vger.kernel.org
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
- net/xdp/xdp_umem.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+WARNING: Non-standard signature: Co-authored-by:
+#18:
+Co-authored-by: Sasha Levin <sashal@kernel.org>
 
-diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
-index 83de74ca729a..17c4b3d3dc34 100644
---- a/net/xdp/xdp_umem.c
-+++ b/net/xdp/xdp_umem.c
-@@ -166,14 +166,7 @@ void xdp_umem_clear_dev(struct xdp_umem *umem)
- 
- static void xdp_umem_unpin_pages(struct xdp_umem *umem)
- {
--	unsigned int i;
--
--	for (i = 0; i < umem->npgs; i++) {
--		struct page *page = umem->pgs[i];
--
--		set_page_dirty_lock(page);
--		put_page(page);
--	}
-+	put_user_pages_dirty_lock(umem->pgs, umem->npgs, true);
- 
- 	kfree(umem->pgs);
- 	umem->pgs = NULL;
--- 
-2.22.0
+WARNING: prefer 'help' over '---help---' for new help texts
+#39: FILE: drivers/char/tpm/Kconfig:167:
++config TCG_FTPM_TEE
 
+WARNING: please write a paragraph that describes the config symbol fully
+#39: FILE: drivers/char/tpm/Kconfig:167:
++config TCG_FTPM_TEE
+
+WARNING: added, moved or deleted file(s), does MAINTAINERS need updating?
+#57:
+new file mode 100644
+
+WARNING: please, no space before tabs
+#102: FILE: drivers/char/tpm/tpm_ftpm_tee.c:41:
++ * ^IIn case of success the number of bytes received.$
+
+WARNING: please, no space before tabs
+#131: FILE: drivers/char/tpm/tpm_ftpm_tee.c:70:
++ * ^IIn case of success, returns 0.$
+
+WARNING: please, no space before tabs
+#276: FILE: drivers/char/tpm/tpm_ftpm_tee.c:215:
++ * ^IOn success, 0. On failure, -errno.$
+
+WARNING: please, no space before tabs
+#366: FILE: drivers/char/tpm/tpm_ftpm_tee.c:305:
++ * ^I0 always.$
+
+ERROR: code indent should use tabs where possible
+#387: FILE: drivers/char/tpm/tpm_ftpm_tee.c:326:
++        /* memory allocated with devm_kzalloc() is freed automatically */$
+
+WARNING: DT compatible string "microsoft,ftpm" appears un-documented -- check ./Documentation/devicetree/bindings/
+#393: FILE: drivers/char/tpm/tpm_ftpm_tee.c:332:
++	{ .compatible = "microsoft,ftpm" },
+
+WARNING: DT compatible string vendor "microsoft" appears un-documented -- check ./Documentation/devicetree/bindings/vendor-prefixes.yaml
+#393: FILE: drivers/char/tpm/tpm_ftpm_tee.c:332:
++	{ .compatible = "microsoft,ftpm" },
+
+total: 1 errors, 11 warnings, 405 lines checked
+
+NOTE: For some of the reported defects, checkpatch may be able to
+      mechanically convert to the typical style using --fix or --fix-inplace.
+
+NOTE: Whitespace errors detected.
+      You may wish to use scripts/cleanpatch or scripts/cleanfile
+
+I temporarily dropped the patches but can apply them once the issues
+are fixed.
+
+/Jarkko
