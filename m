@@ -2,148 +2,119 @@ Return-Path: <SRS0=geQ9=WA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9EFBC19759
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 20:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A4EAC433FF
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 20:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C42D2206C1
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 20:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD89E206C1
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 20:32:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="zJokoDCE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbfHDUZj (ORCPT
+        id S1726696AbfHDUcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 4 Aug 2019 16:25:39 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63702 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726392AbfHDUZj (ORCPT
+        Sun, 4 Aug 2019 16:32:35 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:49030 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726392AbfHDUcf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 4 Aug 2019 16:25:39 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x74KMBpc018760;
-        Sun, 4 Aug 2019 16:24:46 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u5qn6g5u0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 04 Aug 2019 16:24:46 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x74KMcs7019432;
-        Sun, 4 Aug 2019 16:24:46 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u5qn6g5tr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 04 Aug 2019 16:24:45 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x74KOjE3004344;
-        Sun, 4 Aug 2019 20:24:45 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma02wdc.us.ibm.com with ESMTP id 2u51w612af-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 04 Aug 2019 20:24:45 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x74KOi8A10945276
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 4 Aug 2019 20:24:44 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BBC96B205F;
-        Sun,  4 Aug 2019 20:24:44 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 86269B2064;
-        Sun,  4 Aug 2019 20:24:44 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.85.150.228])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Sun,  4 Aug 2019 20:24:44 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id EEA0016C9A2E; Sun,  4 Aug 2019 13:24:46 -0700 (PDT)
-Date:   Sun, 4 Aug 2019 13:24:46 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, rostedt@goodmis.org,
-        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
-        oleg@redhat.com, joel@joelfernandes.org
-Subject: Re: [PATCH RFC tip/core/rcu 14/14] rcu/nohz: Make multi_cpu_stop()
- enable tick on all online CPUs
-Message-ID: <20190804202446.GA25634@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <20190802151435.GA1081@linux.ibm.com>
- <20190802151501.13069-14-paulmck@linux.ibm.com>
- <20190804144317.GF2349@hirez.programming.kicks-ass.net>
- <20190804144835.GB2386@hirez.programming.kicks-ass.net>
- <20190804184159.GC28441@linux.ibm.com>
+        Sun, 4 Aug 2019 16:32:35 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 051E7886BF
+        for <linux-kernel@vger.kernel.org>; Mon,  5 Aug 2019 08:32:32 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1564950752;
+        bh=tegd89vFijqIdzQ79b+Q5otg8XB6JewNAHl+LPZxs3c=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=zJokoDCE2lcUhCqwcSEoDKECNj2ns65Q+tYzjHGiF8BlUTjSvXs/vbiL01duVCCnD
+         TC/g/FMDGWhXIjq8VPu+UwnLTIVMp7Te25fW2B/mCByrx6ZgB58GMG5Txm9kgqOFoC
+         vKQ+x9YLajFWOfaZhPjHQvAMHE1kf5HZg4PjGiyb3Pm5uROAT/SaYI91rSPHgQmjY9
+         MbtC/VzMim6SgKzKk4jU9s0jr8287ytrwA85Fm6Pl+W+6YM4T0BZb6THrXzYtxoSJU
+         uGDPaNF7N44/GM/C6vdsqnwZAPTlBfgcHdQ4BglKOdZNRiG1X6kxbkFhTmfZDgXXWG
+         IvxUFb8iMt/NQ==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5d4740df0000>; Mon, 05 Aug 2019 08:32:31 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1156.6; Mon, 5 Aug 2019 08:32:26 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1156.000; Mon, 5 Aug 2019 08:32:26 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>,
+        "paulus@samba.org" <paulus@samba.org>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
+CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] powerpc: Remove inaccessible CMDLINE default
+Thread-Topic: [PATCH] powerpc: Remove inaccessible CMDLINE default
+Thread-Index: AQHVSO+BYedDSPkTQUuUDGl4P2DrBqbmiHsAgAQj8AA=
+Date:   Sun, 4 Aug 2019 20:32:26 +0000
+Message-ID: <1564950746.27215.3.camel@alliedtelesis.co.nz>
+References: <20190802050232.22978-1-chris.packham@alliedtelesis.co.nz>
+         <43422528-c2fc-a2c8-49e6-0f6b2c791648@c-s.fr>
+In-Reply-To: <43422528-c2fc-a2c8-49e6-0f6b2c791648@c-s.fr>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D07377008B989F47A25F2C2948D1A0FB@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190804184159.GC28441@linux.ibm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-04_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908040238
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 04, 2019 at 11:41:59AM -0700, Paul E. McKenney wrote:
-> On Sun, Aug 04, 2019 at 04:48:35PM +0200, Peter Zijlstra wrote:
-> > On Sun, Aug 04, 2019 at 04:43:17PM +0200, Peter Zijlstra wrote:
-> > > On Fri, Aug 02, 2019 at 08:15:01AM -0700, Paul E. McKenney wrote:
-> > > > The multi_cpu_stop() function relies on the scheduler to gain control from
-> > > > whatever is running on the various online CPUs, including any nohz_full
-> > > > CPUs running long loops in kernel-mode code.  Lack of the scheduler-clock
-> > > > interrupt on such CPUs can delay multi_cpu_stop() for several minutes
-> > > > and can also result in RCU CPU stall warnings.  This commit therefore
-> > > > causes multi_cpu_stop() to enable the scheduler-clock interrupt on all
-> > > > online CPUs.
-> > > 
-> > > This sounds wrong; should we be fixing sched_can_stop_tick() instead to
-> > > return false when the stop task is runnable?
-> 
-> Agreed.  However, it is proving surprisingly hard to come up with a
-> code sequence that has the effect of rcu_nocb without nohz_full.
-> And rcu_nocb works just fine.  With nohz_full also in place, I am
-> decreasing the failure rate, but it still fails, perhaps a few times
-> per hour of TREE04 rcutorture on an eight-CPU system.  (My 12-CPU
-> system stubbornly refuses to fail.  Good thing I kept the eight-CPU
-> system around, I guess.)
-> 
-> When I arrive at some sequence of actions that actually work reliably,
-> then by all means let's put it somewhere in the NO_HZ_FULL machinery!
-> 
-> > And even without that; I don't understand how we're not instantly
-> > preempted the moment we enqueue the stop task.
-> 
-> There is no preemption because CONFIG_PREEMPT=n for the scenarios still
-> having trouble.  Yes, there are cond_resched() calls, but they don't do
-> anything unless the appropriate flags are set, which won't always happen
-> without the tick, apparently.  Or without -something- that isn't always
-> happening as it should.
-> 
-> > Any enqueue, should go through check_preempt_curr() which will be an
-> > instant resched_curr() when we just woke the stop class.
-> 
-> I did try hitting all of the CPUs with resched_cpu().  Ten times on each
-> CPU with a ten-jiffy wait between each.  This might have decreased the
-> probability of excessively long CPU-stopper waits by a factor of two or
-> three, but it did not eliminate the excessively long waits.
-> 
-> What else should I try?
-> 
-> For example, are there any diagnostics I could collect, say from within
-> the CPU stopper when things are taking too long?  I see CPU-stopper
-> delays in excess of five -minutes-, so this is anything but subtle.
-
-For whatever it is worth, the things on my list include using 25 rounds
-of resched_cpu() on each CPU with ten-jiffy wait between each (instead of
-merely 10 rounds), using waitqueues or some such to actually force a
-meaningful context switch on the other CPUs, etc.
-
-							Thanx, Paul
+T24gRnJpLCAyMDE5LTA4LTAyIGF0IDA3OjE4ICswMjAwLCBDaHJpc3RvcGhlIExlcm95IHdyb3Rl
+Og0KPiANCj4gTGUgMDIvMDgvMjAxOSDDoCAwNzowMiwgQ2hyaXMgUGFja2hhbSBhIMOpY3JpdMKg
+Og0KPiA+IA0KPiA+IFNpbmNlIGNvbW1pdCBjYmU0NmJkNGY1MTAgKCJwb3dlcnBjOiByZW1vdmUg
+Q09ORklHX0NNRExJTkUgI2lmZGVmDQo+ID4gbWVzcyIpDQo+ID4gQ09ORklHX0NNRExJTkUgaGFz
+IGFsd2F5cyBoYWQgYSB2YWx1ZSByZWdhcmRsZXNzIG9mDQo+ID4gQ09OTklHX0NNRExJTkVfQk9P
+TC4NCj4gcy9DT05OSUcvQ09ORklHLw0KPiANCj4gPiANCj4gPiANCj4gPiBGb3IgZXhhbXBsZToN
+Cj4gPiANCj4gPiDCoCAkIG1ha2UgQVJDSD1wb3dlcnBjIGRlZmNvbmZpZw0KPiA+IMKgICQgY2F0
+IC5jb25maWcNCj4gPiDCoCAjIENPTkZJR19DTURMSU5FX0JPT0wgaXMgbm90IHNldA0KPiA+IMKg
+IENPTkZJR19DTURMSU5FPSIiDQo+ID4gDQo+ID4gV2hlbiBlbmFibGluZyBDT05OSUdfQ01ETElO
+RV9CT09MIHRoaXMgdmFsdWUgaXMga2VwdCBtYWtpbmcgdGhlDQo+ID4gJ2RlZmF1bHQNCj4gPiAi
+Li4uIiBpZiBDT05OSUdfQ01ETElORV9CT09MJyBpbmVmZmVjdGl2ZS4NCj4gcy9DT05OSUcvQ09O
+RklHLw0KPiANCg0KV2lsbCBmaXggaW4gdjIuDQoNCj4gPiANCj4gPiANCj4gPiDCoCAkIC4vc2Ny
+aXB0cy9jb25maWcgLS1lbmFibGUgQ09ORklHX0NNRExJTkVfQk9PTA0KPiA+IMKgICQgY2F0IC5j
+b25maWcNCj4gPiDCoCBDT05GSUdfQ01ETElORV9CT09MPXkNCj4gPiDCoCBDT05GSUdfQ01ETElO
+RT0iIg0KPiA+IA0KPiA+IEFkZGl0aW9uYWxseSBhbGwgdGhlIGluLXRyZWUgcG93ZXJwYyBkZWZj
+b25maWdzIHRoYXQgc2V0DQo+ID4gQ09ORklHX0NNRExJTkVfQk9PTD15IGFsc28gc2V0IENPTkZJ
+R19DTURMSU5FIHRvIHNvbWV0aGluZyBlbHNlLg0KPiA+IEZvcg0KPiA+IHRoZXNlIHJlYXNvbnMg
+cmVtb3ZlIHRoZSBpbmFjY2Vzc2libGUgZGVmYXVsdC4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5
+OiBDaHJpcyBQYWNraGFtIDxjaHJpcy5wYWNraGFtQGFsbGllZHRlbGVzaXMuY28ubno+DQo+IFJl
+dmlld2VkLWJ5OiBDaHJpc3RvcGhlIExlcm95IDxjaHJpc3RvcGhlLmxlcm95QGMtcy5mcj4NCj4g
+DQo+ID4gDQo+ID4gLS0tDQo+ID4gVGhpcyBzaG91bGQgYmUgaW5kZXBlbmRlbnQgb2YgaHR0cDov
+L3BhdGNod29yay5vemxhYnMub3JnL3BhdGNoLzExNA0KPiA+IDA4MTEvIGJ1dA0KPiA+IEkndmUg
+Z2VuZXJhdGVkIHRoaXMgcGF0Y2ggb24gYSBzdHJlYW0gdGhhdCBoYXMgaXQgYXBwbGllZCBsb2Nh
+bGx5Lg0KPiA+IA0KPiA+IMKgIGFyY2gvcG93ZXJwYy9LY29uZmlnIHwgMSAtDQo+ID4gwqAgMSBm
+aWxlIGNoYW5nZWQsIDEgZGVsZXRpb24oLSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9w
+b3dlcnBjL0tjb25maWcgYi9hcmNoL3Bvd2VycGMvS2NvbmZpZw0KPiA+IGluZGV4IGQ0MTNmZTFi
+NDA1OC4uNmZjYTZlYmE2YWVlIDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvcG93ZXJwYy9LY29uZmln
+DQo+ID4gKysrIGIvYXJjaC9wb3dlcnBjL0tjb25maWcNCj4gPiBAQCAtODQ0LDcgKzg0NCw2IEBA
+IGNvbmZpZyBDTURMSU5FX0JPT0wNCj4gPiDCoMKgDQo+ID4gwqAgY29uZmlnIENNRExJTkUNCj4g
+PiDCoMKgCXN0cmluZyAiSW5pdGlhbCBrZXJuZWwgY29tbWFuZCBzdHJpbmciIGlmIENNRExJTkVf
+Qk9PTA0KPiA+IC0JZGVmYXVsdCAiY29uc29sZT10dHlTMCw5NjAwIGNvbnNvbGU9dHR5MCByb290
+PS9kZXYvc2RhMiINCj4gPiBpZiBDTURMSU5FX0JPT0wNCj4gPiDCoMKgCWRlZmF1bHQgIiINCj4g
+PiDCoMKgCWhlbHANCj4gPiDCoMKgCcKgwqBPbiBzb21lIHBsYXRmb3JtcywgdGhlcmUgaXMgY3Vy
+cmVudGx5IG5vIHdheSBmb3IgdGhlDQo+ID4gYm9vdCBsb2FkZXIgdG8NCj4gPiANCj4gSSB0aGlu
+ayB3ZSBjb3VsZCBhbHNvIGdldCByaWQgb2YgQ01ETElORV9CT09MIHRvdGFsbHkgYW5kIHVzZSBD
+TURMSU5FDQo+ICE9wqANCj4gIiIgaW5zdGVhZC4NCg0KVGhlIG9ubHkgcmVhc29uIEkgY2FuIHNl
+ZSB0byBrZWVwIENNRExJTkVfQk9PTCBpcyB0aGF0IGl0IGhpZGVzIHRoZQ0KdGV4dCBpbnB1dCBm
+b3LCoENNRExJTkUgd2hpY2ggc2VlbXMgdG8gYmUgYSBwYXR0ZXJuIGluIEtjb25maWcuIEhhcHB5
+IHRvDQpyZW1vdmUgaXQgaWYgdGhhdCdzIHRoZSBjb25zZW5zdXMuwqANCg0KSSdsbCB3YWl0IGZv
+ciB0aGUgZHVzdCB0byBzZXR0bGUgb24gbXkgb3RoZXIgcGF0Y2ggYmVmb3JlIHNlbmRpbmcgYSB2
+Mg0Kb2YgdGhpcyBvbmUuDQoNCj4gDQo+IENocmlzdG9waGU=
