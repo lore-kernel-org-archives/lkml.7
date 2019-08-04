@@ -4,65 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB20EC19759
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 23:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1648DC433FF
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 23:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3B1B2089F
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 23:45:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE96E217D9
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 23:45:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564962303;
-	bh=8RlQdNAcpQtFvyZL9AJ9supFQk2ldzqSGYCUn2mebXU=;
+	s=default; t=1564962312;
+	bh=qv/lWZrl1Q5IsRPZpWPmFdP9Rf9bJ+WFUfQfHmBjajY=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=qPM2NXon7/kDrptPlyNpryCTIipbVtU3uirXQW2k5E1AWfIMi1LOjeuqC3G9YrYk1
-	 Fv82wf8GKYT9YpBMbQ7vnoqSAsT17rIrh0u2iZr2I2fxiXK4S4FhWH47eejv9Py0Uv
-	 GlGIczwUnhjAfUAOZxnW25hUjYJKco7UPnYvKPwk=
+	b=USqiv2HcxQtkYkHrGDVAkiXVOfoYYHmroLf6PU3rfGbFClBGM8uXfdNwbjIcfwIrY
+	 FWnaGj5hId5OWIIc1e8cX0kFs6Be3lfekeRf+eKAPuuCVV6a8c5BJ6P6WDGs9Cm0aw
+	 K5Zm4C1VfkG+P2PvFh8a8DNJXXYNoHxJnpzgeJPo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfHDXpC (ORCPT
+        id S1726842AbfHDXpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 4 Aug 2019 19:45:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50678 "EHLO mail.kernel.org"
+        Sun, 4 Aug 2019 19:45:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726526AbfHDXpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 4 Aug 2019 19:45:02 -0400
-Subject: Re: [GIT PULL] tpmdd fixes for Linux v5.3-rc2
+        id S1726526AbfHDXpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 4 Aug 2019 19:45:11 -0400
+Subject: Re: [GIT PULL] mtd: Fixes for 5.3-rc4
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564962301;
-        bh=8RlQdNAcpQtFvyZL9AJ9supFQk2ldzqSGYCUn2mebXU=;
+        s=default; t=1564962310;
+        bh=qv/lWZrl1Q5IsRPZpWPmFdP9Rf9bJ+WFUfQfHmBjajY=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Mj3zyrmXGdhmeuBviKobHbebb3qsldE/vNr0BWp8kQpLKXQmWefy8nEn9s2h/kdY5
-         Fe5fJWNSuQEV8rhsVoZ1LFofY80i+nVRS0EdJrC1kT/2z2MH6+xhNW5Q9vqWSGfrPO
-         l9lMkgymiF/6i3mOR6fiPQYPc+SfYNvxFDOeqsS8=
+        b=ug/hvANDvEVsgfUzHz15uwmv20WolG/1LQrfpmdqGoVK43Qr17UkZTdfOm3LccRqI
+         jwr6EiwR52QkkEwfNpJ5q0VshH/CQc2/uYpOtFO71Qtsp6gL+p8Xe693rvf/4ZuhjQ
+         majn39ng8DZ4081l0p+XPLidmVGHBBF+SqtBlzoY=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190804221450.n62l3fwehjt3nyit@linux.intel.com>
-References: <20190804221450.n62l3fwehjt3nyit@linux.intel.com>
-X-PR-Tracked-List-Id: <linux-integrity.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190804221450.n62l3fwehjt3nyit@linux.intel.com>
-X-PR-Tracked-Remote: git://git.infradead.org/users/jjs/linux-tpmdd.git
- tags/tpmdd-next-20190805
-X-PR-Tracked-Commit-Id: fa4f99c05320eb28bf6ba52a9adf64d888da1f9e
+In-Reply-To: <20190804232928.08b4b69a@xps13>
+References: <20190804232928.08b4b69a@xps13>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190804232928.08b4b69a@xps13>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git
+ tags/mtd/fixes-for-5.3-rc3
+X-PR-Tracked-Commit-Id: 2b372a9685a757a1d3ab30615ef42b2db7c45298
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a6831a89bcaf351cf41b3a5922640c89beaaf9eb
-Message-Id: <156496230136.14797.607405632963435837.pr-tracker-bot@kernel.org>
-Date:   Sun, 04 Aug 2019 23:45:01 +0000
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, jmorris@namei.org,
-        gmazyland@gmail.com, nayna@linux.ibm.com
+X-PR-Merge-Commit-Id: 62d1716304d1bb35ad9cdafe40efbbb6b3981cfe
+Message-Id: <156496231039.14797.7123620641839744800.pr-tracker-bot@kernel.org>
+Date:   Sun, 04 Aug 2019 23:45:10 +0000
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 5 Aug 2019 01:14:50 +0300:
+The pull request you sent on Sun, 4 Aug 2019 23:30:44 +0200:
 
-> git://git.infradead.org/users/jjs/linux-tpmdd.git tags/tpmdd-next-20190805
+> git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git tags/mtd/fixes-for-5.3-rc3
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a6831a89bcaf351cf41b3a5922640c89beaaf9eb
+https://git.kernel.org/torvalds/c/62d1716304d1bb35ad9cdafe40efbbb6b3981cfe
 
 Thank you!
 
