@@ -2,88 +2,139 @@ Return-Path: <SRS0=geQ9=WA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3DBC433FF
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 00:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1AF6C31E40
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 00:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 476EE217D4
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 00:22:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564878122;
-	bh=IGpBwgR5XcH5gav/JzYjv9T3JfVw2oR4QfQ/k93nyYg=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Z6LFiQDCuvPouIGbiupeSXhBcwVJzTmJ9FZ/Aqj2aW3MEm75a02lb4Nc/Nzz4Bv3Z
-	 BsNJtb5RlM0p8OCUyHyTXSjdFdDA0JvlFAPKB3zrjypAti3+5X2N0ChQBUPHE/z/LM
-	 sDl6tEsxF0fVcZxGxaN/Zli61xlb4eBdNVAHUYVI=
+	by mail.kernel.org (Postfix) with ESMTP id 64EF32067D
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 00:29:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O9USVhXR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729352AbfHDAWA (ORCPT
+        id S1729379AbfHDA3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 3 Aug 2019 20:22:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60066 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725385AbfHDAWA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 3 Aug 2019 20:22:00 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 046C52087C;
-        Sun,  4 Aug 2019 00:21:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564878119;
-        bh=IGpBwgR5XcH5gav/JzYjv9T3JfVw2oR4QfQ/k93nyYg=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=OniBmjTgg/h5un7/sziCUtQeYJ5MOo4hf5F6nxNXEOwzVEhcjn9exE+86bos4M9VP
-         MuCrqSRwh2JMHRC0lzltLSy7TK9u5ZntCLltsmSJM/+LuCHUJYW4Y+ILPfq4o4tc2W
-         195JEuFjtkQydcqCQKQxdRp0xTQ+Ok1mshPDCtp8=
-Date:   Sun, 4 Aug 2019 02:21:55 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        security@kernel.org, linux-doc@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: Re: [PATCH] Documentation/admin-guide: Embargoed hardware security
- issues
-In-Reply-To: <nycvar.YFH.7.76.1908040214090.5899@cbobk.fhfr.pm>
-Message-ID: <nycvar.YFH.7.76.1908040220450.5899@cbobk.fhfr.pm>
-References: <20190725130113.GA12932@kroah.com> <nycvar.YFH.7.76.1908040214090.5899@cbobk.fhfr.pm>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Sat, 3 Aug 2019 20:29:40 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:36226 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728032AbfHDA3j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 3 Aug 2019 20:29:39 -0400
+Received: by mail-io1-f66.google.com with SMTP id o9so56623374iom.3;
+        Sat, 03 Aug 2019 17:29:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=86PJYgdBlM7UjsOQwJrxL+Im2FqipIlVfKPrHonN8B4=;
+        b=O9USVhXRPTgtHHxYTLyQh1xeJrbeTxvqjrbi6pXgUmN5k7Id8Dfanw6Qp6iEdOPgs+
+         85m3i2/kihoowrmcg0Wh+ci6Op8xgDrP5MbGJz4ic+3aJWlnKphgRiHmE7yUgNmDNsJk
+         L/bnPqzoHrzUgVfb965bweaS8BFjwjRgrf2KIf1PEheZs4iVo96jwx0xjaQC49b1/4EI
+         LRh4jJXem4PlfUy/YIMfmh65L1xDVhRELJIpXDBpIli8gHvYyDztIq9xVCA8I80SkZoY
+         Hmk8bgHSZ8U8nBKRCdQXnn83kgYye9sl2zhsWqqKKsHFk9vdd1BO43KZ7EVSn9rdXzY0
+         B5lA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=86PJYgdBlM7UjsOQwJrxL+Im2FqipIlVfKPrHonN8B4=;
+        b=gYOq55YfI/1nGC16FYIg97YzOeZIyKNUDai/jiXqKDIXPtbiCoL4QuVYQYcuQ8HgTD
+         7KBh/wJvLgl5vIwyioYmOiYjcwDVRYN3NSca56jaJ8U+aNNmrvUE49M1xZyX7GL5TsT0
+         8qYmZ4gbEMWQPeyr39yu1fHaQ1AY1uJBNVVCt+ZAHVCxCDWC5jNksp7E1sNdcLQJnppu
+         emaqf/zB2aqovOsfSmpu903jMy5jCUWbUtXhJ2qHHNEmr2c6sOiIrMEFCVbPXVrA8MIT
+         glGR3KzSos3kEh1clnsvTLTdRLTnZsoipITv5a/iJi8FlX6zuNPToxlCyMNxYb8gfYlF
+         ZMnA==
+X-Gm-Message-State: APjAAAUkXusPtojwqJC6v+HKxtZNXvApVEXsVmXlKgckMEKkMsPt0cHO
+        9dbSP+UgFl4JF8bNcWWYj3E=
+X-Google-Smtp-Source: APXvYqw2OfxFgZMs4JjOK2/xGih0hENBHjaUw8oj/P06uwCMqq4IYpVyQhHWorFxKL00rtTzMhR42Q==
+X-Received: by 2002:a02:b812:: with SMTP id o18mr35093577jam.64.1564878578620;
+        Sat, 03 Aug 2019 17:29:38 -0700 (PDT)
+Received: from peng.science.purdue.edu (cos-128-210-107-27.science.purdue.edu. [128.210.107.27])
+        by smtp.googlemail.com with ESMTPSA id s10sm171136252iod.46.2019.08.03.17.29.37
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 03 Aug 2019 17:29:38 -0700 (PDT)
+From:   Hui Peng <benquike@gmail.com>
+To:     kvalo@codeaurora.org, davem@davemloft.net
+Cc:     Hui Peng <benquike@gmail.com>,
+        Mathias Payer <mathias.payer@nebelwelt.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] Fix a NULL-ptr-deref bug in ath6kl_usb_alloc_urb_from_pipe
+Date:   Sat,  3 Aug 2019 20:29:04 -0400
+Message-Id: <20190804002905.11292-1-benquike@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 4 Aug 2019, Jiri Kosina wrote:
+The `ar_usb` field of `ath6kl_usb_pipe_usb_pipe` objects
+are initialized to point to the containing `ath6kl_usb` object
+according to endpoint descriptors read from the device side, as shown
+below in `ath6kl_usb_setup_pipe_resources`:
 
-> On Thu, 25 Jul 2019, Greg Kroah-Hartman wrote:
-> 
-> > To address the requirements of embargoed hardware issues, like Meltdown,
-> > Spectre, L1TF, etc. it is necessary to define and document a process for
-> > handling embargoed hardware security issues.
-> 
-> I don't know what exactly went wrong, but there is a much more up-to-date 
-> version of that document (especially when it comes to vendor contacts), 
-> which I sent around on Thu, 2 May 2019 20:23:48 +0200 (CEST) already. 
-> Please find it below.
-> 
-> 
-> 
-> From: Jiri Kosina <jkosina@suse.cz>
+for (i = 0; i < iface_desc->desc.bNumEndpoints; ++i) {
+	endpoint = &iface_desc->endpoint[i].desc;
 
-And this should've been
+	// get the address from endpoint descriptor
+	pipe_num = ath6kl_usb_get_logical_pipe_num(ar_usb,
+						endpoint->bEndpointAddress,
+						&urbcount);
+	......
+	// select the pipe object
+	pipe = &ar_usb->pipes[pipe_num];
 
-	From: Thomas Gleixner <tglx@linutronix.de>
+	// initialize the ar_usb field
+	pipe->ar_usb = ar_usb;
+}
 
-as Thomas wrote most part of the text of course.
+The driver assumes that the addresses reported in endpoint
+descriptors from device side  to be complete. If a device is
+malicious and does not report complete addresses, it may trigger
+NULL-ptr-deref `ath6kl_usb_alloc_urb_from_pipe` and
+`ath6kl_usb_free_urb_to_pipe`.
 
-Sorry for the noise,
+This patch fixes the bug by preventing potential NULL-ptr-deref.
 
+Signed-off-by: Hui Peng <benquike@gmail.com>
+Reported-by: Hui Peng <benquike@gmail.com>
+Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
+---
+ drivers/net/wireless/ath/ath6kl/usb.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/net/wireless/ath/ath6kl/usb.c b/drivers/net/wireless/ath/ath6kl/usb.c
+index 4defb7a0330f..53b66e9434c9 100644
+--- a/drivers/net/wireless/ath/ath6kl/usb.c
++++ b/drivers/net/wireless/ath/ath6kl/usb.c
+@@ -132,6 +132,10 @@ ath6kl_usb_alloc_urb_from_pipe(struct ath6kl_usb_pipe *pipe)
+ 	struct ath6kl_urb_context *urb_context = NULL;
+ 	unsigned long flags;
+ 
++	/* bail if this pipe is not initialized */
++	if (!pipe->ar_usb)
++		return NULL;
++
+ 	spin_lock_irqsave(&pipe->ar_usb->cs_lock, flags);
+ 	if (!list_empty(&pipe->urb_list_head)) {
+ 		urb_context =
+@@ -150,6 +154,10 @@ static void ath6kl_usb_free_urb_to_pipe(struct ath6kl_usb_pipe *pipe,
+ {
+ 	unsigned long flags;
+ 
++	/* bail if this pipe is not initialized */
++	if (!pipe->ar_usb)
++		return;
++
+ 	spin_lock_irqsave(&pipe->ar_usb->cs_lock, flags);
+ 	pipe->urb_cnt++;
+ 
 -- 
-Jiri Kosina
-SUSE Labs
+2.22.0
 
