@@ -2,105 +2,83 @@ Return-Path: <SRS0=geQ9=WA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D23C19759
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 16:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D367CC433FF
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 16:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8B7E2070D
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 16:20:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 999FB2067D
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 16:22:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="atCXWNlx"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Cs44fTZH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbfHDQUh (ORCPT
+        id S1726550AbfHDQWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 4 Aug 2019 12:20:37 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43208 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726319AbfHDQUg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 4 Aug 2019 12:20:36 -0400
-Received: by mail-pf1-f193.google.com with SMTP id i189so38364074pfg.10
-        for <linux-kernel@vger.kernel.org>; Sun, 04 Aug 2019 09:20:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RAhLVv+TDY5bQcYl+NXFjNhU9tR7BPyaRx/k/4DyyF8=;
-        b=atCXWNlxav1dtL7F4U4MgGLdCrMFihKDTns2PoxBk8cXDIj8Ac6jRKBOZs5RH49KI3
-         fll83PWrd1eFnpu+jLXwm6ya3gnVTjm8ohFDGJmPLRJQOY4rCiO4bavfyO9F+dokF1MX
-         AdKriPl57Cj1cBCpOCgLzjfOHEEJRgQJgTIzrmTMhlnq/KlLTkRoa3EnwBjZcRz21g0V
-         2i97pzX7JaM6ebRsy2T3Op+VUuVzO6/78Se6Jf7C8bKZejXa9wBOefXh/IuOIPBuYVcB
-         6PVR9Cc6WK+GB2f7IVEeBGWTLyWDAJ6tFaroLNDLrAUFQ64hCYAJs7mnXv/o70fhKkYv
-         HUsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RAhLVv+TDY5bQcYl+NXFjNhU9tR7BPyaRx/k/4DyyF8=;
-        b=r9p00FCpb12vw4d8C/nOStX8DKKtyuLE5m0jA9Y/So0p+NCsURzUpJWX2fjbFLr/Ws
-         DLQr80SQozUtJa3KR61lCSGR7VJgKksGFhfm9Mkwe3Ka5elzZCIeZiSIKNIt8WgWf/NW
-         Tdj2/SFVETNfK0tdWS0zBUJDpZCUIKFnu4TouXBzycGVKvSMO4n6Wa2apY1haOvGp11v
-         X+NYquUXYhP/RK9InoL+ypIpVkTO9gfq+o2yYH8+3IMxPSEPFA3c0d8/ihdK64MRb47A
-         jMTrX/lWw9WKZbkh26VkxllMUPr79jVtCIhf3RTlvr9MjtLD4DoyAAQqnIf7XdDQ1bxP
-         SzNA==
-X-Gm-Message-State: APjAAAW5alJprfw/bUq/0cU9GynviMwFbtoeMVYjUFwbwY5k21M2ntvV
-        rpoQNCPs7ICjjBH13hpOQfg=
-X-Google-Smtp-Source: APXvYqy5fbEWIMIDi0oTzL495n1glQm2hXkBgQU6fG9eKX1MGBbXW1OmV6YioDl913AajynA6Oj0cA==
-X-Received: by 2002:a62:f250:: with SMTP id y16mr68836412pfl.50.1564935635868;
-        Sun, 04 Aug 2019 09:20:35 -0700 (PDT)
-Received: from localhost.localdomain ([122.163.105.8])
-        by smtp.gmail.com with ESMTPSA id h14sm106731763pfq.22.2019.08.04.09.20.33
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 04 Aug 2019 09:20:35 -0700 (PDT)
-From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
-To:     lgirdwood@gmail.com, broonie@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Subject: [PATCH] regulator: core: Add of_node_put() before return
-Date:   Sun,  4 Aug 2019 21:50:23 +0530
-Message-Id: <20190804162023.5673-1-nishkadg.linux@gmail.com>
-X-Mailer: git-send-email 2.19.1
+        Sun, 4 Aug 2019 12:22:23 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:59938 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726319AbfHDQWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 4 Aug 2019 12:22:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=kr2uYMmZDpUO1/Oyu8nKDJ6LDea+x/hpCdWyFJ2gDTs=; b=Cs44fTZHL2QOmZcTJs/4ZTf/DF
+        cTsDYmlPmbt4OW5rNafTkzyTfqh58YvggPoH6X3zb2cydczTyzvLQyI6NLcWNJf5G3Wh6YtDW/KAh
+        9JLxBFZUi3a0gVJZBsjvttQq4Whku/az7H3iS6CP5LryJbVWnHy+b/uCILS/L7VjZmAI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1huJGx-0002MZ-U4; Sun, 04 Aug 2019 18:22:15 +0200
+Date:   Sun, 4 Aug 2019 18:22:15 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Vladimir Oltean <olteanv@gmail.com>, Tao Ren <taoren@fb.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Arun Parameswaran <arun.parameswaran@broadcom.com>,
+        Justin Chen <justinpopo6@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
+Subject: Re: [PATCH net-next v3] net: phy: broadcom: add 1000Base-X support
+ for BCM54616S
+Message-ID: <20190804162215.GE6800@lunn.ch>
+References: <20190802215419.313512-1-taoren@fb.com>
+ <CA+h21hrOEape89MTqCUyGFt=f6ba7Q-2KcOsN_Vw2Qv8iq86jw@mail.gmail.com>
+ <53e18a01-3d08-3023-374f-2c712c4ee9ea@fb.com>
+ <20190804145152.GA6800@lunn.ch>
+ <CA+h21hrUDaSxKpsy9TuWqwgaxKYaoXHyhgS=xSoAcPwxXzvrHg@mail.gmail.com>
+ <f8de2514-081a-0e6e-fbe2-bcafcd459646@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f8de2514-081a-0e6e-fbe2-bcafcd459646@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Each iteration of for_each_child_of_node puts the previous node, but in
-the case of a return from the middle of the loop, there is no put, thus
-causing a memory leak. Hence add an of_node_put before the return in
-two places.
-Issue found with Coccinelle.
+> > Even if that were the case (patching phy_attach_direct to apply a
+> > logical-or to dev_flags), it sounds fishy to me that the genphy code
+> > is unable to determine that this PHY is running in 1000Base-X mode.
+> > 
+> > In my opinion it all boils down to this warning:
+> > 
+> > "PHY advertising (0,00000200,000062c0) more modes than genphy
+> > supports, some modes not advertised".
+> > 
+> The genphy code deals with Clause 22 + Gigabit BaseT only.
+> Question is whether you want aneg at all in 1000Base-X mode and
+> what you want the config_aneg callback to do.
+> There may be some inspiration in the Marvel PHY drivers.
 
-Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
----
- drivers/regulator/core.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+As far as i know, you cannot actually advertise 1000Base-X. So we
+probably should not be setting the bit in advertise, only having it in
+supported?
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index e0c0cf462004..7a5d52948703 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -380,9 +380,12 @@ static struct device_node *of_get_child_regulator(struct device_node *parent,
- 
- 		if (!regnode) {
- 			regnode = of_get_child_regulator(child, prop_name);
--			if (regnode)
-+			if (regnode) {
-+				of_node_put(child);
- 				return regnode;
-+			}
- 		} else {
-+			of_node_put(child);
- 			return regnode;
- 		}
- 	}
--- 
-2.19.1
-
+	Andrew
