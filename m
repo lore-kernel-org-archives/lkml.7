@@ -2,119 +2,114 @@ Return-Path: <SRS0=geQ9=WA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A4EAC433FF
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 20:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A31C19759
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 20:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD89E206C1
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 20:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23D18206C1
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 20:33:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="zJokoDCE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="myd3tsfj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbfHDUcf (ORCPT
+        id S1726762AbfHDUci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 4 Aug 2019 16:32:35 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:49030 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726392AbfHDUcf (ORCPT
+        Sun, 4 Aug 2019 16:32:38 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43224 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726709AbfHDUci (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 4 Aug 2019 16:32:35 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 051E7886BF
-        for <linux-kernel@vger.kernel.org>; Mon,  5 Aug 2019 08:32:32 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1564950752;
-        bh=tegd89vFijqIdzQ79b+Q5otg8XB6JewNAHl+LPZxs3c=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=zJokoDCE2lcUhCqwcSEoDKECNj2ns65Q+tYzjHGiF8BlUTjSvXs/vbiL01duVCCnD
-         TC/g/FMDGWhXIjq8VPu+UwnLTIVMp7Te25fW2B/mCByrx6ZgB58GMG5Txm9kgqOFoC
-         vKQ+x9YLajFWOfaZhPjHQvAMHE1kf5HZg4PjGiyb3Pm5uROAT/SaYI91rSPHgQmjY9
-         MbtC/VzMim6SgKzKk4jU9s0jr8287ytrwA85Fm6Pl+W+6YM4T0BZb6THrXzYtxoSJU
-         uGDPaNF7N44/GM/C6vdsqnwZAPTlBfgcHdQ4BglKOdZNRiG1X6kxbkFhTmfZDgXXWG
-         IvxUFb8iMt/NQ==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d4740df0000>; Mon, 05 Aug 2019 08:32:31 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1156.6; Mon, 5 Aug 2019 08:32:26 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Mon, 5 Aug 2019 08:32:26 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>,
-        "paulus@samba.org" <paulus@samba.org>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
-CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] powerpc: Remove inaccessible CMDLINE default
-Thread-Topic: [PATCH] powerpc: Remove inaccessible CMDLINE default
-Thread-Index: AQHVSO+BYedDSPkTQUuUDGl4P2DrBqbmiHsAgAQj8AA=
-Date:   Sun, 4 Aug 2019 20:32:26 +0000
-Message-ID: <1564950746.27215.3.camel@alliedtelesis.co.nz>
-References: <20190802050232.22978-1-chris.packham@alliedtelesis.co.nz>
-         <43422528-c2fc-a2c8-49e6-0f6b2c791648@c-s.fr>
-In-Reply-To: <43422528-c2fc-a2c8-49e6-0f6b2c791648@c-s.fr>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D07377008B989F47A25F2C2948D1A0FB@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Sun, 4 Aug 2019 16:32:38 -0400
+Received: by mail-wr1-f65.google.com with SMTP id p13so7768430wru.10;
+        Sun, 04 Aug 2019 13:32:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=yJcTX6yAM/28X+y7Mpoop6XMEsRl/RWmoeElcLy1hsQ=;
+        b=myd3tsfjagcJQVGtr1pZjOA14+sS5tTfp/5T34+bxh0e4x9zDOcAelWWZNmLK2S6KW
+         TaJ6p4ihbxxEfmD7Ze/uyWk6EeowRlyTc+IlPeAbGdoJHPmI7By14+axKg261p/swOsF
+         f+B7roH+5Fkith597jXgSQ6sXQvSpAIUUAlDPCg+puU3fl5JoswIDY3fX6k4n5mQtVZt
+         OuC7sfW4Yy85rgFkFbL6KmD+lUd0/78qO0JsJmJOjjH7OBJZCWF7vmWG0S4ow8vzH3vD
+         OoVkyE0kHFnzKqZm97jKuQgPCLt+RjrWnp0JW/n9svkHXELwN/7qeFAfruvtAIoTWUmZ
+         YM/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=yJcTX6yAM/28X+y7Mpoop6XMEsRl/RWmoeElcLy1hsQ=;
+        b=tT0BDnzuL1TLs5FQLz4xigYs3JSbAsLxhvLZ5u1+ADmuZmSoazBZpFNbzl5nMA6VJK
+         /3C/8lYyBUZcI4blfYzKhnW6dCB/l1cNsGA3DVcJtDeOrRoyoqKYR8SzjbJFz1hTNsV9
+         2B9z7TJDestMlTxMxX8xS+c2qw6YY2RQYNqJXEVYX2Xf4MUHdt0qYudre3+NhgFBWVeF
+         QRB5Xu7ht6Hhg38tRatbhG5zkpTonGRXhOmpQIWXZ7ijcv+ZvrdR3DD1/2EV5UoWDIO+
+         Fi1jcjT7d83qVGUlIfOIdJJc2WI1l2FwuQbEsZbS1o5TV+s/rUZI9kqUpTXu0TFBfrGw
+         yJ0g==
+X-Gm-Message-State: APjAAAWp5Ib8cgOGmsZnLZVtJSGyOyfj/+mBDPMvlopsAz7Bk2sAs4/E
+        sL4DpZhZafj1Qk7vmAks2UY=
+X-Google-Smtp-Source: APXvYqz6zXXgesNxrw1GRqNtRHfvZKscXL1dPOOLJLrkKRVPznyq+CZfPQrkgHZO0MXDwRZqCZgaFA==
+X-Received: by 2002:adf:e4c6:: with SMTP id v6mr150550068wrm.315.1564950756492;
+        Sun, 04 Aug 2019 13:32:36 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.gmail.com with ESMTPSA id b2sm112066619wrp.72.2019.08.04.13.32.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 04 Aug 2019 13:32:35 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 2/2] soc/tegra: pmc: Remove unnecessary memory barrier
+Date:   Sun,  4 Aug 2019 23:29:27 +0300
+Message-Id: <20190804202927.15014-2-digetx@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190804202927.15014-1-digetx@gmail.com>
+References: <20190804202927.15014-1-digetx@gmail.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTA4LTAyIGF0IDA3OjE4ICswMjAwLCBDaHJpc3RvcGhlIExlcm95IHdyb3Rl
-Og0KPiANCj4gTGUgMDIvMDgvMjAxOSDDoCAwNzowMiwgQ2hyaXMgUGFja2hhbSBhIMOpY3JpdMKg
-Og0KPiA+IA0KPiA+IFNpbmNlIGNvbW1pdCBjYmU0NmJkNGY1MTAgKCJwb3dlcnBjOiByZW1vdmUg
-Q09ORklHX0NNRExJTkUgI2lmZGVmDQo+ID4gbWVzcyIpDQo+ID4gQ09ORklHX0NNRExJTkUgaGFz
-IGFsd2F5cyBoYWQgYSB2YWx1ZSByZWdhcmRsZXNzIG9mDQo+ID4gQ09OTklHX0NNRExJTkVfQk9P
-TC4NCj4gcy9DT05OSUcvQ09ORklHLw0KPiANCj4gPiANCj4gPiANCj4gPiBGb3IgZXhhbXBsZToN
-Cj4gPiANCj4gPiDCoCAkIG1ha2UgQVJDSD1wb3dlcnBjIGRlZmNvbmZpZw0KPiA+IMKgICQgY2F0
-IC5jb25maWcNCj4gPiDCoCAjIENPTkZJR19DTURMSU5FX0JPT0wgaXMgbm90IHNldA0KPiA+IMKg
-IENPTkZJR19DTURMSU5FPSIiDQo+ID4gDQo+ID4gV2hlbiBlbmFibGluZyBDT05OSUdfQ01ETElO
-RV9CT09MIHRoaXMgdmFsdWUgaXMga2VwdCBtYWtpbmcgdGhlDQo+ID4gJ2RlZmF1bHQNCj4gPiAi
-Li4uIiBpZiBDT05OSUdfQ01ETElORV9CT09MJyBpbmVmZmVjdGl2ZS4NCj4gcy9DT05OSUcvQ09O
-RklHLw0KPiANCg0KV2lsbCBmaXggaW4gdjIuDQoNCj4gPiANCj4gPiANCj4gPiDCoCAkIC4vc2Ny
-aXB0cy9jb25maWcgLS1lbmFibGUgQ09ORklHX0NNRExJTkVfQk9PTA0KPiA+IMKgICQgY2F0IC5j
-b25maWcNCj4gPiDCoCBDT05GSUdfQ01ETElORV9CT09MPXkNCj4gPiDCoCBDT05GSUdfQ01ETElO
-RT0iIg0KPiA+IA0KPiA+IEFkZGl0aW9uYWxseSBhbGwgdGhlIGluLXRyZWUgcG93ZXJwYyBkZWZj
-b25maWdzIHRoYXQgc2V0DQo+ID4gQ09ORklHX0NNRExJTkVfQk9PTD15IGFsc28gc2V0IENPTkZJ
-R19DTURMSU5FIHRvIHNvbWV0aGluZyBlbHNlLg0KPiA+IEZvcg0KPiA+IHRoZXNlIHJlYXNvbnMg
-cmVtb3ZlIHRoZSBpbmFjY2Vzc2libGUgZGVmYXVsdC4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5
-OiBDaHJpcyBQYWNraGFtIDxjaHJpcy5wYWNraGFtQGFsbGllZHRlbGVzaXMuY28ubno+DQo+IFJl
-dmlld2VkLWJ5OiBDaHJpc3RvcGhlIExlcm95IDxjaHJpc3RvcGhlLmxlcm95QGMtcy5mcj4NCj4g
-DQo+ID4gDQo+ID4gLS0tDQo+ID4gVGhpcyBzaG91bGQgYmUgaW5kZXBlbmRlbnQgb2YgaHR0cDov
-L3BhdGNod29yay5vemxhYnMub3JnL3BhdGNoLzExNA0KPiA+IDA4MTEvIGJ1dA0KPiA+IEkndmUg
-Z2VuZXJhdGVkIHRoaXMgcGF0Y2ggb24gYSBzdHJlYW0gdGhhdCBoYXMgaXQgYXBwbGllZCBsb2Nh
-bGx5Lg0KPiA+IA0KPiA+IMKgIGFyY2gvcG93ZXJwYy9LY29uZmlnIHwgMSAtDQo+ID4gwqAgMSBm
-aWxlIGNoYW5nZWQsIDEgZGVsZXRpb24oLSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9w
-b3dlcnBjL0tjb25maWcgYi9hcmNoL3Bvd2VycGMvS2NvbmZpZw0KPiA+IGluZGV4IGQ0MTNmZTFi
-NDA1OC4uNmZjYTZlYmE2YWVlIDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvcG93ZXJwYy9LY29uZmln
-DQo+ID4gKysrIGIvYXJjaC9wb3dlcnBjL0tjb25maWcNCj4gPiBAQCAtODQ0LDcgKzg0NCw2IEBA
-IGNvbmZpZyBDTURMSU5FX0JPT0wNCj4gPiDCoMKgDQo+ID4gwqAgY29uZmlnIENNRExJTkUNCj4g
-PiDCoMKgCXN0cmluZyAiSW5pdGlhbCBrZXJuZWwgY29tbWFuZCBzdHJpbmciIGlmIENNRExJTkVf
-Qk9PTA0KPiA+IC0JZGVmYXVsdCAiY29uc29sZT10dHlTMCw5NjAwIGNvbnNvbGU9dHR5MCByb290
-PS9kZXYvc2RhMiINCj4gPiBpZiBDTURMSU5FX0JPT0wNCj4gPiDCoMKgCWRlZmF1bHQgIiINCj4g
-PiDCoMKgCWhlbHANCj4gPiDCoMKgCcKgwqBPbiBzb21lIHBsYXRmb3JtcywgdGhlcmUgaXMgY3Vy
-cmVudGx5IG5vIHdheSBmb3IgdGhlDQo+ID4gYm9vdCBsb2FkZXIgdG8NCj4gPiANCj4gSSB0aGlu
-ayB3ZSBjb3VsZCBhbHNvIGdldCByaWQgb2YgQ01ETElORV9CT09MIHRvdGFsbHkgYW5kIHVzZSBD
-TURMSU5FDQo+ICE9wqANCj4gIiIgaW5zdGVhZC4NCg0KVGhlIG9ubHkgcmVhc29uIEkgY2FuIHNl
-ZSB0byBrZWVwIENNRExJTkVfQk9PTCBpcyB0aGF0IGl0IGhpZGVzIHRoZQ0KdGV4dCBpbnB1dCBm
-b3LCoENNRExJTkUgd2hpY2ggc2VlbXMgdG8gYmUgYSBwYXR0ZXJuIGluIEtjb25maWcuIEhhcHB5
-IHRvDQpyZW1vdmUgaXQgaWYgdGhhdCdzIHRoZSBjb25zZW5zdXMuwqANCg0KSSdsbCB3YWl0IGZv
-ciB0aGUgZHVzdCB0byBzZXR0bGUgb24gbXkgb3RoZXIgcGF0Y2ggYmVmb3JlIHNlbmRpbmcgYSB2
-Mg0Kb2YgdGhpcyBvbmUuDQoNCj4gDQo+IENocmlzdG9waGU=
+The removed barrier isn't needed because the writes/reads are strictly
+ordered and even if PMC had separate ports for the writes, it wouldn't
+matter since the hardware logic takes into effect after triggering CPU's
+power-gating and at that point all CPU accesses are guaranteed to be
+completed. Hence remove the barrier to eliminate the confusion.
+
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+
+Changelog:
+
+v4: No changes.
+
+v3: No changes.
+
+v2: New patch that was added after Jon's Hunter pointing that it's better
+    not to change the barrier's placement in the code. In fact the barrier
+    is not needed at all.
+
+ drivers/soc/tegra/pmc.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+index 4e44943d0b26..8f8fb2db064d 100644
+--- a/drivers/soc/tegra/pmc.c
++++ b/drivers/soc/tegra/pmc.c
+@@ -1460,8 +1460,6 @@ void tegra_pmc_enter_suspend_mode(enum tegra_suspend_mode mode)
+ 	do_div(ticks, USEC_PER_SEC);
+ 	tegra_pmc_writel(pmc, ticks, PMC_CPUPWROFF_TIMER);
+ 
+-	wmb();
+-
+ 	value = tegra_pmc_readl(pmc, PMC_CNTRL);
+ 	value &= ~PMC_CNTRL_SIDE_EFFECT_LP0;
+ 	value |= PMC_CNTRL_CPU_PWRREQ_OE;
+-- 
+2.22.0
+
