@@ -2,131 +2,95 @@ Return-Path: <SRS0=geQ9=WA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1CDFC433FF
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 08:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E50E1C19759
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 08:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD9B520844
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 08:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEC5C20844
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 08:18:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MpsIv5sv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726125AbfHDIHY (ORCPT
+        id S1726071AbfHDISo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 4 Aug 2019 04:07:24 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44131 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726034AbfHDIHX (ORCPT
+        Sun, 4 Aug 2019 04:18:44 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55075 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbfHDISo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 4 Aug 2019 04:07:23 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p17so81300302wrf.11
-        for <linux-kernel@vger.kernel.org>; Sun, 04 Aug 2019 01:07:22 -0700 (PDT)
+        Sun, 4 Aug 2019 04:18:44 -0400
+Received: by mail-wm1-f65.google.com with SMTP id p74so71926649wme.4
+        for <linux-kernel@vger.kernel.org>; Sun, 04 Aug 2019 01:18:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=KpX1VoMswGff60EXJm7f4ppyOShHzSDUT2ehky/gEA0=;
+        b=MpsIv5svLr8SiKGgefFxmgjXRYnFusqmN1Y7ZxrtUwAiSeB/9T0eWfiLWtpbJE0PpO
+         uBb0tW7/e5BogbYLVpmmGPsPrmEHjWJYvK+8vxb7+nxqwiEzwFiTWZlXxddrqNGvgfvv
+         70G618Upp3ayXSwA338jWB34KOjIgmb6NYcpc0JAvx43GAm9JpiaCBWP0vn4C7oozTPA
+         vsyGsoB8QoZfr8EyCmn5T2Mpvr+4/jH+VWmc7oGwVJ7OcngjPdH0Vsn8inCvG9h4TGxM
+         YbMKKNBShGiuHwCYwV9JPSpXghzdIqtbOT0dXOc0hDh7fei3FPQwFty9w6NIyu3HPCZ7
+         CWEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9iGihd0uQZm0OhWtfPGT4IVKLzhJ/X1+ULeDAnIt+iM=;
-        b=XTLeA+2619es/w1V+0sNAeKdNbXFsvbb/9d3T5Ze2tmkL1f5qcOk3ZlXDBgvOyEPuS
-         BZigauX9nzJGaVpHh7trHcedMDm0KgKngQOOaSXDs25WZ8lxA7nSJ6D1St7fO8mjEHll
-         o0Fql8XKcG/04IAsr67zSCkyH9veChGOaAo9TB37TXRnzAB9ihywZDfWCiXs3ayMsGa2
-         N+6ciJjIbodyQxFNLs/LDindX7U1R3qerrs8zxd5JUZwGtucPSeiuAnL85NaXK30Z+TA
-         FHaaj5u0xrlnCLZCQJb2Aln2VCRa+JkGan3f7IvUCwm3o3bn0gvrxdC1sgu74DbdRLDm
-         KZSw==
-X-Gm-Message-State: APjAAAVcbTPsGchQwEOgv6/ivTdRVcXxbwAKxAKEk7gx9fvt4IL53SFn
-        G6BJg9jpSmWyMlxAPyDRgOij+g==
-X-Google-Smtp-Source: APXvYqwI+gaRAvVddfB9OVUlNyUeUxov9xoEZgkuKZzlqBcvGCZoK4Z/LJM3l40Bq9U3eA5YbA17zQ==
-X-Received: by 2002:adf:e2c1:: with SMTP id d1mr163081358wrj.283.1564906041363;
-        Sun, 04 Aug 2019 01:07:21 -0700 (PDT)
-Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
-        by smtp.gmail.com with ESMTPSA id r11sm124352644wre.14.2019.08.04.01.07.19
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 04 Aug 2019 01:07:20 -0700 (PDT)
-Date:   Sun, 4 Aug 2019 04:07:17 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH V2 7/9] vhost: do not use RCU to synchronize MMU notifier
- with worker
-Message-ID: <20190804040034-mutt-send-email-mst@kernel.org>
-References: <7555c949-ae6f-f105-6e1d-df21ddae9e4e@redhat.com>
- <20190731193057.GG3946@ziepe.ca>
- <a3bde826-6329-68e4-2826-8a9de4c5bd1e@redhat.com>
- <20190801141512.GB23899@ziepe.ca>
- <42ead87b-1749-4c73-cbe4-29dbeb945041@redhat.com>
- <20190802124613.GA11245@ziepe.ca>
- <20190802100414-mutt-send-email-mst@kernel.org>
- <20190802172418.GB11245@ziepe.ca>
- <20190803172944-mutt-send-email-mst@kernel.org>
- <20190804001400.GA25543@ziepe.ca>
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=KpX1VoMswGff60EXJm7f4ppyOShHzSDUT2ehky/gEA0=;
+        b=ALSzZzA8lBN+S1pzHSvTCCgiFbZbvd3YOSUAAlStqMw6deu33CiL6wfoHW8YG+cO7X
+         wCB/fy7aWPvpEDT+J1XeIVl2Rxz3X3fkQtCTfXSHXf/6VzGCBIvRDRNgB9fevKVAwUcO
+         w7dbs1lgR7jPFsoaN7eDmqH+q5xZrMVpywG2pP45nCCmlAog+kk0Uvube4/cqTyXw1qM
+         BdGEbKizFyM7iZXleDgOifs2484R5AUDCq1Tzhh33jvuGj4hrqFyNGouuDdHBcV3wI8B
+         jErZE9Mx1ID9nxy1rrB9nTYPTadv108cWjb6QP5gviBzArKxqh1U7SktGSkQ7lZd+Rqs
+         COBg==
+X-Gm-Message-State: APjAAAXpJdQG27iUCf0bTzKPSLq0wNnTd26K63x/RWycqv0VCSF7gfgA
+        a6uVMcJ1jfiJq3XkgS0mRMpVfAvR
+X-Google-Smtp-Source: APXvYqyGYN7LWGn5rNdmj8fXVsLdEWRfqaQENgL451ZVqP2RfCkBEI7lwsuliRBIGcFYhm6w8CxahQ==
+X-Received: by 2002:a7b:c383:: with SMTP id s3mr12971070wmj.44.1564906722337;
+        Sun, 04 Aug 2019 01:18:42 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f28:9900:d80f:58c5:990d:c59b? (p200300EA8F289900D80F58C5990DC59B.dip0.t-ipconnect.de. [2003:ea:8f28:9900:d80f:58c5:990d:c59b])
+        by smtp.googlemail.com with ESMTPSA id r123sm79910521wme.7.2019.08.04.01.18.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 04 Aug 2019 01:18:41 -0700 (PDT)
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH 0/3] x86/irq: slightly improve handle_irq
+Message-ID: <c9b51ac3-b1d6-89a6-e323-4600af22d9de@gmail.com>
+Date:   Sun, 4 Aug 2019 10:18:35 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190804001400.GA25543@ziepe.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 03, 2019 at 09:14:00PM -0300, Jason Gunthorpe wrote:
-> On Sat, Aug 03, 2019 at 05:36:13PM -0400, Michael S. Tsirkin wrote:
-> > On Fri, Aug 02, 2019 at 02:24:18PM -0300, Jason Gunthorpe wrote:
-> > > On Fri, Aug 02, 2019 at 10:27:21AM -0400, Michael S. Tsirkin wrote:
-> > > > On Fri, Aug 02, 2019 at 09:46:13AM -0300, Jason Gunthorpe wrote:
-> > > > > On Fri, Aug 02, 2019 at 05:40:07PM +0800, Jason Wang wrote:
-> > > > > > > This must be a proper barrier, like a spinlock, mutex, or
-> > > > > > > synchronize_rcu.
-> > > > > > 
-> > > > > > 
-> > > > > > I start with synchronize_rcu() but both you and Michael raise some
-> > > > > > concern.
-> > > > > 
-> > > > > I've also idly wondered if calling synchronize_rcu() under the various
-> > > > > mm locks is a deadlock situation.
-> > > > > 
-> > > > > > Then I try spinlock and mutex:
-> > > > > > 
-> > > > > > 1) spinlock: add lots of overhead on datapath, this leads 0 performance
-> > > > > > improvement.
-> > > > > 
-> > > > > I think the topic here is correctness not performance improvement
-> > > > 
-> > > > The topic is whether we should revert
-> > > > commit 7f466032dc9 ("vhost: access vq metadata through kernel virtual address")
-> > > > 
-> > > > or keep it in. The only reason to keep it is performance.
-> > > 
-> > > Yikes, I'm not sure you can ever win against copy_from_user using
-> > > mmu_notifiers?
-> > 
-> > Ever since copy_from_user started playing with flags (for SMAP) and
-> > added speculation barriers there's a chance we can win by accessing
-> > memory through the kernel address.
-> 
-> You think copy_to_user will be more expensive than the minimum two
-> atomics required to synchronize with another thread?
+When checking something else I stumbled across this code.
+This patch set simplifies it a little bit.
 
-I frankly don't know. With SMAP you flip flags twice, and with spectre
-you flush the pipeline. Is that cheaper or more expensive than an atomic
-operation? Testing is the only way to tell.
+Heiner Kallweit (3):
+  x86/irq: improve definition of VECTOR_SHUTDOWN et al
+  x86/irq: factor out IS_ERR_OR_NULL check from platfom-specific
+    handle_irq
+  x86/irq: slightly improve do_IRQ
 
-> > > Also, why can't this just permanently GUP the pages? In fact, where
-> > > does it put_page them anyhow? Worrying that 7f466 adds a get_user page
-> > > but does not add a put_page??
-> 
-> You didn't answer this.. Why not just use GUP?
-> 
-> Jason
-
-Sorry I misunderstood the question. Permanent GUP breaks lots of
-functionality we need such as THP and numa balancing.
-
-release_pages is used instead of put_page.
-
-
-
+ arch/x86/include/asm/hw_irq.h | 4 ++--
+ arch/x86/include/asm/irq.h    | 2 +-
+ arch/x86/kernel/irq.c         | 7 ++++---
+ arch/x86/kernel/irq_32.c      | 7 +------
+ arch/x86/kernel/irq_64.c      | 6 +-----
+ 5 files changed, 9 insertions(+), 17 deletions(-)
 
 -- 
-MST
+2.22.0
+
