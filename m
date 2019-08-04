@@ -2,83 +2,107 @@ Return-Path: <SRS0=geQ9=WA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D367CC433FF
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 16:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0BF8C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 16:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 999FB2067D
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 16:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C76C22067D
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 16:24:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Cs44fTZH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lpp4MtdY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbfHDQWX (ORCPT
+        id S1726556AbfHDQYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 4 Aug 2019 12:22:23 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:59938 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726319AbfHDQWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 4 Aug 2019 12:22:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=kr2uYMmZDpUO1/Oyu8nKDJ6LDea+x/hpCdWyFJ2gDTs=; b=Cs44fTZHL2QOmZcTJs/4ZTf/DF
-        cTsDYmlPmbt4OW5rNafTkzyTfqh58YvggPoH6X3zb2cydczTyzvLQyI6NLcWNJf5G3Wh6YtDW/KAh
-        9JLxBFZUi3a0gVJZBsjvttQq4Whku/az7H3iS6CP5LryJbVWnHy+b/uCILS/L7VjZmAI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1huJGx-0002MZ-U4; Sun, 04 Aug 2019 18:22:15 +0200
-Date:   Sun, 4 Aug 2019 18:22:15 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Vladimir Oltean <olteanv@gmail.com>, Tao Ren <taoren@fb.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Arun Parameswaran <arun.parameswaran@broadcom.com>,
-        Justin Chen <justinpopo6@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
-Subject: Re: [PATCH net-next v3] net: phy: broadcom: add 1000Base-X support
- for BCM54616S
-Message-ID: <20190804162215.GE6800@lunn.ch>
-References: <20190802215419.313512-1-taoren@fb.com>
- <CA+h21hrOEape89MTqCUyGFt=f6ba7Q-2KcOsN_Vw2Qv8iq86jw@mail.gmail.com>
- <53e18a01-3d08-3023-374f-2c712c4ee9ea@fb.com>
- <20190804145152.GA6800@lunn.ch>
- <CA+h21hrUDaSxKpsy9TuWqwgaxKYaoXHyhgS=xSoAcPwxXzvrHg@mail.gmail.com>
- <f8de2514-081a-0e6e-fbe2-bcafcd459646@gmail.com>
+        Sun, 4 Aug 2019 12:24:32 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41161 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726206AbfHDQYc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 4 Aug 2019 12:24:32 -0400
+Received: by mail-pg1-f193.google.com with SMTP id x15so28076356pgg.8;
+        Sun, 04 Aug 2019 09:24:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cZeBnpYmONo0s7L5W0iy8cP0PQ+zZF6B8fmLCtt7ggo=;
+        b=lpp4MtdY7v54RF4SywPn9NqI/hW980Al2LmT0eCWdZWrbJ3wHmoU9kGwmbig/DtHnS
+         ucw8f/l7IMbzAAJJfStWwUxwqqLjQK8/bvucOuuEu4j2ecSbEuQ+mZ1Rl//DayYQsM1W
+         Rpxrdgvow4ksYxQG3J3OrF0uq8UobtzyHJAan/ouO8r2Y4plbuWkSCmXOC1lA1LVsZ7G
+         Btj2A07e4vvRQTla0BPWit8KAZYvHd9coPrycjKTCqDMkXcQIIctHNhjz3YrdBYygNP5
+         QM6S/eu1gZ+TKXxCq+pYHA4JQDplAFntvkm1HWsO9RpHgRzdjcTWIXuLafhKM0kyNlZg
+         Tczg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cZeBnpYmONo0s7L5W0iy8cP0PQ+zZF6B8fmLCtt7ggo=;
+        b=WvfBzrZElJX6qbTQFdG9hh4dYtPzXkgsDpcpJK5F2XxDtN/sCX5OBFl3VZz5hb1w5X
+         WKJ4fJ+lYK56vQYv+dW98XOqYgz2Xr4DC6E5mwxihL0Qk0KJrz2VvQ7c023V5KOz2ZtI
+         Vkc9s5iqr0EpQUMe/vdgJEEmVi8OD8FzOxqWv2SGk4wxskUgmEWHuy9Y92M6CZAgVIn3
+         CWeBLe4HeKTKDZAzrojH4QkfZ52lIa2XNls2CqJoMCGavpBSuo7bF+w2Jo1Z0LvVzC2E
+         OnNcJVluc27edB8F1s6pYzShiU3B/qtg7Hj7hJCMbXKe2Iv4PG6Hv/W/1yZ353GpK2cm
+         DOkA==
+X-Gm-Message-State: APjAAAVmo4MgooCPNcPXKCAJJR2FHGeO0CKdD0TEVKi2btJ7Dz6NUbOX
+        HERc27X5+hyRh0ePXor52A5vs6c6cU4=
+X-Google-Smtp-Source: APXvYqyELApgtKkfgYPAPOEJjxO6X5pq5qokemjPgqGEY+umSMcei11+jC/aKYIICUOzQtG/Zuj3xA==
+X-Received: by 2002:aa7:9834:: with SMTP id q20mr70098022pfl.196.1564935871962;
+        Sun, 04 Aug 2019 09:24:31 -0700 (PDT)
+Received: from localhost.localdomain ([122.163.105.8])
+        by smtp.gmail.com with ESMTPSA id v10sm80530006pfe.163.2019.08.04.09.24.29
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 04 Aug 2019 09:24:31 -0700 (PDT)
+From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
+To:     agross@kernel.org, kishon@ti.com, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
+Subject: [PATCH] phy: qualcomm: phy-qcom-qmp: Add of_node_put() before return
+Date:   Sun,  4 Aug 2019 21:54:20 +0530
+Message-Id: <20190804162420.6005-1-nishkadg.linux@gmail.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f8de2514-081a-0e6e-fbe2-bcafcd459646@gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > Even if that were the case (patching phy_attach_direct to apply a
-> > logical-or to dev_flags), it sounds fishy to me that the genphy code
-> > is unable to determine that this PHY is running in 1000Base-X mode.
-> > 
-> > In my opinion it all boils down to this warning:
-> > 
-> > "PHY advertising (0,00000200,000062c0) more modes than genphy
-> > supports, some modes not advertised".
-> > 
-> The genphy code deals with Clause 22 + Gigabit BaseT only.
-> Question is whether you want aneg at all in 1000Base-X mode and
-> what you want the config_aneg callback to do.
-> There may be some inspiration in the Marvel PHY drivers.
+Each iteration of for_each_available_child_of_node puts the previous
+node, but in the case of a return from the middle of the loop, there is
+no put, thus causing a memory leak. Hence add an of_node_put before the
+return in two places.
+Issue found with Coccinelle.
 
-As far as i know, you cannot actually advertise 1000Base-X. So we
-probably should not be setting the bit in advertise, only having it in
-supported?
+Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+---
+ drivers/phy/qualcomm/phy-qcom-qmp.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-	Andrew
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+index 34ff6434da8f..2f0652efebf0 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+@@ -2094,6 +2094,7 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
+ 			dev_err(dev, "failed to create lane%d phy, %d\n",
+ 				id, ret);
+ 			pm_runtime_disable(dev);
++			of_node_put(child);
+ 			return ret;
+ 		}
+ 
+@@ -2106,6 +2107,7 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
+ 			dev_err(qmp->dev,
+ 				"failed to register pipe clock source\n");
+ 			pm_runtime_disable(dev);
++			of_node_put(child);
+ 			return ret;
+ 		}
+ 		id++;
+-- 
+2.19.1
+
