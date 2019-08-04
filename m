@@ -2,132 +2,114 @@ Return-Path: <SRS0=geQ9=WA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D10C19759
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 16:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD43C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 17:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6E722067D
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 16:25:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HL0ic2X+"
+	by mail.kernel.org (Postfix) with ESMTP id 36FAC2086D
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 17:08:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564938490;
+	bh=McJvKzXg7EOeeoTvWtcJ97DUI77ndntXv4DbFlzZrEg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=BXm7W6x+NcNSUzHZA03kGOQN041vtFSlqlrnQ+lOLnjEyhVVBIKCEp6mKFvqwxnNK
+	 1hJvI6msCl7uhmhn38xRXFghQxpTuO7SoqW7vPi8zD6eweud6Kisk2ZXM9x0rubax/
+	 2VQT9wcLukDI7uKDbEfL1F1bI5R+yl/KTuCdEe7c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbfHDQZO (ORCPT
+        id S1726519AbfHDRHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 4 Aug 2019 12:25:14 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:41024 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726206AbfHDQZO (ORCPT
+        Sun, 4 Aug 2019 13:07:50 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:43497 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726234AbfHDRHu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 4 Aug 2019 12:25:14 -0400
-Received: by mail-pl1-f196.google.com with SMTP id m9so35361302pls.8;
-        Sun, 04 Aug 2019 09:25:14 -0700 (PDT)
+        Sun, 4 Aug 2019 13:07:50 -0400
+Received: by mail-lj1-f194.google.com with SMTP id y17so52667000ljk.10
+        for <linux-kernel@vger.kernel.org>; Sun, 04 Aug 2019 10:07:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5WlmJ+yd/d7SIJ24wXZRYm8DiNvuInZwPvh//jsoG+E=;
-        b=HL0ic2X+mfG2OTztd7bP7gg/t7pOpxH3L3xqJ6xCf8149ouUJNxSkNzOnkQwgdZ3j+
-         QtKydCyWWP+BUQ+R/kK0rPhIWurkw1U2HW7EDab/PUrDJEs8/S+77qvE6HENuEPjv6HD
-         MWkcASbOfSqv7MlEZZehxuyApStZcvQdgOW+ZX+wS+eabVaCnje6aiav+cqS7D/17584
-         68Tr+iOumn/dAx/SsHVlwXsQQQW3OiF7An1Q29daNrwTC2GOr5FHgQyPgPcfVggF7E5P
-         h/1rNgWj9e3aMK/rDO5ZwDooV8gBar5PJisPNgp6Czx50et9wn0YcyIki0uSObsaD783
-         iMWw==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CUuLjrr40eT0gT47Sq8V20yAh9inQI6F3hRPfWbEWq0=;
+        b=XeKH/ON5ROKLw3AJirLwmiogg5d1JvAm75RUEeKG5SkDjhF6N0JWHG3O3I5DpwH5FA
+         MK1gNT5J/NY4V4dy0S/wA+wt5FyyqfPZXGPH8ve2T2siAq/pL5Tq2KgGfuDP4X1Qeo/f
+         c/lDfC0MoUMV4Sn7U2QBSmfsiRBwiKHl4fgUY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5WlmJ+yd/d7SIJ24wXZRYm8DiNvuInZwPvh//jsoG+E=;
-        b=Fkljpsp/pV1ZlqOwHxNU4Z3Fmb8pQomVWn6FIXCjNnjvLkcAlK/3UaDBh/ms2sgr8b
-         R7yFqYN7ztFfKD9Od96mWJByPOrJP0Y7zb3323bNYR5UYLit7g3WP3nmgomJFP+TSBcS
-         2amBQKKGdUOCjZf/JgHN8CCIUcGOFLlSJKzqYH9PSyI6pQSv0CAPzCeJG1UQ7MHDdPOz
-         8zhn3tfQ+McVuDB7o6pvvhQhi+ZVPlRWDmnLcAhWmbTLxl6wGWOkA5woy2oHB75r+GbZ
-         LLo2/Gv85IsVyRppAv9lCwQ6BqjX1HojO4RB8p/OinbwZTo/VK2Jmu96tvFWVSynUwfS
-         jgkQ==
-X-Gm-Message-State: APjAAAUeA1n1jw0jn0kwVApBzq4HQV30MpmMNIJXTBtCUXlTtQhIMOkN
-        3tKCo+v4olg03esnTSdneH0=
-X-Google-Smtp-Source: APXvYqyOB1YihaDuk90aKgQfss8ov2tWeKeFp/qhmVCx/yCsGih8L2APUrCm2kNBjo6CDYtyNdcNEA==
-X-Received: by 2002:a17:902:1566:: with SMTP id b35mr144143678plh.147.1564935913785;
-        Sun, 04 Aug 2019 09:25:13 -0700 (PDT)
-Received: from localhost.localdomain ([122.163.105.8])
-        by smtp.gmail.com with ESMTPSA id u1sm79708839pgi.28.2019.08.04.09.25.11
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 04 Aug 2019 09:25:13 -0700 (PDT)
-From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
-To:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Subject: [PATCH] soc: qcom: smp2p: Add of_node_put() at goto
-Date:   Sun,  4 Aug 2019 21:55:02 +0530
-Message-Id: <20190804162502.6170-1-nishkadg.linux@gmail.com>
-X-Mailer: git-send-email 2.19.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CUuLjrr40eT0gT47Sq8V20yAh9inQI6F3hRPfWbEWq0=;
+        b=GEULZX0usrx6+ZMggRZAAmmp5pE+Vn7oIdW1pVtCEfZ3w490iI8NclYqG5n0sSXJ/k
+         Skj2xFa3gnMtg8jeDHrltUqdNQV9In5xzve5J6AqDL/V6DIGR6hnqPLqxrYQS+lOwVOw
+         aBifRhLVl/MXbSAU6rh3PV8BcUWi/bQ3X7F3WIBucrytzOOu62i5MJJkEfuMFFuY4zEK
+         m+dgrMQURlHeyRl/6M7/+iyxLyd/vWPaW+BV8jKHVszl1g1GU9W9uXgY0A/ZwdLx05WY
+         0/cysZpz1abJ0UFSZL+q4QrCiojzxRFomrwRDQ1DzfuV//xoW2ST8AcYC2tNRF81WEi5
+         27/g==
+X-Gm-Message-State: APjAAAVnM5UxiY/ea+h1IAnnB3Z6k8z+SecYQ8S5FoloRAwQPGyhgB/U
+        dff9/knYNr2w+0W8NthuYWKZUyIcuPU=
+X-Google-Smtp-Source: APXvYqxXwR/lINzIUn1qVXgJaJn0AdhONcY3GDKw/MSR+Bp9rI4Zy+I40JJdDyByZ4qNHorfID4cow==
+X-Received: by 2002:a2e:980a:: with SMTP id a10mr77153324ljj.40.1564938467955;
+        Sun, 04 Aug 2019 10:07:47 -0700 (PDT)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
+        by smtp.gmail.com with ESMTPSA id v4sm16561411lji.103.2019.08.04.10.07.46
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Sun, 04 Aug 2019 10:07:46 -0700 (PDT)
+Received: by mail-lj1-f180.google.com with SMTP id v24so77361663ljg.13
+        for <linux-kernel@vger.kernel.org>; Sun, 04 Aug 2019 10:07:46 -0700 (PDT)
+X-Received: by 2002:a2e:9b83:: with SMTP id z3mr47452082lji.84.1564938466184;
+ Sun, 04 Aug 2019 10:07:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAJ-EccMXEVktpuPS5BwkGqTo++dGcpHAuSUZo7WgJhAzFByz0g@mail.gmail.com>
+ <CAHk-=whZzJ8WxAeHcirUghcbeOYxmpCr+XxeS9ngH3df3+=p2Q@mail.gmail.com> <CAJ-EccOqmmrf2KPb7Z7NU6bF_4W1XUawLLy=pLekCyFKqusjKQ@mail.gmail.com>
+In-Reply-To: <CAJ-EccOqmmrf2KPb7Z7NU6bF_4W1XUawLLy=pLekCyFKqusjKQ@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 4 Aug 2019 10:07:30 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgTOTAW5a4AcCfzRQihd2bNWvYtnqOmXc1QLfN=ZL1fUA@mail.gmail.com>
+Message-ID: <CAHk-=wgTOTAW5a4AcCfzRQihd2bNWvYtnqOmXc1QLfN=ZL1fUA@mail.gmail.com>
+Subject: Re: [GIT PULL] SafeSetID MAINTAINERS file update for v5.3
+To:     Micah Morton <mortonm@chromium.org>
+Cc:     linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Each iteration of for_each_available_child_of_node puts the previous
-node, but in the case of a goto from the middle of the loop, there is no
-put, thus causing a memory leak. Hence make the gotos within the loop
-first go to a new label where an of_node_put() puts the last used node,
-before falling through to the original label.
-Issue found with Coccinelle.
+On Thu, Aug 1, 2019 at 11:11 AM Micah Morton <mortonm@chromium.org> wrote:
+>
+> Add entry in MAINTAINERS file for SafeSetID LSM.
 
-Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
----
- drivers/soc/qcom/smp2p.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+So I've pulled this now.
 
-diff --git a/drivers/soc/qcom/smp2p.c b/drivers/soc/qcom/smp2p.c
-index c7300d54e444..d223e914487d 100644
---- a/drivers/soc/qcom/smp2p.c
-+++ b/drivers/soc/qcom/smp2p.c
-@@ -501,7 +501,7 @@ static int qcom_smp2p_probe(struct platform_device *pdev)
- 		entry = devm_kzalloc(&pdev->dev, sizeof(*entry), GFP_KERNEL);
- 		if (!entry) {
- 			ret = -ENOMEM;
--			goto unwind_interfaces;
-+			goto release_child;
- 		}
- 
- 		entry->smp2p = smp2p;
-@@ -509,18 +509,18 @@ static int qcom_smp2p_probe(struct platform_device *pdev)
- 
- 		ret = of_property_read_string(node, "qcom,entry-name", &entry->name);
- 		if (ret < 0)
--			goto unwind_interfaces;
-+			goto release_child;
- 
- 		if (of_property_read_bool(node, "interrupt-controller")) {
- 			ret = qcom_smp2p_inbound_entry(smp2p, entry, node);
- 			if (ret < 0)
--				goto unwind_interfaces;
-+				goto release_child;
- 
- 			list_add(&entry->node, &smp2p->inbound);
- 		} else  {
- 			ret = qcom_smp2p_outbound_entry(smp2p, entry, node);
- 			if (ret < 0)
--				goto unwind_interfaces;
-+				goto release_child;
- 
- 			list_add(&entry->node, &smp2p->outbound);
- 		}
-@@ -541,6 +541,8 @@ static int qcom_smp2p_probe(struct platform_device *pdev)
- 
- 	return 0;
- 
-+release_child:
-+	of_node_put(node);
- unwind_interfaces:
- 	list_for_each_entry(entry, &smp2p->inbound, node)
- 		irq_domain_remove(entry->domain);
--- 
-2.19.1
+However, I have to say that I'm now very nervous about future pulls,
+simply because the last one had basically everything that can be wrong
+be wrong.
 
+Random rebasing of existing commits, a random merge with no sane merge
+message.. All complete no-no's.
+
+So I will have to remember to be careful when pulling from you, and
+you need to get into a habit of not doing those things.
+
+One very powerful git tool is "gitk". It's just a good idea to use it
+to *visualize* to yourself what it is you actually have. Do something
+like
+
+    git fetch linus   (or "upstream" or "origin" or whatever your
+remote branch for my tree is called)
+    gitk linus/master..
+
+which should show you very clearly what you have that is not in my
+tree, and should show any odd merges etc.
+
+Just doing "git diff" doesn't show garbage _history_, it only shows
+the differences between the two states. There can be crazy bad history
+that doesn't show up in the diff, exactly because you had duplicate
+commits or something like that.
+
+             Linus
