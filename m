@@ -2,238 +2,131 @@ Return-Path: <SRS0=geQ9=WA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F18ACC19759
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 07:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1CDFC433FF
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 08:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3FEB20679
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 07:57:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wfn1Gu3a"
+	by mail.kernel.org (Postfix) with ESMTP id AD9B520844
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 08:07:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726054AbfHDH5P (ORCPT
+        id S1726125AbfHDIHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 4 Aug 2019 03:57:15 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36427 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725936AbfHDH5P (ORCPT
+        Sun, 4 Aug 2019 04:07:24 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44131 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726034AbfHDIHX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 4 Aug 2019 03:57:15 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n4so81374977wrs.3
-        for <linux-kernel@vger.kernel.org>; Sun, 04 Aug 2019 00:57:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uS/tyRA1HhQtO4ADL8hEZuizK1iCv9RoDdaac2v1yH4=;
-        b=wfn1Gu3adFwv/Pk2kRj3UTJmJZciTaF/YOPEy8jffyJ6C8rni4AR9s/45gTYPa4Fgo
-         c8HCaV0w2SCcZyRvZa3q/QVk2/nJwpH/EMR8g2OE0FuxOI7E5y56XQ6ON1bTeSw5BJtx
-         6KecsUH3eriYLDSv8Ha2NnjtI28lVLTItqw4qi8LhEyXkYkMmEsTuxQjHvN1bbD1t6/T
-         R0pIgH80JovPWuRwxvL9IK361aQRfKdyQ7IJI0G8ROdKufqa2rhSlx5COllc21RZ3wuX
-         rpJ4LbJega5ppVLH5z0p9pDsobiqao0LkFTOc5WQDc0n43xWmyUdg1lprdEzvBW4Dl6i
-         6N2g==
+        Sun, 4 Aug 2019 04:07:23 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p17so81300302wrf.11
+        for <linux-kernel@vger.kernel.org>; Sun, 04 Aug 2019 01:07:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uS/tyRA1HhQtO4ADL8hEZuizK1iCv9RoDdaac2v1yH4=;
-        b=DBBMj4A44BXC+n//7PRtnN9bU0n7GatWjCushDFaTQ+oWLT0KnivUV9d8eYqZkW5eG
-         oG3rbrQn1KGXWCDI0uoyNz3jOZv94P8CmjtyX69dUVQCNG2KPbbnwzkZf3G7NkNvQgGD
-         H1TGlCFguadv3N3nMT8TJn/FYpfh9beUFRi2VmNguqFR/zWAkPzjf+DlH0pFQmnCffit
-         Wl9a39amw9v/jdcUlfIYqD01qOlhkCTjplJ4rJ90jtgHjrZVdTWV8h6vleq9uGWZ79IC
-         XYoQ5TG8FkJkYZCf1PXga3+O57zgWflOD+YOr42azwdBSTT8qf1jmU98PdlrFegUuEJO
-         V9Cw==
-X-Gm-Message-State: APjAAAV9Jj6vaAO71xNQ4pWKrPcz/p0JwO/HB9CunMiLwOYNv0juJB+H
-        ifhcPt5B5McMRy+Ivh4qNmQdCoh6YQ2UGJz42lH8wA==
-X-Google-Smtp-Source: APXvYqzORxDgrgKNb+/sBjejLMdg1ru++3B89ONmSHwqHruiVTgPaefLyZbe4UzVKnJbIfAwYhqwt58DVddwGi0AKks=
-X-Received: by 2002:adf:9ccf:: with SMTP id h15mr14389399wre.241.1564905431661;
- Sun, 04 Aug 2019 00:57:11 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9iGihd0uQZm0OhWtfPGT4IVKLzhJ/X1+ULeDAnIt+iM=;
+        b=XTLeA+2619es/w1V+0sNAeKdNbXFsvbb/9d3T5Ze2tmkL1f5qcOk3ZlXDBgvOyEPuS
+         BZigauX9nzJGaVpHh7trHcedMDm0KgKngQOOaSXDs25WZ8lxA7nSJ6D1St7fO8mjEHll
+         o0Fql8XKcG/04IAsr67zSCkyH9veChGOaAo9TB37TXRnzAB9ihywZDfWCiXs3ayMsGa2
+         N+6ciJjIbodyQxFNLs/LDindX7U1R3qerrs8zxd5JUZwGtucPSeiuAnL85NaXK30Z+TA
+         FHaaj5u0xrlnCLZCQJb2Aln2VCRa+JkGan3f7IvUCwm3o3bn0gvrxdC1sgu74DbdRLDm
+         KZSw==
+X-Gm-Message-State: APjAAAVcbTPsGchQwEOgv6/ivTdRVcXxbwAKxAKEk7gx9fvt4IL53SFn
+        G6BJg9jpSmWyMlxAPyDRgOij+g==
+X-Google-Smtp-Source: APXvYqwI+gaRAvVddfB9OVUlNyUeUxov9xoEZgkuKZzlqBcvGCZoK4Z/LJM3l40Bq9U3eA5YbA17zQ==
+X-Received: by 2002:adf:e2c1:: with SMTP id d1mr163081358wrj.283.1564906041363;
+        Sun, 04 Aug 2019 01:07:21 -0700 (PDT)
+Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
+        by smtp.gmail.com with ESMTPSA id r11sm124352644wre.14.2019.08.04.01.07.19
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 04 Aug 2019 01:07:20 -0700 (PDT)
+Date:   Sun, 4 Aug 2019 04:07:17 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH V2 7/9] vhost: do not use RCU to synchronize MMU notifier
+ with worker
+Message-ID: <20190804040034-mutt-send-email-mst@kernel.org>
+References: <7555c949-ae6f-f105-6e1d-df21ddae9e4e@redhat.com>
+ <20190731193057.GG3946@ziepe.ca>
+ <a3bde826-6329-68e4-2826-8a9de4c5bd1e@redhat.com>
+ <20190801141512.GB23899@ziepe.ca>
+ <42ead87b-1749-4c73-cbe4-29dbeb945041@redhat.com>
+ <20190802124613.GA11245@ziepe.ca>
+ <20190802100414-mutt-send-email-mst@kernel.org>
+ <20190802172418.GB11245@ziepe.ca>
+ <20190803172944-mutt-send-email-mst@kernel.org>
+ <20190804001400.GA25543@ziepe.ca>
 MIME-Version: 1.0
-References: <20190802053744.5519-1-clin@suse.com>
-In-Reply-To: <20190802053744.5519-1-clin@suse.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Sun, 4 Aug 2019 10:57:00 +0300
-Message-ID: <CAKv+Gu-yaNYsLQOOcr8srW91-nt-w0e+RBqxXGOagiGGT69n1Q@mail.gmail.com>
-Subject: Re: [PATCH] efi/arm: fix allocation failure when reserving the kernel base
-To:     Chester Lin <clin@suse.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>
-Cc:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
-        "ren_guo@c-sky.com" <ren_guo@c-sky.com>,
-        Juergen Gross <JGross@suse.com>,
-        "geert@linux-m68k.org" <geert@linux-m68k.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
-        "guillaume.gardet@arm.com" <guillaume.gardet@arm.com>,
-        Joey Lee <JLee@suse.com>, Gary Lin <GLin@suse.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190804001400.GA25543@ziepe.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Chester,
+On Sat, Aug 03, 2019 at 09:14:00PM -0300, Jason Gunthorpe wrote:
+> On Sat, Aug 03, 2019 at 05:36:13PM -0400, Michael S. Tsirkin wrote:
+> > On Fri, Aug 02, 2019 at 02:24:18PM -0300, Jason Gunthorpe wrote:
+> > > On Fri, Aug 02, 2019 at 10:27:21AM -0400, Michael S. Tsirkin wrote:
+> > > > On Fri, Aug 02, 2019 at 09:46:13AM -0300, Jason Gunthorpe wrote:
+> > > > > On Fri, Aug 02, 2019 at 05:40:07PM +0800, Jason Wang wrote:
+> > > > > > > This must be a proper barrier, like a spinlock, mutex, or
+> > > > > > > synchronize_rcu.
+> > > > > > 
+> > > > > > 
+> > > > > > I start with synchronize_rcu() but both you and Michael raise some
+> > > > > > concern.
+> > > > > 
+> > > > > I've also idly wondered if calling synchronize_rcu() under the various
+> > > > > mm locks is a deadlock situation.
+> > > > > 
+> > > > > > Then I try spinlock and mutex:
+> > > > > > 
+> > > > > > 1) spinlock: add lots of overhead on datapath, this leads 0 performance
+> > > > > > improvement.
+> > > > > 
+> > > > > I think the topic here is correctness not performance improvement
+> > > > 
+> > > > The topic is whether we should revert
+> > > > commit 7f466032dc9 ("vhost: access vq metadata through kernel virtual address")
+> > > > 
+> > > > or keep it in. The only reason to keep it is performance.
+> > > 
+> > > Yikes, I'm not sure you can ever win against copy_from_user using
+> > > mmu_notifiers?
+> > 
+> > Ever since copy_from_user started playing with flags (for SMAP) and
+> > added speculation barriers there's a chance we can win by accessing
+> > memory through the kernel address.
+> 
+> You think copy_to_user will be more expensive than the minimum two
+> atomics required to synchronize with another thread?
 
-On Fri, 2 Aug 2019 at 08:40, Chester Lin <clin@suse.com> wrote:
->
-> In some cases the arm32 efistub could fail to allocate memory for
-> uncompressed kernel. For example, we got the following error message when
-> verifying EFI stub on Raspberry Pi-2 [kernel-5.2.1 + grub-2.04] :
->
->   EFI stub: Booting Linux Kernel...
->   EFI stub: ERROR: Unable to allocate memory for uncompressed kernel.
->   EFI stub: ERROR: Failed to relocate kernel
->
-> After checking the EFI memory map we found that the first page [0 - 0xfff]
-> had been reserved by Raspberry Pi-2's firmware, and the efistub tried to
-> set the dram base at 0, which was actually in a reserved region.
->
+I frankly don't know. With SMAP you flip flags twice, and with spectre
+you flush the pipeline. Is that cheaper or more expensive than an atomic
+operation? Testing is the only way to tell.
 
-This by itself is a violation of the Linux boot protocol for 32-bit
-ARM when using the decompressor. The decompressor rounds down its own
-base address to a multiple of 128 MB, and assumes the whole area is
-available for the decompressed kernel and related data structures.
-(The first TEXT_OFFSET bytes are no longer used in practice, which is
-why putting a reserved region of 4 KB bytes works at the moment, but
-this is fragile). Note that the decompressor does not look at any DT
-or EFI provided memory maps *at all*.
+> > > Also, why can't this just permanently GUP the pages? In fact, where
+> > > does it put_page them anyhow? Worrying that 7f466 adds a get_user page
+> > > but does not add a put_page??
+> 
+> You didn't answer this.. Why not just use GUP?
+> 
+> Jason
 
-So unfortunately, this is not something we can fix in the kernel, but
-we should fix it in the bootloader or in GRUB, so it does not put any
-reserved regions in the first 128 MB of memory,
+Sorry I misunderstood the question. Permanent GUP breaks lots of
+functionality we need such as THP and numa balancing.
+
+release_pages is used instead of put_page.
 
 
->   grub> lsefimmap
->   Type      Physical start  - end             #Pages        Size Attributes
->   reserved  0000000000000000-0000000000000fff 00000001      4KiB WB
->   conv-mem  0000000000001000-0000000007ef5fff 00007ef5 130004KiB WB
->   RT-data   0000000007ef6000-0000000007f09fff 00000014     80KiB RT WB
->   conv-mem  0000000007f0a000-000000002d871fff 00025968 615840KiB WB
->   .....
->
-> To avoid a reserved address, we have to ignore the memory regions which are
-> marked as EFI_RESERVED_TYPE, and only conventional memory regions can be
-> chosen. If the region before the kernel base is unaligned, it will be
-> marked as EFI_RESERVED_TYPE and let kernel ignore it so that memblock_limit
-> will not be sticked with a very low address such as 0x1000.
->
-> Signed-off-by: Chester Lin <clin@suse.com>
-> ---
->  arch/arm/mm/mmu.c                         |  3 ++
->  drivers/firmware/efi/libstub/arm32-stub.c | 43 ++++++++++++++++++-----
->  2 files changed, 37 insertions(+), 9 deletions(-)
->
-> diff --git a/arch/arm/mm/mmu.c b/arch/arm/mm/mmu.c
-> index f3ce34113f89..909b11ba48d8 100644
-> --- a/arch/arm/mm/mmu.c
-> +++ b/arch/arm/mm/mmu.c
-> @@ -1184,6 +1184,9 @@ void __init adjust_lowmem_bounds(void)
->                 phys_addr_t block_start = reg->base;
->                 phys_addr_t block_end = reg->base + reg->size;
->
-> +               if (memblock_is_nomap(reg))
-> +                       continue;
-> +
->                 if (reg->base < vmalloc_limit) {
->                         if (block_end > lowmem_limit)
->                                 /*
-> diff --git a/drivers/firmware/efi/libstub/arm32-stub.c b/drivers/firmware/efi/libstub/arm32-stub.c
-> index e8f7aefb6813..10d33d36df00 100644
-> --- a/drivers/firmware/efi/libstub/arm32-stub.c
-> +++ b/drivers/firmware/efi/libstub/arm32-stub.c
-> @@ -128,7 +128,7 @@ static efi_status_t reserve_kernel_base(efi_system_table_t *sys_table_arg,
->
->         for (l = 0; l < map_size; l += desc_size) {
->                 efi_memory_desc_t *desc;
-> -               u64 start, end;
-> +               u64 start, end, spare, kernel_base;
->
->                 desc = (void *)memory_map + l;
->                 start = desc->phys_addr;
-> @@ -144,27 +144,52 @@ static efi_status_t reserve_kernel_base(efi_system_table_t *sys_table_arg,
->                 case EFI_BOOT_SERVICES_DATA:
->                         /* Ignore types that are released to the OS anyway */
->                         continue;
-> -
-> +               case EFI_RESERVED_TYPE:
-> +                       /* Ignore reserved regions */
-> +                       continue;
->                 case EFI_CONVENTIONAL_MEMORY:
->                         /*
->                          * Reserve the intersection between this entry and the
->                          * region.
->                          */
->                         start = max(start, (u64)dram_base);
-> -                       end = min(end, (u64)dram_base + MAX_UNCOMP_KERNEL_SIZE);
-> +                       kernel_base = round_up(start, PMD_SIZE);
-> +                       spare = kernel_base - start;
-> +                       end = min(end, kernel_base + MAX_UNCOMP_KERNEL_SIZE);
-> +
-> +                       status = efi_call_early(allocate_pages,
-> +                                       EFI_ALLOCATE_ADDRESS,
-> +                                       EFI_LOADER_DATA,
-> +                                       MAX_UNCOMP_KERNEL_SIZE / EFI_PAGE_SIZE,
-> +                                       &kernel_base);
-> +                       if (status != EFI_SUCCESS) {
-> +                               pr_efi_err(sys_table_arg,
-> +                                       "reserve_kernel_base: alloc failed.\n");
-> +                               goto out;
-> +                       }
-> +                       *reserve_addr = kernel_base;
->
-> +                       if (!spare)
-> +                               break;
-> +                       /*
-> +                        * If there's a gap between start and kernel_base,
-> +                        * it needs be reserved so that the memblock_limit
-> +                        * will not fall on a very low address when running
-> +                        * adjust_lowmem_bounds(), wchich could eventually
-> +                        * cause CMA reservation issue.
-> +                        */
->                         status = efi_call_early(allocate_pages,
->                                                 EFI_ALLOCATE_ADDRESS,
-> -                                               EFI_LOADER_DATA,
-> -                                               (end - start) / EFI_PAGE_SIZE,
-> +                                               EFI_RESERVED_TYPE,
-> +                                               spare / EFI_PAGE_SIZE,
->                                                 &start);
->                         if (status != EFI_SUCCESS) {
->                                 pr_efi_err(sys_table_arg,
-> -                                       "reserve_kernel_base(): alloc failed.\n");
-> +                                       "reserve spare-region failed\n");
->                                 goto out;
->                         }
-> -                       break;
->
-> +                       break;
->                 case EFI_LOADER_CODE:
->                 case EFI_LOADER_DATA:
->                         /*
-> @@ -220,7 +245,7 @@ efi_status_t handle_kernel_image(efi_system_table_t *sys_table,
->         *image_size = image->image_size;
->         status = efi_relocate_kernel(sys_table, image_addr, *image_size,
->                                      *image_size,
-> -                                    dram_base + MAX_UNCOMP_KERNEL_SIZE, 0);
-> +                                    *reserve_addr + MAX_UNCOMP_KERNEL_SIZE, 0);
->         if (status != EFI_SUCCESS) {
->                 pr_efi_err(sys_table, "Failed to relocate kernel.\n");
->                 efi_free(sys_table, *reserve_size, *reserve_addr);
-> @@ -233,7 +258,7 @@ efi_status_t handle_kernel_image(efi_system_table_t *sys_table,
->          * in memory. The kernel determines the base of DRAM from the
->          * address at which the zImage is loaded.
->          */
-> -       if (*image_addr + *image_size > dram_base + ZIMAGE_OFFSET_LIMIT) {
-> +       if (*image_addr + *image_size > *reserve_addr + ZIMAGE_OFFSET_LIMIT) {
->                 pr_efi_err(sys_table, "Failed to relocate kernel, no low memory available.\n");
->                 efi_free(sys_table, *reserve_size, *reserve_addr);
->                 *reserve_size = 0;
-> --
-> 2.22.0
->
+
+
+-- 
+MST
