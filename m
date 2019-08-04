@@ -2,81 +2,88 @@ Return-Path: <SRS0=geQ9=WA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B49C19759
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 22:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 084BFC19759
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 22:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 258572089F
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 22:15:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5B5B20882
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 22:16:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564956968;
+	bh=nZTSrb/LTY2MAB6nAXO0fol/JfFShvONnnQGkzjOUa4=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=JTlXmymirQQColV27DCI+009+CWWMwX+hZ3qghxT7PnJJZT0Z6yw8wq8Cc374rDQn
+	 0H2uB6f+PD9QWqN4QezIHOrkHxzQPsV/KrkZybO3bm8mhLlbJmaryRopLdBlhvgNFm
+	 rEwom9cMWx1E//VQDiTtQPYxAdl2SIX1MbVzUMkw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbfHDWPC (ORCPT
+        id S1726824AbfHDWPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 4 Aug 2019 18:15:02 -0400
-Received: from mga17.intel.com ([192.55.52.151]:32644 "EHLO mga17.intel.com"
+        Sun, 4 Aug 2019 18:15:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726687AbfHDWPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 4 Aug 2019 18:15:02 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Aug 2019 15:15:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,347,1559545200"; 
-   d="scan'208";a="181514616"
-Received: from chenghao-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.36.2])
-  by FMSMGA003.fm.intel.com with ESMTP; 04 Aug 2019 15:14:56 -0700
-Date:   Mon, 5 Aug 2019 01:14:50 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        jmorris@namei.org, gmazyland@gmail.com, nayna@linux.ibm.com
-Subject: [GIT PULL] tpmdd fixes for Linux v5.3-rc2
-Message-ID: <20190804221450.n62l3fwehjt3nyit@linux.intel.com>
+        id S1726687AbfHDWPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 4 Aug 2019 18:15:20 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE15520880;
+        Sun,  4 Aug 2019 22:15:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564956919;
+        bh=nZTSrb/LTY2MAB6nAXO0fol/JfFShvONnnQGkzjOUa4=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=dqaJuMpQupF/rvtPwFx9HqozchB7AHHAWObO+7ekInaLVD/YidquVA8O3XFxP+cIZ
+         Z0j7jhUeL8CTuBfQn1Op04anAzluRoUpRJLi0Pz2ipPu9DVEn59D0ltfLIRFIkO7DZ
+         dTHsnBb5T4uQmi96cmd9trbNT2XGVc9Ug6hFVfjU=
+Date:   Mon, 5 Aug 2019 00:15:14 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Denis Efremov <efremov@linux.com>
+cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Willy Tarreau <w@1wt.eu>, Will Deacon <will@kernel.org>,
+        Greg KH <greg@kroah.com>,
+        Alexander Popov <alex.popov@linux.com>, efremov@ispras.ru,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] MAINTAINERS: floppy: take over maintainership
+In-Reply-To: <57af5f3e-9cfe-b6d8-314c-f59855408cd5@linux.com>
+Message-ID: <nycvar.YFH.7.76.1908050013270.5899@cbobk.fhfr.pm>
+References: <20190712185523.7208-1-efremov@ispras.ru> <20190713080726.GA19611@1wt.eu> <ec0a6c5e-bdee-3c26-f5d2-31b883c0de5d@ispras.ru> <CAHk-=wi=fHuiQg1fMzqAP9cuykBQSN_feD=eALDwRPmw27UwEg@mail.gmail.com> <nycvar.YFH.7.76.1907172355020.5899@cbobk.fhfr.pm>
+ <57af5f3e-9cfe-b6d8-314c-f59855408cd5@linux.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+On Wed, 31 Jul 2019, Denis Efremov wrote:
 
-Contains two bug fixes that did not make into my first PR for Linux v5.3.
+> Well, without jokes about Thunderdome, I've got time, hardware and
+> would like to maintain the floppy. Except the for recent fixes,
+> I described floppy ioctls in syzkaller. I've already spent quite
+> a lot of time with this code. Thus, if nobody minds
+> 
+> -- >8 --
+> From: Denis Efremov <efremov@linux.com>
+> Subject: [PATCH] MAINTAINERS: floppy: take over maintainership
+> 
+> I would like to maintain the floppy driver. After the recent fixes,
+> I think I know the code pretty well. Nowadays I've got 2 physical 3.5"
+> readers to test all the changes.
+> 
+> Signed-off-by: Denis Efremov <efremov@linux.com>
 
-/Jarkko
+Awesome, thanks a lot Denis for offering to carry the torch I dropped. 
+Obviously:
 
-The following changes since commit 4b6f23161b4e888e72671e377c32eabe9a8e62fc:
+	Acked-by: Jiri Kosina <jkosina@suse.cz>
 
-  Merge tag 'powerpc-5.3-3' of git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux (2019-08-04 10:30:47 -0700)
+-- 
+Jiri Kosina
+SUSE Labs
 
-are available in the Git repository at:
-
-  git://git.infradead.org/users/jjs/linux-tpmdd.git tags/tpmdd-next-20190805
-
-for you to fetch changes up to fa4f99c05320eb28bf6ba52a9adf64d888da1f9e:
-
-  tpm: tpm_ibm_vtpm: Fix unallocated banks (2019-08-05 00:55:00 +0300)
-
-----------------------------------------------------------------
-tpmdd fixes for Linux v5.3-rc2
-
-----------------------------------------------------------------
-Milan Broz (1):
-      tpm: Fix null pointer dereference on chip register error path
-
-Nayna Jain (1):
-      tpm: tpm_ibm_vtpm: Fix unallocated banks
-
- drivers/char/tpm/tpm-chip.c | 43 ++++++++++++++++++++++++++++++++++++-------
- drivers/char/tpm/tpm.h      |  2 ++
- drivers/char/tpm/tpm1-cmd.c | 36 ++++++++++++++++++++++++------------
- drivers/char/tpm/tpm2-cmd.c |  6 +-----
- 4 files changed, 63 insertions(+), 24 deletions(-)
