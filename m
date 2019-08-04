@@ -2,76 +2,89 @@ Return-Path: <SRS0=geQ9=WA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA35BC433FF
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 02:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F08C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 03:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F86B2075C
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 02:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BCBF2075C
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 03:02:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="KjhesF/U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729307AbfHDC5b (ORCPT
+        id S1727611AbfHDDCx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 3 Aug 2019 22:57:31 -0400
-Received: from gofer.mess.org ([88.97.38.141]:49813 "EHLO gofer.mess.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726268AbfHDC5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 3 Aug 2019 22:57:31 -0400
-Received: by gofer.mess.org (Postfix, from userid 1000)
-        id 2D44F604C0; Sun,  4 Aug 2019 03:57:29 +0100 (BST)
-Date:   Sun, 4 Aug 2019 03:57:29 +0100
-From:   Sean Young <sean@mess.org>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-i2c@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] media: ir-kbd-i2c: convert to
- i2c_new_dummy_device()
-Message-ID: <20190804025728.5v5r42zmjn5onxl7@gofer.mess.org>
-References: <20190730175555.14098-1-wsa+renesas@sang-engineering.com>
- <20190730175555.14098-2-wsa+renesas@sang-engineering.com>
- <20190803131749.4d6517ab@coco.lan>
+        Sat, 3 Aug 2019 23:02:53 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:31450 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbfHDDCx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 3 Aug 2019 23:02:53 -0400
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x7432aAY014417
+        for <linux-kernel@vger.kernel.org>; Sun, 4 Aug 2019 12:02:36 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x7432aAY014417
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1564887757;
+        bh=eBaNdFfdyUpWDaqKB82Rb8JPDYvrtv4uP2o90AUrrQw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=KjhesF/Ucf2e5tFutcSeuzqxi4pKLbvUXXFtagoXOh/h/LSS5wogqSRtC6RlwFRKp
+         0rAuSbzOAm3F/wFDSrCpiEiYkWIIJNZJ9purSEKZN8hvLy+cLdW0oK+PHqNB3u5yw1
+         ijqb1CWY2awNVHsGAm4vduIb19zJW9+W9p0XO/x5nRmmu3MBMV3qi95aHzAjJ+qLqZ
+         4TD3oIv3SBjszsfsk9jzXhjmmcimDzCsJZAMhLnNvcgmfGWtxYjx7qqvS6Z84Rsn1A
+         qnxK0tcOysh+XidZyJYbrUfA+3ZSYoYWNKq9GQkbCWeyI1rWodhaBRkUdVvRNxPbNq
+         xXMCICk7vgl4g==
+X-Nifty-SrcIP: [209.85.217.45]
+Received: by mail-vs1-f45.google.com with SMTP id j26so53849120vsn.10
+        for <linux-kernel@vger.kernel.org>; Sat, 03 Aug 2019 20:02:36 -0700 (PDT)
+X-Gm-Message-State: APjAAAUko+sZSyN6xD74NQM4cy8lshg2EGooX8idMnEg3/MNSXMbBeF3
+        EDQtyBY0ohHa+kuLSkQxHefJVuzeNlGSD5v0b7E=
+X-Google-Smtp-Source: APXvYqyXiSoqU1kn2CLhXSQx8EnLxBwvy51Ri0zsxGYtUl/WYkLjLojdHPowjJNrMEsHV20MAg/rQLlswB8bxjv9sBg=
+X-Received: by 2002:a67:cd1a:: with SMTP id u26mr11864168vsl.155.1564887755476;
+ Sat, 03 Aug 2019 20:02:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190803131749.4d6517ab@coco.lan>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20190728182029.2893-1-mcroce@redhat.com> <CAGnkfhxedte7iQ_4eOVSUzXK3nOWcXSkOQtfp3X3wogOtkX9VQ@mail.gmail.com>
+In-Reply-To: <CAGnkfhxedte7iQ_4eOVSUzXK3nOWcXSkOQtfp3X3wogOtkX9VQ@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sun, 4 Aug 2019 12:01:59 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAR=YMj2xc0KSR72AUUbHuJSRKnEnONkFzEr=9JyhLC3QA@mail.gmail.com>
+Message-ID: <CAK7LNAR=YMj2xc0KSR72AUUbHuJSRKnEnONkFzEr=9JyhLC3QA@mail.gmail.com>
+Subject: Re: [PATCH] kernel: ignore auto-generated file
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 03, 2019 at 01:17:49PM -0300, Mauro Carvalho Chehab wrote:
-> Em Tue, 30 Jul 2019 19:55:54 +0200
-> Wolfram Sang <wsa+renesas@sang-engineering.com> escreveu:
-> 
-> > Convert this driver to use the new i2c_new_dummy_device() call and bail
-> > out if the dummy device cannot be registered to make failure more
-> > visible to the user.
-> > 
-> 
-> Please don't do that.
-> 
-> At first glance, devm_* sounds a good idea, but we had enough issues
-> using it on media system.
-> 
-> I don't mind mind much if some SoC specific would use it, but doing
-> it on generic drivers is a very bad idea. We have removed almost all
-> devm_* calls from the media system.
-> 
-> The problem with devm is that it the de-allocation routines aren't
-> called during device unbind. They happen a way later, only when the
-> device itself is physically removed, or the driver is removed.
+On Sun, Aug 4, 2019 at 1:33 AM Matteo Croce <mcroce@redhat.com> wrote:
+>
+> On Sun, Jul 28, 2019 at 8:20 PM Matteo Croce <mcroce@redhat.com> wrote:
+> >
+> > kernel/config_data.h is autogenerated during the build, let's add it to
+> > the directory .gitignore.
+> >
+> > Signed-off-by: Matteo Croce <mcroce@redhat.com>
+> >
+>
+> CCing people as `scripts/get_maintainer.pl kernel/.gitignore` suggests
+>
 
-Yes, good point.
+Probably, you built old version kernel.
 
-> That caused lots of headaches to debug memory lifetime issues on
-> media.
+The latest one does not generate kernel/config_data.h
 
-Indeed this becomes much more complex. Explicit freeing is much better.
+See 13610aa908dcfce77135bb799c0a10d0172da6ba
 
 
-Thanks,
-Sean
+
+
+-- 
+Best Regards
+Masahiro Yamada
