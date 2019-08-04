@@ -8,69 +8,76 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6656BC19759
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 08:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 442FDC19759
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 08:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CB182089F
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 08:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15078206C1
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 08:33:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LOBvebTF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HW6ZXPXr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726178AbfHDIWw (ORCPT
+        id S1726138AbfHDIdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 4 Aug 2019 04:22:52 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37490 "EHLO
+        Sun, 4 Aug 2019 04:33:38 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45964 "EHLO
         mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbfHDIWs (ORCPT
+        with ESMTP id S1725987AbfHDIdh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 4 Aug 2019 04:22:48 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n9so56262025wrr.4
-        for <linux-kernel@vger.kernel.org>; Sun, 04 Aug 2019 01:22:47 -0700 (PDT)
+        Sun, 4 Aug 2019 04:33:37 -0400
+Received: by mail-wr1-f67.google.com with SMTP id f9so2430064wre.12;
+        Sun, 04 Aug 2019 01:33:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
+        h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=iAXzdzaSwM+e+U2MqW+fV+EEmKPaHc+/eZTIsVQHLw0=;
-        b=LOBvebTFtnKHYCIF7Of7MQ4OSIDlic+E2tTW7H09zZLsOyws6aICc98QXfRs6W9tLQ
-         bz3amy+38qUquxG2wV2LgowhdBSTwy7d3M+AB+kiNTUZvKAjgde4Db24Ux5SvSh2vw7S
-         cmEIfoT8MJVofA1djSdfctONVnt0brSa5c1vlbnXF7Zu97yVZ3mbu/zQkRtufXN0pmSA
-         yOuvhkQ5XLRalc6GslCFNXhu72SfcU8bgQ0fQQyShjAOnl4n6unaq5V4bVXSc2ZZxi1J
-         yQ0vNaQNn/Sgn/KVCkOT4Lof86qc22u9dJONcSNHYTx3DCLFRROZHiFA+wBmZ0J21fYB
-         0aSg==
+        bh=Vt6U1YP4aGAGLr957NKZHuWaMpL8mX3IS9JECyDQdCw=;
+        b=HW6ZXPXrOsCYPW8RBQgzAbAfamlFFGF0Lwt2IVORxo7pMCTQW4EK+i6oWovdt8Rgjc
+         FVtLz+zMTi3TlyIuDya9nWryRPySOsB6K10i/lqECTYBzxaRvBNTl284JlGNJQKbPTfQ
+         Ryp/BBp2PdAdLKJwH+Js0BCCwyLdq2FiYwRHX6yK8RZxyDcBufNkz3XhGAyd/kYAmBop
+         P9ImR0IDgfX61M36mYo2YB+FBIBtv/5FDTcjgOxO8a0yfjq7ownR0liHdSsdg76uvD+3
+         K5t+tpewY39K3kNOfMmZtdiptEftOG4dGg91ps7S0ht2LoCTpbF+OfM3POvUkzVOWm1u
+         lPZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=iAXzdzaSwM+e+U2MqW+fV+EEmKPaHc+/eZTIsVQHLw0=;
-        b=ZR13SBFgjdVbfBC//JsEp1UJYicfzaDBQFmuV70Z05EiiXqRkBKarx9ZATlbaagxgn
-         ReG0lRPyyLO5an4+ZukHfbCqDDr3hrn0SJIYb4BBjpl6AxuX93sxv+SUUuXuLMJxICuA
-         23PuWcUt/bEvuBL89U1ia6QZwCNHhCgMsT3dUIiFTCA5MoqYFOkUqpM0PTk3AEyEW5sq
-         f5lX39MqspvbqN+7s+ju6u1oHQi/ut3b1buvFCsmkdVxzTHCXqQ+fr9Ey6+/sxYnJSLv
-         MGb2MQjlFgpFdVd/cxZ1bgqyKUOnRqQR1xcbWRAQHK+C3/GduxJjV304D1cYzYXdXqY7
-         mLjQ==
-X-Gm-Message-State: APjAAAVvnspJ/VugBCJhkc/zWjAN7ypl/PmfiG1hauMzVXNllgp/pqee
-        rBxSBc3OR5oevb4wEN2aaCwd+XBd
-X-Google-Smtp-Source: APXvYqx+Qqxz3BrzqJftkNhqeyD00PAYgWdUSvOIRo+pJKJFDPs09xre8bqUFy0ZqzfrSC8tg7kLnA==
-X-Received: by 2002:adf:e691:: with SMTP id r17mr23828190wrm.67.1564906966490;
-        Sun, 04 Aug 2019 01:22:46 -0700 (PDT)
+        bh=Vt6U1YP4aGAGLr957NKZHuWaMpL8mX3IS9JECyDQdCw=;
+        b=YXKMK28i7dt2G6ITZIez/qZtBRwwepJSCUDhe08FSgX43XGcFYI032+Mx4bwDtUZHD
+         OtuIvcsL+kuDgyL2xyo7pIkxh33yM/P0T0tQxX4evt8DcNUbKR0/6QqypDmRmi6/F9r0
+         KQFobTuBxgLk1wMAjBCn2lN61NuOsqaNwBn8HhPY7IOozbntJr/lrnf844rOsWqppecB
+         iXTQZBUPKqZ0q7RzCqq1UPMnqCJmmFlMhoqOfblDUn9B230rh0F+KcgYYyTMyjbrsOmf
+         1AOIe4q6/r/wMRwiLw8JnVYDPtMJffQdkhIEOA5Xs5UF2BsCzSgfjEN7iVIyFb+Z3kcb
+         A/yQ==
+X-Gm-Message-State: APjAAAUvH1KG1UWKY9hF+dLFmnwNqgqvea4YRHLtbyP0ZYd+mZNVL3T3
+        3JX5FbcIgTwMvNsK53eHAUF2Ofre
+X-Google-Smtp-Source: APXvYqwkk0phUB+FezFpivONVroN9FkS2bT2MM9s4sMwHk+g5S8UFZ33zeDE2MmafKfgRollJfkF9g==
+X-Received: by 2002:adf:df8b:: with SMTP id z11mr98533802wrl.62.1564907615244;
+        Sun, 04 Aug 2019 01:33:35 -0700 (PDT)
 Received: from ?IPv6:2003:ea:8f28:9900:d80f:58c5:990d:c59b? (p200300EA8F289900D80F58C5990DC59B.dip0.t-ipconnect.de. [2003:ea:8f28:9900:d80f:58c5:990d:c59b])
-        by smtp.googlemail.com with ESMTPSA id j16sm28927747wrp.62.2019.08.04.01.22.45
+        by smtp.googlemail.com with ESMTPSA id o3sm67952020wrs.59.2019.08.04.01.33.34
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 04 Aug 2019 01:22:46 -0700 (PDT)
-Subject: [PATCH 3/3] x86/irq: slightly improve do_IRQ
+        Sun, 04 Aug 2019 01:33:34 -0700 (PDT)
+Subject: Re: [PATCH v4 3/4] net: phy: realtek: Add helpers for accessing
+ RTL8211E extension pages
+To:     Matthias Kaehlcke <mka@chromium.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>
+References: <20190801190759.28201-1-mka@chromium.org>
+ <20190801190759.28201-4-mka@chromium.org>
 From:   Heiner Kallweit <hkallweit1@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <c9b51ac3-b1d6-89a6-e323-4600af22d9de@gmail.com>
-Message-ID: <b803cef2-8959-985b-9d71-4abec1417600@gmail.com>
-Date:   Sun, 4 Aug 2019 10:22:24 +0200
+Message-ID: <71d817b9-7bcc-9f83-331d-1c3958c41f51@gmail.com>
+Date:   Sun, 4 Aug 2019 10:33:30 +0200
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <c9b51ac3-b1d6-89a6-e323-4600af22d9de@gmail.com>
+In-Reply-To: <20190801190759.28201-4-mka@chromium.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -79,27 +86,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's simpler and more intuitive to directly check for VECTOR_UNUSED.
+On 01.08.2019 21:07, Matthias Kaehlcke wrote:
+> The RTL8211E has extension pages, which can be accessed after
+> selecting a page through a custom method. Add a function to
+> modify bits in a register of an extension page and a helper for
+> selecting an ext page. Use rtl8211e_modify_ext_paged() in
+> rtl8211e_config_init() instead of doing things 'manually'.
+> 
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+> Changes in v4:
+> - don't add constant RTL8211E_EXT_PAGE, it's only used once,
+>   use a literal instead
+> - pass 'oldpage' to phy_restore_page() in rtl8211e_select_ext_page(),
+>   not 'page'
+> - return 'oldpage' in rtl8211e_select_ext_page()
+> - use __phy_modify() in rtl8211e_modify_ext_paged() instead of
+>   reimplementing __phy_modify_changed()
+> - in rtl8211e_modify_ext_paged() return directly when
+>   rtl8211e_select_ext_page() fails
+> ---
+>  drivers/net/phy/realtek.c | 48 +++++++++++++++++++++++++++------------
+>  1 file changed, 34 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
+> index a669945eb829..e09d3b0da2c7 100644
+> --- a/drivers/net/phy/realtek.c
+> +++ b/drivers/net/phy/realtek.c
+> @@ -53,6 +53,36 @@ static int rtl821x_write_page(struct phy_device *phydev, int page)
+>  	return __phy_write(phydev, RTL821x_PAGE_SELECT, page);
+>  }
+>  
+> +static int rtl8211e_select_ext_page(struct phy_device *phydev, int page)
 
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
----
- arch/x86/kernel/irq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The "extended page" mechanism doesn't exist on RTL8211E only. A prefix
+rtl821x like in other functions may be better therefore.
 
-diff --git a/arch/x86/kernel/irq.c b/arch/x86/kernel/irq.c
-index 042f363a8..2f1a78c4d 100644
---- a/arch/x86/kernel/irq.c
-+++ b/arch/x86/kernel/irq.c
-@@ -246,7 +246,7 @@ __visible unsigned int __irq_entry do_IRQ(struct pt_regs *regs)
- 	if (IS_ERR_OR_NULL(desc)) {
- 		ack_APIC_irq();
- 
--		if (desc != VECTOR_RETRIGGERED && desc != VECTOR_SHUTDOWN) {
-+		if (desc == VECTOR_UNUSED) {
- 			pr_emerg_ratelimited("%s: %d.%d No irq handler for vector\n",
- 					     __func__, smp_processor_id(),
- 					     vector);
--- 
-2.22.0
-
+> +{
+> +	int ret, oldpage;
+> +
+> +	oldpage = phy_select_page(phydev, 7);
+> +	if (oldpage < 0)
+> +		return oldpage;
+> +
+> +	ret = __phy_write(phydev, RTL821x_EXT_PAGE_SELECT, page);
+> +	if (ret)
+> +		return phy_restore_page(phydev, oldpage, ret);
+> +
+> +	return oldpage;
+> +}
+> +
+> +static int rtl8211e_modify_ext_paged(struct phy_device *phydev, int page,
+> +				     u32 regnum, u16 mask, u16 set)
+> +{
+> +	int ret = 0;
+> +	int oldpage;
+> +
+> +	oldpage = rtl8211e_select_ext_page(phydev, page);
+> +	if (oldpage < 0)
+> +		return oldpage;
+> +
+> +	ret = __phy_modify(phydev, regnum, mask, set);
+> +
+> +	return phy_restore_page(phydev, oldpage, ret);
+> +}
+> +
+>  static int rtl8201_ack_interrupt(struct phy_device *phydev)
+>  {
+>  	int err;
+> @@ -184,7 +214,7 @@ static int rtl8211f_config_init(struct phy_device *phydev)
+>  
+>  static int rtl8211e_config_init(struct phy_device *phydev)
+>  {
+> -	int ret = 0, oldpage;
+> +	int ret;
+>  	u16 val;
+>  
+>  	/* enable TX/RX delay for rgmii-* modes, and disable them for rgmii. */
+> @@ -213,19 +243,9 @@ static int rtl8211e_config_init(struct phy_device *phydev)
+>  	 * 2 = RX Delay, 1 = TX Delay, 0 = SELRGV (see original PHY datasheet
+>  	 * for details).
+>  	 */
+> -	oldpage = phy_select_page(phydev, 0x7);
+> -	if (oldpage < 0)
+> -		goto err_restore_page;
+> -
+> -	ret = __phy_write(phydev, RTL821x_EXT_PAGE_SELECT, 0xa4);
+> -	if (ret)
+> -		goto err_restore_page;
+> -
+> -	ret = __phy_modify(phydev, 0x1c, RTL8211E_TX_DELAY | RTL8211E_RX_DELAY,
+> -			   val);
+> -
+> -err_restore_page:
+> -	return phy_restore_page(phydev, oldpage, ret);
+> +	return rtl8211e_modify_ext_paged(phydev, 0xa4, 0x1c,
+> +					 RTL8211E_TX_DELAY | RTL8211E_RX_DELAY,
+> +					 val);
+>  }
+>  
+>  static int rtl8211b_suspend(struct phy_device *phydev)
+> 
 
