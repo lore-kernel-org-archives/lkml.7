@@ -2,77 +2,76 @@ Return-Path: <SRS0=geQ9=WA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 026D3C433FF
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 19:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E098C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 20:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C321620880
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 19:53:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5556820844
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 20:17:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbfHDTxI (ORCPT
+        id S1726740AbfHDURX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 4 Aug 2019 15:53:08 -0400
-Received: from bmailout3.hostsharing.net ([176.9.242.62]:49435 "EHLO
-        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726346AbfHDTxI (ORCPT
+        Sun, 4 Aug 2019 16:17:23 -0400
+Received: from smtprelay0004.hostedemail.com ([216.40.44.4]:46355 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726346AbfHDURW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 4 Aug 2019 15:53:08 -0400
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id D0DCD100D9411;
-        Sun,  4 Aug 2019 21:53:06 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 88F281EC0; Sun,  4 Aug 2019 21:53:06 +0200 (CEST)
-Date:   Sun, 4 Aug 2019 21:53:06 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Keith Busch <keith.busch@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Kai Heng Feng <kai.heng.feng@canonical.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] PCI: pciehp: Do not disable interrupt twice on
- suspend
-Message-ID: <20190804195306.gm4livsxkrleaciv@wunner.de>
-References: <20190618125051.2382-1-mika.westerberg@linux.intel.com>
+        Sun, 4 Aug 2019 16:17:22 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 1131D181D3368;
+        Sun,  4 Aug 2019 20:17:21 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: book66_7a24adcc5af63
+X-Filterd-Recvd-Size: 1902
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf03.hostedemail.com (Postfix) with ESMTPA;
+        Sun,  4 Aug 2019 20:17:19 +0000 (UTC)
+Message-ID: <15450f6ba169de8862e11bc2d20b3645958f4efd.camel@perches.com>
+Subject: Re: [PATCH 1/1] block: Use bits.h macros to improve readability
+From:   Joe Perches <joe@perches.com>
+To:     Jens Axboe <axboe@kernel.dk>,
+        Leonardo Bras <leonardo@linux.ibm.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Dennis Zhou <dennis@kernel.org>, Hannes Reinecke <hare@suse.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Tejun Heo <tj@kernel.org>,
+        "Dennis Zhou (Facebook)" <dennisszhou@gmail.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Sagi Grimberg <sagi@grimberg.me>
+Date:   Sun, 04 Aug 2019 13:17:17 -0700
+In-Reply-To: <a41b5530-f2e1-0932-1f39-0ce66ce902ae@kernel.dk>
+References: <20190802000041.24513-1-leonardo@linux.ibm.com>
+         <a41b5530-f2e1-0932-1f39-0ce66ce902ae@kernel.dk>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190618125051.2382-1-mika.westerberg@linux.intel.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 03:50:50PM +0300, Mika Westerberg wrote:
-> @@ -313,10 +332,12 @@ static struct pcie_port_service_driver hpdriver_portdrv = {
->  	.remove		= pciehp_remove,
->  
->  #ifdef	CONFIG_PM
-> +#ifdef	CONFIG_PM_SLEEP
->  	.suspend	= pciehp_suspend,
->  	.resume_noirq	= pciehp_resume_noirq,
-> +#endif
->  	.resume		= pciehp_resume,
-> -	.runtime_suspend = pciehp_suspend,
-> +	.runtime_suspend = pciehp_runtime_suspend,
->  	.runtime_resume	= pciehp_runtime_resume,
->  #endif	/* PM */
->  };
+On Fri, 2019-08-02 at 21:18 -0700, Jens Axboe wrote:
+> On 8/1/19 6:00 PM, Leonardo Bras wrote:
+> > Applies some bits.h macros in order to improve readability of
+> > linux/blk_types.h.
+[]
+> I know precisely what that does, whereas I have to think about the other
+> one, maybe even look it up to be sure. For instance, without looking
+> now, I have no idea what the second argument is. Looking at the git log,
+> I see numerous instances of:
 
-Hm, why isn't ".resume" part of the "#ifdef CONFIG_PM_SLEEP" section?
+While I'm not at all a proponent of GENMASK/GENMASK_ULL,
+and so not a proponent of this patch, latent defects are
+possible in both cases.
 
-Otherwise LGTM.
+You'd likely have to look at SOME_SHIFT to see if it's 0
+to verify the actual mask is what's really desired.
 
-Thanks,
+$ git grep -P '_SHIFT\s+\(?\s*0\s*\)?\b' | wc -l
+11907
 
-Lukas
