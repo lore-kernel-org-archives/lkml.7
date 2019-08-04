@@ -2,39 +2,38 @@ Return-Path: <SRS0=geQ9=WA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E52CFC433FF
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 15:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F41AC19759
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 15:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD12A2070D
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 15:04:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8D7520844
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 15:10:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="sspKmymJ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="woUVjGc2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbfHDPER (ORCPT
+        id S1726472AbfHDPKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 4 Aug 2019 11:04:17 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:59802 "EHLO vps0.lunn.ch"
+        Sun, 4 Aug 2019 11:10:16 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:59810 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726181AbfHDPER (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 4 Aug 2019 11:04:17 -0400
+        id S1726181AbfHDPKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 4 Aug 2019 11:10:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
         s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
         Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
         List-Post:List-Owner:List-Archive;
-        bh=9YmikpTEpr5D1kpfN5dBORPimRY5G5XZGxcVzG0I71E=; b=sspKmymJGZKyjEHU4QnsfXYY76
-        Q2i1TaxOrrITR9iSoME1XCUXeqEjE4k83TV2x0Q9W/xoaFALuH5E+lwtSQRed+T7gFn6UY1kbbEuW
-        gMxQPRzHSsppP3vmlVagR1MvTM0Ir/xR7ST7MwOY87thZjkW0XlRnSfBJDPY4+ej98TA=;
+        bh=p+WMY+8cLnh8hVqX51cvRSYqb4ylw/3I5FiwQRWM5pY=; b=woUVjGc2uW2gYheYd9bezIjaqt
+        iIFQa+nhzH5eQKVa5xI5ruqNiGZlxfeHI1lDKnhwneSrtfpAiKR6Ebubls+UOG3+ax7J30dqktUtK
+        qvjQjl8MsJskzdYApK1nktzYMv7s7V9+oJqcxui12fpW5jfwjJH9FJkWHf2I31jssxWU=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
         (envelope-from <andrew@lunn.ch>)
-        id 1huI3S-000248-Lh; Sun, 04 Aug 2019 17:04:14 +0200
-Date:   Sun, 4 Aug 2019 17:04:14 +0200
+        id 1huI9F-00026R-79; Sun, 04 Aug 2019 17:10:13 +0200
+Date:   Sun, 4 Aug 2019 17:10:13 +0200
 From:   Andrew Lunn <andrew@lunn.ch>
 To:     Hubert Feurstein <h.feurstein@gmail.com>
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -43,7 +42,7 @@ Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         "David S. Miller" <davem@davemloft.net>
 Subject: Re: [PATCH net] net: dsa: mv88e6xxx: drop adjust_link to enabled
  phylink
-Message-ID: <20190804150414.GC6800@lunn.ch>
+Message-ID: <20190804151013.GD6800@lunn.ch>
 References: <20190731154239.19270-1-h.feurstein@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -62,24 +61,9 @@ On Wed, Jul 31, 2019 at 05:42:39PM +0200, Hubert Feurstein wrote:
 > Otherwise we get the following warning during startup:
 >   "mv88e6xxx 2188000.ethernet-1:10: Using legacy PHYLIB callbacks. Please
 >    migrate to PHYLINK!"
-> 
-> The warning is generated in the function dsa_port_link_register_of in
-> dsa/port.c:
-> 
->   int dsa_port_link_register_of(struct dsa_port *dp)
->   {
->   	struct dsa_switch *ds = dp->ds;
-> 
->   	if (!ds->ops->adjust_link)
->   		return dsa_port_phylink_register(dp);
-> 
->   	dev_warn(ds->dev,
->   		 "Using legacy PHYLIB callbacks. Please migrate to PHYLINK!\n");
->   	[...]
->   }
-> 
-> Signed-off-by: Hubert Feurstein <h.feurstein@gmail.com>
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Hi Hubert
 
-    Andrew
+Do we need the same patch for the b53 driver?
+
+   Andrew
