@@ -2,173 +2,75 @@ Return-Path: <SRS0=geQ9=WA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9284C19759
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 14:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B42A2C19759
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 14:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 859902064A
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 14:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 895ED20844
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 14:44:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oD5jehUM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IVjn9fgQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbfHDOgl (ORCPT
+        id S1726382AbfHDOoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 4 Aug 2019 10:36:41 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:45242 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbfHDOgl (ORCPT
+        Sun, 4 Aug 2019 10:44:11 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:43142 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726181AbfHDOoK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 4 Aug 2019 10:36:41 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x74Ea95C075291;
-        Sun, 4 Aug 2019 09:36:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1564929369;
-        bh=8BzlrKnj/hLUiH+Pk7bowEUPEEAYuQSat8sKNXt0UCU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=oD5jehUM3TY4WdrKiVlJ7cza1+WFPLQvez4n6S+gKwPS3XVrUQI9RGOq8P4Vtgen4
-         xhvvvLb3PItlHbFm7KULgbqSlGFLqF0aa9qiR7F27ZFe+WCI0lgYNd78IJfBaZdshB
-         pXxRwWAwsMxueG1vH4xC9y/buffwlRf/DbCHDTWc=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x74Ea9KF058453
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sun, 4 Aug 2019 09:36:09 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Sun, 4 Aug
- 2019 09:36:09 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Sun, 4 Aug 2019 09:36:09 -0500
-Received: from [10.250.133.238] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x74Ea6R8120595;
-        Sun, 4 Aug 2019 09:36:06 -0500
-Subject: Re: [PATCH 6/7] mtd: spi-nor: Rework the SPI NOR lock/unlock logic
-To:     <Tudor.Ambarus@microchip.com>, <boris.brezillon@collabora.com>,
-        <marek.vasut@gmail.com>
-CC:     <dwmw2@infradead.org>, <computersforpeace@gmail.com>,
-        <miquel.raynal@bootlin.com>, <richard@nod.at>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <boris.brezillon@bootlin.com>
-References: <20190731090315.26798-1-tudor.ambarus@microchip.com>
- <20190731090315.26798-7-tudor.ambarus@microchip.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <21112f0c-abf0-2b86-5847-2ad7676a29be@ti.com>
-Date:   Sun, 4 Aug 2019 20:06:05 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 4 Aug 2019 10:44:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=5rdh5G3lzzyq4EoUCDQ5vzYWt2z2/ddaXxkgEfQ0PHo=; b=IVjn9fgQ9/E+g8+WjfQVMK8Q5
+        j3vCPYCzAnTsHuLB3r5Um+aCRhNQoONqJDIW+mm7keg+rMTJOYyuQx3tLtFpeCUwFnt4qPMdU/eJV
+        Y7y4b2LNzuhyq3dJ2QdG42K6fm+WX1m2hC1UzI0/vL2zzszTBpt+WEc43P+4zqMHji7qRWpHAp/Jz
+        214HVmu6/gHGEDUGbm9p9pHYDE/TE3qnvT3YPoLCkfwD9GWuSMZmO9f/XnK5RwL7LlyrcgeXGx8q2
+        TvtPgbj3uCporq3u8KsFfM7TXQainyMrQ5LwTpdcZrHMtS+fb54fKAVLSRsGVIDaK2o6x47Sda/0g
+        Es6Wam6GA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1huHjE-0007Le-Lx; Sun, 04 Aug 2019 14:43:21 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id CAEA2202989CD; Sun,  4 Aug 2019 16:43:17 +0200 (CEST)
+Date:   Sun, 4 Aug 2019 16:43:17 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mingo@kernel.org, jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, rostedt@goodmis.org,
+        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
+        oleg@redhat.com, joel@joelfernandes.org
+Subject: Re: [PATCH RFC tip/core/rcu 14/14] rcu/nohz: Make multi_cpu_stop()
+ enable tick on all online CPUs
+Message-ID: <20190804144317.GF2349@hirez.programming.kicks-ass.net>
+References: <20190802151435.GA1081@linux.ibm.com>
+ <20190802151501.13069-14-paulmck@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190731090315.26798-7-tudor.ambarus@microchip.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190802151501.13069-14-paulmck@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tudor,
+On Fri, Aug 02, 2019 at 08:15:01AM -0700, Paul E. McKenney wrote:
+> The multi_cpu_stop() function relies on the scheduler to gain control from
+> whatever is running on the various online CPUs, including any nohz_full
+> CPUs running long loops in kernel-mode code.  Lack of the scheduler-clock
+> interrupt on such CPUs can delay multi_cpu_stop() for several minutes
+> and can also result in RCU CPU stall warnings.  This commit therefore
+> causes multi_cpu_stop() to enable the scheduler-clock interrupt on all
+> online CPUs.
 
-On 31-Jul-19 2:33 PM, Tudor.Ambarus@microchip.com wrote:
-> From: Boris Brezillon <boris.brezillon@bootlin.com>
-> 
-> Move the locking hooks in a separate struct so that we have just
-> one field to update when we change the locking implementation.
-> 
-> stm_locking_ops, the legacy locking operations, can be overwritten
-> later on by implementing manufacturer specific default_init() hooks.
-> 
-> Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
-> [tudor.ambarus@microchip.com: use ->default_init() hook]
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-
-[...]
-
-> @@ -1782,7 +1788,7 @@ static int spi_nor_is_locked(struct mtd_info *mtd, loff_t ofs, uint64_t len)
->  	if (ret)
->  		return ret;
->  
-> -	ret = nor->flash_is_locked(nor, ofs, len);
-> +	ret = nor->locking_ops->is_locked(nor, ofs, len);
->  
->  	spi_nor_unlock_and_unprep(nor, SPI_NOR_OPS_LOCK);
->  	return ret;
-> @@ -4805,6 +4811,10 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
->  	nor->quad_enable = spansion_quad_enable;
->  	nor->set_4byte = spansion_set_4byte;
->  
-> +	/* Default locking operations. */
-> +	if (info->flags & SPI_NOR_HAS_LOCK)
-> +		nor->locking_ops = &stm_locking_ops;
-> +
-
-This condition is different than how lock/unlock ops are populated
-today. We would need to add SPI_NOR_HAS_LOCK to all SNOR_MFR_ST and
-SNOR_MFR_MICRON entries to be backward compatible or keep the condition
-as is.
-
->  	/* Init flash parameters based on flash_info struct and SFDP */
->  	spi_nor_init_params(nor, &params);
->  
-> @@ -4819,21 +4829,6 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
->  	mtd->_read = spi_nor_read;
->  	mtd->_resume = spi_nor_resume;
->  
-> -	/* NOR protection support for STmicro/Micron chips and similar */
-> -	if (JEDEC_MFR(info) == SNOR_MFR_ST ||
-> -	    JEDEC_MFR(info) == SNOR_MFR_MICRON ||
-> -	    info->flags & SPI_NOR_HAS_LOCK) {
-> -		nor->flash_lock = stm_lock;
-> -		nor->flash_unlock = stm_unlock;
-> -		nor->flash_is_locked = stm_is_locked;
-> -	}
-> -
-
-[...]
-
-> diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
-> index a434ab7a53e6..bd68ec5a10e7 100644
-> --- a/include/linux/mtd/spi-nor.h
-> +++ b/include/linux/mtd/spi-nor.h
-> @@ -425,9 +425,23 @@ struct spi_nor {
->  	int (*set_4byte)(struct spi_nor *nor, bool enable);
->  	int (*clear_sr_bp)(struct spi_nor *nor);
->  
-> +	const struct spi_nor_locking_ops *locking_ops;
-> +
-
-Also, to be consistent, document this new member.
-
-
->  	void *priv;
->  };
->  
-> +/**
-> + * struct spi_nor_locking_ops - SPI NOR locking methods
-> + * @lock: lock a region of the SPI NOR
-> + * @unlock: unlock a region of the SPI NOR
-> + * @is_locked: check if a region of the SPI NOR is completely locked
-> + */
-> +struct spi_nor_locking_ops {
-> +	int (*lock)(struct spi_nor *nor, loff_t ofs, uint64_t len);
-> +	int (*unlock)(struct spi_nor *nor, loff_t ofs, uint64_t len);
-> +	int (*is_locked)(struct spi_nor *nor, loff_t ofs, uint64_t len);
-
-checkpatch does not like uint64_t. Please changes these to size_t
-
-Regards
-Vignesh
-
-
-> +};
-> +
->  static u64 __maybe_unused
->  spi_nor_region_is_last(const struct spi_nor_erase_region *region)
->  {
-> 
+This sounds wrong; should we be fixing sched_can_stop_tick() instead to
+return false when the stop task is runnable?
