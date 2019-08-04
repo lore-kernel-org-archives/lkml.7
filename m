@@ -2,97 +2,70 @@ Return-Path: <SRS0=geQ9=WA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38660C31E40
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 01:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A99C31E40
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 01:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0313A217D6
-	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 01:46:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93C8621655
+	for <linux-kernel@archiver.kernel.org>; Sun,  4 Aug 2019 01:55:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564883167;
-	bh=LObcNmCTMYOwT0YqrzSQoS9DFz9YmJB/jsZ8jz9VWiw=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=0rrQwBWupBTxTiNCy8VAvqoNjmNWJQHmYgmlgCN3tmxrpO54WA7N++Qag/NlJqJlF
-	 /YeyPA8j908UhGXGBRqWVoyNilfUKX3nFcyoDpZLllhj8l7SvSQjIoe90ah7wOynwO
-	 J2KpkBg+1n6efHKMs0SkpA6X+ywUKFoSZXu/jUt4=
+	s=default; t=1564883713;
+	bh=wSG6jf9T+ocPDPBrS4p+orC3jQ6/dpbATN0xmdl2mkI=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=TIonj8TT77Fy0l3l2ILGXUKzYmn0qnuRHyONN64s9YZJrg23IX01u7hO+CkuPypjz
+	 ZiuJEg6kda8Zo+xLt3VscvKX692JLxXqr42tIoBsGFN6lDwFTrVN9n0VZ18aM5XMg6
+	 Yi97PDMs16oaZEqTqIthXVvd0znIvtPYpvy0IGrU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729435AbfHDBqE (ORCPT
+        id S1729454AbfHDBzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 3 Aug 2019 21:46:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45392 "EHLO mail.kernel.org"
+        Sat, 3 Aug 2019 21:55:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726150AbfHDBqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 3 Aug 2019 21:46:04 -0400
-Received: from localhost.localdomain (ool-18bba523.dyn.optonline.net [24.187.165.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F253321726;
-        Sun,  4 Aug 2019 01:46:01 +0000 (UTC)
+        id S1729154AbfHDBzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 3 Aug 2019 21:55:11 -0400
+Subject: Re: [PULL 0/1] xtensa fixes for v5.3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564883163;
-        bh=LObcNmCTMYOwT0YqrzSQoS9DFz9YmJB/jsZ8jz9VWiw=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=E2bL4sYF6FreUCYUd9IpAVztcpoyip+1mUP3FEP3RYjJ24xUpPslMV+cTd2qyJ4MA
-         0huAb7ZkdApN7WG1I353p1c7oZ/SscxOtvscfIx0Cy6Tq/ZhNMOZAkXjLtx+rt/mdd
-         btu9sLWTJWfbk7cGLxkNJbr4dTwd0Ew0vA63dfM8=
-Message-ID: <1564883160.11223.103.camel@kernel.org>
-Subject: Re: [PATCH] KEYS: trusted: allow module init if TPM is inactive or
- deactivated
-From:   Mimi Zohar <zohar@kernel.org>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Tyler Hicks <tyhicks@canonical.com>
-Cc:     Roberto Sassu <roberto.sassu@huawei.com>, jejb@linux.ibm.com,
-        jgg@ziepe.ca, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org, crazyt2019+lml@gmail.com,
-        nayna@linux.vnet.ibm.com, silviu.vlasceanu@huawei.com
-Date:   Sat, 03 Aug 2019 21:46:00 -0400
-In-Reply-To: <aff3502c598fb76a1517795edaacd8c8ea330051.camel@linux.intel.com>
-References: <20190705163735.11539-1-roberto.sassu@huawei.com>
-         <20190711194811.rfsohbfc3a7carpa@linux.intel.com>
-         <b4454a78-1f1b-cc75-114a-99926e097b05@huawei.com>
-         <20190801163215.mfkagoafkxscesne@linux.intel.com>
-         <e50c4cfa-1f0c-6f4d-1910-010a8d874393@huawei.com>
-         <20190802142721.GA26616@elm>
-         <20190802194226.oiztvme5klkmw6fh@linux.intel.com>
-         <20190802202343.GE26616@elm>
-         <aff3502c598fb76a1517795edaacd8c8ea330051.camel@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        s=default; t=1564883711;
+        bh=wSG6jf9T+ocPDPBrS4p+orC3jQ6/dpbATN0xmdl2mkI=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=NXj8bdSnfGDi6R8ol91F0HzQfVagXJo19JgMnGwPCdnbnukdl6YulzN024mGqSP6r
+         lwRj/4ALpBiO9OSRYeBGH7G8EvWsBVHuYgoUoKduTZ2rl46lU2jY21quuHlY+laCva
+         hRdkDeMpxr5PCEsQ4To1P051XPmz2fxO00S7zJAg=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190804003317.15370-1-jcmvbkbc@gmail.com>
+References: <20190804003317.15370-1-jcmvbkbc@gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190804003317.15370-1-jcmvbkbc@gmail.com>
+X-PR-Tracked-Remote: git://github.com/jcmvbkbc/linux-xtensa.git
+ tags/xtensa-20190803
+X-PR-Tracked-Commit-Id: e3cacb73e626d885b8cf24103fed0ae26518e3c4
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: d8778f13b73f1cde08be0ece18571dee495b92f1
+Message-Id: <156488371119.19418.14198023350636017348.pr-tracker-bot@kernel.org>
+Date:   Sun, 04 Aug 2019 01:55:11 +0000
+To:     Max Filippov <jcmvbkbc@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-08-03 at 17:44 +0300, Jarkko Sakkinen wrote:
-> On Fri, 2019-08-02 at 15:23 -0500, Tyler Hicks wrote:
-> > That wasn't the conclusion that I came to. I prefer Robert's proposed
-> > change to trusted.ko.
-> > 
-> > How do you propose that this be fixed in eCryptfs?
-> > 
-> > Removing encrypted_key support from eCryptfs is the only way that I can
-> > see to fix the bug in eCryptfs. That support has been there since 2011.
-> > I'm not sure of the number of users that would be broken by removing
-> > encrypted_key support. I don't think the number is high but I can't say
-> > that confidently.
-> 
-> Looking at the documentation [1] it is stated that
-> 
-> "Encrypted keys do not depend on a TPM, and are faster, as they use AES
-> for encryption/decryption."
-> 
-> Why would you need to remove support for encrypted keys? Isn't it a
-> regression in encrypted keys to hard depend on trusted keys given
-> what the documentation says?
+The pull request you sent on Sat,  3 Aug 2019 17:33:17 -0700:
 
-"Encrypted" key are symmetric keys, which are encrypted/decrypted
-either by a "trusted" key or, for development purposes only, a "user"
-key.
+> git://github.com/jcmvbkbc/linux-xtensa.git tags/xtensa-20190803
 
-Mimi
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/d8778f13b73f1cde08be0ece18571dee495b92f1
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
