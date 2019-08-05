@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D433C32754
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC2EC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D818020679
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:17:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B906D2067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:17:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011043;
-	bh=kxYrQmdRCtib0t6LmWD86n72w2PuoQG4j+uU0f3cboU=;
+	s=default; t=1565011047;
+	bh=uhRnb8qBmv5YbEoS3SVhg9Z7ozD/abVLDN6+uSb0wqk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jc/KdwgYJvWCNk1y8WMhKgatGIZXXd9NPo5TtghymDmhCdPowsvt1F0KMwR3KjzEq
-	 fO/+bquUEPZGopUGaEPm54JiG39NrLtSX41C7TeBuRBni6G7mmZ+EaB1YktdzOMvvZ
-	 g68jz3WrV5fcUlgiaDdICDbdyIT7mjK0mTxEWWqA=
+	b=GWU4fqH6bagDQ5/L414Y4xd/lgxyvweoG7nciwsZ1/GgSyodaxeFcJCqvWoDY25yJ
+	 b6T6XFw/Mr2OboLCSs+BqTm9lbnJaISKsTwXgT1f2C/f+JvYO+g1h6WKKvQTxZJnCZ
+	 jHcXaIgcSEQhN7xsTOlcCUAcQCEjYM3MdSPObTOE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729313AbfHENF3 (ORCPT
+        id S1729286AbfHENFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:05:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41446 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729284AbfHENFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 5 Aug 2019 09:05:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41210 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729253AbfHENFN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:05:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7725F216F4;
-        Mon,  5 Aug 2019 13:05:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B3C0214C6;
+        Mon,  5 Aug 2019 13:05:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010323;
-        bh=kxYrQmdRCtib0t6LmWD86n72w2PuoQG4j+uU0f3cboU=;
+        s=default; t=1565010312;
+        bh=uhRnb8qBmv5YbEoS3SVhg9Z7ozD/abVLDN6+uSb0wqk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WIIEmsLd7avyOk8dAo61Na8Mh9v2grACSLF7nlWZc3kvw3PJjSccdXeFWTviTGfGe
-         ZGsE+uAJV6yVkKyF0aH1Z2tevM5BtKg7d56icFNyp3BDtXH/4DHkOVOYR7ye/Y+Vor
-         8xixxGQuPdzwYUbzovnlzViOrsPhrqNXCvQUESS0=
+        b=q3TGuqinFM/B3fZL64vwO75ByhlKW6LdA2NosnUNCyGgQBbs3v7D6BJB+214ne6xk
+         pY4OpUL4q6tZvAnNh4z66Y5YoubhnqokInEdv4HNPn6uszevOrIL23ZkKZWpXHH/Ix
+         OVlAQa0fvLSwPPBiNmAUDlBSoQP/Blt1ARQ1GPRM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Petr Cvek <petrcvekcz@gmail.com>,
+        Paul Burton <paul.burton@mips.com>, hauke@hauke-m.de,
+        john@phrozen.org, linux-mips@vger.kernel.org,
+        openwrt-devel@lists.openwrt.org, pakahmar@hotmail.com,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 14/42] ACPI: fix false-positive -Wuninitialized warning
-Date:   Mon,  5 Aug 2019 15:02:40 +0200
-Message-Id: <20190805124926.496049277@linuxfoundation.org>
+Subject: [PATCH 4.9 07/42] MIPS: lantiq: Fix bitfield masking
+Date:   Mon,  5 Aug 2019 15:02:33 +0200
+Message-Id: <20190805124925.726213552@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124924.788666484@linuxfoundation.org>
 References: <20190805124924.788666484@linuxfoundation.org>
@@ -62,56 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit dfd6f9ad36368b8dbd5f5a2b2f0a4705ae69a323 ]
+[ Upstream commit ba1bc0fcdeaf3bf583c1517bd2e3e29cf223c969 ]
 
-clang gets confused by an uninitialized variable in what looks
-to it like a never executed code path:
+The modification of EXIN register doesn't clean the bitfield before
+the writing of a new value. After a few modifications the bitfield would
+accumulate only '1's.
 
-arch/x86/kernel/acpi/boot.c:618:13: error: variable 'polarity' is uninitialized when used here [-Werror,-Wuninitialized]
-        polarity = polarity ? ACPI_ACTIVE_LOW : ACPI_ACTIVE_HIGH;
-                   ^~~~~~~~
-arch/x86/kernel/acpi/boot.c:606:32: note: initialize the variable 'polarity' to silence this warning
-        int rc, irq, trigger, polarity;
-                                      ^
-                                       = 0
-arch/x86/kernel/acpi/boot.c:617:12: error: variable 'trigger' is uninitialized when used here [-Werror,-Wuninitialized]
-        trigger = trigger ? ACPI_LEVEL_SENSITIVE : ACPI_EDGE_SENSITIVE;
-                  ^~~~~~~
-arch/x86/kernel/acpi/boot.c:606:22: note: initialize the variable 'trigger' to silence this warning
-        int rc, irq, trigger, polarity;
-                            ^
-                             = 0
-
-This is unfortunately a design decision in clang and won't be fixed.
-
-Changing the acpi_get_override_irq() macro to an inline function
-reliably avoids the issue.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Petr Cvek <petrcvekcz@gmail.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: hauke@hauke-m.de
+Cc: john@phrozen.org
+Cc: linux-mips@vger.kernel.org
+Cc: openwrt-devel@lists.openwrt.org
+Cc: pakahmar@hotmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/acpi.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/mips/lantiq/irq.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index ca2b4c4aec42c..719eb97217a3c 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -309,7 +309,10 @@ void acpi_set_irq_model(enum acpi_irq_model_id model,
- #ifdef CONFIG_X86_IO_APIC
- extern int acpi_get_override_irq(u32 gsi, int *trigger, int *polarity);
- #else
--#define acpi_get_override_irq(gsi, trigger, polarity) (-1)
-+static inline int acpi_get_override_irq(u32 gsi, int *trigger, int *polarity)
-+{
-+	return -1;
-+}
- #endif
- /*
-  * This function undoes the effect of one call to acpi_register_gsi().
+diff --git a/arch/mips/lantiq/irq.c b/arch/mips/lantiq/irq.c
+index 8ac0e5994ed29..7c6f75c2aa4df 100644
+--- a/arch/mips/lantiq/irq.c
++++ b/arch/mips/lantiq/irq.c
+@@ -160,8 +160,9 @@ static int ltq_eiu_settype(struct irq_data *d, unsigned int type)
+ 			if (edge)
+ 				irq_set_handler(d->hwirq, handle_edge_irq);
+ 
+-			ltq_eiu_w32(ltq_eiu_r32(LTQ_EIU_EXIN_C) |
+-				(val << (i * 4)), LTQ_EIU_EXIN_C);
++			ltq_eiu_w32((ltq_eiu_r32(LTQ_EIU_EXIN_C) &
++				    (~(7 << (i * 4)))) | (val << (i * 4)),
++				    LTQ_EIU_EXIN_C);
+ 		}
+ 	}
+ 
 -- 
 2.20.1
 
