@@ -2,139 +2,227 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9A3C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF436C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB08B2067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:13:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="ovtMuhKi"
+	by mail.kernel.org (Postfix) with ESMTP id 96AF82183F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:14:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728377AbfHEJNn (ORCPT
+        id S1727979AbfHEJOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 05:13:43 -0400
-Received: from mail-eopbgr1400113.outbound.protection.outlook.com ([40.107.140.113]:28757
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        Mon, 5 Aug 2019 05:14:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41494 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727979AbfHEJNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 05:13:40 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ReU4e2y8Po0mN31SbRFK9/uZmAQzD6z+rMDxmSnswd34uN0R0/VcYOQn/PhsKTB+ZGJ7OxFE4Dcn04eXah3BB8iK3osCsdAMmh9r1dP1urU2NTKpgLoGoKK1s1kjD/IN52kdI2U5JJfqEUbYyI9+zvyT82R9KAnl2UmfTiRXXQUSHuPtF0IIvbcHxxTaK8OyFO05FAa8UvCcQuoU/g7/9WDJ+tWLRtnnNmYTEj0XZP128wFp08GNYhUbGOfCn+jglDkea//VSiC/2ZpX+YUTlaWtbWeH8/4s1CHndStmrnnFKOceBLxolyqaaOfHdGis5aZuRrJwC5sLmhA30wYyNw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rHcCGHcyoQggT8KTDMvMlJQSNtcC3WEDUnlrtYiZZhI=;
- b=H8lQA7pGVqH0Cu5bv+1D0C40LICXvEK68zDtLnAYFzuglQN63rL+fmnjMb6/IpUtbhN8AvBwJRg08hhcfPGWHVg9oopV/LmZMfIzu+uepzNqhuHRiae/nJhTq9RokuSEWGTqUd4Qc5wFPxIpnboWqW9l5+7kJcFswMqlGnthxqS03YdFyk7TNMZS9PIigJ5mtgnP3WimMq+ZUDlATAFL/56SpTgBkklSS9+vnFIwIw/qX6lnbm0HNNZt1jRiKgTKGVFZCyI4yYjkvbpRuyo5K6h2KZbT7msEwePCzO8hz+Dn65jGLAMScZPt8C/5XtHa0ROSLjOUt48+s7B2kOi0VA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=bp.renesas.com;dmarc=pass action=none
- header.from=bp.renesas.com;dkim=pass header.d=bp.renesas.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rHcCGHcyoQggT8KTDMvMlJQSNtcC3WEDUnlrtYiZZhI=;
- b=ovtMuhKiZJleA7B53f2kJLflf16lbu+IRfLGV0xFTL0jjfE+KqxKTqlrfTDhDTX3X+d7FUQlawJDHkTILvFEjYvoZW5aybW+MyaPIcmi3Rxt0mBoJOu2GlX2pRhTRLoyln1eWn8/QHssZPI6aeS8NEZBt/P0lE3OLK6Nq31h3eU=
-Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com (52.133.163.13) by
- TY1PR01MB1817.jpnprd01.prod.outlook.com (52.133.162.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2136.16; Mon, 5 Aug 2019 09:13:37 +0000
-Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com
- ([fe80::d881:cb74:8277:5a16]) by TY1PR01MB1770.jpnprd01.prod.outlook.com
- ([fe80::d881:cb74:8277:5a16%7]) with mapi id 15.20.2136.010; Mon, 5 Aug 2019
- 09:13:37 +0000
-From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-CC:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH/RFC 08/12] drm: rcar-du: lvds: Fix bridge_to_rcar_lvds
-Thread-Topic: [PATCH/RFC 08/12] drm: rcar-du: lvds: Fix bridge_to_rcar_lvds
-Thread-Index: AQHVSQTSrbTIKPXXuEe1pDPVJr2EH6bnhLeAgATFG6A=
-Date:   Mon, 5 Aug 2019 09:13:37 +0000
-Message-ID: <TY1PR01MB1770195BDEBCFF107F0B1E03C0DA0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1564731249-22671-9-git-send-email-fabrizio.castro@bp.renesas.com>
- <20190802082209.GI5008@pendragon.ideasonboard.com>
-In-Reply-To: <20190802082209.GI5008@pendragon.ideasonboard.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=fabrizio.castro@bp.renesas.com; 
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5daabcb1-8383-4ec4-07e5-08d71985333e
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:TY1PR01MB1817;
-x-ms-traffictypediagnostic: TY1PR01MB1817:
-x-microsoft-antispam-prvs: <TY1PR01MB181727CB49DD5BBD62BB06F3C0DA0@TY1PR01MB1817.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 01208B1E18
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(39860400002)(376002)(346002)(136003)(396003)(189003)(199004)(102836004)(14454004)(256004)(66066001)(71190400001)(6506007)(99286004)(76176011)(53546011)(81166006)(52536014)(81156014)(68736007)(71200400001)(7416002)(66946007)(6116002)(305945005)(478600001)(7736002)(6436002)(64756008)(66556008)(66476007)(66446008)(86362001)(26005)(186003)(44832011)(486006)(74316002)(53936002)(3846002)(229853002)(6916009)(446003)(11346002)(33656002)(316002)(25786009)(4326008)(2906002)(5660300002)(9686003)(8936002)(8676002)(76116006)(55016002)(476003)(54906003)(6246003)(7696005)(107886003);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1817;H:TY1PR01MB1770.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: bp.renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Ss8tHes4H673f0UhK8eWDRwWH/YBYUIxWLCVJkpD6vn6MmDV64wa5b5VSNiYSBl7hsojrJceL/HE43Rvmm/zoj8DnYP9qRVXJsv5LZ1RuE8mmGoFqQ8IijX+zQSstD0w3D8gPTl06TqpMHzPY08ROBkXkEgW7EJ2cPuAii3p5152WcoNKCeYovoF9WXYqHPrNsHr5RqZsqjMkx0MC4VSTCJUR5OIH3vD0TrUhueiFt/YQkSfXupc5BVQbbefMu8bp/LhncdjggxIzqaLWhICpdvOyYXdCnD7gp9OWlEpJbFzs/cO4uvQlN+OPqbxNfv75+G6MgaV7lM45ZTLpXx3yFiiyV6EJpDxxaCuKS4yXg1JST1NE3rHGQgNI5oqsL5eZLifImp11rmVA4HZFhMpOjtXMHDv89bcXbLjhgqr8SM=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1727349AbfHEJOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 05:14:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5E290AE56;
+        Mon,  5 Aug 2019 09:14:43 +0000 (UTC)
+Subject: Re: [PATCH 2/3] mm, compaction: raise compaction priority after it
+ withdrawns
+To:     Mike Kravetz <mike.kravetz@oracle.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Cc:     Hillf Danton <hdanton@sina.com>, Michal Hocko <mhocko@kernel.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20190802223930.30971-1-mike.kravetz@oracle.com>
+ <20190802223930.30971-3-mike.kravetz@oracle.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Openpgp: preference=signencrypt
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ mQINBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
+ KxRWDHX0R2tgpFDXHnzZcQywawu8eSq0LxzxFNYMvtB7sV1pxYwej2qx9B75qW2plBs+7+YB
+ 87tMFA+u+L4Z5xAzIimfLD5EKC56kJ1CsXlM8S/LHcmdD9Ctkn3trYDNnat0eoAcfPIP2OZ+
+ 9oe9IF/R28zmh0ifLXyJQQz5ofdj4bPf8ecEW0rhcqHfTD8k4yK0xxt3xW+6Exqp9n9bydiy
+ tcSAw/TahjW6yrA+6JhSBv1v2tIm+itQc073zjSX8OFL51qQVzRFr7H2UQG33lw2QrvHRXqD
+ Ot7ViKam7v0Ho9wEWiQOOZlHItOOXFphWb2yq3nzrKe45oWoSgkxKb97MVsQ+q2SYjJRBBH4
+ 8qKhphADYxkIP6yut/eaj9ImvRUZZRi0DTc8xfnvHGTjKbJzC2xpFcY0DQbZzuwsIZ8OPJCc
+ LM4S7mT25NE5kUTG/TKQCk922vRdGVMoLA7dIQrgXnRXtyT61sg8PG4wcfOnuWf8577aXP1x
+ 6mzw3/jh3F+oSBHb/GcLC7mvWreJifUL2gEdssGfXhGWBo6zLS3qhgtwjay0Jl+kza1lo+Cv
+ BB2T79D4WGdDuVa4eOrQ02TxqGN7G0Biz5ZLRSFzQSQwLn8fbwARAQABtCBWbGFzdGltaWwg
+ QmFia2EgPHZiYWJrYUBzdXNlLmN6PokCVAQTAQoAPgIbAwULCQgHAwUVCgkICwUWAgMBAAIe
+ AQIXgBYhBKlA1DSZLC6OmRA9UCJPp+fMgqZkBQJcbbyGBQkH8VTqAAoJECJPp+fMgqZkpGoP
+ /1jhVihakxw1d67kFhPgjWrbzaeAYOJu7Oi79D8BL8Vr5dmNPygbpGpJaCHACWp+10KXj9yz
+ fWABs01KMHnZsAIUytVsQv35DMMDzgwVmnoEIRBhisMYOQlH2bBn/dqBjtnhs7zTL4xtqEcF
+ 1hoUFEByMOey7gm79utTk09hQE/Zo2x0Ikk98sSIKBETDCl4mkRVRlxPFl4O/w8dSaE4eczH
+ LrKezaFiZOv6S1MUKVKzHInonrCqCNbXAHIeZa3JcXCYj1wWAjOt9R3NqcWsBGjFbkgoKMGD
+ usiGabetmQjXNlVzyOYdAdrbpVRNVnaL91sB2j8LRD74snKsV0Wzwt90YHxDQ5z3M75YoIdl
+ byTKu3BUuqZxkQ/emEuxZ7aRJ1Zw7cKo/IVqjWaQ1SSBDbZ8FAUPpHJxLdGxPRN8Pfw8blKY
+ 8mvLJKoF6i9T6+EmlyzxqzOFhcc4X5ig5uQoOjTIq6zhLO+nqVZvUDd2Kz9LMOCYb516cwS/
+ Enpi0TcZ5ZobtLqEaL4rupjcJG418HFQ1qxC95u5FfNki+YTmu6ZLXy+1/9BDsPuZBOKYpUm
+ 3HWSnCS8J5Ny4SSwfYPH/JrtberWTcCP/8BHmoSpS/3oL3RxrZRRVnPHFzQC6L1oKvIuyXYF
+ rkybPXYbmNHN+jTD3X8nRqo+4Qhmu6SHi3VquQENBFsZNQwBCACuowprHNSHhPBKxaBX7qOv
+ KAGCmAVhK0eleElKy0sCkFghTenu1sA9AV4okL84qZ9gzaEoVkgbIbDgRbKY2MGvgKxXm+kY
+ n8tmCejKoeyVcn9Xs0K5aUZiDz4Ll9VPTiXdf8YcjDgeP6/l4kHb4uSW4Aa9ds0xgt0gP1Xb
+ AMwBlK19YvTDZV5u3YVoGkZhspfQqLLtBKSt3FuxTCU7hxCInQd3FHGJT/IIrvm07oDO2Y8J
+ DXWHGJ9cK49bBGmK9B4ajsbe5GxtSKFccu8BciNluF+BqbrIiM0upJq5Xqj4y+Xjrpwqm4/M
+ ScBsV0Po7qdeqv0pEFIXKj7IgO/d4W2bABEBAAGJA3IEGAEKACYWIQSpQNQ0mSwujpkQPVAi
+ T6fnzIKmZAUCWxk1DAIbAgUJA8JnAAFACRAiT6fnzIKmZMB0IAQZAQoAHRYhBKZ2GgCcqNxn
+ k0Sx9r6Fd25170XjBQJbGTUMAAoJEL6Fd25170XjDBUH/2jQ7a8g+FC2qBYxU/aCAVAVY0NE
+ YuABL4LJ5+iWwmqUh0V9+lU88Cv4/G8fWwU+hBykSXhZXNQ5QJxyR7KWGy7LiPi7Cvovu+1c
+ 9Z9HIDNd4u7bxGKMpn19U12ATUBHAlvphzluVvXsJ23ES/F1c59d7IrgOnxqIcXxr9dcaJ2K
+ k9VP3TfrjP3g98OKtSsyH0xMu0MCeyewf1piXyukFRRMKIErfThhmNnLiDbaVy6biCLx408L
+ Mo4cCvEvqGKgRwyckVyo3JuhqreFeIKBOE1iHvf3x4LU8cIHdjhDP9Wf6ws1XNqIvve7oV+w
+ B56YWoalm1rq00yUbs2RoGcXmtX1JQ//aR/paSuLGLIb3ecPB88rvEXPsizrhYUzbe1TTkKc
+ 4a4XwW4wdc6pRPVFMdd5idQOKdeBk7NdCZXNzoieFntyPpAq+DveK01xcBoXQ2UktIFIsXey
+ uSNdLd5m5lf7/3f0BtaY//f9grm363NUb9KBsTSnv6Vx7Co0DWaxgC3MFSUhxzBzkJNty+2d
+ 10jvtwOWzUN+74uXGRYSq5WefQWqqQNnx+IDb4h81NmpIY/X0PqZrapNockj3WHvpbeVFAJ0
+ 9MRzYP3x8e5OuEuJfkNnAbwRGkDy98nXW6fKeemREjr8DWfXLKFWroJzkbAVmeIL0pjXATxr
+ +tj5JC0uvMrrXefUhXTo0SNoTsuO/OsAKOcVsV/RHHTwCDR2e3W8mOlA3QbYXsscgjghbuLh
+ J3oTRrOQa8tUXWqcd5A0+QPo5aaMHIK0UAthZsry5EmCY3BrbXUJlt+23E93hXQvfcsmfi0N
+ rNh81eknLLWRYvMOsrbIqEHdZBT4FHHiGjnck6EYx/8F5BAZSodRVEAgXyC8IQJ+UVa02QM5
+ D2VL8zRXZ6+wARKjgSrW+duohn535rG/ypd0ctLoXS6dDrFokwTQ2xrJiLbHp9G+noNTHSan
+ ExaRzyLbvmblh3AAznb68cWmM3WVkceWACUalsoTLKF1sGrrIBj5updkKkzbKOq5gcC5AQ0E
+ Wxk1NQEIAJ9B+lKxYlnKL5IehF1XJfknqsjuiRzj5vnvVrtFcPlSFL12VVFVUC2tT0A1Iuo9
+ NAoZXEeuoPf1dLDyHErrWnDyn3SmDgb83eK5YS/K363RLEMOQKWcawPJGGVTIRZgUSgGusKL
+ NuZqE5TCqQls0x/OPljufs4gk7E1GQEgE6M90Xbp0w/r0HB49BqjUzwByut7H2wAdiNAbJWZ
+ F5GNUS2/2IbgOhOychHdqYpWTqyLgRpf+atqkmpIJwFRVhQUfwztuybgJLGJ6vmh/LyNMRr8
+ J++SqkpOFMwJA81kpjuGR7moSrUIGTbDGFfjxmskQV/W/c25Xc6KaCwXah3OJ40AEQEAAYkC
+ PAQYAQoAJhYhBKlA1DSZLC6OmRA9UCJPp+fMgqZkBQJbGTU1AhsMBQkDwmcAAAoJECJPp+fM
+ gqZkPN4P/Ra4NbETHRj5/fM1fjtngt4dKeX/6McUPDIRuc58B6FuCQxtk7sX3ELs+1+w3eSV
+ rHI5cOFRSdgw/iKwwBix8D4Qq0cnympZ622KJL2wpTPRLlNaFLoe5PkoORAjVxLGplvQIlhg
+ miljQ3R63ty3+MZfkSVsYITlVkYlHaSwP2t8g7yTVa+q8ZAx0NT9uGWc/1Sg8j/uoPGrctml
+ hFNGBTYyPq6mGW9jqaQ8en3ZmmJyw3CHwxZ5FZQ5qc55xgshKiy8jEtxh+dgB9d8zE/S/UGI
+ E99N/q+kEKSgSMQMJ/CYPHQJVTi4YHh1yq/qTkHRX+ortrF5VEeDJDv+SljNStIxUdroPD29
+ 2ijoaMFTAU+uBtE14UP5F+LWdmRdEGS1Ah1NwooL27uAFllTDQxDhg/+LJ/TqB8ZuidOIy1B
+ xVKRSg3I2m+DUTVqBy7Lixo73hnW69kSjtqCeamY/NSu6LNP+b0wAOKhwz9hBEwEHLp05+mj
+ 5ZFJyfGsOiNUcMoO/17FO4EBxSDP3FDLllpuzlFD7SXkfJaMWYmXIlO0jLzdfwfcnDzBbPwO
+ hBM8hvtsyq8lq8vJOxv6XD6xcTtj5Az8t2JjdUX6SF9hxJpwhBU0wrCoGDkWp4Bbv6jnF7zP
+ Nzftr4l8RuJoywDIiJpdaNpSlXKpj/K6KrnyAI/joYc7
+Message-ID: <8cdb8901-b1fa-86d4-15a8-379b24d8ed60@suse.cz>
+Date:   Mon, 5 Aug 2019 11:14:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5daabcb1-8383-4ec4-07e5-08d71985333e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Aug 2019 09:13:37.6013
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: fabrizio.castro@bp.renesas.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1817
+In-Reply-To: <20190802223930.30971-3-mike.kravetz@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTGF1cmVudCwNCg0KVGhhbmsgeW91IGZvciB5b3VyIGZlZWRiYWNrIQ0KDQo+IEZyb206IExh
-dXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4NCj4gU2Vu
-dDogMDIgQXVndXN0IDIwMTkgMDk6MjINCj4gU3ViamVjdDogUmU6IFtQQVRDSC9SRkMgMDgvMTJd
-IGRybTogcmNhci1kdTogbHZkczogRml4IGJyaWRnZV90b19yY2FyX2x2ZHMNCj4gDQo+IEhpIEZh
-YnJpemlvLA0KPiANCj4gVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guDQo+IA0KPiBPbiBGcmksIEF1
-ZyAwMiwgMjAxOSBhdCAwODozNDowNUFNICswMTAwLCBGYWJyaXppbyBDYXN0cm8gd3JvdGU6DQo+
-ID4gVXNpbmcgbmFtZSAiYnJpZGdlIiBmb3IgbWFjcm8gYnJpZGdlX3RvX3JjYXJfbHZkcyBhcmd1
-bWVudCBkb2Vzbid0DQo+ID4gd29yayB3aGVuIHRoZSBwb2ludGVyIG5hbWUgdXNlZCBieSB0aGUg
-Y2FsbGVyIGlzIG5vdCAiYnJpZGdlIi4NCj4gPiBSZW5hbWUgdGhlIGFyZ3VtZW50IHRvICJicmlk
-Z2VfcHRyIiB0byBhbGxvdyBmb3IgYW55IHBvaW50ZXINCj4gPiBuYW1lLg0KPiA+DQo+ID4gRml4
-ZXM6IGM2YTI3ZmE0MWZhYiAoImRybTogcmNhci1kdTogQ29udmVydCBMVkRTIGVuY29kZXIgY29k
-ZSB0byBicmlkZ2UgZHJpdmVyIikNCj4gPiBTaWduZWQtb2ZmLWJ5OiBGYWJyaXppbyBDYXN0cm8g
-PGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9n
-cHUvZHJtL3JjYXItZHUvcmNhcl9sdmRzLmMgfCA0ICsrLS0NCj4gPiAgMSBmaWxlIGNoYW5nZWQs
-IDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9k
-cml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2x2ZHMuYyBiL2RyaXZlcnMvZ3B1L2RybS9yY2Fy
-LWR1L3JjYXJfbHZkcy5jDQo+ID4gaW5kZXggOTdjNTFjMi4uZWRkNjNmNSAxMDA2NDQNCj4gPiAt
-LS0gYS9kcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2x2ZHMuYw0KPiA+ICsrKyBiL2RyaXZl
-cnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfbHZkcy5jDQo+ID4gQEAgLTcyLDggKzcyLDggQEAgc3Ry
-dWN0IHJjYXJfbHZkcyB7DQo+ID4gIAlib29sIHN0cmlwZV9zd2FwX2RhdGE7DQo+ID4gIH07DQo+
-ID4NCj4gPiAtI2RlZmluZSBicmlkZ2VfdG9fcmNhcl9sdmRzKGJyaWRnZSkgXA0KPiA+IC0JY29u
-dGFpbmVyX29mKGJyaWRnZSwgc3RydWN0IHJjYXJfbHZkcywgYnJpZGdlKQ0KPiA+ICsjZGVmaW5l
-IGJyaWRnZV90b19yY2FyX2x2ZHMoYnJpZGdlX3B0cikgXA0KPiA+ICsJY29udGFpbmVyX29mKGJy
-aWRnZV9wdHIsIHN0cnVjdCByY2FyX2x2ZHMsIGJyaWRnZSkNCj4gDQo+IEhvdyBhYm91dCBqdXN0
-ICdiJyBpbnN0ZWFkIG9mICdicmlkZ2VfcHRyJyA/IElmIHRoYXQncyBmaW5lIHdpdGggeW91DQo+
-IEknbGwgdGFrZSB0aGUgbW9kaWZpZWQgcGF0Y2ggaW4gbXkgdHJlZSwgbm8gbmVlZCB0byByZXN1
-Ym1pdC4NCg0KVGhhdCdzIGZpbmUgYnkgbWUsIHRoYW5rIHlvdXIgZml4aW5nLg0KDQpUaGFua3Ms
-DQpGYWINCg0KPiANCj4gUmV2aWV3ZWQtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGlu
-Y2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4NCj4gDQo+ID4NCj4gPiAgI2RlZmluZSBjb25uZWN0b3Jf
-dG9fcmNhcl9sdmRzKGNvbm5lY3RvcikgXA0KPiA+ICAJY29udGFpbmVyX29mKGNvbm5lY3Rvciwg
-c3RydWN0IHJjYXJfbHZkcywgY29ubmVjdG9yKQ0KPiANCj4gLS0NCj4gUmVnYXJkcywNCj4gDQo+
-IExhdXJlbnQgUGluY2hhcnQNCg==
+On 8/3/19 12:39 AM, Mike Kravetz wrote:
+> From: Vlastimil Babka <vbabka@suse.cz>
+> 
+> Mike Kravetz reports that "hugetlb allocations could stall for minutes or hours
+> when should_compact_retry() would return true more often then it should.
+> Specifically, this was in the case where compact_result was COMPACT_DEFERRED
+> and COMPACT_PARTIAL_SKIPPED and no progress was being made."
+> 
+> The problem is that the compaction_withdrawn() test in should_compact_retry()
+> includes compaction outcomes that are only possible on low compaction priority,
+> and results in a retry without increasing the priority. This may result in
+> furter reclaim, and more incomplete compaction attempts.
+> 
+> With this patch, compaction priority is raised when possible, or
+> should_compact_retry() returns false.
+> 
+> The COMPACT_SKIPPED result doesn't really fit together with the other outcomes
+> in compaction_withdrawn(), as that's a result caused by insufficient order-0
+> pages, not due to low compaction priority. With this patch, it is moved to
+> a new compaction_needs_reclaim() function, and for that outcome we keep the
+> current logic of retrying if it looks like reclaim will be able to help.
+> 
+> Reported-by: Mike Kravetz <mike.kravetz@oracle.com>
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> Tested-by: Mike Kravetz <mike.kravetz@oracle.com>
+
+There should be also your SOB, IIUC.
+
+> ---
+>  include/linux/compaction.h | 22 +++++++++++++++++-----
+>  mm/page_alloc.c            | 16 ++++++++++++----
+>  2 files changed, 29 insertions(+), 9 deletions(-)
+> 
+> diff --git a/include/linux/compaction.h b/include/linux/compaction.h
+> index 9569e7c786d3..4b898cdbdf05 100644
+> --- a/include/linux/compaction.h
+> +++ b/include/linux/compaction.h
+> @@ -129,11 +129,8 @@ static inline bool compaction_failed(enum compact_result result)
+>  	return false;
+>  }
+>  
+> -/*
+> - * Compaction  has backed off for some reason. It might be throttling or
+> - * lock contention. Retrying is still worthwhile.
+> - */
+> -static inline bool compaction_withdrawn(enum compact_result result)
+> +/* Compaction needs reclaim to be performed first, so it can continue. */
+> +static inline bool compaction_needs_reclaim(enum compact_result result)
+>  {
+>  	/*
+>  	 * Compaction backed off due to watermark checks for order-0
+> @@ -142,6 +139,16 @@ static inline bool compaction_withdrawn(enum compact_result result)
+>  	if (result == COMPACT_SKIPPED)
+>  		return true;
+>  
+> +	return false;
+> +}
+> +
+> +/*
+> + * Compaction has backed off for some reason after doing some work or none
+> + * at all. It might be throttling or lock contention. Retrying might be still
+> + * worthwhile, but with a higher priority if allowed.
+> + */
+> +static inline bool compaction_withdrawn(enum compact_result result)
+> +{
+>  	/*
+>  	 * If compaction is deferred for high-order allocations, it is
+>  	 * because sync compaction recently failed. If this is the case
+> @@ -207,6 +214,11 @@ static inline bool compaction_failed(enum compact_result result)
+>  	return false;
+>  }
+>  
+> +static inline bool compaction_needs_reclaim(enum compact_result result)
+> +{
+> +	return false;
+> +}
+> +
+>  static inline bool compaction_withdrawn(enum compact_result result)
+>  {
+>  	return true;
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index d3bb601c461b..af29c05e23aa 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -3965,15 +3965,23 @@ should_compact_retry(struct alloc_context *ac, int order, int alloc_flags,
+>  	if (compaction_failed(compact_result))
+>  		goto check_priority;
+>  
+> +	/*
+> +	 * compaction was skipped because there are not enough order-0 pages
+> +	 * to work with, so we retry only if it looks like reclaim can help.
+> +	 */
+> +	if (compaction_needs_reclaim(compact_result)) {
+> +		ret = compaction_zonelist_suitable(ac, order, alloc_flags);
+> +		goto out;
+> +	}
+> +
+>  	/*
+>  	 * make sure the compaction wasn't deferred or didn't bail out early
+>  	 * due to locks contention before we declare that we should give up.
+> -	 * But do not retry if the given zonelist is not suitable for
+> -	 * compaction.
+> +	 * But the next retry should use a higher priority if allowed, so
+> +	 * we don't just keep bailing out endlessly.
+>  	 */
+>  	if (compaction_withdrawn(compact_result)) {
+> -		ret = compaction_zonelist_suitable(ac, order, alloc_flags);
+> -		goto out;
+> +		goto check_priority;
+>  	}
+>  
+>  	/*
+> 
+
