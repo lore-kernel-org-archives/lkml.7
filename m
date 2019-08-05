@@ -2,91 +2,71 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E01C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E8FC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EC392086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:24:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF6E32086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:25:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="GcTf+FLj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729258AbfHEOYS (ORCPT
+        id S1729478AbfHEOZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 10:24:18 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:37159 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728028AbfHEOYS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 10:24:18 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1huduJ-0003js-F8; Mon, 05 Aug 2019 14:24:15 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     gregkh@linuxfoundation.org
-Cc:     stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [RESEND] [PATCH v2] USB: Disable USB2 LPM at shutdown
-Date:   Mon,  5 Aug 2019 22:24:12 +0800
-Message-Id: <20190805142412.23965-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 5 Aug 2019 10:25:17 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:34240 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728028AbfHEOZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 10:25:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=pM17/mm7hk6l4gBw6yqpxD0ipo386Hkuzc90J1eBglE=; b=GcTf+FLjhwfrAUNoa6l/XXGacB
+        kzklya1rmkLVLe/R5iYyoC3JilZyu6VOOTxRFULB93Vlr4x6dzso5Chtc9hCO4k7ngeQqdSuB568t
+        p+xID9+UbrphMcQC4gZ6MEhB/8dyUEEunc16p5H0oAa9J/ZnU+LUf0vqCAWT1JVKvlTc=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hudvF-0007St-54; Mon, 05 Aug 2019 16:25:13 +0200
+Date:   Mon, 5 Aug 2019 16:25:13 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, davem@davemloft.net,
+        robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com,
+        hkallweit1@gmail.com
+Subject: Re: [PATCH 04/16] net: phy: adin: add {write,read}_mmd hooks
+Message-ID: <20190805142513.GK24275@lunn.ch>
+References: <20190805165453.3989-1-alexandru.ardelean@analog.com>
+ <20190805165453.3989-5-alexandru.ardelean@analog.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190805165453.3989-5-alexandru.ardelean@analog.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The QCA Rome USB Bluetooth controller has several issues once LPM gets
-enabled:
-- Fails to get enumerated in coldboot. [1]
-- Drains more power (~ 0.2W) when the system is in S5. [2]
-- Disappears after a warmboot. [2]
+> diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
+> index b75c723bda79..3dd9fe50f4c8 100644
+> --- a/drivers/net/phy/adin.c
+> +++ b/drivers/net/phy/adin.c
+> @@ -14,6 +14,9 @@
+>  #define PHY_ID_ADIN1200				0x0283bc20
+>  #define PHY_ID_ADIN1300				0x0283bc30
+>  
+> +#define ADIN1300_MII_EXT_REG_PTR		0x10
+> +#define ADIN1300_MII_EXT_REG_DATA		0x11
+> +
+>  #define ADIN1300_INT_MASK_REG			0x0018
 
-The issue happens because the device lingers at LPM L1 in S5, so device
-can't get enumerated even after a reboot.
+Please be consistent with registers. Either use 4 digits, or 2 digits.
 
-Disable LPM at shutdown to solve the issue.
-
-[1] https://bugs.launchpad.net/bugs/1757218
-[2] https://patchwork.kernel.org/patch/10607097/
-
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
-v2: Use new LPM helpers.
-
- drivers/usb/core/port.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/usb/core/port.c b/drivers/usb/core/port.c
-index 1a06a4b5fbb1..bbbb35fa639f 100644
---- a/drivers/usb/core/port.c
-+++ b/drivers/usb/core/port.c
-@@ -285,6 +285,14 @@ static int usb_port_runtime_suspend(struct device *dev)
- }
- #endif
- 
-+static void usb_port_shutdown(struct device *dev)
-+{
-+	struct usb_port *port_dev = to_usb_port(dev);
-+
-+	if (port_dev->child)
-+		usb_disable_usb2_hardware_lpm(port_dev->child);
-+}
-+
- static const struct dev_pm_ops usb_port_pm_ops = {
- #ifdef CONFIG_PM
- 	.runtime_suspend =	usb_port_runtime_suspend,
-@@ -301,6 +309,7 @@ struct device_type usb_port_device_type = {
- static struct device_driver usb_port_driver = {
- 	.name = "usb",
- 	.owner = THIS_MODULE,
-+	.shutdown = usb_port_shutdown,
- };
- 
- static int link_peers(struct usb_port *left, struct usb_port *right)
--- 
-2.17.1
-
+       Andrew
