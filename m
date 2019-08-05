@@ -2,115 +2,71 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6340AC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E6F3C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DC132067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:13:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A4BF2067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:13:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010803;
-	bh=O+70/KXM6Un8qCtO310oCJhukJo4rQYOMa+IEdVzAaU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WrCr52Bcqb5l40YU3+V4+sgMnjLUTdZjlC5YxhHbVmfJoTjE2C2zHufMgRD9nvd9D
-	 gs2oGx6nXloUu/aozIFTp1667mbhZrqiWYejIkfTVYHp34YygYeTPLxJOenIcK7UtP
-	 /cG+oXcvT8o80Ugouhlx3n/2+GUlOKSXW1ZK2Elk=
+	s=default; t=1565010809;
+	bh=LTRsxYOPK9boOsPL66WtkKRklA/LN8sc3TCoGIEsBok=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=gSvKa2dztKkTFTll8ACg3offhrAuHRFsofq+MNJRomfQLbZnERdgl+AzFoBwjeMym
+	 IXaJ2TqDWMEGP1vtabslPewcLs83JMnZ3c4IHXOXRcxXjuPZAyuiKRr/mT6Cbjc0Hj
+	 BPojgiyYbwaHIzJ1esZN+GJ9iEKva2UIp0KzF7RY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729932AbfHENNW (ORCPT
+        id S1730133AbfHENN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:13:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47640 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:13:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729407AbfHENJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:09:14 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729407AbfHENNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:13:25 -0400
+Received: from [192.168.0.101] (unknown [180.111.32.87])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42D362067D;
-        Mon,  5 Aug 2019 13:09:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 391732075B;
+        Mon,  5 Aug 2019 13:13:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010553;
-        bh=O+70/KXM6Un8qCtO310oCJhukJo4rQYOMa+IEdVzAaU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GEkheRLwNHJZLZ/knmkOH9uuQVfewofcU+NeFCrbMohcoQ+EiXTpWVfasmlzQAWJS
-         GxqVT3/siM4b3IijJ68LUK2bBpC7mV4576eLUZ+mS3dB65bvk/mRlG3CKgeNERHxm6
-         zDWzuH1StN8T6FEeqNw2Ut8EW743cnvEvFsGRLYw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 02/74] ARM: dts: rockchip: Make rk3288-veyron-minnie run at hs200
-Date:   Mon,  5 Aug 2019 15:02:15 +0200
-Message-Id: <20190805124936.029458352@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190805124935.819068648@linuxfoundation.org>
-References: <20190805124935.819068648@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1565010805;
+        bh=LTRsxYOPK9boOsPL66WtkKRklA/LN8sc3TCoGIEsBok=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=OYMIXGORSNofcJWEjw8n5bn8gs6jqLQUgv8dTd1fAOEv2EarcVp1404rX89V05U4Q
+         jHWeohZ6WZcGQlNFItbc8uID/XmqNnnLc9WenDUHKEe1xhd1hoXaE5fW8Uof75OlgI
+         1rCVUM4pyHsKfCxDil3CV+Vd94YPgx8q3bKGNvyo=
+Subject: Re: [f2fs-dev] [PATCH] f2fs: cleanup the code in build_sit_entries.
+To:     Lihong Kou <koulihong@huawei.com>, yuchao0@huawei.com,
+        jaegeuk@kernel.org
+Cc:     linux-kernel@vger.kernel.org, fangwei1@huawei.com,
+        linux-f2fs-devel@lists.sourceforge.net
+References: <1565003632-124792-1-git-send-email-koulihong@huawei.com>
+From:   Chao Yu <chao@kernel.org>
+Message-ID: <632c947b-2c44-b48d-e80e-0f6c43ac2f6d@kernel.org>
+Date:   Mon, 5 Aug 2019 21:13:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1565003632-124792-1-git-send-email-koulihong@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1c0479023412ab7834f2e98b796eb0d8c627cd62 ]
+On 2019-8-5 19:13, Lihong Kou wrote:
+> We do not need to set the SBI_NEED_FSCK flag in the error paths, if we
+> return error here, we will not update the checkpoint flag, so the code
+> is useless, just remove it.
+> 
+> Signed-off-by: Lihong Kou <koulihong@huawei.com>
 
-As some point hs200 was failing on rk3288-veyron-minnie.  See commit
-984926781122 ("ARM: dts: rockchip: temporarily remove emmc hs200 speed
-from rk3288 minnie").  Although I didn't track down exactly when it
-started working, it seems to work OK now, so let's turn it back on.
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 
-To test this, I booted from SD card and then used this script to
-stress the enumeration process after fixing a memory leak [1]:
-  cd /sys/bus/platform/drivers/dwmmc_rockchip
-  for i in $(seq 1 3000); do
-    echo "========================" $i
-    echo ff0f0000.dwmmc > unbind
-    sleep .5
-    echo ff0f0000.dwmmc > bind
-    while true; do
-      if [ -e /dev/mmcblk2 ]; then
-        break;
-      fi
-      sleep .1
-    done
-  done
-
-It worked fine.
-
-[1] https://lkml.kernel.org/r/20190503233526.226272-1-dianders@chromium.org
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/rk3288-veyron-minnie.dts | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/arch/arm/boot/dts/rk3288-veyron-minnie.dts b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-index f95d0c5fcf712..6e8946052c78b 100644
---- a/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-@@ -90,10 +90,6 @@
- 	pwm-off-delay-ms = <200>;
- };
- 
--&emmc {
--	/delete-property/mmc-hs200-1_8v;
--};
--
- &gpio_keys {
- 	pinctrl-0 = <&pwr_key_l &ap_lid_int_l &volum_down_l &volum_up_l>;
- 
--- 
-2.20.1
-
-
-
+Thanks,
