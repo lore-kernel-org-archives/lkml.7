@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E9FC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 129F6C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA5C320651
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE12720651
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:25:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011537;
-	bh=vwHaWWEkpNmSGKt7699SUpLjN9aj5o//MW99xbP38+Y=;
+	s=default; t=1565011540;
+	bh=ekhNss4NNs7jA0CkrNtgPv+wTkyyfbEcWNDOz7Y7dYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jlw+iBZPOwUvi72CTmB4ohMLyncyTjo9NGeOogWHUwudsx/RY63PQAC+IljkNbcOg
-	 /UBHp4hD0S2TRAsJjIZlH3l8KIHAqyanDF6z3FTbs/HB9SaeDqAYbubZO2pPQWPhR+
-	 o0QQzLFb4fbgU4OEohwqFYbkGw1Smdo+cbZU8qFw=
+	b=Lp5JNJ9gDJGmvJFjoOBf97Nn+mg5NMpzBrdcAtG7+Fpsq2IGP2wJzBOF0HQaFJ1MJ
+	 h/aAoewijhAlmg7/hbbuCP8CVT1xOGGisYt70N5qxRbrK99RGxsuL3E1j1cZc16ILg
+	 5ctiuBjmnYlMm4WBBAedEK5vEUfqn/N56GwSClXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731255AbfHENZg (ORCPT
+        id S1731265AbfHENZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:25:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34096 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:25:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730529AbfHENZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:25:34 -0400
+        id S1731252AbfHENZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:25:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01FB720651;
-        Mon,  5 Aug 2019 13:25:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A5B520644;
+        Mon,  5 Aug 2019 13:25:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011533;
-        bh=vwHaWWEkpNmSGKt7699SUpLjN9aj5o//MW99xbP38+Y=;
+        s=default; t=1565011536;
+        bh=ekhNss4NNs7jA0CkrNtgPv+wTkyyfbEcWNDOz7Y7dYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ivj6nPtlkTaTnrNw/NXMvvjJLlMS6wyoEnQZ7FNuFSYhwqttlDpRbNI4y2mjH9VDT
-         h/NwLR2tNN6MtLQtj+qJfTI/Z2yuzjh3kbNyG0Ommkry73QXRrbhfUf4s9J7tlqgpO
-         5Kk12G/7yIprCtTPNpDYSqySlGqmPUuopBjNnBq4=
+        b=AHNJtOfiwqy+tQXHB+vFw9L/u2LcB+w9KBWd0w34mqeebFANYNGN36gEZZO+u3f+Y
+         w0RJhyc+PeGBl9F0zrP2dgj8SR9D2hcJlp/peOwKXX0nIF7I1th2SAjF4/FN1RUaW1
+         c/GnGCrEN90TdBTljqSav51DtnjRA8c/Mkr5oyFE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Artemy Kovalyov <artemyko@mellanox.com>,
         Leon Romanovsky <leonro@mellanox.com>,
         Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.2 124/131] IB/mlx5: Move MRs to a kernel PD when freeing them to the MR cache
-Date:   Mon,  5 Aug 2019 15:03:31 +0200
-Message-Id: <20190805125000.270436201@linuxfoundation.org>
+Subject: [PATCH 5.2 125/131] IB/mlx5: Fix clean_mr() to work in the expected order
+Date:   Mon,  5 Aug 2019 15:03:32 +0200
+Message-Id: <20190805125000.342651544@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -63,21 +63,17 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yishai Hadas <yishaih@mellanox.com>
 
-commit 9ec4483a3f0f71a228a5933bc040441322bfb090 upstream.
+commit b9332dad987018745a0c0bb718d12dacfa760489 upstream.
 
-Fix unreg_umr to move the MR to a kernel owned PD (i.e. the UMR PD) which
-can't be accessed by userspace.
+Any dma map underlying the MR should only be freed once the MR is fenced
+at the hardware.
 
-This ensures that nothing can continue to access the MR once it has been
-placed in the kernels cache for reuse.
+As of the above we first destroy the MKEY and just after that can safely
+call to dma_unmap_single().
 
-MRs in the cache continue to have their HW state, including DMA tables,
-present. Even though the MR has been invalidated, changing the PD provides
-an additional layer of protection against use of the MR.
-
-Link: https://lore.kernel.org/r/20190723065733.4899-5-leon@kernel.org
-Cc: <stable@vger.kernel.org> # 3.10
-Fixes: e126ba97dba9 ("mlx5: Add driver for Mellanox Connect-IB adapters")
+Link: https://lore.kernel.org/r/20190723065733.4899-6-leon@kernel.org
+Cc: <stable@vger.kernel.org> # 4.3
+Fixes: 8a187ee52b04 ("IB/mlx5: Support the new memory registration API")
 Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
 Reviewed-by: Artemy Kovalyov <artemyko@mellanox.com>
 Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
@@ -86,22 +82,24 @@ Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/mlx5/mr.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/infiniband/hw/mlx5/mr.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 --- a/drivers/infiniband/hw/mlx5/mr.c
 +++ b/drivers/infiniband/hw/mlx5/mr.c
-@@ -1375,8 +1375,10 @@ static int unreg_umr(struct mlx5_ib_dev
- 	if (mdev->state == MLX5_DEVICE_STATE_INTERNAL_ERROR)
- 		return 0;
+@@ -1583,10 +1583,10 @@ static void clean_mr(struct mlx5_ib_dev
+ 		mr->sig = NULL;
+ 	}
  
--	umrwr.wr.send_flags = MLX5_IB_SEND_UMR_DISABLE_MR;
-+	umrwr.wr.send_flags = MLX5_IB_SEND_UMR_DISABLE_MR |
-+			      MLX5_IB_SEND_UMR_UPDATE_PD_ACCESS;
- 	umrwr.wr.opcode = MLX5_IB_WR_UMR;
-+	umrwr.pd = dev->umrc.pd;
- 	umrwr.mkey = mr->mmkey.key;
- 	umrwr.ignore_free_state = 1;
+-	mlx5_free_priv_descs(mr);
+-
+-	if (!allocated_from_cache)
++	if (!allocated_from_cache) {
+ 		destroy_mkey(dev, mr);
++		mlx5_free_priv_descs(mr);
++	}
+ }
  
+ static void dereg_mr(struct mlx5_ib_dev *dev, struct mlx5_ib_mr *mr)
 
 
