@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02768C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8135AC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEBEF2067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58DA22067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:21:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011263;
-	bh=kTm8vFgVI5vn+JvQ5m+tks9zwFBwjmQgoLwBfOhTY+Q=;
+	s=default; t=1565011267;
+	bh=yi+x7RbmMs095tElme98utNqj5tUu/gIfIx36yBNeSY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sq6hP22oBzspdk+quQVbvrxzMXJADeol8YIM8A6yAfU2XAnJnHTPomhPOrT11CmpC
-	 dcsuWTeOvC0aXo8IV0A9gfCJ00ZrHcx1Sed52Gox5/Zm8dkNYvL9xx3itLKYSphDih
-	 tR48Bylq1LHFf7rNAT//wYNyHBl4T9fJn4Yff6uk=
+	b=gvb08P1fjznwPdLUMJa4N1o3rkG3plB8yKNkwy7dqljdT5c9Rf6jHsqREF6C9tTrv
+	 dS3urRzMhIiDZZNFMuhul2wRtawqjI4i4bJ2T2Idx8yx1yIXgYcBfcuMIqveIZMb3i
+	 pPM5DbE/Pml259V+k5xKF2Qm01cmPeb2GuABEulY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730432AbfHENVC (ORCPT
+        id S1730444AbfHENVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:21:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57138 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:21:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730376AbfHENVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:21:00 -0400
+        id S1730419AbfHENVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:21:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 779222067D;
-        Mon,  5 Aug 2019 13:20:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BE872067D;
+        Mon,  5 Aug 2019 13:21:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011259;
-        bh=kTm8vFgVI5vn+JvQ5m+tks9zwFBwjmQgoLwBfOhTY+Q=;
+        s=default; t=1565011261;
+        bh=yi+x7RbmMs095tElme98utNqj5tUu/gIfIx36yBNeSY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZKRdbeicX/r11UJzuAKk/aRWkFAQqLdpeNYzB4LAOqSlvZTgewt+sB39sJVan4za+
-         QfieMa1nVKwYhDFjq+c6kxc0MnTFVzykANlDySefFCvDyuJZxVT7NZ1gzlhSYvUBL5
-         OJgRipwtNYlLTBUCiY4rlfDXWIbIJ8g89LR49Cc4=
+        b=hUbZQKvl8oEh11xWVX6ykPraa1AbUAR/mjhQL9bIL9AU3hGdR/8lE/kaXLm2SucSg
+         TP9AaPHjQu2vo7mMb60Bx/Ez0vafuFK7u4y10ojy4sxeyfzc2uZjbsnHoRslJS7XWH
+         cFxbZN3Tzr4YFKAUZQBnXJNu54uA/qDTZP1JSlao=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Niklas Cassel <niklas.cassel@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 007/131] arm64: dts: qcom: qcs404-evb: fix l3 min voltage
-Date:   Mon,  5 Aug 2019 15:01:34 +0200
-Message-Id: <20190805124951.918923072@linuxfoundation.org>
+        stable@vger.kernel.org, Vicente Bergas <vicencb@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 025/131] arm64: dts: rockchip: Fix USB3 Type-C on rk3399-sapphire
+Date:   Mon,  5 Aug 2019 15:01:52 +0200
+Message-Id: <20190805124953.125844901@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -60,43 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 887b528c958f40b064d53edd0bfa9fea3a69eccd ]
+[ Upstream commit e1d9149e8389f1690cdd4e4056766dd26488a0fe ]
 
-The current l3 min voltage level is not supported by
-the regulator (the voltage is not a multiple of the regulator step size),
-so a driver requesting this exact voltage would fail, see discussion in:
-https://patchwork.kernel.org/comment/22461199/
+Before this patch, the Type-C port on the Sapphire board is dead.
+If setting the 'regulator-always-on' property to 'vcc5v0_typec0'
+then the port works for about 4 seconds at start-up. This is a
+sample trace with a memory stick plugged in:
+1.- The memory stick LED lights on and kernel reports:
+[    4.782999] scsi 0:0:0:0: Direct-Access USB DISK PMAP PQ: 0 ANSI: 4
+[    5.904580] sd 0:0:0:0: [sdb] 3913344 512-byte logical blocks: (2.00 GB/1.87 GiB)
+[    5.906860] sd 0:0:0:0: [sdb] Write Protect is off
+[    5.908973] sd 0:0:0:0: [sdb] Mode Sense: 23 00 00 00
+[    5.909122] sd 0:0:0:0: [sdb] No Caching mode page found
+[    5.911214] sd 0:0:0:0: [sdb] Assuming drive cache: write through
+[    5.951585]  sdb: sdb1
+[    5.954816] sd 0:0:0:0: [sdb] Attached SCSI removable disk
+2.- 4 seconds later the memory stick LED lights off and kernel reports:
+[    9.082822] phy phy-ff770000.syscon:usb2-phy@e450.2: charger = USB_DCP_CHARGER
+3.- After a minute the kernel reports:
+[   71.666761] usb 5-1: USB disconnect, device number 2
+It has been checked that, although the LED is off, VBUS is present.
 
-It was agreed upon to set a min voltage level that is a multiple of the
-regulator step size.
+If, instead, the dr_mode is changed to host and the phy-supply changed
+accordingly, then it works. It has only been tested in host mode.
 
-There was actually a patch sent that did this:
-https://patchwork.kernel.org/patch/10819313/
-
-However, the commit 331ab98f8c4a ("arm64: dts: qcom: qcs404:
-Fix voltages l3") that was applied is not identical to that patch.
-
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Andy Gross <agross@kernel.org>
+Signed-off-by: Vicente Bergas <vicencb@gmail.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-index 2c3127167e3c2..d987d6741e40b 100644
---- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-@@ -118,7 +118,7 @@
- 		};
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
+index 04623e52ac5db..1bc1579674e57 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
+@@ -565,12 +565,11 @@
+ 	status = "okay";
  
- 		vreg_l3_1p05: l3 {
--			regulator-min-microvolt = <1050000>;
-+			regulator-min-microvolt = <1048000>;
- 			regulator-max-microvolt = <1160000>;
- 		};
+ 	u2phy0_otg: otg-port {
+-		phy-supply = <&vcc5v0_typec0>;
+ 		status = "okay";
+ 	};
  
+ 	u2phy0_host: host-port {
+-		phy-supply = <&vcc5v0_host>;
++		phy-supply = <&vcc5v0_typec0>;
+ 		status = "okay";
+ 	};
+ };
+@@ -620,7 +619,7 @@
+ 
+ &usbdrd_dwc3_0 {
+ 	status = "okay";
+-	dr_mode = "otg";
++	dr_mode = "host";
+ };
+ 
+ &usbdrd3_1 {
 -- 
 2.20.1
 
