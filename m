@@ -2,156 +2,143 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F997C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 11:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA270C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 11:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D0722086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 11:58:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="YSU/9sxg";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="J/m9KWk/"
+	by mail.kernel.org (Postfix) with ESMTP id 8AFF5206A2
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 11:58:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728777AbfHEL6e (ORCPT
+        id S1728763AbfHEL6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 07:58:34 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:35889 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728513AbfHEL6c (ORCPT
+        Mon, 5 Aug 2019 07:58:33 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:52954 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728537AbfHEL6H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 07:58:32 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailnew.nyi.internal (Postfix) with ESMTP id BD0F91E2C;
-        Mon,  5 Aug 2019 07:58:31 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Mon, 05 Aug 2019 07:58:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=CpP+jXyBTmqGd87EE+i6YMktL/+
-        9k4HJgd3+6RNm4e0=; b=YSU/9sxglEDrFB83JMjF5GYy1tJNN+/Hz/W4eHE00/3
-        BS634k/o0H3PihhmK1Zb32wPagLscjViaodRihFhCD4D1Xr/N7OuTcCbHdp+yp2b
-        hAxUeUDzLDmXF6HHzXkoD5FwVLNdoR9yahMQJK8k07kLoC38wxuUmJsIv3RETAn+
-        H9QPWEjzDXwKE3COFk/KG/iAldsp5igbzyKEg5WxbXcX8X5kFuvu/PL1xdmtAQVA
-        k6/bZwVVJezhner1ToP4BbOK8i5i1v19niZKf2QroMLgRxOyNX5VHVmN+VG4udYN
-        7snOYX6wZ0gPnEWBvZRAPYH8AoyXgXEdMrsCW5X4p7A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=CpP+jX
-        yBTmqGd87EE+i6YMktL/+9k4HJgd3+6RNm4e0=; b=J/m9KWk/b9cprwIDZ0LVHU
-        NSpbZFZBe5Go/FrtVsGyrgXG4cyu/FpCCSn0H0cnNVddaTcdkJ5VHSHSj79LwoZI
-        QeRBGmt5qreO1w4HRZ2nIbCfdobl49bQU6qEPYCbFYf/otoStAv03MgCbIZq5mHu
-        hpFVmSMg9ic0ilmBUA4sh7VwrzNm+ZkLi9sOZaoNUcVPLCmnRYB6DQ6mOXaNXV3A
-        SVichjeuqWc/c9yS0TaGcnxpCMmJ0rhZjUxAdUFTPjxnG+eRpsZewbibfn3sqCU9
-        w/BHCyj93gOjODAS4jPgj4VMdzqA6jGvmjVkOn+7XYXDYuJslR7QzaQ0pKJ4xSfg
-        ==
-X-ME-Sender: <xms:5hlIXcqMVKi6zxTmzvvHuT1PJZQtmmC1XN_iAqPr-G63OXDCke2BOg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddruddtjedggeeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
-    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuffhomhgrihhnpehkvghrnhgvlh
-    drohhrghenucfkphepkeefrdekiedrkeelrddutdejnecurfgrrhgrmhepmhgrihhlfhhr
-    ohhmpehgrhgvgheskhhrohgrhhdrtghomhenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:5hlIXSMFXTiUORDQChenY9N-xpSnU5cxldhyvUmIPpbStCHRo9JFyw>
-    <xmx:5hlIXXry_Fd0KQl8H9WVBkIZjErtgxBhonRW_5eSpbJc85k93DemqQ>
-    <xmx:5hlIXTeo0I6vFJ6Ck8XI_Ghi8pANBVVwSRh-EE8pdL-O_Kz3V7axuQ>
-    <xmx:5xlIXaPeOx7_ugFSNGIfd6OSrqrUuuHKHqwJUnqN-H8Y3UCQ9ojxlw>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B723E80060;
-        Mon,  5 Aug 2019 07:58:29 -0400 (EDT)
-Date:   Mon, 5 Aug 2019 13:58:24 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     stable@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, x86@kernel.org, Jann Horn <jannh@google.com>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        xen-devel@lists.xenproject.org, Oscar Salvador <osalvador@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juergen Gross <jgross@suse.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH STABLE 4.9] x86, mm, gup: prevent get_page() race with
- munmap in paravirt guest
-Message-ID: <20190805115824.GC8189@kroah.com>
-References: <20190802160614.8089-1-vbabka@suse.cz>
+        Mon, 5 Aug 2019 07:58:07 -0400
+Received: by mail-io1-f70.google.com with SMTP id p12so91909032iog.19
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 04:58:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=Q45b86lNMk/ackMVfZQ0OhqLDALygn4H6DlW9QRBpRA=;
+        b=KWJ/gNeQK5g2x0mSblr3y3XMb/Xebt+ZJHrLFWqRj7rc5CCTN6HELBoZXS9hDjN5qv
+         Wii7+c5muzpnU2gmpnUUveozxIeqBgv40prr2FobVZDmHxzqblGOdOB7IMXtzdznp3dT
+         OWy8flDAK0SVgu5AUEu/Nmy/ceMgQMEps3GWZydtXCQTWiq3YVU209pt14EsDxT/nbdH
+         bY/Vqo4midr6SMgoEyMftDNUgs1yj+1Jt4E88nmK/zoyPvQnN+yVVWQEZxJ8stzPz3t1
+         zr7D1hwF6jAJZngKKwZxLcKQINYmOz1ghEW/H9Dvv482srraSv2UCz6Lrm8WqbW6SkGy
+         y9NQ==
+X-Gm-Message-State: APjAAAVwQvhVgKeJQHVKmwmOTbo+OFjyEJcHZoRJDFrEJ6kiOhP/h2pm
+        y8rd09ubJGO5u55bqQE4cwzzXeT/+LKIUquG1QIr5Eq9I0Uk
+X-Google-Smtp-Source: APXvYqxWzRJsYur4i5e8jrqLN8uyPVtZeooFu2rlzyao3vA47td6Noah9r3a8/VG6QaSYqL76yo/jRYRkcjw5tWOql7J1585Sl4k
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190802160614.8089-1-vbabka@suse.cz>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Received: by 2002:a02:c916:: with SMTP id t22mr15405656jao.24.1565006286599;
+ Mon, 05 Aug 2019 04:58:06 -0700 (PDT)
+Date:   Mon, 05 Aug 2019 04:58:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c8bea1058f5d6bf6@google.com>
+Subject: WARNING in usbtouch_reset_resume
+From:   syzbot <syzbot+91f7bbcce580376d784e@syzkaller.appspotmail.com>
+To:     allison@lohutok.net, andreyknvl@google.com,
+        dmitry.torokhov@gmail.com, gregkh@linuxfoundation.org,
+        kstewart@linuxfoundation.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        mpe@ellerman.id.au, rfontana@redhat.com, rydberg@bitmath.org,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 06:06:14PM +0200, Vlastimil Babka wrote:
-> The x86 version of get_user_pages_fast() relies on disabled interrupts to
-> synchronize gup_pte_range() between gup_get_pte(ptep); and get_page() against
-> a parallel munmap. The munmap side nulls the pte, then flushes TLBs, then
-> releases the page. As TLB flush is done synchronously via IPI disabling
-> interrupts blocks the page release, and get_page(), which assumes existing
-> reference on page, is thus safe.
-> However when TLB flush is done by a hypercall, e.g. in a Xen PV guest, there is
-> no blocking thanks to disabled interrupts, and get_page() can succeed on a page
-> that was already freed or even reused.
-> 
-> We have recently seen this happen with our 4.4 and 4.12 based kernels, with
-> userspace (java) that exits a thread, where mm_release() performs a futex_wake()
-> on tsk->clear_child_tid, and another thread in parallel unmaps the page where
-> tsk->clear_child_tid points to. The spurious get_page() succeeds, but futex code
-> immediately releases the page again, while it's already on a freelist. Symptoms
-> include a bad page state warning, general protection faults acessing a poisoned
-> list prev/next pointer in the freelist, or free page pcplists of two cpus joined
-> together in a single list. Oscar has also reproduced this scenario, with a
-> patch inserting delays before the get_page() to make the race window larger.
-> 
-> Fix this by removing the dependency on TLB flush interrupts the same way as the
-> generic get_user_pages_fast() code by using page_cache_add_speculative() and
-> revalidating the PTE contents after pinning the page. Mainline is safe since
-> 4.13 where the x86 gup code was removed in favor of the common code. Accessing
-> the page table itself safely also relies on disabled interrupts and TLB flush
-> IPIs that don't happen with hypercalls, which was acknowledged in commit
-> 9e52fc2b50de ("x86/mm: Enable RCU based page table freeing
-> (CONFIG_HAVE_RCU_TABLE_FREE=y)"). That commit with follups should also be
-> backported for full safety, although our reproducer didn't hit a problem
-> without that backport.
-> 
-> Reproduced-by: Oscar Salvador <osalvador@suse.de>
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Juergen Gross <jgross@suse.com>
-> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Andy Lutomirski <luto@kernel.org>
-> ---
-> 
-> Hi, I'm sending this stable-only patch for consideration because it's probably
-> unrealistic to backport the 4.13 switch to generic GUP. I can look at 4.4 and
-> 3.16 if accepted. The RCU page table freeing could be also considered.
-> Note the patch also includes page refcount protection. I found out that
-> 8fde12ca79af ("mm: prevent get_user_pages() from overflowing page refcount")
-> backport to 4.9 missed the arch-specific gup implementations:
-> https://lore.kernel.org/lkml/6650323f-dbc9-f069-000b-f6b0f941a065@suse.cz/
+Hello,
 
-This looks sane to me, thank you for the backport.  I've queued it up
-now, and if anyone has any objections, please let me know.
+syzbot found the following crash on:
 
-thanks,
+HEAD commit:    e96407b4 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=1104baf8600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cfa2c18fb6a8068e
+dashboard link: https://syzkaller.appspot.com/bug?extid=91f7bbcce580376d784e
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14199a62600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17d94aaa600000
 
-greg k-h
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+91f7bbcce580376d784e@syzkaller.appspotmail.com
+
+input: USB Touchscreen 0eef:0002 as  
+/devices/platform/dummy_hcd.0/usb1/1-1/1-1:0.180/input/input5
+usb 1-1: reset high-speed USB device number 2 using dummy_hcd
+usb 1-1: Using ep0 maxpacket: 32
+------------[ cut here ]------------
+DEBUG_LOCKS_WARN_ON(lock->magic != lock)
+WARNING: CPU: 0 PID: 12 at kernel/locking/mutex.c:912 __mutex_lock_common  
+kernel/locking/mutex.c:912 [inline]
+WARNING: CPU: 0 PID: 12 at kernel/locking/mutex.c:912  
+__mutex_lock+0xd31/0x1360 kernel/locking/mutex.c:1077
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.3.0-rc2+ #25
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  panic+0x2a3/0x6da kernel/panic.c:219
+  __warn.cold+0x20/0x4a kernel/panic.c:576
+  report_bug+0x262/0x2a0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1026
+RIP: 0010:__mutex_lock_common kernel/locking/mutex.c:912 [inline]
+RIP: 0010:__mutex_lock+0xd31/0x1360 kernel/locking/mutex.c:1077
+Code: d2 0f 85 f6 05 00 00 44 8b 05 7b de 1c 02 45 85 c0 0f 85 0a f4 ff ff  
+48 c7 c6 c0 92 c6 85 48 c7 c7 60 90 c6 85 e8 f4 c4 a6 fb <0f> 0b e9 f0 f3  
+ff ff 65 48 8b 1c 25 00 ef 01 00 be 08 00 00 00 48
+RSP: 0018:ffff8881da20f6b0 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff8128a0fd RDI: ffffed103b441ec8
+RBP: ffff8881da20f820 R08: ffff8881da1f9800 R09: fffffbfff0d9ee35
+R10: fffffbfff0d9ee34 R11: ffffffff86cf71a3 R12: 0000000000000000
+R13: dffffc0000000000 R14: ffff8881d2e291c8 R15: ffff8881d2fba228
+  usbtouch_reset_resume+0xb1/0x170  
+drivers/input/touchscreen/usbtouchscreen.c:1611
+  usb_resume_interface drivers/usb/core/driver.c:1242 [inline]
+  usb_resume_interface.isra.0+0x184/0x390 drivers/usb/core/driver.c:1210
+  usb_resume_both+0x26a/0x7b0 drivers/usb/core/driver.c:1412
+  __rpm_callback+0x27e/0x3c0 drivers/base/power/runtime.c:355
+  rpm_callback+0x18f/0x230 drivers/base/power/runtime.c:485
+  rpm_resume+0x10f7/0x1870 drivers/base/power/runtime.c:849
+  __pm_runtime_resume+0x103/0x180 drivers/base/power/runtime.c:1076
+  pm_runtime_get_sync include/linux/pm_runtime.h:226 [inline]
+  usb_autoresume_device+0x1e/0x60 drivers/usb/core/driver.c:1599
+  usb_remote_wakeup+0x7b/0xb0 drivers/usb/core/hub.c:3603
+  hub_port_connect_change drivers/usb/core/hub.c:5199 [inline]
+  port_event drivers/usb/core/hub.c:5359 [inline]
+  hub_event+0x246c/0x3640 drivers/usb/core/hub.c:5441
+  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+  kthread+0x318/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
