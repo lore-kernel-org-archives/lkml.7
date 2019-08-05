@@ -2,162 +2,215 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C093CC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6ED5C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A21A20856
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:25:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="Sfjx4mJ8"
+	by mail.kernel.org (Postfix) with ESMTP id 99F4020578
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:26:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728221AbfHEKZo (ORCPT
+        id S1728319AbfHEK0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 06:25:44 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:48891 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727158AbfHEKZo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 06:25:44 -0400
-Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
-  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="Tudor.Ambarus@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa1.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa1.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: DxKR9W15XD3mz7Raxy5ycVPUB+Qjk6Sw5owHijlt5WWt4jnIHYFZgSA4XjJPcEeNmnMu6dwbmi
- 95DlJ8eqxnIEN4aNc1+MQ5foGb5Vc21ZBZ7OzyGGiaNSUykqPfk4jaBTQMcWspUz6AiJNEOkzd
- IMWHON7+k42PhFgjJCU+nCQHvlxANvBed5u4LXukqo/vzpI5uKGGeOkUS8YRrIS4P+Msk4JxTv
- lT5DHKwcYfAeM3L3PdlfDK5Gjsm7gxQIoZwC2DMtBrf1eZC9IF0QTO1jC90+GH3bHSm3Wr5Yco
- xnY=
+        Mon, 5 Aug 2019 06:26:39 -0400
+Received: from mga17.intel.com ([192.55.52.151]:7819 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728281AbfHEK0j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 06:26:39 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 03:26:38 -0700
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,349,1559545200"; 
-   d="scan'208";a="45345562"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 05 Aug 2019 03:25:43 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 5 Aug 2019 03:25:43 -0700
-Received: from NAM01-BY2-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 5 Aug 2019 03:25:43 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Xjh9qRH3IY10PhWTh/rWf4x8+PqZgIzAziSgHbGmrN8n27stUyDy9osZpcvGQxBvAiEG+rILaI+K3ww5aIBrCdUmvn5yzQ72z1nfVAi50KTUWl6hzG2Aq03VjiPRb/d5h0aGpoKeBGTHCeGSeoJI0Y9DTfvuyYZwwdfDctYuZSOhQpkjLKf/mVpUIOoenFZIQ8l3p69apTkIlJgN0Y3a1iv2mE873UrXm/m9QNwatI1uaOmvx+QZ0ekH+935j921opdzbV4y65k7BVi6ArWIMg6qJ84zgIOmg8gjBzY0CArteDkbnbZHyegEDjvq8ZkmZGgmYnnw98UQ3G+HUid+vw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+v+1mb8LNZU/oPMYE3RGfiExIiz1KJMGAfvLZW/fdLI=;
- b=nI5D14e8vzkHu1cslREYOerz4eCt8TDvfO1hkVH8ZCV8QfNIDj0W/XcXjAnm6l5YBMIQ/nL1f+nBbcRr0AgsTvx5rUpSq2r1sNYOkqKVgeRnTXGDYL0wkn9dFafBoEVKilbeMeSeCrdjbRg0+UomKfdBshzwU6cQ+J4N5RY17M7LJ2hTpNRsPYhlm2fo9TsU/iiOhlpa0KAKn6b7tuepMaqo35HY3fqiTNVmjofPwjCXTrBhIdlU+vXkY0balQDIiwAlADjk6YczsnHqOS6cayMePP9WRoL94zoLJJlwhkBHhiHYvGxoMmV1/98IsuUHIu2gfq7zwBf1ETffh2FuDA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=microchip.com;dmarc=pass action=none
- header.from=microchip.com;dkim=pass header.d=microchip.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+v+1mb8LNZU/oPMYE3RGfiExIiz1KJMGAfvLZW/fdLI=;
- b=Sfjx4mJ8ejZ7MhMBwzsO0t1Q1k4MERaCYiKNqH6/gUf3iC8EtLYDkVLEyNA4tk4Bp1w4U7eJlz+/oe3dtay0KIczUmAeVe5QWYNU/5ZI4Q7BDyQEKjNlFWHU4OIP50uic5UMzajzh+vVs7O6l81Y7C1VdwVYU7orIaPKghaCE94=
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
- MN2PR11MB4477.namprd11.prod.outlook.com (52.135.36.93) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2136.17; Mon, 5 Aug 2019 10:25:41 +0000
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::70c3:e929:4da2:60a5]) by MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::70c3:e929:4da2:60a5%7]) with mapi id 15.20.2136.018; Mon, 5 Aug 2019
- 10:25:41 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <vigneshr@ti.com>, <miquel.raynal@bootlin.com>, <richard@nod.at>
-CC:     <marek.vasut@gmail.com>, <bbrezillon@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
-        <tmaimon77@gmail.com>
-Subject: Re: [PATCH v4 2/3] mtd: spi-nor: Move m25p80 code in spi-nor.c
-Thread-Topic: [PATCH v4 2/3] mtd: spi-nor: Move m25p80 code in spi-nor.c
-Thread-Index: AQHVSIVNR1h9SqkuukqZlfb/4kclfKbsXzAA
-Date:   Mon, 5 Aug 2019 10:25:41 +0000
-Message-ID: <852ffdd1-a546-03db-3b60-47d60bd8d7cf@microchip.com>
-References: <20190801162229.28897-1-vigneshr@ti.com>
- <20190801162229.28897-3-vigneshr@ti.com>
-In-Reply-To: <20190801162229.28897-3-vigneshr@ti.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR0101CA0057.eurprd01.prod.exchangelabs.com
- (2603:10a6:800:1f::25) To MN2PR11MB4448.namprd11.prod.outlook.com
- (2603:10b6:208:193::29)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [94.177.32.154]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a4e4ed8b-9ded-403d-4d80-08d7198f4452
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MN2PR11MB4477;
-x-ms-traffictypediagnostic: MN2PR11MB4477:
-x-microsoft-antispam-prvs: <MN2PR11MB4477052247EB576403FA09EEF0DA0@MN2PR11MB4477.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 01208B1E18
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(346002)(396003)(136003)(366004)(376002)(199004)(189003)(66946007)(66556008)(66446008)(7736002)(6512007)(99286004)(8936002)(26005)(186003)(14454004)(446003)(4326008)(6246003)(31686004)(6486002)(8676002)(478600001)(476003)(2616005)(81156014)(11346002)(486006)(53936002)(305945005)(71200400001)(81166006)(25786009)(6116002)(3846002)(68736007)(31696002)(6506007)(386003)(53546011)(66066001)(6436002)(36756003)(2906002)(316002)(52116002)(54906003)(110136005)(71190400001)(76176011)(229853002)(64756008)(66476007)(86362001)(256004)(5660300002)(102836004);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4477;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: dfnoTbD+7yjLlXiXd9H2dgxMb2NyebARTMPv6ZBx8Ra2CJ90AfTTMYDfPyJoa4ZP/bfY79JZF9uGw5ScvVG57T5ASSbjhioOmqPOu2kEQWut4dGzFtvO0iYWtz+H8Lu6i6tcPR66MvcCnQEg/L2N399zWtDU70mwPIGjR9M1/95uwy2kjc+Gevy0k4M0hoXKxE63OL42CKeyqbW1bgjm5oH4mH8qfPSppOfhd9UZiaIxxdQf1kpHG/8LNEPF+4Dlj1fx5zgQWV+cu0GXBp5c/rSTepKeUFFWitV2X5dRK7dHTUWMu6zgodvyKZ0SnaVy9FiPpoTQlHQdtM9X+rvf7Ch0g8kTDz2nYSSSOmJh0h7Pgdqu1G3BtprU5b/ggQVC2RFEg4B4Nf7WUk2y56Im8S/YiGA3wX4vIwF3cyQwcGg=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6A04998477AA694C9F22C195129CC8BE@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+   d="scan'208";a="192386489"
+Received: from buildpc-hp-z230.iind.intel.com (HELO buildpc-HP-Z230) ([10.223.89.34])
+  by fmsmga001.fm.intel.com with ESMTP; 05 Aug 2019 03:26:35 -0700
+Date:   Mon, 5 Aug 2019 15:58:28 +0530
+From:   Sanyog Kale <sanyog.r.kale@intel.com>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, vkoul@kernel.org,
+        gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com
+Subject: Re: [RFC PATCH 25/40] soundwire: intel: use BIOS information to set
+ clock dividers
+Message-ID: <20190805102828.GF22437@buildpc-HP-Z230>
+References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
+ <20190725234032.21152-26-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: a4e4ed8b-9ded-403d-4d80-08d7198f4452
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Aug 2019 10:25:41.5175
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tudor.ambarus@microchip.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4477
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190725234032.21152-26-pierre-louis.bossart@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDA4LzAxLzIwMTkgMDc6MjIgUE0sIFZpZ25lc2ggUmFnaGF2ZW5kcmEgd3JvdGU6DQoN
-Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbXRkL3NwaS1ub3Ivc3BpLW5vci5jIGIvZHJpdmVycy9t
-dGQvc3BpLW5vci9zcGktbm9yLmMNCj4gaW5kZXggZTAyMzc2ZTExMjdiLi44NjY5NjJjNzE1YjQg
-MTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvbXRkL3NwaS1ub3Ivc3BpLW5vci5jDQo+ICsrKyBiL2Ry
-aXZlcnMvbXRkL3NwaS1ub3Ivc3BpLW5vci5jDQo+IEBAIC0xOSw2ICsxOSw3IEBADQoNCmN1dA0K
-DQo+ICtzdGF0aWMgc3NpemVfdCBzcGlfbm9yX3NwaW1lbV9yZWFkX2RhdGEoc3RydWN0IHNwaV9u
-b3IgKm5vciwgbG9mZl90IGZyb20sDQo+ICsJCQkJCXNpemVfdCBsZW4sIHU4ICpidWYpDQo+ICt7
-DQo+ICsJc3RydWN0IHNwaV9tZW1fb3Agb3AgPQ0KPiArCQlTUElfTUVNX09QKFNQSV9NRU1fT1Bf
-Q01EKG5vci0+cmVhZF9vcGNvZGUsIDEpLA0KPiArCQkJICAgU1BJX01FTV9PUF9BRERSKG5vci0+
-YWRkcl93aWR0aCwgZnJvbSwgMSksDQo+ICsJCQkgICBTUElfTUVNX09QX0RVTU1ZKG5vci0+cmVh
-ZF9kdW1teSwgMSksDQo+ICsJCQkgICBTUElfTUVNX09QX0RBVEFfSU4obGVuLCBidWYsIDEpKTsN
-Cj4gKw0KPiArCS8qIGdldCB0cmFuc2ZlciBwcm90b2NvbHMuICovDQo+ICsJb3AuY21kLmJ1c3dp
-ZHRoID0gc3BpX25vcl9nZXRfcHJvdG9jb2xfaW5zdF9uYml0cyhub3ItPnJlYWRfcHJvdG8pOw0K
-PiArCW9wLmFkZHIuYnVzd2lkdGggPSBzcGlfbm9yX2dldF9wcm90b2NvbF9hZGRyX25iaXRzKG5v
-ci0+cmVhZF9wcm90byk7DQoNCm5pdDogb3AuZHVtbXkuYnVzd2lkdGggPSBvcC5hZGRyLmJ1c3dp
-ZHRoOw0KDQpjdXQNCg0KPiAgDQo+IEBAIC02ODgsNiArMTAwMywxNiBAQCBzdGF0aWMgaW50IHNw
-aV9ub3JfZXJhc2Vfc2VjdG9yKHN0cnVjdCBzcGlfbm9yICpub3IsIHUzMiBhZGRyKQ0KPiAgCWlm
-IChub3ItPmVyYXNlKQ0KPiAgCQlyZXR1cm4gbm9yLT5lcmFzZShub3IsIGFkZHIpOw0KPiAgDQo+
-ICsJaWYgKG5vci0+c3BpbWVtKSB7DQo+ICsJCXN0cnVjdCBzcGlfbWVtX29wIG9wID0NCj4gKwkJ
-CVNQSV9NRU1fT1AoU1BJX01FTV9PUF9DTUQobm9yLT5lcmFzZV9vcGNvZGUsIDEpLA0KPiArCQkJ
-CSAgIFNQSV9NRU1fT1BfQUREUihub3ItPmFkZHJfd2lkdGgsIGFkZHIsIDEpLA0KPiArCQkJCSAg
-IFNQSV9NRU1fT1BfTk9fRFVNTVksDQo+ICsJCQkJICAgU1BJX01FTV9PUF9OT19EQVRBKTsNCj4g
-Kw0KPiArCQlyZXR1cm4gc3BpX21lbV9leGVjX29wKG5vci0+c3BpbWVtLCAmb3ApOw0KPiArCX0N
-Cj4gKw0KDQp0aGlzIHNob3VsZCBiZSBkb25lIGJlbG93IGluIHRoZSBmdW5jdGlvbiwgYWZ0ZXIg
-bWFza2luZyB0aGUgYWRkcmVzcy4NCg0KWW91IGFkZCBhIGRvdWJsZSBzcGFjZSBhZnRlciByZXR1
-cm4gaW46DQo+ICsJcmV0dXJuICBub3ItPnJlYWRfcmVnKG5vciwgU1BJTk9SX09QX1JEU1IyLCBz
-cjIsIDEpOw0KDQpUaGVyZSBhcmUgc29tZSBjaGVja3BhdGNoIHdhcm5pbmdzIHRoYXQgd2UgY2Fu
-IGZpeCBub3cuDQoNCkxvb2tzIGdvb2QhDQp0YQ0K
+On Thu, Jul 25, 2019 at 06:40:17PM -0500, Pierre-Louis Bossart wrote:
+> The BIOS provides an Intel-specific property, let's use it to avoid
+> hard-coded clock dividers.
+> 
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> ---
+>  drivers/soundwire/cadence_master.c | 26 ++++++++++++++++++++++----
+>  drivers/soundwire/intel.c          | 26 ++++++++++++++++++++++++++
+>  include/linux/soundwire/sdw.h      |  2 ++
+>  3 files changed, 50 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/soundwire/cadence_master.c b/drivers/soundwire/cadence_master.c
+> index d84344e29f71..10ebcef2e84e 100644
+> --- a/drivers/soundwire/cadence_master.c
+> +++ b/drivers/soundwire/cadence_master.c
+> @@ -173,8 +173,6 @@
+>  #define CDNS_PDI_CONFIG_PORT			GENMASK(4, 0)
+>  
+>  /* Driver defaults */
+> -
+> -#define CDNS_DEFAULT_CLK_DIVIDER		0
+>  #define CDNS_DEFAULT_SSP_INTERVAL		0x18
+>  #define CDNS_TX_TIMEOUT				2000
+>  
+> @@ -973,7 +971,10 @@ static u32 cdns_set_default_frame_shape(int n_rows, int n_cols)
+>   */
+>  int sdw_cdns_init(struct sdw_cdns *cdns)
+>  {
+> +	struct sdw_bus *bus = &cdns->bus;
+> +	struct sdw_master_prop *prop = &bus->prop;
+>  	u32 val;
+> +	int divider;
+>  	int ret;
+>  
+>  	/* Exit clock stop */
+> @@ -985,9 +986,17 @@ int sdw_cdns_init(struct sdw_cdns *cdns)
+>  	}
+>  
+>  	/* Set clock divider */
+> +	divider	= (prop->mclk_freq / prop->max_clk_freq) - 1;
+
+Do you expect mclk_freq and max_clk_freq to be same?
+
+>  	val = cdns_readl(cdns, CDNS_MCP_CLK_CTRL0);
+> -	val |= CDNS_DEFAULT_CLK_DIVIDER;
+> +	val |= divider;
+>  	cdns_writel(cdns, CDNS_MCP_CLK_CTRL0, val);
+> +	cdns_writel(cdns, CDNS_MCP_CLK_CTRL1, val);
+> +
+> +	pr_err("plb: mclk %d max_freq %d divider %d register %x\n",
+> +	       prop->mclk_freq,
+> +	       prop->max_clk_freq,
+> +	       divider,
+> +	       val);
+
+This can be removed.
+
+>  
+>  	/* Set the default frame shape */
+>  	val = cdns_set_default_frame_shape(prop->default_row,
+> @@ -1035,6 +1044,7 @@ EXPORT_SYMBOL(sdw_cdns_init);
+>  
+>  int cdns_bus_conf(struct sdw_bus *bus, struct sdw_bus_params *params)
+>  {
+> +	struct sdw_master_prop *prop = &bus->prop;
+>  	struct sdw_cdns *cdns = bus_to_cdns(bus);
+>  	int mcp_clkctrl_off, mcp_clkctrl;
+>  	int divider;
+> @@ -1044,7 +1054,9 @@ int cdns_bus_conf(struct sdw_bus *bus, struct sdw_bus_params *params)
+>  		return -EINVAL;
+>  	}
+>  
+> -	divider	= (params->max_dr_freq / params->curr_dr_freq) - 1;
+> +	divider	= prop->mclk_freq * SDW_DOUBLE_RATE_FACTOR /
+
+What is the reason for not using max_dr_freq? Its precomputed as
+prop->max_clk_freq * SDW_DOUBLE_RATE_FACTOR;
+
+> +		params->curr_dr_freq;
+> +	divider--; /* divider is 1/(N+1) */
+>  
+>  	if (params->next_bank)
+>  		mcp_clkctrl_off = CDNS_MCP_CLK_CTRL1;
+> @@ -1055,6 +1067,12 @@ int cdns_bus_conf(struct sdw_bus *bus, struct sdw_bus_params *params)
+>  	mcp_clkctrl |= divider;
+>  	cdns_writel(cdns, mcp_clkctrl_off, mcp_clkctrl);
+>  
+> +	pr_err("plb: mclk * 2 %d curr_dr_freq %d divider %d register %x\n",
+> +	       prop->mclk_freq * SDW_DOUBLE_RATE_FACTOR,
+> +	       params->curr_dr_freq,
+> +	       divider,
+> +	       mcp_clkctrl);
+> +
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL(cdns_bus_conf);
+> diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+> index c718c9c67a37..796ac2bc8cea 100644
+> --- a/drivers/soundwire/intel.c
+> +++ b/drivers/soundwire/intel.c
+> @@ -917,11 +917,37 @@ static int intel_register_dai(struct sdw_intel *sdw)
+>  					  dais, num_dai);
+>  }
+>  
+> +static int sdw_master_read_intel_prop(struct sdw_bus *bus)
+> +{
+> +	struct sdw_master_prop *prop = &bus->prop;
+> +	struct fwnode_handle *link;
+> +	char name[32];
+> +	int nval, i;
+> +
+> +	/* Find master handle */
+> +	snprintf(name, sizeof(name),
+> +		 "mipi-sdw-link-%d-subproperties", bus->link_id);
+> +
+> +	link = device_get_named_child_node(bus->dev, name);
+> +	if (!link) {
+> +		dev_err(bus->dev, "Master node %s not found\n", name);
+> +		return -EIO;
+> +	}
+> +
+> +	fwnode_property_read_u32(link,
+> +				 "intel-sdw-ip-clock",
+> +				 &prop->mclk_freq);
+> +	return 0;
+> +}
+> +
+>  static int intel_prop_read(struct sdw_bus *bus)
+>  {
+>  	/* Initialize with default handler to read all DisCo properties */
+>  	sdw_master_read_prop(bus);
+>  
+> +	/* read Intel-specific properties */
+> +	sdw_master_read_intel_prop(bus);
+> +
+>  	return 0;
+>  }
+>  
+> diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
+> index 31d1e8acf25b..b6acc436ac80 100644
+> --- a/include/linux/soundwire/sdw.h
+> +++ b/include/linux/soundwire/sdw.h
+> @@ -379,6 +379,7 @@ struct sdw_slave_prop {
+>   * @dynamic_frame: Dynamic frame shape supported
+>   * @err_threshold: Number of times that software may retry sending a single
+>   * command
+> + * @mclk_freq: clock reference passed to SoundWire Master, in Hz.
+>   */
+>  struct sdw_master_prop {
+>  	u32 revision;
+> @@ -393,6 +394,7 @@ struct sdw_master_prop {
+>  	u32 default_col;
+>  	bool dynamic_frame;
+>  	u32 err_threshold;
+> +	u32 mclk_freq;
+>  };
+>  
+>  int sdw_master_read_prop(struct sdw_bus *bus);
+> -- 
+> 2.20.1
+> 
+
+-- 
