@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 274E6C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A11C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF59E2075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A65872173B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:09:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010554;
-	bh=NkoFAn4xJ2jlJdbsRP+BzE2rZQN58hFHOKUeHRZe9sI=;
+	s=default; t=1565010557;
+	bh=BFA5KkJp4vIV/V6KNLMZnNb7Da08HBmuiJBDgQVvN4I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pHOeOmxW/WqC0uSfkGlpU1ugCBVU1aOuiJL+Z26PFXuqt2+fCOW/ceAh+m4J07b46
-	 hctIh88xqBoOhvvAimA2HZSuhl/sKgl4Kv2HYb3i/cquZv1uhERpfNh7EO84mw3+/J
-	 cjAkP0b5FqLhIhI5TMmDWETdJMK4Ec8AlDyZktqk=
+	b=tK83wwozb1lP8P2T6hzzmZbKePQfJ+h6yGIkfm1nb9wYO3otlK79G6o2GkvsWtnyT
+	 FtIw5Kg/q77PKcgdHkiRJQsuMBjYjPxU7CRLWpr93mB+g2vir31zMahh0egLgBeIdV
+	 SGR6CC2wRzkBXfg08owQaZ17hsvyt3zdl5gR27Ww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730151AbfHENJM (ORCPT
+        id S1730154AbfHENJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:09:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47516 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:09:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730134AbfHENJJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:09:09 -0400
+        id S1730143AbfHENJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:09:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C40D2075B;
-        Mon,  5 Aug 2019 13:09:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A23C921743;
+        Mon,  5 Aug 2019 13:09:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010548;
-        bh=NkoFAn4xJ2jlJdbsRP+BzE2rZQN58hFHOKUeHRZe9sI=;
+        s=default; t=1565010551;
+        bh=BFA5KkJp4vIV/V6KNLMZnNb7Da08HBmuiJBDgQVvN4I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1H11pKVn1ITDArlZDxDpMx8Va+GAL2k7V27CrL/GJMBbvAtjAKmrnwj44yacmPllT
-         3S28EKCs2i3HiNc8RnZElRRV1mPIMjNHFT+XlIuZ0j6q+dd+kcJ3wHjccoTwvRzpsK
-         39HuNzSXTkTg5BU9oYWJbJtaBIQOEb/DDNpZ5dFc=
+        b=bbHPusZnxfOvSWswoDlHiEn3Y5DezWadx5jWH1ms0eBvYTY6Zg3leTT37RK6iHyK6
+         opcxjWixVpMvODmd90Y89lTZW6Qem8QDy4GuUIgDrpWZz8Xn+uZzndWeb4OZ1gMHQ5
+         GX7NnTj37ZnPCp8zfc1zPA3dopKn9zWehZKdwX7I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Al Viro <viro@zeniv.linux.org.uk>,
+        stable@vger.kernel.org, Chunyan Zhang <zhang.chunyan@linaro.org>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 13/74] fs/adfs: super: fix use-after-free bug
-Date:   Mon,  5 Aug 2019 15:02:26 +0200
-Message-Id: <20190805124936.871654524@linuxfoundation.org>
+Subject: [PATCH 4.19 14/74] clk: sprd: Add check for return value of sprd_clk_regmap_init()
+Date:   Mon,  5 Aug 2019 15:02:27 +0200
+Message-Id: <20190805124936.940055780@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124935.819068648@linuxfoundation.org>
 References: <20190805124935.819068648@linuxfoundation.org>
@@ -60,43 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5808b14a1f52554de612fee85ef517199855e310 ]
+[ Upstream commit c974c48deeb969c5e4250e4f06af91edd84b1f10 ]
 
-Fix a use-after-free bug during filesystem initialisation, where we
-access the disc record (which is stored in a buffer) after we have
-released the buffer.
+sprd_clk_regmap_init() doesn't always return success, adding check
+for its return value should make the code more strong.
 
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
+Reviewed-by: Baolin Wang <baolin.wang@linaro.org>
+[sboyd@kernel.org: Add a missing int ret]
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/adfs/super.c | 5 ++++-
+ drivers/clk/sprd/sc9860-clk.c | 5 ++++-
  1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/fs/adfs/super.c b/fs/adfs/super.c
-index 7e099a7a4eb1e..4dc15b2634894 100644
---- a/fs/adfs/super.c
-+++ b/fs/adfs/super.c
-@@ -369,6 +369,7 @@ static int adfs_fill_super(struct super_block *sb, void *data, int silent)
- 	struct buffer_head *bh;
- 	struct object_info root_obj;
- 	unsigned char *b_data;
-+	unsigned int blocksize;
- 	struct adfs_sb_info *asb;
- 	struct inode *root;
- 	int ret = -EINVAL;
-@@ -420,8 +421,10 @@ static int adfs_fill_super(struct super_block *sb, void *data, int silent)
- 		goto error_free_bh;
+diff --git a/drivers/clk/sprd/sc9860-clk.c b/drivers/clk/sprd/sc9860-clk.c
+index 9980ab55271ba..f76305b4bc8df 100644
+--- a/drivers/clk/sprd/sc9860-clk.c
++++ b/drivers/clk/sprd/sc9860-clk.c
+@@ -2023,6 +2023,7 @@ static int sc9860_clk_probe(struct platform_device *pdev)
+ {
+ 	const struct of_device_id *match;
+ 	const struct sprd_clk_desc *desc;
++	int ret;
+ 
+ 	match = of_match_node(sprd_sc9860_clk_ids, pdev->dev.of_node);
+ 	if (!match) {
+@@ -2031,7 +2032,9 @@ static int sc9860_clk_probe(struct platform_device *pdev)
  	}
  
-+	blocksize = 1 << dr->log2secsize;
- 	brelse(bh);
--	if (sb_set_blocksize(sb, 1 << dr->log2secsize)) {
-+
-+	if (sb_set_blocksize(sb, blocksize)) {
- 		bh = sb_bread(sb, ADFS_DISCRECORD / sb->s_blocksize);
- 		if (!bh) {
- 			adfs_error(sb, "couldn't read superblock on "
+ 	desc = match->data;
+-	sprd_clk_regmap_init(pdev, desc);
++	ret = sprd_clk_regmap_init(pdev, desc);
++	if (ret)
++		return ret;
+ 
+ 	return sprd_clk_probe(&pdev->dev, desc->hw_clks);
+ }
 -- 
 2.20.1
 
