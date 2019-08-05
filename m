@@ -2,134 +2,165 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48909C32751
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C623EC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D4B421738
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:25:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565018736;
-	bh=46qT1njeA/amYMLiDTb4zMUL3B7EVT91q/FztoHlmQA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=t0KymJJAch+uGkIDqUYAbCArr+bUmhORhIqhrlEF5uryrMdhWfiigeWkbIn0dE4dC
-	 WhUav12cONSL2CIMOrhnRIf6ukEpAcuQJJ4eF1DqnRMhdSaOkletRPe5k4BlM5aXRe
-	 2Tu8zoFXhp1ojPtw3Aj0Uft2xnJLqxI4pSGHKI3U=
+	by mail.kernel.org (Postfix) with ESMTP id 9522820B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:28:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729384AbfHEPZf (ORCPT
+        id S1729289AbfHEP2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 11:25:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41332 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728468AbfHEPZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 11:25:35 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3435120880;
-        Mon,  5 Aug 2019 15:25:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565018734;
-        bh=46qT1njeA/amYMLiDTb4zMUL3B7EVT91q/FztoHlmQA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=wvIANRTPX4AeyxmqbYyqGn8M07hRGn27gjj7WdBTWhCwLVSLFMFz58SxBw056LF6j
-         +yI/mGvRv4rNTARY5C/UDPUjEeAWOZq418bXkyhEfL9A5n98sg9JWTnTGV+KtXWUr5
-         1TeDBRT2rJz+LRpauU6dPCyXcvUf3G/ny79IW4z4=
-Date:   Mon, 5 Aug 2019 16:25:30 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/4] iio: tsl2772: Use devm_add_action_or_reset
-Message-ID: <20190805162530.4c24df1c@archlinux>
-In-Reply-To: <20190801093731.GC27653@onstation.org>
-References: <20190801073557.9578-1-hslester96@gmail.com>
-        <20190801093347.GA27653@onstation.org>
-        <20190801093731.GC27653@onstation.org>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 5 Aug 2019 11:28:08 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:54342 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728801AbfHEP2I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 11:28:08 -0400
+Received: by mail-io1-f72.google.com with SMTP id n8so92465367ioo.21
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 08:28:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=aGIXnUc/O2gYmPtjAdqfNPS+pIqx/MJop+VG9TNzZnw=;
+        b=C2VNEClNcyv4dJmr8PPlF3kqdw3k8pJ3i1rosmPLg/a5zQNVjJt8JjaxfgrsOlDsEN
+         4nRDBCbl2PmXxbpNKB2fJ3mdmfcaTLfFnUAbGcIfg9otUAdkVhIfyAF//C+KX0t0XYq/
+         OwMmIc6IexoDiW6Pvn7N+93sQApyRXq7fyauYB6EQaqX3HOckz9mPZDodA2N8YlQ3ayR
+         aQaAt8ZkbHzkL5tmq5ODiymxzm4iOvu59FciDEbk/AYQM0QFIT1PSG1IxDht3E+kU0Nc
+         xtXoNFOTfb92YdiH9/Hi9NeqTawpDx8idJ2275cNXoyNpCCs1uCZYZLdVMGHP0UFjttW
+         jbkw==
+X-Gm-Message-State: APjAAAWV/3jXLg6fWw9QfZBWfNWT1gS+39Nn1nLh4cE2N1KRq9lZddiq
+        Fu8YBfp6Q5zZ0reEiM7XF0IRRSPEOvf/Hpcn1g0CzaIHXa5s
+X-Google-Smtp-Source: APXvYqyd3iW3HIS78ZsmeYpofVefk/IPsPQjA8/vcnzarlBzC6/XDGvBlXQ5IpupZ3/0jVrAUF+aR7dZt8HTRN8p+cN2sLZTBMWH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a5d:8a10:: with SMTP id w16mr28701728iod.175.1565018887012;
+ Mon, 05 Aug 2019 08:28:07 -0700 (PDT)
+Date:   Mon, 05 Aug 2019 08:28:07 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d3c7e0058f605a53@google.com>
+Subject: INFO: rcu detected stall in __do_softirq
+From:   syzbot <syzbot+6593c6b8c8b66a07cd98@syzkaller.appspotmail.com>
+To:     bp@alien8.de, gregkh@linuxfoundation.org, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, mingo@redhat.com, nstange@suse.de,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        x86@kernel.org, yakui.zhao@intel.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 1 Aug 2019 05:37:31 -0400
-Brian Masney <masneyb@onstation.org> wrote:
+Hello,
 
-> On Thu, Aug 01, 2019 at 05:33:47AM -0400, Brian Masney wrote:
-> > On Thu, Aug 01, 2019 at 03:35:57PM +0800, Chuhong Yuan wrote:  
-> > > Use devm_add_action_or_reset to remove the call to
-> > > tsl2772_disable_regulators_action to simplify the error path.
-> > > 
-> > > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>  
-> > 
-> > For the whole series:
-> > 
-> > Reviewed-by: Brian Masney <masneyb@onstation.org>  
-> 
-> Oops, I forgot to add this as well:
-> 
-> Tested-by: Brian Masney <masneyb@onstation.org>
-> 
-> I tested this on a Nexus 5 phone.
-> 
-> Brian
-> 
-Applied to the togreg branch of iio.git and pushed out as testing.
+syzbot found the following crash on:
 
-Now the fact we have a fix in the middle of this series is
-a bit unfortunate as it'll mean we need an explicit backport to
-take that for stable.
+HEAD commit:    882e8691 Add linux-next specific files for 20190801
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=17fc120c600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=466b331af3f34e94
+dashboard link: https://syzkaller.appspot.com/bug?extid=6593c6b8c8b66a07cd98
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16b216b2600000
 
-Oh well, if anyone wants it up to them to do the work ;)
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+6593c6b8c8b66a07cd98@syzkaller.appspotmail.com
 
-Thanks,
+rcu: INFO: rcu_preempt self-detected stall on CPU
+rcu: 	1-...!: (1 ticks this GP) idle=b66/1/0x4000000000000004  
+softirq=28179/28180 fqs=1
+	(t=29639 jiffies g=24749 q=37154)
+NMI backtrace for cpu 1
+CPU: 1 PID: 16869 Comm: syz-executor.5 Not tainted 5.3.0-rc2-next-20190801  
+#57
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  <IRQ>
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  nmi_cpu_backtrace.cold+0x70/0xb2 lib/nmi_backtrace.c:101
+  nmi_trigger_cpumask_backtrace+0x23b/0x28b lib/nmi_backtrace.c:62
+  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
+  trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
+  rcu_dump_cpu_stacks+0x183/0x1cf kernel/rcu/tree_stall.h:254
+  print_cpu_stall kernel/rcu/tree_stall.h:455 [inline]
+  check_cpu_stall kernel/rcu/tree_stall.h:529 [inline]
+  rcu_pending kernel/rcu/tree.c:2736 [inline]
+  rcu_sched_clock_irq.cold+0x4dd/0xc13 kernel/rcu/tree.c:2183
+  update_process_times+0x32/0x80 kernel/time/timer.c:1724
+  tick_sched_handle+0xa2/0x190 kernel/time/tick-sched.c:167
+  tick_sched_timer+0x53/0x140 kernel/time/tick-sched.c:1299
+  __run_hrtimer kernel/time/hrtimer.c:1493 [inline]
+  __hrtimer_run_queues+0x364/0xe40 kernel/time/hrtimer.c:1555
+  hrtimer_interrupt+0x314/0x770 kernel/time/hrtimer.c:1617
+  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1068 [inline]
+  smp_apic_timer_interrupt+0x160/0x610 arch/x86/kernel/apic/apic.c:1093
+  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:828
+RIP: 0010:ffs arch/x86/include/asm/bitops.h:297 [inline]
+RIP: 0010:__do_softirq+0x227/0x98c kernel/softirq.c:280
+Code: c7 c0 b0 f4 d2 88 48 c1 e8 03 42 80 3c 30 00 0f 85 b1 06 00 00 48 83  
+3d 96 f2 72 01 00 0f 84 d6 05 00 00 fb 66 0f 1f 44 00 00 <b8> ff ff ff ff  
+48 c7 45 c8 00 91 c0 88 0f bc 45 d4 83 c0 01 89 45
+RSP: 0018:ffff8880ae909f18 EFLAGS: 00000282 ORIG_RAX: ffffffffffffff13
+RAX: 1ffffffff11a5e96 RBX: ffff88809aa061c0 RCX: 1ffffffff134c0be
+RDX: 0000000000000000 RSI: ffffffff8177a50e RDI: ffffffff876001fc
+RBP: ffff8880ae909f98 R08: ffff88809aa061c0 R09: 0000000000000000
+R10: ffffffff89e49050 R11: 0000000000000001 R12: ffff888099137938
+R13: 0000000000000028 R14: dffffc0000000000 R15: 0000000000000000
+  invoke_softirq kernel/softirq.c:373 [inline]
+  irq_exit+0x19b/0x1e0 kernel/softirq.c:413
+  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+  do_IRQ+0x12c/0x200 arch/x86/kernel/irq.c:259
+  common_interrupt+0xf/0xf arch/x86/entry/entry_64.S:605
+  </IRQ>
+RIP: 0010:variable_test_bit arch/x86/include/asm/bitops.h:214 [inline]
+RIP: 0010:test_bit include/asm-generic/bitops-instrumented.h:238 [inline]
+RIP: 0010:kvm_test_request include/linux/kvm_host.h:1207 [inline]
+RIP: 0010:kvm_check_request+0x30/0x70 include/linux/kvm_host.h:1217
+Code: 41 55 41 54 49 89 f4 53 4d 8d 74 24 30 89 fb e8 f6 13 67 00 be 08 00  
+00 00 4c 89 f7 0f b6 db e8 36 e2 a1 00 49 0f a3 5c 24 30 <41> 0f 92 c5 31  
+ff 44 89 ee e8 12 15 67 00 45 84 ed 75 11 e8 c8 13
+RSP: 0018:ffff8880991379e0 EFLAGS: 00000246 ORIG_RAX: ffffffffffffffd7
+RAX: 0000000000000001 RBX: 000000000000001f RCX: ffffffff810b0e4a
+RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff888093c409f0
+RBP: ffff888099137a00 R08: 1ffff1101278813e R09: ffffed101278813f
+R10: ffffed101278813e R11: ffff888093c409f7 R12: ffff888093c409c0
+R13: ffff888093c409c0 R14: ffff888093c409f0 R15: ffff888093c409f0
+  vcpu_enter_guest+0x32a6/0x5e90 arch/x86/kvm/x86.c:7866
+  vcpu_run arch/x86/kvm/x86.c:8151 [inline]
+  kvm_arch_vcpu_ioctl_run+0x464/0x1750 arch/x86/kvm/x86.c:8359
+  kvm_vcpu_ioctl+0x4dc/0xfd0 arch/x86/kvm/../../../virt/kvm/kvm_main.c:2754
+  vfs_ioctl fs/ioctl.c:46 [inline]
+  file_ioctl fs/ioctl.c:509 [inline]
+  do_vfs_ioctl+0xdb6/0x13e0 fs/ioctl.c:696
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
+  __do_sys_ioctl fs/ioctl.c:720 [inline]
+  __se_sys_ioctl fs/ioctl.c:718 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x459829
+Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fa754e29c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459829
+RDX: 0000000000000000 RSI: 000000000000ae80 RDI: 0000000000000005
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fa754e2a6d4
+R13: 00000000004c2bcf R14: 00000000004d6150 R15: 00000000ffffffff
 
-Jonathan
 
-> 
-> > 
-> > I forgot to mention this before, but next time please use a cover letter
-> > if you're sending more than one patch: git format-patch --cover-letter.
-> > 
-> > Brian
-> > 
-> >   
-> > > ---
-> > > Changes in v4:
-> > >   - Split v3 into three patches.
-> > >   - Revise description to make it more precise.
-> > > 
-> > >  drivers/iio/light/tsl2772.c | 6 +++---
-> > >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/drivers/iio/light/tsl2772.c b/drivers/iio/light/tsl2772.c
-> > > index 83cece921843..29cfd8ae2700 100644
-> > > --- a/drivers/iio/light/tsl2772.c
-> > > +++ b/drivers/iio/light/tsl2772.c
-> > > @@ -1807,10 +1807,10 @@ static int tsl2772_probe(struct i2c_client *clientp,
-> > >  		return PTR_ERR(chip->vdd_supply);
-> > >  	}
-> > >  
-> > > -	ret = devm_add_action(&clientp->dev, tsl2772_disable_regulators_action,
-> > > -			      chip);
-> > > +	ret = devm_add_action_or_reset(&clientp->dev,
-> > > +					tsl2772_disable_regulators_action,
-> > > +					chip);
-> > >  	if (ret < 0) {
-> > > -		tsl2772_disable_regulators_action(chip);
-> > >  		dev_err(&clientp->dev, "Failed to setup regulator cleanup action %d\n",
-> > >  			ret);
-> > >  		return ret;
-> > > -- 
-> > > 2.20.1  
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
