@@ -2,113 +2,98 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FDDC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E75AC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D3BE2183F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:53:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564998783;
-	bh=Keolo4uD8qVVOXpyPQKrCcwdglcn3RBBHp23/JSb1GQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NxdJT6yITWmKbYTgrJJuDCntK+Rj1SBb0Cqb/WT4JPUHE+Y08nDoq6ZgTq66NZIYl
-	 7BFMEKGRL/lp5QXjkad82X8SKTQDlatYcDUB0Gvf8mydl9BYFR49Zza/n+YiSx4DLd
-	 FDcqkfj0wsyQJGee+SwO8msaFJ2p67ZgyQe7FDy0=
+	by mail.kernel.org (Postfix) with ESMTP id 1A9DC2182B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:53:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K0B7/O1S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728085AbfHEJxB (ORCPT
+        id S1728140AbfHEJxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 05:53:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42454 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727158AbfHEJxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 05:53:01 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF188217D9;
-        Mon,  5 Aug 2019 09:52:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564998780;
-        bh=Keolo4uD8qVVOXpyPQKrCcwdglcn3RBBHp23/JSb1GQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UB146OiDMhmIAlVUQrsvF7Pr7/CbDwjh9BAslUhM0T2kUCIztdiab7gPobwXubO6t
-         NGXxPUhbebq3xbgjP+pcftEZkN8uXkMrZsQpCiounajddlzAEIFKyEO4tRTa2QjaBT
-         xf4qgxNb/CMXukNd7xsuCp/HPm0cF7qs2bzQYqoI=
-Date:   Mon, 5 Aug 2019 10:52:56 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     catalin.marinas@arm.com, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64/cache: fix -Woverride-init compiler warnings
-Message-ID: <20190805095256.ocgdb2yfhnbdz6kw@willie-the-truck>
-References: <1564759944-2197-1-git-send-email-cai@lca.pw>
+        Mon, 5 Aug 2019 05:53:18 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:32944 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727158AbfHEJxS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 05:53:18 -0400
+Received: by mail-lf1-f66.google.com with SMTP id x3so57534371lfc.0
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 02:53:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yhFhmYD1XCmoTjeTnvzGsODetc1XqqaQE8oBpm4W4vQ=;
+        b=K0B7/O1SMz4RHGXSXodAVa9L8sFoa6UoXKns2dJR1JyKOU2c6furolEA7Q5allCkl0
+         hz3utRt5xZzsleYc5j96GSG5SHJEN9qRmcnlBwZ5Hbwn+fft/iuWyPYdhkJXD/m3jjk7
+         jrqz4dcI6wnABAMB/2cejuK/mx5zUZuzGuS867Iji3hw8OpOMM0EX1haB0kh4NotBmOv
+         TnrXt+nPzDsghutAkYvsNt/760Kmcu8ed+WXy1lumUgqOtf+HKx+P7IjgQ1X5X3F7qkT
+         B41DImoEkIRtZUYYGgcCoKd1jS/rYluUTw2JPsGDWnr8wMsUgYyBHWgFNW3+ViFzuyiM
+         iwUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yhFhmYD1XCmoTjeTnvzGsODetc1XqqaQE8oBpm4W4vQ=;
+        b=PV+URA4C7kHJ0+cwsHVXCrvzF7Pz62Scurb7BzxnHuHgKipRfSBaFap76DNFcpa5GE
+         Z9XBcxX7PT9T35Mc6hnsj7gdtbjd3wATC/6dKAdQq2+FOct9Ti7CnhYljuhrytdeTe1k
+         eOPmY+iTVMzaTnoGD2hLXsHypliA7/S0ub45XjHoApzciA8zBPLVzIhkZaxyEIZxv1C0
+         3Vb8pB71wB4jj8aLewSHE7TKi8Z4Y/raJwDUSxeKQY7tkgn/LlTkcAlHZW0xOvO28aez
+         zlMNC73kox4yYmXZMDksw89A+gDOawgkRXYp9eKRKXcsvS0iLaMAgUPpP1fYi6m9LGL9
+         DPrg==
+X-Gm-Message-State: APjAAAXwdocyw0jb0hRl3sf1aZW9AOPyCmDSyHEEO+1Kpjpddk2D0+OJ
+        EMBnl8AfaQs+x8zRj0NNBYwz6szNAgr5qgbzeRplyw==
+X-Google-Smtp-Source: APXvYqznj+OyBQxOK0qX1ZGixNtwr50nmLElXsC7qnFS3oH2+cAja/iMhd5ozIzmb9vouUkDfKjemRMc1Gv/14GZ9L0=
+X-Received: by 2002:ac2:4c07:: with SMTP id t7mr1288145lfq.152.1564998796491;
+ Mon, 05 Aug 2019 02:53:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1564759944-2197-1-git-send-email-cai@lca.pw>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20190722150302.29526-1-brgl@bgdev.pl> <20190722150302.29526-2-brgl@bgdev.pl>
+In-Reply-To: <20190722150302.29526-2-brgl@bgdev.pl>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 5 Aug 2019 11:53:04 +0200
+Message-ID: <CACRpkdYexsXR=n+t1iVb1QMZc9U1FeKdyHy3w4VnfPy4B=xeiA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/7] sh: ecovec24: add additional properties to the
+ backlight device
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-sh@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        linux-fbdev@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 11:32:24AM -0400, Qian Cai wrote:
-> The commit 155433cb365e ("arm64: cache: Remove support for ASID-tagged
-> VIVT I-caches") introduced some compiation warnings from GCC,
-> 
-> arch/arm64/kernel/cpuinfo.c:38:26: warning: initialized field
-> overwritten [-Woverride-init]
->   [ICACHE_POLICY_VIPT]  = "VIPT",
->                           ^~~~~~
-> arch/arm64/kernel/cpuinfo.c:38:26: note: (near initialization for
-> 'icache_policy_str[2]')
-> arch/arm64/kernel/cpuinfo.c:39:26: warning: initialized field
-> overwritten [-Woverride-init]
->   [ICACHE_POLICY_PIPT]  = "PIPT",
->                           ^~~~~~
-> arch/arm64/kernel/cpuinfo.c:39:26: note: (near initialization for
-> 'icache_policy_str[3]')
-> arch/arm64/kernel/cpuinfo.c:40:27: warning: initialized field
-> overwritten [-Woverride-init]
->   [ICACHE_POLICY_VPIPT]  = "VPIPT",
->                            ^~~~~~~
-> arch/arm64/kernel/cpuinfo.c:40:27: note: (near initialization for
-> 'icache_policy_str[0]')
-> 
-> because it initializes icache_policy_str[0 ... 3] twice.
-> 
-> Fixes: 155433cb365e ("arm64: cache: Remove support for ASID-tagged VIVT I-caches")
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
->  arch/arm64/kernel/cpuinfo.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/cpuinfo.c b/arch/arm64/kernel/cpuinfo.c
-> index 876055e37352..193b38da8d96 100644
-> --- a/arch/arm64/kernel/cpuinfo.c
-> +++ b/arch/arm64/kernel/cpuinfo.c
-> @@ -34,10 +34,10 @@
->  static struct cpuinfo_arm64 boot_cpu_data;
->  
->  static char *icache_policy_str[] = {
-> -	[0 ... ICACHE_POLICY_PIPT]	= "RESERVED/UNKNOWN",
-> +	[ICACHE_POLICY_VPIPT]		= "VPIPT",
-> +	[ICACHE_POLICY_VPIPT + 1]	= "RESERVED/UNKNOWN",
->  	[ICACHE_POLICY_VIPT]		= "VIPT",
->  	[ICACHE_POLICY_PIPT]		= "PIPT",
-> -	[ICACHE_POLICY_VPIPT]		= "VPIPT",
+On Mon, Jul 22, 2019 at 5:03 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-I really don't like this patch. Using "[0 ... MAXIDX] = <default>" is a
-useful idiom and I think the code is more error-prone the way you have
-restructured it.
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Add a GPIO lookup entry and a device property for GPIO backlight to the
+> board file. Tie them to the platform device which is now registered using
+> platform_device_register_full() because of the properties. These changes
+> are inactive now but will be used once the gpio backlight driver is
+> modified.
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Why are you passing -Woverride-init to the compiler anyway? There's only
-one Makefile that references that option, and it's specific to a pinctrl
-driver.
+Clever! I must also use these dynamic properties now.
 
-Will
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
