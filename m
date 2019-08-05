@@ -2,77 +2,70 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2F0C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2E1C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EB3920856
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A467220B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:22:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p6Z3kfl4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rMyVun8j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728597AbfHEMWT (ORCPT
+        id S1728694AbfHEMWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 08:22:19 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41924 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727259AbfHEMWS (ORCPT
+        Mon, 5 Aug 2019 08:22:33 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45315 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727259AbfHEMWd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 08:22:18 -0400
-Received: by mail-pl1-f194.google.com with SMTP id m9so36281705pls.8;
-        Mon, 05 Aug 2019 05:22:18 -0700 (PDT)
+        Mon, 5 Aug 2019 08:22:33 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r1so39554155pfq.12
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 05:22:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=vEWoK/ncnnL5HeoDBfuY5M1+24Qlh2DA31rCewI/52E=;
-        b=p6Z3kfl4eEvXmrZiU9Y687TE0tfxSww44x8bZWTyiuM1Kk4+Ls0NTJ67ignEqCsb8V
-         qFoXvj+B7+OYXH5/sjVkWdJMQWfVVVxqkBrItVYnnYbjuQruh8Pd55RQm7Gf3vIwN4pj
-         qvFF+yNwQbDj6TRhMxwvFnYifcpkdEi0xX3oWKOj8LdlE6VWvZniE5rgSbC33RSHiq4p
-         7ji9b3MO2QrjgFvyBkTOmN49Uh9HswzgDWNIntCDXWJkN7bXuY50icgNCxMwWIO5O1uq
-         QDRhnwKy2BjH/9Q8ZEHjRSSsJ4pjm1yh0yC14L22KF3amQ9pxCsB+WlNpVLLiEgmX7It
-         MkiA==
+        bh=D3yEsJczZk4ZuqdPDx5JLOGIqCT05A22pIoztZy5LD4=;
+        b=rMyVun8jDU5nU4z8IENdJOaneaQw2J+d+Rg4cXCoDHJIjW1njTpAtZXF5GaEFM7YjW
+         AIdf1IzEpBtCP6i2ZyH6JWV+KUbSr4xUv9P8ThS3WkjI2D07VeCBjG7glClOCfW7rlLJ
+         4OGXgRd1fujoEHSLpOiXO/5IeIliDP4rCRWl8ikeaXrbKJETMzDdkwtbQVCFKxV01p1b
+         wiu4xyCJyNK5sNHw+znCtjvNd68vVsdHS8iyOHr5YX0hSN1h3p5sqlA/iOaOBgideP8e
+         ZkIzQ1JMkd6UV7W1H8JYhjhE52BADcEbWxMFjHr/H5jTm+L1cmsqe27IIB/wJm0oPzfc
+         gTmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=vEWoK/ncnnL5HeoDBfuY5M1+24Qlh2DA31rCewI/52E=;
-        b=N9W5HPJJ297AYWdM5eOJqTaUXyFm9kJdiLc9mcYtbErl/hoMMicZojooQ6m/6fGFSA
-         uZ1go1CjdHMhw/87cQvJdwDqXjbKBdaivkX1AGAEt6wKz72dF4RZZfMEwnrXFatPAa4J
-         brKm4mI+Fd191YDJyF5jpMvj/OQu5IW08LpNK9mz2ZSclugJ7Aa0k8h6BowWlES0vDPe
-         GRvFoJrA9FVvMbrsRQk0DsdojYOBbb0/nBi+McO7s1cVhKdJMU3WnJA7uET8qm5nvJoD
-         vLdUzThvhZylc1frWuNQ7YOtCYfgygSkz5mveppbDXTncyuPCNTIfdjiDJDhnnZrTTaF
-         mmMQ==
-X-Gm-Message-State: APjAAAUW+rYMai3yN96EcMV3a3RgYVnYEeWT8ygBws+DyZrO+FmlKYI2
-        rU0DNa8sFURT3Av52OWsHyA=
-X-Google-Smtp-Source: APXvYqyKEfTE85E4XHkXoQNUJWBl4w/9gg2ux5fA/09qhCairbUTm2pP4GaeK6Zg8ntOYFTPUxt7kQ==
-X-Received: by 2002:a17:902:8b88:: with SMTP id ay8mr139369488plb.139.1565007738273;
-        Mon, 05 Aug 2019 05:22:18 -0700 (PDT)
+        bh=D3yEsJczZk4ZuqdPDx5JLOGIqCT05A22pIoztZy5LD4=;
+        b=fYXbkH0i7P0fInZputcNdGFwlKb9Jl1/xNZASYafX0B/8WJf1/xS9qA48v1VA+1n/F
+         FsWHZHiUCCLSPz1QHlQjKTowHWEidYkVcMI1i70ob5jamOQ4/2xiyVYGxPagDURKPum8
+         Afj2UIhnh6wvYLm/Vsmu0a1an30sbkgri70kbJD96L/UxamXEc19lkTXTb4cl3HLynea
+         Af2XctH7QswMxYmJjKfcQBClP4D4gtCokqxH5VKXwqFHc2II8GzKcZpfyztA50ydSNRK
+         KUfMgY9dfJgvnTIl9rYublhLrCdOawavJz4VODheYAEGPtpBFNXYRBRkihPNQAMWALqG
+         8whw==
+X-Gm-Message-State: APjAAAWNWSXMzZc6vpaEvCEKtTKOMT0JmSVO330jdmIV5RpPPFLPUyqs
+        kPwvbFJv3NilYzal0y3/5hs=
+X-Google-Smtp-Source: APXvYqwogI/fnXLqwAApMoBx9T/YLbLHBkEj2sYreLJgL7EsGb4NcAT0guXujrbqomzYJYPxPETjNQ==
+X-Received: by 2002:a63:cc14:: with SMTP id x20mr90544477pgf.142.1565007752637;
+        Mon, 05 Aug 2019 05:22:32 -0700 (PDT)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id a16sm92646276pfd.68.2019.08.05.05.22.10
+        by smtp.gmail.com with ESMTPSA id a12sm12472578pgv.48.2019.08.05.05.22.26
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 05 Aug 2019 05:22:17 -0700 (PDT)
+        Mon, 05 Aug 2019 05:22:32 -0700 (PDT)
 From:   Chuhong Yuan <hslester96@gmail.com>
 Cc:     Christoph Hellwig <hch@lst.de>,
         Marek Szyprowski <m.szyprowski@samsung.com>,
         Robin Murphy <robin.murphy@arm.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joe Perches <joe@perches.com>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        iommu@lists.linux-foundation.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v3 0/8] Replace strncmp with str_has_prefix
-Date:   Mon,  5 Aug 2019 20:22:04 +0800
-Message-Id: <20190805122204.12823-1-hslester96@gmail.com>
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH v3 1/8] dma: debug: Replace strncmp with str_has_prefix
+Date:   Mon,  5 Aug 2019 20:22:20 +0800
+Message-Id: <20190805122220.12878-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -82,56 +75,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 72921427d46b
-("string.h: Add str_has_prefix() helper function")
-introduced str_has_prefix() to substitute error-prone
-strncmp(str, const, len).
+strncmp(str, const, len) is error-prone because len
+is easy to have typo.
+The example is the hard-coded len has counting error
+or sizeof(const) forgets - 1.
+So we prefer using newly introduced str_has_prefix()
+to substitute such strncmp to make code better.
 
-strncmp(str, const, len) is easy to have error in len
-because of counting error or sizeof(const) without - 1.
-
-These patches replace such pattern with str_has_prefix()
-to avoid hard coded constant length and sizeof.
-
-Besides, str_has_prefix() returns the length of prefix
-when the comparison returns true.
-We can use this return value to substitute some hard-coding.
-
-Changelog:
-
-v1 -> v2:
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+Changes in v3:
   - Revise the description.
-  - Use the return value of str_has_prefix() to eliminate
-    hard coding.
-  - Remove possible false positives and add newly detected
-    one in upstream.
 
-v2 -> v3:
-  - Revise the description.
-  - Remove else uses in printk.c.
+ kernel/dma/debug.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Chuhong Yuan (8):
-  dma: debug: Replace strncmp with str_has_prefix
-  module: Replace strncmp with str_has_prefix
-  PM/sleep: Replace strncmp with str_has_prefix
-  printk: Replace strncmp with str_has_prefix
-  reboot: Replace strncmp with str_has_prefix
-  sched: Replace strncmp with str_has_prefix
-  userns: Replace strncmp with str_has_prefix
-  watchdog: Replace strncmp with str_has_prefix
-
- kernel/dma/debug.c       |  2 +-
- kernel/module.c          |  2 +-
- kernel/power/main.c      |  2 +-
- kernel/printk/braille.c  | 10 ++++++----
- kernel/printk/printk.c   | 19 +++++++++++++------
- kernel/reboot.c          |  6 ++++--
- kernel/sched/debug.c     |  5 +++--
- kernel/sched/isolation.c |  9 +++++----
- kernel/user_namespace.c  | 10 +++++-----
- kernel/watchdog.c        |  8 ++++----
- 10 files changed, 43 insertions(+), 30 deletions(-)
-
+diff --git a/kernel/dma/debug.c b/kernel/dma/debug.c
+index 099002d84f46..0f9e1aba3e1a 100644
+--- a/kernel/dma/debug.c
++++ b/kernel/dma/debug.c
+@@ -970,7 +970,7 @@ static __init int dma_debug_cmdline(char *str)
+ 	if (!str)
+ 		return -EINVAL;
+ 
+-	if (strncmp(str, "off", 3) == 0) {
++	if (str_has_prefix(str, "off")) {
+ 		pr_info("debugging disabled on kernel command line\n");
+ 		global_disable = true;
+ 	}
 -- 
 2.20.1
 
