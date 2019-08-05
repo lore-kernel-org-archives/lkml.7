@@ -2,130 +2,141 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A18B1C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2817C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79A3620880
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:35:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="eD6hF6pN"
+	by mail.kernel.org (Postfix) with ESMTP id 8B99D20B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:38:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbfHEJft (ORCPT
+        id S1727917AbfHEJiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 05:35:49 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:46978 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbfHEJfs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 05:35:48 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id A559B2F9;
-        Mon,  5 Aug 2019 11:35:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1564997745;
-        bh=9lyHNth0BO3OFQvy53sY8ChramaGr6/aYpcQayRs7Wk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eD6hF6pNE4bGlluLrMGZh1kev4mdIMcD6210/F7TcCD0TUmHaq+x3qIKSNpNLjI9O
-         cnLNzSztiNtar/f+edH9FcfE2L3wsdjsgGvImAuR1LSyQQTdl0Gz3LscYddaQXoudC
-         YclyoiDWszwHtibWSIFQLKCqKqh7obs/JjZw3NfI=
-Date:   Mon, 5 Aug 2019 12:35:43 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>
-Subject: Re: [PATCH/RFC 02/12] dt-bindings: display: renesas: lvds: Document
- renesas,swap-data
-Message-ID: <20190805093543.GB29747@pendragon.ideasonboard.com>
-References: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1564731249-22671-3-git-send-email-fabrizio.castro@bp.renesas.com>
- <20190802074428.GB5008@pendragon.ideasonboard.com>
- <TY1PR01MB17706A4FF4C26CD4BDA1A5DAC0DA0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+        Mon, 5 Aug 2019 05:38:00 -0400
+Received: from mga03.intel.com ([134.134.136.65]:32372 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726880AbfHEJiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 05:38:00 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 02:37:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,349,1559545200"; 
+   d="scan'208";a="167921292"
+Received: from buildpc-hp-z230.iind.intel.com (HELO buildpc-HP-Z230) ([10.223.89.34])
+  by orsmga008.jf.intel.com with ESMTP; 05 Aug 2019 02:37:31 -0700
+Date:   Mon, 5 Aug 2019 15:09:23 +0530
+From:   Sanyog Kale <sanyog.r.kale@intel.com>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, vkoul@kernel.org,
+        gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com
+Subject: Re: [RFC PATCH 21/40] soundwire: export helpers to find row and
+ column values
+Message-ID: <20190805093923.GC22437@buildpc-HP-Z230>
+References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
+ <20190725234032.21152-22-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <TY1PR01MB17706A4FF4C26CD4BDA1A5DAC0DA0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190725234032.21152-22-pierre-louis.bossart@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fabrizio,
+On Thu, Jul 25, 2019 at 06:40:13PM -0500, Pierre-Louis Bossart wrote:
+> Add a prefix for common tables and export 2 helpers to set the frame
+> shapes based on row/col values.
+> 
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> ---
+>  drivers/soundwire/bus.h    |  7 +++++--
+>  drivers/soundwire/stream.c | 14 ++++++++------
+>  2 files changed, 13 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/soundwire/bus.h b/drivers/soundwire/bus.h
+> index 06ac4adb0074..c57c9c23f6ca 100644
+> --- a/drivers/soundwire/bus.h
+> +++ b/drivers/soundwire/bus.h
+> @@ -73,8 +73,11 @@ struct sdw_msg {
+>  
+>  #define SDW_DOUBLE_RATE_FACTOR		2
+>  
+> -extern int rows[SDW_FRAME_ROWS];
+> -extern int cols[SDW_FRAME_COLS];
+> +extern int sdw_rows[SDW_FRAME_ROWS];
+> +extern int sdw_cols[SDW_FRAME_COLS];
+> +
+> +int sdw_find_row_index(int row);
+> +int sdw_find_col_index(int col);
 
-On Mon, Aug 05, 2019 at 08:59:51AM +0000, Fabrizio Castro wrote:
-> > From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > Sent: 02 August 2019 08:44
-> > Subject: Re: [PATCH/RFC 02/12] dt-bindings: display: renesas: lvds: Document renesas,swap-data
-> > 
-> > Hi Fabrizio,
-> > 
-> > Thank you for the patch.
-> > 
-> > On Fri, Aug 02, 2019 at 08:33:59AM +0100, Fabrizio Castro wrote:
-> > > R-Car D3, R-Car E3, and RZ/G2E support dual-link mode.
-> > > In such a mode, the first LVDS encoder emits even data, and the
-> > > second LVDS encoder emits odd data. This patch documents property
-> > > renesas,swap-data, used to swap even and odd data around.
-> > >
-> > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt | 5 +++++
-> > >  1 file changed, 5 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
-> > b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
-> > > index dece79e..8980179 100644
-> > > --- a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
-> > > +++ b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
-> > > @@ -52,6 +52,11 @@ Optional properties:
-> > >    mandatory for the first LVDS encoder on R-Car D3, R-Car E3, and RZ/G2E SoCs,
-> > >    and shall point to the second encoder to be used as a companion in dual-link
-> > >    mode. It shall not be set for any other LVDS encoder.
-> > > +- renesas,swap-data : when in dual-link mode, the first LVDS encoder normally
-> > > +  emits even data, and the second LVDS encoder emits odd data. When property
-> > > +  renesas,swap-data is specified, the data emitted by the two encoders will be
-> > > +  swapped around. This property can only be used in conjunction with property
-> > > +  renesas,companion.
-> > 
-> > From an LVDS encoder point of view this is more a configuration option
-> > than a description of the hardware. Wouldn't it be better for the LVDS
-> > sink to report which of the odd or even pixels it expects on each of its
-> > endpoints ?
-> 
-> Yes, that would be my preference too, and it would be better, I am just not entirely
-> what's the best place for this information though
-> 
-> > The LVDS encoder driver could then query that at runtime and
-> > configure itself accordingly. Ideally this should be queried through the
-> > drm_bridge_timings structure (or through a similar mean), not through
-> > DT. An LVDS sink that has a fixed mapping of odd/even pixels to
-> > endpoints wouldn't need the information to be specified in DT at all.
-> 
-> Isn't drm_bridge_timings specific for bridges?
+We use index values only in bank switch operations to program registers. Do we
+really need to export sdw_find_row_index & sdw_find_col_index?? If i understand
+correctly the allocation algorithm only needs to know about cols and rows values
+and not index.
 
-Its name makes it specific to bridges, but the information it contains
-could equally apply to panels. I would thus use it for both, possibly
-after renaming it.
+>  
+>  /**
+>   * sdw_port_runtime: Runtime port parameters for Master or Slave
+> diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
+> index a0476755a459..53f5e790fcd7 100644
+> --- a/drivers/soundwire/stream.c
+> +++ b/drivers/soundwire/stream.c
+> @@ -21,37 +21,39 @@
+>   * The rows are arranged as per the array index value programmed
+>   * in register. The index 15 has dummy value 0 in order to fill hole.
+>   */
+> -int rows[SDW_FRAME_ROWS] = {48, 50, 60, 64, 75, 80, 125, 147,
+> +int sdw_rows[SDW_FRAME_ROWS] = {48, 50, 60, 64, 75, 80, 125, 147,
+>  			96, 100, 120, 128, 150, 160, 250, 0,
+>  			192, 200, 240, 256, 72, 144, 90, 180};
+>  
+> -int cols[SDW_FRAME_COLS] = {2, 4, 6, 8, 10, 12, 14, 16};
+> +int sdw_cols[SDW_FRAME_COLS] = {2, 4, 6, 8, 10, 12, 14, 16};
+>  
+> -static int sdw_find_col_index(int col)
+> +int sdw_find_col_index(int col)
+>  {
+>  	int i;
+>  
+>  	for (i = 0; i < SDW_FRAME_COLS; i++) {
+> -		if (cols[i] == col)
+> +		if (sdw_cols[i] == col)
+>  			return i;
+>  	}
+>  
+>  	pr_warn("Requested column not found, selecting lowest column no: 2\n");
+>  	return 0;
+>  }
+> +EXPORT_SYMBOL(sdw_find_col_index);
+>  
+> -static int sdw_find_row_index(int row)
+> +int sdw_find_row_index(int row)
+>  {
+>  	int i;
+>  
+>  	for (i = 0; i < SDW_FRAME_ROWS; i++) {
+> -		if (rows[i] == row)
+> +		if (sdw_rows[i] == row)
+>  			return i;
+>  	}
+>  
+>  	pr_warn("Requested row not found, selecting lowest row no: 48\n");
+>  	return 0;
+>  }
+> +EXPORT_SYMBOL(sdw_find_row_index);
+>  
+>  static int _sdw_program_slave_port_params(struct sdw_bus *bus,
+>  					  struct sdw_slave *slave,
+> -- 
+> 2.20.1
+> 
 
 -- 
-Regards,
-
-Laurent Pinchart
