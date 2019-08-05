@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F41C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40916C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A458C206C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:05:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED0D1216F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:05:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010312;
-	bh=VOoS7PET3wB4ny2eX8H1WUeULIDYFPBtFg8yivqtRxs=;
+	s=default; t=1565010317;
+	bh=TqnifPeWFcqsVHSip/uFpPPI4gb3Qj12me9k3CbRWJ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HrE8SYP/F4dzsEagviFxRuRNbBsgXdyJmTVEDWyqoGq2o6jzfl5Q2HJZs6SjtTz/V
-	 tQ2iYUhtOuxb5EzcwXHNzDasRNxGcE2sLiEgtQpypveMoqyejku3ozLNYv2UGTXSC5
-	 ej/aJ1UrJIrFDZMyvDs2CIOWPzaswsFs8+J75hI4=
+	b=eR+8oXwKPS3sQtlroWvEuVHGs2MUnbTywxe7UB6uIT4V18sCuSugIsb89VTwR2mpE
+	 hLxB+qP1/F8qbraKJQy2TQcmaJox+huemhcAHDSQszXoUoOLjjN1V9jSSb1CtzEpCV
+	 UlnFmc5h+cLxz8AVxD3JckTVCOGH4R45Vrzi3WsE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729250AbfHENFL (ORCPT
+        id S1729262AbfHENFP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:05:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41028 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:05:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729214AbfHENFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:05:05 -0400
+        id S1729246AbfHENFL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:05:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62A6C214C6;
-        Mon,  5 Aug 2019 13:05:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 815CA206C1;
+        Mon,  5 Aug 2019 13:05:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010304;
-        bh=VOoS7PET3wB4ny2eX8H1WUeULIDYFPBtFg8yivqtRxs=;
+        s=default; t=1565010310;
+        bh=TqnifPeWFcqsVHSip/uFpPPI4gb3Qj12me9k3CbRWJ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UCyeAVdPpRncfwbd6CuISQgsWfSI3BXM/dMVboDsv3ybUVpZK1gzyijEIXfRst7ja
-         gQXrZXlipZ7qlWwp2T5uyZr4tYyx5jTXUScYivxPZQdO0+7WTudbu+6En3yDB3QfP4
-         RJBC64eUs/fcroWRgU2/D5w5S/g7bWQ5WcI8Rfa0=
+        b=yXRHyBNoGijq3z0hcnZM9O6Soy7E6qSesEKduUCu25+PgPFnaGC5vGRy/QxOwKFn4
+         nQ0/6xprQc9zFrdT28lnUd8MdVvNIKxAqg5YSmnlN4noQ0qJALVerzgKoPuQTk+jtW
+         do7S3jLum9xGK0tcQwIjEePB3jTyq+0DQs3i7Jg4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>,
+        stable@vger.kernel.org, Prarit Bhargava <prarit@redhat.com>,
+        Barret Rhoden <brho@google.com>,
+        David Arcari <darcari@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 04/42] ARM: dts: rockchip: Mark that the rk3288 timer might stop in suspend
-Date:   Mon,  5 Aug 2019 15:02:30 +0200
-Message-Id: <20190805124925.354401486@linuxfoundation.org>
+Subject: [PATCH 4.9 06/42] kernel/module.c: Only return -EEXIST for modules that have finished loading
+Date:   Mon,  5 Aug 2019 15:02:32 +0200
+Message-Id: <20190805124925.612535283@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124924.788666484@linuxfoundation.org>
 References: <20190805124924.788666484@linuxfoundation.org>
@@ -60,46 +63,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8ef1ba39a9fa53d2205e633bc9b21840a275908e ]
+[ Upstream commit 6e6de3dee51a439f76eb73c22ae2ffd2c9384712 ]
 
-This is similar to commit e6186820a745 ("arm64: dts: rockchip: Arch
-counter doesn't tick in system suspend").  Specifically on the rk3288
-it can be seen that the timer stops ticking in suspend if we end up
-running through the "osc_disable" path in rk3288_slp_mode_set().  In
-that path the 24 MHz clock will turn off and the timer stops.
+Microsoft HyperV disables the X86_FEATURE_SMCA bit on AMD systems, and
+linux guests boot with repeated errors:
 
-To test this, I ran this on a Chrome OS filesystem:
-  before=$(date); \
-  suspend_stress_test -c1 --suspend_min=30 --suspend_max=31; \
-  echo ${before}; date
+amd64_edac_mod: Unknown symbol amd_unregister_ecc_decoder (err -2)
+amd64_edac_mod: Unknown symbol amd_register_ecc_decoder (err -2)
+amd64_edac_mod: Unknown symbol amd_report_gart_errors (err -2)
+amd64_edac_mod: Unknown symbol amd_unregister_ecc_decoder (err -2)
+amd64_edac_mod: Unknown symbol amd_register_ecc_decoder (err -2)
+amd64_edac_mod: Unknown symbol amd_report_gart_errors (err -2)
 
-...and I found that unless I plug in a device that requests USB wakeup
-to be active that the two calls to "date" would show that fewer than
-30 seconds passed.
+The warnings occur because the module code erroneously returns -EEXIST
+for modules that have failed to load and are in the process of being
+removed from the module list.
 
-NOTE: deep suspend (where the 24 MHz clock gets disabled) isn't
-supported yet on upstream Linux so this was tested on a downstream
-kernel.
+module amd64_edac_mod has a dependency on module edac_mce_amd.  Using
+modules.dep, systemd will load edac_mce_amd for every request of
+amd64_edac_mod.  When the edac_mce_amd module loads, the module has
+state MODULE_STATE_UNFORMED and once the module load fails and the state
+becomes MODULE_STATE_GOING.  Another request for edac_mce_amd module
+executes and add_unformed_module() will erroneously return -EEXIST even
+though the previous instance of edac_mce_amd has MODULE_STATE_GOING.
+Upon receiving -EEXIST, systemd attempts to load amd64_edac_mod, which
+fails because of unknown symbols from edac_mce_amd.
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+add_unformed_module() must wait to return for any case other than
+MODULE_STATE_LIVE to prevent a race between multiple loads of
+dependent modules.
+
+Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+Signed-off-by: Barret Rhoden <brho@google.com>
+Cc: David Arcari <darcari@redhat.com>
+Cc: Jessica Yu <jeyu@kernel.org>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Jessica Yu <jeyu@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/rk3288.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/module.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 17ec2e2d7a60b..30f1384f619b3 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -210,6 +210,7 @@
- 			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
- 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
- 		clock-frequency = <24000000>;
-+		arm,no-tick-in-suspend;
- 	};
+diff --git a/kernel/module.c b/kernel/module.c
+index 2325c9821f2a1..fb9e07aec49e0 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -3351,8 +3351,7 @@ static bool finished_loading(const char *name)
+ 	sched_annotate_sleep();
+ 	mutex_lock(&module_mutex);
+ 	mod = find_module_all(name, strlen(name), true);
+-	ret = !mod || mod->state == MODULE_STATE_LIVE
+-		|| mod->state == MODULE_STATE_GOING;
++	ret = !mod || mod->state == MODULE_STATE_LIVE;
+ 	mutex_unlock(&module_mutex);
  
- 	timer: timer@ff810000 {
+ 	return ret;
+@@ -3515,8 +3514,7 @@ again:
+ 	mutex_lock(&module_mutex);
+ 	old = find_module_all(mod->name, strlen(mod->name), true);
+ 	if (old != NULL) {
+-		if (old->state == MODULE_STATE_COMING
+-		    || old->state == MODULE_STATE_UNFORMED) {
++		if (old->state != MODULE_STATE_LIVE) {
+ 			/* Wait in case it fails to load. */
+ 			mutex_unlock(&module_mutex);
+ 			err = wait_event_interruptible(module_wq,
 -- 
 2.20.1
 
