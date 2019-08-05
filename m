@@ -2,84 +2,104 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDEF9C19759
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 00:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4A79C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 00:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 967ED20880
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 00:10:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rt+Cwu4a"
+	by mail.kernel.org (Postfix) with ESMTP id C38972133F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 00:23:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbfHEAKL (ORCPT
+        id S1726826AbfHEAXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 4 Aug 2019 20:10:11 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:46052 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726532AbfHEAKL (ORCPT
+        Sun, 4 Aug 2019 20:23:30 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:59042 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726621AbfHEAX3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 4 Aug 2019 20:10:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=rrSge+Ou39enQtggjfw97C05S0AT6/LDL4+Td7GzXqo=; b=rt+Cwu4aN9dj8FNJ9j8WimAWw
-        /voDELMBcEZqVCTnt2wiJwQ64mtmAQJg8N0vJhM/dY3yDbuqKn+k9RJzYn74HbRzV5PH800Ft20zq
-        Zy+twK1dRca2Gzk7CeXQUz6f1IpIx+eOJOs4knnmEetbE7du8Xx1CY6c43zdjIipL+sZHvLsggODA
-        jyh3K/IBGAR3BMcC0ypc0gBrIoYpI3GOso5ufIuocnV2Fjv2MPHDVkXFqWfFSjgjSqsmqZpEJore1
-        U8f0o7WtMhhPY4BfuPGOedN7GMjkakTRfbjPQouq1fhSAC6TPpYc8Ho7OJrNyM+CyfJNk5rX8PRzc
-        OspzJK32Q==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1huQZf-00055K-CZ; Mon, 05 Aug 2019 00:10:03 +0000
-Date:   Sun, 4 Aug 2019 17:10:03 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Sheriff Esseson <sheriffesseson@gmail.com>
-Cc:     skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:RISC-V ARCHITECTURE" <linux-riscv@lists.infradead.org>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <netdev@vger.kernel.org>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <bpf@vger.kernel.org>
-Subject: Re: [PATCH] Documentation: virt: Fix broken reference to virt tree's
- index
-Message-ID: <20190805001003.GA30179@bombadil.infradead.org>
-References: <20190804154635.GA18475@localhost>
+        Sun, 4 Aug 2019 20:23:29 -0400
+Received: from dread.disaster.area (pa49-181-167-148.pa.nsw.optusnet.com.au [49.181.167.148])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id A7108438EAC;
+        Mon,  5 Aug 2019 10:23:25 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1huQkw-00050c-Nc; Mon, 05 Aug 2019 10:21:42 +1000
+Date:   Mon, 5 Aug 2019 10:21:42 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
+Cc:     Goldwyn Rodrigues <rgoldwyn@suse.de>, linux-xfs@vger.kernel.org,
+        linux-nvdimm@lists.01.org, darrick.wong@oracle.com,
+        linux-kernel@vger.kernel.org, gujx@cn.fujitsu.com,
+        qi.fuli@fujitsu.com, caoj.fnst@cn.fujitsu.com
+Subject: Re: [RFC PATCH 0/7] xfs: add reflink & dedupe support for fsdax.
+Message-ID: <20190805002142.GV7777@dread.disaster.area>
+References: <20190731114935.11030-1-ruansy.fnst@cn.fujitsu.com>
+ <20190731203324.7vjwlejmwpghpvqi@fiona>
+ <800ff77a-7cd1-5fa1-fcf7-e41264a3f189@cn.fujitsu.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190804154635.GA18475@localhost>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <800ff77a-7cd1-5fa1-fcf7-e41264a3f189@cn.fujitsu.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0 cx=a_idp_d
+        a=gu9DDhuZhshYSb5Zs/lkOA==:117 a=gu9DDhuZhshYSb5Zs/lkOA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
+        a=7-415B0cAAAA:8 a=5uzjyc-vXknmC19CI-UA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 04, 2019 at 04:46:35PM +0100, Sheriff Esseson wrote:
-> Fix broken reference to virt/index.rst.
+On Thu, Aug 01, 2019 at 09:37:04AM +0800, Shiyang Ruan wrote:
 > 
-> Sequel to: 2f5947dfcaec ("Documentation: move Documentation/virtual to
-> Documentation/virt")
+> 
+> On 8/1/19 4:33 AM, Goldwyn Rodrigues wrote:
+> > On 19:49 31/07, Shiyang Ruan wrote:
+> > > This patchset aims to take care of this issue to make reflink and dedupe
+> > > work correctly in XFS.
+> > > 
+> > > It is based on Goldwyn's patchsets: "v4 Btrfs dax support" and "Btrfs
+> > > iomap".  I picked up some patches related and made a few fix to make it
+> > > basically works fine.
+> > > 
+> > > For dax framework:
+> > >    1. adapt to the latest change in iomap.
+> > > 
+> > > For XFS:
+> > >    1. report the source address and set IOMAP_COW type for those write
+> > >       operations that need COW.
+> > >    2. update extent list at the end.
+> > >    3. add file contents comparison function based on dax framework.
+> > >    4. use xfs_break_layouts() to support dax.
+> > 
+> > Shiyang,
+> > 
+> > I think you used the older patches which does not contain the iomap changes
+> > which would call iomap_begin() with two iomaps. I have it in the btrfs-iomap
+> 
+> Oh, Sorry for my carelessness.  This patchset is built on your "Btrfs
+> iomap".  I didn't point it out in cover letter.
+> 
+> > branch and plan to update it today. It is built on v5.3-rcX, so it should
+> > contain the changes which moves the iomap code to the different directory.
+> > I will build the dax patches on top of that.
+> > However, we are making a big dependency chain here
+> Don't worry.  It's fine for me.  I'll follow your updates.
 
-'Sequel to'?  Do you mean 'Fixes'?
+Hi Shiyang,
 
-> Reported-by: Sphinx
+I'll wait for you to update your patches on top of the latest btrfs
+patches before looking at this any futher. it would be good to get
+a set of iomap infrastructure patches separated from the btrfs
+patchsets so could have them both built from a common patchset.
 
-Reported-by is used for people.  See
-Documentation/process/submitting-patches.rst section 13.
+Cheers,
 
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
