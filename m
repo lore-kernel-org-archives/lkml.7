@@ -2,153 +2,71 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C1FC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:58:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21976C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 23:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E2602147A
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:58:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I/auqCVD"
+	by mail.kernel.org (Postfix) with ESMTP id EFC892086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 23:10:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730971AbfHEW6O (ORCPT
+        id S1730515AbfHEXKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 18:58:14 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44738 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728870AbfHEW6O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 18:58:14 -0400
-Received: by mail-pl1-f194.google.com with SMTP id t14so37000067plr.11
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 15:58:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=33ODwh9+siw4jaJjkemMOwZowzifm/mJiOiBDrPOEqk=;
-        b=I/auqCVDp+17lR7htooMYvNhX4kcFZAvbtwZcuJNVHW4VI/O002Fuo0/x4qgu0Fuu7
-         ysIUHOOolI/96+Whm6FCbn+iv3bBzC1Fu1P8Rrp4DpcVAA7IDEgjxyjfw9J6rEv8zh6/
-         4mVG1MySvmzriEHxURZSljfnxHy9k+W/8snVBb5SpzcxqLFFvuj8QXSAJ0UV5vIWPTkx
-         vR32En/zf4U8QWE47GBteuRicLMLgLfN4axaki3LTEZE5DjI7AnJm/U5JLaGlT7uXxfv
-         UHxlTH4lag4q6U7bvJE/P2B6k3w1M5T4habqkXpQNgJvhnah9ueYjRX6rE3kRzsOs/K2
-         gRNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=33ODwh9+siw4jaJjkemMOwZowzifm/mJiOiBDrPOEqk=;
-        b=iBgqrEDVelpXEABe7DyjYllfA9TMdzE8jym4j/EwRGcOdu4LQvEAGtnDnt5vA8Unug
-         fKpzuhhKDiDaos7K2I7DSU5UezXMDmPROFYoImn3JdWEPFnOTIN4+Pxgof/uuzLwPoxW
-         x1XQpLzKcjvDXt1OTqLdKhLxcyhkjN40sasjrMk9jteGSfkvvSRz7ufpcMirZNP3pGzn
-         1S8mcVsezgt8XQC/+KQ7HPKkGf3PhqYo/ZUdAeJLVttp5sD+Qt+5gAKjuiB7909oA+zY
-         sr0yM2FrL4WTrStOV07ZDEV2idwm+ZCxvaTdFLm5lnLScgEk0XHIm4SnCIDE2r/lLc8h
-         uQiA==
-X-Gm-Message-State: APjAAAX3M8oR13rMRmxKh4e0NcwEyVQgCtieSS74StXTYWFd8ScRCdTF
-        p/1nGXqQznirLGSpP1gcFvg5rg==
-X-Google-Smtp-Source: APXvYqwkpdyNbEUT8xGflpzlSaRR34itFkKnM6gi8ljfIOf0bfXFvRlUOC/L2g9jZxj5pIZHIZZEhA==
-X-Received: by 2002:a17:902:a40c:: with SMTP id p12mr161163plq.146.1565045893174;
-        Mon, 05 Aug 2019 15:58:13 -0700 (PDT)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 185sm85788076pfd.125.2019.08.05.15.58.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 05 Aug 2019 15:58:12 -0700 (PDT)
-Date:   Mon, 5 Aug 2019 15:58:10 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] soc: qcom: smp2p: Add of_node_put() at goto
-Message-ID: <20190805225810.GC6470@builder>
-References: <20190804162502.6170-1-nishkadg.linux@gmail.com>
+        Mon, 5 Aug 2019 19:10:00 -0400
+Received: from mga11.intel.com ([192.55.52.93]:43785 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727928AbfHEXKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 19:10:00 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 16:09:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,350,1559545200"; 
+   d="scan'208";a="257856716"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga001.jf.intel.com with ESMTP; 05 Aug 2019 16:09:59 -0700
+Date:   Mon, 5 Aug 2019 16:13:37 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Auger Eric <eric.auger@redhat.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v4 11/22] iommu: Introduce guest PASID bind function
+Message-ID: <20190805161337.70ed8784@jacob-builder>
+In-Reply-To: <706dacc1-18de-2a9a-23d9-3e10e9b14262@redhat.com>
+References: <1560087862-57608-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1560087862-57608-12-git-send-email-jacob.jun.pan@linux.intel.com>
+        <706dacc1-18de-2a9a-23d9-3e10e9b14262@redhat.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190804162502.6170-1-nishkadg.linux@gmail.com>
-User-Agent: Mutt/1.10.0 (2018-05-17)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 04 Aug 09:25 PDT 2019, Nishka Dasgupta wrote:
+On Tue, 16 Jul 2019 18:44:56 +0200
+Auger Eric <eric.auger@redhat.com> wrote:
 
-> Each iteration of for_each_available_child_of_node puts the previous
-> node, but in the case of a goto from the middle of the loop, there is no
-> put, thus causing a memory leak. Hence make the gotos within the loop
-> first go to a new label where an of_node_put() puts the last used node,
-> before falling through to the original label.
-> Issue found with Coccinelle.
-> 
+> > +struct gpasid_bind_data {  
+> other structs in iommu.h are prefixed with iommu_?
+Good point, will add iommu_ prefix.
 
-Good catch, thanks for the patch!
+Thanks,
 
-> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
-> ---
->  drivers/soc/qcom/smp2p.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/soc/qcom/smp2p.c b/drivers/soc/qcom/smp2p.c
-> index c7300d54e444..d223e914487d 100644
-> --- a/drivers/soc/qcom/smp2p.c
-> +++ b/drivers/soc/qcom/smp2p.c
-> @@ -501,7 +501,7 @@ static int qcom_smp2p_probe(struct platform_device *pdev)
->  		entry = devm_kzalloc(&pdev->dev, sizeof(*entry), GFP_KERNEL);
->  		if (!entry) {
->  			ret = -ENOMEM;
-> -			goto unwind_interfaces;
-> +			goto release_child;
->  		}
->  
->  		entry->smp2p = smp2p;
-> @@ -509,18 +509,18 @@ static int qcom_smp2p_probe(struct platform_device *pdev)
->  
->  		ret = of_property_read_string(node, "qcom,entry-name", &entry->name);
->  		if (ret < 0)
-> -			goto unwind_interfaces;
-> +			goto release_child;
->  
->  		if (of_property_read_bool(node, "interrupt-controller")) {
->  			ret = qcom_smp2p_inbound_entry(smp2p, entry, node);
->  			if (ret < 0)
-> -				goto unwind_interfaces;
-> +				goto release_child;
->  
->  			list_add(&entry->node, &smp2p->inbound);
->  		} else  {
->  			ret = qcom_smp2p_outbound_entry(smp2p, entry, node);
->  			if (ret < 0)
-> -				goto unwind_interfaces;
-> +				goto release_child;
->  
->  			list_add(&entry->node, &smp2p->outbound);
->  		}
-> @@ -541,6 +541,8 @@ static int qcom_smp2p_probe(struct platform_device *pdev)
->  
->  	return 0;
->  
-> +release_child:
-> +	of_node_put(node);
-
-Following the loop over the children we request the irq and if that
-falls we'll jump to unwind_interfaces. So while it would work fine to
-jump to release_child within the loop and then unwind_interfaces after
-the loop, it doesn't follow the idiomatic way of using the error path to
-"unroll" things that has been setup up until a particular point in the
-function.
-
-So I would rather see that you of_node_put() in the loop and then jump
-to unwind_interfaces as is done today.
-
-Regards,
-Bjorn
-
->  unwind_interfaces:
->  	list_for_each_entry(entry, &smp2p->inbound, node)
->  		irq_domain_remove(entry->domain);
-> -- 
-> 2.19.1
-> 
+Jacob
