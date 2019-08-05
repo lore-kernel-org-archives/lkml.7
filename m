@@ -7,54 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4041BC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D433C32754
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1437720679
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:17:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D818020679
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:17:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011041;
-	bh=w121SKm28VtyLycjqIt6tSeDVk3l9HfcjiPticrwHh4=;
+	s=default; t=1565011043;
+	bh=kxYrQmdRCtib0t6LmWD86n72w2PuoQG4j+uU0f3cboU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gQ2cXHS83U0wMvjInmhremGM8eMbvN0bBQAk2wNxKS+cqMBsslfABbL8MROo3iMFh
-	 KgvRgf5LjNaiXxRjJzaO3u04nJncLVGU1vxF5las3cpyy5yzPAscc7WKy266UVd7+C
-	 9mBIlvGff7vOdFfkJMgrwvaBG/xY2nzSl95CTp/g=
+	b=jc/KdwgYJvWCNk1y8WMhKgatGIZXXd9NPo5TtghymDmhCdPowsvt1F0KMwR3KjzEq
+	 fO/+bquUEPZGopUGaEPm54JiG39NrLtSX41C7TeBuRBni6G7mmZ+EaB1YktdzOMvvZ
+	 g68jz3WrV5fcUlgiaDdICDbdyIT7mjK0mTxEWWqA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729332AbfHENFc (ORCPT
+        id S1729313AbfHENF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:05:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41488 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:05:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729296AbfHENF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:05:26 -0400
+        id S1729284AbfHENFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:05:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDB01216B7;
-        Mon,  5 Aug 2019 13:05:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7725F216F4;
+        Mon,  5 Aug 2019 13:05:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010325;
-        bh=w121SKm28VtyLycjqIt6tSeDVk3l9HfcjiPticrwHh4=;
+        s=default; t=1565010323;
+        bh=kxYrQmdRCtib0t6LmWD86n72w2PuoQG4j+uU0f3cboU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YPDs3YsLVGxxsiFd2peXNylqKDYkOWIjV0mLbP5ZLJyezfe8Yd26tvk3h6+I1Fla9
-         TK4XeWGgBa9i2bKoZ2Et3QDi7/puGADCzCcQF1YzdJSk+e2MH9H6eNhDdmHLfhgJy9
-         nhVqHqRp3pVPj5f7hmV5btviBw4i0CbB77cE8jyI=
+        b=WIIEmsLd7avyOk8dAo61Na8Mh9v2grACSLF7nlWZc3kvw3PJjSccdXeFWTviTGfGe
+         ZGsE+uAJV6yVkKyF0aH1Z2tevM5BtKg7d56icFNyp3BDtXH/4DHkOVOYR7ye/Y+Vor
+         8xixxGQuPdzwYUbzovnlzViOrsPhrqNXCvQUESS0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Andreas Christoforou <andreaschristofo@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Manfred Spraul <manfred@colorfullife.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 23/42] ipc/mqueue.c: only perform resource calculation if user valid
-Date:   Mon,  5 Aug 2019 15:02:49 +0200
-Message-Id: <20190805124927.673910632@linuxfoundation.org>
+Subject: [PATCH 4.9 14/42] ACPI: fix false-positive -Wuninitialized warning
+Date:   Mon,  5 Aug 2019 15:02:40 +0200
+Message-Id: <20190805124926.496049277@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124924.788666484@linuxfoundation.org>
 References: <20190805124924.788666484@linuxfoundation.org>
@@ -67,101 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a318f12ed8843cfac53198390c74a565c632f417 ]
+[ Upstream commit dfd6f9ad36368b8dbd5f5a2b2f0a4705ae69a323 ]
 
-Andreas Christoforou reported:
+clang gets confused by an uninitialized variable in what looks
+to it like a never executed code path:
 
-  UBSAN: Undefined behaviour in ipc/mqueue.c:414:49 signed integer overflow:
-  9 * 2305843009213693951 cannot be represented in type 'long int'
-  ...
-  Call Trace:
-    mqueue_evict_inode+0x8e7/0xa10 ipc/mqueue.c:414
-    evict+0x472/0x8c0 fs/inode.c:558
-    iput_final fs/inode.c:1547 [inline]
-    iput+0x51d/0x8c0 fs/inode.c:1573
-    mqueue_get_inode+0x8eb/0x1070 ipc/mqueue.c:320
-    mqueue_create_attr+0x198/0x440 ipc/mqueue.c:459
-    vfs_mkobj+0x39e/0x580 fs/namei.c:2892
-    prepare_open ipc/mqueue.c:731 [inline]
-    do_mq_open+0x6da/0x8e0 ipc/mqueue.c:771
+arch/x86/kernel/acpi/boot.c:618:13: error: variable 'polarity' is uninitialized when used here [-Werror,-Wuninitialized]
+        polarity = polarity ? ACPI_ACTIVE_LOW : ACPI_ACTIVE_HIGH;
+                   ^~~~~~~~
+arch/x86/kernel/acpi/boot.c:606:32: note: initialize the variable 'polarity' to silence this warning
+        int rc, irq, trigger, polarity;
+                                      ^
+                                       = 0
+arch/x86/kernel/acpi/boot.c:617:12: error: variable 'trigger' is uninitialized when used here [-Werror,-Wuninitialized]
+        trigger = trigger ? ACPI_LEVEL_SENSITIVE : ACPI_EDGE_SENSITIVE;
+                  ^~~~~~~
+arch/x86/kernel/acpi/boot.c:606:22: note: initialize the variable 'trigger' to silence this warning
+        int rc, irq, trigger, polarity;
+                            ^
+                             = 0
 
-Which could be triggered by:
+This is unfortunately a design decision in clang and won't be fixed.
 
-        struct mq_attr attr = {
-                .mq_flags = 0,
-                .mq_maxmsg = 9,
-                .mq_msgsize = 0x1fffffffffffffff,
-                .mq_curmsgs = 0,
-        };
+Changing the acpi_get_override_irq() macro to an inline function
+reliably avoids the issue.
 
-        if (mq_open("/testing", 0x40, 3, &attr) == (mqd_t) -1)
-                perror("mq_open");
-
-mqueue_get_inode() was correctly rejecting the giant mq_msgsize, and
-preparing to return -EINVAL.  During the cleanup, it calls
-mqueue_evict_inode() which performed resource usage tracking math for
-updating "user", before checking if there was a valid "user" at all
-(which would indicate that the calculations would be sane).  Instead,
-delay this check to after seeing a valid "user".
-
-The overflow was real, but the results went unused, so while the flaw is
-harmless, it's noisy for kernel fuzzers, so just fix it by moving the
-calculation under the non-NULL "user" where it actually gets used.
-
-Link: http://lkml.kernel.org/r/201906072207.ECB65450@keescook
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Reported-by: Andreas Christoforou <andreaschristofo@gmail.com>
-Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Manfred Spraul <manfred@colorfullife.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- ipc/mqueue.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ include/linux/acpi.h | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/ipc/mqueue.c b/ipc/mqueue.c
-index d5491a8807515..3f7dc5f341f7e 100644
---- a/ipc/mqueue.c
-+++ b/ipc/mqueue.c
-@@ -369,7 +369,6 @@ static void mqueue_evict_inode(struct inode *inode)
- {
- 	struct mqueue_inode_info *info;
- 	struct user_struct *user;
--	unsigned long mq_bytes, mq_treesize;
- 	struct ipc_namespace *ipc_ns;
- 	struct msg_msg *msg, *nmsg;
- 	LIST_HEAD(tmp_msg);
-@@ -392,16 +391,18 @@ static void mqueue_evict_inode(struct inode *inode)
- 		free_msg(msg);
- 	}
- 
--	/* Total amount of bytes accounted for the mqueue */
--	mq_treesize = info->attr.mq_maxmsg * sizeof(struct msg_msg) +
--		min_t(unsigned int, info->attr.mq_maxmsg, MQ_PRIO_MAX) *
--		sizeof(struct posix_msg_tree_node);
--
--	mq_bytes = mq_treesize + (info->attr.mq_maxmsg *
--				  info->attr.mq_msgsize);
--
- 	user = info->user;
- 	if (user) {
-+		unsigned long mq_bytes, mq_treesize;
-+
-+		/* Total amount of bytes accounted for the mqueue */
-+		mq_treesize = info->attr.mq_maxmsg * sizeof(struct msg_msg) +
-+			min_t(unsigned int, info->attr.mq_maxmsg, MQ_PRIO_MAX) *
-+			sizeof(struct posix_msg_tree_node);
-+
-+		mq_bytes = mq_treesize + (info->attr.mq_maxmsg *
-+					  info->attr.mq_msgsize);
-+
- 		spin_lock(&mq_lock);
- 		user->mq_bytes -= mq_bytes;
- 		/*
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index ca2b4c4aec42c..719eb97217a3c 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -309,7 +309,10 @@ void acpi_set_irq_model(enum acpi_irq_model_id model,
+ #ifdef CONFIG_X86_IO_APIC
+ extern int acpi_get_override_irq(u32 gsi, int *trigger, int *polarity);
+ #else
+-#define acpi_get_override_irq(gsi, trigger, polarity) (-1)
++static inline int acpi_get_override_irq(u32 gsi, int *trigger, int *polarity)
++{
++	return -1;
++}
+ #endif
+ /*
+  * This function undoes the effect of one call to acpi_register_gsi().
 -- 
 2.20.1
 
