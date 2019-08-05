@@ -2,52 +2,53 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D25C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9CFC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 338762067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4733A2075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:22:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011339;
-	bh=DisYABNDdL5F7NBGRgcPCFQDZVkr4bandtkDWDPTzeQ=;
+	s=default; t=1565011342;
+	bh=lPwyNVnIRzEaWGHLLwcdEhNRYl4mScGqRovi7S8MVyE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ep/vv1VdQTRa4hZ/TaJ8MhCv7n7gqv+f3EZGxRTupUnlebzUaxMOtUVpS9vC5bPmT
-	 XKNbcy2IbdEUGlP+8VZqFgyBQF9PKarjRaL/Mw2q8KSQUdB4sJjGiU8hR0l/m6Kf84
-	 Ck1egPm34/Qna1i0ncsEeA5FMTkX1X725IU1tZOE=
+	b=zmjZZM0UETUTrfPbHeTHBBMfbtDemA687Gp6ShAZml7wDhdxjal/GVfE2m4ipwox5
+	 3lMgMae2a0tty4EKarnuTimtHS57ZL9BCL5AqGlkH3TpeMrl+sNaL7KMwFie5vg9oE
+	 G4776eX6rOSghbYBiOXUKh+Aem1UjIzrGVBwESaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727553AbfHENWS (ORCPT
+        id S1730667AbfHENWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:22:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58482 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:22:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730624AbfHENWK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:22:10 -0400
+        id S1730649AbfHENWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:22:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9B4320657;
-        Mon,  5 Aug 2019 13:22:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9842720651;
+        Mon,  5 Aug 2019 13:22:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011329;
-        bh=DisYABNDdL5F7NBGRgcPCFQDZVkr4bandtkDWDPTzeQ=;
+        s=default; t=1565011337;
+        bh=lPwyNVnIRzEaWGHLLwcdEhNRYl4mScGqRovi7S8MVyE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rmce8MMt7UghRaHYj3roLoolvHxVoi9tKmP++rWPsWPEiGAzu9wrrnW3a4/tqRHRV
-         7BgOENuKGO3vDZulQXPfUx+UZxtVsMFIs+p0+yVHtYai9g1fa20qy7h1FRTPMMlQcW
-         EvInc1yWCab0x4Z3A3a3IH8meHmvUGX6nS0hHw8E=
+        b=cLVylhLb69hE6YfpfQ1dR5I2H/QnsC9mXKrwpmkaiRC1kfarMa/dWiIIkirtCGUpe
+         YYBqCh0wtTk2QTmPAijk+DialGMipAjZqt11EiwWvqB4uchL7cajeD8PaUwyP90h3c
+         WsXK5LFDbJ9/B4p+I+V2uh3KqupsHdN5vOgxw6MM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        stable@vger.kernel.org, Peter Rosin <peda@axentia.se>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 052/131] x86: math-emu: Hide clang warnings for 16-bit overflow
-Date:   Mon,  5 Aug 2019 15:02:19 +0200
-Message-Id: <20190805124954.915678051@linuxfoundation.org>
+Subject: [PATCH 5.2 055/131] lib/test_string.c: avoid masking memset16/32/64 failures
+Date:   Mon,  5 Aug 2019 15:02:22 +0200
+Message-Id: <20190805124955.119100635@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -60,67 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 29e7e9664aec17b94a9c8c5a75f8d216a206aa3a ]
+[ Upstream commit 33d6e0ff68af74be0c846c8e042e84a9a1a0561e ]
 
-clang warns about a few parts of the math-emu implementation
-where a 16-bit integer becomes negative during assignment:
+If a memsetXX implementation is completely broken and fails in the first
+iteration, when i, j, and k are all zero, the failure is masked as zero
+is returned.  Failing in the first iteration is perhaps the most likely
+failure, so this makes the tests pretty much useless.  Avoid the
+situation by always setting a random unused bit in the result on
+failure.
 
-arch/x86/math-emu/poly_tan.c:88:35: error: implicit conversion from 'int' to 'short' changes value from 49216 to -16320 [-Werror,-Wconstant-conversion]
-                                      (0x41 + EXTENDED_Ebias) | SIGN_Negative);
-                                      ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
-arch/x86/math-emu/fpu_emu.h:180:58: note: expanded from macro 'setexponent16'
- #define setexponent16(x,y)  { (*(short *)&((x)->exp)) = (y); }
-                                                      ~  ^
-arch/x86/math-emu/reg_constant.c:37:32: error: implicit conversion from 'int' to 'short' changes value from 49085 to -16451 [-Werror,-Wconstant-conversion]
-FPU_REG const CONST_PI2extra = MAKE_REG(NEG, -66,
-                               ^~~~~~~~~~~~~~~~~~
-arch/x86/math-emu/reg_constant.c:21:25: note: expanded from macro 'MAKE_REG'
-                ((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
-                 ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
-arch/x86/math-emu/reg_constant.c:48:28: error: implicit conversion from 'int' to 'short' changes value from 65535 to -1 [-Werror,-Wconstant-conversion]
-FPU_REG const CONST_QNaN = MAKE_REG(NEG, EXP_OVER, 0x00000000, 0xC0000000);
-                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-arch/x86/math-emu/reg_constant.c:21:25: note: expanded from macro 'MAKE_REG'
-                ((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
-                 ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The code is correct as is, so add a typecast to shut up the warnings.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190712090816.350668-1-arnd@arndb.de
+Link: http://lkml.kernel.org/r/20190506124634.6807-3-peda@axentia.se
+Fixes: 03270c13c5ff ("lib/string.c: add testcases for memset16/32/64")
+Signed-off-by: Peter Rosin <peda@axentia.se>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/math-emu/fpu_emu.h      | 2 +-
- arch/x86/math-emu/reg_constant.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ lib/test_string.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/math-emu/fpu_emu.h b/arch/x86/math-emu/fpu_emu.h
-index a5a41ec580721..0c122226ca56f 100644
---- a/arch/x86/math-emu/fpu_emu.h
-+++ b/arch/x86/math-emu/fpu_emu.h
-@@ -177,7 +177,7 @@ static inline void reg_copy(FPU_REG const *x, FPU_REG *y)
- #define setexponentpos(x,y) { (*(short *)&((x)->exp)) = \
-   ((y) + EXTENDED_Ebias) & 0x7fff; }
- #define exponent16(x)         (*(short *)&((x)->exp))
--#define setexponent16(x,y)  { (*(short *)&((x)->exp)) = (y); }
-+#define setexponent16(x,y)  { (*(short *)&((x)->exp)) = (u16)(y); }
- #define addexponent(x,y)    { (*(short *)&((x)->exp)) += (y); }
- #define stdexp(x)           { (*(short *)&((x)->exp)) += EXTENDED_Ebias; }
+diff --git a/lib/test_string.c b/lib/test_string.c
+index bf8def01ed204..b5117ae596931 100644
+--- a/lib/test_string.c
++++ b/lib/test_string.c
+@@ -36,7 +36,7 @@ static __init int memset16_selftest(void)
+ fail:
+ 	kfree(p);
+ 	if (i < 256)
+-		return (i << 24) | (j << 16) | k;
++		return (i << 24) | (j << 16) | k | 0x8000;
+ 	return 0;
+ }
  
-diff --git a/arch/x86/math-emu/reg_constant.c b/arch/x86/math-emu/reg_constant.c
-index 8dc9095bab224..742619e94bdf2 100644
---- a/arch/x86/math-emu/reg_constant.c
-+++ b/arch/x86/math-emu/reg_constant.c
-@@ -18,7 +18,7 @@
- #include "control_w.h"
+@@ -72,7 +72,7 @@ static __init int memset32_selftest(void)
+ fail:
+ 	kfree(p);
+ 	if (i < 256)
+-		return (i << 24) | (j << 16) | k;
++		return (i << 24) | (j << 16) | k | 0x8000;
+ 	return 0;
+ }
  
- #define MAKE_REG(s, e, l, h) { l, h, \
--		((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
-+		(u16)((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
+@@ -108,7 +108,7 @@ static __init int memset64_selftest(void)
+ fail:
+ 	kfree(p);
+ 	if (i < 256)
+-		return (i << 24) | (j << 16) | k;
++		return (i << 24) | (j << 16) | k | 0x8000;
+ 	return 0;
+ }
  
- FPU_REG const CONST_1 = MAKE_REG(POS, 0, 0x00000000, 0x80000000);
- #if 0
 -- 
 2.20.1
 
