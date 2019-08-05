@@ -2,189 +2,135 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD35C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 19:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD28C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 19:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93EA92075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 19:23:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565033000;
-	bh=d6p6NWXIzAr/w+L57W8Oyrx5VdZnumUCXtu9FxtaNsc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rAjRShUfYSfU3CdTNaRnJssZrQOwCWFWlSCZxzTkU6AkVloqvHR55yxFjBrIUmuH3
-	 s3PqhVwnWSeydlSf4myO8dCe7iN3A022orga48l9OKqigQjyA51HWMf+AHOT9DdzoA
-	 fkupjUdQDzt/TmxAp3UlAcyOYnBG2k9UK3MSAEcA=
+	by mail.kernel.org (Postfix) with ESMTP id 1F4E020B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 19:25:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OWoEZJcf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730310AbfHETXT (ORCPT
+        id S1730453AbfHETZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 15:23:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51060 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727802AbfHETXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 15:23:19 -0400
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBBBD216B7;
-        Mon,  5 Aug 2019 19:23:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565032998;
-        bh=d6p6NWXIzAr/w+L57W8Oyrx5VdZnumUCXtu9FxtaNsc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=R/AKCL41e439d3YyW9Frd8+LqZmY/L/BTeDfKJwCw0IYn+fId94XDv2wn7Pml91f9
-         dnKXgXpHTXeFphyc7/df75+ieHN1KnS+kSCTZqgR9c8Gkj9yb5S930ddLj/+yapLMz
-         2x3mqfxdOrcNQAQnSXJqYUrWF68Oxa6/5KI536WM=
-Received: by mail-qk1-f178.google.com with SMTP id r6so61041032qkc.0;
-        Mon, 05 Aug 2019 12:23:17 -0700 (PDT)
-X-Gm-Message-State: APjAAAVSB5PylCegkKpUn4dEGuognuvnPB/gPuH0SriL0sldMylqBLk0
-        YsgD+I/Z9n6hTEpzycwbHgGfX/VtDA1usktBFA==
-X-Google-Smtp-Source: APXvYqzJ3385dVDr7a416MCnVTqPVutjB6pJSnn10jB+T3hVVAIomIypEjVR/sntYZAAkaMyD0seP3rNxE7IslWzcJM=
-X-Received: by 2002:a37:6944:: with SMTP id e65mr95063738qkc.119.1565032997083;
- Mon, 05 Aug 2019 12:23:17 -0700 (PDT)
+        Mon, 5 Aug 2019 15:25:11 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:33508 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730011AbfHETZK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 15:25:10 -0400
+Received: by mail-yw1-f66.google.com with SMTP id l124so30007398ywd.0
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 12:25:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jBhZHZxcR0OIAcxY7/57CQdVnxqW0BKtiYJig9O330A=;
+        b=OWoEZJcfzeB9SYxPFawo056U4q1al2l7k+0gU3JECGIOX5fJ9AIdUCnznZLyUznYRF
+         Tt203xpJn7adxpO28UHjqgDOoQm2q85rp40ZFW+XF8uvBcrlSXeStp3k0U3tihqqdSZG
+         HqAu/l+qBcDLyzGHEVoJraaaC6fsenAwxprN829u8nILdwy08WqWvqliXoPBXr2Y/7JM
+         b7Nf9zKAJdeZoKdGBMxeicWw3wXpN10PUPyvRrn6Hzdwvuh0Ss0RCTr5DRAAeRPt0GnF
+         uzYpyuws4/j/4HUokCCBpgk9/3CI8BxdwHhbi3hJWUq/6jl9NtTOOd8QPD+zqw5w5f6u
+         nx+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jBhZHZxcR0OIAcxY7/57CQdVnxqW0BKtiYJig9O330A=;
+        b=pGbbxbTS5UGXu58wLrjEmNROq6kJeZp3JqlWzJ/QhGC/VAX4VGb0ndMUO4uDF677ZZ
+         8vcU9ZRFKrZn3C1rcjZspgWtmbkcxlAVw5biWEN3bSN5oYL6PGddQYrl0KunG8k6bFh7
+         ZhUAZyM6RwilzPkQp9R0W3vGGFMBjfioyOd0geGneg/Ldcozei66C2xxv8tI7DLn0f9p
+         uO4p0BqkG8MWzSoHMlmx5NN2gZLCZXVf8pDmh5lyF9xYV2cT8Y5XjXEcrL292wZaMFYz
+         7sge37pT5y3YxHtq0dW7qa4yF/vOLWd5WmrHDZGIFR4Xtz+DfrzIF2Baad9xs4uaLDwo
+         sZvA==
+X-Gm-Message-State: APjAAAVRnKUMycAPk4gScj559ksO3dSHRsEZiNRmYPtgcVp2gtUDBz/1
+        yZ8QDDvRIQ0FEvWGqXm0dXb5cVE8cYPG0SqyHMqUDQ==
+X-Google-Smtp-Source: APXvYqxbDkA1SdB4BSUlDwh2X+zCd0WZTNLSo8tmRckemDIdGtE48knQ4mlRNXjwS7YqcsgBexfZZdY7HIiqIwx86rc=
+X-Received: by 2002:a0d:cb42:: with SMTP id n63mr37267027ywd.205.1565033109503;
+ Mon, 05 Aug 2019 12:25:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190731154752.16557-1-nsaenzjulienne@suse.de>
- <20190731154752.16557-4-nsaenzjulienne@suse.de> <CAL_JsqKF5nh3hcdLTG5+6RU3_TnFrNX08vD6qZ8wawoA3WSRpA@mail.gmail.com>
- <2050374ac07e0330e505c4a1637256428adb10c4.camel@suse.de>
-In-Reply-To: <2050374ac07e0330e505c4a1637256428adb10c4.camel@suse.de>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 5 Aug 2019 13:23:05 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+LjsRmFg-xaLgpVx3miXN3hid3aD+mgTW__j0SbEFYjQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+LjsRmFg-xaLgpVx3miXN3hid3aD+mgTW__j0SbEFYjQ@mail.gmail.com>
-Subject: Re: [PATCH 3/8] of/fdt: add function to get the SoC wide DMA
- addressable memory size
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Christoph Hellwig <hch@lst.de>,
-        wahrenst@gmx.net, Marc Zyngier <marc.zyngier@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        linux-mm@kvack.org, Frank Rowand <frowand.list@gmail.com>,
-        phill@raspberryi.org, Florian Fainelli <f.fainelli@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Eric Anholt <eric@anholt.net>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>
+References: <156431697805.3170.6377599347542228221.stgit@buzz>
+ <20190729091738.GF9330@dhcp22.suse.cz> <3d6fc779-2081-ba4b-22cf-be701d617bb4@yandex-team.ru>
+ <20190729103307.GG9330@dhcp22.suse.cz> <CAHbLzkrdj-O2uXwM8ujm90OcgjyR4nAiEbFtRGe7SOoY_fs=BA@mail.gmail.com>
+ <20190729184850.GH9330@dhcp22.suse.cz> <CAHbLzkp9xFV2sE0TdKfWNRVcAwaYNKwDugRiBBoEKx6A_Hr3Jw@mail.gmail.com>
+ <20190802093507.GF6461@dhcp22.suse.cz> <CAHbLzkrjh7KEvdfXackaVy8oW5CU=UaBucERffxcUorgq1vdoA@mail.gmail.com>
+ <20190805143239.GS7597@dhcp22.suse.cz>
+In-Reply-To: <20190805143239.GS7597@dhcp22.suse.cz>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Mon, 5 Aug 2019 12:24:58 -0700
+Message-ID: <CALvZod5upYA2UgUSWJjrL7K=zifhwwvK5M_gUakPhf2fP-3HxA@mail.gmail.com>
+Subject: Re: [PATCH RFC] mm/memcontrol: reclaim severe usage over high limit
+ in get_user_pages loop
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Yang Shi <shy828301@gmail.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 5, 2019 at 10:03 AM Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
+On Mon, Aug 5, 2019 at 7:32 AM Michal Hocko <mhocko@kernel.org> wrote:
 >
-> Hi Rob,
-> Thanks for the review!
->
-> On Fri, 2019-08-02 at 11:17 -0600, Rob Herring wrote:
-> > On Wed, Jul 31, 2019 at 9:48 AM Nicolas Saenz Julienne
-> > <nsaenzjulienne@suse.de> wrote:
-> > > Some SoCs might have multiple interconnects each with their own DMA
-> > > addressing limitations. This function parses the 'dma-ranges' on each of
-> > > them and tries to guess the maximum SoC wide DMA addressable memory
-> > > size.
+> On Fri 02-08-19 11:56:28, Yang Shi wrote:
+> > On Fri, Aug 2, 2019 at 2:35 AM Michal Hocko <mhocko@kernel.org> wrote:
 > > >
-> > > This is specially useful for arch code in order to properly setup CMA
-> > > and memory zones.
-> >
-> > We already have a way to setup CMA in reserved-memory, so why is this
-> > needed for that?
->
-> Correct me if I'm wrong but I got the feeling you got the point of the patch
-> later on.
-
-No, for CMA I don't. Can't we already pass a size and location for CMA
-region under /reserved-memory. The only advantage here is perhaps the
-CMA range could be anywhere in the DMA zone vs. a fixed location.
-
-> > > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > > ---
+> > > On Thu 01-08-19 14:00:51, Yang Shi wrote:
+> > > > On Mon, Jul 29, 2019 at 11:48 AM Michal Hocko <mhocko@kernel.org> wrote:
+> > > > >
+> > > > > On Mon 29-07-19 10:28:43, Yang Shi wrote:
+> > > > > [...]
+> > > > > > I don't worry too much about scale since the scale issue is not unique
+> > > > > > to background reclaim, direct reclaim may run into the same problem.
+> > > > >
+> > > > > Just to clarify. By scaling problem I mean 1:1 kswapd thread to memcg.
+> > > > > You can have thousands of memcgs and I do not think we really do want
+> > > > > to create one kswapd for each. Once we have a kswapd thread pool then we
+> > > > > get into a tricky land where a determinism/fairness would be non trivial
+> > > > > to achieve. Direct reclaim, on the other hand is bound by the workload
+> > > > > itself.
+> > > >
+> > > > Yes, I agree thread pool would introduce more latency than dedicated
+> > > > kswapd thread. But, it looks not that bad in our test. When memory
+> > > > allocation is fast, even though dedicated kswapd thread can't catch
+> > > > up. So, such background reclaim is best effort, not guaranteed.
+> > > >
+> > > > I don't quite get what you mean about fairness. Do you mean they may
+> > > > spend excessive cpu time then cause other processes starvation? I
+> > > > think this could be mitigated by properly organizing and setting
+> > > > groups. But, I agree this is tricky.
 > > >
-> > >  drivers/of/fdt.c       | 72 ++++++++++++++++++++++++++++++++++++++++++
-> > >  include/linux/of_fdt.h |  2 ++
-> > >  2 files changed, 74 insertions(+)
-> > >
-> > > diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> > > index 9cdf14b9aaab..f2444c61a136 100644
-> > > --- a/drivers/of/fdt.c
-> > > +++ b/drivers/of/fdt.c
-> > > @@ -953,6 +953,78 @@ int __init early_init_dt_scan_chosen_stdout(void)
-> > >  }
-> > >  #endif
-> > >
-> > > +/**
-> > > + * early_init_dt_dma_zone_size - Look at all 'dma-ranges' and provide the
-> > > + * maximum common dmable memory size.
-> > > + *
-> > > + * Some devices might have multiple interconnects each with their own DMA
-> > > + * addressing limitations. For example the Raspberry Pi 4 has the
-> > > following:
-> > > + *
-> > > + * soc {
-> > > + *     dma-ranges = <0xc0000000  0x0 0x00000000  0x3c000000>;
-> > > + *     [...]
-> > > + * }
-> > > + *
-> > > + * v3dbus {
-> > > + *     dma-ranges = <0x00000000  0x0 0x00000000  0x3c000000>;
-> > > + *     [...]
-> > > + * }
-> > > + *
-> > > + * scb {
-> > > + *     dma-ranges = <0x0 0x00000000  0x0 0x00000000  0xfc000000>;
-> > > + *     [...]
-> > > + * }
-> > > + *
-> > > + * Here the area addressable by all devices is [0x00000000-0x3bffffff].
-> > > Hence
-> > > + * the function will write in 'data' a size of 0x3c000000.
-> > > + *
-> > > + * Note that the implementation assumes all interconnects have the same
-> > > physical
-> > > + * memory view and that the mapping always start at the beginning of RAM.
+> > > No, I meant that the cost of reclaiming a unit of charges (e.g.
+> > > SWAP_CLUSTER_MAX) is not constant and depends on the state of the memory
+> > > on LRUs. Therefore any thread pool mechanism would lead to unfair
+> > > reclaim and non-deterministic behavior.
 > >
-> > Not really a valid assumption for general code.
+> > Yes, the cost depends on the state of pages, but I still don't quite
+> > understand what does "unfair" refer to in this context. Do you mean
+> > some cgroups may reclaim much more than others?
 >
-> Fair enough. On my defence I settled on that assumption after grepping all dts
-> and being unable to find a board that behaved otherwise.
+> > Or the work may take too long so it can't not serve other cgroups in time?
 >
-> [...]
+> exactly.
 >
-> > It's possible to have multiple levels of nodes and dma-ranges. You need to
-> > handle that case too. Doing that and handling differing address translations
-> > will be complicated.
->
-> Understood.
->
-> > IMO, I'd just do:
-> >
-> > if (of_fdt_machine_is_compatible(blob, "brcm,bcm2711"))
-> >     dma_zone_size = XX;
-> >
-> > 2 lines of code is much easier to maintain than 10s of incomplete code
-> > and is clearer who needs this. Maybe if we have dozens of SoCs with
-> > this problem we should start parsing dma-ranges.
->
-> FYI that's what arm32 is doing at the moment and was my first instinct. But it
-> seems that arm64 has been able to survive so far without any machine specific
-> code and I have the feeling Catalin and Will will not be happy about this
-> solution. Am I wrong?
 
-No doubt. I'm fine if the 2 lines live in drivers/of/.
+How about allowing the users to implement their own user space kswapd?
+A memcg interface similar to MADV_PAGEOUT. Users can register for
+MEMCG_HIGH notification (it needs some modification) and on receiving
+the notification, the uswapd (User's kswapd) will trigger reclaim
+through memory.pageout (or memory.try_to_free_pages). One can argue
+why not just use MADV_PAGEOUT? In real workload, a job can be a
+combination of different sub-jobs and most probably may not know the
+importance of the memory layout of the tasks of the sub-jobs. So, a
+memcg level interface makes more sense there.
 
-Note that I'm trying to reduce the number of early_init_dt_scan_*
-calls from arch code into the DT code so there's more commonality
-across architectures in the early DT scans. So ideally, this can all
-be handled under early_init_dt_scan() call.
-
-Rob
+Shakeel
