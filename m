@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D95BDC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FC1C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB3402067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 523FD2067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:23:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011390;
-	bh=uXHNVe8C8fpJN8+Z05jRnqLV7K7iMj/zai16Jdh9jgE=;
+	s=default; t=1565011393;
+	bh=iqHwHrhpIETGLfGzdmgKsSWSRbnrsCeUGwFDY/Lb73g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OozlxM6d1vjJ7y0arrT46CQv7H8Vc/LiKzPTMk3fzMoSowxUu/ZyOsJ41FcwS3aPu
-	 pk3K4JglHQnH8ilX6Gg2S1UyW7HjAPh2b3Skvb5ko8PKuINZD6YHuLDvA0UE04Zg8b
-	 GBPXxFA4wD76Jz7BiamZPPKMbfz8T08EYoSEQufQ=
+	b=LwKi6DClV6qItsrnmuXt4Rh/HYpq3Iynu8bktnk/v+RIsIy/4xt3DMttthdLPiCbK
+	 w32QImv0YNUBH4b/sohC7J8yL0zlC9Wna4HXg74GVbpT5T1rWAWv5BzSTDrUG+B0dJ
+	 r7uQkZBjE89sZ5rR6EJJVr6DnOPDr8WuE+behMSA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730546AbfHENXJ (ORCPT
+        id S1730460AbfHENWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:23:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59544 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:22:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730483AbfHENWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:22:53 -0400
+        id S1730748AbfHENWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:22:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9839214C6;
-        Mon,  5 Aug 2019 13:22:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33B2B20657;
+        Mon,  5 Aug 2019 13:22:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011372;
-        bh=uXHNVe8C8fpJN8+Z05jRnqLV7K7iMj/zai16Jdh9jgE=;
+        s=default; t=1565011364;
+        bh=iqHwHrhpIETGLfGzdmgKsSWSRbnrsCeUGwFDY/Lb73g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dyDE9972wX5Bz6+vu85T46/GueERJJfvqk9h0c/y79c4sgPcRm+2GOK6w6qiej4mb
-         6wSaZLezc8wsZOK9vsIFWhbHU4my89SF6R6Kj5qBnlSTJdj0JAoIaTHfqvN364Qxr4
-         0QNz+AOLUdt5wJ8Pj2/CtQcxA15TqYOevfFqKiz4=
+        b=ra3jWoW9Y1D/CK4YrpLujSsCpkwbblYd2n3zPjZeAjdb4wJ6AZ9Sy3FQ6YVsj+pRw
+         xNH45rmOY5Ibtek6xhfrioIL0ypHmY0fu2JF1yNMlI0fLcmGgC3FJvUD7oAobt8dOv
+         1H65qRo0bmadIuwJEdFo2grjG3DK/yiLdvwTtUn4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paolo Bonzini <pbonzini@redhat.com>,
+        stable@vger.kernel.org, Vegard Nossum <vegard.nossum@oracle.com>,
+        Eiichi Tsukata <devel@etsukata.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 068/131] x86/kvm: Dont call kvm_spurious_fault() from .fixup
-Date:   Mon,  5 Aug 2019 15:02:35 +0200
-Message-Id: <20190805124956.051151076@linuxfoundation.org>
+Subject: [PATCH 5.2 065/131] stacktrace: Force USER_DS for stack_trace_save_user()
+Date:   Mon,  5 Aug 2019 15:02:32 +0200
+Message-Id: <20190805124955.820469238@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -62,120 +63,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3901336ed9887b075531bffaeef7742ba614058b ]
+[ Upstream commit cac9b9a4b08304f11daace03b8b48659355e44c1 ]
 
-After making a change to improve objtool's sibling call detection, it
-started showing the following warning:
+When walking userspace stacks, USER_DS needs to be set, otherwise
+access_ok() will not function as expected.
 
-  arch/x86/kvm/vmx/nested.o: warning: objtool: .fixup+0x15: sibling call from callable instruction with modified stack frame
-
-The problem is the ____kvm_handle_fault_on_reboot() macro.  It does a
-fake call by pushing a fake RIP and doing a jump.  That tricks the
-unwinder into printing the function which triggered the exception,
-rather than the .fixup code.
-
-Instead of the hack to make it look like the original function made the
-call, just change the macro so that the original function actually does
-make the call.  This allows removal of the hack, and also makes objtool
-happy.
-
-I triggered a vmx instruction exception and verified that the stack
-trace is still sane:
-
-  kernel BUG at arch/x86/kvm/x86.c:358!
-  invalid opcode: 0000 [#1] SMP PTI
-  CPU: 28 PID: 4096 Comm: qemu-kvm Not tainted 5.2.0+ #16
-  Hardware name: Lenovo THINKSYSTEM SD530 -[7X2106Z000]-/-[7X2106Z000]-, BIOS -[TEE113Z-1.00]- 07/17/2017
-  RIP: 0010:kvm_spurious_fault+0x5/0x10
-  Code: 00 00 00 00 00 8b 44 24 10 89 d2 45 89 c9 48 89 44 24 10 8b 44 24 08 48 89 44 24 08 e9 d4 40 22 00 0f 1f 40 00 0f 1f 44 00 00 <0f> 0b 66 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 41 55 49 89 fd 41
-  RSP: 0018:ffffbf91c683bd00 EFLAGS: 00010246
-  RAX: 000061f040000000 RBX: ffff9e159c77bba0 RCX: ffff9e15a5c87000
-  RDX: 0000000665c87000 RSI: ffff9e15a5c87000 RDI: ffff9e159c77bba0
-  RBP: 0000000000000000 R08: 0000000000000000 R09: ffff9e15a5c87000
-  R10: 0000000000000000 R11: fffff8f2d99721c0 R12: ffff9e159c77bba0
-  R13: ffffbf91c671d960 R14: ffff9e159c778000 R15: 0000000000000000
-  FS:  00007fa341cbe700(0000) GS:ffff9e15b7400000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 00007fdd38356804 CR3: 00000006759de003 CR4: 00000000007606e0
-  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  PKRU: 55555554
-  Call Trace:
-   loaded_vmcs_init+0x4f/0xe0
-   alloc_loaded_vmcs+0x38/0xd0
-   vmx_create_vcpu+0xf7/0x600
-   kvm_vm_ioctl+0x5e9/0x980
-   ? __switch_to_asm+0x40/0x70
-   ? __switch_to_asm+0x34/0x70
-   ? __switch_to_asm+0x40/0x70
-   ? __switch_to_asm+0x34/0x70
-   ? free_one_page+0x13f/0x4e0
-   do_vfs_ioctl+0xa4/0x630
-   ksys_ioctl+0x60/0x90
-   __x64_sys_ioctl+0x16/0x20
-   do_syscall_64+0x55/0x1c0
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  RIP: 0033:0x7fa349b1ee5b
-
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Reported-by: Vegard Nossum <vegard.nossum@oracle.com>
+Reported-by: Eiichi Tsukata <devel@etsukata.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/64a9b64d127e87b6920a97afde8e96ea76f6524e.1563413318.git.jpoimboe@redhat.com
+Tested-by: Vegard Nossum <vegard.nossum@oracle.com>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Link: https://lkml.kernel.org/r/20190718085754.GM3402@hirez.programming.kicks-ass.net
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/kvm_host.h | 34 ++++++++++++++++++---------------
- 1 file changed, 19 insertions(+), 15 deletions(-)
+ kernel/stacktrace.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 08f46951c4306..8253925c5e8cc 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1491,25 +1491,29 @@ enum {
- #define kvm_arch_vcpu_memslots_id(vcpu) ((vcpu)->arch.hflags & HF_SMM_MASK ? 1 : 0)
- #define kvm_memslots_for_spte_role(kvm, role) __kvm_memslots(kvm, (role).smm)
+diff --git a/kernel/stacktrace.c b/kernel/stacktrace.c
+index 36139de0a3c4b..899b726c9e98f 100644
+--- a/kernel/stacktrace.c
++++ b/kernel/stacktrace.c
+@@ -226,12 +226,17 @@ unsigned int stack_trace_save_user(unsigned long *store, unsigned int size)
+ 		.store	= store,
+ 		.size	= size,
+ 	};
++	mm_segment_t fs;
  
-+asmlinkage void __noreturn kvm_spurious_fault(void);
+ 	/* Trace user stack if not a kernel thread */
+ 	if (!current->mm)
+ 		return 0;
+ 
++	fs = get_fs();
++	set_fs(USER_DS);
+ 	arch_stack_walk_user(consume_entry, &c, task_pt_regs(current));
++	set_fs(fs);
 +
- /*
-  * Hardware virtualization extension instructions may fault if a
-  * reboot turns off virtualization while processes are running.
-- * Trap the fault and ignore the instruction if that happens.
-+ * Usually after catching the fault we just panic; during reboot
-+ * instead the instruction is ignored.
-  */
--asmlinkage void kvm_spurious_fault(void);
--
--#define ____kvm_handle_fault_on_reboot(insn, cleanup_insn)	\
--	"666: " insn "\n\t" \
--	"668: \n\t"                           \
--	".pushsection .fixup, \"ax\" \n" \
--	"667: \n\t" \
--	cleanup_insn "\n\t"		      \
--	"cmpb $0, kvm_rebooting \n\t"	      \
--	"jne 668b \n\t"      		      \
--	__ASM_SIZE(push) " $666b \n\t"	      \
--	"jmp kvm_spurious_fault \n\t"	      \
--	".popsection \n\t" \
--	_ASM_EXTABLE(666b, 667b)
-+#define ____kvm_handle_fault_on_reboot(insn, cleanup_insn)		\
-+	"666: \n\t"							\
-+	insn "\n\t"							\
-+	"jmp	668f \n\t"						\
-+	"667: \n\t"							\
-+	"call	kvm_spurious_fault \n\t"				\
-+	"668: \n\t"							\
-+	".pushsection .fixup, \"ax\" \n\t"				\
-+	"700: \n\t"							\
-+	cleanup_insn "\n\t"						\
-+	"cmpb	$0, kvm_rebooting\n\t"					\
-+	"je	667b \n\t"						\
-+	"jmp	668b \n\t"						\
-+	".popsection \n\t"						\
-+	_ASM_EXTABLE(666b, 700b)
- 
- #define __kvm_handle_fault_on_reboot(insn)		\
- 	____kvm_handle_fault_on_reboot(insn, "")
+ 	return c.len;
+ }
+ #endif
 -- 
 2.20.1
 
