@@ -5,65 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7CCC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE06AC32750
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A425D2086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C14482086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:27:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dJaEB+8q"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DXZoBd9D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727676AbfHEH1H (ORCPT
+        id S1727711AbfHEH1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 03:27:07 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33225 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726423AbfHEH1G (ORCPT
+        Mon, 5 Aug 2019 03:27:17 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45197 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726423AbfHEH1R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 03:27:06 -0400
-Received: by mail-pf1-f196.google.com with SMTP id g2so39179284pfq.0;
-        Mon, 05 Aug 2019 00:27:06 -0700 (PDT)
+        Mon, 5 Aug 2019 03:27:17 -0400
+Received: by mail-pf1-f195.google.com with SMTP id r1so39162291pfq.12;
+        Mon, 05 Aug 2019 00:27:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=0kexfm7iH3i/VSJOwC3FuVy5N6LFfHFxQSV+3oxaWZQ=;
-        b=dJaEB+8qJn0QJtz/DJ3fkifzpjMhNhP7Ip6R3bWOUO5sV3RGwnD1HHdfHzlRGLPkZk
-         xfof7rzNGH3bt9HfHe4EDHfDhT7wLwDoUwaVzW5JwCKbjKpQu8X/sHqheIPhMcdPC4hY
-         2IgYzu3PmznaI1mecw3zg2x0M1sbXGXFPbyk9nxY2QqMz3OknkNaNGMTeK0rkd6dRgop
-         UF6FXd1AkZLw0aZ7xdUppCbhP9rL9QwgHKQH2W9HDMnvbuJzCt/2t5SbzSGqNUFb1kZn
-         kYk4GoLoCWK/PS0JN/JE1pIRvFSo+Np/FD4AdHM2uSLRtJk8Wps4WDwJq5LyYdZzMSF+
-         iUwQ==
+        bh=R7V3vHCmvIyymKb6Z8EX6Xtx5UX/ukka4A2oRBOP7X8=;
+        b=DXZoBd9DYaNN+Z+siZf6HZa0aO4n+LYEfrBldhcH7WiXXTk7ruOWbdjHNf5Lombh/X
+         TKAiq1VgX3FKz1pahP9g/JkFbQyk00dc5YNEyLzHbTn5oa0OolDtNX2yYHilMIrb7FEc
+         dwjHGhcQc3CMQbi8jXplmjAgA50xncfNU31mI3DRk9pzIdEzn4NWSxIyBvoQhJGngAhw
+         JJfF7RYEx54J6AmABZPZwQL6Zrm60y9K/HPuY/weLwwa6XUeZKIc6hxdL8FhztCcv5Ra
+         qzJ7cxgXcG3weVEebsHma+qOIs8gwiAT/CTiyUm2n/rjBzGUsS8DtG2jn9KUbEiFQRr4
+         DaiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=0kexfm7iH3i/VSJOwC3FuVy5N6LFfHFxQSV+3oxaWZQ=;
-        b=nn5X+5c8WGOlLbZU9Jij/FakT0JgEDRkhRh2dBcXQzDsyoa61zU+Q5blaTWJgIqyY1
-         UAbg1S8cZUnqNzJToMc3K/iFvql8hy5fieR/8cxp5gmeUMJXZu26nY3u+Jn1X0M4kMSF
-         fh6nyNP2ssLHrQHac67Vxa37XhLfL5IioZv0wWq/zm93UD0+Yjl1X9pSGnQDmfMr04BF
-         inG+ZPaMInbQ1ouNTJP/K0m707lSH7Pqni3nopZlogztB6mqbmVXj4GE3TBCjWVcYKE3
-         LFcRz8DDbEEdlIsYGjukQZfca/8Ey/LLi0VPtNRM+3oU7AA3g2vN37zkjSgS2s0jRcm0
-         GKnw==
-X-Gm-Message-State: APjAAAXuHGssKrTVtQ3UdDDAnt+JkPAa+G2dnuwZ6zCo9uV0QYrOVr1U
-        TKW2URt7Tf7u3/ZKDWjVXF8=
-X-Google-Smtp-Source: APXvYqwr8wyNYy9oYI9NOwS4OQLaD5zm0ijr5UzV59jmk+rn8vspVToRE09Z07ImmiAnY7uL2haDqw==
-X-Received: by 2002:a63:1b56:: with SMTP id b22mr18210606pgm.265.1564990026218;
-        Mon, 05 Aug 2019 00:27:06 -0700 (PDT)
+        bh=R7V3vHCmvIyymKb6Z8EX6Xtx5UX/ukka4A2oRBOP7X8=;
+        b=GIh6T2b0F4DcS8RUfrpQ99RHRWBBnwi8T9gXa2NFPdt32CApO0WSE+zHaoU/uNio1G
+         XrWhu2+UVrkn41NUM7ec8L1WYYQNWKQiYpKIlXHCd/6f8K0k/Quw0E6bplHDUNDZyYjv
+         d/PTcUxFi6Ot81hcAeVsNVhsWlSnmCcatPfYd5w5zl4rJtjz/NcyVDnqLeS6Vhc1pCv2
+         HJN1qYBZQVEhDegTbF5OwTAb6k+ZdfIF/tsFY4FsMUC15TkKf/F4JV5IDpWzHRhqJxY7
+         BIA+bREMxaMRZ3j2/b0yEU7XXpqbE0r1I8wxAp8tbmDyYBbvz4MFruDlZITtQZ+bXmnJ
+         KXsw==
+X-Gm-Message-State: APjAAAXapPZ7hBZD96Kj3+CtAC0vxJkJIxYhr3KA78XhZoqWbLlcE8sF
+        3tMp5rUP78u45q5qFGvFHFs=
+X-Google-Smtp-Source: APXvYqztqaX/P9wlIIwN2Nt3ZpFTaWhrIp7Yw6rsZdMkJ0QIEYpYO2N7vrmHssIIzug1PtRv+pU7PQ==
+X-Received: by 2002:a17:90a:e397:: with SMTP id b23mr16517668pjz.140.1564990036698;
+        Mon, 05 Aug 2019 00:27:16 -0700 (PDT)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id e13sm102354383pff.45.2019.08.05.00.27.03
+        by smtp.gmail.com with ESMTPSA id o3sm15840301pje.1.2019.08.05.00.27.13
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 05 Aug 2019 00:27:05 -0700 (PDT)
+        Mon, 05 Aug 2019 00:27:16 -0700 (PDT)
 From:   Chuhong Yuan <hslester96@gmail.com>
 Cc:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH 1/2] ia64: hp-sim: Replace strncmp with str_has_prefix
-Date:   Mon,  5 Aug 2019 15:26:59 +0800
-Message-Id: <20190805072659.32745-1-hslester96@gmail.com>
+        linux-efi@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH 2/2] ia64: Replace strncmp with str_has_prefix
+Date:   Mon,  5 Aug 2019 15:27:09 +0800
+Message-Id: <20190805072709.345-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -82,36 +83,92 @@ it to make code better.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- arch/ia64/hp/sim/boot/bootloader.c | 2 +-
- arch/ia64/hp/sim/simeth.c          | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/ia64/kernel/acpi.c | 9 ++++-----
+ arch/ia64/kernel/efi.c  | 2 +-
+ arch/ia64/kernel/esi.c  | 2 +-
+ arch/ia64/kernel/sal.c  | 2 +-
+ 4 files changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/arch/ia64/hp/sim/boot/bootloader.c b/arch/ia64/hp/sim/boot/bootloader.c
-index 6d804608dc81..bcb7af27466c 100644
---- a/arch/ia64/hp/sim/boot/bootloader.c
-+++ b/arch/ia64/hp/sim/boot/bootloader.c
-@@ -112,7 +112,7 @@ start_bootloader (void)
- 	ssc((long) &stat, 0, 0, 0, SSC_WAIT_COMPLETION);
+diff --git a/arch/ia64/kernel/acpi.c b/arch/ia64/kernel/acpi.c
+index c597ab5275b8..f01e6fb2f962 100644
+--- a/arch/ia64/kernel/acpi.c
++++ b/arch/ia64/kernel/acpi.c
+@@ -77,7 +77,7 @@ acpi_get_sysname(void)
+ 	}
  
- 	elf = (struct elfhdr *) mem;
--	if (elf->e_ident[0] == 0x7f && strncmp(elf->e_ident + 1, "ELF", 3) != 0) {
-+	if (elf->e_ident[0] == 0x7f && !str_has_prefix(elf->e_ident + 1, "ELF", 3)) {
- 		cons_write("not an ELF file\n");
+ 	rsdp = (struct acpi_table_rsdp *)__va(rsdp_phys);
+-	if (strncmp(rsdp->signature, ACPI_SIG_RSDP, sizeof(ACPI_SIG_RSDP) - 1)) {
++	if (!str_has_prefix(rsdp->signature, ACPI_SIG_RSDP)) {
+ 		printk(KERN_ERR
+ 		       "ACPI 2.0 RSDP signature incorrect, default to \"dig\"\n");
+ 		return "dig";
+@@ -85,7 +85,7 @@ acpi_get_sysname(void)
+ 
+ 	xsdt = (struct acpi_table_xsdt *)__va(rsdp->xsdt_physical_address);
+ 	hdr = &xsdt->header;
+-	if (strncmp(hdr->signature, ACPI_SIG_XSDT, sizeof(ACPI_SIG_XSDT) - 1)) {
++	if (!str_has_prefix(hdr->signature, ACPI_SIG_XSDT)) {
+ 		printk(KERN_ERR
+ 		       "ACPI 2.0 XSDT signature incorrect, default to \"dig\"\n");
+ 		return "dig";
+@@ -106,8 +106,7 @@ acpi_get_sysname(void)
+ 			 sizeof(xsdt->table_offset_entry[0]);
+ 	for (i = 0; i < nentries; i++) {
+ 		hdr = __va(xsdt->table_offset_entry[i]);
+-		if (strncmp(hdr->signature, ACPI_SIG_DMAR,
+-			sizeof(ACPI_SIG_DMAR) - 1) == 0)
++		if (str_has_prefix(hdr->signature, ACPI_SIG_DMAR))
+ 			return "dig_vtd";
+ 	}
+ #endif
+@@ -348,7 +347,7 @@ acpi_parse_nmi_src(union acpi_subtable_headers * header, const unsigned long end
+ 
+ static void __init acpi_madt_oem_check(char *oem_id, char *oem_table_id)
+ {
+-	if (!strncmp(oem_id, "IBM", 3) && (!strncmp(oem_table_id, "SERMOW", 6))) {
++	if (str_has_prefix(oem_id, "IBM") && (str_has_prefix(oem_table_id, "SERMOW"))) {
+ 
+ 		/*
+ 		 * Unfortunately ITC_DRIFT is not yet part of the
+diff --git a/arch/ia64/kernel/efi.c b/arch/ia64/kernel/efi.c
+index 3795d18276c4..615e73bd88fd 100644
+--- a/arch/ia64/kernel/efi.c
++++ b/arch/ia64/kernel/efi.c
+@@ -434,7 +434,7 @@ static void __init handle_palo(unsigned long phys_addr)
+ 	struct palo_table *palo = __va(phys_addr);
+ 	u8  checksum;
+ 
+-	if (strncmp(palo->signature, PALO_SIG, sizeof(PALO_SIG) - 1)) {
++	if (!str_has_prefix(palo->signature, PALO_SIG)) {
+ 		printk(KERN_INFO "PALO signature incorrect.\n");
  		return;
  	}
-diff --git a/arch/ia64/hp/sim/simeth.c b/arch/ia64/hp/sim/simeth.c
-index f39ef2b4ed72..9ad812cd8d0e 100644
---- a/arch/ia64/hp/sim/simeth.c
-+++ b/arch/ia64/hp/sim/simeth.c
-@@ -248,7 +248,7 @@ simeth_open(struct net_device *dev)
- /* copied from lapbether.c */
- static __inline__ int dev_is_ethdev(struct net_device *dev)
- {
--       return ( dev->type == ARPHRD_ETHER && strncmp(dev->name, "dummy", 5));
-+       return (dev->type == ARPHRD_ETHER && !str_has_prefix(dev->name, "dummy"));
- }
+diff --git a/arch/ia64/kernel/esi.c b/arch/ia64/kernel/esi.c
+index cb514126ef7f..d929689a99e4 100644
+--- a/arch/ia64/kernel/esi.c
++++ b/arch/ia64/kernel/esi.c
+@@ -70,7 +70,7 @@ static int __init esi_init (void)
  
+ 	systab = __va(esi);
  
+-	if (strncmp(systab->signature, "ESIT", 4) != 0) {
++	if (!str_has_prefix(systab->signature, "ESIT")) {
+ 		printk(KERN_ERR "bad signature in ESI system table!");
+ 		return -ENODEV;
+ 	}
+diff --git a/arch/ia64/kernel/sal.c b/arch/ia64/kernel/sal.c
+index 9b2331ac10ce..9f02e3ec28e5 100644
+--- a/arch/ia64/kernel/sal.c
++++ b/arch/ia64/kernel/sal.c
+@@ -315,7 +315,7 @@ ia64_sal_init (struct ia64_sal_systab *systab)
+ 		return;
+ 	}
+ 
+-	if (strncmp(systab->signature, "SST_", 4) != 0)
++	if (!str_has_prefix(systab->signature, "SST_"))
+ 		printk(KERN_ERR "bad signature in system table!");
+ 
+ 	check_versions(systab);
 -- 
 2.20.1
 
