@@ -7,54 +7,65 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FF3C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E88C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87FAF2067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 029C92067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:22:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011364;
-	bh=seF0PILUTmmVA/4wqivh3/hSdhFRWQkndEHhniBn9kw=;
+	s=default; t=1565011366;
+	bh=abVtm5R4TC05I+ifUy0dsctYKFHWSDncpsOa7i8Gpus=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mXlG/HaUyVq9kNzFBqWafHH4WSbhuVLUNTsNfqcZ9kSMb2Z+7m3ld8c9Iw26waRp2
-	 471Y1gReQGMzjj88mnQEsQswhWzUSTI9UJtNrw26103ZjbCJ2BByQw0YNyePBftwXP
-	 B88E5aIkqGWVJ8PPrRY5/DlHGvfC5WQwmWjJAiwI=
+	b=kOBOclxp8PPMpGipJvJ+RWBveJ1MA8SrEnDsM/yZnbMgUekOEeS6ksbkJCGyAVisC
+	 ZDbUXrdhffbW8Ld/1rPZYZcJy00SyHvJlGfS1WvYCDdWYc9FxkZPulGF0+Atp4BRaY
+	 2MXDN9ti9WX984zNM8dY3CA4P42jN/Zs7xalZyis=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729931AbfHENWn (ORCPT
+        id S1730745AbfHENWo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:22:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59096 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:22:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730434AbfHENWg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:22:36 -0400
+        id S1729989AbfHENWk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:22:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 404A9216B7;
-        Mon,  5 Aug 2019 13:22:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D2E421871;
+        Mon,  5 Aug 2019 13:22:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011354;
-        bh=seF0PILUTmmVA/4wqivh3/hSdhFRWQkndEHhniBn9kw=;
+        s=default; t=1565011359;
+        bh=abVtm5R4TC05I+ifUy0dsctYKFHWSDncpsOa7i8Gpus=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nc+iIZoVJrrN07HWrzMqy/6wsBVgw1UezqcnVdXt1uZvy8DxU3TqDft1KW0PNfre0
-         01Vh133fw6pDBQ0H8tf7Q9I5TpC+pfL8boKtD4DEgIAQqpSVRDX5jzMBx9aGSm5k0t
-         4lhdxS2xch17XpOv1ZrL20rq8B3AeFoa7OexqnlA=
+        b=F7aimuNtg43x3v1JjLY8GRgBYpwTfhi3Qdmlfp89RAabddXyHjrFwuTFwU8A2xNu7
+         D3X82YPWVPsJ2tv0PIZ9KRjUvKL1F5SEGe3/QLkDELdW5F4FysYrANQgL/Rhzz6UVy
+         Q1IuMTx9pc+iUA+pmtSUWVWgk5RwurCTXngRpowQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Andreas Christoforou <andreaschristofo@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Manfred Spraul <manfred@colorfullife.com>,
+        stable@vger.kernel.org, Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Borislav Petkov <bp@suse.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        Huang Ying <ying.huang@intel.com>,
+        James Morris <jmorris@namei.org>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Ross Zwisler <zwisler@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, Takashi Iwai <tiwai@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Yaowei Bai <baiyaowei@cmss.chinamobile.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 061/131] ipc/mqueue.c: only perform resource calculation if user valid
-Date:   Mon,  5 Aug 2019 15:02:28 +0200
-Message-Id: <20190805124955.513765459@linuxfoundation.org>
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.2 063/131] device-dax: fix memory and resource leak if hotplug fails
+Date:   Mon,  5 Aug 2019 15:02:30 +0200
+Message-Id: <20190805124955.668151080@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -67,101 +78,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a318f12ed8843cfac53198390c74a565c632f417 ]
+[ Upstream commit 31e4ca92a7dd4cdebd7fe1456b3b0b6ace9a816f ]
 
-Andreas Christoforou reported:
+Patch series ""Hotremove" persistent memory", v6.
 
-  UBSAN: Undefined behaviour in ipc/mqueue.c:414:49 signed integer overflow:
-  9 * 2305843009213693951 cannot be represented in type 'long int'
-  ...
-  Call Trace:
-    mqueue_evict_inode+0x8e7/0xa10 ipc/mqueue.c:414
-    evict+0x472/0x8c0 fs/inode.c:558
-    iput_final fs/inode.c:1547 [inline]
-    iput+0x51d/0x8c0 fs/inode.c:1573
-    mqueue_get_inode+0x8eb/0x1070 ipc/mqueue.c:320
-    mqueue_create_attr+0x198/0x440 ipc/mqueue.c:459
-    vfs_mkobj+0x39e/0x580 fs/namei.c:2892
-    prepare_open ipc/mqueue.c:731 [inline]
-    do_mq_open+0x6da/0x8e0 ipc/mqueue.c:771
+Recently, adding a persistent memory to be used like a regular RAM was
+added to Linux.  This work extends this functionality to also allow hot
+removing persistent memory.
 
-Which could be triggered by:
+We (Microsoft) have an important use case for this functionality.
 
-        struct mq_attr attr = {
-                .mq_flags = 0,
-                .mq_maxmsg = 9,
-                .mq_msgsize = 0x1fffffffffffffff,
-                .mq_curmsgs = 0,
-        };
+The requirement is for physical machines with small amount of RAM (~8G)
+to be able to reboot in a very short period of time (<1s).  Yet, there
+is a userland state that is expensive to recreate (~2G).
 
-        if (mq_open("/testing", 0x40, 3, &attr) == (mqd_t) -1)
-                perror("mq_open");
+The solution is to boot machines with 2G preserved for persistent
+memory.
 
-mqueue_get_inode() was correctly rejecting the giant mq_msgsize, and
-preparing to return -EINVAL.  During the cleanup, it calls
-mqueue_evict_inode() which performed resource usage tracking math for
-updating "user", before checking if there was a valid "user" at all
-(which would indicate that the calculations would be sane).  Instead,
-delay this check to after seeing a valid "user".
+Copy the state, and hotadd the persistent memory so machine still has
+all 8G available for runtime.  Before reboot, offline and hotremove
+device-dax 2G, copy the memory that is needed to be preserved to pmem0
+device, and reboot.
 
-The overflow was real, but the results went unused, so while the flaw is
-harmless, it's noisy for kernel fuzzers, so just fix it by moving the
-calculation under the non-NULL "user" where it actually gets used.
+The series of operations look like this:
 
-Link: http://lkml.kernel.org/r/201906072207.ECB65450@keescook
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Reported-by: Andreas Christoforou <andreaschristofo@gmail.com>
-Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Manfred Spraul <manfred@colorfullife.com>
+1. After boot restore /dev/pmem0 to ramdisk to be consumed by apps.
+   and free ramdisk.
+2. Convert raw pmem0 to devdax
+   ndctl create-namespace --mode devdax --map mem -e namespace0.0 -f
+3. Hotadd to System RAM
+   echo dax0.0 > /sys/bus/dax/drivers/device_dax/unbind
+   echo dax0.0 > /sys/bus/dax/drivers/kmem/new_id
+   echo online_movable > /sys/devices/system/memoryXXX/state
+4. Before reboot hotremove device-dax memory from System RAM
+   echo offline > /sys/devices/system/memoryXXX/state
+   echo dax0.0 > /sys/bus/dax/drivers/kmem/unbind
+5. Create raw pmem0 device
+   ndctl create-namespace --mode raw  -e namespace0.0 -f
+6. Copy the state that was stored by apps to ramdisk to pmem device
+7. Do kexec reboot or reboot through firmware if firmware does not
+   zero memory in pmem0 region (These machines have only regular
+   volatile memory). So to have pmem0 device either memmap kernel
+   parameter is used, or devices nodes in dtb are specified.
+
+This patch (of 3):
+
+When add_memory() fails, the resource and the memory should be freed.
+
+Link: http://lkml.kernel.org/r/20190517215438.6487-2-pasha.tatashin@soleen.com
+Fixes: c221c0b0308f ("device-dax: "Hotplug" persistent memory for use like normal RAM")
+Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+Reviewed-by: Dave Hansen <dave.hansen@intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Fengguang Wu <fengguang.wu@intel.com>
+Cc: Huang Ying <ying.huang@intel.com>
+Cc: James Morris <jmorris@namei.org>
+Cc: Jérôme Glisse <jglisse@redhat.com>
+Cc: Keith Busch <keith.busch@intel.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Ross Zwisler <zwisler@kernel.org>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Takashi Iwai <tiwai@suse.de>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Yaowei Bai <baiyaowei@cmss.chinamobile.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- ipc/mqueue.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ drivers/dax/kmem.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/ipc/mqueue.c b/ipc/mqueue.c
-index 216cad1ff0d0c..65c351564ad08 100644
---- a/ipc/mqueue.c
-+++ b/ipc/mqueue.c
-@@ -438,7 +438,6 @@ static void mqueue_evict_inode(struct inode *inode)
- {
- 	struct mqueue_inode_info *info;
- 	struct user_struct *user;
--	unsigned long mq_bytes, mq_treesize;
- 	struct ipc_namespace *ipc_ns;
- 	struct msg_msg *msg, *nmsg;
- 	LIST_HEAD(tmp_msg);
-@@ -461,16 +460,18 @@ static void mqueue_evict_inode(struct inode *inode)
- 		free_msg(msg);
- 	}
+diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
+index a02318c6d28ab..4c0131857133d 100644
+--- a/drivers/dax/kmem.c
++++ b/drivers/dax/kmem.c
+@@ -66,8 +66,11 @@ int dev_dax_kmem_probe(struct device *dev)
+ 	new_res->name = dev_name(dev);
  
--	/* Total amount of bytes accounted for the mqueue */
--	mq_treesize = info->attr.mq_maxmsg * sizeof(struct msg_msg) +
--		min_t(unsigned int, info->attr.mq_maxmsg, MQ_PRIO_MAX) *
--		sizeof(struct posix_msg_tree_node);
--
--	mq_bytes = mq_treesize + (info->attr.mq_maxmsg *
--				  info->attr.mq_msgsize);
--
- 	user = info->user;
- 	if (user) {
-+		unsigned long mq_bytes, mq_treesize;
-+
-+		/* Total amount of bytes accounted for the mqueue */
-+		mq_treesize = info->attr.mq_maxmsg * sizeof(struct msg_msg) +
-+			min_t(unsigned int, info->attr.mq_maxmsg, MQ_PRIO_MAX) *
-+			sizeof(struct posix_msg_tree_node);
-+
-+		mq_bytes = mq_treesize + (info->attr.mq_maxmsg *
-+					  info->attr.mq_msgsize);
-+
- 		spin_lock(&mq_lock);
- 		user->mq_bytes -= mq_bytes;
- 		/*
+ 	rc = add_memory(numa_node, new_res->start, resource_size(new_res));
+-	if (rc)
++	if (rc) {
++		release_resource(new_res);
++		kfree(new_res);
+ 		return rc;
++	}
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
