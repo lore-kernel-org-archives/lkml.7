@@ -2,74 +2,110 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F002C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC1FC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E0522075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:52:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B3532075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:52:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565020365;
+	bh=JKWWEf+UF41qzixrKS7OzYkcF1MFv9/nEQ4bTM458I0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=e15lAGRvzZA4rZdrKIG3nGSWX2nEZhFa4eAE2Ln/BSAON2qpQk0rnQn5NLnSdhhl1
+	 ZomaUKymaJzpJXTc+Pw500EQG84u0rxiqpLqB9JhTi+tLSiy3NOG6mCL7uWXghhg3P
+	 bwDnHH9Lq5Tybel8KzzGTGajbOelrkqfauYZ6TcU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729064AbfHEPwB (ORCPT
+        id S1729096AbfHEPwo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 11:52:01 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:58351 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726559AbfHEPwA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 11:52:00 -0400
-Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.pengutronix.de.)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1hufH9-0000B4-1O; Mon, 05 Aug 2019 17:51:55 +0200
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de, patchwork-lst@pengutronix.de
-Subject: [PATCH] dma-direct: don't truncate dma_required_mask to bus addressing capabilities
-Date:   Mon,  5 Aug 2019 17:51:53 +0200
-Message-Id: <20190805155153.11021-1-l.stach@pengutronix.de>
-X-Mailer: git-send-email 2.20.1
+        Mon, 5 Aug 2019 11:52:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48766 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726559AbfHEPwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 11:52:44 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5A2F2075B;
+        Mon,  5 Aug 2019 15:52:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565020363;
+        bh=JKWWEf+UF41qzixrKS7OzYkcF1MFv9/nEQ4bTM458I0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CgTAdhMO87lZWvO/L1sIxpO14mELKHxFF7iresS4QHoRz/JWdDbNW+HFtppUGki6L
+         j0BkOKXMkYGMTLYAOLgFWf4GOLcqgfC97OJBUnOgCU6UHpDjLXsbsmQ2FQRzpqh1V9
+         42uDptMp7hg/207Yk3vD6to/lyrryIujx9ezfmBY=
+Date:   Mon, 5 Aug 2019 17:52:40 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Wu Hao <hao.wu@intel.com>
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-doc@vger.kernel.org, atull@kernel.org,
+        Xu Yilun <yilun.xu@intel.com>
+Subject: Re: [PATCH v4 06/12] fpga: dfl: afu: export __port_enable/disable
+ function.
+Message-ID: <20190805155240.GB8107@kroah.com>
+References: <1564914022-3710-1-git-send-email-hao.wu@intel.com>
+ <1564914022-3710-7-git-send-email-hao.wu@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1564914022-3710-7-git-send-email-hao.wu@intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The dma required_mask needs to reflect the actual addressing capabilities
-needed to handle the whole system RAM. When truncated down to the bus
-addressing capabilities dma_addressing_limited() will incorrectly signal
-no limitations for devices which are restricted by the bus_dma_mask.
+On Sun, Aug 04, 2019 at 06:20:16PM +0800, Wu Hao wrote:
+> As these two functions are used by other private features. e.g.
+> in error reporting private feature, it requires to check port status
+> and reset port for error clearing.
+> 
+> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> Signed-off-by: Wu Hao <hao.wu@intel.com>
+> Acked-by: Moritz Fischer <mdf@kernel.org>
+> Acked-by: Alan Tull <atull@kernel.org>
+> Signed-off-by: Moritz Fischer <mdf@kernel.org>
+> ---
+> v2: rebased
+> ---
+>  drivers/fpga/dfl-afu-main.c | 25 ++++++++++++++-----------
+>  drivers/fpga/dfl-afu.h      |  3 +++
+>  2 files changed, 17 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
+> index e013afb..e312179 100644
+> --- a/drivers/fpga/dfl-afu-main.c
+> +++ b/drivers/fpga/dfl-afu-main.c
+> @@ -22,14 +22,16 @@
+>  #include "dfl-afu.h"
+>  
+>  /**
+> - * port_enable - enable a port
+> + * __port_enable - enable a port
+>   * @pdev: port platform device.
+>   *
+>   * Enable Port by clear the port soft reset bit, which is set by default.
+>   * The AFU is unable to respond to any MMIO access while in reset.
+> - * port_enable function should only be used after port_disable function.
+> + * __port_enable function should only be used after __port_disable function.
+> + *
+> + * The caller needs to hold lock for protection.
+>   */
+> -static void port_enable(struct platform_device *pdev)
+> +void __port_enable(struct platform_device *pdev)
 
-Fixes: b4ebe6063204 (dma-direct: implement complete bus_dma_mask handling)
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
----
- kernel/dma/direct.c | 3 ---
- 1 file changed, 3 deletions(-)
+worst global function name ever.
 
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index 59bdceea3737..7ba3480fc546 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -47,9 +47,6 @@ u64 dma_direct_get_required_mask(struct device *dev)
- {
- 	u64 max_dma = phys_to_dma_direct(dev, (max_pfn - 1) << PAGE_SHIFT);
- 
--	if (dev->bus_dma_mask && dev->bus_dma_mask < max_dma)
--		max_dma = dev->bus_dma_mask;
--
- 	return (1ULL << (fls64(max_dma) - 1)) * 2 - 1;
- }
- 
--- 
-2.20.1
+Don't polute the global namespace like this for a single driver.  If you
+REALLY need it, then use a prefix that shows it is your individual
+dfl_special_sauce_platform_device_only type thing.
 
+thanks,
+
+greg k-h
