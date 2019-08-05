@@ -7,54 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3206C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B4AC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C38672075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:24:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A3F62067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:24:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011451;
-	bh=5g4/R91xu4czyvStOQwsVtxcB69iOwxdVH04GP7H0N4=;
+	s=default; t=1565011456;
+	bh=but4/aoqQhAlVg1ekjeuY57oNWH9FIgLys4thN8s+3c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YklPMDyCu02sQPyckETxYAZIcd0gSb0FiFerMlYWSi1gnCdlEAermOKnAHFfZID60
-	 zKWWFFjNq80Pr2aBBm+E2UGtPXgL4lXjuod485GrVnp2hL/8Y8sScR/OS3HY/Zrj5e
-	 m4wHk7Kbdwj+8Yp2v+y6Qf7/Oy4XobtM2astibhM=
+	b=V50TC/jCIRTss10pO5PWf3wfBLQspisg8LTnnUAAEx3EjLiLWgvdVdpeKN9Y9s72q
+	 hQM/xBLd+dl/HIYclCCmZgZgs9kUHPeFGV/TM973AJw26oZKjEuosP2YHz+5MRnIT0
+	 nymNt4meU8qjDbvEngqhLFhsbVMI4Wr946Ih87b8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730965AbfHENYK (ORCPT
+        id S1730972AbfHENYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:24:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60862 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:24:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730160AbfHENYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:24:05 -0400
+        id S1730966AbfHENYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:24:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F83D2067D;
-        Mon,  5 Aug 2019 13:24:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE6552067D;
+        Mon,  5 Aug 2019 13:24:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011445;
-        bh=5g4/R91xu4czyvStOQwsVtxcB69iOwxdVH04GP7H0N4=;
+        s=default; t=1565011450;
+        bh=but4/aoqQhAlVg1ekjeuY57oNWH9FIgLys4thN8s+3c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n3ITrh2w3Y3kk09bokM7fNhnLG07WTzaJN2kMQPaEcA8PL/wluAb0ykUebkutHtBV
-         6Xa06g9UYRSESOKX+cO+Dffl3dsIOAheI8Ym7GnkEdecboSHY+3daePf5nJa+NlIsS
-         fn9Q9GBUR/4C21m2EqkEo0Y/Bjg8oLVXe3q1U8I8=
+        b=xX3aoLKqronXYjk9Q/tF3vHOtuoZU6zLbctkDoaCtguH294qcapWTqR/Svcc6Xl+j
+         0uGAR+dLBj16YNCN1s0qSCDaj0NApWMBTX2nR03eUoPNGhnNXHIwD7i11pNOEJQo83
+         886d6u+ewS+m7//F73ABSWDD2EdtxmME1t9Km91Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        David Airlie <airlied@redhat.com>,
-        Jerry Zuo <Jerry.Zuo@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Juston Li <juston.li@intel.com>,
-        Karol Herbst <karolherbst@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Ilia Mirkin <imirkin@alum.mit.edu>
-Subject: [PATCH 5.2 091/131] drm/nouveau: Only release VCPI slots on mode changes
-Date:   Mon,  5 Aug 2019 15:02:58 +0200
-Message-Id: <20190805124958.059380045@linuxfoundation.org>
+        stable@vger.kernel.org, "M. Vefa Bicakci" <m.v.b@runbox.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH 5.2 075/131] kconfig: Clear "written" flag to avoid data loss
+Date:   Mon,  5 Aug 2019 15:02:42 +0200
+Message-Id: <20190805124956.731138588@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -67,89 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lyude Paul <lyude@redhat.com>
+From: M. Vefa Bicakci <m.v.b@runbox.com>
 
-commit 412e85b605315fd129a849599cf4a5a7959573a8 upstream.
+commit 0c5b6c28ed68becb692b43eae5e44d5aa7e160ce upstream.
 
-Looks like a regression got introduced into nv50_mstc_atomic_check()
-that somehow didn't get found until now. If userspace changes
-crtc_state->active to false but leaves the CRTC enabled, we end up
-calling drm_dp_atomic_find_vcpi_slots() using the PBN calculated in
-asyh->dp.pbn. However, if the display is inactive we end up calculating
-a PBN of 0, which inadvertently causes us to have an allocation of 0.
->From there, if userspace then disables the CRTC afterwards we end up
-accidentally attempting to free the VCPI twice:
+Prior to this commit, starting nconfig, xconfig or gconfig, and saving
+the .config file more than once caused data loss, where a .config file
+that contained only comments would be written to disk starting from the
+second save operation.
 
-WARNING: CPU: 0 PID: 1484 at drivers/gpu/drm/drm_dp_mst_topology.c:3336
-drm_dp_atomic_release_vcpi_slots+0x87/0xb0 [drm_kms_helper]
-RIP: 0010:drm_dp_atomic_release_vcpi_slots+0x87/0xb0 [drm_kms_helper]
-Call Trace:
- drm_atomic_helper_check_modeset+0x3f3/0xa60 [drm_kms_helper]
- ? drm_atomic_check_only+0x43/0x780 [drm]
- drm_atomic_helper_check+0x15/0x90 [drm_kms_helper]
- nv50_disp_atomic_check+0x83/0x1d0 [nouveau]
- drm_atomic_check_only+0x54d/0x780 [drm]
- ? drm_atomic_set_crtc_for_connector+0xec/0x100 [drm]
- drm_atomic_commit+0x13/0x50 [drm]
- drm_atomic_helper_set_config+0x81/0x90 [drm_kms_helper]
- drm_mode_setcrtc+0x194/0x6a0 [drm]
- ? vprintk_emit+0x16a/0x230
- ? drm_ioctl+0x163/0x390 [drm]
- ? drm_mode_getcrtc+0x180/0x180 [drm]
- drm_ioctl_kernel+0xaa/0xf0 [drm]
- drm_ioctl+0x208/0x390 [drm]
- ? drm_mode_getcrtc+0x180/0x180 [drm]
- nouveau_drm_ioctl+0x63/0xb0 [nouveau]
- do_vfs_ioctl+0x405/0x660
- ? recalc_sigpending+0x17/0x50
- ? _copy_from_user+0x37/0x60
- ksys_ioctl+0x5e/0x90
- ? exit_to_usermode_loop+0x92/0xe0
- __x64_sys_ioctl+0x16/0x20
- do_syscall_64+0x59/0x190
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-WARNING: CPU: 0 PID: 1484 at drivers/gpu/drm/drm_dp_mst_topology.c:3336
-drm_dp_atomic_release_vcpi_slots+0x87/0xb0 [drm_kms_helper]
----[ end trace 4c395c0c51b1f88d ]---
-[drm:drm_dp_atomic_release_vcpi_slots [drm_kms_helper]] *ERROR* no VCPI for
-[MST PORT:00000000e288eb7d] found in mst state 000000008e642070
+This bug manifests itself because the SYMBOL_WRITTEN flag is never
+cleared after the first call to conf_write, and subsequent calls to
+conf_write then skip all of the configuration symbols due to the
+SYMBOL_WRITTEN flag being set.
 
-So, fix this by doing what we probably should have done from the start: only
-call drm_dp_atomic_find_vcpi_slots() when crtc_state->mode_changed is set, so
-that VCPI allocations remain for as long as the CRTC is enabled.
+This commit resolves this issue by clearing the SYMBOL_WRITTEN flag
+from all symbols before conf_write returns.
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Fixes: 232c9eec417a ("drm/nouveau: Use atomic VCPI helpers for MST")
-Cc: Lyude Paul <lyude@redhat.com>
-Cc: Ben Skeggs <bskeggs@redhat.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: David Airlie <airlied@redhat.com>
-Cc: Jerry Zuo <Jerry.Zuo@amd.com>
-Cc: Harry Wentland <harry.wentland@amd.com>
-Cc: Juston Li <juston.li@intel.com>
-Cc: Karol Herbst <karolherbst@gmail.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Ilia Mirkin <imirkin@alum.mit.edu>
-Cc: <stable@vger.kernel.org> # v5.1+
-Acked-by: Ben Skeggs <bskeggs@redhat.com>
-Signed-off-by: Dave Airlie <airlied@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190801220216.15323-1-lyude@redhat.com
+Fixes: 8e2442a5f86e ("kconfig: fix missing choice values in auto.conf")
+Cc: linux-stable <stable@vger.kernel.org> # 4.19+
+Signed-off-by: M. Vefa Bicakci <m.v.b@runbox.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/nouveau/dispnv50/disp.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ scripts/kconfig/confdata.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
-+++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-@@ -775,7 +775,7 @@ nv50_msto_atomic_check(struct drm_encode
- 			drm_dp_calc_pbn_mode(crtc_state->adjusted_mode.clock,
- 					     connector->display_info.bpc * 3);
+--- a/scripts/kconfig/confdata.c
++++ b/scripts/kconfig/confdata.c
+@@ -867,6 +867,7 @@ int conf_write(const char *name)
+ 	const char *str;
+ 	char tmpname[PATH_MAX + 1], oldname[PATH_MAX + 1];
+ 	char *env;
++	int i;
+ 	bool need_newline = false;
  
--	if (drm_atomic_crtc_needs_modeset(crtc_state)) {
-+	if (crtc_state->mode_changed) {
- 		slots = drm_dp_atomic_find_vcpi_slots(state, &mstm->mgr,
- 						      mstc->port,
- 						      asyh->dp.pbn);
+ 	if (!name)
+@@ -949,6 +950,9 @@ next:
+ 	}
+ 	fclose(out);
+ 
++	for_all_symbols(i, sym)
++		sym->flags &= ~SYMBOL_WRITTEN;
++
+ 	if (*tmpname) {
+ 		if (is_same(name, tmpname)) {
+ 			conf_message("No change to %s", name);
 
 
