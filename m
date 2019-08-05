@@ -2,114 +2,222 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18146C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC580C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA3F720880
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:38:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A29A32067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:39:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728850AbfHEMi0 (ORCPT
+        id S1728767AbfHEMjY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 08:38:26 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:44612 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728759AbfHEMiJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 08:38:09 -0400
-Received: by mail-io1-f71.google.com with SMTP id s9so92077667iob.11
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 05:38:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=0SlIsA2694wt+MQ5zgGwgDx+HJC9onZmiZCosf0h45g=;
-        b=YU3vnozp29pdFyKQ5hKos5G3D00U2HLj3eYtpTIAEFQGJsneg5pdUV62FXMbCf/WJr
-         uinVEpGYTtGjqQE89acwkr4mym7duYPzEdklPKTyrH0bjv0jAJHGQvNuIp+5np8A3aBD
-         hiYiBJMgac4/p4OmBmjQlZnC62+fBJ21cNtQHAJB4Cd/5J4BS6t6GXsu3afFiKPSA5KR
-         nSxcgH5yrbb1NTL3JiSLvcFF3Q+ZT84sEdUWR1+ADgyrh/QBsAeeyhrQAl+8WJlvuh42
-         SsZcA6hFOaUjjXhoKBn4ezXx54BkuZlGiyEGZpKB+ciomI1tV6W36L3t5pIYl9Q3t8WO
-         7h3g==
-X-Gm-Message-State: APjAAAXtlXza2DTQ90L696EBvkkXS8UFprjkyT7N7Ru2F/Rpfxu1IMzk
-        GNIKypAYsZLOk0ZQcjoPC8Iu20IW/MEj43LwbPb1C3hk4XJM
-X-Google-Smtp-Source: APXvYqyl33KSmOqc0D/gaCB1vcetR2LjFAP3VYVdy4LJX4399FDTlJi85XLUKNOx6HsJaQg1toX7SXFnsmn8hwqbMaIt4hdcR0vj
+        Mon, 5 Aug 2019 08:39:24 -0400
+Received: from mga01.intel.com ([192.55.52.88]:21458 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726508AbfHEMjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 08:39:24 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 05:39:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,349,1559545200"; 
+   d="scan'208";a="192411599"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 05 Aug 2019 05:39:20 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 05 Aug 2019 15:39:20 +0300
+Date:   Mon, 5 Aug 2019 15:39:20 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Justin Forbes <jmforbes@linuxtx.org>,
+        LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 5.2 123/413] PCI: Add missing link delays required by the
+ PCIe spec
+Message-ID: <20190805123920.GN2640@lahna.fi.intel.com>
+References: <20190724191735.096702571@linuxfoundation.org>
+ <20190724191743.977277445@linuxfoundation.org>
+ <CAFxkdApc6V=7qS+XEVSLy-v0AgqUQ8faKbjFXv18Px7VcxHgBw@mail.gmail.com>
+ <20190803065000.GE10855@kroah.com>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:5a17:: with SMTP id o23mr32421740iob.41.1565008688166;
- Mon, 05 Aug 2019 05:38:08 -0700 (PDT)
-Date:   Mon, 05 Aug 2019 05:38:08 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000edc1d5058f5dfa5f@google.com>
-Subject: memory leak in ppp_write
-From:   syzbot <syzbot+d9c8bf24e56416d7ce2c@syzkaller.appspotmail.com>
-To:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        davem@davemloft.net, kafai@fb.com, linux-kernel@vger.kernel.org,
-        linux-ppp@vger.kernel.org, netdev@vger.kernel.org,
-        paulus@samba.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190803065000.GE10855@kroah.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi,
 
-syzbot found the following crash on:
+On Sat, Aug 03, 2019 at 08:50:00AM +0200, Greg Kroah-Hartman wrote:
+> On Fri, Aug 02, 2019 at 12:06:39PM -0500, Justin Forbes wrote:
+> > On Wed, Jul 24, 2019 at 3:31 PM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > [ Upstream commit c2bf1fc212f7e6f25ace1af8f0b3ac061ea48ba5 ]
+> > >
+> > > Currently Linux does not follow PCIe spec regarding the required delays
+> > > after reset. A concrete example is a Thunderbolt add-in-card that
+> > > consists of a PCIe switch and two PCIe endpoints:
+> > >
+> > >   +-1b.0-[01-6b]----00.0-[02-6b]--+-00.0-[03]----00.0 TBT controller
+> > >                                   +-01.0-[04-36]-- DS hotplug port
+> > >                                   +-02.0-[37]----00.0 xHCI controller
+> > >                                   \-04.0-[38-6b]-- DS hotplug port
+> > >
+> > > The root port (1b.0) and the PCIe switch downstream ports are all PCIe
+> > > gen3 so they support 8GT/s link speeds.
+> > >
+> > > We wait for the PCIe hierarchy to enter D3cold (runtime):
+> > >
+> > >   pcieport 0000:00:1b.0: power state changed by ACPI to D3cold
+> > >
+> > > When it wakes up from D3cold, according to the PCIe 4.0 section 5.8 the
+> > > PCIe switch is put to reset and its power is re-applied. This means that
+> > > we must follow the rules in PCIe 4.0 section 6.6.1.
+> > >
+> > > For the PCIe gen3 ports we are dealing with here, the following applies:
+> > >
+> > >   With a Downstream Port that supports Link speeds greater than 5.0
+> > >   GT/s, software must wait a minimum of 100 ms after Link training
+> > >   completes before sending a Configuration Request to the device
+> > >   immediately below that Port. Software can determine when Link training
+> > >   completes by polling the Data Link Layer Link Active bit or by setting
+> > >   up an associated interrupt (see Section 6.7.3.3).
+> > >
+> > > Translating this into the above topology we would need to do this (DLLLA
+> > > stands for Data Link Layer Link Active):
+> > >
+> > >   pcieport 0000:00:1b.0: wait for 100ms after DLLLA is set before access to 0000:01:00.0
+> > >   pcieport 0000:02:00.0: wait for 100ms after DLLLA is set before access to 0000:03:00.0
+> > >   pcieport 0000:02:02.0: wait for 100ms after DLLLA is set before access to 0000:37:00.0
+> > >
+> > > I've instrumented the kernel with additional logging so we can see the
+> > > actual delays the kernel performs:
+> > >
+> > >   pcieport 0000:00:1b.0: power state changed by ACPI to D0
+> > >   pcieport 0000:00:1b.0: waiting for D3cold delay of 100 ms
+> > >   pcieport 0000:00:1b.0: waking up bus
+> > >   pcieport 0000:00:1b.0: waiting for D3hot delay of 10 ms
+> > >   pcieport 0000:00:1b.0: restoring config space at offset 0x2c (was 0x60, writing 0x60)
+> > >   ...
+> > >   pcieport 0000:00:1b.0: PME# disabled
+> > >   pcieport 0000:01:00.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
+> > >   ...
+> > >   pcieport 0000:01:00.0: PME# disabled
+> > >   pcieport 0000:02:00.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
+> > >   ...
+> > >   pcieport 0000:02:00.0: PME# disabled
+> > >   pcieport 0000:02:01.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
+> > >   ...
+> > >   pcieport 0000:02:01.0: restoring config space at offset 0x4 (was 0x100000, writing 0x100407)
+> > >   pcieport 0000:02:01.0: PME# disabled
+> > >   pcieport 0000:02:02.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
+> > >   ...
+> > >   pcieport 0000:02:02.0: PME# disabled
+> > >   pcieport 0000:02:04.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
+> > >   ...
+> > >   pcieport 0000:02:04.0: PME# disabled
+> > >   pcieport 0000:02:01.0: PME# enabled
+> > >   pcieport 0000:02:01.0: waiting for D3hot delay of 10 ms
+> > >   pcieport 0000:02:04.0: PME# enabled
+> > >   pcieport 0000:02:04.0: waiting for D3hot delay of 10 ms
+> > >   thunderbolt 0000:03:00.0: restoring config space at offset 0x14 (was 0x0, writing 0x8a040000)
+> > >   ...
+> > >   thunderbolt 0000:03:00.0: PME# disabled
+> > >   xhci_hcd 0000:37:00.0: restoring config space at offset 0x10 (was 0x0, writing 0x73f00000)
+> > >   ...
+> > >   xhci_hcd 0000:37:00.0: PME# disabled
+> > >
+> > > For the switch upstream port (01:00.0) we wait for 100ms but not taking
+> > > into account the DLLLA requirement. We then wait 10ms for D3hot -> D0
+> > > transition of the root port and the two downstream hotplug ports. This
+> > > means that we deviate from what the spec requires.
+> > >
+> > > Performing the same check for system sleep (s2idle) transitions we can
+> > > see following when resuming from s2idle:
+> > >
+> > >   pcieport 0000:00:1b.0: power state changed by ACPI to D0
+> > >   pcieport 0000:00:1b.0: restoring config space at offset 0x2c (was 0x60, writing 0x60)
+> > >   ...
+> > >   pcieport 0000:01:00.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
+> > >   ...
+> > >   pcieport 0000:02:02.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
+> > >   pcieport 0000:02:02.0: restoring config space at offset 0x2c (was 0x0, writing 0x0)
+> > >   pcieport 0000:02:01.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
+> > >   pcieport 0000:02:04.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
+> > >   pcieport 0000:02:02.0: restoring config space at offset 0x28 (was 0x0, writing 0x0)
+> > >   pcieport 0000:02:00.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
+> > >   pcieport 0000:02:02.0: restoring config space at offset 0x24 (was 0x10001, writing 0x1fff1)
+> > >   pcieport 0000:02:01.0: restoring config space at offset 0x2c (was 0x0, writing 0x60)
+> > >   pcieport 0000:02:02.0: restoring config space at offset 0x20 (was 0x0, writing 0x73f073f0)
+> > >   pcieport 0000:02:04.0: restoring config space at offset 0x2c (was 0x0, writing 0x60)
+> > >   pcieport 0000:02:01.0: restoring config space at offset 0x28 (was 0x0, writing 0x60)
+> > >   pcieport 0000:02:00.0: restoring config space at offset 0x2c (was 0x0, writing 0x0)
+> > >   pcieport 0000:02:02.0: restoring config space at offset 0x1c (was 0x101, writing 0x1f1)
+> > >   pcieport 0000:02:04.0: restoring config space at offset 0x28 (was 0x0, writing 0x60)
+> > >   pcieport 0000:02:01.0: restoring config space at offset 0x24 (was 0x10001, writing 0x1ff10001)
+> > >   pcieport 0000:02:00.0: restoring config space at offset 0x28 (was 0x0, writing 0x0)
+> > >   pcieport 0000:02:02.0: restoring config space at offset 0x18 (was 0x0, writing 0x373702)
+> > >   pcieport 0000:02:04.0: restoring config space at offset 0x24 (was 0x10001, writing 0x49f12001)
+> > >   pcieport 0000:02:01.0: restoring config space at offset 0x20 (was 0x0, writing 0x73e05c00)
+> > >   pcieport 0000:02:00.0: restoring config space at offset 0x24 (was 0x10001, writing 0x1fff1)
+> > >   pcieport 0000:02:04.0: restoring config space at offset 0x20 (was 0x0, writing 0x89f07400)
+> > >   pcieport 0000:02:01.0: restoring config space at offset 0x1c (was 0x101, writing 0x5151)
+> > >   pcieport 0000:02:00.0: restoring config space at offset 0x20 (was 0x0, writing 0x8a008a00)
+> > >   pcieport 0000:02:02.0: restoring config space at offset 0xc (was 0x10000, writing 0x10020)
+> > >   pcieport 0000:02:04.0: restoring config space at offset 0x1c (was 0x101, writing 0x6161)
+> > >   pcieport 0000:02:01.0: restoring config space at offset 0x18 (was 0x0, writing 0x360402)
+> > >   pcieport 0000:02:00.0: restoring config space at offset 0x1c (was 0x101, writing 0x1f1)
+> > >   pcieport 0000:02:04.0: restoring config space at offset 0x18 (was 0x0, writing 0x6b3802)
+> > >   pcieport 0000:02:02.0: restoring config space at offset 0x4 (was 0x100000, writing 0x100407)
+> > >   pcieport 0000:02:00.0: restoring config space at offset 0x18 (was 0x0, writing 0x30302)
+> > >   pcieport 0000:02:01.0: restoring config space at offset 0xc (was 0x10000, writing 0x10020)
+> > >   pcieport 0000:02:04.0: restoring config space at offset 0xc (was 0x10000, writing 0x10020)
+> > >   pcieport 0000:02:00.0: restoring config space at offset 0xc (was 0x10000, writing 0x10020)
+> > >   pcieport 0000:02:01.0: restoring config space at offset 0x4 (was 0x100000, writing 0x100407)
+> > >   pcieport 0000:02:04.0: restoring config space at offset 0x4 (was 0x100000, writing 0x100407)
+> > >   pcieport 0000:02:00.0: restoring config space at offset 0x4 (was 0x100000, writing 0x100407)
+> > >   xhci_hcd 0000:37:00.0: restoring config space at offset 0x10 (was 0x0, writing 0x73f00000)
+> > >   ...
+> > >   thunderbolt 0000:03:00.0: restoring config space at offset 0x14 (was 0x0, writing 0x8a040000)
+> > >
+> > > This is even worse. None of the mandatory delays are performed. If this
+> > > would be S3 instead of s2idle then according to PCI FW spec 3.2 section
+> > > 4.6.8.  there is a specific _DSM that allows the OS to skip the delays
+> > > but this platform does not provide the _DSM and does not go to S3 anyway
+> > > so no firmware is involved that could already handle these delays.
+> > >
+> > > In this particular Intel Coffee Lake platform these delays are not
+> > > actually needed because there is an additional delay as part of the ACPI
+> > > power resource that is used to turn on power to the hierarchy but since
+> > > that additional delay is not required by any of standards (PCIe, ACPI)
+> > > it is not present in the Intel Ice Lake, for example where missing the
+> > > mandatory delays causes pciehp to start tearing down the stack too early
+> > > (links are not yet trained).
+> > >
+> > > For this reason, change the PCIe portdrv PM resume hooks so that they
+> > > perform the mandatory delays before the downstream component gets
+> > > resumed. We perform the delays before port services are resumed because
+> > > otherwise pciehp might find that the link is not up (even if it is just
+> > > training) and tears-down the hierarchy.
+> > >
+> > 
+> > We have gotten multiple reports in Fedora that this patch has broken
+> > suspend for users of 5.1.20 and 5.2 stable kernels.
+> 
+> And is the issue also in 5.3-rcX kernels?  If so, can we either get this
+> reverted there, or find the fix for it?
 
-HEAD commit:    d8778f13 Merge tag 'xtensa-20190803' of git://github.com/j..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17a953d6600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=30cef20daf3e9977
-dashboard link: https://syzkaller.appspot.com/bug?extid=d9c8bf24e56416d7ce2c
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16da002c600000
+AFAIK the issue is also in v5.3-rcX.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+d9c8bf24e56416d7ce2c@syzkaller.appspotmail.com
-
-2019/08/04 10:45:32 executed programs: 5
-2019/08/04 10:45:38 executed programs: 7
-2019/08/04 10:45:44 executed programs: 9
-2019/08/04 10:45:51 executed programs: 11
-BUG: memory leak
-unreferenced object 0xffff88811b943200 (size 224):
-   comm "syz-executor.0", pid 7102, jiffies 4294951426 (age 8.020s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000612bb18c>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000612bb18c>] slab_post_alloc_hook mm/slab.h:522 [inline]
-     [<00000000612bb18c>] slab_alloc_node mm/slab.c:3262 [inline]
-     [<00000000612bb18c>] kmem_cache_alloc_node+0x163/0x2f0 mm/slab.c:3574
-     [<00000000f510d7dd>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:197
-     [<0000000064f35f9b>] alloc_skb include/linux/skbuff.h:1055 [inline]
-     [<0000000064f35f9b>] ppp_write+0x48/0x120  
-drivers/net/ppp/ppp_generic.c:502
-     [<000000007d5732a9>] __vfs_write+0x43/0xa0 fs/read_write.c:494
-     [<00000000b490138e>] vfs_write fs/read_write.c:558 [inline]
-     [<00000000b490138e>] vfs_write+0xee/0x210 fs/read_write.c:542
-     [<00000000d20d33e5>] ksys_write+0x7c/0x130 fs/read_write.c:611
-     [<000000007b61e45c>] __do_sys_write fs/read_write.c:623 [inline]
-     [<000000007b61e45c>] __se_sys_write fs/read_write.c:620 [inline]
-     [<000000007b61e45c>] __x64_sys_write+0x1e/0x30 fs/read_write.c:620
-     [<0000000067600a9b>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:296
-     [<000000007e48b83c>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+I started looking at the issue now. Hopefully there is a better solution
+than revert but let's see.
