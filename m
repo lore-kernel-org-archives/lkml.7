@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B721BC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD5CBC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D53220651
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:30:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99B8E20644
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:30:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011818;
-	bh=BFA5KkJp4vIV/V6KNLMZnNb7Da08HBmuiJBDgQVvN4I=;
+	s=default; t=1565011821;
+	bh=JvjKPoo8eUVOMAxiFPbiFtyfxhrRCIx6tq+pdQSRyXw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DD1DVFM0zajUh278z1uO02aUWGaNW/HCp0279wT5y8amA/ox/4Y2kcsLQT7CAiymJ
-	 TW4rZh3RxhRIDi8LjiKtsmKSkoyP8ffM1qBcq3I4LadzarqWYGUYhB3w7/ZaXzMeIq
-	 7A3hzimM8fQwVCZUsjtO4GBFQU4S6en/SD+DPJDc=
+	b=AL2LvM3nCe+H5ddM06YDCJo6MU2FhDG0QrbqdJ+qIy0rXWqdRUN+4mGnsYWQXh6sC
+	 u8x4T65vSptabFABG5/XvfRohJmPhlzZd5vjq+5L+10HQ5tiz9dMuu6oYfpdby+o45
+	 +qPDpplJDTqVBfcR+GLhQdL7gVjx+hJXKDoXrQco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730671AbfHENaR (ORCPT
+        id S1730372AbfHENUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:30:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57104 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:20:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730365AbfHENU5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:20:57 -0400
+        id S1728847AbfHENUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:20:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D25522173B;
-        Mon,  5 Aug 2019 13:20:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A545A20657;
+        Mon,  5 Aug 2019 13:20:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011256;
-        bh=BFA5KkJp4vIV/V6KNLMZnNb7Da08HBmuiJBDgQVvN4I=;
+        s=default; t=1565011251;
+        bh=JvjKPoo8eUVOMAxiFPbiFtyfxhrRCIx6tq+pdQSRyXw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1XRd9GTlZkJk2D+HOsvH/drL9DE0+QHDU1g6vGCgLYhtcOtvy/smX0gbt55404FwC
-         omNIaZnNd48kIkf8t0hNh+T+gYd3T2RRTnOfEoVT3VyrW7ub/ai3xd4Dyel4+0z2Tp
-         bvUw400K68pnGibqVyM78frHdSSAMIcLdeeTrzX4=
+        b=PEK5DWNlCg1bSP+iHBXe1HXayJLM0GlXTkVUNLBXKkYMwnkteobUQcBvAmwSzTi96
+         v0TXIYbDYPxD8/+UDubUcRKchzPDLPM/app3BhjkyWx7CfjbBcP31ThgIDnQQHbQFM
+         KKuwziWb/bXZcYizSLd+fvhHQC1/JjszqqBWBic0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chunyan Zhang <zhang.chunyan@linaro.org>,
-        Baolin Wang <baolin.wang@linaro.org>,
+        stable@vger.kernel.org, JC Kuo <jckuo@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
         Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 024/131] clk: sprd: Add check for return value of sprd_clk_regmap_init()
-Date:   Mon,  5 Aug 2019 15:01:51 +0200
-Message-Id: <20190805124953.060478312@linuxfoundation.org>
+Subject: [PATCH 5.2 022/131] clk: tegra210: fix PLLU and PLLU_OUT1
+Date:   Mon,  5 Aug 2019 15:01:49 +0200
+Message-Id: <20190805124952.925338397@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -61,43 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c974c48deeb969c5e4250e4f06af91edd84b1f10 ]
+[ Upstream commit 0d34dfbf3023cf119b83f6470692c0b10c832495 ]
 
-sprd_clk_regmap_init() doesn't always return success, adding check
-for its return value should make the code more strong.
+Full-speed and low-speed USB devices do not work with Tegra210
+platforms because of incorrect PLLU/PLLU_OUT1 clock settings.
 
-Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
-Reviewed-by: Baolin Wang <baolin.wang@linaro.org>
-[sboyd@kernel.org: Add a missing int ret]
+When full-speed device is connected:
+[   14.059886] usb 1-3: new full-speed USB device number 2 using tegra-xusb
+[   14.196295] usb 1-3: device descriptor read/64, error -71
+[   14.436311] usb 1-3: device descriptor read/64, error -71
+[   14.675749] usb 1-3: new full-speed USB device number 3 using tegra-xusb
+[   14.812335] usb 1-3: device descriptor read/64, error -71
+[   15.052316] usb 1-3: device descriptor read/64, error -71
+[   15.164799] usb usb1-port3: attempt power cycle
+
+When low-speed device is connected:
+[   37.610949] usb usb1-port3: Cannot enable. Maybe the USB cable is bad?
+[   38.557376] usb usb1-port3: Cannot enable. Maybe the USB cable is bad?
+[   38.564977] usb usb1-port3: attempt power cycle
+
+This commit fixes the issue by:
+ 1. initializing PLLU_OUT1 before initializing XUSB_FS_SRC clock
+    because PLLU_OUT1 is parent of XUSB_FS_SRC.
+ 2. changing PLLU post-divider to /2 (DIVP=1) according to Technical
+    Reference Manual.
+
+Fixes: e745f992cf4b ("clk: tegra: Rework pll_u")
+Signed-off-by: JC Kuo <jckuo@nvidia.com>
+Acked-By: Peter De Schrijver <pdeschrijver@nvidia.com>
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/sprd/sc9860-clk.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/clk/tegra/clk-tegra210.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/clk/sprd/sc9860-clk.c b/drivers/clk/sprd/sc9860-clk.c
-index 9980ab55271ba..f76305b4bc8df 100644
---- a/drivers/clk/sprd/sc9860-clk.c
-+++ b/drivers/clk/sprd/sc9860-clk.c
-@@ -2023,6 +2023,7 @@ static int sc9860_clk_probe(struct platform_device *pdev)
- {
- 	const struct of_device_id *match;
- 	const struct sprd_clk_desc *desc;
-+	int ret;
+diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
+index ac1d27a8c650a..e5470a6bbf550 100644
+--- a/drivers/clk/tegra/clk-tegra210.c
++++ b/drivers/clk/tegra/clk-tegra210.c
+@@ -2204,9 +2204,9 @@ static struct div_nmp pllu_nmp = {
+ };
  
- 	match = of_match_node(sprd_sc9860_clk_ids, pdev->dev.of_node);
- 	if (!match) {
-@@ -2031,7 +2032,9 @@ static int sc9860_clk_probe(struct platform_device *pdev)
- 	}
+ static struct tegra_clk_pll_freq_table pll_u_freq_table[] = {
+-	{ 12000000, 480000000, 40, 1, 0, 0 },
+-	{ 13000000, 480000000, 36, 1, 0, 0 }, /* actual: 468.0 MHz */
+-	{ 38400000, 480000000, 25, 2, 0, 0 },
++	{ 12000000, 480000000, 40, 1, 1, 0 },
++	{ 13000000, 480000000, 36, 1, 1, 0 }, /* actual: 468.0 MHz */
++	{ 38400000, 480000000, 25, 2, 1, 0 },
+ 	{        0,         0,  0, 0, 0, 0 },
+ };
  
- 	desc = match->data;
--	sprd_clk_regmap_init(pdev, desc);
-+	ret = sprd_clk_regmap_init(pdev, desc);
-+	if (ret)
-+		return ret;
- 
- 	return sprd_clk_probe(&pdev->dev, desc->hw_clks);
- }
+@@ -3333,6 +3333,7 @@ static struct tegra_clk_init_table init_table[] __initdata = {
+ 	{ TEGRA210_CLK_DFLL_REF, TEGRA210_CLK_PLL_P, 51000000, 1 },
+ 	{ TEGRA210_CLK_SBC4, TEGRA210_CLK_PLL_P, 12000000, 1 },
+ 	{ TEGRA210_CLK_PLL_RE_VCO, TEGRA210_CLK_CLK_MAX, 672000000, 1 },
++	{ TEGRA210_CLK_PLL_U_OUT1, TEGRA210_CLK_CLK_MAX, 48000000, 1 },
+ 	{ TEGRA210_CLK_XUSB_GATE, TEGRA210_CLK_CLK_MAX, 0, 1 },
+ 	{ TEGRA210_CLK_XUSB_SS_SRC, TEGRA210_CLK_PLL_U_480M, 120000000, 0 },
+ 	{ TEGRA210_CLK_XUSB_FS_SRC, TEGRA210_CLK_PLL_U_48M, 48000000, 0 },
+@@ -3357,7 +3358,6 @@ static struct tegra_clk_init_table init_table[] __initdata = {
+ 	{ TEGRA210_CLK_PLL_DP, TEGRA210_CLK_CLK_MAX, 270000000, 0 },
+ 	{ TEGRA210_CLK_SOC_THERM, TEGRA210_CLK_PLL_P, 51000000, 0 },
+ 	{ TEGRA210_CLK_CCLK_G, TEGRA210_CLK_CLK_MAX, 0, 1 },
+-	{ TEGRA210_CLK_PLL_U_OUT1, TEGRA210_CLK_CLK_MAX, 48000000, 1 },
+ 	{ TEGRA210_CLK_PLL_U_OUT2, TEGRA210_CLK_CLK_MAX, 60000000, 1 },
+ 	{ TEGRA210_CLK_SPDIF_IN_SYNC, TEGRA210_CLK_CLK_MAX, 24576000, 0 },
+ 	{ TEGRA210_CLK_I2S0_SYNC, TEGRA210_CLK_CLK_MAX, 24576000, 0 },
 -- 
 2.20.1
 
