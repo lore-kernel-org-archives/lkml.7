@@ -2,141 +2,94 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2817C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78858C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B99D20B1F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:38:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A92220B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:41:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727917AbfHEJiA (ORCPT
+        id S1727959AbfHEJlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 05:38:00 -0400
-Received: from mga03.intel.com ([134.134.136.65]:32372 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726880AbfHEJiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 05:38:00 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 02:37:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,349,1559545200"; 
-   d="scan'208";a="167921292"
-Received: from buildpc-hp-z230.iind.intel.com (HELO buildpc-HP-Z230) ([10.223.89.34])
-  by orsmga008.jf.intel.com with ESMTP; 05 Aug 2019 02:37:31 -0700
-Date:   Mon, 5 Aug 2019 15:09:23 +0530
-From:   Sanyog Kale <sanyog.r.kale@intel.com>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, vkoul@kernel.org,
-        gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com
-Subject: Re: [RFC PATCH 21/40] soundwire: export helpers to find row and
- column values
-Message-ID: <20190805093923.GC22437@buildpc-HP-Z230>
-References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
- <20190725234032.21152-22-pierre-louis.bossart@linux.intel.com>
+        Mon, 5 Aug 2019 05:41:11 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:20957 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727259AbfHEJlK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 05:41:10 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-236-iiCZ4_0kN0uCcHgQ-ApRbg-1; Mon, 05 Aug 2019 10:41:07 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 5 Aug 2019 10:41:07 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 5 Aug 2019 10:41:07 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     =?utf-8?B?J0NocmlzdG9waCBCw7ZobXdhbGRlcic=?= 
+        <christoph.boehmwalder@linbit.com>, Jens Axboe <axboe@kernel.dk>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Philipp Reisner" <philipp.reisner@linbit.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>
+Subject: RE: [PATCH] drbd: do not ignore signals in threads
+Thread-Topic: [PATCH] drbd: do not ignore signals in threads
+Thread-Index: AQHVRehdZ3MFgEc+dUGpXqE3QyW7xKbhRpmwgAr+X4CAABFvoA==
+Date:   Mon, 5 Aug 2019 09:41:06 +0000
+Message-ID: <6f8c0d1e51c242a288fbf9b32240e4c1@AcuMS.aculab.com>
+References: <20190729083248.30362-1-christoph.boehmwalder@linbit.com>
+ <6259de605e9246b095233e3984262b93@AcuMS.aculab.com>
+ <ad16d006-4382-3f77-8968-6f840e58b8df@linbit.com>
+In-Reply-To: <ad16d006-4382-3f77-8968-6f840e58b8df@linbit.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190725234032.21152-22-pierre-louis.bossart@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-MC-Unique: iiCZ4_0kN0uCcHgQ-ApRbg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 06:40:13PM -0500, Pierre-Louis Bossart wrote:
-> Add a prefix for common tables and export 2 helpers to set the frame
-> shapes based on row/col values.
-> 
-> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> ---
->  drivers/soundwire/bus.h    |  7 +++++--
->  drivers/soundwire/stream.c | 14 ++++++++------
->  2 files changed, 13 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/soundwire/bus.h b/drivers/soundwire/bus.h
-> index 06ac4adb0074..c57c9c23f6ca 100644
-> --- a/drivers/soundwire/bus.h
-> +++ b/drivers/soundwire/bus.h
-> @@ -73,8 +73,11 @@ struct sdw_msg {
->  
->  #define SDW_DOUBLE_RATE_FACTOR		2
->  
-> -extern int rows[SDW_FRAME_ROWS];
-> -extern int cols[SDW_FRAME_COLS];
-> +extern int sdw_rows[SDW_FRAME_ROWS];
-> +extern int sdw_cols[SDW_FRAME_COLS];
-> +
-> +int sdw_find_row_index(int row);
-> +int sdw_find_col_index(int col);
+RnJvbTogQ2hyaXN0b3BoIELDtmhtd2FsZGVyDQo+IFNlbnQ6IDA1IEF1Z3VzdCAyMDE5IDEwOjMz
+DQo+IA0KPiBPbiAyOS4wNy4xOSAxMDo1MCwgRGF2aWQgTGFpZ2h0IHdyb3RlOg0KPiA+IERvZXNu
+J3QgdW5tYXNraW5nIHRoZSBzaWduYWxzIGFuZCB1c2luZyBzZW5kX3NpZygpIGluc3RlYWQgIG9m
+IGZvcmNlX3NpZygpDQo+ID4gaGF2ZSB0aGUgKHByb2JhYmx5IHVud2FudGVkKSBzaWRlIGVmZmVj
+dCBvZiBhbGxvd2luZyB1c2Vyc3BhY2UgdG8gc2VuZA0KPiA+IHRoZSBzaWduYWw/DQo+IA0KPiBJ
+IGhhdmUgcmFuIHNvbWUgdGVzdHMsIGFuZCBpdCBkb2VzIGxvb2sgbGlrZSBpdCBpcyBub3cgcG9z
+c2libGUgdG8gc2VuZA0KPiBzaWduYWxzIHRvIHRoZSBEUkJEIGt0aHJlYWQgZnJvbSB1c2Vyc3Bh
+Y2UuIEhvd2V2ZXIsIC4uLg0KPiANCj4gPiBJJ3ZlIGNlcnRhaW5seSBnb3Qgc29tZSBkcml2ZXIg
+Y29kZSB0aGF0IHVzZXMgZm9yY2Vfc2lnKCkgb24gYSBrdGhyZWFkDQo+ID4gdGhhdCBpdCBkb2Vz
+bid0IChldmVyKSB3YW50IHVzZXJzcGFjZSB0byBzaWduYWwuDQo+IA0KPiAuLi4gd2UgZG9uJ3Qg
+ZmVlbCB0aGF0IGl0IGlzIGFic29sdXRlbHkgbmVjZXNzYXJ5IGZvciB1c2Vyc3BhY2UgdG8gYmUN
+Cj4gdW5hYmxlIHRvIHNlbmQgYSBzaWduYWwgdG8gb3VyIGt0aHJlYWRzLiBUaGlzIGlzIGJlY2F1
+c2UgdGhlIERSQkQgdGhyZWFkDQo+IGluZGVwZW5kZW50bHkgY2hlY2tzIGl0cyBvd24gc3RhdGUs
+IGFuZCAoZm9yIGV4YW1wbGUpIG9ubHkgZXhpdHMgYXMgYQ0KPiByZXN1bHQgb2YgYSBzaWduYWwg
+aWYgaXRzIHRocmVhZCBzdGF0ZSB3YXMgYWxyZWFkeSAiRVhJVElORyIgdG8gYmVnaW4NCj4gd2l0
+aC4NCg0KSW4gbXVzdCAnY2xlYXInIHRoZSBzaWduYWwgLSBvdGhlcndpc2UgaXQgd29uJ3QgYmxv
+Y2sgYWdhaW4uDQoNCkkndmUgYWxzbyBnb3QgdGhpcyBob3JyaWQgY29kZSBmcmFnbWVudDoNCg0K
+ICAgIGluaXRfd2FpdHF1ZXVlX2VudHJ5KCZ3LCBjdXJyZW50KTsNCg0KICAgIC8qIFRlbGwgc2No
+ZWR1bGVyIHdlIGFyZSBnb2luZyB0byBzbGVlcC4uLiAqLw0KICAgIGlmIChzaWduYWxfcGVuZGlu
+ZyhjdXJyZW50KSAmJiAhaW50ZXJydXB0aWJsZSkNCiAgICAgICAgLyogV2UgZG9uJ3Qgd2FudCB3
+YWtpbmcgaW1tZWRpYXRlbHkgKGFnYWluKSAqLw0KICAgICAgICBzbGVlcF9zdGF0ZSA9IFRBU0tf
+VU5JTlRFUlJVUFRJQkxFOw0KICAgIGVsc2UNCiAgICAgICAgc2xlZXBfc3RhdGUgPSBUQVNLX0lO
+VEVSUlVQVElCTEU7DQogICAgc2V0X2N1cnJlbnRfc3RhdGUoc2xlZXBfc3RhdGUpOw0KDQogICAg
+LyogQ29ubmVjdCB0byBjb25kaXRpb24gdmFyaWFibGUgLi4uICovDQogICAgYWRkX3dhaXRfcXVl
+dWUoY3ZwLCAmdyk7DQogICAgbXV0ZXhfdW5sb2NrKG10eHApOyAvKiBSZWxlYXNlIG11dGV4ICov
+DQoNCndoZXJlIHdlIHdhbnQgdG8gc2xlZXAgVEFTS19VTklOVEVSUlVQVElCTEUgYnV0IHRoYXQg
+Zipja3MgdXAgdGhlICdsb2FkIGF2ZXJhZ2UnLA0Kc28gc2xlZXAgVEFTS19JTlRFUlJVUFRJQkxF
+IHVubGVzcyB0aGVyZSBpcyBhIHNpZ25hbCBwZW5kaW5nIHRoYXQgd2Ugd2FudCB0bw0KaWdub3Jl
+Lg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJv
+YWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24g
+Tm86IDEzOTczODYgKFdhbGVzKQ0K
 
-We use index values only in bank switch operations to program registers. Do we
-really need to export sdw_find_row_index & sdw_find_col_index?? If i understand
-correctly the allocation algorithm only needs to know about cols and rows values
-and not index.
-
->  
->  /**
->   * sdw_port_runtime: Runtime port parameters for Master or Slave
-> diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
-> index a0476755a459..53f5e790fcd7 100644
-> --- a/drivers/soundwire/stream.c
-> +++ b/drivers/soundwire/stream.c
-> @@ -21,37 +21,39 @@
->   * The rows are arranged as per the array index value programmed
->   * in register. The index 15 has dummy value 0 in order to fill hole.
->   */
-> -int rows[SDW_FRAME_ROWS] = {48, 50, 60, 64, 75, 80, 125, 147,
-> +int sdw_rows[SDW_FRAME_ROWS] = {48, 50, 60, 64, 75, 80, 125, 147,
->  			96, 100, 120, 128, 150, 160, 250, 0,
->  			192, 200, 240, 256, 72, 144, 90, 180};
->  
-> -int cols[SDW_FRAME_COLS] = {2, 4, 6, 8, 10, 12, 14, 16};
-> +int sdw_cols[SDW_FRAME_COLS] = {2, 4, 6, 8, 10, 12, 14, 16};
->  
-> -static int sdw_find_col_index(int col)
-> +int sdw_find_col_index(int col)
->  {
->  	int i;
->  
->  	for (i = 0; i < SDW_FRAME_COLS; i++) {
-> -		if (cols[i] == col)
-> +		if (sdw_cols[i] == col)
->  			return i;
->  	}
->  
->  	pr_warn("Requested column not found, selecting lowest column no: 2\n");
->  	return 0;
->  }
-> +EXPORT_SYMBOL(sdw_find_col_index);
->  
-> -static int sdw_find_row_index(int row)
-> +int sdw_find_row_index(int row)
->  {
->  	int i;
->  
->  	for (i = 0; i < SDW_FRAME_ROWS; i++) {
-> -		if (rows[i] == row)
-> +		if (sdw_rows[i] == row)
->  			return i;
->  	}
->  
->  	pr_warn("Requested row not found, selecting lowest row no: 48\n");
->  	return 0;
->  }
-> +EXPORT_SYMBOL(sdw_find_row_index);
->  
->  static int _sdw_program_slave_port_params(struct sdw_bus *bus,
->  					  struct sdw_slave *slave,
-> -- 
-> 2.20.1
-> 
-
--- 
