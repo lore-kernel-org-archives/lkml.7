@@ -2,126 +2,127 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7320CC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 05:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE52C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 05:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56B8F217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 05:23:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 528C32086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 05:24:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RYStpXRd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727500AbfHEFX0 (ORCPT
+        id S1727513AbfHEFYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 01:23:26 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:61864 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726375AbfHEFWt (ORCPT
+        Mon, 5 Aug 2019 01:24:05 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:41765 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbfHEFYE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 01:22:49 -0400
-X-UUID: a4f0ef492c274da3a0b5023f92302eab-20190805
-X-UUID: a4f0ef492c274da3a0b5023f92302eab-20190805
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <hsin-hsiung.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 1811369814; Mon, 05 Aug 2019 13:22:40 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 5 Aug 2019 13:22:41 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 5 Aug 2019 13:22:41 +0800
-From:   Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Richard Fontana <rfontana@redhat.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>
-Subject: [PATCH v4 01/10] mfd: mt6397: clean up code
-Date:   Mon, 5 Aug 2019 13:21:49 +0800
-Message-ID: <1564982518-32163-2-git-send-email-hsin-hsiung.wang@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1564982518-32163-1-git-send-email-hsin-hsiung.wang@mediatek.com>
-References: <1564982518-32163-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+        Mon, 5 Aug 2019 01:24:04 -0400
+Received: by mail-pl1-f194.google.com with SMTP id m9so35861391pls.8;
+        Sun, 04 Aug 2019 22:24:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=kwMEz+087NG71UJ43Y4PF8iaz73tFFj8XFrCYqheyzM=;
+        b=RYStpXRdJ6l1TB5wKrJU7HiL/1JFuert86TTPAt7bqfUAgmkKErLM2V7eOfh80Dt2X
+         z7zdYP5OzQEjRfg6GxLfMGJx5i8X3s+g//iYCtV2yZNKceD6Ya66xqmj8jEJZ0x4z3OQ
+         43TQ1PL+flTx9iYukVvXCXiibP5xo1OjP9SbWR1oZbkY1uY6zZGLDoEN0/r6wsIRVgzU
+         3Noiq/QHVUllGwiToLVLy27y4uG1aCixTU4rLvpGd8YxUaPuwP/ba/CLQxcjYW586fb6
+         1W/dT88fozfMlEJD/QgB/3tin2mbI5vBE/RSIhH9/hQtob0Oxs1EXz4vbgjetDZz0uCm
+         Yf/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=kwMEz+087NG71UJ43Y4PF8iaz73tFFj8XFrCYqheyzM=;
+        b=a3e0P6queC2BxB2HatvRW+Tl2BSUftyauGl3en0d9ygPijfEb4nyPRZBvDXHztzaFR
+         qW7ru7yIa27Aabyc8yy1KW6m4xU6mgczXNluP6QEeFUCHzZ/pLcjml3K3i1c1mYNFuzo
+         ofIWi91zFaV7yx2PRWR1Idafs/Dw8Q6Owp0KKwCHVo2IBO4jt6HRjYWhB1Cj4vSlzrWE
+         DGl639uXL9HWipk4XNb0DHoioyuIkEvA40gWmoUrdaQcYnMY8vuGAEgENes3Vu0M79pL
+         TXSFdp5gPGiZmCmJCc1p4Jxd3qkaQDp+qI1y6YP0BjFFTDAKyrby6CRzhaL0qWMgvFhu
+         A+Vw==
+X-Gm-Message-State: APjAAAW33hCF+FQq01ulgLEGErk1RFNU7hfMRsr9PBnXynN2UNbCtA5W
+        rJ96SZrOX648uSKa/ITlh1Q=
+X-Google-Smtp-Source: APXvYqwJG9ftnbw1vWkXErhnQDqqhwN5wPt0f+1hEmXWYKjYXk1pH+W1bk1sCUeNvKF1PgCaKoiyQg==
+X-Received: by 2002:a17:902:ba96:: with SMTP id k22mr146166694pls.44.1564982644123;
+        Sun, 04 Aug 2019 22:24:04 -0700 (PDT)
+Received: from localhost.localdomain ([163.152.162.125])
+        by smtp.gmail.com with ESMTPSA id o12sm12798313pjr.22.2019.08.04.22.24.01
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 04 Aug 2019 22:24:03 -0700 (PDT)
+Date:   Mon, 5 Aug 2019 14:23:58 +0900
+From:   Suwan Kim <suwan.kim027@gmail.com>
+To:     shuah <shuah@kernel.org>
+Cc:     valentina.manea.m@gmail.com, gregkh@linuxfoundation.org,
+        stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] usbip: Skip DMA mapping and unmapping for urb at
+ vhci
+Message-ID: <20190805052358.GA8904@localhost.localdomain>
+References: <20190802173651.22247-1-suwan.kim027@gmail.com>
+ <20190802173651.22247-2-suwan.kim027@gmail.com>
+ <c23b3ac1-68d9-bc1e-610b-955988e11055@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c23b3ac1-68d9-bc1e-610b-955988e11055@kernel.org>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-refine some variable name for more readable
+On Fri, Aug 02, 2019 at 04:22:27PM -0600, shuah wrote:
+> On 8/2/19 11:36 AM, Suwan Kim wrote:
+> > vhci doesn’t do DMA for remote device. Actually, the real DMA
+> > operation is done by network card driver. vhci just passes virtual
+> > address of the buffer to the network stack, so vhci doesn’t use and
+> > need dma address of the buffer of the URB.
+> > 
+> > But HCD provides DMA mapping and unmapping function by default.
+> > Moreover, it causes unnecessary DMA mapping and unmapping which
+> > will be done again at the NIC driver and it wastes CPU cycles.
+> > So, implement map_urb_for_dma and unmap_urb_for_dma function for
+> > vhci in order to skip the DMA mapping and unmapping procedure.
+> > 
+> > When it comes to supporting SG for vhci, it is useful to use native
+> > SG list (urb->num_sgs) instead of mapped SG list because DMA mapping
+> > fnuction can adjust the number of SG list (urb->num_mapped_sgs).
+> > And vhci_map_urb_for_dma() prevents isoc pipe from using SG as
+> > hcd_map_urb_for_dma() does.
+> > 
+> > Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
+> > ---
+> >   drivers/usb/usbip/vhci_hcd.c | 19 +++++++++++++++++++
+> >   1 file changed, 19 insertions(+)
+> > 
+> > diff --git a/drivers/usb/usbip/vhci_hcd.c b/drivers/usb/usbip/vhci_hcd.c
+> > index 000ab7225717..c62f7fa8118c 100644
+> > --- a/drivers/usb/usbip/vhci_hcd.c
+> > +++ b/drivers/usb/usbip/vhci_hcd.c
+> > @@ -1288,6 +1288,22 @@ static int vhci_free_streams(struct usb_hcd *hcd, struct usb_device *udev,
+> >   	return 0;
+> >   }
+> > +static int vhci_map_urb_for_dma(struct usb_hcd *hcd, struct urb *urb,
+> > +		gfp_t mem_flags)
+> > +{
+> > +	if (usb_endpoint_xfer_isoc(&urb->ep->desc) && urb->num_sgs) {
+> > +		WARN_ON(1);
+> 
+> Don't add WARN_ON. I cleaned them all up recently and don't want new
+> ones added.
 
-Acked-for-mfd-by: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
----
- drivers/mfd/mt6397-core.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+Ok. I will remove it and resend v4.
 
-diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
-index 337bccc..c070862 100644
---- a/drivers/mfd/mt6397-core.c
-+++ b/drivers/mfd/mt6397-core.c
-@@ -10,17 +10,17 @@
- #include <linux/of_irq.h>
- #include <linux/regmap.h>
- #include <linux/mfd/core.h>
--#include <linux/mfd/mt6397/core.h>
- #include <linux/mfd/mt6323/core.h>
--#include <linux/mfd/mt6397/registers.h>
-+#include <linux/mfd/mt6397/core.h>
- #include <linux/mfd/mt6323/registers.h>
-+#include <linux/mfd/mt6397/registers.h>
- 
- #define MT6397_RTC_BASE		0xe000
- #define MT6397_RTC_SIZE		0x3e
- 
--#define MT6323_CID_CODE		0x23
--#define MT6391_CID_CODE		0x91
--#define MT6397_CID_CODE		0x97
-+#define MT6323_CHIP_ID		0x23
-+#define MT6391_CHIP_ID		0x91
-+#define MT6397_CHIP_ID		0x97
- 
- static const struct resource mt6397_rtc_resources[] = {
- 	{
-@@ -290,7 +290,7 @@ static int mt6397_probe(struct platform_device *pdev)
- 		return pmic->irq;
- 
- 	switch (id & 0xff) {
--	case MT6323_CID_CODE:
-+	case MT6323_CHIP_ID:
- 		pmic->int_con[0] = MT6323_INT_CON0;
- 		pmic->int_con[1] = MT6323_INT_CON1;
- 		pmic->int_status[0] = MT6323_INT_STATUS0;
-@@ -304,8 +304,8 @@ static int mt6397_probe(struct platform_device *pdev)
- 					   0, pmic->irq_domain);
- 		break;
- 
--	case MT6397_CID_CODE:
--	case MT6391_CID_CODE:
-+	case MT6391_CHIP_ID:
-+	case MT6397_CHIP_ID:
- 		pmic->int_con[0] = MT6397_INT_CON0;
- 		pmic->int_con[1] = MT6397_INT_CON1;
- 		pmic->int_status[0] = MT6397_INT_STATUS0;
--- 
-2.6.4
-
+Regards
+Suwan Kim
