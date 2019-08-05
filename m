@@ -2,104 +2,86 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB58C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A447FC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1656B205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:47:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71671205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:47:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j/bAgWAi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ATyHGFdJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728769AbfHEMrS (ORCPT
+        id S1728827AbfHEMr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 08:47:18 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35051 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726779AbfHEMrR (ORCPT
+        Mon, 5 Aug 2019 08:47:29 -0400
+Received: from mail-lj1-f175.google.com ([209.85.208.175]:36736 "EHLO
+        mail-lj1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726779AbfHEMr3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 08:47:17 -0400
-Received: by mail-io1-f67.google.com with SMTP id m24so167021337ioo.2;
-        Mon, 05 Aug 2019 05:47:17 -0700 (PDT)
+        Mon, 5 Aug 2019 08:47:29 -0400
+Received: by mail-lj1-f175.google.com with SMTP id i21so79193779ljj.3;
+        Mon, 05 Aug 2019 05:47:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=aNRu8d6P0l9UPeO2XHPUBXtwBghX09sN9CzqbrlIoh0=;
-        b=j/bAgWAil3mRiYky6AnRqLeM8V1zdbGU/zoXCwNDELkUqbe57Wb3Rqul+Yp7KZYmnp
-         /pXsxz4Ec1Ja6QFaBuqCCTyu4IjNEWuXjoThkG+AEQ3Th8XgyCwagIqsWbWYPl+qLynY
-         W81J2gSa/MLIwFXNv3zKXUKIu5+D6qnfW8TKgghA/61gAyF195B5MtLkiuE6PG8N0NnQ
-         /jqsrHJ7xyMicdJQmRxfBJG7YG5IsqcncR8/nnzSg6vU/sfnl9j+NaGJwjiVoItP7UVP
-         EROiUjX4A8VVYEfbXRhf/BX2VbQyKxkP3acsT18XJ41Jp698vRCg2ZZbbeGLgnFHmK/y
-         HpwA==
+        bh=lL3Croan3VsAvdmzwNDatZOL62bT4QU+D/MCPrex0oo=;
+        b=ATyHGFdJW6t6n/bKqnHz3vFzUOhu9uNRejyoHdvgSqforsurcwCC756tzrgXgREw87
+         uzun1aMWRKmX/60nRtpJTK0ndF3WqtcdWDIaY7qrpU3lMDpiz2ZNUklVpKXbpUptxLdN
+         GvAtD7KmJYDy/p1bd1nYzcsTLvZUV1ZKxc0ty9bNjddv5oPOPWG2KBmOEIFs3FOFuxK/
+         QWjcOyNeAl5PUBrDa0SAOtUEuqb1FXiIRXHKOMYl31P0Ug71jLbJuAWZXTg7uCRI2j8m
+         bQmSfpsMr3azx3JIJfOX97A8CbpI7tnWPdp8mUjv9tG4lOfkStP+LdNVbzo3/+uejMcH
+         EubQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=aNRu8d6P0l9UPeO2XHPUBXtwBghX09sN9CzqbrlIoh0=;
-        b=mJz9CU045Tvh6I/fIkeLnimMLsV/ZiIYruMmtModtZwQHS9xztZhMzMJjxiZ3o+toF
-         YmjsEhTrSPxZaa/UjlfaP+f1pkh7HrlTw0fKZwjuo2PpuOJ2plehJ1YhGIuum1n9W8DE
-         1kjc9RTlNAqYxT2dcpi7wWrx7E4NuRbxm6dJgKwt7y1mKOGSh8gAGbdtmvo8wBLcyNCx
-         ccjyBPjzAM7FrHRf8r5JFWJBXR7uRoXxItscZBaGw76K/UPLSRa/W5LZDnL0WFH+3Fhc
-         b3jtyylqqOD59RDnjWtvQI63It3GXi7o1u68UI9YAFI3bkIzAto1UIu9zfXBmW0ot2dR
-         pJMQ==
-X-Gm-Message-State: APjAAAXMEPukTE20sldkFSovfHUr+8vXoqM9C8WvSVogKZ9pK/yCRuUb
-        VjM+c7IZQk2OkrUArP9TvRdDpa6OH9hB8IJg2jw=
-X-Google-Smtp-Source: APXvYqzXL2hkLoxBzy0mGaLH2PFh9enoPkAIlPHpx/CXR2e8aI0nWFKy0Tu9frhpX5sT1w1c87ndw7D6azKbKOfDYYg=
-X-Received: by 2002:a02:cb4b:: with SMTP id k11mr152797148jap.109.1565009236799;
- Mon, 05 Aug 2019 05:47:16 -0700 (PDT)
+        bh=lL3Croan3VsAvdmzwNDatZOL62bT4QU+D/MCPrex0oo=;
+        b=tI3A4nZdYrbIC086QL1I2bj85FdBTpkugaEGY25X1Jzxaz+KYpgyAciL3SIdPB0r62
+         kdctES6uVWPMOUvuq5Hamn4jAXHJPqrL3HqJnxiK7THYjQnrjx49unGVzZO6kBkYZgl7
+         w32rMTBqSvs+fT9iknLilh9saR6blayQdxH8ex3ezZLwG4mqdEF6HSa603hJKafKLxJq
+         9QihV9NkxtVwxR4aDttY9uEd3TdZZmZ4drFT1QZVU0fkpWBZhDO8FqMNqHiidSKEiaGx
+         2uSWD+o16/NcYV5Vmzv0YUTWda/YBtly9ngnSstAlNd1AQnOXtK6am+Gyc6EQmUZCT+7
+         +y/g==
+X-Gm-Message-State: APjAAAURD3J+dWjptbHU0IuAl+yPQxxmJ+Fc9I555S04Qg00Xgh3/Yir
+        D+m/8+VHEeMK3JGFAjKIBul3bfQqzRptutG1jy1Qeg==
+X-Google-Smtp-Source: APXvYqw5b2HMbRc+Zic5cYzHfdzRa07AQdAGvaoc1hRPPEo2ULeTuY4WfOUW8G/0Du+E0E5QtbNjBPo8dRbPIXFb0w4=
+X-Received: by 2002:a2e:8741:: with SMTP id q1mr25763713ljj.144.1565009246427;
+ Mon, 05 Aug 2019 05:47:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190731195713.3150463-1-arnd@arndb.de> <20190731195713.3150463-3-arnd@arndb.de>
- <20190801055821.GB24607@kroah.com>
-In-Reply-To: <20190801055821.GB24607@kroah.com>
-From:   Sylvain Lemieux <slemieux.tyco@gmail.com>
-Date:   Mon, 5 Aug 2019 08:47:05 -0400
-Message-ID: <CA+rxa6rJE2R7R_r8nx7HyHu4xc8ujQB1rRG+0Yx2XzwtoiD5CQ@mail.gmail.com>
-Subject: Re: [PATCH 02/14] usb: udc: lpc32xx: allow compile-testing
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, soc@kernel.org,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        linux-serial@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190606185900.GA19937@kroah.com> <CANiq72n2E4Ue0MU5mWitSbsscizPQKML0QQx_DBwJVni+eWMHQ@mail.gmail.com>
+ <4007272.nJfEYfeqza@devpool35> <CANiq72=T8nH3HHkYvWF+vPMscgwXki1Ugiq6C9PhVHJUHAwDYw@mail.gmail.com>
+ <20190802103346.GA14255@kroah.com> <CANiq72kcZZwp2MRVF5Ls+drXCzVbCfZ7wZ8Y+rU93oGohVAGsQ@mail.gmail.com>
+ <20190802112542.GA29534@kroah.com> <CANiq72mSLmP-EaOgY0m2qgTMVsAnyE6iuW5Kjdw5mSy1ZH0y-A@mail.gmail.com>
+ <20190802155627.GB28398@kroah.com> <CANiq72k-2Gtb8Q_f2Nhy6aud-QwuSiJ8oEJbwt-pjd+bs8qDVg@mail.gmail.com>
+ <20190805115540.GB8189@kroah.com>
+In-Reply-To: <20190805115540.GB8189@kroah.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Mon, 5 Aug 2019 14:47:15 +0200
+Message-ID: <CANiq72kUg_Q0VTju=ebs3mgTca1QtYvGt6AKCwS=TUoN3ENuYA@mail.gmail.com>
+Subject: =?UTF-8?Q?Re=3A_Linux_4=2E9=2E180_build_fails_with_gcc_9_and_=27cleanu?=
+        =?UTF-8?Q?p=5Fmodule=27_specifies_less_restrictive_attribute_than_its_targ?=
+        =?UTF-8?Q?et_=E2=80=A6?=
+To:     Greg KH <greg@kroah.com>
+Cc:     Rolf Eike Beer <eb@emlix.com>, stable@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Acked-by: Sylvain Lemieux <slemieux.tyco@gmail.com>
+On Mon, Aug 5, 2019 at 1:55 PM Greg KH <greg@kroah.com> wrote:
+>
+> I think I got it working now, all looks good for 4.9.y, 4.14.y and
+> 4.19.y for gcc9 so far.  I'll leave 4.4.y alone :)
 
-On Thu, Aug 1, 2019 at 1:58 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Wed, Jul 31, 2019 at 09:56:44PM +0200, Arnd Bergmann wrote:
-> > The only thing that prevents building this driver on other
-> > platforms is the mach/hardware.h include, which is not actually
-> > used here at all, so remove the line and allow CONFIG_COMPILE_TEST.
-> >
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > ---
-> >  drivers/usb/gadget/udc/Kconfig       | 3 ++-
-> >  drivers/usb/gadget/udc/lpc32xx_udc.c | 2 --
-> >  2 files changed, 2 insertions(+), 3 deletions(-)
->
-> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+You are welcome! I am glad we can now use gcc 9 easily. I will be
+keeping a look into gcc 10. :)
+
+Cheers,
+Miguel
