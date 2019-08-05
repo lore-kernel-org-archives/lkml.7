@@ -2,175 +2,140 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D826C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 655EEC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FEFF21738
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:57:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="hqXVQVO1"
+	by mail.kernel.org (Postfix) with ESMTP id 3B88421738
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:58:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565020683;
+	bh=44qgJUZzegg1qFcAcmz2R5AwMHNsv5gye238cohSRcI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=qry6wnNtxbpq/KTo7UDDi/oCGOLyyAonFSaR38IU7EUbs/noymgzgqJv9MwKYmEiO
+	 qJWMaT3fBmAHwlrCElPCDr602e8ToFcALxFwgMjSyq3AKIOo0lCr71sie5wl9uw7c3
+	 Qz7wVWCQ3FGtkEZqzOOwkq9QK1QDLdwbVGt62Rl0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729316AbfHEP5r (ORCPT
+        id S1729437AbfHEP6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 11:57:47 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:34486 "EHLO mail.skyhub.de"
+        Mon, 5 Aug 2019 11:58:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726559AbfHEP5q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 11:57:46 -0400
-Received: from zn.tnic (p200300EC2F065B00683A29B48F14DC99.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:5b00:683a:29b4:8f14:dc99])
+        id S1728829AbfHEP6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 11:58:02 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5834E1EC0C31;
-        Mon,  5 Aug 2019 17:57:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1565020664;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Gi0g2I1SbpSiAESkUfjkocwrvZWSJhT+FGN1+9gI4Qs=;
-        b=hqXVQVO1eBdWSbC2SWJjwNbU1BND9M1CfYpHbUaC4l2NaN/xsnsOZOZ1yXmnmg8R5DPYKU
-        TJunkjyPpqDi7qBrHWcJsQ57V1jc9RJRJ7orpOC0GasXyPwSQxpsuP6X3gPekea8OOEYNR
-        RogX4pSSQcS4sqg53INzn91hAYHyxVk=
-Date:   Mon, 5 Aug 2019 17:57:39 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Reinette Chatre <reinette.chatre@intel.com>
-Cc:     tglx@linutronix.de, fenghua.yu@intel.com, tony.luck@intel.com,
-        kuo-lang.tseng@intel.com, mingo@redhat.com, hpa@zytor.com,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 04/10] x86/resctrl: Set cache line size using new
- utility
-Message-ID: <20190805155739.GB18785@zn.tnic>
-References: <cover.1564504901.git.reinette.chatre@intel.com>
- <affb28c7095e94b6fa55870f8739e6184ff4859a.1564504901.git.reinette.chatre@intel.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 145012064A;
+        Mon,  5 Aug 2019 15:57:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565020681;
+        bh=44qgJUZzegg1qFcAcmz2R5AwMHNsv5gye238cohSRcI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=SYXV73IuJ/sD/y/Y5vesdDWtWtxspS6jUR9Rop7Bl6Auf0NG3gkf3XHKk2AXitxg8
+         61QRWEoG15KVBZ2q/ciDygr5duQTmv1JRx0c/9OMxxSpiVf5wWd6i/PxAYN9LmncK1
+         kiP9qBNNROJ6IhQesh5sHJCRkZAiHJBzdgvaRmVs=
+Date:   Mon, 5 Aug 2019 16:57:55 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Martyn Welch <martyn.welch@collabora.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@lists.collabora.co.uk, devicetree@vger.kernel.org,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: Add binding document for NOA1305
+Message-ID: <20190805165755.10c0bde3@archlinux>
+In-Reply-To: <20190802114228.1278-1-martyn.welch@collabora.com>
+References: <20190802114228.1278-1-martyn.welch@collabora.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <affb28c7095e94b6fa55870f8739e6184ff4859a.1564504901.git.reinette.chatre@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 10:29:38AM -0700, Reinette Chatre wrote:
-> In preparation for support of pseudo-locked regions spanning two
-> cache levels the cache line size computation is moved to a utility.
+On Fri,  2 Aug 2019 12:42:27 +0100
+Martyn Welch <martyn.welch@collabora.com> wrote:
 
-Please write this in active voice: "Move the cache line size computation
-to a utility function in preparation... "
+> Document the ON Semiconductor NOA1305 ambient light sensor devicetree
+> bindings.
+> 
+> Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-And yes, "a utility" solely sounds like you're adding a tool which does
-that. But it is simply a separate function. :-)
+Applied to the togreg branch of iio.git and pushed out as testing.
 
-> Setting of the cache line size is moved a few lines earlier, before
-> the C-states are constrained, to reduce the amount of cleanup needed
-> on failure.
+Thanks,
 
-And in general, that passive voice is kinda hard to read. To quote from
-Documentation/process/submitting-patches.rst:
+Jonathan
 
- "Describe your changes in imperative mood, e.g. "make xyzzy do frotz"
-  instead of "[This patch] makes xyzzy do frotz" or "[I] changed xyzzy
-  to do frotz", as if you are giving orders to the codebase to change
-  its behaviour."
-
-Please check all your commit messages.
-
-> Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
 > ---
->  arch/x86/kernel/cpu/resctrl/pseudo_lock.c | 42 +++++++++++++++++------
->  1 file changed, 31 insertions(+), 11 deletions(-)
 > 
-> diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-> index 110ae4b4f2e4..884976913326 100644
-> --- a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-> +++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-> @@ -101,6 +101,30 @@ static u64 get_prefetch_disable_bits(void)
->  	return 0;
->  }
->  
-> +/**
-> + * get_cache_line_size - Determine the cache coherency line size
-> + * @cpu: CPU with which cache is associated
-> + * @level: Cache level
-> + *
-> + * Context: @cpu has to be online.
-> + * Return: The cache coherency line size for cache level @level associated
-> + * with CPU @cpu. Zero on failure.
-> + */
-> +static unsigned int get_cache_line_size(unsigned int cpu, int level)
-> +{
-> +	struct cpu_cacheinfo *ci;
-> +	int i;
-> +
-> +	ci = get_cpu_cacheinfo(cpu);
-> +
-> +	for (i = 0; i < ci->num_leaves; i++) {
-> +		if (ci->info_list[i].level == level)
-> +			return ci->info_list[i].coherency_line_size;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  /**
->   * pseudo_lock_minor_get - Obtain available minor number
->   * @minor: Pointer to where new minor number will be stored
-> @@ -281,9 +305,7 @@ static void pseudo_lock_region_clear(struct pseudo_lock_region *plr)
->   */
->  static int pseudo_lock_region_init(struct pseudo_lock_region *plr)
->  {
-> -	struct cpu_cacheinfo *ci;
->  	int ret;
-> -	int i;
->  
->  	/* Pick the first cpu we find that is associated with the cache. */
->  	plr->cpu = cpumask_first(&plr->d->cpu_mask);
-> @@ -295,7 +317,12 @@ static int pseudo_lock_region_init(struct pseudo_lock_region *plr)
->  		goto out_region;
->  	}
->  
-> -	ci = get_cpu_cacheinfo(plr->cpu);
-> +	plr->line_size = get_cache_line_size(plr->cpu, plr->r->cache_level);
-> +	if (plr->line_size == 0) {
-
-	if (!plr->...)
-
-> +		rdt_last_cmd_puts("Unable to determine cache line size\n");
-> +		ret = -1;
-> +		goto out_region;
-> +	}
->  
->  	plr->size = rdtgroup_cbm_to_size(plr->r, plr->d, plr->cbm);
->  
-> @@ -303,15 +330,8 @@ static int pseudo_lock_region_init(struct pseudo_lock_region *plr)
->  	if (ret < 0)
->  		goto out_region;
->  
-> -	for (i = 0; i < ci->num_leaves; i++) {
-> -		if (ci->info_list[i].level == plr->r->cache_level) {
-> -			plr->line_size = ci->info_list[i].coherency_line_size;
-> -			return 0;
-> -		}
-> -	}
-> +	return 0;
->  
-> -	ret = -1;
-> -	rdt_last_cmd_puts("Unable to determine cache line size\n");
->  out_region:
->  	pseudo_lock_region_clear(plr);
->  	return ret;
-> -- 
-> 2.17.2
+> Changes:
+> v2: Same as v1.
+> v3: Same as v2.
+> v4: Same as v3.
 > 
+>  .../bindings/iio/light/noa1305.yaml           | 44 +++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/light/noa1305.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/light/noa1305.yaml b/Documentation/devicetree/bindings/iio/light/noa1305.yaml
+> new file mode 100644
+> index 000000000000..17e7f140b69b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/light/noa1305.yaml
+> @@ -0,0 +1,44 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/light/noa1305.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ON Semiconductor NOA1305 Ambient Light Sensor
+> +
+> +maintainers:
+> +  - Martyn Welch <martyn.welch@collabora.com>
+> +
+> +description: |
+> +  Ambient sensing with an i2c interface.
+> +
+> +  https://www.onsemi.com/pub/Collateral/NOA1305-D.PDF
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - onnn,noa1305
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  vin-supply:
+> +    description: Regulator that provides power to the sensor
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        light@39 {
+> +                compatible = "onnn,noa1305";
+> +                reg = <0x39>;
+> +        };
+> +    };
+> +...
 
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
