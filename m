@@ -2,103 +2,105 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBCAFC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A4EC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ECD32086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:28:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="pERkNKNV"
+	by mail.kernel.org (Postfix) with ESMTP id 4885D20679
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:28:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565015284;
+	bh=EFibC8nuHz8k2yU2grpf2ggs1Z3fm4CC0QMtC9RxKSo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ANck+pqy0VH41o4QOkG+PGubdjlLk8bVnegfpovtIengoJCjCHA0EiD2iGWQMrLwW
+	 O7+EDA1fMCreLH9PJIxgq1lY48v6Q2SqU4kOjilxiMAhBj1Bs1l94/r+yzWgDVQyQR
+	 P7/yH2zeTTg03TIIYlOmF9Bkjt5O2kOms7xWwqLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729514AbfHEO17 (ORCPT
+        id S1729558AbfHEO2D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 5 Aug 2019 10:28:03 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:40546 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728015AbfHEO17 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 5 Aug 2019 10:27:59 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:34256 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727460AbfHEO17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 10:27:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=qPMjMdQW0XPhvwML3+DIpeMAETcO8BXuYgnocqdsrVI=; b=pERkNKNVe+73uwFMh3mKrh9ptl
-        H1zv8D9bXN5ObQC75U0r5UHGphJNSp1OhEe57CRr39ydCEmwIUvG3vaYr1lK5Q0MuNq6T8FC83Q/w
-        8k8Z+TNFpzidX6kn1dL+3RdKQfAJlDjOuyxNWWnYupocjo4mIQc8mces5VzKMun30vEU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hudxq-0007Tz-Ov; Mon, 05 Aug 2019 16:27:54 +0200
-Date:   Mon, 5 Aug 2019 16:27:54 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, davem@davemloft.net,
-        robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com,
-        hkallweit1@gmail.com
-Subject: Re: [PATCH 16/16] dt-bindings: net: add bindings for ADIN PHY driver
-Message-ID: <20190805142754.GL24275@lunn.ch>
-References: <20190805165453.3989-1-alexandru.ardelean@analog.com>
- <20190805165453.3989-17-alexandru.ardelean@analog.com>
+Received: by mail-qt1-f194.google.com with SMTP id a15so81063192qtn.7
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 07:27:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MPEMXXmCHM/Mi/52mb4NCYntDnv4EkvOmRuE01mrmhM=;
+        b=LsYu/7kbcZOBmMJF2KPR0BdGTxfFG4KIPTNBXea2pkzguDONumtWEwAtUGH2h/3hHr
+         AlrEx4oWTmsYDmbOCECB7IY3NUlCBLrjfKE5pSSSq5AhaeQ0Z+cTjkjdMxxFT5TxPVxM
+         ICdTYMGtFfhKijP26HFPKcqWDexRxlkTDtrmQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MPEMXXmCHM/Mi/52mb4NCYntDnv4EkvOmRuE01mrmhM=;
+        b=HHGkyR4BHMAfNjjCKvnx/JuGcuO0VcbiDNji01kRQI6e2dVfFhuEFBJ9lq6dAxQXei
+         CzGXqbz8ZBojjNkBvFm+9K11gFcwxYW5M7NYWN+8AxWcT5Xa308k1XpNIf34iSPaHaNW
+         +G74uQ9YrKEhvoPPE7QOVeEPCKRVemy1tzrGWxCG9mDMGrbdoUdAUj1v6rtbOU2BEG7Y
+         CzwcxyJSWZkUMa8hTQZQtXXByiytoLN+lbqtXlRhrRnsPZkBobcGFcO0KqxQMkYDQk0k
+         j+2n4JHvnbDaP42cWcrjiYRGPTkceIPKkdPanzTJLypBGG/Y/UBaBT59ZhNZyh0Nyz8N
+         Zc7A==
+X-Gm-Message-State: APjAAAUlZr+yVrWLe69ksV/nq9ev5lfR4VdoM3OArgP2ZcIvPiFqUocc
+        ggPrSTjc5JTKF8V/LXk5lXdkHg==
+X-Google-Smtp-Source: APXvYqwNWHoP8flXC29xSNV4hE27uDEAsRgm6KXmlO41iOn5/WG4m1AQejfoVX6v04H7CdZ0ocxj9w==
+X-Received: by 2002:ac8:2a88:: with SMTP id b8mr97552817qta.331.1565015278681;
+        Mon, 05 Aug 2019 07:27:58 -0700 (PDT)
+Received: from chatter.i7.local (192-0-228-88.cpe.teksavvy.com. [192.0.228.88])
+        by smtp.gmail.com with ESMTPSA id j2sm38240945qtb.89.2019.08.05.07.27.57
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 05 Aug 2019 07:27:57 -0700 (PDT)
+Date:   Mon, 5 Aug 2019 10:27:56 -0400
+From:   Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Micah Morton <mortonm@chromium.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] SafeSetID MAINTAINERS file update for v5.3
+Message-ID: <20190805142756.GA4887@chatter.i7.local>
+References: <CAJ-EccMXEVktpuPS5BwkGqTo++dGcpHAuSUZo7WgJhAzFByz0g@mail.gmail.com>
+ <CAHk-=whZzJ8WxAeHcirUghcbeOYxmpCr+XxeS9ngH3df3+=p2Q@mail.gmail.com>
+ <CAJ-EccOqmmrf2KPb7Z7NU6bF_4W1XUawLLy=pLekCyFKqusjKQ@mail.gmail.com>
+ <CAHk-=wgT7Z3kCbKS9Q1rdA=OVxPL32CdBovX=eHvD2PppWCHpQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20190805165453.3989-17-alexandru.ardelean@analog.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <CAHk-=wgT7Z3kCbKS9Q1rdA=OVxPL32CdBovX=eHvD2PppWCHpQ@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 07:54:53PM +0300, Alexandru Ardelean wrote:
-> This change adds bindings for the Analog Devices ADIN PHY driver, detailing
-> all the properties implemented by the driver.
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> ---
->  .../devicetree/bindings/net/adi,adin.yaml     | 93 +++++++++++++++++++
->  MAINTAINERS                                   |  2 +
->  include/dt-bindings/net/adin.h                | 26 ++++++
->  3 files changed, 121 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/adi,adin.yaml
->  create mode 100644 include/dt-bindings/net/adin.h
-> 
-> diff --git a/Documentation/devicetree/bindings/net/adi,adin.yaml b/Documentation/devicetree/bindings/net/adi,adin.yaml
-> new file mode 100644
-> index 000000000000..fcf884bb86f7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/adi,adin.yaml
-> @@ -0,0 +1,93 @@
-> +# SPDX-License-Identifier: GPL-2.0+
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/adi,adin.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices ADIN1200/ADIN1300 PHY
-> +
-> +maintainers:
-> +  - Alexandru Ardelean <alexandru.ardelean@analog.com>
-> +
-> +description: |
-> +  Bindings for Analog Devices Industrial Ethernet PHYs
-> +
-> +properties:
-> +  compatible:
-> +    description: |
-> +      Compatible list, may contain "ethernet-phy-ieee802.3-c45" in which case
-> +      Clause 45 will be used to access device management registers. If
-> +      unspecified, Clause 22 will be used. Use this only when MDIO supports
-> +      Clause 45 access, but there is no other way to determine this.
-> +    enum:
-> +      - ethernet-phy-ieee802.3-c45
+On Sun, Aug 04, 2019 at 10:47:54AM -0700, Linus Torvalds wrote:
+> - maybe pr-tracker-bot ignores follow-up emails with "Re:" in the 
+> subject?
 
-It is valid to list ethernet-phy-ieee802.3-c22, it is just not
-required. So maybe you should list it here to keep the DT validater happy?
+Yes, this is the culprit. Here are the matching regexes:
 
-	  Andrew
+https://git.kernel.org/pub/scm/linux/kernel/git/mricon/korg-helpers.git/tree/pr-tracker-bot.py#n41
+
+Normally, pull requests don't come in as replies -- this is the first 
+one that got missed in months, to my knowledge.
+
+I can change it to be more permissive -- the only concern would be that 
+we would be scanning more bodies, and there *might* be a chance where we 
+end up tracking the wrong message if someone uses Outlook-style replies 
+(fully quoted messages without '>') and those replies arrive before the 
+original message. Both of these are very unlikely to happen (in fact, I 
+believe using Outlook-style replies on LKML would result in mass 
+outrage).
+
+So, just let me know if you'd like me to make this change and I'll 
+modify the regex to be something like '^\S*:?\s*\[GIT' that should match 
+most permutations of Re/Aw/etc.
+
+-K
