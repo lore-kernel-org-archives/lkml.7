@@ -2,181 +2,161 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D224EC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C51C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 958C92147A
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:58:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92C262075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:01:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PkQPMljf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729192AbfHEQ6j (ORCPT
+        id S1729261AbfHERBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 12:58:39 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:37502 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727328AbfHEQ6j (ORCPT
+        Mon, 5 Aug 2019 13:01:23 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:51474 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728935AbfHERBX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 12:58:39 -0400
-Received: from [10.137.184.118] (unknown [131.107.147.118])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 21E2620B7186;
-        Mon,  5 Aug 2019 09:58:37 -0700 (PDT)
-Subject: Re: [RFC PATCH 1/2] sys-hypervisor: /sys/hypervisor/type for Hyper-V
-To:     Nuno Das Neves "<Nuno.Das@microsoft.com>;" Nuno Das Neves
-         "<Nuno.Das@microsoft.com>;" "gregkh@linuxfoundation.org"
-         "<gregkh@linuxfoundation.org>;" Sasha Levin
-         "<Alexander.Levin@microsoft.com>;" Haiyang Zhang
-         "<haiyangz@microsoft.com>;" KY Srinivasan
-         "<kys@microsoft.com>;" Michael Kelley <mikelley@microsoft.com>
-References: <1564183046-128211-1-git-send-email-nudasnev@microsoft.com>
- <1564183046-128211-2-git-send-email-nudasnev@microsoft.com>
- <MN2PR21MB1216DBB3BD918B6DCC738E30CCC30@MN2PR21MB1216.namprd21.prod.outlook.com>
- <MWHPR21MB07015125F311AF5E2A8D813883DD0@MWHPR21MB0701.namprd21.prod.outlook.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Nuno Das Neves <nuno.das@linux.microsoft.com>
-Message-ID: <c3cbae7a-d0d1-4c63-ccf1-10f73dd25fc9@linux.microsoft.com>
-Date:   Mon, 5 Aug 2019 09:58:37 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 5 Aug 2019 13:01:23 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x75Gj6IA113561;
+        Mon, 5 Aug 2019 17:00:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=9pUfgziCq7pxPpZPM6g5Do4JMKoJYIw8oH79TZUxwXY=;
+ b=PkQPMljfOmAIQpx501wtF+rIjs+mcgDoiMpircWo7jHH88A2tIpl4nnV8azMM1Dd66PX
+ jqn9tc+tvmCDyOcUWjv9nI5xdOc9NBYzIuJHEzPiTNA0N6uZ9ETtevbC9N8RBHViNpaa
+ YuFbP1C5k2riXhF6eKTP+ELkI8d/H5rWJC/7fm7nRcIeobm3rkyZRREKfYApppimsSbc
+ 3V4IvMw1i4FN8ZGz7rL5+kWYXrh9ex+JjsitLy7mh8fpEvJprSC+7AOLDU5PyQRb3aEi
+ 4Ix1s1in1si6pvznojlvamRz0YkPdffwvMSQJVI31ZumJNx9LbpgZvNQK9wwvD0drxSK Kg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2u527pgf0t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 05 Aug 2019 17:00:41 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x75GlBa3160930;
+        Mon, 5 Aug 2019 16:58:40 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2u4ycu5ure-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 05 Aug 2019 16:58:40 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x75Gwb6J022007;
+        Mon, 5 Aug 2019 16:58:38 GMT
+Received: from [192.168.1.222] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 05 Aug 2019 09:58:37 -0700
+Subject: Re: [PATCH 1/3] mm, reclaim: make should_continue_reclaim perform
+ dryrun detection
+To:     Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Cc:     Hillf Danton <hdanton@sina.com>, Michal Hocko <mhocko@kernel.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20190802223930.30971-1-mike.kravetz@oracle.com>
+ <20190802223930.30971-2-mike.kravetz@oracle.com>
+ <bb16d3f0-0984-be32-4346-358abad92c4c@suse.cz>
+ <0d31cc14-13cd-13e0-cf2d-dd8a8d3049ff@suse.cz>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <b4dbe25f-4499-af28-94bb-d12147505326@oracle.com>
+Date:   Mon, 5 Aug 2019 09:58:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <MWHPR21MB07015125F311AF5E2A8D813883DD0@MWHPR21MB0701.namprd21.prod.outlook.com>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <0d31cc14-13cd-13e0-cf2d-dd8a8d3049ff@suse.cz>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9340 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=927
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908050184
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9340 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=965 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908050184
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/29/2019 3:54 PM, Nuno Das Neves wrote:
-> *From:*Stephen Hemminger <sthemmin@microsoft.com>
-> *Sent:* Friday, 26 July 2019 5:43 PM
-> *To:* Nuno Das Neves <Nuno.Das@microsoft.com>; Nuno Das Neves <Nuno.Das@microsoft.com>; gregkh@linuxfoundation.org <gregkh@linuxfoundation.org>; Sasha Levin <Alexander.Levin@microsoft.com>; Haiyang Zhang <haiyangz@microsoft.com>; KY Srinivasan <kys@microsoft.com>; Michael Kelley <mikelley@microsoft.com>
-> *Cc:* linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>
-> *Subject:* Re: [RFC PATCH 1/2] sys-hypervisor: /sys/hypervisor/type for Hyper-V
->  
-> I am not sure about this. 
-> The existing tools like lscpu just use CPUID. What is does this addition add?
+On 8/5/19 3:57 AM, Vlastimil Babka wrote:
+> On 8/5/19 10:42 AM, Vlastimil Babka wrote:
+>> On 8/3/19 12:39 AM, Mike Kravetz wrote:
+>>> From: Hillf Danton <hdanton@sina.com>
+>>>
+>>> Address the issue of should_continue_reclaim continuing true too often
+>>> for __GFP_RETRY_MAYFAIL attempts when !nr_reclaimed and nr_scanned.
+>>> This could happen during hugetlb page allocation causing stalls for
+>>> minutes or hours.
+>>>
+>>> We can stop reclaiming pages if compaction reports it can make a progress.
+>>> A code reshuffle is needed to do that.
+>>
+>>> And it has side-effects, however,
+>>> with allocation latencies in other cases but that would come at the cost
+>>> of potential premature reclaim which has consequences of itself.
+>>
+>> Based on Mel's longer explanation, can we clarify the wording here? e.g.:
+>>
+>> There might be side-effect for other high-order allocations that would
+>> potentially benefit from more reclaim before compaction for them to be
+>> faster and less likely to stall, but the consequences of
+>> premature/over-reclaim are considered worse.
+>>
+>>> We can also bail out of reclaiming pages if we know that there are not
+>>> enough inactive lru pages left to satisfy the costly allocation.
+>>>
+>>> We can give up reclaiming pages too if we see dryrun occur, with the
+>>> certainty of plenty of inactive pages. IOW with dryrun detected, we are
+>>> sure we have reclaimed as many pages as we could.
+>>>
+>>> Cc: Mike Kravetz <mike.kravetz@oracle.com>
+>>> Cc: Mel Gorman <mgorman@suse.de>
+>>> Cc: Michal Hocko <mhocko@kernel.org>
+>>> Cc: Vlastimil Babka <vbabka@suse.cz>
+>>> Cc: Johannes Weiner <hannes@cmpxchg.org>
+>>> Signed-off-by: Hillf Danton <hdanton@sina.com>
+>>> Tested-by: Mike Kravetz <mike.kravetz@oracle.com>
+>>> Acked-by: Mel Gorman <mgorman@suse.de>
+>>
+>> Acked-by: Vlastimil Babka <vbabka@suse.cz>
+>> I will send some followup cleanup.
 > 
-The main motivation is to replicate functionality available on Xen.
+> How about this?
+> ----8<----
+> From 0040b32462587171ad22395a56699cc036ad483f Mon Sep 17 00:00:00 2001
+> From: Vlastimil Babka <vbabka@suse.cz>
+> Date: Mon, 5 Aug 2019 12:49:40 +0200
+> Subject: [PATCH] mm, reclaim: cleanup should_continue_reclaim()
+> 
+> After commit "mm, reclaim: make should_continue_reclaim perform dryrun
+> detection", closer look at the function shows, that nr_reclaimed == 0 means
+> the function will always return false. And since non-zero nr_reclaimed implies
+> non_zero nr_scanned, testing nr_scanned serves no purpose, and so does the
+> testing for __GFP_RETRY_MAYFAIL.
+> 
+> This patch thus cleans up the function to test only !nr_reclaimed upfront, and
+> remove the __GFP_RETRY_MAYFAIL test and nr_scanned parameter completely.
+> Comment is also updated, explaining that approximating "full LRU list has been
+> scanned" with nr_scanned == 0 didn't really work.
+> 
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-> *From:* Nuno Das Neves <nudasnev@microsoft.com>
-> *Sent:* Friday, July 26, 2019 4:17 PM
-> *To:* Nuno Das Neves <Nuno.Das@microsoft.com>; gregkh@linuxfoundation.org <gregkh@linuxfoundation.org>; Stephen Hemminger <sthemmin@microsoft.com>; Sasha Levin <Alexander.Levin@microsoft.com>; Haiyang Zhang <haiyangz@microsoft.com>; KY Srinivasan <kys@microsoft.com>; Michael Kelley <mikelley@microsoft.com>
-> *Cc:* linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>
-> *Subject:* [RFC PATCH 1/2] sys-hypervisor: /sys/hypervisor/type for Hyper-V
->  
-> Populate /sys/hypervisor with entries for Hyper-V.
-> This patch adds /sys/hypervisor/type which contains "Hyper-V".
-> 
-> Signed-off-by: Nuno Das Neves <nudasnev@microsoft.com>
-> ---
->  .../ABI/stable/sysfs-hypervisor-hyperv        |  7 ++++
->  drivers/hv/Kconfig                            | 10 +++++
->  drivers/hv/Makefile                           |  7 ++--
->  drivers/hv/sys-hypervisor.c                   | 41 +++++++++++++++++++
->  4 files changed, 62 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/ABI/stable/sysfs-hypervisor-hyperv
->  create mode 100644 drivers/hv/sys-hypervisor.c
-> 
-> diff --git a/Documentation/ABI/stable/sysfs-hypervisor-hyperv b/Documentation/ABI/stable/sysfs-hypervisor-hyperv
-> new file mode 100644
-> index 000000000000..58380ea81315
-> --- /dev/null
-> +++ b/Documentation/ABI/stable/sysfs-hypervisor-hyperv
-> @@ -0,0 +1,7 @@
-> +What:          /sys/hypervisor/type
-> +Date:          July 2019
-> +KernelVersion: 5.2.1
-> +Contact:       linux-hyperv@vger.kernel.org
-> +Description:   If running under Hyper-V:
-> +               Type of hypervisor:
-> +               "Hyper-V": Hyper-V hypervisor
-> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-> index 1c1a2514d6f3..e693adf0b77f 100644
-> --- a/drivers/hv/Kconfig
-> +++ b/drivers/hv/Kconfig
-> @@ -25,4 +25,14 @@ config HYPERV_BALLOON
->          help
->            Select this option to enable Hyper-V Balloon driver.
->  
-> +config HYPERV_SYS_HYPERVISOR
-> +       bool "Create Hyper-V entries under /sys/hypervisor"
-> +       depends on HYPERV && SYSFS
-> +       select SYS_HYPERVISOR
-> +       default y
-> +       help
-> +         Create Hyper-V entries under /sys/hypervisor (e.g., type). When running
-> +         native or on another hypervisor, /sys/hypervisor may still be
-> +         present, but it will have no Hyper-V entries.
-> +
->  endmenu
-> diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
-> index a1eec7177c2d..87f569659555 100644
-> --- a/drivers/hv/Makefile
-> +++ b/drivers/hv/Makefile
-> @@ -1,7 +1,8 @@
->  # SPDX-License-Identifier: GPL-2.0
-> -obj-$(CONFIG_HYPERV)           += hv_vmbus.o
-> -obj-$(CONFIG_HYPERV_UTILS)     += hv_utils.o
-> -obj-$(CONFIG_HYPERV_BALLOON)   += hv_balloon.o
-> +obj-$(CONFIG_HYPERV)                   += hv_vmbus.o
-> +obj-$(CONFIG_HYPERV_UTILS)             += hv_utils.o
-> +obj-$(CONFIG_HYPERV_BALLOON)           += hv_balloon.o
-> +obj-$(CONFIG_HYPERV_SYS_HYPERVISOR)    += sys-hypervisor.o
->  
->  CFLAGS_hv_trace.o = -I$(src)
->  CFLAGS_hv_balloon.o = -I$(src)
-> diff --git a/drivers/hv/sys-hypervisor.c b/drivers/hv/sys-hypervisor.c
-> new file mode 100644
-> index 000000000000..eb3d2a6502c4
-> --- /dev/null
-> +++ b/drivers/hv/sys-hypervisor.c
-> @@ -0,0 +1,41 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/*
-> + * Copyright (C) 2019, Microsoft, Inc.
-> + *
-> + * Authored by: Nuno Das Neves <nudasnev@microsoft.com>
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/init.h>
-> +#include <linux/kobject.h>
-> +#include <linux/err.h>
-> +
-> +#include <asm/hypervisor.h>
-> +
-> +static ssize_t type_show(struct kobject *obj,
-> +                       struct kobj_attribute *attr,
-> +                       char *buf)
-> +{
-> +       return sprintf(buf, "Hyper-V\n");
-> +}
-> +
-> +static struct kobj_attribute type_attr = __ATTR_RO(type);
-> +
-> +static int __init hyperv_sysfs_type_init(void)
-> +{
-> +       return sysfs_create_file(hypervisor_kobj, &type_attr.attr);
-> +}
-> +
-> +static int __init hyper_sysfs_init(void)
-> +{
-> +       int ret;
-> +
-> +       if (!hypervisor_is_type(X86_HYPER_MS_HYPERV))
-> +               return -ENODEV;
-> +
-> +       ret = hyperv_sysfs_type_init();
-> +
-> +       return ret;
-> +}
-> +device_initcall(hyper_sysfs_init);
-> -- 
-> 2.17.1
-> 
+Acked-by: Mike Kravetz <mike.kravetz@oracle.com>
+
+Would you like me to add this to the series, or do you want to send later?
+-- 
+Mike Kravetz
