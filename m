@@ -6,157 +6,177 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1BFC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D224EC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8F312147A
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 958C92147A
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:58:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729972AbfHEQzk (ORCPT
+        id S1729192AbfHEQ6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 12:55:40 -0400
-Received: from mga01.intel.com ([192.55.52.88]:43767 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727349AbfHEQzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 12:55:40 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 09:55:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,350,1559545200"; 
-   d="scan'208";a="175635793"
-Received: from buildpc-hp-z230.iind.intel.com (HELO buildpc-HP-Z230) ([10.223.89.34])
-  by fmsmga007.fm.intel.com with ESMTP; 05 Aug 2019 09:55:35 -0700
-Date:   Mon, 5 Aug 2019 22:27:29 +0530
-From:   Sanyog Kale <sanyog.r.kale@intel.com>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, vkoul@kernel.org,
-        gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com
-Subject: Re: [RFC PATCH 28/40] soundwire: intel: handle disabled links
-Message-ID: <20190805165729.GC24889@buildpc-HP-Z230>
-References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
- <20190725234032.21152-29-pierre-louis.bossart@linux.intel.com>
+        Mon, 5 Aug 2019 12:58:39 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:37502 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727328AbfHEQ6j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 12:58:39 -0400
+Received: from [10.137.184.118] (unknown [131.107.147.118])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 21E2620B7186;
+        Mon,  5 Aug 2019 09:58:37 -0700 (PDT)
+Subject: Re: [RFC PATCH 1/2] sys-hypervisor: /sys/hypervisor/type for Hyper-V
+To:     Nuno Das Neves "<Nuno.Das@microsoft.com>;" Nuno Das Neves
+         "<Nuno.Das@microsoft.com>;" "gregkh@linuxfoundation.org"
+         "<gregkh@linuxfoundation.org>;" Sasha Levin
+         "<Alexander.Levin@microsoft.com>;" Haiyang Zhang
+         "<haiyangz@microsoft.com>;" KY Srinivasan
+         "<kys@microsoft.com>;" Michael Kelley <mikelley@microsoft.com>
+References: <1564183046-128211-1-git-send-email-nudasnev@microsoft.com>
+ <1564183046-128211-2-git-send-email-nudasnev@microsoft.com>
+ <MN2PR21MB1216DBB3BD918B6DCC738E30CCC30@MN2PR21MB1216.namprd21.prod.outlook.com>
+ <MWHPR21MB07015125F311AF5E2A8D813883DD0@MWHPR21MB0701.namprd21.prod.outlook.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Nuno Das Neves <nuno.das@linux.microsoft.com>
+Message-ID: <c3cbae7a-d0d1-4c63-ccf1-10f73dd25fc9@linux.microsoft.com>
+Date:   Mon, 5 Aug 2019 09:58:37 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190725234032.21152-29-pierre-louis.bossart@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <MWHPR21MB07015125F311AF5E2A8D813883DD0@MWHPR21MB0701.namprd21.prod.outlook.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 06:40:20PM -0500, Pierre-Louis Bossart wrote:
-> On most hardware platforms, SoundWire interfaces are pin-muxed with
-> other interfaces (typically DMIC or I2S) and the status of each link
-> needs to be checked at boot time.
+On 7/29/2019 3:54 PM, Nuno Das Neves wrote:
+> *From:*Stephen Hemminger <sthemmin@microsoft.com>
+> *Sent:* Friday, 26 July 2019 5:43 PM
+> *To:* Nuno Das Neves <Nuno.Das@microsoft.com>; Nuno Das Neves <Nuno.Das@microsoft.com>; gregkh@linuxfoundation.org <gregkh@linuxfoundation.org>; Sasha Levin <Alexander.Levin@microsoft.com>; Haiyang Zhang <haiyangz@microsoft.com>; KY Srinivasan <kys@microsoft.com>; Michael Kelley <mikelley@microsoft.com>
+> *Cc:* linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>
+> *Subject:* Re: [RFC PATCH 1/2] sys-hypervisor: /sys/hypervisor/type for Hyper-V
+>  
+> I am not sure about this. 
+> The existing tools like lscpu just use CPUID. What is does this addition add?
 > 
-> For Intel platforms, the BIOS provides a menu to enable/disable the
-> links separately, and the information is provided to the OS with an
-> Intel-specific _DSD property. The same capability will be added to
-> revisions of the MIPI DisCo specification.
+The main motivation is to replicate functionality available on Xen.
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+> *From:* Nuno Das Neves <nudasnev@microsoft.com>
+> *Sent:* Friday, July 26, 2019 4:17 PM
+> *To:* Nuno Das Neves <Nuno.Das@microsoft.com>; gregkh@linuxfoundation.org <gregkh@linuxfoundation.org>; Stephen Hemminger <sthemmin@microsoft.com>; Sasha Levin <Alexander.Levin@microsoft.com>; Haiyang Zhang <haiyangz@microsoft.com>; KY Srinivasan <kys@microsoft.com>; Michael Kelley <mikelley@microsoft.com>
+> *Cc:* linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>
+> *Subject:* [RFC PATCH 1/2] sys-hypervisor: /sys/hypervisor/type for Hyper-V
+>  
+> Populate /sys/hypervisor with entries for Hyper-V.
+> This patch adds /sys/hypervisor/type which contains "Hyper-V".
 > 
-> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> Signed-off-by: Nuno Das Neves <nudasnev@microsoft.com>
 > ---
->  drivers/soundwire/intel.c     | 26 ++++++++++++++++++++++----
->  include/linux/soundwire/sdw.h |  2 ++
->  2 files changed, 24 insertions(+), 4 deletions(-)
+>  .../ABI/stable/sysfs-hypervisor-hyperv        |  7 ++++
+>  drivers/hv/Kconfig                            | 10 +++++
+>  drivers/hv/Makefile                           |  7 ++--
+>  drivers/hv/sys-hypervisor.c                   | 41 +++++++++++++++++++
+>  4 files changed, 62 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/ABI/stable/sysfs-hypervisor-hyperv
+>  create mode 100644 drivers/hv/sys-hypervisor.c
 > 
-> diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
-> index 796ac2bc8cea..5947fa8e840b 100644
-> --- a/drivers/soundwire/intel.c
-> +++ b/drivers/soundwire/intel.c
-> @@ -90,6 +90,8 @@
->  #define SDW_ALH_STRMZCFG_DMAT		GENMASK(7, 0)
->  #define SDW_ALH_STRMZCFG_CHN		GENMASK(19, 16)
->  
-> +#define SDW_INTEL_QUIRK_MASK_BUS_DISABLE	BIT(1)
+> diff --git a/Documentation/ABI/stable/sysfs-hypervisor-hyperv b/Documentation/ABI/stable/sysfs-hypervisor-hyperv
+> new file mode 100644
+> index 000000000000..58380ea81315
+> --- /dev/null
+> +++ b/Documentation/ABI/stable/sysfs-hypervisor-hyperv
+> @@ -0,0 +1,7 @@
+> +What:          /sys/hypervisor/type
+> +Date:          July 2019
+> +KernelVersion: 5.2.1
+> +Contact:       linux-hyperv@vger.kernel.org
+> +Description:   If running under Hyper-V:
+> +               Type of hypervisor:
+> +               "Hyper-V": Hyper-V hypervisor
+> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+> index 1c1a2514d6f3..e693adf0b77f 100644
+> --- a/drivers/hv/Kconfig
+> +++ b/drivers/hv/Kconfig
+> @@ -25,4 +25,14 @@ config HYPERV_BALLOON
+>          help
+>            Select this option to enable Hyper-V Balloon driver.
+>  
+> +config HYPERV_SYS_HYPERVISOR
+> +       bool "Create Hyper-V entries under /sys/hypervisor"
+> +       depends on HYPERV && SYSFS
+> +       select SYS_HYPERVISOR
+> +       default y
+> +       help
+> +         Create Hyper-V entries under /sys/hypervisor (e.g., type). When running
+> +         native or on another hypervisor, /sys/hypervisor may still be
+> +         present, but it will have no Hyper-V entries.
 > +
->  enum intel_pdi_type {
->  	INTEL_PDI_IN = 0,
->  	INTEL_PDI_OUT = 1,
-> @@ -922,7 +924,7 @@ static int sdw_master_read_intel_prop(struct sdw_bus *bus)
->  	struct sdw_master_prop *prop = &bus->prop;
->  	struct fwnode_handle *link;
->  	char name[32];
-> -	int nval, i;
-> +	u32 quirk_mask;
->  
->  	/* Find master handle */
->  	snprintf(name, sizeof(name),
-> @@ -937,6 +939,14 @@ static int sdw_master_read_intel_prop(struct sdw_bus *bus)
->  	fwnode_property_read_u32(link,
->  				 "intel-sdw-ip-clock",
->  				 &prop->mclk_freq);
+>  endmenu
+> diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
+> index a1eec7177c2d..87f569659555 100644
+> --- a/drivers/hv/Makefile
+> +++ b/drivers/hv/Makefile
+> @@ -1,7 +1,8 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> -obj-$(CONFIG_HYPERV)           += hv_vmbus.o
+> -obj-$(CONFIG_HYPERV_UTILS)     += hv_utils.o
+> -obj-$(CONFIG_HYPERV_BALLOON)   += hv_balloon.o
+> +obj-$(CONFIG_HYPERV)                   += hv_vmbus.o
+> +obj-$(CONFIG_HYPERV_UTILS)             += hv_utils.o
+> +obj-$(CONFIG_HYPERV_BALLOON)           += hv_balloon.o
+> +obj-$(CONFIG_HYPERV_SYS_HYPERVISOR)    += sys-hypervisor.o
+>  
+>  CFLAGS_hv_trace.o = -I$(src)
+>  CFLAGS_hv_balloon.o = -I$(src)
+> diff --git a/drivers/hv/sys-hypervisor.c b/drivers/hv/sys-hypervisor.c
+> new file mode 100644
+> index 000000000000..eb3d2a6502c4
+> --- /dev/null
+> +++ b/drivers/hv/sys-hypervisor.c
+> @@ -0,0 +1,41 @@
+> +// SPDX-License-Identifier: GPL-2.0
 > +
-> +	fwnode_property_read_u32(link,
-> +				 "intel-quirk-mask",
-> +				 &quirk_mask);
+> +/*
+> + * Copyright (C) 2019, Microsoft, Inc.
+> + *
+> + * Authored by: Nuno Das Neves <nudasnev@microsoft.com>
+> + */
 > +
-> +	if (quirk_mask & SDW_INTEL_QUIRK_MASK_BUS_DISABLE)
-> +		prop->hw_disabled = true;
+> +#include <linux/kernel.h>
+> +#include <linux/init.h>
+> +#include <linux/kobject.h>
+> +#include <linux/err.h>
 > +
->  	return 0;
->  }
->  
-> @@ -997,6 +1007,12 @@ static int intel_probe(struct platform_device *pdev)
->  		goto err_master_reg;
->  	}
->  
-> +	if (sdw->cdns.bus.prop.hw_disabled) {
-> +		dev_info(&pdev->dev, "SoundWire master %d is disabled, ignoring\n",
-> +			 sdw->cdns.bus.link_id);
-> +		return 0;
-> +	}
+> +#include <asm/hypervisor.h>
 > +
->  	/* Initialize shim and controller */
->  	intel_link_power_up(sdw);
->  	intel_shim_init(sdw);
-> @@ -1050,9 +1066,11 @@ static int intel_remove(struct platform_device *pdev)
->  
->  	sdw = platform_get_drvdata(pdev);
->  
-> -	intel_debugfs_exit(sdw);
-> -	free_irq(sdw->res->irq, sdw);
-> -	snd_soc_unregister_component(sdw->cdns.dev);
-> +	if (!sdw->cdns.bus.prop.hw_disabled) {
-> +		intel_debugfs_exit(sdw);
-> +		free_irq(sdw->res->irq, sdw);
-> +		snd_soc_unregister_component(sdw->cdns.dev);
-> +	}
->  	sdw_delete_bus_master(&sdw->cdns.bus);
->  
->  	return 0;
-> diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
-> index c7dfc824be80..f78b076a8782 100644
-> --- a/include/linux/soundwire/sdw.h
-> +++ b/include/linux/soundwire/sdw.h
-> @@ -380,6 +380,7 @@ struct sdw_slave_prop {
->   * @err_threshold: Number of times that software may retry sending a single
->   * command
->   * @mclk_freq: clock reference passed to SoundWire Master, in Hz.
-> + * @hw_disabled: if true, the Master is not functional, typically due to pin-mux
->   */
->  struct sdw_master_prop {
->  	u32 revision;
-> @@ -395,6 +396,7 @@ struct sdw_master_prop {
->  	bool dynamic_frame;
->  	u32 err_threshold;
->  	u32 mclk_freq;
-> +	bool hw_disabled;
-
-Do we have such cases where some of SoundWire links are disabled and
-some enabled?
-
->  };
->  
->  int sdw_master_read_prop(struct sdw_bus *bus);
+> +static ssize_t type_show(struct kobject *obj,
+> +                       struct kobj_attribute *attr,
+> +                       char *buf)
+> +{
+> +       return sprintf(buf, "Hyper-V\n");
+> +}
+> +
+> +static struct kobj_attribute type_attr = __ATTR_RO(type);
+> +
+> +static int __init hyperv_sysfs_type_init(void)
+> +{
+> +       return sysfs_create_file(hypervisor_kobj, &type_attr.attr);
+> +}
+> +
+> +static int __init hyper_sysfs_init(void)
+> +{
+> +       int ret;
+> +
+> +       if (!hypervisor_is_type(X86_HYPER_MS_HYPERV))
+> +               return -ENODEV;
+> +
+> +       ret = hyperv_sysfs_type_init();
+> +
+> +       return ret;
+> +}
+> +device_initcall(hyper_sysfs_init);
 > -- 
-> 2.20.1
+> 2.17.1
 > 
-
--- 
