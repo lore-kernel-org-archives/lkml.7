@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A6B8C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D052C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D45FE2186A
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:08:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02DAC2087B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:08:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010519;
-	bh=eeFIHSL2xp6/VvCSYq3PlJ1aasNV2jep2XmQvnOX6eg=;
+	s=default; t=1565010524;
+	bh=QJogNQRhvJMrWQSd7kP7zNpjHx0HEVdzKC5SkZME/60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Stdy/aiUAgSnkTqrHsvT5nGaRnEp8izM4VqxmyvHBtH4FrppdkTkPwI9+2njfZ91b
-	 3SfGyCZEcEWlbJOgoOwFOQIsf2fY6ZAcAlgS5ORZO3CcWsB6Fn4Pypo5J2ItUAI7Of
-	 cQJl/D/isYgDgvyge/5sCvYA/47tn4cXEs3uih3g=
+	b=UXF/m4zc+MVbDWGPwoyjjO0IXn0X09LyLz0FhQl7Zmm+/9zWl9kpBMTYbNnE7bT7W
+	 Zz7Y3V6VinUY8bPUuinn70acnEX8lwAIY684QhSyiwqoi0LmE3yBHuehX5LBIo4gKh
+	 sG8sKooNB1h9hpFYqdIlbA5MktZJWeqqrg0hNdcU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729620AbfHENIi (ORCPT
+        id S1730075AbfHENIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:08:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46722 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:08:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729192AbfHENIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:08:35 -0400
+        id S1729578AbfHENIi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:08:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0FC32075B;
-        Mon,  5 Aug 2019 13:08:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D0692067D;
+        Mon,  5 Aug 2019 13:08:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010515;
-        bh=eeFIHSL2xp6/VvCSYq3PlJ1aasNV2jep2XmQvnOX6eg=;
+        s=default; t=1565010517;
+        bh=QJogNQRhvJMrWQSd7kP7zNpjHx0HEVdzKC5SkZME/60=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZpZwwsnddCNKItpA1uJObdiOWhdTCmA4vEpe9iqk04N7QYsxyBTaWgrZSV2NwYrib
-         STd30WMLp3KQPaliA4t8F1uKedCx8CDxPNkaqCV1JL4xoyuVMxn8EczwvgdfzFVuDl
-         gP4o05/MjTQQ3wyzOJHU/vOG4sjOPCGZOTBEjYr4=
+        b=eX5M+MvndvvavtVfzUQqZYUp/9brE47X0EE/aCY9rQ89ltbTgSM7JuVf0J1pUsWlz
+         7uwcxXUaciMqlMZY7PezOLyhTB0hw/ltGsUYiSrobuFAxKhSuojvD4aoq8focXazNs
+         wXB/k4jqYC0QAqadU/EF+8FbQeI56fauKIMMJWps=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, x86@kernel.org,
-        Borislav Petkov <bp@alien8.de>,
-        Duncan Roe <duncan_roe@optusnet.com.au>,
-        Andy Lutomirski <luto@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 53/53] x86/vdso: Prevent segfaults due to hoisted vclock reads
-Date:   Mon,  5 Aug 2019 15:03:18 +0200
-Message-Id: <20190805124933.695368129@linuxfoundation.org>
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Alim Akhtar <alim.akhtar@gmail.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.14 36/53] mmc: dw_mmc: Fix occasional hang after tuning on eMMC
+Date:   Mon,  5 Aug 2019 15:03:01 +0200
+Message-Id: <20190805124932.154353918@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124927.973499541@linuxfoundation.org>
 References: <20190805124927.973499541@linuxfoundation.org>
@@ -62,67 +62,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Lutomirski <luto@kernel.org>
+From: Douglas Anderson <dianders@chromium.org>
 
-commit ff17bbe0bb405ad8b36e55815d381841f9fdeebc upstream.
+commit ba2d139b02ba684c6c101de42fed782d6cd2b997 upstream.
 
-GCC 5.5.0 sometimes cleverly hoists reads of the pvclock and/or hvclock
-pages before the vclock mode checks.  This creates a path through
-vclock_gettime() in which no vclock is enabled at all (due to disabled
-TSC on old CPUs, for example) but the pvclock or hvclock page
-nevertheless read.  This will segfault on bare metal.
+In commit 46d179525a1f ("mmc: dw_mmc: Wait for data transfer after
+response errors.") we fixed a tuning-induced hang that I saw when
+stress testing tuning on certain SD cards.  I won't re-hash that whole
+commit, but the summary is that as a normal part of tuning you need to
+deal with transfer errors and there were cases where these transfer
+errors was putting my system into a bad state causing all future
+transfers to fail.  That commit fixed handling of the transfer errors
+for me.
 
-This fixes commit 459e3a21535a ("gcc-9: properly declare the
-{pv,hv}clock_page storage") in the sense that, before that commit, GCC
-didn't seem to generate the offending code.  There was nothing wrong
-with that commit per se, and -stable maintainers should backport this to
-all supported kernels regardless of whether the offending commit was
-present, since the same crash could just as easily be triggered by the
-phase of the moon.
+In downstream Chrome OS my fix landed and had the same behavior for
+all SD/MMC commands.  However, it looks like when the commit landed
+upstream we limited it to only SD tuning commands.  Presumably this
+was to try to get around problems that Alim Akhtar reported on exynos
+[1].
 
-On GCC 9.1.1, this doesn't seem to affect the generated code at all, so
-I'm not too concerned about performance regressions from this fix.
+Unfortunately while stress testing reboots (and suspend/resume) on
+some rk3288-based Chromebooks I found the same problem on the eMMC on
+some of my Chromebooks (the ones with Hynix eMMC).  Since the eMMC
+tuning command is different (MMC_SEND_TUNING_BLOCK_HS200
+vs. MMC_SEND_TUNING_BLOCK) we were basically getting back into the
+same situation.
 
+I'm hoping that whatever problems exynos was having in the past are
+somehow magically fixed now and we can make the behavior the same for
+all commands.
+
+[1] https://lkml.kernel.org/r/CAGOxZ53WfNbaMe0_AM0qBqU47kAfgmPBVZC8K8Y-_J3mDMqW4A@mail.gmail.com
+
+Fixes: 46d179525a1f ("mmc: dw_mmc: Wait for data transfer after response errors.")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Alim Akhtar <alim.akhtar@gmail.com>
+Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Cc: stable@vger.kernel.org
-Cc: x86@kernel.org
-Cc: Borislav Petkov <bp@alien8.de>
-Reported-by: Duncan Roe <duncan_roe@optusnet.com.au>
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/entry/vdso/vclock_gettime.c |   15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ drivers/mmc/host/dw_mmc.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/arch/x86/entry/vdso/vclock_gettime.c
-+++ b/arch/x86/entry/vdso/vclock_gettime.c
-@@ -191,13 +191,24 @@ notrace static inline u64 vgetsns(int *m
- 
- 	if (gtod->vclock_mode == VCLOCK_TSC)
- 		cycles = vread_tsc();
-+
-+	/*
-+	 * For any memory-mapped vclock type, we need to make sure that gcc
-+	 * doesn't cleverly hoist a load before the mode check.  Otherwise we
-+	 * might end up touching the memory-mapped page even if the vclock in
-+	 * question isn't enabled, which will segfault.  Hence the barriers.
-+	 */
- #ifdef CONFIG_PARAVIRT_CLOCK
--	else if (gtod->vclock_mode == VCLOCK_PVCLOCK)
-+	else if (gtod->vclock_mode == VCLOCK_PVCLOCK) {
-+		barrier();
- 		cycles = vread_pvclock(mode);
-+	}
- #endif
- #ifdef CONFIG_HYPERV_TSCPAGE
--	else if (gtod->vclock_mode == VCLOCK_HVCLOCK)
-+	else if (gtod->vclock_mode == VCLOCK_HVCLOCK) {
-+		barrier();
- 		cycles = vread_hvclock(mode);
-+	}
- #endif
- 	else
- 		return 0;
+--- a/drivers/mmc/host/dw_mmc.c
++++ b/drivers/mmc/host/dw_mmc.c
+@@ -2046,8 +2046,7 @@ static void dw_mci_tasklet_func(unsigned
+ 				 * delayed. Allowing the transfer to take place
+ 				 * avoids races and keeps things simple.
+ 				 */
+-				if ((err != -ETIMEDOUT) &&
+-				    (cmd->opcode == MMC_SEND_TUNING_BLOCK)) {
++				if (err != -ETIMEDOUT) {
+ 					state = STATE_SENDING_DATA;
+ 					continue;
+ 				}
 
 
