@@ -2,106 +2,114 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 225B7C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C50CC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1DFD2173B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:14:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010855;
-	bh=YwiC+hXW1ijrw9UQ2aF7Quevho4xFUQsbUEAordRrL0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0h0056MlVgop5gN1P4OblfiWNlc8qw6AdMQe08/7/ghY1yYQqDyM+2rVQIFCo6oTE
-	 898oRF/g5mfsTHnw3IlelCcXhoLJOWmwZ1UvGChq+9J50U6HTpDgY4lf5vAzy9O2Pk
-	 qeYe31LRazp8u1uiS1EgPXbrr98moYmfNaVABBk4=
+	by mail.kernel.org (Postfix) with ESMTP id 6E0782067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:14:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730009AbfHENIV (ORCPT
+        id S1730205AbfHENOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:08:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46310 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:14:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:48486 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729988AbfHENIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:08:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 936C521872;
-        Mon,  5 Aug 2019 13:08:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010497;
-        bh=YwiC+hXW1ijrw9UQ2aF7Quevho4xFUQsbUEAordRrL0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v5pHoQHkPUao1LzH8GzM6u61JuRqnMErVimUVn6xm6QyLBt8dbp+wUdHKUDcV+kj0
-         wSX4lcG2X32+FvJsbfDJtRaKn3swn253OTN4W/+qj+8B/vjvjeV/qjBRx+o+GGW5d4
-         M5isa2kJrLAR3fWVoVdL8l9WyClzNHg5j/X8lqmg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yishai Hadas <yishaih@mellanox.com>,
-        Artemy Kovalyov <artemyko@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.14 47/53] IB/mlx5: Move MRs to a kernel PD when freeing them to the MR cache
-Date:   Mon,  5 Aug 2019 15:03:12 +0200
-Message-Id: <20190805124933.152431582@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190805124927.973499541@linuxfoundation.org>
-References: <20190805124927.973499541@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1729469AbfHENON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:14:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B021D337;
+        Mon,  5 Aug 2019 06:14:11 -0700 (PDT)
+Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CA2003F706;
+        Mon,  5 Aug 2019 06:14:09 -0700 (PDT)
+Subject: Re: [PATCH 3/9] KVM: arm64: Implement PV_FEATURES call
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     kvm@vger.kernel.org,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        linux-doc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
+        Julien Thierry <julien.thierry.kdev@gmail.com>
+References: <20190802145017.42543-1-steven.price@arm.com>
+ <20190802145017.42543-4-steven.price@arm.com> <20190803122124.7700f700@why>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <1e0a03b4-1fb6-cbe2-fb7a-8ed39341a187@arm.com>
+Date:   Mon, 5 Aug 2019 14:14:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190803122124.7700f700@why>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yishai Hadas <yishaih@mellanox.com>
+On 03/08/2019 12:21, Marc Zyngier wrote:
+> On Fri,  2 Aug 2019 15:50:11 +0100
+> Steven Price <steven.price@arm.com> wrote:
+> 
+>> This provides a mechanism for querying which paravirtualized features
+>> are available in this hypervisor.
+>>
+>> Also add the header file which defines the ABI for the paravirtualized
+>> clock features we're about to add.
+>>
+>> Signed-off-by: Steven Price <steven.price@arm.com>
+>> ---
+>>  arch/arm64/include/asm/pvclock-abi.h | 20 ++++++++++++++++++++
+>>  include/linux/arm-smccc.h            | 14 ++++++++++++++
+>>  virt/kvm/arm/hypercalls.c            |  9 +++++++++
+>>  3 files changed, 43 insertions(+)
+>>  create mode 100644 arch/arm64/include/asm/pvclock-abi.h
+>>
+>> diff --git a/arch/arm64/include/asm/pvclock-abi.h b/arch/arm64/include/asm/pvclock-abi.h
+>> new file mode 100644
+>> index 000000000000..1f7cdc102691
+>> --- /dev/null
+>> +++ b/arch/arm64/include/asm/pvclock-abi.h
+>> @@ -0,0 +1,20 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +/* Copyright (C) 2019 Arm Ltd. */
+>> +
+>> +#ifndef __ASM_PVCLOCK_ABI_H
+>> +#define __ASM_PVCLOCK_ABI_H
+>> +
+>> +/* The below structures and constants are defined in ARM DEN0057A */
+>> +
+>> +struct pvclock_vcpu_stolen_time_info {
+>> +	__le32 revision;
+>> +	__le32 attributes;
+>> +	__le64 stolen_time;
+>> +	/* Structure must be 64 byte aligned, pad to that size */
+>> +	u8 padding[48];
+>> +} __packed;
+>> +
+>> +#define PV_VM_TIME_NOT_SUPPORTED	-1
+> 
+> Isn't the intent for this to be the same value as
+> SMCCC_RET_NOT_SUPPORTED?
 
-commit 9ec4483a3f0f71a228a5933bc040441322bfb090 upstream.
+Yes it is, I guess there's not much point defining it again.
 
-Fix unreg_umr to move the MR to a kernel owned PD (i.e. the UMR PD) which
-can't be accessed by userspace.
+>> +#define PV_VM_TIME_INVALID_PARAMETERS	-2
+> 
+> It overlaps with SMCCC_RET_NOT_REQUIRED. Is that a problem? Should we
+> consider a spec change for this?
 
-This ensures that nothing can continue to access the MR once it has been
-placed in the kernels cache for reuse.
+Actually INVALID_PARAMETERS is only for Live Physical Time, since we're
+not implementing it here, this can go as well.
 
-MRs in the cache continue to have their HW state, including DMA tables,
-present. Even though the MR has been invalidated, changing the PD provides
-an additional layer of protection against use of the MR.
+Thanks,
 
-Link: https://lore.kernel.org/r/20190723065733.4899-5-leon@kernel.org
-Cc: <stable@vger.kernel.org> # 3.10
-Fixes: e126ba97dba9 ("mlx5: Add driver for Mellanox Connect-IB adapters")
-Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
-Reviewed-by: Artemy Kovalyov <artemyko@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/infiniband/hw/mlx5/mr.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
---- a/drivers/infiniband/hw/mlx5/mr.c
-+++ b/drivers/infiniband/hw/mlx5/mr.c
-@@ -1305,8 +1305,10 @@ static int unreg_umr(struct mlx5_ib_dev
- 	if (mdev->state == MLX5_DEVICE_STATE_INTERNAL_ERROR)
- 		return 0;
- 
--	umrwr.wr.send_flags = MLX5_IB_SEND_UMR_DISABLE_MR;
-+	umrwr.wr.send_flags = MLX5_IB_SEND_UMR_DISABLE_MR |
-+			      MLX5_IB_SEND_UMR_UPDATE_PD_ACCESS;
- 	umrwr.wr.opcode = MLX5_IB_WR_UMR;
-+	umrwr.pd = dev->umrc.pd;
- 	umrwr.mkey = mr->mmkey.key;
- 	umrwr.ignore_free_state = 1;
- 
-
-
+Steve
