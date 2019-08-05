@@ -2,161 +2,154 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 395B3C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 21:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B65C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 21:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC2C320B1F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 21:18:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ef/4gIpz"
+	by mail.kernel.org (Postfix) with ESMTP id AA72520B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 21:21:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730669AbfHEVSZ (ORCPT
+        id S1730640AbfHEVVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 17:18:25 -0400
-Received: from mail-oi1-f178.google.com ([209.85.167.178]:43385 "EHLO
-        mail-oi1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729566AbfHEVSZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 17:18:25 -0400
-Received: by mail-oi1-f178.google.com with SMTP id w79so63475742oif.10
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 14:18:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:reply-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Quv5LKbs49OA0A7kUkrESPHUpmixy0uCyhJoYZPtdP4=;
-        b=Ef/4gIpz8Estc4b2dD1u9XsH48FqtGNZcuSUKZu6Go6rAtTAAwWYccI8oKPC/WeJ9s
-         eysXbXa5OjK92WFBIdmQOFtQvHIJGzoKD57djmO5UaLJxjlxMp6Car2c12JLfpa34aZN
-         1Q6ieMCMAte89kX+rw6vzaT6YfO+GF9EZBdMse9zBu8zsuy5dU5aNtdjaZC6gbPBtE39
-         OrqyKgioDnWIl5vFaHtViPMuxeiJxdx5IYMb1sPP90jo1ue+CQsVIW2Q00EQppIKoa/I
-         9LJnItZ7EHKdOtSwtstrd/EJ35SOTuQ42F0ThDXr5eT4KHpYYhohWvO32EO2xXdtrMrq
-         y3lA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :reply-to:references:mime-version:content-disposition:in-reply-to
-         :user-agent;
-        bh=Quv5LKbs49OA0A7kUkrESPHUpmixy0uCyhJoYZPtdP4=;
-        b=gJdvHNcjmndd8B/1KQZWRtEmJUL5H35xhW9W/5HN73Tcy5rYnHsXOBZQ2W6FFUsItS
-         Hhl8qaSuk0zKdA2QyT75IirF+pEsGfzvW7BdIJX3rYa0S3gMvF1E0HW/JkHrwEH/sV0h
-         YerOBjSXP4Hb5sKiaPENFb2RRL/9XfLJJ4SSgqK1vGsA20g5NdHEGltKZJ010LF6VRbW
-         PYhHwpZUFoO1f368JvKzBj7ai2L5WuI38wXkNItSTO1wujbWhBM2VsMC2qwuUO0Axe5W
-         uXPlzDrbNrStvWJNvLEyfksE7auseitY9BD6S2WsJ2P1ZfxsXugkzPkzo1mZ45uBrCsD
-         ce+Q==
-X-Gm-Message-State: APjAAAWYWydkI10FhEAgqO0j0k9+W5Xgyd2b12DwGm6sI7UB/VVSVv6d
-        VxCri9F556/gUVEzK4Ahrw==
-X-Google-Smtp-Source: APXvYqx6jU8h4cOhrS0fGYgjYoVtMAHXM3guXHC1cBcm4h7gVHA3pxgSsuez4bR3WHgjD/Auu/IoRw==
-X-Received: by 2002:aca:bb45:: with SMTP id l66mr291841oif.108.1565039903877;
-        Mon, 05 Aug 2019 14:18:23 -0700 (PDT)
-Received: from serve.minyard.net ([47.184.134.43])
-        by smtp.gmail.com with ESMTPSA id c21sm27381174oib.4.2019.08.05.14.18.23
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 05 Aug 2019 14:18:23 -0700 (PDT)
-Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:395d:f792:3095:bcc7])
-        by serve.minyard.net (Postfix) with ESMTPSA id A12A81800D1;
-        Mon,  5 Aug 2019 21:18:22 +0000 (UTC)
-Date:   Mon, 5 Aug 2019 16:18:21 -0500
-From:   Corey Minyard <minyard@acm.org>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     openipmi-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH] ipmi_si_intf: use usleep_range() instead of busy looping
-Message-ID: <20190805211821.GG5001@minyard.net>
-Reply-To: minyard@acm.org
-References: <20190709210643.GJ657710@devbig004.ftw2.facebook.com>
- <20190709214602.GD19430@minyard.net>
- <20190709220908.GL657710@devbig004.ftw2.facebook.com>
- <20190709230144.GE19430@minyard.net>
- <20190710142221.GO657710@devbig004.ftw2.facebook.com>
- <20190801174002.GC5001@minyard.net>
- <20190805181850.GI136335@devbig004.ftw2.facebook.com>
+        Mon, 5 Aug 2019 17:21:37 -0400
+Received: from mga12.intel.com ([192.55.52.136]:62828 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730055AbfHEVVh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 17:21:37 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 14:21:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,350,1559545200"; 
+   d="scan'208";a="192503883"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
+  by fmsmga001.fm.intel.com with ESMTP; 05 Aug 2019 14:21:36 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org
+Cc:     "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/apic: Annotate global config variables as "read-only after init"
+Date:   Mon,  5 Aug 2019 14:21:34 -0700
+Message-Id: <20190805212134.12001-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190805181850.GI136335@devbig004.ftw2.facebook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 11:18:50AM -0700, Tejun Heo wrote:
-> Hello, Corey.
-> 
-> On Thu, Aug 01, 2019 at 12:40:02PM -0500, Corey Minyard wrote:
-> > I spent some time looking at this.  Without the patch, I
-> > measured around 3.5ms to send/receive a get device ID message
-> > and uses 100% of the CPU on a core.
-> > 
-> > I measured your patch, it slowed it down to around 10.5ms
-> > per message, which is not good.  Though it did just use a
-> > few percent of the core.
-> > 
-> > I wrote some code to auto-adjust the timer.  It settled on
-> > a delay around 35us, which gave 4.7ms per message, which is
-> > probably acceptable, and used around 40% of the CPU.  If
-> > I use any timeout (even a 0-10us range) it won't go below
-> > 4ms per message.
-> 
-> Out of curiosity, what makes 4.7ms okay and 10.5ms not?  At least for
-> the use case we have in the fleet (sensor reading mostly), the less
-> disruptive the better as long as things don't timeout and fail.
+Mark the APIC's global config variables that are constant after boot as
+__ro_after_init to help document that the majority of the APIC config is
+not changed at runtime, and to harden the kernel a smidge.
 
-Well, when you are loading firmware and it takes 10 minutes at
-max speed, taking 20-30 minutes is a lot worse.  It's not reading
-sensors, which would be fine, it's tranferring large chunks of
-data.
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
 
-> 
-> > The process is running at nice 19 priority, so it won't
-> > have a significant effect on other processes from a priority
-> > point of view.  It may still be hitting the scheduler locks
-> > pretty hard, though.  But I played with things quite a bit
-> 
-> And power.  Imagine multi six digit number of machines burning a full
-> core just because of this busy loop to read temperature sensors some
-> msecs faster.
-> 
-> > and the behavior or the management controller is too
-> > erratic to set a really good timeout.  Maybe other ones
-> > are better, don't know.
-> > 
-> > One other option we have is that the driver has something
-> > called "maintenance mode".  If it detect that you have
-> > reset the management controller or are issuing firmware
-> > commands, it will modify timeout behavior.  It can also
-> > be activated manually.  I could also make it switch to
-> > just calling schedule instead of delaying when in that
-> > mode.
-> 
-> Yeah, whatever which makes the common-case behavior avoid busy looping
-> would work.
+This applies on tip/x86/apic, which is currently:
 
-Ok, it's queued in linux-next now (and has been for a few days).
-I'll get it into the next kernel release (and I just noticed
-a spelling error and fixed it).
+  43931d350f30 ("x86/apic/x2apic: Implement IPI shorthands support")
 
--corey
+Let me know if this patch should be based on a different tree.
 
-> 
-> > The right thing it do is complain bitterly to vendors who
-> > build hardware that has to be polled.  But besides that,
-> 
-> For sure, but there already are a lot of machines with this thing and
-> it'll take multiple years for them to retire so...
-> 
-> > I'm thinking the maintenance mode is the thing to do.
-> > It will also change behavior if you reset the management
-> > controller, but only for 30 seconds or so.  Does that
-> > work?
-> 
-> Yeah, sounds good to me.
-> 
-> Thnaks.
-> 
-> -- 
-> tejun
+ arch/x86/kernel/apic/apic.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
+
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 831274e3c09f..3a31875bd0a3 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -65,10 +65,10 @@ unsigned int num_processors;
+ unsigned disabled_cpus;
+ 
+ /* Processor that is doing the boot up */
+-unsigned int boot_cpu_physical_apicid = -1U;
++unsigned int boot_cpu_physical_apicid __ro_after_init = -1U;
+ EXPORT_SYMBOL_GPL(boot_cpu_physical_apicid);
+ 
+-u8 boot_cpu_apic_version;
++u8 boot_cpu_apic_version __ro_after_init;
+ 
+ /*
+  * The highest APIC ID seen during enumeration.
+@@ -85,13 +85,13 @@ physid_mask_t phys_cpu_present_map;
+  * disable_cpu_apicid=<int>, mostly used for the kdump 2nd kernel to
+  * avoid undefined behaviour caused by sending INIT from AP to BSP.
+  */
+-static unsigned int disabled_cpu_apicid __read_mostly = BAD_APICID;
++static unsigned int disabled_cpu_apicid __ro_after_init = BAD_APICID;
+ 
+ /*
+  * This variable controls which CPUs receive external NMIs.  By default,
+  * external NMIs are delivered only to the BSP.
+  */
+-static int apic_extnmi = APIC_EXTNMI_BSP;
++static int apic_extnmi __ro_after_init = APIC_EXTNMI_BSP;
+ 
+ /*
+  * Map cpu index to physical APIC ID
+@@ -114,7 +114,7 @@ EXPORT_EARLY_PER_CPU_SYMBOL(x86_cpu_to_acpiid);
+ DEFINE_EARLY_PER_CPU_READ_MOSTLY(int, x86_cpu_to_logical_apicid, BAD_APICID);
+ 
+ /* Local APIC was disabled by the BIOS and enabled by the kernel */
+-static int enabled_via_apicbase;
++static int enabled_via_apicbase __ro_after_init;
+ 
+ /*
+  * Handle interrupt mode configuration register (IMCR).
+@@ -172,23 +172,23 @@ static __init int setup_apicpmtimer(char *s)
+ __setup("apicpmtimer", setup_apicpmtimer);
+ #endif
+ 
+-unsigned long mp_lapic_addr;
+-int disable_apic;
++unsigned long mp_lapic_addr __ro_after_init;
++int disable_apic __ro_after_init;
+ /* Disable local APIC timer from the kernel commandline or via dmi quirk */
+ static int disable_apic_timer __initdata;
+ /* Local APIC timer works in C2 */
+-int local_apic_timer_c2_ok;
++int local_apic_timer_c2_ok __ro_after_init;
+ EXPORT_SYMBOL_GPL(local_apic_timer_c2_ok);
+ 
+ /*
+  * Debug level, exported for io_apic.c
+  */
+-int apic_verbosity;
++int apic_verbosity __ro_after_init;
+ 
+-int pic_mode;
++int pic_mode __ro_after_init;
+ 
+ /* Have we found an MP table */
+-int smp_found_config;
++int smp_found_config __ro_after_init;
+ 
+ static struct resource lapic_resource = {
+ 	.name = "Local APIC",
+@@ -199,7 +199,7 @@ unsigned int lapic_timer_period = 0;
+ 
+ static void apic_pm_activate(void);
+ 
+-static unsigned long apic_phys;
++static unsigned long apic_phys __ro_after_init;
+ 
+ /*
+  * Get the LAPIC version
+@@ -1278,7 +1278,7 @@ void __init sync_Arb_IDs(void)
+ 			APIC_INT_LEVELTRIG | APIC_DM_INIT);
+ }
+ 
+-enum apic_intr_mode_id apic_intr_mode;
++enum apic_intr_mode_id apic_intr_mode __ro_after_init;
+ 
+ static int __init apic_intr_mode_select(void)
+ {
+-- 
+2.22.0
+
