@@ -2,139 +2,772 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CCCC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E83E2C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 639A320665
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:18:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564993105;
-	bh=v1kJgqWtz8SKuut30AH+kScrgqXQGxtoAKutbydahCI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ekFEK4eXE1Hd22VRBfbMvNbX+dWR76eAW3319E6AcaJJ5175dJXXl895mqTg5u3FK
-	 tT1U7oUbrnNmL0b4e0Gd0uOnYoLl824ATzANdOKsq0RniNj9zoLPSP5raZ5mDgPmhM
-	 zKRtgKT18S0MbzOL7/8W7askapwxDMPm8Hni+DTY=
+	by mail.kernel.org (Postfix) with ESMTP id AB6CF20665
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:18:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727613AbfHEISP (ORCPT
+        id S1727819AbfHEIS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 04:18:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42926 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727624AbfHEISO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 04:18:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7B600ADDC;
-        Mon,  5 Aug 2019 08:18:12 +0000 (UTC)
-Date:   Mon, 5 Aug 2019 10:18:10 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Masoud Sharbiani <msharbiani@apple.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, hannes@cmpxchg.org,
-        vdavydov.dev@gmail.com, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Possible mem cgroup bug in kernels between 4.18.0 and 5.3-rc1.
-Message-ID: <20190805081810.GA7597@dhcp22.suse.cz>
-References: <5659221C-3E9B-44AD-9BBF-F74DE09535CD@apple.com>
- <20190802074047.GQ11627@dhcp22.suse.cz>
- <7E44073F-9390-414A-B636-B1AE916CC21E@apple.com>
- <20190802144110.GL6461@dhcp22.suse.cz>
- <5DE6F4AE-F3F9-4C52-9DFC-E066D9DD5EDC@apple.com>
- <20190802191430.GO6461@dhcp22.suse.cz>
- <A06C5313-B021-4ADA-9897-CE260A9011CC@apple.com>
+        Mon, 5 Aug 2019 04:18:29 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42920 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727624AbfHEIS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 04:18:29 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C6B48C04FFE0;
+        Mon,  5 Aug 2019 08:18:26 +0000 (UTC)
+Received: from [10.72.12.115] (ovpn-12-115.pek2.redhat.com [10.72.12.115])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2095160127;
+        Mon,  5 Aug 2019 08:18:20 +0000 (UTC)
+Subject: Re: [PATCH V2 7/9] vhost: do not use RCU to synchronize MMU notifier
+ with worker
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, jgg@ziepe.ca,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+References: <20190731084655.7024-1-jasowang@redhat.com>
+ <20190731084655.7024-8-jasowang@redhat.com>
+ <20190731132438-mutt-send-email-mst@kernel.org>
+ <130386548.6222676.1564646773879.JavaMail.zimbra@redhat.com>
+ <20190803173825-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <2f0d9753-9103-b9d9-aea1-7e5abcd0fb96@redhat.com>
+Date:   Mon, 5 Aug 2019 16:18:19 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <20190803173825-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <A06C5313-B021-4ADA-9897-CE260A9011CC@apple.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Mon, 05 Aug 2019 08:18:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 02-08-19 16:28:25, Masoud Sharbiani wrote:
-> 
-> 
-> > On Aug 2, 2019, at 12:14 PM, Michal Hocko <mhocko@kernel.org> wrote:
-> > 
-> > On Fri 02-08-19 11:00:55, Masoud Sharbiani wrote:
-> >> 
-> >> 
-> >>> On Aug 2, 2019, at 7:41 AM, Michal Hocko <mhocko@kernel.org> wrote:
-> >>> 
-> >>> On Fri 02-08-19 07:18:17, Masoud Sharbiani wrote:
-> >>>> 
-> >>>> 
-> >>>>> On Aug 2, 2019, at 12:40 AM, Michal Hocko <mhocko@kernel.org> wrote:
-> >>>>> 
-> >>>>> On Thu 01-08-19 11:04:14, Masoud Sharbiani wrote:
-> >>>>>> Hey folks,
-> >>>>>> I’ve come across an issue that affects most of 4.19, 4.20 and 5.2 linux-stable kernels that has only been fixed in 5.3-rc1.
-> >>>>>> It was introduced by
-> >>>>>> 
-> >>>>>> 29ef680 memcg, oom: move out_of_memory back to the charge path 
-> >>>>> 
-> >>>>> This commit shouldn't really change the OOM behavior for your particular
-> >>>>> test case. It would have changed MAP_POPULATE behavior but your usage is
-> >>>>> triggering the standard page fault path. The only difference with
-> >>>>> 29ef680 is that the OOM killer is invoked during the charge path rather
-> >>>>> than on the way out of the page fault.
-> >>>>> 
-> >>>>> Anyway, I tried to run your test case in a loop and leaker always ends
-> >>>>> up being killed as expected with 5.2. See the below oom report. There
-> >>>>> must be something else going on. How much swap do you have on your
-> >>>>> system?
-> >>>> 
-> >>>> I do not have swap defined. 
-> >>> 
-> >>> OK, I have retested with swap disabled and again everything seems to be
-> >>> working as expected. The oom happens earlier because I do not have to
-> >>> wait for the swap to get full.
-> >>> 
-> >> 
-> >> In my tests (with the script provided), it only loops 11 iterations before hanging, and uttering the soft lockup message.
-> >> 
-> >> 
-> >>> Which fs do you use to write the file that you mmap?
-> >> 
-> >> /dev/sda3 on / type xfs (rw,relatime,seclabel,attr2,inode64,logbufs=8,logbsize=32k,noquota)
-> >> 
-> >> Part of the soft lockup path actually specifies that it is going through __xfs_filemap_fault():
-> > 
-> > Right, I have just missed that.
-> > 
-> > [...]
-> > 
-> >> If I switch the backing file to a ext4 filesystem (separate hard drive), it OOMs.
-> >> 
-> >> 
-> >> If I switch the file used to /dev/zero, it OOMs: 
-> >> …
-> >> Todal sum was 0. Loop count is 11
-> >> Buffer is @ 0x7f2b66c00000
-> >> ./test-script-devzero.sh: line 16:  3561 Killed                  ./leaker -p 10240 -c 100000
-> >> 
-> >> 
-> >>> Or could you try to
-> >>> simplify your test even further? E.g. does everything work as expected
-> >>> when doing anonymous mmap rather than file backed one?
-> >> 
-> >> It also OOMs with MAP_ANON. 
-> >> 
-> >> Hope that helps.
-> > 
-> > It helps to focus more on the xfs reclaim path. Just to be sure, is
-> > there any difference if you use cgroup v2? I do not expect to be but
-> > just to be sure there are no v1 artifacts.
-> 
-> I was unable to use cgroups2. I’ve created the new control group, but the attempt to move a running process into it fails with ‘Device or resource busy’.
 
-Have you enabled the memory controller for the hierarchy? Please read
-Documentation/admin-guide/cgroup-v2.rst for more information.
--- 
-Michal Hocko
-SUSE Labs
+On 2019/8/4 上午5:54, Michael S. Tsirkin wrote:
+> On Thu, Aug 01, 2019 at 04:06:13AM -0400, Jason Wang wrote:
+>> On 2019/8/1 上午2:29, Michael S. Tsirkin wrote:
+>>> On Wed, Jul 31, 2019 at 04:46:53AM -0400, Jason Wang wrote:
+>>>> We used to use RCU to synchronize MMU notifier with worker. This leads
+>>>> calling synchronize_rcu() in invalidate_range_start(). But on a busy
+>>>> system, there would be many factors that may slow down the
+>>>> synchronize_rcu() which makes it unsuitable to be called in MMU
+>>>> notifier.
+>>>>
+>>>> A solution is SRCU but its overhead is obvious with the expensive full
+>>>> memory barrier. Another choice is to use seqlock, but it doesn't
+>>>> provide a synchronization method between readers and writers. The last
+>>>> choice is to use vq mutex, but it need to deal with the worst case
+>>>> that MMU notifier must be blocked and wait for the finish of swap in.
+>>>>
+>>>> So this patch switches use a counter to track whether or not the map
+>>>> was used. The counter was increased when vq try to start or finish
+>>>> uses the map. This means, when it was even, we're sure there's no
+>>>> readers and MMU notifier is synchronized. When it was odd, it means
+>>>> there's a reader we need to wait it to be even again then we are
+>>>> synchronized. To avoid full memory barrier, store_release +
+>>>> load_acquire on the counter is used.
+>>> Unfortunately this needs a lot of review and testing, so this can't make
+>>> rc2, and I don't think this is the kind of patch I can merge after rc3.
+>>> Subtle memory barrier tricks like this can introduce new bugs while they
+>>> are fixing old ones.
+>> I admit the patch is tricky. Some questions:
+>>
+>> - Do we must address the case of e.g swap in? If not, a simple
+>>    vhost_work_flush() instead of synchronize_rcu() may work.
+>> - Having some hard thought, I think we can use seqlock, it looks
+>>    to me smp_wmb() is in write_segcount_begin() is sufficient, we don't
+>>    care vq->map read before smp_wmb(), and for the other we all have
+>>    good data devendency so smp_wmb() in the write_seqbegin_end() is
+>>    sufficient.
+> If we need an mb in the begin() we can switch to
+> dependent_ptr_mb. if you need me to fix it up
+> and repost, let me know.
+
+
+Yes, but please let me figure out whether mb is really necessary here.
+
+
+>
+> Why isn't it a problem if the map is
+> accessed outside the lock?
+
+
+Correct me if I was wrong. E.g for vhost_put_avail_event()
+
+vhost_vq_access_map_begin(vq);
+
+                 map = vq->maps[VHOST_ADDR_USED];
+                 if (likely(map)) {
+                         used = map->addr;
+                         *((__virtio16 *)&used->ring[vq->num]) =
+                                 cpu_to_vhost16(vq, vq->avail_idx);
+vhost_vq_access_map_end(vq);
+                         return 0;
+}
+
+                 vhost_vq_access_map_end(vq);
+
+
+We dont' care whether map is accessed before vhost_vq_access_map_begin() 
+since MMU notifier can only change map from non-NULL to NULL. If we read 
+it too early, we will only get NULL and won't use the map at all. And 
+smp_wmb() in vhost_vq_access_map_begin() can make sure the real access 
+to map->addr is done after we increasing the counter.
+
+
+>
+>
+>
+>> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+>> index db2c81cb1e90..6d9501303258 100644
+>> --- a/drivers/vhost/vhost.c
+>> +++ b/drivers/vhost/vhost.c
+>> @@ -363,39 +363,29 @@ static bool vhost_map_range_overlap(struct vhost_uaddr *uaddr,
+>>   
+>>   static void inline vhost_vq_access_map_begin(struct vhost_virtqueue *vq)
+>>   {
+>> -	int ref = READ_ONCE(vq->ref);
+>> -
+>> -	smp_store_release(&vq->ref, ref + 1);
+>> -	/* Make sure ref counter is visible before accessing the map */
+>> -	smp_load_acquire(&vq->ref);
+>> +	write_seqcount_begin(&vq->seq);
+>>   }
+>>   
+>>   static void inline vhost_vq_access_map_end(struct vhost_virtqueue *vq)
+>>   {
+>> -	int ref = READ_ONCE(vq->ref);
+>> -
+>> -	/* Make sure vq access is done before increasing ref counter */
+>> -	smp_store_release(&vq->ref, ref + 1);
+>> +	write_seqcount_end(&vq->seq);
+>>   }
+>>   
+>>   static void inline vhost_vq_sync_access(struct vhost_virtqueue *vq)
+>>   {
+>> -	int ref;
+>> +	unsigned int ret;
+>>   
+>>   	/* Make sure map change was done before checking ref counter */
+>>   	smp_mb();
+>> -
+>> -	ref = READ_ONCE(vq->ref);
+>> -	if (ref & 0x1) {
+>> -		/* When ref change, we are sure no reader can see
+>> +	ret = raw_read_seqcount(&vq->seq);
+>> +	if (ret & 0x1) {
+>> +		/* When seq changes, we are sure no reader can see
+>>   		 * previous map */
+>> -		while (READ_ONCE(vq->ref) == ref) {
+>> -			set_current_state(TASK_RUNNING);
+>> +		while (raw_read_seqcount(&vq->seq) == ret)
+>>   			schedule();
+>
+> So why do we set state here?
+
+
+No need, just a artifact of previous patch.
+
+
+> And should not we
+> check need_sched?
+
+
+We need use need_sched().
+
+
+>
+>
+>> -		}
+>>   	}
+>> -	/* Make sure ref counter was checked before any other
+>> -	 * operations that was dene on map. */
+>> +	/* Make sure seq was checked before any other operations that
+>> +	 * was dene on map. */
+>>   	smp_mb();
+>>   }
+>>   
+>> @@ -691,7 +681,7 @@ void vhost_dev_init(struct vhost_dev *dev,
+>>   		vq->indirect = NULL;
+>>   		vq->heads = NULL;
+>>   		vq->dev = dev;
+>> -		vq->ref = 0;
+>> +		seqcount_init(&vq->seq);
+>>   		mutex_init(&vq->mutex);
+>>   		spin_lock_init(&vq->mmu_lock);
+>>   		vhost_vq_reset(dev, vq);
+>> diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+>> index 3d10da0ae511..1a705e181a84 100644
+>> --- a/drivers/vhost/vhost.h
+>> +++ b/drivers/vhost/vhost.h
+>> @@ -125,7 +125,7 @@ struct vhost_virtqueue {
+>>   	 */
+>>   	struct vhost_uaddr uaddrs[VHOST_NUM_ADDRS];
+>>   #endif
+>> -	int ref;
+>> +	seqcount_t seq;
+>>   	const struct vhost_umem_node *meta_iotlb[VHOST_NUM_ADDRS];
+>>   
+>>   	struct file *kick;
+>> -- 
+>> 2.18.1
+>>
+>>>
+>>>
+>>>
+>>>
+>>>> Consider the read critical section is pretty small the synchronization
+>>>> should be done very fast.
+>>>>
+>>>> Note the patch lead about 3% PPS dropping.
+>>> Sorry what do you mean by this last sentence? This degrades performance
+>>> compared to what?
+>> Compare to without this patch.
+> OK is the feature still a performance win? or should we drop it for now?
+
+
+Still a win, just a drop from 23% improvement to 20% improvement.
+
+
+>>>> Reported-by: Michael S. Tsirkin <mst@redhat.com>
+>>>> Fixes: 7f466032dc9e ("vhost: access vq metadata through kernel virtual address")
+>>>> Signed-off-by: Jason Wang <jasowang@redhat.com>
+>>>> ---
+>>>>   drivers/vhost/vhost.c | 145 ++++++++++++++++++++++++++----------------
+>>>>   drivers/vhost/vhost.h |   7 +-
+>>>>   2 files changed, 94 insertions(+), 58 deletions(-)
+>>>>
+>>>> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+>>>> index cfc11f9ed9c9..db2c81cb1e90 100644
+>>>> --- a/drivers/vhost/vhost.c
+>>>> +++ b/drivers/vhost/vhost.c
+>>>> @@ -324,17 +324,16 @@ static void vhost_uninit_vq_maps(struct vhost_virtqueue *vq)
+>>>>   
+>>>>   	spin_lock(&vq->mmu_lock);
+>>>>   	for (i = 0; i < VHOST_NUM_ADDRS; i++) {
+>>>> -		map[i] = rcu_dereference_protected(vq->maps[i],
+>>>> -				  lockdep_is_held(&vq->mmu_lock));
+>>>> +		map[i] = vq->maps[i];
+>>>>   		if (map[i]) {
+>>>>   			vhost_set_map_dirty(vq, map[i], i);
+>>>> -			rcu_assign_pointer(vq->maps[i], NULL);
+>>>> +			vq->maps[i] = NULL;
+>>>>   		}
+>>>>   	}
+>>>>   	spin_unlock(&vq->mmu_lock);
+>>>>   
+>>>> -	/* No need for synchronize_rcu() or kfree_rcu() since we are
+>>>> -	 * serialized with memory accessors (e.g vq mutex held).
+>>>> +	/* No need for synchronization since we are serialized with
+>>>> +	 * memory accessors (e.g vq mutex held).
+>>>>   	 */
+>>>>   
+>>>>   	for (i = 0; i < VHOST_NUM_ADDRS; i++)
+>>>> @@ -362,6 +361,44 @@ static bool vhost_map_range_overlap(struct vhost_uaddr *uaddr,
+>>>>   	return !(end < uaddr->uaddr || start > uaddr->uaddr - 1 + uaddr->size);
+>>>>   }
+>>>>   
+>>>> +static void inline vhost_vq_access_map_begin(struct vhost_virtqueue *vq)
+>>>> +{
+>>>> +	int ref = READ_ONCE(vq->ref);
+>>>> +
+>>>> +	smp_store_release(&vq->ref, ref + 1);
+>>>> +	/* Make sure ref counter is visible before accessing the map */
+>>>> +	smp_load_acquire(&vq->ref);
+>>> The map access is after this sequence, correct?
+>> Yes.
+>>
+>>> Just going by the rules in Documentation/memory-barriers.txt,
+>>> I think that this pair will not order following accesses with ref store.
+>>>
+>>> Documentation/memory-barriers.txt says:
+>>>
+>>>
+>>> +     In addition, a RELEASE+ACQUIRE
+>>> +     pair is -not- guaranteed to act as a full memory barrier.
+>>>
+>>>
+>>>
+>>> The guarantee that is made is this:
+>>> 	after
+>>>       an ACQUIRE on a given variable, all memory accesses preceding any prior
+>>>       RELEASE on that same variable are guaranteed to be visible.
+>> Yes, but it's not clear about the order of ACQUIRE the same location
+>> of previous RELEASE. And it only has a example like:
+>>
+>> "
+>> 	*A = a;
+>> 	RELEASE M
+>> 	ACQUIRE N
+>> 	*B = b;
+>>
+>> could occur as:
+>>
+>> 	ACQUIRE N, STORE *B, STORE *A, RELEASE M
+>> "
+>>
+>> But it doesn't explain what happen when
+>>
+>> *A = a
+>> RELEASE M
+>> ACQUIRE M
+>> *B = b;
+>>
+>> And tools/memory-model/Documentation said
+>>
+>> "
+>> First, when a lock-acquire reads from a lock-release, the LKMM
+>> requires that every instruction po-before the lock-release must
+>> execute before any instruction po-after the lock-acquire.
+>> "
+>>
+>> Is this a hint that I was correct?
+> I don't think it's correct since by this logic
+> memory barriers can be nops on x86.
+
+
+It not a nop, instead, it goes to a write and then read to one same 
+location of memory.
+
+
+>
+>>>
+>>> And if we also had the reverse rule we'd end up with a full barrier,
+>>> won't we?
+>>>
+>>> Cc Paul in case I missed something here. And if I'm right,
+>>> maybe we should call this out, adding
+>>>
+>>> 	"The opposite is not true: a prior RELEASE is not
+>>> 	 guaranteed to be visible before memory accesses following
+>>> 	 the subsequent ACQUIRE".
+>> That kinds of violates the RELEASE?
+>>
+>> "
+>>       This also acts as a one-way permeable barrier.  It guarantees that all
+>>       memory operations before the RELEASE operation will appear to happen
+>>       before the RELEASE operation with respect to the other components of the
+>> "
+>
+> yes but we are talking about RELEASE itself versus stuff
+> that comes after it.
+
+
+Unless RELEASE and ACQUIRE on the same address can be reordered (at 
+least doesn't happen x86). The following ACQUIRE can make sure stuff 
+after ACQUIRE id done after RELEASE.
+
+
+>
+>>>
+>>>
+>>>> +}
+>>>> +
+>>>> +static void inline vhost_vq_access_map_end(struct vhost_virtqueue *vq)
+>>>> +{
+>>>> +	int ref = READ_ONCE(vq->ref);
+>>>> +
+>>>> +	/* Make sure vq access is done before increasing ref counter */
+>>>> +	smp_store_release(&vq->ref, ref + 1);
+>>>> +}
+>>>> +
+>>>> +static void inline vhost_vq_sync_access(struct vhost_virtqueue *vq)
+>>>> +{
+>>>> +	int ref;
+>>>> +
+>>>> +	/* Make sure map change was done before checking ref counter */
+>>>> +	smp_mb();
+>>>> +
+>>>> +	ref = READ_ONCE(vq->ref);
+>>>> +	if (ref & 0x1) {
+>>> Please document the even/odd trick here too, not just in the commit log.
+>>>
+>> Ok.
+>>
+>>>> +		/* When ref change,
+>>> changes
+>>>
+>>>> we are sure no reader can see
+>>>> +		 * previous map */
+>>>> +		while (READ_ONCE(vq->ref) == ref) {
+>>>
+>>> what is the below line in aid of?
+>>>
+>>>> +			set_current_state(TASK_RUNNING);
+> any answers here?
+
+
+It's unecessary.
+
+
+>
+>>>> +			schedule();
+>>>                          if (need_resched())
+>>>                                  schedule();
+>>>
+>>> ?
+>> Yes, better.
+>>
+>>>> +		}
+>>> On an interruptible kernel, there's a risk here is that
+>>> a task got preempted with an odd ref.
+>>> So I suspect we'll have to disable preemption when we
+>>> make ref odd.
+>> I'm not sure I get, if the odd is not the original value we read,
+>> we're sure it won't read the new map here I believe.
+> But we will spin for a very long time in this case.
+
+
+Yes, but do we disable preemption in MMU notifier callback. If not it 
+should be the same as MMU notifier was preempted for long time.
+
+We can disable the preempt count here, but it needs an extra cacheline.
+
+Thanks
+
+
+>
+>>>
+>>>> +	}
+>>>> +	/* Make sure ref counter was checked before any other
+>>>> +	 * operations that was dene on map. */
+>>> was dene -> were done?
+>>>
+>> Yes.
+>>
+>>>> +	smp_mb();
+>>>> +}
+>>>> +
+>>>>   static void vhost_invalidate_vq_start(struct vhost_virtqueue *vq,
+>>>>   				      int index,
+>>>>   				      unsigned long start,
+>>>> @@ -376,16 +413,15 @@ static void vhost_invalidate_vq_start(struct vhost_virtqueue *vq,
+>>>>   	spin_lock(&vq->mmu_lock);
+>>>>   	++vq->invalidate_count;
+>>>>   
+>>>> -	map = rcu_dereference_protected(vq->maps[index],
+>>>> -					lockdep_is_held(&vq->mmu_lock));
+>>>> +	map = vq->maps[index];
+>>>>   	if (map) {
+>>>>   		vhost_set_map_dirty(vq, map, index);
+>>>> -		rcu_assign_pointer(vq->maps[index], NULL);
+>>>> +		vq->maps[index] = NULL;
+>>>>   	}
+>>>>   	spin_unlock(&vq->mmu_lock);
+>>>>   
+>>>>   	if (map) {
+>>>> -		synchronize_rcu();
+>>>> +		vhost_vq_sync_access(vq);
+>>>>   		vhost_map_unprefetch(map);
+>>>>   	}
+>>>>   }
+>>>> @@ -457,7 +493,7 @@ static void vhost_init_maps(struct vhost_dev *dev)
+>>>>   	for (i = 0; i < dev->nvqs; ++i) {
+>>>>   		vq = dev->vqs[i];
+>>>>   		for (j = 0; j < VHOST_NUM_ADDRS; j++)
+>>>> -			RCU_INIT_POINTER(vq->maps[j], NULL);
+>>>> +			vq->maps[j] = NULL;
+>>>>   	}
+>>>>   }
+>>>>   #endif
+>>>> @@ -655,6 +691,7 @@ void vhost_dev_init(struct vhost_dev *dev,
+>>>>   		vq->indirect = NULL;
+>>>>   		vq->heads = NULL;
+>>>>   		vq->dev = dev;
+>>>> +		vq->ref = 0;
+>>>>   		mutex_init(&vq->mutex);
+>>>>   		spin_lock_init(&vq->mmu_lock);
+>>>>   		vhost_vq_reset(dev, vq);
+>>>> @@ -921,7 +958,7 @@ static int vhost_map_prefetch(struct vhost_virtqueue *vq,
+>>>>   	map->npages = npages;
+>>>>   	map->pages = pages;
+>>>>   
+>>>> -	rcu_assign_pointer(vq->maps[index], map);
+>>>> +	vq->maps[index] = map;
+>>>>   	/* No need for a synchronize_rcu(). This function should be
+>>>>   	 * called by dev->worker so we are serialized with all
+>>>>   	 * readers.
+>>>> @@ -1216,18 +1253,18 @@ static inline int vhost_put_avail_event(struct vhost_virtqueue *vq)
+>>>>   	struct vring_used *used;
+>>>>   
+>>>>   	if (!vq->iotlb) {
+>>>> -		rcu_read_lock();
+>>>> +		vhost_vq_access_map_begin(vq);
+>>>>   
+>>>> -		map = rcu_dereference(vq->maps[VHOST_ADDR_USED]);
+>>>> +		map = vq->maps[VHOST_ADDR_USED];
+>>>>   		if (likely(map)) {
+>>>>   			used = map->addr;
+>>>>   			*((__virtio16 *)&used->ring[vq->num]) =
+>>>>   				cpu_to_vhost16(vq, vq->avail_idx);
+>>>> -			rcu_read_unlock();
+>>>> +			vhost_vq_access_map_end(vq);
+>>>>   			return 0;
+>>>>   		}
+>>>>   
+>>>> -		rcu_read_unlock();
+>>>> +		vhost_vq_access_map_end(vq);
+>>>>   	}
+>>>>   #endif
+>>>>   
+>>>> @@ -1245,18 +1282,18 @@ static inline int vhost_put_used(struct vhost_virtqueue *vq,
+>>>>   	size_t size;
+>>>>   
+>>>>   	if (!vq->iotlb) {
+>>>> -		rcu_read_lock();
+>>>> +		vhost_vq_access_map_begin(vq);
+>>>>   
+>>>> -		map = rcu_dereference(vq->maps[VHOST_ADDR_USED]);
+>>>> +		map = vq->maps[VHOST_ADDR_USED];
+>>>>   		if (likely(map)) {
+>>>>   			used = map->addr;
+>>>>   			size = count * sizeof(*head);
+>>>>   			memcpy(used->ring + idx, head, size);
+>>>> -			rcu_read_unlock();
+>>>> +			vhost_vq_access_map_end(vq);
+>>>>   			return 0;
+>>>>   		}
+>>>>   
+>>>> -		rcu_read_unlock();
+>>>> +		vhost_vq_access_map_end(vq);
+>>>>   	}
+>>>>   #endif
+>>>>   
+>>>> @@ -1272,17 +1309,17 @@ static inline int vhost_put_used_flags(struct vhost_virtqueue *vq)
+>>>>   	struct vring_used *used;
+>>>>   
+>>>>   	if (!vq->iotlb) {
+>>>> -		rcu_read_lock();
+>>>> +		vhost_vq_access_map_begin(vq);
+>>>>   
+>>>> -		map = rcu_dereference(vq->maps[VHOST_ADDR_USED]);
+>>>> +		map = vq->maps[VHOST_ADDR_USED];
+>>>>   		if (likely(map)) {
+>>>>   			used = map->addr;
+>>>>   			used->flags = cpu_to_vhost16(vq, vq->used_flags);
+>>>> -			rcu_read_unlock();
+>>>> +			vhost_vq_access_map_end(vq);
+>>>>   			return 0;
+>>>>   		}
+>>>>   
+>>>> -		rcu_read_unlock();
+>>>> +		vhost_vq_access_map_end(vq);
+>>>>   	}
+>>>>   #endif
+>>>>   
+>>>> @@ -1298,17 +1335,17 @@ static inline int vhost_put_used_idx(struct vhost_virtqueue *vq)
+>>>>   	struct vring_used *used;
+>>>>   
+>>>>   	if (!vq->iotlb) {
+>>>> -		rcu_read_lock();
+>>>> +		vhost_vq_access_map_begin(vq);
+>>>>   
+>>>> -		map = rcu_dereference(vq->maps[VHOST_ADDR_USED]);
+>>>> +		map = vq->maps[VHOST_ADDR_USED];
+>>>>   		if (likely(map)) {
+>>>>   			used = map->addr;
+>>>>   			used->idx = cpu_to_vhost16(vq, vq->last_used_idx);
+>>>> -			rcu_read_unlock();
+>>>> +			vhost_vq_access_map_end(vq);
+>>>>   			return 0;
+>>>>   		}
+>>>>   
+>>>> -		rcu_read_unlock();
+>>>> +		vhost_vq_access_map_end(vq);
+>>>>   	}
+>>>>   #endif
+>>>>   
+>>>> @@ -1362,17 +1399,17 @@ static inline int vhost_get_avail_idx(struct vhost_virtqueue *vq,
+>>>>   	struct vring_avail *avail;
+>>>>   
+>>>>   	if (!vq->iotlb) {
+>>>> -		rcu_read_lock();
+>>>> +		vhost_vq_access_map_begin(vq);
+>>>>   
+>>>> -		map = rcu_dereference(vq->maps[VHOST_ADDR_AVAIL]);
+>>>> +		map = vq->maps[VHOST_ADDR_AVAIL];
+>>>>   		if (likely(map)) {
+>>>>   			avail = map->addr;
+>>>>   			*idx = avail->idx;
+>>>> -			rcu_read_unlock();
+>>>> +			vhost_vq_access_map_end(vq);
+>>>>   			return 0;
+>>>>   		}
+>>>>   
+>>>> -		rcu_read_unlock();
+>>>> +		vhost_vq_access_map_end(vq);
+>>>>   	}
+>>>>   #endif
+>>>>   
+>>>> @@ -1387,17 +1424,17 @@ static inline int vhost_get_avail_head(struct vhost_virtqueue *vq,
+>>>>   	struct vring_avail *avail;
+>>>>   
+>>>>   	if (!vq->iotlb) {
+>>>> -		rcu_read_lock();
+>>>> +		vhost_vq_access_map_begin(vq);
+>>>>   
+>>>> -		map = rcu_dereference(vq->maps[VHOST_ADDR_AVAIL]);
+>>>> +		map = vq->maps[VHOST_ADDR_AVAIL];
+>>>>   		if (likely(map)) {
+>>>>   			avail = map->addr;
+>>>>   			*head = avail->ring[idx & (vq->num - 1)];
+>>>> -			rcu_read_unlock();
+>>>> +			vhost_vq_access_map_end(vq);
+>>>>   			return 0;
+>>>>   		}
+>>>>   
+>>>> -		rcu_read_unlock();
+>>>> +		vhost_vq_access_map_end(vq);
+>>>>   	}
+>>>>   #endif
+>>>>   
+>>>> @@ -1413,17 +1450,17 @@ static inline int vhost_get_avail_flags(struct vhost_virtqueue *vq,
+>>>>   	struct vring_avail *avail;
+>>>>   
+>>>>   	if (!vq->iotlb) {
+>>>> -		rcu_read_lock();
+>>>> +		vhost_vq_access_map_begin(vq);
+>>>>   
+>>>> -		map = rcu_dereference(vq->maps[VHOST_ADDR_AVAIL]);
+>>>> +		map = vq->maps[VHOST_ADDR_AVAIL];
+>>>>   		if (likely(map)) {
+>>>>   			avail = map->addr;
+>>>>   			*flags = avail->flags;
+>>>> -			rcu_read_unlock();
+>>>> +			vhost_vq_access_map_end(vq);
+>>>>   			return 0;
+>>>>   		}
+>>>>   
+>>>> -		rcu_read_unlock();
+>>>> +		vhost_vq_access_map_end(vq);
+>>>>   	}
+>>>>   #endif
+>>>>   
+>>>> @@ -1438,15 +1475,15 @@ static inline int vhost_get_used_event(struct vhost_virtqueue *vq,
+>>>>   	struct vring_avail *avail;
+>>>>   
+>>>>   	if (!vq->iotlb) {
+>>>> -		rcu_read_lock();
+>>>> -		map = rcu_dereference(vq->maps[VHOST_ADDR_AVAIL]);
+>>>> +		vhost_vq_access_map_begin(vq);
+>>>> +		map = vq->maps[VHOST_ADDR_AVAIL];
+>>>>   		if (likely(map)) {
+>>>>   			avail = map->addr;
+>>>>   			*event = (__virtio16)avail->ring[vq->num];
+>>>> -			rcu_read_unlock();
+>>>> +			vhost_vq_access_map_end(vq);
+>>>>   			return 0;
+>>>>   		}
+>>>> -		rcu_read_unlock();
+>>>> +		vhost_vq_access_map_end(vq);
+>>>>   	}
+>>>>   #endif
+>>>>   
+>>>> @@ -1461,17 +1498,17 @@ static inline int vhost_get_used_idx(struct vhost_virtqueue *vq,
+>>>>   	struct vring_used *used;
+>>>>   
+>>>>   	if (!vq->iotlb) {
+>>>> -		rcu_read_lock();
+>>>> +		vhost_vq_access_map_begin(vq);
+>>>>   
+>>>> -		map = rcu_dereference(vq->maps[VHOST_ADDR_USED]);
+>>>> +		map = vq->maps[VHOST_ADDR_USED];
+>>>>   		if (likely(map)) {
+>>>>   			used = map->addr;
+>>>>   			*idx = used->idx;
+>>>> -			rcu_read_unlock();
+>>>> +			vhost_vq_access_map_end(vq);
+>>>>   			return 0;
+>>>>   		}
+>>>>   
+>>>> -		rcu_read_unlock();
+>>>> +		vhost_vq_access_map_end(vq);
+>>>>   	}
+>>>>   #endif
+>>>>   
+>>>> @@ -1486,17 +1523,17 @@ static inline int vhost_get_desc(struct vhost_virtqueue *vq,
+>>>>   	struct vring_desc *d;
+>>>>   
+>>>>   	if (!vq->iotlb) {
+>>>> -		rcu_read_lock();
+>>>> +		vhost_vq_access_map_begin(vq);
+>>>>   
+>>>> -		map = rcu_dereference(vq->maps[VHOST_ADDR_DESC]);
+>>>> +		map = vq->maps[VHOST_ADDR_DESC];
+>>>>   		if (likely(map)) {
+>>>>   			d = map->addr;
+>>>>   			*desc = *(d + idx);
+>>>> -			rcu_read_unlock();
+>>>> +			vhost_vq_access_map_end(vq);
+>>>>   			return 0;
+>>>>   		}
+>>>>   
+>>>> -		rcu_read_unlock();
+>>>> +		vhost_vq_access_map_end(vq);
+>>>>   	}
+>>>>   #endif
+>>>>   
+>>>> @@ -1843,13 +1880,11 @@ static bool iotlb_access_ok(struct vhost_virtqueue *vq,
+>>>>   #if VHOST_ARCH_CAN_ACCEL_UACCESS
+>>>>   static void vhost_vq_map_prefetch(struct vhost_virtqueue *vq)
+>>>>   {
+>>>> -	struct vhost_map __rcu *map;
+>>>> +	struct vhost_map *map;
+>>>>   	int i;
+>>>>   
+>>>>   	for (i = 0; i < VHOST_NUM_ADDRS; i++) {
+>>>> -		rcu_read_lock();
+>>>> -		map = rcu_dereference(vq->maps[i]);
+>>>> -		rcu_read_unlock();
+>>>> +		map = vq->maps[i];
+>>>>   		if (unlikely(!map))
+>>>>   			vhost_map_prefetch(vq, i);
+>>>>   	}
+>>>> diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+>>>> index a9a2a93857d2..f9e9558a529d 100644
+>>>> --- a/drivers/vhost/vhost.h
+>>>> +++ b/drivers/vhost/vhost.h
+>>>> @@ -115,16 +115,17 @@ struct vhost_virtqueue {
+>>>>   #if VHOST_ARCH_CAN_ACCEL_UACCESS
+>>>>   	/* Read by memory accessors, modified by meta data
+>>>>   	 * prefetching, MMU notifier and vring ioctl().
+>>>> -	 * Synchonrized through mmu_lock (writers) and RCU (writers
+>>>> -	 * and readers).
+>>>> +	 * Synchonrized through mmu_lock (writers) and ref counters,
+>>>> +	 * see vhost_vq_access_map_begin()/vhost_vq_access_map_end().
+>>>>   	 */
+>>>> -	struct vhost_map __rcu *maps[VHOST_NUM_ADDRS];
+>>>> +	struct vhost_map *maps[VHOST_NUM_ADDRS];
+>>>>   	/* Read by MMU notifier, modified by vring ioctl(),
+>>>>   	 * synchronized through MMU notifier
+>>>>   	 * registering/unregistering.
+>>>>   	 */
+>>>>   	struct vhost_uaddr uaddrs[VHOST_NUM_ADDRS];
+>>>>   #endif
+>>>> +	int ref;
+>>> Is it important that this is signed? If not I'd do unsigned here:
+>>> even though kernel does compile with 2s complement sign overflow,
+>>> it seems cleaner not to depend on that.
+>> Not a must, let me fix.
+>>
+>> Thanks
+>>
+>>>>   	const struct vhost_umem_node *meta_iotlb[VHOST_NUM_ADDRS];
+>>>>   
+>>>>   	struct file *kick;
+>>>> -- 
+>>>> 2.18.1
