@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7F1C32754
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCF0C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 934C621738
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:07:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A379D21743
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:08:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010477;
-	bh=agc1PVtAORgXiE6ckLoFTP2zJuRjb4W6lkyVJlTVHyg=;
+	s=default; t=1565010481;
+	bh=5yAdCXDaZA3rOtg+YWuBOzARWQB+yGdCAYsiauxOojI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OJse/FsBJikxHkVR1xJVUT7Ak4AQMhbpTLPxb2ywhIPZb1oJ9HiQqw8tgX+EjPN9a
-	 tAb6IESKN3f/f8SUVNMQz4CBuiVfhKM9CUtRRRJ25hfzBlk8so/cpwYd3bu8VT6mMv
-	 JvZhG3aiYHDe8bi/6SLGSelPZONDg4HiYG2g5DQE=
+	b=mczyovhQBYcOY0qIgy2tGPCnxniF1SiJTCDjgyCxuwjzFqiYuLnizDjdHACSaKbkD
+	 zxAJqBBXQ7Jc2CVFAKsW1TDIhuvTDLWPfpJFMyFz1A1Go3bbCacSxEVipxlhsPoQOP
+	 uxaZmT5bGCAW27Nr44xp6mt2rIw0GZWO4t9aG6q0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729906AbfHENH4 (ORCPT
+        id S1729927AbfHENIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:07:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45612 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:08:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729882AbfHENHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:07:52 -0400
+        id S1729905AbfHENH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:07:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B91492087B;
-        Mon,  5 Aug 2019 13:07:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4E612087B;
+        Mon,  5 Aug 2019 13:07:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010471;
-        bh=agc1PVtAORgXiE6ckLoFTP2zJuRjb4W6lkyVJlTVHyg=;
+        s=default; t=1565010476;
+        bh=5yAdCXDaZA3rOtg+YWuBOzARWQB+yGdCAYsiauxOojI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mg9g/rfUciPkQQi6ayY5sR0hSpZuN65oO6Ssw+Nou+8W4YZFzMRprrHmq4E7OUJ6e
-         GilfSh0CKdRnA+Mi5P+G5AhE97IVtg9aoeoU8U0MdQGekodNSminK0zrjiRiCQOY4e
-         +xf1V/IfgisNEHKL79BT2Bz7cVuEAgTREMrldcR8=
+        b=t0jyebpbxr3j7LoOUkw48A0OYaVFPqjLEVtkEhOEQhxuO8HL9TtL+jiNUHmVel6ic
+         dNG3TVVeYJUPMTxhYCcdPAXJU2AvkSjCKQrINomCMyW1QVO5nswLXTj1LbOIxbBL01
+         kp2/Yq576Ef/a2okvsNkZYfjZ6PeBPbecU5hbdrg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Prarit Bhargava <prarit@redhat.com>,
-        Barret Rhoden <brho@google.com>,
-        David Arcari <darcari@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 06/53] kernel/module.c: Only return -EEXIST for modules that have finished loading
-Date:   Mon,  5 Aug 2019 15:02:31 +0200
-Message-Id: <20190805124928.729264842@linuxfoundation.org>
+        stable@vger.kernel.org, Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 4.14 08/53] dmaengine: rcar-dmac: Reject zero-length slave DMA requests
+Date:   Mon,  5 Aug 2019 15:02:33 +0200
+Message-Id: <20190805124928.940710533@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124927.973499541@linuxfoundation.org>
 References: <20190805124927.973499541@linuxfoundation.org>
@@ -63,71 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6e6de3dee51a439f76eb73c22ae2ffd2c9384712 ]
+[ Upstream commit 78efb76ab4dfb8f74f290ae743f34162cd627f19 ]
 
-Microsoft HyperV disables the X86_FEATURE_SMCA bit on AMD systems, and
-linux guests boot with repeated errors:
+While the .device_prep_slave_sg() callback rejects empty scatterlists,
+it still accepts single-entry scatterlists with a zero-length segment.
+These may happen if a driver calls dmaengine_prep_slave_single() with a
+zero len parameter.  The corresponding DMA request will never complete,
+leading to messages like:
 
-amd64_edac_mod: Unknown symbol amd_unregister_ecc_decoder (err -2)
-amd64_edac_mod: Unknown symbol amd_register_ecc_decoder (err -2)
-amd64_edac_mod: Unknown symbol amd_report_gart_errors (err -2)
-amd64_edac_mod: Unknown symbol amd_unregister_ecc_decoder (err -2)
-amd64_edac_mod: Unknown symbol amd_register_ecc_decoder (err -2)
-amd64_edac_mod: Unknown symbol amd_report_gart_errors (err -2)
+    rcar-dmac e7300000.dma-controller: Channel Address Error happen
 
-The warnings occur because the module code erroneously returns -EEXIST
-for modules that have failed to load and are in the process of being
-removed from the module list.
+and DMA timeouts.
 
-module amd64_edac_mod has a dependency on module edac_mce_amd.  Using
-modules.dep, systemd will load edac_mce_amd for every request of
-amd64_edac_mod.  When the edac_mce_amd module loads, the module has
-state MODULE_STATE_UNFORMED and once the module load fails and the state
-becomes MODULE_STATE_GOING.  Another request for edac_mce_amd module
-executes and add_unformed_module() will erroneously return -EEXIST even
-though the previous instance of edac_mce_amd has MODULE_STATE_GOING.
-Upon receiving -EEXIST, systemd attempts to load amd64_edac_mod, which
-fails because of unknown symbols from edac_mce_amd.
+Although requesting a zero-length DMA request is a driver bug, rejecting
+it early eases debugging.  Note that the .device_prep_dma_memcpy()
+callback already rejects requests to copy zero bytes.
 
-add_unformed_module() must wait to return for any case other than
-MODULE_STATE_LIVE to prevent a race between multiple loads of
-dependent modules.
-
-Signed-off-by: Prarit Bhargava <prarit@redhat.com>
-Signed-off-by: Barret Rhoden <brho@google.com>
-Cc: David Arcari <darcari@redhat.com>
-Cc: Jessica Yu <jeyu@kernel.org>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Jessica Yu <jeyu@kernel.org>
+Reported-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Analyzed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/module.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/dma/sh/rcar-dmac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/module.c b/kernel/module.c
-index 94528b8910278..4b372c14d9a1f 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -3391,8 +3391,7 @@ static bool finished_loading(const char *name)
- 	sched_annotate_sleep();
- 	mutex_lock(&module_mutex);
- 	mod = find_module_all(name, strlen(name), true);
--	ret = !mod || mod->state == MODULE_STATE_LIVE
--		|| mod->state == MODULE_STATE_GOING;
-+	ret = !mod || mod->state == MODULE_STATE_LIVE;
- 	mutex_unlock(&module_mutex);
+diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
+index 77b126525daca..19c7433e83097 100644
+--- a/drivers/dma/sh/rcar-dmac.c
++++ b/drivers/dma/sh/rcar-dmac.c
+@@ -1129,7 +1129,7 @@ rcar_dmac_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
+ 	struct rcar_dmac_chan *rchan = to_rcar_dmac_chan(chan);
  
- 	return ret;
-@@ -3560,8 +3559,7 @@ again:
- 	mutex_lock(&module_mutex);
- 	old = find_module_all(mod->name, strlen(mod->name), true);
- 	if (old != NULL) {
--		if (old->state == MODULE_STATE_COMING
--		    || old->state == MODULE_STATE_UNFORMED) {
-+		if (old->state != MODULE_STATE_LIVE) {
- 			/* Wait in case it fails to load. */
- 			mutex_unlock(&module_mutex);
- 			err = wait_event_interruptible(module_wq,
+ 	/* Someone calling slave DMA on a generic channel? */
+-	if (rchan->mid_rid < 0 || !sg_len) {
++	if (rchan->mid_rid < 0 || !sg_len || !sg_dma_len(sgl)) {
+ 		dev_warn(chan->device->dev,
+ 			 "%s: bad parameter: len=%d, id=%d\n",
+ 			 __func__, sg_len, rchan->mid_rid);
 -- 
 2.20.1
 
