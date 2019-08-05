@@ -2,259 +2,262 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F2E6C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 787D0C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 101502147A
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36F942147A
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:15:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565043355;
+	bh=gqgI7Td8ya5EaOlUxaoHPCuUb9YPdER2f8SpSFfiX3s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=OWMRS/BGWrTUMk0bc0pnuAqmnRwuS+yHzhp948YTjnmvCxaZhIT72iq4Zvmt95ukw
+	 MergtAcZYsNMVhVO1MrwFYE7/tNgLBtA39nJbyZ2CDv7vi0k/cmvG6p4NaAenrvAyj
+	 r14ToYW0A/n3yLEK0Imrhqg9qCcYxUFnd1J+EigY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730589AbfHEWPa (ORCPT
+        id S1730843AbfHEWPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 18:15:30 -0400
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:60432 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727928AbfHEWP3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 18:15:29 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R261e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0TYmEAnP_1565043321;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TYmEAnP_1565043321)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 06 Aug 2019 06:15:23 +0800
-Subject: Re: list corruption in deferred_split_scan()
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1562795006.8510.19.camel@lca.pw>
- <1564002826.11067.17.camel@lca.pw>
- <db71dacc-5074-65ef-d018-df695e25c769@linux.alibaba.com>
-Message-ID: <13487e44-273e-819d-89be-8b7823c2f936@linux.alibaba.com>
-Date:   Mon, 5 Aug 2019 15:15:21 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Mon, 5 Aug 2019 18:15:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57124 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727928AbfHEWPx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 18:15:53 -0400
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F6CD214C6;
+        Mon,  5 Aug 2019 22:15:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565043352;
+        bh=gqgI7Td8ya5EaOlUxaoHPCuUb9YPdER2f8SpSFfiX3s=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=p6BYo9vICP20E2H7J5JD1GPZZEs4RDAqVXatLGvmAGDhU46KMTzTU5U9XchsUqHhh
+         Z8Pcsnx/3ClpT7HoPEF32riYteA4LNtuNgDHHLiNdDtZpox3oDnv8kUmjXXD7NvDke
+         xuqg1Z/OPzNGOrBeca8XNDs0QCb0rQ8rT5J5/a1c=
+Received: by mail-qt1-f174.google.com with SMTP id 44so51548038qtg.11;
+        Mon, 05 Aug 2019 15:15:52 -0700 (PDT)
+X-Gm-Message-State: APjAAAVlzl9Zys8Xg3rHYkIhd86FV60bQHV/069L841D+0pCjm+WpGS2
+        D1+Sbpxd9myMgmoNpEJWLoYyiKfQVatl8jSlgg==
+X-Google-Smtp-Source: APXvYqwm/iTNeyoohd5iOgYIhWKWDbDEFpKz7B1Uk8GGEgSBnv2xRcrfIbmRVx/OdCwErm1FdR+0Xcg/0i6B8bMoBaU=
+X-Received: by 2002:aed:3f10:: with SMTP id p16mr356023qtf.110.1565043351480;
+ Mon, 05 Aug 2019 15:15:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <db71dacc-5074-65ef-d018-df695e25c769@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20190805134319.737-1-narmstrong@baylibre.com> <20190805134319.737-2-narmstrong@baylibre.com>
+In-Reply-To: <20190805134319.737-2-narmstrong@baylibre.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 5 Aug 2019 16:15:40 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJPFdR6bj_XuVuEDFYhCpmhQ4pZ66egCNJH_U26tTydmA@mail.gmail.com>
+Message-ID: <CAL_JsqJPFdR6bj_XuVuEDFYhCpmhQ4pZ66egCNJH_U26tTydmA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: display: amlogic,meson-dw-hdmi: convert
+ to yaml
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     devicetree@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-amlogic@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Aug 5, 2019 at 7:43 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> Now that we have the DT validation in place, let's convert the device tree
+> bindings for the Amlogic Synopsys DW-HDMI specifics over to YAML schemas.
+>
+> The original example and usage of clock-names uses a reversed "isfr"
+> and "iahb" clock-names, the rewritten YAML bindings uses the reversed
+> instead of fixing the device trees order.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  .../display/amlogic,meson-dw-hdmi.txt         | 119 -------------
+>  .../display/amlogic,meson-dw-hdmi.yaml        | 160 ++++++++++++++++++
+>  2 files changed, 160 insertions(+), 119 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml
 
-
-On 7/25/19 2:46 PM, Yang Shi wrote:
->
->
-> On 7/24/19 2:13 PM, Qian Cai wrote:
->> On Wed, 2019-07-10 at 17:43 -0400, Qian Cai wrote:
->>> Running LTP oom01 test case with swap triggers a crash below. Revert 
->>> the
->>> series
->>> "Make deferred split shrinker memcg aware" [1] seems fix the issue.
->> You might want to look harder on this commit, as reverted it alone on 
->> the top of
->>   5.2.0-next-20190711 fixed the issue.
->>
->> aefde94195ca mm: thp: make deferred split shrinker memcg aware [1]
->>
->> [1] 
->> https://lore.kernel.org/linux-mm/1561507361-59349-5-git-send-email-yang.shi@
->> linux.alibaba.com/
->
-> This is the real meat of the patch series, which converted to memcg 
-> deferred split queue actually.
->
->>
->>
->> list_del corruption. prev->next should be ffffea0022b10098, but was
->> 0000000000000000
->
-> Finally I could reproduce the list corruption issue on my machine with 
-> THP swap (swap device is fast device). I should checked this with you 
-> at the first place. The problem can't be reproduced with rotate swap 
-> device. So, I'm supposed you were using THP swap too.
->
-> Actually, I found two issues with THP swap:
-> 1. free_transhuge_page() is called in reclaim path instead of 
-> put_page. The mem_cgroup_uncharge() is called before 
-> free_transhuge_page() in reclaim path, which causes page->mem_cgroup 
-> is NULL so the wrong deferred_split_queue would be used, so the THP 
-> was not deleted from the memcg's list at all. Then the page might be 
-> split or reused later, page->mapping would be override.
->
-> 2. There is a race condition caused by try_to_unmap() with THP swap. 
-> The try_to_unmap() just calls page_remove_rmap() to add THP to 
-> deferred split queue in reclaim path. This might cause the below race 
-> condition to corrupt the list:
->
->                   A                                      B
-> deferred_split_scan
->     list_move
->                                                try_to_unmap
-> list_add_tail
->
-> list_splice <-- The list might get corrupted here
->
->                                                free_transhuge_page
->                                                       list_del <-- 
-> kernel bug triggered
->
-> I hope the below patch would solve your problem (tested locally).
-
-Hi Qian,
-
-Did the below patch solve your problem? I would like the fold the fix 
-into the series then target to 5.4 release.
-
-Thanks,
-Yang
-
->
->
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index b7f709d..d6612ec 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -2830,6 +2830,19 @@ void deferred_split_huge_page(struct page *page)
->
->         VM_BUG_ON_PAGE(!PageTransHuge(page), page);
->
-> +       /*
-> +        * The try_to_unmap() in page reclaim path might reach here too,
-> +        * this may cause a race condition to corrupt deferred split 
-> queue.
-> +        * And, if page reclaim is already handling the same page, it is
-> +        * unnecessary to handle it again in shrinker.
-> +        *
-> +        * Check PageSwapCache to determine if the page is being
-> +        * handled by page reclaim since THP swap would add the page into
-> +        * swap cache before reaching try_to_unmap().
-> +        */
-> +       if (PageSwapCache(page))
-> +               return;
+> diff --git a/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml b/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml
+> new file mode 100644
+> index 000000000000..1212aa7a624f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml
+> @@ -0,0 +1,160 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019 BayLibre, SAS
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/display/amlogic,meson-dw-hdmi.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 > +
->         spin_lock_irqsave(&ds_queue->split_queue_lock, flags);
->         if (list_empty(page_deferred_list(page))) {
->                 count_vm_event(THP_DEFERRED_SPLIT_PAGE);
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index a0301ed..40c684a 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -1485,10 +1485,9 @@ static unsigned long shrink_page_list(struct 
-> list_head *page_list,
->                  * Is there need to periodically free_page_list? It would
->                  * appear not as the counts should be low
->                  */
-> -               if (unlikely(PageTransHuge(page))) {
-> -                       mem_cgroup_uncharge(page);
-> +               if (unlikely(PageTransHuge(page)))
->                         (*get_compound_page_dtor(page))(page);
-> -               } else
-> +               else
->                         list_add(&page->lru, &free_pages);
->                 continue;
->
-> @@ -1909,7 +1908,6 @@ static unsigned noinline_for_stack 
-> move_pages_to_lru(struct lruvec *lruvec,
->
->                         if (unlikely(PageCompound(page))) {
-> spin_unlock_irq(&pgdat->lru_lock);
-> -                               mem_cgroup_uncharge(page);
-> (*get_compound_page_dtor(page))(page);
-> spin_lock_irq(&pgdat->lru_lock);
->                         } else
->
->> [  685.284254][ T3456] ------------[ cut here ]------------
->> [  685.289616][ T3456] kernel BUG at lib/list_debug.c:53!
->> [  685.294808][ T3456] invalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC 
->> KASAN NOPTI
->> [  685.301998][ T3456] CPU: 5 PID: 3456 Comm: oom01 Tainted:
->> G        W         5.2.0-next-20190711+ #3
->> [  685.311193][ T3456] Hardware name: HPE ProLiant DL385 
->> Gen10/ProLiant DL385
->> Gen10, BIOS A40 06/24/2019
->> [  685.320485][ T3456] RIP: 0010:__list_del_entry_valid+0x8b/0xb6
->> [  685.326364][ T3456] Code: f1 e0 ff 49 8b 55 08 4c 39 e2 75 2c 5b 
->> b8 01 00 00
->> 00 41 5c 41 5d 5d c3 4c 89 e2 48 89 de 48 c7 c7 c0 5a 73 a3 e8 d9 fa 
->> bc ff <0f>
->> 0b 48 c7 c7 60 a0 e1 a3 e8 13 52 01 00 4c 89 e6 48 c7 c7 20 5b
->> [  685.345956][ T3456] RSP: 0018:ffff888e0c8a73c0 EFLAGS: 00010082
->> [  685.351920][ T3456] RAX: 0000000000000054 RBX: ffffea0022b10098 RCX:
->> ffffffffa2d5d708
->> [  685.359807][ T3456] RDX: 0000000000000000 RSI: 0000000000000008 RDI:
->> ffff8888442bd380
->> [  685.367693][ T3456] RBP: ffff888e0c8a73d8 R08: ffffed1108857a71 R09:
->> ffffed1108857a70
->> [  685.375577][ T3456] R10: ffffed1108857a70 R11: ffff8888442bd387 R12:
->> 0000000000000000
->> [  685.383462][ T3456] R13: 0000000000000000 R14: ffffea0022b10034 R15:
->> ffffea0022b10098
->> [  685.391348][ T3456] FS:  00007fbe26db4700(0000) 
->> GS:ffff888844280000(0000)
->> knlGS:0000000000000000
->> [  685.400194][ T3456] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> [  685.406681][ T3456] CR2: 00007fbcabb3f000 CR3: 0000001012e44000 CR4:
->> 00000000001406a0
->> [  685.414563][ T3456] Call Trace:
->> [  685.417736][ T3456]  deferred_split_scan+0x337/0x740
->> [  685.422741][ T3456]  ? split_huge_page_to_list+0xe10/0xe10
->> [  685.428272][ T3456]  ? __radix_tree_lookup+0x12d/0x1e0
->> [  685.433453][ T3456]  ? node_tag_get.part.0.constprop.6+0x40/0x40
->> [  685.439505][ T3456]  do_shrink_slab+0x244/0x5a0
->> [  685.444071][ T3456]  shrink_slab+0x253/0x440
->> [  685.448375][ T3456]  ? unregister_shrinker+0x110/0x110
->> [  685.453551][ T3456]  ? kasan_check_read+0x11/0x20
->> [  685.458291][ T3456]  ? mem_cgroup_protected+0x20f/0x260
->> [  685.463555][ T3456]  shrink_node+0x31e/0xa30
->> [  685.467858][ T3456]  ? shrink_node_memcg+0x1560/0x1560
->> [  685.473036][ T3456]  ? ktime_get+0x93/0x110
->> [  685.477250][ T3456]  do_try_to_free_pages+0x22f/0x820
->> [  685.482338][ T3456]  ? shrink_node+0xa30/0xa30
->> [  685.486815][ T3456]  ? kasan_check_read+0x11/0x20
->> [  685.491556][ T3456]  ? check_chain_key+0x1df/0x2e0
->> [  685.496383][ T3456]  try_to_free_pages+0x242/0x4d0
->> [  685.501209][ T3456]  ? do_try_to_free_pages+0x820/0x820
->> [  685.506476][ T3456]  __alloc_pages_nodemask+0x9ce/0x1bc0
->> [  685.511826][ T3456]  ? gfp_pfmemalloc_allowed+0xc0/0xc0
->> [  685.517089][ T3456]  ? kasan_check_read+0x11/0x20
->> [  685.521826][ T3456]  ? check_chain_key+0x1df/0x2e0
->> [  685.526657][ T3456]  ? do_anonymous_page+0x343/0xe30
->> [  685.531658][ T3456]  ? lock_downgrade+0x390/0x390
->> [  685.536399][ T3456]  ? get_kernel_page+0xa0/0xa0
->> [  685.541050][ T3456]  ? __lru_cache_add+0x108/0x160
->> [  685.545879][ T3456]  alloc_pages_vma+0x89/0x2c0
->> [  685.550444][ T3456]  do_anonymous_page+0x3e1/0xe30
->> [  685.555271][ T3456]  ? __update_load_avg_cfs_rq+0x2c/0x490
->> [  685.560796][ T3456]  ? finish_fault+0x120/0x120
->> [  685.565361][ T3456]  ? alloc_pages_vma+0x21e/0x2c0
->> [  685.570187][ T3456]  handle_pte_fault+0x457/0x12c0
->> [  685.575014][ T3456]  __handle_mm_fault+0x79a/0xa50
->> [  685.579841][ T3456]  ? vmf_insert_mixed_mkwrite+0x20/0x20
->> [  685.585280][ T3456]  ? kasan_check_read+0x11/0x20
->> [  685.590021][ T3456]  ? __count_memcg_events+0x8b/0x1c0
->> [  685.595196][ T3456]  handle_mm_fault+0x17f/0x370
->> [  685.599850][ T3456]  __do_page_fault+0x25b/0x5d0
->> [  685.604501][ T3456]  do_page_fault+0x4c/0x2cf
->> [  685.608892][ T3456]  ? page_fault+0x5/0x20
->> [  685.613019][ T3456]  page_fault+0x1b/0x20
->> [  685.617058][ T3456] RIP: 0033:0x410be0
->> [  685.620840][ T3456] Code: 89 de e8 e3 23 ff ff 48 83 f8 ff 0f 84 
->> 86 00 00 00
->> 48 89 c5 41 83 fc 02 74 28 41 83 fc 03 74 62 e8 95 29 ff ff 31 d2 48 
->> 98 90 <c6>
->> 44 15 00 07 48 01 c2 48 39 d3 7f f3 31 c0 5b 5d 41 5c c3 0f 1f
->> [  68[  687.120156][ T3456] Shutting down cpus with NMI
->> [  687.124731][ T3456] Kernel Offset: 0x21800000 from 0xffffffff81000000
->> (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
->> [  687.136389][ T3456] ---[ end Kernel panic - not syncing: Fatal 
->> exception ]---
->
+> +title: Amlogic specific extensions to the Synopsys Designware HDMI Controller
+> +
+> +maintainers:
+> +  - Neil Armstrong <narmstrong@baylibre.com>
+> +
+> +description: |
+> +  The Amlogic Meson Synopsys Designware Integration is composed of
+> +  - A Synopsys DesignWare HDMI Controller IP
+> +  - A TOP control block controlling the Clocks and PHY
+> +  - A custom HDMI PHY in order to convert video to TMDS signal
+> +   ___________________________________
+> +  |            HDMI TOP               |<= HPD
+> +  |___________________________________|
+> +  |                  |                |
+> +  |  Synopsys HDMI   |   HDMI PHY     |=> TMDS
+> +  |    Controller    |________________|
+> +  |___________________________________|<=> DDC
+> +
+> +  The HDMI TOP block only supports HPD sensing.
+> +  The Synopsys HDMI Controller interrupt is routed through the
+> +  TOP Block interrupt.
+> +  Communication to the TOP Block and the Synopsys HDMI Controller is done
+> +  via a pair of dedicated addr+read/write registers.
+> +  The HDMI PHY is configured by registers in the HHI register block.
+> +
+> +  Pixel data arrives in "4:4:4" format from the VENC block and the VPU HDMI mux
+> +  selects either the ENCI encoder for the 576i or 480i formats or the ENCP
+> +  encoder for all the other formats including interlaced HD formats.
+> +
+> +  The VENC uses a DVI encoder on top of the ENCI or ENCP encoders to generate
+> +  DVI timings for the HDMI controller.
+> +
+> +  Amlogic Meson GXBB, GXL and GXM SoCs families embeds the Synopsys DesignWare
+> +  HDMI TX IP version 2.01a with HDCP and I2C & S/PDIF
+> +  audio source interfaces.
+> +
+> +  The following table lists for each supported model the port number
+> +  corresponding to each HDMI output and input.
+> +
+> +                  Port 0                 Port 1
+> +  -----------------------------------------
+> +   S905 (GXBB)   VENC Input    TMDS Output
+> +   S905X (GXL)   VENC Input    TMDS Output
+> +   S905D (GXL)   VENC Input    TMDS Output
+> +   S912 (GXM)      VENC Input  TMDS Output
+> +   S905X2 (G12A)       VENC Input      TMDS Output
+> +   S905Y2 (G12A)       VENC Input      TMDS Output
+> +   S905D2 (G12A)       VENC Input      TMDS Output
 
+Does this ever change?
+
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - amlogic,meson-gxbb-dw-hdmi # GXBB (S905)
+> +              - amlogic,meson-gxl-dw-hdmi # GXL (S905X, S905D)
+> +              - amlogic,meson-gxm-dw-hdmi # GXM (S912)
+> +          - const: amlogic,meson-gx-dw-hdmi
+> +      - enum:
+> +          - amlogic,meson-g12a-dw-hdmi # G12A (S905X2, S905Y2, S905D2)
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    minItems: 3
+> +
+> +  clock-names:
+> +    items:
+> +      - const: isfr
+> +      - const: iahb
+> +      - const: venci
+> +
+> +  resets:
+> +    minItems: 3
+> +
+> +  reset-names:
+> +    items:
+> +      - const: hdmitx_apb
+> +      - const: hdmitx
+> +      - const: hdmitx_phy
+> +
+> +  hdmi-supply:
+> +    description: phandle to an external 5V regulator to power the HDMI logic
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/phandle
+> +
+> +  port@0:
+> +    type: object
+> +    description:
+> +      A port node modeled using the OF graph
+> +      bindings specified in Documentation/devicetree/bindings/graph.txt.
+
+Would be better to say this is the VENC (or ...? input and drop the
+reference (as I expect graph.txt will be replaced with graph.yaml).
+
+> +
+> +  port@1:
+> +    type: object
+> +    description:
+> +      A port node modeled using the OF graph
+> +      bindings specified in Documentation/devicetree/bindings/graph.txt.
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +  - resets
+> +  - reset-names
+> +  - port@0
+> +  - port@1
+> +  - "#address-cells"
+> +  - "#size-cells"
+
+Should be able to add an 'additionalProperties: false' here.
+
+> +
+> +examples:
+> +  - |
+> +    hdmi_tx: hdmi-tx@c883a000 {
+> +        compatible = "amlogic,meson-gxbb-dw-hdmi", "amlogic,meson-gx-dw-hdmi";
+> +        reg = <0xc883a000 0x1c>;
+> +        interrupts = <57>;
+> +        resets = <&reset_apb>, <&reset_hdmitx>, <&reset_hdmitx_phy>;
+> +        reset-names = "hdmitx_apb", "hdmitx", "hdmitx_phy";
+> +        clocks = <&clk_isfr>, <&clk_iahb>, <&clk_venci>;
+> +        clock-names = "isfr", "iahb", "venci";
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        /* VPU VENC Input */
+> +        hdmi_tx_venc_port: port@0 {
+> +            reg = <0>;
+> +
+> +            hdmi_tx_in: endpoint {
+> +                remote-endpoint = <&hdmi_tx_out>;
+> +            };
+> +        };
+> +
+> +        /* TMDS Output */
+> +        hdmi_tx_tmds_port: port@1 {
+> +             reg = <1>;
+> +
+> +             hdmi_tx_tmds_out: endpoint {
+> +                 remote-endpoint = <&hdmi_connector_in>;
+> +             };
+> +        };
+> +    };
+> +
+> --
+> 2.22.0
+>
