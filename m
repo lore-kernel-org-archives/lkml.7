@@ -2,125 +2,124 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B66C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 04:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70FB1C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 04:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 893942086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 04:20:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5061D2070D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 04:26:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfHEEUy (ORCPT
+        id S1726450AbfHEE0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 00:20:54 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49032 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725902AbfHEEUx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 00:20:53 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4E8B5A3EB3;
-        Mon,  5 Aug 2019 04:20:53 +0000 (UTC)
-Received: from [10.72.12.115] (ovpn-12-115.pek2.redhat.com [10.72.12.115])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 870955D9E2;
-        Mon,  5 Aug 2019 04:20:47 +0000 (UTC)
-Subject: Re: [PATCH V2 7/9] vhost: do not use RCU to synchronize MMU notifier
- with worker
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     mst@redhat.com, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20190731084655.7024-1-jasowang@redhat.com>
- <20190731084655.7024-8-jasowang@redhat.com> <20190731123935.GC3946@ziepe.ca>
- <7555c949-ae6f-f105-6e1d-df21ddae9e4e@redhat.com>
- <20190731193057.GG3946@ziepe.ca>
- <a3bde826-6329-68e4-2826-8a9de4c5bd1e@redhat.com>
- <20190801141512.GB23899@ziepe.ca>
- <42ead87b-1749-4c73-cbe4-29dbeb945041@redhat.com>
- <20190802124613.GA11245@ziepe.ca>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <11b2a930-eae4-522c-4132-3f8a2da05666@redhat.com>
-Date:   Mon, 5 Aug 2019 12:20:45 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 5 Aug 2019 00:26:19 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43414 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725771AbfHEE0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 00:26:18 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+X-Amavis-Alert: BAD HEADER SECTION, Duplicate header field: "To"
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8E9DFACC1;
+        Mon,  5 Aug 2019 04:26:17 +0000 (UTC)
+From:   NeilBrown <neilb@suse.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+To:     Sergei Turchanov <turchanov@farpost.com>
+Date:   Mon, 05 Aug 2019 14:26:08 +1000
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] seq_file: fix problem when seeking mid-record.
+In-Reply-To: <2d54ca59-9c22-0b75-3087-3718b30b8d11@farpost.com>
+References: <3bd775ab-9e31-c6b3-374e-7a9982a9a8cd@farpost.com> <5c4c0648-2a96-4132-9d22-91c22e7c7d4d@huawei.com> <eab812ef-ba79-11d6-0a4e-232872f0fcc4@farpost.com> <877e7xl029.fsf@notabene.neil.brown.name> <2d54ca59-9c22-0b75-3087-3718b30b8d11@farpost.com>
+Message-ID: <87mugojl0f.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-In-Reply-To: <20190802124613.GA11245@ziepe.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Mon, 05 Aug 2019 04:20:53 +0000 (UTC)
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2019/8/2 下午8:46, Jason Gunthorpe wrote:
-> On Fri, Aug 02, 2019 at 05:40:07PM +0800, Jason Wang wrote:
->>> This must be a proper barrier, like a spinlock, mutex, or
->>> synchronize_rcu.
->>
->> I start with synchronize_rcu() but both you and Michael raise some
->> concern.
-> I've also idly wondered if calling synchronize_rcu() under the various
-> mm locks is a deadlock situation.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
 
-Maybe, that's why I suggest to use vhost_work_flush() which is much 
-lightweight can can achieve the same function. It can guarantee all 
-previous work has been processed after vhost_work_flush() return.
+If you use lseek or similar (e.g. pread) to access
+a location in a seq_file file that is within a record,
+rather than at a record boundary, then the first read
+will return the remainder of the record, and the second
+read will return the whole of that same record (instead
+of the next record).
+Whnn seeking to a record boundary, the next record is
+correctly returned.
+
+This bug was introduced by a recent patch (identified below)
+Before that patch, seq_read() would increment m->index when
+the last of the buffer was returned (m->count =3D=3D 0).
+After that patch, we rely on ->next to increment m->index
+after filling the buffer - but there was one place where that
+didn't happen.
+
+Link: https://lkml.kernel.org/lkml/877e7xl029.fsf@notabene.neil.brown.name/
+Reported-by-tested-by: Sergei Turchanov <turchanov@farpost.com>
+Fixes: 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code
+	and interface")
+Cc: stable@vger.kernel.org (v4.19+)
+Signed-off-by: NeilBrown <neilb@suse.com>
+=2D--
+
+Hi Andrew: as you applied the offending patch for me, maybe you could
+queue up this fix too.
+Thanks,
+NeilBrown
+
+ fs/seq_file.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/seq_file.c b/fs/seq_file.c
+index 04f09689cd6d..1600034a929b 100644
+=2D-- a/fs/seq_file.c
++++ b/fs/seq_file.c
+@@ -119,6 +119,7 @@ static int traverse(struct seq_file *m, loff_t offset)
+ 		}
+ 		if (seq_has_overflowed(m))
+ 			goto Eoverflow;
++		p =3D m->op->next(m, p, &m->index);
+ 		if (pos + m->count > offset) {
+ 			m->from =3D offset - pos;
+ 			m->count -=3D m->from;
+@@ -126,7 +127,6 @@ static int traverse(struct seq_file *m, loff_t offset)
+ 		}
+ 		pos +=3D m->count;
+ 		m->count =3D 0;
+=2D		p =3D m->op->next(m, p, &m->index);
+ 		if (pos =3D=3D offset)
+ 			break;
+ 	}
+=2D-=20
+2.14.0.rc0.dirty
 
 
->
->> Then I try spinlock and mutex:
->>
->> 1) spinlock: add lots of overhead on datapath, this leads 0 performance
->> improvement.
-> I think the topic here is correctness not performance improvement
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-But the whole series is to speed up vhost.
-
-
->
->> 2) SRCU: full memory barrier requires on srcu_read_lock(), which still leads
->> little performance improvement
->   
->> 3) mutex: a possible issue is need to wait for the page to be swapped in (is
->> this unacceptable ?), another issue is that we need hold vq lock during
->> range overlap check.
-> I have a feeling that mmu notififers cannot safely become dependent on
-> progress of swap without causing deadlock. You probably should avoid
-> this.
-
-
-Yes, so that's why I try to synchronize the critical region by myself.
-
-
->>> And, again, you can't re-invent a spinlock with open coding and get
->>> something better.
->> So the question is if waiting for swap is considered to be unsuitable for
->> MMU notifiers. If not, it would simplify codes. If not, we still need to
->> figure out a possible solution.
->>
->> Btw, I come up another idea, that is to disable preemption when vhost thread
->> need to access the memory. Then register preempt notifier and if vhost
->> thread is preempted, we're sure no one will access the memory and can do the
->> cleanup.
-> I think you should use the spinlock so at least the code is obviously
-> functionally correct and worry about designing some properly justified
-> performance change after.
->
-> Jason
-
-
-Spinlock is correct but make the whole series meaningless consider it 
-won't bring any performance improvement.
-
-Thanks
-
-
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl1Hr+AACgkQOeye3VZi
+gblFQw//WFFSPovVwp9N+BvIWmjw6cxpwTYE0X2mOrFVYjis4ijpXsu5aoN3qDWj
+XNfyU5HHf0vM1estIAD+SBHBKnhHfWHZqCh0Xxqb5fTPcm1HjHWnUjdWlPDEmtfp
+7ZbmyTV7RWb+BQ1SE/P9kyLv+A9oerJRwQEXz4UI9XydYfmzoFyCSjlo9MuM5AD3
+cX3ScwAMlVNv3O5l/gFlOAU9snWp8nU9ngSfQ88GL5ML/ryFbdXW7UFPkFn3Wmiq
+3spMA4tsJNEekbxTCU/TNxqnVHZc+s4yIhpwVc2c0u5oMLxIExSig9GU2AEO/4jH
+4DhkW56z4jOSh2sK0tWNAJmHtRwYREbik+CEKJmfQgiSG5Qh5rvWuFk7U75TLi4x
+wEWCgaoPwCUTFM7JD6UUtJNdJa1+C9HyWaNp2uvpNLWuYQ0wQtCIvgCgmm+XXlnq
+KuvVtqcjmVDQ/ElsvrMP1gkvxTPjlVXqwc7dmazY/641rob8L4CR2hlXDpS9tM4M
+NsyxN+pROTJYNcWXnJCnZjkb57ohEpfh3/SgwOv3EIi9h81S7kyIrs4Y3SpvIDww
++035RWcVoy9nnzRiAP+x4xgmM5MGaCNWN+Tw6dEYu/UZKpHdqLc3KiSnIfOqQPS3
+kKGyopfrBZXk5Vl5lnM39zeBe48Io9rU+iDA2fBRUY2x8cDHDd8=
+=JONQ
+-----END PGP SIGNATURE-----
+--=-=-=--
