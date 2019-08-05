@@ -2,206 +2,172 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C834DC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 19:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36568C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 20:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C37C2147A
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 19:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0881320665
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 20:02:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="d4bkb6vW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730583AbfHET62 (ORCPT
+        id S1730174AbfHEUCO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 15:58:28 -0400
-Received: from mga09.intel.com ([134.134.136.24]:56931 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727830AbfHET62 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 15:58:28 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 12:58:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,350,1559545200"; 
-   d="scan'208";a="164754154"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga007.jf.intel.com with ESMTP; 05 Aug 2019 12:58:26 -0700
-Date:   Mon, 5 Aug 2019 13:02:04 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Auger Eric <eric.auger@redhat.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v4 14/22] iommu/vt-d: Add custom allocator for IOASID
-Message-ID: <20190805130204.21aca034@jacob-builder>
-In-Reply-To: <2f2ba561-793f-a6a0-5765-ef8e9a5a3ab6@redhat.com>
-References: <1560087862-57608-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1560087862-57608-15-git-send-email-jacob.jun.pan@linux.intel.com>
-        <2f2ba561-793f-a6a0-5765-ef8e9a5a3ab6@redhat.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 5 Aug 2019 16:02:14 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:33264 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727830AbfHEUCO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 16:02:14 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x75JxJoa014801;
+        Mon, 5 Aug 2019 20:02:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2018-07-02;
+ bh=0s5SjS/9VwIFL1MIYzBpG9oPEz0xwSOto06hAmnmhEc=;
+ b=d4bkb6vWGEi/v1DM15Xnylb7MkgrqE/lVuk+JTyr7ERubC03jczrFbvJcenfiL2+XV1e
+ d2V03/RtwGm3fE1NHLvCvBI8gQY0Albyb8gPf2NqPStBk+Ov6sSI0SRrK8bQ6ZOoBKq/
+ mBsWJfUWEqaCKCyRaDrtP9aqtN7OW2EHPeYSUM0iR6aiIrGSG7e7axBDQC493ILK/s9z
+ LRelKD5zJYsumXdgCYEtHmHvv3jouEQKjWXbmnfoRYGfmPLCnCTqGgKHiTwLIib+/oAt
+ pUL5unAGqJHVmmyEHdoJmbqPsfwbY8Q24+XY2pzUZ8l49MyunZz0LMC7GEnvOypa8zS3 TQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2u51ptsj3e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 05 Aug 2019 20:02:11 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x75JwOSX180328;
+        Mon, 5 Aug 2019 20:02:11 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2u50ac2xau-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 05 Aug 2019 20:02:10 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x75K2AcQ032183;
+        Mon, 5 Aug 2019 20:02:10 GMT
+Received: from jubi-laptop.us.oracle.com (/10.11.23.49)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 05 Aug 2019 13:02:10 -0700
+From:   Junxiao Bi <junxiao.bi@oracle.com>
+To:     linux-block@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, axboe@kernel.dk,
+        martin.petersen@oracle.com, junxiao.bi@oracle.com
+Subject: [PATCH] block: fix RO partition with RW disk
+Date:   Mon,  5 Aug 2019 13:01:38 -0700
+Message-Id: <20190805200138.28098-1-junxiao.bi@oracle.com>
+X-Mailer: git-send-email 2.17.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9340 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908050200
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9340 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908050200
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Jul 2019 11:30:14 +0200
-Auger Eric <eric.auger@redhat.com> wrote:
+When md raid1 was used with imsm metadata, during the boot stage,
+the raid device will first be set to readonly, then mdmon will set
+it read-write later. When there were some partitions in this device,
+the following race would make some partition left ro and fail to mount.
 
-> Hi Jacob,
-> 
-> On 6/9/19 3:44 PM, Jacob Pan wrote:
-> > When VT-d driver runs in the guest, PASID allocation must be
-> > performed via virtual command interface. This patch registers a
-> > custom IOASID allocator which takes precedence over the default
-> > XArray based allocator. The resulting IOASID allocation will always
-> > come from the host. This ensures that PASID namespace is system-
-> > wide.
-> > 
-> > Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> > Signed-off-by: Liu, Yi L <yi.l.liu@intel.com>
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > ---
-> >  drivers/iommu/Kconfig       |  1 +
-> >  drivers/iommu/intel-iommu.c | 60
-> > +++++++++++++++++++++++++++++++++++++++++++++
-> > include/linux/intel-iommu.h |  2 ++ 3 files changed, 63
-> > insertions(+)
-> > 
-> > diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> > index c40c4b5..5d1bc2a 100644
-> > --- a/drivers/iommu/Kconfig
-> > +++ b/drivers/iommu/Kconfig
-> > @@ -213,6 +213,7 @@ config INTEL_IOMMU_SVM
-> >  	bool "Support for Shared Virtual Memory with Intel IOMMU"
-> >  	depends on INTEL_IOMMU && X86
-> >  	select PCI_PASID
-> > +	select IOASID
-> >  	select MMU_NOTIFIER
-> >  	select IOASID
-> >  	help
-> > diff --git a/drivers/iommu/intel-iommu.c
-> > b/drivers/iommu/intel-iommu.c index 09b8ff0..5b84994 100644
-> > --- a/drivers/iommu/intel-iommu.c
-> > +++ b/drivers/iommu/intel-iommu.c
-> > @@ -1711,6 +1711,8 @@ static void free_dmar_iommu(struct
-> > intel_iommu *iommu) if (ecap_prs(iommu->ecap))
-> >  			intel_svm_finish_prq(iommu);
-> >  	}
-> > +	ioasid_unregister_allocator(&iommu->pasid_allocator);
-> > +
-> >  #endif
-> >  }
-> >  
-> > @@ -4820,6 +4822,46 @@ static int __init
-> > platform_optin_force_iommu(void) return 1;
-> >  }
-> >  
-> > +#ifdef CONFIG_INTEL_IOMMU_SVM
-> > +static ioasid_t intel_ioasid_alloc(ioasid_t min, ioasid_t max,
-> > void *data) +{
-> > +	struct intel_iommu *iommu = data;
-> > +	ioasid_t ioasid;
-> > +
-> > +	/*
-> > +	 * VT-d virtual command interface always uses the full 20
-> > bit
-> > +	 * PASID range. Host can partition guest PASID range based
-> > on
-> > +	 * policies but it is out of guest's control.
-> > +	 */
-> > +	if (min < PASID_MIN || max > PASID_MAX)
-> > +		return -EINVAL;  
-> ioasid_alloc() does not handle that error value, use INVALID_IOASID?
-> > +
-> > +	if (vcmd_alloc_pasid(iommu, &ioasid))
-> > +		return INVALID_IOASID;
-> > +
-> > +	return ioasid;
-> > +}
-> > +
-> > +static void intel_ioasid_free(ioasid_t ioasid, void *data)
-> > +{
-> > +	struct iommu_pasid_alloc_info *svm;
-> > +	struct intel_iommu *iommu = data;
-> > +
-> > +	if (!iommu)
-> > +		return;
-> > +	/*
-> > +	 * Sanity check the ioasid owner is done at upper layer,
-> > e.g. VFIO
-> > +	 * We can only free the PASID when all the devices are
-> > unbond.
-> > +	 */
-> > +	svm = ioasid_find(NULL, ioasid, NULL);
-> > +	if (!svm) {
-> > +		pr_warn("Freeing unbond IOASID %d\n", ioasid);
-> > +		return;
-> > +	}
-> > +	vcmd_free_pasid(iommu, ioasid);
-> > +}
-> > +#endif
-> > +
-> >  int __init intel_iommu_init(void)
-> >  {
-> >  	int ret = -ENODEV;
-> > @@ -4924,6 +4966,24 @@ int __init intel_iommu_init(void)
-> >  				       "%s", iommu->name);
-> >  		iommu_device_set_ops(&iommu->iommu,
-> > &intel_iommu_ops); iommu_device_register(&iommu->iommu);
-> > +#ifdef CONFIG_INTEL_IOMMU_SVM
-> > +		if (cap_caching_mode(iommu->cap) &&
-> > sm_supported(iommu)) {
-> > +			/*
-> > +			 * Register a custom ASID allocator if we
-> > are running
-> > +			 * in a guest, the purpose is to have a
-> > system wide PASID
-> > +			 * namespace among all PASID users.
-> > +			 * There can be multiple vIOMMUs in each
-> > guest but only
-> > +			 * one allocator is active. All vIOMMU
-> > allocators will
-> > +			 * eventually be calling the same host
-> > allocator.
-> > +			 */
-> > +			iommu->pasid_allocator.alloc =
-> > intel_ioasid_alloc;
-> > +			iommu->pasid_allocator.free =
-> > intel_ioasid_free;
-> > +			iommu->pasid_allocator.pdata = (void
-> > *)iommu;
-> > +			ret =
-> > ioasid_register_allocator(&iommu->pasid_allocator);
-> > +			if (ret)
-> > +				pr_warn("Custom PASID allocator
-> > registeration failed\n");  
-> what if it fails, don't you want a tear down path?
-> 
+CPU 1:                                                 CPU 2:
+add_partition()                                        set_disk_ro() //set disk RW
+ //disk was RO, so partition set to RO
+ p->policy = get_disk_ro(disk);
+                                                        if (disk->part0.policy != flag) {
+                                                            set_disk_ro_uevent(disk, flag);
+                                                            // disk set to RW
+                                                            disk->part0.policy = flag;
+                                                        }
+                                                        // set all exit partition to RW
+                                                        while ((part = disk_part_iter_next(&piter)))
+                                                            part->policy = flag;
+ // this part was not yet added, so it was still RO
+ rcu_assign_pointer(ptbl->part[partno], p);
 
-Good point, we need to disable PASID usage, i.e. disable scalable mode
-if there is no virtual command based PASID allocator in the guest.
+Move RO status setting of partitions after they were added into partition
+table and introduce a mutex to sync RO status between disk and partitions.
 
-Sorry for the late reply.
+Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
+---
+ block/genhd.c             | 3 +++
+ block/partition-generic.c | 5 ++++-
+ include/linux/genhd.h     | 1 +
+ 3 files changed, 8 insertions(+), 1 deletion(-)
 
-> Thanks
-> 
-> Eric
->  [...]  
+diff --git a/block/genhd.c b/block/genhd.c
+index 54f1f0d381f4..f3cce1d354cf 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -1479,6 +1479,7 @@ struct gendisk *__alloc_disk_node(int minors, int node_id)
+ 		}
+ 		ptbl = rcu_dereference_protected(disk->part_tbl, 1);
+ 		rcu_assign_pointer(ptbl->part[0], &disk->part0);
++		mutex_init(&disk->part_lock);
+ 
+ 		/*
+ 		 * set_capacity() and get_capacity() currently don't use
+@@ -1570,6 +1571,7 @@ void set_disk_ro(struct gendisk *disk, int flag)
+ 	struct disk_part_iter piter;
+ 	struct hd_struct *part;
+ 
++	mutex_lock(&disk->part_lock);
+ 	if (disk->part0.policy != flag) {
+ 		set_disk_ro_uevent(disk, flag);
+ 		disk->part0.policy = flag;
+@@ -1579,6 +1581,7 @@ void set_disk_ro(struct gendisk *disk, int flag)
+ 	while ((part = disk_part_iter_next(&piter)))
+ 		part->policy = flag;
+ 	disk_part_iter_exit(&piter);
++	mutex_unlock(&disk->part_lock);
+ }
+ 
+ EXPORT_SYMBOL(set_disk_ro);
+diff --git a/block/partition-generic.c b/block/partition-generic.c
+index aee643ce13d1..63cb6fb996ff 100644
+--- a/block/partition-generic.c
++++ b/block/partition-generic.c
+@@ -345,7 +345,6 @@ struct hd_struct *add_partition(struct gendisk *disk, int partno,
+ 		queue_limit_discard_alignment(&disk->queue->limits, start);
+ 	p->nr_sects = len;
+ 	p->partno = partno;
+-	p->policy = get_disk_ro(disk);
+ 
+ 	if (info) {
+ 		struct partition_meta_info *pinfo = alloc_part_info(disk);
+@@ -401,6 +400,10 @@ struct hd_struct *add_partition(struct gendisk *disk, int partno,
+ 	/* everything is up and running, commence */
+ 	rcu_assign_pointer(ptbl->part[partno], p);
+ 
++	mutex_lock(&disk->part_lock);
++	p->policy = get_disk_ro(disk);
++	mutex_unlock(&disk->part_lock);
++
+ 	/* suppress uevent if the disk suppresses it */
+ 	if (!dev_get_uevent_suppress(ddev))
+ 		kobject_uevent(&pdev->kobj, KOBJ_ADD);
+diff --git a/include/linux/genhd.h b/include/linux/genhd.h
+index 8b5330dd5ac0..df6ddca8a92c 100644
+--- a/include/linux/genhd.h
++++ b/include/linux/genhd.h
+@@ -201,6 +201,7 @@ struct gendisk {
+ 	 */
+ 	struct disk_part_tbl __rcu *part_tbl;
+ 	struct hd_struct part0;
++	struct mutex part_lock;
+ 
+ 	const struct block_device_operations *fops;
+ 	struct request_queue *queue;
+-- 
+2.17.1
 
-[Jacob Pan]
