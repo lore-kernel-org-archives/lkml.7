@@ -2,126 +2,165 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2936C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC46C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B546A2067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:05:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E20B52067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:06:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rn+i+wAp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="D1Oaua35"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727785AbfHEIFv (ORCPT
+        id S1727806AbfHEIGI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 04:05:51 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42401 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfHEIFu (ORCPT
+        Mon, 5 Aug 2019 04:06:08 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:47214 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726423AbfHEIGI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 04:05:50 -0400
-Received: by mail-wr1-f67.google.com with SMTP id x1so33487611wrr.9;
-        Mon, 05 Aug 2019 01:05:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ToJnko+ALzDVdJBIaKKGvkFZghSxFZh/q3t7aezmRt8=;
-        b=Rn+i+wApNOubMkKXVGQiNN7q1RPqWbnfbZiPhpGCCv/a4DBezn2FQmJ3xLNMBQrRRQ
-         AieVM3+jNGpaONTi6W7i01MQlCC8n2t1kZDzj3EpAhcZN/zrD595QyiePdOC2ZaYaN77
-         dsBP3zVKY6c8X6alPMR3bdPBsImT5jzG8a5FUqL5q/Oiel4qAGvHcXgI9cYxUdSBp4ml
-         jhpqTq6Ut0l+RkqWWifaRss14qiR97zg/PwTbNAwr/F4zVusWpDo97rah6grSZErbjvn
-         q28DHk3vCaCeslbfFLkJmewfOPrJTV8hqIaQgncEkMeEZS+uiBXO0UEUmm74MlSIS6AL
-         FDEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ToJnko+ALzDVdJBIaKKGvkFZghSxFZh/q3t7aezmRt8=;
-        b=pSqgeSsdNNFoTDFN9eaHwdU3CyOEOgx0vjZ2VGpQBLIxWKTi2iyhJTJ99epEu4rdrO
-         pX3pWKlAVi7v+OG7v1ttVJLbVY2xsQBskghee2zkuo7UxZt5bhIxLAslAspkYXZIInvB
-         P1W67VKDsKQvSSuPYVmfLN4TnsJKW6xvsOUCs9YVjs+/4GNR8OPP4tv8tw7wld5NluOL
-         zVxkW6rNdNFyyv1rLVqCvRPAnJoas9DLgyfnDMhb1uDNoolsJambEm4su5oQ9xuNhf+V
-         TxEASGjJV6QgENMc8gwSD35FPAi91A7Nf1umH3yG5CJe85wXvN5Wd3z/ALFxCgLpcnFA
-         RbCQ==
-X-Gm-Message-State: APjAAAWPQYzLrSedFJ815dxOySzhAVToI/hmPIbdQ1D4dG7xFU/Xjbwj
-        fiVjXj6HxeXV3lMZ+JVlcaRJGJgr
-X-Google-Smtp-Source: APXvYqzoyoyBAZU/BfHJM4ehX0Vfb2NCIS43nHkEzh0T5VEB/PXkGj57KdGo5PCP7qT7GtFUf6zLnQ==
-X-Received: by 2002:a5d:50d1:: with SMTP id f17mr28873767wrt.124.1564992348457;
-        Mon, 05 Aug 2019 01:05:48 -0700 (PDT)
-Received: from [192.168.8.147] (120.162.185.81.rev.sfr.net. [81.185.162.120])
-        by smtp.gmail.com with ESMTPSA id 32sm75623972wrh.76.2019.08.05.01.05.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 05 Aug 2019 01:05:47 -0700 (PDT)
-Subject: Re: [PATCH v3] net: sched: Fix a possible null-pointer dereference in
- dequeue_func()
-To:     Cong Wang <xiyou.wangcong@gmail.com>,
-        Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc:     Jamal Hadi Salim <jhs@mojatatu.com>, Jiri Pirko <jiri@resnulli.us>,
-        David Miller <davem@davemloft.net>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190729082433.28981-1-baijiaju1990@gmail.com>
- <CAM_iQpU0L6hgzg1N9Ay=72Ee-2Ni-ovPJX8SyJaRDv7dbhZs_Q@mail.gmail.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <7c260c52-5f73-2efb-1477-cfcca0971a59@gmail.com>
-Date:   Mon, 5 Aug 2019 10:05:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 5 Aug 2019 04:06:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Ewu2VQx7ohjTv9REeCE3iKUZBfpdE7LS97SwyPI4rIw=; b=D1Oaua359olNxByaLu35WaYTo
+        FT+J/OtFJoqrh9db+zAMRPY6k+7jQvK6iZZ9a2jOdSZefPYgoRUH6nZaprzobOz6Z1PeZnFIPgrTd
+        tidbMsv01HsuBxh6nlh+YCNuNYJfLBUprxLm1Kk+2KjE4XwtMHGHq4B8PGM3RyZ8mrbqd0+4r8ZzY
+        0MKckdEJLExMYwDX96KrnpyfpkdHFKlcGITdNPz6x+j/ka40TqCGA3GpVZ7PmNbtU2C9G9794abN6
+        z+V4BWMtUEMEZGd6hDfGB8fr6Y1dSDjnjBqjRS04/VhLYOly7X1QSbC9y3gc0zEHY5NdyTvnc+xdg
+        zK0SjYHmw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1huXzp-0006NN-Im; Mon, 05 Aug 2019 08:05:33 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id CBCA920268334; Mon,  5 Aug 2019 10:05:31 +0200 (CEST)
+Date:   Mon, 5 Aug 2019 10:05:31 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mingo@kernel.org, jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, rostedt@goodmis.org,
+        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
+        oleg@redhat.com, joel@joelfernandes.org
+Subject: Re: [PATCH RFC tip/core/rcu 14/14] rcu/nohz: Make multi_cpu_stop()
+ enable tick on all online CPUs
+Message-ID: <20190805080531.GH2349@hirez.programming.kicks-ass.net>
+References: <20190802151435.GA1081@linux.ibm.com>
+ <20190802151501.13069-14-paulmck@linux.ibm.com>
+ <20190804144317.GF2349@hirez.programming.kicks-ass.net>
+ <20190804144835.GB2386@hirez.programming.kicks-ass.net>
+ <20190804184159.GC28441@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <CAM_iQpU0L6hgzg1N9Ay=72Ee-2Ni-ovPJX8SyJaRDv7dbhZs_Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190804184159.GC28441@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/29/19 7:23 PM, Cong Wang wrote:
-> On Mon, Jul 29, 2019 at 1:24 AM Jia-Ju Bai <baijiaju1990@gmail.com> wrote:
->>
->> In dequeue_func(), there is an if statement on line 74 to check whether
->> skb is NULL:
->>     if (skb)
->>
->> When skb is NULL, it is used on line 77:
->>     prefetch(&skb->end);
->>
->> Thus, a possible null-pointer dereference may occur.
->>
->> To fix this bug, skb->end is used when skb is not NULL.
->>
->> This bug is found by a static analysis tool STCheck written by us.
+On Sun, Aug 04, 2019 at 11:41:59AM -0700, Paul E. McKenney wrote:
+> On Sun, Aug 04, 2019 at 04:48:35PM +0200, Peter Zijlstra wrote:
+> > On Sun, Aug 04, 2019 at 04:43:17PM +0200, Peter Zijlstra wrote:
+> > > On Fri, Aug 02, 2019 at 08:15:01AM -0700, Paul E. McKenney wrote:
+> > > > The multi_cpu_stop() function relies on the scheduler to gain control from
+> > > > whatever is running on the various online CPUs, including any nohz_full
+> > > > CPUs running long loops in kernel-mode code.  Lack of the scheduler-clock
+> > > > interrupt on such CPUs can delay multi_cpu_stop() for several minutes
+> > > > and can also result in RCU CPU stall warnings.  This commit therefore
+> > > > causes multi_cpu_stop() to enable the scheduler-clock interrupt on all
+> > > > online CPUs.
+> > > 
+> > > This sounds wrong; should we be fixing sched_can_stop_tick() instead to
+> > > return false when the stop task is runnable?
 > 
-> It doesn't dereference the pointer, it simply calculates the address
-> and passes it to gcc builtin prefetch. Both are fine when it is NULL,
-> as prefetching a NULL address should be okay for kernel.
+> Agreed.  However, it is proving surprisingly hard to come up with a
+> code sequence that has the effect of rcu_nocb without nohz_full.
+> And rcu_nocb works just fine.  With nohz_full also in place, I am
+> decreasing the failure rate, but it still fails, perhaps a few times
+> per hour of TREE04 rcutorture on an eight-CPU system.  (My 12-CPU
+> system stubbornly refuses to fail.  Good thing I kept the eight-CPU
+> system around, I guess.)
 > 
-> So your changelog is misleading and it doesn't fix any bug,
-> although it does very slightly make the code better.
+> When I arrive at some sequence of actions that actually work reliably,
+> then by all means let's put it somewhere in the NO_HZ_FULL machinery!
+
+I'm confused; what are you arguing? The patch as proposed is just wrong,
+it needs to go.
+
+> > And even without that; I don't understand how we're not instantly
+> > preempted the moment we enqueue the stop task.
 > 
+> There is no preemption because CONFIG_PREEMPT=n for the scenarios still
 
-Original code was intentional.
+That doesn't make sense; even with CONFIG_PREEMPT=n we set
+TIF_NEED_RESCHED. We'll just not react to it as promptly (only explicit
+rescheduling points and return to userspace). Enabling the tick will not
+make any difference what so ever.
 
-A prefetch() need to be done as early as possible.
+Tick based preemption will not 'fix' the lack of wakeup preemption. If
+the stop task wakeup didn't set TIF_NEED_RESCHED, the OTHER/CFS tick
+will not either.
 
-At the time of commit 76e3cc126bb223013a6b9a0e2a51238d1ef2e409
-this was pretty clear :
+> having trouble.  Yes, there are cond_resched() calls, but they don't do
+> anything unless the appropriate flags are set, which won't always happen
+> without the tick, apparently.  Or without -something- that isn't always
+> happening as it should.
 
-+static struct sk_buff *dequeue(struct codel_vars *vars, struct Qdisc *sch)
-+{
-+	struct sk_buff *skb = __skb_dequeue(&sch->q);
-+
-+	prefetch(&skb->end); /* we'll need skb_shinfo() */
-+	return skb;
-+}
+Right; so clearly we're not understanding what's happening. That seems
+like a requirement for actually doing a patch.
+
+> > Any enqueue, should go through check_preempt_curr() which will be an
+> > instant resched_curr() when we just woke the stop class.
+> 
+> I did try hitting all of the CPUs with resched_cpu().  Ten times on each
+> CPU with a ten-jiffy wait between each.  This might have decreased the
+> probability of excessively long CPU-stopper waits by a factor of two or
+> three, but it did not eliminate the excessively long waits.
+> 
+> What else should I try?
+> 
+> For example, are there any diagnostics I could collect, say from within
+> the CPU stopper when things are taking too long?  I see CPU-stopper
+> delays in excess of five -minutes-, so this is anything but subtle.
+
+Catch the whole thing in a function trace?
+
+The chain that should instantly set TIF_NEED_RESCHED:
+
+  stop_machine()
+    stop_machine_cpuslocked()
+      stop_cpus()
+        __stop_cpus()
+          queue_stop_cpus_work()
+            cpu_stop_queue_work()
+	      wake_up_q()
+	        wake_up_process()
 
 
-Really static analysis should learn about prefetch(X) being legal for _any_ value of X
+  wake_up_process()
+    try_to_wake_up()
+      ttwu_queue()
+        ttwu_queue_remote()
+	  <- scheduler_ipi()
+	    sched_ttwu_pending()
+	      ttwu_do_activate()
+
+        ttwu_do_activate()
+	  activate_task()
+	  ttwu_do_wakeup()
+	    check_preempt_curr()
+	      resched_curr()
+
+You could frob some tracing into __stop_cpus(), before
+wait_for_completion(), at that point all the CPUs in @cpumask should
+either be running the stop task or have TIF_NEED_RESCHED set.
+
+
