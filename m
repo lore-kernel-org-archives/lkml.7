@@ -2,148 +2,173 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1BAC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF34C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ADB92086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FFCE2087B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:07:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="WoKh7uXp"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="YDxy67Ub"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728254AbfHEKH1 (ORCPT
+        id S1728292AbfHEKH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 06:07:27 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33046 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728126AbfHEKH0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 06:07:26 -0400
-Received: by mail-wm1-f65.google.com with SMTP id h19so6309376wme.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 03:07:24 -0700 (PDT)
+        Mon, 5 Aug 2019 06:07:29 -0400
+Received: from mail-eopbgr1410138.outbound.protection.outlook.com ([40.107.141.138]:16253
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728126AbfHEKH2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 06:07:28 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fVJLpGAYhx9mgCyvWtD+Ep67YHkxzWnYtiyustnEe4qIy3+F11/z+jPXFCrjx4U0Ca21Pvi7FzEr1pTBGuMOFCplIIEyi1ZuaRvrzBbz2n2Tsqoh2MIfIwsrz0phfQvGltK9+5mbALiV69CgQ50SwtZ4W8jSVV933j5XTFyXYGcFLd5snFxzlFckIvvvtwQuAgs44ixRPMepGnoXdKW73UeMO4RXyzdBwvZu2ShUAlH5JX06fC8SoFPdiwB9O5uOI1qCyzeu1iWlj5Gz4JTq+cAgHjOKW5EDJPdcCBvxp1lLqfHjhRG//i133ZdFu54Ul0YKw1aLrqETetluLWyGGQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Gks3pFMTeZLMenuOHfsa8j66upiYTJ51pQnlQ2yMDLY=;
+ b=SnMtOVWjyhLn/ajX6zBBYwAJdbKWQShzo89fyvKRhkT1V2YdkxQ06NqgBPD3YLyRCcThapYKc8V/7SuX/btRc9x6lvenMNP18JTofXxuatStXsmmRTdLBrTDSzL/V7R3czEfVUIs92S956SudJeGenDgPHYrJ8hJJXXf9QkBeV3J9D0eXOgW/qH7cloJsehly0F0CGeQh4bTSudCCiL+ehTm6lXthrgjwKr5mP7UOuLY/7bPj6hfC6AqgbYjeg7qONAA5eft0i9ATHcuSl1Dduu9i1xfwo78sQnGDr4fXz7qAc3lUE3oUPO9LmPxWpDeFu5v8vc74WZq7S1NkCi2Tg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=bp.renesas.com;dmarc=pass action=none
+ header.from=bp.renesas.com;dkim=pass header.d=bp.renesas.com;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tSUXfM1GBDtf8d32fnO2t1HSYdqv9TrCrzBesx2Y2r4=;
-        b=WoKh7uXp2eFvRFtfyoLMbFxpofblGAbjiJeO/5jm2jytnH6nWtmyKskqrbx75YeQWG
-         V5X7FxP/4rjog38emeYGlmLnkeMOnf/BovPbxPMYUu1xq8C06dJClKqTkSefpyeXPPOR
-         dloeYq+6c+Bto8i7g08vh6qO6tGk3b03w48RVdW9q29kxiHA8HgPPAV4mLyCLFVVpCLz
-         kGN3tWenMO7frIPuKlDOwk2KIxPb19lqRl/xDfpWxOpa4a5PkBCTuNuc7hBrXfCcpfdY
-         xve9XgkFXCe7koQs7AwdgsJb3Ahy04Zm5nfaceawYlnZHHLDT4nMuItmA2DL0whAfhXI
-         ly9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tSUXfM1GBDtf8d32fnO2t1HSYdqv9TrCrzBesx2Y2r4=;
-        b=lq1JfnCkfuLiRcDHXJVi82q8c2GmyQmCW13dbm1QcXQexgyY2iaQplkq+DGm3zTcAN
-         TeAzyqpT348bj/C4ZvzALcCMArUdOue3gxgDTZp1TPFAeE9bLdGCo5z3t3fQjWhrYAk6
-         vdZpvdlNRG90JbCyP5n6yE6bWcdaua1/FfAg1tRexj8Itist9WfV7YXorOlpsfY+P57L
-         V+Dg3DZ5K6i0FldHBeGphv1aQhBLNL2UOn7P17ot8icVnCfK4SsLgmgHGyH7o3nFYFkd
-         nM4xE6lqzWhKS2QIRqLIRAdy10GI37RGrBBde8kwowGf6NtS43asUFMqVVtbb51wzgtg
-         B0fg==
-X-Gm-Message-State: APjAAAWixY7VxDNff56oogtM2qY83QZ79DyEy7gIV6eA7EBB6zgydTUe
-        w9gTk82hn9EPZP/nFji62+hxOPoNPBbQatENSKKGGQ==
-X-Google-Smtp-Source: APXvYqyaxuGvgZY+LJ4vNWfPOtT80YRzrJxZJ6KszUHbn8NrKf0wYNwoLXDFfS7cWakR5cKffBu7arak9gV7Z9wXleg=
-X-Received: by 2002:a1c:cfc5:: with SMTP id f188mr16590824wmg.24.1564999643825;
- Mon, 05 Aug 2019 03:07:23 -0700 (PDT)
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Gks3pFMTeZLMenuOHfsa8j66upiYTJ51pQnlQ2yMDLY=;
+ b=YDxy67Ubez1S8yfMBs79yTcpc1sB1XNvGcwdxs41wPbgpYTutmq0KnsW3jnimNaJ5VazsczffapIw+SwVF1tjsOd6JEF4TRM/3GZRzzTRwpwiApWh2NF5EfUBRwrgwW5EvAmezGOeamNAsdTZFh6mhWrEfC1BPV7ntI0LhhDNVU=
+Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com (52.133.163.13) by
+ TY1PR01MB1673.jpnprd01.prod.outlook.com (52.133.162.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2136.16; Mon, 5 Aug 2019 10:07:24 +0000
+Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com
+ ([fe80::d881:cb74:8277:5a16]) by TY1PR01MB1770.jpnprd01.prod.outlook.com
+ ([fe80::d881:cb74:8277:5a16%7]) with mapi id 15.20.2136.010; Mon, 5 Aug 2019
+ 10:07:24 +0000
+From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+CC:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>
+Subject: RE: [PATCH/RFC 02/12] dt-bindings: display: renesas: lvds: Document
+ renesas,swap-data
+Thread-Topic: [PATCH/RFC 02/12] dt-bindings: display: renesas: lvds: Document
+ renesas,swap-data
+Thread-Index: AQHVSQTAkHqVuaZ+mkSDN4F3/wGVC6bnejAAgATJjGCAAAyHgIAACJAQ
+Date:   Mon, 5 Aug 2019 10:07:24 +0000
+Message-ID: <TY1PR01MB1770C5AB21E45C24158584B7C0DA0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1564731249-22671-3-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20190802074428.GB5008@pendragon.ideasonboard.com>
+ <TY1PR01MB17706A4FF4C26CD4BDA1A5DAC0DA0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+ <20190805093543.GB29747@pendragon.ideasonboard.com>
+In-Reply-To: <20190805093543.GB29747@pendragon.ideasonboard.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=fabrizio.castro@bp.renesas.com; 
+x-originating-ip: [193.141.220.21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 313d52ad-4411-4454-1357-08d7198cb6c5
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:TY1PR01MB1673;
+x-ms-traffictypediagnostic: TY1PR01MB1673:
+x-microsoft-antispam-prvs: <TY1PR01MB16734743AC1C0188F964EBB5C0DA0@TY1PR01MB1673.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 01208B1E18
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(136003)(366004)(39860400002)(346002)(396003)(199004)(189003)(11346002)(3846002)(6116002)(256004)(229853002)(86362001)(7416002)(446003)(55016002)(8676002)(68736007)(478600001)(186003)(9686003)(476003)(6246003)(7696005)(99286004)(6916009)(81156014)(6436002)(66946007)(76116006)(52536014)(81166006)(66556008)(66476007)(74316002)(107886003)(33656002)(14454004)(7736002)(8936002)(66446008)(64756008)(102836004)(76176011)(316002)(71200400001)(71190400001)(53936002)(486006)(66066001)(26005)(54906003)(2906002)(305945005)(6506007)(4326008)(53546011)(25786009)(44832011)(5660300002)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1673;H:TY1PR01MB1770.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: bp.renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 5a/EfsZR0RokdCyOue26Yw71Fa5zAv0fNnFVFHsLJHM/66MASHjfpvSMxwcFja8mZI6SMGzrW7jw3hDqiIYiKfez5ADwzffpUWQ84RYezdeZan0JCQu5inRuJ2cxyQmtQqJCzhg4qEzguKZo3MfdcS0cfblojxYSqvzaEkU+bz0SUzVaCfviKvb8XO/SfNW/kI98mxMA0jJ+rdanYZXyM5rVlr3yI2MJ/SlzRUEWBgCxk94OFHbpFQ8w3VVCmd1HwvyPu+oLJklt5zpEgmT5N71eDZe2QjWgcR5ud8TAK++VtKL24IYWFDmDp12P5e4pgY1mDgK91s/uPlyc243uQ/oughSk4tC1Q5I44xYDa9KG6Wg9KBj4T+O/1blhAB0qF+8+/+fYouGW6z69AF7F/CaCHqo4E5kYY8NMkyTgGrc=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190802074620.115029-1-anup.patel@wdc.com> <20190802074620.115029-12-anup.patel@wdc.com>
- <ef688903-ff49-ffeb-1f95-ef995942d5dc@redhat.com>
-In-Reply-To: <ef688903-ff49-ffeb-1f95-ef995942d5dc@redhat.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Mon, 5 Aug 2019 15:37:12 +0530
-Message-ID: <CAAhSdy2y+DfV0b7dG_V43AL_MVz2R+LzEsE0y8YuiJY_EBeabg@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 11/19] RISC-V: KVM: Implement VMID allocator
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Radim K <rkrcmar@redhat.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 313d52ad-4411-4454-1357-08d7198cb6c5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Aug 2019 10:07:24.6790
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fabrizio.castro@bp.renesas.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1673
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 2, 2019 at 2:49 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 02/08/19 09:48, Anup Patel wrote:
-> > +struct kvm_vmid {
-> > +     unsigned long vmid_version;
-> > +     unsigned long vmid;
-> > +};
-> > +
->
-> Please document that both fields are written under vmid_lock, and read
-> outside it.
-
-Sure, will add comments in asm/kvm_host.h
-
->
-> > +             /*
-> > +              * On SMP we know no other CPUs can use this CPU's or
-> > +              * each other's VMID after forced exit returns since the
-> > +              * vmid_lock blocks them from re-entry to the guest.
-> > +              */
-> > +             force_exit_and_guest_tlb_flush(cpu_all_mask);
->
-> Please use kvm_flush_remote_tlbs(kvm) instead.  All you need to do to
-> support it is check for KVM_REQ_TLB_FLUSH and handle it by calling
-> __kvm_riscv_hfence_gvma_all.  Also, since your spinlock is global you
-> probably should release it around the call to kvm_flush_remote_tlbs.
-> (Think of an implementation that has a very small number of VMID bits).
-
-Sure, I will use kvm_flush_remote_tlbs() here.
-
->
-> > +     if (unlikely(vmid_next == 0)) {
-> > +             WRITE_ONCE(vmid_version, READ_ONCE(vmid_version) + 1);
-> > +             vmid_next = 1;
-> > +             /*
-> > +              * On SMP we know no other CPUs can use this CPU's or
-> > +              * each other's VMID after forced exit returns since the
-> > +              * vmid_lock blocks them from re-entry to the guest.
-> > +              */
-> > +             force_exit_and_guest_tlb_flush(cpu_all_mask);
-> > +     }
-> > +
-> > +     vmid->vmid = vmid_next;
-> > +     vmid_next++;
-> > +     vmid_next &= (1 << vmid_bits) - 1;
-> > +
-> > +     /* Ensure VMID next update is completed */
-> > +     smp_wmb();
->
-> This barrier is not necessary.  Writes to vmid->vmid need not be ordered
-> with writes to vmid->vmid_version, because the accesses happen in
-> completely different places.
-
-Yes, your right. There is already a WRITE_ONCE after it.
->
-> (As a rule of thumb, each smp_wmb() should have a matching smp_rmb()
-> somewhere, and this one doesn't).
-
-Sure, thanks for the hint.
-
->
-> Paolo
->
-> > +     WRITE_ONCE(vmid->vmid_version, READ_ONCE(vmid_version));
-> > +
-
-Regards,
-Anup
+SGkgTGF1cmVudCwNCg0KPiBGcm9tOiBsaW51eC1rZXJuZWwtb3duZXJAdmdlci5rZXJuZWwub3Jn
+IDxsaW51eC1rZXJuZWwtb3duZXJAdmdlci5rZXJuZWwub3JnPiBPbiBCZWhhbGYgT2YgTGF1cmVu
+dCBQaW5jaGFydA0KPiBTZW50OiAwNSBBdWd1c3QgMjAxOSAxMDozNg0KPiBTdWJqZWN0OiBSZTog
+W1BBVENIL1JGQyAwMi8xMl0gZHQtYmluZGluZ3M6IGRpc3BsYXk6IHJlbmVzYXM6IGx2ZHM6IERv
+Y3VtZW50IHJlbmVzYXMsc3dhcC1kYXRhDQo+IA0KPiBIaSBGYWJyaXppbywNCj4gDQo+IE9uIE1v
+biwgQXVnIDA1LCAyMDE5IGF0IDA4OjU5OjUxQU0gKzAwMDAsIEZhYnJpemlvIENhc3RybyB3cm90
+ZToNCj4gPiA+IEZyb206IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNv
+bmJvYXJkLmNvbT4NCj4gPiA+IFNlbnQ6IDAyIEF1Z3VzdCAyMDE5IDA4OjQ0DQo+ID4gPiBTdWJq
+ZWN0OiBSZTogW1BBVENIL1JGQyAwMi8xMl0gZHQtYmluZGluZ3M6IGRpc3BsYXk6IHJlbmVzYXM6
+IGx2ZHM6IERvY3VtZW50IHJlbmVzYXMsc3dhcC1kYXRhDQo+ID4gPg0KPiA+ID4gSGkgRmFicml6
+aW8sDQo+ID4gPg0KPiA+ID4gVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guDQo+ID4gPg0KPiA+ID4g
+T24gRnJpLCBBdWcgMDIsIDIwMTkgYXQgMDg6MzM6NTlBTSArMDEwMCwgRmFicml6aW8gQ2FzdHJv
+IHdyb3RlOg0KPiA+ID4gPiBSLUNhciBEMywgUi1DYXIgRTMsIGFuZCBSWi9HMkUgc3VwcG9ydCBk
+dWFsLWxpbmsgbW9kZS4NCj4gPiA+ID4gSW4gc3VjaCBhIG1vZGUsIHRoZSBmaXJzdCBMVkRTIGVu
+Y29kZXIgZW1pdHMgZXZlbiBkYXRhLCBhbmQgdGhlDQo+ID4gPiA+IHNlY29uZCBMVkRTIGVuY29k
+ZXIgZW1pdHMgb2RkIGRhdGEuIFRoaXMgcGF0Y2ggZG9jdW1lbnRzIHByb3BlcnR5DQo+ID4gPiA+
+IHJlbmVzYXMsc3dhcC1kYXRhLCB1c2VkIHRvIHN3YXAgZXZlbiBhbmQgb2RkIGRhdGEgYXJvdW5k
+Lg0KPiA+ID4gPg0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBGYWJyaXppbyBDYXN0cm8gPGZhYnJp
+emlvLmNhc3Ryb0BicC5yZW5lc2FzLmNvbT4NCj4gPiA+ID4gLS0tDQo+ID4gPiA+ICBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmVuZXNhcyxsdmRzLnR4
+dCB8IDUgKysrKysNCj4gPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKykNCj4g
+PiA+ID4NCj4gPiA+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGx2ZHMudHh0DQo+ID4gPiBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGx2ZHMudHh0DQo+
+ID4gPiA+IGluZGV4IGRlY2U3OWUuLjg5ODAxNzkgMTAwNjQ0DQo+ID4gPiA+IC0tLSBhL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGx2ZHMu
+dHh0DQo+ID4gPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L2JyaWRnZS9yZW5lc2FzLGx2ZHMudHh0DQo+ID4gPiA+IEBAIC01Miw2ICs1MiwxMSBAQCBP
+cHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+ID4gPiAgICBtYW5kYXRvcnkgZm9yIHRoZSBmaXJzdCBM
+VkRTIGVuY29kZXIgb24gUi1DYXIgRDMsIFItQ2FyIEUzLCBhbmQgUlovRzJFIFNvQ3MsDQo+ID4g
+PiA+ICAgIGFuZCBzaGFsbCBwb2ludCB0byB0aGUgc2Vjb25kIGVuY29kZXIgdG8gYmUgdXNlZCBh
+cyBhIGNvbXBhbmlvbiBpbiBkdWFsLWxpbmsNCj4gPiA+ID4gICAgbW9kZS4gSXQgc2hhbGwgbm90
+IGJlIHNldCBmb3IgYW55IG90aGVyIExWRFMgZW5jb2Rlci4NCj4gPiA+ID4gKy0gcmVuZXNhcyxz
+d2FwLWRhdGEgOiB3aGVuIGluIGR1YWwtbGluayBtb2RlLCB0aGUgZmlyc3QgTFZEUyBlbmNvZGVy
+IG5vcm1hbGx5DQo+ID4gPiA+ICsgIGVtaXRzIGV2ZW4gZGF0YSwgYW5kIHRoZSBzZWNvbmQgTFZE
+UyBlbmNvZGVyIGVtaXRzIG9kZCBkYXRhLiBXaGVuIHByb3BlcnR5DQo+ID4gPiA+ICsgIHJlbmVz
+YXMsc3dhcC1kYXRhIGlzIHNwZWNpZmllZCwgdGhlIGRhdGEgZW1pdHRlZCBieSB0aGUgdHdvIGVu
+Y29kZXJzIHdpbGwgYmUNCj4gPiA+ID4gKyAgc3dhcHBlZCBhcm91bmQuIFRoaXMgcHJvcGVydHkg
+Y2FuIG9ubHkgYmUgdXNlZCBpbiBjb25qdW5jdGlvbiB3aXRoIHByb3BlcnR5DQo+ID4gPiA+ICsg
+IHJlbmVzYXMsY29tcGFuaW9uLg0KPiA+ID4NCj4gPiA+IEZyb20gYW4gTFZEUyBlbmNvZGVyIHBv
+aW50IG9mIHZpZXcgdGhpcyBpcyBtb3JlIGEgY29uZmlndXJhdGlvbiBvcHRpb24NCj4gPiA+IHRo
+YW4gYSBkZXNjcmlwdGlvbiBvZiB0aGUgaGFyZHdhcmUuIFdvdWxkbid0IGl0IGJlIGJldHRlciBm
+b3IgdGhlIExWRFMNCj4gPiA+IHNpbmsgdG8gcmVwb3J0IHdoaWNoIG9mIHRoZSBvZGQgb3IgZXZl
+biBwaXhlbHMgaXQgZXhwZWN0cyBvbiBlYWNoIG9mIGl0cw0KPiA+ID4gZW5kcG9pbnRzID8NCj4g
+Pg0KPiA+IFllcywgdGhhdCB3b3VsZCBiZSBteSBwcmVmZXJlbmNlIHRvbywgYW5kIGl0IHdvdWxk
+IGJlIGJldHRlciwgSSBhbSBqdXN0IG5vdCBlbnRpcmVseQ0KPiA+IHdoYXQncyB0aGUgYmVzdCBw
+bGFjZSBmb3IgdGhpcyBpbmZvcm1hdGlvbiB0aG91Z2gNCj4gPg0KPiA+ID4gVGhlIExWRFMgZW5j
+b2RlciBkcml2ZXIgY291bGQgdGhlbiBxdWVyeSB0aGF0IGF0IHJ1bnRpbWUgYW5kDQo+ID4gPiBj
+b25maWd1cmUgaXRzZWxmIGFjY29yZGluZ2x5LiBJZGVhbGx5IHRoaXMgc2hvdWxkIGJlIHF1ZXJp
+ZWQgdGhyb3VnaCB0aGUNCj4gPiA+IGRybV9icmlkZ2VfdGltaW5ncyBzdHJ1Y3R1cmUgKG9yIHRo
+cm91Z2ggYSBzaW1pbGFyIG1lYW4pLCBub3QgdGhyb3VnaA0KPiA+ID4gRFQuIEFuIExWRFMgc2lu
+ayB0aGF0IGhhcyBhIGZpeGVkIG1hcHBpbmcgb2Ygb2RkL2V2ZW4gcGl4ZWxzIHRvDQo+ID4gPiBl
+bmRwb2ludHMgd291bGRuJ3QgbmVlZCB0aGUgaW5mb3JtYXRpb24gdG8gYmUgc3BlY2lmaWVkIGlu
+IERUIGF0IGFsbC4NCj4gPg0KPiA+IElzbid0IGRybV9icmlkZ2VfdGltaW5ncyBzcGVjaWZpYyBm
+b3IgYnJpZGdlcz8NCj4gDQo+IEl0cyBuYW1lIG1ha2VzIGl0IHNwZWNpZmljIHRvIGJyaWRnZXMs
+IGJ1dCB0aGUgaW5mb3JtYXRpb24gaXQgY29udGFpbnMNCj4gY291bGQgZXF1YWxseSBhcHBseSB0
+byBwYW5lbHMuIEkgd291bGQgdGh1cyB1c2UgaXQgZm9yIGJvdGgsIHBvc3NpYmx5DQo+IGFmdGVy
+IHJlbmFtaW5nIGl0Lg0KDQpXaWxsIGdpdmUgdGhpcyBhIHRyeSB0aGVuLg0KDQpUaGFua3MsDQpG
+YWINCg0KPiANCj4gLS0NCj4gUmVnYXJkcywNCj4gDQo+IExhdXJlbnQgUGluY2hhcnQNCg==
