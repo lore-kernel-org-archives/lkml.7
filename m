@@ -2,186 +2,147 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17633C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9572BC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:33:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB1112067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:32:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564993972;
-	bh=X3DsxvoUyO8BWT9Rmk+NqY4rLPfy+td+0CCjsLeLrsw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YMYPMg90enAW7//fPCuSb7oSRfz2vvvTQeL61otklgapv+/CISuqLoGwKi7cx0ccG
-	 pxcPq1VmahxcIItq2YheQhsb1jyfFqiMV+XFzRhNQFYQ2pO2QSrHvBEbpQSy+Tu2x6
-	 yjrUoEjAtm+lMdmC5EPBPYY1yQoxa+IYphth7Xf4=
+	by mail.kernel.org (Postfix) with ESMTP id 6604F2067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:33:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="crDdlRSV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727862AbfHEIcu (ORCPT
+        id S1727865AbfHEId3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 04:32:50 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46176 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726423AbfHEIcu (ORCPT
+        Mon, 5 Aug 2019 04:33:29 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:15502 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726423AbfHEId3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 04:32:50 -0400
-Received: by mail-ot1-f66.google.com with SMTP id z23so56111018ote.13;
-        Mon, 05 Aug 2019 01:32:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zN5arBluSaU7iuMkb1bdkzd/J9ztzBg1fZtHM8/6PEw=;
-        b=rOsWPRG/CSdeweQgt2Id0UaxTCZNcJT4KnwCxTHY5qNyWZRY4ANwyxqlpeYxvKBDeo
-         5cMJp+uQVqrSZII/tpaOnjhf13UP3r+96Cp4P7LnWShaVWnwqHtzzKwplGCuppilobca
-         1lPfT1/SaRa7fN1R+sFsWhaph3fa2MiA4QNppsgsc/YSfUdddcidUMPPGrY/GEc4mGba
-         INkSwS2sJauZDMFM3AbsQ9ckOak6HdG+1s5qx3fy5/SCLmSa8wbaw36zDUQOP1rcFZAp
-         LYzale9DriEbFELhDMYcfPJjyNB5ZjOIBoj17cbYha9JjaxVlZ07Gdh2k4HKQZxb/YH8
-         VvJA==
-X-Gm-Message-State: APjAAAXI9jju8BawSMnNZ4wRtS2TSnZ24SR9obcnA0a5BWOaTDf+X46A
-        1XgcsfQ9DllmxrLzR2U863wjD7eFD6l562qOcio=
-X-Google-Smtp-Source: APXvYqxi/zGwKaFeEyCdwqytMLCi1mCgwjaO4WgXUM53T9921kaMZ1kccxf7zKH1cxGKvNJhRPvfgPSROUeermemRI8=
-X-Received: by 2002:a05:6830:1516:: with SMTP id k22mr106178174otp.189.1564993969706;
- Mon, 05 Aug 2019 01:32:49 -0700 (PDT)
+        Mon, 5 Aug 2019 04:33:29 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d47e9e20000>; Mon, 05 Aug 2019 01:33:38 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 05 Aug 2019 01:33:28 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 05 Aug 2019 01:33:28 -0700
+Received: from tbergstrom-lnx.Nvidia.com (172.20.13.39) by
+ HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3; Mon, 5 Aug 2019 08:33:27 +0000
+Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
+        id BB5BF42845; Mon,  5 Aug 2019 11:33:25 +0300 (EEST)
+Date:   Mon, 5 Aug 2019 11:33:25 +0300
+From:   Peter De Schrijver <pdeschrijver@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "Mark Brown" <broonie@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 3/3] soc/tegra: regulators: Add regulators coupler for
+ Tegra30
+Message-ID: <20190805083325.GE3883@pdeschrijver-desktop.Nvidia.com>
+References: <20190725151832.9802-1-digetx@gmail.com>
+ <20190725151832.9802-4-digetx@gmail.com>
+ <20190802140512.GD3883@pdeschrijver-desktop.Nvidia.com>
+ <c537fbea-5884-03db-305f-6ab3d553f7ab@gmail.com>
 MIME-Version: 1.0
-References: <20190731215514.212215-1-trong@android.com> <32598586.Mjd66ZhNnG@kreacher>
- <CANA+-vDTDq__LnLBpM5u_VHHvpFA--K5Du63vPB7HfaKzBsPtg@mail.gmail.com>
- <6987393.M0uybTKmdI@kreacher> <CANA+-vAPpXF1=z1=OjOhr8HWQ=Qn39qtQ3+8bUeXNTuFFTxoJQ@mail.gmail.com>
- <CAJZ5v0go-qOTyQV4D2Sj_xQxT831PxJZP0uay67rG73Q3K2pHQ@mail.gmail.com>
- <5d42281c.1c69fb81.bcda1.71f5@mx.google.com> <CANA+-vCoCuMtSKCfnav9NSwrzX7of9iLbppNX+pcymBp19kgQQ@mail.gmail.com>
- <5d434a23.1c69fb81.c4201.c65b@mx.google.com> <CANA+-vCt3QJDykzbZWBDZyaiaMiz_SOJ+Htv7+G0czjL07MjmQ@mail.gmail.com>
- <CAJZ5v0ioPioGBNBjiK-i5eydT9AGU3JvOBAy8L0zvs3kQNF35Q@mail.gmail.com> <CANA+-vDYh4a74ve1NZkybbcqpQZK-8tTGVK6+Nqgv0yvqg-Dgg@mail.gmail.com>
-In-Reply-To: <CANA+-vDYh4a74ve1NZkybbcqpQZK-8tTGVK6+Nqgv0yvqg-Dgg@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 5 Aug 2019 10:32:35 +0200
-Message-ID: <CAJZ5v0hJ4O53VG4GbdU7fibWFx2Lx_oUkfV1te8iZRAyBbEk8A@mail.gmail.com>
-Subject: Re: [PATCH v6] PM / wakeup: show wakeup sources stats in sysfs
-To:     Tri Vo <trong@android.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Hridya Valsaraju <hridya@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <c537fbea-5884-03db-305f-6ab3d553f7ab@gmail.com>
+X-NVConfidentiality: public
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1564994018; bh=mWdZVci7AOyAKC8AqAypHQ9t/8NzQXkYTYcm5zqhMdI=;
+        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
+         MIME-Version:Content-Type:Content-Disposition:
+         Content-Transfer-Encoding:In-Reply-To:X-NVConfidentiality:
+         User-Agent:X-Originating-IP:X-ClientProxiedBy;
+        b=crDdlRSVjTJgr074oPgSg+8KGNVt+bKhAYMwVXEkzOzeUsj9mXJUFPCVDGgNs55ZS
+         81EQyIcxJGKLxW3oOnNi+kJMdNI4HksxcC686y51lAGz22R/ZuhLqx5/9yOLRWhgvw
+         4i6WPydkHRZY4qMp9mXm4rv4MbsOYy9PXd/Op/P/ymGdvVrvE8NH+TD9Vuk3IDjDDb
+         74ip7JXTRxV2vGCmpAdZNZ4BoiQJNagTPt31MG+q6zaG6kD5zjqPfDHh7KM7++xhHA
+         iO9yUgk5QV03msHFngZzGKobeabNbdHjS1AUYcDFwAEfgqiUCqchkviQZYjoMogCDu
+         7YGI9W4N9pFVA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 4, 2019 at 12:40 AM Tri Vo <trong@android.com> wrote:
->
-> On Thu, Aug 1, 2019 at 3:10 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-> > On Thu, Aug 1, 2019 at 11:45 PM Tri Vo <trong@android.com> wrote:
-> > >
-> > > On Thu, Aug 1, 2019 at 1:23 PM Stephen Boyd <swboyd@chromium.org> wrote:
-> > > >
-> > > > Quoting Tri Vo (2019-08-01 12:50:25)
-> > > > > On Wed, Jul 31, 2019 at 4:45 PM Stephen Boyd <swboyd@chromium.org> wrote:
-> > > > > >
-> > > > > > Quoting Rafael J. Wysocki (2019-07-31 16:10:38)
-> > > > > > > On Thu, Aug 1, 2019 at 12:59 AM Tri Vo <trong@android.com> wrote:
-> > > > > > > >
-> > > > > > > > >
-> > > > > > > > > So why wouldn't something like this suffice:
-> > > > > > > > >
-> > > > > > > > > dev = device_create_with_groups(wakeup_class, parent, MKDEV(0, 0), ws,
-> > > > > > > > >                                 wakeup_source_groups, "wakeup:%s", ws->name);
-> > > > > > > > >
-> > > > > > > > > ?
-> > > > > > > >
-> > > > > > > > ws->name is inherited from the device name. IIUC device names are not
-> > > > > > > > guaranteed to be unique. So if different devices with the same name
-> > > > > > > > register wakeup sources, there is an error.
-> > > > > > >
-> > > > > > > OK
-> > > > > > >
-> > > > > > > So I guess the names are retained for backwards compatibility with
-> > > > > > > existing user space that may be using them?
-> > > > > > >
-> > > > > > > That's kind of fair enough, but having two different identification
-> > > > > > > schemes for wakeup sources will end up confusing.
-> > > > > >
-> > > > > > I understand your concern about the IDA now. Thanks for clarifying.
-> > > > > >
-> > > > > > How about we name the devices 'wakeupN' with the IDA when they're
-> > > > > > registered with a non-NULL device pointer and then name them whatever
-> > > > > > the name argument is when the device pointer is NULL. If we have this,
-> > > > > > we should be able to drop the name attribute in sysfs and figure out the
-> > > > > > name either by looking at the device name in /sys/class/wakeup/ if it
-> > > > > > isn't 'wakeupN', or follow the symlink to the device in /sys/devices/
-> > > > > > and look at the parent device name there.
-> > > > >
-> > > > > This makes it difficult for userspace to query the name a wakeup
-> > > > > source, as it now has to first figure out if a wakeup source is
-> > > > > associated with a device or not. The criteria for that is also
-> > > > > awkward, userspase has to check if directory path contains "wakeupN",
-> > > > > then it's a virtual wakeup source.
-> > > >
-> > > > I think you mean if it doesn't match wakeupN then it's a virtual wakeup
-> > > > source?
-> > >
-> > > Yes
-> > > >
-> > > > >
-> > > > > IMO it's cleaner to consistently have /sys/class/wakeup/wakeupN/name
-> > > > > for every wakeup source.
-> > > >
-> > > > I don't find it awkward or difficult. Just know what the name of the
-> > > > /sys/class/wakeup/ path is and then extract the name from there if it
-> > > > doesn't match wakeupN, otherwise read the 'device' symlink and run it
-> > > > through basename.
-> > >
-> > > The concern was that having both "id" and "name" around might be
-> > > confusing. I don't think that making the presence of "name"
-> > > conditional helps here. And we have to maintain additional logic in
-> > > both kernel and userspace to support this.
-> > >
-> > > Also, say, userspace grabs a wakelock named "wakeup0". In the current
-> > > patch, this results in a name collision and an error. Even assuming
-> > > that userspace doesn't have ill intent, it still needs to be aware of
-> > > "wakeupN" naming pattern to avoid this error condition.
-> > >
-> > > All wakeup sources in the /sys/class/wakeup/ are in the same namespace
-> > > regardless of where they originate from, i.e. we have to either (1)
-> > > inspect the name of a wakeup source and make sure it's unique before
-> > > using it as a directory name OR (2) generate the directory name on
-> > > behalf of whomever is registering a wakeup source, which I think is a
-> > > much simpler solution.
-> >
-> > OK, whatever.
-> >
-> > Let's use the IDA as originally proposed and retain the names for
-> > backwards compatibility only.
-> >
-> > Maybe just allocate the ID at the wakeup source object creation time
-> > already (ISTR that you did that before attempting to create a virtual
-> > device for the wakeup source).
->
-> Yes, allocating the ID when creating the wakeup source object makes
-> sense. However, kernel/power/wakelock.c allocates its wakeup sources
-> manually. I imagine we don't want these IDs to be created in more than
-> one place.
+On Fri, Aug 02, 2019 at 05:39:23PM +0300, Dmitry Osipenko wrote:
+> 02.08.2019 17:05, Peter De Schrijver =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > On Thu, Jul 25, 2019 at 06:18:32PM +0300, Dmitry Osipenko wrote:
+> >> Add regulators coupler for Tegra30 SoCs that performs voltage balancin=
+g
+> >> of a coupled regulators and thus provides voltage scaling functionalit=
+y.
+> >>
+> >> There are 2 coupled regulators on all Tegra30 SoCs: CORE and CPU. The
+> >> coupled regulator voltages shall be in a range of 300mV from each othe=
+r
+> >> and CORE voltage shall be higher than the CPU by N mV, where N depends
+> >> on the CPU voltage.
+> >>
+> >> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> >> ---
+> >>  drivers/soc/tegra/Kconfig              |   4 +
+> >>  drivers/soc/tegra/Makefile             |   1 +
+> >>  drivers/soc/tegra/regulators-tegra30.c | 316 ++++++++++++++++++++++++=
++
+> >>  3 files changed, 321 insertions(+)
+> >>  create mode 100644 drivers/soc/tegra/regulators-tegra30.c
+> >>
+> > ...
+> >=20
+> >> +
+> >> +static int tegra30_core_cpu_limit(int cpu_uV)
+> >> +{
+> >> +	if (cpu_uV < 800000)
+> >> +		return 950000;
+> >> +
+> >> +	if (cpu_uV < 900000)
+> >> +		return 1000000;
+> >> +
+> >> +	if (cpu_uV < 1000000)
+> >> +		return 1100000;
+> >> +
+> >> +	if (cpu_uV < 1100000)
+> >> +		return 1200000;
+> >> +
+> >> +	if (cpu_uV < 1250000) {
+> >> +		switch (tegra_sku_info.cpu_speedo_id) {
+> >> +		case 0 ... 1:
+> > Aren't we supposed to add /* fall through */ here now?
+>=20
+> There is no compiler warning if there is nothing in-between of the
+> case-switches, so annotation isn't really necessary here. Of course it
+> is possible to add an explicit annotation just to make clear the
+> fall-through intention.
+>=20
 
-No, we don't.
+Ah. Ok. Whatever you want then :)
 
-> Making wakelock.c only use wakeup_source_*() family of functions when
-> dealing with wakeup sources  might be a worthwhile change though. Then
-> we won't have to worry about ID allocation in wakelock.c. WDYT?
+> >> +		case 4:
+> >> +		case 7 ... 8:
+> >> +			return 1200000;
+> >> +
+> >> +		default:
+> >> +			return 1300000;
+> >> +		}
+> >> +	}
+> >> +
+> >=20
+> > Other than that, this looks ok to me.
+>=20
+> Awesome, thank you very much! Explicit ACK will be appreciated as well.
 
-Sounds reasonable to me.
+Acked-By: Peter De Schrijver <pdeschrijver@nvidia.com>
 
-> Also, it sounds like we all agree with "/sys/class/wakeup/wsN/" path
-> and "/sys/class/wakeup/wsN/name" attribute for each wakeup source,
-> right?
-
-Generally yes, but please make it "wakeupN".
