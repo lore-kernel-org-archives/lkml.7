@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 689F4C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E35D2C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C5042067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:14:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0C602067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:14:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010884;
-	bh=nZJMbnrCCwT2523WvJYqEWdpmkvWRx06TB6047Q7KPI=;
+	s=default; t=1565010889;
+	bh=grWK2I+nBJkX18PcZ0UgVrOEZQsDYPTm31Twy1iMMXA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pm3qHAN3KNyjUvq9+mcJ+KirVXjnIupvydwWtue2bt+oWhseZX76FDVsmavAznVr5
-	 HKxHrkHZbX/dgfrGtHUx0R9qOORPoZqINrwM2KkayweOKUgQtHxDNyNYxahaiDq7rP
-	 P2IS8U39tdRI2oTW4lAw2658FS4jjqYKyqduXsvQ=
+	b=1AIau+HT+EVufe83br2WWC26sfzRFigKh7KYpXEpwHu11QRkO4vlU6YoCByRJs/1u
+	 mzTj4jZ7V2lVu1E7x5TgTacNsENMGfaVxceyeBHHBEq6qLjs194v/Jtod7xTpdFZek
+	 UJf78WhGv9sV2MVX86ge6cjbeNQs+zkhK/uxmtxg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729872AbfHENHr (ORCPT
+        id S1729474AbfHENOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:07:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45440 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:14:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729857AbfHENHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:07:44 -0400
+        id S1729388AbfHENHl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:07:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBA7621738;
-        Mon,  5 Aug 2019 13:07:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 534192147A;
+        Mon,  5 Aug 2019 13:07:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010463;
-        bh=nZJMbnrCCwT2523WvJYqEWdpmkvWRx06TB6047Q7KPI=;
+        s=default; t=1565010460;
+        bh=grWK2I+nBJkX18PcZ0UgVrOEZQsDYPTm31Twy1iMMXA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o/eM/haeNjpMuMvS7C0bnIbQBYxPnV436sMUoujE4iJezXPdEgGmBw5DfO68tZMT4
-         C5KChOfemCPbveurHxsKVZMW5kPpLAKy18MsBX1iR8u8jLKRf3C3GzZUG8i48XH7Yb
-         syZJ+9P7HDuPl1Nm+qcIXQNZyfk9Ie7exKC2zKVo=
+        b=HThqWpUKMR8hR4pMf5V+oisI/slTlTKQqMTP4cxipRYAri0lVuIo/jhjL2uy3gW0K
+         Li9zGjTRbZyeRTGAuYDEElmWoErOyvj0TyGJOVHp2Mp9Al1MQFvoljqqPbBt4x2qdd
+         O24KfBBLoa92mWOSVaYvvAVQLpWeo0s3YMQSBE6Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yongxin Liu <yongxin.liu@windriver.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
+        stable@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 32/53] drm/nouveau: fix memory leak in nouveau_conn_reset()
-Date:   Mon,  5 Aug 2019 15:02:57 +0200
-Message-Id: <20190805124931.699313190@linuxfoundation.org>
+Subject: [PATCH 4.14 31/53] x86, boot: Remove multiple copy of static function sanitize_boot_params()
+Date:   Mon,  5 Aug 2019 15:02:56 +0200
+Message-Id: <20190805124931.532425240@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124927.973499541@linuxfoundation.org>
 References: <20190805124927.973499541@linuxfoundation.org>
@@ -60,59 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 09b90e2fe35faeace2488234e2a7728f2ea8ba26 ]
+[ Upstream commit 8c5477e8046ca139bac250386c08453da37ec1ae ]
 
-In nouveau_conn_reset(), if connector->state is true,
-__drm_atomic_helper_connector_destroy_state() will be called,
-but the memory pointed by asyc isn't freed. Memory leak happens
-in the following function __drm_atomic_helper_connector_reset(),
-where newly allocated asyc->state will be assigned to connector->state.
+Kernel build warns:
+ 'sanitize_boot_params' defined but not used [-Wunused-function]
 
-So using nouveau_conn_atomic_destroy_state() instead of
-__drm_atomic_helper_connector_destroy_state to free the "old" asyc.
+at below files:
+  arch/x86/boot/compressed/cmdline.c
+  arch/x86/boot/compressed/error.c
+  arch/x86/boot/compressed/early_serial_console.c
+  arch/x86/boot/compressed/acpi.c
 
-Here the is the log showing memory leak.
+That's becausethey each include misc.h which includes a definition of
+sanitize_boot_params() via bootparam_utils.h.
 
-unreferenced object 0xffff8c5480483c80 (size 192):
-  comm "kworker/0:2", pid 188, jiffies 4294695279 (age 53.179s)
-  hex dump (first 32 bytes):
-    00 f0 ba 7b 54 8c ff ff 00 00 00 00 00 00 00 00  ...{T...........
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<000000005005c0d0>] kmem_cache_alloc_trace+0x195/0x2c0
-    [<00000000a122baed>] nouveau_conn_reset+0x25/0xc0 [nouveau]
-    [<000000004fd189a2>] nouveau_connector_create+0x3a7/0x610 [nouveau]
-    [<00000000c73343a8>] nv50_display_create+0x343/0x980 [nouveau]
-    [<000000002e2b03c3>] nouveau_display_create+0x51f/0x660 [nouveau]
-    [<00000000c924699b>] nouveau_drm_device_init+0x182/0x7f0 [nouveau]
-    [<00000000cc029436>] nouveau_drm_probe+0x20c/0x2c0 [nouveau]
-    [<000000007e961c3e>] local_pci_probe+0x47/0xa0
-    [<00000000da14d569>] work_for_cpu_fn+0x1a/0x30
-    [<0000000028da4805>] process_one_work+0x27c/0x660
-    [<000000001d415b04>] worker_thread+0x22b/0x3f0
-    [<0000000003b69f1f>] kthread+0x12f/0x150
-    [<00000000c94c29b7>] ret_from_fork+0x3a/0x50
+Remove the inclusion from misc.h and have the c file including
+bootparam_utils.h directly.
 
-Signed-off-by: Yongxin Liu <yongxin.liu@windriver.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/1563283092-1189-1-git-send-email-zhenzhong.duan@oracle.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_connector.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/boot/compressed/misc.c | 1 +
+ arch/x86/boot/compressed/misc.h | 1 -
+ 2 files changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.c b/drivers/gpu/drm/nouveau/nouveau_connector.c
-index 2c6d196836886..4a7d50a96d36f 100644
---- a/drivers/gpu/drm/nouveau/nouveau_connector.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_connector.c
-@@ -251,7 +251,7 @@ nouveau_conn_reset(struct drm_connector *connector)
- 		return;
+diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+index 252fee3208166..fb07cfa3f2f90 100644
+--- a/arch/x86/boot/compressed/misc.c
++++ b/arch/x86/boot/compressed/misc.c
+@@ -16,6 +16,7 @@
+ #include "error.h"
+ #include "../string.h"
+ #include "../voffset.h"
++#include <asm/bootparam_utils.h>
  
- 	if (connector->state)
--		__drm_atomic_helper_connector_destroy_state(connector->state);
-+		nouveau_conn_atomic_destroy_state(connector, connector->state);
- 	__drm_atomic_helper_connector_reset(connector, &asyc->state);
- 	asyc->dither.mode = DITHERING_MODE_AUTO;
- 	asyc->dither.depth = DITHERING_DEPTH_AUTO;
+ /*
+  * WARNING!!
+diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+index 32d4ec2e0243c..5380d45b1c6e4 100644
+--- a/arch/x86/boot/compressed/misc.h
++++ b/arch/x86/boot/compressed/misc.h
+@@ -19,7 +19,6 @@
+ #include <asm/page.h>
+ #include <asm/boot.h>
+ #include <asm/bootparam.h>
+-#include <asm/bootparam_utils.h>
+ 
+ #define BOOT_BOOT_H
+ #include "../ctype.h"
 -- 
 2.20.1
 
