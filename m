@@ -4,541 +4,382 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F77C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A109DC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 920B4216F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 608D9216B7
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:43:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="X6ygQCnw";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="QFPBfyIO"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="l9Jj/3mX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730597AbfHENnd (ORCPT
+        id S1730636AbfHENng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:43:33 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:7931 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730418AbfHENn2 (ORCPT
+        Mon, 5 Aug 2019 09:43:36 -0400
+Received: from mail-wm1-f41.google.com ([209.85.128.41]:36475 "EHLO
+        mail-wm1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730377AbfHENna (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:43:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1565012609; x=1596548609;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=w15PUak1BzMgotK/fSAUJUiqSJzFZAXtinm76b2toeU=;
-  b=X6ygQCnwaGYPf65Z+TjG8YU0/o7glUkBQs6quPDyT11fG8u8Re9FAbcM
-   6/um3JvIrQkbVFG41hzr/pnPxSfOU4H0qy5cf8QIMkKsm+10u/21doSUW
-   /o6a5xl5EqgFwmY7wOQJdI5s5nIxBgk+CGwiVbn0gaEpVpu25glrpnL5E
-   +bZHi+xlFy7mYqAMbcST8E9YCE9d3Fdb4g9KxBEiSpDQHBBG1CRk5IJBK
-   G07sL9vpw4A/ZGYLNuvWbv5k8bXp2ytrMGtXOiJAWJBgI/tGOhra7MbIS
-   kEcKQLswJLdqfIma7Eu5f9/ofbfun8BJP8Cbp+bgOzxlUAAVuntY2m5L6
-   g==;
-IronPort-SDR: 4aGu9y3hPTaPy0oIJKTem7GMuKchFu+1Rp/dvnXd4S59os9rppIYGsYXXINMJoyIHwd9E7bH6Y
- CP9BQyQYFnOOhvS/Hd1UswRiN6e67+leOKoCbQVJpaSEy/S1y5OazhLjyaj9vwl1eWhGJPKPsW
- 8ObWIHXhvhkKXJdYDAltzaGv+iSS5WfIyw3wUhK/86psNYe8I5gSrJ5cqRZrUriXQ+EEHjt3ko
- 4lKgyrTlIlwIm4NNIJaNfjqZPXi0nCBGD1wFm46rScQj1fpVkRT3Hf8/YhF5ozeaNzUV4NInWa
- beE=
-X-IronPort-AV: E=Sophos;i="5.64,350,1559491200"; 
-   d="scan'208";a="115996619"
-Received: from mail-by2nam05lp2054.outbound.protection.outlook.com (HELO NAM05-BY2-obe.outbound.protection.outlook.com) ([104.47.50.54])
-  by ob1.hgst.iphmx.com with ESMTP; 05 Aug 2019 21:43:28 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MFhzyh5/CyJZGpY9dBmbzB3M7pqIc2aSf0EUieNxrC0Dz9TTmCqF1tQ3hwoKf/jON6nL1DKtoO2AM0nCYi/YV9ryC3hVv16jZMFjlvuJelZ81rNKE4+yHdc4eozrgOjhRuBcStJFcFc/umhz7cFS4SoTH+8LbkvpcgaGiHqJwxjbq5S5NdJ4uAsBYAOEXwAG+MO8V7Co++9q7S0irAHqGKX/+oT5UpqHKJZu964fS1BH9KmaKIGwad4hM5sjBIRAY5pnwRhkw1wHT0YRlslrM7xCQD5i1H6/F9y+/51v1XxwmZfd9H4D0FJttQziDgZLhTaztKh+H/vILZKlFZg2JQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wfi0ZjUdE+X7UWRHDezI6g3iiswJmV+j3yenCyk0DYY=;
- b=gA8GcOib4yTkVFshl/GoIIpcyp6Q64EOuq5Wmr0MBOrqhsljhFgVzBUc6RQe51nPtKHu01+Q1QH2/qHTUE/oyCU4cUBC/RPbXtJEx+S3x1BFY1ovsxa5bDoFwppb2nPIcpGR+wnq/QSWwzaHfZzgM18WxudwqjeN6i6Qrhd95324oKxRmFNc/qI0h+x2cpgF9LOSyRnZfonloudYlCyrEe9Y2XUwLMea1u/ENjpMSd93IIfnExBIHKZXMsBu6J3kvUpnbj7BMPQkg2weQrmOjJS9wTJj46f7AZ/U9/zFdr/f2vYdYgBQkTzEiiMaOKrn+3ISmeAfT5VO0WYjckbimQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=wdc.com;dmarc=pass action=none header.from=wdc.com;dkim=pass
- header.d=wdc.com;arc=none
+        Mon, 5 Aug 2019 09:43:30 -0400
+Received: by mail-wm1-f41.google.com with SMTP id g67so68960588wme.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 06:43:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wfi0ZjUdE+X7UWRHDezI6g3iiswJmV+j3yenCyk0DYY=;
- b=QFPBfyIOZmyR7MSiOkVoNhQZYc5VlSBE6buzaZbs9Ia1XYh3M2yPSfCfV55fFjsgTQFII8myXdpSwRvboxqofrap1BkZTsnQEfuKTXw0sUJ9Hox0fUUVDnAueqfDFsdHNGUw+iV/T7U+OKU+uQGQMbTaQLh3TrDBOy+V89gQBE4=
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
- MN2PR04MB6159.namprd04.prod.outlook.com (20.178.249.147) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2136.17; Mon, 5 Aug 2019 13:43:25 +0000
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::a815:e61a:b4aa:60c8]) by MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::a815:e61a:b4aa:60c8%7]) with mapi id 15.20.2136.018; Mon, 5 Aug 2019
- 13:43:25 +0000
-From:   Anup Patel <Anup.Patel@wdc.com>
-To:     Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim K <rkrcmar@redhat.com>
-CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Anup Patel <anup@brainfault.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Anup Patel <Anup.Patel@wdc.com>
-Subject: [PATCH v3 08/19] RISC-V: KVM: Implement VCPU world-switch
-Thread-Topic: [PATCH v3 08/19] RISC-V: KVM: Implement VCPU world-switch
-Thread-Index: AQHVS5PBSDMkRDzQf0agGRj571npXg==
-Date:   Mon, 5 Aug 2019 13:43:25 +0000
-Message-ID: <20190805134201.2814-9-anup.patel@wdc.com>
-References: <20190805134201.2814-1-anup.patel@wdc.com>
-In-Reply-To: <20190805134201.2814-1-anup.patel@wdc.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BMXPR01CA0087.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:54::27) To MN2PR04MB6061.namprd04.prod.outlook.com
- (2603:10b6:208:d8::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Anup.Patel@wdc.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [106.51.20.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0176d3ce-841d-4986-ab8b-08d719aae38c
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MN2PR04MB6159;
-x-ms-traffictypediagnostic: MN2PR04MB6159:
-x-microsoft-antispam-prvs: <MN2PR04MB615967BB01C5F774DEEDE66A8DDA0@MN2PR04MB6159.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 01208B1E18
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(136003)(366004)(396003)(376002)(346002)(189003)(199004)(66556008)(66476007)(71190400001)(71200400001)(110136005)(54906003)(66946007)(66446008)(64756008)(86362001)(5660300002)(102836004)(52116002)(55236004)(14454004)(99286004)(386003)(78486014)(316002)(256004)(14444005)(6506007)(76176011)(2616005)(6486002)(8676002)(9456002)(8936002)(36756003)(3846002)(6116002)(6512007)(4326008)(2906002)(476003)(305945005)(44832011)(81156014)(81166006)(26005)(30864003)(186003)(486006)(11346002)(25786009)(7736002)(1076003)(50226002)(478600001)(68736007)(446003)(53936002)(66066001)(6436002)(7416002);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6159;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ZPy/ZIDzpO0Ghhb2w1EUvNnv/e+MtMFIBMRerKA94u2E2NL6pAtJl2qpkQPGBUN7oyfEtf01Dfn3oi4u73qbAL0s12rmchoKE/A9YcIn9+cpHiDDqZBtsvfarDNEZAqDJ+k1/FqBmg+Wlci1bc57nyQUFpWaZFmVmItIG00vuSNsn7pZKF/OzDv9Ph/nVNdHfI6mPngXjUarAKmDE/2lr0oAa2neMcrlLwBaWAfOefZZSijXRYND5b1Uyyl3LFIbVNB9OdVbeTsBel47G33WWIz4L2Ff/PRMzN0qaN0DzehBu6R1fMoG3hsUFvfJKBvH7Th1M5B19K7kaTObnw06gXQK5l2L/pIom7H6AWeGheWAFROYYIeQKtbI/j6gfAMrXLREmGjFEs8FTvGwJQeEA/GgPuDySnyQoGKTPSiWDYU=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=3Oz+CQZCAUJwgcEYTJbHCfvJ38RsLWITOk33JWAtJCs=;
+        b=l9Jj/3mXuSfWIT8MmpVIdNZ1FM8Ehk/gGROM1xhtLzrz8UTVy+iVxkHUKNo58m4ylB
+         +TOBVwsvyyKcoJuXP4yJoOCKeRyHLb7bcyPuyv03lPTekhZwTetCNhBEfpgoEr0ApSZo
+         EL9mnKfdyj89YOZZrJzOV1mo5EoFbyWLXtkPhmnaP7iqzXaxyU/u2RRa+q4qx4ngcHI9
+         F3Bvn75T3i+Of68SmmaJRWonglLlEMu2EBaNh12Vc0TQi93nxIgnezk4h0WNV+38T1w8
+         AXw3f7aASvxjE/BDVyNYodccL8B+6tn/w6slgQcsmZU8V8s1xqDrfsvCqtjQSpsOzUfV
+         l6gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=3Oz+CQZCAUJwgcEYTJbHCfvJ38RsLWITOk33JWAtJCs=;
+        b=pjhXLtOBWUiNQhEo5Ef9tcA7Lg55+jyVW2FDQt8p6t7G5BZRdMPQhbG9hZTgk3WS4C
+         kldTT2nd08m1T9q74geQBM8bkci4Dy2YN9JsFawpK/blkSMjO1RxI9JUrnryOceE73hD
+         5sZ5JOr2ZUdGDzP1N7HTUh05Zt1LqJ/e5NVL6Mo5Gf9CUg1mEiaW5Yk7p/QidO+gudAk
+         P4ZJrInCLYUTqRYmoX5IhMqwVLY/SLA/xCYUTPnHBA/YkiZnqKpFHfAXpmhQx3tYPI/Z
+         osG8UD8AmDNZG4GW3krQXqqE7+gVIkz01udhqS6Yz5GhzsoBNAuJwbmOPMCpxgSEsc2m
+         s30A==
+X-Gm-Message-State: APjAAAUDqnFGQiUskBL7nUgdKGKxOaXAJA3yR9ys0mp7YkhC6sVGOwGH
+        zAdoO1sRKlFWtXS+4w+157kz+w==
+X-Google-Smtp-Source: APXvYqxEEXnGSaCS7pv1hDgGbcwpL2AF22A56XIER4IhlM9BM/ZxoTHDt5hJfE1aM1Ee8/lyGfCwzQ==
+X-Received: by 2002:a1c:67c3:: with SMTP id b186mr17875085wmc.34.1565012606705;
+        Mon, 05 Aug 2019 06:43:26 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id t3sm67835842wmi.6.2019.08.05.06.43.26
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 05 Aug 2019 06:43:26 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     robh+dt@kernel.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] dt-bindings: display: amlogic,meson-dw-hdmi: convert to yaml
+Date:   Mon,  5 Aug 2019 15:43:17 +0200
+Message-Id: <20190805134319.737-2-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190805134319.737-1-narmstrong@baylibre.com>
+References: <20190805134319.737-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0176d3ce-841d-4986-ab8b-08d719aae38c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Aug 2019 13:43:25.2144
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Anup.Patel@wdc.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6159
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch implements the VCPU world-switch for KVM RISC-V.
+Now that we have the DT validation in place, let's convert the device tree
+bindings for the Amlogic Synopsys DW-HDMI specifics over to YAML schemas.
 
-The KVM RISC-V world-switch (i.e. __kvm_riscv_switch_to()) mostly
-switches general purpose registers, SSTATUS, STVEC, SSCRATCH and
-HSTATUS CSRs. Other CSRs are switched via vcpu_load() and vcpu_put()
-interface in kvm_arch_vcpu_load() and kvm_arch_vcpu_put() functions
-respectively.
+The original example and usage of clock-names uses a reversed "isfr"
+and "iahb" clock-names, the rewritten YAML bindings uses the reversed
+instead of fixing the device trees order.
 
-Signed-off-by: Anup Patel <anup.patel@wdc.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/riscv/include/asm/kvm_host.h |   9 +-
- arch/riscv/kernel/asm-offsets.c   |  76 ++++++++++++
- arch/riscv/kvm/Makefile           |   2 +-
- arch/riscv/kvm/vcpu.c             |  31 ++++-
- arch/riscv/kvm/vcpu_switch.S      | 194 ++++++++++++++++++++++++++++++
- 5 files changed, 308 insertions(+), 4 deletions(-)
- create mode 100644 arch/riscv/kvm/vcpu_switch.S
+ .../display/amlogic,meson-dw-hdmi.txt         | 119 -------------
+ .../display/amlogic,meson-dw-hdmi.yaml        | 160 ++++++++++++++++++
+ 2 files changed, 160 insertions(+), 119 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt
+ create mode 100644 Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml
 
-diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm=
-_host.h
-index 04804f14f760..9c90656e7374 100644
---- a/arch/riscv/include/asm/kvm_host.h
-+++ b/arch/riscv/include/asm/kvm_host.h
-@@ -110,6 +110,13 @@ struct kvm_vcpu_arch {
- 	/* ISA feature bits (similar to MISA) */
- 	unsigned long isa;
-=20
-+	/* SSCRATCH and STVEC of Host */
-+	unsigned long host_sscratch;
-+	unsigned long host_stvec;
-+
-+	/* CPU context of Host */
-+	struct kvm_cpu_context host_context;
-+
- 	/* CPU context of Guest VCPU */
- 	struct kvm_cpu_context guest_context;
-=20
-@@ -159,7 +166,7 @@ int kvm_riscv_vcpu_mmio_return(struct kvm_vcpu *vcpu, s=
-truct kvm_run *run);
- int kvm_riscv_vcpu_exit(struct kvm_vcpu *vcpu, struct kvm_run *run,
- 			unsigned long scause, unsigned long stval);
-=20
--static inline void __kvm_riscv_switch_to(struct kvm_vcpu_arch *vcpu_arch) =
-{}
-+void __kvm_riscv_switch_to(struct kvm_vcpu_arch *vcpu_arch);
-=20
- int kvm_riscv_vcpu_set_interrupt(struct kvm_vcpu *vcpu, unsigned int irq);
- int kvm_riscv_vcpu_unset_interrupt(struct kvm_vcpu *vcpu, unsigned int irq=
-);
-diff --git a/arch/riscv/kernel/asm-offsets.c b/arch/riscv/kernel/asm-offset=
-s.c
-index 9f5628c38ac9..711656710190 100644
---- a/arch/riscv/kernel/asm-offsets.c
-+++ b/arch/riscv/kernel/asm-offsets.c
-@@ -7,7 +7,9 @@
- #define GENERATING_ASM_OFFSETS
-=20
- #include <linux/kbuild.h>
-+#include <linux/mm.h>
- #include <linux/sched.h>
-+#include <asm/kvm_host.h>
- #include <asm/thread_info.h>
- #include <asm/ptrace.h>
-=20
-@@ -109,6 +111,80 @@ void asm_offsets(void)
- 	OFFSET(PT_SBADADDR, pt_regs, sbadaddr);
- 	OFFSET(PT_SCAUSE, pt_regs, scause);
-=20
-+	OFFSET(KVM_ARCH_GUEST_ZERO, kvm_vcpu_arch, guest_context.zero);
-+	OFFSET(KVM_ARCH_GUEST_RA, kvm_vcpu_arch, guest_context.ra);
-+	OFFSET(KVM_ARCH_GUEST_SP, kvm_vcpu_arch, guest_context.sp);
-+	OFFSET(KVM_ARCH_GUEST_GP, kvm_vcpu_arch, guest_context.gp);
-+	OFFSET(KVM_ARCH_GUEST_TP, kvm_vcpu_arch, guest_context.tp);
-+	OFFSET(KVM_ARCH_GUEST_T0, kvm_vcpu_arch, guest_context.t0);
-+	OFFSET(KVM_ARCH_GUEST_T1, kvm_vcpu_arch, guest_context.t1);
-+	OFFSET(KVM_ARCH_GUEST_T2, kvm_vcpu_arch, guest_context.t2);
-+	OFFSET(KVM_ARCH_GUEST_S0, kvm_vcpu_arch, guest_context.s0);
-+	OFFSET(KVM_ARCH_GUEST_S1, kvm_vcpu_arch, guest_context.s1);
-+	OFFSET(KVM_ARCH_GUEST_A0, kvm_vcpu_arch, guest_context.a0);
-+	OFFSET(KVM_ARCH_GUEST_A1, kvm_vcpu_arch, guest_context.a1);
-+	OFFSET(KVM_ARCH_GUEST_A2, kvm_vcpu_arch, guest_context.a2);
-+	OFFSET(KVM_ARCH_GUEST_A3, kvm_vcpu_arch, guest_context.a3);
-+	OFFSET(KVM_ARCH_GUEST_A4, kvm_vcpu_arch, guest_context.a4);
-+	OFFSET(KVM_ARCH_GUEST_A5, kvm_vcpu_arch, guest_context.a5);
-+	OFFSET(KVM_ARCH_GUEST_A6, kvm_vcpu_arch, guest_context.a6);
-+	OFFSET(KVM_ARCH_GUEST_A7, kvm_vcpu_arch, guest_context.a7);
-+	OFFSET(KVM_ARCH_GUEST_S2, kvm_vcpu_arch, guest_context.s2);
-+	OFFSET(KVM_ARCH_GUEST_S3, kvm_vcpu_arch, guest_context.s3);
-+	OFFSET(KVM_ARCH_GUEST_S4, kvm_vcpu_arch, guest_context.s4);
-+	OFFSET(KVM_ARCH_GUEST_S5, kvm_vcpu_arch, guest_context.s5);
-+	OFFSET(KVM_ARCH_GUEST_S6, kvm_vcpu_arch, guest_context.s6);
-+	OFFSET(KVM_ARCH_GUEST_S7, kvm_vcpu_arch, guest_context.s7);
-+	OFFSET(KVM_ARCH_GUEST_S8, kvm_vcpu_arch, guest_context.s8);
-+	OFFSET(KVM_ARCH_GUEST_S9, kvm_vcpu_arch, guest_context.s9);
-+	OFFSET(KVM_ARCH_GUEST_S10, kvm_vcpu_arch, guest_context.s10);
-+	OFFSET(KVM_ARCH_GUEST_S11, kvm_vcpu_arch, guest_context.s11);
-+	OFFSET(KVM_ARCH_GUEST_T3, kvm_vcpu_arch, guest_context.t3);
-+	OFFSET(KVM_ARCH_GUEST_T4, kvm_vcpu_arch, guest_context.t4);
-+	OFFSET(KVM_ARCH_GUEST_T5, kvm_vcpu_arch, guest_context.t5);
-+	OFFSET(KVM_ARCH_GUEST_T6, kvm_vcpu_arch, guest_context.t6);
-+	OFFSET(KVM_ARCH_GUEST_SEPC, kvm_vcpu_arch, guest_context.sepc);
-+	OFFSET(KVM_ARCH_GUEST_SSTATUS, kvm_vcpu_arch, guest_context.sstatus);
-+	OFFSET(KVM_ARCH_GUEST_HSTATUS, kvm_vcpu_arch, guest_context.hstatus);
-+
-+	OFFSET(KVM_ARCH_HOST_ZERO, kvm_vcpu_arch, host_context.zero);
-+	OFFSET(KVM_ARCH_HOST_RA, kvm_vcpu_arch, host_context.ra);
-+	OFFSET(KVM_ARCH_HOST_SP, kvm_vcpu_arch, host_context.sp);
-+	OFFSET(KVM_ARCH_HOST_GP, kvm_vcpu_arch, host_context.gp);
-+	OFFSET(KVM_ARCH_HOST_TP, kvm_vcpu_arch, host_context.tp);
-+	OFFSET(KVM_ARCH_HOST_T0, kvm_vcpu_arch, host_context.t0);
-+	OFFSET(KVM_ARCH_HOST_T1, kvm_vcpu_arch, host_context.t1);
-+	OFFSET(KVM_ARCH_HOST_T2, kvm_vcpu_arch, host_context.t2);
-+	OFFSET(KVM_ARCH_HOST_S0, kvm_vcpu_arch, host_context.s0);
-+	OFFSET(KVM_ARCH_HOST_S1, kvm_vcpu_arch, host_context.s1);
-+	OFFSET(KVM_ARCH_HOST_A0, kvm_vcpu_arch, host_context.a0);
-+	OFFSET(KVM_ARCH_HOST_A1, kvm_vcpu_arch, host_context.a1);
-+	OFFSET(KVM_ARCH_HOST_A2, kvm_vcpu_arch, host_context.a2);
-+	OFFSET(KVM_ARCH_HOST_A3, kvm_vcpu_arch, host_context.a3);
-+	OFFSET(KVM_ARCH_HOST_A4, kvm_vcpu_arch, host_context.a4);
-+	OFFSET(KVM_ARCH_HOST_A5, kvm_vcpu_arch, host_context.a5);
-+	OFFSET(KVM_ARCH_HOST_A6, kvm_vcpu_arch, host_context.a6);
-+	OFFSET(KVM_ARCH_HOST_A7, kvm_vcpu_arch, host_context.a7);
-+	OFFSET(KVM_ARCH_HOST_S2, kvm_vcpu_arch, host_context.s2);
-+	OFFSET(KVM_ARCH_HOST_S3, kvm_vcpu_arch, host_context.s3);
-+	OFFSET(KVM_ARCH_HOST_S4, kvm_vcpu_arch, host_context.s4);
-+	OFFSET(KVM_ARCH_HOST_S5, kvm_vcpu_arch, host_context.s5);
-+	OFFSET(KVM_ARCH_HOST_S6, kvm_vcpu_arch, host_context.s6);
-+	OFFSET(KVM_ARCH_HOST_S7, kvm_vcpu_arch, host_context.s7);
-+	OFFSET(KVM_ARCH_HOST_S8, kvm_vcpu_arch, host_context.s8);
-+	OFFSET(KVM_ARCH_HOST_S9, kvm_vcpu_arch, host_context.s9);
-+	OFFSET(KVM_ARCH_HOST_S10, kvm_vcpu_arch, host_context.s10);
-+	OFFSET(KVM_ARCH_HOST_S11, kvm_vcpu_arch, host_context.s11);
-+	OFFSET(KVM_ARCH_HOST_T3, kvm_vcpu_arch, host_context.t3);
-+	OFFSET(KVM_ARCH_HOST_T4, kvm_vcpu_arch, host_context.t4);
-+	OFFSET(KVM_ARCH_HOST_T5, kvm_vcpu_arch, host_context.t5);
-+	OFFSET(KVM_ARCH_HOST_T6, kvm_vcpu_arch, host_context.t6);
-+	OFFSET(KVM_ARCH_HOST_SEPC, kvm_vcpu_arch, host_context.sepc);
-+	OFFSET(KVM_ARCH_HOST_SSTATUS, kvm_vcpu_arch, host_context.sstatus);
-+	OFFSET(KVM_ARCH_HOST_HSTATUS, kvm_vcpu_arch, host_context.hstatus);
-+	OFFSET(KVM_ARCH_HOST_SSCRATCH, kvm_vcpu_arch, host_sscratch);
-+	OFFSET(KVM_ARCH_HOST_STVEC, kvm_vcpu_arch, host_stvec);
-+
- 	/*
- 	 * THREAD_{F,X}* might be larger than a S-type offset can handle, but
- 	 * these are used in performance-sensitive assembly so we can't resort
-diff --git a/arch/riscv/kvm/Makefile b/arch/riscv/kvm/Makefile
-index 37b5a59d4f4f..845579273727 100644
---- a/arch/riscv/kvm/Makefile
-+++ b/arch/riscv/kvm/Makefile
-@@ -8,6 +8,6 @@ ccflags-y :=3D -Ivirt/kvm -Iarch/riscv/kvm
-=20
- kvm-objs :=3D $(common-objs-y)
-=20
--kvm-objs +=3D main.o vm.o mmu.o vcpu.o vcpu_exit.o
-+kvm-objs +=3D main.o vm.o mmu.o vcpu.o vcpu_exit.o vcpu_switch.o
-=20
- obj-$(CONFIG_KVM)	+=3D kvm.o
-diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
-index e22aabaf32e7..b1591d962cee 100644
---- a/arch/riscv/kvm/vcpu.c
-+++ b/arch/riscv/kvm/vcpu.c
-@@ -568,14 +568,41 @@ int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vc=
-pu *vcpu,
-=20
- void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
- {
--	/* TODO: */
-+	struct kvm_vcpu_csr *csr =3D &vcpu->arch.guest_csr;
-+
-+	csr_write(CSR_VSSTATUS, csr->vsstatus);
-+	csr_write(CSR_VSIE, csr->vsie);
-+	csr_write(CSR_VSTVEC, csr->vstvec);
-+	csr_write(CSR_VSSCRATCH, csr->vsscratch);
-+	csr_write(CSR_VSEPC, csr->vsepc);
-+	csr_write(CSR_VSCAUSE, csr->vscause);
-+	csr_write(CSR_VSTVAL, csr->vstval);
-+	csr_write(CSR_VSIP, csr->vsip);
-+	*this_cpu_ptr(&vsip_shadow) =3D csr->vsip;
-+	csr_write(CSR_VSATP, csr->vsatp);
-=20
- 	kvm_riscv_stage2_update_hgatp(vcpu);
-+
-+	vcpu->cpu =3D cpu;
- }
-=20
- void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
- {
--	/* TODO: */
-+	struct kvm_vcpu_csr *csr =3D &vcpu->arch.guest_csr;
-+
-+	vcpu->cpu =3D -1;
-+
-+	csr_write(CSR_HGATP, 0);
-+
-+	csr->vsstatus =3D csr_read(CSR_VSSTATUS);
-+	csr->vsie =3D csr_read(CSR_VSIE);
-+	csr->vstvec =3D csr_read(CSR_VSTVEC);
-+	csr->vsscratch =3D csr_read(CSR_VSSCRATCH);
-+	csr->vsepc =3D csr_read(CSR_VSEPC);
-+	csr->vscause =3D csr_read(CSR_VSCAUSE);
-+	csr->vstval =3D csr_read(CSR_VSTVAL);
-+	csr->vsip =3D csr_read(CSR_VSIP);
-+	csr->vsatp =3D csr_read(CSR_VSATP);
- }
-=20
- static void kvm_riscv_check_vcpu_requests(struct kvm_vcpu *vcpu)
-diff --git a/arch/riscv/kvm/vcpu_switch.S b/arch/riscv/kvm/vcpu_switch.S
+diff --git a/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt b/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt
+deleted file mode 100644
+index 3a50a7862cf3..000000000000
+--- a/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt
++++ /dev/null
+@@ -1,119 +0,0 @@
+-Amlogic specific extensions to the Synopsys Designware HDMI Controller
+-======================================================================
+-
+-The Amlogic Meson Synopsys Designware Integration is composed of :
+-- A Synopsys DesignWare HDMI Controller IP
+-- A TOP control block controlling the Clocks and PHY
+-- A custom HDMI PHY in order to convert video to TMDS signal
+- ___________________________________
+-|            HDMI TOP               |<= HPD
+-|___________________________________|
+-|                  |                |
+-|  Synopsys HDMI   |   HDMI PHY     |=> TMDS
+-|    Controller    |________________|
+-|___________________________________|<=> DDC
+-
+-The HDMI TOP block only supports HPD sensing.
+-The Synopsys HDMI Controller interrupt is routed through the
+-TOP Block interrupt.
+-Communication to the TOP Block and the Synopsys HDMI Controller is done
+-via a pair of dedicated addr+read/write registers.
+-The HDMI PHY is configured by registers in the HHI register block.
+-
+-Pixel data arrives in 4:4:4 format from the VENC block and the VPU HDMI mux
+-selects either the ENCI encoder for the 576i or 480i formats or the ENCP
+-encoder for all the other formats including interlaced HD formats.
+-
+-The VENC uses a DVI encoder on top of the ENCI or ENCP encoders to generate
+-DVI timings for the HDMI controller.
+-
+-Amlogic Meson GXBB, GXL and GXM SoCs families embeds the Synopsys DesignWare
+-HDMI TX IP version 2.01a with HDCP and I2C & S/PDIF
+-audio source interfaces.
+-
+-Required properties:
+-- compatible: value should be different for each SoC family as :
+-	- GXBB (S905) : "amlogic,meson-gxbb-dw-hdmi"
+-	- GXL (S905X, S905D) : "amlogic,meson-gxl-dw-hdmi"
+-	- GXM (S912) : "amlogic,meson-gxm-dw-hdmi"
+-	followed by the common "amlogic,meson-gx-dw-hdmi"
+-	- G12A (S905X2, S905Y2, S905D2) : "amlogic,meson-g12a-dw-hdmi"
+-- reg: Physical base address and length of the controller's registers.
+-- interrupts: The HDMI interrupt number
+-- clocks, clock-names : must have the phandles to the HDMI iahb and isfr clocks,
+-  and the Amlogic Meson venci clocks as described in
+-  Documentation/devicetree/bindings/clock/clock-bindings.txt,
+-  the clocks are soc specific, the clock-names should be "iahb", "isfr", "venci"
+-- resets, resets-names: must have the phandles to the HDMI apb, glue and phy
+-  resets as described in :
+-  Documentation/devicetree/bindings/reset/reset.txt,
+-  the reset-names should be "hdmitx_apb", "hdmitx", "hdmitx_phy"
+-
+-Optional properties:
+-- hdmi-supply: Optional phandle to an external 5V regulator to power the HDMI
+-  logic, as described in the file ../regulator/regulator.txt
+-
+-Required nodes:
+-
+-The connections to the HDMI ports are modeled using the OF graph
+-bindings specified in Documentation/devicetree/bindings/graph.txt.
+-
+-The following table lists for each supported model the port number
+-corresponding to each HDMI output and input.
+-
+-		Port 0		Port 1
+------------------------------------------
+- S905 (GXBB)	VENC Input	TMDS Output
+- S905X (GXL)	VENC Input	TMDS Output
+- S905D (GXL)	VENC Input	TMDS Output
+- S912 (GXM)	VENC Input	TMDS Output
+- S905X2 (G12A)	VENC Input	TMDS Output
+- S905Y2 (G12A)	VENC Input	TMDS Output
+- S905D2 (G12A)	VENC Input	TMDS Output
+-
+-Example:
+-
+-hdmi-connector {
+-	compatible = "hdmi-connector";
+-	type = "a";
+-
+-	port {
+-		hdmi_connector_in: endpoint {
+-			remote-endpoint = <&hdmi_tx_tmds_out>;
+-		};
+-	};
+-};
+-
+-hdmi_tx: hdmi-tx@c883a000 {
+-	compatible = "amlogic,meson-gxbb-dw-hdmi", "amlogic,meson-gx-dw-hdmi";
+-	reg = <0x0 0xc883a000 0x0 0x1c>;
+-	interrupts = <GIC_SPI 57 IRQ_TYPE_EDGE_RISING>;
+-	resets = <&reset RESET_HDMITX_CAPB3>,
+-		 <&reset RESET_HDMI_SYSTEM_RESET>,
+-		 <&reset RESET_HDMI_TX>;
+-	reset-names = "hdmitx_apb", "hdmitx", "hdmitx_phy";
+-	clocks = <&clkc CLKID_HDMI_PCLK>,
+-		 <&clkc CLKID_CLK81>,
+-		 <&clkc CLKID_GCLK_VENCI_INT0>;
+-	clock-names = "isfr", "iahb", "venci";
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-
+-	/* VPU VENC Input */
+-	hdmi_tx_venc_port: port@0 {
+-		reg = <0>;
+-
+-		hdmi_tx_in: endpoint {
+-			remote-endpoint = <&hdmi_tx_out>;
+-		};
+-	};
+-
+-	/* TMDS Output */
+-	hdmi_tx_tmds_port: port@1 {
+-		reg = <1>;
+-
+-		hdmi_tx_tmds_out: endpoint {
+-			remote-endpoint = <&hdmi_connector_in>;
+-		};
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml b/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml
 new file mode 100644
-index 000000000000..e1a17df1b379
+index 000000000000..1212aa7a624f
 --- /dev/null
-+++ b/arch/riscv/kvm/vcpu_switch.S
-@@ -0,0 +1,194 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2019 Western Digital Corporation or its affiliates.
-+ *
-+ * Authors:
-+ *     Anup Patel <anup.patel@wdc.com>
-+ */
++++ b/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml
+@@ -0,0 +1,160 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2019 BayLibre, SAS
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/display/amlogic,meson-dw-hdmi.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
-+#include <linux/linkage.h>
-+#include <asm/asm.h>
-+#include <asm/asm-offsets.h>
-+#include <asm/csr.h>
++title: Amlogic specific extensions to the Synopsys Designware HDMI Controller
 +
-+	.text
-+	.altmacro
-+	.option norelax
++maintainers:
++  - Neil Armstrong <narmstrong@baylibre.com>
 +
-+ENTRY(__kvm_riscv_switch_to)
-+	/* Save Host GPRs (except A0 and T0-T6) */
-+	REG_S	ra, (KVM_ARCH_HOST_RA)(a0)
-+	REG_S	sp, (KVM_ARCH_HOST_SP)(a0)
-+	REG_S	gp, (KVM_ARCH_HOST_GP)(a0)
-+	REG_S	tp, (KVM_ARCH_HOST_TP)(a0)
-+	REG_S	s0, (KVM_ARCH_HOST_S0)(a0)
-+	REG_S	s1, (KVM_ARCH_HOST_S1)(a0)
-+	REG_S	a1, (KVM_ARCH_HOST_A1)(a0)
-+	REG_S	a2, (KVM_ARCH_HOST_A2)(a0)
-+	REG_S	a3, (KVM_ARCH_HOST_A3)(a0)
-+	REG_S	a4, (KVM_ARCH_HOST_A4)(a0)
-+	REG_S	a5, (KVM_ARCH_HOST_A5)(a0)
-+	REG_S	a6, (KVM_ARCH_HOST_A6)(a0)
-+	REG_S	a7, (KVM_ARCH_HOST_A7)(a0)
-+	REG_S	s2, (KVM_ARCH_HOST_S2)(a0)
-+	REG_S	s3, (KVM_ARCH_HOST_S3)(a0)
-+	REG_S	s4, (KVM_ARCH_HOST_S4)(a0)
-+	REG_S	s5, (KVM_ARCH_HOST_S5)(a0)
-+	REG_S	s6, (KVM_ARCH_HOST_S6)(a0)
-+	REG_S	s7, (KVM_ARCH_HOST_S7)(a0)
-+	REG_S	s8, (KVM_ARCH_HOST_S8)(a0)
-+	REG_S	s9, (KVM_ARCH_HOST_S9)(a0)
-+	REG_S	s10, (KVM_ARCH_HOST_S10)(a0)
-+	REG_S	s11, (KVM_ARCH_HOST_S11)(a0)
++description: |
++  The Amlogic Meson Synopsys Designware Integration is composed of
++  - A Synopsys DesignWare HDMI Controller IP
++  - A TOP control block controlling the Clocks and PHY
++  - A custom HDMI PHY in order to convert video to TMDS signal
++   ___________________________________
++  |            HDMI TOP               |<= HPD
++  |___________________________________|
++  |                  |                |
++  |  Synopsys HDMI   |   HDMI PHY     |=> TMDS
++  |    Controller    |________________|
++  |___________________________________|<=> DDC
 +
-+	/* Save Host SSTATUS, HSTATUS, SCRATCH and STVEC */
-+	csrr	t0, CSR_SSTATUS
-+	REG_S	t0, (KVM_ARCH_HOST_SSTATUS)(a0)
-+	csrr	t1, CSR_HSTATUS
-+	REG_S	t1, (KVM_ARCH_HOST_HSTATUS)(a0)
-+	csrr	t2, CSR_SSCRATCH
-+	REG_S	t2, (KVM_ARCH_HOST_SSCRATCH)(a0)
-+	csrr	t3, CSR_STVEC
-+	REG_S	t3, (KVM_ARCH_HOST_STVEC)(a0)
++  The HDMI TOP block only supports HPD sensing.
++  The Synopsys HDMI Controller interrupt is routed through the
++  TOP Block interrupt.
++  Communication to the TOP Block and the Synopsys HDMI Controller is done
++  via a pair of dedicated addr+read/write registers.
++  The HDMI PHY is configured by registers in the HHI register block.
 +
-+	/* Change Host exception vector to return path */
-+	la	t4, __kvm_switch_return
-+	csrw	CSR_STVEC, t4
++  Pixel data arrives in "4:4:4" format from the VENC block and the VPU HDMI mux
++  selects either the ENCI encoder for the 576i or 480i formats or the ENCP
++  encoder for all the other formats including interlaced HD formats.
 +
-+	/* Restore Guest HSTATUS, SSTATUS and SEPC */
-+	REG_L	t4, (KVM_ARCH_GUEST_SEPC)(a0)
-+	csrw	CSR_SEPC, t4
-+	REG_L	t5, (KVM_ARCH_GUEST_SSTATUS)(a0)
-+	csrw	CSR_SSTATUS, t5
-+	REG_L	t6, (KVM_ARCH_GUEST_HSTATUS)(a0)
-+	csrw	CSR_HSTATUS, t6
++  The VENC uses a DVI encoder on top of the ENCI or ENCP encoders to generate
++  DVI timings for the HDMI controller.
 +
-+	/* Restore Guest GPRs (except A0) */
-+	REG_L	ra, (KVM_ARCH_GUEST_RA)(a0)
-+	REG_L	sp, (KVM_ARCH_GUEST_SP)(a0)
-+	REG_L	gp, (KVM_ARCH_GUEST_GP)(a0)
-+	REG_L	tp, (KVM_ARCH_GUEST_TP)(a0)
-+	REG_L	t0, (KVM_ARCH_GUEST_T0)(a0)
-+	REG_L	t1, (KVM_ARCH_GUEST_T1)(a0)
-+	REG_L	t2, (KVM_ARCH_GUEST_T2)(a0)
-+	REG_L	s0, (KVM_ARCH_GUEST_S0)(a0)
-+	REG_L	s1, (KVM_ARCH_GUEST_S1)(a0)
-+	REG_L	a1, (KVM_ARCH_GUEST_A1)(a0)
-+	REG_L	a2, (KVM_ARCH_GUEST_A2)(a0)
-+	REG_L	a3, (KVM_ARCH_GUEST_A3)(a0)
-+	REG_L	a4, (KVM_ARCH_GUEST_A4)(a0)
-+	REG_L	a5, (KVM_ARCH_GUEST_A5)(a0)
-+	REG_L	a6, (KVM_ARCH_GUEST_A6)(a0)
-+	REG_L	a7, (KVM_ARCH_GUEST_A7)(a0)
-+	REG_L	s2, (KVM_ARCH_GUEST_S2)(a0)
-+	REG_L	s3, (KVM_ARCH_GUEST_S3)(a0)
-+	REG_L	s4, (KVM_ARCH_GUEST_S4)(a0)
-+	REG_L	s5, (KVM_ARCH_GUEST_S5)(a0)
-+	REG_L	s6, (KVM_ARCH_GUEST_S6)(a0)
-+	REG_L	s7, (KVM_ARCH_GUEST_S7)(a0)
-+	REG_L	s8, (KVM_ARCH_GUEST_S8)(a0)
-+	REG_L	s9, (KVM_ARCH_GUEST_S9)(a0)
-+	REG_L	s10, (KVM_ARCH_GUEST_S10)(a0)
-+	REG_L	s11, (KVM_ARCH_GUEST_S11)(a0)
-+	REG_L	t3, (KVM_ARCH_GUEST_T3)(a0)
-+	REG_L	t4, (KVM_ARCH_GUEST_T4)(a0)
-+	REG_L	t5, (KVM_ARCH_GUEST_T5)(a0)
-+	REG_L	t6, (KVM_ARCH_GUEST_T6)(a0)
++  Amlogic Meson GXBB, GXL and GXM SoCs families embeds the Synopsys DesignWare
++  HDMI TX IP version 2.01a with HDCP and I2C & S/PDIF
++  audio source interfaces. 
 +
-+	/* Save Host A0 in SSCRATCH */
-+	csrw	CSR_SSCRATCH, a0
++  The following table lists for each supported model the port number
++  corresponding to each HDMI output and input.
 +
-+	/* Restore Guest A0 */
-+	REG_L	a0, (KVM_ARCH_GUEST_A0)(a0)
++                  Port 0		  Port 1
++  -----------------------------------------
++   S905 (GXBB)	  VENC Input	TMDS Output
++   S905X (GXL)	  VENC Input	TMDS Output
++   S905D (GXL)	  VENC Input	TMDS Output
++   S912 (GXM)	    VENC Input	TMDS Output
++   S905X2 (G12A)	VENC Input	TMDS Output
++   S905Y2 (G12A)	VENC Input	TMDS Output
++   S905D2 (G12A)	VENC Input	TMDS Output
 +
-+	/* Resume Guest */
-+	sret
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - amlogic,meson-gxbb-dw-hdmi # GXBB (S905)
++              - amlogic,meson-gxl-dw-hdmi # GXL (S905X, S905D)
++              - amlogic,meson-gxm-dw-hdmi # GXM (S912)
++          - const: amlogic,meson-gx-dw-hdmi
++      - enum:
++          - amlogic,meson-g12a-dw-hdmi # G12A (S905X2, S905Y2, S905D2)
 +
-+	/* Back to Host */
-+	.align 2
-+__kvm_switch_return:
-+	/* Swap Guest A0 with SSCRATCH */
-+	csrrw	a0, CSR_SSCRATCH, a0
++  reg:
++    maxItems: 1
 +
-+	/* Save Guest GPRs (except A0) */
-+	REG_S	ra, (KVM_ARCH_GUEST_RA)(a0)
-+	REG_S	sp, (KVM_ARCH_GUEST_SP)(a0)
-+	REG_S	gp, (KVM_ARCH_GUEST_GP)(a0)
-+	REG_S	tp, (KVM_ARCH_GUEST_TP)(a0)
-+	REG_S	t0, (KVM_ARCH_GUEST_T0)(a0)
-+	REG_S	t1, (KVM_ARCH_GUEST_T1)(a0)
-+	REG_S	t2, (KVM_ARCH_GUEST_T2)(a0)
-+	REG_S	s0, (KVM_ARCH_GUEST_S0)(a0)
-+	REG_S	s1, (KVM_ARCH_GUEST_S1)(a0)
-+	REG_S	a1, (KVM_ARCH_GUEST_A1)(a0)
-+	REG_S	a2, (KVM_ARCH_GUEST_A2)(a0)
-+	REG_S	a3, (KVM_ARCH_GUEST_A3)(a0)
-+	REG_S	a4, (KVM_ARCH_GUEST_A4)(a0)
-+	REG_S	a5, (KVM_ARCH_GUEST_A5)(a0)
-+	REG_S	a6, (KVM_ARCH_GUEST_A6)(a0)
-+	REG_S	a7, (KVM_ARCH_GUEST_A7)(a0)
-+	REG_S	s2, (KVM_ARCH_GUEST_S2)(a0)
-+	REG_S	s3, (KVM_ARCH_GUEST_S3)(a0)
-+	REG_S	s4, (KVM_ARCH_GUEST_S4)(a0)
-+	REG_S	s5, (KVM_ARCH_GUEST_S5)(a0)
-+	REG_S	s6, (KVM_ARCH_GUEST_S6)(a0)
-+	REG_S	s7, (KVM_ARCH_GUEST_S7)(a0)
-+	REG_S	s8, (KVM_ARCH_GUEST_S8)(a0)
-+	REG_S	s9, (KVM_ARCH_GUEST_S9)(a0)
-+	REG_S	s10, (KVM_ARCH_GUEST_S10)(a0)
-+	REG_S	s11, (KVM_ARCH_GUEST_S11)(a0)
-+	REG_S	t3, (KVM_ARCH_GUEST_T3)(a0)
-+	REG_S	t4, (KVM_ARCH_GUEST_T4)(a0)
-+	REG_S	t5, (KVM_ARCH_GUEST_T5)(a0)
-+	REG_S	t6, (KVM_ARCH_GUEST_T6)(a0)
++  interrupts:
++    maxItems: 1
 +
-+	/* Save Guest A0 */
-+	csrr	t0, CSR_SSCRATCH
-+	REG_S	t0, (KVM_ARCH_GUEST_A0)(a0)
++  clocks:
++    minItems: 3
 +
-+	/* Save Guest HSTATUS, SSTATUS, and SEPC */
-+	csrr	t0, CSR_SEPC
-+	REG_S	t0, (KVM_ARCH_GUEST_SEPC)(a0)
-+	csrr	t1, CSR_SSTATUS
-+	REG_S	t1, (KVM_ARCH_GUEST_SSTATUS)(a0)
-+	csrr	t2, CSR_HSTATUS
-+	REG_S	t2, (KVM_ARCH_GUEST_HSTATUS)(a0)
++  clock-names:
++    items:
++      - const: isfr
++      - const: iahb
++      - const: venci
 +
-+	/* Restore Host SSTATUS, HSTATUS, SCRATCH and STVEC */
-+	REG_L	t3, (KVM_ARCH_HOST_SSTATUS)(a0)
-+	csrw	CSR_SSTATUS, t3
-+	REG_L	t4, (KVM_ARCH_HOST_HSTATUS)(a0)
-+	csrw	CSR_HSTATUS, t4
-+	REG_L	t5, (KVM_ARCH_HOST_SSCRATCH)(a0)
-+	csrw	CSR_SSCRATCH, t5
-+	REG_L	t6, (KVM_ARCH_HOST_STVEC)(a0)
-+	csrw	CSR_STVEC, t6
++  resets:
++    minItems: 3
 +
-+	/* Restore Host GPRs (except A0 and T0-T6) */
-+	REG_L	ra, (KVM_ARCH_HOST_RA)(a0)
-+	REG_L	sp, (KVM_ARCH_HOST_SP)(a0)
-+	REG_L	gp, (KVM_ARCH_HOST_GP)(a0)
-+	REG_L	tp, (KVM_ARCH_HOST_TP)(a0)
-+	REG_L	s0, (KVM_ARCH_HOST_S0)(a0)
-+	REG_L	s1, (KVM_ARCH_HOST_S1)(a0)
-+	REG_L	a1, (KVM_ARCH_HOST_A1)(a0)
-+	REG_L	a2, (KVM_ARCH_HOST_A2)(a0)
-+	REG_L	a3, (KVM_ARCH_HOST_A3)(a0)
-+	REG_L	a4, (KVM_ARCH_HOST_A4)(a0)
-+	REG_L	a5, (KVM_ARCH_HOST_A5)(a0)
-+	REG_L	a6, (KVM_ARCH_HOST_A6)(a0)
-+	REG_L	a7, (KVM_ARCH_HOST_A7)(a0)
-+	REG_L	s2, (KVM_ARCH_HOST_S2)(a0)
-+	REG_L	s3, (KVM_ARCH_HOST_S3)(a0)
-+	REG_L	s4, (KVM_ARCH_HOST_S4)(a0)
-+	REG_L	s5, (KVM_ARCH_HOST_S5)(a0)
-+	REG_L	s6, (KVM_ARCH_HOST_S6)(a0)
-+	REG_L	s7, (KVM_ARCH_HOST_S7)(a0)
-+	REG_L	s8, (KVM_ARCH_HOST_S8)(a0)
-+	REG_L	s9, (KVM_ARCH_HOST_S9)(a0)
-+	REG_L	s10, (KVM_ARCH_HOST_S10)(a0)
-+	REG_L	s11, (KVM_ARCH_HOST_S11)(a0)
++  reset-names:
++    items:
++      - const: hdmitx_apb
++      - const: hdmitx
++      - const: hdmitx_phy
 +
-+	/* Return to C code */
-+	ret
-+ENDPROC(__kvm_riscv_switch_to)
---=20
-2.17.1
++  hdmi-supply:
++    description: phandle to an external 5V regulator to power the HDMI logic
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/phandle
++
++  port@0:
++    type: object
++    description:
++      A port node modeled using the OF graph
++      bindings specified in Documentation/devicetree/bindings/graph.txt.
++
++  port@1:
++    type: object
++    description:
++      A port node modeled using the OF graph
++      bindings specified in Documentation/devicetree/bindings/graph.txt.
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - resets
++  - reset-names
++  - port@0
++  - port@1
++  - "#address-cells"
++  - "#size-cells"
++
++examples:
++  - |
++    hdmi_tx: hdmi-tx@c883a000 {
++        compatible = "amlogic,meson-gxbb-dw-hdmi", "amlogic,meson-gx-dw-hdmi";
++        reg = <0xc883a000 0x1c>;
++        interrupts = <57>;
++        resets = <&reset_apb>, <&reset_hdmitx>, <&reset_hdmitx_phy>;
++        reset-names = "hdmitx_apb", "hdmitx", "hdmitx_phy";
++        clocks = <&clk_isfr>, <&clk_iahb>, <&clk_venci>;
++        clock-names = "isfr", "iahb", "venci";
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        /* VPU VENC Input */
++        hdmi_tx_venc_port: port@0 {
++            reg = <0>;
++
++            hdmi_tx_in: endpoint {
++                remote-endpoint = <&hdmi_tx_out>;
++            };
++        };
++
++        /* TMDS Output */
++        hdmi_tx_tmds_port: port@1 {
++             reg = <1>;
++
++             hdmi_tx_tmds_out: endpoint {
++                 remote-endpoint = <&hdmi_connector_in>;
++             };
++        };
++    };
++
+-- 
+2.22.0
 
