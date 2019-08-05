@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC27C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E6CC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D632520880
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:24:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27D7B20880
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:25:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011496;
-	bh=S0Xsl0T8+NAaR8iaxwLCK5CArJFaJjeMvLO7jaYnVA8=;
+	s=default; t=1565011504;
+	bh=t3JAQbHCLtKUt/umNrekrtOnvNMzgyKVDWx4eUOBK/Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hn+D0J/IlXnlfIW3k+gzGqk44ziV5AtVy518ulrF/uxtZE2Y+sbav6T9Y90d671lT
-	 AdH3Rzum6KHpJAPmHn17bDayORgOhIyIszreUn/Um4CAmkvehiOmONHZBpP09xtrAH
-	 80nJYv782Zl5wAUzpzPqLzS0addioHFylLu1tF+Y=
+	b=wMv6SqTVBkNmWiDVQIe7WTnOw1VZZ4ZcXG8SD3vkCMb3SU8ajE77Xa4pQeJ38mkEj
+	 hUrKEgI3bE21JukZ9OsgYPf2S1UOxcf2JbHp0gONwD+/6rcVML0xqsbhqM0DMUVrvE
+	 Z566K+uzzVxe18lgpqTfj6l8A3Y6BTgIsXQfXqHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731110AbfHENYz (ORCPT
+        id S1731144AbfHENZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:24:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33366 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:25:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731094AbfHENYw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:24:52 -0400
+        id S1731121AbfHENZA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:25:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E44420644;
-        Mon,  5 Aug 2019 13:24:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CC6B20880;
+        Mon,  5 Aug 2019 13:24:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011491;
-        bh=S0Xsl0T8+NAaR8iaxwLCK5CArJFaJjeMvLO7jaYnVA8=;
+        s=default; t=1565011499;
+        bh=t3JAQbHCLtKUt/umNrekrtOnvNMzgyKVDWx4eUOBK/Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JlL9ZlXkybsQkAudLV1gOn/zz02Y6+h6QE/Ing4v6DTcIXktCb3sm2fWsjqkADeH/
-         h7ddvNKXjNx45eG9ZkDd2bPPN2bFXp4RDLs3edopfQe8koPWIUdGAKeWzkOAyNqVsv
-         KPewA0llLGV8ge6aovc9g0Y1q5fzWgxUl6a/PSfI=
+        b=ZqK95qHQPVA5gwggIh5e66doghDt/2eQGS83ySGky1OR4jRqf6s+0o+Q/neqRUV1y
+         i3fBhRdYD7yOJmEebc493n49s9kqYvM8BLLMFrCMTIG6AKKdgAB8xWfQC359PoOaap
+         8qveIR+5Ka1WRkQuJMIQTdWsArbblpTLkJsJJ9WQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH 5.2 081/131] dax: Fix missed wakeup in put_unlocked_entry()
-Date:   Mon,  5 Aug 2019 15:02:48 +0200
-Message-Id: <20190805124957.361969657@linuxfoundation.org>
+        stable@vger.kernel.org, Ralph Campbell <rcampbell@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.2 104/131] mm/migrate.c: initialize pud_entry in migrate_vma()
+Date:   Mon,  5 Aug 2019 15:03:11 +0200
+Message-Id: <20190805124958.936782467@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -59,38 +63,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Ralph Campbell <rcampbell@nvidia.com>
 
-commit 61c30c98ef17e5a330d7bb8494b78b3d6dffe9b8 upstream.
+commit 7b358c6f12dc82364f6d317f8c8f1d794adbc3f5 upstream.
 
-The condition checking whether put_unlocked_entry() needs to wake up
-following waiter got broken by commit 23c84eb78375 ("dax: Fix missed
-wakeup with PMD faults"). We need to wake the waiter whenever the passed
-entry is valid (i.e., non-NULL and not special conflict entry). This
-could lead to processes never being woken up when waiting for entry
-lock. Fix the condition.
+When CONFIG_MIGRATE_VMA_HELPER is enabled, migrate_vma() calls
+migrate_vma_collect() which initializes a struct mm_walk but didn't
+initialize mm_walk.pud_entry.  (Found by code inspection) Use a C
+structure initialization to make sure it is set to NULL.
 
+Link: http://lkml.kernel.org/r/20190719233225.12243-1-rcampbell@nvidia.com
+Fixes: 8763cb45ab967 ("mm/migrate: new memory migration helper for use with device memory")
+Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Jérôme Glisse" <jglisse@redhat.com>
+Cc: Mel Gorman <mgorman@techsingularity.net>
 Cc: <stable@vger.kernel.org>
-Link: http://lore.kernel.org/r/20190729120228.GC17833@quack2.suse.cz
-Fixes: 23c84eb78375 ("dax: Fix missed wakeup with PMD faults")
-Signed-off-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/dax.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/migrate.c |   17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
 
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -267,7 +267,7 @@ static void wait_entry_unlocked(struct x
- static void put_unlocked_entry(struct xa_state *xas, void *entry)
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -2347,16 +2347,13 @@ next:
+ static void migrate_vma_collect(struct migrate_vma *migrate)
  {
- 	/* If we were the only waiter woken, wake the next one */
--	if (entry && dax_is_conflict(entry))
-+	if (entry && !dax_is_conflict(entry))
- 		dax_wake_entry(xas, entry, false);
- }
+ 	struct mmu_notifier_range range;
+-	struct mm_walk mm_walk;
+-
+-	mm_walk.pmd_entry = migrate_vma_collect_pmd;
+-	mm_walk.pte_entry = NULL;
+-	mm_walk.pte_hole = migrate_vma_collect_hole;
+-	mm_walk.hugetlb_entry = NULL;
+-	mm_walk.test_walk = NULL;
+-	mm_walk.vma = migrate->vma;
+-	mm_walk.mm = migrate->vma->vm_mm;
+-	mm_walk.private = migrate;
++	struct mm_walk mm_walk = {
++		.pmd_entry = migrate_vma_collect_pmd,
++		.pte_hole = migrate_vma_collect_hole,
++		.vma = migrate->vma,
++		.mm = migrate->vma->vm_mm,
++		.private = migrate,
++	};
  
+ 	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, NULL, mm_walk.mm,
+ 				migrate->start,
 
 
