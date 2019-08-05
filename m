@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 232CBC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A84C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB397214C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64E90214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:22:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011327;
-	bh=L2n12sUqOg47COSrX65P7AFO8JpGrbfguF3fj3jB14s=;
+	s=default; t=1565011333;
+	bh=JgM23RMtzN5JcTmzv63FdPMJlaOM6dFaulLmq11JPWI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ncZpntT3CIFthOokvnRL0ktqhfAsTXzBrp7+cU1CZNKIjOW0qeREjINdnpU1ueWtB
-	 lS9sLcxQ7cEVu3eBCgm+CimY83smmfqJPOXFiuMPa6qsAJgTmv/wztmLnlbtuuiwyo
-	 XjfxC4uqVGO6uLT5ldVjfpgQCMfaYnPZPva5cCEc=
+	b=C8RO+Yw/7kPQoW/5f08tHQCpojbGLmFWUm3VWJaGU+Vixh39i2kgh+GF86UTokvSU
+	 g10jTWlVjTnlVl0FlnzVJzq/1rL/HmAYWkbOMXQgrm7Oy4pzt191frfmcDXlVcct0C
+	 ymTFCA0L/vAd9hDylKDgxaNDAFbf7YBA1NLn2RLU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730620AbfHENWF (ORCPT
+        id S1729773AbfHENWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:22:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58308 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:22:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729900AbfHENWC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:22:02 -0400
+        id S1729538AbfHENWH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:22:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC80F2067D;
-        Mon,  5 Aug 2019 13:22:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27B9B2067D;
+        Mon,  5 Aug 2019 13:22:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011321;
-        bh=L2n12sUqOg47COSrX65P7AFO8JpGrbfguF3fj3jB14s=;
+        s=default; t=1565011326;
+        bh=JgM23RMtzN5JcTmzv63FdPMJlaOM6dFaulLmq11JPWI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nN2mv71RnZ3/th+NGTQaTdNWFL5mhUnbE+dET1ep3CWEE3RmT35jGEv9Q6cC6A5lu
-         ZCDULQatm/aiqfKvvmKdBGgeDW1LXZoOCQdz67WDJIIMgPJrQPPkwxluzhM7JoD+R0
-         YuFg8lNwHYz4deyMscyUfcRges/AjNJVE1ZTHh3w=
+        b=MtgydtO6U0lSb3orR/OE99etClikkJSLERDtVk04u51+y7eqR0EB5Hdbpzgh532RL
+         jIJbBC1kn/1pu1HVkxMCVvXq50n2FRHyNvhvGfRxPttN2QAi3yZLYzyhnBgUNqEVkx
+         5GorGlrN/nYwc+ewEKNBFfJP6rpCNSU8O+6Ke9U0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 041/131] perf version: Fix segfault due to missing OPT_END()
-Date:   Mon,  5 Aug 2019 15:02:08 +0200
-Message-Id: <20190805124954.181133823@linuxfoundation.org>
+Subject: [PATCH 5.2 051/131] x86/apic: Silence -Wtype-limits compiler warnings
+Date:   Mon,  5 Aug 2019 15:02:18 +0200
+Message-Id: <20190805124954.850444839@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -64,39 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 916c31fff946fae0e05862f9b2435fdb29fd5090 ]
+[ Upstream commit ec6335586953b0df32f83ef696002063090c7aef ]
 
-'perf version' on powerpc segfaults when used with non-supported
-option:
-  # perf version -a
-  Segmentation fault (core dumped)
+There are many compiler warnings like this,
 
-Fix this.
+In file included from ./arch/x86/include/asm/smp.h:13,
+                 from ./arch/x86/include/asm/mmzone_64.h:11,
+                 from ./arch/x86/include/asm/mmzone.h:5,
+                 from ./include/linux/mmzone.h:969,
+                 from ./include/linux/gfp.h:6,
+                 from ./include/linux/mm.h:10,
+                 from arch/x86/kernel/apic/io_apic.c:34:
+arch/x86/kernel/apic/io_apic.c: In function 'check_timer':
+./arch/x86/include/asm/apic.h:37:11: warning: comparison of unsigned
+expression >= 0 is always true [-Wtype-limits]
+   if ((v) <= apic_verbosity) \
+           ^~
+arch/x86/kernel/apic/io_apic.c:2160:2: note: in expansion of macro
+'apic_printk'
+  apic_printk(APIC_QUIET, KERN_INFO "..TIMER: vector=0x%02X "
+  ^~~~~~~~~~~
+./arch/x86/include/asm/apic.h:37:11: warning: comparison of unsigned
+expression >= 0 is always true [-Wtype-limits]
+   if ((v) <= apic_verbosity) \
+           ^~
+arch/x86/kernel/apic/io_apic.c:2207:4: note: in expansion of macro
+'apic_printk'
+    apic_printk(APIC_QUIET, KERN_ERR "..MP-BIOS bug: "
+    ^~~~~~~~~~~
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Tested-by: Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Link: http://lkml.kernel.org/r/20190611030109.20228-1-ravi.bangoria@linux.ibm.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+APIC_QUIET is 0, so silence them by making apic_verbosity type int.
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/1562621805-24789-1-git-send-email-cai@lca.pw
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-version.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/include/asm/apic.h | 2 +-
+ arch/x86/kernel/apic/apic.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/builtin-version.c b/tools/perf/builtin-version.c
-index f470144d1a704..bf114ca9ca870 100644
---- a/tools/perf/builtin-version.c
-+++ b/tools/perf/builtin-version.c
-@@ -19,6 +19,7 @@ static struct version version;
- static struct option version_options[] = {
- 	OPT_BOOLEAN(0, "build-options", &version.build_options,
- 		    "display the build options"),
-+	OPT_END(),
- };
+diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
+index 1340fa53b575b..2e599384abd8c 100644
+--- a/arch/x86/include/asm/apic.h
++++ b/arch/x86/include/asm/apic.h
+@@ -49,7 +49,7 @@ static inline void generic_apic_probe(void)
  
- static const char * const version_usage[] = {
+ #ifdef CONFIG_X86_LOCAL_APIC
+ 
+-extern unsigned int apic_verbosity;
++extern int apic_verbosity;
+ extern int local_apic_timer_c2_ok;
+ 
+ extern int disable_apic;
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 16c21ed97cb23..530cf1fd68a2f 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -183,7 +183,7 @@ EXPORT_SYMBOL_GPL(local_apic_timer_c2_ok);
+ /*
+  * Debug level, exported for io_apic.c
+  */
+-unsigned int apic_verbosity;
++int apic_verbosity;
+ 
+ int pic_mode;
+ 
 -- 
 2.20.1
 
