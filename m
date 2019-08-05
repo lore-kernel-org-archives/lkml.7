@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0026FC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02494C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1D0821871
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:08:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD68B2075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:08:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010532;
-	bh=Vl6OPnb9Fexr5uG2WQcqeRCcoYoD+Utx6wUVCjijQ8Y=;
+	s=default; t=1565010535;
+	bh=H/teyfZI/2ZZtdVHbK7fbPvqO4vsqQMJRFbHUIEizaY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WcLGGUe9WzYTw+HhYsTtNvw8L2IarAuh4ns5ADmWr2zLG75X7IYH6o3LtaYurSdVq
-	 prgiCSHHUYIGChSN1J9EQaeHpx3I5o+ynCNa1+mmDpADrlywbsiKrsL5P3CkvSn7Rc
-	 HiNQF4q7K1uWDyI3APJTF5l5XFM7DJayY6c8KgME=
+	b=kg1SM8yFsNzGjEkG4iuY6rHRsLtmnr6YGmohyGWuDVGLX29ljoC4mRICDpm0TLAEZ
+	 AJJr7mceWYBe+Vxg1Mz0jxgET1D4ekUrE/E/hhj9k6y6u4DbAtfLbXfpIbgUbMOfYT
+	 +eXvCscv7EmMdFVRQDtq1GscHUplFMXNf9uR5t4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730101AbfHENIv (ORCPT
+        id S1729696AbfHENIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:08:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47040 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:08:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729621AbfHENIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:08:49 -0400
+        id S1730099AbfHENIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:08:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 804C02087B;
-        Mon,  5 Aug 2019 13:08:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E58A2087B;
+        Mon,  5 Aug 2019 13:08:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010528;
-        bh=Vl6OPnb9Fexr5uG2WQcqeRCcoYoD+Utx6wUVCjijQ8Y=;
+        s=default; t=1565010530;
+        bh=H/teyfZI/2ZZtdVHbK7fbPvqO4vsqQMJRFbHUIEizaY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dcaenoE9nskvM0OA/pAMs4OeaTJJbsEmfRP9a49xGHCQysjoJyseceU9OvBFeM2I5
-         yJb5e+cK0rOMCD7JT291FDIpuzHxzYhbIqNDn/RcP8MVF13cTEcYtpsXd6Snhye0am
-         3tNg+mT2A8L/6XkguH38zXkYCFGG3Raz9hH0z+1M=
+        b=J3EW0Yymp5xR7rfK0c7gSfF9Qqeewtkl8RGfHzdbKA6GlKopjTa//f5Wi0n07m3xX
+         GZxQ7mRFKCQrm/6BadA4SQZnlfAc30fEFJ0RPUYfqrJO+SVhrehn9CbqJQIJrEWGqn
+         iTgQ48iNOAXm31atehbIu/miAZSLUBI+ua4wHKsk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Haberland <sth@linux.ibm.com>,
-        Jan Hoeppner <hoeppner@linux.ibm.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.14 40/53] s390/dasd: fix endless loop after read unit address configuration
-Date:   Mon,  5 Aug 2019 15:03:05 +0200
-Message-Id: <20190805124932.496816209@linuxfoundation.org>
+        stable@vger.kernel.org, Sven Schnelle <svens@stackframe.org>,
+        Helge Deller <deller@gmx.de>
+Subject: [PATCH 4.14 41/53] parisc: Fix build of compressed kernel even with debug enabled
+Date:   Mon,  5 Aug 2019 15:03:06 +0200
+Message-Id: <20190805124932.593351063@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124927.973499541@linuxfoundation.org>
 References: <20190805124927.973499541@linuxfoundation.org>
@@ -60,73 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Haberland <sth@linux.ibm.com>
+From: Helge Deller <deller@gmx.de>
 
-commit 41995342b40c418a47603e1321256d2c4a2ed0fb upstream.
+commit 3fe6c873af2f2247544debdbe51ec29f690a2ccf upstream.
 
-After getting a storage server event that causes the DASD device driver
-to update its unit address configuration during a device shutdown there is
-the possibility of an endless loop in the device driver.
+With debug info enabled (CONFIG_DEBUG_INFO=y) the resulting vmlinux may get
+that huge that we need to increase the start addresss for the decompression
+text section otherwise one will face a linker error.
 
-In the system log there will be ongoing DASD error messages with RC: -19.
-
-The reason is that the loop starting the ruac request only terminates when
-the retry counter is decreased to 0. But in the sleep_on function there are
-early exit paths that do not decrease the retry counter.
-
-Prevent an endless loop by handling those cases separately.
-
-Remove the unnecessary do..while loop since the sleep_on function takes
-care of retries by itself.
-
-Fixes: 8e09f21574ea ("[S390] dasd: add hyper PAV support to DASD device driver, part 1")
-Cc: stable@vger.kernel.org # 2.6.25+
-Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
-Reviewed-by: Jan Hoeppner <hoeppner@linux.ibm.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Reported-by: Sven Schnelle <svens@stackframe.org>
+Tested-by: Sven Schnelle <svens@stackframe.org>
+Cc: stable@vger.kernel.org # v4.14+
+Signed-off-by: Helge Deller <deller@gmx.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/s390/block/dasd_alias.c |   22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+ arch/parisc/boot/compressed/vmlinux.lds.S |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/s390/block/dasd_alias.c
-+++ b/drivers/s390/block/dasd_alias.c
-@@ -383,6 +383,20 @@ suborder_not_supported(struct dasd_ccw_r
- 	char msg_format;
- 	char msg_no;
+--- a/arch/parisc/boot/compressed/vmlinux.lds.S
++++ b/arch/parisc/boot/compressed/vmlinux.lds.S
+@@ -40,8 +40,8 @@ SECTIONS
+ #endif
+ 	_startcode_end = .;
  
-+	/*
-+	 * intrc values ENODEV, ENOLINK and EPERM
-+	 * will be optained from sleep_on to indicate that no
-+	 * IO operation can be started
-+	 */
-+	if (cqr->intrc == -ENODEV)
-+		return 1;
-+
-+	if (cqr->intrc == -ENOLINK)
-+		return 1;
-+
-+	if (cqr->intrc == -EPERM)
-+		return 1;
-+
- 	sense = dasd_get_sense(&cqr->irb);
- 	if (!sense)
- 		return 0;
-@@ -447,12 +461,8 @@ static int read_unit_address_configurati
- 	lcu->flags &= ~NEED_UAC_UPDATE;
- 	spin_unlock_irqrestore(&lcu->lock, flags);
+-	/* bootloader code and data starts behind area of extracted kernel */
+-	. = (SZ_end - SZparisc_kernel_start + KERNEL_BINARY_TEXT_START);
++	/* bootloader code and data starts at least behind area of extracted kernel */
++	. = MAX(ABSOLUTE(.), (SZ_end - SZparisc_kernel_start + KERNEL_BINARY_TEXT_START));
  
--	do {
--		rc = dasd_sleep_on(cqr);
--		if (rc && suborder_not_supported(cqr))
--			return -EOPNOTSUPP;
--	} while (rc && (cqr->retries > 0));
--	if (rc) {
-+	rc = dasd_sleep_on(cqr);
-+	if (rc && !suborder_not_supported(cqr)) {
- 		spin_lock_irqsave(&lcu->lock, flags);
- 		lcu->flags |= NEED_UAC_UPDATE;
- 		spin_unlock_irqrestore(&lcu->lock, flags);
+ 	/* align on next page boundary */
+ 	. = ALIGN(4096);
 
 
