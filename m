@@ -2,112 +2,130 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25FE7C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 23:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F04B3C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 23:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F004C206A2
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 23:46:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A96702147A
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 23:49:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="wDvshsv1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731010AbfHEXqj (ORCPT
+        id S1731041AbfHEXtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 19:46:39 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45214 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728483AbfHEXqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 19:46:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 69E73ACCA;
-        Mon,  5 Aug 2019 23:46:37 +0000 (UTC)
-From:   NeilBrown <neilb@suse.com>
-To:     Jinpu Wang <jinpu.wang@cloud.ionos.com>,
-        linux-raid <linux-raid@vger.kernel.org>
-Date:   Tue, 06 Aug 2019 09:46:27 +1000
-Cc:     Alexandr Iarygin <alexandr.iarygin@cloud.ionos.com>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: Bisected: Kernel 4.14 + has 3 times higher write IO latency than Kernel 4.4 with raid1
-In-Reply-To: <CAMGffEkcXcQC+kjwdH0iVSrFDk-o+dp+b3Q1qz4z=R=6D+QqLQ@mail.gmail.com>
-References: <CAMGffEkotpvVz8FA78vNFh0qZv3kEMNrXXfVPEUC=MhH0pMCZA@mail.gmail.com> <0a83fde3-1a74-684c-0d70-fb44b9021f96@molgen.mpg.de> <CAMGffE=_kPoBmSwbxvrqdqbhpR5Cu2Vbe4ArGqm9ns9+iVEH_g@mail.gmail.com> <CAMGffEkcXcQC+kjwdH0iVSrFDk-o+dp+b3Q1qz4z=R=6D+QqLQ@mail.gmail.com>
-Message-ID: <87h86vjhv0.fsf@notabene.neil.brown.name>
+        Mon, 5 Aug 2019 19:49:31 -0400
+Received: from gateway32.websitewelcome.com ([192.185.145.1]:43967 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728483AbfHEXtb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 19:49:31 -0400
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id 3CAC0B4BCB
+        for <linux-kernel@vger.kernel.org>; Mon,  5 Aug 2019 18:49:30 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id umjKhHJd73Qi0umjKh0kO4; Mon, 05 Aug 2019 18:49:30 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=9li+YhxHo8+AujwqhsMZd9x+rcO10TXeZqodcMKx7qo=; b=wDvshsv1z+1fXiJZtY4PyLHNww
+        TX8STZuvfNMy65c16V2YqeJF4e8e/HsisSBSRMNAYeBJY66xYI/a5XrZfQP5O40mD+yeXeHv8mhGF
+        /W+BkPEqN7tqKgN4uGAsH1ddru52eG7RKMGdhbMA68N7j/W90G6NeAxsM+j0UroIzheN1fD8VsZFI
+        sA/k0BthKK/9Zm04QwPf2oMN8gM7gjlYuj/OllN0eoj7w5ZOZWXvKUz9mCf309++jkyGM+YRn46r6
+        5P/kqFvhARxma5FJxkO5SiwELWfYONvsDrQNS5FCEC9Xm8TJyI6CRkGjHeBRV/2krkJOt1cspawIF
+        VSuTx2Wg==;
+Received: from [187.192.11.120] (port=40464 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1humjJ-000yz7-1L; Mon, 05 Aug 2019 18:49:29 -0500
+Date:   Mon, 5 Aug 2019 18:49:28 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] drm/msm: Use struct_size() helper
+Message-ID: <20190805234928.GA2785@embeddedor>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.11.120
+X-Source-L: No
+X-Exim-ID: 1humjJ-000yz7-1L
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [187.192.11.120]:40464
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 8
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+One of the more common cases of allocation size calculations is finding
+the size of a structure that has a zero-sized array at the end, along
+with memory for some number of elements for that array. For example:
 
-On Mon, Aug 05 2019, Jinpu Wang wrote:
+struct msm_gem_submit {
+	...
+        struct {
+		...
+        } bos[0];
+};
 
-> Hi Neil,
->
-> For the md higher write IO latency problem, I bisected it to these commit=
-s:
->
-> 4ad23a97 MD: use per-cpu counter for writes_pending
-> 210f7cd percpu-refcount: support synchronous switch to atomic mode.
->
-> Do you maybe have an idea? How can we fix it?
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes.
 
-Hmmm.... not sure.
+So, replace the following form:
 
-My guess is that the set_in_sync() call from md_check_recovery()
-is taking a long time, and is being called too often.
+sizeof(*submit) + ((u64)nr_bos * sizeof(submit->bos[0]))
 
-Could you try two experiments please.
+with:
 
-1/ set  /sys/block/md0/md/safe_mode_delay=20
-   to 20 or more.  It defaults to about 0.2.
+struct_size(submit, bos, nr_bos)
 
-2/ comment out the call the set_in_sync() in md_check_recovery().
+This code was detected with the help of Coccinelle.
 
-Then run the least separately after each of these changes.
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/gpu/drm/msm/msm_gem_submit.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I the second one makes a difference, I'd like to know how often it gets
-called - and why.  The test
-	if ( ! (
-		(mddev->sb_flags & ~ (1<<MD_SB_CHANGE_PENDING)) ||
-		test_bit(MD_RECOVERY_NEEDED, &mddev->recovery) ||
-		test_bit(MD_RECOVERY_DONE, &mddev->recovery) ||
-		(mddev->external =3D=3D 0 && mddev->safemode =3D=3D 1) ||
-		(mddev->safemode =3D=3D 2
-		 && !mddev->in_sync && mddev->recovery_cp =3D=3D MaxSector)
-		))
-		return;
+diff --git a/drivers/gpu/drm/msm/msm_gem_submit.c b/drivers/gpu/drm/msm/msm_gem_submit.c
+index 348f8c2be806..7c17c6154058 100644
+--- a/drivers/gpu/drm/msm/msm_gem_submit.c
++++ b/drivers/gpu/drm/msm/msm_gem_submit.c
+@@ -26,8 +26,8 @@ static struct msm_gem_submit *submit_create(struct drm_device *dev,
+ 		uint32_t nr_cmds)
+ {
+ 	struct msm_gem_submit *submit;
+-	uint64_t sz = sizeof(*submit) + ((u64)nr_bos * sizeof(submit->bos[0])) +
+-		((u64)nr_cmds * sizeof(submit->cmd[0]));
++	uint64_t sz = struct_size(submit, bos, nr_bos) +
++				  ((u64)nr_cmds * sizeof(submit->cmd[0]));
+ 
+ 	if (sz > SIZE_MAX)
+ 		return NULL;
+-- 
+2.22.0
 
-should normally return when doing lots of IO - I'd like to know
-which condition causes it to not return.
-
-Thanks,
-NeilBrown
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl1Iv9MACgkQOeye3VZi
-gbmI5g/+JKHQonxW3qKWWf3giQwBF/hwLPxqfbX1AfXyzbJvMgMgptQWQo/Vce6W
-O0OApPtiUrkkpC7KIYc5fSwFfPXFZt+TT7e+eRSOyVWpHU1B8OkJmEnMtI6MEqOU
-AKKwJ6LdxcSJaP1Z/8b+2r7M2d5jFRgo10GdRDkn2a9RV4oD2LsyydIf5lTq8yvH
-vD45/5YbDwmaiEqmG2HYh9+lm5AH4jqrOEimT90KpERZjW0/vWRm8ZilN2o62+Or
-oSMcaC7YtgYE4MMWoiMLbRPD3CbT4Iitytggn29v+ZxrTvumat1hYEkcnWSz2oZs
-CHMMP7vI6XIPATZ5wzL7YA0w9mgkanW+nsE3geZ4x5K+wmXTUZNiQzxKINagQ33Y
-vmcMsY7uLZejWrajOXmmg/nNi0zCmRbfm1sKikz50H9ysGaAJhhBUzqwt7jb6UFo
-c23oKdS8KYNIQ4AuxmXyMM+w2Nnix9GSGc3cM5jsC5ZGFrMk9P7GiZz6UzoMcTVQ
-tB0p8nJ5EsS6Ook7kEKpG5BUs3N++fq78EF0xwfdOd+UIkIBOa7DPTyihM8b6sUM
-aWgSLsXtWjPHxt/7mm20lL1F2SJ3cfrCz77cCOg6X1VHE5h3PsoeghG/oQIRd9LZ
-6aWzsj/W/fByGG4wsPm2aCL1bWMgnXl2mBb4d4dILAG+3gbQ50M=
-=PJk4
------END PGP SIGNATURE-----
---=-=-=--
