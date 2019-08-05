@@ -2,182 +2,281 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E657C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C4BC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34C4B2075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:14:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010894;
-	bh=xbtRgzuo03sj2At33CiqxEMVoJhFtnftBmdSzxJn/ac=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rIgO18RPkbwV0+3Y16TZcaeQHS43I0F9hZYjMUEu/xKcSm2+EsIL2L07oqHW+HkG3
-	 HAabN1tuBhXJ09jrwVFWsQ7qusZAHvlAocQlsmSe08tbWAbhXv588HXjnRTHVJgdNH
-	 9PpFkdx5X2kUe1KqFJAoPNRm3NX1K7g/o6akbMC8=
+	by mail.kernel.org (Postfix) with ESMTP id 733F72067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:15:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Kn8sww93"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729092AbfHENHi (ORCPT
+        id S1729823AbfHENPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:07:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45174 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729325AbfHENHd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:07:33 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82D4221738;
-        Mon,  5 Aug 2019 13:07:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010453;
-        bh=xbtRgzuo03sj2At33CiqxEMVoJhFtnftBmdSzxJn/ac=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DWL5k0AWZVKitrtWBcplPhsNcKwUzmIoJPtuAEHsFYIu0lA44NVMadANDC9GD4dnz
-         gzlxS9Pk4VF/HYtpeYbK4zVWnVaVwTwLk2B8eDXaecJBgjfO+uzVePhgBVxCGcshwB
-         GbpKL3r6f8Aaf/tHry2dpR13CqZTn+v0Zj2oyBEc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 29/53] x86/kvm: Dont call kvm_spurious_fault() from .fixup
-Date:   Mon,  5 Aug 2019 15:02:54 +0200
-Message-Id: <20190805124931.249046629@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190805124927.973499541@linuxfoundation.org>
-References: <20190805124927.973499541@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 5 Aug 2019 09:15:03 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:63386 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729021AbfHENO7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:14:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1565010897; x=1596546897;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=EJTfZvXMYCi5LQtJcX8nIxNGbqsYysDnIApRtEuH8cM=;
+  b=Kn8sww93SniDs90LSIbi2sSKDKj15lutI6mwmHWR2AMcQRea1gi76TpH
+   BjYrqD/tXjKBDVyQsZWBnsLD6Z1P3xDVWovq4rWpk3OsefmA9n+0SLzcd
+   zByjojvMyKVq041xvPEr+uD3MbbBCWtk59iFJUra/e5hIaEqdD/qcKNHt
+   M=;
+X-IronPort-AV: E=Sophos;i="5.64,349,1559520000"; 
+   d="scan'208";a="745219752"
+Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2b-859fe132.us-west-2.amazon.com) ([10.124.125.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 05 Aug 2019 13:14:53 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-859fe132.us-west-2.amazon.com (Postfix) with ESMTPS id C15D0221D12;
+        Mon,  5 Aug 2019 13:14:52 +0000 (UTC)
+Received: from EX13D21UWA004.ant.amazon.com (10.43.160.252) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 5 Aug 2019 13:14:52 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
+ EX13D21UWA004.ant.amazon.com (10.43.160.252) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 5 Aug 2019 13:14:52 +0000
+Received: from [10.95.84.246] (10.95.84.246) by mail-relay.amazon.com
+ (10.43.160.118) with Microsoft SMTP Server (TLS) id 15.0.1367.3 via Frontend
+ Transport; Mon, 5 Aug 2019 13:14:47 +0000
+Subject: Re: [PATCH v4 4/4] edac: Add support for Amazon's Annapurna Labs L2
+ EDAC
+To:     James Morse <james.morse@arm.com>
+CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>, <bp@alien8.de>,
+        <mchehab@kernel.org>, <davem@davemloft.net>,
+        <gregkh@linuxfoundation.org>, <linus.walleij@linaro.org>,
+        <Jonathan.Cameron@huawei.com>, <nicolas.ferre@microchip.com>,
+        <paulmck@linux.ibm.com>, <dwmw@amazon.co.uk>, <benh@amazon.com>,
+        <ronenk@amazon.com>, <talel@amazon.com>, <jonnyc@amazon.com>,
+        <hanochu@amazon.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>
+References: <20190801130956.26388-1-hhhawa@amazon.com>
+ <20190801130956.26388-5-hhhawa@amazon.com>
+ <a060cbce-14f3-0592-4998-0a900d3fe6e4@arm.com>
+From:   "Hawa, Hanna" <hhhawa@amazon.com>
+Message-ID: <907e9e91-0830-7643-a329-8587541635da@amazon.com>
+Date:   Mon, 5 Aug 2019 16:14:45 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <a060cbce-14f3-0592-4998-0a900d3fe6e4@arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3901336ed9887b075531bffaeef7742ba614058b ]
-
-After making a change to improve objtool's sibling call detection, it
-started showing the following warning:
-
-  arch/x86/kvm/vmx/nested.o: warning: objtool: .fixup+0x15: sibling call from callable instruction with modified stack frame
-
-The problem is the ____kvm_handle_fault_on_reboot() macro.  It does a
-fake call by pushing a fake RIP and doing a jump.  That tricks the
-unwinder into printing the function which triggered the exception,
-rather than the .fixup code.
-
-Instead of the hack to make it look like the original function made the
-call, just change the macro so that the original function actually does
-make the call.  This allows removal of the hack, and also makes objtool
-happy.
-
-I triggered a vmx instruction exception and verified that the stack
-trace is still sane:
-
-  kernel BUG at arch/x86/kvm/x86.c:358!
-  invalid opcode: 0000 [#1] SMP PTI
-  CPU: 28 PID: 4096 Comm: qemu-kvm Not tainted 5.2.0+ #16
-  Hardware name: Lenovo THINKSYSTEM SD530 -[7X2106Z000]-/-[7X2106Z000]-, BIOS -[TEE113Z-1.00]- 07/17/2017
-  RIP: 0010:kvm_spurious_fault+0x5/0x10
-  Code: 00 00 00 00 00 8b 44 24 10 89 d2 45 89 c9 48 89 44 24 10 8b 44 24 08 48 89 44 24 08 e9 d4 40 22 00 0f 1f 40 00 0f 1f 44 00 00 <0f> 0b 66 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 41 55 49 89 fd 41
-  RSP: 0018:ffffbf91c683bd00 EFLAGS: 00010246
-  RAX: 000061f040000000 RBX: ffff9e159c77bba0 RCX: ffff9e15a5c87000
-  RDX: 0000000665c87000 RSI: ffff9e15a5c87000 RDI: ffff9e159c77bba0
-  RBP: 0000000000000000 R08: 0000000000000000 R09: ffff9e15a5c87000
-  R10: 0000000000000000 R11: fffff8f2d99721c0 R12: ffff9e159c77bba0
-  R13: ffffbf91c671d960 R14: ffff9e159c778000 R15: 0000000000000000
-  FS:  00007fa341cbe700(0000) GS:ffff9e15b7400000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 00007fdd38356804 CR3: 00000006759de003 CR4: 00000000007606e0
-  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  PKRU: 55555554
-  Call Trace:
-   loaded_vmcs_init+0x4f/0xe0
-   alloc_loaded_vmcs+0x38/0xd0
-   vmx_create_vcpu+0xf7/0x600
-   kvm_vm_ioctl+0x5e9/0x980
-   ? __switch_to_asm+0x40/0x70
-   ? __switch_to_asm+0x34/0x70
-   ? __switch_to_asm+0x40/0x70
-   ? __switch_to_asm+0x34/0x70
-   ? free_one_page+0x13f/0x4e0
-   do_vfs_ioctl+0xa4/0x630
-   ksys_ioctl+0x60/0x90
-   __x64_sys_ioctl+0x16/0x20
-   do_syscall_64+0x55/0x1c0
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  RIP: 0033:0x7fa349b1ee5b
-
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/64a9b64d127e87b6920a97afde8e96ea76f6524e.1563413318.git.jpoimboe@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/include/asm/kvm_host.h | 34 ++++++++++++++++++---------------
- 1 file changed, 19 insertions(+), 15 deletions(-)
-
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index f9a4b85d7309b..9f3eb334c818e 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1353,25 +1353,29 @@ enum {
- #define kvm_arch_vcpu_memslots_id(vcpu) ((vcpu)->arch.hflags & HF_SMM_MASK ? 1 : 0)
- #define kvm_memslots_for_spte_role(kvm, role) __kvm_memslots(kvm, (role).smm)
- 
-+asmlinkage void __noreturn kvm_spurious_fault(void);
-+
- /*
-  * Hardware virtualization extension instructions may fault if a
-  * reboot turns off virtualization while processes are running.
-- * Trap the fault and ignore the instruction if that happens.
-+ * Usually after catching the fault we just panic; during reboot
-+ * instead the instruction is ignored.
-  */
--asmlinkage void kvm_spurious_fault(void);
--
--#define ____kvm_handle_fault_on_reboot(insn, cleanup_insn)	\
--	"666: " insn "\n\t" \
--	"668: \n\t"                           \
--	".pushsection .fixup, \"ax\" \n" \
--	"667: \n\t" \
--	cleanup_insn "\n\t"		      \
--	"cmpb $0, kvm_rebooting \n\t"	      \
--	"jne 668b \n\t"      		      \
--	__ASM_SIZE(push) " $666b \n\t"	      \
--	"jmp kvm_spurious_fault \n\t"	      \
--	".popsection \n\t" \
--	_ASM_EXTABLE(666b, 667b)
-+#define ____kvm_handle_fault_on_reboot(insn, cleanup_insn)		\
-+	"666: \n\t"							\
-+	insn "\n\t"							\
-+	"jmp	668f \n\t"						\
-+	"667: \n\t"							\
-+	"call	kvm_spurious_fault \n\t"				\
-+	"668: \n\t"							\
-+	".pushsection .fixup, \"ax\" \n\t"				\
-+	"700: \n\t"							\
-+	cleanup_insn "\n\t"						\
-+	"cmpb	$0, kvm_rebooting\n\t"					\
-+	"je	667b \n\t"						\
-+	"jmp	668b \n\t"						\
-+	".popsection \n\t"						\
-+	_ASM_EXTABLE(666b, 700b)
- 
- #define __kvm_handle_fault_on_reboot(insn)		\
- 	____kvm_handle_fault_on_reboot(insn, "")
--- 
-2.20.1
 
 
+On 8/2/2019 6:11 PM, James Morse wrote:
+> Hi Hanna,
+> 
+> On 01/08/2019 14:09, Hanna Hawa wrote:
+>> Adds support for Amazon's Annapurna Labs L2 EDAC driver to detect and
+>> report L2 errors.
+>> diff --git a/drivers/edac/al_l2_edac.c b/drivers/edac/al_l2_edac.c
+>> new file mode 100644
+>> index 000000000000..6c6d37cf82ab
+>> --- /dev/null
+>> +++ b/drivers/edac/al_l2_edac.c
+>> @@ -0,0 +1,189 @@
+> 
+>> +#include <asm/sysreg.h>
+>> +#include <linux/bitfield.h>
+> 
+> #include <linux/cpumask.h> ?
 
+Will be added.
+
+> 
+>> +#include <linux/of.h>
+>> +#include <linux/smp.h>
+> 
+> [...]
+> 
+>> +static void al_l2_edac_l2merrsr(void *arg)
+>> +{
+>> +	struct edac_device_ctl_info *edac_dev = arg;
+>> +	int cpu, i;
+>> +	u32 ramid, repeat, other, fatal;
+>> +	u64 val = read_sysreg_s(ARM_CA57_L2MERRSR_EL1);
+>> +	char msg[AL_L2_EDAC_MSG_MAX];
+>> +	int space, count;
+>> +	char *p;
+>> +
+>> +	if (!(FIELD_GET(ARM_CA57_L2MERRSR_VALID, val)))
+>> +		return;
+>> +
+>> +	write_sysreg_s(0, ARM_CA57_L2MERRSR_EL1);
+>> +
+>> +	cpu = smp_processor_id();
+>> +	ramid = FIELD_GET(ARM_CA57_L2MERRSR_RAMID, val);
+>> +	repeat = FIELD_GET(ARM_CA57_L2MERRSR_REPEAT, val);
+>> +	other = FIELD_GET(ARM_CA57_L2MERRSR_OTHER, val);
+>> +	fatal = FIELD_GET(ARM_CA57_L2MERRSR_FATAL, val);
+>> +
+>> +	space = sizeof(msg);
+>> +	p = msg;
+>> +	count = scnprintf(p, space, "CPU%d L2 %serror detected", cpu,
+>> +			  (fatal) ? "Fatal " : "");
+>> +	p += count;
+>> +	space -= count;
+>> +
+>> +	switch (ramid) {
+>> +	case ARM_CA57_L2_TAG_RAM:
+>> +		count = scnprintf(p, space, " RAMID='L2 Tag RAM'");
+>> +		break;
+>> +	case ARM_CA57_L2_DATA_RAM:
+>> +		count = scnprintf(p, space, " RAMID='L2 Data RAM'");
+>> +		break;
+>> +	case ARM_CA57_L2_SNOOP_RAM:
+>> +		count = scnprintf(p, space, " RAMID='L2 Snoop RAM'");
+> 
+> Nit: The TRMs both call this 'L2 Snoop Tag RAM'. Could we include 'tag' in the
+> description. 'tag' implies its some kind of metadata, so an uncorrected error here affect
+> a now unknown location, its more series than a 'data RAM' error. v8.2 would term this kind
+> of error 'uncontained'.
+
+Ack, will be fixed.
+
+> 
+> 
+>> +		break;
+>> +	case ARM_CA57_L2_DIRTY_RAM:
+>> +		count = scnprintf(p, space, " RAMID='L2 Dirty RAM'");
+>> +		break;
+>> +	case ARM_CA57_L2_INC_PF_RAM:
+>> +		count = scnprintf(p, space, " RAMID='L2 internal metadat'");
+> 
+> Nit: metadata
+
+Ack, will be fixed.
+
+> 
+>> +		break;
+>> +	default:
+>> +		count = scnprintf(p, space, " RAMID='unknown'");
+>> +		break;
+>> +	}
+>> +
+>> +	p += count;
+>> +	space -= count;
+>> +
+>> +	count = scnprintf(p, space,
+>> +			  " repeat=%d, other=%d (L2MERRSR_EL1=0x%llx)",
+>> +			  repeat, other, val);
+>> +
+>> +	for (i = 0; i < repeat; i++) {
+>> +		if (fatal)
+>> +			edac_device_handle_ue(edac_dev, 0, 0, msg);
+>> +		else
+>> +			edac_device_handle_ce(edac_dev, 0, 0, msg);
+>> +	}
+>> +}
+> 
+> [...]
+> 
+>> +static int al_l2_edac_probe(struct platform_device *pdev)
+>> +{
+>> +	struct edac_device_ctl_info *edac_dev;
+>> +	struct al_l2_edac *al_l2;
+>> +	struct device *dev = &pdev->dev;
+>> +	int ret, i;
+>> +
+>> +	edac_dev = edac_device_alloc_ctl_info(sizeof(*al_l2),
+>> +					      (char *)dev_name(dev), 1, "L", 1,
+>> +					      2, NULL, 0,
+>> +					      edac_device_alloc_index());
+>> +	if (IS_ERR_OR_NULL(edac_dev))
+>> +		return -ENOMEM;
+>> +
+>> +	al_l2 = edac_dev->pvt_info;
+>> +	edac_dev->edac_check = al_l2_edac_check;
+>> +	edac_dev->dev = dev;
+>> +	edac_dev->mod_name = DRV_NAME;
+>> +	edac_dev->dev_name = dev_name(dev);
+>> +	edac_dev->ctl_name = "L2 cache";
+>> +	platform_set_drvdata(pdev, edac_dev);
+> 
+>> +	for_each_online_cpu(i) {
+> 
+> for_each_possible_cpu()?
+> 
+> If you boot with maxcpus= the driver's behaviour changes.
+> But you are only parsing information from the DT, so you don't really need the CPUs to be
+> online.
+Agree, for dt parsing no need the online CPUs, if 
+for_each_possible_cpu() used then smp_call_function_any() will run only 
+on the online CPUs in the mask.
+
+Will change to for_each_possible_cpu().
+
+> 
+> 
+>> +		struct device_node *cpu;
+>> +		struct device_node *cpu_cache, *l2_cache;
+>> +
+>> +		cpu = of_get_cpu_node(i, NULL);
+> 
+> (of_get_cpu_node() can return NULL, but I don't think it can ever happen like this)
+> 
+>> +		cpu_cache = of_find_next_cache_node(cpu);
+>> +		l2_cache = of_parse_phandle(dev->of_node, "l2-cache", 0);
+>> +
+>> +		if (cpu_cache == l2_cache)
+>> +			cpumask_set_cpu(i, &al_l2->cluster_cpus);
+> 
+> You need to of_node_put() these device_node pointers once you're done with them.
+
+Will be added.
+
+> 
+> 
+>> +	}
+>> +
+>> +	if (cpumask_empty(&al_l2->cluster_cpus)) {
+>> +		dev_err(dev, "CPU mask is empty for this L2 cache\n");
+>> +		ret = -EINVAL;
+>> +		goto err;
+>> +	}
+>> +
+>> +	ret = edac_device_add_device(edac_dev);
+>> +	if (ret) {
+>> +		dev_err(dev, "Failed to add L2 edac device\n");
+>> +		goto err;
+>> +	}
+>> +
+>> +	return 0;
+>> +
+>> +err:
+>> +	edac_device_free_ctl_info(edac_dev);
+>> +
+>> +	return ret;
+>> +}
+> 
+> With the of_node_put()ing:
+> Reviewed-by: James Morse <james.morse@arm.com>
+
+Thanks for review, will publish v5 with the above fixes.
+
+Thanks,
+Hanna
+
+> 
+> 
+> Thanks,
+> 
+> James
+> 
