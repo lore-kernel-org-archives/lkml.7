@@ -5,42 +5,42 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A698C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80819C32751
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F67E206A2
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:46:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33BA52064A
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:46:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="R5c9+4lS"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="VISvmwzd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730287AbfHEQqk (ORCPT
+        id S1730211AbfHEQqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 12:46:40 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:39938 "EHLO
+        Mon, 5 Aug 2019 12:46:34 -0400
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:39924 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729152AbfHEQpa (ORCPT
+        by vger.kernel.org with ESMTP id S1728893AbfHEQpa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 5 Aug 2019 12:45:30 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 7C432C01C9;
-        Mon,  5 Aug 2019 16:45:29 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 95210C01A9;
+        Mon,  5 Aug 2019 16:45:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1565023529; bh=V44TUUYT1RGwCjbP/DWW+2loHOAHueRrgu0WkD/bado=;
+        t=1565023529; bh=HncnrGiwYBaY8cLHuvwXP6jFPNRWl7ryxSwIDGsQp08=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=R5c9+4lSSEFLQDGi2uEnBMg6yiPBYMHJwfQCOBMOgitzPztthbBpYCJatCIv3pjfB
-         Uxd13qsILTH246IxKk3pz1ivVnA/b13vSIIZt5dj05t8pZKb66nEQRfsBl2ZoK9NKo
-         ZUOI19pACu/D7ZkT1ifrOAYBNv1JgHnj4UMsH1hodSyeeUH8zp9R+U2kqgyFR2WWE6
-         O9NtfE5hr6VnK9Fcoq0PTbC2EleABE50Lsgm8liyFtv1oUcgidV05gpc+0uNDACPRL
-         Z6wSmk+KVr+HgvvriU8YsScCX6tGm8X3FHW5P7WYFepysvT43XPrv1UGbrKTba90Kg
-         v/eHiOaqZmrSw==
+        b=VISvmwzdltJ6LV7lcVmdTLPLrNwJfh4/zJAjnNk/I9bKunkj0kKNhdTg3R3LznJSS
+         3q6amkVoELu48Fbx2aqkJPXdvzLcpJr6V6A+Jx7/86Cy6H48DU2KbrIcKCuBdpbodF
+         PpHIt5A89s16kTDpwVcApEQJoSjq+rXr/5IMunw1+gezyz7+PyZ3l2vD4i6iBDoNBI
+         9foCu410ggWSJvtlCCzzu5rGYWjM3YBg14Ag/2NH8OU2aCnc04cTAyjTSv1phkMp3z
+         RO8Y+8ySNSJKLqPQORFF8Vw5gWJ8CbgJwltRrGUVU5kILgT3+AG7S8CDdDi3fCugIH
+         b3MdR31TGFSkQ==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 39A81A009E;
-        Mon,  5 Aug 2019 16:45:28 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id 4BD90A0070;
+        Mon,  5 Aug 2019 16:45:27 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
 Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
@@ -51,9 +51,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 21/26] net: stmmac: Add support for SA Insertion/Replacement in XGMAC cores
-Date:   Mon,  5 Aug 2019 18:44:48 +0200
-Message-Id: <4fa8eaada09f8aeccf653243e73979fe25b9bdc9.1565022597.git.joabreu@synopsys.com>
+Subject: [PATCH net-next 06/26] net: stmmac: Implement RSS and enable it in XGMAC core
+Date:   Mon,  5 Aug 2019 18:44:33 +0200
+Message-Id: <e70981c111ac857a0bac77750bd69a3383d99ee0.1565022597.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1565022597.git.joabreu@synopsys.com>
 References: <cover.1565022597.git.joabreu@synopsys.com>
@@ -64,8 +64,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the support for Source Address Insertion and Replacement in XGMAC
-cores. Two methods are supported: Descriptor based and register based.
+Implement the RSS functionality and add the corresponding callbacks in
+XGMAC core.
 
 Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 ---
@@ -79,164 +79,494 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h       |  2 ++
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c  | 11 +++++++++++
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c | 10 +++++++++-
- drivers/net/ethernet/stmicro/stmmac/hwif.h           |  7 +++++++
- drivers/net/ethernet/stmicro/stmmac/stmmac.h         |  1 +
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c    |  6 ++++++
- 6 files changed, 36 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/common.h       |  5 ++
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     | 18 +++++-
+ .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c    | 52 +++++++++++++++
+ .../net/ethernet/stmicro/stmmac/dwxgmac2_descs.c   | 29 +++++++++
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c |  1 +
+ drivers/net/ethernet/stmicro/stmmac/hwif.h         | 11 ++++
+ drivers/net/ethernet/stmicro/stmmac/stmmac.h       |  9 +++
+ .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c   | 75 ++++++++++++++++++++++
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 38 ++++++++++-
+ include/linux/stmmac.h                             |  1 +
+ 10 files changed, 236 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
+index ed872eed1cab..45a997fe571c 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/common.h
++++ b/drivers/net/ethernet/stmicro/stmmac/common.h
+@@ -354,6 +354,7 @@ struct dma_features {
+ 	unsigned int frpbs;
+ 	unsigned int frpes;
+ 	unsigned int addr64;
++	unsigned int rssen;
+ };
+ 
+ /* GMAC TX FIFO is 8K, Rx FIFO is 16K */
+@@ -381,6 +382,10 @@ struct dma_features {
+ 
+ #define JUMBO_LEN		9000
+ 
++/* Receive Side Scaling */
++#define STMMAC_RSS_HASH_KEY_SIZE	40
++#define STMMAC_RSS_MAX_TABLE_SIZE	256
++
+ extern const struct stmmac_desc_ops enh_desc_ops;
+ extern const struct stmmac_desc_ops ndesc_ops;
+ 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-index 11fa3b601033..5a7763be0b17 100644
+index b77091161765..eb7c7726fcd6 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-@@ -337,6 +337,8 @@
- #define XGMAC_TDES3_CPC			GENMASK(27, 26)
- #define XGMAC_TDES3_CPC_SHIFT		26
- #define XGMAC_TDES3_TCMSSV		BIT(26)
-+#define XGMAC_TDES3_SAIC		GENMASK(25, 23)
-+#define XGMAC_TDES3_SAIC_SHIFT		23
- #define XGMAC_TDES3_THL			GENMASK(22, 19)
- #define XGMAC_TDES3_THL_SHIFT		19
- #define XGMAC_TDES3_TSE			BIT(18)
+@@ -89,6 +89,7 @@
+ #define XGMAC_HWFEAT_RWKSEL		BIT(6)
+ #define XGMAC_HWFEAT_GMIISEL		BIT(1)
+ #define XGMAC_HW_FEATURE1		0x00000120
++#define XGMAC_HWFEAT_RSSEN		BIT(20)
+ #define XGMAC_HWFEAT_TSOEN		BIT(18)
+ #define XGMAC_HWFEAT_ADDR64		GENMASK(15, 14)
+ #define XGMAC_HWFEAT_TXFIFOSIZE		GENMASK(10, 6)
+@@ -109,6 +110,17 @@
+ #define XGMAC_DCS_SHIFT			16
+ #define XGMAC_ADDRx_LOW(x)		(0x00000304 + (x) * 0x8)
+ #define XGMAC_ARP_ADDR			0x00000c10
++#define XGMAC_RSS_CTRL			0x00000c80
++#define XGMAC_UDP4TE			BIT(3)
++#define XGMAC_TCP4TE			BIT(2)
++#define XGMAC_IP2TE			BIT(1)
++#define XGMAC_RSSE			BIT(0)
++#define XGMAC_RSS_ADDR			0x00000c88
++#define XGMAC_RSSIA_SHIFT		8
++#define XGMAC_ADDRT			BIT(2)
++#define XGMAC_CT			BIT(1)
++#define XGMAC_OB			BIT(0)
++#define XGMAC_RSS_DATA			0x00000c8c
+ #define XGMAC_TIMESTAMP_STATUS		0x00000d20
+ #define XGMAC_TXTSC			BIT(15)
+ #define XGMAC_TXTIMESTAMP_NSEC		0x00000d30
+@@ -125,8 +137,9 @@
+ #define XGMAC_MTL_INT_STATUS		0x00001020
+ #define XGMAC_MTL_RXQ_DMA_MAP0		0x00001030
+ #define XGMAC_MTL_RXQ_DMA_MAP1		0x00001034
+-#define XGMAC_QxMDMACH(x)		GENMASK((x) * 8 + 3, (x) * 8)
++#define XGMAC_QxMDMACH(x)		GENMASK((x) * 8 + 7, (x) * 8)
+ #define XGMAC_QxMDMACH_SHIFT(x)		((x) * 8)
++#define XGMAC_QDDMACH			BIT(7)
+ #define XGMAC_TC_PRTY_MAP0		0x00001040
+ #define XGMAC_TC_PRTY_MAP1		0x00001044
+ #define XGMAC_PSTC(x)			GENMASK((x) * 8 + 7, (x) * 8)
+@@ -261,6 +274,9 @@
+ #define XGMAC_RDES3_IOC			BIT(30)
+ #define XGMAC_RDES3_LD			BIT(28)
+ #define XGMAC_RDES3_CDA			BIT(27)
++#define XGMAC_RDES3_RSV			BIT(26)
++#define XGMAC_RDES3_L34T		GENMASK(23, 20)
++#define XGMAC_RDES3_L34T_SHIFT		20
+ #define XGMAC_RDES3_ES			BIT(15)
+ #define XGMAC_RDES3_PL			GENMASK(13, 0)
+ #define XGMAC_RDES3_TSD			BIT(6)
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-index 2093c996a090..16e3a0a0c826 100644
+index bfbd5ae11540..04eec85acc59 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-@@ -1082,6 +1082,16 @@ static int dwxgmac2_flex_pps_config(void __iomem *ioaddr, int index,
- 	return 0;
+@@ -6,6 +6,7 @@
+ 
+ #include <linux/bitrev.h>
+ #include <linux/crc32.h>
++#include <linux/iopoll.h>
+ #include "stmmac.h"
+ #include "dwxgmac2.h"
+ 
+@@ -439,6 +440,56 @@ static void dwxgmac2_set_mac_loopback(void __iomem *ioaddr, bool enable)
+ 	writel(value, ioaddr + XGMAC_RX_CONFIG);
  }
  
-+static void dwxgmac2_sarc_configure(void __iomem *ioaddr, int val)
++static int dwxgmac2_rss_write_reg(void __iomem *ioaddr, bool is_key, int idx,
++				  u32 val)
 +{
-+	u32 value = readl(ioaddr + XGMAC_TX_CONFIG);
++	u32 ctrl = 0;
 +
-+	value &= ~XGMAC_CONFIG_SARC;
-+	value |= val << XGMAC_CONFIG_SARC_SHIFT;
++	writel(val, ioaddr + XGMAC_RSS_DATA);
++	ctrl |= idx << XGMAC_RSSIA_SHIFT;
++	ctrl |= is_key ? XGMAC_ADDRT : 0x0;
++	ctrl |= XGMAC_OB;
++	writel(ctrl, ioaddr + XGMAC_RSS_ADDR);
 +
-+	writel(value, ioaddr + XGMAC_TX_CONFIG);
++	return readl_poll_timeout(ioaddr + XGMAC_RSS_ADDR, ctrl,
++				  !(ctrl & XGMAC_OB), 100, 10000);
++}
++
++static int dwxgmac2_rss_configure(struct mac_device_info *hw,
++				  struct stmmac_rss *cfg, u32 num_rxq)
++{
++	void __iomem *ioaddr = hw->pcsr;
++	u32 *key = (u32 *)cfg->key;
++	int i, ret;
++	u32 value;
++
++	value = readl(ioaddr + XGMAC_RSS_CTRL);
++	if (!cfg->enable) {
++		value &= ~XGMAC_RSSE;
++		writel(value, ioaddr + XGMAC_RSS_CTRL);
++		return 0;
++	}
++
++	for (i = 0; i < (sizeof(cfg->key) / sizeof(u32)); i++) {
++		ret = dwxgmac2_rss_write_reg(ioaddr, true, i, *key++);
++		if (ret)
++			return ret;
++	}
++
++	for (i = 0; i < ARRAY_SIZE(cfg->table); i++) {
++		ret = dwxgmac2_rss_write_reg(ioaddr, false, i, cfg->table[i]);
++		if (ret)
++			return ret;
++	}
++
++	for (i = 0; i < num_rxq; i++)
++		dwxgmac2_map_mtl_to_dma(hw, i, XGMAC_QDDMACH);
++
++	value |= XGMAC_UDP4TE | XGMAC_TCP4TE | XGMAC_IP2TE | XGMAC_RSSE;
++	writel(value, ioaddr + XGMAC_RSS_CTRL);
++	return 0;
 +}
 +
  const struct stmmac_ops dwxgmac210_ops = {
  	.core_init = dwxgmac2_core_init,
  	.set_mac = dwxgmac2_set_mac,
-@@ -1120,6 +1130,7 @@ const struct stmmac_ops dwxgmac210_ops = {
- 	.rxp_config = dwxgmac3_rxp_config,
- 	.get_mac_tx_timestamp = dwxgmac2_get_mac_tx_timestamp,
- 	.flex_pps_config = dwxgmac2_flex_pps_config,
-+	.sarc_configure = dwxgmac2_sarc_configure,
+@@ -469,6 +520,7 @@ const struct stmmac_ops dwxgmac210_ops = {
+ 	.debug = NULL,
+ 	.set_filter = dwxgmac2_set_filter,
+ 	.set_mac_loopback = dwxgmac2_set_mac_loopback,
++	.rss_configure = dwxgmac2_rss_configure,
  };
  
  int dwxgmac2_setup(struct stmmac_priv *priv)
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
-index 4cef7a3bf8df..3c2abfb12820 100644
+index c4c45402b8f8..9ff9d9ac1a50 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
-@@ -149,7 +149,7 @@ static void dwxgmac2_prepare_tx_desc(struct dma_desc *p, int is_fs, int len,
- 
- 	p->des2 |= cpu_to_le32(len & XGMAC_TDES2_B1L);
- 
--	tdes3 = tot_pkt_len & XGMAC_TDES3_FL;
-+	tdes3 |= tot_pkt_len & XGMAC_TDES3_FL;
- 	if (is_fs)
- 		tdes3 |= XGMAC_TDES3_FD;
- 	else
-@@ -299,6 +299,13 @@ static void dwxgmac2_set_sec_addr(struct dma_desc *p, dma_addr_t addr)
- 	p->des3 = cpu_to_le32(upper_32_bits(addr));
+@@ -254,6 +254,34 @@ static void dwxgmac2_clear(struct dma_desc *p)
+ 	p->des3 = 0;
  }
  
-+static void dwxgmac2_set_sarc(struct dma_desc *p, u32 sarc_type)
++static int dwxgmac2_get_rx_hash(struct dma_desc *p, u32 *hash,
++				enum pkt_hash_types *type)
 +{
-+	sarc_type <<= XGMAC_TDES3_SAIC_SHIFT;
++	unsigned int rdes3 = le32_to_cpu(p->des3);
++	u32 ptype;
 +
-+	p->des3 |= cpu_to_le32(sarc_type & XGMAC_TDES3_SAIC);
++	if (rdes3 & XGMAC_RDES3_RSV) {
++		ptype = (rdes3 & XGMAC_RDES3_L34T) >> XGMAC_RDES3_L34T_SHIFT;
++
++		switch (ptype) {
++		case 0x1:
++		case 0x2:
++		case 0x9:
++		case 0xA:
++			*type = PKT_HASH_TYPE_L4;
++			break;
++		default:
++			*type = PKT_HASH_TYPE_L3;
++			break;
++		}
++
++		*hash = le32_to_cpu(p->des1);
++		return 0;
++	}
++
++	return -EINVAL;
 +}
 +
  const struct stmmac_desc_ops dwxgmac210_desc_ops = {
  	.tx_status = dwxgmac2_get_tx_status,
  	.rx_status = dwxgmac2_get_rx_status,
-@@ -325,4 +332,5 @@ const struct stmmac_desc_ops dwxgmac210_desc_ops = {
- 	.get_rx_hash = dwxgmac2_get_rx_hash,
- 	.get_rx_header_len = dwxgmac2_get_rx_header_len,
- 	.set_sec_addr = dwxgmac2_set_sec_addr,
-+	.set_sarc = dwxgmac2_set_sarc,
+@@ -277,4 +305,5 @@ const struct stmmac_desc_ops dwxgmac210_desc_ops = {
+ 	.get_addr = dwxgmac2_get_addr,
+ 	.set_addr = dwxgmac2_set_addr,
+ 	.clear = dwxgmac2_clear,
++	.get_rx_hash = dwxgmac2_get_rx_hash,
  };
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
+index 0f1c772e892a..45a6634ee397 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
+@@ -363,6 +363,7 @@ static void dwxgmac2_get_hw_feature(void __iomem *ioaddr,
+ 
+ 	/* MAC HW feature 1 */
+ 	hw_cap = readl(ioaddr + XGMAC_HW_FEATURE1);
++	dma_cap->rssen = (hw_cap & XGMAC_HWFEAT_RSSEN) >> 20;
+ 	dma_cap->tsoen = (hw_cap & XGMAC_HWFEAT_TSOEN) >> 18;
+ 
+ 	dma_cap->addr64 = (hw_cap & XGMAC_HWFEAT_ADDR64) >> 14;
 diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-index ed9fda50ee22..e54864cde01b 100644
+index 00539a09d1db..bfe7efee9481 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
 +++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-@@ -91,6 +91,7 @@ struct stmmac_desc_ops {
- 			   enum pkt_hash_types *type);
- 	int (*get_rx_header_len)(struct dma_desc *p, unsigned int *len);
- 	void (*set_sec_addr)(struct dma_desc *p, dma_addr_t addr);
-+	void (*set_sarc)(struct dma_desc *p, u32 sarc_type);
+@@ -86,6 +86,9 @@ struct stmmac_desc_ops {
+ 	void (*set_addr)(struct dma_desc *p, dma_addr_t addr);
+ 	/* clear descriptor */
+ 	void (*clear)(struct dma_desc *p);
++	/* RSS */
++	int (*get_rx_hash)(struct dma_desc *p, u32 *hash,
++			   enum pkt_hash_types *type);
  };
  
  #define stmmac_init_rx_desc(__priv, __args...) \
-@@ -147,6 +148,8 @@ struct stmmac_desc_ops {
- 	stmmac_do_callback(__priv, desc, get_rx_header_len, __args)
- #define stmmac_set_desc_sec_addr(__priv, __args...) \
- 	stmmac_do_void_callback(__priv, desc, set_sec_addr, __args)
-+#define stmmac_set_desc_sarc(__priv, __args...) \
-+	stmmac_do_void_callback(__priv, desc, set_sarc, __args)
+@@ -136,6 +139,8 @@ struct stmmac_desc_ops {
+ 	stmmac_do_void_callback(__priv, desc, set_addr, __args)
+ #define stmmac_clear_desc(__priv, __args...) \
+ 	stmmac_do_void_callback(__priv, desc, clear, __args)
++#define stmmac_get_rx_hash(__priv, __args...) \
++	stmmac_do_callback(__priv, desc, get_rx_hash, __args)
  
  struct stmmac_dma_cfg;
  struct dma_features;
-@@ -350,6 +353,8 @@ struct stmmac_ops {
- 				 bool is_double);
- 	/* TX Timestamp */
- 	int (*get_mac_tx_timestamp)(struct mac_device_info *hw, u64 *ts);
-+	/* Source Address Insertion / Replacement */
-+	void (*sarc_configure)(void __iomem *ioaddr, int val);
+@@ -249,6 +254,7 @@ struct rgmii_adv;
+ struct stmmac_safety_stats;
+ struct stmmac_tc_entry;
+ struct stmmac_pps_cfg;
++struct stmmac_rss;
+ 
+ /* Helpers to program the MAC core */
+ struct stmmac_ops {
+@@ -327,6 +333,9 @@ struct stmmac_ops {
+ 			       u32 sub_second_inc, u32 systime_flags);
+ 	/* Loopback for selftests */
+ 	void (*set_mac_loopback)(void __iomem *ioaddr, bool enable);
++	/* RSS */
++	int (*rss_configure)(struct mac_device_info *hw,
++			     struct stmmac_rss *cfg, u32 num_rxq);
  };
  
  #define stmmac_core_init(__priv, __args...) \
-@@ -426,6 +431,8 @@ struct stmmac_ops {
- 	stmmac_do_void_callback(__priv, mac, update_vlan_hash, __args)
- #define stmmac_get_mac_tx_timestamp(__priv, __args...) \
- 	stmmac_do_callback(__priv, mac, get_mac_tx_timestamp, __args)
-+#define stmmac_sarc_configure(__priv, __args...) \
-+	stmmac_do_void_callback(__priv, mac, sarc_configure, __args)
+@@ -397,6 +406,8 @@ struct stmmac_ops {
+ 	stmmac_do_callback(__priv, mac, flex_pps_config, __args)
+ #define stmmac_set_mac_loopback(__priv, __args...) \
+ 	stmmac_do_void_callback(__priv, mac, set_mac_loopback, __args)
++#define stmmac_rss_configure(__priv, __args...) \
++	stmmac_do_callback(__priv, mac, rss_configure, __args)
  
  /* PTP and HW Timer helpers */
  struct stmmac_hwtimestamp {
 diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac.h b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-index e91dcb5196f6..39911c8e90c1 100644
+index 5cd966c154f3..d2f6f56ae29c 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/stmmac.h
 +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-@@ -139,6 +139,7 @@ struct stmmac_priv {
- 	bool tx_path_in_lpi_mode;
- 	bool tso;
- 	int sph;
-+	u32 sarc_type;
+@@ -113,6 +113,12 @@ struct stmmac_pps_cfg {
+ 	struct timespec64 period;
+ };
  
- 	unsigned int dma_buf_sz;
- 	unsigned int rx_copybreak;
++struct stmmac_rss {
++	int enable;
++	u8 key[STMMAC_RSS_HASH_KEY_SIZE];
++	u32 table[STMMAC_RSS_MAX_TABLE_SIZE];
++};
++
+ struct stmmac_priv {
+ 	/* Frequently used values are kept adjacent for cache effect */
+ 	u32 tx_coal_frames;
+@@ -203,6 +209,9 @@ struct stmmac_priv {
+ 
+ 	/* Pulse Per Second output */
+ 	struct stmmac_pps_cfg pps[STMMAC_PPS_MAX];
++
++	/* Receive Side Scaling */
++	struct stmmac_rss rss;
+ };
+ 
+ enum stmmac_state {
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
+index d294590cba27..2423160ab582 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
+@@ -764,6 +764,76 @@ static int stmmac_set_coalesce(struct net_device *dev,
+ 	return 0;
+ }
+ 
++static int stmmac_get_rxnfc(struct net_device *dev,
++			    struct ethtool_rxnfc *rxnfc, u32 *rule_locs)
++{
++	struct stmmac_priv *priv = netdev_priv(dev);
++
++	switch (rxnfc->cmd) {
++	case ETHTOOL_GRXRINGS:
++		rxnfc->data = priv->plat->rx_queues_to_use;
++		break;
++	default:
++		return -EOPNOTSUPP;
++	}
++
++	return 0;
++}
++
++static u32 stmmac_get_rxfh_key_size(struct net_device *dev)
++{
++	struct stmmac_priv *priv = netdev_priv(dev);
++
++	return sizeof(priv->rss.key);
++}
++
++static u32 stmmac_get_rxfh_indir_size(struct net_device *dev)
++{
++	struct stmmac_priv *priv = netdev_priv(dev);
++
++	return ARRAY_SIZE(priv->rss.table);
++}
++
++static int stmmac_get_rxfh(struct net_device *dev, u32 *indir, u8 *key,
++			   u8 *hfunc)
++{
++	struct stmmac_priv *priv = netdev_priv(dev);
++	int i;
++
++	if (indir) {
++		for (i = 0; i < ARRAY_SIZE(priv->rss.table); i++)
++			indir[i] = priv->rss.table[i];
++	}
++
++	if (key)
++		memcpy(key, priv->rss.key, sizeof(priv->rss.key));
++	if (hfunc)
++		*hfunc = ETH_RSS_HASH_TOP;
++
++	return 0;
++}
++
++static int stmmac_set_rxfh(struct net_device *dev, const u32 *indir,
++			   const u8 *key, const u8 hfunc)
++{
++	struct stmmac_priv *priv = netdev_priv(dev);
++	int i;
++
++	if ((hfunc != ETH_RSS_HASH_NO_CHANGE) && (hfunc != ETH_RSS_HASH_TOP))
++		return -EOPNOTSUPP;
++
++	if (indir) {
++		for (i = 0; i < ARRAY_SIZE(priv->rss.table); i++)
++			priv->rss.table[i] = indir[i];
++	}
++
++	if (key)
++		memcpy(priv->rss.key, key, sizeof(priv->rss.key));
++
++	return stmmac_rss_configure(priv, priv->hw, &priv->rss,
++				    priv->plat->rx_queues_to_use);
++}
++
+ static int stmmac_get_ts_info(struct net_device *dev,
+ 			      struct ethtool_ts_info *info)
+ {
+@@ -855,6 +925,11 @@ static const struct ethtool_ops stmmac_ethtool_ops = {
+ 	.get_eee = stmmac_ethtool_op_get_eee,
+ 	.set_eee = stmmac_ethtool_op_set_eee,
+ 	.get_sset_count	= stmmac_get_sset_count,
++	.get_rxnfc = stmmac_get_rxnfc,
++	.get_rxfh_key_size = stmmac_get_rxfh_key_size,
++	.get_rxfh_indir_size = stmmac_get_rxfh_indir_size,
++	.get_rxfh = stmmac_get_rxfh,
++	.set_rxfh = stmmac_set_rxfh,
+ 	.get_ts_info = stmmac_get_ts_info,
+ 	.get_coalesce = stmmac_get_coalesce,
+ 	.set_coalesce = stmmac_set_coalesce,
 diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 34b6b8227b92..62d206ea7e7a 100644
+index 65bd92c403c1..0daca766615e 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -3010,6 +3010,9 @@ static netdev_tx_t stmmac_tso_xmit(struct sk_buff *skb, struct net_device *dev)
- 		priv->xstats.tx_set_ic_bit++;
+@@ -2423,6 +2423,22 @@ static void stmmac_mac_config_rx_queues_routing(struct stmmac_priv *priv)
  	}
+ }
  
-+	if (priv->sarc_type)
-+		stmmac_set_desc_sarc(priv, first, priv->sarc_type);
++static void stmmac_mac_config_rss(struct stmmac_priv *priv)
++{
++	if (!priv->dma_cap.rssen || !priv->plat->rss_en) {
++		priv->rss.enable = false;
++		return;
++	}
 +
- 	skb_tx_timestamp(skb);
- 
- 	if (unlikely((skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) &&
-@@ -3223,6 +3226,9 @@ static netdev_tx_t stmmac_xmit(struct sk_buff *skb, struct net_device *dev)
- 		priv->xstats.tx_set_ic_bit++;
- 	}
- 
-+	if (priv->sarc_type)
-+		stmmac_set_desc_sarc(priv, first, priv->sarc_type);
++	if (priv->dev->features & NETIF_F_RXHASH)
++		priv->rss.enable = true;
++	else
++		priv->rss.enable = false;
 +
- 	skb_tx_timestamp(skb);
++	stmmac_rss_configure(priv, priv->hw, &priv->rss,
++			     priv->plat->rx_queues_to_use);
++}
++
+ /**
+  *  stmmac_mtl_configuration - Configure MTL
+  *  @priv: driver private structure
+@@ -2467,6 +2483,10 @@ static void stmmac_mtl_configuration(struct stmmac_priv *priv)
+ 	/* Set RX routing */
+ 	if (rx_queues_count > 1)
+ 		stmmac_mac_config_rx_queues_routing(priv);
++
++	/* Receive Side Scaling */
++	if (rx_queues_count > 1)
++		stmmac_mac_config_rss(priv);
+ }
  
- 	/* Ready to fill the first descriptor and set the OWN bit w/o any
+ static void stmmac_safety_feat_configuration(struct stmmac_priv *priv)
+@@ -3391,9 +3411,11 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
+ 			priv->dev->stats.rx_errors++;
+ 			buf->page = NULL;
+ 		} else {
++			enum pkt_hash_types hash_type;
+ 			struct sk_buff *skb;
+-			int frame_len;
+ 			unsigned int des;
++			int frame_len;
++			u32 hash;
+ 
+ 			stmmac_get_desc_addr(priv, p, &des);
+ 			frame_len = stmmac_get_rx_frame_len(priv, p, coe);
+@@ -3458,6 +3480,10 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
+ 			else
+ 				skb->ip_summed = CHECKSUM_UNNECESSARY;
+ 
++			if (!stmmac_get_rx_hash(priv, p, &hash, &hash_type))
++				skb_set_hash(skb, hash, hash_type);
++
++			skb_record_rx_queue(skb, queue);
+ 			napi_gro_receive(&ch->rx_napi, skb);
+ 
+ 			/* Data payload copied into SKB, page ready for recycle */
+@@ -4182,7 +4208,7 @@ int stmmac_dvr_probe(struct device *device,
+ 	struct net_device *ndev = NULL;
+ 	struct stmmac_priv *priv;
+ 	u32 queue, maxq;
+-	int ret = 0;
++	int i, ret = 0;
+ 
+ 	ndev = devm_alloc_etherdev_mqs(device, sizeof(struct stmmac_priv),
+ 				       MTL_MAX_TX_QUEUES, MTL_MAX_RX_QUEUES);
+@@ -4290,6 +4316,14 @@ int stmmac_dvr_probe(struct device *device,
+ #endif
+ 	priv->msg_enable = netif_msg_init(debug, default_msg_level);
+ 
++	/* Initialize RSS */
++	netdev_rss_key_fill(priv->rss.key, sizeof(priv->rss.key));
++	for (i = 0; i < ARRAY_SIZE(priv->rss.table); i++)
++		priv->rss.table[i] = i % priv->plat->rx_queues_to_use;
++
++	if (priv->dma_cap.rssen && priv->plat->rss_en)
++		ndev->features |= NETIF_F_RXHASH;
++
+ 	/* MTU range: 46 - hw-specific max */
+ 	ndev->min_mtu = ETH_ZLEN - ETH_HLEN;
+ 	if ((priv->plat->enh_desc) || (priv->synopsys_id >= DWMAC_CORE_4_00))
+diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
+index 7b3e354bcd3c..5cc6b6faf359 100644
+--- a/include/linux/stmmac.h
++++ b/include/linux/stmmac.h
+@@ -173,6 +173,7 @@ struct plat_stmmacenet_data {
+ 	int has_gmac4;
+ 	bool has_sun8i;
+ 	bool tso_en;
++	int rss_en;
+ 	int mac_port_sel_speed;
+ 	bool en_tx_lpi_clockgating;
+ 	int has_xgmac;
 -- 
 2.7.4
 
