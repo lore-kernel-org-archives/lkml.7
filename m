@@ -2,105 +2,103 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B820C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBCAFC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C826F20651
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:26:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565015186;
-	bh=skX07n3VdFTtx5SM7xLwQgWBuzwcYzG6fi9cXTyEaxs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Pklmm3ZQdLXWmo08Xqx83WPaOsv4SpXXHc4v/U7pmTWcrEe3AXRvafZGYfRaAjCwQ
-	 3m8eAZiezKhholdr8N0TOij7h0cLFyY/zzlO7TabpI+qZwXBRInE8+E+jQaDHJMVeJ
-	 Yr9YXuYGZ6EbK/qJcA31VKGooYgbtyt94tSYK3Js=
+	by mail.kernel.org (Postfix) with ESMTP id 9ECD32086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:28:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="pERkNKNV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729485AbfHEO0Z (ORCPT
+        id S1729514AbfHEO17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 10:26:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41012 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727460AbfHEO0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 10:26:25 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0C3C0AE48;
-        Mon,  5 Aug 2019 14:26:24 +0000 (UTC)
-Date:   Mon, 5 Aug 2019 16:26:22 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Masoud Sharbiani <msharbiani@apple.com>,
-        Greg KH <gregkh@linuxfoundation.org>, hannes@cmpxchg.org,
-        vdavydov.dev@gmail.com, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Possible mem cgroup bug in kernels between 4.18.0 and 5.3-rc1.
-Message-ID: <20190805142622.GR7597@dhcp22.suse.cz>
-References: <20190802144110.GL6461@dhcp22.suse.cz>
- <5DE6F4AE-F3F9-4C52-9DFC-E066D9DD5EDC@apple.com>
- <20190802191430.GO6461@dhcp22.suse.cz>
- <A06C5313-B021-4ADA-9897-CE260A9011CC@apple.com>
- <f7733773-35bc-a1f6-652f-bca01ea90078@I-love.SAKURA.ne.jp>
- <d7efccf4-7f07-10da-077d-a58dafbf627e@I-love.SAKURA.ne.jp>
- <20190805084228.GB7597@dhcp22.suse.cz>
- <7e3c0399-c091-59cd-dbe6-ff53c7c8adc9@i-love.sakura.ne.jp>
- <20190805114434.GK7597@dhcp22.suse.cz>
- <0b817204-29f4-adfb-9b78-4fec5fa8f680@i-love.sakura.ne.jp>
+        Mon, 5 Aug 2019 10:27:59 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:34256 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727460AbfHEO17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 10:27:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=qPMjMdQW0XPhvwML3+DIpeMAETcO8BXuYgnocqdsrVI=; b=pERkNKNVe+73uwFMh3mKrh9ptl
+        H1zv8D9bXN5ObQC75U0r5UHGphJNSp1OhEe57CRr39ydCEmwIUvG3vaYr1lK5Q0MuNq6T8FC83Q/w
+        8k8Z+TNFpzidX6kn1dL+3RdKQfAJlDjOuyxNWWnYupocjo4mIQc8mces5VzKMun30vEU=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hudxq-0007Tz-Ov; Mon, 05 Aug 2019 16:27:54 +0200
+Date:   Mon, 5 Aug 2019 16:27:54 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, davem@davemloft.net,
+        robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com,
+        hkallweit1@gmail.com
+Subject: Re: [PATCH 16/16] dt-bindings: net: add bindings for ADIN PHY driver
+Message-ID: <20190805142754.GL24275@lunn.ch>
+References: <20190805165453.3989-1-alexandru.ardelean@analog.com>
+ <20190805165453.3989-17-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0b817204-29f4-adfb-9b78-4fec5fa8f680@i-love.sakura.ne.jp>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190805165453.3989-17-alexandru.ardelean@analog.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 05-08-19 23:00:12, Tetsuo Handa wrote:
-> On 2019/08/05 20:44, Michal Hocko wrote:
-> >> Allowing forced charge due to being unable to invoke memcg OOM killer
-> >> will lead to global OOM situation, and just returning -ENOMEM will not
-> >> solve memcg OOM situation.
-> > 
-> > Returning -ENOMEM would effectivelly lead to triggering the oom killer
-> > from the page fault bail out path. So effectively get us back to before
-> > 29ef680ae7c21110. But it is true that this is riskier from the
-> > observability POV when a) the OOM path wouldn't point to the culprit and
-> > b) it would leak ENOMEM from g-u-p path.
-> > 
+On Mon, Aug 05, 2019 at 07:54:53PM +0300, Alexandru Ardelean wrote:
+> This change adds bindings for the Analog Devices ADIN PHY driver, detailing
+> all the properties implemented by the driver.
 > 
-> Excuse me? But according to my experiment, below code showed flood of
-> "Returning -ENOMEM" message instead of invoking the OOM killer.
-> I didn't find it gets us back to before 29ef680ae7c21110...
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> ---
+>  .../devicetree/bindings/net/adi,adin.yaml     | 93 +++++++++++++++++++
+>  MAINTAINERS                                   |  2 +
+>  include/dt-bindings/net/adin.h                | 26 ++++++
+>  3 files changed, 121 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/adi,adin.yaml
+>  create mode 100644 include/dt-bindings/net/adin.h
+> 
+> diff --git a/Documentation/devicetree/bindings/net/adi,adin.yaml b/Documentation/devicetree/bindings/net/adi,adin.yaml
+> new file mode 100644
+> index 000000000000..fcf884bb86f7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/adi,adin.yaml
+> @@ -0,0 +1,93 @@
+> +# SPDX-License-Identifier: GPL-2.0+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/adi,adin.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices ADIN1200/ADIN1300 PHY
+> +
+> +maintainers:
+> +  - Alexandru Ardelean <alexandru.ardelean@analog.com>
+> +
+> +description: |
+> +  Bindings for Analog Devices Industrial Ethernet PHYs
+> +
+> +properties:
+> +  compatible:
+> +    description: |
+> +      Compatible list, may contain "ethernet-phy-ieee802.3-c45" in which case
+> +      Clause 45 will be used to access device management registers. If
+> +      unspecified, Clause 22 will be used. Use this only when MDIO supports
+> +      Clause 45 access, but there is no other way to determine this.
+> +    enum:
+> +      - ethernet-phy-ieee802.3-c45
 
-You would need to declare OOM_ASYNC to return ENOMEM properly from the
-charge (which is effectivelly a revert of 29ef680ae7c21110 for NOFS
-allocations). Something like the following
+It is valid to list ethernet-phy-ieee802.3-c22, it is just not
+required. So maybe you should list it here to keep the DT validater happy?
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index ba9138a4a1de..cc34ff0932ce 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -1797,7 +1797,7 @@ static enum oom_status mem_cgroup_oom(struct mem_cgroup *memcg, gfp_t mask, int
- 	 * Please note that mem_cgroup_out_of_memory might fail to find a
- 	 * victim and then we have to bail out from the charge path.
- 	 */
--	if (memcg->oom_kill_disable) {
-+	if (memcg->oom_kill_disable || !(mask & __GFP_FS)) {
- 		if (!current->in_user_fault)
- 			return OOM_SKIPPED;
- 		css_get(&memcg->css);
-
-I am quite surprised that your patch didn't trigger the global OOM
-though. It might mean that ENOMEM doesn't propagate all the way down to
-the #PF handler for this path for some reason.
-
-Anyway what I meant to say is that returning ENOMEM has the
-observable issues as well.
--- 
-Michal Hocko
-SUSE Labs
+	  Andrew
