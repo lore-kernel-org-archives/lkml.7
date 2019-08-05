@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBBD2C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D142C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E52F20880
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:11:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 546E4205F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:11:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010680;
-	bh=Pa4wSFVkCPxyf5+NSU1pVrZRiZUO5m60ZRYSvyppvxs=;
+	s=default; t=1565010686;
+	bh=QysK84hquV/fn9GV/zWxjrS2fStoVIEKU6R3FzEDvEI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FRKvPm+IouIjlk4lkxtAJdmpP6B/Xe7Sl+POIkPK/pfsjF0KJmtMwUxw+bGi3a0qC
-	 SH0TTuC87jgFG50Dl4VRWreOLLD87SvKUThJ0xWxijqreF3PhUPJzaH1SwdeaZJ8Is
-	 N+23sLW6KXESQuYnhbMHBBuWz0/aUhb6ybQtdTi8=
+	b=wDBKYwa8JIvfLY7rZJ0slOLUttLYwAtSmtR1GM/eKPiiNVDw7gkmDl1LrKf5DR/UN
+	 vBVifOzF9PBb72/KllVaFqLNg4sgLqxQrZ57sImg0r2mbWm4NsezCjjOY+MVhLwnPF
+	 TVY3UagRN8g2mS12m7WFSmShTaBGj2Cz4lG/d3As=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729406AbfHENLT (ORCPT
+        id S1730520AbfHENLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:11:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50554 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:11:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730498AbfHENLP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:11:15 -0400
+        id S1730493AbfHENLW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:11:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C9EC21738;
-        Mon,  5 Aug 2019 13:11:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80D2F2075B;
+        Mon,  5 Aug 2019 13:11:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010675;
-        bh=Pa4wSFVkCPxyf5+NSU1pVrZRiZUO5m60ZRYSvyppvxs=;
+        s=default; t=1565010681;
+        bh=QysK84hquV/fn9GV/zWxjrS2fStoVIEKU6R3FzEDvEI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cyOvs+cbmoo9x2IThMPMvF+gU7JBmk+gDVhoihBXb9vLN1Tazf/AaVcFCJ/TySiTB
-         H0ek9TOpMAO5q4hFTUqgiQZ8Am4/YOTgLZCwU0BA4KI2n82RPULiHJMGpBtkpQa5MG
-         dmosag/3GDqZyxM8bfGzgomY7hemFZf9wa8on6Js=
+        b=tk6NXz6rPWfeuyEqdNNeEjvqlpFd8kHA+cnZFQaF1Y32T5mtkdBm52hveP4JduJCg
+         wOj+/2A/w3ZFEWV7WtqxBkmLLiIN+oop6BLBCBKZGc3YUVCEwH7vLpqgFPP/Zj6zD2
+         TY5Mlpsz+4hrkGe+BeiezJ0uBiHIReLi1f6VneJA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Jan Beulich <jbeulich@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Subject: [PATCH 4.19 61/74] xen/swiotlb: fix condition for calling xen_destroy_contiguous_region()
-Date:   Mon,  5 Aug 2019 15:03:14 +0200
-Message-Id: <20190805124940.763241980@linuxfoundation.org>
+        stable@vger.kernel.org, Yishai Hadas <yishaih@mellanox.com>,
+        Artemy Kovalyov <artemyko@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.19 63/74] IB/mlx5: Use direct mkey destroy command upon UMR unreg failure
+Date:   Mon,  5 Aug 2019 15:03:16 +0200
+Message-Id: <20190805124940.921823433@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124935.819068648@linuxfoundation.org>
 References: <20190805124935.819068648@linuxfoundation.org>
@@ -61,44 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juergen Gross <jgross@suse.com>
+From: Yishai Hadas <yishaih@mellanox.com>
 
-commit 50f6393f9654c561df4cdcf8e6cfba7260143601 upstream.
+commit afd1417404fba6dbfa6c0a8e5763bd348da682e4 upstream.
 
-The condition in xen_swiotlb_free_coherent() for deciding whether to
-call xen_destroy_contiguous_region() is wrong: in case the region to
-be freed is not contiguous calling xen_destroy_contiguous_region() is
-the wrong thing to do: it would result in inconsistent mappings of
-multiple PFNs to the same MFN. This will lead to various strange
-crashes or data corruption.
+Use a direct firmware command to destroy the mkey in case the unreg UMR
+operation has failed.
 
-Instead of calling xen_destroy_contiguous_region() in that case a
-warning should be issued as that situation should never occur.
+This prevents a case that a mkey will leak out from the cache post a
+failure to be destroyed by a UMR WR.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Reviewed-by: Jan Beulich <jbeulich@suse.com>
-Acked-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
+In case the MR cache limit didn't reach a call to add another entry to the
+cache instead of the destroyed one is issued.
+
+In addition, replaced a warn message to WARN_ON() as this flow is fatal
+and can't happen unless some bug around.
+
+Link: https://lore.kernel.org/r/20190723065733.4899-4-leon@kernel.org
+Cc: <stable@vger.kernel.org> # 4.10
+Fixes: 49780d42dfc9 ("IB/mlx5: Expose MR cache for mlx5_ib")
+Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
+Reviewed-by: Artemy Kovalyov <artemyko@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/xen/swiotlb-xen.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/infiniband/hw/mlx5/mr.c |   13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
---- a/drivers/xen/swiotlb-xen.c
-+++ b/drivers/xen/swiotlb-xen.c
-@@ -357,8 +357,8 @@ xen_swiotlb_free_coherent(struct device
- 	/* Convert the size to actually allocated. */
- 	size = 1UL << (order + XEN_PAGE_SHIFT);
+--- a/drivers/infiniband/hw/mlx5/mr.c
++++ b/drivers/infiniband/hw/mlx5/mr.c
+@@ -548,13 +548,16 @@ void mlx5_mr_cache_free(struct mlx5_ib_d
+ 		return;
  
--	if (((dev_addr + size - 1 <= dma_mask)) ||
--	    range_straddles_page_boundary(phys, size))
-+	if (!WARN_ON((dev_addr + size - 1 > dma_mask) ||
-+		     range_straddles_page_boundary(phys, size)))
- 		xen_destroy_contiguous_region(phys, order);
+ 	c = order2idx(dev, mr->order);
+-	if (c < 0 || c >= MAX_MR_CACHE_ENTRIES) {
+-		mlx5_ib_warn(dev, "order %d, cache index %d\n", mr->order, c);
+-		return;
+-	}
++	WARN_ON(c < 0 || c >= MAX_MR_CACHE_ENTRIES);
  
- 	xen_free_coherent_pages(hwdev, size, vaddr, (dma_addr_t)phys, attrs);
+-	if (unreg_umr(dev, mr))
++	if (unreg_umr(dev, mr)) {
++		mr->allocated_from_cache = false;
++		destroy_mkey(dev, mr);
++		ent = &cache->ent[c];
++		if (ent->cur < ent->limit)
++			queue_work(cache->wq, &ent->work);
+ 		return;
++	}
+ 
+ 	ent = &cache->ent[c];
+ 	spin_lock_irq(&ent->lock);
 
 
