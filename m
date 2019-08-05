@@ -4,31 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC3CC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 19:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A9FC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 19:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEF04205F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 19:44:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A990208C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 19:49:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Od0w6vJj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="UCaKGme6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730549AbfHEToV (ORCPT
+        id S1730414AbfHETtq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 15:44:21 -0400
-Received: from gateway21.websitewelcome.com ([192.185.45.147]:14673 "EHLO
+        Mon, 5 Aug 2019 15:49:46 -0400
+Received: from gateway21.websitewelcome.com ([192.185.45.147]:11724 "EHLO
         gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727830AbfHEToU (ORCPT
+        by vger.kernel.org with ESMTP id S1727830AbfHETtq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 15:44:20 -0400
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id E5A8E400CD15C
-        for <linux-kernel@vger.kernel.org>; Mon,  5 Aug 2019 14:44:19 -0500 (CDT)
+        Mon, 5 Aug 2019 15:49:46 -0400
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id 7E330400CD79F
+        for <linux-kernel@vger.kernel.org>; Mon,  5 Aug 2019 14:49:45 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id uiu3htqlm2qH7uiu3huraq; Mon, 05 Aug 2019 14:44:19 -0500
+        id uizJhBG9KdnCeuizJhdGzB; Mon, 05 Aug 2019 14:49:45 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
@@ -36,24 +36,24 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=WZPbcno5kDstBvt8/14fBFARpkWyA04NEb7lNKhBwGo=; b=Od0w6vJjgFOjV4WuKR7HZjOgLO
-        8TuIhgXjPRkicKU9lFgd6WQoTHi0q+24vrDj3y7WjG44MKbrSfs85etsIW2TQfFbXKkaEfJahLpqD
-        +wuvNejPnQRI74S/vh3SPLono+L6uJlcJjnj9hrG4KlYgfob+REwCDSir0iOJ3ZlGNOoMPvilltbW
-        7eJN+GNnMsg2qWCjjM7aLSqx4oo7HKADwTl1u1DZvK++mXGRZznSMKWyAAO3/2i8HTVgzNcj4R+01
-        6N19tIierQic0sY61GLjt0lvYQZJdM01hR34NSZEd4GbE87k2WvhxuchvuktOzOaKPQQUAooxKGCz
-        /Rqx/3RA==;
-Received: from [187.192.11.120] (port=38214 helo=embeddedor)
+        bh=xZvmNQWkP13y7swlL9SJ9LeGDDnwPw+077qyfdnX8C8=; b=UCaKGme6a3j8oUc9WIaUXSrCly
+        JZX162Ll3dhwRCAOTRgB7lerALEG26AhLN4e3RdhZ1Ou/sbhj61OY1UwlctHymSL3NWR/tIZ6+kWB
+        WczsXGMvJSXy+iKxAsGc1+2MJZEQEq+IjSXXnkJ8T2wZRvKP9Pt7D6UfVmTRyXIbTmMw+q3mYReV/
+        y9PZ8U5JLaRT1p1PX9zlYz1vMFTlFKKRNp+y6MoDyAGVa12VTeJXhrCLvl5+q8ecyYkNT2MmhZ7+Y
+        hfabhw6QyBmFHzpiQn6a5RS4w1+04cfajackZP08Xzh345lrP4u6GWdmNIgnlIaF9AM7Z7CngyqzY
+        uZ9fqNAw==;
+Received: from [187.192.11.120] (port=38228 helo=embeddedor)
         by gator4166.hostgator.com with esmtpa (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1huiu2-003O9k-Rw; Mon, 05 Aug 2019 14:44:18 -0500
-Date:   Mon, 5 Aug 2019 14:44:18 -0500
+        id 1huizI-003RAT-IQ; Mon, 05 Aug 2019 14:49:44 -0500
+Date:   Mon, 5 Aug 2019 14:49:42 -0500
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Sebastian Reichel <sre@kernel.org>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] power: supply: ab8500_charger: Mark expected switch
- fall-through
-Message-ID: <20190805194418.GA14438@embeddedor>
+To:     Dominik Brodowski <linux@dominikbrodowski.net>
+Cc:     linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] pcmcia: db1xxx_ss: Mark expected switch fall-throughs
+Message-ID: <20190805194942.GA15816@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -66,13 +66,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.192.11.120
 X-Source-L: No
-X-Exim-ID: 1huiu2-003O9k-Rw
+X-Exim-ID: 1huizI-003RAT-IQ
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: (embeddedor) [187.192.11.120]:38214
+X-Source-Sender: (embeddedor) [187.192.11.120]:38228
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 11
+X-Email-Count: 13
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -82,27 +82,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Mark switch cases where we are expecting to fall through.
 
-This patch fixes the following warning (Building: allmodconfig arm):
+This patch fixes the following warnings (Building: db1xxx_defconfig mips):
 
-drivers/power/supply/ab8500_charger.c:738:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+drivers/pcmcia/db1xxx_ss.c:257:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+drivers/pcmcia/db1xxx_ss.c:269:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
 
 Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/power/supply/ab8500_charger.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pcmcia/db1xxx_ss.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/power/supply/ab8500_charger.c b/drivers/power/supply/ab8500_charger.c
-index 30de448de802..1be75a2fed9b 100644
---- a/drivers/power/supply/ab8500_charger.c
-+++ b/drivers/power/supply/ab8500_charger.c
-@@ -742,6 +742,7 @@ static int ab8500_charger_max_usb_curr(struct ab8500_charger *di,
- 						USB_CH_IP_CUR_LVL_1P5;
- 			break;
- 		}
-+		/* else, fall through */
- 	case USB_STAT_HM_IDGND:
- 		dev_err(di->dev, "USB Type - Charging not allowed\n");
- 		di->max_usb_in_curr.usb_type_max = USB_CH_IP_CUR_LVL_0P05;
+diff --git a/drivers/pcmcia/db1xxx_ss.c b/drivers/pcmcia/db1xxx_ss.c
+index eb6168e6ac43..590e594092f2 100644
+--- a/drivers/pcmcia/db1xxx_ss.c
++++ b/drivers/pcmcia/db1xxx_ss.c
+@@ -255,8 +255,10 @@ static int db1x_pcmcia_configure(struct pcmcia_socket *skt,
+ 	switch (state->Vcc) {
+ 	case 50:
+ 		++v;
++		/* fall through */
+ 	case 33:
+ 		++v;
++		/* fall through */
+ 	case 0:
+ 		break;
+ 	default:
+@@ -267,9 +269,11 @@ static int db1x_pcmcia_configure(struct pcmcia_socket *skt,
+ 	switch (state->Vpp) {
+ 	case 12:
+ 		++p;
++		/* fall through */
+ 	case 33:
+ 	case 50:
+ 		++p;
++		/* fall through */
+ 	case 0:
+ 		break;
+ 	default:
 -- 
 2.22.0
 
