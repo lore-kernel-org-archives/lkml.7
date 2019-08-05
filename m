@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B45C32751
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF456C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2451214C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B165F206A2
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:47:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="FVOeFUiP"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="TnLZBD/+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730480AbfHEQra (ORCPT
+        id S1730532AbfHEQrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 12:47:30 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:52274 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728831AbfHEQpa (ORCPT
+        Mon, 5 Aug 2019 12:47:45 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:39900 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728837AbfHEQpa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 5 Aug 2019 12:45:30 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 6E7B3C0265;
-        Mon,  5 Aug 2019 16:45:29 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 03F5EC01BA;
+        Mon,  5 Aug 2019 16:45:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1565023529; bh=yyNtvtwnX+hdMr+b42YSYiKifO+GzqUr20MJH1mLdYo=;
+        t=1565023529; bh=rYjim++CJiLw+EAbl+AvTt60t2aTr369J3F6tFoyX0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=FVOeFUiPyOO5PVg77zX1AbSBPvUDAY60N6gwVvwxwku77LjeRh91/KWbcZf27YXg5
-         XFiNGX7VIrM/ZIzxJCzV1gL5C43GSfmvaIgOEb8WZ6D57TJWKM1AXz6AB1lwo8HSJZ
-         g1J3is/WU8l7DfxDjVE5CRtTU+yHN58RxVbAilB3GCy86L7ucWLAhD45HtRsxJV1Z3
-         ulq2Z8uKel2ARtfewxRp7TlxpP0z/ybmAQKLA4h6iPB30C7d4OVbuknQjaHgT05h+J
-         50pe39/qezB5gfR+/+RvqXibcmitnVpwxOnEnxH/V4iRtGZ43vDmFGG/FVN2QDY6lf
-         dHShqf12Aw5tA==
+        b=TnLZBD/+fjlowlGSL0D+b0HCrowocEWKqHDnxwQypNa3hR1/gKPsPt3uRB+SM6tM9
+         Hvt/VZbSkssLR5TfI1AEs5HAXeFCTU063BSJ1na2ZfCjnEg6N0rnFVOUfAUU5tIQbz
+         7A2j0M24MecgUHWD1zAA73uYKd/rUVZ+Z7n42rYrhhErhLNt6EgK3a60D4ORNftxwM
+         uW+EyUffs0kxLPc60EaVwN+kUWsUOk9a6W9jjjvDrYUiV+/DF6HFu/xVocPstLPmKz
+         vpa+c1k2StMh7Y6i+3IRlZV7p1oRKfHJf+wBYPxLpd7Dmvd8K+kUzujWTS+XyRifQI
+         7SYumT52YsF+w==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 25A1EA009B;
-        Mon,  5 Aug 2019 16:45:28 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id B2893A0081;
+        Mon,  5 Aug 2019 16:45:27 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
 Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
@@ -51,9 +51,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 20/26] net: stmmac: Add a counter for Split Header packets
-Date:   Mon,  5 Aug 2019 18:44:47 +0200
-Message-Id: <6b33c1ca13f94a4514154a543a74ba28dbd2e820.1565022597.git.joabreu@synopsys.com>
+Subject: [PATCH net-next 12/26] net: stmmac: tc: Do not return a fragment entry
+Date:   Mon,  5 Aug 2019 18:44:39 +0200
+Message-Id: <1fecb7aa0b0f0cd01baf67e026e5e134dee9a944.1565022597.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1565022597.git.joabreu@synopsys.com>
 References: <cover.1565022597.git.joabreu@synopsys.com>
@@ -64,8 +64,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a counter that increments each time a packet with split header is
-received.
+Do not try to return a fragment entry from TC list. Otherwise we may not
+clean properly allocated entries.
 
 Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 ---
@@ -79,48 +79,22 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/common.h         | 1 +
- drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c | 1 +
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c    | 2 ++
- 3 files changed, 4 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
-index 527f961579f4..1303ec81fd3d 100644
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -75,6 +75,7 @@ struct stmmac_extra_stats {
- 	unsigned long rx_missed_cntr;
- 	unsigned long rx_overflow_cntr;
- 	unsigned long rx_vlan;
-+	unsigned long rx_split_hdr_pkt_n;
- 	/* Tx/Rx IRQ error info */
- 	unsigned long tx_undeflow_irq;
- 	unsigned long tx_process_stopped_irq;
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-index 0ea3844ae329..8828a5481f61 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-@@ -67,6 +67,7 @@ static const struct stmmac_stats stmmac_gstrings_stats[] = {
- 	STMMAC_STAT(rx_missed_cntr),
- 	STMMAC_STAT(rx_overflow_cntr),
- 	STMMAC_STAT(rx_vlan),
-+	STMMAC_STAT(rx_split_hdr_pkt_n),
- 	/* Tx/Rx IRQ error info */
- 	STMMAC_STAT(tx_undeflow_irq),
- 	STMMAC_STAT(tx_process_stopped_irq),
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index fef64e415447..34b6b8227b92 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -3504,6 +3504,8 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
- 				if (!(status & rx_not_ls))
- 					sec_len = sec_len - hlen;
- 				len = hlen;
-+
-+				priv->xstats.rx_split_hdr_pkt_n++;
- 			}
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
+index 58ea18af9813..37c0bc699cd9 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
+@@ -37,7 +37,7 @@ static struct stmmac_tc_entry *tc_find_entry(struct stmmac_priv *priv,
+ 		entry = &priv->tc_entries[i];
+ 		if (!entry->in_use && !first && free)
+ 			first = entry;
+-		if (entry->handle == loc && !free)
++		if ((entry->handle == loc) && !free && !entry->is_frag)
+ 			dup = entry;
+ 	}
  
- 			skb = netdev_alloc_skb_ip_align(priv->dev, len);
 -- 
 2.7.4
 
