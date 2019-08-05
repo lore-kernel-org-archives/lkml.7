@@ -2,78 +2,85 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD17AC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE314C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 771CD2086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:32:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A18F2086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:35:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="YwSydi+q"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KvAAsEp7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729691AbfHEQcJ (ORCPT
+        id S1729129AbfHEQfH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 12:32:09 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:39300 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726620AbfHEQcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 12:32:09 -0400
-Received: from zn.tnic (p200300EC2F065B00683A29B48F14DC99.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:5b00:683a:29b4:8f14:dc99])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A405F1EC0C31;
-        Mon,  5 Aug 2019 18:32:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1565022728;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=g+cTmbSEFfoz2KUZz+uvRnfYrlj//AwDFvYHV2OvsKQ=;
-        b=YwSydi+q2UAgpz8CC6RgebD3zV7GEPqVPv5pRN0M6jox/WccOZt9CR/6wdUcBGgHFie+wH
-        jGJIrKZSCnOA/4dXXVZ8d+KRrEUpIJO9cO/h4qAWyis7lZ28NvwoVi/AS9506pyVZldV3P
-        1Z2Jbc3INpkKJPe/0i3ikL9HuH4XOog=
-Date:   Mon, 5 Aug 2019 18:32:02 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Thomas Garnier <thgarnie@chromium.org>
-Cc:     kernel-hardening@lists.openwall.com, kristen@linux.intel.com,
-        keescook@chromium.org, Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 01/11] x86/crypto: Adapt assembly for PIE support
-Message-ID: <20190805163202.GD18785@zn.tnic>
-References: <20190730191303.206365-1-thgarnie@chromium.org>
- <20190730191303.206365-2-thgarnie@chromium.org>
+        Mon, 5 Aug 2019 12:35:07 -0400
+Received: from mail-qk1-f171.google.com ([209.85.222.171]:34109 "EHLO
+        mail-qk1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728701AbfHEQfH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 12:35:07 -0400
+Received: by mail-qk1-f171.google.com with SMTP id t8so60563870qkt.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 09:35:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YiRlEkepGMSBghGordYKrd53LhTX7Zo4aO4skFP+FPQ=;
+        b=KvAAsEp7EBlmFnFm4A3RAJMlB16Gu/ClvhmFXF3/nwkvC5G3iN4z6D5ZAIMQe6rNqy
+         C9y9oS1wkZ6b0qlJqiG5dKcARxLYs606StbTrx5pU50S/+YvdJKieH9ziJKmkBTXHyxr
+         vd8kTNJR5d72pYVhLyhomafAyREIb+BcHb5B0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YiRlEkepGMSBghGordYKrd53LhTX7Zo4aO4skFP+FPQ=;
+        b=rHLV/lhKwrAj0kB7ayYbFCuUZQ19rGrjtwzxTctGz3UvEO/9Ig7uIBK/n3hAUYNk5X
+         mvadbZumf5b0ZgK+XPo/TghiB9vG0Hy93EMelm9sEAPFO9Fr1L5jvPtmGgACglfpLP8l
+         9s2k/Djm5uwFdySraU4uWTHIrtqR0PT+JRPCfMwtQe28WM8gkMH4AWl9cfZzHONav5Mk
+         XIN7Ismn1PKDo0pEPj3JO5ZJEUWwV+un7cIBIc0a17zC9JdKSo19RulHKARwZ8KqLe4O
+         ibHGGWslplTPMjy4I+SefJxtUlysOR3V1G++P44Ebo7vRrVZalBkinQwK8zQqFYgJzf/
+         iRCA==
+X-Gm-Message-State: APjAAAW548lJPOs2pLcDQPLj1Lyzlk/GIcMhY7gVKlbj2qRz7rwX89Qr
+        d0t2/0Yo8zYSKyUJbho9uOKD5+omNWqLMdokM3tdtw==
+X-Google-Smtp-Source: APXvYqwpHxcg06Mbli+NdzWaalL0e2240Scm0EbQOE4XY2ybkQPkjSSR20aWvi9JTpQhhWlZ4idPL5YNwkECJiwlU5I=
+X-Received: by 2002:a37:660b:: with SMTP id a11mr99152263qkc.342.1565022905887;
+ Mon, 05 Aug 2019 09:35:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190730191303.206365-2-thgarnie@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190703040135.169843-1-hsinyi@chromium.org>
+In-Reply-To: <20190703040135.169843-1-hsinyi@chromium.org>
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Mon, 5 Aug 2019 09:34:40 -0700
+Message-ID: <CAJMQK-jaLi9QaZ4n0TguL7GD_rdn6VVNnf-3=j2XwGbUHwrgBw@mail.gmail.com>
+Subject: Re: [PATCH v7 0/3] add support for rng-seed
+To:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Miles Chen <miles.chen@mediatek.com>,
+        James Morse <james.morse@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 12:12:45PM -0700, Thomas Garnier wrote:
-> Change the assembly code to use only relative references of symbols for the
-> kernel to be PIE compatible.
-> 
-> Position Independent Executable (PIE) support will allow to extend the
-> KASLR randomization range below 0xffffffff80000000.
+Ping on the thread.
+Should the series be proceeded?
 
-I believe in previous reviews I asked about why this sentence is being
-replicated in every commit message and now it is still in every commit
-message except in 2/11.
-
-Why do you need it everywhere and not once in the 0th mail?
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Thanks
