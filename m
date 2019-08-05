@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F117AC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28EE8C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBA0D20644
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1215214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:27:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011664;
-	bh=V7iHpQlzG47w3l0h0GnwluXQpMNb2nQBW0dYAAujHRc=;
+	s=default; t=1565011667;
+	bh=COiR/sBkvowXV4Nyw0r0JT5XhVpATUrlVCDXRX0ia6E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KEVyL/KFbxV42ZKh0fzIsEFc5cYmq7DfYUyHsZlNaYfmO+zxcY0Cuni+fVOPKOusN
-	 0qWmIZaE/FKhWRBKpR5wWvxVEvVXqBmJ1l3IzRSyWHh98lkMq3n7dbxM/C1/Q9x2Aa
-	 LwDSjAKF2x3U+lSE/XkdO4G5llA4t3m2UqywGyMI=
+	b=oqQTUXK68nRBua3WjmSW6QmyU1ADppWOzZyOUb0///0uSD+t8meH6/XwZAyRsV/e5
+	 ncEGaSk1i9jmoNvgxkznrdx5zjEvb/BDGh+SW9QuuBw7FdTOMjsa44Iuc1zkPeJaLn
+	 ko0/nZCJnZffwNZwTGhqqtkJ50keZbMqB0p1RI+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730692AbfHENY0 (ORCPT
+        id S1730936AbfHEN1q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:24:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32894 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:27:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730983AbfHENYV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:24:21 -0400
+        id S1731001AbfHENY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:24:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3786520651;
-        Mon,  5 Aug 2019 13:24:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 787F2214C6;
+        Mon,  5 Aug 2019 13:24:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011460;
-        bh=V7iHpQlzG47w3l0h0GnwluXQpMNb2nQBW0dYAAujHRc=;
+        s=default; t=1565011466;
+        bh=COiR/sBkvowXV4Nyw0r0JT5XhVpATUrlVCDXRX0ia6E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UYg9wZgl1HTGSeuurs97afsPWjcUJuWLTGkindxODhnxjrlNlIpLjvSWVma+q7OhN
-         b1VnvwhewuxmbNTMuXUT1+aGeHVbv1uL7IZL5/qAcZk+GOY8iicKt/ipGK55xDe5uC
-         8eNyeuggCO85nLVVMNKaZNH2W7bHHQZsJaOwcZf0=
+        b=Tatl0CeQt7PxSxhTIHQVG53oKHFn9c25cdbwKnwn7t6kPcvUgKSCCFc1zSCbxDWH3
+         XHLVqA4SvG3lSEEeJZXfsATKFGp86zu6gJU0S0AlX/XaDrpWnN0bqdwdRHt2aSEzvC
+         fzJxHmabG/PAXscBPC/lEGhUBWFfFnX0xdRhDuCM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH 5.2 096/131] i2c: at91: fix clk_offset for sama5d2
-Date:   Mon,  5 Aug 2019 15:03:03 +0200
-Message-Id: <20190805124958.394493325@linuxfoundation.org>
+        syzbot+fee3a14d4cdf92646287@syzkaller.appspotmail.com,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Paul Moore <paul@paul-moore.com>
+Subject: [PATCH 5.2 098/131] selinux: fix memory leak in policydb_init()
+Date:   Mon,  5 Aug 2019 15:03:05 +0200
+Message-Id: <20190805124958.523237547@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -61,35 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+From: Ondrej Mosnacek <omosnace@redhat.com>
 
-commit b1ac6704493fa14b5dc19eb6b69a73932361a131 upstream.
+commit 45385237f65aeee73641f1ef737d7273905a233f upstream.
 
-In SAMA5D2 datasheet, TWIHS_CWGR register rescription mentions clock
-offset of 3 cycles (compared to 4 in eg. SAMA5D3).
+Since roles_init() adds some entries to the role hash table, we need to
+destroy also its keys/values on error, otherwise we get a memory leak in
+the error path.
 
-Cc: stable@vger.kernel.org # 5.2.x
-[needs applying to i2c-at91.c instead for earlier kernels]
-Fixes: 0ef6f3213dac ("i2c: at91: add support for new alternative command mode")
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Cc: <stable@vger.kernel.org>
+Reported-by: syzbot+fee3a14d4cdf92646287@syzkaller.appspotmail.com
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/i2c/busses/i2c-at91-core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ security/selinux/ss/policydb.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/i2c/busses/i2c-at91-core.c
-+++ b/drivers/i2c/busses/i2c-at91-core.c
-@@ -142,7 +142,7 @@ static struct at91_twi_pdata sama5d4_con
+--- a/security/selinux/ss/policydb.c
++++ b/security/selinux/ss/policydb.c
+@@ -272,6 +272,8 @@ static int rangetr_cmp(struct hashtab *h
+ 	return v;
+ }
  
- static struct at91_twi_pdata sama5d2_config = {
- 	.clk_max_div = 7,
--	.clk_offset = 4,
-+	.clk_offset = 3,
- 	.has_unre_flag = true,
- 	.has_alt_cmd = true,
- 	.has_hold_field = true,
++static int (*destroy_f[SYM_NUM]) (void *key, void *datum, void *datap);
++
+ /*
+  * Initialize a policy database structure.
+  */
+@@ -319,8 +321,10 @@ static int policydb_init(struct policydb
+ out:
+ 	hashtab_destroy(p->filename_trans);
+ 	hashtab_destroy(p->range_tr);
+-	for (i = 0; i < SYM_NUM; i++)
++	for (i = 0; i < SYM_NUM; i++) {
++		hashtab_map(p->symtab[i].table, destroy_f[i], NULL);
+ 		hashtab_destroy(p->symtab[i].table);
++	}
+ 	return rc;
+ }
+ 
 
 
