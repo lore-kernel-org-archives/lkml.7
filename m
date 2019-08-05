@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E4C1C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAFD6C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFF1D214C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:19:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40766216B7
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:19:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011168;
-	bh=MzY3GTrzMHFCOZgbaePkw1i7Fuq60WcQXcMJR8PmiuA=;
+	s=default; t=1565011171;
+	bh=j0pWjmnA3CobvqjjJAyJKBfNQ9eDlv+rmkaQtp2r6gw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=apcIg/S61sJbKxCa+cy2p4G3MbPrl7jWQT/VnQy6jS5NkHnMyhmZNzVZFVIRcYq1D
-	 2g4sB0JUVx66JD85pNA4Lik+6a4X3stIEMhV3y0+P7ejcMTylLmXzjoheREpcBDG38
-	 JWFRt8JDn9rZQRdiifUyQow5Xqm54iX+HG798L6M=
+	b=NjwouvpKJMhMBV2zxeHDTLKOX1rnpL7xZ2XVqZ9AIRdCtJ+WkauNPCNmI57SdYlqc
+	 F3kFcSHSziYrRPl1EoOB5C/FOK0NNokHDZTF0+pchrop0LIxy3jKNmrqm6A0UoD0Os
+	 I2TZrLccm3m8zkOsWFkZGNimw5zcnHS0qX2vzs9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729529AbfHENT2 (ORCPT
+        id S1729597AbfHENTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:19:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55454 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:19:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728991AbfHENT0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:19:26 -0400
+        id S1728991AbfHENT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:19:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55255214C6;
-        Mon,  5 Aug 2019 13:19:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 041A7216F4;
+        Mon,  5 Aug 2019 13:19:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011165;
-        bh=MzY3GTrzMHFCOZgbaePkw1i7Fuq60WcQXcMJR8PmiuA=;
+        s=default; t=1565011168;
+        bh=j0pWjmnA3CobvqjjJAyJKBfNQ9eDlv+rmkaQtp2r6gw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JEbvMfqI45LW9UeJo+rnAJTEbgnUBSIVbBGqDkkuvEb0Q5LYTd14BxvcN49w2nh7+
-         zK+PvODpLjJL8AVEhVGIEIwu6mR74eyVDl97VBu4AQ5jzX/Q4Iu/Ba4/ALnwpYYVCs
-         KqgSxOP+nfS6c49MIzADogcVG678mh/sAOS9mNtM=
+        b=jsJeaXNIhe5EFpm2T9tUHqGvFyE6NGIQuRUVjOYmHjXAhCLvjFQfwX5V3tY4Bokpq
+         fN7S56Im4uiE1C8W44cLGgDkW1lgu2+DwFCh1i2zM0KF3Hi+L7J0/gmxxr+YYD/oJ0
+         w36+530255gzgTLiVEWjCBVY20IWduVKng7UReV4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+fee3a14d4cdf92646287@syzkaller.appspotmail.com,
-        Ondrej Mosnacek <omosnace@redhat.com>,
-        Paul Moore <paul@paul-moore.com>
-Subject: [PATCH 4.19 51/74] selinux: fix memory leak in policydb_init()
-Date:   Mon,  5 Aug 2019 15:03:04 +0200
-Message-Id: <20190805124940.017741367@linuxfoundation.org>
+        stable@vger.kernel.org, Jean Delvare <jdelvare@suse.de>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 4.19 69/74] eeprom: at24: make spd world-readable again
+Date:   Mon,  5 Aug 2019 15:03:22 +0200
+Message-Id: <20190805124941.387184724@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124935.819068648@linuxfoundation.org>
 References: <20190805124935.819068648@linuxfoundation.org>
@@ -61,47 +63,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondrej Mosnacek <omosnace@redhat.com>
+From: Jean Delvare <jdelvare@suse.de>
 
-commit 45385237f65aeee73641f1ef737d7273905a233f upstream.
+commit 25e5ef302c24a6fead369c0cfe88c073d7b97ca8 upstream.
 
-Since roles_init() adds some entries to the role hash table, we need to
-destroy also its keys/values on error, otherwise we get a memory leak in
-the error path.
+The integration of the at24 driver into the nvmem framework broke the
+world-readability of spd EEPROMs. Fix it.
 
-Cc: <stable@vger.kernel.org>
-Reported-by: syzbot+fee3a14d4cdf92646287@syzkaller.appspotmail.com
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+Cc: stable@vger.kernel.org
+Fixes: 57d155506dd5 ("eeprom: at24: extend driver to plug into the NVMEM framework")
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+[Bartosz: backported to v4.19.y]
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/selinux/ss/policydb.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/misc/eeprom/at24.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/security/selinux/ss/policydb.c
-+++ b/security/selinux/ss/policydb.c
-@@ -275,6 +275,8 @@ static int rangetr_cmp(struct hashtab *h
- 	return v;
- }
- 
-+static int (*destroy_f[SYM_NUM]) (void *key, void *datum, void *datap);
-+
- /*
-  * Initialize a policy database structure.
-  */
-@@ -322,8 +324,10 @@ static int policydb_init(struct policydb
- out:
- 	hashtab_destroy(p->filename_trans);
- 	hashtab_destroy(p->range_tr);
--	for (i = 0; i < SYM_NUM; i++)
-+	for (i = 0; i < SYM_NUM; i++) {
-+		hashtab_map(p->symtab[i].table, destroy_f[i], NULL);
- 		hashtab_destroy(p->symtab[i].table);
-+	}
- 	return rc;
- }
- 
+--- a/drivers/misc/eeprom/at24.c
++++ b/drivers/misc/eeprom/at24.c
+@@ -724,7 +724,7 @@ static int at24_probe(struct i2c_client
+ 	nvmem_config.name = dev_name(dev);
+ 	nvmem_config.dev = dev;
+ 	nvmem_config.read_only = !writable;
+-	nvmem_config.root_only = true;
++	nvmem_config.root_only = !(pdata.flags & AT24_FLAG_IRUGO);
+ 	nvmem_config.owner = THIS_MODULE;
+ 	nvmem_config.compat = true;
+ 	nvmem_config.base_dev = dev;
 
 
