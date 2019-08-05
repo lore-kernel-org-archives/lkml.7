@@ -2,29 +2,29 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C42CC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B04E2C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE29B217D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84BC920B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:26:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbfHEG0e (ORCPT
+        id S1727383AbfHEG0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 02:26:34 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:42112 "EHLO huawei.com"
+        Mon, 5 Aug 2019 02:26:40 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:42462 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725976AbfHEG0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 02:26:34 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 1045643B73685290DE0C;
-        Mon,  5 Aug 2019 14:26:32 +0800 (CST)
+        id S1727270AbfHEG0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 02:26:38 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 3B389BDC3C4B824952CB;
+        Mon,  5 Aug 2019 14:26:37 +0800 (CST)
 Received: from huawei.com (10.175.124.28) by DGGEMS414-HUB.china.huawei.com
  (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Mon, 5 Aug 2019
- 14:26:25 +0800
+ 14:26:28 +0800
 From:   Jason Yan <yanaijie@huawei.com>
 To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
         <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
@@ -35,10 +35,12 @@ CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
         <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
         <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>,
         <zhaohongjiang@huawei.com>, Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH v4 00/10] implement KASLR for powerpc/fsl_booke/32
-Date:   Mon, 5 Aug 2019 14:43:25 +0800
-Message-ID: <20190805064335.19156-1-yanaijie@huawei.com>
+Subject: [PATCH v4 03/10] powerpc: introduce kimage_vaddr to store the kernel base
+Date:   Mon, 5 Aug 2019 14:43:28 +0800
+Message-ID: <20190805064335.19156-4-yanaijie@huawei.com>
 X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20190805064335.19156-1-yanaijie@huawei.com>
+References: <20190805064335.19156-1-yanaijie@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.175.124.28]
@@ -48,93 +50,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series implements KASLR for powerpc/fsl_booke/32, as a security
-feature that deters exploit attempts relying on knowledge of the location
-of kernel internals.
+Now the kernel base is a fixed value - KERNELBASE. To support KASLR, we
+need a variable to store the kernel base.
 
-Since CONFIG_RELOCATABLE has already supported, what we need to do is
-map or copy kernel to a proper place and relocate. Freescale Book-E
-parts expect lowmem to be mapped by fixed TLB entries(TLB1). The TLB1
-entries are not suitable to map the kernel directly in a randomized
-region, so we chose to copy the kernel to a proper place and restart to
-relocate.
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+Cc: Diana Craciun <diana.craciun@nxp.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Kees Cook <keescook@chromium.org>
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Reviewed-by: Diana Craciun <diana.craciun@nxp.com>
+Tested-by: Diana Craciun <diana.craciun@nxp.com>
+---
+ arch/powerpc/include/asm/page.h | 2 ++
+ arch/powerpc/mm/init-common.c   | 2 ++
+ 2 files changed, 4 insertions(+)
 
-Entropy is derived from the banner and timer base, which will change every
-build and boot. This not so much safe so additionally the bootloader may
-pass entropy via the /chosen/kaslr-seed node in device tree.
-
-We will use the first 512M of the low memory to randomize the kernel
-image. The memory will be split in 64M zones. We will use the lower 8
-bit of the entropy to decide the index of the 64M zone. Then we chose a
-16K aligned offset inside the 64M zone to put the kernel in.
-
-    KERNELBASE
-
-        |-->   64M   <--|
-        |               |
-        +---------------+    +----------------+---------------+
-        |               |....|    |kernel|    |               |
-        +---------------+    +----------------+---------------+
-        |                         |
-        |----->   offset    <-----|
-
-                              kimage_vaddr
-
-We also check if we will overlap with some areas like the dtb area, the
-initrd area or the crashkernel area. If we cannot find a proper area,
-kaslr will be disabled and boot from the original kernel.
-
-Changes since v3:
- - Add Reviewed-by and Tested-by tag from Diana
- - Change the comment in fsl_booke_entry_mapping.S to be consistent
-   with the new code.
-
-Changes since v2:
- - Remove unnecessary #ifdef
- - Use SZ_64M instead of0x4000000
- - Call early_init_dt_scan_chosen() to init boot_command_line
- - Rename kaslr_second_init() to kaslr_late_init()
-
-Changes since v1:
- - Remove some useless 'extern' keyword.
- - Replace EXPORT_SYMBOL with EXPORT_SYMBOL_GPL
- - Improve some assembly code
- - Use memzero_explicit instead of memset
- - Use boot_command_line and remove early_command_line
- - Do not print kaslr offset if kaslr is disabled
-
-Jason Yan (10):
-  powerpc: unify definition of M_IF_NEEDED
-  powerpc: move memstart_addr and kernstart_addr to init-common.c
-  powerpc: introduce kimage_vaddr to store the kernel base
-  powerpc/fsl_booke/32: introduce create_tlb_entry() helper
-  powerpc/fsl_booke/32: introduce reloc_kernel_entry() helper
-  powerpc/fsl_booke/32: implement KASLR infrastructure
-  powerpc/fsl_booke/32: randomize the kernel image offset
-  powerpc/fsl_booke/kaslr: clear the original kernel if randomized
-  powerpc/fsl_booke/kaslr: support nokaslr cmdline parameter
-  powerpc/fsl_booke/kaslr: dump out kernel offset information on panic
-
- arch/powerpc/Kconfig                          |  11 +
- arch/powerpc/include/asm/nohash/mmu-book3e.h  |  10 +
- arch/powerpc/include/asm/page.h               |   7 +
- arch/powerpc/kernel/Makefile                  |   1 +
- arch/powerpc/kernel/early_32.c                |   2 +-
- arch/powerpc/kernel/exceptions-64e.S          |  10 -
- arch/powerpc/kernel/fsl_booke_entry_mapping.S |  27 +-
- arch/powerpc/kernel/head_fsl_booke.S          |  55 ++-
- arch/powerpc/kernel/kaslr_booke.c             | 427 ++++++++++++++++++
- arch/powerpc/kernel/machine_kexec.c           |   1 +
- arch/powerpc/kernel/misc_64.S                 |   5 -
- arch/powerpc/kernel/setup-common.c            |  19 +
- arch/powerpc/mm/init-common.c                 |   7 +
- arch/powerpc/mm/init_32.c                     |   5 -
- arch/powerpc/mm/init_64.c                     |   5 -
- arch/powerpc/mm/mmu_decl.h                    |  10 +
- arch/powerpc/mm/nohash/fsl_booke.c            |   8 +-
- 17 files changed, 560 insertions(+), 50 deletions(-)
- create mode 100644 arch/powerpc/kernel/kaslr_booke.c
-
+diff --git a/arch/powerpc/include/asm/page.h b/arch/powerpc/include/asm/page.h
+index 0d52f57fca04..60a68d3a54b1 100644
+--- a/arch/powerpc/include/asm/page.h
++++ b/arch/powerpc/include/asm/page.h
+@@ -315,6 +315,8 @@ void arch_free_page(struct page *page, int order);
+ 
+ struct vm_area_struct;
+ 
++extern unsigned long kimage_vaddr;
++
+ #include <asm-generic/memory_model.h>
+ #endif /* __ASSEMBLY__ */
+ #include <asm/slice.h>
+diff --git a/arch/powerpc/mm/init-common.c b/arch/powerpc/mm/init-common.c
+index 152ae0d21435..d4801ce48dc5 100644
+--- a/arch/powerpc/mm/init-common.c
++++ b/arch/powerpc/mm/init-common.c
+@@ -25,6 +25,8 @@ phys_addr_t memstart_addr = (phys_addr_t)~0ull;
+ EXPORT_SYMBOL_GPL(memstart_addr);
+ phys_addr_t kernstart_addr;
+ EXPORT_SYMBOL_GPL(kernstart_addr);
++unsigned long kimage_vaddr = KERNELBASE;
++EXPORT_SYMBOL_GPL(kimage_vaddr);
+ 
+ static bool disable_kuep = !IS_ENABLED(CONFIG_PPC_KUEP);
+ static bool disable_kuap = !IS_ENABLED(CONFIG_PPC_KUAP);
 -- 
 2.17.2
 
