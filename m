@@ -2,114 +2,150 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D40E5C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 19:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4EA2C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 19:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A325B20C01
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 19:11:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="pEWHySVG"
+	by mail.kernel.org (Postfix) with ESMTP id 9CE3520C01
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 19:12:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730364AbfHETLy (ORCPT
+        id S1730412AbfHETMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 15:11:54 -0400
-Received: from gateway23.websitewelcome.com ([192.185.48.104]:15205 "EHLO
-        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728870AbfHETLx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 15:11:53 -0400
-X-Greylist: delayed 1387 seconds by postgrey-1.27 at vger.kernel.org; Mon, 05 Aug 2019 15:11:53 EDT
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway23.websitewelcome.com (Postfix) with ESMTP id 916C7A6C2
-        for <linux-kernel@vger.kernel.org>; Mon,  5 Aug 2019 13:48:45 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id ui2GhrClw90onui2HhhSc1; Mon, 05 Aug 2019 13:48:45 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ZmIHx3XJdBaj7RV/vprnPWvpQjhw5au5H8dBkUDrmrs=; b=pEWHySVGZdwEQCJOFLM85qeI43
-        oVziUhmZKzQ7l8EwanqLkBnE9dI9SRdvXqVG57KsXoGW4VXuACI7MNjh8eOsIlpP+KZQBxq5BJ2uy
-        NiFTNGtExkxVOgaP/B29A7bFDsboYbrT64GubvieaUxil0LbDBTolT/aIJT3h5vjNi4SkB0ZjzQZ2
-        n+f5N9NEvypwPfkKJ30n3ijiYXv3hhdJcEQHvjVH8KEqOcUgTLg1Zd5oHhnT8QYuxrhtlY9G4CTbF
-        laka7sJP/Y+JJNVJJjZF3udsKIWoJgj5jrp665PYmEDnxAIxBUxwV8C86zdPduJ8c9uLkGf2xJIxR
-        RyZWXYCg==;
-Received: from [187.192.11.120] (port=37266 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hui2F-002sVJ-Lx; Mon, 05 Aug 2019 13:48:43 -0500
-Date:   Mon, 5 Aug 2019 13:48:42 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Cristian Birsan <cristian.birsan@microchip.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] usb: gadget: atmel_usba_udc: Mark expected switch
- fall-through
-Message-ID: <20190805184842.GA8627@embeddedor>
+        Mon, 5 Aug 2019 15:12:09 -0400
+Received: from mga12.intel.com ([192.55.52.136]:53964 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728870AbfHETMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 15:12:09 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 12:12:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,350,1559545200"; 
+   d="scan'208";a="373177998"
+Received: from amerhebi-mobl1.amr.corp.intel.com (HELO [10.251.154.70]) ([10.251.154.70])
+  by fmsmga005.fm.intel.com with ESMTP; 05 Aug 2019 12:12:07 -0700
+Subject: Re: [alsa-devel] [RFC PATCH 23/40] soundwire: stream: fix disable
+ sequence
+To:     Sanyog Kale <sanyog.r.kale@intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, vkoul@kernel.org,
+        gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com
+References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
+ <20190725234032.21152-24-pierre-louis.bossart@linux.intel.com>
+ <20190805095620.GD22437@buildpc-HP-Z230>
+ <12799e97-d6e3-5027-a409-0fe37dba86fd@linux.intel.com>
+ <20190805163233.GA24889@buildpc-HP-Z230>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <078f19d4-5a2f-91bf-43a3-7c92eacd8fc1@linux.intel.com>
+Date:   Mon, 5 Aug 2019 14:12:07 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.11.120
-X-Source-L: No
-X-Exim-ID: 1hui2F-002sVJ-Lx
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [187.192.11.120]:37266
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 9
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20190805163233.GA24889@buildpc-HP-Z230>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark switch cases where we are expecting to fall through.
 
-This patch fixes the following warning (Building: at91_dt_defconfig arm):
 
-drivers/usb/gadget/udc/atmel_usba_udc.c:329:13: warning: this statement may fall through [-Wimplicit-fallthrough=]
+On 8/5/19 11:32 AM, Sanyog Kale wrote:
+> On Mon, Aug 05, 2019 at 10:33:25AM -0500, Pierre-Louis Bossart wrote:
+>>
+>>
+>> On 8/5/19 4:56 AM, Sanyog Kale wrote:
+>>> On Thu, Jul 25, 2019 at 06:40:15PM -0500, Pierre-Louis Bossart wrote:
+>>>> When we disable the stream and then call hw_free, two bank switches
+>>>> will be handled and as a result we re-enable the stream on hw_free.
+>>>>
+>>>
+>>> I didnt quite get why there will be two bank switches as part of disable flow
+>>> which leads to enabling of stream?
+>>
+>> You have two bank switches, one to stop streaming and on in de-prepare. It's
+>> symmetrical with the start sequence, where we do a bank switch to prepare
+>> and another to enable.
+> 
+> Got it. I misunderstood it that two bank switches are performed as part of
+> disable_stream.
+> 
+>>
+>> Let's assume we are using bank0 when streaming.
+>>
+>> Before the first bank switch, the channel_enable is set to false in the
+>> alternate bank1. When the bank switch happens, bank1 become active and the
+>> streaming stops. But bank0 registers have not been modified so when we do
+>> the second bank switch in de-prepare we make bank0 active, and the ch_enable
+>> bits are still set so streaming will restart... When we stop streaming, we
+>> need to make sure the ch_enable bits are cleared in the two banks.
+> 
+> This is clear. Even though the channels remains enabled, i believe there
+> won't be any data pushed on lines as stream will be closed.
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/usb/gadget/udc/atmel_usba_udc.c | 1 +
- 1 file changed, 1 insertion(+)
+Actually the link remains active. We tested this by setting the PRBS 
+data mode and the Slave device detects when we artificially inject errors.
 
-diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.c b/drivers/usb/gadget/udc/atmel_usba_udc.c
-index 503d275bc4c4..86ffc8307864 100644
---- a/drivers/usb/gadget/udc/atmel_usba_udc.c
-+++ b/drivers/usb/gadget/udc/atmel_usba_udc.c
-@@ -327,6 +327,7 @@ static int usba_config_fifo_table(struct usba_udc *udc)
- 	switch (fifo_mode) {
- 	default:
- 		fifo_mode = 0;
-+		/* fall through */
- 	case 0:
- 		udc->fifo_cfg = NULL;
- 		n = 0;
--- 
-2.22.0
+There is however no data consumption on the DMA side of the Master IP 
+since the DMA is indeed stopped.
 
+> 
+> Regarding mirroring approach, I assume after bank switch we will take
+> snapshot of active bank and program same in inactive bank.
+
+That should be the approach yes.
+
+> 
+>>
+>>
+>>>
+>>>> Make sure the stream is disabled on both banks.
+>>>>
+>>>> TODO: we need to completely revisit all this and make sure we have a
+>>>> mirroring mechanism between current and alternate banks.
+>>>>
+>>>> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+>>>> ---
+>>>>    drivers/soundwire/stream.c | 19 ++++++++++++++++++-
+>>>>    1 file changed, 18 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
+>>>> index 53f5e790fcd7..75b9ad1fb1a6 100644
+>>>> --- a/drivers/soundwire/stream.c
+>>>> +++ b/drivers/soundwire/stream.c
+>>>> @@ -1637,7 +1637,24 @@ static int _sdw_disable_stream(struct sdw_stream_runtime *stream)
+>>>>    		}
+>>>>    	}
+>>>> -	return do_bank_switch(stream);
+>>>> +	ret = do_bank_switch(stream);
+>>>> +	if (ret < 0) {
+>>>> +		dev_err(bus->dev, "Bank switch failed: %d\n", ret);
+>>>> +		return ret;
+>>>> +	}
+>>>> +
+>>>> +	/* make sure alternate bank (previous current) is also disabled */
+>>>> +	list_for_each_entry(m_rt, &stream->master_list, stream_node) {
+>>>> +		bus = m_rt->bus;
+>>>> +		/* Disable port(s) */
+>>>> +		ret = sdw_enable_disable_ports(m_rt, false);
+>>>> +		if (ret < 0) {
+>>>> +			dev_err(bus->dev, "Disable port(s) failed: %d\n", ret);
+>>>> +			return ret;
+>>>> +		}
+>>>> +	}
+>>>> +
+>>>> +	return 0;
+>>>>    }
+>>>>    /**
+>>>> -- 
+>>>> 2.20.1
+>>>>
+>>>
+> 
