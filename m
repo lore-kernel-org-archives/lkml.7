@@ -2,117 +2,142 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 078DFC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17049C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD36A21734
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:10:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565017832;
-	bh=1XLJDjtLhmH3Nu2ywqFu5TahZ/2ynvQCvn57FJ4sqyg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=RKlJH/qewjqNBfZULqJ/FWzn5z16JU2ZO1xBJnC8ukagovUXS8hTPfUPDeuOBVcGV
-	 U0RMGkSTyX6T/L+y5QVyv4B3zYnNIiCr+2G2TVEIM1pCcwAlaC3zNcKjSMM5hyks8f
-	 guPR9r7BDw4+Y+/i44iBNU22+fig1+wFgiQ94I4E=
+	by mail.kernel.org (Postfix) with ESMTP id D76E521734
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:11:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="Yc8iF9Tg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729230AbfHEPKb (ORCPT
+        id S1729365AbfHEPLH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 11:10:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37834 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727259AbfHEPKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 11:10:31 -0400
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6AA3217F5;
-        Mon,  5 Aug 2019 15:10:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565017830;
-        bh=1XLJDjtLhmH3Nu2ywqFu5TahZ/2ynvQCvn57FJ4sqyg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=UMzQ642KAkc+xOAjK4i60aO6rfjBzXfP97qIIK292B7wUGrdd1LMUJTpGSHoynA3Z
-         R6v7bE1MmoQC8rz/mRSx/dwro/IUeL/jeuBc6qrNsBfZX4uJSC34xuC70OoM700X9Q
-         SGeKZVaC11tnLGIFeabDpZETP/VWtmgxY6jwXDKY=
-Received: by mail-qt1-f182.google.com with SMTP id a15so81221930qtn.7;
-        Mon, 05 Aug 2019 08:10:29 -0700 (PDT)
-X-Gm-Message-State: APjAAAV5EfnSlKXAS24lLEnUhqtXnaLuiiuN9y1A1LSBFFxMjOPPB2Kn
-        dmSwDUsdKBi0V8yUirSrfbiKqaUoSsCFzMUwHQ==
-X-Google-Smtp-Source: APXvYqyWRFCd/Bz2QCeN3gI7nR18QpjL6fpHuRuvqsSwKaIPxyzaMMfZxm5GzNaAUuOC3+0j4jzM4tBAprGGhCbeeYw=
-X-Received: by 2002:a0c:b786:: with SMTP id l6mr110476642qve.148.1565017829011;
- Mon, 05 Aug 2019 08:10:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190803142026.9647-1-masneyb@onstation.org> <20190803142026.9647-2-masneyb@onstation.org>
-In-Reply-To: <20190803142026.9647-2-masneyb@onstation.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 5 Aug 2019 09:10:16 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqK1Xerw+319yDE6=9jmrrqQ0+DAu_nj10EX_Lj=bTJ2hw@mail.gmail.com>
-Message-ID: <CAL_JsqK1Xerw+319yDE6=9jmrrqQ0+DAu_nj10EX_Lj=bTJ2hw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/6] dt-bindings: soc: qcom: add On Chip MEMory (OCMEM) bindings
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     Andy Gross <agross@kernel.org>, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mon, 5 Aug 2019 11:11:07 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:36595 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727259AbfHEPLG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 11:11:06 -0400
+Received: by mail-yw1-f67.google.com with SMTP id x67so28296045ywd.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 08:11:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=poorly.run; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Xpk6f+iULzta9MKqDdvJJrwYV01nAnI8/sskf5srO6w=;
+        b=Yc8iF9Tg6K4ZUygMSzIbAg7TgFHqn+DDIs7uLPE5xrDqID2IWXqNk6LvPQ9rUJHn/y
+         iwBv+kyYjwO2lD6X/Fbjg+YcSnkIRz0Leri50AKvtchFjaw+ayZguSVOSk2X/dILnpWv
+         l05vTy1Q3eSFfnRT62uEMfRaxksSOQIg4guRvn5xGyPW/ul2eM9FFdAE7qOmM6HojDz0
+         hxSRDLNwD1Y46nxRF8OvkBl4oPTboz1hP1ZPsSs4wUZj6mCajEVFQtOiN5fzjDm955Jb
+         YEDhkh4JZe7a4k1yOwZ76mQBkUFzfK0sAxWkzheCnCCnGz6AvAqPROj/zx2UuM4Ya+HD
+         ntyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Xpk6f+iULzta9MKqDdvJJrwYV01nAnI8/sskf5srO6w=;
+        b=oFPgvFw3CN3OjH5ZqS4lNmKUgExNNVdBpnegfVs+K9Txi4MOnqf2AbPkX7enIIn/vm
+         4l1wX9cUCc/g3q6CkIqcPKfug2nQUujdd+8uzM69Gj6skONSbDKOw0Br9LYn/uKHndMF
+         E0VwocUMEBWGNv3c9axuviLEEvC9LS1mdDnJ5HymaovS112iGH4wOdrSo98rCOQfwLmI
+         6LJIR4ew3DeOZzlN/KyIBpRlbZPOU6TjqN4kg4Z1S5HrrcvgJw3RbRp/DxbXjlGES99C
+         +zRc8LRwbSL2DskzMfhv6KvyghqzjF7GkroQ4TnptEfI5w5GNHaDPyb9eDcQ8psJRAWE
+         zQ1Q==
+X-Gm-Message-State: APjAAAWaHsj5b1arFqnFagKV5kkLOqOa0fHq4GYHVbTcA6Wt05puNfeY
+        3JfK/sTtK/p22+4drP5jVnDl2g==
+X-Google-Smtp-Source: APXvYqwucyKIizPhyNVHyc8xvnzNgJysm59poTBqYa8cImRwlOnzSuOS8zREscvyu0uqoevbAyXDUA==
+X-Received: by 2002:a81:1d11:: with SMTP id d17mr96208542ywd.9.1565017865628;
+        Mon, 05 Aug 2019 08:11:05 -0700 (PDT)
+Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
+        by smtp.gmail.com with ESMTPSA id w188sm18900454ywc.93.2019.08.05.08.11.04
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 05 Aug 2019 08:11:04 -0700 (PDT)
+Date:   Mon, 5 Aug 2019 11:11:03 -0400
+From:   Sean Paul <sean@poorly.run>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        seanpaul@chromium.org, linux-rockchip@lists.infradead.org,
+        mka@chromium.org, Sandy Huang <hjc@rock-chips.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Marek <jonathan@marek.ca>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        devicetree@vger.kernel.org, Jordan Crouse <jcrouse@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-arm-kernel@lists.infradead.org,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH] drm/rockchip: Suspend DP late
+Message-ID: <20190805151103.GY104440@art_vandelay>
+References: <20190802184616.44822-1-dianders@chromium.org>
+ <20190802192629.GX104440@art_vandelay>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190802192629.GX104440@art_vandelay>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 3, 2019 at 8:20 AM Brian Masney <masneyb@onstation.org> wrote:
->
-> Add device tree bindings for the On Chip Memory (OCMEM) that is present
-> on some Qualcomm Snapdragon SoCs.
->
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> ---
-> Changes since v3
-> - add ranges property
-> - remove unnecessary literal block |
-> - add #address-cells and #size-cells to binding
-> - rename path devicetree/bindings/sram/qcom/ to devicetree/bindings/sram/ since
->   this is the only qcom binding in the sram namespace. That was a holdover from
->   when I originally put this in the soc namespace.
->
-> Changes since v2:
-> - Add *-sram node and gmu-sram to example.
->
-> Changes since v1:
-> - Rename qcom,ocmem-msm8974 to qcom,msm8974-ocmem
-> - Renamed reg-names to ctrl and mem
-> - update hardware description
-> - moved from soc to sram namespace in the device tree bindings
->
->  .../devicetree/bindings/sram/qcom,ocmem.yaml  | 96 +++++++++++++++++++
->  1 file changed, 96 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sram/qcom,ocmem.yaml
->
-> diff --git a/Documentation/devicetree/bindings/sram/qcom,ocmem.yaml b/Documentation/devicetree/bindings/sram/qcom,ocmem.yaml
-> new file mode 100644
-> index 000000000000..1bb386fffa01
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sram/qcom,ocmem.yaml
-> @@ -0,0 +1,96 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sram/qcom/qcom,ocmem.yaml#
+On Fri, Aug 02, 2019 at 03:26:29PM -0400, Sean Paul wrote:
+> On Fri, Aug 02, 2019 at 11:46:16AM -0700, Douglas Anderson wrote:
+> > In commit fe64ba5c6323 ("drm/rockchip: Resume DP early") we moved
+> > resume to be early but left suspend at its normal time.  This seems
+> > like it could be OK, but casues problems if a suspend gets interrupted
+> > partway through.  The OS only balances matching suspend/resume levels.
+> > ...so if suspend was called then resume will be called.  If suspend
+> > late was called then resume early will be called.  ...but if suspend
+> > was called resume early might not get called.  This leads to an
+> > unbalance in the clock enables / disables.
+> > 
+> > Lets take the simple fix and just move suspend to be late to match.
+> > This makes the PM core take proper care in keeping things balanced.
+> > 
+> > Fixes: fe64ba5c6323 ("drm/rockchip: Resume DP early")
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> 
+> Reviewed-by: Sean Paul <sean@poorly.run>
+> 
+> This should go in -misc-fixes and due to some... administrative reasons... I
+> will leave it on the list until Maarten has a chance to ff to -rc4 on Monday.
+> I'll apply it then so as to not require a backmerge.
 
-Need to update the path here too.
+We're no longer able to ff drm-misc-fixes since a commit came in on Saturday, so
+I've piled this on as well.
 
-With that,
+Thanks,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Sean
+
+> 
+> Sean
+> 
+> > ---
+> > 
+> >  drivers/gpu/drm/rockchip/analogix_dp-rockchip.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c b/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
+> > index 7d7cb57410fc..f38f5e113c6b 100644
+> > --- a/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
+> > +++ b/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
+> > @@ -436,7 +436,7 @@ static int rockchip_dp_resume(struct device *dev)
+> >  
+> >  static const struct dev_pm_ops rockchip_dp_pm_ops = {
+> >  #ifdef CONFIG_PM_SLEEP
+> > -	.suspend = rockchip_dp_suspend,
+> > +	.suspend_late = rockchip_dp_suspend,
+> >  	.resume_early = rockchip_dp_resume,
+> >  #endif
+> >  };
+> > -- 
+> > 2.22.0.770.g0f2c4a37fd-goog
+> > 
+> 
+> -- 
+> Sean Paul, Software Engineer, Google / Chromium OS
+
+-- 
+Sean Paul, Software Engineer, Google / Chromium OS
