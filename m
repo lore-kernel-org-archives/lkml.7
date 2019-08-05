@@ -2,97 +2,196 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2F3C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BA2C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 088E521874
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80EE52086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:29:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="w4+AecEm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bARF1mE/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728713AbfHEM1g (ORCPT
+        id S1728679AbfHEM31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 08:27:36 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40013 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728513AbfHEM1f (ORCPT
+        Mon, 5 Aug 2019 08:29:27 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42936 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727349AbfHEM31 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 08:27:35 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r1so84178536wrl.7
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 05:27:33 -0700 (PDT)
+        Mon, 5 Aug 2019 08:29:27 -0400
+Received: by mail-wr1-f65.google.com with SMTP id x1so34327591wrr.9;
+        Mon, 05 Aug 2019 05:29:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9vjnriQzTp+3fhGfRWD4sJQPpUsfPg2DbYoNAsu2SiI=;
-        b=w4+AecEmFQ/isfLzRPwHz/5MZljTohJlWFNeug8MdHi82X9VKPhe2ZyRzjWlJCvepw
-         kiniiAn5l66EGF3UK+orcy9NcLV/dmSLcCGmna4yi0GF+i5dlXhqrxaPH9KubY6FHjLD
-         99EpBHJsVCkZSJoOyTaWRD/ilyziUyk+nwPk0RUQNGwqFtyKJh13sW08S3edQKCVQCth
-         hXeCoblZKRkBPCTcvTHLXaFhtdFGztMlOBo56CnAVX+z7v0wWKGwWN9zmif9kthuQeXJ
-         pVWvaRXUT6j8dcd4c9QdaTp337ImgbfM8u4W9iSkzJGgF+BBdaFvp1PMRW7Na8yEVZk+
-         giDQ==
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=eDmkN+7wGSJU2DjKyEwaukLGa3ezBnxw3XEDIe2B94w=;
+        b=bARF1mE/lc6ikyx62WF/Ii8OjR9AP8W9/7NFmugXeJrGhRSt0ohxhVtDeo9QPEPLZE
+         aPFJkTobwEnfOj6yjex46mb9RNnRBf5yDpg8xknNYl41OtRgL6DsnOt5/tqcr8ExACjr
+         S+C/4+pbyhfrnjexEs+wB04hTKvBxvk6WCXVcQWu79pOAfLxR3FffnbswhiTb2ZzKGxy
+         cSM2+pD8GtzK3jp+A5KdS0anEXGRY9mIbQedy0muB6J6W0xWScaOVkqekGpLoTdYmk+S
+         DAHANz0c19Wg9BkuIdDKQ9Qt68OxEhirux1t5DhxN/T46xqKB585SXxS2nqTUyMT+0pe
+         RknA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9vjnriQzTp+3fhGfRWD4sJQPpUsfPg2DbYoNAsu2SiI=;
-        b=UO1LDSAvBjZq0XdYPrO/1DkGjSojdfz/fLQtF8KJ2jGc2fjGS4tYTmHc7l5unSfV2e
-         iGvCQt7OP8qiVkp2oNhwXHd583b7f4iq0+DcUCQSHIS5HtdCAamS9i47t0rfGxctPtJ4
-         Ev9SMc1KgXlYC0KeEYc7dd6keiOjQ9JP+hPaWr2d8f35o9u6/KlvMyKPjXe9HIx6K20/
-         6eIzE7Wk+Og9zIqcq9R7B53/HndyBWiIEjl7ZdXaziohvW/KdWA91Cosdu8PsAjPTF97
-         10SZP1GB2oIHwbdEr1vBs0jUCGfUs5pVKJdjvAO9Na0rGD1Rhp0t+cidhiK2HmMk+jxp
-         qcsQ==
-X-Gm-Message-State: APjAAAX071gCy0Q6kwd6y0OQ6wmXYnKp47O8LWBZXzLD3a5PF9V6v3+e
-        pdxGzyMtOGPLvfsXRDkIBtePbK9JBOddus35/wA=
-X-Google-Smtp-Source: APXvYqz/HgV3blyNJGsp03Z7QumAb6XXL7e/qsJ596wIug7Wl/foiSB6qgn4qCCaL+3bGAF5TklCThDKf6RqGhrKNGc=
-X-Received: by 2002:adf:b1cb:: with SMTP id r11mr152697746wra.328.1565008052530;
- Mon, 05 Aug 2019 05:27:32 -0700 (PDT)
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eDmkN+7wGSJU2DjKyEwaukLGa3ezBnxw3XEDIe2B94w=;
+        b=tdDeX5FOVWyGQPFZadVjw+HZkslcwPceeu4RX29Y1l6ogLTKS7UFpSLAWSoMe4FfIU
+         sASoIHK4PkQRbkHYekATfkuEoxHz7bXPrShDxgQk+cOCPyBE5VwhDthpL8CjgjLz/Z1t
+         Ipjck9a9BCMIjUW6VCtvyeGXMaMquQRt8Ct+ntC6lhb9MB6jcUqj62PeH5vXLoyGTp6c
+         LUayS9T30lQ4+N6i1e4Zax/3THvG0OMXWIl/hUsYvfzgstN6J1M2zO9EOn4MhW/dGHh/
+         3CpMwKq0axHw6+HE3+C807Lap2WfZSjVc0R2sYj00w/d1epcVAxQu0tjNwieyUFhd/U0
+         5VAg==
+X-Gm-Message-State: APjAAAW3Es5xf2+LkBBTVXlllGxaEWzCHS+67+k6hzidR2P+eao6MpOw
+        d/ZoIDSQNOrxHlr78CuH2I0=
+X-Google-Smtp-Source: APXvYqwVMfR4xJj3S9xIKxx3G+lIUFED38PukW0psVvVtmYDW6GbmFRyB5/7ia0+IGS8w23MeaEbSw==
+X-Received: by 2002:adf:c7c7:: with SMTP id y7mr13925638wrg.44.1565008164180;
+        Mon, 05 Aug 2019 05:29:24 -0700 (PDT)
+Received: from [10.0.20.253] ([95.157.63.22])
+        by smtp.gmail.com with ESMTPSA id a2sm88177337wmj.9.2019.08.05.05.29.22
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 05 Aug 2019 05:29:22 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com, "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-man <linux-man@vger.kernel.org>,
+        Containers <containers@lists.linux-foundation.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jordan Ogas <jogas@lanl.gov>, Al Viro <viro@ftp.linux.org.uk>,
+        werner@almesberger.net
+Subject: Re: pivot_root(".", ".") and the fchdir() dance
+To:     Aleksa Sarai <asarai@suse.de>
+References: <CAKgNAki0bR5zZr+kp_xjq+bNUky6-F+s2ep+jnR0YrjHhNMB1g@mail.gmail.com>
+ <20190805103630.tu4kytsbi5evfrhi@mikami>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <3a96c631-6595-b75e-f6a7-db703bf89bcf@gmail.com>
+Date:   Mon, 5 Aug 2019 14:29:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190802074620.115029-1-anup.patel@wdc.com> <20190802074620.115029-7-anup.patel@wdc.com>
- <98eaa917-8270-ecdc-2420-491ed1c903d8@redhat.com>
-In-Reply-To: <98eaa917-8270-ecdc-2420-491ed1c903d8@redhat.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Mon, 5 Aug 2019 17:57:20 +0530
-Message-ID: <CAAhSdy2rYy+hAaQROYqjDQPKDq1DvROLMjOuWamn6333W-rrpg@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 06/19] RISC-V: KVM: Implement VCPU interrupts and
- requests handling
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Radim K <rkrcmar@redhat.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190805103630.tu4kytsbi5evfrhi@mikami>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 2, 2019 at 1:47 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 02/08/19 09:47, Anup Patel wrote:
-> > +     /* VCPU interrupts */
-> > +     unsigned long irqs_pending;
-> > +     unsigned long irqs_pending_mask;
-> > +
->
-> This deserves a comment on the locking policy (none for producer,
-> vcpu_lock for consumers).
+[CC += Werner Almesberger, original author of both the system call 
+and the manual page.]
 
-Yes, I will certainly add comments about our approach in
-asm/kvm_host.h
+Hello Aleksa,
 
-Regards,
-Anup
+Thank you for your responses. See below.
+
+On 8/5/19 12:36 PM, Aleksa Sarai wrote:
+> On 2019-08-01, Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> wrote:
+>> I'd like to add some documentation about the pivot_root(".", ".")
+>> idea, but I have a doubt/question. In the lxc_pivot_root() code we
+>> have these steps
+>>
+>>         oldroot = open("/", O_DIRECTORY | O_RDONLY | O_CLOEXEC);
+>>         newroot = open(rootfs, O_DIRECTORY | O_RDONLY | O_CLOEXEC);
+>>
+>>         fchdir(newroot);
+>>         pivot_root(".", ".");
+>>
+>>         fchdir(oldroot);      // ****
+> 
+> This one is "required" because (as the pivot_root(2) man page states),
+> it's technically not guaranteed by the kernel that the process's cwd
+> will be the same after pivot_root(2):
+> 
+>> pivot_root() may or may not change the current root and the current
+>> working directory of any processes or threads which use the old root
+>> directory.
+>
+> 
+> Now, if it turns out that we can rely on the current behaviour (and the
+> man page you're improving is actually inaccurate on this point) then
+> you're right that this fchdir(2) isn't required.
+
+I'm not sure that I follow your logic here. In the old manual page
+text that you quote above, it says that [pivot_root() may change the
+CWD of any processes that use the old root directory]. Two points 
+there:
+
+(1) the first fchdir() has *already* changed the CWD of the calling
+process to the new root directory, and 
+
+(2) the manual page implied but did not explicitly say that the
+CWD of processes using the old root may be changed *to the new root
+directory* (rather than changed to some arbitrary location!);
+presumably, omitting to mention that detail explicitly in the manual
+page was an oversight, since that is indeed the kernel's behavior.
+
+The point is, the manual page was written 19 years ago and has
+barely been changed since then. Even at the time that the system
+call was officially released (in Linux 2.4.0), the manual page was
+already inaccurate in a number of details, since it was written 
+about a year beforehand (during the 2.3 series), and the 
+implementation already changed by the time of 2.4.0, but the manual
+page was not changed then (or since, but I'm working on that).
+
+The behavior has in practice always been (modulo the introduction
+of mount namespaces in 2001/2002):
+
+       pivot_root()  changes  the root directory and the current
+       working directory of each process or thread in  the  same
+       mount namespace to new_root if they point to the old root
+       directory.
+
+Given that this has been the behavior since Linux 2.4.0 was
+released, it improbable that this will ever change, since,
+notwithstanding what the manual page says, this would be an ABI
+breakage.
+
+I hypothesize that the original manual page text, written before
+the system call was even officially released, reflects Werner's
+belief at the time that perhaps in the not too distant future
+the implementation might change. But, 18 years on from 2.4.0,
+it has not.
+
+And arguably, the manual page should reflect that reality,
+describing what the kernel actually does, rather than speculating
+that things might (after 19 years) still sometime change.
+
+>>         mount("", ".", "", MS_SLAVE | MS_REC, NULL);
+>>         umount2(".", MNT_DETACH);
+> 
+>>         fchdir(newroot);      // ****
+> 
+> And this one is required because we are in @oldroot at this point, due
+> to the first fchdir(2). If we don't have the first one, then switching
+> from "." to "/" in the mount/umount2 calls should fix the issue.
+
+See my notes above for why I therefore think that the second fchdir()
+is also not needed (and therefore why switching from "." to "/" in the
+mount()/umount2() calls is unnecessary.
+
+Do you agree with my analysis?
+
+> We do something very similar to this in runc as well[1] (though, as the
+> commit message says, I "borrowed" the idea from LXC).
+> 
+> [1]: https://github.com/opencontainers/runc/commit/f8e6b5af5e120ab7599885bd13a932d970ccc748
+
+Yep -- I saw your code as well, which in fact was what led me back
+to the source of the idea in LXC (so, thanks for commenting the
+origin of the idea).
+
+Cheers,
+
+Michael
+
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
