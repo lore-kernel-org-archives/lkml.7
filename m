@@ -2,118 +2,192 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA62C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E03C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B48FD206C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01E1D206C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:55:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="ZW+9EsnP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IGZvj4Ig"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727445AbfHEGze (ORCPT
+        id S1727520AbfHEGzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 02:55:34 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40698 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726375AbfHEGze (ORCPT
+        Mon, 5 Aug 2019 02:55:48 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:40929 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbfHEGzs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 02:55:34 -0400
-Received: by mail-wr1-f66.google.com with SMTP id r1so83151298wrl.7
-        for <linux-kernel@vger.kernel.org>; Sun, 04 Aug 2019 23:55:32 -0700 (PDT)
+        Mon, 5 Aug 2019 02:55:48 -0400
+Received: by mail-ed1-f67.google.com with SMTP id k8so77600679eds.7;
+        Sun, 04 Aug 2019 23:55:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=4TTBYe7R89ObYhNrQ7Cl1PDjf+qeeSySCDSm/yvi8hE=;
-        b=ZW+9EsnPgnlzTYewisjxT+EOSy6r2aUxK55FB/Fm+mi+AtDooHD4mu+yQ4gb37M10g
-         NFW40A+O1T6r5RXaZM/8SExP8R6DwkNY4tOg66IuS30k7+H4zGVIjXQc5CsCiFM2+BMe
-         V0+mlrOMXhxPEG24hqd84dDo9gu3cphW0r9/JFlKTTaR+vGq0uS9aklZTp2Wcx8DcdRa
-         2kuzuR1HDGS6PxOG/Lzvo154FcmiWh5jjA0bm9vC2WXhhhOramW5aZIV01jvhSj2rdDM
-         n+kO58hpipZI6NalfKRWflgcGxRn2DNY40LLNgm/sPPLUvZwPDy7XRixemaSGUe+O/Df
-         PYaQ==
+        bh=2vcIiINY4WBP+S4p7ZvCljxe/AGpBFsXIl5B5dC7+jY=;
+        b=IGZvj4IgmpHw+kKQTtY8eeb5E9cDO3t0ezYt8tkNMicugTeGnGIQ7+XxTUdxszd8qU
+         tm0/jRpIWihYTtvPPiWRHkiXFnslsPz1U67otEH+hSX2gDtw38tvjxjKw5jXUVcAjbji
+         Sef3EjUl9wORFtI68cJqtqXCtFhbVd/9o40ndI8II/QaM2ZbHB/ovA1T/1GaxbBLovhZ
+         mZYpjg3DTgTBOsTyoboXlxBwe8Bw4f5hzg6Mk4zpTsbzrBMD9vkv3wGQDNLoNVRmZQA2
+         1YnwyBDVkjAJADw/cf4V3UdeDkSn/7+P2BCV9sPKO8aKKZVwfYO616s2KRVRpi9zCh2a
+         6hjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4TTBYe7R89ObYhNrQ7Cl1PDjf+qeeSySCDSm/yvi8hE=;
-        b=LUiZI/W9xldoFRoycXs8UU4NKa9V5eJ2PHd8qA3IJALIoulLkwoIOqL43eoi+PsuMy
-         tFRK8vWfGbFBnxYlO62wbn9eC+cVvw75nMPAW6zAkHNrpbDDHAeyYdHdXoKIDWeYVasr
-         f5Ia3N5sPswnhxL8v2YkyrKycR/Oat+F/shcrNoGFj+1p7+8cryTX7GA55/CCLB5GjDO
-         7minWESKoLOgodxKoaxszFSXvJXKwi6fW2XmBQpoVGRReasmlEXVHk9wa5KEdBHhsHEQ
-         1tDeWrrFetJS8LpxgrzGbVIXaha7TMNQ++q2RhP4FR/1x5Ru3sUFtZaklCzs3aBRzDBm
-         nKQw==
-X-Gm-Message-State: APjAAAUQf0yskc37vZ3ZcrFGsuWmsZJ9nwN6BpPafHyoDNx2PzEty63u
-        IaZf3nshwj/G0/0k+WA3Nnv5OiNukjVpqwiDotE=
-X-Google-Smtp-Source: APXvYqxAjiUTpRBRVnl8zo2WRruaXTltVlSlDaYn0gjxaCM1yH1vbKfeokdHZ8Ie7GExj9eQjB7BsoJu8wlqK+dlYTk=
-X-Received: by 2002:adf:b1cb:: with SMTP id r11mr150790179wra.328.1564988131513;
- Sun, 04 Aug 2019 23:55:31 -0700 (PDT)
+        bh=2vcIiINY4WBP+S4p7ZvCljxe/AGpBFsXIl5B5dC7+jY=;
+        b=cbnsYt/4M/WVyV/1eKUhBXBDqXrDo0Vh2mS3eevPaQOEfoaNgb1pEqc2vYrCyzM5lU
+         KBSK73B4sSrP4o8Yuwy69+kzXxwaHPqPGKg53U/ZTO+ERa/HL8UXLCdd7woDEAyaQzcA
+         +vqyeNedM0r5a2X5cqFHk9r3uGlcTlBh6P3NpsUSH+0+iM3NGNfrjTshJjqHJFB8E8z7
+         9LmvblKMNb2kjbk4SIGo++vbq+SltIbVPq01UOJ28YcU6dF2kFtI5m2YQbdVVuNoGMJa
+         JmLqfkaGW3/oiL9J895mzR7SkV8GuKQm0b661OxGi7ofZ89QELtBBP0rL8XqKpIXSyJa
+         NGBg==
+X-Gm-Message-State: APjAAAV5BZbLVlG5RVdErLWZ3RMr1JKu72aR3YYoBRNuGhiAblo0ZzSA
+        /i3c4/iq0IN+nOt1KHvTumwo9gAnJJDeHe6nHqfAb+MIvRs=
+X-Google-Smtp-Source: APXvYqzXx3p2Pz7Q7wMxZKubkTIW6zu3x3Sr+7578oy+fMgP1ypqnD0LxU8UEDkWZatK5ntlXt5G6vS3t/3Q9WQXIx8=
+X-Received: by 2002:aa7:cf8e:: with SMTP id z14mr131881877edx.40.1564988145755;
+ Sun, 04 Aug 2019 23:55:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190802074620.115029-1-anup.patel@wdc.com> <20190802074620.115029-8-anup.patel@wdc.com>
- <03f60f3a-bb50-9210-8352-da16cca322b9@redhat.com>
-In-Reply-To: <03f60f3a-bb50-9210-8352-da16cca322b9@redhat.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Mon, 5 Aug 2019 12:25:20 +0530
-Message-ID: <CAAhSdy3hdWfUCUEK-idoTzgB2hKeAd3FzsHEH1DK_BTC_KGdJw@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 07/19] RISC-V: KVM: Implement KVM_GET_ONE_REG/KVM_SET_ONE_REG
- ioctls
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Radim K <rkrcmar@redhat.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190802164828.20243-1-hslester96@gmail.com> <20190804125858.GJ4832@mtr-leonro.mtl.com>
+ <CANhBUQ2H5MU0m2xM0AkJGPf7+MJBZ3Eq5rR0kgeOoKRi4q1j6Q@mail.gmail.com> <20190805061320.GN4832@mtr-leonro.mtl.com>
+In-Reply-To: <20190805061320.GN4832@mtr-leonro.mtl.com>
+From:   Chuhong Yuan <hslester96@gmail.com>
+Date:   Mon, 5 Aug 2019 14:55:34 +0800
+Message-ID: <CANhBUQ0tUTXQKq__zvhNCUxXTFfDyr2xKF+Cwupod9xmvSrw2A@mail.gmail.com>
+Subject: Re: [PATCH v2] net/mlx5e: Use refcount_t for refcount
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Saeed Mahameed <saeedm@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Netdev <netdev@vger.kernel.org>, linux-rdma@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 2, 2019 at 2:33 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
+On Mon, Aug 5, 2019 at 2:13 PM Leon Romanovsky <leon@kernel.org> wrote:
 >
-> On 02/08/19 09:47, Anup Patel wrote:
-> > +     if (reg_num == KVM_REG_RISCV_CSR_REG(sip))
-> > +             kvm_riscv_vcpu_flush_interrupts(vcpu, false);
+> On Sun, Aug 04, 2019 at 10:44:47PM +0800, Chuhong Yuan wrote:
+> > On Sun, Aug 4, 2019 at 8:59 PM Leon Romanovsky <leon@kernel.org> wrote:
+> > >
+> > > On Sat, Aug 03, 2019 at 12:48:28AM +0800, Chuhong Yuan wrote:
+> > > > refcount_t is better for reference counters since its
+> > > > implementation can prevent overflows.
+> > > > So convert atomic_t ref counters to refcount_t.
+> > >
+> > > I'm not thrilled to see those automatic conversion patches, especially
+> > > for flows which can't overflow. There is nothing wrong in using atomic_t
+> > > type of variable, do you have in mind flow which will cause to overflow?
+> > >
+> > > Thanks
+> >
+> > I have to say that these patches are not done automatically...
+> > Only the detection of problems is done by a script.
+> > All conversions are done manually.
 >
-> Not updating the vsip CSR here can cause an interrupt to be lost, if the
-> next call to kvm_riscv_vcpu_flush_interrupts finds a zero mask.
+> Even worse, you need to audit usage of atomic_t and replace there
+> it can overflow.
+>
+> >
+> > I am not sure whether the flow can cause an overflow.
+>
+> It can't.
+>
+> > But I think it is hard to ensure that a data path is impossible
+> > to have problems in any cases including being attacked.
+>
+> It is not data path, and I doubt that such conversion will be allowed
+> in data paths without proving that no performance regression is introduced.
+>>
+>
+> > So I think it is better to do this minor revision to prevent
+> > potential risk, just like we have done in mlx5/core/cq.c.
+>
+> mlx5/core/cq.c is a different beast, refcount there means actual users
+> of CQ which are limited in SW, so in theory, they have potential
+> to be overflown.
+>
+> It is not the case here, there your are adding new port.
+> There is nothing wrong with atomic_t.
+>
 
-Thanks for catching this issue. I will address it in v3.
-
-If we think more on similar lines then we also need to handle the case
-where Guest VCPU had pending interrupts and we suddenly stopped it
-for Guest migration. In this case, we would eventually use SET_ONE_REG
-ioctl on destination Host which should set vsip_shadow instead of vsip so
-that we force update HW after resuming Guest VCPU on destination host.
-
->
-> You could add a new field vcpu->vsip_shadow that is updated every time
-> CSR_VSIP is written (including kvm_arch_vcpu_load) with a function like
->
-> void kvm_riscv_update_vsip(struct kvm_vcpu *vcpu)
-> {
->         if (vcpu->vsip_shadow != vcpu->arch.guest_csr.vsip) {
->                 csr_write(CSR_VSIP, vcpu->arch.guest_csr.vsip);
->                 vcpu->vsip_shadow = vcpu->arch.guest_csr.vsip;
->         }
-> }
->
-> And just call this unconditionally from kvm_vcpu_ioctl_run.  The cost is
-> just a memory load per VS-mode entry, it should hardly be measurable.
->
-
-I think we can do this at start of kvm_riscv_vcpu_flush_interrupts() as well.
+Thanks for your explanation!
+I will pay attention to this point in similar cases.
+But it seems that the semantic of refcount is not always as clear as here...
 
 Regards,
-Anup
+Chuhong
+
+
+> Thanks
+>
+> >
+> > Regards,
+> > Chuhong
+> >
+> > > >
+> > > > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> > > > ---
+> > > > Changes in v2:
+> > > >   - Add #include.
+> > > >
+> > > >  drivers/net/ethernet/mellanox/mlx5/core/lib/vxlan.c | 9 +++++----
+> > > >  1 file changed, 5 insertions(+), 4 deletions(-)
+> > > >
+> > > > diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/vxlan.c b/drivers/net/ethernet/mellanox/mlx5/core/lib/vxlan.c
+> > > > index b9d4f4e19ff9..148b55c3db7a 100644
+> > > > --- a/drivers/net/ethernet/mellanox/mlx5/core/lib/vxlan.c
+> > > > +++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/vxlan.c
+> > > > @@ -32,6 +32,7 @@
+> > > >
+> > > >  #include <linux/kernel.h>
+> > > >  #include <linux/module.h>
+> > > > +#include <linux/refcount.h>
+> > > >  #include <linux/mlx5/driver.h>
+> > > >  #include <net/vxlan.h>
+> > > >  #include "mlx5_core.h"
+> > > > @@ -48,7 +49,7 @@ struct mlx5_vxlan {
+> > > >
+> > > >  struct mlx5_vxlan_port {
+> > > >       struct hlist_node hlist;
+> > > > -     atomic_t refcount;
+> > > > +     refcount_t refcount;
+> > > >       u16 udp_port;
+> > > >  };
+> > > >
+> > > > @@ -113,7 +114,7 @@ int mlx5_vxlan_add_port(struct mlx5_vxlan *vxlan, u16 port)
+> > > >
+> > > >       vxlanp = mlx5_vxlan_lookup_port(vxlan, port);
+> > > >       if (vxlanp) {
+> > > > -             atomic_inc(&vxlanp->refcount);
+> > > > +             refcount_inc(&vxlanp->refcount);
+> > > >               return 0;
+> > > >       }
+> > > >
+> > > > @@ -137,7 +138,7 @@ int mlx5_vxlan_add_port(struct mlx5_vxlan *vxlan, u16 port)
+> > > >       }
+> > > >
+> > > >       vxlanp->udp_port = port;
+> > > > -     atomic_set(&vxlanp->refcount, 1);
+> > > > +     refcount_set(&vxlanp->refcount, 1);
+> > > >
+> > > >       spin_lock_bh(&vxlan->lock);
+> > > >       hash_add(vxlan->htable, &vxlanp->hlist, port);
+> > > > @@ -170,7 +171,7 @@ int mlx5_vxlan_del_port(struct mlx5_vxlan *vxlan, u16 port)
+> > > >               goto out_unlock;
+> > > >       }
+> > > >
+> > > > -     if (atomic_dec_and_test(&vxlanp->refcount)) {
+> > > > +     if (refcount_dec_and_test(&vxlanp->refcount)) {
+> > > >               hash_del(&vxlanp->hlist);
+> > > >               remove = true;
+> > > >       }
+> > > > --
+> > > > 2.20.1
+> > > >
