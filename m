@@ -2,56 +2,57 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93960C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2961C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A3252067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C37521871
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:09:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010539;
-	bh=VfcaByF7r95+yEsTsJOfHLZKb5vPPTHlHaR+VpYo8vM=;
+	s=default; t=1565010543;
+	bh=7BSbn3tM72/0DGPULT67fewpqTSUU33aag1yFIWmkl0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tj05SNHZdMxNPL4znmEEZ0kcVe7rjvgUccsvc1tJ/TwQZsbP6ZuDdZL0XAvwczkKK
-	 ytPHam1qfoCwy9GcT71cllsBs6Mo17e0j2sZEYidxFW+QZpzMbvsVPJDTwRVs7PfWX
-	 rq6PNhJvx8Aq9T1rpps3Idqw9pvagBisaQdiB7ec=
+	b=vT2uZI0fmr1jIQuMHHS7qRjl0O8BUKrOXORNNWophu+CXwybM9irBwXddvgyZsZQX
+	 OAwF9YBGd6BrC/tTVarf+RsMaN9IZrqvCrQMOuiUCMc9zTQQvLu67pueIz4NozlMjl
+	 hKaa5nfif0fosiZkYMo+BmmNTMmhYK/zEWJoptT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730114AbfHENI6 (ORCPT
+        id S1729184AbfHENJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:08:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47138 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:09:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729675AbfHENIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:08:53 -0400
+        id S1729211AbfHENI7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:08:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9313621738;
-        Mon,  5 Aug 2019 13:08:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0CAC2075B;
+        Mon,  5 Aug 2019 13:08:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010533;
-        bh=VfcaByF7r95+yEsTsJOfHLZKb5vPPTHlHaR+VpYo8vM=;
+        s=default; t=1565010538;
+        bh=7BSbn3tM72/0DGPULT67fewpqTSUU33aag1yFIWmkl0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IrsnswP480g+xix10oSQbQ8+T+IYksYb5eF/kntb/uMHIoBkN51j6Z/TYI9NyebM6
-         PXPZe0ndwwRShyROfx/C2ocHdUhYkgcMp2BP8otgPMWooflRnASYL5SQNIJ64HrgT7
-         6fqoPQHyr/oFjf39mWnRKIfhtvHSUF7AFljTvkZw=
+        b=upY9xddS6bojt52cxcD2fMA46yClPzJd74M6jqI57oMDxyqMnAbuQigm/sGFLoBrt
+         6YPETTv9iZf2qSN5SZRRBy7ph/VG4S31RqH6SJdmnrxAVG4B68Th8yMBi4RdAoZgFK
+         7s6jdRkImWsgfvadkX8Axwx87wv7RumBk3HurGYI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH 4.14 42/53] drivers/perf: arm_pmu: Fix failure path in PM notifier
-Date:   Mon,  5 Aug 2019 15:03:07 +0200
-Message-Id: <20190805124932.694154877@linuxfoundation.org>
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 01/74] ARM: riscpc: fix DMA
+Date:   Mon,  5 Aug 2019 15:02:14 +0200
+Message-Id: <20190805124935.945668453@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190805124927.973499541@linuxfoundation.org>
-References: <20190805124927.973499541@linuxfoundation.org>
+In-Reply-To: <20190805124935.819068648@linuxfoundation.org>
+References: <20190805124935.819068648@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,36 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+[ Upstream commit ffd9a1ba9fdb7f2bd1d1ad9b9243d34e96756ba2 ]
 
-commit 0d7fd70f26039bd4b33444ca47f0e69ce3ae0354 upstream.
+DMA got broken a while back in two different ways:
+1) a change in the behaviour of disable_irq() to wait for the interrupt
+   to finish executing causes us to deadlock at the end of DMA.
+2) a change to avoid modifying the scatterlist left the first transfer
+   uninitialised.
 
-Handling of the CPU_PM_ENTER_FAILED transition in the Arm PMU PM
-notifier code incorrectly skips restoration of the counters. Fix the
-logic so that CPU_PM_ENTER_FAILED follows the same path as CPU_PM_EXIT.
+DMA is only used with expansion cards, so has gone unnoticed.
 
-Cc: <stable@vger.kernel.org>
-Fixes: da4e4f18afe0f372 ("drivers/perf: arm_pmu: implement CPU_PM notifier")
-Reported-by: Anders Roxell <anders.roxell@linaro.org>
-Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: fa4e99899932 ("[ARM] dma: RiscPC: don't modify DMA SG entries")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/perf/arm_pmu.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/mach-rpc/dma.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/perf/arm_pmu.c
-+++ b/drivers/perf/arm_pmu.c
-@@ -751,8 +751,8 @@ static int cpu_pm_pmu_notify(struct noti
- 		cpu_pm_pmu_setup(armpmu, cmd);
- 		break;
- 	case CPU_PM_EXIT:
--		cpu_pm_pmu_setup(armpmu, cmd);
- 	case CPU_PM_ENTER_FAILED:
-+		cpu_pm_pmu_setup(armpmu, cmd);
- 		armpmu->start(armpmu);
- 		break;
- 	default:
+diff --git a/arch/arm/mach-rpc/dma.c b/arch/arm/mach-rpc/dma.c
+index fb48f3141fb4d..c4c96661eb89a 100644
+--- a/arch/arm/mach-rpc/dma.c
++++ b/arch/arm/mach-rpc/dma.c
+@@ -131,7 +131,7 @@ static irqreturn_t iomd_dma_handle(int irq, void *dev_id)
+ 	} while (1);
+ 
+ 	idma->state = ~DMA_ST_AB;
+-	disable_irq(irq);
++	disable_irq_nosync(irq);
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -174,6 +174,9 @@ static void iomd_enable_dma(unsigned int chan, dma_t *dma)
+ 				DMA_FROM_DEVICE : DMA_TO_DEVICE);
+ 		}
+ 
++		idma->dma_addr = idma->dma.sg->dma_address;
++		idma->dma_len = idma->dma.sg->length;
++
+ 		iomd_writeb(DMA_CR_C, dma_base + CR);
+ 		idma->state = DMA_ST_AB;
+ 	}
+-- 
+2.20.1
+
 
 
