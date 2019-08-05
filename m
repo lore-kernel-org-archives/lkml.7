@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF721C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B43C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5E6E2087B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:07:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D28D5216F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:07:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010465;
-	bh=mKbuILyhU1KoG9uu22Dj1pFFcx92w0McbjcdyX37PqM=;
+	s=default; t=1565010472;
+	bh=lFaEGnz60eDMQHaUkbICmeAkYBapyM727C0olobxqIw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NXcHBnBCfs+aHh06hWdNcUq/OWaCOIWwyBDyCef1j1D4tjwYPI02P5minfoIZFEKk
-	 DUhvC5eqAknL7snrqgDNoBvo5ib8Ukx/9ZVUu0/FBCABrhcJUceNP+/iBnPlytB8XW
-	 61FTUUxqmjIgnAJ6IY+ddi+UbJPdSpKcJbeB5qBw=
+	b=qcP9k4YKLRIY0mgSZkUADwD7qPFlexgaPzM4hV2Mv/nG12H6hTdFvOMbRwAs8lvMY
+	 QBcccPMX3nDW39PZ4Q2vRtHZrmjkdytm7RCFp6CF3UHv3PElSFwyFWX+pb6/IZTUN3
+	 tXNPFeWIkW/1HtMRUiM99UDGcyFUHjz5tOZ1wMrM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729324AbfHENHo (ORCPT
+        id S1729844AbfHENHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:07:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45318 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:07:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729844AbfHENHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:07:39 -0400
+        id S1729862AbfHENHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:07:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB5862087B;
-        Mon,  5 Aug 2019 13:07:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90DB82067D;
+        Mon,  5 Aug 2019 13:07:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010458;
-        bh=mKbuILyhU1KoG9uu22Dj1pFFcx92w0McbjcdyX37PqM=;
+        s=default; t=1565010466;
+        bh=lFaEGnz60eDMQHaUkbICmeAkYBapyM727C0olobxqIw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zxRw7YpYFJKN0bCY1rl82C7iMPPsUoeuxPbIkOjhWE21NO3Lxo/CSVLzju1LCGAmW
-         vWOVe+QMwpIq3Tg0tSS4Ov61KMwAfnOoM+2E4FLuDJHyECeM+SoPxg+ur74MMi/pWN
-         VeH46pZiKER6IqggDiT48hEOX0LlSkyxOhpz3H98=
+        b=E6kbD03rKFgX1Y/x/pS47Xhm4PE+EzjwSIVJyuPbBLzsoCQX+02uR8cAzV0YOyevi
+         Ah3PyRFcLBFwhOj39RgE2NhKyK/en2ehcTmUY65kvQSxj31KOIxbFRNOw33aapVyMA
+         /NSXz6PWsDkx2Oy+3Ze4ORch+UuTQPiMt4NVLW3c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Juergen Gross <jgross@suse.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 30/53] x86/paravirt: Fix callee-saved function ELF sizes
-Date:   Mon,  5 Aug 2019 15:02:55 +0200
-Message-Id: <20190805124931.410246891@linuxfoundation.org>
+Subject: [PATCH 4.14 04/53] ARM: dts: rockchip: Mark that the rk3288 timer might stop in suspend
+Date:   Mon,  5 Aug 2019 15:02:29 +0200
+Message-Id: <20190805124928.501246620@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124927.973499541@linuxfoundation.org>
 References: <20190805124927.973499541@linuxfoundation.org>
@@ -62,53 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 083db6764821996526970e42d09c1ab2f4155dd4 ]
+[ Upstream commit 8ef1ba39a9fa53d2205e633bc9b21840a275908e ]
 
-The __raw_callee_save_*() functions have an ELF symbol size of zero,
-which confuses objtool and other tools.
+This is similar to commit e6186820a745 ("arm64: dts: rockchip: Arch
+counter doesn't tick in system suspend").  Specifically on the rk3288
+it can be seen that the timer stops ticking in suspend if we end up
+running through the "osc_disable" path in rk3288_slp_mode_set().  In
+that path the 24 MHz clock will turn off and the timer stops.
 
-Fixes a bunch of warnings like the following:
+To test this, I ran this on a Chrome OS filesystem:
+  before=$(date); \
+  suspend_stress_test -c1 --suspend_min=30 --suspend_max=31; \
+  echo ${before}; date
 
-  arch/x86/xen/mmu_pv.o: warning: objtool: __raw_callee_save_xen_pte_val() is missing an ELF size annotation
-  arch/x86/xen/mmu_pv.o: warning: objtool: __raw_callee_save_xen_pgd_val() is missing an ELF size annotation
-  arch/x86/xen/mmu_pv.o: warning: objtool: __raw_callee_save_xen_make_pte() is missing an ELF size annotation
-  arch/x86/xen/mmu_pv.o: warning: objtool: __raw_callee_save_xen_make_pgd() is missing an ELF size annotation
+...and I found that unless I plug in a device that requests USB wakeup
+to be active that the two calls to "date" would show that fewer than
+30 seconds passed.
 
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/afa6d49bb07497ca62e4fc3b27a2d0cece545b4e.1563413318.git.jpoimboe@redhat.com
+NOTE: deep suspend (where the 24 MHz clock gets disabled) isn't
+supported yet on upstream Linux so this was tested on a downstream
+kernel.
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/paravirt.h | 1 +
- arch/x86/kernel/kvm.c           | 1 +
- 2 files changed, 2 insertions(+)
+ arch/arm/boot/dts/rk3288.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
-index c83a2f418cea0..4471f0da6ed76 100644
---- a/arch/x86/include/asm/paravirt.h
-+++ b/arch/x86/include/asm/paravirt.h
-@@ -758,6 +758,7 @@ static __always_inline bool pv_vcpu_is_preempted(long cpu)
- 	    PV_RESTORE_ALL_CALLER_REGS					\
- 	    FRAME_END							\
- 	    "ret;"							\
-+	    ".size " PV_THUNK_NAME(func) ", .-" PV_THUNK_NAME(func) ";"	\
- 	    ".popsection")
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 5a7888581eea9..23907d9ce89ad 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -213,6 +213,7 @@
+ 			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
+ 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+ 		clock-frequency = <24000000>;
++		arm,no-tick-in-suspend;
+ 	};
  
- /* Get a reference to a callee-save function */
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index 652bdd867782c..5853eb50138e7 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -631,6 +631,7 @@ asm(
- "cmpb	$0, " __stringify(KVM_STEAL_TIME_preempted) "+steal_time(%rax);"
- "setne	%al;"
- "ret;"
-+".size __raw_callee_save___kvm_vcpu_is_preempted, .-__raw_callee_save___kvm_vcpu_is_preempted;"
- ".popsection");
- 
- #endif
+ 	timer: timer@ff810000 {
 -- 
 2.20.1
 
