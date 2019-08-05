@@ -2,286 +2,116 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DATE_IN_PAST_96_XX,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA83C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5531C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94A092087B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:05:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Y2CBe7wx"
+	by mail.kernel.org (Postfix) with ESMTP id 915E12087B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:05:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565010339;
+	bh=3t28i2Pbdns/SBEB6N4kPKnKjVtoyuY9ZmRMAti6lm8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=EP9owNAd9fV+EebJWvsLN7hZjhJ2SqS/VrX064iVaUzwCye2wCuAQo3BRJCY/9vIx
+	 VH0DRCAtpVqIdpxsbcRsO76oaHIJKJycaCnUUrZX4cpJWLR37eJwPXhzG2lhw/GHui
+	 c/ZvMaJHKbU9tIBLNxZG0Wo21ua+nIifq3m+4KMI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729352AbfHENFg (ORCPT
+        id S1729366AbfHENFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:05:36 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:29894 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729305AbfHENF3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:05:29 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190805130527epoutp012951590e4ac281e33e405a85b91e60aa~4CJnDdWsT1531215312epoutp01A
-        for <linux-kernel@vger.kernel.org>; Mon,  5 Aug 2019 13:05:27 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190805130527epoutp012951590e4ac281e33e405a85b91e60aa~4CJnDdWsT1531215312epoutp01A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1565010327;
-        bh=FP8ux3OTkd8fvlaQBEXL6CEm156hOz8+Jh5icRMsf2w=;
-        h=From:To:Subject:Date:References:From;
-        b=Y2CBe7wx7zFATsaDqua9S3ytj3SsP/DTKMdF6XrpY8R369Ygc3mlfgBXhr0Uyp61I
-         3b0brzSLX/M6fDIScU8cwz8q7uGfS9/zUXSziqAT1KSOj2AwyceEFwGF4cQ6/W+G/Q
-         qf3kfpOKepke2rNIJVntlUWv0QZAIDambNqPvyUc=
-Received: from epsnrtp5.localdomain (unknown [182.195.42.166]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190805130526epcas1p13714bd330f18070470fd72da935125e3~4CJmfFlAc0752407524epcas1p1v;
-        Mon,  5 Aug 2019 13:05:26 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.165]) by
-        epsnrtp5.localdomain (Postfix) with ESMTP id 462J0P2j3GzMqYkc; Mon,  5 Aug
-        2019 13:05:25 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        25.35.04075.599284D5; Mon,  5 Aug 2019 22:05:25 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190805130524epcas1p27a4845fccaf66da2eb0b391bfe4da75f~4CJk_2iBo2928429284epcas1p2p;
-        Mon,  5 Aug 2019 13:05:24 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190805130524epsmtrp191fef8ddceb5d0a126efa4e56f69aa57~4CJk_KbVS1992919929epsmtrp1N;
-        Mon,  5 Aug 2019 13:05:24 +0000 (GMT)
-X-AuditID: b6c32a36-b49ff70000000feb-d5-5d482995ff7c
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        5B.F5.03706.499284D5; Mon,  5 Aug 2019 22:05:24 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.88.100.192]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190805130524epsmtip1bad200ba0aa478eb9d18115bdd9e2181~4CJkz3cfV2632326323epsmtip1y;
-        Mon,  5 Aug 2019 13:05:24 +0000 (GMT)
-From:   Jungseung Lee <js07.lee@samsung.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org (open list:FILESYSTEMS (VFS and
-        infrastructure)), linux-kernel@vger.kernel.org (open list),
-        js07.lee@gmail.com, js07.lee@samsung.com
-Subject: [PATCH] fs/binfmt_elf.c: remove unnecessary white space.
-Date:   Sun, 14 Jul 2019 08:53:44 +0900
-Message-Id: <20190713235344.24683-1-js07.lee@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHKsWRmVeSWpSXmKPExsWy7bCmvu5UTY9Yg5ftghZz1q9hs/g75x2T
-        xaObv1kt9uw9yWJxedccNovzf4+zOrB57Jx1l93jxIzfLB59W1YxenzeJOex6clbpgDWqByb
-        jNTElNQihdS85PyUzLx0WyXv4HjneFMzA0NdQ0sLcyWFvMTcVFslF58AXbfMHKALlBTKEnNK
-        gUIBicXFSvp2NkX5pSWpChn5xSW2SqkFKTkFhgYFesWJucWleel6yfm5VoYGBkamQJUJORl3
-        jixgKXitXfGo/z5LA+N5pS5GTg4JAROJC2+XMYHYQgI7GCW23xbrYuQCsj8xSuxb1cIM4Xxj
-        lHizbQsjTMfrAx+hEnsZJRreT2SEcD4zSvz+8YANpIpNQEvixu9NrCAJEYFGJonvm7aCLREW
-        cJTY9nYpC4jNIqAqseveITCbV8BS4t31N1Ar5CVWbzgAtkJC4COrxP6d75kgEi4S71p3skLY
-        whKvjm9hh7ClJF72t0HZxRI7V05kh2huYZR4tHwJVMJY4t3btUBTOTiYBTQl1u/ShwgrSuz8
-        PRdsMbMAn8S7rz2sICUSArwSHW1CECVKEm8etLBA2BISFx73Qp3gIXF10iJmSODFSrxqfMA4
-        gVFmFsKCBYyMqxjFUguKc9NTiw0LjJCjZhMjOC1pme1gXHTO5xCjAAejEg+vgqx7rBBrYllx
-        Ze4hRgkOZiUR3kJmoBBvSmJlVWpRfnxRaU5q8SFGU2DoTWSWEk3OB6bMvJJ4Q1MjY2NjCxMz
-        czNTYyVx3oU/LGKFBNITS1KzU1MLUotg+pg4OKUaGDmjGuYV7nStObD87kKHm2u1ih03v3lm
-        7it1+qSb+n1esdrX8R/u1zmvtNhf9c1IqeLqSaaA6C+imknbWW5tiC6btZU5f+ZKtaSEez2b
-        hbOm7TpYfPf7JifHNTfavKZfWx178/KjnL1pdZdd31yP1jpbc4Jx8Zodh9zubdfznRqs+WHN
-        nVlCT4qVWIozEg21mIuKEwFDNReFYQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrNJMWRmVeSWpSXmKPExsWy7bCSnO4UTY9Yg3MftC3mrF/DZvF3zjsm
-        i0c3f7Na7Nl7ksXi8q45bBbn/x5ndWDz2DnrLrvHiRm/WTz6tqxi9Pi8Sc5j05O3TAGsUVw2
-        Kak5mWWpRfp2CVwZd44sYCl4rV3xqP8+SwPjeaUuRk4OCQETidcHPjJ3MXJxCAnsZpSY+ecI
-        M0RCQuLRzi8sXYwcQLawxOHDxRA1Hxklfv05xAJSwyagJXHj9yZWkISIQCuTRPPmo0wgCWEB
-        R4ltb5eCFbEIqErsugfRwCtgKfHu+htGiAXyEqs3HGCewMi9gJFhFaNkakFxbnpusWGBYV5q
-        uV5xYm5xaV66XnJ+7iZGcJBoae5gvLwk/hCjAAejEg/vCSn3WCHWxLLiytxDjBIczEoivIXM
-        QCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8T/OORQoJpCeWpGanphakFsFkmTg4pRoYZ3Ev13Lb
-        2fFhqnac23K2LQbrfims+Wy7cZrCo5jvdgcE/2r4pza6s7C3l8ScymePfveU8R/LqcInv3Yt
-        P7zZ7H+GKLevZKP4wWPzBSaxM3WuV9pz7bxf+EvPadnXvWJMri9qYtyuJ3b7m790cb5s37Jv
-        poW2ykr/lSTKtBJ37Nqoa/acP7NZiaU4I9FQi7moOBEAtHRDiQ4CAAA=
-X-CMS-MailID: 20190805130524epcas1p27a4845fccaf66da2eb0b391bfe4da75f
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190805130524epcas1p27a4845fccaf66da2eb0b391bfe4da75f
-References: <CGME20190805130524epcas1p27a4845fccaf66da2eb0b391bfe4da75f@epcas1p2.samsung.com>
+        Mon, 5 Aug 2019 09:05:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41612 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729322AbfHENFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:05:31 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19B9B21738;
+        Mon,  5 Aug 2019 13:05:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565010330;
+        bh=3t28i2Pbdns/SBEB6N4kPKnKjVtoyuY9ZmRMAti6lm8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vPPt6BpyKGoc2nvm2KCR0Qv0K2m5/9U5XUKlNzhlUpIhKYtusk82JYmb4xlKI+Jhm
+         8fWgRSkkMdLdlkPqMdLkrbsrV7EPxrJCui+wO8XicWJ6hV6zIgEvttCMjTcEp3eWxz
+         pzZLwl24wJC6S5vAE4FK/pZvRN5wWvzpwqaRZ7zg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 25/42] x86, boot: Remove multiple copy of static function sanitize_boot_params()
+Date:   Mon,  5 Aug 2019 15:02:51 +0200
+Message-Id: <20190805124927.940943813@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190805124924.788666484@linuxfoundation.org>
+References: <20190805124924.788666484@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- - spaces before tabs,
- - spaces at the end of lines,
- - multiple blank lines,
- - redundant blank lines,
- fix it.
+[ Upstream commit 8c5477e8046ca139bac250386c08453da37ec1ae ]
 
-Signed-off-by: Jungseung Lee <js07.lee@samsung.com>
+Kernel build warns:
+ 'sanitize_boot_params' defined but not used [-Wunused-function]
+
+at below files:
+  arch/x86/boot/compressed/cmdline.c
+  arch/x86/boot/compressed/error.c
+  arch/x86/boot/compressed/early_serial_console.c
+  arch/x86/boot/compressed/acpi.c
+
+That's becausethey each include misc.h which includes a definition of
+sanitize_boot_params() via bootparam_utils.h.
+
+Remove the inclusion from misc.h and have the c file including
+bootparam_utils.h directly.
+
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/1563283092-1189-1-git-send-email-zhenzhong.duan@oracle.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/binfmt_elf.c | 31 ++++++++++++-------------------
- 1 file changed, 12 insertions(+), 19 deletions(-)
+ arch/x86/boot/compressed/misc.c | 1 +
+ arch/x86/boot/compressed/misc.h | 1 -
+ 2 files changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index cec3b4146440..5ba1944e3ce1 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -235,7 +235,7 @@ create_elf_tables(struct linux_binprm *bprm, struct elfhdr *exec,
- 	} while (0)
+diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+index d86e68d3c794f..1912b2671f107 100644
+--- a/arch/x86/boot/compressed/misc.c
++++ b/arch/x86/boot/compressed/misc.c
+@@ -15,6 +15,7 @@
+ #include "error.h"
+ #include "../string.h"
+ #include "../voffset.h"
++#include <asm/bootparam_utils.h>
  
- #ifdef ARCH_DLINFO
--	/* 
-+	/*
- 	 * ARCH_DLINFO must come first so PPC can do its special alignment of
- 	 * AUXV.
- 	 * update AT_VECTOR_SIZE_ARCH if the number of NEW_AUX_ENT() in
-@@ -294,7 +294,6 @@ create_elf_tables(struct linux_binprm *bprm, struct elfhdr *exec,
- 	sp = (elf_addr_t __user *)bprm->p;
- #endif
+ /*
+  * WARNING!!
+diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+index 2728e1b7e4a61..a8789aa647b47 100644
+--- a/arch/x86/boot/compressed/misc.h
++++ b/arch/x86/boot/compressed/misc.h
+@@ -19,7 +19,6 @@
+ #include <asm/page.h>
+ #include <asm/boot.h>
+ #include <asm/bootparam.h>
+-#include <asm/bootparam_utils.h>
  
--
- 	/*
- 	 * Grow the stack manually; some architectures have a limit on how
- 	 * far ahead a user-space access may be in order to grow the stack.
-@@ -344,7 +343,6 @@ create_elf_tables(struct linux_binprm *bprm, struct elfhdr *exec,
- }
- 
- #ifndef elf_map
--
- static unsigned long elf_map(struct file *filep, unsigned long addr,
- 		const struct elf_phdr *eppnt, int prot, int type,
- 		unsigned long total_size)
-@@ -383,7 +381,6 @@ static unsigned long elf_map(struct file *filep, unsigned long addr,
- 
- 	return(map_addr);
- }
--
- #endif /* !elf_map */
- 
- static unsigned long total_mapping_size(const struct elf_phdr *cmds, int nr)
-@@ -456,7 +453,6 @@ static struct elf_phdr *load_elf_phdrs(const struct elfhdr *elf_ex,
- }
- 
- #ifndef CONFIG_ARCH_BINFMT_ELF_STATE
--
- /**
-  * struct arch_elf_state - arch-specific ELF loading state
-  *
-@@ -522,7 +518,6 @@ static inline int arch_check_elf(struct elfhdr *ehdr, bool has_interp,
- 	/* Dummy implementation, always proceed */
- 	return 0;
- }
--
- #endif /* !CONFIG_ARCH_BINFMT_ELF_STATE */
- 
- static inline int make_prot(u32 p_flags)
-@@ -542,7 +537,6 @@ static inline int make_prot(u32 p_flags)
-    so we keep this separate.  Technically the library read function
-    is only provided so that we can read a.out libraries that have
-    an ELF header */
--
- static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
- 		struct file *interpreter, unsigned long *interp_map_addr,
- 		unsigned long no_base, struct elf_phdr *interp_elf_phdata)
-@@ -669,7 +663,6 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
-  * These are the functions used to load ELF style executables and shared
-  * libraries.  There is no binary dependent code anywhere else.
-  */
--
- static int load_elf_binary(struct linux_binprm *bprm)
- {
- 	struct file *interpreter = NULL; /* to shut gcc up */
-@@ -697,7 +690,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 		retval = -ENOMEM;
- 		goto out_ret;
- 	}
--	
-+
- 	/* Get the exec-header */
- 	loc->elf_ex = *((struct elfhdr *)bprm->buf);
- 
-@@ -866,7 +859,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 				 executable_stack);
- 	if (retval < 0)
- 		goto out_free_dentry;
--	
-+
- 	elf_bss = 0;
- 	elf_brk = 0;
- 
-@@ -888,7 +881,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 
- 		if (unlikely (elf_brk > elf_bss)) {
- 			unsigned long nbyte;
--	            
-+
- 			/* There was a PT_LOAD segment with p_memsz > p_filesz
- 			   before this one. Map anonymous pages, if needed,
- 			   and clear the area.  */
-@@ -1462,7 +1455,7 @@ static void fill_elf_note_phdr(struct elf_phdr *phdr, int sz, loff_t offset)
- 	phdr->p_align = 0;
- }
- 
--static void fill_note(struct memelfnote *note, const char *name, int type, 
-+static void fill_note(struct memelfnote *note, const char *name, int type,
- 		unsigned int sz, void *data)
- {
- 	note->name = name;
-@@ -1514,7 +1507,7 @@ static int fill_psinfo(struct elf_prpsinfo *psinfo, struct task_struct *p,
- {
- 	const struct cred *cred;
- 	unsigned int i, len;
--	
-+
- 	/* first copy the parameters from user space */
- 	memset(psinfo, 0, sizeof(struct elf_prpsinfo));
- 
-@@ -1548,7 +1541,7 @@ static int fill_psinfo(struct elf_prpsinfo *psinfo, struct task_struct *p,
- 	SET_GID(psinfo->pr_gid, from_kgid_munged(cred->user_ns, cred->gid));
- 	rcu_read_unlock();
- 	strncpy(psinfo->pr_fname, p->comm, sizeof(psinfo->pr_fname));
--	
-+
- 	return 0;
- }
- 
-@@ -1945,8 +1938,8 @@ static int elf_dump_thread_status(long signr, struct elf_thread_status *t)
- 	t->num_notes = 0;
- 
- 	fill_prstatus(&t->prstatus, p, signr);
--	elf_core_copy_task_regs(p, &t->prstatus.pr_reg);	
--	
-+	elf_core_copy_task_regs(p, &t->prstatus.pr_reg);
-+
- 	fill_note(&t->notes[0], "CORE", NT_PRSTATUS, sizeof(t->prstatus),
- 		  &(t->prstatus));
- 	t->num_notes++;
-@@ -1967,7 +1960,7 @@ static int elf_dump_thread_status(long signr, struct elf_thread_status *t)
- 		t->num_notes++;
- 		sz += notesize(&t->notes[2]);
- 	}
--#endif	
-+#endif
- 	return sz;
- }
- 
-@@ -2205,7 +2198,7 @@ static int elf_core_dump(struct coredump_params *cprm)
- 
- 	/*
- 	 * We no longer stop all VM operations.
--	 * 
-+	 *
- 	 * This is because those proceses that could possibly change map_count
- 	 * or the mmap / vma pages are now blocked in do_exit on current
- 	 * finishing this core dump.
-@@ -2214,7 +2207,7 @@ static int elf_core_dump(struct coredump_params *cprm)
- 	 * the map_count or the pages allocated. So no possibility of crashing
- 	 * exists while dumping the mm->vm_next areas to the core file.
- 	 */
--  
-+
- 	/* alloc memory for large data structures: too large to be on stack */
- 	elf = kmalloc(sizeof(*elf), GFP_KERNEL);
- 	if (!elf)
+ #define BOOT_BOOT_H
+ #include "../ctype.h"
 -- 
-2.17.1
+2.20.1
+
+
 
