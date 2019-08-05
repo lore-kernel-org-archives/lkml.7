@@ -4,55 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B51EC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D194AC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E53FB20651
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:29:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CA0820651
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:29:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011755;
-	bh=lZ4qH7eMqi86NFse/Iv5+y2ZDI6YfEIJiv4HFmce+Kc=;
+	s=default; t=1565011765;
+	bh=1V6EgHECcJ2657FjYfWl2si5OLvZWbuAkA+gcyhoQtg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l8NeqRLl4pMXAMfoiuZEwjyA+QMC0OHWQrJLpBv7izEUPw1qDEmCzGUCkdVkb7TOG
-	 F4W2KxE9DASTx2Bq2NNU+XsJOPPBjbwCvbze8+WeYhIagNaSgcgwze9s8Ztn725Kmk
-	 ze6453kfdFoAQTdUDkeeoKkSBLB7jy3rGTuRNJ5E=
+	b=ihiD35mi8Bl6Fs6VQ7Idfl1HDIZMJKMMMlO1GGEBa6bnV0an80AhVHL31gQaMLmpa
+	 +mnjAXPMkWncnHD01bZYEqzda7kMhpfS1TFgadek85hKkCr+8UJqlXySRLjtn2gZUo
+	 DApXjwfzxdCgFsPQygaxHxMB23o8nWInMQd9sBSY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730283AbfHENWJ (ORCPT
+        id S1730937AbfHEN3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:22:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58372 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:29:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730614AbfHENWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:22:04 -0400
+        id S1729353AbfHENVy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:21:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E5EF20657;
-        Mon,  5 Aug 2019 13:22:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53C952067D;
+        Mon,  5 Aug 2019 13:21:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011324;
-        bh=lZ4qH7eMqi86NFse/Iv5+y2ZDI6YfEIJiv4HFmce+Kc=;
+        s=default; t=1565011313;
+        bh=1V6EgHECcJ2657FjYfWl2si5OLvZWbuAkA+gcyhoQtg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zr+Vdc8Ak8nYZvYvQKpFZ3ncNBgsh8XXVuw0VgY+uSUXmvrmGMHJIrob5IOck33K5
-         S+66t2mVqaI9LB8JRtOPXS67ybllr1NT0sagnPiPEsfxlJoDuFOKRjAVe+L5qWGeem
-         OtFMNANVx4E+Yp/PuSIFD/jmUqJVnSvrpQ6vQ+k0=
+        b=CeR5RwcrPJa5RrZqd7LgUmCbUM5esFaVuCbJdbNH0dpWQSONX9y9MEc4kXY95eC0L
+         m6d1rG+mfwc7UOxBFIvKCV4zP7eN6D4pGIO3lo5kYTLh2xFt0AulxQ65UO+4+87nQp
+         JGUT/s6eTzcUmHx70VMAUfgkCoxOr7qoNX/b8ygY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Henry Burns <henryburns@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Vitaly Vul <vitaly.vul@sony.com>,
-        Vitaly Wool <vitalywool@gmail.com>,
-        Jonathan Adams <jwadams@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Prarit Bhargava <prarit@redhat.com>,
+        Barret Rhoden <brho@google.com>,
+        David Arcari <darcari@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 050/131] mm/z3fold.c: reinitialize zhdr structs after migration
-Date:   Mon,  5 Aug 2019 15:02:17 +0200
-Message-Id: <20190805124954.784647814@linuxfoundation.org>
+Subject: [PATCH 5.2 013/131] kernel/module.c: Only return -EEXIST for modules that have finished loading
+Date:   Mon,  5 Aug 2019 15:01:40 +0200
+Message-Id: <20190805124952.322262893@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -65,59 +63,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c92d2f38563db20c20c8db2f98fa1349290477d5 ]
+[ Upstream commit 6e6de3dee51a439f76eb73c22ae2ffd2c9384712 ]
 
-z3fold_page_migration() calls memcpy(new_zhdr, zhdr, PAGE_SIZE).
-However, zhdr contains fields that can't be directly coppied over (ex:
-list_head, a circular linked list).  We only need to initialize the
-linked lists in new_zhdr, as z3fold_isolate_page() already ensures that
-these lists are empty
+Microsoft HyperV disables the X86_FEATURE_SMCA bit on AMD systems, and
+linux guests boot with repeated errors:
 
-Additionally it is possible that zhdr->work has been placed in a
-workqueue.  In this case we shouldn't migrate the page, as zhdr->work
-references zhdr as opposed to new_zhdr.
+amd64_edac_mod: Unknown symbol amd_unregister_ecc_decoder (err -2)
+amd64_edac_mod: Unknown symbol amd_register_ecc_decoder (err -2)
+amd64_edac_mod: Unknown symbol amd_report_gart_errors (err -2)
+amd64_edac_mod: Unknown symbol amd_unregister_ecc_decoder (err -2)
+amd64_edac_mod: Unknown symbol amd_register_ecc_decoder (err -2)
+amd64_edac_mod: Unknown symbol amd_report_gart_errors (err -2)
 
-Link: http://lkml.kernel.org/r/20190716000520.230595-1-henryburns@google.com
-Fixes: 1f862989b04ade61d3 ("mm/z3fold.c: support page migration")
-Signed-off-by: Henry Burns <henryburns@google.com>
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
-Cc: Vitaly Vul <vitaly.vul@sony.com>
-Cc: Vitaly Wool <vitalywool@gmail.com>
-Cc: Jonathan Adams <jwadams@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+The warnings occur because the module code erroneously returns -EEXIST
+for modules that have failed to load and are in the process of being
+removed from the module list.
+
+module amd64_edac_mod has a dependency on module edac_mce_amd.  Using
+modules.dep, systemd will load edac_mce_amd for every request of
+amd64_edac_mod.  When the edac_mce_amd module loads, the module has
+state MODULE_STATE_UNFORMED and once the module load fails and the state
+becomes MODULE_STATE_GOING.  Another request for edac_mce_amd module
+executes and add_unformed_module() will erroneously return -EEXIST even
+though the previous instance of edac_mce_amd has MODULE_STATE_GOING.
+Upon receiving -EEXIST, systemd attempts to load amd64_edac_mod, which
+fails because of unknown symbols from edac_mce_amd.
+
+add_unformed_module() must wait to return for any case other than
+MODULE_STATE_LIVE to prevent a race between multiple loads of
+dependent modules.
+
+Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+Signed-off-by: Barret Rhoden <brho@google.com>
+Cc: David Arcari <darcari@redhat.com>
+Cc: Jessica Yu <jeyu@kernel.org>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Jessica Yu <jeyu@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/z3fold.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ kernel/module.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/mm/z3fold.c b/mm/z3fold.c
-index 304f2883cdb93..3b27094dc42e1 100644
---- a/mm/z3fold.c
-+++ b/mm/z3fold.c
-@@ -1360,12 +1360,22 @@ static int z3fold_page_migrate(struct address_space *mapping, struct page *newpa
- 		unlock_page(page);
- 		return -EBUSY;
- 	}
-+	if (work_pending(&zhdr->work)) {
-+		z3fold_page_unlock(zhdr);
-+		return -EAGAIN;
-+	}
- 	new_zhdr = page_address(newpage);
- 	memcpy(new_zhdr, zhdr, PAGE_SIZE);
- 	newpage->private = page->private;
- 	page->private = 0;
- 	z3fold_page_unlock(zhdr);
- 	spin_lock_init(&new_zhdr->page_lock);
-+	INIT_WORK(&new_zhdr->work, compact_page_work);
-+	/*
-+	 * z3fold_page_isolate() ensures that new_zhdr->buddy is empty,
-+	 * so we only have to reinitialize it.
-+	 */
-+	INIT_LIST_HEAD(&new_zhdr->buddy);
- 	new_mapping = page_mapping(page);
- 	__ClearPageMovable(page);
- 	ClearPagePrivate(page);
+diff --git a/kernel/module.c b/kernel/module.c
+index 80c7c09584cf9..8431c3d47c97b 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -3385,8 +3385,7 @@ static bool finished_loading(const char *name)
+ 	sched_annotate_sleep();
+ 	mutex_lock(&module_mutex);
+ 	mod = find_module_all(name, strlen(name), true);
+-	ret = !mod || mod->state == MODULE_STATE_LIVE
+-		|| mod->state == MODULE_STATE_GOING;
++	ret = !mod || mod->state == MODULE_STATE_LIVE;
+ 	mutex_unlock(&module_mutex);
+ 
+ 	return ret;
+@@ -3576,8 +3575,7 @@ again:
+ 	mutex_lock(&module_mutex);
+ 	old = find_module_all(mod->name, strlen(mod->name), true);
+ 	if (old != NULL) {
+-		if (old->state == MODULE_STATE_COMING
+-		    || old->state == MODULE_STATE_UNFORMED) {
++		if (old->state != MODULE_STATE_LIVE) {
+ 			/* Wait in case it fails to load. */
+ 			mutex_unlock(&module_mutex);
+ 			err = wait_event_interruptible(module_wq,
 -- 
 2.20.1
 
