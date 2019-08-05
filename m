@@ -2,214 +2,154 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56BCBC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BFFC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 204B321738
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:55:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="qlDE8qK6"
+	by mail.kernel.org (Postfix) with ESMTP id AF28A214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:55:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565013348;
+	bh=mzybu+bDFEKhAYbK0L8pnqrYvuSkK6tBQ5/YJMZrmq4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=qFDvN/ue/pzotgHBIcaE+lPAgNNSlkkD5ePFSQ6XdI6+NFBxUSlL5iB1N1KQVf3NW
+	 9hYWpYF4jWbEAICSh6kJeZvX6wfe8Alddbpyf7K0Fa+Q9uNnfb0IXaG/zShfyiHOy/
+	 //xvarhWHc6fCzJSlc+GLBs4B97JuXB5TpSzP8Xo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729813AbfHENzm (ORCPT
+        id S1729967AbfHENzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:55:42 -0400
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:16086 "EHLO
-        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729720AbfHENzj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:55:39 -0400
-Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x75Dr6eE015931;
-        Mon, 5 Aug 2019 09:55:24 -0400
-Received: from nam04-bn3-obe.outbound.protection.outlook.com (mail-bn3nam04lp2053.outbound.protection.outlook.com [104.47.46.53])
-        by mx0b-00128a01.pphosted.com with ESMTP id 2u6kb20e1d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 05 Aug 2019 09:55:24 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NZZNabxH1YZrJmK5Od99rvWroOvb/VE+pL3NO9bBDZoHwXxZ58U9pZTYDLv370z6kep+/ohhJIxeblanCG8WZ1LAkBCRqpTtXT9M1FZOAIXRELtSnfxNqMCeDuRwvvhJ5XT7IllYeK3C6I07dm60QEJE3VUTgvOg3kobEF8vL01aqHzzcUQaYYkwh+vy0cZPXozqYJf9uUK9fRLA378XZLQKDM6w/nOLcRK7xgCXUPrOB6QB3SyYhtzkkyxD4KjxYi2bPfSLJtFzlOw3/GJVNL/d5rsnGpMnEfCBIZoxFUZFiBPUag2Rtn5if5conV8X2C+Viz25rOh4z/bFAVirqA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2bTXW9FbWsrk053yU3mRr/jjxL5i/KX0fA2tAKONyAU=;
- b=X7fDt/E2BlgrEwUzCmvKHosNubPnHTLlYqsAvR3xPkOx10pUmxJPuF/YPPnEClDZiQR2tHzO52UEe8xo21xHakfeEVWd26c/Y6nLkEUB/j3Nak3Bn5wtPLAmXbJaUypVb/9Svnchy9hHcqyQncJ9di/l+imWu0aGHKfreQe0kheFWnc3Vx6DIX6Fhq8U0+AOnkYaeLtEHqmm0Vf0u03U37tTVy3OTgciOtV+wIzAXCZD4lSaqpexT0oLEDKJir9tHkWN28i/CyoKhdN4K9fS1GuaGiRHwGYOpcT0QXwMkZ77KJZsg9Wq1ofcizXOy85rCPruh+831XyVBBPDczudCg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass (sender ip is
- 137.71.25.55) smtp.rcpttodomain=vger.kernel.org
- smtp.mailfrom=analog.com;dmarc=bestguesspass action=none
- header.from=analog.com;dkim=none (message not signed);arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2bTXW9FbWsrk053yU3mRr/jjxL5i/KX0fA2tAKONyAU=;
- b=qlDE8qK6FEjsIAwLG0+t3sU0RLc6Q2lKzZ8WI3cYbVemUYMCv5yAztp8SNAuK7rmXORZxQchrKKLhTdMWsU+XMONmuLpAZaGYCMrz94m9cGzA/W7Bb7qvaMlUiqdkJnsqyalBzfKF5APGNyO9tS+5qN6VRpG39TNMjhy9AlQB54=
-Received: from BN8PR03CA0022.namprd03.prod.outlook.com (2603:10b6:408:94::35)
- by CY4PR03MB2887.namprd03.prod.outlook.com (2603:10b6:903:132::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2136.17; Mon, 5 Aug
- 2019 13:55:21 +0000
-Received: from BL2NAM02FT009.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::209) by BN8PR03CA0022.outlook.office365.com
- (2603:10b6:408:94::35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2136.17 via Frontend
- Transport; Mon, 5 Aug 2019 13:55:21 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
-Received: from nwd2mta1.analog.com (137.71.25.55) by
- BL2NAM02FT009.mail.protection.outlook.com (10.152.77.68) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2136.14
- via Frontend Transport; Mon, 5 Aug 2019 13:55:20 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x75DtHQQ016208
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Mon, 5 Aug 2019 06:55:17 -0700
-Received: from saturn.ad.analog.com (10.48.65.109) by
- NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Mon, 5 Aug 2019 09:55:20 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <davem@davemloft.net>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <f.fainelli@gmail.com>,
-        <hkallweit1@gmail.com>, <andrew@lunn.ch>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH 07/16] net: phy: adin: make RGMII internal delays configurable
-Date:   Mon, 5 Aug 2019 19:54:44 +0300
-Message-ID: <20190805165453.3989-8-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190805165453.3989-1-alexandru.ardelean@analog.com>
-References: <20190805165453.3989-1-alexandru.ardelean@analog.com>
+        Mon, 5 Aug 2019 09:55:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45346 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729720AbfHENzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:55:43 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F3AA2087B;
+        Mon,  5 Aug 2019 13:55:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565013343;
+        bh=mzybu+bDFEKhAYbK0L8pnqrYvuSkK6tBQ5/YJMZrmq4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=rtobr340u6jDi5lqe4nMpfdooJa0O1JO+brXW4KXyunFEeS5DV9hmGpsONTDvHyzw
+         MmyJ5zQ4E0Y+MX3DTOZRDa9VHgH7hEwvs9fl7uDPXtAwWRrrBpubFiqKJ/jmt7dSXW
+         2ehblUjsBgtg2uKu5YDU0VAhNouL04mbc7wrRM+k=
+Date:   Mon, 5 Aug 2019 14:55:38 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Kevin Tsai <ktsai@capellamicro.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Daniel Baluta <daniel.baluta@gmail.com>
+Subject: Re: [PATCH v2] iio: light: cm3323: Use device-managed APIs
+Message-ID: <20190805145538.4a3561c0@archlinux>
+In-Reply-To: <20190728143630.7620-1-hslester96@gmail.com>
+References: <20190728143630.7620-1-hslester96@gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(39860400002)(376002)(396003)(346002)(2980300002)(199004)(189003)(2906002)(316002)(76176011)(1076003)(2201001)(126002)(4326008)(47776003)(36756003)(11346002)(51416003)(426003)(486006)(336012)(246002)(26005)(2616005)(7696005)(476003)(44832011)(50466002)(446003)(186003)(6666004)(48376002)(50226002)(70586007)(8936002)(70206006)(54906003)(8676002)(107886003)(478600001)(86362001)(356004)(5660300002)(2870700001)(106002)(7636002)(110136005)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR03MB2887;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9d816bca-a0c4-4da5-c325-08d719ac8e62
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:CY4PR03MB2887;
-X-MS-TrafficTypeDiagnostic: CY4PR03MB2887:
-X-Microsoft-Antispam-PRVS: <CY4PR03MB288740E45C29E176A541ADF7F9DA0@CY4PR03MB2887.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2803;
-X-Forefront-PRVS: 01208B1E18
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: i6T3Mdxl/uTvN+JHItFwBB4CWO9MMjQluXTIL4JJ+QG8st4ooTMFz6XIx2oBXHs8YPMB77SfLL5e71Hx4cBvnAL2sQIxLjVQ+VcuOP2pqAH/NovfGmPB9pm6L+c5c0/3OKD8MPZkhxgklizHaNlEbJf+pPn/ym5mSlsPIXJZUw16A/c46vwL1If3XpsJcvBf/RMnUpCbY5isOU91/XBU6ooAmNub3We2dJ9yb3Sni217fJYTsdrr4WPtYnwBoZTX4+BFfP//0NaDnnmI4wzMVjkfl9rQsAT7j9bYFBpYp7nVlLZGwy9CLT0LDm5pbALZ2x3s5aTYbDu3z7Fxg5dnsguU5bHYvoVLTQu3LbgDFofLmNwYnqOiuTIe/Z1v6TnmmFC1WoDqzkoKvu2uYXxi4xUPgbofMUjvSYnemj24jxo=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Aug 2019 13:55:20.9110
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9d816bca-a0c4-4da5-c325-08d719ac8e62
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR03MB2887
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-05_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908050154
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The internal delays for the RGMII are configurable for both RX & TX. This
-change adds support for configuring them via device-tree (or ACPI).
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/net/phy/adin.c | 37 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
++CC Daniel as this is one of his I think.
 
-diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-index e3d2ff8cc09c..cb96d47d457e 100644
---- a/drivers/net/phy/adin.c
-+++ b/drivers/net/phy/adin.c
-@@ -5,6 +5,7 @@
-  * Copyright 2019 Analog Devices Inc.
-  */
- #include <linux/kernel.h>
-+#include <linux/bitfield.h>
- #include <linux/errno.h>
- #include <linux/init.h>
- #include <linux/module.h>
-@@ -12,6 +13,8 @@
- #include <linux/phy.h>
- #include <linux/property.h>
- 
-+#include <dt-bindings/net/adin.h>
-+
- #define PHY_ID_ADIN1200				0x0283bc20
- #define PHY_ID_ADIN1300				0x0283bc30
- 
-@@ -35,6 +38,12 @@
- #define ADIN1300_INT_STATUS_REG			0x0019
- 
- #define ADIN1300_GE_RGMII_CFG_REG		0xff23
-+#define   ADIN1300_GE_RGMII_RX_MSK		GENMASK(8, 6)
-+#define   ADIN1300_GE_RGMII_RX_SEL(x)		\
-+		FIELD_PREP(ADIN1300_GE_RGMII_RX_MSK, x)
-+#define   ADIN1300_GE_RGMII_GTX_MSK		GENMASK(5, 3)
-+#define   ADIN1300_GE_RGMII_GTX_SEL(x)		\
-+		FIELD_PREP(ADIN1300_GE_RGMII_GTX_MSK, x)
- #define   ADIN1300_GE_RGMII_RXID_EN		BIT(2)
- #define   ADIN1300_GE_RGMII_TXID_EN		BIT(1)
- #define   ADIN1300_GE_RGMII_EN			BIT(0)
-@@ -67,6 +76,32 @@ static int adin_get_phy_internal_mode(struct phy_device *phydev)
- 	return -EINVAL;
- }
- 
-+static void adin_config_rgmii_rx_internal_delay(struct phy_device *phydev,
-+						int *reg)
-+{
-+	struct device *dev = &phydev->mdio.dev;
-+	u32 val;
-+
-+	if (device_property_read_u32(dev, "adi,rx-internal-delay", &val))
-+		val = ADIN1300_RGMII_2_00_NS;
-+
-+	*reg &= ADIN1300_GE_RGMII_RX_MSK;
-+	*reg |= ADIN1300_GE_RGMII_RX_SEL(val);
-+}
-+
-+static void adin_config_rgmii_tx_internal_delay(struct phy_device *phydev,
-+						int *reg)
-+{
-+	struct device *dev = &phydev->mdio.dev;
-+	u32 val;
-+
-+	if (device_property_read_u32(dev, "adi,tx-internal-delay", &val))
-+		val = ADIN1300_RGMII_2_00_NS;
-+
-+	*reg &= ADIN1300_GE_RGMII_GTX_MSK;
-+	*reg |= ADIN1300_GE_RGMII_GTX_SEL(val);
-+}
-+
- static int adin_config_rgmii_mode(struct phy_device *phydev,
- 				  phy_interface_t intf)
- {
-@@ -86,6 +121,7 @@ static int adin_config_rgmii_mode(struct phy_device *phydev,
- 	if (intf == PHY_INTERFACE_MODE_RGMII_ID ||
- 	    intf == PHY_INTERFACE_MODE_RGMII_RXID) {
- 		reg |= ADIN1300_GE_RGMII_RXID_EN;
-+		adin_config_rgmii_rx_internal_delay(phydev, &reg);
- 	} else {
- 		reg &= ~ADIN1300_GE_RGMII_RXID_EN;
- 	}
-@@ -93,6 +129,7 @@ static int adin_config_rgmii_mode(struct phy_device *phydev,
- 	if (intf == PHY_INTERFACE_MODE_RGMII_ID ||
- 	    intf == PHY_INTERFACE_MODE_RGMII_TXID) {
- 		reg |= ADIN1300_GE_RGMII_TXID_EN;
-+		adin_config_rgmii_tx_internal_delay(phydev, &reg);
- 	} else {
- 		reg &= ~ADIN1300_GE_RGMII_TXID_EN;
- 	}
--- 
-2.20.1
+On Sun, 28 Jul 2019 22:36:30 +0800
+Chuhong Yuan <hslester96@gmail.com> wrote:
+
+> Use device-managed APIs to simplify the code.
+> The remove functions are redundant now and can
+> be deleted.
+> 
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to play with it.
+
+Thanks,
+
+Jonathan
+
+> ---
+> Changes in v2:
+>   - Split v1 into two patches.
+>   - Drop the failed to register message and just
+>     return devm_iio_register.
+> 
+>  drivers/iio/light/cm3323.c | 33 +++++++++------------------------
+>  1 file changed, 9 insertions(+), 24 deletions(-)
+> 
+> diff --git a/drivers/iio/light/cm3323.c b/drivers/iio/light/cm3323.c
+> index 50f3438c2b49..0443861ba1ec 100644
+> --- a/drivers/iio/light/cm3323.c
+> +++ b/drivers/iio/light/cm3323.c
+> @@ -101,15 +101,16 @@ static int cm3323_init(struct iio_dev *indio_dev)
+>  	return 0;
+>  }
+>  
+> -static void cm3323_disable(struct iio_dev *indio_dev)
+> +static void cm3323_disable(void *data)
+>  {
+>  	int ret;
+> -	struct cm3323_data *data = iio_priv(indio_dev);
+> +	struct iio_dev *indio_dev = data;
+> +	struct cm3323_data *cm_data = iio_priv(indio_dev);
+>  
+> -	ret = i2c_smbus_write_word_data(data->client, CM3323_CMD_CONF,
+> +	ret = i2c_smbus_write_word_data(cm_data->client, CM3323_CMD_CONF,
+>  					CM3323_CONF_SD_BIT);
+>  	if (ret < 0)
+> -		dev_err(&data->client->dev, "Error writing reg_conf\n");
+> +		dev_err(&cm_data->client->dev, "Error writing reg_conf\n");
+>  }
+>  
+>  static int cm3323_set_it_bits(struct cm3323_data *data, int val, int val2)
+> @@ -243,26 +244,11 @@ static int cm3323_probe(struct i2c_client *client,
+>  		return ret;
+>  	}
+>  
+> -	ret = iio_device_register(indio_dev);
+> -	if (ret < 0) {
+> -		dev_err(&client->dev, "failed to register iio dev\n");
+> -		goto err_init;
+> -	}
+> -
+> -	return 0;
+> -err_init:
+> -	cm3323_disable(indio_dev);
+> -	return ret;
+> -}
+> -
+> -static int cm3323_remove(struct i2c_client *client)
+> -{
+> -	struct iio_dev *indio_dev = i2c_get_clientdata(client);
+> -
+> -	iio_device_unregister(indio_dev);
+> -	cm3323_disable(indio_dev);
+> +	ret = devm_add_action_or_reset(&client->dev, cm3323_disable, indio_dev);
+> +	if (ret < 0)
+> +		return ret;
+>  
+> -	return 0;
+> +	return devm_iio_device_register(&client->dev, indio_dev);
+>  }
+>  
+>  static const struct i2c_device_id cm3323_id[] = {
+> @@ -276,7 +262,6 @@ static struct i2c_driver cm3323_driver = {
+>  		.name = CM3323_DRV_NAME,
+>  	},
+>  	.probe		= cm3323_probe,
+> -	.remove		= cm3323_remove,
+>  	.id_table	= cm3323_id,
+>  };
+>  
 
