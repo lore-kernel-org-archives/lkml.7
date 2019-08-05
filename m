@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCBBC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 232CBC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0015B20657
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:22:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB397214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:22:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011323;
-	bh=i7gOVqMtjCBskIH84y4UQDJED3Qg6Jnw4PH2U/WCxUk=;
+	s=default; t=1565011327;
+	bh=L2n12sUqOg47COSrX65P7AFO8JpGrbfguF3fj3jB14s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CfVwhTXDK5kIFXn24PtpdmwbEbrS822mdjW+C2NfDNsCpuRNALlL9o+XJKHyuEHuP
-	 sc6zyD2mQql0Jaxxazor12qDPMv/ICcSZQlUYrckaz5N4L+bdwApbwlbVVtbpz6BIe
-	 qDSVR9zaADFIcjTE9nAX4J+optfPVuevy/qc/KVE=
+	b=ncZpntT3CIFthOokvnRL0ktqhfAsTXzBrp7+cU1CZNKIjOW0qeREjINdnpU1ueWtB
+	 lS9sLcxQ7cEVu3eBCgm+CimY83smmfqJPOXFiuMPa6qsAJgTmv/wztmLnlbtuuiwyo
+	 XjfxC4uqVGO6uLT5ldVjfpgQCMfaYnPZPva5cCEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729393AbfHENWC (ORCPT
+        id S1730620AbfHENWF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:22:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58224 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:22:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730592AbfHENV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:21:57 -0400
+        id S1729900AbfHENWC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:22:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEA8620880;
-        Mon,  5 Aug 2019 13:21:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC80F2067D;
+        Mon,  5 Aug 2019 13:22:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011316;
-        bh=i7gOVqMtjCBskIH84y4UQDJED3Qg6Jnw4PH2U/WCxUk=;
+        s=default; t=1565011321;
+        bh=L2n12sUqOg47COSrX65P7AFO8JpGrbfguF3fj3jB14s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IvPoyXb9YqhHVUS+10ed9At1ySfSBsWXnCtpujq6qHXuHTvbRl+tI0xttlVb8wXAO
-         +sHXE5gvknanYAAPixFbARpOzlebvIIu5VxdJ4BRCZkDcCxh1reXLRxbdqUKYVaD+A
-         BRaSc1gAqfL3S+OpwMcDeKSBslEtmP87oxxmfkPo=
+        b=nN2mv71RnZ3/th+NGTQaTdNWFL5mhUnbE+dET1ep3CWEE3RmT35jGEv9Q6cC6A5lu
+         ZCDULQatm/aiqfKvvmKdBGgeDW1LXZoOCQdz67WDJIIMgPJrQPPkwxluzhM7JoD+R0
+         YuFg8lNwHYz4deyMscyUfcRges/AjNJVE1ZTHh3w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
+        stable@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 014/131] PCI: OF: Initialize dev->fwnode appropriately
-Date:   Mon,  5 Aug 2019 15:01:41 +0200
-Message-Id: <20190805124952.389932592@linuxfoundation.org>
+Subject: [PATCH 5.2 041/131] perf version: Fix segfault due to missing OPT_END()
+Date:   Mon,  5 Aug 2019 15:02:08 +0200
+Message-Id: <20190805124954.181133823@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -61,59 +64,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 59b099a6c75e4ddceeaf9676422d8d91d0049755 ]
+[ Upstream commit 916c31fff946fae0e05862f9b2435fdb29fd5090 ]
 
-For PCI devices that have an OF node, set the fwnode as well. This way
-drivers that rely on fwnode don't need the special case described by
-commit f94277af03ea ("of/platform: Initialise dev->fwnode appropriately").
+'perf version' on powerpc segfaults when used with non-supported
+option:
+  # perf version -a
+  Segmentation fault (core dumped)
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Fix this.
+
+Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Tested-by: Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Link: http://lkml.kernel.org/r/20190611030109.20228-1-ravi.bangoria@linux.ibm.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/of.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ tools/perf/builtin-version.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index 73d5adec0a28d..bc7b27a28795d 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -22,12 +22,15 @@ void pci_set_of_node(struct pci_dev *dev)
- 		return;
- 	dev->dev.of_node = of_pci_find_child_device(dev->bus->dev.of_node,
- 						    dev->devfn);
-+	if (dev->dev.of_node)
-+		dev->dev.fwnode = &dev->dev.of_node->fwnode;
- }
+diff --git a/tools/perf/builtin-version.c b/tools/perf/builtin-version.c
+index f470144d1a704..bf114ca9ca870 100644
+--- a/tools/perf/builtin-version.c
++++ b/tools/perf/builtin-version.c
+@@ -19,6 +19,7 @@ static struct version version;
+ static struct option version_options[] = {
+ 	OPT_BOOLEAN(0, "build-options", &version.build_options,
+ 		    "display the build options"),
++	OPT_END(),
+ };
  
- void pci_release_of_node(struct pci_dev *dev)
- {
- 	of_node_put(dev->dev.of_node);
- 	dev->dev.of_node = NULL;
-+	dev->dev.fwnode = NULL;
- }
- 
- void pci_set_bus_of_node(struct pci_bus *bus)
-@@ -41,13 +44,18 @@ void pci_set_bus_of_node(struct pci_bus *bus)
- 		if (node && of_property_read_bool(node, "external-facing"))
- 			bus->self->untrusted = true;
- 	}
-+
- 	bus->dev.of_node = node;
-+
-+	if (bus->dev.of_node)
-+		bus->dev.fwnode = &bus->dev.of_node->fwnode;
- }
- 
- void pci_release_bus_of_node(struct pci_bus *bus)
- {
- 	of_node_put(bus->dev.of_node);
- 	bus->dev.of_node = NULL;
-+	bus->dev.fwnode = NULL;
- }
- 
- struct device_node * __weak pcibios_get_phb_of_node(struct pci_bus *bus)
+ static const char * const version_usage[] = {
 -- 
 2.20.1
 
