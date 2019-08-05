@@ -2,116 +2,91 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D7AC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 079E7C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83A532087B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5B7F2087B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:16:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CEpf7s4k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728318AbfHEKQe (ORCPT
+        id S1728347AbfHEKQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 06:16:34 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:35888 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728190AbfHEKQd (ORCPT
+        Mon, 5 Aug 2019 06:16:39 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:36938 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728319AbfHEKQi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 06:16:33 -0400
-Received: by mail-ed1-f65.google.com with SMTP id k21so78154441edq.3;
-        Mon, 05 Aug 2019 03:16:31 -0700 (PDT)
+        Mon, 5 Aug 2019 06:16:38 -0400
+Received: by mail-lf1-f66.google.com with SMTP id c9so57425099lfh.4
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 03:16:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SrbJD1vEfE60HVKjYoBmFtGgNGgrOIdfFoPt4X6Q+2M=;
+        b=CEpf7s4k5oxGDjJNaYqs3rNyMc08fXeAZr7+86sI4zxQ09hLwEgCj/ZTWv270igZUA
+         MBnuxP52z+gVvbpCqKNyoY/rVW2zFwZ1dBho3naVESdTps3/PYebbyvptTrbEy0FoD7u
+         F4b61y3FBnom8OagnIdGxalPnqdxXn5wtX6dhu+iFbx9p5RuFlAOt1/5Dn1HlQ5JbGZX
+         wzDRVmOCjoF2gyOlZKWNfNvoPKyFRyB6X0Y9s5eEwSfcCLRLwT7DijoYst5XrAvrcFIR
+         yXzqQ28Y9KXDIGGjcy93VHBgEtefP/zmwNeshyNooHMfGTh4M2r2ormcG94/UfhxaQsF
+         pHow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3byZm4WW5S66f9sH9AAiCJ18IamGlDO717O/42CmSCg=;
-        b=gt/k6a71k8lNHd/S6ml9DU9yj5zJQ4XfIW24iRo4Sz0Qugt0d8rIms/CrfJQc9ARf9
-         VjqTLD3qoTAx+RIQEpazxpQ0trQMieBBb9GZkN2n+Z+kBbbLvY09DqnRYxXzyYXvmW0b
-         51oHu0PV2r1LVEMKJ1G7fZZ9AbelehL3INlMUIny4I82QhLTbECTY/uXts1TOkv0G3kx
-         Omxqcpy5/f8zfR3Lq2Pns0CLoZISxKIJQbNHI/HNJ0ZlKDehLL7X71fdX2aERclow+EK
-         89S+gxy9TzUYRyyy0dHuqkB3w+iY1QjaF+erF0AWnmNgKfAEFKhDL24jN3z8ZF+vwxlp
-         tPdA==
-X-Gm-Message-State: APjAAAXHA3vTlmCunbSFhI3iva+CpVa4ppnmLxavLXhowp8QWYqLIgBS
-        7sQSDu4IVS0osiDj9989RPCX3swelbA=
-X-Google-Smtp-Source: APXvYqxAN0sxCtDc4KhWPVHTXzChQfZCMBd7qpDFXGJMW0lrk+7+ss52WdJZUbQ1knMd9Zk3P8ACpw==
-X-Received: by 2002:aa7:c515:: with SMTP id o21mr132330413edq.2.1565000190536;
-        Mon, 05 Aug 2019 03:16:30 -0700 (PDT)
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com. [209.85.221.54])
-        by smtp.gmail.com with ESMTPSA id h10sm18916541edn.86.2019.08.05.03.16.29
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 05 Aug 2019 03:16:30 -0700 (PDT)
-Received: by mail-wr1-f54.google.com with SMTP id c2so80591053wrm.8;
-        Mon, 05 Aug 2019 03:16:29 -0700 (PDT)
-X-Received: by 2002:adf:c613:: with SMTP id n19mr104922068wrg.109.1565000189770;
- Mon, 05 Aug 2019 03:16:29 -0700 (PDT)
+        bh=SrbJD1vEfE60HVKjYoBmFtGgNGgrOIdfFoPt4X6Q+2M=;
+        b=GUN6xVHvDbTKFgK5f2P1vFRoc7DGjeYm+fZbITRFTtp/6Fv+HqIfKCAfPFpZO+3MgV
+         1HtSfGBEqA07gBtt4Xw5zZAQ0x+p8QBsUJfBwE9QZw1xNOzvsSwbYHeqxWn89IHqbLGl
+         F64ogwizAIpdJHiNjWG7NldgnZsY6ZZDaWb+LJb7rosNyeBN4ovSpLkxEbbsX8VA1hhD
+         JTEM5uWPjs4DERUuddSmUXD83zelQVQlMfEw7NMEQm6Z7fIHMYwC+ICSO8ZilgwM2l7z
+         Yk+BMVeYnsQwryWVDGOz1z84dt04IJYiIj77P6D/1X+IBv+w80NrvZhtnPMwCKCZbvsl
+         +FHg==
+X-Gm-Message-State: APjAAAVAvqMst30Jk1ASu1bJtaOWbUiqUFBSexc3VmhrQn74zsLtuFV6
+        N/5KYZ7Nzqfxy00L58V1pJIVDDYJEkuVq2UiuXvfYA==
+X-Google-Smtp-Source: APXvYqyOosV8sv/TZHhVjwj5Q16nJaAbVg2+Q5BdPmAvWKsycRacpctNaCXuf4VkQIw648gtA3ql91UGmSXtMQwMmXU=
+X-Received: by 2002:ac2:5382:: with SMTP id g2mr68773554lfh.92.1565000196094;
+ Mon, 05 Aug 2019 03:16:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190412120730.473-1-megous@megous.com> <20190412120730.473-3-megous@megous.com>
-In-Reply-To: <20190412120730.473-3-megous@megous.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Mon, 5 Aug 2019 18:16:14 +0800
-X-Gmail-Original-Message-ID: <CAGb2v675j-aCLMgPJOzr9yx1XxsUvHRr_K7VnL=p8mSdwpu2jw@mail.gmail.com>
-Message-ID: <CAGb2v675j-aCLMgPJOzr9yx1XxsUvHRr_K7VnL=p8mSdwpu2jw@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH 2/3] rtc: sun6i: Add support for H6 RTC
-To:     =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        linux-rtc@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
+References: <20190725142419.29892-1-yuehaibing@huawei.com>
+In-Reply-To: <20190725142419.29892-1-yuehaibing@huawei.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 5 Aug 2019 12:16:24 +0200
+Message-ID: <CACRpkdZ+fBDKB3i8D=YKK-iVUeBN23b=2YdhnOY-dwR1tyQnYQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: oxnas: remove set but not used variable 'arg'
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-oxnas@groups.io,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 8:07 PM megous via linux-sunxi
-<linux-sunxi@googlegroups.com> wrote:
->
-> From: Ondrej Jirman <megous@megous.com>
->
-> RTC on H6 is mostly the same as on H5 and H3. It has slight differences
-> mostly in features that are not yet supported by this driver.
->
-> Some differences are already stated in the comments in existing code.
-> One other difference is that H6 has extra bit in LOSC_CTRL_REG, called
-> EXT_LOSC_EN to enable/disable external low speed crystal oscillator.
->
-> It also has bit EXT_LOSC_STA in LOSC_AUTO_SWT_STA_REG, to check whether
-> external low speed oscillator is working correctly.
->
-> This patch adds support for enabling LOSC when necessary:
->
-> - during reparenting
-> - when probing the clock
->
-> H6 also has capacbility to automatically reparent RTC clock from
-> external crystal oscillator, to internal RC oscillator, if external
-> oscillator fails. This is enabled by default. Disable it during
-> probe.
->
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> ---
->  drivers/rtc/rtc-sun6i.c | 40 ++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 38 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
-> index 11f56de52179..7375a530c565 100644
-> --- a/drivers/rtc/rtc-sun6i.c
-> +++ b/drivers/rtc/rtc-sun6i.c
-> @@ -41,9 +41,11 @@
->  /* Control register */
->  #define SUN6I_LOSC_CTRL                                0x0000
->  #define SUN6I_LOSC_CTRL_KEY                    (0x16aa << 16)
-> +#define SUN6I_LOSC_CTRL_AUTO_SWT_BYPASS                BIT(15)
+On Thu, Jul 25, 2019 at 4:24 PM YueHaibing <yuehaibing@huawei.com> wrote:
 
-Manual says bit 14? Or is this different from LOSC_AUTO_SWT_EN?
+> Fixes gcc '-Wunused-but-set-variable' warning:
+>
+> drivers/pinctrl/pinctrl-oxnas.c: In function oxnas_ox810se_pinconf_set:
+> drivers/pinctrl/pinctrl-oxnas.c:905:6: warning: variable arg set but not used [-Wunused-but-set-variable]
+> drivers/pinctrl/pinctrl-oxnas.c: In function oxnas_ox820_pinconf_set:
+> drivers/pinctrl/pinctrl-oxnas.c:944:6: warning: variable arg set but not used [-Wunused-but-set-variable]
+>
+> It is never used since commit 4b0c0c25fa79 ("pinctrl:
+> oxnas: Add support for OX820"), so can be removed.
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-The rest looks ok.
+Patch applied.
 
-ChenYu
+Yours,
+Linus Walleij
