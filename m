@@ -2,146 +2,106 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75759C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69BE7C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:03:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FFDF2064A
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:01:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PMxbfiSM"
+	by mail.kernel.org (Postfix) with ESMTP id 4506F2064A
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:03:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729157AbfHEQBc (ORCPT
+        id S1729031AbfHEQDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 12:01:32 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44232 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726559AbfHEQBb (ORCPT
+        Mon, 5 Aug 2019 12:03:05 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39163 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727349AbfHEQDF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 12:01:31 -0400
-Received: by mail-wr1-f65.google.com with SMTP id p17so84944447wrf.11
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 09:01:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=I6j4ZxMaWGS3ScQ5dYywCZhv8aZuc2y/2ZEwdEBFjM0=;
-        b=PMxbfiSMRVb2CVi78S7JPr4kqNeAtYQt4QEY6FnGOvc/Y9c8iJhcL1bzUGgTScNz9Z
-         4Iz7Ay6J+hDVaWZc7sclhnUOzWo9QvkJj26mj39rToOdpSyYK6Marij2v4EmUrvQ81z6
-         XzFvCFAX70+HYi1F4I3AXJF+/9WLydPCtMmiIn2pzmeLqA5DAtvCO1q10rtHRZyyFa4V
-         lQgtvFRVTAG4aMgIeRLk5jKdg4xj1A9Mthd6V4RJn8U2SI6U/WqVaB3DafYYp4GA2Pj3
-         sT+oPkdvPkl1RLTV6Dux5uvcH/THfNfwFpZ7G5XUGJLaEj8O9Deqgt3ZMAhoyrICv/O3
-         p4qg==
+        Mon, 5 Aug 2019 12:03:05 -0400
+Received: by mail-wm1-f67.google.com with SMTP id u25so63187242wmc.4
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 09:03:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=I6j4ZxMaWGS3ScQ5dYywCZhv8aZuc2y/2ZEwdEBFjM0=;
-        b=IKmdwm1A4+bsO6dAgsu1GqZCp6OXvsyUl49CX+7skO/Yq7guxkeQkn66+eKKCoujS3
-         xJ7ynzBBN0Lpn837fX+6vykKD0k2wZ8rnJPo3HgeDsF+zbMKGXZPxmg/iYhBOMPOz3br
-         eExS/a8lq/ICWIDh8eZnupGy1pDhKAqwRYdVkBPNX1GY7nGAj9sGglvqb5GjabKlmryc
-         sf5fGcw4/vpWAzKAmB1Jf602KS/vhCCCgMXDxp9yZoDAj87Lz6Frq2nbPQ4uXgaPWj93
-         ZwGIv5++fZLhixT+VU1BFQiN2DQ9I6TzTezQxMJRvYt/AEVmG/dBUi16a4TYMK8vBybG
-         mhoQ==
-X-Gm-Message-State: APjAAAVBnNMxngBl8ajT/N5SmfOJ9L/3qWkrN9VJYn7wooGdPEi2R5ON
-        FkHChC4ujaxfLhTHOO/QM8I6YLt+bT2+OxtqPLV0+g==
-X-Google-Smtp-Source: APXvYqzzl2uBb2K29t8VL4rEak+IjBCH2cxdGjkA0Y/AUt/aWR4t/c7z3oqdAHgJrbelidfqtath+dA0ugEzYW8v6GA=
-X-Received: by 2002:a5d:46cf:: with SMTP id g15mr26783408wrs.93.1565020889861;
- Mon, 05 Aug 2019 09:01:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <b20dd437-790a-aad9-0515-061751d46e53@redhat.com>
- <CAKv+Gu8p47SHEtTHQu_3agQJDH2yYjQJ5xUvE+oTiLaY=sZdUA@mail.gmail.com> <ff73efc3-1951-2982-3ddf-e77005c5fddb@redhat.com>
-In-Reply-To: <ff73efc3-1951-2982-3ddf-e77005c5fddb@redhat.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Mon, 5 Aug 2019 19:01:20 +0300
-Message-ID: <CAKv+Gu9nEM5D877YD+N8tSN0sON6rR3f+Tc-9bg5u==+9Q2meA@mail.gmail.com>
-Subject: Re: 5.3 boot regression caused by 5.3 TPM changes
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Matthew Garrett <mjg59@google.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LwK/9xcoxcLhVd0bC7/eyesTfSVbLSLef7bJ1QJeiPA=;
+        b=LVVGRxbhM84p4BY1nflnY85hASNh+Fj1eViiK5GYLqZSj4/WUbcFhBlRjkeoDoo4ca
+         a6ErT0PcGG8RxNHYdyN/WdKPY9kdoD3pkN+iel6qPctJGPNYna4LXuJ7oYj8TZ4CiXT8
+         TBTIrwQnELZsTrpokVYLn0wkD5PVOnUpOnj0pbXLPu/icnr9AdJy79S2mWgLWA9dSFsZ
+         T1ktJ5EV2Y0iL+FGRnn2xqDHa0xfN9FJzG+POlZOrcqfHVXzny66xforW0XcSIEV4R+p
+         0ZgRgFKYUQfbhZ3UrAu4NWNkfmwIdQGLlcRYlsxSsR1R+2QyJOxKemtJopwzJ3Y8ttDO
+         C5ag==
+X-Gm-Message-State: APjAAAX4Z1GpizxSJXC7dKj7ioojAAXRBvEVyM33345hMNkxDutx+bz6
+        1Yysb532FKHxaiz6YFe2nt0HTsxIFng=
+X-Google-Smtp-Source: APXvYqzGW/23QI5xsDwaQipvdvH1ice7rq/tQKOY4EpSalvG7w4huAOnxqDQnYhgBxpemU160KN5eg==
+X-Received: by 2002:a05:600c:1008:: with SMTP id c8mr19642061wmc.133.1565020983219;
+        Mon, 05 Aug 2019 09:03:03 -0700 (PDT)
+Received: from [192.168.178.40] ([151.21.165.91])
+        by smtp.gmail.com with ESMTPSA id n3sm76821109wrt.31.2019.08.05.09.03.02
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 05 Aug 2019 09:03:02 -0700 (PDT)
+Subject: Re: [PATCH v3 11/19] RISC-V: KVM: Implement VMID allocator
+To:     Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Radim K <rkrcmar@redhat.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Anup Patel <anup@brainfault.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190805134201.2814-1-anup.patel@wdc.com>
+ <20190805134201.2814-12-anup.patel@wdc.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <21bdde39-8d33-6aae-e729-476ce11406a3@redhat.com>
+Date:   Mon, 5 Aug 2019 18:03:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190805134201.2814-12-anup.patel@wdc.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 4 Aug 2019 at 19:12, Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi,
->
-> On 04-08-19 17:33, Ard Biesheuvel wrote:
-> > Hi Hans,
-> >
-> > On Sun, 4 Aug 2019 at 13:00, Hans de Goede <hdegoede@redhat.com> wrote:
-> >>
-> >> Hi All,
-> >>
-> >> While testing 5.3-rc2 on an Irbis TW90 Intel Cherry Trail based
-> >> tablet I noticed that it does not boot on this device.
-> >>
-> >> A git bisect points to commit 166a2809d65b ("tpm: Don't duplicate
-> >> events from the final event log in the TCG2 log")
-> >>
-> >> And I can confirm that reverting just that single commit makes
-> >> the TW90 boot again.
-> >>
-> >> This machine uses AptIO firmware with base component versions
-> >> of: UEFI 2.4 PI 1.3. I've tried to reproduce the problem on
-> >> a Teclast X80 Pro which is also CHT based and also uses AptIO
-> >> firmware with the same base components. But it does not reproduce
-> >> there. Neither does the problem reproduce on a CHT tablet using
-> >> InsideH20 based firmware.
-> >>
-> >> Note that these devices have a software/firmware TPM-2.0
-> >> implementation, they do not have an actual TPM chip.
-> >>
-> >> Comparing TPM firmware setting between the 2 AptIO based
-> >> tablets the settings are identical, but the troublesome
-> >> TW90 does have some more setting then the X80, it has
-> >> the following settings which are not shown on the X80:
-> >>
-> >> Active PCR banks:           SHA-1         (read only)
-> >> Available PCR banks:        SHA-1,SHA256  (read only)
-> >> TPM2.0 UEFI SPEC version:   TCG_2         (other possible setting: TCG_1_2
-> >> Physical Presence SPEC ver: 1.2           (other possible setting: 1.3)
-> >>
-> >> I have the feeling that at least the first 2 indicate that
-> >> the previous win10 installation has actually used the
-> >> TPM, where as on the X80 the TPM is uninitialized.
-> >> Note this is just a hunch I could be completely wrong.
-> >>
-> >> I would be happy to run any commands to try and debug this
-> >> or to build a kernel with some patches to gather more info.
-> >>
-> >> Note any kernel patches to printk some debug stuff need
-> >> to be based on 5.3 with 166a2809d65b reverted, without that
-> >> reverted the device will not boot, and thus I cannot collect
-> >> logs without it reverted.
-> >>
-> >
-> > Are you booting a 64-bit kernel on 32-bit firmware?
->
-> Yes you are right, I must say that this is somewhat surprising
-> most Cherry Trail devices do use 64 bit firmware (where as Bay Trail
-> typically uses 32 bit). But I just checked efibootmgr output and it
-> says it is booting: \EFI\FEDORA\SHIMIA32.EFI so yeah 32 bit firmware.
->
-> Recent Fedora releases take care of this so seamlessly I did not
-> even realize...
->
+On 05/08/19 15:43, Anup Patel wrote:
+> +	spin_lock(&vmid_lock);
+> +
+> +	/*
+> +	 * We need to re-check the vmid_version here to ensure that if
+> +	 * another vcpu already allocated a valid vmid for this vm.
+> +	 */
+> +	if (!kvm_riscv_stage2_vmid_ver_changed(vmid)) {
+> +		spin_unlock(&vmid_lock);
+> +		return;
+> +	}
+> +
+> +	/* First user of a new VMID version? */
+> +	if (unlikely(vmid_next == 0)) {
+> +		WRITE_ONCE(vmid_version, READ_ONCE(vmid_version) + 1);
+> +		vmid_next = 1;
+> +
+> +		/*
+> +		 * On SMP, we know no other CPUs can use this CPU's or
+> +		 * each other's VMID after forced exit returns since the
+> +		 * vmid_lock blocks them from re-entry to the guest.
+> +		 */
+> +		spin_unlock(&vmid_lock);
+> +		kvm_flush_remote_tlbs(vcpu->kvm);
+> +		spin_lock(&vmid_lock);
 
-OK, so we'll have to find out how this patch affects 64-bit code
-running on 32-bit firmware. The only EFI call in that patch is
-get_config_table(), which is not actually a EFI boot service call but
-a EFI stub helper that parses the config table array in the EFI system
-table.
+This comment is not true anymore, so this "if" should become a "while".
+
+Paolo
