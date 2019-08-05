@@ -2,173 +2,122 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17413C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F58CC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD3CC216F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E58320880
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:15:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JjTRgPB+"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CMvFpVuQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729608AbfHERPA (ORCPT
+        id S1729941AbfHERPX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 13:15:00 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:38584 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728843AbfHERO7 (ORCPT
+        Mon, 5 Aug 2019 13:15:23 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35569 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728843AbfHERPX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 13:14:59 -0400
-Received: by mail-io1-f68.google.com with SMTP id j6so1209411ioa.5
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 10:14:59 -0700 (PDT)
+        Mon, 5 Aug 2019 13:15:23 -0400
+Received: by mail-pf1-f196.google.com with SMTP id u14so39989952pfn.2
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 10:15:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BaGEBCCvHgLEeEM0jkTTKpXw1mRgMNiOlwrLO1Ss3pE=;
-        b=JjTRgPB+SGUpcW+V3EtO6gL93HfTBnpBBM2vny9l8TcyUi5UkRHiDr4pq4BfGTxDm9
-         6qlTZ0bf4iNdZYF/tA9gMQDaHOKsCk0kkQ7sG+UIrccFLU970xNtlgGQHFVJcps/j+6g
-         pqTNufrlLPZqx2gH19poXxTiOgxkMlpjPxz6BtEWFFxrBwuZh6iaB1o3V6sVX56+ylGU
-         2pszfJRnRuLfd3ez1yKDNCqpKFzfIMt7ScpsAppPN5dSa1UtA4JwMl67ZKOiCjpjyKH8
-         E+W9yaFIGavidj9gdLW170u1mu/Nq9jerve9QF+3GHtgQvR1fhS0D2sNraatYXX5C9Xm
-         FQIA==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=17BppcXqZfxbPGr9PRMTPoV/LLkPLLP+SKK7CO3M9eM=;
+        b=CMvFpVuQrHcaD8wENeZs7xRQPCZW9zxoDeK0XmBywbFJS4h/1BZRVhVx1DnZeFcxN4
+         Sj49NMeaQHcsgtWvP8uJ3WzN/jDeTbHvbxdCghM+J7HFtImo+guQKbo9PK5w7nSWwb4L
+         wjcuVDRB/z/Er1Pc0kkrN7ZQQlOmGB/H2uljA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BaGEBCCvHgLEeEM0jkTTKpXw1mRgMNiOlwrLO1Ss3pE=;
-        b=if/MtYLHMlt7SLEd/COlCWsKQPZxLNzl/WuCzTIlYEtsiGRa+jPU+pD77l+2mDavAl
-         uC0lNXWAH3IWnf61N80Ub9tCwfkSuGr9lSIPSYE9nLz+ewa6UExHf+9dOF8ZxQH26ilN
-         fmJZ+pNKqw1Q58UBZjzmghY8tJnFMNlZJRz9VJHVMgTQF25t2LRBQzpIVMhWvMnsvykU
-         7Bkg2fok0cUOEum3WG/82C6MUSFZeXc4QRIXDekh7tasZ1zKdSYqngr971XuSwtk0Opx
-         L6fT8jsGO6S4r2/vew0yvDjSfIFY4C0ID3Nh0YTU/0D+K/JVhuYGJV/juCTfjpFHmLiq
-         VUCQ==
-X-Gm-Message-State: APjAAAVtpF2puS48sBy8VmR/1U9jva+T0FcaKEAY+qkNh2NP2y/rsKBQ
-        FmRdwXs8nXYxtdClP2hyX1WUJbDj/JTlXU58yAjrBGWAS+Zx8w==
-X-Google-Smtp-Source: APXvYqyYq8Rtn/DMdIS94LKA7/HHkb6Gd4UKz+pVmoP+PdIkZvkKoQxrBDinOQiL8GBtZH952dHVKUmsuGzP5lURYG4=
-X-Received: by 2002:a02:1607:: with SMTP id a7mr623447jaa.123.1565025298399;
- Mon, 05 Aug 2019 10:14:58 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=17BppcXqZfxbPGr9PRMTPoV/LLkPLLP+SKK7CO3M9eM=;
+        b=uN7vrqpTxCieVrtIYgTWzDzF2XY9Ov0YC9wDBj3FW6q9yQka9+oKYXmjPVkfrr609U
+         RiNIMu3pvpww/SRbdkwBcl/L5gl0sYoxC0YSHD7Ke6wWBGQ1VeK/w9+5eXvgN2MFu/tM
+         Ly/ai60xTvClN21/b+Hj2YckHNlr1H7ZxpL7nEIxyNM/2yAc3SkLfRZnmUVCqcxuHWYB
+         ghJCbNkG1MCUOgG9TIHVyBLRSmzGnVtIu16UICp0jeVwgigV9vsZjfX5J9c8XmYbIwhq
+         n7d4S58RkXtFFTiVmVZ/cd9yV7zoSwSYpLpCRMJB+lDfS94VUfCvsAsRlu79HtWvpoT5
+         XL2A==
+X-Gm-Message-State: APjAAAW4ncwJsmkFC2EQx+t4K5gB+i5Xwx4BbktU8SR4CRTk9Whc1yHf
+        /TOISWFZAqxWlsobAY70Va6W+LQgKdU=
+X-Google-Smtp-Source: APXvYqzxv7M6IR4in1vhGB8Q4n4XPFhXuk+D/n/xjxagMGtxkbwhP5GVaL+d6zafns1iu9roD/5eJw==
+X-Received: by 2002:a63:ed55:: with SMTP id m21mr15707852pgk.343.1565025322316;
+        Mon, 05 Aug 2019 10:15:22 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:534:b7c0:a63c:460c])
+        by smtp.gmail.com with ESMTPSA id f20sm99610723pgg.56.2019.08.05.10.15.20
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 05 Aug 2019 10:15:20 -0700 (PDT)
+From:   Brian Norris <briannorris@chromium.org>
+To:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        Ganapathi Bhat <gbhat@marvell.com>,
+        Xinming Hu <huxinming820@gmail.com>
+Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Amitkumar Karwar <akarwar@marvell.com>
+Subject: [PATCH] Revert "mwifiex: fix system hang problem after resume"
+Date:   Mon,  5 Aug 2019 10:15:04 -0700
+Message-Id: <20190805171504.48122-1-briannorris@chromium.org>
+X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
 MIME-Version: 1.0
-References: <20190805032114.8740-1-hdanton@sina.com>
-In-Reply-To: <20190805032114.8740-1-hdanton@sina.com>
-From:   Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date:   Mon, 5 Aug 2019 22:14:47 +0500
-Message-ID: <CABXGCsM3-Ax0jsLS=QCM6m331onGXLEcfmmc_kLdqgOLzMSj9Q@mail.gmail.com>
-Subject: Re: The issue with page allocation 5.3 rc1-rc2 (seems drm culprit here)
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Dave Airlie <airlied@gmail.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 5 Aug 2019 at 08:21, Hillf Danton <hdanton@sina.com> wrote:
->
->
->
-> Try to fix the failure above using vmalloc + kmalloc.
->
-> --- a/drivers/gpu/drm/amd/display/dc/core/dc.c
-> +++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
-> @@ -1174,8 +1174,12 @@ struct dc_state *dc_create_state(struct
->         struct dc_state *context = kzalloc(sizeof(struct dc_state),
->                                            GFP_KERNEL);
->
-> -       if (!context)
-> -               return NULL;
-> +       if (!context) {
-> +               context = kvzalloc(sizeof(struct dc_state),
-> +                                          GFP_KERNEL);
-> +               if (!context)
-> +                       return NULL;
-> +       }
->         /* Each context must have their own instance of VBA and in order to
->          * initialize and obtain IP and SOC the base DML instance from DC is
->          * initially copied into every context
-> @@ -1195,8 +1199,13 @@ struct dc_state *dc_copy_state(struct dc
->         struct dc_state *new_ctx = kmemdup(src_ctx,
->                         sizeof(struct dc_state), GFP_KERNEL);
->
-> -       if (!new_ctx)
-> -               return NULL;
-> +       if (!new_ctx) {
-> +               new_ctx = kvmalloc(sizeof(*new_ctx), GFP_KERNEL);
-> +               if (new_ctx)
-> +                       *new_ctx = *src_ctx;
-> +               else
-> +                       return NULL;
-> +       }
->
->         for (i = 0; i < MAX_PIPES; i++) {
->                         struct pipe_ctx *cur_pipe = &new_ctx->res_ctx.pipe_ctx[i];
-> @@ -1230,7 +1239,7 @@ static void dc_state_free(struct kref *k
->  {
->         struct dc_state *context = container_of(kref, struct dc_state, refcount);
->         dc_resource_state_destruct(context);
-> -       kfree(context);
-> +       kvfree(context);
->  }
->
->  void dc_release_state(struct dc_state *context)
-> --
+This reverts commit 437322ea2a36d112e20aa7282c869bf924b3a836.
 
-Unfortunately couldn't check this patch because, with the patch, the
-kernel did not compile.
-Here is compile error messages:
+This above-mentioned "fix" does not actually do anything to prevent a
+race condition. It simply papers over it so that the issue doesn't
+appear.
 
-drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc.c: In function
-'dc_create_state':
-drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc.c:1178:13: error:
-implicit declaration of function 'kvzalloc'; did you mean 'kzalloc'?
-[-Werror=implicit-function-declaration]
- 1178 |   context = kvzalloc(sizeof(struct dc_state),
-      |             ^~~~~~~~
-      |             kzalloc
-drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc.c:1178:11: warning:
-assignment to 'struct dc_state *' from 'int' makes pointer from
-integer without a cast [-Wint-conversion]
- 1178 |   context = kvzalloc(sizeof(struct dc_state),
-      |           ^
-drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc.c: In function 'dc_copy_state':
-drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc.c:1203:13: error:
-implicit declaration of function 'kvmalloc'; did you mean 'kmalloc'?
-[-Werror=implicit-function-declaration]
- 1203 |   new_ctx = kvmalloc(sizeof(*new_ctx), GFP_KERNEL);
-      |             ^~~~~~~~
-      |             kmalloc
-drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc.c:1203:11: warning:
-assignment to 'struct dc_state *' from 'int' makes pointer from
-integer without a cast [-Wint-conversion]
- 1203 |   new_ctx = kvmalloc(sizeof(*new_ctx), GFP_KERNEL);
-      |           ^
-drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc.c: In function 'dc_state_free':
-drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc.c:1242:2: error:
-implicit declaration of function 'kvfree'; did you mean 'kzfree'?
-[-Werror=implicit-function-declaration]
- 1242 |  kvfree(context);
-      |  ^~~~~~
-      |  kzfree
-cc1: some warnings being treated as errors
-make[4]: *** [scripts/Makefile.build:274:
-drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc.o] Error 1
-make[4]: *** Waiting for unfinished jobs....
-make[3]: *** [scripts/Makefile.build:490: drivers/gpu/drm/amd/amdgpu] Error 2
-make[3]: *** Waiting for unfinished jobs....
-make: *** [Makefile:1084: drivers] Error 2
+If this is a real problem, it should be explained better than the above
+commit does, and an alternative, non-racy solution should be found.
 
+For further reason to revert this: there's no reason we can't try
+resetting the card when it's *actually* stuck in host-sleep mode. So
+instead, this is unnecessarily creating scenarios where we can't recover
+Wifi (and in fact, I'm fielding reports of Chromebooks that can't
+recover after the aforementioned commit).
 
---
-Best Regards,
-Mike Gavrilov.
+Note that this was proposed in 2017 and Ack'ed then, but due to my
+marking as RFC, it never went anywhere:
+
+https://patchwork.kernel.org/patch/9657277/
+[RFC] Revert "mwifiex: fix system hang problem after resume"
+
+Cc: Amitkumar Karwar <akarwar@marvell.com>
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Acked-by: Amitkumar Karwar <amitkarwar@gmail.com>
+Tested-by: Matthias Kaehlcke <mka@chromium.org>
+---
+ drivers/net/wireless/marvell/mwifiex/init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/marvell/mwifiex/init.c b/drivers/net/wireless/marvell/mwifiex/init.c
+index 6c0e52eb8794..1aa93e7e9835 100644
+--- a/drivers/net/wireless/marvell/mwifiex/init.c
++++ b/drivers/net/wireless/marvell/mwifiex/init.c
+@@ -59,7 +59,7 @@ static void wakeup_timer_fn(struct timer_list *t)
+ 	adapter->hw_status = MWIFIEX_HW_STATUS_RESET;
+ 	mwifiex_cancel_all_pending_cmd(adapter);
+ 
+-	if (adapter->if_ops.card_reset && !adapter->hs_activated)
++	if (adapter->if_ops.card_reset)
+ 		adapter->if_ops.card_reset(adapter);
+ }
+ 
+-- 
+2.22.0.770.g0f2c4a37fd-goog
+
