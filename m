@@ -2,52 +2,53 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA54C41514
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F1CBC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7243E2075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3FE9216F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:11:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010668;
-	bh=ZUSXdUx7NCiZjfW6EQPeX81N8ijA32Mv2/ErVjajlaU=;
+	s=default; t=1565010674;
+	bh=C3BKCTmCRN8NbJIBpcJImXNFNlZCvo5O6jaof3h0hO4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bEFSNx0jhT4uATHEXuAr4a0REQJyhawvLtJZcC2z94QYTDnZpXzOUQPddCWeRfgQN
-	 0Du+ER+E8/IfP6YJFw5UKXRUQppmSBEe7HP15G4B6K1ZpwmEKNHzRq5NXm682Brvmc
-	 BIdrfCzJUzUpU61NXEDutJWTUlhOw16s2h4NJp+E=
+	b=DvzvKeMN5mVJORbid7n93s4A1uhBSQI4SJwp670fX4w48+UOgJotILdu2oRKvdzkb
+	 kXnuMmycKkYqJ6YKzoxxSSuoKh2TQGShXDQiCPAYSP1Dunhl7qVgbhJZq9kJVWG9nU
+	 WyWOr0xPtLLYOS3GGXNmEpozuhbNMw4Dgy5y4Olg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730463AbfHENLH (ORCPT
+        id S1730486AbfHENLM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:11:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50272 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:11:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730448AbfHENLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:11:04 -0400
+        id S1729875AbfHENLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:11:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B4212067D;
-        Mon,  5 Aug 2019 13:11:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF5E32186A;
+        Mon,  5 Aug 2019 13:11:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010663;
-        bh=ZUSXdUx7NCiZjfW6EQPeX81N8ijA32Mv2/ErVjajlaU=;
+        s=default; t=1565010669;
+        bh=C3BKCTmCRN8NbJIBpcJImXNFNlZCvo5O6jaof3h0hO4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ic2vwzqDEzx7eQGmd14qpvT11EFk9V3wY015o+41pDcFgAFf2Z6ZVWEHKJUxarWQ/
-         gvIsy7et56ugJ4QiuCetN+FtE4Q2010zZ/voxzwqNHxgL4qlbQkDCnFtbZsMlS+tLr
-         kAWm73oATMiqzrXQjxZeERmaTECmWiQW6LmqOJDc=
+        b=PG2CPE79I2WUunGVUeEKlWOfFRLFtOtnCJKd48JDDrAPVPDRvtfx8T9F/vKygKT61
+         6erHVrv2/a3zlxIIbq2qw0Sah4L0B9/6mRCo/9gnxL9yHbwIDT/a9hrP660Ob57kI1
+         XFaGqZ7BcepxK4IBcfaGJxLAHkNF7aiFXQxTZQb0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 15/74] btrfs: fix minimum number of chunk errors for DUP
-Date:   Mon,  5 Aug 2019 15:02:28 +0200
-Message-Id: <20190805124937.023183875@linuxfoundation.org>
+        stable@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH 4.19 59/74] arm64: cpufeature: Fix feature comparison for CTR_EL0.{CWG,ERG}
+Date:   Mon,  5 Aug 2019 15:03:12 +0200
+Message-Id: <20190805124940.628708569@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124935.819068648@linuxfoundation.org>
 References: <20190805124935.819068648@linuxfoundation.org>
@@ -60,48 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0ee5f8ae082e1f675a2fb6db601c31ac9958a134 ]
+From: Will Deacon <will@kernel.org>
 
-The list of profiles in btrfs_chunk_max_errors lists DUP as a profile
-DUP able to tolerate 1 device missing. Though this profile is special
-with 2 copies, it still needs the device, unlike the others.
+commit 147b9635e6347104b91f48ca9dca61eb0fbf2a54 upstream.
 
-Looking at the history of changes, thre's no clear reason why DUP is
-there, functions were refactored and blocks of code merged to one
-helper.
+If CTR_EL0.{CWG,ERG} are 0b0000 then they must be interpreted to have
+their architecturally maximum values, which defeats the use of
+FTR_HIGHER_SAFE when sanitising CPU ID registers on heterogeneous
+machines.
 
-d20983b40e828 Btrfs: fix writing data into the seed filesystem
-  - factor code to a helper
+Introduce FTR_HIGHER_OR_ZERO_SAFE so that these fields effectively
+saturate at zero.
 
-de11cc12df173 Btrfs: don't pre-allocate btrfs bio
-  - unrelated change, DUP still in the list with max errors 1
+Fixes: 3c739b571084 ("arm64: Keep track of CPU feature registers")
+Cc: <stable@vger.kernel.org> # 4.4.x-
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-a236aed14ccb0 Btrfs: Deal with failed writes in mirrored configurations
-  - introduced the max errors, leaves DUP and RAID1 in the same group
-
-Reviewed-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/volumes.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/arm64/include/asm/cpufeature.h |    7 ++++---
+ arch/arm64/kernel/cpufeature.c      |    8 ++++++--
+ 2 files changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
-index 2fd000308be76..6e008bd5c8cd1 100644
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -5040,8 +5040,7 @@ static inline int btrfs_chunk_max_errors(struct map_lookup *map)
+--- a/arch/arm64/include/asm/cpufeature.h
++++ b/arch/arm64/include/asm/cpufeature.h
+@@ -45,9 +45,10 @@
+  */
  
- 	if (map->type & (BTRFS_BLOCK_GROUP_RAID1 |
- 			 BTRFS_BLOCK_GROUP_RAID10 |
--			 BTRFS_BLOCK_GROUP_RAID5 |
--			 BTRFS_BLOCK_GROUP_DUP)) {
-+			 BTRFS_BLOCK_GROUP_RAID5)) {
- 		max_errors = 1;
- 	} else if (map->type & BTRFS_BLOCK_GROUP_RAID6) {
- 		max_errors = 2;
--- 
-2.20.1
-
+ enum ftr_type {
+-	FTR_EXACT,	/* Use a predefined safe value */
+-	FTR_LOWER_SAFE,	/* Smaller value is safe */
+-	FTR_HIGHER_SAFE,/* Bigger value is safe */
++	FTR_EXACT,			/* Use a predefined safe value */
++	FTR_LOWER_SAFE,			/* Smaller value is safe */
++	FTR_HIGHER_SAFE,		/* Bigger value is safe */
++	FTR_HIGHER_OR_ZERO_SAFE,	/* Bigger value is safe, but 0 is biggest */
+ };
+ 
+ #define FTR_STRICT	true	/* SANITY check strict matching required */
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -206,8 +206,8 @@ static const struct arm64_ftr_bits ftr_c
+ 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_EXACT, 31, 1, 1), /* RES1 */
+ 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, CTR_DIC_SHIFT, 1, 1),
+ 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, CTR_IDC_SHIFT, 1, 1),
+-	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_HIGHER_SAFE, CTR_CWG_SHIFT, 4, 0),
+-	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_HIGHER_SAFE, CTR_ERG_SHIFT, 4, 0),
++	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_HIGHER_OR_ZERO_SAFE, CTR_CWG_SHIFT, 4, 0),
++	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_HIGHER_OR_ZERO_SAFE, CTR_ERG_SHIFT, 4, 0),
+ 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, CTR_DMINLINE_SHIFT, 4, 1),
+ 	/*
+ 	 * Linux can handle differing I-cache policies. Userspace JITs will
+@@ -449,6 +449,10 @@ static s64 arm64_ftr_safe_value(const st
+ 	case FTR_LOWER_SAFE:
+ 		ret = new < cur ? new : cur;
+ 		break;
++	case FTR_HIGHER_OR_ZERO_SAFE:
++		if (!cur || !new)
++			break;
++		/* Fallthrough */
+ 	case FTR_HIGHER_SAFE:
+ 		ret = new > cur ? new : cur;
+ 		break;
 
 
