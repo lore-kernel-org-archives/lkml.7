@@ -2,84 +2,90 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D49DC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D826C32750
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F93F2067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:10:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A9442067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:11:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MApQPGim"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbfHEJK5 (ORCPT
+        id S1727955AbfHEJLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 05:10:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:44062 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726423AbfHEJK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 05:10:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2AC9428;
-        Mon,  5 Aug 2019 02:10:56 -0700 (PDT)
-Received: from iMac.local (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4CDE03F694;
-        Mon,  5 Aug 2019 02:10:54 -0700 (PDT)
-Date:   Mon, 5 Aug 2019 10:10:52 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     iommu@lists.linux-foundation.org,
-        Shawn Anastasio <shawn@anastas.io>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Russell King <linux@armlinux.org.uk>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Gavin Li <git@thegavinli.com>
-Subject: Re: [PATCH 1/2] dma-mapping: fix page attributes for dma_mmap_*
-Message-ID: <20190805091051.GB59981@iMac.local>
-References: <20190805080145.5694-1-hch@lst.de>
- <20190805080145.5694-2-hch@lst.de>
+        Mon, 5 Aug 2019 05:11:11 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:38891 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727908AbfHEJLK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 05:11:10 -0400
+Received: by mail-lf1-f65.google.com with SMTP id h28so57283237lfj.5
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 02:11:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CcF0Tf2csoH94nm9DKzCzxCvNAg9jTgP3wKmMSrxdJ0=;
+        b=MApQPGimnkQK1YumuVAH57d9GFewJzttBSI4IlwQ/yJIDJRLm/8dLT/w11qpoANUCS
+         n640jop+mLHN4B2M8hCyV1s1RVoI6uCnDy2Qi2aj6o04OsN3By99wr2Q1AbFZwEivVEP
+         bEpNarqmrqqS0+i3A8W8o/Rtzdl02Q3JGzQLO7qKaIpOD0BEFBfYqj3AJLez5XeGQ581
+         iTAjRtwnM4qVQoyVmlTmECKZrLD4w2YvfCcP/981a20pKfyUc32js/CGh1MjVImw3nRT
+         y6pA9EFW4hLfWHqizmRsJIShPImlsMhnIIETjHySMG4uB6FMhpSbUkGAxDbFrfFZR4Dn
+         fbnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CcF0Tf2csoH94nm9DKzCzxCvNAg9jTgP3wKmMSrxdJ0=;
+        b=TZde91aRc7NoYc/+z4cO1CiBv7dYQ+rgRMoJafjuXa62qgUjy5p9auiwLgGioVfyfn
+         ujLT/FpMj093aja1W4S18v6QBQi6r5zbmbdoABgpdSEYbhadcmYdcztBVvS2kJB3wXql
+         sFuJbcyGTIdQyYhRHh/kDFl8sn+GG5EweOB+gSmLcPrQ4zUazvpMhJ1zDIKC2ebY5SGX
+         jsrlMwgIjcfiDda7Rc4cqQkDt6i5618wrW4rkvj/xIfgYvgt/wXqZmD9j8tFX4kcAsD8
+         IEuDfs+cvgltUbb0KGpXe0vUCrgT29jitA3sowxaQKzdX0ORCJnDvciBLDT8ZSgBrCcc
+         FPPA==
+X-Gm-Message-State: APjAAAVhzhtiL+twIVlDCi8jytWuhBOoqNENNpjzpCKImyXm1gV66Rhg
+        IiZ1MgQ+8kbAhhP8iNUL/1aI8qVV819hBioWxd1Qug==
+X-Google-Smtp-Source: APXvYqxKN2Q9wjm993pLiTXUE/ZTFSZClxmxBxiSWznvRekHA4AKzry63edPZGGrMCuZQed5S2uahCV2KTY89z9epxY=
+X-Received: by 2002:ac2:59d0:: with SMTP id x16mr863981lfn.60.1564996268308;
+ Mon, 05 Aug 2019 02:11:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190805080145.5694-2-hch@lst.de>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+References: <20190721125259.13990-1-hm@bitlabs.co.za> <20190721125259.13990-2-hm@bitlabs.co.za>
+In-Reply-To: <20190721125259.13990-2-hm@bitlabs.co.za>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 5 Aug 2019 11:10:56 +0200
+Message-ID: <CACRpkdZ0OYt4q3a=kEWswKZ0z779aDFNg8wbm9Tqa+ddgiW3dA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] [PATCH] gpio: Explicitly cast from __be16 to unsigned short
+To:     Hennie Muller <hm@bitlabs.co.za>, Arnd Bergmann <arnd@arndb.de>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 11:01:44AM +0300, Christoph Hellwig wrote:
-> All the way back to introducing dma_common_mmap we've defaulyed to mark
+On Sun, Jul 21, 2019 at 2:53 PM Hennie Muller <hm@bitlabs.co.za> wrote:
 
-s/defaultyed/defaulted/
+> cpu_to_be16 returns a __be16 value. This does not break anything
+> but does cause sparse to generate unnecessary warnings.
+>
+> Signed-off-by: Hennie Muller <hm@bitlabs.co.za>
+(...)
 
-> the pages as uncached.  But this is wrong for DMA coherent devices.
-> Later on DMA_ATTR_WRITE_COMBINE also got incorrect treatment as that
-> flag is only treated special on the alloc side for non-coherent devices.
-> 
-> Introduce a new dma_pgprot helper that deals with the check for coherent
-> devices so that only the remapping cases even reach arch_dma_mmap_pgprot
+> -       gbmsg->val = cpu_to_be16(dir << offset);
+> -       gbmsg->mask = cpu_to_be16(0x0001 << offset);
+> +       gbmsg->val = (__force u16)cpu_to_be16(dir << offset);
+> +       gbmsg->mask = (__force u16)cpu_to_be16(0x0001 << offset);
 
-s/even/ever/
+Ugh I don't understand this.
 
-> diff --git a/arch/arm64/mm/dma-mapping.c b/arch/arm64/mm/dma-mapping.c
-> index 1d3f0b5a9940..bd2b039f43a6 100644
-> --- a/arch/arm64/mm/dma-mapping.c
-> +++ b/arch/arm64/mm/dma-mapping.c
-> @@ -14,9 +14,7 @@
->  pgprot_t arch_dma_mmap_pgprot(struct device *dev, pgprot_t prot,
->  		unsigned long attrs)
->  {
-> -	if (!dev_is_dma_coherent(dev) || (attrs & DMA_ATTR_WRITE_COMBINE))
-> -		return pgprot_writecombine(prot);
-> -	return prot;
-> +	return pgprot_writecombine(prot);
->  }
+Arnd: you know this better than me: is this the right thing to do
+to get rid of sparse warnings from the code?
 
-For arm64:
-
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Yours,
+Linus Walleij
