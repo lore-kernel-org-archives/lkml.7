@@ -2,176 +2,191 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B88C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1AB1C41514
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA880214C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6655B216F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:04:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010289;
-	bh=Q0r+99K5J7kIeiEntfm7cv9iuAgk3irlIKMtudbxTh8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IFt+CLmzAA7H8flXsFDHypfq3wqzNaD1PGMnlid1L7Vcr9pghH2NWcTWcJFJHZet1
-	 eiQ/e1mmoRUAl/9zW5KErJzwP0nFRAkOwu14ynsk3F6vJZxroQuQRQRtqOeSv6mLG3
-	 AaLdUSneMj3OgEVQiMCrSgJPDcXjKj5AQgCW+7PM=
+	s=default; t=1565010293;
+	bh=pM3h5p8BZjDPYjh7YiBUMdKZQLVMxXpetQg6fOhvV/M=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=CUuxeC4caxRokCUMggDjpBin1qYnktCqi9GN2x24ciNUdmiZyKcNSCHBKsc+D4A00
+	 +XwZWlQE5NT0ARCamAfOBLUExZVMCGhm/EKnQGp07fwu21S1z0hQyYRQsDQWjvW512
+	 BE8tt0Y+X3IQ7BDfg+HUBoFWwQxyz2t6AfKhQ20I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729141AbfHENEs (ORCPT
+        id S1729159AbfHENEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:04:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40550 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:04:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729121AbfHENEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:04:45 -0400
+        id S1729132AbfHENEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:04:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0D3020880;
-        Mon,  5 Aug 2019 13:04:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DE15216B7;
+        Mon,  5 Aug 2019 13:04:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010284;
-        bh=Q0r+99K5J7kIeiEntfm7cv9iuAgk3irlIKMtudbxTh8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ak5VNg1uZV4irNNxov7S6a6XzKRagsMDzERPttYy+UCszXV8tdHV7IsbEl1OMXe5N
-         a34O466FDecSY5PrYFzXvnjsebKMO4nZ7IGOGK4sHO0MM73dy8YqJwaN6//CWhKEWO
-         lKPIrQGZVIcQjxN36+MsC3UzMyTnw1+HBv+YUj84=
+        s=default; t=1565010286;
+        bh=pM3h5p8BZjDPYjh7YiBUMdKZQLVMxXpetQg6fOhvV/M=;
+        h=From:To:Cc:Subject:Date:From;
+        b=T9v7TkEtSBfC/acwJwWfc3m8EPw9DW0bfV73Y3SSSM1mwY/RzsSfDSL2heK0rsEcz
+         7/zsWtTL2VWZD7PpgAm8Xi6G8g4qgLnBrYiYGpzrM76pn8OVLh2eKXoTZh3pO7mwPp
+         r/0fSvOR1CUYU22mI4WcBXTWXdMciZ9ax25e4k60=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benjamin Block <bblock@linux.ibm.com>,
-        Jens Remus <jremus@linux.ibm.com>,
-        Steffen Maier <maier@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 09/22] scsi: zfcp: fix GCC compiler warning emitted with -Wmaybe-uninitialized
-Date:   Mon,  5 Aug 2019 15:02:46 +0200
-Message-Id: <20190805124920.647834364@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.4 00/22] 4.4.188-stable review
+Date:   Mon,  5 Aug 2019 15:02:37 +0200
+Message-Id: <20190805124918.070468681@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190805124918.070468681@linuxfoundation.org>
-References: <20190805124918.070468681@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.188-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.4.188-rc1
+X-KernelTest-Deadline: 2019-08-07T12:49+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 484647088826f2f651acbda6bcf9536b8a466703 ]
+This is the start of the stable review cycle for the 4.4.188 release.
+There are 22 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-GCC v9 emits this warning:
-      CC      drivers/s390/scsi/zfcp_erp.o
-    drivers/s390/scsi/zfcp_erp.c: In function 'zfcp_erp_action_enqueue':
-    drivers/s390/scsi/zfcp_erp.c:217:26: warning: 'erp_action' may be used uninitialized in this function [-Wmaybe-uninitialized]
-      217 |  struct zfcp_erp_action *erp_action;
-          |                          ^~~~~~~~~~
+Responses should be made by Wed 07 Aug 2019 12:47:58 PM UTC.
+Anything received after that time might be too late.
 
-This is a possible false positive case, as also documented in the GCC
-documentations:
-    https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wmaybe-uninitialized
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.188-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+and the diffstat can be found below.
 
-The actual code-sequence is like this:
-    Various callers can invoke the function below with the argument "want"
-    being one of:
-    ZFCP_ERP_ACTION_REOPEN_ADAPTER,
-    ZFCP_ERP_ACTION_REOPEN_PORT_FORCED,
-    ZFCP_ERP_ACTION_REOPEN_PORT, or
-    ZFCP_ERP_ACTION_REOPEN_LUN.
+thanks,
 
-    zfcp_erp_action_enqueue(want, ...)
-        ...
-        need = zfcp_erp_required_act(want, ...)
-            need = want
-            ...
-            maybe: need = ZFCP_ERP_ACTION_REOPEN_PORT
-            maybe: need = ZFCP_ERP_ACTION_REOPEN_ADAPTER
-            ...
-            return need
-        ...
-        zfcp_erp_setup_act(need, ...)
-            struct zfcp_erp_action *erp_action; // <== line 217
-            ...
-            switch(need) {
-            case ZFCP_ERP_ACTION_REOPEN_LUN:
-                    ...
-                    erp_action = &zfcp_sdev->erp_action;
-                    WARN_ON_ONCE(erp_action->port != port); // <== access
-                    ...
-                    break;
-            case ZFCP_ERP_ACTION_REOPEN_PORT:
-            case ZFCP_ERP_ACTION_REOPEN_PORT_FORCED:
-                    ...
-                    erp_action = &port->erp_action;
-                    WARN_ON_ONCE(erp_action->port != port); // <== access
-                    ...
-                    break;
-            case ZFCP_ERP_ACTION_REOPEN_ADAPTER:
-                    ...
-                    erp_action = &adapter->erp_action;
-                    WARN_ON_ONCE(erp_action->port != NULL); // <== access
-                    ...
-                    break;
-            }
-            ...
-            WARN_ON_ONCE(erp_action->adapter != adapter); // <== access
+greg k-h
 
-When zfcp_erp_setup_act() is called, 'need' will never be anything else
-than one of the 4 possible enumeration-names that are used in the
-switch-case, and 'erp_action' is initialized for every one of them, before
-it is used. Thus the warning is a false positive, as documented.
+-------------
+Pseudo-Shortlog of commits:
 
-We introduce the extra if{} in the beginning to create an extra code-flow,
-so the compiler can be convinced that the switch-case will never see any
-other value.
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.4.188-rc1
 
-BUG_ON()/BUG() is intentionally not used to not crash anything, should
-this ever happen anyway - right now it's impossible, as argued above; and
-it doesn't introduce a 'default:' switch-case to retain warnings should
-'enum zfcp_erp_act_type' ever be extended and no explicit case be
-introduced. See also v5.0 commit 399b6c8bc9f7 ("scsi: zfcp: drop old
-default switch case which might paper over missing case").
+Juergen Gross <jgross@suse.com>
+    xen/swiotlb: fix condition for calling xen_destroy_contiguous_region()
 
-Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
-Reviewed-by: Jens Remus <jremus@linux.ibm.com>
-Reviewed-by: Steffen Maier <maier@linux.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/s390/scsi/zfcp_erp.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Stefan Haberland <sth@linux.ibm.com>
+    s390/dasd: fix endless loop after read unit address configuration
 
-diff --git a/drivers/s390/scsi/zfcp_erp.c b/drivers/s390/scsi/zfcp_erp.c
-index abe460eac7126..cc62d8cc8cfdd 100644
---- a/drivers/s390/scsi/zfcp_erp.c
-+++ b/drivers/s390/scsi/zfcp_erp.c
-@@ -10,6 +10,7 @@
- #define pr_fmt(fmt) KMSG_COMPONENT ": " fmt
- 
- #include <linux/kthread.h>
-+#include <linux/bug.h>
- #include "zfcp_ext.h"
- #include "zfcp_reqlist.h"
- 
-@@ -244,6 +245,12 @@ static struct zfcp_erp_action *zfcp_erp_setup_act(int need, u32 act_status,
- 	struct zfcp_erp_action *erp_action;
- 	struct zfcp_scsi_dev *zfcp_sdev;
- 
-+	if (WARN_ON_ONCE(need != ZFCP_ERP_ACTION_REOPEN_LUN &&
-+			 need != ZFCP_ERP_ACTION_REOPEN_PORT &&
-+			 need != ZFCP_ERP_ACTION_REOPEN_PORT_FORCED &&
-+			 need != ZFCP_ERP_ACTION_REOPEN_ADAPTER))
-+		return NULL;
-+
- 	switch (need) {
- 	case ZFCP_ERP_ACTION_REOPEN_LUN:
- 		zfcp_sdev = sdev_to_zfcp(sdev);
--- 
-2.20.1
+Ondrej Mosnacek <omosnace@redhat.com>
+    selinux: fix memory leak in policydb_init()
 
+Josh Poimboeuf <jpoimboe@redhat.com>
+    x86/kvm: Don't call kvm_spurious_fault() from .fixup
+
+Kees Cook <keescook@chromium.org>
+    ipc/mqueue.c: only perform resource calculation if user valid
+
+Mikko Rapeli <mikko.rapeli@iki.fi>
+    uapi linux/coda_psdev.h: move upc_req definition from uapi to kernel side headers
+
+Sam Protsenko <semen.protsenko@linaro.org>
+    coda: fix build using bare-metal toolchain
+
+Zhouyang Jia <jiazhouyang09@gmail.com>
+    coda: add error handling for fget
+
+Doug Berger <opendmb@gmail.com>
+    mm/cma.c: fail if fixed declaration can't be honored
+
+Arnd Bergmann <arnd@arndb.de>
+    x86: math-emu: Hide clang warnings for 16-bit overflow
+
+Qian Cai <cai@lca.pw>
+    x86/apic: Silence -Wtype-limits compiler warnings
+
+Benjamin Poirier <bpoirier@suse.com>
+    be2net: Signal that the device cannot transmit during reconfiguration
+
+Arnd Bergmann <arnd@arndb.de>
+    ACPI: fix false-positive -Wuninitialized warning
+
+Benjamin Block <bblock@linux.ibm.com>
+    scsi: zfcp: fix GCC compiler warning emitted with -Wmaybe-uninitialized
+
+Andrea Parri <andrea.parri@amarulasolutions.com>
+    ceph: fix improper use of smp_mb__before_atomic()
+
+David Sterba <dsterba@suse.com>
+    btrfs: fix minimum number of chunk errors for DUP
+
+Russell King <rmk+kernel@armlinux.org.uk>
+    fs/adfs: super: fix use-after-free bug
+
+Geert Uytterhoeven <geert+renesas@glider.be>
+    dmaengine: rcar-dmac: Reject zero-length slave DMA requests
+
+Petr Cvek <petrcvekcz@gmail.com>
+    MIPS: lantiq: Fix bitfield masking
+
+Prarit Bhargava <prarit@redhat.com>
+    kernel/module.c: Only return -EEXIST for modules that have finished loading
+
+Douglas Anderson <dianders@chromium.org>
+    ARM: dts: rockchip: Mark that the rk3288 timer might stop in suspend
+
+Russell King <rmk+kernel@armlinux.org.uk>
+    ARM: riscpc: fix DMA
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                    |  4 ++--
+ arch/arm/boot/dts/rk3288.dtsi               |  1 +
+ arch/arm/mach-rpc/dma.c                     |  5 ++++-
+ arch/mips/lantiq/irq.c                      |  5 +++--
+ arch/x86/include/asm/apic.h                 |  2 +-
+ arch/x86/include/asm/kvm_host.h             | 34 ++++++++++++++++-------------
+ arch/x86/kernel/apic/apic.c                 |  2 +-
+ arch/x86/math-emu/fpu_emu.h                 |  2 +-
+ arch/x86/math-emu/reg_constant.c            |  2 +-
+ drivers/dma/sh/rcar-dmac.c                  |  2 +-
+ drivers/net/ethernet/emulex/benet/be_main.c |  6 ++++-
+ drivers/s390/block/dasd_alias.c             | 22 ++++++++++++++-----
+ drivers/s390/scsi/zfcp_erp.c                |  7 ++++++
+ drivers/xen/swiotlb-xen.c                   |  4 ++--
+ fs/adfs/super.c                             |  5 ++++-
+ fs/btrfs/volumes.c                          |  3 +--
+ fs/ceph/super.h                             |  7 +++++-
+ fs/coda/psdev.c                             |  5 ++++-
+ include/linux/acpi.h                        |  5 ++++-
+ include/linux/coda.h                        |  3 +--
+ include/linux/coda_psdev.h                  | 11 ++++++++++
+ include/uapi/linux/coda_psdev.h             | 13 -----------
+ ipc/mqueue.c                                | 19 ++++++++--------
+ kernel/module.c                             |  6 ++---
+ mm/cma.c                                    | 13 +++++++++++
+ security/selinux/ss/policydb.c              |  6 ++++-
+ 26 files changed, 125 insertions(+), 69 deletions(-)
 
 
