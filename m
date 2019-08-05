@@ -2,101 +2,81 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9EF2C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C2AFC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C98A20B1F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:28:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Ss58XvFH"
+	by mail.kernel.org (Postfix) with ESMTP id 1FF2820B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:28:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565018934;
+	bh=0OjQ8Rdqqx/BilDZyvjG6A1sMxbSpqh2cWddJ5gCTxA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bUut7u4Os13UTDaOBQeUQuUjaBKC35CTKeqw2njvYelkQlfNs8JPEbx2VdyIGGn+j
+	 N3bNbM8y5BqHIQtVPNIAm9MFpHRBsQD0bRPvpBDTH6K+/dh9LEGtKellEjfQurjcNs
+	 GbOlHioY7eBWzj/hRmO74CDAA1bM2QuXONtY3Esc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729701AbfHEP2g (ORCPT
+        id S1729756AbfHEP2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 11:28:36 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:34444 "EHLO vps0.lunn.ch"
+        Mon, 5 Aug 2019 11:28:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728801AbfHEP2g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 11:28:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=i1UVO/cNdQzQGNtCSgGelcu02jpY/mg7+r1uSOQCzI8=; b=Ss58XvFHgvOpHFVAAZKk6f7lbz
-        gmRUzMNdJG202xX26oPNRAa61YNJB+b7AxhS9/5xcg59UsHZt6Szwy6BR5y1MGitISVxZ4eUiWrwj
-        goxLQ0SP1Y70nGM52iqa3JsJlJJR3wy0//WpqNolgGmG+D029Kc72hgvqGkrlsS0N4bI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hueuW-0007vG-UU; Mon, 05 Aug 2019 17:28:32 +0200
-Date:   Mon, 5 Aug 2019 17:28:32 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, davem@davemloft.net,
-        robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com,
-        hkallweit1@gmail.com
-Subject: Re: [PATCH 15/16] net: phy: adin: add ethtool get_stats support
-Message-ID: <20190805152832.GT24275@lunn.ch>
-References: <20190805165453.3989-1-alexandru.ardelean@analog.com>
- <20190805165453.3989-16-alexandru.ardelean@analog.com>
+        id S1728801AbfHEP2w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 11:28:52 -0400
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2FC321734;
+        Mon,  5 Aug 2019 15:28:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565018931;
+        bh=0OjQ8Rdqqx/BilDZyvjG6A1sMxbSpqh2cWddJ5gCTxA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=duH8pakwY9L3UpmLFj+tYRNB3e7+ek2sgh5AF5PT5QSI8PBN8JrF0qXVWWeMY1BDe
+         7mqSzPL5PD4GdydB6QAzZzpuSBs5cO1fO0uxjV8epriAov44a/pr3add+zRHl66KhT
+         XdxMbB9sU+JatZfB9FIvfHysQTOXsb4WWsz+o8N8=
+Received: by mail-qt1-f174.google.com with SMTP id k10so12174326qtq.1;
+        Mon, 05 Aug 2019 08:28:51 -0700 (PDT)
+X-Gm-Message-State: APjAAAV6gsTCwknQtUHB4t/CVLDO6+VWQMU9OI0zOL2GjK1q8QlITsRE
+        N/hQ+uMQLXTC/eC4S9hLQLsDhtppzbcNmNv85w==
+X-Google-Smtp-Source: APXvYqx9Mp339aOHnb56VlztmeVuv2F5K0wvgS8FCwqrBT+3li2+QntQXhNvXx3cWwoB15jWc/TREdIJGl2K2FIijfw=
+X-Received: by 2002:ac8:368a:: with SMTP id a10mr107432491qtc.143.1565018931042;
+ Mon, 05 Aug 2019 08:28:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190805165453.3989-16-alexandru.ardelean@analog.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <1564996320-10897-1-git-send-email-mars.cheng@mediatek.com> <1564996320-10897-2-git-send-email-mars.cheng@mediatek.com>
+In-Reply-To: <1564996320-10897-2-git-send-email-mars.cheng@mediatek.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 5 Aug 2019 09:28:39 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+5jydeN83BU+Ne+6muv7KWjceJrAApaOXYevLmUJh6qw@mail.gmail.com>
+Message-ID: <CAL_Jsq+5jydeN83BU+Ne+6muv7KWjceJrAApaOXYevLmUJh6qw@mail.gmail.com>
+Subject: Re: [PATCH 01/11] dt-bindings: mediatek: add support for mt6779
+ reference board
+To:     Mars Cheng <mars.cheng@mediatek.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>, devicetree@vger.kernel.org,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        Wendell Lin <wendell.lin@mediatek.com>,
+        Ivan Tseng <ivan.tseng@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +struct adin_hw_stat {
-> +	const char *string;
+On Mon, Aug 5, 2019 at 3:13 AM Mars Cheng <mars.cheng@mediatek.com> wrote:
+>
+> Update binding document for mt6779 reference board
+>
+> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+> ---
+>  .../devicetree/bindings/arm/mediatek.yaml          |    4 ++++
+>  1 file changed, 4 insertions(+)
 
-> +static void adin_get_strings(struct phy_device *phydev, u8 *data)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(adin_hw_stats); i++) {
-> +		memcpy(data + i * ETH_GSTRING_LEN,
-> +		       adin_hw_stats[i].string, ETH_GSTRING_LEN);
-
-You define string as a char *. So it will be only as long as it should
-be. However memcpy always copies ETH_GSTRING_LEN bytes, doing off the
-end of the string and into whatever follows.
-
-
-> +	}
-> +}
-> +
-> +static int adin_read_mmd_stat_regs(struct phy_device *phydev,
-> +				   struct adin_hw_stat *stat,
-> +				   u32 *val)
-> +{
-> +	int ret;
-> +
-> +	ret = phy_read_mmd(phydev, MDIO_MMD_VEND1, stat->reg1);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	*val = (ret & 0xffff);
-> +
-> +	if (stat->reg2 == 0)
-> +		return 0;
-> +
-> +	ret = phy_read_mmd(phydev, MDIO_MMD_VEND1, stat->reg2);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	*val <<= 16;
-> +	*val |= (ret & 0xffff);
-
-Does the hardware have a snapshot feature? Is there a danger that
-between the two reads stat->reg1 rolls over and you end up with too
-big a value?
-
-    Andrew
+Reviewed-by: Rob Herring <robh@kernel.org>
