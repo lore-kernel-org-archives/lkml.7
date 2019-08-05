@@ -2,81 +2,103 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90FE6C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7332C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71D162075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A691E20657
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:19:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MkKnS0ha"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729750AbfHENSO (ORCPT
+        id S1729204AbfHENTB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:18:14 -0400
-Received: from mga03.intel.com ([134.134.136.65]:48668 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726779AbfHENSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:18:12 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 06:17:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,350,1559545200"; 
-   d="scan'208";a="192418646"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 05 Aug 2019 06:17:44 -0700
-Received: by lahna (sSMTP sendmail emulation); Mon, 05 Aug 2019 16:17:43 +0300
-Date:   Mon, 5 Aug 2019 16:17:43 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>
-Subject: Re: [PATCH 4/8] thunderbolt: Do not fail adding switch if some port
- is not implemented
-Message-ID: <20190805131743.GS2640@lahna.fi.intel.com>
-References: <20190705095800.43534-1-mika.westerberg@linux.intel.com>
- <20190705095800.43534-5-mika.westerberg@linux.intel.com>
- <20190803141401.bmjo7u723p4wxtqb@wunner.de>
+        Mon, 5 Aug 2019 09:19:01 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42490 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726779AbfHENTB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:19:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=+zg3Q0qbwadWzEXAHp2dEIUnwX928QZQCv40GNsiQfE=; b=MkKnS0haSAsZCM1dQAbXlm7qm
+        /9jne+j7omAc+jgYQFv0sE1x3jeePjGawqcbaD/c69HixKGXRNGrOnNScsU1+ShZl3jjZaEuuCFrw
+        Rrf52WWLraGV621/8eEvwdwdrMDNBKqBAq/wUDWuWDZRd4dmwRdiuE5awB6nu4mrhnqBga3/MSZ2O
+        pgeKKYdi3sS6aB7AXsJ3DM4/R6hkc/SKkc0V2VOZzudyQZkkmiD9EPNk4ANJFfBzHOgcHD1yG324g
+        KF1yoW3RPS7T95OnZY3jXqY4TTcJU7F9gXM+Ga1+UeZdOxjCIyJbmyg3O1iY6oF6ORiVS3sOBVFzW
+        Zpn+8hIbw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1huct8-0008I6-Sg; Mon, 05 Aug 2019 13:18:59 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DFED82020AD3A; Mon,  5 Aug 2019 15:18:56 +0200 (CEST)
+Date:   Mon, 5 Aug 2019 15:18:56 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        kan.liang@linux.intel.com, Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v4 1/7] perf: Allow normal events to be sources of AUX
+ data
+Message-ID: <20190805131856.GM2349@hirez.programming.kicks-ass.net>
+References: <20190805071618.29468-1-alexander.shishkin@linux.intel.com>
+ <20190805071618.29468-2-alexander.shishkin@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190803141401.bmjo7u723p4wxtqb@wunner.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190805071618.29468-2-alexander.shishkin@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 03, 2019 at 04:14:01PM +0200, Lukas Wunner wrote:
-> On Fri, Jul 05, 2019 at 12:57:56PM +0300, Mika Westerberg wrote:
-> > There are two ways to mark a port as unimplemented. Typical way is to
-> > return port type as TB_TYPE_INACTIVE when its config space is read.
-> > Alternatively if the port is not physically present (such as ports 10
-> > and 11 in ICL) reading from port config space returns
-> > TB_CFG_ERROR_INVALID_CONFIG_SPACE instead. Currently the driver bails
-> > out from adding the switch if it receives any error during port
-> > inititialization which is wrong.
-> > 
-> > Handle this properly and just leave the port as TB_TYPE_INACTIVE before
-> > continuing to the next port.
+On Mon, Aug 05, 2019 at 10:16:12AM +0300, Alexander Shishkin wrote:
+> In some cases, ordinary (non-AUX) events can generate data for AUX events.
+> For example, PEBS events can come out as records in the Intel PT stream
+> instead of their usual DS records, if configured to do so.
 > 
-> Your patch may also cause this snippet in eeprom.c to become obsolete:
-> 
-> 		/* Port 5 is inaccessible on this gen 1 controller */
-> 		if (sw->config.device_id == PCI_DEVICE_ID_INTEL_LIGHT_RIDGE)
-> 			sw->ports[5].disabled = true;
-> 
-> To verify this hypothesis, one needs to comment out the call to
-> tb_drom_copy_efi() as well as the above-quoted snippet and boot
-> on a Mac with Light Ridge.  The driver should hit an error without
-> your patch and it may work correctly with your patch.
+> One requirement for such events is to consistently schedule together, to
+> ensure that the data from the "AUX source" events isn't lost while their
+> corresponding AUX event is not scheduled. We use grouping to provide this
+> guarantee: an "AUX source" event can be added to a group where an AUX event
+> is a group leader, and provided that the former supports writing to the
+> latter.
 
-Indeed. I'll check this - as I have Mac with LR, and update the patch
-accordingly (e.g drop the check if the error does not appear).
+Two niggles -- and sorry for not bringing those up sooner:
+
+> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+> index 7198ddd0c6b1..213cae95e713 100644
+> --- a/include/uapi/linux/perf_event.h
+> +++ b/include/uapi/linux/perf_event.h
+> @@ -374,7 +374,8 @@ struct perf_event_attr {
+>  				namespaces     :  1, /* include namespaces data */
+>  				ksymbol        :  1, /* include ksymbol events */
+>  				bpf_event      :  1, /* include bpf events */
+> -				__reserved_1   : 33;
+> +				aux_source     :  1, /* generate AUX records instead of events */
+> +				__reserved_1   : 32;
+>  
+>  	union {
+>  		__u32		wakeup_events;	  /* wakeup every n events */
+
+The name: "aux_source" seems to imply that we change the source to
+'aux', while in fact it is the destination we change.
+
+So we want to %s/aux_source/aux_output/ on the whole thing?
+
+> +	/*
+> +	 * Our group leader must be an aux event if we want to be
+> +	 * an aux_source. This way, the aux event will precede its
+> +	 * aux_source events in the group, and therefore will always
+> +	  schedule first.
+> +	 */
+
+You fudged the comment there.
