@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7464C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD565C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A45F20657
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:27:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B5EF20657
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:27:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011644;
-	bh=tF5l4vY/ZytGIGsA1ZiECEOzN6+zhjA3RpfxlO/nO/M=;
+	s=default; t=1565011647;
+	bh=k/4/y+FaKbCvXMdtJ7a1zb8ET5r/cuQ3uweNFNZ67UY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pcLAnYkkfjXaqEM9ZZrMneV2QqDdd5hVJYyXtm8Az+U3dc608ZYp5Q3YiedKl3rgk
-	 sWkrVOp5EmaCn/4sN8DLwzG7S7YcDfLHjIHMecYdMWWN5UOUoJGwOBepswxLn/ilQv
-	 m5oaOIaUCItnvph4BkSSGZIQOUyRSGopX7hK9yeg=
+	b=bKxWrcfXc26eplWwC4LnK7hnxulaL6wboteiHFfZJPpZFDoA6Um1Gyc/utMfdp+NG
+	 Cmx/V47/55pLRAAjUF5KvpxyVoYajFyFgFMRMj4NIo/e/j1+2E1L2ChvXYJajFwnM3
+	 oz7P3nG1jZa6o5Y4zavv1oDHo2TmQhNrvy1VsBBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729947AbfHENY7 (ORCPT
+        id S1731101AbfHENYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:24:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33414 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:24:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731105AbfHENYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:24:55 -0400
+        id S1731062AbfHENYv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:24:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E99D2075B;
-        Mon,  5 Aug 2019 13:24:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0276920644;
+        Mon,  5 Aug 2019 13:24:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011494;
-        bh=tF5l4vY/ZytGIGsA1ZiECEOzN6+zhjA3RpfxlO/nO/M=;
+        s=default; t=1565011489;
+        bh=k/4/y+FaKbCvXMdtJ7a1zb8ET5r/cuQ3uweNFNZ67UY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tqPYfOjbeW2C0shRLwAz/eh6Pxgw+s4OwsEA6HOp0LQzsSaf1brHczWuwngtG0ziy
-         ssFMCsrnPRV9RqKxvTh/yD0PCq3KhsIAW3OmICFDeiVeyHozKkAkTND/z+RSDI4THt
-         pRvQIkLgQqVBib/jx+BFvDCO+c+SjZHHB9laUS2A=
+        b=N9aeYHV7TSAZYGl0qqa3duYA/PCHdjZnhGsRiQsoYU1Ge4nhg4CiwT8g4kpVfKsjv
+         sy2erJ6AVBsMa+rcgZILEoBlqNubAaxfp0JjWDLU1dfIfDP1ktaF2HbiYuxjjrdyjK
+         e8nfWWicIC5NTI9RwNVtsz7CCeFhlSik0XlfvEDQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Changbin Du <changbin.du@gmail.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.2 082/131] fgraph: Remove redundant ftrace_graph_notrace_addr() test
-Date:   Mon,  5 Aug 2019 15:02:49 +0200
-Message-Id: <20190805124957.435614683@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.2 080/131] Btrfs: fix race leading to fs corruption after transaction abort
+Date:   Mon,  5 Aug 2019 15:02:47 +0200
+Message-Id: <20190805124957.278280846@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -59,57 +60,142 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Changbin Du <changbin.du@gmail.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit 6c77221df96177da0520847ce91e33f539fb8b2d upstream.
+commit cb2d3daddbfb6318d170e79aac1f7d5e4d49f0d7 upstream.
 
-We already have tested it before. The second one should be removed.
-With this change, the performance should have little improvement.
+When one transaction is finishing its commit, it is possible for another
+transaction to start and enter its initial commit phase as well. If the
+first ends up getting aborted, we have a small time window where the second
+transaction commit does not notice that the previous transaction aborted
+and ends up committing, writing a superblock that points to btrees that
+reference extent buffers (nodes and leafs) that were not persisted to disk.
+The consequence is that after mounting the filesystem again, we will be
+unable to load some btree nodes/leafs, either because the content on disk
+is either garbage (or just zeroes) or corresponds to the old content of a
+previouly COWed or deleted node/leaf, resulting in the well known error
+messages "parent transid verify failed on ...".
+The following sequence diagram illustrates how this can happen.
 
-Link: http://lkml.kernel.org/r/20190730140850.7927-1-changbin.du@gmail.com
+        CPU 1                                           CPU 2
 
-Cc: stable@vger.kernel.org
-Fixes: 9cd2992f2d6c ("fgraph: Have set_graph_notrace only affect function_graph tracer")
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+ <at transaction N>
+
+ btrfs_commit_transaction()
+   (...)
+   --> sets transaction state to
+       TRANS_STATE_UNBLOCKED
+   --> sets fs_info->running_transaction
+       to NULL
+
+                                                    (...)
+                                                    btrfs_start_transaction()
+                                                      start_transaction()
+                                                        wait_current_trans()
+                                                          --> returns immediately
+                                                              because
+                                                              fs_info->running_transaction
+                                                              is NULL
+                                                        join_transaction()
+                                                          --> creates transaction N + 1
+                                                          --> sets
+                                                              fs_info->running_transaction
+                                                              to transaction N + 1
+                                                          --> adds transaction N + 1 to
+                                                              the fs_info->trans_list list
+                                                        --> returns transaction handle
+                                                            pointing to the new
+                                                            transaction N + 1
+                                                    (...)
+
+                                                    btrfs_sync_file()
+                                                      btrfs_start_transaction()
+                                                        --> returns handle to
+                                                            transaction N + 1
+                                                      (...)
+
+   btrfs_write_and_wait_transaction()
+     --> writeback of some extent
+         buffer fails, returns an
+	 error
+   btrfs_handle_fs_error()
+     --> sets BTRFS_FS_STATE_ERROR in
+         fs_info->fs_state
+   --> jumps to label "scrub_continue"
+   cleanup_transaction()
+     btrfs_abort_transaction(N)
+       --> sets BTRFS_FS_STATE_TRANS_ABORTED
+           flag in fs_info->fs_state
+       --> sets aborted field in the
+           transaction and transaction
+	   handle structures, for
+           transaction N only
+     --> removes transaction from the
+         list fs_info->trans_list
+                                                      btrfs_commit_transaction(N + 1)
+                                                        --> transaction N + 1 was not
+							    aborted, so it proceeds
+                                                        (...)
+                                                        --> sets the transaction's state
+                                                            to TRANS_STATE_COMMIT_START
+                                                        --> does not find the previous
+                                                            transaction (N) in the
+                                                            fs_info->trans_list, so it
+                                                            doesn't know that transaction
+                                                            was aborted, and the commit
+                                                            of transaction N + 1 proceeds
+                                                        (...)
+                                                        --> sets transaction N + 1 state
+                                                            to TRANS_STATE_UNBLOCKED
+                                                        btrfs_write_and_wait_transaction()
+                                                          --> succeeds writing all extent
+                                                              buffers created in the
+                                                              transaction N + 1
+                                                        write_all_supers()
+                                                           --> succeeds
+                                                           --> we now have a superblock on
+                                                               disk that points to trees
+                                                               that refer to at least one
+                                                               extent buffer that was
+                                                               never persisted
+
+So fix this by updating the transaction commit path to check if the flag
+BTRFS_FS_STATE_TRANS_ABORTED is set on fs_info->fs_state if after setting
+the transaction to the TRANS_STATE_COMMIT_START we do not find any previous
+transaction in the fs_info->trans_list. If the flag is set, just fail the
+transaction commit with -EROFS, as we do in other places. The exact error
+code for the previous transaction abort was already logged and reported.
+
+Fixes: 49b25e0540904b ("btrfs: enhance transaction abort infrastructure")
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_functions_graph.c |   17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
+ fs/btrfs/transaction.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/kernel/trace/trace_functions_graph.c
-+++ b/kernel/trace/trace_functions_graph.c
-@@ -137,6 +137,13 @@ int trace_graph_entry(struct ftrace_grap
- 	if (trace_recursion_test(TRACE_GRAPH_NOTRACE_BIT))
- 		return 0;
+--- a/fs/btrfs/transaction.c
++++ b/fs/btrfs/transaction.c
+@@ -2019,6 +2019,16 @@ int btrfs_commit_transaction(struct btrf
+ 		}
+ 	} else {
+ 		spin_unlock(&fs_info->trans_lock);
++		/*
++		 * The previous transaction was aborted and was already removed
++		 * from the list of transactions at fs_info->trans_list. So we
++		 * abort to prevent writing a new superblock that reflects a
++		 * corrupt state (pointing to trees with unwritten nodes/leafs).
++		 */
++		if (test_bit(BTRFS_FS_STATE_TRANS_ABORTED, &fs_info->fs_state)) {
++			ret = -EROFS;
++			goto cleanup_transaction;
++		}
+ 	}
  
-+	/*
-+	 * Do not trace a function if it's filtered by set_graph_notrace.
-+	 * Make the index of ret stack negative to indicate that it should
-+	 * ignore further functions.  But it needs its own ret stack entry
-+	 * to recover the original index in order to continue tracing after
-+	 * returning from the function.
-+	 */
- 	if (ftrace_graph_notrace_addr(trace->func)) {
- 		trace_recursion_set(TRACE_GRAPH_NOTRACE_BIT);
- 		/*
-@@ -156,16 +163,6 @@ int trace_graph_entry(struct ftrace_grap
- 		return 0;
- 
- 	/*
--	 * Do not trace a function if it's filtered by set_graph_notrace.
--	 * Make the index of ret stack negative to indicate that it should
--	 * ignore further functions.  But it needs its own ret stack entry
--	 * to recover the original index in order to continue tracing after
--	 * returning from the function.
--	 */
--	if (ftrace_graph_notrace_addr(trace->func))
--		return 1;
--
--	/*
- 	 * Stop here if tracing_threshold is set. We only write function return
- 	 * events to the ring buffer.
- 	 */
+ 	extwriter_counter_dec(cur_trans, trans->type);
 
 
