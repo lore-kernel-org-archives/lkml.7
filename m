@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F26C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4D6C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A98122075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1D7E20644
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:21:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011283;
-	bh=2anYfaSMEW9hwR3HSdQR1JHRUgCCY3/Xz79c8TsQN2Q=;
+	s=default; t=1565011286;
+	bh=6/aconRxdHSsHCvo34orQxhuarnf6NEQYSFYDAIaev8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h1QV+KOEkPASM/hJHGjNg48+7JqrePcOFL9Qev/x3eKVEO9ibgAZqajxUWs0FfoW3
-	 gCFCc3X8DZYs54bNQgrVtw6EjMeI6kGqKchj1tOG4c2N2egs3JfYZIBzqBPIO+ztLP
-	 VzfeK8JQefqiSVtSR9q7Y6/Wsyen/060VwFhJJ/o=
+	b=UTEFI5ePfG16IKQKAumN27bUpFOkvKZpbYhV5kk5vzI3KuxbDC/xp1D/w2hW8wEdx
+	 NOQuEgLv4CAiFWp0J9WUNf+CaKPjijt3IM4k1n5xzTuN5os40/itWW4Ij97FgyPGfP
+	 kg394cmCPaCtO3ffmMnW+t02XnHj4G6F08LvbqBw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730134AbfHENVW (ORCPT
+        id S1730524AbfHENVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:21:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57256 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:21:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730449AbfHENVH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:21:07 -0400
+        id S1730479AbfHENVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:21:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 437B320657;
-        Mon,  5 Aug 2019 13:21:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABD3B20880;
+        Mon,  5 Aug 2019 13:21:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011266;
-        bh=2anYfaSMEW9hwR3HSdQR1JHRUgCCY3/Xz79c8TsQN2Q=;
+        s=default; t=1565011277;
+        bh=6/aconRxdHSsHCvo34orQxhuarnf6NEQYSFYDAIaev8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cCwYEf39Wu084CzJH0msksYQCSFyo6VfCdf1pfPjFT/hvbeyDsbhSf0s6Pd2rHNly
-         9ywyKvtrRe9T/ZQSpONLbE2qk1MEcKsPux8Ts15SWs94NDC0+JUPe2yXICNxiZgMbZ
-         iTnlR521KU8DOEyQSzlF83rwlJ8KA1GOJbX9c/xg=
+        b=MyrVRK4oBkjBNdLeE6E9grHFJR5t0WyVnRxKstSdnjalgI//2BxBP015mjAxFDrDM
+         WUHTyvVF0TYl9kU6fQwoq93zQcvVJZ4jUxpVKA871nzlrnxmkrQNPCs1vIrNKqNbyA
+         PI5i4y5O+S1hmGjgGp+KH93rn1qWzA/9c0CDM6YY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 027/131] btrfs: fix minimum number of chunk errors for DUP
-Date:   Mon,  5 Aug 2019 15:01:54 +0200
-Message-Id: <20190805124953.257152699@linuxfoundation.org>
+Subject: [PATCH 5.2 031/131] cifs: Fix a race condition with cifs_echo_request
+Date:   Mon,  5 Aug 2019 15:01:58 +0200
+Message-Id: <20190805124953.516186475@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -60,46 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0ee5f8ae082e1f675a2fb6db601c31ac9958a134 ]
+[ Upstream commit f2caf901c1b7ce65f9e6aef4217e3241039db768 ]
 
-The list of profiles in btrfs_chunk_max_errors lists DUP as a profile
-DUP able to tolerate 1 device missing. Though this profile is special
-with 2 copies, it still needs the device, unlike the others.
+There is a race condition with how we send (or supress and don't send)
+smb echos that will cause the client to incorrectly think the
+server is unresponsive and thus needs to be reconnected.
 
-Looking at the history of changes, thre's no clear reason why DUP is
-there, functions were refactored and blocks of code merged to one
-helper.
+Summary of the race condition:
+ 1) Daisy chaining scheduling creates a gap.
+ 2) If traffic comes unfortunate shortly after
+    the last echo, the planned echo is suppressed.
+ 3) Due to the gap, the next echo transmission is delayed
+    until after the timeout, which is set hard to twice
+    the echo interval.
 
-d20983b40e828 Btrfs: fix writing data into the seed filesystem
-  - factor code to a helper
+This is fixed by changing the timeouts from 2 to three times the echo interval.
 
-de11cc12df173 Btrfs: don't pre-allocate btrfs bio
-  - unrelated change, DUP still in the list with max errors 1
+Detailed description of the bug: https://lutz.donnerhacke.de/eng/Blog/Groundhog-Day-with-SMB-remount
 
-a236aed14ccb0 Btrfs: Deal with failed writes in mirrored configurations
-  - introduced the max errors, leaves DUP and RAID1 in the same group
-
-Reviewed-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/volumes.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/cifs/connect.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
-index 1c2a6e4b39da7..8508f6028c8d2 100644
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -5328,8 +5328,7 @@ static inline int btrfs_chunk_max_errors(struct map_lookup *map)
- 
- 	if (map->type & (BTRFS_BLOCK_GROUP_RAID1 |
- 			 BTRFS_BLOCK_GROUP_RAID10 |
--			 BTRFS_BLOCK_GROUP_RAID5 |
--			 BTRFS_BLOCK_GROUP_DUP)) {
-+			 BTRFS_BLOCK_GROUP_RAID5)) {
- 		max_errors = 1;
- 	} else if (map->type & BTRFS_BLOCK_GROUP_RAID6) {
- 		max_errors = 2;
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index 59380dd546a1e..6ad43ac129d2f 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -706,10 +706,10 @@ static bool
+ server_unresponsive(struct TCP_Server_Info *server)
+ {
+ 	/*
+-	 * We need to wait 2 echo intervals to make sure we handle such
++	 * We need to wait 3 echo intervals to make sure we handle such
+ 	 * situations right:
+ 	 * 1s  client sends a normal SMB request
+-	 * 2s  client gets a response
++	 * 3s  client gets a response
+ 	 * 30s echo workqueue job pops, and decides we got a response recently
+ 	 *     and don't need to send another
+ 	 * ...
+@@ -718,9 +718,9 @@ server_unresponsive(struct TCP_Server_Info *server)
+ 	 */
+ 	if ((server->tcpStatus == CifsGood ||
+ 	    server->tcpStatus == CifsNeedNegotiate) &&
+-	    time_after(jiffies, server->lstrp + 2 * server->echo_interval)) {
++	    time_after(jiffies, server->lstrp + 3 * server->echo_interval)) {
+ 		cifs_dbg(VFS, "Server %s has not responded in %lu seconds. Reconnecting...\n",
+-			 server->hostname, (2 * server->echo_interval) / HZ);
++			 server->hostname, (3 * server->echo_interval) / HZ);
+ 		cifs_reconnect(server);
+ 		wake_up(&server->response_q);
+ 		return true;
 -- 
 2.20.1
 
