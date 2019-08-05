@@ -2,94 +2,208 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B303C19759
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 03:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9571C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 03:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C7F72183F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 03:04:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="X9fdExVr"
+	by mail.kernel.org (Postfix) with ESMTP id C1DEE2075C
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 03:07:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbfHEDEN (ORCPT
+        id S1727004AbfHEDHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 4 Aug 2019 23:04:13 -0400
-Received: from ozlabs.org ([203.11.71.1]:46505 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726765AbfHEDEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 4 Aug 2019 23:04:13 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4622ff22Fkz9sNx;
-        Mon,  5 Aug 2019 13:04:10 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1564974250;
-        bh=r9I99tLyLD5nxx5Zr+h7m74pVqauWanji7UCe01s9Pw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=X9fdExVrw6l7zKmXACen9UT+yWJbBuO88sqIShkZf8thWKSFoozBT54vGFnMddjV5
-         vi4BOJ5fySjY165F3IbSS0+NjQ5Os5gfpDmtd3e9dIV9kntKCDx5O/24PYiy54ovSK
-         1gEAIP7LphOQVZ/e37Lp9nGY13euBSnCIPVLKv/PZBXWpUwTaYlqAdOuDoGmjkrh70
-         /D1j4lH/eWsg58L/aaavQhj9K7jYxZEXLOcLsOfQzIs83TzZY4orUijmGdec27Lh3m
-         vnoUz3yhza2KOV2NNT0mX32dv+KcznUT+A0zJmFkB0jehThTSFgkdrKLhd2Pys0vZe
-         WzKuJgvqOpsJA==
-Date:   Mon, 5 Aug 2019 13:04:03 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Saravana Kannan <saravanak@google.com>
-Subject: linux-next: build warning after merge of the driver-core tree
-Message-ID: <20190805130403.06dc27b4@canb.auug.org.au>
+        Sun, 4 Aug 2019 23:07:25 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:57653 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbfHEDHZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 4 Aug 2019 23:07:25 -0400
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x7537CRU004066, This message is accepted by code: ctloc85258
+Received: from RS-CAS02.realsil.com.cn (msx.realsil.com.cn[172.29.17.3](maybeforged))
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x7537CRU004066
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 5 Aug 2019 11:07:12 +0800
+Received: from toshiba (172.29.36.108) by RS-CAS02.realsil.com.cn
+ (172.29.17.3) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 5 Aug 2019
+ 11:07:12 +0800
+Date:   Mon, 5 Aug 2019 11:07:33 +0800
+From:   Alex Lu <alex_lu@realsil.com.cn>
+To:     Marcel Holtmann <marcel@holtmann.org>
+CC:     Johan Hedberg <johan.hedberg@gmail.com>,
+        <linux-bluetooth@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Max Chou <max.chou@realtek.com>
+Subject: [PATCH v2] Bluetooth: btrtl: Save firmware and config
+Message-ID: <20190805030733.GA11069@toshiba>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/bes5F2ic.1asHnYSmE8if9o";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Originating-IP: [172.29.36.108]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/bes5F2ic.1asHnYSmE8if9o
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Alex Lu <alex_lu@realsil.com.cn>
 
-Hi all,
+usb reset resume will cause downloading firmware again and
+requesting firmware may be failed while host is resuming
 
-After merging the driver-core tree, today's linux-next build (powerpc
-ppc64_defconfig) produced this warning:
+Signed-off-by: Alex Lu <alex_lu@realsil.com.cn>
+---
+ drivers/bluetooth/btrtl.c | 101 ++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 97 insertions(+), 4 deletions(-)
 
-drivers/of/platform.c:674:12: warning: 'of_link_to_suppliers' defined but n=
-ot used [-Wunused-function]
- static int of_link_to_suppliers(struct device *dev)
-            ^~~~~~~~~~~~~~~~~~~~
+diff --git a/drivers/bluetooth/btrtl.c b/drivers/bluetooth/btrtl.c
+index 208feef63de4..416a5cb676e3 100644
+--- a/drivers/bluetooth/btrtl.c
++++ b/drivers/bluetooth/btrtl.c
+@@ -56,6 +56,8 @@ struct btrtl_device_info {
+ 	int cfg_len;
+ };
+ 
++static struct btrtl_device_info dev_info;
++
+ static const struct id_table ic_id_table[] = {
+ 	{ IC_MATCH_FL_LMPSUBV, RTL_ROM_LMP_8723A, 0x0,
+ 	  .config_needed = false,
+@@ -553,8 +555,23 @@ struct btrtl_device_info *btrtl_initialize(struct hci_dev *hdev,
+ 			goto err_free;
+ 	}
+ 
+-	btrtl_dev->fw_len = rtl_load_file(hdev, btrtl_dev->ic_info->fw_name,
+-					  &btrtl_dev->fw_data);
++	if (dev_info.ic_info == NULL ||
++	    dev_info.ic_info != btrtl_dev->ic_info) {
++		btrtl_dev->fw_len = rtl_load_file(hdev,
++						  btrtl_dev->ic_info->fw_name,
++						  &btrtl_dev->fw_data);
++		/* Make sure that fw is stored later */
++		dev_info.ic_info = NULL;
++	} else {
++		if (dev_info.fw_len > 0)
++			btrtl_dev->fw_data = kmemdup(dev_info.fw_data,
++						     dev_info.fw_len,
++						     GFP_KERNEL);
++		if (btrtl_dev->fw_data)
++			btrtl_dev->fw_len = dev_info.fw_len;
++		else
++			btrtl_dev->fw_len = -ENOMEM;
++	}
+ 	if (btrtl_dev->fw_len < 0) {
+ 		rtl_dev_err(hdev, "firmware file %s not found\n",
+ 			    btrtl_dev->ic_info->fw_name);
+@@ -570,8 +587,21 @@ struct btrtl_device_info *btrtl_initialize(struct hci_dev *hdev,
+ 			snprintf(cfg_name, sizeof(cfg_name), "%s.bin",
+ 				 btrtl_dev->ic_info->cfg_name);
+ 		}
+-		btrtl_dev->cfg_len = rtl_load_file(hdev, cfg_name,
+-						   &btrtl_dev->cfg_data);
++
++		if (dev_info.ic_info == NULL ||
++		    dev_info.ic_info != btrtl_dev->ic_info) {
++			btrtl_dev->cfg_len = rtl_load_file(hdev, cfg_name,
++							&btrtl_dev->cfg_data);
++		} else {
++			if (dev_info.cfg_len > 0)
++				btrtl_dev->cfg_data = kmemdup(dev_info.cfg_data,
++							      dev_info.cfg_len,
++							      GFP_KERNEL);
++			if (btrtl_dev->cfg_data)
++				btrtl_dev->cfg_len = dev_info.cfg_len;
++			else
++				btrtl_dev->cfg_len = -ENOMEM;
++		}
+ 		if (btrtl_dev->ic_info->config_needed &&
+ 		    btrtl_dev->cfg_len <= 0) {
+ 			rtl_dev_err(hdev, "mandatory config file %s not found\n",
+@@ -620,6 +650,49 @@ int btrtl_download_firmware(struct hci_dev *hdev,
+ }
+ EXPORT_SYMBOL_GPL(btrtl_download_firmware);
+ 
++static void dev_fw_free(void)
++{
++	kfree(dev_info.fw_data);
++	kfree(dev_info.cfg_data);
++	memset(&dev_info, 0, sizeof(dev_info));
++}
++
++static void dev_fw_dup(struct btrtl_device_info *btrtl_dev)
++{
++	dev_fw_free();
++
++	dev_info.ic_info = btrtl_dev->ic_info;
++	dev_info.rom_version = btrtl_dev->rom_version;
++
++	dev_info.fw_len = btrtl_dev->fw_len;
++	if (dev_info.fw_len > 0)
++		dev_info.fw_data = kmemdup(btrtl_dev->fw_data,
++					   btrtl_dev->fw_len, GFP_KERNEL);
++	if (!dev_info.fw_data) {
++		BT_ERR("Failed to save rtl firmware");
++		goto err_memdup;
++	}
++
++	dev_info.cfg_len = btrtl_dev->cfg_len;
++	if (dev_info.cfg_len > 0)
++		dev_info.cfg_data = kmemdup(btrtl_dev->cfg_data,
++					    btrtl_dev->cfg_len, GFP_KERNEL);
++	if (!dev_info.cfg_data) {
++		if (dev_info.ic_info->config_needed) {
++			BT_ERR("Failed to save mandatory rtl config file");
++			goto err_memdup;
++		} else {
++			dev_info.cfg_len = 0;
++		}
++		BT_WARN("Failed to save rtl config file");
++	}
++
++	return;
++
++err_memdup:
++	dev_fw_free();
++}
++
+ int btrtl_setup_realtek(struct hci_dev *hdev)
+ {
+ 	struct btrtl_device_info *btrtl_dev;
+@@ -629,6 +702,9 @@ int btrtl_setup_realtek(struct hci_dev *hdev)
+ 	if (IS_ERR(btrtl_dev))
+ 		return PTR_ERR(btrtl_dev);
+ 
++	if (btrtl_dev->ic_info && dev_info.ic_info != btrtl_dev->ic_info)
++		dev_fw_dup(btrtl_dev);
++
+ 	ret = btrtl_download_firmware(hdev, btrtl_dev);
+ 
+ 	btrtl_free(btrtl_dev);
+@@ -745,6 +821,23 @@ int btrtl_get_uart_settings(struct hci_dev *hdev,
+ }
+ EXPORT_SYMBOL_GPL(btrtl_get_uart_settings);
+ 
++static int btrtl_module_init(void)
++{
++	BT_INFO("btrtl: init");
++
++	return 0;
++}
++
++static void btrtl_module_exit(void)
++{
++	BT_INFO("btrtl: exit");
++
++	dev_fw_free();
++}
++
++module_init(btrtl_module_init);
++module_exit(btrtl_module_exit)
++
+ MODULE_AUTHOR("Daniel Drake <drake@endlessm.com>");
+ MODULE_DESCRIPTION("Bluetooth support for Realtek devices ver " VERSION);
+ MODULE_VERSION(VERSION);
+-- 
+2.19.2
 
-Introduced by commit
-
-  690ff7881b26 ("of/platform: Add functional dependency link from DT bindin=
-gs")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/bes5F2ic.1asHnYSmE8if9o
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1HnKMACgkQAVBC80lX
-0GwPOwf/WnyFlJapb2s4Yc7hWk7pBo2Yo/avAfRCgVVc3/qWyeQlGAeFSruIrhzP
-Ic+VDl5Io9qqsc4GaeaFC/L/CJL23QneqgQqlk0aRR3t+jcRjl1JY6nhcEy1daPI
-ZaXci4Z/B/gYutuZ7vrlJOfEMCXgeQUh8eLsntm2i56mI0tGEtwCh4OmtXqHtm7c
-dbarxQKOOPzTnB9x/V6SI7naTfyqc/7kHSbymDZwYQpb1gX1sRCd+zUOkJ3poNq2
-+nkJMVKGz7+DwjEVAfGDndbgQP1nOh9iSeNQYpOUKOMoQD+O21h2P3WRjtIbBXag
-CcoGI6MqwN6/g9mIZ61xrZcVnaRnlg==
-=wQ+3
------END PGP SIGNATURE-----
-
---Sig_/bes5F2ic.1asHnYSmE8if9o--
