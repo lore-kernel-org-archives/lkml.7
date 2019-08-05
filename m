@@ -2,110 +2,106 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92023C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B97EC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B82F217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:02:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Fb4phbBK"
+	by mail.kernel.org (Postfix) with ESMTP id 5514D20818
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:06:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727573AbfHEHCf (ORCPT
+        id S1727422AbfHEHGx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 03:02:35 -0400
-Received: from mail-eopbgr50076.outbound.protection.outlook.com ([40.107.5.76]:59910
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726375AbfHEHCf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 03:02:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mAwSLf0ch1aY7hqJIfVHRHuhJzPw49oJw/s6nx3K4rHLb7HlCjxfrbNWkWi+hVixD2SlxhUcNrDGlYNVivOEvJ+aAMVPsaGgM9NwDsUl/W8O+X1ZJAwna7uTkbWGqxWMx+0f/sE03XcZphwssI9HcXk1v8CR6fo6kiRGO+sJFjrlwXWsFQyTeMNIA3p8kCar2TOdS/D4C7UWJXe84sP0cA84eKThMoSUXYDyqRsG5TJ3jD5ihsK7uFQgBaI9PyQTqGyA9DYbKdHmo9nSVR1rt3IIbqZuRlOmiYWZt7KlfYMS9fQVw4XQeZhz8xwYzhODpVKaZoEJ3TrS2M33mj41eQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WhPQ/1YihpA86LKtFtSVNSxs8Ka5la6tpPg+MIkXrY0=;
- b=n/fyVZCXai3zFjisEjBcJxUPOSLod0/vl8xYu2tExpzUAPyorKftl20SgsCbbEo7MbFINNxvrHmd0teVkSnzmFxmzBPHamXYtP1lXJLll2hHm3nTAKlbR4fITTinCwiEUxx1V1kHGGgDrrN07r7epLClgOX9Se1jx/as8eyUn2x+bbfAdkK88XN5/hKiXsGR9cUUKFRYxfywCA0sKtuprU68ykM6CHEonwnTABzyHtOeaE+j+xX07ktTOoMEusjmcGaki/M5dk9NwmhdQkQgceZt0MyABI7XrridTsxouBBR+GoV/vnPYv6+pJNg3MeQRrwmBrALr28U1J1WnNXTvw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
- header.d=nxp.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WhPQ/1YihpA86LKtFtSVNSxs8Ka5la6tpPg+MIkXrY0=;
- b=Fb4phbBKTBziWcjDphoS0sdOj8+V4MAu3CSpcbzRWRY/iKlOFI2gKbvckI4iuHxGfD2VqCvluElDE9pJcZpK3iAOqGEF3ZG34wjOzKTOPrCnypXKWcwMeCc9y+4zwvN6DYTKWPOvMSXXovw5A5cAdM8ScuUfKMwk2NNJzt9U2Ow=
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com (52.134.92.158) by
- AM0PR04MB6577.eurprd04.prod.outlook.com (20.179.255.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2136.13; Mon, 5 Aug 2019 07:02:31 +0000
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::5553:29b6:d66c:6afe]) by AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::5553:29b6:d66c:6afe%5]) with mapi id 15.20.2136.018; Mon, 5 Aug 2019
- 07:02:31 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "edubezval@gmail.com" <edubezval@gmail.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V3 5/5] dt-bindings: thermal: qoriq: Add optional clocks
- property
-Thread-Topic: [PATCH V3 5/5] dt-bindings: thermal: qoriq: Add optional clocks
- property
-Thread-Index: AQHVRn7WFVqxJm4LuEW+w7KL0Lw4sabsKmuA
-Date:   Mon, 5 Aug 2019 07:02:31 +0000
-Message-ID: <AM0PR04MB42117687C2604556C2559B4E80DA0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20190730022126.17883-1-Anson.Huang@nxp.com>
- <20190730022126.17883-5-Anson.Huang@nxp.com>
-In-Reply-To: <20190730022126.17883-5-Anson.Huang@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=aisheng.dong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bea5f23c-a03b-421d-8c1b-08d71972e2a1
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB6577;
-x-ms-traffictypediagnostic: AM0PR04MB6577:
-x-microsoft-antispam-prvs: <AM0PR04MB6577E3412C9A05D7E67568BF80DA0@AM0PR04MB6577.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:663;
-x-forefront-prvs: 01208B1E18
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(4636009)(376002)(396003)(39860400002)(346002)(136003)(366004)(199004)(189003)(6436002)(76176011)(81156014)(11346002)(8676002)(478600001)(74316002)(476003)(7736002)(256004)(9686003)(14454004)(66066001)(2501003)(305945005)(55016002)(53936002)(8936002)(71190400001)(71200400001)(33656002)(44832011)(66556008)(66476007)(64756008)(66946007)(66446008)(52536014)(76116006)(81166006)(558084003)(229853002)(110136005)(25786009)(486006)(5660300002)(2906002)(316002)(99286004)(6246003)(2201001)(6506007)(86362001)(186003)(446003)(3846002)(6116002)(102836004)(7696005)(68736007)(4326008)(26005)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6577;H:AM0PR04MB4211.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: bPKwjFvafOLYKcAi0jniSUBAfy1tc8ABggn9RPW/vp9LuA08lZlA1NY+pMdktWbOEk64w9P2NS3oS+06A/RBRYavJ5ZnUn+J5oFF5ETSQbO0PIFwLg/XW0/umwbB57Ej37oiz4lwiaHn2eEC2yLk2lU9j0v2RGgGsI8wlHdsdvv0QHS0P755jNBQsskHk2R7tO5jeDqjiSFiH2nWpVaSX/Q4E8In3cEgUcqw0sUuwdSX28UJAIUlR+EuIilRftCApHv3amtHfcmgeHl1b0gMwEA8ptBcHDfWLypDP0CAvolQXk0x/7y9QFWutHd+OQwd0t/eXlENo9VAjKR93EsQgRX9kbRcxVDIMqyXQAjdr4pjiklDnT/nxs/JyI+fKm8EoAmotiFfQM/si13M8O0iELQYvCoElOTkKqg4LYuLonA=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bea5f23c-a03b-421d-8c1b-08d71972e2a1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Aug 2019 07:02:31.3999
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aisheng.dong@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6577
+        Mon, 5 Aug 2019 03:06:53 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:43726 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726375AbfHEHGx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 03:06:53 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 69C98200282;
+        Mon,  5 Aug 2019 09:06:50 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9BEAC200221;
+        Mon,  5 Aug 2019 09:06:44 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 5606F402B5;
+        Mon,  5 Aug 2019 15:06:37 +0800 (SGT)
+From:   Hui Song <hui.song_1@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Song Hui <hui.song_1@nxp.com>
+Subject: [PATCH] arm64: dts: ls1028a: fix gpio nodes
+Date:   Mon,  5 Aug 2019 14:57:00 +0800
+Message-Id: <20190805065700.7601-1-hui.song_1@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBBbnNvbi5IdWFuZ0BueHAuY29tIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiBTZW50
-OiBUdWVzZGF5LCBKdWx5IDMwLCAyMDE5IDEwOjIxIEFNDQo+IA0KPiBTb21lIHBsYXRmb3JtcyBs
-aWtlIGkuTVg4TSBzZXJpZXMgU29DcyBoYXZlIGNsb2NrIGNvbnRyb2wgZm9yIFRNVSwgYWRkDQo+
-IG9wdGlvbmFsIGNsb2NrcyBwcm9wZXJ0eSB0byB0aGUgYmluZGluZyBkb2MuDQo+IA0KPiBTaWdu
-ZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gUmV2aWV3ZWQt
-Ynk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+DQoNClJldmlld2VkLWJ5OiBEb25nIEFp
-c2hlbmcgPGFpc2hlbmcuZG9uZ0BueHAuY29tPg0KDQpSZWdhcmRzDQpBaXNoZW5nDQo=
+From: Song Hui <hui.song_1@nxp.com>
+
+Update the nodes to include little-endian
+property to be consistent with the hardware.
+
+Signed-off-by: Song Hui <hui.song_1@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index aef5b06..7ccbbfc 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@ -277,33 +277,36 @@
+ 		};
+ 
+ 		gpio1: gpio@2300000 {
+-			compatible = "fsl,qoriq-gpio";
++			compatible = "fsl,ls1028a-gpio","fsl,qoriq-gpio";
+ 			reg = <0x0 0x2300000 0x0 0x10000>;
+ 			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
++			little-endian;
+ 		};
+ 
+ 		gpio2: gpio@2310000 {
+-			compatible = "fsl,qoriq-gpio";
++			compatible = "fsl,ls1028a-gpio","fsl,qoriq-gpio";
+ 			reg = <0x0 0x2310000 0x0 0x10000>;
+ 			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
++			little-endian;
+ 		};
+ 
+ 		gpio3: gpio@2320000 {
+-			compatible = "fsl,qoriq-gpio";
++			compatible = "fsl,ls1028a-gpio","fsl,qoriq-gpio";
+ 			reg = <0x0 0x2320000 0x0 0x10000>;
+ 			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
++			little-endian;
+ 		};
+ 
+ 		usb0: usb@3100000 {
+-- 
+2.9.5
+
