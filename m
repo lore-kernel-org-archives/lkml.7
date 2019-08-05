@@ -8,66 +8,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0261BC19759
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 02:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C956DC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 02:03:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD2AE20B1F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 02:03:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1F6520B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 02:03:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xk3DeOF+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ELHAEb/c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfHECDm (ORCPT
+        id S1727125AbfHECDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 4 Aug 2019 22:03:42 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36553 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727060AbfHECDj (ORCPT
+        Sun, 4 Aug 2019 22:03:45 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34867 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727060AbfHECDn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 4 Aug 2019 22:03:39 -0400
-Received: by mail-pg1-f195.google.com with SMTP id l21so38836418pgm.3;
-        Sun, 04 Aug 2019 19:03:39 -0700 (PDT)
+        Sun, 4 Aug 2019 22:03:43 -0400
+Received: by mail-pf1-f196.google.com with SMTP id u14so38787927pfn.2;
+        Sun, 04 Aug 2019 19:03:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=jGqqJdoFPgJRfsp1veHs6du8u1sFJO+Ydm26xk5LIKY=;
-        b=Xk3DeOF+Q2VofPljRLhC6CCEq1+BN2Mk/wjSANITZuaSY20WOH+WPYkQJWFOObpmrO
-         bpsnSXk5JcWYIMKSZC2plULWQtsCTYiGvkD/4az2GR4uOhj0wd+LstHF/ClEosGMCQPw
-         lb1kb55OEJFNG7Eh9E644AfDvu3Lto1ZK89D2tyjouFjQguZnjRVFxaBrn4tnKUJyiNx
-         Sr16EnS0eruQ0YO6gVBpfXjKsr/7r+/AemBkoYTu1EOHOJsFnCWSlOF9ccss3HE3Ak0b
-         M/G5jQ3JvY9h9Xvc+Vmv0dd0UutHogKn/F7x5BHeHE0+hlLlUyh7+Qx2NVfiUnXByZz6
-         r06A==
+        bh=Hoi2qggJgGKlBqGJ2GtCroDIXuqb12/f4X0se5rdkzk=;
+        b=ELHAEb/c0g8ciUTihz8zTEwp7BEgCe6Jif2phFQXVHydHHkUp6z2DGYbVMY7bemulb
+         rnTGgy7Ar/5FVw914qquuOyhNx9fCROm7Jy4SEsXiXKJRKnNTlXuFA/XbCCl5A7eraEq
+         StDL+CWkOO7lougYGUsxOZnqNLLzOn/Y+xAGtnPZGraqpPbLSbNHMO8sBWtsdzlLL9SN
+         pt5ghjiaitwO50Qf54t4MVv7QbsicNW715PVgRgbBwwDNrVinqhN7drKclxKMvLlNKJ8
+         yy6KcDRYTH9r1lNJEdI3DoxJ1SBEi05CE2l0mI8G3JizdLzYk9Vb4AvJhqeklPJomkSF
+         vzKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=jGqqJdoFPgJRfsp1veHs6du8u1sFJO+Ydm26xk5LIKY=;
-        b=JQrOjVgR8lKghFumUgt4rYXMU9FkypsIIZyYPMB0rfMNXh/0QLoMmQ5ccRUdTc0Zgv
-         jybZvCeDtqT1hCtsaTv6vIgevVPe8V6HyUv535eE80Skav+VMVYMjgSzXtVMk+kh2Kik
-         hgcgC40UBIbBOdv7igcukcn+oZWpX8bdz/C/f/Be+6jm+Sv6pMwJragSZm4y5c3VeMFf
-         ve7upF2w6w8ZPWP0eSVA5yd32E+llzNuPgz4NIIP/A7NM+abMtytqsjsE+VpC5sApnxw
-         F7TrWFb3pTLqit4QcYc+Cb4qk4/qTSu3ZqPVFSMVLc6tlb/AAQElIhuPFlvJRp9Wrw4i
-         SHkw==
-X-Gm-Message-State: APjAAAXfX6o3Z1maRTzjnGUIjBh2kMH/GOAIm3Fcszdz/2laKVlSTDjU
-        gMWMJ+rXcpL4/tatoxyfrL+8Pp2L
-X-Google-Smtp-Source: APXvYqz+Q9PM/X7k6L6D+IfKYndmCPEBeDNfA4xoBsr4C1ljccCsECgjdtNKyzuq869gnzWJhdzYzw==
-X-Received: by 2002:a63:2a08:: with SMTP id q8mr102013732pgq.415.1564970618660;
-        Sun, 04 Aug 2019 19:03:38 -0700 (PDT)
+        bh=Hoi2qggJgGKlBqGJ2GtCroDIXuqb12/f4X0se5rdkzk=;
+        b=JSpCIUh0It6XIEVLZvz0+kCQQiG2Ot1Vg2ah/ZeXR7/IbN2JTFi4gVctjy/l+3pQ0M
+         ARloOEkcJ4lHq2lIY7cH0rWjHUvIFVprP1cI8J8wZyk7oROjEJef423/Q++RlmKRuldQ
+         LbWGucgctoLf4p6Kh/lr8uIJT4hCPpKFRU8izhG+mKyQO81FiVsnpqh6Gl+ZZf9lspwC
+         dqZoSDbE/tOAtDF4Dciz0Dp9DkFvEHaul1Ux/7QriGEYbr5Uub+Ok7b38OFZAPJEUvEz
+         Qve7aLfrYWkr/RBynv8jB/6MVRYwlHg0+hn0EDHpkUKFd/fQjRSDlR3vbB1keql6kTUV
+         3y6Q==
+X-Gm-Message-State: APjAAAWbgUUiQ/98XWoLg2rw6B+ohRnPqZDd5Hp6knu2qazNhgLkFTmI
+        evDiPmT2lX2+ge8Xk46G9+OmEQE4
+X-Google-Smtp-Source: APXvYqxDROGQMciy3kn6lTsD8uj9Zufwk/bjW0IymlSN9rRmy6jNJFEGGM9u/GGNAL9RHc/G5O70Wg==
+X-Received: by 2002:a62:82c1:: with SMTP id w184mr72018868pfd.8.1564970622332;
+        Sun, 04 Aug 2019 19:03:42 -0700 (PDT)
 Received: from localhost.localdomain ([203.205.141.123])
-        by smtp.googlemail.com with ESMTPSA id o32sm14739365pje.9.2019.08.04.19.03.36
+        by smtp.googlemail.com with ESMTPSA id o32sm14739365pje.9.2019.08.04.19.03.40
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 04 Aug 2019 19:03:38 -0700 (PDT)
+        Sun, 04 Aug 2019 19:03:41 -0700 (PDT)
 From:   Wanpeng Li <kernellwp@gmail.com>
 X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Nadav Amit <namit@vmware.com>
-Subject: [PATCH v4 4/6] KVM: X86: Use IPI shorthands in kvm guest when support
-Date:   Mon,  5 Aug 2019 10:03:22 +0800
-Message-Id: <1564970604-10044-4-git-send-email-wanpengli@tencent.com>
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Subject: [PATCH v4 6/6] KVM: X86: Add pv tlb shootdown tracepoint
+Date:   Mon,  5 Aug 2019 10:03:24 +0800
+Message-Id: <1564970604-10044-6-git-send-email-wanpengli@tencent.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1564970604-10044-1-git-send-email-wanpengli@tencent.com>
 References: <1564970604-10044-1-git-send-email-wanpengli@tencent.com>
@@ -81,57 +78,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Wanpeng Li <wanpengli@tencent.com>
 
-IPI shorthand is supported now by linux apic/x2apic driver, switch to
-IPI shorthand for all excluding self and all including self destination
-shorthand in kvm guest, to avoid splitting the target mask into several
-PV IPI hypercalls. This patch removes the kvm_send_ipi_all() and
-kvm_send_ipi_allbutself() since the callers in APIC codes have already
-taken care of apic_use_ipi_shorthand and fallback to ->send_IPI_mask
-and ->send_IPI_mask_allbutself if it is false.
+Add pv tlb shootdown tracepoint.
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Radim Krčmář <rkrcmar@redhat.com>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Nadav Amit <namit@vmware.com>
 Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
 ---
-Note: rebase against tip tree's x86/apic branch, but just modify kvm codes
-v1 -> v2:
- * remove kvm_send_ipi_all() and kvm_send_ipi_allbutself()
+ arch/x86/kvm/trace.h | 19 +++++++++++++++++++
+ arch/x86/kvm/x86.c   |  2 ++
+ 2 files changed, 21 insertions(+)
 
- arch/x86/kernel/kvm.c | 12 ------------
- 1 file changed, 12 deletions(-)
-
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index b7f34fe..96626d8 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -505,16 +505,6 @@ static void kvm_send_ipi_mask_allbutself(const struct cpumask *mask, int vector)
- 	__send_ipi_mask(local_mask, vector);
- }
+diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
+index ce6ee34..84f32d3 100644
+--- a/arch/x86/kvm/trace.h
++++ b/arch/x86/kvm/trace.h
+@@ -1487,6 +1487,25 @@ TRACE_EVENT(kvm_pv_send_ipi,
+ 	TP_printk("vector %d min 0x%x ipi_bitmap_low 0x%lx ipi_bitmap_high 0x%lx",
+ 		  __entry->vector, __entry->min, __entry->ipi_bitmap_low, __entry->ipi_bitmap_high)
+ );
++
++TRACE_EVENT(kvm_pv_tlb_flush,
++	TP_PROTO(unsigned int vcpu_id, bool need_flush_tlb),
++	TP_ARGS(vcpu_id, need_flush_tlb),
++
++	TP_STRUCT__entry(
++		__field(	unsigned int,	vcpu_id		)
++		__field(	bool,	need_flush_tlb		)
++	),
++
++	TP_fast_assign(
++		__entry->vcpu_id	= vcpu_id;
++		__entry->need_flush_tlb = need_flush_tlb;
++	),
++
++	TP_printk("vcpu %u need_flush_tlb %s", __entry->vcpu_id,
++		__entry->need_flush_tlb ? "true" : "false")
++);
++
+ #endif /* _TRACE_KVM_H */
  
--static void kvm_send_ipi_allbutself(int vector)
--{
--	kvm_send_ipi_mask_allbutself(cpu_online_mask, vector);
--}
--
--static void kvm_send_ipi_all(int vector)
--{
--	__send_ipi_mask(cpu_online_mask, vector);
--}
--
- /*
-  * Set the IPI entry points
-  */
-@@ -522,8 +512,6 @@ static void kvm_setup_pv_ipi(void)
- {
- 	apic->send_IPI_mask = kvm_send_ipi_mask;
- 	apic->send_IPI_mask_allbutself = kvm_send_ipi_mask_allbutself;
--	apic->send_IPI_allbutself = kvm_send_ipi_allbutself;
--	apic->send_IPI_all = kvm_send_ipi_all;
- 	pr_info("KVM setup pv IPIs\n");
- }
+ #undef TRACE_INCLUDE_PATH
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index f715efb..7a302cd 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -2452,6 +2452,8 @@ static void record_steal_time(struct kvm_vcpu *vcpu)
+ 	 * Doing a TLB flush here, on the guest's behalf, can avoid
+ 	 * expensive IPIs.
+ 	 */
++	trace_kvm_pv_tlb_flush(vcpu->vcpu_id,
++		vcpu->arch.st.steal.preempted & KVM_VCPU_FLUSH_TLB);
+ 	if (xchg(&vcpu->arch.st.steal.preempted, 0) & KVM_VCPU_FLUSH_TLB)
+ 		kvm_vcpu_flush_tlb(vcpu, false);
  
 -- 
 2.7.4
