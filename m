@@ -2,114 +2,99 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CA8C32751
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FB6C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DBE5206A2
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:05:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cXmi7mI9"
+	by mail.kernel.org (Postfix) with ESMTP id 18B9D216B7
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:05:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565028322;
+	bh=4zj0WOS0HKxI+9HNAwbT0W8pBLSjUbq7Qvos7piJMe8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SbnX+3PAwOm1WRhM7BW4AGZSHqNtzuStMpWf1++fb7671xDqJK5EQq6DQKATv/s0V
+	 DysX6TMU1ptDbIAnu/Wzjplm6vS4x6xXa49RzaSwUj8R3a+Z/LTZxZhPRPkpkpU9E8
+	 KLP6MVUeykyQ6r/8yWELB5YcI583GlSdLnHVf2+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728837AbfHESFE (ORCPT
+        id S1730263AbfHESFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 14:05:04 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41502 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728686AbfHESFD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 14:05:03 -0400
-Received: by mail-pf1-f194.google.com with SMTP id m30so40045819pff.8
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 11:05:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZSkdc0K+z32xxfAPnuWbM7lfH87BvTZ2fp0ZJPTc+Cw=;
-        b=cXmi7mI9gwJdyWlkxh4sZXDNnwqAOM396pNmF+W1i3XDqQTScm/cCqOx5XVa2iLejA
-         Okh9/6L40CfVbdqGr5Shz+jFD7Ag4pGdOQ5YZkQHcqPtoaotaiApMZfOYK3K3xpjM8y3
-         X6Ed5z/AL5ANJinBmBbc4ZVFVOwIdGw3rVliUR+sERk+XF4QoMsaevs2YWxvmew9VYWq
-         Z51shcbd7kkT6yVs5a0PR3kuVZrX6dYOWFQxYHglJWImyoqQ1pWdGm4f/BKeAB29XnvJ
-         sDNuequqjPbD5nlB8EN26VK5jKITS6IBWUfs5JnUXPcqfTFCav1mYpLcbnJVOAh5a2YH
-         Ztvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZSkdc0K+z32xxfAPnuWbM7lfH87BvTZ2fp0ZJPTc+Cw=;
-        b=dQhKd/og7MIHChJVTXQkj+LJOi7HAMTb7IN9sJCWOD2OBmP6PtjXosTlU2s2r0lya3
-         swSznZq07ku5OTVcWDbCyu3CZUBfyHCGjyUIbBzhPL0qi/A+088AFU2EZXzEednzULqr
-         v8QIVrF5yd0xgtt7IyPVUJBrDkxpjl4DQ6QQg56Mh2saSx8AE1HmEhT6GpoUrxILUn5Z
-         N+5heQaImqifMAImdhlwN+mBCFCQIKTdDf4cpwm0DUaCTR+QBoCuf+JanWbZjoyISYSl
-         MqxuUI82u63QqGU1b/h63ngZOn/jKltIDjdNFbe9qavlPme7ujDiXVbZkmau/fmSWWdy
-         X39g==
-X-Gm-Message-State: APjAAAWluNaq1dajWnNR3g3xcWDyrNsxXS9TMj2M/SPwUaE3xZnRV+7k
-        dPy8vS9h2eM+nPINSy8PRJcUvA==
-X-Google-Smtp-Source: APXvYqyqwv3DLgpNhtnK2vwj2OiJn5Vdw0hfYPmrR/vLdQkSLHUgx7cCtN15F4zNLbLljZ08yl4v8A==
-X-Received: by 2002:a63:6904:: with SMTP id e4mr76419969pgc.321.1565028302610;
-        Mon, 05 Aug 2019 11:05:02 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id j20sm80470011pfr.113.2019.08.05.11.05.01
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 05 Aug 2019 11:05:01 -0700 (PDT)
-Date:   Mon, 5 Aug 2019 11:06:33 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Govind Singh <govinds@codeaurora.org>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 0/3] ath10k: Clean up regulator and clock handling
-Message-ID: <20190805180633.GB23928@tuxbook-pro>
-References: <20190725174755.23432-1-bjorn.andersson@linaro.org>
- <196fa4aa63fd5135aead736396fe3f8c@codeaurora.org>
+        Mon, 5 Aug 2019 14:05:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34380 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730011AbfHESFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 14:05:20 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36C1A206A2;
+        Mon,  5 Aug 2019 18:05:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565028319;
+        bh=4zj0WOS0HKxI+9HNAwbT0W8pBLSjUbq7Qvos7piJMe8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HHpciDACnikAmxWjh5CUq79Xi+1N61c7Mf/IK9ah412iKlsgGkpZ7W+vNAETumn6B
+         D0vaQYM32YAo8YFFV5Ux2xqjo0agtKj43xUn7ENA5JJGOP2ffGK1wn19/AyzUhK//y
+         xXSnRgZKfECIZS+vd5UoPR9TJo8YIdJKFpUYbkO4=
+Date:   Mon, 5 Aug 2019 14:05:18 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     peterhuewe@gmx.de, jgg@ziepe.ca, corbet@lwn.net,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-kernel@microsoft.com,
+        thiruan@microsoft.com, bryankel@microsoft.com,
+        tee-dev@lists.linaro.org, ilias.apalodimas@linaro.org,
+        sumit.garg@linaro.org, rdunlap@infradead.org
+Subject: Re: [PATCH v8 0/2] fTPM: firmware TPM running in TEE
+Message-ID: <20190805180518.GC17747@sasha-vm>
+References: <20190705204746.27543-1-sashal@kernel.org>
+ <20190711200858.xydm3wujikufxjcw@linux.intel.com>
+ <20190804214218.vdv2sn4oc4cityy2@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <196fa4aa63fd5135aead736396fe3f8c@codeaurora.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190804214218.vdv2sn4oc4cityy2@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 25 Jul 23:52 PDT 2019, Govind Singh wrote:
+On Mon, Aug 05, 2019 at 12:44:28AM +0300, Jarkko Sakkinen wrote:
+>On Thu, Jul 11, 2019 at 11:08:58PM +0300, Jarkko Sakkinen wrote:
+>> On Fri, Jul 05, 2019 at 04:47:44PM -0400, Sasha Levin wrote:
+>> > Changes from v7:
+>> >
+>> >  - Address Jarkko's comments.
+>> >
+>> > Sasha Levin (2):
+>> >   fTPM: firmware TPM running in TEE
+>> >   fTPM: add documentation for ftpm driver
+>> >
+>> >  Documentation/security/tpm/index.rst        |   1 +
+>> >  Documentation/security/tpm/tpm_ftpm_tee.rst |  27 ++
+>> >  drivers/char/tpm/Kconfig                    |   5 +
+>> >  drivers/char/tpm/Makefile                   |   1 +
+>> >  drivers/char/tpm/tpm_ftpm_tee.c             | 350 ++++++++++++++++++++
+>> >  drivers/char/tpm/tpm_ftpm_tee.h             |  40 +++
+>> >  6 files changed, 424 insertions(+)
+>> >  create mode 100644 Documentation/security/tpm/tpm_ftpm_tee.rst
+>> >  create mode 100644 drivers/char/tpm/tpm_ftpm_tee.c
+>> >  create mode 100644 drivers/char/tpm/tpm_ftpm_tee.h
+>> >
+>> > --
+>> > 2.20.1
+>> >
+>>
+>> I applied the patches now. Appreciate a lot the patience with these.
+>> Thank you.
+>
+>Hi, can you possibly fix these:
 
-> On 2019-07-25 23:17, Bjorn Andersson wrote:
-> > The first patch in this series removes the regulator_set_voltage() of a
-> > fixed
-> > voltate, as fixed regulator constraints should be specified on a board
-> > level
-> > and on certain boards - such as the Lenovo Yoga C630 - the voltage
-> > specified
-> > for the 3.3V regulator is outside the given range.
-> > 
-> > The following two patches cleans up regulator and clock usage by using
-> > the bulk
-> > API provided by the two frameworks.
-> > 
-> > Bjorn Andersson (3):
-> >   ath10k: snoc: skip regulator operations
-> >   ath10k: Use standard regulator bulk API in snoc
-> >   ath10k: Use standard bulk clock API in snoc
-> > 
-> >  drivers/net/wireless/ath/ath10k/snoc.c | 324 ++++---------------------
-> >  drivers/net/wireless/ath/ath10k/snoc.h |  26 +-
-> >  2 files changed, 48 insertions(+), 302 deletions(-)
-> 
-> Tested on 845 MTP and QCS404 platform with normal sanity and driver recover
-> cases for proxy votes.
-> 
-> Tested-by: Govind Singh <govinds@codeaurora.org>
-> Reviewed-by: Govind Singh <govinds@codeaurora.org>
-> 
+Any objection to sending you a patch on top of your tree instead?
 
-Thanks Govind!
-
-Regards,
-Bjorn
+--
+Thanks,
+Sasha
