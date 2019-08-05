@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A962CC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 213D5C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D79520651
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:30:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E687F20657
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:30:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011833;
-	bh=IXsPk9v/Gg7bNbkGARSUZ4OtjTerAI8nv6xLp15FF44=;
+	s=default; t=1565011837;
+	bh=pV9wrI9as6ezqckcn7Af8Py7PNo8WAFuoBYf4WzacSw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yLGXePkmGLtBRLCXK2rLf56GDX+PiDtlN/h8ukK4IZQ2WVztOJ0QgapjNsSvCJ9gi
-	 v9T9vmfoLMnh8p3507Jn1uqX0IICdTXASV1G1Wn3w5BWynPmbjKsiRmZALIy7XsTlP
-	 2SZsqmIgsctCtQP+XQ7gPJUjpNT7EqvTB5OWLE2s=
+	b=j6RefTsvbs70k0BnPFpL2wn/h5jwD6geENDMKOt5x7Z2LkX6tkE1RDyilj93rw99o
+	 iNzunpv4jzx7UELUsp17EhSKRtzU8E3mlRWRQldkFLHzQr8GYm/ogb/DEGhKYNZ3e1
+	 NFcw3imKiDdkRwH29SGq5st4dhVxQnsuaNyjP5JI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730536AbfHENac (ORCPT
+        id S1730721AbfHENaf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:30:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56790 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:30:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728977AbfHENUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:20:41 -0400
+        id S1728997AbfHENUg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:20:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 472872075B;
-        Mon,  5 Aug 2019 13:20:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0916A20880;
+        Mon,  5 Aug 2019 13:20:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011240;
-        bh=IXsPk9v/Gg7bNbkGARSUZ4OtjTerAI8nv6xLp15FF44=;
+        s=default; t=1565011235;
+        bh=pV9wrI9as6ezqckcn7Af8Py7PNo8WAFuoBYf4WzacSw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cA9LY19w1UizJEjhvX31Qdu34IP2SxlNKlVc79BPYS5jymG/4Pf8kj4Ba7bNOQfsp
-         /B/GbZi2XdKti7GsmcnhfylMxHq978Dfj3WzUwKHRIPhj5CiBJs+0CvLPchlx+Ch/+
-         yNlen8tYHZCL6ladNaEgUcgWaRP9g0AifAuLJEbI=
+        b=EQkYiY49BiECA2wox+fCmRuTFRv5NboS858PZejJaxEPIJJ/OCaev5wS88T3cVYO/
+         DLLMnpkJvdwWPN86ZaVN4VSl8E6NyFSbUJzcLzfuvSktJakDR2+chQTh0ZuFviBew0
+         NXjXb9vm7aoj4VobA6wgBGm+zH/we+6uoMYwhohw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        stable@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 018/131] swiotlb: fix phys_addr_t overflow warning
-Date:   Mon,  5 Aug 2019 15:01:45 +0200
-Message-Id: <20190805124952.653921627@linuxfoundation.org>
+Subject: [PATCH 5.2 016/131] soc: imx8: Fix potential kernel dump in error path
+Date:   Mon,  5 Aug 2019 15:01:43 +0200
+Message-Id: <20190805124952.523457659@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -62,64 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9c106119f6538f65bdddb7948a157d90625effa7 ]
+[ Upstream commit 1bcbe7300815e91fef18ee905b04f65490ad38c9 ]
 
-On architectures that have a larger dma_addr_t than phys_addr_t,
-the swiotlb_tbl_map_single() function truncates its return code
-in the failure path, making it impossible to identify the error
-later, as we compare to the original value:
+When SoC's revision value is 0, SoC driver will print out
+"unknown" in sysfs's revision node, this "unknown" is a
+static string which can NOT be freed, this will caused below
+kernel dump in later error path which calls kfree:
 
-kernel/dma/swiotlb.c:551:9: error: implicit conversion from 'dma_addr_t' (aka 'unsigned long long') to 'phys_addr_t' (aka 'unsigned int') changes value from 18446744073709551615 to 4294967295 [-Werror,-Wconstant-conversion]
-        return DMA_MAPPING_ERROR;
+kernel BUG at mm/slub.c:3942!
+Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc4-next-20190611-00023-g705146c-dirty #2197
+Hardware name: NXP i.MX8MQ EVK (DT)
+pstate: 60000005 (nZCv daif -PAN -UAO)
+pc : kfree+0x170/0x1b0
+lr : imx8_soc_init+0xc0/0xe4
+sp : ffff00001003bd10
+x29: ffff00001003bd10 x28: ffff00001121e0a0
+x27: ffff000011482000 x26: ffff00001117068c
+x25: ffff00001121e100 x24: ffff000011482000
+x23: ffff000010fe2b58 x22: ffff0000111b9ab0
+x21: ffff8000bd9dfba0 x20: ffff0000111b9b70
+x19: ffff7e000043f880 x18: 0000000000001000
+x17: ffff000010d05fa0 x16: ffff0000122e0000
+x15: 0140000000000000 x14: 0000000030360000
+x13: ffff8000b94b5bb0 x12: 0000000000000038
+x11: ffffffffffffffff x10: ffffffffffffffff
+x9 : 0000000000000003 x8 : ffff8000b9488147
+x7 : ffff00001003bc00 x6 : 0000000000000000
+x5 : 0000000000000003 x4 : 0000000000000003
+x3 : 0000000000000003 x2 : b8793acd604edf00
+x1 : ffff7e000043f880 x0 : ffff7e000043f888
+Call trace:
+ kfree+0x170/0x1b0
+ imx8_soc_init+0xc0/0xe4
+ do_one_initcall+0x58/0x1b8
+ kernel_init_freeable+0x1cc/0x288
+ kernel_init+0x10/0x100
+ ret_from_fork+0x10/0x18
 
-Use an explicit typecast here to convert it to the narrower type,
-and use the same expression in the error handling later.
+This patch fixes this potential kernel dump when a chip's
+revision is "unknown", it is done by checking whether the
+revision space can be freed.
 
-Fixes: b907e20508d0 ("swiotlb: remove SWIOTLB_MAP_ERROR")
-Acked-by: Stefano Stabellini <sstabellini@kernel.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Fixes: a7e26f356ca1 ("soc: imx: Add generic i.MX8 SoC driver")
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/swiotlb-xen.c | 2 +-
- kernel/dma/swiotlb.c      | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/soc/imx/soc-imx8.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
-index d53f3493a6b98..cfbe46785a3b3 100644
---- a/drivers/xen/swiotlb-xen.c
-+++ b/drivers/xen/swiotlb-xen.c
-@@ -402,7 +402,7 @@ static dma_addr_t xen_swiotlb_map_page(struct device *dev, struct page *page,
+diff --git a/drivers/soc/imx/soc-imx8.c b/drivers/soc/imx/soc-imx8.c
+index e567d866a9d31..79a3d922a4a9b 100644
+--- a/drivers/soc/imx/soc-imx8.c
++++ b/drivers/soc/imx/soc-imx8.c
+@@ -112,7 +112,8 @@ static int __init imx8_soc_init(void)
+ 	return 0;
  
- 	map = swiotlb_tbl_map_single(dev, start_dma_addr, phys, size, dir,
- 				     attrs);
--	if (map == DMA_MAPPING_ERROR)
-+	if (map == (phys_addr_t)DMA_MAPPING_ERROR)
- 		return DMA_MAPPING_ERROR;
- 
- 	dev_addr = xen_phys_to_bus(map);
-diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-index 13f0cb080a4dc..5f4e1b78babb5 100644
---- a/kernel/dma/swiotlb.c
-+++ b/kernel/dma/swiotlb.c
-@@ -546,7 +546,7 @@ not_found:
- 	if (!(attrs & DMA_ATTR_NO_WARN) && printk_ratelimit())
- 		dev_warn(hwdev, "swiotlb buffer is full (sz: %zd bytes), total %lu (slots), used %lu (slots)\n",
- 			 size, io_tlb_nslabs, tmp_io_tlb_used);
--	return DMA_MAPPING_ERROR;
-+	return (phys_addr_t)DMA_MAPPING_ERROR;
- found:
- 	io_tlb_used += nslots;
- 	spin_unlock_irqrestore(&io_tlb_lock, flags);
-@@ -664,7 +664,7 @@ bool swiotlb_map(struct device *dev, phys_addr_t *phys, dma_addr_t *dma_addr,
- 	/* Oh well, have to allocate and map a bounce buffer. */
- 	*phys = swiotlb_tbl_map_single(dev, __phys_to_dma(dev, io_tlb_start),
- 			*phys, size, dir, attrs);
--	if (*phys == DMA_MAPPING_ERROR)
-+	if (*phys == (phys_addr_t)DMA_MAPPING_ERROR)
- 		return false;
- 
- 	/* Ensure that the address returned is DMA'ble */
+ free_rev:
+-	kfree(soc_dev_attr->revision);
++	if (strcmp(soc_dev_attr->revision, "unknown"))
++		kfree(soc_dev_attr->revision);
+ free_soc:
+ 	kfree(soc_dev_attr);
+ 	of_node_put(root);
 -- 
 2.20.1
 
