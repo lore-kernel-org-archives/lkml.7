@@ -2,115 +2,109 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F24C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 19:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 110F9C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 19:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E90B2054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 19:56:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="TFWEEk/b"
+	by mail.kernel.org (Postfix) with ESMTP id D90842054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 19:58:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730550AbfHET45 (ORCPT
+        id S1730565AbfHET6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 15:56:57 -0400
-Received: from gateway24.websitewelcome.com ([192.185.51.31]:24208 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727830AbfHET45 (ORCPT
+        Mon, 5 Aug 2019 15:58:16 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:38115 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727830AbfHET6Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 15:56:57 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id 7C1F138D478
-        for <linux-kernel@vger.kernel.org>; Mon,  5 Aug 2019 14:56:56 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id uj6GhEvYj3Qi0uj6GhyOIS; Mon, 05 Aug 2019 14:56:56 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=73Ji5AC5KMZkK6fMpGAVZtl81St9Sv4vNuTrXk8naK0=; b=TFWEEk/b9uZIVs5YGnNE/9ccy7
-        PDvhGCy+g1TPRCp2xjIOnkiIg4MufYBfidkzLklG58cOzHy5XRrHBTkwZgK0gZgHfelJ3SHuJs3/F
-        0/KIy2Ey0l/Tmk6r3XrcSpegCpYoX5RYadmTQ3Hev3wQ9vwzYV5RwuqG9Ei8afqp6F2mmtePBZlsk
-        QdRQD5dzVyFfKU/57/b5jmQNhFP6WEi0mjMPho0XYtCMxCVMWgM00uJjySVzVQAYl8Ta+BfykgJTb
-        RX2zBRqJjblObc420r2XrLCjDBHKJXSEgLFfVcRd+bdOqzZwrsL0RSzKpdDIBD3wj6NMEUnYNciWV
-        gLESlD9w==;
-Received: from [187.192.11.120] (port=38244 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1huj6F-003UPU-B4; Mon, 05 Aug 2019 14:56:55 -0500
-Date:   Mon, 5 Aug 2019 14:56:54 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Oleg Nesterov <oleg@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH] x86/ptrace: Mark expected switch fall-through
-Message-ID: <20190805195654.GA17831@embeddedor>
+        Mon, 5 Aug 2019 15:58:16 -0400
+Received: by mail-qt1-f194.google.com with SMTP id n11so82189627qtl.5
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 12:58:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QkzvEI6Tns5RQIrPdwX9/BySbUwnle9P3y+uxdJJN8w=;
+        b=mEYRAqdzzTj6FDX5sZxCqmBGAFsXJ9kJNerHMVvxzyawbQY6n1reG8JVNPYt/FXL/O
+         1PELOpB2xFArZQpz2R0w1K2CafFb22+bE/lIvTC5L3GslhM4PIoMABh1RWSkJLbqetVT
+         pMAfrxLOO1p/MatEF4ADTuM9ww15261m9H2COKiEK1F9ndNI5FhQziUA1GmEMGCVOcQU
+         ZL/gyAeuMxubNqFXHafFj75FeQ4+tWdehEJjmL9QrqhOHN92e0kldOqMjY/B6+O5sKmY
+         1n703yC4Er7Q/pkwMvbCsRCqNjLzlvGNUJgL3LtgsAzrCNsPCeEIUFB4vxlJXlbHsk85
+         fXKA==
+X-Gm-Message-State: APjAAAUvaUmizVWny6gAoUrDnFrahDx9bwb0kpHb2r758ogRdhA4RzmF
+        GZPWDaB6qIsCiWJmUAtUUWe3lH+p3t/O1Jsx4I8=
+X-Google-Smtp-Source: APXvYqypwGXNI05c4k/o7XNqtx5QnpGh0SQ4OArCQGs2TY25vaZmexgH14mrqY99HwUGyJ+XfKIdwmLh8H0x/ZZWpNs=
+X-Received: by 2002:aed:3e7c:: with SMTP id m57mr108599076qtf.204.1565035095532;
+ Mon, 05 Aug 2019 12:58:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.11.120
-X-Source-L: No
-X-Exim-ID: 1huj6F-003UPU-B4
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [187.192.11.120]:38244
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 21
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20190805165128.GA23762@roeck-us.net> <CAK8P3a1MLMu0qh-j9fZXmG10-q2SZrtFm9JGT_xOuuZHQm31qw@mail.gmail.com>
+ <20190805185204.GA28257@roeck-us.net>
+In-Reply-To: <20190805185204.GA28257@roeck-us.net>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 5 Aug 2019 21:57:59 +0200
+Message-ID: <CAK8P3a1AsD8SJge-W10xNsyYrYyLqce1W2+9nMGTPdHcP5haOg@mail.gmail.com>
+Subject: Re: [PATCH] page flags: prioritize kasan bits over last-cpuid
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark switch cases where we are expecting to fall through.
+On Mon, Aug 5, 2019 at 8:52 PM Guenter Roeck <linux@roeck-us.net> wrote:
+> On Mon, Aug 05, 2019 at 08:35:40PM +0200, Arnd Bergmann wrote:
+> > On Mon, Aug 5, 2019 at 6:51 PM Guenter Roeck <linux@roeck-us.net> wrote:
+> > > On Fri, Aug 02, 2019 at 09:49:02PM -0700, Arnd Bergmann wrote:
+> > > > ARM64 randdconfig builds regularly run into a build error, especially
+> > > > when NUMA_BALANCING and SPARSEMEM are enabled but not SPARSEMEM_VMEMMAP:
+> > > >
+> > > >   #error "KASAN: not enough bits in page flags for tag"
+> > > >
+> > > > The last-cpuid bits are already contitional on the available space, so
+> > > > the result of the calculation is a bit random on whether they were
+> > > > already left out or not.
+> > > >
+> > > > Adding the kasan tag bits before last-cpuid makes it much more likely to
+> > > > end up with a successful build here, and should be reliable for
+> > > > randconfig at least, as long as that does not randomize NR_CPUS or
+> > > > NODES_SHIFT but uses the defaults.
+> > > >
+> > > > In order for the modified check to not trigger in the x86 vdso32 code
+> > > > where all constants are wrong (building with -m32), enclose all the
+> > > > definitions with an #ifdef.
+> > > >
+> > >
+> > > This results in
+> > >
+> > > ./include/linux/page-flags-layout.h:95:2: error: #error "Not enough bits in page flags"
+> > >  #error "Not enough bits in page flags"
+> > >
+> > > when trying to build mipsel64:fuloong2e_defconfig.
+> >
+> > Do you have my follow-up fix applied?
+> >
+> > https://ozlabs.org/~akpm/mmots/broken-out/page-flags-prioritize-kasan-bits-over-last-cpuid-fix.patch
+> >
+>
+> No. I see the failure in next-20190729..next-20190805.
+>
+> I didn't try to apply that patch, but I don't see
+> arch/mips/vdso/vdso.h in the tree. I only see
+>
+> arch/mips/include/asm/vdso.h
+> arch/mips/include/asm/vdso/vdso.h
+>
+> Are you sure that your patch can be applied as-is ?
 
-Fix the following warning (Building: allnoconfig i386):
+Ah, right, we now have support for the generic vdso on mips,
+so the file got moved from arch/mips/vdso/vdso.h to
+arch/mips/include/asm/vdso/vdso.h
 
-arch/x86/kernel/ptrace.c:202:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   if (unlikely(value == 0))
-      ^
-arch/x86/kernel/ptrace.c:206:2: note: here
-  default:
-  ^~~~~~~
+Try applying it to the new location then. I think it should still apply,
+but have not tried it.
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- arch/x86/kernel/ptrace.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/x86/kernel/ptrace.c b/arch/x86/kernel/ptrace.c
-index 0fdbe89d0754..3c5bbe8e4120 100644
---- a/arch/x86/kernel/ptrace.c
-+++ b/arch/x86/kernel/ptrace.c
-@@ -201,6 +201,7 @@ static int set_segment_reg(struct task_struct *task,
- 	case offsetof(struct user_regs_struct, ss):
- 		if (unlikely(value == 0))
- 			return -EIO;
-+		/* Else, fall through */
- 
- 	default:
- 		*pt_regs_access(task_pt_regs(task), offset) = value;
--- 
-2.22.0
-
+         Arnd
