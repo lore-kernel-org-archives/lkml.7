@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04BA4C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 23:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C3AC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 23:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B56A220665
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 23:36:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5362B20665
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 23:36:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z6jrILgg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WK97h2Gx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731462AbfHEXgn (ORCPT
+        id S1731473AbfHEXgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 19:36:43 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39135 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730900AbfHEXfV (ORCPT
+        Mon, 5 Aug 2019 19:36:51 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35581 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731057AbfHEXfP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 19:35:21 -0400
-Received: by mail-pl1-f196.google.com with SMTP id b7so37103507pls.6;
-        Mon, 05 Aug 2019 16:35:20 -0700 (PDT)
+        Mon, 5 Aug 2019 19:35:15 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n4so5243000pgv.2;
+        Mon, 05 Aug 2019 16:35:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=YFQ4AoMFvQmMSyDzoiWHzk59x+QNTk1pRP20/urZlo0=;
-        b=Z6jrILgg++NDytvDTNzU7ffPKGYG+xNJz/aNfoeFluS8ytP+Gph24wSxjN4tQdGDPt
-         RGfkJ/6Ux7CrEB0hUBmVilI13ZocAUrxnx/bzdbgQTruJm/XKHy7T+pmWiYwb2OK3n8S
-         hRC5bzqJDTQOWxOSskUr72/tYu4aAuReXJWD1ITNfgtSb0gpMTCv2GsoHkmyLCf/efd5
-         VjkV63HlqMIEFi5vkqSep9mIC3cHAhLQj5nmGv4Zg6tfwMBxWOIuZWD/+LDW0R1RHvcW
-         pmyzpuJmTG9CnUN2j5FSlsbphNqoR8xh4jAf06IVEuY9dcSB/PuFROxx9Za9efDRxZE/
-         eYVw==
+        bh=3hiXeQQV1KrdCEAIpSQAk9Ltt3Glhe3/FQmcNgwcF6I=;
+        b=WK97h2Gxi7lfr4FpaCZdEE6yb8tmSN60vE5Ahq7PYXjtBL+BVy/eniGtFtqRVhsrEw
+         JeB2t/F2D/kZBGLZlFw9LGtgtRGcAgsSrgYs6GFbxr6jD+AJ5RNSeyki1JGL8qok0aZN
+         AqJbeluAc086VbxCIzYAW6PoQOwdxGB5pqkbtNEfryP8R2feACWJaZIEQwivEY0vu0Oy
+         FiM84V4Zvsb3hY/+Arn06VLPRv5pEbnFPwAmUdEClTdIf6XoygSZ1AT6uhHmufCnFl4u
+         IaA7TldEVoa80dwl5ThE0gLdtwdQtrA2FPZ99dRTQ6ztgrcOPx3DeEt7T4u/xCiiHr+n
+         J6Nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=YFQ4AoMFvQmMSyDzoiWHzk59x+QNTk1pRP20/urZlo0=;
-        b=RC2Spck+zB/E8omyBlO5B75dKos3hiUB6A4voQB92nIsVxpX72w0Uy1BQYbssGljna
-         Mi6zp7zZTW4euHPFVolqP3mhKUME5wyVlooFVlYUSfDD2QY734yjaJpHKILczxnqyWbT
-         9a9qryOggiscfg/Rbtjm4h9/NOJRZmDkrriu9755KowW3h2NmZFwEs9ltvGX8HFi4cbd
-         ERtfQEuv7/iBPvotADL8f6vN9dObxFiWgf3zVkesuK9ROitcqyc1yWacGdw80J+bEzkw
-         UmKeL51S361mQqJZMHuNYiiegL6hquLIBHv9yrbzGvilf2/QW7k7ssWtQCKGSHqC5pEh
-         exhQ==
-X-Gm-Message-State: APjAAAU1OwnZBq7y1Mr7NfVAwvDkzYEgkG5vrWa/+pLNdHU4n16E32+D
-        epGnwfC+NyAlw6c/PulibyVJlbmO
-X-Google-Smtp-Source: APXvYqwk6uHxQUupum1kLR2fneJjb9XpXYhfHpsb6IFjE+beuEbsUj6EwqWsKhsllFtRvWk4kgL4YA==
-X-Received: by 2002:a17:902:7781:: with SMTP id o1mr233895pll.205.1565048120080;
-        Mon, 05 Aug 2019 16:35:20 -0700 (PDT)
+        bh=3hiXeQQV1KrdCEAIpSQAk9Ltt3Glhe3/FQmcNgwcF6I=;
+        b=a0iadvFMRQptk7X83wUVTDmSJOpYLby2CG/8NDOGZy2NBjwW3pgVI4jf0y2DhCwClr
+         SXe+WlvY+M602+vS/tOXnQZdFB1MYrQ6Mw2y8OXlxsFzSvN1pvnag5yv3f8FJ6JZr9V3
+         o0skVlT51hoyJdYz2sKqcVGGVXeKptALlf9tznYhVTE+Sb+GLs/WWENhme9Gpg4DezuH
+         r5E/huu9nti/B1QHjcbD7aUgPeQGyYyUOEbptENMKjennC7Sr7FVOXKBe8VfKUH7sXiO
+         nHQdO9MMyIe4IT4bLZYLsUm0nWqCSbbYCLsuvx/Qh0PfWxHuEoQEynVF45dWw4bhL2Qi
+         d35g==
+X-Gm-Message-State: APjAAAW0jG2dV3wPVbr52zeHxDqRo7EGTK0iOOdwnOOI7qhpRuKrcfyA
+        B6iQDcAWGua7lF/9+5CAgQdXxQRY
+X-Google-Smtp-Source: APXvYqxKVm5fkj8NRo91yo6fTIS54zqYPfOuVt6pelKsqlZ5bMNtwElDmJJ7V6YR95YmOzs/98BxZw==
+X-Received: by 2002:aa7:8f2c:: with SMTP id y12mr588868pfr.38.1565048114461;
+        Mon, 05 Aug 2019 16:35:14 -0700 (PDT)
 Received: from majic.sklembedded.com (c-73-202-231-77.hsd1.ca.comcast.net. [73.202.231.77])
-        by smtp.googlemail.com with ESMTPSA id 30sm31296349pjk.17.2019.08.05.16.35.19
+        by smtp.googlemail.com with ESMTPSA id 30sm31296349pjk.17.2019.08.05.16.35.13
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 05 Aug 2019 16:35:19 -0700 (PDT)
+        Mon, 05 Aug 2019 16:35:14 -0700 (PDT)
 From:   Steve Longerbeam <slongerbeam@gmail.com>
 To:     linux-media@vger.kernel.org
 Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
@@ -63,9 +63,9 @@ Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 05/22] media: entity: Add functions to convert fwnode endpoints to media links
-Date:   Mon,  5 Aug 2019 16:34:48 -0700
-Message-Id: <20190805233505.21167-6-slongerbeam@gmail.com>
+Subject: [PATCH 03/22] media: entity: Convert media_entity_get_fwnode_pad() args to const
+Date:   Mon,  5 Aug 2019 16:34:46 -0700
+Message-Id: <20190805233505.21167-4-slongerbeam@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190805233505.21167-1-slongerbeam@gmail.com>
 References: <20190805233505.21167-1-slongerbeam@gmail.com>
@@ -74,292 +74,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds two functions:
-
-media_create_fwnode_pad_links(), which converts fwnode endpoints that
-connect a local pad to all pads on a remote entity into media links.
-
-media_create_fwnode_links(), which converts fwnode endpoints that
-connect all pads from a local entity to all pads on a remote entity into
-media links.
+The function media_entity_get_fwnode_pad() can be passed the
+const local_fwnode member from a struct fwnode_endpoint, so
+the fwnode argument should be a const pointer. Change the
+direction_flags argument to const in the process.
 
 Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
 ---
- drivers/media/mc/mc-entity.c | 178 +++++++++++++++++++++++++++++++++++
- include/media/media-entity.h |  71 ++++++++++++++
- 2 files changed, 249 insertions(+)
+ drivers/media/mc/mc-entity.c | 4 ++--
+ include/media/media-entity.h | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/media/mc/mc-entity.c b/drivers/media/mc/mc-entity.c
-index e9e090244fd4..45bbd6c91019 100644
+index 47a39d9383d8..e9e090244fd4 100644
 --- a/drivers/media/mc/mc-entity.c
 +++ b/drivers/media/mc/mc-entity.c
-@@ -787,6 +787,184 @@ int media_create_pad_links(const struct media_device *mdev,
- }
- EXPORT_SYMBOL_GPL(media_create_pad_links);
+@@ -366,8 +366,8 @@ struct media_entity *media_graph_walk_next(struct media_graph *graph)
+ EXPORT_SYMBOL_GPL(media_graph_walk_next);
  
-+static int __media_create_fwnode_pad_link(struct media_pad *local_pad,
-+					struct media_entity *remote,
-+					const struct fwnode_handle *remote_ep,
-+					const u32 flags)
-+{
-+	struct media_entity *local = local_pad->entity;
-+	unsigned long local_dir = local_pad->flags;
-+	unsigned long remote_dir = (local_dir & MEDIA_PAD_FL_SOURCE) ?
-+		MEDIA_PAD_FL_SINK : MEDIA_PAD_FL_SOURCE;
-+	struct media_entity *src, *sink;
-+	int src_pad, sink_pad;
-+	int remote_pad;
-+	int ret;
-+
-+	remote_pad = media_entity_get_fwnode_pad(remote, remote_ep,
-+						 remote_dir);
-+	if (remote_pad < 0)
-+		return 0;
-+
-+	if (local_dir & MEDIA_PAD_FL_SOURCE) {
-+		src = local;
-+		src_pad = local_pad->index;
-+		sink = remote;
-+		sink_pad = remote_pad;
-+	} else {
-+		src = remote;
-+		src_pad = remote_pad;
-+		sink = local;
-+		sink_pad = local_pad->index;
-+	}
-+
-+	/* make sure link doesn't already exist */
-+	if (media_entity_find_link(&src->pads[src_pad],
-+				   &sink->pads[sink_pad]))
-+		return 0;
-+
-+	ret = media_create_pad_link(src, src_pad, sink, sink_pad, flags);
-+	if (ret) {
-+		dev_dbg(sink->graph_obj.mdev->dev,
-+			"%s:%d -> %s:%d failed with %d\n",
-+			src->name, src_pad, sink->name, sink_pad,
-+			ret);
-+		return ret;
-+	}
-+
-+	dev_dbg(sink->graph_obj.mdev->dev, "%s:%d -> %s:%d\n",
-+		src->name, src_pad, sink->name, sink_pad);
-+
-+	return 0;
-+}
-+
-+int __media_create_fwnode_pad_links(struct media_pad *local_pad,
-+				    const struct fwnode_handle *local_fwnode,
-+				    struct media_entity *remote,
-+				    const struct fwnode_handle *remote_fwnode,
-+				    const u32 link_flags)
-+{
-+	struct fwnode_handle *endpoint;
-+
-+	fwnode_graph_for_each_endpoint(remote_fwnode, endpoint) {
-+		struct fwnode_link link;
-+		int ret;
-+
-+		ret = fwnode_graph_parse_link(endpoint, &link);
-+		if (ret)
-+			continue;
-+
-+		/*
-+		 * if this endpoint does not link to the local fwnode
-+		 * device, ignore it and continue.
-+		 */
-+		if (link.remote_port_parent != local_fwnode) {
-+			fwnode_graph_put_link(&link);
-+			continue;
-+		}
-+
-+		ret = __media_create_fwnode_pad_link(local_pad,
-+						     remote, endpoint,
-+						     link_flags);
-+
-+		fwnode_graph_put_link(&link);
-+
-+		if (ret) {
-+			fwnode_handle_put(endpoint);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(__media_create_fwnode_pad_links);
-+
-+int media_create_fwnode_pad_links(struct media_pad *local_pad,
-+				  const struct fwnode_handle *local_fwnode,
-+				  struct media_entity *remote,
-+				  const struct fwnode_handle *remote_fwnode,
-+				  const u32 link_flags)
-+{
-+	struct media_device *mdev = local_pad->entity->graph_obj.mdev;
-+	int ret;
-+
-+	mutex_lock(&mdev->graph_mutex);
-+	ret = __media_create_fwnode_pad_links(local_pad, local_fwnode,
-+					      remote, remote_fwnode,
-+					      link_flags);
-+	mutex_unlock(&mdev->graph_mutex);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(media_create_fwnode_pad_links);
-+
-+int __media_create_fwnode_links(struct media_entity *local,
-+				const struct fwnode_handle *local_fwnode,
-+				struct media_entity *remote,
-+				const struct fwnode_handle *remote_fwnode,
-+				const u32 link_flags)
-+{
-+	struct fwnode_handle *endpoint;
-+
-+	fwnode_graph_for_each_endpoint(local_fwnode, endpoint) {
-+		struct fwnode_link link;
-+		int local_pad;
-+		int ret;
-+
-+		local_pad = media_entity_get_fwnode_pad(local, endpoint,
-+							MEDIA_PAD_FL_SINK |
-+							MEDIA_PAD_FL_SOURCE);
-+		if (local_pad < 0)
-+			continue;
-+
-+		ret = fwnode_graph_parse_link(endpoint, &link);
-+		if (ret)
-+			continue;
-+
-+		/*
-+		 * if this endpoint does not link to the remote fwnode
-+		 * device, ignore it and continue.
-+		 */
-+		if (link.remote_port_parent != remote_fwnode) {
-+			fwnode_graph_put_link(&link);
-+			continue;
-+		}
-+
-+		ret = __media_create_fwnode_pad_link(&local->pads[local_pad],
-+						     remote,
-+						     link.remote.local_fwnode,
-+						     link_flags);
-+
-+		fwnode_graph_put_link(&link);
-+
-+		if (ret) {
-+			fwnode_handle_put(endpoint);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(__media_create_fwnode_links);
-+
-+int media_create_fwnode_links(struct media_entity *local,
-+			      const struct fwnode_handle *local_fwnode,
-+			      struct media_entity *remote,
-+			      const struct fwnode_handle *remote_fwnode,
-+			      const u32 link_flags)
-+{
-+	struct media_device *mdev = local->graph_obj.mdev;
-+	int ret;
-+
-+	mutex_lock(&mdev->graph_mutex);
-+	ret = __media_create_fwnode_links(local, local_fwnode,
-+					  remote, remote_fwnode, link_flags);
-+	mutex_unlock(&mdev->graph_mutex);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(media_create_fwnode_links);
-+
- void __media_entity_remove_links(struct media_entity *entity)
+ int media_entity_get_fwnode_pad(struct media_entity *entity,
+-				struct fwnode_handle *fwnode,
+-				unsigned long direction_flags)
++				const struct fwnode_handle *fwnode,
++				const unsigned long direction_flags)
  {
- 	struct media_link *link, *tmp;
+ 	struct fwnode_endpoint endpoint;
+ 	int ret;
 diff --git a/include/media/media-entity.h b/include/media/media-entity.h
-index de7fc3676b5a..781ac2df6460 100644
+index ed00adb4313b..de7fc3676b5a 100644
 --- a/include/media/media-entity.h
 +++ b/include/media/media-entity.h
-@@ -772,6 +772,77 @@ int media_create_pad_links(const struct media_device *mdev,
- 			   u32 flags,
- 			   const bool allow_both_undefined);
- 
-+/**
-+ * media_create_fwnode_links() - create links formed by the fwnode
-+ *			     endpoints between a known local pad and
-+ *			     a remote entity.
-+ *
-+ * @local_pad: Pointer to &media_pad of the local media pad.
-+ * @local_fwnode: Pointer to the local device's firmware node.
-+ * @remote: Pointer to &media_entity of the remote device.
-+ * @remote_fwnode: Pointer to the remote device's firmware node.
-+ * @link_flags: Link flags, as defined in include/uapi/linux/media.h.
-+ *
-+ * .. note::
-+ *
-+ *    Before calling this function, media_entity_pads_init() and
-+ *    media_device_register_entity() should be called previously for
-+ *    both entities to be linked.
-+ *
-+ *    Locked (via the mdev graph_mutex) and unlocked versions of this
-+ *    function are provided. If this function is called from v4l2-async
-+ *    notifier bound handlers, the locked version should be used to
-+ *    prevent races with other subdevices loading and binding to their
-+ *    notifiers in parallel. The unlocked version can for example be
-+ *    called from v4l2-async notifier complete handlers, after all
-+ *    subdevices have loaded and bound.
-+ */
-+int __media_create_fwnode_pad_links(struct media_pad *local_pad,
-+				    const struct fwnode_handle *local_fwnode,
-+				    struct media_entity *remote,
-+				    const struct fwnode_handle *remote_fwnode,
-+				    const u32 link_flags);
-+int media_create_fwnode_pad_links(struct media_pad *local_pad,
-+				  const struct fwnode_handle *local_fwnode,
-+				  struct media_entity *remote,
-+				  const struct fwnode_handle *remote_fwnode,
-+				  const u32 link_flags);
-+
-+/**
-+ * media_create_fwnode_links() - create links formed by the fwnode
-+ *			     endpoints between two entities.
-+ *
-+ * @local: Pointer to &media_entity of the local device.
-+ * @local_fwnode: Pointer to the local device's firmware node.
-+ * @remote: Pointer to &media_entity of the remote device.
-+ * @remote_fwnode: Pointer to the remote device's firmware node.
-+ * @link_flags: Link flags, as defined in include/uapi/linux/media.h.
-+ *
-+ * .. note::
-+ *
-+ *    Before calling this function, media_entity_pads_init() and
-+ *    media_device_register_entity() should be called previously for
-+ *    both entities to be linked.
-+ *
-+ *    Locked (via the mdev graph_mutex) and unlocked versions of this
-+ *    function are provided. If this function is called from v4l2-async
-+ *    notifier bound handlers, the locked version should be used to
-+ *    prevent races with other subdevices loading and binding to their
-+ *    notifiers in parallel. The unlocked version can for example be
-+ *    called from v4l2-async notifier complete handlers, after all
-+ *    subdevices have loaded and bound.
-+ */
-+int __media_create_fwnode_links(struct media_entity *local,
-+				const struct fwnode_handle *local_fwnode,
-+				struct media_entity *remote,
-+				const struct fwnode_handle *remote_fwnode,
-+				const u32 link_flags);
-+int media_create_fwnode_links(struct media_entity *local,
-+			      const struct fwnode_handle *local_fwnode,
-+			      struct media_entity *remote,
-+			      const struct fwnode_handle *remote_fwnode,
-+			      const u32 link_flags);
-+
- void __media_entity_remove_links(struct media_entity *entity);
+@@ -886,8 +886,8 @@ struct media_pad *media_entity_remote_pad(const struct media_pad *pad);
+  * Return: returns the pad number on success or a negative error code.
+  */
+ int media_entity_get_fwnode_pad(struct media_entity *entity,
+-				struct fwnode_handle *fwnode,
+-				unsigned long direction_flags);
++				const struct fwnode_handle *fwnode,
++				const unsigned long direction_flags);
  
  /**
+  * media_graph_walk_init - Allocate resources used by graph walk.
 -- 
 2.17.1
 
