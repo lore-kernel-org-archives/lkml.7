@@ -2,101 +2,137 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8734C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA95BC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DC3D2067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:31:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564993902;
-	bh=6GDlY6Oj/pMsxqqXmrShaQDXNdC8M9mTC8Uh+0WR7cw=;
-	h=References:In-Reply-To:From:Date:Subject:To:List-ID:From;
-	b=GslPh7qbDdOwmqxDmPJZNfK64hlheLRTkv5PUOfgeJMDooZAOFMqyrywFCc0aKX3T
-	 OTE2BcTpTuBrEDu3ZvPCj0hFqT5uZaJvRigH4bk8/zinbfnvPApZ2YNgm1KHwYe7CD
-	 6v95Qy7Q2WcXFnYwXsf0PDTb1F0PoRf7ywHX6Jpw=
+	by mail.kernel.org (Postfix) with ESMTP id 816C920B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:31:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="aywESScd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbfHEIbl (ORCPT
+        id S1727821AbfHEIbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 04:31:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46654 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726423AbfHEIbl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 04:31:41 -0400
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF0BB20B1F;
-        Mon,  5 Aug 2019 08:31:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564993901;
-        bh=6GDlY6Oj/pMsxqqXmrShaQDXNdC8M9mTC8Uh+0WR7cw=;
-        h=References:In-Reply-To:From:Date:Subject:To:From;
-        b=peHYXbmKGBkRGDkgiCG5T0LLnNYHuvThB7B3ZZZnfMAD4dBao3elfqPZWeYSLgv5m
-         mgxeKfu8ZWuAS8b6dcFyko593cTA9bWGo6IGV9Jxp5cXtOJQEFvdOepvRLByQEsPcN
-         MS8Q7SLbllXv+ymRvocxkzEptTK+NEInF7m/Q3Xw=
-Received: by mail-lf1-f47.google.com with SMTP id s19so57243330lfb.9;
-        Mon, 05 Aug 2019 01:31:40 -0700 (PDT)
-X-Gm-Message-State: APjAAAVYiTCYAq9OL/6CBRwFW6vf4xC20YDCYhPaNOqkgrb4xMT5wO8P
-        MsyQmBM1p7m1SYIthcKOv7a0XuJJIHGME1YZm1A=
-X-Google-Smtp-Source: APXvYqyWaflWWQ8wwvaO1d9cbgBslefLEtgX0rPNgijTABssXm+H4yZIkYKO5j/21nYMMWJoveT1E8Ew7gsDV7eLoD4=
-X-Received: by 2002:ac2:4d1c:: with SMTP id r28mr68291107lfi.159.1564993898942;
- Mon, 05 Aug 2019 01:31:38 -0700 (PDT)
+        Mon, 5 Aug 2019 04:31:47 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:42463 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726423AbfHEIbr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 04:31:47 -0400
+Received: by mail-io1-f65.google.com with SMTP id e20so32601303iob.9
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 01:31:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=/9onNqSu8H6T4t+v8bvPux5C3Ze/nalI4ApJroQRttg=;
+        b=aywESScdkNjlGJf+foMrGaH30r3yFivVONl+3QF/vs9mPZxQ7Z9lCSqAyevZxfhXBV
+         p8Y71cVlfFNUQTlqv3fAISo5KNCajOU6OqFY8zXEiQwtgIDNHjm1JLQM8mcmBfK/Essk
+         Vs1iZN+Zd9qsQCZfwGrN71p0/vxpdh1yVob0V5Kddk+Z/nd7sQKhLstCHf0Usgxwwjk9
+         EJQmEKFdpnBimhSdaDaq4sVIY93TaBb8vY1+OPKgg+jhPAp0s/NgDOZ5ohrGB3Cz7R22
+         +L0+ioeTc9pYBSuDbEdoGHFvdgHuYL79kuicaVTPqh+hvyhAcJoXbtOht/1sFRJngb0w
+         qquw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/9onNqSu8H6T4t+v8bvPux5C3Ze/nalI4ApJroQRttg=;
+        b=Zpq9hNLlnoMkVrKohONRrrigPXMNn3KbWbpaaNXnoC2TxRv5Pfz10QsuGaWaEfjvoP
+         guX7iBRtUeUdZXydbGwoAN6IsiqrSnkNfYj7KcEHRVCcPb+Y5cSHc8kCfvzvFasnG4Bm
+         S/r+aQlqCu2DDbsNExumzJWQh5BRmMaKPqElBMjUeBLLXspXXM9LE6M/qrH8ICRsFWkE
+         Rf7u79KiGEmq/1RVGVMP4qiq1Xzkkk+8D+J8ph0rP/FTNVp2rXwcl9pf+/uSarrCMsez
+         qG3lZKYdDEQWpkeLuidwcaUHGFOKYlfJPrmonOuJVUlNhlubcPRkmry0fnrt6da7J+VV
+         mNeg==
+X-Gm-Message-State: APjAAAWh+K8K3uwa//iVReqLmQqSqZrlrTgy5cO97VVScirMHU0X/r4F
+        ntZt0nCBaHXjap8Ou9keczDwlaLckz+k9+hEppupkg==
+X-Google-Smtp-Source: APXvYqwdH5YrXmNOdQLqeqaHrEbB41XdZAI+QgVn/WPhGXhazC5gC+vdAsxaH69ckpH1PS09DzXuJmzKdsOLUZS7P9M=
+X-Received: by 2002:a02:5b05:: with SMTP id g5mr147889176jab.114.1564993906173;
+ Mon, 05 Aug 2019 01:31:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAF-0O_47bLysYD9qn2ekNC7PmNj0LguB6ab_9mdw6NaoGPj4rw@mail.gmail.com>
-In-Reply-To: <CAF-0O_47bLysYD9qn2ekNC7PmNj0LguB6ab_9mdw6NaoGPj4rw@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Mon, 5 Aug 2019 10:31:27 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPe9nY4wV+Dj4BHMO6=WmtxjMnSe+z6ZywaokUNPyyvOuA@mail.gmail.com>
-Message-ID: <CAJKOXPe9nY4wV+Dj4BHMO6=WmtxjMnSe+z6ZywaokUNPyyvOuA@mail.gmail.com>
-Subject: Re: suspend/Resume Sound issue workaround
-To:     Jaafar Ali <jaafarkhalaf@gmail.com>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190725131257.6142-1-brgl@bgdev.pl> <CAK8P3a1FXyRRi5q48h-=egFjgoRJvy6_zuO9MQaAOMA-bsJKRA@mail.gmail.com>
+In-Reply-To: <CAK8P3a1FXyRRi5q48h-=egFjgoRJvy6_zuO9MQaAOMA-bsJKRA@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 5 Aug 2019 10:31:35 +0200
+Message-ID: <CAMRc=Me_7aw_RvU_tZnVUgduN2wWYGqJ7hQirQ2RLzxGiPujvQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] ARM: make DaVinci part of the ARM v5 multiplatform build
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
+        David Lechner <david@lechnology.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 4 Aug 2019 at 14:36, Jaafar Ali <jaafarkhalaf@gmail.com> wrote:
-> Dear Krzysztof,
-> The sound of Odroid-XU4 after suspend/resume cycle has an issue. As a workaround, the I2SMOD register value should be set to zero after resume, the i2s_resume function would be:
+czw., 25 lip 2019 o 16:57 Arnd Bergmann <arnd@arndb.de> napisa=C5=82(a):
 >
-> static int i2s_resume(struct snd_soc_dai *dai)
-> {
-> struct samsung_i2s_priv *priv = dev_get_drvdata(dai->dev);
-> printk(KERN_EMERG "i2s resume of dai !\n");
-> priv->suspend_i2smod = 0;//workaround-1 , to force using internal codec clock source (CDCLKCON bit = 0)
-> //see another workaround inside hw_param
+> On Thu, Jul 25, 2019 at 3:13 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote=
+:
+> >
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > This series makes DaVinci part of the multiplatform build for ARM v5.
+> >
+> > First three patches fix build errors spotted and fixed by Arnd with v1.
+> >
+> > The fourth patch adds necessary bits and pieces for davinci to support
+> > multiplatform build and the last one actually adds all davinci boards
+> > to multi_v5_defconfig.
+> >
+> > Tested on da850-lcdk with both multi_v5 as well as davinci_all defconfi=
+gs.
+> >
+> > v1 -> v2:
+> > - added patches from Arnd that fix build errors spotted when building
+> >   random configurations (much appreciated)
+> > - rebased on top of v5.3-rc1
 >
->         return pm_runtime_force_resume(dai->dev);
+> > Arnd Bergmann (3):
+> > staging: media/davinci_vpfe: fix pinmux setup compilation
+> >  media: davinci-vpbe: remove obsolete includes
+> >  davinci: fix sleep.S build error on ARMv4
+> >
+> > Bartosz Golaszewski (2):
+> >  ARM: davinci: support multiplatform build for ARM v5
+> >  ARM: multi_v5_defconfig: make DaVinci part of the ARM v5 multiplatform=
+ build
 >
-> }
 >
-> Also, inside hw_params function, the rclk_srcrate must be halved to solve unknown problem of clock shift, so before return from hw_params we must insert:
-> if(mod == 0){
-> priv->rclk_srcrate = priv->rclk_srcrate / 2; //workaround-2, clock is being halved due to unknwon bug
-> printk(KERN_EMERG "i2s hw_param rclk_srcrate after %lu !\n", priv->rclk_srcrate);
-> }
-> return 0;
+> Thanks a lot for reposting the series!
 >
-> With these two workaround sound issue was solved, but I hope we can get concrete fix.
+> I wonder how we shoud deal with the dependencies now that the two media
+> patches got merged in the linux-media tree.
+>
+> It would be tempting to just merge the arch/arm/ changes, but that create=
+s
+> a bisection problem when the vpbe driver is enabled. I don't care
+> about the staging driver really as that one is broken anyway, but includi=
+ng
+> the "media: davinci-vpbe: remove obsolete includes" fix would be better
+> here.
+>
+> Mauro, any idea for how to handle that? Should we apply an identical
+> patch to the davinci tree, or maybe only have it the ARM tree and you
+> drop it from your tree (I don't know if you have a rule against rebasing)=
+.
+> Sorry for not coordinating with Bartosz before I sent the patch again
+> earlier this week.
+>
+>
+>       Arnd
 
-Hi Jaafar,
+Hi Arnd,
 
-Thanks for the report. Preferred way to send bug reports is to use the
-public channels by sending to Linux kernel mailing lists:
-linux-samsung-soc@vger.kernel.org and linux-kernel@vger.kernel.org,
-with the Cc of other interested people. The best is to use the
-scripts/get_maintainer.pl tool (with -f for example) to get the list
-of addresses to Cc.
+is there any action required from me for this series?
 
-Best regards,
-Krzysztof
+Bart
