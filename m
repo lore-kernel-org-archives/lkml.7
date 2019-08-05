@@ -2,85 +2,98 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E4C5C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 012EDC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C1F9206A2
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:05:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565006729;
-	bh=0KthwZ/qASUYVgIm9Vr44fdumvR86Xj9n+x93+7mobo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XUu9xV2qXC5FGPWr1Y+mp7dPIzHUKjndSnyG7nDFbG7oQX+c+2uK79OBJF5JUQQDp
-	 2JePs6/wr+x++43ylBTZPOW8tVPP3iBTY1y5/Fuqw+6AsuzcJ0Tf33HvC0IzcYexcX
-	 01NWwaVva3wUge6LFMAhTBmitdVz7+b+RWxAM/5A=
+	by mail.kernel.org (Postfix) with ESMTP id D61CB2086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:06:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728648AbfHEMF2 (ORCPT
+        id S1728668AbfHEMGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 08:05:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41506 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728028AbfHEMF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 08:05:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A26EBADAA;
-        Mon,  5 Aug 2019 12:05:26 +0000 (UTC)
-Date:   Mon, 5 Aug 2019 14:05:25 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Pankaj Suryawanshi <pankajssuryawanshi@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        pankaj.suryawanshi@einfochips.com
-Subject: Re: oom-killer
-Message-ID: <20190805120525.GL7597@dhcp22.suse.cz>
-References: <CACDBo54Jbueeq1XbtbrFOeOEyF-Q4ipZJab8mB7+0cyK1Foqyw@mail.gmail.com>
- <20190805112437.GF7597@dhcp22.suse.cz>
- <0821a17d-1703-1b82-d850-30455e19e0c1@suse.cz>
+        Mon, 5 Aug 2019 08:06:41 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:49745 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727553AbfHEMGl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 08:06:41 -0400
+Received: from [192.168.1.110] ([77.7.70.5]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1N0G5n-1iIikw2Pxv-00xL1r; Mon, 05 Aug 2019 14:06:33 +0200
+Subject: Re: [PATCH v2] platform/x86/pcengines-apuv2: use KEY_RESTART for
+ front button
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+References: <1564081563-28322-1-git-send-email-info@metux.net>
+ <CAHp75Vem8QZVGx6x0p3JgxA6kH3pG+1_zU=cgiDUDSC5p2ODDQ@mail.gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <0b2802f8-5732-52e9-0a95-b28d23239ecd@metux.net>
+Date:   Mon, 5 Aug 2019 14:06:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0821a17d-1703-1b82-d850-30455e19e0c1@suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAHp75Vem8QZVGx6x0p3JgxA6kH3pG+1_zU=cgiDUDSC5p2ODDQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:zILWaArSokcPaTMpjpK3s3auy6+xy9QkB0Sqa2fjj1HM1dZqmuv
+ Ix+8GcRmNF/cR+R/tnxMEOWSW35LhjP0MIHQxt3iIncqiO/ZCntlzayFcV6n++CK9mD3MMM
+ OmmW4PmGr2SDGSdUUxfMHtJ6pzX/GJ9Y5Lpjab/+E5CAS3/qFpG0BcfM6U8ikkoQh4XXlXv
+ wHGzMMTVRrdHSvVsnM/RA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:7g3//ffHaGE=:oheL3/eOGxapi9Z74+a1jf
+ Ci8EQp5GHXvBIInQ30to+5OqO7cScSglZu4fjaQHal2dI9/1vXTSzOLSvZaVnnqgbnEujFuQj
+ djcvLNXN/ndJ1eskLjO29pphZBryHQ9q5nkUygnJViNufpLCrGEyIpZ1U5m29MVgY9nhQUNGV
+ OA72esDWVkmKC/Ny6DtZxrgs9YIG+BEia6EIlTLN+wsVQic3OWleRWYANEBXBBzwbx64UoYCh
+ vbtjQyswTGdxeyEdjc45LpSMan8Dw82I0Jas5Sga5aCtHfUpe2OJ4Od+Fmd82BsdQIgikU3CR
+ timBRvHZJSLfjo7GU2RApQqHg1kDmKbIq42Virdfz4oivJ1CRRihmso4Xk5sccZPpx5dKvyUb
+ wq5Fgvy0R2k0KDIzkZcD+yR9ZzpwpHXkdZoJfgZwlzSBaSR+9Yqo5wp61FKwKoMrA5pjNW1Nj
+ 9/OngJ0IBcbyn3tWt0V2/PTmUnptge+Z2mqnGcOZ87cTZepM3lJmUkz9wQ/DQBKvEU2t7xYFL
+ jCZiXoKsZpLiFGDJzyzEWDcnb9P3obU35eiADOXe0a7kHYQupC7GpCzEQ3zl5rD2VMhu7wVFT
+ fM18Fy6XaK8Jr0UA3BXAs0TVXxZQMCf1hIF2KlMtb3jUPYGRlTu0eJoq8/evHFxbgWfSpp+j+
+ lBiMUZsSve2TGsKVi6DJBDFWkol/BEV2ClOlxhUGYSd73/7GQ9BOrZDTo9mSxQdjMW7pHyfhI
+ bpa4ragtRgnueIkpajFtKHccKyDNjmw1Rp7RayIf28A/svQNQgX6VjD+QWU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 05-08-19 13:56:20, Vlastimil Babka wrote:
-> On 8/5/19 1:24 PM, Michal Hocko wrote:
-> >> [  727.954355] CPU: 0 PID: 56 Comm: kworker/u8:2 Tainted: P           O  4.14.65 #606
-> > [...]
-> >> [  728.029390] [<c034a094>] (oom_kill_process) from [<c034af24>] (out_of_memory+0x140/0x368)
-> >> [  728.037569]  r10:00000001 r9:c12169bc r8:00000041 r7:c121e680 r6:c1216588 r5:dd347d7c > [  728.045392]  r4:d5737080
-> >> [  728.047929] [<c034ade4>] (out_of_memory) from [<c03519ac>]  (__alloc_pages_nodemask+0x1178/0x124c)
-> >> [  728.056798]  r7:c141e7d0 r6:c12166a4 r5:00000000 r4:00001155
-> >> [  728.062460] [<c0350834>] (__alloc_pages_nodemask) from [<c021e9d4>] (copy_process.part.5+0x114/0x1a28)
-> >> [  728.071764]  r10:00000000 r9:dd358000 r8:00000000 r7:c1447e08 r6:c1216588 r5:00808111
-> >> [  728.079587]  r4:d1063c00
-> >> [  728.082119] [<c021e8c0>] (copy_process.part.5) from [<c0220470>] (_do_fork+0xd0/0x464)
-> >> [  728.090034]  r10:00000000 r9:00000000 r8:dd008400 r7:00000000 r6:c1216588 r5:d2d58ac0
-> >> [  728.097857]  r4:00808111
-> > 
-> > The call trace tells that this is a fork (of a usermodhlper but that is
-> > not all that important.
-> > [...]
-> >> [  728.260031] DMA free:17960kB min:16384kB low:25664kB high:29760kB active_anon:3556kB inactive_anon:0kB active_file:280kB inactive_file:28kB unevictable:0kB writepending:0kB present:458752kB managed:422896kB mlocked:0kB kernel_stack:6496kB pagetables:9904kB bounce:0kB free_pcp:348kB local_pcp:0kB free_cma:0kB
-> >> [  728.287402] lowmem_reserve[]: 0 0 579 579
-> > 
-> > So this is the only usable zone and you are close to the min watermark
-> > which means that your system is under a serious memory pressure but not
-> > yet under OOM for order-0 request. The situation is not great though
-> 
-> Looking at lowmem_reserve above, wonder if 579 applies here? What does
-> /proc/zoneinfo say?
+On 01.08.19 17:00, Andy Shevchenko wrote:
 
-This is GFP_KERNEL request essentially so there shouldn't be any lowmem
-reserve here, no?
+Hi,
+
+> On Thu, Jul 25, 2019 at 10:06 PM Enrico Weigelt, metux IT consult
+> <info@metux.net> wrote:
+>>
+>> From: Enrico Weigelt <info@metux.net>
+>>
+>> The keycode KEY_RESTART is more appropriate for the front button,
+>> as most people use it for things like restart or factory reset.
+>>
+> 
+> Applied, thanks!
+
+thx.
+
+> 
+>> Signed-off-by: Enrico Weigelt <info@metux.net>
+>> Fixes: f8eb0235f65989fc5521c40c78d1261e7f25cdbe ("x86: pcengines apuv2 gpio/leds/keys platform driver")
+> 
+> Please, use allowed minimum (12 nowadays) characters of hash.
+
+hmm, do you happen to know how to configure tig to show the short hash ?
+
+
+--mtx
+
 -- 
-Michal Hocko
-SUSE Labs
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
