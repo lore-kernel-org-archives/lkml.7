@@ -2,104 +2,69 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62489C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41170C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 19:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 320BD20B1F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:59:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="kcsKUUvF"
+	by mail.kernel.org (Postfix) with ESMTP id 104FC21738
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 19:00:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565031613;
+	bh=huMwvSJffSri2HM4wfW/0xKRtkcO2R5wLi0dokv2kmo=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=dZ8CS9iogFWHilO8qhUCxIG6spc9ExS/wYpmuwUG4AvnwT8crWFDI8oFoOqySS6Zz
+	 K8cJvjQOVQypmV0n26y+GLjL07zlQ33iLmUSOk0DEtBlRR4BbBd4hrQE3vxKKXiDyJ
+	 OiMA3nuGX/1B1IPCkGqJh8FXNI+nubzAWNyfjPSw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730301AbfHES7F (ORCPT
+        id S1730358AbfHETAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 14:59:05 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:40764 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728870AbfHES7F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 14:59:05 -0400
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x75IrteI025380
-        for <linux-kernel@vger.kernel.org>; Mon, 5 Aug 2019 11:59:04 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=olxrzDhcF2Hs+/ax9UmhTrZ2/vLiaLlLle713iOgSr0=;
- b=kcsKUUvF4D9/rHC+fC+XaC1oGzR96h4TzSsnwaIQDCewe8KcghI7mWKEIwm3rRgobDEC
- vC7+dlGRjwS6u4GMkUMg0QQj+L1bNbnFfmGazoDcs0FB57XhhWqt2BPEgfehAuMSe6+y
- k6ylUN32VIA3US+Coq+NLBoWnSRikbydC1Q= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by m0001303.ppops.net with ESMTP id 2u55xdy95x-4
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 11:59:04 -0700
-Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::125) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Mon, 5 Aug 2019 11:58:57 -0700
-Received: by devvm24792.prn1.facebook.com (Postfix, from userid 150176)
-        id 4143618B3EC17; Mon,  5 Aug 2019 11:56:05 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Tao Ren <taoren@fb.com>
-Smtp-Origin-Hostname: devvm24792.prn1.facebook.com
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Arun Parameswaran <arun.parameswaran@broadcom.com>,
-        Justin Chen <justinpopo6@gmail.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <openbmc@lists.ozlabs.org>
-CC:     Tao Ren <taoren@fb.com>
-Smtp-Origin-Cluster: prn1c35
-Subject: [PATCH net-next] net: phy: modify assignment to OR for dev_flags in phy_attach_direct
-Date:   Mon, 5 Aug 2019 11:55:51 -0700
-Message-ID: <20190805185551.3140564-1-taoren@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-05_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=673 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908050191
-X-FB-Internal: deliver
+        Mon, 5 Aug 2019 15:00:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46630 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728870AbfHETAL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 15:00:11 -0400
+Subject: Re: [GIT PULL] regulator fixes for v5.3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565031611;
+        bh=huMwvSJffSri2HM4wfW/0xKRtkcO2R5wLi0dokv2kmo=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=wqUcl/FpdEozKEWbMfI5PttNsekeK8pEnnpy3su52h8+X++sQ4Nw1raWQ26WL6uFd
+         Hd9ylqQlfn7cD1FBYcCZ9JKPdWgDsXN1qhM1FhDePAL//BdWu8N1v1ssKYcHGT6B2c
+         7GhA4hOq9v/2tZ/L+V4NBiz4GGjQnQyLLj9fRexQ=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190805143431.GH6432@sirena.org.uk>
+References: <20190805143431.GH6432@sirena.org.uk>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190805143431.GH6432@sirena.org.uk>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git
+ tags/regulator-fix-v5.3-rc3
+X-PR-Tracked-Commit-Id: 811ba489fa524ec634933cdf83aaf6c007a4c004
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: df9edcba0b1146da5e4a2d1921bbc10c1a2fb55d
+Message-Id: <156503161095.31890.7623032134838084743.pr-tracker-bot@kernel.org>
+Date:   Mon, 05 Aug 2019 19:00:10 +0000
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Modify the assignment to OR when dealing with phydev->dev_flags in
-phy_attach_direct function, and this is to make sure dev_flags set in
-driver's probe callback won't be lost.
+The pull request you sent on Mon, 5 Aug 2019 15:34:31 +0100:
 
-Suggested-by: Andrew Lunn <andrew@lunn.ch>
-CC: Heiner Kallweit <hkallweit1@gmail.com>
-CC: Vladimir Oltean <olteanv@gmail.com>
-Signed-off-by: Tao Ren <taoren@fb.com>
----
- drivers/net/phy/phy_device.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/regulator-fix-v5.3-rc3
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 6b5cb87f3866..9259eb45c794 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -1270,7 +1270,7 @@ int phy_attach_direct(struct net_device *dev, struct phy_device *phydev,
- 			phydev_err(phydev, "error creating 'phy_standalone' sysfs entry\n");
- 	}
- 
--	phydev->dev_flags = flags;
-+	phydev->dev_flags |= flags;
- 
- 	phydev->interface = interface;
- 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/df9edcba0b1146da5e4a2d1921bbc10c1a2fb55d
+
+Thank you!
+
 -- 
-2.17.1
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
