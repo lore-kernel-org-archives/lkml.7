@@ -2,108 +2,136 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D58C41514
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 19:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B79CC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 19:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A02120C01
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 19:27:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565033252;
-	bh=MQ8FR72Dyq5oOL55TMoiwVjBxDH1WhMvPfmVW1mvDIQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zczcQDmkwPCjvJMrf1X+4CUZ4gcCEhf2kLDzNb08DYprNQHXT6Y/PpO3oG6apoh/v
-	 rq2kEfo4p/4Lx6Mwbe5esDVvKQ5qfG00HUTkjUnnBWQ6eTLNVubrEf8LC0KbmLTpQD
-	 vuxpW1GaqUrD6+zrc5SIPsa9Bm2c+QfPn398TiZE=
+	by mail.kernel.org (Postfix) with ESMTP id D5A4A20C01
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 19:30:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rZTyzChf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730483AbfHET1b (ORCPT
+        id S1730371AbfHETaH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 15:27:31 -0400
-Received: from mail-qt1-f178.google.com ([209.85.160.178]:43505 "EHLO
-        mail-qt1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727460AbfHET1b (ORCPT
+        Mon, 5 Aug 2019 15:30:07 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51981 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727460AbfHETaH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 15:27:31 -0400
-Received: by mail-qt1-f178.google.com with SMTP id w17so1489238qto.10
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 12:27:30 -0700 (PDT)
+        Mon, 5 Aug 2019 15:30:07 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 207so75851826wma.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 12:30:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=h1ewf34lHhC/ecib1hsGGIlixnNIzDn15kep7wiXFj4=;
-        b=EverIdWBkbzrNKBtVjB/eEfEjEu95MHUnU5wBU8QlutwkoFjuV2QkwB4r0q4CLVmB/
-         QQlU8b6AEABq1mqziHyeOka6DTzr7MkEtLGiIKQLVfWMHVHBC7fTL6QM3upaV7R2qXi8
-         eV8XC4+v+h8mPIxGVQgYmEnGxAJ/12wtj0KV4=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=4TR1ROvSxrSW2jGMt/9xUpK6NJiArbHQHezkRC5T3No=;
+        b=rZTyzChfgcWwwgTvCD/CVNOqEZQsoKiuqoj6vu6VFXxDpBxWbk6/3on5trmksfOnUM
+         X70HVqGO+45T01EKlSpcM/e498+YYNoj1r+r3ZfwxrA3DLrvx8JZZN5/2dBeOMh3DYoR
+         YTgGq08SWRokl8/7az8va7hPyfo9h17732xhpydMZ9QkZDZTChlAvwvkAhzzUQuICJa1
+         mtjvYaSwTv+/VuNuFmSLV4upxvAZVJdFv7aS6dU5vG/50Qvylr5mRb8UQCK0F12Gqbnn
+         WtD66meo/gDN8udvs2t6HhYX0P3+EuKF48/xi5ibJVGT/4jAC1H29FMQ7esFHiaUncLz
+         G8gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=h1ewf34lHhC/ecib1hsGGIlixnNIzDn15kep7wiXFj4=;
-        b=rLTvlEIqYfE84ek/54z8dnxuEZnrPrCHCPBXPkkBXQO0fdGLVMcsiAdpb5pf8OcaHk
-         5GfWAEtUJ6y+kbrFj9ifQJofqreuajQLm2tQUZEuJ84hEp1LpoNweYUvpMIg+Z+Wxt6U
-         ii203zF9UXFEtE0oPM/CtqmWFrwhite3lhSMvIHlgQ4OQFRnMMJGBaTQ8v10dhck+ogO
-         k+kVmhZSoKq9YnciGuOErET8P4wvULUQUPMRc335e6qLCul/ZZSiuyJ3gVyCOIjgyFA0
-         mbIt8uq+04YABFN38Dk+hm6t4g81NSoM1iUjzzWKwDpgHFbks0NLVorLDH7rA2eIfTqr
-         8CTQ==
-X-Gm-Message-State: APjAAAVBwhDAxOYvpYC0VDrbfwzREJzDao9Iug6oyOVtsutDZa/GeROH
-        x+fpF4n0It7G4KUbwD7WnY5vmQ==
-X-Google-Smtp-Source: APXvYqzNnb5aK5bFMZDX/1DWfTBCo+Ag0Lvk6m3WaIGVkXDEPpTNVColK/U4FuU9sJuchpQcA5KhYg==
-X-Received: by 2002:ac8:3f55:: with SMTP id w21mr108549934qtk.217.1565033249978;
-        Mon, 05 Aug 2019 12:27:29 -0700 (PDT)
-Received: from chatter.i7.local (192-0-228-88.cpe.teksavvy.com. [192.0.228.88])
-        by smtp.gmail.com with ESMTPSA id j66sm35383650qkf.86.2019.08.05.12.27.29
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 05 Aug 2019 12:27:29 -0700 (PDT)
-Date:   Mon, 5 Aug 2019 15:27:27 -0400
-From:   Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Micah Morton <mortonm@chromium.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] SafeSetID MAINTAINERS file update for v5.3
-Message-ID: <20190805192727.GA15470@chatter.i7.local>
-References: <CAJ-EccMXEVktpuPS5BwkGqTo++dGcpHAuSUZo7WgJhAzFByz0g@mail.gmail.com>
- <CAHk-=whZzJ8WxAeHcirUghcbeOYxmpCr+XxeS9ngH3df3+=p2Q@mail.gmail.com>
- <CAJ-EccOqmmrf2KPb7Z7NU6bF_4W1XUawLLy=pLekCyFKqusjKQ@mail.gmail.com>
- <CAHk-=wgT7Z3kCbKS9Q1rdA=OVxPL32CdBovX=eHvD2PppWCHpQ@mail.gmail.com>
- <20190805142756.GA4887@chatter.i7.local>
- <CAHk-=wgdiiBVprEVoi8+mpicGnOVNZ4Lb9YUJVskOXahO50sXw@mail.gmail.com>
- <20190805191136.GB4887@chatter.i7.local>
- <CAHk-=wg4xMXMM3EfW=NV6YuScA4zvcvaCAPou3bxegjGy6r-qA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=4TR1ROvSxrSW2jGMt/9xUpK6NJiArbHQHezkRC5T3No=;
+        b=qdV1OSVW3Q6J6fUbQp4REGmp+PH5qzGCBPZmCxSQinjSz9mc2ZwGx4zGowmI890B9u
+         IQiz3dIzZpS1YiZKVuGPLA5lkHbR3cubj7soBPkANcwcl0PARL9QzalIb8xVG9U0KQX9
+         kmlpxuLyaE+pe6Mx66iAO68zkZTA42AogOmXGgJ4KY0YqnF87DN0S15JU32rF0eMOFee
+         fGqcFsIb+4hfdcrMXyveH8hS8Ou+9aT7pg8dBF1YOCEXSAO0YMxlipeAoSjtMkxa9xAe
+         kV2Nwju4GElZrVpbb2m5/2x6ljp7/qU/zm1iu1h9dN4pRzxDTqrKC3icld42UGn2kM8b
+         k1QQ==
+X-Gm-Message-State: APjAAAW6YO9/D4EDooHYhe6cOIM8xMaO5+meU1j0pMrNgfl0hyFbtfs7
+        p4MuU3eqK3Lt0AK8YHkNM6lj1K/5VO1f58kUVR8=
+X-Google-Smtp-Source: APXvYqyGSzwDfUb1BiB433k508Z+fmaGZSrxRSK52vSJD6e/xnBmIqpLNGWQq/QRx1YQtmC7gqxrqWy42fyxNAsztfw=
+X-Received: by 2002:a05:600c:225a:: with SMTP id a26mr20957306wmm.81.1565033405310;
+ Mon, 05 Aug 2019 12:30:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wg4xMXMM3EfW=NV6YuScA4zvcvaCAPou3bxegjGy6r-qA@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <51a4155c5bc2ca847a9cbe85c1c11918bb193141.1564086017.git.jpoimboe@redhat.com>
+ <alpine.DEB.2.21.1907252355150.1791@nanos.tec.linutronix.de>
+ <156416793450.30723.5556760526480191131@skylake-alporthouse-com>
+ <alpine.DEB.2.21.1907262116530.1791@nanos.tec.linutronix.de>
+ <156416944205.21451.12269136304831943624@skylake-alporthouse-com> <CA+icZUXwBFS-6e+Qp4e3PhnRzEHvwdzWtS6OfVsgy85R5YNGOg@mail.gmail.com>
+In-Reply-To: <CA+icZUXwBFS-6e+Qp4e3PhnRzEHvwdzWtS6OfVsgy85R5YNGOg@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Mon, 5 Aug 2019 21:29:53 +0200
+Message-ID: <CA+icZUWA6e0Zsio6sthRUC=Ehb2-mw_9U76UnvwGc_tOnOqt7w@mail.gmail.com>
+Subject: Re: [PATCH] drm/i915: Remove redundant user_access_end() from
+ __copy_from_user() error path
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 12:17:49PM -0700, Linus Torvalds wrote:
->> However, I suspect that getting message-ids for all your pull 
->> requests
->> would significantly complicate your workflow.
+On Wed, Jul 31, 2019 at 2:25 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
 >
->Yeah, that would be a noticeable annoyance. If I were to process pull
->requests the way I used to process emailed patches (ie "git am -s" on
->a mailbox) that would be a natural thing to perhaps do, but it's not
->at all how it ends up working. Having to save the pull request email
->to then process it with some script would turn it into a chore.
+> On Fri, Jul 26, 2019 at 9:30 PM Chris Wilson <chris@chris-wilson.co.uk> wrote:
+> >
+> > Quoting Thomas Gleixner (2019-07-26 20:18:32)
+> > > On Fri, 26 Jul 2019, Chris Wilson wrote:
+> > > > Quoting Thomas Gleixner (2019-07-25 22:55:45)
+> > > > > On Thu, 25 Jul 2019, Josh Poimboeuf wrote:
+> > > > >
+> > > > > > Objtool reports:
+> > > > > >
+> > > > > >   drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool: .altinstr_replacement+0x36: redundant UACCESS disable
+> > > > > >
+> > > > > > __copy_from_user() already does both STAC and CLAC, so the
+> > > > > > user_access_end() in its error path adds an extra unnecessary CLAC.
+> > > > > >
+> > > > > > Fixes: 0b2c8f8b6b0c ("i915: fix missing user_access_end() in page fault exception case")
+> > > > > > Reported-by: Thomas Gleixner <tglx@linutronix.de>
+> > > > > > Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > > > > > Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > > > > > Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+> > > > > > Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > > > > > Link: https://github.com/ClangBuiltLinux/linux/issues/617
+> > > > > > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> > > > >
+> > > > > Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+> > > >
+> > > > Which tree do you plan to apply it to? I can put in drm-intel, and with
+> > > > the fixes tag it will percolate through to 5.3 and beyond, but if you
+> > > > want to apply it directly to squash the build warnings, feel free.
+> > >
+> > > It would be nice to get it into 5.3. I can route it linuxwards if you give
+> > > an Acked-by, but I'm happy to hand it to you :)
+> >
+> > Acked-by: Chris Wilson <chris@chris-wilson.co.uk>
 >
->I think the pr-tracker-bot clearly catches most cases as it is, and
->it's only the occasional "somebody did something odd" that then misses
->an automated response. Not a huge deal. For me it was actually more
->the "I didn't understand why the response didn't happen", not so much
->"I really want to always see responses".
+> Thomas did you take this through tip tree after Chris' ACK?
+>
 
-Ok, let me add a fix for Re: at the start -- this won't make things
-significantly more expensive, but will catch this particular corner 
-case.
+Hi,
 
-Best regards,
--K
+Gentle ping...
+Thomas and Chris: Will someone of you pick this up?
+As "objtool: Improve UACCESS coverage" [1] went trough tip tree I
+highly appreciate to do so with this one.
+
+Thanks.
+
+Regards,
+- Sedat -
+
+[1] https://git.kernel.org/linus/882a0db9d143e5e8dac54b96e83135bccd1f68d1
+[2] https://github.com/ClangBuiltLinux/linux/issues/617
