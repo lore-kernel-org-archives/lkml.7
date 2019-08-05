@@ -2,146 +2,137 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC37CC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D72ACC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9062A21734
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:18:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA58C214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:21:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565029135;
-	bh=PvvQIrdlb9AEbjRhyvm06RUNUNrYnsq1UocRxeHCGKk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Qp0DVEG0NxdxZpRGTWNOfBQqZuJqoYgImNYsJ7e9VWXnX4SXwaaT/VoOgCOBSx0Iz
-	 YwFZHh8/gMnKpfbNm7qOtXq4uE0ivKP85JTZfNFprEErLtSoP5cSMISq/uxiDUgcfA
-	 YHUfdAFGBUx/xq54MoDIQRvGYUun+qiqfE4S6iKw=
+	s=default; t=1565029280;
+	bh=7ay6wCzrCYZ7STww6F38sr5K1boDOH6OylBRvj6rcbA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=OycKywcJXRBQdVZTSZwLBahDOUG+cc+4xpr/puMDxWkuHj6ufJPwaXyqjQ7XLTvo1
+	 fTqsZcm6AD3oWVx0QTkCOYhidKOIczMnsV0TxRGl+HcbnKFybi5CXE42lO2wNBpyct
+	 U115P39C+MMzvuBaycqHTaY4A9XDsOl9u6gN3S+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730176AbfHESSy (ORCPT
+        id S1730137AbfHESVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 14:18:54 -0400
-Received: from mail-qk1-f175.google.com ([209.85.222.175]:37464 "EHLO
-        mail-qk1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728824AbfHESSy (ORCPT
+        Mon, 5 Aug 2019 14:21:19 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:43822 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728759AbfHESVT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 14:18:54 -0400
-Received: by mail-qk1-f175.google.com with SMTP id d15so60814566qkl.4
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 11:18:53 -0700 (PDT)
+        Mon, 5 Aug 2019 14:21:19 -0400
+Received: by mail-lf1-f68.google.com with SMTP id c19so58768886lfm.10
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 11:21:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WaiMpJM6wmUrTlGb1M5WnJo1GmhESZg0oc856bSZaeI=;
-        b=VhG2X0bjL7c7zyfuEQEH7WHjMT/El0t1r90O2Ygdv1S9Yp8rULuUqTO0TRE6eZkYH8
-         c8J72/M4cbxh9au+cSSMCrMKlN8YMQEdgaDB3oViwzoe3R1WidRQPCizUcjVM2tzqV66
-         33QWkPmb55QoUX2Geg+mVF0lGpDa8EK3Db6Ky4LcSxeb5lbbCRaP+lFHv0nYHtSMR3hC
-         9pI9OtlClLGzXdhN4IZtZeuWr5PVw12MY9DGp8EjaEI85JDg4qHG1dUZmoUGX7ZZUNKu
-         QQKZqG29mS5rtVx9Aevl7FiJo4oQ8aMh0eLYAzdZxo0ZJY+8WtcDATXkswJ7oSrz1aQz
-         D+AA==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WGQ5IB84E7mhKplViJK5IrEC3u7IzYyrnw83fJb3J2I=;
+        b=CLhlvp6oMG8Ynt6VPrXmi8rSjn6ZKK/3dkRZCW83Uk58mLwN52g7vuodlXSP55jKd7
+         F4LA1YdX8tA54qpVwhkDFvL7lHM6G2zE0lqeWe0lqMijcj8j0HopsDCHXiJ4L55BgPMJ
+         6kDvCBK2ELmZP/VK4yyFLL/MPNcWLz/M4kXFA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WaiMpJM6wmUrTlGb1M5WnJo1GmhESZg0oc856bSZaeI=;
-        b=PIuYDzEk1BmFWYgKRULWXIFzMOjWMMdi3HRzMiAS/LphcT9Oel9whI9M+4D/xKO5JB
-         6rsOiEuTNHIo2mIgfxJSRZbL71EfgcsaueNsyjUhFVkSpjSrg0BDswQDuZZnXuxKAdlS
-         ZPz1s6YUgHTsVzzK++d9X6nbFZlgL5rIbkkUkdf7RsZGUk0L0VN6rRfwGG30A+B7qfP2
-         dURKf7h++fsuQJVkoQET6y0Das8UPR9NrLX3UIzumg3YrJZkpJ2msvbMPY54hVJgZG5e
-         qkQRtzVBtdlg+05K2dusawRi+nh1fX7++msqaQyQiuLT5/sYlCao9fKIuLlAd1Em7pfB
-         SzDg==
-X-Gm-Message-State: APjAAAWtgiPz9yhLX+J0XSCbW9rrvQa6+0CxiuPihVW4rEhEXADZYSgW
-        suC+L2Kx3Urxap9GoUnRXCI=
-X-Google-Smtp-Source: APXvYqzjIA0DKIHR/Qh6C4C36/MpQFi9/z6kf8TgvCA6b67TRh+R/U2pGzyk/D7AjGDmNJXAXIc7aQ==
-X-Received: by 2002:a37:61c3:: with SMTP id v186mr97547335qkb.158.1565029133207;
-        Mon, 05 Aug 2019 11:18:53 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::39f3])
-        by smtp.gmail.com with ESMTPSA id l63sm35761964qkb.124.2019.08.05.11.18.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 05 Aug 2019 11:18:52 -0700 (PDT)
-Date:   Mon, 5 Aug 2019 11:18:50 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Corey Minyard <minyard@acm.org>
-Cc:     openipmi-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH] ipmi_si_intf: use usleep_range() instead of busy looping
-Message-ID: <20190805181850.GI136335@devbig004.ftw2.facebook.com>
-References: <20190709210643.GJ657710@devbig004.ftw2.facebook.com>
- <20190709214602.GD19430@minyard.net>
- <20190709220908.GL657710@devbig004.ftw2.facebook.com>
- <20190709230144.GE19430@minyard.net>
- <20190710142221.GO657710@devbig004.ftw2.facebook.com>
- <20190801174002.GC5001@minyard.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WGQ5IB84E7mhKplViJK5IrEC3u7IzYyrnw83fJb3J2I=;
+        b=IBRwFDfe2ITWzgCvkKe2CN1+3x55o2nfM21lG/9nS1+necZcld6WHT78nlLWALTNeh
+         MsgcDRTZguNpi7BI/qFqSjAoCdKLSeSuSmP9KpKkvtPQQ34hVjw8XNFeu0SsX+PtZVo7
+         gwsCcx9v6nOe3RzUqiKaZvVyoeP3mpLfoM3Ul1oa7v26GYXlMrtitSyIeDoHHRgHXWnm
+         AoDqPRASqvzRf5npEZKO9jLMyPkazoFZ3x+F1OAOdjGXiecxjfTwAHuBfGb0h4Oo3OVn
+         MPDTKxwcCH4FhRqgH3nBPtJEL//xmHu1WYtng23VcRMiYDfFq2TTmIxyQhrQ30RIKMGg
+         IJAQ==
+X-Gm-Message-State: APjAAAU1/SwsOLqYnLBnnPGnFVMwcM1QnWPeRmW3Yc/0XSVCxT6+XtZR
+        pWEWdjjrgYIerPDDPkJr1t67VwKhKsE=
+X-Google-Smtp-Source: APXvYqyfbgUpF85WWNf0+Eplof2v4YhXEBP9PeaKFCUrpsHKSdr8fU1stMWkFbnu526ZXl8LbHW0Bg==
+X-Received: by 2002:a19:c213:: with SMTP id l19mr53344611lfc.83.1565029276964;
+        Mon, 05 Aug 2019 11:21:16 -0700 (PDT)
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
+        by smtp.gmail.com with ESMTPSA id u18sm14972024lfe.65.2019.08.05.11.21.16
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 05 Aug 2019 11:21:16 -0700 (PDT)
+Received: by mail-lf1-f41.google.com with SMTP id 62so53902821lfa.8
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 11:21:16 -0700 (PDT)
+X-Received: by 2002:ac2:428d:: with SMTP id m13mr7524597lfh.52.1565029275746;
+ Mon, 05 Aug 2019 11:21:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190801174002.GC5001@minyard.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <CAJ-EccMXEVktpuPS5BwkGqTo++dGcpHAuSUZo7WgJhAzFByz0g@mail.gmail.com>
+ <CAHk-=whZzJ8WxAeHcirUghcbeOYxmpCr+XxeS9ngH3df3+=p2Q@mail.gmail.com>
+ <CAJ-EccOqmmrf2KPb7Z7NU6bF_4W1XUawLLy=pLekCyFKqusjKQ@mail.gmail.com>
+ <CAHk-=wgT7Z3kCbKS9Q1rdA=OVxPL32CdBovX=eHvD2PppWCHpQ@mail.gmail.com> <20190805142756.GA4887@chatter.i7.local>
+In-Reply-To: <20190805142756.GA4887@chatter.i7.local>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 5 Aug 2019 11:20:59 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgdiiBVprEVoi8+mpicGnOVNZ4Lb9YUJVskOXahO50sXw@mail.gmail.com>
+Message-ID: <CAHk-=wgdiiBVprEVoi8+mpicGnOVNZ4Lb9YUJVskOXahO50sXw@mail.gmail.com>
+Subject: Re: [GIT PULL] SafeSetID MAINTAINERS file update for v5.3
+To:     Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Cc:     Micah Morton <mortonm@chromium.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Corey.
+On Mon, Aug 5, 2019 at 7:28 AM Konstantin Ryabitsev
+<konstantin@linuxfoundation.org> wrote:
+>
+> On Sun, Aug 04, 2019 at 10:47:54AM -0700, Linus Torvalds wrote:
+> > - maybe pr-tracker-bot ignores follow-up emails with "Re:" in the
+> > subject?
+>
+> Yes, this is the culprit. Here are the matching regexes:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/mricon/korg-helpers.git/tree/pr-tracker-bot.py#n41
+>
+> Normally, pull requests don't come in as replies -- this is the first
+> one that got missed in months, to my knowledge.
 
-On Thu, Aug 01, 2019 at 12:40:02PM -0500, Corey Minyard wrote:
-> I spent some time looking at this.  Without the patch, I
-> measured around 3.5ms to send/receive a get device ID message
-> and uses 100% of the CPU on a core.
-> 
-> I measured your patch, it slowed it down to around 10.5ms
-> per message, which is not good.  Though it did just use a
-> few percent of the core.
-> 
-> I wrote some code to auto-adjust the timer.  It settled on
-> a delay around 35us, which gave 4.7ms per message, which is
-> probably acceptable, and used around 40% of the CPU.  If
-> I use any timeout (even a 0-10us range) it won't go below
-> 4ms per message.
+Most pull requests certainly are proper starts of threads. And I
+generally wish they were, because I know I myself tend to skim over
+emails much more quickly if it's some old discussion that I either
+consider solved or where somebody else is handling it, so if I see a
+pull request in the middle of a thread, it's much more likely that I'd
+miss it.
 
-Out of curiosity, what makes 4.7ms okay and 10.5ms not?  At least for
-the use case we have in the fleet (sensor reading mostly), the less
-disruptive the better as long as things don't timeout and fail.
+It does happen, though. Not just in situations like this, where I
+replied to the original pull request with some reason for why I
+wouldn't pull it, and then the fixed pull came in as part of the
+thread.
 
-> The process is running at nice 19 priority, so it won't
-> have a significant effect on other processes from a priority
-> point of view.  It may still be hitting the scheduler locks
-> pretty hard, though.  But I played with things quite a bit
+Al Viro does that to me occasionally, for example. Some discussion
+about a vfs problem, and then the pull request is in the middle of
+that thread. You can see an example of that here:
 
-And power.  Imagine multi six digit number of machines burning a full
-core just because of this busy loop to read temperature sensors some
-msecs faster.
+     https://lore.kernel.org/lkml/20180125002151.GR13338@ZenIV.linux.org.uk/
 
-> and the behavior or the management controller is too
-> erratic to set a really good timeout.  Maybe other ones
-> are better, don't know.
-> 
-> One other option we have is that the driver has something
-> called "maintenance mode".  If it detect that you have
-> reset the management controller or are issuing firmware
-> commands, it will modify timeout behavior.  It can also
-> be activated manually.  I could also make it switch to
-> just calling schedule instead of delaying when in that
-> mode.
+although in that case it was Davem who merged it (in merge commit 8ec59b44a006.
 
-Yeah, whatever which makes the common-case behavior avoid busy looping
-would work.
+Of course, pr-tracker-bot wouldn't have noticed that one anyway,
+because it also doesn't have "GIT PULL" or anything like that in the
+subject line at all. So maybe it's not a great example.
 
-> The right thing it do is complain bitterly to vendors who
-> build hardware that has to be polled.  But besides that,
+I don't know if it's worth changing the pr-tracker-bot rules. I *do*
+think that the whole unquoted
 
-For sure, but there already are a lot of machines with this thing and
-it'll take multiple years for them to retire so...
+   for you to fetch changes up to [hex string]
 
-> I'm thinking the maintenance mode is the thing to do.
-> It will also change behavior if you reset the management
-> controller, but only for 30 seconds or so.  Does that
-> work?
+is by far the strongest single signal for a pull request, but it's not
+clear that it's worth spending a lot of CPU time looking for that
+unless you have a strong signal in the subject line.
 
-Yeah, sounds good to me.
+So I consider this "solved", and maybe people should just realize that
+they won't get the automated responses unless they do everything just
+right.
 
-Thnaks.
-
--- 
-tejun
+                  Linus
