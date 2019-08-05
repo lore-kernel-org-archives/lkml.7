@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF38C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E0FC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E6042087B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:24:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 244E120651
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:24:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011470;
-	bh=Mul0E8HVTIwUIJumJMenw8NuqJ7QN5bugakid710Lpg=;
+	s=default; t=1565011473;
+	bh=kDASm8+AuMPNY/cREAHlH2bRIsXBL4K8DG62KX5A/mw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iTmCQqrjO8Hb5NGkkHbMMCJDo3HbwNbi1jf3YULICv57lN+at0ve+GDZ7VPPcUJyy
-	 JB5Bmol8O8ShD6UwKOSsAykGe01BEl1jLYXooBv+I1mTubkUb9dPxumqFQjmbkevoL
-	 Gi0Emj/cEDfYZvOhvjBeEMika7MAbZcxZqNwl59k=
+	b=uNtG7tpzrX1CPAiXuqXh8hqhRbjfcyF7f3/W2Kq4AP91uwRTvR+qDzo17kiUZNTc7
+	 HvGbfE/22MnmdzAC+pCiAGUyuhgruFpLKkI3z+UQXenFLiH2fKVsTRhNyullJeoeEl
+	 Syu471E1qDtmSL23xTlQxPaWSYOpNsaVlkTZQvsU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731018AbfHENY3 (ORCPT
+        id S1731028AbfHENYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:24:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32932 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:24:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730182AbfHENYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:24:24 -0400
+        id S1731014AbfHENY3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:24:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D079A2067D;
-        Mon,  5 Aug 2019 13:24:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1827D20651;
+        Mon,  5 Aug 2019 13:24:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011463;
-        bh=Mul0E8HVTIwUIJumJMenw8NuqJ7QN5bugakid710Lpg=;
+        s=default; t=1565011468;
+        bh=kDASm8+AuMPNY/cREAHlH2bRIsXBL4K8DG62KX5A/mw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vOq9b7q0gzZB5STY7HSIPEjX2P5CR0Uj0wnoqeYkDutiJX/fifF+ltMIp3NDbieYv
-         DQZFQi+j1xMiqf/tSD9WNWM02eKMOrZx/g2G4yoAS6cL53ORg5QNS5UqK5/Fk2LJ6K
-         0t8eUOJjZb+sCQX1hs6hhA2S/67Gw2uAkrT8wjXY=
+        b=zlMRCpHGgGdSJjOGuTZCstlI+yAnznsEcvao72KYDk/2WYyUsPGRDtubcKDZjTWNp
+         DLvSTLCrH7nVWUq8LG0SSE5I8KYjuwjLc69i4LdiOvLPytTDqMT2V9YokmFpXLkhyN
+         iKEp7NvqrViDyjFwp7S18y4XvZqidtENTWFC2oVc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Erhard F." <erhard_f@mailbox.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.2 097/131] powerpc/kasan: fix early boot failure on PPC32
-Date:   Mon,  5 Aug 2019 15:03:04 +0200
-Message-Id: <20190805124958.459176172@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Samuel Thibault <samuel.thibault@ens-lyon.org>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.2 099/131] ALSA: hda: Fix 1-minute detection delay when i915 module is not available
+Date:   Mon,  5 Aug 2019 15:03:06 +0200
+Message-Id: <20190805124958.585858607@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -60,50 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Samuel Thibault <samuel.thibault@ens-lyon.org>
 
-commit d7e23b887f67178c4f840781be7a6aa6aeb52ab1 upstream.
+commit 74bf71ed792ab0f64631cc65ccdb54c356c36d45 upstream.
 
-Due to commit 4a6d8cf90017 ("powerpc/mm: don't use pte_alloc_kernel()
-until slab is available on PPC32"), pte_alloc_kernel() cannot be used
-during early KASAN init.
+Distribution installation images such as Debian include different sets
+of modules which can be downloaded dynamically.  Such images may notably
+include the hda sound modules but not the i915 DRM module, even if the
+latter was enabled at build time, as reported on
+https://bugs.debian.org/931507
 
-Fix it by using memblock_alloc() instead.
+In such a case hdac_i915 would be linked in and try to load the i915
+module, fail since it is not there, but still wait for a whole minute
+before giving up binding with it.
 
-Fixes: 2edb16efc899 ("powerpc/32: Add KASAN support")
-Cc: stable@vger.kernel.org # v5.2+
-Reported-by: Erhard F. <erhard_f@mailbox.org>
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/da89670093651437f27d2975224712e0a130b055.1564552796.git.christophe.leroy@c-s.fr
+This fixes such as case by only waiting for the binding if the module
+was properly loaded (or module support is disabled, in which case i915
+is already compiled-in anyway).
+
+Fixes: f9b54e1961c7 ("ALSA: hda/i915: Allow delayed i915 audio component binding")
+Signed-off-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/mm/kasan/kasan_init_32.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ sound/hda/hdac_i915.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/arch/powerpc/mm/kasan/kasan_init_32.c
-+++ b/arch/powerpc/mm/kasan/kasan_init_32.c
-@@ -21,7 +21,7 @@ static void kasan_populate_pte(pte_t *pt
- 		__set_pte_at(&init_mm, va, ptep, pfn_pte(PHYS_PFN(pa), prot), 0);
- }
- 
--static int kasan_init_shadow_page_tables(unsigned long k_start, unsigned long k_end)
-+static int __ref kasan_init_shadow_page_tables(unsigned long k_start, unsigned long k_end)
- {
- 	pmd_t *pmd;
- 	unsigned long k_cur, k_next;
-@@ -35,7 +35,10 @@ static int kasan_init_shadow_page_tables
- 		if ((void *)pmd_page_vaddr(*pmd) != kasan_early_shadow_pte)
- 			continue;
- 
--		new = pte_alloc_one_kernel(&init_mm);
-+		if (slab_is_available())
-+			new = pte_alloc_one_kernel(&init_mm);
-+		else
-+			new = memblock_alloc(PTE_FRAG_SIZE, PTE_FRAG_SIZE);
- 
- 		if (!new)
- 			return -ENOMEM;
+--- a/sound/hda/hdac_i915.c
++++ b/sound/hda/hdac_i915.c
+@@ -136,10 +136,12 @@ int snd_hdac_i915_init(struct hdac_bus *
+ 	if (!acomp)
+ 		return -ENODEV;
+ 	if (!acomp->ops) {
+-		request_module("i915");
+-		/* 60s timeout */
+-		wait_for_completion_timeout(&bind_complete,
+-					    msecs_to_jiffies(60 * 1000));
++		if (!IS_ENABLED(CONFIG_MODULES) ||
++		    !request_module("i915")) {
++			/* 60s timeout */
++			wait_for_completion_timeout(&bind_complete,
++						   msecs_to_jiffies(60 * 1000));
++		}
+ 	}
+ 	if (!acomp->ops) {
+ 		dev_info(bus->dev, "couldn't bind with audio component\n");
 
 
