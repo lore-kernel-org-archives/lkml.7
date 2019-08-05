@@ -2,143 +2,367 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DATE_IN_PAST_12_24,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A302C41514
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76C7CC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC4F020C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:39:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 437FE20C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:40:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="XTjnnHi8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d7YlRKZb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733032AbfHFOjH (ORCPT
+        id S1733074AbfHFOke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 10:39:07 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:46472 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732018AbfHFOjG (ORCPT
+        Tue, 6 Aug 2019 10:40:34 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45908 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729535AbfHFOkd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 10:39:06 -0400
-Received: by mail-qt1-f196.google.com with SMTP id h21so84690535qtn.13
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 07:39:06 -0700 (PDT)
+        Tue, 6 Aug 2019 10:40:33 -0400
+Received: by mail-pg1-f193.google.com with SMTP id o13so41691078pgp.12
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 07:40:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=R5CPIS4mmyxALTwu292eKFtIXYTqe3SCg3BcaBK423k=;
-        b=XTjnnHi8z+SYvy9zIZcrSsQ/4Y2tZDIGwuTiAd3On/3Qyk2jJKpY9TJZwKkhDIEj3+
-         MGHtt3rEv401lGpVq5xL0CKheYAiDCONwdtltzljbu1GSNGjaTUSRBGuj6fMXfPd7xx9
-         AvWLguAEFAriYfUuE/os0GFuvFNJgqJH9P1XG2mJ+YwX0AZhkzMufVj8RERsoxhYeF6L
-         xRIbWAbvwo4On/nNeR5bWsE7X6QGURzO6ky4zV3wi1UlvTjZErwMLSfQ7U9cov+5JWeV
-         kG6leE1orrap1pWD6YdXGVpsb3smabaJfOBSV25ApiXrIfZ6NUpp239eLF46tRKUjS0M
-         cRZg==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:from:cc:to:user-agent:date;
+        bh=1OEM8Kxh1iavtHrE6SU4/XrnKb20VgM9nqhlOhcLshg=;
+        b=d7YlRKZbryzBLzrclhSdKOl6s8nlSQjzREsidggOCDnui5QblKwUjfrA5gB8/OueL+
+         GFoIMJy1KeCbIAxO9oYx8/7WkYtzJvIUOUgxuF33fbWArb4ZSvPtDKSad/tmj6lxoD7z
+         Z4vIZl2I0yqwTQA7Tr+CeVaqEFpfx01vNb3hA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=R5CPIS4mmyxALTwu292eKFtIXYTqe3SCg3BcaBK423k=;
-        b=S8yjDTPkBDLIhI11I8NlaoOwD2E+YXQvhB/QGH69lbYMixIbxCKCLqjtYbZJqGYmOu
-         0DzdCoELqJD1MvIYeTOQHxhNR/+4ladRb33sgl0YYWvGuPPmGwoVGf46EdQk5j8ZChtY
-         QVP2cnBXPVmhClC/XQphXrp9px8QoeUafgwlYX5bR34ZyeQP4fPanSqFCglO414pNtFQ
-         sY2AZ2r3jGy+DbZNld9+XTciwvcK93XrKUGFOw1jEgIQg6dsa+hJkljUVqatztNhLaGR
-         oHUzSkqfZIj65k/B3n57KDJH6EtTG5M91gqp9tksWGd3TAJQWojv9ydnDTIP+Rk3Y32n
-         g4xQ==
-X-Gm-Message-State: APjAAAXPuToyEQUJmqGwt9BoSK2zDPMk/vP7Rn2WuxbiJlmGFLVCna0E
-        OLZvb5LgAP8BHj693rfPNRvEMw==
-X-Google-Smtp-Source: APXvYqxb9K01d3+TG7ks63JaVg+hAktf2Hz+U/53HsIRu0RYyLZKlOzhu0DzA2UWt4gOEDGxB6xX5A==
-X-Received: by 2002:a0c:e001:: with SMTP id j1mr3394954qvk.110.1565102345637;
-        Tue, 06 Aug 2019 07:39:05 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id d71sm500507qkg.70.2019.08.06.07.39.05
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 06 Aug 2019 07:39:05 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hv0cC-0005jc-Oe; Tue, 06 Aug 2019 11:39:04 -0300
-Date:   Tue, 6 Aug 2019 11:39:04 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Qian Cai <cai@lca.pw>
-Cc:     akpm@linux-foundation.org, arnd@arndb.de,
-        kirill.shutemov@linux.intel.com, mhocko@suse.com,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] asm-generic: fix variable 'p4d' set but not used
-Message-ID: <20190806143904.GE11627@ziepe.ca>
-References: <1564774882-22926-1-git-send-email-cai@lca.pw>
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
+         :user-agent:date;
+        bh=1OEM8Kxh1iavtHrE6SU4/XrnKb20VgM9nqhlOhcLshg=;
+        b=TI36oQtyleVF2DNkvMZsOc7NztV2Kjxwq+HTOuqyyL5vBRZo5uv0LeVgl7tnZIijHC
+         4rB4WexPfVsIVKRffmGpvRiubzuzR1XrUflvS3S7KM+UOud7VNaUcAGM430xDdEUI6DX
+         vmT8slECijzr21R3K7cKhI/ViIsDNGt4uvB64Fq0R8vkbLhEzgJMKPb2X9BdEbeyTS2g
+         A4OpbKTqPfGsdogJPkS1FRbpBZDfad0Q5nUydUyOZz3E7HX/i3BE6FdA+qglCCxOt8pH
+         GQlN2jAiZY4HzIgEhzIxm1jUkww+IDbOaK11SVH61TFEoIbiBA4ZQGnxC/Uhzjgy/eAG
+         7Fhg==
+X-Gm-Message-State: APjAAAWsPWDs/TS2zRITzzTABiKlB+OTDIxU8UrcCKVxnAXJ+IcNWc1+
+        PZv2p1Y3VJgfV6pvb7bubLDpLA==
+X-Google-Smtp-Source: APXvYqyIdAcX9gEHIL92NTQ7Jcxp4UzryejnsH/gabMiD2oWCx9789AzjTxPqGhILNUBIkvH+fQVxQ==
+X-Received: by 2002:aa7:8711:: with SMTP id b17mr4073613pfo.234.1565102432451;
+        Tue, 06 Aug 2019 07:40:32 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id 11sm87812562pfw.33.2019.08.06.07.40.31
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 06 Aug 2019 07:40:31 -0700 (PDT)
+Message-ID: <5d49915f.1c69fb81.bd889.bc77@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1564774882-22926-1-git-send-email-cai@lca.pw>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <04c0f028-308d-2dae-5067-8c239acaa3bf@infineon.com>
+References: <20190716224518.62556-1-swboyd@chromium.org> <20190716224518.62556-7-swboyd@chromium.org> <04c0f028-308d-2dae-5067-8c239acaa3bf@infineon.com>
+Subject: Re: [PATCH v2 6/6] tpm: Add driver for cr50 on I2C
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Duncan Laurie <dlaurie@chromium.org>, linux-kernel@vger.kernel.org,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org,
+        Andrey Pronin <apronin@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+To:     Alexander Steffen <Alexander.Steffen@infineon.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Peter Huewe <peterhuewe@gmx.de>
+User-Agent: alot/0.8.1
+Date:   Mon, 05 Aug 2019 16:52:55 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 03:41:22PM -0400, Qian Cai wrote:
-> GCC throws a warning on an arm64 system since the commit 9849a5697d3d
-> ("arch, mm: convert all architectures to use 5level-fixup.h"),
-> 
-> mm/kasan/init.c: In function 'kasan_free_p4d':
-> mm/kasan/init.c:344:9: warning: variable 'p4d' set but not used
-> [-Wunused-but-set-variable]
->   p4d_t *p4d;
->          ^~~
-> 
-> because p4d_none() in "5level-fixup.h" is compiled away while it is a
-> static inline function in "pgtable-nopud.h". However, if converted
-> p4d_none() to a static inline there, powerpc would be unhappy as it
-> reads those in assembler language in
-> "arch/powerpc/include/asm/book3s/64/pgtable.h",
-> 
-> ./include/asm-generic/5level-fixup.h: Assembler messages:
-> ./include/asm-generic/5level-fixup.h:20: Error: unrecognized opcode:
-> `static'
-> ./include/asm-generic/5level-fixup.h:21: Error: junk at end of line,
-> first unrecognized character is `{'
-> ./include/asm-generic/5level-fixup.h:22: Error: unrecognized opcode:
-> `return'
-> ./include/asm-generic/5level-fixup.h:23: Error: junk at end of line,
-> first unrecognized character is `}'
-> ./include/asm-generic/5level-fixup.h:25: Error: unrecognized opcode:
-> `static'
-> ./include/asm-generic/5level-fixup.h:26: Error: junk at end of line,
-> first unrecognized character is `{'
-> ./include/asm-generic/5level-fixup.h:27: Error: unrecognized opcode:
-> `return'
-> ./include/asm-generic/5level-fixup.h:28: Error: junk at end of line,
-> first unrecognized character is `}'
-> ./include/asm-generic/5level-fixup.h:30: Error: unrecognized opcode:
-> `static'
-> ./include/asm-generic/5level-fixup.h:31: Error: junk at end of line,
-> first unrecognized character is `{'
-> ./include/asm-generic/5level-fixup.h:32: Error: unrecognized opcode:
-> `return'
-> ./include/asm-generic/5level-fixup.h:33: Error: junk at end of line,
-> first unrecognized character is `}'
-> make[2]: *** [scripts/Makefile.build:375:
-> arch/powerpc/kvm/book3s_hv_rmhandlers.o] Error 1
-> 
-> Fix it by reference the variable in the macro instead.
-> 
-> Signed-off-by: Qian Cai <cai@lca.pw>
->  include/asm-generic/5level-fixup.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/asm-generic/5level-fixup.h b/include/asm-generic/5level-fixup.h
-> index bb6cb347018c..2c3e14c924b6 100644
-> +++ b/include/asm-generic/5level-fixup.h
-> @@ -19,7 +19,7 @@
->  
->  #define p4d_alloc(mm, pgd, address)	(pgd)
->  #define p4d_offset(pgd, start)		(pgd)
-> -#define p4d_none(p4d)			0
-> +#define p4d_none(p4d)			((void)p4d, 0)
+Quoting Alexander Steffen (2019-07-17 08:19:19)
+> On 17.07.2019 00:45, Stephen Boyd wrote:
+> > From: Duncan Laurie <dlaurie@chromium.org>
+> >=20
+> > Add TPM 2.0 compatible I2C interface for chips with cr50 firmware.
+> >=20
+> > The firmware running on the currently supported H1 MCU requires a
+> > special driver to handle its specific protocol, and this makes it
+> > unsuitable to use tpm_tis_core_* and instead it must implement the
+> > underlying TPM protocol similar to the other I2C TPM drivers.
+> >=20
+> > - All 4 byes of status register must be read/written at once.
+> > - FIFO and burst count is limited to 63 and must be drained by AP.
+> > - Provides an interrupt to indicate when read response data is ready
+> > and when the TPM is finished processing write data.
+>=20
+> And why does this prevent using the existing tpm_tis_core=20
+> infrastructure? Taking the status register as an example, you could just =
 
-Yuk, how about a static inline instead?
+> teach read_bytes to look at the requested address, and if it lies=20
+> between 0x18 and 0x1b read the whole status register and then return=20
+> only the subset that has been requested originally.
+>=20
+> Both approaches might not be pretty, but I'd prefer having shared code=20
+> with explicit code paths for the differences instead of having two=20
+> copies of mostly the same algorithm where a simple diff will print out a =
 
-Jason
+> lot more than just the crucial differences.
+
+There are a few i2c tpm drivers in drivers/char/tpm/. I still haven't
+looked at the details but maybe this will work out. I'm planning to drop
+this patch from the series and revisit this after getting the SPI driver
+merged.
+
+>=20
+> > This driver is based on the existing infineon I2C TPM driver, which
+> > most closely matches the cr50 i2c protocol behavior.  The driver is
+> > intentionally kept very similar in structure and style to the
+> > corresponding drivers in coreboot and depthcharge.
+> >=20
+> > Signed-off-by: Duncan Laurie <dlaurie@chromium.org>
+> > [swboyd@chromium.org: Depend on i2c even if it's a module, replace
+> > boilier plate with SPDX tag, drop asm/byteorder.h include, simplify
+> > return from probe]
+> > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> > ---
+> >   drivers/char/tpm/Kconfig    |  10 +
+> >   drivers/char/tpm/Makefile   |   1 +
+> >   drivers/char/tpm/cr50_i2c.c | 705 ++++++++++++++++++++++++++++++++++++
+> >   3 files changed, 716 insertions(+)
+> >   create mode 100644 drivers/char/tpm/cr50_i2c.c
+> >=20
+> > diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+> > index b7028bfa6f87..57a8c3540265 100644
+> > --- a/drivers/char/tpm/Kconfig
+> > +++ b/drivers/char/tpm/Kconfig
+> > @@ -119,6 +119,16 @@ config TCG_CR50
+> >       ---help---
+> >         Common routines shared by drivers for Cr50-based devices.
+> >  =20
+> > +config TCG_CR50_I2C
+> > +     tristate "Cr50 I2C Interface"
+> > +     depends on I2C
+> > +     select TCG_CR50
+> > +     ---help---
+> > +       If you have a H1 secure module running Cr50 firmware on I2C bus,
+> > +       say Yes and it will be accessible from within Linux. To compile
+> > +       this driver as a module, choose M here; the module will be call=
+ed
+> > +       cr50_i2c.
+> > +
+> >   config TCG_CR50_SPI
+> >       tristate "Cr50 SPI Interface"
+> >       depends on SPI
+> > diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
+> > index 4e89538c73c8..3ac3448c21fa 100644
+> > --- a/drivers/char/tpm/Makefile
+> > +++ b/drivers/char/tpm/Makefile
+> > @@ -29,6 +29,7 @@ obj-$(CONFIG_TCG_NSC) +=3D tpm_nsc.o
+> >   obj-$(CONFIG_TCG_ATMEL) +=3D tpm_atmel.o
+> >   obj-$(CONFIG_TCG_CR50) +=3D cr50.o
+> >   obj-$(CONFIG_TCG_CR50_SPI) +=3D cr50_spi.o
+> > +obj-$(CONFIG_TCG_CR50_I2C) +=3D cr50_i2c.o
+> >   obj-$(CONFIG_TCG_INFINEON) +=3D tpm_infineon.o
+> >   obj-$(CONFIG_TCG_IBMVTPM) +=3D tpm_ibmvtpm.o
+> >   obj-$(CONFIG_TCG_TIS_ST33ZP24) +=3D st33zp24/
+> > diff --git a/drivers/char/tpm/cr50_i2c.c b/drivers/char/tpm/cr50_i2c.c
+> > new file mode 100644
+> > index 000000000000..25934c038b9b
+> > --- /dev/null
+> > +++ b/drivers/char/tpm/cr50_i2c.c
+> > @@ -0,0 +1,705 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright 2016 Google Inc.
+> > + *
+> > + * Based on Linux Kernel TPM driver by
+> > + * Peter Huewe <peter.huewe@infineon.com>
+> > + * Copyright (C) 2011 Infineon Technologies
+> > + */
+> > +
+> > +/*
+> > + * cr50 is a firmware for H1 secure modules that requires special
+> > + * handling for the I2C interface.
+> > + *
+> > + * - Use an interrupt for transaction status instead of hardcoded dela=
+ys
+> > + * - Must use write+wait+read read protocol
+> > + * - All 4 bytes of status register must be read/written at once
+> > + * - Burst count max is 63 bytes, and burst count behaves
+> > + *   slightly differently than other I2C TPMs
+> > + * - When reading from FIFO the full burstcnt must be read
+> > + *   instead of just reading header and determining the remainder
+> > + */
+> > +
+> > +#include <linux/acpi.h>
+> > +#include <linux/completion.h>
+> > +#include <linux/i2c.h>
+> > +#include <linux/module.h>
+> > +#include <linux/pm.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/wait.h>
+> > +#include "cr50.h"
+> > +#include "tpm.h"
+> > +
+> > +#define CR50_MAX_BUFSIZE     63
+> > +#define CR50_TIMEOUT_SHORT_MS        2       /* Short timeout during t=
+ransactions */
+> > +#define CR50_TIMEOUT_NOIRQ_MS        20      /* Timeout for TPM ready =
+without IRQ */
+> > +#define CR50_I2C_DID_VID     0x00281ae0L
+> > +#define CR50_I2C_MAX_RETRIES 3       /* Max retries due to I2C errors =
+*/
+> > +#define CR50_I2C_RETRY_DELAY_LO      55      /* Min usecs between retr=
+ies on I2C */
+> > +#define CR50_I2C_RETRY_DELAY_HI      65      /* Max usecs between retr=
+ies on I2C */
+> > +
+> > +static unsigned short rng_quality =3D 1022;
+> > +
+> > +module_param(rng_quality, ushort, 0644);
+> > +MODULE_PARM_DESC(rng_quality,
+> > +              "Estimation of true entropy, in bits per 1024 bits.");
+> > +
+> > +struct priv_data {
+> > +     int irq;
+> > +     int locality;
+> > +     struct completion tpm_ready;
+> > +     u8 buf[CR50_MAX_BUFSIZE + sizeof(u8)];
+> > +};
+> > +
+> > +/*
+> > + * The cr50 interrupt handler just signals waiting threads that the
+> > + * interrupt was asserted.  It does not do any processing triggered
+> > + * by interrupts but is instead used to avoid fixed delays.
+> > + */
+> > +static irqreturn_t cr50_i2c_int_handler(int dummy, void *dev_id)
+> > +{
+> > +     struct tpm_chip *chip =3D dev_id;
+> > +     struct priv_data *priv =3D dev_get_drvdata(&chip->dev);
+> > +
+> > +     complete(&priv->tpm_ready);
+> > +
+> > +     return IRQ_HANDLED;
+> > +}
+> > +
+> > +/*
+> > + * Wait for completion interrupt if available, otherwise use a fixed
+> > + * delay for the TPM to be ready.
+> > + *
+> > + * Returns negative number for error, positive number for success.
+> > + */
+> > +static int cr50_i2c_wait_tpm_ready(struct tpm_chip *chip)
+> > +{
+> > +     struct priv_data *priv =3D dev_get_drvdata(&chip->dev);
+> > +     long rc;
+> > +
+> > +     /* Use a safe fixed delay if interrupt is not supported */
+> > +     if (priv->irq <=3D 0) {
+> > +             msleep(CR50_TIMEOUT_NOIRQ_MS);
+> > +             return 1;
+> > +     }
+> > +
+> > +     /* Wait for interrupt to indicate TPM is ready to respond */
+> > +     rc =3D wait_for_completion_timeout(&priv->tpm_ready,
+> > +             msecs_to_jiffies(chip->timeout_a));
+> > +
+> > +     if (rc =3D=3D 0)
+> > +             dev_warn(&chip->dev, "Timeout waiting for TPM ready\n");
+> > +
+> > +     return rc;
+> > +}
+> > +
+> > +static void cr50_i2c_enable_tpm_irq(struct tpm_chip *chip)
+> > +{
+> > +     struct priv_data *priv =3D dev_get_drvdata(&chip->dev);
+> > +
+> > +     if (priv->irq > 0) {
+> > +             reinit_completion(&priv->tpm_ready);
+> > +             enable_irq(priv->irq);
+> > +     }
+> > +}
+> > +
+> > +static void cr50_i2c_disable_tpm_irq(struct tpm_chip *chip)
+> > +{
+> > +     struct priv_data *priv =3D dev_get_drvdata(&chip->dev);
+> > +
+> > +     if (priv->irq > 0)
+> > +             disable_irq(priv->irq);
+> > +}
+> > +
+> > +/*
+> > + * cr50_i2c_transfer - transfer messages over i2c
+> > + *
+> > + * @adapter: i2c adapter
+> > + * @msgs: array of messages to transfer
+> > + * @num: number of messages in the array
+> > + *
+> > + * Call unlocked i2c transfer routine with the provided parameters and=
+ retry
+> > + * in case of bus errors. Returns the number of transferred messages.
+> > + */
+>=20
+> Documentation is nice, why is it only present for some of the functions? =
+
+> Also, the dev parameter is missing in the list of parameters above.
+
+Ok.
+
+>=20
+> > +static int cr50_i2c_transfer(struct device *dev, struct i2c_adapter *a=
+dapter,
+> > +                          struct i2c_msg *msgs, int num)
+> > +{
+> > +     int rc, try;
+> > +
+> > +     for (try =3D 0; try < CR50_I2C_MAX_RETRIES; try++) {
+> > +             rc =3D __i2c_transfer(adapter, msgs, num);
+> > +             if (rc > 0)
+> > +                     break;
+> > +             if (try)
+> > +                     dev_warn(dev, "i2c transfer failed (attempt %d/%d=
+): %d\n",
+> > +                              try+1, CR50_I2C_MAX_RETRIES, rc);
+>=20
+> Why does this not generate a message when the first attempt fails?
+>=20
+
+Hmm looks like an off-by-one bug.=20
+
+> > +
+> > +enum tis_access {
+> > +     TPM_ACCESS_VALID =3D 0x80,
+> > +     TPM_ACCESS_ACTIVE_LOCALITY =3D 0x20,
+> > +     TPM_ACCESS_REQUEST_PENDING =3D 0x04,
+> > +     TPM_ACCESS_REQUEST_USE =3D 0x02,
+> > +};
+> > +
+> > +enum tis_status {
+> > +     TPM_STS_VALID =3D 0x80,
+> > +     TPM_STS_COMMAND_READY =3D 0x40,
+> > +     TPM_STS_GO =3D 0x20,
+> > +     TPM_STS_DATA_AVAIL =3D 0x10,
+> > +     TPM_STS_DATA_EXPECT =3D 0x08,
+> > +};
+> > +
+> > +enum tis_defaults {
+> > +     TIS_SHORT_TIMEOUT =3D 750,        /* ms */
+> > +     TIS_LONG_TIMEOUT =3D 2000,        /* 2 sec */
+> > +};
+>=20
+> This is already defined in tpm_tis_core.h. Do you really need to=20
+> redefine it here?
+
+This whole chunk of code is copying from tpm_i2c_infineon.c and I'm not
+sure why that driver redefines things either. If i include
+tpm_tis_core.h then I need to undef the below defines so they can be
+redefined in this file.
+
+>=20
+> > +
+> > +#define      TPM_ACCESS(l)                   (0x0000 | ((l) << 4))
+> > +#define      TPM_STS(l)                      (0x0001 | ((l) << 4))
+> > +#define      TPM_DATA_FIFO(l)                (0x0005 | ((l) << 4))
+> > +#define      TPM_DID_VID(l)                  (0x0006 | ((l) << 4))
+> > +
