@@ -7,49 +7,57 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77284C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E8CC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4531E2075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00C402186A
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:16:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010958;
-	bh=Q0r+99K5J7kIeiEntfm7cv9iuAgk3irlIKMtudbxTh8=;
+	s=default; t=1565010962;
+	bh=iROJ5hqAMhLnI/WyXcSfNfNavpiVroAGsu9DCAHdrRQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y+bvGqp+XvZTRefmL/l7yVZzWbkkb0AdyPlbXuC4Rdosbmj+ImyeH2hL4evo/5la7
-	 e07s58flXaV5lBovQMRmR0tpnhXdqok4+St/2H6H6hsi9X80AAGhYZtYmmRD4QAiy1
-	 VY+8c47rXGew118II6Wsix+PYpy4EHcyGVPBmRbI=
+	b=N/tq5Ig8QqBdT8m/bcdWfwdRNsKkPAlJ9hc3hvn2HG0lymN3axhHlaP2Kh0I8D/2x
+	 7y4znzfvD22tJejb7O7JxLixSLOYqpOsm14CuilbSal5wrDCeWT7Sb3Op/kD4aY2Ny
+	 fuDWmHUzr4kFac/hYuZgp/vmI/bDT7w+SAuW7mzk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729646AbfHENGj (ORCPT
+        id S1729613AbfHENGa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:06:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43548 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:06:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729606AbfHENGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:06:38 -0400
+        id S1729601AbfHENG1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:06:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 780CD214C6;
-        Mon,  5 Aug 2019 13:06:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27BE420657;
+        Mon,  5 Aug 2019 13:06:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010397;
-        bh=Q0r+99K5J7kIeiEntfm7cv9iuAgk3irlIKMtudbxTh8=;
+        s=default; t=1565010386;
+        bh=iROJ5hqAMhLnI/WyXcSfNfNavpiVroAGsu9DCAHdrRQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sTHUebjNAJQpFOOhbn4mCNrv9jiFQ1OfyovNWTQ56OLrwDnCw3DgpevezwvqBZ31a
-         0pzaX0C2ZPf4FuMCsEwKb7r/LhaOTrsr+R2jPInNXzGvHpchSL6HdsNWSZ/qNKXyAh
-         NrMObr54rWk3L0CdTgYCx0ofR29hhVWce7v4LSbc=
+        b=crVvcp/ij3oRx0GR7S5HiVk7QMSIBHWpNeUC1tww0pDoOVfj8CSkLwnjPzDV1CCq8
+         boGEdhF//1EMmrHrQXcfamO5V/L7yH1ymNgevckDWN+f0eZL40BFWCJqewjKGAAEpc
+         J7QLKugIw8vjJrMc+cRLAT7VSjQX6H0sNYF9xpxI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benjamin Block <bblock@linux.ibm.com>,
-        Jens Remus <jremus@linux.ibm.com>,
-        Steffen Maier <maier@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Zhouyang Jia <jiazhouyang09@gmail.com>,
+        Jan Harkes <jaharkes@cs.cmu.edu>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Colin Ian King <colin.king@canonical.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        David Howells <dhowells@redhat.com>,
+        Fabian Frederick <fabf@skynet.be>,
+        Mikko Rapeli <mikko.rapeli@iki.fi>,
+        Sam Protsenko <semen.protsenko@linaro.org>,
+        Yann Droneaud <ydroneaud@opteya.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 13/42] scsi: zfcp: fix GCC compiler warning emitted with -Wmaybe-uninitialized
-Date:   Mon,  5 Aug 2019 15:02:39 +0200
-Message-Id: <20190805124926.394145531@linuxfoundation.org>
+Subject: [PATCH 4.9 19/42] coda: add error handling for fget
+Date:   Mon,  5 Aug 2019 15:02:45 +0200
+Message-Id: <20190805124927.162636799@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124924.788666484@linuxfoundation.org>
 References: <20190805124924.788666484@linuxfoundation.org>
@@ -62,114 +70,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 484647088826f2f651acbda6bcf9536b8a466703 ]
+[ Upstream commit 02551c23bcd85f0c68a8259c7b953d49d44f86af ]
 
-GCC v9 emits this warning:
-      CC      drivers/s390/scsi/zfcp_erp.o
-    drivers/s390/scsi/zfcp_erp.c: In function 'zfcp_erp_action_enqueue':
-    drivers/s390/scsi/zfcp_erp.c:217:26: warning: 'erp_action' may be used uninitialized in this function [-Wmaybe-uninitialized]
-      217 |  struct zfcp_erp_action *erp_action;
-          |                          ^~~~~~~~~~
+When fget fails, the lack of error-handling code may cause unexpected
+results.
 
-This is a possible false positive case, as also documented in the GCC
-documentations:
-    https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wmaybe-uninitialized
+This patch adds error-handling code after calling fget.
 
-The actual code-sequence is like this:
-    Various callers can invoke the function below with the argument "want"
-    being one of:
-    ZFCP_ERP_ACTION_REOPEN_ADAPTER,
-    ZFCP_ERP_ACTION_REOPEN_PORT_FORCED,
-    ZFCP_ERP_ACTION_REOPEN_PORT, or
-    ZFCP_ERP_ACTION_REOPEN_LUN.
-
-    zfcp_erp_action_enqueue(want, ...)
-        ...
-        need = zfcp_erp_required_act(want, ...)
-            need = want
-            ...
-            maybe: need = ZFCP_ERP_ACTION_REOPEN_PORT
-            maybe: need = ZFCP_ERP_ACTION_REOPEN_ADAPTER
-            ...
-            return need
-        ...
-        zfcp_erp_setup_act(need, ...)
-            struct zfcp_erp_action *erp_action; // <== line 217
-            ...
-            switch(need) {
-            case ZFCP_ERP_ACTION_REOPEN_LUN:
-                    ...
-                    erp_action = &zfcp_sdev->erp_action;
-                    WARN_ON_ONCE(erp_action->port != port); // <== access
-                    ...
-                    break;
-            case ZFCP_ERP_ACTION_REOPEN_PORT:
-            case ZFCP_ERP_ACTION_REOPEN_PORT_FORCED:
-                    ...
-                    erp_action = &port->erp_action;
-                    WARN_ON_ONCE(erp_action->port != port); // <== access
-                    ...
-                    break;
-            case ZFCP_ERP_ACTION_REOPEN_ADAPTER:
-                    ...
-                    erp_action = &adapter->erp_action;
-                    WARN_ON_ONCE(erp_action->port != NULL); // <== access
-                    ...
-                    break;
-            }
-            ...
-            WARN_ON_ONCE(erp_action->adapter != adapter); // <== access
-
-When zfcp_erp_setup_act() is called, 'need' will never be anything else
-than one of the 4 possible enumeration-names that are used in the
-switch-case, and 'erp_action' is initialized for every one of them, before
-it is used. Thus the warning is a false positive, as documented.
-
-We introduce the extra if{} in the beginning to create an extra code-flow,
-so the compiler can be convinced that the switch-case will never see any
-other value.
-
-BUG_ON()/BUG() is intentionally not used to not crash anything, should
-this ever happen anyway - right now it's impossible, as argued above; and
-it doesn't introduce a 'default:' switch-case to retain warnings should
-'enum zfcp_erp_act_type' ever be extended and no explicit case be
-introduced. See also v5.0 commit 399b6c8bc9f7 ("scsi: zfcp: drop old
-default switch case which might paper over missing case").
-
-Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
-Reviewed-by: Jens Remus <jremus@linux.ibm.com>
-Reviewed-by: Steffen Maier <maier@linux.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Link: http://lkml.kernel.org/r/2514ec03df9c33b86e56748513267a80dd8004d9.1558117389.git.jaharkes@cs.cmu.edu
+Signed-off-by: Zhouyang Jia <jiazhouyang09@gmail.com>
+Signed-off-by: Jan Harkes <jaharkes@cs.cmu.edu>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Colin Ian King <colin.king@canonical.com>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Fabian Frederick <fabf@skynet.be>
+Cc: Mikko Rapeli <mikko.rapeli@iki.fi>
+Cc: Sam Protsenko <semen.protsenko@linaro.org>
+Cc: Yann Droneaud <ydroneaud@opteya.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/scsi/zfcp_erp.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ fs/coda/psdev.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/s390/scsi/zfcp_erp.c b/drivers/s390/scsi/zfcp_erp.c
-index abe460eac7126..cc62d8cc8cfdd 100644
---- a/drivers/s390/scsi/zfcp_erp.c
-+++ b/drivers/s390/scsi/zfcp_erp.c
-@@ -10,6 +10,7 @@
- #define pr_fmt(fmt) KMSG_COMPONENT ": " fmt
+diff --git a/fs/coda/psdev.c b/fs/coda/psdev.c
+index 822629126e89f..ff9b5cf8ff016 100644
+--- a/fs/coda/psdev.c
++++ b/fs/coda/psdev.c
+@@ -187,8 +187,11 @@ static ssize_t coda_psdev_write(struct file *file, const char __user *buf,
+ 	if (req->uc_opcode == CODA_OPEN_BY_FD) {
+ 		struct coda_open_by_fd_out *outp =
+ 			(struct coda_open_by_fd_out *)req->uc_data;
+-		if (!outp->oh.result)
++		if (!outp->oh.result) {
+ 			outp->fh = fget(outp->fd);
++			if (!outp->fh)
++				return -EBADF;
++		}
+ 	}
  
- #include <linux/kthread.h>
-+#include <linux/bug.h>
- #include "zfcp_ext.h"
- #include "zfcp_reqlist.h"
- 
-@@ -244,6 +245,12 @@ static struct zfcp_erp_action *zfcp_erp_setup_act(int need, u32 act_status,
- 	struct zfcp_erp_action *erp_action;
- 	struct zfcp_scsi_dev *zfcp_sdev;
- 
-+	if (WARN_ON_ONCE(need != ZFCP_ERP_ACTION_REOPEN_LUN &&
-+			 need != ZFCP_ERP_ACTION_REOPEN_PORT &&
-+			 need != ZFCP_ERP_ACTION_REOPEN_PORT_FORCED &&
-+			 need != ZFCP_ERP_ACTION_REOPEN_ADAPTER))
-+		return NULL;
-+
- 	switch (need) {
- 	case ZFCP_ERP_ACTION_REOPEN_LUN:
- 		zfcp_sdev = sdev_to_zfcp(sdev);
+         wake_up(&req->uc_sleep);
 -- 
 2.20.1
 
