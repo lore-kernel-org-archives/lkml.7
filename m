@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAFD6C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD968C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40766216B7
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:19:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F15F216B7
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:19:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011171;
-	bh=j0pWjmnA3CobvqjjJAyJKBfNQ9eDlv+rmkaQtp2r6gw=;
+	s=default; t=1565011176;
+	bh=WKk7Po/DdPi+mkB6NA0NVJqtNYKUxWRUF1VhLXt1suA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NjwouvpKJMhMBV2zxeHDTLKOX1rnpL7xZ2XVqZ9AIRdCtJ+WkauNPCNmI57SdYlqc
-	 F3kFcSHSziYrRPl1EoOB5C/FOK0NNokHDZTF0+pchrop0LIxy3jKNmrqm6A0UoD0Os
-	 I2TZrLccm3m8zkOsWFkZGNimw5zcnHS0qX2vzs9M=
+	b=QZ2uU1yAKJaVwwGp1NtmB07oG51aVIXhMRD+Knh4tYphLuNLAQFIZVz2dgBwSK5Gq
+	 ZANIv1ApxePZAHMufaCspdNEFZkf8VzngRVOS83masNfno5JIKG5fhzTJX2Jax5buh
+	 6ziyFIIbpvuAVpd/nC0hqZgsR11JhO0HzbVVC3Jo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729597AbfHENTa (ORCPT
+        id S1729686AbfHENTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:19:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55490 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:19:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728991AbfHENT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:19:29 -0400
+        id S1728991AbfHENTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:19:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 041A7216F4;
-        Mon,  5 Aug 2019 13:19:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95853214C6;
+        Mon,  5 Aug 2019 13:19:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011168;
-        bh=j0pWjmnA3CobvqjjJAyJKBfNQ9eDlv+rmkaQtp2r6gw=;
+        s=default; t=1565011171;
+        bh=WKk7Po/DdPi+mkB6NA0NVJqtNYKUxWRUF1VhLXt1suA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jsJeaXNIhe5EFpm2T9tUHqGvFyE6NGIQuRUVjOYmHjXAhCLvjFQfwX5V3tY4Bokpq
-         fN7S56Im4uiE1C8W44cLGgDkW1lgu2+DwFCh1i2zM0KF3Hi+L7J0/gmxxr+YYD/oJ0
-         w36+530255gzgTLiVEWjCBVY20IWduVKng7UReV4=
+        b=olzOwIT/uj2MdgBz5NnFu7lz+6RdQEPjJrhZ2FkeXHCPghRiksB3AOssFQG1Fh1Ny
+         0dlXEeOVoCHUDS4Mc5ZMcBBNCNjV2QH+Q41dAQkeL8gElOYg4fblW7sbzl2XiyI+DY
+         zrJOq9cb9QpY6nFhIfShpVXjLMgsyeH84I9puvzY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jean Delvare <jdelvare@suse.de>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 4.19 69/74] eeprom: at24: make spd world-readable again
-Date:   Mon,  5 Aug 2019 15:03:22 +0200
-Message-Id: <20190805124941.387184724@linuxfoundation.org>
+        stable@vger.kernel.org, Corentin LABBE <clabbe@baylibre.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>
+Subject: [PATCH 4.19 70/74] ARC: enable uboot support unconditionally
+Date:   Mon,  5 Aug 2019 15:03:23 +0200
+Message-Id: <20190805124941.456368181@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124935.819068648@linuxfoundation.org>
 References: <20190805124935.819068648@linuxfoundation.org>
@@ -63,40 +60,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jean Delvare <jdelvare@suse.de>
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 
-commit 25e5ef302c24a6fead369c0cfe88c073d7b97ca8 upstream.
+commit 493a2f812446e92bcb1e69a77381b4d39808d730 upstream.
 
-The integration of the at24 driver into the nvmem framework broke the
-world-readability of spd EEPROMs. Fix it.
+After reworking U-boot args handling code and adding paranoid
+arguments check we can eliminate CONFIG_ARC_UBOOT_SUPPORT and
+enable uboot support unconditionally.
 
-Signed-off-by: Jean Delvare <jdelvare@suse.de>
+For JTAG case we can assume that core registers will come up
+reset value of 0 or in worst case we rely on user passing
+'-on=clear_regs' to Metaware debugger.
+
 Cc: stable@vger.kernel.org
-Fixes: 57d155506dd5 ("eeprom: at24: extend driver to plug into the NVMEM framework")
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-[Bartosz: backported to v4.19.y]
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Tested-by: Corentin LABBE <clabbe@baylibre.com>
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/eeprom/at24.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arc/Kconfig                        |   13 -------------
+ arch/arc/configs/nps_defconfig          |    1 -
+ arch/arc/configs/vdk_hs38_defconfig     |    1 -
+ arch/arc/configs/vdk_hs38_smp_defconfig |    2 --
+ arch/arc/kernel/head.S                  |    2 --
+ arch/arc/kernel/setup.c                 |    2 --
+ 6 files changed, 21 deletions(-)
 
---- a/drivers/misc/eeprom/at24.c
-+++ b/drivers/misc/eeprom/at24.c
-@@ -724,7 +724,7 @@ static int at24_probe(struct i2c_client
- 	nvmem_config.name = dev_name(dev);
- 	nvmem_config.dev = dev;
- 	nvmem_config.read_only = !writable;
--	nvmem_config.root_only = true;
-+	nvmem_config.root_only = !(pdata.flags & AT24_FLAG_IRUGO);
- 	nvmem_config.owner = THIS_MODULE;
- 	nvmem_config.compat = true;
- 	nvmem_config.base_dev = dev;
+--- a/arch/arc/Kconfig
++++ b/arch/arc/Kconfig
+@@ -199,7 +199,6 @@ config NR_CPUS
+ 
+ config ARC_SMP_HALT_ON_RESET
+ 	bool "Enable Halt-on-reset boot mode"
+-	default y if ARC_UBOOT_SUPPORT
+ 	help
+ 	  In SMP configuration cores can be configured as Halt-on-reset
+ 	  or they could all start at same time. For Halt-on-reset, non
+@@ -539,18 +538,6 @@ config ARC_DBG_TLB_PARANOIA
+ 
+ endif
+ 
+-config ARC_UBOOT_SUPPORT
+-	bool "Support uboot arg Handling"
+-	default n
+-	help
+-	  ARC Linux by default checks for uboot provided args as pointers to
+-	  external cmdline or DTB. This however breaks in absence of uboot,
+-	  when booting from Metaware debugger directly, as the registers are
+-	  not zeroed out on reset by mdb and/or ARCv2 based cores. The bogus
+-	  registers look like uboot args to kernel which then chokes.
+-	  So only enable the uboot arg checking/processing if users are sure
+-	  of uboot being in play.
+-
+ config ARC_BUILTIN_DTB_NAME
+ 	string "Built in DTB"
+ 	help
+--- a/arch/arc/configs/nps_defconfig
++++ b/arch/arc/configs/nps_defconfig
+@@ -31,7 +31,6 @@ CONFIG_ARC_CACHE_LINE_SHIFT=5
+ # CONFIG_ARC_HAS_LLSC is not set
+ CONFIG_ARC_KVADDR_SIZE=402
+ CONFIG_ARC_EMUL_UNALIGNED=y
+-CONFIG_ARC_UBOOT_SUPPORT=y
+ CONFIG_PREEMPT=y
+ CONFIG_NET=y
+ CONFIG_UNIX=y
+--- a/arch/arc/configs/vdk_hs38_defconfig
++++ b/arch/arc/configs/vdk_hs38_defconfig
+@@ -13,7 +13,6 @@ CONFIG_PARTITION_ADVANCED=y
+ CONFIG_ARC_PLAT_AXS10X=y
+ CONFIG_AXS103=y
+ CONFIG_ISA_ARCV2=y
+-CONFIG_ARC_UBOOT_SUPPORT=y
+ CONFIG_ARC_BUILTIN_DTB_NAME="vdk_hs38"
+ CONFIG_PREEMPT=y
+ CONFIG_NET=y
+--- a/arch/arc/configs/vdk_hs38_smp_defconfig
++++ b/arch/arc/configs/vdk_hs38_smp_defconfig
+@@ -15,8 +15,6 @@ CONFIG_AXS103=y
+ CONFIG_ISA_ARCV2=y
+ CONFIG_SMP=y
+ # CONFIG_ARC_TIMERS_64BIT is not set
+-# CONFIG_ARC_SMP_HALT_ON_RESET is not set
+-CONFIG_ARC_UBOOT_SUPPORT=y
+ CONFIG_ARC_BUILTIN_DTB_NAME="vdk_hs38_smp"
+ CONFIG_PREEMPT=y
+ CONFIG_NET=y
+--- a/arch/arc/kernel/head.S
++++ b/arch/arc/kernel/head.S
+@@ -100,7 +100,6 @@ ENTRY(stext)
+ 	st.ab   0, [r5, 4]
+ 1:
+ 
+-#ifdef CONFIG_ARC_UBOOT_SUPPORT
+ 	; Uboot - kernel ABI
+ 	;    r0 = [0] No uboot interaction, [1] cmdline in r2, [2] DTB in r2
+ 	;    r1 = magic number (always zero as of now)
+@@ -109,7 +108,6 @@ ENTRY(stext)
+ 	st	r0, [@uboot_tag]
+ 	st      r1, [@uboot_magic]
+ 	st	r2, [@uboot_arg]
+-#endif
+ 
+ 	; setup "current" tsk and optionally cache it in dedicated r25
+ 	mov	r9, @init_task
+--- a/arch/arc/kernel/setup.c
++++ b/arch/arc/kernel/setup.c
+@@ -493,7 +493,6 @@ void __init handle_uboot_args(void)
+ 	bool use_embedded_dtb = true;
+ 	bool append_cmdline = false;
+ 
+-#ifdef CONFIG_ARC_UBOOT_SUPPORT
+ 	/* check that we know this tag */
+ 	if (uboot_tag != UBOOT_TAG_NONE &&
+ 	    uboot_tag != UBOOT_TAG_CMDLINE &&
+@@ -525,7 +524,6 @@ void __init handle_uboot_args(void)
+ 		append_cmdline = true;
+ 
+ ignore_uboot_args:
+-#endif
+ 
+ 	if (use_embedded_dtb) {
+ 		machine_desc = setup_machine_fdt(__dtb_start);
 
 
