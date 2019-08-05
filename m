@@ -2,160 +2,295 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA56C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E45CC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA0E2206A2
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:32:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A34621841
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:33:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="aIBw1moh"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="cJK9+0cP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727535AbfHEHcd (ORCPT
+        id S1727633AbfHEHdn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 03:32:33 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:17915 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726394AbfHEHcd (ORCPT
+        Mon, 5 Aug 2019 03:33:43 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:29358 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726394AbfHEHdm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 03:32:33 -0400
-Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
-  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="Tudor.Ambarus@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa2.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa2.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: g46tughlXUBJNyBZKVe17P/z0VOcNvqyLm3fMsl3f/bd8RGKFO/Pyfcmk57O4hxVkvli1ZP51S
- p5XKZfrr+7wYPXLn31yWaNB8wdny+eYDqoKZrxLTI1i9t5+DKWPVE1MsBVy0YwQtVhsp4LKtWD
- HIjOJqBj61uyM/CrdGCM+vyxLwwbQjax4y/QXuQS/rywuGee6qpKiSXOhGjHyVVoIdTo50d71E
- 8CoS9p4oL1Vk5NZ1K2krM8vF7ZH1qXIWdk/tMigxsToO2DFTklXeGsPolHdT1e3MrMSEKnwL8h
- m30=
-X-IronPort-AV: E=Sophos;i="5.64,349,1559545200"; 
-   d="scan'208";a="43922944"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 05 Aug 2019 00:32:13 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 5 Aug 2019 00:32:13 -0700
-Received: from NAM03-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 5 Aug 2019 00:32:13 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=O1/sySa+2dsTfS3gHZCRSvsuYJVUa5LdKPW3rqpPssidQLJPxoPErnPBfx0s+mj37OR4khW/Mcphi1UAPQ/jn5Jyy3g7GkEuTtIMQCPhFg5OGqcKXC0Am5+58QO5s/VFpavOvsfP+JSwqFmTKbDQ/ryZWkqs0P06QzwQI52d5WJXrF46bs8HNY7VktjSuwmxjfqMGb0GKoeG1/fJV3AcC9K5f5vmHBZiW9tmwAoLhfmBNiXBVE7HS3D6yeFw7bPhyrcPsgThJL1z1G0nZ4oxJCbdzNzTT05a5vwE4rRAUx8aiIhIIdatJEbH5B7L7O6uxZJbaM4mfJSHfsNDd0lbnQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zHAOT+yeiuVdF7L/3Cnn1RZrgiB9FR1DwxR3eWVMAlg=;
- b=FUsyGHFkyouFvXSBXcrUYj3Ul/Rm2Us65LU/UnpRwachhMCcGna7zZK+EDqg/X1CPY+NzbjnbYOPEl/9ndqL4ffTp+v6ieMyebLE7K4Q6cRofzhRSNwDgVYc6f0ppB8pjUdZA9mpg0RIl7vhLiJTdo05AgmXr2Hqxf0th41HhBBRKh9D3H+NOb3IpoQEVdY/jcuKpHkzhjM79IGs4rsox8PkwcdKWumfwc+FoVolNB+pUc3lIwWv9vwbgBGNbP4DU1VrAOWTDQW8zI6QLw36VJvN7Pghr7EvCHdBBkZf77j+5qn7U5AU/FlAlxCgkTG3Yh4JyqYFgNTlYvXvIWG4ew==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=microchip.com;dmarc=pass action=none
- header.from=microchip.com;dkim=pass header.d=microchip.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zHAOT+yeiuVdF7L/3Cnn1RZrgiB9FR1DwxR3eWVMAlg=;
- b=aIBw1mohLRO7i8ghgRGTH0TubXyzmN0NcZ4AFny20F3sGU6qxgWAXbObRcnCe0/d6+p4h5QD/TeBIjXu7UckHGJCjK84Q+Ta11up0e4GjCwcZ02T/m/pnVk3XnZBv3+ndWm44jTeIML83wpYkM6JdbPrciJK2qA6dMUOZw/jLu8=
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
- MN2PR11MB4205.namprd11.prod.outlook.com (52.135.39.87) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2136.17; Mon, 5 Aug 2019 07:32:09 +0000
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::70c3:e929:4da2:60a5]) by MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::70c3:e929:4da2:60a5%7]) with mapi id 15.20.2136.018; Mon, 5 Aug 2019
- 07:32:09 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <vigneshr@ti.com>, <boris.brezillon@collabora.com>,
-        <marek.vasut@gmail.com>
-CC:     <dwmw2@infradead.org>, <computersforpeace@gmail.com>,
-        <miquel.raynal@bootlin.com>, <richard@nod.at>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH 6/6] mtd: spi-nor: Add the SPI_NOR_XSR_RDY flag
-Thread-Topic: [PATCH 6/6] mtd: spi-nor: Add the SPI_NOR_XSR_RDY flag
-Thread-Index: AQHVR4ANBFbmyZuDXEi4qln0HD1tDabsCj2AgAAmgQA=
-Date:   Mon, 5 Aug 2019 07:32:09 +0000
-Message-ID: <d87bf780-f728-e2e0-be6a-1731fddd32c9@microchip.com>
-References: <20190731091145.27374-1-tudor.ambarus@microchip.com>
- <20190731091145.27374-7-tudor.ambarus@microchip.com>
- <93dc5a5d-3a72-c80e-0b0d-7fd758a1ea5e@ti.com>
-In-Reply-To: <93dc5a5d-3a72-c80e-0b0d-7fd758a1ea5e@ti.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR04CA0046.eurprd04.prod.outlook.com
- (2603:10a6:802:2::17) To MN2PR11MB4448.namprd11.prod.outlook.com
- (2603:10b6:208:193::29)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [94.177.32.154]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: df3af668-ae51-49da-2eab-08d71977064f
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR11MB4205;
-x-ms-traffictypediagnostic: MN2PR11MB4205:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <MN2PR11MB4205BA29339A2239EF1891ABF0DA0@MN2PR11MB4205.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 01208B1E18
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(136003)(39860400002)(366004)(396003)(199004)(189003)(26005)(36756003)(110136005)(186003)(81156014)(6512007)(54906003)(486006)(3846002)(4326008)(66476007)(66556008)(64756008)(66446008)(6116002)(66946007)(966005)(2906002)(5660300002)(25786009)(31696002)(2616005)(11346002)(476003)(446003)(6486002)(86362001)(71200400001)(14454004)(66066001)(102836004)(68736007)(305945005)(229853002)(14444005)(256004)(478600001)(71190400001)(7416002)(2501003)(6246003)(31686004)(316002)(2201001)(53936002)(53546011)(386003)(6306002)(8676002)(6506007)(52116002)(6436002)(99286004)(8936002)(7736002)(81166006)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4205;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 8i5/7GjppMrceN2Jvo8QzFsliltPIcgIvEBpyKJ65flXcpoeovpGfxmOASp2hV9D++/KV79IEfUeQjy+87hcQbS6lzAWf0HbrgpPnxdbISY4OKucX/9tnOgMcsASwoYLEOUYd7wiO3fIMzW2qLHZjvUv7j+UIn72roM826MZGgn7mZ4a2o3y15zPUPbNiRksrhY9HzUmr7AFhkwR5mtLpag/QlQMSlRhhdpqxPEB6Cfs5wJYnUtqEGrJPJvyxycaw8sG/Uwxt9Ac+biu7VjbeMHoBOlnzFfk1+40Ov/TvZRLz63pFDV+kf74weExl5arz0w4wxjCtIaXhxsjF4G0M22BYEDw/a1bbXql/kYHgJ2yz4boGvu+JwYpOCEjLmO7fbXwlWeefd2Y05Qw6v+W5lDTzvCPBZa+Ogd0o8hK+AE=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F2CC753D0DFAE04C926EF3F91C5BB4BA@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 5 Aug 2019 03:33:42 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x757WDuS007598;
+        Mon, 5 Aug 2019 09:33:27 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : from : to : cc
+ : references : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=ELEd8ZxDb7OfiConavdH3VksFxUv47PrkLTaOF/CEmU=;
+ b=cJK9+0cPWxphMfTR2X7N0k4Qd/pJTWpyQP7xmPodbFYsZY4TukHFk29x34sHuBTfMBri
+ EYIGFX/AjpB0Z0ta1UUx+m0ftLoLbppExROO6Lszg1eHPuZ3o29EAXleZgw/cyJCTRHX
+ mvOO7PsQl5kiYqcuZVIP9Tqp31q6Q7KcgC8+gxTYiACHMkuH7Q6HEDxtGaaSHQMjOiFA
+ SMIygIB/l/Q1JXzdouWm7IfpDnXOv898XHAo1O/KJ6NHtDtXX8ucXaQ2CJxgpBihBuOb
+ ROpea/o9zOxBzMaanx9ZJVd7Ls7bPsKsnMJ3UIvxn4ESe2oDwMf99KWipwPvQlFtOCj5 zg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2u5sd1d4jg-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 05 Aug 2019 09:33:27 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DF36249;
+        Mon,  5 Aug 2019 07:33:24 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id CC0DB2C35BB;
+        Mon,  5 Aug 2019 09:33:24 +0200 (CEST)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas24.st.com
+ (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 5 Aug 2019
+ 09:33:24 +0200
+Received: from lmecxl0923.lme.st.com (10.48.0.237) by webmail-ga.st.com
+ (10.75.90.48) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 5 Aug 2019
+ 09:33:24 +0200
+Subject: Re: [Linux-stm32] [PATCH V3 1/3] mmc: mmci: fix read status for busy
+ detect
+From:   Ludovic BARRE <ludovic.barre@st.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+CC:     DTML <devicetree@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Srinivas Kandagatla" <srinivas.kandagatla@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <1559577325-19266-1-git-send-email-ludovic.Barre@st.com>
+ <1559577325-19266-2-git-send-email-ludovic.Barre@st.com>
+ <CAPDyKFpJPbpTnfA2cynFURyxFY_YCm7MRXw3m2nQyU+z=ZWsFA@mail.gmail.com>
+ <dd5c1e86-f0b1-cdfa-1b91-486f99d4e50c@st.com>
+Message-ID: <7eed2ec4-30db-ae26-f07d-6a8ace7fce12@st.com>
+Date:   Mon, 5 Aug 2019 09:33:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: df3af668-ae51-49da-2eab-08d71977064f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Aug 2019 07:32:09.5288
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tudor.ambarus@microchip.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4205
+In-Reply-To: <dd5c1e86-f0b1-cdfa-1b91-486f99d4e50c@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.48.0.237]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-05_03:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDA4LzA1LzIwMTkgMDg6MTQgQU0sIFZpZ25lc2ggUmFnaGF2ZW5kcmEgd3JvdGU6DQo+
-IEV4dGVybmFsIEUtTWFpbA0KPiANCj4gDQo+IA0KPiBPbiAzMS8wNy8xOSAyOjQyIFBNLCBUdWRv
-ci5BbWJhcnVzQG1pY3JvY2hpcC5jb20gd3JvdGU6DQo+PiBGcm9tOiBCb3JpcyBCcmV6aWxsb24g
-PGJvcmlzLmJyZXppbGxvbkBib290bGluLmNvbT4NCj4+DQo+PiBTM0FOIGZsYXNoZXMgdXNlIGEg
-c3BlY2lmaWMgb3Bjb2RlIHRvIHJlYWQgdGhlIHN0YXR1cyByZWdpc3Rlci4NCj4+IFdlIGN1cnJl
-bnRseSB1c2UgdGhlIFNQSV9TM0FOIGZsYWcgdG8gZGVjaWRlIHdoZXRoZXIgdGhpcyBzcGVjaWZp
-Yw0KPj4gU1IgcmVhZCBvcGNvZGUgc2hvdWxkIGJlIHVzZWQsIGJ1dCBTUElfUzNBTiBpcyBhYm91
-dCB0byBkaXNhcHBlYXIsIHNvDQo+PiBsZXQncyBhZGQgYSBuZXcgZmxhZy4NCj4+DQo+IA0KPiBJ
-IHRoaW5rIHlvdSBjYW4gZHJvcCBTUElfUzNBTiByaWdodCBhd2F5IGVpdGhlciBhcyBzZXBhcmF0
-ZSBwYXRjaCBpbg0KPiB0aGlzIHNlcmllcyBvciBhcyBwYXJ0IG9mIHRoaXMgcGF0Y2ggaXRzZWxm
-Lg0KPiANCg0KU1BJX05PUl9YU1JfUkRZIGlzIG1vcmUgZ2VuZXJpYyB0aGFuIFNQSV9TM0FOLCBh
-bmQgbGV0cyBvdGhlciBmbGFzaGVzIHVzZQ0KU1BJTk9SX09QX1hSRFNSIFNSIHJlYWQgb3Bjb2Rl
-IGlmIG5lZWRlZC4NCg0KSWYgSSBkcm9wIFNQSV9TM0FOIG5vdywgSSdsbCBoYXZlIHRvIHNlbGVj
-dCB0aGUgczNhbl9ub3Jfc2V0dXAoKSBtZXRob2QgYmFzZWQgb24NClNQSV9OT1JfWFNSX1JEWS9T
-Tk9SX0ZfUkVBRFlfWFNSX1JEWSB3aGljaCBtaWdodCBub3QgYmUgY29ycmVjdC4gVGhlcmUgbWln
-aHQgYmUNCmZsYXNoZXMgdGhhdCB1c2UgU1BJTk9SX09QX1hSRFNSIGJ1dCBoYXZlIGEgZGlmZmVy
-ZW50IHNldHVwIGNhbGwuDQoNCk9mIGNvdXJzZSB0aGVyZSBhcmUgYSBsb3Qgb2YgIm1pZ2h0IiBo
-ZXJlIChiZWNhdXNlIEkgY291bGRuJ3QgZmluZCBzb21lIG90aGVyDQpOT1JzIHRoYXQgdXNlIHRo
-aXMgb3Bjb2RlKSwgYW5kIGlmIHlvdSBoYXZlIGEgc3Ryb25nIG9waW5pb24gSSBjYW4gY2hhbmdl
-IGFzIHlvdQ0Kc3VnZ2VzdGVkLiBJIHByZWZlciB0byBkcm9wIFNQSV9TM0FOIHdoZW4gbW92aW5n
-IHRoZSB4aWxsaW54IGJpdHMgb3V0IG9mIHRoZQ0KY29yZSwgYXMgaW4gaHR0cHM6Ly9wYXRjaHdv
-cmsub3psYWJzLm9yZy9wYXRjaC8xMDA5Mjk1Ly4NCg0KQ2hlZXJzLA0KdGENCg==
+hi Ulf
+
+On 7/26/19 11:41 AM, Ludovic BARRE wrote:
+> hi Ulf
+> 
+> Thanks to your "Clarify comments ..." commit, like is closes
+> I resumed upstream of this series.
+> 
+> On 7/15/19 6:31 PM, Ulf Hansson wrote:
+>> On Mon, 3 Jun 2019 at 17:55, Ludovic Barre <ludovic.Barre@st.com> wrote:
+>>>
+>>> From: Ludovic Barre <ludovic.barre@st.com>
+>>>
+>>> "busy_detect_flag" is used to read & clear busy value of mmci status.
+>>> "busy_detect_mask" is used to manage busy irq of mmci mask.
+>>> So to read mmci status the busy_detect_flag must be take account.
+>>> if the variant does not support busy detect feature the flag is null
+>>> and there is no impact.
+>>
+>> By reading the changelog, it doesn't tell me the purpose of this
+>> change. When going forward, please work harder on your changelogs.
+>>
+>> Make sure to answer the questions, *why* is this change needed,
+>> *what/how* does the change do.
+> 
+> Ok, I will explain the differences with the legacy and the needs of 
+> sdmmc variant about busy detection.
+> 
+>>
+>>>
+>>> Not need to re-read the status register in mmci_cmd_irq, the
+>>> status parameter can be used.
+>>>
+>>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+>>> ---
+>>>   drivers/mmc/host/mmci.c | 5 +++--
+>>>   1 file changed, 3 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+>>> index 356833a..5b5cc45 100644
+>>> --- a/drivers/mmc/host/mmci.c
+>>> +++ b/drivers/mmc/host/mmci.c
+>>> @@ -1240,7 +1240,7 @@ mmci_cmd_irq(struct mmci_host *host, struct 
+>>> mmc_command *cmd,
+>>>                   */
+>>>                  if (!host->busy_status &&
+>>>                      !(status & (MCI_CMDCRCFAIL|MCI_CMDTIMEOUT)) &&
+>>> -                   (readl(base + MMCISTATUS) & 
+>>> host->variant->busy_detect_flag)) {
+>>> +                   (status & host->variant->busy_detect_flag)) {
+>>
+>> I suggested you to do this change through some of my earlier comments,
+>> however I think it should be made as a stand alone change.
+>>
+>> Anyway, when looking at the details in your series, I decided to try
+>> to help out a bit, so I have prepared a couple of related patches for
+>> cleaning up and clarifying the busy detection code/comments in mmci. I
+>> have incorporated the above change, so let me post them asap.
+>>
+>>>
+>>>                          /* Clear the busy start IRQ */
+>>>                          writel(host->variant->busy_detect_mask,
+>>> @@ -1517,7 +1517,8 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
+>>>                   * to make sure that both start and end interrupts 
+>>> are always
+>>>                   * cleared one after the other.
+>>>                   */
+>>> -               status &= readl(host->base + MMCIMASK0);
+>>> +               status &= readl(host->base + MMCIMASK0) |
+>>> +                       host->variant->busy_detect_flag;
+>>
+>> As I told earlier in the review, this looks wrong to me.
+>>
+>> It means that you will add the bit for the ->busy_detect_flag to the
+>> status field we have just read from the MMCISTATUS register. That
+>> means the busy status may be set when it shouldn't.
+>>
+>>>                  if (host->variant->busy_detect)
+>>>                          writel(status & 
+>>> ~host->variant->busy_detect_mask,
+>>>                                 host->base + MMCICLEAR);
+>>> -- 
+>>> 2.7.4
+>>>
+>>
+>> By looking at the other changes in the series, I assume @subject patch
+>> is intended to prepare for the other changes on top. But it's not
+>> really clear.
+>>
+>> Anyway, in that regards, the below is my observations of what seems to
+>> be important part, when supporting busy detection for the stm32 sdmmc
+>> variant (except the timeout things in patch2, which I intend to
+>> comment separately on).
+>>
+>> I figured, these are the involved register bits/masks:
+>>
+>> MMCISTATUS:
+>> MCI_STM32_BUSYD0 BIT(20)
+>> MCI_STM32_BUSYD0END BIT(21)
+>>
+>> MMCIMASK0:
+>> MCI_STM32_BUSYD0ENDMASK BIT(21)
+> 
+> it's exact:
+> MCI_STM32_BUSYD0 BIT(20): This is a hardware status flag only (inverted 
+> value of d0 line), it does not generate an interrupt, and so no mask
+> bit.
+> 
+> MCI_STM32_BUSYD0ENDMASK BIT(21): This indicates only end of busy
+> following a CMD response. On busy to Not busy changes, an interrupt
+> is generated (if unmask) and BUSYD0END status flag is set.
+> status flag is cleared by writing corresponding interrupt clear bit in 
+> MMCICLEAR.
+> 
+>>
+>> For the legacy ST variant, there is only one register bit in
+>> MMCISTATUS that is used for indicating busy (MCI_ST_CARDBUSY BIT(24)).
+>> There is no dedicated busy-end bit for the busy-end IRQ, which I
+>> believe is the reason to why the current code also is bit messy.
+> 
+> yes
+> 
+>>
+>> It seems like the stm32 sdmmc variant have a separate status bit for
+>> the busy-end IRQ, correct?
+> 
+> yes
+> 
+>>
+>> If I understand correctly by looking at patch3, you don't use the
+>> dedicated busy-end status bit (MCI_STM32_BUSYD0END), right? Then why
+>> not?
+> 
+> like your are clarify in previous series, the busy detection is done
+> in 3 steps.
+> 
+> if I use:
+> .busy_detect_flag    = MCI_STM32_BUSYD0ENDMASK,
+> .busy_detect_mask    = MCI_STM32_BUSYD0ENDMASK,
+> 
+> the sdmmc request will be not correctly completed, because the third 
+> step can't be happen.
+> 
+> chronologies:
+> step1: when busyd0end change to 1
+>   => busyd0end interrupt is unmasked
+>   => busy_status = cmd_sent | respend
+>   => return to mmci_irq
+> step2: busyd0end is yet to 1
+>   => clear the busyd0end interrupt
+>      => the hardware clear busyd0end status flag on interrupt clear
+>   => return to mmci_irq
+> 
+> like MCI_STM32_BUSYD0END interrupt is generated only on change
+> busy to not busy, when the interrupt is cleared (status is 0)
+> the step 3 can't happen (no irq pending to re-enter in mmci_cmd_irq).
+> sdmmc can't complete the request.
+> 
+> If I use:
+> .busy_detect_flag    = MCI_STM32_BUSYD0,
+> .busy_detect_mask    = MCI_STM32_BUSYD0ENDMASK,
+> 
+> Like there is no MCI_STM32_BUSYD0 irq mask, the status read in mmci_irq
+> "status &= readl(host->base + MMCIMASK0)" can't take account the 
+> busy_detect_flag (for sdmmc). So the  step 2 can't be passed.
+> However we could share re-read between step 1 and step 2.
+> 
+> proposal:
+> 
+> +
+> +        u32 busy_val = readl(base + MMCISTATUS) &
+> +            host->variant->busy_detect_flag;
+> +
+>           if (!host->busy_status &&
+> -            !(status & (MCI_CMDCRCFAIL|MCI_CMDTIMEOUT)) &&
+> -            (readl(base + MMCISTATUS) & 
+> host->variant->busy_detect_flag)) {
+> +            !(status & (MCI_CMDCRCFAIL|MCI_CMDTIMEOUT)) && busy_val) {
+> 
+>               writel(readl(base + MMCIMASK0) |
+>                      host->variant->busy_detect_mask,
+> @@ -1262,8 +1265,7 @@ mmci_cmd_irq(struct mmci_host *host, struct 
+> mmc_command *cmd,
+>            * both the start and the end interrupts needs to be cleared,
+>            * one after the other. So, clear the busy start IRQ here.
+>            */
+> -        if (host->busy_status &&
+> -            (status & host->variant->busy_detect_flag)) {
+> +        if (host->busy_status && busy_val) {
+> 
+> 
+> what do you think about it ?
+> 
+
+I give up this proposal for a new version based on mmci_host_ops
+callback to done the busy completion.
+
+>>
+>> Thoughts?
+>>
+>> Kind regards
+>> Uffe
+>>
+> 
+> Regards
+> Ludo
+> _______________________________________________
+> Linux-stm32 mailing list
+> Linux-stm32@st-md-mailman.stormreply.com
+> https://st-md-mailman.stormreply.com/mailman/listinfo/linux-stm32
