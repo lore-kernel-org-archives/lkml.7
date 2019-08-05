@@ -2,310 +2,133 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 204CFC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 05:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B48C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 05:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E859B206A2
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 05:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 054CE2086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 05:13:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KQCe62tX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbfHEFLb (ORCPT
+        id S1727140AbfHEFNz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 01:11:31 -0400
-Received: from comms.puri.sm ([159.203.221.185]:44974 "EHLO comms.puri.sm"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725959AbfHEFLb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 01:11:31 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by comms.puri.sm (Postfix) with ESMTP id D11B8DF8E0;
-        Sun,  4 Aug 2019 22:11:28 -0700 (PDT)
-Received: from comms.puri.sm ([127.0.0.1])
-        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id XwR4pE4Qe2a6; Sun,  4 Aug 2019 22:11:27 -0700 (PDT)
-From:   Martin Kepplinger <martin.kepplinger@puri.sm>
-To:     daniel.lezcano@linaro.org, viresh.kumar@linaro.org,
-        kevin.wangtao@linaro.org, leo.yan@linaro.org, edubezval@gmail.com,
-        vincent.guittot@linaro.org, javi.merino@kernel.org,
-        rui.zhang@intel.com, daniel.thompson@linaro.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Martin Kepplinger <martin.kepplinger@puri.sm>
-Subject: Re: [PATCH v3 6/7] thermal/drivers/cpu_cooling: Introduce the cpu idle cooling driver
-Date:   Mon,  5 Aug 2019 07:11:11 +0200
-Message-Id: <20190805051111.24318-1-martin.kepplinger@puri.sm>
-In-Reply-To: <1522945005-7165-7-git-send-email-daniel.lezcano@linaro.org>
-References: <1522945005-7165-7-git-send-email-daniel.lezcano@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mon, 5 Aug 2019 01:13:55 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:43390 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725959AbfHEFNz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 01:13:55 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x755DX7t000360;
+        Mon, 5 Aug 2019 00:13:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1564982013;
+        bh=ewdIibSSQijgwi+dlHIsVHF2PIynzZcDv3GyCZ5qoao=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=KQCe62tXWVeGrSrKB9tF8y+nwKb2Sh5uurchqHfP8F1fhvgx+d8cxZ3C/x1g2gzah
+         kWUoh9JEucHPLlqgW/DWzGz7rGPZgbSlup4Q/HHYAMBF3fnKJDVCxndejSz8FioivS
+         XC6GeUq/5BAR/0Pk7Dxj1fIG2oFeVjvzZxFidgX8=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x755DXbQ036738
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 5 Aug 2019 00:13:33 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 5 Aug
+ 2019 00:13:32 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 5 Aug 2019 00:13:32 -0500
+Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x755DT5L104396;
+        Mon, 5 Aug 2019 00:13:30 -0500
+Subject: Re: [PATCH 6/6] mtd: spi-nor: Add the SPI_NOR_XSR_RDY flag
+To:     <Tudor.Ambarus@microchip.com>, <boris.brezillon@collabora.com>,
+        <marek.vasut@gmail.com>
+CC:     <dwmw2@infradead.org>, <computersforpeace@gmail.com>,
+        <miquel.raynal@bootlin.com>, <richard@nod.at>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <boris.brezillon@bootlin.com>
+References: <20190731091145.27374-1-tudor.ambarus@microchip.com>
+ <20190731091145.27374-7-tudor.ambarus@microchip.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <93dc5a5d-3a72-c80e-0b0d-7fd758a1ea5e@ti.com>
+Date:   Mon, 5 Aug 2019 10:44:13 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190731091145.27374-7-tudor.ambarus@microchip.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
----
 
-On 05-04-18, 18:16, Daniel Lezcano wrote:
-> The cpu idle cooling driver performs synchronized idle injection across all
-> cpus belonging to the same cluster and offers a new method to cool down a SoC.
+
+On 31/07/19 2:42 PM, Tudor.Ambarus@microchip.com wrote:
+> From: Boris Brezillon <boris.brezillon@bootlin.com>
 > 
-> Each cluster has its own idle cooling device, each core has its own idle
-> injection thread, each idle injection thread uses play_idle to enter idle.  In
-> order to reach the deepest idle state, each cooling device has the idle
-> injection threads synchronized together.
+> S3AN flashes use a specific opcode to read the status register.
+> We currently use the SPI_S3AN flag to decide whether this specific
+> SR read opcode should be used, but SPI_S3AN is about to disappear, so
+> let's add a new flag.
 > 
-> It has some similarity with the intel power clamp driver but it is actually
-> designed to work on the ARM architecture via the DT with a mathematical proof
-> with the power model which comes with the Documentation.
+
+I think you can drop SPI_S3AN right away either as separate patch in
+this series or as part of this patch itself.
+
+Regards
+Vignesh
+
+> Note that we use the same bit as SPI_S3AN implies SPI_NOR_XSR_RDY and
+> vice versa.
 > 
-> The idle injection cycle is fixed while the running cycle is variable. That
-> allows to have control on the device reactivity for the user experience. At
-> the mitigation point the idle threads are unparked, they play idle the
-> specified amount of time and they schedule themselves. The last thread sets
-> the next idle injection deadline and when the timer expires it wakes up all
-> the threads which in turn play idle again. Meanwhile the running cycle is
-> changed by set_cur_state.  When the mitigation ends, the threads are parked.
-> The algorithm is self adaptive, so there is no need to handle hotplugging.
-> 
-> If we take an example of the balanced point, we can use the DT for the hi6220.
-> 
-> The sustainable power for the SoC is 3326mW to mitigate at 75°C. Eight cores
-> running at full blast at the maximum OPP consumes 5280mW. The first value is
-> given in the DT, the second is calculated from the OPP with the formula:
-> 
->    Pdyn = Cdyn x Voltage^2 x Frequency
-> 
-> As the SoC vendors don't want to share the static leakage values, we assume
-> it is zero, so the Prun = Pdyn + Pstatic = Pdyn + 0 = Pdyn.
-> 
-> In order to reduce the power to 3326mW, we have to apply a ratio to the
-> running time.
-> 
-> ratio = (Prun - Ptarget) / Ptarget = (5280 - 3326) / 3326 = 0,5874
-> 
-> We know the idle cycle which is fixed, let's assume 10ms. However from this
-> duration we have to substract the wake up latency for the cluster idle state.
-> In our case, it is 1.5ms. So for a 10ms latency for idle, we are really idle
-> 8.5ms.
-> 
-> As we know the idle duration and the ratio, we can compute the running cycle.
-> 
->    running_cycle = 8.5 / 0.5874 = 14.47ms
-> 
-> So for 8.5ms of idle, we have 14.47ms of running cycle, and that brings the
-> SoC to the balanced trip point of 75°C.
-> 
-> The driver has been tested on the hi6220 and it appears the temperature
-> stabilizes at 75°C with an idle injection time of 10ms (8.5ms real) and
-> running cycle of 14ms as expected by the theory above.
-> 
-> Signed-off-by: Kevin Wangtao <kevin.wangtao@linaro.org>
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 > ---
->  drivers/thermal/Kconfig       |  10 +
->  drivers/thermal/cpu_cooling.c | 479 ++++++++++++++++++++++++++++++++++++++++++
->  include/linux/cpu_cooling.h   |   6 +
->  3 files changed, 495 insertions(+)
+>  drivers/mtd/spi-nor/spi-nor.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index 5aaae1b..6c34117 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -166,6 +166,16 @@ config CPU_FREQ_THERMAL
->  	  This will be useful for platforms using the generic thermal interface
->  	  and not the ACPI interface.
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> index 5fea5d7ce2cb..01be6d49ce3b 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -213,6 +213,14 @@ struct flash_info {
+>  					 * bit. Must be used with
+>  					 * SPI_NOR_HAS_LOCK.
+>  					 */
+> +#define SPI_NOR_XSR_RDY		BIT(10)	/*
+> +					 * S3AN flashes have specific opcode to
+> +					 * read the status register.
+> +					 * Flags SPI_NOR_XSR_RDY and SPI_S3AN
+> +					 * use the same bit as one implies the
+> +					 * other, but we will get rid of
+> +					 * SPI_S3AN soon.
+> +					 */
+>  #define	SPI_S3AN		BIT(10)	/*
+>  					 * Xilinx Spartan 3AN In-System Flash
+>  					 * (MFR cannot be used for probing
+> @@ -4818,7 +4826,7 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
+>  	 * spi_nor_wait_till_ready(). Xilinx S3AN share MFR
+>  	 * with Atmel spi-nor
+>  	 */
+> -	if (info->flags & SPI_S3AN)
+> +	if (info->flags & SPI_NOR_XSR_RDY)
+>  		nor->flags |=  SNOR_F_READY_XSR_RDY;
 >  
-> +config CPU_IDLE_THERMAL
-> +       bool "CPU idle cooling strategy"
-> +       depends on CPU_IDLE
-> +       help
-> +	 This implements the generic CPU cooling mechanism through
-> +	 idle injection.  This will throttle the CPU by injecting
-> +	 fixed idle cycle.  All CPUs belonging to the same cluster
-> +	 will enter idle synchronously to reach the deepest idle
-> +	 state.
-> +
->  endchoice
->  
->  config CLOCK_THERMAL
-> diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpu_cooling.c
-> index 5c219dc..1eec8d6 100644
-> --- a/drivers/thermal/cpu_cooling.c
-> +++ b/drivers/thermal/cpu_cooling.c
-> @@ -10,18 +10,33 @@
->   *		Viresh Kumar <viresh.kumar@linaro.org>
->   *
->   */
-> +#define pr_fmt(fmt) "CPU cooling: " fmt
-> +
->  #include <linux/module.h>
->  #include <linux/thermal.h>
->  #include <linux/cpufreq.h>
-> +#include <linux/cpuidle.h>
->  #include <linux/err.h>
-> +#include <linux/freezer.h>
->  #include <linux/idr.h>
-> +#include <linux/kthread.h>
->  #include <linux/pm_opp.h>
->  #include <linux/slab.h>
-> +#include <linux/sched/prio.h>
-> +#include <linux/sched/rt.h>
-> +#include <linux/smpboot.h>
->  #include <linux/cpu.h>
->  #include <linux/cpu_cooling.h>
->  
-> +#include <linux/ratelimit.h>
-> +
-> +#include <linux/platform_device.h>
-> +#include <linux/of_platform.h>
-> +
->  #include <trace/events/thermal.h>
->  
-> +#include <uapi/linux/sched/types.h>
-> +
->  #ifdef CONFIG_CPU_FREQ_THERMAL
->  /*
->   * Cooling state <-> CPUFreq frequency
-> @@ -928,3 +943,467 @@ void cpufreq_cooling_unregister(struct thermal_cooling_device *cdev)
->  }
->  EXPORT_SYMBOL_GPL(cpufreq_cooling_unregister);
->  #endif /* CONFIG_CPU_FREQ_THERMAL */
-> +
-> +#ifdef CONFIG_CPU_IDLE_THERMAL
-> +/**
-> + * struct cpuidle_cooling_device - data for the idle cooling device
-> + * @cdev: a pointer to a struct thermal_cooling_device
-> + * @cpumask: a cpumask containing the CPU managed by the cooling device
-> + * @timer: a hrtimer giving the tempo for the idle injection cycles
-> + * @kref: a kernel refcount on this structure
-> + * @count: an atomic to keep track of the last task exiting the idle cycle
-> + * @idle_cycle: an integer defining the duration of the idle injection
-> + * @state: an normalized integer giving the state of the cooling device
-> + */
-> +struct cpuidle_cooling_device {
-> +	struct thermal_cooling_device *cdev;
-> +	struct cpumask *cpumask;
-> +	struct hrtimer timer;
-> +	struct kref kref;
-> +	atomic_t count;
-> +	unsigned int idle_cycle;
-> +	unsigned long state;
-> +};
-> +
-> +struct cpuidle_cooling_thread {
-> +	struct task_struct *tsk;
-> +	int should_run;
-> +};
-> +
-> +static DEFINE_PER_CPU(struct cpuidle_cooling_thread, cpuidle_cooling_thread);
-> +static DEFINE_PER_CPU(struct cpuidle_cooling_device *, cpuidle_cooling_device);
-> +
-> +/**
-> + * cpuidle_cooling_wakeup - Wake up all idle injection threads
-> + * @idle_cdev: the idle cooling device
-> + *
-> + * Every idle injection task belonging to the idle cooling device and
-> + * running on an online cpu will be wake up by this call.
-> + */
-> +static void cpuidle_cooling_wakeup(struct cpuidle_cooling_device *idle_cdev)
-> +{
-> +	struct cpuidle_cooling_thread *cct;
-> +	int cpu;
-> +
-> +	for_each_cpu_and(cpu, idle_cdev->cpumask, cpu_online_mask) {
-> +		cct = per_cpu_ptr(&cpuidle_cooling_thread, cpu);
-> +		cct->should_run = 1;
-> +		wake_up_process(cct->tsk);
-> +	}
-> +}
-> +
-> +/**
-> + * cpuidle_cooling_wakeup_fn - Running cycle timer callback
-> + * @timer: a hrtimer structure
-> + *
-> + * When the mitigation is acting, the CPU is allowed to run an amount
-> + * of time, then the idle injection happens for the specified delay
-> + * and the idle task injection schedules itself until the timer event
-> + * wakes the idle injection tasks again for a new idle injection
-> + * cycle. The time between the end of the idle injection and the timer
-> + * expiration is the allocated running time for the CPU.
-> + *
-> + * Always returns HRTIMER_NORESTART
-> + */
-> +static enum hrtimer_restart cpuidle_cooling_wakeup_fn(struct hrtimer *timer)
-> +{
-> +	struct cpuidle_cooling_device *idle_cdev =
-> +		container_of(timer, struct cpuidle_cooling_device, timer);
-> +
-> +	cpuidle_cooling_wakeup(idle_cdev);
-> +
-> +	return HRTIMER_NORESTART;
-> +}
-> +
-> +/**
-> + * cpuidle_cooling_runtime - Running time computation
-> + * @idle_cdev: the idle cooling device
-> + *
-> + * The running duration is computed from the idle injection duration
-> + * which is fixed. If we reach 100% of idle injection ratio, that
-> + * means the running duration is zero. If we have a 50% ratio
-> + * injection, that means we have equal duration for idle and for
-> + * running duration.
-> + *
-> + * The formula is deduced as the following:
-> + *
-> + *  running = idle x ((100 / ratio) - 1)
-> + *
-> + * For precision purpose for integer math, we use the following:
-> + *
-> + *  running = (idle x 100) / ratio - idle
-> + *
-> + * For example, if we have an injected duration of 50%, then we end up
-> + * with 10ms of idle injection and 10ms of running duration.
-> + *
-> + * Returns a s64 nanosecond based
-> + */
-> +static s64 cpuidle_cooling_runtime(struct cpuidle_cooling_device *idle_cdev)
-> +{
-> +	s64 next_wakeup;
-> +	unsigned long state = idle_cdev->state;
-> +
-> +	/*
-> +	 * The function should not be called when there is no
-> +	 * mitigation because:
-> +	 * - that does not make sense
-> +	 * - we end up with a division by zero
-> +	 */
-> +	if (!state)
-> +		return 0;
-> +
-> +	next_wakeup = (s64)((idle_cdev->idle_cycle * 100) / state) -
-> +		idle_cdev->idle_cycle;
-> +
-> +	return next_wakeup * NSEC_PER_USEC;
-> +}
-> +
+>  	/* Kept only for backward compatibility purpose. */
+> 
 
-There is a bug in your calculation formula here when "state" becomes 100.
-You return 0 for the injection rate, which is the same as "rate" being 0,
-which is dangerous. You stop cooling when it's most necessary :)
-
-I'm not sure how much sense really being 100% idle makes, so I, when testing
-this, just say if (state == 100) { state = 99 }. Anyways, just don't return 0.
-
-Daniel, thanks a lot for these additions! Could you send an update of this?
-
-btw, that's what I'm referring to:
-https://lore.kernel.org/linux-pm/1522945005-7165-1-git-send-email-daniel.lezcano@linaro.org/
-I know it's a little old already, but it seems like there hasn't been any
-equivalent solution in the meantime, has it?
-
-Using cpuidle for cooling is way more effective than cpufreq (which often
-hardly is).
-
-thanks again,
-
-                                     martin
-
-
+-- 
+Regards
+Vignesh
