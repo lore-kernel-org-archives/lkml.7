@@ -2,178 +2,149 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3ADEC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66DD8C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 802CB20880
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 392BE2086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:18:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SFYNAWN7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="skYgA7Ag"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728710AbfHEMQm (ORCPT
+        id S1728591AbfHEMSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 08:16:42 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:36835 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728028AbfHEMQm (ORCPT
+        Mon, 5 Aug 2019 08:18:37 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38618 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727357AbfHEMSg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 08:16:42 -0400
-Received: by mail-yw1-f68.google.com with SMTP id x67so28104366ywd.3;
-        Mon, 05 Aug 2019 05:16:41 -0700 (PDT)
+        Mon, 5 Aug 2019 08:18:36 -0400
+Received: by mail-pg1-f195.google.com with SMTP id z14so2417302pga.5
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 05:18:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=2owfBemMNzwqCr4e/gAfcBxKqGNq66XIVWka4Mym5jY=;
-        b=SFYNAWN7q1kCrntsfHCd/5Mo7YDYTYh2CllkkT2KzjFhkLSrLeYDlfv+vAb9KgjMDT
-         6Hy7ogRclX8fMxZDBB7Nzl/j60f88PQIZRmX1s4Con3eiISSybd+c5P27xZVe/sj9lDF
-         UDvhHIwCCPhK5RkD4FtECE33nJHjTcog1BuaHp8idReWx6QSTQoVOlsqmTZ7UVWFJth4
-         eHCDCZxgqxPw+XYEeHVLwPngS1W/9RLEeFdar8F0cQ0Ia1l7XSj8fVKhtoJosTrAs2Z6
-         IBFxKzkRuPgJHwltbMLr2m5oRk9k+LjUwU+VjWUiLcVnl+KcBaIkHW6Ebp2/xcGPq51K
-         FORQ==
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yQ4ulFEyF6VrvHFlKf881bAuYun1TIHdSMkPsNYgHWs=;
+        b=skYgA7Agimy3OMPxQskR5Po6L586nWbs5cHU4HtighVcSAC1Jk4olQop9weN10YKcN
+         lJTu85PM2kgRgzigjN3o3npEzbPlvzdc3SeMnYYb7bpMGIBAbyWsnAnew5y1eKhjUveS
+         R1fJhUsjEsUVtR4uLzIpWuzkvBh1DAQtUVNi7gD5voDXHpp9jc6en2jTlWKiJZXaqNRQ
+         /9qnXTDTBsgjeqTfMwXPYj40gqgjRwR7lkhP94kuy5xubPI0OneqYZ4iJhu8JcxZkf1k
+         EspqxkYRFeYT040UoHXCNmJMz0hsEG/c0XI6Xl8JHZskdOf+fBkQTyp3Sq47JFoc3LN2
+         Oj8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=2owfBemMNzwqCr4e/gAfcBxKqGNq66XIVWka4Mym5jY=;
-        b=QDOQTV14MO4gTlf2Mi6jzHZiRpbnTGv56g/NBQGC0/8ONpv/JLQYfmpKUoEFkKyxjx
-         WMJ6oFEAxIbikNRc/BzOzE6MbifOB0qvzA67wcT+Akv5d2VDfp3M+ObCP6fMXVc1dfB1
-         LW7zHKKkSKI6Y0shJVZZ0/jj3SD4fctXomiR/cebji8SAeO6dcpXV6XI1MCnG+qt+A4A
-         qC041KVGrpXwAhrhnpolIG+rhU1dXi/3DrW6poq/UPocv6uiKY26GcB+zSHUHmb0r2up
-         ygUaYQt89SUMt7GmVUqjxp9xFKis1ShKiwXFYjz3ewiRsJqLlHb5xmO7IE9TB0uhV6+8
-         /ijg==
-X-Gm-Message-State: APjAAAUl2Yz/WYqRK0I0kkmcMWpdzkW5Hqn7KD2K+c9M9oSOmcl3MJkc
-        7T1gM9ySTsyzktIfMm+VBQWrN5nJUMqnUpca33o=
-X-Google-Smtp-Source: APXvYqzVBhE1astHQr64QTNViz/dNyr7vRGzOPPbBam+bd9DR6XH/cv/8ANa7WDEPPUmj6ThBXsw0wDLPy2SGFUCyKg=
-X-Received: by 2002:a81:79d2:: with SMTP id u201mr86194722ywc.457.1565007400871;
- Mon, 05 Aug 2019 05:16:40 -0700 (PDT)
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yQ4ulFEyF6VrvHFlKf881bAuYun1TIHdSMkPsNYgHWs=;
+        b=cqP8USIiSpadGsBW13BXrijnARl5D5FC41yWEkHXuCSZH0W019H9n/oJHXqFGlLrwn
+         0Wotd11CPJUIy/aYUDVTAPm/p9w8pyamxDRvCjhXj+hNy1oA4RTZYvvsfzqhrbrTGLfv
+         6SzL5HzTTwVStbirx1Z3smalAedQEA2y94Qif5Z0DBkoNHBKJLOi0GrImykl//EuErOC
+         n2S076vvPyS6RqGuDdQwPIoiCZ/Nub6CzSMKOxNzcC3/tYmzC2tZ1FyUPR6eCLFuo7gQ
+         B9dBNGqrdUn1qYDTUwRiHF/aVSTBLXMKyO4kJBX0xI1TjBJebLIXd/zlVRUrsZiIyDEu
+         Ik+w==
+X-Gm-Message-State: APjAAAVf2FdrK1TdEo92E15cDxtKgPZY5DsQvCg1s06BxRiwYU1H+Idp
+        YVVUzL1UCdvszawiaPnQMuOHqi/C
+X-Google-Smtp-Source: APXvYqzyT8QjHHdcSrat1OwwQ0vhk53R4wCstX+rAg/Vla6vKkTNCl7Xfh+HTR8In37p7l5Iumf9sg==
+X-Received: by 2002:a62:7695:: with SMTP id r143mr75038886pfc.173.1565007515870;
+        Mon, 05 Aug 2019 05:18:35 -0700 (PDT)
+Received: from [10.44.0.192] ([103.48.210.53])
+        by smtp.gmail.com with ESMTPSA id g18sm130360927pgm.9.2019.08.05.05.18.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 05 Aug 2019 05:18:35 -0700 (PDT)
+From:   Greg Ungerer <gregungerer00@gmail.com>
+X-Google-Original-From: Greg Ungerer <gerg@linux-m68k.org>
+Subject: Re: [PATCH] m68k: Prevent some compiler warnings in coldfire builds
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <9ec2190f5be1c4e676a803901200364578662b6d.1564704625.git.fthain@telegraphics.com.au>
+ <fd5ccd89-987a-3d4b-5c49-9068abadf81d@linux-m68k.org>
+ <CAMuHMdW=cPipS6pmxAtU6r1MaVaPWfhGQ-AAe0E-TJGbXftHfA@mail.gmail.com>
+Message-ID: <e73a9616-23c3-f04d-1519-185483adcb98@linux-m68k.org>
+Date:   Mon, 5 Aug 2019 22:18:30 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190412120730.473-1-megous@megous.com> <20190412120730.473-3-megous@megous.com>
- <CAGb2v675j-aCLMgPJOzr9yx1XxsUvHRr_K7VnL=p8mSdwpu2jw@mail.gmail.com>
- <20190805104529.z3mex3m2tss7lzlr@core.my.home> <CAGb2v67pcxdxjdRX_HN4133A32eA566DDtUJUKV7pqzxDtOaeg@mail.gmail.com>
- <20190805111037.76vmanzcurffpbdf@core.my.home>
-In-Reply-To: <20190805111037.76vmanzcurffpbdf@core.my.home>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Mon, 5 Aug 2019 14:16:29 +0200
-Message-ID: <CAJiuCcevAHm1_P8USuP1TxCDKH=eJ_CA0SC=sfZP=v03p5y_Yw@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH 2/3] rtc: sun6i: Add support for H6 RTC
-To:     megous@megous.com, Chen-Yu Tsai <wens@csie.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        linux-rtc@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAMuHMdW=cPipS6pmxAtU6r1MaVaPWfhGQ-AAe0E-TJGbXftHfA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Geert,
 
-On Mon, 5 Aug 2019 at 13:10, Ond=C5=99ej Jirman <megous@megous.com> wrote:
->
-> On Mon, Aug 05, 2019 at 06:54:17PM +0800, Chen-Yu Tsai wrote:
-> > On Mon, Aug 5, 2019 at 6:45 PM Ond=C5=99ej Jirman <megous@megous.com> w=
-rote:
-> > >
-[snip]
->
-> Interesting. :) I have the BSP I was using saved here:
->
-> https://megous.com/git/linux/tree/drivers/rtc/rtc-sunxi.c?h=3Dh6-4.9-bsp#=
-n649
->
-> It's based of 4.9.119
->
-> https://megous.com/git/linux/log/?h=3Dh6-4.9-bsp
->
-> I don't remember where I found it. But I imported it fairly recently, and
-> the code you pointed to looks like an older version that I can found in s=
-ome
-> beta H6 BSP, that I imported way earlier and is based on 4.9.56:
+On 5/8/19 5:14 pm, Geert Uytterhoeven wrote:
+> On Sat, Aug 3, 2019 at 1:36 AM Greg Ungerer <gregungerer00@gmail.com> wrote:
+>> On 2/8/19 10:10 am, Finn Thain wrote:
+>>> Since commit d3b41b6bb49e ("m68k: Dispatch nvram_ops calls to Atari or
+>>> Mac functions"), Coldfire builds generate compiler warnings due to the
+>>> unconditional inclusion of asm/atarihw.h and asm/macintosh.h.
+>>>
+>>> The inclusion of asm/atarihw.h causes warnings like this:
+>>>
+>>> In file included from ./arch/m68k/include/asm/atarihw.h:25:0,
+>>>                    from arch/m68k/kernel/setup_mm.c:41,
+>>>                    from arch/m68k/kernel/setup.c:3:
+>>> ./arch/m68k/include/asm/raw_io.h:39:0: warning: "__raw_readb" redefined
+>>>    #define __raw_readb in_8
+>>>
+>>> In file included from ./arch/m68k/include/asm/io.h:6:0,
+>>>                    from arch/m68k/kernel/setup_mm.c:36,
+>>>                    from arch/m68k/kernel/setup.c:3:
+>>> ./arch/m68k/include/asm/io_no.h:16:0: note: this is the location of the previous definition
+>>>    #define __raw_readb(addr) \
+>>> ...
+>>>
+>>> This issue is resolved by dropping the asm/raw_io.h include. It turns out
+>>> that asm/io_mm.h already includes that header file.
+>>>
+>>> Moving the relevant macro definitions helps to clarify this dependency
+>>> and make it safe to include asm/atarihw.h.
+>>>
+>>> The other warnings look like this:
+>>>
+>>> In file included from arch/m68k/kernel/setup_mm.c:48:0,
+>>>                    from arch/m68k/kernel/setup.c:3:
+>>> ./arch/m68k/include/asm/macintosh.h:19:35: warning: 'struct irq_data' declared inside parameter list will not be visible outside of this definition or declaration
+>>>    extern void mac_irq_enable(struct irq_data *data);
+>>>                                      ^~~~~~~~
+>>> ...
+>>>
+>>> This issue is resolved by adding the missing linux/irq.h include.
+>>>
+>>> Cc: Michael Schmitz <schmitzmic@gmail.com>
+>>> Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+> 
+>>
+>> Looks good to me:
+>>
+>> Acked-by: Greg Ungerer <gerg@linux-m68k.org>
+>>
+>> Geert: I can take this via the m68knommu tree if you like?
+>> Or if you want to pick it up then no problem.
+> 
+> If you have fixes for m68knommu for v5.3, feel free to queue it.
+> Else I can queue it for v5.4.
+> 
+> Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-The last recent that I know is from OrangePi H6 but it's based on 4.9.118.
+I don't currently have any fixes for 5.3 queued.
+And there is no real hurry on this anyway, it can wait for 5.4.
+So please add to your queue for 5.4
 
-https://github.com/orangepi-xunlong/OrangePiH6_Linux4_9
+Regards
+Greg
 
-Regards,
-Cl=C3=A9ment
 
->
-> https://megous.com/git/linux/tree/drivers/rtc/rtc-sunxi.c?h=3Dlinux-h6
-> https://megous.com/git/linux/log/?h=3Dlinux-h6
->
-> Hmm, archeology. :)
->
-> > > For older BSPs, the init sequence looked like this:
-> > >
-> > > 482         /*
-> > > 483          * Step1: select RTC clock source
-> > > 484          */
-> > > 485         tmp_data =3D sunxi_rtc_read(SUNXI_LOSC_CTRL_REG);
-> > > 486         tmp_data &=3D (~REG_CLK32K_AUTO_SWT_EN);
-> > > 487         tmp_data |=3D (RTC_SOURCE_EXTERNAL | REG_LOSCCTRL_MAGIC);
-> > > 488         tmp_data |=3D (EXT_LOSC_GSM);
-> > > 489         sunxi_rtc_write(tmp_data, SUNXI_LOSC_CTRL_REG);
-> > > 490
-> > >
-> > > EXT_LOSC_GSM has values 4 values from low to high, and I guess it con=
-figures
-> > > gain for the oscillator's amplifier in the feedback loop of the circu=
-it.
-> > >
-> > > So the new code, for some reason changed from single write to sequenc=
-e
-> > > of individual writes/config steps:
-> > >
-> > > 1) disable auto-switch and enable auto-switch bypass
-> > > 2) select RTC clock source (to LOSC)
-> > >   (wait)
-> >
-> > Maybe it's possible to glitch if these two are combined?
->
-> That's what I thought too. Or the programmer thought so, and was just
-> programming defensively, and there's no real problem in the practice.
->
-> But that specific delay() seems like someone trying to solve a real issue=
-. Of
-> course there's no knowing if it was on H6 or on some other SoC.
->
-> regards,
->         o.
->
-> >
-> > > 3) configure gain on the LOSC
-> > >
-> > > regards,
-> > >         o.
-> > >
-> > > > ChenYu
-> > >
-> > > --
-> > > You received this message because you are subscribed to the Google Gr=
-oups "linux-sunxi" group.
-> > > To unsubscribe from this group and stop receiving emails from it, sen=
-d an email to linux-sunxi+unsubscribe@googlegroups.com.
-> > > To view this discussion on the web, visit https://groups.google.com/d=
-/msgid/linux-sunxi/20190805104529.z3mex3m2tss7lzlr%40core.my.home.
->
-> --
-> You received this message because you are subscribed to the Google Groups=
- "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to linux-sunxi+unsubscribe@googlegroups.com.
-> To view this discussion on the web, visit https://groups.google.com/d/msg=
-id/linux-sunxi/20190805111037.76vmanzcurffpbdf%40core.my.home.
