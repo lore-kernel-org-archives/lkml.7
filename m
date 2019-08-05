@@ -2,110 +2,90 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6448C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6EFC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B105E20679
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9810F20818
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:07:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="OKXu80bh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GPQWyTvO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbfHEIGe (ORCPT
+        id S1727723AbfHEIH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 04:06:34 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36527 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726659AbfHEIGe (ORCPT
+        Mon, 5 Aug 2019 04:07:57 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:47256 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726423AbfHEIH5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 04:06:34 -0400
-Received: by mail-lj1-f196.google.com with SMTP id i21so78497867ljj.3
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 01:06:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4jotGUYX3HDjIjrPWkq93S31gJkGTLLQx5i8QIerKxE=;
-        b=OKXu80bhtKFjmm2MpkIDYVWmXqi7Y+Xjky/uEczjP2Zl5b7vO97lSZ4GxsSOJjZduQ
-         VgPXNXexmCAKG6Z+637VhMExKFfEjxuDw3H3mRcIbO3qLRCxF1TJiOxHnvXkyL1xl5hz
-         9tSzcuFZEaM47GjqXTJ6n5YnEqhbYAzKlpVrDHKCy9VeCfnp53elgyy+VMv+lz31Ers7
-         Eic301vKwslj47MtbPz81DyzufZoA3sVB/fmBoMeBi2wwb65qyfXQctIncrR9gNzSMvv
-         ew3Ty0ZvYjqCUhy9kY7gTZ+iW4B61AZpbS675ligIs/I+dyRKPx83vFtsSrTsvbz0lFJ
-         WX4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4jotGUYX3HDjIjrPWkq93S31gJkGTLLQx5i8QIerKxE=;
-        b=WaMpPYzTmmkmUuODPEE7LUsOAFrgnjIOCHjgdm9LMVQUJtyBYLp+BADaMI3gPmYE2s
-         tLptodLCGxMAAZyjOne9Z+DI9QkXZc3R4vhK6IAytHYRUGRph1M8YNOnSHkS1ZnNVj/b
-         TsCamwgWehD7hlCTOWFNBDKecUZeroBm8gph6rI5sMpj1IIY/a2+KA7IG3RDabxUpm35
-         M8prAkb9ZAJ/JjLj7hPKLyNtkXRVBYYEz16D9hgp6y3xHo2vEwNF6/lo7l6EZ1jk+UVh
-         3GvzTMC3R9z/YsQF1oBByfN5QDepHu5OEa5bs0v7BelKWMW34d037eTgz83+6ONgilni
-         l8qg==
-X-Gm-Message-State: APjAAAVtXi/oyZgWDXxJ/fhPT94apg27eu/HsKCNXplTpDjMeFfIB0gG
-        BriBuIkwxmgt9enebEUn6djfCLDv6NH+iQ==
-X-Google-Smtp-Source: APXvYqyZpQSVk777vhC2lpS6B8C38YOlvgzOQV2vQdpdrwUMZBvpR5l2r7dZg3bY6N4q4hVA/QRa0Q==
-X-Received: by 2002:a2e:9b48:: with SMTP id o8mr78054712ljj.122.1564992392086;
-        Mon, 05 Aug 2019 01:06:32 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:44f5:2f9a:806:ec14:8a98:a30c? ([2a00:1fa0:44f5:2f9a:806:ec14:8a98:a30c])
-        by smtp.gmail.com with ESMTPSA id l24sm17213019lji.78.2019.08.05.01.06.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 05 Aug 2019 01:06:31 -0700 (PDT)
-Subject: Re: [PATCH 2/2] MIPS: remove support for DMA_ATTR_WRITE_COMBINE
-To:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org
-Cc:     Shawn Anastasio <shawn@anastas.io>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20190805080145.5694-1-hch@lst.de>
- <20190805080145.5694-3-hch@lst.de>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <f02604c5-dbea-e64e-cfb7-3a002b0da9a6@cogentembedded.com>
-Date:   Mon, 5 Aug 2019 11:06:24 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 5 Aug 2019 04:07:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=hQA/rHY648PLuDHdt0h8sdeUqJlY++q1WEQC024LSPw=; b=GPQWyTvOO6m8SdhjgY7gIUtSt
+        8td4m7e5ShiEOi/gFXT67z1QlfvbOoXqXC94vtc6tPLADjYpr/T03SlVHwhCdrgD6wqDo2qx0PsXl
+        y4Vvp6xJkj13Qr2DwVoJt5jwnAOMe8w9tRojqYXOjZ3Cbg/2iisbX99BHQhNxz1fv457wOcGPw9Xp
+        B9WjroZnZMHKQgZuQ4SsmJ90DIUyAOeyzcE1T6CGvFfUTRxKSD4KIzF+U4XOBUPA79baEvWVX8krj
+        X844yml+HqGp/2tDNFgXFp+6k4DTWOjE11r0fyQxhdeOhPbeg2zgkgLda89/uSFox19DR8dNbrX1W
+        U6zXwx/Yw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1huY1q-0006OZ-0J; Mon, 05 Aug 2019 08:07:38 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id BA9AB20238109; Mon,  5 Aug 2019 10:07:36 +0200 (CEST)
+Date:   Mon, 5 Aug 2019 10:07:36 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mingo@kernel.org, jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, rostedt@goodmis.org,
+        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
+        oleg@redhat.com, joel@joelfernandes.org
+Subject: Re: [PATCH RFC tip/core/rcu 14/14] rcu/nohz: Make multi_cpu_stop()
+ enable tick on all online CPUs
+Message-ID: <20190805080736.GI2349@hirez.programming.kicks-ass.net>
+References: <20190802151435.GA1081@linux.ibm.com>
+ <20190802151501.13069-14-paulmck@linux.ibm.com>
+ <20190804144317.GF2349@hirez.programming.kicks-ass.net>
+ <20190804144835.GB2386@hirez.programming.kicks-ass.net>
+ <20190804184159.GC28441@linux.ibm.com>
+ <20190804202446.GA25634@linux.ibm.com>
+ <20190805041901.GA17621@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190805080145.5694-3-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190805041901.GA17621@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+On Sun, Aug 04, 2019 at 09:19:01PM -0700, Paul E. McKenney wrote:
+> On Sun, Aug 04, 2019 at 01:24:46PM -0700, Paul E. McKenney wrote:
 
-On 05.08.2019 11:01, Christoph Hellwig wrote:
+> > For whatever it is worth, the things on my list include using 25 rounds
+> > of resched_cpu() on each CPU with ten-jiffy wait between each (instead of
+> > merely 10 rounds), using waitqueues or some such to actually force a
+> > meaningful context switch on the other CPUs, etc.
 
-> Mips uses the KSEG1 kernel memory segment do map dma coherent
+That really should not be needed. What are those other CPUs doing?
 
-     MIPS. s/do/to/?
+> Which appears to have reduced the bug rate by about a factor of two.
+> (But statistics and all that.)
 
-> allocations for n
+Which is just weird..
 
-on-coherent devices as uncachable, and does not have
+> I am now trying the same test, but with CONFIG_PREEMPT=y and without
+> quite so much hammering on the scheduler.  This is keying off Peter's
+> earlier mention of preemption.  If this turns out to be solid, perhaps
+> we outlaw CONFIG_PREEMPT=n && CONFIG_NO_HZ_FULL=y?
 
-    Uncacheable?
-
-> any kind of special support for DMA_ATTR_WRITE_COMBINE in the allocation
-> path.  Thus supporting DMA_ATTR_WRITE_COMBINE in dma_mmap_attrs will
-> lead to multiple mappings with different caching attributes.
-> 
-> Fixes: 8c172467be36 ("MIPS: Add implementation of dma_map_ops.mmap()")
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-[...]
-
-MBR, Sergei
+CONFIG_PREEMPT=n should work just fine, _something_ is off.
