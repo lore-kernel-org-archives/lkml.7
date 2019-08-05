@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3FEC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 05:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AEA7C32750
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 05:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F8092070D
+	by mail.kernel.org (Postfix) with ESMTP id E22E52070D
 	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 05:22:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbfHEFWu (ORCPT
+        id S1727323AbfHEFWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 01:22:50 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:55443 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725976AbfHEFWs (ORCPT
+        Mon, 5 Aug 2019 01:22:52 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:20375 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726559AbfHEFWu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 01:22:48 -0400
-X-UUID: 59b0e93b7c83498da797e7a704b08fa7-20190805
-X-UUID: 59b0e93b7c83498da797e7a704b08fa7-20190805
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        Mon, 5 Aug 2019 01:22:50 -0400
+X-UUID: 38c73d5d2c0b42a981506abb98e89495-20190805
+X-UUID: 38c73d5d2c0b42a981506abb98e89495-20190805
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
         (envelope-from <hsin-hsiung.wang@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 1466503382; Mon, 05 Aug 2019 13:22:40 +0800
+        with ESMTP id 255577387; Mon, 05 Aug 2019 13:22:43 +0800
 Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
  mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 5 Aug 2019 13:22:42 +0800
+ 15.0.1395.4; Mon, 5 Aug 2019 13:22:43 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 5 Aug 2019 13:22:42 +0800
+ Transport; Mon, 5 Aug 2019 13:22:43 +0800
 From:   Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
 To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
@@ -52,10 +52,10 @@ CC:     Mark Rutland <mark.rutland@arm.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>
-Subject: [PATCH v4 04/10] dt-bindings: mfd: Add compatible for the MediaTek MT6358 PMIC
-Date:   Mon, 5 Aug 2019 13:21:52 +0800
-Message-ID: <1564982518-32163-5-git-send-email-hsin-hsiung.wang@mediatek.com>
+        <srv_heupstream@mediatek.com>, Ran Bi <ran.bi@mediatek.com>
+Subject: [PATCH v4 09/10] rtc: mt6397: fix alarm register overwrite
+Date:   Mon, 5 Aug 2019 13:21:57 +0800
+Message-ID: <1564982518-32163-10-git-send-email-hsin-hsiung.wang@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1564982518-32163-1-git-send-email-hsin-hsiung.wang@mediatek.com>
 References: <1564982518-32163-1-git-send-email-hsin-hsiung.wang@mediatek.com>
@@ -67,50 +67,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds compatible for the MediaTek MT6358 PMIC.
+From: Ran Bi <ran.bi@mediatek.com>
 
-Acked-for-mfd-by: Lee Jones <lee.jones@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Alarm registers high byte was reserved for other functions.
+This add mask in alarm registers operation functions.
+This also fix error condition in interrupt handler.
+
+Fixes: fc2979118f3f ("rtc: mediatek: Add MT6397 RTC driver")
+
+Signed-off-by: Ran Bi <ran.bi@mediatek.com>
 ---
- Documentation/devicetree/bindings/mfd/mt6397.txt | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/rtc/rtc-mt6397.c | 47 +++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 33 insertions(+), 14 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/mt6397.txt b/Documentation/devicetree/bindings/mfd/mt6397.txt
-index 0ebd08a..62f1c17 100644
---- a/Documentation/devicetree/bindings/mfd/mt6397.txt
-+++ b/Documentation/devicetree/bindings/mfd/mt6397.txt
-@@ -17,22 +17,27 @@ Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
- This document describes the binding for MFD device and its sub module.
+diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
+index b46ed4d..828def7 100644
+--- a/drivers/rtc/rtc-mt6397.c
++++ b/drivers/rtc/rtc-mt6397.c
+@@ -47,6 +47,14 @@
  
- Required properties:
--compatible: "mediatek,mt6397" or "mediatek,mt6323"
-+compatible:
-+	"mediatek,mt6323" for PMIC MT6323
-+	"mediatek,mt6358" for PMIC MT6358
-+	"mediatek,mt6397" for PMIC MT6397
+ #define RTC_AL_SEC		0x0018
  
- Optional subnodes:
++#define RTC_AL_SEC_MASK		0x003f
++#define RTC_AL_MIN_MASK		0x003f
++#define RTC_AL_HOU_MASK		0x001f
++#define RTC_AL_DOM_MASK		0x001f
++#define RTC_AL_DOW_MASK		0x0007
++#define RTC_AL_MTH_MASK		0x000f
++#define RTC_AL_YEA_MASK		0x007f
++
+ #define RTC_PDN2		0x002e
+ #define RTC_PDN2_PWRON_ALARM	BIT(4)
  
- - rtc
- 	Required properties:
--		- compatible: "mediatek,mt6397-rtc"
-+		- compatible: "mediatek,mt6397-rtc" or "mediatek,mt6358-rtc"
- - regulators
- 	Required properties:
- 		- compatible: "mediatek,mt6397-regulator"
- 	see Documentation/devicetree/bindings/regulator/mt6397-regulator.txt
-+		- compatible: "mediatek,mt6358-regulator"
-+	see Documentation/devicetree/bindings/regulator/mt6358-regulator.txt
- 		- compatible: "mediatek,mt6323-regulator"
- 	see Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
- - codec
- 	Required properties:
--		- compatible: "mediatek,mt6397-codec"
-+		- compatible: "mediatek,mt6397-codec" or "mediatek,mt6358-sound"
- - clk
- 	Required properties:
- 		- compatible: "mediatek,mt6397-clk"
+@@ -103,7 +111,7 @@ static irqreturn_t mtk_rtc_irq_handler_thread(int irq, void *data)
+ 		irqen = irqsta & ~RTC_IRQ_EN_AL;
+ 		mutex_lock(&rtc->lock);
+ 		if (regmap_write(rtc->regmap, rtc->addr_base + RTC_IRQ_EN,
+-				 irqen) < 0)
++				 irqen) == 0)
+ 			mtk_rtc_write_trigger(rtc);
+ 		mutex_unlock(&rtc->lock);
+ 
+@@ -225,12 +233,12 @@ static int mtk_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alm)
+ 	alm->pending = !!(pdn2 & RTC_PDN2_PWRON_ALARM);
+ 	mutex_unlock(&rtc->lock);
+ 
+-	tm->tm_sec = data[RTC_OFFSET_SEC];
+-	tm->tm_min = data[RTC_OFFSET_MIN];
+-	tm->tm_hour = data[RTC_OFFSET_HOUR];
+-	tm->tm_mday = data[RTC_OFFSET_DOM];
+-	tm->tm_mon = data[RTC_OFFSET_MTH];
+-	tm->tm_year = data[RTC_OFFSET_YEAR];
++	tm->tm_sec = data[RTC_OFFSET_SEC] & RTC_AL_SEC_MASK;
++	tm->tm_min = data[RTC_OFFSET_MIN] & RTC_AL_MIN_MASK;
++	tm->tm_hour = data[RTC_OFFSET_HOUR] & RTC_AL_HOU_MASK;
++	tm->tm_mday = data[RTC_OFFSET_DOM] & RTC_AL_DOM_MASK;
++	tm->tm_mon = data[RTC_OFFSET_MTH] & RTC_AL_MTH_MASK;
++	tm->tm_year = data[RTC_OFFSET_YEAR] & RTC_AL_YEA_MASK;
+ 
+ 	tm->tm_year += RTC_MIN_YEAR_OFFSET;
+ 	tm->tm_mon--;
+@@ -251,14 +259,25 @@ static int mtk_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm)
+ 	tm->tm_year -= RTC_MIN_YEAR_OFFSET;
+ 	tm->tm_mon++;
+ 
+-	data[RTC_OFFSET_SEC] = tm->tm_sec;
+-	data[RTC_OFFSET_MIN] = tm->tm_min;
+-	data[RTC_OFFSET_HOUR] = tm->tm_hour;
+-	data[RTC_OFFSET_DOM] = tm->tm_mday;
+-	data[RTC_OFFSET_MTH] = tm->tm_mon;
+-	data[RTC_OFFSET_YEAR] = tm->tm_year;
+-
+ 	mutex_lock(&rtc->lock);
++	ret = regmap_bulk_read(rtc->regmap, rtc->addr_base + RTC_AL_SEC,
++			       data, RTC_OFFSET_COUNT);
++	if (ret < 0)
++		goto exit;
++
++	data[RTC_OFFSET_SEC] = ((data[RTC_OFFSET_SEC] & ~(RTC_AL_SEC_MASK)) |
++				(tm->tm_sec & RTC_AL_SEC_MASK));
++	data[RTC_OFFSET_MIN] = ((data[RTC_OFFSET_MIN] & ~(RTC_AL_MIN_MASK)) |
++				(tm->tm_min & RTC_AL_MIN_MASK));
++	data[RTC_OFFSET_HOUR] = ((data[RTC_OFFSET_HOUR] & ~(RTC_AL_HOU_MASK)) |
++				(tm->tm_hour & RTC_AL_HOU_MASK));
++	data[RTC_OFFSET_DOM] = ((data[RTC_OFFSET_DOM] & ~(RTC_AL_DOM_MASK)) |
++				(tm->tm_mday & RTC_AL_DOM_MASK));
++	data[RTC_OFFSET_MTH] = ((data[RTC_OFFSET_MTH] & ~(RTC_AL_MTH_MASK)) |
++				(tm->tm_mon & RTC_AL_MTH_MASK));
++	data[RTC_OFFSET_YEAR] = ((data[RTC_OFFSET_YEAR] & ~(RTC_AL_YEA_MASK)) |
++				(tm->tm_year & RTC_AL_YEA_MASK));
++
+ 	if (alm->enabled) {
+ 		ret = regmap_bulk_write(rtc->regmap,
+ 					rtc->addr_base + RTC_AL_SEC,
 -- 
 2.6.4
 
