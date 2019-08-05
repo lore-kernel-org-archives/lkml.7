@@ -2,236 +2,113 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A38C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 11:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A0DC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 11:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E1DB206A2
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 11:53:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 407F5206A2
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 11:55:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="2lc6U5MS"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="l2Pu8MVc";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iaoTftYe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728664AbfHELxf (ORCPT
+        id S1728534AbfHELzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 07:53:35 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:48786 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727739AbfHELxe (ORCPT
+        Mon, 5 Aug 2019 07:55:44 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:43207 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727259AbfHELzo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 07:53:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Msf2V2we4WXS20WMdFiMZ4D3iFIy0buao6uIC50MNEM=; b=2lc6U5MS0+V8U+XyrODAUQr8/
-        CdcuDfc2HJzLfIrLWjo1cHIU13z7jI9RX+srG3MSgbBjXJ1XBXkGfYZA3cfB41HHdKAtQdmWcUrBx
-        F+x6T/5e/Hw7kDXXZGPrJG1sbTTwshMUCXSC5zoK9OELCuEoXMOf1qWXMCajr7W9Y0/woknw5xiAj
-        LQwN+BctbI7HgdPHspw0Ng45+wctKf4ncjlT5f01HpWqhVi5DCf8wL77mzgiO0ZlbZGaBFfQZ380o
-        f0rs92irlijFE2DoF4JK3wu7qSA7wKLXjCr+V1HdvgOZrJgzIUbDEgh0WSYZDW12ItYuNSP9FLMx5
-        2FMLXc5Kw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hubY7-0007xS-3r; Mon, 05 Aug 2019 11:53:11 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 38BB82022940D; Mon,  5 Aug 2019 13:53:09 +0200 (CEST)
-Date:   Mon, 5 Aug 2019 13:53:09 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alessio Balsini <balsini@android.com>
-Cc:     mingo@kernel.org, juri.lelli@redhat.com,
-        linux-kernel@vger.kernel.org, dietmar.eggemann@arm.com,
-        luca.abeni@santannapisa.it, bristot@redhat.com, dvyukov@google.com,
-        tglx@linutronix.de, vpillai@digitalocean.com, rostedt@goodmis.org
-Subject: Re: [RFC][PATCH 01/13] sched/deadline: Impose global limits on
- sched_attr::sched_period
-Message-ID: <20190805115309.GJ2349@hirez.programming.kicks-ass.net>
-References: <20190726145409.947503076@infradead.org>
- <20190726161357.397880775@infradead.org>
- <20190802172104.GA134279@google.com>
+        Mon, 5 Aug 2019 07:55:44 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id A90C82148D;
+        Mon,  5 Aug 2019 07:55:42 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Mon, 05 Aug 2019 07:55:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=WrDb4esL3ajy5ujNajPOSkPy+aY
+        Xl4b5J03jgIi8A30=; b=l2Pu8MVcAiEwRA3W0qQaombT2nsBgFeFEoQMNqpsJbh
+        RgT3MCY+MiEuFaJ3HDN8eI30hLKOwzdpb4jwpf0+Tan/FT4LUDjL35HJ4sxMMZ8M
+        jbg5glDUZ17SEnb/Q4cogPaXa6NVxlrQ7TU45sokJDP/Y6dvuDPP2E094bks3tRi
+        9QfajSGuiJw9FFqKr9WB/weCzpF9YL5Ajt2EAgCT2tHv7p07X21lkv75LC28s8yE
+        armMlxITchCXBSasH7zPw99Wnyw0ZyRxsbgWlhbNLa3Y8SVGYmh76I1lHzgHYhvN
+        z6epxdz6O6SSNs0+hHukH6O8ljI78IvzOYRAymKt+PQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=WrDb4e
+        sL3ajy5ujNajPOSkPy+aYXl4b5J03jgIi8A30=; b=iaoTftYeGg62YeE9iY3jQ/
+        Bw+8PRR/Tyy3uSerrx87LSRGV3y9fezeytzcSxQnZZ/qU8BxMdSF/PHcphneoCPr
+        FBYkZDbx+mw7KjU+oXJLlg4O8yN3juZSWpE9an5bHGpWx6KiBC5vDyA2Zgzth9Lz
+        hLeGqSWolHZ+Va9Zpfws+OAmlDPo49l5CDO5id6h3E4TcpOKEc685kIY5EMEu5Ea
+        OAV5aQjei/VBd8SGtjBCAWwCEBwcYFr/Zu4jcxkx/+C2AettZbKaiS/fqYlWkk64
+        5NzLrlxM0XlXbSGrmYvuFWl3si0cx2/m70zYn7o3NeqS8KJd5Ka+Hlip6UDXrIsQ
+        ==
+X-ME-Sender: <xms:PhlIXUIeReZuy51-E2xDo0yJwqGJyEpIihly7OKrqaQHI3UlduAZZw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddruddtjedggeeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledrud
+    dtjeenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhmnecu
+    vehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:PhlIXbQ0EnPU4uz71IWF72Cbs_9NdpdYJL73UC0GqNX9MvMP-cmeng>
+    <xmx:PhlIXXD_ocstRIYGwUYYvlBL4iWg1miIsXdh5Gz4B6uOqyDfJJdfBQ>
+    <xmx:PhlIXaIF-nOpV6rBhU77WyYTaIauXZdxq91sXWTtezKxuxoteVqm3g>
+    <xmx:PhlIXTMTFGu49LMlP_CDrR5UJNKyzy1affuIzOUtF3Vi2aPIjtTcEQ>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id DEA3C380085;
+        Mon,  5 Aug 2019 07:55:41 -0400 (EDT)
+Date:   Mon, 5 Aug 2019 13:55:40 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Rolf Eike Beer <eb@emlix.com>, stable@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: Linux 4.9.180 build fails =?utf-8?Q?wi?=
+ =?utf-8?Q?th_gcc_9_and_'cleanup=5Fmodule'_specifies_less_restrictive_attr?=
+ =?utf-8?Q?ibute_than_its_target_=E2=80=A6?=
+Message-ID: <20190805115540.GB8189@kroah.com>
+References: <20190606185900.GA19937@kroah.com>
+ <CANiq72n2E4Ue0MU5mWitSbsscizPQKML0QQx_DBwJVni+eWMHQ@mail.gmail.com>
+ <4007272.nJfEYfeqza@devpool35>
+ <CANiq72=T8nH3HHkYvWF+vPMscgwXki1Ugiq6C9PhVHJUHAwDYw@mail.gmail.com>
+ <20190802103346.GA14255@kroah.com>
+ <CANiq72kcZZwp2MRVF5Ls+drXCzVbCfZ7wZ8Y+rU93oGohVAGsQ@mail.gmail.com>
+ <20190802112542.GA29534@kroah.com>
+ <CANiq72mSLmP-EaOgY0m2qgTMVsAnyE6iuW5Kjdw5mSy1ZH0y-A@mail.gmail.com>
+ <20190802155627.GB28398@kroah.com>
+ <CANiq72k-2Gtb8Q_f2Nhy6aud-QwuSiJ8oEJbwt-pjd+bs8qDVg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190802172104.GA134279@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CANiq72k-2Gtb8Q_f2Nhy6aud-QwuSiJ8oEJbwt-pjd+bs8qDVg@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 06:21:04PM +0100, Alessio Balsini wrote:
-> Hi Peter,
+On Fri, Aug 02, 2019 at 06:55:53PM +0200, Miguel Ojeda wrote:
+> On Fri, Aug 2, 2019 at 5:56 PM Greg KH <greg@kroah.com> wrote:
+> >
+> > I see a ton of warnings on those kernels today.  I'll look into it next
+> > week after I apply your patches to see what's missing.
 > 
-> This is indeed an important missing piece.
+> Yeah, the objtool ones -- I thought you were referring to the
+> -Wmissing-attributes that Rolf asked about (I am not sure why Rolf has
+> those as -Werror rather than warnings, though).
 > 
-> I think it would be worth having some simple checks, e.g.:
-> - period_min <= period_max;
-> - period_min >= (1ULL << DL_SCALE).
-> 
-> To be even more picky, I'm wondering if it would be a good practice to
-> fail the write operation if there are already dl-tasks in the system
-> that violate the new constraint.  I'm afraid there is no cheap way of
-> achieving such check, so, I think we can skip this last tricky thing for
-> now.
+> I can take a look at the objtool ones and see if applying some of the
+> patches helps, although I have never looked into how objtool works, so
+> no promises :)
 
-Like so?
+I think I got it working now, all looks good for 4.9.y, 4.14.y and
+4.19.y for gcc9 so far.  I'll leave 4.4.y alone :)
 
----
-Subject: sched/deadline: Impose global limits on sched_attr::sched_period
-From: Peter Zijlstra <peterz@infradead.org>
-Date: Tue Jul 23 16:01:29 CEST 2019
+thanks,
 
-There are two DoS scenarios with SCHED_DEADLINE related to
-sched_attr::sched_period:
-
- - since access-control only looks at utilization and density, a very
-   large period can allow a very large runtime, which in turn can
-   incur a very large latency to lower priority tasks.
-
- - for very short periods we can end up spending more time programming
-   the hardware timer than actually running the task.
-
-Mitigate these by imposing limits on the period.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
-Cc: Luca Abeni <luca.abeni@santannapisa.it>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
----
- include/linux/sched/sysctl.h |    7 ++++
- kernel/sched/deadline.c      |   61 +++++++++++++++++++++++++++++++++++++++++--
- kernel/sysctl.c              |   14 +++++++++
- 3 files changed, 80 insertions(+), 2 deletions(-)
-
---- a/include/linux/sched/sysctl.h
-+++ b/include/linux/sched/sysctl.h
-@@ -56,6 +56,13 @@ int sched_proc_update_handler(struct ctl
- extern unsigned int sysctl_sched_rt_period;
- extern int sysctl_sched_rt_runtime;
- 
-+extern unsigned int sysctl_sched_dl_period_max;
-+extern unsigned int sysctl_sched_dl_period_min;
-+
-+extern int sched_dl_period_handler(struct ctl_table *table, int write,
-+		void __user *buffer, size_t *lenp,
-+		loff_t *ppos);
-+
- #ifdef CONFIG_UCLAMP_TASK
- extern unsigned int sysctl_sched_uclamp_util_min;
- extern unsigned int sysctl_sched_uclamp_util_max;
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -2660,6 +2660,52 @@ void __getparam_dl(struct task_struct *p
- }
- 
- /*
-+ * Default limits for DL period; on the top end we guard against small util
-+ * tasks still getting ridiculous long effective runtimes, on the bottom end we
-+ * guard against timer DoS.
-+ */
-+unsigned int sysctl_sched_dl_period_max = 1 << 22; /* ~4 seconds */
-+unsigned int sysctl_sched_dl_period_min = 100;     /* 100 us */
-+
-+int sched_dl_period_handler(struct ctl_table *table, int write,
-+			    void __user *buffer, size_t *lenp,
-+			    loff_t *ppos)
-+{
-+	unsigned int old_min, old_max;
-+	static DEFINE_MUTEX(mutex);
-+	int ret;
-+
-+	mutex_lock(&mutex);
-+	old_min = sysctl_sched_dl_period_min;
-+	old_max = sysctl_sched_dl_period_max;
-+
-+	ret = proc_dointvec(table, write, buffer, lenp, ppos);
-+
-+	if (!ret && write) {
-+		u64 min = (u64)sysctl_sched_dl_period_min * NSEC_PER_USEC;
-+		u64 max = (u64)sysctl_sched_dl_period_man * NSEC_PER_USEC;
-+
-+		ret = -EINVAL;
-+		if (min < 1ULL << DL_SCALE)
-+			goto undo;
-+
-+		if (max < min)
-+			goto undo;
-+
-+		ret = 0;
-+	}
-+
-+	if (0) {
-+undo:
-+		sysctl_sched_rt_period = old_period;
-+		sysctl_sched_rt_runtime = old_runtime;
-+	}
-+	mutex_unlock(&mutex);
-+
-+	return ret;
-+}
-+
-+/*
-  * This function validates the new parameters of a -deadline task.
-  * We ask for the deadline not being zero, and greater or equal
-  * than the runtime, as well as the period of being zero or
-@@ -2671,6 +2717,8 @@ void __getparam_dl(struct task_struct *p
-  */
- bool __checkparam_dl(const struct sched_attr *attr)
- {
-+	u64 period, max, min;
-+
- 	/* special dl tasks don't actually use any parameter */
- 	if (attr->sched_flags & SCHED_FLAG_SUGOV)
- 		return true;
-@@ -2694,12 +2742,21 @@ bool __checkparam_dl(const struct sched_
- 	    attr->sched_period & (1ULL << 63))
- 		return false;
- 
-+	period = attr->sched_period;
-+	if (!period)
-+		period = attr->sched_deadline;
-+
- 	/* runtime <= deadline <= period (if period != 0) */
--	if ((attr->sched_period != 0 &&
--	     attr->sched_period < attr->sched_deadline) ||
-+	if (period < attr->sched_deadline ||
- 	    attr->sched_deadline < attr->sched_runtime)
- 		return false;
- 
-+	max = (u64)READ_ONCE(sysctl_sched_dl_period_max) * NSEC_PER_USEC;
-+	min = (u64)READ_ONCE(sysctl_sched_dl_period_min) * NSEC_PER_USEC;
-+
-+	if (period < min || period > max)
-+		return false;
-+
- 	return true;
- }
- 
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -443,6 +443,20 @@ static struct ctl_table kern_table[] = {
- 		.proc_handler	= sched_rt_handler,
- 	},
- 	{
-+		.procname	= "sched_deadline_period_max_us",
-+		.data		= &sysctl_sched_dl_period_max,
-+		.maxlen		= sizeof(unsigned int),
-+		.mode		= 0644,
-+		.proc_handler	= sched_dl_period_handler,
-+	},
-+	{
-+		.procname	= "sched_deadline_period_min_us",
-+		.data		= &sysctl_sched_dl_period_min,
-+		.maxlen		= sizeof(unsigned int),
-+		.mode		= 0644,
-+		.proc_handler	= sched_dl_period_handler,
-+	},
-+	{
- 		.procname	= "sched_rr_timeslice_ms",
- 		.data		= &sysctl_sched_rr_timeslice,
- 		.maxlen		= sizeof(int),
+greg k-h
