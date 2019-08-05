@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8135AC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA59C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58DA22067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:21:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFFC820880
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:21:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011267;
-	bh=yi+x7RbmMs095tElme98utNqj5tUu/gIfIx36yBNeSY=;
+	s=default; t=1565011271;
+	bh=jJs/ZGRveEr6EqdpW7NbSDpFdrYqj5xsHv9wAFDLWEU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gvb08P1fjznwPdLUMJa4N1o3rkG3plB8yKNkwy7dqljdT5c9Rf6jHsqREF6C9tTrv
-	 dS3urRzMhIiDZZNFMuhul2wRtawqjI4i4bJ2T2Idx8yx1yIXgYcBfcuMIqveIZMb3i
-	 pPM5DbE/Pml259V+k5xKF2Qm01cmPeb2GuABEulY=
+	b=gpWyh6GH65ekQ3ceX06Z0emulOjVVGq5AlHITxtxYYbIb7Fm2n/r+vpEtRY19SojL
+	 5eqPSjoe/HgoGJ5w8hI0CqfXbLrcyDcjFFq9mkzwLXaln5Wdu4S4k5cv3hQEFTwfqb
+	 bRQSiUvaJfYDxp7NSaN+Og21nk9clgbtitnkR7Wg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730444AbfHENVG (ORCPT
+        id S1730465AbfHENVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:21:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57164 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:21:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730419AbfHENVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:21:02 -0400
+        id S1729423AbfHENVE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:21:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BE872067D;
-        Mon,  5 Aug 2019 13:21:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB71720657;
+        Mon,  5 Aug 2019 13:21:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011261;
-        bh=yi+x7RbmMs095tElme98utNqj5tUu/gIfIx36yBNeSY=;
+        s=default; t=1565011264;
+        bh=jJs/ZGRveEr6EqdpW7NbSDpFdrYqj5xsHv9wAFDLWEU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hUbZQKvl8oEh11xWVX6ykPraa1AbUAR/mjhQL9bIL9AU3hGdR/8lE/kaXLm2SucSg
-         TP9AaPHjQu2vo7mMb60Bx/Ez0vafuFK7u4y10ojy4sxeyfzc2uZjbsnHoRslJS7XWH
-         cFxbZN3Tzr4YFKAUZQBnXJNu54uA/qDTZP1JSlao=
+        b=JPrH+HAHmmqGSa+cyJjsOMzh3ko2yMiBT4pYKIbDjXfiMJxWkhUWC6oaMuIbGSENK
+         WyF53ATRgGfxQ1bWedUBAbM+0eUF1BwQSvqDKMgpm13VRzDhqf9ZLji5exge8Xvp5o
+         Doc09qTB6N7f6tPXclvE1cV97TWlOjOfbQ3H2KVM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vicente Bergas <vicencb@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
+        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 025/131] arm64: dts: rockchip: Fix USB3 Type-C on rk3399-sapphire
-Date:   Mon,  5 Aug 2019 15:01:52 +0200
-Message-Id: <20190805124953.125844901@linuxfoundation.org>
+Subject: [PATCH 5.2 026/131] btrfs: tree-checker: Check if the file extent end overflows
+Date:   Mon,  5 Aug 2019 15:01:53 +0200
+Message-Id: <20190805124953.190420246@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -60,64 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e1d9149e8389f1690cdd4e4056766dd26488a0fe ]
+[ Upstream commit 4c094c33c9ed4b8d0d814bd1d7ff78e123d15d00 ]
 
-Before this patch, the Type-C port on the Sapphire board is dead.
-If setting the 'regulator-always-on' property to 'vcc5v0_typec0'
-then the port works for about 4 seconds at start-up. This is a
-sample trace with a memory stick plugged in:
-1.- The memory stick LED lights on and kernel reports:
-[    4.782999] scsi 0:0:0:0: Direct-Access USB DISK PMAP PQ: 0 ANSI: 4
-[    5.904580] sd 0:0:0:0: [sdb] 3913344 512-byte logical blocks: (2.00 GB/1.87 GiB)
-[    5.906860] sd 0:0:0:0: [sdb] Write Protect is off
-[    5.908973] sd 0:0:0:0: [sdb] Mode Sense: 23 00 00 00
-[    5.909122] sd 0:0:0:0: [sdb] No Caching mode page found
-[    5.911214] sd 0:0:0:0: [sdb] Assuming drive cache: write through
-[    5.951585]  sdb: sdb1
-[    5.954816] sd 0:0:0:0: [sdb] Attached SCSI removable disk
-2.- 4 seconds later the memory stick LED lights off and kernel reports:
-[    9.082822] phy phy-ff770000.syscon:usb2-phy@e450.2: charger = USB_DCP_CHARGER
-3.- After a minute the kernel reports:
-[   71.666761] usb 5-1: USB disconnect, device number 2
-It has been checked that, although the LED is off, VBUS is present.
+Under certain conditions, we could have strange file extent item in log
+tree like:
 
-If, instead, the dr_mode is changed to host and the phy-supply changed
-accordingly, then it works. It has only been tested in host mode.
+  item 18 key (69599 108 397312) itemoff 15208 itemsize 53
+	extent data disk bytenr 0 nr 0
+	extent data offset 0 nr 18446744073709547520 ram 18446744073709547520
 
-Signed-off-by: Vicente Bergas <vicencb@gmail.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+The num_bytes + ram_bytes overflow 64 bit type.
+
+For num_bytes part, we can detect such overflow along with file offset
+(key->offset), as file_offset + num_bytes should never go beyond u64.
+
+For ram_bytes part, it's about the decompressed size of the extent, not
+directly related to the size.
+In theory it is OK to have a large value, and put extra limitation
+on RAM bytes may cause unexpected false alerts.
+
+So in tree-checker, we only check if the file offset and num bytes
+overflow.
+
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ fs/btrfs/tree-checker.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
-index 04623e52ac5db..1bc1579674e57 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
-@@ -565,12 +565,11 @@
- 	status = "okay";
+diff --git a/fs/btrfs/tree-checker.c b/fs/btrfs/tree-checker.c
+index 96fce4bef4e7d..ccd5706199d76 100644
+--- a/fs/btrfs/tree-checker.c
++++ b/fs/btrfs/tree-checker.c
+@@ -132,6 +132,7 @@ static int check_extent_data_item(struct extent_buffer *leaf,
+ 	struct btrfs_file_extent_item *fi;
+ 	u32 sectorsize = fs_info->sectorsize;
+ 	u32 item_size = btrfs_item_size_nr(leaf, slot);
++	u64 extent_end;
  
- 	u2phy0_otg: otg-port {
--		phy-supply = <&vcc5v0_typec0>;
- 		status = "okay";
- 	};
+ 	if (!IS_ALIGNED(key->offset, sectorsize)) {
+ 		file_extent_err(leaf, slot,
+@@ -207,6 +208,16 @@ static int check_extent_data_item(struct extent_buffer *leaf,
+ 	    CHECK_FE_ALIGNED(leaf, slot, fi, num_bytes, sectorsize))
+ 		return -EUCLEAN;
  
- 	u2phy0_host: host-port {
--		phy-supply = <&vcc5v0_host>;
-+		phy-supply = <&vcc5v0_typec0>;
- 		status = "okay";
- 	};
- };
-@@ -620,7 +619,7 @@
- 
- &usbdrd_dwc3_0 {
- 	status = "okay";
--	dr_mode = "otg";
-+	dr_mode = "host";
- };
- 
- &usbdrd3_1 {
++	/* Catch extent end overflow */
++	if (check_add_overflow(btrfs_file_extent_num_bytes(leaf, fi),
++			       key->offset, &extent_end)) {
++		file_extent_err(leaf, slot,
++	"extent end overflow, have file offset %llu extent num bytes %llu",
++				key->offset,
++				btrfs_file_extent_num_bytes(leaf, fi));
++		return -EUCLEAN;
++	}
++
+ 	/*
+ 	 * Check that no two consecutive file extent items, in the same leaf,
+ 	 * present ranges that overlap each other.
 -- 
 2.20.1
 
