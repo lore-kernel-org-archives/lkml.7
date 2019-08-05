@@ -2,119 +2,91 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D36C1C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E01C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9BC1214C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:21:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565014915;
-	bh=XAA7Flg5c5GFi9m33JML4YyxGkePU4glbZekU7pANpg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=vfU5FKuKNAmRWdmKJ9OIN4XUDy7tmTRtR8dV1cKyyqNkM+dx5PUazUR/7XQxOsjEo
-	 +9JkL7/kdL/gTjpju3Eu6Cbi58iGyEqut+krs30J8yexAHTg+Bg9lTrEjPPWBJddwI
-	 keaqrEY/IxQC51e9ejDqq9OPocC+KHMLzJIWEFj4=
+	by mail.kernel.org (Postfix) with ESMTP id 5EC392086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:24:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729430AbfHEOVy (ORCPT
+        id S1729258AbfHEOYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 10:21:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54172 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728028AbfHEOVy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 10:21:54 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEB47206C1;
-        Mon,  5 Aug 2019 14:21:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565014913;
-        bh=XAA7Flg5c5GFi9m33JML4YyxGkePU4glbZekU7pANpg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=gZflbhZO5wL2IJqDdj7C3PyIeif9ajRKpt9I2gvPVDtdzb0BypyhzRjIT5ogW0iiD
-         3UNvEFV3B0mUBPiGQAEB0bngO9gMJWRpAvhhzezVw9W+zDrbSe441TA2IDrlzsj9MP
-         fei20FuVg8oNi/hkg02l57xqlkefBr7QDWebJGf4=
-Date:   Mon, 5 Aug 2019 15:21:48 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Martin Kepplinger <martin.kepplinger@puri.sm>
-Cc:     lorenzo.bianconi83@gmail.com, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: imu: st_lsm6dsx: make IIO_CHAN_INFO_SCALE shared
- by type
-Message-ID: <20190805152148.0ea55f6e@archlinux>
-In-Reply-To: <20190801143908.27608-1-martin.kepplinger@puri.sm>
-References: <20190801143908.27608-1-martin.kepplinger@puri.sm>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 5 Aug 2019 10:24:18 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37159 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728028AbfHEOYS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 10:24:18 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1huduJ-0003js-F8; Mon, 05 Aug 2019 14:24:15 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     gregkh@linuxfoundation.org
+Cc:     stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [RESEND] [PATCH v2] USB: Disable USB2 LPM at shutdown
+Date:   Mon,  5 Aug 2019 22:24:12 +0800
+Message-Id: <20190805142412.23965-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  1 Aug 2019 16:39:08 +0200
-Martin Kepplinger <martin.kepplinger@puri.sm> wrote:
+The QCA Rome USB Bluetooth controller has several issues once LPM gets
+enabled:
+- Fails to get enumerated in coldboot. [1]
+- Drains more power (~ 0.2W) when the system is in S5. [2]
+- Disappears after a warmboot. [2]
 
-> in_accel_x_scale, in_accel_y_scale and in_accel_z_scale are always
-> the same. The scale is still defined to be in "info_mask_separate".
-> 
-> Userspace (iio-sensor-proxy and others) is not used to that and only
-> looks for "in_accel_scale" for the scaling factor to apply.
-> 
-> Change IIO_CHAN_INFO_SCALE from being separate in all channel to be
-> shared by type.
-> 
-> This removes in_accel_x_scale, in_accel_y_scale and in_accel_z_scale and
-> makes available in_accel_scale.
-> 
-> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
-> ---
-> 
-> AFAIK in all other drivers, IIO_CHAN_INFO_SCALE is "shared by type". Sure
-> devices are different, but LSM6DSX devices still don't have different
-> scales for x/y/z channels :)
+The issue happens because the device lingers at LPM L1 in S5, so device
+can't get enumerated even after a reboot.
 
-I'm fine with this, but would like a Lorenzo ack as we have had
-devices in other series where these are not equal.   It used to
-be common in accelerometers as I think it was hard to get a large
-range in the vertical direction.  Doubt that applies on these modern
-parts though!
+Disable LPM at shutdown to solve the issue.
 
-Thanks,
+[1] https://bugs.launchpad.net/bugs/1757218
+[2] https://patchwork.kernel.org/patch/10607097/
 
-Jonathan
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+v2: Use new LPM helpers.
 
+ drivers/usb/core/port.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-> 
-> thanks,
-> 
->                               martin
-> 
-> 
-> 
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-> index af379a5429ed..59c3ab7cbb6f 100644
-> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-> @@ -56,8 +56,8 @@ enum st_lsm6dsx_hw_id {
->  	.address = addr,						\
->  	.modified = 1,							\
->  	.channel2 = mod,						\
-> -	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |			\
-> -			      BIT(IIO_CHAN_INFO_SCALE),			\
-> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),			\
-> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),		\
->  	.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),	\
->  	.scan_index = scan_idx,						\
->  	.scan_type = {							\
+diff --git a/drivers/usb/core/port.c b/drivers/usb/core/port.c
+index 1a06a4b5fbb1..bbbb35fa639f 100644
+--- a/drivers/usb/core/port.c
++++ b/drivers/usb/core/port.c
+@@ -285,6 +285,14 @@ static int usb_port_runtime_suspend(struct device *dev)
+ }
+ #endif
+ 
++static void usb_port_shutdown(struct device *dev)
++{
++	struct usb_port *port_dev = to_usb_port(dev);
++
++	if (port_dev->child)
++		usb_disable_usb2_hardware_lpm(port_dev->child);
++}
++
+ static const struct dev_pm_ops usb_port_pm_ops = {
+ #ifdef CONFIG_PM
+ 	.runtime_suspend =	usb_port_runtime_suspend,
+@@ -301,6 +309,7 @@ struct device_type usb_port_device_type = {
+ static struct device_driver usb_port_driver = {
+ 	.name = "usb",
+ 	.owner = THIS_MODULE,
++	.shutdown = usb_port_shutdown,
+ };
+ 
+ static int link_peers(struct usb_port *left, struct usb_port *right)
+-- 
+2.17.1
 
