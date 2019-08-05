@@ -2,87 +2,103 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2387AC41514
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C90AC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4373216F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:30:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="2Xqlu4JN"
+	by mail.kernel.org (Postfix) with ESMTP id 7154920644
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:30:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565011814;
+	bh=M9kA6vywYhmV6AUU9MEyFZaf6DLYgVev0DEg/fwbbYU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qwqBwzkjLyvAv6foLbU9SvgqqXXj/fWudttWE0TKYrNNYE36kpfCEYVoJjV/Y4Qo5
+	 RAZ2to1O09ww9kbwZDz6YFrbCMZ3HtjNjy1ByUmQwqkToDsqt0t3X3jQZlAnMCcnho
+	 jUu4sHuNQu3h9lXe3IbvOgSBWWwWENqHF/CrNoaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730411AbfHENVA (ORCPT
+        id S1730396AbfHENU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:21:00 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:34002 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730367AbfHENU5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 5 Aug 2019 09:20:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=6daK9OLtTHHmYFQn2clC+oFUHMXZEy7xd2EJnCzCpfk=; b=2Xqlu4JNgn9D9OND3DH1g0VDsc
-        2etmgO2ZFmrD7NXQqgtZ+pvFTXnEkT9iEwpvoIM6wdK7+AvMv5nhwfS78Ik5uWYTjN7YgzeosGDnk
-        GYwzWro6J8XCQMOt1FR1Ebq6bJIDeOqhzONyX0uDirp4RGjcDK7JH8cEhgiGjcLe48OY=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hucur-0006ZZ-Um; Mon, 05 Aug 2019 15:20:45 +0200
-Date:   Mon, 5 Aug 2019 15:20:45 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Harini Katakam <harinik@xilinx.com>
-Cc:     Harini Katakam <harini.katakam@xilinx.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        David Miller <davem@davemloft.net>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Michal Simek <michal.simek@xilinx.com>,
-        devicetree@vger.kernel.org
-Subject: Re: [RFC PATCH 1/2] dt-bindings: net: macb: Add new property for PS
- SGMII only
-Message-ID: <20190805132045.GC24275@lunn.ch>
-References: <1564566033-676-1-git-send-email-harini.katakam@xilinx.com>
- <1564566033-676-2-git-send-email-harini.katakam@xilinx.com>
- <20190804145633.GB6800@lunn.ch>
- <CAFcVECL6cvCjeo+fn1NDyMDZyZXDrWyhD9djvcVXiLVLiLgGeA@mail.gmail.com>
+Received: from mail.kernel.org ([198.145.29.99]:57068 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730356AbfHENUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:20:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DD7220657;
+        Mon,  5 Aug 2019 13:20:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565011253;
+        bh=M9kA6vywYhmV6AUU9MEyFZaf6DLYgVev0DEg/fwbbYU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kQ09bzU6hWoBfGmq+nQ4ROOIlNVkjLZuKH2NEIgoKAaMrG/0/+iaKnvHr64LGQdwr
+         P0p/Ks9V5z8i/Mf2/FceFvF8j+g/ANH2VSm8ITFSlfG1y1ovrygWX1BRj6zimdCZka
+         Ly53MBey+tC9+Zmw1qYWJgE2gErmho0/85kOqBEM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 023/131] fs/adfs: super: fix use-after-free bug
+Date:   Mon,  5 Aug 2019 15:01:50 +0200
+Message-Id: <20190805124952.992413920@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
+References: <20190805124951.453337465@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFcVECL6cvCjeo+fn1NDyMDZyZXDrWyhD9djvcVXiLVLiLgGeA@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 11:45:05AM +0530, Harini Katakam wrote:
-> Hi Andrew,
-> 
-> On Sun, Aug 4, 2019 at 8:26 PM Andrew Lunn <andrew@lunn.ch> wrote:
-> >
-> > On Wed, Jul 31, 2019 at 03:10:32PM +0530, Harini Katakam wrote:
-> > > Add a new property to indicate when PS SGMII is used with NO
-> > > external PHY on board.
-> >
-> > Hi Harini
-> >
-> > What exactly is you use case? Are you connecting to a Ethernet switch?
-> > To an SFP cage with a copper module?
-> 
-> Yes, an SFP cage is the common HW target for this patch.
+[ Upstream commit 5808b14a1f52554de612fee85ef517199855e310 ]
 
-Hi Harini
+Fix a use-after-free bug during filesystem initialisation, where we
+access the disc record (which is stored in a buffer) after we have
+released the buffer.
 
-So you have a copper PHY in the SFP cage. It will talk SGMII
-signalling to your PS SGMII. When that signalling is complete i would
-expect the MAC to raise an interrupt, just as if the SGMII PHY was
-soldered on the board. So i don't see why you need this polling?
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/adfs/super.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-       Andrew
+diff --git a/fs/adfs/super.c b/fs/adfs/super.c
+index ffb669f9bba78..ce0fbbe002bf3 100644
+--- a/fs/adfs/super.c
++++ b/fs/adfs/super.c
+@@ -360,6 +360,7 @@ static int adfs_fill_super(struct super_block *sb, void *data, int silent)
+ 	struct buffer_head *bh;
+ 	struct object_info root_obj;
+ 	unsigned char *b_data;
++	unsigned int blocksize;
+ 	struct adfs_sb_info *asb;
+ 	struct inode *root;
+ 	int ret = -EINVAL;
+@@ -411,8 +412,10 @@ static int adfs_fill_super(struct super_block *sb, void *data, int silent)
+ 		goto error_free_bh;
+ 	}
+ 
++	blocksize = 1 << dr->log2secsize;
+ 	brelse(bh);
+-	if (sb_set_blocksize(sb, 1 << dr->log2secsize)) {
++
++	if (sb_set_blocksize(sb, blocksize)) {
+ 		bh = sb_bread(sb, ADFS_DISCRECORD / sb->s_blocksize);
+ 		if (!bh) {
+ 			adfs_error(sb, "couldn't read superblock on "
+-- 
+2.20.1
+
+
+
