@@ -2,213 +2,479 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED260C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B9EC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF48C2067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:37:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CB932067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:38:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729068AbfHENhY (ORCPT
+        id S1729257AbfHENiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:37:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51352 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726834AbfHENhY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:37:24 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5495EAD18;
-        Mon,  5 Aug 2019 13:37:22 +0000 (UTC)
-Date:   Mon, 5 Aug 2019 23:37:44 +1000
-From:   Aleksa Sarai <asarai@suse.de>
-To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc:     "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-man <linux-man@vger.kernel.org>,
-        Containers <containers@lists.linux-foundation.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jordan Ogas <jogas@lanl.gov>, Al Viro <viro@ftp.linux.org.uk>,
-        werner@almesberger.net, Aleksa Sarai <cyphar@cyphar.com>
-Subject: Re: pivot_root(".", ".") and the fchdir() dance
-Message-ID: <20190805133744.7sm6wx2rspwiuxu5@mikami>
-References: <CAKgNAki0bR5zZr+kp_xjq+bNUky6-F+s2ep+jnR0YrjHhNMB1g@mail.gmail.com>
- <20190805103630.tu4kytsbi5evfrhi@mikami>
- <3a96c631-6595-b75e-f6a7-db703bf89bcf@gmail.com>
+        Mon, 5 Aug 2019 09:38:16 -0400
+Received: from mga05.intel.com ([192.55.52.43]:4354 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728843AbfHENiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:38:15 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 06:38:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,350,1559545200"; 
+   d="scan'208";a="173885811"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.122]) ([10.237.72.122])
+  by fmsmga008.fm.intel.com with ESMTP; 05 Aug 2019 06:38:10 -0700
+Subject: Re: [PATCH v4 2/2] mmc: Add support for the ASPEED SD controller
+To:     Andrew Jeffery <andrew@aj.id.au>, linux-mmc@vger.kernel.org
+Cc:     ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        joel@jms.id.au, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        ryanchen.aspeed@gmail.com
+References: <20190805025155.9020-1-andrew@aj.id.au>
+ <20190805025155.9020-3-andrew@aj.id.au>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <497ab8d6-24aa-c505-a1fa-e71fa1560da1@intel.com>
+Date:   Mon, 5 Aug 2019 16:36:47 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="np2ugc7obo2qaz74"
-Content-Disposition: inline
-In-Reply-To: <3a96c631-6595-b75e-f6a7-db703bf89bcf@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190805025155.9020-3-andrew@aj.id.au>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 5/08/19 5:51 AM, Andrew Jeffery wrote:
+> Add a minimal driver for ASPEED's SD controller, which exposes two
+> SDHCIs.
+> 
+> The ASPEED design implements a common register set for the SDHCIs, and
+> moves some of the standard configuration elements out to this common
+> area (e.g. 8-bit mode, and card detect configuration which is not
+> currently supported).
+> 
+> The SD controller has a dedicated hardware interrupt that is shared
+> between the slots. The common register set exposes information on which
+> slot triggered the interrupt; early revisions of the patch introduced an
+> irqchip for the register, but reality is it doesn't behave as an
+> irqchip, and the result fits awkwardly into the irqchip APIs. Instead
+> I've taken the simple approach of using the IRQ as a shared IRQ with
+> some minor performance impact for the second slot.
+> 
+> Ryan was the original author of the patch - I've taken his work and
+> massaged it to drop the irqchip support and rework the devicetree
+> integration. The driver has been smoke tested under qemu against a
+> minimal SD controller model and lightly tested on an ast2500-evb.
+> 
+> Signed-off-by: Ryan Chen <ryanchen.aspeed@gmail.com>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 
---np2ugc7obo2qaz74
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+One minor comment otherwise:
 
-On 2019-08-05, Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> wrote:
-> On 8/5/19 12:36 PM, Aleksa Sarai wrote:
-> > On 2019-08-01, Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> wro=
-te:
-> >> I'd like to add some documentation about the pivot_root(".", ".")
-> >> idea, but I have a doubt/question. In the lxc_pivot_root() code we
-> >> have these steps
-> >>
-> >>         oldroot =3D open("/", O_DIRECTORY | O_RDONLY | O_CLOEXEC);
-> >>         newroot =3D open(rootfs, O_DIRECTORY | O_RDONLY | O_CLOEXEC);
-> >>
-> >>         fchdir(newroot);
-> >>         pivot_root(".", ".");
-> >>
-> >>         fchdir(oldroot);      // ****
-> >=20
-> > This one is "required" because (as the pivot_root(2) man page states),
-> > it's technically not guaranteed by the kernel that the process's cwd
-> > will be the same after pivot_root(2):
-> >=20
-> >> pivot_root() may or may not change the current root and the current
-> >> working directory of any processes or threads which use the old root
-> >> directory.
-> >=20
-> > Now, if it turns out that we can rely on the current behaviour (and the
-> > man page you're improving is actually inaccurate on this point) then
-> > you're right that this fchdir(2) isn't required.
->=20
-> I'm not sure that I follow your logic here. In the old manual page
-> text that you quote above, it says that [pivot_root() may change the
-> CWD of any processes that use the old root directory]. Two points=20
-> there:
->=20
-> (1) the first fchdir() has *already* changed the CWD of the calling
-> process to the new root directory, and
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-Right, I (and presumably the LXC folks as well) must've missed the
-qualifier on the end of the sentence and was thinking that it said "you
-can't trust CWD after pivot_root(2)".
+> 
+> ---
+> v3: No change
+> v2:
+> * Add AST2600 compatible
+> * Drop SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN
+> * Ensure slot number is valid
+> * Fix build with CONFIG_MODULES
+> * Fix module license string
+> * Non-PCI devices won't die
+> * Rename aspeed_sdc_configure_8bit_mode()
+> * Rename aspeed_sdhci_pdata
+> * Switch to sdhci_enable_clk()
+> * Use PTR_ERR() on the right `struct platform_device *`
+> ---
+>  drivers/mmc/host/Kconfig           |  12 ++
+>  drivers/mmc/host/Makefile          |   1 +
+>  drivers/mmc/host/sdhci-of-aspeed.c | 328 +++++++++++++++++++++++++++++
+>  3 files changed, 341 insertions(+)
+>  create mode 100644 drivers/mmc/host/sdhci-of-aspeed.c
+> 
+> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+> index 14d89a108edd..0f8a230de2f3 100644
+> --- a/drivers/mmc/host/Kconfig
+> +++ b/drivers/mmc/host/Kconfig
+> @@ -154,6 +154,18 @@ config MMC_SDHCI_OF_ARASAN
+>  
+>  	  If unsure, say N.
+>  
+> +config MMC_SDHCI_OF_ASPEED
+> +	tristate "SDHCI OF support for the ASPEED SDHCI controller"
+> +	depends on MMC_SDHCI_PLTFM
+> +	depends on OF
+> +	help
+> +	  This selects the ASPEED Secure Digital Host Controller Interface.
+> +
+> +	  If you have a controller with this interface, say Y or M here. You
+> +	  also need to enable an appropriate bus interface.
+> +
+> +	  If unsure, say N.
+> +
+>  config MMC_SDHCI_OF_AT91
+>  	tristate "SDHCI OF support for the Atmel SDMMC controller"
+>  	depends on MMC_SDHCI_PLTFM
+> diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
+> index 73578718f119..390ee162fe71 100644
+> --- a/drivers/mmc/host/Makefile
+> +++ b/drivers/mmc/host/Makefile
+> @@ -84,6 +84,7 @@ obj-$(CONFIG_MMC_SDHCI_ESDHC_IMX)	+= sdhci-esdhc-imx.o
+>  obj-$(CONFIG_MMC_SDHCI_DOVE)		+= sdhci-dove.o
+>  obj-$(CONFIG_MMC_SDHCI_TEGRA)		+= sdhci-tegra.o
+>  obj-$(CONFIG_MMC_SDHCI_OF_ARASAN)	+= sdhci-of-arasan.o
+> +obj-$(CONFIG_MMC_SDHCI_OF_ASPEED)	+= sdhci-of-aspeed.o
+>  obj-$(CONFIG_MMC_SDHCI_OF_AT91)		+= sdhci-of-at91.o
+>  obj-$(CONFIG_MMC_SDHCI_OF_ESDHC)	+= sdhci-of-esdhc.o
+>  obj-$(CONFIG_MMC_SDHCI_OF_HLWD)		+= sdhci-of-hlwd.o
+> diff --git a/drivers/mmc/host/sdhci-of-aspeed.c b/drivers/mmc/host/sdhci-of-aspeed.c
+> new file mode 100644
+> index 000000000000..d31785ec90d7
+> --- /dev/null
+> +++ b/drivers/mmc/host/sdhci-of-aspeed.c
+> @@ -0,0 +1,328 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/* Copyright (C) 2019 ASPEED Technology Inc. */
+> +/* Copyright (C) 2019 IBM Corp. */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/device.h>
+> +#include <linux/io.h>
+> +#include <linux/mmc/host.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/spinlock.h>
+> +
+> +#include "sdhci-pltfm.h"
+> +
+> +#define ASPEED_SDC_INFO		0x00
+> +#define   ASPEED_SDC_S1MMC8	BIT(25)
+> +#define   ASPEED_SDC_S0MMC8	BIT(24)
+> +
+> +struct aspeed_sdc {
+> +	struct clk *clk;
+> +	struct resource *res;
+> +
+> +	spinlock_t lock;
+> +	void __iomem *regs;
+> +};
+> +
+> +struct aspeed_sdhci {
+> +	struct aspeed_sdc *parent;
+> +	u32 width_mask;
+> +};
+> +
+> +static void aspeed_sdc_configure_8bit_mode(struct aspeed_sdc *sdc,
+> +					   struct aspeed_sdhci *sdhci,
+> +					   bool bus8)
+> +{
+> +	u32 info;
+> +
+> +	/* Set/clear 8 bit mode */
+> +	spin_lock(&sdc->lock);
+> +	info = readl(sdc->regs + ASPEED_SDC_INFO);
+> +	if (bus8)
+> +		info |= sdhci->width_mask;
+> +	else
+> +		info &= ~sdhci->width_mask;
+> +	writel(info, sdc->regs + ASPEED_SDC_INFO);
+> +	spin_unlock(&sdc->lock);
+> +}
+> +
+> +static void aspeed_sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
+> +{
+> +	int div;
+> +	u16 clk;
+> +
+> +	if (clock == host->clock)
+> +		return;
+> +
+> +	sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
+> +
+> +	if (clock == 0)
+> +		goto out;
+> +
+> +	for (div = 1; div < 256; div *= 2) {
+> +		if ((host->max_clk / div) <= clock)
+> +			break;
+> +	}
+> +	div >>= 1;
+> +
+> +	clk = div << SDHCI_DIVIDER_SHIFT;
+> +
+> +	sdhci_enable_clk(host, clk);
+> +
+> +out:
+> +	host->clock = clock;
+> +}
+> +
+> +static void aspeed_sdhci_set_bus_width(struct sdhci_host *host, int width)
+> +{
+> +	struct sdhci_pltfm_host *pltfm_priv;
+> +	struct aspeed_sdhci *aspeed_sdhci;
+> +	struct aspeed_sdc *aspeed_sdc;
+> +	u8 ctrl;
+> +
+> +	pltfm_priv = sdhci_priv(host);
+> +	aspeed_sdhci = sdhci_pltfm_priv(pltfm_priv);
+> +	aspeed_sdc = aspeed_sdhci->parent;
+> +
+> +	/* Set/clear 8-bit mode */
+> +	aspeed_sdc_configure_8bit_mode(aspeed_sdc, aspeed_sdhci,
+> +				       width == MMC_BUS_WIDTH_8);
+> +
+> +	/* Set/clear 1 or 4 bit mode */
+> +	ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
+> +	if (width == MMC_BUS_WIDTH_4)
+> +		ctrl |= SDHCI_CTRL_4BITBUS;
+> +	else
+> +		ctrl &= ~SDHCI_CTRL_4BITBUS;
+> +	sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
+> +}
+> +
+> +static const struct sdhci_ops aspeed_sdhci_ops = {
+> +	.set_clock = aspeed_sdhci_set_clock,
+> +	.get_max_clock = sdhci_pltfm_clk_get_max_clock,
+> +	.set_bus_width = aspeed_sdhci_set_bus_width,
+> +	.get_timeout_clock = sdhci_pltfm_clk_get_max_clock,
+> +	.reset = sdhci_reset,
+> +	.set_uhs_signaling = sdhci_set_uhs_signaling,
+> +};
+> +
+> +static const struct sdhci_pltfm_data aspeed_sdhci_pdata = {
+> +	.ops = &aspeed_sdhci_ops,
+> +	.quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
+> +};
+> +
+> +static inline int aspeed_sdhci_calculate_slot(struct aspeed_sdhci *dev,
+> +					      struct resource *res)
+> +{
+> +	resource_size_t delta;
+> +
+> +	if (!res || resource_type(res) != IORESOURCE_MEM)
+> +		return -EINVAL;
+> +
+> +	if (res->start < dev->parent->res->start)
+> +		return -EINVAL;
+> +
+> +	delta = res->start - dev->parent->res->start;
+> +	if (delta & (0x100 - 1))
+> +		return -EINVAL;
+> +
+> +	return (delta / 0x100) - 1;
+> +}
+> +
+> +static int aspeed_sdhci_probe(struct platform_device *pdev)
+> +{
+> +	struct sdhci_pltfm_host *pltfm_host;
+> +	struct aspeed_sdhci *dev;
+> +	struct sdhci_host *host;
+> +	struct resource *res;
+> +	int slot;
+> +	int ret;
+> +
+> +	host = sdhci_pltfm_init(pdev, &aspeed_sdhci_pdata, sizeof(*dev));
+> +	if (IS_ERR(host))
+> +		return PTR_ERR(host);
+> +
+> +	pltfm_host = sdhci_priv(host);
+> +	dev = sdhci_pltfm_priv(pltfm_host);
+> +	dev->parent = dev_get_drvdata(pdev->dev.parent);
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	slot = aspeed_sdhci_calculate_slot(dev, res);
+> +
+> +	if (slot < 0)
+> +		return slot;
+> +	else if (slot >= 2)
+> +		return -EINVAL;
+> +
+> +	dev_info(&pdev->dev, "Configuring for slot %d\n", slot);
+> +	dev->width_mask = !slot ? ASPEED_SDC_S0MMC8 : ASPEED_SDC_S1MMC8;
+> +
+> +	sdhci_get_of_property(pdev);
+> +
+> +	pltfm_host->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(pltfm_host->clk))
+> +		return PTR_ERR(pltfm_host->clk);
+> +
+> +	ret = clk_prepare_enable(pltfm_host->clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Unable to enable SDIO clock\n");
+> +		goto err_pltfm_free;
+> +	}
+> +
+> +	ret = mmc_of_parse(host->mmc);
+> +	if (ret)
+> +		goto err_sdhci_add;
+> +
+> +	ret = sdhci_add_host(host);
+> +	if (ret)
+> +		goto err_sdhci_add;
+> +
+> +	return 0;
+> +
+> +err_sdhci_add:
+> +	clk_disable_unprepare(pltfm_host->clk);
+> +err_pltfm_free:
+> +	sdhci_pltfm_free(pdev);
+> +	return ret;
+> +}
+> +
+> +static int aspeed_sdhci_remove(struct platform_device *pdev)
+> +{
+> +	struct sdhci_pltfm_host *pltfm_host;
+> +	struct sdhci_host *host;
+> +	int dead = 0;
+> +
+> +	host = platform_get_drvdata(pdev);
+> +	pltfm_host = sdhci_priv(host);
+> +
+> +	sdhci_remove_host(host, dead);
+> +
+> +	clk_disable_unprepare(pltfm_host->clk);
+> +
+> +	sdhci_pltfm_free(pdev);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id aspeed_sdhci_of_match[] = {
+> +	{ .compatible = "aspeed,ast2400-sdhci", },
+> +	{ .compatible = "aspeed,ast2500-sdhci", },
+> +	{ .compatible = "aspeed,ast2600-sdhci", },
+> +	{ }
+> +};
+> +
+> +static struct platform_driver aspeed_sdhci_driver = {
+> +	.driver		= {
+> +		.name	= "sdhci-aspeed",
+> +		.of_match_table = aspeed_sdhci_of_match,
+> +	},
+> +	.probe		= aspeed_sdhci_probe,
+> +	.remove		= aspeed_sdhci_remove,
+> +};
+> +
+> +static int aspeed_sdc_probe(struct platform_device *pdev)
+> +
+> +{
+> +	struct device_node *parent, *child;
+> +	struct aspeed_sdc *sdc;
+> +	int ret;
+> +
+> +	sdc = devm_kzalloc(&pdev->dev, sizeof(*sdc), GFP_KERNEL);
+> +	if (!sdc)
+> +		return -ENOMEM;
+> +
+> +	spin_lock_init(&sdc->lock);
+> +
+> +	sdc->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(sdc->clk))
+> +		return PTR_ERR(sdc->clk);
+> +
+> +	ret = clk_prepare_enable(sdc->clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Unable to enable SDCLK\n");
+> +		return ret;
+> +	}
+> +
+> +	sdc->res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	sdc->regs = devm_ioremap_resource(&pdev->dev, sdc->res);
+> +	if (IS_ERR(sdc->regs)) {
+> +		ret = PTR_ERR(sdc->regs);
+> +		goto err_clk;
+> +	}
+> +
+> +	dev_set_drvdata(&pdev->dev, sdc);
+> +
+> +	parent = pdev->dev.of_node;
+> +	for_each_available_child_of_node(parent, child) {
+> +		struct platform_device *cpdev;
+> +
+> +		cpdev = of_platform_device_create(child, NULL, &pdev->dev);
+> +		if (IS_ERR(cpdev)) {
+> +			of_node_put(child);
+> +			ret = PTR_ERR(cpdev);
+> +			goto err_clk;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +
+> +err_clk:
+> +	clk_disable_unprepare(sdc->clk);
+> +	return ret;
+> +}
+> +
+> +static int aspeed_sdc_remove(struct platform_device *pdev)
+> +{
+> +	struct aspeed_sdc *sdc = dev_get_drvdata(&pdev->dev);
+> +
+> +	clk_disable_unprepare(sdc->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id aspeed_sdc_of_match[] = {
+> +	{ .compatible = "aspeed,ast2400-sd-controller", },
+> +	{ .compatible = "aspeed,ast2500-sd-controller", },
+> +	{ .compatible = "aspeed,ast2600-sd-controller", },
+> +	{ }
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, aspeed_sdc_of_match);
+> +
+> +static struct platform_driver aspeed_sdc_driver = {
+> +	.driver		= {
+> +		.name	= "sd-controller-aspeed",
+> +		.pm	= &sdhci_pltfm_pmops,
+> +		.of_match_table = aspeed_sdc_of_match,
+> +	},
+> +	.probe		= aspeed_sdc_probe,
+> +	.remove		= aspeed_sdc_remove,
+> +};
+> +
+> +static int __init aspeed_sdc_init(void)
+> +{
+> +	int rc;
+> +
+> +	rc = platform_driver_register(&aspeed_sdhci_driver);
+> +	if (rc < 0)
+> +		return rc;
+> +
+> +	return platform_driver_register(&aspeed_sdc_driver);
 
-My follow-up was going to be that we need to be in the old root to
-umount, but as you mentioned that shouldn't be necessary either since
-the umount will apply to the stacked mount (which is somewhat
-counter-intuitively the earlier mount not the later one -- I will freely
-admit that I don't understand all of the stacked and tucked mount
-logic in VFS).
+Shouldn't aspeed_sdhci_driver be unregistered here if there was an error.
 
-> (2) the manual page implied but did not explicitly say that the
-> CWD of processes using the old root may be changed *to the new root
-> directory* (rather than changed to some arbitrary location!);
-> presumably, omitting to mention that detail explicitly in the manual
-> page was an oversight, since that is indeed the kernel's behavior.
->=20
-> The point is, the manual page was written 19 years ago and has
-> barely been changed since then. Even at the time that the system
-> call was officially released (in Linux 2.4.0), the manual page was
-> already inaccurate in a number of details, since it was written=20
-> about a year beforehand (during the 2.3 series), and the=20
-> implementation already changed by the time of 2.4.0, but the manual
-> page was not changed then (or since, but I'm working on that).
->=20
-> The behavior has in practice always been (modulo the introduction
-> of mount namespaces in 2001/2002):
->=20
->        pivot_root()  changes  the root directory and the current
->        working directory of each process or thread in  the  same
->        mount namespace to new_root if they point to the old root
->        directory.
->=20
-> Given that this has been the behavior since Linux 2.4.0 was
-> released, it improbable that this will ever change, since,
-> notwithstanding what the manual page says, this would be an ABI
-> breakage.
->=20
-> I hypothesize that the original manual page text, written before
-> the system call was even officially released, reflects Werner's
-> belief at the time that perhaps in the not too distant future
-> the implementation might change. But, 18 years on from 2.4.0,
-> it has not.
->=20
-> And arguably, the manual page should reflect that reality,
-> describing what the kernel actually does, rather than speculating
-> that things might (after 19 years) still sometime change.
+> +}
+> +module_init(aspeed_sdc_init);
+> +
+> +static void __exit aspeed_sdc_exit(void)
+> +{
+> +	platform_driver_unregister(&aspeed_sdc_driver);
+> +	platform_driver_unregister(&aspeed_sdhci_driver);
+> +}
+> +module_exit(aspeed_sdc_exit);
+> +
+> +MODULE_DESCRIPTION("Driver for the ASPEED SD/SDIO/SDHCI Controllers");
+> +MODULE_AUTHOR("Ryan Chen <ryan_chen@aspeedtech.com>");
+> +MODULE_AUTHOR("Andrew Jeffery <andrew@aj.id.au>");
+> +MODULE_LICENSE("GPL");
+> 
 
-I wasn't aware of the history of the man page, and took it as gospel
-that we should avoid making assumptions about current's CWD surrounding
-a pivot_root(2). Given the history (and that it appears the behaviour
-was never intended to be changed after being merged), we should
-definitely drop that text to avoid the confusion which has already
-caused us container folks to implement this in a
-more-convoluted-than-necessary fashion.
-
-In case you haven't noticed already, you might want to also send a patch
-to util-linux to also update pivot_root(8) which makes the same mistake
-in its text:
-
-> Note that, depending on the implementation of pivot_root, root and cwd
-> of the caller may or may not change.
-
-Then again, it's also possible this text is independently just as vague
-for other reasons.
-
-> > And this one is required because we are in @oldroot at this point, due
-> > to the first fchdir(2). If we don't have the first one, then switching
-> > from "." to "/" in the mount/umount2 calls should fix the issue.
->=20
-> See my notes above for why I therefore think that the second fchdir()
-> is also not needed (and therefore why switching from "." to "/" in the
-> mount()/umount2() calls is unnecessary.
-
-My gut feeling reading this was that operating on "." will result in you
-doing the later mount operations on @newroot (since "." is @newroot) not
-on the stacked mount which isn't your CWD.
-
-*But* my gut feeling is obviously wrong (since you've tested it), and I
-will again admit I don't understand quite how CWD references interact
-with mount operations -- especially in the context of stacked mounts.
-
-> Do you agree with my analysis?
-
-Minus the mount bits that I'm not too sure about (I defer to
-Christian/Serge/et al on that point), it seems reasonable to me.
-
-My only real argument for keeping it the way it is, is that it's much
-easier (for me, at least) to understand the semantics with explicit
-fchdir(2)s. But that's not really a good reason to continue doing it the
-way we do it now -- if it's documented in a man page that'd be more than
-sufficient to avoid confusion when reading snippets that do it without
-the fchdir(2)s.
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---np2ugc7obo2qaz74
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEXzbGxhtUYBJKdfWmnhiqJn3bjbQFAl1IMSUACgkQnhiqJn3b
-jbR9TxAAr3w1iw2zyRsIJt+qye7WLDUYc70Qq8XBW/+Xmbq5Vcf2gKXB3WAJb5PM
-3D0Btda2Dw9tT69QJdEvVyt27FgwUzQAWo0m1Ki7NXI0AIocXV+a32NrBbtB+XKI
-f2xY5J9oCCoJ1GErEO4SkchHcxWFyygGn3jQVavxfFDA2I6p7DOXtJ23X83ZTXqJ
-i/Z4pu3TAPeU4SogXFJhBsdwsL8JFcLjDhnyK6SZws5oatneKvitC213J1CwGBno
-G4PaYQ4JGmeg+ePSvogQigYBd7ZZ89yjJjum+HAqrwVu0AVkf5VGzWu/HNXRD22v
-auU4MocADXFwbqjr5kDI/q5hpjVA97u4mbu06Wv9rqGIl8l1swORNJC4lZWN6uwT
-uzASEopUcZKrCrsj7qEQmQnfMQXZz/1SNdl55TxRA2b/BOWozK0Q7utoLBx+UGBe
-0wwiCr++euhANpRrGOmgZRDvwrhGL+56Qzo8GhkQpYffmOglpiVkdSzZ5wGhLusZ
-IyXZH2t/vuEAoq9xEEtBvZLWW4dKnRKzYWWvV0hLEqajHRyxQCskc1LjBapE8rMm
-E0UR94LE0TX/KnxDPX/8XDhNT7RGVlEhTF5qmBhT1sOfXrfZ3T0zW/awlbGDHfHu
-1wtivpqvwbtdF8JpWiS9uU0Pnf+743nF10yDnvJnkJgBRBzaCfE=
-=7p3L
------END PGP SIGNATURE-----
-
---np2ugc7obo2qaz74--
