@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60246C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC1FC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CE0D206A2
+	by mail.kernel.org (Postfix) with ESMTP id E1587206A2
 	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:47:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="OjW+mx5H"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="BexTkKnw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730424AbfHEQr2 (ORCPT
+        id S1730449AbfHEQr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 12:47:28 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:52254 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728824AbfHEQpa (ORCPT
+        Mon, 5 Aug 2019 12:47:29 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:39912 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728843AbfHEQpa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 5 Aug 2019 12:45:30 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 616E5C020B;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id E8CD7C01B9;
         Mon,  5 Aug 2019 16:45:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1565023529; bh=ZScKZj7qhntAYFMoXsRRZOHL848j6J8v8glAt9eiNxw=;
+        t=1565023529; bh=tYuLLNvd8u7ViPKYx1WmXBB4P1bkXsM38xjYG4ICZFo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=OjW+mx5HSMxXS/witd30FcBMi2YACpFg5YuiZQVuK50tCjIvPMJVgu2BujEevbMn+
-         y1d6KEvxv2NcOX7SSVas0JAxdxhcvcBSH9ykLw/LON4qsafQGDwYgMszKiz6q58TDi
-         NA4AXXqhWhxuGU7WrDrAgBGQY0B/1G66t/WvDSe2VNOuZ/ZDk36r+0tCT7OO0FgC1B
-         NydAwwmNn/7oVzE8sK4vud/AFiOQYcX8szaaVh8vJxWKDrucTa7d6xRAbyNxF6lpCD
-         ZC/ZcNodLSbFLUHL8nFdqOXwtuos0JOIx6dNuM9s1QpiUnOYooO23CX+xYoeprjUDg
-         MBsTFEIUoG4/A==
+        b=BexTkKnwUYfqkNrieGui0uwEPQo4KHOw/MsGZpAcJcanZHdU3IjFq8S40Z3NR1FE5
+         1OJR1lvFzcZlq0xqPuPDcGkoR9OdRTC7zuwTbibHVO5Af0ffAGoumBPIxV8RVyPmuK
+         OiJUaHAZpcImKjf1bcVQOkyYpTCwguP2gr5EGjNARbOjlgkJ80OZo8vsX/tP3Z8Qar
+         EKcKNIBZHr5qg3OMX1WG9WLGZsAzXm5YAWw/ZkRmZvaebQOpihbwpTPNalJ+neP/rC
+         sjHwW26rV1E6FNJ4Kp8cweugOksMiEHh2trgBgeugSa6b7XegSR6OjePCzEx/ZZMkJ
+         Zrr6kQBcjI88A==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 01234A0065;
+        by mailhost.synopsys.com (Postfix) with ESMTP id A84AFA007F;
         Mon,  5 Aug 2019 16:45:27 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
@@ -51,9 +51,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 02/26] net: stmmac: xgmac: Implement MMC counters
-Date:   Mon,  5 Aug 2019 18:44:29 +0200
-Message-Id: <eb143f2abc5c7a1a22e13b14d7572821864f08ec.1565022597.git.joabreu@synopsys.com>
+Subject: [PATCH net-next 11/26] net: stmmac: Add Flexible RX Parser support in XGMAC
+Date:   Mon,  5 Aug 2019 18:44:38 +0200
+Message-Id: <60c776f2e676bf32a9d40ec0f6424e0691a54985.1565022597.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1565022597.git.joabreu@synopsys.com>
 References: <cover.1565022597.git.joabreu@synopsys.com>
@@ -64,7 +64,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement the MMC counters feature in XGMAC core.
+XGMAC cores also support the Flexible RX Parser feature. Add the support
+for it in the XGMAC core.
 
 Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 ---
@@ -78,324 +79,271 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     |   1 +
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c |   1 +
- drivers/net/ethernet/stmicro/stmmac/hwif.c         |   4 +-
- drivers/net/ethernet/stmicro/stmmac/hwif.h         |   1 +
- drivers/net/ethernet/stmicro/stmmac/mmc.h          |   9 +
- drivers/net/ethernet/stmicro/stmmac/mmc_core.c     | 192 +++++++++++++++++++++
- .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c   |   6 +
- 7 files changed, 212 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     |  13 ++
+ .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c    | 190 +++++++++++++++++++++
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c |   3 +
+ 3 files changed, 206 insertions(+)
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-index 3174b701aa90..86a42bc39d21 100644
+index 3d8782f99f64..01bd20ab34a5 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-@@ -84,6 +84,7 @@
- #define XGMAC_HWFEAT_AVSEL		BIT(11)
- #define XGMAC_HWFEAT_RAVSEL		BIT(10)
- #define XGMAC_HWFEAT_ARPOFFSEL		BIT(9)
-+#define XGMAC_HWFEAT_MMCSEL		BIT(8)
- #define XGMAC_HWFEAT_MGKSEL		BIT(7)
- #define XGMAC_HWFEAT_RWKSEL		BIT(6)
- #define XGMAC_HWFEAT_GMIISEL		BIT(1)
+@@ -112,6 +112,9 @@
+ #define XGMAC_HWFEAT_RXQCNT		GENMASK(3, 0)
+ #define XGMAC_HW_FEATURE3		0x00000128
+ #define XGMAC_HWFEAT_ASP		GENMASK(15, 14)
++#define XGMAC_HWFEAT_FRPES		GENMASK(12, 11)
++#define XGMAC_HWFEAT_FRPPB		GENMASK(10, 9)
++#define XGMAC_HWFEAT_FRPSEL		BIT(3)
+ #define XGMAC_MAC_DPP_FSM_INT_STATUS	0x00000150
+ #define XGMAC_MAC_FSM_CONTROL		0x00000158
+ #define XGMAC_PRTYEN			BIT(1)
+@@ -145,6 +148,7 @@
+ 
+ /* MTL Registers */
+ #define XGMAC_MTL_OPMODE		0x00001000
++#define XGMAC_FRPE			BIT(15)
+ #define XGMAC_ETSALG			GENMASK(6, 5)
+ #define XGMAC_WRR			(0x0 << 5)
+ #define XGMAC_WFQ			(0x1 << 5)
+@@ -160,6 +164,15 @@
+ #define XGMAC_TC_PRTY_MAP1		0x00001044
+ #define XGMAC_PSTC(x)			GENMASK((x) * 8 + 7, (x) * 8)
+ #define XGMAC_PSTC_SHIFT(x)		((x) * 8)
++#define XGMAC_MTL_RXP_CONTROL_STATUS	0x000010a0
++#define XGMAC_RXPI			BIT(31)
++#define XGMAC_NPE			GENMASK(23, 16)
++#define XGMAC_NVE			GENMASK(7, 0)
++#define XGMAC_MTL_RXP_IACC_CTRL_ST	0x000010b0
++#define XGMAC_STARTBUSY			BIT(31)
++#define XGMAC_WRRDN			BIT(16)
++#define XGMAC_ADDR			GENMASK(9, 0)
++#define XGMAC_MTL_RXP_IACC_DATA		0x000010b4
+ #define XGMAC_MTL_ECC_CONTROL		0x000010c0
+ #define XGMAC_MTL_SAFETY_INT_STATUS	0x000010c4
+ #define XGMAC_MEUIS			BIT(1)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+index 19dfb72cab11..767f3fe5efaa 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+@@ -808,6 +808,195 @@ static int dwxgmac3_safety_feat_dump(struct stmmac_safety_stats *stats,
+ 	return 0;
+ }
+ 
++static int dwxgmac3_rxp_disable(void __iomem *ioaddr)
++{
++	u32 val = readl(ioaddr + XGMAC_MTL_OPMODE);
++
++	val &= ~XGMAC_FRPE;
++	writel(val, ioaddr + XGMAC_MTL_OPMODE);
++
++	return 0;
++}
++
++static void dwxgmac3_rxp_enable(void __iomem *ioaddr)
++{
++	u32 val;
++
++	val = readl(ioaddr + XGMAC_MTL_OPMODE);
++	val |= XGMAC_FRPE;
++	writel(val, ioaddr + XGMAC_MTL_OPMODE);
++}
++
++static int dwxgmac3_rxp_update_single_entry(void __iomem *ioaddr,
++					    struct stmmac_tc_entry *entry,
++					    int pos)
++{
++	int ret, i;
++
++	for (i = 0; i < (sizeof(entry->val) / sizeof(u32)); i++) {
++		int real_pos = pos * (sizeof(entry->val) / sizeof(u32)) + i;
++		u32 val;
++
++		/* Wait for ready */
++		ret = readl_poll_timeout(ioaddr + XGMAC_MTL_RXP_IACC_CTRL_ST,
++					 val, !(val & XGMAC_STARTBUSY), 1, 10000);
++		if (ret)
++			return ret;
++
++		/* Write data */
++		val = *((u32 *)&entry->val + i);
++		writel(val, ioaddr + XGMAC_MTL_RXP_IACC_DATA);
++
++		/* Write pos */
++		val = real_pos & XGMAC_ADDR;
++		writel(val, ioaddr + XGMAC_MTL_RXP_IACC_CTRL_ST);
++
++		/* Write OP */
++		val |= XGMAC_WRRDN;
++		writel(val, ioaddr + XGMAC_MTL_RXP_IACC_CTRL_ST);
++
++		/* Start Write */
++		val |= XGMAC_STARTBUSY;
++		writel(val, ioaddr + XGMAC_MTL_RXP_IACC_CTRL_ST);
++
++		/* Wait for done */
++		ret = readl_poll_timeout(ioaddr + XGMAC_MTL_RXP_IACC_CTRL_ST,
++					 val, !(val & XGMAC_STARTBUSY), 1, 10000);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
++static struct stmmac_tc_entry *
++dwxgmac3_rxp_get_next_entry(struct stmmac_tc_entry *entries,
++			    unsigned int count, u32 curr_prio)
++{
++	struct stmmac_tc_entry *entry;
++	u32 min_prio = ~0x0;
++	int i, min_prio_idx;
++	bool found = false;
++
++	for (i = count - 1; i >= 0; i--) {
++		entry = &entries[i];
++
++		/* Do not update unused entries */
++		if (!entry->in_use)
++			continue;
++		/* Do not update already updated entries (i.e. fragments) */
++		if (entry->in_hw)
++			continue;
++		/* Let last entry be updated last */
++		if (entry->is_last)
++			continue;
++		/* Do not return fragments */
++		if (entry->is_frag)
++			continue;
++		/* Check if we already checked this prio */
++		if (entry->prio < curr_prio)
++			continue;
++		/* Check if this is the minimum prio */
++		if (entry->prio < min_prio) {
++			min_prio = entry->prio;
++			min_prio_idx = i;
++			found = true;
++		}
++	}
++
++	if (found)
++		return &entries[min_prio_idx];
++	return NULL;
++}
++
++static int dwxgmac3_rxp_config(void __iomem *ioaddr,
++			       struct stmmac_tc_entry *entries,
++			       unsigned int count)
++{
++	struct stmmac_tc_entry *entry, *frag;
++	int i, ret, nve = 0;
++	u32 curr_prio = 0;
++	u32 old_val, val;
++
++	/* Force disable RX */
++	old_val = readl(ioaddr + XGMAC_RX_CONFIG);
++	val = old_val & ~XGMAC_CONFIG_RE;
++	writel(val, ioaddr + XGMAC_RX_CONFIG);
++
++	/* Disable RX Parser */
++	ret = dwxgmac3_rxp_disable(ioaddr);
++	if (ret)
++		goto re_enable;
++
++	/* Set all entries as NOT in HW */
++	for (i = 0; i < count; i++) {
++		entry = &entries[i];
++		entry->in_hw = false;
++	}
++
++	/* Update entries by reverse order */
++	while (1) {
++		entry = dwxgmac3_rxp_get_next_entry(entries, count, curr_prio);
++		if (!entry)
++			break;
++
++		curr_prio = entry->prio;
++		frag = entry->frag_ptr;
++
++		/* Set special fragment requirements */
++		if (frag) {
++			entry->val.af = 0;
++			entry->val.rf = 0;
++			entry->val.nc = 1;
++			entry->val.ok_index = nve + 2;
++		}
++
++		ret = dwxgmac3_rxp_update_single_entry(ioaddr, entry, nve);
++		if (ret)
++			goto re_enable;
++
++		entry->table_pos = nve++;
++		entry->in_hw = true;
++
++		if (frag && !frag->in_hw) {
++			ret = dwxgmac3_rxp_update_single_entry(ioaddr, frag, nve);
++			if (ret)
++				goto re_enable;
++			frag->table_pos = nve++;
++			frag->in_hw = true;
++		}
++	}
++
++	if (!nve)
++		goto re_enable;
++
++	/* Update all pass entry */
++	for (i = 0; i < count; i++) {
++		entry = &entries[i];
++		if (!entry->is_last)
++			continue;
++
++		ret = dwxgmac3_rxp_update_single_entry(ioaddr, entry, nve);
++		if (ret)
++			goto re_enable;
++
++		entry->table_pos = nve++;
++	}
++
++	/* Assume n. of parsable entries == n. of valid entries */
++	val = (nve << 16) & XGMAC_NPE;
++	val |= nve & XGMAC_NVE;
++	writel(val, ioaddr + XGMAC_MTL_RXP_CONTROL_STATUS);
++
++	/* Enable RX Parser */
++	dwxgmac3_rxp_enable(ioaddr);
++
++re_enable:
++	/* Re-enable RX */
++	writel(old_val, ioaddr + XGMAC_RX_CONFIG);
++	return ret;
++}
++
+ const struct stmmac_ops dwxgmac210_ops = {
+ 	.core_init = dwxgmac2_core_init,
+ 	.set_mac = dwxgmac2_set_mac,
+@@ -843,6 +1032,7 @@ const struct stmmac_ops dwxgmac210_ops = {
+ 	.set_mac_loopback = dwxgmac2_set_mac_loopback,
+ 	.rss_configure = dwxgmac2_rss_configure,
+ 	.update_vlan_hash = dwxgmac2_update_vlan_hash,
++	.rxp_config = dwxgmac3_rxp_config,
+ };
+ 
+ int dwxgmac2_setup(struct stmmac_priv *priv)
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
-index a4f236e3593e..0f1c772e892a 100644
+index e4a1c877f2e1..18cbf4ab4ad2 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
-@@ -356,6 +356,7 @@ static void dwxgmac2_get_hw_feature(void __iomem *ioaddr,
- 	dma_cap->atime_stamp = (hw_cap & XGMAC_HWFEAT_TSSEL) >> 12;
- 	dma_cap->av = (hw_cap & XGMAC_HWFEAT_AVSEL) >> 11;
- 	dma_cap->av &= (hw_cap & XGMAC_HWFEAT_RAVSEL) >> 10;
-+	dma_cap->rmon = (hw_cap & XGMAC_HWFEAT_MMCSEL) >> 8;
- 	dma_cap->pmt_magic_frame = (hw_cap & XGMAC_HWFEAT_MGKSEL) >> 7;
- 	dma_cap->pmt_remote_wake_up = (hw_cap & XGMAC_HWFEAT_RWKSEL) >> 6;
- 	dma_cap->mbps_1000 = (hw_cap & XGMAC_HWFEAT_GMIISEL) >> 1;
-diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.c b/drivers/net/ethernet/stmicro/stmmac/hwif.c
-index 6c61b753b55e..3af2e5015245 100644
---- a/drivers/net/ethernet/stmicro/stmmac/hwif.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/hwif.c
-@@ -201,7 +201,7 @@ static const struct stmmac_hwif_entry {
- 		.min_id = DWXGMAC_CORE_2_10,
- 		.regs = {
- 			.ptp_off = PTP_XGMAC_OFFSET,
--			.mmc_off = 0,
-+			.mmc_off = MMC_XGMAC_OFFSET,
- 		},
- 		.desc = &dwxgmac210_desc_ops,
- 		.dma = &dwxgmac210_dma_ops,
-@@ -209,7 +209,7 @@ static const struct stmmac_hwif_entry {
- 		.hwtimestamp = &stmmac_ptp,
- 		.mode = NULL,
- 		.tc = &dwmac510_tc_ops,
--		.mmc = NULL,
-+		.mmc = &dwxgmac_mmc_ops,
- 		.setup = dwxgmac2_setup,
- 		.quirks = NULL,
- 	},
-diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-index 278c0dbec9d9..00539a09d1db 100644
---- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-@@ -503,6 +503,7 @@ extern const struct stmmac_ops dwxgmac210_ops;
- extern const struct stmmac_dma_ops dwxgmac210_dma_ops;
- extern const struct stmmac_desc_ops dwxgmac210_desc_ops;
- extern const struct stmmac_mmc_ops dwmac_mmc_ops;
-+extern const struct stmmac_mmc_ops dwxgmac_mmc_ops;
+@@ -403,6 +403,9 @@ static void dwxgmac2_get_hw_feature(void __iomem *ioaddr,
+ 	/* MAC HW feature 3 */
+ 	hw_cap = readl(ioaddr + XGMAC_HW_FEATURE3);
+ 	dma_cap->asp = (hw_cap & XGMAC_HWFEAT_ASP) >> 14;
++	dma_cap->frpes = (hw_cap & XGMAC_HWFEAT_FRPES) >> 11;
++	dma_cap->frpbs = (hw_cap & XGMAC_HWFEAT_FRPPB) >> 9;
++	dma_cap->frpsel = (hw_cap & XGMAC_HWFEAT_FRPSEL) >> 3;
+ }
  
- #define GMAC_VERSION		0x00000020	/* GMAC CORE Version */
- #define GMAC4_VERSION		0x00000110	/* GMAC4+ CORE Version */
-diff --git a/drivers/net/ethernet/stmicro/stmmac/mmc.h b/drivers/net/ethernet/stmicro/stmmac/mmc.h
-index 3587ceb9faf5..a0c05925883e 100644
---- a/drivers/net/ethernet/stmicro/stmmac/mmc.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/mmc.h
-@@ -24,6 +24,7 @@
- 
- #define MMC_GMAC4_OFFSET		0x700
- #define MMC_GMAC3_X_OFFSET		0x100
-+#define MMC_XGMAC_OFFSET		0x800
- 
- struct stmmac_counters {
- 	unsigned int mmc_tx_octetcount_gb;
-@@ -116,6 +117,14 @@ struct stmmac_counters {
- 	unsigned int mmc_rx_tcp_err_octets;
- 	unsigned int mmc_rx_icmp_gd_octets;
- 	unsigned int mmc_rx_icmp_err_octets;
-+
-+	/* FPE */
-+	unsigned int mmc_tx_fpe_fragment_cntr;
-+	unsigned int mmc_tx_hold_req_cntr;
-+	unsigned int mmc_rx_packet_assembly_err_cntr;
-+	unsigned int mmc_rx_packet_smd_err_cntr;
-+	unsigned int mmc_rx_packet_assembly_ok_cntr;
-+	unsigned int mmc_rx_fpe_fragment_cntr;
- };
- 
- #endif /* __MMC_H__ */
-diff --git a/drivers/net/ethernet/stmicro/stmmac/mmc_core.c b/drivers/net/ethernet/stmicro/stmmac/mmc_core.c
-index a471db6d7b11..a223584f5f9a 100644
---- a/drivers/net/ethernet/stmicro/stmmac/mmc_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/mmc_core.c
-@@ -119,6 +119,64 @@
- #define MMC_RX_ICMP_GD_OCTETS		0x180
- #define MMC_RX_ICMP_ERR_OCTETS		0x184
- 
-+/* XGMAC MMC Registers */
-+#define MMC_XGMAC_TX_OCTET_GB		0x14
-+#define MMC_XGMAC_TX_PKT_GB		0x1c
-+#define MMC_XGMAC_TX_BROAD_PKT_G	0x24
-+#define MMC_XGMAC_TX_MULTI_PKT_G	0x2c
-+#define MMC_XGMAC_TX_64OCT_GB		0x34
-+#define MMC_XGMAC_TX_65OCT_GB		0x3c
-+#define MMC_XGMAC_TX_128OCT_GB		0x44
-+#define MMC_XGMAC_TX_256OCT_GB		0x4c
-+#define MMC_XGMAC_TX_512OCT_GB		0x54
-+#define MMC_XGMAC_TX_1024OCT_GB		0x5c
-+#define MMC_XGMAC_TX_UNI_PKT_GB		0x64
-+#define MMC_XGMAC_TX_MULTI_PKT_GB	0x6c
-+#define MMC_XGMAC_TX_BROAD_PKT_GB	0x74
-+#define MMC_XGMAC_TX_UNDER		0x7c
-+#define MMC_XGMAC_TX_OCTET_G		0x84
-+#define MMC_XGMAC_TX_PKT_G		0x8c
-+#define MMC_XGMAC_TX_PAUSE		0x94
-+#define MMC_XGMAC_TX_VLAN_PKT_G		0x9c
-+#define MMC_XGMAC_TX_LPI_USEC		0xa4
-+#define MMC_XGMAC_TX_LPI_TRAN		0xa8
-+
-+#define MMC_XGMAC_RX_PKT_GB		0x100
-+#define MMC_XGMAC_RX_OCTET_GB		0x108
-+#define MMC_XGMAC_RX_OCTET_G		0x110
-+#define MMC_XGMAC_RX_BROAD_PKT_G	0x118
-+#define MMC_XGMAC_RX_MULTI_PKT_G	0x120
-+#define MMC_XGMAC_RX_CRC_ERR		0x128
-+#define MMC_XGMAC_RX_RUNT_ERR		0x130
-+#define MMC_XGMAC_RX_JABBER_ERR		0x134
-+#define MMC_XGMAC_RX_UNDER		0x138
-+#define MMC_XGMAC_RX_OVER		0x13c
-+#define MMC_XGMAC_RX_64OCT_GB		0x140
-+#define MMC_XGMAC_RX_65OCT_GB		0x148
-+#define MMC_XGMAC_RX_128OCT_GB		0x150
-+#define MMC_XGMAC_RX_256OCT_GB		0x158
-+#define MMC_XGMAC_RX_512OCT_GB		0x160
-+#define MMC_XGMAC_RX_1024OCT_GB		0x168
-+#define MMC_XGMAC_RX_UNI_PKT_G		0x170
-+#define MMC_XGMAC_RX_LENGTH_ERR		0x178
-+#define MMC_XGMAC_RX_RANGE		0x180
-+#define MMC_XGMAC_RX_PAUSE		0x188
-+#define MMC_XGMAC_RX_FIFOOVER_PKT	0x190
-+#define MMC_XGMAC_RX_VLAN_PKT_GB	0x198
-+#define MMC_XGMAC_RX_WATCHDOG_ERR	0x1a0
-+#define MMC_XGMAC_RX_LPI_USEC		0x1a4
-+#define MMC_XGMAC_RX_LPI_TRAN		0x1a8
-+#define MMC_XGMAC_RX_DISCARD_PKT_GB	0x1ac
-+#define MMC_XGMAC_RX_DISCARD_OCT_GB	0x1b4
-+#define MMC_XGMAC_RX_ALIGN_ERR_PKT	0x1bc
-+
-+#define MMC_XGMAC_TX_FPE_FRAG		0x208
-+#define MMC_XGMAC_TX_HOLD_REQ		0x20c
-+#define MMC_XGMAC_RX_PKT_ASSEMBLY_ERR	0x228
-+#define MMC_XGMAC_RX_PKT_SMD_ERR	0x22c
-+#define MMC_XGMAC_RX_PKT_ASSEMBLY_OK	0x230
-+#define MMC_XGMAC_RX_FPE_FRAG		0x234
-+
- static void dwmac_mmc_ctrl(void __iomem *mmcaddr, unsigned int mode)
- {
- 	u32 value = readl(mmcaddr + MMC_CNTRL);
-@@ -263,3 +321,137 @@ const struct stmmac_mmc_ops dwmac_mmc_ops = {
- 	.intr_all_mask = dwmac_mmc_intr_all_mask,
- 	.read = dwmac_mmc_read,
- };
-+
-+static void dwxgmac_mmc_ctrl(void __iomem *mmcaddr, unsigned int mode)
-+{
-+	u32 value = readl(mmcaddr + MMC_CNTRL);
-+
-+	value |= (mode & 0x3F);
-+
-+	writel(value, mmcaddr + MMC_CNTRL);
-+}
-+
-+static void dwxgmac_mmc_intr_all_mask(void __iomem *mmcaddr)
-+{
-+	writel(MMC_DEFAULT_MASK, mmcaddr + MMC_RX_INTR_MASK);
-+	writel(MMC_DEFAULT_MASK, mmcaddr + MMC_TX_INTR_MASK);
-+}
-+
-+static void dwxgmac_read_mmc_reg(void __iomem *addr, u32 reg, u32 *dest)
-+{
-+	u64 tmp = 0;
-+
-+	tmp += readl(addr + reg);
-+	tmp += ((u64 )readl(addr + reg + 0x4)) << 32;
-+	if (tmp > GENMASK(31, 0))
-+		*dest = ~0x0;
-+	else
-+		*dest = *dest + tmp;
-+}
-+
-+/* This reads the MAC core counters (if actaully supported).
-+ * by default the MMC core is programmed to reset each
-+ * counter after a read. So all the field of the mmc struct
-+ * have to be incremented.
-+ */
-+static void dwxgmac_mmc_read(void __iomem *mmcaddr, struct stmmac_counters *mmc)
-+{
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_OCTET_GB,
-+			     &mmc->mmc_tx_octetcount_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_PKT_GB,
-+			     &mmc->mmc_tx_framecount_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_BROAD_PKT_G,
-+			     &mmc->mmc_tx_broadcastframe_g);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_MULTI_PKT_G,
-+			     &mmc->mmc_tx_multicastframe_g);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_64OCT_GB,
-+			     &mmc->mmc_tx_64_octets_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_65OCT_GB,
-+			     &mmc->mmc_tx_65_to_127_octets_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_128OCT_GB,
-+			     &mmc->mmc_tx_128_to_255_octets_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_256OCT_GB,
-+			     &mmc->mmc_tx_256_to_511_octets_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_512OCT_GB,
-+			     &mmc->mmc_tx_512_to_1023_octets_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_1024OCT_GB,
-+			     &mmc->mmc_tx_1024_to_max_octets_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_UNI_PKT_GB,
-+			     &mmc->mmc_tx_unicast_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_MULTI_PKT_GB,
-+			     &mmc->mmc_tx_multicast_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_BROAD_PKT_GB,
-+			     &mmc->mmc_tx_broadcast_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_UNDER,
-+			     &mmc->mmc_tx_underflow_error);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_OCTET_G,
-+			     &mmc->mmc_tx_octetcount_g);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_PKT_G,
-+			     &mmc->mmc_tx_framecount_g);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_PAUSE,
-+			     &mmc->mmc_tx_pause_frame);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_VLAN_PKT_G,
-+			     &mmc->mmc_tx_vlan_frame_g);
-+
-+	/* MMC RX counter registers */
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_PKT_GB,
-+			     &mmc->mmc_rx_framecount_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_OCTET_GB,
-+			     &mmc->mmc_rx_octetcount_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_OCTET_G,
-+			     &mmc->mmc_rx_octetcount_g);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_BROAD_PKT_G,
-+			     &mmc->mmc_rx_broadcastframe_g);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_MULTI_PKT_G,
-+			     &mmc->mmc_rx_multicastframe_g);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_CRC_ERR,
-+			     &mmc->mmc_rx_crc_error);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_CRC_ERR,
-+			     &mmc->mmc_rx_crc_error);
-+	mmc->mmc_rx_run_error += readl(mmcaddr + MMC_XGMAC_RX_RUNT_ERR);
-+	mmc->mmc_rx_jabber_error += readl(mmcaddr + MMC_XGMAC_RX_JABBER_ERR);
-+	mmc->mmc_rx_undersize_g += readl(mmcaddr + MMC_XGMAC_RX_UNDER);
-+	mmc->mmc_rx_oversize_g += readl(mmcaddr + MMC_XGMAC_RX_OVER);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_64OCT_GB,
-+			     &mmc->mmc_rx_64_octets_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_65OCT_GB,
-+			     &mmc->mmc_rx_65_to_127_octets_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_128OCT_GB,
-+			     &mmc->mmc_rx_128_to_255_octets_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_256OCT_GB,
-+			     &mmc->mmc_rx_256_to_511_octets_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_512OCT_GB,
-+			     &mmc->mmc_rx_512_to_1023_octets_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_1024OCT_GB,
-+			     &mmc->mmc_rx_1024_to_max_octets_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_UNI_PKT_G,
-+			     &mmc->mmc_rx_unicast_g);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_LENGTH_ERR,
-+			     &mmc->mmc_rx_length_error);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_RANGE,
-+			     &mmc->mmc_rx_autofrangetype);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_PAUSE,
-+			     &mmc->mmc_rx_pause_frames);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_FIFOOVER_PKT,
-+			     &mmc->mmc_rx_fifo_overflow);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_VLAN_PKT_GB,
-+			     &mmc->mmc_rx_vlan_frames_gb);
-+	mmc->mmc_rx_watchdog_error += readl(mmcaddr + MMC_XGMAC_RX_WATCHDOG_ERR);
-+
-+	mmc->mmc_tx_fpe_fragment_cntr += readl(mmcaddr + MMC_XGMAC_TX_FPE_FRAG);
-+	mmc->mmc_tx_hold_req_cntr += readl(mmcaddr + MMC_XGMAC_TX_HOLD_REQ);
-+	mmc->mmc_rx_packet_assembly_err_cntr +=
-+		readl(mmcaddr + MMC_XGMAC_RX_PKT_ASSEMBLY_ERR);
-+	mmc->mmc_rx_packet_smd_err_cntr +=
-+		readl(mmcaddr + MMC_XGMAC_RX_PKT_SMD_ERR);
-+	mmc->mmc_rx_packet_assembly_ok_cntr +=
-+		readl(mmcaddr + MMC_XGMAC_RX_PKT_ASSEMBLY_OK);
-+	mmc->mmc_rx_fpe_fragment_cntr +=
-+		readl(mmcaddr + MMC_XGMAC_RX_FPE_FRAG);
-+}
-+
-+const struct stmmac_mmc_ops dwxgmac_mmc_ops = {
-+	.ctrl = dwxgmac_mmc_ctrl,
-+	.intr_all_mask = dwxgmac_mmc_intr_all_mask,
-+	.read = dwxgmac_mmc_read,
-+};
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-index 6efb66820d4c..d294590cba27 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-@@ -243,6 +243,12 @@ static const struct stmmac_stats stmmac_mmc[] = {
- 	STMMAC_MMC_STAT(mmc_rx_tcp_err_octets),
- 	STMMAC_MMC_STAT(mmc_rx_icmp_gd_octets),
- 	STMMAC_MMC_STAT(mmc_rx_icmp_err_octets),
-+	STMMAC_MMC_STAT(mmc_tx_fpe_fragment_cntr),
-+	STMMAC_MMC_STAT(mmc_tx_hold_req_cntr),
-+	STMMAC_MMC_STAT(mmc_rx_packet_assembly_err_cntr),
-+	STMMAC_MMC_STAT(mmc_rx_packet_smd_err_cntr),
-+	STMMAC_MMC_STAT(mmc_rx_packet_assembly_ok_cntr),
-+	STMMAC_MMC_STAT(mmc_rx_fpe_fragment_cntr),
- };
- #define STMMAC_MMC_STATS_LEN ARRAY_SIZE(stmmac_mmc)
- 
+ static void dwxgmac2_rx_watchdog(void __iomem *ioaddr, u32 riwt, u32 nchan)
 -- 
 2.7.4
 
