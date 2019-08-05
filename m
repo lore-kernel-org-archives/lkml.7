@@ -2,123 +2,87 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D854C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6519C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A399217D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85D672086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:49:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727348AbfHEGmo (ORCPT
+        id S1727329AbfHEGtp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 02:42:44 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:59414 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725992AbfHEGmo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 02:42:44 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 2F7A7A7224D5A53CE50D;
-        Mon,  5 Aug 2019 14:26:37 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Mon, 5 Aug 2019
- 14:26:27 +0800
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
-        <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
-        <benh@kernel.crashing.org>, <paulus@samba.org>,
-        <npiggin@gmail.com>, <keescook@chromium.org>,
-        <kernel-hardening@lists.openwall.com>
-CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
-        <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
-        <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>,
-        <zhaohongjiang@huawei.com>, Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH v4 02/10] powerpc: move memstart_addr and kernstart_addr to init-common.c
-Date:   Mon, 5 Aug 2019 14:43:27 +0800
-Message-ID: <20190805064335.19156-3-yanaijie@huawei.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20190805064335.19156-1-yanaijie@huawei.com>
-References: <20190805064335.19156-1-yanaijie@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+        Mon, 5 Aug 2019 02:49:45 -0400
+Received: from gate.crashing.org ([63.228.1.57]:39127 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726436AbfHEGto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 02:49:44 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x756nNRm017042;
+        Mon, 5 Aug 2019 01:49:24 -0500
+Message-ID: <6290507e1b2830b1729fc858cd5c20b85d092728.camel@kernel.crashing.org>
+Subject: Re: [PATCH v3] nvme-pci: Support shared tags across queues for
+ Apple 2018 controllers
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Paul Pawlowski <paul@mrarm.io>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Minwoo Im <minwoo.im.dev@gmail.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>
+Date:   Mon, 05 Aug 2019 16:49:23 +1000
+In-Reply-To: <2030a028664a9af9e96fffca3ab352faf1f739e5.camel@kernel.crashing.org>
+References: <b1f9bdf0294b8d87d292de3c7462c8e99551b02d.camel@kernel.crashing.org>
+         <20190730153044.GA13948@localhost.localdomain>
+         <2030a028664a9af9e96fffca3ab352faf1f739e5.camel@kernel.crashing.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These two variables are both defined in init_32.c and init_64.c. Move
-them to init-common.c.
+On Tue, 2019-07-30 at 13:28 -0700, Benjamin Herrenschmidt wrote:
+> > One problem is that we've an nvme parameter, io_queue_depth, that a user
+> > could set to something less than 32, and then you won't be able to do
+> > any IO. I'd recommend enforce the admin queue to QD1 for this device so
+> > that you have more potential IO tags.
+> 
+> So I had a look and it's not that trivial. I would have to change
+> a few things that use constants for the admin queue depth, such as
+> the AEN tag etc...
+> 
+> For such a special case, I am tempted instead to do the much simpler:
+> 
+>         if (dev->ctrl.quirks & NVME_QUIRK_SHARED_TAGS) {
+>                 if (dev->q_depth < (NVME_AQ_DEPTH + 2))
+>                         dev->q_depth = NVME_AQ_DEPTH + 2;
+>         }
+> 
+> In nvme_pci_enable() next to the existing q_depth hackery for other
+> controllers.
+> 
+> Thoughts ?
 
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
-Cc: Diana Craciun <diana.craciun@nxp.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Kees Cook <keescook@chromium.org>
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Reviewed-by: Diana Craciun <diana.craciun@nxp.com>
-Tested-by: Diana Craciun <diana.craciun@nxp.com>
----
- arch/powerpc/mm/init-common.c | 5 +++++
- arch/powerpc/mm/init_32.c     | 5 -----
- arch/powerpc/mm/init_64.c     | 5 -----
- 3 files changed, 5 insertions(+), 10 deletions(-)
+Ping ? I had another look today and I don't feel like mucking around
+with all the AQ size logic, AEN magic tag etc... just for that sake of
+that Apple gunk. I'm happy to have it give up IO tags, it doesn't seem
+to make much of a difference in practice anyway.
 
-diff --git a/arch/powerpc/mm/init-common.c b/arch/powerpc/mm/init-common.c
-index a84da92920f7..152ae0d21435 100644
---- a/arch/powerpc/mm/init-common.c
-+++ b/arch/powerpc/mm/init-common.c
-@@ -21,6 +21,11 @@
- #include <asm/pgtable.h>
- #include <asm/kup.h>
- 
-+phys_addr_t memstart_addr = (phys_addr_t)~0ull;
-+EXPORT_SYMBOL_GPL(memstart_addr);
-+phys_addr_t kernstart_addr;
-+EXPORT_SYMBOL_GPL(kernstart_addr);
-+
- static bool disable_kuep = !IS_ENABLED(CONFIG_PPC_KUEP);
- static bool disable_kuap = !IS_ENABLED(CONFIG_PPC_KUAP);
- 
-diff --git a/arch/powerpc/mm/init_32.c b/arch/powerpc/mm/init_32.c
-index b04896a88d79..872df48ae41b 100644
---- a/arch/powerpc/mm/init_32.c
-+++ b/arch/powerpc/mm/init_32.c
-@@ -56,11 +56,6 @@
- phys_addr_t total_memory;
- phys_addr_t total_lowmem;
- 
--phys_addr_t memstart_addr = (phys_addr_t)~0ull;
--EXPORT_SYMBOL(memstart_addr);
--phys_addr_t kernstart_addr;
--EXPORT_SYMBOL(kernstart_addr);
--
- #ifdef CONFIG_RELOCATABLE
- /* Used in __va()/__pa() */
- long long virt_phys_offset;
-diff --git a/arch/powerpc/mm/init_64.c b/arch/powerpc/mm/init_64.c
-index a44f6281ca3a..c836f1269ee7 100644
---- a/arch/powerpc/mm/init_64.c
-+++ b/arch/powerpc/mm/init_64.c
-@@ -63,11 +63,6 @@
- 
- #include <mm/mmu_decl.h>
- 
--phys_addr_t memstart_addr = ~0;
--EXPORT_SYMBOL_GPL(memstart_addr);
--phys_addr_t kernstart_addr;
--EXPORT_SYMBOL_GPL(kernstart_addr);
--
- #ifdef CONFIG_SPARSEMEM_VMEMMAP
- /*
-  * Given an address within the vmemmap, determine the pfn of the page that
--- 
-2.17.2
+But if you feel strongly about it, then I'll implement the "proper" way
+sometimes this week, adding a way to shrink the AQ down to something
+like 3 (one admin request, one async event (AEN), and the empty slot)
+by making a bunch of the constants involved variables instead.
+
+This leas to a question: Wouldn't be be nicer/cleaner to make AEN be
+tag 0 of the AQ ? That way we just include it as reserved tag ? Not a
+huge different from what we do now, just a thought.
+
+Cheers,
+Ben.
+
 
