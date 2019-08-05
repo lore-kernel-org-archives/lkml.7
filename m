@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45575C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16FD2C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 195F32075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:19:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB61C20657
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:20:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011196;
-	bh=xdCYdjfiBaSQZRO9aUNInNiabgYff/7tlTke98MlrR0=;
+	s=default; t=1565011201;
+	bh=SP3xN8bHih54Phe42wv/GZ0+w9YRq2qns9znwyLFSFE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dy0EkXPiS+i/EwPZeb7jL6Qyyg9ZrAFTm/BbmvOMoxwILV/2RfFQIoqE0qgSGgjUW
-	 LHAg4XJamGEaqo4I4ozPX43xp3iXezBfoC0muH/zhevcNPruzwx1R3wKVhMkpbDBls
-	 o7emYRvS3nv/X2gB/NFbFuat70TTFEjacXsnZwvM=
+	b=QxBHX2rgl+iUYdJeR96aiAu2ZdFY977jKb26kDWbMYtDowp/eUHEAfjESz9fwXFQL
+	 +i3f27dK969PSSUuDHENN3hiY0Ho7MKru+WChfBqKL2So8le9KIHql5wWRRjC5c2KX
+	 OMC82eIggP5bM4/6JHhOWJgsP5YCdCk4P2YsAd4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730021AbfHENTz (ORCPT
+        id S1730127AbfHENUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:19:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56024 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:20:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729942AbfHENTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:19:53 -0400
+        id S1730067AbfHENT6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:19:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 987742075B;
-        Mon,  5 Aug 2019 13:19:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E11E52067D;
+        Mon,  5 Aug 2019 13:19:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011192;
-        bh=xdCYdjfiBaSQZRO9aUNInNiabgYff/7tlTke98MlrR0=;
+        s=default; t=1565011197;
+        bh=SP3xN8bHih54Phe42wv/GZ0+w9YRq2qns9znwyLFSFE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LDEXqrpyqp6BujLhpnnmmmh+eBd889w4C6Lje44j35+/qJC6zDC/2dGzth9W69GSC
-         gMmLQno+Qs+ays/ilga+JKLDD2qnm1rf95nns27/be9fQ3TUt9zCSldHec8t8md0CG
-         I7837q7x6gK3WzWKBHxoszeglkcyNex97trXFzus=
+        b=g/HZCVa5+Y+Q7s/j5WqHxP37aShT07/ff5xhOf+kD+z3ThW8gQeDbMg0EDJFivZMo
+         tqyA+W+7YbL1PWyIw25JE2VKwShPtbM5OC8W9gk6ngGpIzdPaJ/AAdG23CpvIGHCkD
+         YgIC0KuXDnGFAqs+u6HBe2NyiluQwbJ+ULORhTRY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Down <chris@chrisdown.name>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>, Roman Gushchin <guro@fb.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 55/74] cgroup: kselftest: relax fs_spec checks
-Date:   Mon,  5 Aug 2019 15:03:08 +0200
-Message-Id: <20190805124940.331222447@linuxfoundation.org>
+        stable@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 4.19 57/74] drivers/perf: arm_pmu: Fix failure path in PM notifier
+Date:   Mon,  5 Aug 2019 15:03:10 +0200
+Message-Id: <20190805124940.481624134@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124935.819068648@linuxfoundation.org>
 References: <20190805124935.819068648@linuxfoundation.org>
@@ -62,49 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Down <chris@chrisdown.name>
+From: Will Deacon <will@kernel.org>
 
-commit b59b1baab789eacdde809135542e3d4f256f6878 upstream.
+commit 0d7fd70f26039bd4b33444ca47f0e69ce3ae0354 upstream.
 
-On my laptop most memcg kselftests were being skipped because it claimed
-cgroup v2 hierarchy wasn't mounted, but this isn't correct.  Instead, it
-seems current systemd HEAD mounts it with the name "cgroup2" instead of
-"cgroup":
+Handling of the CPU_PM_ENTER_FAILED transition in the Arm PMU PM
+notifier code incorrectly skips restoration of the counters. Fix the
+logic so that CPU_PM_ENTER_FAILED follows the same path as CPU_PM_EXIT.
 
-    % grep cgroup /proc/mounts
-    cgroup2 /sys/fs/cgroup cgroup2 rw,nosuid,nodev,noexec,relatime,nsdelegate 0 0
-
-I can't think of a reason to need to check fs_spec explicitly
-since it's arbitrary, so we can just rely on fs_vfstype.
-
-After these changes, `make TARGETS=cgroup kselftest` actually runs the
-cgroup v2 tests in more cases.
-
-Link: http://lkml.kernel.org/r/20190723210737.GA487@chrisdown.name
-Signed-off-by: Chris Down <chris@chrisdown.name>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Roman Gushchin <guro@fb.com>
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: da4e4f18afe0f372 ("drivers/perf: arm_pmu: implement CPU_PM notifier")
+Reported-by: Anders Roxell <anders.roxell@linaro.org>
+Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/testing/selftests/cgroup/cgroup_util.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/perf/arm_pmu.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/tools/testing/selftests/cgroup/cgroup_util.c
-+++ b/tools/testing/selftests/cgroup/cgroup_util.c
-@@ -181,8 +181,7 @@ int cg_find_unified_root(char *root, siz
- 		strtok(NULL, delim);
- 		strtok(NULL, delim);
- 
--		if (strcmp(fs, "cgroup") == 0 &&
--		    strcmp(type, "cgroup2") == 0) {
-+		if (strcmp(type, "cgroup2") == 0) {
- 			strncpy(root, mount, len);
- 			return 0;
- 		}
+--- a/drivers/perf/arm_pmu.c
++++ b/drivers/perf/arm_pmu.c
+@@ -730,8 +730,8 @@ static int cpu_pm_pmu_notify(struct noti
+ 		cpu_pm_pmu_setup(armpmu, cmd);
+ 		break;
+ 	case CPU_PM_EXIT:
+-		cpu_pm_pmu_setup(armpmu, cmd);
+ 	case CPU_PM_ENTER_FAILED:
++		cpu_pm_pmu_setup(armpmu, cmd);
+ 		armpmu->start(armpmu);
+ 		break;
+ 	default:
 
 
