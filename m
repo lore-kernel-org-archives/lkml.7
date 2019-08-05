@@ -2,87 +2,68 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D94FC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B22B8C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EA6920679
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:50:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F2672087B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:52:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728561AbfHEKuk (ORCPT
+        id S1728406AbfHEKwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 06:50:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42934 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728015AbfHEKuk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 06:50:40 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 68AA5C051676;
-        Mon,  5 Aug 2019 10:50:40 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-81.ams2.redhat.com [10.36.116.81])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 15EC45D712;
-        Mon,  5 Aug 2019 10:50:40 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 4A79816E08; Mon,  5 Aug 2019 12:50:39 +0200 (CEST)
-Date:   Mon, 5 Aug 2019 12:50:39 +0200
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     Frediano Ziglio <fziglio@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
-        <virtualization@lists.linux-foundation.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
-        <spice-devel@lists.freedesktop.org>,
-        Dave Airlie <airlied@redhat.com>
-Subject: Re: [Spice-devel] [PATCH] drm/qxl: get vga ioports
-Message-ID: <20190805105039.cxf2ogbzdf7hropp@sirius.home.kraxel.org>
-References: <20190805085355.12527-1-kraxel@redhat.com>
- <1869747233.4556840.1564996693878.JavaMail.zimbra@redhat.com>
+        Mon, 5 Aug 2019 06:52:16 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:32810 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727259AbfHEKwP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 06:52:15 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1huab5-0007uq-Qh; Mon, 05 Aug 2019 10:52:11 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH]][next] selftests: nettest: fix spelling mistake: "potocol" -> "protocol"
+Date:   Mon,  5 Aug 2019 11:52:11 +0100
+Message-Id: <20190805105211.27229-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1869747233.4556840.1564996693878.JavaMail.zimbra@redhat.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Mon, 05 Aug 2019 10:50:40 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  Hi,
+From: Colin Ian King <colin.king@canonical.com>
 
-> > +	ret = vga_get_interruptible(pdev, VGA_RSRC_LEGACY_IO);
-> > +	if (ret) {
-> > +		DRM_ERROR("can't get legacy vga ports\n");
-> > +		goto put_vga;
-> 
-> I suppose that if this fails it's secondary so should continue.
+There is a spelling mistake in an error messgae. Fix it.
 
-Ah, right, there are secondary qxl cards (without the vga compat bits).
-We should skip the call in that case (likewise for the cleanups).
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ tools/testing/selftests/net/nettest.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> What happen configuring 2 QXL devices?
-> Only a card should provide VGA registers in the system so
-> if any other card provide them QXL won't work.
-
-Well, with intel vgpu everything works fine with this patch.  Probably
-i915 skips direct vga register access in case vga_get fails (because qxl
-grabed them first).
-
-In any case I'd prefer to fail qxl initialization over continuing
-despite vga_get() having failed.  The failure mode is rather awkward:
-qemu thinks the qxl card is in vga mode while the guest kernel thinks
-qxl is in native mode.  Guest keeps queuing commands until the ring is
-full while qemu never takes them out, so at some point the guest kernel
-blocks forever in qxl_ring_push().
-
-cheers,
-  Gerd
+diff --git a/tools/testing/selftests/net/nettest.c b/tools/testing/selftests/net/nettest.c
+index 9278f8460d75..83515e5ea4dc 100644
+--- a/tools/testing/selftests/net/nettest.c
++++ b/tools/testing/selftests/net/nettest.c
+@@ -1627,7 +1627,7 @@ int main(int argc, char *argv[])
+ 				args.protocol = pe->p_proto;
+ 			} else {
+ 				if (str_to_uint(optarg, 0, 0xffff, &tmp) != 0) {
+-					fprintf(stderr, "Invalid potocol\n");
++					fprintf(stderr, "Invalid protocol\n");
+ 					return 1;
+ 				}
+ 				args.protocol = tmp;
+-- 
+2.20.1
 
