@@ -2,962 +2,362 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C16C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A99C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A65FC21738
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7361C214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:06:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728997AbfHEOFt convert rfc822-to-8bit (ORCPT
+        id S1729208AbfHEOGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 10:05:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46196 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728518AbfHEOFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 10:05:48 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DB9B489ACA;
-        Mon,  5 Aug 2019 14:05:47 +0000 (UTC)
-Received: from [10.18.17.163] (dhcp-17-163.bos.redhat.com [10.18.17.163])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 449A55D6C8;
-        Mon,  5 Aug 2019 14:05:35 +0000 (UTC)
-Subject: Re: [PATCH v3 4/6] mm: Introduce Reported pages
-To:     Alexander Duyck <alexander.duyck@gmail.com>, kvm@vger.kernel.org,
-        david@redhat.com, mst@redhat.com, dave.hansen@intel.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org
-Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
-        konrad.wilk@oracle.com, willy@infradead.org,
-        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com,
-        alexander.h.duyck@linux.intel.com
-References: <20190801222158.22190.96964.stgit@localhost.localdomain>
- <20190801223359.22190.2212.stgit@localhost.localdomain>
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- VujM7c/b4pps
-Organization: Red Hat Inc,
-Message-ID: <42683cc1-3235-5894-2610-bc7b9d443eb0@redhat.com>
-Date:   Mon, 5 Aug 2019 10:05:33 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 5 Aug 2019 10:06:16 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:50538 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728975AbfHEOGQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 10:06:16 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id E946B22149A80DF7A813;
+        Mon,  5 Aug 2019 21:50:18 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.75) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 5 Aug 2019 21:50:12 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <jejb@linux.vnet.ibm.com>, <martin.petersen@oracle.com>
+CC:     <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>, Luo Jiaxing <luojiaxing@huawei.com>,
+        John Garry <john.garry@huawei.com>
+Subject: [PATCH 04/15] scsi: hisi_sas: Snapshot HW cache of IOST and ITCT at debugfs
+Date:   Mon, 5 Aug 2019 21:48:01 +0800
+Message-ID: <1565012892-75940-5-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
+In-Reply-To: <1565012892-75940-1-git-send-email-john.garry@huawei.com>
+References: <1565012892-75940-1-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20190801223359.22190.2212.stgit@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Mon, 05 Aug 2019 14:05:48 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.75]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Luo Jiaxing <luojiaxing@huawei.com>
 
-On 8/1/19 6:33 PM, Alexander Duyck wrote:
-> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
->
-> In order to pave the way for free page reporting in virtualized
-> environments we will need a way to get pages out of the free lists and
-> identify those pages after they have been returned. To accomplish this,
-> this patch adds the concept of a Reported Buddy, which is essentially
-> meant to just be the Uptodate flag used in conjunction with the Buddy
-> page type.
->
-> It adds a set of pointers we shall call "boundary" which represents the
-> upper boundary between the unreported and reported pages. The general idea
-> is that in order for a page to cross from one side of the boundary to the
-> other it will need to go through the reporting process. Ultimately a
-> free_list has been fully processed when the boundary has been moved from
-> the tail all they way up to occupying the first entry in the list.
->
-> Doing this we should be able to make certain that we keep the reported
-> pages as one contiguous block in each free list. This will allow us to
-> efficiently manipulate the free lists whenever we need to go in and start
-> sending reports to the hypervisor that there are new pages that have been
-> freed and are no longer in use.
->
-> An added advantage to this approach is that we should be reducing the
-> overall memory footprint of the guest as it will be more likely to recycle
-> warm pages versus trying to allocate the reported pages that were likely
-> evicted from the guest memory.
->
-> Since we will only be reporting one zone at a time we keep the boundary
-> limited to being defined for just the zone we are currently reporting pages
-> from. Doing this we can keep the number of additional pointers needed quite
-> small. To flag that the boundaries are in place we use a single bit
-> in the zone to indicate that reporting and the boundaries are active.
->
-> The determination of when to start reporting is based on the tracking of
-> the number of free pages in a given area versus the number of reported
-> pages in that area. We keep track of the number of reported pages per
-> free_area in a separate zone specific area. We do this to avoid modifying
-> the free_area structure as this can lead to false sharing for the highest
-> order with the zone lock which leads to a noticeable performance
-> degradation.
->
-> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> ---
->  include/linux/mmzone.h         |   40 +++++
->  include/linux/page-flags.h     |   11 +
->  include/linux/page_reporting.h |  138 ++++++++++++++++++
->  mm/Kconfig                     |    5 +
->  mm/Makefile                    |    1 
->  mm/memory_hotplug.c            |    1 
->  mm/page_alloc.c                |  136 ++++++++++++++++++
->  mm/page_reporting.c            |  299 ++++++++++++++++++++++++++++++++++++++++
->  8 files changed, 623 insertions(+), 8 deletions(-)
->  create mode 100644 include/linux/page_reporting.h
->  create mode 100644 mm/page_reporting.c
->
-> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> index f0c68b6b6154..4e6692380deb 100644
-> --- a/include/linux/mmzone.h
-> +++ b/include/linux/mmzone.h
-> @@ -460,6 +460,14 @@ struct zone {
->  	seqlock_t		span_seqlock;
->  #endif
->  
-> +#ifdef CONFIG_PAGE_REPORTING
-> +	/*
-> +	 * Pointer to reported page tracking statistics array. The size of
-> +	 * the array is MAX_ORDER - PAGE_REPORTING_MIN_ORDER. NULL when
-> +	 * unused page reporting is not present.
-> +	 */
-> +	unsigned long		*reported_pages;
-> +#endif
->  	int initialized;
->  
->  	/* Write-intensive fields used from the page allocator */
-> @@ -535,6 +543,14 @@ enum zone_flags {
->  	ZONE_BOOSTED_WATERMARK,		/* zone recently boosted watermarks.
->  					 * Cleared when kswapd is woken.
->  					 */
-> +	ZONE_PAGE_REPORTING_REQUESTED,	/* zone enabled page reporting and has
-> +					 * requested flushing the data out of
-> +					 * higher order pages.
-> +					 */
-> +	ZONE_PAGE_REPORTING_ACTIVE,	/* zone enabled page reporting and is
-> +					 * activly flushing the data out of
-> +					 * higher order pages.
-> +					 */
->  };
->  
->  static inline unsigned long zone_managed_pages(struct zone *zone)
-> @@ -755,6 +771,8 @@ static inline bool pgdat_is_empty(pg_data_t *pgdat)
->  	return !pgdat->node_start_pfn && !pgdat->node_spanned_pages;
->  }
->  
-> +#include <linux/page_reporting.h>
-> +
->  /* Used for pages not on another list */
->  static inline void add_to_free_list(struct page *page, struct zone *zone,
->  				    unsigned int order, int migratetype)
-> @@ -769,10 +787,16 @@ static inline void add_to_free_list(struct page *page, struct zone *zone,
->  static inline void add_to_free_list_tail(struct page *page, struct zone *zone,
->  					 unsigned int order, int migratetype)
->  {
-> -	struct free_area *area = &zone->free_area[order];
-> +	struct list_head *tail = get_unreported_tail(zone, order, migratetype);
->  
-> -	list_add_tail(&page->lru, &area->free_list[migratetype]);
-> -	area->nr_free++;
-> +	/*
-> +	 * To prevent the unreported pages from being interleaved with the
-> +	 * reported ones while we are actively processing pages we will use
-> +	 * the head of the reported pages to determine the tail of the free
-> +	 * list.
-> +	 */
-> +	list_add_tail(&page->lru, tail);
-> +	zone->free_area[order].nr_free++;
->  }
->  
->  /* Used for pages which are on another list */
-> @@ -781,12 +805,22 @@ static inline void move_to_free_list(struct page *page, struct zone *zone,
->  {
->  	struct free_area *area = &zone->free_area[order];
->  
-> +	/*
-> +	 * Clear Hinted flag, if present, to avoid placing reported pages
-> +	 * at the top of the free_list. It is cheaper to just process this
-> +	 * page again than to walk around a page that is already reported.
-> +	 */
-> +	clear_page_reported(page, zone);
-> +
->  	list_move(&page->lru, &area->free_list[migratetype]);
->  }
->  
->  static inline void del_page_from_free_list(struct page *page, struct zone *zone,
->  					   unsigned int order)
->  {
-> +	/* Clear Reported flag, if present, before resetting page type */
-> +	clear_page_reported(page, zone);
-> +
->  	list_del(&page->lru);
->  	__ClearPageBuddy(page);
->  	set_page_private(page, 0);
-> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-> index f91cb8898ff0..759a3b3956f2 100644
-> --- a/include/linux/page-flags.h
-> +++ b/include/linux/page-flags.h
-> @@ -163,6 +163,9 @@ enum pageflags {
->  
->  	/* non-lru isolated movable page */
->  	PG_isolated = PG_reclaim,
-> +
-> +	/* Buddy pages. Used to track which pages have been reported */
-> +	PG_reported = PG_uptodate,
->  };
->  
->  #ifndef __GENERATING_BOUNDS_H
-> @@ -432,6 +435,14 @@ static inline bool set_hwpoison_free_buddy_page(struct page *page)
->  #endif
->  
->  /*
-> + * PageReported() is used to track reported free pages within the Buddy
-> + * allocator. We can use the non-atomic version of the test and set
-> + * operations as both should be shielded with the zone lock to prevent
-> + * any possible races on the setting or clearing of the bit.
-> + */
-> +__PAGEFLAG(Reported, reported, PF_NO_COMPOUND)
-> +
-> +/*
->   * On an anonymous page mapped into a user virtual memory area,
->   * page->mapping points to its anon_vma, not to a struct address_space;
->   * with the PAGE_MAPPING_ANON bit set to distinguish it.  See rmap.h.
-> diff --git a/include/linux/page_reporting.h b/include/linux/page_reporting.h
-> new file mode 100644
-> index 000000000000..498bde6ea764
-> --- /dev/null
-> +++ b/include/linux/page_reporting.h
-> @@ -0,0 +1,138 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _LINUX_PAGE_REPORTING_H
-> +#define _LINUX_PAGE_REPORTING_H
-> +
-> +#include <linux/mmzone.h>
-> +#include <linux/jump_label.h>
-> +#include <linux/pageblock-flags.h>
-> +#include <asm/pgtable_types.h>
-> +
-> +#define PAGE_REPORTING_MIN_ORDER	pageblock_order
-> +#define PAGE_REPORTING_HWM		32
-> +
-> +#ifdef CONFIG_PAGE_REPORTING
-> +struct page_reporting_dev_info {
-> +	/* function that alters pages to make them "reported" */
-> +	void (*report)(struct page_reporting_dev_info *phdev,
-> +		       unsigned int nents);
-> +
-> +	/* scatterlist containing pages to be processed */
-> +	struct scatterlist *sg;
-> +
-> +	/*
-> +	 * Upper limit on the number of pages that the react function
-> +	 * expects to be placed into the batch list to be processed.
-> +	 */
-> +	unsigned long capacity;
-> +
-> +	/* work struct for processing reports */
-> +	struct delayed_work work;
-> +
-> +	/*
-> +	 * The number of zones requesting reporting, plus one additional if
-> +	 * processing thread is active.
-> +	 */
-> +	atomic_t refcnt;
-> +};
-> +
-> +extern struct static_key page_reporting_notify_enabled;
-> +
-> +/* Boundary functions */
-> +struct list_head *__page_reporting_get_boundary(unsigned int order,
-> +						int migratetype);
-> +void page_reporting_del_from_boundary(struct page *page, struct zone *zone);
-> +void page_reporting_add_to_boundary(struct page *page, struct zone *zone,
-> +				    int migratetype);
-> +
-> +/* Hinted page accessors, defined in page_alloc.c */
-> +struct page *get_unreported_page(struct zone *zone, unsigned int order,
-> +				 int migratetype);
-> +void put_reported_page(struct zone *zone, struct page *page);
-> +
-> +void __page_reporting_request(struct zone *zone);
-> +void __page_reporting_free_stats(struct zone *zone);
-> +
-> +/* Tear-down and bring-up for page reporting devices */
-> +void page_reporting_shutdown(struct page_reporting_dev_info *phdev);
-> +int page_reporting_startup(struct page_reporting_dev_info *phdev);
-> +#endif /* CONFIG_PAGE_REPORTING */
-> +
-> +static inline struct list_head *
-> +get_unreported_tail(struct zone *zone, unsigned int order, int migratetype)
-> +{
-> +#ifdef CONFIG_PAGE_REPORTING
-> +	if (order >= PAGE_REPORTING_MIN_ORDER &&
-> +	    test_bit(ZONE_PAGE_REPORTING_ACTIVE, &zone->flags))
-> +		return __page_reporting_get_boundary(order, migratetype);
-> +#endif
-> +	return &zone->free_area[order].free_list[migratetype];
-> +}
-> +
-> +static inline void clear_page_reported(struct page *page,
-> +				     struct zone *zone)
-> +{
-> +#ifdef CONFIG_PAGE_REPORTING
-> +	if (likely(!PageReported(page)))
-> +		return;
-> +
-> +	/* push boundary back if we removed the upper boundary */
-> +	if (test_bit(ZONE_PAGE_REPORTING_ACTIVE, &zone->flags))
-> +		page_reporting_del_from_boundary(page, zone);
-> +
-> +	__ClearPageReported(page);
-> +
-> +	/* page_private will contain the page order, so just use it directly */
-> +	zone->reported_pages[page_private(page) - PAGE_REPORTING_MIN_ORDER]--;
-> +#endif
-> +}
-> +
-> +/* Free reported_pages and reset reported page tracking count to 0 */
-> +static inline void page_reporting_reset(struct zone *zone)
-> +{
-> +#ifdef CONFIG_PAGE_REPORTING
-> +	if (zone->reported_pages)
-> +		__page_reporting_free_stats(zone);
-> +#endif
-> +}
-> +
-> +/**
-> + * page_reporting_notify_free - Free page notification to start page processing
-> + * @zone: Pointer to current zone of last page processed
-> + * @order: Order of last page added to zone
-> + *
-> + * This function is meant to act as a screener for __page_reporting_request
-> + * which will determine if a give zone has crossed over the high-water mark
-> + * that will justify us beginning page treatment. If we have crossed that
-> + * threshold then it will start the process of pulling some pages and
-> + * placing them in the batch list for treatment.
-> + */
-> +static inline void page_reporting_notify_free(struct zone *zone, int order)
-> +{
-> +#ifdef CONFIG_PAGE_REPORTING
-> +	unsigned long nr_reported;
-> +
-> +	/* Called from hot path in __free_one_page() */
-> +	if (!static_key_false(&page_reporting_notify_enabled))
-> +		return;
-> +
-> +	/* Limit notifications only to higher order pages */
-> +	if (order < PAGE_REPORTING_MIN_ORDER)
-> +		return;
-> +
-> +	/* Do not bother with tests if we have already requested reporting */
-> +	if (test_bit(ZONE_PAGE_REPORTING_REQUESTED, &zone->flags))
-> +		return;
-> +
-> +	/* If reported_pages is not populated, assume 0 */
-> +	nr_reported = zone->reported_pages ?
-> +		    zone->reported_pages[order - PAGE_REPORTING_MIN_ORDER] : 0;
-> +
-> +	/* Only request it if we have enough to begin the page reporting */
-> +	if (zone->free_area[order].nr_free < nr_reported + PAGE_REPORTING_HWM)
-> +		return;
-> +
-> +	/* This is slow, but should be called very rarely */
-> +	__page_reporting_request(zone);
-> +#endif
-> +}
-> +#endif /*_LINUX_PAGE_REPORTING_H */
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index 56cec636a1fc..f5c68bba522f 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -237,6 +237,11 @@ config COMPACTION
->            linux-mm@kvack.org.
->  
->  #
-> +# support for unused page reporting
-> +config PAGE_REPORTING
-> +	bool
-> +
-> +#
->  # support for page migration
->  #
->  config MIGRATION
-> diff --git a/mm/Makefile b/mm/Makefile
-> index d0b295c3b764..1e17ba0ed2f0 100644
-> --- a/mm/Makefile
-> +++ b/mm/Makefile
-> @@ -105,3 +105,4 @@ obj-$(CONFIG_PERCPU_STATS) += percpu-stats.o
->  obj-$(CONFIG_ZONE_DEVICE) += memremap.o
->  obj-$(CONFIG_HMM_MIRROR) += hmm.o
->  obj-$(CONFIG_MEMFD_CREATE) += memfd.o
-> +obj-$(CONFIG_PAGE_REPORTING) += page_reporting.o
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 9a82e12bd0e7..3acd2c3e53b3 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -1608,6 +1608,7 @@ static int __ref __offline_pages(unsigned long start_pfn,
->  	if (!populated_zone(zone)) {
->  		zone_pcp_reset(zone);
->  		build_all_zonelists(NULL);
-> +		page_reporting_reset(zone);
->  	} else
->  		zone_pcp_update(zone);
->  
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 71aadc7d5ff6..69b848e5b83f 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -68,6 +68,7 @@
->  #include <linux/lockdep.h>
->  #include <linux/nmi.h>
->  #include <linux/psi.h>
-> +#include <linux/page_reporting.h>
->  
->  #include <asm/sections.h>
->  #include <asm/tlbflush.h>
-> @@ -915,7 +916,7 @@ static inline struct capture_control *task_capc(struct zone *zone)
->  static inline void __free_one_page(struct page *page,
->  		unsigned long pfn,
->  		struct zone *zone, unsigned int order,
-> -		int migratetype)
-> +		int migratetype, bool reported)
->  {
->  	struct capture_control *capc = task_capc(zone);
->  	unsigned long uninitialized_var(buddy_pfn);
-> @@ -990,11 +991,20 @@ static inline void __free_one_page(struct page *page,
->  done_merging:
->  	set_page_order(page, order);
->  
-> -	if (is_shuffle_order(order) ? shuffle_add_to_tail() :
-> -	    buddy_merge_likely(pfn, buddy_pfn, page, order))
-> +	if (reported ||
-> +	    (is_shuffle_order(order) ? shuffle_add_to_tail() :
-> +	     buddy_merge_likely(pfn, buddy_pfn, page, order)))
->  		add_to_free_list_tail(page, zone, order, migratetype);
->  	else
->  		add_to_free_list(page, zone, order, migratetype);
-> +
-> +	/*
-> +	 * No need to notify on a reported page as the total count of
-> +	 * unreported pages will not have increased since we have essentially
-> +	 * merged the reported page with one or more unreported pages.
-> +	 */
-> +	if (!reported)
-> +		page_reporting_notify_free(zone, order);
->  }
->  
->  /*
-> @@ -1305,7 +1315,7 @@ static void free_pcppages_bulk(struct zone *zone, int count,
->  		if (unlikely(isolated_pageblocks))
->  			mt = get_pageblock_migratetype(page);
->  
-> -		__free_one_page(page, page_to_pfn(page), zone, 0, mt);
-> +		__free_one_page(page, page_to_pfn(page), zone, 0, mt, false);
->  		trace_mm_page_pcpu_drain(page, 0, mt);
->  	}
->  	spin_unlock(&zone->lock);
-> @@ -1321,7 +1331,7 @@ static void free_one_page(struct zone *zone,
->  		is_migrate_isolate(migratetype))) {
->  		migratetype = get_pfnblock_migratetype(page, pfn);
->  	}
-> -	__free_one_page(page, pfn, zone, order, migratetype);
-> +	__free_one_page(page, pfn, zone, order, migratetype, false);
->  	spin_unlock(&zone->lock);
->  }
->  
-> @@ -2183,6 +2193,122 @@ struct page *__rmqueue_smallest(struct zone *zone, unsigned int order,
->  	return NULL;
->  }
->  
-> +#ifdef CONFIG_PAGE_REPORTING
-> +/**
-> + * get_unreported_page - Pull an unreported page from the free_list
-> + * @zone: Zone to draw pages from
-> + * @order: Order to draw pages from
-> + * @mt: Migratetype to draw pages from
-> + *
-> + * This function will obtain a page from the free list. It will start by
-> + * attempting to pull from the tail of the free list and if that is already
-> + * reported on it will instead pull the head if that is unreported.
-> + *
-> + * The page will have the migrate type and order stored in the page
-> + * metadata. While being processed the page will not be avaialble for
-> + * allocation.
-> + *
-> + * Return: page pointer if raw page found, otherwise NULL
-> + */
-> +struct page *get_unreported_page(struct zone *zone, unsigned int order, int mt)
-> +{
-> +	struct list_head *tail = get_unreported_tail(zone, order, mt);
-> +	struct free_area *area = &(zone->free_area[order]);
-> +	struct list_head *list = &area->free_list[mt];
-> +	struct page *page;
-> +
-> +	/* zone lock should be held when this function is called */
-> +	lockdep_assert_held(&zone->lock);
-> +
-> +	/* Find a page of the appropriate size in the preferred list */
-> +	page = list_last_entry(tail, struct page, lru);
-> +	list_for_each_entry_from_reverse(page, list, lru) {
-> +		/* If we entered this loop then the "raw" list isn't empty */
-> +
-> +		/* If the page is reported try the head of the list */
-> +		if (PageReported(page)) {
-> +			page = list_first_entry(list, struct page, lru);
-> +
-> +			/*
-> +			 * If both the head and tail are reported then reset
-> +			 * the boundary so that we read as an empty list
-> +			 * next time and bail out.
-> +			 */
-> +			if (PageReported(page)) {
-> +				page_reporting_add_to_boundary(page, zone, mt);
-> +				break;
-> +			}
-> +		}
-> +
-> +		del_page_from_free_list(page, zone, order);
-> +
-> +		/* record migratetype and order within page */
-> +		set_pcppage_migratetype(page, mt);
-> +		set_page_private(page, order);
-> +
-> +		/*
-> +		 * Page will not be available for allocation while we are
-> +		 * processing it so update the freepage state.
-> +		 */
-> +		__mod_zone_freepage_state(zone, -(1 << order), mt);
-> +
-> +		return page;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
-> +/**
-> + * put_reported_page - Return a now-reported page back where we got it
-> + * @zone: Zone to return pages to
-> + * @page: Page that was reported
-> + *
-> + * This function will pull the migratetype and order information out
-> + * of the page and attempt to return it where it found it. If the page
-> + * is added to the free list without changes we will mark it as being
-> + * reported.
-> + */
-> +void put_reported_page(struct zone *zone, struct page *page)
-> +{
-> +	unsigned int order, mt;
-> +	unsigned long pfn;
-> +
-> +	/* zone lock should be held when this function is called */
-> +	lockdep_assert_held(&zone->lock);
-> +
-> +	mt = get_pcppage_migratetype(page);
-> +	pfn = page_to_pfn(page);
-> +
-> +	if (unlikely(has_isolate_pageblock(zone) || is_migrate_isolate(mt))) {
-> +		mt = get_pfnblock_migratetype(page, pfn);
-> +		set_pcppage_migratetype(page, mt);
-> +	}
-> +
-> +	order = page_private(page);
-> +	set_page_private(page, 0);
-> +
-> +	__free_one_page(page, pfn, zone, order, mt, true);
+The value of IOST/ITCT is update to cache first, and then synchronize
+to DDR periodically. So the value in IOST/ITCT cache is the latest data
+and it's important for debug.
 
-I don't think we need to hold the zone lock for fetching migratetype and other
-information.
-We can save some lock held time by acquiring and releasing zone lock before and
-after __free_one_page() respectively. Isn't?
+So, the HW cache of IOST and ITCT should be snapshot at debugfs.
 
-> +
-> +	/*
-> +	 * If page was comingled with another page we cannot consider
-> +	 * the result to be "reported" since part of the page hasn't been.
-> +	 * In this case we will simply exit and not update the "reported"
-> +	 * state. Instead just treat the result as a unreported page.
-> +	 */
-> +	if (!PageBuddy(page) || page_order(page) != order)
-> +		return;
-> +
-> +	/* update areated page accounting */
-> +	zone->reported_pages[order - PAGE_REPORTING_MIN_ORDER]++;
-> +
-> +	/* update boundary of new migratetype and record it */
-> +	page_reporting_add_to_boundary(page, zone, mt);
-> +
-> +	/* flag page as reported */
-> +	__SetPageReported(page);
-> +}
-> +#endif /* CONFIG_PAGE_REPORTING */
-> +
->  /*
->   * This array describes the order lists are fallen back to when
->   * the free lists for the desirable migrate type are depleted
-> diff --git a/mm/page_reporting.c b/mm/page_reporting.c
-> new file mode 100644
-> index 000000000000..971138205ae5
-> --- /dev/null
-> +++ b/mm/page_reporting.c
-> @@ -0,0 +1,299 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <linux/mm.h>
-> +#include <linux/mmzone.h>
-> +#include <linux/page-isolation.h>
-> +#include <linux/gfp.h>
-> +#include <linux/export.h>
-> +#include <linux/delay.h>
-> +#include <linux/slab.h>
-> +#include <linux/scatterlist.h>
-> +#include "internal.h"
-> +
-> +static struct page_reporting_dev_info __rcu *ph_dev_info __read_mostly;
-> +struct static_key page_reporting_notify_enabled;
-> +
-> +struct list_head *boundary[MAX_ORDER - PAGE_REPORTING_MIN_ORDER][MIGRATE_TYPES];
-> +
-> +static void page_reporting_reset_boundary(struct zone *zone, unsigned int order,
-> +					  unsigned int migratetype)
-> +{
-> +	boundary[order - PAGE_REPORTING_MIN_ORDER][migratetype] =
-> +			&zone->free_area[order].free_list[migratetype];
-> +}
-> +
-> +#define for_each_reporting_migratetype_order(_order, _type) \
-> +	for (_order = MAX_ORDER; _order-- != PAGE_REPORTING_MIN_ORDER;) \
-> +		for (_type = MIGRATE_TYPES; _type--;)
-> +
-> +static int page_reporting_populate_metadata(struct zone *zone)
-> +{
-> +	unsigned int order, mt;
-> +
-> +	/*
-> +	 * We need to make sure we have somewhere to store the tracking
-> +	 * data for how many reported pages are in the zone. To do that
-> +	 * we need to make certain zone->reported_pages is populated.
-> +	 */
-> +	if (!zone->reported_pages) {
-> +		zone->reported_pages =
-> +			kcalloc(MAX_ORDER - PAGE_REPORTING_MIN_ORDER,
-> +				sizeof(unsigned long),
-> +				GFP_KERNEL);
-> +		if (!zone->reported_pages)
-> +			return -ENOMEM;
-> +	}
-> +
-> +	/* Update boundary data to reflect the zone we are currently working */
-> +	for_each_reporting_migratetype_order(order, mt)
-> +		page_reporting_reset_boundary(zone, order, mt);
-> +
-> +	return 0;
-> +}
-> +
-> +struct list_head *__page_reporting_get_boundary(unsigned int order,
-> +						int migratetype)
-> +{
-> +	return boundary[order - PAGE_REPORTING_MIN_ORDER][migratetype];
-> +}
-> +
-> +void page_reporting_del_from_boundary(struct page *page, struct zone *zone)
-> +{
-> +	unsigned int order = page_private(page) - PAGE_REPORTING_MIN_ORDER;
-> +	int mt = get_pcppage_migratetype(page);
-> +	struct list_head **tail = &boundary[order][mt];
-> +
-> +	if (*tail == &page->lru)
-> +		*tail = page->lru.next;
-> +}
-> +
-> +void page_reporting_add_to_boundary(struct page *page, struct zone *zone,
-> +				    int migratetype)
-> +{
-> +	unsigned int order = page_private(page) - PAGE_REPORTING_MIN_ORDER;
-> +	struct list_head **tail = &boundary[order][migratetype];
-> +
-> +	*tail = &page->lru;
-> +}
-> +
-> +static unsigned int page_reporting_fill(struct zone *zone,
-> +					struct page_reporting_dev_info *phdev)
-> +{
-> +	struct scatterlist *sg = phdev->sg;
-> +	unsigned int order, mt, count = 0;
-> +
-> +	sg_init_table(phdev->sg, phdev->capacity);
-> +
-> +	for_each_reporting_migratetype_order(order, mt) {
-> +		struct page *page;
-> +
-> +		/*
-> +		 * Pull pages from free list until we have drained
-> +		 * it or we have reached capacity.
-> +		 */
-> +		while ((page = get_unreported_page(zone, order, mt))) {
-> +			sg_set_page(&sg[count], page, PAGE_SIZE << order, 0);
-> +
-> +			if (++count == phdev->capacity)
-> +				return count;
-> +		}
-> +	}
-> +
-> +	/* mark end of scatterlist due to underflow */
-> +	if (count)
-> +		sg_mark_end(&sg[count - 1]);
-> +
-> +	/*
-> +	 * If there are no longer enough free pages to fully populate
-> +	 * the scatterlist, then we can just shut it down for this zone.
-> +	 */
-> +	__clear_bit(ZONE_PAGE_REPORTING_REQUESTED, &zone->flags);
-> +	atomic_dec(&phdev->refcnt);
-> +
-> +	return count;
-> +}
-> +
-> +static void page_reporting_drain(struct zone *zone,
-> +				 struct page_reporting_dev_info *phdev)
-> +{
-> +	struct scatterlist *sg = phdev->sg;
-> +
-> +	/*
-> +	 * Drain the now reported pages back into their respective
-> +	 * free lists/areas. We assume at least one page is populated.
-> +	 */
-> +	do {
-> +		put_reported_page(zone, sg_page(sg));
-> +	} while (!sg_is_last(sg++));
-> +}
-> +
-> +/*
-> + * The page reporting cycle consists of 4 stages, fill, report, drain, and idle.
-> + * We will cycle through the first 3 stages until we fail to obtain any
-> + * pages, in that case we will switch to idle.
-> + */
-> +static void page_reporting_cycle(struct zone *zone,
-> +				 struct page_reporting_dev_info *phdev)
-> +{
-> +	/*
-> +	 * Guarantee boundaries and stats are populated before we
-> +	 * start placing reported pages in the zone.
-> +	 */
-> +	if (page_reporting_populate_metadata(zone))
-> +		return;
-> +
-> +	spin_lock(&zone->lock);
-> +
-> +	/* set bit indicating boundaries are present */
-> +	__set_bit(ZONE_PAGE_REPORTING_ACTIVE, &zone->flags);
-> +
-> +	do {
-> +		/* Pull pages out of allocator into a scaterlist */
-> +		unsigned int nents = page_reporting_fill(zone, phdev);
-> +
-> +		/* no pages were acquired, give up */
-> +		if (!nents)
-> +			break;
-> +
-> +		spin_unlock(&zone->lock);
-> +
-> +		/* begin processing pages in local list */
-> +		phdev->report(phdev, nents);
-> +
-> +		spin_lock(&zone->lock);
-> +
-> +		/*
-> +		 * We should have a scatterlist of pages that have been
-> +		 * processed. Return them to their original free lists.
-> +		 */
-> +		page_reporting_drain(zone, phdev);
-> +
-> +		/* keep pulling pages till there are none to pull */
-> +	} while (test_bit(ZONE_PAGE_REPORTING_REQUESTED, &zone->flags));
-> +
-> +	/* processing of the zone is complete, we can disable boundaries */
-> +	__clear_bit(ZONE_PAGE_REPORTING_ACTIVE, &zone->flags);
-> +
-> +	spin_unlock(&zone->lock);
-> +}
-> +
-> +static void page_reporting_process(struct work_struct *work)
-> +{
-> +	struct delayed_work *d_work = to_delayed_work(work);
-> +	struct page_reporting_dev_info *phdev =
-> +		container_of(d_work, struct page_reporting_dev_info, work);
-> +	struct zone *zone = first_online_pgdat()->node_zones;
-> +
-> +	do {
-> +		if (test_bit(ZONE_PAGE_REPORTING_REQUESTED, &zone->flags))
-> +			page_reporting_cycle(zone, phdev);
-> +
-> +		/*
-> +		 * Move to next zone, if at the end of the list
-> +		 * test to see if we can just go into idle.
-> +		 */
-> +		zone = next_zone(zone);
-> +		if (zone)
-> +			continue;
-> +		zone = first_online_pgdat()->node_zones;
-> +
-> +		/*
-> +		 * As long as refcnt has not reached zero there are still
-> +		 * zones to be processed.
-> +		 */
-> +	} while (atomic_read(&phdev->refcnt));
-> +}
-> +
-> +/* request page reporting on this zone */
-> +void __page_reporting_request(struct zone *zone)
-> +{
-> +	struct page_reporting_dev_info *phdev;
-> +
-> +	rcu_read_lock();
-> +
-> +	/*
-> +	 * We use RCU to protect the ph_dev_info pointer. In almost all
-> +	 * cases this should be present, however in the unlikely case of
-> +	 * a shutdown this will be NULL and we should exit.
-> +	 */
-> +	phdev = rcu_dereference(ph_dev_info);
-> +	if (unlikely(!phdev))
-> +		return;
-> +
-> +	/*
-> +	 * We can use separate test and set operations here as there
-> +	 * is nothing else that can set or clear this bit while we are
-> +	 * holding the zone lock. The advantage to doing it this way is
-> +	 * that we don't have to dirty the cacheline unless we are
-> +	 * changing the value.
-> +	 */
-> +	__set_bit(ZONE_PAGE_REPORTING_REQUESTED, &zone->flags);
-> +
-> +	/*
-> +	 * Delay the start of work to allow a sizable queue to
-> +	 * build. For now we are limiting this to running no more
-> +	 * than 10 times per second.
-> +	 */
-> +	if (!atomic_fetch_inc(&phdev->refcnt))
-> +		schedule_delayed_work(&phdev->work, HZ / 10);
-> +
-> +	rcu_read_unlock();
-> +}
-> +
-> +void __page_reporting_free_stats(struct zone *zone)
-> +{
-> +	/* free reported_page statisitics */
-> +	kfree(zone->reported_pages);
-> +	zone->reported_pages = NULL;
-> +}
-> +
-> +void page_reporting_shutdown(struct page_reporting_dev_info *phdev)
-> +{
-> +	if (rcu_access_pointer(ph_dev_info) != phdev)
-> +		return;
-> +
-> +	/* Disable page reporting notification */
-> +	static_key_slow_dec(&page_reporting_notify_enabled);
-> +	RCU_INIT_POINTER(ph_dev_info, NULL);
-> +	synchronize_rcu();
-> +
-> +	/* Flush any existing work, and lock it out */
-> +	cancel_delayed_work_sync(&phdev->work);
-> +
-> +	/* Free scatterlist */
-> +	kfree(phdev->sg);
-> +	phdev->sg = NULL;
-> +}
-> +EXPORT_SYMBOL_GPL(page_reporting_shutdown);
-> +
-> +int page_reporting_startup(struct page_reporting_dev_info *phdev)
-> +{
-> +	struct zone *zone;
-> +
-> +	/* nothing to do if already in use */
-> +	if (rcu_access_pointer(ph_dev_info))
-> +		return -EBUSY;
-> +
-> +	/* allocate scatterlist to store pages being reported on */
-> +	phdev->sg = kcalloc(phdev->capacity, sizeof(*phdev->sg), GFP_KERNEL);
-> +	if (!phdev->sg)
-> +		return -ENOMEM;
-> +
-> +	/* initialize refcnt and work structures */
-> +	atomic_set(&phdev->refcnt, 0);
-> +	INIT_DELAYED_WORK(&phdev->work, &page_reporting_process);
-> +
-> +	/* assign device, and begin initial flush of populated zones */
-> +	rcu_assign_pointer(ph_dev_info, phdev);
+Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+---
+ drivers/scsi/hisi_sas/hisi_sas.h       |  17 ++++
+ drivers/scsi/hisi_sas/hisi_sas_main.c  | 114 ++++++++++++++++++++++++-
+ drivers/scsi/hisi_sas/hisi_sas_v3_hw.c |  32 +++++++
+ 3 files changed, 161 insertions(+), 2 deletions(-)
 
-
-Will, it not make sense to do this at the top after rcu_access_pointer check()?
-Otherwise, there could be a race between two enablers. Am I missing something here?
-
-
-> +	for_each_populated_zone(zone) {
-> +		spin_lock(&zone->lock);
-> +		__page_reporting_request(zone);
-> +		spin_unlock(&zone->lock);
-> +	}
-> +
-> +	/* enable page reporting notification */
-> +	static_key_slow_inc(&page_reporting_notify_enabled);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(page_reporting_startup);
-> +
->
+diff --git a/drivers/scsi/hisi_sas/hisi_sas.h b/drivers/scsi/hisi_sas/hisi_sas.h
+index c1b56b482a23..5a2fbbbed53e 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas.h
++++ b/drivers/scsi/hisi_sas/hisi_sas.h
+@@ -36,6 +36,9 @@
+ #define HISI_SAS_UNRESERVED_IPTT \
+ 	(HISI_SAS_MAX_COMMANDS - HISI_SAS_RESERVED_IPTT)
+ 
++#define HISI_SAS_IOST_ITCT_CACHE_NUM 64
++#define HISI_SAS_IOST_ITCT_CACHE_DW_SZ 10
++
+ #define HISI_SAS_STATUS_BUF_SZ (sizeof(struct hisi_sas_status_buffer))
+ #define HISI_SAS_COMMAND_TABLE_SZ (sizeof(union hisi_sas_command_table))
+ 
+@@ -252,6 +255,15 @@ struct hisi_sas_debugfs_reg {
+ 	};
+ };
+ 
++struct hisi_sas_iost_itct_cache {
++	u32 data[HISI_SAS_IOST_ITCT_CACHE_DW_SZ];
++};
++
++enum hisi_sas_debugfs_cache_type {
++	HISI_SAS_ITCT_CACHE,
++	HISI_SAS_IOST_CACHE,
++};
++
+ struct hisi_sas_hw {
+ 	int (*hw_init)(struct hisi_hba *hisi_hba);
+ 	void (*setup_itct)(struct hisi_hba *hisi_hba,
+@@ -294,6 +306,9 @@ struct hisi_sas_hw {
+ 					  int delay_ms, int timeout_ms);
+ 	void (*snapshot_prepare)(struct hisi_hba *hisi_hba);
+ 	void (*snapshot_restore)(struct hisi_hba *hisi_hba);
++	void (*read_iost_itct_cache)(struct hisi_hba *hisi_hba,
++				     enum hisi_sas_debugfs_cache_type type,
++				     u32 *cache);
+ 	int complete_hdr_size;
+ 	struct scsi_host_template *sht;
+ 
+@@ -379,6 +394,8 @@ struct hisi_hba {
+ 	struct hisi_sas_cmd_hdr	*debugfs_cmd_hdr[HISI_SAS_MAX_QUEUES];
+ 	struct hisi_sas_iost *debugfs_iost;
+ 	struct hisi_sas_itct *debugfs_itct;
++	u64 *debugfs_iost_cache;
++	u64 *debugfs_itct_cache;
+ 
+ 	struct dentry *debugfs_dir;
+ 	struct dentry *debugfs_dump_dentry;
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
+index 325ec4306794..240b6faaf25f 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_main.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+@@ -2763,10 +2763,14 @@ static void hisi_sas_debugfs_snapshot_global_reg(struct hisi_hba *hisi_hba)
+ 
+ static void hisi_sas_debugfs_snapshot_itct_reg(struct hisi_hba *hisi_hba)
+ {
++	void *cachebuf = hisi_hba->debugfs_itct_cache;
+ 	void *databuf = hisi_hba->debugfs_itct;
+ 	struct hisi_sas_itct *itct;
+ 	int i;
+ 
++	hisi_hba->hw->read_iost_itct_cache(hisi_hba, HISI_SAS_ITCT_CACHE,
++					   cachebuf);
++
+ 	itct = hisi_hba->itct;
+ 
+ 	for (i = 0; i < HISI_SAS_MAX_ITCT_ENTRIES; i++, itct++) {
+@@ -2778,10 +2782,14 @@ static void hisi_sas_debugfs_snapshot_itct_reg(struct hisi_hba *hisi_hba)
+ static void hisi_sas_debugfs_snapshot_iost_reg(struct hisi_hba *hisi_hba)
+ {
+ 	int max_command_entries = HISI_SAS_MAX_COMMANDS;
++	void *cachebuf = hisi_hba->debugfs_iost_cache;
+ 	void *databuf = hisi_hba->debugfs_iost;
+ 	struct hisi_sas_iost *iost;
+ 	int i;
+ 
++	hisi_hba->hw->read_iost_itct_cache(hisi_hba, HISI_SAS_IOST_CACHE,
++					   cachebuf);
++
+ 	iost = hisi_hba->iost;
+ 
+ 	for (i = 0; i < max_command_entries; i++, iost++) {
+@@ -3018,6 +3026,46 @@ static const struct file_operations hisi_sas_debugfs_iost_fops = {
+ 	.owner = THIS_MODULE,
+ };
+ 
++static int hisi_sas_debugfs_iost_cache_show(struct seq_file *s, void *p)
++{
++	struct hisi_hba *hisi_hba = s->private;
++	struct hisi_sas_iost_itct_cache *iost_cache =
++		(struct hisi_sas_iost_itct_cache *)hisi_hba->debugfs_iost_cache;
++	u32 cache_size = HISI_SAS_IOST_ITCT_CACHE_DW_SZ * 4;
++	int i, tab_idx;
++	__le64 *iost;
++
++	for (i = 0; i < HISI_SAS_IOST_ITCT_CACHE_NUM; i++, iost_cache++) {
++		/*
++		 * Data struct of IOST cache:
++		 * Data[1]: BIT0~15: Table index
++		 *	    Bit16:   Valid mask
++		 * Data[2]~[9]: IOST table
++		 */
++		tab_idx = (iost_cache->data[1] & 0xffff);
++		iost = (__le64 *)iost_cache;
++
++		hisi_sas_show_row_64(s, tab_idx, cache_size, iost);
++	}
++
++	return 0;
++}
++
++static int hisi_sas_debugfs_iost_cache_open(struct inode *inode,
++					    struct file *filp)
++{
++	return single_open(filp, hisi_sas_debugfs_iost_cache_show,
++			   inode->i_private);
++}
++
++static const struct file_operations hisi_sas_debugfs_iost_cache_fops = {
++	.open = hisi_sas_debugfs_iost_cache_open,
++	.read = seq_read,
++	.llseek = seq_lseek,
++	.release = single_release,
++	.owner = THIS_MODULE,
++};
++
+ static int hisi_sas_debugfs_itct_show(struct seq_file *s, void *p)
+ {
+ 	int i, ret;
+@@ -3049,6 +3097,46 @@ static const struct file_operations hisi_sas_debugfs_itct_fops = {
+ 	.owner = THIS_MODULE,
+ };
+ 
++static int hisi_sas_debugfs_itct_cache_show(struct seq_file *s, void *p)
++{
++	struct hisi_hba *hisi_hba = s->private;
++	struct hisi_sas_iost_itct_cache *itct_cache =
++		(struct hisi_sas_iost_itct_cache *)hisi_hba->debugfs_itct_cache;
++	u32 cache_size = HISI_SAS_IOST_ITCT_CACHE_DW_SZ * 4;
++	int i, tab_idx;
++	__le64 *itct;
++
++	for (i = 0; i < HISI_SAS_IOST_ITCT_CACHE_NUM; i++, itct_cache++) {
++		/*
++		 * Data struct of ITCT cache:
++		 * Data[1]: BIT0~15: Table index
++		 *	    Bit16:   Valid mask
++		 * Data[2]~[9]: ITCT table
++		 */
++		tab_idx = itct_cache->data[1] & 0xffff;
++		itct = (__le64 *)itct_cache;
++
++		hisi_sas_show_row_64(s, tab_idx, cache_size, itct);
++	}
++
++	return 0;
++}
++
++static int hisi_sas_debugfs_itct_cache_open(struct inode *inode,
++					    struct file *filp)
++{
++	return single_open(filp, hisi_sas_debugfs_itct_cache_show,
++			   inode->i_private);
++}
++
++static const struct file_operations hisi_sas_debugfs_itct_cache_fops = {
++	.open = hisi_sas_debugfs_itct_cache_open,
++	.read = seq_read,
++	.llseek = seq_lseek,
++	.release = single_release,
++	.owner = THIS_MODULE,
++};
++
+ static void hisi_sas_debugfs_create_files(struct hisi_hba *hisi_hba)
+ {
+ 	struct dentry *dump_dentry;
+@@ -3095,9 +3183,15 @@ static void hisi_sas_debugfs_create_files(struct hisi_hba *hisi_hba)
+ 	debugfs_create_file("iost", 0400, dump_dentry, hisi_hba,
+ 			    &hisi_sas_debugfs_iost_fops);
+ 
++	debugfs_create_file("iost_cache", 0400, dump_dentry, hisi_hba,
++			    &hisi_sas_debugfs_iost_cache_fops);
++
+ 	debugfs_create_file("itct", 0400, dump_dentry, hisi_hba,
+ 			    &hisi_sas_debugfs_itct_fops);
+ 
++	debugfs_create_file("itct_cache", 0400, dump_dentry, hisi_hba,
++			    &hisi_sas_debugfs_itct_cache_fops);
++
+ 	return;
+ }
+ 
+@@ -3212,14 +3306,26 @@ void hisi_sas_debugfs_init(struct hisi_hba *hisi_hba)
+ 			goto fail_iost_dq;
+ 	}
+ 
+-	/* Alloc buffer for iost */
+ 	sz = max_command_entries * sizeof(struct hisi_sas_iost);
+ 
+ 	hisi_hba->debugfs_iost = devm_kmalloc(dev, sz, GFP_KERNEL);
+ 	if (!hisi_hba->debugfs_iost)
+ 		goto fail_iost_dq;
+ 
+-	/* Alloc buffer for itct */
++	sz = HISI_SAS_IOST_ITCT_CACHE_NUM *
++	     sizeof(struct hisi_sas_iost_itct_cache);
++
++	hisi_hba->debugfs_iost_cache = devm_kmalloc(dev, sz, GFP_KERNEL);
++	if (!hisi_hba->debugfs_iost_cache)
++		goto fail_iost_cache;
++
++	sz = HISI_SAS_IOST_ITCT_CACHE_NUM *
++	     sizeof(struct hisi_sas_iost_itct_cache);
++
++	hisi_hba->debugfs_itct_cache = devm_kmalloc(dev, sz, GFP_KERNEL);
++	if (!hisi_hba->debugfs_itct_cache)
++		goto fail_itct_cache;
++
+ 	/* New memory allocation must be locate before itct */
+ 	sz = HISI_SAS_MAX_ITCT_ENTRIES * sizeof(struct hisi_sas_itct);
+ 
+@@ -3229,6 +3335,10 @@ void hisi_sas_debugfs_init(struct hisi_hba *hisi_hba)
+ 
+ 	return;
+ fail_itct:
++	devm_kfree(dev, hisi_hba->debugfs_iost_cache);
++fail_itct_cache:
++	devm_kfree(dev, hisi_hba->debugfs_iost_cache);
++fail_iost_cache:
+ 	devm_kfree(dev, hisi_hba->debugfs_iost);
+ fail_iost_dq:
+ 	for (i = 0; i < d; i++)
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+index b99abc788487..c8ca6ead639b 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+@@ -71,6 +71,7 @@
+ #define HGC_DQE_ECC_MB_ADDR_OFF	16
+ #define HGC_DQE_ECC_MB_ADDR_MSK (0xfff << HGC_DQE_ECC_MB_ADDR_OFF)
+ #define CHNL_INT_STATUS			0x148
++#define TAB_DFX				0x14c
+ #define HGC_ITCT_ECC_ADDR		0x150
+ #define HGC_ITCT_ECC_1B_ADDR_OFF		0
+ #define HGC_ITCT_ECC_1B_ADDR_MSK		(0x3ff << \
+@@ -83,6 +84,7 @@
+ #define AXI_ERR_INFO_MSK               (0xff << AXI_ERR_INFO_OFF)
+ #define FIFO_ERR_INFO_OFF              8
+ #define FIFO_ERR_INFO_MSK              (0xff << FIFO_ERR_INFO_OFF)
++#define TAB_RD_TYPE			0x15c
+ #define INT_COAL_EN			0x19c
+ #define OQ_INT_COAL_TIME		0x1a0
+ #define OQ_INT_COAL_CNT			0x1a4
+@@ -2877,6 +2879,35 @@ static void debugfs_snapshot_restore_v3_hw(struct hisi_hba *hisi_hba)
+ 	clear_bit(HISI_SAS_REJECT_CMD_BIT, &hisi_hba->flags);
+ }
+ 
++static void read_iost_itct_cache_v3_hw(struct hisi_hba *hisi_hba,
++				       enum hisi_sas_debugfs_cache_type type,
++				       u32 *cache)
++{
++	u32 cache_dw_size = HISI_SAS_IOST_ITCT_CACHE_DW_SZ *
++			    HISI_SAS_IOST_ITCT_CACHE_NUM;
++	u32 *buf = cache;
++	u32 i, val;
++
++	hisi_sas_write32(hisi_hba, TAB_RD_TYPE, type);
++
++	for (i = 0; i < HISI_SAS_IOST_ITCT_CACHE_DW_SZ; i++) {
++		val = hisi_sas_read32(hisi_hba, TAB_DFX);
++		if (val == 0xffffffff)
++			break;
++	}
++
++	if (val != 0xffffffff) {
++		pr_err("Issue occur when reading IOST/ITCT cache!\n");
++		return;
++	}
++
++	memset(buf, 0, cache_dw_size * 4);
++	buf[0] = val;
++
++	for (i = 1; i < cache_dw_size; i++)
++		buf[i] = hisi_sas_read32(hisi_hba, TAB_DFX);
++}
++
+ static struct scsi_host_template sht_v3_hw = {
+ 	.name			= DRV_NAME,
+ 	.module			= THIS_MODULE,
+@@ -2929,6 +2960,7 @@ static const struct hisi_sas_hw hisi_sas_v3_hw = {
+ 	.debugfs_reg_port = &debugfs_port_reg,
+ 	.snapshot_prepare = debugfs_snapshot_prepare_v3_hw,
+ 	.snapshot_restore = debugfs_snapshot_restore_v3_hw,
++	.read_iost_itct_cache = read_iost_itct_cache_v3_hw,
+ };
+ 
+ static struct Scsi_Host *
 -- 
-Thanks
-Nitesh
+2.17.1
 
