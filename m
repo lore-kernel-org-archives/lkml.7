@@ -2,113 +2,189 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A0DC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 11:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBAACC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 11:55:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 407F5206A2
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 11:55:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94561206A2
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 11:55:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="l2Pu8MVc";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iaoTftYe"
+	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="AXZ1JXWH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728534AbfHELzo (ORCPT
+        id S1728647AbfHELzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 07:55:44 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:43207 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727259AbfHELzo (ORCPT
+        Mon, 5 Aug 2019 07:55:53 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37191 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728028AbfHELzw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 07:55:44 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id A90C82148D;
-        Mon,  5 Aug 2019 07:55:42 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Mon, 05 Aug 2019 07:55:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=WrDb4esL3ajy5ujNajPOSkPy+aY
-        Xl4b5J03jgIi8A30=; b=l2Pu8MVcAiEwRA3W0qQaombT2nsBgFeFEoQMNqpsJbh
-        RgT3MCY+MiEuFaJ3HDN8eI30hLKOwzdpb4jwpf0+Tan/FT4LUDjL35HJ4sxMMZ8M
-        jbg5glDUZ17SEnb/Q4cogPaXa6NVxlrQ7TU45sokJDP/Y6dvuDPP2E094bks3tRi
-        9QfajSGuiJw9FFqKr9WB/weCzpF9YL5Ajt2EAgCT2tHv7p07X21lkv75LC28s8yE
-        armMlxITchCXBSasH7zPw99Wnyw0ZyRxsbgWlhbNLa3Y8SVGYmh76I1lHzgHYhvN
-        z6epxdz6O6SSNs0+hHukH6O8ljI78IvzOYRAymKt+PQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=WrDb4e
-        sL3ajy5ujNajPOSkPy+aYXl4b5J03jgIi8A30=; b=iaoTftYeGg62YeE9iY3jQ/
-        Bw+8PRR/Tyy3uSerrx87LSRGV3y9fezeytzcSxQnZZ/qU8BxMdSF/PHcphneoCPr
-        FBYkZDbx+mw7KjU+oXJLlg4O8yN3juZSWpE9an5bHGpWx6KiBC5vDyA2Zgzth9Lz
-        hLeGqSWolHZ+Va9Zpfws+OAmlDPo49l5CDO5id6h3E4TcpOKEc685kIY5EMEu5Ea
-        OAV5aQjei/VBd8SGtjBCAWwCEBwcYFr/Zu4jcxkx/+C2AettZbKaiS/fqYlWkk64
-        5NzLrlxM0XlXbSGrmYvuFWl3si0cx2/m70zYn7o3NeqS8KJd5Ka+Hlip6UDXrIsQ
-        ==
-X-ME-Sender: <xms:PhlIXUIeReZuy51-E2xDo0yJwqGJyEpIihly7OKrqaQHI3UlduAZZw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddruddtjedggeeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
-    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledrud
-    dtjeenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhmnecu
-    vehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:PhlIXbQ0EnPU4uz71IWF72Cbs_9NdpdYJL73UC0GqNX9MvMP-cmeng>
-    <xmx:PhlIXXD_ocstRIYGwUYYvlBL4iWg1miIsXdh5Gz4B6uOqyDfJJdfBQ>
-    <xmx:PhlIXaIF-nOpV6rBhU77WyYTaIauXZdxq91sXWTtezKxuxoteVqm3g>
-    <xmx:PhlIXTMTFGu49LMlP_CDrR5UJNKyzy1affuIzOUtF3Vi2aPIjtTcEQ>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id DEA3C380085;
-        Mon,  5 Aug 2019 07:55:41 -0400 (EDT)
-Date:   Mon, 5 Aug 2019 13:55:40 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     Rolf Eike Beer <eb@emlix.com>, stable@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 4.9.180 build fails =?utf-8?Q?wi?=
- =?utf-8?Q?th_gcc_9_and_'cleanup=5Fmodule'_specifies_less_restrictive_attr?=
- =?utf-8?Q?ibute_than_its_target_=E2=80=A6?=
-Message-ID: <20190805115540.GB8189@kroah.com>
-References: <20190606185900.GA19937@kroah.com>
- <CANiq72n2E4Ue0MU5mWitSbsscizPQKML0QQx_DBwJVni+eWMHQ@mail.gmail.com>
- <4007272.nJfEYfeqza@devpool35>
- <CANiq72=T8nH3HHkYvWF+vPMscgwXki1Ugiq6C9PhVHJUHAwDYw@mail.gmail.com>
- <20190802103346.GA14255@kroah.com>
- <CANiq72kcZZwp2MRVF5Ls+drXCzVbCfZ7wZ8Y+rU93oGohVAGsQ@mail.gmail.com>
- <20190802112542.GA29534@kroah.com>
- <CANiq72mSLmP-EaOgY0m2qgTMVsAnyE6iuW5Kjdw5mSy1ZH0y-A@mail.gmail.com>
- <20190802155627.GB28398@kroah.com>
- <CANiq72k-2Gtb8Q_f2Nhy6aud-QwuSiJ8oEJbwt-pjd+bs8qDVg@mail.gmail.com>
+        Mon, 5 Aug 2019 07:55:52 -0400
+Received: by mail-wm1-f66.google.com with SMTP id f17so72689083wme.2
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 04:55:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=H6DV7NULWXTKmxPUlxIbIaTZ+WwHek3RCbS21JjmkqM=;
+        b=AXZ1JXWHpa1/9l8Lat/iA00eJxyxK8rXNxsFRf/7VHn9iXxxioTT9hAEItPx1Dh9th
+         jIM5rzqJgCf61lqf+HxveUC7mM9UoG43KxWZJtKfJQIfA7mSISGGBVYPGNg4SM/uHuMW
+         MsM0dJarujeWc8LH+h9WrR5deoIUFo5EqJ6Gycxe5R2g7z89x5phAAx+TtmEKWw05q1/
+         02LO0EfCJQg4I2QJfTtHNNeFe+vwPomtwR9mhV5QhBqmhXgV1PW2F//7iIeOcc2+vsRG
+         1uU98BwxupRiCrZN9Pcr+PnI5uFlPlwTIWEKuDhEZ/269L8+hRgIbvKbrLZh41PgPFT7
+         oviA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=H6DV7NULWXTKmxPUlxIbIaTZ+WwHek3RCbS21JjmkqM=;
+        b=U5dXcYXGC6sWbfUuGxMgYjN92f3xIfczuZPl+ylnKDBgbV/rMSyzyxkIvxi15PBi8M
+         N+AzhHAfrKZ0XSMUc9Y28o+jtjzYL+OVDtHemmeblji0AcXq1Df1AvghB4hh4SQHGr9o
+         jee20eZH0NO6LJHgwpKA4USAXk5qUNqPqQfL0RbPFWuXnaIgowtpOGGp5KpP8mZuXaQy
+         BznmR6ql7iF13JwWlNTOE65viEbgHK2Lsrqz+sZhk/5OT+vURHpGQjhjTPB7Ltbvdk+b
+         jmJb5qvr246leXLT59HGxFMTPjBkkkm5ISyBpGXTZkS1j+HncsJk30+DE27xmGKmGDW6
+         IlxA==
+X-Gm-Message-State: APjAAAUr6fmsxoUdQobeblfc3njf8bh53xBaHrz1cHgFOPsR1aimeYNY
+        uOpLvaDEv0GqL1r8G747WPJMWfkbRncPDV2EWiHUJA==
+X-Google-Smtp-Source: APXvYqxRocYlZtsmySV21CtvrpzgqkTjPiyGA/IX/Ff4cR/YijjeB8VqhHjlHMmanlC3IKQDUZI/c4pVnbBHk6t8P44=
+X-Received: by 2002:a1c:c005:: with SMTP id q5mr17605109wmf.59.1565006149655;
+ Mon, 05 Aug 2019 04:55:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANiq72k-2Gtb8Q_f2Nhy6aud-QwuSiJ8oEJbwt-pjd+bs8qDVg@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <CAMGffEkotpvVz8FA78vNFh0qZv3kEMNrXXfVPEUC=MhH0pMCZA@mail.gmail.com>
+ <0a83fde3-1a74-684c-0d70-fb44b9021f96@molgen.mpg.de> <CAMGffE=_kPoBmSwbxvrqdqbhpR5Cu2Vbe4ArGqm9ns9+iVEH_g@mail.gmail.com>
+In-Reply-To: <CAMGffE=_kPoBmSwbxvrqdqbhpR5Cu2Vbe4ArGqm9ns9+iVEH_g@mail.gmail.com>
+From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
+Date:   Mon, 5 Aug 2019 13:55:38 +0200
+Message-ID: <CAMGffEkcXcQC+kjwdH0iVSrFDk-o+dp+b3Q1qz4z=R=6D+QqLQ@mail.gmail.com>
+Subject: Bisected: Kernel 4.14 + has 3 times higher write IO latency than
+ Kernel 4.4 with raid1
+To:     NeilBrown <neilb@suse.com>, linux-raid <linux-raid@vger.kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexandr Iarygin <alexandr.iarygin@cloud.ionos.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 06:55:53PM +0200, Miguel Ojeda wrote:
-> On Fri, Aug 2, 2019 at 5:56 PM Greg KH <greg@kroah.com> wrote:
-> >
-> > I see a ton of warnings on those kernels today.  I'll look into it next
-> > week after I apply your patches to see what's missing.
-> 
-> Yeah, the objtool ones -- I thought you were referring to the
-> -Wmissing-attributes that Rolf asked about (I am not sure why Rolf has
-> those as -Werror rather than warnings, though).
-> 
-> I can take a look at the objtool ones and see if applying some of the
-> patches helps, although I have never looked into how objtool works, so
-> no promises :)
+Hi Neil,
 
-I think I got it working now, all looks good for 4.9.y, 4.14.y and
-4.19.y for gcc9 so far.  I'll leave 4.4.y alone :)
+For the md higher write IO latency problem, I bisected it to these commits:
 
-thanks,
+4ad23a97 MD: use per-cpu counter for writes_pending
+210f7cd percpu-refcount: support synchronous switch to atomic mode.
 
-greg k-h
+Do you maybe have an idea? How can we fix it?
+
+Regards,
+Jack Wang
+
+git bisect log:
+git bisect start
+# good: [d9560919689d588beccf719452086b5cdf6d6c22] Linux 4.4.157
+git bisect good d9560919689d588beccf719452086b5cdf6d6c22
+# good: [d9560919689d588beccf719452086b5cdf6d6c22] Linux 4.4.157
+git bisect good d9560919689d588beccf719452086b5cdf6d6c22
+# good: [b562e44f507e863c6792946e4e1b1449fbbac85d] Linux 4.5
+git bisect good b562e44f507e863c6792946e4e1b1449fbbac85d
+# bad: [7d80e1218adf6d1aa5270587192789e218fef706] Linux 4.14.136
+git bisect bad 7d80e1218adf6d1aa5270587192789e218fef706
+# good: [309c675e62d140d46806ca3e6b29f4549076d0d6] hwmon: (pcf8591)
+use permission-specific DEVICE_ATTR variants
+git bisect good 309c675e62d140d46806ca3e6b29f4549076d0d6
+# bad: [8ad06e56dcbc1984ef0ff8f6e3c19982c5809f73] Merge branch 'linus'
+of git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6
+git bisect bad 8ad06e56dcbc1984ef0ff8f6e3c19982c5809f73
+# good: [47d272f0f9887343f4e4d31bb22910b141b96654] Merge tag
+'iwlwifi-next-for-kalle-2017-04-26' of
+git://git.kernel.org/pub/scm/linux/kernel/git/iwlwifi/iwlwifi-next
+git bisect good 47d272f0f9887343f4e4d31bb22910b141b96654
+# bad: [81be3dee96346fbe08c31be5ef74f03f6b63cf68] fs/xattr.c: zero out
+memory copied to userspace in getxattr
+git bisect bad 81be3dee96346fbe08c31be5ef74f03f6b63cf68
+# bad: [2f34c1231bfc9f2550f934acb268ac7315fb3837] Merge tag
+'drm-for-v4.12' of git://people.freedesktop.org/~airlied/linux
+git bisect bad 2f34c1231bfc9f2550f934acb268ac7315fb3837
+# good: [be580e7522eecfcf31c70abdf6fa0ae77b2e293b] Merge tag
+'mmc-v4.12' of git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc
+git bisect good be580e7522eecfcf31c70abdf6fa0ae77b2e293b
+# good: [f7effef8d6e38d7d3120c604ad7d0b299b349e14] drm/amdgpu: limit
+block size to one page
+git bisect good f7effef8d6e38d7d3120c604ad7d0b299b349e14
+# good: [1676a2b35cd5a548da17d1106fb0d4d238c0d191] drm/i915: Park the
+signaler before sleeping
+git bisect good 1676a2b35cd5a548da17d1106fb0d4d238c0d191
+# good: [0302e28dee643932ee7b3c112ebccdbb9f8ec32c] Merge branch 'next'
+of git://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security
+git bisect good 0302e28dee643932ee7b3c112ebccdbb9f8ec32c
+# bad: [d35a878ae1c50977b55e352fd46e36e35add72a0] Merge tag
+'for-4.12/dm-changes' of
+git://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm
+git bisect bad d35a878ae1c50977b55e352fd46e36e35add72a0
+# bad: [78b6350dcaadb03b4a2970b16387227ba6744876] md: support
+disabling of create-on-open semantics.
+git bisect bad 78b6350dcaadb03b4a2970b16387227ba6744876
+# bad: [513e2faa0138462ce014e1b0e226ca45c83bc6c1] md: prepare for
+managing resync I/O pages in clean way
+git bisect bad 513e2faa0138462ce014e1b0e226ca45c83bc6c1
+# good: [497280509f32340d90feac030bce18006a3e3605] md/raid5: use
+md_write_start to count stripes, not bios
+git bisect good 497280509f32340d90feac030bce18006a3e3605
+# good: [84dd97a69092cef858483b775f1900d743d796a4] md/raid5: don't
+test ->writes_pending in raid5_remove_disk
+git bisect good 84dd97a69092cef858483b775f1900d743d796a4
+# bad: [0b408baf7f4f3ea94239d021a1f19e60cd8694de] raid5-ppl: silence a
+misleading warning message
+git bisect bad 0b408baf7f4f3ea94239d021a1f19e60cd8694de
+# good: [55cc39f345256af241deb6152ff5c06bedd10f11] md: close a race
+with setting mddev->in_sync
+git bisect good 55cc39f345256af241deb6152ff5c06bedd10f11
+# bad: [4ad23a976413aa57fe5ba7a25953dc35ccca5b71] MD: use per-cpu
+counter for writes_pending
+git bisect bad 4ad23a976413aa57fe5ba7a25953dc35ccca5b71
+
+diff between bad latency and good latency:
+root@ib2:/home/jwang/pb-linux-4.14# diff
+md_lat_ib2_4.11.0-rc2-1-storage+_2019_0805_125846.log
+md_lat_ib2_4.11.0-rc2-1-storage+_2019_0805_132042.log
+5c5
+< write-test: (groupid=0, jobs=1): err= 0: pid=3265: Mon Aug  5 12:59:27 2019
+---
+> write-test: (groupid=0, jobs=1): err= 0: pid=3192: Mon Aug  5 13:21:23 2019
+7,9c7,9
+<     slat (usec): min=2, max=29, avg= 2.36, stdev= 0.49
+<     clat (usec): min=0, max=94, avg= 0.37, stdev= 1.13
+<      lat (usec): min=2, max=113, avg= 2.74, stdev= 1.16
+---
+>     slat (usec): min=2, max=59973, avg= 5.25, stdev=375.04
+>     clat (usec): min=0, max=127, avg= 1.74, stdev=13.00
+>      lat (usec): min=2, max=60095, avg= 7.00, stdev=376.12
+13,20c13,20
+<      | 70.00th=[    1], 80.00th=[    1], 90.00th=[    1], 95.00th=[    1],
+<      | 99.00th=[    1], 99.50th=[    1], 99.90th=[    1], 99.95th=[    1],
+<      | 99.99th=[   67]
+<     bw (KB  /s): min=20000, max=20008, per=100.00%, avg=20004.35, stdev= 4.01
+<     lat (usec) : 2=99.96%, 4=0.01%, 10=0.01%, 20=0.01%, 50=0.01%
+<     lat (usec) : 100=0.02%
+<   cpu          : usr=2.44%, sys=1.49%, ctx=199942, majf=0, minf=11
+<   IO depths    : 1=100.0%, 2=0.1%, 4=0.1%, 8=0.1%, 16=0.1%, 32=0.1%, >=64=0.0%
+---
+>      | 70.00th=[    0], 80.00th=[    1], 90.00th=[    1], 95.00th=[    1],
+>      | 99.00th=[   93], 99.50th=[  120], 99.90th=[  123], 99.95th=[  124],
+>      | 99.99th=[  125]
+>     bw (KB  /s): min=18042, max=22072, per=100.00%, avg=20007.54, stdev=409.26
+>     lat (usec) : 2=98.52%, 4=0.01%, 10=0.01%, 20=0.02%, 50=0.06%
+>     lat (usec) : 100=0.41%, 250=0.98%
+>   cpu          : usr=1.06%, sys=2.81%, ctx=197106, majf=0, minf=11
+>   IO depths    : 1=98.5%, 2=0.1%, 4=0.1%, 8=0.1%, 16=0.1%, 32=1.3%, >=64=0.0%
+30c30
+<     md0: ios=60/199469, merge=0/0, ticks=0/0, in_queue=0,
+util=0.00%, aggrios=0/0, aggrmerge=0/0, aggrticks=0/0, aggrin_queue=0,
+aggrutil=0.00%
+---
+>     md0: ios=60/199443, merge=0/0, ticks=0/0, in_queue=0, util=0.00%, aggrios=0/0, aggrmerge=0/0, aggrticks=0/0, aggrin_queue=0, aggrutil=0.00%
