@@ -2,128 +2,132 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 154D1C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9882C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9CDA20B1F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:16:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="pzQW1nJ2"
+	by mail.kernel.org (Postfix) with ESMTP id 8325F20B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:18:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728022AbfHEJQ2 (ORCPT
+        id S1727908AbfHEJSQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 05:16:28 -0400
-Received: from mout.web.de ([212.227.17.12]:59477 "EHLO mout.web.de"
+        Mon, 5 Aug 2019 05:18:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45358 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727161AbfHEJQ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 05:16:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1564996551;
-        bh=Lava83WeBTNK8y0fCWBr4gFIIH1fgDIi4D+2PbA2nU0=;
-        h=X-UI-Sender-Class:Cc:References:Subject:To:From:Date:In-Reply-To;
-        b=pzQW1nJ2QLBQ3ybzRgwjeBtTCCovoDBhTcB2Vc7qxtPQlG8qnQaZilNFrj+HOfJI+
-         JLseAA5wtz6yePbs59dweQGAPleoE4Nbd5dwd/phz6qCAslHR65F/DRpGOKqlWHPwT
-         pi8MeYk4JiXLM4m35cC11Sp02a9v0cdL5qObIfoM=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.132.163.134]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MGign-1i7R8o0rDt-00Dbph; Mon, 05
- Aug 2019 11:15:51 +0200
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sergei Turchanov <turchanov@farpost.com>
-References: <87mugojl0f.fsf@notabene.neil.brown.name>
-Subject: Re: seq_file: fix problem when seeking mid-record.
-To:     Neil Brown <neilb@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <4862a29d-7e4f-5bc5-dcde-ec9ebafa1ff2@web.de>
-Date:   Mon, 5 Aug 2019 11:15:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726454AbfHEJSQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 05:18:16 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7ECE881DEC;
+        Mon,  5 Aug 2019 09:18:15 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 65BF560605;
+        Mon,  5 Aug 2019 09:18:15 +0000 (UTC)
+Received: from zmail25.collab.prod.int.phx2.redhat.com (zmail25.collab.prod.int.phx2.redhat.com [10.5.83.31])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 45E964E589;
+        Mon,  5 Aug 2019 09:18:15 +0000 (UTC)
+Date:   Mon, 5 Aug 2019 05:18:13 -0400 (EDT)
+From:   Frediano Ziglio <fziglio@redhat.com>
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
+        <virtualization@lists.linux-foundation.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
+        <spice-devel@lists.freedesktop.org>,
+        Dave Airlie <airlied@redhat.com>
+Message-ID: <1869747233.4556840.1564996693878.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20190805085355.12527-1-kraxel@redhat.com>
+References: <20190805085355.12527-1-kraxel@redhat.com>
+Subject: Re: [Spice-devel] [PATCH] drm/qxl: get vga ioports
 MIME-Version: 1.0
-In-Reply-To: <87mugojl0f.fsf@notabene.neil.brown.name>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Provags-ID: V03:K1:9ylnVCQNAG5orZXuJ9ZxrYVpvRCVqK+52CmbzkWsf41XCQb7cKP
- QXs4cHylFMRhnTWhpP+p6+rrmNo++pltAmn1RQqHz4YwiZTeskYcbcx0UWKGL/LCmn3dca+
- 47QKsvnKtT4qgS6fw/FMFrC680G6SQR/ZI6U3Hx+bjqniQOv76bNE5uU32PHFHni1O1wFIh
- 5+adhy9Ni29P7B8ipIpJA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Dl/XEqIFSTg=:06YvczyAcvsDyMgOMlM5Dh
- uUrRGo8oAe7E7tY6+WrNrN6Mwms2dYrkAFggMV5D1SWsM0Pq+Okgq2JksnPTaEwVzcT0rQ2om
- dEh1jsCLUStnBlatv3ZAPbO7KKFU4Yiw7l/q2WC9cZv4dRvVTMjWVxig1LTn1MHBN8lSU9rnT
- Ic5jPKmO/LT7P6O0D9BPlm+eAUjuRiaO5il5RklngYzet+xBk50V3lHdetdU9KF5jsnFyR3Ct
- KVLnKXrw4flgqb5zYtS22/2dUQPqq+TSLU1Zk9U5fMkG+SLQBJsVehKE6q1GaPFS7KEaRl/qL
- UvbW1SZ2Nz9x49U7/31M954a4yeSzat/iRwv+PnEvrr5UjBT3bKZ0cHwOThgZd/mQpfxs2QVA
- p6dTBWdGvZItIIMp+njse99ClHQhprG71TRAoYTPRnZ0KiwYV+miOn/GiWI7M3GgvwiVjikPc
- 22nCRvzlc8wyIRqhScoqQaZxqV9aG0Ab1oDFmX7Spd04VEzkqFPUPXXuZ71CKFhIjD703phnR
- V+oDhJ6N1XZkKCz4udlIbO+GCm3T+G6aQ1r5S6xfdkHo+3o3IsnM64YhN97Ah7NvhFuODSSTL
- ihTOKF9feTN+tZasphLTTf7S8mEInBinC/tX7ILJZFUIcWFa8PmDf5VDK2nWtjPlYbpJ2uceZ
- 31q3zBmC4DdW8udyTMs15tuGOVIRCltnVssJZiovoyKpWNXqATe347G+cJUlqCeg/+pAi7ndY
- bFZ+TJOWvn+E7Xt1t0aKXxsWzfOcaJw3TZKHY/QGaWabTArZIM3qfoTc9i9uzHO8nk5VQK2YP
- ymrARk9eTqkPxP4FM6RrB4OdxG8ffbL8LKy+bjNBGsiNnHb/FJHTTsMq9FkWJYv1oVj4cpXT7
- Vagkq72UBR+iK6vsFMEe0W28gga4aprQdl/GhpXjlABpioH88vMuVd6EbN3iF2FPCgAhDzGlU
- H3eJwPLWZ57F77PNnFbqq4AhAoY57uUzAkTHVEWXTnS3+VuahdC2q8D3xu163ngfq0gNvOuC3
- egt1wKrRSskr/+7WrwYRx/9rusrIEwQMSEotsm5mTPXN+Whx/88c5I3niKWGPMbe9xfvM2RpN
- J+6QvR1RBDoOcvJWN0XXzD0Yg84JO+dL9soidkO77IDsTZre9Tnvdh8vHbB2XkPuO4i7klbxu
- BKps4=
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.33.32.18, 10.4.195.2]
+Thread-Topic: drm/qxl: get vga ioports
+Thread-Index: B+Egf2oktmkF6AuofBNvusT7r7gH4A==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Mon, 05 Aug 2019 09:18:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Fixes: 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code
-> 	and interface")
+> 
+> qxl has two modes: "native" (used by the drm driver) and "vga" (vga
+> compatibility mode, typically used for boot display and firmware
+> framebuffers).
+> 
+> Accessing any vga ioport will switch the qxl device into vga mode.
+> The qxl driver never does that, but other drivers accessing vga ports
+> can trigger that too and therefore disturb qxl operation.  So aquire
+> the legacy vga ioports from vgaarb to avoid that.
+> 
+> Reporducer: Boot kvm guest with both qxl and i915 vgpu, with qxl being
 
-Please do not split this tag across multiple lines in the final commit description.
+typo: "Reporducer"
 
-Regards,
-Markus
+> first in pci scan order.
+> 
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> ---
+>  drivers/gpu/drm/qxl/qxl_drv.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/qxl/qxl_drv.c b/drivers/gpu/drm/qxl/qxl_drv.c
+> index b57a37543613..8a2e86adc423 100644
+> --- a/drivers/gpu/drm/qxl/qxl_drv.c
+> +++ b/drivers/gpu/drm/qxl/qxl_drv.c
+> @@ -87,9 +87,15 @@ qxl_pci_probe(struct pci_dev *pdev, const struct
+> pci_device_id *ent)
+>  	if (ret)
+>  		goto disable_pci;
+>  
+> +	ret = vga_get_interruptible(pdev, VGA_RSRC_LEGACY_IO);
+> +	if (ret) {
+> +		DRM_ERROR("can't get legacy vga ports\n");
+> +		goto put_vga;
+
+I suppose that if this fails it's secondary so should continue.
+What happen configuring 2 QXL devices?
+Only a card should provide VGA registers in the system so
+if any other card provide them QXL won't work.
+
+> +	}
+> +
+>  	ret = qxl_device_init(qdev, &qxl_driver, pdev);
+>  	if (ret)
+> -		goto disable_pci;
+> +		goto put_vga;
+>  
+>  	ret = qxl_modeset_init(qdev);
+>  	if (ret)
+> @@ -109,6 +115,8 @@ qxl_pci_probe(struct pci_dev *pdev, const struct
+> pci_device_id *ent)
+>  	qxl_modeset_fini(qdev);
+>  unload:
+>  	qxl_device_fini(qdev);
+> +put_vga:
+> +	vga_put(pdev, VGA_RSRC_LEGACY_IO);
+
+What happen if you didn't get the I/O? Maybe it's safe to
+just call vga_put and avoid adding an additional label here?
+
+>  disable_pci:
+>  	pci_disable_device(pdev);
+>  free_dev:
+> @@ -126,6 +134,7 @@ qxl_pci_remove(struct pci_dev *pdev)
+>  
+>  	qxl_modeset_fini(qdev);
+>  	qxl_device_fini(qdev);
+> +	vga_put(pdev, VGA_RSRC_LEGACY_IO);
+>  
+>  	dev->dev_private = NULL;
+>  	kfree(qdev);
+
+Frediano
