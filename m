@@ -2,114 +2,147 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C649EC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E7CCC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99A0F214C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:08:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565017701;
-	bh=pP2QV9RFikSg/QhS3JVeQ96q3EXCKWZuPOHE9VeEQNY=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=KHzOXlP1qiolKH5rxolQHSStyt9aXggE2MiYmMnXXn5W0+9ckjlgFZ1kMI0fd9nLm
-	 66VkX3lgoDyOi1+o28h8D/P8ptHjHPmXkhXPgDB827CBkY70FIPg2MG4HDdIU1nEfr
-	 0OsnHJOxhBTrNRqTAMHVP9hO2JKhR0TgmAttCAm4=
+	by mail.kernel.org (Postfix) with ESMTP id 63C4E214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:08:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jbxxzFHH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729637AbfHEPIU (ORCPT
+        id S1729674AbfHEPIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 11:08:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37364 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728885AbfHEPIU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 11:08:20 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3148214C6;
-        Mon,  5 Aug 2019 15:08:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565017699;
-        bh=pP2QV9RFikSg/QhS3JVeQ96q3EXCKWZuPOHE9VeEQNY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=dkPlqTiVJR4OM905QzzFSSRjr3/Uxz+ktVrFmuv+aN0S6asPuCW4+3IWyFIX7FRGO
-         hGVL/BqI2f1SNkrvob80iZePUX/TQy25TGkMewRLMx5QuCiScFbXFRS98WuE+uSPg6
-         l7tGs5oslOQjt75LlNWg0yvFQZmlnEDTK3ic8rmY=
-Subject: Re: [PATCH v3 1/2] usbip: Skip DMA mapping and unmapping for urb at
- vhci
-To:     Suwan Kim <suwan.kim027@gmail.com>
-Cc:     valentina.manea.m@gmail.com, gregkh@linuxfoundation.org,
-        stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190802173651.22247-1-suwan.kim027@gmail.com>
- <20190802173651.22247-2-suwan.kim027@gmail.com>
- <c23b3ac1-68d9-bc1e-610b-955988e11055@kernel.org>
- <20190805052358.GA8904@localhost.localdomain>
-From:   shuah <shuah@kernel.org>
-Message-ID: <8ce7b60c-6075-54ac-a917-921cb41003e6@kernel.org>
-Date:   Mon, 5 Aug 2019 09:08:18 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190805052358.GA8904@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Mon, 5 Aug 2019 11:08:42 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35216 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728952AbfHEPIl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 11:08:41 -0400
+Received: by mail-wm1-f66.google.com with SMTP id l2so73332820wmg.0
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 08:08:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=CfGlMJlJq1yx6eSWof1+4yQXKTkrtm+XZNLVyiuuYPc=;
+        b=jbxxzFHHvusryD5w8vzHeuPeqU/d3yLi9SHaw+kphMYUNZbQHKRDzd0wOyUR/cmUgM
+         iMB55vlb/E8GPsyr5ucRPmimQH23RpGgdFiQBLzrxFXoq1sqDkFlGV+7etEF2y6fKRcg
+         mc5VTGedBcNbRLHK58Op9xwxSGRqTW4NNy2ZXqz4/zNBv9SNY0VBWz5gJVC1blrGH3jF
+         vNnmQ7gxzsoLn1ExYyoQuw5LWo9CH554+vbq0kfDJVdyCK4eq5LocjSQ4KunVUAkwDaG
+         7q2NuNsw16RVT8AZxS87xuORXknHwk+nYviQ763BWAYD5i9CYfsX2MjrExgAgGrwLfWf
+         gQXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=CfGlMJlJq1yx6eSWof1+4yQXKTkrtm+XZNLVyiuuYPc=;
+        b=QYVYRkKWtDuGApHQqxcXLoid45h/S+VKu6YHUrJ76zLeVqRcN4buiKTpTzTaHNAdas
+         306VhM5RpqyMbH1JkdVQLcPD4//jVDCItEgnvTrqT6NjJAtjFuGw5H203vyxmYfZLzah
+         Gm072tUUub2pAE9u9yQdg2h/jSXe3YLH0i7x1diS6az3VCnTAh+cp/KV0TBJuwRaJGvs
+         7nhKD1IOnl6EemL5L+PFuXd3oXc1W33igHK4rjXvlMDu3wy5Ub7TS/UbrZQMId60L6tR
+         hBJ+/y2oh3gy35ymW4espWfF+rYvDZlqAgQ2oBm3mwHlOJEysFdniLZwJN9r89HmKLxT
+         jYBQ==
+X-Gm-Message-State: APjAAAXa9j8Y86w7aHvxI49DDA7Rq3ujdpVRUXw0fe1iHJZVXhCP0/+d
+        PU99/3gH2tlxUUHFuNk81VxveA==
+X-Google-Smtp-Source: APXvYqxRh/11CyvYNBmPNpSUQlUGVd7DPB6MVKtbk4hpZxUXI6n37AJ0hZvqbtL18gsPQ4efe74OnA==
+X-Received: by 2002:a1c:1a87:: with SMTP id a129mr18849472wma.21.1565017719279;
+        Mon, 05 Aug 2019 08:08:39 -0700 (PDT)
+Received: from [192.168.0.100] (88-147-69-71.dyn.eolo.it. [88.147.69.71])
+        by smtp.gmail.com with ESMTPSA id c3sm87272983wrx.19.2019.08.05.08.08.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 05 Aug 2019 08:08:38 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCH v2 0/3] Implement BFQ per-device weight interface
+From:   Paolo Valente <paolo.valente@linaro.org>
+In-Reply-To: <20190805063807.9494-1-zhengfeiran@bytedance.com>
+Date:   Mon, 5 Aug 2019 17:08:36 +0200
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Fam Zheng <fam@euphon.net>,
+        duanxiongchun@bytedance.com,
+        linux-block <linux-block@vger.kernel.org>, tj@kernel.org,
+        cgroups@vger.kernel.org, zhangjiachen.jc@bytedance.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <A6E36505-16B1-4E6D-BCA8-53E5FD4AEE98@linaro.org>
+References: <20190805063807.9494-1-zhengfeiran@bytedance.com>
+To:     Fam Zheng <zhengfeiran@bytedance.com>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/4/19 11:23 PM, Suwan Kim wrote:
-> On Fri, Aug 02, 2019 at 04:22:27PM -0600, shuah wrote:
->> On 8/2/19 11:36 AM, Suwan Kim wrote:
->>> vhci doesn’t do DMA for remote device. Actually, the real DMA
->>> operation is done by network card driver. vhci just passes virtual
->>> address of the buffer to the network stack, so vhci doesn’t use and
->>> need dma address of the buffer of the URB.
->>>
->>> But HCD provides DMA mapping and unmapping function by default.
->>> Moreover, it causes unnecessary DMA mapping and unmapping which
->>> will be done again at the NIC driver and it wastes CPU cycles.
->>> So, implement map_urb_for_dma and unmap_urb_for_dma function for
->>> vhci in order to skip the DMA mapping and unmapping procedure.
->>>
->>> When it comes to supporting SG for vhci, it is useful to use native
->>> SG list (urb->num_sgs) instead of mapped SG list because DMA mapping
->>> fnuction can adjust the number of SG list (urb->num_mapped_sgs).
->>> And vhci_map_urb_for_dma() prevents isoc pipe from using SG as
->>> hcd_map_urb_for_dma() does.
->>>
->>> Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
->>> ---
->>>    drivers/usb/usbip/vhci_hcd.c | 19 +++++++++++++++++++
->>>    1 file changed, 19 insertions(+)
->>>
->>> diff --git a/drivers/usb/usbip/vhci_hcd.c b/drivers/usb/usbip/vhci_hcd.c
->>> index 000ab7225717..c62f7fa8118c 100644
->>> --- a/drivers/usb/usbip/vhci_hcd.c
->>> +++ b/drivers/usb/usbip/vhci_hcd.c
->>> @@ -1288,6 +1288,22 @@ static int vhci_free_streams(struct usb_hcd *hcd, struct usb_device *udev,
->>>    	return 0;
->>>    }
->>> +static int vhci_map_urb_for_dma(struct usb_hcd *hcd, struct urb *urb,
->>> +		gfp_t mem_flags)
->>> +{
->>> +	if (usb_endpoint_xfer_isoc(&urb->ep->desc) && urb->num_sgs) {
->>> +		WARN_ON(1);
->>
->> Don't add WARN_ON. I cleaned them all up recently and don't want new
->> ones added.
-> 
-> Ok. I will remove it and resend v4.
-> 
+Thank you very much, Fam, for this extension.
 
-Please add appropriate error message in place of WARN_ON
+Reviewed-by: Paolo Valente <paolo.valente@linaro.org>
 
-thanks,
--- Shuah
+> Il giorno 5 ago 2019, alle ore 08:38, Fam Zheng =
+<zhengfeiran@bytedance.com> ha scritto:
+>=20
+> (Revision starting from v2 since v1 was used off-list)
+>=20
+> Hi Paolo and others,
+>=20
+> This adds to BFQ the missing per-device weight interfaces:
+> blkio.bfq.weight_device on legacy and io.bfq.weight on unified. The
+> implementation pretty closely resembles what we had in CFQ and the =
+parsing code
+> is basically reused.
+>=20
+> Tests
+> =3D=3D=3D=3D=3D
+>=20
+> Using two cgroups and three block devices, having weights setup as:
+>=20
+> Cgroup          test1           test2
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> default         100             500
+> sda             500             100
+> sdb             default         default
+> sdc             200             200
+>=20
+> cgroup v1 runs
+> --------------
+>=20
+>    sda.test1.out:   READ: bw=3D913MiB/s
+>    sda.test2.out:   READ: bw=3D183MiB/s
+>=20
+>    sdb.test1.out:   READ: bw=3D213MiB/s
+>    sdb.test2.out:   READ: bw=3D1054MiB/s
+>=20
+>    sdc.test1.out:   READ: bw=3D650MiB/s
+>    sdc.test2.out:   READ: bw=3D650MiB/s
+>=20
+> cgroup v2 runs
+> --------------
+>=20
+>    sda.test1.out:   READ: bw=3D915MiB/s
+>    sda.test2.out:   READ: bw=3D184MiB/s
+>=20
+>    sdb.test1.out:   READ: bw=3D216MiB/s
+>    sdb.test2.out:   READ: bw=3D1069MiB/s
+>=20
+>    sdc.test1.out:   READ: bw=3D621MiB/s
+>    sdc.test2.out:   READ: bw=3D622MiB/s
+>=20
+> Fam Zheng (3):
+>  bfq: Fix the missing barrier in __bfq_entity_update_weight_prio
+>  bfq: Extract bfq_group_set_weight from bfq_io_set_weight_legacy
+>  bfq: Add per-device weight
+>=20
+> block/bfq-cgroup.c  | 151 =
++++++++++++++++++++++++++++++++++++++++-------------
+> block/bfq-iosched.h |   3 ++
+> block/bfq-wf2q.c    |   2 +
+> 3 files changed, 119 insertions(+), 37 deletions(-)
+>=20
+> --=20
+> 2.11.0
+>=20
 
