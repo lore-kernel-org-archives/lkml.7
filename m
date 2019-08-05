@@ -2,92 +2,117 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5C5C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3FFC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 428EE217D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:02:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564984948;
-	bh=yQX7YAlJ45FZwBgTl9rdH0N9X0UpxWT3t+wfvZobwSM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FIUsVkshVQdUDhl0O/ZAk8GUzCMj2fqy4T5ncKucHZU6Y2pQaNTfywmcFoMduZs3n
-	 WknIq5W3TAI8w5dOqI5ynzIGbA9F+wljPJ0yEDRmnMKHg31QBvgeRQb7qNIbARNv9r
-	 gUfPcx+8BAlQG0ko4RIdd5blSIa3OhwPsfH/Aag0=
+	by mail.kernel.org (Postfix) with ESMTP id AA3032086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:08:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Fl9CUnf9";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aG1LzNNU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbfHEGC1 (ORCPT
+        id S1727267AbfHEGG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 02:02:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44864 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725951AbfHEGC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 02:02:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 5 Aug 2019 02:06:57 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:55674 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbfHEGG4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 02:06:56 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 29E32608CC; Mon,  5 Aug 2019 06:06:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564985215;
+        bh=ktVD02BcXE+HLZRKFPfw+gQviyMJgu1ejEKfwVh3mng=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Fl9CUnf9ZxYQiJT08h5HG5SSXur27bgh2qCzqGrcelIG+5bPwSHtj4D3VyoubUS7/
+         V2Qsyce5R0FUeI7imxrJMvA5KwutgYE7q4VML8ssuHxFtc/3k6H30T0ENDc9ZY8xRk
+         FEnrYeHN36B3ZRjx19HqnpBWu4zJTDInBIrKPjVA=
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B36B206C1;
-        Mon,  5 Aug 2019 06:02:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564984945;
-        bh=yQX7YAlJ45FZwBgTl9rdH0N9X0UpxWT3t+wfvZobwSM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zSXgYL75mNTG7YL12V8C5eDoiC89Hf9Kaiia7s6JjkSUHCF3x6/Ak018i3ohQQ3O1
-         C+6GAAKghAvtLBKxUDxhRUd0DUmvkM7dGI43mf/Q1DPFk7szO3cfjFWxrD2gdHXb7D
-         6dlcetc0SFH7Yf9LWrJm/9N7xnUQ/WeVSCP7gH38=
-Date:   Mon, 5 Aug 2019 08:02:23 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Ajay Kaher <akaher@vmware.com>
-Cc:     aarcange@redhat.com, jannh@google.com, oleg@redhat.com,
-        peterx@redhat.com, rppt@linux.ibm.com, jgg@mellanox.com,
-        mhocko@suse.com, srinidhir@vmware.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        amakhalov@vmware.com, sean.hefty@intel.com, srivatsa@csail.mit.edu,
-        srivatsab@vmware.com, devel@driverdev.osuosl.org,
-        linux-rdma@vger.kernel.org, bvikas@vmware.com, dledford@redhat.com,
-        riandrews@android.com, hal.rosenstock@gmail.com,
-        vsirnapalli@vmware.com, leonro@mellanox.com, jglisse@redhat.com,
-        viro@zeniv.linux.org.uk, yishaih@mellanox.com, matanb@mellanox.com,
-        stable@vger.kernel.org, arve@android.com,
-        linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org,
-        torvalds@linux-foundation.org, mike.kravetz@oracle.com
-Subject: Re: [PATCH v6 0/3] [v4.9.y] coredump: fix race condition between
- mmget_not_zero()/get_task_mm() and core dumping
-Message-ID: <20190805060223.GA4947@kroah.com>
-References: <1564891168-30016-1-git-send-email-akaher@vmware.com>
- <1564891168-30016-4-git-send-email-akaher@vmware.com>
+        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 60730607F4;
+        Mon,  5 Aug 2019 06:06:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564985214;
+        bh=ktVD02BcXE+HLZRKFPfw+gQviyMJgu1ejEKfwVh3mng=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=aG1LzNNUJV9oj5ztU6uTHP7smcVXmwvlmb2fskrtaFOXYjc32OR99TTJgnPYVUcV1
+         4EjjrYAZbOkmj/7RnCyqMxIUqtK83GwQdhUqKM8DVwOQ0MK4b4iMuDmuRlT6YL5unr
+         XlzERhkOtRnNoLN/nV+p9Y/pNwsfBIu4ZzzZt4J4=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 60730607F4
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
+Received: by mail-ed1-f52.google.com with SMTP id k8so77501436eds.7;
+        Sun, 04 Aug 2019 23:06:54 -0700 (PDT)
+X-Gm-Message-State: APjAAAXvtKVwRS/b2y8CUkoxkO93YKR0Xsu9iDCkXz213d7OgFYkYVzq
+        zcWWDsgmh9qj+SdLyYvnRtCfLJOjBo5adq7eCY8=
+X-Google-Smtp-Source: APXvYqyHeWIMQVWkYsv0f42miwy/sqy8EM/fSMGDzgYt4fdp13rlsYiET5rETi6Iu0JYtozFD3S2JRft2Vzy+ZDHZWI=
+X-Received: by 2002:a17:907:2130:: with SMTP id qo16mr61519114ejb.235.1564985213057;
+ Sun, 04 Aug 2019 23:06:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1564891168-30016-4-git-send-email-akaher@vmware.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190804162420.6005-1-nishkadg.linux@gmail.com>
+In-Reply-To: <20190804162420.6005-1-nishkadg.linux@gmail.com>
+From:   Vivek Gautam <vivek.gautam@codeaurora.org>
+Date:   Mon, 5 Aug 2019 11:36:41 +0530
+X-Gmail-Original-Message-ID: <CAFp+6iE0BN9+BA-9hozs0-0LDCA+-LLZPdZfebaRAi9nTRV4xg@mail.gmail.com>
+Message-ID: <CAFp+6iE0BN9+BA-9hozs0-0LDCA+-LLZPdZfebaRAi9nTRV4xg@mail.gmail.com>
+Subject: Re: [PATCH] phy: qualcomm: phy-qcom-qmp: Add of_node_put() before return
+To:     Nishka Dasgupta <nishkadg.linux@gmail.com>
+Cc:     Andy Gross <agross@kernel.org>, kishon <kishon@ti.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 04, 2019 at 09:29:28AM +0530, Ajay Kaher wrote:
-> coredump: fix race condition between mmget_not_zero()/get_task_mm()
-> and core dumping
-> 
-> [PATCH v5 1/3]:
-> Backporting of commit 04f5866e41fb70690e28397487d8bd8eea7d712a upstream.
-> 
-> [PATCH v5 2/3]:
-> Extension of commit 04f5866e41fb to fix the race condition between
-> get_task_mm() and core dumping for IB->mlx4 and IB->mlx5 drivers.
-> 
-> [PATCH v5 3/3]
-> Backporting of commit 59ea6d06cfa9247b586a695c21f94afa7183af74 upstream.
-> 
-> [diff from v5]:
-> - Recreated [PATCH v6 1/3], to solve patch apply error.
+On Sun, Aug 4, 2019 at 9:54 PM Nishka Dasgupta <nishkadg.linux@gmail.com> wrote:
+>
+> Each iteration of for_each_available_child_of_node puts the previous
+> node, but in the case of a return from the middle of the loop, there is
+> no put, thus causing a memory leak. Hence add an of_node_put before the
+> return in two places.
+> Issue found with Coccinelle.
+>
+> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+> ---
+>  drivers/phy/qualcomm/phy-qcom-qmp.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> index 34ff6434da8f..2f0652efebf0 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> @@ -2094,6 +2094,7 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
+>                         dev_err(dev, "failed to create lane%d phy, %d\n",
+>                                 id, ret);
+>                         pm_runtime_disable(dev);
+> +                       of_node_put(child);
+>                         return ret;
+>                 }
+>
+> @@ -2106,6 +2107,7 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
+>                         dev_err(qmp->dev,
+>                                 "failed to register pipe clock source\n");
+>                         pm_runtime_disable(dev);
+> +                       of_node_put(child);
 
-Now queued up, let's see what breaks :)
+Nice find. Thanks for the patch.
 
-thanks,
+Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>
 
-greg k-h
+Best regards
+Vivek
+
+[snip]
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
