@@ -2,114 +2,152 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7154C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 11:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32BC9C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 11:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD6E72086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 11:47:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565005637;
-	bh=X6BXZw1yemhSJzHyE0iW4PjS0ifC5SWcNs4xPQvMFjg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JPqvd8NkrxxIvaqo6vEWyyjQ0lRdSxImV7cf8gdOUat6u5VQRDJQx3AuC3D4foztn
-	 eT/H07BXYD62qr097gMfpQoZcP/eZsxXLJzRaotya72QqzqPnPLaQ3ybb6jT1qQjG0
-	 YOSF7VImv0cON116IxZ0V9RQ0uymaC1hp7njmhtY=
+	by mail.kernel.org (Postfix) with ESMTP id 0292720856
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 11:47:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="RqwbRbC7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728568AbfHELrQ (ORCPT
+        id S1728583AbfHELrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 07:47:16 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:45944 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727259AbfHELrQ (ORCPT
+        Mon, 5 Aug 2019 07:47:40 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:40188 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727259AbfHELrj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 07:47:16 -0400
-Received: by mail-lf1-f66.google.com with SMTP id u10so18935029lfm.12;
-        Mon, 05 Aug 2019 04:47:14 -0700 (PDT)
+        Mon, 5 Aug 2019 07:47:39 -0400
+Received: by mail-qk1-f196.google.com with SMTP id s145so59790859qke.7
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 04:47:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=f6szPwFxDbpw2ZKmmxnSTt1g2JfUNMH6l68GeeOqbeA=;
+        b=RqwbRbC7E5abtgOFsm6t0AUynjZ5rcKHbVCBlFTqcoqhjs1n6baAcFt2AY6zQmZ1+t
+         7SMSJNHRsENlBL6IBLyyFYpT4K7w3+NQ/KEaZE5Hy8X+Be2g5XWIxgB1NBdVfnWiSNkQ
+         4CyWvaVZ8LtJQ4E9KuXtr3NTmQdEgJ9eZFCPaO3vfkwHe+utjx/SZdzrEF6yGr1fyYrg
+         hrCP23mOcWm8Z52VVAnpVGmAbugX7ng3H9nSnlKe9NaukWZGsP6lb3glRR+gvOrHhzQI
+         ivuMQr1uNox+6GlUM5NVIqdUd7mMaVkYc/fH+ngflkjr2r2TRA4Xp1u/TXQVcNX0jFhS
+         f+KA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XqfbHS+kotk8JoRbfLuGqMSPe/L9zMN6nAynv8vWNNE=;
-        b=O+OAZdfs0epR4mar8rurpUaubeHEoz9RUhXnXCuUIg6fivHNXgeGlhOIz3MhMXy3jt
-         MEu7lumoLYRKU4Bf4XZ2+iLAIXDFudMGWug7EKm3kDy9lk+nKf/A016vXX58tflFzf+x
-         9FXuMkisWjyiAmR4iBYZsg23rY9w4e86gH21TdkZFyGIPD8fsYUdvL2cRolPFGGBlMg7
-         Bi7POE68YNYEYdBUd5IchMIhnZ4F0HV9bVw3/r5bENRwLQ/9xHXsx0AxwFIOs2AF6wm4
-         fd4HPt0NxWIio9LTlgp6YzbP9p5I4oPeSAfe9foFd4cYabD1aDlwgIr2DjCwTRFfaeVM
-         6rwA==
-X-Gm-Message-State: APjAAAXh+FjAQdSS8+xVCiKwg9SCmivlvwadI1R58wdgHLuBflabJfMF
-        IgzaHSChCyVskxvc0lkoMNtclfqY2GM=
-X-Google-Smtp-Source: APXvYqwCQQpWwF/H86pq5gU6luyGEhhHPzYgbnkV99GOKcMkH1wANYUuU+ymSzgAiP1aj/rOjAxasw==
-X-Received: by 2002:a19:a419:: with SMTP id q25mr5603054lfc.136.1565005633919;
-        Mon, 05 Aug 2019 04:47:13 -0700 (PDT)
-Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
-        by smtp.gmail.com with ESMTPSA id p21sm14866073lfc.41.2019.08.05.04.47.12
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=f6szPwFxDbpw2ZKmmxnSTt1g2JfUNMH6l68GeeOqbeA=;
+        b=ohhlBDNn5nq23a4D131B2d/DW7exXFerfIj177SZ2SV5e/ouf3ZPHRxGziraQSr/1v
+         4vuVWnVNgonbe15j9WhSR/xKUjK3t8JWNOHczVf801alzMb2VdqMVOR2U/sUVXLSiJ+A
+         qyXlO0k5wBujOErXUmLwcb5q4ptbnrIeRt3h3AsbKRQbpGW9RI+1lxRATJZzle5rKskD
+         osPOAcGo2BucMWzl13GIhYnkpy5Ow7J3KFLMGwPxzFZocTusRWSF2cKhIGPvvCsfAYhw
+         AI8RrBnnknh5yZUtNJ2DvP/lEZqtdrHq9Lgx49LCHNcjtXNVhTOv61TAclI3F4H9S5s+
+         e/iw==
+X-Gm-Message-State: APjAAAVD4gQlaQxbjCt1cHvTIjKlfXrhwimc54iuulWCKEJkv5fxVCyP
+        AkJp3BMbJWOWcTkZ84VVAIiKsg==
+X-Google-Smtp-Source: APXvYqxBgJKy9z+rqeTuFeh91T3hyxcm65GKukJYybRFBiubRkqGyQNhtog1NgVCEZqmvJ2S7OX4yg==
+X-Received: by 2002:a05:620a:1537:: with SMTP id n23mr95501333qkk.441.1565005658834;
+        Mon, 05 Aug 2019 04:47:38 -0700 (PDT)
+Received: from qians-mbp.fios-router.home (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id z4sm40873036qtd.60.2019.08.05.04.47.37
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 05 Aug 2019 04:47:13 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92)
-        (envelope-from <johan@kernel.org>)
-        id 1hubSJ-0006DC-U0; Mon, 05 Aug 2019 13:47:11 +0200
-Date:   Mon, 5 Aug 2019 13:47:11 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc:     kernel@puri.sm, =?iso-8859-1?Q?Bj=F8rn?= Mork <bjorn@mork.no>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Bob Ham <bob.ham@puri.sm>
-Subject: Re: [PATCH 1/2] usb: serial: option: Add the BroadMobi BM818 card
-Message-ID: <20190805114711.GF3574@localhost>
-References: <20190724145227.27169-1-angus@akkea.ca>
- <20190724145227.27169-2-angus@akkea.ca>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724145227.27169-2-angus@akkea.ca>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Mon, 05 Aug 2019 04:47:38 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] arm64/cache: fix -Woverride-init compiler warnings
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <20190805095256.ocgdb2yfhnbdz6kw@willie-the-truck>
+Date:   Mon, 5 Aug 2019 07:47:37 -0400
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <771C4B4C-6D79-419D-9778-5DE1BFC67FBE@lca.pw>
+References: <1564759944-2197-1-git-send-email-cai@lca.pw>
+ <20190805095256.ocgdb2yfhnbdz6kw@willie-the-truck>
+To:     Will Deacon <will@kernel.org>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 07:52:26AM -0700, Angus Ainslie (Purism) wrote:
-> From: Bob Ham <bob.ham@puri.sm>
-> 
-> Add a VID:PID for the BroadModi BM818 M.2 card
 
-Would you mind posting the output of usb-devices (or lsusb -v) for this
-device?
 
-> Signed-off-by: Bob Ham <bob.ham@puri.sm>
-> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-> ---
->  drivers/usb/serial/option.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/usb/serial/option.c b/drivers/usb/serial/option.c
-> index c1582fbd1150..674a68ee9564 100644
-> --- a/drivers/usb/serial/option.c
-> +++ b/drivers/usb/serial/option.c
-> @@ -1975,6 +1975,8 @@ static const struct usb_device_id option_ids[] = {
->  	  .driver_info = RSVD(4) | RSVD(5) },
->  	{ USB_DEVICE_INTERFACE_CLASS(0x2cb7, 0x0105, 0xff),			/* Fibocom NL678 series */
->  	  .driver_info = RSVD(6) },
-> +	{ USB_DEVICE(0x2020, 0x2060),						/* BroadMobi  */
+> On Aug 5, 2019, at 5:52 AM, Will Deacon <will@kernel.org> wrote:
+>=20
+> On Fri, Aug 02, 2019 at 11:32:24AM -0400, Qian Cai wrote:
+>> The commit 155433cb365e ("arm64: cache: Remove support for =
+ASID-tagged
+>> VIVT I-caches") introduced some compiation warnings from GCC,
+>>=20
+>> arch/arm64/kernel/cpuinfo.c:38:26: warning: initialized field
+>> overwritten [-Woverride-init]
+>>  [ICACHE_POLICY_VIPT]  =3D "VIPT",
+>>                          ^~~~~~
+>> arch/arm64/kernel/cpuinfo.c:38:26: note: (near initialization for
+>> 'icache_policy_str[2]')
+>> arch/arm64/kernel/cpuinfo.c:39:26: warning: initialized field
+>> overwritten [-Woverride-init]
+>>  [ICACHE_POLICY_PIPT]  =3D "PIPT",
+>>                          ^~~~~~
+>> arch/arm64/kernel/cpuinfo.c:39:26: note: (near initialization for
+>> 'icache_policy_str[3]')
+>> arch/arm64/kernel/cpuinfo.c:40:27: warning: initialized field
+>> overwritten [-Woverride-init]
+>>  [ICACHE_POLICY_VPIPT]  =3D "VPIPT",
+>>                           ^~~~~~~
+>> arch/arm64/kernel/cpuinfo.c:40:27: note: (near initialization for
+>> 'icache_policy_str[0]')
+>>=20
+>> because it initializes icache_policy_str[0 ... 3] twice.
+>>=20
+>> Fixes: 155433cb365e ("arm64: cache: Remove support for ASID-tagged =
+VIVT I-caches")
+>> Signed-off-by: Qian Cai <cai@lca.pw>
+>> ---
+>> arch/arm64/kernel/cpuinfo.c | 4 ++--
+>> 1 file changed, 2 insertions(+), 2 deletions(-)
+>>=20
+>> diff --git a/arch/arm64/kernel/cpuinfo.c =
+b/arch/arm64/kernel/cpuinfo.c
+>> index 876055e37352..193b38da8d96 100644
+>> --- a/arch/arm64/kernel/cpuinfo.c
+>> +++ b/arch/arm64/kernel/cpuinfo.c
+>> @@ -34,10 +34,10 @@
+>> static struct cpuinfo_arm64 boot_cpu_data;
+>>=20
+>> static char *icache_policy_str[] =3D {
+>> -	[0 ... ICACHE_POLICY_PIPT]	=3D "RESERVED/UNKNOWN",
+>> +	[ICACHE_POLICY_VPIPT]		=3D "VPIPT",
+>> +	[ICACHE_POLICY_VPIPT + 1]	=3D "RESERVED/UNKNOWN",
+>> 	[ICACHE_POLICY_VIPT]		=3D "VIPT",
+>> 	[ICACHE_POLICY_PIPT]		=3D "PIPT",
+>> -	[ICACHE_POLICY_VPIPT]		=3D "VPIPT",
+>=20
+> I really don't like this patch. Using "[0 ... MAXIDX] =3D <default>" =
+is a
+> useful idiom and I think the code is more error-prone the way you have
+> restructured it.
+>=20
+> Why are you passing -Woverride-init to the compiler anyway? There's =
+only
+> one Makefile that references that option, and it's specific to a =
+pinctrl
+> driver.
 
-Looks like you forgot to include the model in the comment here.
+Those extra warnings can be enabled by =E2=80=9Cmake W=3D1=E2=80=9D. =
+=E2=80=9C-Woverride-init =E2=80=9C seems to be useful
+to catch potential developer mistakes with unintented =
+double-initializations. It is normal to
+start to fix the most of false-positives first before globally enabling =
+the flag by default just like
+=E2=80=9C-Wimplicit-fallthrough=E2=80=9D mentioned in,
 
-And please move this one after the other 0x2020 (PID 0x2031) entry.
+https://lwn.net/Articles/794944/
 
-Should you also be using USB_DEVICE_INTERFACE_CLASS() (e.g. to avoid
-matching a mass-storage interface)?
-
-> +	  .driver_info = RSVD(4) },
->  	{ } /* Terminating entry */
->  };
->  MODULE_DEVICE_TABLE(usb, option_ids);
-
-Johan
