@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C92C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE279C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79A9320880
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A4BD20880
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:04:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010280;
-	bh=3KBRVhRDiu83YjpGhGpXMuxxGlTDGVg54CdmRe86b0I=;
+	s=default; t=1565010282;
+	bh=BFW7DoRAYf7dgaHviXk1Nrn/iOolgbPP3aB044T6Itw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lht4cImOU+Sdy5c4vDYCXAAhhn2oGMwrA3+Vp8JEB3mUtigl2JMOttJhXDmnSlcxU
-	 KI8FcWjWYvU03I5tMzxzbTzCcPBRAiNn0TWA3kT6K+8KCD4ERXH2RRe4eQXEtBBPEN
-	 Ezx+p9Lcmv16qC/hbaIpTMzZlKdc8kaey8UqV4JQ=
+	b=LMCtpXQRtHZrWSlGZ9dSunT3J6LPDSni2hWhnm2f4QRjDGiowwjiW9h9yNGahj/lm
+	 RzNfq8/yqC+iyDb/5PGdvXc2Njo6i8BqzxJEIsnw1AHdzmu6Bwp/HFwPZLLDd1uez+
+	 4qWnxKbjFGuFSQnGqN7KyWTDtCUQYQtn0nd+dR0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729098AbfHENEj (ORCPT
+        id S1729111AbfHENEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:04:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40352 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:04:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729053AbfHENEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:04:37 -0400
+        id S1729094AbfHENEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:04:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3FC02087B;
-        Mon,  5 Aug 2019 13:04:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EE27216B7;
+        Mon,  5 Aug 2019 13:04:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010276;
-        bh=3KBRVhRDiu83YjpGhGpXMuxxGlTDGVg54CdmRe86b0I=;
+        s=default; t=1565010278;
+        bh=BFW7DoRAYf7dgaHviXk1Nrn/iOolgbPP3aB044T6Itw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qqJZIMATUFyBhf7yDHucu30loioRGjQ1s3FobowuSdYF2dFeFSzBE5SgquZexQesv
-         MjOWXplPiZLBpOOii7JHO/1G7kRsonYzSxnqpoVdo/ISKYoEVNdCgsS/5ikpJCvkTx
-         s2CriieStcm9/G/cMGKEsL2wsMCCmo+UtrznnC7c=
+        b=2cwKgzTlq3xVoOOFA4FfTBtbxtxJRG6nI3WCek7Igoy7zcGs7JVXWLskEB7Kfe6uQ
+         MymXdj5GV9h+ew7hHufxOuVLci5gFdEQPnrc4Ghq1L1uOL+lDx0BIvemErdpqiMdOn
+         4ryHkrsBC9rkk6/99gjWBeLxQ695viKfAwrNHQdg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Al Viro <viro@zeniv.linux.org.uk>,
+        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 06/22] fs/adfs: super: fix use-after-free bug
-Date:   Mon,  5 Aug 2019 15:02:43 +0200
-Message-Id: <20190805124920.027806904@linuxfoundation.org>
+Subject: [PATCH 4.4 07/22] btrfs: fix minimum number of chunk errors for DUP
+Date:   Mon,  5 Aug 2019 15:02:44 +0200
+Message-Id: <20190805124920.288101264@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124918.070468681@linuxfoundation.org>
 References: <20190805124918.070468681@linuxfoundation.org>
@@ -60,43 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5808b14a1f52554de612fee85ef517199855e310 ]
+[ Upstream commit 0ee5f8ae082e1f675a2fb6db601c31ac9958a134 ]
 
-Fix a use-after-free bug during filesystem initialisation, where we
-access the disc record (which is stored in a buffer) after we have
-released the buffer.
+The list of profiles in btrfs_chunk_max_errors lists DUP as a profile
+DUP able to tolerate 1 device missing. Though this profile is special
+with 2 copies, it still needs the device, unlike the others.
 
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Looking at the history of changes, thre's no clear reason why DUP is
+there, functions were refactored and blocks of code merged to one
+helper.
+
+d20983b40e828 Btrfs: fix writing data into the seed filesystem
+  - factor code to a helper
+
+de11cc12df173 Btrfs: don't pre-allocate btrfs bio
+  - unrelated change, DUP still in the list with max errors 1
+
+a236aed14ccb0 Btrfs: Deal with failed writes in mirrored configurations
+  - introduced the max errors, leaves DUP and RAID1 in the same group
+
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/adfs/super.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ fs/btrfs/volumes.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/adfs/super.c b/fs/adfs/super.c
-index 4d4a0df8344fe..b00ae922ece27 100644
---- a/fs/adfs/super.c
-+++ b/fs/adfs/super.c
-@@ -368,6 +368,7 @@ static int adfs_fill_super(struct super_block *sb, void *data, int silent)
- 	struct buffer_head *bh;
- 	struct object_info root_obj;
- 	unsigned char *b_data;
-+	unsigned int blocksize;
- 	struct adfs_sb_info *asb;
- 	struct inode *root;
- 	int ret = -EINVAL;
-@@ -419,8 +420,10 @@ static int adfs_fill_super(struct super_block *sb, void *data, int silent)
- 		goto error_free_bh;
- 	}
+diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
+index 4eb7a6ba7e470..55ce6543050d9 100644
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -4942,8 +4942,7 @@ static inline int btrfs_chunk_max_errors(struct map_lookup *map)
  
-+	blocksize = 1 << dr->log2secsize;
- 	brelse(bh);
--	if (sb_set_blocksize(sb, 1 << dr->log2secsize)) {
-+
-+	if (sb_set_blocksize(sb, blocksize)) {
- 		bh = sb_bread(sb, ADFS_DISCRECORD / sb->s_blocksize);
- 		if (!bh) {
- 			adfs_error(sb, "couldn't read superblock on "
+ 	if (map->type & (BTRFS_BLOCK_GROUP_RAID1 |
+ 			 BTRFS_BLOCK_GROUP_RAID10 |
+-			 BTRFS_BLOCK_GROUP_RAID5 |
+-			 BTRFS_BLOCK_GROUP_DUP)) {
++			 BTRFS_BLOCK_GROUP_RAID5)) {
+ 		max_errors = 1;
+ 	} else if (map->type & BTRFS_BLOCK_GROUP_RAID6) {
+ 		max_errors = 2;
 -- 
 2.20.1
 
