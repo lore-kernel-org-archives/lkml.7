@@ -2,90 +2,165 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 048C7C19759
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 02:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05721C19759
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 02:06:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C732320B1F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 02:04:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8965420B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 02:06:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qgxebg64"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="Ki6SlqzN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727184AbfHECEb (ORCPT
+        id S1726954AbfHECGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 4 Aug 2019 22:04:31 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:36775 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbfHECEa (ORCPT
+        Sun, 4 Aug 2019 22:06:35 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:50153 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726666AbfHECGf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 4 Aug 2019 22:04:30 -0400
-Received: by mail-oi1-f196.google.com with SMTP id c15so5527645oic.3;
-        Sun, 04 Aug 2019 19:04:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jlZVpCwb8LJh/MImQJYCN+5/OoJlhiTXGdKz7PMIeAk=;
-        b=qgxebg64y7SzQkWFag7qCkN/7qLUFZ3IhNEs6U471CltZZf9NHFEc8ZKfkzKe5ZtxH
-         ujyyDOA9da1Bq37hBZCDn1nbFMeqkB71xNmT1V9llcYGzW9cv42k8oCXdAY9T+kkxZBT
-         3Yo/kupBHL+ztjMu+q9Vmy9tfdmio3Tne8YwRIoCG7FuNtNnFo5nx9uAbEIbvFbqzceN
-         CaYtG1Fbe+r2AM3IDDo2HOHb66HKcyiYTaSxTXUtRvndJj8QdUirDqOFiYgl3RfTu3oa
-         52N1yAQPnmEnb6EwNuYGdUSEaNtklBRBd9/agnSITYOUOlKjKWyKJo6JCcdHEPaBidM8
-         469w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jlZVpCwb8LJh/MImQJYCN+5/OoJlhiTXGdKz7PMIeAk=;
-        b=BW1Bddrg+FnB0w9kKTI8VEsQTxN2sEHbdyy9pXFkPGS4RvNXCTMbz49PSfqz/Dqv4H
-         dEjRgHE5E6ZBZ0d/eNRSQ+1GfEvtzANwa68s9kpH2/v20LPeegy7c0oMcKDUxqMQQbpe
-         Ltr467AQQqI1ydX30BJGq5b9rRxqNMtM8aymKcjtNQLSoKDNToKJwQvGzVWh0f8VQbx6
-         jYPbSkPTjKhCG0FLHl8zMEMAGQPcFPJffY/4aG3FlvIsUXH9R7reb7q2y+HggbnmHPqZ
-         qF4etWvOkOzsWvJKcTcoKkPt/0Rt63jcKuBkrHkdEqXPY6hktCVn7hYVpUYeVyFB7nrS
-         a+7g==
-X-Gm-Message-State: APjAAAXY/bMel32UolVU2KpUJstUolI+kcgXo4CkfLiyAuzsYRC78J8f
-        kGh9BBBThgDyv5NetYZGDha+tKcKf/IYvE2V6ds=
-X-Google-Smtp-Source: APXvYqz6lX9fZZLvIhSvVRRDavkLmaRClv++hVn4Zwuyqy1Mduqy7fnUmDJanY/GYnXBwlTmyh0bRzthfrVMVVWTbfY=
-X-Received: by 2002:aca:544b:: with SMTP id i72mr10077821oib.174.1564970669691;
- Sun, 04 Aug 2019 19:04:29 -0700 (PDT)
+        Sun, 4 Aug 2019 22:06:35 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id D41B3886BF
+        for <linux-kernel@vger.kernel.org>; Mon,  5 Aug 2019 14:06:31 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1564970791;
+        bh=vD/z9VAv2MfvAFjnTe3FrQ0q17kppHc++Y0M5hXervk=;
+        h=From:To:CC:Subject:Date;
+        b=Ki6SlqzNPKLunEE1Q3yNsG5+3FWzaS6Zdv5wVSLo6dJYxtS5O4/bbr2v2AC9SnviR
+         xpZZoITnAhA4BymiJB9WzULsXXyspynlRf/GK58tjTQXL3A0hbMLlbUMjVCEkuwd/M
+         wzSf4S0qpT3zx08SxMu/x3zk2/KEGLwwNROPFGmeZQaupf+QbuHDQ3YGWz/83aX6nO
+         GGXEu5A698ayg81Sj7x4ViPw56C4IDpBiarUB/UoWbJ1yvaAQ5HeOE8J7v4XQG18Lq
+         dFtsHH2Z3PML+0hUufKRvXFWtI2BADsG+pm7hfsZwqNiN5MC3YplV0SdhmPdBSdYxQ
+         TuvdlJf2z1b+A==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5d478f280000>; Mon, 05 Aug 2019 14:06:32 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1156.6; Mon, 5 Aug 2019 14:06:26 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1156.000; Mon, 5 Aug 2019 14:06:26 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Grant McEwan" <grant.mcewan@alliedtelesis.co.nz>
+Subject: SMP lockup at boot on Freescale/NXP T2080 (powerpc 64)
+Thread-Topic: SMP lockup at boot on Freescale/NXP T2080 (powerpc 64)
+Thread-Index: AQHVSzJiQ9f053Ig/kuwEclH36qTsg==
+Date:   Mon, 5 Aug 2019 02:06:25 +0000
+Message-ID: <1564970785.27215.29.camel@alliedtelesis.co.nz>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0319F4CBF72D884589A68E4F309D9C84@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <1564630214-28442-1-git-send-email-wanpengli@tencent.com>
- <20190801133133.955E4216C8@mail.kernel.org> <CANRm+Cy1wWSwn7HH-dNWeR6FX1TT_M7t_9vvRMdCKFATmvFDkA@mail.gmail.com>
- <c96d6707-87bd-1794-331e-6fa1a2d562f8@redhat.com>
-In-Reply-To: <c96d6707-87bd-1794-331e-6fa1a2d562f8@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Mon, 5 Aug 2019 10:04:18 +0800
-Message-ID: <CANRm+CxZ_ZKeOtjMEER+EevZ7CrDwKAU9pxcR4TodEJEzmBbHA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] KVM: Fix leak vCPU's VMCS value into other pCPU
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Marc Zyngier <Marc.Zyngier@arm.com>,
-        "# v3 . 10+" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 3 Aug 2019 at 14:41, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 02/08/19 02:46, Wanpeng Li wrote:
-> > Thanks for reporting this, after more grep, it seems that just x86 and
-> > s390 enable async_pf in their Makefile. So I can move 'if
-> > (!list_empty_careful(&vcpu->async_pf.done))' checking to
-> > kvm_arch_dy_runnable()
->
-> No, wrap it with #ifdef CONFIG_KVM_ASYNC_PF instead.  Thanks!
-
-Ok, handle all the comments in v4. :)
-
-Regards,
-Wanpeng Li
+SGkgQWxsLA0KDQpJIGhhdmUgYSBjdXN0b20gYm9hcmQgdGhhdCB1c2VzIHRoZSBGcmVlc2NhbGUv
+TlhQIFQyMDgwIFNvQy4NCg0KVGhlIGJvYXJkIGJvb3RzIGZpbmUgdXNpbmfCoHY0LjE5LjYwIGJ1
+dCB3aGVuIEkgdXNlwqB2NS4xLjIxIGl0IGxvY2tzIHVwDQp3YWl0aW5nIGZvciB0aGUgb3RoZXIg
+Q1BVcyB0byBjb21lIG9ubGluZSAoZWFybHlwcmludGsgb3V0cHV0IGJlbG93KS4NCklmIEkgc2V0
+IG1heGNwdXM9MCB0aGVuIHRoZSBzeXN0ZW0gYm9vdHMgYWxsIHRoZSB3YXkgdGhyb3VnaCB0bw0K
+dXNlcmxhbmQuIFRoZSBzYW1lIHRoaW5nIGhhcHBlbnMgd2l0aCA1LjMtcmMyLg0KDQpUaGUgZGVm
+Y29uZmlnIEknbSB1c2luZyBpc8KgaHR0cHM6Ly9naXN0LmdpdGh1Yi5jb20vY3BhY2toYW0vZjI0
+ZDBiNDI2ZjMNCmRlMGVhYWJhMTdiODJjMzUyOGE5ZMKgaXQgd2FzIHVwZGF0ZWQgZnJvbSB0aGUg
+d29ya2luZyB2NC4xOS42MA0KZGVmY29uZmlnIHVzaW5nIG1ha2Ugb2xkZGVmY29uZmlnLg0KDQpE
+b2VzIHRoaXMgcmluZyBhbnkgYmVsbHMgZm9yIGFueW9uZT8NCg0KSSBoYXZlbid0IGR1ZyBpbnRv
+IHRoZSBkaWZmZXJlbmNlcyBiZXR3ZWVuIHRoZSB3b3JraW5nIGFuIG5vbi13b3JraW5nDQp2ZXJz
+aW9ucyB5ZXQuIEknbGwgc3RhcnQgbG9va2luZyBub3cuDQoNCkJvb3RpbmcuLi4NCk1NVTogU3Vw
+cG9ydGVkIHBhZ2Ugc2l6ZXMNCsKgwqDCoMKgwqDCoMKgwqDCoDQgS0IgYXMgZGlyZWN0DQrCoMKg
+wqDCoMKgwqAyMDQ4IEtCIGFzIGRpcmVjdCAmIGluZGlyZWN0DQrCoMKgwqDCoMKgwqA0MDk2IEtC
+IGFzIGRpcmVjdA0KwqDCoMKgwqDCoDE2Mzg0IEtCIGFzIGRpcmVjdA0KwqDCoMKgwqDCoDY1NTM2
+IEtCIGFzIGRpcmVjdA0KwqDCoMKgwqAyNjIxNDQgS0IgYXMgZGlyZWN0DQrCoMKgwqAxMDQ4NTc2
+IEtCIGFzIGRpcmVjdA0KTU1VOiBCb29rM0UgSFcgdGFibGV3YWxrIGVuYWJsZWQNCkxpbnV4IHZl
+cnNpb24gNS4xLjIxLWF0MSsgKEBjaHJpc3AtZGwpIChnY2MgdmVyc2lvbiA0LjkuMyAoY3Jvc3N0
+b29sLU5HIA0KY3Jvc3N0b29sLW5nLTEuMjIuMCkpICMyNCBTTVAgUFJFRU1QVCBNb24gQXVnIDUg
+MDE6NDI6MDAgVVRDIDIwMTkNCkZvdW5kIGluaXRyZCBhdCAweGMwMDAwMDAwMmYwNDUwMDA6MHhj
+MDAwMDAwMDMwMDAwMDAwDQpVc2luZyBDb3JlTmV0IEdlbmVyaWMgbWFjaGluZSBkZXNjcmlwdGlv
+bg0KRm91bmQgbGVnYWN5IHNlcmlhbCBwb3J0IDAgZm9yIC9zb2NAZmZlMDAwMDAwL3NlcmlhbEAx
+MWM1MDANCsKgIG1lbT1mZmUxMWM1MDAsIHRhZGRyPWZmZTExYzUwMCwgaXJxPTAsIGNsaz0zMDAw
+MDAwMDAsIHNwZWVkPTANCkZvdW5kIGxlZ2FjeSBzZXJpYWwgcG9ydCAxIGZvciAvc29jQGZmZTAw
+MDAwMC9zZXJpYWxAMTFjNjAwDQrCoCBtZW09ZmZlMTFjNjAwLCB0YWRkcj1mZmUxMWM2MDAsIGly
+cT0wLCBjbGs9MzAwMDAwMDAwLCBzcGVlZD0wDQpGb3VuZCBsZWdhY3kgc2VyaWFsIHBvcnQgMiBm
+b3IgL3NvY0BmZmUwMDAwMDAvc2VyaWFsQDExZDUwMA0KwqAgbWVtPWZmZTExZDUwMCwgdGFkZHI9
+ZmZlMTFkNTAwLCBpcnE9MCwgY2xrPTMwMDAwMDAwMCwgc3BlZWQ9MA0KRm91bmQgbGVnYWN5IHNl
+cmlhbCBwb3J0IDMgZm9yIC9zb2NAZmZlMDAwMDAwL3NlcmlhbEAxMWQ2MDANCsKgIG1lbT1mZmUx
+MWQ2MDAsIHRhZGRyPWZmZTExZDYwMCwgaXJxPTAsIGNsaz0zMDAwMDAwMDAsIHNwZWVkPTANCnBy
+aW50azogYm9vdGNvbnNvbGUgW3VkYmcwXSBlbmFibGVkDQpDUFUgbWFwcyBpbml0aWFsaXplZCBm
+b3IgMiB0aHJlYWRzIHBlciBjb3JlDQrCoCh0aHJlYWQgc2hpZnQgaXMgMSkNCkFsbG9jYXRlZCAx
+ODU2IGJ5dGVzIGZvciA4IHBhY2FzDQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLQ0KcGh5c19tZW1fc2l6ZcKgwqDCoMKgwqA9IDB4MTAwMDAwMDAw
+DQpkY2FjaGVfYnNpemXCoMKgwqDCoMKgwqA9IDB4NDANCmljYWNoZV9ic2l6ZcKgwqDCoMKgwqDC
+oD0gMHg0MA0KY3B1X2ZlYXR1cmVzwqDCoMKgwqDCoMKgPSAweDAwMDAwMDAzMDA5MDAzYjYNCsKg
+IHBvc3NpYmxlwqDCoMKgwqDCoMKgwqDCoD0gMHgwMDAwMDAwMzAwOTAwM2I2DQrCoCBhbHdheXPC
+oMKgwqDCoMKgwqDCoMKgwqDCoD0gMHgwMDAwMDAwMzAwODAwM2I0DQpjcHVfdXNlcl9mZWF0dXJl
+cyA9IDB4ZGMwMDgwMDAgMHgwODAwMDAwMA0KbW11X2ZlYXR1cmVzwqDCoMKgwqDCoMKgPSAweDAw
+MGEwMDEwDQpmaXJtd2FyZV9mZWF0dXJlcyA9IDB4MDAwMDAwMDAwMDAwMDAwMA0KLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCkNvcmVOZXQgR2Vu
+ZXJpYyBib2FyZA0KYmFycmllci1ub3NwZWM6IHVzaW5nIGlzeW5jOyBzeW5jIGFzIHNwZWN1bGF0
+aW9uIGJhcnJpZXINCmJhcnJpZXItbm9zcGVjOiBwYXRjaGVkIDQxMiBsb2NhdGlvbnMNClRvcCBv
+ZiBSQU06IDB4MTAwMDAwMDAwLCBUb3RhbCBSQU06IDB4MTAwMDAwMDAwDQpNZW1vcnkgaG9sZSBz
+aXplOiAwTUINClpvbmUgcmFuZ2VzOg0KwqAgRE1BwqDCoMKgwqDCoMKgW21lbSAweDAwMDAwMDAw
+MDAwMDAwMDAtMHgwMDAwMDAwMDdmZmZlZmZmXQ0KwqAgTm9ybWFswqDCoMKgW21lbSAweDAwMDAw
+MDAwN2ZmZmYwMDAtMHgwMDAwMDAwMGZmZmZmZmZmXQ0KTW92YWJsZSB6b25lIHN0YXJ0IGZvciBl
+YWNoIG5vZGUNCkVhcmx5IG1lbW9yeSBub2RlIHJhbmdlcw0KwqAgbm9kZcKgwqDCoDA6IFttZW0g
+MHgwMDAwMDAwMDAwMDAwMDAwLTB4MDAwMDAwMDBmZmZmZmZmZl0NCkluaXRtZW0gc2V0dXAgbm9k
+ZSAwIFttZW0gMHgwMDAwMDAwMDAwMDAwMDAwLTB4MDAwMDAwMDBmZmZmZmZmZl0NCk9uIG5vZGUg
+MCB0b3RhbHBhZ2VzOiAxMDQ4NTc2DQrCoCBETUEgem9uZTogNzE2OCBwYWdlcyB1c2VkIGZvciBt
+ZW1tYXANCsKgIERNQSB6b25lOiAwIHBhZ2VzIHJlc2VydmVkDQrCoCBETUEgem9uZTogNTI0Mjg3
+IHBhZ2VzLCBMSUZPIGJhdGNoOjYzDQrCoCBOb3JtYWwgem9uZTogNzE2OSBwYWdlcyB1c2VkIGZv
+ciBtZW1tYXANCsKgIE5vcm1hbCB6b25lOiA1MjQyODkgcGFnZXMsIExJRk8gYmF0Y2g6NjMNCk1N
+VTogQWxsb2NhdGVkIDIxMTIgYnl0ZXMgb2YgY29udGV4dCBtYXBzIGZvciAyNTUgY29udGV4dHMN
+CnBlcmNwdTogRW1iZWRkZWQgMjIgcGFnZXMvY3B1IHM0OTMwNCByMCBkNDA4MDggdTEzMTA3Mg0K
+cGNwdS1hbGxvYzogczQ5MzA0IHIwIGQ0MDgwOCB1MTMxMDcyIGFsbG9jPTEqMTA0ODU3Ng0KcGNw
+dS1hbGxvYzogWzBdIDAgMSAyIDMgNCA1IDYgN8KgDQpCdWlsdCAxIHpvbmVsaXN0cywgbW9iaWxp
+dHkgZ3JvdXBpbmcgb24uwqDCoFRvdGFsIHBhZ2VzOiAxMDM0MjM5DQpLZXJuZWwgY29tbWFuZCBs
+aW5lOiBjb25zb2xlPXR0eVMwLDExNTIwMCByb290PS9kZXYvcmFtMA0KcmVsZWFzZWZpbGU9bGlu
+dXhib3hfcHBjNjRfZTY1MDBtYy10YjIzMy5yZWwgYm9vdHZlcnNpb249Ni4yLjcNCmxvZ2xldmVs
+PTggbXRkb29wcy5tdGRkZXY9ZXJybG9nDQptdGRwYXJ0cz1mZmY4MDAwMDAuZmxhc2g6NDA4OE0o
+dXNlciksOE0oZXJybG9nKQ0KZWFybHlwcmludGs9dHR5UzAsMTE1MjAwIHJlYWxfaW5pdD0NCi9i
+aW4vc2ggc2VjdXJpdHlsZXZlbD0xIHJlbGFkZHI9MHgxMDAwMDAwLDE1MjI1MjMNCnByaW50azog
+bG9nX2J1Zl9sZW4gaW5kaXZpZHVhbCBtYXggY3B1IGNvbnRyaWJ1dGlvbjogNDA5NiBieXRlcw0K
+cHJpbnRrOiBsb2dfYnVmX2xlbiB0b3RhbCBjcHVfZXh0cmEgY29udHJpYnV0aW9uczogMjg2NzIg
+Ynl0ZXMNCnByaW50azogbG9nX2J1Zl9sZW4gbWluIHNpemU6IDE2Mzg0IGJ5dGVzDQpwcmludGs6
+IGxvZ19idWZfbGVuOiA2NTUzNiBieXRlcw0KcHJpbnRrOiBlYXJseSBsb2cgYnVmIGZyZWU6IDEy
+NDEyKDc1JSkNCkRlbnRyeSBjYWNoZSBoYXNoIHRhYmxlIGVudHJpZXM6IDUyNDI4OCAob3JkZXI6
+IDEwLCA0MTk0MzA0IGJ5dGVzKQ0KSW5vZGUtY2FjaGUgaGFzaCB0YWJsZSBlbnRyaWVzOiAyNjIx
+NDQgKG9yZGVyOiA5LCAyMDk3MTUyIGJ5dGVzKQ0KTWVtb3J5OiAzOTc5Mjg0Sy80MTk0MzA0SyBh
+dmFpbGFibGUgKDg3MDRLIGtlcm5lbCBjb2RlLCAxNTg0SyByd2RhdGEsDQoyNDk2SyByb2RhdGEs
+IDQ3MksgaW5pdCwgMjk5SyBic3MsIDIxNTAyMEsgcmVzZXJ2ZWQsIDBLIGNtYS1yZXNlcnZlZCkN
+ClNMVUI6IEhXYWxpZ249NjQsIE9yZGVyPTAtMywgTWluT2JqZWN0cz0wLCBDUFVzPTgsIE5vZGVz
+PTENCnJjdTogUHJlZW1wdGlibGUgaGllcmFyY2hpY2FsIFJDVSBpbXBsZW1lbnRhdGlvbi4NCnJj
+dTrCoMKgwqDCoFJDVSBldmVudCB0cmFjaW5nIGlzIGVuYWJsZWQuDQrCoMKgwqDCoMKgwqDCoMKg
+VGFza3MgUkNVIGVuYWJsZWQuDQpyY3U6IFJDVSBjYWxjdWxhdGVkIHZhbHVlIG9mIHNjaGVkdWxl
+ci1lbmxpc3RtZW50IGRlbGF5IGlzIDI1IGppZmZpZXMuDQpOUl9JUlFTOiA1MTIsIG5yX2lycXM6
+IDUxMiwgcHJlYWxsb2NhdGVkIGlycXM6IDE2DQptcGljOiBTZXR0aW5nIHVwIE1QSUMgIiBPcGVu
+UElDwqDCoCIgdmVyc2lvbiAxLjIgYXQgZmZlMDQwMDAwLCBtYXggOCBDUFVzDQptcGljOiBJU1Ug
+c2l6ZTogNTEyLCBzaGlmdDogOSwgbWFzazogMWZmDQptcGljOiBJbml0aWFsaXppbmcgZm9yIDUx
+MiBzb3VyY2VzDQp0aW1lX2luaXQ6IGRlY3JlbWVudGVyIGZyZXF1ZW5jeSA9IDM3LjUwMDAwMCBN
+SHoNCnRpbWVfaW5pdDogcHJvY2Vzc29yIGZyZXF1ZW5jecKgwqDCoD0gMTUwMC4wMDAwMDAgTUh6
+DQpjbG9ja3NvdXJjZTogdGltZWJhc2U6IG1hc2s6IDB4ZmZmZmZmZmZmZmZmZmZmZiBtYXhfY3lj
+bGVzOg0KMHg4YTYwZGQ2YTksIG1heF9pZGxlX25zOiA0NDA3OTUyMDQwNTYgbnMNCmNsb2Nrc291
+cmNlOiB0aW1lYmFzZSBtdWx0WzFhYWFhYWFiXSBzaGlmdFsyNF0gcmVnaXN0ZXJlZA0KY2xvY2tl
+dmVudDogZGVjcmVtZW50ZXIgbXVsdFs5OTk5OTlhXSBzaGlmdFszMl0gY3B1WzBdDQpwaWRfbWF4
+OiBkZWZhdWx0OiAzMjc2OCBtaW5pbXVtOiAzMDENCk1vdW50LWNhY2hlIGhhc2ggdGFibGUgZW50
+cmllczogODE5MiAob3JkZXI6IDQsIDY1NTM2IGJ5dGVzKQ0KTW91bnRwb2ludC1jYWNoZSBoYXNo
+IHRhYmxlIGVudHJpZXM6IDgxOTIgKG9yZGVyOiA0LCA2NTUzNiBieXRlcykNCmU2NTAwIGZhbWls
+eSBwZXJmb3JtYW5jZSBtb25pdG9yIGhhcmR3YXJlIHN1cHBvcnQgcmVnaXN0ZXJlZA0KcmN1OiBI
+aWVyYXJjaGljYWwgU1JDVSBpbXBsZW1lbnRhdGlvbi4NCnNtcDogQnJpbmdpbmcgdXAgc2Vjb25k
+YXJ5IENQVXMgLi4u
