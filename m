@@ -2,57 +2,52 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9747AC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7110C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6802A20880
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:23:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF6A120651
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:23:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011422;
-	bh=8uCq6Hog5rSLXya+/nTvcvv2RE/+H2+vXoQZB/KOLes=;
+	s=default; t=1565011427;
+	bh=j5V3O5era90t3qvigSrU+W5mJ4rfJhC0zY/oMIG+Ivw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wtsJBbTRluiL405uFIHWPt1WrvkUddyCm5aUMu09kDX0e3EqU9as0IdUyI7vb3I64
-	 iky4ZEK9lxiwzw6YQrwNhrvYsCV8l7eeMGuZPn0UjJR/TFYYumDUhtSbrE2vv5guGd
-	 KhG7XFJABR0Bt9HnFewRfse4B4Xb57itYzygh6JA=
+	b=lPWr8KwoV14RXLvJBlsK/pEp5g6/k5iZIswk9U4ad5TbPC1PivzWBXfXzab1o0gWb
+	 vIyAHcm8OC6ZTQtgIyDit1RacSQ5xaqYvR6asSKO3vrPOFyJKPHXAzCzpeSM3fyWW3
+	 DGFAA1iV4slJ7Cd4x/l04vT56tNlYYhEG3j4P9So=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730585AbfHENXk (ORCPT
+        id S1730007AbfHENXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:23:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60356 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:23:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730858AbfHENXh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:23:37 -0400
+        id S1730867AbfHENXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:23:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 293F221880;
-        Mon,  5 Aug 2019 13:23:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCC36217D9;
+        Mon,  5 Aug 2019 13:23:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011416;
-        bh=8uCq6Hog5rSLXya+/nTvcvv2RE/+H2+vXoQZB/KOLes=;
+        s=default; t=1565011419;
+        bh=j5V3O5era90t3qvigSrU+W5mJ4rfJhC0zY/oMIG+Ivw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BCtQaIzodfI8jEbOZRiaI53O16daspKgrsG+GfLcdlpYjW/HiVPOA7jbYq+RJtvOJ
-         +ZKEz8SmzwjiK1tKlbUdwQRU4IqTPQpc88XiJrP3zP+6ktpjufuK9DeziSvVH0JM29
-         JRk+1cPMRsSFN6tLElk8bC/KvSNUhpJ9JsGAm2JE=
+        b=jTy4+3tPWZ8QkSCX1/DScCgt2YG5CmhSQAfPnLV5wAUi6wQ026Bhqeps9quBRSNg+
+         mrHOSTP72FyxmLo9mP7lNyUQXYYS2loO7ciO5zzIQohowUipUt8ZIKam2WXdr3+LiU
+         RCnh9sni/NZgv9T21RZdRnWCfYW/rgBYnzmFhil0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yafang Shao <laoar.shao@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Yafang Shao <shaoyafang@didiglobal.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
+        Steve French <stfrench@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 049/131] mm/memcontrol.c: keep local VM counters in sync with the hierarchical ones
-Date:   Mon,  5 Aug 2019 15:02:16 +0200
-Message-Id: <20190805124954.714867980@linuxfoundation.org>
+Subject: [PATCH 5.2 040/131] cifs: fix crash in cifs_dfs_do_automount
+Date:   Mon,  5 Aug 2019 15:02:07 +0200
+Message-Id: <20190805124954.117575403@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -65,101 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 766a4c19d880887c457811b86f1f68525e416965 ]
+[ Upstream commit ce465bf94b70f03136171a62b607864f00093b19 ]
 
-After commit 815744d75152 ("mm: memcontrol: don't batch updates of local
-VM stats and events"), the local VM counter are not in sync with the
-hierarchical ones.
+RHBZ: 1649907
 
-Below is one example in a leaf memcg on my server (with 8 CPUs):
+Fix a crash that happens while attempting to mount a DFS referral from the same server on the root of a filesystem.
 
-	inactive_file 3567570944
-	total_inactive_file 3568029696
-
-We find that the deviation is very great because the 'val' in
-__mod_memcg_state() is in pages while the effective value in
-memcg_stat_show() is in bytes.
-
-So the maximum of this deviation between local VM stats and total VM
-stats can be (32 * number_of_cpu * PAGE_SIZE), that may be an
-unacceptably great value.
-
-We should keep the local VM stats in sync with the total stats.  In
-order to keep this behavior the same across counters, this patch updates
-__mod_lruvec_state() and __count_memcg_events() as well.
-
-Link: http://lkml.kernel.org/r/1562851979-10610-1-git-send-email-laoar.shao@gmail.com
-Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: Yafang Shao <shaoyafang@didiglobal.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/memcontrol.c | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+ fs/cifs/connect.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 591eafafbd8cb..902d020aa70e5 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -691,12 +691,15 @@ void __mod_memcg_state(struct mem_cgroup *memcg, int idx, int val)
- 	if (mem_cgroup_disabled())
- 		return;
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index 6ad43ac129d2f..18c7c6b2fe08a 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -4463,11 +4463,13 @@ cifs_are_all_path_components_accessible(struct TCP_Server_Info *server,
+ 					unsigned int xid,
+ 					struct cifs_tcon *tcon,
+ 					struct cifs_sb_info *cifs_sb,
+-					char *full_path)
++					char *full_path,
++					int added_treename)
+ {
+ 	int rc;
+ 	char *s;
+ 	char sep, tmp;
++	int skip = added_treename ? 1 : 0;
  
--	__this_cpu_add(memcg->vmstats_local->stat[idx], val);
+ 	sep = CIFS_DIR_SEP(cifs_sb);
+ 	s = full_path;
+@@ -4482,7 +4484,14 @@ cifs_are_all_path_components_accessible(struct TCP_Server_Info *server,
+ 		/* next separator */
+ 		while (*s && *s != sep)
+ 			s++;
 -
- 	x = val + __this_cpu_read(memcg->vmstats_percpu->stat[idx]);
- 	if (unlikely(abs(x) > MEMCG_CHARGE_BATCH)) {
- 		struct mem_cgroup *mi;
- 
 +		/*
-+		 * Batch local counters to keep them in sync with
-+		 * the hierarchical ones.
++		 * if the treename is added, we then have to skip the first
++		 * part within the separators
 +		 */
-+		__this_cpu_add(memcg->vmstats_local->stat[idx], x);
- 		for (mi = memcg; mi; mi = parent_mem_cgroup(mi))
- 			atomic_long_add(x, &mi->vmstats[idx]);
- 		x = 0;
-@@ -745,13 +748,15 @@ void __mod_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
- 	/* Update memcg */
- 	__mod_memcg_state(memcg, idx, val);
++		if (skip) {
++			skip = 0;
++			continue;
++		}
+ 		/*
+ 		 * temporarily null-terminate the path at the end of
+ 		 * the current component
+@@ -4530,8 +4539,7 @@ static int is_path_remote(struct cifs_sb_info *cifs_sb, struct smb_vol *vol,
  
--	/* Update lruvec */
--	__this_cpu_add(pn->lruvec_stat_local->count[idx], val);
--
- 	x = val + __this_cpu_read(pn->lruvec_stat_cpu->count[idx]);
- 	if (unlikely(abs(x) > MEMCG_CHARGE_BATCH)) {
- 		struct mem_cgroup_per_node *pi;
- 
-+		/*
-+		 * Batch local counters to keep them in sync with
-+		 * the hierarchical ones.
-+		 */
-+		__this_cpu_add(pn->lruvec_stat_local->count[idx], x);
- 		for (pi = pn; pi; pi = parent_nodeinfo(pi, pgdat->node_id))
- 			atomic_long_add(x, &pi->lruvec_stat[idx]);
- 		x = 0;
-@@ -773,12 +778,15 @@ void __count_memcg_events(struct mem_cgroup *memcg, enum vm_event_item idx,
- 	if (mem_cgroup_disabled())
- 		return;
- 
--	__this_cpu_add(memcg->vmstats_local->events[idx], count);
--
- 	x = count + __this_cpu_read(memcg->vmstats_percpu->events[idx]);
- 	if (unlikely(x > MEMCG_CHARGE_BATCH)) {
- 		struct mem_cgroup *mi;
- 
-+		/*
-+		 * Batch local counters to keep them in sync with
-+		 * the hierarchical ones.
-+		 */
-+		__this_cpu_add(memcg->vmstats_local->events[idx], x);
- 		for (mi = memcg; mi; mi = parent_mem_cgroup(mi))
- 			atomic_long_add(x, &mi->vmevents[idx]);
- 		x = 0;
+ 	if (rc != -EREMOTE) {
+ 		rc = cifs_are_all_path_components_accessible(server, xid, tcon,
+-							     cifs_sb,
+-							     full_path);
++			cifs_sb, full_path, tcon->Flags & SMB_SHARE_IS_IN_DFS);
+ 		if (rc != 0) {
+ 			cifs_dbg(VFS, "cannot query dirs between root and final path, "
+ 				 "enabling CIFS_MOUNT_USE_PREFIX_PATH\n");
 -- 
 2.20.1
 
