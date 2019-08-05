@@ -2,112 +2,101 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA373C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C596C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AE372086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:24:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HOpVCdl6"
+	by mail.kernel.org (Postfix) with ESMTP id D44ED2173B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:24:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565007865;
+	bh=Oj3FPFXjuZW8aPht4bbn3YgVA2X/7dkzPDjsNfH4nDc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=heXbphw2+v34G3b6p9ON7028rbCuJvamDizyBUJiGW9eelYFtrAUO7LB3IbGRgywZ
+	 qBz49q4czccfVD0OSUiBl2W/3YwV7FDa5G26pRBQsWol1ytcs1MLIPAuZKuRFK0v6L
+	 XS5Prow9EbeBIdLy79onv4tg0hpNFNdOfoJwFS3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728792AbfHEMYF (ORCPT
+        id S1728796AbfHEMYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 08:24:05 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41102 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727259AbfHEMYF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 08:24:05 -0400
-Received: by mail-pf1-f193.google.com with SMTP id m30so39579862pff.8
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 05:24:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kvNIIvyr1HZdHxI3+dMG0XwOSbyqFwP/GOGTSjFs/B4=;
-        b=HOpVCdl6QfscvZumVVZBmYBvn6ARHLLUFP7R98TQku3GrqyU3dAAzxvL4ijBStcoYk
-         5czJxxpew3ycKWH1++HGfmppdrYO8RRb+byVydL4dmofr8CJVT757lfwXgoVto+hfL0l
-         SZe5/k9NQeAfjH8H6FURerps8wvx5EA2tf/k8xWEuLFjE3+JefcVrQO+hbp9+UnK461e
-         fUE44nXWttbw+6JcKJFWobaWwKw/YEzvillOo7J6I8dGs/mWPN/m4ztDWuDQ/vqqzYjw
-         W7ucjpYPNrNDka+ZOGUZFtI07XhNjRBT9R9h09OgcisRSln6FCt13t9ekUrKPf/hBqpM
-         XXkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kvNIIvyr1HZdHxI3+dMG0XwOSbyqFwP/GOGTSjFs/B4=;
-        b=t9wSFKwqMZWQr9J/5z+weKAFJYa0nQboTOsdaBwYt3LnTqvDtPa6HTPgcrlKzQfz83
-         QQ93dLFMnVWAju7prQMNLzxUqfDyNrtPcn66cioF3UsPcZE+D/yS5MMqdzulzvCssbLR
-         N1WFC0iYSNtcYoGXiLjubgnk4enxACYUFG2ahoWX9ftVXa69rPaH2/MgELXpdp9JHpEd
-         h5bx/ClFnjFy6APfZ31vWStjcBKwHAgog55LszGeul569QkbmD7MdWREG18OwcQaOou8
-         SqYedMQkGpB7pphNitGxnArF3GOqaNXrM++vIV7ww2l1hJ1P8I1YOJKIKCBeMThfHvCj
-         D6LQ==
-X-Gm-Message-State: APjAAAWI4nl/aYDxxDmCTaiK0aHzpKjxhVCX0E/3g16Lz2cc14aIvgyU
-        811ZGBsVlJoGaR06IV1fl12j4W/ImEy/WA==
-X-Google-Smtp-Source: APXvYqzlm2OkMcd3gqx8xG+Nfp3IjJV48sbLSn+hdVA6VkaZsMth4vdnVIkdYU8cInV22ilwcWfC+g==
-X-Received: by 2002:a17:90a:b104:: with SMTP id z4mr18045000pjq.102.1565007844428;
-        Mon, 05 Aug 2019 05:24:04 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id s20sm95447299pfe.169.2019.08.05.05.24.02
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 05 Aug 2019 05:24:03 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v3 8/8] watchdog: Replace strncmp with str_has_prefix
-Date:   Mon,  5 Aug 2019 20:23:57 +0800
-Message-Id: <20190805122357.13262-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 5 Aug 2019 08:24:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58338 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727259AbfHEMYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 08:24:24 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F010020880;
+        Mon,  5 Aug 2019 12:24:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565007863;
+        bh=Oj3FPFXjuZW8aPht4bbn3YgVA2X/7dkzPDjsNfH4nDc=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=rc67jfov6f45X1oYV0lXMBU96xnOstBh/8Wg3OI5C2o0BxO1BSdtBmM1vNkWAgIUc
+         j5ly81QJ4W/0Ql98gioJ5SB8T2fIG2+a4Yr39gyADL5XXNwVZlAzInsYNL+gqU/XO7
+         ce4eHcUuZzytfdLwAUSSzalZLcr3vNXcdLp9ndLo=
+Date:   Mon, 5 Aug 2019 14:24:18 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Hillf Danton <hdanton@sina.com>
+cc:     syzbot <syzbot+62a1e04fd3ec2abf099e@syzkaller.appspotmail.com>,
+        andreyknvl@google.com, benjamin.tissoires@redhat.com,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: KASAN: use-after-free Read in hiddev_release
+In-Reply-To: <20190805081212.3144-1-hdanton@sina.com>
+Message-ID: <nycvar.YFH.7.76.1908051423440.5899@cbobk.fhfr.pm>
+References: <20190805081212.3144-1-hdanton@sina.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-strncmp(str, const, len) is error-prone because len
-is easy to have typo.
-The example is the hard-coded len has counting error
-or sizeof(const) forgets - 1.
-So we prefer using newly introduced str_has_prefix()
-to substitute such strncmp to make code better.
+On Mon, 5 Aug 2019, Hillf Danton wrote:
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
-Changes in v3:
-  - Revise the description.
+> 1, no dev no open.
+> 
+> --- a/drivers/hid/usbhid/hiddev.c
+> +++ b/drivers/hid/usbhid/hiddev.c
+> @@ -284,6 +284,10 @@ static int hiddev_open(struct inode *ino
+>  	spin_unlock_irq(&list->hiddev->list_lock);
+>  
+>  	mutex_lock(&hiddev->existancelock);
+> +	if (!list->hiddev->exist) {
+> +		res = -ENODEV;
+> +		goto bail_unlock;
+> +	}
+>  	if (!list->hiddev->open++)
+>  		if (list->hiddev->exist) {
+>  			struct hid_device *hid = hiddev->hid;
+> --
+> 
+> 2, list_del before vfree.
+> 
+> --- a/drivers/hid/usbhid/hiddev.c
+> +++ b/drivers/hid/usbhid/hiddev.c
+> @@ -300,6 +304,9 @@ bail_normal_power:
+>  	hid_hw_power(hid, PM_HINT_NORMAL);
+>  bail_unlock:
+>  	mutex_unlock(&hiddev->existancelock);
+> +	spin_lock_irq(&list->hiddev->list_lock);
+> +	list_del(&list->node);
+> +	spin_unlock_irq(&list->hiddev->list_lock);
+>  bail:
+>  	file->private_data = NULL;
+>  	vfree(list);
 
- kernel/watchdog.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Hilf,
 
-diff --git a/kernel/watchdog.c b/kernel/watchdog.c
-index 7f9e7b9306fe..ac7a4b5f856e 100644
---- a/kernel/watchdog.c
-+++ b/kernel/watchdog.c
-@@ -70,13 +70,13 @@ void __init hardlockup_detector_disable(void)
- 
- static int __init hardlockup_panic_setup(char *str)
- {
--	if (!strncmp(str, "panic", 5))
-+	if (str_has_prefix(str, "panic"))
- 		hardlockup_panic = 1;
--	else if (!strncmp(str, "nopanic", 7))
-+	else if (str_has_prefix(str, "nopanic"))
- 		hardlockup_panic = 0;
--	else if (!strncmp(str, "0", 1))
-+	else if (str_has_prefix(str, "0"))
- 		nmi_watchdog_user_enabled = 0;
--	else if (!strncmp(str, "1", 1))
-+	else if (str_has_prefix(str, "1"))
- 		nmi_watchdog_user_enabled = 1;
- 	return 1;
- }
+both patches look good to me. Could you please resend them properly so 
+that I could apply them? Thanks,
+
 -- 
-2.20.1
+Jiri Kosina
+SUSE Labs
 
