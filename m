@@ -2,192 +2,108 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E03C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F8FDC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01E1D206C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE2A7217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:00:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IGZvj4Ig"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="LOnEYYo8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727520AbfHEGzs (ORCPT
+        id S1727391AbfHEHAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 02:55:48 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:40929 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbfHEGzs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 02:55:48 -0400
-Received: by mail-ed1-f67.google.com with SMTP id k8so77600679eds.7;
-        Sun, 04 Aug 2019 23:55:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2vcIiINY4WBP+S4p7ZvCljxe/AGpBFsXIl5B5dC7+jY=;
-        b=IGZvj4IgmpHw+kKQTtY8eeb5E9cDO3t0ezYt8tkNMicugTeGnGIQ7+XxTUdxszd8qU
-         tm0/jRpIWihYTtvPPiWRHkiXFnslsPz1U67otEH+hSX2gDtw38tvjxjKw5jXUVcAjbji
-         Sef3EjUl9wORFtI68cJqtqXCtFhbVd/9o40ndI8II/QaM2ZbHB/ovA1T/1GaxbBLovhZ
-         mZYpjg3DTgTBOsTyoboXlxBwe8Bw4f5hzg6Mk4zpTsbzrBMD9vkv3wGQDNLoNVRmZQA2
-         1YnwyBDVkjAJADw/cf4V3UdeDkSn/7+P2BCV9sPKO8aKKZVwfYO616s2KRVRpi9zCh2a
-         6hjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2vcIiINY4WBP+S4p7ZvCljxe/AGpBFsXIl5B5dC7+jY=;
-        b=cbnsYt/4M/WVyV/1eKUhBXBDqXrDo0Vh2mS3eevPaQOEfoaNgb1pEqc2vYrCyzM5lU
-         KBSK73B4sSrP4o8Yuwy69+kzXxwaHPqPGKg53U/ZTO+ERa/HL8UXLCdd7woDEAyaQzcA
-         +vqyeNedM0r5a2X5cqFHk9r3uGlcTlBh6P3NpsUSH+0+iM3NGNfrjTshJjqHJFB8E8z7
-         9LmvblKMNb2kjbk4SIGo++vbq+SltIbVPq01UOJ28YcU6dF2kFtI5m2YQbdVVuNoGMJa
-         JmLqfkaGW3/oiL9J895mzR7SkV8GuKQm0b661OxGi7ofZ89QELtBBP0rL8XqKpIXSyJa
-         NGBg==
-X-Gm-Message-State: APjAAAV5BZbLVlG5RVdErLWZ3RMr1JKu72aR3YYoBRNuGhiAblo0ZzSA
-        /i3c4/iq0IN+nOt1KHvTumwo9gAnJJDeHe6nHqfAb+MIvRs=
-X-Google-Smtp-Source: APXvYqzXx3p2Pz7Q7wMxZKubkTIW6zu3x3Sr+7578oy+fMgP1ypqnD0LxU8UEDkWZatK5ntlXt5G6vS3t/3Q9WQXIx8=
-X-Received: by 2002:aa7:cf8e:: with SMTP id z14mr131881877edx.40.1564988145755;
- Sun, 04 Aug 2019 23:55:45 -0700 (PDT)
+        Mon, 5 Aug 2019 03:00:43 -0400
+Received: from mail-eopbgr70072.outbound.protection.outlook.com ([40.107.7.72]:22020
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726375AbfHEHAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 03:00:43 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=O7uFjzgw/B55jV44PMP6yh0CeCu+R5jXKYjJ1IginFvzFf+KSKGjbFRa/pame5j/H0R/8ITkfJTAtsb6Ff31c1zmMuGuinP+eZ3EKD4P8qDizGs6L2d6kFv4k5E7eITCd44zIIlAUOvRpMZKSJsIHv0fJYF6vyeMwJPguZgQuVb4D5ILfZ4tAGX6gUgxhYmcEGQ8P5hcIgiNTKAtUp4qoN0AffpL0DCSg/NWwteucNwWDM3Fl80eVYnBGqEyVOn1GTjcX43wn5C1woiOoeYg0oTVIwU95n5jYXFySgf295YILRgXwyQrTD3obEgk7ibnqb94bQ/H7SH6yTS93SJtHg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Emf//9XX5rEjTDLwFnDdYcqR3JOz99mvztNwBsSXm7Q=;
+ b=iVpBFGMgtbI9CxAzZXk5vMtEUQZbHTK/gqx1wWNhSlEmFndBgljMlPDOInaDhTVZ4BF+Lri73P41Fsa1RujqriN7R9vOKOi0xlFO3v83rDAsT0zR4qcAXZ9NwAUvO7fbrsVRkqmEZLPTvzdKKR+gASUM1NhJYytVweuUSZh+wsvI2IRDB27IcSDEdQE2T/4c3vLh8kZ3ufFOYg9fUag93AMHDaCklI94JWUq/dikc1NtkhgwWekRnrF+4XSEzQ6JhopGjYqEcmDiYHOGnKfme2bsYuit+KTERB6W8v0cfusr9rUQ7PyWP4SA/vfLI372P1ZyKyoWf+hwrtiuGtVXLA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
+ header.d=nxp.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Emf//9XX5rEjTDLwFnDdYcqR3JOz99mvztNwBsSXm7Q=;
+ b=LOnEYYo8sCHBK9a5+Z8YlYfCTPtlsqW3hL62gr1XI8zb52st0rn/aIqCqgPn8I1YrCzIvZ1oagNuQhQxYJbpu2VW1YY0QDesKvYJkHiVIhkDPKeM2/LMKalRf4H4h7ONB04NRoVYIeMw6+bo+HvzqB0xrwVYao+FBN2lRGvevAs=
+Received: from AM0PR04MB4211.eurprd04.prod.outlook.com (52.134.92.158) by
+ AM0PR04MB6947.eurprd04.prod.outlook.com (10.255.225.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2136.15; Mon, 5 Aug 2019 07:00:37 +0000
+Received: from AM0PR04MB4211.eurprd04.prod.outlook.com
+ ([fe80::5553:29b6:d66c:6afe]) by AM0PR04MB4211.eurprd04.prod.outlook.com
+ ([fe80::5553:29b6:d66c:6afe%5]) with mapi id 15.20.2136.018; Mon, 5 Aug 2019
+ 07:00:37 +0000
+From:   Aisheng Dong <aisheng.dong@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "edubezval@gmail.com" <edubezval@gmail.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V3 1/5] thermal: qoriq: Add clock operations
+Thread-Topic: [PATCH V3 1/5] thermal: qoriq: Add clock operations
+Thread-Index: AQHVRn7T5OGYuqP7WEuKEtk4ncRMTqbsKdIg
+Date:   Mon, 5 Aug 2019 07:00:37 +0000
+Message-ID: <AM0PR04MB4211DA900C624AFE404946F480DA0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20190730022126.17883-1-Anson.Huang@nxp.com>
+In-Reply-To: <20190730022126.17883-1-Anson.Huang@nxp.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=aisheng.dong@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9090ce06-f01f-4ba7-5b93-08d719729ee9
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB6947;
+x-ms-traffictypediagnostic: AM0PR04MB6947:
+x-microsoft-antispam-prvs: <AM0PR04MB69473D54C520B8F80EF4854B80DA0@AM0PR04MB6947.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2803;
+x-forefront-prvs: 01208B1E18
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(136003)(346002)(396003)(376002)(189003)(199004)(52536014)(7736002)(305945005)(316002)(14454004)(66476007)(2906002)(256004)(76116006)(8936002)(74316002)(66946007)(71190400001)(71200400001)(7696005)(64756008)(66446008)(102836004)(446003)(3846002)(558084003)(6506007)(11346002)(66556008)(26005)(2501003)(81166006)(81156014)(110136005)(86362001)(6116002)(6436002)(99286004)(76176011)(478600001)(9686003)(6246003)(44832011)(55016002)(229853002)(8676002)(66066001)(186003)(5660300002)(4326008)(25786009)(33656002)(53936002)(68736007)(476003)(486006)(2201001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6947;H:AM0PR04MB4211.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: lCRjsAKM1qQ6OEGyytjSWZ9sQifVkwvMFrA6BOqlSiwiMJi5luzaKNZGMratgQRSL5FT/nxbsRztmdGFHco9XK+xyb0gerraSYNcBI0fTvt7/fKLD9Q35nk7fqaZW+NNj9xy6fCQM7NCbjynJzt8Lhwm38ZRr1Q+/At9wliDWB69ajXEPFCEEMQSE85aohJReeSnxJNfuLE3oeoOng8T2AFFJ1v+6aAXmpwPs6Y1KwIfzi9z/jcWQiPyN032n9AB9hfZhbMC/XhJENenHx/oLq3/zqXArv7iVQLNKcwYqt8GoUJKA9lCai7CvkXUgdJWnvKG1HuKOIpFJwDdWJkEvGzUWpc0mF/DPUHQhv+m5ZmPyFTEtiVBR+wTEUBelEgQ+ApzgRyac2JxTgiG3494Nv7/1dIuqp+BNrvmnFvxiCI=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190802164828.20243-1-hslester96@gmail.com> <20190804125858.GJ4832@mtr-leonro.mtl.com>
- <CANhBUQ2H5MU0m2xM0AkJGPf7+MJBZ3Eq5rR0kgeOoKRi4q1j6Q@mail.gmail.com> <20190805061320.GN4832@mtr-leonro.mtl.com>
-In-Reply-To: <20190805061320.GN4832@mtr-leonro.mtl.com>
-From:   Chuhong Yuan <hslester96@gmail.com>
-Date:   Mon, 5 Aug 2019 14:55:34 +0800
-Message-ID: <CANhBUQ0tUTXQKq__zvhNCUxXTFfDyr2xKF+Cwupod9xmvSrw2A@mail.gmail.com>
-Subject: Re: [PATCH v2] net/mlx5e: Use refcount_t for refcount
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Saeed Mahameed <saeedm@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Netdev <netdev@vger.kernel.org>, linux-rdma@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9090ce06-f01f-4ba7-5b93-08d719729ee9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Aug 2019 07:00:37.8174
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aisheng.dong@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6947
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 5, 2019 at 2:13 PM Leon Romanovsky <leon@kernel.org> wrote:
->
-> On Sun, Aug 04, 2019 at 10:44:47PM +0800, Chuhong Yuan wrote:
-> > On Sun, Aug 4, 2019 at 8:59 PM Leon Romanovsky <leon@kernel.org> wrote:
-> > >
-> > > On Sat, Aug 03, 2019 at 12:48:28AM +0800, Chuhong Yuan wrote:
-> > > > refcount_t is better for reference counters since its
-> > > > implementation can prevent overflows.
-> > > > So convert atomic_t ref counters to refcount_t.
-> > >
-> > > I'm not thrilled to see those automatic conversion patches, especially
-> > > for flows which can't overflow. There is nothing wrong in using atomic_t
-> > > type of variable, do you have in mind flow which will cause to overflow?
-> > >
-> > > Thanks
-> >
-> > I have to say that these patches are not done automatically...
-> > Only the detection of problems is done by a script.
-> > All conversions are done manually.
->
-> Even worse, you need to audit usage of atomic_t and replace there
-> it can overflow.
->
-> >
-> > I am not sure whether the flow can cause an overflow.
->
-> It can't.
->
-> > But I think it is hard to ensure that a data path is impossible
-> > to have problems in any cases including being attacked.
->
-> It is not data path, and I doubt that such conversion will be allowed
-> in data paths without proving that no performance regression is introduced.
->>
->
-> > So I think it is better to do this minor revision to prevent
-> > potential risk, just like we have done in mlx5/core/cq.c.
->
-> mlx5/core/cq.c is a different beast, refcount there means actual users
-> of CQ which are limited in SW, so in theory, they have potential
-> to be overflown.
->
-> It is not the case here, there your are adding new port.
-> There is nothing wrong with atomic_t.
->
-
-Thanks for your explanation!
-I will pay attention to this point in similar cases.
-But it seems that the semantic of refcount is not always as clear as here...
-
-Regards,
-Chuhong
-
-
-> Thanks
->
-> >
-> > Regards,
-> > Chuhong
-> >
-> > > >
-> > > > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> > > > ---
-> > > > Changes in v2:
-> > > >   - Add #include.
-> > > >
-> > > >  drivers/net/ethernet/mellanox/mlx5/core/lib/vxlan.c | 9 +++++----
-> > > >  1 file changed, 5 insertions(+), 4 deletions(-)
-> > > >
-> > > > diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/vxlan.c b/drivers/net/ethernet/mellanox/mlx5/core/lib/vxlan.c
-> > > > index b9d4f4e19ff9..148b55c3db7a 100644
-> > > > --- a/drivers/net/ethernet/mellanox/mlx5/core/lib/vxlan.c
-> > > > +++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/vxlan.c
-> > > > @@ -32,6 +32,7 @@
-> > > >
-> > > >  #include <linux/kernel.h>
-> > > >  #include <linux/module.h>
-> > > > +#include <linux/refcount.h>
-> > > >  #include <linux/mlx5/driver.h>
-> > > >  #include <net/vxlan.h>
-> > > >  #include "mlx5_core.h"
-> > > > @@ -48,7 +49,7 @@ struct mlx5_vxlan {
-> > > >
-> > > >  struct mlx5_vxlan_port {
-> > > >       struct hlist_node hlist;
-> > > > -     atomic_t refcount;
-> > > > +     refcount_t refcount;
-> > > >       u16 udp_port;
-> > > >  };
-> > > >
-> > > > @@ -113,7 +114,7 @@ int mlx5_vxlan_add_port(struct mlx5_vxlan *vxlan, u16 port)
-> > > >
-> > > >       vxlanp = mlx5_vxlan_lookup_port(vxlan, port);
-> > > >       if (vxlanp) {
-> > > > -             atomic_inc(&vxlanp->refcount);
-> > > > +             refcount_inc(&vxlanp->refcount);
-> > > >               return 0;
-> > > >       }
-> > > >
-> > > > @@ -137,7 +138,7 @@ int mlx5_vxlan_add_port(struct mlx5_vxlan *vxlan, u16 port)
-> > > >       }
-> > > >
-> > > >       vxlanp->udp_port = port;
-> > > > -     atomic_set(&vxlanp->refcount, 1);
-> > > > +     refcount_set(&vxlanp->refcount, 1);
-> > > >
-> > > >       spin_lock_bh(&vxlan->lock);
-> > > >       hash_add(vxlan->htable, &vxlanp->hlist, port);
-> > > > @@ -170,7 +171,7 @@ int mlx5_vxlan_del_port(struct mlx5_vxlan *vxlan, u16 port)
-> > > >               goto out_unlock;
-> > > >       }
-> > > >
-> > > > -     if (atomic_dec_and_test(&vxlanp->refcount)) {
-> > > > +     if (refcount_dec_and_test(&vxlanp->refcount)) {
-> > > >               hash_del(&vxlanp->hlist);
-> > > >               remove = true;
-> > > >       }
-> > > > --
-> > > > 2.20.1
-> > > >
+PiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gDQo+IFNvbWUgcGxh
+dGZvcm1zIGxpa2UgaS5NWDhNUSBoYXMgY2xvY2sgY29udHJvbCBmb3IgdGhpcyBtb2R1bGUsIG5l
+ZWQgdG8gYWRkDQo+IGNsb2NrIG9wZXJhdGlvbnMgdG8gbWFrZSBzdXJlIHRoZSBkcml2ZXIgaXMg
+d29ya2luZyBwcm9wZXJseS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNv
+bi5IdWFuZ0BueHAuY29tPg0KPiBSZXZpZXdlZC1ieTogR3VpZG8gR8O8bnRoZXIgPGFneEBzaWd4
+Y3B1Lm9yZz4NCg0KUmV2aWV3ZWQtYnk6IERvbmcgQWlzaGVuZyA8YWlzaGVuZy5kb25nQG54cC5j
+b20+DQoNClJlZ2FyZHMNCkFpc2hlbmcNCg==
