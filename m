@@ -2,85 +2,83 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A778AC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53633C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78064214C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30FAB214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:18:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730054AbfHESQm (ORCPT
+        id S1730111AbfHESSR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 14:16:42 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56848 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727802AbfHESQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 14:16:42 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E4035AC91;
-        Mon,  5 Aug 2019 18:16:40 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 4623DDABC7; Mon,  5 Aug 2019 20:17:13 +0200 (CEST)
-Date:   Mon, 5 Aug 2019 20:17:12 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Nikolay Borisov <nborisov@suse.com>, linux-btrfs@vger.kernel.org,
-        paulmck@linux.ibm.com, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] btrfs: Hook btrfs' DRW lock to locktorture
- infrastructure
-Message-ID: <20190805181712.GH28208@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nikolay Borisov <nborisov@suse.com>, linux-btrfs@vger.kernel.org,
-        paulmck@linux.ibm.com, linux-kernel@vger.kernel.org
-References: <20190719083949.5351-1-nborisov@suse.com>
- <20190719084808.5877-1-nborisov@suse.com>
- <20190805163621.GA94502@archlinux-threadripper>
+        Mon, 5 Aug 2019 14:18:17 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:35866 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726559AbfHESSR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 14:18:17 -0400
+Received: by mail-lj1-f193.google.com with SMTP id i21so830867ljj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 11:18:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5iD60MN3ezKI1+xt5FlPDcJaTEoPJLW96DLDKH2MmR0=;
+        b=Rs36w3Gtqp/ZeJoZpwoyU04iG+8sE3YYjLggT2XWV1jt/7UrDN0xbGlRvXs+1r5Bm1
+         3MFCl7pzuEo3eLdsGySP5EkAafparMYUD3BqvfNAUVgPI3tlBSgyuVrTN4ogmPuLuF6i
+         nMOn1fl3+6cpdLBuvtkgRasckvmCXNtCRNuZW1Owvm07qKs2K/8r+IDysJa3vw3AdJ7T
+         ZP1Zhcc5ihPZ6ngUOIEN+Sp5B7jGBuHbklZrkDGkd/FlKYpRF56k5r79jaqYaEFW7+/B
+         5o6wsGtQPhFvFxCJZn9h7vIVGI5rafZj3EXeXN0qiATw/nGoJ8dKUgPQuXJHPcOpymK7
+         gP3Q==
+X-Gm-Message-State: APjAAAX01wFeSaWRrKKSFKoAR3eCntb8VXBGq6hOIl8a8ZzjPTMF/h+2
+        LgwgrjWJqlh/3v6lsBrQXYBYjwu6J5GK1zT51NwveQ==
+X-Google-Smtp-Source: APXvYqzBELw4G2jCqYxgIDkXE9OFhaWwBRVhy7Ub8mvdIqBjWO2i1v3mF9Q01T8rDZyiz+sIt0VO0YHuvz2HFjdenWM=
+X-Received: by 2002:a2e:9643:: with SMTP id z3mr80490301ljh.43.1565029095550;
+ Mon, 05 Aug 2019 11:18:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190805163621.GA94502@archlinux-threadripper>
-User-Agent: Mutt/1.5.23.1 (2014-03-12)
+References: <20190731183116.4791-1-mcroce@redhat.com> <20190805.105800.1380680189003158228.davem@davemloft.net>
+In-Reply-To: <20190805.105800.1380680189003158228.davem@davemloft.net>
+From:   Matteo Croce <mcroce@redhat.com>
+Date:   Mon, 5 Aug 2019 20:17:39 +0200
+Message-ID: <CAGnkfhxRV=2G6Sxf_nZQekeXLsf64QkKqfN-9pN_Mi6Y+=nXRA@mail.gmail.com>
+Subject: Re: [PATCH net] mvpp2: fix panic on module removal
+To:     David Miller <davem@davemloft.net>
+Cc:     netdev <netdev@vger.kernel.org>,
+        Miquel Raynal <miquel.raynal@free-electrons.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lorenzo Bianconi <lorenzo@kernel.org>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 09:36:21AM -0700, Nathan Chancellor wrote:
-> Looks like this is in next-20190805 and causes a link time error when
-> CONFIG_BTRFS_FS is unset:
-> 
->   LD      vmlinux.o
->   MODPOST vmlinux.o
->   MODINFO modules.builtin.modinfo
-> ld.lld: error: undefined symbol: btrfs_drw_lock_init
-> >>> referenced by locktorture.c
-> >>>               locking/locktorture.o:(torture_drw_init) in archive kernel/built-in.a
-> 
-> ld.lld: error: undefined symbol: btrfs_drw_write_lock
-> >>> referenced by locktorture.c
-> >>>               locking/locktorture.o:(torture_drw_write_lock) in archive kernel/built-in.a
-> 
-> ld.lld: error: undefined symbol: btrfs_drw_write_unlock
-> >>> referenced by locktorture.c
-> >>>               locking/locktorture.o:(torture_drw_write_unlock) in archive kernel/built-in.a
-> 
-> ld.lld: error: undefined symbol: btrfs_drw_read_lock
-> >>> referenced by locktorture.c
-> >>>               locking/locktorture.o:(torture_drw_read_lock) in archive kernel/built-in.a
-> 
-> ld.lld: error: undefined symbol: btrfs_drw_read_unlock
-> >>> referenced by locktorture.c
-> >>>               locking/locktorture.o:(torture_drw_read_unlock) in archive kernel/built-in.a
-> 
-> If this commit is to remain around, there should probably be static
-> inline stubs in fs/btrfs/locking.h. Apologies if this has already been
-> reported, I still see the commit in the btrfs for-next branch.
+On Mon, Aug 5, 2019 at 7:58 PM David Miller <davem@davemloft.net> wrote:
+>
+> From: Matteo Croce <mcroce@redhat.com>
+> Date: Wed, 31 Jul 2019 20:31:16 +0200
+>
+> > mvpp2 uses a delayed workqueue to gather traffic statistics.
+> > On module removal the workqueue can be destroyed before calling
+> > cancel_delayed_work_sync() on its works.
+> > Fix it by moving the destroy_workqueue() call after mvpp2_port_remove().
+>
+> Please post a new version with the flush_workqueue() removed.
 
-Sorry for the build breakage, the patch is not essential for the
-patchset so I'll remove it from the upcoming for-next branch.
+Hi,
+
+I thought that it was already merged:
+
+https://lore.kernel.org/netdev/20190801121330.30823-1-mcroce@redhat.com/
+
+Let me know if it's ok already.
+
+Regards,
+-- 
+Matteo Croce
+per aspera ad upstream
