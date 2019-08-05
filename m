@@ -2,335 +2,188 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21575C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D79C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA6AE2075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77B642075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:40:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="mfOxvS7V"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="IRXJQiB4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729727AbfHEOkS (ORCPT
+        id S1729355AbfHEOkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 10:40:18 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:1268 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728149AbfHEOkQ (ORCPT
+        Mon, 5 Aug 2019 10:40:42 -0400
+Received: from gateway36.websitewelcome.com ([192.185.188.18]:24462 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728149AbfHEOkl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 10:40:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1565016015; x=1596552015;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=Q1x25GzYPMupI/OkV0eXrvN26mN4nvYEu2kdknQosgc=;
-  b=mfOxvS7VUQ40YERvCbW//H6s7C0mNdKjDWh+B+dcndzTOxvIUGQX+OFT
-   cb2VFoMHUoqe42gsSVH/hR2Z65KfI7dCBSJYp/qj+Qhq7zvCD1WTw7+iI
-   WqFmpWCPZcRxTorHMtZ4G0ZPFf801kcrnYKnqrS61kcUEJYdCAkpooWby
-   k=;
-X-IronPort-AV: E=Sophos;i="5.64,350,1559520000"; 
-   d="scan'208";a="777792932"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 05 Aug 2019 14:40:14 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com (Postfix) with ESMTPS id 9AE58A249D;
-        Mon,  5 Aug 2019 14:40:10 +0000 (UTC)
-Received: from EX13D19EUB003.ant.amazon.com (10.43.166.69) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 5 Aug 2019 14:40:09 +0000
-Received: from ua9e4f3715fbc5f.ant.amazon.com (10.43.162.137) by
- EX13D19EUB003.ant.amazon.com (10.43.166.69) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 5 Aug 2019 14:40:00 +0000
-From:   Hanna Hawa <hhhawa@amazon.com>
-To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>, <bp@alien8.de>,
-        <mchehab@kernel.org>, <james.morse@arm.com>, <davem@davemloft.net>,
-        <gregkh@linuxfoundation.org>, <linus.walleij@linaro.org>,
-        <Jonathan.Cameron@huawei.com>, <nicolas.ferre@microchip.com>,
-        <paulmck@linux.ibm.com>
-CC:     <dwmw@amazon.co.uk>, <benh@amazon.com>, <ronenk@amazon.com>,
-        <talel@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-edac@vger.kernel.org>, <hhhawa@amazon.com>
-Subject: [PATCH v5 4/4] edac: Add support for Amazon's Annapurna Labs L2 EDAC
-Date:   Mon, 5 Aug 2019 15:39:11 +0100
-Message-ID: <20190805143911.12185-5-hhhawa@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190805143911.12185-1-hhhawa@amazon.com>
-References: <20190805143911.12185-1-hhhawa@amazon.com>
+        Mon, 5 Aug 2019 10:40:41 -0400
+X-Greylist: delayed 1443 seconds by postgrey-1.27 at vger.kernel.org; Mon, 05 Aug 2019 10:40:41 EDT
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id F0A10400C7C6B
+        for <linux-kernel@vger.kernel.org>; Mon,  5 Aug 2019 08:41:07 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id udmvhoNcE2qH7udmvhpRAr; Mon, 05 Aug 2019 09:16:37 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Hx+Ff/N9WaE2ovCEAjCvFy5YvKvR6C7+BZFLcw7htVk=; b=IRXJQiB4iUgDCWYRJL2+LmPpVS
+        BQE1hfVZjTsCyNWSmeh4r3M1OSU5beDidG33U9j0BOcJPX+B8DjhmiCRO/wrHlRRG31jOnbw7OSSl
+        /xpNyDvzpBeyKu84GSvEgs86jzWZmr7nJdRYYoCn4MqpWS2i8mFqso494GzIEXN6lTwsV03I/Qrin
+        07fgDOAcUUgvBETxkEO1sZ7PN7SXesuVdQZmAXtVvZGScq2sTbRr+Hea10/GOLTbXPRiGYv3jog6J
+        7CvRfcmfV1QH5icfXTy2OQXWBfVw3UEFe0pHwaGFK7LM0c1HaflTDBNDFm19CTJviNDgwJDo0Y3nD
+        sp/d6fZA==;
+Received: from [187.192.11.120] (port=41098 helo=[192.168.43.131])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hudmv-000Pp8-I8; Mon, 05 Aug 2019 09:16:37 -0500
+Subject: Re: [PATCH 4.14 38/53] IB/hfi1: Fix Spectre v1 vulnerability
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org
+References: <20190805124927.973499541@linuxfoundation.org>
+ <20190805124932.331142598@linuxfoundation.org>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <3d25fa83-91e6-dd99-2170-44a51066c82d@embeddedor.com>
+Date:   Mon, 5 Aug 2019 09:16:36 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.162.137]
-X-ClientProxiedBy: EX13D03UWA001.ant.amazon.com (10.43.160.141) To
- EX13D19EUB003.ant.amazon.com (10.43.166.69)
+In-Reply-To: <20190805124932.331142598@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.11.120
+X-Source-L: No
+X-Exim-ID: 1hudmv-000Pp8-I8
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.131]) [187.192.11.120]:41098
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 2
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds support for Amazon's Annapurna Labs L2 EDAC driver to detect and
-report L2 errors.
+Hi Greg,
 
-Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
-Reviewed-by: James Morse <james.morse@arm.com>
----
- MAINTAINERS               |   6 ++
- drivers/edac/Kconfig      |   8 ++
- drivers/edac/Makefile     |   1 +
- drivers/edac/al_l2_edac.c | 192 ++++++++++++++++++++++++++++++++++++++
- 4 files changed, 207 insertions(+)
- create mode 100644 drivers/edac/al_l2_edac.c
+Can you please add these other two patches to stable:
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fd29ea62ba29..a6dcf3d8e12a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -749,6 +749,12 @@ S:	Maintained
- F:	drivers/edac/al_l1_edac.c
- F:	Documentation/devicetree/bindings/edac/amazon,al-l1-edac.txt
- 
-+AMAZON ANNAPURNA LABS L2 EDAC
-+M:	Hanna Hawa <hhhawa@amazon.com>
-+S:	Maintained
-+F:	drivers/edac/al_l2_edac.c
-+F:	Documentation/devicetree/bindings/edac/amazon,al-l2-edac.txt
-+
- AMAZON ANNAPURNA LABS THERMAL MMIO DRIVER
- M:	Talel Shenhar <talel@amazon.com>
- S:	Maintained
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index 58b92bcb39ce..8bbb745b84ed 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -82,6 +82,14 @@ config EDAC_AL_L1
- 	  for Amazon's Annapurna Labs SoCs.
- 	  This driver detects errors of L1 caches.
- 
-+config EDAC_AL_L2
-+	bool "Amazon's Annapurna Labs L2 EDAC"
-+	depends on ARCH_ALPINE
-+	help
-+	  Support for L2 error detection and correction
-+	  for Amazon's Annapurna Labs SoCs.
-+	  This driver detects errors of L2 caches.
-+
- config EDAC_AMD64
- 	tristate "AMD64 (Opteron, Athlon64)"
- 	depends on AMD_NB && EDAC_DECODE_MCE
-diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-index caa2dc91e8a0..60a6b8bbe2f8 100644
---- a/drivers/edac/Makefile
-+++ b/drivers/edac/Makefile
-@@ -23,6 +23,7 @@ edac_mce_amd-y				:= mce_amd.o
- obj-$(CONFIG_EDAC_DECODE_MCE)		+= edac_mce_amd.o
- 
- obj-$(CONFIG_EDAC_AL_L1)		+= al_l1_edac.o
-+obj-$(CONFIG_EDAC_AL_L2)		+= al_l2_edac.o
- obj-$(CONFIG_EDAC_AMD76X)		+= amd76x_edac.o
- obj-$(CONFIG_EDAC_CPC925)		+= cpc925_edac.o
- obj-$(CONFIG_EDAC_I5000)		+= i5000_edac.o
-diff --git a/drivers/edac/al_l2_edac.c b/drivers/edac/al_l2_edac.c
-new file mode 100644
-index 000000000000..3dcca380d2aa
---- /dev/null
-+++ b/drivers/edac/al_l2_edac.c
-@@ -0,0 +1,192 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-+ */
-+
-+#include <asm/sysreg.h>
-+#include <linux/bitfield.h>
-+#include <linux/cpumask.h>
-+#include <linux/of.h>
-+#include <linux/smp.h>
-+
-+#include "edac_device.h"
-+#include "edac_module.h"
-+
-+#define DRV_NAME				"al_l2_edac"
-+
-+/* Same bit assignments of L2MERRSR_EL1 in ARM CA57/CA72 */
-+#define ARM_CA57_L2MERRSR_EL1			sys_reg(3, 1, 15, 2, 3)
-+#define ARM_CA57_L2MERRSR_RAMID			GENMASK(30, 24)
-+#define  ARM_CA57_L2_TAG_RAM			0x10
-+#define  ARM_CA57_L2_DATA_RAM			0x11
-+#define  ARM_CA57_L2_SNOOP_RAM			0x12
-+#define  ARM_CA57_L2_DIRTY_RAM			0x14
-+#define  ARM_CA57_L2_INC_PF_RAM			0x18
-+#define ARM_CA57_L2MERRSR_VALID			BIT(31)
-+#define ARM_CA57_L2MERRSR_REPEAT		GENMASK_ULL(39, 32)
-+#define ARM_CA57_L2MERRSR_OTHER			GENMASK_ULL(47, 40)
-+#define ARM_CA57_L2MERRSR_FATAL			BIT_ULL(63)
-+
-+#define AL_L2_EDAC_MSG_MAX			256
-+
-+struct al_l2_edac {
-+	cpumask_t cluster_cpus;
-+};
-+
-+static void al_l2_edac_l2merrsr(void *arg)
-+{
-+	struct edac_device_ctl_info *edac_dev = arg;
-+	int cpu, i;
-+	u32 ramid, repeat, other, fatal;
-+	u64 val = read_sysreg_s(ARM_CA57_L2MERRSR_EL1);
-+	char msg[AL_L2_EDAC_MSG_MAX];
-+	int space, count;
-+	char *p;
-+
-+	if (!(FIELD_GET(ARM_CA57_L2MERRSR_VALID, val)))
-+		return;
-+
-+	write_sysreg_s(0, ARM_CA57_L2MERRSR_EL1);
-+
-+	cpu = smp_processor_id();
-+	ramid = FIELD_GET(ARM_CA57_L2MERRSR_RAMID, val);
-+	repeat = FIELD_GET(ARM_CA57_L2MERRSR_REPEAT, val);
-+	other = FIELD_GET(ARM_CA57_L2MERRSR_OTHER, val);
-+	fatal = FIELD_GET(ARM_CA57_L2MERRSR_FATAL, val);
-+
-+	space = sizeof(msg);
-+	p = msg;
-+	count = scnprintf(p, space, "CPU%d L2 %serror detected", cpu,
-+			  (fatal) ? "Fatal " : "");
-+	p += count;
-+	space -= count;
-+
-+	switch (ramid) {
-+	case ARM_CA57_L2_TAG_RAM:
-+		count = scnprintf(p, space, " RAMID='L2 Tag RAM'");
-+		break;
-+	case ARM_CA57_L2_DATA_RAM:
-+		count = scnprintf(p, space, " RAMID='L2 Data RAM'");
-+		break;
-+	case ARM_CA57_L2_SNOOP_RAM:
-+		count = scnprintf(p, space, " RAMID='L2 Snoop Tag RAM'");
-+		break;
-+	case ARM_CA57_L2_DIRTY_RAM:
-+		count = scnprintf(p, space, " RAMID='L2 Dirty RAM'");
-+		break;
-+	case ARM_CA57_L2_INC_PF_RAM:
-+		count = scnprintf(p, space, " RAMID='L2 internal metadata'");
-+		break;
-+	default:
-+		count = scnprintf(p, space, " RAMID='unknown'");
-+		break;
-+	}
-+
-+	p += count;
-+	space -= count;
-+
-+	count = scnprintf(p, space,
-+			  " repeat=%d, other=%d (L2MERRSR_EL1=0x%llx)",
-+			  repeat, other, val);
-+
-+	for (i = 0; i < repeat; i++) {
-+		if (fatal)
-+			edac_device_handle_ue(edac_dev, 0, 0, msg);
-+		else
-+			edac_device_handle_ce(edac_dev, 0, 0, msg);
-+	}
-+}
-+
-+static void al_l2_edac_check(struct edac_device_ctl_info *edac_dev)
-+{
-+	struct al_l2_edac *al_l2 = edac_dev->pvt_info;
-+
-+	smp_call_function_any(&al_l2->cluster_cpus, al_l2_edac_l2merrsr,
-+			      edac_dev, 1);
-+}
-+
-+static int al_l2_edac_probe(struct platform_device *pdev)
-+{
-+	struct edac_device_ctl_info *edac_dev;
-+	struct al_l2_edac *al_l2;
-+	struct device *dev = &pdev->dev;
-+	int ret, i;
-+
-+	edac_dev = edac_device_alloc_ctl_info(sizeof(*al_l2),
-+					      (char *)dev_name(dev), 1, "L", 1,
-+					      2, NULL, 0,
-+					      edac_device_alloc_index());
-+	if (IS_ERR_OR_NULL(edac_dev))
-+		return -ENOMEM;
-+
-+	al_l2 = edac_dev->pvt_info;
-+	edac_dev->edac_check = al_l2_edac_check;
-+	edac_dev->dev = dev;
-+	edac_dev->mod_name = DRV_NAME;
-+	edac_dev->dev_name = dev_name(dev);
-+	edac_dev->ctl_name = "L2 cache";
-+	platform_set_drvdata(pdev, edac_dev);
-+
-+	for_each_possible_cpu(i) {
-+		struct device_node *cpu;
-+		struct device_node *cpu_cache, *l2_cache;
-+
-+		cpu = of_get_cpu_node(i, NULL);
-+		cpu_cache = of_find_next_cache_node(cpu);
-+		l2_cache = of_parse_phandle(dev->of_node, "l2-cache", 0);
-+
-+		if (cpu_cache == l2_cache)
-+			cpumask_set_cpu(i, &al_l2->cluster_cpus);
-+
-+		of_node_put(cpu);
-+	}
-+
-+	if (cpumask_empty(&al_l2->cluster_cpus)) {
-+		dev_err(dev, "CPU mask is empty for this L2 cache\n");
-+		ret = -EINVAL;
-+		goto err;
-+	}
-+
-+	ret = edac_device_add_device(edac_dev);
-+	if (ret) {
-+		dev_err(dev, "Failed to add L2 edac device\n");
-+		goto err;
-+	}
-+
-+	return 0;
-+
-+err:
-+	edac_device_free_ctl_info(edac_dev);
-+
-+	return ret;
-+}
-+
-+static int al_l2_edac_remove(struct platform_device *pdev)
-+{
-+	struct edac_device_ctl_info *edac_dev = platform_get_drvdata(pdev);
-+
-+	edac_device_del_device(edac_dev->dev);
-+	edac_device_free_ctl_info(edac_dev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id al_l2_edac_of_match[] = {
-+	{ .compatible = "amazon,al-l2-edac" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, al_l2_edac_of_match);
-+
-+static struct platform_driver al_l2_edac_driver = {
-+	.probe = al_l2_edac_probe,
-+	.remove = al_l2_edac_remove,
-+	.driver = {
-+		.name = DRV_NAME,
-+		.of_match_table = al_l2_edac_of_match,
-+	},
-+};
-+module_platform_driver(al_l2_edac_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Hanna Hawa <hhhawa@amazon.com>");
-+MODULE_DESCRIPTION("Amazon's Annapurna Lab's L2 EDAC Driver");
--- 
-2.17.1
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d64062b57eeb58d4928aed945515bf53f7944913
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=737298d18836fd14b8820de6504536c998986bcd
 
+Thanks!
+--
+Gustavo
+
+On 8/5/19 8:03 AM, Greg Kroah-Hartman wrote:
+> From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> 
+> commit 6497d0a9c53df6e98b25e2b79f2295d7caa47b6e upstream.
+> 
+> sl is controlled by user-space, hence leading to a potential
+> exploitation of the Spectre variant 1 vulnerability.
+> 
+> Fix this by sanitizing sl before using it to index ibp->sl_to_sc.
+> 
+> Notice that given that speculation windows are large, the policy is
+> to kill the speculation on the first load and not worry if it can be
+> completed with a dependent load/store [1].
+> 
+> [1] https://lore.kernel.org/lkml/20180423164740.GY17484@dhcp22.suse.cz/
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> Link: https://lore.kernel.org/r/20190731175428.GA16736@embeddedor
+> Signed-off-by: Doug Ledford <dledford@redhat.com>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> ---
+>  drivers/infiniband/hw/hfi1/verbs.c |    2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> --- a/drivers/infiniband/hw/hfi1/verbs.c
+> +++ b/drivers/infiniband/hw/hfi1/verbs.c
+> @@ -54,6 +54,7 @@
+>  #include <linux/mm.h>
+>  #include <linux/vmalloc.h>
+>  #include <rdma/opa_addr.h>
+> +#include <linux/nospec.h>
+>  
+>  #include "hfi.h"
+>  #include "common.h"
+> @@ -1587,6 +1588,7 @@ static int hfi1_check_ah(struct ib_devic
+>  	sl = rdma_ah_get_sl(ah_attr);
+>  	if (sl >= ARRAY_SIZE(ibp->sl_to_sc))
+>  		return -EINVAL;
+> +	sl = array_index_nospec(sl, ARRAY_SIZE(ibp->sl_to_sc));
+>  
+>  	sc5 = ibp->sl_to_sc[sl];
+>  	if (sc_to_vlt(dd, sc5) > num_vls && sc_to_vlt(dd, sc5) != 0xf)
+> 
+> 
