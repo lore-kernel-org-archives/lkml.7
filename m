@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31209C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51944C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0180F20651
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18AB220657
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:25:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011549;
-	bh=VSBuZuQ2TjME/vq/siv1SahZ1Ua+CuTdzLk6UoAYRxE=;
+	s=default; t=1565011554;
+	bh=O81cY2+UO09peQGoXM9mbiGl/Zz6yhVdTmLOCrqsWy0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iT27X1Gj51sTkLCxAgwzaIIn4akgnOt6xbOMRi5EoIocxfX1JFRudJzimM5alrL82
-	 yTy8AbDvHu/1AXMtZwkv3luPd76rbA/MKyxv0jmQmP85aid/iHDRZJ7pW/+bovqZSR
-	 TsOUfyiuUqx6E9QapWRSK4lcTfDrRc+PGpyDuth8=
+	b=qXehr5fqzhBMhEojEaaPl6DFSUeJKdEt5dUXPfnBUluRqqiDrDOMjSKZuy57NnUht
+	 MYO/6zF8u+Gs25/yF6N9KwJSM8d1WRwrLTQrghZt+ziCdxndO+XbKEWGG6hUy9LNA9
+	 i64V7Ex5CXETbDJf2cyL0CInASphcDt3EA929TAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730981AbfHENZs (ORCPT
+        id S1731334AbfHENZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:25:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34266 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:25:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731279AbfHENZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:25:44 -0400
+        id S1730916AbfHENZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:25:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FCAB20644;
-        Mon,  5 Aug 2019 13:25:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DD6A20644;
+        Mon,  5 Aug 2019 13:25:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011543;
-        bh=VSBuZuQ2TjME/vq/siv1SahZ1Ua+CuTdzLk6UoAYRxE=;
+        s=default; t=1565011549;
+        bh=O81cY2+UO09peQGoXM9mbiGl/Zz6yhVdTmLOCrqsWy0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G/ViWXB7FJjgD0/9lCSPfQAPU9T/WuirtTo8ZM1SfL5DbuldySbj0XZ/733l179N1
-         VnHHhVKQNY//y2p+QPGoHnbPTv6mnuj1LfxfzxNOxsK2MJjDb+ZjCSjKXH+1zDyXtB
-         GpIppK+Jbq5B70vCJoq80V+uHFElQsI6dyFzoDoE=
+        b=fvae2LmQHCdKoqDEewTy59ddlu9mEgPkwaNIgRvG9OUvtD7739cV5Hhbx+0wa6FS7
+         1F3lcmJ3iFAsb05L7nigE5YRiqtqLh722hzn4AIgU+vYmiqY4Lfmper1J498ESiaRT
+         XlN5dWfXgK+r/ywWOP3F4vuJKH2AM5X6DFjpUAJ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.2 128/131] IB/hfi1: Drop all TID RDMA READ RESP packets after r_next_psn
-Date:   Mon,  5 Aug 2019 15:03:35 +0200
-Message-Id: <20190805125000.558551973@linuxfoundation.org>
+        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
+        Kenneth Graunke <kenneth@whitecape.org>,
+        Jani Nikula <jani.nikula@intel.com>
+Subject: [PATCH 5.2 130/131] drm/i915/perf: fix ICL perf register offsets
+Date:   Mon,  5 Aug 2019 15:03:37 +0200
+Message-Id: <20190805125000.682940232@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -61,93 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kaike Wan <kaike.wan@intel.com>
+From: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
 
-commit f4d46119f214f9a7620b0d18b153d7e0e8c90b4f upstream.
+commit 95eef14cdad150fed43147bcd4f29eea3d0a3f03 upstream.
 
-When a TID sequence error occurs while receiving TID RDMA READ RESP
-packets, all packets after flow->flow_state.r_next_psn should be dropped,
-including those response packets for subsequent segments.
+We got the wrong offsets (could they have changed?). New values were
+computed off an error state by looking up the register offset in the
+context image as written by the HW.
 
-The current implementation will drop the subsequent response packets for
-the segment to complete next, but may accept packets for subsequent
-segments and therefore mistakenly advance the r_next_psn fields for the
-corresponding software flows. This may result in failures to complete
-subsequent segments after the current segment is completed.
-
-The fix is to only use the flow pointed by req->clear_tail for checking
-KDETH PSN instead of finding a flow from the request's flow array.
-
-Fixes: b885d5be9ca1 ("IB/hfi1: Unify the software PSN check for TID RDMA READ/WRITE")
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20190715164540.74174.54702.stgit@awfm-01.aw.intel.com
-Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
+Fixes: 1de401c08fa805 ("drm/i915/perf: enable perf support on ICL")
+Cc: <stable@vger.kernel.org> # v4.18+
+Acked-by: Kenneth Graunke <kenneth@whitecape.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190610081914.25428-1-lionel.g.landwerlin@intel.com
+(cherry picked from commit 8dcfdfb4501012a8d36d2157dc73925715f2befb)
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/hfi1/tid_rdma.c |   42 ----------------------------------
- 1 file changed, 1 insertion(+), 41 deletions(-)
+ drivers/gpu/drm/i915/i915_perf.c |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
---- a/drivers/infiniband/hw/hfi1/tid_rdma.c
-+++ b/drivers/infiniband/hw/hfi1/tid_rdma.c
-@@ -1673,34 +1673,6 @@ static struct tid_rdma_flow *find_flow_i
- 	return NULL;
- }
+--- a/drivers/gpu/drm/i915/i915_perf.c
++++ b/drivers/gpu/drm/i915/i915_perf.c
+@@ -3457,9 +3457,13 @@ void i915_perf_init(struct drm_i915_priv
+ 			dev_priv->perf.oa.ops.enable_metric_set = gen8_enable_metric_set;
+ 			dev_priv->perf.oa.ops.disable_metric_set = gen10_disable_metric_set;
  
--static struct tid_rdma_flow *
--__find_flow_ranged(struct tid_rdma_request *req, u16 head, u16 tail,
--		   u32 psn, u16 *fidx)
--{
--	for ( ; CIRC_CNT(head, tail, MAX_FLOWS);
--	      tail = CIRC_NEXT(tail, MAX_FLOWS)) {
--		struct tid_rdma_flow *flow = &req->flows[tail];
--		u32 spsn, lpsn;
+-			dev_priv->perf.oa.ctx_oactxctrl_offset = 0x128;
+-			dev_priv->perf.oa.ctx_flexeu0_offset = 0x3de;
 -
--		spsn = full_flow_psn(flow, flow->flow_state.spsn);
--		lpsn = full_flow_psn(flow, flow->flow_state.lpsn);
--
--		if (cmp_psn(psn, spsn) >= 0 && cmp_psn(psn, lpsn) <= 0) {
--			if (fidx)
--				*fidx = tail;
--			return flow;
--		}
--	}
--	return NULL;
--}
--
--static struct tid_rdma_flow *find_flow(struct tid_rdma_request *req,
--				       u32 psn, u16 *fidx)
--{
--	return __find_flow_ranged(req, req->setup_head, req->clear_tail, psn,
--				  fidx);
--}
--
- /* TID RDMA READ functions */
- u32 hfi1_build_tid_rdma_read_packet(struct rvt_swqe *wqe,
- 				    struct ib_other_headers *ohdr, u32 *bth1,
-@@ -2790,19 +2762,7 @@ static bool handle_read_kdeth_eflags(str
- 			 * to prevent continuous Flow Sequence errors for any
- 			 * packets that could be still in the fabric.
- 			 */
--			flow = find_flow(req, psn, NULL);
--			if (!flow) {
--				/*
--				 * We can't find the IB PSN matching the
--				 * received KDETH PSN. The only thing we can
--				 * do at this point is report the error to
--				 * the QP.
--				 */
--				hfi1_kern_read_tid_flow_free(qp);
--				spin_unlock(&qp->s_lock);
--				rvt_rc_error(qp, IB_WC_LOC_QP_OP_ERR);
--				return ret;
--			}
-+			flow = &req->flows[req->clear_tail];
- 			if (priv->s_flags & HFI1_R_TID_SW_PSN) {
- 				diff = cmp_psn(psn,
- 					       flow->flow_state.r_next_psn);
++			if (IS_GEN(dev_priv, 10)) {
++				dev_priv->perf.oa.ctx_oactxctrl_offset = 0x128;
++				dev_priv->perf.oa.ctx_flexeu0_offset = 0x3de;
++			} else {
++				dev_priv->perf.oa.ctx_oactxctrl_offset = 0x124;
++				dev_priv->perf.oa.ctx_flexeu0_offset = 0x78e;
++			}
+ 			dev_priv->perf.oa.gen8_valid_ctx_bit = (1<<16);
+ 		}
+ 	}
 
 
