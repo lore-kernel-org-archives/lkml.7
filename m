@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3897DC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:56:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E77C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:56:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F10EA20880
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:56:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3711920657
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:56:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="7jRx/B+K"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="MnqE/VMa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730346AbfHEN4I (ORCPT
+        id S1729899AbfHENzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:56:08 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:4614 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729911AbfHENzq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 5 Aug 2019 09:55:46 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x75Dqrwa026596;
-        Mon, 5 Aug 2019 09:55:39 -0400
-Received: from nam03-co1-obe.outbound.protection.outlook.com (mail-co1nam03lp2054.outbound.protection.outlook.com [104.47.40.54])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2u576712xc-1
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:1472 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729805AbfHENzn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:55:43 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x75DqoCV015406;
+        Mon, 5 Aug 2019 09:55:36 -0400
+Received: from nam01-by2-obe.outbound.protection.outlook.com (mail-by2nam01lp2052.outbound.protection.outlook.com [104.47.34.52])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2u5448sdbw-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 05 Aug 2019 09:55:39 -0400
+        Mon, 05 Aug 2019 09:55:36 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fsV0c7wSju5oXz3MrJNfwhlPXfzP+ZGGhdNT6YfnLC09Ehn7y8Udu9TAfgbrxKtJG33kM1UvRWWh4ZCFaRCLBERVJanSdxXPIQJ7+BKOIlycq99sd4sBle/Jvm3Q7uJ6h8mooeIL7XXzheV6AzDZkoL1LQ0lFj3t8ekkiK2ludnKO2PUPrhQFc9QKTIiGxR61V7tRo0+o2667TlgKYfPgmJdJc+5ANm8gK7BOctsNKZ5xVQRmQ64/s3tWjEI8nf9NfW/Ph7V0bF1Z09gvc1oNPeZRpo920GLgFeH/0xIRVvaMUcF/FjE6C0HFAnx6bnkJQJZJvaF1Gflntz48laBNg==
+ b=ebCyqM3nBEWumVF8fe9lKIbQGJVbFvVBsaPnuKAeOpQ7GRPc/OuPBLXy7OLGMA1ypJRGgxCbUXzoJKJXXLSP0AEu5YRC2uWaPwK0Zt4YyCkOPxGElPeFkjlH62kHV3dodCtPqBCWwOpVRQjBl2n0sJEjghrwmjuJsqOcMZoijxW9U/p+AsYiw0KQxGtf6pULlz+c96mmLDkbWMJxVenojeemjPNJ07ooYPa5SYO4VdkGKdF3Kv/vqBWWCaf/FSJDjTUskq2QxqfPip+soyWIseT8/HVA3kMu2KICBy8QfM7+VzH0XoWRUucSHmfRPL5WHqfcNf+oKrKH1GYM09GxXA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2fGJsVqpRU5Mzv698G1bhEg6K2VsudNEVIFPmka+b0k=;
- b=Ef7Y0QFD5/c5GfD8r/Nyzz1ochAj5v7nMLrimkIFLEuK9gSDJDgT8X4H61j7G2rGTxNr3ICgYqa1zbTyejqMVBWN6TlUkC4Bod7xFuR5wr6YJWpk/Q4JfhDA7Fo3z6gnxLO0jpV/GtqbL+U9CBbhQC1iZQts21g9wXsCwHQqaLB2cbPTO1/rRa2S5Frmq/kz6DPN8XvyeF+vCowAmSnVDPi2JL3Xfnm6rdgS6cFk+LeGh6upIxsPEj7RYo++pG4LpxaLzAgVpQKR0bxodSStHoeIUkM7l6iXP7R7cqQQ5PaqURMKM5yh6qBOzY1iIVsFpb2i89QtKwOuAIrcQW92ug==
+ bh=uSVlBXmLQrbrDr/1UrmkH0PUCXZvePdkxAdhdT5SR9o=;
+ b=fWSOTNjDUdj9w1fyLbQFrhPy6LcfoU+i+kFl5/CsXlcvDOZVsTpH6oy6ACP7npiT9xYRGNCA6MDPlUtL893ywDp6eiBSfUKqDOthGwO56jDZYUnFeZDSOFhdC0Qyi3W33ocKf27NTc5pbAhCDRl9j3hxN5zlRH6ktiL7u7YsjL9HdNm5Igfk5AIQUG2KKTBHS4uOKgANEX6t4ofTCRk2Wa6hEBgCSzkJaJQ0n+n+bCuLR5lQ994tyyE3ddn+KPH3+0wzYOVrotrjMYbz7XmjHTgjWvKd/xU9VR8nPU9q6sUkG647rhWaDxW3u5cmBcguI/Cvr3YKhCYUfEz5qVKc1Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass (sender ip is
  137.71.25.55) smtp.rcpttodomain=vger.kernel.org
  smtp.mailfrom=analog.com;dmarc=bestguesspass action=none
@@ -44,32 +44,32 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2fGJsVqpRU5Mzv698G1bhEg6K2VsudNEVIFPmka+b0k=;
- b=7jRx/B+K+hkUQHQrT8VxS/IBN6PRs7C09cxLMTpn+ZYi9TKC62zpgqij4rI1DvQV418w1zT7fTObCheNKjo7VE924BrvauqMBqOn1hdMO7OcO+GAyxJvYod3/FCAcC0rUd/RpZtRMdDpgvgsmyI/xdx+BpIXROazKQZIZUIziVY=
-Received: from DM5PR03CA0036.namprd03.prod.outlook.com (2603:10b6:4:3b::25) by
- CY1PR03MB2186.namprd03.prod.outlook.com (2a01:111:e400:c61a::9) with
+ bh=uSVlBXmLQrbrDr/1UrmkH0PUCXZvePdkxAdhdT5SR9o=;
+ b=MnqE/VMaGHg4WHSGllkA6FZuYfqXVROXb6Qe0VtYh0MoZCX7p2jpR6fFkMmleuILia+bsI5ZJoHsJfulas8l7zfqLitW96NOKFE12Dv4VDAjFdvf/3bXvX0uWrs/rZgOZfsp42KGryi0Vl4L/EdyNALNnjXImDzcP5mV48gmWho=
+Received: from MWHPR03CA0014.namprd03.prod.outlook.com (2603:10b6:300:117::24)
+ by SN2PR03MB2192.namprd03.prod.outlook.com (2603:10b6:804:c::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2136.17; Mon, 5 Aug
- 2019 13:55:37 +0000
-Received: from BL2NAM02FT012.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::204) by DM5PR03CA0036.outlook.office365.com
- (2603:10b6:4:3b::25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2136.13 via Frontend
- Transport; Mon, 5 Aug 2019 13:55:37 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2136.16; Mon, 5 Aug
+ 2019 13:55:33 +0000
+Received: from BL2NAM02FT022.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::209) by MWHPR03CA0014.outlook.office365.com
+ (2603:10b6:300:117::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2136.14 via Frontend
+ Transport; Mon, 5 Aug 2019 13:55:33 +0000
 Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
  137.71.25.55 as permitted sender) receiver=protection.outlook.com;
  client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
 Received: from nwd2mta1.analog.com (137.71.25.55) by
- BL2NAM02FT012.mail.protection.outlook.com (10.152.77.27) with Microsoft SMTP
+ BL2NAM02FT022.mail.protection.outlook.com (10.152.77.153) with Microsoft SMTP
  Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2136.14
- via Frontend Transport; Mon, 5 Aug 2019 13:55:37 +0000
+ via Frontend Transport; Mon, 5 Aug 2019 13:55:33 +0000
 Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x75DtYZ3016255
+        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x75DtUqo016246
         (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Mon, 5 Aug 2019 06:55:34 -0700
+        Mon, 5 Aug 2019 06:55:30 -0700
 Received: from saturn.ad.analog.com (10.48.65.109) by
  NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Mon, 5 Aug 2019 09:55:36 -0400
+ 14.3.408.0; Mon, 5 Aug 2019 09:55:32 -0400
 From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
 To:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
@@ -77,9 +77,9 @@ CC:     <davem@davemloft.net>, <robh+dt@kernel.org>,
         <mark.rutland@arm.com>, <f.fainelli@gmail.com>,
         <hkallweit1@gmail.com>, <andrew@lunn.ch>,
         Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH 15/16] net: phy: adin: add ethtool get_stats support
-Date:   Mon, 5 Aug 2019 19:54:52 +0300
-Message-ID: <20190805165453.3989-16-alexandru.ardelean@analog.com>
+Subject: [PATCH 13/16] net: phy: adin: implement Energy Detect Powerdown mode
+Date:   Mon, 5 Aug 2019 19:54:50 +0300
+Message-ID: <20190805165453.3989-14-alexandru.ardelean@analog.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190805165453.3989-1-alexandru.ardelean@analog.com>
 References: <20190805165453.3989-1-alexandru.ardelean@analog.com>
@@ -89,24 +89,24 @@ Content-Type: text/plain
 X-ADIRoutedOnPrem: True
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(39860400002)(136003)(346002)(376002)(2980300002)(199004)(189003)(14444005)(2616005)(476003)(186003)(336012)(8676002)(426003)(106002)(7636002)(305945005)(316002)(11346002)(446003)(54906003)(51416003)(4326008)(7696005)(110136005)(76176011)(86362001)(356004)(44832011)(126002)(486006)(6666004)(2201001)(478600001)(36756003)(2906002)(26005)(1076003)(5660300002)(107886003)(70206006)(2870700001)(48376002)(50466002)(8936002)(70586007)(50226002)(47776003)(246002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY1PR03MB2186;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
+X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(39860400002)(396003)(376002)(346002)(2980300002)(199004)(189003)(1076003)(7636002)(486006)(2616005)(446003)(11346002)(36756003)(336012)(476003)(126002)(47776003)(356004)(50466002)(26005)(4326008)(186003)(54906003)(305945005)(86362001)(478600001)(6666004)(5660300002)(48376002)(50226002)(70586007)(8936002)(316002)(70206006)(8676002)(110136005)(246002)(44832011)(426003)(2906002)(14444005)(2201001)(76176011)(7696005)(106002)(107886003)(2870700001)(51416003);DIR:OUT;SFP:1101;SCL:1;SRVR:SN2PR03MB2192;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 5dc05824-e906-4de7-a17f-08d719ac9815
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:CY1PR03MB2186;
-X-MS-TrafficTypeDiagnostic: CY1PR03MB2186:
-X-Microsoft-Antispam-PRVS: <CY1PR03MB2186D2581691944F91B87073F9DA0@CY1PR03MB2186.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Office365-Filtering-Correlation-Id: 2456e675-b11a-4f92-b510-08d719ac9598
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:SN2PR03MB2192;
+X-MS-TrafficTypeDiagnostic: SN2PR03MB2192:
+X-Microsoft-Antispam-PRVS: <SN2PR03MB2192BE5DD50D2670D7F410F7F9DA0@SN2PR03MB2192.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
 X-Forefront-PRVS: 01208B1E18
 X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: VYXhjVxAEAlAHvPXbf2Jv2XXGTRwvtvz0d43k+QUMduwPlbcZxI8wJ+VM++6bOiP4+D0TZ3txQhy3AvXqUUlU+/uU2F1qC6bWEdJJmb/hr9ykH6TQ5Fq4H+njCh03P1cV6KxLZcmwyxr5L1R/5+qnyGDyi7vMbvCXytGTDoAmyLPDsMosvJDqXlu/p2roNvGVvVqZnoDBtbnTtIbcIRpmP8NhzI4TYJ0iSldf8hCnjX7c6rX7AmblPUGsOmVeIytpTbb2tHwpQsbFlLFARYNHtcnJO52x+YRAitz5lJcKdo0tS8c1ACsLpKUoT7cpUtwPIoL/RbCExfxaRf8UPJYPTkjN0GuMRE/CXGPfsfaUM58V5VEfq9jmfk5VLg6NYwtI02SqBorXajN8BTDlY2AbI4KQ87OiCXlNqWWO0Z4Bok=
+X-Microsoft-Antispam-Message-Info: Vk4O59ueEX1Wry/ndbEJAVHSIxrbjaHpBLkiHMCZIPjBoWHaSng9IJAe2PcI/xxl56ZO/4Q8nasWeHlRlslP908Tda+81uJK2cc05G5yAXqjLSn9ZD22dN5vE3k6J18sBnS8uBybvjFlZTJqIr6CH4oQ8Cvc1A5v026yENVPHxEQ/y6OItfF96xjyrc78/hlo7Rzb3q2bVuDxagSqwF6vOagMfL50lZA5lqwjCHeMeescry4IOHOcUGWXw3q2BarzX9/Dkpi2bYlOe0ypJyiAcoKrRs3CnPNTeFQMpyGqLiCkrbBM+rTjDQ5CJ5Tz8TSqY5jAgP4WeRxdjZigvhMBuI7sg++e3OxN/zp2qge96vCGFRz0O3oVQ3Y6GWsZDH86FSnx2YjNqkbeB7S4SL+JAAfyHCcjaoqGxMmlnPED5c=
 X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Aug 2019 13:55:37.1757
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Aug 2019 13:55:33.0126
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5dc05824-e906-4de7-a17f-08d719ac9815
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2456e675-b11a-4f92-b510-08d719ac9598
 X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY1PR03MB2186
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN2PR03MB2192
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-05_07:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
@@ -119,170 +119,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change implements retrieving all the error counters from the PHY.
-The PHY supports several error counters/stats. The `Mean Square Errors`
-status values are only valie when a link is established, and shouldn't be
-incremented. These values characterize the quality of a signal.
-
-The rest of the error counters are self-clearing on read.
-Most of them are reports from the Frame Checker engine that the PHY has.
-
-Not retrieving the `LPI Wake Error Count Register` here, since that is used
-by the PHY framework to check for any EEE errors. And that register is
-self-clearing when read (as per IEEE spec).
+The ADIN PHYs support Energy Detect Powerdown mode, which puts the PHY into
+a low power mode when there is no signal on the wire (typically cable
+unplugged).
+This behavior is enabled by default, but can be disabled via device
+property.
 
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/net/phy/adin.c | 108 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 108 insertions(+)
+ drivers/net/phy/adin.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
 diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-index a1f3456a8504..04896547dac8 100644
+index cf99ccacfeeb..86848444bd98 100644
 --- a/drivers/net/phy/adin.c
 +++ b/drivers/net/phy/adin.c
-@@ -103,6 +103,32 @@ static struct clause22_mmd_map clause22_mmd_map[] = {
- 	{ MDIO_MMD_PCS, MDIO_PCS_EEE_WK_ERR,	ADIN1300_LPI_WAKE_ERR_CNT_REG },
- };
+@@ -27,6 +27,11 @@
+ #define   ADIN1300_AUTO_MDI_EN			BIT(10)
+ #define   ADIN1300_MAN_MDIX_EN			BIT(9)
  
-+struct adin_hw_stat {
-+	const char *string;
-+	u16 reg1;
-+	u16 reg2;
-+	bool do_not_inc;
-+};
++#define ADIN1300_PHY_CTRL_STATUS2		0x0015
++#define   ADIN1300_NRG_PD_EN			BIT(3)
++#define   ADIN1300_NRG_PD_TX_EN			BIT(2)
++#define   ADIN1300_NRG_PD_STATUS		BIT(1)
 +
-+/* Named just like in the datasheet */
-+static struct adin_hw_stat adin_hw_stats[] = {
-+	{ "RxErrCnt",		0x0014,	},
-+	{ "MseA",		0x8402,	0,	true },
-+	{ "MseB",		0x8403,	0,	true },
-+	{ "MseC",		0x8404,	0,	true },
-+	{ "MseD",		0x8405,	0,	true },
-+	{ "FcFrmCnt",		0x940A, 0x940B }, /* FcFrmCntH + FcFrmCntL */
-+	{ "FcLenErrCnt",	0x940C },
-+	{ "FcAlgnErrCnt",	0x940D },
-+	{ "FcSymbErrCnt",	0x940E },
-+	{ "FcOszCnt",		0x940F },
-+	{ "FcUszCnt",		0x9410 },
-+	{ "FcOddCnt",		0x9411 },
-+	{ "FcOddPreCnt",	0x9412 },
-+	{ "FcDribbleBitsCnt",	0x9413 },
-+	{ "FcFalseCarrierCnt",	0x9414 },
-+};
-+
- /**
+ #define ADIN1300_INT_MASK_REG			0x0018
+ #define   ADIN1300_INT_MDIO_SYNC_EN		BIT(9)
+ #define   ADIN1300_INT_ANEG_STAT_CHNG_EN	BIT(8)
+@@ -95,10 +100,12 @@ static struct clause22_mmd_map clause22_mmd_map[] = {
   * struct adin_priv - ADIN PHY driver private data
   * gpiod_reset		optional reset GPIO, to be used in soft_reset() cb
-@@ -113,6 +139,7 @@ struct adin_priv {
+  * eee_modes		EEE modes to advertise after reset
++ * edpd_enabled		true if Energy Detect Powerdown mode is enabled
+  */
+ struct adin_priv {
  	struct gpio_desc	*gpiod_reset;
  	u8			eee_modes;
- 	bool			edpd_enabled;
-+	u64			stats[ARRAY_SIZE(adin_hw_stats)];
++	bool			edpd_enabled;
  };
  
  static int adin_get_phy_internal_mode(struct phy_device *phydev)
-@@ -568,6 +595,81 @@ static int adin_reset(struct phy_device *phydev)
- 	return adin_subsytem_soft_reset(phydev);
+@@ -235,6 +242,18 @@ static int adin_config_init_eee(struct phy_device *phydev)
+ 	return phy_write_mmd(phydev, MDIO_MMD_VEND1, ADIN1300_EEE_ADV_REG, reg);
  }
  
-+static int adin_get_sset_count(struct phy_device *phydev)
++static int adin_config_init_edpd(struct phy_device *phydev)
 +{
-+	return ARRAY_SIZE(adin_hw_stats);
-+}
-+
-+static void adin_get_strings(struct phy_device *phydev, u8 *data)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(adin_hw_stats); i++) {
-+		memcpy(data + i * ETH_GSTRING_LEN,
-+		       adin_hw_stats[i].string, ETH_GSTRING_LEN);
-+	}
-+}
-+
-+static int adin_read_mmd_stat_regs(struct phy_device *phydev,
-+				   struct adin_hw_stat *stat,
-+				   u32 *val)
-+{
-+	int ret;
-+
-+	ret = phy_read_mmd(phydev, MDIO_MMD_VEND1, stat->reg1);
-+	if (ret < 0)
-+		return ret;
-+
-+	*val = (ret & 0xffff);
-+
-+	if (stat->reg2 == 0)
-+		return 0;
-+
-+	ret = phy_read_mmd(phydev, MDIO_MMD_VEND1, stat->reg2);
-+	if (ret < 0)
-+		return ret;
-+
-+	*val <<= 16;
-+	*val |= (ret & 0xffff);
-+
-+	return 0;
-+}
-+
-+static u64 adin_get_stat(struct phy_device *phydev, int i)
-+{
-+	struct adin_hw_stat *stat = &adin_hw_stats[i];
 +	struct adin_priv *priv = phydev->priv;
-+	u32 val;
-+	int ret;
 +
-+	if (stat->reg1 > 0x1f) {
-+		ret = adin_read_mmd_stat_regs(phydev, stat, &val);
-+		if (ret < 0)
-+			return (u64)(~0);
-+	} else {
-+		ret = phy_read(phydev, stat->reg1);
-+		if (ret < 0)
-+			return (u64)(~0);
-+		val = (ret & 0xffff);
-+	}
++	if (priv->edpd_enabled)
++		return phy_set_bits(phydev, ADIN1300_PHY_CTRL_STATUS2,
++				(ADIN1300_NRG_PD_EN | ADIN1300_NRG_PD_TX_EN));
 +
-+	if (stat->do_not_inc)
-+		priv->stats[i] = val;
-+	else
-+		priv->stats[i] += val;
-+
-+	return priv->stats[i];
++	return phy_clear_bits(phydev, ADIN1300_PHY_CTRL_STATUS2,
++			(ADIN1300_NRG_PD_EN | ADIN1300_NRG_PD_TX_EN));
 +}
 +
-+static void adin_get_stats(struct phy_device *phydev,
-+			   struct ethtool_stats *stats, u64 *data)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(adin_hw_stats); i++)
-+		data[i] = adin_get_stat(phydev, i);
-+}
-+
- static int adin_probe(struct phy_device *phydev)
+ static int adin_config_init(struct phy_device *phydev)
  {
- 	struct device *dev = &phydev->mdio.dev;
-@@ -607,6 +709,9 @@ static struct phy_driver adin_driver[] = {
- 		.read_status	= adin_read_status,
- 		.ack_interrupt	= adin_phy_ack_intr,
- 		.config_intr	= adin_phy_config_intr,
-+		.get_sset_count	= adin_get_sset_count,
-+		.get_strings	= adin_get_strings,
-+		.get_stats	= adin_get_stats,
- 		.resume		= genphy_resume,
- 		.suspend	= genphy_suspend,
- 		.read_mmd	= adin_read_mmd,
-@@ -624,6 +729,9 @@ static struct phy_driver adin_driver[] = {
- 		.read_status	= adin_read_status,
- 		.ack_interrupt	= adin_phy_ack_intr,
- 		.config_intr	= adin_phy_config_intr,
-+		.get_sset_count	= adin_get_sset_count,
-+		.get_strings	= adin_get_strings,
-+		.get_stats	= adin_get_stats,
- 		.resume		= genphy_resume,
- 		.suspend	= genphy_suspend,
- 		.read_mmd	= adin_read_mmd,
+ 	phy_interface_t interface, rc;
+@@ -261,6 +280,10 @@ static int adin_config_init(struct phy_device *phydev)
+ 	if (rc < 0)
+ 		return rc;
+ 
++	rc = adin_config_init_edpd(phydev);
++	if (rc < 0)
++		return rc;
++
+ 	if (phydev->interface == interface)
+ 		dev_info(&phydev->mdio.dev, "PHY is using mode '%s'\n",
+ 			 phy_modes(phydev->interface));
+@@ -535,6 +558,10 @@ static int adin_probe(struct phy_device *phydev)
+ 	priv->gpiod_reset = gpiod_reset;
+ 	if (device_property_read_bool(dev, "adi,eee-enabled"))
+ 		priv->eee_modes = (MDIO_EEE_100TX | MDIO_EEE_1000T);
++	if (device_property_read_bool(dev, "adi,disable-energy-detect"))
++		priv->edpd_enabled = false;
++	else
++		priv->edpd_enabled = true;
+ 	phydev->priv = priv;
+ 
+ 	return adin_reset(phydev);
 -- 
 2.20.1
 
