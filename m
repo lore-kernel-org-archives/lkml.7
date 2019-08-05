@@ -2,111 +2,71 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5523BC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C54C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2377D2147A
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:09:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565042998;
-	bh=NAJ16jvh/qchypdVowjtbzNr9+9foVnE+vd1uUZQC7g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VebwhGo0e9ulZP/jGeOFgqTUaWKGhRePyidw8b9Bf8yfYeCDyatgvNciP9YtayjTq
-	 6jsVxDL08OQzdh54VoCoDPnqWviDu9mgX3Pj0ZUxKGpqcVie0ehctT6fenh+RZ7Q9j
-	 tATW9fsMyPB/QD232wnyH8DBj+c0gBsBHmdY+5qM=
+	by mail.kernel.org (Postfix) with ESMTP id 3369F2147A
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:11:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730849AbfHEWJ5 (ORCPT
+        id S1730866AbfHEWLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 18:09:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56178 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 18:11:10 -0400
+Received: from mga04.intel.com ([192.55.52.120]:10190 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728483AbfHEWJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 18:09:56 -0400
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABAF7216B7;
-        Mon,  5 Aug 2019 22:09:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565042995;
-        bh=NAJ16jvh/qchypdVowjtbzNr9+9foVnE+vd1uUZQC7g=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=UdlsxMT9wxnPg84czTc53XMAznVmd7n8JRcYPxB0Fu7FGgY6Vf9s/Dqc+UR+3IfO7
-         LPXWB3QDqCrtcNwuUxU7BaE/2hGz/E0e0XBJLo7Q5km8dkVP/ybkS82B3bEJoI21rs
-         XBRKjIh4YtimZeQp5Or12nvID6o1ifjlu7V5KIpU=
-Received: by mail-qt1-f171.google.com with SMTP id d23so82619847qto.2;
-        Mon, 05 Aug 2019 15:09:55 -0700 (PDT)
-X-Gm-Message-State: APjAAAWqtpm+nZDV1X2usZAWszPpM5jNCK8vVpVFS+yAzUgDQEYw9RYl
-        F6gFcCeQV7+EArf6caBFN7RBLQCEdkWMKIzgpg==
-X-Google-Smtp-Source: APXvYqzN7Oaow/mdIokjxZIROhfoq29oWOHhIQUUHynApmz52dA7L6a16lTZR93u1Os4RUyoD7Omw1XiDFtlZBNZ4Fw=
-X-Received: by 2002:a0c:acef:: with SMTP id n44mr215262qvc.39.1565042994893;
- Mon, 05 Aug 2019 15:09:54 -0700 (PDT)
+        id S1727928AbfHEWLJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 18:11:09 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 15:11:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,350,1559545200"; 
+   d="scan'208";a="202600160"
+Received: from unknown (HELO localhost) ([10.252.52.83])
+  by fmsmga002.fm.intel.com with ESMTP; 05 Aug 2019 15:11:05 -0700
+Date:   Tue, 6 Aug 2019 01:11:04 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>
+Cc:     Tyler Hicks <tyhicks@canonical.com>, jejb@linux.ibm.com,
+        zohar@linux.ibm.com, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org, crazyt2019+lml@gmail.com,
+        nayna@linux.vnet.ibm.com, silviu.vlasceanu@huawei.com
+Subject: Re: [PATCH] KEYS: trusted: allow module init if TPM is inactive or
+ deactivated
+Message-ID: <20190805221029.v75lcoecz6fvvjqt@linux.intel.com>
+References: <20190705163735.11539-1-roberto.sassu@huawei.com>
+ <20190711194811.rfsohbfc3a7carpa@linux.intel.com>
+ <b4454a78-1f1b-cc75-114a-99926e097b05@huawei.com>
+ <20190801163215.mfkagoafkxscesne@linux.intel.com>
+ <e50c4cfa-1f0c-6f4d-1910-010a8d874393@huawei.com>
+ <20190802142721.GA26616@elm>
+ <20190802194226.oiztvme5klkmw6fh@linux.intel.com>
+ <20190802202343.GE26616@elm>
+ <e10f7b04-3d63-435e-180e-72a084ac4bab@huawei.com>
 MIME-Version: 1.0
-References: <20190805122558.5130-1-narmstrong@baylibre.com>
-In-Reply-To: <20190805122558.5130-1-narmstrong@baylibre.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 5 Aug 2019 16:09:43 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+efvvb1UK-Nas0G5XefLWwN7ebnqoevi+W=jj4r3E2dg@mail.gmail.com>
-Message-ID: <CAL_Jsq+efvvb1UK-Nas0G5XefLWwN7ebnqoevi+W=jj4r3E2dg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: net: meson-dwmac: convert to yaml
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        devicetree@vger.kernel.org, netdev <netdev@vger.kernel.org>,
-        linux-amlogic@lists.infradead.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e10f7b04-3d63-435e-180e-72a084ac4bab@huawei.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 5, 2019 at 6:26 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> Now that we have the DT validation in place, let's convert the device tree
-> bindings for the Synopsys DWMAC Glue for Amlogic SoCs over to a YAML schemas.
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
-> Rob,
->
-> I keep getting :
-> .../devicetree/bindings/net/amlogic,meson-dwmac.example.dt.yaml: ethernet@c9410000: reg: [[3376480256, 65536], [3364046144, 8]] is too long
+On Mon, Aug 05, 2019 at 04:50:35PM +0200, Roberto Sassu wrote:
+> I also don't think it is a good idea to remove this functionality.
+> 
+> Jarkko, we were discussing about this issue in another thread, and your
+> answer then (https://lkml.org/lkml/2019/3/21/396) was that it is a
+> priority to fix the regression.
 
-Because snps,dwmac.yaml has:
+OK, I think I'm now in the same page. I guess vacation did the job.
 
-  reg:
-    maxItems: 1
-
-The schemas are applied separately and all have to be valid. You'll
-need to change snps,dwmac.yaml to:
-
-reg:
-  minItems: 1
-  maxItems: 2
-
-
-The schema error messages leave something to be desired. I wish the
-error messages said which schema is throwing the error.
-
-> for the example DT
->
-> and for the board DT :
-> ../amlogic/meson-gxl-s905x-libretech-cc.dt.yaml: ethernet@c9410000: reg: [[0, 3376480256, 0, 65536, 0, 3364046144, 0, 4]] is too short
-> ../amlogic/meson-gxl-s905x-nexbox-a95x.dt.yaml: soc: ethernet@c9410000:reg:0: [0, 3376480256, 0, 65536, 0, 3364046144, 0, 4] is too long
->
-> and I don't know how to get rid of it.
-
-The first issue is the same as the above. The 2nd issue is the use of
-<> in dts files becomes stricter with the schema. Each entry in an
-array needs to be bracketed:
-
-reg = <0x0 0xc9410000 0x0 0x10000>,
-          <0x0 0xc8834540 0x0 0x4>;
-
-Rob
+/Jarkko
