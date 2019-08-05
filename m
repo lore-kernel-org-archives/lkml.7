@@ -2,287 +2,471 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C7DDC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 345CEC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 180E62064A
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:57:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KNZUDma6"
+	by mail.kernel.org (Postfix) with ESMTP id F3B47208C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:57:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565020656;
+	bh=w/I9qYAak8W5IuoRimZZ3SFYjVOYnri1qHi8+mlWGms=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=VzCN/xR4UpBAWUUFGUiv9b+h6BSnRS5XeRquNIfUXmtEnaCiHgmUXB7zSntuuvvuM
+	 y+NiyilYzLHq7mt7aO+nqoLmbb9Y/7Fsx2SdTv811dND9G1gh5LP4e4M1Sfyy+wIWA
+	 pOZxxH0Pu/7z2osdVaIKMPzywEH5czwExS8mhyj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729106AbfHEP5J (ORCPT
+        id S1729255AbfHEP5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 11:57:09 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:49994 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728760AbfHEP5I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 11:57:08 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x75FsNWh057944;
-        Mon, 5 Aug 2019 15:56:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=cbBP8N3KN1Lt/OuHm+MgfpoWdZsU7dxj+qA8fUVOQUI=;
- b=KNZUDma6fITUwU1tvaB+HpNehPHeFdN+M5R8VVACwjv2x5BUhh8NGDrgyEanbuRZ/97U
- qRGBId4ZPb80PXRgRx5w/Tx+l39RLzsQ9f65H/JOZil1CVs+Z8H+HtTylazqmHbKTInW
- +FuLkC33yFB+R5mwj/YMJXo9JiJW4WzCaXtx64AnF5pdQPbf2FKYuW8Cdma7NWSvLdNU
- HCluTFUDxSP9yrQJuWC/DsTUJwIOD2VuOrqOKHfLbx7IpYZBBTNDjM6ezUjoGyKgdU+J
- 8SESmc35GAPz7qxCw5jW8TKSnU4mR/G09hgXDvgxqTr+Z1cY3G38B1kwrKyyB6oOwkNz dA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2u527pg47w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 05 Aug 2019 15:56:49 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x75Fqpfq017054;
-        Mon, 5 Aug 2019 15:56:49 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2u5233baxv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 05 Aug 2019 15:56:49 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x75FukQD028308;
-        Mon, 5 Aug 2019 15:56:47 GMT
-Received: from [192.168.0.110] (/73.243.10.6)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 05 Aug 2019 08:56:46 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3570.1\))
-Subject: Re: [PATCH v3 2/2] mm,thp: Add experimental config option
- RO_EXEC_FILEMAP_HUGE_FAULT_THP
-From:   William Kucharski <william.kucharski@oracle.com>
-In-Reply-To: <20190805132854.5dnqkfaajmstpelm@box.shutemov.name>
-Date:   Mon, 5 Aug 2019 09:56:45 -0600
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Bob Kasten <robert.a.kasten@intel.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Chad Mynhier <chad.mynhier@oracle.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Johannes Weiner <jweiner@fb.com>,
-        Matthew Wilcox <willy@infradead.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <19A86A16-B440-4B73-98FE-922A09484DFD@oracle.com>
-References: <20190731082513.16957-1-william.kucharski@oracle.com>
- <20190731082513.16957-3-william.kucharski@oracle.com>
- <20190801123658.enpchkjkqt7cdkue@box>
- <c8d02a3b-e1ad-2b95-ce15-13d3ed4cca87@oracle.com>
- <20190805132854.5dnqkfaajmstpelm@box.shutemov.name>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-X-Mailer: Apple Mail (2.3570.1)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9340 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908050176
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9340 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908050176
+        Mon, 5 Aug 2019 11:57:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50138 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726559AbfHEP5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 11:57:35 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F1122064A;
+        Mon,  5 Aug 2019 15:57:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565020653;
+        bh=w/I9qYAak8W5IuoRimZZ3SFYjVOYnri1qHi8+mlWGms=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=OMG3CcEl8OL7qnGVxaIkQZP/5nvXeHddWzG6A5vpAjd0NT8Oo6aGBNIc0db6tse9N
+         vHsChOVdnOYT19piqEhkI1He7tscf90HtYisOLu2t+bTiGpUTMd8hK91s6Yv6R13Jy
+         3XJgxqLhrmoENgDRUxP1AIOWO4rIHKvaCUV4RM2M=
+Date:   Mon, 5 Aug 2019 16:57:27 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Martyn Welch <martyn.welch@collabora.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@lists.collabora.co.uk, devicetree@vger.kernel.org,
+        Sergei M <fizik1@yandex.com>
+Subject: Re: [PATCH v4 2/2] iio: light: noa1305: Add support for NOA1305
+Message-ID: <20190805165727.60105086@archlinux>
+In-Reply-To: <20190802114228.1278-2-martyn.welch@collabora.com>
+References: <20190802114228.1278-1-martyn.welch@collabora.com>
+        <20190802114228.1278-2-martyn.welch@collabora.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri,  2 Aug 2019 12:42:28 +0100
+Martyn Welch <martyn.welch@collabora.com> wrote:
 
+> This driver adds the initial support for the ON Semiconductor
+> NOA1305 Ambient Light Sensor.
+> 
+> Originally written by Sergei Miroshnichenko. Found here:
+>   https://github.com/EmcraftSystems/linux-upstream/commit/196d6cf897e632d2cb82d45484bd7a1bfdd5b6d9
+> 
+> Signed-off-by: Sergei M <fizik1@yandex.com>
+> Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
 
-> On Aug 5, 2019, at 7:28 AM, Kirill A. Shutemov <kirill@shutemov.name> =
-wrote:
->=20
->>=20
->> Is there different terminology you'd prefer to see me use here to =
-clarify
->> this?
->=20
-> My point is that maybe we should just use ~HPAGE_P?D_MASK in code. The =
-new
-> HPAGE_P?D_OFFSET doesn't add much for readability in my opinion.
+One minor thing I'll fix up whilst applying.
 
-Fair enough, I'll make that change.
+Applied to the togreg branch of iio.git and pushed out as testing
+to see if we missed anything!
 
->> OK, I can do that; I didn't want to unnecessarily eliminate the
->> VM_BUG_ON_PAGE(PageTransHuge(page)) call for everyone given this
->> is CONFIG experimental code.
->=20
-> If you bring the feature, you bring the feature. Just drop these =
-VM_BUGs.
+Thanks,
 
-OK.
+Jonathan
 
-> I'm not sure. It will be costly comparing to PageTransCompound/Huge as =
-we
-> need to check more than flags.
->=20
-> To exclude hugetlb pages here, use VM_BUG_ON_PAGE(PageHuge(page), =
-page).
-> It will allow to catch wrong usage of the function.
+> ---
+> 
+> Changes:
+> v2:
+>  - Correcting authorship and SOB.
+> v3:
+>  - Improve register define naming.
+>  - Follow IIO convention of interleaving register bit definitions with
+>    register defintions.
+>  - Use proper endian swapping.
+>  - Process raw sensor count into Lux.
+>  - Avoid setting variables to zero when not needed.
+>  - Check return value of i2c writes.
+>  - Implement disabling of regulator as a devm action.
+>  - Remove excessive white spacing.
+> v4:
+>  - Clean up returns
+>  - Remove redundant noa1305_remove()
+>  - Remove redundant interrupt configuration/disabling
+>  - Return raw value and scaling
+> 
+> Note: Scaling added for all possible interation times to ensure the
+>       mechanism utilised would allow this, though chip currently
+>       statically configured to 800mS.
+> 
+>  drivers/iio/light/Kconfig   |  10 ++
+>  drivers/iio/light/Makefile  |   1 +
+>  drivers/iio/light/noa1305.c | 312 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 323 insertions(+)
+>  create mode 100644 drivers/iio/light/noa1305.c
+> 
+> diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
+> index 954c958cfc43..d1db0ec0d0f5 100644
+> --- a/drivers/iio/light/Kconfig
+> +++ b/drivers/iio/light/Kconfig
+> @@ -309,6 +309,16 @@ config MAX44009
+>  	 To compile this driver as a module, choose M here:
+>  	 the module will be called max44009.
+>  
+> +config NOA1305
+> +	tristate "ON Semiconductor NOA1305 ambient light sensor"
+> +	depends on I2C
 
-That will also do it and that way we will better know if it ever =
-happens,
-which of course it shouldn't.
+Needs to select REGMAP_I2C I think. I'll add that if it's all I find.
 
->> This routine's main function other than validation is to make sure =
-the page
->> cache has not been polluted between when we go out to read the large =
-page
->> and when the page is added to the cache (more on that coming up.) For
->> example, the way I was able to tell readahead() was polluting future
->> possible THP mappings is because after a buffered read I would =
-typically see
->> 52 (the readahead size) PAGESIZE pages for the next 2M range in the =
-page
->> cache.
->=20
-> My point is that you should only see compound pages here if they are
-> HPAGE_PMD_ORDER, shouldn't you? Any other order of compound page would =
-be
-> unexpected to say the least.
+> +	help
+> +	 Say Y here if you want to build support for the ON Semiconductor
+> +	 NOA1305 ambient light sensor.
+> +
+> +	 To compile this driver as a module, choose M here:
+> +	 The module will be called noa1305.
+> +
+>  config OPT3001
+>  	tristate "Texas Instruments OPT3001 Light Sensor"
+>  	depends on I2C
+> diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
+> index e40794fbb435..00d1f9b98f39 100644
+> --- a/drivers/iio/light/Makefile
+> +++ b/drivers/iio/light/Makefile
+> @@ -29,6 +29,7 @@ obj-$(CONFIG_LTR501)		+= ltr501.o
+>  obj-$(CONFIG_LV0104CS)		+= lv0104cs.o
+>  obj-$(CONFIG_MAX44000)		+= max44000.o
+>  obj-$(CONFIG_MAX44009)		+= max44009.o
+> +obj-$(CONFIG_NOA1305)		+= noa1305.o
+>  obj-$(CONFIG_OPT3001)		+= opt3001.o
+>  obj-$(CONFIG_PA12203001)	+= pa12203001.o
+>  obj-$(CONFIG_RPR0521)		+= rpr0521.o
+> diff --git a/drivers/iio/light/noa1305.c b/drivers/iio/light/noa1305.c
+> new file mode 100644
+> index 000000000000..b8758aa7b32a
+> --- /dev/null
+> +++ b/drivers/iio/light/noa1305.c
+> @@ -0,0 +1,312 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Support for ON Semiconductor NOA1305 ambient light sensor
+> + *
+> + * Copyright (C) 2016 Emcraft Systems
+> + * Copyright (C) 2019 Collabora Ltd.
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/i2c.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +#include <linux/module.h>
+> +#include <linux/regmap.h>
+> +#include <linux/regulator/consumer.h>
+> +
+> +#define NOA1305_REG_POWER_CONTROL	0x0
+> +#define   NOA1305_POWER_CONTROL_DOWN	0x00
+> +#define   NOA1305_POWER_CONTROL_ON	0x08
+> +#define NOA1305_REG_RESET		0x1
+> +#define   NOA1305_RESET_RESET		0x10
+> +#define NOA1305_REG_INTEGRATION_TIME	0x2
+> +#define   NOA1305_INTEGR_TIME_800MS	0x00
+> +#define   NOA1305_INTEGR_TIME_400MS	0x01
+> +#define   NOA1305_INTEGR_TIME_200MS	0x02
+> +#define   NOA1305_INTEGR_TIME_100MS	0x03
+> +#define   NOA1305_INTEGR_TIME_50MS	0x04
+> +#define   NOA1305_INTEGR_TIME_25MS	0x05
+> +#define   NOA1305_INTEGR_TIME_12_5MS	0x06
+> +#define   NOA1305_INTEGR_TIME_6_25MS	0x07
+> +#define NOA1305_REG_INT_SELECT		0x3
+> +#define   NOA1305_INT_SEL_ACTIVE_HIGH	0x01
+> +#define   NOA1305_INT_SEL_ACTIVE_LOW	0x02
+> +#define   NOA1305_INT_SEL_INACTIVE	0x03
+> +#define NOA1305_REG_INT_THRESH_LSB	0x4
+> +#define NOA1305_REG_INT_THRESH_MSB	0x5
+> +#define NOA1305_REG_ALS_DATA_LSB	0x6
+> +#define NOA1305_REG_ALS_DATA_MSB	0x7
+> +#define NOA1305_REG_DEVICE_ID_LSB	0x8
+> +#define NOA1305_REG_DEVICE_ID_MSB	0x9
+> +
+> +#define NOA1305_DEVICE_ID	0x0519
+> +#define NOA1305_DRIVER_NAME	"noa1305"
+> +
+> +struct noa1305_priv {
+> +	struct i2c_client *client;
+> +	struct regmap *regmap;
+> +	struct regulator *vin_reg;
+> +};
+> +
+> +static int noa1305_measure(struct noa1305_priv *priv)
+> +{
+> +	__le16 data;
+> +	int ret;
+> +
+> +	ret = regmap_bulk_read(priv->regmap, NOA1305_REG_ALS_DATA_LSB, &data,
+> +			       2);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return le16_to_cpu(data);
+> +}
+> +
+> +static int noa1305_scale(struct noa1305_priv *priv, int *val, int *val2)
+> +{
+> +	int data;
+> +	int ret;
+> +
+> +	ret = regmap_read(priv->regmap, NOA1305_REG_INTEGRATION_TIME, &data);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/*
+> +	 * Lux = count / (<Integration Constant> * <Integration Time>)
+> +	 *
+> +	 * Integration Constant = 7.7
+> +	 * Integration Time in Seconds
+> +	 */
+> +	switch (data) {
+> +	case NOA1305_INTEGR_TIME_800MS:
+> +		*val = 100;
+> +		*val2 = 77 * 8;
+> +		break;
+> +	case NOA1305_INTEGR_TIME_400MS:
+> +		*val = 100;
+> +		*val2 = 77 * 4;
+> +	case NOA1305_INTEGR_TIME_200MS:
+> +		*val = 100;
+> +		*val2 = 77 * 2;
+> +		break;
+> +	case NOA1305_INTEGR_TIME_100MS:
+> +		*val = 100;
+> +		*val2 = 77;
+> +		break;
+> +	case NOA1305_INTEGR_TIME_50MS:
+> +		*val = 1000;
+> +		*val2 = 77 * 5;
+> +		break;
+> +	case NOA1305_INTEGR_TIME_25MS:
+> +		*val = 10000;
+> +		*val2 = 77 * 25;
+> +		break;
+> +	case NOA1305_INTEGR_TIME_12_5MS:
+> +		*val = 100000;
+> +		*val2 = 77 * 125;
+> +		break;
+> +	case NOA1305_INTEGR_TIME_6_25MS:
+> +		*val = 1000000;
+> +		*val2 = 77 * 625;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	return IIO_VAL_FRACTIONAL;
+> +}
+> +
+> +static const struct iio_chan_spec noa1305_channels[] = {
+> +	{
+> +		.type = IIO_LIGHT,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
+> +	}
+> +};
+> +
+> +static int noa1305_read_raw(struct iio_dev *indio_dev,
+> +				struct iio_chan_spec const *chan,
+> +				int *val, int *val2, long mask)
+> +{
+> +	int ret = -EINVAL;
+> +	struct noa1305_priv *priv = iio_priv(indio_dev);
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		switch (chan->type) {
+> +		case IIO_LIGHT:
+> +			ret = noa1305_measure(priv);
+> +			if (ret < 0)
+> +				return ret;
+> +			*val = ret;
+> +			return IIO_VAL_INT;
+> +		default:
+> +			break;
+> +		}
+> +		break;
+> +	case IIO_CHAN_INFO_SCALE:
+> +		switch (chan->type) {
+> +		case IIO_LIGHT:
+> +			return noa1305_scale(priv, val, val2);
+> +		default:
+> +			break;
+> +		}
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct iio_info noa1305_info = {
+> +	.read_raw = noa1305_read_raw,
+> +};
+> +
+> +static bool noa1305_writable_reg(struct device *dev, unsigned int reg)
+> +{
+> +	switch (reg) {
+> +	case NOA1305_REG_POWER_CONTROL:
+> +	case NOA1305_REG_RESET:
+> +	case NOA1305_REG_INTEGRATION_TIME:
+> +	case NOA1305_REG_INT_SELECT:
+> +	case NOA1305_REG_INT_THRESH_LSB:
+> +	case NOA1305_REG_INT_THRESH_MSB:
+> +		return true;
+> +	default:
+> +		return false;
+> +	}
+> +}
+> +
+> +static const struct regmap_config noa1305_regmap_config = {
+> +	.name = NOA1305_DRIVER_NAME,
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +	.max_register = NOA1305_REG_DEVICE_ID_MSB,
+> +	.writeable_reg = noa1305_writable_reg,
+> +};
+> +
+> +static void noa1305_reg_remove(void *data)
+> +{
+> +	struct noa1305_priv *priv = data;
+> +
+> +	regulator_disable(priv->vin_reg);
+> +}
+> +
+> +static int noa1305_probe(struct i2c_client *client,
+> +			 const struct i2c_device_id *id)
+> +{
+> +	struct noa1305_priv *priv;
+> +	struct iio_dev *indio_dev;
+> +	struct regmap *regmap;
+> +	__le16 data;
+> +	unsigned int dev_id;
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*priv));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	regmap = devm_regmap_init_i2c(client, &noa1305_regmap_config);
+> +	if (IS_ERR(regmap)) {
+> +		dev_err(&client->dev, "Regmap initialization failed.\n");
+> +		return PTR_ERR(regmap);
+> +	}
+> +
+> +	priv = iio_priv(indio_dev);
+> +
+> +	priv->vin_reg = devm_regulator_get(&client->dev, "vin");
+> +	if (IS_ERR(priv->vin_reg)) {
+> +		dev_err(&client->dev, "get regulator vin failed\n");
+> +		return PTR_ERR(priv->vin_reg);
+> +	}
+> +
+> +	ret = regulator_enable(priv->vin_reg);
+> +	if (ret) {
+> +		dev_err(&client->dev, "enable regulator vin failed\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = devm_add_action_or_reset(&client->dev, noa1305_reg_remove, priv);
+> +	if (ret) {
+> +		dev_err(&client->dev, "addition of devm action failed\n");
+> +		return ret;
+> +	}
+> +
+> +	i2c_set_clientdata(client, indio_dev);
+> +	priv->client = client;
+> +	priv->regmap = regmap;
+> +
+> +	ret = regmap_bulk_read(regmap, NOA1305_REG_DEVICE_ID_LSB, &data, 2);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "ID reading failed: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	dev_id = le16_to_cpu(data);
+> +	if (dev_id != NOA1305_DEVICE_ID) {
+> +		dev_err(&client->dev, "Unknown device ID: 0x%x\n", dev_id);
+> +		return -ENODEV;
+> +	}
+> +
+> +	ret = regmap_write(regmap, NOA1305_REG_POWER_CONTROL,
+> +			   NOA1305_POWER_CONTROL_ON);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "Enabling power control failed\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = regmap_write(regmap, NOA1305_REG_RESET, NOA1305_RESET_RESET);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "Device reset failed\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = regmap_write(regmap, NOA1305_REG_INTEGRATION_TIME,
+> +			   NOA1305_INTEGR_TIME_800MS);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "Setting integration time failed\n");
+> +		return ret;
+> +	}
+> +
+> +	indio_dev->dev.parent = &client->dev;
+> +	indio_dev->info = &noa1305_info;
+> +	indio_dev->channels = noa1305_channels;
+> +	indio_dev->num_channels = ARRAY_SIZE(noa1305_channels);
+> +	indio_dev->name = NOA1305_DRIVER_NAME;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +
+> +	ret = devm_iio_device_register(&client->dev, indio_dev);
+> +	if (ret)
+> +		dev_err(&client->dev, "registering device failed\n");
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct of_device_id noa1305_of_match[] = {
+> +	{ .compatible = "onnn,noa1305" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, noa1305_of_match);
+> +
+> +static const struct i2c_device_id noa1305_ids[] = {
+> +	{ "noa1305", 0 },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, noa1305_id);
+> +
+> +static struct i2c_driver noa1305_driver = {
+> +	.driver = {
+> +		.name		= NOA1305_DRIVER_NAME,
+> +		.of_match_table	= noa1305_of_match,
+> +	},
+> +	.probe		= noa1305_probe,
+> +	.id_table	= noa1305_ids,
+> +};
+> +
+> +module_i2c_driver(noa1305_driver);
+> +
+> +MODULE_AUTHOR("Sergei Miroshnichenko <sergeimir@emcraft.com>");
+> +MODULE_AUTHOR("Martyn Welch <martyn.welch@collabora.com");
+> +MODULE_DESCRIPTION("ON Semiconductor NOA1305 ambient light sensor");
+> +MODULE_LICENSE("GPL");
 
-Yes, compound pages should only be HPAGE_PMD_ORDER.
-
-The routine and the check will need to be updated if we ever can
-allocate/cache larger pages.
-
->> It's my understanding that pages in the page cache should be locked, =
-so I
->> wanted to check for that.
->=20
-> No. They are get locked temporary for some operation, but not all the
-> time.
-
-OK, thanks for that.
-
->> I don't really care if the start of the VMA is suitable, just whether =
-I can map
->> the current faulting page with a THP. As far as I know, there's =
-nothing wrong
->> with mapping all the pages before the VMA hits a properly aligned =
-bound with
->> PAGESIZE pages and then aligned chunks in the middle with THP.
->=20
-> You cannot map any paged as huge into wrongly aligned VMA.
->=20
-> THP's ->index must be aligned to HPAGE_PMD_NR, so if the combination =
-VMA's
-> ->vm_start and ->vm_pgoff doesn't allow for this, you must fallback to
-> mapping the page with PTEs. I don't see it handled properly here.
-
-It was my assumption that if say a VMA started at an address say one =
-page
-before a large page alignment, you could map that page with a PAGESIZE
-page but if VMA size allowed, there was a fault on the next page, and
-VMA size allowed, you could map that next range with a large page, =
-taking
-taking the approach of mapping chunks of the VMA with the largest page
-possible.
-
-Is it that the start of the VMA must always align or that the entire VMA
-must be properly aligned and a multiple of the PMD size (so you either =
-map
-with all large pages or none)?
-
->> This is the page that content was just read to; readpage() will =
-unlock the page
->> when it is done with I/O, but the page needs to be locked before it's =
-inserted
->> into the page cache.
->=20
-> Then you must to lock the page properly with lock_page().
->=20
-> __SetPageLocked() is fine for just allocated pages that was not =
-exposed
-> anywhere. After ->readpage() it's not the case and it's not safe to =
-use
-> __SetPageLocked() for them.
-
-In the current code, it's assumed it is not exposed, because a single =
-read
-of a large page that does no readahead before the page is inserted into =
-the
-cache means there are no external users of the page.
-
-Regardless, I can make this change as part of the changes I will need to =
-to
-reorder when the page is inserted into the cache.
-
->> I can make that change; originally alloc_set_pte() didn't use the =
-second
->> parameter at all when mapping a read-only page.
->>=20
->> Even now, if the page isn't writable, it would only be dereferenced =
-by a
->> VM_BUG_ON_PAGE() call if it's COW.
->=20
-> Please do change this. It has to be future-proof.
-
-OK, thanks.
-
->> My thinking had been if any part of reading a large page and mapping =
-it had
->> failed, the code could just put_page() the newly allocated page and =
-fallback
->> to mapping the page with PAGESIZE pages rather than add a THP to the =
-cache.
->=20
-> I think it's must change. We should not allow inconsistent view on =
-page
-> cache.
-
-Yes, I can see where it would be confusing to anyone looking at it that =
-assumed
-the page must already be in the cache before readpage() is called.
-
->> If mprotect() is called, wouldn't the pages be COWed to PAGESIZE =
-pages the
->> first time the area was written to? I may be way off on this =
-assumption.
->=20
-> Okay, fair enough. COW will happen for private mappings.
->=20
-> But for private mappings you don't need to enforce even RO. All =
-permission
-> mask should be fine.
-
-Thanks.
-
->> Once again, the question is whether we want to make this just RO or =
-RO + EXEC
->> to maintain my goal of just mapping program TEXT via THP. I'm willing =
-to
->> hear arguments either way.
->=20
-> It think the goal is to make feature useful and therefore we need to =
-make
-> it available for widest possible set of people.
->=20
-> I think is should be allowed for RO (based on how file was opened, not =
-on
-> PROT_*) + SHARED and for any PRIVATE mappings.
-
-That makes sense.
-
->> I did that because the existing code just blindly sets VM_MAYWRITE =
-and I
->> obviously didn't want to, so making it a variable allowed me to shut =
-it off
->> if it was a THP mapping.
->=20
-> I think touching VM_MAYWRITE here is wrong. It should reflect what =
-file
-> under the mapping allows.
-
-Fair enough.
-
-Thanks again!
-    -- Bill=
