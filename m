@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B05AFC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2C8C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CB032067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89DFE20880
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:21:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011310;
-	bh=n9eGEAa/Nk6aJ2s5kj9FdOmQGguQr2mEbKZzmIwVJVw=;
+	s=default; t=1565011314;
+	bh=RXq82yXBtpwWT7EC+LA8Ru3p7SQOpZ4Adeaw98q+AbA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=otbSuUtwMTrZnRvqz8j6KEQJYBNXEFOLhLIje6QluNJCSGM1cadxX3iChI2pK5Qdj
-	 NeyxD6Irb8WlioxD5oXcAIgfNpUll18MKEtAXcYeXtKAQW5CKT78yR7eLMNPcZelZ1
-	 nCED8KCbbMmlTKq/z6qDi7tyZkJxuhdPAL6GDyaA=
+	b=m8TvCPs8WeCZB+HA/UlJt7Xf1px3+mljaoM9c08UpVIXLYrPowGplG6TyNBiFGvfP
+	 g/VQCQXXPKZjnVCwtV2SpbdjJP+mW/Z35U3m6F4a4fxl+GkIarDPdJkI09l8XpgeCe
+	 P44h0ZJvaZd4xtWvtpdcjNfk79shTnN5GL13i960=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729859AbfHENVs (ORCPT
+        id S1730586AbfHENVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:21:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57968 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:21:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729152AbfHENVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:21:44 -0400
+        id S1729353AbfHENVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:21:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9F9C2067D;
-        Mon,  5 Aug 2019 13:21:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 237F32067D;
+        Mon,  5 Aug 2019 13:21:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011303;
-        bh=n9eGEAa/Nk6aJ2s5kj9FdOmQGguQr2mEbKZzmIwVJVw=;
+        s=default; t=1565011308;
+        bh=RXq82yXBtpwWT7EC+LA8Ru3p7SQOpZ4Adeaw98q+AbA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lw/1I0JpxZgzmWwU+lnnxqf51jkoL0vO/rpFivTfowgJ49mE6/pzH6RgyzHKdC/X4
-         M6QjWlJB1ykZIgE/MjflC21BkJhBfiAdb8EuGBCtsesqI57qK1xUNBrIkz1Dg9Nipx
-         1rlsDrDHgoH0iP1XAOswfVhDCyW3cOfpnKb6kq0E=
+        b=ZGnI2N964EhzcUj/8TCZx5ot0NnHMzHU1nh7eoatTscRAfe3/h0uOeIz+n1VdCoXL
+         7UPc0XRDpSbNU8ceV4ktv1HY0QaMhsDPpZ48UGzHho6iIw8nqDS0sIqKgBgpQy4BlT
+         AXsuI7wqUCOHEU2UQihPslzv4zGLjAxV9Z5u4RjA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 009/131] arm64: dts: marvell: mcbin: enlarge PCI memory window
-Date:   Mon,  5 Aug 2019 15:01:36 +0200
-Message-Id: <20190805124952.053910776@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 011/131] dmaengine: tegra-apb: Error out if DMA_PREP_INTERRUPT flag is unset
+Date:   Mon,  5 Aug 2019 15:01:38 +0200
+Message-Id: <20190805124952.183362810@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -60,44 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d3446b266a8c72a7bbc94b65f5fc6d206be77d24 ]
+[ Upstream commit dc161064beb83c668e0f85766b92b1e7ed186e58 ]
 
-Running a graphics adapter on the MACCHIATObin fails due to an
-insufficiently sized memory window.
+Apparently driver was never tested with DMA_PREP_INTERRUPT flag being
+unset since it completely disables interrupt handling instead of skipping
+the callbacks invocations, hence putting channel into unusable state.
 
-Enlarge the memory window for the PCIe slot to 512 MiB.
+The flag is always set by all of kernel drivers that use APB DMA, so let's
+error out in otherwise case for consistency. It won't be difficult to
+support that case properly if ever will be needed.
 
-With the patch I am able to use a GT710 graphics adapter with 1 GB onboard
-memory.
-
-These are the mapped memory areas that the graphics adapter is actually
-using:
-
-Region 0: Memory at cc000000 (32-bit, non-prefetchable) [size=16M]
-Region 1: Memory at c0000000 (64-bit, prefetchable) [size=128M]
-Region 3: Memory at c8000000 (64-bit, prefetchable) [size=32M]
-Region 5: I/O ports at 1000 [size=128]
-Expansion ROM at ca000000 [disabled] [size=512K]
-
-Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/dma/tegra20-apb-dma.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
-index 329f8ceeebea1..205071b45a324 100644
---- a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
-@@ -184,6 +184,8 @@
- 	num-lanes = <4>;
- 	num-viewport = <8>;
- 	reset-gpios = <&cp0_gpio2 20 GPIO_ACTIVE_LOW>;
-+	ranges = <0x81000000 0x0 0xf9010000 0x0 0xf9010000 0x0 0x10000
-+		  0x82000000 0x0 0xc0000000 0x0 0xc0000000 0x0 0x20000000>;
- 	status = "okay";
- };
+diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+index ef317c90fbe1e..79e9593815f12 100644
+--- a/drivers/dma/tegra20-apb-dma.c
++++ b/drivers/dma/tegra20-apb-dma.c
+@@ -977,8 +977,12 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
+ 		csr |= tdc->slave_id << TEGRA_APBDMA_CSR_REQ_SEL_SHIFT;
+ 	}
+ 
+-	if (flags & DMA_PREP_INTERRUPT)
++	if (flags & DMA_PREP_INTERRUPT) {
+ 		csr |= TEGRA_APBDMA_CSR_IE_EOC;
++	} else {
++		WARN_ON_ONCE(1);
++		return NULL;
++	}
+ 
+ 	apb_seq |= TEGRA_APBDMA_APBSEQ_WRAP_WORD_1;
+ 
+@@ -1120,8 +1124,12 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_dma_cyclic(
+ 		csr |= tdc->slave_id << TEGRA_APBDMA_CSR_REQ_SEL_SHIFT;
+ 	}
+ 
+-	if (flags & DMA_PREP_INTERRUPT)
++	if (flags & DMA_PREP_INTERRUPT) {
+ 		csr |= TEGRA_APBDMA_CSR_IE_EOC;
++	} else {
++		WARN_ON_ONCE(1);
++		return NULL;
++	}
+ 
+ 	apb_seq |= TEGRA_APBDMA_APBSEQ_WRAP_WORD_1;
  
 -- 
 2.20.1
