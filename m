@@ -2,112 +2,99 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C89C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E37C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F160F206C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:58:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49DB3206C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:58:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="x6ZSwOQb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728653AbfHEM6m (ORCPT
+        id S1728770AbfHEM6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 08:58:42 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:35199 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726508AbfHEM6l (ORCPT
+        Mon, 5 Aug 2019 08:58:54 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33231 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728690AbfHEM6x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 08:58:41 -0400
-Received: from mail-pl1-f197.google.com ([209.85.214.197])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1hucZS-00075M-7e
-        for linux-kernel@vger.kernel.org; Mon, 05 Aug 2019 12:58:38 +0000
-Received: by mail-pl1-f197.google.com with SMTP id n1so46153918plk.11
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 05:58:38 -0700 (PDT)
+        Mon, 5 Aug 2019 08:58:53 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n9so84443321wru.0
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 05:58:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=D1BgNM2O50qMEacQ9ueo5XhVsMsgr663mURR/65nCS8=;
+        b=x6ZSwOQbFU227kVmjbkUTbeCX9UkSrwO9Y8Znms5YvqO/c1EY25vYimVjwyKE5XMlj
+         xJMPeL++r0FG3YpFbrCEe+ky0RgbyXi55r9HvWZJkPtDGGM5+soXNUqG+O6o+sP7aYfD
+         212hWYsFrNbVLrGizdS5xi34j6WrVYVVFaZaZTqpO0hBgtuhzWNwvFwCOlllAmx5vL4q
+         wVpuUveOgy8ouv555qscQY3uQEvTQtI7w6WJW5adzrJgmRnHwX96QTKEfN6Czmayd6ib
+         pEL2h1ow0J8ZumiZ2bDybnyRVgaucZQ2U13go7woATDuA1K7P+UmMSjsMvmGd5jI7RD4
+         ldaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=kLQHkY6IzjLJ/SxKbqZprYGcodxnQqbLc6H8ulCgR/0=;
-        b=Tt+SaEkZv7qhLp3lrY5fd4OmQtH4Roq04c5Fc3NJwOmjdZpVj9YDtwi7pl73MwAbSg
-         h9TmNlSaubJu44IQxb1uc46j4yfG316byaJ1plM4eshs6FzEp5bzudJDBimiXlLc+yyN
-         XVkpthObowPyQbmA7EUJEnEotDy/3YBWAT/NXORHUxvbgJmyDxJH8iwtSeXk6LLHwaga
-         cHfCm9PZ9WLzE+ZRexo6ZnAQXziRZBaSDdbg8wYQW0096M0PBujHJGzzCRZMEYC07uWo
-         cc0iKcXGi4EE2uOLVtU98VbfHU2H+nItgK3gQ6RcwiyxN8WFAEM/GKPLZOTKnkUzQ/rh
-         eGJg==
-X-Gm-Message-State: APjAAAUxsXtoCTFf2reGMwbQDN/RM1QXK/4sDFU3trvVF13CXqnO3xnu
-        lGs71idKdu6lGWfA8SjhwZrs0kv7NUxjzqoxmUkiCDU+GLPUa9Nxcv/3Oan/rCvl555gE/D/QWY
-        7bAvLqVo7JoYzKp56sHug0o6Kw9X1a6+RhfMH5flb7Q==
-X-Received: by 2002:a17:90a:cb8e:: with SMTP id a14mr17818352pju.124.1565009916984;
-        Mon, 05 Aug 2019 05:58:36 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqy6wB7RQJuS893yP0lCto2JC6p6RMOWq5tsJVXCzjroOijdAwdM4YtEXc5wZU7Uw3eYJjb+Ow==
-X-Received: by 2002:a17:90a:cb8e:: with SMTP id a14mr17818334pju.124.1565009916772;
-        Mon, 05 Aug 2019 05:58:36 -0700 (PDT)
-Received: from 2001-b011-380f-37d3-1da7-2297-19d9-489e.dynamic-ip6.hinet.net (2001-b011-380f-37d3-1da7-2297-19d9-489e.dynamic-ip6.hinet.net. [2001:b011:380f:37d3:1da7:2297:19d9:489e])
-        by smtp.gmail.com with ESMTPSA id x24sm81693897pgl.84.2019.08.05.05.58.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 05 Aug 2019 05:58:36 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8;
-        delsp=yes;
-        format=flowed
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v2] USB: Disable USB2 LPM at shutdown
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <46147522-7BC2-4C30-B3E5-6568E9642982@canonical.com>
-Date:   Mon, 5 Aug 2019 20:58:33 +0800
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=D1BgNM2O50qMEacQ9ueo5XhVsMsgr663mURR/65nCS8=;
+        b=OIJdrGl/X2LtXxXxHrV7N4EAL5DLJn+B15SMQAvri+CzfcWLRW82haaJw2o6pB2R9q
+         5tf1hvtURNvXUzamS966Jkwx+T1Z8rMWNZCBpAjQkn+ndFnP7l6O8HqQFLq+umk+JSko
+         6ZQq84+5N3fDOr1/65TzhuMhwD1NMM6g6hO4vlFS9TIC3CNDcSWHsEeG0hdWqr8de7f7
+         jcdL9A4ncxvLLfBCT3yI0M/WxZ7kZU55vuTQ/YtbkwJ/uzbs+O+mAXalXBgpG0RRIXSA
+         CiuYkv2zO5nSrkKxiX0bR1MHeovqLWQ3YueurmxvNi9kyyI5svInww5OlCBjmb2qxktl
+         55fg==
+X-Gm-Message-State: APjAAAVtdqOzOZceA0DfJgWgFzSQS0tv+ojYcLdSno65p6fGHjzrXZrb
+        fxVvT6gzrqYE2a8y2IsZMu7LIQ==
+X-Google-Smtp-Source: APXvYqxjUyHGwnsENRGPnY7OdGXXY3X3GMtZZhvQF/96Pw7p0vEa9V6iBlA2Mnw7rhqJaFvPqAiD3g==
+X-Received: by 2002:adf:c003:: with SMTP id z3mr79675952wre.243.1565009931515;
+        Mon, 05 Aug 2019 05:58:51 -0700 (PDT)
+Received: from radium.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id k9sm15582779wrd.46.2019.08.05.05.58.50
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 05 Aug 2019 05:58:50 -0700 (PDT)
+From:   Fabien Parent <fparent@baylibre.com>
+To:     thierry.reding@gmail.com, robh+dt@kernel.org,
+        matthias.bgg@gmail.com
+Cc:     mark.rutland@arm.com, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Fabien Parent <fparent@baylibre.com>
+Subject: [PATCH 1/2] dt-bindings: pwm: pwm-mediatek: Add documentation for MT8516
+Date:   Mon,  5 Aug 2019 14:58:47 +0200
+Message-Id: <20190805125848.15751-1-fparent@baylibre.com>
+X-Mailer: git-send-email 2.23.0.rc1
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Message-Id: <27A5C1CC-E0A4-4CAF-B81E-90EE76C8A887@canonical.com>
-References: <Pine.LNX.4.44L0.1906061013490.1641-100000@iolanthe.rowland.org>
- <46147522-7BC2-4C30-B3E5-6568E9642982@canonical.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+Add the device-tree documentation for the PWM IP on the MediaTek
+MT8516 SoCs.
 
-at 17:22, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
+Signed-off-by: Fabien Parent <fparent@baylibre.com>
+---
+ Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-> at 22:17, Alan Stern <stern@rowland.harvard.edu> wrote:
->>
->> I agree with Kai-Heng, this seems like a fairly light-weight solution
->> to a reasonable problem.
->
-> Thanks for your review.
->
->> As to the issue of how much it will slow down system shutdowns, I have
->> no idea.  Probably not very much, unless somebody has an unusually
->> large number of USB devices plugged in, but only testing can give a
->> real answer.
->
-> In addition to that, only USB2 devices that enable LPM will slow down  
-> shutdown process.
-> Right now only internally connected USB2 devices enable LPM, so the  
-> numbers are even lower.
->
->> I suppose we could add an HCD flag for host controllers which require
->> this workaround.  Either way, it's probably not a very big deal.
->
-> IMO this is not necessary. Only xHCI that reports hw_lpm_support will be  
-> affected. At least for PC, this only became true after Whiskey Lake.
->
-> Kai-Heng
->
->> Alan Stern
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+index 991728cb46cb..9152bf5afe56 100644
+--- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
++++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+@@ -6,6 +6,7 @@ Required properties:
+    - "mediatek,mt7622-pwm": found on mt7622 SoC.
+    - "mediatek,mt7623-pwm": found on mt7623 SoC.
+    - "mediatek,mt7628-pwm": found on mt7628 SoC.
++   - "mediatek,mt8516-pwm": found on mt8516 SoC.
+  - reg: physical base address and length of the controller's registers.
+  - #pwm-cells: must be 2. See pwm.txt in this directory for a description of
+    the cell format.
+-- 
+2.23.0.rc1
 
-This patch is included in Ubuntu’s kernel for a while now, and there’s no  
-regression report so far.
-Please consider merge this patch.
-
-Kai-Heng
