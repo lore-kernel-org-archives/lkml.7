@@ -4,52 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 908EEC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2066AC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62406216F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:10:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E63EB20880
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:10:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010618;
-	bh=dB18CKiYDObzg0Q42T65d52HEeNUlXSnKibxNIjXYNA=;
+	s=default; t=1565010625;
+	bh=Oz6P3yvKf6wkzTeJ2/NqPW8vYc0v2HrdUwmn9CEeN2Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L8/4Dgeiixo2y/2jkCgBF0mc+/XUUDJ71FVxGRwn4mk8KkI/v6Uo0+cXwQNQ5n9Nt
-	 Ly80XMTpIHlxq1KKvgz/lQZLyPNIrenEuXphzdLu2BlqeCpmmVk3uv3YaLQT726gX5
-	 gO0DqL26AI5oW3ihMKGEJ94IcK0Y1tffkldBzHUo=
+	b=ia1T4nw5sH3hlySfz9tXXmcb+6Ada7Hqyz3LZQyJkiLBCyDzcOjwr2O1grPz1ocxl
+	 6GhQWT8wctvlIAn3Ij652ga6Re1yxhnaOWjNaO8NcHeb4B0nBYW1MRBPWqoafS2Lhq
+	 eKGlSjTJomMcGHAlcyRKCkpkFRhNqeldtOA1rUmo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729975AbfHENKR (ORCPT
+        id S1729996AbfHENKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:10:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49036 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:10:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729137AbfHENKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:10:11 -0400
+        id S1729712AbfHENKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:10:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FD6B216F4;
-        Mon,  5 Aug 2019 13:10:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F1852173B;
+        Mon,  5 Aug 2019 13:10:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010610;
-        bh=dB18CKiYDObzg0Q42T65d52HEeNUlXSnKibxNIjXYNA=;
+        s=default; t=1565010613;
+        bh=Oz6P3yvKf6wkzTeJ2/NqPW8vYc0v2HrdUwmn9CEeN2Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mlf9G2xs50tuYoEQsTxCdVQCuzwcbBW4Qicw17VfH7VBcfxIaa5UrJ/loHoebgrGM
-         dvKdD9cEZKmOr8SbbfQm3OoO+aHMKSoznrTq5szdKnxDDRzVyzEjEhTQOVI1TK4JVT
-         QgLcpRuUcydzdcrrCnx3oDSZ9tr9KTdD9udGncMU=
+        b=erXb5E74tv6bBMT/7XUqU0iPBI5RD8DlS8MF5dCXAmPDWdRI3FipIACGtE/WvSxic
+         jhFHnNBDjDpT1YXNAw6EgcOvHQculZDJxaBsn2i6tZFc/J3WdhzYOuRSHu9ml/hLL7
+         3PrMe6h99VZMhhNARqUD2LEeLz2eDINzXU+bJnA0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Petr Machata <petrm@mellanox.com>,
-        Alex Veber <alexve@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 36/74] mlxsw: spectrum_dcb: Configure DSCP map as the last rule is removed
-Date:   Mon,  5 Aug 2019 15:02:49 +0200
-Message-Id: <20190805124938.737897983@linuxfoundation.org>
+Subject: [PATCH 4.19 37/74] xen/pv: Fix a boot up hang revealed by int3 self test
+Date:   Mon,  5 Aug 2019 15:02:50 +0200
+Message-Id: <20190805124938.827633793@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124935.819068648@linuxfoundation.org>
 References: <20190805124935.819068648@linuxfoundation.org>
@@ -62,75 +67,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit dedfde2fe1c4ccf27179fcb234e2112d065c39bb ]
+[ Upstream commit b23e5844dfe78a80ba672793187d3f52e4b528d7 ]
 
-Spectrum systems use DSCP rewrite map to update DSCP field in egressing
-packets to correspond to priority that the packet has. Whether rewriting
-will take place is determined at the point when the packet ingresses the
-switch: if the port is in Trust L3 mode, packet priority is determined from
-the DSCP map at the port, and DSCP rewrite will happen. If the port is in
-Trust L2 mode, 802.1p is used for packet prioritization, and no DSCP
-rewrite will happen.
+Commit 7457c0da024b ("x86/alternatives: Add int3_emulate_call()
+selftest") is used to ensure there is a gap setup in int3 exception stack
+which could be used for inserting call return address.
 
-The driver determines the port trust mode based on whether any DSCP
-prioritization rules are in effect at given port. If there are any, trust
-level is L3, otherwise it's L2. When the last DSCP rule is removed, the
-port is switched to trust L2. Under that scenario, if DSCP of a packet
-should be rewritten, it should be rewritten to 0.
+This gap is missed in XEN PV int3 exception entry path, then below panic
+triggered:
 
-However, when switching to Trust L2, the driver neglects to also update the
-DSCP rewrite map. The last DSCP rule thus remains in effect, and packets
-egressing through this port, if they have the right priority, will have
-their DSCP set according to this rule.
+[    0.772876] general protection fault: 0000 [#1] SMP NOPTI
+[    0.772886] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.2.0+ #11
+[    0.772893] RIP: e030:int3_magic+0x0/0x7
+[    0.772905] RSP: 3507:ffffffff82203e98 EFLAGS: 00000246
+[    0.773334] Call Trace:
+[    0.773334]  alternative_instructions+0x3d/0x12e
+[    0.773334]  check_bugs+0x7c9/0x887
+[    0.773334]  ? __get_locked_pte+0x178/0x1f0
+[    0.773334]  start_kernel+0x4ff/0x535
+[    0.773334]  ? set_init_arg+0x55/0x55
+[    0.773334]  xen_start_kernel+0x571/0x57a
 
-Fix by first configuring the rewrite map, and only then switching to trust
-L2 and bailing out.
+For 64bit PV guests, Xen's ABI enters the kernel with using SYSRET, with
+%rcx/%r11 on the stack. To convert back to "normal" looking exceptions,
+the xen thunks do 'xen_*: pop %rcx; pop %r11; jmp *'.
 
-Fixes: b2b1dab6884e ("mlxsw: spectrum: Support ieee_setapp, ieee_delapp")
-Signed-off-by: Petr Machata <petrm@mellanox.com>
-Reported-by: Alex Veber <alexve@mellanox.com>
-Tested-by: Alex Veber <alexve@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+E.g. Extracting 'xen_pv_trap xenint3' we have:
+xen_xenint3:
+ pop %rcx;
+ pop %r11;
+ jmp xenint3
+
+As xenint3 and int3 entry code are same except xenint3 doesn't generate
+a gap, we can fix it by using int3 and drop useless xenint3.
+
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Stefano Stabellini <sstabellini@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Andrew Cooper <andrew.cooper3@citrix.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/mellanox/mlxsw/spectrum_dcb.c   | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ arch/x86/entry/entry_64.S    | 1 -
+ arch/x86/include/asm/traps.h | 2 +-
+ arch/x86/xen/enlighten_pv.c  | 2 +-
+ arch/x86/xen/xen-asm_64.S    | 1 -
+ 4 files changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_dcb.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_dcb.c
-index b25048c6c7618..21296fa7f7fbf 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_dcb.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_dcb.c
-@@ -408,14 +408,6 @@ static int mlxsw_sp_port_dcb_app_update(struct mlxsw_sp_port *mlxsw_sp_port)
- 	have_dscp = mlxsw_sp_port_dcb_app_prio_dscp_map(mlxsw_sp_port,
- 							&prio_map);
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index 206df099950ea..e7572a209fbe7 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -1196,7 +1196,6 @@ idtentry stack_segment		do_stack_segment	has_error_code=1
+ #ifdef CONFIG_XEN
+ idtentry xennmi			do_nmi			has_error_code=0
+ idtentry xendebug		do_debug		has_error_code=0
+-idtentry xenint3		do_int3			has_error_code=0
+ #endif
  
--	if (!have_dscp) {
--		err = mlxsw_sp_port_dcb_toggle_trust(mlxsw_sp_port,
--					MLXSW_REG_QPTS_TRUST_STATE_PCP);
--		if (err)
--			netdev_err(mlxsw_sp_port->dev, "Couldn't switch to trust L2\n");
--		return err;
--	}
--
- 	mlxsw_sp_port_dcb_app_dscp_prio_map(mlxsw_sp_port, default_prio,
- 					    &dscp_map);
- 	err = mlxsw_sp_port_dcb_app_update_qpdpm(mlxsw_sp_port,
-@@ -432,6 +424,14 @@ static int mlxsw_sp_port_dcb_app_update(struct mlxsw_sp_port *mlxsw_sp_port)
- 		return err;
- 	}
+ idtentry general_protection	do_general_protection	has_error_code=1
+diff --git a/arch/x86/include/asm/traps.h b/arch/x86/include/asm/traps.h
+index afbc87206886e..b771bb3d159bc 100644
+--- a/arch/x86/include/asm/traps.h
++++ b/arch/x86/include/asm/traps.h
+@@ -40,7 +40,7 @@ asmlinkage void simd_coprocessor_error(void);
+ asmlinkage void xen_divide_error(void);
+ asmlinkage void xen_xennmi(void);
+ asmlinkage void xen_xendebug(void);
+-asmlinkage void xen_xenint3(void);
++asmlinkage void xen_int3(void);
+ asmlinkage void xen_overflow(void);
+ asmlinkage void xen_bounds(void);
+ asmlinkage void xen_invalid_op(void);
+diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
+index 782f98b332f05..1730a26ff6abc 100644
+--- a/arch/x86/xen/enlighten_pv.c
++++ b/arch/x86/xen/enlighten_pv.c
+@@ -597,12 +597,12 @@ struct trap_array_entry {
  
-+	if (!have_dscp) {
-+		err = mlxsw_sp_port_dcb_toggle_trust(mlxsw_sp_port,
-+					MLXSW_REG_QPTS_TRUST_STATE_PCP);
-+		if (err)
-+			netdev_err(mlxsw_sp_port->dev, "Couldn't switch to trust L2\n");
-+		return err;
-+	}
-+
- 	err = mlxsw_sp_port_dcb_toggle_trust(mlxsw_sp_port,
- 					     MLXSW_REG_QPTS_TRUST_STATE_DSCP);
- 	if (err) {
+ static struct trap_array_entry trap_array[] = {
+ 	{ debug,                       xen_xendebug,                    true },
+-	{ int3,                        xen_xenint3,                     true },
+ 	{ double_fault,                xen_double_fault,                true },
+ #ifdef CONFIG_X86_MCE
+ 	{ machine_check,               xen_machine_check,               true },
+ #endif
+ 	{ nmi,                         xen_xennmi,                      true },
++	{ int3,                        xen_int3,                        false },
+ 	{ overflow,                    xen_overflow,                    false },
+ #ifdef CONFIG_IA32_EMULATION
+ 	{ entry_INT80_compat,          xen_entry_INT80_compat,          false },
+diff --git a/arch/x86/xen/xen-asm_64.S b/arch/x86/xen/xen-asm_64.S
+index 417b339e5c8e1..3a6feed76dfc1 100644
+--- a/arch/x86/xen/xen-asm_64.S
++++ b/arch/x86/xen/xen-asm_64.S
+@@ -30,7 +30,6 @@ xen_pv_trap divide_error
+ xen_pv_trap debug
+ xen_pv_trap xendebug
+ xen_pv_trap int3
+-xen_pv_trap xenint3
+ xen_pv_trap xennmi
+ xen_pv_trap overflow
+ xen_pv_trap bounds
 -- 
 2.20.1
 
