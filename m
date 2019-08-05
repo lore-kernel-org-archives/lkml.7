@@ -2,44 +2,44 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A7BBC32754
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:45:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B403AC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FAFD2064A
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:45:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8407C214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:45:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="EDW0a/CJ"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="TAy/GifF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729706AbfHEQpc (ORCPT
+        id S1729833AbfHEQpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 12:45:32 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:39836 "EHLO
+        Mon, 5 Aug 2019 12:45:36 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:39856 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728468AbfHEQp3 (ORCPT
+        by vger.kernel.org with ESMTP id S1728518AbfHEQp3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 5 Aug 2019 12:45:29 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 75D1BC01A7;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 7E4F9C01A8;
         Mon,  5 Aug 2019 16:45:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1565023529; bh=0tXrBzavpJ30SObdk4JISSwIOZOnt+7gyCH6maN+jEo=;
+        t=1565023529; bh=fbtQFB9LCewR+4CQnQA+pjZHqX6A89CQKWKrIGkEz44=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=EDW0a/CJyU5b9qdPQU/06LEjfF9PXlYcCkXlaRM93KRjS020WtwWBJ9Pw7moxZdTk
-         /k+JayEBFpZ162KKS41g5A3Z44YZyVyeIgc24i9+GBJzt9yZq5KjU6B8lCYL8JeycG
-         BlAuqht7gq0VV+ZHwvD9hfvrZ6Q/8aeEYeni2NPaWyy7cDrAl6DRsUvIYwa0AugPYw
-         LYykgv1Ceg0s55v0pRwt1Qrio4UdZmG5KR1Pnt9m4iYGONLLw8cL2/i7qIE+/UV1PD
-         fbvZl2ETbuXgO2DQ0erRUlYLb4DUQ+yp7nNRUxtOVWuGrBkdxo814FgVg852z7KkpB
-         y31WdRpx0KIgw==
+        b=TAy/GifFfCsgt1WBqf69BuaoZfVvRpQfw9TkvdaeQ4SVB2ppxUTsyrZ1cerPpa8QX
+         oh1/Anj+LRTjwj3er1l45O8pjDuiXCFLQv+23KYMhcYr9MsSjlpH8nt3vd7SoDtnO5
+         5OxhK88QSb8laK86oZqiwkvnDqSKk/BDpj4zzupoPECqujYiEWT5vPM65w344xjHuc
+         XZj/7+CE+hOgSMvRan03YA38mF7g3VthpD5gjhdtyR6KPx++gjgwOLjgKSrH1Oe1/Y
+         H4/RmF6/fV4bX+Hl9/QJPon+hLwFDFS7jGXt8qUrro0/Tt5HndFxzfIKjot5V+MPuJ
+         Rti94f84VYrzQ==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 0EB4DA0068;
+        by mailhost.synopsys.com (Postfix) with ESMTP id 36FE5A006D;
         Mon,  5 Aug 2019 16:45:27 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
@@ -51,9 +51,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 03/26] net: stmmac: Fix issues when number of Queues >= 4
-Date:   Mon,  5 Aug 2019 18:44:30 +0200
-Message-Id: <5e95bb1761f9438361f198d744640685a34790ea.1565022597.git.joabreu@synopsys.com>
+Subject: [PATCH net-next 05/26] net: stmmac: xgmac: Implement tx_queue_prio()
+Date:   Mon,  5 Aug 2019 18:44:32 +0200
+Message-Id: <e0536be2fc13bdd7df7815f4863fef57accfab48.1565022597.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1565022597.git.joabreu@synopsys.com>
 References: <cover.1565022597.git.joabreu@synopsys.com>
@@ -64,10 +64,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When queues >= 4 we use different registers but we were not subtracting
-the offset of 4. Fix this.
-
-Found out by Coverity.
+Implement the TX Queue Priority callback in XGMAC core.
 
 Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 ---
@@ -81,54 +78,62 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c   | 4 ++++
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 4 ++++
- 2 files changed, 8 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h      |  4 ++++
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 19 ++++++++++++++++++-
+ 2 files changed, 22 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index 01c2e2d83e76..fc9954e4a772 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -85,6 +85,8 @@ static void dwmac4_rx_queue_priority(struct mac_device_info *hw,
- 	u32 value;
- 
- 	base_register = (queue < 4) ? GMAC_RXQ_CTRL2 : GMAC_RXQ_CTRL3;
-+	if (queue >= 4)
-+		queue -= 4;
- 
- 	value = readl(ioaddr + base_register);
- 
-@@ -102,6 +104,8 @@ static void dwmac4_tx_queue_priority(struct mac_device_info *hw,
- 	u32 value;
- 
- 	base_register = (queue < 4) ? GMAC_TXQ_PRTY_MAP0 : GMAC_TXQ_PRTY_MAP1;
-+	if (queue >= 4)
-+		queue -= 4;
- 
- 	value = readl(ioaddr + base_register);
- 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
+index 86a42bc39d21..b77091161765 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
+@@ -127,6 +127,10 @@
+ #define XGMAC_MTL_RXQ_DMA_MAP1		0x00001034
+ #define XGMAC_QxMDMACH(x)		GENMASK((x) * 8 + 3, (x) * 8)
+ #define XGMAC_QxMDMACH_SHIFT(x)		((x) * 8)
++#define XGMAC_TC_PRTY_MAP0		0x00001040
++#define XGMAC_TC_PRTY_MAP1		0x00001044
++#define XGMAC_PSTC(x)			GENMASK((x) * 8 + 7, (x) * 8)
++#define XGMAC_PSTC_SHIFT(x)		((x) * 8)
+ #define XGMAC_MTL_TXQ_OPMODE(x)		(0x00001100 + (0x80 * (x)))
+ #define XGMAC_TQS			GENMASK(25, 16)
+ #define XGMAC_TQS_SHIFT			16
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-index 03a6a59650ca..85c68b7ee8c6 100644
+index ce6503dfc86d..bfbd5ae11540 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-@@ -108,6 +108,8 @@ static void dwxgmac2_rx_queue_prio(struct mac_device_info *hw, u32 prio,
- 	u32 value, reg;
+@@ -118,6 +118,23 @@ static void dwxgmac2_rx_queue_prio(struct mac_device_info *hw, u32 prio,
+ 	writel(value, ioaddr + reg);
+ }
  
- 	reg = (queue < 4) ? XGMAC_RXQ_CTRL2 : XGMAC_RXQ_CTRL3;
++static void dwxgmac2_tx_queue_prio(struct mac_device_info *hw, u32 prio,
++				   u32 queue)
++{
++	void __iomem *ioaddr = hw->pcsr;
++	u32 value, reg;
++
++	reg = (queue < 4) ? XGMAC_TC_PRTY_MAP0 : XGMAC_TC_PRTY_MAP1;
 +	if (queue >= 4)
 +		queue -= 4;
- 
- 	value = readl(ioaddr + reg);
- 	value &= ~XGMAC_PSRQ(queue);
-@@ -171,6 +173,8 @@ static void dwxgmac2_map_mtl_to_dma(struct mac_device_info *hw, u32 queue,
- 	u32 value, reg;
- 
- 	reg = (queue < 4) ? XGMAC_MTL_RXQ_DMA_MAP0 : XGMAC_MTL_RXQ_DMA_MAP1;
-+	if (queue >= 4)
-+		queue -= 4;
- 
- 	value = readl(ioaddr + reg);
- 	value &= ~XGMAC_QxMDMACH(queue);
++
++	value = readl(ioaddr + reg);
++	value &= ~XGMAC_PSTC(queue);
++	value |= (prio << XGMAC_PSTC_SHIFT(queue)) & XGMAC_PSTC(queue);
++
++	writel(value, ioaddr + reg);
++}
++
+ static void dwxgmac2_prog_mtl_rx_algorithms(struct mac_device_info *hw,
+ 					    u32 rx_alg)
+ {
+@@ -428,7 +445,7 @@ const struct stmmac_ops dwxgmac210_ops = {
+ 	.rx_ipc = dwxgmac2_rx_ipc,
+ 	.rx_queue_enable = dwxgmac2_rx_queue_enable,
+ 	.rx_queue_prio = dwxgmac2_rx_queue_prio,
+-	.tx_queue_prio = NULL,
++	.tx_queue_prio = dwxgmac2_tx_queue_prio,
+ 	.rx_queue_routing = NULL,
+ 	.prog_mtl_rx_algorithms = dwxgmac2_prog_mtl_rx_algorithms,
+ 	.prog_mtl_tx_algorithms = dwxgmac2_prog_mtl_tx_algorithms,
 -- 
 2.7.4
 
