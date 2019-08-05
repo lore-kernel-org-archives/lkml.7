@@ -2,168 +2,93 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7FB1C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2CAC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86E4520856
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:45:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 457F321734
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:46:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="rtsidnR5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gaWYUfwJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728311AbfHEKpc (ORCPT
+        id S1728369AbfHEKqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 06:45:32 -0400
-Received: from vps.xff.cz ([195.181.215.36]:59488 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727349AbfHEKpc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 06:45:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1565001930; bh=W7YU1/q/aKB7zPV20b+aOpwNuBfRX4fYBwxtrKTypcs=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=rtsidnR5e6wz7P8Kq/lk2ZT/uWN8M1hVUELvi6u5HAxdgkTYzZJz32UfKicJ5MkFY
-         iPpXJxY4MVkE9Yl9G9ZH7h1IN7fMV2/EBR+ZGxV7MOmwFDkc5DiQKlxCFp+Hqu/KkU
-         KxZjjI6dvTxMrZlvQg5W9oI6NuwzEhxSzSGfQXgc=
-Date:   Mon, 5 Aug 2019 12:45:29 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        linux-rtc@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Subject: Re: [linux-sunxi] [PATCH 2/3] rtc: sun6i: Add support for H6 RTC
-Message-ID: <20190805104529.z3mex3m2tss7lzlr@core.my.home>
-Mail-Followup-To: Chen-Yu Tsai <wens@csie.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        linux-rtc@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-References: <20190412120730.473-1-megous@megous.com>
- <20190412120730.473-3-megous@megous.com>
- <CAGb2v675j-aCLMgPJOzr9yx1XxsUvHRr_K7VnL=p8mSdwpu2jw@mail.gmail.com>
+        Mon, 5 Aug 2019 06:46:11 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:34137 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727357AbfHEKqL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 06:46:11 -0400
+Received: by mail-lj1-f193.google.com with SMTP id p17so78902712ljg.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 03:46:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=azjj3TFeiqdmOl8nmyercmf7iB34KF89eZoGG/R6Zs4=;
+        b=gaWYUfwJYyttQBMe2nY+8yFL/8R5jK6AQk8xvuMDqQn5mcexQfU+ZUUBmyu+uJP9FD
+         AmKll1bIV4/biJ6Qu5g1juCqirMX0AA9Y7O0FMduDj8D0GDyQdzizwqMTlzy5Bu9gjWv
+         1HnI+DOVGuN2KsQjDbjg/5PnQh5CXxe8LbU1I1jgmfyS4ER7mB+VkEGz9UWTkkKnvIDb
+         AE8kGu/a+T/WRFmIyQppd735PPaioAy1djy1ixvflToH7U7NTeqAlF3eQ9nOCL1KN0gH
+         0asNpJXWqNkEs/u5hVmU5YZuz2wSW0AKsmclxTy6HUY95ONFEY6k/YlWjvb91w9mQ4xa
+         GrwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=azjj3TFeiqdmOl8nmyercmf7iB34KF89eZoGG/R6Zs4=;
+        b=XjVB9rqHChUT3h8coxy9IGIik/z31haN46WghSP+Ev85GUYg3H/FKwm+WinLnEbZVB
+         c4aMiiDCV7VrEq70nWVVkFJgdrHgg+l55ZwJbd+zQKXxidaEUoj2aaYjEeuDzF6f/bUB
+         GKs96ZNpk6w39PXAcGFVwnHC5gVC5XuyyW8nRSSXnItKT76MC5svTFnKShiYmECraast
+         YuKnbyXGJ5hraXpy+Q2/OIG2lS3KyA0YTtJgY5ElNbdRPzQe+p2zEWS3SznMMwUtjfGE
+         I5MMaOtqUg3tzz1HnrgWMlkiXjcCsXkFqGUq5pCA+tXMof+bx/ujupWwySzSI5waZ46A
+         rdIQ==
+X-Gm-Message-State: APjAAAUELgKo6i0s9/mN7Oi0KfK/pdZSqCFMjRXudmRQnAOD9zAMYDr1
+        ZnmZlTUX9Zb2oqj+k52EWbgH/3k7gDQjzKyfEJ7dFQ==
+X-Google-Smtp-Source: APXvYqyclUQUuvXpJI3a3I9xyKZ6YIBTCazGIgPNcBnTvtEx+0Gv4bfEuR07MD49TkWuHW7hIeykHmoPhEdmQSSmqjQ=
+X-Received: by 2002:a2e:781a:: with SMTP id t26mr29583690ljc.28.1565001969218;
+ Mon, 05 Aug 2019 03:46:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGb2v675j-aCLMgPJOzr9yx1XxsUvHRr_K7VnL=p8mSdwpu2jw@mail.gmail.com>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+References: <20190724081313.12934-1-andrew@aj.id.au> <CACRpkdapypySGPrLgSMSNy1fzkca2BfMUGzf3koFWQZ-M5VOvg@mail.gmail.com>
+ <9d0f2b20-e6f6-419c-a866-c4a0dd92aa63@www.fastmail.com> <3691f6cb-2451-43f7-9f00-d5693071ba59@www.fastmail.com>
+ <CACPK8XcWK9Gf=pW5ds=3muoXHAWnyYfHcVSVh+anaTigtMO8yA@mail.gmail.com>
+In-Reply-To: <CACPK8XcWK9Gf=pW5ds=3muoXHAWnyYfHcVSVh+anaTigtMO8yA@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 5 Aug 2019 12:45:57 +0200
+Message-ID: <CACRpkdbb9OFnnG6rN0fL-qA7vBsGze23GgOifAHqxhod=0kRpQ@mail.gmail.com>
+Subject: Re: [PATCH 0/3] ARM: dts: aspeed: Deprecate g[45]-style compatibles
+To:     Joel Stanley <joel@jms.id.au>
+Cc:     Andrew Jeffery <andrew@aj.id.au>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 06:16:14PM +0800, Chen-Yu Tsai wrote:
-> On Fri, Apr 12, 2019 at 8:07 PM megous via linux-sunxi
-> <linux-sunxi@googlegroups.com> wrote:
-> >
-> > From: Ondrej Jirman <megous@megous.com>
-> >
-> > RTC on H6 is mostly the same as on H5 and H3. It has slight differences
-> > mostly in features that are not yet supported by this driver.
-> >
-> > Some differences are already stated in the comments in existing code.
-> > One other difference is that H6 has extra bit in LOSC_CTRL_REG, called
-> > EXT_LOSC_EN to enable/disable external low speed crystal oscillator.
-> >
-> > It also has bit EXT_LOSC_STA in LOSC_AUTO_SWT_STA_REG, to check whether
-> > external low speed oscillator is working correctly.
-> >
-> > This patch adds support for enabling LOSC when necessary:
-> >
-> > - during reparenting
-> > - when probing the clock
-> >
-> > H6 also has capacbility to automatically reparent RTC clock from
-> > external crystal oscillator, to internal RC oscillator, if external
-> > oscillator fails. This is enabled by default. Disable it during
-> > probe.
-> >
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > ---
-> >  drivers/rtc/rtc-sun6i.c | 40 ++++++++++++++++++++++++++++++++++++++--
-> >  1 file changed, 38 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
-> > index 11f56de52179..7375a530c565 100644
-> > --- a/drivers/rtc/rtc-sun6i.c
-> > +++ b/drivers/rtc/rtc-sun6i.c
-> > @@ -41,9 +41,11 @@
-> >  /* Control register */
-> >  #define SUN6I_LOSC_CTRL                                0x0000
-> >  #define SUN6I_LOSC_CTRL_KEY                    (0x16aa << 16)
-> > +#define SUN6I_LOSC_CTRL_AUTO_SWT_BYPASS                BIT(15)
-> 
-> Manual says bit 14? Or is this different from LOSC_AUTO_SWT_EN?
-> 
-> The rest looks ok.
+On Fri, Aug 2, 2019 at 8:15 AM Joel Stanley <joel@jms.id.au> wrote:
 
-To give you more information. This is a new thing in H6 BSP, compared
-to BSPs for previous SoCs (H5/H3).
+> > Joel, do you mind if Linus takes this series through the pinctrl tree, given
+> > the fix to the devicetrees is patch 1/3?
+>
+> It depends if you plan more changes to that part of the device tree
+> this merge window :)
+>
+> Linus, perhaps the safer option is for me to take 1/3 through my tree
+> and you can take the rest through yours?
 
- 20 #define REG_CLK32K_AUTO_SWT_EN                  BIT(14)
- 21 #define REG_CLK32K_AUTO_SWT_BYPASS              BIT(15)
+OK let's proceed like that.
 
-Init sequence changed in H6 BSP to:
-
-646         /*
-647          * Step1: select RTC clock source
-648          */
-649         tmp_data = readl(chip->base + SUNXI_LOSC_CTRL);
-650         tmp_data &= (~REG_CLK32K_AUTO_SWT_EN);
-651
-652         /* Disable auto switch function */
-653         tmp_data |= REG_CLK32K_AUTO_SWT_BYPASS;
-654         writel(tmp_data, chip->base + SUNXI_LOSC_CTRL);
-655
-656         tmp_data = readl(chip->base + SUNXI_LOSC_CTRL);
-657         tmp_data |= (RTC_SOURCE_EXTERNAL | REG_LOSCCTRL_MAGIC);
-658         writel(tmp_data, chip->base + SUNXI_LOSC_CTRL);
-659
-660         /* We need to set GSM after change clock source */
-661         udelay(10);
-662         tmp_data = readl(chip->base + SUNXI_LOSC_CTRL);
-663         tmp_data |= (EXT_LOSC_GSM | REG_LOSCCTRL_MAGIC);
-664         writel(tmp_data, chip->base + SUNXI_LOSC_CTRL);
-665
-
-For older BSPs, the init sequence looked like this:
-
-482         /*
-483          * Step1: select RTC clock source
-484          */
-485         tmp_data = sunxi_rtc_read(SUNXI_LOSC_CTRL_REG);
-486         tmp_data &= (~REG_CLK32K_AUTO_SWT_EN);
-487         tmp_data |= (RTC_SOURCE_EXTERNAL | REG_LOSCCTRL_MAGIC);
-488         tmp_data |= (EXT_LOSC_GSM);
-489         sunxi_rtc_write(tmp_data, SUNXI_LOSC_CTRL_REG);
-490
-
-EXT_LOSC_GSM has values 4 values from low to high, and I guess it configures
-gain for the oscillator's amplifier in the feedback loop of the circuit.
-
-So the new code, for some reason changed from single write to sequence
-of individual writes/config steps:
-
-1) disable auto-switch and enable auto-switch bypass
-2) select RTC clock source (to LOSC)
-  (wait)
-3) configure gain on the LOSC
-
-regards,
-	o.
-
-> ChenYu
+Yours,
+Linus Walleij
