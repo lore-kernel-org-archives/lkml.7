@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 235F5C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C92C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:04:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D08C5216B7
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:04:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79A9320880
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:04:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010277;
-	bh=kGX1jxzuDNRJqOod9t7QrMG4O+Bd/lEDlWmeu/BAsbA=;
+	s=default; t=1565010280;
+	bh=3KBRVhRDiu83YjpGhGpXMuxxGlTDGVg54CdmRe86b0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DojRG86bHfyE3z4Ao9BRAoZcjkfxfcNv6CeP9NltcTACkN/FBFtberd6LDS+flcVt
-	 oT4zZboTps1GPpqW48w5kiy8ReWBDrpzcj1K6e4m9J4DzfswjDetnQvr0UkNRjLLcM
-	 BwjZwkFFpr/ui0K4dmpQXjeYtIW7qTO1ssPXJ5kQ=
+	b=lht4cImOU+Sdy5c4vDYCXAAhhn2oGMwrA3+Vp8JEB3mUtigl2JMOttJhXDmnSlcxU
+	 KI8FcWjWYvU03I5tMzxzbTzCcPBRAiNn0TWA3kT6K+8KCD4ERXH2RRe4eQXEtBBPEN
+	 Ezx+p9Lcmv16qC/hbaIpTMzZlKdc8kaey8UqV4JQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729084AbfHENEf (ORCPT
+        id S1729098AbfHENEj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:04:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40238 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:04:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729053AbfHENEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:04:32 -0400
+        id S1729053AbfHENEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:04:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0921214C6;
-        Mon,  5 Aug 2019 13:04:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3FC02087B;
+        Mon,  5 Aug 2019 13:04:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010271;
-        bh=kGX1jxzuDNRJqOod9t7QrMG4O+Bd/lEDlWmeu/BAsbA=;
+        s=default; t=1565010276;
+        bh=3KBRVhRDiu83YjpGhGpXMuxxGlTDGVg54CdmRe86b0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l7MmsMMQe14UJLfBK5IeGJNA/cqBr2X7wNHpLLOjsAu8qor6vbTjQvrqY87Six/IK
-         dzhStr47peCyEQIXPn+NUZSVXcW3JIrYJf3Oe6yRvgYnxxntkq74O0moPNMA9khjDZ
-         7k3NOpdJNM26W+ehsIVRhiHra8j0+FlHAafmtiPs=
+        b=qqJZIMATUFyBhf7yDHucu30loioRGjQ1s3FobowuSdYF2dFeFSzBE5SgquZexQesv
+         MjOWXplPiZLBpOOii7JHO/1G7kRsonYzSxnqpoVdo/ISKYoEVNdCgsS/5ikpJCvkTx
+         s2CriieStcm9/G/cMGKEsL2wsMCCmo+UtrznnC7c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Petr Cvek <petrcvekcz@gmail.com>,
-        Paul Burton <paul.burton@mips.com>, hauke@hauke-m.de,
-        john@phrozen.org, linux-mips@vger.kernel.org,
-        openwrt-devel@lists.openwrt.org, pakahmar@hotmail.com,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Al Viro <viro@zeniv.linux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 04/22] MIPS: lantiq: Fix bitfield masking
-Date:   Mon,  5 Aug 2019 15:02:41 +0200
-Message-Id: <20190805124919.695465347@linuxfoundation.org>
+Subject: [PATCH 4.4 06/22] fs/adfs: super: fix use-after-free bug
+Date:   Mon,  5 Aug 2019 15:02:43 +0200
+Message-Id: <20190805124920.027806904@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124918.070468681@linuxfoundation.org>
 References: <20190805124918.070468681@linuxfoundation.org>
@@ -62,40 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ba1bc0fcdeaf3bf583c1517bd2e3e29cf223c969 ]
+[ Upstream commit 5808b14a1f52554de612fee85ef517199855e310 ]
 
-The modification of EXIN register doesn't clean the bitfield before
-the writing of a new value. After a few modifications the bitfield would
-accumulate only '1's.
+Fix a use-after-free bug during filesystem initialisation, where we
+access the disc record (which is stored in a buffer) after we have
+released the buffer.
 
-Signed-off-by: Petr Cvek <petrcvekcz@gmail.com>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: hauke@hauke-m.de
-Cc: john@phrozen.org
-Cc: linux-mips@vger.kernel.org
-Cc: openwrt-devel@lists.openwrt.org
-Cc: pakahmar@hotmail.com
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/lantiq/irq.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/adfs/super.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/lantiq/irq.c b/arch/mips/lantiq/irq.c
-index 2e7f60c9fc5df..a7057a06c0961 100644
---- a/arch/mips/lantiq/irq.c
-+++ b/arch/mips/lantiq/irq.c
-@@ -160,8 +160,9 @@ static int ltq_eiu_settype(struct irq_data *d, unsigned int type)
- 			if (edge)
- 				irq_set_handler(d->hwirq, handle_edge_irq);
- 
--			ltq_eiu_w32(ltq_eiu_r32(LTQ_EIU_EXIN_C) |
--				(val << (i * 4)), LTQ_EIU_EXIN_C);
-+			ltq_eiu_w32((ltq_eiu_r32(LTQ_EIU_EXIN_C) &
-+				    (~(7 << (i * 4)))) | (val << (i * 4)),
-+				    LTQ_EIU_EXIN_C);
- 		}
+diff --git a/fs/adfs/super.c b/fs/adfs/super.c
+index 4d4a0df8344fe..b00ae922ece27 100644
+--- a/fs/adfs/super.c
++++ b/fs/adfs/super.c
+@@ -368,6 +368,7 @@ static int adfs_fill_super(struct super_block *sb, void *data, int silent)
+ 	struct buffer_head *bh;
+ 	struct object_info root_obj;
+ 	unsigned char *b_data;
++	unsigned int blocksize;
+ 	struct adfs_sb_info *asb;
+ 	struct inode *root;
+ 	int ret = -EINVAL;
+@@ -419,8 +420,10 @@ static int adfs_fill_super(struct super_block *sb, void *data, int silent)
+ 		goto error_free_bh;
  	}
  
++	blocksize = 1 << dr->log2secsize;
+ 	brelse(bh);
+-	if (sb_set_blocksize(sb, 1 << dr->log2secsize)) {
++
++	if (sb_set_blocksize(sb, blocksize)) {
+ 		bh = sb_bread(sb, ADFS_DISCRECORD / sb->s_blocksize);
+ 		if (!bh) {
+ 			adfs_error(sb, "couldn't read superblock on "
 -- 
 2.20.1
 
