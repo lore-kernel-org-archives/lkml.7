@@ -2,101 +2,118 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85FA6C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2BABC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6330920B1F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A00C620B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:55:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="c2qOfqJX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730350AbfHESw5 (ORCPT
+        id S1730434AbfHESzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 14:52:57 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:41988 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727802AbfHESw4 (ORCPT
+        Mon, 5 Aug 2019 14:55:36 -0400
+Received: from gateway32.websitewelcome.com ([192.185.145.18]:49388 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729383AbfHESzg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 14:52:56 -0400
-Received: by mail-lf1-f66.google.com with SMTP id s19so58850923lfb.9;
-        Mon, 05 Aug 2019 11:52:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tjeoZJSeJkKftPMhGTbICIt4Paaa37S6NJ3KXecwDeY=;
-        b=fvTemu1MFvP3e3MNKI2Pbrf/wHX6q46nVKg2ocsEKct+hxK7sIF9rnoGKcqFrPVDTM
-         VLqJ2qnYHZXXj8nt2uZ/0VdrOJZv32zzb3jLOfkfiSYoez0riQTYLWcj2YioqbkexiuO
-         UYj7pDObX0bvq4tOOF7tu47ytdNawbEIwgl87EsaCt8RIn6f+MQpk0M7oKgHySEF3xkN
-         YEmJIDIhPPD00fOHg7jz6jRLhVlkULOYmBD90AifoPzetFWPefgV9bufc2Tr//X+HF51
-         mnjQ5xvoI+NtG18LsCy1PKiTppZj6Tl40aQMTWdeqtqgGuZ1JJHw7G36SUP9aTj+U16p
-         4WVA==
-X-Gm-Message-State: APjAAAXeQBrS3L8EaTpgQeRGi8sf1TNDZEgbdxj0WUME71fGdGktwy2r
-        9vzq2l7AV/I+2uRu1vuwfFqxUcGvtUA=
-X-Google-Smtp-Source: APXvYqzTljTOe2UuvkTqGvSOMSBz0h17PiloDwVWeaMUgvL8fo5qazYZQnEjG630THUuUjnC7BG+Sg==
-X-Received: by 2002:a19:110:: with SMTP id 16mr7698001lfb.63.1565031174224;
-        Mon, 05 Aug 2019 11:52:54 -0700 (PDT)
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
-        by smtp.gmail.com with ESMTPSA id z23sm15124608lfq.77.2019.08.05.11.52.53
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 05 Aug 2019 11:52:53 -0700 (PDT)
-Received: by mail-lj1-f170.google.com with SMTP id r9so80152710ljg.5;
-        Mon, 05 Aug 2019 11:52:53 -0700 (PDT)
-X-Received: by 2002:a2e:2c14:: with SMTP id s20mr17515926ljs.54.1565031173071;
- Mon, 05 Aug 2019 11:52:53 -0700 (PDT)
+        Mon, 5 Aug 2019 14:55:36 -0400
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id 38C8334705
+        for <linux-kernel@vger.kernel.org>; Mon,  5 Aug 2019 13:55:35 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id ui8thMyMHiQerui8thkigd; Mon, 05 Aug 2019 13:55:35 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=4oitkPyzu59yuzJ8cpXBWop1iWqnQ/XBOg9TEqWZEew=; b=c2qOfqJXrRp8mZENbNXd45JsFc
+        nzQdoM04/hXlmEi1/JZUWbZHkpbKVujwtKpRFHfmNAt/6tD0ud15VmzcVYx2fclip4mcRfRF5CI3N
+        lAUSNO54BG/deJB1A8nj7SNX/1bE+2r/97caxNuaGcgwyJmtA5LekbVqXVt4EWLFQn6uo88urlvRd
+        AkRFgDseS05WZV66TL1jSP7lZhY+Jd++oCWzcHgSl5LGpPoy+8cxJ7w7GWHR2hDetNZbDi/gpxV8E
+        LXds5y8iTnkVbEEPiBIepY9XzLdn+zD0a3QmHlchoBAa65d71az64ryyjX5QUvSR8CKCjjirMOmKr
+        l/o6etQg==;
+Received: from [187.192.11.120] (port=37284 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hui8r-002vrg-QY; Mon, 05 Aug 2019 13:55:33 -0500
+Date:   Mon, 5 Aug 2019 13:55:33 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Cc:     linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] MIPS: BCM63XX: Mark expected switch fall-through
+Message-ID: <20190805185533.GA10551@embeddedor>
 MIME-Version: 1.0
-References: <20190802195017.27845-1-ricardo6142@gmail.com> <20190802145448.0bcd5374@hermes.lan>
-In-Reply-To: <20190802145448.0bcd5374@hermes.lan>
-From:   Helen Koike <helen@koikeco.de>
-Date:   Mon, 5 Aug 2019 15:52:42 -0300
-X-Gmail-Original-Message-ID: <CAPW4XYYUQGungxgvDq5G7zhT3M+N75WrR1HoOFesMtU2hYK2dA@mail.gmail.com>
-Message-ID: <CAPW4XYYUQGungxgvDq5G7zhT3M+N75WrR1HoOFesMtU2hYK2dA@mail.gmail.com>
-Subject: Re: [Lkcamp] [PATCH] isdn: hysdn: fix code style error from checkpatch
-To:     Stephen Hemminger <stephen@networkplumber.org>
-Cc:     Ricardo Bruno Lopes da Silva <ricardo6142@gmail.com>,
-        devel@driverdev.osuosl.org, Karsten Keil <isdn@linux-pingi.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org,
-        netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.11.120
+X-Source-L: No
+X-Exim-ID: 1hui8r-002vrg-QY
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [187.192.11.120]:37284
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 17
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Mark switch cases where we are expecting to fall through.
 
-On Fri, Aug 2, 2019 at 6:55 PM Stephen Hemminger
-<stephen@networkplumber.org> wrote:
->
-> On Fri,  2 Aug 2019 19:50:17 +0000
-> Ricardo Bruno Lopes da Silva <ricardo6142@gmail.com> wrote:
->
-> > Fix error bellow from checkpatch.
-> >
-> > WARNING: Block comments use * on subsequent lines
-> > +/***********************************************************
-> > +
-> >
-> > Signed-off-by: Ricardo Bruno Lopes da Silva <ricardo6142@gmail.com>
->
-> Read the TODO, these drivers are scheduled for removal, so changes
-> are not helpful at this time.
+This patch fixes the following warning (Building: bcm63xx_defconfig mips):
 
-I'm sorry, it was me who suggested Ricardo to make this change
-as his first contribution, I didn't see the TODO file.
+arch/mips/pci/ops-bcm63xx.c: In function ‘bcm63xx_pcie_can_access’:
+arch/mips/pci/ops-bcm63xx.c:474:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   if (PCI_SLOT(devfn) == 0)
+      ^
+arch/mips/pci/ops-bcm63xx.c:477:2: note: here
+  default:
+  ^~~~~~~
 
-Ricardo, it would be great if you could send a patch to another staging driver
-to get starting and to learn how the kernel development cycle works.
-Feel free to ping me or the lkcamp group if you want some pointers/guidance.
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ arch/mips/pci/ops-bcm63xx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks both for your contribution.
-Helen
+diff --git a/arch/mips/pci/ops-bcm63xx.c b/arch/mips/pci/ops-bcm63xx.c
+index d02eb9d16b55..925c72348fb6 100644
+--- a/arch/mips/pci/ops-bcm63xx.c
++++ b/arch/mips/pci/ops-bcm63xx.c
+@@ -474,6 +474,7 @@ static int bcm63xx_pcie_can_access(struct pci_bus *bus, int devfn)
+ 		if (PCI_SLOT(devfn) == 0)
+ 			return bcm_pcie_readl(PCIE_DLSTATUS_REG)
+ 					& DLSTATUS_PHYLINKUP;
++		/* else, fall through */
+ 	default:
+ 		return false;
+ 	}
+-- 
+2.22.0
 
->
-> _______________________________________________
-> Lkcamp mailing list
-> Lkcamp@lists.libreplanetbr.org
-> https://lists.libreplanetbr.org/mailman/listinfo/lkcamp
