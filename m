@@ -2,111 +2,139 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4638C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 644C8C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B261220856
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3321D20679
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:37:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SdYRFXoz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728388AbfHEKg4 (ORCPT
+        id S1728393AbfHEKh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 06:36:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47774 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727328AbfHEKg4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 06:36:56 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7C2F33084025;
-        Mon,  5 Aug 2019 10:36:55 +0000 (UTC)
-Received: from localhost (holly.tpb.lab.eng.brq.redhat.com [10.43.134.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9C22760603;
-        Mon,  5 Aug 2019 10:36:53 +0000 (UTC)
-Date:   Mon, 5 Aug 2019 12:36:52 +0200
-From:   Miroslav Lichvar <mlichvar@redhat.com>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Hubert Feurstein <h.feurstein@gmail.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [RFC] net: dsa: mv88e6xxx: ptp: improve phc2sys precision for
- mv88e6xxx switch in combination with imx6-fec
-Message-ID: <20190805103652.GA16411@localhost>
-References: <20190802163248.11152-1-h.feurstein@gmail.com>
- <CA+h21hr835sdvtgVOA2M9SWeCXDOrDG1S3FnNgJd_9NP2X_TaQ@mail.gmail.com>
+        Mon, 5 Aug 2019 06:37:56 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55200 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727349AbfHEKhz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 06:37:55 -0400
+Received: by mail-wm1-f68.google.com with SMTP id p74so74197963wme.4
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 03:37:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=EjSGNU5tuMFasj89k5pfoAkxeWuwm7YGZxI63pDJurY=;
+        b=SdYRFXozELsThSHXdS1mXooull3R6J9nnf8C9J4LG2rf8Ay/tHpcXw2sFKAZoIllXB
+         UKzi8TW1M0OqDdoMJIDgbNPtrLtVsqGNe/0mrOegp1PJbxsi91tSM2AMp05i+GQJGWfv
+         0ndxMSUXoF6zD4BAG4BkQVA5ggAsEF1fWdZLuxRZwHQxF2mE9tNSwMUHD6NPuvpOd/pG
+         t6FqshJ99YgzsFLuWKobI7n04sKxA23fNY0aWKPCmWnE/D5C39GPb0eyMHtNpKwaD/mJ
+         4ho5THOfnm4/3mlbtxwCfPSP8ZB7VdziBnItzlaaDFyKQ7bhlLHbMKVB7phZr+csRiRE
+         XmCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=EjSGNU5tuMFasj89k5pfoAkxeWuwm7YGZxI63pDJurY=;
+        b=apGVaYONhH+9sKzMGCEnnYZNNNVxEYdTaOoR9xgLUgwR61vruxXsUGTKeAG5z+GwH9
+         RVUvcAuFdSligtIQhly6RV9bDL5svaAiVTxNCdxN0NGY6q9DyzAlE3And6beWNCwg83O
+         Hny+BXWYJ+szFUb1deuvHmdSuPNeOdvt/X4cbHhEKeIzZNSnpfxxAmnsGeGb82okWfdL
+         bH28F6ynC+2Xfy1mRbPrWE5WONmXTGpMVrFwfv4NNtR3tt4Lhd8whSM9BsORVJYmnIgq
+         qAIQ67Pw+zHNvTN7RAAOQju+mdvwGOrbvdgmeRDFOmsSuHFM+lJaXMJy4j5u1uYPvNrd
+         SKfw==
+X-Gm-Message-State: APjAAAU0+rA8vk/DIeHI9Ji1XZ42+sQ4aaw/r7/gd32wOBI7x39VIetw
+        z4YS7o3rdZ/1TdDgLZVoGuRprQ==
+X-Google-Smtp-Source: APXvYqyfPy8bJ4jliIHsN8Aii8j0f6KsqZMMACwhVIeHmj6Cf501bv9kzRahA7ZUnqifBzzHRD/S/w==
+X-Received: by 2002:a1c:cfc3:: with SMTP id f186mr17103441wmg.134.1565001472966;
+        Mon, 05 Aug 2019 03:37:52 -0700 (PDT)
+Received: from dell ([109.180.115.177])
+        by smtp.gmail.com with ESMTPSA id o11sm79528209wmh.37.2019.08.05.03.37.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 05 Aug 2019 03:37:52 -0700 (PDT)
+Date:   Mon, 5 Aug 2019 11:37:50 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v3 0/4] backlight: Expose brightness curve type through
+ sysfs
+Message-ID: <20190805103750.GG4739@dell>
+References: <20190709190007.91260-1-mka@chromium.org>
+ <20190722235926.GA250418@google.com>
+ <20190725111541.GA23883@dell>
+ <20190725171726.GD250418@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CA+h21hr835sdvtgVOA2M9SWeCXDOrDG1S3FnNgJd_9NP2X_TaQ@mail.gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Mon, 05 Aug 2019 10:36:55 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190725171726.GD250418@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 12:54:49PM +0300, Vladimir Oltean wrote:
-> - Along the lines of the above, I wonder how badly would the
-> maintainers shout at the proposal of adding a struct
-> ptp_system_timestamp pointer and its associated lock in struct device.
-> That way at least you don't have to change the API, like you did with
-> mdiobus_write_nested_ptp. Relatively speaking, this is the least
-> amount of intrusion (although, again, far from beautiful).
+On Thu, 25 Jul 2019, Matthias Kaehlcke wrote:
 
-That would make sense to me, if there are other drivers that could use
-it.
+> On Thu, Jul 25, 2019 at 12:15:41PM +0100, Lee Jones wrote:
+> > On Mon, 22 Jul 2019, Matthias Kaehlcke wrote:
+> > 
+> > > On Tue, Jul 09, 2019 at 12:00:03PM -0700, Matthias Kaehlcke wrote:
+> > > > Backlight brightness curves can have different shapes. The two main
+> > > > types are linear and non-linear curves. The human eye doesn't
+> > > > perceive linearly increasing/decreasing brightness as linear (see
+> > > > also 88ba95bedb79 "backlight: pwm_bl: Compute brightness of LED
+> > > > linearly to human eye"), hence many backlights use non-linear (often
+> > > > logarithmic) brightness curves. The type of curve is currently opaque
+> > > > to userspace, so userspace often relies on more or less reliable
+> > > > heuristics (like the number of brightness levels) to decide whether
+> > > > to treat a backlight device as linear or non-linear.
+> > > > 
+> > > > Export the type of the brightness curve via a new sysfs attribute.
+> > > > 
+> > > > Matthias Kaehlcke (4):
+> > > >   MAINTAINERS: Add entry for stable backlight sysfs ABI documentation
+> > > >   backlight: Expose brightness curve type through sysfs
+> > > >   backlight: pwm_bl: Set scale type for CIE 1931 curves
+> > > >   backlight: pwm_bl: Set scale type for brightness curves specified in
+> > > >     the DT
+> > > > 
+> > > >  .../ABI/testing/sysfs-class-backlight         | 26 ++++++++++++++
+> > > >  MAINTAINERS                                   |  2 ++
+> > > >  drivers/video/backlight/backlight.c           | 19 ++++++++++
+> > > >  drivers/video/backlight/pwm_bl.c              | 35 ++++++++++++++++++-
+> > > >  include/linux/backlight.h                     |  8 +++++
+> > > >  5 files changed, 89 insertions(+), 1 deletion(-)
+> > > >  create mode 100644 Documentation/ABI/testing/sysfs-class-backlight
+> > > 
+> > > ping, any comments on v3?
+> > 
+> > Looks like PATCH 2/4 still needs seeing to.
+> 
+> The patch currently doesn't have any comments.
+> 
+> Do you see any specific things that need improvement? If so, could you
+> comment on the patch?
 
-> I also added Miroslav Lichvar, who originally created the
-> PTP_SYS_OFFSET_EXTENDED ioctl, maybe he can share some ideas on how it
-> is best served.
-
-The idea behind that ioctl was to allow drivers to take the system
-timestamps as close to the reading of the HW clock as possible,
-excluding delays (and jitter) due to other operations that are
-necessary to get that timestamp. In the ethernet drivers that was a
-single PCI read. If in this case it's a "write" operation that
-triggers the reading of the HW clock, then I think the patch is
-using is the ptp_read_system_*ts() calls correctly.
-
-> > --- a/drivers/net/ethernet/freescale/fec_main.c
-> > +++ b/drivers/net/ethernet/freescale/fec_main.c
-> > @@ -1814,11 +1814,25 @@ static int fec_enet_mdio_write(struct mii_bus *bus, int mii_id, int regnum,
-> >
-> >         reinit_completion(&fep->mdio_done);
-> >
-> > -       /* start a write op */
-> > -       writel(FEC_MMFR_ST | FEC_MMFR_OP_WRITE |
-> > -               FEC_MMFR_PA(mii_id) | FEC_MMFR_RA(regnum) |
-> > -               FEC_MMFR_TA | FEC_MMFR_DATA(value),
-> > -               fep->hwp + FEC_MII_DATA);
-> > +       if (bus->ptp_sts) {
-> > +               unsigned long flags = 0;
-> > +               local_irq_save(flags);
-> > +               __iowmb();
-> > +               /* >Take the timestamp *after* the memory barrier */
-> > +               ptp_read_system_prets(bus->ptp_sts);
-> > +               writel_relaxed(FEC_MMFR_ST | FEC_MMFR_OP_WRITE |
-> > +                       FEC_MMFR_PA(mii_id) | FEC_MMFR_RA(regnum) |
-> > +                       FEC_MMFR_TA | FEC_MMFR_DATA(value),
-> > +                       fep->hwp + FEC_MII_DATA);
-> > +               ptp_read_system_postts(bus->ptp_sts);
-> > +               local_irq_restore(flags);
-> > +       } else {
-> > +               /* start a write op */
-> > +               writel(FEC_MMFR_ST | FEC_MMFR_OP_WRITE |
-> > +                       FEC_MMFR_PA(mii_id) | FEC_MMFR_RA(regnum) |
-> > +                       FEC_MMFR_TA | FEC_MMFR_DATA(value),
-> > +                       fep->hwp + FEC_MII_DATA);
-> > +       }
+It needs Daniel T's Ack.
 
 -- 
-Miroslav Lichvar
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
