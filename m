@@ -2,165 +2,101 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C623EC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9EF2C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9522820B1F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:28:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C98A20B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:28:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Ss58XvFH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729289AbfHEP2I (ORCPT
+        id S1729701AbfHEP2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 11:28:08 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:54342 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728801AbfHEP2I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 11:28:08 -0400
-Received: by mail-io1-f72.google.com with SMTP id n8so92465367ioo.21
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 08:28:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=aGIXnUc/O2gYmPtjAdqfNPS+pIqx/MJop+VG9TNzZnw=;
-        b=C2VNEClNcyv4dJmr8PPlF3kqdw3k8pJ3i1rosmPLg/a5zQNVjJt8JjaxfgrsOlDsEN
-         4nRDBCbl2PmXxbpNKB2fJ3mdmfcaTLfFnUAbGcIfg9otUAdkVhIfyAF//C+KX0t0XYq/
-         OwMmIc6IexoDiW6Pvn7N+93sQApyRXq7fyauYB6EQaqX3HOckz9mPZDodA2N8YlQ3ayR
-         aQaAt8ZkbHzkL5tmq5ODiymxzm4iOvu59FciDEbk/AYQM0QFIT1PSG1IxDht3E+kU0Nc
-         xtXoNFOTfb92YdiH9/Hi9NeqTawpDx8idJ2275cNXoyNpCCs1uCZYZLdVMGHP0UFjttW
-         jbkw==
-X-Gm-Message-State: APjAAAWV/3jXLg6fWw9QfZBWfNWT1gS+39Nn1nLh4cE2N1KRq9lZddiq
-        Fu8YBfp6Q5zZ0reEiM7XF0IRRSPEOvf/Hpcn1g0CzaIHXa5s
-X-Google-Smtp-Source: APXvYqyd3iW3HIS78ZsmeYpofVefk/IPsPQjA8/vcnzarlBzC6/XDGvBlXQ5IpupZ3/0jVrAUF+aR7dZt8HTRN8p+cN2sLZTBMWH
+        Mon, 5 Aug 2019 11:28:36 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:34444 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728801AbfHEP2g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 11:28:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=i1UVO/cNdQzQGNtCSgGelcu02jpY/mg7+r1uSOQCzI8=; b=Ss58XvFHgvOpHFVAAZKk6f7lbz
+        gmRUzMNdJG202xX26oPNRAa61YNJB+b7AxhS9/5xcg59UsHZt6Szwy6BR5y1MGitISVxZ4eUiWrwj
+        goxLQ0SP1Y70nGM52iqa3JsJlJJR3wy0//WpqNolgGmG+D029Kc72hgvqGkrlsS0N4bI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hueuW-0007vG-UU; Mon, 05 Aug 2019 17:28:32 +0200
+Date:   Mon, 5 Aug 2019 17:28:32 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, davem@davemloft.net,
+        robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com,
+        hkallweit1@gmail.com
+Subject: Re: [PATCH 15/16] net: phy: adin: add ethtool get_stats support
+Message-ID: <20190805152832.GT24275@lunn.ch>
+References: <20190805165453.3989-1-alexandru.ardelean@analog.com>
+ <20190805165453.3989-16-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-X-Received: by 2002:a5d:8a10:: with SMTP id w16mr28701728iod.175.1565018887012;
- Mon, 05 Aug 2019 08:28:07 -0700 (PDT)
-Date:   Mon, 05 Aug 2019 08:28:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d3c7e0058f605a53@google.com>
-Subject: INFO: rcu detected stall in __do_softirq
-From:   syzbot <syzbot+6593c6b8c8b66a07cd98@syzkaller.appspotmail.com>
-To:     bp@alien8.de, gregkh@linuxfoundation.org, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, mingo@redhat.com, nstange@suse.de,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        x86@kernel.org, yakui.zhao@intel.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190805165453.3989-16-alexandru.ardelean@analog.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+> +struct adin_hw_stat {
+> +	const char *string;
 
-syzbot found the following crash on:
+> +static void adin_get_strings(struct phy_device *phydev, u8 *data)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(adin_hw_stats); i++) {
+> +		memcpy(data + i * ETH_GSTRING_LEN,
+> +		       adin_hw_stats[i].string, ETH_GSTRING_LEN);
 
-HEAD commit:    882e8691 Add linux-next specific files for 20190801
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=17fc120c600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=466b331af3f34e94
-dashboard link: https://syzkaller.appspot.com/bug?extid=6593c6b8c8b66a07cd98
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16b216b2600000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+6593c6b8c8b66a07cd98@syzkaller.appspotmail.com
-
-rcu: INFO: rcu_preempt self-detected stall on CPU
-rcu: 	1-...!: (1 ticks this GP) idle=b66/1/0x4000000000000004  
-softirq=28179/28180 fqs=1
-	(t=29639 jiffies g=24749 q=37154)
-NMI backtrace for cpu 1
-CPU: 1 PID: 16869 Comm: syz-executor.5 Not tainted 5.3.0-rc2-next-20190801  
-#57
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  <IRQ>
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  nmi_cpu_backtrace.cold+0x70/0xb2 lib/nmi_backtrace.c:101
-  nmi_trigger_cpumask_backtrace+0x23b/0x28b lib/nmi_backtrace.c:62
-  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
-  trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
-  rcu_dump_cpu_stacks+0x183/0x1cf kernel/rcu/tree_stall.h:254
-  print_cpu_stall kernel/rcu/tree_stall.h:455 [inline]
-  check_cpu_stall kernel/rcu/tree_stall.h:529 [inline]
-  rcu_pending kernel/rcu/tree.c:2736 [inline]
-  rcu_sched_clock_irq.cold+0x4dd/0xc13 kernel/rcu/tree.c:2183
-  update_process_times+0x32/0x80 kernel/time/timer.c:1724
-  tick_sched_handle+0xa2/0x190 kernel/time/tick-sched.c:167
-  tick_sched_timer+0x53/0x140 kernel/time/tick-sched.c:1299
-  __run_hrtimer kernel/time/hrtimer.c:1493 [inline]
-  __hrtimer_run_queues+0x364/0xe40 kernel/time/hrtimer.c:1555
-  hrtimer_interrupt+0x314/0x770 kernel/time/hrtimer.c:1617
-  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1068 [inline]
-  smp_apic_timer_interrupt+0x160/0x610 arch/x86/kernel/apic/apic.c:1093
-  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:828
-RIP: 0010:ffs arch/x86/include/asm/bitops.h:297 [inline]
-RIP: 0010:__do_softirq+0x227/0x98c kernel/softirq.c:280
-Code: c7 c0 b0 f4 d2 88 48 c1 e8 03 42 80 3c 30 00 0f 85 b1 06 00 00 48 83  
-3d 96 f2 72 01 00 0f 84 d6 05 00 00 fb 66 0f 1f 44 00 00 <b8> ff ff ff ff  
-48 c7 45 c8 00 91 c0 88 0f bc 45 d4 83 c0 01 89 45
-RSP: 0018:ffff8880ae909f18 EFLAGS: 00000282 ORIG_RAX: ffffffffffffff13
-RAX: 1ffffffff11a5e96 RBX: ffff88809aa061c0 RCX: 1ffffffff134c0be
-RDX: 0000000000000000 RSI: ffffffff8177a50e RDI: ffffffff876001fc
-RBP: ffff8880ae909f98 R08: ffff88809aa061c0 R09: 0000000000000000
-R10: ffffffff89e49050 R11: 0000000000000001 R12: ffff888099137938
-R13: 0000000000000028 R14: dffffc0000000000 R15: 0000000000000000
-  invoke_softirq kernel/softirq.c:373 [inline]
-  irq_exit+0x19b/0x1e0 kernel/softirq.c:413
-  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
-  do_IRQ+0x12c/0x200 arch/x86/kernel/irq.c:259
-  common_interrupt+0xf/0xf arch/x86/entry/entry_64.S:605
-  </IRQ>
-RIP: 0010:variable_test_bit arch/x86/include/asm/bitops.h:214 [inline]
-RIP: 0010:test_bit include/asm-generic/bitops-instrumented.h:238 [inline]
-RIP: 0010:kvm_test_request include/linux/kvm_host.h:1207 [inline]
-RIP: 0010:kvm_check_request+0x30/0x70 include/linux/kvm_host.h:1217
-Code: 41 55 41 54 49 89 f4 53 4d 8d 74 24 30 89 fb e8 f6 13 67 00 be 08 00  
-00 00 4c 89 f7 0f b6 db e8 36 e2 a1 00 49 0f a3 5c 24 30 <41> 0f 92 c5 31  
-ff 44 89 ee e8 12 15 67 00 45 84 ed 75 11 e8 c8 13
-RSP: 0018:ffff8880991379e0 EFLAGS: 00000246 ORIG_RAX: ffffffffffffffd7
-RAX: 0000000000000001 RBX: 000000000000001f RCX: ffffffff810b0e4a
-RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff888093c409f0
-RBP: ffff888099137a00 R08: 1ffff1101278813e R09: ffffed101278813f
-R10: ffffed101278813e R11: ffff888093c409f7 R12: ffff888093c409c0
-R13: ffff888093c409c0 R14: ffff888093c409f0 R15: ffff888093c409f0
-  vcpu_enter_guest+0x32a6/0x5e90 arch/x86/kvm/x86.c:7866
-  vcpu_run arch/x86/kvm/x86.c:8151 [inline]
-  kvm_arch_vcpu_ioctl_run+0x464/0x1750 arch/x86/kvm/x86.c:8359
-  kvm_vcpu_ioctl+0x4dc/0xfd0 arch/x86/kvm/../../../virt/kvm/kvm_main.c:2754
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xdb6/0x13e0 fs/ioctl.c:696
-  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
-  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x459829
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fa754e29c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459829
-RDX: 0000000000000000 RSI: 000000000000ae80 RDI: 0000000000000005
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fa754e2a6d4
-R13: 00000000004c2bcf R14: 00000000004d6150 R15: 00000000ffffffff
+You define string as a char *. So it will be only as long as it should
+be. However memcpy always copies ETH_GSTRING_LEN bytes, doing off the
+end of the string and into whatever follows.
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> +	}
+> +}
+> +
+> +static int adin_read_mmd_stat_regs(struct phy_device *phydev,
+> +				   struct adin_hw_stat *stat,
+> +				   u32 *val)
+> +{
+> +	int ret;
+> +
+> +	ret = phy_read_mmd(phydev, MDIO_MMD_VEND1, stat->reg1);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	*val = (ret & 0xffff);
+> +
+> +	if (stat->reg2 == 0)
+> +		return 0;
+> +
+> +	ret = phy_read_mmd(phydev, MDIO_MMD_VEND1, stat->reg2);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	*val <<= 16;
+> +	*val |= (ret & 0xffff);
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Does the hardware have a snapshot feature? Is there a danger that
+between the two reads stat->reg1 rolls over and you end up with too
+big a value?
+
+    Andrew
