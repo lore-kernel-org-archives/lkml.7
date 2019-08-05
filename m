@@ -2,52 +2,54 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7110C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB473C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF6A120651
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB791216B7
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:23:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011427;
-	bh=j5V3O5era90t3qvigSrU+W5mJ4rfJhC0zY/oMIG+Ivw=;
+	s=default; t=1565011434;
+	bh=o39PdSMzrs077BpBulehE/YGCmet2UzHgKM/weZOLSU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lPWr8KwoV14RXLvJBlsK/pEp5g6/k5iZIswk9U4ad5TbPC1PivzWBXfXzab1o0gWb
-	 vIyAHcm8OC6ZTQtgIyDit1RacSQ5xaqYvR6asSKO3vrPOFyJKPHXAzCzpeSM3fyWW3
-	 DGFAA1iV4slJ7Cd4x/l04vT56tNlYYhEG3j4P9So=
+	b=sAajKX5uDysz3RlOmL1lF53rCzIJbk1LhESoqh4us2RSSHy9uLecxqDGirlwdOBqk
+	 Y5ajZsX2u3SMtAlgtuG3kbT/w09sTjJ+pxNp8RP6Y+MATdJ5KlFvVx3tyx/a4b2uKt
+	 5cuLPXBySWXqHqEXCXZxCK8HJIEPEIlUjO/TzDqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730007AbfHENXq (ORCPT
+        id S1730899AbfHENXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:23:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60404 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:23:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730867AbfHENXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:23:40 -0400
+        id S1730644AbfHENXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:23:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCC36217D9;
-        Mon,  5 Aug 2019 13:23:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBF0920651;
+        Mon,  5 Aug 2019 13:23:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011419;
-        bh=j5V3O5era90t3qvigSrU+W5mJ4rfJhC0zY/oMIG+Ivw=;
+        s=default; t=1565011424;
+        bh=o39PdSMzrs077BpBulehE/YGCmet2UzHgKM/weZOLSU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jTy4+3tPWZ8QkSCX1/DScCgt2YG5CmhSQAfPnLV5wAUi6wQ026Bhqeps9quBRSNg+
-         mrHOSTP72FyxmLo9mP7lNyUQXYYS2loO7ciO5zzIQohowUipUt8ZIKam2WXdr3+LiU
-         RCnh9sni/NZgv9T21RZdRnWCfYW/rgBYnzmFhil0=
+        b=Hw55ZIPWI1zDUWo6vZqlACN7MvTzXyTtkSSkcbxW3Kkg1ctxBSCPIzvJpnzEKqckK
+         p5lb4fizKw/CQ4yFRlmySd2I/7pzEl9Z5E0o/gY2X4v8GbTejWSvdCwBvuVD+SJOJg
+         w6nXxNwIRBHy6SWpO2Uojux89R3wBj6VjOEjM/Tg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 040/131] cifs: fix crash in cifs_dfs_do_automount
-Date:   Mon,  5 Aug 2019 15:02:07 +0200
-Message-Id: <20190805124954.117575403@linuxfoundation.org>
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Alim Akhtar <alim.akhtar@gmail.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.2 083/131] mmc: dw_mmc: Fix occasional hang after tuning on eMMC
+Date:   Mon,  5 Aug 2019 15:02:50 +0200
+Message-Id: <20190805124957.514638922@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -60,66 +62,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ce465bf94b70f03136171a62b607864f00093b19 ]
+From: Douglas Anderson <dianders@chromium.org>
 
-RHBZ: 1649907
+commit ba2d139b02ba684c6c101de42fed782d6cd2b997 upstream.
 
-Fix a crash that happens while attempting to mount a DFS referral from the same server on the root of a filesystem.
+In commit 46d179525a1f ("mmc: dw_mmc: Wait for data transfer after
+response errors.") we fixed a tuning-induced hang that I saw when
+stress testing tuning on certain SD cards.  I won't re-hash that whole
+commit, but the summary is that as a normal part of tuning you need to
+deal with transfer errors and there were cases where these transfer
+errors was putting my system into a bad state causing all future
+transfers to fail.  That commit fixed handling of the transfer errors
+for me.
 
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+In downstream Chrome OS my fix landed and had the same behavior for
+all SD/MMC commands.  However, it looks like when the commit landed
+upstream we limited it to only SD tuning commands.  Presumably this
+was to try to get around problems that Alim Akhtar reported on exynos
+[1].
+
+Unfortunately while stress testing reboots (and suspend/resume) on
+some rk3288-based Chromebooks I found the same problem on the eMMC on
+some of my Chromebooks (the ones with Hynix eMMC).  Since the eMMC
+tuning command is different (MMC_SEND_TUNING_BLOCK_HS200
+vs. MMC_SEND_TUNING_BLOCK) we were basically getting back into the
+same situation.
+
+I'm hoping that whatever problems exynos was having in the past are
+somehow magically fixed now and we can make the behavior the same for
+all commands.
+
+[1] https://lkml.kernel.org/r/CAGOxZ53WfNbaMe0_AM0qBqU47kAfgmPBVZC8K8Y-_J3mDMqW4A@mail.gmail.com
+
+Fixes: 46d179525a1f ("mmc: dw_mmc: Wait for data transfer after response errors.")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Alim Akhtar <alim.akhtar@gmail.com>
+Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/cifs/connect.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ drivers/mmc/host/dw_mmc.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 6ad43ac129d2f..18c7c6b2fe08a 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -4463,11 +4463,13 @@ cifs_are_all_path_components_accessible(struct TCP_Server_Info *server,
- 					unsigned int xid,
- 					struct cifs_tcon *tcon,
- 					struct cifs_sb_info *cifs_sb,
--					char *full_path)
-+					char *full_path,
-+					int added_treename)
- {
- 	int rc;
- 	char *s;
- 	char sep, tmp;
-+	int skip = added_treename ? 1 : 0;
- 
- 	sep = CIFS_DIR_SEP(cifs_sb);
- 	s = full_path;
-@@ -4482,7 +4484,14 @@ cifs_are_all_path_components_accessible(struct TCP_Server_Info *server,
- 		/* next separator */
- 		while (*s && *s != sep)
- 			s++;
--
-+		/*
-+		 * if the treename is added, we then have to skip the first
-+		 * part within the separators
-+		 */
-+		if (skip) {
-+			skip = 0;
-+			continue;
-+		}
- 		/*
- 		 * temporarily null-terminate the path at the end of
- 		 * the current component
-@@ -4530,8 +4539,7 @@ static int is_path_remote(struct cifs_sb_info *cifs_sb, struct smb_vol *vol,
- 
- 	if (rc != -EREMOTE) {
- 		rc = cifs_are_all_path_components_accessible(server, xid, tcon,
--							     cifs_sb,
--							     full_path);
-+			cifs_sb, full_path, tcon->Flags & SMB_SHARE_IS_IN_DFS);
- 		if (rc != 0) {
- 			cifs_dbg(VFS, "cannot query dirs between root and final path, "
- 				 "enabling CIFS_MOUNT_USE_PREFIX_PATH\n");
--- 
-2.20.1
-
+--- a/drivers/mmc/host/dw_mmc.c
++++ b/drivers/mmc/host/dw_mmc.c
+@@ -2034,8 +2034,7 @@ static void dw_mci_tasklet_func(unsigned
+ 				 * delayed. Allowing the transfer to take place
+ 				 * avoids races and keeps things simple.
+ 				 */
+-				if ((err != -ETIMEDOUT) &&
+-				    (cmd->opcode == MMC_SEND_TUNING_BLOCK)) {
++				if (err != -ETIMEDOUT) {
+ 					state = STATE_SENDING_DATA;
+ 					continue;
+ 				}
 
 
