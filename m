@@ -2,762 +2,108 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96AFDC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F9EBC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A76120B1F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:52:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564995171;
-	bh=vwNKIy6DufbutbXl3lNpnCgQpoO4XIh9RglZp3b6EgY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XaN+g4sX9uGRqaxH0S0oOcdJqnGgj+Wuky/pqkT0PQecGKot35YXYjJVWA/PjdNjz
-	 ilmL5fp533t17BTIzrPfi3SKH091Nq00PSWQAphe0t+vckdJiUkOQT89Y2ZyyJ2Y21
-	 jHbxdu2ak9sEYN1PbH5WkU2pJEgeoUzoOQBNX0fY=
+	by mail.kernel.org (Postfix) with ESMTP id D774720B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:54:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbfHEIwu (ORCPT
+        id S1727783AbfHEIyl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 04:52:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53296 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 04:54:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49472 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726423AbfHEIwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 04:52:49 -0400
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726880AbfHEIyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 04:54:41 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF6CC21841;
-        Mon,  5 Aug 2019 08:52:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564995166;
-        bh=vwNKIy6DufbutbXl3lNpnCgQpoO4XIh9RglZp3b6EgY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=zaI0VBYGNFwrbBTH9mq34wllWwxk2q8oV1MOF+dSLhF8V0uDYekQnb4laPUfHrG2x
-         rGvnLoV2YeocMnuyp+KXQ0mO1SS6m8ZOwPEVEVImjJLu3mXgKHgMknz/T/5YlUdavl
-         6FF+G3KLkeQ2kBoxdaXTyi7xEgRP6ku4p6kt50K0=
-Received: by mail-lf1-f44.google.com with SMTP id b29so50045898lfq.1;
-        Mon, 05 Aug 2019 01:52:45 -0700 (PDT)
-X-Gm-Message-State: APjAAAUSlZak+G55mS5FzZkTCR80NLaozyxht285QrTiLJ2bAnz/AcRQ
-        SP/Zaf59Rdp467TvdstcI2Gj3nvvnabv7eNF5To=
-X-Google-Smtp-Source: APXvYqwGxVR0sVv2PvtAY+wYpXn4AmvyH4pVbscQWmGwEBawBb7zdiyTdyebPgS8zZPPk8PdEg6hakfHgIJ2Op5LwNo=
-X-Received: by 2002:a19:f007:: with SMTP id p7mr9950833lfc.24.1564995163993;
- Mon, 05 Aug 2019 01:52:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190729172007.3275-1-krzk@kernel.org> <20190729172007.3275-2-krzk@kernel.org>
- <20190803154724.GS8870@X250.getinternet.no>
-In-Reply-To: <20190803154724.GS8870@X250.getinternet.no>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Mon, 5 Aug 2019 10:52:32 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPew1Tk0ySNyJ=KwaZ2Zv4N8a7569SNHSet-nLqqdqFEcA@mail.gmail.com>
-Message-ID: <CAJKOXPew1Tk0ySNyJ=KwaZ2Zv4N8a7569SNHSet-nLqqdqFEcA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] ARM: dts: imx6ul-kontron-n6310: Add Kontron
- i.MX6UL N6310 SoM and boards
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Schrempf Frieder <frieder.schrempf@kontron.de>
-Content-Type: text/plain; charset="UTF-8"
+        by mx1.redhat.com (Postfix) with ESMTPS id EABAB30833C1;
+        Mon,  5 Aug 2019 08:54:40 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-81.ams2.redhat.com [10.36.116.81])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9456A1000321;
+        Mon,  5 Aug 2019 08:54:37 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 3B87511AAA; Mon,  5 Aug 2019 10:54:19 +0200 (CEST)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Gerd Hoffmann <kraxel@redhat.com>,
+        Dave Airlie <airlied@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        virtualization@lists.linux-foundation.org (open list:DRM DRIVER FOR QXL
+        VIRTUAL GPU),
+        spice-devel@lists.freedesktop.org (open list:DRM DRIVER FOR QXL VIRTUAL
+        GPU), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] drm/qxl: get vga ioports
+Date:   Mon,  5 Aug 2019 10:53:55 +0200
+Message-Id: <20190805085355.12527-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Mon, 05 Aug 2019 08:54:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 3 Aug 2019 at 17:47, Shawn Guo <shawnguo@kernel.org> wrote:
->
-> On Mon, Jul 29, 2019 at 07:20:07PM +0200, Krzysztof Kozlowski wrote:
-> > Add support for i.MX6UL modules from Kontron Electronics GmbH (before
-> > acquisition: Exceet Electronics) and evalkit boards based on it:
-> >
-> > 1. N6310 SOM: i.MX6 UL System-on-Module, a 25x25 mm solderable module
-> >    (LGA pads and pin castellations) with 256 MB RAM, 1 MB NOR-Flash,
-> >    256 MB NAND and other interfaces,
-> > 2. N6310 S: evalkit, w/wo eMMC, without display,
-> > 3. N6310 S 43: evalkit with 4.3" display,
-> > 4. N6310 S 50: evalkit with 5.0" display.
-> >
-> > This includes device nodes for unsupported displays (Admatec
-> > T043C004800272T2A and T070P133T0S301).
->
-> Do not include unsupported devices.
+qxl has two modes: "native" (used by the drm driver) and "vga" (vga
+compatibility mode, typically used for boot display and firmware
+framebuffers).
 
-OK
+Accessing any vga ioport will switch the qxl device into vga mode.
+The qxl driver never does that, but other drivers accessing vga ports
+can trigger that too and therefore disturb qxl operation.  So aquire
+the legacy vga ioports from vgaarb to avoid that.
 
->
-> >
-> > The work is based on Exceet/Kontron source code (GPLv2) with numerous
-> > changes:
-> > 1. Reorganize files,
-> > 2. Rename Exceet -> Kontron,
-> > 3. Rename models/compatibles to match newest Kontron product naming,
-> > 4. Fix coding style errors and adjust to device tree coding guidelines,
-> > 5. Fix DTC warnings,
-> > 6. Extend compatibles so eval boards inherit the SoM compatible,
-> > 7. Use defines instead of GPIO and interrupt flag values,
-> > 8. Use proper vendor compatible for Macronix SPI NOR,
-> > 9. Sort nodes alphabetically.
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> >
-> > ---
-> >
-> > Changes since v2, after Fabio's review:
-> > 1. Add "imx6ul" compatible to board name (that's what I understood from
-> >    review),
-> > 2. Add vendor/device prefix to eeprom and document the compatible,
-> > 3. Use "admatecde" as vendor compatible to avoid confusion with Admatec
-> >    AG in Switzerland (also making LCD panels),
-> > 4. Use generic names for nodes,
-> > 5. Use IRQ_TYPE_LEVEL_LOW,
-> > 6. Move iomux to the end of files,
-> > 7. Remove regulators node (include regulators in top level),
-> > 8. Remove cpu clock-frequency,
-> > 9. Other minor fixes pointed by Fabio.
-> >
-> > Changes since v1, after Frieder's review:
-> > 1. Remove unneeded license notes,
-> > 2. Add Kontron copyright (2018),
-> > 3. Rename the files/models/compatibles to new naming - N6310,
-> > 4. Remove unneeded CPU operating points override,
-> > 5. Switch regulator nodes into simple children nodes without addresses
-> >    (so not simple bus),
-> > 6. Use proper vendor compatible for Macronix SPI NOR.
-> > ---
-> >  .../devicetree/bindings/arm/fsl.yaml          |   4 +
-> >  .../devicetree/bindings/eeprom/at25.txt       |   1 +
->
-> Please make them two separate patches.
+Reporducer: Boot kvm guest with both qxl and i915 vgpu, with qxl being
+first in pci scan order.
 
-Sure.
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+---
+ drivers/gpu/drm/qxl/qxl_drv.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
->
-> >  arch/arm/boot/dts/Makefile                    |   3 +
-> >  .../boot/dts/imx6ul-kontron-n6310-s-43.dts    | 119 +++++
-> >  .../boot/dts/imx6ul-kontron-n6310-s-50.dts    | 119 +++++
->
-> Are they identical except the display node?  Please manage to save
-> duplicated data.
+diff --git a/drivers/gpu/drm/qxl/qxl_drv.c b/drivers/gpu/drm/qxl/qxl_drv.c
+index b57a37543613..8a2e86adc423 100644
+--- a/drivers/gpu/drm/qxl/qxl_drv.c
++++ b/drivers/gpu/drm/qxl/qxl_drv.c
+@@ -87,9 +87,15 @@ qxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	if (ret)
+ 		goto disable_pci;
+ 
++	ret = vga_get_interruptible(pdev, VGA_RSRC_LEGACY_IO);
++	if (ret) {
++		DRM_ERROR("can't get legacy vga ports\n");
++		goto put_vga;
++	}
++
+ 	ret = qxl_device_init(qdev, &qxl_driver, pdev);
+ 	if (ret)
+-		goto disable_pci;
++		goto put_vga;
+ 
+ 	ret = qxl_modeset_init(qdev);
+ 	if (ret)
+@@ -109,6 +115,8 @@ qxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	qxl_modeset_fini(qdev);
+ unload:
+ 	qxl_device_fini(qdev);
++put_vga:
++	vga_put(pdev, VGA_RSRC_LEGACY_IO);
+ disable_pci:
+ 	pci_disable_device(pdev);
+ free_dev:
+@@ -126,6 +134,7 @@ qxl_pci_remove(struct pci_dev *pdev)
+ 
+ 	qxl_modeset_fini(qdev);
+ 	qxl_device_fini(qdev);
++	vga_put(pdev, VGA_RSRC_LEGACY_IO);
+ 
+ 	dev->dev_private = NULL;
+ 	kfree(qdev);
+-- 
+2.18.1
 
-Since removing of display panels (unsupported), there will be no
-differentiation between S-43 and S-50.
-
->
-> >  arch/arm/boot/dts/imx6ul-kontron-n6310-s.dts  | 420 ++++++++++++++++++
-> >  .../boot/dts/imx6ul-kontron-n6310-som.dtsi    | 134 ++++++
-> >  7 files changed, 800 insertions(+)
-> >  create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6310-s-43.dts
-> >  create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6310-s-50.dts
-> >  create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6310-s.dts
-> >  create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6310-som.dtsi
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-> > index 7294ac36f4c0..6a6c09d67dea 100644
-> > --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> > +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> > @@ -161,6 +161,10 @@ properties:
-> >          items:
-> >            - enum:
-> >                - fsl,imx6ul-14x14-evk      # i.MX6 UltraLite 14x14 EVK Board
-> > +              - kontron,imx6ul-n6310-som  # Kontron N6310 SOM
-> > +              - kontron,imx6ul-n6310-s    # Kontron N6310 S Board
-> > +              - kontron,imx6ul-n6310-s-43 # Kontron N6310 S 43 Board
-> > +              - kontron,imx6ul-n6310-s-50 # Kontron N6310 S 50 Board
-> >            - const: fsl,imx6ul
-> >
-> >        - description: i.MX6ULL based Boards
-> > diff --git a/Documentation/devicetree/bindings/eeprom/at25.txt b/Documentation/devicetree/bindings/eeprom/at25.txt
-> > index b3bde97dc199..42577dd113dd 100644
-> > --- a/Documentation/devicetree/bindings/eeprom/at25.txt
-> > +++ b/Documentation/devicetree/bindings/eeprom/at25.txt
-> > @@ -3,6 +3,7 @@ EEPROMs (SPI) compatible with Atmel at25.
-> >  Required properties:
-> >  - compatible : Should be "<vendor>,<type>", and generic value "atmel,at25".
-> >    Example "<vendor>,<type>" values:
-> > +    "anvo,anv32e61w"
-> >      "microchip,25lc040"
-> >      "st,m95m02"
-> >      "st,m95256"
-> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> > index 9159fa2cea90..28b6cb3454a3 100644
-> > --- a/arch/arm/boot/dts/Makefile
-> > +++ b/arch/arm/boot/dts/Makefile
-> > @@ -569,6 +569,9 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
-> >       imx6ul-geam.dtb \
-> >       imx6ul-isiot-emmc.dtb \
-> >       imx6ul-isiot-nand.dtb \
-> > +     imx6ul-kontron-n6310-s.dtb \
-> > +     imx6ul-kontron-n6310-s-43.dtb \
-> > +     imx6ul-kontron-n6310-s-50.dtb \
-> >       imx6ul-liteboard.dtb \
-> >       imx6ul-opos6uldev.dtb \
-> >       imx6ul-pico-hobbit.dtb \
-> > diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6310-s-43.dts b/arch/arm/boot/dts/imx6ul-kontron-n6310-s-43.dts
-> > new file mode 100644
-> > index 000000000000..c83793725245
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/imx6ul-kontron-n6310-s-43.dts
-> > @@ -0,0 +1,119 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (C) 2017 exceet electronics GmbH
-> > + * Copyright (C) 2018 Kontron Electronics GmbH
-> > + * Copyright (c) 2019 Krzysztof Kozlowski <krzk@kernel.org>
-> > + */
-> > +
-> > +#include "imx6ul-kontron-n6310-s.dts"
-> > +
-> > +/ {
-> > +     model = "Kontron N6310 S 43";
-> > +     compatible = "kontron,imx6ul-n6310-s-43", "kontron,imx6ul-n6310-s",
-> > +                  "kontron,imx6ul-n6310-som", "fsl,imx6ul";
-> > +
-> > +     backlight: backlight {
-> > +             compatible = "pwm-backlight";
-> > +             pwms = <&pwm7 0 5000000>;
-> > +             brightness-levels = <0 4 8 16 32 64 128 255>;
-> > +             default-brightness-level = <6>;
-> > +             status = "okay";
-> > +     };
-> > +
-> > +     panel {
-> > +             compatible = "admatecde,t043c004800272t2a";
->
-> Undocumented/unsupported compatible?
->
-> > +             backlight = <&backlight>;
-> > +
-> > +             port {
-> > +                     panel_in: endpoint {
-> > +                             remote-endpoint = <&display_out>;
-> > +                     };
-> > +             };
-> > +     };
-> > +};
-> > +
-> > +&i2c4 {
-> > +     touchscreen@5d {
-> > +             compatible = "goodix,gt928";
-> > +             reg = <0x5d>;
-> > +             pinctrl-names = "default";
-> > +             pinctrl-0 = <&pinctrl_cap_touch>;
-> > +             interrupt-parent = <&gpio5>;
-> > +             interrupts = <6 IRQ_TYPE_LEVEL_LOW>;
-> > +             reset-gpios = <&gpio5 8 GPIO_ACTIVE_HIGH>;
-> > +             irq-gpios = <&gpio5 6 GPIO_ACTIVE_HIGH>;
-> > +     };
-> > +};
-> > +
-> > +&lcdif {
-> > +     pinctrl-names = "default";
-> > +     pinctrl-0 = <&pinctrl_lcdif_dat &pinctrl_lcdif_ctrl>;
-> > +     status = "okay";
-> > +
-> > +     port {
-> > +             display_out: endpoint {
-> > +                     remote-endpoint = <&panel_in>;
-> > +             };
-> > +     };
-> > +};
-> > +
-> > +&pwm7 {
-> > +     pinctrl-names = "default";
-> > +     pinctrl-0 = <&pinctrl_pwm7>;
-> > +     status = "okay";
-> > +};
-> > +
-> > +&iomuxc {
-> > +     pinctrl_lcdif_dat: lcdifdatgrp {
-> > +             fsl,pins = <
-> > +                     MX6UL_PAD_LCD_DATA00__LCDIF_DATA00      0x79
-> > +                     MX6UL_PAD_LCD_DATA01__LCDIF_DATA01      0x79
-> > +                     MX6UL_PAD_LCD_DATA02__LCDIF_DATA02      0x79
-> > +                     MX6UL_PAD_LCD_DATA03__LCDIF_DATA03      0x79
-> > +                     MX6UL_PAD_LCD_DATA04__LCDIF_DATA04      0x79
-> > +                     MX6UL_PAD_LCD_DATA05__LCDIF_DATA05      0x79
-> > +                     MX6UL_PAD_LCD_DATA06__LCDIF_DATA06      0x79
-> > +                     MX6UL_PAD_LCD_DATA07__LCDIF_DATA07      0x79
-> > +                     MX6UL_PAD_LCD_DATA08__LCDIF_DATA08      0x79
-> > +                     MX6UL_PAD_LCD_DATA09__LCDIF_DATA09      0x79
-> > +                     MX6UL_PAD_LCD_DATA10__LCDIF_DATA10      0x79
-> > +                     MX6UL_PAD_LCD_DATA11__LCDIF_DATA11      0x79
-> > +                     MX6UL_PAD_LCD_DATA12__LCDIF_DATA12      0x79
-> > +                     MX6UL_PAD_LCD_DATA13__LCDIF_DATA13      0x79
-> > +                     MX6UL_PAD_LCD_DATA14__LCDIF_DATA14      0x79
-> > +                     MX6UL_PAD_LCD_DATA15__LCDIF_DATA15      0x79
-> > +                     MX6UL_PAD_LCD_DATA16__LCDIF_DATA16      0x79
-> > +                     MX6UL_PAD_LCD_DATA17__LCDIF_DATA17      0x79
-> > +                     MX6UL_PAD_LCD_DATA18__LCDIF_DATA18      0x79
-> > +                     MX6UL_PAD_LCD_DATA19__LCDIF_DATA19      0x79
-> > +                     MX6UL_PAD_LCD_DATA20__LCDIF_DATA20      0x79
-> > +                     MX6UL_PAD_LCD_DATA21__LCDIF_DATA21      0x79
-> > +                     MX6UL_PAD_LCD_DATA22__LCDIF_DATA22      0x79
-> > +                     MX6UL_PAD_LCD_DATA23__LCDIF_DATA23      0x79
-> > +             >;
-> > +     };
-> > +
-> > +     pinctrl_lcdif_ctrl: lcdifctrlgrp {
-> > +             fsl,pins = <
-> > +                     MX6UL_PAD_LCD_CLK__LCDIF_CLK            0x79
-> > +                     MX6UL_PAD_LCD_ENABLE__LCDIF_ENABLE      0x79
-> > +                     MX6UL_PAD_LCD_HSYNC__LCDIF_HSYNC        0x79
-> > +                     MX6UL_PAD_LCD_VSYNC__LCDIF_VSYNC        0x79
-> > +                     MX6UL_PAD_LCD_RESET__LCDIF_RESET        0x79
-> > +             >;
-> > +     };
-> > +
-> > +     pinctrl_cap_touch: captouchgrp {
-> > +             fsl,pins = <
-> > +                     MX6UL_PAD_SNVS_TAMPER6__GPIO5_IO06      0x1b0b0 /* Touch Interrupt */
-> > +                     MX6UL_PAD_SNVS_TAMPER7__GPIO5_IO07      0x1b0b0 /* Touch Reset */
-> > +                     MX6UL_PAD_SNVS_TAMPER8__GPIO5_IO08      0x1b0b0 /* Touch Wake */
-> > +             >;
-> > +     };
-> > +
-> > +     pinctrl_pwm7: pwm7grp {
-> > +             fsl,pins = <
-> > +                     MX6UL_PAD_CSI_VSYNC__PWM7_OUT           0x110b0
-> > +             >;
-> > +     };
-> > +};
-> > diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6310-s-50.dts b/arch/arm/boot/dts/imx6ul-kontron-n6310-s-50.dts
-> > new file mode 100644
-> > index 000000000000..f9c9afa58771
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/imx6ul-kontron-n6310-s-50.dts
-> > @@ -0,0 +1,119 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (C) 2017 exceet electronics GmbH
-> > + * Copyright (C) 2018 Kontron Electronics GmbH
-> > + * Copyright (c) 2019 Krzysztof Kozlowski <krzk@kernel.org>
-> > + */
-> > +
-> > +#include "imx6ul-kontron-n6310-s.dts"
-> > +
-> > +/ {
-> > +     model = "Kontron N6310 S 50";
-> > +     compatible = "kontron,imx6ul-n6310-s-50", "kontron,imx6ul-n6310-s",
-> > +                  "kontron,imx6ul-n6310-som", "fsl,imx6ul";
-> > +
-> > +     backlight: backlight {
-> > +             compatible = "pwm-backlight";
-> > +             pwms = <&pwm7 0 5000000>;
-> > +             brightness-levels = <0 4 8 16 32 64 128 255>;
-> > +             default-brightness-level = <6>;
-> > +             status = "okay";
-> > +     };
-> > +
-> > +     panel {
-> > +             compatible = "admatecde,t070p133t0s301";
-> > +             backlight = <&backlight>;
-> > +
-> > +             port {
-> > +                     panel_in: endpoint {
-> > +                             remote-endpoint = <&display_out>;
-> > +                     };
-> > +             };
-> > +     };
-> > +};
-> > +
-> > +&i2c4 {
-> > +     touchscreen@5d {
-> > +             compatible = "goodix,gt928";
-> > +             reg = <0x5d>;
-> > +             pinctrl-names = "default";
-> > +             pinctrl-0 = <&pinctrl_cap_touch>;
-> > +             interrupt-parent = <&gpio5>;
-> > +             interrupts = <6 IRQ_TYPE_LEVEL_LOW>;
-> > +             reset-gpios = <&gpio5 8 GPIO_ACTIVE_HIGH>;
-> > +             irq-gpios = <&gpio5 6 GPIO_ACTIVE_HIGH>;
-> > +     };
-> > +};
-> > +
-> > +&lcdif {
-> > +     pinctrl-names = "default";
-> > +     pinctrl-0 = <&pinctrl_lcdif_dat &pinctrl_lcdif_ctrl>;
-> > +     status = "okay";
-> > +
-> > +     port {
-> > +             display_out: endpoint {
-> > +                     remote-endpoint = <&panel_in>;
-> > +             };
-> > +     };
-> > +};
-> > +
-> > +&pwm7 {
-> > +     pinctrl-names = "default";
-> > +     pinctrl-0 = <&pinctrl_pwm7>;
-> > +     status = "okay";
-> > +};
-> > +
-> > +&iomuxc {
-> > +     pinctrl_lcdif_dat: lcdifdatgrp {
-> > +             fsl,pins = <
-> > +                     MX6UL_PAD_LCD_DATA00__LCDIF_DATA00      0x79
-> > +                     MX6UL_PAD_LCD_DATA01__LCDIF_DATA01      0x79
-> > +                     MX6UL_PAD_LCD_DATA02__LCDIF_DATA02      0x79
-> > +                     MX6UL_PAD_LCD_DATA03__LCDIF_DATA03      0x79
-> > +                     MX6UL_PAD_LCD_DATA04__LCDIF_DATA04      0x79
-> > +                     MX6UL_PAD_LCD_DATA05__LCDIF_DATA05      0x79
-> > +                     MX6UL_PAD_LCD_DATA06__LCDIF_DATA06      0x79
-> > +                     MX6UL_PAD_LCD_DATA07__LCDIF_DATA07      0x79
-> > +                     MX6UL_PAD_LCD_DATA08__LCDIF_DATA08      0x79
-> > +                     MX6UL_PAD_LCD_DATA09__LCDIF_DATA09      0x79
-> > +                     MX6UL_PAD_LCD_DATA10__LCDIF_DATA10      0x79
-> > +                     MX6UL_PAD_LCD_DATA11__LCDIF_DATA11      0x79
-> > +                     MX6UL_PAD_LCD_DATA12__LCDIF_DATA12      0x79
-> > +                     MX6UL_PAD_LCD_DATA13__LCDIF_DATA13      0x79
-> > +                     MX6UL_PAD_LCD_DATA14__LCDIF_DATA14      0x79
-> > +                     MX6UL_PAD_LCD_DATA15__LCDIF_DATA15      0x79
-> > +                     MX6UL_PAD_LCD_DATA16__LCDIF_DATA16      0x79
-> > +                     MX6UL_PAD_LCD_DATA17__LCDIF_DATA17      0x79
-> > +                     MX6UL_PAD_LCD_DATA18__LCDIF_DATA18      0x79
-> > +                     MX6UL_PAD_LCD_DATA19__LCDIF_DATA19      0x79
-> > +                     MX6UL_PAD_LCD_DATA20__LCDIF_DATA20      0x79
-> > +                     MX6UL_PAD_LCD_DATA21__LCDIF_DATA21      0x79
-> > +                     MX6UL_PAD_LCD_DATA22__LCDIF_DATA22      0x79
-> > +                     MX6UL_PAD_LCD_DATA23__LCDIF_DATA23      0x79
-> > +             >;
-> > +     };
-> > +
-> > +     pinctrl_lcdif_ctrl: lcdifctrlgrp {
-> > +             fsl,pins = <
-> > +                     MX6UL_PAD_LCD_CLK__LCDIF_CLK            0x79
-> > +                     MX6UL_PAD_LCD_ENABLE__LCDIF_ENABLE      0x79
-> > +                     MX6UL_PAD_LCD_HSYNC__LCDIF_HSYNC        0x79
-> > +                     MX6UL_PAD_LCD_VSYNC__LCDIF_VSYNC        0x79
-> > +                     MX6UL_PAD_LCD_RESET__LCDIF_RESET        0x79
-> > +             >;
-> > +     };
-> > +
-> > +     pinctrl_cap_touch: captouchgrp {
-> > +             fsl,pins = <
-> > +                     MX6UL_PAD_SNVS_TAMPER6__GPIO5_IO06      0x1b0b0 /* Touch Interrupt */
-> > +                     MX6UL_PAD_SNVS_TAMPER7__GPIO5_IO07      0x1b0b0 /* Touch Reset */
-> > +                     MX6UL_PAD_SNVS_TAMPER8__GPIO5_IO08      0x1b0b0 /* Touch Wake */
-> > +             >;
-> > +     };
-> > +
-> > +     pinctrl_pwm7: pwm7grp {
-> > +             fsl,pins = <
-> > +                     MX6UL_PAD_CSI_VSYNC__PWM7_OUT           0x110b0
-> > +             >;
-> > +     };
-> > +};
-> > diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6310-s.dts b/arch/arm/boot/dts/imx6ul-kontron-n6310-s.dts
-> > new file mode 100644
-> > index 000000000000..4206a4b3f0df
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/imx6ul-kontron-n6310-s.dts
-> > @@ -0,0 +1,420 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (C) 2017 exceet electronics GmbH
-> > + * Copyright (C) 2018 Kontron Electronics GmbH
-> > + * Copyright (c) 2019 Krzysztof Kozlowski <krzk@kernel.org>
-> > + */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include "imx6ul-kontron-n6310-som.dtsi"
-> > +
-> > +/ {
-> > +     model = "Kontron N6310 S";
-> > +     compatible = "kontron,imx6ul-n6310-s", "kontron,imx6ul-n6310-som",
-> > +                  "fsl,imx6ul";
-> > +
-> > +     pwm-beeper {
-> > +             compatible = "pwm-beeper";
-> > +             pwms = <&pwm8 0 5000>;
-> > +     };
-> > +
-> > +     gpio-leds {
-> > +             compatible = "gpio-leds";
-> > +             pinctrl-names = "default";
-> > +             pinctrl-0 = <&pinctrl_gpio_leds>;
-> > +
-> > +             led1 {
-> > +                     label = "debug-led1";
-> > +                     gpios = <&gpio1 30 GPIO_ACTIVE_LOW>;
-> > +                     default-state = "off";
-> > +                     linux,default-trigger = "heartbeat";
-> > +             };
-> > +
-> > +             led2 {
-> > +                     label = "debug-led2";
-> > +                     gpios = <&gpio5 3 GPIO_ACTIVE_LOW>;
-> > +                     default-state = "off";
-> > +             };
-> > +
-> > +             led3 {
-> > +                     label = "debug-led3";
-> > +                     gpios = <&gpio5 2 GPIO_ACTIVE_LOW>;
-> > +                     default-state = "off";
-> > +             };
-> > +     };
-> > +
-> > +     reg_3v3: regulator-3v3 {
-> > +             compatible = "regulator-fixed";
-> > +             regulator-name = "3v3";
-> > +             regulator-min-microvolt = <3300000>;
-> > +             regulator-max-microvolt = <3300000>;
-> > +     };
-> > +
-> > +     reg_vref_adc: regulator-vref-adc {
-> > +             compatible = "regulator-fixed";
-> > +             regulator-name = "vref-adc";
-> > +             regulator-min-microvolt = <3300000>;
-> > +             regulator-max-microvolt = <3300000>;
-> > +     };
-> > +
-> > +     reg_usb_otg1_vbus: regulator-usb-otg1-vbus {
-> > +             compatible = "regulator-fixed";
-> > +             regulator-name = "usb_otg1_vbus";
-> > +             regulator-min-microvolt = <5000000>;
-> > +             regulator-max-microvolt = <5000000>;
-> > +             gpio = <&gpio1 4 GPIO_ACTIVE_HIGH>;
-> > +             enable-active-high;
-> > +     };
-> > +};
-> > +
-> > +&adc1 {
-> > +     pinctrl-names = "default";
-> > +     pinctrl-0 = <&pinctrl_adc1>;
-> > +     num-channels = <3>;
-> > +     vref-supply = <&reg_vref_adc>;
-> > +     status = "okay";
-> > +};
-> > +
-> > +&can2 {
-> > +     pinctrl-names = "default";
-> > +     pinctrl-0 = <&pinctrl_flexcan2>;
-> > +     status = "okay";
-> > +};
-> > +
-> > +&ecspi1 {
-> > +     cs-gpios = <&gpio4 26 GPIO_ACTIVE_HIGH>;
-> > +     pinctrl-names = "default";
-> > +     pinctrl-0 = <&pinctrl_ecspi1>;
-> > +     status = "okay";
-> > +
-> > +     eeprom@0 {
-> > +             compatible = "anvo,anv32e61w", "atmel,at25";
-> > +             reg = <0>;
-> > +             spi-max-frequency = <20000000>;
-> > +             spi-cpha;
-> > +             spi-cpol;
-> > +             pagesize = <1>;
-> > +             size = <8192>;
-> > +             address-width = <16>;
-> > +     };
-> > +};
-> > +
-> > +&fec1 {
-> > +     pinctrl-0 = <&pinctrl_enet1>;
-> > +     /delete-node/ mdio;
-> > +};
-> > +
-> > +&fec2 {
-> > +     pinctrl-names = "default";
-> > +     pinctrl-0 = <&pinctrl_enet2 &pinctrl_enet2_mdio>;
-> > +     phy-mode = "rmii";
-> > +     phy-handle = <&ethphy2>;
-> > +     status = "okay";
-> > +
-> > +     mdio {
-> > +             #address-cells = <1>;
-> > +             #size-cells = <0>;
-> > +
-> > +             ethphy1: ethernet-phy@1 {
-> > +                     reg = <1>;
-> > +                     micrel,led-mode = <0>;
-> > +                     clocks = <&clks IMX6UL_CLK_ENET_REF>;
-> > +                     clock-names = "rmii-ref";
-> > +             };
-> > +
-> > +             ethphy2: ethernet-phy@2 {
-> > +                     reg = <2>;
-> > +                     micrel,led-mode = <0>;
-> > +                     clocks = <&clks IMX6UL_CLK_ENET2_REF>;
-> > +                     clock-names = "rmii-ref";
-> > +             };
-> > +     };
-> > +};
-> > +
-> > +&i2c1 {
-> > +     clock-frequency = <100000>;
-> > +     pinctrl-names = "default";
-> > +     pinctrl-0 = <&pinctrl_i2c1>;
-> > +     status = "okay";
-> > +};
-> > +
-> > +&i2c4 {
-> > +     clock-frequency = <100000>;
-> > +     pinctrl-names = "default";
-> > +     pinctrl-0 = <&pinctrl_i2c4>;
-> > +     status = "okay";
-> > +
-> > +     rtc@32 {
-> > +             compatible = "epson,rx8900";
-> > +             reg = <0x32>;
-> > +     };
-> > +};
-> > +
-> > +&pwm8 {
-> > +     pinctrl-names = "default";
-> > +     pinctrl-0 = <&pinctrl_pwm8>;
-> > +     status = "okay";
-> > +};
-> > +
-> > +&snvs_poweroff {
-> > +     status = "okay";
-> > +};
-> > +
-> > +&uart1 {
-> > +     pinctrl-names = "default";
-> > +     pinctrl-0 = <&pinctrl_uart1>;
-> > +     status = "okay";
-> > +};
-> > +
-> > +&uart2 {
-> > +     pinctrl-names = "default";
-> > +     pinctrl-0 = <&pinctrl_uart2>;
-> > +     linux,rs485-enabled-at-boot-time;
-> > +     rs485-rx-during-tx;
-> > +     rs485-rts-active-low;
-> > +     uart-has-rtscts;
-> > +     status = "okay";
-> > +};
-> > +
-> > +&uart3 {
-> > +     pinctrl-names = "default";
-> > +     pinctrl-0 = <&pinctrl_uart3>;
-> > +     fsl,uart-has-rtscts;
-> > +     status = "okay";
-> > +};
-> > +
-> > +&uart4 {
-> > +     pinctrl-names = "default";
-> > +     pinctrl-0 = <&pinctrl_uart4>;
-> > +     status = "okay";
-> > +};
-> > +
-> > +&usbotg1 {
-> > +     pinctrl-names = "default";
-> > +     pinctrl-0 = <&pinctrl_usbotg1>;
-> > +     dr_mode = "otg";
-> > +     srp-disable;
-> > +     hnp-disable;
-> > +     adp-disable;
-> > +     vbus-supply = <&reg_usb_otg1_vbus>;
-> > +     status = "okay";
-> > +};
-> > +
-> > +&usbotg2 {
-> > +     dr_mode = "host";
-> > +     disable-over-current;
-> > +     status = "okay";
-> > +};
-> > +
-> > +&usdhc1 {
-> > +     pinctrl-names = "default";
-> > +     pinctrl-0 = <&pinctrl_usdhc1>;
-> > +     cd-gpios = <&gpio1 19 GPIO_ACTIVE_LOW>;
-> > +     keep-power-in-suspend;
-> > +     enable-sdio-wakeup;
->
-> Check Documentation/devicetree/bindings/power/wakeup-source.txt
-
-Indeed, thanks.
-
-> > +     vmmc-supply = <&reg_3v3>;
-> > +     voltage-ranges = <3300 3300>;
-> > +     no-1-8-v;
-> > +     status = "okay";
-> > +};
-> > +
-> > +&usdhc2 {
-> > +     pinctrl-names = "default", "state_100mhz", "state_200mhz";
-> > +     pinctrl-0 = <&pinctrl_usdhc2>;
-> > +     pinctrl-1 = <&pinctrl_usdhc2_100mhz>;
-> > +     pinctrl-2 = <&pinctrl_usdhc2_200mhz>;
-> > +     non-removable;
-> > +     keep-power-in-suspend;
-> > +     enable-sdio-wakeup;
-> > +     vmmc-supply = <&reg_3v3>;
-> > +     voltage-ranges = <3300 3300>;
-> > +     no-1-8-v;
-> > +     status = "okay";
-> > +};
-> > +
-> > +&wdog1 {
-> > +     pinctrl-names = "default";
-> > +     pinctrl-0 = <&pinctrl_wdog>;
-> > +     status = "okay";
->
-> We usually put 'status' at the end of property list.
-
-OK
-
->
-> > +     fsl,ext-reset-output;
-> > +};
-> > +
-> > +&iomuxc {
-> > +     pinctrl-0 = <&pinctrl_reset_out &pinctrl_gpio>;
-> > +
-> > +     pinctrl_wdog: wdoggrp {
-> > +             fsl,pins = <
-> > +                     MX6UL_PAD_GPIO1_IO09__WDOG1_WDOG_ANY    0x30b0
-> > +             >;
-> > +     };
-> > +
-> > +     pinctrl_gpio: gpio {
->
-> Please consistently name the node like:
->
->         pinctrl_xxx: xxxgrp
->
-> And keep them well sorted alphabetically.
-
-Sure
-
->
-> > +             fsl,pins = <
-> > +                     MX6UL_PAD_SNVS_TAMPER5__GPIO5_IO05      0x1b0b0 /* DOUT1 */
-> > +                     MX6UL_PAD_SNVS_TAMPER4__GPIO5_IO04      0x1b0b0 /* DIN1 */
-> > +                     MX6UL_PAD_SNVS_TAMPER1__GPIO5_IO01      0x1b0b0 /* DOUT2 */
-> > +                     MX6UL_PAD_SNVS_TAMPER0__GPIO5_IO00      0x1b0b0 /* DIN2 */
-> > +             >;
-> > +     };
-> > +
-> > +     pinctrl_usbotg1: usbotg1 {
-> > +             fsl,pins = <
-> > +                     MX6UL_PAD_GPIO1_IO04__GPIO1_IO04        0x1b0b0
-> > +             >;
-> > +     };
-> > +
-> > +     pinctrl_gpio_leds: gpio_leds {
-> > +             fsl,pins = <
-> > +                     MX6UL_PAD_UART5_TX_DATA__GPIO1_IO30     0x1b0b0 /* LED H14 */
-> > +                     MX6UL_PAD_SNVS_TAMPER3__GPIO5_IO03      0x1b0b0 /* LED H15 */
-> > +                     MX6UL_PAD_SNVS_TAMPER2__GPIO5_IO02      0x1b0b0 /* LED H16 */
-> > +             >;
-> > +     };
-> > +
-> > +     /* FRAM */
-> > +     pinctrl_ecspi1: ecspi1grp-1 {
->
-> Meaningless '-1' suffix.
-
-Thanks for the review!
-Krzysztof
