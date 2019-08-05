@@ -2,138 +2,133 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2541C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA4FC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A29562086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5C4320644
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:26:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PxzyLfa7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727601AbfHEHZc (ORCPT
+        id S1727575AbfHEH06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 03:25:32 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:20856 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726423AbfHEHZc (ORCPT
+        Mon, 5 Aug 2019 03:26:58 -0400
+Received: from mail-pg1-f178.google.com ([209.85.215.178]:44157 "EHLO
+        mail-pg1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726423AbfHEH05 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 03:25:32 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x757Ncsm128188
-        for <linux-kernel@vger.kernel.org>; Mon, 5 Aug 2019 03:25:30 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2u6e4kvsnx-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 03:25:30 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <jwi@linux.ibm.com>;
-        Mon, 5 Aug 2019 08:25:28 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 5 Aug 2019 08:25:26 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x757PPrT37617832
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 5 Aug 2019 07:25:25 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0838D11C05B;
-        Mon,  5 Aug 2019 07:25:25 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7DCC611C052;
-        Mon,  5 Aug 2019 07:25:24 +0000 (GMT)
-Received: from [9.145.155.106] (unknown [9.145.155.106])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  5 Aug 2019 07:25:24 +0000 (GMT)
-Subject: Re: [PATCH] s390/net: Mark expected switch fall-throughs
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-References: <20190730001715.GA20706@embeddedor>
-From:   Julian Wiedmann <jwi@linux.ibm.com>
-Date:   Mon, 5 Aug 2019 09:25:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 5 Aug 2019 03:26:57 -0400
+Received: by mail-pg1-f178.google.com with SMTP id i18so39251082pgl.11;
+        Mon, 05 Aug 2019 00:26:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EimvqE0jwyqP2WGVedMuh7qrn6YSjJuzP7Su4aO08UA=;
+        b=PxzyLfa7re80m4D/ZGKf2uK1mGVnjoa23fNDxiw41OD6EYPoVxEksmkmpjZXTZJr3d
+         f35V4qcpVFb1fWfZvDv+6oPRtrusv3q7rJtlen32b+gK3sn2PG3lwNUDPqGKyadLvvjV
+         zTavhVtYpLjrovjEYS+rromXBFnHjMigjkUQYyv7AtaiVmGJD0d011li/a1Ldvoy5Bd0
+         tLcxrBTk0RLH6q+Uro0RKlEQcY4L2Sg58j43ckvIRI45UW53CWldSZhbm4xo39YulDF4
+         1hiIhZgj3sQfyUMFguThXe0LxeL28bXfxyS+DxT446cTVLRIjm+syT0sq7bCT752RAIB
+         ZpDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EimvqE0jwyqP2WGVedMuh7qrn6YSjJuzP7Su4aO08UA=;
+        b=SC7f8faNYRSkTsFXtnLq3LkPGTeZmIxUfMLksWfpFSyL1pVnojLS0z99MVjNX+6JKs
+         o4fJoZXTn32yvwJY3TzdSbbhlenjV501d7Kd0ePQhDDCpMbQVxuGAxHkRXmixe0X2w3q
+         221iGNeUqzEuJ22DYmfDnOVMdciquiHTYOZi7KYSJ8MY+3mDORTKzojWTt7MZkgGLSsq
+         IpzBYzqTkfLAkeHZLbfZH9xTJNjXYDPF7mOlBd84ppOGYrLVJb+ZDxNyq9aAQpHn7fIr
+         jphpOkBXyDJ6d2NeJkP+jQ9WmK/wTqaue5u93O2qeMYXSdmzWjm/vKXnqbgXG5D9KvoE
+         VBxw==
+X-Gm-Message-State: APjAAAXoRjWkQCGOahRd+bU1p1f6cTz6fkmaYJX33sH9o6bGzJOLQRsJ
+        RiE6cZYdHOBwnHXcS6LYepWKzUg9yt9scg==
+X-Google-Smtp-Source: APXvYqyiGHjzQnzFsluj5XM90F8t6hyJvvi+Lq6zx2SX9OAWkCqaHYGp6mt9zRTsPtj1MgZ6nW2LUQ==
+X-Received: by 2002:a63:c006:: with SMTP id h6mr4759884pgg.290.1564990016921;
+        Mon, 05 Aug 2019 00:26:56 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
+        by smtp.gmail.com with ESMTPSA id x25sm113662267pfa.90.2019.08.05.00.26.53
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 05 Aug 2019 00:26:55 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Andy Whitcroft <apw@canonical.com>,
+        Joe Perches <joe@perches.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH v2] Documentation/checkpatch: Prefer str_has_prefix over strncmp
+Date:   Mon,  5 Aug 2019 15:26:45 +0800
+Message-Id: <20190805072645.32691-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190730001715.GA20706@embeddedor>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19080507-0016-0000-0000-0000029A53FD
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19080507-0017-0000-0000-000032F95978
-Message-Id: <9d2534f3-246b-ad01-6cae-b9c461b28bac@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-05_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908050084
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30.07.19 02:17, Gustavo A. R. Silva wrote:
-> Mark switch cases where we are expecting to fall through.
-> 
-> This patch fixes the following warnings (Building: s390):
-> 
-> drivers/s390/net/ctcm_fsms.c: In function ‘ctcmpc_chx_attnbusy’:
-> drivers/s390/net/ctcm_fsms.c:1703:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    if (grp->changed_side == 1) {
->       ^
-> drivers/s390/net/ctcm_fsms.c:1707:2: note: here
->   case MPCG_STATE_XID0IOWAIX:
->   ^~~~
-> 
-> drivers/s390/net/ctcm_mpc.c: In function ‘ctc_mpc_alloc_channel’:
-> drivers/s390/net/ctcm_mpc.c:358:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    if (callback)
->       ^
-> drivers/s390/net/ctcm_mpc.c:360:2: note: here
->   case MPCG_STATE_XID0IOWAIT:
->   ^~~~
-> 
-> drivers/s390/net/ctcm_mpc.c: In function ‘mpc_action_timeout’:
-> drivers/s390/net/ctcm_mpc.c:1469:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    if ((fsm_getstate(rch->fsm) == CH_XID0_PENDING) &&
->       ^
-> drivers/s390/net/ctcm_mpc.c:1472:2: note: here
->   default:
->   ^~~~~~~
-> drivers/s390/net/ctcm_mpc.c: In function ‘mpc_send_qllc_discontact’:
-> drivers/s390/net/ctcm_mpc.c:2087:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    if (grp->estconnfunc) {
->       ^
-> drivers/s390/net/ctcm_mpc.c:2092:2: note: here
->   case MPCG_STATE_FLOWC:
->   ^~~~
-> 
-> drivers/s390/net/qeth_l2_main.c: In function ‘qeth_l2_process_inbound_buffer’:
-> drivers/s390/net/qeth_l2_main.c:328:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     if (IS_OSN(card)) {
->        ^
-> drivers/s390/net/qeth_l2_main.c:337:3: note: here
->    default:
->    ^~~~~~~
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  drivers/s390/net/ctcm_fsms.c    | 1 +
->  drivers/s390/net/ctcm_mpc.c     | 3 +++
->  drivers/s390/net/qeth_l2_main.c | 2 +-
->  3 files changed, 5 insertions(+), 1 deletion(-)
-> 
+Add "strncmp() on string prefix" to
+Documentation/process/deprecated.rst since using strncmp()
+to check whether a string starts with a prefix is error-prone.
+The safe replacement is str_has_prefix().
 
-Applied, thanks.
+Also add check to the newly introduced deprecated_string_apis
+in checkpatch.pl.
+
+This patch depends on patch:
+"Documentation/checkpatch: Prefer stracpy/strscpy over
+strcpy/strlcpy/strncpy."
+
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+Changes in v2:
+  - Use "strncmp() on string prefix" instead of
+    "strncmp()" to make it more precise.
+  - Remove "c:func" and use "strncmp" directly
+    in description.
+
+ Documentation/process/deprecated.rst | 8 ++++++++
+ scripts/checkpatch.pl                | 1 +
+ 2 files changed, 9 insertions(+)
+
+diff --git a/Documentation/process/deprecated.rst b/Documentation/process/deprecated.rst
+index 56280e108d5a..96fa32aba189 100644
+--- a/Documentation/process/deprecated.rst
++++ b/Documentation/process/deprecated.rst
+@@ -109,6 +109,14 @@ the given limit of bytes to copy. This is inefficient and can lead to
+ linear read overflows if a source string is not NUL-terminated. The
+ safe replacement is stracpy() or strscpy().
+ 
++strncmp() on string prefix
++--------------------------
++strncmp() is often used to test if a string starts with a prefix by
++strncmp(str, prefix, length of prefix). This is error-prone because length
++of prefix can have counting error if using a constant length, or use
++sizeof(prefix) without - 1. Also, if the prefix is a pointer, sizeof(prefix)
++leads to a wrong size. The safe replacement is str_has_prefix().
++
+ Variable Length Arrays (VLAs)
+ -----------------------------
+ Using stack VLAs produces much worse machine code than statically
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 0ae9ae01d855..38e82d2ac286 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -609,6 +609,7 @@ our %deprecated_string_apis = (
+ 	"strcpy"		=> "stracpy or strscpy",
+ 	"strlcpy"		=> "stracpy or strscpy",
+ 	"strncpy"		=> "stracpy or strscpy - for non-NUL-terminated uses, strncpy dest should be __nonstring",
++	"strncmp"		=> "str_has_prefix",
+ );
+ 
+ #Create a search pattern for all these strings apis to speed up a loop below
+-- 
+2.20.1
 
