@@ -2,261 +2,156 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9EFC32751
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C5BC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD2F72087B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:28:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011716;
-	bh=WCr2C9SvA6NcF0TyMrkE44OCdazKei7aqczCmdnv1ac=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XtOlLOyGQQSowgkWQ7kEE3NQ7hW1WU7Q2a0py93zye+UGwmK5ri2O6BzfulE5S9ux
-	 F1BZHebHlFAuLy2MUiS4bvkkwfwEFNvMnVM7QccEHygFrpV0jytYa2FwUrb/h/lOcV
-	 DfarPS6GTz4eZOI7OIqvpk1h116HQN5SHgnJXcR0=
+	by mail.kernel.org (Postfix) with ESMTP id 68C6620657
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:28:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730751AbfHEN2g (ORCPT
+        id S1731020AbfHEN2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:28:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59314 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:28:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:49066 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730723AbfHENWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:22:42 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CEFF20651;
-        Mon,  5 Aug 2019 13:22:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011362;
-        bh=WCr2C9SvA6NcF0TyMrkE44OCdazKei7aqczCmdnv1ac=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dei+GJRSHPxVOW1YNzO+hl0OHkmuTpOf1dtvCeAN73gg/vvieASbE3K1BOx70swP+
-         HnjXeTn+iuTGPRAi9vUoCGpRZL5RkezyDGW0hCzXz++IYJX/ZuG91NsQim9j4ImVCK
-         UV8md/mSZQnceJkCOiQehRWvk9tpQKNolPsYjudc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Tatashin <pasha.tatashin@soleen.com>,
-        David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@suse.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        Huang Ying <ying.huang@intel.com>,
-        James Morris <jmorris@namei.org>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, Takashi Iwai <tiwai@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Yaowei Bai <baiyaowei@cmss.chinamobile.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.2 064/131] mm/hotplug: make remove_memory() interface usable
-Date:   Mon,  5 Aug 2019 15:02:31 +0200
-Message-Id: <20190805124955.739647249@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
-References: <20190805124951.453337465@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1730723AbfHEN2i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:28:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 602A1337;
+        Mon,  5 Aug 2019 06:28:37 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 279043F706;
+        Mon,  5 Aug 2019 06:28:35 -0700 (PDT)
+Date:   Mon, 5 Aug 2019 14:28:33 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Etienne Carriere <etienne.carriere@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, Peng Fan <peng.fan@nxp.com>,
+        linux-kernel@vger.kernel.org,
+        Bo Zhang <bozhang.zhang@broadcom.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Volodymyr Babchuk <volodymyr_babchuk@epam.com>,
+        Gaku Inami <gaku.inami.xh@renesas.com>,
+        aidapala@qti.qualcomm.com, pajay@qti.qualcomm.com,
+        Souvik Chakravarty <Souvik.Chakravarty@arm.com>,
+        wesleys@xilinx.com, Felix Burton <fburton@xilinx.com>,
+        Saeed Nowshadi <saeed.nowshadi@xilinx.com>,
+        Ionela Voinescu <Ionela.Voinescu@arm.com>,
+        Chris Redpath <Chris.Redpath@arm.com>,
+        Quentin Perret <Quentin.Perret@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 2/5] firmware: arm_scmi: Make use SCMI v2.0 fastchannel
+ for performance protocol
+Message-ID: <20190805132833.GC627@e107155-lin>
+References: <20190726135954.11078-1-sudeep.holla@arm.com>
+ <20190726135954.11078-3-sudeep.holla@arm.com>
+ <CAN5uoS-dgtz55O+AAxEFkgtijpHj_-NSy7SkNRAkhEJN5v4PWA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAN5uoS-dgtz55O+AAxEFkgtijpHj_-NSy7SkNRAkhEJN5v4PWA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit eca499ab3749a4537dee77ffead47a1a2c0dee19 ]
+On Mon, Aug 05, 2019 at 03:16:41PM +0200, Etienne Carriere wrote:
+> On Fri, 26 Jul 2019 at 16:00, Sudeep Holla <sudeep.holla@arm.com> wrote:
+> >
+> > SCMI v2.0 adds support for "FastChannel" which do not use a message
+> > header as they are specialized for a single message.
+> >
+> > Only PERFORMANCE_LIMITS_{SET,GET} and PERFORMANCE_LEVEL_{SET,GET}
+> > commands are supported over fastchannels. As they are optional, they
+> > need to be discovered by PERFORMANCE_DESCRIBE_FASTCHANNEL command.
+> > Further {LIMIT,LEVEL}_SET commands can have optional doorbell support.
+> >
+> > Add support for making use of these fastchannels.
+> >
+> > Cc: Ionela Voinescu <Ionela.Voinescu@arm.com>
+> > Cc: Chris Redpath <Chris.Redpath@arm.com>
+> > Cc: Quentin Perret <Quentin.Perret@arm.com>
+> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> > ---
+> >  drivers/firmware/arm_scmi/perf.c | 104 +++++++++++++++++++++++++++++--
+> >  1 file changed, 100 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/firmware/arm_scmi/perf.c b/drivers/firmware/arm_scmi/perf.c
+> > index 6cce3e82e81e..b9144efbd6fb 100644
+> > --- a/drivers/firmware/arm_scmi/perf.c
+> > +++ b/drivers/firmware/arm_scmi/perf.c
+> > @@ -8,6 +8,7 @@
+> >  #include <linux/bits.h>
+> >  #include <linux/of.h>
+> >  #include <linux/io.h>
+> > +#include <linux/io-64-nonatomic-hi-lo.h>
+> >  #include <linux/platform_device.h>
+> >  #include <linux/pm_opp.h>
+> >  #include <linux/sort.h>
+> > @@ -293,7 +294,42 @@ scmi_perf_describe_levels_get(const struct scmi_handle *handle, u32 domain,
+> >         return ret;
+> >  }
+> >
+> > -static int scmi_perf_limits_set(const struct scmi_handle *handle, u32 domain,
+> > +#define SCMI_PERF_FC_RING_DB(doorbell, w)              \
+>
+> Suggest to reformat into a macro style:
+>     #define SCMI_PERF_FC_RING_DB(doorbell, w)              \
+>         do { \
+>                 (...) \
+>         } while (0)
+>
 
-Presently the remove_memory() interface is inherently broken.  It tries
-to remove memory but panics if some memory is not offline.  The problem
-is that it is impossible to ensure that all memory blocks are offline as
-this function also takes lock_device_hotplug that is required to change
-memory state via sysfs.
+Sure I can try that.
 
-So, between calling this function and offlining all memory blocks there
-is always a window when lock_device_hotplug is released, and therefore,
-there is always a chance for a panic during this window.
+> > +{                                                      \
+> > +       u##w val = 0;                                   \
+> > +       struct scmi_fc_db_info *db = doorbell;          \
+> > +                                                       \
+> > +       if ((db)->mask)                                 \
+>
+> remove parentheses. I would say, could simply remove `if (db->mask)` here.
 
-Make this interface to return an error if memory removal fails.  This
-way it is safe to call this function without panicking machine, and also
-makes it symmetric to add_memory() which already returns an error.
+Ah, missed to drop this one. We can avoid reading the value if mask = 0,
+so I prefer to keep it.
+>
+> > +               val = ioread##w(db->addr) & db->mask;   \
+> > +       iowrite##w((u##w)db->set | val, db->addr);      \
+> > +}
+> > +
+> > +static void scmi_perf_fc_ring_db(struct scmi_fc_db_info *db)
+> > +{
+> > +       if (!db || !db->addr)
+> > +               return;
+> > +
+> > +       if (db->width == 1)
+> > +               SCMI_PERF_FC_RING_DB(db, 8)
+> > +       else if (db->width == 2)
+> > +               SCMI_PERF_FC_RING_DB(db, 16)
+> > +       else if (db->width == 4)
+> > +               SCMI_PERF_FC_RING_DB(db, 32)
+> > +       else /* db->width == 8 */
+> > +#ifdef CONFIG_64BIT
+> > +               SCMI_PERF_FC_RING_DB(db, 64)
+> > +#else
+> > +       {
+> > +               u64 val = 0;
+> > +
+> > +               if (db->mask)
+> > +                       val = ioread64_hi_lo(db->addr) & db->mask;
+> > +               iowrite64_hi_lo(db->set, db->addr);
+>
+> Is `value` missing here?
+> Why not using SCMI_PERF_FC_RING_DB(db, 64) here?
+>
 
-Link: http://lkml.kernel.org/r/20190517215438.6487-3-pasha.tatashin@soleen.com
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Fengguang Wu <fengguang.wu@intel.com>
-Cc: Huang Ying <ying.huang@intel.com>
-Cc: James Morris <jmorris@namei.org>
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: Keith Busch <keith.busch@intel.com>
-Cc: Ross Zwisler <zwisler@kernel.org>
-Cc: Sasha Levin <sashal@kernel.org>
-Cc: Takashi Iwai <tiwai@suse.de>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Yaowei Bai <baiyaowei@cmss.chinamobile.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- include/linux/memory_hotplug.h |  8 +++--
- mm/memory_hotplug.c            | 64 +++++++++++++++++++++++-----------
- 2 files changed, 49 insertions(+), 23 deletions(-)
+I am still using it. Just if CONFIG_64BIT is enabled and  io{read,write}64
+are defined. ARM32/MIPS and other 32-bit platform build might fail
+otherwise. I don't want to restrict SCMI to 64-bit platforms only.
 
-diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-index ae892eef8b825..988fde33cd7f5 100644
---- a/include/linux/memory_hotplug.h
-+++ b/include/linux/memory_hotplug.h
-@@ -324,7 +324,7 @@ static inline void pgdat_resize_init(struct pglist_data *pgdat) {}
- extern bool is_mem_section_removable(unsigned long pfn, unsigned long nr_pages);
- extern void try_offline_node(int nid);
- extern int offline_pages(unsigned long start_pfn, unsigned long nr_pages);
--extern void remove_memory(int nid, u64 start, u64 size);
-+extern int remove_memory(int nid, u64 start, u64 size);
- extern void __remove_memory(int nid, u64 start, u64 size);
- 
- #else
-@@ -341,7 +341,11 @@ static inline int offline_pages(unsigned long start_pfn, unsigned long nr_pages)
- 	return -EINVAL;
- }
- 
--static inline void remove_memory(int nid, u64 start, u64 size) {}
-+static inline int remove_memory(int nid, u64 start, u64 size)
-+{
-+	return -EBUSY;
-+}
-+
- static inline void __remove_memory(int nid, u64 start, u64 size) {}
- #endif /* CONFIG_MEMORY_HOTREMOVE */
- 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index e096c987d2614..77d1f69cdeadd 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1736,9 +1736,10 @@ static int check_memblock_offlined_cb(struct memory_block *mem, void *arg)
- 		endpa = PFN_PHYS(section_nr_to_pfn(mem->end_section_nr + 1))-1;
- 		pr_warn("removing memory fails, because memory [%pa-%pa] is onlined\n",
- 			&beginpa, &endpa);
--	}
- 
--	return ret;
-+		return -EBUSY;
-+	}
-+	return 0;
- }
- 
- static int check_cpu_on_node(pg_data_t *pgdat)
-@@ -1821,19 +1822,9 @@ static void __release_memory_resource(resource_size_t start,
- 	}
- }
- 
--/**
-- * remove_memory
-- * @nid: the node ID
-- * @start: physical address of the region to remove
-- * @size: size of the region to remove
-- *
-- * NOTE: The caller must call lock_device_hotplug() to serialize hotplug
-- * and online/offline operations before this call, as required by
-- * try_offline_node().
-- */
--void __ref __remove_memory(int nid, u64 start, u64 size)
-+static int __ref try_remove_memory(int nid, u64 start, u64 size)
- {
--	int ret;
-+	int rc = 0;
- 
- 	BUG_ON(check_hotplug_memory_range(start, size));
- 
-@@ -1841,13 +1832,13 @@ void __ref __remove_memory(int nid, u64 start, u64 size)
- 
- 	/*
- 	 * All memory blocks must be offlined before removing memory.  Check
--	 * whether all memory blocks in question are offline and trigger a BUG()
-+	 * whether all memory blocks in question are offline and return error
- 	 * if this is not the case.
- 	 */
--	ret = walk_memory_range(PFN_DOWN(start), PFN_UP(start + size - 1), NULL,
--				check_memblock_offlined_cb);
--	if (ret)
--		BUG();
-+	rc = walk_memory_range(PFN_DOWN(start), PFN_UP(start + size - 1), NULL,
-+			       check_memblock_offlined_cb);
-+	if (rc)
-+		goto done;
- 
- 	/* remove memmap entry */
- 	firmware_map_remove(start, start + size, "System RAM");
-@@ -1859,14 +1850,45 @@ void __ref __remove_memory(int nid, u64 start, u64 size)
- 
- 	try_offline_node(nid);
- 
-+done:
- 	mem_hotplug_done();
-+	return rc;
- }
- 
--void remove_memory(int nid, u64 start, u64 size)
-+/**
-+ * remove_memory
-+ * @nid: the node ID
-+ * @start: physical address of the region to remove
-+ * @size: size of the region to remove
-+ *
-+ * NOTE: The caller must call lock_device_hotplug() to serialize hotplug
-+ * and online/offline operations before this call, as required by
-+ * try_offline_node().
-+ */
-+void __remove_memory(int nid, u64 start, u64 size)
-+{
-+
-+	/*
-+	 * trigger BUG() is some memory is not offlined prior to calling this
-+	 * function
-+	 */
-+	if (try_remove_memory(nid, start, size))
-+		BUG();
-+}
-+
-+/*
-+ * Remove memory if every memory block is offline, otherwise return -EBUSY is
-+ * some memory is not offline
-+ */
-+int remove_memory(int nid, u64 start, u64 size)
- {
-+	int rc;
-+
- 	lock_device_hotplug();
--	__remove_memory(nid, start, size);
-+	rc  = try_remove_memory(nid, start, size);
- 	unlock_device_hotplug();
-+
-+	return rc;
- }
- EXPORT_SYMBOL_GPL(remove_memory);
- #endif /* CONFIG_MEMORY_HOTREMOVE */
--- 
-2.20.1
-
-
-
+--
+Regards,
+Sudeep
