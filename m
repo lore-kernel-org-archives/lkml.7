@@ -2,153 +2,92 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B95C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB92C32751
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2598D20880
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CE082075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:12:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010721;
-	bh=aOwNTrr2iEEVJz++WCaYtU1NDdt7iGgWoZ4ARJl2uiM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lUSJpC+9WeHFDz7CeBIaStGuAZt/YIYDSCcl6GOm4+8P3pDRqMipUx2UVkgbbmNA1
-	 Hskv9fzBEK3pcBkBO5ee6DaDz9t0lbluxqEK4Q0rJPdG9BFHBpB0T/oisbqoPE7hhL
-	 T4pdMhfrgNh01LWrdOL4+mCHadbdr+xgMEBdtKvU=
+	s=default; t=1565010728;
+	bh=HAJIUKAnC7bJu5wsqkTi3X8xbKnJ5vzI7COmh/zhbeo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=OiaohQW/aVj/CcAkLFU6ATVtvVucCCV6rU3geyvABq2t1UdjXT+MqshQ1EsmSRt1G
+	 1+pM0UBM2UbIdSpBGqFvLvAggXH2pbSpto03uOt53YZWZPI2uSFWhAEJhmCuA4yW39
+	 48w00caNqlSGpqG0EYxC7YEOxF+Tn5NfZ+41WyWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730194AbfHENL7 (ORCPT
+        id S1730391AbfHENKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:11:59 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:46206 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729804AbfHENKy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:10:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=VrCAPwQwFTw1if53nWlT2zlercpavRMIEI0XwlCoYsQ=; b=Ms5BxrLVteV4zzh+7oV/uBRGh
-        TXR3nX5sfpayQu52G/5XB9tCD8Fna9FaGr4vBwbShA7ReHxN2SGNGnBOGSGnHmOK3RqFjGou6SgsA
-        d8M36V3YTUebG4vAkZ0rxqUueGAJPpA4eEHL2aLxIWLBLMwN6g163SKd+kHbGr7zBxXnU=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hucky-0000Js-H6; Mon, 05 Aug 2019 13:10:32 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id D91112742D06; Mon,  5 Aug 2019 14:10:30 +0100 (BST)
-Date:   Mon, 5 Aug 2019 14:10:30 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Richard Fontana <rfontana@redhat.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rtc@vger.kernel.org, srv_heupstream@mediatek.com
-Subject: Re: [PATCH v4 07/10] regulator: mt6358: Add support for MT6358
- regulator
-Message-ID: <20190805131030.GE6432@sirena.org.uk>
-References: <1564982518-32163-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1564982518-32163-8-git-send-email-hsin-hsiung.wang@mediatek.com>
+        Mon, 5 Aug 2019 09:10:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49752 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730054AbfHENKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:10:42 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 824332067D;
+        Mon,  5 Aug 2019 13:10:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565010642;
+        bh=HAJIUKAnC7bJu5wsqkTi3X8xbKnJ5vzI7COmh/zhbeo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KupVax7spWHa4z41iGxU/UvHdXOT2o6SvjwJORDwfHx2ojPNoKuSddn2EnXc20k3T
+         Mpd99llpYWPQJz8Zsi5+BArdtVnGt41IGZfTR7SDlkysZKUBETEozNjE+vliCfFA5d
+         jufUoJ76Y+BewNUcFy4nsLVQENihQ+A5ZUkGxjLI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Joe Perches <joe@perches.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.19 47/74] mmc: meson-mx-sdio: Fix misuse of GENMASK macro
+Date:   Mon,  5 Aug 2019 15:03:00 +0200
+Message-Id: <20190805124939.692542146@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190805124935.819068648@linuxfoundation.org>
+References: <20190805124935.819068648@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xJK8B5Wah2CMJs8h"
-Content-Disposition: inline
-In-Reply-To: <1564982518-32163-8-git-send-email-hsin-hsiung.wang@mediatek.com>
-X-Cookie: Place stamp here.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Joe Perches <joe@perches.com>
 
---xJK8B5Wah2CMJs8h
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+commit 665e985c2f41bebc3e6cee7e04c36a44afbc58f7 upstream.
 
-On Mon, Aug 05, 2019 at 01:21:55PM +0800, Hsin-Hsiung Wang wrote:
+Arguments are supposed to be ordered high then low.
 
-> +static const u32 vmch_voltages[] = {
-> +	2900000, 3000000, 3300000,
-> +};
+Signed-off-by: Joe Perches <joe@perches.com>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Fixes: ed80a13bb4c4 ("mmc: meson-mx-sdio: Add a driver for the Amlogic
+Meson8 and Meson8b SoCs")
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-> +static const u32 vemc_voltages[] = {
-> +	2900000, 3000000, 3300000,
-> +};
+---
+ drivers/mmc/host/meson-mx-sdio.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Several of these tables appear to be identical.
+--- a/drivers/mmc/host/meson-mx-sdio.c
++++ b/drivers/mmc/host/meson-mx-sdio.c
+@@ -76,7 +76,7 @@
+ 	#define MESON_MX_SDIO_IRQC_IF_CONFIG_MASK		GENMASK(7, 6)
+ 	#define MESON_MX_SDIO_IRQC_FORCE_DATA_CLK		BIT(8)
+ 	#define MESON_MX_SDIO_IRQC_FORCE_DATA_CMD		BIT(9)
+-	#define MESON_MX_SDIO_IRQC_FORCE_DATA_DAT_MASK		GENMASK(10, 13)
++	#define MESON_MX_SDIO_IRQC_FORCE_DATA_DAT_MASK		GENMASK(13, 10)
+ 	#define MESON_MX_SDIO_IRQC_SOFT_RESET			BIT(15)
+ 	#define MESON_MX_SDIO_IRQC_FORCE_HALT			BIT(30)
+ 	#define MESON_MX_SDIO_IRQC_HALT_HOLE			BIT(31)
 
-> +static inline unsigned int mt6358_map_mode(unsigned int mode)
-> +{
-> +	return mode == MT6358_BUCK_MODE_AUTO ?
-> +		REGULATOR_MODE_NORMAL : REGULATOR_MODE_FAST;
-> +}
 
-There is no need for this to be an inline and please write normal
-conditional statements to improve legibility.  There's other examples in
-the driver.
-
-> +static int mt6358_get_buck_voltage_sel(struct regulator_dev *rdev)
-> +{
-> +	int ret, regval;
-> +	struct mt6358_regulator_info *info = rdev_get_drvdata(rdev);
-> +
-> +	ret = regmap_read(rdev->regmap, info->da_vsel_reg, &regval);
-> +	if (ret != 0) {
-> +		dev_info(&rdev->dev,
-> +			 "Failed to get mt6358 Buck %s vsel reg: %d\n",
-> +			 info->desc.name, ret);
-
-dev_err() for errors here and throughout the driver.
-
-> +		return ret;
-> +	}
-> +
-> +	ret = (regval >> info->da_vsel_shift) & info->da_vsel_mask;
-> +
-> +	return ret;
-> +}
-
-This looks like a standard get_voltage_sel_regmap()?
-
-> +err_mode:
-> +	if (ret != 0)
-> +		return ret;
-> +
-> +	return 0;
-
-Or just return ret unconditionally?
-
---xJK8B5Wah2CMJs8h
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1IKsYACgkQJNaLcl1U
-h9AMIggAg397SgwCnQsqUm0bErtFXMF3frCb8lQZCc/BOEjOShATbn9igZbM6ZTU
-QxQabCCpti0hAUqGHB6ye8q+OlI13w8ShOMg6+VJxOhec2ihBGLtkbhJguoZtfVI
-v+cqPZf3DxmDs1QCqMQTHdKK47Zjf2GN7XMEubNifpcWlkAHTcrQ8NGTC+8vGcCj
-5Ss9eBuRyAO0c5Z08Nsxh70MhK6FnHzwXDzlaOPDXbQWfxouTBvNLHN2LtGeNLDO
-St8mmX2B4jwvOLjItqqhsATzbH+DwoBGSOUtRNFbwIh+/UeZfwpwQJJk5U0FsgwC
-4K6rYZLMhm8RQGlTWwS3xPlqirZbvg==
-=1DeU
------END PGP SIGNATURE-----
-
---xJK8B5Wah2CMJs8h--
