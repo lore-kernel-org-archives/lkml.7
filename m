@@ -4,215 +4,324 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A04C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 05:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC69C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 05:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51E7A20B1F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 05:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 879E7217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 05:22:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727307AbfHEFPU (ORCPT
+        id S1727211AbfHEFWr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 01:15:20 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:39512 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726375AbfHEFPM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 01:15:12 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 903181A0199;
-        Mon,  5 Aug 2019 07:15:10 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E6C301A0186;
-        Mon,  5 Aug 2019 07:15:05 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 4572E402E6;
-        Mon,  5 Aug 2019 13:15:00 +0800 (SGT)
-From:   Richard Zhu <hongxing.zhu@nxp.com>
-To:     jassisinghbrar@gmail.com, o.rempel@pengutronix.de,
-        daniel.baluta@nxp.com, aisheng.dong@nxp.com
-Cc:     linux-imx@nxp.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Richard Zhu <hongxing.zhu@nxp.com>
-Subject: [RESEND PATCH v5 4/4] mailbox: imx: add support for imx v1 mu
-Date:   Mon,  5 Aug 2019 12:52:22 +0800
-Message-Id: <1564980742-19124-5-git-send-email-hongxing.zhu@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1564980742-19124-1-git-send-email-hongxing.zhu@nxp.com>
-References: <1564980742-19124-1-git-send-email-hongxing.zhu@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 5 Aug 2019 01:22:47 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:20375 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725992AbfHEFWr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 01:22:47 -0400
+X-UUID: 0ebec12718714b29b3d51be59f5a6a10-20190805
+X-UUID: 0ebec12718714b29b3d51be59f5a6a10-20190805
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
+        (envelope-from <hsin-hsiung.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
+        with ESMTP id 2129419381; Mon, 05 Aug 2019 13:22:42 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 5 Aug 2019 13:22:42 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 5 Aug 2019 13:22:42 +0800
+From:   Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
+        <srv_heupstream@mediatek.com>
+Subject: [PATCH v4 03/10] mfd: mt6397: modify suspend/resume behavior
+Date:   Mon, 5 Aug 2019 13:21:51 +0800
+Message-ID: <1564982518-32163-4-git-send-email-hsin-hsiung.wang@mediatek.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1564982518-32163-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+References: <1564982518-32163-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 80ACD00008461D827E9598721687A43049042773A393F161012BD8D9EA4927502000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a version 1.0 MU on i.MX7ULP platform.
-One new version ID register is added, and it's offset is 0.
-TRn registers are defined at the offset 0x20 ~ 0x2C.
-RRn registers are defined at the offset 0x40 ~ 0x4C.
-SR/CR registers are defined at 0x60/0x64.
-Extend this driver to support it.
+Some pmics don't need backup interrupt settings, so we change to use
+pm notifier for the pmics which are necessary to store settings.
 
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-Suggested-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
 ---
- drivers/mailbox/imx-mailbox.c | 55 ++++++++++++++++++++++++++++++-------------
- 1 file changed, 38 insertions(+), 17 deletions(-)
+ drivers/mfd/mt6397-core.c       | 89 +++++++++++++++++------------------------
+ drivers/mfd/mt6397-irq.c        | 33 +++++++++++++++
+ include/linux/mfd/mt6397/core.h |  3 ++
+ 3 files changed, 73 insertions(+), 52 deletions(-)
 
-diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
-index afe625e..2cdcdc5 100644
---- a/drivers/mailbox/imx-mailbox.c
-+++ b/drivers/mailbox/imx-mailbox.c
-@@ -12,19 +12,11 @@
+diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
+index 93c8881..8f94187 100644
+--- a/drivers/mfd/mt6397-core.c
++++ b/drivers/mfd/mt6397-core.c
+@@ -4,7 +4,6 @@
+  * Author: Flora Fu, MediaTek
+  */
+ 
+-#include <linux/interrupt.h>
+ #include <linux/module.h>
  #include <linux/of_device.h>
- #include <linux/slab.h>
- 
--/* Transmit Register */
--#define IMX_MU_xTRn(x)		(0x00 + 4 * (x))
--/* Receive Register */
--#define IMX_MU_xRRn(x)		(0x10 + 4 * (x))
--/* Status Register */
--#define IMX_MU_xSR		0x20
- #define IMX_MU_xSR_GIPn(x)	BIT(28 + (3 - (x)))
- #define IMX_MU_xSR_RFn(x)	BIT(24 + (3 - (x)))
- #define IMX_MU_xSR_TEn(x)	BIT(20 + (3 - (x)))
- #define IMX_MU_xSR_BRDIP	BIT(9)
- 
--/* Control Register */
--#define IMX_MU_xCR		0x24
- /* General Purpose Interrupt Enable */
- #define IMX_MU_xCR_GIEn(x)	BIT(28 + (3 - (x)))
- /* Receive Interrupt Enable */
-@@ -44,6 +36,13 @@ enum imx_mu_chan_type {
- 	IMX_MU_TYPE_RXDB,	/* Rx doorbell */
+ #include <linux/of_irq.h>
+@@ -82,40 +81,27 @@ static const struct mfd_cell mt6397_devs[] = {
+ 	}
  };
  
-+struct imx_mu_dcfg {
-+	u32	xTR[4];		/* Transmit Registers */
-+	u32	xRR[4];		/* Receive Registers */
-+	u32	xSR;		/* Status Register */
-+	u32	xCR;		/* Control Register */
+-#ifdef CONFIG_PM_SLEEP
+-static int mt6397_irq_suspend(struct device *dev)
+-{
+-	struct mt6397_chip *chip = dev_get_drvdata(dev);
+-
+-	regmap_write(chip->regmap, chip->int_con[0], chip->wake_mask[0]);
+-	regmap_write(chip->regmap, chip->int_con[1], chip->wake_mask[1]);
+-
+-	enable_irq_wake(chip->irq);
+-
+-	return 0;
+-}
+-
+-static int mt6397_irq_resume(struct device *dev)
+-{
+-	struct mt6397_chip *chip = dev_get_drvdata(dev);
+-
+-	regmap_write(chip->regmap, chip->int_con[0], chip->irq_masks_cur[0]);
+-	regmap_write(chip->regmap, chip->int_con[1], chip->irq_masks_cur[1]);
+-
+-	disable_irq_wake(chip->irq);
++struct chip_data {
++	u32 cid_addr;
++	u32 cid_shift;
 +};
-+
- struct imx_mu_con_priv {
- 	unsigned int		idx;
- 	char			irq_desc[IMX_MU_CHAN_NAME_SIZE];
-@@ -61,12 +60,27 @@ struct imx_mu_priv {
- 	struct mbox_chan	mbox_chans[IMX_MU_CHANS];
  
- 	struct imx_mu_con_priv  con_priv[IMX_MU_CHANS];
-+	const struct imx_mu_dcfg	*dcfg;
- 	struct clk		*clk;
- 	int			irq;
- 
- 	bool			side_b;
- };
- 
-+static const struct imx_mu_dcfg imx_mu_cfg_imx6sx = {
-+	.xTR	= {0x0, 0x4, 0x8, 0xc},
-+	.xRR	= {0x10, 0x14, 0x18, 0x1c},
-+	.xSR	= 0x20,
-+	.xCR	= 0x24,
+-	return 0;
+-}
+-#endif
++static const struct chip_data mt6323_core = {
++	.cid_addr = MT6323_CID,
++	.cid_shift = 0,
 +};
-+
-+static const struct imx_mu_dcfg imx_mu_cfg_imx7ulp = {
-+	.xTR	= {0x20, 0x24, 0x28, 0x2c},
-+	.xRR	= {0x40, 0x44, 0x48, 0x4c},
-+	.xSR	= 0x60,
-+	.xCR	= 0x64,
+ 
+-static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_irq_suspend,
+-			mt6397_irq_resume);
++static const struct chip_data mt6397_core = {
++	.cid_addr = MT6397_CID,
++	.cid_shift = 0,
 +};
-+
- static struct imx_mu_priv *to_imx_mu_priv(struct mbox_controller *mbox)
+ 
+ static int mt6397_probe(struct platform_device *pdev)
  {
- 	return container_of(mbox, struct imx_mu_priv, mbox);
-@@ -88,10 +102,10 @@ static u32 imx_mu_xcr_rmw(struct imx_mu_priv *priv, u32 set, u32 clr)
- 	u32 val;
- 
- 	spin_lock_irqsave(&priv->xcr_lock, flags);
--	val = imx_mu_read(priv, IMX_MU_xCR);
-+	val = imx_mu_read(priv, priv->dcfg->xCR);
- 	val &= ~clr;
- 	val |= set;
--	imx_mu_write(priv, val, IMX_MU_xCR);
-+	imx_mu_write(priv, val, priv->dcfg->xCR);
- 	spin_unlock_irqrestore(&priv->xcr_lock, flags);
- 
- 	return val;
-@@ -111,8 +125,8 @@ static irqreturn_t imx_mu_isr(int irq, void *p)
- 	struct imx_mu_con_priv *cp = chan->con_priv;
- 	u32 val, ctrl, dat;
- 
--	ctrl = imx_mu_read(priv, IMX_MU_xCR);
--	val = imx_mu_read(priv, IMX_MU_xSR);
-+	ctrl = imx_mu_read(priv, priv->dcfg->xCR);
-+	val = imx_mu_read(priv, priv->dcfg->xSR);
- 
- 	switch (cp->type) {
- 	case IMX_MU_TYPE_TX:
-@@ -138,10 +152,10 @@ static irqreturn_t imx_mu_isr(int irq, void *p)
- 		imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_TIEn(cp->idx));
- 		mbox_chan_txdone(chan, 0);
- 	} else if (val == IMX_MU_xSR_RFn(cp->idx)) {
--		dat = imx_mu_read(priv, IMX_MU_xRRn(cp->idx));
-+		dat = imx_mu_read(priv, priv->dcfg->xRR[cp->idx]);
- 		mbox_chan_received_data(chan, (void *)&dat);
- 	} else if (val == IMX_MU_xSR_GIPn(cp->idx)) {
--		imx_mu_write(priv, IMX_MU_xSR_GIPn(cp->idx), IMX_MU_xSR);
-+		imx_mu_write(priv, IMX_MU_xSR_GIPn(cp->idx), priv->dcfg->xSR);
- 		mbox_chan_received_data(chan, NULL);
- 	} else {
- 		dev_warn_ratelimited(priv->dev, "Not handled interrupt\n");
-@@ -159,7 +173,7 @@ static int imx_mu_send_data(struct mbox_chan *chan, void *data)
- 
- 	switch (cp->type) {
- 	case IMX_MU_TYPE_TX:
--		imx_mu_write(priv, *arg, IMX_MU_xTRn(cp->idx));
-+		imx_mu_write(priv, *arg, priv->dcfg->xTR[cp->idx]);
- 		imx_mu_xcr_rmw(priv, IMX_MU_xCR_TIEn(cp->idx), 0);
- 		break;
- 	case IMX_MU_TYPE_TXDB:
-@@ -270,7 +284,7 @@ static void imx_mu_init_generic(struct imx_mu_priv *priv)
- 		return;
- 
- 	/* Set default MU configuration */
--	imx_mu_write(priv, 0, IMX_MU_xCR);
-+	imx_mu_write(priv, 0, priv->dcfg->xCR);
- }
- 
- static int imx_mu_probe(struct platform_device *pdev)
-@@ -278,6 +292,7 @@ static int imx_mu_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct device_node *np = dev->of_node;
- 	struct imx_mu_priv *priv;
-+	const struct imx_mu_dcfg *dcfg;
- 	unsigned int i;
  	int ret;
+ 	unsigned int id;
+ 	struct mt6397_chip *pmic;
++	const struct chip_data *pmic_core;
  
-@@ -295,6 +310,11 @@ static int imx_mu_probe(struct platform_device *pdev)
- 	if (priv->irq < 0)
- 		return priv->irq;
+ 	pmic = devm_kzalloc(&pdev->dev, sizeof(*pmic), GFP_KERNEL);
+ 	if (!pmic)
+@@ -131,28 +117,30 @@ static int mt6397_probe(struct platform_device *pdev)
+ 	if (!pmic->regmap)
+ 		return -ENODEV;
  
-+	dcfg = of_device_get_match_data(dev);
-+	if (!dcfg)
-+		return -EINVAL;
-+	priv->dcfg = dcfg;
+-	platform_set_drvdata(pdev, pmic);
++	pmic_core = of_device_get_match_data(&pdev->dev);
++	if (!pmic_core)
++		return -ENODEV;
+ 
+-	ret = regmap_read(pmic->regmap, MT6397_CID, &id);
++	ret = regmap_read(pmic->regmap, pmic_core->cid_addr, &id);
+ 	if (ret) {
+-		dev_err(pmic->dev, "Failed to read chip id: %d\n", ret);
++		dev_err(&pdev->dev, "Failed to read chip id: %d\n", ret);
+ 		return ret;
+ 	}
+ 
++	pmic->chip_id = (id >> pmic_core->cid_shift) & 0xff;
 +
- 	priv->clk = devm_clk_get(dev, NULL);
- 	if (IS_ERR(priv->clk)) {
- 		if (PTR_ERR(priv->clk) != -ENOENT)
-@@ -348,7 +368,8 @@ static int imx_mu_remove(struct platform_device *pdev)
++	platform_set_drvdata(pdev, pmic);
++
+ 	pmic->irq = platform_get_irq(pdev, 0);
+ 	if (pmic->irq <= 0)
+ 		return pmic->irq;
+ 
+-	switch (id & 0xff) {
+-	case MT6323_CHIP_ID:
+-		pmic->int_con[0] = MT6323_INT_CON0;
+-		pmic->int_con[1] = MT6323_INT_CON1;
+-		pmic->int_status[0] = MT6323_INT_STATUS0;
+-		pmic->int_status[1] = MT6323_INT_STATUS1;
+-		ret = mt6397_irq_init(pmic);
+-		if (ret)
+-			return ret;
++	ret = mt6397_irq_init(pmic);
++	if (ret)
++		return ret;
+ 
++	switch (pmic->chip_id) {
++	case MT6323_CHIP_ID:
+ 		ret = devm_mfd_add_devices(&pdev->dev, -1, mt6323_devs,
+ 					   ARRAY_SIZE(mt6323_devs), NULL,
+ 					   0, pmic->irq_domain);
+@@ -160,21 +148,13 @@ static int mt6397_probe(struct platform_device *pdev)
+ 
+ 	case MT6391_CHIP_ID:
+ 	case MT6397_CHIP_ID:
+-		pmic->int_con[0] = MT6397_INT_CON0;
+-		pmic->int_con[1] = MT6397_INT_CON1;
+-		pmic->int_status[0] = MT6397_INT_STATUS0;
+-		pmic->int_status[1] = MT6397_INT_STATUS1;
+-		ret = mt6397_irq_init(pmic);
+-		if (ret)
+-			return ret;
+-
+ 		ret = devm_mfd_add_devices(&pdev->dev, -1, mt6397_devs,
+ 					   ARRAY_SIZE(mt6397_devs), NULL,
+ 					   0, pmic->irq_domain);
+ 		break;
+ 
+ 	default:
+-		dev_err(&pdev->dev, "unsupported chip: %d\n", id);
++		dev_err(&pdev->dev, "unsupported chip: %d\n", pmic->chip_id);
+ 		return -ENODEV;
+ 	}
+ 
+@@ -187,9 +167,15 @@ static int mt6397_probe(struct platform_device *pdev)
  }
  
- static const struct of_device_id imx_mu_dt_ids[] = {
--	{ .compatible = "fsl,imx6sx-mu" },
-+	{ .compatible = "fsl,imx7ulp-mu", .data = &imx_mu_cfg_imx7ulp },
-+	{ .compatible = "fsl,imx6sx-mu", .data = &imx_mu_cfg_imx6sx },
- 	{ },
+ static const struct of_device_id mt6397_of_match[] = {
+-	{ .compatible = "mediatek,mt6397" },
+-	{ .compatible = "mediatek,mt6323" },
+-	{ }
++	{
++		.compatible = "mediatek,mt6323",
++		.data = &mt6323_core,
++	}, {
++		.compatible = "mediatek,mt6397",
++		.data = &mt6397_core,
++	}, {
++		/* sentinel */
++	}
  };
- MODULE_DEVICE_TABLE(of, imx_mu_dt_ids);
+ MODULE_DEVICE_TABLE(of, mt6397_of_match);
+ 
+@@ -204,7 +190,6 @@ static struct platform_driver mt6397_driver = {
+ 	.driver = {
+ 		.name = "mt6397",
+ 		.of_match_table = of_match_ptr(mt6397_of_match),
+-		.pm = &mt6397_pm_ops,
+ 	},
+ 	.id_table = mt6397_id,
+ };
+diff --git a/drivers/mfd/mt6397-irq.c b/drivers/mfd/mt6397-irq.c
+index b2d3ce1..669e93d 100644
+--- a/drivers/mfd/mt6397-irq.c
++++ b/drivers/mfd/mt6397-irq.c
+@@ -9,6 +9,7 @@
+ #include <linux/of_irq.h>
+ #include <linux/platform_device.h>
+ #include <linux/regmap.h>
++#include <linux/suspend.h>
+ #include <linux/mfd/mt6323/core.h>
+ #include <linux/mfd/mt6323/registers.h>
+ #include <linux/mfd/mt6397/core.h>
+@@ -128,6 +129,36 @@ static const struct irq_domain_ops mt6397_irq_domain_ops = {
+ 	.map = mt6397_irq_domain_map,
+ };
+ 
++static int mt6397_irq_pm_notifier(struct notifier_block *notifier,
++				  unsigned long pm_event, void *unused)
++{
++	struct mt6397_chip *chip =
++		container_of(notifier, struct mt6397_chip, pm_nb);
++
++	switch (pm_event) {
++	case PM_SUSPEND_PREPARE:
++		regmap_write(chip->regmap,
++			     chip->int_con[0], chip->wake_mask[0]);
++		regmap_write(chip->regmap,
++			     chip->int_con[1], chip->wake_mask[1]);
++		enable_irq_wake(chip->irq);
++		break;
++
++	case PM_POST_SUSPEND:
++		regmap_write(chip->regmap,
++			     chip->int_con[0], chip->irq_masks_cur[0]);
++		regmap_write(chip->regmap,
++			     chip->int_con[1], chip->irq_masks_cur[1]);
++		disable_irq_wake(chip->irq);
++		break;
++
++	default:
++		break;
++	}
++
++	return NOTIFY_DONE;
++}
++
+ int mt6397_irq_init(struct mt6397_chip *chip)
+ {
+ 	int ret;
+@@ -159,6 +190,7 @@ int mt6397_irq_init(struct mt6397_chip *chip)
+ 	regmap_write(chip->regmap, chip->int_con[0], 0x0);
+ 	regmap_write(chip->regmap, chip->int_con[1], 0x0);
+ 
++	chip->pm_nb.notifier_call = mt6397_irq_pm_notifier;
+ 	chip->irq_domain = irq_domain_add_linear(chip->dev->of_node,
+ 						 MT6397_IRQ_NR,
+ 						 &mt6397_irq_domain_ops,
+@@ -177,5 +209,6 @@ int mt6397_irq_init(struct mt6397_chip *chip)
+ 		return ret;
+ 	}
+ 
++	register_pm_notifier(&chip->pm_nb);
+ 	return 0;
+ }
+diff --git a/include/linux/mfd/mt6397/core.h b/include/linux/mfd/mt6397/core.h
+index 9320c2a..23e21da 100644
+--- a/include/linux/mfd/mt6397/core.h
++++ b/include/linux/mfd/mt6397/core.h
+@@ -7,6 +7,8 @@
+ #ifndef __MFD_MT6397_CORE_H__
+ #define __MFD_MT6397_CORE_H__
+ 
++#include <linux/notifier.h>
++
+ enum chip_id {
+ 	MT6323_CHIP_ID = 0x23,
+ 	MT6391_CHIP_ID = 0x91,
+@@ -52,6 +54,7 @@ enum mt6397_irq_numbers {
+ struct mt6397_chip {
+ 	struct device *dev;
+ 	struct regmap *regmap;
++	struct notifier_block pm_nb;
+ 	int irq;
+ 	struct irq_domain *irq_domain;
+ 	struct mutex irqlock;
 -- 
-2.7.4
+2.6.4
 
