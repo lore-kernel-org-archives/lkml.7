@@ -2,124 +2,318 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D054FC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBF4C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD1422087B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C27BA2087B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:50:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565013048;
+	bh=cY16iu3KhNJAJ/bWT3UlvI0g6rGjeP3b0SDb82ZifGY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Q5X0y/fXlXxKYYp3zPKa/VBOnITNMm30vxiohemf52uOlpadDCiZTba8pWOgDcbFZ
+	 fWobqPhmEPbrrnOd7lNAiYIvj7h9ig2cV2my/yAVT1/1fKtcj9RlE9Jd+wp2f6xpR5
+	 BQLe7ydh0wJ/Z7PJeJgrYWL4S6iMXqJRJ57L+lVQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730422AbfHENuo (ORCPT
+        id S1730464AbfHENur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:50:44 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:44552 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729854AbfHENu2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:50:28 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 24FF616D94FDECA0FE1E;
-        Mon,  5 Aug 2019 21:50:24 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.75) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 5 Aug 2019 21:50:15 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <jejb@linux.vnet.ibm.com>, <martin.petersen@oracle.com>
-CC:     <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>,
-        Xiang Chen <chenxiang66@hisilicon.com>,
-        "John Garry" <john.garry@huawei.com>
-Subject: [PATCH 13/15] scsi: hisi_sas: Remove some unnecessary code
-Date:   Mon, 5 Aug 2019 21:48:10 +0800
-Message-ID: <1565012892-75940-14-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1565012892-75940-1-git-send-email-john.garry@huawei.com>
-References: <1565012892-75940-1-git-send-email-john.garry@huawei.com>
+        Mon, 5 Aug 2019 09:50:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43562 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729873AbfHENun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:50:43 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 453C82086D;
+        Mon,  5 Aug 2019 13:50:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565013041;
+        bh=cY16iu3KhNJAJ/bWT3UlvI0g6rGjeP3b0SDb82ZifGY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=w1oIyytiSAAVeRglYjhkbYpLENnGU4W+Go4SY2B8JxWEA3Zioq0n+5vry5KeiXNse
+         XkW1pTZV6N34GPqEmucqrqX8SJdQZ4xuNdmg0nMYI7f7gfTKt1BzF+7znbV1P/kxJE
+         G7C6ADuYvbqjKHI3xUMsZReX8YuQ/7ACvwvma/kc=
+Date:   Mon, 5 Aug 2019 14:50:37 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        freeman.liu@unisoc.com,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-iio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iio: adc: sc27xx: Change to polling mode to read data
+Message-ID: <20190805145037.0a03f21e@archlinux>
+In-Reply-To: <CAMz4kuLLSYw0JRLRVN-JegxZcK1bdv4K2m4mVu7oep6xfb+xxg@mail.gmail.com>
+References: <1870ea18729f93fb36694affaf7e9443733dd988.1564035575.git.baolin.wang@linaro.org>
+        <20190727182709.037fc595@archlinux>
+        <CAMz4kuLLSYw0JRLRVN-JegxZcK1bdv4K2m4mVu7oep6xfb+xxg@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.75]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiang Chen <chenxiang66@hisilicon.com>
+On Mon, 29 Jul 2019 10:19:48 +0800
+Baolin Wang <baolin.wang@linaro.org> wrote:
 
-Remove some unnecessary code, including:
-- Explicit zeroing of memory allocated for dmam_alloc_coherent()
-- Some duplicated code
-- Some redundant masking
+> Hi Jonathan,
+> 
+> On Sun, 28 Jul 2019 at 01:27, Jonathan Cameron <jic23@kernel.org> wrote:
+> >
+> > On Thu, 25 Jul 2019 14:33:50 +0800
+> > Baolin Wang <baolin.wang@linaro.org> wrote:
+> >  
+> > > From: Freeman Liu <freeman.liu@unisoc.com>
+> > >
+> > > On Spreadtrum platform, the headphone will read one ADC channel multiple
+> > > times to identify the headphone type, and the headphone identification is
+> > > sensitive of the ADC reading time. And we found it will take longer time
+> > > to reading ADC data by using interrupt mode comparing with the polling
+> > > mode, thus we should change to polling mode to improve the efficiency
+> > > of reading data, which can identify the headphone type successfully.
+> > >
+> > > Signed-off-by: Freeman Liu <freeman.liu@unisoc.com>
+> > > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>  
+> >
+> > Hi,
+> >
+> > My concerns with this sort of approach is that we may be sacrificing power
+> > efficiency for some usecases to support one demanding one.
+> >
+> > The maximum sleep time is 1 second (I think) which is probably too long
+> > to poll a register for in general.  
+> 
+> 1 second is the timeout time, that means something wrong when reading
+> the data taking 1 second, and we will poll the register status every
+> 500 us.
+> From the testing, polling mode takes less time than interrupt mode
+> when reading ADC data multiple times, so polling mode did not
+> sacrifice power
+> efficiency.
 
-Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
----
- drivers/scsi/hisi_sas/hisi_sas_main.c  | 5 ++---
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 5 +----
- 2 files changed, 3 insertions(+), 7 deletions(-)
+Hmm.  I'll go with a probably on that, depends on interrupt response
+latency etc so isn't entirely obvious.  Faster response doesn't necessarily
+mean lower power.
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index be15280343d1..e1c52811f4c7 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -2358,7 +2358,7 @@ int hisi_sas_alloc(struct hisi_hba *hisi_hba)
- 
- 	s = HISI_SAS_MAX_ITCT_ENTRIES * sizeof(struct hisi_sas_itct);
- 	hisi_hba->itct = dmam_alloc_coherent(dev, s, &hisi_hba->itct_dma,
--					     GFP_KERNEL | __GFP_ZERO);
-+					     GFP_KERNEL);
- 	if (!hisi_hba->itct)
- 		goto err_out;
- 
-@@ -2385,7 +2385,7 @@ int hisi_sas_alloc(struct hisi_hba *hisi_hba)
- 		void *buf;
- 
- 		buf = dmam_alloc_coherent(dev, s, &buf_dma,
--					  GFP_KERNEL | __GFP_ZERO);
-+					  GFP_KERNEL);
- 		if (!buf)
- 			goto err_out;
- 
-@@ -2434,7 +2434,6 @@ int hisi_sas_alloc(struct hisi_hba *hisi_hba)
- 					GFP_KERNEL);
- 	if (!hisi_hba->sata_breakpoint)
- 		goto err_out;
--	hisi_sas_init_mem(hisi_hba);
- 
- 	hisi_sas_slot_index_init(hisi_hba);
- 	hisi_hba->last_slot_index = HISI_SAS_UNRESERVED_IPTT;
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-index 3cc53e5b92f2..db8c7e4b1954 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-@@ -1914,7 +1914,7 @@ static void fatal_ecc_int_v3_hw(struct hisi_hba *hisi_hba)
- 	u32 irq_value, irq_msk;
- 
- 	irq_msk = hisi_sas_read32(hisi_hba, SAS_ECC_INTR_MSK);
--	hisi_sas_write32(hisi_hba, SAS_ECC_INTR_MSK, irq_msk | 0xffffffff);
-+	hisi_sas_write32(hisi_hba, SAS_ECC_INTR_MSK, 0xffffffff);
- 
- 	irq_value = hisi_sas_read32(hisi_hba, SAS_ECC_INTR);
- 	if (irq_value)
-@@ -3008,8 +3008,6 @@ hisi_sas_shost_alloc_pci(struct pci_dev *pdev)
- 	else
- 		hisi_hba->prot_mask = prot_mask;
- 
--	timer_setup(&hisi_hba->timer, NULL, 0);
--
- 	if (hisi_sas_get_fw_info(hisi_hba) < 0)
- 		goto err_out;
- 
-@@ -3099,7 +3097,6 @@ hisi_sas_v3_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	sha->lldd_module = THIS_MODULE;
- 	sha->sas_addr = &hisi_hba->sas_addr[0];
- 	sha->num_phys = hisi_hba->n_phy;
--	sha->core.shost = hisi_hba->shost;
- 
- 	for (i = 0; i < hisi_hba->n_phy; i++) {
- 		sha->sas_phy[i] = &hisi_hba->phy[i].sas_phy;
--- 
-2.17.1
+> 
+> > Is there some way we can bound that time and perhaps switch between
+> > interrupt and polling modes depending on how long we expect to wait?  
+> 
+> I do not think the interrupt mode is needed any more, since the ADC
+> reading is so fast enough usually. Thanks.
+The reason for interrupts in such devices is usually precisely the opposite.
+
+You do it because things are slow enough that you can go to sleep
+for a long time before the interrupt occurs.
+
+So question becomes whether there are circumstances in which we are
+running with long timescales and would benefit from using interrupts.
+
+Thanks,
+
+Jonathan
+
+
+> 
+> >
+> > Thanks,
+> >
+> > Jonathan
+> >  
+> > > ---
+> > >  drivers/iio/adc/sc27xx_adc.c |   81 ++++++++++++++----------------------------
+> > >  1 file changed, 27 insertions(+), 54 deletions(-)
+> > >
+> > > diff --git a/drivers/iio/adc/sc27xx_adc.c b/drivers/iio/adc/sc27xx_adc.c
+> > > index f7f7a189..ea864290 100644
+> > > --- a/drivers/iio/adc/sc27xx_adc.c
+> > > +++ b/drivers/iio/adc/sc27xx_adc.c
+> > > @@ -3,7 +3,6 @@
+> > >
+> > >  #include <linux/hwspinlock.h>
+> > >  #include <linux/iio/iio.h>
+> > > -#include <linux/interrupt.h>
+> > >  #include <linux/module.h>
+> > >  #include <linux/nvmem-consumer.h>
+> > >  #include <linux/of.h>
+> > > @@ -46,14 +45,18 @@
+> > >  /* Bits definitions for SC27XX_ADC_INT_CLR registers */
+> > >  #define SC27XX_ADC_IRQ_CLR           BIT(0)
+> > >
+> > > +/* Bits definitions for SC27XX_ADC_INT_RAW registers */
+> > > +#define SC27XX_ADC_IRQ_RAW           BIT(0)
+> > > +
+> > >  /* Mask definition for SC27XX_ADC_DATA register */
+> > >  #define SC27XX_ADC_DATA_MASK         GENMASK(11, 0)
+> > >
+> > >  /* Timeout (ms) for the trylock of hardware spinlocks */
+> > >  #define SC27XX_ADC_HWLOCK_TIMEOUT    5000
+> > >
+> > > -/* Timeout (ms) for ADC data conversion according to ADC datasheet */
+> > > -#define SC27XX_ADC_RDY_TIMEOUT               100
+> > > +/* Timeout (us) for ADC data conversion according to ADC datasheet */
+> > > +#define SC27XX_ADC_RDY_TIMEOUT               1000000  
+> >
+> > This is 10 x the value I think...
+> >  
+> > > +#define SC27XX_ADC_POLL_RAW_STATUS   500
+> > >
+> > >  /* Maximum ADC channel number */
+> > >  #define SC27XX_ADC_CHANNEL_MAX               32
+> > > @@ -72,10 +75,8 @@ struct sc27xx_adc_data {
+> > >        * subsystems which will access the unique ADC controller.
+> > >        */
+> > >       struct hwspinlock *hwlock;
+> > > -     struct completion completion;
+> > >       int channel_scale[SC27XX_ADC_CHANNEL_MAX];
+> > >       u32 base;
+> > > -     int value;
+> > >       int irq;
+> > >  };
+> > >
+> > > @@ -188,9 +189,7 @@ static int sc27xx_adc_read(struct sc27xx_adc_data *data, int channel,
+> > >                          int scale, int *val)
+> > >  {
+> > >       int ret;
+> > > -     u32 tmp;
+> > > -
+> > > -     reinit_completion(&data->completion);
+> > > +     u32 tmp, value, status;
+> > >
+> > >       ret = hwspin_lock_timeout_raw(data->hwlock, SC27XX_ADC_HWLOCK_TIMEOUT);
+> > >       if (ret) {
+> > > @@ -203,6 +202,11 @@ static int sc27xx_adc_read(struct sc27xx_adc_data *data, int channel,
+> > >       if (ret)
+> > >               goto unlock_adc;
+> > >
+> > > +     ret = regmap_update_bits(data->regmap, data->base + SC27XX_ADC_INT_CLR,
+> > > +                              SC27XX_ADC_IRQ_CLR, SC27XX_ADC_IRQ_CLR);
+> > > +     if (ret)
+> > > +             goto disable_adc;
+> > > +
+> > >       /* Configure the channel id and scale */
+> > >       tmp = (scale << SC27XX_ADC_SCALE_SHIFT) & SC27XX_ADC_SCALE_MASK;
+> > >       tmp |= channel & SC27XX_ADC_CHN_ID_MASK;
+> > > @@ -226,15 +230,22 @@ static int sc27xx_adc_read(struct sc27xx_adc_data *data, int channel,
+> > >       if (ret)
+> > >               goto disable_adc;
+> > >
+> > > -     ret = wait_for_completion_timeout(&data->completion,
+> > > -                             msecs_to_jiffies(SC27XX_ADC_RDY_TIMEOUT));
+> > > -     if (!ret) {
+> > > -             dev_err(data->dev, "read ADC data timeout\n");
+> > > -             ret = -ETIMEDOUT;
+> > > -     } else {
+> > > -             ret = 0;
+> > > +     ret = regmap_read_poll_timeout(data->regmap,
+> > > +                                    data->base + SC27XX_ADC_INT_RAW,
+> > > +                                    status, (status & SC27XX_ADC_IRQ_RAW),
+> > > +                                    SC27XX_ADC_POLL_RAW_STATUS,
+> > > +                                    SC27XX_ADC_RDY_TIMEOUT);
+> > > +     if (ret) {
+> > > +             dev_err(data->dev, "read adc timeout, status = 0x%x\n", status);
+> > > +             goto disable_adc;
+> > >       }
+> > >
+> > > +     ret = regmap_read(data->regmap, data->base + SC27XX_ADC_DATA, &value);
+> > > +     if (ret)
+> > > +             goto disable_adc;
+> > > +
+> > > +     value &= SC27XX_ADC_DATA_MASK;
+> > > +
+> > >  disable_adc:
+> > >       regmap_update_bits(data->regmap, data->base + SC27XX_ADC_CTL,
+> > >                          SC27XX_ADC_EN, 0);
+> > > @@ -242,32 +253,11 @@ static int sc27xx_adc_read(struct sc27xx_adc_data *data, int channel,
+> > >       hwspin_unlock_raw(data->hwlock);
+> > >
+> > >       if (!ret)
+> > > -             *val = data->value;
+> > > +             *val = value;
+> > >
+> > >       return ret;
+> > >  }
+> > >
+> > > -static irqreturn_t sc27xx_adc_isr(int irq, void *dev_id)
+> > > -{
+> > > -     struct sc27xx_adc_data *data = dev_id;
+> > > -     int ret;
+> > > -
+> > > -     ret = regmap_update_bits(data->regmap, data->base + SC27XX_ADC_INT_CLR,
+> > > -                              SC27XX_ADC_IRQ_CLR, SC27XX_ADC_IRQ_CLR);
+> > > -     if (ret)
+> > > -             return IRQ_RETVAL(ret);
+> > > -
+> > > -     ret = regmap_read(data->regmap, data->base + SC27XX_ADC_DATA,
+> > > -                       &data->value);
+> > > -     if (ret)
+> > > -             return IRQ_RETVAL(ret);
+> > > -
+> > > -     data->value &= SC27XX_ADC_DATA_MASK;
+> > > -     complete(&data->completion);
+> > > -
+> > > -     return IRQ_HANDLED;
+> > > -}
+> > > -
+> > >  static void sc27xx_adc_volt_ratio(struct sc27xx_adc_data *data,
+> > >                                 int channel, int scale,
+> > >                                 u32 *div_numerator, u32 *div_denominator)
+> > > @@ -454,11 +444,6 @@ static int sc27xx_adc_enable(struct sc27xx_adc_data *data)
+> > >       if (ret)
+> > >               goto disable_adc;
+> > >
+> > > -     ret = regmap_update_bits(data->regmap, data->base + SC27XX_ADC_INT_EN,
+> > > -                              SC27XX_ADC_IRQ_EN, SC27XX_ADC_IRQ_EN);
+> > > -     if (ret)
+> > > -             goto disable_clk;
+> > > -
+> > >       /* ADC channel scales' calibration from nvmem device */
+> > >       ret = sc27xx_adc_scale_calibration(data, true);
+> > >       if (ret)
+> > > @@ -484,9 +469,6 @@ static void sc27xx_adc_disable(void *_data)
+> > >  {
+> > >       struct sc27xx_adc_data *data = _data;
+> > >
+> > > -     regmap_update_bits(data->regmap, data->base + SC27XX_ADC_INT_EN,
+> > > -                        SC27XX_ADC_IRQ_EN, 0);
+> > > -
+> > >       /* Disable ADC work clock and controller clock */
+> > >       regmap_update_bits(data->regmap, SC27XX_ARM_CLK_EN,
+> > >                          SC27XX_CLK_ADC_EN | SC27XX_CLK_ADC_CLK_EN, 0);
+> > > @@ -553,7 +535,6 @@ static int sc27xx_adc_probe(struct platform_device *pdev)
+> > >               return ret;
+> > >       }
+> > >
+> > > -     init_completion(&sc27xx_data->completion);
+> > >       sc27xx_data->dev = &pdev->dev;
+> > >
+> > >       ret = sc27xx_adc_enable(sc27xx_data);
+> > > @@ -569,14 +550,6 @@ static int sc27xx_adc_probe(struct platform_device *pdev)
+> > >               return ret;
+> > >       }
+> > >
+> > > -     ret = devm_request_threaded_irq(&pdev->dev, sc27xx_data->irq, NULL,
+> > > -                                     sc27xx_adc_isr, IRQF_ONESHOT,
+> > > -                                     pdev->name, sc27xx_data);
+> > > -     if (ret) {
+> > > -             dev_err(&pdev->dev, "failed to request ADC irq\n");
+> > > -             return ret;
+> > > -     }
+> > > -
+> > >       indio_dev->dev.parent = &pdev->dev;
+> > >       indio_dev->name = dev_name(&pdev->dev);
+> > >       indio_dev->modes = INDIO_DIRECT_MODE;  
+> >  
+> 
+> 
 
