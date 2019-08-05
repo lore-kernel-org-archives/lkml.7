@@ -4,55 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2961C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DA5C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C37521871
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF2EE2075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:09:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010543;
-	bh=7BSbn3tM72/0DGPULT67fewpqTSUU33aag1yFIWmkl0=;
+	s=default; t=1565010546;
+	bh=f1WaR3tSARaSVDFRiJ7S+mftWy4gyhuDPSgOpNyxiVI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vT2uZI0fmr1jIQuMHHS7qRjl0O8BUKrOXORNNWophu+CXwybM9irBwXddvgyZsZQX
-	 OAwF9YBGd6BrC/tTVarf+RsMaN9IZrqvCrQMOuiUCMc9zTQQvLu67pueIz4NozlMjl
-	 hKaa5nfif0fosiZkYMo+BmmNTMmhYK/zEWJoptT0=
+	b=BmBvVH/zX9bz3KLpqg27dtKa2Z97Y9pG9LwYlSHFW8h+j3zDOM0On7paRJm0mfGDk
+	 E9l6cX3pGw+2T44/2HPupZI9yMXDjle3LSIggniHpawlikgu+ekm1Pw6W48WlbNGp9
+	 RsR5DHfjNC+7fYwQ5legL+cbNZYj2/bIm6kgSEy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729184AbfHENJC (ORCPT
+        id S1730132AbfHENJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:09:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47262 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:09:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729211AbfHENI7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:08:59 -0400
+        id S1730121AbfHENJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:09:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0CAC2075B;
-        Mon,  5 Aug 2019 13:08:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E3BE2067D;
+        Mon,  5 Aug 2019 13:09:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010538;
-        bh=7BSbn3tM72/0DGPULT67fewpqTSUU33aag1yFIWmkl0=;
+        s=default; t=1565010540;
+        bh=f1WaR3tSARaSVDFRiJ7S+mftWy4gyhuDPSgOpNyxiVI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=upY9xddS6bojt52cxcD2fMA46yClPzJd74M6jqI57oMDxyqMnAbuQigm/sGFLoBrt
-         6YPETTv9iZf2qSN5SZRRBy7ph/VG4S31RqH6SJdmnrxAVG4B68Th8yMBi4RdAoZgFK
-         7s6jdRkImWsgfvadkX8Axwx87wv7RumBk3HurGYI=
+        b=ecGrG6MdpgvScpyRC2+yinDYz1NQlECQyBbiYtg7dJdurr6soSJd0nZourFB1MXlh
+         qfP8yZ1DTBIEAfMnzxNvnKuHVKf34QYmBJAXuPw9/hYnpzeAkagv5a/w4k++4tz2Gd
+         lOrB6hIWeqaGaxTWhzb4evvtszTd5RVjI8sVcNBE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Petr Cvek <petrcvekcz@gmail.com>,
+        Paul Burton <paul.burton@mips.com>, hauke@hauke-m.de,
+        john@phrozen.org, linux-mips@vger.kernel.org,
+        openwrt-devel@lists.openwrt.org, pakahmar@hotmail.com,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 01/74] ARM: riscpc: fix DMA
-Date:   Mon,  5 Aug 2019 15:02:14 +0200
-Message-Id: <20190805124935.945668453@linuxfoundation.org>
+Subject: [PATCH 4.19 10/74] MIPS: lantiq: Fix bitfield masking
+Date:   Mon,  5 Aug 2019 15:02:23 +0200
+Message-Id: <20190805124936.628894906@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124935.819068648@linuxfoundation.org>
 References: <20190805124935.819068648@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,46 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ffd9a1ba9fdb7f2bd1d1ad9b9243d34e96756ba2 ]
+[ Upstream commit ba1bc0fcdeaf3bf583c1517bd2e3e29cf223c969 ]
 
-DMA got broken a while back in two different ways:
-1) a change in the behaviour of disable_irq() to wait for the interrupt
-   to finish executing causes us to deadlock at the end of DMA.
-2) a change to avoid modifying the scatterlist left the first transfer
-   uninitialised.
+The modification of EXIN register doesn't clean the bitfield before
+the writing of a new value. After a few modifications the bitfield would
+accumulate only '1's.
 
-DMA is only used with expansion cards, so has gone unnoticed.
-
-Fixes: fa4e99899932 ("[ARM] dma: RiscPC: don't modify DMA SG entries")
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Petr Cvek <petrcvekcz@gmail.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: hauke@hauke-m.de
+Cc: john@phrozen.org
+Cc: linux-mips@vger.kernel.org
+Cc: openwrt-devel@lists.openwrt.org
+Cc: pakahmar@hotmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-rpc/dma.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/mips/lantiq/irq.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/mach-rpc/dma.c b/arch/arm/mach-rpc/dma.c
-index fb48f3141fb4d..c4c96661eb89a 100644
---- a/arch/arm/mach-rpc/dma.c
-+++ b/arch/arm/mach-rpc/dma.c
-@@ -131,7 +131,7 @@ static irqreturn_t iomd_dma_handle(int irq, void *dev_id)
- 	} while (1);
+diff --git a/arch/mips/lantiq/irq.c b/arch/mips/lantiq/irq.c
+index c4ef1c31e0c4f..37caeadb2964c 100644
+--- a/arch/mips/lantiq/irq.c
++++ b/arch/mips/lantiq/irq.c
+@@ -156,8 +156,9 @@ static int ltq_eiu_settype(struct irq_data *d, unsigned int type)
+ 			if (edge)
+ 				irq_set_handler(d->hwirq, handle_edge_irq);
  
- 	idma->state = ~DMA_ST_AB;
--	disable_irq(irq);
-+	disable_irq_nosync(irq);
- 
- 	return IRQ_HANDLED;
- }
-@@ -174,6 +174,9 @@ static void iomd_enable_dma(unsigned int chan, dma_t *dma)
- 				DMA_FROM_DEVICE : DMA_TO_DEVICE);
+-			ltq_eiu_w32(ltq_eiu_r32(LTQ_EIU_EXIN_C) |
+-				(val << (i * 4)), LTQ_EIU_EXIN_C);
++			ltq_eiu_w32((ltq_eiu_r32(LTQ_EIU_EXIN_C) &
++				    (~(7 << (i * 4)))) | (val << (i * 4)),
++				    LTQ_EIU_EXIN_C);
  		}
- 
-+		idma->dma_addr = idma->dma.sg->dma_address;
-+		idma->dma_len = idma->dma.sg->length;
-+
- 		iomd_writeb(DMA_CR_C, dma_base + CR);
- 		idma->state = DMA_ST_AB;
  	}
+ 
 -- 
 2.20.1
 
