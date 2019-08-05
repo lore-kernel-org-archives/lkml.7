@@ -2,131 +2,171 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 033EAC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A41DC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA3872147A
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:50:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565016619;
-	bh=niWrUY5l9piw2oNy16OidH3cKjEj5dtuPnSBzg2JN+A=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=mqRwBtyb23B9PyR5mcMneCnaFZ98h3epEmW/7cf48mfcFyMW/CyN+XUMphlsktL/m
-	 x4UrGB3l6F5RqGu82whCB1GXa8UbEr9EZSphImNPzCrcbD3CXk3oySZwmbUcP2jSUd
-	 L1llDV8w6BguHn2CBBMIdhrWTotdkhAjM8XrYIOM=
+	by mail.kernel.org (Postfix) with ESMTP id D76102147A
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:50:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MyQVXRRk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729226AbfHEOuS (ORCPT
+        id S1729325AbfHEOu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 10:50:18 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43938 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726508AbfHEOuS (ORCPT
+        Mon, 5 Aug 2019 10:50:27 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:43311 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728815AbfHEOu1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 10:50:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
-        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=2qYGdFyCH95p20i9diOVmgkNhS9ej7OzPV6au+bJxxs=; b=tU9LO1+KpYKVn3+h7O+gBv/p1
-        1L+WdLOavAK8sUHuXIUV4/ZpLc3Zpi+S3i+S3XlwpACB+e+oC/6tE5hK91x2zTZhQzc0E/HClYeOj
-        NRXjM6WrThdzYabhj6IsXtCSHK325voQkPRo+0OzYsBfWFJArc7U6DZJ6o31mOLPjMQYk=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hueJT-0000WM-Uw; Mon, 05 Aug 2019 14:50:16 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id D210F2742D06; Mon,  5 Aug 2019 15:50:14 +0100 (BST)
-Date:   Mon, 5 Aug 2019 15:50:14 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] SPI fixes for v5.3
-Message-ID: <20190805145014.GI6432@sirena.org.uk>
+        Mon, 5 Aug 2019 10:50:27 -0400
+Received: by mail-lf1-f68.google.com with SMTP id c19so58216409lfm.10;
+        Mon, 05 Aug 2019 07:50:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=F862krckXOX344fCimCqRO8x8WuPKfh9vUzQq4I4yF4=;
+        b=MyQVXRRksG0El5/VFPisuOZ/4de/ARUzE1OhaPAnPYDtkZlChwkEMTR5rE+nVqvdtR
+         TVk0tmsIiVO9x9CIBS6knv37UoPJ7dN3aqLeWdetN87vKNO1Pzi2ZjNVJQcozOS11Vop
+         QANFoIxfvDg8TRjr5HAeUu8xW7rCVsNIyOBYPLXp2BgiYA/mCRhF+ecOj/9Efyzdhnyg
+         pVEcwiOCja7qL8AU1QH7VGyJmPSp7c8X8iWORkA69fyljoLbXWB0ApLWxTYfkE7WDazQ
+         gsdnbD3NNRleCzhhwzkJVPcIpUy3gPuAQm41xzoPf2rEFcInXX3VLNxLKvz4QnUUZGT9
+         FVWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=F862krckXOX344fCimCqRO8x8WuPKfh9vUzQq4I4yF4=;
+        b=szaB18GKLHbHUV4OGygMuyuYAo2idRE/yF5ayt1VY2rMTLeoKJvAVgNFZX5KcIWHLG
+         xewOGxaiDlnykGjRkcXalEJbuNJUNQAYOoeunI1np1sLecy8pJanXcGZTPtyvh7fGd6h
+         d2ptyjO7Rhqb7ZThysuDikvSYi6Lb9DHumsDdGDCk0+eUPg+RTy2XNJtqEq/U+fHxO3d
+         z3yWSeIgJh+ajFe0eLZvKcxHeLQh4nsEPOjS9fF3Pa8/813xI9YeLUdG2PTC/3y/C6IL
+         l6uGykx05w4lcxW1u48SYP3FXOP9D8W8ibPofu3rQ1RK9SevoKItufmGMinj9++YjPcW
+         2NvQ==
+X-Gm-Message-State: APjAAAUxAxaUAq51lsm5mmZpMtV6lZsSneqDEq/2Uju0+ZqYljMdlVPq
+        KoXd3UVB0tvd5TSOUyVlorIoiWqmYfEoKOPQ2fE=
+X-Google-Smtp-Source: APXvYqxF5vYMfF3gM9OzkbRzmI2xcdjsC7DvfhpBD/fUlQ52XHpAr5n6UjjOejUTKa+U7w4mEdF3YuMYpZZy9jWUnKI=
+X-Received: by 2002:ac2:59dd:: with SMTP id x29mr3721990lfn.140.1565016624236;
+ Mon, 05 Aug 2019 07:50:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="hABqaeELJqnDDeDE"
-Content-Disposition: inline
-X-Cookie: Place stamp here.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190802163248.11152-1-h.feurstein@gmail.com> <CA+h21hr835sdvtgVOA2M9SWeCXDOrDG1S3FnNgJd_9NP2X_TaQ@mail.gmail.com>
+In-Reply-To: <CA+h21hr835sdvtgVOA2M9SWeCXDOrDG1S3FnNgJd_9NP2X_TaQ@mail.gmail.com>
+From:   Hubert Feurstein <h.feurstein@gmail.com>
+Date:   Mon, 5 Aug 2019 16:50:12 +0200
+Message-ID: <CAFfN3gVTVwsqvLEYEczDsxdXQ6Ru2gWpECA2P+thh5buGmNHSw@mail.gmail.com>
+Subject: Re: [RFC] net: dsa: mv88e6xxx: ptp: improve phc2sys precision for
+ mv88e6xxx switch in combination with imx6-fec
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     mlichvar@redhat.com, Richard Cochran <richardcochran@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>, netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Vladimir,
 
---hABqaeELJqnDDeDE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Am Mo., 5. Aug. 2019 um 11:55 Uhr schrieb Vladimir Oltean <olteanv@gmail.com>:
+[...]
+> You guessed correctly (since you copied me) that I'm battling much of
+> the same issues with the sja1105 and its spi-fsl-dspi controller
+> driver.
+I've copied you, because of this discussion on github:
+https://github.com/openil/linuxptp/issues/5
+There you said: "In fact any MDIO access will make the latency
+unpredictable and hence
+ throw off the time."
+I thought you might be interested in how to make MDIO latency predictable.
 
-The following changes since commit 8cc7720470a17558bd6f8d67df63361600e46c55:
+[...]
+> - You said you patched linuxptp master. Could you share the patch? Is
+> there anything else that's needed except compiling against the board's
+> real kernel headers (aka point KBUILD_OUTPUT to the extracted location
+> of /sys/kernel/kheaders.tar.xz)? I've done that and I do see phc2sys
+> probing and using the new ioctl, but I don't see a big improvement in
+> my case (that's probably because my SPI interface has real jitter
+> caused by peripheral clock instability, but I really need to put a
+> scope on it to be sure, so that's a discussion for another time).
 
-  spi: pxa2xx: Add support for Intel Elkhart Lake (2019-07-03 13:03:44 +0100)
+My compiler used kernel headers where the ioctl was not yet defined.
+So I simply defined it in the linuxptp source directly:
 
-are available in the Git repository at:
+diff --git a/sysoff.c b/sysoff.c
+index b993ee9..b23ad2f 100644
+--- a/sysoff.c
++++ b/sysoff.c
+@@ -27,6 +27,20 @@
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-fix-v5.3-rc3
+#define NS_PER_SEC 1000000000LL
 
-for you to fetch changes up to a4127952859a869cf3fc5a49547dbe2ffa2eac89:
++#ifndef PTP_SYS_OFFSET_EXTENDED
++struct ptp_sys_offset_extended {
++    unsigned int n_samples; /* Desired number of measurements. */
++    unsigned int rsv[3];    /* Reserved for future use. */
++    /*
++     * Array of [system, phc, system] time stamps. The kernel will provide
++     * 3*n_samples time stamps.
++     */
++    struct ptp_clock_time ts[PTP_MAX_SAMPLES][3];
++};
++#define PTP_SYS_OFFSET_EXTENDED \
++    _IOWR(PTP_CLK_MAGIC, 9, struct ptp_sys_offset_extended)
++#endif
++
+#ifdef PTP_SYS_OFFSET
 
-  spi: pxa2xx: Add support for Intel Tiger Lake (2019-08-02 12:14:23 +0100)
+static int64_t pctns(struct ptp_clock_time *t)
 
-----------------------------------------------------------------
-spi: Fixes for v5.3
+> - I really wonder what your jitter is caused by. Maybe it is just
+> contention on the mii_bus->mdio_lock? If that's the case, maybe you
+> don't need to go all the way down to the driver level, and taking the
+> ptp_sts at the subsystem (MDIO, SPI, I2C, etc) level is "good enough".
 
-A bunch of small, device specific things here plus a DT bindings fix for
-the new validatable YAML binding format.  The most notable thing is the
-fix for GPIO chip selects which fixes a corner case in updates of that
-code to modern APIs, unfortunately due to a historical mess the code
-around GPIO support is obscure, fragile and an ABI which makes and
-attempt to improve the situation painful.
+I would say there are many places, where we introduce unpredictable jitter:
+- The busy-flag polling
+- The locking of the chip- and mdio-bus-mutex
+- The mdio_done completion in the imx_fec
+- Scheduling latencies
 
-----------------------------------------------------------------
-Han Xu (1):
-      spi: spi-fsl-qspi: change i.MX7D RX FIFO size
+> - Along the lines of the above, I wonder how badly would the
+> maintainers shout at the proposal of adding a struct
+> ptp_system_timestamp pointer and its associated lock in struct device.
+> That way at least you don't have to change the API, like you did with
+> mdiobus_write_nested_ptp. Relatively speaking, this is the least
+> amount of intrusion (although, again, far from beautiful).
 
-Jarkko Nikula (1):
-      spi: pxa2xx: Add support for Intel Tiger Lake
+It is important to make sure to hook up the right mdio_write access, that is
+why the ptp_sts pointer is passed under the mdio_lock. Of course It would
+be nicer, to pass through the pointer as an argument, instead of bypassing it to
+the mii_bus struct. In the case of SPI it could be added to the spi_transfer
+struct.
 
-Linus Walleij (1):
-      spi: gpio: Add SPI_MASTER_GPIO_SS flag
+> - The software timestamps help you in the particular case of phc2sys,
+> but are they enough to cover all your needs?
+For now it's all I need.
 
-Lubomir Rintel (1):
-      spi: pxa2xx: Balance runtime PM enable/disable on error
+> I haven't spent even 1
+> second looking at Marvell switch datasheets, but is its free-running
+> timer only used for PTP timestamping? At least the sja1105 does also
+> support time-based egress scheduling and ingress policing, so for that
+> scenario, the timecounter/cyclecounter implementation will no longer
+> cut it (you do need to synchronize the hardware clock). If your
+> hardware supports these PTP-based features as well, I can only assume
+> the reason why mv88e6xxx went for a timecounter is the same as the
+> reason why I did: the MDIO/SPI jitter while accessing the frequency
+> and offset correction registers is bad enough that the servo loop goes
+> haywire. And implementing gettimex64 will not solve that.
+>
+[...]
 
-Lukas Wunner (1):
-      spi: bcm2835: Fix 3-wire mode if DMA is enabled
-
-Rob Herring (1):
-      spi: dt-bindings: spi-controller: remove unnecessary 'maxItems: 1' from reg
-
- Documentation/devicetree/bindings/spi/spi-controller.yaml |  1 -
- drivers/spi/spi-bcm2835.c                                 |  3 ++-
- drivers/spi/spi-fsl-qspi.c                                |  2 +-
- drivers/spi/spi-gpio.c                                    |  6 ++++++
- drivers/spi/spi-pxa2xx.c                                  | 14 ++++++++++++--
- 5 files changed, 21 insertions(+), 5 deletions(-)
-
---hABqaeELJqnDDeDE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEyBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1IQiYACgkQJNaLcl1U
-h9DVrAf4rI7VruSCdKi9gWLD+MK79ppEONhiDo3KiVnkHghlOck5NtA88KzhQizW
-QF3hd29Y3hJil+r31iuPIqj9GdLKGMpFPrgovR184SrA7aUikm8niuuqh0RE0voX
-KKEAXz+AYpUxsBlLAu6pyF+5treKw+B/HmHXSaT/+Bv9TDrbrL1GcZKYLVm747ta
-BkFP6Sc/IJRgw8hq6TdRtshGoxlgT4rLaSxuMtkltbu1UoAA/qyq98rjmJvNfbSi
-b4Y0hmhY50wM9dN1F0Vj4PGmfGOTqM9YqubE6yLuWHS8dgXL/pLULjXqfxoYMjCE
-PQxWUtWfcE/GAHD/sMUs8IYK8L3Q
-=AiZ5
------END PGP SIGNATURE-----
-
---hABqaeELJqnDDeDE--
+Hubert
