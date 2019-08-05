@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A18ABC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B9EFC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77C6C20B1F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1AC620B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:22:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fossix-org.20150623.gappssmtp.com header.i=@fossix-org.20150623.gappssmtp.com header.b="OFrfSNcS"
+	dkim=pass (2048-bit key) header.d=fossix-org.20150623.gappssmtp.com header.i=@fossix-org.20150623.gappssmtp.com header.b="1Nse/dO2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727338AbfHEGWk (ORCPT
+        id S1727361AbfHEGWo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 02:22:40 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38828 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726375AbfHEGWj (ORCPT
+        Mon, 5 Aug 2019 02:22:44 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46525 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726375AbfHEGWm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 02:22:39 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y15so39090555pfn.5
-        for <linux-kernel@vger.kernel.org>; Sun, 04 Aug 2019 23:22:38 -0700 (PDT)
+        Mon, 5 Aug 2019 02:22:42 -0400
+Received: by mail-pl1-f195.google.com with SMTP id c2so36021782plz.13
+        for <linux-kernel@vger.kernel.org>; Sun, 04 Aug 2019 23:22:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fossix-org.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=wCmmwD53XttWvxo3IyfDIXHfbZJtgpbW8gfsweTknQc=;
-        b=OFrfSNcS5B23jmgGaxKhHDxaRdtfG9Z/9t76o5z4mnZtYlEYQ91YZ0dKJbAEJlOi7Z
-         g9KAI8tTJyy2tACIQe1DM1eKsOxnDmkMbQR9/o9sxMHYfzT21wmvfdQ3Yza1W6T0Ww5w
-         wmTuD3Z8XKNFh3q3SRiWrAQ6pHlK5Zi4dMiPWHqRtIQYEE2DSe9trD/Kt5MGoDrriPU+
-         OvOomkWC9/VFXvYAvQDqQbkppeE2qBMjBtXz/QXCTgxcCMn1wTnkQVLCcrJVFqrrJWSE
-         0yl2BL4d7pszaUvl09p/k3KPNV+klnoAksnyhx3a4k5KXF4uhTrnf7gGlb4TOGRIvXT2
-         iY7Q==
+        bh=H/M6TqzLiuanVCliBc3NhrwyBR/yMVzqsnz9WE14WyI=;
+        b=1Nse/dO23Ys1MctZWr+L8K1WlGtDgARRZnoh5PGymw+9Eu9kdrsnfK4WmSY9X4jRsq
+         5vcDPjPH6UM/qX6zRFpX8KjxaNGzTShw5Oqoq2H9q2WruYazsPSeUI8VNvmJs14chpEn
+         umzFmf3dUagSdryUGeIIhY7BJLH6RU1uDuRKkDyjDhOePY5RwBKFZZFhqhjL3BCx9JLP
+         d97OiAVZ+e413fgnUvzJH4H9ZwIxYEUGUXwhiTpjycjIOrWJaFHN408f/CP0F+0PFigj
+         RZdeBbiXnLmUn+fCA+SstBfhlS6W1mJrEFJ0oPzbYPfDasGwlCUKmGb4HDCqX3zWdtfh
+         b1xA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=wCmmwD53XttWvxo3IyfDIXHfbZJtgpbW8gfsweTknQc=;
-        b=isoMXc1Gi7ofui2TO4g3neKkG7XeBUqZJ3dxknJaIKqlCxcrACQ9ensmKZwKh3KJIc
-         2U2EKdgjm3tKN9g+dTjR1++xYdwKiskZ5SqGo1EOwgX8yc1S0H0PQf0bI1ixB3vOWacF
-         xYBq8nlxYxmpbkSP398AjIh4jokD4zO4/XDc9lMHpz5EkeCvZYz7uhz6RrdBwIy20DmA
-         0d0BLHCJQUIk6CzsbIuNvusUF5z/SS/CRoWvh+VAmWzsHwDliHpG2o/mJvAOH3SWM48z
-         EP+1bOQhgqsjMk7u2hVdtc+MEC8U5IKq+SAhP1vpDERcuOj3pBLJrq1nSX1r/SJM/qKn
-         L7zg==
-X-Gm-Message-State: APjAAAUbeELl5F+yU2ZXUwJ4OqFYCrcWYKQEaqqE1q1ov1qt11p9MS4f
-        H9krQRBUuNH+noZh8KrLDj3/PA==
-X-Google-Smtp-Source: APXvYqzhpCMHhcko/8qLIOGOygFC1h7OUS2KmJMEu13blLA1da/lJtYyGUdGlWhX+fadRuZLVXRKgQ==
-X-Received: by 2002:a17:90a:8c06:: with SMTP id a6mr16996434pjo.45.1564986158367;
-        Sun, 04 Aug 2019 23:22:38 -0700 (PDT)
+        bh=H/M6TqzLiuanVCliBc3NhrwyBR/yMVzqsnz9WE14WyI=;
+        b=j7HLhXiRwUSPjRmDGrL751D4T3VfixjmvtGt08dqPYlCrYbAuuAnLKEB4VDaeftJQa
+         N8gMC6ABjNph+Rh8DTPVBNk/Nsrl/M/sxJkh3sav9jnDkQS0h7HrWu9hJTCIVkva/m3i
+         mOZ0C1rRdv0ZsMvBSpe3th2fGHdpvgijz70SW+dwgosB7Of4fffEH8QW2/R7cv9trL95
+         1RvxXIM5F4LFpfJYAsxxGZcqPvoTcROkeBBBrBgg9Mc9CEZ6NTm2fKSSr3fIDtj11YJq
+         m88qZzUz4EfQ+Sa80KokzDkwPXFazVVM53xkxB6QPqq/KVcWl2fyZQLtvKBd07u3rgx4
+         DOIQ==
+X-Gm-Message-State: APjAAAVLvEeYWbaKRIOsGu/xL+rJLYOzh84eKKMVqqrT4JAEBKQglTIm
+        bz4gk63isbggqg693lFPGiQ=
+X-Google-Smtp-Source: APXvYqzExHvOBf8j3MhHZWTk+Z3VqVYZHgHGPaR9MQnzwDtZFXfB5bCcqDxIIAFdNRwOe2v+7v6ctw==
+X-Received: by 2002:a17:902:9a07:: with SMTP id v7mr35731472plp.245.1564986161925;
+        Sun, 04 Aug 2019 23:22:41 -0700 (PDT)
 Received: from santosiv.in.ibm.com ([129.41.84.66])
-        by smtp.gmail.com with ESMTPSA id i14sm124680082pfk.0.2019.08.04.23.22.34
+        by smtp.gmail.com with ESMTPSA id i14sm124680082pfk.0.2019.08.04.23.22.38
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 04 Aug 2019 23:22:37 -0700 (PDT)
+        Sun, 04 Aug 2019 23:22:41 -0700 (PDT)
 From:   Santosh Sivaraj <santosh@fossix.org>
 To:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
         linux-kernel@vger.kernel.org
@@ -67,9 +67,9 @@ Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Nicholas Piggin <npiggin@gmail.com>,
         christophe leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v7 1/7] powerpc/mce: Schedule work from irq_work
-Date:   Mon,  5 Aug 2019 11:52:19 +0530
-Message-Id: <20190805062225.4354-2-santosh@fossix.org>
+Subject: [PATCH v7 2/7] powerpc/mce: Make machine_check_ue_event() static
+Date:   Mon,  5 Aug 2019 11:52:20 +0530
+Message-Id: <20190805062225.4354-3-santosh@fossix.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190805062225.4354-1-santosh@fossix.org>
 References: <20190805062225.4354-1-santosh@fossix.org>
@@ -80,48 +80,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-schedule_work() cannot be called from MCE exception context as MCE can
-interrupt even in interrupt disabled context.
+From: Reza Arbab <arbab@linux.ibm.com>
 
-fixes: 733e4a4c ("powerpc/mce: hookup memory_failure for UE errors")
+The function doesn't get used outside this file, so make it static.
+
+Signed-off-by: Reza Arbab <arbab@linux.ibm.com>
 Signed-off-by: Santosh Sivaraj <santosh@fossix.org>
+Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- arch/powerpc/kernel/mce.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ arch/powerpc/kernel/mce.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/powerpc/kernel/mce.c b/arch/powerpc/kernel/mce.c
-index b18df633eae9..0ab6fa7cbbbb 100644
+index 0ab6fa7cbbbb..8c0b471658a7 100644
 --- a/arch/powerpc/kernel/mce.c
 +++ b/arch/powerpc/kernel/mce.c
-@@ -144,7 +144,6 @@ void save_mce_event(struct pt_regs *regs, long handled,
- 		if (phys_addr != ULONG_MAX) {
- 			mce->u.ue_error.physical_address_provided = true;
- 			mce->u.ue_error.physical_address = phys_addr;
--			machine_check_ue_event(mce);
- 		}
- 	}
- 	return;
-@@ -275,8 +274,7 @@ static void machine_process_ue_event(struct work_struct *work)
- 	}
- }
+@@ -33,7 +33,7 @@ static DEFINE_PER_CPU(struct machine_check_event[MAX_MC_EVT],
+ 					mce_ue_event_queue);
+ 
+ static void machine_check_process_queued_event(struct irq_work *work);
+-void machine_check_ue_event(struct machine_check_event *evt);
++static void machine_check_ue_event(struct machine_check_event *evt);
+ static void machine_process_ue_event(struct work_struct *work);
+ 
+ static struct irq_work mce_event_process_work = {
+@@ -202,7 +202,7 @@ void release_mce_event(void)
  /*
-- * process pending MCE event from the mce event queue. This function will be
-- * called during syscall exit.
-+ * process pending MCE event from the mce event queue.
+  * Queue up the MCE event which then can be handled later.
   */
- static void machine_check_process_queued_event(struct irq_work *work)
+-void machine_check_ue_event(struct machine_check_event *evt)
++static void machine_check_ue_event(struct machine_check_event *evt)
  {
-@@ -292,6 +290,10 @@ static void machine_check_process_queued_event(struct irq_work *work)
- 	while (__this_cpu_read(mce_queue_count) > 0) {
- 		index = __this_cpu_read(mce_queue_count) - 1;
- 		evt = this_cpu_ptr(&mce_event_queue[index]);
-+
-+		if (evt->error_type == MCE_ERROR_TYPE_UE)
-+			machine_check_ue_event(evt);
-+
- 		machine_check_print_event_info(evt, false, false);
- 		__this_cpu_dec(mce_queue_count);
- 	}
+ 	int index;
+ 
 -- 
 2.20.1
 
