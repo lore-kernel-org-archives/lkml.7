@@ -2,90 +2,108 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E168DC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E24CBC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9600C20B1F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:21:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JNaoUaSZ"
+	by mail.kernel.org (Postfix) with ESMTP id BA05420B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:22:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbfHEJVt (ORCPT
+        id S1728063AbfHEJWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 05:21:49 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44294 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727158AbfHEJVt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 05:21:49 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p17so83621315wrf.11;
-        Mon, 05 Aug 2019 02:21:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:subject:date:message-id;
-        bh=V2wWMUhEfoTz/ptCW6Cm4wW3fQFRZiOyo0lAiMKG3TQ=;
-        b=JNaoUaSZYHg8+/9m3TbOKS6cDiaoljuMhaEobB05f+5ATWkE37VDKBGfOgn18Igizv
-         5TQ9fkSueBBGD63/LUZ//Na/iHdfnRvQcKJEujdeRL796fiCZNRnqke3fglHDQ53cNZX
-         m63L1YJ1x6l9e1Sw2bEMh4Zo4leO3YF5C84QSH5GEfgo/TKcnZXbb2rqcbhwa599PeWS
-         PXIfyOSqCpt/5phipT96iclK9KD3Sbu2VwE1F9lkx1VMBqDhqoTYS+sZY1G9Eki877ZI
-         rahCq2yRvrrLHeWBym7WUnxMhVJXTaKzZZUGiAAwdmG9QpZirEAdvEwV30MxCfel1kCK
-         daQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:subject:date:message-id;
-        bh=V2wWMUhEfoTz/ptCW6Cm4wW3fQFRZiOyo0lAiMKG3TQ=;
-        b=R4n4QnMEKvERacF1+1bGMtdSt/nAP443LHPrEiTrbt9LG06k7G0hp0D1ZNwXZdtRu/
-         1M9kBZ7Ipw0HGt7+xL+Bd/oWME6/1O+CFLUNeSCnCYxfNo/oMBO9r3fZL+CduOt5D/Se
-         fa3JDEKvLX4wMgoFuY7GUUAs4lhlmkGzosUUGlKl61DGP9BdRC6iCDD6yt6Jg9xL+39N
-         wYm77oBgl7s3rQwWxjKZRvlruVOi57bu9wmyR9BvyYGMJ1j013ymg4fZKIDM54n+YNbh
-         +BNiaBMPRi/iRzJTVewf47iDthyIHpFqmq+FFNrykraTEWyj1bT5cII1R71WnPqxeYg+
-         xOAA==
-X-Gm-Message-State: APjAAAXU4PlXxO0Z3KC295WWI5xnPoQitFPEjsme+v5INO7VdLU7WqKi
-        2Xdy8+CQBhUsyJGEBp/45sV6hVdN
-X-Google-Smtp-Source: APXvYqzKK78GrO0c6eGvIdnD7VuvXUpK2K4+rH5fiLS1IBvR6ovcHd2gq0aJFJoqFkT1L7x24Ir1wQ==
-X-Received: by 2002:adf:cf02:: with SMTP id o2mr14384514wrj.352.1564996906615;
-        Mon, 05 Aug 2019 02:21:46 -0700 (PDT)
-Received: from 640k.localdomain.com ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id o126sm82577723wmo.1.2019.08.05.02.21.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 05 Aug 2019 02:21:45 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [PATCH] kvm: remove unnecessary PageReserved check
-Date:   Mon,  5 Aug 2019 11:21:42 +0200
-Message-Id: <1564996902-22600-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 5 Aug 2019 05:22:02 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44262 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728023AbfHEJWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 05:22:01 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D4025AFF0;
+        Mon,  5 Aug 2019 09:21:59 +0000 (UTC)
+Date:   Mon, 05 Aug 2019 11:22:03 +0200
+Message-ID: <s5hzhkonf0k.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     iommu@lists.linux-foundation.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Michal Simek <monstr@monstr.eu>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-m68k@lists.linux-m68k.org, linux-parisc@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linuxppc-dev@lists.ozlabs.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/7] ALSA: pcm: use dma_can_mmap() to check if a device supports dma_mmap_*
+In-Reply-To: <20190805091159.7826-5-hch@lst.de>
+References: <20190805091159.7826-1-hch@lst.de>
+        <20190805091159.7826-5-hch@lst.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The same check is already done in kvm_is_reserved_pfn.
+On Mon, 05 Aug 2019 11:11:56 +0200,
+Christoph Hellwig wrote:
+> 
+> Replace the local hack with the dma_can_mmap helper to check if
+> a given device supports mapping DMA allocations to userspace.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  sound/core/pcm_native.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/sound/core/pcm_native.c b/sound/core/pcm_native.c
+> index 703857aab00f..81c82c3ee8a2 100644
+> --- a/sound/core/pcm_native.c
+> +++ b/sound/core/pcm_native.c
+> @@ -220,12 +220,11 @@ static bool hw_support_mmap(struct snd_pcm_substream *substream)
+>  {
+>  	if (!(substream->runtime->hw.info & SNDRV_PCM_INFO_MMAP))
+>  		return false;
+> -	/* architecture supports dma_mmap_coherent()? */
+> -#if defined(CONFIG_ARCH_NO_COHERENT_DMA_MMAP) || !defined(CONFIG_HAS_DMA)
+> +	if (!dma_can_mmap(substream->dma_buffer.dev.dev))
+> +		return false;
+>  	if (!substream->ops->mmap &&
+>  	    substream->dma_buffer.dev.type == SNDRV_DMA_TYPE_DEV)
+>  		return false;
+> -#endif
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- virt/kvm/kvm_main.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+This won't work as expected, unfortunately.  It's a bit tricky check,
+since the driver may have its own mmap implementation via
+substream->ops->mmap, and the dma_buffer.dev.dev might point to
+another object depending on the dma_buffer.dev.type.
 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 416969d9fefe..c5f1186f4b60 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -1855,8 +1855,7 @@ void kvm_set_pfn_dirty(kvm_pfn_t pfn)
- 	if (!kvm_is_reserved_pfn(pfn)) {
- 		struct page *page = pfn_to_page(pfn);
- 
--		if (!PageReserved(page))
--			SetPageDirty(page);
-+		SetPageDirty(page);
- 	}
+So please replace with something like below:
+
+--- a/sound/core/pcm_native.c
++++ b/sound/core/pcm_native.c
+@@ -221,11 +221,10 @@ static bool hw_support_mmap(struct snd_pcm_substream *substream)
+ 	if (!(substream->runtime->hw.info & SNDRV_PCM_INFO_MMAP))
+ 		return false;
+ 	/* architecture supports dma_mmap_coherent()? */
+-#if defined(CONFIG_ARCH_NO_COHERENT_DMA_MMAP) || !defined(CONFIG_HAS_DMA)
+ 	if (!substream->ops->mmap &&
+-	    substream->dma_buffer.dev.type == SNDRV_DMA_TYPE_DEV)
++	    substream->dma_buffer.dev.type == SNDRV_DMA_TYPE_DEV &&
++	    !dma_can_mmap(substream->dma_buffer.dev.dev))
+ 		return false;
+-#endif
+ 	return true;
  }
- EXPORT_SYMBOL_GPL(kvm_set_pfn_dirty);
--- 
-1.8.3.1
+ 
+ 
 
+Thanks!
+
+Takashi
