@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB86C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD43DC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7D4E20B1F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:27:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D78620B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:27:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbfHEG0p (ORCPT
+        id S1727571AbfHEG1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 02:26:45 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:42356 "EHLO huawei.com"
+        Mon, 5 Aug 2019 02:27:06 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4169 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727329AbfHEG0j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 02:26:39 -0400
+        id S1727386AbfHEG0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 02:26:44 -0400
 Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 28FC4A35ABC050BAC3FA;
-        Mon,  5 Aug 2019 14:26:37 +0800 (CST)
+        by Forcepoint Email with ESMTP id 2D11D5AC1884040C1DD1;
+        Mon,  5 Aug 2019 14:26:42 +0800 (CST)
 Received: from huawei.com (10.175.124.28) by DGGEMS414-HUB.china.huawei.com
  (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Mon, 5 Aug 2019
- 14:26:29 +0800
+ 14:26:32 +0800
 From:   Jason Yan <yanaijie@huawei.com>
 To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
         <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
@@ -35,9 +35,9 @@ CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
         <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
         <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>,
         <zhaohongjiang@huawei.com>, Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH v4 04/10] powerpc/fsl_booke/32: introduce create_tlb_entry() helper
-Date:   Mon, 5 Aug 2019 14:43:29 +0800
-Message-ID: <20190805064335.19156-5-yanaijie@huawei.com>
+Subject: [PATCH v4 08/10] powerpc/fsl_booke/kaslr: clear the original kernel if randomized
+Date:   Mon, 5 Aug 2019 14:43:33 +0800
+Message-ID: <20190805064335.19156-9-yanaijie@huawei.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20190805064335.19156-1-yanaijie@huawei.com>
 References: <20190805064335.19156-1-yanaijie@huawei.com>
@@ -50,9 +50,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a new helper create_tlb_entry() to create a tlb entry by the virtual
-and physical address. This is a preparation to support boot kernel at a
-randomized address.
+The original kernel still exists in the memory, clear it now.
 
 Signed-off-by: Jason Yan <yanaijie@huawei.com>
 Cc: Diana Craciun <diana.craciun@nxp.com>
@@ -66,62 +64,57 @@ Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
 Reviewed-by: Diana Craciun <diana.craciun@nxp.com>
 Tested-by: Diana Craciun <diana.craciun@nxp.com>
 ---
- arch/powerpc/kernel/head_fsl_booke.S | 29 ++++++++++++++++++++++++++++
- arch/powerpc/mm/mmu_decl.h           |  1 +
- 2 files changed, 30 insertions(+)
+ arch/powerpc/kernel/kaslr_booke.c  | 11 +++++++++++
+ arch/powerpc/mm/mmu_decl.h         |  2 ++
+ arch/powerpc/mm/nohash/fsl_booke.c |  1 +
+ 3 files changed, 14 insertions(+)
 
-diff --git a/arch/powerpc/kernel/head_fsl_booke.S b/arch/powerpc/kernel/head_fsl_booke.S
-index adf0505dbe02..04d124fee17d 100644
---- a/arch/powerpc/kernel/head_fsl_booke.S
-+++ b/arch/powerpc/kernel/head_fsl_booke.S
-@@ -1114,6 +1114,35 @@ __secondary_hold_acknowledge:
- 	.long	-1
- #endif
+diff --git a/arch/powerpc/kernel/kaslr_booke.c b/arch/powerpc/kernel/kaslr_booke.c
+index 97250cad71de..4b3f19a663fc 100644
+--- a/arch/powerpc/kernel/kaslr_booke.c
++++ b/arch/powerpc/kernel/kaslr_booke.c
+@@ -400,3 +400,14 @@ notrace void __init kaslr_early_init(void *dt_ptr, phys_addr_t size)
  
-+/*
-+ * Create a 64M tlb by address and entry
-+ * r3/r4 - physical address
-+ * r5 - virtual address
-+ * r6 - entry
-+ */
-+_GLOBAL(create_tlb_entry)
-+	lis     r7,0x1000               /* Set MAS0(TLBSEL) = 1 */
-+	rlwimi  r7,r6,16,4,15           /* Setup MAS0 = TLBSEL | ESEL(r6) */
-+	mtspr   SPRN_MAS0,r7            /* Write MAS0 */
+ 	reloc_kernel_entry(dt_ptr, kimage_vaddr);
+ }
 +
-+	lis     r6,(MAS1_VALID|MAS1_IPROT)@h
-+	ori     r6,r6,(MAS1_TSIZE(BOOK3E_PAGESZ_64M))@l
-+	mtspr   SPRN_MAS1,r6            /* Write MAS1 */
++void __init kaslr_late_init(void)
++{
++	/* If randomized, clear the original kernel */
++	if (kimage_vaddr != KERNELBASE) {
++		unsigned long kernel_sz;
 +
-+	lis     r6,MAS2_EPN_MASK(BOOK3E_PAGESZ_64M)@h
-+	ori     r6,r6,MAS2_EPN_MASK(BOOK3E_PAGESZ_64M)@l
-+	and     r6,r6,r5
-+	ori	r6,r6,MAS2_M@l
-+	mtspr   SPRN_MAS2,r6            /* Write MAS2(EPN) */
-+
-+	ori     r8,r4,(MAS3_SW|MAS3_SR|MAS3_SX)
-+	mtspr   SPRN_MAS3,r8            /* Write MAS3(RPN) */
-+
-+	tlbwe                           /* Write TLB */
-+	isync
-+	sync
-+	blr
-+
- /*
-  * Create a tlb entry with the same effective and physical address as
-  * the tlb entry used by the current running code. But set the TS to 1.
++		kernel_sz = (unsigned long)_end - kimage_vaddr;
++		memzero_explicit((void *)KERNELBASE, kernel_sz);
++	}
++}
 diff --git a/arch/powerpc/mm/mmu_decl.h b/arch/powerpc/mm/mmu_decl.h
-index 32c1a191c28a..a09f89d3aa0f 100644
+index 9332772c8a66..f0a461482dba 100644
 --- a/arch/powerpc/mm/mmu_decl.h
 +++ b/arch/powerpc/mm/mmu_decl.h
-@@ -142,6 +142,7 @@ extern unsigned long calc_cam_sz(unsigned long ram, unsigned long virt,
- extern void adjust_total_lowmem(void);
- extern int switch_to_as1(void);
- extern void restore_to_as0(int esel, int offset, void *dt_ptr, int bootcpu);
-+void create_tlb_entry(phys_addr_t phys, unsigned long virt, int entry);
+@@ -150,8 +150,10 @@ extern void loadcam_multi(int first_idx, int num, int tmp_idx);
+ 
+ #ifdef CONFIG_RANDOMIZE_BASE
+ void kaslr_early_init(void *dt_ptr, phys_addr_t size);
++void kaslr_late_init(void);
+ #else
+ static inline void kaslr_early_init(void *dt_ptr, phys_addr_t size) {}
++static inline void kaslr_late_init(void) {}
  #endif
- extern void loadcam_entry(unsigned int index);
- extern void loadcam_multi(int first_idx, int num, int tmp_idx);
+ 
+ struct tlbcam {
+diff --git a/arch/powerpc/mm/nohash/fsl_booke.c b/arch/powerpc/mm/nohash/fsl_booke.c
+index 8d25a8dc965f..e88fcc367600 100644
+--- a/arch/powerpc/mm/nohash/fsl_booke.c
++++ b/arch/powerpc/mm/nohash/fsl_booke.c
+@@ -269,6 +269,7 @@ notrace void __init relocate_init(u64 dt_ptr, phys_addr_t start)
+ 	kernstart_addr = start;
+ 	if (is_second_reloc) {
+ 		virt_phys_offset = PAGE_OFFSET - memstart_addr;
++		kaslr_late_init();
+ 		return;
+ 	}
+ 
 -- 
 2.17.2
 
