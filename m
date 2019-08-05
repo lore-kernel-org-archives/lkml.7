@@ -2,56 +2,72 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCD6C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8E3C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD242075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:13:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C032F214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:14:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729922AbfHESNL (ORCPT
+        id S1730104AbfHESOJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 14:13:11 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:40070 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728701AbfHESNK (ORCPT
+        Mon, 5 Aug 2019 14:14:09 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:60212 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728686AbfHESOJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 14:13:10 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1huhTb-0007sZ-Cd; Mon, 05 Aug 2019 18:12:55 +0000
-Date:   Mon, 5 Aug 2019 19:12:55 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        David Howells <dhowells@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCHv2 2/3] i915: convert to new mount API
-Message-ID: <20190805181255.GH1131@ZenIV.linux.org.uk>
-References: <20190805160307.5418-1-sergey.senozhatsky@gmail.com>
- <20190805160307.5418-3-sergey.senozhatsky@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190805160307.5418-3-sergey.senozhatsky@gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+        Mon, 5 Aug 2019 14:14:09 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8F6DE1540C725;
+        Mon,  5 Aug 2019 11:14:06 -0700 (PDT)
+Date:   Mon, 05 Aug 2019 11:14:05 -0700 (PDT)
+Message-Id: <20190805.111405.1284530866900143643.davem@davemloft.net>
+To:     cai@lca.pw
+Cc:     saeedm@mellanox.com, tariqt@mellanox.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] net/mlx5e: always initialize frag->last_in_page
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1564667574-31542-1-git-send-email-cai@lca.pw>
+References: <1564667574-31542-1-git-send-email-cai@lca.pw>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 05 Aug 2019 11:14:09 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 01:03:06AM +0900, Sergey Senozhatsky wrote:
-> tmpfs does not set ->remount_fs() anymore and its users need
-> to be converted to new mount API.
+From: Qian Cai <cai@lca.pw>
+Date: Thu,  1 Aug 2019 09:52:54 -0400
 
-Could you explain why the devil do you bother with remount at all?
-Why not pass the right options when mounting the damn thing?
+> The commit 069d11465a80 ("net/mlx5e: RX, Enhance legacy Receive Queue
+> memory scheme") introduced an undefined behaviour below due to
+> "frag->last_in_page" is only initialized in mlx5e_init_frags_partition()
+> when,
+> 
+> if (next_frag.offset + frag_info[f].frag_stride > PAGE_SIZE)
+> 
+> or after bailed out the loop,
+> 
+> for (i = 0; i < mlx5_wq_cyc_get_size(&rq->wqe.wq); i++)
+> 
+> As the result, there could be some "frag" have uninitialized
+> value of "last_in_page".
+> 
+> Later, get_frag() obtains those "frag" and check "frag->last_in_page" in
+> mlx5e_put_rx_frag() and triggers the error during boot. Fix it by always
+> initializing "frag->last_in_page" to "false" in
+> mlx5e_init_frags_partition().
+...
+> Fixes: 069d11465a80 ("net/mlx5e: RX, Enhance legacy Receive Queue memory scheme")
+> Signed-off-by: Qian Cai <cai@lca.pw>
+
+Applied and queued up for -stable.
