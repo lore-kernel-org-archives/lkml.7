@@ -2,75 +2,110 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF69C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FBFC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 929C52067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:36:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 624BD217D9
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:36:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564994171;
+	bh=/OtRSIguKOv7zIsZgv8aLGiWOV71DQCuKF1WWLvQ/ts=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=KJoTKi3SsHA7ayyEOTGk2UFPGAg/QHX1dqQGY8MzR/87Vg/nkGMSBRnOMq3igqNbL
+	 uMs+m7VImdLd5W3yXAl0JSmB6GfpqRXSnz4gQtoJYNhJBABAwab3/GpFqhWl8vCYOl
+	 xzMezAUDuTwHOyhSfeQdVmr1+w5L/nnZrsSnGsZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727757AbfHEIgA (ORCPT
+        id S1727857AbfHEIgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 04:36:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51222 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726423AbfHEIgA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 04:36:00 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 44C19300BCE9;
-        Mon,  5 Aug 2019 08:36:00 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-12-149.pek2.redhat.com [10.72.12.149])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8803E5C1A1;
-        Mon,  5 Aug 2019 08:35:57 +0000 (UTC)
-Date:   Mon, 5 Aug 2019 16:35:53 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     linux-efi@vger.kernel.org, ard.biesheuvel@linaro.org
-Cc:     kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        matthewgarrett@google.com, bhsharma@redhat.com
-Subject: [PATCH] do not clean dummy variable in kexec path
-Message-ID: <20190805083553.GA27708@dhcp-128-65.nay.redhat.com>
+        Mon, 5 Aug 2019 04:36:10 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:43713 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726423AbfHEIgK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 04:36:10 -0400
+Received: by mail-oi1-f193.google.com with SMTP id w79so61503662oif.10;
+        Mon, 05 Aug 2019 01:36:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/OtRSIguKOv7zIsZgv8aLGiWOV71DQCuKF1WWLvQ/ts=;
+        b=sDiYfr8NyS7gO+VAZ/tBMzkDRBlvg22YhMutAcg7IZZD8FBJKbTuu0B8zqAm1TFmvO
+         bVqk6ONOSRPhRqGbEBHzD3x+8y1xmpGwfmxtLbcMsXtJZuwc8E8yzgZ67V9iH6H4QHV2
+         KXkTga6XCnGZ7vGhOFuDw9ZQKjwsDXL8u+ZI012aIUoYZKMEFqIKWMgly7JvBZMWG9Zm
+         uiYTmIiYqIQUxgLjLad2ngUO8BnEosBGCkD3lj+wzMnIt5vCLDwB7fsn9Ko/JjnVQwit
+         UDKwU+QjZr0pOVr5pbIkYFyVO1BfvzsEKoiZy0+FRRmaC7S7a4T+WGb8VbkyTyTQjtTN
+         Yi9A==
+X-Gm-Message-State: APjAAAUahoNaeZ2LpcT6Wkb6PkzgmCTAmfSNinHmnS3lIIAXZElczLDL
+        2gPORKDBLDIP3IAUTrLrKmFcUoE18Dj8RGQGl6g=
+X-Google-Smtp-Source: APXvYqzptRCEZ3O3VTh+dWJbaewHGMvttEmampT8Y6ZF/UP5Mp/uYEFm+nFP6TD3n8EPdgwQktQBzUqZ43EkMSyyGww=
+X-Received: by 2002:aca:5a41:: with SMTP id o62mr10383463oib.110.1564994169130;
+ Mon, 05 Aug 2019 01:36:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Mon, 05 Aug 2019 08:36:00 +0000 (UTC)
+References: <7dedb6bd157b8183c693bb578e25e313cf4f451d.1564724511.git.viresh.kumar@linaro.org>
+ <23e3dee8688f5a9767635b686bb7a9c0e09a4438.1564724511.git.viresh.kumar@linaro.org>
+ <CAJZ5v0iqztRWyxf1cgiAN1dK4qTGwy9raaGOx5u3tfBTGUKOng@mail.gmail.com>
+ <2676200.jfxhmTd764@kreacher> <000401d54a0c$2f03aa50$8d0afef0$@net>
+In-Reply-To: <000401d54a0c$2f03aa50$8d0afef0$@net>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 5 Aug 2019 10:35:54 +0200
+Message-ID: <CAJZ5v0idOvmYHVYjQ5YYPBH0MYMEPMu+m7kDRgtBi8yqyEuyAQ@mail.gmail.com>
+Subject: Re: [PATCH V3 2/2] cpufreq: intel_pstate: Implement ->resolve_freq()
+To:     Doug Smythies <dsmythies@telus.net>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "v4 . 18+" <stable@vger.kernel.org>,
+        Doug Smythies <doug.smythies@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kexec reboot fails randomly in UEFI based kvm guest.  The firmware
-just reset while calling efi_delete_dummy_variable();  Unfortunately
-I don't know how to debug the firmware, it is also possible a potential
-problem on real hardware as well although nobody reproduced it.
+On Sat, Aug 3, 2019 at 5:00 PM Doug Smythies <dsmythies@telus.net> wrote:
+>
+> On 2019.08.02 02:28 Rafael J. Wysocki wrote:
+> > On Friday, August 2, 2019 11:17:55 AM CEST Rafael J. Wysocki wrote:
+> >> On Fri, Aug 2, 2019 at 7:44 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> >>>
+> >>> Intel pstate driver exposes min_perf_pct and max_perf_pct sysfs files,
+> >>> which can be used to force a limit on the min/max P state of the driver.
+> >>> Though these files eventually control the min/max frequencies that the
+> >>> CPUs will run at, they don't make a change to policy->min/max values.
+> >>
+> >> That's correct.
+> >>
+> >>> When the values of these files are changed (in passive mode of the
+> >>> driver), it leads to calling ->limits() callback of the cpufreq
+> >>> governors, like schedutil. On a call to it the governors shall
+> >>> forcefully update the frequency to come within the limits.
+> >>
+> >> OK, so the problem is that it is a bug to invoke the governor's ->limits()
+> >> callback without updating policy->min/max, because that's what
+> >> "limits" mean to the governors.
+> >>
+> >> Fair enough.
+> >
+> > AFAICS this can be addressed by adding PM QoS freq limits requests of each CPU to
+> > intel_pstate in the passive mode such that changing min_perf_pct or max_perf_pct
+> > will cause these requests to be updated.
+>
+> All governors for the intel_cpufreq (intel_pstate in passive mode) CPU frequency
+> scaling driver are broken with respect to this issue, not just the schedutil
+> governor.
 
-The intention of efi_delete_dummy_variable is to trigger garbage collection
-when entering virtual mode.  But SetVirtualAddressMap can only run once
-for each physical reboot, thus kexec_enter_virtual_mode is not necessarily
-a good place to clean dummy object.
+Right.
 
-Drop efi_delete_dummy_variable so that kexec reboot can work.
-
-Signed-off-by: Dave Young <dyoung@redhat.com>
----
- arch/x86/platform/efi/efi.c |    3 ---
- 1 file changed, 3 deletions(-)
-
---- linux-x86.orig/arch/x86/platform/efi/efi.c
-+++ linux-x86/arch/x86/platform/efi/efi.c
-@@ -894,9 +894,6 @@ static void __init kexec_enter_virtual_m
- 
- 	if (efi_enabled(EFI_OLD_MEMMAP) && (__supported_pte_mask & _PAGE_NX))
- 		runtime_code_page_mkexec();
--
--	/* clean DUMMY object */
--	efi_delete_dummy_variable();
- #endif
- }
- 
+My point is that that changing min_perf_pct or max_perf_pct should
+cause policy limits to be updated (which is not the case now) instead
+of running special driver code on every frequency update just in case
+the limits have changed in the meantime.
