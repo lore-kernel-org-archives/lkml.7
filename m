@@ -2,80 +2,139 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F04C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9A3C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96F642067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB08B2067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:13:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="ovtMuhKi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728366AbfHEJNb (ORCPT
+        id S1728377AbfHEJNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 05:13:31 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:10114 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728052AbfHEJMN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 05:12:13 -0400
-X-UUID: 981bcf1022104168913e075f4434fd05-20190805
-X-UUID: 981bcf1022104168913e075f4434fd05-20190805
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <mars.cheng@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 342898328; Mon, 05 Aug 2019 17:12:06 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 5 Aug 2019 17:12:06 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 5 Aug 2019 17:12:06 +0800
-From:   Mars Cheng <mars.cheng@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-CC:     CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>,
-        Wendell Lin <wendell.lin@mediatek.com>,
-        Ivan Tseng <ivan.tseng@mediatek.com>,
-        Mars Cheng <mars.cheng@mediatek.com>
-Subject: [PATCH 03/11] dt-bindings: irq: mtk,sysirq: add support for mt6779
-Date:   Mon, 5 Aug 2019 17:11:52 +0800
-Message-ID: <1564996320-10897-4-git-send-email-mars.cheng@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1564996320-10897-1-git-send-email-mars.cheng@mediatek.com>
-References: <1564996320-10897-1-git-send-email-mars.cheng@mediatek.com>
+        Mon, 5 Aug 2019 05:13:43 -0400
+Received: from mail-eopbgr1400113.outbound.protection.outlook.com ([40.107.140.113]:28757
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727979AbfHEJNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 05:13:40 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ReU4e2y8Po0mN31SbRFK9/uZmAQzD6z+rMDxmSnswd34uN0R0/VcYOQn/PhsKTB+ZGJ7OxFE4Dcn04eXah3BB8iK3osCsdAMmh9r1dP1urU2NTKpgLoGoKK1s1kjD/IN52kdI2U5JJfqEUbYyI9+zvyT82R9KAnl2UmfTiRXXQUSHuPtF0IIvbcHxxTaK8OyFO05FAa8UvCcQuoU/g7/9WDJ+tWLRtnnNmYTEj0XZP128wFp08GNYhUbGOfCn+jglDkea//VSiC/2ZpX+YUTlaWtbWeH8/4s1CHndStmrnnFKOceBLxolyqaaOfHdGis5aZuRrJwC5sLmhA30wYyNw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rHcCGHcyoQggT8KTDMvMlJQSNtcC3WEDUnlrtYiZZhI=;
+ b=H8lQA7pGVqH0Cu5bv+1D0C40LICXvEK68zDtLnAYFzuglQN63rL+fmnjMb6/IpUtbhN8AvBwJRg08hhcfPGWHVg9oopV/LmZMfIzu+uepzNqhuHRiae/nJhTq9RokuSEWGTqUd4Qc5wFPxIpnboWqW9l5+7kJcFswMqlGnthxqS03YdFyk7TNMZS9PIigJ5mtgnP3WimMq+ZUDlATAFL/56SpTgBkklSS9+vnFIwIw/qX6lnbm0HNNZt1jRiKgTKGVFZCyI4yYjkvbpRuyo5K6h2KZbT7msEwePCzO8hz+Dn65jGLAMScZPt8C/5XtHa0ROSLjOUt48+s7B2kOi0VA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=bp.renesas.com;dmarc=pass action=none
+ header.from=bp.renesas.com;dkim=pass header.d=bp.renesas.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rHcCGHcyoQggT8KTDMvMlJQSNtcC3WEDUnlrtYiZZhI=;
+ b=ovtMuhKiZJleA7B53f2kJLflf16lbu+IRfLGV0xFTL0jjfE+KqxKTqlrfTDhDTX3X+d7FUQlawJDHkTILvFEjYvoZW5aybW+MyaPIcmi3Rxt0mBoJOu2GlX2pRhTRLoyln1eWn8/QHssZPI6aeS8NEZBt/P0lE3OLK6Nq31h3eU=
+Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com (52.133.163.13) by
+ TY1PR01MB1817.jpnprd01.prod.outlook.com (52.133.162.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2136.16; Mon, 5 Aug 2019 09:13:37 +0000
+Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com
+ ([fe80::d881:cb74:8277:5a16]) by TY1PR01MB1770.jpnprd01.prod.outlook.com
+ ([fe80::d881:cb74:8277:5a16%7]) with mapi id 15.20.2136.010; Mon, 5 Aug 2019
+ 09:13:37 +0000
+From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+CC:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>
+Subject: RE: [PATCH/RFC 08/12] drm: rcar-du: lvds: Fix bridge_to_rcar_lvds
+Thread-Topic: [PATCH/RFC 08/12] drm: rcar-du: lvds: Fix bridge_to_rcar_lvds
+Thread-Index: AQHVSQTSrbTIKPXXuEe1pDPVJr2EH6bnhLeAgATFG6A=
+Date:   Mon, 5 Aug 2019 09:13:37 +0000
+Message-ID: <TY1PR01MB1770195BDEBCFF107F0B1E03C0DA0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1564731249-22671-9-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20190802082209.GI5008@pendragon.ideasonboard.com>
+In-Reply-To: <20190802082209.GI5008@pendragon.ideasonboard.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=fabrizio.castro@bp.renesas.com; 
+x-originating-ip: [193.141.220.21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5daabcb1-8383-4ec4-07e5-08d71985333e
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:TY1PR01MB1817;
+x-ms-traffictypediagnostic: TY1PR01MB1817:
+x-microsoft-antispam-prvs: <TY1PR01MB181727CB49DD5BBD62BB06F3C0DA0@TY1PR01MB1817.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 01208B1E18
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(39860400002)(376002)(346002)(136003)(396003)(189003)(199004)(102836004)(14454004)(256004)(66066001)(71190400001)(6506007)(99286004)(76176011)(53546011)(81166006)(52536014)(81156014)(68736007)(71200400001)(7416002)(66946007)(6116002)(305945005)(478600001)(7736002)(6436002)(64756008)(66556008)(66476007)(66446008)(86362001)(26005)(186003)(44832011)(486006)(74316002)(53936002)(3846002)(229853002)(6916009)(446003)(11346002)(33656002)(316002)(25786009)(4326008)(2906002)(5660300002)(9686003)(8936002)(8676002)(76116006)(55016002)(476003)(54906003)(6246003)(7696005)(107886003);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1817;H:TY1PR01MB1770.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: bp.renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Ss8tHes4H673f0UhK8eWDRwWH/YBYUIxWLCVJkpD6vn6MmDV64wa5b5VSNiYSBl7hsojrJceL/HE43Rvmm/zoj8DnYP9qRVXJsv5LZ1RuE8mmGoFqQ8IijX+zQSstD0w3D8gPTl06TqpMHzPY08ROBkXkEgW7EJ2cPuAii3p5152WcoNKCeYovoF9WXYqHPrNsHr5RqZsqjMkx0MC4VSTCJUR5OIH3vD0TrUhueiFt/YQkSfXupc5BVQbbefMu8bp/LhncdjggxIzqaLWhICpdvOyYXdCnD7gp9OWlEpJbFzs/cO4uvQlN+OPqbxNfv75+G6MgaV7lM45ZTLpXx3yFiiyV6EJpDxxaCuKS4yXg1JST1NE3rHGQgNI5oqsL5eZLifImp11rmVA4HZFhMpOjtXMHDv89bcXbLjhgqr8SM=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5daabcb1-8383-4ec4-07e5-08d71985333e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Aug 2019 09:13:37.6013
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fabrizio.castro@bp.renesas.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1817
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add binding documentation of mediatek,sysirq for mt6779 SoC.
-
-Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
----
- .../interrupt-controller/mediatek,sysirq.txt       |    1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
-index 0e312fe..84ced3f 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
-@@ -15,6 +15,7 @@ Required properties:
- 	"mediatek,mt7629-sysirq", "mediatek,mt6577-sysirq": for MT7629
- 	"mediatek,mt6795-sysirq", "mediatek,mt6577-sysirq": for MT6795
- 	"mediatek,mt6797-sysirq", "mediatek,mt6577-sysirq": for MT6797
-+	"mediatek,mt6779-sysirq", "mediatek,mt6577-sysirq": for MT6779
- 	"mediatek,mt6765-sysirq", "mediatek,mt6577-sysirq": for MT6765
- 	"mediatek,mt6755-sysirq", "mediatek,mt6577-sysirq": for MT6755
- 	"mediatek,mt6592-sysirq", "mediatek,mt6577-sysirq": for MT6592
--- 
-1.7.9.5
-
+SGkgTGF1cmVudCwNCg0KVGhhbmsgeW91IGZvciB5b3VyIGZlZWRiYWNrIQ0KDQo+IEZyb206IExh
+dXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4NCj4gU2Vu
+dDogMDIgQXVndXN0IDIwMTkgMDk6MjINCj4gU3ViamVjdDogUmU6IFtQQVRDSC9SRkMgMDgvMTJd
+IGRybTogcmNhci1kdTogbHZkczogRml4IGJyaWRnZV90b19yY2FyX2x2ZHMNCj4gDQo+IEhpIEZh
+YnJpemlvLA0KPiANCj4gVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guDQo+IA0KPiBPbiBGcmksIEF1
+ZyAwMiwgMjAxOSBhdCAwODozNDowNUFNICswMTAwLCBGYWJyaXppbyBDYXN0cm8gd3JvdGU6DQo+
+ID4gVXNpbmcgbmFtZSAiYnJpZGdlIiBmb3IgbWFjcm8gYnJpZGdlX3RvX3JjYXJfbHZkcyBhcmd1
+bWVudCBkb2Vzbid0DQo+ID4gd29yayB3aGVuIHRoZSBwb2ludGVyIG5hbWUgdXNlZCBieSB0aGUg
+Y2FsbGVyIGlzIG5vdCAiYnJpZGdlIi4NCj4gPiBSZW5hbWUgdGhlIGFyZ3VtZW50IHRvICJicmlk
+Z2VfcHRyIiB0byBhbGxvdyBmb3IgYW55IHBvaW50ZXINCj4gPiBuYW1lLg0KPiA+DQo+ID4gRml4
+ZXM6IGM2YTI3ZmE0MWZhYiAoImRybTogcmNhci1kdTogQ29udmVydCBMVkRTIGVuY29kZXIgY29k
+ZSB0byBicmlkZ2UgZHJpdmVyIikNCj4gPiBTaWduZWQtb2ZmLWJ5OiBGYWJyaXppbyBDYXN0cm8g
+PGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9n
+cHUvZHJtL3JjYXItZHUvcmNhcl9sdmRzLmMgfCA0ICsrLS0NCj4gPiAgMSBmaWxlIGNoYW5nZWQs
+IDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9k
+cml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2x2ZHMuYyBiL2RyaXZlcnMvZ3B1L2RybS9yY2Fy
+LWR1L3JjYXJfbHZkcy5jDQo+ID4gaW5kZXggOTdjNTFjMi4uZWRkNjNmNSAxMDA2NDQNCj4gPiAt
+LS0gYS9kcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2x2ZHMuYw0KPiA+ICsrKyBiL2RyaXZl
+cnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfbHZkcy5jDQo+ID4gQEAgLTcyLDggKzcyLDggQEAgc3Ry
+dWN0IHJjYXJfbHZkcyB7DQo+ID4gIAlib29sIHN0cmlwZV9zd2FwX2RhdGE7DQo+ID4gIH07DQo+
+ID4NCj4gPiAtI2RlZmluZSBicmlkZ2VfdG9fcmNhcl9sdmRzKGJyaWRnZSkgXA0KPiA+IC0JY29u
+dGFpbmVyX29mKGJyaWRnZSwgc3RydWN0IHJjYXJfbHZkcywgYnJpZGdlKQ0KPiA+ICsjZGVmaW5l
+IGJyaWRnZV90b19yY2FyX2x2ZHMoYnJpZGdlX3B0cikgXA0KPiA+ICsJY29udGFpbmVyX29mKGJy
+aWRnZV9wdHIsIHN0cnVjdCByY2FyX2x2ZHMsIGJyaWRnZSkNCj4gDQo+IEhvdyBhYm91dCBqdXN0
+ICdiJyBpbnN0ZWFkIG9mICdicmlkZ2VfcHRyJyA/IElmIHRoYXQncyBmaW5lIHdpdGggeW91DQo+
+IEknbGwgdGFrZSB0aGUgbW9kaWZpZWQgcGF0Y2ggaW4gbXkgdHJlZSwgbm8gbmVlZCB0byByZXN1
+Ym1pdC4NCg0KVGhhdCdzIGZpbmUgYnkgbWUsIHRoYW5rIHlvdXIgZml4aW5nLg0KDQpUaGFua3Ms
+DQpGYWINCg0KPiANCj4gUmV2aWV3ZWQtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGlu
+Y2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4NCj4gDQo+ID4NCj4gPiAgI2RlZmluZSBjb25uZWN0b3Jf
+dG9fcmNhcl9sdmRzKGNvbm5lY3RvcikgXA0KPiA+ICAJY29udGFpbmVyX29mKGNvbm5lY3Rvciwg
+c3RydWN0IHJjYXJfbHZkcywgY29ubmVjdG9yKQ0KPiANCj4gLS0NCj4gUmVnYXJkcywNCj4gDQo+
+IExhdXJlbnQgUGluY2hhcnQNCg==
