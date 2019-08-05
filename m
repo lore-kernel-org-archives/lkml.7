@@ -2,51 +2,54 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9B4C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A068EC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4101E20679
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7374120679
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:17:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011029;
-	bh=9GKALGfakBMmmFRWnJvklXWYZ/z02A+qOIf/kJJ53Cs=;
+	s=default; t=1565011034;
+	bh=fxFKXvRUDgzM5fGoQSjFJqpMV5twtW0JF/o7fkRf6FE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fOS/zcInWsdDm2NyUe9MMjTSgrcQEHeRsukg1TeZWGldzFEeDh5S/TG8mbMjo9cAm
-	 44Gn02DtYbuF6A5kwfWUqEUUdgZf8L79tcNQKyLa4ZAEeT5xSjgFk9ASwed5KI5QOk
-	 ccpKf74+Ac5o5uCnmVFzBX9W572C01kDHmJVO8rQ=
+	b=zwWxyREktDu46AGdwEUp2sOjiUJZMyd2EWwEIkit/ouIeExGYF3tOnwsNd25bb8Kw
+	 T8/AkRwt41Og4bCR9gYCilKI0xugSzsuX3c+TvcLml/xHMkKWbGkBshA8jtORT6wcJ
+	 Z0lM/iFvzgcuWkRM8x00/jmS+d7ZkqIuuftpbdIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729908AbfHENRI (ORCPT
+        id S1729341AbfHENFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:17:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41838 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:05:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729375AbfHENFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:05:41 -0400
+        id S1729306AbfHENF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:05:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6ECE12087B;
-        Mon,  5 Aug 2019 13:05:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 761D9216F4;
+        Mon,  5 Aug 2019 13:05:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010340;
-        bh=9GKALGfakBMmmFRWnJvklXWYZ/z02A+qOIf/kJJ53Cs=;
+        s=default; t=1565010328;
+        bh=fxFKXvRUDgzM5fGoQSjFJqpMV5twtW0JF/o7fkRf6FE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s2Q6a7lXjG+HOEBBniboTqtSPuIYzEC9z5NlqBQLZZ6/HrT9zr0AVC2lxKQ3lgqzM
-         XVfY703QhI0Q7S5tzv+9vbRZeK8Ks0y0UbGAGOB1NT86lCqNmlm5vHLI8Z6Ko0HkRN
-         pmfWo56rUiSorMPa60e3XmyR1EXoRHQ6z7mjdAt8=
+        b=CVmWf636vtIP5QI0wfO1XCb5fBWCeUZbzyN/j/5rVox333RgjVdbuovBVPNJsRQg6
+         VKuOCDLBiEGt0TvwcPt2MjDjQSd0wI+1Q81Jmi0k9goUWAvJHCyt4EFlShqgsoQirT
+         pd8WxAyaQ0e4M6GS8qbu9aGTzsdvWMLfU8XJqW48=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Wu <michael.wu@vatics.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 4.9 29/42] gpiolib: fix incorrect IRQ requesting of an active-low lineevent
-Date:   Mon,  5 Aug 2019 15:02:55 +0200
-Message-Id: <20190805124928.441011112@linuxfoundation.org>
+        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 24/42] x86/kvm: Dont call kvm_spurious_fault() from .fixup
+Date:   Mon,  5 Aug 2019 15:02:50 +0200
+Message-Id: <20190805124927.784953009@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124924.788666484@linuxfoundation.org>
 References: <20190805124924.788666484@linuxfoundation.org>
@@ -59,70 +62,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Wu <michael.wu@vatics.com>
+[ Upstream commit 3901336ed9887b075531bffaeef7742ba614058b ]
 
-commit 223ecaf140b1dd1c1d2a1a1d96281efc5c906984 upstream.
+After making a change to improve objtool's sibling call detection, it
+started showing the following warning:
 
-When a pin is active-low, logical trigger edge should be inverted to match
-the same interrupt opportunity.
+  arch/x86/kvm/vmx/nested.o: warning: objtool: .fixup+0x15: sibling call from callable instruction with modified stack frame
 
-For example, a button pushed triggers falling edge in ACTIVE_HIGH case; in
-ACTIVE_LOW case, the button pushed triggers rising edge. For user space the
-IRQ requesting doesn't need to do any modification except to configuring
-GPIOHANDLE_REQUEST_ACTIVE_LOW.
+The problem is the ____kvm_handle_fault_on_reboot() macro.  It does a
+fake call by pushing a fake RIP and doing a jump.  That tricks the
+unwinder into printing the function which triggered the exception,
+rather than the .fixup code.
 
-For example, we want to catch the event when the button is pushed. The
-button on the original board drives level to be low when it is pushed, and
-drives level to be high when it is released.
+Instead of the hack to make it look like the original function made the
+call, just change the macro so that the original function actually does
+make the call.  This allows removal of the hack, and also makes objtool
+happy.
 
-In user space we can do:
+I triggered a vmx instruction exception and verified that the stack
+trace is still sane:
 
-	req.handleflags = GPIOHANDLE_REQUEST_INPUT;
-	req.eventflags = GPIOEVENT_REQUEST_FALLING_EDGE;
+  kernel BUG at arch/x86/kvm/x86.c:358!
+  invalid opcode: 0000 [#1] SMP PTI
+  CPU: 28 PID: 4096 Comm: qemu-kvm Not tainted 5.2.0+ #16
+  Hardware name: Lenovo THINKSYSTEM SD530 -[7X2106Z000]-/-[7X2106Z000]-, BIOS -[TEE113Z-1.00]- 07/17/2017
+  RIP: 0010:kvm_spurious_fault+0x5/0x10
+  Code: 00 00 00 00 00 8b 44 24 10 89 d2 45 89 c9 48 89 44 24 10 8b 44 24 08 48 89 44 24 08 e9 d4 40 22 00 0f 1f 40 00 0f 1f 44 00 00 <0f> 0b 66 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 41 55 49 89 fd 41
+  RSP: 0018:ffffbf91c683bd00 EFLAGS: 00010246
+  RAX: 000061f040000000 RBX: ffff9e159c77bba0 RCX: ffff9e15a5c87000
+  RDX: 0000000665c87000 RSI: ffff9e15a5c87000 RDI: ffff9e159c77bba0
+  RBP: 0000000000000000 R08: 0000000000000000 R09: ffff9e15a5c87000
+  R10: 0000000000000000 R11: fffff8f2d99721c0 R12: ffff9e159c77bba0
+  R13: ffffbf91c671d960 R14: ffff9e159c778000 R15: 0000000000000000
+  FS:  00007fa341cbe700(0000) GS:ffff9e15b7400000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 00007fdd38356804 CR3: 00000006759de003 CR4: 00000000007606e0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  PKRU: 55555554
+  Call Trace:
+   loaded_vmcs_init+0x4f/0xe0
+   alloc_loaded_vmcs+0x38/0xd0
+   vmx_create_vcpu+0xf7/0x600
+   kvm_vm_ioctl+0x5e9/0x980
+   ? __switch_to_asm+0x40/0x70
+   ? __switch_to_asm+0x34/0x70
+   ? __switch_to_asm+0x40/0x70
+   ? __switch_to_asm+0x34/0x70
+   ? free_one_page+0x13f/0x4e0
+   do_vfs_ioctl+0xa4/0x630
+   ksys_ioctl+0x60/0x90
+   __x64_sys_ioctl+0x16/0x20
+   do_syscall_64+0x55/0x1c0
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  RIP: 0033:0x7fa349b1ee5b
 
-	while (1) {
-		read(fd, &dat, sizeof(dat));
-		if (dat.id == GPIOEVENT_EVENT_FALLING_EDGE)
-			printf("button pushed\n");
-	}
-
-Run the same logic on another board which the polarity of the button is
-inverted; it drives level to be high when pushed, and level to be low when
-released. For this inversion we add flag GPIOHANDLE_REQUEST_ACTIVE_LOW:
-
-	req.handleflags = GPIOHANDLE_REQUEST_INPUT |
-		GPIOHANDLE_REQUEST_ACTIVE_LOW;
-	req.eventflags = GPIOEVENT_REQUEST_FALLING_EDGE;
-
-At the result, there are no any events caught when the button is pushed.
-By the way, button releasing will emit a "falling" event. The timing of
-"falling" catching is not expected.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Michael Wu <michael.wu@vatics.com>
-Tested-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/64a9b64d127e87b6920a97afde8e96ea76f6524e.1563413318.git.jpoimboe@redhat.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpiolib.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/kvm_host.h | 34 ++++++++++++++++++---------------
+ 1 file changed, 19 insertions(+), 15 deletions(-)
 
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -817,9 +817,11 @@ static int lineevent_create(struct gpio_
- 	}
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 83b5b2990b49a..222cb69e1219d 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1309,25 +1309,29 @@ enum {
+ #define kvm_arch_vcpu_memslots_id(vcpu) ((vcpu)->arch.hflags & HF_SMM_MASK ? 1 : 0)
+ #define kvm_memslots_for_spte_role(kvm, role) __kvm_memslots(kvm, (role).smm)
  
- 	if (eflags & GPIOEVENT_REQUEST_RISING_EDGE)
--		irqflags |= IRQF_TRIGGER_RISING;
-+		irqflags |= test_bit(FLAG_ACTIVE_LOW, &desc->flags) ?
-+			IRQF_TRIGGER_FALLING : IRQF_TRIGGER_RISING;
- 	if (eflags & GPIOEVENT_REQUEST_FALLING_EDGE)
--		irqflags |= IRQF_TRIGGER_FALLING;
-+		irqflags |= test_bit(FLAG_ACTIVE_LOW, &desc->flags) ?
-+			IRQF_TRIGGER_RISING : IRQF_TRIGGER_FALLING;
- 	irqflags |= IRQF_ONESHOT;
- 	irqflags |= IRQF_SHARED;
++asmlinkage void __noreturn kvm_spurious_fault(void);
++
+ /*
+  * Hardware virtualization extension instructions may fault if a
+  * reboot turns off virtualization while processes are running.
+- * Trap the fault and ignore the instruction if that happens.
++ * Usually after catching the fault we just panic; during reboot
++ * instead the instruction is ignored.
+  */
+-asmlinkage void kvm_spurious_fault(void);
+-
+-#define ____kvm_handle_fault_on_reboot(insn, cleanup_insn)	\
+-	"666: " insn "\n\t" \
+-	"668: \n\t"                           \
+-	".pushsection .fixup, \"ax\" \n" \
+-	"667: \n\t" \
+-	cleanup_insn "\n\t"		      \
+-	"cmpb $0, kvm_rebooting \n\t"	      \
+-	"jne 668b \n\t"      		      \
+-	__ASM_SIZE(push) " $666b \n\t"	      \
+-	"jmp kvm_spurious_fault \n\t"	      \
+-	".popsection \n\t" \
+-	_ASM_EXTABLE(666b, 667b)
++#define ____kvm_handle_fault_on_reboot(insn, cleanup_insn)		\
++	"666: \n\t"							\
++	insn "\n\t"							\
++	"jmp	668f \n\t"						\
++	"667: \n\t"							\
++	"call	kvm_spurious_fault \n\t"				\
++	"668: \n\t"							\
++	".pushsection .fixup, \"ax\" \n\t"				\
++	"700: \n\t"							\
++	cleanup_insn "\n\t"						\
++	"cmpb	$0, kvm_rebooting\n\t"					\
++	"je	667b \n\t"						\
++	"jmp	668b \n\t"						\
++	".popsection \n\t"						\
++	_ASM_EXTABLE(666b, 700b)
  
+ #define __kvm_handle_fault_on_reboot(insn)		\
+ 	____kvm_handle_fault_on_reboot(insn, "")
+-- 
+2.20.1
+
 
 
