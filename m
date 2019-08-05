@@ -2,171 +2,161 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A41DC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBB8C32751
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D76102147A
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:50:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MyQVXRRk"
+	by mail.kernel.org (Postfix) with ESMTP id 8D8EC216B7
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:50:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729325AbfHEOu1 (ORCPT
+        id S1729394AbfHEOuz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 10:50:27 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43311 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728815AbfHEOu1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 10:50:27 -0400
-Received: by mail-lf1-f68.google.com with SMTP id c19so58216409lfm.10;
-        Mon, 05 Aug 2019 07:50:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=F862krckXOX344fCimCqRO8x8WuPKfh9vUzQq4I4yF4=;
-        b=MyQVXRRksG0El5/VFPisuOZ/4de/ARUzE1OhaPAnPYDtkZlChwkEMTR5rE+nVqvdtR
-         TVk0tmsIiVO9x9CIBS6knv37UoPJ7dN3aqLeWdetN87vKNO1Pzi2ZjNVJQcozOS11Vop
-         QANFoIxfvDg8TRjr5HAeUu8xW7rCVsNIyOBYPLXp2BgiYA/mCRhF+ecOj/9Efyzdhnyg
-         pVEcwiOCja7qL8AU1QH7VGyJmPSp7c8X8iWORkA69fyljoLbXWB0ApLWxTYfkE7WDazQ
-         gsdnbD3NNRleCzhhwzkJVPcIpUy3gPuAQm41xzoPf2rEFcInXX3VLNxLKvz4QnUUZGT9
-         FVWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F862krckXOX344fCimCqRO8x8WuPKfh9vUzQq4I4yF4=;
-        b=szaB18GKLHbHUV4OGygMuyuYAo2idRE/yF5ayt1VY2rMTLeoKJvAVgNFZX5KcIWHLG
-         xewOGxaiDlnykGjRkcXalEJbuNJUNQAYOoeunI1np1sLecy8pJanXcGZTPtyvh7fGd6h
-         d2ptyjO7Rhqb7ZThysuDikvSYi6Lb9DHumsDdGDCk0+eUPg+RTy2XNJtqEq/U+fHxO3d
-         z3yWSeIgJh+ajFe0eLZvKcxHeLQh4nsEPOjS9fF3Pa8/813xI9YeLUdG2PTC/3y/C6IL
-         l6uGykx05w4lcxW1u48SYP3FXOP9D8W8ibPofu3rQ1RK9SevoKItufmGMinj9++YjPcW
-         2NvQ==
-X-Gm-Message-State: APjAAAUxAxaUAq51lsm5mmZpMtV6lZsSneqDEq/2Uju0+ZqYljMdlVPq
-        KoXd3UVB0tvd5TSOUyVlorIoiWqmYfEoKOPQ2fE=
-X-Google-Smtp-Source: APXvYqxF5vYMfF3gM9OzkbRzmI2xcdjsC7DvfhpBD/fUlQ52XHpAr5n6UjjOejUTKa+U7w4mEdF3YuMYpZZy9jWUnKI=
-X-Received: by 2002:ac2:59dd:: with SMTP id x29mr3721990lfn.140.1565016624236;
- Mon, 05 Aug 2019 07:50:24 -0700 (PDT)
+        Mon, 5 Aug 2019 10:50:55 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:33114 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728815AbfHEOuz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 10:50:55 -0400
+Received: from LHREML713-CAH.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 443347AA8897794C0CE7;
+        Mon,  5 Aug 2019 15:50:53 +0100 (IST)
+Received: from [10.210.168.118] (10.210.168.118) by smtpsuk.huawei.com
+ (10.201.108.36) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 5 Aug
+ 2019 15:50:43 +0100
+Subject: Re: [PATCH] KEYS: trusted: allow module init if TPM is inactive or
+ deactivated
+To:     Tyler Hicks <tyhicks@canonical.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+CC:     <jejb@linux.ibm.com>, <zohar@linux.ibm.com>, <jgg@ziepe.ca>,
+        <linux-integrity@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <keyrings@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <crazyt2019+lml@gmail.com>, <nayna@linux.vnet.ibm.com>,
+        <silviu.vlasceanu@huawei.com>
+References: <20190705163735.11539-1-roberto.sassu@huawei.com>
+ <20190711194811.rfsohbfc3a7carpa@linux.intel.com>
+ <b4454a78-1f1b-cc75-114a-99926e097b05@huawei.com>
+ <20190801163215.mfkagoafkxscesne@linux.intel.com>
+ <e50c4cfa-1f0c-6f4d-1910-010a8d874393@huawei.com>
+ <20190802142721.GA26616@elm>
+ <20190802194226.oiztvme5klkmw6fh@linux.intel.com>
+ <20190802202343.GE26616@elm>
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+Message-ID: <e10f7b04-3d63-435e-180e-72a084ac4bab@huawei.com>
+Date:   Mon, 5 Aug 2019 16:50:35 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-References: <20190802163248.11152-1-h.feurstein@gmail.com> <CA+h21hr835sdvtgVOA2M9SWeCXDOrDG1S3FnNgJd_9NP2X_TaQ@mail.gmail.com>
-In-Reply-To: <CA+h21hr835sdvtgVOA2M9SWeCXDOrDG1S3FnNgJd_9NP2X_TaQ@mail.gmail.com>
-From:   Hubert Feurstein <h.feurstein@gmail.com>
-Date:   Mon, 5 Aug 2019 16:50:12 +0200
-Message-ID: <CAFfN3gVTVwsqvLEYEczDsxdXQ6Ru2gWpECA2P+thh5buGmNHSw@mail.gmail.com>
-Subject: Re: [RFC] net: dsa: mv88e6xxx: ptp: improve phc2sys precision for
- mv88e6xxx switch in combination with imx6-fec
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     mlichvar@redhat.com, Richard Cochran <richardcochran@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190802202343.GE26616@elm>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.210.168.118]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vladimir,
+On 8/2/2019 10:23 PM, Tyler Hicks wrote:
+> On 2019-08-02 22:42:26, Jarkko Sakkinen wrote:
+>> On Fri, Aug 02, 2019 at 09:27:22AM -0500, Tyler Hicks wrote:
+>>> On 2019-08-02 10:21:16, Roberto Sassu wrote:
+>>>> On 8/1/2019 6:32 PM, Jarkko Sakkinen wrote:
+>>>>> On Mon, Jul 15, 2019 at 06:44:28PM +0200, Roberto Sassu wrote:
+>>>>>> According to the bug report at https://bugs.archlinux.org/task/62678,
+>>>>>> the trusted module is a dependency of the ecryptfs module. We should
+>>>>>> load the trusted module even if the TPM is inactive or deactivated.
+>>>>>>
+>>>>>> Given that commit 782779b60faa ("tpm: Actually fail on TPM errors during
+>>>>>> "get random"") changes the return code of tpm_get_random(), the patch
+>>>>>> should be modified to ignore the -EIO error. I will send a new version.
+>>>>>
+>>>>> Do you have information where this dependency comes from?
+>>>>
+>>>> ecryptfs retrieves the encryption key from encrypted keys (see
+>>>> ecryptfs_get_encrypted_key()).
+>>>
+>>> That has been there for many years with any problems. It was added
+>>> in 2011:
+>>>
+>>>   commit 1252cc3b232e582e887623dc5f70979418caaaa2
+>>>   Author: Roberto Sassu <roberto.sassu@polito.it>
+>>>   Date:   Mon Jun 27 13:45:45 2011 +0200
+>>>
+>>>       eCryptfs: added support for the encrypted key type
+>>>
+>>> What's recently changed the situation is this patch:
+>>>
+>>>   commit 240730437deb213a58915830884e1a99045624dc
+>>>   Author: Roberto Sassu <roberto.sassu@huawei.com>
+>>>   Date:   Wed Feb 6 17:24:51 2019 +0100
+>>>
+>>>       KEYS: trusted: explicitly use tpm_chip structure from tpm_default_chip()
+>>>
+>>> Now eCryptfs has a hard dependency on a TPM chip that's working
+>>> as expected even if eCryptfs (or the rest of the system) isn't utilizing
+>>> the TPM. If the TPM behaves unexpectedly, you can't access your files.
+>>> We need to get this straightened out soon.
+>>
+>> I agree with this conclusion that eCryptfs needs to be fixed, not
+>> another workaround to trusted.ko.
+> 
+> That wasn't the conclusion that I came to. I prefer Robert's proposed
+> change to trusted.ko.
+> 
+> How do you propose that this be fixed in eCryptfs?
+> 
+> Removing encrypted_key support from eCryptfs is the only way that I can
+> see to fix the bug in eCryptfs. That support has been there since 2011.
+> I'm not sure of the number of users that would be broken by removing
+> encrypted_key support. I don't think the number is high but I can't say
+> that confidently.
+> 
+> Roberto, what was your use case when you added encrypted_key support to
+> eCryptfs back then? Are you aware of any users of eCryptfs +
+> encrypted_keys?
 
-Am Mo., 5. Aug. 2019 um 11:55 Uhr schrieb Vladimir Oltean <olteanv@gmail.com>:
-[...]
-> You guessed correctly (since you copied me) that I'm battling much of
-> the same issues with the sja1105 and its spi-fsl-dspi controller
-> driver.
-I've copied you, because of this discussion on github:
-https://github.com/openil/linuxptp/issues/5
-There you said: "In fact any MDIO access will make the latency
-unpredictable and hence
- throw off the time."
-I thought you might be interested in how to make MDIO latency predictable.
+Well, my use case at that time (I was at the university) was to provide
+a secure storage based on TPM. I'm not aware of users of this
+functionality, but I believe that it is reasonable (depending on how
+trusted keys are used, the secure storage is available only on a
+specific platform and if the software configuration is good). This
+secure storage would be even more effective if it is coupled with
+Mandatory Access Control, to release sensitive data only to the
+legitimate applications.
 
-[...]
-> - You said you patched linuxptp master. Could you share the patch? Is
-> there anything else that's needed except compiling against the board's
-> real kernel headers (aka point KBUILD_OUTPUT to the extracted location
-> of /sys/kernel/kheaders.tar.xz)? I've done that and I do see phc2sys
-> probing and using the new ioctl, but I don't see a big improvement in
-> my case (that's probably because my SPI interface has real jitter
-> caused by peripheral clock instability, but I really need to put a
-> scope on it to be sure, so that's a discussion for another time).
 
-My compiler used kernel headers where the ioctl was not yet defined.
-So I simply defined it in the linuxptp source directly:
+> Jarkko, removing a long-standing feature is potentially more disruptive
+> to users than adding a workaround to trusted.ko which already requires a
+> similar workaround. I don't think that I agree with you on the proper
+> fix here.
 
-diff --git a/sysoff.c b/sysoff.c
-index b993ee9..b23ad2f 100644
---- a/sysoff.c
-+++ b/sysoff.c
-@@ -27,6 +27,20 @@
+I also don't think it is a good idea to remove this functionality.
 
-#define NS_PER_SEC 1000000000LL
+Jarkko, we were discussing about this issue in another thread, and your
+answer then (https://lkml.org/lkml/2019/3/21/396) was that it is a
+priority to fix the regression.
 
-+#ifndef PTP_SYS_OFFSET_EXTENDED
-+struct ptp_sys_offset_extended {
-+    unsigned int n_samples; /* Desired number of measurements. */
-+    unsigned int rsv[3];    /* Reserved for future use. */
-+    /*
-+     * Array of [system, phc, system] time stamps. The kernel will provide
-+     * 3*n_samples time stamps.
-+     */
-+    struct ptp_clock_time ts[PTP_MAX_SAMPLES][3];
-+};
-+#define PTP_SYS_OFFSET_EXTENDED \
-+    _IOWR(PTP_CLK_MAGIC, 9, struct ptp_sys_offset_extended)
-+#endif
-+
-#ifdef PTP_SYS_OFFSET
+The patch I proposed (https://lkml.org/lkml/2019/8/2/1282, I will apply
+Tyler's comments) is not invasive and fixes the issue. If the digests
+pointer is still NULL, pcrlock() returns an error.
 
-static int64_t pctns(struct ptp_clock_time *t)
+Regarding Mimi's proposal to avoid the issue by extending the PCR with
+zeros, I think it also achieve the goal. The purpose of pcrlock() is to
+prevent unsealing of sealed data outside the kernel. If PCR values do
+not change, sealed data can be unsealed and misused by a user space
+process.
 
-> - I really wonder what your jitter is caused by. Maybe it is just
-> contention on the mii_bus->mdio_lock? If that's the case, maybe you
-> don't need to go all the way down to the driver level, and taking the
-> ptp_sts at the subsystem (MDIO, SPI, I2C, etc) level is "good enough".
+Extending the PCR with any value would be sufficient, as the extend
+operation (the only way to update PCRs) was designed in a way that
+finding the value that would be passed to the extend operation to obtain
+again one of the previous PCR values is computationally infeasible.
 
-I would say there are many places, where we introduce unpredictable jitter:
-- The busy-flag polling
-- The locking of the chip- and mdio-bus-mutex
-- The mdio_done completion in the imx_fec
-- Scheduling latencies
+Roberto
 
-> - Along the lines of the above, I wonder how badly would the
-> maintainers shout at the proposal of adding a struct
-> ptp_system_timestamp pointer and its associated lock in struct device.
-> That way at least you don't have to change the API, like you did with
-> mdiobus_write_nested_ptp. Relatively speaking, this is the least
-> amount of intrusion (although, again, far from beautiful).
-
-It is important to make sure to hook up the right mdio_write access, that is
-why the ptp_sts pointer is passed under the mdio_lock. Of course It would
-be nicer, to pass through the pointer as an argument, instead of bypassing it to
-the mii_bus struct. In the case of SPI it could be added to the spi_transfer
-struct.
-
-> - The software timestamps help you in the particular case of phc2sys,
-> but are they enough to cover all your needs?
-For now it's all I need.
-
-> I haven't spent even 1
-> second looking at Marvell switch datasheets, but is its free-running
-> timer only used for PTP timestamping? At least the sja1105 does also
-> support time-based egress scheduling and ingress policing, so for that
-> scenario, the timecounter/cyclecounter implementation will no longer
-> cut it (you do need to synchronize the hardware clock). If your
-> hardware supports these PTP-based features as well, I can only assume
-> the reason why mv88e6xxx went for a timecounter is the same as the
-> reason why I did: the MDIO/SPI jitter while accessing the frequency
-> and offset correction registers is bad enough that the servo loop goes
-> haywire. And implementing gettimex64 will not solve that.
->
-[...]
-
-Hubert
+-- 
+HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
+Managing Director: Li Peng, Li Jian, Shi Yanli
