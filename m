@@ -2,93 +2,131 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 582C6C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B1D5C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 250C72067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:13:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Sd4QHDwu"
+	by mail.kernel.org (Postfix) with ESMTP id 0895D2067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:13:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728309AbfHEJNF (ORCPT
+        id S1727942AbfHEJNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 05:13:05 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:34602 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728095AbfHEJMT (ORCPT
+        Mon, 5 Aug 2019 05:13:10 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:62353 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728069AbfHEJMS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 05:12:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=r7VigzYU3BuHUi2BBP1jIMsKqnBbu0+Xmxj4lDWNmG0=; b=Sd4QHDwuC8t+6vutznxfjeQukI
-        02e7uLEYeS7f/4D+3POuYv4ZxgWMNVY7eDp6J7tleaoYU7pppL8xXSM6f81jDZVjJTLDl22ru67IU
-        f4gkXp/yZcv9v0g6Fe0e6IpRC8jSvYiygY/FH5YpQ7cEhg+2bqRMibPUsHrhM1CkxwgHILjqwKIjr
-        w9S/Ulsek9D8832JzD+E1gwns8BTtn/sJUlKJf0FgkxU8wSe/i/Pt3Ogoo/zqFupnMC400hE/3RW6
-        02BmOfALUs2NKEFGJNMHjow/YYbsDC0A9FZEEd6mweswxwTRO0uOaFyhTGmmbxcsxHZurxCwtQotm
-        Oy4PGlhw==;
-Received: from [195.167.85.94] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1huZ2L-0004ys-Hw; Mon, 05 Aug 2019 09:12:14 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     iommu@lists.linux-foundation.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Takashi Iwai <tiwai@suse.de>, Robin Murphy <robin.murphy@arm.com>,
-        Michal Simek <monstr@monstr.eu>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-m68k@lists.linux-m68k.org, linux-parisc@vger.kernel.org,
-        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linuxppc-dev@lists.ozlabs.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4/7] ALSA: pcm: use dma_can_mmap() to check if a device supports dma_mmap_*
-Date:   Mon,  5 Aug 2019 12:11:56 +0300
-Message-Id: <20190805091159.7826-5-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190805091159.7826-1-hch@lst.de>
-References: <20190805091159.7826-1-hch@lst.de>
+        Mon, 5 Aug 2019 05:12:18 -0400
+X-UUID: 8f66d207a15445bba07f1e2efbdbe3ba-20190805
+X-UUID: 8f66d207a15445bba07f1e2efbdbe3ba-20190805
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <mars.cheng@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
+        with ESMTP id 1169585689; Mon, 05 Aug 2019 17:12:03 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 5 Aug 2019 17:12:05 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 5 Aug 2019 17:12:05 +0800
+From:   Mars Cheng <mars.cheng@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>,
+        Wendell Lin <wendell.lin@mediatek.com>,
+        Ivan Tseng <ivan.tseng@mediatek.com>
+Subject: [PATCH 00/11] Add basic SoC Support for Mediatek MT6779 SoC
+Date:   Mon, 5 Aug 2019 17:11:49 +0800
+Message-ID: <1564996320-10897-1-git-send-email-mars.cheng@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 4B7BB4B967302A6224F3882B8C334D65CEAC8A715A37D03142A05D2B0A9A4D852000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the local hack with the dma_can_mmap helper to check if
-a given device supports mapping DMA allocations to userspace.
+This patchset is based on v5.3-rc1. Basic SoC support for the new Mediatek
+SoC, MT6779, which targets for smartphone.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- sound/core/pcm_native.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+It provides ccf, pinctrl, uart, timer, gic...etc. We will also upstream
+other parts of this SoC very soon.
 
-diff --git a/sound/core/pcm_native.c b/sound/core/pcm_native.c
-index 703857aab00f..81c82c3ee8a2 100644
---- a/sound/core/pcm_native.c
-+++ b/sound/core/pcm_native.c
-@@ -220,12 +220,11 @@ static bool hw_support_mmap(struct snd_pcm_substream *substream)
- {
- 	if (!(substream->runtime->hw.info & SNDRV_PCM_INFO_MMAP))
- 		return false;
--	/* architecture supports dma_mmap_coherent()? */
--#if defined(CONFIG_ARCH_NO_COHERENT_DMA_MMAP) || !defined(CONFIG_HAS_DMA)
-+	if (!dma_can_mmap(substream->dma_buffer.dev.dev))
-+		return false;
- 	if (!substream->ops->mmap &&
- 	    substream->dma_buffer.dev.type == SNDRV_DMA_TYPE_DEV)
- 		return false;
--#endif
- 	return true;
- }
- 
--- 
-2.20.1
 
+Mars Cheng (8):
+  dt-bindings: mediatek: add support for mt6779 reference board
+  dt-bindings: mtk-uart: add mt6779 uart bindings
+  dt-bindings: irq: mtk,sysirq: add support for mt6779
+  pinctrl: mediatek: update pinmux defintions for mt6779
+  pinctrl: mediatek: avoid virtual gpio trying to set reg
+  pinctrl: mediatek: add pinctrl support for MT6779 SoC
+  pinctrl: mediatek: add mt6779 eint support
+  arm64: dts: add dts nodes for MT6779
+
+mtk01761 (3):
+  dt-bindings: mediatek: bindings for MT6779 clk
+  clk: mediatek: Add dt-bindings for MT6779 clocks
+  clk: mediatek: Add MT6779 clock support
+
+ .../devicetree/bindings/arm/mediatek.yaml     |    4 +
+ .../arm/mediatek/mediatek,apmixedsys.txt      |    1 +
+ .../bindings/arm/mediatek/mediatek,audsys.txt |    1 +
+ .../bindings/arm/mediatek/mediatek,camsys.txt |    1 +
+ .../bindings/arm/mediatek/mediatek,imgsys.txt |    1 +
+ .../arm/mediatek/mediatek,infracfg.txt        |    1 +
+ .../bindings/arm/mediatek/mediatek,ipesys.txt |   22 +
+ .../bindings/arm/mediatek/mediatek,mfgcfg.txt |    1 +
+ .../bindings/arm/mediatek/mediatek,mmsys.txt  |    1 +
+ .../arm/mediatek/mediatek,topckgen.txt        |    1 +
+ .../arm/mediatek/mediatek,vdecsys.txt         |    1 +
+ .../arm/mediatek/mediatek,vencsys.txt         |    1 +
+ .../interrupt-controller/mediatek,sysirq.txt  |    1 +
+ .../devicetree/bindings/serial/mtk-uart.txt   |    1 +
+ arch/arm64/boot/dts/mediatek/Makefile         |    1 +
+ arch/arm64/boot/dts/mediatek/mt6779-evb.dtsi  |   99 +
+ arch/arm64/boot/dts/mediatek/mt6779.dts       |  229 ++
+ drivers/clk/mediatek/Kconfig                  |   56 +
+ drivers/clk/mediatek/Makefile                 |    9 +
+ drivers/clk/mediatek/clk-mt6779-aud.c         |  125 +
+ drivers/clk/mediatek/clk-mt6779-cam.c         |   66 +
+ drivers/clk/mediatek/clk-mt6779-img.c         |   58 +
+ drivers/clk/mediatek/clk-mt6779-ipe.c         |   60 +
+ drivers/clk/mediatek/clk-mt6779-mfg.c         |   55 +
+ drivers/clk/mediatek/clk-mt6779-mm.c          |  113 +
+ drivers/clk/mediatek/clk-mt6779-vdec.c        |   68 +
+ drivers/clk/mediatek/clk-mt6779-venc.c        |   58 +
+ drivers/clk/mediatek/clk-mt6779.c             | 1553 ++++++++++++
+ drivers/pinctrl/mediatek/Kconfig              |    7 +
+ drivers/pinctrl/mediatek/Makefile             |    1 +
+ drivers/pinctrl/mediatek/pinctrl-mt6779.c     |  783 +++++++
+ .../pinctrl/mediatek/pinctrl-mtk-common-v2.c  |   20 +
+ .../pinctrl/mediatek/pinctrl-mtk-common-v2.h  |    1 +
+ drivers/pinctrl/mediatek/pinctrl-mtk-mt6779.h | 2085 +++++++++++++++++
+ drivers/pinctrl/mediatek/pinctrl-paris.c      |    3 +
+ include/dt-bindings/clock/mt6779-clk.h        |  436 ++++
+ include/dt-bindings/pinctrl/mt6779-pinfunc.h  | 1242 ++++++++++
+ 37 files changed, 7166 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,ipesys.txt
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt6779-evb.dtsi
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt6779.dts
+ create mode 100644 drivers/clk/mediatek/clk-mt6779-aud.c
+ create mode 100644 drivers/clk/mediatek/clk-mt6779-cam.c
+ create mode 100644 drivers/clk/mediatek/clk-mt6779-img.c
+ create mode 100644 drivers/clk/mediatek/clk-mt6779-ipe.c
+ create mode 100644 drivers/clk/mediatek/clk-mt6779-mfg.c
+ create mode 100644 drivers/clk/mediatek/clk-mt6779-mm.c
+ create mode 100644 drivers/clk/mediatek/clk-mt6779-vdec.c
+ create mode 100644 drivers/clk/mediatek/clk-mt6779-venc.c
+ create mode 100644 drivers/clk/mediatek/clk-mt6779.c
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt6779.c
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt6779.h
+ create mode 100644 include/dt-bindings/clock/mt6779-clk.h
+ create mode 100644 include/dt-bindings/pinctrl/mt6779-pinfunc.h
