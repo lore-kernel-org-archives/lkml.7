@@ -2,226 +2,97 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E60E5C32754
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 21:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9CEC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 21:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD76F2173B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 21:29:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A614C20B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 21:29:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565040563;
-	bh=flUatEBns2tnECMtuVIEVWWJfXMpf0ZAEBTEWy7NdUs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=gYyheHiriraZo+9X5b93wJASQFpidVDqnwFBxuS8qgbKnklm4mk6sxI3NzvHvwYPH
-	 i9vbgoprxrAtWnwIz/NouNq/Zl5DgECiGrwl0W6aAHmoQS8+MxA59CsjcGcxa3oV88
-	 dTflMH5CVhACDXQWeNRpiGCYiyBwCVNPjT+jTFA0=
+	s=default; t=1565040571;
+	bh=u+3SYBPVgv/FEIxWu9RLECxDzTwrB/RGyZBZnMDQAec=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2Ep1pNbJ0JE6yKl9sb7yvLXvngB3k/sNfWXsUx6FnM43nnvyFpyH1is0xsdCCgSpF
+	 QxRTRGJ0Fwk00rv13acynDz7UOWuOckXCo0+jOGv6zhEKbtve782/WGuNQLbcKsiIM
+	 oNka0bNjwZNRQ4EScRMuWtLlzUZAwlu9JmDb0aBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730923AbfHEV3S convert rfc822-to-8bit (ORCPT
+        id S1730979AbfHEV3a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 17:29:18 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35282 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730515AbfHEV3K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 17:29:10 -0400
-Received: by mail-ot1-f67.google.com with SMTP id j19so10726867otq.2;
-        Mon, 05 Aug 2019 14:29:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=n9m4a81xA4A6Gqrjsk6A7X7AeMPsJrAB1x7Sj73OucU=;
-        b=dEadA3gmF0D61r6p8D0XoHUvnh08RHGJxYL5k2j8xQU9jrQs1ouCIWhQ0VcI16afi2
-         unjfdO33QLC4hhSAK2bgF0lROKv13GY28tE7xaljiUTqiIEnotEcCdGIZjIDZd7zmLmH
-         hfq5tw+EVsWIDlDPsMncUkceP9ThDSsqNeUFSWz9EooRQMgrGIeqzjDhb5tgNRvime4h
-         BbL4nAcSIpSi2FvXH6huFOCmMHtyDDfV19xtQAoy0kKXiqRQ6RDA61ucNpANgd4Ee8sH
-         lOdwh62ARrmMtcIBTWfNKFITCJKYKCxZuk05zWAgcosv95phuoszZowgbZZHVNHSuS7P
-         RhEg==
-X-Gm-Message-State: APjAAAVszxBF8bYOfe9ffqsfgk+g+FxpthLPvrXRvTUt4iVnWeO+lG2S
-        +AuJ2pd2CfKN/u/pqn/6n5N0QYhOsUwlJ/kBGws=
-X-Google-Smtp-Source: APXvYqxpTVSOfNsXqw6xI0jyOWBRBVQU09/rqkjcCwO+AoepqViogqw6NBs6AWYwfaCIzRhHKhGXX40Fn2EsuJZSwEk=
-X-Received: by 2002:a05:6830:8a:: with SMTP id a10mr2125745oto.167.1565040549855;
- Mon, 05 Aug 2019 14:29:09 -0700 (PDT)
+        Mon, 5 Aug 2019 17:29:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47264 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730827AbfHEV3N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 17:29:13 -0400
+Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 940BA216F4;
+        Mon,  5 Aug 2019 21:29:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565040552;
+        bh=u+3SYBPVgv/FEIxWu9RLECxDzTwrB/RGyZBZnMDQAec=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jERS4ABosOx4Nh0Qu2Lfi1dqigzT8zM+tMPMVq2zw4+f7Z+9O1FXkt6rXMe23xDL+
+         v+gizQCi+rDkwwvX6At/Am3eneEnSl9CoSiQfC37IPtAPtSPbDVW0kAaUT4b9ZNCq8
+         N/hamxJdUghTGHeiSGCv1/60I3uA4e6UKmMySj1g=
+From:   Andy Lutomirski <luto@kernel.org>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Song Liu <songliubraving@fb.com>,
+        Kees Cook <keescook@chromium.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Lorenz Bauer <lmb@cloudflare.com>,
+        Jann Horn <jannh@google.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: [WIP 4/4] bpf: Allow creating all program types without privilege
+Date:   Mon,  5 Aug 2019 14:29:05 -0700
+Message-Id: <9e77ae06243555a96a3fd5e854f61d24823110c9.1565040372.git.luto@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <cover.1565040372.git.luto@kernel.org>
+References: <cover.1565040372.git.luto@kernel.org>
 MIME-Version: 1.0
-References: <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM>
- <CAJZ5v0iDQ4=kTUgW94tKGt7oJzA_3uVU_M6HAMbNCRXwp_do8A@mail.gmail.com>
- <47415939.KV5G6iaeJG@kreacher> <20190730144134.GA12844@localhost.localdomain>
- <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM>
- <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com> <20190730191934.GD13948@localhost.localdomain>
- <7d3e0b8ba1444194a153c93faa1cabb3@AUSX13MPC105.AMER.DELL.COM>
- <20190730213114.GK13948@localhost.localdomain> <CAJZ5v0gxfeMN8eCNRjcXmUOkReVsdozb3EccaYMpnmSHu3771g@mail.gmail.com>
- <20190731221956.GB15795@localhost.localdomain> <CAJZ5v0hxYGBXau39sb80MQ8jbZZCzH0JU2DYZvn9JOtYT2+30g@mail.gmail.com>
- <70D536BE-8DC7-4CA2-84A9-AFB067BA520E@canonical.com> <CAJZ5v0hFYEv_+vFkrxaCn_pNAbyqmO_cLb5GOLNn_xxRRwjh2g@mail.gmail.com>
- <38d4b4b107154454a932781acde0fa5a@AUSX13MPC105.AMER.DELL.COM>
- <CAJZ5v0jmO4FMOVYs62wkvPrUW81scD2H7cJyRc+tfoj+vODVbQ@mail.gmail.com>
- <43A8DF53-8463-4314-9E8E-47A7D3C5A709@canonical.com> <CAJZ5v0ipG-MJjERBL9fjx29QktaYEKSmMCbWiEGPHsbF=Xfxtw@mail.gmail.com>
- <1FA3D56B-80C6-496C-8772-2F773AA8043C@canonical.com>
-In-Reply-To: <1FA3D56B-80C6-496C-8772-2F773AA8043C@canonical.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 5 Aug 2019 23:28:58 +0200
-Message-ID: <CAJZ5v0g_yAP=zgYDXtJWtwceQp4wWPWFghDDD0opdZ4zT-yo5Q@mail.gmail.com>
-Subject: Re: [Regression] Commit "nvme/pci: Use host managed power state for
- suspend" has problems
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 5, 2019 at 9:14 PM Kai-Heng Feng
-<kai.heng.feng@canonical.com> wrote:
->
-> at 19:04, Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> > On Fri, Aug 2, 2019 at 12:55 PM Kai-Heng Feng
-> > <kai.heng.feng@canonical.com> wrote:
-> >> at 06:26, Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >>
-> >>> On Thu, Aug 1, 2019 at 9:05 PM <Mario.Limonciello@dell.com> wrote:
-> >>>>> -----Original Message-----
-> >>>>> From: Rafael J. Wysocki <rafael@kernel.org>
-> >>>>> Sent: Thursday, August 1, 2019 12:30 PM
-> >>>>> To: Kai-Heng Feng; Keith Busch; Limonciello, Mario
-> >>>>> Cc: Keith Busch; Christoph Hellwig; Sagi Grimberg; linux-nvme; Linux
-> >>>>> PM; Linux
-> >>>>> Kernel Mailing List; Rajat Jain
-> >>>>> Subject: Re: [Regression] Commit "nvme/pci: Use host managed power
-> >>>>> state for
-> >>>>> suspend" has problems
-> >>>>>
-> >>>>>
-> >>>>> [EXTERNAL EMAIL]
-> >>>>>
-> >>>>> On Thu, Aug 1, 2019 at 11:06 AM Kai-Heng Feng
-> >>>>> <kai.heng.feng@canonical.com> wrote:
-> >>>>>> at 06:33, Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >>>>>>
-> >>>>>>> On Thu, Aug 1, 2019 at 12:22 AM Keith Busch <kbusch@kernel.org>
-> >>>>>>> wrote:
-> >>>>>>>> On Wed, Jul 31, 2019 at 11:25:51PM +0200, Rafael J. Wysocki wrote:
-> >>>>>>>>> A couple of remarks if you will.
-> >>>>>>>>>
-> >>>>>>>>> First, we don't know which case is the majority at this point.  For
-> >>>>>>>>> now, there is one example of each, but it may very well turn out
-> >>>>>>>>> that
-> >>>>>>>>> the SK Hynix BC501 above needs to be quirked.
-> >>>>>>>>>
-> >>>>>>>>> Second, the reference here really is 5.2, so if there are any
-> >>>>>>>>> systems
-> >>>>>>>>> that are not better off with 5.3-rc than they were with 5.2,
-> >>>>>>>>> well, we
-> >>>>>>>>> have not made progress.  However, if there are systems that are
-> >>>>>>>>> worse
-> >>>>>>>>> off with 5.3, that's bad.  In the face of the latest findings the
-> >>>>>>>>> only
-> >>>>>>>>> way to avoid that is to be backwards compatible with 5.2 and that's
-> >>>>>>>>> where my patch is going.  That cannot be achieved by quirking all
-> >>>>>>>>> cases that are reported as "bad", because there still may be
-> >>>>>>>>> unreported ones.
-> >>>>>>>>
-> >>>>>>>> I have to agree. I think your proposal may allow PCI D3cold,
-> >>>>>>>
-> >>>>>>> Yes, it may.
-> >>>>>>
-> >>>>>> Somehow the 9380 with Toshiba NVMe never hits SLP_S0 with or without
-> >>>>>> Rafael’s patch.
-> >>>>>> But the “real” s2idle power consumption does improve with the patch.
-> >>>>>
-> >>>>> Do you mean this patch:
-> >>>>>
-> >>>>> https://lore.kernel.org/linux-pm/70D536BE-8DC7-4CA2-84A9-
-> >>>>> AFB067BA520E@canonical.com/T/#m456aa5c69973a3b68f2cdd4713a1ce83be5145
-> >>>>> 8f
-> >>>>>
-> >>>>> or the $subject one without the above?
-> >>>>>
-> >>>>>> Can we use a DMI based quirk for this platform? It seems like a
-> >>>>>> platform
-> >>>>>> specific issue.
-> >>>>>
-> >>>>> We seem to see too many "platform-specific issues" here. :-)
-> >>>>>
-> >>>>> To me, the status quo (ie. what we have in 5.3-rc2) is not defensible.
-> >>>>> Something needs to be done to improve the situation.
-> >>>>
-> >>>> Rafael, would it be possible to try popping out PC401 from the 9380 and
-> >>>> into a 9360 to
-> >>>> confirm there actually being a platform impact or not?
-> >>>
-> >>> Not really, sorry.
-> >>>
-> >>>> I was hoping to have something useful from Hynix by now before
-> >>>> responding, but oh well.
-> >>>>
-> >>>> In terms of what is the majority, I do know that between folks at Dell,
-> >>>> Google, Compal,
-> >>>> Wistron, Canonical, Micron, Hynix, Toshiba, LiteOn, and Western Digital
-> >>>> we tested a wide
-> >>>> variety of SSDs with this patch series.  I would like to think that they
-> >>>> are representative of
-> >>>> what's being manufactured into machines now.
-> >>>
-> >>> Well, what about drives already in the field?  My concern is mostly
-> >>> about those ones.
-> >>>
-> >>>> Notably the LiteOn CL1 was tested with the HMB flushing support and
-> >>>> and Hynix PC401 was tested with older firmware though.
-> >>>>
-> >>>>>>>> In which case we do need to reintroduce the HMB handling.
-> >>>>>>>
-> >>>>>>> Right.
-> >>>>>>
-> >>>>>> The patch alone doesn’t break HMB Toshiba NVMe I tested. But I think
-> >>>>>> it’s
-> >>>>>> still safer to do proper HMB handling.
-> >>>>>
-> >>>>> Well, so can anyone please propose something specific?  Like an
-> >>>>> alternative patch?
-> >>>>
-> >>>> This was proposed a few days ago:
-> >>>> http://lists.infradead.org/pipermail/linux-nvme/2019-July/026056.html
-> >>>>
-> >>>> However we're still not sure why it is needed, and it will take some
-> >>>> time to get
-> >>>> a proper failure analysis from LiteOn  regarding the CL1.
-> >>>
-> >>> Thanks for the update, but IMO we still need to do something before
-> >>> final 5.3 while the investigation continues.
-> >>>
-> >>> Honestly, at this point I would vote for going back to the 5.2
-> >>> behavior at least by default and only running the new code on the
-> >>> drives known to require it (because they will block PC10 otherwise).
-> >>>
-> >>> Possibly (ideally) with an option for users who can't get beyond PC3
-> >>> to test whether or not the new code helps them.
-> >>
-> >> I just found out that the XPS 9380 at my hand never reaches SLP_S0 but
-> >> only
-> >> PC10.
-> >
-> > That's the case for me too.
-> >
-> >> This happens with or without putting the device to D3.
-> >
-> > On my system, though, it only can get to PC3 without putting the NVMe
-> > into D3 (as reported previously).
->
-> I forgot to ask, what BIOS version does the system have?
-> I don’t see this issue on BIOS v1.5.0.
+This doesn't let you *run* the programs except in test mode, so it should
+be safe.  Famous last words.
 
-It is 1.5.0 here too.
+This assumes that the check-privilege-to-call-privileged-functions
+patch actually catches all the cases and that there's nothing else
+that should need privilege lurking in the type-specific verifiers.
+
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+---
+ kernel/bpf/syscall.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 23f8f89d2a86..730afa2be786 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -1649,8 +1649,7 @@ static int bpf_prog_load(union bpf_attr *attr, union bpf_attr __user *uattr)
+ 	    attr->insn_cnt > (capable(CAP_SYS_ADMIN) ? BPF_COMPLEXITY_LIMIT_INSNS : BPF_MAXINSNS))
+ 		return -E2BIG;
+ 	if (type != BPF_PROG_TYPE_SOCKET_FILTER &&
+-	    type != BPF_PROG_TYPE_CGROUP_SKB &&
+-	    !capable(CAP_SYS_ADMIN))
++	    type != BPF_PROG_TYPE_CGROUP_SKB)
+ 		return -EPERM;
+ 
+ 	bpf_prog_load_fixup_attach_type(attr);
+-- 
+2.21.0
+
