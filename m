@@ -2,126 +2,112 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FC8C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E74D7C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A754120B1F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:54:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565020490;
-	bh=GqH8P8Sc5z4BoLebSRYjQW+TVTAwhdGRVGtddclJmxY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=S4f0Qq5vA3hUb35zgP0GVpgsW+Bp4bYUaCOMQbR5Rg2yrFxlHaJh61r0pFUTEooXt
-	 Cf5cyJjnSqagPAHBJbLMCldSvvVK/kpET1aG8opKQU7pWTdMNrESADlui3Z1RCaZBO
-	 pomPS8uYfUE9ed40eaPXBfA6dBdIx2WU7WaKj66U=
+	by mail.kernel.org (Postfix) with ESMTP id B6CAB20B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:55:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nIKF7www"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729300AbfHEPyt (ORCPT
+        id S1729345AbfHEPzO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 11:54:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49518 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729042AbfHEPyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 11:54:49 -0400
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A9212173C;
-        Mon,  5 Aug 2019 15:54:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565020488;
-        bh=GqH8P8Sc5z4BoLebSRYjQW+TVTAwhdGRVGtddclJmxY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vNvjROcPu+7yaOA4CmFHRvfPgFiNVGV+xXMikkoDn+sXkSwDhZ4+5hYxEAbBTD7VG
-         vByLOYoOoBXdEGxacgnA2dPqb//W18X7uaqiqGW4RqdHW1qknvjED9mGzTKWw0WSVb
-         Rv2TVfmT2BZ08O1V8VqJn5W3b2XANdgAoLDEnB9s=
-Received: by mail-qk1-f182.google.com with SMTP id t187so7775081qke.8;
-        Mon, 05 Aug 2019 08:54:48 -0700 (PDT)
-X-Gm-Message-State: APjAAAXFX7sL2zEnAQuObWlVVDmA98ZBY0FcbgHQiMVA69M879zuNhBf
-        vg+kvPNvvQMPO4FIV4386Mc8uWkFJb/4IaEigA==
-X-Google-Smtp-Source: APXvYqw9FR3wqH+oZ5jAU/pdfSplNc6XBxfybOgvQPatkfulK2lt7S/NZVvHJvpqmoyDdmCwUTGKN+GG+Qi/B+5UxHI=
-X-Received: by 2002:a37:a48e:: with SMTP id n136mr104724739qke.223.1565020487172;
- Mon, 05 Aug 2019 08:54:47 -0700 (PDT)
+        Mon, 5 Aug 2019 11:55:14 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44505 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728028AbfHEPzO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 11:55:14 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p17so84924543wrf.11
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 08:55:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pnsluh819l1ZStKbmfOcG3O4jnLq32HWa/lDwn+83Yg=;
+        b=nIKF7wwwI0QPjCu0IOvAfwL8Hr2Lr3IyHpP1+ypF27lI+2iwFL7eal+6vIO+rqw+Mt
+         LXAwxw+s2ChlfUXNMEXSxChFPEyBlt2mrI7syMIUMzAKRifN913by3ykVqN0/d6xl7XU
+         45yp5Dbam98j3f3E/3LUUY2skj+VRIR6Q8k8Rg31HD71xr5EqDX6gQ6cap/HUwc24hja
+         S7D4kueITTfZcQpcEVxOCeYR8beovQfohGrp1HjLWzMgb2ix1D3u4rlYkfqFYgbvAlqx
+         BgcR5X7htSE1LfbrPS4WmeTMbUqF3oBy6DHpwH+405NuzlAK/rx/oVE5GFOwT1brTawU
+         LZFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pnsluh819l1ZStKbmfOcG3O4jnLq32HWa/lDwn+83Yg=;
+        b=XXRxYuptmeKo3C0ge8mw8CM7vGQPAgo+E13gQa7FXWYsjgDKP8Ak9rQOSCMJSUhtVm
+         9puJpooWxc7L/Vc04luL3BdavGeSrXybBJd+C8IO5tYY3czWSi7Bm/JNJRPdtSKnLxtO
+         OLk2gzu+pWySFFDr7BTJvTGlvIHU22HMbx+Ng79XhdhNvtd0Xz6oZr6535lUVlLHZxaP
+         N8jbuE+tGbzj37i+lnFN7SlCzkL/oStsmEv5oMMwHdldCvxGjsM701AVJItt2ObDQfVg
+         1R/+6qrW75z5qgAzuveld10vfLxEOxcUrBGAYhRTu9y6Pvu/VhfmffwdF0P01ZT7MO5x
+         ulgw==
+X-Gm-Message-State: APjAAAUf9KtuZAaCue9A21p5SWbFq/UYu5yf6cq0Wei3crpDDs8TDWwH
+        Mu0uMlfiESYB+qR2xwMLA8VOEMIfZBKldxhl/yjrkQ==
+X-Google-Smtp-Source: APXvYqzYjhwZn5w5yyV/Vo+58zqgFvAH23OEi6QSh7dNxwvBI9af8UVivxjFT+LneGo0eAeVs1mIu/sfzpI/ECNUVHU=
+X-Received: by 2002:a5d:46cf:: with SMTP id g15mr26762663wrs.93.1565020512761;
+ Mon, 05 Aug 2019 08:55:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190805145211.23161-1-dinguyen@kernel.org>
-In-Reply-To: <20190805145211.23161-1-dinguyen@kernel.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 5 Aug 2019 09:54:34 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKUK+AQiy8jZ_aWuSsHMb5nSFJpiDMUAYbmK6pvc0p1_w@mail.gmail.com>
-Message-ID: <CAL_JsqKUK+AQiy8jZ_aWuSsHMb5nSFJpiDMUAYbmK6pvc0p1_w@mail.gmail.com>
-Subject: Re: [PATCHv2] drivers/amba: add reset control to primecell probe
-To:     Dinh Nguyen <dinguyen@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>
+References: <20190805083553.GA27708@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20190805083553.GA27708@dhcp-128-65.nay.redhat.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Mon, 5 Aug 2019 18:55:03 +0300
+Message-ID: <CAKv+Gu-my6EpLfxBnbMn21be62oHrF6PKFu2rt-4Pqk9wG9SXA@mail.gmail.com>
+Subject: Re: [PATCH] do not clean dummy variable in kexec path
+To:     Dave Young <dyoung@redhat.com>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Kexec Mailing List <kexec@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Bhupesh Sharma <bhsharma@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 5, 2019 at 8:52 AM Dinh Nguyen <dinguyen@kernel.org> wrote:
+On Mon, 5 Aug 2019 at 11:36, Dave Young <dyoung@redhat.com> wrote:
 >
-> The primecell controller on some SoCs, i.e. SoCFPGA, is held in reset by
-> default. Until recently, the DMA controller was brought out of reset by the
-> bootloader(i.e. U-Boot). But a recent change in U-Boot, the peripherals that
-> are not used are held in reset and are left to Linux to bring them out of
-> reset.
+> kexec reboot fails randomly in UEFI based kvm guest.  The firmware
+> just reset while calling efi_delete_dummy_variable();  Unfortunately
+> I don't know how to debug the firmware, it is also possible a potential
+> problem on real hardware as well although nobody reproduced it.
 >
-> Add a mechanism for getting the reset property and de-assert the primecell
-> module from reset if found. This is a not a hard fail if the reset property
-> is not present in the device tree node, so the driver will continue to probe.
+> The intention of efi_delete_dummy_variable is to trigger garbage collection
+> when entering virtual mode.  But SetVirtualAddressMap can only run once
+> for each physical reboot, thus kexec_enter_virtual_mode is not necessarily
+> a good place to clean dummy object.
 >
-> Because there are different variants of the controller that may have multiple
-> reset signals, the code will find all reset(s) specified and de-assert them.
+
+I would argue that this means it is not a good place to *create* the
+dummy variable, and if we don't create it, we don't have to delete it
+either.
+
+> Drop efi_delete_dummy_variable so that kexec reboot can work.
 >
-> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+
+Creating it and not deleting it is bad, so please try and see if we
+can omit the creation on this code path instead.
+
+
+> Signed-off-by: Dave Young <dyoung@redhat.com>
 > ---
-> v2: move reset control to bus code
->     find all reset properties and de-assert them
-> ---
->  drivers/amba/bus.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+>  arch/x86/platform/efi/efi.c |    3 ---
+>  1 file changed, 3 deletions(-)
 >
-> diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
-> index 100e798a5c82..75e18b9e4808 100644
-> --- a/drivers/amba/bus.c
-> +++ b/drivers/amba/bus.c
-> @@ -18,6 +18,7 @@
->  #include <linux/limits.h>
->  #include <linux/clk/clk-conf.h>
->  #include <linux/platform_device.h>
-> +#include <linux/reset.h>
+> --- linux-x86.orig/arch/x86/platform/efi/efi.c
+> +++ linux-x86/arch/x86/platform/efi/efi.c
+> @@ -894,9 +894,6 @@ static void __init kexec_enter_virtual_m
 >
->  #include <asm/irq.h>
+>         if (efi_enabled(EFI_OLD_MEMMAP) && (__supported_pte_mask & _PAGE_NX))
+>                 runtime_code_page_mkexec();
+> -
+> -       /* clean DUMMY object */
+> -       efi_delete_dummy_variable();
+>  #endif
+>  }
 >
-> @@ -401,6 +402,18 @@ static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
->         ret = amba_get_enable_pclk(dev);
->         if (ret == 0) {
->                 u32 pid, cid;
-> +               int count;
-> +               struct reset_control *rstc;
-> +
-> +               /*
-> +                * Find reset control(s) of the amba bus and de-assert them.
-> +                */
-> +               count = reset_control_get_count(&dev->dev);
-> +               while (count > 0) {
-> +                       rstc = of_reset_control_get_shared_by_index(dev->dev.of_node, count - 1);
-> +                       reset_control_deassert(rstc);
-> +                       count--;
-> +               }
-
-Aren't you going to need a put somewhere?
-
-And then there's the fun possibility of deferred probe which could
-happen on any of the resets.
-
-Rob
