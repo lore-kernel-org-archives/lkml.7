@@ -2,87 +2,103 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0240CC41514
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1900EC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA95620B1F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:17:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFDA5205F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:18:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="vaSHkIAH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727750AbfHEHRi (ORCPT
+        id S1727599AbfHEHS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 03:17:38 -0400
-Received: from hel-mailgw-01.vaisala.com ([193.143.230.17]:22329 "EHLO
-        hel-mailgw-01.vaisala.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726423AbfHEHRh (ORCPT
+        Mon, 5 Aug 2019 03:18:26 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38201 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726394AbfHEHS0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 03:17:37 -0400
-X-Greylist: delayed 429 seconds by postgrey-1.27 at vger.kernel.org; Mon, 05 Aug 2019 03:17:36 EDT
-IronPort-SDR: AiVsvu83aTiditj6bcGQPuocqOVRL70JlYuCuYjJ858UNGxtou3LY7zkkGMN8jnPOOAeJThQjU
- YIRW2/bmY8XRUFu0dAeeHEG1MRG3i6Pa9zjINUVMJ6d/4u5FJHCjE5mZsvJVoLeLUnvm6Ck4Z2
- QhAM/NtQjsn2B8BT1G7FUaEXtLkTOcbl3Ntz/Mt7w5tu6rBe1BOHanV+KJUtU6VXmbddeO9aph
- jH7yXWOuZ0/Dl8HuGebBIO/upipgxj19ZEuGUxvEx95irLWsXAMKL+0s3J/o2rV8Ipir4rBiSo
- uLo=
-X-IronPort-AV: E=Sophos;i="5.64,349,1559509200"; 
-   d="scan'208";a="227589749"
-Subject: Re: [PATCH] power: reset: nvmem-reboot-mode: add CONFIG_OF dependency
-To:     Arnd Bergmann <arnd@arndb.de>, Sebastian Reichel <sre@kernel.org>
-Cc:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190708125247.3769080-1-arnd@arndb.de>
-From:   Nandor Han <nandor.han@vaisala.com>
-Message-ID: <6aa562a3-effe-12c2-25d8-47ecf583d724@vaisala.com>
-Date:   Mon, 5 Aug 2019 10:10:14 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Mon, 5 Aug 2019 03:18:26 -0400
+Received: by mail-wr1-f68.google.com with SMTP id g17so83253380wrr.5
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 00:18:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RUqYiFGRwqZz3baSi7DePLwfU/zHvDjxvxTGgWRnjy4=;
+        b=vaSHkIAHMZgvdsmo51ZYrbAryRPsAqLUFYv5jJavndTgROhdJ2YKtLsZZ7C5gyHtvW
+         d/v3QIkwaKBrAFuclzEsoay1vDYmjzsPaxL6kALb0MhKAhO2G5JvtGBdNRuHDOhawgi4
+         lXTjtmEwRoGoiHPDd7rP98028ijkU/rrmccPlI4+BJUogzjLpnIAfcM/RSF7a0W20G3a
+         +lYNkmcxP15Wv0MSZzqX1VmMeIw8oeevNB0gHTpWSvBKIISi5EBHG0ojEi+JIBbaGMD3
+         Jrc2jqiRbvWDhyZXhGGFBf5N5Ec8u2CeeK2HmFW6XmZ5yQoLYLGMohbmcA8s+tpwyTkC
+         naNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RUqYiFGRwqZz3baSi7DePLwfU/zHvDjxvxTGgWRnjy4=;
+        b=STkNqlGyP5A7AYQY2zDWawcRtAEfiJ931Hg0Eegg1gq1+7BPRhoHI1hZZx8MtTklRy
+         e1Uxd6dDxZ+zmVMUClGAbBJnSAnmTLzrU2TAMntnpy+LHT/d6vsGXAEOWW7HXrmibBgr
+         LL9AgRWQMtOX8QIfJtzDhOChgo0eoqcdAXQeIRzlbEYodA17SmPdMTAHJu2LpthRuSCu
+         Fyiu8GSQMlX1HXHJITxApM50qgl5dx1vPNvYQLxa6fddT/QA2Bxo7W+JDRyFRxMUcirW
+         3cejSk0ditvFkxXRMHQX61U/8ajjF5qAZZ04KovOqkDroCKSeMboRzmHrsxFbpNGeOmb
+         d2bw==
+X-Gm-Message-State: APjAAAWvM7bEDlVy/l9toqIGRMYu7f2ENS/YM41kiJ75bulji9HehLXh
+        alrg5e/2iImbdqw7MNsFNTRuCA3g1jUhzEPJI54=
+X-Google-Smtp-Source: APXvYqw/FM+tBx9ajgV2UsWP4KPKi99Z0fzot3UMGZ6r5xVj6SOPqPddG0DiyAWPBjneacTNTdnwazaj1Hb9o9cCPqQ=
+X-Received: by 2002:a5d:4e50:: with SMTP id r16mr24977381wrt.227.1564989504211;
+ Mon, 05 Aug 2019 00:18:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190708125247.3769080-1-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-OriginalArrivalTime: 05 Aug 2019 07:10:20.0701 (UTC) FILETIME=[D7CE8CD0:01D54B5C]
+References: <20190802074620.115029-1-anup.patel@wdc.com> <20190802074620.115029-11-anup.patel@wdc.com>
+ <5b966171-4d11-237d-5a43-dc881efb7d0a@redhat.com> <CAAhSdy0BVqagYTTnaG2hwsxxM51ZZ2QpJbZtQ21v__8UaXCOWA@mail.gmail.com>
+ <458f6b85-cdb2-5e6b-6730-4875f0e4cdba@redhat.com>
+In-Reply-To: <458f6b85-cdb2-5e6b-6730-4875f0e4cdba@redhat.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Mon, 5 Aug 2019 12:48:12 +0530
+Message-ID: <CAAhSdy02bZAbyK4TGzO0jYRCTCFwexzA_iu7GNRh-07NZ6fuFw@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 10/19] RISC-V: KVM: Handle WFI exits for VCPU
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Radim K <rkrcmar@redhat.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/8/19 3:52 PM, Arnd Bergmann wrote:
-> Without CONFIG_OF, we get a build failure in the reboot-mode
-> implementation:
-> 
-> drivers/power/reset/reboot-mode.c: In function 'reboot_mode_register':
-> drivers/power/reset/reboot-mode.c:72:2: error: implicit declaration of function 'for_each_property_of_node'; did you mean 'for_each_child_of_node'? [-Werror=implicit-function-declaration]
->    for_each_property_of_node(np, prop) {
-> 
-> Add a Kconfig dependency like we have for the other users of
-> CONFIG_REBOOT_MODE.
-> 
-> Fixes: 7a78a7f7695b ("power: reset: nvmem-reboot-mode: use NVMEM as reboot mode write interface")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->   drivers/power/reset/Kconfig | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-> index 8dfb105db391..a564237278ff 100644
-> --- a/drivers/power/reset/Kconfig
-> +++ b/drivers/power/reset/Kconfig
-> @@ -248,6 +248,7 @@ config POWER_RESET_SC27XX
->   
->   config NVMEM_REBOOT_MODE
->   	tristate "Generic NVMEM reboot mode driver"
-> +	depends on OF
->   	select REBOOT_MODE
->   	help
->   	  Say y here will enable reboot mode driver. This will
-> 
+On Mon, Aug 5, 2019 at 12:44 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 05/08/19 09:12, Anup Patel wrote:
+> > On Fri, Aug 2, 2019 at 2:33 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
+> >>
+> >> On 02/08/19 09:47, Anup Patel wrote:
+> >>> +             if (!kvm_riscv_vcpu_has_interrupt(vcpu)) {
+> >>
+> >> This can be kvm_arch_vcpu_runnable instead, since kvm_vcpu_block will
+> >> check it anyway before sleeping.
+> >
+> > I think we can skip this check here because kvm_vcpu_block() is
+> > checking it anyway. Agree ??
+>
+> Yes, but it's quite a bit faster to do this outside the call.  There's a
+> bunch of setup before kvm_vcpu_block reaches that point, and it includes
+> mfences too once you add srcu_read_unlock/lock here.
 
-Wouldn't this be more appropriate to add the "depends on OF" to "config 
-REBOOT_MODE" section, since this is an error to `reboot-mode.c` unit?
+No problem, I will use kvm_arch_vcpu_runnable() here.
 
-Nandor
+Regards,
+Anup
