@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE4ADC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBBD2C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8552E2075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:11:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E52F20880
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:11:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010676;
-	bh=KnrFv3vDarcaPhQcdemoJlumUpCpVGh+3zak/sjMUo4=;
+	s=default; t=1565010680;
+	bh=Pa4wSFVkCPxyf5+NSU1pVrZRiZUO5m60ZRYSvyppvxs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m9A6VWFcrT5NnD4WR3XQEkURdeMp4e5pyB998UZeERb5Q4ubP29qJjXDwhCPP02PA
-	 1f55O5WMiWdYYMvdKD+y3QMLyAQ6vyhvTJHIF+hB6ZJrERxlOql/XazkkR7HlntK1h
-	 ot8q9FlQLRmEIBnG1NozlwyWcloJ8D7S8iDt0fzA=
+	b=FRKvPm+IouIjlk4lkxtAJdmpP6B/Xe7Sl+POIkPK/pfsjF0KJmtMwUxw+bGi3a0qC
+	 SH0TTuC87jgFG50Dl4VRWreOLLD87SvKUThJ0xWxijqreF3PhUPJzaH1SwdeaZJ8Is
+	 N+23sLW6KXESQuYnhbMHBBuWz0/aUhb6ybQtdTi8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730497AbfHENLP (ORCPT
+        id S1729406AbfHENLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:11:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50476 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:11:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730483AbfHENLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:11:13 -0400
+        id S1730498AbfHENLP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:11:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 786072075B;
-        Mon,  5 Aug 2019 13:11:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C9EC21738;
+        Mon,  5 Aug 2019 13:11:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010672;
-        bh=KnrFv3vDarcaPhQcdemoJlumUpCpVGh+3zak/sjMUo4=;
+        s=default; t=1565010675;
+        bh=Pa4wSFVkCPxyf5+NSU1pVrZRiZUO5m60ZRYSvyppvxs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qnMKDvt899UrATZEZrj2gSAA9lvefcI72rCMvr7D+iC9T4jpgfF6jvYfYtICyMfXy
-         0HIcTYd1KcZQHYnRcz0abP/VSdf1rE7w5XpY5fB7gQBn9mCDPuVN7z4bEk6nvTQL0Q
-         Q/n3ORhCL9nCFzHGbMlYWiAEQg1MCvRJJaqDUhqw=
+        b=cyOvs+cbmoo9x2IThMPMvF+gU7JBmk+gDVhoihBXb9vLN1Tazf/AaVcFCJ/TySiTB
+         H0ek9TOpMAO5q4hFTUqgiQZ8Am4/YOTgLZCwU0BA4KI2n82RPULiHJMGpBtkpQa5MG
+         dmosag/3GDqZyxM8bfGzgomY7hemFZf9wa8on6Js=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, linux-block@vger.kernel.org,
-        Ratna Manoj Bolla <manoj.br@gmail.com>, nbd@other.debian.org,
-        David Woodhouse <dwmw@amazon.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Munehisa Kamata <kamatam@amazon.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.19 60/74] nbd: replace kill_bdev() with __invalidate_device() again
-Date:   Mon,  5 Aug 2019 15:03:13 +0200
-Message-Id: <20190805124940.695248947@linuxfoundation.org>
+        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Jan Beulich <jbeulich@suse.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Subject: [PATCH 4.19 61/74] xen/swiotlb: fix condition for calling xen_destroy_contiguous_region()
+Date:   Mon,  5 Aug 2019 15:03:14 +0200
+Message-Id: <20190805124940.763241980@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124935.819068648@linuxfoundation.org>
 References: <20190805124935.819068648@linuxfoundation.org>
@@ -63,74 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Munehisa Kamata <kamatam@amazon.com>
+From: Juergen Gross <jgross@suse.com>
 
-commit 2b5c8f0063e4b263cf2de82029798183cf85c320 upstream.
+commit 50f6393f9654c561df4cdcf8e6cfba7260143601 upstream.
 
-Commit abbbdf12497d ("replace kill_bdev() with __invalidate_device()")
-once did this, but 29eaadc03649 ("nbd: stop using the bdev everywhere")
-resurrected kill_bdev() and it has been there since then. So buffer_head
-mappings still get killed on a server disconnection, and we can still
-hit the BUG_ON on a filesystem on the top of the nbd device.
+The condition in xen_swiotlb_free_coherent() for deciding whether to
+call xen_destroy_contiguous_region() is wrong: in case the region to
+be freed is not contiguous calling xen_destroy_contiguous_region() is
+the wrong thing to do: it would result in inconsistent mappings of
+multiple PFNs to the same MFN. This will lead to various strange
+crashes or data corruption.
 
-  EXT4-fs (nbd0): mounted filesystem with ordered data mode. Opts: (null)
-  block nbd0: Receive control failed (result -32)
-  block nbd0: shutting down sockets
-  print_req_error: I/O error, dev nbd0, sector 66264 flags 3000
-  EXT4-fs warning (device nbd0): htree_dirblock_to_tree:979: inode #2: lblock 0: comm ls: error -5 reading directory block
-  print_req_error: I/O error, dev nbd0, sector 2264 flags 3000
-  EXT4-fs error (device nbd0): __ext4_get_inode_loc:4690: inode #2: block 283: comm ls: unable to read itable block
-  EXT4-fs error (device nbd0) in ext4_reserve_inode_write:5894: IO failure
-  ------------[ cut here ]------------
-  kernel BUG at fs/buffer.c:3057!
-  invalid opcode: 0000 [#1] SMP PTI
-  CPU: 7 PID: 40045 Comm: jbd2/nbd0-8 Not tainted 5.1.0-rc3+ #4
-  Hardware name: Amazon EC2 m5.12xlarge/, BIOS 1.0 10/16/2017
-  RIP: 0010:submit_bh_wbc+0x18b/0x190
-  ...
-  Call Trace:
-   jbd2_write_superblock+0xf1/0x230 [jbd2]
-   ? account_entity_enqueue+0xc5/0xf0
-   jbd2_journal_update_sb_log_tail+0x94/0xe0 [jbd2]
-   jbd2_journal_commit_transaction+0x12f/0x1d20 [jbd2]
-   ? __switch_to_asm+0x40/0x70
-   ...
-   ? lock_timer_base+0x67/0x80
-   kjournald2+0x121/0x360 [jbd2]
-   ? remove_wait_queue+0x60/0x60
-   kthread+0xf8/0x130
-   ? commit_timeout+0x10/0x10 [jbd2]
-   ? kthread_bind+0x10/0x10
-   ret_from_fork+0x35/0x40
+Instead of calling xen_destroy_contiguous_region() in that case a
+warning should be issued as that situation should never occur.
 
-With __invalidate_device(), I no longer hit the BUG_ON with sync or
-unmount on the disconnected device.
-
-Fixes: 29eaadc03649 ("nbd: stop using the bdev everywhere")
-Cc: linux-block@vger.kernel.org
-Cc: Ratna Manoj Bolla <manoj.br@gmail.com>
-Cc: nbd@other.debian.org
 Cc: stable@vger.kernel.org
-Cc: David Woodhouse <dwmw@amazon.com>
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Munehisa Kamata <kamatam@amazon.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Reviewed-by: Jan Beulich <jbeulich@suse.com>
+Acked-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/block/nbd.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/xen/swiotlb-xen.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -1218,7 +1218,7 @@ static void nbd_clear_sock_ioctl(struct
- 				 struct block_device *bdev)
- {
- 	sock_shutdown(nbd);
--	kill_bdev(bdev);
-+	__invalidate_device(bdev, true);
- 	nbd_bdev_reset(bdev);
- 	if (test_and_clear_bit(NBD_HAS_CONFIG_REF,
- 			       &nbd->config->runtime_flags))
+--- a/drivers/xen/swiotlb-xen.c
++++ b/drivers/xen/swiotlb-xen.c
+@@ -357,8 +357,8 @@ xen_swiotlb_free_coherent(struct device
+ 	/* Convert the size to actually allocated. */
+ 	size = 1UL << (order + XEN_PAGE_SHIFT);
+ 
+-	if (((dev_addr + size - 1 <= dma_mask)) ||
+-	    range_straddles_page_boundary(phys, size))
++	if (!WARN_ON((dev_addr + size - 1 > dma_mask) ||
++		     range_straddles_page_boundary(phys, size)))
+ 		xen_destroy_contiguous_region(phys, order);
+ 
+ 	xen_free_coherent_pages(hwdev, size, vaddr, (dma_addr_t)phys, attrs);
 
 
