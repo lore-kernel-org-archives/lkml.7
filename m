@@ -6,155 +6,82 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40BA8C19759
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 00:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A252C19759
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 00:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC2722182B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 00:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0456C20880
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 00:55:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="KouHbajv";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kPaNfa3g"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="Ul50OO+S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbfHEAsC (ORCPT
+        id S1726896AbfHEAzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 4 Aug 2019 20:48:02 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:36983 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726621AbfHEAsB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 4 Aug 2019 20:48:01 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 7C2CD16BF;
-        Sun,  4 Aug 2019 20:48:00 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Sun, 04 Aug 2019 20:48:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=wVRpJrgZ1O2Fju5cbM4E047p8yDD7x/
-        0FjNTZOxLy8A=; b=KouHbajvM5FTe5slhbI3hC2lczfuS90T9Jxq/k4GpPAXW3h
-        HugHeepMQ+QxDJcrrchOQ1VAqXNNFEOsWL97R/IcAe4l+mbizw9iqtkDcoAFnh0X
-        seovXUIddjx47kFX6hFXBChUSzl4ze9W+zwYf6TXXgerzeJGgvU1DZhbS849ImRW
-        /e4b32jzTzIeNFRyg6IzoX8cazIY83I8yohFl+dB+vqZ3ArhdSa5iEsqHpAyPUDf
-        QqCV6O7/ilnpb4umTPeM8OPTAA7jHW6hBNJCHSuHGVm68tQ3fCdd7MkD3RP8xwVv
-        fQvZtmh0KefZECyo4KqXbwox/tR9OghhnevkT/w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=wVRpJr
-        gZ1O2Fju5cbM4E047p8yDD7x/0FjNTZOxLy8A=; b=kPaNfa3gItyPsgkEtYnPEx
-        ZWMrlMf/0VEwKYOqlfEYuUQCJfH15DbnP92xDipWrPXCTKuXtJUhZp9pna73Lk4n
-        bumeSKK+UCKZ9b0/Khnl2Qpch+VccyqQ61D3cUhfdjV8y5u625CIpWEP7oeHCLqZ
-        HF/IE6IziAaee7ajhvZhxl5XNtTU2jrZuOzVu2ouldc/ttf7GAWnlNBNi15USOXD
-        JjCl8mBXmXTvNVvT1u0esC1owINwkmXB1xS/Oxwri9zAP8JINhKpaK+FgPiMqV/x
-        oYQtlnWxpakK5v0cPxb9Wyz5YmiLkU80urNmC8m/suDVSBJk5puhuMmf8oJqYQMA
-        ==
-X-ME-Sender: <xms:vHxHXae8zQkQoIXOFmhTlYGbWfRNpWOI-HINgXhGX2UygIWYbvuKZA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddruddtiedgfeejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
-    rhfuihiivgeptd
-X-ME-Proxy: <xmx:vHxHXYdSMGHxjZ4pnB-Ih6FhwhszzhpideX8pQECYN7z2CciX5vnSg>
-    <xmx:vHxHXWha17NCHarMxWIGvYsAQpQN_0u3dGGl-KAV-JwWc_BWf-pVHw>
-    <xmx:vHxHXcT3yaRYfFFGevfhXKYxLtpI1CCuze7nBKJU72nktFY9vzBOIg>
-    <xmx:wHxHXTjzDEJZKPlzisyKmdB0D309JcA8BJ-nH7F9fhiZii5hKAPq2A>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id BC0C0E00A2; Sun,  4 Aug 2019 20:47:56 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.6-799-g925e343-fmstable-20190729v1
-Mime-Version: 1.0
-Message-Id: <5a6a22f8-d459-4aec-b69b-e49d096afa85@www.fastmail.com>
-In-Reply-To: <CACPK8Xc4Vigeu1B1Su5392BSCSKfoEDqt_tiDtgKmNH5ucAvAg@mail.gmail.com>
-References: <20190726053959.2003-1-andrew@aj.id.au>
- <CAL_JsqJ+sFDG8eKbV3gvmqVHx+otWbki4dY213apzXgfhbXXEw@mail.gmail.com>
- <fd8e57f0-aee2-403e-b6fb-76d0c18fe306@www.fastmail.com>
- <CACPK8Xc4Vigeu1B1Su5392BSCSKfoEDqt_tiDtgKmNH5ucAvAg@mail.gmail.com>
-Date:   Mon, 05 Aug 2019 10:18:21 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Joel Stanley" <joel@jms.id.au>
-Cc:     "Rob Herring" <robh+dt@kernel.org>, linux-aspeed@lists.ozlabs.org,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Adriana Kobylak" <anoo@us.ibm.com>,
-        "Alexander A. Filippov" <a.filippov@yadro.com>,
-        "Arnd Bergmann" <arnd@arndb.de>,
-        =?UTF-8?Q?YangBrianC=2EW_=E6=A5=8A=E5=98=89=E5=81=89_TAO?= 
-        <yang.brianc.w@inventec.com>, "Corey Minyard" <minyard@acm.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Haiyue Wang" <haiyue.wang@linux.intel.com>,
-        "John Wang" <wangzqbj@inspur.com>,
-        "Ken Chen" <chen.kenyy@inventec.com>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        openipmi-developer@lists.sourceforge.net,
-        "Patrick Venture" <venture@google.com>,
-        "Stefan M Schaeckeler" <sschaeck@cisco.com>,
-        "Tao Ren" <taoren@fb.com>, "Xo Wang" <xow@google.com>,
-        yao.yuan@linaro.org
-Subject: Re: [RFC-ish PATCH 00/17] Clean up ASPEED devicetree warnings
-Content-Type: text/plain
+        Sun, 4 Aug 2019 20:55:07 -0400
+Received: from onstation.org ([52.200.56.107]:60648 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726621AbfHEAzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 4 Aug 2019 20:55:07 -0400
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 9806F3E911;
+        Mon,  5 Aug 2019 00:55:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1564966506;
+        bh=xcJu39yh/KDbuEIVcLZj8MtcXthNXhETiQXbPkx9TMw=;
+        h=Date:From:To:Subject:From;
+        b=Ul50OO+SV1rF0RHepUkaRaq00xhue/4JlkoXCxziDLMJ4+0whaLKRvqYO89GLY1VE
+         CXaERLCZ00SvtVFW2eb31q/bfiOTnTHWjM3lz0BE5+c7znvfOw6MHW7NewVEfMED9g
+         B09U/uhqU1K/u6mbGgaADkIq4CCOfoowmZTQlIXE=
+Date:   Sun, 4 Aug 2019 20:55:06 -0400
+From:   Brian Masney <masneyb@onstation.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Mainline status update for the Nexus 5 phone (qcom msm8974 SoC)
+Message-ID: <20190805005506.GA17695@onstation.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
+There's been a fair bit of development effort to get the LG Nexus 5
+working with a mainline kernel. Here is a brief summary of what's
+working upstream as of this week:
 
-On Fri, 2 Aug 2019, at 15:21, Joel Stanley wrote:
-> On Tue, 30 Jul 2019 at 01:09, Andrew Jeffery <andrew@aj.id.au> wrote:
-> 
-> > > > The bang-for-buck is in fixing up the KCS bindings which removes all-but-two of
-> > > > the remaining warnings (which we can't feasibly remove), but doing so forces
-> > > > code changes (which I'd avoided up until this point).
-> > > >
-> > > > Reflecting broadly on the fixes, I think I've made a mistake way back by using
-> > > > syscon/simple-mfds to expose the innards of the SCU and LPC controllers in the
-> > > > devicetree. This series cleans up what's currently there, but I have half a
-> > > > mind to rev the SCU and LPC bindings to not use simple-mfd and instead have a
-> > > > driver implementation that uses `platform_device_register_full()` or similar to
-> > > > deal with the mess.
-> > > >
-> > > > Rob - I'm looking for your thoughts here and on the series, I've never felt
-> > > > entirely comfortable with what I cooked up. Your advice would be appreciated.
-> > >
-> > > The series generally looks fine to me from a quick scan. As far as
-> > > dropping 'simple-mfd', having less fine grained description in DT is
-> > > generally my preference. It comes down to whether what you have
-> > > defined is maintainable. As most of it is just additions, I think what
-> > > you have is fine. Maybe keep all this in mind for the next chip
-> > > depending how the SCU and LPC change.
-> >
-> > Okay, I think the timing of that suggestion is good given where things are with
-> > the AST2600. I'll keep that in mind.
-> >
-> > Consensus so far seems to be that the series is fine. I'll split it up and send out
-> > the sub-series to the relevant lists with the acks accumulated here.
-> 
-> The series look good. I suggest posting the KCS bindings and driver
-> changes as their own series to go through the IPMI tree.
+- Display - X11, Wayland, and text mode work. No GPU yet however
+  out of tree patches are available. I'm slowly working on proper
+  support for inclusion upstream.
+- Display backlight
+- Touchscreen
+- WiFi
+- USB
+- gyroscope / accelerometer
+- magnetometer
+- temperature / humidity / barometer
+- proximity / ambient light sensor (ALS)
+- Charger
+- Serial port
 
-Yeah, that was the plan.
+See https://masneyb.github.io/nexus-5-upstream/ for more details. I
+created a TODO list at
+https://masneyb.github.io/nexus-5-upstream/TODO.html with links to
+existing out-of-tree code in case anyone out there is looking for a
+project.
 
-> 
-> Please add my tag to all the patches except the OCC one, which I need
-> to do some investigation in to.
-> 
-> Reviewed-by: Joel Stanley <joel@jms.id.au>
+The Nexus 5 uses the Qualcomm msm8974 SoC, and some of this work (such
+as the display) should help other devices like the Fairphone 2, OnePlus
+One, Samsung Galaxy S5, Sony Xperia Z1, and Sony Xperia Z2 tablets.
 
-Thanks, will do.
+postmarketOS (https://postmarketos.org/) can be used as the userspace
+to run the latest version of Alpine Linux.
 
-> 
-> The others can go via the aspeed tree. Perhaps post them as their own
-> series too so I don't get confused and apply the wrong ones. That way
-> if Rob wants to send his reviewed-by he can.
+Thank you to all of the maintainers and reviewers that have provided
+feedback on this work. I picked this up as a side project last year and
+have learned a lot doing this.
 
-SGTM.
-
-Cheers,
-
-Andrew
+Brian
