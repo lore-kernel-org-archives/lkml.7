@@ -2,317 +2,237 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF34EC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 344F8C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EFA021738
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F276E2173B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:08:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010486;
-	bh=Lr7rPp8Gjkw7OFAvNlfSbxgPDih3ANUh4/AP3k4Put8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=MslWNST3B+35+QKM5Wha0azJL26S3R21Bfxb+quE4ST8c0MicWbheDulODHZdttAY
-	 CpUiOt5d15JP7Go/eDzmYak/7s/UDEGYxnRVTU3/btPo5c/h+k/ElXWh+hOtNn1gmO
-	 QKvx67bKIKXEef8jQ8yMHg4rxmM2GCbAe7pQ9Vz8=
+	s=default; t=1565010489;
+	bh=HieSV+SPC7yu3sb5MXxN1dqPjg2oY2jH03BIgWZbI6E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pO+eBUgc2mdZNG81bklpCsCI5f0VykI3dWPlyOfFmBEcmuMLnIfRfUCc+E5zYMRM4
+	 9D1ebkgEYFm4wcsitikAK+gXm/KjF1XHm6XLiQk9T0OMRb/PS5mbePoy+did4cXxd7
+	 XQ/BijGPIjKtePvaX+GeZPDeY/ma+7+fw4UgcliA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729946AbfHENIF (ORCPT
+        id S1729357AbfHENIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:08:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45884 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:08:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729928AbfHENIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:08:02 -0400
+        id S1729094AbfHENIF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:08:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CFEF2087B;
-        Mon,  5 Aug 2019 13:08:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B35512075B;
+        Mon,  5 Aug 2019 13:08:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010481;
-        bh=Lr7rPp8Gjkw7OFAvNlfSbxgPDih3ANUh4/AP3k4Put8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=JOgiunHiAL4Pr/vGrlbM4gYJ0V2PanVMNSUv/3UaUmXLPy2M4KghU+1BvHGzcv6o1
-         KI5jqgU/EK1k6kNS3nYrVASe+2zWDJDxBKJnH8Vq2fubg2+j+iK+Oiqys1Ab4uiBN4
-         K+GU6KolIcroiUCBpFATi108Vk6mAsrogJBfj+MI=
+        s=default; t=1565010484;
+        bh=HieSV+SPC7yu3sb5MXxN1dqPjg2oY2jH03BIgWZbI6E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BebPuzCe5G5Svty23irpb61PFcShfqaDCeZLNeBngHA3+xJPY3sUAbsK5Risnu//j
+         9XDPHee3w3rxxjCibUHutEylfEVZRt6y7FUPV0O+z2w/iSXtiF00xyzFcKawWwL4X+
+         gl7g/CuexGcdOPSirelnohH9UPbC/uNE3bTsbZlU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.14 00/53] 4.14.137-stable review
-Date:   Mon,  5 Aug 2019 15:02:25 +0200
-Message-Id: <20190805124927.973499541@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.14 34/53] Btrfs: fix incremental send failure after deduplication
+Date:   Mon,  5 Aug 2019 15:02:59 +0200
+Message-Id: <20190805124931.988306131@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-MIME-Version: 1.0
+In-Reply-To: <20190805124927.973499541@linuxfoundation.org>
+References: <20190805124927.973499541@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.137-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.137-rc1
-X-KernelTest-Deadline: 2019-08-07T12:49+00:00
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.14.137 release.
-There are 53 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: Filipe Manana <fdmanana@suse.com>
 
-Responses should be made by Wed 07 Aug 2019 12:47:58 PM UTC.
-Anything received after that time might be too late.
+commit b4f9a1a87a48c255bb90d8a6c3d555a1abb88130 upstream.
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.137-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-and the diffstat can be found below.
+When doing an incremental send operation we can fail if we previously did
+deduplication operations against a file that exists in both snapshots. In
+that case we will fail the send operation with -EIO and print a message
+to dmesg/syslog like the following:
 
-thanks,
+  BTRFS error (device sdc): Send: inconsistent snapshot, found updated \
+  extent for inode 257 without updated inode item, send root is 258, \
+  parent root is 257
 
-greg k-h
+This requires that we deduplicate to the same file in both snapshots for
+the same amount of times on each snapshot. The issue happens because a
+deduplication only updates the iversion of an inode and does not update
+any other field of the inode, therefore if we deduplicate the file on
+each snapshot for the same amount of time, the inode will have the same
+iversion value (stored as the "sequence" field on the inode item) on both
+snapshots, therefore it will be seen as unchanged between in the send
+snapshot while there are new/updated/deleted extent items when comparing
+to the parent snapshot. This makes the send operation return -EIO and
+print an error message.
 
--------------
-Pseudo-Shortlog of commits:
+Example reproducer:
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.14.137-rc1
+  $ mkfs.btrfs -f /dev/sdb
+  $ mount /dev/sdb /mnt
 
-Andy Lutomirski <luto@kernel.org>
-    x86/vdso: Prevent segfaults due to hoisted vclock reads
+  # Create our first file. The first half of the file has several 64Kb
+  # extents while the second half as a single 512Kb extent.
+  $ xfs_io -f -s -c "pwrite -S 0xb8 -b 64K 0 512K" /mnt/foo
+  $ xfs_io -c "pwrite -S 0xb8 512K 512K" /mnt/foo
 
-Linus Torvalds <torvalds@linux-foundation.org>
-    gcc-9: properly declare the {pv,hv}clock_page storage
+  # Create the base snapshot and the parent send stream from it.
+  $ btrfs subvolume snapshot -r /mnt /mnt/mysnap1
+  $ btrfs send -f /tmp/1.snap /mnt/mysnap1
 
-Josh Poimboeuf <jpoimboe@redhat.com>
-    objtool: Support GCC 9 cold subfunction naming scheme
+  # Create our second file, that has exactly the same data as the first
+  # file.
+  $ xfs_io -f -c "pwrite -S 0xb8 0 1M" /mnt/bar
 
-Jean Delvare <jdelvare@suse.de>
-    eeprom: at24: make spd world-readable again
+  # Create the second snapshot, used for the incremental send, before
+  # doing the file deduplication.
+  $ btrfs subvolume snapshot -r /mnt /mnt/mysnap2
 
-John Fleck <john.fleck@intel.com>
-    IB/hfi1: Check for error on call to alloc_rsm_map_table
+  # Now before creating the incremental send stream:
+  #
+  # 1) Deduplicate into a subrange of file foo in snapshot mysnap1. This
+  #    will drop several extent items and add a new one, also updating
+  #    the inode's iversion (sequence field in inode item) by 1, but not
+  #    any other field of the inode;
+  #
+  # 2) Deduplicate into a different subrange of file foo in snapshot
+  #    mysnap2. This will replace an extent item with a new one, also
+  #    updating the inode's iversion by 1 but not any other field of the
+  #    inode.
+  #
+  # After these two deduplication operations, the inode items, for file
+  # foo, are identical in both snapshots, but we have different extent
+  # items for this inode in both snapshots. We want to check this doesn't
+  # cause send to fail with an error or produce an incorrect stream.
 
-Yishai Hadas <yishaih@mellanox.com>
-    IB/mlx5: Fix RSS Toeplitz setup to be aligned with the HW specification
+  $ xfs_io -r -c "dedupe /mnt/bar 0 0 512K" /mnt/mysnap1/foo
+  $ xfs_io -r -c "dedupe /mnt/bar 512K 512K 512K" /mnt/mysnap2/foo
 
-Yishai Hadas <yishaih@mellanox.com>
-    IB/mlx5: Move MRs to a kernel PD when freeing them to the MR cache
+  # Create the incremental send stream.
+  $ btrfs send -p /mnt/mysnap1 -f /tmp/2.snap /mnt/mysnap2
+  ERROR: send ioctl failed with -5: Input/output error
 
-Yishai Hadas <yishaih@mellanox.com>
-    IB/mlx5: Use direct mkey destroy command upon UMR unreg failure
+This issue started happening back in 2015 when deduplication was updated
+to not update the inode's ctime and mtime and update only the iversion.
+Back then we would hit a BUG_ON() in send, but later in 2016 send was
+updated to return -EIO and print the error message instead of doing the
+BUG_ON().
 
-Yishai Hadas <yishaih@mellanox.com>
-    IB/mlx5: Fix unreg_umr to ignore the mkey state
+A test case for fstests follows soon.
 
-Juergen Gross <jgross@suse.com>
-    xen/swiotlb: fix condition for calling xen_destroy_contiguous_region()
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203933
+Fixes: 1c919a5e13702c ("btrfs: don't update mtime/ctime on deduped inodes")
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Munehisa Kamata <kamatam@amazon.com>
-    nbd: replace kill_bdev() with __invalidate_device() again
+---
+ fs/btrfs/send.c |   77 ++++++++++----------------------------------------------
+ 1 file changed, 15 insertions(+), 62 deletions(-)
 
-Will Deacon <will@kernel.org>
-    drivers/perf: arm_pmu: Fix failure path in PM notifier
-
-Helge Deller <deller@gmx.de>
-    parisc: Fix build of compressed kernel even with debug enabled
-
-Stefan Haberland <sth@linux.ibm.com>
-    s390/dasd: fix endless loop after read unit address configuration
-
-Ondrej Mosnacek <omosnace@redhat.com>
-    selinux: fix memory leak in policydb_init()
-
-Gustavo A. R. Silva <gustavo@embeddedor.com>
-    IB/hfi1: Fix Spectre v1 vulnerability
-
-Michael Wu <michael.wu@vatics.com>
-    gpiolib: fix incorrect IRQ requesting of an active-low lineevent
-
-Douglas Anderson <dianders@chromium.org>
-    mmc: dw_mmc: Fix occasional hang after tuning on eMMC
-
-Filipe Manana <fdmanana@suse.com>
-    Btrfs: fix race leading to fs corruption after transaction abort
-
-Filipe Manana <fdmanana@suse.com>
-    Btrfs: fix incremental send failure after deduplication
-
-Masahiro Yamada <yamada.masahiro@socionext.com>
-    kbuild: initialize CLANG_FLAGS correctly in the top Makefile
-
-Yongxin Liu <yongxin.liu@windriver.com>
-    drm/nouveau: fix memory leak in nouveau_conn_reset()
-
-Zhenzhong Duan <zhenzhong.duan@oracle.com>
-    x86, boot: Remove multiple copy of static function sanitize_boot_params()
-
-Josh Poimboeuf <jpoimboe@redhat.com>
-    x86/paravirt: Fix callee-saved function ELF sizes
-
-Josh Poimboeuf <jpoimboe@redhat.com>
-    x86/kvm: Don't call kvm_spurious_fault() from .fixup
-
-Zhenzhong Duan <zhenzhong.duan@oracle.com>
-    xen/pv: Fix a boot up hang revealed by int3 self test
-
-Kees Cook <keescook@chromium.org>
-    ipc/mqueue.c: only perform resource calculation if user valid
-
-Dan Carpenter <dan.carpenter@oracle.com>
-    drivers/rapidio/devices/rio_mport_cdev.c: NUL terminate some strings
-
-Mikko Rapeli <mikko.rapeli@iki.fi>
-    uapi linux/coda_psdev.h: move upc_req definition from uapi to kernel side headers
-
-Sam Protsenko <semen.protsenko@linaro.org>
-    coda: fix build using bare-metal toolchain
-
-Zhouyang Jia <jiazhouyang09@gmail.com>
-    coda: add error handling for fget
-
-Doug Berger <opendmb@gmail.com>
-    mm/cma.c: fail if fixed declaration can't be honored
-
-Arnd Bergmann <arnd@arndb.de>
-    x86: math-emu: Hide clang warnings for 16-bit overflow
-
-Qian Cai <cai@lca.pw>
-    x86/apic: Silence -Wtype-limits compiler warnings
-
-Benjamin Poirier <bpoirier@suse.com>
-    be2net: Signal that the device cannot transmit during reconfiguration
-
-Arnd Bergmann <arnd@arndb.de>
-    ACPI: fix false-positive -Wuninitialized warning
-
-Arnd Bergmann <arnd@arndb.de>
-    x86: kvm: avoid constant-conversion warning
-
-Benjamin Block <bblock@linux.ibm.com>
-    scsi: zfcp: fix GCC compiler warning emitted with -Wmaybe-uninitialized
-
-Arnd Bergmann <arnd@arndb.de>
-    ACPI: blacklist: fix clang warning for unused DMI table
-
-Jeff Layton <jlayton@kernel.org>
-    ceph: return -ERANGE if virtual xattr value didn't fit in buffer
-
-Andrea Parri <andrea.parri@amarulasolutions.com>
-    ceph: fix improper use of smp_mb__before_atomic()
-
-Ronnie Sahlberg <lsahlber@redhat.com>
-    cifs: Fix a race condition with cifs_echo_request
-
-David Sterba <dsterba@suse.com>
-    btrfs: fix minimum number of chunk errors for DUP
-
-Russell King <rmk+kernel@armlinux.org.uk>
-    fs/adfs: super: fix use-after-free bug
-
-JC Kuo <jckuo@nvidia.com>
-    clk: tegra210: fix PLLU and PLLU_OUT1
-
-Geert Uytterhoeven <geert+renesas@glider.be>
-    dmaengine: rcar-dmac: Reject zero-length slave DMA requests
-
-Petr Cvek <petrcvekcz@gmail.com>
-    MIPS: lantiq: Fix bitfield masking
-
-Prarit Bhargava <prarit@redhat.com>
-    kernel/module.c: Only return -EEXIST for modules that have finished loading
-
-Cheng Jian <cj.chengjian@huawei.com>
-    ftrace: Enable trampoline when rec count returns back to one
-
-Douglas Anderson <dianders@chromium.org>
-    ARM: dts: rockchip: Mark that the rk3288 timer might stop in suspend
-
-Douglas Anderson <dianders@chromium.org>
-    ARM: dts: rockchip: Make rk3288-veyron-mickey's emmc work again
-
-Douglas Anderson <dianders@chromium.org>
-    ARM: dts: rockchip: Make rk3288-veyron-minnie run at hs200
-
-Russell King <rmk+kernel@armlinux.org.uk>
-    ARM: riscpc: fix DMA
-
-
--------------
-
-Diffstat:
-
- Makefile                                    |  7 +--
- arch/arm/boot/dts/rk3288-veyron-mickey.dts  |  4 --
- arch/arm/boot/dts/rk3288-veyron-minnie.dts  |  4 --
- arch/arm/boot/dts/rk3288.dtsi               |  1 +
- arch/arm/mach-rpc/dma.c                     |  5 +-
- arch/mips/lantiq/irq.c                      |  5 +-
- arch/parisc/boot/compressed/vmlinux.lds.S   |  4 +-
- arch/x86/boot/compressed/misc.c             |  1 +
- arch/x86/boot/compressed/misc.h             |  1 -
- arch/x86/entry/entry_64.S                   |  1 -
- arch/x86/entry/vdso/vclock_gettime.c        | 19 +++++--
- arch/x86/include/asm/apic.h                 |  2 +-
- arch/x86/include/asm/kvm_host.h             | 34 +++++++------
- arch/x86/include/asm/paravirt.h             |  1 +
- arch/x86/include/asm/traps.h                |  2 +-
- arch/x86/kernel/apic/apic.c                 |  2 +-
- arch/x86/kernel/kvm.c                       |  1 +
- arch/x86/kvm/mmu.c                          |  6 +--
- arch/x86/math-emu/fpu_emu.h                 |  2 +-
- arch/x86/math-emu/reg_constant.c            |  2 +-
- arch/x86/xen/enlighten_pv.c                 |  2 +-
- arch/x86/xen/xen-asm_64.S                   |  1 -
- drivers/acpi/blacklist.c                    |  4 ++
- drivers/block/nbd.c                         |  2 +-
- drivers/clk/tegra/clk-tegra210.c            |  8 +--
- drivers/dma/sh/rcar-dmac.c                  |  2 +-
- drivers/gpio/gpiolib.c                      |  6 ++-
- drivers/gpu/drm/nouveau/nouveau_connector.c |  2 +-
- drivers/infiniband/hw/hfi1/chip.c           | 11 ++++-
- drivers/infiniband/hw/hfi1/verbs.c          |  2 +
- drivers/infiniband/hw/mlx5/mlx5_ib.h        |  1 +
- drivers/infiniband/hw/mlx5/mr.c             | 17 ++++---
- drivers/infiniband/hw/mlx5/qp.c             | 13 +++--
- drivers/misc/eeprom/at24.c                  |  2 +-
- drivers/mmc/host/dw_mmc.c                   |  3 +-
- drivers/net/ethernet/emulex/benet/be_main.c |  6 ++-
- drivers/perf/arm_pmu.c                      |  2 +-
- drivers/rapidio/devices/rio_mport_cdev.c    |  2 +
- drivers/s390/block/dasd_alias.c             | 22 ++++++---
- drivers/s390/scsi/zfcp_erp.c                |  7 +++
- drivers/xen/swiotlb-xen.c                   |  4 +-
- fs/adfs/super.c                             |  5 +-
- fs/btrfs/send.c                             | 77 ++++++-----------------------
- fs/btrfs/transaction.c                      | 10 ++++
- fs/btrfs/volumes.c                          |  3 +-
- fs/ceph/super.h                             |  7 ++-
- fs/ceph/xattr.c                             | 14 +++---
- fs/cifs/connect.c                           |  8 +--
- fs/coda/psdev.c                             |  5 +-
- include/linux/acpi.h                        |  5 +-
- include/linux/coda.h                        |  3 +-
- include/linux/coda_psdev.h                  | 11 +++++
- include/uapi/linux/coda_psdev.h             | 13 -----
- ipc/mqueue.c                                | 19 +++----
- kernel/module.c                             |  6 +--
- kernel/trace/ftrace.c                       | 28 ++++++-----
- mm/cma.c                                    | 13 +++++
- security/selinux/ss/policydb.c              |  6 ++-
- tools/objtool/elf.c                         |  2 +-
- 59 files changed, 254 insertions(+), 204 deletions(-)
+--- a/fs/btrfs/send.c
++++ b/fs/btrfs/send.c
+@@ -6130,68 +6130,21 @@ static int changed_extent(struct send_ct
+ {
+ 	int ret = 0;
+ 
+-	if (sctx->cur_ino != sctx->cmp_key->objectid) {
+-
+-		if (result == BTRFS_COMPARE_TREE_CHANGED) {
+-			struct extent_buffer *leaf_l;
+-			struct extent_buffer *leaf_r;
+-			struct btrfs_file_extent_item *ei_l;
+-			struct btrfs_file_extent_item *ei_r;
+-
+-			leaf_l = sctx->left_path->nodes[0];
+-			leaf_r = sctx->right_path->nodes[0];
+-			ei_l = btrfs_item_ptr(leaf_l,
+-					      sctx->left_path->slots[0],
+-					      struct btrfs_file_extent_item);
+-			ei_r = btrfs_item_ptr(leaf_r,
+-					      sctx->right_path->slots[0],
+-					      struct btrfs_file_extent_item);
+-
+-			/*
+-			 * We may have found an extent item that has changed
+-			 * only its disk_bytenr field and the corresponding
+-			 * inode item was not updated. This case happens due to
+-			 * very specific timings during relocation when a leaf
+-			 * that contains file extent items is COWed while
+-			 * relocation is ongoing and its in the stage where it
+-			 * updates data pointers. So when this happens we can
+-			 * safely ignore it since we know it's the same extent,
+-			 * but just at different logical and physical locations
+-			 * (when an extent is fully replaced with a new one, we
+-			 * know the generation number must have changed too,
+-			 * since snapshot creation implies committing the current
+-			 * transaction, and the inode item must have been updated
+-			 * as well).
+-			 * This replacement of the disk_bytenr happens at
+-			 * relocation.c:replace_file_extents() through
+-			 * relocation.c:btrfs_reloc_cow_block().
+-			 */
+-			if (btrfs_file_extent_generation(leaf_l, ei_l) ==
+-			    btrfs_file_extent_generation(leaf_r, ei_r) &&
+-			    btrfs_file_extent_ram_bytes(leaf_l, ei_l) ==
+-			    btrfs_file_extent_ram_bytes(leaf_r, ei_r) &&
+-			    btrfs_file_extent_compression(leaf_l, ei_l) ==
+-			    btrfs_file_extent_compression(leaf_r, ei_r) &&
+-			    btrfs_file_extent_encryption(leaf_l, ei_l) ==
+-			    btrfs_file_extent_encryption(leaf_r, ei_r) &&
+-			    btrfs_file_extent_other_encoding(leaf_l, ei_l) ==
+-			    btrfs_file_extent_other_encoding(leaf_r, ei_r) &&
+-			    btrfs_file_extent_type(leaf_l, ei_l) ==
+-			    btrfs_file_extent_type(leaf_r, ei_r) &&
+-			    btrfs_file_extent_disk_bytenr(leaf_l, ei_l) !=
+-			    btrfs_file_extent_disk_bytenr(leaf_r, ei_r) &&
+-			    btrfs_file_extent_disk_num_bytes(leaf_l, ei_l) ==
+-			    btrfs_file_extent_disk_num_bytes(leaf_r, ei_r) &&
+-			    btrfs_file_extent_offset(leaf_l, ei_l) ==
+-			    btrfs_file_extent_offset(leaf_r, ei_r) &&
+-			    btrfs_file_extent_num_bytes(leaf_l, ei_l) ==
+-			    btrfs_file_extent_num_bytes(leaf_r, ei_r))
+-				return 0;
+-		}
+-
+-		inconsistent_snapshot_error(sctx, result, "extent");
+-		return -EIO;
+-	}
++	/*
++	 * We have found an extent item that changed without the inode item
++	 * having changed. This can happen either after relocation (where the
++	 * disk_bytenr of an extent item is replaced at
++	 * relocation.c:replace_file_extents()) or after deduplication into a
++	 * file in both the parent and send snapshots (where an extent item can
++	 * get modified or replaced with a new one). Note that deduplication
++	 * updates the inode item, but it only changes the iversion (sequence
++	 * field in the inode item) of the inode, so if a file is deduplicated
++	 * the same amount of times in both the parent and send snapshots, its
++	 * iversion becames the same in both snapshots, whence the inode item is
++	 * the same on both snapshots.
++	 */
++	if (sctx->cur_ino != sctx->cmp_key->objectid)
++		return 0;
+ 
+ 	if (!sctx->cur_inode_new_gen && !sctx->cur_inode_deleted) {
+ 		if (result != BTRFS_COMPARE_TREE_DELETED)
 
 
