@@ -2,159 +2,126 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 552CCC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 268BEC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2637520B1F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:50:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lcMh40MT"
+	by mail.kernel.org (Postfix) with ESMTP id 0C22120880
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:52:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729903AbfHERup (ORCPT
+        id S1729919AbfHERwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 13:50:45 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:46611 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728885AbfHERup (ORCPT
+        Mon, 5 Aug 2019 13:52:08 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:55953 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726559AbfHERwH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 13:50:45 -0400
-Received: by mail-ed1-f65.google.com with SMTP id d4so79667643edr.13
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 10:50:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Cudx4Ed0VrEgvxeqYlvplwj7CuqSGFqTGqW93wYT0ZA=;
-        b=lcMh40MTEhDqcDc/Gwizp4DJq1zLgs29VTl8B1MgV0gn6732Zykhw5rk/hpfE/bZdg
-         Z858446bKNZEhHdaqVDwdaAsKxo6RjEGO70Kjc0YCdzO2WCfu8gWMDnBHRY7Wsqazeyi
-         upx6pi+/qoF7JyIsV5gcZruSS8VvqmZ+kjsTs=
+        Mon, 5 Aug 2019 13:52:07 -0400
+Received: by mail-io1-f71.google.com with SMTP id f22so93039841ioh.22
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 10:52:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Cudx4Ed0VrEgvxeqYlvplwj7CuqSGFqTGqW93wYT0ZA=;
-        b=rn0d/uLKh8Tylc7Ns9Kt+lrkmwbbh4KukfnyW5PfI9J853a/6D2pxhW7owiRASc0Tf
-         yVZMlj9NlYv2yIdK4Ukt9M95ZRS7zqsV5fsnMRntz2NMh+eBWmpT2pDs/fHkhN8uzVFU
-         6M8DuWC/zAzqHhU2fm3w9fO5pc1oGX5hl2xFEzWaVdI+jyZI4Y8YENyYBmufhTBxhO5e
-         hZVeUdibRREXQoIpMz6zdBNJ578Dy2PwlWCryKYEd1/+p7657KO27mR4q2oZ6BqACgqB
-         Xr5PUFpx7TbFXiDSE4kpxSS2YSXVWMISCastPrqoUXto7nGQmirPdvhvdWyXagNkZfLL
-         IfGQ==
-X-Gm-Message-State: APjAAAVN5QQ82q0/lIc7ipapWq6Zh9LI3gPJQbuxF/pvWUUAj3jY//YK
-        Bth4ZHUemlMnBonmDoUaf+sXLpMnJWo=
-X-Google-Smtp-Source: APXvYqxDtmKaDSHqglX7WpZ78VF26t9/0RJOoD9K6/+jG2l6I74n3OUROEdP8zdzMHxuWz7mmBUyMg==
-X-Received: by 2002:a17:907:105e:: with SMTP id oy30mr15994410ejb.236.1565027443304;
-        Mon, 05 Aug 2019 10:50:43 -0700 (PDT)
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com. [209.85.221.53])
-        by smtp.gmail.com with ESMTPSA id b15sm20382007edb.46.2019.08.05.10.50.42
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 05 Aug 2019 10:50:42 -0700 (PDT)
-Received: by mail-wr1-f53.google.com with SMTP id z1so85270246wru.13
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 10:50:42 -0700 (PDT)
-X-Received: by 2002:adf:f40b:: with SMTP id g11mr11766296wro.81.1565027441769;
- Mon, 05 Aug 2019 10:50:41 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=2CgEpJm4dc6plTMBewlYD9DVekR0ydsouo6c7dRQapo=;
+        b=cB2l6TvhOyeUCKU1sG5rvvaQBBB7ELaSZ2yppWMmX/BoiMPi0FE0cVgY0OvWM3opv/
+         5+ezvnq+LsOqJVsj9FFKwgWQRcuQxQ275sCFQ/IE3qdcejbAdWPQGZTsPNcN2YoYAEDv
+         3V1082YRJJjEg/4jT1Kbf7pVitM2peWDQrKpaoALbaGfL4UaCetNwDKXx2ESYN6QTJgK
+         7FJogd9ofbv+gX7AgVrOIMsKAuGM8X8vBMYpD/I0Js+43lWLxw8IHrHVeecSOOW8Wvnr
+         oa7m8S4ykkCXwUYiYjArMyiXoJ1otPhuzo17lzz1tVpKk0gFrUfbs6XBVcJjTeYAqxfQ
+         yS6w==
+X-Gm-Message-State: APjAAAVNWCmPLbWvkibAJr6slp7vgV/0VrnsgUxUEGHGMtBZR8124HLP
+        lGx3j3WWNx8qR6Ntd4AuRq+cq5u8d41EO8oJpVB87kD731KC
+X-Google-Smtp-Source: APXvYqxRmARPYj4Nqgkpm82Fmphfj/+y18LbFnUWEzBcKGuASRhHNGfHfj0iftlQPvnLkcEhCpUTKLHZyPFDxPqVcpvSANlleQ5f
 MIME-Version: 1.0
-References: <20190730191303.206365-1-thgarnie@chromium.org>
- <20190730191303.206365-5-thgarnie@chromium.org> <20190805172854.GF18785@zn.tnic>
-In-Reply-To: <20190805172854.GF18785@zn.tnic>
-From:   Thomas Garnier <thgarnie@chromium.org>
-Date:   Mon, 5 Aug 2019 10:50:30 -0700
-X-Gmail-Original-Message-ID: <CAJcbSZGedSfZZ5rveH2+_3q7pvmMyDGLxmZU41Nno=ZBX8kN=w@mail.gmail.com>
-Message-ID: <CAJcbSZGedSfZZ5rveH2+_3q7pvmMyDGLxmZU41Nno=ZBX8kN=w@mail.gmail.com>
-Subject: Re: [PATCH v9 04/11] x86/entry/64: Adapt assembly for PIE support
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a6b:dd17:: with SMTP id f23mr1252383ioc.213.1565027527087;
+ Mon, 05 Aug 2019 10:52:07 -0700 (PDT)
+Date:   Mon, 05 Aug 2019 10:52:07 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d0df7f058f625d13@google.com>
+Subject: WARNING: refcount bug in blk_mq_free_request (2)
+From:   syzbot <syzbot+f4316dab9d4518b755eb@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 5, 2019 at 10:28 AM Borislav Petkov <bp@alien8.de> wrote:
->
-> On Tue, Jul 30, 2019 at 12:12:48PM -0700, Thomas Garnier wrote:
-> > Change the assembly code to use only relative references of symbols for the
-> > kernel to be PIE compatible.
-> >
-> > Position Independent Executable (PIE) support will allow to extend the
-> > KASLR randomization range below 0xffffffff80000000.
-> >
-> > Signed-off-by: Thomas Garnier <thgarnie@chromium.org>
-> > Reviewed-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  arch/x86/entry/entry_64.S | 16 +++++++++++-----
-> >  1 file changed, 11 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-> > index 3f5a978a02a7..4b588a902009 100644
-> > --- a/arch/x86/entry/entry_64.S
-> > +++ b/arch/x86/entry/entry_64.S
-> > @@ -1317,7 +1317,8 @@ ENTRY(error_entry)
-> >       movl    %ecx, %eax                      /* zero extend */
-> >       cmpq    %rax, RIP+8(%rsp)
-> >       je      .Lbstep_iret
-> > -     cmpq    $.Lgs_change, RIP+8(%rsp)
-> > +     leaq    .Lgs_change(%rip), %rcx
-> > +     cmpq    %rcx, RIP+8(%rsp)
-> >       jne     .Lerror_entry_done
-> >
-> >       /*
-> > @@ -1514,10 +1515,10 @@ ENTRY(nmi)
-> >        * resume the outer NMI.
-> >        */
-> >
-> > -     movq    $repeat_nmi, %rdx
-> > +     leaq    repeat_nmi(%rip), %rdx
-> >       cmpq    8(%rsp), %rdx
-> >       ja      1f
-> > -     movq    $end_repeat_nmi, %rdx
-> > +     leaq    end_repeat_nmi(%rip), %rdx
-> >       cmpq    8(%rsp), %rdx
-> >       ja      nested_nmi_out
-> >  1:
-> > @@ -1571,7 +1572,8 @@ nested_nmi:
-> >       pushq   %rdx
-> >       pushfq
-> >       pushq   $__KERNEL_CS
-> > -     pushq   $repeat_nmi
-> > +     leaq    repeat_nmi(%rip), %rdx
-> > +     pushq   %rdx
-> >
-> >       /* Put stack back */
-> >       addq    $(6*8), %rsp
-> > @@ -1610,7 +1612,11 @@ first_nmi:
-> >       addq    $8, (%rsp)      /* Fix up RSP */
-> >       pushfq                  /* RFLAGS */
-> >       pushq   $__KERNEL_CS    /* CS */
-> > -     pushq   $1f             /* RIP */
-> > +     pushq   $0              /* Future return address */
-> > +     pushq   %rax            /* Save RAX */
-> > +     leaq    1f(%rip), %rax  /* RIP */
-> > +     movq    %rax, 8(%rsp)   /* Put 1f on return address */
-> > +     popq    %rax            /* Restore RAX */
->
-> Can't you just use a callee-clobbered reg here instead of preserving
-> %rax?
+Hello,
 
-I saw that %rdx was used for temporary usage and restored before the
-end so I assumed that it was not an option.
+syzbot found the following crash on:
 
->
-> --
-> Regards/Gruss,
->     Boris.
->
-> Good mailing practices for 400: avoid top-posting and trim the reply.
+HEAD commit:    e21a712a Linux 5.3-rc3
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10cf349a600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a4c9e9f08e9e8960
+dashboard link: https://syzkaller.appspot.com/bug?extid=f4316dab9d4518b755eb
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=117a1906600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11aa11aa600000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+f4316dab9d4518b755eb@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+refcount_t: underflow; use-after-free.
+WARNING: CPU: 1 PID: 16 at lib/refcount.c:190 refcount_sub_and_test_checked  
+lib/refcount.c:190 [inline]
+WARNING: CPU: 1 PID: 16 at lib/refcount.c:190  
+refcount_sub_and_test_checked+0x1d0/0x200 lib/refcount.c:180
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 16 Comm: ksoftirqd/1 Not tainted 5.3.0-rc3 #98
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  panic+0x2dc/0x755 kernel/panic.c:219
+  __warn.cold+0x20/0x4c kernel/panic.c:576
+  report_bug+0x263/0x2b0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1026
+RIP: 0010:refcount_sub_and_test_checked lib/refcount.c:190 [inline]
+RIP: 0010:refcount_sub_and_test_checked+0x1d0/0x200 lib/refcount.c:180
+Code: 1d 7e b3 64 06 31 ff 89 de e8 9c a3 35 fe 84 db 75 94 e8 53 a2 35 fe  
+48 c7 c7 80 02 c6 87 c6 05 5e b3 64 06 01 e8 18 15 07 fe <0f> 0b e9 75 ff  
+ff ff e8 34 a2 35 fe e9 6e ff ff ff 48 89 df e8 b7
+RSP: 0018:ffff8880a990fbb0 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000100 RSI: ffffffff815c3ba6 RDI: ffffed1015321f68
+RBP: ffff8880a990fc48 R08: ffff8880a9900440 R09: ffffed1015d24101
+R10: ffffed1015d24100 R11: ffff8880ae920807 R12: 00000000ffffffff
+R13: 0000000000000001 R14: ffff8880a990fc20 R15: 0000000000000000
+  refcount_dec_and_test_checked+0x1b/0x20 lib/refcount.c:220
+  blk_mq_free_request+0x3b8/0x580 block/blk-mq.c:524
+  __blk_mq_end_request block/blk-mq.c:550 [inline]
+  blk_mq_end_request+0x456/0x560 block/blk-mq.c:559
+  nbd_complete_rq+0x42/0x50 drivers/block/nbd.c:322
+  blk_done_softirq+0x2fe/0x4d0 block/blk-softirq.c:37
+  __do_softirq+0x262/0x98c kernel/softirq.c:292
+  run_ksoftirqd kernel/softirq.c:603 [inline]
+  run_ksoftirqd+0x8e/0x110 kernel/softirq.c:595
+  smpboot_thread_fn+0x6a3/0xa40 kernel/smpboot.c:165
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
