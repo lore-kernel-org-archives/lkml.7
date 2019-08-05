@@ -2,92 +2,91 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4BCC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EAF0C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 379F020880
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F136A2086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:52:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730816AbfHENvZ (ORCPT
+        id S1729201AbfHENwH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:51:25 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:44502 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728690AbfHENu0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:50:26 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 0D823BC74230D4495B06;
-        Mon,  5 Aug 2019 21:50:24 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.75) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 5 Aug 2019 21:50:13 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <jejb@linux.vnet.ibm.com>, <martin.petersen@oracle.com>
-CC:     <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>, Luo Jiaxing <luojiaxing@huawei.com>,
-        John Garry <john.garry@huawei.com>
-Subject: [PATCH 06/15] scsi: hisi_sas: Fix out of bound at debug_I_T_nexus_reset()
-Date:   Mon, 5 Aug 2019 21:48:03 +0800
-Message-ID: <1565012892-75940-7-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1565012892-75940-1-git-send-email-john.garry@huawei.com>
-References: <1565012892-75940-1-git-send-email-john.garry@huawei.com>
+        Mon, 5 Aug 2019 09:52:07 -0400
+Received: from mga06.intel.com ([134.134.136.31]:18172 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728662AbfHENwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:52:07 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 06:51:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,350,1559545200"; 
+   d="scan'208";a="178854881"
+Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
+  by orsmga006.jf.intel.com with ESMTP; 05 Aug 2019 06:51:38 -0700
+Date:   Mon, 5 Aug 2019 07:49:07 -0600
+From:   Keith Busch <keith.busch@intel.com>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Keith Busch <kbusch@kernel.org>, linux-nvme@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Paul Pawlowski <paul@mrarm.io>,
+        Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
+        Minwoo Im <minwoo.im.dev@gmail.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>
+Subject: Re: [PATCH v3] nvme-pci: Support shared tags across queues for Apple
+ 2018 controllers
+Message-ID: <20190805134907.GC18647@localhost.localdomain>
+References: <b1f9bdf0294b8d87d292de3c7462c8e99551b02d.camel@kernel.crashing.org>
+ <20190730153044.GA13948@localhost.localdomain>
+ <2030a028664a9af9e96fffca3ab352faf1f739e5.camel@kernel.crashing.org>
+ <6290507e1b2830b1729fc858cd5c20b85d092728.camel@kernel.crashing.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.75]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6290507e1b2830b1729fc858cd5c20b85d092728.camel@kernel.crashing.org>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luo Jiaxing <luojiaxing@huawei.com>
+On Mon, Aug 05, 2019 at 04:49:23PM +1000, Benjamin Herrenschmidt wrote:
+> On Tue, 2019-07-30 at 13:28 -0700, Benjamin Herrenschmidt wrote:
+> > > One problem is that we've an nvme parameter, io_queue_depth, that a user
+> > > could set to something less than 32, and then you won't be able to do
+> > > any IO. I'd recommend enforce the admin queue to QD1 for this device so
+> > > that you have more potential IO tags.
+> > 
+> > So I had a look and it's not that trivial. I would have to change
+> > a few things that use constants for the admin queue depth, such as
+> > the AEN tag etc...
+> > 
+> > For such a special case, I am tempted instead to do the much simpler:
+> > 
+> >         if (dev->ctrl.quirks & NVME_QUIRK_SHARED_TAGS) {
+> >                 if (dev->q_depth < (NVME_AQ_DEPTH + 2))
+> >                         dev->q_depth = NVME_AQ_DEPTH + 2;
+> >         }
+> > 
+> > In nvme_pci_enable() next to the existing q_depth hackery for other
+> > controllers.
+> > 
+> > Thoughts ?
+> 
+> Ping ? I had another look today and I don't feel like mucking around
+> with all the AQ size logic, AEN magic tag etc... just for that sake of
+> that Apple gunk. I'm happy to have it give up IO tags, it doesn't seem
+> to make much of a difference in practice anyway.
+> 
+> But if you feel strongly about it, then I'll implement the "proper" way
+> sometimes this week, adding a way to shrink the AQ down to something
+> like 3 (one admin request, one async event (AEN), and the empty slot)
+> by making a bunch of the constants involved variables instead.
 
-Fix a possible out-of-bounds access in hisi_sas_debug_I_T_nexus_reset().
+I don't feel too strongly about it. I think your patch is fine, so
 
-Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
----
- drivers/scsi/hisi_sas/hisi_sas_main.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index 04b3b0040059..02ad91c01a44 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -1762,13 +1762,14 @@ static int hisi_sas_debug_I_T_nexus_reset(struct domain_device *device)
- 	struct hisi_sas_device *sas_dev = device->lldd_dev;
- 	struct hisi_hba *hisi_hba = dev_to_hisi_hba(device);
- 	struct sas_ha_struct *sas_ha = &hisi_hba->sha;
--	struct asd_sas_phy *sas_phy = sas_ha->sas_phy[local_phy->number];
--	struct hisi_sas_phy *phy = container_of(sas_phy,
--			struct hisi_sas_phy, sas_phy);
- 	DECLARE_COMPLETION_ONSTACK(phyreset);
- 	int rc, reset_type;
- 
- 	if (scsi_is_sas_phy_local(local_phy)) {
-+		struct asd_sas_phy *sas_phy =
-+			sas_ha->sas_phy[local_phy->number];
-+		struct hisi_sas_phy *phy =
-+			container_of(sas_phy, struct hisi_sas_phy, sas_phy);
- 		phy->in_reset = 1;
- 		phy->reset_completion = &phyreset;
- 	}
-@@ -1780,6 +1781,10 @@ static int hisi_sas_debug_I_T_nexus_reset(struct domain_device *device)
- 	sas_put_local_phy(local_phy);
- 
- 	if (scsi_is_sas_phy_local(local_phy)) {
-+		struct asd_sas_phy *sas_phy =
-+			sas_ha->sas_phy[local_phy->number];
-+		struct hisi_sas_phy *phy =
-+			container_of(sas_phy, struct hisi_sas_phy, sas_phy);
- 		int ret = wait_for_completion_timeout(&phyreset, 2 * HZ);
- 		unsigned long flags;
- 
--- 
-2.17.1
-
+Acked-by: Keith Busch <keith.busch@intel.com>
