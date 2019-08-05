@@ -2,93 +2,123 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED56C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0EB8C32751
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C7752087B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:17:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B60EE2087B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:20:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="gsRiiR+h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728381AbfHEKRU (ORCPT
+        id S1728126AbfHEKUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 06:17:20 -0400
-Received: from smtp180.sjtu.edu.cn ([202.120.2.180]:52172 "EHLO
-        smtp180.sjtu.edu.cn" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727989AbfHEKRT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 06:17:19 -0400
-Received: from proxy01.sjtu.edu.cn (unknown [202.112.26.54])
-        by smtp180.sjtu.edu.cn (Postfix) with ESMTPS id 0F71210089E14;
-        Mon,  5 Aug 2019 18:17:17 +0800 (CST)
-Received: from localhost (localhost [127.0.0.1])
-        by proxy01.sjtu.edu.cn (Postfix) with ESMTP id F0F422042423F;
-        Mon,  5 Aug 2019 18:17:16 +0800 (CST)
-X-Virus-Scanned: amavisd-new at proxy01.sjtu.edu.cn
-Received: from proxy01.sjtu.edu.cn ([127.0.0.1])
-        by localhost (proxy01.sjtu.edu.cn [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id hJCk14iFE37W; Mon,  5 Aug 2019 18:17:16 +0800 (CST)
-Received: from xywang-pc.ipads-lab.se.sjtu.edu.cn (unknown [202.120.40.82])
-        (Authenticated sender: xywang.sjtu@sjtu.edu.cn)
-        by proxy01.sjtu.edu.cn (Postfix) with ESMTPA id CB5602042423E;
-        Mon,  5 Aug 2019 18:17:16 +0800 (CST)
-From:   Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
-Cc:     lftan@altera.com, rppt@linux.vnet.ibm.com,
-        nios2-dev@lists.rocketboards.org, linux-kernel@vger.kernel.org,
-        Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
-Subject: [PATCH] nios2: force the string buffer NULL-terminated
-Date:   Mon,  5 Aug 2019 18:17:12 +0800
-Message-Id: <20190805101712.22580-1-xywang.sjtu@sjtu.edu.cn>
-X-Mailer: git-send-email 2.11.0
-To:     unlisted-recipients:; (no To-header on input)
+        Mon, 5 Aug 2019 06:20:04 -0400
+Received: from vps.xff.cz ([195.181.215.36]:59036 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726454AbfHEKUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 06:20:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1565000401; bh=UbKSHNJhmMN1hbm43YULL0GmnUkGg9ph8ySUEjcpnw0=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=gsRiiR+hnT1hK6iZz/qjoDRZZUwcrGRhpW7vfRTN2k5xKzRytohkBdYtwuthstZt2
+         GShvGFYLVp7Due3TLXPxA5DD084qKPe0jdHh72dNNW1aFWkq0LPgoS8+R69qLgP1ZH
+         0bSenMR3uUaxxtBVF+UvvsOSPh7jTqXHluzeQFEc=
+Date:   Mon, 5 Aug 2019 12:20:01 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Chen-Yu Tsai <wens@csie.org>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        linux-rtc@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Subject: Re: [linux-sunxi] [PATCH 2/3] rtc: sun6i: Add support for H6 RTC
+Message-ID: <20190805102001.guo7e52bl5agp2w4@core.my.home>
+Mail-Followup-To: Chen-Yu Tsai <wens@csie.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        linux-rtc@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+References: <20190412120730.473-1-megous@megous.com>
+ <20190412120730.473-3-megous@megous.com>
+ <CAGb2v675j-aCLMgPJOzr9yx1XxsUvHRr_K7VnL=p8mSdwpu2jw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGb2v675j-aCLMgPJOzr9yx1XxsUvHRr_K7VnL=p8mSdwpu2jw@mail.gmail.com>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-strncpy() does not ensure NULL-termination when the input string
-size equals to the destination buffer size COMMAND_LINE_SIZE.
-Besides, grep under arch/ with 'boot_command_line' shows
-no other arch-specific code uses strncpy() when copying
-boot_command_line.
+On Mon, Aug 05, 2019 at 06:16:14PM +0800, Chen-Yu Tsai wrote:
+> On Fri, Apr 12, 2019 at 8:07 PM megous via linux-sunxi
+> <linux-sunxi@googlegroups.com> wrote:
+> >
+> > From: Ondrej Jirman <megous@megous.com>
+> >
+> > RTC on H6 is mostly the same as on H5 and H3. It has slight differences
+> > mostly in features that are not yet supported by this driver.
+> >
+> > Some differences are already stated in the comments in existing code.
+> > One other difference is that H6 has extra bit in LOSC_CTRL_REG, called
+> > EXT_LOSC_EN to enable/disable external low speed crystal oscillator.
+> >
+> > It also has bit EXT_LOSC_STA in LOSC_AUTO_SWT_STA_REG, to check whether
+> > external low speed oscillator is working correctly.
+> >
+> > This patch adds support for enabling LOSC when necessary:
+> >
+> > - during reparenting
+> > - when probing the clock
+> >
+> > H6 also has capacbility to automatically reparent RTC clock from
+> > external crystal oscillator, to internal RC oscillator, if external
+> > oscillator fails. This is enabled by default. Disable it during
+> > probe.
+> >
+> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > ---
+> >  drivers/rtc/rtc-sun6i.c | 40 ++++++++++++++++++++++++++++++++++++++--
+> >  1 file changed, 38 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
+> > index 11f56de52179..7375a530c565 100644
+> > --- a/drivers/rtc/rtc-sun6i.c
+> > +++ b/drivers/rtc/rtc-sun6i.c
+> > @@ -41,9 +41,11 @@
+> >  /* Control register */
+> >  #define SUN6I_LOSC_CTRL                                0x0000
+> >  #define SUN6I_LOSC_CTRL_KEY                    (0x16aa << 16)
+> > +#define SUN6I_LOSC_CTRL_AUTO_SWT_BYPASS                BIT(15)
+> 
+> Manual says bit 14? Or is this different from LOSC_AUTO_SWT_EN?
+> 
+> The rest looks ok.
 
-Use strlcpy() instead.
+Yes, see H6 BSP:
 
-This issue is identified by a Coccinelle script.
+drivers/rtc/rtc-sunxi.h
 
-Signed-off-by: Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
----
- arch/nios2/kernel/setup.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ 20 #define REG_CLK32K_AUTO_SWT_EN                  BIT(14)
+ 21 #define REG_CLK32K_AUTO_SWT_BYPASS              BIT(15)
 
-diff --git a/arch/nios2/kernel/setup.c b/arch/nios2/kernel/setup.c
-index 6bbd4ae2beb0..4cf35b09c0ec 100644
---- a/arch/nios2/kernel/setup.c
-+++ b/arch/nios2/kernel/setup.c
-@@ -123,7 +123,7 @@ asmlinkage void __init nios2_boot_init(unsigned r4, unsigned r5, unsigned r6,
- 		dtb_passed = r6;
- 
- 		if (r7)
--			strncpy(cmdline_passed, (char *)r7, COMMAND_LINE_SIZE);
-+			strlcpy(cmdline_passed, (char *)r7, COMMAND_LINE_SIZE);
- 	}
- #endif
- 
-@@ -131,10 +131,10 @@ asmlinkage void __init nios2_boot_init(unsigned r4, unsigned r5, unsigned r6,
- 
- #ifndef CONFIG_CMDLINE_FORCE
- 	if (cmdline_passed[0])
--		strncpy(boot_command_line, cmdline_passed, COMMAND_LINE_SIZE);
-+		strlcpy(boot_command_line, cmdline_passed, COMMAND_LINE_SIZE);
- #ifdef CONFIG_NIOS2_CMDLINE_IGNORE_DTB
- 	else
--		strncpy(boot_command_line, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
-+		strlcpy(boot_command_line, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
- #endif
- #endif
- 
--- 
-2.11.0
+regards,
+	Ondrej
 
+> ChenYu
