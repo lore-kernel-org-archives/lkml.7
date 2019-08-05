@@ -2,130 +2,101 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B3AC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8734C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49CB82067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:30:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="MBLoncso"
+	by mail.kernel.org (Postfix) with ESMTP id 7DC3D2067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:31:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564993902;
+	bh=6GDlY6Oj/pMsxqqXmrShaQDXNdC8M9mTC8Uh+0WR7cw=;
+	h=References:In-Reply-To:From:Date:Subject:To:List-ID:From;
+	b=GslPh7qbDdOwmqxDmPJZNfK64hlheLRTkv5PUOfgeJMDooZAOFMqyrywFCc0aKX3T
+	 OTE2BcTpTuBrEDu3ZvPCj0hFqT5uZaJvRigH4bk8/zinbfnvPApZ2YNgm1KHwYe7CD
+	 6v95Qy7Q2WcXFnYwXsf0PDTb1F0PoRf7ywHX6Jpw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbfHEIai (ORCPT
+        id S1727775AbfHEIbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 04:30:38 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46954 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726423AbfHEIah (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 04:30:37 -0400
-Received: by mail-io1-f67.google.com with SMTP id i10so52243475iol.13
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 01:30:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=yyl06VlC6+KCObHiyWGls6JX8m37oW5ZUavAlFOgRwY=;
-        b=MBLoncsocISVckTtBkUcx1oZ1ATdC/vQzYufJcdYCtudNT1v8Hqd4WTrUuJRTUcaX2
-         tLVeYIVrE1wbVHLuk3FkIUUtAP/BOaSfeM/C3DI6bbbbQ7o3iWWrIt1C7ehr8MLkU8UG
-         T/04JQH8eW6m6sa8cg7Wc9h+YGcqxJRWkVtOLN5dQiynlleSvpqaXvR7JycB4UhgRguS
-         P5LkYwQBoQWdCFHFDIKxFvYAs0qLCzp59JKfbCN1AuFsQQDdVMe4p5mSqdJJfePdktGV
-         ygBco/z+Lh5If06f1ZONGTbxoxSH1qEik7tmaVKHKEts5EozNXpSarfdwfNVRlIo930n
-         VvKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=yyl06VlC6+KCObHiyWGls6JX8m37oW5ZUavAlFOgRwY=;
-        b=NMG2F+YQaFTYq93sz2hYMbUpWbfFml13Xc2W8ks8u6GiW64V4drRrct//hp42TBSHV
-         /yUIR7phRe5Y0F+EYc3FV+ynLcfhaMsVeuytjjkBNWNMxCfN18uNssAQBkpvuS7Q9HlW
-         cr9XH4kTCAXx1zIK5ZdVeBuMUjPuoRFWMx1RuYmjozLUvWcitpSnF1pWxwzFa7Zfzmaq
-         A5jSst0nBD/h7cetoE6oTOqJj7EaJzlvtQ0wAPJKxzDFxAEzZu/LDul8je+BmxG9bzyU
-         c5eiO/iprYYtc6VDz8oO8VNENpE9/B6v9PDSxfBLP9e/Aq81CegrU+0INjHA1YKlJzTi
-         M2Lw==
-X-Gm-Message-State: APjAAAXt9m8pbEks/KEk4/1Rnwfywba6MWJacWusKS1b9r7M//B50p7c
-        n5DqzXsQHdfqfn+/Ql41gS9DELlecq5GyUhYi+g=
-X-Google-Smtp-Source: APXvYqx6T0N1Ra1tdlHmxChURIXRJl2MTdbHsY9hPq8d6/X7xlF0XynNY+IOJMgjzboNM2rejEeOazjtnKv1GoQeMQE=
-X-Received: by 2002:a05:6638:cf:: with SMTP id w15mr75704049jao.136.1564993837015;
- Mon, 05 Aug 2019 01:30:37 -0700 (PDT)
+        Mon, 5 Aug 2019 04:31:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46654 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726423AbfHEIbl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 04:31:41 -0400
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF0BB20B1F;
+        Mon,  5 Aug 2019 08:31:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564993901;
+        bh=6GDlY6Oj/pMsxqqXmrShaQDXNdC8M9mTC8Uh+0WR7cw=;
+        h=References:In-Reply-To:From:Date:Subject:To:From;
+        b=peHYXbmKGBkRGDkgiCG5T0LLnNYHuvThB7B3ZZZnfMAD4dBao3elfqPZWeYSLgv5m
+         mgxeKfu8ZWuAS8b6dcFyko593cTA9bWGo6IGV9Jxp5cXtOJQEFvdOepvRLByQEsPcN
+         MS8Q7SLbllXv+ymRvocxkzEptTK+NEInF7m/Q3Xw=
+Received: by mail-lf1-f47.google.com with SMTP id s19so57243330lfb.9;
+        Mon, 05 Aug 2019 01:31:40 -0700 (PDT)
+X-Gm-Message-State: APjAAAVYiTCYAq9OL/6CBRwFW6vf4xC20YDCYhPaNOqkgrb4xMT5wO8P
+        MsyQmBM1p7m1SYIthcKOv7a0XuJJIHGME1YZm1A=
+X-Google-Smtp-Source: APXvYqyWaflWWQ8wwvaO1d9cbgBslefLEtgX0rPNgijTABssXm+H4yZIkYKO5j/21nYMMWJoveT1E8Ew7gsDV7eLoD4=
+X-Received: by 2002:ac2:4d1c:: with SMTP id r28mr68291107lfi.159.1564993898942;
+ Mon, 05 Aug 2019 01:31:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190722134423.26555-1-brgl@bgdev.pl>
-In-Reply-To: <20190722134423.26555-1-brgl@bgdev.pl>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 5 Aug 2019 10:30:26 +0200
-Message-ID: <CAMRc=Me51RgQu8VK70dy=1OhmHeKo40HLxfsvp2nD5UC+Mzb=w@mail.gmail.com>
-Subject: Re: [PATCH v2 0/9] ARM: davinci: da850-evm: remove more legacy GPIO calls
-To:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        David Lechner <david@lechnology.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fbdev@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <CAF-0O_47bLysYD9qn2ekNC7PmNj0LguB6ab_9mdw6NaoGPj4rw@mail.gmail.com>
+In-Reply-To: <CAF-0O_47bLysYD9qn2ekNC7PmNj0LguB6ab_9mdw6NaoGPj4rw@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Mon, 5 Aug 2019 10:31:27 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPe9nY4wV+Dj4BHMO6=WmtxjMnSe+z6ZywaokUNPyyvOuA@mail.gmail.com>
+Message-ID: <CAJKOXPe9nY4wV+Dj4BHMO6=WmtxjMnSe+z6ZywaokUNPyyvOuA@mail.gmail.com>
+Subject: Re: suspend/Resume Sound issue workaround
+To:     Jaafar Ali <jaafarkhalaf@gmail.com>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pon., 22 lip 2019 o 15:44 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=82(=
-a):
+On Sun, 4 Aug 2019 at 14:36, Jaafar Ali <jaafarkhalaf@gmail.com> wrote:
+> Dear Krzysztof,
+> The sound of Odroid-XU4 after suspend/resume cycle has an issue. As a workaround, the I2SMOD register value should be set to zero after resume, the i2s_resume function would be:
 >
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> static int i2s_resume(struct snd_soc_dai *dai)
+> {
+> struct samsung_i2s_priv *priv = dev_get_drvdata(dai->dev);
+> printk(KERN_EMERG "i2s resume of dai !\n");
+> priv->suspend_i2smod = 0;//workaround-1 , to force using internal codec clock source (CDCLKCON bit = 0)
+> //see another workaround inside hw_param
 >
-> This is another small step on the path to liberating davinci from legacy
-> GPIO API calls and shrinking the davinci GPIO driver by not having to
-> support the base GPIO number anymore.
+>         return pm_runtime_force_resume(dai->dev);
 >
-> This time we're removing the legacy calls used indirectly by the LCDC
-> fbdev driver.
+> }
 >
-> First two patches enable the GPIO backlight driver in
-> davinci_all_defconfig.
+> Also, inside hw_params function, the rclk_srcrate must be halved to solve unknown problem of clock shift, so before return from hw_params we must insert:
+> if(mod == 0){
+> priv->rclk_srcrate = priv->rclk_srcrate / 2; //workaround-2, clock is being halved due to unknwon bug
+> printk(KERN_EMERG "i2s hw_param rclk_srcrate after %lu !\n", priv->rclk_srcrate);
+> }
+> return 0;
 >
-> Patch 3/12 models the backlight GPIO as an actual GPIO backlight device.
->
-> Patches 4-6 extend the fbdev driver with regulator support and convert
-> the da850-evm board file to using it.
->
-> Last three patches are improvements to the da8xx fbdev driver since
-> we're already touching it in this series.
->
-> v1 -> v2:
-> - dopped the gpio-backlight patches from this series as since v5.3-rc1 we
->   can probe the module with neither the OF node nor platform data
-> - collected review and ack tags
-> - rebased on top of v5.3-rc1
->
-> Bartosz Golaszewski (9):
->   ARM: davinci: refresh davinci_all_defconfig
->   ARM: davinci_all_defconfig: enable GPIO backlight
->   ARM: davinci: da850-evm: model the backlight GPIO as an actual device
->   fbdev: da8xx: add support for a regulator
->   ARM: davinci: da850-evm: switch to using a fixed regulator for lcdc
->   fbdev: da8xx: remove panel_power_ctrl() callback from platform data
->   fbdev: da8xx-fb: use devm_platform_ioremap_resource()
->   fbdev: da8xx-fb: drop a redundant if
->   fbdev: da8xx: use resource management for dma
->
->  arch/arm/configs/davinci_all_defconfig  |  27 ++----
->  arch/arm/mach-davinci/board-da850-evm.c |  90 +++++++++++++-----
->  drivers/video/fbdev/da8xx-fb.c          | 118 +++++++++++++-----------
->  include/video/da8xx-fb.h                |   1 -
->  4 files changed, 141 insertions(+), 95 deletions(-)
->
-> --
-> 2.21.0
->
+> With these two workaround sound issue was solved, but I hope we can get concrete fix.
 
-Hi Sekhar,
+Hi Jaafar,
 
-the fbdev patches have been acked by Bartlomiej. I think the entire
-series can go through the ARM-SoC tree.
+Thanks for the report. Preferred way to send bug reports is to use the
+public channels by sending to Linux kernel mailing lists:
+linux-samsung-soc@vger.kernel.org and linux-kernel@vger.kernel.org,
+with the Cc of other interested people. The best is to use the
+scripts/get_maintainer.pl tool (with -f for example) to get the list
+of addresses to Cc.
 
-Bart
+Best regards,
+Krzysztof
