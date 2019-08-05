@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D11C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A451AC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C9BA2075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A2A22087B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:04:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010238;
-	bh=s8KbTj/TJZ7RmdhXBn0lQn93yoncr6rK9wY2f6pQr2k=;
+	s=default; t=1565010242;
+	bh=2EP8xN2E+Lw5V0jkHNGOA32fey2znqVmi7ukNtyFPmU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nf6nda/Huj9OPaoQ/Q0do0xE9ervaNQipcfo0VLSCj3d5Sd5D6eJSZDH4OHXUR+u0
-	 2AC6wBhXp9qgLGQZHThQXjeE/QKBK07W28j9de4wXOQpGbUS/pknvD54iSwTGUfSfW
-	 KDnUDg8s94AdvZj83jpD7FLytFfq4yJ0yEH9saOM=
+	b=K5tytDg0pXEBxXh0mPO8ljF0zf/mxU5/Nt3nTkQDZH+YMK87twh0HwCjWGpl+I0Hk
+	 YKnlJNKzcBV/+eECV1nohyHyKq0Rta/MXKVDAGXvtiywf/8QPqPzrs0Vlsgm1mKomP
+	 /lALLqGASzsBWtM1wQ4IG/DEU/wcN7N73KqRqAHY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728835AbfHEND5 (ORCPT
+        id S1728858AbfHENEB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:03:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39330 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:04:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726508AbfHEND4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:03:56 -0400
+        id S1726508AbfHEND7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:03:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBCEF2075B;
-        Mon,  5 Aug 2019 13:03:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B9AB206C1;
+        Mon,  5 Aug 2019 13:03:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010235;
-        bh=s8KbTj/TJZ7RmdhXBn0lQn93yoncr6rK9wY2f6pQr2k=;
+        s=default; t=1565010238;
+        bh=2EP8xN2E+Lw5V0jkHNGOA32fey2znqVmi7ukNtyFPmU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PFqb/y3v1f5Ns5lVvO/mZU32C7MLdxmPhG8yy878rc374R9wCmyp5CeU7TROMZ3XR
-         OXWnUPeUcAkyDuzEAEyCuD3Qp+YCisMOIERetc3YAuxk/Sdj/L8PDHbLlJqAdv+Z7h
-         ul7xd5a8ZDRNwlUQkh+uXY8+1gz8yuQ5OFDIl3xM=
+        b=i6QuIfw2lfr1LHYUOfFa9bbuOQ6fhV1Ge/vc1UES2Lza6GgNn8iiS4ruE0GEXI5sP
+         HzMevU2VYlyMFsDsBNyZRr0ghBbbIVldU968s1tKp6owG3HuJbcAjmVarvUYEfPwce
+         +TMLCna7/kid+nQ4VtDfCzzUzgHtHelMlGWoWMJM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benjamin Poirier <bpoirier@suse.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 11/22] be2net: Signal that the device cannot transmit during reconfiguration
-Date:   Mon,  5 Aug 2019 15:02:48 +0200
-Message-Id: <20190805124921.118903949@linuxfoundation.org>
+Subject: [PATCH 4.4 12/22] x86/apic: Silence -Wtype-limits compiler warnings
+Date:   Mon,  5 Aug 2019 15:02:49 +0200
+Message-Id: <20190805124921.388898231@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124918.070468681@linuxfoundation.org>
 References: <20190805124918.070468681@linuxfoundation.org>
@@ -60,41 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7429c6c0d9cb086d8e79f0d2a48ae14851d2115e ]
+[ Upstream commit ec6335586953b0df32f83ef696002063090c7aef ]
 
-While changing the number of interrupt channels, be2net stops adapter
-operation (including netif_tx_disable()) but it doesn't signal that it
-cannot transmit. This may lead dev_watchdog() to falsely trigger during
-that time.
+There are many compiler warnings like this,
 
-Add the missing call to netif_carrier_off(), following the pattern used in
-many other drivers. netif_carrier_on() is already taken care of in
-be_open().
+In file included from ./arch/x86/include/asm/smp.h:13,
+                 from ./arch/x86/include/asm/mmzone_64.h:11,
+                 from ./arch/x86/include/asm/mmzone.h:5,
+                 from ./include/linux/mmzone.h:969,
+                 from ./include/linux/gfp.h:6,
+                 from ./include/linux/mm.h:10,
+                 from arch/x86/kernel/apic/io_apic.c:34:
+arch/x86/kernel/apic/io_apic.c: In function 'check_timer':
+./arch/x86/include/asm/apic.h:37:11: warning: comparison of unsigned
+expression >= 0 is always true [-Wtype-limits]
+   if ((v) <= apic_verbosity) \
+           ^~
+arch/x86/kernel/apic/io_apic.c:2160:2: note: in expansion of macro
+'apic_printk'
+  apic_printk(APIC_QUIET, KERN_INFO "..TIMER: vector=0x%02X "
+  ^~~~~~~~~~~
+./arch/x86/include/asm/apic.h:37:11: warning: comparison of unsigned
+expression >= 0 is always true [-Wtype-limits]
+   if ((v) <= apic_verbosity) \
+           ^~
+arch/x86/kernel/apic/io_apic.c:2207:4: note: in expansion of macro
+'apic_printk'
+    apic_printk(APIC_QUIET, KERN_ERR "..MP-BIOS bug: "
+    ^~~~~~~~~~~
 
-Signed-off-by: Benjamin Poirier <bpoirier@suse.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+APIC_QUIET is 0, so silence them by making apic_verbosity type int.
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/1562621805-24789-1-git-send-email-cai@lca.pw
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/emulex/benet/be_main.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/apic.h | 2 +-
+ arch/x86/kernel/apic/apic.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/emulex/benet/be_main.c b/drivers/net/ethernet/emulex/benet/be_main.c
-index 26255862d1cfc..7524a33b7032c 100644
---- a/drivers/net/ethernet/emulex/benet/be_main.c
-+++ b/drivers/net/ethernet/emulex/benet/be_main.c
-@@ -4307,8 +4307,12 @@ int be_update_queues(struct be_adapter *adapter)
- 	struct net_device *netdev = adapter->netdev;
- 	int status;
+diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
+index fd810a57ab1b1..3328a37ddc75c 100644
+--- a/arch/x86/include/asm/apic.h
++++ b/arch/x86/include/asm/apic.h
+@@ -44,7 +44,7 @@ static inline void generic_apic_probe(void)
  
--	if (netif_running(netdev))
-+	if (netif_running(netdev)) {
-+		/* device cannot transmit now, avoid dev_watchdog timeouts */
-+		netif_carrier_off(netdev);
-+
- 		be_close(netdev);
-+	}
+ #ifdef CONFIG_X86_LOCAL_APIC
  
- 	be_cancel_worker(adapter);
+-extern unsigned int apic_verbosity;
++extern int apic_verbosity;
+ extern int local_apic_timer_c2_ok;
+ 
+ extern int disable_apic;
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index deddc9b932990..cc6c33249850e 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -171,7 +171,7 @@ int first_system_vector = FIRST_SYSTEM_VECTOR;
+ /*
+  * Debug level, exported for io_apic.c
+  */
+-unsigned int apic_verbosity;
++int apic_verbosity;
+ 
+ int pic_mode;
  
 -- 
 2.20.1
