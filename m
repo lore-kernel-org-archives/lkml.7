@@ -2,117 +2,133 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C750C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 03:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F2EC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 04:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A7932070D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 03:47:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OBYI43Xl"
+	by mail.kernel.org (Postfix) with ESMTP id D138B2086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 04:14:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564978492;
+	bh=+Y1NuEUjGC3aUIFq2y7e/Xv0wOCDGVTnmXI4vCIVEDI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WoGhGVLQYJG0f0Qn8wVBaD/7CLEvCAOjl3/VQx2TJMu+bUW4RqZAxHvBpvRjAMaLB
+	 nOAlTxtChuDukU/yhrSYm8DlxRBQTwgXMCNZylGiXWOMzVuEfEuULJ1wM82rZofOqN
+	 cc26ZCLETO278d+S5pTuuUOLOX+XIjRofJZ70bA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbfHEDrS (ORCPT
+        id S1726066AbfHEEOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 4 Aug 2019 23:47:18 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:32900 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbfHEDrS (ORCPT
+        Mon, 5 Aug 2019 00:14:47 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37414 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725613AbfHEEOr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 4 Aug 2019 23:47:18 -0400
-Received: by mail-io1-f68.google.com with SMTP id z3so23251240iog.0;
-        Sun, 04 Aug 2019 20:47:17 -0700 (PDT)
+        Mon, 5 Aug 2019 00:14:47 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 19so38910976pfa.4
+        for <linux-kernel@vger.kernel.org>; Sun, 04 Aug 2019 21:14:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NdPVws2a6Dt8y874ce3RveAAw3TWAis9HKBWlXlAjvY=;
-        b=OBYI43XlN/vZLhQ4I5ks3RXrtil8B+rCxmR8cwtZaowww5tDMI+Cxo2hbvdu8FHNLu
-         BhH+YD93jhkSfrl75up6xGGlXrLaP9X1t6rqAOFVil8kLtPjDeioFzDMuFQajnlVdRXD
-         vKwdzSfwVwamLFFT/rx74hSgj/FhZcXk1ZWlptrNGi2gPYAiI8KZnlTVm+14MmX9P5FS
-         8gmxewjFS1UqvwscTQgGNwQ6bR3nt37XDvxJJmddgiuSkKN9VaXugpLVKDADofPFxIQ5
-         7Buoec1ZXqzVleG6k7Fc8qYaTdsBGRUzReQ+BvUDuQso9RmWcnuP87fxacB0HDOaS4fH
-         7G6w==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mva09u+yn1RWE+TO1luNzBDnrlH/Q/3QfIfoFJtdBKs=;
+        b=lUaKgKHU3tYV6FVsndghO1nh62VmLyjBz+gnRDFzMtyQSKeK4kyNlKt7pfyVZI5dP0
+         lCmU53u7ZoMWT0GjNCzqnOSqZsjasDVwlPCqu3E04EBsomGuC5AAi2qOnGX+T6kdDxni
+         dV6o/haUzLnNpKhvlZ15NuuJvVzUEFuORq2wb6M+ExKwYLtMUDhXsmnZ6PSmWyr8PWxE
+         V0kct3Svkq8vUoVZOO289g/Yw0Wqon93UAVktJZ1iuJxKV0PoU8euDaXateelJ7JSx9o
+         f40OBUyRw88R3NWa2O8csPHoyge5AVZZPF8py8aCAYxVK8+Dltiuo2QpqUbwAnXmRmta
+         HM1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NdPVws2a6Dt8y874ce3RveAAw3TWAis9HKBWlXlAjvY=;
-        b=QfI8NYeg4y/cjhevFWdUIet5tIckVy1PZIi1Kq0Hf/58phWCx2C52ig25prSKSU5XU
-         8hxImQ7pQZ5k3ZvcOgx6/eeKX61RjoPKXZ0QQDqK7y/D3aL7uu21xmpwW5B0uzweuDiW
-         ftuz9XpwdN3SH3ObEcx+TJU8zDaKeM/UscJ7Tq2xKFxFkuCioU9PoQd9FlmKDdjPVijd
-         APLNtYFLgs1vbl7gTAoguBtlWfLTPKxt7mmSTX6g8/pCd1QyxgdDUu+peO/nr6FV337H
-         9h9kR0XMrvgDza6JTXdVuZC+Y02OpyEcKAex3DhiCwePYZtX6uGlZy0VHvKvfDbb/uiw
-         xcxA==
-X-Gm-Message-State: APjAAAVbd0hbDRtY7AYDsGX9dCsYMBuAaSduLJ7P2YqXdQavC6GB/F7F
-        7oZzdsaGUBdqmYV8a0JiY7x77mFh7TKEJyCdG8g=
-X-Google-Smtp-Source: APXvYqxtnVLtg3Sb9+ZhAgKfKLHG6VNs+MEi642xPS4QqUS2THpCFZQ3F8/DSRihpUHBbfKShzmtrYIA9PT3Yz+Gpug=
-X-Received: by 2002:a02:29ce:: with SMTP id p197mr19639555jap.139.1564976837286;
- Sun, 04 Aug 2019 20:47:17 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mva09u+yn1RWE+TO1luNzBDnrlH/Q/3QfIfoFJtdBKs=;
+        b=WFh0WRKlDWzimve2a7CqH2ZobNQ8h9xschxkoEBnAk+XcEZr7vT9ESBD0OuWfrB9mM
+         9a33gP+GyxBhAEcB4ym6qX98U6+Byvt/DcbRPrWlm0p1ANBl/L9WfB87Dc+4rrkffZqX
+         Q3/mUUDotR3Mbm1tU9NMtTJK/4DbWLHuOcBEaozm0lMwnZpoJrGxqE9hE6Vc7aZEebuH
+         srJa9SzGfo4U34RDt/MwzFMU5bAYIN5QUSQrONbhU8R9MIuIqmDD6rqPAauMnPIWj4vf
+         ddEGi2/pBX2V5GsU2gXk+k3Ox+KYILF9eGx9A3hAZpOb/W7mbEPl6rwmvxAfi6L5GF4f
+         X3gg==
+X-Gm-Message-State: APjAAAVlSJUW857VtOh9A3UPFBFE7MkHiRa0odNryiped9RMhUeyY2YA
+        vX6xm/i/x1G5nhgJy6GqQUg=
+X-Google-Smtp-Source: APXvYqxu85q5rU7e/DgfZCTuChdmrDTsIJLsBcmb1yRybucaAu5vmnJlY6V1Pxkezx8ce2esQ0uBSg==
+X-Received: by 2002:a63:7e1d:: with SMTP id z29mr134680099pgc.346.1564978486557;
+        Sun, 04 Aug 2019 21:14:46 -0700 (PDT)
+Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
+        by smtp.gmail.com with ESMTPSA id j1sm115888081pgl.12.2019.08.04.21.14.43
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 04 Aug 2019 21:14:44 -0700 (PDT)
+Date:   Mon, 5 Aug 2019 13:14:40 +0900
+From:   Minchan Kim <minchan@kernel.org>
+To:     Henry Burns <henryburns@google.com>
+Cc:     Nitin Gupta <ngupta@vflare.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jonathan Adams <jwadams@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] mm/zsmalloc.c: Migration can leave pages in ZS_EMPTY
+ indefinitely
+Message-ID: <20190805041440.GA178551@google.com>
+References: <20190802015332.229322-1-henryburns@google.com>
 MIME-Version: 1.0
-References: <1563873380-2003-1-git-send-email-gkulkarni@marvell.com> <CAKTKpr5kmG3k4b85Zf05Q9xXpxMNZJyzWN7RXqZdteYUdMkc6g@mail.gmail.com>
-In-Reply-To: <CAKTKpr5kmG3k4b85Zf05Q9xXpxMNZJyzWN7RXqZdteYUdMkc6g@mail.gmail.com>
-From:   Ganapatrao Kulkarni <gklkml16@gmail.com>
-Date:   Mon, 5 Aug 2019 09:17:04 +0530
-Message-ID: <CAKTKpr6QqvNQcm43res=3MtAYSsbj5NVwstfuQE3cdFjyo2eNQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] Add CCPI2 PMU support
-To:     Ganapatrao Kulkarni <gkulkarni@marvell.com>,
-        "will@kernel.org" <will@kernel.org>
-Cc:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Jan Glauber <jglauber@marvell.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190802015332.229322-1-henryburns@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 4:24 PM Ganapatrao Kulkarni <gklkml16@gmail.com> wrote:
->
-> Hi Will,
->
-> Any comments to this patchset?
+On Thu, Aug 01, 2019 at 06:53:31PM -0700, Henry Burns wrote:
+> In zs_page_migrate() we call putback_zspage() after we have finished
+> migrating all pages in this zspage. However, the return value is ignored.
+> If a zs_free() races in between zs_page_isolate() and zs_page_migrate(),
+> freeing the last object in the zspage, putback_zspage() will leave the page
+> in ZS_EMPTY for potentially an unbounded amount of time.
 
-If no further comments, can it be queued please?
->
-> On Tue, Jul 23, 2019 at 2:46 PM Ganapatrao Kulkarni
-> <gkulkarni@marvell.com> wrote:
-> >
-> > Add Cavium Coherent Processor Interconnect (CCPI2) PMU
-> > support in ThunderX2 Uncore driver.
-> >
-> > v3: Rebased to 5.3-rc1
-> >
-> > v2: Updated with review comments [1]
-> >
-> > [1] https://lkml.org/lkml/2019/6/14/965
-> >
-> > v1: initial patch
-> >
-> > Ganapatrao Kulkarni (2):
-> >   Documentation: perf: Update documentation for ThunderX2 PMU uncore
-> >     driver
-> >   drivers/perf: Add CCPI2 PMU support in ThunderX2 UNCORE driver.
-> >
-> >  .../admin-guide/perf/thunderx2-pmu.rst        |  20 +-
-> >  drivers/perf/thunderx2_pmu.c                  | 248 +++++++++++++++---
-> >  2 files changed, 225 insertions(+), 43 deletions(-)
-> >
-> > --
-> > 2.17.1
-> >
->
-> Thanks,
-> Ganapat
+Nice catch.
 
-Thanks,
-Ganapat
+> 
+> To fix this, we need to do the same thing as zs_page_putback() does:
+> schedule free_work to occur.  To avoid duplicated code, move the
+> sequence to a new putback_zspage_deferred() function which both
+> zs_page_migrate() and zs_page_putback() call.
+> 
+> Signed-off-by: Henry Burns <henryburns@google.com>
+Cc: <stable@vger.kernel.org>    [4.8+]
+Acked-by: Minchan Kim <minchan@kernel.org>
+
+Below a just trivial:
+
+> ---
+>  mm/zsmalloc.c | 30 ++++++++++++++++++++----------
+>  1 file changed, 20 insertions(+), 10 deletions(-)
+> 
+> diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
+> index 1cda3fe0c2d9..efa660a87787 100644
+> --- a/mm/zsmalloc.c
+> +++ b/mm/zsmalloc.c
+> @@ -1901,6 +1901,22 @@ static void dec_zspage_isolation(struct zspage *zspage)
+>  	zspage->isolated--;
+>  }
+>  
+> +static void putback_zspage_deferred(struct zs_pool *pool,
+> +				    struct size_class *class,
+> +				    struct zspage *zspage)
+> +{
+> +	enum fullness_group fg;
+> +
+> +	fg = putback_zspage(class, zspage);
+> +	/*
+> +	 * Due to page_lock, we cannot free zspage immediately
+> +	 * so let's defer.
+> +	 */
+
+Could you move this comment function's description since it becomes
+a function?
+
+Thanks.
