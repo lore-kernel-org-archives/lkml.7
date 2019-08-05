@@ -2,128 +2,222 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE8B4C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC6DEC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B303220B1F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:33:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B2Lhpbtr"
+	by mail.kernel.org (Postfix) with ESMTP id A22C621734
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:34:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565019261;
+	bh=nFZl8Ezzm4gz9Nz30tAC5bC8jHrdhY6mFkbX5D53lx8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=fWI6Z9kyX0Jve7FUsgHFcM8qQN4+Av2dFLt7bF7cN77ljELkGCXUY3hdOix0fSC9q
+	 SOrSfe0Pp9uz07SrA0qXkjeO03kOkjcTcZMDGeMiDqxUxsH/cB5DsHe/uTjVEF0/Gr
+	 ABk9YBJzOgJj3hd38DrYZJ/oJBBoHOvJgcsgqqDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729733AbfHEPdh (ORCPT
+        id S1729333AbfHEPeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 11:33:37 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:40496 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729337AbfHEPdh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 11:33:37 -0400
-Received: by mail-lj1-f194.google.com with SMTP id m8so46061969lji.7
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 08:33:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=MdJeprxlisYG8Xt385Sz+mmujOJvqAOkUH6DNb4w/D8=;
-        b=B2Lhpbtr1RQ+61200Fmk9bx9MyVKDvEMyZ7/Sucu6j8pxDoI6avpjSje0laQDjRMYV
-         VF1coVJgpdXAY89hZ2klNoOHN5jbuSkKkEmziApzwKR9b0+4dGSYq+0pML4qwwRoUkeZ
-         cQAC6UiilaOZXiDSN8vOKYohnFIEwxtIr8QoKrzI/QGeD0IDaiDyhjah1Bch2ZDfLW/B
-         tzhY0eJNcGYZFAD2KDbPILqRB7p2tkqIWuIhpwgCn16/EarR3t/SwJoTY01wVUePos+h
-         1gX+EYq+wSM41n4sorJgO18a39v/T/lkZscOxu1KTm6dHMly2jmTSyg21btav+M/Gj+I
-         TfIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=MdJeprxlisYG8Xt385Sz+mmujOJvqAOkUH6DNb4w/D8=;
-        b=go+NLJBR7xIL7O9hR7aHSKX5af0QBUbPoqgiYjwN+6jURd/jcLURfPwYcAJRP+dnL8
-         mjZVUHXqUx4cdeiShJ2l3Qj4bZkseOKSOGFWlCOcyTOAULPLZfEdgKjkjSpRdBBteJQE
-         6oTknPUEfvP/u+GyfNC/gyV/B34NnN/+kBmInpVmmI8PQUyz+Cby4Z0++XFC42fCyDSE
-         7D1ALUGQVLMQa7LTslXpjo0gZFw7u00iGOBFGK+6nTCjhO+SKruKpJFuZX4u/oLSyh/2
-         yWQ2ZOe7EJRADjtlziOozP25CbaB/tx/xjYbWnnqhgzcuR8dTUnsN2GkgyLCqY5NV2Lp
-         DmLw==
-X-Gm-Message-State: APjAAAWuGUOosL6ndIrMWo9t35y2fkZ63yR4SbPfVa6Y48UwfGh9Kqne
-        l1DVlkFAkNADpn82GNJB1FLnlw==
-X-Google-Smtp-Source: APXvYqztjooZSce4zqpF9/gHXvgtQ0+44a+NSVLzEfRyM2p2N1elaBB8l4bVhR8hOcA4WY6jJHvlGw==
-X-Received: by 2002:a2e:534a:: with SMTP id t10mr39316085ljd.109.1565019215224;
-        Mon, 05 Aug 2019 08:33:35 -0700 (PDT)
-Received: from localhost.localdomain ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id a15sm14969312lfl.44.2019.08.05.08.33.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 05 Aug 2019 08:33:34 -0700 (PDT)
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-To:     linux-pm@vger.kernel.org, evgreen@chromium.org,
-        daidavid1@codeaurora.org
-Cc:     vincent.guittot@linaro.org, bjorn.andersson@linaro.org,
-        amit.kucheria@linaro.org, dianders@chromium.org,
-        seansw@qti.qualcomm.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org,
-        Georgi Djakov <georgi.djakov@linaro.org>
-Subject: [PATCH] interconnect: Add pre_aggregate() callback
-Date:   Mon,  5 Aug 2019 18:33:32 +0300
-Message-Id: <20190805153332.10047-1-georgi.djakov@linaro.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <752aca6f-4f69-301d-81ef-ff29bc25b614@linaro.org>
-References: <752aca6f-4f69-301d-81ef-ff29bc25b614@linaro.org>
+        Mon, 5 Aug 2019 11:34:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43672 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727802AbfHEPeU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 11:34:20 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25C3720B1F;
+        Mon,  5 Aug 2019 15:34:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565019259;
+        bh=nFZl8Ezzm4gz9Nz30tAC5bC8jHrdhY6mFkbX5D53lx8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=daZiDgOftPc6OZSPYfT2nfPYh92+bhwM0gB0iubHKicm5h1tCvzPQikK4rKVrN0zu
+         +iY1U/uFL6RGRp77MTpUDPYiMsaYX344zG79UtK+StVjJ/uZGcQz0hjfOCEkbBwxA3
+         Uu+9h9XjqjG9ViChTTV8Sx0Rb4Q2jhFN13s+mgMg=
+Date:   Mon, 5 Aug 2019 16:34:14 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Brian Masney <masneyb@onstation.org>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 4/4] iio: tsl2772: Use regulator_bulk_() APIs
+Message-ID: <20190805163414.369561ab@archlinux>
+In-Reply-To: <20190801073619.9743-1-hslester96@gmail.com>
+References: <20190801073619.9743-1-hslester96@gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce an optional callback in interconnect provider drivers. It can be
-used for implementing actions, that need to be executed before the actual
-aggregation of the bandwidth requests has started.
+On Thu,  1 Aug 2019 15:36:19 +0800
+Chuhong Yuan <hslester96@gmail.com> wrote:
 
-The benefit of this for now is that it will significantly simplify the code
-in provider drivers.
+> Use regulator_bulk_() APIs to shrink driver size.
+> 
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 
-Suggested-by: Evan Green <evgreen@chromium.org>
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
----
- drivers/interconnect/core.c           | 3 +++
- include/linux/interconnect-provider.h | 3 +++
- 2 files changed, 6 insertions(+)
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to play with it.
 
-diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-index 251354bb7fdc..7b971228df38 100644
---- a/drivers/interconnect/core.c
-+++ b/drivers/interconnect/core.c
-@@ -205,6 +205,9 @@ static int aggregate_requests(struct icc_node *node)
- 	node->avg_bw = 0;
- 	node->peak_bw = 0;
- 
-+	if (p->pre_aggregate)
-+		p->pre_aggregate(node);
-+
- 	hlist_for_each_entry(r, &node->req_list, req_node)
- 		p->aggregate(node, r->tag, r->avg_bw, r->peak_bw,
- 			     &node->avg_bw, &node->peak_bw);
-diff --git a/include/linux/interconnect-provider.h b/include/linux/interconnect-provider.h
-index 4ee19fd41568..fd42bd19302d 100644
---- a/include/linux/interconnect-provider.h
-+++ b/include/linux/interconnect-provider.h
-@@ -36,6 +36,8 @@ struct icc_node *of_icc_xlate_onecell(struct of_phandle_args *spec,
-  * @nodes: internal list of the interconnect provider nodes
-  * @set: pointer to device specific set operation function
-  * @aggregate: pointer to device specific aggregate operation function
-+ * @pre_aggregate: pointer to device specific function that is called
-+ *		   before the aggregation begins (optional)
-  * @xlate: provider-specific callback for mapping nodes from phandle arguments
-  * @dev: the device this interconnect provider belongs to
-  * @users: count of active users
-@@ -47,6 +49,7 @@ struct icc_provider {
- 	int (*set)(struct icc_node *src, struct icc_node *dst);
- 	int (*aggregate)(struct icc_node *node, u32 tag, u32 avg_bw,
- 			 u32 peak_bw, u32 *agg_avg, u32 *agg_peak);
-+	int (*pre_aggregate)(struct icc_node *node);
- 	struct icc_node* (*xlate)(struct of_phandle_args *spec, void *data);
- 	struct device		*dev;
- 	int			users;
+Thanks,
+
+Jonathan
+
+> ---
+> Changes in v4:
+>   - Change the var name of regulator_bulk_data.
+>   - Adjust alignment.
+>   - Add a new line between two if blocks.
+> 
+>  drivers/iio/light/tsl2772.c | 87 +++++++++++++------------------------
+>  1 file changed, 29 insertions(+), 58 deletions(-)
+> 
+> diff --git a/drivers/iio/light/tsl2772.c b/drivers/iio/light/tsl2772.c
+> index 680afdb078d2..be37fcbd4654 100644
+> --- a/drivers/iio/light/tsl2772.c
+> +++ b/drivers/iio/light/tsl2772.c
+> @@ -134,6 +134,12 @@ enum {
+>  	TSL2772_CHIP_SUSPENDED = 2
+>  };
+>  
+> +enum {
+> +	TSL2772_SUPPLY_VDD = 0,
+> +	TSL2772_SUPPLY_VDDIO = 1,
+> +	TSL2772_NUM_SUPPLIES = 2
+> +};
+> +
+>  /* Per-device data */
+>  struct tsl2772_als_info {
+>  	u16 als_ch0;
+> @@ -161,8 +167,7 @@ struct tsl2772_chip {
+>  	struct mutex prox_mutex;
+>  	struct mutex als_mutex;
+>  	struct i2c_client *client;
+> -	struct regulator *vdd_supply;
+> -	struct regulator *vddio_supply;
+> +	struct regulator_bulk_data supplies[TSL2772_NUM_SUPPLIES];
+>  	u16 prox_data;
+>  	struct tsl2772_als_info als_cur_info;
+>  	struct tsl2772_settings settings;
+> @@ -697,46 +702,7 @@ static void tsl2772_disable_regulators_action(void *_data)
+>  {
+>  	struct tsl2772_chip *chip = _data;
+>  
+> -	regulator_disable(chip->vdd_supply);
+> -	regulator_disable(chip->vddio_supply);
+> -}
+> -
+> -static int tsl2772_enable_regulator(struct tsl2772_chip *chip,
+> -				    struct regulator *regulator)
+> -{
+> -	int ret;
+> -
+> -	ret = regulator_enable(regulator);
+> -	if (ret < 0) {
+> -		dev_err(&chip->client->dev, "Failed to enable regulator: %d\n",
+> -			ret);
+> -		return ret;
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+> -static struct regulator *tsl2772_get_regulator(struct tsl2772_chip *chip,
+> -					       char *name)
+> -{
+> -	struct regulator *regulator;
+> -	int ret;
+> -
+> -	regulator = devm_regulator_get(&chip->client->dev, name);
+> -	if (IS_ERR(regulator)) {
+> -		if (PTR_ERR(regulator) != -EPROBE_DEFER)
+> -			dev_err(&chip->client->dev,
+> -				"Failed to get %s regulator %d\n",
+> -				name, (int)PTR_ERR(regulator));
+> -
+> -		return regulator;
+> -	}
+> -
+> -	ret = tsl2772_enable_regulator(chip, regulator);
+> -	if (ret < 0)
+> -		return ERR_PTR(ret);
+> -
+> -	return regulator;
+> +	regulator_bulk_disable(ARRAY_SIZE(chip->supplies), chip->supplies);
+>  }
+>  
+>  static int tsl2772_chip_on(struct iio_dev *indio_dev)
+> @@ -1804,14 +1770,26 @@ static int tsl2772_probe(struct i2c_client *clientp,
+>  	chip->client = clientp;
+>  	i2c_set_clientdata(clientp, indio_dev);
+>  
+> -	chip->vddio_supply = tsl2772_get_regulator(chip, "vddio");
+> -	if (IS_ERR(chip->vddio_supply))
+> -		return PTR_ERR(chip->vddio_supply);
+> +	chip->supplies[TSL2772_SUPPLY_VDD].supply = "vdd";
+> +	chip->supplies[TSL2772_SUPPLY_VDDIO].supply = "vddio";
+>  
+> -	chip->vdd_supply = tsl2772_get_regulator(chip, "vdd");
+> -	if (IS_ERR(chip->vdd_supply)) {
+> -		regulator_disable(chip->vddio_supply);
+> -		return PTR_ERR(chip->vdd_supply);
+> +	ret = devm_regulator_bulk_get(&clientp->dev,
+> +				      ARRAY_SIZE(chip->supplies),
+> +				      chip->supplies);
+> +	if (ret < 0) {
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(&clientp->dev,
+> +				"Failed to get regulators: %d\n",
+> +				ret);
+> +
+> +		return ret;
+> +	}
+> +
+> +	ret = regulator_bulk_enable(ARRAY_SIZE(chip->supplies), chip->supplies);
+> +	if (ret < 0) {
+> +		dev_err(&clientp->dev, "Failed to enable regulators: %d\n",
+> +			ret);
+> +		return ret;
+>  	}
+>  
+>  	ret = devm_add_action_or_reset(&clientp->dev,
+> @@ -1900,8 +1878,7 @@ static int tsl2772_suspend(struct device *dev)
+>  	int ret;
+>  
+>  	ret = tsl2772_chip_off(indio_dev);
+> -	regulator_disable(chip->vdd_supply);
+> -	regulator_disable(chip->vddio_supply);
+> +	regulator_bulk_disable(ARRAY_SIZE(chip->supplies), chip->supplies);
+>  
+>  	return ret;
+>  }
+> @@ -1912,16 +1889,10 @@ static int tsl2772_resume(struct device *dev)
+>  	struct tsl2772_chip *chip = iio_priv(indio_dev);
+>  	int ret;
+>  
+> -	ret = tsl2772_enable_regulator(chip, chip->vddio_supply);
+> +	ret = regulator_bulk_enable(ARRAY_SIZE(chip->supplies), chip->supplies);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	ret = tsl2772_enable_regulator(chip, chip->vdd_supply);
+> -	if (ret < 0) {
+> -		regulator_disable(chip->vddio_supply);
+> -		return ret;
+> -	}
+> -
+>  	usleep_range(TSL2772_BOOT_MIN_SLEEP_TIME, TSL2772_BOOT_MAX_SLEEP_TIME);
+>  
+>  	return tsl2772_chip_on(indio_dev);
+
