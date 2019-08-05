@@ -2,103 +2,128 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1900EC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE681C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFDA5205F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:18:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="vaSHkIAH"
+	by mail.kernel.org (Postfix) with ESMTP id 9FE07205F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:18:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727599AbfHEHS0 (ORCPT
+        id S1727636AbfHEHSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 03:18:26 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38201 "EHLO
+        Mon, 5 Aug 2019 03:18:34 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40123 "EHLO
         mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726394AbfHEHS0 (ORCPT
+        with ESMTP id S1727600AbfHEHSe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 03:18:26 -0400
-Received: by mail-wr1-f68.google.com with SMTP id g17so83253380wrr.5
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 00:18:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RUqYiFGRwqZz3baSi7DePLwfU/zHvDjxvxTGgWRnjy4=;
-        b=vaSHkIAHMZgvdsmo51ZYrbAryRPsAqLUFYv5jJavndTgROhdJ2YKtLsZZ7C5gyHtvW
-         d/v3QIkwaKBrAFuclzEsoay1vDYmjzsPaxL6kALb0MhKAhO2G5JvtGBdNRuHDOhawgi4
-         lXTjtmEwRoGoiHPDd7rP98028ijkU/rrmccPlI4+BJUogzjLpnIAfcM/RSF7a0W20G3a
-         +lYNkmcxP15Wv0MSZzqX1VmMeIw8oeevNB0gHTpWSvBKIISi5EBHG0ojEi+JIBbaGMD3
-         Jrc2jqiRbvWDhyZXhGGFBf5N5Ec8u2CeeK2HmFW6XmZ5yQoLYLGMohbmcA8s+tpwyTkC
-         naNA==
+        Mon, 5 Aug 2019 03:18:34 -0400
+Received: by mail-wr1-f68.google.com with SMTP id r1so83215077wrl.7;
+        Mon, 05 Aug 2019 00:18:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=RUqYiFGRwqZz3baSi7DePLwfU/zHvDjxvxTGgWRnjy4=;
-        b=STkNqlGyP5A7AYQY2zDWawcRtAEfiJ931Hg0Eegg1gq1+7BPRhoHI1hZZx8MtTklRy
-         e1Uxd6dDxZ+zmVMUClGAbBJnSAnmTLzrU2TAMntnpy+LHT/d6vsGXAEOWW7HXrmibBgr
-         LL9AgRWQMtOX8QIfJtzDhOChgo0eoqcdAXQeIRzlbEYodA17SmPdMTAHJu2LpthRuSCu
-         Fyiu8GSQMlX1HXHJITxApM50qgl5dx1vPNvYQLxa6fddT/QA2Bxo7W+JDRyFRxMUcirW
-         3cejSk0ditvFkxXRMHQX61U/8ajjF5qAZZ04KovOqkDroCKSeMboRzmHrsxFbpNGeOmb
-         d2bw==
-X-Gm-Message-State: APjAAAWvM7bEDlVy/l9toqIGRMYu7f2ENS/YM41kiJ75bulji9HehLXh
-        alrg5e/2iImbdqw7MNsFNTRuCA3g1jUhzEPJI54=
-X-Google-Smtp-Source: APXvYqw/FM+tBx9ajgV2UsWP4KPKi99Z0fzot3UMGZ6r5xVj6SOPqPddG0DiyAWPBjneacTNTdnwazaj1Hb9o9cCPqQ=
-X-Received: by 2002:a5d:4e50:: with SMTP id r16mr24977381wrt.227.1564989504211;
- Mon, 05 Aug 2019 00:18:24 -0700 (PDT)
+        bh=7z7TxdT8LM5WCT5rFLppn3f5eATMhBkkA5pGtwYiQRk=;
+        b=L/CU2KyhkgICxLau3rE+r3r+v4HcP2cmxBNeKqJqTE1mBMyzzS2Vkgxqx3I7+z9unA
+         7i3gebW/XEzrm8e/6cenvmJOyhGaLW4gc8eL9+Y+fFLuwuxg+WJt05TBmrUttDwZcPoo
+         aLHUARO5oqsmoQySrhwr47dbi+3bRGSjPUXLpKhVc4s1IRHq9bu64bPWp9xrYYY4wy+H
+         fp2K+OsJJhp+DjQhBLmyQgI5MN0ZD9DdjfFVxmYOUDO8cdKOra9eyTNXpazGVVxFA7/P
+         dAuy9UsFnZ7R+UfpG8x1O/XQdq8eolek5V5UKNtLAPPqOoHOg0EVMT0UqUjqN7e8u+lp
+         /gmA==
+X-Gm-Message-State: APjAAAXpzjsEiLNGYiTh/3mbWGW3Pd401LtzUMybHN7RL8OoVRJydEwR
+        GzO1DNNu82ktJ2A9OfFO0ngXLD6wTgqMHn++IH4=
+X-Google-Smtp-Source: APXvYqzrP4AePN9rc8s5m6cROt7iPLUC8FyQXF+ULNhFoyftI7RhZ3WzSqW9P+zefGbahYWpJN+sHyUyMAySC2w56Ig=
+X-Received: by 2002:adf:ab51:: with SMTP id r17mr134648052wrc.95.1564989511601;
+ Mon, 05 Aug 2019 00:18:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190802074620.115029-1-anup.patel@wdc.com> <20190802074620.115029-11-anup.patel@wdc.com>
- <5b966171-4d11-237d-5a43-dc881efb7d0a@redhat.com> <CAAhSdy0BVqagYTTnaG2hwsxxM51ZZ2QpJbZtQ21v__8UaXCOWA@mail.gmail.com>
- <458f6b85-cdb2-5e6b-6730-4875f0e4cdba@redhat.com>
-In-Reply-To: <458f6b85-cdb2-5e6b-6730-4875f0e4cdba@redhat.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Mon, 5 Aug 2019 12:48:12 +0530
-Message-ID: <CAAhSdy02bZAbyK4TGzO0jYRCTCFwexzA_iu7GNRh-07NZ6fuFw@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 10/19] RISC-V: KVM: Handle WFI exits for VCPU
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Radim K <rkrcmar@redhat.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190804154029.2749-1-nishkadg.linux@gmail.com>
+In-Reply-To: <20190804154029.2749-1-nishkadg.linux@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 5 Aug 2019 09:18:19 +0200
+Message-ID: <CAMuHMdX5FFuHFtj3PmaXC1PFHAHKPoOs_ZLrzhCoyRVOM+ugOA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: rzn1: Add of_node_put() before return
+To:     Nishka Dasgupta <nishkadg.linux@gmail.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Phil Edworthy <phil.edworthy@renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 5, 2019 at 12:44 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 05/08/19 09:12, Anup Patel wrote:
-> > On Fri, Aug 2, 2019 at 2:33 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
-> >>
-> >> On 02/08/19 09:47, Anup Patel wrote:
-> >>> +             if (!kvm_riscv_vcpu_has_interrupt(vcpu)) {
-> >>
-> >> This can be kvm_arch_vcpu_runnable instead, since kvm_vcpu_block will
-> >> check it anyway before sleeping.
-> >
-> > I think we can skip this check here because kvm_vcpu_block() is
-> > checking it anyway. Agree ??
->
-> Yes, but it's quite a bit faster to do this outside the call.  There's a
-> bunch of setup before kvm_vcpu_block reaches that point, and it includes
-> mfences too once you add srcu_read_unlock/lock here.
+CC Phil
 
-No problem, I will use kvm_arch_vcpu_runnable() here.
+On Sun, Aug 4, 2019 at 5:40 PM Nishka Dasgupta <nishkadg.linux@gmail.com> wrote:
+> Each iteration of for_each_child_of_node puts the previous node, but in
+> the case of a return from the middle of the loop, there is no put, thus
+> causing a memory leak. Hence add an of_node_put before the return in
+> three places.
+> Issue found with Coccinelle.
+>
+> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
 
-Regards,
-Anup
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in sh-pfc-for-v5.4.
+
+> ---
+>  drivers/pinctrl/pinctrl-rzn1.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/pinctrl/pinctrl-rzn1.c b/drivers/pinctrl/pinctrl-rzn1.c
+> index cc0e5aa9128a..0f6f8a10a53a 100644
+> --- a/drivers/pinctrl/pinctrl-rzn1.c
+> +++ b/drivers/pinctrl/pinctrl-rzn1.c
+> @@ -412,8 +412,10 @@ static int rzn1_dt_node_to_map(struct pinctrl_dev *pctldev,
+>
+>         for_each_child_of_node(np, child) {
+>                 ret = rzn1_dt_node_to_map_one(pctldev, child, map, num_maps);
+> -               if (ret < 0)
+> +               if (ret < 0) {
+> +                       of_node_put(child);
+>                         return ret;
+> +               }
+>         }
+>
+>         return 0;
+> @@ -792,8 +794,10 @@ static int rzn1_pinctrl_parse_functions(struct device_node *np,
+>                 grp = &ipctl->groups[ipctl->ngroups];
+>                 grp->func = func->name;
+>                 ret = rzn1_pinctrl_parse_groups(child, grp, ipctl);
+> -               if (ret < 0)
+> +               if (ret < 0) {
+> +                       of_node_put(child);
+>                         return ret;
+> +               }
+>                 i++;
+>                 ipctl->ngroups++;
+>         }
+> @@ -838,8 +842,10 @@ static int rzn1_pinctrl_probe_dt(struct platform_device *pdev,
+>
+>         for_each_child_of_node(np, child) {
+>                 ret = rzn1_pinctrl_parse_functions(child, ipctl, i++);
+> -               if (ret < 0)
+> +               if (ret < 0) {
+> +                       of_node_put(child);
+>                         return ret;
+> +               }
+>         }
+>
+>         return 0;
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
