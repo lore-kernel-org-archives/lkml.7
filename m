@@ -2,98 +2,204 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D05F3C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 20:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6279CC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 20:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A76892147A
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 20:30:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 327832075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 20:33:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YQLqCyav";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fesrASc4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730530AbfHEUaR (ORCPT
+        id S1730605AbfHEUdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 16:30:17 -0400
-Received: from mga05.intel.com ([192.55.52.43]:37312 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727802AbfHEUaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 16:30:17 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 13:30:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,350,1559545200"; 
-   d="scan'208";a="198086880"
-Received: from alison-desk.jf.intel.com ([10.54.74.53])
-  by fmsmga004.fm.intel.com with ESMTP; 05 Aug 2019 13:30:15 -0700
-Date:   Mon, 5 Aug 2019 13:31:02 -0700
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Ben Boeckel <mathstuf@gmail.com>
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>, linux-mm@kvack.org,
-        kvm@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCHv2 25/59] keys/mktme: Preparse the MKTME key payload
-Message-ID: <20190805203102.GA7592@alison-desk.jf.intel.com>
-References: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
- <20190731150813.26289-26-kirill.shutemov@linux.intel.com>
- <20190805115819.GA31656@rotor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190805115819.GA31656@rotor>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Mon, 5 Aug 2019 16:33:52 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:40344 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727802AbfHEUdw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 16:33:52 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 4652E608BA; Mon,  5 Aug 2019 20:33:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1565037231;
+        bh=EQpwyTaZLqo/0FlVjz7BjVXvv2QX6kRf2rU72r3sSKo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=YQLqCyavrSjZaLIy9k/4zyq0wafVpMa/YcHH0w5NKJ44Ytg8bDOY58kWvRrOl8fqp
+         76TcWcbF0zcOP7k8YXppQ3x78Rfmse0uOMIXRQVgrs5b8s49CEZotZriRtJAfl3Ckn
+         IEeCghUFOPMhOuG0cUDRlmVClqRw4+u8PrOGwQpQ=
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 856C76076C;
+        Mon,  5 Aug 2019 20:33:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1565037230;
+        bh=EQpwyTaZLqo/0FlVjz7BjVXvv2QX6kRf2rU72r3sSKo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=fesrASc4hlP33n5ROrTySwgZhfsOqs1BLFm2PzqvpylY3nuXOIM4/cVG/D6UnQN4Q
+         5+HdPtaul0xWvoIuDcQcXG0Ma6VxWlLqosZAhW/w9rM7CpS/TGltdX2bMOdDefx3HU
+         Lkai0x8Fbcr+21VATj1hmVGppBmM1sxgFKIdmS+s=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 856C76076C
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     freedreno@lists.freedesktop.org
+Cc:     linux-arm-msm@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        linux-clk@vger.kernel.org
+Subject: [PATCH v2] drivers: qcom: Add BCM vote macro to header
+Date:   Mon,  5 Aug 2019 14:33:46 -0600
+Message-Id: <1565037226-1684-1-git-send-email-jcrouse@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 07:58:19AM -0400, Ben Boeckel wrote:
-> On Wed, Jul 31, 2019 at 18:07:39 +0300, Kirill A. Shutemov wrote:
-> > From: Alison Schofield <alison.schofield@intel.com>
-> > +/* Make sure arguments are correct for the TYPE of key requested */
-> > +static int mktme_check_options(u32 *payload, unsigned long token_mask,
-> > +			       enum mktme_type type, enum mktme_alg alg)
-> > +{
-> > +	if (!token_mask)
-> > +		return -EINVAL;
-> > +
-> > +	switch (type) {
-> > +	case MKTME_TYPE_CPU:
-> > +		if (test_bit(OPT_ALGORITHM, &token_mask))
-> > +			*payload |= (1 << alg) << 8;
-> > +		else
-> > +			return -EINVAL;
-> > +
-> > +		*payload |= MKTME_KEYID_SET_KEY_RANDOM;
-> > +		break;
-> > +
-> > +	case MKTME_TYPE_NO_ENCRYPT:
-		if (test_bit(OPT_ALGORITHM, &token_mask))
-			return -EINVAL;
-> > +		*payload |= MKTME_KEYID_NO_ENCRYPT;
-> > +		break;
-> 
-> The documentation states that for `type=no-encrypt`, algorithm must not
-> be specified at all. Where is that checked?
-> 
-> --Ben
-It's not currently checked, but should be. 
-I'll add it as shown above.
-Thanks for the review,
-Alison
+The macro to generate a Bus Controller Manager (BCM) TCS command is used
+by the interconnect driver but might also be interesting to other
+drivers that need to construct TCS commands for sub processors so move
+it out of the sdm845 specific file and into the header.
+
+Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+---
+
+Changes in v2:
+- Replace a similar BCS_TCS_CMD macro in clk-rpmh.c with the generic one
+
+ drivers/clk/qcom/clk-rpmh.c        | 16 +++-------------
+ drivers/interconnect/qcom/sdm845.c | 19 +------------------
+ include/soc/qcom/tcs.h             | 21 ++++++++++++++++++++-
+ 3 files changed, 24 insertions(+), 32 deletions(-)
+
+diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
+index c3fd632..a32bfae 100644
+--- a/drivers/clk/qcom/clk-rpmh.c
++++ b/drivers/clk/qcom/clk-rpmh.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (c) 2018, The Linux Foundation. All rights reserved.
++ * Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+  */
+ 
+ #include <linux/clk-provider.h>
+@@ -12,23 +12,13 @@
+ #include <linux/platform_device.h>
+ #include <soc/qcom/cmd-db.h>
+ #include <soc/qcom/rpmh.h>
++#include <soc/qcom/tcs.h>
+ 
+ #include <dt-bindings/clock/qcom,rpmh.h>
+ 
+ #define CLK_RPMH_ARC_EN_OFFSET		0
+ #define CLK_RPMH_VRM_EN_OFFSET		4
+ 
+-#define BCM_TCS_CMD_COMMIT_MASK		0x40000000
+-#define BCM_TCS_CMD_VALID_SHIFT		29
+-#define BCM_TCS_CMD_VOTE_MASK		0x3fff
+-#define BCM_TCS_CMD_VOTE_SHIFT		0
+-
+-#define BCM_TCS_CMD(valid, vote)				\
+-	(BCM_TCS_CMD_COMMIT_MASK |				\
+-	((valid) << BCM_TCS_CMD_VALID_SHIFT) |			\
+-	((vote & BCM_TCS_CMD_VOTE_MASK)				\
+-	<< BCM_TCS_CMD_VOTE_SHIFT))
+-
+ /**
+  * struct bcm_db - Auxiliary data pertaining to each Bus Clock Manager(BCM)
+  * @unit: divisor used to convert Hz value to an RPMh msg
+@@ -269,7 +259,7 @@ static int clk_rpmh_bcm_send_cmd(struct clk_rpmh *c, bool enable)
+ 	}
+ 
+ 	cmd.addr = c->res_addr;
+-	cmd.data = BCM_TCS_CMD(enable, cmd_state);
++	cmd.data = BCM_TCS_CMD(1, enable, 0, cmd_state);
+ 
+ 	ret = rpmh_write_async(c->dev, RPMH_ACTIVE_ONLY_STATE, &cmd, 1);
+ 	if (ret) {
+diff --git a/drivers/interconnect/qcom/sdm845.c b/drivers/interconnect/qcom/sdm845.c
+index 4915b78..2181170 100644
+--- a/drivers/interconnect/qcom/sdm845.c
++++ b/drivers/interconnect/qcom/sdm845.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (c) 2018, The Linux Foundation. All rights reserved.
++ * Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+  *
+  */
+ 
+@@ -20,23 +20,6 @@
+ #include <soc/qcom/rpmh.h>
+ #include <soc/qcom/tcs.h>
+ 
+-#define BCM_TCS_CMD_COMMIT_SHFT		30
+-#define BCM_TCS_CMD_COMMIT_MASK		0x40000000
+-#define BCM_TCS_CMD_VALID_SHFT		29
+-#define BCM_TCS_CMD_VALID_MASK		0x20000000
+-#define BCM_TCS_CMD_VOTE_X_SHFT		14
+-#define BCM_TCS_CMD_VOTE_MASK		0x3fff
+-#define BCM_TCS_CMD_VOTE_Y_SHFT		0
+-#define BCM_TCS_CMD_VOTE_Y_MASK		0xfffc000
+-
+-#define BCM_TCS_CMD(commit, valid, vote_x, vote_y)		\
+-	(((commit) << BCM_TCS_CMD_COMMIT_SHFT) |		\
+-	((valid) << BCM_TCS_CMD_VALID_SHFT) |			\
+-	((cpu_to_le32(vote_x) &					\
+-	BCM_TCS_CMD_VOTE_MASK) << BCM_TCS_CMD_VOTE_X_SHFT) |	\
+-	((cpu_to_le32(vote_y) &					\
+-	BCM_TCS_CMD_VOTE_MASK) << BCM_TCS_CMD_VOTE_Y_SHFT))
+-
+ #define to_qcom_provider(_provider) \
+ 	container_of(_provider, struct qcom_icc_provider, provider)
+ 
+diff --git a/include/soc/qcom/tcs.h b/include/soc/qcom/tcs.h
+index 262876a..dbf3c88 100644
+--- a/include/soc/qcom/tcs.h
++++ b/include/soc/qcom/tcs.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
++ * Copyright (c) 2016-2019, The Linux Foundation. All rights reserved.
+  */
+ 
+ #ifndef __SOC_QCOM_TCS_H__
+@@ -53,4 +53,23 @@ struct tcs_request {
+ 	struct tcs_cmd *cmds;
+ };
+ 
++#define BCM_TCS_CMD_COMMIT_SHFT		30
++#define BCM_TCS_CMD_COMMIT_MASK		0x40000000
++#define BCM_TCS_CMD_VALID_SHFT		29
++#define BCM_TCS_CMD_VALID_MASK		0x20000000
++#define BCM_TCS_CMD_VOTE_X_SHFT		14
++#define BCM_TCS_CMD_VOTE_MASK		0x3fff
++#define BCM_TCS_CMD_VOTE_Y_SHFT		0
++#define BCM_TCS_CMD_VOTE_Y_MASK		0xfffc000
++
++/* Construct a Bus Clock Manager (BCM) specific TCS command */
++#define BCM_TCS_CMD(commit, valid, vote_x, vote_y)		\
++	(((commit) << BCM_TCS_CMD_COMMIT_SHFT) |		\
++	((valid) << BCM_TCS_CMD_VALID_SHFT) |			\
++	((cpu_to_le32(vote_x) &					\
++	BCM_TCS_CMD_VOTE_MASK) << BCM_TCS_CMD_VOTE_X_SHFT) |	\
++	((cpu_to_le32(vote_y) &					\
++	BCM_TCS_CMD_VOTE_MASK) << BCM_TCS_CMD_VOTE_Y_SHFT))
++
++
+ #endif /* __SOC_QCOM_TCS_H__ */
+-- 
+2.7.4
 
