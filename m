@@ -2,129 +2,94 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 819EBC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0D1C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 543692182B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:48:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="njb4pAnN"
+	by mail.kernel.org (Postfix) with ESMTP id 2AAB62086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:48:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbfHEJsi (ORCPT
+        id S1728136AbfHEJst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 05:48:38 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:47194 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728015AbfHEJsg (ORCPT
+        Mon, 5 Aug 2019 05:48:49 -0400
+Received: from paleale.coelho.fi ([176.9.41.70]:34084 "EHLO
+        farmhouse.coelho.fi" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727259AbfHEJst (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 05:48:36 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 071782F9;
-        Mon,  5 Aug 2019 11:48:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1564998514;
-        bh=Hlh6gN/t4xFizjbxHfFQzVLy6XLN3G3JoWMd+k4cq+w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=njb4pAnNHQunR991gcRzW/2IP86RN3qunFwrTDBtWjtmCMef9nA6OU6nVetreRI1n
-         QIH94hCpAjye0HhE76vTyRnB0VUDhLkJGvi2wjx53YDM6xUJ0/L3Yo2DdP10d/mvyA
-         fXASI8aA+Balq23VeA4qYdIQxtddCn/45ZRba3Qc=
-Date:   Mon, 5 Aug 2019 12:48:32 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>
-Subject: Re: [PATCH/RFC 07/12] drm: rcar-du: lvds: Add support for dual link
- panels
-Message-ID: <20190805094832.GC29747@pendragon.ideasonboard.com>
-References: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1564731249-22671-8-git-send-email-fabrizio.castro@bp.renesas.com>
- <20190802082020.GH5008@pendragon.ideasonboard.com>
- <TY1PR01MB1770CA2012398B421E609D54C0DA0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+        Mon, 5 Aug 2019 05:48:49 -0400
+Received: from [91.156.6.193] (helo=redipa)
+        by farmhouse.coelho.fi with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.92)
+        (envelope-from <luca@coelho.fi>)
+        id 1huZbg-0003Tn-A1; Mon, 05 Aug 2019 12:48:44 +0300
+Message-ID: <38635c1b10018859457787ecff4f92a3ceec34a4.camel@coelho.fi>
+From:   Luca Coelho <luca@coelho.fi>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     dor.shaish@intel.com, Josh Boyer <jwboyer@kernel.org>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 05 Aug 2019 12:48:43 +0300
+In-Reply-To: <s5hmuh7xrqy.wl-tiwai@suse.de>
+References: <s5hr26m9gvc.wl-tiwai@suse.de>
+         <280dad08ba9864755c3c45ed3ce26d602fe18a49.camel@intel.com>
+         <s5ho91pzyml.wl-tiwai@suse.de> <s5hwogcxwt4.wl-tiwai@suse.de>
+         <b225d043d8581e0fec68cb63f7433161868293f3.camel@coelho.fi>
+         <s5hmuh7xrqy.wl-tiwai@suse.de>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <TY1PR01MB1770CA2012398B421E609D54C0DA0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+Subject: Re: Regression with the latest iwlwifi-9260-*-46.ucode
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fabrizio,
-
-On Mon, Aug 05, 2019 at 09:12:34AM +0000, Fabrizio Castro wrote:
-> > From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > Sent: 02 August 2019 09:20
-> > Subject: Re: [PATCH/RFC 07/12] drm: rcar-du: lvds: Add support for dual link panels
+On Sun, 2019-07-21 at 18:43 +0200, Takashi Iwai wrote:
+> On Sat, 20 Jul 2019 22:49:33 +0200,
+> Luca Coelho wrote:
+> > On Sat, 2019-07-20 at 22:42 +0200, Takashi Iwai wrote:
+> > > On Fri, 19 Jul 2019 20:07:46 +0200,
+> > > Takashi Iwai wrote:
+> > > > On Fri, 19 Jul 2019 18:36:53 +0200,
+> > > > Luciano Coelho wrote:
+> > > > > Adding Dor.
+> > > > > 
+> > > > > Hi Takashi,
+> > > > > 
+> > > > > Do you have full logs of the crash? We can't see much from the log
+> > > > > snippet pasted in the bug report.
+> > > > 
+> > > > OK, I'll ask reporters.  If you have a SUSE/openSUSE bugzilla account,
+> > > > feel free to join there.
+> > > 
+> > > FYI, the dmesg's have been uploaded to the same bugzilla entry:
+> > >   https://bugzilla.opensuse.org/show_bug.cgi?id=1142128
+> > > 
 > > 
-> > Hi Fabrizio,
+> > Thanks!
 > > 
-> > Thank you for the patch.
+> > BTW, I pushed new firmwares to our firmware tree in git.kernel.org
+> > today.  This is the patch:
 > > 
-> > On Fri, Aug 02, 2019 at 08:34:04AM +0100, Fabrizio Castro wrote:
-> > > If the display comes with two ports, assume it supports dual
-> > > link.
-> > >
-> > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > > ---
-> > >  drivers/gpu/drm/rcar-du/rcar_lvds.c | 3 +++
-> > >  1 file changed, 3 insertions(+)
-> > >
-> > > diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> > > index 2d54ae5..97c51c2 100644
-> > > --- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> > > +++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> > > @@ -751,6 +751,9 @@ static int rcar_lvds_parse_dt(struct rcar_lvds *lvds)
-> > >  			ret = -EPROBE_DEFER;
-> > >  			goto done;
-> > >  		}
-> > > +		if (lvds->info->quirks & RCAR_LVDS_QUIRK_DUAL_LINK)
-> > > +			lvds->dual_link = of_graph_get_endpoint_count(remote)
-> > > +					== 2;
+> > https://git.kernel.org/pub/scm/linux/kernel/git/iwlwifi/linux-firmware.git/commit/?id=b5f09bb4f816abace0227d0f4e749859364cef6b
 > > 
-> > This is a bit of a hack, as I think the information should be queried
-> > from the panel, like we do for bridges. I'd say we can live with this
-> > for now, but as the data swap flag should come from the panel as well,
-> > we will need infrastructure for that, and we can as well through the
-> > dual link flag there at the same time.
+> > It would be great if you can try it out and let us know whether the problem is gone or not.
 > 
-> I totally agree, this is a nasty hack, my series is missing the infrastructure
-> for describing this information
+> I created a test package and asked for testing.
+> The test result seems negative, showing the same error,
+> unfortunately.
 > 
-> > I think we should use the drm_bridge_timings structure for this purpose,
-> > as it would make life more difficult for users of drm_bridge and
-> > drm_panel to have two different structures (especially when wrapping a
-> > drm_panel with drm_panel_bridge_add()). The structure could be renamed
-> > if desired.
-> 
-> I am not too sure using drm_bridge_timings for panels would make everybody
-> happy? Is there any alternative? Perhaps this calls for a new struct we could
-> embed in both drm_bridge_timings and some drm_panel_<whatever> data
-> structure?
+> The dmesg was uploaded on the bugzilla entry.
 
-I think we could simply rename the structure, all its fields apply to
-panels too.
+Thanks Takashi! We will look into them as soon as possible (sorry for
+the late reply, I just came back from vacations).
 
-> > >  	}
-> > >
-> > >  	if (lvds->dual_link) {
+--
+Cheers,
+Luca.
 
--- 
-Regards,
-
-Laurent Pinchart
