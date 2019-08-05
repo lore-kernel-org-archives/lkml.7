@@ -2,143 +2,121 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9C5C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F111BC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 972CB217D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:10:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C319120657
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:11:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qw8ADuDw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbfHEHKf (ORCPT
+        id S1727504AbfHEHLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 03:10:35 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42682 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfHEHKf (ORCPT
+        Mon, 5 Aug 2019 03:11:49 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:45021 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726394AbfHEHLt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 03:10:35 -0400
-Received: by mail-wr1-f65.google.com with SMTP id x1so33329437wrr.9
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 00:10:33 -0700 (PDT)
+        Mon, 5 Aug 2019 03:11:49 -0400
+Received: by mail-ua1-f66.google.com with SMTP id 8so31882725uaz.11
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 00:11:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TRCA+VNevmcLQM2/K8vG4I9XTdWP65F4N/hZ4l1EKgE=;
+        b=Qw8ADuDw+szT7KFs/w6R7WdfILlwj/xRfSUW8JxxEsW7IPxwojjuX6lcUFrF8owiz3
+         XM9+IGWsMDzqLuBfa0l6RtNCogoz4m5wGzYf2OBLW9ZBGzKDET04HT3G+Oz2lhLsT1Tu
+         hpP3QU2vezl20fUSmNxKGtuxjMCoxz4jXEJwESIrS1FTYevJKgS85SQh6ZHx082g443K
+         vQLVPrIqEdocdp1e3o8Mj33nknXodLdNb6gN3bTp/19haMG5K1frJrqKH/0P0mAacBnQ
+         4HLc6gKNTQ7LoIUIOGvp9LuCMfe5gtqtLe5df8d4Ct+xKoJ5GnM5upn/avjh9AFD8Hr/
+         bM0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZevUiv8uwSdDDjAx9KzB+mkgl2A2MlBAMqJYEcYxJb4=;
-        b=VNkFjk2VA4yKzW2hyeg0goQYjSulpLwjv34xgLelHkORELoJMe0IcUALiS2QYAJajA
-         rhZhDuKTuBYv48wzkQ0tlXrNTwzQyul0i59ev5o38kKnVJXUCGNHr1V/J9DO/Akpu9b6
-         q3GqlS6vCVe7NHJfjf8gD0yJD3v3PUxTqDVvntUqMGQZAsmxGO3CgLUy3a/MDxrlmUyf
-         HOS+nNGcs5HZ7Qt47lSDpFo/MWW9Ilc6JaKzHbZn3uAJDb7N+ilpzrzbfJ7G+CGC9jgY
-         EmaaR4Hl0Qqw9f2sF0wKE5hR+K932FDFDudZIluk1d1jwJAWKPuoau/E41zdbgUOyg04
-         XNng==
-X-Gm-Message-State: APjAAAWp0tyGGXQBh39CqyNkNrEh3DaW4qcWzy5qVBkzmuFOx61x5emN
-        j6iMwuN0wWUIwuLvTCtyJwNVTSmtKs4=
-X-Google-Smtp-Source: APXvYqz4JZD0IeqwiFL5mBQ4rS9FPy4QrJF8r1CcIFwbr3gterh7TeHwGfJ0MlgqppwBX5w6DpgFdg==
-X-Received: by 2002:a05:6000:42:: with SMTP id k2mr38385884wrx.80.1564989033079;
-        Mon, 05 Aug 2019 00:10:33 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:4013:e920:9388:c3ff? ([2001:b07:6468:f312:4013:e920:9388:c3ff])
-        by smtp.gmail.com with ESMTPSA id t185sm74525739wma.11.2019.08.05.00.10.31
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 05 Aug 2019 00:10:32 -0700 (PDT)
-Subject: Re: [RFC PATCH v2 07/19] RISC-V: KVM: Implement
- KVM_GET_ONE_REG/KVM_SET_ONE_REG ioctls
-To:     Anup Patel <anup@brainfault.org>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Radim K <rkrcmar@redhat.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190802074620.115029-1-anup.patel@wdc.com>
- <20190802074620.115029-8-anup.patel@wdc.com>
- <03f60f3a-bb50-9210-8352-da16cca322b9@redhat.com>
- <CAAhSdy3hdWfUCUEK-idoTzgB2hKeAd3FzsHEH1DK_BTC_KGdJw@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <eb964565-10e1-bd44-c37c-774bf2f58049@redhat.com>
-Date:   Mon, 5 Aug 2019 09:10:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TRCA+VNevmcLQM2/K8vG4I9XTdWP65F4N/hZ4l1EKgE=;
+        b=ruFqX7e082Pe3F65xPj0jRk4yU047ajiKXiEZMCcQ7rMh788e0gVhvqwPZrGBxXzZ4
+         oKd/Pr4dIFWRJjN1BxPwEd+eqT2zgPiCwpuCc/TunjnaqfCPUc6hcZrkQtX0V3Gu38yK
+         PMjJ4qoyRvsSep7Ogneoh9aEOEbm485wAdRf3FKM/iqkxCHMbpjRNHtQaxa7fEeMVh/e
+         8SKN7AmjzT57kZCZyzpSo+2LhBMvKELpoCg4Zk4BT78UYBXjFgusPQ0vRgzRSu5xzh15
+         mIOLOpMRpvHSGuar930hcvAywkPiDKppzV8TpYd9dLU0+vDYtRBTygtNtG6wkLHnW5YD
+         fg9Q==
+X-Gm-Message-State: APjAAAWw18zfqbhTZuLJKK44az2LocVv90uh17+xvU5KhstTRzfkderg
+        +xbfiRuWd5qIw6jRaH1ApJe1zAIqTylNg7gQiXryCg==
+X-Google-Smtp-Source: APXvYqx7sA1bvhNDDnVVuZsul9xeSiLyFwQRgd7T0ZCozpkszH3MzAh9VrVqHghcO8Qvl2rz76CBvc/sazCp9o0MeLM=
+X-Received: by 2002:a9f:230c:: with SMTP id 12mr23129301uae.85.1564989108098;
+ Mon, 05 Aug 2019 00:11:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAAhSdy3hdWfUCUEK-idoTzgB2hKeAd3FzsHEH1DK_BTC_KGdJw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190801142834.329-1-ttayar@habana.ai> <20190801142834.329-2-ttayar@habana.ai>
+In-Reply-To: <20190801142834.329-2-ttayar@habana.ai>
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+Date:   Mon, 5 Aug 2019 10:11:22 +0300
+Message-ID: <CAFCwf138nFfGEJmhW_rxXS-60LruyPhm+XNVX5ZW4LuyxkT5Ww@mail.gmail.com>
+Subject: Re: [PATCH 2/2] habanalabs: Add descriptive name to PSOC app status register
+To:     Tomer Tayar <ttayar@habana.ai>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/08/19 08:55, Anup Patel wrote:
-> On Fri, Aug 2, 2019 at 2:33 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
->>
->> On 02/08/19 09:47, Anup Patel wrote:
->>> +     if (reg_num == KVM_REG_RISCV_CSR_REG(sip))
->>> +             kvm_riscv_vcpu_flush_interrupts(vcpu, false);
->>
->> Not updating the vsip CSR here can cause an interrupt to be lost, if the
->> next call to kvm_riscv_vcpu_flush_interrupts finds a zero mask.
-> 
-> Thanks for catching this issue. I will address it in v3.
-> 
-> If we think more on similar lines then we also need to handle the case
-> where Guest VCPU had pending interrupts and we suddenly stopped it
-> for Guest migration. In this case, we would eventually use SET_ONE_REG
-> ioctl on destination Host which should set vsip_shadow instead of vsip so
-> that we force update HW after resuming Guest VCPU on destination host.
+On Thu, Aug 1, 2019 at 5:28 PM Tomer Tayar <ttayar@habana.ai> wrote:
+>
+> Add a meaningful name to the general PSOC application status register
+> which better describes its usage in keeping the HW state.
+>
+> Signed-off-by: Tomer Tayar <ttayar@habana.ai>
+> ---
+>  drivers/misc/habanalabs/goya/goya.c                 | 4 ++--
+>  drivers/misc/habanalabs/include/goya/goya_reg_map.h | 2 ++
+>  2 files changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
+> index 9699e7d4903e..6acda363983f 100644
+> --- a/drivers/misc/habanalabs/goya/goya.c
+> +++ b/drivers/misc/habanalabs/goya/goya.c
+> @@ -2468,7 +2468,7 @@ static int goya_hw_init(struct hl_device *hdev)
+>          * we need to reset the chip before doing H/W init. This register is
+>          * cleared by the H/W upon H/W reset
+>          */
+> -       WREG32(mmPSOC_GLOBAL_CONF_APP_STATUS, HL_DEVICE_HW_STATE_DIRTY);
+> +       WREG32(mmHW_STATE, HL_DEVICE_HW_STATE_DIRTY);
+>
+>         rc = goya_init_cpu(hdev, GOYA_CPU_TIMEOUT_USEC);
+>         if (rc) {
+> @@ -5023,7 +5023,7 @@ static int goya_get_eeprom_data(struct hl_device *hdev, void *data,
+>
+>  static enum hl_device_hw_state goya_get_hw_state(struct hl_device *hdev)
+>  {
+> -       return RREG32(mmPSOC_GLOBAL_CONF_APP_STATUS);
+> +       return RREG32(mmHW_STATE);
+>  }
+>
+>  static const struct hl_asic_funcs goya_funcs = {
+> diff --git a/drivers/misc/habanalabs/include/goya/goya_reg_map.h b/drivers/misc/habanalabs/include/goya/goya_reg_map.h
+> index 554034f47317..cd89723c7f61 100644
+> --- a/drivers/misc/habanalabs/include/goya/goya_reg_map.h
+> +++ b/drivers/misc/habanalabs/include/goya/goya_reg_map.h
+> @@ -29,4 +29,6 @@
+>  #define mmUBOOT_OFFSET         mmPSOC_GLOBAL_CONF_SCRATCHPAD_30
+>  #define mmBTL_ID               mmPSOC_GLOBAL_CONF_SCRATCHPAD_31
+>
+> +#define mmHW_STATE             mmPSOC_GLOBAL_CONF_APP_STATUS
+> +
+>  #endif /* GOYA_REG_MAP_H_ */
+> --
+> 2.17.1
+>
 
-I think it's simpler than that.
-
-vcpu->vsip_shadow is just the current value of CSR_VSIP so that you do
-not need to update it unconditionally on every vmentry.  That is,
-kvm_vcpu_arch_load should do
-
-	csr_write(CSR_VSIP, vcpu->arch.guest_csr.vsip);
-	vcpu->vsip_shadow = vcpu->arch.guest_csr.vsip;
-
-while every other write can go through kvm_riscv_update_vsip.  But
-vsip_shadow is completely disconnected from SET_ONE_REG; SET_ONE_REG can
-just write vcpu->arch.guest_csr.vsip and clear irqs_pending_mask, the
-next entry will write CSR_VSIP and vsip_shadow if needed.
-
-In fact, instead of placing it in kvm_vcpu, vsip_shadow could be a
-percpu variable; on hardware_enable you write 0 to both vsip_shadow and
-CSR_VSIP, and then kvm_arch_vcpu_load does not have to touch CSR_VSIP at
-all (only kvm_riscv_vcpu_flush_interrupts).  I think this makes the
-purpose of vsip_shadow even clearer, so I highly suggest doing that.
-
->> You could add a new field vcpu->vsip_shadow that is updated every time
->> CSR_VSIP is written (including kvm_arch_vcpu_load) with a function like
->>
->> void kvm_riscv_update_vsip(struct kvm_vcpu *vcpu)
->> {
->>         if (vcpu->vsip_shadow != vcpu->arch.guest_csr.vsip) {
->>                 csr_write(CSR_VSIP, vcpu->arch.guest_csr.vsip);
->>                 vcpu->vsip_shadow = vcpu->arch.guest_csr.vsip;
->>         }
->> }
->>
->> And just call this unconditionally from kvm_vcpu_ioctl_run.  The cost is
->> just a memory load per VS-mode entry, it should hardly be measurable.
-> 
-> I think we can do this at start of kvm_riscv_vcpu_flush_interrupts() as well.
-
-Did you mean at the end?  (That is, after modifying
-vcpu->arch.guest_csr.vsip based on mask and val).  With the above switch
-to percpu, the only write of CSR_VSIP and vsip_shadow should be in
-kvm_riscv_vcpu_flush_interrupts, which in turn is only called from
-kvm_vcpu_ioctl_run.
-
+The two patches are:
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+Applied to -next.
 Thanks,
-
-Paolo
+Oded
