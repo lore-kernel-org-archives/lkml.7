@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC3C1C32751
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CAAAC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C55E2067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:13:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F7752075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:13:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010788;
-	bh=2IYgGqFG/OoL4MWQd8kAJD61tmA7dbMQV4lf9BIqyhQ=;
+	s=default; t=1565010792;
+	bh=aqKz37Eakt9EarZGFpv5j17tzyz1TZjvto7irZCRzVU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wx2gvo65/GdWGb5omO4bpSGiu1pYkWcknHzOKREZ4nEGFJ/s7ln3Cg8QKDXUBXyh/
-	 95eaoh5S8IiuqJHpXjSZyy4WWJx8rw18PP6BmAadOodQ7DhsddXdk50taqj3oY7A3a
-	 cFk7Bl56DyGR7QhKfw7l0jiQejY7Abpd36AAUDq4=
+	b=ixMhVeuLdNd/TJoTG+DubQOzt9CeO9JEEUplqH2PT7THAFCtF71NJlAoizsZ+YS7l
+	 bFKnU6roSUqf2Hl67biXCJdJvOMUNwsKJD/O5KuGVmpwqOO2dr0aTdeFnzZ2fBnJsF
+	 hoOYGbR/Y4Q23u+wtg1/bzAwhmN129RJ8kjaYMzw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730204AbfHENJf (ORCPT
+        id S1729916AbfHENNL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:09:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47944 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:13:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730183AbfHENJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:09:27 -0400
+        id S1729823AbfHENJk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:09:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A3C72067D;
-        Mon,  5 Aug 2019 13:09:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CD4820880;
+        Mon,  5 Aug 2019 13:09:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010566;
-        bh=2IYgGqFG/OoL4MWQd8kAJD61tmA7dbMQV4lf9BIqyhQ=;
+        s=default; t=1565010579;
+        bh=aqKz37Eakt9EarZGFpv5j17tzyz1TZjvto7irZCRzVU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g9W2Nx9ZWOtVktpM2fHMTOJIhUBMabUrNOuBec6IH8nHirP2jFy/rpEKbVDjTQKWp
-         3cigTtzEMzAIo+T9KBLIKMcrX9L3c0Su8ngKG71yQL/6augWH5cJiR3EU3sSY+sZ99
-         qs6eZkHm2yWe6W98GWCBSjNKuC64utYtVxj/W2Yw=
+        b=FConHP3y72y99yO3kvjJbCNEE/L58/tu0vM3ycZ1jipPnaWO7Ut6ZLgIKuPgmwwEh
+         YbAdCl6eHlNxMiW4qkE0EGXz1MEsKyhqDoJ2m4uzJNfOm3uQO7rH7sE3uLXyxr1SFI
+         8/3jSvvQ11uVDEe17G2dM85Wpw4CMQCK30dYdqR0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Helen Koike <helen.koike@collabora.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>,
+        stable@vger.kernel.org, Benjamin Poirier <bpoirier@suse.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 07/74] arm64: dts: rockchip: fix isp iommu clocks and power domain
-Date:   Mon,  5 Aug 2019 15:02:20 +0200
-Message-Id: <20190805124936.406725861@linuxfoundation.org>
+Subject: [PATCH 4.19 25/74] be2net: Signal that the device cannot transmit during reconfiguration
+Date:   Mon,  5 Aug 2019 15:02:38 +0200
+Message-Id: <20190805124937.794723659@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124935.819068648@linuxfoundation.org>
 References: <20190805124935.819068648@linuxfoundation.org>
@@ -61,61 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c432a29d3fc9ee928caeca2f5cf68b3aebfa6817 ]
+[ Upstream commit 7429c6c0d9cb086d8e79f0d2a48ae14851d2115e ]
 
-isp iommu requires wrapper variants of the clocks.
-noc variants are always on and using the wrapper variants will activate
-{A,H}CLK_ISP{0,1} due to the hierarchy.
+While changing the number of interrupt channels, be2net stops adapter
+operation (including netif_tx_disable()) but it doesn't signal that it
+cannot transmit. This may lead dev_watchdog() to falsely trigger during
+that time.
 
-Tested using the pending isp patch set (which is not upstream
-yet). Without this patch, streaming from the isp stalls.
+Add the missing call to netif_carrier_off(), following the pattern used in
+many other drivers. netif_carrier_on() is already taken care of in
+be_open().
 
-Also add the respective power domain and remove the "disabled" status.
-
-Refer:
- RK3399 TRM v1.4 Fig. 2-4 RK3399 Clock Architecture Diagram
- RK3399 TRM v1.4 Fig. 8-1 RK3399 Power Domain Partition
-
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
-Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Benjamin Poirier <bpoirier@suse.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/emulex/benet/be_main.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index df7e62d9a6708..cea44a7c7cf99 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1643,11 +1643,11 @@
- 		reg = <0x0 0xff914000 0x0 0x100>, <0x0 0xff915000 0x0 0x100>;
- 		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
- 		interrupt-names = "isp0_mmu";
--		clocks = <&cru ACLK_ISP0_NOC>, <&cru HCLK_ISP0_NOC>;
-+		clocks = <&cru ACLK_ISP0_WRAPPER>, <&cru HCLK_ISP0_WRAPPER>;
- 		clock-names = "aclk", "iface";
- 		#iommu-cells = <0>;
-+		power-domains = <&power RK3399_PD_ISP0>;
- 		rockchip,disable-mmu-reset;
--		status = "disabled";
- 	};
+diff --git a/drivers/net/ethernet/emulex/benet/be_main.c b/drivers/net/ethernet/emulex/benet/be_main.c
+index bff74752cef16..3fe6a28027fe1 100644
+--- a/drivers/net/ethernet/emulex/benet/be_main.c
++++ b/drivers/net/ethernet/emulex/benet/be_main.c
+@@ -4700,8 +4700,12 @@ int be_update_queues(struct be_adapter *adapter)
+ 	struct net_device *netdev = adapter->netdev;
+ 	int status;
  
- 	isp1_mmu: iommu@ff924000 {
-@@ -1655,11 +1655,11 @@
- 		reg = <0x0 0xff924000 0x0 0x100>, <0x0 0xff925000 0x0 0x100>;
- 		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH 0>;
- 		interrupt-names = "isp1_mmu";
--		clocks = <&cru ACLK_ISP1_NOC>, <&cru HCLK_ISP1_NOC>;
-+		clocks = <&cru ACLK_ISP1_WRAPPER>, <&cru HCLK_ISP1_WRAPPER>;
- 		clock-names = "aclk", "iface";
- 		#iommu-cells = <0>;
-+		power-domains = <&power RK3399_PD_ISP1>;
- 		rockchip,disable-mmu-reset;
--		status = "disabled";
- 	};
+-	if (netif_running(netdev))
++	if (netif_running(netdev)) {
++		/* device cannot transmit now, avoid dev_watchdog timeouts */
++		netif_carrier_off(netdev);
++
+ 		be_close(netdev);
++	}
  
- 	hdmi_sound: hdmi-sound {
+ 	be_cancel_worker(adapter);
+ 
 -- 
 2.20.1
 
