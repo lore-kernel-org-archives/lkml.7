@@ -2,180 +2,160 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9AD7C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 21:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 342ECC32751
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 21:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B158C20C01
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 21:03:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qc/u1ZJI"
+	by mail.kernel.org (Postfix) with ESMTP id 0AB6820C01
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 21:05:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730775AbfHEVDK (ORCPT
+        id S1730715AbfHEVFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 17:03:10 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37531 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730099AbfHEVDJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 17:03:09 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n9so60664610wrr.4;
-        Mon, 05 Aug 2019 14:03:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wD9pRuLXxIn2k87gFSwjMexyP/R3+2bHVXEqdFsqtg0=;
-        b=qc/u1ZJI/gLWI5msj09zALj0xWOCirj/CMHgRj9yjtLkdpmxv/APbxHIKFD1Maorwx
-         qJLd3IvV2cOFBcUJQsvjWn1y0za5UTPBRod3tGMI2QTOSQb29IEX8GtuY1EihWiIduib
-         8CvsrZMl0ONE+5JKTjnQq6dWwadFMnMZnzhSIpvKC8VhCjDx+FRP9cx0BkS40Ym7OGpS
-         XbLSBgrNrBjFjWU0A+M3GvSq+IHi8++L+uKu/QP5EsJRDPPXPivp4a6kcDzuMiyUJ2m2
-         ujR2nqSgKq3aCei8ukc464h8gVE61dsxwtzHYTX8dho5OID/q9Q7RdUjXj2LIqW8voCG
-         3/aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wD9pRuLXxIn2k87gFSwjMexyP/R3+2bHVXEqdFsqtg0=;
-        b=tNWBJcjDJqqKsXUv2N4pwlxNqu81ftqIgAuQxlZ+JbmdbKwHL5yGnHoFkPzOHIGUOv
-         7HwfaTAXl4hfqUPn1ViURL6y9J9ITujzIJqoI1a1ImjTWJAfmQhdCniEAbadQyfa57o0
-         T3W0Rp25OWRlU8NX5DY7Q0miyNDjZdbKp8NRs8pgJ+aKiDCud15GrqUdE6s+eWv6EkCB
-         BlM3hq0pyjARPudZySw2pi4uVqvC4hH+lNIci3MiGf+094RmUbcf7AkBqmjL8iNvVbMC
-         28QD9KBpLgh0Xt3S3I+CcbkVAFUTIhcVPoC++jPVzo3KKuIMiTIfuT2VYaV97hssKsES
-         Zdjw==
-X-Gm-Message-State: APjAAAUYHskgnGmOp9S0FruRHONHj/OyIEC1kg2sIM+5ckg3Im2U1D/w
-        Gid2fkKkl+J81Y5vLa03LW0=
-X-Google-Smtp-Source: APXvYqxgU7vbAbvUbr3mc2vHRvtfI01ZiTZbvl85ATELi73bOeOQQnx4udm+hLOdzrNCYrHzveXe2w==
-X-Received: by 2002:adf:dcc6:: with SMTP id x6mr45584wrm.322.1565038986135;
-        Mon, 05 Aug 2019 14:03:06 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f05:8600:d16c:62d1:98de:d1e5? (p200300EA8F058600D16C62D198DED1E5.dip0.t-ipconnect.de. [2003:ea:8f05:8600:d16c:62d1:98de:d1e5])
-        by smtp.googlemail.com with ESMTPSA id a84sm111051583wmf.29.2019.08.05.14.03.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 05 Aug 2019 14:03:05 -0700 (PDT)
-Subject: Re: [PATCH 03/16] net: phy: adin: add support for interrupts
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com,
-        f.fainelli@gmail.com, andrew@lunn.ch
-References: <20190805165453.3989-1-alexandru.ardelean@analog.com>
- <20190805165453.3989-4-alexandru.ardelean@analog.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <4f539572-4c59-0450-fcd4-0bbc3eece9c8@gmail.com>
-Date:   Mon, 5 Aug 2019 23:02:59 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 5 Aug 2019 17:05:07 -0400
+Received: from mga04.intel.com ([192.55.52.120]:6081 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730454AbfHEVFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 17:05:06 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 14:05:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,350,1559545200"; 
+   d="scan'208";a="181784680"
+Received: from unknown (HELO localhost) ([10.252.52.83])
+  by FMSMGA003.fm.intel.com with ESMTP; 05 Aug 2019 14:05:02 -0700
+Date:   Tue, 6 Aug 2019 00:05:01 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Doug Anderson <dianders@chromium.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "# 4.0+" <stable@vger.kernel.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Vadim Sukhomlinov <sukhomlinov@google.com>,
+        Arnd Bergmann <arnd@arndb.de>, Peter Huewe <peterhuewe@gmx.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org
+Subject: Re: [PATCH] tpm: Fix TPM 1.2 Shutdown sequence to prevent future TPM
+ operations
+Message-ID: <20190805210501.vjtmwgxjg334vtnc@linux.intel.com>
+References: <20190711162919.23813-1-dianders@chromium.org>
+ <20190711163915.GD25807@ziepe.ca>
+ <20190711170437.GA7544@kroah.com>
+ <20190711171726.GE25807@ziepe.ca>
+ <20190711172630.GA11371@kroah.com>
+ <CAD=FV=U0ue_4FyS7MO+iaKQ5gr0PhuLZaTV1adPY3ZtNhKTmHA@mail.gmail.com>
+ <20190712115025.GA8221@kroah.com>
+ <CAD=FV=UBOWHrEFQRhxsnK-PmVkFjcvnEruuy0sYHh0p-Qnk8pA@mail.gmail.com>
+ <20190712152734.GA13940@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20190805165453.3989-4-alexandru.ardelean@analog.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190712152734.GA13940@kroah.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05.08.2019 18:54, Alexandru Ardelean wrote:
-> This change adds support for enabling PHY interrupts that can be used by
-> the PHY framework to get signal for link/speed/auto-negotiation changes.
+On Fri, Jul 12, 2019 at 05:27:34PM +0200, Greg KH wrote:
+> On Fri, Jul 12, 2019 at 08:00:12AM -0700, Doug Anderson wrote:
+> > Hi,
+> > 
+> > On Fri, Jul 12, 2019 at 4:50 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Thu, Jul 11, 2019 at 10:28:01AM -0700, Doug Anderson wrote:
+> > > > Hi,
+> > > >
+> > > > On Thu, Jul 11, 2019 at 10:26 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > > >
+> > > > > On Thu, Jul 11, 2019 at 02:17:26PM -0300, Jason Gunthorpe wrote:
+> > > > > > On Thu, Jul 11, 2019 at 07:04:37PM +0200, Greg KH wrote:
+> > > > > > > On Thu, Jul 11, 2019 at 01:39:15PM -0300, Jason Gunthorpe wrote:
+> > > > > > > > On Thu, Jul 11, 2019 at 09:29:19AM -0700, Douglas Anderson wrote:
+> > > > > > > > > From: Vadim Sukhomlinov <sukhomlinov@google.com>
+> > > > > > > > >
+> > > > > > > > > commit db4d8cb9c9f2af71c4d087817160d866ed572cc9 upstream.
+> > > > > > > > >
+> > > > > > > > > TPM 2.0 Shutdown involve sending TPM2_Shutdown to TPM chip and disabling
+> > > > > > > > > future TPM operations. TPM 1.2 behavior was different, future TPM
+> > > > > > > > > operations weren't disabled, causing rare issues. This patch ensures
+> > > > > > > > > that future TPM operations are disabled.
+> > > > > > > > >
+> > > > > > > > > Fixes: d1bd4a792d39 ("tpm: Issue a TPM2_Shutdown for TPM2 devices.")
+> > > > > > > > > Cc: stable@vger.kernel.org
+> > > > > > > > > Signed-off-by: Vadim Sukhomlinov <sukhomlinov@google.com>
+> > > > > > > > > [dianders: resolved merge conflicts with mainline]
+> > > > > > > > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > > > > > > > > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > > > > > > > > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > > > > > > > > This is the backport of the patch referenced above to 4.19 as was done
+> > > > > > > > > in Chrome OS.  See <https://crrev.com/c/1495114> for details.  It
+> > > > > > > > > presumably applies to some older kernels.  NOTE that the problem
+> > > > > > > > > itself has existed for a long time, but continuing to backport this
+> > > > > > > > > exact solution to super old kernels is out of scope for me.  For those
+> > > > > > > > > truly interested feel free to reference the past discussion [1].
+> > > > > > > > >
+> > > > > > > > > Reason for backport: mainline has commit a3fbfae82b4c ("tpm: take TPM
+> > > > > > > > > chip power gating out of tpm_transmit()") and commit 719b7d81f204
+> > > > > > > > > ("tpm: introduce tpm_chip_start() and tpm_chip_stop()") and it didn't
+> > > > > > > > > seem like a good idea to backport 17 patches to avoid the conflict.
+> > > > > > > >
+> > > > > > > > Careful with this, you can't backport this to any kernels that don't
+> > > > > > > > have the sysfs ops locking changes or they will crash in sysfs code.
+> > > > > > >
+> > > > > > > And what commit added that?
+> > > > > >
+> > > > > > commit 2677ca98ae377517930c183248221f69f771c921
+> > > > > > Author: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > > > > > Date:   Sun Nov 4 11:38:27 2018 +0200
+> > > > > >
+> > > > > >     tpm: use tpm_try_get_ops() in tpm-sysfs.c.
+> > > > > >
+> > > > > >     Use tpm_try_get_ops() in tpm-sysfs.c so that we can consider moving
+> > > > > >     other decorations (locking, localities, power management for example)
+> > > > > >     inside it. This direction can be of course taken only after other call
+> > > > > >     sites for tpm_transmit() have been treated in the same way.
+> > > > > >
+> > > > > > The last sentence suggests there are other patches needed too though..
+> > > > >
+> > > > > So 5.1.  So does this original patch need to go into the 5.2 and 5.1
+> > > > > kernels?
+> > > >
+> > > > The patch ("Fix TPM 1.2 Shutdown sequence to prevent future TPM
+> > > > operations")?  It's already done.  It just got merge conflicts when
+> > > > going back to 4.19 which is why I sent the backport.
+> > >
+> > > But the sysfs comment means I should not apply this backport then?
+> > >
+> > > Totally confused by this long thread, sorry.
+> > >
+> > > What am I supposed to do for the stable trees here?
+> > 
+> > I think the answer is to drop my backport for now and Jarkko says
+> > he'll take a fresh look at it in 2 weeks when he's back from his
+> > leave.  Thus my understanding:
+> > 
+> > * On mainline: fixed
+> > 
+> > * On 5.2 / 5.1: you've already got this picked to stable.  Good
+> > 
+> > * On 4.14 / 4.19: Jarkko will look at in 2 weeks.
+> > 
+> > * On 4.9 and older: I'd propose skipping unless someone is known to
+> > need a solution here.
 > 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> ---
->  drivers/net/phy/adin.c | 44 ++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
+> Thanks, that makes sense now.
 > 
-> diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-> index c100a0dd95cd..b75c723bda79 100644
-> --- a/drivers/net/phy/adin.c
-> +++ b/drivers/net/phy/adin.c
-> @@ -14,6 +14,22 @@
->  #define PHY_ID_ADIN1200				0x0283bc20
->  #define PHY_ID_ADIN1300				0x0283bc30
->  
-> +#define ADIN1300_INT_MASK_REG			0x0018
-> +#define   ADIN1300_INT_MDIO_SYNC_EN		BIT(9)
-> +#define   ADIN1300_INT_ANEG_STAT_CHNG_EN	BIT(8)
-> +#define   ADIN1300_INT_ANEG_PAGE_RX_EN		BIT(6)
-> +#define   ADIN1300_INT_IDLE_ERR_CNT_EN		BIT(5)
-> +#define   ADIN1300_INT_MAC_FIFO_OU_EN		BIT(4)
-> +#define   ADIN1300_INT_RX_STAT_CHNG_EN		BIT(3)
-> +#define   ADIN1300_INT_LINK_STAT_CHNG_EN	BIT(2)
-> +#define   ADIN1300_INT_SPEED_CHNG_EN		BIT(1)
-> +#define   ADIN1300_INT_HW_IRQ_EN		BIT(0)
-> +#define ADIN1300_INT_MASK_EN	\
-> +	(ADIN1300_INT_ANEG_STAT_CHNG_EN | ADIN1300_INT_ANEG_PAGE_RX_EN | \
-> +	 ADIN1300_INT_LINK_STAT_CHNG_EN | ADIN1300_INT_SPEED_CHNG_EN | \
-> +	 ADIN1300_INT_HW_IRQ_EN)
-> +#define ADIN1300_INT_STATUS_REG			0x0019
-> +
->  static int adin_config_init(struct phy_device *phydev)
->  {
->  	int rc;
-> @@ -25,15 +41,40 @@ static int adin_config_init(struct phy_device *phydev)
->  	return 0;
->  }
->  
-> +static int adin_phy_ack_intr(struct phy_device *phydev)
-> +{
-> +	int ret;
-> +
-> +	/* Clear pending interrupts.  */
-> +	ret = phy_read(phydev, ADIN1300_INT_STATUS_REG);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static int adin_phy_config_intr(struct phy_device *phydev)
-> +{
-> +	if (phydev->interrupts == PHY_INTERRUPT_ENABLED)
-> +		return phy_set_bits(phydev, ADIN1300_INT_MASK_REG,
-> +				    ADIN1300_INT_MASK_EN);
-> +
-> +	return phy_clear_bits(phydev, ADIN1300_INT_MASK_REG,
-> +			      ADIN1300_INT_MASK_EN);
-> +}
-> +
->  static struct phy_driver adin_driver[] = {
->  	{
->  		.phy_id		= PHY_ID_ADIN1200,
->  		.name		= "ADIN1200",
->  		.phy_id_mask	= 0xfffffff0,
->  		.features	= PHY_BASIC_FEATURES,
-> +		.flags		= PHY_HAS_INTERRUPT,
+> greg k-h
 
-This flag doesn't exist any longer. This indicates that you
-develop against an older kernel version. Please develop
-against net-next. Check up-to-date drivers like the one
-for Realtek PHY's for hints.
+I have not forgotten this but might have to postpone the backport after
+Linux Plumbers. Just have lots of stuff in my queue ATM but right after
+the conference I have good slot to do the backports.
 
->  		.config_init	= adin_config_init,
->  		.config_aneg	= genphy_config_aneg,
->  		.read_status	= genphy_read_status,
-> +		.ack_interrupt	= adin_phy_ack_intr,
-> +		.config_intr	= adin_phy_config_intr,
->  		.resume		= genphy_resume,
->  		.suspend	= genphy_suspend,
->  	},
-> @@ -42,9 +83,12 @@ static struct phy_driver adin_driver[] = {
->  		.name		= "ADIN1300",
->  		.phy_id_mask	= 0xfffffff0,
->  		.features	= PHY_GBIT_FEATURES,
-> +		.flags		= PHY_HAS_INTERRUPT,
->  		.config_init	= adin_config_init,
->  		.config_aneg	= genphy_config_aneg,
->  		.read_status	= genphy_read_status,
-> +		.ack_interrupt	= adin_phy_ack_intr,
-> +		.config_intr	= adin_phy_config_intr,
->  		.resume		= genphy_resume,
->  		.suspend	= genphy_suspend,
->  	},
-> 
-
+/Jarkko
