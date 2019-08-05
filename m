@@ -2,75 +2,130 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBAAC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A18B1C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15BF620880
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79A3620880
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:35:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="eD6hF6pN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbfHEJfb (ORCPT
+        id S1728049AbfHEJft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 05:35:31 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:52935 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726880AbfHEJfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 05:35:30 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 462CL73Nknz9sDB;
-        Mon,  5 Aug 2019 19:35:27 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Christian Brauner <christian@brauner.io>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, santosh@fossix.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [GIT PULL] Please pull powerpc/linux.git powerpc-5.3-3 tag
-In-Reply-To: <CAADWXX-B=twNfqs=2hbp0UFpnhqmUDMFZA3tjXFEjDp2dAD_YA@mail.gmail.com>
-References: <87a7cpw3on.fsf@concordia.ellerman.id.au> <CAADWXX-B=twNfqs=2hbp0UFpnhqmUDMFZA3tjXFEjDp2dAD_YA@mail.gmail.com>
-Date:   Mon, 05 Aug 2019 19:35:25 +1000
-Message-ID: <877e7svtsy.fsf@concordia.ellerman.id.au>
+        Mon, 5 Aug 2019 05:35:49 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:46978 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbfHEJfs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 05:35:48 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id A559B2F9;
+        Mon,  5 Aug 2019 11:35:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1564997745;
+        bh=9lyHNth0BO3OFQvy53sY8ChramaGr6/aYpcQayRs7Wk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eD6hF6pNE4bGlluLrMGZh1kev4mdIMcD6210/F7TcCD0TUmHaq+x3qIKSNpNLjI9O
+         cnLNzSztiNtar/f+edH9FcfE2L3wsdjsgGvImAuR1LSyQQTdl0Gz3LscYddaQXoudC
+         YclyoiDWszwHtibWSIFQLKCqKqh7obs/JjZw3NfI=
+Date:   Mon, 5 Aug 2019 12:35:43 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>
+Subject: Re: [PATCH/RFC 02/12] dt-bindings: display: renesas: lvds: Document
+ renesas,swap-data
+Message-ID: <20190805093543.GB29747@pendragon.ideasonboard.com>
+References: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1564731249-22671-3-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20190802074428.GB5008@pendragon.ideasonboard.com>
+ <TY1PR01MB17706A4FF4C26CD4BDA1A5DAC0DA0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <TY1PR01MB17706A4FF4C26CD4BDA1A5DAC0DA0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
-> On Sun, Aug 4, 2019 at 4:49 AM Michael Ellerman <mpe@ellerman.id.au> wrote:
->>
->> Please pull some more powerpc fixes for 5.3:
->
-> Hmm. This was caught by the gmail spam-filter for some reason. I don't
-> see anything particularly different from your normal pull requests, so
-> don't ask me why.
->
-> The fact that you have no email authentication (dkim/spf/whatever) for
-> your email address tends to make gmail more suspicious of emails, so
-> it's probably then some random other pattern that just happened to
-> trigger it.
->
-> I do check my spam fairly religiously, so it's not like it's usually a
-> problem - and I obviously marked it as ham to hopefully teach gmail
-> the error of its ways. So this is just a heads up.
+Hi Fabrizio,
 
-Thanks.
+On Mon, Aug 05, 2019 at 08:59:51AM +0000, Fabrizio Castro wrote:
+> > From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > Sent: 02 August 2019 08:44
+> > Subject: Re: [PATCH/RFC 02/12] dt-bindings: display: renesas: lvds: Document renesas,swap-data
+> > 
+> > Hi Fabrizio,
+> > 
+> > Thank you for the patch.
+> > 
+> > On Fri, Aug 02, 2019 at 08:33:59AM +0100, Fabrizio Castro wrote:
+> > > R-Car D3, R-Car E3, and RZ/G2E support dual-link mode.
+> > > In such a mode, the first LVDS encoder emits even data, and the
+> > > second LVDS encoder emits odd data. This patch documents property
+> > > renesas,swap-data, used to swap even and odd data around.
+> > >
+> > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt | 5 +++++
+> > >  1 file changed, 5 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+> > b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+> > > index dece79e..8980179 100644
+> > > --- a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+> > > +++ b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+> > > @@ -52,6 +52,11 @@ Optional properties:
+> > >    mandatory for the first LVDS encoder on R-Car D3, R-Car E3, and RZ/G2E SoCs,
+> > >    and shall point to the second encoder to be used as a companion in dual-link
+> > >    mode. It shall not be set for any other LVDS encoder.
+> > > +- renesas,swap-data : when in dual-link mode, the first LVDS encoder normally
+> > > +  emits even data, and the second LVDS encoder emits odd data. When property
+> > > +  renesas,swap-data is specified, the data emitted by the two encoders will be
+> > > +  swapped around. This property can only be used in conjunction with property
+> > > +  renesas,companion.
+> > 
+> > From an LVDS encoder point of view this is more a configuration option
+> > than a description of the hardware. Wouldn't it be better for the LVDS
+> > sink to report which of the odd or even pixels it expects on each of its
+> > endpoints ?
+> 
+> Yes, that would be my preference too, and it would be better, I am just not entirely
+> what's the best place for this information though
+> 
+> > The LVDS encoder driver could then query that at runtime and
+> > configure itself accordingly. Ideally this should be queried through the
+> > drm_bridge_timings structure (or through a similar mean), not through
+> > DT. An LVDS sink that has a fixed mapping of odd/even pixels to
+> > endpoints wouldn't need the information to be specified in DT at all.
+> 
+> Isn't drm_bridge_timings specific for bridges?
 
-> But if you do have the possibility of enabling DKIM or similar on
-> ellerman.id.au, then that is always a good thing, of course. I hate
-> spam, even even if DKIM and friends certainly aren't perfect, they are
-> better than nothing.
+Its name makes it specific to bridges, but the information it contains
+could equally apply to panels. I would thus use it for both, possibly
+after renaming it.
 
-I'll talk to sfr about getting DKIM/SPF setup, he's the brains behind my
-mail setup.
+-- 
+Regards,
 
-cheers
+Laurent Pinchart
