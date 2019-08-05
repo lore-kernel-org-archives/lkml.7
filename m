@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E6CC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8300EC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39BC72075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:19:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5658A21871
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:19:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011188;
-	bh=kET/XI/yGE7hnw4dQZUVxgjobkG7KvceWR0d2hddSUA=;
+	s=default; t=1565011192;
+	bh=I5NZIyZZlv8ZEO1IZmmwcSXPI8K4vbdP0BRpONsv+QE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s0+ez6VgF+05mCc4Ybn1plywzdhgpSW0nTssnCQ+1MaT2ANtNMMjvyCjb8X7F15af
-	 bJm+IcSoLKp/189ZJDnH9jt1VxYp1148Z0/iRlx/g/VAtkI9EqJArS4btF5MW/YkoY
-	 6WSJfLHFqU0LfKt775uEfosPU/plunTSXh2CU08s=
+	b=A0lLB2Gcw77queERRa1e7/JU6afV8HUBwaapK1nZZAV0VKp3xB6m+Kb/59anIJOHa
+	 mpgjqxLg85aT6ePT0A+R1jmR9P6jZ7TadYzL4d4sxlNYArmuNPvghBgi1RlES7EB1X
+	 TKQJ3uj5Ng8ZyFCRw2NE3gv8C6zVekmwr1P+w1/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729115AbfHENTq (ORCPT
+        id S1729877AbfHENTv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:19:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55692 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:19:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728865AbfHENTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:19:37 -0400
+        id S1729788AbfHENTp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:19:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFF1F2147A;
-        Mon,  5 Aug 2019 13:19:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF58121743;
+        Mon,  5 Aug 2019 13:19:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011176;
-        bh=kET/XI/yGE7hnw4dQZUVxgjobkG7KvceWR0d2hddSUA=;
+        s=default; t=1565011184;
+        bh=I5NZIyZZlv8ZEO1IZmmwcSXPI8K4vbdP0BRpONsv+QE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qKBwO2C53RjFII28Zm3kPJUxw4eUzj+wwTzlCLxFJ8SdE15u8Gyr8uAEjZvCicmMu
-         i0POSwb98YaGC5rFUilhSFBqaB+CeoVX+3qWJR/8aplhhXM30NvMEBzKEq301avBJD
-         K7SZrHMksMBXnoS6zbTaBtnJIH+y4P+1FnocmB98=
+        b=vO8UimynPea8FAnmKwH0Rpu2c9BDaQaIkFw5lddwNRNfyUL9z1ijTUpy9PitHmOyS
+         qqclniKceQ91pKyVdDqjvR5iazZqKsEJOh3QgbhNlXPEPFWmZfHu9IBtk5ezwOsFm5
+         A+3RtgzKQxIgHSWGBKRIPxDdqyc6eGIYxvStw1ic=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 72/74] gcc-9: properly declare the {pv,hv}clock_page storage
-Date:   Mon,  5 Aug 2019 15:03:25 +0200
-Message-Id: <20190805124941.618238077@linuxfoundation.org>
+        Samuel Thibault <samuel.thibault@ens-lyon.org>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 52/74] ALSA: hda: Fix 1-minute detection delay when i915 module is not available
+Date:   Mon,  5 Aug 2019 15:03:05 +0200
+Message-Id: <20190805124940.087422108@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124935.819068648@linuxfoundation.org>
 References: <20190805124935.819068648@linuxfoundation.org>
@@ -59,46 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Samuel Thibault <samuel.thibault@ens-lyon.org>
 
-commit 459e3a21535ae3c7a9a123650e54f5c882b8fcbf upstream.
+commit 74bf71ed792ab0f64631cc65ccdb54c356c36d45 upstream.
 
-The pvlock_page and hvclock_page variables are (as the name implies)
-addresses to pages, created by the linker script.
+Distribution installation images such as Debian include different sets
+of modules which can be downloaded dynamically.  Such images may notably
+include the hda sound modules but not the i915 DRM module, even if the
+latter was enabled at build time, as reported on
+https://bugs.debian.org/931507
 
-But we declared them as just "extern u8" variables, which _works_, but
-now that gcc does some more bounds checking, it causes warnings like
+In such a case hdac_i915 would be linked in and try to load the i915
+module, fail since it is not there, but still wait for a whole minute
+before giving up binding with it.
 
-    warning: array subscript 1 is outside array bounds of ‘u8[1]’
+This fixes such as case by only waiting for the binding if the module
+was properly loaded (or module support is disabled, in which case i915
+is already compiled-in anyway).
 
-when we then access more than one byte from those variables.
-
-Fix this by simply making the declaration of the variables match
-reality, which makes the compiler happy too.
-
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: f9b54e1961c7 ("ALSA: hda/i915: Allow delayed i915 audio component binding")
+Signed-off-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/entry/vdso/vclock_gettime.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/hda/hdac_i915.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/arch/x86/entry/vdso/vclock_gettime.c
-+++ b/arch/x86/entry/vdso/vclock_gettime.c
-@@ -29,12 +29,12 @@ extern int __vdso_gettimeofday(struct ti
- extern time_t __vdso_time(time_t *t);
- 
- #ifdef CONFIG_PARAVIRT_CLOCK
--extern u8 pvclock_page
-+extern u8 pvclock_page[PAGE_SIZE]
- 	__attribute__((visibility("hidden")));
- #endif
- 
- #ifdef CONFIG_HYPERV_TSCPAGE
--extern u8 hvclock_page
-+extern u8 hvclock_page[PAGE_SIZE]
- 	__attribute__((visibility("hidden")));
- #endif
- 
+--- a/sound/hda/hdac_i915.c
++++ b/sound/hda/hdac_i915.c
+@@ -143,10 +143,12 @@ int snd_hdac_i915_init(struct hdac_bus *
+ 	if (!acomp)
+ 		return -ENODEV;
+ 	if (!acomp->ops) {
+-		request_module("i915");
+-		/* 60s timeout */
+-		wait_for_completion_timeout(&bind_complete,
+-					    msecs_to_jiffies(60 * 1000));
++		if (!IS_ENABLED(CONFIG_MODULES) ||
++		    !request_module("i915")) {
++			/* 60s timeout */
++			wait_for_completion_timeout(&bind_complete,
++						   msecs_to_jiffies(60 * 1000));
++		}
+ 	}
+ 	if (!acomp->ops) {
+ 		dev_info(bus->dev, "couldn't bind with audio component\n");
 
 
