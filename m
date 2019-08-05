@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FC1C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C7F1C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:23:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 523FD2067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E9662173C
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:23:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011393;
-	bh=iqHwHrhpIETGLfGzdmgKsSWSRbnrsCeUGwFDY/Lb73g=;
+	s=default; t=1565011399;
+	bh=6u/5CzAsoBRTXh0ATg4gQebDJPRLmvMbCMGyW2Ae3/c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LwKi6DClV6qItsrnmuXt4Rh/HYpq3Iynu8bktnk/v+RIsIy/4xt3DMttthdLPiCbK
-	 w32QImv0YNUBH4b/sohC7J8yL0zlC9Wna4HXg74GVbpT5T1rWAWv5BzSTDrUG+B0dJ
-	 r7uQkZBjE89sZ5rR6EJJVr6DnOPDr8WuE+behMSA=
+	b=seCYnaqqm94Wak5M1yIOsy88t3qUbOHt3w1B3NhjieIZ7xWOU3863pdbP68UANeCP
+	 7/UVZe45ETctNqiqzYDLdMWFB7636dNlCqC14JmdqOAnNli59RgHcjQkj+G0i08nZq
+	 f+E5Eo/15aEB92EknzaNHufk3gAhQ0ACfY9jvkTM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730460AbfHENWs (ORCPT
+        id S1730793AbfHENXR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:22:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59364 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:23:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730748AbfHENWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:22:45 -0400
+        id S1729489AbfHENXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:23:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33B2B20657;
-        Mon,  5 Aug 2019 13:22:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56CB1214C6;
+        Mon,  5 Aug 2019 13:23:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011364;
-        bh=iqHwHrhpIETGLfGzdmgKsSWSRbnrsCeUGwFDY/Lb73g=;
+        s=default; t=1565011395;
+        bh=6u/5CzAsoBRTXh0ATg4gQebDJPRLmvMbCMGyW2Ae3/c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ra3jWoW9Y1D/CK4YrpLujSsCpkwbblYd2n3zPjZeAjdb4wJ6AZ9Sy3FQ6YVsj+pRw
-         xNH45rmOY5Ibtek6xhfrioIL0ypHmY0fu2JF1yNMlI0fLcmGgC3FJvUD7oAobt8dOv
-         1H65qRo0bmadIuwJEdFo2grjG3DK/yiLdvwTtUn4=
+        b=Jy2/Gw2UitFoVsdU/guypWaj0C6r2Mlg4SGz609ZC+i77kqQg2COtR9UGMqJzIbw9
+         AYzPqZACdri/Q0kbAyxuRwGveE/hfbwLbS2/A6ypB0o0jX5+nVDLRuZSibo9LdsgJE
+         ASizj5qWQUOj4PgKQ66be0WN+d8Q2HKLKYs624BU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vegard Nossum <vegard.nossum@oracle.com>,
-        Eiichi Tsukata <devel@etsukata.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        stable@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@oracle.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 065/131] stacktrace: Force USER_DS for stack_trace_save_user()
-Date:   Mon,  5 Aug 2019 15:02:32 +0200
-Message-Id: <20190805124955.820469238@linuxfoundation.org>
+Subject: [PATCH 5.2 070/131] x86, boot: Remove multiple copy of static function sanitize_boot_params()
+Date:   Mon,  5 Aug 2019 15:02:37 +0200
+Message-Id: <20190805124956.205378657@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -63,45 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cac9b9a4b08304f11daace03b8b48659355e44c1 ]
+[ Upstream commit 8c5477e8046ca139bac250386c08453da37ec1ae ]
 
-When walking userspace stacks, USER_DS needs to be set, otherwise
-access_ok() will not function as expected.
+Kernel build warns:
+ 'sanitize_boot_params' defined but not used [-Wunused-function]
 
-Reported-by: Vegard Nossum <vegard.nossum@oracle.com>
-Reported-by: Eiichi Tsukata <devel@etsukata.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+at below files:
+  arch/x86/boot/compressed/cmdline.c
+  arch/x86/boot/compressed/error.c
+  arch/x86/boot/compressed/early_serial_console.c
+  arch/x86/boot/compressed/acpi.c
+
+That's becausethey each include misc.h which includes a definition of
+sanitize_boot_params() via bootparam_utils.h.
+
+Remove the inclusion from misc.h and have the c file including
+bootparam_utils.h directly.
+
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Vegard Nossum <vegard.nossum@oracle.com>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Link: https://lkml.kernel.org/r/20190718085754.GM3402@hirez.programming.kicks-ass.net
+Link: https://lkml.kernel.org/r/1563283092-1189-1-git-send-email-zhenzhong.duan@oracle.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/stacktrace.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/x86/boot/compressed/misc.c | 1 +
+ arch/x86/boot/compressed/misc.h | 1 -
+ 2 files changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/stacktrace.c b/kernel/stacktrace.c
-index 36139de0a3c4b..899b726c9e98f 100644
---- a/kernel/stacktrace.c
-+++ b/kernel/stacktrace.c
-@@ -226,12 +226,17 @@ unsigned int stack_trace_save_user(unsigned long *store, unsigned int size)
- 		.store	= store,
- 		.size	= size,
- 	};
-+	mm_segment_t fs;
+diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+index 5a237e8dbf8d5..0de54a1d25c0a 100644
+--- a/arch/x86/boot/compressed/misc.c
++++ b/arch/x86/boot/compressed/misc.c
+@@ -17,6 +17,7 @@
+ #include "pgtable.h"
+ #include "../string.h"
+ #include "../voffset.h"
++#include <asm/bootparam_utils.h>
  
- 	/* Trace user stack if not a kernel thread */
- 	if (!current->mm)
- 		return 0;
+ /*
+  * WARNING!!
+diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+index d2f184165934c..c8181392f70d7 100644
+--- a/arch/x86/boot/compressed/misc.h
++++ b/arch/x86/boot/compressed/misc.h
+@@ -23,7 +23,6 @@
+ #include <asm/page.h>
+ #include <asm/boot.h>
+ #include <asm/bootparam.h>
+-#include <asm/bootparam_utils.h>
  
-+	fs = get_fs();
-+	set_fs(USER_DS);
- 	arch_stack_walk_user(consume_entry, &c, task_pt_regs(current));
-+	set_fs(fs);
-+
- 	return c.len;
- }
- #endif
+ #define BOOT_CTYPE_H
+ #include <linux/acpi.h>
 -- 
 2.20.1
 
