@@ -2,556 +2,226 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 862B0C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 21:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E60E5C32754
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 21:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D38A2173B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 21:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD76F2173B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 21:29:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565040561;
-	bh=kN6EBgzfOEqR42PSgmAa1A5oUs07dhaoUWkodGKw+54=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cDnFgY1mLOX0KY5uPdU7wWbYt/aBBnTCNHOf2OR0tmsGlQhPRLvifKp0ZE2KttcMd
-	 hHGTo1adWU7PSZvNWpgudoN70yVlDQ1NwxNmSe49k7Ogja9WuXaVjN7zUkz4yqVH3A
-	 4r/wK0cBClGQNufd04EKcsmKsuStMK4pDno47vfE=
+	s=default; t=1565040563;
+	bh=flUatEBns2tnECMtuVIEVWWJfXMpf0ZAEBTEWy7NdUs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gYyheHiriraZo+9X5b93wJASQFpidVDqnwFBxuS8qgbKnklm4mk6sxI3NzvHvwYPH
+	 i9vbgoprxrAtWnwIz/NouNq/Zl5DgECiGrwl0W6aAHmoQS8+MxA59CsjcGcxa3oV88
+	 dTflMH5CVhACDXQWeNRpiGCYiyBwCVNPjT+jTFA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730956AbfHEV3U (ORCPT
+        id S1730923AbfHEV3S convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 17:29:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47118 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730733AbfHEV3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 17:29:12 -0400
-Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B173214C6;
-        Mon,  5 Aug 2019 21:29:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565040550;
-        bh=kN6EBgzfOEqR42PSgmAa1A5oUs07dhaoUWkodGKw+54=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0/ufDuDIWXiKsDyfOj6qIzp9ZTZwz+4hLBHegPu3IHCtvQemfP+cLLfWEswL4qGDJ
-         RWvP72XaXwMOLYcZkEpnjPB+00Ajm2cUd8q+sB5VvNZSFMPmSm/Mx2sClnPrcRyqw6
-         f1GrpaipdPc6d4+/Ii8KmaLdPoGtyZ1w3CVsOYjc=
-From:   Andy Lutomirski <luto@kernel.org>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Song Liu <songliubraving@fb.com>,
-        Kees Cook <keescook@chromium.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Lorenz Bauer <lmb@cloudflare.com>,
-        Jann Horn <jannh@google.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: [WIP 1/4] bpf: Respect persistent map and prog access modes
-Date:   Mon,  5 Aug 2019 14:29:02 -0700
-Message-Id: <3a5ddc41c25e00e8590f6da414bcf0ed7626ffe1.1565040372.git.luto@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1565040372.git.luto@kernel.org>
-References: <cover.1565040372.git.luto@kernel.org>
+        Mon, 5 Aug 2019 17:29:18 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35282 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730515AbfHEV3K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 17:29:10 -0400
+Received: by mail-ot1-f67.google.com with SMTP id j19so10726867otq.2;
+        Mon, 05 Aug 2019 14:29:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=n9m4a81xA4A6Gqrjsk6A7X7AeMPsJrAB1x7Sj73OucU=;
+        b=dEadA3gmF0D61r6p8D0XoHUvnh08RHGJxYL5k2j8xQU9jrQs1ouCIWhQ0VcI16afi2
+         unjfdO33QLC4hhSAK2bgF0lROKv13GY28tE7xaljiUTqiIEnotEcCdGIZjIDZd7zmLmH
+         hfq5tw+EVsWIDlDPsMncUkceP9ThDSsqNeUFSWz9EooRQMgrGIeqzjDhb5tgNRvime4h
+         BbL4nAcSIpSi2FvXH6huFOCmMHtyDDfV19xtQAoy0kKXiqRQ6RDA61ucNpANgd4Ee8sH
+         lOdwh62ARrmMtcIBTWfNKFITCJKYKCxZuk05zWAgcosv95phuoszZowgbZZHVNHSuS7P
+         RhEg==
+X-Gm-Message-State: APjAAAVszxBF8bYOfe9ffqsfgk+g+FxpthLPvrXRvTUt4iVnWeO+lG2S
+        +AuJ2pd2CfKN/u/pqn/6n5N0QYhOsUwlJ/kBGws=
+X-Google-Smtp-Source: APXvYqxpTVSOfNsXqw6xI0jyOWBRBVQU09/rqkjcCwO+AoepqViogqw6NBs6AWYwfaCIzRhHKhGXX40Fn2EsuJZSwEk=
+X-Received: by 2002:a05:6830:8a:: with SMTP id a10mr2125745oto.167.1565040549855;
+ Mon, 05 Aug 2019 14:29:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM>
+ <CAJZ5v0iDQ4=kTUgW94tKGt7oJzA_3uVU_M6HAMbNCRXwp_do8A@mail.gmail.com>
+ <47415939.KV5G6iaeJG@kreacher> <20190730144134.GA12844@localhost.localdomain>
+ <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM>
+ <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com> <20190730191934.GD13948@localhost.localdomain>
+ <7d3e0b8ba1444194a153c93faa1cabb3@AUSX13MPC105.AMER.DELL.COM>
+ <20190730213114.GK13948@localhost.localdomain> <CAJZ5v0gxfeMN8eCNRjcXmUOkReVsdozb3EccaYMpnmSHu3771g@mail.gmail.com>
+ <20190731221956.GB15795@localhost.localdomain> <CAJZ5v0hxYGBXau39sb80MQ8jbZZCzH0JU2DYZvn9JOtYT2+30g@mail.gmail.com>
+ <70D536BE-8DC7-4CA2-84A9-AFB067BA520E@canonical.com> <CAJZ5v0hFYEv_+vFkrxaCn_pNAbyqmO_cLb5GOLNn_xxRRwjh2g@mail.gmail.com>
+ <38d4b4b107154454a932781acde0fa5a@AUSX13MPC105.AMER.DELL.COM>
+ <CAJZ5v0jmO4FMOVYs62wkvPrUW81scD2H7cJyRc+tfoj+vODVbQ@mail.gmail.com>
+ <43A8DF53-8463-4314-9E8E-47A7D3C5A709@canonical.com> <CAJZ5v0ipG-MJjERBL9fjx29QktaYEKSmMCbWiEGPHsbF=Xfxtw@mail.gmail.com>
+ <1FA3D56B-80C6-496C-8772-2F773AA8043C@canonical.com>
+In-Reply-To: <1FA3D56B-80C6-496C-8772-2F773AA8043C@canonical.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 5 Aug 2019 23:28:58 +0200
+Message-ID: <CAJZ5v0g_yAP=zgYDXtJWtwceQp4wWPWFghDDD0opdZ4zT-yo5Q@mail.gmail.com>
+Subject: Re: [Regression] Commit "nvme/pci: Use host managed power state for
+ suspend" has problems
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rajat Jain <rajatja@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the interest of making bpf() more useful by unprivileged users,
-this patch teaches bpf to respect access modes on map and prog
-inodes.  The permissions are:
+On Mon, Aug 5, 2019 at 9:14 PM Kai-Heng Feng
+<kai.heng.feng@canonical.com> wrote:
+>
+> at 19:04, Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> > On Fri, Aug 2, 2019 at 12:55 PM Kai-Heng Feng
+> > <kai.heng.feng@canonical.com> wrote:
+> >> at 06:26, Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >>
+> >>> On Thu, Aug 1, 2019 at 9:05 PM <Mario.Limonciello@dell.com> wrote:
+> >>>>> -----Original Message-----
+> >>>>> From: Rafael J. Wysocki <rafael@kernel.org>
+> >>>>> Sent: Thursday, August 1, 2019 12:30 PM
+> >>>>> To: Kai-Heng Feng; Keith Busch; Limonciello, Mario
+> >>>>> Cc: Keith Busch; Christoph Hellwig; Sagi Grimberg; linux-nvme; Linux
+> >>>>> PM; Linux
+> >>>>> Kernel Mailing List; Rajat Jain
+> >>>>> Subject: Re: [Regression] Commit "nvme/pci: Use host managed power
+> >>>>> state for
+> >>>>> suspend" has problems
+> >>>>>
+> >>>>>
+> >>>>> [EXTERNAL EMAIL]
+> >>>>>
+> >>>>> On Thu, Aug 1, 2019 at 11:06 AM Kai-Heng Feng
+> >>>>> <kai.heng.feng@canonical.com> wrote:
+> >>>>>> at 06:33, Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >>>>>>
+> >>>>>>> On Thu, Aug 1, 2019 at 12:22 AM Keith Busch <kbusch@kernel.org>
+> >>>>>>> wrote:
+> >>>>>>>> On Wed, Jul 31, 2019 at 11:25:51PM +0200, Rafael J. Wysocki wrote:
+> >>>>>>>>> A couple of remarks if you will.
+> >>>>>>>>>
+> >>>>>>>>> First, we don't know which case is the majority at this point.  For
+> >>>>>>>>> now, there is one example of each, but it may very well turn out
+> >>>>>>>>> that
+> >>>>>>>>> the SK Hynix BC501 above needs to be quirked.
+> >>>>>>>>>
+> >>>>>>>>> Second, the reference here really is 5.2, so if there are any
+> >>>>>>>>> systems
+> >>>>>>>>> that are not better off with 5.3-rc than they were with 5.2,
+> >>>>>>>>> well, we
+> >>>>>>>>> have not made progress.  However, if there are systems that are
+> >>>>>>>>> worse
+> >>>>>>>>> off with 5.3, that's bad.  In the face of the latest findings the
+> >>>>>>>>> only
+> >>>>>>>>> way to avoid that is to be backwards compatible with 5.2 and that's
+> >>>>>>>>> where my patch is going.  That cannot be achieved by quirking all
+> >>>>>>>>> cases that are reported as "bad", because there still may be
+> >>>>>>>>> unreported ones.
+> >>>>>>>>
+> >>>>>>>> I have to agree. I think your proposal may allow PCI D3cold,
+> >>>>>>>
+> >>>>>>> Yes, it may.
+> >>>>>>
+> >>>>>> Somehow the 9380 with Toshiba NVMe never hits SLP_S0 with or without
+> >>>>>> Rafael’s patch.
+> >>>>>> But the “real” s2idle power consumption does improve with the patch.
+> >>>>>
+> >>>>> Do you mean this patch:
+> >>>>>
+> >>>>> https://lore.kernel.org/linux-pm/70D536BE-8DC7-4CA2-84A9-
+> >>>>> AFB067BA520E@canonical.com/T/#m456aa5c69973a3b68f2cdd4713a1ce83be5145
+> >>>>> 8f
+> >>>>>
+> >>>>> or the $subject one without the above?
+> >>>>>
+> >>>>>> Can we use a DMI based quirk for this platform? It seems like a
+> >>>>>> platform
+> >>>>>> specific issue.
+> >>>>>
+> >>>>> We seem to see too many "platform-specific issues" here. :-)
+> >>>>>
+> >>>>> To me, the status quo (ie. what we have in 5.3-rc2) is not defensible.
+> >>>>> Something needs to be done to improve the situation.
+> >>>>
+> >>>> Rafael, would it be possible to try popping out PC401 from the 9380 and
+> >>>> into a 9360 to
+> >>>> confirm there actually being a platform impact or not?
+> >>>
+> >>> Not really, sorry.
+> >>>
+> >>>> I was hoping to have something useful from Hynix by now before
+> >>>> responding, but oh well.
+> >>>>
+> >>>> In terms of what is the majority, I do know that between folks at Dell,
+> >>>> Google, Compal,
+> >>>> Wistron, Canonical, Micron, Hynix, Toshiba, LiteOn, and Western Digital
+> >>>> we tested a wide
+> >>>> variety of SSDs with this patch series.  I would like to think that they
+> >>>> are representative of
+> >>>> what's being manufactured into machines now.
+> >>>
+> >>> Well, what about drives already in the field?  My concern is mostly
+> >>> about those ones.
+> >>>
+> >>>> Notably the LiteOn CL1 was tested with the HMB flushing support and
+> >>>> and Hynix PC401 was tested with older firmware though.
+> >>>>
+> >>>>>>>> In which case we do need to reintroduce the HMB handling.
+> >>>>>>>
+> >>>>>>> Right.
+> >>>>>>
+> >>>>>> The patch alone doesn’t break HMB Toshiba NVMe I tested. But I think
+> >>>>>> it’s
+> >>>>>> still safer to do proper HMB handling.
+> >>>>>
+> >>>>> Well, so can anyone please propose something specific?  Like an
+> >>>>> alternative patch?
+> >>>>
+> >>>> This was proposed a few days ago:
+> >>>> http://lists.infradead.org/pipermail/linux-nvme/2019-July/026056.html
+> >>>>
+> >>>> However we're still not sure why it is needed, and it will take some
+> >>>> time to get
+> >>>> a proper failure analysis from LiteOn  regarding the CL1.
+> >>>
+> >>> Thanks for the update, but IMO we still need to do something before
+> >>> final 5.3 while the investigation continues.
+> >>>
+> >>> Honestly, at this point I would vote for going back to the 5.2
+> >>> behavior at least by default and only running the new code on the
+> >>> drives known to require it (because they will block PC10 otherwise).
+> >>>
+> >>> Possibly (ideally) with an option for users who can't get beyond PC3
+> >>> to test whether or not the new code helps them.
+> >>
+> >> I just found out that the XPS 9380 at my hand never reaches SLP_S0 but
+> >> only
+> >> PC10.
+> >
+> > That's the case for me too.
+> >
+> >> This happens with or without putting the device to D3.
+> >
+> > On my system, though, it only can get to PC3 without putting the NVMe
+> > into D3 (as reported previously).
+>
+> I forgot to ask, what BIOS version does the system have?
+> I don’t see this issue on BIOS v1.5.0.
 
-R on a map: read the map
-W on a map: write the map
-
-Referencing a map from a program should require RW.
-
-R on a prog: Read or introspect the prog
-W on a prog: Attach the prog to something
-
-Test-running a prog is a form of introspection, so it requires RW.
-Detaching a prog merely uses the fd for identification, so neither R
-nor W is needed.
-
-This is likely incomplete, and it has some comments that should be
-removed.
-
-This patch uses WRITE instead of EXEC as the permission needed to
-run (by attaching or test-running) a program.  EXEC seems nicer, but
-O_MAYEXEC isn't merged, which makes using X awkward.
----
- include/linux/bpf.h    | 15 +++++++------
- kernel/bpf/arraymap.c  |  8 ++++++-
- kernel/bpf/cgroup.c    |  6 ++++-
- kernel/bpf/inode.c     | 25 ++++++++++++++-------
- kernel/bpf/syscall.c   | 51 ++++++++++++++++++++++++++++++------------
- kernel/events/core.c   |  5 +++--
- net/core/dev.c         |  4 +++-
- net/core/filter.c      |  8 ++++---
- net/netfilter/xt_bpf.c |  5 +++--
- net/packet/af_packet.c |  2 +-
- 10 files changed, 89 insertions(+), 40 deletions(-)
-
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index 18f4cc2c6acd..2d5e1a4dff6c 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -630,9 +630,9 @@ extern const struct bpf_prog_ops bpf_offload_prog_ops;
- extern const struct bpf_verifier_ops tc_cls_act_analyzer_ops;
- extern const struct bpf_verifier_ops xdp_analyzer_ops;
- 
--struct bpf_prog *bpf_prog_get(u32 ufd);
-+struct bpf_prog *bpf_prog_get(u32 ufd, int mask);
- struct bpf_prog *bpf_prog_get_type_dev(u32 ufd, enum bpf_prog_type type,
--				       bool attach_drv);
-+				       bool attach_drv, int mask);
- struct bpf_prog * __must_check bpf_prog_add(struct bpf_prog *prog, int i);
- void bpf_prog_sub(struct bpf_prog *prog, int i);
- struct bpf_prog * __must_check bpf_prog_inc(struct bpf_prog *prog);
-@@ -662,7 +662,7 @@ void bpf_map_init_from_attr(struct bpf_map *map, union bpf_attr *attr);
- extern int sysctl_unprivileged_bpf_disabled;
- 
- int bpf_map_new_fd(struct bpf_map *map, int flags);
--int bpf_prog_new_fd(struct bpf_prog *prog);
-+int bpf_prog_new_fd(struct bpf_prog *prog, int flags);
- 
- int bpf_obj_pin_user(u32 ufd, const char __user *pathname);
- int bpf_obj_get_user(const char __user *pathname, int flags);
-@@ -733,7 +733,7 @@ static inline int bpf_map_attr_numa_node(const union bpf_attr *attr)
- 		attr->numa_node : NUMA_NO_NODE;
- }
- 
--struct bpf_prog *bpf_prog_get_type_path(const char *name, enum bpf_prog_type type);
-+struct bpf_prog *bpf_prog_get_type_path(const char *name, enum bpf_prog_type type, int mask);
- int array_map_alloc_check(union bpf_attr *attr);
- 
- int bpf_prog_test_run_xdp(struct bpf_prog *prog, const union bpf_attr *kattr,
-@@ -850,7 +850,7 @@ static inline int cpu_map_enqueue(struct bpf_cpu_map_entry *rcpu,
- }
- 
- static inline struct bpf_prog *bpf_prog_get_type_path(const char *name,
--				enum bpf_prog_type type)
-+				enum bpf_prog_type type, int mask)
- {
- 	return ERR_PTR(-EOPNOTSUPP);
- }
-@@ -878,9 +878,10 @@ static inline int bpf_prog_test_run_flow_dissector(struct bpf_prog *prog,
- #endif /* CONFIG_BPF_SYSCALL */
- 
- static inline struct bpf_prog *bpf_prog_get_type(u32 ufd,
--						 enum bpf_prog_type type)
-+						 enum bpf_prog_type type,
-+						 int mask)
- {
--	return bpf_prog_get_type_dev(ufd, type, false);
-+	return bpf_prog_get_type_dev(ufd, type, false, mask);
- }
- 
- bool bpf_prog_get_ok(struct bpf_prog *, enum bpf_prog_type *, bool);
-diff --git a/kernel/bpf/arraymap.c b/kernel/bpf/arraymap.c
-index 1c65ce0098a9..7e17a5d42110 100644
---- a/kernel/bpf/arraymap.c
-+++ b/kernel/bpf/arraymap.c
-@@ -522,6 +522,10 @@ int bpf_fd_array_map_lookup_elem(struct bpf_map *map, void *key, u32 *value)
- }
- 
- /* only called from syscall */
-+/*
-+ * XXX: it's totally unclear to me what this ends up doing with the fd
-+ * in general.
-+ */
- int bpf_fd_array_map_update_elem(struct bpf_map *map, struct file *map_file,
- 				 void *key, void *value, u64 map_flags)
- {
-@@ -569,7 +573,9 @@ static void *prog_fd_array_get_ptr(struct bpf_map *map,
- 				   struct file *map_file, int fd)
- {
- 	struct bpf_array *array = container_of(map, struct bpf_array, map);
--	struct bpf_prog *prog = bpf_prog_get(fd);
-+
-+	/* XXX: what, exactly, does this end up doing to the prog in question? */
-+	struct bpf_prog *prog = bpf_prog_get(fd, FMODE_READ | FMODE_WRITE);
- 
- 	if (IS_ERR(prog))
- 		return prog;
-diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
-index 0a00eaca6fae..1450c3bdab82 100644
---- a/kernel/bpf/cgroup.c
-+++ b/kernel/bpf/cgroup.c
-@@ -562,7 +562,11 @@ int cgroup_bpf_prog_detach(const union bpf_attr *attr, enum bpf_prog_type ptype)
- 	if (IS_ERR(cgrp))
- 		return PTR_ERR(cgrp);
- 
--	prog = bpf_prog_get_type(attr->attach_bpf_fd, ptype);
-+	/*
-+	 * No particular access required -- this only uses the fd to identify
-+	 * a program, not to do anything with the program.
-+	 */
-+	prog = bpf_prog_get_type(attr->attach_bpf_fd, ptype, 0);
- 	if (IS_ERR(prog))
- 		prog = NULL;
- 
-diff --git a/kernel/bpf/inode.c b/kernel/bpf/inode.c
-index cc0d0cf114e3..cb07736b33ae 100644
---- a/kernel/bpf/inode.c
-+++ b/kernel/bpf/inode.c
-@@ -58,7 +58,7 @@ static void bpf_any_put(void *raw, enum bpf_type type)
- 	}
- }
- 
--static void *bpf_fd_probe_obj(u32 ufd, enum bpf_type *type)
-+static void *bpf_fd_probe_obj(u32 ufd, enum bpf_type *type, int mask)
- {
- 	void *raw;
- 
-@@ -66,7 +66,7 @@ static void *bpf_fd_probe_obj(u32 ufd, enum bpf_type *type)
- 	raw = bpf_map_get_with_uref(ufd);
- 	if (IS_ERR(raw)) {
- 		*type = BPF_TYPE_PROG;
--		raw = bpf_prog_get(ufd);
-+		raw = bpf_prog_get(ufd, mask);
- 	}
- 
- 	return raw;
-@@ -430,7 +430,12 @@ int bpf_obj_pin_user(u32 ufd, const char __user *pathname)
- 	if (IS_ERR(pname))
- 		return PTR_ERR(pname);
- 
--	raw = bpf_fd_probe_obj(ufd, &type);
-+	/*
-+	 * Pinning an object effectively grants the caller all access, because
-+	 * the caller ends up owning the inode.  So require all access.
-+	 * XXX: If we use FMODE_EXEC, we should require FMODE_EXEC too.
-+	 */
-+	raw = bpf_fd_probe_obj(ufd, &type, FMODE_READ | FMODE_WRITE);
- 	if (IS_ERR(raw)) {
- 		ret = PTR_ERR(raw);
- 		goto out;
-@@ -456,6 +461,10 @@ static void *bpf_obj_do_get(const struct filename *pathname,
- 	if (ret)
- 		return ERR_PTR(ret);
- 
-+	/*
-+	 * XXX: O_MAYEXEC doesn't exist, which is problematic here if we
-+	 * want to use FMODE_EXEC.
-+	 */
- 	inode = d_backing_inode(path.dentry);
- 	ret = inode_permission(inode, ACC_MODE(flags));
- 	if (ret)
-@@ -499,7 +508,7 @@ int bpf_obj_get_user(const char __user *pathname, int flags)
- 	}
- 
- 	if (type == BPF_TYPE_PROG)
--		ret = bpf_prog_new_fd(raw);
-+		ret = bpf_prog_new_fd(raw, f_flags);
- 	else if (type == BPF_TYPE_MAP)
- 		ret = bpf_map_new_fd(raw, f_flags);
- 	else
-@@ -512,10 +521,10 @@ int bpf_obj_get_user(const char __user *pathname, int flags)
- 	return ret;
- }
- 
--static struct bpf_prog *__get_prog_inode(struct inode *inode, enum bpf_prog_type type)
-+static struct bpf_prog *__get_prog_inode(struct inode *inode, enum bpf_prog_type type, int mask)
- {
- 	struct bpf_prog *prog;
--	int ret = inode_permission(inode, MAY_READ);
-+	int ret = inode_permission(inode, mask);
- 	if (ret)
- 		return ERR_PTR(ret);
- 
-@@ -536,14 +545,14 @@ static struct bpf_prog *__get_prog_inode(struct inode *inode, enum bpf_prog_type
- 	return bpf_prog_inc(prog);
- }
- 
--struct bpf_prog *bpf_prog_get_type_path(const char *name, enum bpf_prog_type type)
-+struct bpf_prog *bpf_prog_get_type_path(const char *name, enum bpf_prog_type type, int mask)
- {
- 	struct bpf_prog *prog;
- 	struct path path;
- 	int ret = kern_path(name, LOOKUP_FOLLOW, &path);
- 	if (ret)
- 		return ERR_PTR(ret);
--	prog = __get_prog_inode(d_backing_inode(path.dentry), type);
-+	prog = __get_prog_inode(d_backing_inode(path.dentry), type, mask);
- 	if (!IS_ERR(prog))
- 		touch_atime(&path);
- 	path_put(&path);
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index 5d141f16f6fa..23f8f89d2a86 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -447,6 +447,7 @@ int bpf_map_new_fd(struct bpf_map *map, int flags)
- 
- int bpf_get_file_flag(int flags)
- {
-+	/* XXX: What about exec? */
- 	if ((flags & BPF_F_RDONLY) && (flags & BPF_F_WRONLY))
- 		return -EINVAL;
- 	if (flags & BPF_F_RDONLY)
-@@ -556,6 +557,10 @@ static int map_create(union bpf_attr *attr)
- 	if (err)
- 		return -EINVAL;
- 
-+	/*
-+	 * XXX: I'm a bit confused.  Why would you ever create a map and
-+	 * grant *yourself* less than full permission?
-+	 */
- 	f_flags = bpf_get_file_flag(attr->map_flags);
- 	if (f_flags < 0)
- 		return f_flags;
-@@ -1411,7 +1416,7 @@ const struct file_operations bpf_prog_fops = {
- 	.write		= bpf_dummy_write,
- };
- 
--int bpf_prog_new_fd(struct bpf_prog *prog)
-+int bpf_prog_new_fd(struct bpf_prog *prog, int flags)
- {
- 	int ret;
- 
-@@ -1420,10 +1425,10 @@ int bpf_prog_new_fd(struct bpf_prog *prog)
- 		return ret;
- 
- 	return anon_inode_getfd("bpf-prog", &bpf_prog_fops, prog,
--				O_RDWR | O_CLOEXEC);
-+				flags | O_CLOEXEC);
- }
- 
--static struct bpf_prog *____bpf_prog_get(struct fd f)
-+static struct bpf_prog *____bpf_prog_get(struct fd f, int mask)
- {
- 	if (!f.file)
- 		return ERR_PTR(-EBADF);
-@@ -1431,6 +1436,10 @@ static struct bpf_prog *____bpf_prog_get(struct fd f)
- 		fdput(f);
- 		return ERR_PTR(-EINVAL);
- 	}
-+	if ((f.file->f_mode & mask) != mask) {
-+		fdput(f);
-+		return ERR_PTR(-EACCES);
-+	}
- 
- 	return f.file->private_data;
- }
-@@ -1497,12 +1506,12 @@ bool bpf_prog_get_ok(struct bpf_prog *prog,
- }
- 
- static struct bpf_prog *__bpf_prog_get(u32 ufd, enum bpf_prog_type *attach_type,
--				       bool attach_drv)
-+				       bool attach_drv, int mask)
- {
- 	struct fd f = fdget(ufd);
- 	struct bpf_prog *prog;
- 
--	prog = ____bpf_prog_get(f);
-+	prog = ____bpf_prog_get(f, mask);
- 	if (IS_ERR(prog))
- 		return prog;
- 	if (!bpf_prog_get_ok(prog, attach_type, attach_drv)) {
-@@ -1516,15 +1525,15 @@ static struct bpf_prog *__bpf_prog_get(u32 ufd, enum bpf_prog_type *attach_type,
- 	return prog;
- }
- 
--struct bpf_prog *bpf_prog_get(u32 ufd)
-+struct bpf_prog *bpf_prog_get(u32 ufd, int mask)
- {
--	return __bpf_prog_get(ufd, NULL, false);
-+	return __bpf_prog_get(ufd, NULL, false, mask);
- }
- 
- struct bpf_prog *bpf_prog_get_type_dev(u32 ufd, enum bpf_prog_type type,
--				       bool attach_drv)
-+				       bool attach_drv, int mask)
- {
--	return __bpf_prog_get(ufd, &type, attach_drv);
-+	return __bpf_prog_get(ufd, &type, attach_drv, mask);
- }
- EXPORT_SYMBOL_GPL(bpf_prog_get_type_dev);
- 
-@@ -1707,7 +1716,7 @@ static int bpf_prog_load(union bpf_attr *attr, union bpf_attr __user *uattr)
- 	if (err)
- 		goto free_used_maps;
- 
--	err = bpf_prog_new_fd(prog);
-+	err = bpf_prog_new_fd(prog, O_RDWR /* | O_MAYEXEC */);
- 	if (err < 0) {
- 		/* failed to allocate fd.
- 		 * bpf_prog_put() is needed because the above
-@@ -1808,7 +1817,7 @@ static int bpf_raw_tracepoint_open(const union bpf_attr *attr)
- 	}
- 	raw_tp->btp = btp;
- 
--	prog = bpf_prog_get(attr->raw_tracepoint.prog_fd);
-+	prog = bpf_prog_get(attr->raw_tracepoint.prog_fd, MAY_EXEC);
- 	if (IS_ERR(prog)) {
- 		err = PTR_ERR(prog);
- 		goto out_free_tp;
-@@ -1929,7 +1938,7 @@ static int bpf_prog_attach(const union bpf_attr *attr)
- 		return -EINVAL;
- 	}
- 
--	prog = bpf_prog_get_type(attr->attach_bpf_fd, ptype);
-+	prog = bpf_prog_get_type(attr->attach_bpf_fd, ptype, MAY_EXEC);
- 	if (IS_ERR(prog))
- 		return PTR_ERR(prog);
- 
-@@ -2083,7 +2092,11 @@ static int bpf_prog_test_run(const union bpf_attr *attr,
- 	    (!attr->test.ctx_size_out && attr->test.ctx_out))
- 		return -EINVAL;
- 
--	prog = bpf_prog_get(attr->test.prog_fd);
-+	/*
-+	 * A test run is is a form of query, so require RW.  Using W as a proxy for
-+	 * X, since X is awkward due to a lack of O_MAYEXEC.
-+	 */
-+	prog = bpf_prog_get(attr->test.prog_fd, MAY_READ | MAY_WRITE);
- 	if (IS_ERR(prog))
- 		return PTR_ERR(prog);
- 
-@@ -2147,7 +2160,11 @@ static int bpf_prog_get_fd_by_id(const union bpf_attr *attr)
- 	if (IS_ERR(prog))
- 		return PTR_ERR(prog);
- 
--	fd = bpf_prog_new_fd(prog);
-+	/*
-+	 * We have all permissions.  This is okay, since we also require
-+	 * CAP_SYS_ADMIN to do this at all.
-+	 */
-+	fd = bpf_prog_new_fd(prog, O_RDWR /* | O_MAYEXEC */);
- 	if (fd < 0)
- 		bpf_prog_put(prog);
- 
-@@ -2638,6 +2655,11 @@ static int bpf_obj_get_info_by_fd(const union bpf_attr *attr,
- 	if (!f.file)
- 		return -EBADFD;
- 
-+	if (!(f.file->f_mode & FMODE_READ)) {
-+		err = -EACCES;
-+		goto out;
-+	}
-+
- 	if (f.file->f_op == &bpf_prog_fops)
- 		err = bpf_prog_get_info_by_fd(f.file->private_data, attr,
- 					      uattr);
-@@ -2649,6 +2671,7 @@ static int bpf_obj_get_info_by_fd(const union bpf_attr *attr,
- 	else
- 		err = -EINVAL;
- 
-+out:
- 	fdput(f);
- 	return err;
- }
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 026a14541a38..f2e3973b28f2 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -8876,7 +8876,8 @@ static int perf_event_set_bpf_handler(struct perf_event *event, u32 prog_fd)
- 	if (event->prog)
- 		return -EEXIST;
- 
--	prog = bpf_prog_get_type(prog_fd, BPF_PROG_TYPE_PERF_EVENT);
-+	/* Should maybe be FMODE_EXEC? */
-+	prog = bpf_prog_get_type(prog_fd, BPF_PROG_TYPE_PERF_EVENT, FMODE_WRITE);
- 	if (IS_ERR(prog))
- 		return PTR_ERR(prog);
- 
-@@ -8942,7 +8943,7 @@ static int perf_event_set_bpf_prog(struct perf_event *event, u32 prog_fd)
- 		/* bpf programs can only be attached to u/kprobe or tracepoint */
- 		return -EINVAL;
- 
--	prog = bpf_prog_get(prog_fd);
-+	prog = bpf_prog_get(prog_fd, FMODE_WRITE);
- 	if (IS_ERR(prog))
- 		return PTR_ERR(prog);
- 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index fc676b2610e3..3fcaeae693bb 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -8093,8 +8093,10 @@ int dev_change_xdp_fd(struct net_device *dev, struct netlink_ext_ack *extack,
- 			return -EBUSY;
- 		}
- 
-+		/* XXX: FMODE_EXEC? */
- 		prog = bpf_prog_get_type_dev(fd, BPF_PROG_TYPE_XDP,
--					     bpf_op == ops->ndo_bpf);
-+					     bpf_op == ops->ndo_bpf,
-+					     FMODE_WRITE);
- 		if (IS_ERR(prog))
- 			return PTR_ERR(prog);
- 
-diff --git a/net/core/filter.c b/net/core/filter.c
-index 4e2a79b2fd77..9282462678fd 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -1544,7 +1544,8 @@ static struct bpf_prog *__get_bpf(u32 ufd, struct sock *sk)
- 	if (sock_flag(sk, SOCK_FILTER_LOCKED))
- 		return ERR_PTR(-EPERM);
- 
--	return bpf_prog_get_type(ufd, BPF_PROG_TYPE_SOCKET_FILTER);
-+	/* FMODE_EXEC? */
-+	return bpf_prog_get_type(ufd, BPF_PROG_TYPE_SOCKET_FILTER, FMODE_WRITE);
- }
- 
- int sk_attach_bpf(u32 ufd, struct sock *sk)
-@@ -1572,9 +1573,10 @@ int sk_reuseport_attach_bpf(u32 ufd, struct sock *sk)
- 	if (sock_flag(sk, SOCK_FILTER_LOCKED))
- 		return -EPERM;
- 
--	prog = bpf_prog_get_type(ufd, BPF_PROG_TYPE_SOCKET_FILTER);
-+	prog = bpf_prog_get_type(ufd, BPF_PROG_TYPE_SOCKET_FILTER, FMODE_WRITE);
- 	if (IS_ERR(prog) && PTR_ERR(prog) == -EINVAL)
--		prog = bpf_prog_get_type(ufd, BPF_PROG_TYPE_SK_REUSEPORT);
-+		prog = bpf_prog_get_type(ufd, BPF_PROG_TYPE_SK_REUSEPORT,
-+					 FMODE_WRITE);
- 	if (IS_ERR(prog))
- 		return PTR_ERR(prog);
- 
-diff --git a/net/netfilter/xt_bpf.c b/net/netfilter/xt_bpf.c
-index 13cf3f9b5938..34e5c08ee1f3 100644
---- a/net/netfilter/xt_bpf.c
-+++ b/net/netfilter/xt_bpf.c
-@@ -44,7 +44,7 @@ static int __bpf_mt_check_fd(int fd, struct bpf_prog **ret)
- {
- 	struct bpf_prog *prog;
- 
--	prog = bpf_prog_get_type(fd, BPF_PROG_TYPE_SOCKET_FILTER);
-+	prog = bpf_prog_get_type(fd, BPF_PROG_TYPE_SOCKET_FILTER, MAY_EXEC);
- 	if (IS_ERR(prog))
- 		return PTR_ERR(prog);
- 
-@@ -57,7 +57,8 @@ static int __bpf_mt_check_path(const char *path, struct bpf_prog **ret)
- 	if (strnlen(path, XT_BPF_PATH_MAX) == XT_BPF_PATH_MAX)
- 		return -EINVAL;
- 
--	*ret = bpf_prog_get_type_path(path, BPF_PROG_TYPE_SOCKET_FILTER);
-+	*ret = bpf_prog_get_type_path(path, BPF_PROG_TYPE_SOCKET_FILTER,
-+				      MAY_EXEC);
- 	return PTR_ERR_OR_ZERO(*ret);
- }
- 
-diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-index 8d54f3047768..5b8c5e5d94bf 100644
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -1563,7 +1563,7 @@ static int fanout_set_data_ebpf(struct packet_sock *po, char __user *data,
- 	if (copy_from_user(&fd, data, len))
- 		return -EFAULT;
- 
--	new = bpf_prog_get_type(fd, BPF_PROG_TYPE_SOCKET_FILTER);
-+	new = bpf_prog_get_type(fd, BPF_PROG_TYPE_SOCKET_FILTER, FMODE_WRITE);
- 	if (IS_ERR(new))
- 		return PTR_ERR(new);
- 
--- 
-2.21.0
-
+It is 1.5.0 here too.
