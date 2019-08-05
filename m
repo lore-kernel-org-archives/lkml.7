@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52592C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3258C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25684214C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:41:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A79D220880
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:41:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="XY6BtsEB"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="f2kDgP14"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729659AbfHENlS (ORCPT
+        id S1729786AbfHENlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:41:18 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:56082 "EHLO
+        Mon, 5 Aug 2019 09:41:21 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40931 "EHLO
         mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729363AbfHENlN (ORCPT
+        with ESMTP id S1729387AbfHENlO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:41:13 -0400
-Received: by mail-wm1-f66.google.com with SMTP id a15so74795131wmj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 06:41:12 -0700 (PDT)
+        Mon, 5 Aug 2019 09:41:14 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v19so73084874wmj.5
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 06:41:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=2grGK+7b0cBByVRRUu0+TFl4ki5jcSq2t6fD2bzIBcg=;
-        b=XY6BtsEB1h0Gtg+bL5p1xMMozbLebyArx8o4E98A64UfAQwGnp5hTTSwxO3wBSrqNs
-         sjtDhqO4sss6ywReivGGAP6VbBnP2qbrBZ5RDcxsWDX2P+Q9CaAIWgOrJZQHEH+twJPE
-         C/kxG+bLpg59JjLS7HcM/K2Pehm7/j8fiXU6UnxOoJr101ja8u28RuDLs8CT+zvN5Rvg
-         2Ns0saVhFskKwefkeTaCx8x6mDEL08r4MclXBIMcTbDgbjKDJp0E1Nz+mXzDNqVCTsRy
-         fUbTPcQbKGuYauyamy2q/FlnfnOy4z8lWR0PNpP7fonXJu8qTymVLyzDNFJJVjFG2kGu
-         yZyg==
+        bh=qVzaYwLQ0IyryucLyxiH/odxXJQTMSx5Nh4LY6yGL/I=;
+        b=f2kDgP143d0HrJANosipnWVMoq01I+69xpPIahSbB00o59IrM6ocWRY8N8/9bj7/r/
+         7Uk7JljTqjtYeSAgptE9vL/QG3qBzfbzMUwGvWDITSnZ5bS/CFvai/L1kZl3KAgNUydc
+         wfQRJzatabV0duadNUeHxb5UbJ/L+g3hbd3XvyesDOHOYBnEflfp5ZYTY2bBRxmw1d9c
+         kAvctaIY0WFROtJ3UZs2ChJ1EwKa/fgxo3taxsCN4XaadvYsE1qia05ZI/KlLnLBGpjF
+         AuM13Dt6JP/0YB+USV+ZRAnP+tS3fouv2TTRnf1QxrelQhADnQPvu6ut5QpSdBSV7BJa
+         NHXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=2grGK+7b0cBByVRRUu0+TFl4ki5jcSq2t6fD2bzIBcg=;
-        b=ZMu/g/4uZ2JYXJIfDViAxZb/BwUkW8niLhJwWH1zKsta+B20aQ2LIUyBHZrdm704/5
-         2jElQZrb18QBpKQqYaFWeDI3mJPs/bPVYEuCCKiclI5cpgL5lJNUNAvqsfqMZPCmR5ei
-         AUQwvryRoSTbiWEz5Ply8Mgold41lEY1yqNRNfewiEIUW3Jwx1w0H77cTxODVSqI3s4U
-         1aw0rUm60O+Q0QzoP5KZXmw0GHDdOBtvdrd23WDLdABQ/28Y3eeAbNM2c1oPeU6hMxiS
-         aTEtNZq/g0mROYUlby7HbVHtJ1L+k/Cn3pKe80Y1DnY34RnbKcmr5fR+ODEcRQA3dErC
-         rV6g==
-X-Gm-Message-State: APjAAAU7pi1IEmSECNEA8X7zJG8vPOwWiZ8xENAgB/4Tj+epCv/D6xuN
-        gF1lSaBnDJzzQJ1PXBsFTdVsfQ==
-X-Google-Smtp-Source: APXvYqxCpcovHfHjK57i7gHO5E0iPm5URGttLvaapaIyenpv0N3qiZvBMVpLedY5JPKCE562WeBNtg==
-X-Received: by 2002:a1c:a7c6:: with SMTP id q189mr19275733wme.146.1565012471772;
-        Mon, 05 Aug 2019 06:41:11 -0700 (PDT)
+        bh=qVzaYwLQ0IyryucLyxiH/odxXJQTMSx5Nh4LY6yGL/I=;
+        b=PhHaYdULOubzAnujOJ5ttc9mWGSDxF2+5Y1YhpDtsV/HCoP1P0hy0emFLVppGHbQd1
+         n6YX4kseMbCfNFulcYwVi3WapGaPhNKTm09BT2D3TOIyS5fyxezADEcnzbW6P4E+EMUx
+         y+YWVpUPcxMbnoRKkCi045oZZ72AWA7GmSkSbG/kEsR+MMf2Na1BmTbJD6KfaK2nU+PE
+         g/8yFw3wBVLnqDnkfgRFxOQd2iYi0b6RfnBkfv3Ag0Aaezl0MvZwHGda6H1D1XyH7zMA
+         V1ClENolHpyDYYKAZVGISpPhIcPKSdcaP6UM5TuLlU4dGzJEwPMOf5lOYa96CFomt1sk
+         W9XQ==
+X-Gm-Message-State: APjAAAXqI2UunfDfn0emdCHJgBfPNvMJuu+NRjWqhMk0MyNrhN6Y1hc9
+        FwDKcjW2oHVm48VxscdtKa3Ukw==
+X-Google-Smtp-Source: APXvYqzIdxmXDup/BxNDb6FeOvbs8087+YAEORHVdQ2WCPN0OwAzp/Wh/rJXlQk484ET/UdwuJ5/Qw==
+X-Received: by 2002:a1c:a8d7:: with SMTP id r206mr19116418wme.47.1565012472683;
+        Mon, 05 Aug 2019 06:41:12 -0700 (PDT)
 Received: from starbuck.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id w7sm99040534wrn.11.2019.08.05.06.41.10
+        by smtp.googlemail.com with ESMTPSA id w7sm99040534wrn.11.2019.08.05.06.41.11
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 05 Aug 2019 06:41:10 -0700 (PDT)
+        Mon, 05 Aug 2019 06:41:12 -0700 (PDT)
 From:   Jerome Brunet <jbrunet@baylibre.com>
 To:     Andrzej Hajda <a.hajda@samsung.com>,
         Neil Armstrong <narmstrong@baylibre.com>
@@ -64,9 +64,9 @@ Cc:     Jerome Brunet <jbrunet@baylibre.com>,
         Jonas Karlman <jonas@kwiboo.se>,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH 5/8] drm/bridge: dw-hdmi-i2s: set the channel allocation
-Date:   Mon,  5 Aug 2019 15:40:59 +0200
-Message-Id: <20190805134102.24173-6-jbrunet@baylibre.com>
+Subject: [PATCH 6/8] drm/bridge: dw-hdmi-i2s: reset audio fifo before applying new params
+Date:   Mon,  5 Aug 2019 15:41:00 +0200
+Message-Id: <20190805134102.24173-7-jbrunet@baylibre.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190805134102.24173-1-jbrunet@baylibre.com>
 References: <20190805134102.24173-1-jbrunet@baylibre.com>
@@ -78,26 +78,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-setup the channel allocation provided by the generic hdmi-codec driver
+When changing the audio hw params, reset the audio fifo to make sure
+any old remaining data is flushed.
+
+The databook mentions that such reset should be followed by a reset of
+the i2s block to make sure the samples stay aligned
 
 Cc: Jonas Karlman <jonas@kwiboo.se>
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c | 6 ++++--
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.h           | 1 +
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
-index caf8aed78fea..0864dee8d180 100644
+index 0864dee8d180..41bee0099578 100644
 --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
 +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
-@@ -85,6 +85,7 @@ static int dw_hdmi_i2s_hw_params(struct device *dev, void *data,
+@@ -49,6 +49,10 @@ static int dw_hdmi_i2s_hw_params(struct device *dev, void *data,
+ 		return -EINVAL;
+ 	}
  
- 	dw_hdmi_set_sample_rate(hdmi, hparms->sample_rate);
- 	dw_hdmi_set_channel_count(hdmi, hparms->channels);
-+	dw_hdmi_set_channel_allocation(hdmi, hparms->cea.channel_allocation);
++	/* Reset the FIFOs before applying new params */
++	hdmi_write(audio, HDMI_AUD_CONF0_SW_RESET, HDMI_AUD_CONF0);
++	hdmi_write(audio, (u8)~HDMI_MC_SWRSTZ_I2SSWRST_REQ, HDMI_MC_SWRSTZ);
++
+ 	inputclkfs	= HDMI_AUD_INPUTCLKFS_64FS;
+ 	conf0		= HDMI_AUD_CONF0_I2S_ALL_ENABLE;
  
- 	hdmi_write(audio, inputclkfs, HDMI_AUD_INPUTCLKFS);
- 	hdmi_write(audio, conf0, HDMI_AUD_CONF0);
+@@ -102,8 +106,6 @@ static void dw_hdmi_i2s_audio_shutdown(struct device *dev, void *data)
+ 	struct dw_hdmi *hdmi = audio->hdmi;
+ 
+ 	dw_hdmi_audio_disable(hdmi);
+-
+-	hdmi_write(audio, HDMI_AUD_CONF0_SW_RESET, HDMI_AUD_CONF0);
+ }
+ 
+ static int dw_hdmi_i2s_get_dai_id(struct snd_soc_component *component,
+diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
+index 091d7c28aa17..a272fa393ae6 100644
+--- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
++++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
+@@ -940,6 +940,7 @@ enum {
+ 	HDMI_MC_CLKDIS_PIXELCLK_DISABLE = 0x1,
+ 
+ /* MC_SWRSTZ field values */
++	HDMI_MC_SWRSTZ_I2SSWRST_REQ = 0x08,
+ 	HDMI_MC_SWRSTZ_TMDSSWRST_REQ = 0x02,
+ 
+ /* MC_FLOWCTRL field values */
 -- 
 2.21.0
 
