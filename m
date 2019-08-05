@@ -4,105 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9F4C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A64FC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66F102086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:51:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D8CB2086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:51:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730685AbfHENvP (ORCPT
+        id S1730780AbfHENvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:51:15 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:44492 "EHLO huawei.com"
+        Mon, 5 Aug 2019 09:51:19 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4176 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729625AbfHENu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:50:27 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 0636237F57F35AD326B3;
-        Mon,  5 Aug 2019 21:50:24 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.75) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 5 Aug 2019 21:50:15 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <jejb@linux.vnet.ibm.com>, <martin.petersen@oracle.com>
-CC:     <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>, Luo Jiaxing <luojiaxing@huawei.com>,
-        John Garry <john.garry@huawei.com>
-Subject: [PATCH 15/15] scsi: hisi_sas: Consolidate internal abort calls in LU reset operation
-Date:   Mon, 5 Aug 2019 21:48:12 +0800
-Message-ID: <1565012892-75940-16-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1565012892-75940-1-git-send-email-john.garry@huawei.com>
-References: <1565012892-75940-1-git-send-email-john.garry@huawei.com>
+        id S1729625AbfHENvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:51:17 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 46D274C0241425031124;
+        Mon,  5 Aug 2019 21:51:14 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Mon, 5 Aug 2019
+ 21:51:07 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <j.vosburgh@gmail.com>, <vfalico@gmail.com>, <andy@greyhouse.net>,
+        <davem@davemloft.net>, <jiri@resnulli.us>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] bonding: Add vlan tx offload to hw_enc_features
+Date:   Mon, 5 Aug 2019 21:49:53 +0800
+Message-ID: <20190805134953.63596-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.67.212.75]
+X-Originating-IP: [10.133.213.239]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luo Jiaxing <luojiaxing@huawei.com>
+As commit 30d8177e8ac7 ("bonding: Always enable vlan tx offload")
+said, we should always enable bonding's vlan tx offload, pass the
+vlan packets to the slave devices with vlan tci, let them to handle
+vlan implementation.
 
-In hisi_sas_lu_reset(), we call internal abort for SAS and SATA device
-codepaths -> consolidate into a single call.
+Now if encapsulation protocols like VXLAN is used, skb->encapsulation
+may be set, then the packet is passed to vlan devicec which based on
+bonding device. However in netif_skb_features(), the check of
+hw_enc_features:
 
-Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
+	 if (skb->encapsulation)
+                 features &= dev->hw_enc_features;
+
+clears NETIF_F_HW_VLAN_CTAG_TX/NETIF_F_HW_VLAN_STAG_TX. This results
+in same issue in commit 30d8177e8ac7 like this:
+
+vlan_dev_hard_start_xmit
+  -->dev_queue_xmit
+    -->validate_xmit_skb
+      -->netif_skb_features //NETIF_F_HW_VLAN_CTAG_TX is cleared
+      -->validate_xmit_vlan
+        -->__vlan_hwaccel_push_inside //skb->tci is cleared
+...
+ --> bond_start_xmit
+   --> bond_xmit_hash //BOND_XMIT_POLICY_ENCAP34
+     --> __skb_flow_dissect // nhoff point to IP header
+        -->  case htons(ETH_P_8021Q)
+             // skb_vlan_tag_present is false, so
+             vlan = __skb_header_pointer(skb, nhoff, sizeof(_vlan),
+             //vlan point to ip header wrongly
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/scsi/hisi_sas/hisi_sas_main.c | 26 +++++++++-----------------
- 1 file changed, 9 insertions(+), 17 deletions(-)
+ drivers/net/bonding/bond_main.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index acb87b4f9622..d60eaaa4c5e8 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -1829,18 +1829,18 @@ static int hisi_sas_lu_reset(struct domain_device *device, u8 *lun)
- 	struct device *dev = hisi_hba->dev;
- 	int rc = TMF_RESP_FUNC_FAILED;
- 
-+	/* Clear internal IO and then lu reset */
-+	rc = hisi_sas_internal_task_abort(hisi_hba, device,
-+					  HISI_SAS_INT_ABT_DEV, 0);
-+	if (rc < 0) {
-+		dev_err(dev, "lu_reset: internal abort failed\n");
-+		goto out;
-+	}
-+	hisi_sas_dereg_device(hisi_hba, device);
-+
- 	if (dev_is_sata(device)) {
- 		struct sas_phy *phy;
- 
--		/* Clear internal IO and then hardreset */
--		rc = hisi_sas_internal_task_abort(hisi_hba, device,
--						  HISI_SAS_INT_ABT_DEV, 0);
--		if (rc < 0) {
--			dev_err(dev, "lu_reset: internal abort failed\n");
--			goto out;
--		}
--		hisi_sas_dereg_device(hisi_hba, device);
--
- 		phy = sas_get_local_phy(device);
- 
- 		rc = sas_phy_reset(phy, 1);
-@@ -1851,14 +1851,6 @@ static int hisi_sas_lu_reset(struct domain_device *device, u8 *lun)
- 	} else {
- 		struct hisi_sas_tmf_task tmf_task = { .tmf =  TMF_LU_RESET };
- 
--		rc = hisi_sas_internal_task_abort(hisi_hba, device,
--						  HISI_SAS_INT_ABT_DEV, 0);
--		if (rc < 0) {
--			dev_err(dev, "lu_reset: internal abort failed\n");
--			goto out;
--		}
--		hisi_sas_dereg_device(hisi_hba, device);
--
- 		rc = hisi_sas_debug_issue_ssp_tmf(device, lun, &tmf_task);
- 		if (rc == TMF_RESP_FUNC_COMPLETE)
- 			hisi_sas_release_task(hisi_hba, device);
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index 02fd782..931d9d9 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -1126,6 +1126,8 @@ static void bond_compute_features(struct bonding *bond)
+ done:
+ 	bond_dev->vlan_features = vlan_features;
+ 	bond_dev->hw_enc_features = enc_features | NETIF_F_GSO_ENCAP_ALL |
++				    NETIF_F_HW_VLAN_CTAG_TX |
++				    NETIF_F_HW_VLAN_STAG_TX |
+ 				    NETIF_F_GSO_UDP_L4;
+ 	bond_dev->mpls_features = mpls_features;
+ 	bond_dev->gso_max_segs = gso_max_segs;
 -- 
-2.17.1
+2.7.4
+
 
