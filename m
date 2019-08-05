@@ -2,94 +2,137 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78858C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C73C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A92220B1F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E70BF20B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:41:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="uemqmpa5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727959AbfHEJlL (ORCPT
+        id S1728055AbfHEJln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 05:41:11 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:20957 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727259AbfHEJlK (ORCPT
+        Mon, 5 Aug 2019 05:41:43 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33185 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727340AbfHEJln (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 05:41:10 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-236-iiCZ4_0kN0uCcHgQ-ApRbg-1; Mon, 05 Aug 2019 10:41:07 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 5 Aug 2019 10:41:07 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 5 Aug 2019 10:41:07 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     =?utf-8?B?J0NocmlzdG9waCBCw7ZobXdhbGRlcic=?= 
-        <christoph.boehmwalder@linbit.com>, Jens Axboe <axboe@kernel.dk>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Philipp Reisner" <philipp.reisner@linbit.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>
-Subject: RE: [PATCH] drbd: do not ignore signals in threads
-Thread-Topic: [PATCH] drbd: do not ignore signals in threads
-Thread-Index: AQHVRehdZ3MFgEc+dUGpXqE3QyW7xKbhRpmwgAr+X4CAABFvoA==
-Date:   Mon, 5 Aug 2019 09:41:06 +0000
-Message-ID: <6f8c0d1e51c242a288fbf9b32240e4c1@AcuMS.aculab.com>
-References: <20190729083248.30362-1-christoph.boehmwalder@linbit.com>
- <6259de605e9246b095233e3984262b93@AcuMS.aculab.com>
- <ad16d006-4382-3f77-8968-6f840e58b8df@linbit.com>
-In-Reply-To: <ad16d006-4382-3f77-8968-6f840e58b8df@linbit.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 5 Aug 2019 05:41:43 -0400
+Received: by mail-wm1-f66.google.com with SMTP id h19so6260063wme.0
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 02:41:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=zwVFHt+48HDHPxY5b54ZFa7xoeFEjvHa3khRmzD7FKU=;
+        b=uemqmpa5kVFXiavwLe6yqYrDmEZZV7Fcfsv21+JFTYqvKAtB5dvFEWIr4grJOpmSRp
+         denJH6xQUZDRMwrqyhoKWcKx0lvzboWIwlSDmy82BgpPOXrpCKAxdpqxVSKSRipCOh7s
+         pqGeT1q/7andPM62LzouFLClYDxeAW+3CDCE5wWZakpPw1H0n1TCp398yGA/dFMJ2T0S
+         I3uOcmxbIsoZudjPF9sJzz8l55xuAM7Wb6TgrxVG7WuwkXdtusMHMerDRBUXnVZpPVOA
+         RCE8ecEsdXVrfBZech4vOgi8/sgNY60ua7JQ/cuqCB0kbeyI2qT2Z5HQrvdQndmit9Mq
+         2diA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=zwVFHt+48HDHPxY5b54ZFa7xoeFEjvHa3khRmzD7FKU=;
+        b=WdkverofzMpF0tLVDZq8ZO47A9M0ih/IY/G1XJm+hpzE4iCih1rrIF6E6RuGS7HjXw
+         /gjcl9FNsbqh/dB4XoGWrY6efJbGzBfmub7XZgIib9a3cpL0CNLww6TLOTzwvliqaV64
+         Qz0rcP0WvBYiz2wxjl4h2C9eDBew2SzCNYmUpjXHosgOZoys2QAdpEaZTwvSsiSWzv3s
+         w10vdiQGZn7xxFgDnjiY161Q0tjSvzApYIGbr0R2N6j/2+sEiPZvpzo+tH888mQ5YyiY
+         RfkTH+ZrF8wV7iPZ0N0V8VtjhK+aCwEsip0dgP4/FG/BNa3+B4jnLqXQzQTXR7xWcfR3
+         i1bQ==
+X-Gm-Message-State: APjAAAXAgO2hejYzFGvathXLl6yyEPTen2XxdAKl+zeAZ3jJHpu6rcmW
+        hvv/VT6MwgnNb5CBM0eyO9kyFQ==
+X-Google-Smtp-Source: APXvYqxUqLSyKoX3kBT5LqfmayHxL8IsZIurFOcWjSA/ZAELqlanwnjiTdxfqjeBVGrR1f0Qv4G6Aw==
+X-Received: by 2002:a1c:1a87:: with SMTP id a129mr17580112wma.21.1564998101244;
+        Mon, 05 Aug 2019 02:41:41 -0700 (PDT)
+Received: from [10.1.4.98] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id a81sm90371174wmh.3.2019.08.05.02.41.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 05 Aug 2019 02:41:40 -0700 (PDT)
+Subject: Re: [PATCH v2 3/6] arm64: dts: amlogic: g12: add temperature sensor
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     daniel.lezcano@linaro.org, khilman@baylibre.com,
+        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org
+References: <20190731153529.30159-1-glaroque@baylibre.com>
+ <20190731153529.30159-4-glaroque@baylibre.com>
+ <CAFBinCBYPiLgmTNk+7Db3EPSPePwbnAshCbomYPXWdse8i0oJw@mail.gmail.com>
+From:   guillaume La Roque <glaroque@baylibre.com>
+Message-ID: <d702eb8b-f0b7-0b3b-9a17-1d158d7c072f@baylibre.com>
+Date:   Mon, 5 Aug 2019 11:41:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-MC-Unique: iiCZ4_0kN0uCcHgQ-ApRbg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+In-Reply-To: <CAFBinCBYPiLgmTNk+7Db3EPSPePwbnAshCbomYPXWdse8i0oJw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQ2hyaXN0b3BoIELDtmhtd2FsZGVyDQo+IFNlbnQ6IDA1IEF1Z3VzdCAyMDE5IDEwOjMz
-DQo+IA0KPiBPbiAyOS4wNy4xOSAxMDo1MCwgRGF2aWQgTGFpZ2h0IHdyb3RlOg0KPiA+IERvZXNu
-J3QgdW5tYXNraW5nIHRoZSBzaWduYWxzIGFuZCB1c2luZyBzZW5kX3NpZygpIGluc3RlYWQgIG9m
-IGZvcmNlX3NpZygpDQo+ID4gaGF2ZSB0aGUgKHByb2JhYmx5IHVud2FudGVkKSBzaWRlIGVmZmVj
-dCBvZiBhbGxvd2luZyB1c2Vyc3BhY2UgdG8gc2VuZA0KPiA+IHRoZSBzaWduYWw/DQo+IA0KPiBJ
-IGhhdmUgcmFuIHNvbWUgdGVzdHMsIGFuZCBpdCBkb2VzIGxvb2sgbGlrZSBpdCBpcyBub3cgcG9z
-c2libGUgdG8gc2VuZA0KPiBzaWduYWxzIHRvIHRoZSBEUkJEIGt0aHJlYWQgZnJvbSB1c2Vyc3Bh
-Y2UuIEhvd2V2ZXIsIC4uLg0KPiANCj4gPiBJJ3ZlIGNlcnRhaW5seSBnb3Qgc29tZSBkcml2ZXIg
-Y29kZSB0aGF0IHVzZXMgZm9yY2Vfc2lnKCkgb24gYSBrdGhyZWFkDQo+ID4gdGhhdCBpdCBkb2Vz
-bid0IChldmVyKSB3YW50IHVzZXJzcGFjZSB0byBzaWduYWwuDQo+IA0KPiAuLi4gd2UgZG9uJ3Qg
-ZmVlbCB0aGF0IGl0IGlzIGFic29sdXRlbHkgbmVjZXNzYXJ5IGZvciB1c2Vyc3BhY2UgdG8gYmUN
-Cj4gdW5hYmxlIHRvIHNlbmQgYSBzaWduYWwgdG8gb3VyIGt0aHJlYWRzLiBUaGlzIGlzIGJlY2F1
-c2UgdGhlIERSQkQgdGhyZWFkDQo+IGluZGVwZW5kZW50bHkgY2hlY2tzIGl0cyBvd24gc3RhdGUs
-IGFuZCAoZm9yIGV4YW1wbGUpIG9ubHkgZXhpdHMgYXMgYQ0KPiByZXN1bHQgb2YgYSBzaWduYWwg
-aWYgaXRzIHRocmVhZCBzdGF0ZSB3YXMgYWxyZWFkeSAiRVhJVElORyIgdG8gYmVnaW4NCj4gd2l0
-aC4NCg0KSW4gbXVzdCAnY2xlYXInIHRoZSBzaWduYWwgLSBvdGhlcndpc2UgaXQgd29uJ3QgYmxv
-Y2sgYWdhaW4uDQoNCkkndmUgYWxzbyBnb3QgdGhpcyBob3JyaWQgY29kZSBmcmFnbWVudDoNCg0K
-ICAgIGluaXRfd2FpdHF1ZXVlX2VudHJ5KCZ3LCBjdXJyZW50KTsNCg0KICAgIC8qIFRlbGwgc2No
-ZWR1bGVyIHdlIGFyZSBnb2luZyB0byBzbGVlcC4uLiAqLw0KICAgIGlmIChzaWduYWxfcGVuZGlu
-ZyhjdXJyZW50KSAmJiAhaW50ZXJydXB0aWJsZSkNCiAgICAgICAgLyogV2UgZG9uJ3Qgd2FudCB3
-YWtpbmcgaW1tZWRpYXRlbHkgKGFnYWluKSAqLw0KICAgICAgICBzbGVlcF9zdGF0ZSA9IFRBU0tf
-VU5JTlRFUlJVUFRJQkxFOw0KICAgIGVsc2UNCiAgICAgICAgc2xlZXBfc3RhdGUgPSBUQVNLX0lO
-VEVSUlVQVElCTEU7DQogICAgc2V0X2N1cnJlbnRfc3RhdGUoc2xlZXBfc3RhdGUpOw0KDQogICAg
-LyogQ29ubmVjdCB0byBjb25kaXRpb24gdmFyaWFibGUgLi4uICovDQogICAgYWRkX3dhaXRfcXVl
-dWUoY3ZwLCAmdyk7DQogICAgbXV0ZXhfdW5sb2NrKG10eHApOyAvKiBSZWxlYXNlIG11dGV4ICov
-DQoNCndoZXJlIHdlIHdhbnQgdG8gc2xlZXAgVEFTS19VTklOVEVSUlVQVElCTEUgYnV0IHRoYXQg
-Zipja3MgdXAgdGhlICdsb2FkIGF2ZXJhZ2UnLA0Kc28gc2xlZXAgVEFTS19JTlRFUlJVUFRJQkxF
-IHVubGVzcyB0aGVyZSBpcyBhIHNpZ25hbCBwZW5kaW5nIHRoYXQgd2Ugd2FudCB0bw0KaWdub3Jl
-Lg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJv
-YWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24g
-Tm86IDEzOTczODYgKFdhbGVzKQ0K
+hi Martin,
 
+
+thanks for comments i will fix in v3.
+
+
+guillaume
+
+On 8/3/19 7:52 PM, Martin Blumenstingl wrote:
+> Hi Guillaume,
+>
+> On Wed, Jul 31, 2019 at 5:36 PM Guillaume La Roque
+> <glaroque@baylibre.com> wrote:
+>> Add cpu and ddr temperature sensors for G12 Socs
+>>
+>> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> with the nit-pick below addressed:
+> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+>
+>> ---
+>>  .../boot/dts/amlogic/meson-g12-common.dtsi    | 22 +++++++++++++++++++
+>>  1 file changed, 22 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+>> index 06e186ca41e3..7f862a3490fb 100644
+>> --- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+>> @@ -1353,6 +1353,28 @@
+>>                                 };
+>>                         };
+>>
+>> +                       cpu_temp: temperature-sensor@34800 {
+>> +                               compatible = "amlogic,g12-cpu-thermal",
+>> +                                            "amlogic,g12-thermal";
+>> +                               reg = <0x0 0x34800 0x0 0x50>;
+>> +                               interrupts = <GIC_SPI 35 IRQ_TYPE_EDGE_RISING>;
+>> +                               clocks = <&clkc CLKID_TS>;
+>> +                               status = "okay";
+> I believe nodes are enabled automatically if they don't have a status property
+>
+>> +                               #thermal-sensor-cells = <0>;
+>> +                               amlogic,ao-secure = <&sec_AO>;
+>> +                       };
+>> +
+>> +                       ddr_temp: temperature-sensor@34c00 {
+>> +                               compatible = "amlogic,g12-ddr-thermal",
+>> +                                            "amlogic,g12-thermal";
+>> +                               reg = <0x0 0x34c00 0x0 0x50>;
+>> +                               interrupts = <GIC_SPI 36 IRQ_TYPE_EDGE_RISING>;
+>> +                               clocks = <&clkc CLKID_TS>;
+>> +                               status = "okay";
+> same here
+>
+>
+> Martin
