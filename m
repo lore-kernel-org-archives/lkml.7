@@ -2,137 +2,193 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1421FC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69428C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF0792147A
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:17:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CFA42147A
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:19:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565043566;
+	bh=DAJwXEw19Gb3M6Oq5kBaOup970MTSVSAKhmz3GBuXtk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=0bQHqUFXWkfE3OyKs+76BWkV2kMTJmqEFtY9mu6+mtU0oD0Z1EvKCHkf1pAOo4yZT
+	 TBZfRN/dxTNFcAcloRHJr0pi7xZ8fMp8ER7HGBQmmeGVoFaDRxH4kbk5D8vLt/aHC/
+	 LRTvl7xzBDOFJIV8CQwkrbBk4cQHnMMS0Q3+K+LI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730850AbfHEWRr (ORCPT
+        id S1730804AbfHEWTY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 18:17:47 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61570 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727928AbfHEWRq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 18:17:46 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x75MGdLQ103742;
-        Mon, 5 Aug 2019 18:17:27 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2u6v9t9qwd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 05 Aug 2019 18:17:27 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x75MHRjt105700;
-        Mon, 5 Aug 2019 18:17:27 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2u6v9t9qvx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 05 Aug 2019 18:17:27 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x75MAsq3013181;
-        Mon, 5 Aug 2019 22:17:26 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma01wdc.us.ibm.com with ESMTP id 2u51w6bcyf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 05 Aug 2019 22:17:26 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x75MHQq844957956
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 5 Aug 2019 22:17:26 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 28E03B20A4;
-        Mon,  5 Aug 2019 22:17:26 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0A3DCB209D;
-        Mon,  5 Aug 2019 22:17:26 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  5 Aug 2019 22:17:25 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 9958416C9A3A; Mon,  5 Aug 2019 15:17:29 -0700 (PDT)
-Date:   Mon, 5 Aug 2019 15:17:29 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     Andrea Parri <parri.andrea@gmail.com>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Daniel Lustig <dlustig@nvidia.com>
-Subject: Re: [PATCH] MAINTAINERS: Update e-mail address for Andrea Parri
-Message-ID: <20190805221729.GM28441@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <20190805121517.4734-1-parri.andrea@gmail.com>
- <76010b66-a662-5b07-a21d-ed074d7d2194@gmail.com>
- <20190805151545.GA1615@aparri>
- <1565018618.3341.6.camel@HansenPartnership.com>
- <20190805174355.GJ28441@linux.ibm.com>
- <1565028568.15050.7.camel@HansenPartnership.com>
+        Mon, 5 Aug 2019 18:19:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58364 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727928AbfHEWTY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 18:19:24 -0400
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C08E4216B7;
+        Mon,  5 Aug 2019 22:19:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565043562;
+        bh=DAJwXEw19Gb3M6Oq5kBaOup970MTSVSAKhmz3GBuXtk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=MMsu+oJbyvDnQfp/3Sqw52yu3oTmDrGx7JSFykZCahzUkH1ZG3cT518XVsjvF2OJS
+         wrJNhvBMBvhL9qo5jubI/JdMWLyhn0H3wjlPddG0iWsyQSXDXUnV4AH+eFK/e+qLSz
+         sptjIsYR7y1qbYOgBXVRxXn+5b/AmGXSWCHqWxuM=
+Received: by mail-qk1-f182.google.com with SMTP id t8so61388163qkt.1;
+        Mon, 05 Aug 2019 15:19:22 -0700 (PDT)
+X-Gm-Message-State: APjAAAV5L2M6cZynI7nqUFJSxmF53hSWoKW8wQctT+skutIaF1Ro1MTy
+        aUZQEagcA7H+ooLd0tNiKaGwBa67cJrr4z4+7w==
+X-Google-Smtp-Source: APXvYqwz4pf25c01K6WX65UF5AuzkCcAaP6sAPVUCXeRy75ZDEAzBFtayvGaJ/BvtVIeahMI898URW4gNOpYlM5mhJY=
+X-Received: by 2002:a37:a010:: with SMTP id j16mr575745qke.152.1565043561946;
+ Mon, 05 Aug 2019 15:19:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1565028568.15050.7.camel@HansenPartnership.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-05_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908050224
+References: <20190805134319.737-1-narmstrong@baylibre.com> <20190805134319.737-3-narmstrong@baylibre.com>
+In-Reply-To: <20190805134319.737-3-narmstrong@baylibre.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 5 Aug 2019 16:19:10 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLMS2y5ZR4SH6TVwnaTDhnGwk2_C_81DTz9J=ypDdBd4w@mail.gmail.com>
+Message-ID: <CAL_JsqLMS2y5ZR4SH6TVwnaTDhnGwk2_C_81DTz9J=ypDdBd4w@mail.gmail.com>
+Subject: Re: [PATCH 2/3] dt-bindings: display: amlogic,meson-vpu: convert to yaml
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     devicetree@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-amlogic@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 11:09:28AM -0700, James Bottomley wrote:
-> On Mon, 2019-08-05 at 10:43 -0700, Paul E. McKenney wrote:
-> > On Mon, Aug 05, 2019 at 08:23:38AM -0700, James Bottomley wrote:
-> > > On Mon, 2019-08-05 at 17:15 +0200, Andrea Parri wrote:
-> > > > > Why don't you also add an entry in .mailmap as Will did in
-> > > > > commit
-> > > > > c584b1202f2d ("MAINTAINERS: Update my email address to use
-> > > > > @kernel.org")?
-> > > > 
-> > > > I considered it but could not understand its purpose...  Maybe
-> > > > you can explain it to me?  ;-) (can resend with this change if
-> > > > needed/desired).
-> > > 
-> > > man git-shortlog gives you the gory detail, but its use is to
-> > > "coalesce together commits by the same person in the shortlog,
-> > > where their name and/or email address was spelled
-> > > differently."  The usual way this happens is that people have the
-> > > name that appears in the From field with and without initials.
-> > 
-> > New one on me, thank you!  So I should have a line in .mailmap like
-> > this?
-> > 
-> > Paul E. McKenney <paulmck@linux.vnet.ibm.com> <paul.mckenney@linaro.o
-> > rg> <paulmck@linux.ibm.com>
-> 
-> Well, you could, but there's no need.  As long as your email has 'Paul
-> E. McKenney' as the text prefix, git-shortlog will do the correct
-> aggregation without any need for a .mailmap entry.  However, if, say,
-> your linaro email had been
-> 
-> Paul McKenney <paul.mckenney@linaro.com>
-> 
-> Then you would need one because git-shortlog would think 'Paul
-> McKenney' and 'Paul E. McKenney' were two different people.
+On Mon, Aug 5, 2019 at 7:43 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> Now that we have the DT validation in place, let's convert the device tree
+> bindings for the Amlogic Display Controller over to YAML schemas.
+>
+> The original example has a leftover "dmc" memory cell, that has been
+> removed in the yaml rewrite.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  .../bindings/display/amlogic,meson-vpu.txt    | 121 --------------
+>  .../bindings/display/amlogic,meson-vpu.yaml   | 153 ++++++++++++++++++
+>  2 files changed, 153 insertions(+), 121 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/amlogic,meson-vpu.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/amlogic,meson-vpu.yaml
 
-Thank you for the explication!
 
-							Thanx, Paul
+> diff --git a/Documentation/devicetree/bindings/display/amlogic,meson-vpu.yaml b/Documentation/devicetree/bindings/display/amlogic,meson-vpu.yaml
+> new file mode 100644
+> index 000000000000..9eba13031998
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/amlogic,meson-vpu.yaml
+> @@ -0,0 +1,153 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019 BayLibre, SAS
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/display/amlogic,meson-vpu.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Amlogic Meson Display Controller
+> +
+> +maintainers:
+> +  - Neil Armstrong <narmstrong@baylibre.com>
+> +
+> +description: |
+> +  The Amlogic Meson Display controller is composed of several components
+> +  that are going to be documented below
+> +
+> +  DMC|---------------VPU (Video Processing Unit)----------------|------HHI------|
+> +     | vd1   _______     _____________    _________________     |               |
+> +  D  |-------|      |----|            |   |                |    |   HDMI PLL    |
+> +  D  | vd2   | VIU  |    | Video Post |   | Video Encoders |<---|-----VCLK      |
+> +  R  |-------|      |----| Processing |   |                |    |               |
+> +     | osd2  |      |    |            |---| Enci ----------|----|-----VDAC------|
+> +  R  |-------| CSC  |----| Scalers    |   | Encp ----------|----|----HDMI-TX----|
+> +  A  | osd1  |      |    | Blenders   |   | Encl ----------|----|---------------|
+> +  M  |-------|______|----|____________|   |________________|    |               |
+> +  ___|__________________________________________________________|_______________|
+> +
+> +
+> +  VIU: Video Input Unit
+> +  ---------------------
+> +
+> +  The Video Input Unit is in charge of the pixel scanout from the DDR memory.
+> +  It fetches the frames addresses, stride and parameters from the "Canvas" memory.
+> +  This part is also in charge of the CSC (Colorspace Conversion).
+> +  It can handle 2 OSD Planes and 2 Video Planes.
+> +
+> +  VPP: Video Post Processing
+> +  --------------------------
+> +
+> +  The Video Post Processing is in charge of the scaling and blending of the
+> +  various planes into a single pixel stream.
+> +  There is a special "pre-blending" used by the video planes with a dedicated
+> +  scaler and a "post-blending" to merge with the OSD Planes.
+> +  The OSD planes also have a dedicated scaler for one of the OSD.
+> +
+> +  VENC: Video Encoders
+> +  --------------------
+> +
+> +  The VENC is composed of the multiple pixel encoders
+> +   - ENCI : Interlace Video encoder for CVBS and Interlace HDMI
+> +   - ENCP : Progressive Video Encoder for HDMI
+> +   - ENCL : LCD LVDS Encoder
+> +  The VENC Unit gets a Pixel Clocks (VCLK) from a dedicated HDMI PLL and clock
+> +  tree and provides the scanout clock to the VPP and VIU.
+> +  The ENCI is connected to a single VDAC for Composite Output.
+> +  The ENCI and ENCP are connected to an on-chip HDMI Transceiver.
+> +
+> +  The following table lists for each supported model the port number
+> +  corresponding to each VPU output.
+> +
+> +                  Port 0       Port 1
+> +  -----------------------------------------
+> +   S905 (GXBB)   CVBS VDAC        HDMI-TX
+> +   S905X (GXL)   CVBS VDAC        HDMI-TX
+> +   S905D (GXL)   CVBS VDAC        HDMI-TX
+> +   S912 (GXM)      CVBS VDAC      HDMI-TX
+> +   S905X2 (G12A)       CVBS VDAC          HDMI-TX
+> +   S905Y2 (G12A)       CVBS VDAC          HDMI-TX
+> +   S905D2 (G12A)       CVBS VDAC          HDMI-TX
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - amlogic,meson-gxbb-vpu # GXBB (S905)
+> +              - amlogic,meson-gxl-vpu # GXL (S905X, S905D)
+> +              - amlogic,meson-gxm-vpu # GXM (S912)
+> +          - const: amlogic,meson-gx-vpu
+> +      - enum:
+> +          - amlogic,meson-g12a-vpu # G12A (S905X2, S905Y2, S905D2)
+> +
+> +  reg:
+> +    maxItems: 2
+> +
+> +  reg-names:
+> +   items:
+> +     - const: vpu
+> +     - const: hhi
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  power-domains:
+> +    description: phandle to the associated power domain
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/phandle
+
+Common properties don't need a type definition. As this can be an
+array, you just need 'maxItems: 1'.
+
+Same comments on patch 1 apply here too.
+
+Rob
