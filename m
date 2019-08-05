@@ -2,127 +2,125 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A2EBC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEEDDC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 259EE21734
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:32:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565019139;
-	bh=5Fo1lcrk0QBH+nQkQEA4eroaNHcmo/SoobrETrf2H2M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=0ekWNnTtm+UKfucllbLlPjVNtRXIqIFfjHEGcX9aoeGOazihm3d99oDUz99+JD30C
-	 toMWKX0jkGC7eWUE7Hz89aHCyTuUGvXDGcLjOaJ7hLbEODwCwzAJodCoqwcwzaCXA0
-	 XX8Qnx/dk4nYDxqN+48lgF490i16kpb32nuhUWRs=
+	by mail.kernel.org (Postfix) with ESMTP id 8A1A521734
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:33:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729321AbfHEPcS (ORCPT
+        id S1729121AbfHEPd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 11:32:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43046 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 11:33:27 -0400
+Received: from mga17.intel.com ([192.55.52.151]:30103 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727460AbfHEPcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 11:32:17 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33C5D20B1F;
-        Mon,  5 Aug 2019 15:32:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565019136;
-        bh=5Fo1lcrk0QBH+nQkQEA4eroaNHcmo/SoobrETrf2H2M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=U86SO7xoHwFOD2M90mxGhLow/fXDhWnWdl0RzdQrXOi6UPr5x0pz7iSHOGldoClRt
-         rXOvXuB2KnZnWcG1Blzgx2T3b3S/8b3rmDLmSryB0LTxBKXtryQeYPDaGy0RSTrVcJ
-         oZTUPO7HhwKoeqjiJO1J3mjN1vXTpa1nDSqg9rO8=
-Date:   Mon, 5 Aug 2019 16:32:12 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Brian Masney <masneyb@onstation.org>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/4] iio: tsl2772: Use devm_iio_device_register
-Message-ID: <20190805163157.1ee0c0c0@archlinux>
-In-Reply-To: <20190801073612.9689-1-hslester96@gmail.com>
-References: <20190801073612.9689-1-hslester96@gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1727460AbfHEPd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 11:33:27 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 08:33:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,350,1559545200"; 
+   d="scan'208";a="164683077"
+Received: from nupurjai-mobl.amr.corp.intel.com (HELO [10.251.149.179]) ([10.251.149.179])
+  by orsmga007.jf.intel.com with ESMTP; 05 Aug 2019 08:33:25 -0700
+Subject: Re: [alsa-devel] [RFC PATCH 23/40] soundwire: stream: fix disable
+ sequence
+To:     Sanyog Kale <sanyog.r.kale@intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, vkoul@kernel.org,
+        gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com
+References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
+ <20190725234032.21152-24-pierre-louis.bossart@linux.intel.com>
+ <20190805095620.GD22437@buildpc-HP-Z230>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <12799e97-d6e3-5027-a409-0fe37dba86fd@linux.intel.com>
+Date:   Mon, 5 Aug 2019 10:33:25 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190805095620.GD22437@buildpc-HP-Z230>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  1 Aug 2019 15:36:12 +0800
-Chuhong Yuan <hslester96@gmail.com> wrote:
 
-> Use devm_iio_device_register, which removes the tsl2772_remove
-> function.
+
+On 8/5/19 4:56 AM, Sanyog Kale wrote:
+> On Thu, Jul 25, 2019 at 06:40:15PM -0500, Pierre-Louis Bossart wrote:
+>> When we disable the stream and then call hw_free, two bank switches
+>> will be handled and as a result we re-enable the stream on hw_free.
+>>
 > 
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> I didnt quite get why there will be two bank switches as part of disable flow
+> which leads to enabling of stream?
 
-Applied.
+You have two bank switches, one to stop streaming and on in de-prepare. 
+It's symmetrical with the start sequence, where we do a bank switch to 
+prepare and another to enable.
 
-Thanks,
+Let's assume we are using bank0 when streaming.
 
-J
-> ---
-> Changes in v4:
->   - Split v3 into three patches.
->   - Revise description to make it more precise.
+Before the first bank switch, the channel_enable is set to false in the 
+alternate bank1. When the bank switch happens, bank1 become active and 
+the streaming stops. But bank0 registers have not been modified so when 
+we do the second bank switch in de-prepare we make bank0 active, and the 
+ch_enable bits are still set so streaming will restart... When we stop 
+streaming, we need to make sure the ch_enable bits are cleared in the 
+two banks.
+
+
 > 
->  drivers/iio/light/tsl2772.c | 19 +------------------
->  1 file changed, 1 insertion(+), 18 deletions(-)
+>> Make sure the stream is disabled on both banks.
+>>
+>> TODO: we need to completely revisit all this and make sure we have a
+>> mirroring mechanism between current and alternate banks.
+>>
+>> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+>> ---
+>>   drivers/soundwire/stream.c | 19 ++++++++++++++++++-
+>>   1 file changed, 18 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
+>> index 53f5e790fcd7..75b9ad1fb1a6 100644
+>> --- a/drivers/soundwire/stream.c
+>> +++ b/drivers/soundwire/stream.c
+>> @@ -1637,7 +1637,24 @@ static int _sdw_disable_stream(struct sdw_stream_runtime *stream)
+>>   		}
+>>   	}
+>>   
+>> -	return do_bank_switch(stream);
+>> +	ret = do_bank_switch(stream);
+>> +	if (ret < 0) {
+>> +		dev_err(bus->dev, "Bank switch failed: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	/* make sure alternate bank (previous current) is also disabled */
+>> +	list_for_each_entry(m_rt, &stream->master_list, stream_node) {
+>> +		bus = m_rt->bus;
+>> +		/* Disable port(s) */
+>> +		ret = sdw_enable_disable_ports(m_rt, false);
+>> +		if (ret < 0) {
+>> +			dev_err(bus->dev, "Disable port(s) failed: %d\n", ret);
+>> +			return ret;
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+>>   }
+>>   
+>>   /**
+>> -- 
+>> 2.20.1
+>>
 > 
-> diff --git a/drivers/iio/light/tsl2772.c b/drivers/iio/light/tsl2772.c
-> index e866ae40f157..680afdb078d2 100644
-> --- a/drivers/iio/light/tsl2772.c
-> +++ b/drivers/iio/light/tsl2772.c
-> @@ -1890,14 +1890,7 @@ static int tsl2772_probe(struct i2c_client *clientp,
->  	if (ret < 0)
->  		return ret;
->  
-> -	ret = iio_device_register(indio_dev);
-> -	if (ret) {
-> -		dev_err(&clientp->dev,
-> -			"%s: iio registration failed\n", __func__);
-> -		return ret;
-> -	}
-> -
-> -	return 0;
-> +	return devm_iio_device_register(&clientp->dev, indio_dev);
->  }
->  
->  static int tsl2772_suspend(struct device *dev)
-> @@ -1934,15 +1927,6 @@ static int tsl2772_resume(struct device *dev)
->  	return tsl2772_chip_on(indio_dev);
->  }
->  
-> -static int tsl2772_remove(struct i2c_client *client)
-> -{
-> -	struct iio_dev *indio_dev = i2c_get_clientdata(client);
-> -
-> -	iio_device_unregister(indio_dev);
-> -
-> -	return 0;
-> -}
-> -
->  static const struct i2c_device_id tsl2772_idtable[] = {
->  	{ "tsl2571", tsl2571 },
->  	{ "tsl2671", tsl2671 },
-> @@ -1989,7 +1973,6 @@ static struct i2c_driver tsl2772_driver = {
->  	},
->  	.id_table = tsl2772_idtable,
->  	.probe = tsl2772_probe,
-> -	.remove = tsl2772_remove,
->  };
->  
->  module_i2c_driver(tsl2772_driver);
-
