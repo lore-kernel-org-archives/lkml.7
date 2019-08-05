@@ -2,98 +2,140 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97010C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D107FC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A165217D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9806217D9
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:56:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564998987;
+	bh=c/eJMd7h8iMY7g3oBcO09Ax6tNi/85j/LkvMdm+2LJ0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ySEroXUezxd+a7eKPMkkX7PqAkKeSSmBQ8vZVaMs+7k/7P/c5QtjmmpIZAkDCOW1F
+	 yLkmygXQgU0l8qbBMgLTYE5U5PJYSF5xVA0bSNACaZ8Xd0Zc621KYrcFJSolsbNXYa
+	 5X1iwb5OENDb08qcYhs/UMLc/1c0wkEhevEkfvnc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728142AbfHEJ4P (ORCPT
+        id S1728210AbfHEJ41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 05:56:15 -0400
-Received: from shell.v3.sk ([90.176.6.54]:60334 "EHLO shell.v3.sk"
+        Mon, 5 Aug 2019 05:56:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727225AbfHEJ4P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 05:56:15 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 0AEE0D5DDB;
-        Mon,  5 Aug 2019 11:56:10 +0200 (CEST)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id Q-7FVgH1G8-P; Mon,  5 Aug 2019 11:56:03 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id E7E5CD5DD8;
-        Mon,  5 Aug 2019 11:56:02 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id lqHkZW8HlhTz; Mon,  5 Aug 2019 11:56:01 +0200 (CEST)
-Received: from zimbra.v3.sk (zimbra.v3.sk [10.13.37.31])
-        by zimbra.v3.sk (Postfix) with ESMTP id 346F0D5DDB;
-        Mon,  5 Aug 2019 11:56:01 +0200 (CEST)
-Date:   Mon, 5 Aug 2019 11:56:00 +0200 (CEST)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Message-ID: <1387772868.4330.1564998960018.JavaMail.zimbra@v3.sk>
-In-Reply-To: <20190803085824.GB8224@amd>
-References: <20190802103326.531250-1-lkundrak@v3.sk> <20190802103326.531250-7-lkundrak@v3.sk> <20190803085824.GB8224@amd>
-Subject: Re: [PATCH v2 6/6] ARM: dts: mmp2: add OLPC XO 1.75 machine
+        id S1727158AbfHEJ40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 05:56:26 -0400
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5469C217D9;
+        Mon,  5 Aug 2019 09:56:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564998985;
+        bh=c/eJMd7h8iMY7g3oBcO09Ax6tNi/85j/LkvMdm+2LJ0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=kCUfwhYAxdatWJQsoVRP5kF25HVcRa1aMqKUgUJMss9brgbECYUQmepSWt2tGm/RQ
+         umRuOgvoPUKkt+A7Papljrijh6QQVCW0gkYfOsbJ6bM3ez1Rp3W8VOVzCufeKWykP2
+         SI9yu/NkrsRLYzfI5dB6G+qzLhW/6hIfeGIf620k=
+Received: by mail-lj1-f171.google.com with SMTP id h10so7308819ljg.0;
+        Mon, 05 Aug 2019 02:56:25 -0700 (PDT)
+X-Gm-Message-State: APjAAAXzFIpCWS5XBf77VnlywWzZUbrTNQNiwyN3HVuC4+prFDF7C8xX
+        DaepV4NDFhOVqOD6QA0HpqV/hsw07nnrY/d3cd0=
+X-Google-Smtp-Source: APXvYqxzVKAd5TMLzlif6yoBQ/7YS/sKvvkA9uKhcxY/lMn1ISB5YMDZXNJeRxIeHY+6zPufLi4WkrEALvt2npvWd0M=
+X-Received: by 2002:a2e:8155:: with SMTP id t21mr21170060ljg.80.1564998983563;
+ Mon, 05 Aug 2019 02:56:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.13.37.1]
-X-Mailer: Zimbra 8.6.0_GA_1153 (ZimbraWebClient - FF68 (Linux)/8.6.0_GA_1153)
-Thread-Topic: mmp2: add OLPC XO 1.75 machine
-Thread-Index: tSI++o0iWICeZ1TARJ86vAWcjaSjHw==
+References: <20190723122016.30279-1-a.swigon@partner.samsung.com>
+ <CGME20190723122022eucas1p1266d90873d564894bd852c20140f8474@eucas1p1.samsung.com>
+ <20190723122016.30279-2-a.swigon@partner.samsung.com> <20190724190741.GD14346@kozik-lap>
+ <bda10bcc66aae96355e74c4739229d72bcc95b0d.camel@partner.samsung.com>
+In-Reply-To: <bda10bcc66aae96355e74c4739229d72bcc95b0d.camel@partner.samsung.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Mon, 5 Aug 2019 11:56:12 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPdAhyAE96LmzV7TB1YTyNcN7Eh65Xb9caanXA-52Gskvg@mail.gmail.com>
+Message-ID: <CAJKOXPdAhyAE96LmzV7TB1YTyNcN7Eh65Xb9caanXA-52Gskvg@mail.gmail.com>
+Subject: Re: [RFC PATCH 01/11] devfreq: exynos-bus: Extract exynos_bus_profile_init()
+To:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Chanwoo Choi <cw00.choi@samsung.com>, myungjoo.ham@samsung.com,
+        Inki Dae <inki.dae@samsung.com>,
+        Seung Woo Kim <sw0312.kim@samsung.com>,
+        georgi.djakov@linaro.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
+        <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Aug 3, 2019, at 10:58 AM, Pavel Machek pavel@ucw.cz wrote:
+On Wed, 31 Jul 2019 at 15:00, Artur =C5=9Awigo=C5=84 <a.swigon@partner.sams=
+ung.com> wrote:
+>
+> Hi,
+>
+> On Wed, 2019-07-24 at 21:07 +0200, Krzysztof Kozlowski wrote:
+> > On Tue, Jul 23, 2019 at 02:20:06PM +0200, Artur =C5=9Awigo=C5=84 wrote:
+> > > This patch adds a new static function, exynos_bus_profile_init(), ext=
+racted
+> > > from exynos_bus_probe().
+> > >
+> > > Signed-off-by: Artur =C5=9Awigo=C5=84 <a.swigon@partner.samsung.com>
+> > > ---
+> > >  drivers/devfreq/exynos-bus.c | 106 ++++++++++++++++++++-------------=
+--
+> > >  1 file changed, 60 insertions(+), 46 deletions(-)
+> > >
+> > > diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bu=
+s.c
+> > > index d9f377912c10..d8f1efaf2d49 100644
+> > > --- a/drivers/devfreq/exynos-bus.c
+> > > +++ b/drivers/devfreq/exynos-bus.c
+> > > @@ -372,12 +372,69 @@ static int exynos_bus_parse_of(struct device_no=
+de *np,
+> > >     return ret;
+> > >  }
+> > >
+> > > +static int exynos_bus_profile_init(struct exynos_bus *bus,
+> > > +                              struct devfreq_dev_profile *profile)
+> > > +{
+> > > +   struct device *dev =3D bus->dev;
+> > > +   struct devfreq_simple_ondemand_data *ondemand_data;
+> > > +   int ret;
+> > > +
+> > > +   /* Initialize the struct profile and governor data for parent dev=
+ice */
+> > > +   profile->polling_ms =3D 50;
+> > > +   profile->target =3D exynos_bus_target;
+> > > +   profile->get_dev_status =3D exynos_bus_get_dev_status;
+> > > +   profile->exit =3D exynos_bus_exit;
+> > > +
+> > > +   ondemand_data =3D devm_kzalloc(dev, sizeof(*ondemand_data), GFP_K=
+ERNEL);
+> > > +   if (!ondemand_data) {
+> > > +           ret =3D -ENOMEM;
+> > > +           goto err;
+> >
+> > Just return proper error code. Less lines, obvious code since you do no=
+t
+> > have any cleanup in error path.
+>
+> I was advised to avoid modifying code being moved (in one patch). I do ma=
+ke
+> changes in these places in patch 04/11, i.e. change the original label 'e=
+rr' to
+> 'out'. What's your opinion on making the proposed changes to patches 01 a=
+nd 02
+> (s/goto err/return ret/) in patch 04 instead?
 
-> On Fri 2019-08-02 12:33:26, Lubomir Rintel wrote:
->> This is a fairly complete description of an OLPC XO 1.75 laptop.
->> What's missing for now is the GPU, LCD controller, DCON, the panel and
->> audio.
-> 
-> Ok, but I need GPU/LCD/panel... that's my only output. Is video
-> expected to work in 5.2? Does the firmware pass right device tree,
-> including the GPU/LCD/DCON?
+Yes, you're right. I also prefer not to touch moved code.
 
-The firmware (and the dts) uses a simple-framebuffer. You won't get
-any nifty features, but you'll get a framebuffer.
-
-Hopefully we'll get a proper DRM video soon. The status is roughly
-as follows:
-
-LCDC: potentially supported by the Armada DRM driver. Patches sent to
-Russell King some months ago, not there yet. I'd prefer not to nag him.
-
-DCON: Russell dislikes the idea of a DRM bridge, DRM maintainers prefer
-if the driver was not a DRM encoder driver. This seems to require
-quite some work to fix [1].
-
-[1] https://www.spinics.net/lists/dri-devel/msg201927.html
-
-GPU: supported by the etnaviv driver, good enough for 2D acceleration
-to work with xorg-x11-video-armada driver. 3D (weston and mutter alike)
-is broken. To add this to the device tree, the clock and power needs
-to be figured out.
-
-> Is there config somewhere I could use?
-> 
-> Thanks a lot,
->								Pavel
-> --
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures)
-> http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Best regards,
+Krzysztof
