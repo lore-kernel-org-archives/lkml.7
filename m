@@ -2,289 +2,139 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A181CC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99308C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E13D20644
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:30:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AE7720644
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:31:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011855;
-	bh=TltyPTgMHvtdc6Ke83O+iff5VUQh6ojyl9eg/r1GOlo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ry8BtOLXpsHXYBTKTDjVgGc7pe8SEI/G0LTTZDSyfftOu941V9Q2ZG8xnrPUN85qC
-	 3pbPtfKETyoGjmWqTFqVdivbOFq+fiJT8Of6+HLn2Mvy3eCsNr4UoK+cCCjmuZ9mkO
-	 3rxSjoBwO4O+PHCoIopfvhRBSFJ0MKQDD4PwxVL0=
+	s=default; t=1565011861;
+	bh=tOO9qAJGqeSgn0fiOnpdtzq6ceY9M1FHtQOBWcqz8tY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2vqAsz0O8dAezg610i778yzjdZw17TIY2gM7+nvusABzscca64cjqVCwS5/wnE+0j
+	 WZ7MwYxNGSSnFsSaN/z+z6QmrP2Ptgr0o2PKAZL0735M9LJo+1n+oqZTKMVvw3+53+
+	 1E2510gHhU6RBzHoFWZt+eFsaA3+rvZnH5Jgg158=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730774AbfHENay (ORCPT
+        id S1729888AbfHENTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:30:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37626 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:19:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730093AbfHENax (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:30:53 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        id S1728680AbfHENTm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:19:42 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91BF320657;
-        Mon,  5 Aug 2019 13:30:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B01C2147A;
+        Mon,  5 Aug 2019 13:19:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011852;
-        bh=TltyPTgMHvtdc6Ke83O+iff5VUQh6ojyl9eg/r1GOlo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qg4RvRJ2HGugIzFAvpXyZui3ObrELUkS0A/p6eolDqorpBs+qStqUFEzka9sqsw0t
-         /DGFwUvakZ6t1QAHktmmsZH4H1y91sAUM/3YemGBNes6Xou/RXQocRjhCn4MEA0D2p
-         3mZsjGntXEPuc5DTi3tdKaNWP95Wn10tOFi9FyX8=
-Date:   Mon, 5 Aug 2019 14:30:41 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Martin Kaiser <martin@kaiser.cx>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] iio: potentiometer: add a driver for Maxim
- 5432-5435
-Message-ID: <20190805143041.3c6f8aac@archlinux>
-In-Reply-To: <20190731140706.2765-1-martin@kaiser.cx>
-References: <20190721175915.27192-1-martin@kaiser.cx>
-        <20190731140706.2765-1-martin@kaiser.cx>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1565011181;
+        bh=tOO9qAJGqeSgn0fiOnpdtzq6ceY9M1FHtQOBWcqz8tY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Powwxj9xFk78R5sC625F7KeoUAFmELakmbqeRxXHLwxHfzEh5+P0PLUcGZv1wAHpC
+         NIq1vNaDJJzbXoghpqgfMp89mEvzzRdajOBjV8f2jCKn/dCD1FUnFbrFescT9FagNH
+         CBD9ByLXpiZyrzORH8FHa28V3qbos4Mts4BFlsuo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Suganath Prabu <suganath-prabu.subramani@broadcom.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.19 74/74] scsi: mpt3sas: Use 63-bit DMA addressing on SAS35 HBA
+Date:   Mon,  5 Aug 2019 15:03:27 +0200
+Message-Id: <20190805124941.760727197@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190805124935.819068648@linuxfoundation.org>
+References: <20190805124935.819068648@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 31 Jul 2019 16:07:05 +0200
-Martin Kaiser <martin@kaiser.cx> wrote:
+From: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
 
-> Add a driver for the Maxim Integrated MAX5432-MAX5435 family of digital
-> potentiometers.
-> 
-> These potentiometers are connected via I2C and have 32 wiper
-> positions.
-> 
-> Supported functionality
-> - set the volatile wiper position
-> - read the potentiometer scale
-> 
-> Datasheet:
-> https://datasheets.maximintegrated.com/en/ds/MAX5432-MAX5435.pdf
-> 
-> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
+commit df9a606184bfdb5ae3ca9d226184e9489f5c24f7 upstream.
 
-Looks good.
+Although SAS3 & SAS3.5 IT HBA controllers support 64-bit DMA addressing, as
+per hardware design, if DMA-able range contains all 64-bits
+set (0xFFFFFFFF-FFFFFFFF) then it results in a firmware fault.
 
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to play with it.
+E.g. SGE's start address is 0xFFFFFFFF-FFFF000 and data length is 0x1000
+bytes. when HBA tries to DMA the data at 0xFFFFFFFF-FFFFFFFF location then
+HBA will fault the firmware.
 
-Thanks,
+Driver will set 63-bit DMA mask to ensure the above address will not be
+used.
 
-Jonathan
+Cc: <stable@vger.kernel.org> # 4.19.63
+Signed-off-by: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-> ---
-> changes in v4
->  - fix the dt bindings
->    - replace ic20 with i2c
->    - document the reg property
->    - add additionalProperties and required
-> 
-> changes in v3
->  - split dt bindings and driver code into separate patches
->  - use yaml format for dt bindings
->  - fix formatting of parameter lists
-> 
-> changes in v2
->  - use MAX5432_ prefix for all defines
->  - fix indentation
->  - convert void * to unsigned long, not to u32
->    (warning from kbuild test robot)
-> 
->  drivers/iio/potentiometer/Kconfig   |  11 +++
->  drivers/iio/potentiometer/Makefile  |   1 +
->  drivers/iio/potentiometer/max5432.c | 135 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 147 insertions(+)
->  create mode 100644 drivers/iio/potentiometer/max5432.c
-> 
-> diff --git a/drivers/iio/potentiometer/Kconfig b/drivers/iio/potentiometer/Kconfig
-> index ebc7c72a5e36..4cac0173db8b 100644
-> --- a/drivers/iio/potentiometer/Kconfig
-> +++ b/drivers/iio/potentiometer/Kconfig
-> @@ -26,6 +26,17 @@ config DS1803
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called ds1803.
->  
-> +config MAX5432
-> +	tristate "Maxim MAX5432-MAX5435 Digital Potentiometer driver"
-> +	depends on I2C
-> +	help
-> +	  Say yes here to build support for the Maxim
-> +	  MAX5432, MAX5433, MAX5434 and MAX5435 digital
-> +	  potentiometer chips.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called max5432.
-> +
->  config MAX5481
->  	tristate "Maxim MAX5481-MAX5484 Digital Potentiometer driver"
->  	depends on SPI
-> diff --git a/drivers/iio/potentiometer/Makefile b/drivers/iio/potentiometer/Makefile
-> index 8ff55138cf12..091adf3cdd0b 100644
-> --- a/drivers/iio/potentiometer/Makefile
-> +++ b/drivers/iio/potentiometer/Makefile
-> @@ -6,6 +6,7 @@
->  # When adding new entries keep the list in alphabetical order
->  obj-$(CONFIG_AD5272) += ad5272.o
->  obj-$(CONFIG_DS1803) += ds1803.o
-> +obj-$(CONFIG_MAX5432) += max5432.o
->  obj-$(CONFIG_MAX5481) += max5481.o
->  obj-$(CONFIG_MAX5487) += max5487.o
->  obj-$(CONFIG_MCP4018) += mcp4018.o
-> diff --git a/drivers/iio/potentiometer/max5432.c b/drivers/iio/potentiometer/max5432.c
-> new file mode 100644
-> index 000000000000..641b1821fdf6
-> --- /dev/null
-> +++ b/drivers/iio/potentiometer/max5432.c
-> @@ -0,0 +1,135 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Maxim Integrated MAX5432-MAX5435 digital potentiometer driver
-> + * Copyright (C) 2019 Martin Kaiser <martin@kaiser.cx>
-> + *
-> + * Datasheet:
-> + * https://datasheets.maximintegrated.com/en/ds/MAX5432-MAX5435.pdf
-> + */
-> +
-> +#include <linux/i2c.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/limits.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +
-> +/* All chip variants have 32 wiper positions. */
-> +#define MAX5432_MAX_POS 31
-> +
-> +#define MAX5432_OHM_50K   (50  * 1000)
-> +#define MAX5432_OHM_100K  (100 * 1000)
-> +
-> +/* Update the volatile (currently active) setting. */
-> +#define MAX5432_CMD_VREG  0x11
-> +
-> +struct max5432_data {
-> +	struct i2c_client *client;
-> +	unsigned long ohm;
-> +};
-> +
-> +static const struct iio_chan_spec max5432_channels[] = {
-> +	{
-> +		.type = IIO_RESISTANCE,
-> +		.indexed = 1,
-> +		.output = 1,
-> +		.channel = 0,
-> +		.address = MAX5432_CMD_VREG,
-> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
-> +	}
-> +};
-> +
-> +static int max5432_read_raw(struct iio_dev *indio_dev,
-> +			struct iio_chan_spec const *chan,
-> +			int *val, int *val2, long mask)
-> +{
-> +	struct max5432_data *data = iio_priv(indio_dev);
-> +
-> +	if (mask != IIO_CHAN_INFO_SCALE)
-> +		return -EINVAL;
-> +
-> +	if (unlikely(data->ohm > INT_MAX))
-> +		return -ERANGE;
-> +
-> +	*val = data->ohm;
-> +	*val2 = MAX5432_MAX_POS;
-> +
-> +	return IIO_VAL_FRACTIONAL;
-> +}
-> +
-> +static int max5432_write_raw(struct iio_dev *indio_dev,
-> +			struct iio_chan_spec const *chan,
-> +			int val, int val2, long mask)
-> +{
-> +	struct max5432_data *data = iio_priv(indio_dev);
-> +	u8 data_byte;
-> +
-> +	if (mask != IIO_CHAN_INFO_RAW)
-> +		return -EINVAL;
-> +
-> +	if (val < 0 || val > MAX5432_MAX_POS)
-> +		return -EINVAL;
-> +
-> +	if (val2 != 0)
-> +		return -EINVAL;
-> +
-> +	/* Wiper position is in bits D7-D3. (D2-D0 are don't care bits.) */
-> +	data_byte = val << 3;
-> +	return i2c_smbus_write_byte_data(data->client, chan->address,
-> +			data_byte);
-> +}
-> +
-> +static const struct iio_info max5432_info = {
-> +	.read_raw = max5432_read_raw,
-> +	.write_raw = max5432_write_raw,
-> +};
-> +
-> +static int max5432_probe(struct i2c_client *client,
-> +		const struct i2c_device_id *id)
-> +{
-> +	struct device *dev = &client->dev;
-> +	struct iio_dev *indio_dev;
-> +	struct max5432_data *data;
-> +
-> +	indio_dev = devm_iio_device_alloc(dev, sizeof(struct max5432_data));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	i2c_set_clientdata(client, indio_dev);
-> +
-> +	data = iio_priv(indio_dev);
-> +	data->client = client;
-> +	data->ohm = (unsigned long)of_device_get_match_data(dev);
-> +
-> +	indio_dev->dev.parent = dev;
-> +	indio_dev->info = &max5432_info;
-> +	indio_dev->channels = max5432_channels;
-> +	indio_dev->num_channels = ARRAY_SIZE(max5432_channels);
-> +	indio_dev->name = client->name;
-> +
-> +	return devm_iio_device_register(dev, indio_dev);
-> +}
-> +
-> +static const struct of_device_id max5432_dt_ids[] = {
-> +	{ .compatible = "maxim,max5432", .data = (void *)MAX5432_OHM_50K  },
-> +	{ .compatible = "maxim,max5433", .data = (void *)MAX5432_OHM_100K },
-> +	{ .compatible = "maxim,max5434", .data = (void *)MAX5432_OHM_50K  },
-> +	{ .compatible = "maxim,max5435", .data = (void *)MAX5432_OHM_100K },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, max5432_dt_ids);
-> +
-> +static struct i2c_driver max5432_driver = {
-> +	.driver = {
-> +		.name = "max5432",
-> +		.of_match_table = of_match_ptr(max5432_dt_ids),
-> +	},
-> +	.probe = max5432_probe,
-> +};
-> +
-> +module_i2c_driver(max5432_driver);
-> +
-> +MODULE_AUTHOR("Martin Kaiser <martin@kaiser.cx>");
-> +MODULE_DESCRIPTION("max5432-max5435 digital potentiometers");
-> +MODULE_LICENSE("GPL v2");
+---
+ drivers/scsi/mpt3sas/mpt3sas_base.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+--- a/drivers/scsi/mpt3sas/mpt3sas_base.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
+@@ -2565,12 +2565,14 @@ _base_config_dma_addressing(struct MPT3S
+ {
+ 	struct sysinfo s;
+ 	u64 consistent_dma_mask;
++	/* Set 63 bit DMA mask for all SAS3 and SAS35 controllers */
++	int dma_mask = (ioc->hba_mpi_version_belonged > MPI2_VERSION) ? 63 : 64;
+ 
+ 	if (ioc->is_mcpu_endpoint)
+ 		goto try_32bit;
+ 
+ 	if (ioc->dma_mask)
+-		consistent_dma_mask = DMA_BIT_MASK(64);
++		consistent_dma_mask = DMA_BIT_MASK(dma_mask);
+ 	else
+ 		consistent_dma_mask = DMA_BIT_MASK(32);
+ 
+@@ -2578,11 +2580,11 @@ _base_config_dma_addressing(struct MPT3S
+ 		const uint64_t required_mask =
+ 		    dma_get_required_mask(&pdev->dev);
+ 		if ((required_mask > DMA_BIT_MASK(32)) &&
+-		    !pci_set_dma_mask(pdev, DMA_BIT_MASK(64)) &&
++		    !pci_set_dma_mask(pdev, DMA_BIT_MASK(dma_mask)) &&
+ 		    !pci_set_consistent_dma_mask(pdev, consistent_dma_mask)) {
+ 			ioc->base_add_sg_single = &_base_add_sg_single_64;
+ 			ioc->sge_size = sizeof(Mpi2SGESimple64_t);
+-			ioc->dma_mask = 64;
++			ioc->dma_mask = dma_mask;
+ 			goto out;
+ 		}
+ 	}
+@@ -2609,7 +2611,7 @@ static int
+ _base_change_consistent_dma_mask(struct MPT3SAS_ADAPTER *ioc,
+ 				      struct pci_dev *pdev)
+ {
+-	if (pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(64))) {
++	if (pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(ioc->dma_mask))) {
+ 		if (pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(32)))
+ 			return -ENODEV;
+ 	}
+@@ -4545,7 +4547,7 @@ _base_allocate_memory_pools(struct MPT3S
+ 		total_sz += sz;
+ 	} while (ioc->rdpq_array_enable && (++i < ioc->reply_queue_count));
+ 
+-	if (ioc->dma_mask == 64) {
++	if (ioc->dma_mask > 32) {
+ 		if (_base_change_consistent_dma_mask(ioc, ioc->pdev) != 0) {
+ 			pr_warn(MPT3SAS_FMT
+ 			    "no suitable consistent DMA mask for %s\n",
+
 
