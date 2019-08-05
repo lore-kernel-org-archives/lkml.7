@@ -2,186 +2,110 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4640C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7210C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B139620856
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:06:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7734D2086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:07:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bhdM2Ula"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727225AbfHEKGw (ORCPT
+        id S1728220AbfHEKHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 06:06:52 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33124 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726454AbfHEKGw (ORCPT
+        Mon, 5 Aug 2019 06:07:10 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:45186 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728113AbfHEKHK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 06:06:52 -0400
-Received: by mail-wr1-f66.google.com with SMTP id n9so83900614wru.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 03:06:50 -0700 (PDT)
+        Mon, 5 Aug 2019 06:07:10 -0400
+Received: by mail-lf1-f66.google.com with SMTP id u10so18696732lfm.12
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 03:07:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nVUZMecSchHo3ov4XgyeqBe+ricOQYDOHuC+qKYyro0=;
+        b=bhdM2UlaB2K8iOROiArDFJXYmMBmI0NM6/LKx7/XPm3GqnbIb/bPPiA9Pz8k6nIBF1
+         a9wtyCtkgQ0ZgwGYPUfVAbL+577Jz5tF8GafZQB9sMfUv4Nlj4rYl3Er6wl9+QH8Nxhy
+         FtkwAUSMAAQBSGeGVlWgZpDNyLCvoPBhP0pcgK2/BjumMbrw+T0pnm5VkmBeHWZ3nO4I
+         GPuHg6bPKKt6ASXdwolYWYyjGdwR+7o06PTxLel00izXGOs6Vp7hj8S46bBF1UOQ3xx7
+         4WFYidUocdAHqGiNAXEwabc3LLabLm4K7NaBqzO0dTJ+pDE/gdAlCjuDbCMU7TKWXxNK
+         QsKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=KHSDHJMmRR6+MAepna6mVzgtfSoIEzKmWS4o8nXlsKc=;
-        b=SWu4dMFKHveoFPIW0bxi5L4TVlaL6qZiph7igNRLaaJWzrfCaBtdKuVoZAgnT0WG5+
-         Zhx3RKZHhsj4RwZLfa6WNkoVf1evGZmRxcUfPVvrdhK5fLc/t5u10WXzAmGrMtbskKhA
-         D4hufCVbKEp7GpUp7Np5wKbbrQzN1W9esvTXTjUrvBoD6TmOxmBI+PoAsUmryn2uk8qN
-         chE2Mm4v1jsd6hmkiI8Zbo1JWve+8SfrOzkMdWrENVQ3zrsYHSr0NmiamUQmoofL2BeF
-         OirVn8G5XR9uWAxm8NsgmUbkM0Yf6qLTsKvd1kjXPVfHFshiQHe/aD5NeoQbm26KJxsf
-         Isnw==
-X-Gm-Message-State: APjAAAUu9ztTs9KQpkHdKTt0y6GJIB5A6q3CThu8/01nORs/LDJeQttR
-        q1fe9ABAF+JLlIg72ZHLkunkvA==
-X-Google-Smtp-Source: APXvYqzS7rfxkH1QK7P1OTYH2JCFz0B6tRjCy+fpaZyc9HZj3VCgRxllujcrgSAWFdZYdsw/x/gMGA==
-X-Received: by 2002:adf:deca:: with SMTP id i10mr20675715wrn.313.1564999609568;
-        Mon, 05 Aug 2019 03:06:49 -0700 (PDT)
-Received: from localhost.localdomain ([151.29.237.107])
-        by smtp.gmail.com with ESMTPSA id 91sm170413277wrp.3.2019.08.05.03.06.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 05 Aug 2019 03:06:48 -0700 (PDT)
-Date:   Mon, 5 Aug 2019 12:06:46 +0200
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     linux-rt-users <linux-rt-users@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Clark Williams <williams@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [RT BUG] isolcpus causes sleeping function called from invalid
- context (4.19.59-rt24)
-Message-ID: <20190805100646.GH14724@localhost.localdomain>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nVUZMecSchHo3ov4XgyeqBe+ricOQYDOHuC+qKYyro0=;
+        b=OqYFp3xIaKWu9B5eJIi7/DDG5ZBiz/EQINQToHES/fqLTwiqgDr/bVuV7oKy3Y5R85
+         wyk7NfU3B3jUq8MMxv53Ex6MBR5DL5P8x+t5yjDyJRPFXI8xBzuoRwL3i4EORWBRF1q/
+         0Kn4zLDmOZuqY028j5D+jtrpg/oU0D+boyu3IXYxCh8uJ1clrI1a7XO3fJv1g+oGu3bw
+         qvQ1ugN6tGIb5UKaAF4dWknHqgyAP+iOy42xg3quzC29t6aWVhxBR+c9DymUHGpjW4Gx
+         wydr0gL50rnNNzSk3b1qLXGYUHCBi9035g0oR8uW7EoMzDifnWuftCuTkFJRKZh28rki
+         dxpg==
+X-Gm-Message-State: APjAAAXvx7RKXoQmrjHbUx0/CdP3dMQ1YZDYEV3YowSgUSn8To19krDc
+        jPBVP9o0x/NoQYpA/jpsG1gP0HVhHKppVvOVucvK7wteed4=
+X-Google-Smtp-Source: APXvYqzbr3N8Sty4/n+PKBjjuxasyEkPZbJo4c/cdLdH2JC6OzKmDCkMaV5/W8Fpx4+sg/pPghnAd39wNmbfOj5KmtU=
+X-Received: by 2002:ac2:5939:: with SMTP id v25mr1356862lfi.115.1564999628161;
+ Mon, 05 Aug 2019 03:07:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <1563958245-6321-1-git-send-email-chunfeng.yun@mediatek.com>
+In-Reply-To: <1563958245-6321-1-git-send-email-chunfeng.yun@mediatek.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 5 Aug 2019 12:06:56 +0200
+Message-ID: <CACRpkdaBT24JPH_VsKtgp6fjWtVuqM50rXkDVYKmLHgR5hdJzA@mail.gmail.com>
+Subject: Re: [PATCH v8 00/11] add USB GPIO based connection detection driver
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Li Jun <jun.li@nxp.com>,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Min Guo <min.guo@mediatek.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Jul 24, 2019 at 10:51 AM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
 
-Booting 4.19.59-rt24 with debug options enabled (DEBUG_ATOMIC_SLEEP) I
-noticed the following splat (edited for clarity):
+> Because the USB Connector is introduced and the requirement of
+> usb-connector.txt binding, the old way using extcon to support
+> USB Dual-Role switch is now deprecated, meanwhile there is no
+> available common driver when use Type-B connector, typically
+> using an input GPIO to detect USB ID pin.
 
---->8---
- Linux version 4.19.59-rt24 (...) (...) #2 SMP PREEMPT RT Mon Aug 5 05:23:26 EDT 2019
- Command line: BOOT_IMAGE=(hd0,msdos1)/vmlinuz-4.19.59-rt24 ... skew_tick=1 isolcpus=9-35 intel_pstate=disable nosoftlockup nohz=on nohz_full=9-35 rcu_nocbs=9-35
- ...
- smpboot: CPU0: Intel(R) Xeon(R) CPU E5-2699 v3 @ 2.30GHz (family: 0x6, model: 0x3f, stepping: 0x2)
- ...
- smp: Bringing up secondary CPUs ...
- x86: Booting SMP configuration:
- .... node  #0, CPUs:        #1
-   #2
-   #3
-   #4
-   #5
-   #6
-   #7
-   #8
- .... node  #1, CPUs:    #9
- BUG: sleeping function called from invalid context at kernel/locking/rtmutex.c:967
- in_atomic(): 1, irqs_disabled(): 1, pid: 0, name: swapper/9
- 1 lock held by swapper/9/0:
-  #0: 00000000eb141bd9 ((pendingb_lock).lock){+.+.}, at: queue_delayed_work_on+0x103/0x580
- irq event stamp: 0
- hardirqs last  enabled at (0): [<0000000000000000>]
- hardirqs last disabled at (0): [<ffffffffadda7bf8>] copy_process.part.18+0x1928/0x7250
- softirqs last  enabled at (0): [<ffffffffadda7c94>] copy_process.part.18+0x19c4/0x7250
- softirqs last disabled at (0): [<0000000000000000>]           (null)
- Preemption disabled at:
- [<ffffffffadcbdaef>] start_secondary+0x11f/0x530
- CPU: 9 PID: 0 Comm: swapper/9 Not tainted 4.19.59-rt24 #2
- Hardware name: HP ProLiant BL460c Gen9, BIOS I36 10/17/2018
- Call Trace:
-  dump_stack+0x9a/0xf0
-  ___might_sleep.cold.57+0x6a/0x7c
-  rt_spin_lock+0x75/0x90
-  ? queue_delayed_work_on+0x103/0x580
-  queue_delayed_work_on+0x103/0x580
-  sched_cpu_starting+0x28c/0x370
-  ? sched_cpu_deactivate+0x2b0/0x2b0
-  cpuhp_invoke_callback+0x1d0/0x1dc0
-  ? _raw_spin_unlock_irqrestore+0x4a/0xf0
-  notify_cpu_starting+0x117/0x190
-  start_secondary+0x2be/0x530
-  ? set_c+0x27c0/0x27c0
-  secondary_startup_64+0xb6/0xc0
-  #10
-  #11
-  #12
-  #13
-  #14
-  #15
-  #16
-  #17
- .... node  #0, CPUs:   #18
-  #19
-  #20
-  #21
-  #22
-  #23
-  #24
-  #25
-  #26
- .... node  #1, CPUs:   #27
-  #28
- BUG: sleeping function called from invalid context at kernel/locking/rtmutex.c:967
- in_atomic(): 1, irqs_disabled(): 1, pid: 0, name: swapper/28
- 1 lock held by swapper/28/0:
-  #0: 0000000004707c3e ((pendingb_lock).lock){+.+.}, at: queue_delayed_work_on+0x103/0x580
- irq event stamp: 0
- hardirqs last  enabled at (0): [<0000000000000000>]           (null)
- hardirqs last disabled at (0): [<ffffffffadda7bf8>] copy_process.part.18+0x1928/0x7250
- softirqs last  enabled at (0): [<ffffffffadda7c94>] copy_process.part.18+0x19c4/0x0
- softirqs last disabled at (0): [<0000000000000000>]           (null)
- Preemption disabled at:
- [<ffffffffadcbdaef>] start_secondary+0x11f/0x530
- CPU: 28 PID: 0 Comm: swapper/28 Tainted: G        W         4.19.59-rt24 #2
- Hardware name: HP ProLiant BL460c Gen9, BIOS I36 10/17/2018
- Call Trace:
-  dump_stack+0x9a/0xf0
-  ___might_sleep.cold.57+0x6a/0x7c
-  rt_spin_lock+0x75/0x90
-  ? queue_delayed_work_on+0x103/0x580
-  queue_delayed_work_on+0x103/0x580
-  sched_cpu_starting+0x28c/0x370
-  ? sched_cpu_deactivate+0x2b0/0x2b0
-  cpuhp_invoke_callback+0x1d0/0x1dc0
-  ? _raw_spin_unlock_irqrestore+0x4a/0xf0
-  notify_cpu_starting+0x117/0x190
-  start_secondary+0x2be/0x530
-  ? set_cpu_sibling_map+0x27c0/0x27c0
-  secondary_startup_64+0xb6/0xc0
-  #29
-  #30
-  #31
-  #32
-  #33
+However while this was going on,
+drivers/extcon/extcon-fsa9480.c was merged and that detects
+not only GPIO on the USB port but multiplexed usecases such
+as UART over the USB micro PHY (and no that UART is not
+a USB UART, but an actual RX/TX over D-/D+).
 
-  #35
- smp: Brought up 2 nodes, 36 CPUs
- smpboot: Max logical packages: 2
- smpboot: Total of 36 processors activated (166451.61 BogoMIPS)
---->8---
+That driver also measure a whole slew of funny resistance
+values on the ID pin, that is how it does its job.
 
-This only happens if isolcpus are configured at boot.
+But for just "hey I'm plugged in" we can surely keep this
+ID on GPIO detection in the USB subsystem.
 
-AFAIU, RT is reworking workqueues and 5.x-rt shouldn't suffer from this.
-As a matter of fact, I could verify that backporting the workqueue
-rework all-in change from 5.0-rt [1] fixes this problem.
+I just get a bit insecure about how we should ideally
+handle these "funny-PHY's".
 
-I'm thus wondering if there is any plan on backporting the rework to
-4.19-rt stable, and if that patch has dependencies, or if any alternative
-fix might be found for this problem.
-
-Thanks,
-
-Juri
-
-1 - https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git/commit/?h=v5.0.19-rt11&id=d15a862f24df983458533aebd6fa207ecdd1095a
+Yours,
+Linus Walleij
