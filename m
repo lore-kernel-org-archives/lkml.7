@@ -7,48 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEB7C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A48BC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6A5D216F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:10:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B4922087B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:10:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010608;
-	bh=QZ+aaWTUIyXJ7C1ky9bKKBHcnbAsyEgHKKuQWgsNePI=;
+	s=default; t=1565010614;
+	bh=53Gmy9eQSTJU/x71vf2YST5rKco6rnVzifnPWFRyBKU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gIfvWaH+Bcf3KUtjIXU10gErmSkUJGPC2uaQiA8lgObsfkgPks+Onp/AaPdTyWZld
-	 s8ZCrxgGPCKx04/UOsw669m6IW5Twh2zY/yHeaCkja6gj3bSORc/u2vVYn5kmxK3wL
-	 BkbDFBUeWakonfh9eZ3a4YBy4y/qxcjmSWLaUG+0=
+	b=hoS5yb3I3kSTSQ4Y2318dQw/I+87zXA8vDMW1yQVkHaQBQp/RI5HFTdbwU8bCbxCt
+	 SIl6+Ape1OzQz1qIPlKOIV7yKcvAt1Ev0mqBdxmM15Cwn37MRvFcAlMTwM28NEIBYV
+	 jJj56eh/WmQToOpbikTSbOxNHpUF6kQgbAw3qsL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730294AbfHENKH (ORCPT
+        id S1730296AbfHENKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:10:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48898 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:10:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730278AbfHENKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:10:06 -0400
+        id S1729703AbfHENKJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:10:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1068720880;
-        Mon,  5 Aug 2019 13:10:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82A0520880;
+        Mon,  5 Aug 2019 13:10:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010605;
-        bh=QZ+aaWTUIyXJ7C1ky9bKKBHcnbAsyEgHKKuQWgsNePI=;
+        s=default; t=1565010608;
+        bh=53Gmy9eQSTJU/x71vf2YST5rKco6rnVzifnPWFRyBKU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nGcw2QCaA+FDc41lyF8HEkXh1jvPBPVlIBMso3tIaM+Um6Jz08cJllKSM8zoinmqO
-         VFIWckgVXgvmIHN1xuPjEX1xe80ry7A8AFo53tYXivoczG5UpaNf5qYrErv70iOgFw
-         1A3M/3eWh2O5RAmlLemn8Lkbhzqcxsuoc5mQy+NQ=
+        b=lIetp0fFrlpJuRk0UQj7b2MaXG+xBAOqilr1PS88UgMayIDwi01y+6Q/FM/PL+a4h
+         FTetbSICH4xGlm3Bt7Qtdn714U7pEdS6aIXOlDiotqe7uaEkr03q5ElmjBsueItOE1
+         oPw2QBSY4yvw6J2HiOCdFQLrRHyjEGbVLnVOhH5I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>,
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Andreas Christoforou <andreaschristofo@gmail.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Manfred Spraul <manfred@colorfullife.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 17/74] cifs: Fix a race condition with cifs_echo_request
-Date:   Mon,  5 Aug 2019 15:02:30 +0200
-Message-Id: <20190805124937.192021152@linuxfoundation.org>
+Subject: [PATCH 4.19 35/74] ipc/mqueue.c: only perform resource calculation if user valid
+Date:   Mon,  5 Aug 2019 15:02:48 +0200
+Message-Id: <20190805124938.654653556@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124935.819068648@linuxfoundation.org>
 References: <20190805124935.819068648@linuxfoundation.org>
@@ -61,61 +67,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f2caf901c1b7ce65f9e6aef4217e3241039db768 ]
+[ Upstream commit a318f12ed8843cfac53198390c74a565c632f417 ]
 
-There is a race condition with how we send (or supress and don't send)
-smb echos that will cause the client to incorrectly think the
-server is unresponsive and thus needs to be reconnected.
+Andreas Christoforou reported:
 
-Summary of the race condition:
- 1) Daisy chaining scheduling creates a gap.
- 2) If traffic comes unfortunate shortly after
-    the last echo, the planned echo is suppressed.
- 3) Due to the gap, the next echo transmission is delayed
-    until after the timeout, which is set hard to twice
-    the echo interval.
+  UBSAN: Undefined behaviour in ipc/mqueue.c:414:49 signed integer overflow:
+  9 * 2305843009213693951 cannot be represented in type 'long int'
+  ...
+  Call Trace:
+    mqueue_evict_inode+0x8e7/0xa10 ipc/mqueue.c:414
+    evict+0x472/0x8c0 fs/inode.c:558
+    iput_final fs/inode.c:1547 [inline]
+    iput+0x51d/0x8c0 fs/inode.c:1573
+    mqueue_get_inode+0x8eb/0x1070 ipc/mqueue.c:320
+    mqueue_create_attr+0x198/0x440 ipc/mqueue.c:459
+    vfs_mkobj+0x39e/0x580 fs/namei.c:2892
+    prepare_open ipc/mqueue.c:731 [inline]
+    do_mq_open+0x6da/0x8e0 ipc/mqueue.c:771
 
-This is fixed by changing the timeouts from 2 to three times the echo interval.
+Which could be triggered by:
 
-Detailed description of the bug: https://lutz.donnerhacke.de/eng/Blog/Groundhog-Day-with-SMB-remount
+        struct mq_attr attr = {
+                .mq_flags = 0,
+                .mq_maxmsg = 9,
+                .mq_msgsize = 0x1fffffffffffffff,
+                .mq_curmsgs = 0,
+        };
 
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+        if (mq_open("/testing", 0x40, 3, &attr) == (mqd_t) -1)
+                perror("mq_open");
+
+mqueue_get_inode() was correctly rejecting the giant mq_msgsize, and
+preparing to return -EINVAL.  During the cleanup, it calls
+mqueue_evict_inode() which performed resource usage tracking math for
+updating "user", before checking if there was a valid "user" at all
+(which would indicate that the calculations would be sane).  Instead,
+delay this check to after seeing a valid "user".
+
+The overflow was real, but the results went unused, so while the flaw is
+harmless, it's noisy for kernel fuzzers, so just fix it by moving the
+calculation under the non-NULL "user" where it actually gets used.
+
+Link: http://lkml.kernel.org/r/201906072207.ECB65450@keescook
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Reported-by: Andreas Christoforou <andreaschristofo@gmail.com>
+Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Manfred Spraul <manfred@colorfullife.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/connect.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ ipc/mqueue.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index f31339db45fdb..c53a2e86ed544 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -563,10 +563,10 @@ static bool
- server_unresponsive(struct TCP_Server_Info *server)
+diff --git a/ipc/mqueue.c b/ipc/mqueue.c
+index bce7af1546d9c..de4070d5472f2 100644
+--- a/ipc/mqueue.c
++++ b/ipc/mqueue.c
+@@ -389,7 +389,6 @@ static void mqueue_evict_inode(struct inode *inode)
  {
- 	/*
--	 * We need to wait 2 echo intervals to make sure we handle such
-+	 * We need to wait 3 echo intervals to make sure we handle such
- 	 * situations right:
- 	 * 1s  client sends a normal SMB request
--	 * 2s  client gets a response
-+	 * 3s  client gets a response
- 	 * 30s echo workqueue job pops, and decides we got a response recently
- 	 *     and don't need to send another
- 	 * ...
-@@ -575,9 +575,9 @@ server_unresponsive(struct TCP_Server_Info *server)
- 	 */
- 	if ((server->tcpStatus == CifsGood ||
- 	    server->tcpStatus == CifsNeedNegotiate) &&
--	    time_after(jiffies, server->lstrp + 2 * server->echo_interval)) {
-+	    time_after(jiffies, server->lstrp + 3 * server->echo_interval)) {
- 		cifs_dbg(VFS, "Server %s has not responded in %lu seconds. Reconnecting...\n",
--			 server->hostname, (2 * server->echo_interval) / HZ);
-+			 server->hostname, (3 * server->echo_interval) / HZ);
- 		cifs_reconnect(server);
- 		wake_up(&server->response_q);
- 		return true;
+ 	struct mqueue_inode_info *info;
+ 	struct user_struct *user;
+-	unsigned long mq_bytes, mq_treesize;
+ 	struct ipc_namespace *ipc_ns;
+ 	struct msg_msg *msg, *nmsg;
+ 	LIST_HEAD(tmp_msg);
+@@ -412,16 +411,18 @@ static void mqueue_evict_inode(struct inode *inode)
+ 		free_msg(msg);
+ 	}
+ 
+-	/* Total amount of bytes accounted for the mqueue */
+-	mq_treesize = info->attr.mq_maxmsg * sizeof(struct msg_msg) +
+-		min_t(unsigned int, info->attr.mq_maxmsg, MQ_PRIO_MAX) *
+-		sizeof(struct posix_msg_tree_node);
+-
+-	mq_bytes = mq_treesize + (info->attr.mq_maxmsg *
+-				  info->attr.mq_msgsize);
+-
+ 	user = info->user;
+ 	if (user) {
++		unsigned long mq_bytes, mq_treesize;
++
++		/* Total amount of bytes accounted for the mqueue */
++		mq_treesize = info->attr.mq_maxmsg * sizeof(struct msg_msg) +
++			min_t(unsigned int, info->attr.mq_maxmsg, MQ_PRIO_MAX) *
++			sizeof(struct posix_msg_tree_node);
++
++		mq_bytes = mq_treesize + (info->attr.mq_maxmsg *
++					  info->attr.mq_msgsize);
++
+ 		spin_lock(&mq_lock);
+ 		user->mq_bytes -= mq_bytes;
+ 		/*
 -- 
 2.20.1
 
