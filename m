@@ -2,139 +2,98 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB41C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 03:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD22C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 03:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE8792054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 03:35:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 410A92070D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 03:44:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="IXcfai26"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbfHEDfV (ORCPT
+        id S1727100AbfHEDo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 4 Aug 2019 23:35:21 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:39781 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726757AbfHEDfV (ORCPT
+        Sun, 4 Aug 2019 23:44:27 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41506 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726847AbfHEDo0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 4 Aug 2019 23:35:21 -0400
-Received: by mail-ed1-f66.google.com with SMTP id m10so77307013edv.6
-        for <linux-kernel@vger.kernel.org>; Sun, 04 Aug 2019 20:35:20 -0700 (PDT)
+        Sun, 4 Aug 2019 23:44:26 -0400
+Received: by mail-pg1-f194.google.com with SMTP id x15so28614209pgg.8
+        for <linux-kernel@vger.kernel.org>; Sun, 04 Aug 2019 20:44:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qaevOKKBkx9wzczWsPhokAptJGi+7DJxhR9knuVBhIc=;
+        b=IXcfai26P/X8GzjqUOtmAH/Jo83R/2UjSztaety4x290UiwGJr62Nqbed+2gcSQnQq
+         dqrgQtS9ocweR9XW2Mm9pHhrHFFRMBaxYLcm1pzOCTxIROUS9hvQ0qWmtamBqxPLZnOT
+         EhjWLNHhSgeW0KfvyTB5RDtd5Dx9aJd7gcu2qMZsycPbBk5FRPwlnfzs1JqQpV41O2NT
+         TPWPxUu0Sy5kUJDKrSn5SMTtpXqbO/vsBlmx8w9Dg1h8usHVPrStDNgIQeda0jezkGNQ
+         kPsX+LoS4FBe/97ALO78rYF45eRlRbbdHtywIrV0PhhVjh1e7t5mswweENmRPEKXbsYl
+         gxSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xqhoil23mCCoSHv8fSgyN9BpiBD51hIbu//YpD4kADg=;
-        b=S1bI9qB0fGedlo/Nd86xBi012egUIqk1nHseETNSHt+L90ADgs2kVSlQrDuWimZ2by
-         ySVYh6l8nsHF3A7C9VDUDzmXXre4NVbZxrdU4reG747YM0KvErnPnXxBhGNyJPWSBy7w
-         oWNG1JoZn7qSSmEMhEb4wP9W6qEHAgaIPAMoGmd+5KTDBYvfjDV+Cy+m2AvZrtctN83t
-         orFAmdaG1J8q1f1wj/SC4QtlGZAjWHbRqExa71viXVcByMyIYfGWMifZAVYfRkg0n8Ba
-         7F/ct8HcZXTp9Be126afbd6cY8q55nfcanFiOjP18EuxBGCfTI6MrcIKxseDjXX7XV6e
-         HnlA==
-X-Gm-Message-State: APjAAAWM2ztKIB+DECdOYn54wP0X4WMcI1uLUtZ9ZiDuEpk9rgQEWj0w
-        p50bJyp/A3ifRRyCNQOUiKJOA43PAkQ=
-X-Google-Smtp-Source: APXvYqzsOa9+Lpu29rJFeqataghFtEubUKFWu/7aXO5Btgj6isNEwmsallDXNU/sx3bpZ04np4QQhw==
-X-Received: by 2002:a17:906:a394:: with SMTP id k20mr20417256ejz.46.1564976119087;
-        Sun, 04 Aug 2019 20:35:19 -0700 (PDT)
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com. [209.85.221.51])
-        by smtp.gmail.com with ESMTPSA id oh24sm13966324ejb.35.2019.08.04.20.35.18
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Sun, 04 Aug 2019 20:35:18 -0700 (PDT)
-Received: by mail-wr1-f51.google.com with SMTP id r1so82801330wrl.7
-        for <linux-kernel@vger.kernel.org>; Sun, 04 Aug 2019 20:35:18 -0700 (PDT)
-X-Received: by 2002:adf:c613:: with SMTP id n19mr102352520wrg.109.1564976118031;
- Sun, 04 Aug 2019 20:35:18 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qaevOKKBkx9wzczWsPhokAptJGi+7DJxhR9knuVBhIc=;
+        b=RC+4KjkDwdIcCBYMXWBg9ap+GtrpAyzKdp7hPJjVtutybauoDmr8DLuD9Ptjb897uI
+         z2eCuwmotYkWtw13c5Lt8xkty33pzkvjLomvluZFwTQzzpph/1KEmZXnJUrLumUenEVJ
+         JyYDH3IatfOGYb2IQ9FRnLvDH9aPkg9aAnS5oXOG4fupyl77IEf+CYLGNWlPUU8tzoPI
+         iwvXxTUCIzvNXHWBb1Zed9wTxmNEYCmcEtXjYp50C2ZSQ7N/tcUvQLTWRsqZg28VELm8
+         dfPa3GayTQsHYcqvXDyq3WUwysC3B131srQGlC3w6ZUG3CPvQAVPHqlBzfb9Zk3/Ze9I
+         8sYA==
+X-Gm-Message-State: APjAAAXwLqHYr+5EKpZrv/VuJnjsu66SMUgokYgKg/d2tQouv2nUY1VK
+        e00yZwH2sX3DXuJi+sKW6e4=
+X-Google-Smtp-Source: APXvYqy4lnuT+Nq4f5lxPk3nmqptozGkTW1Nn0qcFMewuAbFZKOxXjof5Tv5YsVkUmYJ47dOKqH08g==
+X-Received: by 2002:a17:90a:376f:: with SMTP id u102mr16333110pjb.5.1564976665920;
+        Sun, 04 Aug 2019 20:44:25 -0700 (PDT)
+Received: from ?IPv6:2605:e000:100e:83a1:61e6:1197:7c18:827e? ([2605:e000:100e:83a1:61e6:1197:7c18:827e])
+        by smtp.gmail.com with ESMTPSA id t8sm13977229pji.24.2019.08.04.20.44.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 04 Aug 2019 20:44:25 -0700 (PDT)
+Subject: Re: [PATCH] fs/io_uring.c: convert put_page() to put_user_page*()
+To:     john.hubbard@gmail.com, Andrew Morton <akpm@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jerome Glisse <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-block@vger.kernel.org
+References: <20190805023206.8831-1-jhubbard@nvidia.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <fe0b9303-fce0-e7a8-a27d-af8e3903f097@kernel.dk>
+Date:   Sun, 4 Aug 2019 20:44:23 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190730181557.90391-1-swboyd@chromium.org> <20190730181557.90391-3-swboyd@chromium.org>
-In-Reply-To: <20190730181557.90391-3-swboyd@chromium.org>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Mon, 5 Aug 2019 11:35:05 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65njFXzLM_BvkDsZEzxEfkp_FFmFrS+1Ww9ZVen3iwy9g@mail.gmail.com>
-Message-ID: <CAGb2v65njFXzLM_BvkDsZEzxEfkp_FFmFrS+1Ww9ZVen3iwy9g@mail.gmail.com>
-Subject: Re: [PATCH v6 02/57] bus: sunxi-rsb: Remove dev_err() usage after platform_get_irq()
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190805023206.8831-1-jhubbard@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 8/4/19 7:32 PM, john.hubbard@gmail.com wrote:
+> From: John Hubbard <jhubbard@nvidia.com>
+> 
+> For pages that were retained via get_user_pages*(), release those pages
+> via the new put_user_page*() routines, instead of via put_page() or
+> release_pages().
+> 
+> This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
+> ("mm: introduce put_user_page*(), placeholder versions").
 
-On Wed, Jul 31, 2019 at 2:16 AM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> We don't need dev_err() messages when platform_get_irq() fails now that
-> platform_get_irq() prints an error message itself when something goes
-> wrong. Let's remove these prints with a simple semantic patch.
->
-> // <smpl>
-> @@
-> expression ret;
-> struct platform_device *E;
-> @@
->
-> ret =
-> (
-> platform_get_irq(E, ...)
-> |
-> platform_get_irq_byname(E, ...)
-> );
->
-> if ( \( ret < 0 \| ret <= 0 \) )
-> {
-> (
-> -if (ret != -EPROBE_DEFER)
-> -{ ...
-> -dev_err(...);
-> -... }
-> |
-> ...
-> -dev_err(...);
-> )
-> ...
-> }
-> // </smpl>
->
-> While we're here, remove braces on if statements that only have one
-> statement (manually).
->
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->
-> Please apply directly to subsystem trees
+Applied for 5.4, thanks.
 
-I didn't follow this series. Is this for -fixes or -next?
+-- 
+Jens Axboe
 
-Thanks.
-
->  drivers/bus/sunxi-rsb.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->
-> diff --git a/drivers/bus/sunxi-rsb.c b/drivers/bus/sunxi-rsb.c
-> index 1b76d9585902..be79d6c6a4e4 100644
-> --- a/drivers/bus/sunxi-rsb.c
-> +++ b/drivers/bus/sunxi-rsb.c
-> @@ -651,10 +651,8 @@ static int sunxi_rsb_probe(struct platform_device *pdev)
->                 return PTR_ERR(rsb->regs);
->
->         irq = platform_get_irq(pdev, 0);
-> -       if (irq < 0) {
-> -               dev_err(dev, "failed to retrieve irq: %d\n", irq);
-> +       if (irq < 0)
->                 return irq;
-> -       }
->
->         rsb->clk = devm_clk_get(dev, NULL);
->         if (IS_ERR(rsb->clk)) {
-> --
-> Sent by a computer through tubes
->
