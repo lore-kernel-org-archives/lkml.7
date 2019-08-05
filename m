@@ -2,128 +2,122 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F5BC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6239CC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5CD7217D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3724A217F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:36:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AqaQUUty";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AqaQUUty"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727398AbfHEGal (ORCPT
+        id S1727137AbfHEGgE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 02:30:41 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:34010 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727081AbfHEGal (ORCPT
+        Mon, 5 Aug 2019 02:36:04 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:34534 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbfHEGgE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 02:30:41 -0400
-Received: by mail-qk1-f195.google.com with SMTP id t8so59276420qkt.1
-        for <linux-kernel@vger.kernel.org>; Sun, 04 Aug 2019 23:30:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=PVqIsmchklCTrdzugsyQL+AeUL8kmqaAFQiz9HKaITE=;
-        b=iBGL/o/bJTt21GNV7Z4nFPb8NkzYSxpYaiJAX45dBfTGfEWya4Hq66ke+2OplZ021B
-         crjzjOORDUZKPWbDvYxaj8W6kHt7Wjwmy91qPqH6p5Q2Ho9rXzbXkMq+z12I3eRpEnho
-         sF7JW9o3R3zpH+fvXHrKvQeIu8RpTnx/KPI5Fr2ODaJVNGR982X0qoBwqrbLA+9UP2P+
-         NSJAGzK/Iq/heyECzsyQEyVP0YFn8rnQXD4t1r0W6Rb+dwhTAPT7AW21ALtFhCzzQ8/3
-         8oO1g9ZZ0ptXA5sVXj3hUlPhP/hmC7F70Dc1X3oTPLxmZkelf/oi3imPOG6RPqXtrhoM
-         PhLA==
-X-Gm-Message-State: APjAAAU65lQ4Wa95iaf1nOdDxWDCRhrI0XZOqeeeO6xbi255wD33Gu4q
-        0SMVPqRsWduW8x37DRjeZ05w5g==
-X-Google-Smtp-Source: APXvYqwS0Eo1lXfnBu6u3xqFFZLty3hYj+avFeIYmNSdIaVzfHVVLe9QhqalA5xTV3YZrONCooErvg==
-X-Received: by 2002:a37:86c4:: with SMTP id i187mr100882695qkd.464.1564986640071;
-        Sun, 04 Aug 2019 23:30:40 -0700 (PDT)
-Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
-        by smtp.gmail.com with ESMTPSA id n3sm34029874qkk.54.2019.08.04.23.30.36
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 04 Aug 2019 23:30:39 -0700 (PDT)
-Date:   Mon, 5 Aug 2019 02:30:34 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH V2 7/9] vhost: do not use RCU to synchronize MMU notifier
- with worker
-Message-ID: <20190805022833-mutt-send-email-mst@kernel.org>
-References: <20190731084655.7024-8-jasowang@redhat.com>
- <20190731123935.GC3946@ziepe.ca>
- <7555c949-ae6f-f105-6e1d-df21ddae9e4e@redhat.com>
- <20190731193057.GG3946@ziepe.ca>
- <a3bde826-6329-68e4-2826-8a9de4c5bd1e@redhat.com>
- <20190801141512.GB23899@ziepe.ca>
- <42ead87b-1749-4c73-cbe4-29dbeb945041@redhat.com>
- <20190802124613.GA11245@ziepe.ca>
- <20190802100414-mutt-send-email-mst@kernel.org>
- <e8ecb811-6653-cff4-bc11-81f4ccb0dbbf@redhat.com>
+        Mon, 5 Aug 2019 02:36:04 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id A7DDB609EF; Mon,  5 Aug 2019 06:36:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564986962;
+        bh=YC2f6yFf1lfzAzxrNyThP9hnT7M2waYwm0V2lbnwG+k=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=AqaQUUtyzRJgU+mTAS/0v+OHG88X7PTtqPDVvQX74crxwzwLDiWtawHJCPUpsalvS
+         tkoCMEESi5pTQTpHz5zRoNCifc6Y5GOCf/PioxydkmlKoBzGmI4cqZ4zFqwAnUeza7
+         1TIX+SIDbai1nLP15CP1HdUlUSM6N/5vcdBnG8Lo=
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 13F4C607F4;
+        Mon,  5 Aug 2019 06:36:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564986962;
+        bh=YC2f6yFf1lfzAzxrNyThP9hnT7M2waYwm0V2lbnwG+k=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=AqaQUUtyzRJgU+mTAS/0v+OHG88X7PTtqPDVvQX74crxwzwLDiWtawHJCPUpsalvS
+         tkoCMEESi5pTQTpHz5zRoNCifc6Y5GOCf/PioxydkmlKoBzGmI4cqZ4zFqwAnUeza7
+         1TIX+SIDbai1nLP15CP1HdUlUSM6N/5vcdBnG8Lo=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 13F4C607F4
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
+Received: by mail-ed1-f45.google.com with SMTP id i11so14099639edq.0;
+        Sun, 04 Aug 2019 23:36:01 -0700 (PDT)
+X-Gm-Message-State: APjAAAXHGSuaYr/ZnvFmgP/lPaCZoFdm5xtdqk4ycNQPUucRr0H0SzOs
+        PPc+OyL1+dNYoJc8Yj6rPY9pALkuWkVLL2/uQGA=
+X-Google-Smtp-Source: APXvYqzPksVYGcY/a/wzEqdo2nZvczPNPjOJlXU65BxpS+6SbY8+DTD0LVavKq6NF48znuF0Z+//UbXWxAdeCA0WcIo=
+X-Received: by 2002:a17:906:7013:: with SMTP id n19mr116074017ejj.65.1564986960796;
+ Sun, 04 Aug 2019 23:36:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e8ecb811-6653-cff4-bc11-81f4ccb0dbbf@redhat.com>
+References: <20190710112924.17724-1-vivek.gautam@codeaurora.org>
+In-Reply-To: <20190710112924.17724-1-vivek.gautam@codeaurora.org>
+From:   Vivek Gautam <vivek.gautam@codeaurora.org>
+Date:   Mon, 5 Aug 2019 12:05:49 +0530
+X-Gmail-Original-Message-ID: <CAFp+6iGF50aoGUumGFPuNTDsV-F5c1y_qSvqqcLuzapRzH7HVA@mail.gmail.com>
+Message-ID: <CAFp+6iGF50aoGUumGFPuNTDsV-F5c1y_qSvqqcLuzapRzH7HVA@mail.gmail.com>
+Subject: Re: [PATCH 1/1] arm64: dts: sdm845: Add device node for Last level
+ cache controller
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        "robh+dt" <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 12:36:40PM +0800, Jason Wang wrote:
-> 
-> On 2019/8/2 下午10:27, Michael S. Tsirkin wrote:
-> > On Fri, Aug 02, 2019 at 09:46:13AM -0300, Jason Gunthorpe wrote:
-> > > On Fri, Aug 02, 2019 at 05:40:07PM +0800, Jason Wang wrote:
-> > > > > This must be a proper barrier, like a spinlock, mutex, or
-> > > > > synchronize_rcu.
-> > > > 
-> > > > I start with synchronize_rcu() but both you and Michael raise some
-> > > > concern.
-> > > I've also idly wondered if calling synchronize_rcu() under the various
-> > > mm locks is a deadlock situation.
-> > > 
-> > > > Then I try spinlock and mutex:
-> > > > 
-> > > > 1) spinlock: add lots of overhead on datapath, this leads 0 performance
-> > > > improvement.
-> > > I think the topic here is correctness not performance improvement
-> > The topic is whether we should revert
-> > commit 7f466032dc9 ("vhost: access vq metadata through kernel virtual address")
-> > 
-> > or keep it in. The only reason to keep it is performance.
-> 
-> 
-> Maybe it's time to introduce the config option?
+Hi Bjorn,
 
-Depending on CONFIG_BROKEN? I'm not sure it's a good idea.
+On Wed, Jul 10, 2019 at 5:09 PM Vivek Gautam
+<vivek.gautam@codeaurora.org> wrote:
+>
+> From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>
+> Last level cache (aka. system cache) controller provides control
+> over the last level cache present on SDM845. This cache lies after
+> the memory noc, right before the DDR.
+>
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index 4babff5f19b5..314241a99290 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -1275,6 +1275,13 @@
+>                         };
+>                 };
+>
+> +               cache-controller@1100000 {
+> +                       compatible = "qcom,sdm845-llcc";
+> +                       reg = <0 0x1100000 0 0x200000>, <0 0x1300000 0 0x50000>;
+> +                       reg-names = "llcc_base", "llcc_broadcast_base";
+> +                       interrupts = <GIC_SPI 582 IRQ_TYPE_LEVEL_HIGH>;
+> +               };
 
-> 
-> > 
-> > Now as long as all this code is disabled anyway, we can experiment a
-> > bit.
-> > 
-> > I personally feel we would be best served by having two code paths:
-> > 
-> > - Access to VM memory directly mapped into kernel
-> > - Access to userspace
-> > 
-> > 
-> > Having it all cleanly split will allow a bunch of optimizations, for
-> > example for years now we planned to be able to process an incoming short
-> > packet directly on softirq path, or an outgoing on directly within
-> > eventfd.
-> 
-> 
-> It's not hard consider we've already had our own accssors. But the question
-> is (as asked in another thread), do you want permanent GUP or still use MMU
-> notifiers.
-> 
-> Thanks
+Gentle ping. Are you planning to pick this?
 
-We want THP and NUMA to work. Both are important for performance.
+Thanks
+Vivek
+[snip]
 
 -- 
-MST
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
