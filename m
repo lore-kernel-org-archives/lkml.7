@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3EBCC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88782C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:20:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C05012075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 512BF21743
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:20:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011244;
-	bh=NiODZww1Lx7CncHNndOsLnpgx9qKu/NV6F80uKpbQqk=;
+	s=default; t=1565011248;
+	bh=WQ6IdJnGylUw5D3tDviDE6y2TF7w0s6NvKTzLHZJjnU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d7SLgv8QbG75IJBXKigi6NnmsYgJY81TrcFsOGwTF989KIGoR/DFNxaNcHX0ki8rK
-	 a7WwzHhe/0a6mBgbeWMBAT/h5RWx4VeyhCYe9IG9tUQMAD0inqkHoQDFhCY66hJVVy
-	 QYLj6003IYQvN2v3zvbLSRDu2pHLqW6dak77co54=
+	b=imwAii/SvOWE/VMa4o2lSGrb88mef3rS+xORIPd2XGUYruE+SyoWCehIQjy1foKkc
+	 7HJEAgZAaei2OGZfuO+1xWfkkza21B+aOg298CesZg6CBDzym03jReT58t6u5NE0Ez
+	 zFFJwZwG3ikArnfef7873lIhwtM/4FIa0D2XPo0w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730318AbfHENUn (ORCPT
+        id S1730334AbfHENUr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:20:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56734 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:20:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729773AbfHENUj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:20:39 -0400
+        id S1730319AbfHENUo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:20:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A25522075B;
-        Mon,  5 Aug 2019 13:20:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEB9020880;
+        Mon,  5 Aug 2019 13:20:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011238;
-        bh=NiODZww1Lx7CncHNndOsLnpgx9qKu/NV6F80uKpbQqk=;
+        s=default; t=1565011243;
+        bh=WQ6IdJnGylUw5D3tDviDE6y2TF7w0s6NvKTzLHZJjnU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0xHXnB1S2VH7fBPIFI0lk+XyymZYIYquiKtO3WGs/C6fi7HU/A1p6jcbJpJI4Pkvz
-         PwxbFThzO9HPnXdw4MWe1B2zokKr/B06yCNEG3bGCW80ZWSvPChbsGqJFWg0QtUeWw
-         bgpeZLGhpjU57jPW5XtOzJVSSJGh0TmUOaEnJag4=
+        b=Ah51SoobktcbSasrrVRnjjcU0Efq0vfhxAUfQYrL7+hnddDe16i0cbZb01zmGc/7z
+         ev3N6Ho86GX7azuXQgX8zY2+MzCrAy48gJxInBjDSjk/e0UTUAwxFA5ImEEtodpB/q
+         Q8UF5Q2Qq8/eKMliKs6kspOk3CxtiCkHj8r4D9LU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, Olof Johansson <olof@lixom.net>,
+        stable@vger.kernel.org, Petr Cvek <petrcvekcz@gmail.com>,
+        Paul Burton <paul.burton@mips.com>, hauke@hauke-m.de,
+        john@phrozen.org, linux-mips@vger.kernel.org,
+        openwrt-devel@lists.openwrt.org, pakahmar@hotmail.com,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 017/131] arm64: qcom: qcs404: Add reset-cells to GCC node
-Date:   Mon,  5 Aug 2019 15:01:44 +0200
-Message-Id: <20190805124952.589825090@linuxfoundation.org>
+Subject: [PATCH 5.2 019/131] MIPS: lantiq: Fix bitfield masking
+Date:   Mon,  5 Aug 2019 15:01:46 +0200
+Message-Id: <20190805124952.718096980@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -61,43 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0763d0c2273a3c72247d325c48fbac3d918d6b87 ]
+[ Upstream commit ba1bc0fcdeaf3bf583c1517bd2e3e29cf223c969 ]
 
-This patch adds a reset-cells property to the gcc controller on the QCS404.
-Without this in place, we get warnings like the following if nodes reference
-a gcc reset:
+The modification of EXIN register doesn't clean the bitfield before
+the writing of a new value. After a few modifications the bitfield would
+accumulate only '1's.
 
-arch/arm64/boot/dts/qcom/qcs404.dtsi:261.38-310.5: Warning (resets_property):
-/soc@0/remoteproc@b00000: Missing property '#reset-cells' in node
-/soc@0/clock-controller@1800000 or bad phandle (referred from resets[0])
-  also defined at arch/arm64/boot/dts/qcom/qcs404-evb.dtsi:82.18-84.3
-  DTC     arch/arm64/boot/dts/qcom/qcs404-evb-4000.dtb
-arch/arm64/boot/dts/qcom/qcs404.dtsi:261.38-310.5: Warning (resets_property):
-/soc@0/remoteproc@b00000: Missing property '#reset-cells' in node
-/soc@0/clock-controller@1800000 or bad phandle (referred from resets[0])
-  also defined at arch/arm64/boot/dts/qcom/qcs404-evb.dtsi:82.18-84.3
-
-Signed-off-by: Andy Gross <agross@kernel.org>
-Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Olof Johansson <olof@lixom.net>
+Signed-off-by: Petr Cvek <petrcvekcz@gmail.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: hauke@hauke-m.de
+Cc: john@phrozen.org
+Cc: linux-mips@vger.kernel.org
+Cc: openwrt-devel@lists.openwrt.org
+Cc: pakahmar@hotmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/mips/lantiq/irq.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index ffedf9640af7d..65a2cbeb28bec 100644
---- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -383,6 +383,7 @@
- 			compatible = "qcom,gcc-qcs404";
- 			reg = <0x01800000 0x80000>;
- 			#clock-cells = <1>;
-+			#reset-cells = <1>;
+diff --git a/arch/mips/lantiq/irq.c b/arch/mips/lantiq/irq.c
+index cfd87e662fcf4..9c95097557c75 100644
+--- a/arch/mips/lantiq/irq.c
++++ b/arch/mips/lantiq/irq.c
+@@ -154,8 +154,9 @@ static int ltq_eiu_settype(struct irq_data *d, unsigned int type)
+ 			if (edge)
+ 				irq_set_handler(d->hwirq, handle_edge_irq);
  
- 			assigned-clocks = <&gcc GCC_APSS_AHB_CLK_SRC>;
- 			assigned-clock-rates = <19200000>;
+-			ltq_eiu_w32(ltq_eiu_r32(LTQ_EIU_EXIN_C) |
+-				(val << (i * 4)), LTQ_EIU_EXIN_C);
++			ltq_eiu_w32((ltq_eiu_r32(LTQ_EIU_EXIN_C) &
++				    (~(7 << (i * 4)))) | (val << (i * 4)),
++				    LTQ_EIU_EXIN_C);
+ 		}
+ 	}
+ 
 -- 
 2.20.1
 
