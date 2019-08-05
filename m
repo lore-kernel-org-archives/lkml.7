@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04110C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82883C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C56DB20644
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:26:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58AF320644
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:26:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011600;
-	bh=c4qnbbbF6peffAXYg6PUmwwo6Rs0I4rNQqfhLi4h33I=;
+	s=default; t=1565011603;
+	bh=F5nmWI4N3L3upEYEKPWEfR2p0H16olBUXqf9oPpehg4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SQ3tDcT2GUpqakfuG1IXQR/C1vtS5N9Rl5pcX/fCid4wrYhQDSjPlk55EvhTJPQWE
-	 MlJW9HfUZdhPnyZbCg66WsUepPHpZoW/MXh8idRaDNv/hNl+giwMb2RuVIR+RhluOT
-	 iNVWCgsoyclYqNp82Y7MMKdeAq9lASh4YP1RKOts=
+	b=mzSAnksiz/ooLZjIDC8wZRsoByTSwN7qTlFXcU6E5NgkQwbMdiobrVIw5oWGcbZkS
+	 JTu5GobUGehSt6S+CE/tLKEKJQORn4KF8OmRH7zVkfibU71yoAQpMlNOe/n0wT+qX9
+	 8OqsUQrgyZ4X0ywSlA+3jOyq1zp899zH3s0ws/Dc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731357AbfHEN0D (ORCPT
+        id S1731348AbfHEN0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:26:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34514 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:26:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731335AbfHENZ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:25:57 -0400
+        id S1731320AbfHENZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:25:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9889520644;
-        Mon,  5 Aug 2019 13:25:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E67C20644;
+        Mon,  5 Aug 2019 13:25:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011557;
-        bh=c4qnbbbF6peffAXYg6PUmwwo6Rs0I4rNQqfhLi4h33I=;
+        s=default; t=1565011551;
+        bh=F5nmWI4N3L3upEYEKPWEfR2p0H16olBUXqf9oPpehg4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hti7S6db3t/aH0ePoiwngVZVjjTePeB/MxSyXuk++5wbtQFDOBXlNkQyBZnunYB6B
-         o6VtNv4oCuMkHn6GBgXQbAF3NySDNxONf1z2bOzJd3npr6YtcMSY6f+ZcEeC4on/B/
-         4SLg3Vm0qcc7AIg2swaabOYmo0C9O7LomYWdC5Ds=
+        b=agS+SWwhHadZWRNEWN23iIOihG4/mqofXKFDdAvxHcPkjVVJrSGZHz7NKCHRxP9Hl
+         mmMxnFHOmqDdiKfaU2zxQvthemcHs+NCeuSxEGYKWKdDQ2xPwyIOt0HvuJQsBz9KWj
+         9N8hu4GenlocGb2NvOI14T9pHKX70Fimhq98NLuQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Down <chris@chrisdown.name>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>, Roman Gushchin <guro@fb.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.2 107/131] cgroup: kselftest: relax fs_spec checks
-Date:   Mon,  5 Aug 2019 15:03:14 +0200
-Message-Id: <20190805124959.135988748@linuxfoundation.org>
+        stable@vger.kernel.org, Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Xiaolin Zhang <xiaolin.zhang@intel.com>
+Subject: [PATCH 5.2 131/131] drm/i915/gvt: fix incorrect cache entry for guest page mapping
+Date:   Mon,  5 Aug 2019 15:03:38 +0200
+Message-Id: <20190805125000.899343807@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -62,49 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Down <chris@chrisdown.name>
+From: Xiaolin Zhang <xiaolin.zhang@intel.com>
 
-commit b59b1baab789eacdde809135542e3d4f256f6878 upstream.
+commit 7366aeb77cd840f3edea02c65065d40affaa7f45 upstream.
 
-On my laptop most memcg kselftests were being skipped because it claimed
-cgroup v2 hierarchy wasn't mounted, but this isn't correct.  Instead, it
-seems current systemd HEAD mounts it with the name "cgroup2" instead of
-"cgroup":
+GPU hang observed during the guest OCL conformance test which is caused
+by THP GTT feature used durning the test.
 
-    % grep cgroup /proc/mounts
-    cgroup2 /sys/fs/cgroup cgroup2 rw,nosuid,nodev,noexec,relatime,nsdelegate 0 0
+It was observed the same GFN with different size (4K and 2M) requested
+from the guest in GVT. So during the guest page dma map stage, it is
+required to unmap first with orginal size and then remap again with
+requested size.
 
-I can't think of a reason to need to check fs_spec explicitly
-since it's arbitrary, so we can just rely on fs_vfstype.
-
-After these changes, `make TARGETS=cgroup kselftest` actually runs the
-cgroup v2 tests in more cases.
-
-Link: http://lkml.kernel.org/r/20190723210737.GA487@chrisdown.name
-Signed-off-by: Chris Down <chris@chrisdown.name>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Roman Gushchin <guro@fb.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: b901b252b6cf ("drm/i915/gvt: Add 2M huge gtt support")
+Cc: stable@vger.kernel.org
+Reviewed-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Signed-off-by: Xiaolin Zhang <xiaolin.zhang@intel.com>
+Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/testing/selftests/cgroup/cgroup_util.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/gpu/drm/i915/gvt/kvmgt.c |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
---- a/tools/testing/selftests/cgroup/cgroup_util.c
-+++ b/tools/testing/selftests/cgroup/cgroup_util.c
-@@ -191,8 +191,7 @@ int cg_find_unified_root(char *root, siz
- 		strtok(NULL, delim);
- 		strtok(NULL, delim);
- 
--		if (strcmp(fs, "cgroup") == 0 &&
--		    strcmp(type, "cgroup2") == 0) {
-+		if (strcmp(type, "cgroup2") == 0) {
- 			strncpy(root, mount, len);
- 			return 0;
- 		}
+--- a/drivers/gpu/drm/i915/gvt/kvmgt.c
++++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
+@@ -1911,6 +1911,18 @@ static int kvmgt_dma_map_guest_page(unsi
+ 		ret = __gvt_cache_add(info->vgpu, gfn, *dma_addr, size);
+ 		if (ret)
+ 			goto err_unmap;
++	} else if (entry->size != size) {
++		/* the same gfn with different size: unmap and re-map */
++		gvt_dma_unmap_page(vgpu, gfn, entry->dma_addr, entry->size);
++		__gvt_cache_remove_entry(vgpu, entry);
++
++		ret = gvt_dma_map_page(vgpu, gfn, dma_addr, size);
++		if (ret)
++			goto err_unlock;
++
++		ret = __gvt_cache_add(info->vgpu, gfn, *dma_addr, size);
++		if (ret)
++			goto err_unmap;
+ 	} else {
+ 		kref_get(&entry->ref);
+ 		*dma_addr = entry->dma_addr;
 
 
