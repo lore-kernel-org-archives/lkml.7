@@ -2,188 +2,120 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66797C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 19:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E87AFC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 19:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27315208C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 19:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EB082147A
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 19:55:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="K5WSkhlQ";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="QryImEVv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="asd7Fg8e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730509AbfHETvQ (ORCPT
+        id S1730438AbfHETzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 15:51:16 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:1468 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727830AbfHETvQ (ORCPT
+        Mon, 5 Aug 2019 15:55:32 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:40799 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727830AbfHETzb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 15:51:16 -0400
-Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x75JoNd5022742;
-        Mon, 5 Aug 2019 12:50:55 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=5D0B1p/iIxkANtFxql5oXN6PNtQxj87D6xNdrBoLP5w=;
- b=K5WSkhlQm06CVtqu2TPG6hoCCIlf+AWyIDttiR9St2cUoz9NJ6huF12yy5tQShvpdWW+
- z0B6kak6WvQs1ch4T+/vXOMtIH6/3IpOQ6D2OTsdjvvcHMPxp/ncLxu5AxItRzy4oniB
- mrYmhQh0d2ic5p5Afs7yBxbbMvkShZ8VlOw= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2u6n54hefv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 05 Aug 2019 12:50:55 -0700
-Received: from prn-mbx04.TheFacebook.com (2620:10d:c081:6::18) by
- prn-hub02.TheFacebook.com (2620:10d:c081:35::126) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Mon, 5 Aug 2019 12:50:54 -0700
-Received: from prn-hub03.TheFacebook.com (2620:10d:c081:35::127) by
- prn-mbx04.TheFacebook.com (2620:10d:c081:6::18) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Mon, 5 Aug 2019 12:50:54 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Mon, 5 Aug 2019 12:50:54 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EfncesKShHC9uZ7fgEAMUHwwcgu38DjC4DZWRWd2UibPNgxAuxLRjZyo3sS92HsZfoL5jxPSQ1LwSPe4NpLswV7UQGyX01YVw3+JmXPPvp4Hppxcz7fthIKY+z8B6D1xCgb2fkZ97fBF8+Mq2oLZYrFWFNmGGDGgYgD1V4hJTIzru5zTYVjy99zYWTtLntmPTPbD7gJBFMwdkmLriKHi/jHxYTb3MvGeUS8arTOUcKZYehWd0Q2bPaTSrc/8y/7nZeHvXZQTSNZ9zyNdtp4DR0jpbC+JHDaVDkj1PWfbnwGwqRUQqitieTewTOt5TpeeWVkEUEFU6gTXLWlX6QzgUA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5D0B1p/iIxkANtFxql5oXN6PNtQxj87D6xNdrBoLP5w=;
- b=afWORuhPqFQs/zFQiHeEN/l3neku6XStJAOCVoSFtH/fzK4O8VyMtSQi9+folGjHwXbsTOi8ZBle8Ht5YnjgEUZ6WYUNwVNNwxfWBxETAJjRBWNwrS0VFrNChEhPvLOGOlUvmafEH+RvqGvQ7o0JVhIyfZxmUE1JhIg+1Y4VqD3P0Mxr7IeVSXSmLGGgcyJm0xtpopxwyoA4oGOJKxHYRR3ANmkidkEbDNTVbaDcvLy3SQvLPUT+BZdhfMr3gk6I77DZvpkxE76HuON1yfCkPfYuHBqkpPv73n6OxP86lD939S2nwNtztf9HOkwGC+VYRDh4ETG5gmbkF5x7aA9RHw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=fb.com;dmarc=pass action=none header.from=fb.com;dkim=pass
- header.d=fb.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5D0B1p/iIxkANtFxql5oXN6PNtQxj87D6xNdrBoLP5w=;
- b=QryImEVviZlL5Q5qQZoerV/+cK2kd8Prue4DFNYgYX6v9Uym+6cAVuIRHoY+wAxAuWupJx2rDBB08p7Kto9o6kB1/GQHA3vCEbMC/MYmSuSt5rFVZ802Fjk0oONJSf1kWACAWTsuPgySfyBz8tGfw3Ly0+EFWcrcvW0xXbPfP5w=
-Received: from DM6PR15MB2635.namprd15.prod.outlook.com (20.179.161.152) by
- DM6PR15MB2603.namprd15.prod.outlook.com (20.179.161.32) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2136.20; Mon, 5 Aug 2019 19:50:52 +0000
-Received: from DM6PR15MB2635.namprd15.prod.outlook.com
- ([fe80::fc39:8b78:f4df:a053]) by DM6PR15MB2635.namprd15.prod.outlook.com
- ([fe80::fc39:8b78:f4df:a053%3]) with mapi id 15.20.2136.018; Mon, 5 Aug 2019
- 19:50:52 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     Michal Hocko <mhocko@kernel.org>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Hillf Danton <hdanton@sina.com>
-Subject: Re: [PATCH v2] mm: memcontrol: switch to rcu protection in
- drain_all_stock()
-Thread-Topic: [PATCH v2] mm: memcontrol: switch to rcu protection in
- drain_all_stock()
-Thread-Index: AQHVSWe95NlTDGyLyE2eOxgDGjbby6bsakaAgACREIA=
-Date:   Mon, 5 Aug 2019 19:50:52 +0000
-Message-ID: <20190805195047.GA16917@tower.DHCP.thefacebook.com>
-References: <20190802192241.3253165-1-guro@fb.com>
- <20190805111135.GE7597@dhcp22.suse.cz>
-In-Reply-To: <20190805111135.GE7597@dhcp22.suse.cz>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR21CA0054.namprd21.prod.outlook.com
- (2603:10b6:300:db::16) To DM6PR15MB2635.namprd15.prod.outlook.com
- (2603:10b6:5:1a6::24)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::e44]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: caf2e730-89cb-4a00-039a-08d719de3888
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM6PR15MB2603;
-x-ms-traffictypediagnostic: DM6PR15MB2603:
-x-microsoft-antispam-prvs: <DM6PR15MB2603468CB4C2CEAE2A1A7A12BEDA0@DM6PR15MB2603.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 01208B1E18
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(366004)(136003)(376002)(346002)(39860400002)(199004)(189003)(229853002)(46003)(102836004)(8676002)(66946007)(14454004)(68736007)(81166006)(81156014)(476003)(446003)(6436002)(6486002)(99286004)(11346002)(478600001)(76176011)(54906003)(25786009)(33656002)(486006)(386003)(186003)(6506007)(7736002)(305945005)(4326008)(256004)(316002)(9686003)(1076003)(6512007)(71190400001)(71200400001)(5660300002)(8936002)(6116002)(6916009)(52116002)(66446008)(53936002)(66556008)(66476007)(64756008)(6246003)(86362001)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR15MB2603;H:DM6PR15MB2635.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: i3uJRM6hsh9zoBJKLaZJVGd6/4P7JjtVim5j0R+sEJ6wN0YvLr+4qV0B8B4dMlqgZNQAxwUQsZmiBz4darD/l2d5Yl/xG1hQjnUFo/ZxXhdwgY7M8qYZprOIf9Ho60tuVJ/Ps+5mkqmXJr2oyOggCfxQjdV+ZYIx2Ut+3EOqmUwbvf3pzqKf2Ewl4ahUq3QS5hyqh6LiqWWRJtMHr8F6rrplMevNoTokftBhoNR6x/9pHdjHV8umOOCcKsR7kG0uwqc8k/UPJnlZDceZxUGoJmgilYb0AMtlBZpG0h01EEj055NsQPDzFBpVksxNErlIuh0z6/JGvnT6KuKSL69ASLBTCW10JSwH3YhfhCPg2yXqeio7TNJOMYahD1euyKHou1eE5ppw0qsM9gh4zjWO6P5yVYkv61HcL34WdqAVB9I=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <509D1DD3ADE9FD4788650A59BC9C7997@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 5 Aug 2019 15:55:31 -0400
+Received: by mail-lf1-f66.google.com with SMTP id b17so58998310lff.7
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 12:55:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VkZbfC+EpkQaPEsPSx9ocRYh+3TkiZxKiNMzxlWu3nY=;
+        b=asd7Fg8eJdbHaUl/GE3/fiESkYN2MkQbklldaifFBdBmP1aAFynBKD7kWJJUuT/MNb
+         xzJNvzEBk6Bxo/QtY8i6KO8yPipV4a5El88ztGISyiSv5i5Zii16+FPrC3pToeTHOLFQ
+         6iL3ZBCvyTPzQ9gW9yC/flhRzMJ3xVDAgzbF1VvYm6eBbZLwCSycU/1wngnT2IgNmMey
+         iSScBlmmOnvba6tj02T5cqIVMYit182lKLXabZlkKOLjPC3Y7tE//5HrU8whbFzzHrKP
+         hR/+IDuYXjXkv00FKs1bk7QYoU3UBHMsNpdLlRIxv/maWRgYFMar3/W28bpXha7J2h5F
+         /44w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VkZbfC+EpkQaPEsPSx9ocRYh+3TkiZxKiNMzxlWu3nY=;
+        b=LislCtAakSnWDlKz2OqR49FZxYZVO/3+BLoFfwIak6+Xo5ImJlMmegG0ax2d4FzUhD
+         u4UZz3P8NngV8MAAuJXqj45WD31ZFe7jRigwR0h+TCkSB05rR1ZYfy8itnV4Z6WLEb8r
+         cQRqXEnlra00RhG6gLSko235dUsnYVFeceu43Xlk2XO8lcT6HLVJZluwTs2n9P88g4gi
+         5VBMvXtlPIE478FOajD3bOqS0pqn/SFRCcB4xKanRK99QPLD4fUEsiUTCUjNSeg7IVjd
+         3pzRf49OTamYLG5AgLk2BymMTiX304ypD5I9OUiHncKtmqQ1u2oQmkDXQ4qjdapMFGG0
+         vjtw==
+X-Gm-Message-State: APjAAAXPQn908hpWd7jISyQKWLSHusUkZmDOECIOjrPbxnIA80qj+Vax
+        K56uqfEEcy/3pLknQrWAN1s=
+X-Google-Smtp-Source: APXvYqyY9qWwAG2jf9rcD9EksskZzYxVzDHABpiv5f7kSALonkfju/RXxcTaqdJw5nPFDF8khBJyQw==
+X-Received: by 2002:a05:6512:15a:: with SMTP id m26mr70998580lfo.71.1565034930052;
+        Mon, 05 Aug 2019 12:55:30 -0700 (PDT)
+Received: from rikard (h-158-174-186-115.NA.cust.bahnhof.se. [158.174.186.115])
+        by smtp.gmail.com with ESMTPSA id m17sm15000408lfj.22.2019.08.05.12.55.28
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 05 Aug 2019 12:55:29 -0700 (PDT)
+From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
+X-Google-Original-From: Rikard Falkeborn <rikard.falkeborn>
+Date:   Mon, 5 Aug 2019 21:55:26 +0200
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] linux/bits.h: Add compile time sanity check of GENMASK
+ inputs
+Message-ID: <20190805195526.GA869@rikard>
+References: <20190731190309.19909-1-rikard.falkeborn@gmail.com>
+ <47d29791addc075431737aff4b64531a668d4c1b.camel@perches.com>
+ <CAK7LNAQdgUOsjWtWFnXm66DPnYFRp=i69DMyr+q4+NT+SPCQxA@mail.gmail.com>
+ <2b782cf609330f53b6ecc5b75a8a4b49898483eb.camel@perches.com>
+ <CAK7LNASw+Fraio3t=bZw-FzJihScTuDR=p2EktFVOmdLH4GTGA@mail.gmail.com>
+ <20190802181853.GA809@rikard>
+ <CAK7LNAT+cNxna4SER04MdkBsq_LDg4TwYR_U1ioNNxYOZWXigA@mail.gmail.com>
+ <CAK7LNAQv-5epL8DYDaUdHsQEQ=Va676t_6TgsaSYC30Eix=iyw@mail.gmail.com>
+ <20190803183637.GA831@rikard>
+ <CAK7LNASBndh4yJKVdeMb7RQGopUzEUSNXPQcUgQdB8PiJetMuQ@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: caf2e730-89cb-4a00-039a-08d719de3888
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Aug 2019 19:50:52.2813
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: guro@fb.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR15MB2603
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-05_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908050198
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK7LNASBndh4yJKVdeMb7RQGopUzEUSNXPQcUgQdB8PiJetMuQ@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 01:11:35PM +0200, Michal Hocko wrote:
-> On Fri 02-08-19 12:22:41, Roman Gushchin wrote:
-> > Commit 72f0184c8a00 ("mm, memcg: remove hotplug locking from try_charge=
-")
-> > introduced css_tryget()/css_put() calls in drain_all_stock(),
-> > which are supposed to protect the target memory cgroup from being
-> > released during the mem_cgroup_is_descendant() call.
-> >=20
-> > However, it's not completely safe. In theory, memcg can go away
-> > between reading stock->cached pointer and calling css_tryget().
-> >=20
-> > This can happen if drain_all_stock() races with drain_local_stock()
-> > performed on the remote cpu as a result of a work, scheduled
-> > by the previous invocation of drain_all_stock().
->=20
-> Maybe I am still missing something but I do not see how 72f0184c8a00
-> changed the existing race. get_online_cpus doesn't prevent the same race
-> right? If this is the case then it would be great to clarify that. I
-> know that you are mostly after clarifying that css_tryget is
-> insufficient but the above sounds like 72f0184c8a00 has introduced a
-> regression.
+On Sun, Aug 04, 2019 at 03:45:16PM +0900, Masahiro Yamada wrote:
+> On Sun, Aug 4, 2019 at 3:36 AM Rikard Falkeborn
+> <rikard.falkeborn@gmail.com> wrote:
+> >
+> > On Sat, Aug 03, 2019 at 12:12:46PM +0900, Masahiro Yamada wrote:
+> > > On Sat, Aug 3, 2019 at 12:03 PM Masahiro Yamada
+> > > <yamada.masahiro@socionext.com> wrote:
+> > >
+> > > >
+> > > > BTW, v2 is already inconsistent.
+> > > > If you wanted GENMASK_INPUT_CHECK() to return 'unsigned long',,
+> > > > you would have to cast (low) > (high) as well:
+> > > >
+> > > >                (unsigned long)((low) > (high)), UL(0))))
+> > > >
+> > > > This is totally redundant, and weird.
+> > >
+> > > I take back this comment.
+> > > You added (unsigned long) to the beginning of this macro.
+> > > So, the type is consistent, but I believe all casts should be removed.
+> >
+> > Maybe you're right. BUILD_BUG_ON_ZERO returns size_t regardless of
+> > inputs. I was worried that on some platform, size_t would be larger than
+> > unsigned long (as far as I could see, the standard does not give any
+> > guarantees), and thus all of a sudden GENMASK would be 8 bytes instead
+> > of 4, but perhaps that is not a problem?
+> 
+> 
+> How about adding (int) cast to BUILD_BUG_ON_ZERO() ?
 
-Yeah, I'm not blaming 72f0184c8a00 for the race, which as I said,
-is barely reproducible at all. There is no "Fixes" tag, and I don't think
-we need to backport it to stable.
-Let's think about this patch as a refactoring patch, which makes the code
-cleaner.
-
->=20
-> > The race is a bit theoretical and there are few chances to trigger
-> > it, but the current code looks a bit confusing, so it makes sense
-> > to fix it anyway. The code looks like as if css_tryget() and
-> > css_put() are used to protect stocks drainage. It's not necessary
-> > because stocked pages are holding references to the cached cgroup.
-> > And it obviously won't work for works, scheduled on other cpus.
-> >=20
-> > So, let's read the stock->cached pointer and evaluate the memory
-> > cgroup inside a rcu read section, and get rid of
-> > css_tryget()/css_put() calls.
-> >=20
-> > v2: added some explanations to the commit message, no code changes
-> >=20
-> > Signed-off-by: Roman Gushchin <guro@fb.com>
-> > Cc: Michal Hocko <mhocko@suse.com>
-> > Cc: Hillf Danton <hdanton@sina.com>
->=20
-> Other than that.
-> Acked-by: Michal Hocko <mhocko@suse.com>
-
-Thanks!
+I'll have a look.
