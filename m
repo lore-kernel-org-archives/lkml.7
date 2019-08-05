@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCCDC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A731C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B14D214C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C88A20651
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:27:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011673;
-	bh=dJ6eF9Ln8U7bkQe9KNDZRmgsHgayYzmLEycoAeDZu5I=;
+	s=default; t=1565011678;
+	bh=zgnIYBAxB2jrEJmNoprGrBSkqiAFi5O/SGlURM4Rtug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VKH0z9x/SlFOHo7PlbOFiGDk5m7yLHucE7X/fyDlPD5JS5kToBMYEntBK7dEkoCjB
-	 y9GOJ0GK1y006fpVrgO9MfEpi/1crKlom6wTML8HugzBHyzNJPWCzJqOqdTN57i8zK
-	 4OkDl4hanQRExOqzyBy34jEiIb8+6tz3ZEOoYrd0=
+	b=rFhYRw4M1sx/M/NdvfXHyp9sGbAtb8Xz22ju7SC62LITi5oVlfhzEUZu9KG0i7MEh
+	 1ujZ+Nd5OfXM0ogZpHQKT4J2xKHba3gKojV4ufgu6aLgXpb7v9z2Tf2EO2hB5lXp9G
+	 95r6+tW8liPedhtF3FaNWXTyLmYmt7CJjSCXCitA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730988AbfHENYV (ORCPT
+        id S1730957AbfHEN15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:24:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32828 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:27:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730971AbfHENYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:24:19 -0400
+        id S1730951AbfHENYJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:24:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92A9C2087B;
-        Mon,  5 Aug 2019 13:24:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 243712075B;
+        Mon,  5 Aug 2019 13:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011458;
-        bh=dJ6eF9Ln8U7bkQe9KNDZRmgsHgayYzmLEycoAeDZu5I=;
+        s=default; t=1565011447;
+        bh=zgnIYBAxB2jrEJmNoprGrBSkqiAFi5O/SGlURM4Rtug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bzI/gcF2lM/JrqWSDEy51v4/pvtL2+CF3o5laPO6MXrnoghUxvgD6BQGfLsXzfP5i
-         nVB3PDKaHNAmx+cVqPhNoyHVvt5G1FcqmRSnOM+5+4Dz53CvM58altfHEW5fdo0t54
-         KZZa4ljA1QMuGe5nHtQRNp1t8hABe4YDYEKg3YGA=
+        b=jyHA3Fje9NLfU+Yv0uWgEjQdxtL19Hxk/9LFXlNxjkb5/hM9BtLWCVN6rKm3A4jr3
+         vYAFo3ahZVQ09hWUfgBOYtLuOguV0782XVlc51vqJdw7IQuN1fmyvz3CcrX2KLCqWr
+         iB1Z3ulZOq7VHUWEL7u6HC1LdVNGXdbGV/mYKTLY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Raag Jadav <raagjadav@gmail.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH 5.2 095/131] i2c: at91: disable TXRDY interrupt after sending data
-Date:   Mon,  5 Aug 2019 15:03:02 +0200
-Message-Id: <20190805124958.328486837@linuxfoundation.org>
+        stable@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 5.2 092/131] mtd: rawnand: micron: handle on-die "ECC-off" devices correctly
+Date:   Mon,  5 Aug 2019 15:02:59 +0200
+Message-Id: <20190805124958.129040120@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -62,54 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+From: Marco Felsch <m.felsch@pengutronix.de>
 
-commit d12e3aae160fb26b534c4496b211d6e60a5179ed upstream.
+commit 8493b2a06fc5b77ef5c579dc32b12761f7b7a84c upstream.
 
-Driver was not disabling TXRDY interrupt after last TX byte.
-This caused interrupt storm until transfer timeouts for slow
-or broken device on the bus. The patch fixes the interrupt storm
-on my SAMA5D2-based board.
+Some devices are not supposed to support on-die ECC but experience
+shows that internal ECC machinery can actually be enabled through the
+"SET FEATURE (EFh)" command, even if a read of the "READ ID Parameter
+Tables" returns that it is not.
 
-Cc: stable@vger.kernel.org # 5.2.x
-[v5.2 introduced file split; the patch should apply to i2c-at91.c before the split]
-Fixes: fac368a04048 ("i2c: at91: add new driver")
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Tested-by: Raag Jadav <raagjadav@gmail.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Currently, the driver checks the "READ ID Parameter" field directly
+after having enabled the feature. If the check fails it returns
+immediately but leaves the ECC on. When using buggy chips like
+MT29F2G08ABAGA and MT29F2G08ABBGA, all future read/program cycles will
+go through the on-die ECC, confusing the host controller which is
+supposed to be the one handling correction.
+
+To address this in a common way we need to turn off the on-die ECC
+directly after reading the "READ ID Parameter" and before checking the
+"ECC status".
+
+Cc: stable@vger.kernel.org
+Fixes: dbc44edbf833 ("mtd: rawnand: micron: Fix on-die ECC detection logic")
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/i2c/busses/i2c-at91-master.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/mtd/nand/raw/nand_micron.c |   14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
---- a/drivers/i2c/busses/i2c-at91-master.c
-+++ b/drivers/i2c/busses/i2c-at91-master.c
-@@ -122,9 +122,11 @@ static void at91_twi_write_next_byte(str
- 	writeb_relaxed(*dev->buf, dev->base + AT91_TWI_THR);
+--- a/drivers/mtd/nand/raw/nand_micron.c
++++ b/drivers/mtd/nand/raw/nand_micron.c
+@@ -390,6 +390,14 @@ static int micron_supports_on_die_ecc(st
+ 	    (chip->id.data[4] & MICRON_ID_INTERNAL_ECC_MASK) != 0x2)
+ 		return MICRON_ON_DIE_UNSUPPORTED;
  
- 	/* send stop when last byte has been written */
--	if (--dev->buf_len == 0)
-+	if (--dev->buf_len == 0) {
- 		if (!dev->use_alt_cmd)
- 			at91_twi_write(dev, AT91_TWI_CR, AT91_TWI_STOP);
-+		at91_twi_write(dev, AT91_TWI_IDR, AT91_TWI_TXRDY);
-+	}
++	/*
++	 * It seems that there are devices which do not support ECC officially.
++	 * At least the MT29F2G08ABAGA / MT29F2G08ABBGA devices supports
++	 * enabling the ECC feature but don't reflect that to the READ_ID table.
++	 * So we have to guarantee that we disable the ECC feature directly
++	 * after we did the READ_ID table command. Later we can evaluate the
++	 * ECC_ENABLE support.
++	 */
+ 	ret = micron_nand_on_die_ecc_setup(chip, true);
+ 	if (ret)
+ 		return MICRON_ON_DIE_UNSUPPORTED;
+@@ -398,13 +406,13 @@ static int micron_supports_on_die_ecc(st
+ 	if (ret)
+ 		return MICRON_ON_DIE_UNSUPPORTED;
  
- 	dev_dbg(dev->dev, "wrote 0x%x, to go %zu\n", *dev->buf, dev->buf_len);
+-	if (!(id[4] & MICRON_ID_ECC_ENABLED))
+-		return MICRON_ON_DIE_UNSUPPORTED;
+-
+ 	ret = micron_nand_on_die_ecc_setup(chip, false);
+ 	if (ret)
+ 		return MICRON_ON_DIE_UNSUPPORTED;
  
-@@ -542,9 +544,8 @@ static int at91_do_twi_transfer(struct a
- 		} else {
- 			at91_twi_write_next_byte(dev);
- 			at91_twi_write(dev, AT91_TWI_IER,
--				       AT91_TWI_TXCOMP |
--				       AT91_TWI_NACK |
--				       AT91_TWI_TXRDY);
-+				       AT91_TWI_TXCOMP | AT91_TWI_NACK |
-+				       (dev->buf_len ? AT91_TWI_TXRDY : 0));
- 		}
- 	}
- 
++	if (!(id[4] & MICRON_ID_ECC_ENABLED))
++		return MICRON_ON_DIE_UNSUPPORTED;
++
+ 	ret = nand_readid_op(chip, 0, id, sizeof(id));
+ 	if (ret)
+ 		return MICRON_ON_DIE_UNSUPPORTED;
 
 
