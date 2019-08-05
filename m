@@ -2,132 +2,138 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF95C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0389C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C8972067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8957F2067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:28:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TEzxLHot"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="gn0LHf8E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbfHEI1M (ORCPT
+        id S1726659AbfHEI2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 04:27:12 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39668 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfHEI1M (ORCPT
+        Mon, 5 Aug 2019 04:28:00 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44051 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbfHEI2A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 04:27:12 -0400
-Received: by mail-wr1-f66.google.com with SMTP id x4so30283864wrt.6;
-        Mon, 05 Aug 2019 01:27:10 -0700 (PDT)
+        Mon, 5 Aug 2019 04:28:00 -0400
+Received: by mail-ot1-f68.google.com with SMTP id b7so34258451otl.11
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 01:27:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Rictj+Qm0LQXHqbH3hWSwYOizIiK+569WyJPDSyU/rM=;
-        b=TEzxLHotZ82D7MoMvuzxjcA7V/ypQNIEGXEpcjDgnhivRGAZWKNeU/ZSSg5e+FVpjF
-         //f86yV6Q8sV795KeRHK0ntbgbuq0TNP1Ln2bEt1E71EuGXu+8+8EKEWZzPVBwrVPzeg
-         3MTcijUcrpgueLJd21mwEfYDRMiy+3mq8Z+lzBD3lQJPA/OHWhq+X/OPwJE2Kc3SCe5O
-         cBlOjDCI2v3VD32QFFaptomk4CxQFG9Jt/IBuXvA4l1wMmRIjolYZYztI2pnxD2CgWBC
-         /4XeOik586yrwDztDzma+84oR0uPqCD6QSkxxlv/pf3M7VDW20owOZ/HJEoXlbn0DySQ
-         r/6A==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=qvG85uu+23wc3aOz56jKz9zl98RKrlFXnI9v0RdgYHY=;
+        b=gn0LHf8ENoBGwjVAUPWk1trAn5THo247jg8e6zjlOG+W0AiNseHCflLSx/XH7Kcfy9
+         2wSOMmbwOPfMbBjkX6M2RQupJ/NbQ7i1OeZV4x0b7UaMTogOPcjGAh2WD4/Wzn3oFz+S
+         s68do0KW/i5W4PVQKdwoTVYuoajMggDI1ujveZBBQeM1XkbfxbcpVORGDNzhN6D90l0s
+         nchBa36BsovaPAw4h8M0gY9GSFJmJ6RPIM5M8O2TBp8svyqdG+/Z77FGfO1gxNobnwjE
+         Hl6bo1835l7C2TEp1ARt072yPf+OHySWwJSl6kUR7uAp3M2jEwLs21KSIEzQgcwZEeFx
+         EIwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Rictj+Qm0LQXHqbH3hWSwYOizIiK+569WyJPDSyU/rM=;
-        b=rZy7ovCymIr6uYUyS1A6o5phO5HLUdUX5AaxBDXgppiAYzNFJgbhgX0PtwUfICY0QE
-         zA/xWQhRo5mi1AQ+2zIaXdHrcQ4nFvv3fYvRZuAHRoeDAExbyLrvZ7C5EeOzh5nBgDQV
-         Sx0Ch7ypDx5mG0tqN4xpTtyvA7YmpUeQyAkc2eeo2ODGAVkwujLsd7pyhbUtHpErAeNc
-         5YYhFS0qwWB8ieoYWxeQQvWvhTeLypw72JdnrBF7tP6py8+1jeCj5jwIOFkNZ7s+vEK/
-         CRXQBjfN9YtBeENYqtJllaV4jvjJLEldMpmqqz+X3PMuiHQaqhaTV99l5YbIBMG69o6M
-         CP+A==
-X-Gm-Message-State: APjAAAXdJ6+ZnGpHCeGRM39Ptfzt5VYQK6JB78sphi/xQKkgolCFrBVx
-        6q/tnMNxdqbD+hsW+CaqhxTsVvSP
-X-Google-Smtp-Source: APXvYqyDBattDjWc9UlHZrsEouI7PMUtB7vqKfXzRoEKLK2QuJpNk9k6BaZpThCCD+FSuRkGJpE04g==
-X-Received: by 2002:adf:e343:: with SMTP id n3mr122890130wrj.103.1564993629831;
-        Mon, 05 Aug 2019 01:27:09 -0700 (PDT)
-Received: from vd-lxpc-hfe.ad.vahle.at ([80.110.31.209])
-        by smtp.gmail.com with ESMTPSA id w23sm90645706wmi.45.2019.08.05.01.27.08
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 05 Aug 2019 01:27:09 -0700 (PDT)
-From:   Hubert Feurstein <h.feurstein@gmail.com>
-X-Google-Original-From: Hubert Feurstein <hubert.feurstein@vahle.at>
-To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Hubert Feurstein <h.feurstein@gmail.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH net-next v2] net: dsa: mv88e6xxx: extend PTP gettime function to read system clock
-Date:   Mon,  5 Aug 2019 10:26:42 +0200
-Message-Id: <20190805082642.12873-1-hubert.feurstein@vahle.at>
-X-Mailer: git-send-email 2.22.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=qvG85uu+23wc3aOz56jKz9zl98RKrlFXnI9v0RdgYHY=;
+        b=Rhc+UHSF0C27XeWe3giWzoUcq4eJ80lblx8P/VoBggplGO6RabXupQw+hcj7MI1A/u
+         kDNAhClg0kJC62MD0m9hmiqKzXLRFF8L1DR5/NnO2iNfQLwX99zTMOkuojIVJpgqGEVD
+         xxaKYJoh30xeFzeJwyat2x/N2BSZGXdkH3UmDLepKGaaXOz18pbOeSufUzxvuRSUo+0p
+         h9Gey1chg/6WMX+6TbTvnRFYA3Bye7mdl/6qUMWApEip2DENzLfu2E/PE8lipOhsuI31
+         1gMenfPPHZU7ud7ImRSOw+hdi0sSxICPgnJIBlwGc9mAqj88dZvVFCpXqbUSP41PGTwr
+         55tw==
+X-Gm-Message-State: APjAAAVusPIwRLuQUJv1fJKVqpoGmmdPEjZ2leWiQ5SGNi0JmlI2z/35
+        PtszC3vUQtapzJ3vXIypk9Rk7meUn2N206W0TUncKA==
+X-Google-Smtp-Source: APXvYqyHiFzcWgwMSYIdyYbnaCWSjRwGweIT3RKPv1xwORdpLKUPWaLHXzDYxYbuZLEk4t8xeoYAy31E8HbSzjuIfD4=
+X-Received: by 2002:a9d:2969:: with SMTP id d96mr115002880otb.85.1564993679131;
+ Mon, 05 Aug 2019 01:27:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190731195713.3150463-1-arnd@arndb.de> <20190731195713.3150463-6-arnd@arndb.de>
+ <CAMpxmJWFfT_vrDas2fzW5tnxskk9kmgHQpGnGQ-_C20UaS_jhA@mail.gmail.com> <CAK8P3a3KpKvRKXY72toE_5eAp4ER_Mre0GX3guwGeQgsY2HX+g@mail.gmail.com>
+In-Reply-To: <CAK8P3a3KpKvRKXY72toE_5eAp4ER_Mre0GX3guwGeQgsY2HX+g@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 5 Aug 2019 10:27:48 +0200
+Message-ID: <CAMpxmJUdSnp0QNwWB0rJ1opFrYs9R2KSVS64Tz8X5GDYAJYLpg@mail.gmail.com>
+Subject: Re: [PATCH 05/14] gpio: lpc32xx: allow building on non-lpc32xx targets
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     soc@kernel.org, arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>, linux-serial@vger.kernel.org,
+        USB list <linux-usb@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hubert Feurstein <h.feurstein@gmail.com>
+pt., 2 sie 2019 o 13:20 Arnd Bergmann <arnd@arndb.de> napisa=C5=82(a):
+>
+> On Fri, Aug 2, 2019 at 9:10 AM Bartosz Golaszewski
+> <bgolaszewski@baylibre.com> wrote:
+> > > -#include <mach/hardware.h>
+> > > -#include <mach/platform.h>
+> > > +#define _GPREG(x)                              (x)
+> >
+> > What purpose does this macro serve?
+> >
+> > >
+> > >  #define LPC32XX_GPIO_P3_INP_STATE              _GPREG(0x000)
+> > >  #define LPC32XX_GPIO_P3_OUTP_SET               _GPREG(0x004)
+>
+> In the existing code base, this macro converts a register offset to
+> an __iomem pointer for a gpio register. I changed the definition of the
+> macro here to keep the number of changes down, but I it's just
+> as easy to remove it if you prefer.
 
-This adds support for the PTP_SYS_OFFSET_EXTENDED ioctl.
+Could you just add a comment so that it's clear at first glance?
 
-Signed-off-by: Hubert Feurstein <h.feurstein@gmail.com>
----
- drivers/net/dsa/mv88e6xxx/ptp.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+>
+> > > @@ -167,14 +166,26 @@ struct lpc32xx_gpio_chip {
+> > >         struct gpio_regs        *gpio_grp;
+> > >  };
+> > >
+> > > +void __iomem *gpio_reg_base;
+> >
+> > Any reason why this can't be made part of struct lpc32xx_gpio_chip?
+>
+> It could be, but it's the same for each instance, and not known until
+> probe() time, so the same pointer would need to be copied into each
+> instance that is otherwise read-only.
+>
+> Let me know if you'd prefer me to rework these two things or leave
+> them as they are.
 
-diff --git a/drivers/net/dsa/mv88e6xxx/ptp.c b/drivers/net/dsa/mv88e6xxx/ptp.c
-index 073cbd0bb91b..2ebc7db0fd4a 100644
---- a/drivers/net/dsa/mv88e6xxx/ptp.c
-+++ b/drivers/net/dsa/mv88e6xxx/ptp.c
-@@ -235,14 +235,17 @@ static int mv88e6xxx_ptp_adjtime(struct ptp_clock_info *ptp, s64 delta)
- 	return 0;
- }
- 
--static int mv88e6xxx_ptp_gettime(struct ptp_clock_info *ptp,
--				 struct timespec64 *ts)
-+static int mv88e6xxx_ptp_gettimex(struct ptp_clock_info *ptp,
-+				  struct timespec64 *ts,
-+				  struct ptp_system_timestamp *sts)
- {
- 	struct mv88e6xxx_chip *chip = ptp_to_chip(ptp);
- 	u64 ns;
- 
- 	mv88e6xxx_reg_lock(chip);
-+	ptp_read_system_prets(sts);
- 	ns = timecounter_read(&chip->tstamp_tc);
-+	ptp_read_system_postts(sts);
- 	mv88e6xxx_reg_unlock(chip);
- 
- 	*ts = ns_to_timespec64(ns);
-@@ -426,7 +429,7 @@ static void mv88e6xxx_ptp_overflow_check(struct work_struct *work)
- 	struct mv88e6xxx_chip *chip = dw_overflow_to_chip(dw);
- 	struct timespec64 ts;
- 
--	mv88e6xxx_ptp_gettime(&chip->ptp_clock_info, &ts);
-+	mv88e6xxx_ptp_gettimex(&chip->ptp_clock_info, &ts, NULL);
- 
- 	schedule_delayed_work(&chip->overflow_work,
- 			      MV88E6XXX_TAI_OVERFLOW_PERIOD);
-@@ -472,7 +475,7 @@ int mv88e6xxx_ptp_setup(struct mv88e6xxx_chip *chip)
- 	chip->ptp_clock_info.max_adj    = MV88E6XXX_MAX_ADJ_PPB;
- 	chip->ptp_clock_info.adjfine	= mv88e6xxx_ptp_adjfine;
- 	chip->ptp_clock_info.adjtime	= mv88e6xxx_ptp_adjtime;
--	chip->ptp_clock_info.gettime64	= mv88e6xxx_ptp_gettime;
-+	chip->ptp_clock_info.gettimex64	= mv88e6xxx_ptp_gettimex;
- 	chip->ptp_clock_info.settime64	= mv88e6xxx_ptp_settime;
- 	chip->ptp_clock_info.enable	= ptp_ops->ptp_enable;
- 	chip->ptp_clock_info.verify	= ptp_ops->ptp_verify;
--- 
-2.22.0
+I would prefer not to have global state in the driver, let's just
+store the pointer in the data passed to gpiochip_add_data().
 
+Bart
+
+>
+> > > +static inline u32 gpreg_read(unsigned long offset)
+> >
+> > Here and elsewhere: could you please keep the lpc32xx_gpio prefix for
+> > all symbols?
+>
+> Sure.
+>
+>       Arnd
