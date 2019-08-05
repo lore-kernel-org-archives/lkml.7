@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E6CC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8853C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27D7B20880
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 930E6214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:25:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011504;
-	bh=t3JAQbHCLtKUt/umNrekrtOnvNMzgyKVDWx4eUOBK/Y=;
+	s=default; t=1565011508;
+	bh=M5XLCrLXO58Fa1EK7vbtFtKGYwFSzsWIZeij3TjsELI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wMv6SqTVBkNmWiDVQIe7WTnOw1VZZ4ZcXG8SD3vkCMb3SU8ajE77Xa4pQeJ38mkEj
-	 hUrKEgI3bE21JukZ9OsgYPf2S1UOxcf2JbHp0gONwD+/6rcVML0xqsbhqM0DMUVrvE
-	 Z566K+uzzVxe18lgpqTfj6l8A3Y6BTgIsXQfXqHE=
+	b=KkNSQ2n3BbcxBri7uKyvUUU18xyjdi30OasbwQx5ILuwnlbBIWIfbMEHnSWl6xlDO
+	 dLNR0vzOTvv3yfISYA95BTq2Fkmop2mcgDi1/6VaclM74oGMmQ9grB4YS+HY4iLolr
+	 hyUMUFOP3tzE33RERFDT6AYvYI7iitTgiN74bWA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731144AbfHENZC (ORCPT
+        id S1731176AbfHENZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:25:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33486 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:25:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731121AbfHENZA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:25:00 -0400
+        id S1731150AbfHENZF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:25:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CC6B20880;
-        Mon,  5 Aug 2019 13:24:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 763B020880;
+        Mon,  5 Aug 2019 13:25:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011499;
-        bh=t3JAQbHCLtKUt/umNrekrtOnvNMzgyKVDWx4eUOBK/Y=;
+        s=default; t=1565011505;
+        bh=M5XLCrLXO58Fa1EK7vbtFtKGYwFSzsWIZeij3TjsELI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZqK95qHQPVA5gwggIh5e66doghDt/2eQGS83ySGky1OR4jRqf6s+0o+Q/neqRUV1y
-         i3fBhRdYD7yOJmEebc493n49s9kqYvM8BLLMFrCMTIG6AKKdgAB8xWfQC359PoOaap
-         8qveIR+5Ka1WRkQuJMIQTdWsArbblpTLkJsJJ9WQ=
+        b=nOzX8CT4gyxqy7taFrZrKLbfXh3pVqvDD9gf3NtVlJuCTTtKPar41n9Qz5QcAq0Fs
+         eCjVhoZmq416TZmJwLgZ1XTLaelBxQLtO11Z5N43qDT0pq1Nz0HBBw2JdQW4ofimuD
+         RrddcH+vFT+95AC7ynnMTqzvJtcWFckyFPOKVOP8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ralph Campbell <rcampbell@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.2 104/131] mm/migrate.c: initialize pud_entry in migrate_vma()
-Date:   Mon,  5 Aug 2019 15:03:11 +0200
-Message-Id: <20190805124958.936782467@linuxfoundation.org>
+        stable@vger.kernel.org, Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
+        linux-block@vger.kernel.org, Jackie Liu <liuyun01@kylinos.cn>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.2 114/131] io_uring: fix KASAN use after free in io_sq_wq_submit_work
+Date:   Mon,  5 Aug 2019 15:03:21 +0200
+Message-Id: <20190805124959.595607216@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -63,56 +60,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ralph Campbell <rcampbell@nvidia.com>
+From: Jackie Liu <liuyun01@kylinos.cn>
 
-commit 7b358c6f12dc82364f6d317f8c8f1d794adbc3f5 upstream.
+commit d0ee879187df966ef638031b5f5183078d672141 upstream.
 
-When CONFIG_MIGRATE_VMA_HELPER is enabled, migrate_vma() calls
-migrate_vma_collect() which initializes a struct mm_walk but didn't
-initialize mm_walk.pud_entry.  (Found by code inspection) Use a C
-structure initialization to make sure it is set to NULL.
+[root@localhost ~]# ./liburing/test/link
 
-Link: http://lkml.kernel.org/r/20190719233225.12243-1-rcampbell@nvidia.com
-Fixes: 8763cb45ab967 ("mm/migrate: new memory migration helper for use with device memory")
-Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: "Jérôme Glisse" <jglisse@redhat.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+QEMU Standard PC report that:
+
+[   29.379892] CPU: 0 PID: 84 Comm: kworker/u2:2 Not tainted 5.3.0-rc2-00051-g4010b622f1d2-dirty #86
+[   29.379902] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+[   29.379913] Workqueue: io_ring-wq io_sq_wq_submit_work
+[   29.379929] Call Trace:
+[   29.379953]  dump_stack+0xa9/0x10e
+[   29.379970]  ? io_sq_wq_submit_work+0xbf4/0xe90
+[   29.379986]  print_address_description.cold.6+0x9/0x317
+[   29.379999]  ? io_sq_wq_submit_work+0xbf4/0xe90
+[   29.380010]  ? io_sq_wq_submit_work+0xbf4/0xe90
+[   29.380026]  __kasan_report.cold.7+0x1a/0x34
+[   29.380044]  ? io_sq_wq_submit_work+0xbf4/0xe90
+[   29.380061]  kasan_report+0xe/0x12
+[   29.380076]  io_sq_wq_submit_work+0xbf4/0xe90
+[   29.380104]  ? io_sq_thread+0xaf0/0xaf0
+[   29.380152]  process_one_work+0xb59/0x19e0
+[   29.380184]  ? pwq_dec_nr_in_flight+0x2c0/0x2c0
+[   29.380221]  worker_thread+0x8c/0xf40
+[   29.380248]  ? __kthread_parkme+0xab/0x110
+[   29.380265]  ? process_one_work+0x19e0/0x19e0
+[   29.380278]  kthread+0x30b/0x3d0
+[   29.380292]  ? kthread_create_on_node+0xe0/0xe0
+[   29.380311]  ret_from_fork+0x3a/0x50
+
+[   29.380635] Allocated by task 209:
+[   29.381255]  save_stack+0x19/0x80
+[   29.381268]  __kasan_kmalloc.constprop.6+0xc1/0xd0
+[   29.381279]  kmem_cache_alloc+0xc0/0x240
+[   29.381289]  io_submit_sqe+0x11bc/0x1c70
+[   29.381300]  io_ring_submit+0x174/0x3c0
+[   29.381311]  __x64_sys_io_uring_enter+0x601/0x780
+[   29.381322]  do_syscall_64+0x9f/0x4d0
+[   29.381336]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+[   29.381633] Freed by task 84:
+[   29.382186]  save_stack+0x19/0x80
+[   29.382198]  __kasan_slab_free+0x11d/0x160
+[   29.382210]  kmem_cache_free+0x8c/0x2f0
+[   29.382220]  io_put_req+0x22/0x30
+[   29.382230]  io_sq_wq_submit_work+0x28b/0xe90
+[   29.382241]  process_one_work+0xb59/0x19e0
+[   29.382251]  worker_thread+0x8c/0xf40
+[   29.382262]  kthread+0x30b/0x3d0
+[   29.382272]  ret_from_fork+0x3a/0x50
+
+[   29.382569] The buggy address belongs to the object at ffff888067172140
+                which belongs to the cache io_kiocb of size 224
+[   29.384692] The buggy address is located 120 bytes inside of
+                224-byte region [ffff888067172140, ffff888067172220)
+[   29.386723] The buggy address belongs to the page:
+[   29.387575] page:ffffea00019c5c80 refcount:1 mapcount:0 mapping:ffff88806ace5180 index:0x0
+[   29.387587] flags: 0x100000000000200(slab)
+[   29.387603] raw: 0100000000000200 dead000000000100 dead000000000122 ffff88806ace5180
+[   29.387617] raw: 0000000000000000 00000000800c000c 00000001ffffffff 0000000000000000
+[   29.387624] page dumped because: kasan: bad access detected
+
+[   29.387920] Memory state around the buggy address:
+[   29.388771]  ffff888067172080: fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+[   29.390062]  ffff888067172100: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
+[   29.391325] >ffff888067172180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[   29.392578]                                         ^
+[   29.393480]  ffff888067172200: fb fb fb fb fc fc fc fc fc fc fc fc fc fc fc fc
+[   29.394744]  ffff888067172280: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+[   29.396003] ==================================================================
+[   29.397260] Disabling lock debugging due to kernel taint
+
+io_sq_wq_submit_work free and read req again.
+
+Cc: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
+Cc: linux-block@vger.kernel.org
+Cc: stable@vger.kernel.org
+Fixes: f7b76ac9d17e ("io_uring: fix counter inc/dec mismatch in async_list")
+Signed-off-by: Jackie Liu <liuyun01@kylinos.cn>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/migrate.c |   17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
+ fs/io_uring.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -2347,16 +2347,13 @@ next:
- static void migrate_vma_collect(struct migrate_vma *migrate)
- {
- 	struct mmu_notifier_range range;
--	struct mm_walk mm_walk;
--
--	mm_walk.pmd_entry = migrate_vma_collect_pmd;
--	mm_walk.pte_entry = NULL;
--	mm_walk.pte_hole = migrate_vma_collect_hole;
--	mm_walk.hugetlb_entry = NULL;
--	mm_walk.test_walk = NULL;
--	mm_walk.vma = migrate->vma;
--	mm_walk.mm = migrate->vma->vm_mm;
--	mm_walk.private = migrate;
-+	struct mm_walk mm_walk = {
-+		.pmd_entry = migrate_vma_collect_pmd,
-+		.pte_hole = migrate_vma_collect_hole,
-+		.vma = migrate->vma,
-+		.mm = migrate->vma->vm_mm,
-+		.private = migrate,
-+	};
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -1692,6 +1692,7 @@ restart:
+ 	do {
+ 		struct sqe_submit *s = &req->submit;
+ 		const struct io_uring_sqe *sqe = s->sqe;
++		unsigned int flags = req->flags;
  
- 	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, NULL, mm_walk.mm,
- 				migrate->start,
+ 		/* Ensure we clear previously set non-block flag */
+ 		req->rw.ki_flags &= ~IOCB_NOWAIT;
+@@ -1737,7 +1738,7 @@ restart:
+ 		kfree(sqe);
+ 
+ 		/* req from defer and link list needn't decrease async cnt */
+-		if (req->flags & (REQ_F_IO_DRAINED | REQ_F_LINK_DONE))
++		if (flags & (REQ_F_IO_DRAINED | REQ_F_LINK_DONE))
+ 			goto out;
+ 
+ 		if (!async_list)
 
 
