@@ -2,250 +2,87 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE912C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2387AC41514
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B64EA20644
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:30:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011802;
-	bh=SnozmbikUmIp9bsi2KjVoEJhpS3bebSKWh1Mbu9XJXc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q8pwgEWno5Y+kQmdJlj8hkCnmHdRrUt3WtZ5FWbM3t8axAUdaGnq9DEoyZAPhDwu2
-	 e0CbZY55IZj+NbtK0S6Zq+Nui0QPEGS3G8VFGjJBJBuNm1YPsyBFTr+F0idxcJRzpX
-	 ZSe371re/IKpf38zU2/F3b6MQEaRZow1SvKlsTRo=
+	by mail.kernel.org (Postfix) with ESMTP id E4373216F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:30:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="2Xqlu4JN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730269AbfHENaC (ORCPT
+        id S1730411AbfHENVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:30:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57418 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:21:00 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:34002 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730464AbfHENVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:21:15 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0ACBD2067D;
-        Mon,  5 Aug 2019 13:21:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011274;
-        bh=SnozmbikUmIp9bsi2KjVoEJhpS3bebSKWh1Mbu9XJXc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dJM1Pfi30uBzb58ZUN5EdWEH2KAFZCeBr7NJvVpqIRdS4rwkbCkixT2QZCYmtwYuo
-         jbgMQvucieXalxY7XO4ug+Wyaqg6fWMKp37XWsaWsm/Y9DOpYDC+TcLjNR8aoJCe5Y
-         nteWqe+mpePdtuXtjK7ndsTxRmRgKJ/b8pi/8IDk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 030/131] btrfs: qgroup: Dont hold qgroup_ioctl_lock in btrfs_qgroup_inherit()
-Date:   Mon,  5 Aug 2019 15:01:57 +0200
-Message-Id: <20190805124953.451859024@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
-References: <20190805124951.453337465@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1730367AbfHENU5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:20:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=6daK9OLtTHHmYFQn2clC+oFUHMXZEy7xd2EJnCzCpfk=; b=2Xqlu4JNgn9D9OND3DH1g0VDsc
+        2etmgO2ZFmrD7NXQqgtZ+pvFTXnEkT9iEwpvoIM6wdK7+AvMv5nhwfS78Ik5uWYTjN7YgzeosGDnk
+        GYwzWro6J8XCQMOt1FR1Ebq6bJIDeOqhzONyX0uDirp4RGjcDK7JH8cEhgiGjcLe48OY=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hucur-0006ZZ-Um; Mon, 05 Aug 2019 15:20:45 +0200
+Date:   Mon, 5 Aug 2019 15:20:45 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Harini Katakam <harinik@xilinx.com>
+Cc:     Harini Katakam <harini.katakam@xilinx.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        David Miller <davem@davemloft.net>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Michal Simek <michal.simek@xilinx.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [RFC PATCH 1/2] dt-bindings: net: macb: Add new property for PS
+ SGMII only
+Message-ID: <20190805132045.GC24275@lunn.ch>
+References: <1564566033-676-1-git-send-email-harini.katakam@xilinx.com>
+ <1564566033-676-2-git-send-email-harini.katakam@xilinx.com>
+ <20190804145633.GB6800@lunn.ch>
+ <CAFcVECL6cvCjeo+fn1NDyMDZyZXDrWyhD9djvcVXiLVLiLgGeA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFcVECL6cvCjeo+fn1NDyMDZyZXDrWyhD9djvcVXiLVLiLgGeA@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e88439debd0a7f969b3ddba6f147152cd0732676 ]
+On Mon, Aug 05, 2019 at 11:45:05AM +0530, Harini Katakam wrote:
+> Hi Andrew,
+> 
+> On Sun, Aug 4, 2019 at 8:26 PM Andrew Lunn <andrew@lunn.ch> wrote:
+> >
+> > On Wed, Jul 31, 2019 at 03:10:32PM +0530, Harini Katakam wrote:
+> > > Add a new property to indicate when PS SGMII is used with NO
+> > > external PHY on board.
+> >
+> > Hi Harini
+> >
+> > What exactly is you use case? Are you connecting to a Ethernet switch?
+> > To an SFP cage with a copper module?
+> 
+> Yes, an SFP cage is the common HW target for this patch.
 
-[BUG]
-Lockdep will report the following circular locking dependency:
+Hi Harini
 
-  WARNING: possible circular locking dependency detected
-  5.2.0-rc2-custom #24 Tainted: G           O
-  ------------------------------------------------------
-  btrfs/8631 is trying to acquire lock:
-  000000002536438c (&fs_info->qgroup_ioctl_lock#2){+.+.}, at: btrfs_qgroup_inherit+0x40/0x620 [btrfs]
+So you have a copper PHY in the SFP cage. It will talk SGMII
+signalling to your PS SGMII. When that signalling is complete i would
+expect the MAC to raise an interrupt, just as if the SGMII PHY was
+soldered on the board. So i don't see why you need this polling?
 
-  but task is already holding lock:
-  000000003d52cc23 (&fs_info->tree_log_mutex){+.+.}, at: create_pending_snapshot+0x8b6/0xe60 [btrfs]
-
-  which lock already depends on the new lock.
-
-  the existing dependency chain (in reverse order) is:
-
-  -> #2 (&fs_info->tree_log_mutex){+.+.}:
-         __mutex_lock+0x76/0x940
-         mutex_lock_nested+0x1b/0x20
-         btrfs_commit_transaction+0x475/0xa00 [btrfs]
-         btrfs_commit_super+0x71/0x80 [btrfs]
-         close_ctree+0x2bd/0x320 [btrfs]
-         btrfs_put_super+0x15/0x20 [btrfs]
-         generic_shutdown_super+0x72/0x110
-         kill_anon_super+0x18/0x30
-         btrfs_kill_super+0x16/0xa0 [btrfs]
-         deactivate_locked_super+0x3a/0x80
-         deactivate_super+0x51/0x60
-         cleanup_mnt+0x3f/0x80
-         __cleanup_mnt+0x12/0x20
-         task_work_run+0x94/0xb0
-         exit_to_usermode_loop+0xd8/0xe0
-         do_syscall_64+0x210/0x240
-         entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-  -> #1 (&fs_info->reloc_mutex){+.+.}:
-         __mutex_lock+0x76/0x940
-         mutex_lock_nested+0x1b/0x20
-         btrfs_commit_transaction+0x40d/0xa00 [btrfs]
-         btrfs_quota_enable+0x2da/0x730 [btrfs]
-         btrfs_ioctl+0x2691/0x2b40 [btrfs]
-         do_vfs_ioctl+0xa9/0x6d0
-         ksys_ioctl+0x67/0x90
-         __x64_sys_ioctl+0x1a/0x20
-         do_syscall_64+0x65/0x240
-         entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-  -> #0 (&fs_info->qgroup_ioctl_lock#2){+.+.}:
-         lock_acquire+0xa7/0x190
-         __mutex_lock+0x76/0x940
-         mutex_lock_nested+0x1b/0x20
-         btrfs_qgroup_inherit+0x40/0x620 [btrfs]
-         create_pending_snapshot+0x9d7/0xe60 [btrfs]
-         create_pending_snapshots+0x94/0xb0 [btrfs]
-         btrfs_commit_transaction+0x415/0xa00 [btrfs]
-         btrfs_mksubvol+0x496/0x4e0 [btrfs]
-         btrfs_ioctl_snap_create_transid+0x174/0x180 [btrfs]
-         btrfs_ioctl_snap_create_v2+0x11c/0x180 [btrfs]
-         btrfs_ioctl+0xa90/0x2b40 [btrfs]
-         do_vfs_ioctl+0xa9/0x6d0
-         ksys_ioctl+0x67/0x90
-         __x64_sys_ioctl+0x1a/0x20
-         do_syscall_64+0x65/0x240
-         entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-  other info that might help us debug this:
-
-  Chain exists of:
-    &fs_info->qgroup_ioctl_lock#2 --> &fs_info->reloc_mutex --> &fs_info->tree_log_mutex
-
-   Possible unsafe locking scenario:
-
-         CPU0                    CPU1
-         ----                    ----
-    lock(&fs_info->tree_log_mutex);
-                                 lock(&fs_info->reloc_mutex);
-                                 lock(&fs_info->tree_log_mutex);
-    lock(&fs_info->qgroup_ioctl_lock#2);
-
-   *** DEADLOCK ***
-
-  6 locks held by btrfs/8631:
-   #0: 00000000ed8f23f6 (sb_writers#12){.+.+}, at: mnt_want_write_file+0x28/0x60
-   #1: 000000009fb1597a (&type->i_mutex_dir_key#10/1){+.+.}, at: btrfs_mksubvol+0x70/0x4e0 [btrfs]
-   #2: 0000000088c5ad88 (&fs_info->subvol_sem){++++}, at: btrfs_mksubvol+0x128/0x4e0 [btrfs]
-   #3: 000000009606fc3e (sb_internal#2){.+.+}, at: start_transaction+0x37a/0x520 [btrfs]
-   #4: 00000000f82bbdf5 (&fs_info->reloc_mutex){+.+.}, at: btrfs_commit_transaction+0x40d/0xa00 [btrfs]
-   #5: 000000003d52cc23 (&fs_info->tree_log_mutex){+.+.}, at: create_pending_snapshot+0x8b6/0xe60 [btrfs]
-
-[CAUSE]
-Due to the delayed subvolume creation, we need to call
-btrfs_qgroup_inherit() inside commit transaction code, with a lot of
-other mutex hold.
-This hell of lock chain can lead to above problem.
-
-[FIX]
-On the other hand, we don't really need to hold qgroup_ioctl_lock if
-we're in the context of create_pending_snapshot().
-As in that context, we're the only one being able to modify qgroup.
-
-All other qgroup functions which needs qgroup_ioctl_lock are either
-holding a transaction handle, or will start a new transaction:
-  Functions will start a new transaction():
-  * btrfs_quota_enable()
-  * btrfs_quota_disable()
-  Functions hold a transaction handler:
-  * btrfs_add_qgroup_relation()
-  * btrfs_del_qgroup_relation()
-  * btrfs_create_qgroup()
-  * btrfs_remove_qgroup()
-  * btrfs_limit_qgroup()
-  * btrfs_qgroup_inherit() call inside create_subvol()
-
-So we have a higher level protection provided by transaction, thus we
-don't need to always hold qgroup_ioctl_lock in btrfs_qgroup_inherit().
-
-Only the btrfs_qgroup_inherit() call in create_subvol() needs to hold
-qgroup_ioctl_lock, while the btrfs_qgroup_inherit() call in
-create_pending_snapshot() is already protected by transaction.
-
-So the fix is to detect the context by checking
-trans->transaction->state.
-If we're at TRANS_STATE_COMMIT_DOING, then we're in commit transaction
-context and no need to get the mutex.
-
-Reported-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/btrfs/qgroup.c | 24 ++++++++++++++++++++++--
- 1 file changed, 22 insertions(+), 2 deletions(-)
-
-diff --git a/fs/btrfs/qgroup.c b/fs/btrfs/qgroup.c
-index 3e6ffbbd8b0af..f8a3c1b0a15a8 100644
---- a/fs/btrfs/qgroup.c
-+++ b/fs/btrfs/qgroup.c
-@@ -2614,6 +2614,7 @@ int btrfs_qgroup_inherit(struct btrfs_trans_handle *trans, u64 srcid,
- 	int ret = 0;
- 	int i;
- 	u64 *i_qgroups;
-+	bool committing = false;
- 	struct btrfs_fs_info *fs_info = trans->fs_info;
- 	struct btrfs_root *quota_root;
- 	struct btrfs_qgroup *srcgroup;
-@@ -2621,7 +2622,25 @@ int btrfs_qgroup_inherit(struct btrfs_trans_handle *trans, u64 srcid,
- 	u32 level_size = 0;
- 	u64 nums;
- 
--	mutex_lock(&fs_info->qgroup_ioctl_lock);
-+	/*
-+	 * There are only two callers of this function.
-+	 *
-+	 * One in create_subvol() in the ioctl context, which needs to hold
-+	 * the qgroup_ioctl_lock.
-+	 *
-+	 * The other one in create_pending_snapshot() where no other qgroup
-+	 * code can modify the fs as they all need to either start a new trans
-+	 * or hold a trans handler, thus we don't need to hold
-+	 * qgroup_ioctl_lock.
-+	 * This would avoid long and complex lock chain and make lockdep happy.
-+	 */
-+	spin_lock(&fs_info->trans_lock);
-+	if (trans->transaction->state == TRANS_STATE_COMMIT_DOING)
-+		committing = true;
-+	spin_unlock(&fs_info->trans_lock);
-+
-+	if (!committing)
-+		mutex_lock(&fs_info->qgroup_ioctl_lock);
- 	if (!test_bit(BTRFS_FS_QUOTA_ENABLED, &fs_info->flags))
- 		goto out;
- 
-@@ -2785,7 +2804,8 @@ int btrfs_qgroup_inherit(struct btrfs_trans_handle *trans, u64 srcid,
- unlock:
- 	spin_unlock(&fs_info->qgroup_lock);
- out:
--	mutex_unlock(&fs_info->qgroup_ioctl_lock);
-+	if (!committing)
-+		mutex_unlock(&fs_info->qgroup_ioctl_lock);
- 	return ret;
- }
- 
--- 
-2.20.1
-
-
-
+       Andrew
