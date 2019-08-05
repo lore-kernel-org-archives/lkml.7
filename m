@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE90DC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FBF4C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9255E216B7
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:22:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 060F8214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:23:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011379;
-	bh=ziQjtn5gXG10OVKMmQ0S3B2FYf9YyrWr4BVzu/gLGOI=;
+	s=default; t=1565011383;
+	bh=dmXDvN0EtKV+Iu6gVqeRXk7BBaGA1sPoN7oLHkVNaQg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D/ug7vDx8e7vbdH0prwHQwXeTf58ogvqM/nOqA7XaBwGaFiKQP1iREriM1/KOS0sm
-	 xLMNXAlP5awMJ+W4tssH0jP61a1KIXja+tItTdsxHGP3ORmmRzd1pOsnOX8Tf83vHa
-	 gmCuUM97OklW9d6C1yiMRjBT5GB48zsYB/F70dAc=
+	b=aX1yXxVxPbV5uKeNwUECeMQVWp49tzaNly4qPJznKB8xFGYMXc3nsjK9kBoAxi6P0
+	 RO/1ZvKaSA3KEXZsNhulUWI5pFFQ6bHZ7r2FJt1cuf6bhFvZjBTV+9bisrvPrpmz+N
+	 SN/tq3igNUVvLwptPF4pJuzRSi0rhun8p0c2pIqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729559AbfHENW6 (ORCPT
+        id S1730790AbfHENXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:22:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59576 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:23:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730776AbfHENWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:22:55 -0400
+        id S1728885AbfHENW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:22:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 720F62067D;
-        Mon,  5 Aug 2019 13:22:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C76E20880;
+        Mon,  5 Aug 2019 13:22:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011374;
-        bh=ziQjtn5gXG10OVKMmQ0S3B2FYf9YyrWr4BVzu/gLGOI=;
+        s=default; t=1565011377;
+        bh=dmXDvN0EtKV+Iu6gVqeRXk7BBaGA1sPoN7oLHkVNaQg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0hXpoucwlbYIFfvw99WZ3z1TXPsass/HOdHeEOsu4Z7qI9x+g0LGBBB4GGSUgwMxk
-         GDyc3Pp5Xp2wIHfF+H38yKESLnvtXpIntAc4a9xsIoffbD2NnmmiyioDmYv7C8bqU3
-         iieFm4jTKQG27+PPB0VRYTF7o3ijIYgQA3OsHz+Q=
+        b=gA8m2h60vbgjFg5o9FAjYBG3C/lUchOX22VWnoweXAivHlycMYbwrXwg/zb/2tNXM
+         H/pYy+Y4Ui6HNZynzFOlKGv1xvDWb1p1LnOcbc4vcxFhb49m8UAbC/P8V0WDzyKf/J
+         LYh2550lrlFAw2Yinq5wnV1tx7cnQFf6ZFS4nS9g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Juergen Gross <jgross@suse.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 069/131] x86/paravirt: Fix callee-saved function ELF sizes
-Date:   Mon,  5 Aug 2019 15:02:36 +0200
-Message-Id: <20190805124956.123542064@linuxfoundation.org>
+Subject: [PATCH 5.2 043/131] ACPI: fix false-positive -Wuninitialized warning
+Date:   Mon,  5 Aug 2019 15:02:10 +0200
+Message-Id: <20190805124954.322524180@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -62,53 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 083db6764821996526970e42d09c1ab2f4155dd4 ]
+[ Upstream commit dfd6f9ad36368b8dbd5f5a2b2f0a4705ae69a323 ]
 
-The __raw_callee_save_*() functions have an ELF symbol size of zero,
-which confuses objtool and other tools.
+clang gets confused by an uninitialized variable in what looks
+to it like a never executed code path:
 
-Fixes a bunch of warnings like the following:
+arch/x86/kernel/acpi/boot.c:618:13: error: variable 'polarity' is uninitialized when used here [-Werror,-Wuninitialized]
+        polarity = polarity ? ACPI_ACTIVE_LOW : ACPI_ACTIVE_HIGH;
+                   ^~~~~~~~
+arch/x86/kernel/acpi/boot.c:606:32: note: initialize the variable 'polarity' to silence this warning
+        int rc, irq, trigger, polarity;
+                                      ^
+                                       = 0
+arch/x86/kernel/acpi/boot.c:617:12: error: variable 'trigger' is uninitialized when used here [-Werror,-Wuninitialized]
+        trigger = trigger ? ACPI_LEVEL_SENSITIVE : ACPI_EDGE_SENSITIVE;
+                  ^~~~~~~
+arch/x86/kernel/acpi/boot.c:606:22: note: initialize the variable 'trigger' to silence this warning
+        int rc, irq, trigger, polarity;
+                            ^
+                             = 0
 
-  arch/x86/xen/mmu_pv.o: warning: objtool: __raw_callee_save_xen_pte_val() is missing an ELF size annotation
-  arch/x86/xen/mmu_pv.o: warning: objtool: __raw_callee_save_xen_pgd_val() is missing an ELF size annotation
-  arch/x86/xen/mmu_pv.o: warning: objtool: __raw_callee_save_xen_make_pte() is missing an ELF size annotation
-  arch/x86/xen/mmu_pv.o: warning: objtool: __raw_callee_save_xen_make_pgd() is missing an ELF size annotation
+This is unfortunately a design decision in clang and won't be fixed.
 
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/afa6d49bb07497ca62e4fc3b27a2d0cece545b4e.1563413318.git.jpoimboe@redhat.com
+Changing the acpi_get_override_irq() macro to an inline function
+reliably avoids the issue.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/paravirt.h | 1 +
- arch/x86/kernel/kvm.c           | 1 +
- 2 files changed, 2 insertions(+)
+ include/linux/acpi.h | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
-index c25c38a05c1c9..d6f5ae2c79ab9 100644
---- a/arch/x86/include/asm/paravirt.h
-+++ b/arch/x86/include/asm/paravirt.h
-@@ -746,6 +746,7 @@ bool __raw_callee_save___native_vcpu_is_preempted(long cpu);
- 	    PV_RESTORE_ALL_CALLER_REGS					\
- 	    FRAME_END							\
- 	    "ret;"							\
-+	    ".size " PV_THUNK_NAME(func) ", .-" PV_THUNK_NAME(func) ";"	\
- 	    ".popsection")
- 
- /* Get a reference to a callee-save function */
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index 5169b8cc35bb2..320b70acb2119 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -817,6 +817,7 @@ asm(
- "cmpb	$0, " __stringify(KVM_STEAL_TIME_preempted) "+steal_time(%rax);"
- "setne	%al;"
- "ret;"
-+".size __raw_callee_save___kvm_vcpu_is_preempted, .-__raw_callee_save___kvm_vcpu_is_preempted;"
- ".popsection");
- 
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index d315d86844e49..872ab208c8ad8 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -317,7 +317,10 @@ void acpi_set_irq_model(enum acpi_irq_model_id model,
+ #ifdef CONFIG_X86_IO_APIC
+ extern int acpi_get_override_irq(u32 gsi, int *trigger, int *polarity);
+ #else
+-#define acpi_get_override_irq(gsi, trigger, polarity) (-1)
++static inline int acpi_get_override_irq(u32 gsi, int *trigger, int *polarity)
++{
++	return -1;
++}
  #endif
+ /*
+  * This function undoes the effect of one call to acpi_register_gsi().
 -- 
 2.20.1
 
