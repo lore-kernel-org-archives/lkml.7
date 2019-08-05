@@ -2,226 +2,131 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA73C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8906C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C068216B7
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:01:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565017267;
-	bh=384BdRNrgOOPUHK/Gd5gCMeKsXndGzWgEJedt98ySYI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=H2p+WObsE0GV/ogQnRb/IBvyMQ1RjYcOLfUwADUwQ45GZgM1CiZb8mBGavYLR5UBI
-	 MDtKtxpDyzDZB9lE4z8vzRPZOCafELNix/rPxcyxQ7c+LCPkK0z6IGp012356RvzOB
-	 /JSp4EeSl4/S9gJ1pYU/YZBwu3zbpitg2hlqp/ws=
+	by mail.kernel.org (Postfix) with ESMTP id AE134216B7
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:01:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U9ztI/gI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729363AbfHEPBG (ORCPT
+        id S1729542AbfHEPBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 5 Aug 2019 11:01:10 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42108 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728918AbfHEPBG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 5 Aug 2019 11:01:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36196 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728848AbfHEPBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 11:01:06 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 493A9206C1;
-        Mon,  5 Aug 2019 15:01:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565017264;
-        bh=384BdRNrgOOPUHK/Gd5gCMeKsXndGzWgEJedt98ySYI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fPsxLD2kGrZ6nAmuXEvY7FDyBVnBaRN6dt3HrDvCMCeUM86R+p/IRxLYxUESGCwdr
-         0GO4aVohZ31gRx359dkq2bXOA9PUhIzUWYsyZ3hj70xgyYYv9UGv/Xfg9YHgFdM/w7
-         Ku9eG9Hc8exbAjuMwNOeuhC6dZKBxVsuJSg92C2c=
-Date:   Mon, 5 Aug 2019 16:01:00 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Phil Reid <preid@electromag.com.au>
-Cc:     Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v6 19/57] iio: Remove dev_err() usage after
- platform_get_irq()
-Message-ID: <20190805160100.7f1b92be@archlinux>
-In-Reply-To: <6dc9dbc0-c338-eb21-aeb3-70026bebfd41@electromag.com.au>
-References: <20190730181557.90391-1-swboyd@chromium.org>
-        <20190730181557.90391-20-swboyd@chromium.org>
-        <f28e8440-a57d-e269-f3a8-5bf5b9fcd41f@electromag.com.au>
-        <5d41a66d.1c69fb81.6d372.4c72@mx.google.com>
-        <6dc9dbc0-c338-eb21-aeb3-70026bebfd41@electromag.com.au>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Received: by mail-pf1-f194.google.com with SMTP id q10so39770684pff.9;
+        Mon, 05 Aug 2019 08:01:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KWknOm3Weo65hoQxD0OMyaPHcUcXcORCl61LnaMhBHs=;
+        b=U9ztI/gIE3rGmpMLb6h3XduLr5I+Jmc3UXd6RwE+BsEiCBgWvOt8SESPCa/yaNpeDg
+         5NLEhf8LkYXjUMpGmH7w3OKGVBjkym5nFDPSsH6FzaY3wTyO++zo3IZObB3PoayJKcwe
+         9Zp5I7ScGw174YsesmASgP+QjMaJwbtjBQ0WJnPUn+2MHgxkqDxMHjiDKlA/ujO0XTUE
+         Gro84k7vmLDxHUaQ5rL12Y8vo3vJCxvBRykdfxXE6jmVX1kXxdKusvEtir5857vMn2Oz
+         2/3wAyNciJRXhpT4P9zFNgmFKtDnG7l0/62B7QRKxxlPvowtJtZAxmyKK9Wgck/cHB3a
+         qBeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KWknOm3Weo65hoQxD0OMyaPHcUcXcORCl61LnaMhBHs=;
+        b=jqPUrZx8qfC99w/M7p91shNZE1r1QGOFJvOdVyRdGoErLsZYI5rYmwL9owe+MlzUVo
+         zXjal4lb2qmOQFoGfY7TBIT3rYblXotO7WimcRLS/N4JVjVxVJFlv/tJGTPVUvoObPes
+         CMr1Ydf7Nwg6vb1G+2TBO0F5aNB7rVBt9MuKdhclABF/QWadWyVbsMZr05gKvdVcB7kD
+         UDPrCj9wes+Lu5BT/N12RbEaXa8SrcJ5n31HtnXlmRJ0wdlLP1H2QnGy5aAuK28+IlRq
+         BYWLKcIpzyUt+r9jJ3PQOGwWVzjgCOCmaHPEGlBfK90qbQTRtcCJMKx/irNVaV6ejieK
+         RhkQ==
+X-Gm-Message-State: APjAAAXKttwU5xcx1gLlkIjTVJkaBH9XhKLX1WGYwVHEh/ye+NR+F04A
+        n1sajOGi4NTqkfTjQNzUQOU=
+X-Google-Smtp-Source: APXvYqzLGQLInXt1y4PDIZrIFJHvmzApxJcFTFguBOSpoAxiH3S7HxsR87mHnbYleSrFAUxeshIF0Q==
+X-Received: by 2002:aa7:8f2c:: with SMTP id y12mr75897672pfr.38.1565017265795;
+        Mon, 05 Aug 2019 08:01:05 -0700 (PDT)
+Received: from [192.168.11.2] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
+        by smtp.gmail.com with ESMTPSA id b26sm93700927pfo.129.2019.08.05.08.01.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 05 Aug 2019 08:01:05 -0700 (PDT)
+Subject: Re: [PATCH] MAINTAINERS: Update e-mail address for Andrea Parri
+To:     Andrea Parri <parri.andrea@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Daniel Lustig <dlustig@nvidia.com>
+References: <20190805121517.4734-1-parri.andrea@gmail.com>
+From:   Akira Yokosawa <akiyks@gmail.com>
+Message-ID: <76010b66-a662-5b07-a21d-ed074d7d2194@gmail.com>
+Date:   Tue, 6 Aug 2019 00:01:00 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190805121517.4734-1-parri.andrea@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 1 Aug 2019 10:37:40 +0800
-Phil Reid <preid@electromag.com.au> wrote:
-
-> G'day Stephen,
+On Mon,  5 Aug 2019 14:15:17 +0200, Andrea Parri wrote:
+> My @amarulasolutions.com address stopped working this July, so update
+> to my @gmail.com address where you'll still be able to reach me.
 > 
-> One comment below.
+> Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
+> Cc: Alan Stern <stern@rowland.harvard.edu>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Boqun Feng <boqun.feng@gmail.com>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: David Howells <dhowells@redhat.com>
+> Cc: Jade Alglave <j.alglave@ucl.ac.uk>
+> Cc: Luc Maranget <luc.maranget@inria.fr>
+> Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+> Cc: Akira Yokosawa <akiyks@gmail.com>
+> Cc: Daniel Lustig <dlustig@nvidia.com>
+> ---
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Please send as fresh patch. Nice to clean these up, but I'll loose it
-buried in a thread like this!
+Hi Andrea,
 
-Thanks,
+Why don't you also add an entry in .mailmap as Will did in commit
+c584b1202f2d ("MAINTAINERS: Update my email address to use @kernel.org")?
 
-Jonathan
+        Thanks, Akira
 
 > 
-> On 31/07/2019 22:32, Stephen Boyd wrote:
-> > Quoting Phil Reid (2019-07-30 23:42:16)  
-> >> G'day Stephen,
-> >>
-> >> A comment unrelated to your change.
-> >>
-> >> On 31/07/2019 02:15, Stephen Boyd wrote:
-> >> ....
-> >>  
-> >>> diff --git a/drivers/iio/adc/at91_adc.c b/drivers/iio/adc/at91_adc.c
-> >>> index 32f1c4a33b20..abe99856c823 100644
-> >>> --- a/drivers/iio/adc/at91_adc.c
-> >>> +++ b/drivers/iio/adc/at91_adc.c
-> >>> @@ -1179,10 +1179,8 @@ static int at91_adc_probe(struct platform_device *pdev)
-> >>>        idev->info = &at91_adc_info;
-> >>>    
-> >>>        st->irq = platform_get_irq(pdev, 0);
-> >>> -     if (st->irq < 0) {
-> >>> -             dev_err(&pdev->dev, "No IRQ ID is designated\n");
-> >>> +     if (st->irq < 0)
-> >>>                return -ENODEV;  
-> >> Should this be returning st->irq instead of -ENODEV?
-> >> eg: platform_get_irq can return -EPROBE_DEFER
-> >>
-> >> Pattern is repeated in a number of other places.  
-> > 
-> > Probably? Here's a patch.
-> > 
-> > ----8<----
-> > From: Stephen Boyd <swboyd@chromium.org>
-> > Subject: [PATCH] iio: Return error values from platform_get_irq*()
-> > 
-> > Sometimes platform_get_irq*() can return -EPROBE_DEFER, so it's best to
-> > return the actual error value from calling this function instead of
-> > overriding the value to something like -EINVAL or -ENXIO. Except for in
-> > the case when the irq value is 0 and the driver knows that irq 0 isn't
-> > valid. In such a situation, return whatever error value was returned
-> > before this change.
-> > 
-> > Reported-by: Phil Reid <preid@electromag.com.au>
-> > Cc: Phil Reid <preid@electromag.com.au>
-> > Cc: Jonathan Cameron <jic23@kernel.org>
-> > Cc: Hartmut Knaack <knaack.h@gmx.de>
-> > Cc: Lars-Peter Clausen <lars@metafoo.de>
-> > Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-> > Cc: linux-iio@vger.kernel.org
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> > ---
-> >   drivers/iio/adc/at91_adc.c      | 2 +-
-> >   drivers/iio/adc/bcm_iproc_adc.c | 2 +-
-> >   drivers/iio/adc/fsl-imx25-gcq.c | 4 +---
-> >   drivers/iio/adc/lpc32xx_adc.c   | 2 +-
-> >   drivers/iio/adc/npcm_adc.c      | 2 +-
-> >   drivers/iio/adc/spear_adc.c     | 2 +-
-> >   6 files changed, 6 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/drivers/iio/adc/at91_adc.c b/drivers/iio/adc/at91_adc.c
-> > index abe99856c823..2c604198c4b7 100644
-> > --- a/drivers/iio/adc/at91_adc.c
-> > +++ b/drivers/iio/adc/at91_adc.c
-> > @@ -1180,7 +1180,7 @@ static int at91_adc_probe(struct platform_device *pdev)
-> >   
-> >   	st->irq = platform_get_irq(pdev, 0);
-> >   	if (st->irq < 0)
-> > -		return -ENODEV;
-> > +		return st->irq;
-> >   
-> >   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> >   
-> > diff --git a/drivers/iio/adc/bcm_iproc_adc.c b/drivers/iio/adc/bcm_iproc_adc.c
-> > index 646ebdc0a8b4..6c05ea510c40 100644
-> > --- a/drivers/iio/adc/bcm_iproc_adc.c
-> > +++ b/drivers/iio/adc/bcm_iproc_adc.c
-> > @@ -541,7 +541,7 @@ static int iproc_adc_probe(struct platform_device *pdev)
-> >   
-> >   	adc_priv->irqno = platform_get_irq(pdev, 0);
-> >   	if (adc_priv->irqno <= 0)
-> > -		return -ENODEV;
-> > +		return adc_priv->irqno;  
-> 
-> 		return adc_priv->irqno ? : -ENODEV;
-> 
-> >   
-> >   	ret = regmap_update_bits(adc_priv->regmap, IPROC_REGCTL2,
-> >   				IPROC_ADC_AUXIN_SCAN_ENA, 0);
-> > diff --git a/drivers/iio/adc/fsl-imx25-gcq.c b/drivers/iio/adc/fsl-imx25-gcq.c
-> > index fa71489195c6..ee20ab09abe5 100644
-> > --- a/drivers/iio/adc/fsl-imx25-gcq.c
-> > +++ b/drivers/iio/adc/fsl-imx25-gcq.c
-> > @@ -340,9 +340,7 @@ static int mx25_gcq_probe(struct platform_device *pdev)
-> >   
-> >   	priv->irq = platform_get_irq(pdev, 0);
-> >   	if (priv->irq <= 0) {
-> > -		ret = priv->irq;
-> > -		if (!ret)
-> > -			ret = -ENXIO;
-> > +		ret = priv->irq ? : -ENXIO;
-> >   		goto err_clk_unprepare;
-> >   	}
-> >   
-> > diff --git a/drivers/iio/adc/lpc32xx_adc.c b/drivers/iio/adc/lpc32xx_adc.c
-> > index b896f7ff4572..edbb58212fba 100644
-> > --- a/drivers/iio/adc/lpc32xx_adc.c
-> > +++ b/drivers/iio/adc/lpc32xx_adc.c
-> > @@ -173,7 +173,7 @@ static int lpc32xx_adc_probe(struct platform_device *pdev)
-> >   
-> >   	irq = platform_get_irq(pdev, 0);
-> >   	if (irq <= 0)
-> > -		return -ENXIO;
-> > +		return irq ? : -ENXIO;
-> >   
-> >   	retval = devm_request_irq(&pdev->dev, irq, lpc32xx_adc_isr, 0,
-> >   				  LPC32XXAD_NAME, st);
-> > diff --git a/drivers/iio/adc/npcm_adc.c b/drivers/iio/adc/npcm_adc.c
-> > index 910f3585fa54..1e54a64a4534 100644
-> > --- a/drivers/iio/adc/npcm_adc.c
-> > +++ b/drivers/iio/adc/npcm_adc.c
-> > @@ -225,7 +225,7 @@ static int npcm_adc_probe(struct platform_device *pdev)
-> >   
-> >   	irq = platform_get_irq(pdev, 0);
-> >   	if (irq <= 0) {
-> > -		ret = -EINVAL;
-> > +		ret = irq ? : -EINVAL;
-> >   		goto err_disable_clk;
-> >   	}
-> >   
-> > diff --git a/drivers/iio/adc/spear_adc.c b/drivers/iio/adc/spear_adc.c
-> > index 592b97c464da..9b16717ac7e7 100644
-> > --- a/drivers/iio/adc/spear_adc.c
-> > +++ b/drivers/iio/adc/spear_adc.c
-> > @@ -301,7 +301,7 @@ static int spear_adc_probe(struct platform_device *pdev)
-> >   
-> >   	irq = platform_get_irq(pdev, 0);
-> >   	if (irq <= 0) {
-> > -		ret = -EINVAL;
-> > +		ret = irq ? : -EINVAL;
-> >   		goto errout2;
-> >   	}
-> >   
-> >   
-> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 6426db5198f05..527317026492f 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9326,7 +9326,7 @@ F:	drivers/misc/lkdtm/*
+>  
+>  LINUX KERNEL MEMORY CONSISTENCY MODEL (LKMM)
+>  M:	Alan Stern <stern@rowland.harvard.edu>
+> -M:	Andrea Parri <andrea.parri@amarulasolutions.com>
+> +M:	Andrea Parri <parri.andrea@gmail.com>
+>  M:	Will Deacon <will@kernel.org>
+>  M:	Peter Zijlstra <peterz@infradead.org>
+>  M:	Boqun Feng <boqun.feng@gmail.com>
 > 
 
