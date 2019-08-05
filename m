@@ -2,101 +2,128 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F4AC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 736C8C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79E002087B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:45:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="KQy8WXqz"
+	by mail.kernel.org (Postfix) with ESMTP id 499D92087B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:48:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730241AbfHENpC (ORCPT
+        id S1729122AbfHENsC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:45:02 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37043 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730433AbfHENn3 (ORCPT
+        Mon, 5 Aug 2019 09:48:02 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:43859 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbfHENsB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:43:29 -0400
-Received: by mail-wm1-f65.google.com with SMTP id f17so73047335wme.2
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 06:43:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=cGMV7QhC8DNNZSd4DygDFTwAShSfi/80pVWOD2ZlzJ4=;
-        b=KQy8WXqzt+GT9Ms3PweAVyKX7a6Hz4OupUPGYZHWgTfDcqep0bpg+Ae519mvu3I1hg
-         e7D3VkMTXiDn6NYIBOHYnO98ca4Un2PjNk4qlQGrPJmMjCssBy4fnjw1zMBLLVi4o03t
-         UoSPskgV31NkcygwDhsvZJLmfTwD1XQOCdxLp6plgpCUgL3Bgqh68dfiHOCZ8/6dBoN+
-         kvHN3X/WTRCXQX552Cg9EIV5FM80awl2WLwGgAnRA+3tTtMRBYQ+GSuZknWw76zvdVFo
-         4L4qGFV/M2HNbRXP+0ZYaAWfuLPYsR8W/ACFQaq6f8r3IqsnmGp58pjlpV28OaAKLLCz
-         XrgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=cGMV7QhC8DNNZSd4DygDFTwAShSfi/80pVWOD2ZlzJ4=;
-        b=nWp1uIrLxNPQHJvhTXaAsMA8R9ZwWYpBvDOTaGWB8YRe0RmKe4zNWb9lAQ4FYlno9p
-         C/96ceeOkrKtjWSBVygtPSDhiIcbabv1o1v+7EcFjwJ3GpYpxuxo1jkEBSF4Bq23Pd9o
-         E2stUcz2nyrXbl4cXub6fjA15ehiRByBwtTE18d3bsqJFAIhRcNHjO3BhMBHJmilq/es
-         H5kHbeD05+ZEB2OPed1hCKhONfRAKyNLfa0KLCWVfrQJTz9lMYMw1rJA5+lp8mv7uhdy
-         Jv03y2dGRSszINR9Rn1XCNi/hlVT0ZI3MCZoa81MQXMGliDaeV6kll6TYhIgD+83+VM5
-         03lg==
-X-Gm-Message-State: APjAAAXdzHVN7nQbwePrEuIE/eDSZFv+Fn9iFRL9GW3t3Pnu6d2ygoVB
-        a4r1+ZjoOYpLgZcsE/cH9Zgn5mM2BVkv1g==
-X-Google-Smtp-Source: APXvYqwwWryXK9vXOEQg9N4QQcQMr9Yj0vLdZlzKaPKS8EdfFo7G7Jmuqo5lcERdhsA70RGznVFIiw==
-X-Received: by 2002:a1c:cfc7:: with SMTP id f190mr17881896wmg.85.1565012608012;
-        Mon, 05 Aug 2019 06:43:28 -0700 (PDT)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id t3sm67835842wmi.6.2019.08.05.06.43.27
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 05 Aug 2019 06:43:27 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     robh+dt@kernel.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] MAINTAINERS: Update with Amlogic DRM bindings converted as YAML
-Date:   Mon,  5 Aug 2019 15:43:19 +0200
-Message-Id: <20190805134319.737-4-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190805134319.737-1-narmstrong@baylibre.com>
-References: <20190805134319.737-1-narmstrong@baylibre.com>
+        Mon, 5 Aug 2019 09:48:01 -0400
+X-Originating-IP: 82.246.155.60
+Received: from localhost (hy283-1-82-246-155-60.fbx.proxad.net [82.246.155.60])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id B7E7F1BF20B;
+        Mon,  5 Aug 2019 13:47:55 +0000 (UTC)
+Date:   Mon, 5 Aug 2019 15:47:53 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Frank Wunderlich <frank-w@public-files.de>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>,
+        Allison Randal <allison@lohutok.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Tianping . Fang" <tianping.fang@mediatek.com>,
+        Josef Friedl <josef.friedl@speed.at>
+Subject: Re: [PATCH v3 02/10] dt-bindings: add missing mt6397 rtc
+Message-ID: <20190805134753.GF3600@piout.net>
+References: <20190729174154.4335-1-frank-w@public-files.de>
+ <20190729174154.4335-3-frank-w@public-files.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190729174154.4335-3-frank-w@public-files.de>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The amlogic,meson-dw-hdmi.txt and amlogic,meson-vpu.txt has been
-converted to YAML schemas, update MAINTAINERS to match them again.
+On 29/07/2019 19:41:46+0200, Frank Wunderlich wrote:
+> From: Josef Friedl <josef.friedl@speed.at>
+> 
+> add missing devicetree-binding document for mt6397 rtc
+> in later patch driver is extended with mt6323 chip
+> 
+> changes since v2: splitted rtc-mt6397.txt from first patch
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- MAINTAINERS | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+This line should be after the --- marker.
+> 
+> Suggested-By: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6426db5198f0..c55c18531cd1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5318,8 +5318,8 @@ L:	linux-amlogic@lists.infradead.org
- W:	http://linux-meson.com/
- S:	Supported
- F:	drivers/gpu/drm/meson/
--F:	Documentation/devicetree/bindings/display/amlogic,meson-vpu.txt
--F:	Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt
-+F:	Documentation/devicetree/bindings/display/amlogic,meson-vpu.yaml
-+F:	Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml
- F:	Documentation/gpu/meson.rst
- T:	git git://anongit.freedesktop.org/drm/drm-misc
- 
+Your SoB should appear last.
+
+> Signed-off-by: Josef Friedl <josef.friedl@speed.at>
+> ---
+>  .../devicetree/bindings/rtc/rtc-mt6397.txt    | 29 +++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt b/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
+> new file mode 100644
+> index 000000000000..ebd1cf80dcc8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
+> @@ -0,0 +1,29 @@
+> +Device-Tree bindings for MediaTek PMIC based RTC
+> +
+> +MediaTek PMIC based RTC is an independent function of MediaTek PMIC that works
+> +as a type of multi-function device (MFD). The RTC can be configured and set up
+> +with PMIC wrapper bus which is a common resource shared with the other
+> +functions found on the same PMIC.
+> +
+> +For MediaTek PMIC MFD bindings, see:
+> +Documentation/devicetree/bindings/mfd/mt6397.txt
+> +
+> +For MediaTek PMIC wrapper bus bindings, see:
+> +Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
+> +
+> +Required properties:
+> +- compatible: Should be one of follows
+> +       "mediatek,mt6323-rtc": for MT6323 PMIC
+> +       "mediatek,mt6397-rtc": for MT6397 PMIC
+> +
+> +Example:
+> +
+> +       pmic {
+> +               compatible = "mediatek,mt6323";
+> +
+> +               ...
+> +
+> +               rtc {
+> +                       compatible = "mediatek,mt6323-rtc";
+> +               };
+> +       };
+> --
+> 2.17.1
+> 
+
 -- 
-2.22.0
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
