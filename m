@@ -2,142 +2,84 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE01BC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B027BC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DE6B20679
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:16:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010988;
-	bh=+5Js5A2JtGGZrWLC2jdZDIp+gwKVT9ufZ+BqhvtRjBw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NjJeEqhEmIeN36LS6oZ8u0x6bpqZ1vU2AfAXxGPIO2yhXksRA0cStiqY/cVPpn4PW
-	 S5l8fE6YD6XHdvrDsArZAPWUp+IifFNCbE3E45pH+j1oLEMVb2dDXPnn6/WGxc9NHv
-	 EfsJzc7fP0Tj3BuB2WmQBNycCYdxyUbpDffqLh14=
+	by mail.kernel.org (Postfix) with ESMTP id 80CFE20679
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:16:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729830AbfHENQ1 (ORCPT
+        id S1729933AbfHENQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:16:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42704 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:16:38 -0400
+Received: from foss.arm.com ([217.140.110.172]:48146 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729524AbfHENGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:06:12 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C83D206C1;
-        Mon,  5 Aug 2019 13:06:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010371;
-        bh=+5Js5A2JtGGZrWLC2jdZDIp+gwKVT9ufZ+BqhvtRjBw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2FY2gHIbbnEI0ad7CiBWItPUQum5Be/301esA0/qJNe1ajKIUvG5vwr6w6G9qgb4J
-         qmQJ5rsmzPbHQr5zdaoQvQBNkRVwNOSefotpV7cl6un50yIXNvM6M4u+VtTcL1vwYA
-         CG2XRFTiOCGU17Wrl7IlFebv0g3PCOaKYywO4ru0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "stable@vger.kernel.org, Miguel Ojeda" 
-        <miguel.ojeda.sandonis@gmail.com>,
-        Martin Sebor <msebor@gcc.gnu.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Subject: [PATCH 4.9 40/42] include/linux/module.h: copy __init/__exit attrs to init/cleanup_module
-Date:   Mon,  5 Aug 2019 15:03:06 +0200
-Message-Id: <20190805124929.717616311@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190805124924.788666484@linuxfoundation.org>
-References: <20190805124924.788666484@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1729505AbfHENGJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:06:09 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E280D337;
+        Mon,  5 Aug 2019 06:06:08 -0700 (PDT)
+Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4FEBA3F77D;
+        Mon,  5 Aug 2019 06:06:07 -0700 (PDT)
+Subject: Re: [PATCH 1/9] KVM: arm64: Document PV-time interface
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     kvm@vger.kernel.org, linux-doc@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org
+References: <20190802145017.42543-1-steven.price@arm.com>
+ <20190802145017.42543-2-steven.price@arm.com>
+ <3bdd764a-b6f5-d17e-a703-d8eb13838efc@huawei.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <fd8b0c8d-79d1-1501-cee0-d3f6bc1c3487@arm.com>
+Date:   Mon, 5 Aug 2019 14:06:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <3bdd764a-b6f5-d17e-a703-d8eb13838efc@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+On 05/08/2019 04:23, Zenghui Yu wrote:
+> Hi Steven,
+> 
+> On 2019/8/2 22:50, Steven Price wrote:
+>> Introduce a paravirtualization interface for KVM/arm64 based on the
+>> "Arm Paravirtualized Time for Arm-Base Systems" specification DEN 0057A.
+>>
+>> This only adds the details about "Stolen Time" as the details of "Live
+>> Physical Time" have not been fully agreed.
+>>
+>> User space can specify a reserved area of memory for the guest and
+>> inform KVM to populate the memory with information on time that the host
+>> kernel has stolen from the guest.
+>>
+>> A hypercall interface is provided for the guest to interrogate the
+>> hypervisor's support for this interface and the location of the shared
+>> memory structures.
+>>
+>> Signed-off-by: Steven Price <steven.price@arm.com>
+>> ---
+>>   Documentation/virtual/kvm/arm/pvtime.txt | 107 +++++++++++++++++++++++
+>>   1 file changed, 107 insertions(+)
+>>   create mode 100644 Documentation/virtual/kvm/arm/pvtime.txt
+>                                     ^^^^^^^
+> This directory has been renamed recently, see:
+> 
+> https://patchwork.ozlabs.org/patch/1136104/
 
-commit a6e60d84989fa0e91db7f236eda40453b0e44afa upstream.
+Thanks for pointing that out - I'll move it in the next version.
 
-The upcoming GCC 9 release extends the -Wmissing-attributes warnings
-(enabled by -Wall) to C and aliases: it warns when particular function
-attributes are missing in the aliases but not in their target.
-
-In particular, it triggers for all the init/cleanup_module
-aliases in the kernel (defined by the module_init/exit macros),
-ending up being very noisy.
-
-These aliases point to the __init/__exit functions of a module,
-which are defined as __cold (among other attributes). However,
-the aliases themselves do not have the __cold attribute.
-
-Since the compiler behaves differently when compiling a __cold
-function as well as when compiling paths leading to calls
-to __cold functions, the warning is trying to point out
-the possibly-forgotten attribute in the alias.
-
-In order to keep the warning enabled, we decided to silence
-this case. Ideally, we would mark the aliases directly
-as __init/__exit. However, there are currently around 132 modules
-in the kernel which are missing __init/__exit in their init/cleanup
-functions (either because they are missing, or for other reasons,
-e.g. the functions being called from somewhere else); and
-a section mismatch is a hard error.
-
-A conservative alternative was to mark the aliases as __cold only.
-However, since we would like to eventually enforce __init/__exit
-to be always marked,  we chose to use the new __copy function
-attribute (introduced by GCC 9 as well to deal with this).
-With it, we copy the attributes used by the target functions
-into the aliases. This way, functions that were not marked
-as __init/__exit won't have their aliases marked either,
-and therefore there won't be a section mismatch.
-
-Note that the warning would go away marking either the extern
-declaration, the definition, or both. However, we only mark
-the definition of the alias, since we do not want callers
-(which only see the declaration) to be compiled as if the function
-was __cold (and therefore the paths leading to those calls
-would be assumed to be unlikely).
-
-Link: https://lore.kernel.org/lkml/259986242.BvXPX32bHu@devpool35/
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/lkml/20190123173707.GA16603@gmail.com/
-Link: https://lore.kernel.org/lkml/20190206175627.GA20399@gmail.com/
-Suggested-by: Martin Sebor <msebor@gcc.gnu.org>
-Acked-by: Jessica Yu <jeyu@kernel.org>
-Signed-off-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- include/linux/module.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -129,13 +129,13 @@ extern void cleanup_module(void);
- #define module_init(initfn)					\
- 	static inline initcall_t __maybe_unused __inittest(void)		\
- 	{ return initfn; }					\
--	int init_module(void) __attribute__((alias(#initfn)));
-+	int init_module(void) __copy(initfn) __attribute__((alias(#initfn)));
- 
- /* This is only required if you want to be unloadable. */
- #define module_exit(exitfn)					\
- 	static inline exitcall_t __maybe_unused __exittest(void)		\
- 	{ return exitfn; }					\
--	void cleanup_module(void) __attribute__((alias(#exitfn)));
-+	void cleanup_module(void) __copy(exitfn) __attribute__((alias(#exitfn)));
- 
- #endif
- 
-
-
+Steve
