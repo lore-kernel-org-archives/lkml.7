@@ -2,134 +2,110 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E917C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 05:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F75AC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 05:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81E0620665
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 05:31:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 635A82086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 05:34:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pCSpZwQl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbfHEFbb convert rfc822-to-8bit (ORCPT
+        id S1727237AbfHEFeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 01:31:31 -0400
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162]:44486 "EHLO
-        tyo162.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbfHEFbb (ORCPT
+        Mon, 5 Aug 2019 01:34:11 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:52152 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725951AbfHEFeL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 01:31:31 -0400
-Received: from mailgate01.nec.co.jp ([114.179.233.122])
-        by tyo162.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x755V8XK004238
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Mon, 5 Aug 2019 14:31:08 +0900
-Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
-        by mailgate01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x755V8sK019089;
-        Mon, 5 Aug 2019 14:31:08 +0900
-Received: from mail03.kamome.nec.co.jp (mail03.kamome.nec.co.jp [10.25.43.7])
-        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x755M4TE002674;
-        Mon, 5 Aug 2019 14:31:08 +0900
-Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.152] [10.38.151.152]) by mail02.kamome.nec.co.jp with ESMTP id BT-MMP-7394443; Mon, 5 Aug 2019 14:12:41 +0900
-Received: from BPXM20GP.gisp.nec.co.jp ([10.38.151.212]) by
- BPXC24GP.gisp.nec.co.jp ([10.38.151.152]) with mapi id 14.03.0439.000; Mon, 5
- Aug 2019 14:12:41 +0900
-From:   Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
-To:     Michal Hocko <mhocko@kernel.org>
-CC:     Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        "hch@lst.de" <hch@lst.de>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Junichi Nomura <j-nomura@ce.jp.nec.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH 2/2] /proc/kpageflags: do not use uninitialized struct
- pages
-Thread-Topic: [PATCH 2/2] /proc/kpageflags: do not use uninitialized struct
- pages
-Thread-Index: AQHVQpEKFGt+j6P+NkKoSe72QQuzoKbac7OAgAFmX4CAAAsmgIAPl5OA
-Date:   Mon, 5 Aug 2019 05:12:40 +0000
-Message-ID: <3a926ce5-75b9-ea94-d6e4-6888872e0dc4@vx.jp.nec.com>
-References: <20190725023100.31141-1-t-fukasawa@vx.jp.nec.com>
- <20190725023100.31141-3-t-fukasawa@vx.jp.nec.com>
- <20190725090341.GC13855@dhcp22.suse.cz>
- <40b3078e-fb8b-87ef-5c4e-6321956cc940@vx.jp.nec.com>
- <20190726070615.GB6142@dhcp22.suse.cz>
-In-Reply-To: <20190726070615.GB6142@dhcp22.suse.cz>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.178.21.43]
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-ID: <092F480E631D4C46AA067F5ECBA30C88@gisp.nec.co.jp>
-Content-Transfer-Encoding: 8BIT
+        Mon, 5 Aug 2019 01:34:11 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x755XnIT044113;
+        Mon, 5 Aug 2019 00:33:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1564983229;
+        bh=qSuibQrWlqcr7NRancFSjgJokdV0vFLbh1Bw/JdXrK0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=pCSpZwQlVsjBaeb8Sp7+qS64EVut3oG84vbfXGbRDcZCbPi5EIkAyjthvlLQgf9H7
+         eLepefcSmiDDyOIBuv2apBenIwOWudgnCmyvhJo8wOFewgTl3KrlMkgvDXQ4iRfAPc
+         YVF0/EBNnTuh5YIlFpQJFmKEdadUeP0GaIu/Vdos=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x755Xnjb111768
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 5 Aug 2019 00:33:49 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 5 Aug
+ 2019 00:33:49 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 5 Aug 2019 00:33:49 -0500
+Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x755Xjce124277;
+        Mon, 5 Aug 2019 00:33:46 -0500
+Subject: Re: [PATCH 1/5] mtd: spi-nor: fix description for int
+ (*flash_is_locked)()
+To:     <Tudor.Ambarus@microchip.com>, <marek.vasut@gmail.com>
+CC:     <dwmw2@infradead.org>, <computersforpeace@gmail.com>,
+        <miquel.raynal@bootlin.com>, <richard@nod.at>,
+        <boris.brezillon@collabora.com>, <linux-mtd@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <Nicolas.Ferre@microchip.com>
+References: <20190717084745.19322-1-tudor.ambarus@microchip.com>
+ <20190717084745.19322-2-tudor.ambarus@microchip.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <a4f14ae4-e42c-73f5-2121-5e506dd868cf@ti.com>
+Date:   Mon, 5 Aug 2019 11:04:29 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-TM-AS-MML: disable
+In-Reply-To: <20190717084745.19322-2-tudor.ambarus@microchip.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/07/26 16:06, Michal Hocko wrote:
-> On Fri 26-07-19 06:25:49, Toshiki Fukasawa wrote:
->>
->>
->> On 2019/07/25 18:03, Michal Hocko wrote:
->>> On Thu 25-07-19 02:31:18, Toshiki Fukasawa wrote:
->>>> A kernel panic was observed during reading /proc/kpageflags for
->>>> first few pfns allocated by pmem namespace:
->>>>
->>>> BUG: unable to handle page fault for address: fffffffffffffffe
->>>> [  114.495280] #PF: supervisor read access in kernel mode
->>>> [  114.495738] #PF: error_code(0x0000) - not-present page
->>>> [  114.496203] PGD 17120e067 P4D 17120e067 PUD 171210067 PMD 0
->>>> [  114.496713] Oops: 0000 [#1] SMP PTI
->>>> [  114.497037] CPU: 9 PID: 1202 Comm: page-types Not tainted 5.3.0-rc1 #1
->>>> [  114.497621] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.0-0-g63451fca13-prebuilt.qemu-project.org 04/01/2014
->>>> [  114.498706] RIP: 0010:stable_page_flags+0x27/0x3f0
->>>> [  114.499142] Code: 82 66 90 66 66 66 66 90 48 85 ff 0f 84 d1 03 00 00 41 54 55 48 89 fd 53 48 8b 57 08 48 8b 1f 48 8d 42 ff 83 e2 01 48 0f 44 c7 <48> 8b 00 f6 c4 02 0f 84 57 03 00 00 45 31 e4 48 8b 55 08 48 89 ef
->>>> [  114.500788] RSP: 0018:ffffa5e601a0fe60 EFLAGS: 00010202
->>>> [  114.501373] RAX: fffffffffffffffe RBX: ffffffffffffffff RCX: 0000000000000000
->>>> [  114.502009] RDX: 0000000000000001 RSI: 00007ffca13a7310 RDI: ffffd07489000000
->>>> [  114.502637] RBP: ffffd07489000000 R08: 0000000000000001 R09: 0000000000000000
->>>> [  114.503270] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000240000
->>>> [  114.503896] R13: 0000000000080000 R14: 00007ffca13a7310 R15: ffffa5e601a0ff08
->>>> [  114.504530] FS:  00007f0266c7f540(0000) GS:ffff962dbbac0000(0000) knlGS:0000000000000000
->>>> [  114.505245] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>>> [  114.505754] CR2: fffffffffffffffe CR3: 000000023a204000 CR4: 00000000000006e0
->>>> [  114.506401] Call Trace:
->>>> [  114.506660]  kpageflags_read+0xb1/0x130
->>>> [  114.507051]  proc_reg_read+0x39/0x60
->>>> [  114.507387]  vfs_read+0x8a/0x140
->>>> [  114.507686]  ksys_pread64+0x61/0xa0
->>>> [  114.508021]  do_syscall_64+0x5f/0x1a0
->>>> [  114.508372]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
->>>> [  114.508844] RIP: 0033:0x7f0266ba426b
->>>>
->>>> The reason for the panic is that stable_page_flags() which parses
->>>> the page flags uses uninitialized struct pages reserved by the
->>>> ZONE_DEVICE driver.
->>>
->>> Why pmem hasn't initialized struct pages?
->>
->> We proposed to initialize in previous approach but that wasn't merged.
->> (See https://marc.info/?l=linux-mm&m=152964792500739&w=2)
->>
->>> Isn't that a bug that should be addressed rather than paper over it like this?
->>
->> I'm not sure. What do you think, Dan?
-> 
-> Yeah, I am really curious about details. Why do we keep uninitialized
-> struct pages at all? What is a random pfn walker supposed to do? What
-> kind of metadata would be clobbered? In other words much more details
-> please.
-> 
-I also want to know. I do not think that initializing struct pages will
-clobber any metadata.
 
-Best regards,
-Toshiki Fukasawa
+
+On 17/07/19 2:18 PM, Tudor.Ambarus@microchip.com wrote:
+> From: Tudor Ambarus <tudor.ambarus@microchip.com>
+> 
+> The description was interleaved.
+> 
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+
+Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
+
+> ---
+>  include/linux/mtd/spi-nor.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
+> index 9f57cdfcc93d..c4c2c5971284 100644
+> --- a/include/linux/mtd/spi-nor.h
+> +++ b/include/linux/mtd/spi-nor.h
+> @@ -372,10 +372,10 @@ struct flash_info;
+>   * @flash_lock:		[FLASH-SPECIFIC] lock a region of the SPI NOR
+>   * @flash_unlock:	[FLASH-SPECIFIC] unlock a region of the SPI NOR
+>   * @flash_is_locked:	[FLASH-SPECIFIC] check if a region of the SPI NOR is
+> + *			completely locked
+>   * @quad_enable:	[FLASH-SPECIFIC] enables SPI NOR quad mode
+>   * @clear_sr_bp:	[FLASH-SPECIFIC] clears the Block Protection Bits from
+>   *			the SPI NOR Status Register.
+> - *			completely locked
+>   * @priv:		the private data
+>   */
+>  struct spi_nor {
+> 
+
+-- 
+Regards
+Vignesh
