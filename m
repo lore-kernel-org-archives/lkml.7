@@ -2,210 +2,184 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E6BC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81725C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23171217D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:43:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10D8920880
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:47:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="D2Llkz2O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbfHEInB (ORCPT
+        id S1727467AbfHEIrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 04:43:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56926 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726454AbfHEInB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 04:43:01 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D5442B61C;
-        Mon,  5 Aug 2019 08:42:59 +0000 (UTC)
-Subject: Re: [PATCH 1/3] mm, reclaim: make should_continue_reclaim perform
- dryrun detection
-To:     Mike Kravetz <mike.kravetz@oracle.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Cc:     Hillf Danton <hdanton@sina.com>, Michal Hocko <mhocko@kernel.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20190802223930.30971-1-mike.kravetz@oracle.com>
- <20190802223930.30971-2-mike.kravetz@oracle.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Openpgp: preference=signencrypt
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <bb16d3f0-0984-be32-4346-358abad92c4c@suse.cz>
-Date:   Mon, 5 Aug 2019 10:42:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190802223930.30971-2-mike.kravetz@oracle.com>
-Content-Type: text/plain; charset=utf-8
+        Mon, 5 Aug 2019 04:47:17 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:51103 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbfHEIrQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 04:47:16 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 6413A886BF
+        for <linux-kernel@vger.kernel.org>; Mon,  5 Aug 2019 20:47:13 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1564994833;
+        bh=ZLsG/GZIaKCDY5oiWEWm3v4NszB63MKwFnCPRkxN+s4=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=D2Llkz2OggG/yITf7D3x9JF5wPV5VH7aXQmWDrPavnVvL3oePcrdB9XA+DLngl28e
+         1jS6eHmSkxyuDFbkf/FgCKbCJoNl0ku/IP2WaPfWNTKfECPCgc+zy9FV74essdJvtp
+         e1uobtRuISG2VmkmP+ENnx6LjFQCPWJ6PTzBkBpSS/HvB2UYjzP0XAQbsu/5Bj37mV
+         FUBjV8wpaT50cAIlFxekrNGsVg7q6EFvrh8SwmAWsD99uArHGIvqLO7d3c30Y0IKZP
+         l+01PTiud3g0PmTfwF5Tr9nlBFWbcDIiw5KEyAsEMXegyq3AF0/Q7w4RL5ujdV+mMz
+         6eaOUeAzIFjBQ==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5d47ed110000>; Mon, 05 Aug 2019 20:47:13 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1156.6; Mon, 5 Aug 2019 20:47:08 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1156.000; Mon, 5 Aug 2019 20:47:08 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "npiggin@gmail.com" <npiggin@gmail.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Grant McEwan" <grant.mcewan@alliedtelesis.co.nz>
+Subject: Re: SMP lockup at boot on Freescale/NXP T2080 (powerpc 64)
+Thread-Topic: SMP lockup at boot on Freescale/NXP T2080 (powerpc 64)
+Thread-Index: AQHVSzJiQ9f053Ig/kuwEclH36qTsqbrdSqA
+Date:   Mon, 5 Aug 2019 08:47:07 +0000
+Message-ID: <4525a16cd3e65f89741b50daf2ec259b6baaab78.camel@alliedtelesis.co.nz>
+References: <1564970785.27215.29.camel@alliedtelesis.co.nz>
+In-Reply-To: <1564970785.27215.29.camel@alliedtelesis.co.nz>
+Accept-Language: en-NZ, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.32.14.96]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E2C6A9928DF50A44984766BAC819915F@atlnz.lc>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/3/19 12:39 AM, Mike Kravetz wrote:
-> From: Hillf Danton <hdanton@sina.com>
-> 
-> Address the issue of should_continue_reclaim continuing true too often
-> for __GFP_RETRY_MAYFAIL attempts when !nr_reclaimed and nr_scanned.
-> This could happen during hugetlb page allocation causing stalls for
-> minutes or hours.
-> 
-> We can stop reclaiming pages if compaction reports it can make a progress.
-> A code reshuffle is needed to do that.
-
-> And it has side-effects, however,
-> with allocation latencies in other cases but that would come at the cost
-> of potential premature reclaim which has consequences of itself.
-
-Based on Mel's longer explanation, can we clarify the wording here? e.g.:
-
-There might be side-effect for other high-order allocations that would
-potentially benefit from more reclaim before compaction for them to be
-faster and less likely to stall, but the consequences of
-premature/over-reclaim are considered worse.
-
-> We can also bail out of reclaiming pages if we know that there are not
-> enough inactive lru pages left to satisfy the costly allocation.
-> 
-> We can give up reclaiming pages too if we see dryrun occur, with the
-> certainty of plenty of inactive pages. IOW with dryrun detected, we are
-> sure we have reclaimed as many pages as we could.
-> 
-> Cc: Mike Kravetz <mike.kravetz@oracle.com>
-> Cc: Mel Gorman <mgorman@suse.de>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Signed-off-by: Hillf Danton <hdanton@sina.com>
-> Tested-by: Mike Kravetz <mike.kravetz@oracle.com>
-> Acked-by: Mel Gorman <mgorman@suse.de>
-
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-I will send some followup cleanup.
-
-There should be also Mike's SOB?
-
-
-
-> ---
->  mm/vmscan.c | 28 +++++++++++++++-------------
->  1 file changed, 15 insertions(+), 13 deletions(-)
-> 
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index 47aa2158cfac..a386c5351592 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -2738,18 +2738,6 @@ static inline bool should_continue_reclaim(struct pglist_data *pgdat,
->  			return false;
->  	}
->  
-> -	/*
-> -	 * If we have not reclaimed enough pages for compaction and the
-> -	 * inactive lists are large enough, continue reclaiming
-> -	 */
-> -	pages_for_compaction = compact_gap(sc->order);
-> -	inactive_lru_pages = node_page_state(pgdat, NR_INACTIVE_FILE);
-> -	if (get_nr_swap_pages() > 0)
-> -		inactive_lru_pages += node_page_state(pgdat, NR_INACTIVE_ANON);
-> -	if (sc->nr_reclaimed < pages_for_compaction &&
-> -			inactive_lru_pages > pages_for_compaction)
-> -		return true;
-> -
->  	/* If compaction would go ahead or the allocation would succeed, stop */
->  	for (z = 0; z <= sc->reclaim_idx; z++) {
->  		struct zone *zone = &pgdat->node_zones[z];
-> @@ -2765,7 +2753,21 @@ static inline bool should_continue_reclaim(struct pglist_data *pgdat,
->  			;
->  		}
->  	}
-> -	return true;
-> +
-> +	/*
-> +	 * If we have not reclaimed enough pages for compaction and the
-> +	 * inactive lists are large enough, continue reclaiming
-> +	 */
-> +	pages_for_compaction = compact_gap(sc->order);
-> +	inactive_lru_pages = node_page_state(pgdat, NR_INACTIVE_FILE);
-> +	if (get_nr_swap_pages() > 0)
-> +		inactive_lru_pages += node_page_state(pgdat, NR_INACTIVE_ANON);
-> +
-> +	return inactive_lru_pages > pages_for_compaction &&
-> +		/*
-> +		 * avoid dryrun with plenty of inactive pages
-> +		 */
-> +		nr_scanned && nr_reclaimed;
->  }
->  
->  static bool pgdat_memcg_congested(pg_data_t *pgdat, struct mem_cgroup *memcg)
-> 
-
+T24gTW9uLCAyMDE5LTA4LTA1IGF0IDE0OjA2ICsxMjAwLCBDaHJpcyBQYWNraGFtIHdyb3RlOg0K
+PiBIaSBBbGwsDQo+IA0KPiBJIGhhdmUgYSBjdXN0b20gYm9hcmQgdGhhdCB1c2VzIHRoZSBGcmVl
+c2NhbGUvTlhQIFQyMDgwIFNvQy4NCj4gDQo+IFRoZSBib2FyZCBib290cyBmaW5lIHVzaW5nIHY0
+LjE5LjYwIGJ1dCB3aGVuIEkgdXNlIHY1LjEuMjEgaXQgbG9ja3MNCj4gdXANCj4gd2FpdGluZyBm
+b3IgdGhlIG90aGVyIENQVXMgdG8gY29tZSBvbmxpbmUgKGVhcmx5cHJpbnRrIG91dHB1dCBiZWxv
+dykuDQo+IElmIEkgc2V0IG1heGNwdXM9MCB0aGVuIHRoZSBzeXN0ZW0gYm9vdHMgYWxsIHRoZSB3
+YXkgdGhyb3VnaCB0bw0KPiB1c2VybGFuZC4gVGhlIHNhbWUgdGhpbmcgaGFwcGVucyB3aXRoIDUu
+My1yYzIuDQo+IA0KPiBUaGUgZGVmY29uZmlnIEknbSB1c2luZyBpcyANCj4gaHR0cHM6Ly9naXN0
+LmdpdGh1Yi5jb20vY3BhY2toYW0vZjI0ZDBiNDI2ZjMNCj4gZGUwZWFhYmExN2I4MmMzNTI4YTlk
+IGl0IHdhcyB1cGRhdGVkIGZyb20gdGhlIHdvcmtpbmcgdjQuMTkuNjANCj4gZGVmY29uZmlnIHVz
+aW5nIG1ha2Ugb2xkZGVmY29uZmlnLg0KPiANCj4gRG9lcyB0aGlzIHJpbmcgYW55IGJlbGxzIGZv
+ciBhbnlvbmU/DQo+IA0KPiBJIGhhdmVuJ3QgZHVnIGludG8gdGhlIGRpZmZlcmVuY2VzIGJldHdl
+ZW4gdGhlIHdvcmtpbmcgYW4gbm9uLXdvcmtpbmcNCj4gdmVyc2lvbnMgeWV0LiBJJ2xsIHN0YXJ0
+IGxvb2tpbmcgbm93Lg0KDQpJJ3ZlIGJpc2VjdGVkIHRoaXMgdG8gdGhlIGZvbGxvd2luZyBjb21t
+aXQNCg0KY29tbWl0IGVkMWNkNmRlYjAxM2ExMTk1OWQxN2E5NGUzNWNlMTU5MTk3NjMyZGENCkF1
+dGhvcjogQ2hyaXN0b3BoZSBMZXJveSA8Y2hyaXN0b3BoZS5sZXJveUBjLXMuZnI+DQpEYXRlOiAg
+IFRodSBKYW4gMzEgMTA6MDg6NTggMjAxOSArMDAwMA0KDQogICAgcG93ZXJwYzogQWN0aXZhdGUg
+Q09ORklHX1RIUkVBRF9JTkZPX0lOX1RBU0sNCiAgICANCiAgICBUaGlzIHBhdGNoIGFjdGl2YXRl
+cyBDT05GSUdfVEhSRUFEX0lORk9fSU5fVEFTSyB3aGljaA0KICAgIG1vdmVzIHRoZSB0aHJlYWRf
+aW5mbyBpbnRvIHRhc2tfc3RydWN0Lg0KDQpJJ2xsIGJlIHRoZSBmaXJzdCB0byBhZG1pdCB0aGlz
+IGlzIHdlbGwgYmV5b25kIG15IGFyZWEgb2Yga25vd2xlZGdlIHNvDQpJJ20gdW5zdXJlIHdoYXQg
+YWJvdXQgdGhpcyBwYXRjaCBpcyBwcm9ibGVtYXRpYyBidXQgSSBjYW4gYmUgZmFpcmx5DQpzdXJl
+IHRoYXQgYSBidWlsZCBpbW1lZGlhdGVseSBiZWZvcmUgdGhpcyBwYXRjaCB3b3JrcyB3aGlsZSBh
+IGJ1aWxkDQp3aXRoIHRoaXMgcGF0Y2ggaGFuZ3MuDQoNCj4gDQo+IEJvb3RpbmcuLi4NCj4gTU1V
+OiBTdXBwb3J0ZWQgcGFnZSBzaXplcw0KPiAgICAgICAgICA0IEtCIGFzIGRpcmVjdA0KPiAgICAg
+ICAyMDQ4IEtCIGFzIGRpcmVjdCAmIGluZGlyZWN0DQo+ICAgICAgIDQwOTYgS0IgYXMgZGlyZWN0
+DQo+ICAgICAgMTYzODQgS0IgYXMgZGlyZWN0DQo+ICAgICAgNjU1MzYgS0IgYXMgZGlyZWN0DQo+
+ICAgICAyNjIxNDQgS0IgYXMgZGlyZWN0DQo+ICAgIDEwNDg1NzYgS0IgYXMgZGlyZWN0DQo+IE1N
+VTogQm9vazNFIEhXIHRhYmxld2FsayBlbmFibGVkDQo+IExpbnV4IHZlcnNpb24gNS4xLjIxLWF0
+MSsgKEBjaHJpc3AtZGwpIChnY2MgdmVyc2lvbiA0LjkuMyAoY3Jvc3N0b29sLQ0KPiBORyANCj4g
+Y3Jvc3N0b29sLW5nLTEuMjIuMCkpICMyNCBTTVAgUFJFRU1QVCBNb24gQXVnIDUgMDE6NDI6MDAg
+VVRDIDIwMTkNCj4gRm91bmQgaW5pdHJkIGF0IDB4YzAwMDAwMDAyZjA0NTAwMDoweGMwMDAwMDAw
+MzAwMDAwMDANCj4gVXNpbmcgQ29yZU5ldCBHZW5lcmljIG1hY2hpbmUgZGVzY3JpcHRpb24NCj4g
+Rm91bmQgbGVnYWN5IHNlcmlhbCBwb3J0IDAgZm9yIC9zb2NAZmZlMDAwMDAwL3NlcmlhbEAxMWM1
+MDANCj4gICBtZW09ZmZlMTFjNTAwLCB0YWRkcj1mZmUxMWM1MDAsIGlycT0wLCBjbGs9MzAwMDAw
+MDAwLCBzcGVlZD0wDQo+IEZvdW5kIGxlZ2FjeSBzZXJpYWwgcG9ydCAxIGZvciAvc29jQGZmZTAw
+MDAwMC9zZXJpYWxAMTFjNjAwDQo+ICAgbWVtPWZmZTExYzYwMCwgdGFkZHI9ZmZlMTFjNjAwLCBp
+cnE9MCwgY2xrPTMwMDAwMDAwMCwgc3BlZWQ9MA0KPiBGb3VuZCBsZWdhY3kgc2VyaWFsIHBvcnQg
+MiBmb3IgL3NvY0BmZmUwMDAwMDAvc2VyaWFsQDExZDUwMA0KPiAgIG1lbT1mZmUxMWQ1MDAsIHRh
+ZGRyPWZmZTExZDUwMCwgaXJxPTAsIGNsaz0zMDAwMDAwMDAsIHNwZWVkPTANCj4gRm91bmQgbGVn
+YWN5IHNlcmlhbCBwb3J0IDMgZm9yIC9zb2NAZmZlMDAwMDAwL3NlcmlhbEAxMWQ2MDANCj4gICBt
+ZW09ZmZlMTFkNjAwLCB0YWRkcj1mZmUxMWQ2MDAsIGlycT0wLCBjbGs9MzAwMDAwMDAwLCBzcGVl
+ZD0wDQo+IHByaW50azogYm9vdGNvbnNvbGUgW3VkYmcwXSBlbmFibGVkDQo+IENQVSBtYXBzIGlu
+aXRpYWxpemVkIGZvciAyIHRocmVhZHMgcGVyIGNvcmUNCj4gICh0aHJlYWQgc2hpZnQgaXMgMSkN
+Cj4gQWxsb2NhdGVkIDE4NTYgYnl0ZXMgZm9yIDggcGFjYXMNCj4gLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gcGh5c19tZW1fc2l6ZSAgICAg
+PSAweDEwMDAwMDAwMA0KPiBkY2FjaGVfYnNpemUgICAgICA9IDB4NDANCj4gaWNhY2hlX2JzaXpl
+ICAgICAgPSAweDQwDQo+IGNwdV9mZWF0dXJlcyAgICAgID0gMHgwMDAwMDAwMzAwOTAwM2I2DQo+
+ICAgcG9zc2libGUgICAgICAgID0gMHgwMDAwMDAwMzAwOTAwM2I2DQo+ICAgYWx3YXlzICAgICAg
+ICAgID0gMHgwMDAwMDAwMzAwODAwM2I0DQo+IGNwdV91c2VyX2ZlYXR1cmVzID0gMHhkYzAwODAw
+MCAweDA4MDAwMDAwDQo+IG1tdV9mZWF0dXJlcyAgICAgID0gMHgwMDBhMDAxMA0KPiBmaXJtd2Fy
+ZV9mZWF0dXJlcyA9IDB4MDAwMDAwMDAwMDAwMDAwMA0KPiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiBDb3JlTmV0IEdlbmVyaWMgYm9hcmQN
+Cj4gYmFycmllci1ub3NwZWM6IHVzaW5nIGlzeW5jOyBzeW5jIGFzIHNwZWN1bGF0aW9uIGJhcnJp
+ZXINCj4gYmFycmllci1ub3NwZWM6IHBhdGNoZWQgNDEyIGxvY2F0aW9ucw0KPiBUb3Agb2YgUkFN
+OiAweDEwMDAwMDAwMCwgVG90YWwgUkFNOiAweDEwMDAwMDAwMA0KPiBNZW1vcnkgaG9sZSBzaXpl
+OiAwTUINCj4gWm9uZSByYW5nZXM6DQo+ICAgRE1BICAgICAgW21lbSAweDAwMDAwMDAwMDAwMDAw
+MDAtMHgwMDAwMDAwMDdmZmZlZmZmXQ0KPiAgIE5vcm1hbCAgIFttZW0gMHgwMDAwMDAwMDdmZmZm
+MDAwLTB4MDAwMDAwMDBmZmZmZmZmZl0NCj4gTW92YWJsZSB6b25lIHN0YXJ0IGZvciBlYWNoIG5v
+ZGUNCj4gRWFybHkgbWVtb3J5IG5vZGUgcmFuZ2VzDQo+ICAgbm9kZSAgIDA6IFttZW0gMHgwMDAw
+MDAwMDAwMDAwMDAwLTB4MDAwMDAwMDBmZmZmZmZmZl0NCj4gSW5pdG1lbSBzZXR1cCBub2RlIDAg
+W21lbSAweDAwMDAwMDAwMDAwMDAwMDAtMHgwMDAwMDAwMGZmZmZmZmZmXQ0KPiBPbiBub2RlIDAg
+dG90YWxwYWdlczogMTA0ODU3Ng0KPiAgIERNQSB6b25lOiA3MTY4IHBhZ2VzIHVzZWQgZm9yIG1l
+bW1hcA0KPiAgIERNQSB6b25lOiAwIHBhZ2VzIHJlc2VydmVkDQo+ICAgRE1BIHpvbmU6IDUyNDI4
+NyBwYWdlcywgTElGTyBiYXRjaDo2Mw0KPiAgIE5vcm1hbCB6b25lOiA3MTY5IHBhZ2VzIHVzZWQg
+Zm9yIG1lbW1hcA0KPiAgIE5vcm1hbCB6b25lOiA1MjQyODkgcGFnZXMsIExJRk8gYmF0Y2g6NjMN
+Cj4gTU1VOiBBbGxvY2F0ZWQgMjExMiBieXRlcyBvZiBjb250ZXh0IG1hcHMgZm9yIDI1NSBjb250
+ZXh0cw0KPiBwZXJjcHU6IEVtYmVkZGVkIDIyIHBhZ2VzL2NwdSBzNDkzMDQgcjAgZDQwODA4IHUx
+MzEwNzINCj4gcGNwdS1hbGxvYzogczQ5MzA0IHIwIGQ0MDgwOCB1MTMxMDcyIGFsbG9jPTEqMTA0
+ODU3Ng0KPiBwY3B1LWFsbG9jOiBbMF0gMCAxIDIgMyA0IDUgNiA3IA0KPiBCdWlsdCAxIHpvbmVs
+aXN0cywgbW9iaWxpdHkgZ3JvdXBpbmcgb24uICBUb3RhbCBwYWdlczogMTAzNDIzOQ0KPiBLZXJu
+ZWwgY29tbWFuZCBsaW5lOiBjb25zb2xlPXR0eVMwLDExNTIwMCByb290PS9kZXYvcmFtMA0KPiBy
+ZWxlYXNlZmlsZT1saW51eGJveF9wcGM2NF9lNjUwMG1jLXRiMjMzLnJlbCBib290dmVyc2lvbj02
+LjIuNw0KPiBsb2dsZXZlbD04IG10ZG9vcHMubXRkZGV2PWVycmxvZw0KPiBtdGRwYXJ0cz1mZmY4
+MDAwMDAuZmxhc2g6NDA4OE0odXNlciksOE0oZXJybG9nKQ0KPiBlYXJseXByaW50az10dHlTMCwx
+MTUyMDAgcmVhbF9pbml0PQ0KPiAvYmluL3NoIHNlY3VyaXR5bGV2ZWw9MSByZWxhZGRyPTB4MTAw
+MDAwMCwxNTIyNTIzDQo+IHByaW50azogbG9nX2J1Zl9sZW4gaW5kaXZpZHVhbCBtYXggY3B1IGNv
+bnRyaWJ1dGlvbjogNDA5NiBieXRlcw0KPiBwcmludGs6IGxvZ19idWZfbGVuIHRvdGFsIGNwdV9l
+eHRyYSBjb250cmlidXRpb25zOiAyODY3MiBieXRlcw0KPiBwcmludGs6IGxvZ19idWZfbGVuIG1p
+biBzaXplOiAxNjM4NCBieXRlcw0KPiBwcmludGs6IGxvZ19idWZfbGVuOiA2NTUzNiBieXRlcw0K
+PiBwcmludGs6IGVhcmx5IGxvZyBidWYgZnJlZTogMTI0MTIoNzUlKQ0KPiBEZW50cnkgY2FjaGUg
+aGFzaCB0YWJsZSBlbnRyaWVzOiA1MjQyODggKG9yZGVyOiAxMCwgNDE5NDMwNCBieXRlcykNCj4g
+SW5vZGUtY2FjaGUgaGFzaCB0YWJsZSBlbnRyaWVzOiAyNjIxNDQgKG9yZGVyOiA5LCAyMDk3MTUy
+IGJ5dGVzKQ0KPiBNZW1vcnk6IDM5NzkyODRLLzQxOTQzMDRLIGF2YWlsYWJsZSAoODcwNEsga2Vy
+bmVsIGNvZGUsIDE1ODRLIHJ3ZGF0YSwNCj4gMjQ5Nksgcm9kYXRhLCA0NzJLIGluaXQsIDI5OUsg
+YnNzLCAyMTUwMjBLIHJlc2VydmVkLCAwSyBjbWEtcmVzZXJ2ZWQpDQo+IFNMVUI6IEhXYWxpZ249
+NjQsIE9yZGVyPTAtMywgTWluT2JqZWN0cz0wLCBDUFVzPTgsIE5vZGVzPTENCj4gcmN1OiBQcmVl
+bXB0aWJsZSBoaWVyYXJjaGljYWwgUkNVIGltcGxlbWVudGF0aW9uLg0KPiByY3U6ICAgIFJDVSBl
+dmVudCB0cmFjaW5nIGlzIGVuYWJsZWQuDQo+ICAgICAgICAgVGFza3MgUkNVIGVuYWJsZWQuDQo+
+IHJjdTogUkNVIGNhbGN1bGF0ZWQgdmFsdWUgb2Ygc2NoZWR1bGVyLWVubGlzdG1lbnQgZGVsYXkg
+aXMgMjUNCj4gamlmZmllcy4NCj4gTlJfSVJRUzogNTEyLCBucl9pcnFzOiA1MTIsIHByZWFsbG9j
+YXRlZCBpcnFzOiAxNg0KPiBtcGljOiBTZXR0aW5nIHVwIE1QSUMgIiBPcGVuUElDICAiIHZlcnNp
+b24gMS4yIGF0IGZmZTA0MDAwMCwgbWF4IDgNCj4gQ1BVcw0KPiBtcGljOiBJU1Ugc2l6ZTogNTEy
+LCBzaGlmdDogOSwgbWFzazogMWZmDQo+IG1waWM6IEluaXRpYWxpemluZyBmb3IgNTEyIHNvdXJj
+ZXMNCj4gdGltZV9pbml0OiBkZWNyZW1lbnRlciBmcmVxdWVuY3kgPSAzNy41MDAwMDAgTUh6DQo+
+IHRpbWVfaW5pdDogcHJvY2Vzc29yIGZyZXF1ZW5jeSAgID0gMTUwMC4wMDAwMDAgTUh6DQo+IGNs
+b2Nrc291cmNlOiB0aW1lYmFzZTogbWFzazogMHhmZmZmZmZmZmZmZmZmZmZmIG1heF9jeWNsZXM6
+DQo+IDB4OGE2MGRkNmE5LCBtYXhfaWRsZV9uczogNDQwNzk1MjA0MDU2IG5zDQo+IGNsb2Nrc291
+cmNlOiB0aW1lYmFzZSBtdWx0WzFhYWFhYWFiXSBzaGlmdFsyNF0gcmVnaXN0ZXJlZA0KPiBjbG9j
+a2V2ZW50OiBkZWNyZW1lbnRlciBtdWx0Wzk5OTk5OWFdIHNoaWZ0WzMyXSBjcHVbMF0NCj4gcGlk
+X21heDogZGVmYXVsdDogMzI3NjggbWluaW11bTogMzAxDQo+IE1vdW50LWNhY2hlIGhhc2ggdGFi
+bGUgZW50cmllczogODE5MiAob3JkZXI6IDQsIDY1NTM2IGJ5dGVzKQ0KPiBNb3VudHBvaW50LWNh
+Y2hlIGhhc2ggdGFibGUgZW50cmllczogODE5MiAob3JkZXI6IDQsIDY1NTM2IGJ5dGVzKQ0KPiBl
+NjUwMCBmYW1pbHkgcGVyZm9ybWFuY2UgbW9uaXRvciBoYXJkd2FyZSBzdXBwb3J0IHJlZ2lzdGVy
+ZWQNCj4gcmN1OiBIaWVyYXJjaGljYWwgU1JDVSBpbXBsZW1lbnRhdGlvbi4NCj4gc21wOiBCcmlu
+Z2luZyB1cCBzZWNvbmRhcnkgQ1BVcyAuLi4NCg==
