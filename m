@@ -2,133 +2,81 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9AF1C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90FE6C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 813C12075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:18:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011092;
-	bh=LIzX0/c+zMGkkLO4BG97yDwpZwS0y1Dqb097g3vfgZw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rFtQE8Om5NClWbTgxUvhXNwNUF2NBXmDKcZyJ/8IEAP8LWd6SL/nUdeCW+13C/PR7
-	 vaQ12PQRdhgHok3Qo72DOJTluFSgCB4aAtc+DFpZfSTRzZedCZrHqfloIKoB/1Tvj/
-	 u5TtJOqXeLfvOaVVxTaM5rk4WAhDMeDDeC2s4dPQ=
+	by mail.kernel.org (Postfix) with ESMTP id 71D162075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:18:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728897AbfHENEH (ORCPT
+        id S1729750AbfHENSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:04:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39506 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:18:14 -0400
+Received: from mga03.intel.com ([134.134.136.65]:48668 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728878AbfHENEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:04:04 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E32C2147A;
-        Mon,  5 Aug 2019 13:04:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010243;
-        bh=LIzX0/c+zMGkkLO4BG97yDwpZwS0y1Dqb097g3vfgZw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZLr2Uq9UdcT+7I1PtcUQgE6+8E3233B/pFaGZnUQkrFIBLL42b4QQxoYHXbxAvY5d
-         3E5Oy1y9zYfvOe/GAkbPQ7mgoc3UEP3nuzCRAaBCsA4ByqLuDt8fD35JMo+zeyDZV5
-         JZuV2mEAWQ57EvdgcBUlqdMBI7ipJhSYu4vMiUjo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
-        Michal Nazarewicz <mina86@mina86.com>,
-        Yue Hu <huyue2@yulong.com>, Mike Rapoport <rppt@linux.ibm.com>,
-        Laura Abbott <labbott@redhat.com>, Peng Fan <peng.fan@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 14/22] mm/cma.c: fail if fixed declaration cant be honored
-Date:   Mon,  5 Aug 2019 15:02:51 +0200
-Message-Id: <20190805124921.841141137@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190805124918.070468681@linuxfoundation.org>
-References: <20190805124918.070468681@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1726779AbfHENSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:18:12 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 06:17:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,350,1559545200"; 
+   d="scan'208";a="192418646"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 05 Aug 2019 06:17:44 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 05 Aug 2019 16:17:43 +0300
+Date:   Mon, 5 Aug 2019 16:17:43 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>
+Subject: Re: [PATCH 4/8] thunderbolt: Do not fail adding switch if some port
+ is not implemented
+Message-ID: <20190805131743.GS2640@lahna.fi.intel.com>
+References: <20190705095800.43534-1-mika.westerberg@linux.intel.com>
+ <20190705095800.43534-5-mika.westerberg@linux.intel.com>
+ <20190803141401.bmjo7u723p4wxtqb@wunner.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190803141401.bmjo7u723p4wxtqb@wunner.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c633324e311243586675e732249339685e5d6faa ]
+On Sat, Aug 03, 2019 at 04:14:01PM +0200, Lukas Wunner wrote:
+> On Fri, Jul 05, 2019 at 12:57:56PM +0300, Mika Westerberg wrote:
+> > There are two ways to mark a port as unimplemented. Typical way is to
+> > return port type as TB_TYPE_INACTIVE when its config space is read.
+> > Alternatively if the port is not physically present (such as ports 10
+> > and 11 in ICL) reading from port config space returns
+> > TB_CFG_ERROR_INVALID_CONFIG_SPACE instead. Currently the driver bails
+> > out from adding the switch if it receives any error during port
+> > inititialization which is wrong.
+> > 
+> > Handle this properly and just leave the port as TB_TYPE_INACTIVE before
+> > continuing to the next port.
+> 
+> Your patch may also cause this snippet in eeprom.c to become obsolete:
+> 
+> 		/* Port 5 is inaccessible on this gen 1 controller */
+> 		if (sw->config.device_id == PCI_DEVICE_ID_INTEL_LIGHT_RIDGE)
+> 			sw->ports[5].disabled = true;
+> 
+> To verify this hypothesis, one needs to comment out the call to
+> tb_drom_copy_efi() as well as the above-quoted snippet and boot
+> on a Mac with Light Ridge.  The driver should hit an error without
+> your patch and it may work correctly with your patch.
 
-The description of cma_declare_contiguous() indicates that if the
-'fixed' argument is true the reserved contiguous area must be exactly at
-the address of the 'base' argument.
-
-However, the function currently allows the 'base', 'size', and 'limit'
-arguments to be silently adjusted to meet alignment constraints.  This
-commit enforces the documented behavior through explicit checks that
-return an error if the region does not fit within a specified region.
-
-Link: http://lkml.kernel.org/r/1561422051-16142-1-git-send-email-opendmb@gmail.com
-Fixes: 5ea3b1b2f8ad ("cma: add placement specifier for "cma=" kernel parameter")
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Acked-by: Michal Nazarewicz <mina86@mina86.com>
-Cc: Yue Hu <huyue2@yulong.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Laura Abbott <labbott@redhat.com>
-Cc: Peng Fan <peng.fan@nxp.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Andrey Konovalov <andreyknvl@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- mm/cma.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/mm/cma.c b/mm/cma.c
-index 5ae4452656cdf..65c7aa419048c 100644
---- a/mm/cma.c
-+++ b/mm/cma.c
-@@ -268,6 +268,12 @@ int __init cma_declare_contiguous(phys_addr_t base,
- 	 */
- 	alignment = max(alignment,  (phys_addr_t)PAGE_SIZE <<
- 			  max_t(unsigned long, MAX_ORDER - 1, pageblock_order));
-+	if (fixed && base & (alignment - 1)) {
-+		ret = -EINVAL;
-+		pr_err("Region at %pa must be aligned to %pa bytes\n",
-+			&base, &alignment);
-+		goto err;
-+	}
- 	base = ALIGN(base, alignment);
- 	size = ALIGN(size, alignment);
- 	limit &= ~(alignment - 1);
-@@ -298,6 +304,13 @@ int __init cma_declare_contiguous(phys_addr_t base,
- 	if (limit == 0 || limit > memblock_end)
- 		limit = memblock_end;
- 
-+	if (base + size > limit) {
-+		ret = -EINVAL;
-+		pr_err("Size (%pa) of region at %pa exceeds limit (%pa)\n",
-+			&size, &base, &limit);
-+		goto err;
-+	}
-+
- 	/* Reserve memory */
- 	if (fixed) {
- 		if (memblock_is_region_reserved(base, size) ||
--- 
-2.20.1
-
-
-
+Indeed. I'll check this - as I have Mac with LR, and update the patch
+accordingly (e.g drop the check if the error does not appear).
