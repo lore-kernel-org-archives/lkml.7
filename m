@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02494C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93960C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD68B2075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A3252067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:08:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010535;
-	bh=H/teyfZI/2ZZtdVHbK7fbPvqO4vsqQMJRFbHUIEizaY=;
+	s=default; t=1565010539;
+	bh=VfcaByF7r95+yEsTsJOfHLZKb5vPPTHlHaR+VpYo8vM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kg1SM8yFsNzGjEkG4iuY6rHRsLtmnr6YGmohyGWuDVGLX29ljoC4mRICDpm0TLAEZ
-	 AJJr7mceWYBe+Vxg1Mz0jxgET1D4ekUrE/E/hhj9k6y6u4DbAtfLbXfpIbgUbMOfYT
-	 +eXvCscv7EmMdFVRQDtq1GscHUplFMXNf9uR5t4Q=
+	b=tj05SNHZdMxNPL4znmEEZ0kcVe7rjvgUccsvc1tJ/TwQZsbP6ZuDdZL0XAvwczkKK
+	 ytPHam1qfoCwy9GcT71cllsBs6Mo17e0j2sZEYidxFW+QZpzMbvsVPJDTwRVs7PfWX
+	 rq6PNhJvx8Aq9T1rpps3Idqw9pvagBisaQdiB7ec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729696AbfHENIy (ORCPT
+        id S1730114AbfHENI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:08:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47078 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:08:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730099AbfHENIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:08:51 -0400
+        id S1729675AbfHENIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:08:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E58A2087B;
-        Mon,  5 Aug 2019 13:08:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9313621738;
+        Mon,  5 Aug 2019 13:08:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010530;
-        bh=H/teyfZI/2ZZtdVHbK7fbPvqO4vsqQMJRFbHUIEizaY=;
+        s=default; t=1565010533;
+        bh=VfcaByF7r95+yEsTsJOfHLZKb5vPPTHlHaR+VpYo8vM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J3EW0Yymp5xR7rfK0c7gSfF9Qqeewtkl8RGfHzdbKA6GlKopjTa//f5Wi0n07m3xX
-         GZxQ7mRFKCQrm/6BadA4SQZnlfAc30fEFJ0RPUYfqrJO+SVhrehn9CbqJQIJrEWGqn
-         iTgQ48iNOAXm31atehbIu/miAZSLUBI+ua4wHKsk=
+        b=IrsnswP480g+xix10oSQbQ8+T+IYksYb5eF/kntb/uMHIoBkN51j6Z/TYI9NyebM6
+         PXPZe0ndwwRShyROfx/C2ocHdUhYkgcMp2BP8otgPMWooflRnASYL5SQNIJ64HrgT7
+         6fqoPQHyr/oFjf39mWnRKIfhtvHSUF7AFljTvkZw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Schnelle <svens@stackframe.org>,
-        Helge Deller <deller@gmx.de>
-Subject: [PATCH 4.14 41/53] parisc: Fix build of compressed kernel even with debug enabled
-Date:   Mon,  5 Aug 2019 15:03:06 +0200
-Message-Id: <20190805124932.593351063@linuxfoundation.org>
+        stable@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 4.14 42/53] drivers/perf: arm_pmu: Fix failure path in PM notifier
+Date:   Mon,  5 Aug 2019 15:03:07 +0200
+Message-Id: <20190805124932.694154877@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124927.973499541@linuxfoundation.org>
 References: <20190805124927.973499541@linuxfoundation.org>
@@ -59,36 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+From: Will Deacon <will@kernel.org>
 
-commit 3fe6c873af2f2247544debdbe51ec29f690a2ccf upstream.
+commit 0d7fd70f26039bd4b33444ca47f0e69ce3ae0354 upstream.
 
-With debug info enabled (CONFIG_DEBUG_INFO=y) the resulting vmlinux may get
-that huge that we need to increase the start addresss for the decompression
-text section otherwise one will face a linker error.
+Handling of the CPU_PM_ENTER_FAILED transition in the Arm PMU PM
+notifier code incorrectly skips restoration of the counters. Fix the
+logic so that CPU_PM_ENTER_FAILED follows the same path as CPU_PM_EXIT.
 
-Reported-by: Sven Schnelle <svens@stackframe.org>
-Tested-by: Sven Schnelle <svens@stackframe.org>
-Cc: stable@vger.kernel.org # v4.14+
-Signed-off-by: Helge Deller <deller@gmx.de>
+Cc: <stable@vger.kernel.org>
+Fixes: da4e4f18afe0f372 ("drivers/perf: arm_pmu: implement CPU_PM notifier")
+Reported-by: Anders Roxell <anders.roxell@linaro.org>
+Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/parisc/boot/compressed/vmlinux.lds.S |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/perf/arm_pmu.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/parisc/boot/compressed/vmlinux.lds.S
-+++ b/arch/parisc/boot/compressed/vmlinux.lds.S
-@@ -40,8 +40,8 @@ SECTIONS
- #endif
- 	_startcode_end = .;
- 
--	/* bootloader code and data starts behind area of extracted kernel */
--	. = (SZ_end - SZparisc_kernel_start + KERNEL_BINARY_TEXT_START);
-+	/* bootloader code and data starts at least behind area of extracted kernel */
-+	. = MAX(ABSOLUTE(.), (SZ_end - SZparisc_kernel_start + KERNEL_BINARY_TEXT_START));
- 
- 	/* align on next page boundary */
- 	. = ALIGN(4096);
+--- a/drivers/perf/arm_pmu.c
++++ b/drivers/perf/arm_pmu.c
+@@ -751,8 +751,8 @@ static int cpu_pm_pmu_notify(struct noti
+ 		cpu_pm_pmu_setup(armpmu, cmd);
+ 		break;
+ 	case CPU_PM_EXIT:
+-		cpu_pm_pmu_setup(armpmu, cmd);
+ 	case CPU_PM_ENTER_FAILED:
++		cpu_pm_pmu_setup(armpmu, cmd);
+ 		armpmu->start(armpmu);
+ 		break;
+ 	default:
 
 
