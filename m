@@ -2,127 +2,134 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE52C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 05:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E917C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 05:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 528C32086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 05:24:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RYStpXRd"
+	by mail.kernel.org (Postfix) with ESMTP id 81E0620665
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 05:31:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727513AbfHEFYF (ORCPT
+        id S1727222AbfHEFbb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 01:24:05 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41765 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbfHEFYE (ORCPT
+        Mon, 5 Aug 2019 01:31:31 -0400
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162]:44486 "EHLO
+        tyo162.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbfHEFbb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 01:24:04 -0400
-Received: by mail-pl1-f194.google.com with SMTP id m9so35861391pls.8;
-        Sun, 04 Aug 2019 22:24:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=kwMEz+087NG71UJ43Y4PF8iaz73tFFj8XFrCYqheyzM=;
-        b=RYStpXRdJ6l1TB5wKrJU7HiL/1JFuert86TTPAt7bqfUAgmkKErLM2V7eOfh80Dt2X
-         z7zdYP5OzQEjRfg6GxLfMGJx5i8X3s+g//iYCtV2yZNKceD6Ya66xqmj8jEJZ0x4z3OQ
-         43TQ1PL+flTx9iYukVvXCXiibP5xo1OjP9SbWR1oZbkY1uY6zZGLDoEN0/r6wsIRVgzU
-         3Noiq/QHVUllGwiToLVLy27y4uG1aCixTU4rLvpGd8YxUaPuwP/ba/CLQxcjYW586fb6
-         1W/dT88fozfMlEJD/QgB/3tin2mbI5vBE/RSIhH9/hQtob0Oxs1EXz4vbgjetDZz0uCm
-         Yf/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=kwMEz+087NG71UJ43Y4PF8iaz73tFFj8XFrCYqheyzM=;
-        b=a3e0P6queC2BxB2HatvRW+Tl2BSUftyauGl3en0d9ygPijfEb4nyPRZBvDXHztzaFR
-         qW7ru7yIa27Aabyc8yy1KW6m4xU6mgczXNluP6QEeFUCHzZ/pLcjml3K3i1c1mYNFuzo
-         ofIWi91zFaV7yx2PRWR1Idafs/Dw8Q6Owp0KKwCHVo2IBO4jt6HRjYWhB1Cj4vSlzrWE
-         DGl639uXL9HWipk4XNb0DHoioyuIkEvA40gWmoUrdaQcYnMY8vuGAEgENes3Vu0M79pL
-         TXSFdp5gPGiZmCmJCc1p4Jxd3qkaQDp+qI1y6YP0BjFFTDAKyrby6CRzhaL0qWMgvFhu
-         A+Vw==
-X-Gm-Message-State: APjAAAW33hCF+FQq01ulgLEGErk1RFNU7hfMRsr9PBnXynN2UNbCtA5W
-        rJ96SZrOX648uSKa/ITlh1Q=
-X-Google-Smtp-Source: APXvYqwJG9ftnbw1vWkXErhnQDqqhwN5wPt0f+1hEmXWYKjYXk1pH+W1bk1sCUeNvKF1PgCaKoiyQg==
-X-Received: by 2002:a17:902:ba96:: with SMTP id k22mr146166694pls.44.1564982644123;
-        Sun, 04 Aug 2019 22:24:04 -0700 (PDT)
-Received: from localhost.localdomain ([163.152.162.125])
-        by smtp.gmail.com with ESMTPSA id o12sm12798313pjr.22.2019.08.04.22.24.01
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 04 Aug 2019 22:24:03 -0700 (PDT)
-Date:   Mon, 5 Aug 2019 14:23:58 +0900
-From:   Suwan Kim <suwan.kim027@gmail.com>
-To:     shuah <shuah@kernel.org>
-Cc:     valentina.manea.m@gmail.com, gregkh@linuxfoundation.org,
-        stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] usbip: Skip DMA mapping and unmapping for urb at
- vhci
-Message-ID: <20190805052358.GA8904@localhost.localdomain>
-References: <20190802173651.22247-1-suwan.kim027@gmail.com>
- <20190802173651.22247-2-suwan.kim027@gmail.com>
- <c23b3ac1-68d9-bc1e-610b-955988e11055@kernel.org>
+        Mon, 5 Aug 2019 01:31:31 -0400
+Received: from mailgate01.nec.co.jp ([114.179.233.122])
+        by tyo162.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x755V8XK004238
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Mon, 5 Aug 2019 14:31:08 +0900
+Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x755V8sK019089;
+        Mon, 5 Aug 2019 14:31:08 +0900
+Received: from mail03.kamome.nec.co.jp (mail03.kamome.nec.co.jp [10.25.43.7])
+        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x755M4TE002674;
+        Mon, 5 Aug 2019 14:31:08 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.152] [10.38.151.152]) by mail02.kamome.nec.co.jp with ESMTP id BT-MMP-7394443; Mon, 5 Aug 2019 14:12:41 +0900
+Received: from BPXM20GP.gisp.nec.co.jp ([10.38.151.212]) by
+ BPXC24GP.gisp.nec.co.jp ([10.38.151.152]) with mapi id 14.03.0439.000; Mon, 5
+ Aug 2019 14:12:41 +0900
+From:   Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
+To:     Michal Hocko <mhocko@kernel.org>
+CC:     Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "hch@lst.de" <hch@lst.de>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Junichi Nomura <j-nomura@ce.jp.nec.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH 2/2] /proc/kpageflags: do not use uninitialized struct
+ pages
+Thread-Topic: [PATCH 2/2] /proc/kpageflags: do not use uninitialized struct
+ pages
+Thread-Index: AQHVQpEKFGt+j6P+NkKoSe72QQuzoKbac7OAgAFmX4CAAAsmgIAPl5OA
+Date:   Mon, 5 Aug 2019 05:12:40 +0000
+Message-ID: <3a926ce5-75b9-ea94-d6e4-6888872e0dc4@vx.jp.nec.com>
+References: <20190725023100.31141-1-t-fukasawa@vx.jp.nec.com>
+ <20190725023100.31141-3-t-fukasawa@vx.jp.nec.com>
+ <20190725090341.GC13855@dhcp22.suse.cz>
+ <40b3078e-fb8b-87ef-5c4e-6321956cc940@vx.jp.nec.com>
+ <20190726070615.GB6142@dhcp22.suse.cz>
+In-Reply-To: <20190726070615.GB6142@dhcp22.suse.cz>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.178.21.43]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <092F480E631D4C46AA067F5ECBA30C88@gisp.nec.co.jp>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c23b3ac1-68d9-bc1e-610b-955988e11055@kernel.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 04:22:27PM -0600, shuah wrote:
-> On 8/2/19 11:36 AM, Suwan Kim wrote:
-> > vhci doesn’t do DMA for remote device. Actually, the real DMA
-> > operation is done by network card driver. vhci just passes virtual
-> > address of the buffer to the network stack, so vhci doesn’t use and
-> > need dma address of the buffer of the URB.
-> > 
-> > But HCD provides DMA mapping and unmapping function by default.
-> > Moreover, it causes unnecessary DMA mapping and unmapping which
-> > will be done again at the NIC driver and it wastes CPU cycles.
-> > So, implement map_urb_for_dma and unmap_urb_for_dma function for
-> > vhci in order to skip the DMA mapping and unmapping procedure.
-> > 
-> > When it comes to supporting SG for vhci, it is useful to use native
-> > SG list (urb->num_sgs) instead of mapped SG list because DMA mapping
-> > fnuction can adjust the number of SG list (urb->num_mapped_sgs).
-> > And vhci_map_urb_for_dma() prevents isoc pipe from using SG as
-> > hcd_map_urb_for_dma() does.
-> > 
-> > Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
-> > ---
-> >   drivers/usb/usbip/vhci_hcd.c | 19 +++++++++++++++++++
-> >   1 file changed, 19 insertions(+)
-> > 
-> > diff --git a/drivers/usb/usbip/vhci_hcd.c b/drivers/usb/usbip/vhci_hcd.c
-> > index 000ab7225717..c62f7fa8118c 100644
-> > --- a/drivers/usb/usbip/vhci_hcd.c
-> > +++ b/drivers/usb/usbip/vhci_hcd.c
-> > @@ -1288,6 +1288,22 @@ static int vhci_free_streams(struct usb_hcd *hcd, struct usb_device *udev,
-> >   	return 0;
-> >   }
-> > +static int vhci_map_urb_for_dma(struct usb_hcd *hcd, struct urb *urb,
-> > +		gfp_t mem_flags)
-> > +{
-> > +	if (usb_endpoint_xfer_isoc(&urb->ep->desc) && urb->num_sgs) {
-> > +		WARN_ON(1);
+On 2019/07/26 16:06, Michal Hocko wrote:
+> On Fri 26-07-19 06:25:49, Toshiki Fukasawa wrote:
+>>
+>>
+>> On 2019/07/25 18:03, Michal Hocko wrote:
+>>> On Thu 25-07-19 02:31:18, Toshiki Fukasawa wrote:
+>>>> A kernel panic was observed during reading /proc/kpageflags for
+>>>> first few pfns allocated by pmem namespace:
+>>>>
+>>>> BUG: unable to handle page fault for address: fffffffffffffffe
+>>>> [  114.495280] #PF: supervisor read access in kernel mode
+>>>> [  114.495738] #PF: error_code(0x0000) - not-present page
+>>>> [  114.496203] PGD 17120e067 P4D 17120e067 PUD 171210067 PMD 0
+>>>> [  114.496713] Oops: 0000 [#1] SMP PTI
+>>>> [  114.497037] CPU: 9 PID: 1202 Comm: page-types Not tainted 5.3.0-rc1 #1
+>>>> [  114.497621] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.0-0-g63451fca13-prebuilt.qemu-project.org 04/01/2014
+>>>> [  114.498706] RIP: 0010:stable_page_flags+0x27/0x3f0
+>>>> [  114.499142] Code: 82 66 90 66 66 66 66 90 48 85 ff 0f 84 d1 03 00 00 41 54 55 48 89 fd 53 48 8b 57 08 48 8b 1f 48 8d 42 ff 83 e2 01 48 0f 44 c7 <48> 8b 00 f6 c4 02 0f 84 57 03 00 00 45 31 e4 48 8b 55 08 48 89 ef
+>>>> [  114.500788] RSP: 0018:ffffa5e601a0fe60 EFLAGS: 00010202
+>>>> [  114.501373] RAX: fffffffffffffffe RBX: ffffffffffffffff RCX: 0000000000000000
+>>>> [  114.502009] RDX: 0000000000000001 RSI: 00007ffca13a7310 RDI: ffffd07489000000
+>>>> [  114.502637] RBP: ffffd07489000000 R08: 0000000000000001 R09: 0000000000000000
+>>>> [  114.503270] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000240000
+>>>> [  114.503896] R13: 0000000000080000 R14: 00007ffca13a7310 R15: ffffa5e601a0ff08
+>>>> [  114.504530] FS:  00007f0266c7f540(0000) GS:ffff962dbbac0000(0000) knlGS:0000000000000000
+>>>> [  114.505245] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>>> [  114.505754] CR2: fffffffffffffffe CR3: 000000023a204000 CR4: 00000000000006e0
+>>>> [  114.506401] Call Trace:
+>>>> [  114.506660]  kpageflags_read+0xb1/0x130
+>>>> [  114.507051]  proc_reg_read+0x39/0x60
+>>>> [  114.507387]  vfs_read+0x8a/0x140
+>>>> [  114.507686]  ksys_pread64+0x61/0xa0
+>>>> [  114.508021]  do_syscall_64+0x5f/0x1a0
+>>>> [  114.508372]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>>>> [  114.508844] RIP: 0033:0x7f0266ba426b
+>>>>
+>>>> The reason for the panic is that stable_page_flags() which parses
+>>>> the page flags uses uninitialized struct pages reserved by the
+>>>> ZONE_DEVICE driver.
+>>>
+>>> Why pmem hasn't initialized struct pages?
+>>
+>> We proposed to initialize in previous approach but that wasn't merged.
+>> (See https://marc.info/?l=linux-mm&m=152964792500739&w=2)
+>>
+>>> Isn't that a bug that should be addressed rather than paper over it like this?
+>>
+>> I'm not sure. What do you think, Dan?
 > 
-> Don't add WARN_ON. I cleaned them all up recently and don't want new
-> ones added.
+> Yeah, I am really curious about details. Why do we keep uninitialized
+> struct pages at all? What is a random pfn walker supposed to do? What
+> kind of metadata would be clobbered? In other words much more details
+> please.
+> 
+I also want to know. I do not think that initializing struct pages will
+clobber any metadata.
 
-Ok. I will remove it and resend v4.
-
-Regards
-Suwan Kim
+Best regards,
+Toshiki Fukasawa
