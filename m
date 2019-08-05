@@ -5,66 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F8D0C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 02:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D76BCC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 02:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76BF020B1F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 02:03:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0CF020B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 02:03:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q9mkPyPc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JRkjiLqh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727166AbfHECDv (ORCPT
+        id S1727058AbfHECDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 4 Aug 2019 22:03:51 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40398 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727082AbfHECDl (ORCPT
+        Sun, 4 Aug 2019 22:03:40 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45417 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727023AbfHECDh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 4 Aug 2019 22:03:41 -0400
-Received: by mail-pf1-f195.google.com with SMTP id p184so38765839pfp.7;
-        Sun, 04 Aug 2019 19:03:41 -0700 (PDT)
+        Sun, 4 Aug 2019 22:03:37 -0400
+Received: by mail-pg1-f193.google.com with SMTP id o13so38824266pgp.12;
+        Sun, 04 Aug 2019 19:03:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=tRG59/5lE82m1QRtQTpYyWmXnnIcRnkPvf94Bgtr6Rs=;
-        b=q9mkPyPceELpn2nS45fd46f3dkwHuqerVMaCCDQW9O7ZH/uJcjqgXNwUzHpEPO+fkV
-         bhmqeoFDPFXWFV6GCKMOonq5lalU8ZX8371rKLqI8mf4AnJd/klM8/C6hx2qxoqZrsdi
-         PaJyeiqaJ4a35dHkOri7RlJ0enZQfn0EG6QxmnHMv8FLtl7QojEjVj8oCt7dRcA6whay
-         IttSV6Ui/sXbt3uXRuGl+5hibYOHTLWKXVVG6TNpPzrU0obWgS3MObkwqMIeD79n5QCs
-         vkjgtxsl6zShlvKSAEm70dD4GU/gIMhpMBToTEbhuGNVegwWv5/sty+QGTrUaj1vIh+s
-         2VKw==
+        bh=8vRU7XOXMncH2HX3CBvpyWbhKeVRVshARm7btXYP42w=;
+        b=JRkjiLqhPiQzvIKEiCqljsdkL9L0PLKJGD0M8FGiSEQyGD+ayKEZ1oT7QXiCZFYHee
+         11YGuCpYCC6khFTJMikwh8WVdxpDp8RPH3UCmQX5RNukpM62vOyZS/JlrSYBauHjkbI4
+         ThhsMYl3X2EeTzmjEVV1jbSEz/RGq1kvDR3IcbnbmhmzBYr4MlWfX8lMILYtL3urNZ6v
+         5T0IEg7vk3JVIckFDPvX1DR1i/ngxbrIKITnakd7yN0ctRDNZ/UXgiUaTgqQ0KemY0sI
+         s/UgfztHXULBduVkloiO3K0ih2YFU/b8D8hrcWR9ZJdxdJJedNKudUKhkzSth7mLDLAF
+         4QQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=tRG59/5lE82m1QRtQTpYyWmXnnIcRnkPvf94Bgtr6Rs=;
-        b=nUxOwjVBHFucdJZNouf/lHw8kIZiodoFumF0oGGn72L1zhEJUUsqrWGKga/BUfBTQL
-         HM4IBrrT6Z009oQjfP1JH6OOQdiXALHzi2b4YvNmj43OC7wO/H6FC7Adzrzf0gyi5Kz5
-         N2F8Y2N0na+xdEux86gb1TcbSpJhS0jLJftGXoSP0s0/QN9Fsf5pHfJaU3YnKJfeTY+A
-         QrLgry8aJZZtKXtUPkzp2sQDOKnQ7LRYkZj8DalcEdbpwFdp6Gp7mE0X6/H9zDxWzLYJ
-         cszVti1EAtxQq1p56dbSx6X3ZVHkHL4e4ZMMR79O7A5NnONAedbh/4MUoatGuS02IHnx
-         zgkA==
-X-Gm-Message-State: APjAAAXX0+Of+grKcA2viLXwQMW+2+ASF14Ucsr5PuLk3hJ7pXvf3NnE
-        PmddhFfutuswBVSCiLHEi5yJiGxn
-X-Google-Smtp-Source: APXvYqwx+O2T3Y/610fDmG08ETEs/T5eFALd0i8ye3h0Jacluk6ChqZA8qzKZcGWSykIkqQbUTCC7A==
-X-Received: by 2002:a63:ec13:: with SMTP id j19mr52731786pgh.369.1564970620508;
-        Sun, 04 Aug 2019 19:03:40 -0700 (PDT)
+        bh=8vRU7XOXMncH2HX3CBvpyWbhKeVRVshARm7btXYP42w=;
+        b=HYDXeY2IQHdkPCvCHQcws5ySpKdRohTsC3DPcYLtRo5rowoli++bH/73sK2kh49sTJ
+         YUkEF6vxo6iePoaY28acGQNeGKY3ebBunqYIuz3ymaZC9O2pgKmQ12q31VD6zytnkL28
+         USmMPIWRDYXBxwTL1NV32j8rfwzGJ0iIcadjsjQZZCRNUmy2vvCgnIPTQHpMuhbwOF3p
+         s4Dha3frmoNjR0fY/0H+y2dG5PQlTb0KM5G64n93hsTlaZJoSJ1Q9NZNZMf3aZgyanHU
+         HHyC0cjycK/oHV2Ap5sMcsrxK/GWEKLvYRCVQmPlOMUcgQTN5rmfBHlR4cYDc571Qtf2
+         9mTg==
+X-Gm-Message-State: APjAAAUfsGrTn663v1ZHPfCpT4BzDCiN2//AW7kOM6W7iWa/RtZEfJtV
+        ac/KrV60dOdTrMPIIPSe8vavHbc9
+X-Google-Smtp-Source: APXvYqysH9UkVdeV7dX871CfGOlNrU5gaJfRp3C10inbQrUR5nPcAsJ8RE+ytIeCd/Eih61gHq03dQ==
+X-Received: by 2002:a17:90a:2ec1:: with SMTP id h1mr15787587pjs.119.1564970616325;
+        Sun, 04 Aug 2019 19:03:36 -0700 (PDT)
 Received: from localhost.localdomain ([203.205.141.123])
-        by smtp.googlemail.com with ESMTPSA id o32sm14739365pje.9.2019.08.04.19.03.38
+        by smtp.googlemail.com with ESMTPSA id o32sm14739365pje.9.2019.08.04.19.03.34
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 04 Aug 2019 19:03:40 -0700 (PDT)
+        Sun, 04 Aug 2019 19:03:35 -0700 (PDT)
 From:   Wanpeng Li <kernellwp@gmail.com>
 X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     Paolo Bonzini <pbonzini@redhat.com>,
         =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
-Subject: [PATCH v4 5/6] KVM: LAPIC: Add pv ipi tracepoint
-Date:   Mon,  5 Aug 2019 10:03:23 +0800
-Message-Id: <1564970604-10044-5-git-send-email-wanpengli@tencent.com>
+Subject: [PATCH v4 3/6] KVM: Check preempted_in_kernel for involuntary preemption
+Date:   Mon,  5 Aug 2019 10:03:21 +0800
+Message-Id: <1564970604-10044-3-git-send-email-wanpengli@tencent.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1564970604-10044-1-git-send-email-wanpengli@tencent.com>
 References: <1564970604-10044-1-git-send-email-wanpengli@tencent.com>
@@ -78,65 +78,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Wanpeng Li <wanpengli@tencent.com>
 
-Add pv ipi tracepoint.
+preempted_in_kernel is updated in preempt_notifier when involuntary preemption
+ocurrs, it can be stale when the voluntarily preempted vCPUs are taken into
+account by kvm_vcpu_on_spin() loop. This patch lets it just check preempted_in_kernel
+for involuntary preemption.
 
 Cc: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Radim Krčmář <rkrcmar@redhat.com>
 Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
 ---
- arch/x86/kvm/lapic.c |  2 ++
- arch/x86/kvm/trace.h | 25 +++++++++++++++++++++++++
- 2 files changed, 27 insertions(+)
+ virt/kvm/kvm_main.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index 685d17c..df5cd07 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -570,6 +570,8 @@ int kvm_pv_send_ipi(struct kvm *kvm, unsigned long ipi_bitmap_low,
- 	irq.level = (icr & APIC_INT_ASSERT) != 0;
- 	irq.trig_mode = icr & APIC_INT_LEVELTRIG;
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index e121423..2ae9e84 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -2522,7 +2522,8 @@ void kvm_vcpu_on_spin(struct kvm_vcpu *me, bool yield_to_kernel_mode)
+ 				continue;
+ 			if (swait_active(&vcpu->wq) && !vcpu_runnable(vcpu))
+ 				continue;
+-			if (yield_to_kernel_mode && !kvm_arch_vcpu_in_kernel(vcpu))
++			if (READ_ONCE(vcpu->preempted) && yield_to_kernel_mode &&
++				!kvm_arch_vcpu_in_kernel(vcpu))
+ 				continue;
+ 			if (!kvm_vcpu_eligible_for_directed_yield(vcpu))
+ 				continue;
+@@ -4219,7 +4220,7 @@ static void kvm_sched_in(struct preempt_notifier *pn, int cpu)
+ {
+ 	struct kvm_vcpu *vcpu = preempt_notifier_to_vcpu(pn);
  
-+	trace_kvm_pv_send_ipi(irq.vector, min, ipi_bitmap_low, ipi_bitmap_high);
-+
- 	if (icr & APIC_DEST_MASK)
- 		return -KVM_EINVAL;
- 	if (icr & APIC_SHORT_MASK)
-diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
-index b5c831e..ce6ee34 100644
---- a/arch/x86/kvm/trace.h
-+++ b/arch/x86/kvm/trace.h
-@@ -1462,6 +1462,31 @@ TRACE_EVENT(kvm_hv_send_ipi_ex,
- 		  __entry->vector, __entry->format,
- 		  __entry->valid_bank_mask)
- );
-+
-+/*
-+ * Tracepoints for kvm_pv_send_ipi.
-+ */
-+TRACE_EVENT(kvm_pv_send_ipi,
-+	TP_PROTO(u32 vector, u32 min, unsigned long ipi_bitmap_low, unsigned long ipi_bitmap_high),
-+	TP_ARGS(vector, min, ipi_bitmap_low, ipi_bitmap_high),
-+
-+	TP_STRUCT__entry(
-+		__field(u32, vector)
-+		__field(u32, min)
-+		__field(unsigned long, ipi_bitmap_low)
-+		__field(unsigned long, ipi_bitmap_high)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->vector = vector;
-+		__entry->min = min;
-+		__entry->ipi_bitmap_low = ipi_bitmap_low;
-+		__entry->ipi_bitmap_high = ipi_bitmap_high;
-+	),
-+
-+	TP_printk("vector %d min 0x%x ipi_bitmap_low 0x%lx ipi_bitmap_high 0x%lx",
-+		  __entry->vector, __entry->min, __entry->ipi_bitmap_low, __entry->ipi_bitmap_high)
-+);
- #endif /* _TRACE_KVM_H */
+-	vcpu->preempted = false;
++	WRITE_ONCE(vcpu->preempted, false);
+ 	WRITE_ONCE(vcpu->ready, false);
  
- #undef TRACE_INCLUDE_PATH
+ 	kvm_arch_sched_in(vcpu, cpu);
+@@ -4233,7 +4234,7 @@ static void kvm_sched_out(struct preempt_notifier *pn,
+ 	struct kvm_vcpu *vcpu = preempt_notifier_to_vcpu(pn);
+ 
+ 	if (current->state == TASK_RUNNING) {
+-		vcpu->preempted = true;
++		WRITE_ONCE(vcpu->preempted, true);
+ 		WRITE_ONCE(vcpu->ready, true);
+ 	}
+ 	kvm_arch_vcpu_put(vcpu);
 -- 
 2.7.4
 
