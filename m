@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DFADC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E661C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E465120651
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:28:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D890F216F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:28:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011698;
-	bh=nVedtNDPaa5HnmHFEjyS9OmOu48P9cjjF2bUk2TVMiQ=;
+	s=default; t=1565011707;
+	bh=UXIhSRlAV9LKq4ME4aTBUb7R9FJGY7w1EKadkiD3dTU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xpqnZQI8P9QvMmssfhzKyHnAIYJ7jweY3KXIZFi66+Td9DZQJZWBRDt+1r5DndPt8
-	 +ZgIgWHDxlo1oxfunSyBNoSCd/bXEQMQJD17nbGWGKgKHcDtoXkfXMcURsHjOM4l7+
-	 F+4uk3qr5D6YWZii/WTQOaf/3yXmlXUGqLn5j2jE=
+	b=d9S2DxteIdriM+nwxj7Hc8QvxNHINWVEDKi31Xjvrasa1STUF2bAYbdosXJRsuOxE
+	 vcc0lr5xDUPJ3NaFOmpVbktwtzKOto5kdrW+sEvketjJ9kkSrwAHnOjKNJQsNLTvck
+	 wBF/y8lPTAziN9hSMTFyzCywSetDMQgkjgVtIwEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731001AbfHEN2Q (ORCPT
+        id S1730812AbfHENXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:28:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60446 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:23:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729639AbfHENXn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:23:43 -0400
+        id S1729103AbfHENXV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:23:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5581A2075B;
-        Mon,  5 Aug 2019 13:23:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AB9D2087B;
+        Mon,  5 Aug 2019 13:23:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011421;
-        bh=nVedtNDPaa5HnmHFEjyS9OmOu48P9cjjF2bUk2TVMiQ=;
+        s=default; t=1565011401;
+        bh=UXIhSRlAV9LKq4ME4aTBUb7R9FJGY7w1EKadkiD3dTU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MBhbByeNeuRfxGPyt5LFyhj+ZXVI8Y765Xc7WZMJUyP+UAHSxFqDxTRci//6TPw12
-         2oNtxTTx+CCdCFZJaEsMKAZv4cEWiEJiKolM+hbWcJ1jWWX/Mg/zF6g0Ia/Qw2NOXy
-         AqO42C89HTRS8M5Uz2JYCU08apgm7AWaVrfyJ+oM=
+        b=ZtOShblqHRZPvmOExk46GMdCCOk5mqgzSSzJXe41HpJYxpR12YQEP4w1M/qNvpU8l
+         Puyhs4p6Ibwk4S1yNOyCsPn0+ubvmbWA7qi5E2zsb61QW6S4W34cEC8s2yPN1kv+91
+         imuKNbK+fPZO1WUF/J6jXFforw9zKprZ0Hc0MM/M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ralph Campbell <rcampbell@nvidia.com>,
+        stable@vger.kernel.org, Yongxin Liu <yongxin.liu@windriver.com>,
         Ben Skeggs <bskeggs@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 074/131] drm/nouveau/dmem: missing mutex_lock in error path
-Date:   Mon,  5 Aug 2019 15:02:41 +0200
-Message-Id: <20190805124956.645009219@linuxfoundation.org>
+Subject: [PATCH 5.2 072/131] drm/nouveau: fix memory leak in nouveau_conn_reset()
+Date:   Mon,  5 Aug 2019 15:02:39 +0200
+Message-Id: <20190805124956.439092133@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -60,107 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d304654bd79332ace9ac46b9a3d8de60acb15da3 ]
+[ Upstream commit 09b90e2fe35faeace2488234e2a7728f2ea8ba26 ]
 
-In nouveau_dmem_pages_alloc(), the drm->dmem->mutex is unlocked before
-calling nouveau_dmem_chunk_alloc() as shown when CONFIG_PROVE_LOCKING
-is enabled:
+In nouveau_conn_reset(), if connector->state is true,
+__drm_atomic_helper_connector_destroy_state() will be called,
+but the memory pointed by asyc isn't freed. Memory leak happens
+in the following function __drm_atomic_helper_connector_reset(),
+where newly allocated asyc->state will be assigned to connector->state.
 
-[ 1294.871933] =====================================
-[ 1294.876656] WARNING: bad unlock balance detected!
-[ 1294.881375] 5.2.0-rc3+ #5 Not tainted
-[ 1294.885048] -------------------------------------
-[ 1294.889773] test-malloc-vra/6299 is trying to release lock (&drm->dmem->mutex) at:
-[ 1294.897482] [<ffffffffa01a220f>] nouveau_dmem_migrate_alloc_and_copy+0x79f/0xbf0 [nouveau]
-[ 1294.905782] but there are no more locks to release!
-[ 1294.910690]
-[ 1294.910690] other info that might help us debug this:
-[ 1294.917249] 1 lock held by test-malloc-vra/6299:
-[ 1294.921881]  #0: 0000000016e10454 (&mm->mmap_sem#2){++++}, at: nouveau_svmm_bind+0x142/0x210 [nouveau]
-[ 1294.931313]
-[ 1294.931313] stack backtrace:
-[ 1294.935702] CPU: 4 PID: 6299 Comm: test-malloc-vra Not tainted 5.2.0-rc3+ #5
-[ 1294.942786] Hardware name: ASUS X299-A/PRIME X299-A, BIOS 1401 05/21/2018
-[ 1294.949590] Call Trace:
-[ 1294.952059]  dump_stack+0x7c/0xc0
-[ 1294.955469]  ? nouveau_dmem_migrate_alloc_and_copy+0x79f/0xbf0 [nouveau]
-[ 1294.962213]  print_unlock_imbalance_bug.cold.52+0xca/0xcf
-[ 1294.967641]  lock_release+0x306/0x380
-[ 1294.971383]  ? nouveau_dmem_migrate_alloc_and_copy+0x79f/0xbf0 [nouveau]
-[ 1294.978089]  ? lock_downgrade+0x2d0/0x2d0
-[ 1294.982121]  ? find_held_lock+0xac/0xd0
-[ 1294.985979]  __mutex_unlock_slowpath+0x8f/0x3f0
-[ 1294.990540]  ? wait_for_completion+0x230/0x230
-[ 1294.995002]  ? rwlock_bug.part.2+0x60/0x60
-[ 1294.999197]  nouveau_dmem_migrate_alloc_and_copy+0x79f/0xbf0 [nouveau]
-[ 1295.005751]  ? page_mapping+0x98/0x110
-[ 1295.009511]  migrate_vma+0xa74/0x1090
-[ 1295.013186]  ? move_to_new_page+0x480/0x480
-[ 1295.017400]  ? __kmalloc+0x153/0x300
-[ 1295.021052]  ? nouveau_dmem_migrate_vma+0xd8/0x1e0 [nouveau]
-[ 1295.026796]  nouveau_dmem_migrate_vma+0x157/0x1e0 [nouveau]
-[ 1295.032466]  ? nouveau_dmem_init+0x490/0x490 [nouveau]
-[ 1295.037612]  ? vmacache_find+0xc2/0x110
-[ 1295.041537]  nouveau_svmm_bind+0x1b4/0x210 [nouveau]
-[ 1295.046583]  ? nouveau_svm_fault+0x13e0/0x13e0 [nouveau]
-[ 1295.051912]  drm_ioctl_kernel+0x14d/0x1a0
-[ 1295.055930]  ? drm_setversion+0x330/0x330
-[ 1295.059971]  drm_ioctl+0x308/0x530
-[ 1295.063384]  ? drm_version+0x150/0x150
-[ 1295.067153]  ? find_held_lock+0xac/0xd0
-[ 1295.070996]  ? __pm_runtime_resume+0x3f/0xa0
-[ 1295.075285]  ? mark_held_locks+0x29/0xa0
-[ 1295.079230]  ? _raw_spin_unlock_irqrestore+0x3c/0x50
-[ 1295.084232]  ? lockdep_hardirqs_on+0x17d/0x250
-[ 1295.088768]  nouveau_drm_ioctl+0x9a/0x100 [nouveau]
-[ 1295.093661]  do_vfs_ioctl+0x137/0x9a0
-[ 1295.097341]  ? ioctl_preallocate+0x140/0x140
-[ 1295.101623]  ? match_held_lock+0x1b/0x230
-[ 1295.105646]  ? match_held_lock+0x1b/0x230
-[ 1295.109660]  ? find_held_lock+0xac/0xd0
-[ 1295.113512]  ? __do_page_fault+0x324/0x630
-[ 1295.117617]  ? lock_downgrade+0x2d0/0x2d0
-[ 1295.121648]  ? mark_held_locks+0x79/0xa0
-[ 1295.125583]  ? handle_mm_fault+0x352/0x430
-[ 1295.129687]  ksys_ioctl+0x60/0x90
-[ 1295.133020]  ? mark_held_locks+0x29/0xa0
-[ 1295.136964]  __x64_sys_ioctl+0x3d/0x50
-[ 1295.140726]  do_syscall_64+0x68/0x250
-[ 1295.144400]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[ 1295.149465] RIP: 0033:0x7f1a3495809b
-[ 1295.153053] Code: 0f 1e fa 48 8b 05 ed bd 0c 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d bd bd 0c 00 f7 d8 64 89 01 48
-[ 1295.171850] RSP: 002b:00007ffef7ed1358 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-[ 1295.179451] RAX: ffffffffffffffda RBX: 00007ffef7ed1628 RCX: 00007f1a3495809b
-[ 1295.186601] RDX: 00007ffef7ed13b0 RSI: 0000000040406449 RDI: 0000000000000004
-[ 1295.193759] RBP: 00007ffef7ed13b0 R08: 0000000000000000 R09: 000000000157e770
-[ 1295.200917] R10: 000000000151c010 R11: 0000000000000246 R12: 0000000040406449
-[ 1295.208083] R13: 0000000000000004 R14: 0000000000000000 R15: 0000000000000000
+So using nouveau_conn_atomic_destroy_state() instead of
+__drm_atomic_helper_connector_destroy_state to free the "old" asyc.
 
-Reacquire the lock before continuing to the next page.
+Here the is the log showing memory leak.
 
-Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+unreferenced object 0xffff8c5480483c80 (size 192):
+  comm "kworker/0:2", pid 188, jiffies 4294695279 (age 53.179s)
+  hex dump (first 32 bytes):
+    00 f0 ba 7b 54 8c ff ff 00 00 00 00 00 00 00 00  ...{T...........
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<000000005005c0d0>] kmem_cache_alloc_trace+0x195/0x2c0
+    [<00000000a122baed>] nouveau_conn_reset+0x25/0xc0 [nouveau]
+    [<000000004fd189a2>] nouveau_connector_create+0x3a7/0x610 [nouveau]
+    [<00000000c73343a8>] nv50_display_create+0x343/0x980 [nouveau]
+    [<000000002e2b03c3>] nouveau_display_create+0x51f/0x660 [nouveau]
+    [<00000000c924699b>] nouveau_drm_device_init+0x182/0x7f0 [nouveau]
+    [<00000000cc029436>] nouveau_drm_probe+0x20c/0x2c0 [nouveau]
+    [<000000007e961c3e>] local_pci_probe+0x47/0xa0
+    [<00000000da14d569>] work_for_cpu_fn+0x1a/0x30
+    [<0000000028da4805>] process_one_work+0x27c/0x660
+    [<000000001d415b04>] worker_thread+0x22b/0x3f0
+    [<0000000003b69f1f>] kthread+0x12f/0x150
+    [<00000000c94c29b7>] ret_from_fork+0x3a/0x50
+
+Signed-off-by: Yongxin Liu <yongxin.liu@windriver.com>
 Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_dmem.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/nouveau/nouveau_connector.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouveau/nouveau_dmem.c
-index 40c47d6a7d783..745e197a47751 100644
---- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
-@@ -385,9 +385,10 @@ nouveau_dmem_pages_alloc(struct nouveau_drm *drm,
- 			ret = nouveau_dmem_chunk_alloc(drm);
- 			if (ret) {
- 				if (c)
--					break;
-+					return 0;
- 				return ret;
- 			}
-+			mutex_lock(&drm->dmem->mutex);
- 			continue;
- 		}
+diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.c b/drivers/gpu/drm/nouveau/nouveau_connector.c
+index 4116ee62adafe..f69ff22beee03 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_connector.c
++++ b/drivers/gpu/drm/nouveau/nouveau_connector.c
+@@ -252,7 +252,7 @@ nouveau_conn_reset(struct drm_connector *connector)
+ 		return;
  
+ 	if (connector->state)
+-		__drm_atomic_helper_connector_destroy_state(connector->state);
++		nouveau_conn_atomic_destroy_state(connector, connector->state);
+ 	__drm_atomic_helper_connector_reset(connector, &asyc->state);
+ 	asyc->dither.mode = DITHERING_MODE_AUTO;
+ 	asyc->dither.depth = DITHERING_DEPTH_AUTO;
 -- 
 2.20.1
 
