@@ -2,112 +2,135 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E3F5C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF9BC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D848020880
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:43:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jm9lN989"
+	by mail.kernel.org (Postfix) with ESMTP id 68D042067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:43:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728783AbfHEMnL (ORCPT
+        id S1728891AbfHEMnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 08:43:11 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:39948 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbfHEMnL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 08:43:11 -0400
-Received: by mail-io1-f67.google.com with SMTP id h6so41749880iom.7;
-        Mon, 05 Aug 2019 05:43:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KQm9NPghtf2wFJQFdwyuoe6G2q10wFofTqLGNt8zEfc=;
-        b=Jm9lN989x1LL1wAGmtgQW1PbFf7i6ALddtYVvYUT3D0ZuifbqBe7vXuKRfHJ1DVFyf
-         5E6ia0qFc+YxzkWLdGYvRSD2zIYvdSQi7desBh6dPVYOxX5FGHe8MZTcpO7SoBv2T+fx
-         rM6HGgCOlS1+Mq1T7ZsjoN47gJmVIc8qASDJbmnblb51sxAIIH83d2PNguaUH54zd0Pd
-         g8BJGwj/2VWcZL1lekXwBWPoMwwDfwE/1wbv8+ARLVMYNN37zc7ARSt2a3DyNCxJMg8n
-         X9boR31zKzMZP2i4KZCBZU3pIFAZQ4KVkLrRQcNoPYIaJXKm1UqQkctLH6lsqK5JS0DO
-         uLqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KQm9NPghtf2wFJQFdwyuoe6G2q10wFofTqLGNt8zEfc=;
-        b=l/PpOsVrGHqNxry9E6KpiL1m18rE+Y9jD6rlCTMP/NgLQsrD9kQHFa/0wMdqE1Ygmw
-         lPbqS6m7+u8nt/2SRFwMg/EQahAbtWPf8IPunWkV1lWfsUa1Cj+Sepn3kCWdFFiN3kRM
-         kXG+jYA5LlaLtHWDO9V/pHOICNxng7+Iuc+C253IZ3xYg/4bycVJmw3St31Hy6ATTKH0
-         YP4O2e0gksUmz0UaQ4O3XQbFWg+6NWIn0o40jXR4sChHiD6gYSTMEmYJ63JmtFcq2zMh
-         8dllAS8Ralb83GWveEoAQrIsezbwfoVf374l+jeFbWqwK8YptzZsaYUdTu/b3fztqjY+
-         O4tA==
-X-Gm-Message-State: APjAAAUTKR0LSE9ppQhhTeR6rZV8DMhLVJD1VggiP8DVJugrw+TU3TXI
-        y5G6lBvTu7rJkBnM81z706+P56gNLPKeNdZgLA8=
-X-Google-Smtp-Source: APXvYqz396zlNXAqcaOCvcqObVMswatfB+f2uh+zsXE7YIFo6iaQRklzHrm0RcU5f66HRRMmb5shLa66REY85aMxJmc=
-X-Received: by 2002:a6b:f114:: with SMTP id e20mr11104225iog.169.1565008990378;
- Mon, 05 Aug 2019 05:43:10 -0700 (PDT)
+        Mon, 5 Aug 2019 08:43:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60112 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728843AbfHEMnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 08:43:17 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 27EC930EA1A9;
+        Mon,  5 Aug 2019 12:43:17 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-81.ams2.redhat.com [10.36.116.81])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 94E55194BB;
+        Mon,  5 Aug 2019 12:43:16 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id D99BF9D13; Mon,  5 Aug 2019 14:43:14 +0200 (CEST)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     intel-gfx@lists.freedesktop.org, thomas@shipmail.org,
+        tzimmermann@suse.de, ckoenig.leichtzumerken@gmail.com,
+        bskeggs@redhat.com, daniel@ffwll.ch,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        nouveau@lists.freedesktop.org (open list:DRM DRIVER FOR NVIDIA
+        GEFORCE/QUADRO GPUS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v5 15/18] drm/nouveau: switch driver from bo->resv to bo->base.resv
+Date:   Mon,  5 Aug 2019 14:43:07 +0200
+Message-Id: <20190805124310.3275-16-kraxel@redhat.com>
+In-Reply-To: <20190805124310.3275-1-kraxel@redhat.com>
+References: <20190805124310.3275-1-kraxel@redhat.com>
 MIME-Version: 1.0
-References: <20190731195713.3150463-1-arnd@arndb.de> <20190731195713.3150463-4-arnd@arndb.de>
- <20190731202343.GA14817@roeck-us.net> <CAK8P3a2=gqeCMtdzdqg4d1n6v1-cdaHObeUoVXeB+=Okwd1rqA@mail.gmail.com>
- <20190731203646.GB14817@roeck-us.net>
-In-Reply-To: <20190731203646.GB14817@roeck-us.net>
-From:   Sylvain Lemieux <slemieux.tyco@gmail.com>
-Date:   Mon, 5 Aug 2019 08:42:58 -0400
-Message-ID: <CA+rxa6oOxHH20Oiw1BKqa+9QF+J+M2cnQgMRKkLuxjcm9Ux2uQ@mail.gmail.com>
-Subject: Re: [PATCH 03/14] watchdog: pnx4008_wdt: allow compile-testing
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>, soc@kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        linux-serial@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Mon, 05 Aug 2019 12:43:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Acked-by: Sylvain Lemieux <slemieux.tyco@gmail.com>
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+---
+ drivers/gpu/drm/nouveau/dispnv50/wndw.c | 2 +-
+ drivers/gpu/drm/nouveau/nouveau_bo.c    | 5 ++---
+ drivers/gpu/drm/nouveau/nouveau_fence.c | 2 +-
+ drivers/gpu/drm/nouveau/nouveau_gem.c   | 2 +-
+ 4 files changed, 5 insertions(+), 6 deletions(-)
 
-On Wed, Jul 31, 2019 at 4:36 PM Guenter Roeck <linux@roeck-us.net> wrote:
->
-> On Wed, Jul 31, 2019 at 10:26:35PM +0200, Arnd Bergmann wrote:
-> > On Wed, Jul 31, 2019 at 10:23 PM Guenter Roeck <linux@roeck-us.net> wrote:
-> > >
-> > > On Wed, Jul 31, 2019 at 09:56:45PM +0200, Arnd Bergmann wrote:
-> > > > The only thing that prevents building this driver on other
-> > > > platforms is the mach/hardware.h include, which is not actually
-> > > > used here at all, so remove the line and allow CONFIG_COMPILE_TEST.
-> > > >
-> > > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > >
-> > > Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> > >
-> > > What is the plan for this patch ? Push through watchdog
-> > > or through your branch ?
-> >
-> > I would prefer my branch so I can apply the final patch without waiting
-> > for another release. Not in a hurry though, so if some other maintainer
->
-> Ok with me.
->
-> Guenter
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/wndw.c b/drivers/gpu/drm/nouveau/dispnv50/wndw.c
+index 283ff690350e..89f8e76a2d7d 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/wndw.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/wndw.c
+@@ -457,7 +457,7 @@ nv50_wndw_prepare_fb(struct drm_plane *plane, struct drm_plane_state *state)
+ 		asyw->image.handle[0] = ctxdma->object.handle;
+ 	}
+ 
+-	asyw->state.fence = reservation_object_get_excl_rcu(fb->nvbo->bo.resv);
++	asyw->state.fence = reservation_object_get_excl_rcu(fb->nvbo->bo.base.resv);
+ 	asyw->image.offset[0] = fb->nvbo->bo.offset;
+ 
+ 	if (wndw->func->prepare) {
+diff --git a/drivers/gpu/drm/nouveau/nouveau_bo.c b/drivers/gpu/drm/nouveau/nouveau_bo.c
+index abbbabd12241..99e391be9370 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_bo.c
++++ b/drivers/gpu/drm/nouveau/nouveau_bo.c
+@@ -299,7 +299,6 @@ nouveau_bo_new(struct nouveau_cli *cli, u64 size, int align,
+ 			  type, &nvbo->placement,
+ 			  align >> PAGE_SHIFT, false, acc_size, sg,
+ 			  robj, nouveau_bo_del_ttm);
+-	nvbo->bo.base.resv = nvbo->bo.resv;
+ 
+ 	if (ret) {
+ 		/* ttm will call nouveau_bo_del_ttm if it fails.. */
+@@ -1325,7 +1324,7 @@ nouveau_bo_vm_cleanup(struct ttm_buffer_object *bo,
+ {
+ 	struct nouveau_drm *drm = nouveau_bdev(bo->bdev);
+ 	struct drm_device *dev = drm->dev;
+-	struct dma_fence *fence = reservation_object_get_excl(bo->resv);
++	struct dma_fence *fence = reservation_object_get_excl(bo->base.resv);
+ 
+ 	nv10_bo_put_tile_region(dev, *old_tile, fence);
+ 	*old_tile = new_tile;
+@@ -1656,7 +1655,7 @@ nouveau_ttm_tt_unpopulate(struct ttm_tt *ttm)
+ void
+ nouveau_bo_fence(struct nouveau_bo *nvbo, struct nouveau_fence *fence, bool exclusive)
+ {
+-	struct reservation_object *resv = nvbo->bo.resv;
++	struct reservation_object *resv = nvbo->bo.base.resv;
+ 
+ 	if (exclusive)
+ 		reservation_object_add_excl_fence(resv, &fence->base);
+diff --git a/drivers/gpu/drm/nouveau/nouveau_fence.c b/drivers/gpu/drm/nouveau/nouveau_fence.c
+index d4964f3397a1..e5f249ab216a 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_fence.c
++++ b/drivers/gpu/drm/nouveau/nouveau_fence.c
+@@ -335,7 +335,7 @@ nouveau_fence_sync(struct nouveau_bo *nvbo, struct nouveau_channel *chan, bool e
+ {
+ 	struct nouveau_fence_chan *fctx = chan->fence;
+ 	struct dma_fence *fence;
+-	struct reservation_object *resv = nvbo->bo.resv;
++	struct reservation_object *resv = nvbo->bo.base.resv;
+ 	struct reservation_object_list *fobj;
+ 	struct nouveau_fence *f;
+ 	int ret = 0, i;
+diff --git a/drivers/gpu/drm/nouveau/nouveau_gem.c b/drivers/gpu/drm/nouveau/nouveau_gem.c
+index b1e4852810ed..c7368aa0bdec 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_gem.c
++++ b/drivers/gpu/drm/nouveau/nouveau_gem.c
+@@ -887,7 +887,7 @@ nouveau_gem_ioctl_cpu_prep(struct drm_device *dev, void *data,
+ 		return -ENOENT;
+ 	nvbo = nouveau_gem_object(gem);
+ 
+-	lret = reservation_object_wait_timeout_rcu(nvbo->bo.resv, write, true,
++	lret = reservation_object_wait_timeout_rcu(nvbo->bo.base.resv, write, true,
+ 						   no_wait ? 0 : 30 * HZ);
+ 	if (!lret)
+ 		ret = -EBUSY;
+-- 
+2.18.1
+
