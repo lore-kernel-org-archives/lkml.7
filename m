@@ -2,104 +2,174 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C10C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 20:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C83DBC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 20:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A63F20C01
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 20:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A19A620C01
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 20:09:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730587AbfHEUHX (ORCPT
+        id S1730435AbfHEUJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 16:07:23 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39624 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727460AbfHEUHW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 16:07:22 -0400
-Received: by mail-ot1-f65.google.com with SMTP id r21so80860704otq.6
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 13:07:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=I+/FLS8eqxb1UNBY39cu1xBfCi8bcMalBd0zD3RfHPI=;
-        b=OeEwhYV7B4iMfndbdM82jbZ4p9BFqRGdqLc1IuvkOgXSvF9CzgFQ408HLex96+aO+Z
-         J/aKOzwLjtgHfIapm3US7tnLRI/hXpnlaqwf57shrfDqV7LLlw4WvBU6LGWd5WsWjxMu
-         Eucfljs8iWHey23T+BelqWllsf+F0uTFjQmz1RDQOMAXsv/yHdXhleJTyC9iqVem54vA
-         mQ/laI/F/Li7naHPYhHrpmYCx4NoSFvPXrqWvACpTSGo646mREAc6ea89Y//H651+MB7
-         FjWhxj6fZHxVPijxuNx7TGKqiUrzit+Lm2EOQ8IxaGOItbXF9Nj+ez1KD/IGxLZpVM+l
-         E9Jg==
-X-Gm-Message-State: APjAAAWHcJrsQu1Gl381cNDPUuAxsHM/JgzBECzrVV0pGyYInl/Mrpjw
-        phtjIVbgnbt3JKzRiGmU37U=
-X-Google-Smtp-Source: APXvYqwsmaCa+TUefSLRaH3hqrkW4xgRLkwTOxsVlDP7lmha0tM7uItflkWu4DF0H3l34X//9d2PtQ==
-X-Received: by 2002:a9d:5a82:: with SMTP id w2mr110989797oth.240.1565035641798;
-        Mon, 05 Aug 2019 13:07:21 -0700 (PDT)
-Received: from [192.168.1.114] (162-195-240-247.lightspeed.sntcca.sbcglobal.net. [162.195.240.247])
-        by smtp.gmail.com with ESMTPSA id k10sm28318977otn.58.2019.08.05.13.07.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 05 Aug 2019 13:07:21 -0700 (PDT)
-Subject: Re: [PATCH v3] nvme-pci: Support shared tags across queues for Apple
- 2018 controllers
-From:   Sagi Grimberg <sagi@grimberg.me>
-To:     Jens Axboe <axboe@fb.com>, Keith Busch <keith.busch@intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Paul Pawlowski <paul@mrarm.io>,
-        Minwoo Im <minwoo.im.dev@gmail.com>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>
-References: <b1f9bdf0294b8d87d292de3c7462c8e99551b02d.camel@kernel.crashing.org>
- <20190730153044.GA13948@localhost.localdomain>
- <2030a028664a9af9e96fffca3ab352faf1f739e5.camel@kernel.crashing.org>
- <6290507e1b2830b1729fc858cd5c20b85d092728.camel@kernel.crashing.org>
- <20190805134907.GC18647@localhost.localdomain>
- <40a6acc2-beae-3e36-ca20-af5801038a1e@grimberg.me>
- <caa04d02-05a0-dd1f-2072-df41a21f2aa8@fb.com>
- <f34af208-2707-f326-0451-354a8b482586@grimberg.me>
-Message-ID: <de65f6f8-afb5-ce54-eb8a-b04b2e59628b@grimberg.me>
-Date:   Mon, 5 Aug 2019 13:07:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 5 Aug 2019 16:09:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41672 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727460AbfHEUJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 16:09:20 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2224688317;
+        Mon,  5 Aug 2019 20:09:19 +0000 (UTC)
+Received: from pauld.bos.csb (dhcp-17-51.bos.redhat.com [10.18.17.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D64E1600CC;
+        Mon,  5 Aug 2019 20:09:16 +0000 (UTC)
+Date:   Mon, 5 Aug 2019 16:09:15 -0400
+From:   Phil Auld <pauld@redhat.com>
+To:     Julien Desfossez <jdesfossez@digitalocean.com>
+Cc:     "Li, Aubrey" <aubrey.li@linux.intel.com>,
+        Aaron Lu <aaron.lu@linux.alibaba.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
+Message-ID: <20190805200914.GD20173@pauld.bos.csb>
+References: <635c01b0-d8f3-561b-5396-10c75ed03712@oracle.com>
+ <20190613032246.GA17752@sinkpad>
+ <CAERHkrsMFjjBpPZS7jDhzbob4PSmiPj83OfqEeiKgaDAU3ajOA@mail.gmail.com>
+ <20190619183302.GA6775@sinkpad>
+ <20190718100714.GA469@aaronlu>
+ <CAERHkrtvLKxrpvfw04urAuougsYOWnNw4-H1vUDFx27Dvy0=Ww@mail.gmail.com>
+ <20190725143003.GA992@aaronlu>
+ <20190726152101.GA27884@sinkpad>
+ <7dc86e3c-aa3f-905f-3745-01181a3b0dac@linux.intel.com>
+ <20190802153715.GA18075@sinkpad>
 MIME-Version: 1.0
-In-Reply-To: <f34af208-2707-f326-0451-354a8b482586@grimberg.me>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190802153715.GA18075@sinkpad>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Mon, 05 Aug 2019 20:09:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
->>>>> Ping ? I had another look today and I don't feel like mucking around
->>>>> with all the AQ size logic, AEN magic tag etc... just for that sake of
->>>>> that Apple gunk. I'm happy to have it give up IO tags, it doesn't seem
->>>>> to make much of a difference in practice anyway.
->>>>>
->>>>> But if you feel strongly about it, then I'll implement the "proper" 
->>>>> way
->>>>> sometimes this week, adding a way to shrink the AQ down to something
->>>>> like 3 (one admin request, one async event (AEN), and the empty slot)
->>>>> by making a bunch of the constants involved variables instead.
->>>>
->>>> I don't feel too strongly about it. I think your patch is fine, so
->>>>
->>>> Acked-by: Keith Busch <keith.busch@intel.com>
->>>
->>> Should we pick this up for 5.3-rc?
->>
->> No, it's not a regression fix. Queue it up for 5.4 instead.
+On Fri, Aug 02, 2019 at 11:37:15AM -0400 Julien Desfossez wrote:
+> We tested both Aaron's and Tim's patches and here are our results.
 > 
-> OK, will queue it up for nvme-5.4
+> Test setup:
+> - 2 1-thread sysbench, one running the cpu benchmark, the other one the
+>   mem benchmark
+> - both started at the same time
+> - both are pinned on the same core (2 hardware threads)
+> - 10 30-seconds runs
+> - test script: https://paste.debian.net/plainh/834cf45c
+> - only showing the CPU events/sec (higher is better)
+> - tested 4 tag configurations:
+>   - no tag
+>   - sysbench mem untagged, sysbench cpu tagged
+>   - sysbench mem tagged, sysbench cpu untagged
+>   - both tagged with a different tag
+> - "Alone" is the sysbench CPU running alone on the core, no tag
+> - "nosmt" is both sysbench pinned on the same hardware thread, no tag
+> - "Tim's full patchset + sched" is an experiment with Tim's patchset
+>   combined with Aaron's "hack patch" to get rid of the remaining deep
+>   idle cases
+> - In all test cases, both tasks can run simultaneously (which was not
+>   the case without those patches), but the standard deviation is a
+>   pretty good indicator of the fairness/consistency.
+> 
+> No tag
+> ------
+> Test                            Average     Stdev
+> Alone                           1306.90     0.94
+> nosmt                           649.95      1.44
+> Aaron's full patchset:          828.15      32.45
+> Aaron's first 2 patches:        832.12      36.53
+> Aaron's 3rd patch alone:        864.21      3.68
+> Tim's full patchset:            852.50      4.11
+> Tim's full patchset + sched:    852.59      8.25
+> 
+> Sysbench mem untagged, sysbench cpu tagged
+> ------------------------------------------
+> Test                            Average     Stdev
+> Alone                           1306.90     0.94
+> nosmt                           649.95      1.44
+> Aaron's full patchset:          586.06      1.77
+> Aaron's first 2 patches:        630.08      47.30
+> Aaron's 3rd patch alone:        1086.65     246.54
+> Tim's full patchset:            852.50      4.11
+> Tim's full patchset + sched:    390.49      15.76
+> 
+> Sysbench mem tagged, sysbench cpu untagged
+> ------------------------------------------
+> Test                            Average     Stdev
+> Alone                           1306.90     0.94
+> nosmt                           649.95      1.44
+> Aaron's full patchset:          583.77      3.52
+> Aaron's first 2 patches:        513.63      63.09
+> Aaron's 3rd patch alone:        1171.23     3.35
+> Tim's full patchset:            564.04      58.05
+> Tim's full patchset + sched:    1026.16     49.43
+> 
+> Both sysbench tagged
+> --------------------
+> Test                            Average     Stdev
+> Alone                           1306.90     0.94
+> nosmt                           649.95      1.44
+> Aaron's full patchset:          582.15      3.75
+> Aaron's first 2 patches:        561.07      91.61
+> Aaron's 3rd patch alone:        638.49      231.06
+> Tim's full patchset:            679.43      70.07
+> Tim's full patchset + sched:    664.34      210.14
+> 
 
-Doesn't apply..
+Sorry if I'm missing something obvious here but with only 2 processes 
+of interest shouldn't one tagged and one untagged be about the same
+as both tagged?  
 
-Ben, can you please respin a patch that applies on nvme-5.4?
+In both cases the 2 sysbenches should not be running on the core at 
+the same time. 
 
-http://git.infradead.org/nvme.git/shortlog/refs/heads/nvme-5.4
+There will be times when oher non-related threads could share the core
+with the untagged one. Is that enough to account for this difference?
+
+
+Thanks,
+Phil
+
+
+> So in terms of fairness, Aaron's full patchset is the most consistent, but only
+> Tim's patchset performs better than nosmt in some conditions.
+> 
+> Of course, this is one of the worst case scenario, as soon as we have
+> multithreaded applications on overcommitted systems, core scheduling performs
+> better than nosmt.
+> 
+> Thanks,
+> 
+> Julien
+
+-- 
