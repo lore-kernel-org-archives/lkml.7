@@ -2,80 +2,84 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FB8C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D49DC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78F042067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:09:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pNbvNUtK"
+	by mail.kernel.org (Postfix) with ESMTP id 7F93F2067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:10:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727758AbfHEJJe (ORCPT
+        id S1727885AbfHEJK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 05:09:34 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:34415 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726423AbfHEJJe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 05:09:34 -0400
-Received: by mail-lf1-f66.google.com with SMTP id b29so50086139lfq.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 02:09:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=we40PSHlZcOxSoyjGnWbnysPRh2RslKgTYfYTrx4ljQ=;
-        b=pNbvNUtKF/9q9ltk2TsL3NqSOiSv19d2QktmuQeuUXUC7lk8q7NT3e/mPI5qMWp5yS
-         xKRloHAisfxOxleeUi9WMo/LZPyMSiAWaQR4uHPmwbllv9vi8qEzGVfs9Y65ON1ef8/M
-         B6sWo+42hoSa4T016XMsu0ihzA4pK4Q2jNtgRPtKNQjyxtf7NrIsV6jPbTk1XNFLolmy
-         pkS9HkIbYtlgBjvVWRde0IDfyj0NyekwW+s1xM8Wfe50LMsnwTczu7Y3PqWtDy1PT67H
-         B0jfFUAEQ0/ALtZ7mTS5jR7W43SKoCnPgoO1JiU27kNeDKd0k8Gx/hZlrhXPXtG+n2zr
-         JbqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=we40PSHlZcOxSoyjGnWbnysPRh2RslKgTYfYTrx4ljQ=;
-        b=BE9no7T+BTCef1p9pQLzT/sxHh4oQXZTX1p/6XFh9CJeGk/jGxmBhecKCWLpx+rhiH
-         qty7RXmfjGVbjFYp6MH9A+qK5ng1LTB0CeNldpubjEWUPCbOPzz3XfZdEq/aoCPK4XLY
-         pCS9NsMAgJ6f5/AIKW9iFoCsGSor/3FSw7UVW6voxua0e9r9JNEjYujLhl0ZfmEZtPsr
-         qk9YMqaC/FhkwyNwGl7FzYRi5G4CFV3T6UflN33TM7HOEDbhXy7fWAwzF26ti7yeT03R
-         T0AZId4Re6TkKs8cgRFSN7RblnvTt1wZC9kB9UekvxvpwrwZcCBrLfzWYRIvKazIBtpK
-         7lGg==
-X-Gm-Message-State: APjAAAWeL2b9i3hYUWttnIU180Q+Ygn6XwrqSsVXwLrbdZrs3YKiP9G+
-        3I2n5wKsVz2Kj6kGk6IWoYdXQJLaPdl27TdXeH12yg==
-X-Google-Smtp-Source: APXvYqz6lz5lL4sC3NkfmrYMnYZuD0za5lS2pQ5bSuHLV78yA7wTNHy4EMHe2DRNqzlOvex1FYZgczgR6TP9x508tKs=
-X-Received: by 2002:ac2:5939:: with SMTP id v25mr1192804lfi.115.1564996172018;
- Mon, 05 Aug 2019 02:09:32 -0700 (PDT)
+        Mon, 5 Aug 2019 05:10:57 -0400
+Received: from foss.arm.com ([217.140.110.172]:44062 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726423AbfHEJK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 05:10:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2AC9428;
+        Mon,  5 Aug 2019 02:10:56 -0700 (PDT)
+Received: from iMac.local (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4CDE03F694;
+        Mon,  5 Aug 2019 02:10:54 -0700 (PDT)
+Date:   Mon, 5 Aug 2019 10:10:52 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     iommu@lists.linux-foundation.org,
+        Shawn Anastasio <shawn@anastas.io>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Russell King <linux@armlinux.org.uk>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Gavin Li <git@thegavinli.com>
+Subject: Re: [PATCH 1/2] dma-mapping: fix page attributes for dma_mmap_*
+Message-ID: <20190805091051.GB59981@iMac.local>
+References: <20190805080145.5694-1-hch@lst.de>
+ <20190805080145.5694-2-hch@lst.de>
 MIME-Version: 1.0
-References: <20190720115858.7015-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190720115858.7015-1-yamada.masahiro@socionext.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 5 Aug 2019 11:09:20 +0200
-Message-ID: <CACRpkdYFAKFniNOUG9Gbw-mrO=WsC8+8n1wQEgqTpVK-N0cbCg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: pinctrl-single: add header include guard
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190805080145.5694-2-hch@lst.de>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 20, 2019 at 1:59 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
+On Mon, Aug 05, 2019 at 11:01:44AM +0300, Christoph Hellwig wrote:
+> All the way back to introducing dma_common_mmap we've defaulyed to mark
 
-> Add a header include guard just in case.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+s/defaultyed/defaulted/
 
-Patch applied.
+> the pages as uncached.  But this is wrong for DMA coherent devices.
+> Later on DMA_ATTR_WRITE_COMBINE also got incorrect treatment as that
+> flag is only treated special on the alloc side for non-coherent devices.
+> 
+> Introduce a new dma_pgprot helper that deals with the check for coherent
+> devices so that only the remapping cases even reach arch_dma_mmap_pgprot
 
-Yours,
-Linus Walleij
+s/even/ever/
+
+> diff --git a/arch/arm64/mm/dma-mapping.c b/arch/arm64/mm/dma-mapping.c
+> index 1d3f0b5a9940..bd2b039f43a6 100644
+> --- a/arch/arm64/mm/dma-mapping.c
+> +++ b/arch/arm64/mm/dma-mapping.c
+> @@ -14,9 +14,7 @@
+>  pgprot_t arch_dma_mmap_pgprot(struct device *dev, pgprot_t prot,
+>  		unsigned long attrs)
+>  {
+> -	if (!dev_is_dma_coherent(dev) || (attrs & DMA_ATTR_WRITE_COMBINE))
+> -		return pgprot_writecombine(prot);
+> -	return prot;
+> +	return pgprot_writecombine(prot);
+>  }
+
+For arm64:
+
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
