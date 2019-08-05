@@ -2,160 +2,102 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CEE8C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5562C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36BED2086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:08:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C8272086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:08:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="S7LKFTZZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kyJZW7fZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728310AbfHEKIB (ORCPT
+        id S1728328AbfHEKIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 06:08:01 -0400
-Received: from mail-eopbgr1410103.outbound.protection.outlook.com ([40.107.141.103]:51936
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727989AbfHEKIA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 06:08:00 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QRE8Qvyweia6GBsSbbsmjyQ1Z+I8JOMxIIfotRWIgKiPt0GpoEk/jL9TF9wUYWgXYDeY0JS76qsI2Sim9Q7tcLbq8OVGGkywMFpz1BHhJ2g8cYWpFeryHj8dsdEr4ajYXl/j7uZACSOBg/4U+L7BJnWHHrbUTC07C7mosrYtPNwtXLBLzmDcOB7FcyyLhP9TYFf4B/YP3XDO9EDm6UzmWqWFfT+KnGd6c75GtdDuzJg0jx/NdgVGaigNCyGKOl+p3T7p57s2uv+vB+gHzMPYyT3toZH9b4VDkC/aFTIeKpRCxQQikIYYeoFTt0xhkDAn/R+t2F1H49EzMw/r+2Bz3g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oKYwD4PjX7zAEvtnWK6Xb5ZpiiL6ncAhWuhtjOFUB+o=;
- b=UmrqY7/trU3leJR0EDUenqpVk8bW8O3P/pwXXFw2wpdHUAlMB6Bjfgi4Xeft9sb8lKtih0I0+EHm3oowlVCT8V44p5NFvbg7DkXYh+sVjGpkbJb0GXJp2Bwy/jWDbgULYK+ZwQ6AeOwa81ZivDjqoXJ0urdC1S3D7InxKjrRrlJssQiwxb4Gh51DsIjR1YwyngUSJnVJno+7DdObQqNo18lp/Nhu3pZ4yPIc3Mpw1NmTbYlJZwCxLw3aFy2YdYrJ5sm5+yXE/K3Ir/cd/8ShL410tb3BA4QAUKST9mAzamwNlwyQVAO51Si9QGEnHOPjt8fpDX0oIndHdcu1cXnMBQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=bp.renesas.com;dmarc=pass action=none
- header.from=bp.renesas.com;dkim=pass header.d=bp.renesas.com;arc=none
+        Mon, 5 Aug 2019 06:08:16 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:36363 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbfHEKIP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 06:08:15 -0400
+Received: by mail-lf1-f68.google.com with SMTP id j17so3437427lfp.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 03:08:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oKYwD4PjX7zAEvtnWK6Xb5ZpiiL6ncAhWuhtjOFUB+o=;
- b=S7LKFTZZHaKK+NwGuTRo6IlJXjzPD2Rsc8BUk+miMDsIo7SehBPvE/sbASiIetzroCSr60ULTGcw7EKq/A1bemi+90ai+D759uQeV7uqhl3GbJIwwxhAeYoEihHtR8Mbi8AYkKZd4gyBhOrKDy9EPHRF8M/+LEQZ1XLiL8QrNtg=
-Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com (52.133.163.13) by
- TY1PR01MB1673.jpnprd01.prod.outlook.com (52.133.162.143) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2136.16; Mon, 5 Aug 2019 10:07:57 +0000
-Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com
- ([fe80::d881:cb74:8277:5a16]) by TY1PR01MB1770.jpnprd01.prod.outlook.com
- ([fe80::d881:cb74:8277:5a16%7]) with mapi id 15.20.2136.010; Mon, 5 Aug 2019
- 10:07:57 +0000
-From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-CC:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH/RFC 07/12] drm: rcar-du: lvds: Add support for dual link
- panels
-Thread-Topic: [PATCH/RFC 07/12] drm: rcar-du: lvds: Add support for dual link
- panels
-Thread-Index: AQHVSQTQGxO+ExbJj06XbPWiwlaDqKbnhDUAgATD9OCAAAuvAIAABUsg
-Date:   Mon, 5 Aug 2019 10:07:57 +0000
-Message-ID: <TY1PR01MB1770A40992E1435FE694485CC0DA0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1564731249-22671-8-git-send-email-fabrizio.castro@bp.renesas.com>
- <20190802082020.GH5008@pendragon.ideasonboard.com>
- <TY1PR01MB1770CA2012398B421E609D54C0DA0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
- <20190805094832.GC29747@pendragon.ideasonboard.com>
-In-Reply-To: <20190805094832.GC29747@pendragon.ideasonboard.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=fabrizio.castro@bp.renesas.com; 
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 81535b34-3848-44ac-39e5-08d7198cca3b
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:TY1PR01MB1673;
-x-ms-traffictypediagnostic: TY1PR01MB1673:
-x-microsoft-antispam-prvs: <TY1PR01MB167338CB5000BA8464CFF270C0DA0@TY1PR01MB1673.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 01208B1E18
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(136003)(366004)(39860400002)(346002)(396003)(199004)(189003)(11346002)(3846002)(6116002)(256004)(229853002)(86362001)(7416002)(446003)(55016002)(8676002)(68736007)(478600001)(186003)(9686003)(476003)(6246003)(7696005)(99286004)(6916009)(81156014)(6436002)(66946007)(76116006)(52536014)(81166006)(66556008)(66476007)(74316002)(107886003)(33656002)(14454004)(7736002)(8936002)(66446008)(64756008)(102836004)(76176011)(316002)(71200400001)(71190400001)(53936002)(486006)(66066001)(26005)(54906003)(2906002)(305945005)(6506007)(4326008)(53546011)(25786009)(44832011)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1673;H:TY1PR01MB1770.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: bp.renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 4CTlwGyagMXT1r0bd13JW6lwdJup3AVGCq5TyRrBqd+RdaVQtWVgtoieQIEA+5pDCbWgU+VAYki6vSMukIDqy5k+vMaejt9XBMyCg2OnGe5eZWnZjUVL7tFob8ENvk+nGN94Y1s6R3VjAd9DZo17xn/gux/zYLi/0Fxqyil5huG1g5kMCtAKKpyG0iS+J386wVhnkZNxKk0pDccJo9jwriI5SwKN6swRMWank/1cWfZe4LMiZVDt7Lu1020C8jnadP3OQPrqBKNkvhJ0e3YMqE2d2UyabT6xLHzWCqm9V7Fk+rTYHVO+9yoidk1YhGQ+8bfT3qEDXQfeByv/8RF2masOorMNaxFgE5yFn/CS+mZZXMNekSHGF4pUZKKabi8sCd0hVM1mpnU8gkI54f35mgJXeoIB+2M98jgyaRf6J1A=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VmJocWvsymOdQ7NU7/6yMlP4/6K5DwEx+usK89GVi9s=;
+        b=kyJZW7fZfdLgtDs2aKngH2TyuWTJjTeVTLZyRgxZRY9MQ56FWUw3A52lCdt4c4YJ+1
+         3TgWOde1fzdSqgTWIgbjzvsDeaFtKgXf6SuYKrrM9YK82qK7s6dWcsjao4CGSwv8Ahlt
+         Crwmv8+ySmVuExNcK9irfRd7xd4YEh9epWXPM2OVxpgaQ8bRFBbu/lNMcWXb245BCABI
+         /yNpf25WGiE15uDcA+a++0LXluCfysTo88g0q7Hcvunkj67HSTRYbpqtQilt8t8aWCuR
+         NoBItyc2gaayKuIzBJdFKFHEpFkdC+iXQWdc8it3UQcFXi36FqTMsdYN8t8x8xKnWrM8
+         44vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VmJocWvsymOdQ7NU7/6yMlP4/6K5DwEx+usK89GVi9s=;
+        b=ATVM/z27YSsa2EASBRTLXLPNvcg501OiYk6SO3HwMOHTi7jung6vA+2nRdH83YVi51
+         yasXDSOAkXdKP50jWHq/Sn8WDL8s1fgQSYADPpzlhQazLguFGBFDbXZEMhC04ok/s93o
+         SpnVTDrxxnfTVBLuYrdTy3CG0fcfbb4m2h/Ahi3zHi9pyizoPOGFnvUzFHZ1oo2/zIKk
+         G8ZWTmQopvqAoP6M2lJaoFFsljwSi8/yFmIuqP9gV/SB4logN/UeKuPi+lbP5lx5jt82
+         4RyR2TzCVbr4fzIGpLDKRbqY3deHf6I3L7NIPQ1omzxTRSkFKYFSSjbbttm/DYhF+hdW
+         MRfw==
+X-Gm-Message-State: APjAAAV9HV3uj4M28odSb/xxN3h7j6iGyaWxnlA4z3zOW1MrIthUFFPu
+        oWqdWgKv9o8ICcJmhQOqZSOu7D9i4M+OkLjmNYDrdh8g
+X-Google-Smtp-Source: APXvYqxpqm0yndDdT3beIa5MGWi8lTPoZhzSa/lWFiqq6Dn3b88/pHlyJgXWVtBOlC/fjyLdOtrrqUOtG4JGHdovYiM=
+X-Received: by 2002:ac2:5c42:: with SMTP id s2mr60787048lfp.61.1564999694066;
+ Mon, 05 Aug 2019 03:08:14 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 81535b34-3848-44ac-39e5-08d7198cca3b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Aug 2019 10:07:57.3800
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: fabrizio.castro@bp.renesas.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1673
+References: <1563958245-6321-1-git-send-email-chunfeng.yun@mediatek.com> <1563958245-6321-4-git-send-email-chunfeng.yun@mediatek.com>
+In-Reply-To: <1563958245-6321-4-git-send-email-chunfeng.yun@mediatek.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 5 Aug 2019 12:08:02 +0200
+Message-ID: <CACRpkda5OUEfZRSMA-8H5jnhSan+VJ_3KB5CvOaRdZP1NeJQ+w@mail.gmail.com>
+Subject: Re: [PATCH v8 03/11] dt-bindings: usb: add binding for USB GPIO based
+ connection detection driver
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Li Jun <jun.li@nxp.com>,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Min Guo <min.guo@mediatek.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTGF1cmVudCwNCg0KPiBGcm9tOiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0
-QGlkZWFzb25ib2FyZC5jb20+DQo+IFNlbnQ6IDA1IEF1Z3VzdCAyMDE5IDEwOjQ5DQo+IFN1Ympl
-Y3Q6IFJlOiBbUEFUQ0gvUkZDIDA3LzEyXSBkcm06IHJjYXItZHU6IGx2ZHM6IEFkZCBzdXBwb3J0
-IGZvciBkdWFsIGxpbmsgcGFuZWxzDQo+IA0KPiBIaSBGYWJyaXppbywNCj4gDQo+IE9uIE1vbiwg
-QXVnIDA1LCAyMDE5IGF0IDA5OjEyOjM0QU0gKzAwMDAsIEZhYnJpemlvIENhc3RybyB3cm90ZToN
-Cj4gPiA+IEZyb206IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJv
-YXJkLmNvbT4NCj4gPiA+IFNlbnQ6IDAyIEF1Z3VzdCAyMDE5IDA5OjIwDQo+ID4gPiBTdWJqZWN0
-OiBSZTogW1BBVENIL1JGQyAwNy8xMl0gZHJtOiByY2FyLWR1OiBsdmRzOiBBZGQgc3VwcG9ydCBm
-b3IgZHVhbCBsaW5rIHBhbmVscw0KPiA+ID4NCj4gPiA+IEhpIEZhYnJpemlvLA0KPiA+ID4NCj4g
-PiA+IFRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLg0KPiA+ID4NCj4gPiA+IE9uIEZyaSwgQXVnIDAy
-LCAyMDE5IGF0IDA4OjM0OjA0QU0gKzAxMDAsIEZhYnJpemlvIENhc3RybyB3cm90ZToNCj4gPiA+
-ID4gSWYgdGhlIGRpc3BsYXkgY29tZXMgd2l0aCB0d28gcG9ydHMsIGFzc3VtZSBpdCBzdXBwb3J0
-cyBkdWFsDQo+ID4gPiA+IGxpbmsuDQo+ID4gPiA+DQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IEZh
-YnJpemlvIENhc3RybyA8ZmFicml6aW8uY2FzdHJvQGJwLnJlbmVzYXMuY29tPg0KPiA+ID4gPiAt
-LS0NCj4gPiA+ID4gIGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfbHZkcy5jIHwgMyArKysN
-Cj4gPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKykNCj4gPiA+ID4NCj4gPiA+
-ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfbHZkcy5jIGIvZHJp
-dmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9sdmRzLmMNCj4gPiA+ID4gaW5kZXggMmQ1NGFlNS4u
-OTdjNTFjMiAxMDA2NDQNCj4gPiA+ID4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNh
-cl9sdmRzLmMNCj4gPiA+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9sdmRz
-LmMNCj4gPiA+ID4gQEAgLTc1MSw2ICs3NTEsOSBAQCBzdGF0aWMgaW50IHJjYXJfbHZkc19wYXJz
-ZV9kdChzdHJ1Y3QgcmNhcl9sdmRzICpsdmRzKQ0KPiA+ID4gPiAgCQkJcmV0ID0gLUVQUk9CRV9E
-RUZFUjsNCj4gPiA+ID4gIAkJCWdvdG8gZG9uZTsNCj4gPiA+ID4gIAkJfQ0KPiA+ID4gPiArCQlp
-ZiAobHZkcy0+aW5mby0+cXVpcmtzICYgUkNBUl9MVkRTX1FVSVJLX0RVQUxfTElOSykNCj4gPiA+
-ID4gKwkJCWx2ZHMtPmR1YWxfbGluayA9IG9mX2dyYXBoX2dldF9lbmRwb2ludF9jb3VudChyZW1v
-dGUpDQo+ID4gPiA+ICsJCQkJCT09IDI7DQo+ID4gPg0KPiA+ID4gVGhpcyBpcyBhIGJpdCBvZiBh
-IGhhY2ssIGFzIEkgdGhpbmsgdGhlIGluZm9ybWF0aW9uIHNob3VsZCBiZSBxdWVyaWVkDQo+ID4g
-PiBmcm9tIHRoZSBwYW5lbCwgbGlrZSB3ZSBkbyBmb3IgYnJpZGdlcy4gSSdkIHNheSB3ZSBjYW4g
-bGl2ZSB3aXRoIHRoaXMNCj4gPiA+IGZvciBub3csIGJ1dCBhcyB0aGUgZGF0YSBzd2FwIGZsYWcg
-c2hvdWxkIGNvbWUgZnJvbSB0aGUgcGFuZWwgYXMgd2VsbCwNCj4gPiA+IHdlIHdpbGwgbmVlZCBp
-bmZyYXN0cnVjdHVyZSBmb3IgdGhhdCwgYW5kIHdlIGNhbiBhcyB3ZWxsIHRocm91Z2ggdGhlDQo+
-ID4gPiBkdWFsIGxpbmsgZmxhZyB0aGVyZSBhdCB0aGUgc2FtZSB0aW1lLg0KPiA+DQo+ID4gSSB0
-b3RhbGx5IGFncmVlLCB0aGlzIGlzIGEgbmFzdHkgaGFjaywgbXkgc2VyaWVzIGlzIG1pc3Npbmcg
-dGhlIGluZnJhc3RydWN0dXJlDQo+ID4gZm9yIGRlc2NyaWJpbmcgdGhpcyBpbmZvcm1hdGlvbg0K
-PiA+DQo+ID4gPiBJIHRoaW5rIHdlIHNob3VsZCB1c2UgdGhlIGRybV9icmlkZ2VfdGltaW5ncyBz
-dHJ1Y3R1cmUgZm9yIHRoaXMgcHVycG9zZSwNCj4gPiA+IGFzIGl0IHdvdWxkIG1ha2UgbGlmZSBt
-b3JlIGRpZmZpY3VsdCBmb3IgdXNlcnMgb2YgZHJtX2JyaWRnZSBhbmQNCj4gPiA+IGRybV9wYW5l
-bCB0byBoYXZlIHR3byBkaWZmZXJlbnQgc3RydWN0dXJlcyAoZXNwZWNpYWxseSB3aGVuIHdyYXBw
-aW5nIGENCj4gPiA+IGRybV9wYW5lbCB3aXRoIGRybV9wYW5lbF9icmlkZ2VfYWRkKCkpLiBUaGUg
-c3RydWN0dXJlIGNvdWxkIGJlIHJlbmFtZWQNCj4gPiA+IGlmIGRlc2lyZWQuDQo+ID4NCj4gPiBJ
-IGFtIG5vdCB0b28gc3VyZSB1c2luZyBkcm1fYnJpZGdlX3RpbWluZ3MgZm9yIHBhbmVscyB3b3Vs
-ZCBtYWtlIGV2ZXJ5Ym9keQ0KPiA+IGhhcHB5PyBJcyB0aGVyZSBhbnkgYWx0ZXJuYXRpdmU/IFBl
-cmhhcHMgdGhpcyBjYWxscyBmb3IgYSBuZXcgc3RydWN0IHdlIGNvdWxkDQo+ID4gZW1iZWQgaW4g
-Ym90aCBkcm1fYnJpZGdlX3RpbWluZ3MgYW5kIHNvbWUgZHJtX3BhbmVsXzx3aGF0ZXZlcj4gZGF0
-YQ0KPiA+IHN0cnVjdHVyZT8NCj4gDQo+IEkgdGhpbmsgd2UgY291bGQgc2ltcGx5IHJlbmFtZSB0
-aGUgc3RydWN0dXJlLCBhbGwgaXRzIGZpZWxkcyBhcHBseSB0bw0KPiBwYW5lbHMgdG9vLg0KDQpP
-aywgd2lsbCBnaXZlIHRoaXMgYSB0cnkuDQoNClRoYW5rcywNCkZhYg0KDQo+IA0KPiA+ID4gPiAg
-CX0NCj4gPiA+ID4NCj4gPiA+ID4gIAlpZiAobHZkcy0+ZHVhbF9saW5rKSB7DQo+IA0KPiAtLQ0K
-PiBSZWdhcmRzLA0KPiANCj4gTGF1cmVudCBQaW5jaGFydA0K
+On Wed, Jul 24, 2019 at 10:51 AM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
+
+> It's used to support dual role switch via GPIO when use Type-B
+> receptacle, typically the USB ID pin is connected to an input
+> GPIO, and also used to enable/disable device when the USB Vbus
+> pin is connected to an input GPIO.
+>
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> ---
+> v8 changes:
+
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
