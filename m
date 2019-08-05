@@ -2,95 +2,159 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13728C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 552CCC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDB3E216B7
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:50:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2637520B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:50:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lcMh40MT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728878AbfHERu3 (ORCPT
+        id S1729903AbfHERup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 13:50:29 -0400
-Received: from mga12.intel.com ([192.55.52.136]:47840 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726559AbfHERu3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 13:50:29 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 10:50:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,350,1559545200"; 
-   d="scan'208";a="176376130"
-Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
-  by orsmga003.jf.intel.com with ESMTP; 05 Aug 2019 10:50:28 -0700
-Received: from orsmsx111.amr.corp.intel.com ([169.254.12.46]) by
- ORSMSX107.amr.corp.intel.com ([169.254.1.186]) with mapi id 14.03.0439.000;
- Mon, 5 Aug 2019 10:50:26 -0700
-From:   "Lin, Jing" <jing.lin@intel.com>
-To:     Borislav Petkov <bp@alien8.de>, "Luck, Tony" <tony.luck@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>
-CC:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: RE: [PATCH] x86/asm: Add support for MOVDIR64B instruction
-Thread-Topic: [PATCH] x86/asm: Add support for MOVDIR64B instruction
-Thread-Index: AQHVSKFv5siymBrH4UWZ6VHVf1YRd6bnKKIAgAAKtgCAAAJDAIAAGTWAgAEV2wCABHZo8A==
-Date:   Mon, 5 Aug 2019 17:50:25 +0000
-Message-ID: <4055BDF753AD6F41A91F928E1B53A9303E8A9E29@ORSMSX111.amr.corp.intel.com>
-References: <20190801194348.GA6059@avx2>
- <20190801194947.GA12033@agluck-desk2.amr.corp.intel.com>
- <20190801202808.e2cqlqetixie4gcu@box> <20190801203614.GA16228@zn.tnic>
- <3908561D78D1C84285E8C5FCA982C28F7EA0719C@ORSMSX104.amr.corp.intel.com>
- <20190802144056.GC30661@zn.tnic>
-In-Reply-To: <20190802144056.GC30661@zn.tnic>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZjc5ODUzNzMtMjBiMy00NzE5LWE3OTctYjdiNjg1YWVmNTQ1IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiMHNcL0tybmJOTDRWcFwveit3bzdzelVvN1p2ejBXcXp0eitFSWZzV3czNGRYaWtsWjlDaCtmOWw0bjdjVUFkQTBLIn0=
-x-originating-ip: [10.22.254.138]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 5 Aug 2019 13:50:45 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:46611 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728885AbfHERup (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 13:50:45 -0400
+Received: by mail-ed1-f65.google.com with SMTP id d4so79667643edr.13
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 10:50:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Cudx4Ed0VrEgvxeqYlvplwj7CuqSGFqTGqW93wYT0ZA=;
+        b=lcMh40MTEhDqcDc/Gwizp4DJq1zLgs29VTl8B1MgV0gn6732Zykhw5rk/hpfE/bZdg
+         Z858446bKNZEhHdaqVDwdaAsKxo6RjEGO70Kjc0YCdzO2WCfu8gWMDnBHRY7Wsqazeyi
+         upx6pi+/qoF7JyIsV5gcZruSS8VvqmZ+kjsTs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Cudx4Ed0VrEgvxeqYlvplwj7CuqSGFqTGqW93wYT0ZA=;
+        b=rn0d/uLKh8Tylc7Ns9Kt+lrkmwbbh4KukfnyW5PfI9J853a/6D2pxhW7owiRASc0Tf
+         yVZMlj9NlYv2yIdK4Ukt9M95ZRS7zqsV5fsnMRntz2NMh+eBWmpT2pDs/fHkhN8uzVFU
+         6M8DuWC/zAzqHhU2fm3w9fO5pc1oGX5hl2xFEzWaVdI+jyZI4Y8YENyYBmufhTBxhO5e
+         hZVeUdibRREXQoIpMz6zdBNJ578Dy2PwlWCryKYEd1/+p7657KO27mR4q2oZ6BqACgqB
+         Xr5PUFpx7TbFXiDSE4kpxSS2YSXVWMISCastPrqoUXto7nGQmirPdvhvdWyXagNkZfLL
+         IfGQ==
+X-Gm-Message-State: APjAAAVN5QQ82q0/lIc7ipapWq6Zh9LI3gPJQbuxF/pvWUUAj3jY//YK
+        Bth4ZHUemlMnBonmDoUaf+sXLpMnJWo=
+X-Google-Smtp-Source: APXvYqxDtmKaDSHqglX7WpZ78VF26t9/0RJOoD9K6/+jG2l6I74n3OUROEdP8zdzMHxuWz7mmBUyMg==
+X-Received: by 2002:a17:907:105e:: with SMTP id oy30mr15994410ejb.236.1565027443304;
+        Mon, 05 Aug 2019 10:50:43 -0700 (PDT)
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com. [209.85.221.53])
+        by smtp.gmail.com with ESMTPSA id b15sm20382007edb.46.2019.08.05.10.50.42
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 05 Aug 2019 10:50:42 -0700 (PDT)
+Received: by mail-wr1-f53.google.com with SMTP id z1so85270246wru.13
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 10:50:42 -0700 (PDT)
+X-Received: by 2002:adf:f40b:: with SMTP id g11mr11766296wro.81.1565027441769;
+ Mon, 05 Aug 2019 10:50:41 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190730191303.206365-1-thgarnie@chromium.org>
+ <20190730191303.206365-5-thgarnie@chromium.org> <20190805172854.GF18785@zn.tnic>
+In-Reply-To: <20190805172854.GF18785@zn.tnic>
+From:   Thomas Garnier <thgarnie@chromium.org>
+Date:   Mon, 5 Aug 2019 10:50:30 -0700
+X-Gmail-Original-Message-ID: <CAJcbSZGedSfZZ5rveH2+_3q7pvmMyDGLxmZU41Nno=ZBX8kN=w@mail.gmail.com>
+Message-ID: <CAJcbSZGedSfZZ5rveH2+_3q7pvmMyDGLxmZU41Nno=ZBX8kN=w@mail.gmail.com>
+Subject: Re: [PATCH v9 04/11] x86/entry/64: Adapt assembly for PIE support
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-K0RhdmUsIHdobyBpcyB0aGUgRFNBIGRldmVsb3Blci4gDQoNClRoYW5rcywNCkppbmcgDQoNCi0t
-LS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBCb3Jpc2xhdiBQZXRrb3YgPGJwQGFsaWVu
-OC5kZT4gDQpTZW50OiBGcmlkYXksIEF1Z3VzdCAyLCAyMDE5IDc6NDEgQU0NClRvOiBMdWNrLCBU
-b255IDx0b255Lmx1Y2tAaW50ZWwuY29tPg0KQ2M6IEtpcmlsbCBBLiBTaHV0ZW1vdiA8a2lyaWxs
-QHNodXRlbW92Lm5hbWU+OyBBbGV4ZXkgRG9icml5YW4gPGFkb2JyaXlhbkBnbWFpbC5jb20+OyBr
-aXJpbGwuc2h1dGVtb3ZAbGludXguaW50ZWwuY29tOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
-b3JnOyBMaW4sIEppbmcgPGppbmcubGluQGludGVsLmNvbT47IHg4NkBrZXJuZWwub3JnDQpTdWJq
-ZWN0OiBSZTogW1BBVENIXSB4ODYvYXNtOiBBZGQgc3VwcG9ydCBmb3IgTU9WRElSNjRCIGluc3Ry
-dWN0aW9uDQoNCk9uIFRodSwgQXVnIDAxLCAyMDE5IGF0IDEwOjA2OjI3UE0gKzAwMDAsIEx1Y2ss
-IFRvbnkgd3JvdGU6DQo+ID4gSSB0aGluayBUb255J3MgaW4gdGhlIHJpZ2h0IGRpcmVjdGlvbi4g
-V2UgYWxyZWFkeSBkbyBkc3QgInNpemluZyIgDQo+ID4gbGlrZSB0aGF0IGZvciB0aGUgY29tcGls
-ZXIgaW4gY2x3YigpLg0KPiANCj4gVGhlIGNsd2IgY2FzZSBkb2VzIGxvb2sgbGlrZSB3aGF0IHdl
-IHdhbnQgZm9yIG1vdmRpcjY0YigpLg0KPiANCj4gQnV0IGlzIGl0IHJpZ2h0IGZvciBjbHdiKCkg
-Li4uIHRoYXQgZG9lc24ndCBtb2RpZnkgYW55dGhpbmcsIGp1c3QgDQo+IHB1c2hlcyB0aGluZ3Mg
-ZnJvbSBjYWNoZSB0byBtZW1vcnkuIFNvIHdoeSBpcyBpdCB1c2luZyAiK20iPw0KDQpIZXJlIHNv
-bWUgaGludHMgZnJvbSB0byBteSBub3RlcywgaWYgeW91IHdhbnQgdG8ga25vdyBtb3JlIGRldGFp
-bCwgSSBjYW4gcGluZyBteSBnY2MgZ3V5Lg0KDQpJdCBuZWVkcyB0byBiZSBhbiBpbnB1dCBhbmQg
-YW4gb3V0cHV0IG9wZXJhbmQgc28gdGhhdCBpdCBwcmV2ZW50cyBnY2MgZnJvbSByZW9yZGVyaW5n
-IGFjY2Vzc2VzIHRvIGl0IGFmdGVyIHRoZSBpbnNuIGhhcHBlbnMsIGkuZS4sIHlvdSBkb24ndCB3
-YW50IHRvIHRvdWNoIGl0IGFmdGVyIENMRkxVU0ggaGFzIGV4ZWN1dGVkLg0KDQpBbmQgYWxzbywg
-eW91IHdhbnQgdG8gbWFrZSBzdXJlIGl0IHdvcmtzIHdpdGggYWxsIGdjYyB2ZXJzaW9ucyBhbmQg
-dGhpcyBpcywgSSB3YXMgdG9sZCwgdGhlIHJpZ2h0IHdheSB0byBkbyBpdC4gRm9yIGV4YW1wbGUs
-IHNvbWUgZ2NjIHZlcnNpb25zIGNvbnNpZGVyIGl0IG5vdCBsaW1pdGVkIHRvIDY0IGJ5dGVzIG9m
-IG1lbW9yeSBiZWluZyB0b3VjaGVkIGJ1dCBhIGZ1bGwgbWVtb3J5IGNsb2JiZXIuDQoNCkhUSC4N
-Cg0KLS0NClJlZ2FyZHMvR3J1c3MsDQogICAgQm9yaXMuDQoNCkdvb2QgbWFpbGluZyBwcmFjdGlj
-ZXMgZm9yIDQwMDogYXZvaWQgdG9wLXBvc3RpbmcgYW5kIHRyaW0gdGhlIHJlcGx5Lg0K
+On Mon, Aug 5, 2019 at 10:28 AM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Tue, Jul 30, 2019 at 12:12:48PM -0700, Thomas Garnier wrote:
+> > Change the assembly code to use only relative references of symbols for the
+> > kernel to be PIE compatible.
+> >
+> > Position Independent Executable (PIE) support will allow to extend the
+> > KASLR randomization range below 0xffffffff80000000.
+> >
+> > Signed-off-by: Thomas Garnier <thgarnie@chromium.org>
+> > Reviewed-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  arch/x86/entry/entry_64.S | 16 +++++++++++-----
+> >  1 file changed, 11 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+> > index 3f5a978a02a7..4b588a902009 100644
+> > --- a/arch/x86/entry/entry_64.S
+> > +++ b/arch/x86/entry/entry_64.S
+> > @@ -1317,7 +1317,8 @@ ENTRY(error_entry)
+> >       movl    %ecx, %eax                      /* zero extend */
+> >       cmpq    %rax, RIP+8(%rsp)
+> >       je      .Lbstep_iret
+> > -     cmpq    $.Lgs_change, RIP+8(%rsp)
+> > +     leaq    .Lgs_change(%rip), %rcx
+> > +     cmpq    %rcx, RIP+8(%rsp)
+> >       jne     .Lerror_entry_done
+> >
+> >       /*
+> > @@ -1514,10 +1515,10 @@ ENTRY(nmi)
+> >        * resume the outer NMI.
+> >        */
+> >
+> > -     movq    $repeat_nmi, %rdx
+> > +     leaq    repeat_nmi(%rip), %rdx
+> >       cmpq    8(%rsp), %rdx
+> >       ja      1f
+> > -     movq    $end_repeat_nmi, %rdx
+> > +     leaq    end_repeat_nmi(%rip), %rdx
+> >       cmpq    8(%rsp), %rdx
+> >       ja      nested_nmi_out
+> >  1:
+> > @@ -1571,7 +1572,8 @@ nested_nmi:
+> >       pushq   %rdx
+> >       pushfq
+> >       pushq   $__KERNEL_CS
+> > -     pushq   $repeat_nmi
+> > +     leaq    repeat_nmi(%rip), %rdx
+> > +     pushq   %rdx
+> >
+> >       /* Put stack back */
+> >       addq    $(6*8), %rsp
+> > @@ -1610,7 +1612,11 @@ first_nmi:
+> >       addq    $8, (%rsp)      /* Fix up RSP */
+> >       pushfq                  /* RFLAGS */
+> >       pushq   $__KERNEL_CS    /* CS */
+> > -     pushq   $1f             /* RIP */
+> > +     pushq   $0              /* Future return address */
+> > +     pushq   %rax            /* Save RAX */
+> > +     leaq    1f(%rip), %rax  /* RIP */
+> > +     movq    %rax, 8(%rsp)   /* Put 1f on return address */
+> > +     popq    %rax            /* Restore RAX */
+>
+> Can't you just use a callee-clobbered reg here instead of preserving
+> %rax?
+
+I saw that %rdx was used for temporary usage and restored before the
+end so I assumed that it was not an option.
+
+>
+> --
+> Regards/Gruss,
+>     Boris.
+>
+> Good mailing practices for 400: avoid top-posting and trim the reply.
