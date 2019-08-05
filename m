@@ -6,29 +6,29 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0DEC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD752C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:44:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C91921734
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB35F21734
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:44:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728817AbfHEMnQ (ORCPT
+        id S1729029AbfHEMoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 08:43:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60728 "EHLO mx1.redhat.com"
+        Mon, 5 Aug 2019 08:44:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40500 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726811AbfHEMnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 08:43:15 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        id S1728818AbfHEMnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 08:43:16 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 19681300CB70;
-        Mon,  5 Aug 2019 12:43:15 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6243B85362;
+        Mon,  5 Aug 2019 12:43:16 +0000 (UTC)
 Received: from sirius.home.kraxel.org (ovpn-116-81.ams2.redhat.com [10.36.116.81])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C3DBC60C83;
-        Mon,  5 Aug 2019 12:43:11 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F3C645DA8D;
+        Mon,  5 Aug 2019 12:43:15 +0000 (UTC)
 Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id DD21D17444; Mon,  5 Aug 2019 14:43:10 +0200 (CEST)
+        id 2D0199D40; Mon,  5 Aug 2019 14:43:13 +0200 (CEST)
 From:   Gerd Hoffmann <kraxel@redhat.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     intel-gfx@lists.freedesktop.org, thomas@shipmail.org,
@@ -38,84 +38,47 @@ Cc:     intel-gfx@lists.freedesktop.org, thomas@shipmail.org,
         Christian Koenig <christian.koenig@amd.com>,
         Huang Rui <ray.huang@amd.com>, David Airlie <airlied@linux.ie>,
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v5 01/18] drm/ttm: add gem base object
-Date:   Mon,  5 Aug 2019 14:42:53 +0200
-Message-Id: <20190805124310.3275-2-kraxel@redhat.com>
+Subject: [PATCH v5 09/18] drm/ttm: set both resv and base.resv pointers
+Date:   Mon,  5 Aug 2019 14:43:01 +0200
+Message-Id: <20190805124310.3275-10-kraxel@redhat.com>
 In-Reply-To: <20190805124310.3275-1-kraxel@redhat.com>
 References: <20190805124310.3275-1-kraxel@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Mon, 05 Aug 2019 12:43:15 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Mon, 05 Aug 2019 12:43:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add drm_gem_object struct to ttm_buffer_object, so ttm objects are a gdm
-object superclass.  Add a function to check whenever a given bo actually
-uses the embedded drm_gem_object.
+Initialize both ttm_buffer_object->resv and ttm_buffer_object->base.resv
+pointers.  This allows to move users from the former to the latter.  When
+all users are moved we can drop ttm_buffer_object->resv.
 
 Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 Reviewed-by: Christian König <christian.koenig@amd.com>
 ---
- include/drm/ttm/ttm_bo_api.h | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ drivers/gpu/drm/ttm/ttm_bo.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/drm/ttm/ttm_bo_api.h b/include/drm/ttm/ttm_bo_api.h
-index 49d9cdfc58f2..082550cac92c 100644
---- a/include/drm/ttm/ttm_bo_api.h
-+++ b/include/drm/ttm/ttm_bo_api.h
-@@ -31,6 +31,7 @@
- #ifndef _TTM_BO_API_H_
- #define _TTM_BO_API_H_
- 
-+#include <drm/drm_gem.h>
- #include <drm/drm_hashtab.h>
- #include <drm/drm_vma_manager.h>
- #include <linux/kref.h>
-@@ -127,6 +128,7 @@ struct ttm_tt;
- /**
-  * struct ttm_buffer_object
-  *
-+ * @base: drm_gem_object superclass data.
-  * @bdev: Pointer to the buffer object device structure.
-  * @type: The bo type.
-  * @destroy: Destruction function. If NULL, kfree is used.
-@@ -169,6 +171,8 @@ struct ttm_tt;
-  */
- 
- struct ttm_buffer_object {
-+	struct drm_gem_object base;
-+
- 	/**
- 	 * Members constant at init.
- 	 */
-@@ -768,4 +772,23 @@ int ttm_bo_swapout(struct ttm_bo_global *glob,
- 			struct ttm_operation_ctx *ctx);
- void ttm_bo_swapout_all(struct ttm_bo_device *bdev);
- int ttm_bo_wait_unreserved(struct ttm_buffer_object *bo);
-+
-+/**
-+ * ttm_bo_uses_embedded_gem_object - check if the given bo uses the
-+ * embedded drm_gem_object.
-+ *
-+ * Most ttm drivers are using gem too, so the embedded
-+ * ttm_buffer_object.base will be initialized by the driver (before
-+ * calling ttm_bo_init).  It is also possible to use ttm without gem
-+ * though (vmwgfx does that).
-+ *
-+ * This helper will figure whenever a given ttm bo is a gem object too
-+ * or not.
-+ *
-+ * @bo: The bo to check.
-+ */
-+static inline bool ttm_bo_uses_embedded_gem_object(struct ttm_buffer_object *bo)
-+{
-+	return bo->base.dev != NULL;
-+}
- #endif
+diff --git a/drivers/gpu/drm/ttm/ttm_bo.c b/drivers/gpu/drm/ttm/ttm_bo.c
+index 3e0a0cbc410e..ce1e6221e7ea 100644
+--- a/drivers/gpu/drm/ttm/ttm_bo.c
++++ b/drivers/gpu/drm/ttm/ttm_bo.c
+@@ -1333,9 +1333,11 @@ int ttm_bo_init_reserved(struct ttm_bo_device *bdev,
+ 	bo->sg = sg;
+ 	if (resv) {
+ 		bo->resv = resv;
++		bo->base.resv = resv;
+ 		reservation_object_assert_held(bo->resv);
+ 	} else {
+ 		bo->resv = &bo->base._resv;
++		bo->base.resv = &bo->base._resv;
+ 	}
+ 	if (!ttm_bo_uses_embedded_gem_object(bo)) {
+ 		/*
 -- 
 2.18.1
 
