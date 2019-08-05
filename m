@@ -2,193 +2,130 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05819C32751
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C2CC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D13112087B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 504452087B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:56:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="kfheZN/P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728423AbfHEKyf convert rfc822-to-8bit (ORCPT
+        id S1728382AbfHEK4e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 06:54:35 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:44033 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727158AbfHEKye (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 06:54:34 -0400
-Received: by mail-ed1-f65.google.com with SMTP id k8so78182648edr.11;
-        Mon, 05 Aug 2019 03:54:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=Sv8pVXgrrDrbIAonY+C88fg7ixy9vYBYQXBP0fHLLv8=;
-        b=VoQIT4o+NKMDU1veQCCYqRd4c6fS3KiocAi2AbYIipCi/5y7mvcdnBPoNxg+VWeFr6
-         qd7O4AEIsD+xuArCgZRiYRxurcyY7alBMPOIAEo08srFU+IEX4h65hsY23C1Rn0BFXrw
-         YEdClWxRHgBdLRfvtbkvunbJC+Ln6f30glqQ/8W7Oc8HjIsHv+TH+pRq2SY5Lt2FY0Jw
-         5yKUhjPlRcCQYqm8WZSiZ/Uu4wFt1Fid5PghsaD9KE861FEme3UQ0hLgY6j/c2KkJNmH
-         pMc4+pu5VwsgRsAFF0L8IkwPvXHFdZNpD/kxjFV1MkGs0HHWbqtLyCgWJ0/aoANpT3bL
-         xhAw==
-X-Gm-Message-State: APjAAAXaM9qUinCPzuBF+BuKF/KqHPgxvS4pXOe265qUtgGbk7JLElA7
-        krwO/QIyPSvAlacB6UNGl2nm5Oz0Uj8=
-X-Google-Smtp-Source: APXvYqw1M/sk8Rd0FDUYGuD0LRvQbA6oYhjBhAy9Z/XRedeDP4PKnoLDN7nkr5AfahYE7yipoo/yAg==
-X-Received: by 2002:a50:9168:: with SMTP id f37mr134647181eda.242.1565002471414;
-        Mon, 05 Aug 2019 03:54:31 -0700 (PDT)
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com. [209.85.128.51])
-        by smtp.gmail.com with ESMTPSA id nc6sm14270316ejb.62.2019.08.05.03.54.30
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 05 Aug 2019 03:54:31 -0700 (PDT)
-Received: by mail-wm1-f51.google.com with SMTP id a15so74268487wmj.5;
-        Mon, 05 Aug 2019 03:54:30 -0700 (PDT)
-X-Received: by 2002:a1c:c545:: with SMTP id v66mr18768923wmf.51.1565002470670;
- Mon, 05 Aug 2019 03:54:30 -0700 (PDT)
+        Mon, 5 Aug 2019 06:56:34 -0400
+Received: from mout.web.de ([212.227.17.12]:43833 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727158AbfHEK4d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 06:56:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1565002579;
+        bh=ibIhC5TdU9NvBIHLlKUg8dkM6XZ2mlZ/1npQ9zYfPv4=;
+        h=X-UI-Sender-Class:To:Cc:References:Subject:From:Date:In-Reply-To;
+        b=kfheZN/PgJgKag8xNoTv614JXs4TGVMz+oTI06qdbcPtyJAn9ExfU6T/lTLVAqIDo
+         upi5KpaayRJ5wdBJg5NhOSz6cVttlfzoiX/AtW/aP9qdku2mcRcU5n/KdD+e3H5aJx
+         Pw/8geOpZglbPWrDwVyy88UNNo2UeH1j+l3dUjr4=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.132.163.134]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0M8Qpi-1iHMP32hLW-00vt1r; Mon, 05
+ Aug 2019 12:56:19 +0200
+To:     Mao Wenan <maowenan@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Oliver Hartkopp <socketcan@hartkopp.net>,
+        netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190805012637.62314-1-maowenan@huawei.com>
+Subject: Re: [v2] net: can: Fix compiling warning
+From:   Markus Elfring <Markus.Elfring@web.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
+ +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
+ mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
+ lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
+ YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
+ GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
+ rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
+ 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
+ jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
+ BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
+ cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
+ Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
+ g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
+ OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
+ CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
+ LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
+ sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
+ kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
+ i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
+ g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
+ q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
+ NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
+ nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
+ 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
+ 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
+ wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
+ riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
+ DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
+ fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
+ 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
+ xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
+ qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
+ Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
+ Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
+ +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
+ hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
+ /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
+ tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
+ qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
+ Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
+ x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
+ pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
+Message-ID: <6fd68e9b-a8ae-4e5e-9b23-c099b5ca9aa4@web.de>
+Date:   Mon, 5 Aug 2019 12:56:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190412120730.473-1-megous@megous.com> <20190412120730.473-3-megous@megous.com>
- <CAGb2v675j-aCLMgPJOzr9yx1XxsUvHRr_K7VnL=p8mSdwpu2jw@mail.gmail.com> <20190805104529.z3mex3m2tss7lzlr@core.my.home>
-In-Reply-To: <20190805104529.z3mex3m2tss7lzlr@core.my.home>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Mon, 5 Aug 2019 18:54:17 +0800
-X-Gmail-Original-Message-ID: <CAGb2v67pcxdxjdRX_HN4133A32eA566DDtUJUKV7pqzxDtOaeg@mail.gmail.com>
-Message-ID: <CAGb2v67pcxdxjdRX_HN4133A32eA566DDtUJUKV7pqzxDtOaeg@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH 2/3] rtc: sun6i: Add support for H6 RTC
-To:     =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        linux-rtc@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190805012637.62314-1-maowenan@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:2TFWNZSwQt0Tq4ZoU3im11KlrQg8sj6g8hCK0p83YyWKEreAjti
+ 8WgmE5wSJHVyn+5l3aAsTJiqTIVeK13/Gu9Ykk9azoUr4NoyXFIRbyqcPcV3QZ8Zfguuuy4
+ NjR1S2GfM6c0BSkLYGgf9ccRo1K9xRXR4o6VaAsrDXXe91gGtxNWuXP6kU5uTEmqyz3Lwq6
+ qJGCCpBSIZp/uHPjkjU/A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:3Q5UT4ok0sY=:IziTGb3BEwEeVDU+quy0gw
+ QJ3Dcb6T1N6ZQK427iyNY2CWfMPCCmFKVt58GglDx4jr6QODnDDq+v28ryQ1kReqvrNub6Nof
+ zYdqJuh60z13V0GL/Hs3mFhQ0ihrzhij8CgwpTGGcSzsNUzguCRNHWrv4DimosSA67oUSudyD
+ YzGdqjwW/CGbUNPu+cGmqAAEm13ekLBhC9e+4RTrtENIhE1ny1k9ycyZ2Utz62Hn0c9DlWKTA
+ 1RNWmZeJ0nDQ4fZM52mPf4vTUQfuqmJSvaFtUtYqCzm2xIVwbOeLU6SBqRqexZ/+VwoGec/my
+ pXQw+mudAbVZz/WKcs3n0FvG+f2+ZBt7KJwPXrhDscvuECYeXiPeZGOGatSboMC2ydCuRDvXZ
+ tCPlJHD8vsrXYU53qOrG985l/LoUuYPlN49Ze/RUWa2qydvlrBSTSY+xc5UktEPBAUX3YEfyd
+ A6u5r+iNSP3yV5Y0r8tlU7z5m9ONOft3JEfdVb3hH0aFOeSS90czMuf84Q3cqDY+NnDGb/MZ9
+ Zg6IleJ6X24SOlPFDuLs4T1e/Yz1MSKGbr0NbIFdkvdyluQcWWI5+o1MMA6FSiGh0Uikwbiwr
+ Z0C0fG58O9xueHpJxKBAhiPA7BegdiCCnl/dBqjobLkn/27NAotuUY0VDw8JgUvpBVXNL0Dt5
+ IvHO0cfNSFsvsRzivRecQ/2QZbZK5iXYSRc15UwxmcOrNCz7Xu4RQ5UlnR0hrWxZblCu75lF5
+ ixeuCU9uBfiGwy6MoR6IxYk47r9sb8Moit4ZFL1ERuD5aYVqtVPhxuD9OmgR4FKDPS4b7duoO
+ unoq6ZGt80f5TMszoFVTwUHYYX/X1yirhWuj25Vrmbk3rZpucELWSsSb/EG7bm3o/EZzKpUF0
+ i86aH5kxh0DFHmJCT4FNmgOGg9bAZHDHqSzL8K5gY7g5EiN+Au7DNmlEyONFV6Z0Aq05tXM1S
+ SFJL2F4J0Wt9stuYCs/CahAS8h0PIrwG05l30YdH5G7eVhueJDe2/w/9P2juTr/SjJcz8EzFv
+ i8G2sS2FQ+nKud4UaYdFFdcQgXTwWLyCw67m8KpmHFgRRioymNEAOLSfUyVf3dr4nXsCG6sId
+ ryAv9VXmsUJ05o/yHL6S7dp0KCnqVUX4OHy9pRV+o4TnhsKuPiQBgyVjnDldmfuIcaRl6W8z1
+ hjp7k=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 5, 2019 at 6:45 PM Ondřej Jirman <megous@megous.com> wrote:
->
-> On Mon, Aug 05, 2019 at 06:16:14PM +0800, Chen-Yu Tsai wrote:
-> > On Fri, Apr 12, 2019 at 8:07 PM megous via linux-sunxi
-> > <linux-sunxi@googlegroups.com> wrote:
-> > >
-> > > From: Ondrej Jirman <megous@megous.com>
-> > >
-> > > RTC on H6 is mostly the same as on H5 and H3. It has slight differences
-> > > mostly in features that are not yet supported by this driver.
-> > >
-> > > Some differences are already stated in the comments in existing code.
-> > > One other difference is that H6 has extra bit in LOSC_CTRL_REG, called
-> > > EXT_LOSC_EN to enable/disable external low speed crystal oscillator.
-> > >
-> > > It also has bit EXT_LOSC_STA in LOSC_AUTO_SWT_STA_REG, to check whether
-> > > external low speed oscillator is working correctly.
-> > >
-> > > This patch adds support for enabling LOSC when necessary:
-> > >
-> > > - during reparenting
-> > > - when probing the clock
-> > >
-> > > H6 also has capacbility to automatically reparent RTC clock from
-> > > external crystal oscillator, to internal RC oscillator, if external
-> > > oscillator fails. This is enabled by default. Disable it during
-> > > probe.
-> > >
-> > > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > > ---
-> > >  drivers/rtc/rtc-sun6i.c | 40 ++++++++++++++++++++++++++++++++++++++--
-> > >  1 file changed, 38 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
-> > > index 11f56de52179..7375a530c565 100644
-> > > --- a/drivers/rtc/rtc-sun6i.c
-> > > +++ b/drivers/rtc/rtc-sun6i.c
-> > > @@ -41,9 +41,11 @@
-> > >  /* Control register */
-> > >  #define SUN6I_LOSC_CTRL                                0x0000
-> > >  #define SUN6I_LOSC_CTRL_KEY                    (0x16aa << 16)
-> > > +#define SUN6I_LOSC_CTRL_AUTO_SWT_BYPASS                BIT(15)
-> >
-> > Manual says bit 14? Or is this different from LOSC_AUTO_SWT_EN?
-> >
-> > The rest looks ok.
->
-> To give you more information. This is a new thing in H6 BSP, compared
-> to BSPs for previous SoCs (H5/H3).
->
->  20 #define REG_CLK32K_AUTO_SWT_EN                  BIT(14)
->  21 #define REG_CLK32K_AUTO_SWT_BYPASS              BIT(15)
->
-> Init sequence changed in H6 BSP to:
->
-> 646         /*
-> 647          * Step1: select RTC clock source
-> 648          */
-> 649         tmp_data = readl(chip->base + SUNXI_LOSC_CTRL);
-> 650         tmp_data &= (~REG_CLK32K_AUTO_SWT_EN);
-> 651
-> 652         /* Disable auto switch function */
-> 653         tmp_data |= REG_CLK32K_AUTO_SWT_BYPASS;
-> 654         writel(tmp_data, chip->base + SUNXI_LOSC_CTRL);
-> 655
-> 656         tmp_data = readl(chip->base + SUNXI_LOSC_CTRL);
-> 657         tmp_data |= (RTC_SOURCE_EXTERNAL | REG_LOSCCTRL_MAGIC);
-> 658         writel(tmp_data, chip->base + SUNXI_LOSC_CTRL);
-> 659
-> 660         /* We need to set GSM after change clock source */
-> 661         udelay(10);
-> 662         tmp_data = readl(chip->base + SUNXI_LOSC_CTRL);
-> 663         tmp_data |= (EXT_LOSC_GSM | REG_LOSCCTRL_MAGIC);
-> 664         writel(tmp_data, chip->base + SUNXI_LOSC_CTRL);
-> 665
+>  v1->v2: change patch description typo error, =E2=80=A6
 
-I don't have this in my H6 BSPs. One is H6 Lichee v1.1 downloaded from Pine64.
-The link was from linux-sunxi wiki's H6 page.
+Will an other commit subject like =E2=80=9C[PATCH v3] net: can: Fix compil=
+ation warnings
+for two functions=E2=80=9D be more appropriate here?
 
-The other is a 4.9 kernel tree, which I believe is from Allwinner's github:
-
-    https://github.com/Allwinner-Homlet/H6-BSP4.9-linux
-
-> For older BSPs, the init sequence looked like this:
->
-> 482         /*
-> 483          * Step1: select RTC clock source
-> 484          */
-> 485         tmp_data = sunxi_rtc_read(SUNXI_LOSC_CTRL_REG);
-> 486         tmp_data &= (~REG_CLK32K_AUTO_SWT_EN);
-> 487         tmp_data |= (RTC_SOURCE_EXTERNAL | REG_LOSCCTRL_MAGIC);
-> 488         tmp_data |= (EXT_LOSC_GSM);
-> 489         sunxi_rtc_write(tmp_data, SUNXI_LOSC_CTRL_REG);
-> 490
->
-> EXT_LOSC_GSM has values 4 values from low to high, and I guess it configures
-> gain for the oscillator's amplifier in the feedback loop of the circuit.
->
-> So the new code, for some reason changed from single write to sequence
-> of individual writes/config steps:
->
-> 1) disable auto-switch and enable auto-switch bypass
-> 2) select RTC clock source (to LOSC)
->   (wait)
-
-Maybe it's possible to glitch if these two are combined?
-
-> 3) configure gain on the LOSC
->
-> regards,
->         o.
->
-> > ChenYu
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20190805104529.z3mex3m2tss7lzlr%40core.my.home.
+Regards,
+Markus
