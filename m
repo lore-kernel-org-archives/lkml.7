@@ -2,128 +2,111 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 171C2C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11AB3C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E143C2075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:11:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010694;
-	bh=4pL1hx2ppMTBaKCpsGaTGvaIoDclQ1WBXEy5XCKPB3Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bwNkxL6wr66i/nmPan3+kh55/UDHyu6eYj4A4fJVwxAHKkdUHL2o+SL10fpHeoarS
-	 3V3NuGvFqUa9uN4bkrZRh68Q/CyVhkXPOSIMvJqoHT7zbdbyWqkRPsXIxD322nbPpk
-	 s8dr7XyqD11Ro8V4U9jqY7Bf+j1TNiS/jX26DPkI=
+	by mail.kernel.org (Postfix) with ESMTP id E72252067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:11:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730474AbfHENLL (ORCPT
+        id S1730116AbfHENLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:11:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50342 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729841AbfHENLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:11:07 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45AFB216F4;
-        Mon,  5 Aug 2019 13:11:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010666;
-        bh=4pL1hx2ppMTBaKCpsGaTGvaIoDclQ1WBXEy5XCKPB3Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VLFnHfDsHwnrnaI879Qcg6q6PKRRMnPdQxt/SyXMIbvYENO/fJxBj/O7pFhJyarBY
-         iJKZAsvDSuH9E4DlqKV+Z20BRVT0T/rChq/4UVfBQkeAqECV0hVlyPylELF3zPpqQn
-         2WE2ykxgDUVm9eNignUtXQ6xDOmI8YUPOw+TCxNs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 4.19 50/74] mtd: rawnand: micron: handle on-die "ECC-off" devices correctly
-Date:   Mon,  5 Aug 2019 15:03:03 +0200
-Message-Id: <20190805124939.943312281@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190805124935.819068648@linuxfoundation.org>
-References: <20190805124935.819068648@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 5 Aug 2019 09:11:39 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54642 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729605AbfHENLh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:11:37 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x75D4ESW051140
+        for <linux-kernel@vger.kernel.org>; Mon, 5 Aug 2019 09:11:36 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u6kyxbnuc-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 09:11:36 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <prudo@linux.ibm.com>;
+        Mon, 5 Aug 2019 14:11:32 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 5 Aug 2019 14:11:27 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x75DBPAY52166750
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 5 Aug 2019 13:11:25 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 270E742057;
+        Mon,  5 Aug 2019 13:11:25 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9623542049;
+        Mon,  5 Aug 2019 13:11:24 +0000 (GMT)
+Received: from laptop-ibm (unknown [9.152.212.171])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  5 Aug 2019 13:11:24 +0000 (GMT)
+Date:   Mon, 5 Aug 2019 15:11:23 +0200
+From:   Philipp Rudo <prudo@linux.ibm.com>
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Cc:     Jessica Yu <jeyu@kernel.org>, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        "James Morris" <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "David Howells" <dhowells@redhat.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "AKASHI\, Takahiro" <takahiro.akashi@linaro.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: Re: [PATCH v12 01/11] MODSIGN: Export module signature definitions
+In-Reply-To: <8736iw9y00.fsf@morokweng.localdomain>
+References: <20190628021934.4260-1-bauerman@linux.ibm.com>
+        <20190628021934.4260-2-bauerman@linux.ibm.com>
+        <20190701144752.GC25484@linux-8ccs>
+        <87lfxel2q6.fsf@morokweng.localdomain>
+        <20190704125427.31146026@laptop-ibm>
+        <874l41ocf5.fsf@morokweng.localdomain>
+        <20190705150000.372345b0@laptop-ibm>
+        <8736iw9y00.fsf@morokweng.localdomain>
+Organization: IBM
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19080513-4275-0000-0000-000003549A8C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19080513-4276-0000-0000-0000386593D2
+Message-Id: <20190805151123.12510d72@laptop-ibm>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-05_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=911 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908050146
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Felsch <m.felsch@pengutronix.de>
+Hi Thiago,
 
-commit 8493b2a06fc5b77ef5c579dc32b12761f7b7a84c upstream.
+> > The patch looks good now.  
+> 
+> Thanks! Can I add your Reviewed-by?
 
-Some devices are not supposed to support on-die ECC but experience
-shows that internal ECC machinery can actually be enabled through the
-"SET FEATURE (EFh)" command, even if a read of the "READ ID Parameter
-Tables" returns that it is not.
+sorry, for the late answer, but I was on vacation the last two weeks. I hope
+it's not too late now.
 
-Currently, the driver checks the "READ ID Parameter" field directly
-after having enabled the feature. If the check fails it returns
-immediately but leaves the ECC on. When using buggy chips like
-MT29F2G08ABAGA and MT29F2G08ABBGA, all future read/program cycles will
-go through the on-die ECC, confusing the host controller which is
-supposed to be the one handling correction.
-
-To address this in a common way we need to turn off the on-die ECC
-directly after reading the "READ ID Parameter" and before checking the
-"ECC status".
-
-Cc: stable@vger.kernel.org
-Fixes: dbc44edbf833 ("mtd: rawnand: micron: Fix on-die ECC detection logic")
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/mtd/nand/raw/nand_micron.c |   14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
-
---- a/drivers/mtd/nand/raw/nand_micron.c
-+++ b/drivers/mtd/nand/raw/nand_micron.c
-@@ -400,6 +400,14 @@ static int micron_supports_on_die_ecc(st
- 	    (chip->id.data[4] & MICRON_ID_INTERNAL_ECC_MASK) != 0x2)
- 		return MICRON_ON_DIE_UNSUPPORTED;
- 
-+	/*
-+	 * It seems that there are devices which do not support ECC officially.
-+	 * At least the MT29F2G08ABAGA / MT29F2G08ABBGA devices supports
-+	 * enabling the ECC feature but don't reflect that to the READ_ID table.
-+	 * So we have to guarantee that we disable the ECC feature directly
-+	 * after we did the READ_ID table command. Later we can evaluate the
-+	 * ECC_ENABLE support.
-+	 */
- 	ret = micron_nand_on_die_ecc_setup(chip, true);
- 	if (ret)
- 		return MICRON_ON_DIE_UNSUPPORTED;
-@@ -408,13 +416,13 @@ static int micron_supports_on_die_ecc(st
- 	if (ret)
- 		return MICRON_ON_DIE_UNSUPPORTED;
- 
--	if (!(id[4] & MICRON_ID_ECC_ENABLED))
--		return MICRON_ON_DIE_UNSUPPORTED;
--
- 	ret = micron_nand_on_die_ecc_setup(chip, false);
- 	if (ret)
- 		return MICRON_ON_DIE_UNSUPPORTED;
- 
-+	if (!(id[4] & MICRON_ID_ECC_ENABLED))
-+		return MICRON_ON_DIE_UNSUPPORTED;
-+
- 	ret = nand_readid_op(chip, 0, id, sizeof(id));
- 	if (ret)
- 		return MICRON_ON_DIE_UNSUPPORTED;
-
+Reviewed-by: Philipp Rudo <prudo@linux.ibm.com>
 
