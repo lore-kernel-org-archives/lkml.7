@@ -2,82 +2,113 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B11BC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5120C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 279BB2075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC27F2075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:41:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729796AbfHEOkz (ORCPT
+        id S1729279AbfHEOlQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 10:40:55 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:43799 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729133AbfHEOky (ORCPT
+        Mon, 5 Aug 2019 10:41:16 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:57874 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728149AbfHEOlQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 10:40:54 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hueAP-00089V-En; Mon, 05 Aug 2019 08:40:53 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hueAD-0006yY-3G; Mon, 05 Aug 2019 08:40:53 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        security@kernel.org, linux-doc@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-References: <20190725130113.GA12932@kroah.com>
-        <nycvar.YFH.7.76.1908040214090.5899@cbobk.fhfr.pm>
-Date:   Mon, 05 Aug 2019 09:40:21 -0500
-In-Reply-To: <nycvar.YFH.7.76.1908040214090.5899@cbobk.fhfr.pm> (Jiri Kosina's
-        message of "Sun, 4 Aug 2019 02:17:00 +0200 (CEST)")
-Message-ID: <87blx3n0a2.fsf@xmission.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
+        Mon, 5 Aug 2019 10:41:16 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 1925F80258; Mon,  5 Aug 2019 16:41:01 +0200 (CEST)
+Date:   Mon, 5 Aug 2019 16:41:12 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 02/74] ARM: dts: rockchip: Make rk3288-veyron-minnie
+ run at hs200
+Message-ID: <20190805144112.GA24265@amd>
+References: <20190805124935.819068648@linuxfoundation.org>
+ <20190805124936.029458352@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1hueAD-0006yY-3G;;;mid=<87blx3n0a2.fsf@xmission.com>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/734h3jRw/GfGy5IwgZetr3oaBMoj7LHI=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH] Documentation/admin-guide: Embargoed hardware security issues
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="u3/rZRmxL6MmkK24"
+Content-Disposition: inline
+In-Reply-To: <20190805124936.029458352@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-I skimmed this and a couple things jumped out at me.
+--u3/rZRmxL6MmkK24
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-1) PGP and S/MIME because of their use of long term keys do not provide
-   forward secrecy.  Which can makes it worth while to cryptographically
-   factor a key or to obtain knowledge of a private key without the key
-   holders knowledge.  As the keys will be used again and again over a
-   long period of time.
+Hi!
 
-   More recent protocol's such as Signal's Double Ratchet Protocol
-   enable forward secrecy for store and foward communications, and
-   remove the problem of long term keys.
+> [ Upstream commit 1c0479023412ab7834f2e98b796eb0d8c627cd62 ]
+>=20
+> As some point hs200 was failing on rk3288-veyron-minnie.  See commit
+> 984926781122 ("ARM: dts: rockchip: temporarily remove emmc hs200 speed
+> from rk3288 minnie").  Although I didn't track down exactly when it
+> started working, it seems to work OK now, so let's turn it back on.
+>=20
+> To test this, I booted from SD card and then used this script to
+> stress the enumeration process after fixing a memory leak [1]:
+>   cd /sys/bus/platform/drivers/dwmmc_rockchip
+>   for i in $(seq 1 3000); do
+>     echo "=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D" $i
+>     echo ff0f0000.dwmmc > unbind
+>     sleep .5
+>     echo ff0f0000.dwmmc > bind
+>     while true; do
+>       if [ -e /dev/mmcblk2 ]; then
+>         break;
+>       fi
+>       sleep .1
+>     done
+>   done
+>=20
+> It worked fine.
 
-2) The existence of such a process with encrypted communications to
-   ensure long term confidentiality is going to make our contact people
-   the targets of people who want access to knolwedge about hardware
-   bugs like meltdown, before they become public.
+This may not be suitable for stable. So... hs200 started working in
+mainline sometime. That does not mean it was fixed in all the various
+stable trees, too.
 
-I am just mentioning these things in case they are not immediately
-obvious to everyone else involved, so that people can be certain
-they are comfortable with the tradeoffs being made.
+How was this tested in respective -stable releases?
 
-Eric
+> [1] https://lkml.kernel.org/r/20190503233526.226272-1-dianders@chromium.o=
+rg
+>=20
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--u3/rZRmxL6MmkK24
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl1IQAgACgkQMOfwapXb+vK1+QCgiyrLP+CFhxZyPjkd07+ydxDL
+1JoAn32DOjyKCEJYQQw6DB1POy3fJyRj
+=+EKd
+-----END PGP SIGNATURE-----
+
+--u3/rZRmxL6MmkK24--
