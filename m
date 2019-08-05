@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A80CC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E06E9C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1EC120651
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A904D20644
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:29:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011780;
-	bh=0cNwFlZ1b10kVaaejrryEAcU+pkQ8MaKIVH9ntFQ0Ss=;
+	s=default; t=1565011789;
+	bh=Wq0On0sVRwS3b6yIGDzoh0IPuVEOA26q+6ww1ezcPzY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YK/umxMzSuCVHXUnrdSd5njk+UP+x4eFHTnmtORsWYiQ6HPFca5QxnjynnrA17FhE
-	 RMGkUG1Rnj6yG1SLolFrrDZCE9PJuPv4Ez4RiRdNh0oC7+YjksjhH6ocRsRGTxeCl5
-	 3GIkINg+IXuVVgGc55DRZMTuOUZO+PjkotAnwzn0=
+	b=izf7WM96MoyalUKc0C3qSd3hMGiOPm9hTXTlYYH4aIw3lOeO8sSdDitUREAscNUYS
+	 NA+6bBaj/BYqypWwfM2L7d+Ypexi/bpc3RCi2GHORyNrE6qz9zJGE7Ctll5ROe2MXi
+	 D3oVo84Z7f8X0apJjLQ44AHLcIIRe74GQwqjyOzE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730821AbfHEN3k (ORCPT
+        id S1730852AbfHEN3s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:29:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57874 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:29:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730565AbfHENVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:21:38 -0400
+        id S1730531AbfHENV2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:21:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2DC420657;
-        Mon,  5 Aug 2019 13:21:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3747620644;
+        Mon,  5 Aug 2019 13:21:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011298;
-        bh=0cNwFlZ1b10kVaaejrryEAcU+pkQ8MaKIVH9ntFQ0Ss=;
+        s=default; t=1565011287;
+        bh=Wq0On0sVRwS3b6yIGDzoh0IPuVEOA26q+6ww1ezcPzY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hNxHbq2NSx/jwJyZhYWiG3UyN+6N3pDEO2dA4ZdW4lUx16sUl1A/gBprIFqKhZe69
-         fBGKtSpI0KgH9yDn6+yH2INN1/e4Jf/lcpy1zRCMrnnxVPS2zpcuWlkus2vHYdouGf
-         stccMiiW8gaUi7ZOwTFiLW5bHdHB31I1JwjQw+QU=
+        b=sgzZVCObE0tNqraEpuBDnz07L8iuXP1p4NBAZa5pzJ7ZmWwdeYcskv9KweSRs2QoG
+         Sg+C33pp2XYIa63/lHgyP7rYhhOeW3lLShlgN7yIxueVDVUy47mTW7SOMtS+dBtlZ9
+         BfjKwmoh+jqnbZnpcC9+DocXjUMfewwlh3NU8ryk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilya Leoshkevich <iii@linux.ibm.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 038/131] selftests/bpf: do not ignore clang failures
-Date:   Mon,  5 Aug 2019 15:02:05 +0200
-Message-Id: <20190805124953.988355516@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 008/131] soc: qcom: rpmpd: fixup rpmpd set performance state
+Date:   Mon,  5 Aug 2019 15:01:35 +0200
+Message-Id: <20190805124951.986015582@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -61,70 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9cae4ace80ef39005da106fbb89c952b27d7b89e ]
+[ Upstream commit 8b3344422f097debe52296b87a39707d56ca3abe ]
 
-When compiling an eBPF prog fails, make still returns 0, because
-failing clang command's output is piped to llc and therefore its
-exit status is ignored.
+Remoteproc q6v5-mss calls set_performance_state with INT_MAX on
+rpmpd. This is currently ignored since it is greater than the
+max supported state. Fixup rpmpd state to max if the required
+state is greater than all the supported states.
 
-When clang fails, pipe the string "clang failed" to llc. This will make
-llc fail with an informative error message. This solution was chosen
-over using pipefail, having separate targets or getting rid of llc
-invocation due to its simplicity.
-
-In addition, pull Kbuild.include in order to get .DELETE_ON_ERROR target,
-which would cause partial .o files to be removed.
-
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Fixes: 075d3db8d10d ("soc: qcom: rpmpd: Add support for get/set performance state")
+Reviewed-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Andy Gross <agross@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/Makefile | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/soc/qcom/rpmpd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
-index 1c95112629477..f1573a11d3e41 100644
---- a/tools/testing/selftests/bpf/Makefile
-+++ b/tools/testing/selftests/bpf/Makefile
-@@ -1,4 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
-+include ../../../../scripts/Kbuild.include
+diff --git a/drivers/soc/qcom/rpmpd.c b/drivers/soc/qcom/rpmpd.c
+index 005326050c236..235d01870dd8c 100644
+--- a/drivers/soc/qcom/rpmpd.c
++++ b/drivers/soc/qcom/rpmpd.c
+@@ -226,7 +226,7 @@ static int rpmpd_set_performance(struct generic_pm_domain *domain,
+ 	struct rpmpd *pd = domain_to_rpmpd(domain);
  
- LIBDIR := ../../../lib
- BPFDIR := $(LIBDIR)/bpf
-@@ -185,8 +186,8 @@ $(ALU32_BUILD_DIR)/test_progs_32: prog_tests/*.c
+ 	if (state > MAX_RPMPD_STATE)
+-		goto out;
++		state = MAX_RPMPD_STATE;
  
- $(ALU32_BUILD_DIR)/%.o: progs/%.c $(ALU32_BUILD_DIR) \
- 					$(ALU32_BUILD_DIR)/test_progs_32
--	$(CLANG) $(CLANG_FLAGS) \
--		 -O2 -target bpf -emit-llvm -c $< -o - |      \
-+	($(CLANG) $(CLANG_FLAGS) -O2 -target bpf -emit-llvm -c $< -o - || \
-+		echo "clang failed") | \
- 	$(LLC) -march=bpf -mattr=+alu32 -mcpu=$(CPU) $(LLC_FLAGS) \
- 		-filetype=obj -o $@
- ifeq ($(DWARF2BTF),y)
-@@ -197,16 +198,16 @@ endif
- # Have one program compiled without "-target bpf" to test whether libbpf loads
- # it successfully
- $(OUTPUT)/test_xdp.o: progs/test_xdp.c
--	$(CLANG) $(CLANG_FLAGS) \
--		-O2 -emit-llvm -c $< -o - | \
-+	($(CLANG) $(CLANG_FLAGS) -O2 -emit-llvm -c $< -o - || \
-+		echo "clang failed") | \
- 	$(LLC) -march=bpf -mcpu=$(CPU) $(LLC_FLAGS) -filetype=obj -o $@
- ifeq ($(DWARF2BTF),y)
- 	$(BTF_PAHOLE) -J $@
- endif
+ 	mutex_lock(&rpmpd_lock);
  
- $(OUTPUT)/%.o: progs/%.c
--	$(CLANG) $(CLANG_FLAGS) \
--		 -O2 -target bpf -emit-llvm -c $< -o - |      \
-+	($(CLANG) $(CLANG_FLAGS) -O2 -target bpf -emit-llvm -c $< -o - || \
-+		echo "clang failed") | \
- 	$(LLC) -march=bpf -mcpu=$(CPU) $(LLC_FLAGS) -filetype=obj -o $@
- ifeq ($(DWARF2BTF),y)
- 	$(BTF_PAHOLE) -J $@
 -- 
 2.20.1
 
