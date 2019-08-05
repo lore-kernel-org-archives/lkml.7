@@ -2,98 +2,105 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E75AC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39958C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A9DC2182B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:53:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K0B7/O1S"
+	by mail.kernel.org (Postfix) with ESMTP id 16DBA217D9
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:53:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbfHEJxS (ORCPT
+        id S1728170AbfHEJxi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 05:53:18 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:32944 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727158AbfHEJxS (ORCPT
+        Mon, 5 Aug 2019 05:53:38 -0400
+Received: from paleale.coelho.fi ([176.9.41.70]:34094 "EHLO
+        farmhouse.coelho.fi" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727868AbfHEJxi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 05:53:18 -0400
-Received: by mail-lf1-f66.google.com with SMTP id x3so57534371lfc.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 02:53:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yhFhmYD1XCmoTjeTnvzGsODetc1XqqaQE8oBpm4W4vQ=;
-        b=K0B7/O1SMz4RHGXSXodAVa9L8sFoa6UoXKns2dJR1JyKOU2c6furolEA7Q5allCkl0
-         hz3utRt5xZzsleYc5j96GSG5SHJEN9qRmcnlBwZ5Hbwn+fft/iuWyPYdhkJXD/m3jjk7
-         jrqz4dcI6wnABAMB/2cejuK/mx5zUZuzGuS867Iji3hw8OpOMM0EX1haB0kh4NotBmOv
-         TnrXt+nPzDsghutAkYvsNt/760Kmcu8ed+WXy1lumUgqOtf+HKx+P7IjgQ1X5X3F7qkT
-         B41DImoEkIRtZUYYGgcCoKd1jS/rYluUTw2JPsGDWnr8wMsUgYyBHWgFNW3+ViFzuyiM
-         iwUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yhFhmYD1XCmoTjeTnvzGsODetc1XqqaQE8oBpm4W4vQ=;
-        b=PV+URA4C7kHJ0+cwsHVXCrvzF7Pz62Scurb7BzxnHuHgKipRfSBaFap76DNFcpa5GE
-         Z9XBcxX7PT9T35Mc6hnsj7gdtbjd3wATC/6dKAdQq2+FOct9Ti7CnhYljuhrytdeTe1k
-         eOPmY+iTVMzaTnoGD2hLXsHypliA7/S0ub45XjHoApzciA8zBPLVzIhkZaxyEIZxv1C0
-         3Vb8pB71wB4jj8aLewSHE7TKi8Z4Y/raJwDUSxeKQY7tkgn/LlTkcAlHZW0xOvO28aez
-         zlMNC73kox4yYmXZMDksw89A+gDOawgkRXYp9eKRKXcsvS0iLaMAgUPpP1fYi6m9LGL9
-         DPrg==
-X-Gm-Message-State: APjAAAXwdocyw0jb0hRl3sf1aZW9AOPyCmDSyHEEO+1Kpjpddk2D0+OJ
-        EMBnl8AfaQs+x8zRj0NNBYwz6szNAgr5qgbzeRplyw==
-X-Google-Smtp-Source: APXvYqznj+OyBQxOK0qX1ZGixNtwr50nmLElXsC7qnFS3oH2+cAja/iMhd5ozIzmb9vouUkDfKjemRMc1Gv/14GZ9L0=
-X-Received: by 2002:ac2:4c07:: with SMTP id t7mr1288145lfq.152.1564998796491;
- Mon, 05 Aug 2019 02:53:16 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190722150302.29526-1-brgl@bgdev.pl> <20190722150302.29526-2-brgl@bgdev.pl>
-In-Reply-To: <20190722150302.29526-2-brgl@bgdev.pl>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 5 Aug 2019 11:53:04 +0200
-Message-ID: <CACRpkdYexsXR=n+t1iVb1QMZc9U1FeKdyHy3w4VnfPy4B=xeiA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/7] sh: ecovec24: add additional properties to the
- backlight device
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-sh@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        linux-fbdev@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        Mon, 5 Aug 2019 05:53:38 -0400
+Received: from [91.156.6.193] (helo=redipa)
+        by farmhouse.coelho.fi with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.92)
+        (envelope-from <luca@coelho.fi>)
+        id 1huZgM-0003U7-5q; Mon, 05 Aug 2019 12:53:34 +0300
+Message-ID: <ef32cea91614b9708a474e223f3fbbb85a95501d.camel@coelho.fi>
+From:   Luca Coelho <luca@coelho.fi>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     dor.shaish@intel.com, Josh Boyer <jwboyer@kernel.org>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 05 Aug 2019 12:53:33 +0300
+In-Reply-To: <38635c1b10018859457787ecff4f92a3ceec34a4.camel@coelho.fi>
+References: <s5hr26m9gvc.wl-tiwai@suse.de>
+         <280dad08ba9864755c3c45ed3ce26d602fe18a49.camel@intel.com>
+         <s5ho91pzyml.wl-tiwai@suse.de> <s5hwogcxwt4.wl-tiwai@suse.de>
+         <b225d043d8581e0fec68cb63f7433161868293f3.camel@coelho.fi>
+         <s5hmuh7xrqy.wl-tiwai@suse.de>
+         <38635c1b10018859457787ecff4f92a3ceec34a4.camel@coelho.fi>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Re: Regression with the latest iwlwifi-9260-*-46.ucode
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 5:03 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Mon, 2019-08-05 at 12:48 +0300, Luca Coelho wrote:
+> On Sun, 2019-07-21 at 18:43 +0200, Takashi Iwai wrote:
+> > On Sat, 20 Jul 2019 22:49:33 +0200,
+> > Luca Coelho wrote:
+> > > On Sat, 2019-07-20 at 22:42 +0200, Takashi Iwai wrote:
+> > > > On Fri, 19 Jul 2019 20:07:46 +0200,
+> > > > Takashi Iwai wrote:
+> > > > > On Fri, 19 Jul 2019 18:36:53 +0200,
+> > > > > Luciano Coelho wrote:
+> > > > > > Adding Dor.
+> > > > > > 
+> > > > > > Hi Takashi,
+> > > > > > 
+> > > > > > Do you have full logs of the crash? We can't see much from the log
+> > > > > > snippet pasted in the bug report.
+> > > > > 
+> > > > > OK, I'll ask reporters.  If you have a SUSE/openSUSE bugzilla account,
+> > > > > feel free to join there.
+> > > > 
+> > > > FYI, the dmesg's have been uploaded to the same bugzilla entry:
+> > > >   https://bugzilla.opensuse.org/show_bug.cgi?id=1142128
+> > > > 
+> > > 
+> > > Thanks!
+> > > 
+> > > BTW, I pushed new firmwares to our firmware tree in git.kernel.org
+> > > today.  This is the patch:
+> > > 
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/iwlwifi/linux-firmware.git/commit/?id=b5f09bb4f816abace0227d0f4e749859364cef6b
+> > > 
+> > > It would be great if you can try it out and let us know whether the problem is gone or not.
+> > 
+> > I created a test package and asked for testing.
+> > The test result seems negative, showing the same error,
+> > unfortunately.
+> > 
+> > The dmesg was uploaded on the bugzilla entry.
+> 
+> Thanks Takashi! We will look into them as soon as possible (sorry for
+> the late reply, I just came back from vacations).
 
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> Add a GPIO lookup entry and a device property for GPIO backlight to the
-> board file. Tie them to the platform device which is now registered using
-> platform_device_register_full() because of the properties. These changes
-> are inactive now but will be used once the gpio backlight driver is
-> modified.
->
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Actually, I just noticed that your bugzilla is closed as "RESOLVED
+FIXED".  Is this still an issue?
 
-Clever! I must also use these dynamic properties now.
+This seems like a mismatch between the WiFi and BT firmwares... And
+most likely the same issue as this:
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+https://bugzilla.kernel.org/show_bug.cgi?id=202163
 
-Yours,
-Linus Walleij
+
+--
+Cheers,
+Luca.
+
