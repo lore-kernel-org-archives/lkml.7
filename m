@@ -2,51 +2,53 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D80AAC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99540C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF33D2067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70CCC2075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:25:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011517;
-	bh=RRV6MZPfpryWmJfI3TYE7p7hcAWQgxs1DRV86F8RDWo=;
+	s=default; t=1565011520;
+	bh=A2eYit4iCgSv7faV4aJTnohGLCKHnrfaYjk0Q0752e4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nqgrCAwS0zM5/Y2MLbt6sjvf3OeNyQVu0sNAYTWVS5/cn2cjBMc7dy0nNEHnMFRcw
-	 reTlM4BbwSQAoWTkMNN0SlbXbvqgJWuWmldIZnOl4XLoyB3w6gJU158Gc5L8oCSNlK
-	 Zs8dQEQwe2WMcMSXJG6J6qvNK/R7u+GwwjQmZ+wY=
+	b=K/OwgaNGjT8FuNDRq2HcMtwnPxLED1dTF5LTti/ONKIh4nR0Sno9pIbD4rSDswK+6
+	 /XTDZucL8ch5dVUdNPlY0V2fzuM5oBv3vqT6mnXQAI/zq0aAead/FDLjI75HoXJfdc
+	 tyAZxpRjLh0mRV7BKavhYC+z8R+FeLDLvPuvE3qA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731188AbfHENZQ (ORCPT
+        id S1729298AbfHENZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:25:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33598 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:25:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730691AbfHENZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:25:08 -0400
+        id S1730801AbfHENZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:25:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B34A20644;
-        Mon,  5 Aug 2019 13:25:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02A4E2067D;
+        Mon,  5 Aug 2019 13:25:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011507;
-        bh=RRV6MZPfpryWmJfI3TYE7p7hcAWQgxs1DRV86F8RDWo=;
+        s=default; t=1565011515;
+        bh=A2eYit4iCgSv7faV4aJTnohGLCKHnrfaYjk0Q0752e4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wHgBG+WTHBsNXmW2zo1rltcaCWCydgPn8/gog+4nm0TA5VaY6Dv/b+QqBT7gtpyuv
-         YEtnC7MDoLaMgWUVccb91SH/mQbosOefPqgoIwFq59hwlfs114WBGBsMMeXO36p/7s
-         xK3KBSrL8haM08D4CAKBiA5+WRvy7GE+pQmfultc=
+        b=woqr8ywiCxBh5hYaWDKdFVKqdNuFqMSqS4yMvE1+Xw1rkb1LkFqNhX+T+G0Pnb6SI
+         LGp4mm+Ii+fzTfsnFvq7GHiuyt7N35AKwxh+Z/pGg98Tmc+9xu2fhqjoWJ16Abr2/Y
+         uHhov6z9WuzEq/H0H+zOlbjKFxhuL1sa98C/ad2s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Weiyi Lu <weiyi.lu@mediatek.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCH 5.2 115/131] clk: mediatek: mt8183: Register 13MHz clock earlier for clocksource
-Date:   Mon,  5 Aug 2019 15:03:22 +0200
-Message-Id: <20190805124959.659590680@linuxfoundation.org>
+        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Jan Beulich <jbeulich@suse.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Subject: [PATCH 5.2 118/131] xen/swiotlb: fix condition for calling xen_destroy_contiguous_region()
+Date:   Mon,  5 Aug 2019 15:03:25 +0200
+Message-Id: <20190805124959.859269321@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -59,106 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Weiyi Lu <weiyi.lu@mediatek.com>
+From: Juergen Gross <jgross@suse.com>
 
-commit c93d059a80450af99dd6c0e8c36790579343675a upstream.
+commit 50f6393f9654c561df4cdcf8e6cfba7260143601 upstream.
 
-The 13MHz clock should be registered before clocksource driver is
-initialized. Use CLK_OF_DECLARE_DRIVER() to guarantee.
+The condition in xen_swiotlb_free_coherent() for deciding whether to
+call xen_destroy_contiguous_region() is wrong: in case the region to
+be freed is not contiguous calling xen_destroy_contiguous_region() is
+the wrong thing to do: it would result in inconsistent mappings of
+multiple PFNs to the same MFN. This will lead to various strange
+crashes or data corruption.
 
-Fixes: acddfc2c261b ("clk: mediatek: Add MT8183 clock support")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Instead of calling xen_destroy_contiguous_region() in that case a
+warning should be issued as that situation should never occur.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Reviewed-by: Jan Beulich <jbeulich@suse.com>
+Acked-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clk/mediatek/clk-mt8183.c |   46 ++++++++++++++++++++++++++++----------
- 1 file changed, 34 insertions(+), 12 deletions(-)
+ drivers/xen/swiotlb-xen.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/clk/mediatek/clk-mt8183.c
-+++ b/drivers/clk/mediatek/clk-mt8183.c
-@@ -25,9 +25,11 @@ static const struct mtk_fixed_clk top_fi
- 	FIXED_CLK(CLK_TOP_UNIVP_192M, "univpll_192m", "univpll", 192000000),
- };
+--- a/drivers/xen/swiotlb-xen.c
++++ b/drivers/xen/swiotlb-xen.c
+@@ -361,8 +361,8 @@ xen_swiotlb_free_coherent(struct device
+ 	/* Convert the size to actually allocated. */
+ 	size = 1UL << (order + XEN_PAGE_SHIFT);
  
-+static const struct mtk_fixed_factor top_early_divs[] = {
-+	FACTOR(CLK_TOP_CLK13M, "clk13m", "clk26m", 1, 2),
-+};
-+
- static const struct mtk_fixed_factor top_divs[] = {
--	FACTOR(CLK_TOP_CLK13M, "clk13m", "clk26m", 1,
--		2),
- 	FACTOR(CLK_TOP_F26M_CK_D2, "csw_f26m_ck_d2", "clk26m", 1,
- 		2),
- 	FACTOR(CLK_TOP_SYSPLL_CK, "syspll_ck", "mainpll", 1,
-@@ -1167,37 +1169,57 @@ static int clk_mt8183_apmixed_probe(stru
- 	return of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
- }
+-	if (((dev_addr + size - 1 <= dma_mask)) ||
+-	    range_straddles_page_boundary(phys, size))
++	if (!WARN_ON((dev_addr + size - 1 > dma_mask) ||
++		     range_straddles_page_boundary(phys, size)))
+ 		xen_destroy_contiguous_region(phys, order);
  
-+static struct clk_onecell_data *top_clk_data;
-+
-+static void clk_mt8183_top_init_early(struct device_node *node)
-+{
-+	int i;
-+
-+	top_clk_data = mtk_alloc_clk_data(CLK_TOP_NR_CLK);
-+
-+	for (i = 0; i < CLK_TOP_NR_CLK; i++)
-+		top_clk_data->clks[i] = ERR_PTR(-EPROBE_DEFER);
-+
-+	mtk_clk_register_factors(top_early_divs, ARRAY_SIZE(top_early_divs),
-+			top_clk_data);
-+
-+	of_clk_add_provider(node, of_clk_src_onecell_get, top_clk_data);
-+}
-+
-+CLK_OF_DECLARE_DRIVER(mt8183_topckgen, "mediatek,mt8183-topckgen",
-+			clk_mt8183_top_init_early);
-+
- static int clk_mt8183_top_probe(struct platform_device *pdev)
- {
- 	struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	void __iomem *base;
--	struct clk_onecell_data *clk_data;
- 	struct device_node *node = pdev->dev.of_node;
- 
- 	base = devm_ioremap_resource(&pdev->dev, res);
- 	if (IS_ERR(base))
- 		return PTR_ERR(base);
- 
--	clk_data = mtk_alloc_clk_data(CLK_TOP_NR_CLK);
--
- 	mtk_clk_register_fixed_clks(top_fixed_clks, ARRAY_SIZE(top_fixed_clks),
--		clk_data);
-+		top_clk_data);
-+
-+	mtk_clk_register_factors(top_early_divs, ARRAY_SIZE(top_early_divs),
-+		top_clk_data);
- 
--	mtk_clk_register_factors(top_divs, ARRAY_SIZE(top_divs), clk_data);
-+	mtk_clk_register_factors(top_divs, ARRAY_SIZE(top_divs), top_clk_data);
- 
- 	mtk_clk_register_muxes(top_muxes, ARRAY_SIZE(top_muxes),
--		node, &mt8183_clk_lock, clk_data);
-+		node, &mt8183_clk_lock, top_clk_data);
- 
- 	mtk_clk_register_composites(top_aud_muxes, ARRAY_SIZE(top_aud_muxes),
--		base, &mt8183_clk_lock, clk_data);
-+		base, &mt8183_clk_lock, top_clk_data);
- 
- 	mtk_clk_register_composites(top_aud_divs, ARRAY_SIZE(top_aud_divs),
--		base, &mt8183_clk_lock, clk_data);
-+		base, &mt8183_clk_lock, top_clk_data);
- 
- 	mtk_clk_register_gates(node, top_clks, ARRAY_SIZE(top_clks),
--		clk_data);
-+		top_clk_data);
- 
--	return of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-+	return of_clk_add_provider(node, of_clk_src_onecell_get, top_clk_data);
- }
- 
- static int clk_mt8183_infra_probe(struct platform_device *pdev)
+ 	xen_free_coherent_pages(hwdev, size, vaddr, (dma_addr_t)phys, attrs);
 
 
