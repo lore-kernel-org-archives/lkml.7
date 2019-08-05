@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80424C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D339BC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54E24216F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9765E216F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:12:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010757;
-	bh=BgD3mM4HkmQ/gs+W/RqVaygAB9Nz3ZXAEzte4C+fkoE=;
+	s=default; t=1565010765;
+	bh=k2Eu4AtNfLVBB+3ReNjOJ55pY8hm1o606I6hLFu+uso=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AIst1xvbWKF78BlNwAbqtyNg5HDprW5STwZMV34/iaKwpwlaF8gzvhCe9uhOfQ4IO
-	 QRnhH+yVZprbkbOblWSY7XGTMEPaWqMlngRcdVkXulZHLFwvJ7ZqB+rHHO7e7ClEPP
-	 9m96k529BvYsJqzZ6h0XibQmWUIdiqTQqCUznWK0=
+	b=x1pJH8pjgT0yxzr1JtJtJNzujzqhAAEL8yUYiDE5vKZ1eJT+SUsMZjFRZYW768GmN
+	 9oB+E1fVC0YWOPkldRqwJjLFE7JjAa2FS9H5ZcsDe7MFNXP72U1g8jZiG6hNjfe01g
+	 82ILS7+oZc7nFpvySZNCrRxZQJs7ryQN60InMX9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730136AbfHENMg (ORCPT
+        id S1730158AbfHENMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:12:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49224 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:12:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730305AbfHENKT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:10:19 -0400
+        id S1729153AbfHENKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:10:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F2A52067D;
-        Mon,  5 Aug 2019 13:10:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 713F72173B;
+        Mon,  5 Aug 2019 13:10:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010618;
-        bh=BgD3mM4HkmQ/gs+W/RqVaygAB9Nz3ZXAEzte4C+fkoE=;
+        s=default; t=1565010602;
+        bh=k2Eu4AtNfLVBB+3ReNjOJ55pY8hm1o606I6hLFu+uso=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1P0v75UwMXGNwttu87v2492ie2NpegFtYxnpqVu2+J6LkfTVm7goEBcn8aB/mEhkq
-         o2NnJDYh5r4k8DbqU102NiysNfWgUd3QhuRbeK/PKMEx1N535UxFGRkSdCVlHM/LUT
-         GMNLGaBvRRs8Utcq2BMolHWa0j+HCbVXORDxsw+0=
+        b=pduLCgr2sZhGb9sEM//M/Wo6sjidHAFh5ALYs7GoWODVKnlhLZb3EGcfZbWiYyCuz
+         J2sh3F3UMrjbJoVzf1/Snf81QMRNo+ZV7AfJ3aOSvZX8PAPeJq6Cz2Rnj34dHvQkWg
+         1jyUmZbv962vbpA4IQMyyi0hI8XUHVrC079xCYDE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Juergen Gross <jgross@suse.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Alexandre Bounine <alex.bou9@gmail.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 39/74] x86/paravirt: Fix callee-saved function ELF sizes
-Date:   Mon,  5 Aug 2019 15:02:52 +0200
-Message-Id: <20190805124939.004970037@linuxfoundation.org>
+Subject: [PATCH 4.19 34/74] drivers/rapidio/devices/rio_mport_cdev.c: NUL terminate some strings
+Date:   Mon,  5 Aug 2019 15:02:47 +0200
+Message-Id: <20190805124938.547554946@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124935.819068648@linuxfoundation.org>
 References: <20190805124935.819068648@linuxfoundation.org>
@@ -62,53 +63,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 083db6764821996526970e42d09c1ab2f4155dd4 ]
+[ Upstream commit 156e0b1a8112b76e351684ac948c59757037ac36 ]
 
-The __raw_callee_save_*() functions have an ELF symbol size of zero,
-which confuses objtool and other tools.
+The dev_info.name[] array has space for RIO_MAX_DEVNAME_SZ + 1
+characters.  But the problem here is that we don't ensure that the user
+put a NUL terminator on the end of the string.  It could lead to an out
+of bounds read.
 
-Fixes a bunch of warnings like the following:
-
-  arch/x86/xen/mmu_pv.o: warning: objtool: __raw_callee_save_xen_pte_val() is missing an ELF size annotation
-  arch/x86/xen/mmu_pv.o: warning: objtool: __raw_callee_save_xen_pgd_val() is missing an ELF size annotation
-  arch/x86/xen/mmu_pv.o: warning: objtool: __raw_callee_save_xen_make_pte() is missing an ELF size annotation
-  arch/x86/xen/mmu_pv.o: warning: objtool: __raw_callee_save_xen_make_pgd() is missing an ELF size annotation
-
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/afa6d49bb07497ca62e4fc3b27a2d0cece545b4e.1563413318.git.jpoimboe@redhat.com
+Link: http://lkml.kernel.org/r/20190529110601.GB19119@mwanda
+Fixes: e8de370188d0 ("rapidio: add mport char device driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Alexandre Bounine <alex.bou9@gmail.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/paravirt.h | 1 +
- arch/x86/kernel/kvm.c           | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/rapidio/devices/rio_mport_cdev.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
-index e375d4266b53e..a04677038872c 100644
---- a/arch/x86/include/asm/paravirt.h
-+++ b/arch/x86/include/asm/paravirt.h
-@@ -768,6 +768,7 @@ static __always_inline bool pv_vcpu_is_preempted(long cpu)
- 	    PV_RESTORE_ALL_CALLER_REGS					\
- 	    FRAME_END							\
- 	    "ret;"							\
-+	    ".size " PV_THUNK_NAME(func) ", .-" PV_THUNK_NAME(func) ";"	\
- 	    ".popsection")
+diff --git a/drivers/rapidio/devices/rio_mport_cdev.c b/drivers/rapidio/devices/rio_mport_cdev.c
+index cbe467ff1aba9..fa0bbda4b3f2e 100644
+--- a/drivers/rapidio/devices/rio_mport_cdev.c
++++ b/drivers/rapidio/devices/rio_mport_cdev.c
+@@ -1688,6 +1688,7 @@ static int rio_mport_add_riodev(struct mport_cdev_priv *priv,
  
- /* Get a reference to a callee-save function */
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index 7f89d609095ac..cee45d46e67dc 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -830,6 +830,7 @@ asm(
- "cmpb	$0, " __stringify(KVM_STEAL_TIME_preempted) "+steal_time(%rax);"
- "setne	%al;"
- "ret;"
-+".size __raw_callee_save___kvm_vcpu_is_preempted, .-__raw_callee_save___kvm_vcpu_is_preempted;"
- ".popsection");
+ 	if (copy_from_user(&dev_info, arg, sizeof(dev_info)))
+ 		return -EFAULT;
++	dev_info.name[sizeof(dev_info.name) - 1] = '\0';
  
- #endif
+ 	rmcd_debug(RDEV, "name:%s ct:0x%x did:0x%x hc:0x%x", dev_info.name,
+ 		   dev_info.comptag, dev_info.destid, dev_info.hopcount);
+@@ -1819,6 +1820,7 @@ static int rio_mport_del_riodev(struct mport_cdev_priv *priv, void __user *arg)
+ 
+ 	if (copy_from_user(&dev_info, arg, sizeof(dev_info)))
+ 		return -EFAULT;
++	dev_info.name[sizeof(dev_info.name) - 1] = '\0';
+ 
+ 	mport = priv->md->mport;
+ 
 -- 
 2.20.1
 
