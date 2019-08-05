@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 479ADC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A91C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CDD320B1F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:57:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5A4621734
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:57:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FzVRo/06"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mhbwDZ3n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730580AbfHES5i (ORCPT
+        id S1730592AbfHES5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 5 Aug 2019 14:57:38 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41055 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730523AbfHES5d (ORCPT
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36917 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730431AbfHES5e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 14:57:33 -0400
-Received: by mail-pg1-f196.google.com with SMTP id x15so29850996pgg.8;
-        Mon, 05 Aug 2019 11:57:33 -0700 (PDT)
+        Mon, 5 Aug 2019 14:57:34 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 19so40091102pfa.4;
+        Mon, 05 Aug 2019 11:57:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=cjWaUP04Ww8m6uQcC0AKZNjv1jlcUsiz2ETZEZkSQs0=;
-        b=FzVRo/06bzl3CwDZ8+mhccUNJDBYaD5L/lSu+58feeqoYEUwyacnkqSPjgVWuV/C/l
-         ZgZp/2xRhBnSlGLUrdKgKu8x++voB5hI/EaZmL4hNi+HcksMDSoMAcAhpWg4Hv3tYbw/
-         Q2H/b/93g8luBZOpY3r/6TnS8SNO1kgSu1SZ4Gm2yoWDH2QSBYiS7pdPKqPx3UyKCx7x
-         vo9A49HI+Cuho6/+ZjSWgs3n2eIODQ6tlOMYgdZCA1BiPqLMYM+P4bF4WW9ZSSxeJaGg
-         9yXf3Hps8/CqauiqiqZWoNU86f4udeIChfKiD8HfypIGkBAsxFS3KixPfNmbb3GnzY8R
-         HqEg==
+        bh=VdUzTwa+OjzYQgE6vtFVuX6c9hPKU8SQFqp6Wy3beoE=;
+        b=mhbwDZ3nlvhLAwJKo7WM78d4RYMu3zRSi2QTG1gFGHFiLXFhqRXiav/ZJdMnKPndeJ
+         lZq0KEnmbNlvZY6LDDa9NyLHBvOcRZoHzL1E66T4EcX2oG27pOCCJuRUqef9Ac0MT29i
+         qx1GhfoO2x/qH8Nt+aIikUNaPS565DmGsYnj2d5FFy1f6oV7WEWZeinAYw9iuDupmhjT
+         g24SNXcEzI6KDdmD3vMj9jBdTZ3PYdyNVoh8NVcsQcXnS/RPDMa+7+BMx9WT3FZo0GRT
+         C5956Oh5AYJUR0K+5SqdaSpFd6LsO4MtymwKl+V8A91yKXEq/vpcVAgeOn/uqXUM6wHS
+         jr8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=cjWaUP04Ww8m6uQcC0AKZNjv1jlcUsiz2ETZEZkSQs0=;
-        b=NmoMpDg8cwoaCfMYSyAP2yiz7UNvDu7GVj7+Ie7GILIIaFVC/xcayoFrjhlxVvyTsX
-         dQWajYco9O6oNut8SW0SN6jdMASLByqW9idFgUxjEdhprJHbRM1KWC8omAdLHBiFq5Vn
-         6+rvsILXjRkLkArWMJkXWLXLzbtUrQZ9bl/+kybyACCCqlegYpg3vPC7uas8EJP/Xr/z
-         rptdy86Iv/TUlKewaUJjUeDp8xFEMDgsuwy97Uio1tJZGIUXbyQCGc0VV+H0/5qLRjrl
-         ruAlVCQMiFqXj8mzcqrNrNvOKAtORgHX44yOLfqNel6W9lpHHJ9eWiL9rKIvWafDLP47
-         TVZQ==
-X-Gm-Message-State: APjAAAXW6VrEvqeE+81zYQyg3H3aVPrjSiraX9E0hOdNY66lSXAXM3Yx
-        0VgwZwpXg4ikuPLorn86MBLEqzTA
-X-Google-Smtp-Source: APXvYqyHtUVmbAp3IBSNC6sKX7W7bCeFehFK75RelWZEFMS+D/0YMMGuA0ZIBXr0vLInDa6r9iPjbw==
-X-Received: by 2002:a62:8494:: with SMTP id k142mr73816957pfd.75.1565031452362;
-        Mon, 05 Aug 2019 11:57:32 -0700 (PDT)
+        bh=VdUzTwa+OjzYQgE6vtFVuX6c9hPKU8SQFqp6Wy3beoE=;
+        b=YOOB9BJGjoB2mXhisywc9QzC+DtbPS4UE85UoOaN7ScBxHV/g0RyqwzLMPpQH9zHxH
+         vVyeGoQ2GVPIMap8QJTnLAfq2eFB+kyYsmSQ+ZSvdRDkjqbyT4u8c6Y+ZQDOp/GNsDi1
+         1wBq2HhE4cbkJgrdGPhkYXrnGN00w2UDfch5uGW6Jn7YyHCq/1a6B+xXa/gdn5N1xUzp
+         2ToG1kD+x0rR7cKcJYcsZqUxyFb13n1grpuibNjNFeje3iipbLt1QAgsHqgMtZN7RTtw
+         8/92q13tLW/5NVTZbySlGkkKZR99J4wkKCBOoFd03mtW7iNx5L3zGR6GuBBxt89yK0vg
+         8OcA==
+X-Gm-Message-State: APjAAAWD1EDQVsO1uduiTlALBkPgoobBW//Vt6N9lrNS9Zf2IBbW5FWd
+        gJaZh1UBYMxBBGdzemMRGu9I27M2
+X-Google-Smtp-Source: APXvYqzSxOGGpN+FN/BOtK0Bspwn5pbqjnYTqGYz49C3V+RPPYz9uUbB8ATeNO1MMHZvctU0Upu2Qg==
+X-Received: by 2002:a63:790d:: with SMTP id u13mr25883505pgc.232.1565031453562;
+        Mon, 05 Aug 2019 11:57:33 -0700 (PDT)
 Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id k64sm16037959pgk.74.2019.08.05.11.57.31
+        by smtp.gmail.com with ESMTPSA id k64sm16037959pgk.74.2019.08.05.11.57.32
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 05 Aug 2019 11:57:31 -0700 (PDT)
+        Mon, 05 Aug 2019 11:57:32 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-serial@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -67,9 +67,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>, linux-imx@nxp.com,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 5/6] tty: serial: fsl_lpuart: Don't enable TIE in .startup() or .resume()
-Date:   Mon,  5 Aug 2019 11:57:00 -0700
-Message-Id: <20190805185701.22863-6-andrew.smirnov@gmail.com>
+Subject: [PATCH v3 6/6] tty: serial: fsl_lpuart: Ignore TX/RX interrupts if DMA is enabled
+Date:   Mon,  5 Aug 2019 11:57:01 -0700
+Message-Id: <20190805185701.22863-7-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190805185701.22863-1-andrew.smirnov@gmail.com>
 References: <20190805185701.22863-1-andrew.smirnov@gmail.com>
@@ -80,15 +80,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enabling TIE in .startup() callback causes the driver to start (or at
-least try) to transmit data before .start_tx() is called. Which, while
-harmless (since TIE handler will immediately disable it), is a no-op
-and shouldn't really happen. Drop UARTCR2_TIE from list of bits set in
-lpuart_startup().
-
-This change will also not enable TIE in .resume(), but it seems that,
-similart to .startup(), transmit interrupt shouldn't be enabled there
-either.
+In a mixed DMA/IRQ use-case (e.g.: DMA for TX, IRQ for RX), interrupt
+handler might try to handle Rx/Tx condition it shouldn't. Change the
+code to only handle TX/RX event if corresponding path isn't being
+handled by DMA.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Stefan Agner <stefan@agner.ch>
@@ -101,22 +96,26 @@ Cc: linux-imx@nxp.com
 Cc: linux-serial@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/tty/serial/fsl_lpuart.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/serial/fsl_lpuart.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
-index fb9961edce3a..5c3cc1051aa8 100644
+index 5c3cc1051aa8..3e17bb8a0b16 100644
 --- a/drivers/tty/serial/fsl_lpuart.c
 +++ b/drivers/tty/serial/fsl_lpuart.c
-@@ -1410,7 +1410,7 @@ static void lpuart_setup_watermark_enable(struct lpuart_port *sport)
- 	lpuart_setup_watermark(sport);
+@@ -967,10 +967,10 @@ static irqreturn_t lpuart_int(int irq, void *dev_id)
  
- 	cr2 = readb(sport->port.membase + UARTCR2);
--	cr2 |= UARTCR2_RIE | UARTCR2_TIE | UARTCR2_RE | UARTCR2_TE;
-+	cr2 |= UARTCR2_RIE | UARTCR2_RE | UARTCR2_TE;
- 	writeb(cr2, sport->port.membase + UARTCR2);
- }
+ 	sts = readb(sport->port.membase + UARTSR1);
  
+-	if (sts & UARTSR1_RDRF)
++	if (sts & UARTSR1_RDRF && !sport->lpuart_dma_rx_use)
+ 		lpuart_rxint(sport);
+ 
+-	if (sts & UARTSR1_TDRE)
++	if (sts & UARTSR1_TDRE && !sport->lpuart_dma_tx_use)
+ 		lpuart_txint(sport);
+ 
+ 	return IRQ_HANDLED;
 -- 
 2.21.0
 
