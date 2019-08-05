@@ -5,59 +5,59 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A0BC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D2ACC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93C2421738
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:07:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FF2521738
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:07:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010448;
-	bh=S0RbmLSWiMKeiitaQzaZjME42noNLFqk89Z7obvKyX8=;
+	s=default; t=1565010451;
+	bh=njhFZQxy19PcglwTow94+N5gzFX0PX+0iAdPg690j6M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S/6XJGfR7cQDS6tG0Lf7uZnHmv50vAoVKOGhsPnyyhu9sr/Ptbwx6jAC4NQ8OaNDa
-	 sUvYTmA0N+1xHrAz/46/aTYmSFMrkyJDTcfyS5yz5qOUDXZIw6YyTOaLOmeYNzkbnx
-	 WG5CTbJ1wGyyyHUXwS90Ge89FWazlq+TROdE5YfU=
+	b=HRqTtyFgYvjaA2RCFVGQ2MIYk6D7uV0CUHuaOuYaepIluz9wM9g5MljxP7dhMmXgA
+	 nyR7ydCu8LiGfYvW6OQOuRXEDoSldmc3O6864m8yCJgZXSdIGfkzW0CVvp26G3OZ5Y
+	 Jwx4xUkba/1YIG2dKKadnYp9ViHFv5LAkwY/AMyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729809AbfHENH1 (ORCPT
+        id S1729798AbfHENH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:07:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44886 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:07:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729264AbfHENHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:07:24 -0400
+        id S1729777AbfHENHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:07:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DD3F20657;
-        Mon,  5 Aug 2019 13:07:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B66F216B7;
+        Mon,  5 Aug 2019 13:07:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010443;
-        bh=S0RbmLSWiMKeiitaQzaZjME42noNLFqk89Z7obvKyX8=;
+        s=default; t=1565010440;
+        bh=njhFZQxy19PcglwTow94+N5gzFX0PX+0iAdPg690j6M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fFr0buCqFP2P+59/4/668T9JRCZc6MCO98I9BlLEALsD3JYDKf0pN4EMcmNtxUQ68
-         7USRthoCQyVYXyiUwFhB99eoZ2WcRRkW0JYo23pbN0jXsmW5+mLEruyjnuOSMV1HxV
-         XhWudDaof5KNcg22JD66FkW2WSv5B0EKlZ9s9D8o=
+        b=itJdKXjE/j/pPzpV4ZaHz0GkUp3L8Vq2yTOAYSH92NVBqnW6F/QR79Fd3eYeiWp+O
+         WSeerrr/T6wXkfYCql7afrHgGU4yegvcAWJ3ymtDIDzVB3ay92vihYVL+zOafE1fZv
+         xlDQd0Z2GEIZmdtw/HYLHW0n3wkZq6aRc4O4C4ww=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikko Rapeli <mikko.rapeli@iki.fi>,
+        stable@vger.kernel.org, Sam Protsenko <semen.protsenko@linaro.org>,
         Jan Harkes <jaharkes@cs.cmu.edu>,
         Arnd Bergmann <arnd@arndb.de>,
         Colin Ian King <colin.king@canonical.com>,
         Dan Carpenter <dan.carpenter@oracle.com>,
         David Howells <dhowells@redhat.com>,
         Fabian Frederick <fabf@skynet.be>,
-        Sam Protsenko <semen.protsenko@linaro.org>,
+        Mikko Rapeli <mikko.rapeli@iki.fi>,
         Yann Droneaud <ydroneaud@opteya.com>,
         Zhouyang Jia <jiazhouyang09@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 25/53] uapi linux/coda_psdev.h: move upc_req definition from uapi to kernel side headers
-Date:   Mon,  5 Aug 2019 15:02:50 +0200
-Message-Id: <20190805124930.818459670@linuxfoundation.org>
+Subject: [PATCH 4.14 24/53] coda: fix build using bare-metal toolchain
+Date:   Mon,  5 Aug 2019 15:02:49 +0200
+Message-Id: <20190805124930.725959344@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124927.973499541@linuxfoundation.org>
 References: <20190805124927.973499541@linuxfoundation.org>
@@ -70,103 +70,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f90fb3c7e2c13ae829db2274b88b845a75038b8a ]
+[ Upstream commit b2a57e334086602be56b74958d9f29b955cd157f ]
 
-Only users of upc_req in kernel side fs/coda/psdev.c and
-fs/coda/upcall.c already include linux/coda_psdev.h.
+The kernel is self-contained project and can be built with bare-metal
+toolchain.  But bare-metal toolchain doesn't define __linux__.  Because
+of this u_quad_t type is not defined when using bare-metal toolchain and
+codafs build fails.  This patch fixes it by defining u_quad_t type
+unconditionally.
 
-Suggested by Jan Harkes <jaharkes@cs.cmu.edu> in
-  https://lore.kernel.org/lkml/20150531111913.GA23377@cs.cmu.edu/
-
-Fixes these include/uapi/linux/coda_psdev.h compilation errors in userspace:
-
-  linux/coda_psdev.h:12:19: error: field `uc_chain' has incomplete type
-  struct list_head    uc_chain;
-                   ^
-  linux/coda_psdev.h:13:2: error: unknown type name `caddr_t'
-  caddr_t             uc_data;
-  ^
-  linux/coda_psdev.h:14:2: error: unknown type name `u_short'
-  u_short             uc_flags;
-  ^
-  linux/coda_psdev.h:15:2: error: unknown type name `u_short'
-  u_short             uc_inSize;  /* Size is at most 5000 bytes */
-  ^
-  linux/coda_psdev.h:16:2: error: unknown type name `u_short'
-  u_short             uc_outSize;
-  ^
-  linux/coda_psdev.h:17:2: error: unknown type name `u_short'
-  u_short             uc_opcode;  /* copied from data to save lookup */
-  ^
-  linux/coda_psdev.h:19:2: error: unknown type name `wait_queue_head_t'
-  wait_queue_head_t   uc_sleep;   /* process' wait queue */
-  ^
-
-Link: http://lkml.kernel.org/r/9f99f5ce6a0563d5266e6cf7aa9585aac2cae971.1558117389.git.jaharkes@cs.cmu.edu
-Signed-off-by: Mikko Rapeli <mikko.rapeli@iki.fi>
+Link: http://lkml.kernel.org/r/3cbb40b0a57b6f9923a9d67b53473c0b691a3eaa.1558117389.git.jaharkes@cs.cmu.edu
+Signed-off-by: Sam Protsenko <semen.protsenko@linaro.org>
 Signed-off-by: Jan Harkes <jaharkes@cs.cmu.edu>
 Cc: Arnd Bergmann <arnd@arndb.de>
 Cc: Colin Ian King <colin.king@canonical.com>
 Cc: Dan Carpenter <dan.carpenter@oracle.com>
 Cc: David Howells <dhowells@redhat.com>
 Cc: Fabian Frederick <fabf@skynet.be>
-Cc: Sam Protsenko <semen.protsenko@linaro.org>
+Cc: Mikko Rapeli <mikko.rapeli@iki.fi>
 Cc: Yann Droneaud <ydroneaud@opteya.com>
 Cc: Zhouyang Jia <jiazhouyang09@gmail.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/coda_psdev.h      | 11 +++++++++++
- include/uapi/linux/coda_psdev.h | 13 -------------
- 2 files changed, 11 insertions(+), 13 deletions(-)
+ include/linux/coda.h | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/include/linux/coda_psdev.h b/include/linux/coda_psdev.h
-index 15170954aa2b3..57d2b2faf6a3e 100644
---- a/include/linux/coda_psdev.h
-+++ b/include/linux/coda_psdev.h
-@@ -19,6 +19,17 @@ struct venus_comm {
- 	struct mutex	    vc_mutex;
- };
+diff --git a/include/linux/coda.h b/include/linux/coda.h
+index d30209b9cef81..0ca0c83fdb1c4 100644
+--- a/include/linux/coda.h
++++ b/include/linux/coda.h
+@@ -58,8 +58,7 @@ Mellon the rights to redistribute these changes without encumbrance.
+ #ifndef _CODA_HEADER_
+ #define _CODA_HEADER_
  
-+/* messages between coda filesystem in kernel and Venus */
-+struct upc_req {
-+	struct list_head	uc_chain;
-+	caddr_t			uc_data;
-+	u_short			uc_flags;
-+	u_short			uc_inSize;  /* Size is at most 5000 bytes */
-+	u_short			uc_outSize;
-+	u_short			uc_opcode;  /* copied from data to save lookup */
-+	int			uc_unique;
-+	wait_queue_head_t	uc_sleep;   /* process' wait queue */
-+};
- 
- static inline struct venus_comm *coda_vcp(struct super_block *sb)
- {
-diff --git a/include/uapi/linux/coda_psdev.h b/include/uapi/linux/coda_psdev.h
-index aa6623efd2dd0..d50d51a57fe4e 100644
---- a/include/uapi/linux/coda_psdev.h
-+++ b/include/uapi/linux/coda_psdev.h
-@@ -7,19 +7,6 @@
- #define CODA_PSDEV_MAJOR 67
- #define MAX_CODADEVS  5	   /* how many do we allow */
- 
--
--/* messages between coda filesystem in kernel and Venus */
--struct upc_req {
--	struct list_head    uc_chain;
--	caddr_t	            uc_data;
--	u_short	            uc_flags;
--	u_short             uc_inSize;  /* Size is at most 5000 bytes */
--	u_short	            uc_outSize;
--	u_short	            uc_opcode;  /* copied from data to save lookup */
--	int		    uc_unique;
--	wait_queue_head_t   uc_sleep;   /* process' wait queue */
--};
--
- #define CODA_REQ_ASYNC  0x1
- #define CODA_REQ_READ   0x2
- #define CODA_REQ_WRITE  0x4
+-#if defined(__linux__)
+ typedef unsigned long long u_quad_t;
+-#endif
++
+ #include <uapi/linux/coda.h>
+ #endif 
 -- 
 2.20.1
 
