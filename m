@@ -4,188 +4,199 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCC6C32750
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA108C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C88F2218B6
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:49:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1A362067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:53:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727628AbfHEHtv (ORCPT
+        id S1727330AbfHEHxV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 03:49:51 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:40197 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726394AbfHEHtv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 03:49:51 -0400
-Received: from uno.localdomain (host150-24-dynamic.51-79-r.retail.telecomitalia.it [79.51.24.150])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id A1E3A240004;
-        Mon,  5 Aug 2019 07:49:45 +0000 (UTC)
-Date:   Mon, 5 Aug 2019 09:51:09 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        fabrizio.castro@bp.renesas.com,
-        "open list:DRM DRIVERS FOR RENESAS" <dri-devel@lists.freedesktop.org>,
-        "open list:DRM DRIVERS FOR RENESAS" 
-        <linux-renesas-soc@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm: rcar_lvds: Fix dual link mode operations
-Message-ID: <20190805075109.oe6slqetqoe5wqzr@uno.localdomain>
-References: <20190723165700.13124-1-jacopo+renesas@jmondi.org>
- <20190801151129.GF5024@pendragon.ideasonboard.com>
+        Mon, 5 Aug 2019 03:53:21 -0400
+Received: from mga09.intel.com ([134.134.136.24]:38198 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726394AbfHEHxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 03:53:21 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 00:53:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,349,1559545200"; 
+   d="scan'208";a="175516262"
+Received: from buildpc-hp-z230.iind.intel.com (HELO buildpc-HP-Z230) ([10.223.89.34])
+  by fmsmga007.fm.intel.com with ESMTP; 05 Aug 2019 00:53:17 -0700
+Date:   Mon, 5 Aug 2019 13:25:09 +0530
+From:   Sanyog Kale <sanyog.r.kale@intel.com>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, vkoul@kernel.org,
+        gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com
+Subject: Re: [RFC PATCH 02/40] soundwire: cadence_master: add debugfs
+ register dump
+Message-ID: <20190805075509.GA22437@buildpc-HP-Z230>
+References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
+ <20190725234032.21152-3-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="f6oy4oxrt3xzydfx"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190801151129.GF5024@pendragon.ideasonboard.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190725234032.21152-3-pierre-louis.bossart@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 25, 2019 at 06:39:54PM -0500, Pierre-Louis Bossart wrote:
+> Add debugfs file to dump the Cadence master registers
+> 
+> Credits: this patch is based on an earlier internal contribution by
+> Vinod Koul, Sanyog Kale, Shreyas Nc and Hardik Shah. The main change
+> is the use of scnprintf to avoid known issues with snprintf.
+> 
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> ---
+>  drivers/soundwire/cadence_master.c | 98 ++++++++++++++++++++++++++++++
+>  drivers/soundwire/cadence_master.h |  2 +
+>  2 files changed, 100 insertions(+)
+> 
+> diff --git a/drivers/soundwire/cadence_master.c b/drivers/soundwire/cadence_master.c
+> index ff4badc9b3de..91e8bacb83e3 100644
+> --- a/drivers/soundwire/cadence_master.c
+> +++ b/drivers/soundwire/cadence_master.c
+> @@ -8,6 +8,7 @@
+>  
+>  #include <linux/delay.h>
+>  #include <linux/device.h>
+> +#include <linux/debugfs.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/io.h>
+>  #include <linux/module.h>
+> @@ -223,6 +224,103 @@ static int cdns_clear_bit(struct sdw_cdns *cdns, int offset, u32 value)
+>  	return -EAGAIN;
+>  }
+>  
+> +/*
+> + * debugfs
+> + */
+> +
+> +#define RD_BUF (2 * PAGE_SIZE)
+> +
+> +static ssize_t cdns_sprintf(struct sdw_cdns *cdns,
+> +			    char *buf, size_t pos, unsigned int reg)
+> +{
+> +	return scnprintf(buf + pos, RD_BUF - pos,
+> +			 "%4x\t%4x\n", reg, cdns_readl(cdns, reg));
+> +}
+> +
+> +static ssize_t cdns_reg_read(struct file *file, char __user *user_buf,
+> +			     size_t count, loff_t *ppos)
+> +{
+> +	struct sdw_cdns *cdns = file->private_data;
+> +	char *buf;
+> +	ssize_t ret;
+> +	int i, j;
+> +
+> +	buf = kzalloc(RD_BUF, GFP_KERNEL);
+> +	if (!buf)
+> +		return -ENOMEM;
+> +
+> +	ret = scnprintf(buf, RD_BUF, "Register  Value\n");
+> +	ret += scnprintf(buf + ret, RD_BUF - ret, "\nMCP Registers\n");
+> +	for (i = 0; i < 8; i++) /* 8 MCP registers */
+> +		ret += cdns_sprintf(cdns, buf, ret, i * 4);
+> +
+> +	ret += scnprintf(buf + ret, RD_BUF - ret,
+> +			 "\nStatus & Intr Registers\n");
+> +	for (i = 0; i < 13; i++) /* 13 Status & Intr registers */
+> +		ret += cdns_sprintf(cdns, buf, ret, CDNS_MCP_STAT + i * 4);
+> +
+> +	ret += scnprintf(buf + ret, RD_BUF - ret,
+> +			 "\nSSP & Clk ctrl Registers\n");
+> +	ret += cdns_sprintf(cdns, buf, ret, CDNS_MCP_SSP_CTRL0);
+> +	ret += cdns_sprintf(cdns, buf, ret, CDNS_MCP_SSP_CTRL1);
+> +	ret += cdns_sprintf(cdns, buf, ret, CDNS_MCP_CLK_CTRL0);
+> +	ret += cdns_sprintf(cdns, buf, ret, CDNS_MCP_CLK_CTRL1);
+> +
+> +	ret += scnprintf(buf + ret, RD_BUF - ret,
+> +			 "\nDPn B0 Registers\n");
+> +	for (i = 0; i < 7; i++) {
+> +		ret += scnprintf(buf + ret, RD_BUF - ret,
+> +				 "\nDP-%d\n", i);
+> +		for (j = 0; j < 6; j++)
+> +			ret += cdns_sprintf(cdns, buf, ret,
+> +					CDNS_DPN_B0_CONFIG(i) + j * 4);
+> +	}
+> +
+> +	ret += scnprintf(buf + ret, RD_BUF - ret,
+> +			 "\nDPn B1 Registers\n");
+> +	for (i = 0; i < 7; i++) {
+> +		ret += scnprintf(buf + ret, RD_BUF - ret,
+> +				 "\nDP-%d\n", i);
+> +
+> +		for (j = 0; j < 6; j++)
+> +			ret += cdns_sprintf(cdns, buf, ret,
+> +					CDNS_DPN_B1_CONFIG(i) + j * 4);
+> +	}
+> +
+> +	ret += scnprintf(buf + ret, RD_BUF - ret,
+> +			 "\nDPn Control Registers\n");
+> +	for (i = 0; i < 7; i++)
+> +		ret += cdns_sprintf(cdns, buf, ret,
+> +				CDNS_PORTCTRL + i * CDNS_PORT_OFFSET);
+> +
+> +	ret += scnprintf(buf + ret, RD_BUF - ret,
+> +			 "\nPDIn Config Registers\n");
+> +	for (i = 0; i < 7; i++)
 
---f6oy4oxrt3xzydfx
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+please use macros for all the hardcodings.
 
-Hi Laurent,
+> +		ret += cdns_sprintf(cdns, buf, ret, CDNS_PDI_CONFIG(i));
+> +
+> +	ret = simple_read_from_buffer(user_buf, count, ppos, buf, ret);
+> +	kfree(buf);
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct file_operations cdns_reg_fops = {
+> +	.open = simple_open,
+> +	.read = cdns_reg_read,
+> +	.llseek = default_llseek,
+> +};
+> +
+> +/**
+> + * sdw_cdns_debugfs_init() - Cadence debugfs init
+> + * @cdns: Cadence instance
+> + * @root: debugfs root
+> + */
+> +void sdw_cdns_debugfs_init(struct sdw_cdns *cdns, struct dentry *root)
+> +{
+> +	debugfs_create_file("cdns-registers", 0400, root, cdns, &cdns_reg_fops);
+> +}
+> +EXPORT_SYMBOL_GPL(sdw_cdns_debugfs_init);
+> +
+>  /*
+>   * IO Calls
+>   */
+> diff --git a/drivers/soundwire/cadence_master.h b/drivers/soundwire/cadence_master.h
+> index fe2af62958b1..c0bf6ff00a44 100644
+> --- a/drivers/soundwire/cadence_master.h
+> +++ b/drivers/soundwire/cadence_master.h
+> @@ -163,6 +163,8 @@ int sdw_cdns_pdi_init(struct sdw_cdns *cdns,
+>  		      struct sdw_cdns_stream_config config);
+>  int sdw_cdns_enable_interrupt(struct sdw_cdns *cdns);
+>  
+> +void sdw_cdns_debugfs_init(struct sdw_cdns *cdns, struct dentry *root);
+> +
+>  int sdw_cdns_get_stream(struct sdw_cdns *cdns,
+>  			struct sdw_cdns_streams *stream,
+>  			u32 ch, u32 dir);
+> -- 
+> 2.20.1
+> 
 
-On Thu, Aug 01, 2019 at 06:11:29PM +0300, Laurent Pinchart wrote:
-> Hello Jacopo,
->
-> Thank you for the patch.
->
-> On Tue, Jul 23, 2019 at 06:57:00PM +0200, Jacopo Mondi wrote:
-> > The R-Car LVDS encoder units support dual-link operations by splitting
-> > the pixel output between the primary encoder and the companion one.
->
-> s/the companion one/its companion/
->
-> >
-> > In order for the primary encoder to succesfully control the companion's
-> > operations this should not fail at probe time and register itself its
-> > associated drm bridge so that the primary one can find it.
->
-> This is hard to parse.
->
-
-Re-reading the whole commit message, I would actually drop it
-completely, it's enough what we have here below.
-
-> > Currently the companion encoder fails at probe time, causing the
-> > registration of the primary to fail preventing the whole DU unit to be
-> > registered correctly.
-> >
-> > Fixes: fa440d870358 ("drm: rcar-du: lvds: Add support for dual-link mode")
-> > Reported-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> >
-> > ---
-> > The "Fixes" tag refers to a patch currently part of the
-> > renesas-drivers-2019-07-09-v5.2 branch of Geert's renesas-drivers tree.
-> >
-> >  drivers/gpu/drm/rcar-du/rcar_lvds.c | 31 +++++++++++++++++++++--------
-> >  1 file changed, 23 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> > index bada7ee98544..8b015ba95895 100644
-> > --- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> > +++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> > @@ -767,14 +767,29 @@ static int rcar_lvds_parse_dt(struct rcar_lvds *lvds)
-> >  	of_node_put(remote_input);
-> >  	of_node_put(remote);
-> >
-> > -	/*
-> > -	 * On D3/E3 the LVDS encoder provides a clock to the DU, which can be
-> > -	 * used for the DPAD output even when the LVDS output is not connected.
-> > -	 * Don't fail probe in that case as the DU will need the bridge to
-> > -	 * control the clock.
-> > -	 */
-> > -	if (lvds->info->quirks & RCAR_LVDS_QUIRK_EXT_PLL)
-> > -		return ret == -ENODEV ? 0 : ret;
-> > +	switch (ret) {
-> > +	case -ENODEV:
-> > +		/*
-> > +		 * On D3/E3 the LVDS encoder provides a clock to the DU, which
-> > +		 * can be used for the DPAD output even when the LVDS output is
-> > +		 * not connected. Don't fail probe in that case as the DU will
-> > +		 * need the bridge to control the clock.
-> > +		 */
-> > +		if (lvds->info->quirks & RCAR_LVDS_QUIRK_EXT_PLL)
-> > +			ret = 0;
-> > +		break;
-> > +	case -ENXIO:
-> > +		/*
-> > +		 * When the LVDS output is used in dual link mode, the
-> > +		 * companion encoder fails at
-> > +		 * 'rcar_lvds_parse_dt_companion()'. Don't fail probe in
-> > +		 * that case as the master encoder will need the companion's
-> > +		 * bridge to control its operations.
-> > +		 */
-> > +		if (lvds->info->quirks & RCAR_LVDS_QUIRK_DUAL_LINK)
-> > +			ret = 0;
->
-> As -ENXIO can only be returned by rcar_lvds_parse_dt_companion(), and
-> rcar_lvds_parse_dt_companion() is only called when the
-> RCAR_LVDS_QUIRK_DUAL_LINK flag is set, this essentially means that you
-> always zero the error returned from rcar_lvds_parse_dt_companion(). This
-
-Not totally correct, as rcar_lvds_parse_dt_companion() might also
-return EPROBE_DEFER, but...
-
-> is both complicated and too drastic as the second -ENXIO error case
-> shouldn't be ignored. It would be better and simpler to return 0 from
-> rcar_lvds_parse_dt_companion() when the renesas,companion property can't
-> be found.
-
-I agree, returning 0 when when the property is not specified is enough
-and much simpler. I got dragged away by the idea of centralizing error
-handling at the end of the function, but it's ugly and also wrongly
-zeroes the second -ENXIO error returned by the parse_companion
-function.
-
-I'll change to what you suggested!
-Thanks
-  j
-
->
-> > +		break;
-> > +	}
-> >
-> >  	return ret;
-> >  }
->
-> --
-> Regards,
->
-> Laurent Pinchart
-
---f6oy4oxrt3xzydfx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1H3+0ACgkQcjQGjxah
-VjxYkxAAlzArBpJQTnAx+2BDrFdNyuVKxAzyoEexaV7boeg586M5iV8fTmgjScff
-4KA54u80j8KxeK9adk7cqeqH1wPi+DkkMomFRPpJzUHrwlVpwPXoVERWOIYEVV4Y
-XA4f+xUHBjm0Ftxx9XJPKEbFyFkJYFZLZyl9r3a0PVccA3yikoQqPBP4FX7xrALM
-lAj/o14JXh0voNbK7k6w+LjM1JieofeJjXk59FmeKrIDy9pvM6IlvBQsC7hSmPZ7
-hsOiKk0kEjMA89aVAPnyhq7vP79F4q3A2C0XjUwgv/hO6JTD7zWVTc1/TItzajQV
-6WmnHMM9CUiKDD1Oo2O25fzBjmbNpm+HMclxxoF2IGGgDpRph4rbKio+NjmIDc/A
-myw7qRfM9juRgGOFXYwQgDpQY/tmaqKhr+hTodwj/BKUwIDzk1l5BfN/JGASEgxQ
-aj2KtNJdTyor7wTktGJ1yFWoBRUsVanGwf/fnOPhMqLlPNz/cdjmR3qjQYimjCLs
-G+GLCmlx9it5ZCnM6xhLj6JhysKpHONJGzbbXQqPoBgA3O0IjoOFg1PS3qztEjSg
-bB5XBKLVSnNNq5Yb7DBWnH+5H7j3iFwK2gXHdSrC/PJnNqeN5DLMFJvJkpmlfwb7
-jLHPMhBT58VN8f9YDS+Y5RUByO3tv0SvVm+nO/KI4i8xfbG+5n8=
-=lvdp
------END PGP SIGNATURE-----
-
---f6oy4oxrt3xzydfx--
+-- 
