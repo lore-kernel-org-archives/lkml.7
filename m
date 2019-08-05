@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D0AC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 171C2C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D29C1216F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:11:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E143C2075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:11:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010688;
-	bh=BR5uul7/2wqA9HRNeJg6ZGJ5QHshGNdX/Ucbmgif948=;
+	s=default; t=1565010694;
+	bh=4pL1hx2ppMTBaKCpsGaTGvaIoDclQ1WBXEy5XCKPB3Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=diInvppneJh8RjQbbVwiw3O7E/WiKNGN/nGNniGm+V85xGivena2FCxpM8ZhHCRKC
-	 EKROV8/ivalQiC4CZi+A5Mu2ANFieiYbJmX8AMehsPU7YcDcn7L7tmrF4Xq61JNE5W
-	 zJNr/eprVAuA/cri+FvGzSaNqTI6Yu0p10gVr1ZQ=
+	b=bwNkxL6wr66i/nmPan3+kh55/UDHyu6eYj4A4fJVwxAHKkdUHL2o+SL10fpHeoarS
+	 3V3NuGvFqUa9uN4bkrZRh68Q/CyVhkXPOSIMvJqoHT7zbdbyWqkRPsXIxD322nbPpk
+	 s8dr7XyqD11Ro8V4U9jqY7Bf+j1TNiS/jX26DPkI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730510AbfHENLX (ORCPT
+        id S1730474AbfHENLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:11:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50616 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:11:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730499AbfHENLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:11:19 -0400
+        id S1729841AbfHENLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:11:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B888216F4;
-        Mon,  5 Aug 2019 13:11:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45AFB216F4;
+        Mon,  5 Aug 2019 13:11:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010678;
-        bh=BR5uul7/2wqA9HRNeJg6ZGJ5QHshGNdX/Ucbmgif948=;
+        s=default; t=1565010666;
+        bh=4pL1hx2ppMTBaKCpsGaTGvaIoDclQ1WBXEy5XCKPB3Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k/AGOV0sWa7y+vL8t9+Ux2NoH38b5cYIR4RU0SfBhlY8AVFLN7VJ6VCH8XBfcMbwF
-         ZHx4I/1Z3WT5TQ6HGD85aqSrxup5FF9991f25sU63qFoPRnHdAB3BXe5DLEhGEmVlK
-         KjpuqIwu68kOTKvUgyTeVmePt44fOMY/YGcoI2+Q=
+        b=VLFnHfDsHwnrnaI879Qcg6q6PKRRMnPdQxt/SyXMIbvYENO/fJxBj/O7pFhJyarBY
+         iJKZAsvDSuH9E4DlqKV+Z20BRVT0T/rChq/4UVfBQkeAqECV0hVlyPylELF3zPpqQn
+         2WE2ykxgDUVm9eNignUtXQ6xDOmI8YUPOw+TCxNs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yishai Hadas <yishaih@mellanox.com>,
-        Artemy Kovalyov <artemyko@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.19 62/74] IB/mlx5: Fix unreg_umr to ignore the mkey state
-Date:   Mon,  5 Aug 2019 15:03:15 +0200
-Message-Id: <20190805124940.849754208@linuxfoundation.org>
+        stable@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 4.19 50/74] mtd: rawnand: micron: handle on-die "ECC-off" devices correctly
+Date:   Mon,  5 Aug 2019 15:03:03 +0200
+Message-Id: <20190805124939.943312281@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124935.819068648@linuxfoundation.org>
 References: <20190805124935.819068648@linuxfoundation.org>
@@ -61,76 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yishai Hadas <yishaih@mellanox.com>
+From: Marco Felsch <m.felsch@pengutronix.de>
 
-commit 6a053953739d23694474a5f9c81d1a30093da81a upstream.
+commit 8493b2a06fc5b77ef5c579dc32b12761f7b7a84c upstream.
 
-Fix unreg_umr to ignore the mkey state and do not fail if was freed.  This
-prevents a case that a user space application already changed the mkey
-state to free and then the UMR operation will fail leaving the mkey in an
-inappropriate state.
+Some devices are not supposed to support on-die ECC but experience
+shows that internal ECC machinery can actually be enabled through the
+"SET FEATURE (EFh)" command, even if a read of the "READ ID Parameter
+Tables" returns that it is not.
 
-Link: https://lore.kernel.org/r/20190723065733.4899-3-leon@kernel.org
-Cc: <stable@vger.kernel.org> # 3.19
-Fixes: 968e78dd9644 ("IB/mlx5: Enhance UMR support to allow partial page table update")
-Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
-Reviewed-by: Artemy Kovalyov <artemyko@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Currently, the driver checks the "READ ID Parameter" field directly
+after having enabled the feature. If the check fails it returns
+immediately but leaves the ECC on. When using buggy chips like
+MT29F2G08ABAGA and MT29F2G08ABBGA, all future read/program cycles will
+go through the on-die ECC, confusing the host controller which is
+supposed to be the one handling correction.
+
+To address this in a common way we need to turn off the on-die ECC
+directly after reading the "READ ID Parameter" and before checking the
+"ECC status".
+
+Cc: stable@vger.kernel.org
+Fixes: dbc44edbf833 ("mtd: rawnand: micron: Fix on-die ECC detection logic")
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/mlx5/mlx5_ib.h |    1 +
- drivers/infiniband/hw/mlx5/mr.c      |    4 ++--
- drivers/infiniband/hw/mlx5/qp.c      |   12 ++++++++----
- 3 files changed, 11 insertions(+), 6 deletions(-)
+ drivers/mtd/nand/raw/nand_micron.c |   14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
---- a/drivers/infiniband/hw/mlx5/mlx5_ib.h
-+++ b/drivers/infiniband/hw/mlx5/mlx5_ib.h
-@@ -467,6 +467,7 @@ struct mlx5_umr_wr {
- 	u64				length;
- 	int				access_flags;
- 	u32				mkey;
-+	u8				ignore_free_state:1;
- };
+--- a/drivers/mtd/nand/raw/nand_micron.c
++++ b/drivers/mtd/nand/raw/nand_micron.c
+@@ -400,6 +400,14 @@ static int micron_supports_on_die_ecc(st
+ 	    (chip->id.data[4] & MICRON_ID_INTERNAL_ECC_MASK) != 0x2)
+ 		return MICRON_ON_DIE_UNSUPPORTED;
  
- static inline const struct mlx5_umr_wr *umr_wr(const struct ib_send_wr *wr)
---- a/drivers/infiniband/hw/mlx5/mr.c
-+++ b/drivers/infiniband/hw/mlx5/mr.c
-@@ -1407,10 +1407,10 @@ static int unreg_umr(struct mlx5_ib_dev
- 	if (mdev->state == MLX5_DEVICE_STATE_INTERNAL_ERROR)
- 		return 0;
++	/*
++	 * It seems that there are devices which do not support ECC officially.
++	 * At least the MT29F2G08ABAGA / MT29F2G08ABBGA devices supports
++	 * enabling the ECC feature but don't reflect that to the READ_ID table.
++	 * So we have to guarantee that we disable the ECC feature directly
++	 * after we did the READ_ID table command. Later we can evaluate the
++	 * ECC_ENABLE support.
++	 */
+ 	ret = micron_nand_on_die_ecc_setup(chip, true);
+ 	if (ret)
+ 		return MICRON_ON_DIE_UNSUPPORTED;
+@@ -408,13 +416,13 @@ static int micron_supports_on_die_ecc(st
+ 	if (ret)
+ 		return MICRON_ON_DIE_UNSUPPORTED;
  
--	umrwr.wr.send_flags = MLX5_IB_SEND_UMR_DISABLE_MR |
--			      MLX5_IB_SEND_UMR_FAIL_IF_FREE;
-+	umrwr.wr.send_flags = MLX5_IB_SEND_UMR_DISABLE_MR;
- 	umrwr.wr.opcode = MLX5_IB_WR_UMR;
- 	umrwr.mkey = mr->mmkey.key;
-+	umrwr.ignore_free_state = 1;
+-	if (!(id[4] & MICRON_ID_ECC_ENABLED))
+-		return MICRON_ON_DIE_UNSUPPORTED;
+-
+ 	ret = micron_nand_on_die_ecc_setup(chip, false);
+ 	if (ret)
+ 		return MICRON_ON_DIE_UNSUPPORTED;
  
- 	return mlx5_ib_post_send_wait(dev, &umrwr);
- }
---- a/drivers/infiniband/hw/mlx5/qp.c
-+++ b/drivers/infiniband/hw/mlx5/qp.c
-@@ -3717,10 +3717,14 @@ static int set_reg_umr_segment(struct ml
- 
- 	memset(umr, 0, sizeof(*umr));
- 
--	if (wr->send_flags & MLX5_IB_SEND_UMR_FAIL_IF_FREE)
--		umr->flags = MLX5_UMR_CHECK_FREE; /* fail if free */
--	else
--		umr->flags = MLX5_UMR_CHECK_NOT_FREE; /* fail if not free */
-+	if (!umrwr->ignore_free_state) {
-+		if (wr->send_flags & MLX5_IB_SEND_UMR_FAIL_IF_FREE)
-+			 /* fail if free */
-+			umr->flags = MLX5_UMR_CHECK_FREE;
-+		else
-+			/* fail if not free */
-+			umr->flags = MLX5_UMR_CHECK_NOT_FREE;
-+	}
- 
- 	umr->xlt_octowords = cpu_to_be16(get_xlt_octo(umrwr->xlt_size));
- 	if (wr->send_flags & MLX5_IB_SEND_UMR_UPDATE_XLT) {
++	if (!(id[4] & MICRON_ID_ECC_ENABLED))
++		return MICRON_ON_DIE_UNSUPPORTED;
++
+ 	ret = nand_readid_op(chip, 0, id, sizeof(id));
+ 	if (ret)
+ 		return MICRON_ON_DIE_UNSUPPORTED;
 
 
