@@ -2,80 +2,80 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0235AC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECD6C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF68321743
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:12:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565017968;
-	bh=CdHJI1xxjYQT/XPUsv9iLn5EoLIKEmIfLcVw5q3BXpw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=G79i8PxErMIMizznA++a78VUm7I5RRlvAIfPaH2e3ZpBkAewN/tro53Zb/kRep1iz
-	 Q3gMpf3ynSl+70TmU+YaaBYoWJb4I3J4UWHs+/PKuDQB4jpekCyOnPBce3aWhrgjVC
-	 zR4bFKXChKibLDL76LW2cBj0wyQtzdURnKEPia9Y=
+	by mail.kernel.org (Postfix) with ESMTP id 0B3F3216F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:15:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="HIL5cy43"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729800AbfHEPMs (ORCPT
+        id S1729622AbfHEPPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 11:12:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38472 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 11:15:05 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:34368 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728952AbfHEPMr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 11:12:47 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DBA4216F4;
-        Mon,  5 Aug 2019 15:12:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565017967;
-        bh=CdHJI1xxjYQT/XPUsv9iLn5EoLIKEmIfLcVw5q3BXpw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HGXhUgRDv+erRZ4lwM7QApypM09xE32YoD3Zl7OF3eNOe99mLFBmfJibfFyxKNDMg
-         dgsAy3gWqi21y2uy4qw6txC9V6vTeiPdIEmIdRbg86RFnuzqaE9HF/PE3BDOiaQT+t
-         mtBURjAst7g/FByoUbmewut+mbUk9i/YgS4zcaSs=
-Date:   Mon, 5 Aug 2019 17:12:44 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        security@kernel.org, linux-doc@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: Re: [PATCH] Documentation/admin-guide: Embargoed hardware security
- issues
-Message-ID: <20190805151244.GA28296@kroah.com>
-References: <20190725130113.GA12932@kroah.com>
- <nycvar.YFH.7.76.1908040214090.5899@cbobk.fhfr.pm>
+        id S1728974AbfHEPPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 11:15:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=BxD9bHEfVvbXrjPtXMe/EKAGi9dgh7IkLu7Dh5ppO2Y=; b=HIL5cy43Guu210bimMJY4gbw+7
+        1oWryRkaE4JOMs69ikBdoia3NxlNwoM96inLoCdJJOSE3wiwLG52E3EeZ54To/yGjrJBoDNq3jZtn
+        KCRrwOcYd397n/aGvGSmIdkgw0VJIGAQsUCvf/1PaCZR6r3T0rRoP4iB4c2sWpaI7QCI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1huehQ-0007nS-Ip; Mon, 05 Aug 2019 17:15:00 +0200
+Date:   Mon, 5 Aug 2019 17:15:00 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, davem@davemloft.net,
+        robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com,
+        hkallweit1@gmail.com
+Subject: Re: [PATCH 11/16] net: phy: adin: PHY reset mechanisms
+Message-ID: <20190805151500.GP24275@lunn.ch>
+References: <20190805165453.3989-1-alexandru.ardelean@analog.com>
+ <20190805165453.3989-12-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <nycvar.YFH.7.76.1908040214090.5899@cbobk.fhfr.pm>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190805165453.3989-12-alexandru.ardelean@analog.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 04, 2019 at 02:17:00AM +0200, Jiri Kosina wrote:
-> On Thu, 25 Jul 2019, Greg Kroah-Hartman wrote:
+On Mon, Aug 05, 2019 at 07:54:48PM +0300, Alexandru Ardelean wrote:
+> The ADIN PHYs supports 4 types of reset:
+> 1. The standard PHY reset via BMCR_RESET bit in MII_BMCR reg
+> 2. Reset via GPIO
+> 3. Reset via reg GeSftRst (0xff0c) & reload previous pin configs
+> 4. Reset via reg GeSftRst (0xff0c) & request new pin configs
 > 
-> > To address the requirements of embargoed hardware issues, like Meltdown,
-> > Spectre, L1TF, etc. it is necessary to define and document a process for
-> > handling embargoed hardware security issues.
+> Resets 2 & 4 are almost identical, with the exception that the crystal
+> oscillator is available during reset for 2.
 > 
-> I don't know what exactly went wrong, but there is a much more up-to-date 
-> version of that document (especially when it comes to vendor contacts), 
-> which I sent around on Thu, 2 May 2019 20:23:48 +0200 (CEST) already. 
-> Please find it below.
+> Resetting via GeSftRst or via GPIO is useful when doing a warm reboot. If
+> doing various settings via phytool or ethtool, the sub-system registers
+> don't reset just via BMCR_RESET.
+> 
+> This change implements resetting the entire PHY subsystem during probe.
+> During PHY HW init (phy_hw_init() logic) the PHY core regs will be reset
+> again via BMCR_RESET. This will also need to happen during a PM resume.
 
-Ah, sorry, don't know what happened here, we had too many different
-versions floating around.
+phylib already has support for GPIO reset. So if possible, you should
+not repeat that code here.
 
-I'll take your version, make the edits recommended and send out a new
-one in a few days, thanks!
+What is the difference between a GPIO reset, and a GPIO reset followed
+by a subsystem soft reset?
 
-greg k-h
+   Andrew
