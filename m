@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7023EC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37AC1C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40E892075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 090502087B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:06:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010411;
-	bh=zFjRGFPNjIL768K9LktA6/YMA4FYV3GlrLodHMBX6Ac=;
+	s=default; t=1565010415;
+	bh=1HpjSYwLan9OrxS7SyHBTzZANBPjlOwsdKC5zB/Y+xQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N5Cr8YkC6VvJNOCQHOwIlLZhDu0dcaon1UzJfHWDuVz9X/VbDaQdaAJPcmQqgYTLu
-	 /kvO9BF0cvFW6AV89sYWY4mUWM2d/v+gMh98Ag1P6tkh2IyvZZXacIX1r6ILv40KAM
-	 snWtYEUNJ9mojGzvAkq3W7Q4jR9SSRPqnCJnA3to=
+	b=rjdWewiijHNyjY7mXNZOYmHkLM08cx1l5vjDm4+gDEeUZ7qWrNDBH2Lx1yIvK7RKE
+	 OZDAh+CKX10xj3K2kJPyM/IWgvh98BEwppJH4t0Gk8YDiSi4fc04MHFo/0Kre8Gptq
+	 XNSoUW7VDrcNazSXxk9xtGdv0wvNXv8cyb3HV8+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729699AbfHENGu (ORCPT
+        id S1729711AbfHENGx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:06:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43796 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:06:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729195AbfHENGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:06:47 -0400
+        id S1729698AbfHENGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:06:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B87DF206C1;
-        Mon,  5 Aug 2019 13:06:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 552C0206C1;
+        Mon,  5 Aug 2019 13:06:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010407;
-        bh=zFjRGFPNjIL768K9LktA6/YMA4FYV3GlrLodHMBX6Ac=;
+        s=default; t=1565010409;
+        bh=1HpjSYwLan9OrxS7SyHBTzZANBPjlOwsdKC5zB/Y+xQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2MU+dOH1ZUOASpvjS0H9fmHpvJJBoaj+u83IQA8dCYoxOS4NsDJ9vlobsYG57aKhm
-         Y8tD57XzsRKm20Tlq67hY5oHjfoADN+8aKpn0mKZzzSs8cZppVarDIXrdpPnT5KxsC
-         hx4NYuA3f0iGipapLfhklnP/uVQwrSlM8NGpVpn8=
+        b=vK4sEEUElJD3WHuBsEYXjjzp5Ff/7HPGsWVT6wA3J75ZoItR1TXrcit9bpPbD1th3
+         AgaFK/01ZxRc/oUUFk687D0KyxkDjzQTRCU3gTQAZWaOR9NRLKX3b3mmfhTFcBRU5l
+         j7D8upCkfAqX2mJxTIYhI7/DMNtoHDxSgW5pdhhw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>,
+        stable@vger.kernel.org, "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        "Yan, Zheng" <zyan@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 12/53] cifs: Fix a race condition with cifs_echo_request
-Date:   Mon,  5 Aug 2019 15:02:37 +0200
-Message-Id: <20190805124929.478819677@linuxfoundation.org>
+Subject: [PATCH 4.14 13/53] ceph: fix improper use of smp_mb__before_atomic()
+Date:   Mon,  5 Aug 2019 15:02:38 +0200
+Message-Id: <20190805124929.575764614@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124927.973499541@linuxfoundation.org>
 References: <20190805124927.973499541@linuxfoundation.org>
@@ -61,61 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f2caf901c1b7ce65f9e6aef4217e3241039db768 ]
+[ Upstream commit 749607731e26dfb2558118038c40e9c0c80d23b5 ]
 
-There is a race condition with how we send (or supress and don't send)
-smb echos that will cause the client to incorrectly think the
-server is unresponsive and thus needs to be reconnected.
+This barrier only applies to the read-modify-write operations; in
+particular, it does not apply to the atomic64_set() primitive.
 
-Summary of the race condition:
- 1) Daisy chaining scheduling creates a gap.
- 2) If traffic comes unfortunate shortly after
-    the last echo, the planned echo is suppressed.
- 3) Due to the gap, the next echo transmission is delayed
-    until after the timeout, which is set hard to twice
-    the echo interval.
+Replace the barrier with an smp_mb().
 
-This is fixed by changing the timeouts from 2 to three times the echo interval.
-
-Detailed description of the bug: https://lutz.donnerhacke.de/eng/Blog/Groundhog-Day-with-SMB-remount
-
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Fixes: fdd4e15838e59 ("ceph: rework dcache readdir")
+Reported-by: "Paul E. McKenney" <paulmck@linux.ibm.com>
+Reported-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
+Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/connect.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ fs/ceph/super.h | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 33cd844579aed..57c62ff4e8d6d 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -554,10 +554,10 @@ static bool
- server_unresponsive(struct TCP_Server_Info *server)
+diff --git a/fs/ceph/super.h b/fs/ceph/super.h
+index 3e27a28aa44ad..60b70f0985f67 100644
+--- a/fs/ceph/super.h
++++ b/fs/ceph/super.h
+@@ -517,7 +517,12 @@ static inline void __ceph_dir_set_complete(struct ceph_inode_info *ci,
+ 					   long long release_count,
+ 					   long long ordered_count)
  {
- 	/*
--	 * We need to wait 2 echo intervals to make sure we handle such
-+	 * We need to wait 3 echo intervals to make sure we handle such
- 	 * situations right:
- 	 * 1s  client sends a normal SMB request
--	 * 2s  client gets a response
-+	 * 3s  client gets a response
- 	 * 30s echo workqueue job pops, and decides we got a response recently
- 	 *     and don't need to send another
- 	 * ...
-@@ -566,9 +566,9 @@ server_unresponsive(struct TCP_Server_Info *server)
- 	 */
- 	if ((server->tcpStatus == CifsGood ||
- 	    server->tcpStatus == CifsNeedNegotiate) &&
--	    time_after(jiffies, server->lstrp + 2 * server->echo_interval)) {
-+	    time_after(jiffies, server->lstrp + 3 * server->echo_interval)) {
- 		cifs_dbg(VFS, "Server %s has not responded in %lu seconds. Reconnecting...\n",
--			 server->hostname, (2 * server->echo_interval) / HZ);
-+			 server->hostname, (3 * server->echo_interval) / HZ);
- 		cifs_reconnect(server);
- 		wake_up(&server->response_q);
- 		return true;
+-	smp_mb__before_atomic();
++	/*
++	 * Makes sure operations that setup readdir cache (update page
++	 * cache and i_size) are strongly ordered w.r.t. the following
++	 * atomic64_set() operations.
++	 */
++	smp_mb();
+ 	atomic64_set(&ci->i_complete_seq[0], release_count);
+ 	atomic64_set(&ci->i_complete_seq[1], ordered_count);
+ }
 -- 
 2.20.1
 
