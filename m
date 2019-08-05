@@ -2,159 +2,101 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D206C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AFC2C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6CC721734
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:41:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565019705;
-	bh=i+/SlONclzMp17yGb9OjvY/3Cos4bQ+BCFzghNYRJ0s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=puGkdLN1SrCXz0+2taOKNPAkzhlEazafjPskkDml2YzN8zfcuk9jwlh6cPgf70jwJ
-	 i7aj9bV30SaYH2b8vBTbVv7XYyOcWRdT7SV+ENiykbBOskWgXNd+kvPCb/i4U6F9nk
-	 Tk8ngJ/pp1+mrCuZ/cenjL4l2EuSKXbP4/XSdxRI=
+	by mail.kernel.org (Postfix) with ESMTP id DCFF0216F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:43:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EGAXu6Ma"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729080AbfHEPln (ORCPT
+        id S1728735AbfHEPnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 11:41:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45534 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726559AbfHEPln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 11:41:43 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D31D2086D;
-        Mon,  5 Aug 2019 15:41:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565019702;
-        bh=i+/SlONclzMp17yGb9OjvY/3Cos4bQ+BCFzghNYRJ0s=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hlmAAZwDSFdex4DFQznJDsb8kzKdX5nbgueSG2Vq/5CFTUsKiG5RLl1VW7aqW7bxm
-         XZyiWxmKh7xLtBPXj2XE8VEClt3TLg7iayuJB+9/RIfgbktWDW6zyAtqbK+wHVsnZ8
-         wbMN8qUJaO9mWCDAL2QllrQq9oL+4LHEU8m+hokI=
-Date:   Mon, 5 Aug 2019 16:41:36 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Lorenzo Bianconi <lorenzo@kernel.org>
-Cc:     Martin Kepplinger <martin.kepplinger@puri.sm>,
-        lorenzo.bianconi83@gmail.com, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: imu: st_lsm6dsx: make IIO_CHAN_INFO_SCALE shared
- by type
-Message-ID: <20190805164136.6541af1f@archlinux>
-In-Reply-To: <20190805150435.GA15250@localhost.localdomain>
-References: <20190801143908.27608-1-martin.kepplinger@puri.sm>
-        <20190805152148.0ea55f6e@archlinux>
-        <20190805150435.GA15250@localhost.localdomain>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 5 Aug 2019 11:43:37 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33518 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726847AbfHEPnh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 11:43:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=QerNwwXIfcVqiUxVIQqRP9I819cRghlSQ0iNJulxaCk=; b=EGAXu6MaYf4Vv4pd0s/b/SV5go
+        rFYmS2peBb1Dus950jsiA9TjNwOJiAiPbPgVTas3HVRBvlgOl0ESqn2KxV6Uc/9INM2JrMzcNJqZl
+        9O/+wHgCgm1NIw9mKJ07jXaadhLaaA8ChicH7Ffo8RvKu63HQ5eORSZjc8sWAqdA+vW89EALgMgXK
+        47mrGqvcJeVBX4WIjwN3PKuVNLhHfWolFnCuUv5ljlUJM6I1wF+0PUJIkflRJCJu+F7E2swvG98Wu
+        Nh8QA+vD4zvoBe4inUBzA2a+cWQfDhmNG698Qn6nwKcGE535N+UW9zlclffBqHUIck7K8UwvILBuS
+        LljtTLIQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1huf90-0000bY-As; Mon, 05 Aug 2019 15:43:30 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6FFDA201F0990; Mon,  5 Aug 2019 17:43:28 +0200 (CEST)
+Date:   Mon, 5 Aug 2019 17:43:28 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     Oleg Nesterov <oleg@redhat.com>, Will Deacon <will@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, bigeasy@linutronix.de,
+        juri.lelli@redhat.com, williams@redhat.com, bristot@redhat.com,
+        longman@redhat.com, dave@stgolabs.net, jack@suse.com
+Subject: Re: [PATCH] locking/percpu_rwsem: Rewrite to not use rwsem
+Message-ID: <20190805154328.GJ2332@hirez.programming.kicks-ass.net>
+References: <20190805140241.GI2332@hirez.programming.kicks-ass.net>
+ <20190805144318.GA972@tardis>
+ <20190805145813.GB972@tardis>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190805145813.GB972@tardis>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 5 Aug 2019 17:04:35 +0200
-Lorenzo Bianconi <lorenzo@kernel.org> wrote:
+On Mon, Aug 05, 2019 at 10:58:13PM +0800, Boqun Feng wrote:
+> On Mon, Aug 05, 2019 at 10:43:18PM +0800, Boqun Feng wrote:
+> > On Mon, Aug 05, 2019 at 04:02:41PM +0200, Peter Zijlstra wrote:
+> > [...]
+> > > =20
+> > >  static inline void percpu_up_read(struct percpu_rw_semaphore *sem)
+> > >  {
+> > > +	rwsem_release(&sem->dep_map, 1, _RET_IP_);
+> > > +
+> > >  	preempt_disable();
+> > >  	/*
+> > >  	 * Same as in percpu_down_read().
+> > >  	 */
+> > > -	if (likely(rcu_sync_is_idle(&sem->rss)))
+> > > +	if (likely(rcu_sync_is_idle(&sem->rss))) {
+> > >  		__this_cpu_dec(*sem->read_count);
+> > > -	else
+> > > -		__percpu_up_read(sem); /* Unconditional memory barrier */
+> > > -	preempt_enable();
+> > > +		preempt_enable();
+> > > +		return;
+> > > +	}
+> > > =20
+> > > -	rwsem_release(&sem->rw_sem.dep_map, 1, _RET_IP_);
+> >=20
+> > Missing a preempt_enable() here?
+> >=20
+>=20
+> Ah.. you modified the semantics of __percpu_up_read() to imply a
+> preempt_enable(), sorry for the noise...
 
-> > On Thu,  1 Aug 2019 16:39:08 +0200
-> > Martin Kepplinger <martin.kepplinger@puri.sm> wrote:
-> >   
-> > > in_accel_x_scale, in_accel_y_scale and in_accel_z_scale are always
-> > > the same. The scale is still defined to be in "info_mask_separate".
-> > > 
-> > > Userspace (iio-sensor-proxy and others) is not used to that and only
-> > > looks for "in_accel_scale" for the scaling factor to apply.
-> > > 
-> > > Change IIO_CHAN_INFO_SCALE from being separate in all channel to be
-> > > shared by type.
-> > > 
-> > > This removes in_accel_x_scale, in_accel_y_scale and in_accel_z_scale and
-> > > makes available in_accel_scale.
-> > > 
-> > > Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
-> > > ---
-> > > 
-> > > AFAIK in all other drivers, IIO_CHAN_INFO_SCALE is "shared by type". Sure
-> > > devices are different, but LSM6DSX devices still don't have different
-> > > scales for x/y/z channels :)  
-> > 
-> > I'm fine with this, but would like a Lorenzo ack as we have had
-> > devices in other series where these are not equal.   It used to
-> > be common in accelerometers as I think it was hard to get a large
-> > range in the vertical direction.  Doubt that applies on these modern
-> > parts though!
-> > 
-> > Thanks,
-> > 
-> > Jonathan  
-> 
-> AFAIK all the supported sensors have the same sensitivity on all axis and so I
-> am fine with this patch (it should be done in this way from day 0 actually :))
-> but is it going to break uapi? if not feel free to add:
-It's a gamble, but one we've made a number of times before when tidying this
-sort of thing up.
-
-Most code uses libraries that are capable of coping with both options so chances
-are fairly low that anyone will notice.  It seems some code doesn't cope
-with independent versions and will actually be fixed by this.
-
-I'm not proposing to push this as a fix, but as a tidy up.
-We may break a few custom scripts built against particular setups though.
-
-I think it's a worthwhile enough tidy up to take the risk, particularly
-if it fixes the interactions with some code bases (that incidentally
-should have coped with this either way).
-
-*crosses fingers*
-
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
-
-Thanks,
-
-Jonathan
-
-> 
-> Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> 
-> Regards,
-> Lorenzo
-> 
-> > 
-> >   
-> > > 
-> > > thanks,
-> > > 
-> > >                               martin
-> > > 
-> > > 
-> > > 
-> > >  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h | 4 ++--
-> > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-> > > index af379a5429ed..59c3ab7cbb6f 100644
-> > > --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-> > > +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-> > > @@ -56,8 +56,8 @@ enum st_lsm6dsx_hw_id {
-> > >  	.address = addr,						\
-> > >  	.modified = 1,							\
-> > >  	.channel2 = mod,						\
-> > > -	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |			\
-> > > -			      BIT(IIO_CHAN_INFO_SCALE),			\
-> > > +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),			\
-> > > +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),		\
-> > >  	.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),	\
-> > >  	.scan_index = scan_idx,						\
-> > >  	.scan_type = {							\  
-> >   
-
+Yes indeed; I suppose I should've noted that in the Changlog. The reason
+is that waitqueues use spin_lock() which change into a sleepable lock on
+RT and thus cannot be used with preeption disabled. We also cannot
+(easily) switch to swait because we use both exclusive and !exclusive
+waits.
