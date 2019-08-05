@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4836C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1635C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFB942087B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77BD92087B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:41:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="o9lEr+Sk"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="qJD4gdHb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729458AbfHENlO (ORCPT
+        id S1729594AbfHENlQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:41:14 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53341 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726508AbfHENlL (ORCPT
+        Mon, 5 Aug 2019 09:41:16 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36225 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbfHENlL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 5 Aug 2019 09:41:11 -0400
-Received: by mail-wm1-f68.google.com with SMTP id x15so74813053wmj.3
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 06:41:09 -0700 (PDT)
+Received: by mail-wm1-f67.google.com with SMTP id g67so68952475wme.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 06:41:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=GncMVDz5Vd7/NEmfnXs9hYV3ld42S/SQ0pl+I46T4l8=;
-        b=o9lEr+Skep04ad2BOwbVmN36Q5i0vAAvaall6aKeayBrBMJfcswlnOFmDDkEyHqQvz
-         l6r6b5ma5Uw8b97m/7ZdXjYphKsrWHAUoFElJMElt217BZVGYEeVFpBkrywXBYBmgd8e
-         LRVFIRSCpBzGhiJubWPADBLwMBClmqU4YEgVS6nU5tjNFdfT62fkfU654GJ66Ag0ZNx9
-         pbvJ6dfHI0YEmy8RC+gxOa/BDRkSa9K9AIQf0W4tEZwmcyDboR8Aj0mknHwOr5mXBBsY
-         QSGmdro7WtQgXW5fDZdvzazaYQjg5h3dgprYSG8hZpH3J7DkCkOYvIX366+tCyK6L2Qu
-         tSew==
+        bh=BuuMX+kd4A8dEfG3qDO6RvK4XQjF8g/kyhgS9BKn3r0=;
+        b=qJD4gdHbnAzeFnPvKM+8j1gE58vTH+WCsmheK6fZFJnnrjUDw3nFKihaYFnoE5elar
+         VG/+rWF3g2A+JcgymCXaFsEXgyJnIDT+hsLYwH+ybejdUeXdVh+RW4+FCuhzOoHzFNhg
+         xOrmmMM+mhlrnr8Uw1NRZC6uFoFHjrKT5BQwTbPRiu4nacBAy5VNHoh+jSh40BsBm18T
+         6OL8lWqJbAd4NDQsli32/MMIb20OPlIijh/jr1av7S2+rO1NNzTVkNTHRxzTR5WkVK8J
+         RuYhO1fRZtrG7pz38v4Jr4FGft+lJR8YOPshh9Z5oJG31mIsgetJj3pEQPHxeyf37eWK
+         h4tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=GncMVDz5Vd7/NEmfnXs9hYV3ld42S/SQ0pl+I46T4l8=;
-        b=rYZzhtxikGc6pP7AjPnbc2afCpxcxGpOFWfC50gLb54WrZQg8+a4W5ibx7PDWcsyXO
-         ngG+nLlf2e4wz0z+7RWiEB2JxPVbd8ErHQxUSvktdhJ+i5jLuLRIUmFQAbTX4SDd/8NO
-         FojPnCBgOKpwXyEkYP5ed8RCehCzkCOP3LzUmL2GsYMKvbNsyXbtVUpcIWFdp3nFQIl6
-         hOSN/IOXjN7r8EK1OE31p0o16ZedgK76ptBkMqnyUYJSQnB5ygOOeDJm0yAFZBimvkjU
-         3lK9QvaQKPB3omAtt2BH6ry/bsUWjjgYNyDJIgvSTdAxa7fm/wWzGnSnNewV7ZPWYnhj
-         RfOQ==
-X-Gm-Message-State: APjAAAVT+GSW8CzNa+4Ows0lK0pEG/e9oWx0URTaGE8hcEHcEhdv/x8W
-        UkwWlGibBI+ZRPFnC6jV86RWzw==
-X-Google-Smtp-Source: APXvYqwcSww8Y0uffTimxqmSNt9Jd/RKdAMe2bp2vn9qOiDZl//WDAehUdAAkviXn9l9223SKA46fA==
-X-Received: by 2002:a1c:e710:: with SMTP id e16mr19446088wmh.38.1565012468451;
-        Mon, 05 Aug 2019 06:41:08 -0700 (PDT)
+        bh=BuuMX+kd4A8dEfG3qDO6RvK4XQjF8g/kyhgS9BKn3r0=;
+        b=W3P2tKk9j+ti8vd5fEfG3CN15hBOv4kXSR4E+Fs9ZcXPAYSgidZew7GeOx4EsSMbc+
+         TeZPKDHkJbvP4Cz8qNDJJ3mlMIPIiS9q26+RfFAG0a3OE9QuM15Pm0F/aKY4CTf1nPv4
+         m7hqEMT8cTq0k+jBg6K4F26VExXnG6T47KVynIL0BxfNDI/gThhpoZY0B+0fowFJo5Gi
+         dQj07TV5exQgMI/eCDpuDRweR6wORewKtrwOJrQm56SF3Upq7/zcXygXKxixJPSqqBUn
+         baKazH1Fv1utgnasDSsvlcZXsgMoxNc763xXlzDI+h0OPmi4Ozs5NiJyxZ28oNpPUrnu
+         aKmw==
+X-Gm-Message-State: APjAAAXOcR1chCAa+jCrLgWXJnBWxHdvHgUaUPy/xD6CK2SpeK7CeL92
+        V8emaWODTe+Kx+CqUIa1PyeNUQ==
+X-Google-Smtp-Source: APXvYqwVoqHDa33wnfWrybOC8mjRHHCSuKqmhCrAqI5Gxpc/QXp+sgQF1g1sasCcuASz2XJytrrO5g==
+X-Received: by 2002:a1c:630a:: with SMTP id x10mr19986559wmb.113.1565012469416;
+        Mon, 05 Aug 2019 06:41:09 -0700 (PDT)
 Received: from starbuck.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id w7sm99040534wrn.11.2019.08.05.06.41.07
+        by smtp.googlemail.com with ESMTPSA id w7sm99040534wrn.11.2019.08.05.06.41.08
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 05 Aug 2019 06:41:07 -0700 (PDT)
+        Mon, 05 Aug 2019 06:41:08 -0700 (PDT)
 From:   Jerome Brunet <jbrunet@baylibre.com>
 To:     Andrzej Hajda <a.hajda@samsung.com>,
         Neil Armstrong <narmstrong@baylibre.com>
@@ -64,9 +64,9 @@ Cc:     Jerome Brunet <jbrunet@baylibre.com>,
         Jonas Karlman <jonas@kwiboo.se>,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH 2/8] drm/bridge: dw-hdmi: move audio channel setup out of ahb
-Date:   Mon,  5 Aug 2019 15:40:56 +0200
-Message-Id: <20190805134102.24173-3-jbrunet@baylibre.com>
+Subject: [PATCH 3/8] drm/bridge: dw-hdmi: set channel count in the infoframes
+Date:   Mon,  5 Aug 2019 15:40:57 +0200
+Message-Id: <20190805134102.24173-4-jbrunet@baylibre.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190805134102.24173-1-jbrunet@baylibre.com>
 References: <20190805134102.24173-1-jbrunet@baylibre.com>
@@ -78,122 +78,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Part of the channel count setup done in dw-hdmi ahb should
-actually be done whatever the interface providing the data.
+Set the number of channel in the infoframes
 
-Let's move it to dw-hdmi driver instead.
-
+Cc: Jonas Karlman <jonas@kwiboo.se>
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- .../drm/bridge/synopsys/dw-hdmi-ahb-audio.c   | 20 +++---------
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.c     | 32 +++++++++++++++++++
- include/drm/bridge/dw_hdmi.h                  |  2 ++
- 3 files changed, 38 insertions(+), 16 deletions(-)
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-ahb-audio.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-ahb-audio.c
-index a494186ae6ce..2b7539701b42 100644
---- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-ahb-audio.c
-+++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-ahb-audio.c
-@@ -63,10 +63,6 @@ enum {
- 	HDMI_REVISION_ID = 0x0001,
- 	HDMI_IH_AHBDMAAUD_STAT0 = 0x0109,
- 	HDMI_IH_MUTE_AHBDMAAUD_STAT0 = 0x0189,
--	HDMI_FC_AUDICONF2 = 0x1027,
--	HDMI_FC_AUDSCONF = 0x1063,
--	HDMI_FC_AUDSCONF_LAYOUT1 = 1 << 0,
--	HDMI_FC_AUDSCONF_LAYOUT0 = 0 << 0,
- 	HDMI_AHB_DMA_CONF0 = 0x3600,
- 	HDMI_AHB_DMA_START = 0x3601,
- 	HDMI_AHB_DMA_STOP = 0x3602,
-@@ -403,7 +399,7 @@ static int dw_hdmi_prepare(struct snd_pcm_substream *substream)
- {
- 	struct snd_pcm_runtime *runtime = substream->runtime;
- 	struct snd_dw_hdmi *dw = substream->private_data;
--	u8 threshold, conf0, conf1, layout, ca;
-+	u8 threshold, conf0, conf1, ca;
- 
- 	/* Setup as per 3.0.5 FSL 4.1.0 BSP */
- 	switch (dw->revision) {
-@@ -434,20 +430,12 @@ static int dw_hdmi_prepare(struct snd_pcm_substream *substream)
- 	conf1 = default_hdmi_channel_config[runtime->channels - 2].conf1;
- 	ca = default_hdmi_channel_config[runtime->channels - 2].ca;
- 
--	/*
--	 * For >2 channel PCM audio, we need to select layout 1
--	 * and set an appropriate channel map.
--	 */
--	if (runtime->channels > 2)
--		layout = HDMI_FC_AUDSCONF_LAYOUT1;
--	else
--		layout = HDMI_FC_AUDSCONF_LAYOUT0;
--
- 	writeb_relaxed(threshold, dw->data.base + HDMI_AHB_DMA_THRSLD);
- 	writeb_relaxed(conf0, dw->data.base + HDMI_AHB_DMA_CONF0);
- 	writeb_relaxed(conf1, dw->data.base + HDMI_AHB_DMA_CONF1);
--	writeb_relaxed(layout, dw->data.base + HDMI_FC_AUDSCONF);
--	writeb_relaxed(ca, dw->data.base + HDMI_FC_AUDICONF2);
-+
-+	dw_hdmi_set_channel_count(dw->data.hdmi, runtime->channels);
-+	dw_hdmi_set_channel_allocation(dw->data.hdmi, ca);
- 
- 	switch (runtime->format) {
- 	case SNDRV_PCM_FORMAT_IEC958_SUBFRAME_LE:
 diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-index 218a7b2308f7..be6d6819bef4 100644
+index be6d6819bef4..bed4bb017afd 100644
 --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
 +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-@@ -645,6 +645,38 @@ void dw_hdmi_set_sample_rate(struct dw_hdmi *hdmi, unsigned int rate)
+@@ -663,6 +663,10 @@ void dw_hdmi_set_channel_count(struct dw_hdmi *hdmi, unsigned int cnt)
+ 	hdmi_modb(hdmi, layout, HDMI_FC_AUDSCONF_AUD_PACKET_LAYOUT_MASK,
+ 		  HDMI_FC_AUDSCONF);
+ 
++	/* Set the audio infoframes channel count */
++	hdmi_modb(hdmi, (cnt - 1) << HDMI_FC_AUDICONF0_CC_OFFSET,
++		  HDMI_FC_AUDICONF0_CC_MASK, HDMI_FC_AUDICONF0);
++
+ 	mutex_unlock(&hdmi->audio_mutex);
  }
- EXPORT_SYMBOL_GPL(dw_hdmi_set_sample_rate);
- 
-+void dw_hdmi_set_channel_count(struct dw_hdmi *hdmi, unsigned int cnt)
-+{
-+	u8 layout;
-+
-+	mutex_lock(&hdmi->audio_mutex);
-+
-+	/*
-+	 * For >2 channel PCM audio, we need to select layout 1
-+	 * and set an appropriate channel map.
-+	 */
-+	if (cnt > 2)
-+		layout = HDMI_FC_AUDSCONF_AUD_PACKET_LAYOUT_LAYOUT1;
-+	else
-+		layout = HDMI_FC_AUDSCONF_AUD_PACKET_LAYOUT_LAYOUT0;
-+
-+	hdmi_modb(hdmi, layout, HDMI_FC_AUDSCONF_AUD_PACKET_LAYOUT_MASK,
-+		  HDMI_FC_AUDSCONF);
-+
-+	mutex_unlock(&hdmi->audio_mutex);
-+}
-+EXPORT_SYMBOL_GPL(dw_hdmi_set_channel_count);
-+
-+void dw_hdmi_set_channel_allocation(struct dw_hdmi *hdmi, unsigned int ca)
-+{
-+	mutex_lock(&hdmi->audio_mutex);
-+
-+	hdmi_writeb(hdmi, ca, HDMI_FC_AUDICONF2);
-+
-+	mutex_unlock(&hdmi->audio_mutex);
-+}
-+EXPORT_SYMBOL_GPL(dw_hdmi_set_channel_allocation);
-+
- static void hdmi_enable_audio_clk(struct dw_hdmi *hdmi, bool enable)
- {
- 	if (enable)
-diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
-index c402364aec0d..cf528c289857 100644
---- a/include/drm/bridge/dw_hdmi.h
-+++ b/include/drm/bridge/dw_hdmi.h
-@@ -155,6 +155,8 @@ void dw_hdmi_resume(struct dw_hdmi *hdmi);
- void dw_hdmi_setup_rx_sense(struct dw_hdmi *hdmi, bool hpd, bool rx_sense);
- 
- void dw_hdmi_set_sample_rate(struct dw_hdmi *hdmi, unsigned int rate);
-+void dw_hdmi_set_channel_count(struct dw_hdmi *hdmi, unsigned int cnt);
-+void dw_hdmi_set_channel_allocation(struct dw_hdmi *hdmi, unsigned int ca);
- void dw_hdmi_audio_enable(struct dw_hdmi *hdmi);
- void dw_hdmi_audio_disable(struct dw_hdmi *hdmi);
- void dw_hdmi_set_high_tmds_clock_ratio(struct dw_hdmi *hdmi);
+ EXPORT_SYMBOL_GPL(dw_hdmi_set_channel_count);
 -- 
 2.21.0
 
