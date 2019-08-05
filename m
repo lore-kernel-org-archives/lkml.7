@@ -2,96 +2,82 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C84C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B11BC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73BC32075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:40:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 279BB2075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:40:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729755AbfHEOkt (ORCPT
+        id S1729796AbfHEOkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 10:40:49 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:40441 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729133AbfHEOks (ORCPT
+        Mon, 5 Aug 2019 10:40:55 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:43799 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729133AbfHEOky (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 10:40:48 -0400
-Received: by mail-qk1-f196.google.com with SMTP id s145so60253023qke.7;
-        Mon, 05 Aug 2019 07:40:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oRGlfvIBEGnhMOSaUFrH+SBTE1znMskWY0KJq2yKr84=;
-        b=APuble2BpXARG4jU2DYGB4NSX8yam4ci9ypYe5T8eO3mED1q+6uNR/K1PVpes5zpfz
-         QCwOCOYGsyGKslsSgoSZ5LPoBDiW4WXm4lxNHFQAOYUE4rWyj/cJwu3Z6mYlkTSIKPRy
-         0upin2VVKOR7Ur6ZEdadeZQrc51LrVUti/zo2c+mbub84+rYiTUs4J9TbH2SZNYWiGVp
-         QzXsahOGGJKy2tdbHFrgoT90odsC12RSozVFL95Zqayano7/QvpcMRUWuodaILd4fsZ4
-         GwFQIMOnFQBk29uM82b5ozXjSiXrkABX8dnsqRQRjiv7I9faMLa0nHaa7ICFTCfBa7cj
-         IspQ==
-X-Gm-Message-State: APjAAAWGoHaLxCPVAGh2feIEfY39f/6tW3a42bC4R6fKCoKJJgvmN6Tk
-        XynbPE3EqxCPO1qgOrzqbfNQv9dXLYG+Se0VYpQ=
-X-Google-Smtp-Source: APXvYqwXqRGhG17IavERVcPoGwtZvnFSRNz3XsmJ1I/UDszwO/ygv4rz7O1F3vn/+nsBTx+KYhsS4l9y4SQRsLMtA4w=
-X-Received: by 2002:a37:5f45:: with SMTP id t66mr102886994qkb.286.1565016047182;
- Mon, 05 Aug 2019 07:40:47 -0700 (PDT)
+        Mon, 5 Aug 2019 10:40:54 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1hueAP-00089V-En; Mon, 05 Aug 2019 08:40:53 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1hueAD-0006yY-3G; Mon, 05 Aug 2019 08:40:53 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        security@kernel.org, linux-doc@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+References: <20190725130113.GA12932@kroah.com>
+        <nycvar.YFH.7.76.1908040214090.5899@cbobk.fhfr.pm>
+Date:   Mon, 05 Aug 2019 09:40:21 -0500
+In-Reply-To: <nycvar.YFH.7.76.1908040214090.5899@cbobk.fhfr.pm> (Jiri Kosina's
+        message of "Sun, 4 Aug 2019 02:17:00 +0200 (CEST)")
+Message-ID: <87blx3n0a2.fsf@xmission.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
 MIME-Version: 1.0
-References: <20190730014924.2193-1-deepa.kernel@gmail.com> <20190730014924.2193-5-deepa.kernel@gmail.com>
- <eb2027cdccc0a0ff0a9d061fa8dd04a927c63819.camel@codethink.co.uk>
-In-Reply-To: <eb2027cdccc0a0ff0a9d061fa8dd04a927c63819.camel@codethink.co.uk>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 5 Aug 2019 16:40:30 +0200
-Message-ID: <CAK8P3a0a0ZvwagKa00Q-SCK=6mMcD0dv=wzbOk8D7B9pj4eWrg@mail.gmail.com>
-Subject: Re: [Y2038] [PATCH 04/20] mount: Add mount warning for impending
- timestamp expiry
-To:     Ben Hutchings <ben.hutchings@codethink.co.uk>
-Cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-XM-SPF: eid=1hueAD-0006yY-3G;;;mid=<87blx3n0a2.fsf@xmission.com>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/734h3jRw/GfGy5IwgZetr3oaBMoj7LHI=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH] Documentation/admin-guide: Embargoed hardware security issues
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 5, 2019 at 4:12 PM Ben Hutchings
-<ben.hutchings@codethink.co.uk> wrote:
->
-> On Mon, 2019-07-29 at 18:49 -0700, Deepa Dinamani wrote:
-> > The warning reuses the uptime max of 30 years used by the
-> > setitimeofday().
-> >
-> > Note that the warning is only added for new filesystem mounts
-> > through the mount syscall. Automounts do not have the same warning.
-> >
-> > Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
-> > ---
-> >  fs/namespace.c | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> >
-> > diff --git a/fs/namespace.c b/fs/namespace.c
-> > index b26778bdc236..5314fac8035e 100644
-> > --- a/fs/namespace.c
-> > +++ b/fs/namespace.c
-> > @@ -2739,6 +2739,17 @@ static int do_new_mount_fc(struct fs_context *fc, struct path *mountpoint,
-> >       error = do_add_mount(real_mount(mnt), mountpoint, mnt_flags);
-> >       if (error < 0)
-> >               mntput(mnt);
-> > +
-> > +     if (!error && sb->s_time_max &&
->
-> I don't know why you are testing sb->s_time_max here - it should always
-> be non-zero since alloc_super() sets it to TIME64_MAX.
 
-I think we support some writable file systems that have no timestamps
-at all, so both the minimum and maximum default to 0 (1970-01-01).
+I skimmed this and a couple things jumped out at me.
 
-For these, there is no point in printing a warning, they just work
-as designed, even though the maximum is expired.
+1) PGP and S/MIME because of their use of long term keys do not provide
+   forward secrecy.  Which can makes it worth while to cryptographically
+   factor a key or to obtain knowledge of a private key without the key
+   holders knowledge.  As the keys will be used again and again over a
+   long period of time.
 
-       Arnd
+   More recent protocol's such as Signal's Double Ratchet Protocol
+   enable forward secrecy for store and foward communications, and
+   remove the problem of long term keys.
+
+2) The existence of such a process with encrypted communications to
+   ensure long term confidentiality is going to make our contact people
+   the targets of people who want access to knolwedge about hardware
+   bugs like meltdown, before they become public.
+
+I am just mentioning these things in case they are not immediately
+obvious to everyone else involved, so that people can be certain
+they are comfortable with the tradeoffs being made.
+
+Eric
