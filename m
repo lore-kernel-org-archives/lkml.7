@@ -2,61 +2,60 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B9DC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 511C9C32754
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D6482147A
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:05:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FA6D216B7
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:05:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="QEOkJI1u"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="MWgO4tm5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730086AbfHERFO (ORCPT
+        id S1730144AbfHERFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 13:05:14 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42782 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730037AbfHERFN (ORCPT
+        Mon, 5 Aug 2019 13:05:18 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40519 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730096AbfHERFR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 13:05:13 -0400
-Received: by mail-pg1-f196.google.com with SMTP id t132so40054102pgb.9
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 10:05:13 -0700 (PDT)
+        Mon, 5 Aug 2019 13:05:17 -0400
+Received: by mail-pg1-f195.google.com with SMTP id w10so40058286pgj.7
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 10:05:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=joelfernandes.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=RUBxnyz640QfvTz6lz/Tqs2pyOPmGqnxC24rkQCQqR8=;
-        b=QEOkJI1uuZ+jSdOl6tBfEcxS4lwaMuWo43bvHb8IEHarKAyNN0MWV5t12h+iKsm8dO
-         J7HViNVcJnELGFCNRTAE5kuQ6V6zX93lvwyuOag45IAvbLYcCRmpuzE0Y8TZwWBke/rZ
-         +zU9hexd9hgPeIjOktomqrMSW7rr5L8f+KbsU=
+        bh=hfTT9Vyh4lJ/Mb9rTCTCYXmmzA+mBf4ub6OXNmSq8us=;
+        b=MWgO4tm5GTritoxl53gt5qNjI6dHxFHD3f2tmoGq9OJgzbnGXd/y+DqsRAV4dJJOe8
+         mYeyo0j3HZzU6Tao9ECna4T86NUvCDpvt4gexDupdIGfVRUQxbA+88ArezoiE9kyDdqN
+         Lu/GqdUdfcjbf1HEszwyMIgGK8XfBF0rg6oXU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=RUBxnyz640QfvTz6lz/Tqs2pyOPmGqnxC24rkQCQqR8=;
-        b=sdBiC5VPVw8Q9fJyYHMxbRXE9JQHdHXY4QeqZqjOPJWQXgSsCh106i++sDVTWWP2dw
-         rnxcv5b/HRoPFOJsOq8L078PPtiH3xduSAequ7R9eUE+4ym7e47EYe5zbIIm3wqTSWYT
-         11viTCIb92ej0usR3RMEDHCpFugPKjMclyLRdgDF8HXHRvOLk82sQE+UQQkmzizrkdhe
-         GLV8Sgn9EqFT0zJpueozyzRN7EYH9YMDzdOKXmJFVa0GdtFFW3vkTgeObjdb2CV4jBLF
-         67BEm/aLXSCAVsOw+IKR1cvz74Pgn+gyLZ07cIoJaYHWw5IicNUqqVu9dCqU7G7MHYm9
-         tFJg==
-X-Gm-Message-State: APjAAAWxDIRO8YnE8uK9LvaTy3JLloAp3vEF7qnsiecUjm2d9sxjPxH8
-        M5tYGr79hg5+cO4u3of1BOGDrU5P
-X-Google-Smtp-Source: APXvYqwnR2jAWfV7TWIbHzeRGGMkSbdfN64oix1so/G/sVSVrD4k1Fz1wn7L6kV9yuqrFmYXXVE03A==
-X-Received: by 2002:a62:7a8a:: with SMTP id v132mr73809561pfc.103.1565024712416;
-        Mon, 05 Aug 2019 10:05:12 -0700 (PDT)
+        bh=hfTT9Vyh4lJ/Mb9rTCTCYXmmzA+mBf4ub6OXNmSq8us=;
+        b=OAUvCK4d62F0FHGa4jHbtAIOpYvjP5I80hQ6svJNrgtz3txy6+csZRrQ4syJpaaKzy
+         rh8P/fH/w4pWaUiBPZaqYpM5hzp1Fj9w4qBHEGmDNyilyvaK080wua0SQN3GEGxajj7f
+         XD2JzKp03nr8wFxf75p2Xk9oywtdeuNUSAV4NNq1HMUS1/fIbCyOlYUsLI0zw2OUcpA2
+         njnp1nIGI6D3lLKQo/8E9IWwc4sFJHHfQ9OwmNFGNiML3ucRtEuKclilG1X9uHs5Num6
+         /eoheNhyexKbiL8x47YP5EBFCUNZ2Nhu90isFvuZPJaMGiDEsNVmWrYf47ZW/Tt7dDwd
+         syHw==
+X-Gm-Message-State: APjAAAXVnIukeKRlaUP3I7yqd267GOGs7LCAmaC748uCWjLm8+eN/96i
+        gUhDOp5EvU1OClhSTF8CZTabLcjk
+X-Google-Smtp-Source: APXvYqwNN1t4bVbzgmwIXdCDQSshCIBMOslB9kNDo+lLtbCe0bb0+FNBd/Sai0oabP93PogQiVJHkw==
+X-Received: by 2002:a62:770e:: with SMTP id s14mr71578047pfc.150.1565024716052;
+        Mon, 05 Aug 2019 10:05:16 -0700 (PDT)
 Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id p23sm89832934pfn.10.2019.08.05.10.05.08
+        by smtp.gmail.com with ESMTPSA id p23sm89832934pfn.10.2019.08.05.10.05.12
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 05 Aug 2019 10:05:11 -0700 (PDT)
+        Mon, 05 Aug 2019 10:05:15 -0700 (PDT)
 From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
         Alexey Dobriyan <adobriyan@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Borislav Petkov <bp@alien8.de>,
@@ -72,14 +71,15 @@ Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
         Michal Hocko <mhocko@suse.com>,
         Mike Rapoport <rppt@linux.ibm.com>, minchan@kernel.org,
         namhyung@google.com, paulmck@linux.ibm.com,
+        Robin Murphy <robin.murphy@arm.com>,
         Roman Gushchin <guro@fb.com>,
         Stephen Rothwell <sfr@canb.auug.org.au>, surenb@google.com,
         Thomas Gleixner <tglx@linutronix.de>, tkjos@google.com,
         Vladimir Davydov <vdavydov.dev@gmail.com>,
         Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>
-Subject: [PATCH v4 3/5] [RFC] arm64: Add support for idle bit in swap PTE
-Date:   Mon,  5 Aug 2019 13:04:49 -0400
-Message-Id: <20190805170451.26009-3-joel@joelfernandes.org>
+Subject: [PATCH v4 4/5] page_idle: Drain all LRU pagevec before idle tracking
+Date:   Mon,  5 Aug 2019 13:04:50 -0400
+Message-Id: <20190805170451.26009-4-joel@joelfernandes.org>
 X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
 In-Reply-To: <20190805170451.26009-1-joel@joelfernandes.org>
 References: <20190805170451.26009-1-joel@joelfernandes.org>
@@ -90,73 +90,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This bit will be used by idle page tracking code to correctly identify
-if a page that was swapped out was idle before it got swapped out.
-Without this PTE bit, we lose information about if a page is idle or not
-since the page frame gets unmapped.
+During idle tracking, we see that sometimes faulted anon pages are in
+pagevec but are not drained to LRU. Idle tracking considers pages only
+on LRU. Drain all CPU's LRU before starting idle tracking.
 
-In this patch we reuse PTE_DEVMAP bit since idle page tracking only
-works on user pages in the LRU. Device pages should not consitute those
-so it should be unused and safe to use.
-
-Cc: Robin Murphy <robin.murphy@arm.com>
 Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- arch/arm64/Kconfig                    |  1 +
- arch/arm64/include/asm/pgtable-prot.h |  1 +
- arch/arm64/include/asm/pgtable.h      | 15 +++++++++++++++
- 3 files changed, 17 insertions(+)
+ mm/page_idle.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 3adcec05b1f6..9d1412c693d7 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -128,6 +128,7 @@ config ARM64
- 	select HAVE_ARCH_MMAP_RND_BITS
- 	select HAVE_ARCH_MMAP_RND_COMPAT_BITS if COMPAT
- 	select HAVE_ARCH_PREL32_RELOCATIONS
-+	select HAVE_ARCH_PTE_SWP_PGIDLE
- 	select HAVE_ARCH_SECCOMP_FILTER
- 	select HAVE_ARCH_STACKLEAK
- 	select HAVE_ARCH_THREAD_STRUCT_WHITELIST
-diff --git a/arch/arm64/include/asm/pgtable-prot.h b/arch/arm64/include/asm/pgtable-prot.h
-index 92d2e9f28f28..917b15c5d63a 100644
---- a/arch/arm64/include/asm/pgtable-prot.h
-+++ b/arch/arm64/include/asm/pgtable-prot.h
-@@ -18,6 +18,7 @@
- #define PTE_SPECIAL		(_AT(pteval_t, 1) << 56)
- #define PTE_DEVMAP		(_AT(pteval_t, 1) << 57)
- #define PTE_PROT_NONE		(_AT(pteval_t, 1) << 58) /* only when !PTE_VALID */
-+#define PTE_SWP_PGIDLE		PTE_DEVMAP		 /* for idle page tracking during swapout */
+diff --git a/mm/page_idle.c b/mm/page_idle.c
+index a5b00d63216c..2972367a599f 100644
+--- a/mm/page_idle.c
++++ b/mm/page_idle.c
+@@ -180,6 +180,8 @@ static ssize_t page_idle_bitmap_read(struct file *file, struct kobject *kobj,
+ 	unsigned long pfn, end_pfn;
+ 	int bit, ret;
  
- #ifndef __ASSEMBLY__
++	lru_add_drain_all();
++
+ 	ret = page_idle_get_frames(pos, count, NULL, &pfn, &end_pfn);
+ 	if (ret == -ENXIO)
+ 		return 0;  /* Reads beyond max_pfn do nothing */
+@@ -211,6 +213,8 @@ static ssize_t page_idle_bitmap_write(struct file *file, struct kobject *kobj,
+ 	unsigned long pfn, end_pfn;
+ 	int bit, ret;
  
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index 3f5461f7b560..558f5ebd81ba 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -212,6 +212,21 @@ static inline pte_t pte_mkdevmap(pte_t pte)
- 	return set_pte_bit(pte, __pgprot(PTE_DEVMAP));
- }
++	lru_add_drain_all();
++
+ 	ret = page_idle_get_frames(pos, count, NULL, &pfn, &end_pfn);
+ 	if (ret)
+ 		return ret;
+@@ -428,6 +432,8 @@ ssize_t page_idle_proc_generic(struct file *file, char __user *ubuff,
+ 	walk.private = &priv;
+ 	walk.mm = mm;
  
-+static inline int pte_swp_page_idle(pte_t pte)
-+{
-+	return 0;
-+}
++	lru_add_drain_all();
 +
-+static inline pte_t pte_swp_mkpage_idle(pte_t pte)
-+{
-+	return set_pte_bit(pte, __pgprot(PTE_SWP_PGIDLE));
-+}
-+
-+static inline pte_t pte_swp_clear_page_idle(pte_t pte)
-+{
-+	return clear_pte_bit(pte, __pgprot(PTE_SWP_PGIDLE));
-+}
-+
- static inline void set_pte(pte_t *ptep, pte_t pte)
- {
- 	WRITE_ONCE(*ptep, pte);
+ 	down_read(&mm->mmap_sem);
+ 
+ 	/*
 -- 
 2.22.0.770.g0f2c4a37fd-goog
 
