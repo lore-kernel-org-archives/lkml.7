@@ -2,52 +2,53 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB4CC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EACEDC32751
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 631A321882
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:04:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B82802075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:04:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010261;
-	bh=/cICx+80dZta7bh9CvT/1n+AsO2ktql8iA571OGiJ4c=;
+	s=default; t=1565010264;
+	bh=j8uzukzOaljmQbwdKf6UHODmpG6duIbaQra2BZu+GU4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=irppvdZdyfTA2USASaP2+hTOzj+DyEyi/n7OwjdtN2jpOXJDJzMVRD0FCNk3r/DdV
-	 AP/k7pog7ES0LsrakOnwRhqvlkzwsbp9E1K8l4MWwxywM8nwjTN7YSmT8zTp38U8BL
-	 V2NCXxuWzLmfAdGxWvy/MgbF0jnCIqjyEzHxJsTc=
+	b=IzCNUaQ8rmzUtTfAOcCy6Nu4Iukt2GR4ZeHOSpyKXesfPua9650wi7tW9a/B9vf2d
+	 6QxZIEmW5AMlsKlgMSe/EJenuqDnjUt/N/GIN0a0D4NbXncqiLizx8E3Spm0wnACus
+	 BRf47iKM1ThIfZgZqXUsQKSnY8CqipMu7jam9Kv8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728987AbfHENEU (ORCPT
+        id S1729009AbfHENEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:04:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39926 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:04:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728934AbfHENET (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:04:19 -0400
+        id S1728934AbfHENEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:04:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4A552147A;
-        Mon,  5 Aug 2019 13:04:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 580EE2173C;
+        Mon,  5 Aug 2019 13:04:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010258;
-        bh=/cICx+80dZta7bh9CvT/1n+AsO2ktql8iA571OGiJ4c=;
+        s=default; t=1565010260;
+        bh=j8uzukzOaljmQbwdKf6UHODmpG6duIbaQra2BZu+GU4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eyeEVnyiaMGd0LA8Vn6Sje2mDKEbXoPJEqUxLmnUaiQ0PnzO2wTfPFRuYUAVbCrx6
-         xzAKbOsx2OoPMLYHhBnu8X2DwcIrwhlFVy2hJtNeIcG6XRe9dnHSYQjjXGztCnLGuN
-         uS3b6oz0CEjvMfBwq+bM2fp+J3HWX+2Bi4/i1MmQ=
+        b=fhFTus651N5ZyhGpZe82kr4EauJBE0S/K+SH+MnkG2g8p4n87tObC4MeCFvekyoHy
+         wuqBghgaVwO68epN0It12pvI1sr3/a/sQHRr1YQeZLJbXfIby6CHnRBskr+Byw98Ez
+         Rm3XgkZ6PMouNat7aD/6RENPYXVwVBtgDOqkjIas=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 02/22] ARM: dts: rockchip: Mark that the rk3288 timer might stop in suspend
-Date:   Mon,  5 Aug 2019 15:02:39 +0200
-Message-Id: <20190805124919.374971262@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+fee3a14d4cdf92646287@syzkaller.appspotmail.com,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Paul Moore <paul@paul-moore.com>
+Subject: [PATCH 4.4 20/22] selinux: fix memory leak in policydb_init()
+Date:   Mon,  5 Aug 2019 15:02:57 +0200
+Message-Id: <20190805124923.189417648@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124918.070468681@linuxfoundation.org>
 References: <20190805124918.070468681@linuxfoundation.org>
@@ -60,48 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8ef1ba39a9fa53d2205e633bc9b21840a275908e ]
+From: Ondrej Mosnacek <omosnace@redhat.com>
 
-This is similar to commit e6186820a745 ("arm64: dts: rockchip: Arch
-counter doesn't tick in system suspend").  Specifically on the rk3288
-it can be seen that the timer stops ticking in suspend if we end up
-running through the "osc_disable" path in rk3288_slp_mode_set().  In
-that path the 24 MHz clock will turn off and the timer stops.
+commit 45385237f65aeee73641f1ef737d7273905a233f upstream.
 
-To test this, I ran this on a Chrome OS filesystem:
-  before=$(date); \
-  suspend_stress_test -c1 --suspend_min=30 --suspend_max=31; \
-  echo ${before}; date
+Since roles_init() adds some entries to the role hash table, we need to
+destroy also its keys/values on error, otherwise we get a memory leak in
+the error path.
 
-...and I found that unless I plug in a device that requests USB wakeup
-to be active that the two calls to "date" would show that fewer than
-30 seconds passed.
+Cc: <stable@vger.kernel.org>
+Reported-by: syzbot+fee3a14d4cdf92646287@syzkaller.appspotmail.com
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-NOTE: deep suspend (where the 24 MHz clock gets disabled) isn't
-supported yet on upstream Linux so this was tested on a downstream
-kernel.
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/rk3288.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ security/selinux/ss/policydb.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 04ea209f1737f..98abb053b7daf 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -205,6 +205,7 @@
- 			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
- 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
- 		clock-frequency = <24000000>;
-+		arm,no-tick-in-suspend;
- 	};
+--- a/security/selinux/ss/policydb.c
++++ b/security/selinux/ss/policydb.c
+@@ -266,6 +266,8 @@ static int rangetr_cmp(struct hashtab *h
+ 	return v;
+ }
  
- 	timer: timer@ff810000 {
--- 
-2.20.1
-
++static int (*destroy_f[SYM_NUM]) (void *key, void *datum, void *datap);
++
+ /*
+  * Initialize a policy database structure.
+  */
+@@ -313,8 +315,10 @@ static int policydb_init(struct policydb
+ out:
+ 	hashtab_destroy(p->filename_trans);
+ 	hashtab_destroy(p->range_tr);
+-	for (i = 0; i < SYM_NUM; i++)
++	for (i = 0; i < SYM_NUM; i++) {
++		hashtab_map(p->symtab[i].table, destroy_f[i], NULL);
+ 		hashtab_destroy(p->symtab[i].table);
++	}
+ 	return rc;
+ }
+ 
 
 
