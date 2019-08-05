@@ -2,180 +2,171 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MIME_HEADER_CTYPE_ONLY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D30DC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A323C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38B36216B7
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:54:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565016869;
-	bh=UzKav88A7iFYVtoLk8KJjYDlrDokACtTBAAskUdmfSM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=zHMQ63PBaXeZaT1+//w2nfTv/10WYw412/CalR3GkASyp81r42YC7Yzu3Za2pyBbp
-	 gD3PXIBKnKDWtbN0HAb6CXDTD9o7mh8ybA4oMXWBtLezrMDyF8IZK4E3PlZLOnB1wp
-	 9+uJDd/oNShCn2pXQYs4yzWmDPsvoJALpFhor+6Y=
+	by mail.kernel.org (Postfix) with ESMTP id CE5CB216B7
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:54:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729091AbfHEOy2 (ORCPT
+        id S1729459AbfHEOyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 10:54:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35292 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 10:54:49 -0400
+Received: from comms.puri.sm ([159.203.221.185]:41494 "EHLO comms.puri.sm"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728043AbfHEOy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 10:54:27 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3380E206C1;
-        Mon,  5 Aug 2019 14:54:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565016866;
-        bh=UzKav88A7iFYVtoLk8KJjYDlrDokACtTBAAskUdmfSM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=xPDGnsIPOTwzT3NsSDUSuQUKeNkeo4UjEbPSRmga9tvZXZE5SzNrG+LzxqkmIDmNv
-         oPJl2fK8wL27feQkv9PKQqWkxY6+3S33jNxaDDZXHej336DJW+39r2hC3ntCd/af1U
-         AjZ1ATmmkd1/B/q2FHVz0P9HNhb/RJX9QQy4heLA=
-Date:   Mon, 5 Aug 2019 15:54:20 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] iio: light: si1145: Use device-managed APIs
-Message-ID: <20190805155403.3d45b0b5@archlinux>
-In-Reply-To: <20190729014301.13402-1-hslester96@gmail.com>
-References: <20190729014301.13402-1-hslester96@gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1728043AbfHEOyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 10:54:49 -0400
+X-Greylist: delayed 600 seconds by postgrey-1.27 at vger.kernel.org; Mon, 05 Aug 2019 10:54:48 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by comms.puri.sm (Postfix) with ESMTP id D2931DF2AE;
+        Mon,  5 Aug 2019 07:44:47 -0700 (PDT)
+Received: from comms.puri.sm ([127.0.0.1])
+        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id wV_usbgEvWOB; Mon,  5 Aug 2019 07:44:47 -0700 (PDT)
+Subject: Re: [PATCH 1/2] usb: serial: option: Add the BroadMobi BM818 card
+To:     Johan Hovold <johan@kernel.org>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>
+Cc:     kernel@puri.sm, =?UTF-8?Q?Bj=c3=b8rn_Mork?= <bjorn@mork.no>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        netdev@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190724145227.27169-1-angus@akkea.ca>
+ <20190724145227.27169-2-angus@akkea.ca> <20190805114711.GF3574@localhost>
+From:   Bob Ham <bob.ham@puri.sm>
+Openpgp: preference=signencrypt
+Autocrypt: addr=bob.ham@puri.sm; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <5fb96703-b174-eef1-5ad1-693e2bbce32f@puri.sm>
+Date:   Mon, 5 Aug 2019 15:44:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+In-Reply-To: <20190805114711.GF3574@localhost>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="aav2uDAIncbcoCkDxgmyhfPjctRCwvqu0"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Jul 2019 09:43:01 +0800
-Chuhong Yuan <hslester96@gmail.com> wrote:
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--aav2uDAIncbcoCkDxgmyhfPjctRCwvqu0
+Content-Type: multipart/mixed; boundary="ePV71vOs0eSjkvx3iXjEuaaJV4NUkQxra";
+ protected-headers="v1"
+From: Bob Ham <bob.ham@puri.sm>
+To: Johan Hovold <johan@kernel.org>, "Angus Ainslie (Purism)" <angus@akkea.ca>
+Cc: kernel@puri.sm, =?UTF-8?Q?Bj=c3=b8rn_Mork?= <bjorn@mork.no>,
+ "David S. Miller" <davem@davemloft.net>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, netdev@vger.kernel.org,
+ linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <5fb96703-b174-eef1-5ad1-693e2bbce32f@puri.sm>
+Subject: Re: [PATCH 1/2] usb: serial: option: Add the BroadMobi BM818 card
+References: <20190724145227.27169-1-angus@akkea.ca>
+ <20190724145227.27169-2-angus@akkea.ca> <20190805114711.GF3574@localhost>
+In-Reply-To: <20190805114711.GF3574@localhost>
 
-> Use device-managed APIs to simplify the code.
-> The remove functions are redundant now and can
-> be deleted.
-> 
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+--ePV71vOs0eSjkvx3iXjEuaaJV4NUkQxra
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
 
-Nice little patch, thanks!
+On 05/08/2019 12:47, Johan Hovold wrote:
+> On Wed, Jul 24, 2019 at 07:52:26AM -0700, Angus Ainslie (Purism) wrote:=
 
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
+>> From: Bob Ham <bob.ham@puri.sm>
+>>
+>> Add a VID:PID for the BroadModi BM818 M.2 card
+>=20
+> Would you mind posting the output of usb-devices (or lsusb -v) for this=
 
-Thanks,
+> device?
 
-Jonathan
+T:  Bus=3D01 Lev=3D03 Prnt=3D40 Port=3D03 Cnt=3D01 Dev#=3D 44 Spd=3D480 M=
+xCh=3D 0
+D:  Ver=3D 2.00 Cls=3D00(>ifc ) Sub=3D00 Prot=3D00 MxPS=3D64 #Cfgs=3D  1
+P:  Vendor=3D2020 ProdID=3D2060 Rev=3D00.00
+S:  Manufacturer=3DQualcomm, Incorporated
+S:  Product=3DQualcomm CDMA Technologies MSM
+C:  #Ifs=3D 5 Cfg#=3D 1 Atr=3De0 MxPwr=3D500mA
+I:  If#=3D0x0 Alt=3D 0 #EPs=3D 2 Cls=3Dff(vend.) Sub=3Dff Prot=3Dff Drive=
+r=3D(none)
+I:  If#=3D0x1 Alt=3D 0 #EPs=3D 2 Cls=3Dff(vend.) Sub=3Dff Prot=3Dff Drive=
+r=3D(none)
+I:  If#=3D0x2 Alt=3D 0 #EPs=3D 3 Cls=3Dff(vend.) Sub=3Dff Prot=3Dff Drive=
+r=3D(none)
+I:  If#=3D0x3 Alt=3D 0 #EPs=3D 3 Cls=3Dff(vend.) Sub=3Dfe Prot=3Dff Drive=
+r=3D(none)
+I:  If#=3D0x4 Alt=3D 0 #EPs=3D 3 Cls=3Dff(vend.) Sub=3Dff Prot=3Dff Drive=
+r=3D(none)
 
-> ---
-> Changes in v2:
->   - Split v1 into two patches.
->   - Use devm_iio_trigger_register in probe_trigger,
->     delete redundant remove_trigger.
->   - Return devm_iio_device_register directly as a
->     minor optimization.
-> 
->  drivers/iio/light/si1145.c | 42 +++++---------------------------------
->  1 file changed, 5 insertions(+), 37 deletions(-)
-> 
-> diff --git a/drivers/iio/light/si1145.c b/drivers/iio/light/si1145.c
-> index 6579d2418814..982bba0c54e7 100644
-> --- a/drivers/iio/light/si1145.c
-> +++ b/drivers/iio/light/si1145.c
-> @@ -1261,7 +1261,7 @@ static int si1145_probe_trigger(struct iio_dev *indio_dev)
->  		return ret;
->  	}
->  
-> -	ret = iio_trigger_register(trig);
-> +	ret = devm_iio_trigger_register(&client->dev, trig);
->  	if (ret)
->  		return ret;
->  
-> @@ -1271,16 +1271,6 @@ static int si1145_probe_trigger(struct iio_dev *indio_dev)
->  	return 0;
->  }
->  
-> -static void si1145_remove_trigger(struct iio_dev *indio_dev)
-> -{
-> -	struct si1145_data *data = iio_priv(indio_dev);
-> -
-> -	if (data->trig) {
-> -		iio_trigger_unregister(data->trig);
-> -		data->trig = NULL;
-> -	}
-> -}
-> -
->  static int si1145_probe(struct i2c_client *client,
->  			const struct i2c_device_id *id)
->  {
-> @@ -1332,7 +1322,8 @@ static int si1145_probe(struct i2c_client *client,
->  	if (ret < 0)
->  		return ret;
->  
-> -	ret = iio_triggered_buffer_setup(indio_dev, NULL,
-> +	ret = devm_iio_triggered_buffer_setup(&client->dev,
-> +		indio_dev, NULL,
->  		si1145_trigger_handler, &si1145_buffer_setup_ops);
->  	if (ret < 0)
->  		return ret;
-> @@ -1340,23 +1331,12 @@ static int si1145_probe(struct i2c_client *client,
->  	if (client->irq) {
->  		ret = si1145_probe_trigger(indio_dev);
->  		if (ret < 0)
-> -			goto error_free_buffer;
-> +			return ret;
->  	} else {
->  		dev_info(&client->dev, "no irq, using polling\n");
->  	}
->  
-> -	ret = iio_device_register(indio_dev);
-> -	if (ret < 0)
-> -		goto error_free_trigger;
-> -
-> -	return 0;
-> -
-> -error_free_trigger:
-> -	si1145_remove_trigger(indio_dev);
-> -error_free_buffer:
-> -	iio_triggered_buffer_cleanup(indio_dev);
-> -
-> -	return ret;
-> +	return devm_iio_device_register(&client->dev, indio_dev);
->  }
->  
->  static const struct i2c_device_id si1145_ids[] = {
-> @@ -1371,23 +1351,11 @@ static const struct i2c_device_id si1145_ids[] = {
->  };
->  MODULE_DEVICE_TABLE(i2c, si1145_ids);
->  
-> -static int si1145_remove(struct i2c_client *client)
-> -{
-> -	struct iio_dev *indio_dev = i2c_get_clientdata(client);
-> -
-> -	iio_device_unregister(indio_dev);
-> -	si1145_remove_trigger(indio_dev);
-> -	iio_triggered_buffer_cleanup(indio_dev);
-> -
-> -	return 0;
-> -}
-> -
->  static struct i2c_driver si1145_driver = {
->  	.driver = {
->  		.name   = "si1145",
->  	},
->  	.probe  = si1145_probe,
-> -	.remove = si1145_remove,
->  	.id_table = si1145_ids,
->  };
->  
 
+--ePV71vOs0eSjkvx3iXjEuaaJV4NUkQxra--
+
+--aav2uDAIncbcoCkDxgmyhfPjctRCwvqu0
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE745irA8zXATsZwYpUxfwLpX1YkEFAl1IQNoACgkQUxfwLpX1
+YkGLrw/8DdFrRqq2wSac4phcOPiDz/8DzQFDAn5BzUs9TfKiecHDJdycv0bFCjwY
+aIRF/z+i8ltLnCdO3KMSqwTgqit8npZC+DLWNrY4wBAVc2EsfSi/aQeFgUjr5kMB
+Z3y9IpfAn2dU16xg6+9XLBlHBj4qmpxtn7hnlPJOCJixcRaDoxrQ929kyfeDn2sr
+ntltidTZ/jF7/tkrZ1IPDFOz2ahscYh7kMos9x1NPizRlWWWiOLGRihyQDANbfpt
+VzScmlv/FjXuFDOjIhKlocimDccUYMAniPYfcQ9mL78GAfJKmAo0/MKsBWxNWih/
+Sef1FKCihiBsHbcVGcUMoSkDoVh3J9PYo2hL3y8SQouQoJtZ5FI+0OlUgsF78nTs
+8gJn6rvGIrb4l9FYX4fC3aP4QenyWj5TF4KNLEjxn0tHa6QPGds8Mbyl0RDB553l
+kdC5fAeuJszZFm+mAcijb+bR+fQ6eVu25tcuOjk97EueQabveLpDbSf/fMD8xzSo
+ejdFDydKqxZfeWbYRgKEAgnBufI/GfQLeI+NZN3An0C2pITt515he7o6ekUfaFeu
+6jLKaGWsH97zWmRs6n36TGsZrLrA/6eloib2J7Y+r+3aBZnY9eCJs0/DXTJ6J+PC
+6TylwPkZh3N7fINfKgtVt261Ga0vN8r2Q5T+8PNBamJCT2aDBrw=
+=oTTh
+-----END PGP SIGNATURE-----
+
+--aav2uDAIncbcoCkDxgmyhfPjctRCwvqu0--
