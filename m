@@ -5,67 +5,67 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB5BC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9EFC32751
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 877DE20644
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD2F72087B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:28:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011714;
-	bh=TvNZeH3uAxmo9PFMZvM58peptYjzKhiu7XNmv+CJDD0=;
+	s=default; t=1565011716;
+	bh=WCr2C9SvA6NcF0TyMrkE44OCdazKei7aqczCmdnv1ac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SehMFN7Dm5A3M5R/gx66MWEAE/tOreqiqJmpzIP3uR+J+oT23PJq7gCXO8BQfBaYX
-	 S5tdYZilZult1++EVyxbXMG0mpLQhy6HJzzWa+EJK5eWq9qnbVvY8hLp6qHnlS9QoE
-	 qlSM2L1UQyZazJYhvXdgKJ0DDvCG42acgc9WyC9Y=
+	b=XtOlLOyGQQSowgkWQ7kEE3NQ7hW1WU7Q2a0py93zye+UGwmK5ri2O6BzfulE5S9ux
+	 F1BZHebHlFAuLy2MUiS4bvkkwfwEFNvMnVM7QccEHygFrpV0jytYa2FwUrb/h/lOcV
+	 DfarPS6GTz4eZOI7OIqvpk1h116HQN5SHgnJXcR0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730727AbfHENWm (ORCPT
+        id S1730751AbfHEN2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:22:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59168 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:28:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730712AbfHENWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:22:38 -0400
+        id S1730723AbfHENWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:22:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B666920880;
-        Mon,  5 Aug 2019 13:22:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CEFF20651;
+        Mon,  5 Aug 2019 13:22:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011357;
-        bh=TvNZeH3uAxmo9PFMZvM58peptYjzKhiu7XNmv+CJDD0=;
+        s=default; t=1565011362;
+        bh=WCr2C9SvA6NcF0TyMrkE44OCdazKei7aqczCmdnv1ac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WHJabOtdO8zuFtaa+RWrr/pKnCH8HGt5+Z0FKXVDwgJfkuwX+Uk3cC7/x2ZcHgCg9
-         d5KZ7rW6rHSKdQOMgmMXfNAi24dW4rsDGDpea8ayh1XmfcnbtP5YI+6vMAswuniKCF
-         d/L07JAClLiNJulBqr55JR5iDJhW9YT86KXAMU7A=
+        b=dei+GJRSHPxVOW1YNzO+hl0OHkmuTpOf1dtvCeAN73gg/vvieASbE3K1BOx70swP+
+         HnjXeTn+iuTGPRAi9vUoCGpRZL5RkezyDGW0hCzXz++IYJX/ZuG91NsQim9j4ImVCK
+         UV8md/mSZQnceJkCOiQehRWvk9tpQKNolPsYjudc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Dmitry V. Levin" <ldv@altlinux.org>,
-        kbuild test robot <lkp@intel.com>,
-        Greentime Hu <greentime@andestech.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Elvira Khabirova <lineprinter@altlinux.org>,
-        Eugene Syromyatnikov <esyr@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        "James E.J. Bottomley" <jejb@parisc-linux.org>,
-        James Hogan <jhogan@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Burton <paul.burton@mips.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Richard Kuo <rkuo@codeaurora.org>,
-        Shuah Khan <shuah@kernel.org>,
+        stable@vger.kernel.org, Pavel Tatashin <pasha.tatashin@soleen.com>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Borislav Petkov <bp@suse.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        Huang Ying <ying.huang@intel.com>,
+        James Morris <jmorris@namei.org>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Ross Zwisler <zwisler@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, Takashi Iwai <tiwai@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Yaowei Bai <baiyaowei@cmss.chinamobile.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, Helge Deller <deller@gmx.de>
-Subject: [PATCH 5.2 062/131] nds32: fix asm/syscall.h
-Date:   Mon,  5 Aug 2019 15:02:29 +0200
-Message-Id: <20190805124955.579892869@linuxfoundation.org>
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.2 064/131] mm/hotplug: make remove_memory() interface usable
+Date:   Mon,  5 Aug 2019 15:02:31 +0200
+Message-Id: <20190805124955.739647249@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -78,211 +78,183 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 33644b95eb342201511fc951d8fcd10362bd435b ]
+[ Upstream commit eca499ab3749a4537dee77ffead47a1a2c0dee19 ]
 
-PTRACE_GET_SYSCALL_INFO is a generic ptrace API that lets ptracer obtain
-details of the syscall the tracee is blocked in.
+Presently the remove_memory() interface is inherently broken.  It tries
+to remove memory but panics if some memory is not offline.  The problem
+is that it is impossible to ensure that all memory blocks are offline as
+this function also takes lock_device_hotplug that is required to change
+memory state via sysfs.
 
-There are two reasons for a special syscall-related ptrace request.
+So, between calling this function and offlining all memory blocks there
+is always a window when lock_device_hotplug is released, and therefore,
+there is always a chance for a panic during this window.
 
-Firstly, with the current ptrace API there are cases when ptracer cannot
-retrieve necessary information about syscalls.  Some examples include:
+Make this interface to return an error if memory removal fails.  This
+way it is safe to call this function without panicking machine, and also
+makes it symmetric to add_memory() which already returns an error.
 
- * The notorious int-0x80-from-64-bit-task issue. See [1] for details.
-   In short, if a 64-bit task performs a syscall through int 0x80, its
-   tracer has no reliable means to find out that the syscall was, in
-   fact, a compat syscall, and misidentifies it.
-
- * Syscall-enter-stop and syscall-exit-stop look the same for the
-   tracer. Common practice is to keep track of the sequence of
-   ptrace-stops in order not to mix the two syscall-stops up. But it is
-   not as simple as it looks; for example, strace had a (just recently
-   fixed) long-standing bug where attaching strace to a tracee that is
-   performing the execve system call led to the tracer identifying the
-   following syscall-exit-stop as syscall-enter-stop, which messed up
-   all the state tracking.
-
- * Since the introduction of commit 84d77d3f06e7 ("ptrace: Don't allow
-   accessing an undumpable mm"), both PTRACE_PEEKDATA and
-   process_vm_readv become unavailable when the process dumpable flag is
-   cleared. On such architectures as ia64 this results in all syscall
-   arguments being unavailable for the tracer.
-
-Secondly, ptracers also have to support a lot of arch-specific code for
-obtaining information about the tracee.  For some architectures, this
-requires a ptrace(PTRACE_PEEKUSER, ...) invocation for every syscall
-argument and return value.
-
-PTRACE_GET_SYSCALL_INFO returns the following structure:
-
-struct ptrace_syscall_info {
-	__u8 op;	/* PTRACE_SYSCALL_INFO_* */
-	__u32 arch __attribute__((__aligned__(sizeof(__u32))));
-	__u64 instruction_pointer;
-	__u64 stack_pointer;
-	union {
-		struct {
-			__u64 nr;
-			__u64 args[6];
-		} entry;
-		struct {
-			__s64 rval;
-			__u8 is_error;
-		} exit;
-		struct {
-			__u64 nr;
-			__u64 args[6];
-			__u32 ret_data;
-		} seccomp;
-	};
-};
-
-The structure was chosen according to [2], except for the following
-changes:
-
- * seccomp substructure was added as a superset of entry substructure
-
- * the type of nr field was changed from int to __u64 because syscall
-   numbers are, as a practical matter, 64 bits
-
- * stack_pointer field was added along with instruction_pointer field
-   since it is readily available and can save the tracer from extra
-   PTRACE_GETREGS/PTRACE_GETREGSET calls
-
- * arch is always initialized to aid with tracing system calls such as
-   execve()
-
- * instruction_pointer and stack_pointer are always initialized so they
-   could be easily obtained for non-syscall stops
-
- * a boolean is_error field was added along with rval field, this way
-   the tracer can more reliably distinguish a return value from an error
-   value
-
-strace has been ported to PTRACE_GET_SYSCALL_INFO.  Starting with
-release 4.26, strace uses PTRACE_GET_SYSCALL_INFO API as the preferred
-mechanism of obtaining syscall information.
-
-[1] https://lore.kernel.org/lkml/CA+55aFzcSVmdDj9Lh_gdbz1OzHyEm6ZrGPBDAJnywm2LF_eVyg@mail.gmail.com/
-[2] https://lore.kernel.org/lkml/CAObL_7GM0n80N7J_DFw_eQyfLyzq+sf4y2AvsCCV88Tb3AwEHA@mail.gmail.com/
-
-This patch (of 7):
-
-All syscall_get_*() and syscall_set_*() functions must be defined as
-static inline as on all other architectures, otherwise asm/syscall.h
-cannot be included in more than one compilation unit.
-
-This bug has to be fixed in order to extend the generic
-ptrace API with PTRACE_GET_SYSCALL_INFO request.
-
-Link: http://lkml.kernel.org/r/20190510152749.GA28558@altlinux.org
-Fixes: 1932fbe36e02 ("nds32: System calls handling")
-Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
-Reported-by: kbuild test robot <lkp@intel.com>
-Acked-by: Greentime Hu <greentime@andestech.com>
-Cc: Vincent Chen <deanbo422@gmail.com>
-Cc: Elvira Khabirova <lineprinter@altlinux.org>
-Cc: Eugene Syromyatnikov <esyr@redhat.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Helge Deller <deller@gmx.de>	[parisc]
-Cc: James E.J. Bottomley <jejb@parisc-linux.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Paul Burton <paul.burton@mips.com>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Richard Kuo <rkuo@codeaurora.org>
-Cc: Shuah Khan <shuah@kernel.org>
+Link: http://lkml.kernel.org/r/20190517215438.6487-3-pasha.tatashin@soleen.com
+Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Fengguang Wu <fengguang.wu@intel.com>
+Cc: Huang Ying <ying.huang@intel.com>
+Cc: James Morris <jmorris@namei.org>
+Cc: Jérôme Glisse <jglisse@redhat.com>
+Cc: Keith Busch <keith.busch@intel.com>
+Cc: Ross Zwisler <zwisler@kernel.org>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Takashi Iwai <tiwai@suse.de>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Yaowei Bai <baiyaowei@cmss.chinamobile.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/nds32/include/asm/syscall.h | 27 +++++++++++++++++----------
- 1 file changed, 17 insertions(+), 10 deletions(-)
+ include/linux/memory_hotplug.h |  8 +++--
+ mm/memory_hotplug.c            | 64 +++++++++++++++++++++++-----------
+ 2 files changed, 49 insertions(+), 23 deletions(-)
 
-diff --git a/arch/nds32/include/asm/syscall.h b/arch/nds32/include/asm/syscall.h
-index 899b2fb4b52f7..7b5180d78e200 100644
---- a/arch/nds32/include/asm/syscall.h
-+++ b/arch/nds32/include/asm/syscall.h
-@@ -26,7 +26,8 @@ struct pt_regs;
-  *
-  * It's only valid to call this when @task is known to be blocked.
-  */
--int syscall_get_nr(struct task_struct *task, struct pt_regs *regs)
-+static inline int
-+syscall_get_nr(struct task_struct *task, struct pt_regs *regs)
- {
- 	return regs->syscallno;
+diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+index ae892eef8b825..988fde33cd7f5 100644
+--- a/include/linux/memory_hotplug.h
++++ b/include/linux/memory_hotplug.h
+@@ -324,7 +324,7 @@ static inline void pgdat_resize_init(struct pglist_data *pgdat) {}
+ extern bool is_mem_section_removable(unsigned long pfn, unsigned long nr_pages);
+ extern void try_offline_node(int nid);
+ extern int offline_pages(unsigned long start_pfn, unsigned long nr_pages);
+-extern void remove_memory(int nid, u64 start, u64 size);
++extern int remove_memory(int nid, u64 start, u64 size);
+ extern void __remove_memory(int nid, u64 start, u64 size);
+ 
+ #else
+@@ -341,7 +341,11 @@ static inline int offline_pages(unsigned long start_pfn, unsigned long nr_pages)
+ 	return -EINVAL;
  }
-@@ -47,7 +48,8 @@ int syscall_get_nr(struct task_struct *task, struct pt_regs *regs)
-  * system call instruction.  This may not be the same as what the
-  * register state looked like at system call entry tracing.
-  */
--void syscall_rollback(struct task_struct *task, struct pt_regs *regs)
-+static inline void
-+syscall_rollback(struct task_struct *task, struct pt_regs *regs)
- {
- 	regs->uregs[0] = regs->orig_r0;
+ 
+-static inline void remove_memory(int nid, u64 start, u64 size) {}
++static inline int remove_memory(int nid, u64 start, u64 size)
++{
++	return -EBUSY;
++}
++
+ static inline void __remove_memory(int nid, u64 start, u64 size) {}
+ #endif /* CONFIG_MEMORY_HOTREMOVE */
+ 
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index e096c987d2614..77d1f69cdeadd 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1736,9 +1736,10 @@ static int check_memblock_offlined_cb(struct memory_block *mem, void *arg)
+ 		endpa = PFN_PHYS(section_nr_to_pfn(mem->end_section_nr + 1))-1;
+ 		pr_warn("removing memory fails, because memory [%pa-%pa] is onlined\n",
+ 			&beginpa, &endpa);
+-	}
+ 
+-	return ret;
++		return -EBUSY;
++	}
++	return 0;
  }
-@@ -62,7 +64,8 @@ void syscall_rollback(struct task_struct *task, struct pt_regs *regs)
-  * It's only valid to call this when @task is stopped for tracing on exit
-  * from a system call, due to %TIF_SYSCALL_TRACE or %TIF_SYSCALL_AUDIT.
-  */
--long syscall_get_error(struct task_struct *task, struct pt_regs *regs)
-+static inline long
-+syscall_get_error(struct task_struct *task, struct pt_regs *regs)
- {
- 	unsigned long error = regs->uregs[0];
- 	return IS_ERR_VALUE(error) ? error : 0;
-@@ -79,7 +82,8 @@ long syscall_get_error(struct task_struct *task, struct pt_regs *regs)
-  * It's only valid to call this when @task is stopped for tracing on exit
-  * from a system call, due to %TIF_SYSCALL_TRACE or %TIF_SYSCALL_AUDIT.
-  */
--long syscall_get_return_value(struct task_struct *task, struct pt_regs *regs)
-+static inline long
-+syscall_get_return_value(struct task_struct *task, struct pt_regs *regs)
- {
- 	return regs->uregs[0];
+ 
+ static int check_cpu_on_node(pg_data_t *pgdat)
+@@ -1821,19 +1822,9 @@ static void __release_memory_resource(resource_size_t start,
+ 	}
  }
-@@ -99,8 +103,9 @@ long syscall_get_return_value(struct task_struct *task, struct pt_regs *regs)
-  * It's only valid to call this when @task is stopped for tracing on exit
-  * from a system call, due to %TIF_SYSCALL_TRACE or %TIF_SYSCALL_AUDIT.
-  */
--void syscall_set_return_value(struct task_struct *task, struct pt_regs *regs,
--			      int error, long val)
-+static inline void
-+syscall_set_return_value(struct task_struct *task, struct pt_regs *regs,
-+			 int error, long val)
+ 
+-/**
+- * remove_memory
+- * @nid: the node ID
+- * @start: physical address of the region to remove
+- * @size: size of the region to remove
+- *
+- * NOTE: The caller must call lock_device_hotplug() to serialize hotplug
+- * and online/offline operations before this call, as required by
+- * try_offline_node().
+- */
+-void __ref __remove_memory(int nid, u64 start, u64 size)
++static int __ref try_remove_memory(int nid, u64 start, u64 size)
  {
- 	regs->uregs[0] = (long)error ? error : val;
+-	int ret;
++	int rc = 0;
+ 
+ 	BUG_ON(check_hotplug_memory_range(start, size));
+ 
+@@ -1841,13 +1832,13 @@ void __ref __remove_memory(int nid, u64 start, u64 size)
+ 
+ 	/*
+ 	 * All memory blocks must be offlined before removing memory.  Check
+-	 * whether all memory blocks in question are offline and trigger a BUG()
++	 * whether all memory blocks in question are offline and return error
+ 	 * if this is not the case.
+ 	 */
+-	ret = walk_memory_range(PFN_DOWN(start), PFN_UP(start + size - 1), NULL,
+-				check_memblock_offlined_cb);
+-	if (ret)
+-		BUG();
++	rc = walk_memory_range(PFN_DOWN(start), PFN_UP(start + size - 1), NULL,
++			       check_memblock_offlined_cb);
++	if (rc)
++		goto done;
+ 
+ 	/* remove memmap entry */
+ 	firmware_map_remove(start, start + size, "System RAM");
+@@ -1859,14 +1850,45 @@ void __ref __remove_memory(int nid, u64 start, u64 size)
+ 
+ 	try_offline_node(nid);
+ 
++done:
+ 	mem_hotplug_done();
++	return rc;
  }
-@@ -118,8 +123,9 @@ void syscall_set_return_value(struct task_struct *task, struct pt_regs *regs,
-  * entry to a system call, due to %TIF_SYSCALL_TRACE or %TIF_SYSCALL_AUDIT.
-  */
- #define SYSCALL_MAX_ARGS 6
--void syscall_get_arguments(struct task_struct *task, struct pt_regs *regs,
--			   unsigned long *args)
-+static inline void
-+syscall_get_arguments(struct task_struct *task, struct pt_regs *regs,
-+		      unsigned long *args)
+ 
+-void remove_memory(int nid, u64 start, u64 size)
++/**
++ * remove_memory
++ * @nid: the node ID
++ * @start: physical address of the region to remove
++ * @size: size of the region to remove
++ *
++ * NOTE: The caller must call lock_device_hotplug() to serialize hotplug
++ * and online/offline operations before this call, as required by
++ * try_offline_node().
++ */
++void __remove_memory(int nid, u64 start, u64 size)
++{
++
++	/*
++	 * trigger BUG() is some memory is not offlined prior to calling this
++	 * function
++	 */
++	if (try_remove_memory(nid, start, size))
++		BUG();
++}
++
++/*
++ * Remove memory if every memory block is offline, otherwise return -EBUSY is
++ * some memory is not offline
++ */
++int remove_memory(int nid, u64 start, u64 size)
  {
- 	args[0] = regs->orig_r0;
- 	args++;
-@@ -138,8 +144,9 @@ void syscall_get_arguments(struct task_struct *task, struct pt_regs *regs,
-  * It's only valid to call this when @task is stopped for tracing on
-  * entry to a system call, due to %TIF_SYSCALL_TRACE or %TIF_SYSCALL_AUDIT.
-  */
--void syscall_set_arguments(struct task_struct *task, struct pt_regs *regs,
--			   const unsigned long *args)
-+static inline void
-+syscall_set_arguments(struct task_struct *task, struct pt_regs *regs,
-+		      const unsigned long *args)
- {
- 	regs->orig_r0 = args[0];
- 	args++;
++	int rc;
++
+ 	lock_device_hotplug();
+-	__remove_memory(nid, start, size);
++	rc  = try_remove_memory(nid, start, size);
+ 	unlock_device_hotplug();
++
++	return rc;
+ }
+ EXPORT_SYMBOL_GPL(remove_memory);
+ #endif /* CONFIG_MEMORY_HOTREMOVE */
 -- 
 2.20.1
 
