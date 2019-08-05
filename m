@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D194AC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12552C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CA0820651
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:29:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D759820651
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:29:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011765;
-	bh=1V6EgHECcJ2657FjYfWl2si5OLvZWbuAkA+gcyhoQtg=;
+	s=default; t=1565011767;
+	bh=sfgv1YlKYs8U5wCzWy0rcS718/zQIJ0vqqxrCHmH5Ds=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ihiD35mi8Bl6Fs6VQ7Idfl1HDIZMJKMMMlO1GGEBa6bnV0an80AhVHL31gQaMLmpa
-	 +mnjAXPMkWncnHD01bZYEqzda7kMhpfS1TFgadek85hKkCr+8UJqlXySRLjtn2gZUo
-	 DApXjwfzxdCgFsPQygaxHxMB23o8nWInMQd9sBSY=
+	b=zS2PejXAh8HhAEBLxJp4lRwVh8DgHkNM9lFZHvlPOKPRCMzcy/4BLTEwrSwFnE9dS
+	 yWUa24gaA6HIV/jKY8yaO4fcimQt4rgjrjWBfFCT62WguPcAveJnArfdxI8nyIefbY
+	 8Q+JolAChAi7hzs9AtONU8bAUiSmalxHM91mkHto=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730937AbfHEN3Y (ORCPT
+        id S1730991AbfHEN31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:29:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58168 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:29:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729353AbfHENVy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:21:54 -0400
+        id S1729429AbfHENVq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:21:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53C952067D;
-        Mon,  5 Aug 2019 13:21:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B02D2147A;
+        Mon,  5 Aug 2019 13:21:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011313;
-        bh=1V6EgHECcJ2657FjYfWl2si5OLvZWbuAkA+gcyhoQtg=;
+        s=default; t=1565011306;
+        bh=sfgv1YlKYs8U5wCzWy0rcS718/zQIJ0vqqxrCHmH5Ds=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CeR5RwcrPJa5RrZqd7LgUmCbUM5esFaVuCbJdbNH0dpWQSONX9y9MEc4kXY95eC0L
-         m6d1rG+mfwc7UOxBFIvKCV4zP7eN6D4pGIO3lo5kYTLh2xFt0AulxQ65UO+4+87nQp
-         JGUT/s6eTzcUmHx70VMAUfgkCoxOr7qoNX/b8ygY=
+        b=NaV+KbsQefke2HvG4AkHJEPoRLDVOdR2yQV8uKgVXPz0s/Ls7APsY0b7dhc+lid7y
+         BJkc+jCKoD2HUjQuOfd+IlM/ahzMxWg+Xo7yQOl7+vbQXwOf2Cw+X8j9aacos2KCYe
+         l4nvBn1sGVjf4pi5kjc0h74r8h0OoEJgFxnZLFl8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Prarit Bhargava <prarit@redhat.com>,
-        Barret Rhoden <brho@google.com>,
-        David Arcari <darcari@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        stable@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 013/131] kernel/module.c: Only return -EEXIST for modules that have finished loading
-Date:   Mon,  5 Aug 2019 15:01:40 +0200
-Message-Id: <20190805124952.322262893@linuxfoundation.org>
+Subject: [PATCH 5.2 010/131] soc: imx: soc-imx8: Correct return value of error handle
+Date:   Mon,  5 Aug 2019 15:01:37 +0200
+Message-Id: <20190805124952.117799984@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -63,71 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6e6de3dee51a439f76eb73c22ae2ffd2c9384712 ]
+[ Upstream commit 4c396a604a57da8f883a8b3368d83181680d6907 ]
 
-Microsoft HyperV disables the X86_FEATURE_SMCA bit on AMD systems, and
-linux guests boot with repeated errors:
+Current implementation of i.MX8 SoC driver returns -ENODEV
+for all cases of error during initialization, this is incorrect.
+This patch fixes them using correct return value according
+to different errors.
 
-amd64_edac_mod: Unknown symbol amd_unregister_ecc_decoder (err -2)
-amd64_edac_mod: Unknown symbol amd_register_ecc_decoder (err -2)
-amd64_edac_mod: Unknown symbol amd_report_gart_errors (err -2)
-amd64_edac_mod: Unknown symbol amd_unregister_ecc_decoder (err -2)
-amd64_edac_mod: Unknown symbol amd_register_ecc_decoder (err -2)
-amd64_edac_mod: Unknown symbol amd_report_gart_errors (err -2)
-
-The warnings occur because the module code erroneously returns -EEXIST
-for modules that have failed to load and are in the process of being
-removed from the module list.
-
-module amd64_edac_mod has a dependency on module edac_mce_amd.  Using
-modules.dep, systemd will load edac_mce_amd for every request of
-amd64_edac_mod.  When the edac_mce_amd module loads, the module has
-state MODULE_STATE_UNFORMED and once the module load fails and the state
-becomes MODULE_STATE_GOING.  Another request for edac_mce_amd module
-executes and add_unformed_module() will erroneously return -EEXIST even
-though the previous instance of edac_mce_amd has MODULE_STATE_GOING.
-Upon receiving -EEXIST, systemd attempts to load amd64_edac_mod, which
-fails because of unknown symbols from edac_mce_amd.
-
-add_unformed_module() must wait to return for any case other than
-MODULE_STATE_LIVE to prevent a race between multiple loads of
-dependent modules.
-
-Signed-off-by: Prarit Bhargava <prarit@redhat.com>
-Signed-off-by: Barret Rhoden <brho@google.com>
-Cc: David Arcari <darcari@redhat.com>
-Cc: Jessica Yu <jeyu@kernel.org>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Jessica Yu <jeyu@kernel.org>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/module.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/soc/imx/soc-imx8.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/module.c b/kernel/module.c
-index 80c7c09584cf9..8431c3d47c97b 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -3385,8 +3385,7 @@ static bool finished_loading(const char *name)
- 	sched_annotate_sleep();
- 	mutex_lock(&module_mutex);
- 	mod = find_module_all(name, strlen(name), true);
--	ret = !mod || mod->state == MODULE_STATE_LIVE
--		|| mod->state == MODULE_STATE_GOING;
-+	ret = !mod || mod->state == MODULE_STATE_LIVE;
- 	mutex_unlock(&module_mutex);
+diff --git a/drivers/soc/imx/soc-imx8.c b/drivers/soc/imx/soc-imx8.c
+index fc6429f9170a6..e567d866a9d31 100644
+--- a/drivers/soc/imx/soc-imx8.c
++++ b/drivers/soc/imx/soc-imx8.c
+@@ -73,7 +73,7 @@ static int __init imx8_soc_init(void)
  
- 	return ret;
-@@ -3576,8 +3575,7 @@ again:
- 	mutex_lock(&module_mutex);
- 	old = find_module_all(mod->name, strlen(mod->name), true);
- 	if (old != NULL) {
--		if (old->state == MODULE_STATE_COMING
--		    || old->state == MODULE_STATE_UNFORMED) {
-+		if (old->state != MODULE_STATE_LIVE) {
- 			/* Wait in case it fails to load. */
- 			mutex_unlock(&module_mutex);
- 			err = wait_event_interruptible(module_wq,
+ 	soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
+ 	if (!soc_dev_attr)
+-		return -ENODEV;
++		return -ENOMEM;
+ 
+ 	soc_dev_attr->family = "Freescale i.MX";
+ 
+@@ -83,8 +83,10 @@ static int __init imx8_soc_init(void)
+ 		goto free_soc;
+ 
+ 	id = of_match_node(imx8_soc_match, root);
+-	if (!id)
++	if (!id) {
++		ret = -ENODEV;
+ 		goto free_soc;
++	}
+ 
+ 	of_node_put(root);
+ 
+@@ -96,12 +98,16 @@ static int __init imx8_soc_init(void)
+ 	}
+ 
+ 	soc_dev_attr->revision = imx8_revision(soc_rev);
+-	if (!soc_dev_attr->revision)
++	if (!soc_dev_attr->revision) {
++		ret = -ENOMEM;
+ 		goto free_soc;
++	}
+ 
+ 	soc_dev = soc_device_register(soc_dev_attr);
+-	if (IS_ERR(soc_dev))
++	if (IS_ERR(soc_dev)) {
++		ret = PTR_ERR(soc_dev);
+ 		goto free_rev;
++	}
+ 
+ 	return 0;
+ 
+@@ -110,6 +116,6 @@ free_rev:
+ free_soc:
+ 	kfree(soc_dev_attr);
+ 	of_node_put(root);
+-	return -ENODEV;
++	return ret;
+ }
+ device_initcall(imx8_soc_init);
 -- 
 2.20.1
 
