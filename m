@@ -2,125 +2,110 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B67DC32751
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98EE9C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDFEA218A6
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:06:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 482F221734
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:06:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565010379;
+	bh=qFsiztdLDvQWTMxiXFUptRNbM9KiUDEKG8b6B96WFkQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=isrqaKTCGB4Sx6DgFLpYcaOcA4aGQXlYY2LrIuBJigzmHEpWQ2jJLai3YmRgoODV5
+	 KgKYA/9yBiHQsRhXCd8UOV/ItO4c1n7VCr3Qx+DtSfolvEUWWtJoTJ3NAO6xoTSEMw
+	 lEkaj2+Wm21Fa3sMHLPSTnQMNGJ9fiREbaOfUFw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729545AbfHENGP (ORCPT
+        id S1729553AbfHENGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:06:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:48156 "EHLO foss.arm.com"
+        Mon, 5 Aug 2019 09:06:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729031AbfHENGJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:06:09 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 06BD41570;
-        Mon,  5 Aug 2019 06:06:09 -0700 (PDT)
-Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 15F153F706;
-        Mon,  5 Aug 2019 06:06:06 -0700 (PDT)
-Subject: Re: [PATCH 0/9] arm64: Stolen time support
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     kvm@vger.kernel.org,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        linux-doc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
-        Julien Thierry <julien.thierry.kdev@gmail.com>
-References: <20190802145017.42543-1-steven.price@arm.com>
- <20190803190522.5fec8f7d@why>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <6789f477-8ab5-cc54-1ad2-8627917b07c9@arm.com>
-Date:   Mon, 5 Aug 2019 14:06:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1729541AbfHENGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:06:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4C1D2147A;
+        Mon,  5 Aug 2019 13:06:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565010374;
+        bh=qFsiztdLDvQWTMxiXFUptRNbM9KiUDEKG8b6B96WFkQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WMdR7BxhAFFQwq5SmDlWrCLmWPlPlmMHPZ/zvugs4tn10eniLwAZKg8d1k63FFdQH
+         ZdqseStTou59eKXdSEs2+5ufMgd58ATYDXenyibTL2Ln2eFsLUh7vP6D6Th/O/1xIX
+         1sQs2g6GD4tXmaOooWoAQEhtjVlRbmDjlyebnA6w=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.9 41/42] objtool: Support GCC 9 cold subfunction naming scheme
+Date:   Mon,  5 Aug 2019 15:03:07 +0200
+Message-Id: <20190805124929.851335655@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190805124924.788666484@linuxfoundation.org>
+References: <20190805124924.788666484@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20190803190522.5fec8f7d@why>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/08/2019 19:05, Marc Zyngier wrote:
-> On Fri,  2 Aug 2019 15:50:08 +0100
-> Steven Price <steven.price@arm.com> wrote:
-> 
-> Hi Steven,
-> 
->> This series add support for paravirtualized time for arm64 guests and
->> KVM hosts following the specification in Arm's document DEN 0057A:
->>
->> https://developer.arm.com/docs/den0057/a
->>
->> It implements support for stolen time, allowing the guest to
->> identify time when it is forcibly not executing.
->>
->> It doesn't implement support for Live Physical Time (LPT) as there are
->> some concerns about the overheads and approach in the above
->> specification, and I expect an updated version of the specification to
->> be released soon with just the stolen time parts.
-> 
-> Thanks for posting this.
-> 
-> My current concern with this series is around the fact that we allocate
-> memory from the kernel on behalf of the guest. It is the first example
-> of such thing in the ARM port, and I can't really say I'm fond of it.
-> 
-> x86 seems to get away with it by having the memory allocated from
-> userspace, why I tend to like more. Yes, put_user is more
-> expensive than a straight store, but this isn't done too often either.
-> 
-> What is the rational for your current approach?
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-As I see it there are 3 approaches that can be taken here:
+commit bcb6fb5da77c2a228adf07cc9cb1a0c2aa2001c6 upstream.
 
-1. Hypervisor allocates memory and adds it to the virtual machine. This
-means that everything to do with the 'device' is encapsulated behind the
-KVM_CREATE_DEVICE / KVM_[GS]ET_DEVICE_ATTR ioctls. But since we want the
-stolen time structure to be fast it cannot be a trapping region and has
-to be backed by real memory - in this case allocated by the host kernel.
+Starting with GCC 8, a lot of unlikely code was moved out of line to
+"cold" subfunctions in .text.unlikely.
 
-2. Host user space allocates memory. Similar to above, but this time
-user space needs to manage the memory region as well as the usual
-KVM_CREATE_DEVICE dance. I've no objection to this, but it means
-kvmtool/QEMU needs to be much more aware of what is going on (e.g. how
-to size the memory region).
+For example, the unlikely bits of:
 
-3. Guest kernel "donates" the memory to the hypervisor for the
-structure. As far as I'm aware this is what x86 does. The problems I see
-this approach are:
+  irq_do_set_affinity()
 
- a) kexec becomes much more tricky - there needs to be a disabling
-mechanism for the guest to stop the hypervisor scribbling on memory
-before starting the new kernel.
+are moved out to the following subfunction:
 
- b) If there is more than one entity that is interested in the
-information (e.g. firmware and kernel) then this requires some form of
-arbitration in the guest because the hypervisor doesn't want to have to
-track an arbitrary number of regions to update.
+  irq_do_set_affinity.cold.49()
 
- c) Performance can suffer if the host kernel doesn't have a suitably
-aligned/sized area to use. As you say - put_user() is more expensive.
-The structure is updated on every return to the VM.
+Starting with GCC 9, the numbered suffix has been removed.  So in the
+above example, the cold subfunction is instead:
+
+  irq_do_set_affinity.cold()
+
+Tweak the objtool subfunction detection logic so that it detects both
+GCC 8 and GCC 9 naming schemes.
+
+Reported-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/015e9544b1f188d36a7f02fa31e9e95629aa5f50.1541040800.git.jpoimboe@redhat.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ tools/objtool/elf.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/tools/objtool/elf.c
++++ b/tools/objtool/elf.c
+@@ -305,7 +305,7 @@ static int read_symbols(struct elf *elf)
+ 			if (sym->type != STT_FUNC)
+ 				continue;
+ 			sym->pfunc = sym->cfunc = sym;
+-			coldstr = strstr(sym->name, ".cold.");
++			coldstr = strstr(sym->name, ".cold");
+ 			if (!coldstr)
+ 				continue;
+ 
 
 
-Of course x86 does prove the third approach can work, but I'm not sure
-which is actually better. Avoid the kexec cancellation requirements was
-the main driver of the current approach. Although many of the
-conversations about this were also tied up with Live Physical Time which
-adds its own complications.
-
-Steve
