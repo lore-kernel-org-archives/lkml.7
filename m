@@ -2,89 +2,132 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BED3C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C2EC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15A7F2075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D1392075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:15:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565010927;
+	bh=cKkITTIdvUjoaYS3svFo1xq7sqPo7sASvx/PfOE440s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ZzQyOAvREz0Z9436659/HQMM8W3sUtyl/bvuX+ht/J/BjirQMzwvRFt27AYoE3DZw
+	 IXUBgVYmqasK5Dp8iSucQFWnKDQAGbIKDiZc09ala3h7+zx9ph+IfMZm9IkmEL0DAu
+	 +t2YzKbcLVed1OEYR/wWTDj2KenDfStJuYJnnbFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729527AbfHENPO (ORCPT
+        id S1729010AbfHENP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:15:14 -0400
-Received: from mga04.intel.com ([192.55.52.120]:34149 "EHLO mga04.intel.com"
+        Mon, 5 Aug 2019 09:15:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729839AbfHENPM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:15:12 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 06:15:10 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,350,1559545200"; 
-   d="scan'208";a="192418160"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 05 Aug 2019 06:15:08 -0700
-Received: by lahna (sSMTP sendmail emulation); Mon, 05 Aug 2019 16:15:07 +0300
-Date:   Mon, 5 Aug 2019 16:15:07 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Mario.Limonciello@dell.com
-Cc:     yehezkelshb@gmail.com, linux-kernel@vger.kernel.org,
-        andreas.noever@gmail.com, michael.jamet@intel.com,
-        rjw@rjwysocki.net, lenb@kernel.org, lukas@wunner.de,
-        anthony.wong@canonical.com, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH 2/8] thunderbolt: Move NVM upgrade support flag to struct
- icm
-Message-ID: <20190805131507.GR2640@lahna.fi.intel.com>
-References: <20190705095800.43534-1-mika.westerberg@linux.intel.com>
- <20190705095800.43534-3-mika.westerberg@linux.intel.com>
- <CA+CmpXt5q93e2TQJzfY4afSEMPWijPU+Ks+cgrVDVqUM4=y3Cw@mail.gmail.com>
- <20190705105815.GT2640@lahna.fi.intel.com>
- <23cca57934d24eb6b897ebf00f852128@AUSX13MPC105.AMER.DELL.COM>
+        id S1729754AbfHENHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:07:11 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27EBB214C6;
+        Mon,  5 Aug 2019 13:07:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565010430;
+        bh=cKkITTIdvUjoaYS3svFo1xq7sqPo7sASvx/PfOE440s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AW5/Qf4GBqjtjyg8VEPgeYCXwATlTTJw1Zaca7AP93u5eNh3RvISBpjtgMPMPGZQh
+         yjZSDij5Ryiiw3Yoo0Eh2TCf9OPQuHJxP5oWrRHAEjgnBWHf+tyDl0gbg4l6FLYICI
+         bK8YLK9H0ftFARr1wD3P9E5jekxOETsGfn+MX4aw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 20/53] x86/apic: Silence -Wtype-limits compiler warnings
+Date:   Mon,  5 Aug 2019 15:02:45 +0200
+Message-Id: <20190805124930.337364742@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190805124927.973499541@linuxfoundation.org>
+References: <20190805124927.973499541@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <23cca57934d24eb6b897ebf00f852128@AUSX13MPC105.AMER.DELL.COM>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 09, 2019 at 03:11:15PM +0000, Mario.Limonciello@dell.com wrote:
-> > -----Original Message-----
-> > From: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > Sent: Friday, July 5, 2019 5:58 AM
-> > To: Yehezkel Bernat
-> > Cc: LKML; Andreas Noever; Michael Jamet; Rafael J . Wysocki; Len Brown; Lukas
-> > Wunner; Limonciello, Mario; Anthony Wong; linux-acpi@vger.kernel.org
-> > Subject: Re: [PATCH 2/8] thunderbolt: Move NVM upgrade support flag to struct
-> > icm
-> > 
-> > 
-> > [EXTERNAL EMAIL]
-> > 
-> > On Fri, Jul 05, 2019 at 01:52:49PM +0300, Yehezkel Bernat wrote:
-> > > > @@ -2054,6 +2059,7 @@ struct tb *icm_probe(struct tb_nhi *nhi)
-> > > >         case PCI_DEVICE_ID_INTEL_TITAN_RIDGE_2C_NHI:
-> > > >         case PCI_DEVICE_ID_INTEL_TITAN_RIDGE_4C_NHI:
-> > > >                 icm->max_boot_acl = ICM_AR_PREBOOT_ACL_ENTRIES;
-> > > > +               icm->can_upgrade_nvm = true;
-> > >
-> > > Shouldn't this be also !x86_apple_machine just like AR?
-> > > (For FR, we don't use ICM on Apple machines, as much as I remember, so it's fine
-> > > to enable it there unconditionally for ICM code path.)
-> > 
-> > Yes, good point. I'll fix it up.
-> 
-> Another thought - does the TR or AR ID's setting can_upgrade_nvm to !x86_apple_machine
-> show up in anything like a dock or is it only host controllers?  If it's in docks, then it might be worth
-> only blocking on apple if it's a host.
+[ Upstream commit ec6335586953b0df32f83ef696002063090c7aef ]
 
-It affects only hosts so on Apple system you can't upgrade host NVM but
-docks and other devices you can.
+There are many compiler warnings like this,
+
+In file included from ./arch/x86/include/asm/smp.h:13,
+                 from ./arch/x86/include/asm/mmzone_64.h:11,
+                 from ./arch/x86/include/asm/mmzone.h:5,
+                 from ./include/linux/mmzone.h:969,
+                 from ./include/linux/gfp.h:6,
+                 from ./include/linux/mm.h:10,
+                 from arch/x86/kernel/apic/io_apic.c:34:
+arch/x86/kernel/apic/io_apic.c: In function 'check_timer':
+./arch/x86/include/asm/apic.h:37:11: warning: comparison of unsigned
+expression >= 0 is always true [-Wtype-limits]
+   if ((v) <= apic_verbosity) \
+           ^~
+arch/x86/kernel/apic/io_apic.c:2160:2: note: in expansion of macro
+'apic_printk'
+  apic_printk(APIC_QUIET, KERN_INFO "..TIMER: vector=0x%02X "
+  ^~~~~~~~~~~
+./arch/x86/include/asm/apic.h:37:11: warning: comparison of unsigned
+expression >= 0 is always true [-Wtype-limits]
+   if ((v) <= apic_verbosity) \
+           ^~
+arch/x86/kernel/apic/io_apic.c:2207:4: note: in expansion of macro
+'apic_printk'
+    apic_printk(APIC_QUIET, KERN_ERR "..MP-BIOS bug: "
+    ^~~~~~~~~~~
+
+APIC_QUIET is 0, so silence them by making apic_verbosity type int.
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/1562621805-24789-1-git-send-email-cai@lca.pw
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/include/asm/apic.h | 2 +-
+ arch/x86/kernel/apic/apic.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
+index a1ed92aae12a6..25a5a5c6ae90a 100644
+--- a/arch/x86/include/asm/apic.h
++++ b/arch/x86/include/asm/apic.h
+@@ -48,7 +48,7 @@ static inline void generic_apic_probe(void)
+ 
+ #ifdef CONFIG_X86_LOCAL_APIC
+ 
+-extern unsigned int apic_verbosity;
++extern int apic_verbosity;
+ extern int local_apic_timer_c2_ok;
+ 
+ extern int disable_apic;
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 2e64178f284da..ae410f7585f16 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -182,7 +182,7 @@ EXPORT_SYMBOL_GPL(local_apic_timer_c2_ok);
+ /*
+  * Debug level, exported for io_apic.c
+  */
+-unsigned int apic_verbosity;
++int apic_verbosity;
+ 
+ int pic_mode;
+ 
+-- 
+2.20.1
+
+
+
