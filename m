@@ -2,99 +2,103 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30DD7C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D83C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EC2021738
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:44:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D97820880
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:44:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZhKaC5Mr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728993AbfHEMn7 (ORCPT
+        id S1729005AbfHEMoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 08:43:59 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59320 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728842AbfHEMnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 08:43:17 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 22CD8307CDFC;
-        Mon,  5 Aug 2019 12:43:17 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-81.ams2.redhat.com [10.36.116.81])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CCB005DA8C;
-        Mon,  5 Aug 2019 12:43:16 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 25FAD9D21; Mon,  5 Aug 2019 14:43:15 +0200 (CEST)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     intel-gfx@lists.freedesktop.org, thomas@shipmail.org,
-        tzimmermann@suse.de, ckoenig.leichtzumerken@gmail.com,
-        bskeggs@redhat.com, daniel@ffwll.ch,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v5 17/18] drm/virtio: switch driver from bo->resv to bo->base.resv
-Date:   Mon,  5 Aug 2019 14:43:09 +0200
-Message-Id: <20190805124310.3275-18-kraxel@redhat.com>
-In-Reply-To: <20190805124310.3275-1-kraxel@redhat.com>
-References: <20190805124310.3275-1-kraxel@redhat.com>
+        Mon, 5 Aug 2019 08:44:00 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:45964 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728965AbfHEMn4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 08:43:56 -0400
+Received: by mail-io1-f67.google.com with SMTP id g20so166969498ioc.12;
+        Mon, 05 Aug 2019 05:43:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BtM+NWj25oYvpSibgXFWcN7a4g9p0DLdhW/V4xt2eBU=;
+        b=ZhKaC5MruwlHhhxMdPFwBhdPOYfP4wRyyL5N9ujJ84SwNjtO73htrkFtOMztfiavLw
+         3mjniDoCJ3Bdo87uYPsyaTU8Vac2oGmkLqJQ/CYeXZqR3vFSExkCyiri3ODkTnfBhcV4
+         C7zWaU+uEvyzRO88l6CgCi/Yl8EFpBECsqiW+0n1EXu43WHzCFRCCdfAtPypn8PcHw77
+         VAR8QE8n+f8Bp/TmoDduiOZUWOXS8FME9HJgFscbc1zhEG9ESLdbyJtpPWJzSYOK839a
+         blC7htlqER39fmEduUJ5KTjvmZEO/NXXYrGht3l6l8ygJo+W7iWPDcJrCkDfe962tjVN
+         w5SQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BtM+NWj25oYvpSibgXFWcN7a4g9p0DLdhW/V4xt2eBU=;
+        b=cQ+Sez/VbeUyz54rRqgy5wcfx2BwbofBYYfvEi4WO0GIh/gzd7svFiyJtaapz0Rkzk
+         2tvgf9yxfLnkgroyD61+MHwlgoU4jR+kf/I6ZAcupCJ/YFxAgXakJE73zUlSb8xZRh/u
+         ZBhWgvpi7a01wZgHiZ91ccIqUzgyOWlNCVdEFYipRT8KsiPJzfI2viYB/g5vQ/l2Tihd
+         C0XNwhvHI289REB/HFXCrsLuoHhQH9wvt3UoauGgPFR0k42OaO5qxaGFigLQSLv9/hWY
+         48PcAs5jw5kVhOf5AftU66qcLykKtS51oq/kdrUdTlc6vadeF6tJcbQdoej64CvLAnal
+         t4PQ==
+X-Gm-Message-State: APjAAAVh9yH0+PGL8i4K3Vu0hsy26Z0o9uzSIcGCpLzWScemc5rkCxZh
+        MBHhwIxX1Hypy4Qk3fgwhqKKdyPxCV4fLo5P3g4=
+X-Google-Smtp-Source: APXvYqwqQSPW397kqrW3kGv0GRCbHES+vT5UGpfo7ZHfq/1Bj6VjaFS3ZRkwHG0PLi1+eyqFIVooHFs/Ke2fu12pfIU=
+X-Received: by 2002:a5e:8c11:: with SMTP id n17mr69032096ioj.64.1565009035665;
+ Mon, 05 Aug 2019 05:43:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Mon, 05 Aug 2019 12:43:17 +0000 (UTC)
+References: <20190731195713.3150463-1-arnd@arndb.de> <20190731195713.3150463-5-arnd@arndb.de>
+ <20190801055840.GC24607@kroah.com>
+In-Reply-To: <20190801055840.GC24607@kroah.com>
+From:   Sylvain Lemieux <slemieux.tyco@gmail.com>
+Date:   Mon, 5 Aug 2019 08:43:44 -0400
+Message-ID: <CA+rxa6oU65QeEDaROdz1v=5R6m4YKTd7rRNEBx41d5uixyoz=g@mail.gmail.com>
+Subject: Re: [PATCH 04/14] serial: lpc32xx_hs: allow compile-testing
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, soc@kernel.org,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Guenter Roeck <linux@roeck-us.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        linux-serial@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-Acked-by: Christian König <christian.koenig@amd.com>
----
- drivers/gpu/drm/virtio/virtgpu_ioctl.c | 4 ++--
- drivers/gpu/drm/virtio/virtgpu_plane.c | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+Acked-by: Sylvain Lemieux <slemieux.tyco@gmail.com>
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-index d379d2e7e3ef..3c430dd65f67 100644
---- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-@@ -396,7 +396,7 @@ static int virtio_gpu_transfer_from_host_ioctl(struct drm_device *dev,
- 		(vgdev, qobj->hw_res_handle,
- 		 vfpriv->ctx_id, offset, args->level,
- 		 &box, fence);
--	reservation_object_add_excl_fence(qobj->tbo.resv,
-+	reservation_object_add_excl_fence(qobj->tbo.base.resv,
- 					  &fence->f);
- 
- 	dma_fence_put(&fence->f);
-@@ -450,7 +450,7 @@ static int virtio_gpu_transfer_to_host_ioctl(struct drm_device *dev, void *data,
- 			(vgdev, qobj,
- 			 vfpriv ? vfpriv->ctx_id : 0, offset,
- 			 args->level, &box, fence);
--		reservation_object_add_excl_fence(qobj->tbo.resv,
-+		reservation_object_add_excl_fence(qobj->tbo.base.resv,
- 						  &fence->f);
- 		dma_fence_put(&fence->f);
- 	}
-diff --git a/drivers/gpu/drm/virtio/virtgpu_plane.c b/drivers/gpu/drm/virtio/virtgpu_plane.c
-index f96c8296307e..3dc08f991a8d 100644
---- a/drivers/gpu/drm/virtio/virtgpu_plane.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_plane.c
-@@ -212,7 +212,7 @@ static void virtio_gpu_cursor_plane_update(struct drm_plane *plane,
- 			 0, 0, vgfb->fence);
- 		ret = virtio_gpu_object_reserve(bo, false);
- 		if (!ret) {
--			reservation_object_add_excl_fence(bo->tbo.resv,
-+			reservation_object_add_excl_fence(bo->tbo.base.resv,
- 							  &vgfb->fence->f);
- 			dma_fence_put(&vgfb->fence->f);
- 			vgfb->fence = NULL;
--- 
-2.18.1
-
+On Thu, Aug 1, 2019 at 1:58 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Wed, Jul 31, 2019 at 09:56:46PM +0200, Arnd Bergmann wrote:
+> > The only thing that prevents building this driver on other
+> > platforms is the mach/hardware.h include, which is not actually
+> > used here at all, so remove the line and allow CONFIG_COMPILE_TEST.
+> >
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> >  drivers/tty/serial/Kconfig      | 3 ++-
+> >  drivers/tty/serial/lpc32xx_hs.c | 2 --
+> >  2 files changed, 2 insertions(+), 3 deletions(-)
+>
+> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
