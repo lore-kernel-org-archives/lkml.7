@@ -2,53 +2,55 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99540C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D260DC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70CCC2075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:25:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A72BF2075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:25:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011520;
-	bh=A2eYit4iCgSv7faV4aJTnohGLCKHnrfaYjk0Q0752e4=;
+	s=default; t=1565011524;
+	bh=/Dx7ANAA6hN9wxWi6f/n3vKkYD7HxxDIeNOQP/47imU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K/OwgaNGjT8FuNDRq2HcMtwnPxLED1dTF5LTti/ONKIh4nR0Sno9pIbD4rSDswK+6
-	 /XTDZucL8ch5dVUdNPlY0V2fzuM5oBv3vqT6mnXQAI/zq0aAead/FDLjI75HoXJfdc
-	 tyAZxpRjLh0mRV7BKavhYC+z8R+FeLDLvPuvE3qA=
+	b=ni/nvDggFubZWR0pC0QqbH0ht4rYE4s5GLIWpx/vQG0jzma9t0K1AlNbzroKiUqOQ
+	 s6LugwjPoChVOWMKTMnhhZRH2q9rexUTZWJ3a203SBl2ZGh/EZy8hD1/RuRuE3YfhP
+	 P/ekOAL4Flx57fxbgEI/jV/XsjTQcTXbqw9Cf/uc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729298AbfHENZT (ORCPT
+        id S1731205AbfHENZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:25:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33756 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:25:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730801AbfHENZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:25:16 -0400
+        id S1731197AbfHENZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:25:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02A4E2067D;
-        Mon,  5 Aug 2019 13:25:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67FC620644;
+        Mon,  5 Aug 2019 13:25:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011515;
-        bh=A2eYit4iCgSv7faV4aJTnohGLCKHnrfaYjk0Q0752e4=;
+        s=default; t=1565011517;
+        bh=/Dx7ANAA6hN9wxWi6f/n3vKkYD7HxxDIeNOQP/47imU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=woqr8ywiCxBh5hYaWDKdFVKqdNuFqMSqS4yMvE1+Xw1rkb1LkFqNhX+T+G0Pnb6SI
-         LGp4mm+Ii+fzTfsnFvq7GHiuyt7N35AKwxh+Z/pGg98Tmc+9xu2fhqjoWJ16Abr2/Y
-         uHhov6z9WuzEq/H0H+zOlbjKFxhuL1sa98C/ad2s=
+        b=Kizo4rJuMGLwjfRjOYKD8ZbyqZA7HbTOJutCiUDJEoH53z9jpPNahlIO0/tsngIOm
+         5VIk6IuDTmhHUrUhgWGeqVQ3Ym8lhhhDgeFuGUvA9SRC+ixh6zVsNzcNQ1+t3UllVj
+         0HdChAh8YML2jdn+RGb5J2dSFKsEQnqnX6y2jIOI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Marek=20Marczykowski-G=C3=B3recki?= 
+        <marmarek@invisiblethingslab.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
         Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Jan Beulich <jbeulich@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Subject: [PATCH 5.2 118/131] xen/swiotlb: fix condition for calling xen_destroy_contiguous_region()
-Date:   Mon,  5 Aug 2019 15:03:25 +0200
-Message-Id: <20190805124959.859269321@linuxfoundation.org>
+        Juergen Gross <jgross@suse.com>
+Subject: [PATCH 5.2 119/131] xen/gntdev.c: Replace vm_map_pages() with vm_map_pages_zero()
+Date:   Mon,  5 Aug 2019 15:03:26 +0200
+Message-Id: <20190805124959.927342582@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -61,44 +63,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juergen Gross <jgross@suse.com>
+From: Souptick Joarder <jrdr.linux@gmail.com>
 
-commit 50f6393f9654c561df4cdcf8e6cfba7260143601 upstream.
+commit 8d1502f629c9966743de45744f4c1ba93a57d105 upstream.
 
-The condition in xen_swiotlb_free_coherent() for deciding whether to
-call xen_destroy_contiguous_region() is wrong: in case the region to
-be freed is not contiguous calling xen_destroy_contiguous_region() is
-the wrong thing to do: it would result in inconsistent mappings of
-multiple PFNs to the same MFN. This will lead to various strange
-crashes or data corruption.
+'commit df9bde015a72 ("xen/gntdev.c: convert to use vm_map_pages()")'
+breaks gntdev driver. If vma->vm_pgoff > 0, vm_map_pages()
+will:
+ - use map->pages starting at vma->vm_pgoff instead of 0
+ - verify map->count against vma_pages()+vma->vm_pgoff instead of just
+   vma_pages().
 
-Instead of calling xen_destroy_contiguous_region() in that case a
-warning should be issued as that situation should never occur.
+In practice, this breaks using a single gntdev FD for mapping multiple
+grants.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Juergen Gross <jgross@suse.com>
+relevant strace output:
+[pid   857] ioctl(7, IOCTL_GNTDEV_MAP_GRANT_REF, 0x7ffd3407b6d0) = 0
+[pid   857] mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_SHARED, 7, 0) =
+0x777f1211b000
+[pid   857] ioctl(7, IOCTL_GNTDEV_SET_UNMAP_NOTIFY, 0x7ffd3407b710) = 0
+[pid   857] ioctl(7, IOCTL_GNTDEV_MAP_GRANT_REF, 0x7ffd3407b6d0) = 0
+[pid   857] mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_SHARED, 7,
+0x1000) = -1 ENXIO (No such device or address)
+
+details here:
+https://github.com/QubesOS/qubes-issues/issues/5199
+
+The reason is -> ( copying Marek's word from discussion)
+
+vma->vm_pgoff is used as index passed to gntdev_find_map_index. It's
+basically using this parameter for "which grant reference to map".
+map struct returned by gntdev_find_map_index() describes just the pages
+to be mapped. Specifically map->pages[0] should be mapped at
+vma->vm_start, not vma->vm_start+vma->vm_pgoff*PAGE_SIZE.
+
+When trying to map grant with index (aka vma->vm_pgoff) > 1,
+__vm_map_pages() will refuse to map it because it will expect map->count
+to be at least vma_pages(vma)+vma->vm_pgoff, while it is exactly
+vma_pages(vma).
+
+Converting vm_map_pages() to use vm_map_pages_zero() will fix the
+problem.
+
+Marek has tested and confirmed the same.
+
+Cc: stable@vger.kernel.org # v5.2+
+Fixes: df9bde015a72 ("xen/gntdev.c: convert to use vm_map_pages()")
+
+Reported-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
+Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+Tested-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
 Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Reviewed-by: Jan Beulich <jbeulich@suse.com>
-Acked-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
 Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/xen/swiotlb-xen.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/xen/gntdev.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/xen/swiotlb-xen.c
-+++ b/drivers/xen/swiotlb-xen.c
-@@ -361,8 +361,8 @@ xen_swiotlb_free_coherent(struct device
- 	/* Convert the size to actually allocated. */
- 	size = 1UL << (order + XEN_PAGE_SHIFT);
+--- a/drivers/xen/gntdev.c
++++ b/drivers/xen/gntdev.c
+@@ -1145,7 +1145,7 @@ static int gntdev_mmap(struct file *flip
+ 		goto out_put_map;
  
--	if (((dev_addr + size - 1 <= dma_mask)) ||
--	    range_straddles_page_boundary(phys, size))
-+	if (!WARN_ON((dev_addr + size - 1 > dma_mask) ||
-+		     range_straddles_page_boundary(phys, size)))
- 		xen_destroy_contiguous_region(phys, order);
- 
- 	xen_free_coherent_pages(hwdev, size, vaddr, (dma_addr_t)phys, attrs);
+ 	if (!use_ptemod) {
+-		err = vm_map_pages(vma, map->pages, map->count);
++		err = vm_map_pages_zero(vma, map->pages, map->count);
+ 		if (err)
+ 			goto out_put_map;
+ 	} else {
 
 
