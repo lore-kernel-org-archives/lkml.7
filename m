@@ -2,269 +2,160 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1CBBC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE95C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8643F217D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:36:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R9HAs/WW"
+	by mail.kernel.org (Postfix) with ESMTP id E36152064A
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:37:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565023050;
+	bh=0/BIxc8mhBhYH3Ib+vhnqOIjrI+SrIhPShaOPUp7YI4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=m3DFUu+sgrmdrXrajtIz4B4m5zxvWrDayfsm0dFJQN3fn2mI+FnsnIF2qSZ5u8MHZ
+	 G4EMITiMBD3NKbIhmfgz/BIAbYjn7Q8VaPo0m7B+KR29gaIDFo5Dzdy5h12gwG0uDf
+	 uE+2zMLUjtDRWlwmnxoaBt4iPHXpOyk+g/CRfVjk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728854AbfHEQg1 (ORCPT
+        id S1728995AbfHEQh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 12:36:27 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51808 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726559AbfHEQg1 (ORCPT
+        Mon, 5 Aug 2019 12:37:28 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54818 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726559AbfHEQh2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 12:36:27 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 207so75405013wma.1;
-        Mon, 05 Aug 2019 09:36:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6IgxkcJMKz9Fy1Bo9Dhv0qnNKVUCye+F6rQM5HpFywU=;
-        b=R9HAs/WWeJNgXR6IAv8PwPneDnspd43Kg+L40q6WUEkNAZce927JpS1Xhn17UVd/lf
-         3IVCffEadLNaPdWlvs+jab5/BJv50/OLioU0R2AO/vtTKVMs8NtxUhFufJUaSqhLc54/
-         fpl6+2OjFLZgPXPpX2s7eIXMB5ZEPy2E514rV9YpG2jk3RHsfPUdNb0f2P8LSG5Epqd8
-         zXHJYXbBm650wRYA4KOsoBPzmwCuVeYv6FvdgKgMKwkKCymOa7un09wBlYYoQ1fEQMg1
-         gC2ch/1UkJlgcBYmQOAvtfpU1egUaYQHm3xfCAsEDahdj7riOAe13mrt4L9OpuoXesbM
-         5pUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6IgxkcJMKz9Fy1Bo9Dhv0qnNKVUCye+F6rQM5HpFywU=;
-        b=rd95mgCV7vrKDfL7cHZqWDx3Ltcy2wQaxlnWDSf3r6r2wRfnwAYXHRB3rtxHnl5M4J
-         5T2lO4R0W/ojXsdgN7LY+l+vLMT/hhFO1HlDB5rmC73El2YolxyHv3V3gGxI3qi2r3Hj
-         jnrxu2J9cam74J8UkwsLk3MRkh7DK5RFjDnPjQ4ASR9l7AbXQ/MlJcIkYBXCp0g8RoP2
-         InkBuXuEledVtljpSJI5+FguXLbh2WYJx5cmbOcjz5/URibUIdaZjMtRxMIefcV7iI8x
-         nyLFpjA3HY3RBmOltJCW57ZzFhsz8BKmgZgbZjsuUec/1tSTq63lMrRrDDU0qhDAUC6b
-         HuVw==
-X-Gm-Message-State: APjAAAUWGJrIA6VCDF0WbPVIeuOMOWap0SRwXgJxyh9MELADhFWVZx9A
-        qfjEqbraOw5V/Bdz3YvR1ws=
-X-Google-Smtp-Source: APXvYqzbpu3kVYNUDDAXxV+dNYJGnZMcPvxxEVAAIi6y9bRvr28PjCrHtWzjJfI+1O7EG2m0xfkNRQ==
-X-Received: by 2002:a7b:c4d0:: with SMTP id g16mr19909838wmk.88.1565022983407;
-        Mon, 05 Aug 2019 09:36:23 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id v65sm99792928wme.31.2019.08.05.09.36.22
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 05 Aug 2019 09:36:22 -0700 (PDT)
-Date:   Mon, 5 Aug 2019 09:36:21 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nikolay Borisov <nborisov@suse.com>
-Cc:     linux-btrfs@vger.kernel.org, paulmck@linux.ibm.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] btrfs: Hook btrfs' DRW lock to locktorture
- infrastructure
-Message-ID: <20190805163621.GA94502@archlinux-threadripper>
-References: <20190719083949.5351-1-nborisov@suse.com>
- <20190719084808.5877-1-nborisov@suse.com>
+        Mon, 5 Aug 2019 12:37:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=N/+b7lg2LZUN9MbsueTnHaM/5HWbEaqnfqPiRMvrM28=; b=ERjnBSErYIX4gxaZ9FtiN5tN9
+        nxDY5Br8V2ge/Dzj6TB0aP0EamwlhV2nUtg3YP8JrXDb2wI/7poP3LrJA+REpPZj+hZAytqVM0f8U
+        dVT396bXHPLTt4QHvizsXnYL18vYrCkKuPbowk9sxzU2GiH8Ko43jMjAb/R/evwB6vpt8=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hufzB-0000qh-Ax; Mon, 05 Aug 2019 16:37:25 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 50BD02742D06; Mon,  5 Aug 2019 17:37:24 +0100 (BST)
+Date:   Mon, 5 Aug 2019 17:37:24 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Philippe Schenker <philippe.schenker@toradex.com>
+Cc:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 1/2] Regulator: Core: Add clock-enable to
+ fixed-regulator
+Message-ID: <20190805163724.GK6432@sirena.org.uk>
+References: <20190730173006.15823-1-dev@pschenker.ch>
+ <20190730173006.15823-2-dev@pschenker.ch>
+ <20190730181038.GK4264@sirena.org.uk>
+ <b5e1cc3fb5838d9ea4160078402bff95903ba0da.camel@toradex.com>
+ <20190731212335.GL4369@sirena.org.uk>
+ <0b51a86ad6ee7e143506501937863cd8559244ec.camel@toradex.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="rwbb4r/vLufKlfJs"
 Content-Disposition: inline
-In-Reply-To: <20190719084808.5877-1-nborisov@suse.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <0b51a86ad6ee7e143506501937863cd8559244ec.camel@toradex.com>
+X-Cookie: Place stamp here.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 11:48:08AM +0300, Nikolay Borisov wrote:
-> Signed-off-by: Nikolay Borisov <nborisov@suse.com>
-> ---
-> 
-> Hello Paul, 
-> 
-> Here is the code I used to test the DRW lock via the lock torture infrastructure. 
-> It's rather ugly but got the job done for me. It's definitely not in a mergeable
-> form. At the very least I think including btrfs headers constitutes a violation 
-> of separation of different subsystems. Would it be acceptable to guard them 
-> behind something like "#if BTRFS && BTRFS_DEBUG" ? 
-> 
-> I'm really posting this just for posterity/provenance purposes. I'm fine with 
-> dropping the patch. 
-> 
-> 
->  fs/btrfs/locking.h           |  1 +
->  kernel/locking/locktorture.c | 77 +++++++++++++++++++++++++++++++++++-
->  2 files changed, 77 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/btrfs/locking.h b/fs/btrfs/locking.h
-> index 44378c65f843..27627d4fd3a9 100644
-> --- a/fs/btrfs/locking.h
-> +++ b/fs/btrfs/locking.h
-> @@ -9,6 +9,7 @@
->  #include <linux/atomic.h>
->  #include <linux/wait.h>
->  #include <linux/percpu_counter.h>
-> +#include "extent_io.h"
->  
->  #define BTRFS_WRITE_LOCK 1
->  #define BTRFS_READ_LOCK 2
-> diff --git a/kernel/locking/locktorture.c b/kernel/locking/locktorture.c
-> index 80a463d31a8d..774e10a25876 100644
-> --- a/kernel/locking/locktorture.c
-> +++ b/kernel/locking/locktorture.c
-> @@ -30,6 +30,8 @@
->  #include <linux/slab.h>
->  #include <linux/percpu-rwsem.h>
->  #include <linux/torture.h>
-> +#include "../../fs/btrfs/ctree.h"
-> +#include "../../fs/btrfs/locking.h"
->  
->  MODULE_LICENSE("GPL");
->  MODULE_AUTHOR("Paul E. McKenney <paulmck@linux.ibm.com>");
-> @@ -85,6 +87,7 @@ struct lock_torture_ops {
->  
->  	unsigned long flags; /* for irq spinlocks */
->  	const char *name;
-> +	bool multiple;
->  };
->  
->  struct lock_torture_cxt {
-> @@ -600,6 +603,7 @@ static void torture_percpu_rwsem_up_read(void) __releases(pcpu_rwsem)
->  	percpu_up_read(&pcpu_rwsem);
->  }
->  
-> +
->  static struct lock_torture_ops percpu_rwsem_lock_ops = {
->  	.init		= torture_percpu_rwsem_init,
->  	.writelock	= torture_percpu_rwsem_down_write,
-> @@ -612,6 +616,76 @@ static struct lock_torture_ops percpu_rwsem_lock_ops = {
->  	.name		= "percpu_rwsem_lock"
->  };
->  
-> +static struct btrfs_drw_lock torture_drw_lock;
-> +
-> +void torture_drw_init(void)
-> +{
-> +	BUG_ON(btrfs_drw_lock_init(&torture_drw_lock));
-> +}
-> +
-> +static int torture_drw_write_lock(void) __acquires(torture_drw_lock)
-> +{
-> +	btrfs_drw_write_lock(&torture_drw_lock);
-> +	return 0;
-> +}
-> +
-> +static void torture_drw_write_unlock(void) __releases(torture_drw_lock)
-> +{
-> +	btrfs_drw_write_unlock(&torture_drw_lock);
-> +}
-> +
-> +static int torture_drw_read_lock(void) __acquires(torture_drw_lock)
-> +{
-> +	btrfs_drw_read_lock(&torture_drw_lock);
-> +	return 0;
-> +}
-> +
-> +static void torture_drw_read_unlock(void) __releases(torture_drw_lock)
-> +{
-> +	btrfs_drw_read_unlock(&torture_drw_lock);
-> +}
-> +
-> +static void torture_drw_write_delay(struct torture_random_state *trsp)
-> +{
-> +	const unsigned long longdelay_ms = 100;
-> +
-> +	/* We want a long delay occasionally to force massive contention.  */
-> +	if (!(torture_random(trsp) %
-> +	      (cxt.nrealwriters_stress * 2000 * longdelay_ms)))
-> +		mdelay(longdelay_ms * 10);
-> +	else
-> +		mdelay(longdelay_ms / 10);
-> +	if (!(torture_random(trsp) % (cxt.nrealwriters_stress * 20000)))
-> +		torture_preempt_schedule();  /* Allow test to be preempted. */
-> +}
-> +
-> +static void torture_drw_read_delay(struct torture_random_state *trsp)
-> +{
-> +	const unsigned long longdelay_ms = 100;
-> +
-> +	/* We want a long delay occasionally to force massive contention.  */
-> +	if (!(torture_random(trsp) %
-> +	      (cxt.nrealreaders_stress * 2000 * longdelay_ms)))
-> +		mdelay(longdelay_ms * 2);
-> +	else
-> +		mdelay(longdelay_ms / 2);
-> +	if (!(torture_random(trsp) % (cxt.nrealreaders_stress * 20000)))
-> +		torture_preempt_schedule();  /* Allow test to be preempted. */
-> +}
-> +
-> +static struct lock_torture_ops btrfs_drw_lock_ops = {
-> +	.init		= torture_drw_init,
-> +	.writelock	= torture_drw_write_lock,
-> +	.write_delay	= torture_drw_write_delay,
-> +	.task_boost     = torture_boost_dummy,
-> +	.writeunlock	= torture_drw_write_unlock,
-> +	.readlock       = torture_drw_read_lock,
-> +	.read_delay     = torture_drw_read_delay, /* figure what to do with this */
-> +	.readunlock     = torture_drw_read_unlock,
-> +	.multiple = true,
-> +	.name		= "btrfs_drw_lock"
-> +};
-> +
->  /*
->   * Lock torture writer kthread.  Repeatedly acquires and releases
->   * the lock, checking for duplicate acquisitions.
-> @@ -630,7 +704,7 @@ static int lock_torture_writer(void *arg)
->  
->  		cxt.cur_ops->task_boost(&rand);
->  		cxt.cur_ops->writelock();
-> -		if (WARN_ON_ONCE(lock_is_write_held))
-> +		if (!cxt.cur_ops->multiple && WARN_ON_ONCE(lock_is_write_held))
->  			lwsp->n_lock_fail++;
->  		lock_is_write_held = 1;
->  		if (WARN_ON_ONCE(lock_is_read_held))
-> @@ -852,6 +926,7 @@ static int __init lock_torture_init(void)
->  #endif
->  		&rwsem_lock_ops,
->  		&percpu_rwsem_lock_ops,
-> +		&btrfs_drw_lock_ops
->  	};
->  
->  	if (!torture_init_begin(torture_type, verbose))
-> -- 
-> 2.17.1
-> 
 
-Looks like this is in next-20190805 and causes a link time error when
-CONFIG_BTRFS_FS is unset:
+--rwbb4r/vLufKlfJs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-  LD      vmlinux.o
-  MODPOST vmlinux.o
-  MODINFO modules.builtin.modinfo
-ld.lld: error: undefined symbol: btrfs_drw_lock_init
->>> referenced by locktorture.c
->>>               locking/locktorture.o:(torture_drw_init) in archive kernel/built-in.a
+On Mon, Aug 05, 2019 at 11:07:58AM +0000, Philippe Schenker wrote:
+> On Wed, 2019-07-31 at 22:23 +0100, Mark Brown wrote:
 
-ld.lld: error: undefined symbol: btrfs_drw_write_lock
->>> referenced by locktorture.c
->>>               locking/locktorture.o:(torture_drw_write_lock) in archive kernel/built-in.a
+Please fix your mail client to word wrap within paragraphs at something
+substantially less than 80 columns.  Doing this makes your messages much
+easier to read and reply to.
 
-ld.lld: error: undefined symbol: btrfs_drw_write_unlock
->>> referenced by locktorture.c
->>>               locking/locktorture.o:(torture_drw_write_unlock) in archive kernel/built-in.a
+> > So it's not switching with the clock, the circuit somehow keeps the
+> > switch latched?
 
-ld.lld: error: undefined symbol: btrfs_drw_read_lock
->>> referenced by locktorture.c
->>>               locking/locktorture.o:(torture_drw_read_lock) in archive kernel/built-in.a
+> No, it doesn't keep it latched. To make things clear here a status table:
 
-ld.lld: error: undefined symbol: btrfs_drw_read_unlock
->>> referenced by locktorture.c
->>>               locking/locktorture.o:(torture_drw_read_unlock) in archive kernel/built-in.a
+So the capacitor on the input of the p-FET is keeping the switch on?
+When I say it's not switching with the clock I mean it's not constantly
+bouncing on and off at whatever rate the clock is going at.
 
-If this commit is to remain around, there should probably be static
-inline stubs in fs/btrfs/locking.h. Apologies if this has already been
-reported, I still see the commit in the btrfs for-next branch.
+> > It does feel like it might be simpler to just handle this as a quirk in
+> > the PHY or ethernet driver, this feels like an awful lot of work to
+> > add a sleep on what's probably only going to ever be one system.
 
-Cheers,
-Nathan
+> I thought of that too, but the problem with that approach is that I
+> can't reflect the actual switching behavior. What would happen is if
+> you turnethernet off with 'ip link set eth0 down', the clock would
+> stop and therefore no more supply voltage to the PHY. But the ethernet
+> driverwould in that case let the regulator enabled preventing,
+> switching off the clock.
+
+You could include that in your quirk?
+
+> Anyway I feel that to solve this with a quirk would be a little
+> hackish, plus I'd anyway need to mess around with the Ethernet/PHY
+> drivers. So why not solve it properly with a regulator that supports
+> clocks?
+
+I think you are going to end up with a hack no matter what.
+
+> > Hopefully not a *lot* of duplication.  The GPIOs are handled in the core
+> > because they're really common and used by many regulator devices, the
+> > same will I hope not be true for clocks.
+
+> I agree that they are commonly and widely used. To add support for clocks in
+> regulator-core was really easy to do as I did it the same way as it is done with
+> gpio's. If I don't need to touch regulator-core I don't want to. But as I said
+> it was really easy for me to integrate it in there in a way without even
+> understanding the whole regulator API.
+
+> If it makes more sense to do it in a new file like clock-regulator.c and
+> creating a new compatible that is what I'm trying to find out here. I'd be happy
+> to write also a new clock-regulator driver for that purpose.
+
+It would be better if it wasn't in the core, that keeps everything
+partitioned off nicely.
+
+> > I guess my question here is what the trip through the regulator API buys
+> > us - it's a bit of a sledgehammer to crack a nut thing.
+
+> In my opinion this is not only about to solve my problem with startup-delay. I
+> think that this is really a behavior that can be generic. That's also why I'm
+> asking here how we want to solve that so not only I solve my little problem with
+> a board quirk but in a broader view for possible future usage by others.
+
+> It is possible that a regulator needs a clock. That exactly is, what we have on
+> our board and works better than expected (at least by myself :-)).
+
+The majority of regulators that need clocks are PWM devices which is a
+whole other thing that we already support.  This is a highly unusual
+hardware design, we don't have the regmap stuff in the core and that's a
+lot more common.
+
+--rwbb4r/vLufKlfJs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1IW0MACgkQJNaLcl1U
+h9CeHwf/eC2BmK/40EmK4CPSSL99FIGsL7s+PYPXXPMWeJrxQpeQinTh1AQZEt9D
+AsBCfmbRNLbt6pPhGXaMZpavAq6byxOmkROrpWdACcs0/YlgGDbFiR138YQLN4z1
+zBsBv5V3qw+rY7vZObvFVeOEk8VSDpwIrwJspmLXojxI9LeJfZ+fWsU8JlPfB4+x
+CH7XF2v8VTndmWcgIRJ2XssnHJyG0FfeheaPQQVuFhTk5OelFwZf5m55XvriNx4m
+bZ+SmuW5bu2nbQH+nl+rAl+/vuZstvAVQwqRkH5FnjhHF4EnOzAhRAIm1j2gOXUV
+AQY/5lwQNIXD521N+wQW/JPXCxciMA==
+=TUAt
+-----END PGP SIGNATURE-----
+
+--rwbb4r/vLufKlfJs--
