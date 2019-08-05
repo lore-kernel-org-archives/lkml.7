@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF227C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02768C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:21:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 892072173B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:20:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEBEF2067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:21:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011251;
-	bh=i4+N4sqWwlwiDZJ6WL8q5MpuiiGu2xVhZm0nDEjWYys=;
+	s=default; t=1565011263;
+	bh=kTm8vFgVI5vn+JvQ5m+tks9zwFBwjmQgoLwBfOhTY+Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LXz7Jhyy2zljRmXFFlC6Ed5FYJHZhIfU0EpY4S8li5Zc8tIhfyDrEvN6F0MySQcmj
-	 OBRdXDRttiamooaTCMJULlaOhd4m7dOs7op/Nm7Z6/J29u5y1EIVChUO7er7h03glm
-	 SsPSHRFzdul7pcR/zAogFncAahQzrj/XvrobjLmc=
+	b=sq6hP22oBzspdk+quQVbvrxzMXJADeol8YIM8A6yAfU2XAnJnHTPomhPOrT11CmpC
+	 dcsuWTeOvC0aXo8IV0A9gfCJ00ZrHcx1Sed52Gox5/Zm8dkNYvL9xx3itLKYSphDih
+	 tR48Bylq1LHFf7rNAT//wYNyHBl4T9fJn4Yff6uk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729487AbfHENUu (ORCPT
+        id S1730432AbfHENVC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:20:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56904 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:21:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730323AbfHENUq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:20:46 -0400
+        id S1730376AbfHENVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:21:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 917A32147A;
-        Mon,  5 Aug 2019 13:20:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 779222067D;
+        Mon,  5 Aug 2019 13:20:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011245;
-        bh=i4+N4sqWwlwiDZJ6WL8q5MpuiiGu2xVhZm0nDEjWYys=;
+        s=default; t=1565011259;
+        bh=kTm8vFgVI5vn+JvQ5m+tks9zwFBwjmQgoLwBfOhTY+Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J09nVzeMgs2Vp7brBNQUYgbWO7N493qg8FyVQEw/FVXO9jucAv3D1uzhAFZEUUV4z
-         WhUCg/a4KLyZdN5IDH10w0QlmjS/UoJP1LeY+Hw93XW/ukSjm5TAd+Bqi18m1I9O45
-         OL/dLYF4DXzRGO58Ud5tPrMMZ5ENueIKY3OffftQ=
+        b=ZKRdbeicX/r11UJzuAKk/aRWkFAQqLdpeNYzB4LAOqSlvZTgewt+sB39sJVan4za+
+         QfieMa1nVKwYhDFjq+c6kxc0MnTFVzykANlDySefFCvDyuJZxVT7NZ1gzlhSYvUBL5
+         OJgRipwtNYlLTBUCiY4rlfDXWIbIJ8g89LR49Cc4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 5.2 020/131] dmaengine: rcar-dmac: Reject zero-length slave DMA requests
-Date:   Mon,  5 Aug 2019 15:01:47 +0200
-Message-Id: <20190805124952.790372437@linuxfoundation.org>
+        stable@vger.kernel.org, Niklas Cassel <niklas.cassel@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 007/131] arm64: dts: qcom: qcs404-evb: fix l3 min voltage
+Date:   Mon,  5 Aug 2019 15:01:34 +0200
+Message-Id: <20190805124951.918923072@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -61,44 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 78efb76ab4dfb8f74f290ae743f34162cd627f19 ]
+[ Upstream commit 887b528c958f40b064d53edd0bfa9fea3a69eccd ]
 
-While the .device_prep_slave_sg() callback rejects empty scatterlists,
-it still accepts single-entry scatterlists with a zero-length segment.
-These may happen if a driver calls dmaengine_prep_slave_single() with a
-zero len parameter.  The corresponding DMA request will never complete,
-leading to messages like:
+The current l3 min voltage level is not supported by
+the regulator (the voltage is not a multiple of the regulator step size),
+so a driver requesting this exact voltage would fail, see discussion in:
+https://patchwork.kernel.org/comment/22461199/
 
-    rcar-dmac e7300000.dma-controller: Channel Address Error happen
+It was agreed upon to set a min voltage level that is a multiple of the
+regulator step size.
 
-and DMA timeouts.
+There was actually a patch sent that did this:
+https://patchwork.kernel.org/patch/10819313/
 
-Although requesting a zero-length DMA request is a driver bug, rejecting
-it early eases debugging.  Note that the .device_prep_dma_memcpy()
-callback already rejects requests to copy zero bytes.
+However, the commit 331ab98f8c4a ("arm64: dts: qcom: qcs404:
+Fix voltages l3") that was applied is not identical to that patch.
 
-Reported-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Analyzed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Andy Gross <agross@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/sh/rcar-dmac.c | 2 +-
+ arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
-index 33ab1b607e2b0..54de669c38b84 100644
---- a/drivers/dma/sh/rcar-dmac.c
-+++ b/drivers/dma/sh/rcar-dmac.c
-@@ -1165,7 +1165,7 @@ rcar_dmac_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
- 	struct rcar_dmac_chan *rchan = to_rcar_dmac_chan(chan);
+diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+index 2c3127167e3c2..d987d6741e40b 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+@@ -118,7 +118,7 @@
+ 		};
  
- 	/* Someone calling slave DMA on a generic channel? */
--	if (rchan->mid_rid < 0 || !sg_len) {
-+	if (rchan->mid_rid < 0 || !sg_len || !sg_dma_len(sgl)) {
- 		dev_warn(chan->device->dev,
- 			 "%s: bad parameter: len=%d, id=%d\n",
- 			 __func__, sg_len, rchan->mid_rid);
+ 		vreg_l3_1p05: l3 {
+-			regulator-min-microvolt = <1050000>;
++			regulator-min-microvolt = <1048000>;
+ 			regulator-max-microvolt = <1160000>;
+ 		};
+ 
 -- 
 2.20.1
 
