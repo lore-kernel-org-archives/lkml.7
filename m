@@ -5,53 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6088C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B51EC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B545A20644
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E53FB20651
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:29:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011751;
-	bh=Y8QJsEx3iQGHlddjHTT8Du+dE5LcgvkKqSkfYJiQt9c=;
+	s=default; t=1565011755;
+	bh=lZ4qH7eMqi86NFse/Iv5+y2ZDI6YfEIJiv4HFmce+Kc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vwLB5BAfFT+f4YEvkgWI9g7qaDAn14abeZ3Dl5MK8UgZQbJoB/X322oF8Tk1vD5YA
-	 rXc8utnz7WGoa7LAZHPzDcRiK3QFuhX+7/umdLcOL966iuON2qsPEY/anf9wn0dakB
-	 KW8mwVGfx30B7/dNA9z8kldZU1w+cKYOC5luNHOY=
+	b=l8NeqRLl4pMXAMfoiuZEwjyA+QMC0OHWQrJLpBv7izEUPw1qDEmCzGUCkdVkb7TOG
+	 F4W2KxE9DASTx2Bq2NNU+XsJOPPBjbwCvbze8+WeYhIagNaSgcgwze9s8Ztn725Kmk
+	 ze6453kfdFoAQTdUDkeeoKkSBLB7jy3rGTuRNJ5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730873AbfHEN3K (ORCPT
+        id S1730283AbfHENWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:29:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58594 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:22:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730638AbfHENWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:22:15 -0400
+        id S1730614AbfHENWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:22:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F407A216B7;
-        Mon,  5 Aug 2019 13:22:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E5EF20657;
+        Mon,  5 Aug 2019 13:22:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011334;
-        bh=Y8QJsEx3iQGHlddjHTT8Du+dE5LcgvkKqSkfYJiQt9c=;
+        s=default; t=1565011324;
+        bh=lZ4qH7eMqi86NFse/Iv5+y2ZDI6YfEIJiv4HFmce+Kc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pPfq6Cggo2i5uA/Viul/UNWQNqAm46KXnv0vdf4hn1zrRo0uMQuCdB/UT5hgGPIsK
-         /bRquLo4OpfzMcM3VGc6M9Rltf8U1PzoSymDf2XZNMCkwqjmwuLIMxuHYmHVJJ9Oin
-         fl+StO3Ix703OEnTlCb7L6sXk6TUKXuWyIMKScF8=
+        b=zr+Vdc8Ak8nYZvYvQKpFZ3ncNBgsh8XXVuw0VgY+uSUXmvrmGMHJIrob5IOck33K5
+         S+66t2mVqaI9LB8JRtOPXS67ybllr1NT0sagnPiPEsfxlJoDuFOKRjAVe+L5qWGeem
+         OtFMNANVx4E+Yp/PuSIFD/jmUqJVnSvrpQ6vQ+k0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Joe Perches <joe@perches.com>,
+        stable@vger.kernel.org, Henry Burns <henryburns@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Vitaly Vul <vitaly.vul@sony.com>,
+        Vitaly Wool <vitalywool@gmail.com>,
+        Jonathan Adams <jwadams@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 054/131] lib/test_overflow.c: avoid tainting the kernel and fix wrap size
-Date:   Mon,  5 Aug 2019 15:02:21 +0200
-Message-Id: <20190805124955.049639253@linuxfoundation.org>
+Subject: [PATCH 5.2 050/131] mm/z3fold.c: reinitialize zhdr structs after migration
+Date:   Mon,  5 Aug 2019 15:02:17 +0200
+Message-Id: <20190805124954.784647814@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -64,52 +65,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8e060c21ae2c265a2b596e9e7f9f97ec274151a4 ]
+[ Upstream commit c92d2f38563db20c20c8db2f98fa1349290477d5 ]
 
-This adds __GFP_NOWARN to the kmalloc()-portions of the overflow test to
-avoid tainting the kernel.  Additionally fixes up the math on wrap size
-to be architecture and page size agnostic.
+z3fold_page_migration() calls memcpy(new_zhdr, zhdr, PAGE_SIZE).
+However, zhdr contains fields that can't be directly coppied over (ex:
+list_head, a circular linked list).  We only need to initialize the
+linked lists in new_zhdr, as z3fold_isolate_page() already ensures that
+these lists are empty
 
-Link: http://lkml.kernel.org/r/201905282012.0A8767E24@keescook
-Fixes: ca90800a91ba ("test_overflow: Add memory allocation overflow tests")
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Joe Perches <joe@perches.com>
+Additionally it is possible that zhdr->work has been placed in a
+workqueue.  In this case we shouldn't migrate the page, as zhdr->work
+references zhdr as opposed to new_zhdr.
+
+Link: http://lkml.kernel.org/r/20190716000520.230595-1-henryburns@google.com
+Fixes: 1f862989b04ade61d3 ("mm/z3fold.c: support page migration")
+Signed-off-by: Henry Burns <henryburns@google.com>
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Cc: Vitaly Vul <vitaly.vul@sony.com>
+Cc: Vitaly Wool <vitalywool@gmail.com>
+Cc: Jonathan Adams <jwadams@google.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/test_overflow.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ mm/z3fold.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/lib/test_overflow.c b/lib/test_overflow.c
-index fc680562d8b69..7a4b6f6c5473c 100644
---- a/lib/test_overflow.c
-+++ b/lib/test_overflow.c
-@@ -486,16 +486,17 @@ static int __init test_overflow_shift(void)
-  * Deal with the various forms of allocator arguments. See comments above
-  * the DEFINE_TEST_ALLOC() instances for mapping of the "bits".
-  */
--#define alloc010(alloc, arg, sz) alloc(sz, GFP_KERNEL)
--#define alloc011(alloc, arg, sz) alloc(sz, GFP_KERNEL, NUMA_NO_NODE)
-+#define alloc_GFP		 (GFP_KERNEL | __GFP_NOWARN)
-+#define alloc010(alloc, arg, sz) alloc(sz, alloc_GFP)
-+#define alloc011(alloc, arg, sz) alloc(sz, alloc_GFP, NUMA_NO_NODE)
- #define alloc000(alloc, arg, sz) alloc(sz)
- #define alloc001(alloc, arg, sz) alloc(sz, NUMA_NO_NODE)
--#define alloc110(alloc, arg, sz) alloc(arg, sz, GFP_KERNEL)
-+#define alloc110(alloc, arg, sz) alloc(arg, sz, alloc_GFP)
- #define free0(free, arg, ptr)	 free(ptr)
- #define free1(free, arg, ptr)	 free(arg, ptr)
- 
--/* Wrap around to 8K */
--#define TEST_SIZE		(9 << PAGE_SHIFT)
-+/* Wrap around to 16K */
-+#define TEST_SIZE		(5 * 4096)
- 
- #define DEFINE_TEST_ALLOC(func, free_func, want_arg, want_gfp, want_node)\
- static int __init test_ ## func (void *arg)				\
+diff --git a/mm/z3fold.c b/mm/z3fold.c
+index 304f2883cdb93..3b27094dc42e1 100644
+--- a/mm/z3fold.c
++++ b/mm/z3fold.c
+@@ -1360,12 +1360,22 @@ static int z3fold_page_migrate(struct address_space *mapping, struct page *newpa
+ 		unlock_page(page);
+ 		return -EBUSY;
+ 	}
++	if (work_pending(&zhdr->work)) {
++		z3fold_page_unlock(zhdr);
++		return -EAGAIN;
++	}
+ 	new_zhdr = page_address(newpage);
+ 	memcpy(new_zhdr, zhdr, PAGE_SIZE);
+ 	newpage->private = page->private;
+ 	page->private = 0;
+ 	z3fold_page_unlock(zhdr);
+ 	spin_lock_init(&new_zhdr->page_lock);
++	INIT_WORK(&new_zhdr->work, compact_page_work);
++	/*
++	 * z3fold_page_isolate() ensures that new_zhdr->buddy is empty,
++	 * so we only have to reinitialize it.
++	 */
++	INIT_LIST_HEAD(&new_zhdr->buddy);
+ 	new_mapping = page_mapping(page);
+ 	__ClearPageMovable(page);
+ 	ClearPagePrivate(page);
 -- 
 2.20.1
 
