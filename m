@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51944C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F00C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18AB220657
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE6B520651
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:25:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011554;
-	bh=O81cY2+UO09peQGoXM9mbiGl/Zz6yhVdTmLOCrqsWy0=;
+	s=default; t=1565011559;
+	bh=Vl6OPnb9Fexr5uG2WQcqeRCcoYoD+Utx6wUVCjijQ8Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qXehr5fqzhBMhEojEaaPl6DFSUeJKdEt5dUXPfnBUluRqqiDrDOMjSKZuy57NnUht
-	 MYO/6zF8u+Gs25/yF6N9KwJSM8d1WRwrLTQrghZt+ziCdxndO+XbKEWGG6hUy9LNA9
-	 i64V7Ex5CXETbDJf2cyL0CInASphcDt3EA929TAc=
+	b=hRDsX++p4JyVei/epnl7DG8FrGjeerS7k5GTC8TnGyEL4IsHy6D0P9CTI/IJvI66g
+	 /GQp1Oon5i/a3OfiQJprNhs+Oyl5S22oGSgWLRELM6RPwYbX5NjaKF55BmMl5r1ccS
+	 RLSv57O4JCnGwDK2A3AebbsFTmGJTmCbinAmma9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731334AbfHENZx (ORCPT
+        id S1731338AbfHENZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:25:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34398 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:25:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730916AbfHENZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:25:50 -0400
+        id S1730776AbfHENZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:25:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DD6A20644;
-        Mon,  5 Aug 2019 13:25:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9B2620644;
+        Mon,  5 Aug 2019 13:25:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011549;
-        bh=O81cY2+UO09peQGoXM9mbiGl/Zz6yhVdTmLOCrqsWy0=;
+        s=default; t=1565011554;
+        bh=Vl6OPnb9Fexr5uG2WQcqeRCcoYoD+Utx6wUVCjijQ8Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fvae2LmQHCdKoqDEewTy59ddlu9mEgPkwaNIgRvG9OUvtD7739cV5Hhbx+0wa6FS7
-         1F3lcmJ3iFAsb05L7nigE5YRiqtqLh722hzn4AIgU+vYmiqY4Lfmper1J498ESiaRT
-         XlN5dWfXgK+r/ywWOP3F4vuJKH2AM5X6DFjpUAJ4=
+        b=fFJgRje0shTaJa9RKCrRFemPPPnD6X++0X23GtrOqqo78us2RNBSsWjGaj2rpjk11
+         7i3Tsxc5uIQoFFxTyBor0QRQEbTsRlUc5U8JIcsoyNBvrv0x9XQpVDbD5sqMlXQrT/
+         TCuuDDyNFnbToc0ea1SNDI95xVrH31mJvOQ38zS4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
-        Kenneth Graunke <kenneth@whitecape.org>,
-        Jani Nikula <jani.nikula@intel.com>
-Subject: [PATCH 5.2 130/131] drm/i915/perf: fix ICL perf register offsets
-Date:   Mon,  5 Aug 2019 15:03:37 +0200
-Message-Id: <20190805125000.682940232@linuxfoundation.org>
+        stable@vger.kernel.org, Stefan Haberland <sth@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.2 106/131] s390/dasd: fix endless loop after read unit address configuration
+Date:   Mon,  5 Aug 2019 15:03:13 +0200
+Message-Id: <20190805124959.070635530@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -61,45 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
+From: Stefan Haberland <sth@linux.ibm.com>
 
-commit 95eef14cdad150fed43147bcd4f29eea3d0a3f03 upstream.
+commit 41995342b40c418a47603e1321256d2c4a2ed0fb upstream.
 
-We got the wrong offsets (could they have changed?). New values were
-computed off an error state by looking up the register offset in the
-context image as written by the HW.
+After getting a storage server event that causes the DASD device driver
+to update its unit address configuration during a device shutdown there is
+the possibility of an endless loop in the device driver.
 
-Signed-off-by: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
-Fixes: 1de401c08fa805 ("drm/i915/perf: enable perf support on ICL")
-Cc: <stable@vger.kernel.org> # v4.18+
-Acked-by: Kenneth Graunke <kenneth@whitecape.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190610081914.25428-1-lionel.g.landwerlin@intel.com
-(cherry picked from commit 8dcfdfb4501012a8d36d2157dc73925715f2befb)
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+In the system log there will be ongoing DASD error messages with RC: -19.
+
+The reason is that the loop starting the ruac request only terminates when
+the retry counter is decreased to 0. But in the sleep_on function there are
+early exit paths that do not decrease the retry counter.
+
+Prevent an endless loop by handling those cases separately.
+
+Remove the unnecessary do..while loop since the sleep_on function takes
+care of retries by itself.
+
+Fixes: 8e09f21574ea ("[S390] dasd: add hyper PAV support to DASD device driver, part 1")
+Cc: stable@vger.kernel.org # 2.6.25+
+Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
+Reviewed-by: Jan Hoeppner <hoeppner@linux.ibm.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/i915_perf.c |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/s390/block/dasd_alias.c |   22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
---- a/drivers/gpu/drm/i915/i915_perf.c
-+++ b/drivers/gpu/drm/i915/i915_perf.c
-@@ -3457,9 +3457,13 @@ void i915_perf_init(struct drm_i915_priv
- 			dev_priv->perf.oa.ops.enable_metric_set = gen8_enable_metric_set;
- 			dev_priv->perf.oa.ops.disable_metric_set = gen10_disable_metric_set;
+--- a/drivers/s390/block/dasd_alias.c
++++ b/drivers/s390/block/dasd_alias.c
+@@ -383,6 +383,20 @@ suborder_not_supported(struct dasd_ccw_r
+ 	char msg_format;
+ 	char msg_no;
  
--			dev_priv->perf.oa.ctx_oactxctrl_offset = 0x128;
--			dev_priv->perf.oa.ctx_flexeu0_offset = 0x3de;
--
-+			if (IS_GEN(dev_priv, 10)) {
-+				dev_priv->perf.oa.ctx_oactxctrl_offset = 0x128;
-+				dev_priv->perf.oa.ctx_flexeu0_offset = 0x3de;
-+			} else {
-+				dev_priv->perf.oa.ctx_oactxctrl_offset = 0x124;
-+				dev_priv->perf.oa.ctx_flexeu0_offset = 0x78e;
-+			}
- 			dev_priv->perf.oa.gen8_valid_ctx_bit = (1<<16);
- 		}
- 	}
++	/*
++	 * intrc values ENODEV, ENOLINK and EPERM
++	 * will be optained from sleep_on to indicate that no
++	 * IO operation can be started
++	 */
++	if (cqr->intrc == -ENODEV)
++		return 1;
++
++	if (cqr->intrc == -ENOLINK)
++		return 1;
++
++	if (cqr->intrc == -EPERM)
++		return 1;
++
+ 	sense = dasd_get_sense(&cqr->irb);
+ 	if (!sense)
+ 		return 0;
+@@ -447,12 +461,8 @@ static int read_unit_address_configurati
+ 	lcu->flags &= ~NEED_UAC_UPDATE;
+ 	spin_unlock_irqrestore(&lcu->lock, flags);
+ 
+-	do {
+-		rc = dasd_sleep_on(cqr);
+-		if (rc && suborder_not_supported(cqr))
+-			return -EOPNOTSUPP;
+-	} while (rc && (cqr->retries > 0));
+-	if (rc) {
++	rc = dasd_sleep_on(cqr);
++	if (rc && !suborder_not_supported(cqr)) {
+ 		spin_lock_irqsave(&lcu->lock, flags);
+ 		lcu->flags |= NEED_UAC_UPDATE;
+ 		spin_unlock_irqrestore(&lcu->lock, flags);
 
 
