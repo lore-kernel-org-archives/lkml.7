@@ -4,254 +4,112 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B82D8C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 11:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7154C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 11:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 851E720880
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 11:44:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD6E72086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 11:47:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565005479;
-	bh=akOnkcjMBXJOlLcLF2/Fd+SWxLd4OGaqYTgeoue1PVc=;
+	s=default; t=1565005637;
+	bh=X6BXZw1yemhSJzHyE0iW4PjS0ifC5SWcNs4xPQvMFjg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2XTl/h0H+E7lzhR1F/gvcM23RL4qKrJ5/TMbkTgQKQcK2R8wZ1LIeh6Kv5tQDsHMb
-	 r7SjA1QxWG953idHCQfOSBylQ7cLqDAHoBAKNfSScTQ4pI099TMqJvT8J6gBn9kFGl
-	 +hN15uI3xX/FkvhEEdyEr4H6fieljRctVoED3Z48=
+	b=JPqvd8NkrxxIvaqo6vEWyyjQ0lRdSxImV7cf8gdOUat6u5VQRDJQx3AuC3D4foztn
+	 eT/H07BXYD62qr097gMfpQoZcP/eZsxXLJzRaotya72QqzqPnPLaQ3ybb6jT1qQjG0
+	 YOSF7VImv0cON116IxZ0V9RQ0uymaC1hp7njmhtY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728543AbfHELoi (ORCPT
+        id S1728568AbfHELrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 07:44:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34392 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727259AbfHELoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 07:44:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 26301B05E;
-        Mon,  5 Aug 2019 11:44:36 +0000 (UTC)
-Date:   Mon, 5 Aug 2019 13:44:34 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Masoud Sharbiani <msharbiani@apple.com>,
-        Greg KH <gregkh@linuxfoundation.org>, hannes@cmpxchg.org,
-        vdavydov.dev@gmail.com, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Possible mem cgroup bug in kernels between 4.18.0 and 5.3-rc1.
-Message-ID: <20190805114434.GK7597@dhcp22.suse.cz>
-References: <20190802074047.GQ11627@dhcp22.suse.cz>
- <7E44073F-9390-414A-B636-B1AE916CC21E@apple.com>
- <20190802144110.GL6461@dhcp22.suse.cz>
- <5DE6F4AE-F3F9-4C52-9DFC-E066D9DD5EDC@apple.com>
- <20190802191430.GO6461@dhcp22.suse.cz>
- <A06C5313-B021-4ADA-9897-CE260A9011CC@apple.com>
- <f7733773-35bc-a1f6-652f-bca01ea90078@I-love.SAKURA.ne.jp>
- <d7efccf4-7f07-10da-077d-a58dafbf627e@I-love.SAKURA.ne.jp>
- <20190805084228.GB7597@dhcp22.suse.cz>
- <7e3c0399-c091-59cd-dbe6-ff53c7c8adc9@i-love.sakura.ne.jp>
+        Mon, 5 Aug 2019 07:47:16 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:45944 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727259AbfHELrQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 07:47:16 -0400
+Received: by mail-lf1-f66.google.com with SMTP id u10so18935029lfm.12;
+        Mon, 05 Aug 2019 04:47:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XqfbHS+kotk8JoRbfLuGqMSPe/L9zMN6nAynv8vWNNE=;
+        b=O+OAZdfs0epR4mar8rurpUaubeHEoz9RUhXnXCuUIg6fivHNXgeGlhOIz3MhMXy3jt
+         MEu7lumoLYRKU4Bf4XZ2+iLAIXDFudMGWug7EKm3kDy9lk+nKf/A016vXX58tflFzf+x
+         9FXuMkisWjyiAmR4iBYZsg23rY9w4e86gH21TdkZFyGIPD8fsYUdvL2cRolPFGGBlMg7
+         Bi7POE68YNYEYdBUd5IchMIhnZ4F0HV9bVw3/r5bENRwLQ/9xHXsx0AxwFIOs2AF6wm4
+         fd4HPt0NxWIio9LTlgp6YzbP9p5I4oPeSAfe9foFd4cYabD1aDlwgIr2DjCwTRFfaeVM
+         6rwA==
+X-Gm-Message-State: APjAAAXh+FjAQdSS8+xVCiKwg9SCmivlvwadI1R58wdgHLuBflabJfMF
+        IgzaHSChCyVskxvc0lkoMNtclfqY2GM=
+X-Google-Smtp-Source: APXvYqwCQQpWwF/H86pq5gU6luyGEhhHPzYgbnkV99GOKcMkH1wANYUuU+ymSzgAiP1aj/rOjAxasw==
+X-Received: by 2002:a19:a419:: with SMTP id q25mr5603054lfc.136.1565005633919;
+        Mon, 05 Aug 2019 04:47:13 -0700 (PDT)
+Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
+        by smtp.gmail.com with ESMTPSA id p21sm14866073lfc.41.2019.08.05.04.47.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 05 Aug 2019 04:47:13 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.92)
+        (envelope-from <johan@kernel.org>)
+        id 1hubSJ-0006DC-U0; Mon, 05 Aug 2019 13:47:11 +0200
+Date:   Mon, 5 Aug 2019 13:47:11 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
+Cc:     kernel@puri.sm, =?iso-8859-1?Q?Bj=F8rn?= Mork <bjorn@mork.no>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        netdev@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Bob Ham <bob.ham@puri.sm>
+Subject: Re: [PATCH 1/2] usb: serial: option: Add the BroadMobi BM818 card
+Message-ID: <20190805114711.GF3574@localhost>
+References: <20190724145227.27169-1-angus@akkea.ca>
+ <20190724145227.27169-2-angus@akkea.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7e3c0399-c091-59cd-dbe6-ff53c7c8adc9@i-love.sakura.ne.jp>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190724145227.27169-2-angus@akkea.ca>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 05-08-19 20:36:05, Tetsuo Handa wrote:
-> I updated the changelog.
+On Wed, Jul 24, 2019 at 07:52:26AM -0700, Angus Ainslie (Purism) wrote:
+> From: Bob Ham <bob.ham@puri.sm>
+> 
+> Add a VID:PID for the BroadModi BM818 M.2 card
 
-This looks much better, thanks! One nit
+Would you mind posting the output of usb-devices (or lsusb -v) for this
+device?
 
-> >From 80b6f63b9d30df414e468e193a7f1b40c373ed68 Mon Sep 17 00:00:00 2001
-> From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-> Date: Mon, 5 Aug 2019 20:28:35 +0900
-> Subject: [PATCH v2] memcg, oom: don't require __GFP_FS when invoking memcg OOM killer
-> 
-> Masoud Sharbiani noticed that commit 29ef680ae7c21110 ("memcg, oom: move
-> out_of_memory back to the charge path") broke memcg OOM called from
-> __xfs_filemap_fault() path. It turned out that try_charge() is retrying
-> forever without making forward progress because mem_cgroup_oom(GFP_NOFS)
-> cannot invoke the OOM killer due to commit 3da88fb3bacfaa33 ("mm, oom:
-> move GFP_NOFS check to out_of_memory").
-> 
-> Allowing forced charge due to being unable to invoke memcg OOM killer
-> will lead to global OOM situation, and just returning -ENOMEM will not
-> solve memcg OOM situation.
-
-Returning -ENOMEM would effectivelly lead to triggering the oom killer
-from the page fault bail out path. So effectively get us back to before
-29ef680ae7c21110. But it is true that this is riskier from the
-observability POV when a) the OOM path wouldn't point to the culprit and
-b) it would leak ENOMEM from g-u-p path.
-
-> Therefore, invoking memcg OOM killer (despite
-> GFP_NOFS) will be the only choice we can choose for now.
-> 
-> Until 29ef680ae7c21110~1, we were able to invoke memcg OOM killer when
-> GFP_KERNEL reclaim failed [1]. But since 29ef680ae7c21110, we need to
-> invoke memcg OOM killer when GFP_NOFS reclaim failed [2]. Although in
-> the past we did invoke memcg OOM killer for GFP_NOFS [3], we might get
-> pre-mature memcg OOM reports due to this patch.
-> 
-> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-> Reported-and-tested-by: Masoud Sharbiani <msharbiani@apple.com>
-> Bisected-by: Masoud Sharbiani <msharbiani@apple.com>
-> Acked-by: Michal Hocko <mhocko@suse.com>
-> Fixes: 3da88fb3bacfaa33 # necessary after 29ef680ae7c21110
-> Cc: <stable@vger.kernel.org> # 4.19+
-> 
-> 
-> [1]
-> 
->  leaker invoked oom-killer: gfp_mask=0x6200ca(GFP_HIGHUSER_MOVABLE), nodemask=(null), order=0, oom_score_adj=0
->  CPU: 0 PID: 2746 Comm: leaker Not tainted 4.18.0+ #19
->  Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 04/13/2018
->  Call Trace:
->   dump_stack+0x63/0x88
->   dump_header+0x67/0x27a
->   ? mem_cgroup_scan_tasks+0x91/0xf0
->   oom_kill_process+0x210/0x410
->   out_of_memory+0x10a/0x2c0
->   mem_cgroup_out_of_memory+0x46/0x80
->   mem_cgroup_oom_synchronize+0x2e4/0x310
->   ? high_work_func+0x20/0x20
->   pagefault_out_of_memory+0x31/0x76
->   mm_fault_error+0x55/0x115
->   ? handle_mm_fault+0xfd/0x220
->   __do_page_fault+0x433/0x4e0
->   do_page_fault+0x22/0x30
->   ? page_fault+0x8/0x30
->   page_fault+0x1e/0x30
->  RIP: 0033:0x4009f0
->  Code: 03 00 00 00 e8 71 fd ff ff 48 83 f8 ff 49 89 c6 74 74 48 89 c6 bf c0 0c 40 00 31 c0 e8 69 fd ff ff 45 85 ff 7e 21 31 c9 66 90 <41> 0f be 14 0e 01 d3 f7 c1 ff 0f 00 00 75 05 41 c6 04 0e 2a 48 83
->  RSP: 002b:00007ffe29ae96f0 EFLAGS: 00010206
->  RAX: 000000000000001b RBX: 0000000000000000 RCX: 0000000001ce1000
->  RDX: 0000000000000000 RSI: 000000007fffffe5 RDI: 0000000000000000
->  RBP: 000000000000000c R08: 0000000000000000 R09: 00007f94be09220d
->  R10: 0000000000000002 R11: 0000000000000246 R12: 00000000000186a0
->  R13: 0000000000000003 R14: 00007f949d845000 R15: 0000000002800000
->  Task in /leaker killed as a result of limit of /leaker
->  memory: usage 524288kB, limit 524288kB, failcnt 158965
->  memory+swap: usage 0kB, limit 9007199254740988kB, failcnt 0
->  kmem: usage 2016kB, limit 9007199254740988kB, failcnt 0
->  Memory cgroup stats for /leaker: cache:844KB rss:521136KB rss_huge:0KB shmem:0KB mapped_file:0KB dirty:132KB writeback:0KB inactive_anon:0KB active_anon:521224KB inactive_file:1012KB active_file:8KB unevictable:0KB
->  Memory cgroup out of memory: Kill process 2746 (leaker) score 998 or sacrifice child
->  Killed process 2746 (leaker) total-vm:536704kB, anon-rss:521176kB, file-rss:1208kB, shmem-rss:0kB
->  oom_reaper: reaped process 2746 (leaker), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
-> 
-> 
-> [2]
-> 
->  leaker invoked oom-killer: gfp_mask=0x600040(GFP_NOFS), nodemask=(null), order=0, oom_score_adj=0
->  CPU: 1 PID: 2746 Comm: leaker Not tainted 4.18.0+ #20
->  Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 04/13/2018
->  Call Trace:
->   dump_stack+0x63/0x88
->   dump_header+0x67/0x27a
->   ? mem_cgroup_scan_tasks+0x91/0xf0
->   oom_kill_process+0x210/0x410
->   out_of_memory+0x109/0x2d0
->   mem_cgroup_out_of_memory+0x46/0x80
->   try_charge+0x58d/0x650
->   ? __radix_tree_replace+0x81/0x100
->   mem_cgroup_try_charge+0x7a/0x100
->   __add_to_page_cache_locked+0x92/0x180
->   add_to_page_cache_lru+0x4d/0xf0
->   iomap_readpages_actor+0xde/0x1b0
->   ? iomap_zero_range_actor+0x1d0/0x1d0
->   iomap_apply+0xaf/0x130
->   iomap_readpages+0x9f/0x150
->   ? iomap_zero_range_actor+0x1d0/0x1d0
->   xfs_vm_readpages+0x18/0x20 [xfs]
->   read_pages+0x60/0x140
->   __do_page_cache_readahead+0x193/0x1b0
->   ondemand_readahead+0x16d/0x2c0
->   page_cache_async_readahead+0x9a/0xd0
->   filemap_fault+0x403/0x620
->   ? alloc_set_pte+0x12c/0x540
->   ? _cond_resched+0x14/0x30
->   __xfs_filemap_fault+0x66/0x180 [xfs]
->   xfs_filemap_fault+0x27/0x30 [xfs]
->   __do_fault+0x19/0x40
->   __handle_mm_fault+0x8e8/0xb60
->   handle_mm_fault+0xfd/0x220
->   __do_page_fault+0x238/0x4e0
->   do_page_fault+0x22/0x30
->   ? page_fault+0x8/0x30
->   page_fault+0x1e/0x30
->  RIP: 0033:0x4009f0
->  Code: 03 00 00 00 e8 71 fd ff ff 48 83 f8 ff 49 89 c6 74 74 48 89 c6 bf c0 0c 40 00 31 c0 e8 69 fd ff ff 45 85 ff 7e 21 31 c9 66 90 <41> 0f be 14 0e 01 d3 f7 c1 ff 0f 00 00 75 05 41 c6 04 0e 2a 48 83
->  RSP: 002b:00007ffda45c9290 EFLAGS: 00010206
->  RAX: 000000000000001b RBX: 0000000000000000 RCX: 0000000001a1e000
->  RDX: 0000000000000000 RSI: 000000007fffffe5 RDI: 0000000000000000
->  RBP: 000000000000000c R08: 0000000000000000 R09: 00007f6d061ff20d
->  R10: 0000000000000002 R11: 0000000000000246 R12: 00000000000186a0
->  R13: 0000000000000003 R14: 00007f6ce59b2000 R15: 0000000002800000
->  Task in /leaker killed as a result of limit of /leaker
->  memory: usage 524288kB, limit 524288kB, failcnt 7221
->  memory+swap: usage 0kB, limit 9007199254740988kB, failcnt 0
->  kmem: usage 1944kB, limit 9007199254740988kB, failcnt 0
->  Memory cgroup stats for /leaker: cache:3632KB rss:518232KB rss_huge:0KB shmem:0KB mapped_file:0KB dirty:0KB writeback:0KB inactive_anon:0KB active_anon:518408KB inactive_file:3908KB active_file:12KB unevictable:0KB
->  Memory cgroup out of memory: Kill process 2746 (leaker) score 992 or sacrifice child
->  Killed process 2746 (leaker) total-vm:536704kB, anon-rss:518264kB, file-rss:1188kB, shmem-rss:0kB
->  oom_reaper: reaped process 2746 (leaker), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
-> 
-> 
-> [3]
-> 
->  leaker invoked oom-killer: gfp_mask=0x50, order=0, oom_score_adj=0
->  leaker cpuset=/ mems_allowed=0
->  CPU: 1 PID: 3206 Comm: leaker Not tainted 3.10.0-957.27.2.el7.x86_64 #1
->  Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 04/13/2018
->  Call Trace:
->   [<ffffffffaf364147>] dump_stack+0x19/0x1b
->   [<ffffffffaf35eb6a>] dump_header+0x90/0x229
->   [<ffffffffaedbb456>] ? find_lock_task_mm+0x56/0xc0
->   [<ffffffffaee32a38>] ? try_get_mem_cgroup_from_mm+0x28/0x60
->   [<ffffffffaedbb904>] oom_kill_process+0x254/0x3d0
->   [<ffffffffaee36c36>] mem_cgroup_oom_synchronize+0x546/0x570
->   [<ffffffffaee360b0>] ? mem_cgroup_charge_common+0xc0/0xc0
->   [<ffffffffaedbc194>] pagefault_out_of_memory+0x14/0x90
->   [<ffffffffaf35d072>] mm_fault_error+0x6a/0x157
->   [<ffffffffaf3717c8>] __do_page_fault+0x3c8/0x4f0
->   [<ffffffffaf371925>] do_page_fault+0x35/0x90
->   [<ffffffffaf36d768>] page_fault+0x28/0x30
->  Task in /leaker killed as a result of limit of /leaker
->  memory: usage 524288kB, limit 524288kB, failcnt 20628
->  memory+swap: usage 524288kB, limit 9007199254740988kB, failcnt 0
->  kmem: usage 0kB, limit 9007199254740988kB, failcnt 0
->  Memory cgroup stats for /leaker: cache:840KB rss:523448KB rss_huge:0KB mapped_file:0KB swap:0KB inactive_anon:0KB active_anon:523448KB inactive_file:464KB active_file:376KB unevictable:0KB
->  Memory cgroup out of memory: Kill process 3206 (leaker) score 970 or sacrifice child
->  Killed process 3206 (leaker) total-vm:536692kB, anon-rss:523304kB, file-rss:412kB, shmem-rss:0kB
-> 
+> Signed-off-by: Bob Ham <bob.ham@puri.sm>
+> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
 > ---
->  mm/oom_kill.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  drivers/usb/serial/option.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/mm/oom_kill.c b/mm/oom_kill.c
-> index eda2e2a..26804ab 100644
-> --- a/mm/oom_kill.c
-> +++ b/mm/oom_kill.c
-> @@ -1068,9 +1068,10 @@ bool out_of_memory(struct oom_control *oc)
->  	 * The OOM killer does not compensate for IO-less reclaim.
->  	 * pagefault_out_of_memory lost its gfp context so we have to
->  	 * make sure exclude 0 mask - all other users should have at least
-> -	 * ___GFP_DIRECT_RECLAIM to get here.
-> +	 * ___GFP_DIRECT_RECLAIM to get here. But mem_cgroup_oom() has to
-> +	 * invoke the OOM killer even if it is a GFP_NOFS allocation.
->  	 */
-> -	if (oc->gfp_mask && !(oc->gfp_mask & __GFP_FS))
-> +	if (oc->gfp_mask && !(oc->gfp_mask & __GFP_FS) && !is_memcg_oom(oc))
->  		return true;
->  
->  	/*
-> -- 
-> 1.8.3.1
+> diff --git a/drivers/usb/serial/option.c b/drivers/usb/serial/option.c
+> index c1582fbd1150..674a68ee9564 100644
+> --- a/drivers/usb/serial/option.c
+> +++ b/drivers/usb/serial/option.c
+> @@ -1975,6 +1975,8 @@ static const struct usb_device_id option_ids[] = {
+>  	  .driver_info = RSVD(4) | RSVD(5) },
+>  	{ USB_DEVICE_INTERFACE_CLASS(0x2cb7, 0x0105, 0xff),			/* Fibocom NL678 series */
+>  	  .driver_info = RSVD(6) },
+> +	{ USB_DEVICE(0x2020, 0x2060),						/* BroadMobi  */
 
--- 
-Michal Hocko
-SUSE Labs
+Looks like you forgot to include the model in the comment here.
+
+And please move this one after the other 0x2020 (PID 0x2031) entry.
+
+Should you also be using USB_DEVICE_INTERFACE_CLASS() (e.g. to avoid
+matching a mass-storage interface)?
+
+> +	  .driver_info = RSVD(4) },
+>  	{ } /* Terminating entry */
+>  };
+>  MODULE_DEVICE_TABLE(usb, option_ids);
+
+Johan
