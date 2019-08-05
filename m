@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F411CC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 11:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A255C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 11:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1CE12086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 11:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1D8420880
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 11:58:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728732AbfHEL6M (ORCPT
+        id S1728743AbfHEL6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 07:58:12 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:49695 "EHLO
+        Mon, 5 Aug 2019 07:58:13 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:47086 "EHLO
         mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728706AbfHEL6I (ORCPT
+        with ESMTP id S1728597AbfHEL6H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 07:58:08 -0400
-Received: by mail-io1-f71.google.com with SMTP id x24so91908166ioh.16
+        Mon, 5 Aug 2019 07:58:07 -0400
+Received: by mail-io1-f71.google.com with SMTP id s83so91939118iod.13
         for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 04:58:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Ixk43eItqra8h9Wa45X6I4lrUFoe5aJLAFw3T1SdFyY=;
-        b=QVEMKdbcV2R4OxenSIGKNu6fWYXbaTfRUJGpGXF8NwEVgzPO3UwCv/O14C42Ub7p7X
-         pkDQ9UIieT2AfL4C7oPwoPAuviII21LymWrVmCO6Ogoecqk/a5NjhRp4fHM1WjLOjN3m
-         /WbtZ5BJH1S5lLLr+9pA+ycEpYHUKYP3fmGDx/lgorFn4hzXYuxfY+Whg8AivZWMdbsj
-         mc9XqMSaPtY0OuAKQPRrkWFZe4ez1aorhIPzIIHd7ML4cNcI+IOJVdcPh3adzqhzQ0BW
-         EJZcpEtW9HLiYHXT8uqd29dKuVDnGngsJgO0ga2ddNqjAdhOL2S3IS+xgvLJfkZ5R7/e
-         hMSg==
-X-Gm-Message-State: APjAAAUI4KNBuF0XwhL33i/xCeWB9v5lpL9z23EVPV4G1+iRkydU87qc
-        QUZ9OUlbn2LQ3z5/ApGJ29qweAwzLabYYLp77cGsbGIhf3hI
-X-Google-Smtp-Source: APXvYqxp8W6uhnxexfwFmcf1UA7J8RGhrxx7u0CBUm42X1wrvNOuVp5t0YWQMI2U3hQVN5cyS3Gw8fR98IKdDKspIPXr+twCiE6y
+        bh=oZaIinrUoyyCGIdo2KP19yTMYXmf+0RMjStN+yDNODo=;
+        b=fsoGIBOHMLUDVpY8lybiFVGNQUotR9FtX/p2nbhywPZ7k8Ormt0kp3XLGrG5bMgR3S
+         BIr3Q9W6S6lDVVLjFGSYFFxAjG76wCyx4xdVhEm/Us234GdqmEmOisDU1E6BWvAnz/Xy
+         9hm99BJwzL+PxWi3hkOHXriV6ul3Mvpnsd8APHFSA2EMQ4OG63veqnL0LK32Z8xIMfP9
+         mPr7Z5KNuFzQxTZZRGzNEYUL4yuTHfm+b3itXqamd0ZY1qd4eBqrBnWEXwfVdPR1BHzv
+         TmyYgGpgx1A6p1D08nZFr88MaA8CFkiC38gPOrzWxzQN98bzOfwdXysNvQjrCV8ZvAN+
+         Rwfg==
+X-Gm-Message-State: APjAAAUXTAcSyQ2vpjXadVNhHybK+uM4cKXNV9TjNOvAJjQJ75MsE9Ks
+        DKvtk1yyGbPaVYN+wdGJ3YDPAyO+TYXl99xsDC04VG9TUHP+
+X-Google-Smtp-Source: APXvYqz1BTedFuXY9X6RDQIpGAUet8+GPfh2Qr6GbumzcUHO/o4mPbfOsJei92F+h8MXGKP5gFQ/dj41O13fn+OeIsMCL/rZxYS7
 MIME-Version: 1.0
-X-Received: by 2002:a02:3f0a:: with SMTP id d10mr80696447jaa.23.1565006287430;
- Mon, 05 Aug 2019 04:58:07 -0700 (PDT)
-Date:   Mon, 05 Aug 2019 04:58:07 -0700
+X-Received: by 2002:a02:1607:: with SMTP id a7mr149615132jaa.123.1565006286869;
+ Mon, 05 Aug 2019 04:58:06 -0700 (PDT)
+Date:   Mon, 05 Aug 2019 04:58:06 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d56d4c058f5d6b2b@google.com>
-Subject: KASAN: use-after-free Read in usbhid_wait_io
-From:   syzbot <syzbot+cff772ea5b2812d504a9@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, benjamin.tissoires@redhat.com,
-        jikos@kernel.org, linux-input@vger.kernel.org,
+Message-ID: <000000000000cce142058f5d6be6@google.com>
+Subject: possible deadlock in usb_deregister_dev
+From:   syzbot <syzbot+a64a382964bf6c71a9c0@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
         linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
         syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
@@ -61,78 +60,161 @@ syzbot found the following crash on:
 
 HEAD commit:    e96407b4 usb-fuzzer: main usb gadget fuzzer driver
 git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=136bed1a600000
+console output: https://syzkaller.appspot.com/x/log.txt?x=13b5bc8a600000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=792eb47789f57810
-dashboard link: https://syzkaller.appspot.com/bug?extid=cff772ea5b2812d504a9
+dashboard link: https://syzkaller.appspot.com/bug?extid=a64a382964bf6c71a9c0
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+cff772ea5b2812d504a9@syzkaller.appspotmail.com
+Reported-by: syzbot+a64a382964bf6c71a9c0@syzkaller.appspotmail.com
 
-==================================================================
-BUG: KASAN: use-after-free in test_bit  
-include/asm-generic/bitops-instrumented.h:237 [inline]
-BUG: KASAN: use-after-free in usbhid_wait_io+0xc9/0x3a0  
-drivers/hid/usbhid/hid-core.c:646
-Read of size 8 at addr ffff8881c84068c0 by task syz-executor.2/3548
+usb 4-1: USB disconnect, device number 85
+======================================================
+WARNING: possible circular locking dependency detected
+5.3.0-rc2+ #24 Not tainted
+------------------------------------------------------
+kworker/0:2/105 is trying to acquire lock:
+000000003db0b025 (minor_rwsem){++++}, at: usb_deregister_dev  
+drivers/usb/core/file.c:238 [inline]
+000000003db0b025 (minor_rwsem){++++}, at: usb_deregister_dev+0x61/0x270  
+drivers/usb/core/file.c:230
 
-CPU: 1 PID: 3548 Comm: syz-executor.2 Not tainted 5.3.0-rc2+ #24
+but task is already holding lock:
+000000000afbf30c (iowarrior_open_disc_lock){+.+.}, at:  
+iowarrior_disconnect+0x45/0x2c0 drivers/usb/misc/iowarrior.c:867
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #2 (iowarrior_open_disc_lock){+.+.}:
+        __mutex_lock_common kernel/locking/mutex.c:930 [inline]
+        __mutex_lock+0x158/0x1360 kernel/locking/mutex.c:1077
+        iowarrior_open+0x8a/0x2a0 drivers/usb/misc/iowarrior.c:600
+        usb_open+0x1df/0x270 drivers/usb/core/file.c:48
+        chrdev_open+0x219/0x5c0 fs/char_dev.c:414
+        do_dentry_open+0x494/0x1120 fs/open.c:797
+        do_last fs/namei.c:3416 [inline]
+        path_openat+0x1430/0x3f50 fs/namei.c:3533
+        do_filp_open+0x1a1/0x280 fs/namei.c:3563
+        do_sys_open+0x3c0/0x580 fs/open.c:1089
+        do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+-> #1 (iowarrior_mutex){+.+.}:
+        __mutex_lock_common kernel/locking/mutex.c:930 [inline]
+        __mutex_lock+0x158/0x1360 kernel/locking/mutex.c:1077
+        iowarrior_open+0x23/0x2a0 drivers/usb/misc/iowarrior.c:589
+        usb_open+0x1df/0x270 drivers/usb/core/file.c:48
+        chrdev_open+0x219/0x5c0 fs/char_dev.c:414
+        do_dentry_open+0x494/0x1120 fs/open.c:797
+        do_last fs/namei.c:3416 [inline]
+        path_openat+0x1430/0x3f50 fs/namei.c:3533
+        do_filp_open+0x1a1/0x280 fs/namei.c:3563
+        do_sys_open+0x3c0/0x580 fs/open.c:1089
+        do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+-> #0 (minor_rwsem){++++}:
+        check_prev_add kernel/locking/lockdep.c:2405 [inline]
+        check_prevs_add kernel/locking/lockdep.c:2507 [inline]
+        validate_chain kernel/locking/lockdep.c:2897 [inline]
+        __lock_acquire+0x1f7c/0x3b50 kernel/locking/lockdep.c:3880
+        lock_acquire+0x127/0x320 kernel/locking/lockdep.c:4412
+        down_write+0x92/0x150 kernel/locking/rwsem.c:1500
+        usb_deregister_dev drivers/usb/core/file.c:238 [inline]
+        usb_deregister_dev+0x61/0x270 drivers/usb/core/file.c:230
+        iowarrior_disconnect+0xa8/0x2c0 drivers/usb/misc/iowarrior.c:873
+        usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
+        __device_release_driver drivers/base/dd.c:1120 [inline]
+        device_release_driver_internal+0x404/0x4c0 drivers/base/dd.c:1151
+        bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:556
+        device_del+0x420/0xb10 drivers/base/core.c:2288
+        usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
+        usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2199
+        hub_port_connect drivers/usb/core/hub.c:4949 [inline]
+        hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+        port_event drivers/usb/core/hub.c:5359 [inline]
+        hub_event+0x1454/0x3640 drivers/usb/core/hub.c:5441
+        process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+        worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+        kthread+0x318/0x420 kernel/kthread.c:255
+        ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+other info that might help us debug this:
+
+Chain exists of:
+   minor_rwsem --> iowarrior_mutex --> iowarrior_open_disc_lock
+
+  Possible unsafe locking scenario:
+
+        CPU0                    CPU1
+        ----                    ----
+   lock(iowarrior_open_disc_lock);
+                                lock(iowarrior_mutex);
+                                lock(iowarrior_open_disc_lock);
+   lock(minor_rwsem);
+
+  *** DEADLOCK ***
+
+6 locks held by kworker/0:2/105:
+  #0: 00000000aba84ede ((wq_completion)usb_hub_wq){+.+.}, at:  
+__write_once_size include/linux/compiler.h:226 [inline]
+  #0: 00000000aba84ede ((wq_completion)usb_hub_wq){+.+.}, at:  
+arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
+  #0: 00000000aba84ede ((wq_completion)usb_hub_wq){+.+.}, at: atomic64_set  
+include/asm-generic/atomic-instrumented.h:855 [inline]
+  #0: 00000000aba84ede ((wq_completion)usb_hub_wq){+.+.}, at:  
+atomic_long_set include/asm-generic/atomic-long.h:40 [inline]
+  #0: 00000000aba84ede ((wq_completion)usb_hub_wq){+.+.}, at: set_work_data  
+kernel/workqueue.c:620 [inline]
+  #0: 00000000aba84ede ((wq_completion)usb_hub_wq){+.+.}, at:  
+set_work_pool_and_clear_pending kernel/workqueue.c:647 [inline]
+  #0: 00000000aba84ede ((wq_completion)usb_hub_wq){+.+.}, at:  
+process_one_work+0x827/0x1530 kernel/workqueue.c:2240
+  #1: 0000000058d65fe1 ((work_completion)(&hub->events)){+.+.}, at:  
+process_one_work+0x85b/0x1530 kernel/workqueue.c:2244
+  #2: 000000006a2f7a8f (&dev->mutex){....}, at: device_lock  
+include/linux/device.h:1220 [inline]
+  #2: 000000006a2f7a8f (&dev->mutex){....}, at: hub_event+0x17c/0x3640  
+drivers/usb/core/hub.c:5387
+  #3: 00000000eddd5fcd (&dev->mutex){....}, at: device_lock  
+include/linux/device.h:1220 [inline]
+  #3: 00000000eddd5fcd (&dev->mutex){....}, at: usb_disconnect+0x91/0x8d0  
+drivers/usb/core/hub.c:2190
+  #4: 000000009478eeb7 (&dev->mutex){....}, at:  
+device_release_driver_internal+0x23/0x4c0 drivers/base/dd.c:1148
+  #5: 000000000afbf30c (iowarrior_open_disc_lock){+.+.}, at:  
+iowarrior_disconnect+0x45/0x2c0 drivers/usb/misc/iowarrior.c:867
+
+stack backtrace:
+CPU: 0 PID: 105 Comm: kworker/0:2 Not tainted 5.3.0-rc2+ #24
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
 Call Trace:
   __dump_stack lib/dump_stack.c:77 [inline]
   dump_stack+0xca/0x13e lib/dump_stack.c:113
-  print_address_description+0x6a/0x32c mm/kasan/report.c:351
-  __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
-  kasan_report+0xe/0x12 mm/kasan/common.c:612
-  check_memory_region_inline mm/kasan/generic.c:185 [inline]
-  check_memory_region+0x128/0x190 mm/kasan/generic.c:192
-  test_bit include/asm-generic/bitops-instrumented.h:237 [inline]
-  usbhid_wait_io+0xc9/0x3a0 drivers/hid/usbhid/hid-core.c:646
-  usbhid_init_reports+0x119/0x320 drivers/hid/usbhid/hid-core.c:774
-  hiddev_ioctl+0x10ed/0x1550 drivers/hid/usbhid/hiddev.c:792
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xd2d/0x1330 fs/ioctl.c:696
-  ksys_ioctl+0x9b/0xc0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:718
-  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x459829
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fb23788ec78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459829
-RDX: 0000000020005700 RSI: 0000000040184810 RDI: 0000000000000008
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fb23788f6d4
-R13: 00000000004c2104 R14: 00000000004d5490 R15: 00000000ffffffff
-
-Allocated by task 12:
-  save_stack+0x1b/0x80 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc mm/kasan/common.c:487 [inline]
-  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:460
-  slab_post_alloc_hook mm/slab.h:520 [inline]
-  slab_alloc_node mm/slub.c:2766 [inline]
-  __kmalloc_node_track_caller+0xd0/0x230 mm/slub.c:4361
-  __kmalloc_reserve.isra.0+0x39/0xe0 net/core/skbuff.c:141
-  __alloc_skb+0xef/0x5a0 net/core/skbuff.c:209
-  alloc_skb include/linux/skbuff.h:1055 [inline]
-  alloc_uevent_skb+0x7b/0x210 lib/kobject_uevent.c:289
-  uevent_net_broadcast_untagged lib/kobject_uevent.c:325 [inline]
-  kobject_uevent_net_broadcast lib/kobject_uevent.c:408 [inline]
-  kobject_uevent_env+0x8ee/0x1160 lib/kobject_uevent.c:592
-  __device_release_driver drivers/base/dd.c:1140 [inline]
-  device_release_driver_internal+0x3c4/0x4c0 drivers/base/dd.c:1151
+  check_noncircular+0x345/0x3e0 kernel/locking/lockdep.c:1741
+  check_prev_add kernel/locking/lockdep.c:2405 [inline]
+  check_prevs_add kernel/locking/lockdep.c:2507 [inline]
+  validate_chain kernel/locking/lockdep.c:2897 [inline]
+  __lock_acquire+0x1f7c/0x3b50 kernel/locking/lockdep.c:3880
+  lock_acquire+0x127/0x320 kernel/locking/lockdep.c:4412
+  down_write+0x92/0x150 kernel/locking/rwsem.c:1500
+  usb_deregister_dev drivers/usb/core/file.c:238 [inline]
+  usb_deregister_dev+0x61/0x270 drivers/usb/core/file.c:230
+  iowarrior_disconnect+0xa8/0x2c0 drivers/usb/misc/iowarrior.c:873
+  usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
+  __device_release_driver drivers/base/dd.c:1120 [inline]
+  device_release_driver_internal+0x404/0x4c0 drivers/base/dd.c:1151
   bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:556
   device_del+0x420/0xb10 drivers/base/core.c:2288
-  usb_disconnect+0x4c3/0x8d0 drivers/usb/core/hub.c:2225
+  usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
+  usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2199
   hub_port_connect drivers/usb/core/hub.c:4949 [inline]
   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
   port_event drivers/usb/core/hub.c:5359 [inline]
@@ -141,51 +223,125 @@ Allocated by task 12:
   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
   kthread+0x318/0x420 kernel/kthread.c:255
   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Freed by task 240:
-  save_stack+0x1b/0x80 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:449
-  slab_free_hook mm/slub.c:1423 [inline]
-  slab_free_freelist_hook mm/slub.c:1470 [inline]
-  slab_free mm/slub.c:3012 [inline]
-  kfree+0xe4/0x2f0 mm/slub.c:3953
-  skb_free_head+0x8b/0xa0 net/core/skbuff.c:591
-  skb_release_data+0x41f/0x7c0 net/core/skbuff.c:611
-  skb_release_all+0x46/0x60 net/core/skbuff.c:665
-  __kfree_skb net/core/skbuff.c:679 [inline]
-  consume_skb net/core/skbuff.c:838 [inline]
-  consume_skb+0xd9/0x320 net/core/skbuff.c:832
-  skb_free_datagram+0x16/0xf0 net/core/datagram.c:328
-  netlink_recvmsg+0x65e/0xee0 net/netlink/af_netlink.c:1996
-  sock_recvmsg_nosec net/socket.c:871 [inline]
-  sock_recvmsg net/socket.c:889 [inline]
-  sock_recvmsg+0xca/0x110 net/socket.c:885
-  ___sys_recvmsg+0x271/0x5a0 net/socket.c:2480
-  __sys_recvmsg+0xe9/0x1b0 net/socket.c:2537
-  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff8881c8406880
-  which belongs to the cache kmalloc-1k of size 1024
-The buggy address is located 64 bytes inside of
-  1024-byte region [ffff8881c8406880, ffff8881c8406c80)
-The buggy address belongs to the page:
-page:ffffea0007210100 refcount:1 mapcount:0 mapping:ffff8881da002280  
-index:0x0 compound_mapcount: 0
-flags: 0x200000000010200(slab|head)
-raw: 0200000000010200 dead000000000100 dead000000000122 ffff8881da002280
-raw: 0000000000000000 00000000000e000e 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8881c8406780: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881c8406800: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> ffff8881c8406880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                            ^
-  ffff8881c8406900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881c8406980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+iowarrior 4-1:0.236: I/O-Warror #0 now disconnected
+usb 4-1: new high-speed USB device number 86 using dummy_hcd
+usb 4-1: Using ep0 maxpacket: 8
+usb 4-1: config 0 has an invalid interface number: 171 but max is 0
+usb 4-1: config 0 has no interface number 0
+usb 4-1: New USB device found, idVendor=14f7, idProduct=0500,  
+bcdDevice=ac.d6
+usb 4-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+usb 4-1: config 0 descriptor??
+technisat-usb2: could not set alternate setting to 0
+technisat-usb2: firmware version: 251.126
+dvb-usb: found a 'Technisat SkyStar USB HD (DVB-S/S2)' in warm state.
+dvb-usb: will pass the complete MPEG2 transport stream to the software  
+demuxer.
+dvbdev: DVB: registering new adapter (Technisat SkyStar USB HD (DVB-S/S2))
+usb 4-1: media controller created
+technisat-usb2: i2c-error: out failed 53 = -22
+dvb-usb: MAC address reading failed.
+dvbdev: dvb_create_media_entity: media entity 'dvb-demux' registered.
+technisat-usb2: i2c-error: out failed 68 = -22
+dvb-usb: no frontend was attached by 'Technisat SkyStar USB HD (DVB-S/S2)'
+Registered IR keymap rc-technisat-usb2
+rc_core: Loaded IR protocol module ir-rc5-decoder, but protocol rc-5 still  
+not available
+rc rc0: Technisat SkyStar USB HD (DVB-S/S2) as  
+/devices/platform/dummy_hcd.3/usb4/4-1/rc/rc0
+input: Technisat SkyStar USB HD (DVB-S/S2) as  
+/devices/platform/dummy_hcd.3/usb4/4-1/rc/rc0/input262
+dvb-usb: schedule remote query interval to 100 msecs.
+dvb-usb: Technisat SkyStar USB HD (DVB-S/S2) successfully initialized and  
+connected.
+usb 4-1: USB disconnect, device number 86
+dvb-usb: Technisat SkyStar USB HD (DVB-S/S2) successfully deinitialized and  
+disconnected.
+usb 5-1: USB disconnect, device number 48
+usb 2-1: USB disconnect, device number 98
+metro-usb ttyUSB0: Metrologic USB to Serial converter now disconnected from  
+ttyUSB0
+metro_usb 2-1:0.123: device disconnected
+usb 2-1: new low-speed USB device number 99 using dummy_hcd
+usb 2-1: config index 0 descriptor too short (expected 63259, got 46)
+usb 2-1: config 0 has an invalid interface number: 123 but max is 0
+usb 2-1: config 0 has an invalid descriptor of length 0, skipping remainder  
+of the config
+usb 2-1: config 0 has no interface number 0
+usb 2-1: config 0 interface 123 altsetting 0 endpoint 0x81 is Bulk;  
+changing to Interrupt
+usb 2-1: New USB device found, idVendor=0c2e, idProduct=0720,  
+bcdDevice=43.fe
+usb 2-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+usb 2-1: config 0 descriptor??
+metro_usb 2-1:0.123: Metrologic USB to Serial converter detected
+usb 2-1: Metrologic USB to Serial converter now attached to ttyUSB0
+usb 4-1: new high-speed USB device number 89 using dummy_hcd
+usb 4-1: Using ep0 maxpacket: 8
+usb 4-1: config 0 has an invalid interface number: 171 but max is 0
+usb 4-1: config 0 has no interface number 0
+usb 4-1: New USB device found, idVendor=14f7, idProduct=0500,  
+bcdDevice=ac.d6
+usb 4-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+usb 4-1: config 0 descriptor??
+technisat-usb2: could not set alternate setting to 0
+technisat-usb2: firmware version: 25.147
+dvb-usb: found a 'Technisat SkyStar USB HD (DVB-S/S2)' in warm state.
+dvb-usb: will pass the complete MPEG2 transport stream to the software  
+demuxer.
+dvbdev: DVB: registering new adapter (Technisat SkyStar USB HD (DVB-S/S2))
+usb 4-1: media controller created
+technisat-usb2: i2c-error: out failed 53 = -22
+dvb-usb: MAC address reading failed.
+dvbdev: dvb_create_media_entity: media entity 'dvb-demux' registered.
+technisat-usb2: i2c-error: out failed 68 = -22
+dvb-usb: no frontend was attached by 'Technisat SkyStar USB HD (DVB-S/S2)'
+Registered IR keymap rc-technisat-usb2
+rc_core: Loaded IR protocol module ir-rc5-decoder, but protocol rc-5 still  
+not available
+rc rc0: Technisat SkyStar USB HD (DVB-S/S2) as  
+/devices/platform/dummy_hcd.3/usb4/4-1/rc/rc0
+input: Technisat SkyStar USB HD (DVB-S/S2) as  
+/devices/platform/dummy_hcd.3/usb4/4-1/rc/rc0/input265
+dvb-usb: schedule remote query interval to 100 msecs.
+dvb-usb: Technisat SkyStar USB HD (DVB-S/S2) successfully initialized and  
+connected.
+usb 4-1: USB disconnect, device number 89
+dvb-usb: Technisat SkyStar USB HD (DVB-S/S2) successfully deinitialized and  
+disconnected.
+usb 4-1: new high-speed USB device number 90 using dummy_hcd
+usb 4-1: Using ep0 maxpacket: 8
+usb 4-1: config 0 has an invalid interface number: 171 but max is 0
+usb 4-1: config 0 has no interface number 0
+usb 4-1: New USB device found, idVendor=14f7, idProduct=0500,  
+bcdDevice=ac.d6
+usb 4-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+usb 4-1: config 0 descriptor??
+technisat-usb2: could not set alternate setting to 0
+technisat-usb2: firmware version: 39.225
+dvb-usb: found a 'Technisat SkyStar USB HD (DVB-S/S2)' in warm state.
+dvb-usb: will pass the complete MPEG2 transport stream to the software  
+demuxer.
+dvbdev: DVB: registering new adapter (Technisat SkyStar USB HD (DVB-S/S2))
+usb 4-1: media controller created
+technisat-usb2: i2c-error: out failed 53 = -22
+dvb-usb: MAC address reading failed.
+dvbdev: dvb_create_media_entity: media entity 'dvb-demux' registered.
+technisat-usb2: i2c-error: out failed 68 = -22
+dvb-usb: no frontend was attached by 'Technisat SkyStar USB HD (DVB-S/S2)'
+Registered IR keymap rc-technisat-usb2
+rc_core: Loaded IR protocol module ir-rc5-decoder, but protocol rc-5 still  
+not available
+rc rc0: Technisat SkyStar USB HD (DVB-S/S2) as  
+/devices/platform/dummy_hcd.3/usb4/4-1/rc/rc0
+input: Technisat SkyStar USB HD (DVB-S/S2) as  
+/devices/platform/dummy_hcd.3/usb4/4-1/rc/rc0/input266
+dvb-usb: schedule remote query interval to 100 msecs.
+dvb-usb: Technisat SkyStar USB HD (DVB-S/S2) successfully initialized and  
+connected.
+usb 4-1: USB disconnect, device number 90
+dvb-usb: Technisat SkyStar USB HD (DVB-S/S2) successfully deinitialized and  
+disconnected.
 
 
 ---
