@@ -2,108 +2,111 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F9EBC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B13C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D774720B1F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:54:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4E0C20B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:55:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbfHEIyl (ORCPT
+        id S1727875AbfHEIzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 04:54:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49472 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726880AbfHEIyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 04:54:41 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EABAB30833C1;
-        Mon,  5 Aug 2019 08:54:40 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-81.ams2.redhat.com [10.36.116.81])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9456A1000321;
-        Mon,  5 Aug 2019 08:54:37 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 3B87511AAA; Mon,  5 Aug 2019 10:54:19 +0200 (CEST)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Gerd Hoffmann <kraxel@redhat.com>,
-        Dave Airlie <airlied@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org (open list:DRM DRIVER FOR QXL
-        VIRTUAL GPU),
-        spice-devel@lists.freedesktop.org (open list:DRM DRIVER FOR QXL VIRTUAL
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] drm/qxl: get vga ioports
-Date:   Mon,  5 Aug 2019 10:53:55 +0200
-Message-Id: <20190805085355.12527-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Mon, 05 Aug 2019 08:54:41 +0000 (UTC)
+        Mon, 5 Aug 2019 04:55:08 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:40444 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726423AbfHEIzI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 04:55:08 -0400
+Received: by mail-ed1-f65.google.com with SMTP id k8so77890664eds.7
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 01:55:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=84QEP6FR40jS8MsBxZuPCzBl4Z7+iuUpFONR975wak0=;
+        b=s5jPBA9g3Nqvf+LxYW1Updrv6lyQrsKIM3+YYPUPlonN+pptH0c7FxfQ0NfUNFuqJ1
+         HjtGZu5Rd69G+gFEVg2CFejJr/OBmXmHHY9S/ZjuNJkeyEHpXg/052299cALqUVlz0EB
+         t4Zik9okuVjkTPsvtCbcXx7o/egn0BGsvPiiOgla4w/fXUKaGVfufVokcaJmy/qBPDO4
+         AOVjewO9taZhwAmgTod5r6h0uSlaEzqfFDICXG0fN1KKzuR2ReOMr/ZxkV64FuSeMSBm
+         jFoPjnvvc5McWSY1rj5FOvqlbF/Yb3YWi1UG8mtSvAmyRfOONZmHgMCFHCi2pUWf+3tu
+         DeOg==
+X-Gm-Message-State: APjAAAXnjxwOsfv3/U+epvW3rJ+v74+SdzjWACsoxSGT7sk0Y6Sfd+Gj
+        xHNkqXF4Ffe99Yb3Afa/P7HhAw==
+X-Google-Smtp-Source: APXvYqxBlSLzlAvy5N0qg2kyn7ZnVVogxS8dW1P324AzPoIeg9M28l87KxSLZpKgMwRiFN7yACOz4Q==
+X-Received: by 2002:a50:acc6:: with SMTP id x64mr135478105edc.100.1564995306572;
+        Mon, 05 Aug 2019 01:55:06 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id e43sm19988862ede.62.2019.08.05.01.55.05
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 05 Aug 2019 01:55:05 -0700 (PDT)
+Subject: Re: [PATCH] HID: logitech-dj: Fix check of
+ logi_dj_recv_query_paired_devices()
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Petr Vorel <pvorel@suse.cz>, YueHaibing <yuehaibing@huawei.com>,
+        benjamin.tissoires@redhat.com, linux-kernel@vger.kernel.org,
+        linux-input@vger.kernel.org
+References: <20190725145719.8344-1-yuehaibing@huawei.com>
+ <20190731105927.GA5092@dell5510> <20190731110629.GB5092@dell5510>
+ <3e9bda5b-68dc-15b9-ca79-2e73567ea0a5@redhat.com>
+ <nycvar.YFH.7.76.1908051051080.5899@cbobk.fhfr.pm>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <7988688e-8020-3d03-63cd-d844c01e5bf6@redhat.com>
+Date:   Mon, 5 Aug 2019 10:55:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <nycvar.YFH.7.76.1908051051080.5899@cbobk.fhfr.pm>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-qxl has two modes: "native" (used by the drm driver) and "vga" (vga
-compatibility mode, typically used for boot display and firmware
-framebuffers).
+Hi Jiri,
 
-Accessing any vga ioport will switch the qxl device into vga mode.
-The qxl driver never does that, but other drivers accessing vga ports
-can trigger that too and therefore disturb qxl operation.  So aquire
-the legacy vga ioports from vgaarb to avoid that.
+On 05-08-19 10:51, Jiri Kosina wrote:
+> On Wed, 31 Jul 2019, Hans de Goede wrote:
+> 
+>>>>> In delayedwork_callback(), logi_dj_recv_query_paired_devices
+>>>>> may return positive value while success now, so check it
+>>>>> correctly.
+>>>
+>>>>> Fixes: dbcbabf7da92 ("HID: logitech-dj: fix return value of
+>>>>> Fixes: logi_dj_recv_query_hidpp_devices")
+>>>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>>>> Reviewed-by: Petr Vorel <pvorel@suse.cz>
+>>> OK, not only it didn't fix problems with logitech mouse (see below),
+>>> but removing mouses USB dongle effectively crashes kernel, so this one
+>>> probably
+>>> shouldn't be applied :).
+>>>
+>>> [  330.721629] logitech-djreceiver: probe of 0003:046D:C52F.0013 failed with
+>>> error 7
+>>> [  331.462335] hid 0003:046D:C52F.0013: delayedwork_callback:
+>>> logi_dj_recv_query_paired_devices error: 7
+>>
+>> Please test my patch titled: "HID: logitech-dj: Really fix return value of
+>> logi_dj_recv_query_hidpp_devices"
+>> which should fix this.
+> 
+> Hans, have I been CCed on that patch? I don't seem to see it in in inbox.
 
-Reporducer: Boot kvm guest with both qxl and i915 vgpu, with qxl being
-first in pci scan order.
+I have "Jiri Kosina <jikos@kernel.org>" in the To: for the patch in the
+copy in my Inbox (I always Cc myself).
 
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
----
- drivers/gpu/drm/qxl/qxl_drv.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+Anyways, you can grab it here:
 
-diff --git a/drivers/gpu/drm/qxl/qxl_drv.c b/drivers/gpu/drm/qxl/qxl_drv.c
-index b57a37543613..8a2e86adc423 100644
---- a/drivers/gpu/drm/qxl/qxl_drv.c
-+++ b/drivers/gpu/drm/qxl/qxl_drv.c
-@@ -87,9 +87,15 @@ qxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	if (ret)
- 		goto disable_pci;
- 
-+	ret = vga_get_interruptible(pdev, VGA_RSRC_LEGACY_IO);
-+	if (ret) {
-+		DRM_ERROR("can't get legacy vga ports\n");
-+		goto put_vga;
-+	}
-+
- 	ret = qxl_device_init(qdev, &qxl_driver, pdev);
- 	if (ret)
--		goto disable_pci;
-+		goto put_vga;
- 
- 	ret = qxl_modeset_init(qdev);
- 	if (ret)
-@@ -109,6 +115,8 @@ qxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	qxl_modeset_fini(qdev);
- unload:
- 	qxl_device_fini(qdev);
-+put_vga:
-+	vga_put(pdev, VGA_RSRC_LEGACY_IO);
- disable_pci:
- 	pci_disable_device(pdev);
- free_dev:
-@@ -126,6 +134,7 @@ qxl_pci_remove(struct pci_dev *pdev)
- 
- 	qxl_modeset_fini(qdev);
- 	qxl_device_fini(qdev);
-+	vga_put(pdev, VGA_RSRC_LEGACY_IO);
- 
- 	dev->dev_private = NULL;
- 	kfree(qdev);
--- 
-2.18.1
+https://patchwork.kernel.org/patch/11064087/
 
+It has gathered 2 Tested-by-s and 2 Reviewed-by-s since posting, so
+assuming you like it too, this is ready for merging.
+
+Regards,
+
+Hans
