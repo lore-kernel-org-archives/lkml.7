@@ -4,74 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D402C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67981C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1101F205F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47C4D205F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:20:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727578AbfHEHUI (ORCPT
+        id S1727614AbfHEHUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 03:20:08 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:37720 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726394AbfHEHUI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 03:20:08 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id DD4B71A01E4;
-        Mon,  5 Aug 2019 09:20:05 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1DDBC1A0013;
-        Mon,  5 Aug 2019 09:20:00 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 930A340296;
-        Mon,  5 Aug 2019 15:19:52 +0800 (SGT)
-From:   Hui Song <hui.song_1@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Song Hui <hui.song_1@nxp.com>
-Subject: [PATCH v1] gpio: mpc8xxx: Add new platforms GPIO DT node description
-Date:   Mon,  5 Aug 2019 15:10:24 +0800
-Message-Id: <20190805071024.7992-1-hui.song_1@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 5 Aug 2019 03:20:36 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:34074 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726394AbfHEHUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 03:20:35 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id C9479E04882FA6FD9799;
+        Mon,  5 Aug 2019 15:20:31 +0800 (CST)
+Received: from huawei.com (10.90.53.225) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Mon, 5 Aug 2019
+ 15:20:25 +0800
+From:   Lihong Kou <koulihong@huawei.com>
+To:     <yuchao0@huawei.com>, <jaegeuk@kernel.org>
+CC:     <fangwei1@huawei.com>, <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <koulihong@huawei.com>
+Subject: [f2fs-dev] [PATCH] fsck.f2fs: fix the bug in reserve_new_block
+Date:   Mon, 5 Aug 2019 15:26:21 +0800
+Message-ID: <1564989981-104324-1-git-send-email-koulihong@huawei.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Song Hui <hui.song_1@nxp.com>
+if we new node block in fsck flow, we need to update
+the valid_node_cnt at the same time.
 
-Update the NXP GPIO node dt-binding file for QorIQ and
-Layerscape platforms, and add one more example with
-ls1028a GPIO node.
-
-Signed-off-by: Song Hui <hui.song_1@nxp.com>
+Signed-off-by: Lihong Kou <koulihong@huawei.com>
 ---
- Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fsck/segment.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
-index 69d4616..fbe6d75 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
-@@ -28,7 +28,7 @@ gpio0: gpio@1100 {
- Example of gpio-controller node for a ls2080a SoC:
+diff --git a/fsck/segment.c b/fsck/segment.c
+index 98c836e..c16fb3a 100644
+--- a/fsck/segment.c
++++ b/fsck/segment.c
+@@ -51,8 +51,11 @@ void reserve_new_block(struct f2fs_sb_info *sbi, block_t *to,
  
- gpio0: gpio@2300000 {
--	compatible = "fsl,ls2080a-gpio", "fsl,qoriq-gpio";
-+	compatible = "fsl,ls1028a-gpio","fsl,ls2080a-gpio", "fsl,qoriq-gpio";
- 	reg = <0x0 0x2300000 0x0 0x10000>;
- 	interrupts = <0 36 0x4>; /* Level high type */
- 	gpio-controller;
+ 	if (old_blkaddr == NULL_ADDR) {
+ 		sbi->total_valid_block_count++;
+-		if (c.func == FSCK)
++		if (c.func == FSCK) {
+ 			fsck->chk.valid_blk_cnt++;
++			if (IS_NODESEG(type))
++				fsck->chk.valid_node_cnt++;
++		}
+ 	}
+ 	se->dirty = 1;
+ 
 -- 
-2.9.5
+2.7.4
 
