@@ -2,135 +2,119 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC02C32751
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A2AC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B734F2070D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C0D120665
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:26:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ADhAmScp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730867AbfHEWZp (ORCPT
+        id S1730917AbfHEW0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 18:25:45 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45639 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729999AbfHEWZp (ORCPT
+        Mon, 5 Aug 2019 18:26:32 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33642 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728922AbfHEW0c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 18:25:45 -0400
-Received: by mail-wr1-f65.google.com with SMTP id f9so6979742wre.12
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 15:25:43 -0700 (PDT)
+        Mon, 5 Aug 2019 18:26:32 -0400
+Received: by mail-pf1-f196.google.com with SMTP id g2so40349878pfq.0
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 15:26:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Rg+oeCwUo/H+oN9H7Czh/5Y4i017SsaPztYn9tG5d2Y=;
+        b=ADhAmScpEWlovyJVTyLKzuJz7F5Qrq+05RPL+6N4C4JRJ7fOnPN2zbO7DvvQffhW8t
+         5qCOWU2XnFCFiC8n5RMcwqomSreqCMq1Gd2WwapvE6fGGByk3q1c/RjssbFirWe47w3t
+         rcsghBXRcnVkLDfhKqTREFm1Xgn01kZZHslN8gOWp9twHwe8fk3fZUehesVIe2MWHtQs
+         qi43lT+ENVcIfYraXarMf3sHx//4IEgUiEhzwUuK7wdnLbbCJJvoILbsRb2y4m+iFGTY
+         Hx12ZTXyS/cOmpcxo1o/nZidvq+YrehQDR/opapH7e94CZ6hEodbKqes5cLvviEL1CNE
+         LlMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=v3ukfwq9sao2HM0nnFsoZLetdOCEK73QpJzj1XGgANk=;
-        b=CsJ1It6FqMV+vbiAJEqNTy6e9itTD60wiiACXOZs/UAwMKbjVZ7oZsDWdOeTOei98O
-         0y/a53odJRC3ROPcWXKX9VVR9ZAdUjTr+FaIj305Hz5zEtPEasojczQaTlTfcZN2Xsjo
-         k5pNiNvxR0jXxgkawDuRB5vVZM+TZHsdC2ysJRu4jLxksgDtftvC+zztWkIpI0L4E2y8
-         /+Ar0D28Slmp7stK485adGlFjvixilnukInzBHEKpA7Y/yn4to6RtAxkGoXbtRL3HiEO
-         edF6TfKgTZOegylJJIvzcidsgbMqEKMA3zFhehZZciz/45u7Imw/HTQk5NK4OqwthkwB
-         S3rw==
-X-Gm-Message-State: APjAAAXYSkrk1+3lNmQkq6zSjs6r82/2fk7N2COvAS6HSkkkn5/Um77R
-        k3KiWBlVgnRzeM2obl2qmwMp/Q==
-X-Google-Smtp-Source: APXvYqzz5YzWQFCn36Ny3wpPCgDBusnxRHYPl+zcFffP+AJIbLVyU62LwGkwgu054MJW7P5er0Tggg==
-X-Received: by 2002:adf:f088:: with SMTP id n8mr245425wro.58.1565043942911;
-        Mon, 05 Aug 2019 15:25:42 -0700 (PDT)
-Received: from [192.168.0.24] ([181.120.177.224])
-        by smtp.gmail.com with ESMTPSA id t185sm78372904wma.11.2019.08.05.15.25.38
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 05 Aug 2019 15:25:42 -0700 (PDT)
-Subject: Re: [PATCH RFC] modpost: Support I2C Aliases from OF tables
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-renesas-soc@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>
-References: <20190710193918.31135-1-kieran.bingham+renesas@ideasonboard.com>
- <0e1b6e0b-1c94-4b00-7fda-c2a303ee3816@redhat.com>
- <20190731194419.GB4084@kunai>
-From:   Javier Martinez Canillas <javierm@redhat.com>
-Message-ID: <f4a78e93-6aaa-bc72-cf94-06fc2574451c@redhat.com>
-Date:   Tue, 6 Aug 2019 00:25:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Rg+oeCwUo/H+oN9H7Czh/5Y4i017SsaPztYn9tG5d2Y=;
+        b=KwJRWZRz6cVYuYKbn/Wnaqx3IzboFR8trc7xH3Q6iumoqS2xVoOWbumMX6ZN6CjSOE
+         Vkj5MbPlM9mTFX+aHK6TOJyPtCBxNe+5nzrNR60E07I2gicib/kYPB0tQaljaT2rDoCW
+         Unf9jQb5vfbEcMHFoeAn5wucSbE+PdkSXeHp9N7VCgwZOQ2QgmY3x0RXLpSFcagPZ6Jg
+         kMsifvCXBRwI758H2ommE9bBXY9eaPkULg9LXwb39zLDBwSj0Xjd66ZXPEJ8+A/QVWHn
+         rtVUuykpTodrl2irSMI2ygNj1ZSw3QX1gM7CyyoXoE1sbGLWbvm8MYccDGyW+MfI/5js
+         ApIw==
+X-Gm-Message-State: APjAAAWiLjbvqSwjAh+WPHj1nqFW38nd8PHd4CGLnGEg8p+GAWandK7V
+        rK8KqAoEW7mov983+Z9qAQABxQ==
+X-Google-Smtp-Source: APXvYqzc51XuCht++M4ETl3qnE2tsM6OOV5lrOa8+FmdxOB6VKu1S1xAEQXEr6+Qn0fnjFDRK43mvA==
+X-Received: by 2002:a65:65c5:: with SMTP id y5mr140011pgv.342.1565043990719;
+        Mon, 05 Aug 2019 15:26:30 -0700 (PDT)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id u6sm17486631pjx.23.2019.08.05.15.26.29
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 05 Aug 2019 15:26:29 -0700 (PDT)
+Date:   Mon, 5 Aug 2019 15:26:27 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc:     agross@kernel.org, robh+dt@kernel.org, will.deacon@arm.com,
+        robin.murphy@arm.com, joro@8bytes.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        david.brown@linaro.org
+Subject: Re: [PATCH v3 4/4] arm64: dts/sdm845: Enable FW implemented safe
+ sequence handler on MTP
+Message-ID: <20190805222627.GA2634@builder>
+References: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
+ <20190612071554.13573-5-vivek.gautam@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20190731194419.GB4084@kunai>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190612071554.13573-5-vivek.gautam@codeaurora.org>
+User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Wolfram,
+On Wed 12 Jun 00:15 PDT 2019, Vivek Gautam wrote:
 
-On 7/31/19 9:44 PM, Wolfram Sang wrote:
-> Hi Javier,
+> Indicate on MTP SDM845 that firmware implements handler to
+> TLB invalidate erratum SCM call where SAFE sequence is toggled
+> to achieve optimum performance on real-time clients, such as
+> display and camera.
 > 
-> thank you for providing the extra information.
+> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> (And Kieran, thanks for the patch!)
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index 78ec373a2b18..6a73d9744a71 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -2368,6 +2368,7 @@
+>  			compatible = "qcom,sdm845-smmu-500", "arm,mmu-500";
+>  			reg = <0 0x15000000 0 0x80000>;
+>  			#iommu-cells = <2>;
+> +			qcom,smmu-500-fw-impl-safe-errata;
+
+Looked back at this series and started to wonder if there there is a
+case where this should not be set? I mean we're after all adding this to
+the top 845 dtsi...
+
+How about making it the default in the driver and opt out of the errata
+once there is a need?
+
+Regards,
+Bjorn
+
+>  			#global-interrupts = <1>;
+>  			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>,
+>  				     <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
 > 
->> The other option is to remove i2c_of_match_device() and don't make OF match
->> to fallback to i2c_of_match_device_sysfs(). This is what happens in the ACPI
->> case, since i2c_device_match() just calls acpi_driver_match_device() directly
->> and doesn't have a wrapper function that fallbacks to sysfs matching.
->>
->> In this case an I2C device ID table would be required if the devices have to
->> be instantiated through sysfs. That way the I2C table would be used both for
->> auto-loading and also to match the device when it doesn't have an of_node.
-> 
-> That would probably mean that only a minority of drivers will not add an I2C
-> device ID table because it is easy to add an you get the sysfs feature?
->
-
-I believe so yes.
- 
-> Then we are back again with the situation that most drivers will have
-> multiple tables. With the minor change that the I2C device id table is
-> not required anymore by the core, but it will be just very useful to
-> have? Or?
->
-
-Yes, it won't be needed anymore if you are only instantiating all your devices
-from your firmware interface (e.g: OF, ACPI).
-
->> If the former is the correct way to solve this then the patch looks good to me.
->>
->> Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
-> 
-> For this actual patch from Kieran, I'd like to hear an opinion from the
-> people maintaining modpost. The aproach looks okay to me, yet I can't
-> tell how "easy" we are with adding new types like 'i2c_of'.
->
-
-As Masahiro-san mentioned, this approach will still require to add a new macro
-MODULE_DEVICE_TABLE(i2c_of, bar_of_match) so the OF device table is used twice.
-
-One to expose the "of:N*T*Cfoo,bar" and another one to expose it as "i2c:bar".
-
-I expect that many developers would miss adding this macro for new drivers that
-are DT-only and so sysfs instantiation would not work there. So whatever is the
-approach taken we should clearly document all this so drivers authors are aware.
-
-> Thanks everyone,
-> 
->    Wolfram
-> 
-
-Best regards,
--- 
-Javier Martinez Canillas
-Software Engineer - Desktop Hardware Enablement
-Red Hat
