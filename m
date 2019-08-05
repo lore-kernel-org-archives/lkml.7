@@ -2,90 +2,122 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 085C8C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 20:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA9EC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 20:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C868C214C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 20:18:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565036331;
-	bh=pRLkhlS1bIfbTqQwY8PiDF9HnJcn2wazvkc3C6n7Eyg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0k6cwUdkncZOrd4v6d6NKeQrfXpSAKanoiMsxmvtLddvREI4XSaka6CdFsfgyKD3T
-	 vpDmBgPWNGOMJP39jfZRbUrG0DUrNDKJVd95HZhJYdjYQ+gND4DhQqJ55C9X5eEoAU
-	 ShHTLj2hKAyYtk9xOU0ZLXAUYjZbLwMWoKWtXG2k=
+	by mail.kernel.org (Postfix) with ESMTP id DC3DE216F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 20:18:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SrmWhqPw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730631AbfHEUSu (ORCPT
+        id S1730644AbfHEUS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 16:18:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60646 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727460AbfHEUSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 16:18:50 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05DE520C01;
-        Mon,  5 Aug 2019 20:18:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565036329;
-        bh=pRLkhlS1bIfbTqQwY8PiDF9HnJcn2wazvkc3C6n7Eyg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=maijMol2GFjxuAcla8iNE9/Kt0UoL0FRBdXdMVirjWp7FNXwH7hBasdELw5rtfnOY
-         aYeTQ3GmRDyK+RWN+0nh/LOSXJqjLpThs+2PiyPpx2Gq+BnrhIWDPIa7H6DSjgwGAD
-         59IfsJfxnyB86nL24j7yj5JfnAWk+0A+aPC7XH9A=
-Date:   Mon, 5 Aug 2019 22:18:47 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jari Ruusu <jariruusu@users.sourceforge.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH 4.9 00/42] 4.9.188-stable review
-Message-ID: <20190805201847.GA31714@kroah.com>
-References: <20190805124924.788666484@linuxfoundation.org>
- <5D488D55.B84FC098@users.sourceforge.net>
+        Mon, 5 Aug 2019 16:18:59 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35318 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727460AbfHEUS6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 16:18:58 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n4so5022575pgv.2
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 13:18:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Tjw6rza1ptPRGuXtBmSB7rfUryE1iTlxWybyEMkdZlQ=;
+        b=SrmWhqPwtdCRRXfHAtUvVBKUcU9eiBNfK+41ptlvTZ/K23z6re44RYzQ/QPhZhHNBh
+         fbXoTxoUzzePS7v3l8I0u6iO3mtQyA9aBdPzpZ8ii0vbqRBSyW/qNjrhZI2+90X+jS1A
+         dJlLJPteTrVNLaeI8Un3LiI5jCmGxT8q42M/s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Tjw6rza1ptPRGuXtBmSB7rfUryE1iTlxWybyEMkdZlQ=;
+        b=IeHlGN/XVaYXaoUf8Epf50srBMwxfSmrjC3oS7Yf53MDwzT9uZdg0sv69p0fDIx8Ke
+         PqA23v6Wx0L3PiEumD0N1x0cRgsqJ+DN+OL8uKm4Mi9BV7yaO9dfGMqa1wxOKpTUlj8F
+         /0VVJBKfAeyvyU3H/wdogQioA/43g+PLfyqjAq6xiqzaYKfaoW7cm58m5Y6D7j0HPRMQ
+         /tbtN4qiRuFfk8qooC/Qh4x/Q9BfmVLNF8arhnFO6rly4n7LxZkVUjfJWcBjEFiBy+PB
+         5NBIVmIcUD6RZTIJONa3bs8XBWp809P/jqYCVLra3t/FelvCcK1Gq2Y7qSNGU2G7RTr+
+         Y4yw==
+X-Gm-Message-State: APjAAAWRIDDaJ6K2z36B/MgXe2MlZjdLHLt3bePxjj83zUiypWg79EBm
+        RE/oEw3vnwnEAjLibSyP+BTipCSy0XE=
+X-Google-Smtp-Source: APXvYqz1+b3sw44gfL4a0Lk4PCEX+UQhl9biuK7/DxHHIcKCbRrLwq4eCt58OpEgls1iWSn++h6RIg==
+X-Received: by 2002:a65:5a8c:: with SMTP id c12mr26556335pgt.73.1565036338089;
+        Mon, 05 Aug 2019 13:18:58 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id u7sm76884943pgr.94.2019.08.05.13.18.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 05 Aug 2019 13:18:57 -0700 (PDT)
+Date:   Mon, 5 Aug 2019 13:18:56 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Dominik Brodowski <linux@dominikbrodowski.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pcmcia: db1xxx_ss: Mark expected switch fall-throughs
+Message-ID: <201908051318.0884AE3F@keescook>
+References: <20190805194942.GA15816@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5D488D55.B84FC098@users.sourceforge.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190805194942.GA15816@embeddedor>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 11:11:01PM +0300, Jari Ruusu wrote:
-> Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 4.9.188 release.
+On Mon, Aug 05, 2019 at 02:49:42PM -0500, Gustavo A. R. Silva wrote:
+> Mark switch cases where we are expecting to fall through.
 > 
-> Peter Zijlstra's "x86/atomic: Fix smp_mb__{before,after}_atomic()"
-> upstream commit 69d927bba39517d0980462efc051875b7f4db185 seems to
-> be missing/lost from 4.9 and older stable kernels.
+> This patch fixes the following warnings (Building: db1xxx_defconfig mips):
 > 
-> That patch has 10 hunks, first one of those does not apply cleanly to
-> 4.9 kernel because it attempts to modify Documentation/atomic_t.txt
-> file which does not exist in older kernels. Other 9 hunks apply with
-> small offsets and fuzz, but modifications find their correct places anyway.
-> Those other 9 hunks are the important ones, first hunk can be ignored.
+> drivers/pcmcia/db1xxx_ss.c:257:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+> drivers/pcmcia/db1xxx_ss.c:269:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
 > 
-> Greg,
-> Please take Peter Zijlstra's original patch and "force" apply it like this
-> to 4.9 kernels:
-> 
->   patch -p1 -f <ORIGINAL.patch
-> 
-> and for 4.4 kernels like this:
-> 
->   cat ORIGINAL.patch | sed -e 's/__smp_mb__/smp_mb__/' | patch -p1 -f -l
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Can you send properly backported and tested patches?
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-thanks,
+-Kees
 
-greg k-h
+> ---
+>  drivers/pcmcia/db1xxx_ss.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/pcmcia/db1xxx_ss.c b/drivers/pcmcia/db1xxx_ss.c
+> index eb6168e6ac43..590e594092f2 100644
+> --- a/drivers/pcmcia/db1xxx_ss.c
+> +++ b/drivers/pcmcia/db1xxx_ss.c
+> @@ -255,8 +255,10 @@ static int db1x_pcmcia_configure(struct pcmcia_socket *skt,
+>  	switch (state->Vcc) {
+>  	case 50:
+>  		++v;
+> +		/* fall through */
+>  	case 33:
+>  		++v;
+> +		/* fall through */
+>  	case 0:
+>  		break;
+>  	default:
+> @@ -267,9 +269,11 @@ static int db1x_pcmcia_configure(struct pcmcia_socket *skt,
+>  	switch (state->Vpp) {
+>  	case 12:
+>  		++p;
+> +		/* fall through */
+>  	case 33:
+>  	case 50:
+>  		++p;
+> +		/* fall through */
+>  	case 0:
+>  		break;
+>  	default:
+> -- 
+> 2.22.0
+> 
+
+-- 
+Kees Cook
