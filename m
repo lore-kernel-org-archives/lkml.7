@@ -2,62 +2,52 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09041C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 990DFC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1A86216B7
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:22:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 703A82173B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:22:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011351;
-	bh=njhFZQxy19PcglwTow94+N5gzFX0PX+0iAdPg690j6M=;
+	s=default; t=1565011355;
+	bh=7WcCz3o4e2Hfs+qAR5ZW1cCLpsX3jnj7fAZ4w3TKjwk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q3JoQR8kSiA+DZTA6LNoNkRVHRblU8nMKXuNg3jrXX4Il0sPG3oJwV57w7NgEOBjx
-	 biLfG4C6LW6+fQfkCmDzB5l1G9iyVU8uk1DEJ/6QR4pR2kJi3jgzt5FJjuBAZVzJJH
-	 Mtr6WPyTYUt020e7GE3ofPp6u55vTo7vCFwu2HI0=
+	b=y6f0fs7VYwLggYjKZpzTWBXL5lrzZ1wXeOAgmWxS+onQheGLYCUAqQzoFAEFBuOfj
+	 iG4yDS8rQDHCuIRYN4S5FBjk6V5duELIrL5QMgkHfrOtsoMav2VCLDbM2l6EeXQNiR
+	 AhMc5KB/S5nPFnkFRcRTewxWyNEKNI2bIh8XFM2k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730697AbfHENW3 (ORCPT
+        id S1730703AbfHENWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:22:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58840 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:22:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730679AbfHENWZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:22:25 -0400
+        id S1730696AbfHENWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:22:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 140D02067D;
-        Mon,  5 Aug 2019 13:22:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29C4820657;
+        Mon,  5 Aug 2019 13:22:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011344;
-        bh=njhFZQxy19PcglwTow94+N5gzFX0PX+0iAdPg690j6M=;
+        s=default; t=1565011349;
+        bh=7WcCz3o4e2Hfs+qAR5ZW1cCLpsX3jnj7fAZ4w3TKjwk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gm2YWdTUXVGtM/uQ0HM39xoekg1c9ZDWzIAMnV7HCWxVRjiMWYCMMTePKiEtVqsoI
-         b5XcYNYZxJY/w4v7tYeGhw28A1J1Etb/wUp6Wyl5V/3QlHE++FbRctVm8xo+Bh48Jo
-         oqNAF7I+tErcU8X6BdhmGexxHxwO48G2crU1pZKo=
+        b=qZ1EyIHAOTzBBh6pKBx5faL7y+4IZOl/5x5/WcVAgfV69WoYTPwVuVlfbm0CfSLAf
+         PwTr/N5Fzaj6DZeo6D8otkpzKqHXF7y+ZivHBCl/xES8Vf+jlkXgqOnYCe1l3DSmeP
+         ul9UjQe7tPzCk3BQWTelnMoMezTOIbkzYFMJbiyE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sam Protsenko <semen.protsenko@linaro.org>,
-        Jan Harkes <jaharkes@cs.cmu.edu>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Colin Ian King <colin.king@canonical.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        David Howells <dhowells@redhat.com>,
-        Fabian Frederick <fabf@skynet.be>,
-        Mikko Rapeli <mikko.rapeli@iki.fi>,
-        Yann Droneaud <ydroneaud@opteya.com>,
-        Zhouyang Jia <jiazhouyang09@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 058/131] coda: fix build using bare-metal toolchain
-Date:   Mon,  5 Aug 2019 15:02:25 +0200
-Message-Id: <20190805124955.317098267@linuxfoundation.org>
+Subject: [PATCH 5.2 042/131] x86: kvm: avoid constant-conversion warning
+Date:   Mon,  5 Aug 2019 15:02:09 +0200
+Message-Id: <20190805124954.252567220@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -70,46 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b2a57e334086602be56b74958d9f29b955cd157f ]
+[ Upstream commit a6a6d3b1f867d34ba5bd61aa7bb056b48ca67cff ]
 
-The kernel is self-contained project and can be built with bare-metal
-toolchain.  But bare-metal toolchain doesn't define __linux__.  Because
-of this u_quad_t type is not defined when using bare-metal toolchain and
-codafs build fails.  This patch fixes it by defining u_quad_t type
-unconditionally.
+clang finds a contruct suspicious that converts an unsigned
+character to a signed integer and back, causing an overflow:
 
-Link: http://lkml.kernel.org/r/3cbb40b0a57b6f9923a9d67b53473c0b691a3eaa.1558117389.git.jaharkes@cs.cmu.edu
-Signed-off-by: Sam Protsenko <semen.protsenko@linaro.org>
-Signed-off-by: Jan Harkes <jaharkes@cs.cmu.edu>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Colin Ian King <colin.king@canonical.com>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Fabian Frederick <fabf@skynet.be>
-Cc: Mikko Rapeli <mikko.rapeli@iki.fi>
-Cc: Yann Droneaud <ydroneaud@opteya.com>
-Cc: Zhouyang Jia <jiazhouyang09@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+arch/x86/kvm/mmu.c:4605:39: error: implicit conversion from 'int' to 'u8' (aka 'unsigned char') changes value from -205 to 51 [-Werror,-Wconstant-conversion]
+                u8 wf = (pfec & PFERR_WRITE_MASK) ? ~w : 0;
+                   ~~                               ^~
+arch/x86/kvm/mmu.c:4607:38: error: implicit conversion from 'int' to 'u8' (aka 'unsigned char') changes value from -241 to 15 [-Werror,-Wconstant-conversion]
+                u8 uf = (pfec & PFERR_USER_MASK) ? ~u : 0;
+                   ~~                              ^~
+arch/x86/kvm/mmu.c:4609:39: error: implicit conversion from 'int' to 'u8' (aka 'unsigned char') changes value from -171 to 85 [-Werror,-Wconstant-conversion]
+                u8 ff = (pfec & PFERR_FETCH_MASK) ? ~x : 0;
+                   ~~                               ^~
+
+Add an explicit cast to tell clang that everything works as
+intended here.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://github.com/ClangBuiltLinux/linux/issues/95
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/coda.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/x86/kvm/mmu.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/coda.h b/include/linux/coda.h
-index d30209b9cef81..0ca0c83fdb1c4 100644
---- a/include/linux/coda.h
-+++ b/include/linux/coda.h
-@@ -58,8 +58,7 @@ Mellon the rights to redistribute these changes without encumbrance.
- #ifndef _CODA_HEADER_
- #define _CODA_HEADER_
+diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
+index 98f6e4f88b04c..8d95c81b2c821 100644
+--- a/arch/x86/kvm/mmu.c
++++ b/arch/x86/kvm/mmu.c
+@@ -4593,11 +4593,11 @@ static void update_permission_bitmask(struct kvm_vcpu *vcpu,
+ 		 */
  
--#if defined(__linux__)
- typedef unsigned long long u_quad_t;
--#endif
-+
- #include <uapi/linux/coda.h>
- #endif 
+ 		/* Faults from writes to non-writable pages */
+-		u8 wf = (pfec & PFERR_WRITE_MASK) ? ~w : 0;
++		u8 wf = (pfec & PFERR_WRITE_MASK) ? (u8)~w : 0;
+ 		/* Faults from user mode accesses to supervisor pages */
+-		u8 uf = (pfec & PFERR_USER_MASK) ? ~u : 0;
++		u8 uf = (pfec & PFERR_USER_MASK) ? (u8)~u : 0;
+ 		/* Faults from fetches of non-executable pages*/
+-		u8 ff = (pfec & PFERR_FETCH_MASK) ? ~x : 0;
++		u8 ff = (pfec & PFERR_FETCH_MASK) ? (u8)~x : 0;
+ 		/* Faults from kernel mode fetches of user pages */
+ 		u8 smepf = 0;
+ 		/* Faults from kernel mode accesses of user pages */
 -- 
 2.20.1
 
