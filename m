@@ -2,127 +2,78 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2B7C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC7B1C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74C112147A
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:12:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bnxLQDCy"
+	by mail.kernel.org (Postfix) with ESMTP id 89D252147A
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:12:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730951AbfHEWMo (ORCPT
+        id S1730977AbfHEWMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 18:12:44 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:15630 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727928AbfHEWMo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 18:12:44 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d48a9e50000>; Mon, 05 Aug 2019 15:12:53 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 05 Aug 2019 15:12:43 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 05 Aug 2019 15:12:43 -0700
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 5 Aug
- 2019 22:12:42 +0000
-Subject: Re: [PATCH] fs/io_uring.c: convert put_page() to put_user_page*()
-To:     Ira Weiny <ira.weiny@intel.com>, <john.hubbard@gmail.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jerome Glisse <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-fsdevel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>, <linux-block@vger.kernel.org>
-References: <20190805023206.8831-1-jhubbard@nvidia.com>
- <20190805220441.GA23416@iweiny-DESK2.sc.intel.com>
- <20190805220547.GB23416@iweiny-DESK2.sc.intel.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <dddaaf48-ce33-bdf4-86cb-47101d15eb6c@nvidia.com>
-Date:   Mon, 5 Aug 2019 15:12:42 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 5 Aug 2019 18:12:54 -0400
+Received: from mga11.intel.com ([192.55.52.93]:40026 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727928AbfHEWMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 18:12:54 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 15:12:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,350,1559545200"; 
+   d="scan'208";a="175707900"
+Received: from unknown (HELO localhost) ([10.252.52.83])
+  by fmsmga007.fm.intel.com with ESMTP; 05 Aug 2019 15:12:49 -0700
+Date:   Tue, 6 Aug 2019 01:12:43 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>
+Cc:     jejb@linux.ibm.com, zohar@linux.ibm.com, jgg@ziepe.ca,
+        tyhicks@canonical.com, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org, crazyt2019+lml@gmail.com,
+        nayna@linux.vnet.ibm.com, silviu.vlasceanu@huawei.com
+Subject: Re: [PATCH v3] KEYS: trusted: allow module init if TPM is inactive
+ or deactivated
+Message-ID: <20190805221243.chp4x5h2ow76nmz4@linux.intel.com>
+References: <20190805164427.17408-1-roberto.sassu@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20190805220547.GB23416@iweiny-DESK2.sc.intel.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1565043173; bh=LkAiUo1s42CQYX53EPRAoniYSqypvtE8JhgF1ACTWJI=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=bnxLQDCyTODHWtH8f0QtXRcjnq5ZXER2WiGKW2qcCasfwe2n/ifRFjrKGHdyPOppn
-         UvjQryp87QwL1sEmtQkKSxJDk/DZbvhqo+mDHQVATQ9bBcoKnLRVQZiK9wAKkQ0DdD
-         Vs8tjYGY4h6UomzREoaPHuLbgC1/FrH1JcqhpCHDAF0gBBzIrmrClfnBUsOwA0/j9u
-         PsvNWbbA7QRj75rUXOs05jEZLR3w7rJ4pZ8TDwjzAXpDSY7XDp7GNz9t5A3GCeDz0C
-         mK1bTIxkCObFVZpc/YzRFWLAFY8D44N5xtlkq8ihB9nG04UOs+yqRWzkLpjzL4j7XF
-         R+Vw9vNjJ4jPw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190805164427.17408-1-roberto.sassu@huawei.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/5/19 3:05 PM, Ira Weiny wrote:
-> On Mon, Aug 05, 2019 at 03:04:42PM -0700, 'Ira Weiny' wrote:
->> On Sun, Aug 04, 2019 at 07:32:06PM -0700, john.hubbard@gmail.com wrote:
->>> From: John Hubbard <jhubbard@nvidia.com>
->>>
->>> For pages that were retained via get_user_pages*(), release those pages
->>> via the new put_user_page*() routines, instead of via put_page() or
->>> release_pages().
->>>
->>> This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
->>> ("mm: introduce put_user_page*(), placeholder versions").
->>>
->>> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
->>> Cc: Jens Axboe <axboe@kernel.dk>
->>> Cc: linux-fsdevel@vger.kernel.org
->>> Cc: linux-block@vger.kernel.org
->>> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
->>
->> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+On Mon, Aug 05, 2019 at 06:44:27PM +0200, Roberto Sassu wrote:
+> Commit c78719203fc6 ("KEYS: trusted: allow trusted.ko to initialize w/o a
+> TPM") allows the trusted module to be loaded even if a TPM is not found, to
+> avoid module dependency problems.
 > 
-> <sigh>
+> However, trusted module initialization can still fail if the TPM is
+> inactive or deactivated. tpm_get_random() returns an error.
 > 
-> I meant to say I wrote the same patch ...  For this one...
+> This patch removes the call to tpm_get_random() and instead extends the PCR
+> specified by the user with zeros. The security of this alternative is
+> equivalent to the previous one, as either option prevents with a PCR update
+> unsealing and misuse of sealed data by a user space process.
 > 
-> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> Even if a PCR is extended with zeros, instead of random data, it is still
+> computationally infeasible to find a value as input for a new PCR extend
+> operation, to obtain again the PCR value that would allow unsealing.
 > 
+> Fixes: 240730437deb ("KEYS: trusted: explicitly use tpm_chip structure...")
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> Reviewed-by: Tyler Hicks <tyhicks@canonical.com>
+> Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
 
-Hi Ira,
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-Say, in case you or anyone else is up for it: there are still about 
-two thirds of the 34 patches that could use a reviewed-by, in this series:
-
-   https://lore.kernel.org/r/20190804224915.28669-1-jhubbard@nvidia.com
-
-...and even reviewing one or two quick ones would help--no need to look at
-all of them, especially if several people each look at a few.
-
-Also note that I'm keeping the gup_dma_core branch tracking the latest
-linux.git, and it seems to be working pretty well, aside from one warning
-that I haven't yet figured out (as per the latest commit):
-
-    git@github.com:johnhubbard/linux.git
-   
-
-thanks,
--- 
-John Hubbard
-NVIDIA
-
+/Jarkko
