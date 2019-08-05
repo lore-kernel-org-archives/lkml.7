@@ -2,76 +2,127 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02491C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2B7C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB3462147A
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74C112147A
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:12:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="MLe8jpNo"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bnxLQDCy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730925AbfHEWL4 (ORCPT
+        id S1730951AbfHEWMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 18:11:56 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:35648 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727928AbfHEWL4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 18:11:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=CJCz2EY5Ag3J5AxOUx+/pQJH9PKhgAABBlxZIzlms+Q=; b=MLe8jpNoVmGyLtQqBN2RDThUa+
-        m6e/MUFPCbgPn6MTNbLjZsmKIaD6FMr/E7xxqzZVA7QztM1UVG3Han3dTUxNq8kI7L/awdVMU3jTj
-        bTLNJUQaeciG0KXmfLJclxY5kHQpGPjbrAyJ0nJlCt2sT7gRhmeNZNd0nhwgqNGzDku8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hulCo-0001fO-Ci; Tue, 06 Aug 2019 00:11:50 +0200
-Date:   Tue, 6 Aug 2019 00:11:50 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, davem@davemloft.net,
-        robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com,
-        hkallweit1@gmail.com
-Subject: Re: [PATCH 10/16] net: phy: adin: add EEE translation layer for
- Clause 22
-Message-ID: <20190805221150.GE25700@lunn.ch>
-References: <20190805165453.3989-1-alexandru.ardelean@analog.com>
- <20190805165453.3989-11-alexandru.ardelean@analog.com>
+        Mon, 5 Aug 2019 18:12:44 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:15630 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727928AbfHEWMo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 18:12:44 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d48a9e50000>; Mon, 05 Aug 2019 15:12:53 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 05 Aug 2019 15:12:43 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 05 Aug 2019 15:12:43 -0700
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 5 Aug
+ 2019 22:12:42 +0000
+Subject: Re: [PATCH] fs/io_uring.c: convert put_page() to put_user_page*()
+To:     Ira Weiny <ira.weiny@intel.com>, <john.hubbard@gmail.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jerome Glisse <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-fsdevel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>, <linux-block@vger.kernel.org>
+References: <20190805023206.8831-1-jhubbard@nvidia.com>
+ <20190805220441.GA23416@iweiny-DESK2.sc.intel.com>
+ <20190805220547.GB23416@iweiny-DESK2.sc.intel.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <dddaaf48-ce33-bdf4-86cb-47101d15eb6c@nvidia.com>
+Date:   Mon, 5 Aug 2019 15:12:42 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190805165453.3989-11-alexandru.ardelean@analog.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190805220547.GB23416@iweiny-DESK2.sc.intel.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565043173; bh=LkAiUo1s42CQYX53EPRAoniYSqypvtE8JhgF1ACTWJI=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=bnxLQDCyTODHWtH8f0QtXRcjnq5ZXER2WiGKW2qcCasfwe2n/ifRFjrKGHdyPOppn
+         UvjQryp87QwL1sEmtQkKSxJDk/DZbvhqo+mDHQVATQ9bBcoKnLRVQZiK9wAKkQ0DdD
+         Vs8tjYGY4h6UomzREoaPHuLbgC1/FrH1JcqhpCHDAF0gBBzIrmrClfnBUsOwA0/j9u
+         PsvNWbbA7QRj75rUXOs05jEZLR3w7rJ4pZ8TDwjzAXpDSY7XDp7GNz9t5A3GCeDz0C
+         mK1bTIxkCObFVZpc/YzRFWLAFY8D44N5xtlkq8ihB9nG04UOs+yqRWzkLpjzL4j7XF
+         R+Vw9vNjJ4jPw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +static int adin_cl22_to_adin_reg(int devad, u16 cl22_regnum)
-> +{
-> +	struct clause22_mmd_map *m;
-> +	int i;
-> +
-> +	if (devad == MDIO_MMD_VEND1)
-> +		return cl22_regnum;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(clause22_mmd_map); i++) {
-> +		m = &clause22_mmd_map[i];
-> +		if (m->devad == devad && m->cl22_regnum == cl22_regnum)
-> +			return m->adin_regnum;
-> +	}
-> +
-> +	pr_err("No translation available for devad: %d reg: %04x\n",
-> +	       devad, cl22_regnum);
+On 8/5/19 3:05 PM, Ira Weiny wrote:
+> On Mon, Aug 05, 2019 at 03:04:42PM -0700, 'Ira Weiny' wrote:
+>> On Sun, Aug 04, 2019 at 07:32:06PM -0700, john.hubbard@gmail.com wrote:
+>>> From: John Hubbard <jhubbard@nvidia.com>
+>>>
+>>> For pages that were retained via get_user_pages*(), release those pages
+>>> via the new put_user_page*() routines, instead of via put_page() or
+>>> release_pages().
+>>>
+>>> This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
+>>> ("mm: introduce put_user_page*(), placeholder versions").
+>>>
+>>> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+>>> Cc: Jens Axboe <axboe@kernel.dk>
+>>> Cc: linux-fsdevel@vger.kernel.org
+>>> Cc: linux-block@vger.kernel.org
+>>> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+>>
+>> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 
+> <sigh>
+> 
+> I meant to say I wrote the same patch ...  For this one...
+> 
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> 
 
-phydev_err(). 
+Hi Ira,
 
-	      Andrew
+Say, in case you or anyone else is up for it: there are still about 
+two thirds of the 34 patches that could use a reviewed-by, in this series:
+
+   https://lore.kernel.org/r/20190804224915.28669-1-jhubbard@nvidia.com
+
+...and even reviewing one or two quick ones would help--no need to look at
+all of them, especially if several people each look at a few.
+
+Also note that I'm keeping the gup_dma_core branch tracking the latest
+linux.git, and it seems to be working pretty well, aside from one warning
+that I haven't yet figured out (as per the latest commit):
+
+    git@github.com:johnhubbard/linux.git
+   
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
+
