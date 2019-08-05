@@ -5,59 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A64B4C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4DD9C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CC5221743
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:16:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 881692075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:16:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010965;
-	bh=njhFZQxy19PcglwTow94+N5gzFX0PX+0iAdPg690j6M=;
+	s=default; t=1565010972;
+	bh=mh/16J6YfSdJ2lTmJ0XsrPlGVYth0/sK7TNK0AjCJNk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=crH1CU9BxetGk/vFBykuBbTOJpd8NpszzyYPZpUjb04DdYrq9kvHWrGptSxWmSWr/
-	 scrLzIDKRmbl8YVnepSMKa9e2O8oBEjNuREYII7oZR8ykmkkn3Oz+JFGmvTmzsR6VJ
-	 gCV5euNAKkQ2fVjL26gKFGDB48SgI6x/gY4X0sd0=
+	b=0x+pLy+tS6tv73ew2zqki2jUCZPateo3uMrB+DYZiQFOxiZ9tRsn9oMe1ucvDjigT
+	 5yDim0cSdb55s2YmuSJUqvYUVg+jIOW97kxW4Dm1POYEOV52Bh/sSBZ7PuBjSlIlwP
+	 dxCrsD9ROxBd/JITxgHpKsEsa/cSGQ5H9I6MVmUc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729863AbfHENQE (ORCPT
+        id S1729592AbfHENGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:16:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43306 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:06:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729611AbfHENG3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:06:29 -0400
+        id S1729548AbfHENGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:06:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A49A3206C1;
-        Mon,  5 Aug 2019 13:06:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53AD1214C6;
+        Mon,  5 Aug 2019 13:06:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010389;
-        bh=njhFZQxy19PcglwTow94+N5gzFX0PX+0iAdPg690j6M=;
+        s=default; t=1565010381;
+        bh=mh/16J6YfSdJ2lTmJ0XsrPlGVYth0/sK7TNK0AjCJNk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hPatOKDxLgcjXhmSmYN6RUjQpZ7ZNkEMFzSR8wH8vI4Bxc0bjdObV03KbGyHfAZ30
-         M0BZzjyC3kC+Q632Je2ionI6vqFgNbxQ2gb98NNVQI6c+UPrie5S9myubb/foJ+AJs
-         aNpYZo2505AVNhsJkz7h71uB2D0LdsZaN94DbsFQ=
+        b=KLm/Axfp95IUTwGVnYXnau2Pzq8SgdYWm0398GfdGA/zyasO79+pRTF23+Rdt2huv
+         sS385crQP8YNFYRHTReEE1uUcy2aYa8UihaMZno4dKG3bZbUU1Spb7rMzg4MjTKFLV
+         yenain/FTznraBP2N1w/DMvIGEyQfKYHtY7sbdSw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sam Protsenko <semen.protsenko@linaro.org>,
-        Jan Harkes <jaharkes@cs.cmu.edu>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Colin Ian King <colin.king@canonical.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        David Howells <dhowells@redhat.com>,
-        Fabian Frederick <fabf@skynet.be>,
-        Mikko Rapeli <mikko.rapeli@iki.fi>,
-        Yann Droneaud <ydroneaud@opteya.com>,
-        Zhouyang Jia <jiazhouyang09@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 20/42] coda: fix build using bare-metal toolchain
-Date:   Mon,  5 Aug 2019 15:02:46 +0200
-Message-Id: <20190805124927.323238471@linuxfoundation.org>
+Subject: [PATCH 4.9 17/42] x86: math-emu: Hide clang warnings for 16-bit overflow
+Date:   Mon,  5 Aug 2019 15:02:43 +0200
+Message-Id: <20190805124926.851261996@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124924.788666484@linuxfoundation.org>
 References: <20190805124924.788666484@linuxfoundation.org>
@@ -70,46 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b2a57e334086602be56b74958d9f29b955cd157f ]
+[ Upstream commit 29e7e9664aec17b94a9c8c5a75f8d216a206aa3a ]
 
-The kernel is self-contained project and can be built with bare-metal
-toolchain.  But bare-metal toolchain doesn't define __linux__.  Because
-of this u_quad_t type is not defined when using bare-metal toolchain and
-codafs build fails.  This patch fixes it by defining u_quad_t type
-unconditionally.
+clang warns about a few parts of the math-emu implementation
+where a 16-bit integer becomes negative during assignment:
 
-Link: http://lkml.kernel.org/r/3cbb40b0a57b6f9923a9d67b53473c0b691a3eaa.1558117389.git.jaharkes@cs.cmu.edu
-Signed-off-by: Sam Protsenko <semen.protsenko@linaro.org>
-Signed-off-by: Jan Harkes <jaharkes@cs.cmu.edu>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Colin Ian King <colin.king@canonical.com>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Fabian Frederick <fabf@skynet.be>
-Cc: Mikko Rapeli <mikko.rapeli@iki.fi>
-Cc: Yann Droneaud <ydroneaud@opteya.com>
-Cc: Zhouyang Jia <jiazhouyang09@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+arch/x86/math-emu/poly_tan.c:88:35: error: implicit conversion from 'int' to 'short' changes value from 49216 to -16320 [-Werror,-Wconstant-conversion]
+                                      (0x41 + EXTENDED_Ebias) | SIGN_Negative);
+                                      ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+arch/x86/math-emu/fpu_emu.h:180:58: note: expanded from macro 'setexponent16'
+ #define setexponent16(x,y)  { (*(short *)&((x)->exp)) = (y); }
+                                                      ~  ^
+arch/x86/math-emu/reg_constant.c:37:32: error: implicit conversion from 'int' to 'short' changes value from 49085 to -16451 [-Werror,-Wconstant-conversion]
+FPU_REG const CONST_PI2extra = MAKE_REG(NEG, -66,
+                               ^~~~~~~~~~~~~~~~~~
+arch/x86/math-emu/reg_constant.c:21:25: note: expanded from macro 'MAKE_REG'
+                ((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
+                 ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/x86/math-emu/reg_constant.c:48:28: error: implicit conversion from 'int' to 'short' changes value from 65535 to -1 [-Werror,-Wconstant-conversion]
+FPU_REG const CONST_QNaN = MAKE_REG(NEG, EXP_OVER, 0x00000000, 0xC0000000);
+                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/x86/math-emu/reg_constant.c:21:25: note: expanded from macro 'MAKE_REG'
+                ((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
+                 ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The code is correct as is, so add a typecast to shut up the warnings.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190712090816.350668-1-arnd@arndb.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/coda.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/x86/math-emu/fpu_emu.h      | 2 +-
+ arch/x86/math-emu/reg_constant.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/coda.h b/include/linux/coda.h
-index d30209b9cef81..0ca0c83fdb1c4 100644
---- a/include/linux/coda.h
-+++ b/include/linux/coda.h
-@@ -58,8 +58,7 @@ Mellon the rights to redistribute these changes without encumbrance.
- #ifndef _CODA_HEADER_
- #define _CODA_HEADER_
+diff --git a/arch/x86/math-emu/fpu_emu.h b/arch/x86/math-emu/fpu_emu.h
+index afbc4d805d66f..df5aee5402c44 100644
+--- a/arch/x86/math-emu/fpu_emu.h
++++ b/arch/x86/math-emu/fpu_emu.h
+@@ -176,7 +176,7 @@ static inline void reg_copy(FPU_REG const *x, FPU_REG *y)
+ #define setexponentpos(x,y) { (*(short *)&((x)->exp)) = \
+   ((y) + EXTENDED_Ebias) & 0x7fff; }
+ #define exponent16(x)         (*(short *)&((x)->exp))
+-#define setexponent16(x,y)  { (*(short *)&((x)->exp)) = (y); }
++#define setexponent16(x,y)  { (*(short *)&((x)->exp)) = (u16)(y); }
+ #define addexponent(x,y)    { (*(short *)&((x)->exp)) += (y); }
+ #define stdexp(x)           { (*(short *)&((x)->exp)) += EXTENDED_Ebias; }
  
--#if defined(__linux__)
- typedef unsigned long long u_quad_t;
--#endif
-+
- #include <uapi/linux/coda.h>
- #endif 
+diff --git a/arch/x86/math-emu/reg_constant.c b/arch/x86/math-emu/reg_constant.c
+index 00548354912f4..382093c5072b0 100644
+--- a/arch/x86/math-emu/reg_constant.c
++++ b/arch/x86/math-emu/reg_constant.c
+@@ -17,7 +17,7 @@
+ #include "control_w.h"
+ 
+ #define MAKE_REG(s, e, l, h) { l, h, \
+-		((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
++		(u16)((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
+ 
+ FPU_REG const CONST_1 = MAKE_REG(POS, 0, 0x00000000, 0x80000000);
+ #if 0
 -- 
 2.20.1
 
