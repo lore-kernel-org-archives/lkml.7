@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 931C5C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9B4C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60ED720657
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4101E20679
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:17:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011022;
-	bh=IRmCKvBNjhW16lDaceExpIb/y1TtnyVUPozA91dJ6mc=;
+	s=default; t=1565011029;
+	bh=9GKALGfakBMmmFRWnJvklXWYZ/z02A+qOIf/kJJ53Cs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=08aWi7dK3mAtZuviDcJjWxjyhEfW7UURq6Ve5SsVnpStaRzJuOx2tbwpPRJkYT3TK
-	 t6fP+P1pZALGWAzPsKWLHnlGTx7l8ggFv4p9+CrfTDtII5qfj0F9SgRjm0BgkFB45s
-	 iTxJSFnmszaKhZFQ8EpHnda5MPXpSeXdIR5phwjM=
+	b=fOS/zcInWsdDm2NyUe9MMjTSgrcQEHeRsukg1TeZWGldzFEeDh5S/TG8mbMjo9cAm
+	 44Gn02DtYbuF6A5kwfWUqEUUdgZf8L79tcNQKyLa4ZAEeT5xSjgFk9ASwed5KI5QOk
+	 ccpKf74+Ac5o5uCnmVFzBX9W572C01kDHmJVO8rQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729868AbfHENRB (ORCPT
+        id S1729908AbfHENRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:17:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41968 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:17:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729322AbfHENFr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:05:47 -0400
+        id S1729375AbfHENFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:05:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A753E2087B;
-        Mon,  5 Aug 2019 13:05:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6ECE12087B;
+        Mon,  5 Aug 2019 13:05:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010346;
-        bh=IRmCKvBNjhW16lDaceExpIb/y1TtnyVUPozA91dJ6mc=;
+        s=default; t=1565010340;
+        bh=9GKALGfakBMmmFRWnJvklXWYZ/z02A+qOIf/kJJ53Cs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gskjc8MhEdhSucwx0Hl4UCVjK5jltwfB4Ld8AeYALk/F4TvRPSy2MhGuJdArvhCwy
-         VZOqtUaYt4oZZSCe2LBNamNONXkSyfLg9KsAai8VlEB5dW+cRKGhV9LoPvliriZSiY
-         iKkugEuu3sLP0hAgvHOhUeDxMgbSEXYx0UcL/ZH8=
+        b=s2Q6a7lXjG+HOEBBniboTqtSPuIYzEC9z5NlqBQLZZ6/HrT9zr0AVC2lxKQ3lgqzM
+         XVfY703QhI0Q7S5tzv+9vbRZeK8Ks0y0UbGAGOB1NT86lCqNmlm5vHLI8Z6Ko0HkRN
+         pmfWo56rUiSorMPa60e3XmyR1EXoRHQ6z7mjdAt8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Haberland <sth@linux.ibm.com>,
-        Jan Hoeppner <hoeppner@linux.ibm.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.9 31/42] s390/dasd: fix endless loop after read unit address configuration
-Date:   Mon,  5 Aug 2019 15:02:57 +0200
-Message-Id: <20190805124928.656347732@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Wu <michael.wu@vatics.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 4.9 29/42] gpiolib: fix incorrect IRQ requesting of an active-low lineevent
+Date:   Mon,  5 Aug 2019 15:02:55 +0200
+Message-Id: <20190805124928.441011112@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124924.788666484@linuxfoundation.org>
 References: <20190805124924.788666484@linuxfoundation.org>
@@ -60,73 +59,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Haberland <sth@linux.ibm.com>
+From: Michael Wu <michael.wu@vatics.com>
 
-commit 41995342b40c418a47603e1321256d2c4a2ed0fb upstream.
+commit 223ecaf140b1dd1c1d2a1a1d96281efc5c906984 upstream.
 
-After getting a storage server event that causes the DASD device driver
-to update its unit address configuration during a device shutdown there is
-the possibility of an endless loop in the device driver.
+When a pin is active-low, logical trigger edge should be inverted to match
+the same interrupt opportunity.
 
-In the system log there will be ongoing DASD error messages with RC: -19.
+For example, a button pushed triggers falling edge in ACTIVE_HIGH case; in
+ACTIVE_LOW case, the button pushed triggers rising edge. For user space the
+IRQ requesting doesn't need to do any modification except to configuring
+GPIOHANDLE_REQUEST_ACTIVE_LOW.
 
-The reason is that the loop starting the ruac request only terminates when
-the retry counter is decreased to 0. But in the sleep_on function there are
-early exit paths that do not decrease the retry counter.
+For example, we want to catch the event when the button is pushed. The
+button on the original board drives level to be low when it is pushed, and
+drives level to be high when it is released.
 
-Prevent an endless loop by handling those cases separately.
+In user space we can do:
 
-Remove the unnecessary do..while loop since the sleep_on function takes
-care of retries by itself.
+	req.handleflags = GPIOHANDLE_REQUEST_INPUT;
+	req.eventflags = GPIOEVENT_REQUEST_FALLING_EDGE;
 
-Fixes: 8e09f21574ea ("[S390] dasd: add hyper PAV support to DASD device driver, part 1")
-Cc: stable@vger.kernel.org # 2.6.25+
-Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
-Reviewed-by: Jan Hoeppner <hoeppner@linux.ibm.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+	while (1) {
+		read(fd, &dat, sizeof(dat));
+		if (dat.id == GPIOEVENT_EVENT_FALLING_EDGE)
+			printf("button pushed\n");
+	}
+
+Run the same logic on another board which the polarity of the button is
+inverted; it drives level to be high when pushed, and level to be low when
+released. For this inversion we add flag GPIOHANDLE_REQUEST_ACTIVE_LOW:
+
+	req.handleflags = GPIOHANDLE_REQUEST_INPUT |
+		GPIOHANDLE_REQUEST_ACTIVE_LOW;
+	req.eventflags = GPIOEVENT_REQUEST_FALLING_EDGE;
+
+At the result, there are no any events caught when the button is pushed.
+By the way, button releasing will emit a "falling" event. The timing of
+"falling" catching is not expected.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Michael Wu <michael.wu@vatics.com>
+Tested-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/s390/block/dasd_alias.c |   22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+ drivers/gpio/gpiolib.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/s390/block/dasd_alias.c
-+++ b/drivers/s390/block/dasd_alias.c
-@@ -382,6 +382,20 @@ suborder_not_supported(struct dasd_ccw_r
- 	char msg_format;
- 	char msg_no;
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -817,9 +817,11 @@ static int lineevent_create(struct gpio_
+ 	}
  
-+	/*
-+	 * intrc values ENODEV, ENOLINK and EPERM
-+	 * will be optained from sleep_on to indicate that no
-+	 * IO operation can be started
-+	 */
-+	if (cqr->intrc == -ENODEV)
-+		return 1;
-+
-+	if (cqr->intrc == -ENOLINK)
-+		return 1;
-+
-+	if (cqr->intrc == -EPERM)
-+		return 1;
-+
- 	sense = dasd_get_sense(&cqr->irb);
- 	if (!sense)
- 		return 0;
-@@ -446,12 +460,8 @@ static int read_unit_address_configurati
- 	lcu->flags &= ~NEED_UAC_UPDATE;
- 	spin_unlock_irqrestore(&lcu->lock, flags);
+ 	if (eflags & GPIOEVENT_REQUEST_RISING_EDGE)
+-		irqflags |= IRQF_TRIGGER_RISING;
++		irqflags |= test_bit(FLAG_ACTIVE_LOW, &desc->flags) ?
++			IRQF_TRIGGER_FALLING : IRQF_TRIGGER_RISING;
+ 	if (eflags & GPIOEVENT_REQUEST_FALLING_EDGE)
+-		irqflags |= IRQF_TRIGGER_FALLING;
++		irqflags |= test_bit(FLAG_ACTIVE_LOW, &desc->flags) ?
++			IRQF_TRIGGER_RISING : IRQF_TRIGGER_FALLING;
+ 	irqflags |= IRQF_ONESHOT;
+ 	irqflags |= IRQF_SHARED;
  
--	do {
--		rc = dasd_sleep_on(cqr);
--		if (rc && suborder_not_supported(cqr))
--			return -EOPNOTSUPP;
--	} while (rc && (cqr->retries > 0));
--	if (rc) {
-+	rc = dasd_sleep_on(cqr);
-+	if (rc && !suborder_not_supported(cqr)) {
- 		spin_lock_irqsave(&lcu->lock, flags);
- 		lcu->flags |= NEED_UAC_UPDATE;
- 		spin_unlock_irqrestore(&lcu->lock, flags);
 
 
