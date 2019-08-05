@@ -2,95 +2,93 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 353F4C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 21:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 132F6C32751
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 21:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1EE82086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 21:23:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="RYsmyURo"
+	by mail.kernel.org (Postfix) with ESMTP id CEDF3216F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 21:29:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565040551;
+	bh=i/7VrDyauDUnOWh/jBVyZJrYNnTOpmGMAy5qLU3F4nw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=YwezO+UIQifhU/W/a7mcs+B+01va0AHwuf7GLI9e8vjP8C0a6tQC1wjZ51XAspugq
+	 RK1pKVpq0jYo1GRx2YPRVeYDsLvNAdp+TEmF7S2kgvCmA3hSxk1fPT8ivms6U32/0X
+	 lzmVemXqpeIPHhAX8/Uzhk6aSFZd7Ylo8NwhYEA4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730798AbfHEVXY (ORCPT
+        id S1730815AbfHEV3L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 17:23:24 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44618 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729383AbfHEVXX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 17:23:23 -0400
-Received: by mail-pf1-f193.google.com with SMTP id t16so40244105pfe.11
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 14:23:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=HSmoEp/ziBaJEwse1a0IgnFQRWhZvjEvYtd+aetfTSk=;
-        b=RYsmyURowgYjpUDb5ZIOXfn0WP3QsStZ/1uQEgQmPgOol8mkIRe8+9P5OEafLEeiYt
-         Z6RBz65k5km+Lzt82HrTM1fGDCgHTGldzrZoKygIekf6Yksg94J+Ga8KNpYKt1xicvnp
-         CkFWTQm14jHJd+HaS7tw0u10ibpRAlUozKxFP8b7CrzyTiXmli2xxYEMY4sBKWM9isui
-         HpsZJNaaz4R58Z0sCNFfp47Ryqg7JlHH017DylL7Tteb9Mt2f7EUa/ZSD6jzc+Ie1Eyz
-         ysVTifrLVw0OlKVH0TEUUOkWPScsNBr5wiObjKfZLRIVtE80xRp/qWNYWNXwdyJj49vf
-         LCaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=HSmoEp/ziBaJEwse1a0IgnFQRWhZvjEvYtd+aetfTSk=;
-        b=bbwpxmRQb/z1x618HEK0/KpIIEJPAirqJuVPYbQdJze+ns3jZsMjcerCLX1ddpEYgG
-         8BVkXSgifYLcpAHaBXcKTIH6GseYhm68hDh47Fa4GgDkNKHRxwoRF6wSqqEZP1OHuDCX
-         L9xlanY8Urf+dasbmzuYGobaHbSGq7Eez1G1SCZ6pRWB/s+xPXbJypDh1tQmQKL26H/Z
-         hCNW3hHj/mO0VWJZM576rMqs2WpEjFK+q2KVtGUINP4bchsTojBic7taxMOWL1YkKfUg
-         ZL8xgVCD6DZK/zZxR8WtXQmzANlztF+JoDAZWI1SxV2WbT2l/WndIl7CHnZLPo+2wUCB
-         dFbA==
-X-Gm-Message-State: APjAAAWjcPiINmP93ACnYH1NHha+MDYbUKagZSLyjXssFr/xeKZ+UWR6
-        IVCIhH6BkWC1MLWNSQbF/tugVQ==
-X-Google-Smtp-Source: APXvYqzGhD1zDypW1mivoRqjSzY9R2U5h7sDfLfd2LohUb5Pzua5KyGy9CGK99REHRRiokWBGH7BwQ==
-X-Received: by 2002:a63:6106:: with SMTP id v6mr21815264pgb.36.1565040202848;
-        Mon, 05 Aug 2019 14:23:22 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:7483:80d6:7f67:2672])
-        by smtp.googlemail.com with ESMTPSA id m13sm28025691pgn.57.2019.08.05.14.23.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 05 Aug 2019 14:23:21 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-amlogic@lists.infradead.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux.amoon@gmail.com, ottuzzi@gmail.com,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 0/2] ARM: dts: meson8b: persistent MAC address for Odroid-C1
-In-Reply-To: <20190727194647.15355-1-martin.blumenstingl@googlemail.com>
-References: <20190727194647.15355-1-martin.blumenstingl@googlemail.com>
-Date:   Mon, 05 Aug 2019 14:23:20 -0700
-Message-ID: <7hlfw7gvcn.fsf@baylibre.com>
+        Mon, 5 Aug 2019 17:29:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47088 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729834AbfHEV3K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 17:29:10 -0400
+Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF92D20B1F;
+        Mon,  5 Aug 2019 21:29:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565040549;
+        bh=i/7VrDyauDUnOWh/jBVyZJrYNnTOpmGMAy5qLU3F4nw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Q1588paOMRvR+ZBYtYE+yN2FFfcmHIDgRgd7iH1g0yCzhvVexdsOJIPYQTBMBp5OZ
+         6WlMScw0n8g9isPJDN2JqBuEO90jnLk+X/oAxgXqbW6ojPhdBy9b6bZhW7QstRPBjk
+         tOrIfnCooMM/BLNFIrB5H456SrU9o84P5zfumzOE=
+From:   Andy Lutomirski <luto@kernel.org>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Song Liu <songliubraving@fb.com>,
+        Kees Cook <keescook@chromium.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Lorenz Bauer <lmb@cloudflare.com>,
+        Jann Horn <jannh@google.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: [WIP 0/4] bpf: A bit of progress toward unprivileged use
+Date:   Mon,  5 Aug 2019 14:29:01 -0700
+Message-Id: <cover.1565040372.git.luto@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
+Other than the mknod() patch, this is not ready for prime time.  These
+patches try to make progress toward making bpf() more useful without
+privilege
 
-> This series makes Odroid-C1 use the MAC address which is programmed into
-> the eFuse.
+Andy Lutomirski (4):
+  bpf: Respect persistent map and prog access modes
+  bpf: Don't require mknod() permission to pin an object
+  bpf: Add a way to mark functions as requiring privilege
+  bpf: Allow creating all program types without privilege
 
-Queued for v5.4.
+ include/linux/bpf.h          | 30 +++++++++++++++-----
+ include/linux/bpf_verifier.h |  1 +
+ kernel/bpf/arraymap.c        |  8 +++++-
+ kernel/bpf/cgroup.c          |  6 +++-
+ kernel/bpf/inode.c           | 29 +++++++++++--------
+ kernel/bpf/syscall.c         | 54 +++++++++++++++++++++++++-----------
+ kernel/bpf/verifier.c        |  8 ++++++
+ kernel/events/core.c         |  5 ++--
+ kernel/trace/bpf_trace.c     |  1 +
+ net/core/dev.c               |  4 ++-
+ net/core/filter.c            |  8 ++++--
+ net/netfilter/xt_bpf.c       |  5 ++--
+ net/packet/af_packet.c       |  2 +-
+ 13 files changed, 115 insertions(+), 46 deletions(-)
 
-> build-time dependencies:
-> patches are based on top of "ARM: dts: meson8b: add VDDEE / mali-supply"
-> from [0]
->
-> runtime dependencies (without these a random MAC address is assigned,
-> just like before these patches):
-> - "nvmem: meson-mx-efuse: allow reading data smaller than word_size"
->   from [1]
-> - "net: stmmac: manage errors returned by of_get_mac_address()" from [2]
+-- 
+2.21.0
 
-Looks like the nvmem patch isn't queued yet, but AFAICT queuing these
-will have no adverse affect.
-
-Kevin
