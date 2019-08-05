@@ -2,130 +2,78 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F04B3C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 23:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0950C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 23:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A96702147A
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 23:49:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="wDvshsv1"
+	by mail.kernel.org (Postfix) with ESMTP id 8B89D20825
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 23:59:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731041AbfHEXtb (ORCPT
+        id S1731034AbfHEX7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 19:49:31 -0400
-Received: from gateway32.websitewelcome.com ([192.185.145.1]:43967 "EHLO
-        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728483AbfHEXtb (ORCPT
+        Mon, 5 Aug 2019 19:59:02 -0400
+Received: from mail-oi1-f199.google.com ([209.85.167.199]:49676 "EHLO
+        mail-oi1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728870AbfHEX7C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 19:49:31 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway32.websitewelcome.com (Postfix) with ESMTP id 3CAC0B4BCB
-        for <linux-kernel@vger.kernel.org>; Mon,  5 Aug 2019 18:49:30 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id umjKhHJd73Qi0umjKh0kO4; Mon, 05 Aug 2019 18:49:30 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=9li+YhxHo8+AujwqhsMZd9x+rcO10TXeZqodcMKx7qo=; b=wDvshsv1z+1fXiJZtY4PyLHNww
-        TX8STZuvfNMy65c16V2YqeJF4e8e/HsisSBSRMNAYeBJY66xYI/a5XrZfQP5O40mD+yeXeHv8mhGF
-        /W+BkPEqN7tqKgN4uGAsH1ddru52eG7RKMGdhbMA68N7j/W90G6NeAxsM+j0UroIzheN1fD8VsZFI
-        sA/k0BthKK/9Zm04QwPf2oMN8gM7gjlYuj/OllN0eoj7w5ZOZWXvKUz9mCf309++jkyGM+YRn46r6
-        5P/kqFvhARxma5FJxkO5SiwELWfYONvsDrQNS5FCEC9Xm8TJyI6CRkGjHeBRV/2krkJOt1cspawIF
-        VSuTx2Wg==;
-Received: from [187.192.11.120] (port=40464 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1humjJ-000yz7-1L; Mon, 05 Aug 2019 18:49:29 -0500
-Date:   Mon, 5 Aug 2019 18:49:28 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] drm/msm: Use struct_size() helper
-Message-ID: <20190805234928.GA2785@embeddedor>
+        Mon, 5 Aug 2019 19:59:02 -0400
+Received: by mail-oi1-f199.google.com with SMTP id m24so20019836oih.16
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 16:59:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=cCEYw1YNz6YzHWfgF679x03NeagqCuKTljhuC5ujasE=;
+        b=re1/pip6YgeLyfYr8B383WdgNFV2jKcpejJEBa13KlUdRtBMUvHO2ci6/wl6pDaJBH
+         X7Gc9DTf4Xj19s6v+XW04vJpMwRkXY/c5T2eULF3F0EccRkxFd8wPSK0esx/y6GywNJt
+         aFv9+BCQH1MMbsn2Kcrwpsp1hB9tV0AlC8Qtalr1l7kONzcnJyA+hA1+bV8b6VGoGvxE
+         fz6mnzSJ1D48LsCyfdhfyqOTBASSvKH1Id5NthifJ5RDEQw9Zk1ey65v+C3u3jrTtwOU
+         532PeHSebC5uJwPngDG2hrLcKphpaSs3sD9SVjEsioETkP8yDtsgWylKDap7HYd2fZZT
+         x5Ww==
+X-Gm-Message-State: APjAAAVHYxjg3ZQjwzPG5ze40XbQrN+L8ohXD5n2+7pNqPX6BmLwSH4q
+        2kYdMPdbKyFWRizOmAVBoX76NfEBezoIbzUIAk4kXaIpJ6na
+X-Google-Smtp-Source: APXvYqwnWehfXVv+cTgMbmC8JDtGgeKanwz/g7rHrVO82/VKU6rQkcOihO2EYpiU+OJoGnyjFk/K9Z7NbCjOUvfNijzTrmNmUP5+
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.11.120
-X-Source-L: No
-X-Exim-ID: 1humjJ-000yz7-1L
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [187.192.11.120]:40464
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-Received: by 2002:a05:6638:5:: with SMTP id z5mr1098412jao.58.1565049541088;
+ Mon, 05 Aug 2019 16:59:01 -0700 (PDT)
+Date:   Mon, 05 Aug 2019 16:59:01 -0700
+In-Reply-To: <000000000000d0df7f058f625d13@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f3dd5b058f677d84@google.com>
+Subject: Re: WARNING: refcount bug in blk_mq_free_request (2)
+From:   syzbot <syzbot+f4316dab9d4518b755eb@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, hch@lst.de, keith.busch@intel.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One of the more common cases of allocation size calculations is finding
-the size of a structure that has a zero-sized array at the end, along
-with memory for some number of elements for that array. For example:
+syzbot has bisected this bug to:
 
-struct msm_gem_submit {
-	...
-        struct {
-		...
-        } bos[0];
-};
+commit 12f5b93145450c750f315657ef239a314811aeeb
+Author: Keith Busch <keith.busch@intel.com>
+Date:   Tue May 29 13:52:28 2018 +0000
 
-Make use of the struct_size() helper instead of an open-coded version
-in order to avoid any potential type mistakes.
+     blk-mq: Remove generation seqeunce
 
-So, replace the following form:
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1263808c600000
+start commit:   e21a712a Linux 5.3-rc3
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=1163808c600000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1663808c600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a4c9e9f08e9e8960
+dashboard link: https://syzkaller.appspot.com/bug?extid=f4316dab9d4518b755eb
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=117a1906600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11aa11aa600000
 
-sizeof(*submit) + ((u64)nr_bos * sizeof(submit->bos[0]))
+Reported-by: syzbot+f4316dab9d4518b755eb@syzkaller.appspotmail.com
+Fixes: 12f5b9314545 ("blk-mq: Remove generation seqeunce")
 
-with:
-
-struct_size(submit, bos, nr_bos)
-
-This code was detected with the help of Coccinelle.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/gpu/drm/msm/msm_gem_submit.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/msm_gem_submit.c b/drivers/gpu/drm/msm/msm_gem_submit.c
-index 348f8c2be806..7c17c6154058 100644
---- a/drivers/gpu/drm/msm/msm_gem_submit.c
-+++ b/drivers/gpu/drm/msm/msm_gem_submit.c
-@@ -26,8 +26,8 @@ static struct msm_gem_submit *submit_create(struct drm_device *dev,
- 		uint32_t nr_cmds)
- {
- 	struct msm_gem_submit *submit;
--	uint64_t sz = sizeof(*submit) + ((u64)nr_bos * sizeof(submit->bos[0])) +
--		((u64)nr_cmds * sizeof(submit->cmd[0]));
-+	uint64_t sz = struct_size(submit, bos, nr_bos) +
-+				  ((u64)nr_cmds * sizeof(submit->cmd[0]));
- 
- 	if (sz > SIZE_MAX)
- 		return NULL;
--- 
-2.22.0
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
