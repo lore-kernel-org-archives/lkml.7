@@ -2,79 +2,106 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CABC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 225B7C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 360D52067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1DFD2173B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:14:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565010855;
+	bh=YwiC+hXW1ijrw9UQ2aF7Quevho4xFUQsbUEAordRrL0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0h0056MlVgop5gN1P4OblfiWNlc8qw6AdMQe08/7/ghY1yYQqDyM+2rVQIFCo6oTE
+	 898oRF/g5mfsTHnw3IlelCcXhoLJOWmwZ1UvGChq+9J50U6HTpDgY4lf5vAzy9O2Pk
+	 qeYe31LRazp8u1uiS1EgPXbrr98moYmfNaVABBk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730252AbfHENOD (ORCPT
+        id S1730009AbfHENIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:14:03 -0400
-Received: from mga03.intel.com ([134.134.136.65]:48347 "EHLO mga03.intel.com"
+        Mon, 5 Aug 2019 09:08:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729938AbfHENN6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:13:58 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 06:13:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,350,1559545200"; 
-   d="scan'208";a="192417675"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 05 Aug 2019 06:13:07 -0700
-Received: by lahna (sSMTP sendmail emulation); Mon, 05 Aug 2019 16:13:07 +0300
-Date:   Mon, 5 Aug 2019 16:13:06 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Keith Busch <keith.busch@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Kai Heng Feng <kai.heng.feng@canonical.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] PCI: pciehp: Do not disable interrupt twice on
- suspend
-Message-ID: <20190805131306.GQ2640@lahna.fi.intel.com>
-References: <20190618125051.2382-1-mika.westerberg@linux.intel.com>
- <20190804195306.gm4livsxkrleaciv@wunner.de>
+        id S1729988AbfHENIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:08:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 936C521872;
+        Mon,  5 Aug 2019 13:08:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565010497;
+        bh=YwiC+hXW1ijrw9UQ2aF7Quevho4xFUQsbUEAordRrL0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=v5pHoQHkPUao1LzH8GzM6u61JuRqnMErVimUVn6xm6QyLBt8dbp+wUdHKUDcV+kj0
+         wSX4lcG2X32+FvJsbfDJtRaKn3swn253OTN4W/+qj+8B/vjvjeV/qjBRx+o+GGW5d4
+         M5isa2kJrLAR3fWVoVdL8l9WyClzNHg5j/X8lqmg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Yishai Hadas <yishaih@mellanox.com>,
+        Artemy Kovalyov <artemyko@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.14 47/53] IB/mlx5: Move MRs to a kernel PD when freeing them to the MR cache
+Date:   Mon,  5 Aug 2019 15:03:12 +0200
+Message-Id: <20190805124933.152431582@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190805124927.973499541@linuxfoundation.org>
+References: <20190805124927.973499541@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190804195306.gm4livsxkrleaciv@wunner.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 04, 2019 at 09:53:06PM +0200, Lukas Wunner wrote:
-> On Tue, Jun 18, 2019 at 03:50:50PM +0300, Mika Westerberg wrote:
-> > @@ -313,10 +332,12 @@ static struct pcie_port_service_driver hpdriver_portdrv = {
-> >  	.remove		= pciehp_remove,
-> >  
-> >  #ifdef	CONFIG_PM
-> > +#ifdef	CONFIG_PM_SLEEP
-> >  	.suspend	= pciehp_suspend,
-> >  	.resume_noirq	= pciehp_resume_noirq,
-> > +#endif
-> >  	.resume		= pciehp_resume,
-> > -	.runtime_suspend = pciehp_suspend,
-> > +	.runtime_suspend = pciehp_runtime_suspend,
-> >  	.runtime_resume	= pciehp_runtime_resume,
-> >  #endif	/* PM */
-> >  };
-> 
-> Hm, why isn't ".resume" part of the "#ifdef CONFIG_PM_SLEEP" section?
+From: Yishai Hadas <yishaih@mellanox.com>
 
-Good point. I'll move it there.
+commit 9ec4483a3f0f71a228a5933bc040441322bfb090 upstream.
+
+Fix unreg_umr to move the MR to a kernel owned PD (i.e. the UMR PD) which
+can't be accessed by userspace.
+
+This ensures that nothing can continue to access the MR once it has been
+placed in the kernels cache for reuse.
+
+MRs in the cache continue to have their HW state, including DMA tables,
+present. Even though the MR has been invalidated, changing the PD provides
+an additional layer of protection against use of the MR.
+
+Link: https://lore.kernel.org/r/20190723065733.4899-5-leon@kernel.org
+Cc: <stable@vger.kernel.org> # 3.10
+Fixes: e126ba97dba9 ("mlx5: Add driver for Mellanox Connect-IB adapters")
+Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
+Reviewed-by: Artemy Kovalyov <artemyko@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/infiniband/hw/mlx5/mr.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+--- a/drivers/infiniband/hw/mlx5/mr.c
++++ b/drivers/infiniband/hw/mlx5/mr.c
+@@ -1305,8 +1305,10 @@ static int unreg_umr(struct mlx5_ib_dev
+ 	if (mdev->state == MLX5_DEVICE_STATE_INTERNAL_ERROR)
+ 		return 0;
+ 
+-	umrwr.wr.send_flags = MLX5_IB_SEND_UMR_DISABLE_MR;
++	umrwr.wr.send_flags = MLX5_IB_SEND_UMR_DISABLE_MR |
++			      MLX5_IB_SEND_UMR_UPDATE_PD_ACCESS;
+ 	umrwr.wr.opcode = MLX5_IB_WR_UMR;
++	umrwr.pd = dev->umrc.pd;
+ 	umrwr.mkey = mr->mmkey.key;
+ 	umrwr.ignore_free_state = 1;
+ 
+
+
