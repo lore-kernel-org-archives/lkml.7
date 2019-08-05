@@ -2,153 +2,102 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB1ECC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DC8C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A11A820651
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:26:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B39FD20651
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:26:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011580;
-	bh=mgBiOlhHTK7qh+vZs/EDlJVRM6VssQoHvpI2drPK8Os=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=qINO3VDdrkoe947Hnk/2kbBsFLmweGuc7CcvzdTFsO1ouiJthlBB7lh1Xl5OmUUfs
-	 NG9pc+Bu/VY6VdiH1kycwoitg5JhcAIy5hQ/lrSLpsJkmqPHn4ZNr46GjMhYNLZzoI
-	 4Li4MRDiBwWiRD5RDssDxIECpI4tDMa7gs/C1nD0=
+	s=default; t=1565011583;
+	bh=kz4IhatFXf46gUFuUUXsCZznBc6ohCoNL4N8twIq4lI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jzB5hR/8Zb7IyYC43NdrDXrDotDHqC96lpjvvlRnJIW3QUOLGfx40ecJjkabzE3fo
+	 bRDbIzFembGPEPChnA+Lx/8TNMGf1vPSq4O3aMYdxm1udwxy36fXnYR51U+PFi305E
+	 j7tPPD8eN0r/AyxebMxP39uFOrw5Q0YbRskgBWpI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731418AbfHEN0P (ORCPT
+        id S1731447AbfHEN0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:26:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:48942 "EHLO foss.arm.com"
+        Mon, 5 Aug 2019 09:26:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731391AbfHEN0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:26:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4AE44337;
-        Mon,  5 Aug 2019 06:26:10 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 97F263F706;
-        Mon,  5 Aug 2019 06:26:08 -0700 (PDT)
-Subject: Re: [PATCH 0/9] arm64: Stolen time support
-To:     Steven Price <steven.price@arm.com>
-Cc:     kvm@vger.kernel.org,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        linux-doc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
-        Julien Thierry <julien.thierry.kdev@gmail.com>
-References: <20190802145017.42543-1-steven.price@arm.com>
- <20190803190522.5fec8f7d@why> <6789f477-8ab5-cc54-1ad2-8627917b07c9@arm.com>
-From:   Marc Zyngier <maz@kernel.org>
-Organization: Approximate
-Message-ID: <e36e8baa-7c8b-ca95-95a7-7411599fa0b0@kernel.org>
-Date:   Mon, 5 Aug 2019 14:26:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1731395AbfHEN0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:26:16 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9E8220651;
+        Mon,  5 Aug 2019 13:26:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565011575;
+        bh=kz4IhatFXf46gUFuUUXsCZznBc6ohCoNL4N8twIq4lI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jZFBe8/AkcnYLk4tfbGogE+A4zQ0BR0UMJUVmfqchUwAsDiE6efqFyuP3Ir8Qg1ig
+         gmJQojfPE/+PfpNaalnSGUO40Eb6vNrXCRcf6Av4J8cybgTrLUDoEmp+dimzgnfdis
+         DZc2AIoV0oFKPdKPMxAGGwdcthYKIp+dUcpU0jG4=
+Date:   Mon, 5 Aug 2019 15:06:21 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] USB: Disable USB2 LPM at shutdown
+Message-ID: <20190805130621.GA25026@kroah.com>
+References: <Pine.LNX.4.44L0.1906061013490.1641-100000@iolanthe.rowland.org>
+ <46147522-7BC2-4C30-B3E5-6568E9642982@canonical.com>
+ <27A5C1CC-E0A4-4CAF-B81E-90EE76C8A887@canonical.com>
 MIME-Version: 1.0
-In-Reply-To: <6789f477-8ab5-cc54-1ad2-8627917b07c9@arm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <27A5C1CC-E0A4-4CAF-B81E-90EE76C8A887@canonical.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/08/2019 14:06, Steven Price wrote:
-> On 03/08/2019 19:05, Marc Zyngier wrote:
->> On Fri,  2 Aug 2019 15:50:08 +0100
->> Steven Price <steven.price@arm.com> wrote:
->>
->> Hi Steven,
->>
->>> This series add support for paravirtualized time for arm64 guests and
->>> KVM hosts following the specification in Arm's document DEN 0057A:
->>>
->>> https://developer.arm.com/docs/den0057/a
->>>
->>> It implements support for stolen time, allowing the guest to
->>> identify time when it is forcibly not executing.
->>>
->>> It doesn't implement support for Live Physical Time (LPT) as there are
->>> some concerns about the overheads and approach in the above
->>> specification, and I expect an updated version of the specification to
->>> be released soon with just the stolen time parts.
->>
->> Thanks for posting this.
->>
->> My current concern with this series is around the fact that we allocate
->> memory from the kernel on behalf of the guest. It is the first example
->> of such thing in the ARM port, and I can't really say I'm fond of it.
->>
->> x86 seems to get away with it by having the memory allocated from
->> userspace, why I tend to like more. Yes, put_user is more
->> expensive than a straight store, but this isn't done too often either.
->>
->> What is the rational for your current approach?
+On Mon, Aug 05, 2019 at 08:58:33PM +0800, Kai-Heng Feng wrote:
+> Hi Greg,
 > 
-> As I see it there are 3 approaches that can be taken here:
+> at 17:22, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
 > 
-> 1. Hypervisor allocates memory and adds it to the virtual machine. This
-> means that everything to do with the 'device' is encapsulated behind the
-> KVM_CREATE_DEVICE / KVM_[GS]ET_DEVICE_ATTR ioctls. But since we want the
-> stolen time structure to be fast it cannot be a trapping region and has
-> to be backed by real memory - in this case allocated by the host kernel.
+> > at 22:17, Alan Stern <stern@rowland.harvard.edu> wrote:
+> > > 
+> > > I agree with Kai-Heng, this seems like a fairly light-weight solution
+> > > to a reasonable problem.
+> > 
+> > Thanks for your review.
+> > 
+> > > As to the issue of how much it will slow down system shutdowns, I have
+> > > no idea.  Probably not very much, unless somebody has an unusually
+> > > large number of USB devices plugged in, but only testing can give a
+> > > real answer.
+> > 
+> > In addition to that, only USB2 devices that enable LPM will slow down
+> > shutdown process.
+> > Right now only internally connected USB2 devices enable LPM, so the
+> > numbers are even lower.
+> > 
+> > > I suppose we could add an HCD flag for host controllers which require
+> > > this workaround.  Either way, it's probably not a very big deal.
+> > 
+> > IMO this is not necessary. Only xHCI that reports hw_lpm_support will be
+> > affected. At least for PC, this only became true after Whiskey Lake.
+> > 
+> > Kai-Heng
+> > 
+> > > Alan Stern
 > 
-> 2. Host user space allocates memory. Similar to above, but this time
-> user space needs to manage the memory region as well as the usual
-> KVM_CREATE_DEVICE dance. I've no objection to this, but it means
-> kvmtool/QEMU needs to be much more aware of what is going on (e.g. how
-> to size the memory region).
-> 
-> 3. Guest kernel "donates" the memory to the hypervisor for the
-> structure. As far as I'm aware this is what x86 does. The problems I see
-> this approach are:
-> 
->  a) kexec becomes much more tricky - there needs to be a disabling
-> mechanism for the guest to stop the hypervisor scribbling on memory
-> before starting the new kernel.
-> 
->  b) If there is more than one entity that is interested in the
-> information (e.g. firmware and kernel) then this requires some form of
-> arbitration in the guest because the hypervisor doesn't want to have to
-> track an arbitrary number of regions to update.
-> 
->  c) Performance can suffer if the host kernel doesn't have a suitably
-> aligned/sized area to use. As you say - put_user() is more expensive.
-> The structure is updated on every return to the VM.
-> 
-> 
-> Of course x86 does prove the third approach can work, but I'm not sure
-> which is actually better. Avoid the kexec cancellation requirements was
-> the main driver of the current approach. Although many of the
-> conversations about this were also tied up with Live Physical Time which
-> adds its own complications.
+> This patch is included in Ubuntu’s kernel for a while now, and there’s no
+> regression report so far.
+> Please consider merge this patch.
 
-My current train of thoughts is around (2):
+I do not see a patch here at all, sorry.  Please resend it.
 
-- We don't need a new mechanism to track pages or deal with overlapping
-IPA ranges
-- We can get rid of the save/restore interface
-
-The drawback is that the amount of memory required per vcpu becomes ABI.
-I don't think that's a huge deal, as the hypervisor has the same
-contract with the guest.
-
-We also take a small hit with put_user(), but this is only done as a
-consequence of vcpu_load() (and not on every entry as you suggest
-above). It'd be worth quantifying this overhead before making any
-decision one way or another.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead, it just smells funny...
+greg k-h
