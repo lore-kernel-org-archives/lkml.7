@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB7FDC32751
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16945C32751
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D9A021734
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:01:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE48921734
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:02:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="NYiy+O4W"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="eyg3ypmE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730367AbfHESB5 (ORCPT
+        id S1730401AbfHESCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 14:01:57 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:56220 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730074AbfHESBf (ORCPT
+        Mon, 5 Aug 2019 14:02:05 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:56208 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730044AbfHESBf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 5 Aug 2019 14:01:35 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id F3839C0A6D;
-        Mon,  5 Aug 2019 18:01:33 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 2E931C0A76;
+        Mon,  5 Aug 2019 18:01:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1565028094; bh=HncnrGiwYBaY8cLHuvwXP6jFPNRWl7ryxSwIDGsQp08=;
+        t=1565028094; bh=c6/+CjaQdhRXDAwCh48aWgxLqmnHSIYaE8l/rR8DCHQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=NYiy+O4WByCxUF7pCBcYHi8OxsYbvBsDw7OHzbpEkA9cSgq1bK1JnqcnN4XUJzgxm
-         xVa0ezL+5IT1z6bZ0AOzqhHBHpPVhSaGgi4S6rzgyLnRHtnI1NwheMHI4/cLEzEz6d
-         8ugCjP+e8Qp2GEMGDTZB6Z4ZnU3XhUfJ5u7gKpFuEO/GHo/y9LfZLx/FBNG9Co8BiP
-         a2CtdCbBI7iNv54hsn+cKgK5VEPDZchgaq71J7qpkyk8w8uZMLDBy6mCJWyeC6abGN
-         lyl2XvhC2+CtoiM2JcYVr831VEne5mTuNTUFkmWwkU3RH1+ujH+U65TAybue3uwS4V
-         g/ahY1rCTF04A==
+        b=eyg3ypmET4bFF7x1nPnxljR0tUWQ1F93D96NbOsIijeNxjDI7AE1buoYPHnzt319M
+         cJRZm/KXbxJA9IN9RggItoZZC0dXFQWPuJcQHl2wmQCOFLigYrh+qg2BFUBlPjvONL
+         pN5tP3Oyg4hwCeRsV8ToAjzNgT7IKaEdy6u4Ka88llvDVD/bXZKCJ0tI/dFBeX7G2g
+         Ilw6N3LiWoeyW29sAkeEgvbzfSZaQYcY5S+K/2/gloGdDyTvF2ETaLiSp6IF70Vx2M
+         +gz/6a5R1FdURUUyermrXs3OarVBNacjjs+iAfo6yUtKT9u/fw4C06XVwwwlYX2YDF
+         YTZY39zeXqaNw==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id B6C96A006F;
+        by mailhost.synopsys.com (Postfix) with ESMTP id E2D3FA007B;
         Mon,  5 Aug 2019 18:01:32 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
@@ -51,9 +51,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 06/10] net: stmmac: Implement RSS and enable it in XGMAC core
-Date:   Mon,  5 Aug 2019 20:01:19 +0200
-Message-Id: <e70981c111ac857a0bac77750bd69a3383d99ee0.1565027782.git.joabreu@synopsys.com>
+Subject: [PATCH net-next 10/10] net: stmmac: Implement Safety Features in XGMAC core
+Date:   Mon,  5 Aug 2019 20:01:23 +0200
+Message-Id: <94334d8fe76f2c457e3baf84a1d0b938664b5828.1565027782.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1565027782.git.joabreu@synopsys.com>
 References: <cover.1565027782.git.joabreu@synopsys.com>
@@ -64,8 +64,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement the RSS functionality and add the corresponding callbacks in
-XGMAC core.
+XGMAC also supports Safety Features. This patch implements the
+configuration and handling of this feature in XGMAC core.
 
 Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 ---
@@ -79,494 +79,376 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/common.h       |  5 ++
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     | 18 +++++-
- .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c    | 52 +++++++++++++++
- .../net/ethernet/stmicro/stmmac/dwxgmac2_descs.c   | 29 +++++++++
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c |  1 +
- drivers/net/ethernet/stmicro/stmmac/hwif.h         | 11 ++++
- drivers/net/ethernet/stmicro/stmmac/stmmac.h       |  9 +++
- .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c   | 75 ++++++++++++++++++++++
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 38 ++++++++++-
- include/linux/stmmac.h                             |  1 +
- 10 files changed, 236 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     |  26 ++
+ .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c    | 281 +++++++++++++++++++++
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c |   4 +
+ 3 files changed, 311 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
-index ed872eed1cab..45a997fe571c 100644
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -354,6 +354,7 @@ struct dma_features {
- 	unsigned int frpbs;
- 	unsigned int frpes;
- 	unsigned int addr64;
-+	unsigned int rssen;
- };
- 
- /* GMAC TX FIFO is 8K, Rx FIFO is 16K */
-@@ -381,6 +382,10 @@ struct dma_features {
- 
- #define JUMBO_LEN		9000
- 
-+/* Receive Side Scaling */
-+#define STMMAC_RSS_HASH_KEY_SIZE	40
-+#define STMMAC_RSS_MAX_TABLE_SIZE	256
-+
- extern const struct stmmac_desc_ops enh_desc_ops;
- extern const struct stmmac_desc_ops ndesc_ops;
- 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-index b77091161765..eb7c7726fcd6 100644
+index 29bbe8218600..3d8782f99f64 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-@@ -89,6 +89,7 @@
- #define XGMAC_HWFEAT_RWKSEL		BIT(6)
- #define XGMAC_HWFEAT_GMIISEL		BIT(1)
- #define XGMAC_HW_FEATURE1		0x00000120
-+#define XGMAC_HWFEAT_RSSEN		BIT(20)
- #define XGMAC_HWFEAT_TSOEN		BIT(18)
- #define XGMAC_HWFEAT_ADDR64		GENMASK(15, 14)
- #define XGMAC_HWFEAT_TXFIFOSIZE		GENMASK(10, 6)
-@@ -109,6 +110,17 @@
- #define XGMAC_DCS_SHIFT			16
- #define XGMAC_ADDRx_LOW(x)		(0x00000304 + (x) * 0x8)
- #define XGMAC_ARP_ADDR			0x00000c10
-+#define XGMAC_RSS_CTRL			0x00000c80
-+#define XGMAC_UDP4TE			BIT(3)
-+#define XGMAC_TCP4TE			BIT(2)
-+#define XGMAC_IP2TE			BIT(1)
-+#define XGMAC_RSSE			BIT(0)
-+#define XGMAC_RSS_ADDR			0x00000c88
-+#define XGMAC_RSSIA_SHIFT		8
-+#define XGMAC_ADDRT			BIT(2)
-+#define XGMAC_CT			BIT(1)
-+#define XGMAC_OB			BIT(0)
-+#define XGMAC_RSS_DATA			0x00000c8c
- #define XGMAC_TIMESTAMP_STATUS		0x00000d20
- #define XGMAC_TXTSC			BIT(15)
- #define XGMAC_TXTIMESTAMP_NSEC		0x00000d30
-@@ -125,8 +137,9 @@
- #define XGMAC_MTL_INT_STATUS		0x00001020
- #define XGMAC_MTL_RXQ_DMA_MAP0		0x00001030
- #define XGMAC_MTL_RXQ_DMA_MAP1		0x00001034
--#define XGMAC_QxMDMACH(x)		GENMASK((x) * 8 + 3, (x) * 8)
-+#define XGMAC_QxMDMACH(x)		GENMASK((x) * 8 + 7, (x) * 8)
- #define XGMAC_QxMDMACH_SHIFT(x)		((x) * 8)
-+#define XGMAC_QDDMACH			BIT(7)
- #define XGMAC_TC_PRTY_MAP0		0x00001040
+@@ -110,6 +110,12 @@
+ #define XGMAC_HWFEAT_RXCHCNT		GENMASK(15, 12)
+ #define XGMAC_HWFEAT_TXQCNT		GENMASK(9, 6)
+ #define XGMAC_HWFEAT_RXQCNT		GENMASK(3, 0)
++#define XGMAC_HW_FEATURE3		0x00000128
++#define XGMAC_HWFEAT_ASP		GENMASK(15, 14)
++#define XGMAC_MAC_DPP_FSM_INT_STATUS	0x00000150
++#define XGMAC_MAC_FSM_CONTROL		0x00000158
++#define XGMAC_PRTYEN			BIT(1)
++#define XGMAC_TMOUTEN			BIT(0)
+ #define XGMAC_MDIO_ADDR			0x00000200
+ #define XGMAC_MDIO_DATA			0x00000204
+ #define XGMAC_MDIO_C22P			0x00000220
+@@ -154,6 +160,16 @@
  #define XGMAC_TC_PRTY_MAP1		0x00001044
  #define XGMAC_PSTC(x)			GENMASK((x) * 8 + 7, (x) * 8)
-@@ -261,6 +274,9 @@
- #define XGMAC_RDES3_IOC			BIT(30)
- #define XGMAC_RDES3_LD			BIT(28)
- #define XGMAC_RDES3_CDA			BIT(27)
-+#define XGMAC_RDES3_RSV			BIT(26)
-+#define XGMAC_RDES3_L34T		GENMASK(23, 20)
-+#define XGMAC_RDES3_L34T_SHIFT		20
- #define XGMAC_RDES3_ES			BIT(15)
- #define XGMAC_RDES3_PL			GENMASK(13, 0)
- #define XGMAC_RDES3_TSD			BIT(6)
+ #define XGMAC_PSTC_SHIFT(x)		((x) * 8)
++#define XGMAC_MTL_ECC_CONTROL		0x000010c0
++#define XGMAC_MTL_SAFETY_INT_STATUS	0x000010c4
++#define XGMAC_MEUIS			BIT(1)
++#define XGMAC_MECIS			BIT(0)
++#define XGMAC_MTL_ECC_INT_ENABLE	0x000010c8
++#define XGMAC_RPCEIE			BIT(12)
++#define XGMAC_ECEIE			BIT(8)
++#define XGMAC_RXCEIE			BIT(4)
++#define XGMAC_TXCEIE			BIT(0)
++#define XGMAC_MTL_ECC_INT_STATUS	0x000010cc
+ #define XGMAC_MTL_TXQ_OPMODE(x)		(0x00001100 + (0x80 * (x)))
+ #define XGMAC_TQS			GENMASK(25, 16)
+ #define XGMAC_TQS_SHIFT			16
+@@ -218,6 +234,16 @@
+ #define XGMAC_TDPS			GENMASK(29, 0)
+ #define XGMAC_RX_EDMA_CTRL		0x00003044
+ #define XGMAC_RDPS			GENMASK(29, 0)
++#define XGMAC_DMA_SAFETY_INT_STATUS	0x00003064
++#define XGMAC_MCSIS			BIT(31)
++#define XGMAC_MSUIS			BIT(29)
++#define XGMAC_MSCIS			BIT(28)
++#define XGMAC_DEUIS			BIT(1)
++#define XGMAC_DECIS			BIT(0)
++#define XGMAC_DMA_ECC_INT_ENABLE	0x00003068
++#define XGMAC_DCEIE			BIT(1)
++#define XGMAC_TCEIE			BIT(0)
++#define XGMAC_DMA_ECC_INT_STATUS	0x0000306c
+ #define XGMAC_DMA_CH_CONTROL(x)		(0x00003100 + (0x80 * (x)))
+ #define XGMAC_PBLx8			BIT(16)
+ #define XGMAC_DMA_CH_TX_CONTROL(x)	(0x00003104 + (0x80 * (x)))
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-index bfbd5ae11540..04eec85acc59 100644
+index e2dbebeb59e9..19dfb72cab11 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-@@ -6,6 +6,7 @@
- 
- #include <linux/bitrev.h>
- #include <linux/crc32.h>
-+#include <linux/iopoll.h>
- #include "stmmac.h"
- #include "dwxgmac2.h"
- 
-@@ -439,6 +440,56 @@ static void dwxgmac2_set_mac_loopback(void __iomem *ioaddr, bool enable)
- 	writel(value, ioaddr + XGMAC_RX_CONFIG);
+@@ -530,6 +530,284 @@ static void dwxgmac2_update_vlan_hash(struct mac_device_info *hw, u32 hash,
+ 	}
  }
  
-+static int dwxgmac2_rss_write_reg(void __iomem *ioaddr, bool is_key, int idx,
-+				  u32 val)
++struct dwxgmac3_error_desc {
++	bool valid;
++	const char *desc;
++	const char *detailed_desc;
++};
++
++#define STAT_OFF(field)		offsetof(struct stmmac_safety_stats, field)
++
++static void dwxgmac3_log_error(struct net_device *ndev, u32 value, bool corr,
++			       const char *module_name,
++			       const struct dwxgmac3_error_desc *desc,
++			       unsigned long field_offset,
++			       struct stmmac_safety_stats *stats)
 +{
-+	u32 ctrl = 0;
++	unsigned long loc, mask;
++	u8 *bptr = (u8 *)stats;
++	unsigned long *ptr;
 +
-+	writel(val, ioaddr + XGMAC_RSS_DATA);
-+	ctrl |= idx << XGMAC_RSSIA_SHIFT;
-+	ctrl |= is_key ? XGMAC_ADDRT : 0x0;
-+	ctrl |= XGMAC_OB;
-+	writel(ctrl, ioaddr + XGMAC_RSS_ADDR);
++	ptr = (unsigned long *)(bptr + field_offset);
 +
-+	return readl_poll_timeout(ioaddr + XGMAC_RSS_ADDR, ctrl,
-+				  !(ctrl & XGMAC_OB), 100, 10000);
++	mask = value;
++	for_each_set_bit(loc, &mask, 32) {
++		netdev_err(ndev, "Found %s error in %s: '%s: %s'\n", corr ?
++				"correctable" : "uncorrectable", module_name,
++				desc[loc].desc, desc[loc].detailed_desc);
++
++		/* Update counters */
++		ptr[loc]++;
++	}
 +}
 +
-+static int dwxgmac2_rss_configure(struct mac_device_info *hw,
-+				  struct stmmac_rss *cfg, u32 num_rxq)
++static const struct dwxgmac3_error_desc dwxgmac3_mac_errors[32]= {
++	{ true, "ATPES", "Application Transmit Interface Parity Check Error" },
++	{ true, "DPES", "Descriptor Cache Data Path Parity Check Error" },
++	{ true, "TPES", "TSO Data Path Parity Check Error" },
++	{ true, "TSOPES", "TSO Header Data Path Parity Check Error" },
++	{ true, "MTPES", "MTL Data Path Parity Check Error" },
++	{ true, "MTSPES", "MTL TX Status Data Path Parity Check Error" },
++	{ true, "MTBUPES", "MAC TBU Data Path Parity Check Error" },
++	{ true, "MTFCPES", "MAC TFC Data Path Parity Check Error" },
++	{ true, "ARPES", "Application Receive Interface Data Path Parity Check Error" },
++	{ true, "MRWCPES", "MTL RWC Data Path Parity Check Error" },
++	{ true, "MRRCPES", "MTL RCC Data Path Parity Check Error" },
++	{ true, "CWPES", "CSR Write Data Path Parity Check Error" },
++	{ true, "ASRPES", "AXI Slave Read Data Path Parity Check Error" },
++	{ true, "TTES", "TX FSM Timeout Error" },
++	{ true, "RTES", "RX FSM Timeout Error" },
++	{ true, "CTES", "CSR FSM Timeout Error" },
++	{ true, "ATES", "APP FSM Timeout Error" },
++	{ true, "PTES", "PTP FSM Timeout Error" },
++	{ false, "UNKNOWN", "Unknown Error" }, /* 18 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 19 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 20 */
++	{ true, "MSTTES", "Master Read/Write Timeout Error" },
++	{ true, "SLVTES", "Slave Read/Write Timeout Error" },
++	{ true, "ATITES", "Application Timeout on ATI Interface Error" },
++	{ true, "ARITES", "Application Timeout on ARI Interface Error" },
++	{ true, "FSMPES", "FSM State Parity Error" },
++	{ false, "UNKNOWN", "Unknown Error" }, /* 26 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 27 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 28 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 29 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 30 */
++	{ true, "CPI", "Control Register Parity Check Error" },
++};
++
++static void dwxgmac3_handle_mac_err(struct net_device *ndev,
++				    void __iomem *ioaddr, bool correctable,
++				    struct stmmac_safety_stats *stats)
 +{
-+	void __iomem *ioaddr = hw->pcsr;
-+	u32 *key = (u32 *)cfg->key;
-+	int i, ret;
 +	u32 value;
 +
-+	value = readl(ioaddr + XGMAC_RSS_CTRL);
-+	if (!cfg->enable) {
-+		value &= ~XGMAC_RSSE;
-+		writel(value, ioaddr + XGMAC_RSS_CTRL);
++	value = readl(ioaddr + XGMAC_MAC_DPP_FSM_INT_STATUS);
++	writel(value, ioaddr + XGMAC_MAC_DPP_FSM_INT_STATUS);
++
++	dwxgmac3_log_error(ndev, value, correctable, "MAC",
++			   dwxgmac3_mac_errors, STAT_OFF(mac_errors), stats);
++}
++
++static const struct dwxgmac3_error_desc dwxgmac3_mtl_errors[32]= {
++	{ true, "TXCES", "MTL TX Memory Error" },
++	{ true, "TXAMS", "MTL TX Memory Address Mismatch Error" },
++	{ true, "TXUES", "MTL TX Memory Error" },
++	{ false, "UNKNOWN", "Unknown Error" }, /* 3 */
++	{ true, "RXCES", "MTL RX Memory Error" },
++	{ true, "RXAMS", "MTL RX Memory Address Mismatch Error" },
++	{ true, "RXUES", "MTL RX Memory Error" },
++	{ false, "UNKNOWN", "Unknown Error" }, /* 7 */
++	{ true, "ECES", "MTL EST Memory Error" },
++	{ true, "EAMS", "MTL EST Memory Address Mismatch Error" },
++	{ true, "EUES", "MTL EST Memory Error" },
++	{ false, "UNKNOWN", "Unknown Error" }, /* 11 */
++	{ true, "RPCES", "MTL RX Parser Memory Error" },
++	{ true, "RPAMS", "MTL RX Parser Memory Address Mismatch Error" },
++	{ true, "RPUES", "MTL RX Parser Memory Error" },
++	{ false, "UNKNOWN", "Unknown Error" }, /* 15 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 16 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 17 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 18 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 19 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 20 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 21 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 22 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 23 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 24 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 25 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 26 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 27 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 28 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 29 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 30 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 31 */
++};
++
++static void dwxgmac3_handle_mtl_err(struct net_device *ndev,
++				    void __iomem *ioaddr, bool correctable,
++				    struct stmmac_safety_stats *stats)
++{
++	u32 value;
++
++	value = readl(ioaddr + XGMAC_MTL_ECC_INT_STATUS);
++	writel(value, ioaddr + XGMAC_MTL_ECC_INT_STATUS);
++
++	dwxgmac3_log_error(ndev, value, correctable, "MTL",
++			   dwxgmac3_mtl_errors, STAT_OFF(mtl_errors), stats);
++}
++
++static const struct dwxgmac3_error_desc dwxgmac3_dma_errors[32]= {
++	{ true, "TCES", "DMA TSO Memory Error" },
++	{ true, "TAMS", "DMA TSO Memory Address Mismatch Error" },
++	{ true, "TUES", "DMA TSO Memory Error" },
++	{ false, "UNKNOWN", "Unknown Error" }, /* 3 */
++	{ true, "DCES", "DMA DCACHE Memory Error" },
++	{ true, "DAMS", "DMA DCACHE Address Mismatch Error" },
++	{ true, "DUES", "DMA DCACHE Memory Error" },
++	{ false, "UNKNOWN", "Unknown Error" }, /* 7 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 8 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 9 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 10 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 11 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 12 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 13 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 14 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 15 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 16 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 17 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 18 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 19 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 20 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 21 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 22 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 23 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 24 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 25 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 26 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 27 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 28 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 29 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 30 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 31 */
++};
++
++static void dwxgmac3_handle_dma_err(struct net_device *ndev,
++				    void __iomem *ioaddr, bool correctable,
++				    struct stmmac_safety_stats *stats)
++{
++	u32 value;
++
++	value = readl(ioaddr + XGMAC_DMA_ECC_INT_STATUS);
++	writel(value, ioaddr + XGMAC_DMA_ECC_INT_STATUS);
++
++	dwxgmac3_log_error(ndev, value, correctable, "DMA",
++			   dwxgmac3_dma_errors, STAT_OFF(dma_errors), stats);
++}
++
++static int dwxgmac3_safety_feat_config(void __iomem *ioaddr, unsigned int asp)
++{
++	u32 value;
++
++	if (!asp)
++		return -EINVAL;
++
++	/* 1. Enable Safety Features */
++	writel(0x0, ioaddr + XGMAC_MTL_ECC_CONTROL);
++
++	/* 2. Enable MTL Safety Interrupts */
++	value = readl(ioaddr + XGMAC_MTL_ECC_INT_ENABLE);
++	value |= XGMAC_RPCEIE; /* RX Parser Memory Correctable Error */
++	value |= XGMAC_ECEIE; /* EST Memory Correctable Error */
++	value |= XGMAC_RXCEIE; /* RX Memory Correctable Error */
++	value |= XGMAC_TXCEIE; /* TX Memory Correctable Error */
++	writel(value, ioaddr + XGMAC_MTL_ECC_INT_ENABLE);
++
++	/* 3. Enable DMA Safety Interrupts */
++	value = readl(ioaddr + XGMAC_DMA_ECC_INT_ENABLE);
++	value |= XGMAC_DCEIE; /* Descriptor Cache Memory Correctable Error */
++	value |= XGMAC_TCEIE; /* TSO Memory Correctable Error */
++	writel(value, ioaddr + XGMAC_DMA_ECC_INT_ENABLE);
++
++	/* Only ECC Protection for External Memory feature is selected */
++	if (asp <= 0x1)
 +		return 0;
++
++	/* 4. Enable Parity and Timeout for FSM */
++	value = readl(ioaddr + XGMAC_MAC_FSM_CONTROL);
++	value |= XGMAC_PRTYEN; /* FSM Parity Feature */
++	value |= XGMAC_TMOUTEN; /* FSM Timeout Feature */
++	writel(value, ioaddr + XGMAC_MAC_FSM_CONTROL);
++
++	return 0;
++}
++
++static int dwxgmac3_safety_feat_irq_status(struct net_device *ndev,
++					   void __iomem *ioaddr,
++					   unsigned int asp,
++					   struct stmmac_safety_stats *stats)
++{
++	bool err, corr;
++	u32 mtl, dma;
++	int ret = 0;
++
++	if (!asp)
++		return -EINVAL;
++
++	mtl = readl(ioaddr + XGMAC_MTL_SAFETY_INT_STATUS);
++	dma = readl(ioaddr + XGMAC_DMA_SAFETY_INT_STATUS);
++
++	err = (mtl & XGMAC_MCSIS) || (dma & XGMAC_MCSIS);
++	corr = false;
++	if (err) {
++		dwxgmac3_handle_mac_err(ndev, ioaddr, corr, stats);
++		ret |= !corr;
 +	}
 +
-+	for (i = 0; i < (sizeof(cfg->key) / sizeof(u32)); i++) {
-+		ret = dwxgmac2_rss_write_reg(ioaddr, true, i, *key++);
-+		if (ret)
-+			return ret;
++	err = (mtl & (XGMAC_MEUIS | XGMAC_MECIS)) ||
++	      (dma & (XGMAC_MSUIS | XGMAC_MSCIS));
++	corr = (mtl & XGMAC_MECIS) || (dma & XGMAC_MSCIS);
++	if (err) {
++		dwxgmac3_handle_mtl_err(ndev, ioaddr, corr, stats);
++		ret |= !corr;
 +	}
 +
-+	for (i = 0; i < ARRAY_SIZE(cfg->table); i++) {
-+		ret = dwxgmac2_rss_write_reg(ioaddr, false, i, cfg->table[i]);
-+		if (ret)
-+			return ret;
++	err = dma & (XGMAC_DEUIS | XGMAC_DECIS);
++	corr = dma & XGMAC_DECIS;
++	if (err) {
++		dwxgmac3_handle_dma_err(ndev, ioaddr, corr, stats);
++		ret |= !corr;
 +	}
 +
-+	for (i = 0; i < num_rxq; i++)
-+		dwxgmac2_map_mtl_to_dma(hw, i, XGMAC_QDDMACH);
++	return ret;
++}
 +
-+	value |= XGMAC_UDP4TE | XGMAC_TCP4TE | XGMAC_IP2TE | XGMAC_RSSE;
-+	writel(value, ioaddr + XGMAC_RSS_CTRL);
++static const struct dwxgmac3_error {
++	const struct dwxgmac3_error_desc *desc;
++} dwxgmac3_all_errors[] = {
++	{ dwxgmac3_mac_errors },
++	{ dwxgmac3_mtl_errors },
++	{ dwxgmac3_dma_errors },
++};
++
++static int dwxgmac3_safety_feat_dump(struct stmmac_safety_stats *stats,
++				     int index, unsigned long *count,
++				     const char **desc)
++{
++	int module = index / 32, offset = index % 32;
++	unsigned long *ptr = (unsigned long *)stats;
++
++	if (module >= ARRAY_SIZE(dwxgmac3_all_errors))
++		return -EINVAL;
++	if (!dwxgmac3_all_errors[module].desc[offset].valid)
++		return -EINVAL;
++	if (count)
++		*count = *(ptr + index);
++	if (desc)
++		*desc = dwxgmac3_all_errors[module].desc[offset].desc;
 +	return 0;
 +}
 +
  const struct stmmac_ops dwxgmac210_ops = {
  	.core_init = dwxgmac2_core_init,
  	.set_mac = dwxgmac2_set_mac,
-@@ -469,6 +520,7 @@ const struct stmmac_ops dwxgmac210_ops = {
+@@ -559,6 +837,9 @@ const struct stmmac_ops dwxgmac210_ops = {
+ 	.pcs_get_adv_lp = NULL,
  	.debug = NULL,
  	.set_filter = dwxgmac2_set_filter,
++	.safety_feat_config = dwxgmac3_safety_feat_config,
++	.safety_feat_irq_status = dwxgmac3_safety_feat_irq_status,
++	.safety_feat_dump = dwxgmac3_safety_feat_dump,
  	.set_mac_loopback = dwxgmac2_set_mac_loopback,
-+	.rss_configure = dwxgmac2_rss_configure,
- };
- 
- int dwxgmac2_setup(struct stmmac_priv *priv)
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
-index c4c45402b8f8..9ff9d9ac1a50 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
-@@ -254,6 +254,34 @@ static void dwxgmac2_clear(struct dma_desc *p)
- 	p->des3 = 0;
- }
- 
-+static int dwxgmac2_get_rx_hash(struct dma_desc *p, u32 *hash,
-+				enum pkt_hash_types *type)
-+{
-+	unsigned int rdes3 = le32_to_cpu(p->des3);
-+	u32 ptype;
-+
-+	if (rdes3 & XGMAC_RDES3_RSV) {
-+		ptype = (rdes3 & XGMAC_RDES3_L34T) >> XGMAC_RDES3_L34T_SHIFT;
-+
-+		switch (ptype) {
-+		case 0x1:
-+		case 0x2:
-+		case 0x9:
-+		case 0xA:
-+			*type = PKT_HASH_TYPE_L4;
-+			break;
-+		default:
-+			*type = PKT_HASH_TYPE_L3;
-+			break;
-+		}
-+
-+		*hash = le32_to_cpu(p->des1);
-+		return 0;
-+	}
-+
-+	return -EINVAL;
-+}
-+
- const struct stmmac_desc_ops dwxgmac210_desc_ops = {
- 	.tx_status = dwxgmac2_get_tx_status,
- 	.rx_status = dwxgmac2_get_rx_status,
-@@ -277,4 +305,5 @@ const struct stmmac_desc_ops dwxgmac210_desc_ops = {
- 	.get_addr = dwxgmac2_get_addr,
- 	.set_addr = dwxgmac2_set_addr,
- 	.clear = dwxgmac2_clear,
-+	.get_rx_hash = dwxgmac2_get_rx_hash,
- };
+ 	.rss_configure = dwxgmac2_rss_configure,
+ 	.update_vlan_hash = dwxgmac2_update_vlan_hash,
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
-index 0f1c772e892a..45a6634ee397 100644
+index b50e275e76c2..e4a1c877f2e1 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
-@@ -363,6 +363,7 @@ static void dwxgmac2_get_hw_feature(void __iomem *ioaddr,
- 
- 	/* MAC HW feature 1 */
- 	hw_cap = readl(ioaddr + XGMAC_HW_FEATURE1);
-+	dma_cap->rssen = (hw_cap & XGMAC_HWFEAT_RSSEN) >> 20;
- 	dma_cap->tsoen = (hw_cap & XGMAC_HWFEAT_TSOEN) >> 18;
- 
- 	dma_cap->addr64 = (hw_cap & XGMAC_HWFEAT_ADDR64) >> 14;
-diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-index 00539a09d1db..bfe7efee9481 100644
---- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-@@ -86,6 +86,9 @@ struct stmmac_desc_ops {
- 	void (*set_addr)(struct dma_desc *p, dma_addr_t addr);
- 	/* clear descriptor */
- 	void (*clear)(struct dma_desc *p);
-+	/* RSS */
-+	int (*get_rx_hash)(struct dma_desc *p, u32 *hash,
-+			   enum pkt_hash_types *type);
- };
- 
- #define stmmac_init_rx_desc(__priv, __args...) \
-@@ -136,6 +139,8 @@ struct stmmac_desc_ops {
- 	stmmac_do_void_callback(__priv, desc, set_addr, __args)
- #define stmmac_clear_desc(__priv, __args...) \
- 	stmmac_do_void_callback(__priv, desc, clear, __args)
-+#define stmmac_get_rx_hash(__priv, __args...) \
-+	stmmac_do_callback(__priv, desc, get_rx_hash, __args)
- 
- struct stmmac_dma_cfg;
- struct dma_features;
-@@ -249,6 +254,7 @@ struct rgmii_adv;
- struct stmmac_safety_stats;
- struct stmmac_tc_entry;
- struct stmmac_pps_cfg;
-+struct stmmac_rss;
- 
- /* Helpers to program the MAC core */
- struct stmmac_ops {
-@@ -327,6 +333,9 @@ struct stmmac_ops {
- 			       u32 sub_second_inc, u32 systime_flags);
- 	/* Loopback for selftests */
- 	void (*set_mac_loopback)(void __iomem *ioaddr, bool enable);
-+	/* RSS */
-+	int (*rss_configure)(struct mac_device_info *hw,
-+			     struct stmmac_rss *cfg, u32 num_rxq);
- };
- 
- #define stmmac_core_init(__priv, __args...) \
-@@ -397,6 +406,8 @@ struct stmmac_ops {
- 	stmmac_do_callback(__priv, mac, flex_pps_config, __args)
- #define stmmac_set_mac_loopback(__priv, __args...) \
- 	stmmac_do_void_callback(__priv, mac, set_mac_loopback, __args)
-+#define stmmac_rss_configure(__priv, __args...) \
-+	stmmac_do_callback(__priv, mac, rss_configure, __args)
- 
- /* PTP and HW Timer helpers */
- struct stmmac_hwtimestamp {
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac.h b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-index 5cd966c154f3..d2f6f56ae29c 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-@@ -113,6 +113,12 @@ struct stmmac_pps_cfg {
- 	struct timespec64 period;
- };
- 
-+struct stmmac_rss {
-+	int enable;
-+	u8 key[STMMAC_RSS_HASH_KEY_SIZE];
-+	u32 table[STMMAC_RSS_MAX_TABLE_SIZE];
-+};
+@@ -399,6 +399,10 @@ static void dwxgmac2_get_hw_feature(void __iomem *ioaddr,
+ 		((hw_cap & XGMAC_HWFEAT_TXQCNT) >> 6) + 1;
+ 	dma_cap->number_rx_queues =
+ 		((hw_cap & XGMAC_HWFEAT_RXQCNT) >> 0) + 1;
 +
- struct stmmac_priv {
- 	/* Frequently used values are kept adjacent for cache effect */
- 	u32 tx_coal_frames;
-@@ -203,6 +209,9 @@ struct stmmac_priv {
- 
- 	/* Pulse Per Second output */
- 	struct stmmac_pps_cfg pps[STMMAC_PPS_MAX];
-+
-+	/* Receive Side Scaling */
-+	struct stmmac_rss rss;
- };
- 
- enum stmmac_state {
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-index d294590cba27..2423160ab582 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-@@ -764,6 +764,76 @@ static int stmmac_set_coalesce(struct net_device *dev,
- 	return 0;
++	/* MAC HW feature 3 */
++	hw_cap = readl(ioaddr + XGMAC_HW_FEATURE3);
++	dma_cap->asp = (hw_cap & XGMAC_HWFEAT_ASP) >> 14;
  }
  
-+static int stmmac_get_rxnfc(struct net_device *dev,
-+			    struct ethtool_rxnfc *rxnfc, u32 *rule_locs)
-+{
-+	struct stmmac_priv *priv = netdev_priv(dev);
-+
-+	switch (rxnfc->cmd) {
-+	case ETHTOOL_GRXRINGS:
-+		rxnfc->data = priv->plat->rx_queues_to_use;
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	return 0;
-+}
-+
-+static u32 stmmac_get_rxfh_key_size(struct net_device *dev)
-+{
-+	struct stmmac_priv *priv = netdev_priv(dev);
-+
-+	return sizeof(priv->rss.key);
-+}
-+
-+static u32 stmmac_get_rxfh_indir_size(struct net_device *dev)
-+{
-+	struct stmmac_priv *priv = netdev_priv(dev);
-+
-+	return ARRAY_SIZE(priv->rss.table);
-+}
-+
-+static int stmmac_get_rxfh(struct net_device *dev, u32 *indir, u8 *key,
-+			   u8 *hfunc)
-+{
-+	struct stmmac_priv *priv = netdev_priv(dev);
-+	int i;
-+
-+	if (indir) {
-+		for (i = 0; i < ARRAY_SIZE(priv->rss.table); i++)
-+			indir[i] = priv->rss.table[i];
-+	}
-+
-+	if (key)
-+		memcpy(key, priv->rss.key, sizeof(priv->rss.key));
-+	if (hfunc)
-+		*hfunc = ETH_RSS_HASH_TOP;
-+
-+	return 0;
-+}
-+
-+static int stmmac_set_rxfh(struct net_device *dev, const u32 *indir,
-+			   const u8 *key, const u8 hfunc)
-+{
-+	struct stmmac_priv *priv = netdev_priv(dev);
-+	int i;
-+
-+	if ((hfunc != ETH_RSS_HASH_NO_CHANGE) && (hfunc != ETH_RSS_HASH_TOP))
-+		return -EOPNOTSUPP;
-+
-+	if (indir) {
-+		for (i = 0; i < ARRAY_SIZE(priv->rss.table); i++)
-+			priv->rss.table[i] = indir[i];
-+	}
-+
-+	if (key)
-+		memcpy(priv->rss.key, key, sizeof(priv->rss.key));
-+
-+	return stmmac_rss_configure(priv, priv->hw, &priv->rss,
-+				    priv->plat->rx_queues_to_use);
-+}
-+
- static int stmmac_get_ts_info(struct net_device *dev,
- 			      struct ethtool_ts_info *info)
- {
-@@ -855,6 +925,11 @@ static const struct ethtool_ops stmmac_ethtool_ops = {
- 	.get_eee = stmmac_ethtool_op_get_eee,
- 	.set_eee = stmmac_ethtool_op_set_eee,
- 	.get_sset_count	= stmmac_get_sset_count,
-+	.get_rxnfc = stmmac_get_rxnfc,
-+	.get_rxfh_key_size = stmmac_get_rxfh_key_size,
-+	.get_rxfh_indir_size = stmmac_get_rxfh_indir_size,
-+	.get_rxfh = stmmac_get_rxfh,
-+	.set_rxfh = stmmac_set_rxfh,
- 	.get_ts_info = stmmac_get_ts_info,
- 	.get_coalesce = stmmac_get_coalesce,
- 	.set_coalesce = stmmac_set_coalesce,
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 65bd92c403c1..0daca766615e 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -2423,6 +2423,22 @@ static void stmmac_mac_config_rx_queues_routing(struct stmmac_priv *priv)
- 	}
- }
- 
-+static void stmmac_mac_config_rss(struct stmmac_priv *priv)
-+{
-+	if (!priv->dma_cap.rssen || !priv->plat->rss_en) {
-+		priv->rss.enable = false;
-+		return;
-+	}
-+
-+	if (priv->dev->features & NETIF_F_RXHASH)
-+		priv->rss.enable = true;
-+	else
-+		priv->rss.enable = false;
-+
-+	stmmac_rss_configure(priv, priv->hw, &priv->rss,
-+			     priv->plat->rx_queues_to_use);
-+}
-+
- /**
-  *  stmmac_mtl_configuration - Configure MTL
-  *  @priv: driver private structure
-@@ -2467,6 +2483,10 @@ static void stmmac_mtl_configuration(struct stmmac_priv *priv)
- 	/* Set RX routing */
- 	if (rx_queues_count > 1)
- 		stmmac_mac_config_rx_queues_routing(priv);
-+
-+	/* Receive Side Scaling */
-+	if (rx_queues_count > 1)
-+		stmmac_mac_config_rss(priv);
- }
- 
- static void stmmac_safety_feat_configuration(struct stmmac_priv *priv)
-@@ -3391,9 +3411,11 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
- 			priv->dev->stats.rx_errors++;
- 			buf->page = NULL;
- 		} else {
-+			enum pkt_hash_types hash_type;
- 			struct sk_buff *skb;
--			int frame_len;
- 			unsigned int des;
-+			int frame_len;
-+			u32 hash;
- 
- 			stmmac_get_desc_addr(priv, p, &des);
- 			frame_len = stmmac_get_rx_frame_len(priv, p, coe);
-@@ -3458,6 +3480,10 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
- 			else
- 				skb->ip_summed = CHECKSUM_UNNECESSARY;
- 
-+			if (!stmmac_get_rx_hash(priv, p, &hash, &hash_type))
-+				skb_set_hash(skb, hash, hash_type);
-+
-+			skb_record_rx_queue(skb, queue);
- 			napi_gro_receive(&ch->rx_napi, skb);
- 
- 			/* Data payload copied into SKB, page ready for recycle */
-@@ -4182,7 +4208,7 @@ int stmmac_dvr_probe(struct device *device,
- 	struct net_device *ndev = NULL;
- 	struct stmmac_priv *priv;
- 	u32 queue, maxq;
--	int ret = 0;
-+	int i, ret = 0;
- 
- 	ndev = devm_alloc_etherdev_mqs(device, sizeof(struct stmmac_priv),
- 				       MTL_MAX_TX_QUEUES, MTL_MAX_RX_QUEUES);
-@@ -4290,6 +4316,14 @@ int stmmac_dvr_probe(struct device *device,
- #endif
- 	priv->msg_enable = netif_msg_init(debug, default_msg_level);
- 
-+	/* Initialize RSS */
-+	netdev_rss_key_fill(priv->rss.key, sizeof(priv->rss.key));
-+	for (i = 0; i < ARRAY_SIZE(priv->rss.table); i++)
-+		priv->rss.table[i] = i % priv->plat->rx_queues_to_use;
-+
-+	if (priv->dma_cap.rssen && priv->plat->rss_en)
-+		ndev->features |= NETIF_F_RXHASH;
-+
- 	/* MTU range: 46 - hw-specific max */
- 	ndev->min_mtu = ETH_ZLEN - ETH_HLEN;
- 	if ((priv->plat->enh_desc) || (priv->synopsys_id >= DWMAC_CORE_4_00))
-diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
-index 7b3e354bcd3c..5cc6b6faf359 100644
---- a/include/linux/stmmac.h
-+++ b/include/linux/stmmac.h
-@@ -173,6 +173,7 @@ struct plat_stmmacenet_data {
- 	int has_gmac4;
- 	bool has_sun8i;
- 	bool tso_en;
-+	int rss_en;
- 	int mac_port_sel_speed;
- 	bool en_tx_lpi_clockgating;
- 	int has_xgmac;
+ static void dwxgmac2_rx_watchdog(void __iomem *ioaddr, u32 riwt, u32 nchan)
 -- 
 2.7.4
 
