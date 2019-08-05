@@ -2,105 +2,213 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42AE9C32751
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED260C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 189E120651
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:32:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011937;
-	bh=Pi1nPOcAzoKzmhilwJpY2NWR69GFPeOfUkKKuRKPdvU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=HTbewGwDPSgkfwy9Lp4c+phpDJz7Tgkp4Kf65UmwPxrEPan9UKIc3QR0U+v7hpjGF
-	 03m151yTqguuIltcXt5IQfvQ8V6o2PYb8jZicaDC7YfnBEyDHF6S55Y1Ei3ehG8O/l
-	 jGm5tTdJqFNtnK6MMLaxseaM1dWKG4Z6xIRo012Y=
+	by mail.kernel.org (Postfix) with ESMTP id BF48C2067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:37:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729409AbfHENcQ (ORCPT
+        id S1729068AbfHENhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:32:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38056 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726834AbfHENcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:32:15 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23F7A20644;
-        Mon,  5 Aug 2019 13:32:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011934;
-        bh=Pi1nPOcAzoKzmhilwJpY2NWR69GFPeOfUkKKuRKPdvU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=e3fijdzZP1l07SRJPZGDKsmIE7Q7W7MGtcbT1oxrQ1NkcOHurMHcxpkFkgFugcgBy
-         TfuRG+y41cSoQ4o8FKOjWaVGqiD7ebkqB/XgLG/Ncrvas2kNqhaOYk6b0z58TG2IK+
-         SROpwHWuRN2+V9Kvuiw2bdawFhP0rhin5sjBXt38=
-Date:   Mon, 5 Aug 2019 14:32:09 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Martin Kaiser <martin@kaiser.cx>, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 2/2] dt-bindings: iio: potentiometer: add
- max5432.yaml binding
-Message-ID: <20190805143209.5307ad93@archlinux>
-In-Reply-To: <CAL_JsqK9iuxQEh3s2_AgQhSa19Coq7kSFB497KUMQnjQNU+ELw@mail.gmail.com>
-References: <20190721175915.27192-1-martin@kaiser.cx>
-        <20190731140706.2765-1-martin@kaiser.cx>
-        <20190731140706.2765-2-martin@kaiser.cx>
-        <CAL_JsqK9iuxQEh3s2_AgQhSa19Coq7kSFB497KUMQnjQNU+ELw@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 5 Aug 2019 09:37:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51352 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726834AbfHENhY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:37:24 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5495EAD18;
+        Mon,  5 Aug 2019 13:37:22 +0000 (UTC)
+Date:   Mon, 5 Aug 2019 23:37:44 +1000
+From:   Aleksa Sarai <asarai@suse.de>
+To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Cc:     "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-man <linux-man@vger.kernel.org>,
+        Containers <containers@lists.linux-foundation.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jordan Ogas <jogas@lanl.gov>, Al Viro <viro@ftp.linux.org.uk>,
+        werner@almesberger.net, Aleksa Sarai <cyphar@cyphar.com>
+Subject: Re: pivot_root(".", ".") and the fchdir() dance
+Message-ID: <20190805133744.7sm6wx2rspwiuxu5@mikami>
+References: <CAKgNAki0bR5zZr+kp_xjq+bNUky6-F+s2ep+jnR0YrjHhNMB1g@mail.gmail.com>
+ <20190805103630.tu4kytsbi5evfrhi@mikami>
+ <3a96c631-6595-b75e-f6a7-db703bf89bcf@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="np2ugc7obo2qaz74"
+Content-Disposition: inline
+In-Reply-To: <3a96c631-6595-b75e-f6a7-db703bf89bcf@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 31 Jul 2019 10:50:36 -0600
-Rob Herring <robh+dt@kernel.org> wrote:
 
-> On Wed, Jul 31, 2019 at 8:07 AM Martin Kaiser <martin@kaiser.cx> wrote:
-> >
-> > Add a binding for the Maxim Integrated MAX5432-MAX5435 family of digital
-> > potentiometers.
-> >
-> > Signed-off-by: Martin Kaiser <martin@kaiser.cx>
-> > ---
-> > changes in v4
-> >  - fix the dt bindings
-> >    - replace ic20 with i2c
-> >    - document the reg property
-> >    - add additionalProperties and required
-> >
-> > changes in v3
-> >  - split dt bindings and driver code into separate patches
-> >  - use yaml format for dt bindings
-> >  - fix formatting of parameter lists
-> >
-> > changes in v2
-> >  - use MAX5432_ prefix for all defines
-> >  - fix indentation
-> >  - convert void * to unsigned long, not to u32
-> >    (warning from kbuild test robot)
-> >
-> >  .../bindings/iio/potentiometer/max5432.yaml        | 44 ++++++++++++++++++++++
-> >  1 file changed, 44 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/potentiometer/max5432.yaml  
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-Applied to the togreg branch of iio.git and pushed out as testing for the
-autobuilders to play with it.
+--np2ugc7obo2qaz74
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
+On 2019-08-05, Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> wrote:
+> On 8/5/19 12:36 PM, Aleksa Sarai wrote:
+> > On 2019-08-01, Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> wro=
+te:
+> >> I'd like to add some documentation about the pivot_root(".", ".")
+> >> idea, but I have a doubt/question. In the lxc_pivot_root() code we
+> >> have these steps
+> >>
+> >>         oldroot =3D open("/", O_DIRECTORY | O_RDONLY | O_CLOEXEC);
+> >>         newroot =3D open(rootfs, O_DIRECTORY | O_RDONLY | O_CLOEXEC);
+> >>
+> >>         fchdir(newroot);
+> >>         pivot_root(".", ".");
+> >>
+> >>         fchdir(oldroot);      // ****
+> >=20
+> > This one is "required" because (as the pivot_root(2) man page states),
+> > it's technically not guaranteed by the kernel that the process's cwd
+> > will be the same after pivot_root(2):
+> >=20
+> >> pivot_root() may or may not change the current root and the current
+> >> working directory of any processes or threads which use the old root
+> >> directory.
+> >=20
+> > Now, if it turns out that we can rely on the current behaviour (and the
+> > man page you're improving is actually inaccurate on this point) then
+> > you're right that this fchdir(2) isn't required.
+>=20
+> I'm not sure that I follow your logic here. In the old manual page
+> text that you quote above, it says that [pivot_root() may change the
+> CWD of any processes that use the old root directory]. Two points=20
+> there:
+>=20
+> (1) the first fchdir() has *already* changed the CWD of the calling
+> process to the new root directory, and
 
-Jonathan
+Right, I (and presumably the LXC folks as well) must've missed the
+qualifier on the end of the sentence and was thinking that it said "you
+can't trust CWD after pivot_root(2)".
 
+My follow-up was going to be that we need to be in the old root to
+umount, but as you mentioned that shouldn't be necessary either since
+the umount will apply to the stacked mount (which is somewhat
+counter-intuitively the earlier mount not the later one -- I will freely
+admit that I don't understand all of the stacked and tucked mount
+logic in VFS).
 
+> (2) the manual page implied but did not explicitly say that the
+> CWD of processes using the old root may be changed *to the new root
+> directory* (rather than changed to some arbitrary location!);
+> presumably, omitting to mention that detail explicitly in the manual
+> page was an oversight, since that is indeed the kernel's behavior.
+>=20
+> The point is, the manual page was written 19 years ago and has
+> barely been changed since then. Even at the time that the system
+> call was officially released (in Linux 2.4.0), the manual page was
+> already inaccurate in a number of details, since it was written=20
+> about a year beforehand (during the 2.3 series), and the=20
+> implementation already changed by the time of 2.4.0, but the manual
+> page was not changed then (or since, but I'm working on that).
+>=20
+> The behavior has in practice always been (modulo the introduction
+> of mount namespaces in 2001/2002):
+>=20
+>        pivot_root()  changes  the root directory and the current
+>        working directory of each process or thread in  the  same
+>        mount namespace to new_root if they point to the old root
+>        directory.
+>=20
+> Given that this has been the behavior since Linux 2.4.0 was
+> released, it improbable that this will ever change, since,
+> notwithstanding what the manual page says, this would be an ABI
+> breakage.
+>=20
+> I hypothesize that the original manual page text, written before
+> the system call was even officially released, reflects Werner's
+> belief at the time that perhaps in the not too distant future
+> the implementation might change. But, 18 years on from 2.4.0,
+> it has not.
+>=20
+> And arguably, the manual page should reflect that reality,
+> describing what the kernel actually does, rather than speculating
+> that things might (after 19 years) still sometime change.
+
+I wasn't aware of the history of the man page, and took it as gospel
+that we should avoid making assumptions about current's CWD surrounding
+a pivot_root(2). Given the history (and that it appears the behaviour
+was never intended to be changed after being merged), we should
+definitely drop that text to avoid the confusion which has already
+caused us container folks to implement this in a
+more-convoluted-than-necessary fashion.
+
+In case you haven't noticed already, you might want to also send a patch
+to util-linux to also update pivot_root(8) which makes the same mistake
+in its text:
+
+> Note that, depending on the implementation of pivot_root, root and cwd
+> of the caller may or may not change.
+
+Then again, it's also possible this text is independently just as vague
+for other reasons.
+
+> > And this one is required because we are in @oldroot at this point, due
+> > to the first fchdir(2). If we don't have the first one, then switching
+> > from "." to "/" in the mount/umount2 calls should fix the issue.
+>=20
+> See my notes above for why I therefore think that the second fchdir()
+> is also not needed (and therefore why switching from "." to "/" in the
+> mount()/umount2() calls is unnecessary.
+
+My gut feeling reading this was that operating on "." will result in you
+doing the later mount operations on @newroot (since "." is @newroot) not
+on the stacked mount which isn't your CWD.
+
+*But* my gut feeling is obviously wrong (since you've tested it), and I
+will again admit I don't understand quite how CWD references interact
+with mount operations -- especially in the context of stacked mounts.
+
+> Do you agree with my analysis?
+
+Minus the mount bits that I'm not too sure about (I defer to
+Christian/Serge/et al on that point), it seems reasonable to me.
+
+My only real argument for keeping it the way it is, is that it's much
+easier (for me, at least) to understand the semantics with explicit
+fchdir(2)s. But that's not really a good reason to continue doing it the
+way we do it now -- if it's documented in a man page that'd be more than
+sufficient to avoid confusion when reading snippets that do it without
+the fchdir(2)s.
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--np2ugc7obo2qaz74
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEXzbGxhtUYBJKdfWmnhiqJn3bjbQFAl1IMSUACgkQnhiqJn3b
+jbR9TxAAr3w1iw2zyRsIJt+qye7WLDUYc70Qq8XBW/+Xmbq5Vcf2gKXB3WAJb5PM
+3D0Btda2Dw9tT69QJdEvVyt27FgwUzQAWo0m1Ki7NXI0AIocXV+a32NrBbtB+XKI
+f2xY5J9oCCoJ1GErEO4SkchHcxWFyygGn3jQVavxfFDA2I6p7DOXtJ23X83ZTXqJ
+i/Z4pu3TAPeU4SogXFJhBsdwsL8JFcLjDhnyK6SZws5oatneKvitC213J1CwGBno
+G4PaYQ4JGmeg+ePSvogQigYBd7ZZ89yjJjum+HAqrwVu0AVkf5VGzWu/HNXRD22v
+auU4MocADXFwbqjr5kDI/q5hpjVA97u4mbu06Wv9rqGIl8l1swORNJC4lZWN6uwT
+uzASEopUcZKrCrsj7qEQmQnfMQXZz/1SNdl55TxRA2b/BOWozK0Q7utoLBx+UGBe
+0wwiCr++euhANpRrGOmgZRDvwrhGL+56Qzo8GhkQpYffmOglpiVkdSzZ5wGhLusZ
+IyXZH2t/vuEAoq9xEEtBvZLWW4dKnRKzYWWvV0hLEqajHRyxQCskc1LjBapE8rMm
+E0UR94LE0TX/KnxDPX/8XDhNT7RGVlEhTF5qmBhT1sOfXrfZ3T0zW/awlbGDHfHu
+1wtivpqvwbtdF8JpWiS9uU0Pnf+743nF10yDnvJnkJgBRBzaCfE=
+=7p3L
+-----END PGP SIGNATURE-----
+
+--np2ugc7obo2qaz74--
