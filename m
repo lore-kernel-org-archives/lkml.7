@@ -2,101 +2,117 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DA9C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D900C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29A032086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:09:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qIqjqetM"
+	by mail.kernel.org (Postfix) with ESMTP id ED93720880
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:10:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728288AbfHEKJn (ORCPT
+        id S1728293AbfHEKKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 06:09:43 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34402 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727739AbfHEKJm (ORCPT
+        Mon, 5 Aug 2019 06:10:43 -0400
+Received: from paleale.coelho.fi ([176.9.41.70]:34114 "EHLO
+        farmhouse.coelho.fi" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727158AbfHEKKn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 06:09:42 -0400
-Received: by mail-lj1-f196.google.com with SMTP id p17so78816296ljg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 03:09:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/xtjYgK/kMd57m6KfrfOB62bKyZiiQD+dYMhD8L2z0Y=;
-        b=qIqjqetM/iqya25mvO1vrbiO42qMt9IyCAJYzpv0Wqpo9wqOGNluE4klznlIk2yZfv
-         9KNaZg8QzFZY4Q48l5+z4eup/m2cpfChPGFOc5So/f9zrbncbo1LdwCbt/dw/Fjny/Qs
-         8hQB3eiqnuhdTMb10EfyqrD3JPS+t1xX8aimYVGXXyk2bZN8P/AXvG0DZYn9hRECbBdM
-         KHITvzTv2nInLM5fAiQTjnMtAjqRx7hmRFWsdvHjhN0DX60+eJHy1THDkvhV2DlONPnz
-         LBWK4DrWvRSIY9dvL9VTn4DQSlR2B5z6GZrJAw6qQq1nF78r/A95zOz6L6+4rnQ+9gtI
-         /3tA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/xtjYgK/kMd57m6KfrfOB62bKyZiiQD+dYMhD8L2z0Y=;
-        b=F34m7wOWpRlpK8Defffs5u45zw6LqZn/T3gTAhVtjM5NIjiTKNMZw7pHuVCqJtWHTA
-         tKitKSQwyB5ZZSLGwWBKpIFlWCCaVmFrlC8qd5YmFEdv/v2PpnPiptIs5jMQ5ZwVxh/Q
-         mApH0TKV4mBuJ6Tow3P0khuRHtd2DSajjlqwi8oQqbcbxu9/RuudR3t2KB8nxB720c0y
-         BCH6LLmAW+kDwcBVZI0d6loEemnFlLGwZ/Dw7zkhOInWVz+fev6aA+FvcTEyE8EpmF6b
-         7qHMYqW1n9Pcszw3owH7XndAJamxSpT+tSKYZ3QRhXXd/i7TnQCHTmuA4gB9VXIbsE8o
-         tHhw==
-X-Gm-Message-State: APjAAAXYywytvbkvNoBj7BaTqLD1xhpLg+NqN/yw79iS3GIBY6NMAu+e
-        kckZpg9gOfkM3Fihtsh40fk330WCBs1J4Q3FetkvVA==
-X-Google-Smtp-Source: APXvYqzw2Nx2CZBhSBfHRJe0EXDJKGkQ1w/cgOlJvHSUKAdSOSviOHbRJqsbQQlq6jDi9G5H9DWZgPS60Bpa9u1KaYw=
-X-Received: by 2002:a2e:2c14:: with SMTP id s20mr16414381ljs.54.1564999780576;
- Mon, 05 Aug 2019 03:09:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <1563958245-6321-1-git-send-email-chunfeng.yun@mediatek.com> <1563958245-6321-3-git-send-email-chunfeng.yun@mediatek.com>
-In-Reply-To: <1563958245-6321-3-git-send-email-chunfeng.yun@mediatek.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 5 Aug 2019 12:09:29 +0200
-Message-ID: <CACRpkdZRgUubUF3qc7S-6zoe_L-dLDy284R3qK93qRTLyYOwbg@mail.gmail.com>
-Subject: Re: [PATCH v8 02/11] dt-bindings: connector: add optional properties
- for Type-B
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Li Jun <jun.li@nxp.com>,
-        Badhri Jagan Sridharan <badhri@google.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Min Guo <min.guo@mediatek.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
+        Mon, 5 Aug 2019 06:10:43 -0400
+Received: from [91.156.6.193] (helo=redipa)
+        by farmhouse.coelho.fi with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.92)
+        (envelope-from <luca@coelho.fi>)
+        id 1huZwt-0003V4-E5; Mon, 05 Aug 2019 13:10:39 +0300
+Message-ID: <99462e51eda721d5d85d9ea9e2c28da62f8b54f5.camel@coelho.fi>
+From:   Luca Coelho <luca@coelho.fi>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     dor.shaish@intel.com, Josh Boyer <jwboyer@kernel.org>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 05 Aug 2019 13:10:38 +0300
+In-Reply-To: <s5hsgqgnczv.wl-tiwai@suse.de>
+References: <s5hr26m9gvc.wl-tiwai@suse.de>
+         <280dad08ba9864755c3c45ed3ce26d602fe18a49.camel@intel.com>
+         <s5ho91pzyml.wl-tiwai@suse.de> <s5hwogcxwt4.wl-tiwai@suse.de>
+         <b225d043d8581e0fec68cb63f7433161868293f3.camel@coelho.fi>
+         <s5hmuh7xrqy.wl-tiwai@suse.de>
+         <38635c1b10018859457787ecff4f92a3ceec34a4.camel@coelho.fi>
+         <ef32cea91614b9708a474e223f3fbbb85a95501d.camel@coelho.fi>
+         <s5hsgqgnczv.wl-tiwai@suse.de>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Re: Regression with the latest iwlwifi-9260-*-46.ucode
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 10:51 AM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
+On Mon, 2019-08-05 at 12:05 +0200, Takashi Iwai wrote:
+> On Mon, 05 Aug 2019 11:53:33 +0200,
+> Luca Coelho wrote:
+> > On Mon, 2019-08-05 at 12:48 +0300, Luca Coelho wrote:
+> > > On Sun, 2019-07-21 at 18:43 +0200, Takashi Iwai wrote:
+> > > > On Sat, 20 Jul 2019 22:49:33 +0200,
+> > > > Luca Coelho wrote:
+> > > > > On Sat, 2019-07-20 at 22:42 +0200, Takashi Iwai wrote:
+> > > > > > On Fri, 19 Jul 2019 20:07:46 +0200,
+> > > > > > Takashi Iwai wrote:
+> > > > > > > On Fri, 19 Jul 2019 18:36:53 +0200,
+> > > > > > > Luciano Coelho wrote:
+> > > > > > > > Adding Dor.
+> > > > > > > > 
+> > > > > > > > Hi Takashi,
+> > > > > > > > 
+> > > > > > > > Do you have full logs of the crash? We can't see much from the log
+> > > > > > > > snippet pasted in the bug report.
+> > > > > > > 
+> > > > > > > OK, I'll ask reporters.  If you have a SUSE/openSUSE bugzilla account,
+> > > > > > > feel free to join there.
+> > > > > > 
+> > > > > > FYI, the dmesg's have been uploaded to the same bugzilla entry:
+> > > > > >   https://bugzilla.opensuse.org/show_bug.cgi?id=1142128
+> > > > > > 
+> > > > > 
+> > > > > Thanks!
+> > > > > 
+> > > > > BTW, I pushed new firmwares to our firmware tree in git.kernel.org
+> > > > > today.  This is the patch:
+> > > > > 
+> > > > > https://git.kernel.org/pub/scm/linux/kernel/git/iwlwifi/linux-firmware.git/commit/?id=b5f09bb4f816abace0227d0f4e749859364cef6b
+> > > > > 
+> > > > > It would be great if you can try it out and let us know whether the problem is gone or not.
+> > > > 
+> > > > I created a test package and asked for testing.
+> > > > The test result seems negative, showing the same error,
+> > > > unfortunately.
+> > > > 
+> > > > The dmesg was uploaded on the bugzilla entry.
+> > > 
+> > > Thanks Takashi! We will look into them as soon as possible (sorry for
+> > > the late reply, I just came back from vacations).
+> > 
+> > Actually, I just noticed that your bugzilla is closed as "RESOLVED
+> > FIXED".  Is this still an issue?
+> 
+> It's "closed" because our package contains the revert.
+> 
+> > This seems like a mismatch between the WiFi and BT firmwares... And
+> > most likely the same issue as this:
+> > 
+> > https://bugzilla.kernel.org/show_bug.cgi?id=202163
+> 
+> OK, so we need the update of the whole linux-firmware.
+> I'll refresh the package and ask for testing.
 
-> Add id-gpios, vbus-gpios, vbus-supply and pinctrl properties for
-> usb-b-connector
->
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> v8 no changes
+I'm not sure the new BT firmware is in linux-firmware yet, since I
+don't handle BT stuff.  I hope it is.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+--
+Cheers,
+Luca.
 
-Yours,
-Linus Walleij
