@@ -2,188 +2,96 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D79C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C84C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77B642075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:40:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="IRXJQiB4"
+	by mail.kernel.org (Postfix) with ESMTP id 73BC32075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:40:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729355AbfHEOkm (ORCPT
+        id S1729755AbfHEOkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 10:40:42 -0400
-Received: from gateway36.websitewelcome.com ([192.185.188.18]:24462 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728149AbfHEOkl (ORCPT
+        Mon, 5 Aug 2019 10:40:49 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:40441 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729133AbfHEOks (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 10:40:41 -0400
-X-Greylist: delayed 1443 seconds by postgrey-1.27 at vger.kernel.org; Mon, 05 Aug 2019 10:40:41 EDT
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id F0A10400C7C6B
-        for <linux-kernel@vger.kernel.org>; Mon,  5 Aug 2019 08:41:07 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id udmvhoNcE2qH7udmvhpRAr; Mon, 05 Aug 2019 09:16:37 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Hx+Ff/N9WaE2ovCEAjCvFy5YvKvR6C7+BZFLcw7htVk=; b=IRXJQiB4iUgDCWYRJL2+LmPpVS
-        BQE1hfVZjTsCyNWSmeh4r3M1OSU5beDidG33U9j0BOcJPX+B8DjhmiCRO/wrHlRRG31jOnbw7OSSl
-        /xpNyDvzpBeyKu84GSvEgs86jzWZmr7nJdRYYoCn4MqpWS2i8mFqso494GzIEXN6lTwsV03I/Qrin
-        07fgDOAcUUgvBETxkEO1sZ7PN7SXesuVdQZmAXtVvZGScq2sTbRr+Hea10/GOLTbXPRiGYv3jog6J
-        7CvRfcmfV1QH5icfXTy2OQXWBfVw3UEFe0pHwaGFK7LM0c1HaflTDBNDFm19CTJviNDgwJDo0Y3nD
-        sp/d6fZA==;
-Received: from [187.192.11.120] (port=41098 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hudmv-000Pp8-I8; Mon, 05 Aug 2019 09:16:37 -0500
-Subject: Re: [PATCH 4.14 38/53] IB/hfi1: Fix Spectre v1 vulnerability
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org
-References: <20190805124927.973499541@linuxfoundation.org>
- <20190805124932.331142598@linuxfoundation.org>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <3d25fa83-91e6-dd99-2170-44a51066c82d@embeddedor.com>
-Date:   Mon, 5 Aug 2019 09:16:36 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 5 Aug 2019 10:40:48 -0400
+Received: by mail-qk1-f196.google.com with SMTP id s145so60253023qke.7;
+        Mon, 05 Aug 2019 07:40:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oRGlfvIBEGnhMOSaUFrH+SBTE1znMskWY0KJq2yKr84=;
+        b=APuble2BpXARG4jU2DYGB4NSX8yam4ci9ypYe5T8eO3mED1q+6uNR/K1PVpes5zpfz
+         QCwOCOYGsyGKslsSgoSZ5LPoBDiW4WXm4lxNHFQAOYUE4rWyj/cJwu3Z6mYlkTSIKPRy
+         0upin2VVKOR7Ur6ZEdadeZQrc51LrVUti/zo2c+mbub84+rYiTUs4J9TbH2SZNYWiGVp
+         QzXsahOGGJKy2tdbHFrgoT90odsC12RSozVFL95Zqayano7/QvpcMRUWuodaILd4fsZ4
+         GwFQIMOnFQBk29uM82b5ozXjSiXrkABX8dnsqRQRjiv7I9faMLa0nHaa7ICFTCfBa7cj
+         IspQ==
+X-Gm-Message-State: APjAAAWGoHaLxCPVAGh2feIEfY39f/6tW3a42bC4R6fKCoKJJgvmN6Tk
+        XynbPE3EqxCPO1qgOrzqbfNQv9dXLYG+Se0VYpQ=
+X-Google-Smtp-Source: APXvYqwXqRGhG17IavERVcPoGwtZvnFSRNz3XsmJ1I/UDszwO/ygv4rz7O1F3vn/+nsBTx+KYhsS4l9y4SQRsLMtA4w=
+X-Received: by 2002:a37:5f45:: with SMTP id t66mr102886994qkb.286.1565016047182;
+ Mon, 05 Aug 2019 07:40:47 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190805124932.331142598@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.11.120
-X-Source-L: No
-X-Exim-ID: 1hudmv-000Pp8-I8
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [187.192.11.120]:41098
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 2
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20190730014924.2193-1-deepa.kernel@gmail.com> <20190730014924.2193-5-deepa.kernel@gmail.com>
+ <eb2027cdccc0a0ff0a9d061fa8dd04a927c63819.camel@codethink.co.uk>
+In-Reply-To: <eb2027cdccc0a0ff0a9d061fa8dd04a927c63819.camel@codethink.co.uk>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 5 Aug 2019 16:40:30 +0200
+Message-ID: <CAK8P3a0a0ZvwagKa00Q-SCK=6mMcD0dv=wzbOk8D7B9pj4eWrg@mail.gmail.com>
+Subject: Re: [Y2038] [PATCH 04/20] mount: Add mount warning for impending
+ timestamp expiry
+To:     Ben Hutchings <ben.hutchings@codethink.co.uk>
+Cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+On Mon, Aug 5, 2019 at 4:12 PM Ben Hutchings
+<ben.hutchings@codethink.co.uk> wrote:
+>
+> On Mon, 2019-07-29 at 18:49 -0700, Deepa Dinamani wrote:
+> > The warning reuses the uptime max of 30 years used by the
+> > setitimeofday().
+> >
+> > Note that the warning is only added for new filesystem mounts
+> > through the mount syscall. Automounts do not have the same warning.
+> >
+> > Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
+> > ---
+> >  fs/namespace.c | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
+> >
+> > diff --git a/fs/namespace.c b/fs/namespace.c
+> > index b26778bdc236..5314fac8035e 100644
+> > --- a/fs/namespace.c
+> > +++ b/fs/namespace.c
+> > @@ -2739,6 +2739,17 @@ static int do_new_mount_fc(struct fs_context *fc, struct path *mountpoint,
+> >       error = do_add_mount(real_mount(mnt), mountpoint, mnt_flags);
+> >       if (error < 0)
+> >               mntput(mnt);
+> > +
+> > +     if (!error && sb->s_time_max &&
+>
+> I don't know why you are testing sb->s_time_max here - it should always
+> be non-zero since alloc_super() sets it to TIME64_MAX.
 
-Can you please add these other two patches to stable:
+I think we support some writable file systems that have no timestamps
+at all, so both the minimum and maximum default to 0 (1970-01-01).
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d64062b57eeb58d4928aed945515bf53f7944913
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=737298d18836fd14b8820de6504536c998986bcd
+For these, there is no point in printing a warning, they just work
+as designed, even though the maximum is expired.
 
-Thanks!
---
-Gustavo
-
-On 8/5/19 8:03 AM, Greg Kroah-Hartman wrote:
-> From: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> 
-> commit 6497d0a9c53df6e98b25e2b79f2295d7caa47b6e upstream.
-> 
-> sl is controlled by user-space, hence leading to a potential
-> exploitation of the Spectre variant 1 vulnerability.
-> 
-> Fix this by sanitizing sl before using it to index ibp->sl_to_sc.
-> 
-> Notice that given that speculation windows are large, the policy is
-> to kill the speculation on the first load and not worry if it can be
-> completed with a dependent load/store [1].
-> 
-> [1] https://lore.kernel.org/lkml/20180423164740.GY17484@dhcp22.suse.cz/
-> 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> Link: https://lore.kernel.org/r/20190731175428.GA16736@embeddedor
-> Signed-off-by: Doug Ledford <dledford@redhat.com>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> ---
->  drivers/infiniband/hw/hfi1/verbs.c |    2 ++
->  1 file changed, 2 insertions(+)
-> 
-> --- a/drivers/infiniband/hw/hfi1/verbs.c
-> +++ b/drivers/infiniband/hw/hfi1/verbs.c
-> @@ -54,6 +54,7 @@
->  #include <linux/mm.h>
->  #include <linux/vmalloc.h>
->  #include <rdma/opa_addr.h>
-> +#include <linux/nospec.h>
->  
->  #include "hfi.h"
->  #include "common.h"
-> @@ -1587,6 +1588,7 @@ static int hfi1_check_ah(struct ib_devic
->  	sl = rdma_ah_get_sl(ah_attr);
->  	if (sl >= ARRAY_SIZE(ibp->sl_to_sc))
->  		return -EINVAL;
-> +	sl = array_index_nospec(sl, ARRAY_SIZE(ibp->sl_to_sc));
->  
->  	sc5 = ibp->sl_to_sc[sl];
->  	if (sc_to_vlt(dd, sc5) > num_vls && sc_to_vlt(dd, sc5) != 0xf)
-> 
-> 
+       Arnd
