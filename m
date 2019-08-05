@@ -2,98 +2,115 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B95C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 02:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA175C19759
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 02:26:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0797E20644
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 02:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BADDE2075C
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 02:26:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gFVQKv/z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bjxN1i85"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbfHECO2 (ORCPT
+        id S1726944AbfHEC0a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 4 Aug 2019 22:14:28 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35442 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbfHECO2 (ORCPT
+        Sun, 4 Aug 2019 22:26:30 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45828 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726666AbfHEC0a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 4 Aug 2019 22:14:28 -0400
-Received: by mail-pg1-f196.google.com with SMTP id n4so3582170pgv.2;
-        Sun, 04 Aug 2019 19:14:28 -0700 (PDT)
+        Sun, 4 Aug 2019 22:26:30 -0400
+Received: by mail-pf1-f195.google.com with SMTP id r1so38784853pfq.12;
+        Sun, 04 Aug 2019 19:26:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=mXck+7yixSQbGeYYGZ+JiOZc4vrwYTsXa1d6rhW0au0=;
-        b=gFVQKv/z4hkyO8ZnZlCGUK+FIPH3aqtCeDyUzEgYYsBEWinPU90nKiSb05CUBG01M1
-         oxEgMeb9nQJKz8Rb+HQHx6kRjoJLP1S14blrbtciru0z2KimZ45bVOpsebMYLUALwrrR
-         rf7dJmzlnaA1k61gjjVygTYmZs9B6RvBwQTZlWq3lMLSqVu7UJP/houJiz8wHY29TjxQ
-         WrZ9fD5NqIyt3QvcboZq/UIhWAyZdzO9+/b3WHRpCgsYEL2fxT728QR1WCetpsMPWEzf
-         JzOBdEXS5aEz17iQmyjAZnvp/fj2omrn+uaM+kT71QYo1NZrhrBt1LGoKYGDZi7LNTWP
-         EgGA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lcnoyc82zBJmK7HyZZ9/xYHIo+nvY1F0Vc3WAAWFXf4=;
+        b=bjxN1i855euNnjUnIRlcEX0LvYqx3HxLcGznZolbzXrZ9h2uenhVqHuurr9ZBo0Mdn
+         BEsRrms5VOqtu/pZu/TaKYkRFrpT11Va6g+49pLA5OWY+SZ0hMDbYRKwmWmxzMDhbb8f
+         GTQVuKdH4sre765l2YwqLwgEj5U5TCxJ11dgPQgtD9/F7nITzsxx1q+K6fPt8AJTwZ51
+         SXQT/3NcHGnARj71eCFz2j1ZKbUjtfQuqmAtbXa6juripZelfrT7KMWdgAkVhlhszJJH
+         Qh8QWc4/xPlfmZB6bDU1IsGkYlb7ALstwyWPJLnNFIgVmfoptlw3rJFEc3KpcOW6cCi6
+         uYRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=mXck+7yixSQbGeYYGZ+JiOZc4vrwYTsXa1d6rhW0au0=;
-        b=jZiLHRkbLWPNS6jf8X6B1vor+y6fzJ8Osjmyo1K9bFxrgEXMfhEXfw32uOFWaBQ1pS
-         Pz52hyr1kYhh23qkGcXlO93sF7DAUvDrHAT5VAO0UchKoRajnRXIf171avLgvEUnK4lW
-         SELznKNmzmXXGkAHItqAD9Gmr2/SBO33ZKvbcT/ttmTalWt+/1SHiWyLD5Y0hXmyqMlK
-         T8gIWbNg1rdNFGKtJNi8p8aqIBuzUKuvwz/GF79BbHuKuCT0eB3ErLjeXOr4SFZ7/y7v
-         YjguDsc1A2g3okzLpZ4G1orP/r8dK0UWzlDkfbyS25QPim6Dx/fPUjCnfdWm8jtehFej
-         zKYg==
-X-Gm-Message-State: APjAAAWu6Pq+y1Hwecms1qWk9Qh6TF+12RvBP8a+/8RSfA///+PXWXx6
-        BUmxqPewr9zahRcyVR/PTZc=
-X-Google-Smtp-Source: APXvYqxadHWrRXOwCfVTIVVI7+IRK+OOgL1y3k1/uMmWy9vfvOPgbD29sDXeI3YFCqubPAgaJjVW2A==
-X-Received: by 2002:a65:4948:: with SMTP id q8mr3418751pgs.214.1564971267607;
-        Sun, 04 Aug 2019 19:14:27 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b14sm16640636pga.20.2019.08.04.19.14.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 04 Aug 2019 19:14:26 -0700 (PDT)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc:     Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] sh: Drop -Werror from kernel Makefile
-Date:   Sun,  4 Aug 2019 19:14:23 -0700
-Message-Id: <1564971263-21562-1-git-send-email-linux@roeck-us.net>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lcnoyc82zBJmK7HyZZ9/xYHIo+nvY1F0Vc3WAAWFXf4=;
+        b=S0rVlATrvU8RMWzbpL7Xv04NbyuyMvm6YmbevRTA0AHYfiAPPVYty2Sden3le34y7d
+         jYJG4/OJ4yCC5Lyosd4gzMRfjWTJB8HwTOaKUnYiHTEGAzA9BbLMEQ845gS8VUFr2fAI
+         C+9b1GU7qsml9wbCjo7kvv1//0NyNDSzpSlnVuzAY7UKQsrytCRHeYJj3PeabTC0fmi+
+         XtqMGoumeWWtDpqmOKNLjJnYqJc+DKNl934vExR2J5U2IOt8/wDHnbvMH5InsR3mH4+U
+         v2AZFVTaNZlatV40yj65HQ+M2EGsXfoDAPWqMpyLZkAWxEj3WcbgzdtJYLLE+MsG8b+B
+         lqtQ==
+X-Gm-Message-State: APjAAAV3r9DyLFs//17PCzX+TCb6Q4cBWWSE24NzQ2UU4HVupa5FVHyt
+        k3YKUca63gEDa0p8IuBoRJI=
+X-Google-Smtp-Source: APXvYqz56Uy3OWp9yKpnmoBerTa/QncOG/6somzUXYkyfxRhF/JGW0ZcxzT4FIvpzsPEHyTa4Zvc7A==
+X-Received: by 2002:a63:2004:: with SMTP id g4mr128483482pgg.97.1564971989557;
+        Sun, 04 Aug 2019 19:26:29 -0700 (PDT)
+Received: from blueforge.nvidia.com (searspoint.nvidia.com. [216.228.112.21])
+        by smtp.gmail.com with ESMTPSA id s6sm122624067pfs.122.2019.08.04.19.26.28
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 04 Aug 2019 19:26:29 -0700 (PDT)
+From:   john.hubbard@gmail.com
+X-Google-Original-From: jhubbard@nvidia.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jerome Glisse <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
+        Kentaro Takeda <takedakn@nttdata.co.jp>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        linux-security-module@vger.kernel.org
+Subject: [PATCH] security/tomoyo: convert put_page() to put_user_page*()
+Date:   Sun,  4 Aug 2019 19:26:26 -0700
+Message-Id: <20190805022626.13291-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.22.0
+MIME-Version: 1.0
+X-NVConfidentiality: public
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit a035d552a93b ("Makefile: Globally enable fall-through
-warning"), all sh builds fail with errors such as
+From: John Hubbard <jhubbard@nvidia.com>
 
-arch/sh/kernel/disassemble.c: In function 'print_sh_insn':
-arch/sh/kernel/disassemble.c:478:8: error: this statement may fall through
+For pages that were retained via get_user_pages*(), release those pages
+via the new put_user_page*() routines, instead of via put_page() or
+release_pages().
 
-Since this effectively disables all build and boot tests for the
-architecture, let's drop -Werror from the sh kernel Makefile until
-the problems are fixed.
+This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
+("mm: introduce put_user_page*(), placeholder versions").
 
-Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Cc: Kentaro Takeda <takedakn@nttdata.co.jp>
+Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: linux-security-module@vger.kernel.org
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 ---
- arch/sh/kernel/Makefile | 2 --
- 1 file changed, 2 deletions(-)
+ security/tomoyo/domain.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/sh/kernel/Makefile b/arch/sh/kernel/Makefile
-index 59673f8a3379..ef65f0625c6c 100644
---- a/arch/sh/kernel/Makefile
-+++ b/arch/sh/kernel/Makefile
-@@ -47,5 +47,3 @@ obj-$(CONFIG_DWARF_UNWINDER)	+= dwarf.o
- obj-$(CONFIG_PERF_EVENTS)	+= perf_event.o perf_callchain.o
- obj-$(CONFIG_DMA_NONCOHERENT)	+= dma-coherent.o
- obj-$(CONFIG_HAVE_HW_BREAKPOINT)		+= hw_breakpoint.o
--
--ccflags-y := -Werror
+diff --git a/security/tomoyo/domain.c b/security/tomoyo/domain.c
+index 8526a0a74023..6887beecfb6e 100644
+--- a/security/tomoyo/domain.c
++++ b/security/tomoyo/domain.c
+@@ -931,7 +931,7 @@ bool tomoyo_dump_page(struct linux_binprm *bprm, unsigned long pos,
+ 	}
+ 	/* Same with put_arg_page(page) in fs/exec.c */
+ #ifdef CONFIG_MMU
+-	put_page(page);
++	put_user_page(page);
+ #endif
+ 	return true;
+ }
 -- 
-2.7.4
+2.22.0
 
