@@ -2,250 +2,189 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A23BC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 19:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD35C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 19:23:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30BA92054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 19:21:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SwHvedwU"
+	by mail.kernel.org (Postfix) with ESMTP id 93EA92075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 19:23:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565033000;
+	bh=d6p6NWXIzAr/w+L57W8Oyrx5VdZnumUCXtu9FxtaNsc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rAjRShUfYSfU3CdTNaRnJssZrQOwCWFWlSCZxzTkU6AkVloqvHR55yxFjBrIUmuH3
+	 s3PqhVwnWSeydlSf4myO8dCe7iN3A022orga48l9OKqigQjyA51HWMf+AHOT9DdzoA
+	 fkupjUdQDzt/TmxAp3UlAcyOYnBG2k9UK3MSAEcA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730425AbfHETVX (ORCPT
+        id S1730310AbfHETXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 15:21:23 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:33529 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727460AbfHETVX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 15:21:23 -0400
-Received: by mail-wm1-f68.google.com with SMTP id h19so7319876wme.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 12:21:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d/QPU2oHFa2Ho1S1u38hXjGyl5aDEeD7TzQnoABqEf8=;
-        b=SwHvedwU9g6nA48S5GDPPoRmtIuPB6HVKguEwN51Eqau0hMLvokHWFkjgDclLT4WJ9
-         ZRvtdR1OMl3pDsxeHammDyWTZCV7+pl755zIO26Q6KHFjQ3e/gLCYtfTt/CDuEhl9B89
-         GzO3i9QMkksXWwWTLmaWgoIJQJsnZvBoSZtu5hDq0oVnoafBUSkYMFVcgnaK6cy2pwPH
-         TxzDBdKCB2U3WYsv7E/YVck4skGcHSx1IjNQMnPlRP5Ac+ea13jFQc8xMsPGn0rBCWik
-         Q7M645Zr53ABB8n3lL7+F70QLPeg4uOsu4tRI414AG4hSgTAeO17Zw6WbUebtwNLYWJn
-         qKbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d/QPU2oHFa2Ho1S1u38hXjGyl5aDEeD7TzQnoABqEf8=;
-        b=ETq6yfehJzCqlLbJIv2zlNjwgI47XJNKhcSCK0nyhTAX/FJdtBsj9ysMyRAIA6e66h
-         w9++hlzndEvNnpD34Over5v/A8P1aDw4vKpf0LKOH+RN7xbMswdLHoZeP/GuIeXcJUKC
-         h6wcEhiptXmo3wS7B2dY9iBS49tSiIkIxbmbUZA0UudR18C8MESOIxeps/xaZM4oqcKr
-         +EHCTe/pKDEhmBP8A/H6dKzLCWJDk1X4NYGjtKPw3GSNQtEFmPCKmCmVTsHiRj2A2kyx
-         9OCGtQ89SaWyX6lTemkDlZ5m8xQwDiOm2v3XUvqyiBl7RjpVUcYjYnIbeHL7vF7TSefw
-         oj8w==
-X-Gm-Message-State: APjAAAWImVsnpL2+D84Xtlfpch07O7SHRn6sCOPTMshwN/tx5xCgxAZT
-        xk7zYwkCPF1qaQhZHlXkIvrwM0DYHogD0NthkVg5DA==
-X-Google-Smtp-Source: APXvYqwJAi8fBMrA9JxX1gG/spoyp/2JsRd6mnSAibX5oq4oYYIfQZGjDkqlnIZdIIGU+PrKfA9ja1590/VFMJ38aa0=
-X-Received: by 2002:a1c:96c7:: with SMTP id y190mr18272908wmd.87.1565032881088;
- Mon, 05 Aug 2019 12:21:21 -0700 (PDT)
+        Mon, 5 Aug 2019 15:23:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51060 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727802AbfHETXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 15:23:19 -0400
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBBBD216B7;
+        Mon,  5 Aug 2019 19:23:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565032998;
+        bh=d6p6NWXIzAr/w+L57W8Oyrx5VdZnumUCXtu9FxtaNsc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=R/AKCL41e439d3YyW9Frd8+LqZmY/L/BTeDfKJwCw0IYn+fId94XDv2wn7Pml91f9
+         dnKXgXpHTXeFphyc7/df75+ieHN1KnS+kSCTZqgR9c8Gkj9yb5S930ddLj/+yapLMz
+         2x3mqfxdOrcNQAQnSXJqYUrWF68Oxa6/5KI536WM=
+Received: by mail-qk1-f178.google.com with SMTP id r6so61041032qkc.0;
+        Mon, 05 Aug 2019 12:23:17 -0700 (PDT)
+X-Gm-Message-State: APjAAAVSB5PylCegkKpUn4dEGuognuvnPB/gPuH0SriL0sldMylqBLk0
+        YsgD+I/Z9n6hTEpzycwbHgGfX/VtDA1usktBFA==
+X-Google-Smtp-Source: APXvYqzJ3385dVDr7a416MCnVTqPVutjB6pJSnn10jB+T3hVVAIomIypEjVR/sntYZAAkaMyD0seP3rNxE7IslWzcJM=
+X-Received: by 2002:a37:6944:: with SMTP id e65mr95063738qkc.119.1565032997083;
+ Mon, 05 Aug 2019 12:23:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <1564980742-19124-1-git-send-email-hongxing.zhu@nxp.com> <1564980742-19124-5-git-send-email-hongxing.zhu@nxp.com>
-In-Reply-To: <1564980742-19124-5-git-send-email-hongxing.zhu@nxp.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Mon, 5 Aug 2019 22:21:09 +0300
-Message-ID: <CAEnQRZBoLw5pfZ10STGMRfmR7=6hFjYNFOmXiMAnbM+-8Q4uLg@mail.gmail.com>
-Subject: Re: [RESEND PATCH v5 4/4] mailbox: imx: add support for imx v1 mu
-To:     Richard Zhu <hongxing.zhu@nxp.com>
-Cc:     jassisinghbrar@gmail.com, Oleksij Rempel <o.rempel@pengutronix.de>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+References: <20190731154752.16557-1-nsaenzjulienne@suse.de>
+ <20190731154752.16557-4-nsaenzjulienne@suse.de> <CAL_JsqKF5nh3hcdLTG5+6RU3_TnFrNX08vD6qZ8wawoA3WSRpA@mail.gmail.com>
+ <2050374ac07e0330e505c4a1637256428adb10c4.camel@suse.de>
+In-Reply-To: <2050374ac07e0330e505c4a1637256428adb10c4.camel@suse.de>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 5 Aug 2019 13:23:05 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+LjsRmFg-xaLgpVx3miXN3hid3aD+mgTW__j0SbEFYjQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+LjsRmFg-xaLgpVx3miXN3hid3aD+mgTW__j0SbEFYjQ@mail.gmail.com>
+Subject: Re: [PATCH 3/8] of/fdt: add function to get the SoC wide DMA
+ addressable memory size
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Christoph Hellwig <hch@lst.de>,
+        wahrenst@gmx.net, Marc Zyngier <marc.zyngier@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        linux-mm@kvack.org, Frank Rowand <frowand.list@gmail.com>,
+        phill@raspberryi.org, Florian Fainelli <f.fainelli@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Eric Anholt <eric@anholt.net>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 5, 2019 at 8:16 AM Richard Zhu <hongxing.zhu@nxp.com> wrote:
+On Mon, Aug 5, 2019 at 10:03 AM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
 >
-> There is a version 1.0 MU on i.MX7ULP platform.
-> One new version ID register is added, and it's offset is 0.
-> TRn registers are defined at the offset 0x20 ~ 0x2C.
-> RRn registers are defined at the offset 0x40 ~ 0x4C.
-> SR/CR registers are defined at 0x60/0x64.
-> Extend this driver to support it.
+> Hi Rob,
+> Thanks for the review!
 >
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> Suggested-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-> Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> On Fri, 2019-08-02 at 11:17 -0600, Rob Herring wrote:
+> > On Wed, Jul 31, 2019 at 9:48 AM Nicolas Saenz Julienne
+> > <nsaenzjulienne@suse.de> wrote:
+> > > Some SoCs might have multiple interconnects each with their own DMA
+> > > addressing limitations. This function parses the 'dma-ranges' on each of
+> > > them and tries to guess the maximum SoC wide DMA addressable memory
+> > > size.
+> > >
+> > > This is specially useful for arch code in order to properly setup CMA
+> > > and memory zones.
+> >
+> > We already have a way to setup CMA in reserved-memory, so why is this
+> > needed for that?
+>
+> Correct me if I'm wrong but I got the feeling you got the point of the patch
+> later on.
 
-Very clean solution. Thanks Richard!
+No, for CMA I don't. Can't we already pass a size and location for CMA
+region under /reserved-memory. The only advantage here is perhaps the
+CMA range could be anywhere in the DMA zone vs. a fixed location.
 
-Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
+> > > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > > ---
+> > >
+> > >  drivers/of/fdt.c       | 72 ++++++++++++++++++++++++++++++++++++++++++
+> > >  include/linux/of_fdt.h |  2 ++
+> > >  2 files changed, 74 insertions(+)
+> > >
+> > > diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> > > index 9cdf14b9aaab..f2444c61a136 100644
+> > > --- a/drivers/of/fdt.c
+> > > +++ b/drivers/of/fdt.c
+> > > @@ -953,6 +953,78 @@ int __init early_init_dt_scan_chosen_stdout(void)
+> > >  }
+> > >  #endif
+> > >
+> > > +/**
+> > > + * early_init_dt_dma_zone_size - Look at all 'dma-ranges' and provide the
+> > > + * maximum common dmable memory size.
+> > > + *
+> > > + * Some devices might have multiple interconnects each with their own DMA
+> > > + * addressing limitations. For example the Raspberry Pi 4 has the
+> > > following:
+> > > + *
+> > > + * soc {
+> > > + *     dma-ranges = <0xc0000000  0x0 0x00000000  0x3c000000>;
+> > > + *     [...]
+> > > + * }
+> > > + *
+> > > + * v3dbus {
+> > > + *     dma-ranges = <0x00000000  0x0 0x00000000  0x3c000000>;
+> > > + *     [...]
+> > > + * }
+> > > + *
+> > > + * scb {
+> > > + *     dma-ranges = <0x0 0x00000000  0x0 0x00000000  0xfc000000>;
+> > > + *     [...]
+> > > + * }
+> > > + *
+> > > + * Here the area addressable by all devices is [0x00000000-0x3bffffff].
+> > > Hence
+> > > + * the function will write in 'data' a size of 0x3c000000.
+> > > + *
+> > > + * Note that the implementation assumes all interconnects have the same
+> > > physical
+> > > + * memory view and that the mapping always start at the beginning of RAM.
+> >
+> > Not really a valid assumption for general code.
+>
+> Fair enough. On my defence I settled on that assumption after grepping all dts
+> and being unable to find a board that behaved otherwise.
+>
+> [...]
+>
+> > It's possible to have multiple levels of nodes and dma-ranges. You need to
+> > handle that case too. Doing that and handling differing address translations
+> > will be complicated.
+>
+> Understood.
+>
+> > IMO, I'd just do:
+> >
+> > if (of_fdt_machine_is_compatible(blob, "brcm,bcm2711"))
+> >     dma_zone_size = XX;
+> >
+> > 2 lines of code is much easier to maintain than 10s of incomplete code
+> > and is clearer who needs this. Maybe if we have dozens of SoCs with
+> > this problem we should start parsing dma-ranges.
+>
+> FYI that's what arm32 is doing at the moment and was my first instinct. But it
+> seems that arm64 has been able to survive so far without any machine specific
+> code and I have the feeling Catalin and Will will not be happy about this
+> solution. Am I wrong?
 
-> ---
->  drivers/mailbox/imx-mailbox.c | 55 ++++++++++++++++++++++++++++++-------------
->  1 file changed, 38 insertions(+), 17 deletions(-)
->
-> diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
-> index afe625e..2cdcdc5 100644
-> --- a/drivers/mailbox/imx-mailbox.c
-> +++ b/drivers/mailbox/imx-mailbox.c
-> @@ -12,19 +12,11 @@
->  #include <linux/of_device.h>
->  #include <linux/slab.h>
->
-> -/* Transmit Register */
-> -#define IMX_MU_xTRn(x)         (0x00 + 4 * (x))
-> -/* Receive Register */
-> -#define IMX_MU_xRRn(x)         (0x10 + 4 * (x))
-> -/* Status Register */
-> -#define IMX_MU_xSR             0x20
->  #define IMX_MU_xSR_GIPn(x)     BIT(28 + (3 - (x)))
->  #define IMX_MU_xSR_RFn(x)      BIT(24 + (3 - (x)))
->  #define IMX_MU_xSR_TEn(x)      BIT(20 + (3 - (x)))
->  #define IMX_MU_xSR_BRDIP       BIT(9)
->
-> -/* Control Register */
-> -#define IMX_MU_xCR             0x24
->  /* General Purpose Interrupt Enable */
->  #define IMX_MU_xCR_GIEn(x)     BIT(28 + (3 - (x)))
->  /* Receive Interrupt Enable */
-> @@ -44,6 +36,13 @@ enum imx_mu_chan_type {
->         IMX_MU_TYPE_RXDB,       /* Rx doorbell */
->  };
->
-> +struct imx_mu_dcfg {
-> +       u32     xTR[4];         /* Transmit Registers */
-> +       u32     xRR[4];         /* Receive Registers */
-> +       u32     xSR;            /* Status Register */
-> +       u32     xCR;            /* Control Register */
-> +};
-> +
->  struct imx_mu_con_priv {
->         unsigned int            idx;
->         char                    irq_desc[IMX_MU_CHAN_NAME_SIZE];
-> @@ -61,12 +60,27 @@ struct imx_mu_priv {
->         struct mbox_chan        mbox_chans[IMX_MU_CHANS];
->
->         struct imx_mu_con_priv  con_priv[IMX_MU_CHANS];
-> +       const struct imx_mu_dcfg        *dcfg;
->         struct clk              *clk;
->         int                     irq;
->
->         bool                    side_b;
->  };
->
-> +static const struct imx_mu_dcfg imx_mu_cfg_imx6sx = {
-> +       .xTR    = {0x0, 0x4, 0x8, 0xc},
-> +       .xRR    = {0x10, 0x14, 0x18, 0x1c},
-> +       .xSR    = 0x20,
-> +       .xCR    = 0x24,
-> +};
-> +
-> +static const struct imx_mu_dcfg imx_mu_cfg_imx7ulp = {
-> +       .xTR    = {0x20, 0x24, 0x28, 0x2c},
-> +       .xRR    = {0x40, 0x44, 0x48, 0x4c},
-> +       .xSR    = 0x60,
-> +       .xCR    = 0x64,
-> +};
-> +
->  static struct imx_mu_priv *to_imx_mu_priv(struct mbox_controller *mbox)
->  {
->         return container_of(mbox, struct imx_mu_priv, mbox);
-> @@ -88,10 +102,10 @@ static u32 imx_mu_xcr_rmw(struct imx_mu_priv *priv, u32 set, u32 clr)
->         u32 val;
->
->         spin_lock_irqsave(&priv->xcr_lock, flags);
-> -       val = imx_mu_read(priv, IMX_MU_xCR);
-> +       val = imx_mu_read(priv, priv->dcfg->xCR);
->         val &= ~clr;
->         val |= set;
-> -       imx_mu_write(priv, val, IMX_MU_xCR);
-> +       imx_mu_write(priv, val, priv->dcfg->xCR);
->         spin_unlock_irqrestore(&priv->xcr_lock, flags);
->
->         return val;
-> @@ -111,8 +125,8 @@ static irqreturn_t imx_mu_isr(int irq, void *p)
->         struct imx_mu_con_priv *cp = chan->con_priv;
->         u32 val, ctrl, dat;
->
-> -       ctrl = imx_mu_read(priv, IMX_MU_xCR);
-> -       val = imx_mu_read(priv, IMX_MU_xSR);
-> +       ctrl = imx_mu_read(priv, priv->dcfg->xCR);
-> +       val = imx_mu_read(priv, priv->dcfg->xSR);
->
->         switch (cp->type) {
->         case IMX_MU_TYPE_TX:
-> @@ -138,10 +152,10 @@ static irqreturn_t imx_mu_isr(int irq, void *p)
->                 imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_TIEn(cp->idx));
->                 mbox_chan_txdone(chan, 0);
->         } else if (val == IMX_MU_xSR_RFn(cp->idx)) {
-> -               dat = imx_mu_read(priv, IMX_MU_xRRn(cp->idx));
-> +               dat = imx_mu_read(priv, priv->dcfg->xRR[cp->idx]);
->                 mbox_chan_received_data(chan, (void *)&dat);
->         } else if (val == IMX_MU_xSR_GIPn(cp->idx)) {
-> -               imx_mu_write(priv, IMX_MU_xSR_GIPn(cp->idx), IMX_MU_xSR);
-> +               imx_mu_write(priv, IMX_MU_xSR_GIPn(cp->idx), priv->dcfg->xSR);
->                 mbox_chan_received_data(chan, NULL);
->         } else {
->                 dev_warn_ratelimited(priv->dev, "Not handled interrupt\n");
-> @@ -159,7 +173,7 @@ static int imx_mu_send_data(struct mbox_chan *chan, void *data)
->
->         switch (cp->type) {
->         case IMX_MU_TYPE_TX:
-> -               imx_mu_write(priv, *arg, IMX_MU_xTRn(cp->idx));
-> +               imx_mu_write(priv, *arg, priv->dcfg->xTR[cp->idx]);
->                 imx_mu_xcr_rmw(priv, IMX_MU_xCR_TIEn(cp->idx), 0);
->                 break;
->         case IMX_MU_TYPE_TXDB:
-> @@ -270,7 +284,7 @@ static void imx_mu_init_generic(struct imx_mu_priv *priv)
->                 return;
->
->         /* Set default MU configuration */
-> -       imx_mu_write(priv, 0, IMX_MU_xCR);
-> +       imx_mu_write(priv, 0, priv->dcfg->xCR);
->  }
->
->  static int imx_mu_probe(struct platform_device *pdev)
-> @@ -278,6 +292,7 @@ static int imx_mu_probe(struct platform_device *pdev)
->         struct device *dev = &pdev->dev;
->         struct device_node *np = dev->of_node;
->         struct imx_mu_priv *priv;
-> +       const struct imx_mu_dcfg *dcfg;
->         unsigned int i;
->         int ret;
->
-> @@ -295,6 +310,11 @@ static int imx_mu_probe(struct platform_device *pdev)
->         if (priv->irq < 0)
->                 return priv->irq;
->
-> +       dcfg = of_device_get_match_data(dev);
-> +       if (!dcfg)
-> +               return -EINVAL;
-> +       priv->dcfg = dcfg;
-> +
->         priv->clk = devm_clk_get(dev, NULL);
->         if (IS_ERR(priv->clk)) {
->                 if (PTR_ERR(priv->clk) != -ENOENT)
-> @@ -348,7 +368,8 @@ static int imx_mu_remove(struct platform_device *pdev)
->  }
->
->  static const struct of_device_id imx_mu_dt_ids[] = {
-> -       { .compatible = "fsl,imx6sx-mu" },
-> +       { .compatible = "fsl,imx7ulp-mu", .data = &imx_mu_cfg_imx7ulp },
-> +       { .compatible = "fsl,imx6sx-mu", .data = &imx_mu_cfg_imx6sx },
->         { },
->  };
->  MODULE_DEVICE_TABLE(of, imx_mu_dt_ids);
-> --
-> 2.7.4
->
+No doubt. I'm fine if the 2 lines live in drivers/of/.
+
+Note that I'm trying to reduce the number of early_init_dt_scan_*
+calls from arch code into the DT code so there's more commonality
+across architectures in the early DT scans. So ideally, this can all
+be handled under early_init_dt_scan() call.
+
+Rob
