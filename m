@@ -2,160 +2,124 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE95C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D71DAC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E36152064A
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:37:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565023050;
-	bh=0/BIxc8mhBhYH3Ib+vhnqOIjrI+SrIhPShaOPUp7YI4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=m3DFUu+sgrmdrXrajtIz4B4m5zxvWrDayfsm0dFJQN3fn2mI+FnsnIF2qSZ5u8MHZ
-	 G4EMITiMBD3NKbIhmfgz/BIAbYjn7Q8VaPo0m7B+KR29gaIDFo5Dzdy5h12gwG0uDf
-	 uE+2zMLUjtDRWlwmnxoaBt4iPHXpOyk+g/CRfVjk=
+	by mail.kernel.org (Postfix) with ESMTP id A682D2064A
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:41:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jf1TsCUn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728995AbfHEQh2 (ORCPT
+        id S1728842AbfHEQlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 12:37:28 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54818 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726559AbfHEQh2 (ORCPT
+        Mon, 5 Aug 2019 12:41:02 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40564 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726559AbfHEQlC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 12:37:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=N/+b7lg2LZUN9MbsueTnHaM/5HWbEaqnfqPiRMvrM28=; b=ERjnBSErYIX4gxaZ9FtiN5tN9
-        nxDY5Br8V2ge/Dzj6TB0aP0EamwlhV2nUtg3YP8JrXDb2wI/7poP3LrJA+REpPZj+hZAytqVM0f8U
-        dVT396bXHPLTt4QHvizsXnYL18vYrCkKuPbowk9sxzU2GiH8Ko43jMjAb/R/evwB6vpt8=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hufzB-0000qh-Ax; Mon, 05 Aug 2019 16:37:25 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 50BD02742D06; Mon,  5 Aug 2019 17:37:24 +0100 (BST)
-Date:   Mon, 5 Aug 2019 17:37:24 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Philippe Schenker <philippe.schenker@toradex.com>
-Cc:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 1/2] Regulator: Core: Add clock-enable to
- fixed-regulator
-Message-ID: <20190805163724.GK6432@sirena.org.uk>
-References: <20190730173006.15823-1-dev@pschenker.ch>
- <20190730173006.15823-2-dev@pschenker.ch>
- <20190730181038.GK4264@sirena.org.uk>
- <b5e1cc3fb5838d9ea4160078402bff95903ba0da.camel@toradex.com>
- <20190731212335.GL4369@sirena.org.uk>
- <0b51a86ad6ee7e143506501937863cd8559244ec.camel@toradex.com>
+        Mon, 5 Aug 2019 12:41:02 -0400
+Received: by mail-wr1-f65.google.com with SMTP id r1so85034968wrl.7;
+        Mon, 05 Aug 2019 09:41:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:references:user-agent:to:cc:subject:message-id:in-reply-to
+         :date:mime-version;
+        bh=ABajkI5eExlI/xSitmeiji8gDOSYLzGBroq8lVBwkdg=;
+        b=Jf1TsCUn3vg9vZIttQpRDxQyLLdSkih/m9y3kA3yWVwK1tHBcluvzb64DtQ25oH1/V
+         xc+QogvPb9pckGM5vfsy43/UEaWPZWupWkE5UPXHzZT5A7/7Ma3dw/KrHAyWf+SIQ5pr
+         Dcvq5iH0eSbCNiujtHHwUJZ240xv7Qi/eds7T8oztvpIBx2XrJ5va7rgiLI/SzDbk43Q
+         Z9ORvjpxuJo5BgjdcSStKB849ChK0G8vPO2yzLZGaqzz0g6WR36X48+GBvCQz9Tay6xs
+         czQE6+3WjSb7nz9cH1JuMb4iiT+97q5c2zuu/BUbeRroBVjCzNGInLsmtjQPkR05iWcK
+         8OZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:references:user-agent:to:cc:subject
+         :message-id:in-reply-to:date:mime-version;
+        bh=ABajkI5eExlI/xSitmeiji8gDOSYLzGBroq8lVBwkdg=;
+        b=ja333Nqtw20Mg9p87EzOhrEgYcG7GmjPnXLyAE4NJqb8hLRY9yagT4GFUZuohHJ2iR
+         SAmnNigQGyxIXTdBfVu1ZmiFSDyC6AneB1xemr2cNDqdrSWKVN7wIHvKnAQbW87i3zL5
+         2yhFktPRlmgHyb+QfCQ9uOSWZs4O/b6z1deXeokbgBny6NOEFGBO3n25sHdGA2wA1+KA
+         m4GALRztMhorwE0gqrRmO3FSmuWBup1q8j2x7eyTIqjnQOSEnKNiYUL7HQBeEJEQ4IAn
+         1Mr64JLB9LZNDW4q9FGYPZ3+PywIqfx2Q6j4YtdSh3rvHuSYYyy6/Fswk4l+xi6ykduS
+         NKhg==
+X-Gm-Message-State: APjAAAVKtD726JUIa1WAiplMkkuru1+L8SojAzp9AdVuxovPwFYEwhzT
+        ndKL1hSyrCfEkuxXvSgtEVL3KSef2ck=
+X-Google-Smtp-Source: APXvYqz/Y6nmSCAzfJUUyNSVsxAyHbqu5I0RQoLKZMj78OsAAfjqWRVGFPKFfORnGY8ls5vKuqHU6Q==
+X-Received: by 2002:adf:f050:: with SMTP id t16mr791943wro.99.1565023259727;
+        Mon, 05 Aug 2019 09:40:59 -0700 (PDT)
+Received: from ptitpuce ([2a01:e35:8b6a:1220:5461:8d4f:b809:4bf8])
+        by smtp.gmail.com with ESMTPSA id i12sm99839220wrx.61.2019.08.05.09.40.56
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 05 Aug 2019 09:40:59 -0700 (PDT)
+From:   Christophe de Dinechin <christophe.de.dinechin@gmail.com>
+X-Google-Original-From: Christophe de Dinechin <christophe@dinechin.org>
+References: <20190802145017.42543-1-steven.price@arm.com> <20190802145017.42543-2-steven.price@arm.com>
+User-agent: mu4e 1.3.2; emacs 26.2
+To:     Steven Price <steven.price@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Will Deacon <will@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/9] KVM: arm64: Document PV-time interface
+Message-ID: <m1mugnmv0x.fsf@dinechin.org>
+In-reply-to: <20190802145017.42543-2-steven.price@arm.com>
+Date:   Mon, 05 Aug 2019 18:40:54 +0200
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rwbb4r/vLufKlfJs"
-Content-Disposition: inline
-In-Reply-To: <0b51a86ad6ee7e143506501937863cd8559244ec.camel@toradex.com>
-X-Cookie: Place stamp here.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---rwbb4r/vLufKlfJs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Steven Price writes:
 
-On Mon, Aug 05, 2019 at 11:07:58AM +0000, Philippe Schenker wrote:
-> On Wed, 2019-07-31 at 22:23 +0100, Mark Brown wrote:
+> Introduce a paravirtualization interface for KVM/arm64 based on the
+> "Arm Paravirtualized Time for Arm-Base Systems" specification DEN 0057A.
+>
+> This only adds the details about "Stolen Time" as the details of "Live
+> Physical Time" have not been fully agreed.
+>
+[...]
 
-Please fix your mail client to word wrap within paragraphs at something
-substantially less than 80 columns.  Doing this makes your messages much
-easier to read and reply to.
+> +
+> +Stolen Time
+> +-----------
+> +
+> +The structure pointed to by the PV_TIME_ST hypercall is as follows:
+> +
+> +  Field       | Byte Length | Byte Offset | Description
+> +  ----------- | ----------- | ----------- | --------------------------
+> +  Revision    |      4      |      0      | Must be 0 for version 0.1
+> +  Attributes  |      4      |      4      | Must be 0
+> +  Stolen time |      8      |      8      | Stolen time in unsigned
+> +              |             |             | nanoseconds indicating how
+> +              |             |             | much time this VCPU thread
+> +              |             |             | was involuntarily not
+> +              |             |             | running on a physical CPU.
 
-> > So it's not switching with the clock, the circuit somehow keeps the
-> > switch latched?
+I know very little about the topic, but I don't understand how the spec
+as proposed allows an accurate reading of the relation between physical
+time and stolen time simultaneously. In other words, could you draw
+Figure 1 of the spec from within the guest? Or is it a non-objective?
 
-> No, it doesn't keep it latched. To make things clear here a status table:
+For example, if you read the stolen time before you read CNTVCT_EL0,
+isn't it possible for a lengthy event like a migration to occur between
+the two reads, causing the stolen time to be obsolete and off by seconds?
 
-So the capacitor on the input of the p-FET is keeping the switch on?
-When I say it's not switching with the clock I mean it's not constantly
-bouncing on and off at whatever rate the clock is going at.
-
-> > It does feel like it might be simpler to just handle this as a quirk in
-> > the PHY or ethernet driver, this feels like an awful lot of work to
-> > add a sleep on what's probably only going to ever be one system.
-
-> I thought of that too, but the problem with that approach is that I
-> can't reflect the actual switching behavior. What would happen is if
-> you turnethernet off with 'ip link set eth0 down', the clock would
-> stop and therefore no more supply voltage to the PHY. But the ethernet
-> driverwould in that case let the regulator enabled preventing,
-> switching off the clock.
-
-You could include that in your quirk?
-
-> Anyway I feel that to solve this with a quirk would be a little
-> hackish, plus I'd anyway need to mess around with the Ethernet/PHY
-> drivers. So why not solve it properly with a regulator that supports
-> clocks?
-
-I think you are going to end up with a hack no matter what.
-
-> > Hopefully not a *lot* of duplication.  The GPIOs are handled in the core
-> > because they're really common and used by many regulator devices, the
-> > same will I hope not be true for clocks.
-
-> I agree that they are commonly and widely used. To add support for clocks in
-> regulator-core was really easy to do as I did it the same way as it is done with
-> gpio's. If I don't need to touch regulator-core I don't want to. But as I said
-> it was really easy for me to integrate it in there in a way without even
-> understanding the whole regulator API.
-
-> If it makes more sense to do it in a new file like clock-regulator.c and
-> creating a new compatible that is what I'm trying to find out here. I'd be happy
-> to write also a new clock-regulator driver for that purpose.
-
-It would be better if it wasn't in the core, that keeps everything
-partitioned off nicely.
-
-> > I guess my question here is what the trip through the regulator API buys
-> > us - it's a bit of a sledgehammer to crack a nut thing.
-
-> In my opinion this is not only about to solve my problem with startup-delay. I
-> think that this is really a behavior that can be generic. That's also why I'm
-> asking here how we want to solve that so not only I solve my little problem with
-> a board quirk but in a broader view for possible future usage by others.
-
-> It is possible that a regulator needs a clock. That exactly is, what we have on
-> our board and works better than expected (at least by myself :-)).
-
-The majority of regulators that need clocks are PWM devices which is a
-whole other thing that we already support.  This is a highly unusual
-hardware design, we don't have the regmap stuff in the core and that's a
-lot more common.
-
---rwbb4r/vLufKlfJs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1IW0MACgkQJNaLcl1U
-h9CeHwf/eC2BmK/40EmK4CPSSL99FIGsL7s+PYPXXPMWeJrxQpeQinTh1AQZEt9D
-AsBCfmbRNLbt6pPhGXaMZpavAq6byxOmkROrpWdACcs0/YlgGDbFiR138YQLN4z1
-zBsBv5V3qw+rY7vZObvFVeOEk8VSDpwIrwJspmLXojxI9LeJfZ+fWsU8JlPfB4+x
-CH7XF2v8VTndmWcgIRJ2XssnHJyG0FfeheaPQQVuFhTk5OelFwZf5m55XvriNx4m
-bZ+SmuW5bu2nbQH+nl+rAl+/vuZstvAVQwqRkH5FnjhHF4EnOzAhRAIm1j2gOXUV
-AQY/5lwQNIXD521N+wQW/JPXCxciMA==
-=TUAt
------END PGP SIGNATURE-----
-
---rwbb4r/vLufKlfJs--
+--
+Cheers,
+Christophe de Dinechin (IRC c3d)
