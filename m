@@ -2,96 +2,105 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 208B0C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 316C3C32754
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF36A2147A
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:04:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FCJwaACz"
+	by mail.kernel.org (Postfix) with ESMTP id 0250E2147A
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:04:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730829AbfHEWEJ (ORCPT
+        id S1730855AbfHEWEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 18:04:09 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:33774 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728483AbfHEWEJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 18:04:09 -0400
-Received: by mail-oi1-f194.google.com with SMTP id u15so63626504oiv.0;
-        Mon, 05 Aug 2019 15:04:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hQkPqzCl0EgO8ejsOWFwcjYDROGmuy2jsvyxtVP20aM=;
-        b=FCJwaACzgf1lMLExxkJ0zmSYaGN+RjeBxMMU7Lk33oCV3CEo868GUeLDDxRP8mE1cO
-         1+wU+wOa9k11DarcGLU9OVtJ2zAkqSj1yefQviDdYqkf7C9wGG0fb+b0g7bvyVTR1OEY
-         VrbnQZMl/kXiahEqmsY3qHI56gsaEJJ02c38h7UtUzchv41TArVnLCeThcrLLMr6eAYk
-         Ox4H1/llesBgvumKRwVMvQI87/EbuXwbiPWy2YRdMb2f+Sbtsde13IXtqzgZjhJj86mA
-         4b2/CYpjuJX+HfG9w4X9VG/rCkSp5laJerKuNBQTsDY89wMo7+hNSjcRHyWdjIzA1ArD
-         uazg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hQkPqzCl0EgO8ejsOWFwcjYDROGmuy2jsvyxtVP20aM=;
-        b=D0F6sWSMaupHC0eMKNG8hdNjMXQW/AojAaSM1fu7SGB/aUP7qA6IVFfWBAML23d9CA
-         HYdsBU1gj/7VZ2ybmd8hIkrYHh94y4rVcWTBoAgigV2/o50tMIiEqEnVXEfublHpSYcd
-         qc2wdtivg37wTdUJE8ky9ewDThK2fKcGKVXQdUBNCtXjzdMsnd9ngR1yBRSb7tteaAUF
-         dEhW9nIbZlr1g4Cg1PjxOK2gSHV0lOgvDu2vtIGxaJI4wIJKewPUAmkG1Uhbk0X4ZB/Y
-         YEsDzAqkrvGRiRZUDo0zvIdzbyt58GGQRe8IDzC0ZzqkWPqglsxoQRSlOLgK2Qdc/EG/
-         Exvw==
-X-Gm-Message-State: APjAAAWz7+a3U5/b4G8h+yLCeACyvt3vHJpE0He8QshbrE6qOpUYo19r
-        tiX4xRPnI+kpCgUN6txVVu8Q5+8QLjWh9qQm7OY=
-X-Google-Smtp-Source: APXvYqxP7fkzI8bznQi3qLDYrrbEn4kQESZSUqqCHb6GuB5YrW2/rhkANG1qEjqgWRtj1C/ifmeIShJ1bzdlQVNpSss=
-X-Received: by 2002:a02:b914:: with SMTP id v20mr567705jan.83.1565042648210;
- Mon, 05 Aug 2019 15:04:08 -0700 (PDT)
+        Mon, 5 Aug 2019 18:04:44 -0400
+Received: from mga09.intel.com ([134.134.136.24]:5380 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727928AbfHEWEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 18:04:43 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 15:04:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,350,1559545200"; 
+   d="scan'208";a="373219765"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga005.fm.intel.com with ESMTP; 05 Aug 2019 15:04:42 -0700
+Date:   Mon, 5 Aug 2019 15:04:42 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     john.hubbard@gmail.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jerome Glisse <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
+Subject: Re: [PATCH] fs/io_uring.c: convert put_page() to put_user_page*()
+Message-ID: <20190805220441.GA23416@iweiny-DESK2.sc.intel.com>
+References: <20190805023206.8831-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
-References: <20190802105457.16596-1-hslester96@gmail.com> <26D9FDECA4FBDD4AADA65D8E2FC68A4A1D40F162@ORSMSX104.amr.corp.intel.com>
-In-Reply-To: <26D9FDECA4FBDD4AADA65D8E2FC68A4A1D40F162@ORSMSX104.amr.corp.intel.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Mon, 5 Aug 2019 15:03:57 -0700
-Message-ID: <CAKgT0UcDz_NDnft5YsZY3c_0vJABXzmZUDk0W4XKx82dJtSh9A@mail.gmail.com>
-Subject: Re: [Intel-wired-lan] [PATCH 1/2] ixgbe: Explicitly initialize
- reference count to 0
-To:     "Bowers, AndrewX" <andrewx.bowers@intel.com>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190805023206.8831-1-jhubbard@nvidia.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 5, 2019 at 2:42 PM Bowers, AndrewX <andrewx.bowers@intel.com> wrote:
->
-> > -----Original Message-----
-> > From: Intel-wired-lan [mailto:intel-wired-lan-bounces@osuosl.org] On
-> > Behalf Of Chuhong Yuan
-> > Sent: Friday, August 2, 2019 3:55 AM
-> > Cc: netdev@vger.kernel.org; Chuhong Yuan <hslester96@gmail.com>; linux-
-> > kernel@vger.kernel.org; intel-wired-lan@lists.osuosl.org; David S . Miller
-> > <davem@davemloft.net>
-> > Subject: [Intel-wired-lan] [PATCH 1/2] ixgbe: Explicitly initialize reference
-> > count to 0
-> >
-> > The driver does not explicitly call atomic_set to initialize refcount to 0.
-> > Add the call so that it will be more straight forward to convert refcount from
-> > atomic_t to refcount_t.
-> >
-> > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> > ---
-> >  drivers/net/ethernet/intel/ixgbe/ixgbe_fcoe.c | 1 +
-> >  1 file changed, 1 insertion(+)
->
-> Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+On Sun, Aug 04, 2019 at 07:32:06PM -0700, john.hubbard@gmail.com wrote:
+> From: John Hubbard <jhubbard@nvidia.com>
+> 
+> For pages that were retained via get_user_pages*(), release those pages
+> via the new put_user_page*() routines, instead of via put_page() or
+> release_pages().
+> 
+> This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
+> ("mm: introduce put_user_page*(), placeholder versions").
+> 
+> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+> Cc: Jens Axboe <axboe@kernel.dk>
+> Cc: linux-fsdevel@vger.kernel.org
+> Cc: linux-block@vger.kernel.org
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 
-NAK. This patch is badly broken. We should not be resetting the fcoe
-refcnt in ixgbe_setup_fcoe_ddp_resources.
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+
+> ---
+>  fs/io_uring.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/fs/io_uring.c b/fs/io_uring.c
+> index d542f1cf4428..8a1de5ab9c6d 100644
+> --- a/fs/io_uring.c
+> +++ b/fs/io_uring.c
+> @@ -2815,7 +2815,7 @@ static int io_sqe_buffer_unregister(struct io_ring_ctx *ctx)
+>  		struct io_mapped_ubuf *imu = &ctx->user_bufs[i];
+>  
+>  		for (j = 0; j < imu->nr_bvecs; j++)
+> -			put_page(imu->bvec[j].bv_page);
+> +			put_user_page(imu->bvec[j].bv_page);
+>  
+>  		if (ctx->account_mem)
+>  			io_unaccount_mem(ctx->user, imu->nr_bvecs);
+> @@ -2959,10 +2959,8 @@ static int io_sqe_buffer_register(struct io_ring_ctx *ctx, void __user *arg,
+>  			 * if we did partial map, or found file backed vmas,
+>  			 * release any pages we did get
+>  			 */
+> -			if (pret > 0) {
+> -				for (j = 0; j < pret; j++)
+> -					put_page(pages[j]);
+> -			}
+> +			if (pret > 0)
+> +				put_user_pages(pages, pret);
+>  			if (ctx->account_mem)
+>  				io_unaccount_mem(ctx->user, nr_pages);
+>  			kvfree(imu->bvec);
+> -- 
+> 2.22.0
+> 
