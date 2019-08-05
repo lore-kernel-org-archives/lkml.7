@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6693EC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F329C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 321FA2075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2740820880
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:20:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011239;
-	bh=6o0ZCo4Zmg0dF9N4Daf8VQszTRUhNoiXuKCDiGqX01M=;
+	s=default; t=1565011241;
+	bh=Y8PBpS1nYNHZhQZB7D/E6RDyOcPvA3yZ0fBim/2aaEM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zko/XO0RFtdRkQdmyImB35+Fi20rTZm+ILFOBptXSkWp1bphqWRnvvyTIaP0BPCTm
-	 XaORItUpvKbG98sxPbNeYm0r4JFRPd3amFMgPLFSss2wQ2ZgTB8KAIdDkE7dFvByaJ
-	 bgIghgBnBWEwRssp78izmyETQO1GRg72j9K/PtTs=
+	b=F5Zo2241xL+55Q+tpsAOEDoqJtjpze9bEdCN0B3GKp4mw1sSnkNQOpP/SXO+SKnp8
+	 sUhN1w71PjHi5qEgbgFCupbPv+Vope1rx7FPb9VSRr1BPUXe1KGYe8A9419NkQi6xz
+	 9vJsja8IB3/m2do+3XXrH7EJATUrvawHmogMYfLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730282AbfHENUh (ORCPT
+        id S1730297AbfHENUk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:20:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56604 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:20:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728800AbfHENUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:20:31 -0400
+        id S1728977AbfHENUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:20:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D84102067D;
-        Mon,  5 Aug 2019 13:20:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EC472075B;
+        Mon,  5 Aug 2019 13:20:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011230;
-        bh=6o0ZCo4Zmg0dF9N4Daf8VQszTRUhNoiXuKCDiGqX01M=;
+        s=default; t=1565011232;
+        bh=Y8PBpS1nYNHZhQZB7D/E6RDyOcPvA3yZ0fBim/2aaEM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ULaq6V8H0kwZ3ehqEhYofYipP3TJKySDHREbauXtDWy/oCuO/IAXJ7TPjAE7/cbaB
-         FUda/KuAglairwc63UQkQAy2HXbfcxS0ZfbgretmLKhRyhL09Uq+y/dNJDESYYQUd8
-         0FRu/GP1vprusYNvrjXxgHigcbYZJrdhM2V/2/wE=
+        b=NcKTNuiSTTwunkPWKTeWjMCXVxOtdxIazp2g6FqlOo2RCi/p3bAqVWUYTtz9c1LPa
+         rosTxl1YCHlTa5rPIXd4JxWRaJpTJHTpscUMLJz3JbBbwAeEimTaZdmDG9pG4GysI4
+         ElLRAbAuYrwgc/YKKnmrDoGDPrw9Sn4X5qR7FQuo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cheng Jian <cj.chengjian@huawei.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        stable@vger.kernel.org,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Olof Johansson <olof@lixom.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 006/131] ftrace: Enable trampoline when rec count returns back to one
-Date:   Mon,  5 Aug 2019 15:01:33 +0200
-Message-Id: <20190805124951.850680333@linuxfoundation.org>
+Subject: [PATCH 5.2 015/131] firmware/psci: psci_checker: Park kthreads before stopping them
+Date:   Mon,  5 Aug 2019 15:01:42 +0200
+Message-Id: <20190805124952.458284431@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -60,103 +63,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a124692b698b00026a58d89831ceda2331b2e1d0 ]
+[ Upstream commit 92e074acf6f7694e96204265eb18ac113f546e80 ]
 
-Custom trampolines can only be enabled if there is only a single ops
-attached to it. If there's only a single callback registered to a function,
-and the ops has a trampoline registered for it, then we can call the
-trampoline directly. This is very useful for improving the performance of
-ftrace and livepatch.
+Since commit 85f1abe0019f ("kthread, sched/wait: Fix kthread_parkme()
+completion issue"), kthreads that are bound to a CPU must be parked
+before being stopped. At the moment the PSCI checker calls
+kthread_stop() directly on the suspend kthread, which triggers the
+following warning:
 
-If more than one callback is registered to a function, the general
-trampoline is used, and the custom trampoline is not restored back to the
-direct call even if all the other callbacks were unregistered and we are
-back to one callback for the function.
+[    6.068288] WARNING: CPU: 1 PID: 1 at kernel/kthread.c:398 __kthread_bind_mask+0x20/0x78
+               ...
+[    6.190151] Call trace:
+[    6.192566]  __kthread_bind_mask+0x20/0x78
+[    6.196615]  kthread_unpark+0x74/0x80
+[    6.200235]  kthread_stop+0x44/0x1d8
+[    6.203769]  psci_checker+0x3bc/0x484
+[    6.207389]  do_one_initcall+0x48/0x260
+[    6.211180]  kernel_init_freeable+0x2c8/0x368
+[    6.215488]  kernel_init+0x10/0x100
+[    6.218935]  ret_from_fork+0x10/0x1c
+[    6.222467] ---[ end trace e05e22863d043cd3 ]---
 
-To fix this, set FTRACE_FL_TRAMP flag if rec count is decremented
-to one, and the ops that left has a trampoline.
+kthread_unpark() tries to bind the thread to its CPU and aborts with a
+WARN() if the thread wasn't in TASK_PARKED state. Park the kthreads
+before stopping them.
 
-Testing After this patch :
-
-insmod livepatch_unshare_files.ko
-cat /sys/kernel/debug/tracing/enabled_functions
-
-	unshare_files (1) R I	tramp: 0xffffffffc0000000(klp_ftrace_handler+0x0/0xa0) ->ftrace_ops_assist_func+0x0/0xf0
-
-echo unshare_files > /sys/kernel/debug/tracing/set_ftrace_filter
-echo function > /sys/kernel/debug/tracing/current_tracer
-cat /sys/kernel/debug/tracing/enabled_functions
-
-	unshare_files (2) R I ->ftrace_ops_list_func+0x0/0x150
-
-echo nop > /sys/kernel/debug/tracing/current_tracer
-cat /sys/kernel/debug/tracing/enabled_functions
-
-	unshare_files (1) R I	tramp: 0xffffffffc0000000(klp_ftrace_handler+0x0/0xa0) ->ftrace_ops_assist_func+0x0/0xf0
-
-Link: http://lkml.kernel.org/r/1556969979-111047-1-git-send-email-cj.chengjian@huawei.com
-
-Signed-off-by: Cheng Jian <cj.chengjian@huawei.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: 85f1abe0019f ("kthread, sched/wait: Fix kthread_parkme() completion issue")
+Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Signed-off-by: Olof Johansson <olof@lixom.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/ftrace.c | 28 +++++++++++++++-------------
- 1 file changed, 15 insertions(+), 13 deletions(-)
+ drivers/firmware/psci/psci_checker.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 576c41644e77c..208220d526e83 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -1622,6 +1622,11 @@ static bool test_rec_ops_needs_regs(struct dyn_ftrace *rec)
- 	return  keep_regs;
- }
+diff --git a/drivers/firmware/psci/psci_checker.c b/drivers/firmware/psci/psci_checker.c
+index 08c85099d4d0c..f3659443f8c2c 100644
+--- a/drivers/firmware/psci/psci_checker.c
++++ b/drivers/firmware/psci/psci_checker.c
+@@ -359,16 +359,16 @@ static int suspend_test_thread(void *arg)
+ 	for (;;) {
+ 		/* Needs to be set first to avoid missing a wakeup. */
+ 		set_current_state(TASK_INTERRUPTIBLE);
+-		if (kthread_should_stop()) {
+-			__set_current_state(TASK_RUNNING);
++		if (kthread_should_park())
+ 			break;
+-		}
+ 		schedule();
+ 	}
  
-+static struct ftrace_ops *
-+ftrace_find_tramp_ops_any(struct dyn_ftrace *rec);
-+static struct ftrace_ops *
-+ftrace_find_tramp_ops_next(struct dyn_ftrace *rec, struct ftrace_ops *ops);
+ 	pr_info("CPU %d suspend test results: success %d, shallow states %d, errors %d\n",
+ 		cpu, nb_suspend, nb_shallow_sleep, nb_err);
+ 
++	kthread_parkme();
 +
- static bool __ftrace_hash_rec_update(struct ftrace_ops *ops,
- 				     int filter_hash,
- 				     bool inc)
-@@ -1750,15 +1755,17 @@ static bool __ftrace_hash_rec_update(struct ftrace_ops *ops,
- 			}
- 
- 			/*
--			 * If the rec had TRAMP enabled, then it needs to
--			 * be cleared. As TRAMP can only be enabled iff
--			 * there is only a single ops attached to it.
--			 * In otherwords, always disable it on decrementing.
--			 * In the future, we may set it if rec count is
--			 * decremented to one, and the ops that is left
--			 * has a trampoline.
-+			 * The TRAMP needs to be set only if rec count
-+			 * is decremented to one, and the ops that is
-+			 * left has a trampoline. As TRAMP can only be
-+			 * enabled if there is only a single ops attached
-+			 * to it.
- 			 */
--			rec->flags &= ~FTRACE_FL_TRAMP;
-+			if (ftrace_rec_count(rec) == 1 &&
-+			    ftrace_find_tramp_ops_any(rec))
-+				rec->flags |= FTRACE_FL_TRAMP;
-+			else
-+				rec->flags &= ~FTRACE_FL_TRAMP;
- 
- 			/*
- 			 * flags will be cleared in ftrace_check_record()
-@@ -1951,11 +1958,6 @@ static void print_ip_ins(const char *fmt, const unsigned char *p)
- 		printk(KERN_CONT "%s%02x", i ? ":" : "", p[i]);
+ 	return nb_err;
  }
  
--static struct ftrace_ops *
--ftrace_find_tramp_ops_any(struct dyn_ftrace *rec);
--static struct ftrace_ops *
--ftrace_find_tramp_ops_next(struct dyn_ftrace *rec, struct ftrace_ops *ops);
--
- enum ftrace_bug_type ftrace_bug_type;
- const void *ftrace_expected;
+@@ -433,8 +433,10 @@ static int suspend_tests(void)
  
+ 
+ 	/* Stop and destroy all threads, get return status. */
+-	for (i = 0; i < nb_threads; ++i)
++	for (i = 0; i < nb_threads; ++i) {
++		err += kthread_park(threads[i]);
+ 		err += kthread_stop(threads[i]);
++	}
+  out:
+ 	cpuidle_resume_and_unlock();
+ 	kfree(threads);
 -- 
 2.20.1
 
