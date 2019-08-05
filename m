@@ -2,89 +2,131 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C2DC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 21:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1C5C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 21:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C684720B1F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 21:13:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="2cLajRx2"
+	by mail.kernel.org (Postfix) with ESMTP id 01E7220B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 21:14:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565039689;
+	bh=lNsv9jHussUPiyLIAWUhViIxuDtGxjP/EQCrgV4ad6w=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TA7cqLkPHDMLhFVTBpxnMmGbnTYgy6Gv0ab35UX8EnDku5rNEleZZ0Q3AnMohFpPM
+	 kMMmHj7ReXCA9BO2L9TR/Vj+6Eji+j9Qy/wSJB3mER46zqP+Jb5VwDRNybQFMX+j4j
+	 fRJxslZ8j/F+AVIoR0q0YMbG0//bYiHtBmZ8Ewr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730099AbfHEVNd (ORCPT
+        id S1730735AbfHEVOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 17:13:33 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:51376 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730055AbfHEVNc (ORCPT
+        Mon, 5 Aug 2019 17:14:48 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35229 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729383AbfHEVOr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 17:13:32 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 5241A886BF;
-        Tue,  6 Aug 2019 09:13:30 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1565039610;
-        bh=gr5g/LdhGiAPQskPWwPEPBEUEIgZSDqZJDL0N1Bmt60=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=2cLajRx2gMhwFVkOpKxHu6FHcGMPWjU90WVzNy+eTJ/gRUFP671Rys7zqdXd5m3S+
-         d6taYtmKwCU2ktfQj/oL4BfOBdaxlBSwzgQZf/VG/pIPHo6doI/uKseYuJ52w+wHfD
-         MW4ub7Dlo4lMw4wWmt/XMABcpXyu0qYTRIOnlLTw20dUIHPeCOlrW0UCzQiVEi69Js
-         1AD/O0qRHsG3o4GcZS7Og/yyAuOgKC2JYp9IY5QY8ykB/OWihqHdz/HTIBYhBjBqC1
-         7Rk9/DJZrWa/+aULCCcXXOa2zr83eymBjRn/NTUr22tx19aqu8Hh9fsxh9DNknWrZT
-         YN7apu6E2jSwQ==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d489bf80003>; Tue, 06 Aug 2019 09:13:28 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1156.6; Tue, 6 Aug 2019 09:13:29 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Tue, 6 Aug 2019 09:13:29 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "tjin@wavecomp.com" <tjin@wavecomp.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Subject: Re: MIPS Cache Coherency Issue
-Thread-Topic: MIPS Cache Coherency Issue
-Thread-Index: AQHVS5HXMgkNbD3nfE6pTHb9H7kbG6bsRPOA
-Date:   Mon, 5 Aug 2019 21:13:29 +0000
-Message-ID: <1565039609.15175.3.camel@alliedtelesis.co.nz>
-References: <MWHPR2201MB1119058430642AC300B621ACB8DA0@MWHPR2201MB1119.namprd22.prod.outlook.com>
-In-Reply-To: <MWHPR2201MB1119058430642AC300B621ACB8DA0@MWHPR2201MB1119.namprd22.prod.outlook.com>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5900F38A54DBF1409DEF0E303A28D16C@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Mon, 5 Aug 2019 17:14:47 -0400
+Received: by mail-ot1-f67.google.com with SMTP id j19so10642333otq.2;
+        Mon, 05 Aug 2019 14:14:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K81VJiYZHz48k5xpZL9JVC+H5GcFEAdkpsb0gf8wQuM=;
+        b=SMtfl8tVA71nFqJGEm+lxR2HMNcCzgcHWuldb5bGXwb1iSPuM9If0bbkc5FdTbxrJN
+         6FjTMYRWrqnaWeLK4Mp9UgqiEiUrwxWBRbOw50IvEvKF1t2Gq7Rf3k8Kdl/1wDuKkimF
+         0P+9eKadA4orH2fNnrOb98xaCxkWiW23rx+xH7unCaLHhG7y9iSa/6/OeRLB3EsfJzmJ
+         dqhylpAPXI/73Web3YcSIHUVqQ2g8OQP0ayiEj7Ht9osqYNHY1LpjvfFq0WCd1hw2pht
+         orTM+7SSVHXm4Hv9J8gr1Vm1hOGcWfzz6yzYkxQUA6oaTH05Mgk59pPcw4eZHAkQ73av
+         tFww==
+X-Gm-Message-State: APjAAAVQ+yjn7FqlrtILypAl4tRRBMLFDjHWqe1WYVIZzS0J9xLIkbx+
+        KMvD80fx/wFNDzaf9L17oyKMx24IBUHoxmZR2h0=
+X-Google-Smtp-Source: APXvYqxAOvq6brWaQzk/LEyKzX+snTQA2yXv4SbP05AZTRriz+D8QJvlIqBpei/jWnH2T4tFiMx8z/ExVaTjVwvcCJM=
+X-Received: by 2002:a05:6830:8a:: with SMTP id a10mr2078732oto.167.1565039686381;
+ Mon, 05 Aug 2019 14:14:46 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190805205214.194981-1-helgaas@kernel.org> <20190805205214.194981-6-helgaas@kernel.org>
+In-Reply-To: <20190805205214.194981-6-helgaas@kernel.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 5 Aug 2019 23:14:34 +0200
+Message-ID: <CAJZ5v0iovG=96rz1B_Fcwi0ZMA3GipoW24zOC6JwZhU=5ZhooQ@mail.gmail.com>
+Subject: Re: [PATCH 5/5] PCI / PM: Decode D3cold power state correctly
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Linux PCI <linux-pci@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA4LTA1IGF0IDE0OjAyICswMDAwLCBUb21teSBKaW4gd3JvdGU6DQo+IEhp
-IENocmlzLA0KPiANCj4gTXkgbmFtZSBpcyBUb21teSwgZnJvbSB3YXZlIGNvbXB1dGluZyBDbyxM
-dGQsIG91ciB0ZWFtIGlzIHdvcmtpbmcgb24NCj4gdGhlIG1haW50ZW5hbmNlIG9mIHRoZSBNSVBT
-IGtlcm5lbC4NCj4gDQo+IFlvdSByYWlzZWQgYSBNSVBTIGNhY2hlIGNvaGVyZW5jeSBwYXRjaCB3
-aGljaCBjYW4gYmUgZm91bmQgaW4gdGhlDQo+IGZvbGxvd2luZyBsaW5rcw0KPiBodHRwczovL2xv
-cmUua2VybmVsLm9yZy9saW51eC1taXBzLzIwMTkwNTI4MjIxMjU1LjIyNDYwLTEtY2hyaXMucGFj
-a2gNCj4gYW1AYWxsaWVkdGVsZXNpcy5jby5uei9ULyN1DQo+IA0KPiBXaXRoIFBhdWwncyBwYXRj
-aCwgSXQgc2VlbXMgeW91IHN0aWxsIGdldCAib3RoZXIgYmFkIGJlaGF2aW91ciIsIGl0DQo+IGRv
-ZXNuJ3Qgd29yayBmb3IgeW91LiBIYXMgdGhpcyBpc3N1ZSBiZWVuIHJlc29sdmVkP8KgDQoNCklu
-IHNob3J0IG5vIGl0IGhhc24ndCBiZWVuIHJlc29sdmVkLiBJIGhhdmVuJ3QgYmVlbiBhYmxlIHRv
-IHNwZW5kIG11Y2gNCnRpbWUgbG9va2luZyBhdCB0aGUgaXNzdWUocykgc28gSSBoYXZlbid0IGJl
-ZW4gYWJsZSB0byB0ZWxsIGlmIFBhdWwncw0KcGF0Y2ggdW5jb3ZlcmVkIHByZS1leGlzdGluZyBp
-c3N1ZXMgb3IgY2F1c2VkIG5ldyBvbmVzLg0KDQpVbmZvcnR1bmF0ZWx5IEkgcHJvYmFibHkgd29u
-J3QgZ2V0IG9udG8gaXQgYW55IHRpbWUgc29vbi4gSSB3YXMgaG9waW5nDQp0byBnZXQgc29tZSBv
-ZiBteSBvdGhlciB0ZWFtIG1lbWJlcnMgdG8gcGljayB1cCB0aGUgaXNzdWUgYnV0IHRoZXkncmUN
-CmFsbCBidXN5IGFzIHdlbGwuDQo=
+On Mon, Aug 5, 2019 at 10:52 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> From: Bjorn Helgaas <bhelgaas@google.com>
+>
+> Use pci_power_name() to print pci_power_t correctly.  This changes:
+>
+>   "state 0" or "D0"   to   "D0"
+>   "state 1" or "D1"   to   "D1"
+>   "state 2" or "D2"   to   "D2"
+>   "state 3" or "D3"   to   "D3hot"
+>   "state 4" or "D4"   to   "D3cold"
+>
+> Changes dmesg logging only, no other functional change intended.
+>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+> ---
+>  drivers/pci/pci.c | 16 +++++++++-------
+>  1 file changed, 9 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index d8686e3cd5eb..17ae2615ac11 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -834,14 +834,16 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
+>                 return -EINVAL;
+>
+>         /*
+> -        * Validate current state:
+> -        * Can enter D0 from any state, but if we can only go deeper
+> -        * to sleep if we're already in a low power state
+> +        * Validate transition: We can enter D0 from any state, but if
+> +        * we're already in a low-power state, we can only go deeper.  E.g.,
+> +        * we can go from D1 to D3, but we can't go directly from D3 to D1;
+> +        * we'd have to go from D3 to D0, then to D1.
+>          */
+>         if (state != PCI_D0 && dev->current_state <= PCI_D3cold
+>             && dev->current_state > state) {
+> -               pci_err(dev, "invalid power transition (from state %d to %d)\n",
+> -                       dev->current_state, state);
+> +               pci_err(dev, "invalid power transition (from %s to %s)\n",
+> +                       pci_power_name(dev->current_state),
+> +                       pci_power_name(state));
+>                 return -EINVAL;
+>         }
+>
+> @@ -896,8 +898,8 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
+>         pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+>         dev->current_state = pci_power_state(pmcsr);
+>         if (dev->current_state != state && printk_ratelimit())
+> -               pci_info(dev, "Refused to change power state, currently in D%d\n",
+> -                        dev->current_state);
+> +               pci_info(dev, "refused to change power state (currently %s)\n",
+> +                        pci_power_name(dev->current_state));
+>
+>         /*
+>          * According to section 5.4.1 of the "PCI BUS POWER MANAGEMENT
+> --
+> 2.22.0.770.g0f2c4a37fd-goog
+>
