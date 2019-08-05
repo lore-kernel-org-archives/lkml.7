@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB841C32751
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B6AC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 717AD2067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:07:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C85332173B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:07:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010432;
-	bh=fEYuSV/F6Tk531Y+E5CEhoOWgFZOxHEEEMG54SyEPDs=;
+	s=default; t=1565010434;
+	bh=b6NmLK83Vos5gJpxpkq/gdj6tAu+xiPQoxrI/evUnXw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HShI6WefIStILnH2CiQenCmve614jK09lh+I43qJE6G7DMBNgxEhA0ar4WjHm3POc
-	 knrTtwuChbFXLYwKPnvcpOpUfqFDAj3JHJYG2UpgXX8Q8N+kXn7QqkolEgTwb29y3M
-	 9yFvxIlETXaiJ6VJla3vb9JqRQTJvMVtRE6oNp+A=
+	b=WI5vtqTJvBV4QoH5KpEpoqzr4Movlsv+jH4dUHEvuEjINcV0FjJJdCxQWY7OA+vzK
+	 yvxvf/GZgB2qnppIIyhyGwPY2IhKRkzvxnOqBn1pErTSC2N4bD4hUKMIzdUMbKA898
+	 hP03LUYpRaKmzLrHTF2A9Jwggn6rKEh6XxQIA2YU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729758AbfHENHL (ORCPT
+        id S1729768AbfHENHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:07:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44302 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:07:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728468AbfHENHG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:07:06 -0400
+        id S1728884AbfHENHI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:07:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D56AE2075B;
-        Mon,  5 Aug 2019 13:07:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 872D721734;
+        Mon,  5 Aug 2019 13:07:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010425;
-        bh=fEYuSV/F6Tk531Y+E5CEhoOWgFZOxHEEEMG54SyEPDs=;
+        s=default; t=1565010428;
+        bh=b6NmLK83Vos5gJpxpkq/gdj6tAu+xiPQoxrI/evUnXw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n97k+AiN6LIQR9Hb4CxGiTfrppl3uWhdO4FbdedTiFnzHD4YxLc4b86L+nDUrSLV6
-         ly6pw2jSYCgNGoSZrv3rd6LtOYoEpQoKe22+SMUZoMNrGkElS1JZYXu8Q5q4+3MjUW
-         eTdzxNStKKxhEOc8AzKkRM58kVoIgrkhjg8LFVzM=
+        b=xGkD+uNSVt502PvMA3UvuLh6uzVjvC+zj64BiyzQBiUH3hiNJgj0+9sh4m3dJ4qHK
+         IuX0LT0vj+d/LRW4oW9qQWWb/WOdlVjIISW5X7s1ypsyVLPzt8e9Fe4ny6Z6VqA3nl
+         i2t15oy8P9G0YXLhpxl7sO+7V1n/9cnEBJkhRV9c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benjamin Poirier <bpoirier@suse.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 19/53] be2net: Signal that the device cannot transmit during reconfiguration
-Date:   Mon,  5 Aug 2019 15:02:44 +0200
-Message-Id: <20190805124930.241063403@linuxfoundation.org>
+Subject: [PATCH 4.14 02/53] ARM: dts: rockchip: Make rk3288-veyron-minnie run at hs200
+Date:   Mon,  5 Aug 2019 15:02:27 +0200
+Message-Id: <20190805124928.260867915@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124927.973499541@linuxfoundation.org>
 References: <20190805124927.973499541@linuxfoundation.org>
@@ -60,41 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7429c6c0d9cb086d8e79f0d2a48ae14851d2115e ]
+[ Upstream commit 1c0479023412ab7834f2e98b796eb0d8c627cd62 ]
 
-While changing the number of interrupt channels, be2net stops adapter
-operation (including netif_tx_disable()) but it doesn't signal that it
-cannot transmit. This may lead dev_watchdog() to falsely trigger during
-that time.
+As some point hs200 was failing on rk3288-veyron-minnie.  See commit
+984926781122 ("ARM: dts: rockchip: temporarily remove emmc hs200 speed
+from rk3288 minnie").  Although I didn't track down exactly when it
+started working, it seems to work OK now, so let's turn it back on.
 
-Add the missing call to netif_carrier_off(), following the pattern used in
-many other drivers. netif_carrier_on() is already taken care of in
-be_open().
+To test this, I booted from SD card and then used this script to
+stress the enumeration process after fixing a memory leak [1]:
+  cd /sys/bus/platform/drivers/dwmmc_rockchip
+  for i in $(seq 1 3000); do
+    echo "========================" $i
+    echo ff0f0000.dwmmc > unbind
+    sleep .5
+    echo ff0f0000.dwmmc > bind
+    while true; do
+      if [ -e /dev/mmcblk2 ]; then
+        break;
+      fi
+      sleep .1
+    done
+  done
 
-Signed-off-by: Benjamin Poirier <bpoirier@suse.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+It worked fine.
+
+[1] https://lkml.kernel.org/r/20190503233526.226272-1-dianders@chromium.org
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/emulex/benet/be_main.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/rk3288-veyron-minnie.dts | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/emulex/benet/be_main.c b/drivers/net/ethernet/emulex/benet/be_main.c
-index 39f399741647f..cabeb1790db76 100644
---- a/drivers/net/ethernet/emulex/benet/be_main.c
-+++ b/drivers/net/ethernet/emulex/benet/be_main.c
-@@ -4600,8 +4600,12 @@ int be_update_queues(struct be_adapter *adapter)
- 	struct net_device *netdev = adapter->netdev;
- 	int status;
+diff --git a/arch/arm/boot/dts/rk3288-veyron-minnie.dts b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+index 544de6027aaa0..6000dca1cf054 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-minnie.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+@@ -125,10 +125,6 @@
+ 	power-supply = <&backlight_regulator>;
+ };
  
--	if (netif_running(netdev))
-+	if (netif_running(netdev)) {
-+		/* device cannot transmit now, avoid dev_watchdog timeouts */
-+		netif_carrier_off(netdev);
-+
- 		be_close(netdev);
-+	}
- 
- 	be_cancel_worker(adapter);
+-&emmc {
+-	/delete-property/mmc-hs200-1_8v;
+-};
+-
+ &gpio_keys {
+ 	pinctrl-0 = <&pwr_key_l &ap_lid_int_l &volum_down_l &volum_up_l>;
  
 -- 
 2.20.1
