@@ -2,91 +2,60 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C70C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 21:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF4BC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 21:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BB322075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 21:43:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E87220C01
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 21:43:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730801AbfHEVnH convert rfc822-to-8bit (ORCPT
+        id S1730864AbfHEVn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 17:43:07 -0400
-Received: from mga12.intel.com ([192.55.52.136]:64268 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728717AbfHEVnH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 17:43:07 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 14:43:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,350,1559545200"; 
-   d="scan'208";a="198107284"
-Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
-  by fmsmga004.fm.intel.com with ESMTP; 05 Aug 2019 14:43:07 -0700
-Received: from orsmsx154.amr.corp.intel.com (10.22.226.12) by
- ORSMSX106.amr.corp.intel.com (10.22.225.133) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 5 Aug 2019 14:43:06 -0700
-Received: from orsmsx104.amr.corp.intel.com ([169.254.4.30]) by
- ORSMSX154.amr.corp.intel.com ([169.254.11.96]) with mapi id 14.03.0439.000;
- Mon, 5 Aug 2019 14:43:06 -0700
-From:   "Bowers, AndrewX" <andrewx.bowers@intel.com>
-To:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>
-Subject: RE: [Intel-wired-lan] [PATCH 2/2] ixgbe: Use refcount_t for refcount
-Thread-Topic: [Intel-wired-lan] [PATCH 2/2] ixgbe: Use refcount_t for
- refcount
-Thread-Index: AQHVSSDGlTwuGHWtMECrsXmtZFTBhabtGzOA
-Date:   Mon, 5 Aug 2019 21:43:06 +0000
-Message-ID: <26D9FDECA4FBDD4AADA65D8E2FC68A4A1D40F174@ORSMSX104.amr.corp.intel.com>
-References: <20190802105507.16650-1-hslester96@gmail.com>
-In-Reply-To: <20190802105507.16650-1-hslester96@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYWVjMjMwYWUtMmNmZC00NDE5LTk4ZWItNDc1YmUyMGIwNTA3IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiOUNxUUI3a0V4RmYyVWtSaUIzMkFpMlBreWJ0UVROQ1RaNjFyQkZBZUkyOEdNRU5cL3JVZ0kwZnFRVkZWWmJkMWkifQ==
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.400.15
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.138]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
+        Mon, 5 Aug 2019 17:43:56 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:34730 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728483AbfHEVnz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 17:43:55 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6E0A81543B2B6;
+        Mon,  5 Aug 2019 14:43:55 -0700 (PDT)
+Date:   Mon, 05 Aug 2019 14:43:53 -0700 (PDT)
+Message-Id: <20190805.144353.1304051964359404611.davem@davemloft.net>
+To:     sfr@canb.auug.org.au
+Cc:     netdev@vger.kernel.org, linux-next@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: linux-next: Signed-off-by missing for commit in the net tree
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190806073825.6e6ba393@canb.auug.org.au>
+References: <20190806073825.6e6ba393@canb.auug.org.au>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 05 Aug 2019 14:43:55 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Intel-wired-lan [mailto:intel-wired-lan-bounces@osuosl.org] On
-> Behalf Of Chuhong Yuan
-> Sent: Friday, August 2, 2019 3:55 AM
-> Cc: netdev@vger.kernel.org; Chuhong Yuan <hslester96@gmail.com>; linux-
-> kernel@vger.kernel.org; intel-wired-lan@lists.osuosl.org; David S . Miller
-> <davem@davemloft.net>
-> Subject: [Intel-wired-lan] [PATCH 2/2] ixgbe: Use refcount_t for refcount
-> 
-> refcount_t is better for reference counters since its implementation can
-> prevent overflows.
-> So convert atomic_t ref counters to refcount_t.
-> 
-> Also convert refcount from 0-based to 1-based.
-> 
-> This patch depends on PATCH 1/2.
-> 
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> ---
->  drivers/net/ethernet/intel/ixgbe/ixgbe_fcoe.c | 6 +++---
-> drivers/net/ethernet/intel/ixgbe/ixgbe_fcoe.h | 2 +-
->  2 files changed, 4 insertions(+), 4 deletions(-)
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Tue, 6 Aug 2019 07:38:25 +1000
 
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+> Commit
+> 
+>   c3953a3c2d31 ("NFC: nfcmrvl: fix gpio-handling regression")
+> 
+> is missing a Signed-off-by from its committer.
 
+That has to be the first time that's ever happened to me :-)
+
+And indeed as I check my command line history I forgot the --signoff
+command line option.
 
