@@ -7,56 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B414BC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C88EEC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:06:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F3512075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73EA92147A
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:06:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010370;
-	bh=+ZBO3H0BUQdx7MgxjFLxJ8cL4JIdW5aUO6C05obMmKE=;
+	s=default; t=1565010372;
+	bh=FWoUa6QGEHljtX1mICapLiOgk3Kjd8lcwmBXppSTx8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T6CnLfTaS9LNlgszdHZACS4qykM5yzDtbW6/E63aETNRb8G8+uzyV3eAPJhgUBjJo
-	 qx/deaNVHoSDCPVp0UvFqKNkpFtDWeGZ8IHDhE5VGpcQydcNFpc5R91Dz0vLKC3WRH
-	 yeMnjo3+pXwsv2fZL9+3GC/6UpfKCZROEYv3Fyek=
+	b=p1EO5zwIte/0+L4pmPAeMWELv1JDaEVgPEfF3f/0RJfDDuyPTJ2P/PLT8csqlvw9p
+	 ODOvTVHa6AxDLiBxcJJ+1psMYqNfcCPcGjhpV+n0cHdoc8y1OXv8yZPfZeuM3rbD5p
+	 fi4I3je3VnNYDcbWPbV5qcRcgt+5hq8ZiC8/R2oo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729498AbfHENGI (ORCPT
+        id S1729519AbfHENGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:06:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42456 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:06:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729464AbfHENGF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:06:05 -0400
+        id S1729001AbfHENGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:06:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64134214C6;
-        Mon,  5 Aug 2019 13:06:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07528216F4;
+        Mon,  5 Aug 2019 13:06:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010363;
-        bh=+ZBO3H0BUQdx7MgxjFLxJ8cL4JIdW5aUO6C05obMmKE=;
+        s=default; t=1565010366;
+        bh=FWoUa6QGEHljtX1mICapLiOgk3Kjd8lcwmBXppSTx8U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LFJxO4genz6Szlu7Obxgm8vnDAxZxybH9urPakE46dFkKab++9ZRdEkQ7BGNKzZin
-         dpOBF7pSPF4Qrci2AaMIg1o72sw5Xz8wbpXYgmjArFmBN99BI0UGdqaYP1aTM4mfrf
-         QxqVATgdSnZxc83/pKY0GMPG5VmePM2Uw/Q57J+o=
+        b=WEts65OxaCx15tHHFflkcPXVC6MN5oQ3h8m11szd/SZFOeUdfYQ6ngckztK3yxohZ
+         3jj0UFUc0rHtYaVBbpQsir9T7v5PA+cBudNhrBnImCzt5MXq1yutVpZEozJNnnS5ub
+         pYgF/liqW29tns4CQteFAmtnDvphoApyWiyRfi5s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrea Arcangeli <aarcange@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Hugh Dickins <hughd@google.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Peter Xu <peterx@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ajay Kaher <akaher@vmware.com>
-Subject: [PATCH 4.9 37/42] coredump: fix race condition between collapse_huge_page() and core dumping
-Date:   Mon,  5 Aug 2019 15:03:03 +0200
-Message-Id: <20190805124929.390092782@linuxfoundation.org>
+        stable@vger.kernel.org, Jean Delvare <jdelvare@suse.de>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 4.9 38/42] eeprom: at24: make spd world-readable again
+Date:   Mon,  5 Aug 2019 15:03:04 +0200
+Message-Id: <20190805124929.501553610@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124924.788666484@linuxfoundation.org>
 References: <20190805124924.788666484@linuxfoundation.org>
@@ -69,99 +63,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Arcangeli <aarcange@redhat.com>
+From: Jean Delvare <jdelvare@suse.de>
 
-commit 59ea6d06cfa9247b586a695c21f94afa7183af74 upstream.
+commit 25e5ef302c24a6fead369c0cfe88c073d7b97ca8 upstream.
 
-When fixing the race conditions between the coredump and the mmap_sem
-holders outside the context of the process, we focused on
-mmget_not_zero()/get_task_mm() callers in 04f5866e41fb70 ("coredump: fix
-race condition between mmget_not_zero()/get_task_mm() and core
-dumping"), but those aren't the only cases where the mmap_sem can be
-taken outside of the context of the process as Michal Hocko noticed
-while backporting that commit to older -stable kernels.
+The integration of the at24 driver into the nvmem framework broke the
+world-readability of spd EEPROMs. Fix it.
 
-If mmgrab() is called in the context of the process, but then the
-mm_count reference is transferred outside the context of the process,
-that can also be a problem if the mmap_sem has to be taken for writing
-through that mm_count reference.
-
-khugepaged registration calls mmgrab() in the context of the process,
-but the mmap_sem for writing is taken later in the context of the
-khugepaged kernel thread.
-
-collapse_huge_page() after taking the mmap_sem for writing doesn't
-modify any vma, so it's not obvious that it could cause a problem to the
-coredump, but it happens to modify the pmd in a way that breaks an
-invariant that pmd_trans_huge_lock() relies upon.  collapse_huge_page()
-needs the mmap_sem for writing just to block concurrent page faults that
-call pmd_trans_huge_lock().
-
-Specifically the invariant that "!pmd_trans_huge()" cannot become a
-"pmd_trans_huge()" doesn't hold while collapse_huge_page() runs.
-
-The coredump will call __get_user_pages() without mmap_sem for reading,
-which eventually can invoke a lockless page fault which will need a
-functional pmd_trans_huge_lock().
-
-So collapse_huge_page() needs to use mmget_still_valid() to check it's
-not running concurrently with the coredump...  as long as the coredump
-can invoke page faults without holding the mmap_sem for reading.
-
-This has "Fixes: khugepaged" to facilitate backporting, but in my view
-it's more a bug in the coredump code that will eventually have to be
-rewritten to stop invoking page faults without the mmap_sem for reading.
-So the long term plan is still to drop all mmget_still_valid().
-
-Link: http://lkml.kernel.org/r/20190607161558.32104-1-aarcange@redhat.com
-Fixes: ba76149f47d8 ("thp: khugepaged")
-Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
-Reported-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Peter Xu <peterx@redhat.com>
-Cc: Jason Gunthorpe <jgg@mellanox.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-[Ajay: Just adjusted to apply on v4.9]
-Signed-off-by: Ajay Kaher <akaher@vmware.com>
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+Cc: stable@vger.kernel.org
+Fixes: 57d155506dd5 ("eeprom: at24: extend driver to plug into the NVMEM framework")
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+[Bartosz: backported the patch to older branches]
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/mm.h |    4 ++++
- mm/khugepaged.c    |    3 +++
- 2 files changed, 7 insertions(+)
+ drivers/misc/eeprom/at24.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1197,6 +1197,10 @@ void unmap_vmas(struct mmu_gather *tlb,
-  * followed by taking the mmap_sem for writing before modifying the
-  * vmas or anything the coredump pretends not to change from under it.
-  *
-+ * It also has to be called when mmgrab() is used in the context of
-+ * the process, but then the mm_count refcount is transferred outside
-+ * the context of the process to run down_write() on that pinned mm.
-+ *
-  * NOTE: find_extend_vma() called from GUP context is the only place
-  * that can modify the "mm" (notably the vm_start/end) under mmap_sem
-  * for reading and outside the context of the process, so it is also
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -1004,6 +1004,9 @@ static void collapse_huge_page(struct mm
- 	 * handled by the anon_vma lock + PG_lock.
- 	 */
- 	down_write(&mm->mmap_sem);
-+	result = SCAN_ANY_PROCESS;
-+	if (!mmget_still_valid(mm))
-+		goto out;
- 	result = hugepage_vma_revalidate(mm, address, &vma);
- 	if (result)
- 		goto out;
+--- a/drivers/misc/eeprom/at24.c
++++ b/drivers/misc/eeprom/at24.c
+@@ -777,7 +777,7 @@ static int at24_probe(struct i2c_client
+ 	at24->nvmem_config.name = dev_name(&client->dev);
+ 	at24->nvmem_config.dev = &client->dev;
+ 	at24->nvmem_config.read_only = !writable;
+-	at24->nvmem_config.root_only = true;
++	at24->nvmem_config.root_only = !(chip.flags & AT24_FLAG_IRUGO);
+ 	at24->nvmem_config.owner = THIS_MODULE;
+ 	at24->nvmem_config.compat = true;
+ 	at24->nvmem_config.base_dev = &client->dev;
 
 
