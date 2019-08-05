@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F76C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4BCC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86DC120B1F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:26:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A5C420B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:27:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727560AbfHEG0x (ORCPT
+        id S1727458AbfHEG0q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 02:26:53 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4170 "EHLO huawei.com"
+        Mon, 5 Aug 2019 02:26:46 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:42452 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727403AbfHEG0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 02:26:49 -0400
+        id S1727328AbfHEG0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 02:26:38 -0400
 Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 3377D509E4F974DA7CD9;
-        Mon,  5 Aug 2019 14:26:42 +0800 (CST)
+        by Forcepoint Email with ESMTP id 356A26152D7CDC293207;
+        Mon,  5 Aug 2019 14:26:37 +0800 (CST)
 Received: from huawei.com (10.175.124.28) by DGGEMS414-HUB.china.huawei.com
  (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Mon, 5 Aug 2019
- 14:26:31 +0800
+ 14:26:30 +0800
 From:   Jason Yan <yanaijie@huawei.com>
 To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
         <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
@@ -35,9 +35,9 @@ CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
         <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
         <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>,
         <zhaohongjiang@huawei.com>, Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH v4 07/10] powerpc/fsl_booke/32: randomize the kernel image offset
-Date:   Mon, 5 Aug 2019 14:43:32 +0800
-Message-ID: <20190805064335.19156-8-yanaijie@huawei.com>
+Subject: [PATCH v4 05/10] powerpc/fsl_booke/32: introduce reloc_kernel_entry() helper
+Date:   Mon, 5 Aug 2019 14:43:30 +0800
+Message-ID: <20190805064335.19156-6-yanaijie@huawei.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20190805064335.19156-1-yanaijie@huawei.com>
 References: <20190805064335.19156-1-yanaijie@huawei.com>
@@ -50,33 +50,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After we have the basic support of relocate the kernel in some
-appropriate place, we can start to randomize the offset now.
-
-Entropy is derived from the banner and timer, which will change every
-build and boot. This not so much safe so additionally the bootloader may
-pass entropy via the /chosen/kaslr-seed node in device tree.
-
-We will use the first 512M of the low memory to randomize the kernel
-image. The memory will be split in 64M zones. We will use the lower 8
-bit of the entropy to decide the index of the 64M zone. Then we chose a
-16K aligned offset inside the 64M zone to put the kernel in.
-
-    KERNELBASE
-
-        |-->   64M   <--|
-        |               |
-        +---------------+    +----------------+---------------+
-        |               |....|    |kernel|    |               |
-        +---------------+    +----------------+---------------+
-        |                         |
-        |----->   offset    <-----|
-
-                              kimage_vaddr
-
-We also check if we will overlap with some areas like the dtb area, the
-initrd area or the crashkernel area. If we cannot find a proper area,
-kaslr will be disabled and boot from the original kernel.
+Add a new helper reloc_kernel_entry() to jump back to the start of the
+new kernel. After we put the new kernel in a randomized place we can use
+this new helper to enter the kernel and begin to relocate again.
 
 Signed-off-by: Jason Yan <yanaijie@huawei.com>
 Cc: Diana Craciun <diana.craciun@nxp.com>
@@ -86,366 +62,50 @@ Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 Cc: Paul Mackerras <paulus@samba.org>
 Cc: Nicholas Piggin <npiggin@gmail.com>
 Cc: Kees Cook <keescook@chromium.org>
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
 Reviewed-by: Diana Craciun <diana.craciun@nxp.com>
 Tested-by: Diana Craciun <diana.craciun@nxp.com>
 ---
- arch/powerpc/kernel/kaslr_booke.c | 322 +++++++++++++++++++++++++++++-
- 1 file changed, 320 insertions(+), 2 deletions(-)
+ arch/powerpc/kernel/head_fsl_booke.S | 13 +++++++++++++
+ arch/powerpc/mm/mmu_decl.h           |  1 +
+ 2 files changed, 14 insertions(+)
 
-diff --git a/arch/powerpc/kernel/kaslr_booke.c b/arch/powerpc/kernel/kaslr_booke.c
-index 30f84c0321b2..97250cad71de 100644
---- a/arch/powerpc/kernel/kaslr_booke.c
-+++ b/arch/powerpc/kernel/kaslr_booke.c
-@@ -23,6 +23,8 @@
- #include <linux/delay.h>
- #include <linux/highmem.h>
- #include <linux/memblock.h>
-+#include <linux/libfdt.h>
-+#include <linux/crash_core.h>
- #include <asm/pgalloc.h>
- #include <asm/prom.h>
- #include <asm/io.h>
-@@ -34,15 +36,329 @@
- #include <asm/machdep.h>
- #include <asm/setup.h>
- #include <asm/paca.h>
-+#include <asm/kdump.h>
- #include <mm/mmu_decl.h>
-+#include <generated/compile.h>
-+#include <generated/utsrelease.h>
-+
-+#ifdef DEBUG
-+#define DBG(fmt...) printk(KERN_ERR fmt)
-+#else
-+#define DBG(fmt...)
-+#endif
-+
-+struct regions {
-+	unsigned long pa_start;
-+	unsigned long pa_end;
-+	unsigned long kernel_size;
-+	unsigned long dtb_start;
-+	unsigned long dtb_end;
-+	unsigned long initrd_start;
-+	unsigned long initrd_end;
-+	unsigned long crash_start;
-+	unsigned long crash_end;
-+	int reserved_mem;
-+	int reserved_mem_addr_cells;
-+	int reserved_mem_size_cells;
-+};
+diff --git a/arch/powerpc/kernel/head_fsl_booke.S b/arch/powerpc/kernel/head_fsl_booke.S
+index 04d124fee17d..2083382dd662 100644
+--- a/arch/powerpc/kernel/head_fsl_booke.S
++++ b/arch/powerpc/kernel/head_fsl_booke.S
+@@ -1143,6 +1143,19 @@ _GLOBAL(create_tlb_entry)
+ 	sync
+ 	blr
  
- extern int is_second_reloc;
- 
-+/* Simplified build-specific string for starting entropy. */
-+static const char build_str[] = UTS_RELEASE " (" LINUX_COMPILE_BY "@"
-+		LINUX_COMPILE_HOST ") (" LINUX_COMPILER ") " UTS_VERSION;
++/*
++ * Return to the start of the relocated kernel and run again
++ * r3 - virtual address of fdt
++ * r4 - entry of the kernel
++ */
++_GLOBAL(reloc_kernel_entry)
++	mfmsr	r7
++	rlwinm	r7, r7, 0, ~(MSR_IS | MSR_DS)
 +
-+static __init void kaslr_get_cmdline(void *fdt)
-+{
-+	int node = fdt_path_offset(fdt, "/chosen");
++	mtspr	SPRN_SRR0,r4
++	mtspr	SPRN_SRR1,r7
++	rfi
 +
-+	early_init_dt_scan_chosen(node, "chosen", 1, boot_command_line);
-+}
-+
-+static unsigned long __init rotate_xor(unsigned long hash, const void *area,
-+				       size_t size)
-+{
-+	size_t i;
-+	unsigned long *ptr = (unsigned long *)area;
-+
-+	for (i = 0; i < size / sizeof(hash); i++) {
-+		/* Rotate by odd number of bits and XOR. */
-+		hash = (hash << ((sizeof(hash) * 8) - 7)) | (hash >> 7);
-+		hash ^= ptr[i];
-+	}
-+
-+	return hash;
-+}
-+
-+/* Attempt to create a simple but unpredictable starting entropy. */
-+static unsigned long __init get_boot_seed(void *fdt)
-+{
-+	unsigned long hash = 0;
-+
-+	hash = rotate_xor(hash, build_str, sizeof(build_str));
-+	hash = rotate_xor(hash, fdt, fdt_totalsize(fdt));
-+
-+	return hash;
-+}
-+
-+static __init u64 get_kaslr_seed(void *fdt)
-+{
-+	int node, len;
-+	fdt64_t *prop;
-+	u64 ret;
-+
-+	node = fdt_path_offset(fdt, "/chosen");
-+	if (node < 0)
-+		return 0;
-+
-+	prop = fdt_getprop_w(fdt, node, "kaslr-seed", &len);
-+	if (!prop || len != sizeof(u64))
-+		return 0;
-+
-+	ret = fdt64_to_cpu(*prop);
-+	*prop = 0;
-+	return ret;
-+}
-+
-+static __init bool regions_overlap(u32 s1, u32 e1, u32 s2, u32 e2)
-+{
-+	return e1 >= s2 && e2 >= s1;
-+}
-+
-+static __init bool overlaps_reserved_region(const void *fdt, u32 start,
-+					    u32 end, struct regions *regions)
-+{
-+	int subnode, len, i;
-+	u64 base, size;
-+
-+	/* check for overlap with /memreserve/ entries */
-+	for (i = 0; i < fdt_num_mem_rsv(fdt); i++) {
-+		if (fdt_get_mem_rsv(fdt, i, &base, &size) < 0)
-+			continue;
-+		if (regions_overlap(start, end, base, base + size))
-+			return true;
-+	}
-+
-+	if (regions->reserved_mem < 0)
-+		return false;
-+
-+	/* check for overlap with static reservations in /reserved-memory */
-+	for (subnode = fdt_first_subnode(fdt, regions->reserved_mem);
-+	     subnode >= 0;
-+	     subnode = fdt_next_subnode(fdt, subnode)) {
-+		const fdt32_t *reg;
-+		u64 rsv_end;
-+
-+		len = 0;
-+		reg = fdt_getprop(fdt, subnode, "reg", &len);
-+		while (len >= (regions->reserved_mem_addr_cells +
-+			       regions->reserved_mem_size_cells)) {
-+			base = fdt32_to_cpu(reg[0]);
-+			if (regions->reserved_mem_addr_cells == 2)
-+				base = (base << 32) | fdt32_to_cpu(reg[1]);
-+
-+			reg += regions->reserved_mem_addr_cells;
-+			len -= 4 * regions->reserved_mem_addr_cells;
-+
-+			size = fdt32_to_cpu(reg[0]);
-+			if (regions->reserved_mem_size_cells == 2)
-+				size = (size << 32) | fdt32_to_cpu(reg[1]);
-+
-+			reg += regions->reserved_mem_size_cells;
-+			len -= 4 * regions->reserved_mem_size_cells;
-+
-+			if (base >= regions->pa_end)
-+				continue;
-+
-+			rsv_end = min(base + size, (u64)U32_MAX);
-+
-+			if (regions_overlap(start, end, base, rsv_end))
-+				return true;
-+		}
-+	}
-+	return false;
-+}
-+
-+static __init bool overlaps_region(const void *fdt, u32 start,
-+				   u32 end, struct regions *regions)
-+{
-+	if (regions_overlap(start, end, regions->dtb_start,
-+			    regions->dtb_end))
-+		return true;
-+
-+	if (regions_overlap(start, end, regions->initrd_start,
-+			    regions->initrd_end))
-+		return true;
-+
-+	if (regions_overlap(start, end, regions->crash_start,
-+			    regions->crash_end))
-+		return true;
-+
-+	return overlaps_reserved_region(fdt, start, end, regions);
-+}
-+
-+static void __init get_crash_kernel(void *fdt, unsigned long size,
-+				    struct regions *regions)
-+{
-+#ifdef CONFIG_CRASH_CORE
-+	unsigned long long crash_size, crash_base;
-+	int ret;
-+
-+	ret = parse_crashkernel(boot_command_line, size, &crash_size,
-+				&crash_base);
-+	if (ret != 0 || crash_size == 0)
-+		return;
-+	if (crash_base == 0)
-+		crash_base = KDUMP_KERNELBASE;
-+
-+	regions->crash_start = (unsigned long)crash_base;
-+	regions->crash_end = (unsigned long)(crash_base + crash_size);
-+
-+	DBG("crash_base=0x%llx crash_size=0x%llx\n", crash_base, crash_size);
-+#endif
-+}
-+
-+static void __init get_initrd_range(void *fdt, struct regions *regions)
-+{
-+	u64 start, end;
-+	int node, len;
-+	const __be32 *prop;
-+
-+	node = fdt_path_offset(fdt, "/chosen");
-+	if (node < 0)
-+		return;
-+
-+	prop = fdt_getprop(fdt, node, "linux,initrd-start", &len);
-+	if (!prop)
-+		return;
-+	start = of_read_number(prop, len / 4);
-+
-+	prop = fdt_getprop(fdt, node, "linux,initrd-end", &len);
-+	if (!prop)
-+		return;
-+	end = of_read_number(prop, len / 4);
-+
-+	regions->initrd_start = (unsigned long)start;
-+	regions->initrd_end = (unsigned long)end;
-+
-+	DBG("initrd_start=0x%llx  initrd_end=0x%llx\n", start, end);
-+}
-+
-+static __init unsigned long get_usable_offset(const void *fdt, struct regions *regions,
-+					      unsigned long start)
-+{
-+	unsigned long pa;
-+	unsigned long pa_end;
-+
-+	for (pa = start; pa > regions->pa_start; pa -= SZ_16K) {
-+		pa_end = pa + regions->kernel_size;
-+		if (overlaps_region(fdt, pa, pa_end, regions))
-+			continue;
-+
-+		return pa;
-+	}
-+	return 0;
-+}
-+
-+static __init void get_cell_sizes(const void *fdt, int node, int *addr_cells,
-+				  int *size_cells)
-+{
-+	const int *prop;
-+	int len;
-+
-+	/*
-+	 * Retrieve the #address-cells and #size-cells properties
-+	 * from the 'node', or use the default if not provided.
-+	 */
-+	*addr_cells = *size_cells = 1;
-+
-+	prop = fdt_getprop(fdt, node, "#address-cells", &len);
-+	if (len == 4)
-+		*addr_cells = fdt32_to_cpu(*prop);
-+	prop = fdt_getprop(fdt, node, "#size-cells", &len);
-+	if (len == 4)
-+		*size_cells = fdt32_to_cpu(*prop);
-+}
-+
- static unsigned long __init kaslr_choose_location(void *dt_ptr, phys_addr_t size,
- 						  unsigned long kernel_sz)
- {
--	/* return a fixed offset of 64M for now */
--	return SZ_64M;
-+	unsigned long offset, random;
-+	unsigned long ram, linear_sz;
-+	unsigned long kaslr_offset;
-+	u64 seed;
-+	struct regions regions;
-+	unsigned long index;
-+
-+	random = get_boot_seed(dt_ptr);
-+
-+	seed = get_tb() << 32;
-+	seed ^= get_tb();
-+	random = rotate_xor(random, &seed, sizeof(seed));
-+
-+	/*
-+	 * Retrieve (and wipe) the seed from the FDT
-+	 */
-+	seed = get_kaslr_seed(dt_ptr);
-+	if (seed)
-+		random = rotate_xor(random, &seed, sizeof(seed));
-+
-+	ram = min((phys_addr_t)__max_low_memory, size);
-+	ram = map_mem_in_cams(ram, CONFIG_LOWMEM_CAM_NUM, true);
-+	linear_sz = min(ram, (unsigned long)SZ_512M);
-+
-+	/* If the linear size is smaller than 64M, do not randmize */
-+	if (linear_sz < SZ_64M)
-+		return 0;
-+
-+	memset(&regions, 0, sizeof(regions));
-+
-+	/* check for a reserved-memory node and record its cell sizes */
-+	regions.reserved_mem = fdt_path_offset(dt_ptr, "/reserved-memory");
-+	if (regions.reserved_mem >= 0)
-+		get_cell_sizes(dt_ptr, regions.reserved_mem,
-+			       &regions.reserved_mem_addr_cells,
-+			       &regions.reserved_mem_size_cells);
-+
-+	regions.pa_start = 0;
-+	regions.pa_end = linear_sz;
-+	regions.dtb_start = __pa(dt_ptr);
-+	regions.dtb_end = __pa(dt_ptr) + fdt_totalsize(dt_ptr);
-+	regions.kernel_size = kernel_sz;
-+
-+	get_initrd_range(dt_ptr, &regions);
-+	get_crash_kernel(dt_ptr, ram, &regions);
-+
-+	/*
-+	 * Decide which 64M we want to start
-+	 * Only use the low 8 bits of the random seed
-+	 */
-+	index = random & 0xFF;
-+	index %= linear_sz / SZ_64M;
-+
-+	/* Decide offset inside 64M */
-+	if (index == 0) {
-+		offset = random % (SZ_64M - round_up(kernel_sz, SZ_16K) * 2);
-+		offset += round_up(kernel_sz, SZ_16K);
-+		offset = round_up(offset, SZ_16K);
-+	} else {
-+		offset = random % (SZ_64M - kernel_sz);
-+		offset = round_down(offset, SZ_16K);
-+	}
-+
-+	while (index >= 0) {
-+		offset = offset + index * SZ_64M;
-+		kaslr_offset = get_usable_offset(dt_ptr, &regions, offset);
-+		if (kaslr_offset)
-+			break;
-+		index--;
-+	}
-+
-+	/* Did not find any usable region? Give up randomize */
-+	if (index < 0)
-+		kaslr_offset = 0;
-+
-+	return kaslr_offset;
- }
- 
  /*
-@@ -59,6 +375,8 @@ notrace void __init kaslr_early_init(void *dt_ptr, phys_addr_t size)
- 
- 	kernel_sz = (unsigned long)_end - KERNELBASE;
- 
-+	kaslr_get_cmdline(dt_ptr);
-+
- 	offset = kaslr_choose_location(dt_ptr, size, kernel_sz);
- 
- 	if (offset == 0)
+  * Create a tlb entry with the same effective and physical address as
+  * the tlb entry used by the current running code. But set the TS to 1.
+diff --git a/arch/powerpc/mm/mmu_decl.h b/arch/powerpc/mm/mmu_decl.h
+index a09f89d3aa0f..804da298beb3 100644
+--- a/arch/powerpc/mm/mmu_decl.h
++++ b/arch/powerpc/mm/mmu_decl.h
+@@ -143,6 +143,7 @@ extern void adjust_total_lowmem(void);
+ extern int switch_to_as1(void);
+ extern void restore_to_as0(int esel, int offset, void *dt_ptr, int bootcpu);
+ void create_tlb_entry(phys_addr_t phys, unsigned long virt, int entry);
++void reloc_kernel_entry(void *fdt, int addr);
+ #endif
+ extern void loadcam_entry(unsigned int index);
+ extern void loadcam_multi(int first_idx, int num, int tmp_idx);
 -- 
 2.17.2
 
