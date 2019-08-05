@@ -2,127 +2,115 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 123C8C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 04:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E27EBC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 05:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1B562070D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 04:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC85C2070D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 05:03:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lqDWLVPH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pp7rr9JW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbfHEE5j (ORCPT
+        id S1727122AbfHEFDN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 00:57:39 -0400
-Received: from ozlabs.org ([203.11.71.1]:60767 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725902AbfHEE5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 00:57:39 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46259X61ngz9s7T;
-        Mon,  5 Aug 2019 14:57:36 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1564981056;
-        bh=Kwjsg60Bv78fkfFhCCvHJttAJaSF+wmyVAYwqKxGsLA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=lqDWLVPHKQaChx12u4Bqeoka2q8nx70si95qJXfKKAfL5QPIIdtDa/qIYVfOWKBaI
-         0mtV25IvOeSJfJq6qeqa5cH9G3HmtzKqQymzZP7xxMExPPONvW8WIfrQjEbHdEV+1z
-         gS9DI/sJheBrPkK1O+T185GOX/RFf3Bhl8LdQKeyKk9z4Z1sG47kheMAC2+9iWkJbu
-         BS//Hee9Zcny2zwsD1jHlm52Mfo9ft5B9wwG2hvzeAiFwPlR/5YOABt7UOf1gckLAm
-         iHo6yP13PqqSmNKqdoeJDOZRcPDWRd8ZvEN0fH5urepOzbhyjYcw6eZR6wKAb4a0go
-         zEFlnq56/UAgw==
-Date:   Mon, 5 Aug 2019 14:57:36 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: linux-next: build failure after merge of the crypto tree
-Message-ID: <20190805145736.2d39f95b@canb.auug.org.au>
+        Mon, 5 Aug 2019 01:03:13 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:45638 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726508AbfHEFDN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 01:03:13 -0400
+Received: by mail-lf1-f65.google.com with SMTP id u10so18102617lfm.12
+        for <linux-kernel@vger.kernel.org>; Sun, 04 Aug 2019 22:03:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=59rGgYKXfbOVeORIb/3aPCsYO+up32tSP1XLT583cgM=;
+        b=Pp7rr9JWyW8rvNf7mskAanI9AtGCJ6FROK5Y/83r2NqcfGniuX15dpaNbFLBKhal8P
+         wcn6BAM1OS2b7l9JhEUu+FS4jI0d/3GAs5fSPHIOYeXXTcNlYrreX9QFYp2amkc/us3n
+         fPQS0IYuedLccQz4EBV6PVVi4j1lGml4t6nHKJjsvODNUqz+ZKWMwtQ4XS8y7BbkFPlR
+         UfGU2a2Vdilwtonwk61BmmALDw8mJueH6lj6efGPTYSB54fQ4ghZlgkmuLk0TB4C9uCT
+         q+r1ixbNM2GsHvVAAVMDTBsMBXdUeRcU3exa0a88mrKmpwKKtzY2uB0ycJSYruz7r9JQ
+         GjlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=59rGgYKXfbOVeORIb/3aPCsYO+up32tSP1XLT583cgM=;
+        b=cBcuUfADHf+vMH4ym+8fP9Jw568mExIW1doZOqKztsmj0VQeWBALBqwmB5d2vXa9dA
+         To9SwynXu+P398KSuJU1/xyRZrMvwrtXmhqjcpZou6h2/b+DJTh3Sp56v05tZUhwVU3n
+         EKeiro4fPsW4e/wD5Z0Z4u2gt2EAv55rvGH3dIajGofbV0BBeWHegwXOF1mHQ/Ut7Awc
+         PO9vJ91F/Y+IyKL7GII2Glp7ah8PzvO5E/+J+mbGzSOEJiu0JM9EHLPcb1nVX9SVcjDY
+         WzHPJjnWoMg6ZzW2nE/yI36HkPOb9hPjCZ2Hn6u7En4XDpJmm4mhkBdFzwCV9p6k29Fa
+         lnog==
+X-Gm-Message-State: APjAAAVIqjrpZMfzqjrdkluby+Cp8dSzaKnrFQKhmzk3PEx8LM8mYw+U
+        OCndrJo8gSBFgOVktty+uDy9TGClc7j64soSF+9EFw==
+X-Google-Smtp-Source: APXvYqy5gh4FUNfT5zeuzGIzpHixqpgMfXNy82xJgmEg1C0rn6VH0AyjgsO7hoUJnb3lPf96FzNFy/x/O14eI0YZFv4=
+X-Received: by 2002:a19:c7ca:: with SMTP id x193mr14674281lff.151.1564981391240;
+ Sun, 04 Aug 2019 22:03:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/xTBKpWe9v5NlxbxL4v5QvzF";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <1563449086-13183-1-git-send-email-sumit.garg@linaro.org>
+ <1563449086-13183-2-git-send-email-sumit.garg@linaro.org> <20190801172310.cldcftfdoh5vyfjg@linux.intel.com>
+ <CAFA6WYM+FQuXA9Saj5+ffOGsc-shhiF5Uos4g14Qndvu6w97Sg@mail.gmail.com> <20190802193802.jn56jhoz5crebggt@linux.intel.com>
+In-Reply-To: <20190802193802.jn56jhoz5crebggt@linux.intel.com>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Mon, 5 Aug 2019 10:32:59 +0530
+Message-ID: <CAFA6WYOMXc2y=vXOwRv+PYyF8oBV70G7CrJ81jvD5yJT41zLZw@mail.gmail.com>
+Subject: Re: [RFC/RFT v2 1/2] KEYS: trusted: create trusted keys subsystem
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        linux-security-module@vger.kernel.org, dhowells@redhat.com,
+        Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net,
+        jejb@linux.ibm.com, Mimi Zohar <zohar@linux.ibm.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/xTBKpWe9v5NlxbxL4v5QvzF
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sat, 3 Aug 2019 at 01:08, Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
+>
+> On Fri, Aug 02, 2019 at 11:20:09AM +0530, Sumit Garg wrote:
+> > On Thu, 1 Aug 2019 at 22:54, Jarkko Sakkinen
+> > <jarkko.sakkinen@linux.intel.com> wrote:
+> > >
+> > > On Thu, Jul 18, 2019 at 04:54:45PM +0530, Sumit Garg wrote:
+> > > > Move existing code to trusted keys subsystem. Also, rename files with
+> > > > "tpm" as suffix which provides the underlying implementation.
+> > > >
+> > > > Suggested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > > > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> > >
+> > > What about TPM2 trusted keys code?
+> >
+> > Isn't TPM2 code located here: "drivers/char/tpm/"? Would you like to
+> > move that code under trusted keys subsystem only?
+>
+> Yeah, we need a design decision here. What I care is that they should
+> be in the same subsystem. I did trusted keys directly to TPM 2.0 subsys
+> because the subsystem was not too robust back then.
+>
+> Right now I think it would be feasible to implement TPM2 trusted keys
+> outside TPM driver since the whole transmit functionality is way more
+> robust.
+>
 
-Hi all,
+Okay, I will try to move TPM2 trusted keys code also.
 
-After merging the crypto tree, today's linux-next build (sparc64
-defconfig) failed like this:
+-Sumit
 
-drivers/char/hw_random/n2-drv.c: In function 'n2rng_probe':
-drivers/char/hw_random/n2-drv.c:771:29: error: 'pdev' undeclared (first use=
- in this function); did you mean 'cdev'?
-  err =3D devm_hwrng_register(&pdev->dev, &np->hwrng);
-                             ^~~~
-                             cdev
-drivers/char/hw_random/n2-drv.c:771:29: note: each undeclared identifier is=
- reported only once for each function it appears in
-
-Caused by commit
-
-  3e75241be808 ("hwrng: drivers - Use device-managed registration API")
-
-I applied the following patch for today:
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Mon, 5 Aug 2019 14:49:59 +1000
-Subject: [PATCH] hwrng: fix typo in n2-drv.c
-
-Fixes: 3e75241be808 ("hwrng: drivers - Use device-managed registration API")
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- drivers/char/hw_random/n2-drv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/char/hw_random/n2-drv.c b/drivers/char/hw_random/n2-dr=
-v.c
-index 2d256b3470db..73e408146420 100644
---- a/drivers/char/hw_random/n2-drv.c
-+++ b/drivers/char/hw_random/n2-drv.c
-@@ -768,7 +768,7 @@ static int n2rng_probe(struct platform_device *op)
- 	np->hwrng.data_read =3D n2rng_data_read;
- 	np->hwrng.priv =3D (unsigned long) np;
-=20
--	err =3D devm_hwrng_register(&pdev->dev, &np->hwrng);
-+	err =3D devm_hwrng_register(&op->dev, &np->hwrng);
- 	if (err)
- 		goto out_hvapi_unregister;
-=20
---=20
-2.20.1
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/xTBKpWe9v5NlxbxL4v5QvzF
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1Ht0AACgkQAVBC80lX
-0GwDhQf/faKdUW5dGiwL6BcS1VWPr05Q6fkvSO3K5CPMR6kxzcHrhJzJ5cmlo/Mr
-auG+eCRXImb+REsfycJ4rxfpWISb8rWSkGNfEavijVmsbnHkngPLDd2lUzf6LjVa
-/ZMmdVC1z+WtXP/4HZchuCpk8VamC9RYDNbJXCXPz3tXcJ/HYpncyvqceNEGCjim
-QDWKnKZQtN2DIZH2yBp+s8RHdSzFxgFjTrFg5wToB4Mx+68z/OPa8XZj6XcXXKZr
-emA3V082G4UXi8pGh3X3tnAG6Y22r5vggIlsyo6gJhF60/8JVjzZGZ96xfTpFU/B
-H+o9BBpus5HdVBISLDcjGLPVobRzzw==
-=TF+o
------END PGP SIGNATURE-----
-
---Sig_/xTBKpWe9v5NlxbxL4v5QvzF--
+> /Jarkko
