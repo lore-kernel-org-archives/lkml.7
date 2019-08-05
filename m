@@ -2,163 +2,138 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1D3C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2541C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:25:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00CF020B1F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:24:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A29562086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:25:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727585AbfHEHYo (ORCPT
+        id S1727601AbfHEHZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 03:24:44 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:48449 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726394AbfHEHYo (ORCPT
+        Mon, 5 Aug 2019 03:25:32 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:20856 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726423AbfHEHZc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 03:24:44 -0400
-Received: from localhost (hy283-1-82-246-155-60.fbx.proxad.net [82.246.155.60])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id F266D100009;
-        Mon,  5 Aug 2019 07:24:39 +0000 (UTC)
-Date:   Mon, 5 Aug 2019 09:24:36 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Richard Fontana <rfontana@redhat.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rtc@vger.kernel.org, srv_heupstream@mediatek.com,
-        Ran Bi <ran.bi@mediatek.com>
-Subject: Re: [PATCH v4 09/10] rtc: mt6397: fix alarm register overwrite
-Message-ID: <20190805072436.GC3600@piout.net>
-References: <1564982518-32163-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1564982518-32163-10-git-send-email-hsin-hsiung.wang@mediatek.com>
+        Mon, 5 Aug 2019 03:25:32 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x757Ncsm128188
+        for <linux-kernel@vger.kernel.org>; Mon, 5 Aug 2019 03:25:30 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2u6e4kvsnx-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 03:25:30 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <jwi@linux.ibm.com>;
+        Mon, 5 Aug 2019 08:25:28 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 5 Aug 2019 08:25:26 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x757PPrT37617832
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 5 Aug 2019 07:25:25 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0838D11C05B;
+        Mon,  5 Aug 2019 07:25:25 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7DCC611C052;
+        Mon,  5 Aug 2019 07:25:24 +0000 (GMT)
+Received: from [9.145.155.106] (unknown [9.145.155.106])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  5 Aug 2019 07:25:24 +0000 (GMT)
+Subject: Re: [PATCH] s390/net: Mark expected switch fall-throughs
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>
+References: <20190730001715.GA20706@embeddedor>
+From:   Julian Wiedmann <jwi@linux.ibm.com>
+Date:   Mon, 5 Aug 2019 09:25:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1564982518-32163-10-git-send-email-hsin-hsiung.wang@mediatek.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190730001715.GA20706@embeddedor>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19080507-0016-0000-0000-0000029A53FD
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19080507-0017-0000-0000-000032F95978
+Message-Id: <9d2534f3-246b-ad01-6cae-b9c461b28bac@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-05_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908050084
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/08/2019 13:21:57+0800, Hsin-Hsiung Wang wrote:
-> From: Ran Bi <ran.bi@mediatek.com>
+On 30.07.19 02:17, Gustavo A. R. Silva wrote:
+> Mark switch cases where we are expecting to fall through.
 > 
-> Alarm registers high byte was reserved for other functions.
-> This add mask in alarm registers operation functions.
-> This also fix error condition in interrupt handler.
+> This patch fixes the following warnings (Building: s390):
 > 
-> Fixes: fc2979118f3f ("rtc: mediatek: Add MT6397 RTC driver")
+> drivers/s390/net/ctcm_fsms.c: In function ‘ctcmpc_chx_attnbusy’:
+> drivers/s390/net/ctcm_fsms.c:1703:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    if (grp->changed_side == 1) {
+>       ^
+> drivers/s390/net/ctcm_fsms.c:1707:2: note: here
+>   case MPCG_STATE_XID0IOWAIX:
+>   ^~~~
 > 
-> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-
+> drivers/s390/net/ctcm_mpc.c: In function ‘ctc_mpc_alloc_channel’:
+> drivers/s390/net/ctcm_mpc.c:358:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    if (callback)
+>       ^
+> drivers/s390/net/ctcm_mpc.c:360:2: note: here
+>   case MPCG_STATE_XID0IOWAIT:
+>   ^~~~
+> 
+> drivers/s390/net/ctcm_mpc.c: In function ‘mpc_action_timeout’:
+> drivers/s390/net/ctcm_mpc.c:1469:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    if ((fsm_getstate(rch->fsm) == CH_XID0_PENDING) &&
+>       ^
+> drivers/s390/net/ctcm_mpc.c:1472:2: note: here
+>   default:
+>   ^~~~~~~
+> drivers/s390/net/ctcm_mpc.c: In function ‘mpc_send_qllc_discontact’:
+> drivers/s390/net/ctcm_mpc.c:2087:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    if (grp->estconnfunc) {
+>       ^
+> drivers/s390/net/ctcm_mpc.c:2092:2: note: here
+>   case MPCG_STATE_FLOWC:
+>   ^~~~
+> 
+> drivers/s390/net/qeth_l2_main.c: In function ‘qeth_l2_process_inbound_buffer’:
+> drivers/s390/net/qeth_l2_main.c:328:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>     if (IS_OSN(card)) {
+>        ^
+> drivers/s390/net/qeth_l2_main.c:337:3: note: here
+>    default:
+>    ^~~~~~~
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 > ---
->  drivers/rtc/rtc-mt6397.c | 47 +++++++++++++++++++++++++++++++++--------------
->  1 file changed, 33 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-> index b46ed4d..828def7 100644
-> --- a/drivers/rtc/rtc-mt6397.c
-> +++ b/drivers/rtc/rtc-mt6397.c
-> @@ -47,6 +47,14 @@
->  
->  #define RTC_AL_SEC		0x0018
->  
-> +#define RTC_AL_SEC_MASK		0x003f
-> +#define RTC_AL_MIN_MASK		0x003f
-> +#define RTC_AL_HOU_MASK		0x001f
-> +#define RTC_AL_DOM_MASK		0x001f
-> +#define RTC_AL_DOW_MASK		0x0007
-> +#define RTC_AL_MTH_MASK		0x000f
-> +#define RTC_AL_YEA_MASK		0x007f
-> +
->  #define RTC_PDN2		0x002e
->  #define RTC_PDN2_PWRON_ALARM	BIT(4)
->  
-> @@ -103,7 +111,7 @@ static irqreturn_t mtk_rtc_irq_handler_thread(int irq, void *data)
->  		irqen = irqsta & ~RTC_IRQ_EN_AL;
->  		mutex_lock(&rtc->lock);
->  		if (regmap_write(rtc->regmap, rtc->addr_base + RTC_IRQ_EN,
-> -				 irqen) < 0)
-> +				 irqen) == 0)
->  			mtk_rtc_write_trigger(rtc);
->  		mutex_unlock(&rtc->lock);
->  
-> @@ -225,12 +233,12 @@ static int mtk_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alm)
->  	alm->pending = !!(pdn2 & RTC_PDN2_PWRON_ALARM);
->  	mutex_unlock(&rtc->lock);
->  
-> -	tm->tm_sec = data[RTC_OFFSET_SEC];
-> -	tm->tm_min = data[RTC_OFFSET_MIN];
-> -	tm->tm_hour = data[RTC_OFFSET_HOUR];
-> -	tm->tm_mday = data[RTC_OFFSET_DOM];
-> -	tm->tm_mon = data[RTC_OFFSET_MTH];
-> -	tm->tm_year = data[RTC_OFFSET_YEAR];
-> +	tm->tm_sec = data[RTC_OFFSET_SEC] & RTC_AL_SEC_MASK;
-> +	tm->tm_min = data[RTC_OFFSET_MIN] & RTC_AL_MIN_MASK;
-> +	tm->tm_hour = data[RTC_OFFSET_HOUR] & RTC_AL_HOU_MASK;
-> +	tm->tm_mday = data[RTC_OFFSET_DOM] & RTC_AL_DOM_MASK;
-> +	tm->tm_mon = data[RTC_OFFSET_MTH] & RTC_AL_MTH_MASK;
-> +	tm->tm_year = data[RTC_OFFSET_YEAR] & RTC_AL_YEA_MASK;
->  
->  	tm->tm_year += RTC_MIN_YEAR_OFFSET;
->  	tm->tm_mon--;
-> @@ -251,14 +259,25 @@ static int mtk_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm)
->  	tm->tm_year -= RTC_MIN_YEAR_OFFSET;
->  	tm->tm_mon++;
->  
-> -	data[RTC_OFFSET_SEC] = tm->tm_sec;
-> -	data[RTC_OFFSET_MIN] = tm->tm_min;
-> -	data[RTC_OFFSET_HOUR] = tm->tm_hour;
-> -	data[RTC_OFFSET_DOM] = tm->tm_mday;
-> -	data[RTC_OFFSET_MTH] = tm->tm_mon;
-> -	data[RTC_OFFSET_YEAR] = tm->tm_year;
-> -
->  	mutex_lock(&rtc->lock);
-> +	ret = regmap_bulk_read(rtc->regmap, rtc->addr_base + RTC_AL_SEC,
-> +			       data, RTC_OFFSET_COUNT);
-> +	if (ret < 0)
-> +		goto exit;
-> +
-> +	data[RTC_OFFSET_SEC] = ((data[RTC_OFFSET_SEC] & ~(RTC_AL_SEC_MASK)) |
-> +				(tm->tm_sec & RTC_AL_SEC_MASK));
-> +	data[RTC_OFFSET_MIN] = ((data[RTC_OFFSET_MIN] & ~(RTC_AL_MIN_MASK)) |
-> +				(tm->tm_min & RTC_AL_MIN_MASK));
-> +	data[RTC_OFFSET_HOUR] = ((data[RTC_OFFSET_HOUR] & ~(RTC_AL_HOU_MASK)) |
-> +				(tm->tm_hour & RTC_AL_HOU_MASK));
-> +	data[RTC_OFFSET_DOM] = ((data[RTC_OFFSET_DOM] & ~(RTC_AL_DOM_MASK)) |
-> +				(tm->tm_mday & RTC_AL_DOM_MASK));
-> +	data[RTC_OFFSET_MTH] = ((data[RTC_OFFSET_MTH] & ~(RTC_AL_MTH_MASK)) |
-> +				(tm->tm_mon & RTC_AL_MTH_MASK));
-> +	data[RTC_OFFSET_YEAR] = ((data[RTC_OFFSET_YEAR] & ~(RTC_AL_YEA_MASK)) |
-> +				(tm->tm_year & RTC_AL_YEA_MASK));
-> +
->  	if (alm->enabled) {
->  		ret = regmap_bulk_write(rtc->regmap,
->  					rtc->addr_base + RTC_AL_SEC,
-> -- 
-> 2.6.4
+>  drivers/s390/net/ctcm_fsms.c    | 1 +
+>  drivers/s390/net/ctcm_mpc.c     | 3 +++
+>  drivers/s390/net/qeth_l2_main.c | 2 +-
+>  3 files changed, 5 insertions(+), 1 deletion(-)
 > 
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Applied, thanks.
+
