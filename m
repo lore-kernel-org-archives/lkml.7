@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1C7C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 23:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 925E5C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 23:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD88C217F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 23:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FCCB2070D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 23:35:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HauhLk8d"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P0cWEJqD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731251AbfHEXfj (ORCPT
+        id S1731298AbfHEXfn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 19:35:39 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45093 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731219AbfHEXff (ORCPT
+        Mon, 5 Aug 2019 19:35:43 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41783 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731231AbfHEXfh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 19:35:35 -0400
-Received: by mail-pf1-f196.google.com with SMTP id r1so40409791pfq.12;
-        Mon, 05 Aug 2019 16:35:34 -0700 (PDT)
+        Mon, 5 Aug 2019 19:35:37 -0400
+Received: by mail-pg1-f193.google.com with SMTP id x15so30169830pgg.8;
+        Mon, 05 Aug 2019 16:35:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=dlPssYq0ryvhz0STq2y2DANQYDQwBzmO+X3pNrhAOiU=;
-        b=HauhLk8diwPqoMNLaCvVs+Va+/vM1Lotb6yd4g0srzVoCT4ME7KaWNu46fQtchpf/Y
-         4jTYQIFp17uXOCGxJEVna4L87qT8UKZ4PxAgbP0E6TajvP0s8uJ8RAlATnruwoMXZ0xQ
-         km1KDe2Qx7lImi9sH0snspt9BhAQc6j2B6PdzFEZwxOsk/Mul5as2/6VJiQAcDwXUfNX
-         AcbzzFdw4/Ea7UZibCr/bs+/nMXotUYIrcImd2RbnlZKvt0xXYl8v79Cx8tLs1G0goQF
-         09ZJu2P2wAhzIzFe8JYfWdcle5OunSW837g9RZb0iDfm/DZBfy2XiEi+hElxP0oulYap
-         ikOg==
+        bh=6Pj12shXDJ0qL2ITkdFID+0sK7YPIfnJU0EODI45PAo=;
+        b=P0cWEJqDtIxlI1iTv4y7nWfH9E/dxbKOHhDEh1Ldkd4KsNCON8XIrlTGdDK1ATCV24
+         1pIOi/RmvDSo99JRk88cCOrbmxC7aRhJu7psaA0w/Wb8Dy7uQd0qAqeAWD6gS89htzum
+         IXoJG5CORpjEXHBRY0klwJJh1HpapaZ7g5kv2Ar2lryCWFh4NwADK88QZxREjbpWskO1
+         7iRKe9s9zr0BQS6lPdiqAHIyjO62zig/8ZcIipv999RP/bKmNDcwpPVac7YKd6ubANy3
+         M8sIgODKgXP1t/GSK4n0bavVAMcyuHQzQnpD3Pg/Ld/IKwiHaxJMhawz31vUWPTDcSym
+         W54w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=dlPssYq0ryvhz0STq2y2DANQYDQwBzmO+X3pNrhAOiU=;
-        b=DuT4+CtSU5bUMszr1sRp6VSwBH0NCs0KDUZgp7zgB6IMDx4w4n+S+SF4l/cTwaC7zx
-         sYLPCdZAQtRBPKgIdr4C92D8HsnxjyRkfajRf+XOL2x1xmdXmP7CDdCv37G23J/xjptl
-         aZow1M7EO+9M/HvNBc2x0mWVc3dLkyQ9lHV6/AuZi18atYuJD1PGVM94IAftqhQ+w+/X
-         yO5A6NnsN8cG5xBPi2PTAMmfrhskq5jvXPHS7gycgt6McqJ3ypU/9KhO/vbdoEPmDkFD
-         lInYvN1JqZo0gCcVIVQgIQi+vD4Hoy1x2mpw/6rstgQeeKJwYA76HqyZKfU7vNQcAMrg
-         sfNw==
-X-Gm-Message-State: APjAAAU0OyfakmOKmY0GjJTC+C7YRbDPtawZ4J3iSU/5qY34dUdNWDVa
-        lKZ3/3NFW7DIAePUDjk7Lddr9q4L
-X-Google-Smtp-Source: APXvYqyC9KlTqQHjqDVHhWoeilDLM2Elce3C2IsDg6J+VQpzucQEZbF8tGngST/M5+v2rf41OtR9fw==
-X-Received: by 2002:aa7:956d:: with SMTP id x13mr553906pfq.132.1565048133803;
-        Mon, 05 Aug 2019 16:35:33 -0700 (PDT)
+        bh=6Pj12shXDJ0qL2ITkdFID+0sK7YPIfnJU0EODI45PAo=;
+        b=HSKkuzEs97l9bS3k4mdcAncOHZ9IbdgUEkTrqagIEe3BSKZTmxoRvaa0Mx9PMz+4eB
+         oBfqqfoTg48v2rXrI4FpQ6Z/rbfKXzkW3ZAx+jNn4NNvNUnKkEgvk5GAyg14OjAPfhEn
+         F0fZyyIRrdhlNATeqplk7Y4Hhj824vL2tph01kZJK3ve+d6ALN2lsd0cQSz6cKAd9zPF
+         XZ+IBITgNnFp6KRWwggqlFdN4A+XQ/n65vXw8uxkuPWSKWCayPVRSq5AUBKPGL/O18g8
+         fz8+4k2KNyoJW3HWLuoeFTzkM7LkZCvZ5us1vfaiBnZMhLzxKKjjqGBqBldk18l3Qv9k
+         ea8A==
+X-Gm-Message-State: APjAAAUR9JATyqFujkmOlI6zgACWiPXanuYOqHrb+omk3kgrGPsf5zTu
+        g4aO9czMu4eqV1ILjDWotvFImB3J
+X-Google-Smtp-Source: APXvYqwCuNAlXO9lVulSaYfkaEjh7QPRwoh7y+NSTuatvygZigIcX3cPqTy4WpLO+oFiGtP3uC0Vaw==
+X-Received: by 2002:a17:90a:ca11:: with SMTP id x17mr194531pjt.107.1565048136137;
+        Mon, 05 Aug 2019 16:35:36 -0700 (PDT)
 Received: from majic.sklembedded.com (c-73-202-231-77.hsd1.ca.comcast.net. [73.202.231.77])
-        by smtp.googlemail.com with ESMTPSA id 30sm31296349pjk.17.2019.08.05.16.35.32
+        by smtp.googlemail.com with ESMTPSA id 30sm31296349pjk.17.2019.08.05.16.35.35
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 05 Aug 2019 16:35:33 -0700 (PDT)
+        Mon, 05 Aug 2019 16:35:35 -0700 (PDT)
 From:   Steve Longerbeam <slongerbeam@gmail.com>
 To:     linux-media@vger.kernel.org
 Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
@@ -70,9 +70,9 @@ Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
         devel@driverdev.osuosl.org (open list:STAGING SUBSYSTEM),
         linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX
         / MXC ARM ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 16/22] media: imx: csi: Implement get_fwnode_pad
-Date:   Mon,  5 Aug 2019 16:34:59 -0700
-Message-Id: <20190805233505.21167-17-slongerbeam@gmail.com>
+Subject: [PATCH 18/22] media: imx: csi: Create media links in bound notifier
+Date:   Mon,  5 Aug 2019 16:35:01 -0700
+Message-Id: <20190805233505.21167-19-slongerbeam@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190805233505.21167-1-slongerbeam@gmail.com>
 References: <20190805233505.21167-1-slongerbeam@gmail.com>
@@ -81,54 +81,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The CSI does not have a 1:1 relationship between fwnode port numbers and
-pad indexes. In fact the CSI fwnode device is itself a port which is the
-sink, containing only a single fwnode endpoint. Implement media_entity
-operation get_fwnode_pad to first verify the given endpoint is the CSI's
-sink endpoint, and if so return the CSI sink pad index.
+Implement a notifier bound op to register media links from the remote
+sub-device's source pad(s) to the CSI sink pad.
 
 Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
 ---
- drivers/staging/media/imx/imx-media-csi.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ drivers/staging/media/imx/imx-media-csi.c | 24 +++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
 diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
-index 367e39f5b382..e193f66fa230 100644
+index b39d79e63ac2..37b10cbf3c1a 100644
 --- a/drivers/staging/media/imx/imx-media-csi.c
 +++ b/drivers/staging/media/imx/imx-media-csi.c
-@@ -1824,9 +1824,32 @@ static void csi_unregistered(struct v4l2_subdev *sd)
- 		ipu_csi_put(priv->csi);
+@@ -120,6 +120,11 @@ static inline struct csi_priv *sd_to_dev(struct v4l2_subdev *sdev)
+ 	return container_of(sdev, struct csi_priv, sd);
  }
  
-+/*
-+ * The CSI has only one fwnode endpoint, at the sink pad. Verify the
-+ * endpoint belongs to us, and return CSI_SINK_PAD.
-+ */
-+static int csi_get_fwnode_pad(struct media_entity *entity,
-+			      struct fwnode_endpoint *endpoint)
++static inline struct csi_priv *notifier_to_dev(struct v4l2_async_notifier *n)
 +{
-+	struct v4l2_subdev *sd = media_entity_to_v4l2_subdev(entity);
-+	struct csi_priv *priv = v4l2_get_subdevdata(sd);
-+	struct fwnode_handle *csi_port = dev_fwnode(priv->dev);
-+	struct fwnode_handle *csi_ep;
-+	int ret;
-+
-+	csi_ep = fwnode_get_next_child_node(csi_port, NULL);
-+
-+	ret = endpoint->local_fwnode == csi_ep ? CSI_SINK_PAD : -ENXIO;
-+
-+	fwnode_handle_put(csi_ep);
-+
-+	return ret;
++	return container_of(n, struct csi_priv, notifier);
 +}
 +
- static const struct media_entity_operations csi_entity_ops = {
- 	.link_setup = csi_link_setup,
- 	.link_validate = v4l2_subdev_link_validate,
-+	.get_fwnode_pad = csi_get_fwnode_pad,
- };
+ static inline bool is_parallel_bus(struct v4l2_fwnode_endpoint *ep)
+ {
+ 	return ep->bus_type != V4L2_MBUS_CSI2_DPHY;
+@@ -1895,6 +1900,23 @@ static int imx_csi_parse_endpoint(struct device *dev,
+ 	return fwnode_device_is_available(asd->match.fwnode) ? 0 : -ENOTCONN;
+ }
  
- static const struct v4l2_subdev_core_ops csi_core_ops = {
++static int imx_csi_notify_bound(struct v4l2_async_notifier *notifier,
++				struct v4l2_subdev *sd,
++				struct v4l2_async_subdev *asd)
++{
++	struct csi_priv *priv = notifier_to_dev(notifier);
++	struct media_pad *sink = &priv->sd.entity.pads[CSI_SINK_PAD];
++
++	return media_create_fwnode_pad_links(sink,
++					     dev_fwnode(priv->dev->parent),
++					     &sd->entity,
++					     dev_fwnode(sd->dev), 0);
++}
++
++static const struct v4l2_async_notifier_operations csi_notify_ops = {
++	.bound = imx_csi_notify_bound,
++};
++
+ static int imx_csi_async_register(struct csi_priv *priv)
+ {
+ 	struct fwnode_handle *fwnode;
+@@ -1903,6 +1925,8 @@ static int imx_csi_async_register(struct csi_priv *priv)
+ 
+ 	v4l2_async_notifier_init(&priv->notifier);
+ 
++	priv->notifier.ops = &csi_notify_ops;
++
+ 	fwnode = dev_fwnode(priv->dev);
+ 
+ 	/* get this CSI's port id */
 -- 
 2.17.1
 
