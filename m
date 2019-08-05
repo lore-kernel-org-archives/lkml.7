@@ -2,161 +2,212 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C51C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A94C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92C262075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:01:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PkQPMljf"
+	by mail.kernel.org (Postfix) with ESMTP id 0F0FB2075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:01:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729261AbfHERBX (ORCPT
+        id S1729763AbfHERBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 13:01:23 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:51474 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728935AbfHERBX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 13:01:23 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x75Gj6IA113561;
-        Mon, 5 Aug 2019 17:00:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=9pUfgziCq7pxPpZPM6g5Do4JMKoJYIw8oH79TZUxwXY=;
- b=PkQPMljfOmAIQpx501wtF+rIjs+mcgDoiMpircWo7jHH88A2tIpl4nnV8azMM1Dd66PX
- jqn9tc+tvmCDyOcUWjv9nI5xdOc9NBYzIuJHEzPiTNA0N6uZ9ETtevbC9N8RBHViNpaa
- YuFbP1C5k2riXhF6eKTP+ELkI8d/H5rWJC/7fm7nRcIeobm3rkyZRREKfYApppimsSbc
- 3V4IvMw1i4FN8ZGz7rL5+kWYXrh9ex+JjsitLy7mh8fpEvJprSC+7AOLDU5PyQRb3aEi
- 4Ix1s1in1si6pvznojlvamRz0YkPdffwvMSQJVI31ZumJNx9LbpgZvNQK9wwvD0drxSK Kg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2u527pgf0t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 05 Aug 2019 17:00:41 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x75GlBa3160930;
-        Mon, 5 Aug 2019 16:58:40 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2u4ycu5ure-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 05 Aug 2019 16:58:40 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x75Gwb6J022007;
-        Mon, 5 Aug 2019 16:58:38 GMT
-Received: from [192.168.1.222] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 05 Aug 2019 09:58:37 -0700
-Subject: Re: [PATCH 1/3] mm, reclaim: make should_continue_reclaim perform
- dryrun detection
-To:     Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Cc:     Hillf Danton <hdanton@sina.com>, Michal Hocko <mhocko@kernel.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20190802223930.30971-1-mike.kravetz@oracle.com>
- <20190802223930.30971-2-mike.kravetz@oracle.com>
- <bb16d3f0-0984-be32-4346-358abad92c4c@suse.cz>
- <0d31cc14-13cd-13e0-cf2d-dd8a8d3049ff@suse.cz>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <b4dbe25f-4499-af28-94bb-d12147505326@oracle.com>
-Date:   Mon, 5 Aug 2019 09:58:36 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 5 Aug 2019 13:01:46 -0400
+Received: from mga18.intel.com ([134.134.136.126]:51650 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728871AbfHERBp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 13:01:45 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 09:52:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,350,1559545200"; 
+   d="scan'208";a="257772967"
+Received: from buildpc-hp-z230.iind.intel.com (HELO buildpc-HP-Z230) ([10.223.89.34])
+  by orsmga001.jf.intel.com with ESMTP; 05 Aug 2019 09:52:29 -0700
+Date:   Mon, 5 Aug 2019 22:24:22 +0530
+From:   Sanyog Kale <sanyog.r.kale@intel.com>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, vkoul@kernel.org,
+        gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com
+Subject: Re: [RFC PATCH 27/40] soundwire: Add Intel resource management
+ algorithm
+Message-ID: <20190805165422.GB24889@buildpc-HP-Z230>
+References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
+ <20190725234032.21152-28-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <0d31cc14-13cd-13e0-cf2d-dd8a8d3049ff@suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9340 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=927
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908050184
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9340 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=965 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908050184
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190725234032.21152-28-pierre-louis.bossart@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/5/19 3:57 AM, Vlastimil Babka wrote:
-> On 8/5/19 10:42 AM, Vlastimil Babka wrote:
->> On 8/3/19 12:39 AM, Mike Kravetz wrote:
->>> From: Hillf Danton <hdanton@sina.com>
->>>
->>> Address the issue of should_continue_reclaim continuing true too often
->>> for __GFP_RETRY_MAYFAIL attempts when !nr_reclaimed and nr_scanned.
->>> This could happen during hugetlb page allocation causing stalls for
->>> minutes or hours.
->>>
->>> We can stop reclaiming pages if compaction reports it can make a progress.
->>> A code reshuffle is needed to do that.
->>
->>> And it has side-effects, however,
->>> with allocation latencies in other cases but that would come at the cost
->>> of potential premature reclaim which has consequences of itself.
->>
->> Based on Mel's longer explanation, can we clarify the wording here? e.g.:
->>
->> There might be side-effect for other high-order allocations that would
->> potentially benefit from more reclaim before compaction for them to be
->> faster and less likely to stall, but the consequences of
->> premature/over-reclaim are considered worse.
->>
->>> We can also bail out of reclaiming pages if we know that there are not
->>> enough inactive lru pages left to satisfy the costly allocation.
->>>
->>> We can give up reclaiming pages too if we see dryrun occur, with the
->>> certainty of plenty of inactive pages. IOW with dryrun detected, we are
->>> sure we have reclaimed as many pages as we could.
->>>
->>> Cc: Mike Kravetz <mike.kravetz@oracle.com>
->>> Cc: Mel Gorman <mgorman@suse.de>
->>> Cc: Michal Hocko <mhocko@kernel.org>
->>> Cc: Vlastimil Babka <vbabka@suse.cz>
->>> Cc: Johannes Weiner <hannes@cmpxchg.org>
->>> Signed-off-by: Hillf Danton <hdanton@sina.com>
->>> Tested-by: Mike Kravetz <mike.kravetz@oracle.com>
->>> Acked-by: Mel Gorman <mgorman@suse.de>
->>
->> Acked-by: Vlastimil Babka <vbabka@suse.cz>
->> I will send some followup cleanup.
+On Thu, Jul 25, 2019 at 06:40:19PM -0500, Pierre-Louis Bossart wrote:
+> This algorithm computes bus parameters like clock frequency, frame
+> shape and port transport parameters based on active stream(s) running
+> on the bus.
 > 
-> How about this?
-> ----8<----
-> From 0040b32462587171ad22395a56699cc036ad483f Mon Sep 17 00:00:00 2001
-> From: Vlastimil Babka <vbabka@suse.cz>
-> Date: Mon, 5 Aug 2019 12:49:40 +0200
-> Subject: [PATCH] mm, reclaim: cleanup should_continue_reclaim()
+> This implementation is optimal for Intel platforms. Developers can
+> also implement their own .compute_params() callback for specific
+> resource management algorithm.
 > 
-> After commit "mm, reclaim: make should_continue_reclaim perform dryrun
-> detection", closer look at the function shows, that nr_reclaimed == 0 means
-> the function will always return false. And since non-zero nr_reclaimed implies
-> non_zero nr_scanned, testing nr_scanned serves no purpose, and so does the
-> testing for __GFP_RETRY_MAYFAIL.
+> Credits: this patch is based on an earlier internal contribution by
+> Vinod Koul, Sanyog Kale, Shreyas Nc and Hardik Shah. All hard-coded
+> values were removed from the initial contribution to use BIOS
+> information instead.
 > 
-> This patch thus cleans up the function to test only !nr_reclaimed upfront, and
-> remove the __GFP_RETRY_MAYFAIL test and nr_scanned parameter completely.
-> Comment is also updated, explaining that approximating "full LRU list has been
-> scanned" with nr_scanned == 0 didn't really work.
+> FIXME: remove checkpatch report
+> WARNING: Reusing the krealloc arg is almost always a bug
+> +			group->rates = krealloc(group->rates,
 > 
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> ---
+>  drivers/soundwire/Makefile                  |   2 +-
+>  drivers/soundwire/algo_dynamic_allocation.c | 403 ++++++++++++++++++++
+>  drivers/soundwire/bus.c                     |   3 +
+>  drivers/soundwire/bus.h                     |  46 ++-
+>  drivers/soundwire/stream.c                  |  20 +
+>  include/linux/soundwire/sdw.h               |   5 +
+>  6 files changed, 476 insertions(+), 3 deletions(-)
+>  create mode 100644 drivers/soundwire/algo_dynamic_allocation.c
+> 
+> diff --git a/drivers/soundwire/Makefile b/drivers/soundwire/Makefile
+> index 88990cac48a7..f59a9d4a28fd 100644
+> --- a/drivers/soundwire/Makefile
+> +++ b/drivers/soundwire/Makefile
+> @@ -5,7 +5,7 @@
+>  
+>  #Bus Objs
+>  soundwire-bus-objs := bus_type.o bus.o slave.o mipi_disco.o stream.o \
+> -			debugfs.o
+> +			debugfs.o algo_dynamic_allocation.o
+>  
+>  obj-$(CONFIG_SOUNDWIRE_BUS) += soundwire-bus.o
+>  
+> diff --git a/drivers/soundwire/algo_dynamic_allocation.c b/drivers/soundwire/algo_dynamic_allocation.c
+> new file mode 100644
+> index 000000000000..89edb39162b8
+> --- /dev/null
+> +++ b/drivers/soundwire/algo_dynamic_allocation.c
+> @@ -0,0 +1,403 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+> +// Copyright(c) 2015-18 Intel Corporation.
+> +
+> +/*
+> + * Bandwidth management algorithm based on 2^n gears
+> + *
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/slab.h>
+> +#include <linux/soundwire/sdw.h>
+> +#include "bus.h"
+> +
+> +#define SDW_STRM_RATE_GROUPING		1
+> +
+> +struct sdw_group_params {
+> +	unsigned int rate;
+> +	int full_bw;
+> +	int payload_bw;
+> +	int hwidth;
+> +};
+> +
+> +struct sdw_group {
+> +	unsigned int count;
+> +	unsigned int max_size;
+> +	unsigned int *rates;
+> +};
+> +
+> +struct sdw_transport_data {
+> +	int hstart;
+> +	int hstop;
+> +	int block_offset;
+> +	int sub_block_offset;
+> +};
+> +
+> +
+> +/**
+> + * sdw_compute_port_params: Compute transport and port parameters
+> + *
+> + * @bus: SDW Bus instance
+> + */
+> +static int sdw_compute_port_params(struct sdw_bus *bus)
+> +{
+> +	struct sdw_group_params *params = NULL;
+> +	struct sdw_group group;
+> +	int ret;
+> +
+> +	ret = sdw_get_group_count(bus, &group);
+> +	if (ret < 0)
+> +		goto out;
+> +
+> +	if (group.count == 0)
+> +		goto out;
+> +
+> +	params = kcalloc(group.count, sizeof(*params), GFP_KERNEL);
+> +	if (!params) {
+> +		ret = -ENOMEM;
+> +		goto out;
+> +	}
+> +
+> +	/* Compute transport parameters for grouped streams */
+> +	ret = sdw_compute_group_params(bus, params,
+> +				       &group.rates[0], group.count);
+> +	if (ret < 0)
+> +		goto out;
+> +
+> +	_sdw_compute_port_params(bus, params, group.count);
+> +
+> +out:
+> +	kfree(params);
+> +	kfree(group.rates);
+> +
+> +	return ret;
+> +}
+> +
+> +static int sdw_select_row_col(struct sdw_bus *bus, int clk_freq)
+> +{
+> +	struct sdw_master_prop *prop = &bus->prop;
+> +	int frame_int, frame_freq;
+> +	int r, c;
+> +
+> +	for (c = 0; c < SDW_FRAME_COLS; c++) {
+> +		for (r = 0; r < SDW_FRAME_ROWS; r++) {
+> +			if (sdw_rows[r] != prop->default_row ||
+> +			    sdw_cols[c] != prop->default_col)
+> +				continue;
 
-Acked-by: Mike Kravetz <mike.kravetz@oracle.com>
+Are we only supporting default rows and cols?
 
-Would you like me to add this to the series, or do you want to send later?
+> +
+> +			frame_int = sdw_rows[r] * sdw_cols[c];
+> +			frame_freq = clk_freq / frame_int;
+> +
+> +			if ((clk_freq - (frame_freq * SDW_FRAME_CTRL_BITS)) <
+> +			    bus->params.bandwidth)
+> +				continue;
+> +
+> +			bus->params.row = sdw_rows[r];
+> +			bus->params.col = sdw_cols[c];
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> -- 
+> 2.20.1
+> 
+
 -- 
-Mike Kravetz
