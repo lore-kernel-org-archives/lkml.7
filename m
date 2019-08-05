@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D45C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 479ADC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC4CE21734
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:57:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CDD320B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:57:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="exn7B7an"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FzVRo/06"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730538AbfHES5e (ORCPT
+        id S1730580AbfHES5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 14:57:34 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46934 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730386AbfHES5a (ORCPT
+        Mon, 5 Aug 2019 14:57:38 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41055 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730523AbfHES5d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 14:57:30 -0400
-Received: by mail-pg1-f195.google.com with SMTP id w3so2989259pgt.13;
-        Mon, 05 Aug 2019 11:57:29 -0700 (PDT)
+        Mon, 5 Aug 2019 14:57:33 -0400
+Received: by mail-pg1-f196.google.com with SMTP id x15so29850996pgg.8;
+        Mon, 05 Aug 2019 11:57:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=/WT066rnvh5uQXR2ltMlpOV9a5E867cJV8j39JLKtN0=;
-        b=exn7B7an67HxIvtTwadhTE1oFn0pygr97EM7i5e87Q++9RnUdbffJ3v+GZKRn6L63P
-         V6ESkgVq1UOFDik9frMxth8YFXJ59et50LsE3CR1VVJVGrYIuh9TjLKHacLNvor7YCoI
-         tXlCWY6a1KzUgADWmGWOeS3cULSrNJroJJN5yKNKiC3Oncafb0JEeTsfNmDVs8iGzw/L
-         4McybRKz0wDWn/efCibkC5bEoGALp6ifYmJYXOuc5ZT7x+FAbXb2x+YvWq9pZlNr/a/L
-         6XAVH3wTS6z8wkyWmP6GghNTHGyyR3xtSsKtuFxXqUiks/mcPhBLddTwH3gy8Lz5dgLj
-         h9hg==
+        bh=cjWaUP04Ww8m6uQcC0AKZNjv1jlcUsiz2ETZEZkSQs0=;
+        b=FzVRo/06bzl3CwDZ8+mhccUNJDBYaD5L/lSu+58feeqoYEUwyacnkqSPjgVWuV/C/l
+         ZgZp/2xRhBnSlGLUrdKgKu8x++voB5hI/EaZmL4hNi+HcksMDSoMAcAhpWg4Hv3tYbw/
+         Q2H/b/93g8luBZOpY3r/6TnS8SNO1kgSu1SZ4Gm2yoWDH2QSBYiS7pdPKqPx3UyKCx7x
+         vo9A49HI+Cuho6/+ZjSWgs3n2eIODQ6tlOMYgdZCA1BiPqLMYM+P4bF4WW9ZSSxeJaGg
+         9yXf3Hps8/CqauiqiqZWoNU86f4udeIChfKiD8HfypIGkBAsxFS3KixPfNmbb3GnzY8R
+         HqEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=/WT066rnvh5uQXR2ltMlpOV9a5E867cJV8j39JLKtN0=;
-        b=Qyo4FkmhiFYuXAfZOYMqX59HgaQLBzcgwEJNvYw0hg50OA/u64si5GjmJ2DYkPekas
-         tUdQTgkbXzlY6PCeocTsvXmFPr4rZsLSKhd78GX3V+iYAaXBWMEv9n9UwaXZEqnx7sH9
-         1U08OE0L6KDhR1lyrxoCBW5CJYSm5mFA5iK6b3KMIGLSlxHMd8Vx1z803n+H58hhNJi8
-         vYMvo67VQe518YR/ycspM1fUJohBuPAtBShckFQGa907nV5OA33YV7FaOV/qDiokJxEd
-         dvnyyXLx9E35f4zUuku532izXom2hNVbh14xrilfUvPhmbc5IBktyoxbdKJXXwFhkFMn
-         1oAQ==
-X-Gm-Message-State: APjAAAXYZYUTevE3P7kedXCGzXCEEj50VI/C+RN3a4Trq+HWu4qodqBz
-        qVChGutihGLa0g43z38YRtCL+PfO
-X-Google-Smtp-Source: APXvYqyzE69WY5M2psyQWq/JVAfTpnE9tE2OyRbvrxZTFwrGJVeD84YSWNYWvnFg0Q9VnGE82lGxcQ==
-X-Received: by 2002:aa7:9dcd:: with SMTP id g13mr76106032pfq.204.1565031449284;
-        Mon, 05 Aug 2019 11:57:29 -0700 (PDT)
+        bh=cjWaUP04Ww8m6uQcC0AKZNjv1jlcUsiz2ETZEZkSQs0=;
+        b=NmoMpDg8cwoaCfMYSyAP2yiz7UNvDu7GVj7+Ie7GILIIaFVC/xcayoFrjhlxVvyTsX
+         dQWajYco9O6oNut8SW0SN6jdMASLByqW9idFgUxjEdhprJHbRM1KWC8omAdLHBiFq5Vn
+         6+rvsILXjRkLkArWMJkXWLXLzbtUrQZ9bl/+kybyACCCqlegYpg3vPC7uas8EJP/Xr/z
+         rptdy86Iv/TUlKewaUJjUeDp8xFEMDgsuwy97Uio1tJZGIUXbyQCGc0VV+H0/5qLRjrl
+         ruAlVCQMiFqXj8mzcqrNrNvOKAtORgHX44yOLfqNel6W9lpHHJ9eWiL9rKIvWafDLP47
+         TVZQ==
+X-Gm-Message-State: APjAAAXW6VrEvqeE+81zYQyg3H3aVPrjSiraX9E0hOdNY66lSXAXM3Yx
+        0VgwZwpXg4ikuPLorn86MBLEqzTA
+X-Google-Smtp-Source: APXvYqyHtUVmbAp3IBSNC6sKX7W7bCeFehFK75RelWZEFMS+D/0YMMGuA0ZIBXr0vLInDa6r9iPjbw==
+X-Received: by 2002:a62:8494:: with SMTP id k142mr73816957pfd.75.1565031452362;
+        Mon, 05 Aug 2019 11:57:32 -0700 (PDT)
 Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id k64sm16037959pgk.74.2019.08.05.11.57.28
+        by smtp.gmail.com with ESMTPSA id k64sm16037959pgk.74.2019.08.05.11.57.31
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 05 Aug 2019 11:57:28 -0700 (PDT)
+        Mon, 05 Aug 2019 11:57:31 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-serial@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -67,9 +67,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>, linux-imx@nxp.com,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/6] tty: serial: fsl_lpuart: Introduce lpuart32_configure()
-Date:   Mon,  5 Aug 2019 11:56:58 -0700
-Message-Id: <20190805185701.22863-4-andrew.smirnov@gmail.com>
+Subject: [PATCH v3 5/6] tty: serial: fsl_lpuart: Don't enable TIE in .startup() or .resume()
+Date:   Mon,  5 Aug 2019 11:57:00 -0700
+Message-Id: <20190805185701.22863-6-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190805185701.22863-1-andrew.smirnov@gmail.com>
 References: <20190805185701.22863-1-andrew.smirnov@gmail.com>
@@ -80,9 +80,15 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Code doing final steps of TX/RX configuration in lpuart32_startup()
-and lpuart_resume() is identical, so move it into a standalone
-subroutine.
+Enabling TIE in .startup() callback causes the driver to start (or at
+least try) to transmit data before .start_tx() is called. Which, while
+harmless (since TIE handler will immediately disable it), is a no-op
+and shouldn't really happen. Drop UARTCR2_TIE from list of bits set in
+lpuart_startup().
+
+This change will also not enable TIE in .resume(), but it seems that,
+similart to .startup(), transmit interrupt shouldn't be enabled there
+either.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Stefan Agner <stefan@agner.ch>
@@ -95,81 +101,21 @@ Cc: linux-imx@nxp.com
 Cc: linux-serial@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/tty/serial/fsl_lpuart.c | 48 +++++++++++++++------------------
- 1 file changed, 21 insertions(+), 27 deletions(-)
+ drivers/tty/serial/fsl_lpuart.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
-index 4b59801a0a0c..1286daa1be79 100644
+index fb9961edce3a..5c3cc1051aa8 100644
 --- a/drivers/tty/serial/fsl_lpuart.c
 +++ b/drivers/tty/serial/fsl_lpuart.c
-@@ -1502,6 +1502,24 @@ static int lpuart_startup(struct uart_port *port)
- 	return 0;
+@@ -1410,7 +1410,7 @@ static void lpuart_setup_watermark_enable(struct lpuart_port *sport)
+ 	lpuart_setup_watermark(sport);
+ 
+ 	cr2 = readb(sport->port.membase + UARTCR2);
+-	cr2 |= UARTCR2_RIE | UARTCR2_TIE | UARTCR2_RE | UARTCR2_TE;
++	cr2 |= UARTCR2_RIE | UARTCR2_RE | UARTCR2_TE;
+ 	writeb(cr2, sport->port.membase + UARTCR2);
  }
- 
-+static void lpuart32_configure(struct lpuart_port *sport)
-+{
-+	unsigned long temp;
-+
-+	if (sport->lpuart_dma_rx_use) {
-+		/* RXWATER must be 0 */
-+		temp = lpuart32_read(&sport->port, UARTWATER);
-+		temp &= ~(UARTWATER_WATER_MASK << UARTWATER_RXWATER_OFF);
-+		lpuart32_write(&sport->port, temp, UARTWATER);
-+	}
-+	temp = lpuart32_read(&sport->port, UARTCTRL);
-+	if (!sport->lpuart_dma_rx_use)
-+		temp |= UARTCTRL_RIE;
-+	if (!sport->lpuart_dma_tx_use)
-+		temp |= UARTCTRL_TIE;
-+	lpuart32_write(&sport->port, temp, UARTCTRL);
-+}
-+
- static int lpuart32_startup(struct uart_port *port)
- {
- 	struct lpuart_port *sport = container_of(port, struct lpuart_port, port);
-@@ -1530,18 +1548,7 @@ static int lpuart32_startup(struct uart_port *port)
- 	lpuart_rx_dma_startup(sport);
- 	lpuart_tx_dma_startup(sport);
- 
--	if (sport->lpuart_dma_rx_use) {
--		/* RXWATER must be 0 */
--		temp = lpuart32_read(&sport->port, UARTWATER);
--		temp &= ~(UARTWATER_WATER_MASK << UARTWATER_RXWATER_OFF);
--		lpuart32_write(&sport->port, temp, UARTWATER);
--	}
--	temp = lpuart32_read(&sport->port, UARTCTRL);
--	if (!sport->lpuart_dma_rx_use)
--		temp |= UARTCTRL_RIE;
--	if (!sport->lpuart_dma_tx_use)
--		temp |= UARTCTRL_TIE;
--	lpuart32_write(&sport->port, temp, UARTCTRL);
-+	lpuart32_configure(sport);
- 
- 	spin_unlock_irqrestore(&sport->port.lock, flags);
- 	return 0;
-@@ -2579,21 +2586,8 @@ static int lpuart_resume(struct device *dev)
- 
- 	lpuart_tx_dma_startup(sport);
- 
--	if (lpuart_is_32(sport)) {
--		if (sport->lpuart_dma_rx_use) {
--			/* RXWATER must be 0 */
--			temp = lpuart32_read(&sport->port, UARTWATER);
--			temp &= ~(UARTWATER_WATER_MASK <<
--				  UARTWATER_RXWATER_OFF);
--			lpuart32_write(&sport->port, temp, UARTWATER);
--		}
--		temp = lpuart32_read(&sport->port, UARTCTRL);
--		if (!sport->lpuart_dma_rx_use)
--			temp |= UARTCTRL_RIE;
--		if (!sport->lpuart_dma_tx_use)
--			temp |= UARTCTRL_TIE;
--		lpuart32_write(&sport->port, temp, UARTCTRL);
--	}
-+	if (lpuart_is_32(sport))
-+		lpuart32_configure(sport);
- 
- 	uart_resume_port(&lpuart_reg, &sport->port);
  
 -- 
 2.21.0
