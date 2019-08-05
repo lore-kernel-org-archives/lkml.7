@@ -2,53 +2,62 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9CFC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4ABCC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:22:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4733A2075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:22:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 717E9216B7
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:22:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011342;
-	bh=lPwyNVnIRzEaWGHLLwcdEhNRYl4mScGqRovi7S8MVyE=;
+	s=default; t=1565011347;
+	bh=qvA1gHxkj/CNi0qBGV1bcW02M86NbXpfXLbhdcGmyzM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zmjZZM0UETUTrfPbHeTHBBMfbtDemA687Gp6ShAZml7wDhdxjal/GVfE2m4ipwox5
-	 3lMgMae2a0tty4EKarnuTimtHS57ZL9BCL5AqGlkH3TpeMrl+sNaL7KMwFie5vg9oE
-	 G4776eX6rOSghbYBiOXUKh+Aem1UjIzrGVBwESaA=
+	b=D4A3uAAUPKzYyX9erkeRsgSGGsMKI7bYiXIreafDGm6me2eQnivEp7/iIKEgSm+ib
+	 aX16ErGMnv12hiCSH64RE3UxhP4JykdzGzaqXUXWKDhVmAQArLnDabTHgoovNq0RYD
+	 m84SxEe4F6zfT05jItuzCvb6bFoQjsHK4WJcM0qU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730667AbfHENWV (ORCPT
+        id S1730056AbfHENW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:22:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58656 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:22:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730649AbfHENWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:22:17 -0400
+        id S1730669AbfHENWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:22:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9842720651;
-        Mon,  5 Aug 2019 13:22:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 927C720651;
+        Mon,  5 Aug 2019 13:22:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011337;
-        bh=lPwyNVnIRzEaWGHLLwcdEhNRYl4mScGqRovi7S8MVyE=;
+        s=default; t=1565011342;
+        bh=qvA1gHxkj/CNi0qBGV1bcW02M86NbXpfXLbhdcGmyzM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cLVylhLb69hE6YfpfQ1dR5I2H/QnsC9mXKrwpmkaiRC1kfarMa/dWiIIkirtCGUpe
-         YYBqCh0wtTk2QTmPAijk+DialGMipAjZqt11EiwWvqB4uchL7cajeD8PaUwyP90h3c
-         WsXK5LFDbJ9/B4p+I+V2uh3KqupsHdN5vOgxw6MM=
+        b=QT31eeH5zqtibE8TPYcNwI19/txC1VuRtwt5FsIzFFupLummXWJt0pMUI1yAnDA6j
+         DStXJgm6cmPy3aTCBXZEvw3QwXmJLE6bmuq1nuMilnUSV9V2+oKQ9K0a/KJhRvW8xk
+         3nyxzLjexRoQOTe7piyBMqiLiwLuVlCAIraNgIi0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Rosin <peda@axentia.se>,
+        stable@vger.kernel.org, Zhouyang Jia <jiazhouyang09@gmail.com>,
+        Jan Harkes <jaharkes@cs.cmu.edu>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Colin Ian King <colin.king@canonical.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        David Howells <dhowells@redhat.com>,
+        Fabian Frederick <fabf@skynet.be>,
+        Mikko Rapeli <mikko.rapeli@iki.fi>,
+        Sam Protsenko <semen.protsenko@linaro.org>,
+        Yann Droneaud <ydroneaud@opteya.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 055/131] lib/test_string.c: avoid masking memset16/32/64 failures
-Date:   Mon,  5 Aug 2019 15:02:22 +0200
-Message-Id: <20190805124955.119100635@linuxfoundation.org>
+Subject: [PATCH 5.2 057/131] coda: add error handling for fget
+Date:   Mon,  5 Aug 2019 15:02:24 +0200
+Message-Id: <20190805124955.250507231@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -61,56 +70,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 33d6e0ff68af74be0c846c8e042e84a9a1a0561e ]
+[ Upstream commit 02551c23bcd85f0c68a8259c7b953d49d44f86af ]
 
-If a memsetXX implementation is completely broken and fails in the first
-iteration, when i, j, and k are all zero, the failure is masked as zero
-is returned.  Failing in the first iteration is perhaps the most likely
-failure, so this makes the tests pretty much useless.  Avoid the
-situation by always setting a random unused bit in the result on
-failure.
+When fget fails, the lack of error-handling code may cause unexpected
+results.
 
-Link: http://lkml.kernel.org/r/20190506124634.6807-3-peda@axentia.se
-Fixes: 03270c13c5ff ("lib/string.c: add testcases for memset16/32/64")
-Signed-off-by: Peter Rosin <peda@axentia.se>
+This patch adds error-handling code after calling fget.
+
+Link: http://lkml.kernel.org/r/2514ec03df9c33b86e56748513267a80dd8004d9.1558117389.git.jaharkes@cs.cmu.edu
+Signed-off-by: Zhouyang Jia <jiazhouyang09@gmail.com>
+Signed-off-by: Jan Harkes <jaharkes@cs.cmu.edu>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Colin Ian King <colin.king@canonical.com>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Fabian Frederick <fabf@skynet.be>
+Cc: Mikko Rapeli <mikko.rapeli@iki.fi>
+Cc: Sam Protsenko <semen.protsenko@linaro.org>
+Cc: Yann Droneaud <ydroneaud@opteya.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/test_string.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/coda/psdev.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/lib/test_string.c b/lib/test_string.c
-index bf8def01ed204..b5117ae596931 100644
---- a/lib/test_string.c
-+++ b/lib/test_string.c
-@@ -36,7 +36,7 @@ static __init int memset16_selftest(void)
- fail:
- 	kfree(p);
- 	if (i < 256)
--		return (i << 24) | (j << 16) | k;
-+		return (i << 24) | (j << 16) | k | 0x8000;
- 	return 0;
- }
+diff --git a/fs/coda/psdev.c b/fs/coda/psdev.c
+index 0ceef32e6fae0..241f7e04ad04d 100644
+--- a/fs/coda/psdev.c
++++ b/fs/coda/psdev.c
+@@ -182,8 +182,11 @@ static ssize_t coda_psdev_write(struct file *file, const char __user *buf,
+ 	if (req->uc_opcode == CODA_OPEN_BY_FD) {
+ 		struct coda_open_by_fd_out *outp =
+ 			(struct coda_open_by_fd_out *)req->uc_data;
+-		if (!outp->oh.result)
++		if (!outp->oh.result) {
+ 			outp->fh = fget(outp->fd);
++			if (!outp->fh)
++				return -EBADF;
++		}
+ 	}
  
-@@ -72,7 +72,7 @@ static __init int memset32_selftest(void)
- fail:
- 	kfree(p);
- 	if (i < 256)
--		return (i << 24) | (j << 16) | k;
-+		return (i << 24) | (j << 16) | k | 0x8000;
- 	return 0;
- }
- 
-@@ -108,7 +108,7 @@ static __init int memset64_selftest(void)
- fail:
- 	kfree(p);
- 	if (i < 256)
--		return (i << 24) | (j << 16) | k;
-+		return (i << 24) | (j << 16) | k | 0x8000;
- 	return 0;
- }
- 
+         wake_up(&req->uc_sleep);
 -- 
 2.20.1
 
