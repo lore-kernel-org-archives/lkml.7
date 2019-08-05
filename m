@@ -7,48 +7,56 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98EE9C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F3A5C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 482F221734
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D40802087B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:06:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010379;
-	bh=qFsiztdLDvQWTMxiXFUptRNbM9KiUDEKG8b6B96WFkQ=;
+	s=default; t=1565010382;
+	bh=IoNxLXBCMtqV0FlPq4a4PRsxe+vdwsmKIiPM2OI8hdk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=isrqaKTCGB4Sx6DgFLpYcaOcA4aGQXlYY2LrIuBJigzmHEpWQ2jJLai3YmRgoODV5
-	 KgKYA/9yBiHQsRhXCd8UOV/ItO4c1n7VCr3Qx+DtSfolvEUWWtJoTJ3NAO6xoTSEMw
-	 lEkaj2+Wm21Fa3sMHLPSTnQMNGJ9fiREbaOfUFw8=
+	b=avWz1rFDOWRMJm2w2xmxeZuUIINK14gIXuUzov9Q6qoE2R/6KuLhIY+s+qtH9mfuA
+	 T5Uy1h91XCWj35kO0qF4lUVU7U/Ocau2CVM6ndLZ8+O3D9WE8LibfoP4i2w3ULy+i4
+	 4urcouWMdOQAKCIlLU49nhT5bnYui46fJPt7Bi8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729553AbfHENGS (ORCPT
+        id S1729564AbfHENGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:06:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42774 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:06:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729541AbfHENGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:06:15 -0400
+        id S1729548AbfHENGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:06:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4C1D2147A;
-        Mon,  5 Aug 2019 13:06:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 398F42075B;
+        Mon,  5 Aug 2019 13:06:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010374;
-        bh=qFsiztdLDvQWTMxiXFUptRNbM9KiUDEKG8b6B96WFkQ=;
+        s=default; t=1565010376;
+        bh=IoNxLXBCMtqV0FlPq4a4PRsxe+vdwsmKIiPM2OI8hdk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WMdR7BxhAFFQwq5SmDlWrCLmWPlPlmMHPZ/zvugs4tn10eniLwAZKg8d1k63FFdQH
-         ZdqseStTou59eKXdSEs2+5ufMgd58ATYDXenyibTL2Ln2eFsLUh7vP6D6Th/O/1xIX
-         1sQs2g6GD4tXmaOooWoAQEhtjVlRbmDjlyebnA6w=
+        b=mhIKBBJXer6Zwm3Kl3M3jBUAfSb/mHqoEPQ1hltTRIOpmXoPAfTqQ6ZxiSs2ox4Hs
+         nIv+6sv56FC5lEIlpyJJFRFTMJtdsbiURyJDBEjhPe1vChBGbemFqEaPVeBprbwMfe
+         VW/ixx9GsVDDeh5k4S/unq45psOenG471u27n61Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.9 41/42] objtool: Support GCC 9 cold subfunction naming scheme
-Date:   Mon,  5 Aug 2019 15:03:07 +0200
-Message-Id: <20190805124929.851335655@linuxfoundation.org>
+        Vlastimil Babka <vbabka@suse.cz>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juergen Gross <jgross@suse.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>
+Subject: [PATCH 4.9 42/42] x86, mm, gup: prevent get_page() race with munmap in paravirt guest
+Date:   Mon,  5 Aug 2019 15:03:08 +0200
+Message-Id: <20190805124930.008720376@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124924.788666484@linuxfoundation.org>
 References: <20190805124924.788666484@linuxfoundation.org>
@@ -61,51 +69,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Vlastimil Babka <vbabka@suse.cz>
 
-commit bcb6fb5da77c2a228adf07cc9cb1a0c2aa2001c6 upstream.
+The x86 version of get_user_pages_fast() relies on disabled interrupts to
+synchronize gup_pte_range() between gup_get_pte(ptep); and get_page() against
+a parallel munmap. The munmap side nulls the pte, then flushes TLBs, then
+releases the page. As TLB flush is done synchronously via IPI disabling
+interrupts blocks the page release, and get_page(), which assumes existing
+reference on page, is thus safe.
+However when TLB flush is done by a hypercall, e.g. in a Xen PV guest, there is
+no blocking thanks to disabled interrupts, and get_page() can succeed on a page
+that was already freed or even reused.
 
-Starting with GCC 8, a lot of unlikely code was moved out of line to
-"cold" subfunctions in .text.unlikely.
+We have recently seen this happen with our 4.4 and 4.12 based kernels, with
+userspace (java) that exits a thread, where mm_release() performs a futex_wake()
+on tsk->clear_child_tid, and another thread in parallel unmaps the page where
+tsk->clear_child_tid points to. The spurious get_page() succeeds, but futex code
+immediately releases the page again, while it's already on a freelist. Symptoms
+include a bad page state warning, general protection faults acessing a poisoned
+list prev/next pointer in the freelist, or free page pcplists of two cpus joined
+together in a single list. Oscar has also reproduced this scenario, with a
+patch inserting delays before the get_page() to make the race window larger.
 
-For example, the unlikely bits of:
+Fix this by removing the dependency on TLB flush interrupts the same way as the
+generic get_user_pages_fast() code by using page_cache_add_speculative() and
+revalidating the PTE contents after pinning the page. Mainline is safe since
+4.13 where the x86 gup code was removed in favor of the common code. Accessing
+the page table itself safely also relies on disabled interrupts and TLB flush
+IPIs that don't happen with hypercalls, which was acknowledged in commit
+9e52fc2b50de ("x86/mm: Enable RCU based page table freeing
+(CONFIG_HAVE_RCU_TABLE_FREE=y)"). That commit with follups should also be
+backported for full safety, although our reproducer didn't hit a problem
+without that backport.
 
-  irq_do_set_affinity()
-
-are moved out to the following subfunction:
-
-  irq_do_set_affinity.cold.49()
-
-Starting with GCC 9, the numbered suffix has been removed.  So in the
-above example, the cold subfunction is instead:
-
-  irq_do_set_affinity.cold()
-
-Tweak the objtool subfunction detection logic so that it detects both
-GCC 8 and GCC 9 naming schemes.
-
-Reported-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/015e9544b1f188d36a7f02fa31e9e95629aa5f50.1541040800.git.jpoimboe@redhat.com
+Reproduced-by: Oscar Salvador <osalvador@suse.de>
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
 
 ---
- tools/objtool/elf.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/mm/gup.c |   32 ++++++++++++++++++++++++++++++--
+ 1 file changed, 30 insertions(+), 2 deletions(-)
 
---- a/tools/objtool/elf.c
-+++ b/tools/objtool/elf.c
-@@ -305,7 +305,7 @@ static int read_symbols(struct elf *elf)
- 			if (sym->type != STT_FUNC)
- 				continue;
- 			sym->pfunc = sym->cfunc = sym;
--			coldstr = strstr(sym->name, ".cold.");
-+			coldstr = strstr(sym->name, ".cold");
- 			if (!coldstr)
- 				continue;
+--- a/arch/x86/mm/gup.c
++++ b/arch/x86/mm/gup.c
+@@ -98,6 +98,20 @@ static inline int pte_allows_gup(unsigne
+ }
  
+ /*
++ * Return the compund head page with ref appropriately incremented,
++ * or NULL if that failed.
++ */
++static inline struct page *try_get_compound_head(struct page *page, int refs)
++{
++	struct page *head = compound_head(page);
++	if (WARN_ON_ONCE(page_ref_count(head) < 0))
++		return NULL;
++	if (unlikely(!page_cache_add_speculative(head, refs)))
++		return NULL;
++	return head;
++}
++
++/*
+  * The performance critical leaf functions are made noinline otherwise gcc
+  * inlines everything into a single function which results in too much
+  * register pressure.
+@@ -112,7 +126,7 @@ static noinline int gup_pte_range(pmd_t
+ 	ptep = pte_offset_map(&pmd, addr);
+ 	do {
+ 		pte_t pte = gup_get_pte(ptep);
+-		struct page *page;
++		struct page *head, *page;
+ 
+ 		/* Similar to the PMD case, NUMA hinting must take slow path */
+ 		if (pte_protnone(pte)) {
+@@ -138,7 +152,21 @@ static noinline int gup_pte_range(pmd_t
+ 		}
+ 		VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
+ 		page = pte_page(pte);
+-		get_page(page);
++
++		head = try_get_compound_head(page, 1);
++		if (!head) {
++			put_dev_pagemap(pgmap);
++			pte_unmap(ptep);
++			return 0;
++		}
++
++		if (unlikely(pte_val(pte) != pte_val(*ptep))) {
++			put_page(head);
++			put_dev_pagemap(pgmap);
++			pte_unmap(ptep);
++			return 0;
++		}
++
+ 		put_dev_pagemap(pgmap);
+ 		SetPageReferenced(page);
+ 		pages[*nr] = page;
 
 
