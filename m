@@ -2,131 +2,106 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8906C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F888C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE134216B7
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:01:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U9ztI/gI"
+	by mail.kernel.org (Postfix) with ESMTP id 184B8206C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:03:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565017389;
+	bh=+Xz3bwnFyaWyqY9a37gwwnBNAogellhkHzcb0xquKIA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OsUPKqSYEFu2bkZ0Q8OlHFABBik1KnRFnpK/Pb69AMb+v//B70alt+36Ii69ZXBqu
+	 yc+rWc6USp4IPBY563qONstgA+5oPmpRmw1fiF9kXjn41doBq+zgAdYEeh0ycQugbb
+	 pGY1XyMoWkRaPtubbji1YqDNwrhgGe7KT5EvaIsU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729542AbfHEPBK (ORCPT
+        id S1729021AbfHEPDI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 11:01:10 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42108 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728918AbfHEPBG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 11:01:06 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q10so39770684pff.9;
-        Mon, 05 Aug 2019 08:01:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=KWknOm3Weo65hoQxD0OMyaPHcUcXcORCl61LnaMhBHs=;
-        b=U9ztI/gIE3rGmpMLb6h3XduLr5I+Jmc3UXd6RwE+BsEiCBgWvOt8SESPCa/yaNpeDg
-         5NLEhf8LkYXjUMpGmH7w3OKGVBjkym5nFDPSsH6FzaY3wTyO++zo3IZObB3PoayJKcwe
-         9Zp5I7ScGw174YsesmASgP+QjMaJwbtjBQ0WJnPUn+2MHgxkqDxMHjiDKlA/ujO0XTUE
-         Gro84k7vmLDxHUaQ5rL12Y8vo3vJCxvBRykdfxXE6jmVX1kXxdKusvEtir5857vMn2Oz
-         2/3wAyNciJRXhpT4P9zFNgmFKtDnG7l0/62B7QRKxxlPvowtJtZAxmyKK9Wgck/cHB3a
-         qBeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KWknOm3Weo65hoQxD0OMyaPHcUcXcORCl61LnaMhBHs=;
-        b=jqPUrZx8qfC99w/M7p91shNZE1r1QGOFJvOdVyRdGoErLsZYI5rYmwL9owe+MlzUVo
-         zXjal4lb2qmOQFoGfY7TBIT3rYblXotO7WimcRLS/N4JVjVxVJFlv/tJGTPVUvoObPes
-         CMr1Ydf7Nwg6vb1G+2TBO0F5aNB7rVBt9MuKdhclABF/QWadWyVbsMZr05gKvdVcB7kD
-         UDPrCj9wes+Lu5BT/N12RbEaXa8SrcJ5n31HtnXlmRJ0wdlLP1H2QnGy5aAuK28+IlRq
-         BYWLKcIpzyUt+r9jJ3PQOGwWVzjgCOCmaHPEGlBfK90qbQTRtcCJMKx/irNVaV6ejieK
-         RhkQ==
-X-Gm-Message-State: APjAAAXKttwU5xcx1gLlkIjTVJkaBH9XhKLX1WGYwVHEh/ye+NR+F04A
-        n1sajOGi4NTqkfTjQNzUQOU=
-X-Google-Smtp-Source: APXvYqzLGQLInXt1y4PDIZrIFJHvmzApxJcFTFguBOSpoAxiH3S7HxsR87mHnbYleSrFAUxeshIF0Q==
-X-Received: by 2002:aa7:8f2c:: with SMTP id y12mr75897672pfr.38.1565017265795;
-        Mon, 05 Aug 2019 08:01:05 -0700 (PDT)
-Received: from [192.168.11.2] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
-        by smtp.gmail.com with ESMTPSA id b26sm93700927pfo.129.2019.08.05.08.01.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 05 Aug 2019 08:01:05 -0700 (PDT)
-Subject: Re: [PATCH] MAINTAINERS: Update e-mail address for Andrea Parri
-To:     Andrea Parri <parri.andrea@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Daniel Lustig <dlustig@nvidia.com>
-References: <20190805121517.4734-1-parri.andrea@gmail.com>
-From:   Akira Yokosawa <akiyks@gmail.com>
-Message-ID: <76010b66-a662-5b07-a21d-ed074d7d2194@gmail.com>
-Date:   Tue, 6 Aug 2019 00:01:00 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 5 Aug 2019 11:03:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36544 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728043AbfHEPDH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 11:03:07 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46BBA206C1;
+        Mon,  5 Aug 2019 15:03:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565017386;
+        bh=+Xz3bwnFyaWyqY9a37gwwnBNAogellhkHzcb0xquKIA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=au5ozn6Us640CQSmT+gPP1wjfGcLKu+5AO3u44G76dCrxZWNyyj1JcwczmM6US+Dn
+         IiWu9CBPX4J8YB54hKk0nqGlb9y9AuROg+Rzr1ViY2xle0v+U4k59UI9YGzet5c7YZ
+         Uu9F7zgngDfMe+2b6iAurxNCW5MLhRAYDMZGoEO8=
+Date:   Mon, 5 Aug 2019 17:03:04 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Giridhar Prasath R <cristianoprasath@gmail.com>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: pi433 line over 80 characters in multiple places
+Message-ID: <20190805150304.GA746@kroah.com>
+References: <20190805000248.4902-1-cristianoprasath@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190805121517.4734-1-parri.andrea@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190805000248.4902-1-cristianoprasath@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  5 Aug 2019 14:15:17 +0200, Andrea Parri wrote:
-> My @amarulasolutions.com address stopped working this July, so update
-> to my @gmail.com address where you'll still be able to reach me.
+On Mon, Aug 05, 2019 at 05:32:45AM +0530, Giridhar Prasath R wrote:
+> Fix the following checkpatch warnings:
 > 
-> Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
-> Cc: Alan Stern <stern@rowland.harvard.edu>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Boqun Feng <boqun.feng@gmail.com>
-> Cc: Nicholas Piggin <npiggin@gmail.com>
-> Cc: David Howells <dhowells@redhat.com>
-> Cc: Jade Alglave <j.alglave@ucl.ac.uk>
-> Cc: Luc Maranget <luc.maranget@inria.fr>
-> Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
-> Cc: Akira Yokosawa <akiyks@gmail.com>
-> Cc: Daniel Lustig <dlustig@nvidia.com>
+> WARNING: line over 80 characters
+> FILE: drivers/staging/pi433/pi433_if.h
+> 
+> Signed-off-by: Giridhar Prasath R <cristianoprasath@gmail.com>
 > ---
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-
-Hi Andrea,
-
-Why don't you also add an entry in .mailmap as Will did in commit
-c584b1202f2d ("MAINTAINERS: Update my email address to use @kernel.org")?
-
-        Thanks, Akira
-
+>  drivers/staging/pi433/pi433_if.h | 23 ++++++++++++++++-------
+>  1 file changed, 16 insertions(+), 7 deletions(-)
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 6426db5198f05..527317026492f 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9326,7 +9326,7 @@ F:	drivers/misc/lkdtm/*
+> diff --git a/drivers/staging/pi433/pi433_if.h b/drivers/staging/pi433/pi433_if.h
+> index 9feb95c431cb..915bd96910c6 100644
+> --- a/drivers/staging/pi433/pi433_if.h
+> +++ b/drivers/staging/pi433/pi433_if.h
+> @@ -117,9 +117,14 @@ struct pi433_rx_cfg {
 >  
->  LINUX KERNEL MEMORY CONSISTENCY MODEL (LKMM)
->  M:	Alan Stern <stern@rowland.harvard.edu>
-> -M:	Andrea Parri <andrea.parri@amarulasolutions.com>
-> +M:	Andrea Parri <parri.andrea@gmail.com>
->  M:	Will Deacon <will@kernel.org>
->  M:	Peter Zijlstra <peterz@infradead.org>
->  M:	Boqun Feng <boqun.feng@gmail.com>
-> 
+>  	/* packet format */
+>  	enum option_on_off	enable_sync;
+> -	enum option_on_off	enable_length_byte;	  /* should be used in combination with sync, only */
+> -	enum address_filtering	enable_address_filtering; /* operational with sync, only */
+> -	enum option_on_off	enable_crc;		  /* only operational, if sync on and fixed length or length byte is used */
+> +	/* should be used in combination with sync, only */
+> +	enum option_on_off	enable_length_byte;
+> +	/* operational with sync, only */
+> +	enum address_filtering	enable_address_filtering;
+> +	/* only operational,
+> +	 * if sync on and fixed length or length byte is used
+> +	 */
+> +	enum option_on_off	enable_crc;
+>  
+>  	__u8			sync_length;
+>  	__u8			fixed_message_length;
+> @@ -132,10 +137,14 @@ struct pi433_rx_cfg {
+>  
+>  #define PI433_IOC_MAGIC			'r'
+>  
+> -#define PI433_IOC_RD_TX_CFG	_IOR(PI433_IOC_MAGIC, PI433_TX_CFG_IOCTL_NR, char[sizeof(struct pi433_tx_cfg)])
+> -#define PI433_IOC_WR_TX_CFG	_IOW(PI433_IOC_MAGIC, PI433_TX_CFG_IOCTL_NR, char[sizeof(struct pi433_tx_cfg)])
+> +#define PI433_IOC_RD_TX_CFG	_IOR(PI433_IOC_MAGIC, PI433_TX_CFG_IOCTL_NR,\
+> +char[sizeof(struct pi433_tx_cfg)])
 
+Ick, that does not look better :(
+
+We write code for humans first, compilers second.
+
+The original is fine, thanks.
+
+greg k-h
