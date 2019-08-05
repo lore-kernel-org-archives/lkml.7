@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D84C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D36BC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99E662173C
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5257E214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:19:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011180;
-	bh=qFsiztdLDvQWTMxiXFUptRNbM9KiUDEKG8b6B96WFkQ=;
+	s=default; t=1565011184;
+	bh=eeFIHSL2xp6/VvCSYq3PlJ1aasNV2jep2XmQvnOX6eg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZyUSg4wsoQ1tCFtunwXKoPIIs1LUXJBKS62GOdbzk3oVnZjiLN7Ec6LuiPIea5YAG
-	 ueceWX7bAE5LwOpjsa+WTe9wBK5Uygb5VfvXSNpRGQyplFhypKtNpK07oEvrzlbp7h
-	 HJXJxnaDQwsVO4oAE2qXmkPvaHI3UrgZ1RWAYVtY=
+	b=bAe9fSP2wFvG6X13sgvBC/5pWAd1djju4/VSUahVSspga+tPB4Bmibb2M7oWUDRTQ
+	 zRjHBDBkFiEKhoWkIwzvU24wbc2qnNcHLeSfdp4VXBi17WK2rnrFNV61LVXjv745Ri
+	 nwI0nF7DyfS3LLofmX9p7R4UrDoP3VqAsnDqidx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729723AbfHENTj (ORCPT
+        id S1729524AbfHENTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:19:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55632 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:19:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729672AbfHENTe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:19:34 -0400
+        id S1729672AbfHENTj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:19:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EFE9214C6;
-        Mon,  5 Aug 2019 13:19:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BF00216F4;
+        Mon,  5 Aug 2019 13:19:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011173;
-        bh=qFsiztdLDvQWTMxiXFUptRNbM9KiUDEKG8b6B96WFkQ=;
+        s=default; t=1565011179;
+        bh=eeFIHSL2xp6/VvCSYq3PlJ1aasNV2jep2XmQvnOX6eg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iUlxfz1wYKbh5GhTrmMoElkW26DbgRDsBXPugUxRdTvWjebHKDDdZR2E5VFcT5cmP
-         40LSpFUky62juNKB0mtK2VnJM5c4tTeVZdmUu80Cj1it+T+33EKm0flCua+T/gyn3e
-         H7etDVkYC9PGYHyow6RoiLN1WJyj2wB6W2XzLQt0=
+        b=wE7/Wte9VDmTxACJ5fmXwcvlrTVwfY3X9jckfN6Wu8qyGVkvgq1qFItK6rp7Lw14v
+         FPoEp75YaVgnqCwc1sMBrREOIsrtTbPrWUWVKrLDuAAVWQyb2c4FN6NQonHJgx68Ri
+         z55vuJcsoXXkELjSLjWVh5Kk1Ldvxbi/ITXRO8Lg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.19 71/74] objtool: Support GCC 9 cold subfunction naming scheme
-Date:   Mon,  5 Aug 2019 15:03:24 +0200
-Message-Id: <20190805124941.535629949@linuxfoundation.org>
+        stable@vger.kernel.org, x86@kernel.org,
+        Borislav Petkov <bp@alien8.de>,
+        Duncan Roe <duncan_roe@optusnet.com.au>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 73/74] x86/vdso: Prevent segfaults due to hoisted vclock reads
+Date:   Mon,  5 Aug 2019 15:03:26 +0200
+Message-Id: <20190805124941.688410363@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124935.819068648@linuxfoundation.org>
 References: <20190805124935.819068648@linuxfoundation.org>
@@ -61,51 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Andy Lutomirski <luto@kernel.org>
 
-commit bcb6fb5da77c2a228adf07cc9cb1a0c2aa2001c6 upstream.
+commit ff17bbe0bb405ad8b36e55815d381841f9fdeebc upstream.
 
-Starting with GCC 8, a lot of unlikely code was moved out of line to
-"cold" subfunctions in .text.unlikely.
+GCC 5.5.0 sometimes cleverly hoists reads of the pvclock and/or hvclock
+pages before the vclock mode checks.  This creates a path through
+vclock_gettime() in which no vclock is enabled at all (due to disabled
+TSC on old CPUs, for example) but the pvclock or hvclock page
+nevertheless read.  This will segfault on bare metal.
 
-For example, the unlikely bits of:
+This fixes commit 459e3a21535a ("gcc-9: properly declare the
+{pv,hv}clock_page storage") in the sense that, before that commit, GCC
+didn't seem to generate the offending code.  There was nothing wrong
+with that commit per se, and -stable maintainers should backport this to
+all supported kernels regardless of whether the offending commit was
+present, since the same crash could just as easily be triggered by the
+phase of the moon.
 
-  irq_do_set_affinity()
+On GCC 9.1.1, this doesn't seem to affect the generated code at all, so
+I'm not too concerned about performance regressions from this fix.
 
-are moved out to the following subfunction:
-
-  irq_do_set_affinity.cold.49()
-
-Starting with GCC 9, the numbered suffix has been removed.  So in the
-above example, the cold subfunction is instead:
-
-  irq_do_set_affinity.cold()
-
-Tweak the objtool subfunction detection logic so that it detects both
-GCC 8 and GCC 9 naming schemes.
-
-Reported-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/015e9544b1f188d36a7f02fa31e9e95629aa5f50.1541040800.git.jpoimboe@redhat.com
+Cc: stable@vger.kernel.org
+Cc: x86@kernel.org
+Cc: Borislav Petkov <bp@alien8.de>
+Reported-by: Duncan Roe <duncan_roe@optusnet.com.au>
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/objtool/elf.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/entry/vdso/vclock_gettime.c |   15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
---- a/tools/objtool/elf.c
-+++ b/tools/objtool/elf.c
-@@ -305,7 +305,7 @@ static int read_symbols(struct elf *elf)
- 			if (sym->type != STT_FUNC)
- 				continue;
- 			sym->pfunc = sym->cfunc = sym;
--			coldstr = strstr(sym->name, ".cold.");
-+			coldstr = strstr(sym->name, ".cold");
- 			if (!coldstr)
- 				continue;
+--- a/arch/x86/entry/vdso/vclock_gettime.c
++++ b/arch/x86/entry/vdso/vclock_gettime.c
+@@ -191,13 +191,24 @@ notrace static inline u64 vgetsns(int *m
  
+ 	if (gtod->vclock_mode == VCLOCK_TSC)
+ 		cycles = vread_tsc();
++
++	/*
++	 * For any memory-mapped vclock type, we need to make sure that gcc
++	 * doesn't cleverly hoist a load before the mode check.  Otherwise we
++	 * might end up touching the memory-mapped page even if the vclock in
++	 * question isn't enabled, which will segfault.  Hence the barriers.
++	 */
+ #ifdef CONFIG_PARAVIRT_CLOCK
+-	else if (gtod->vclock_mode == VCLOCK_PVCLOCK)
++	else if (gtod->vclock_mode == VCLOCK_PVCLOCK) {
++		barrier();
+ 		cycles = vread_pvclock(mode);
++	}
+ #endif
+ #ifdef CONFIG_HYPERV_TSCPAGE
+-	else if (gtod->vclock_mode == VCLOCK_HVCLOCK)
++	else if (gtod->vclock_mode == VCLOCK_HVCLOCK) {
++		barrier();
+ 		cycles = vread_hvclock(mode);
++	}
+ #endif
+ 	else
+ 		return 0;
 
 
