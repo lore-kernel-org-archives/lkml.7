@@ -2,105 +2,126 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A4EC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95722C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4885D20679
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:28:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565015284;
-	bh=EFibC8nuHz8k2yU2grpf2ggs1Z3fm4CC0QMtC9RxKSo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ANck+pqy0VH41o4QOkG+PGubdjlLk8bVnegfpovtIengoJCjCHA0EiD2iGWQMrLwW
-	 O7+EDA1fMCreLH9PJIxgq1lY48v6Q2SqU4kOjilxiMAhBj1Bs1l94/r+yzWgDVQyQR
-	 P7/yH2zeTTg03TIIYlOmF9Bkjt5O2kOms7xWwqLA=
+	by mail.kernel.org (Postfix) with ESMTP id 75641214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:28:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729558AbfHEO2D (ORCPT
+        id S1729582AbfHEO2Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 10:28:03 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:40546 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728015AbfHEO17 (ORCPT
+        Mon, 5 Aug 2019 10:28:25 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58516 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728149AbfHEO2Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 10:27:59 -0400
-Received: by mail-qt1-f194.google.com with SMTP id a15so81063192qtn.7
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 07:27:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MPEMXXmCHM/Mi/52mb4NCYntDnv4EkvOmRuE01mrmhM=;
-        b=LsYu/7kbcZOBmMJF2KPR0BdGTxfFG4KIPTNBXea2pkzguDONumtWEwAtUGH2h/3hHr
-         AlrEx4oWTmsYDmbOCECB7IY3NUlCBLrjfKE5pSSSq5AhaeQ0Z+cTjkjdMxxFT5TxPVxM
-         ICdTYMGtFfhKijP26HFPKcqWDexRxlkTDtrmQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MPEMXXmCHM/Mi/52mb4NCYntDnv4EkvOmRuE01mrmhM=;
-        b=HHGkyR4BHMAfNjjCKvnx/JuGcuO0VcbiDNji01kRQI6e2dVfFhuEFBJ9lq6dAxQXei
-         CzGXqbz8ZBojjNkBvFm+9K11gFcwxYW5M7NYWN+8AxWcT5Xa308k1XpNIf34iSPaHaNW
-         +G74uQ9YrKEhvoPPE7QOVeEPCKRVemy1tzrGWxCG9mDMGrbdoUdAUj1v6rtbOU2BEG7Y
-         CzwcxyJSWZkUMa8hTQZQtXXByiytoLN+lbqtXlRhrRnsPZkBobcGFcO0KqxQMkYDQk0k
-         j+2n4JHvnbDaP42cWcrjiYRGPTkceIPKkdPanzTJLypBGG/Y/UBaBT59ZhNZyh0Nyz8N
-         Zc7A==
-X-Gm-Message-State: APjAAAUlZr+yVrWLe69ksV/nq9ev5lfR4VdoM3OArgP2ZcIvPiFqUocc
-        ggPrSTjc5JTKF8V/LXk5lXdkHg==
-X-Google-Smtp-Source: APXvYqwNWHoP8flXC29xSNV4hE27uDEAsRgm6KXmlO41iOn5/WG4m1AQejfoVX6v04H7CdZ0ocxj9w==
-X-Received: by 2002:ac8:2a88:: with SMTP id b8mr97552817qta.331.1565015278681;
-        Mon, 05 Aug 2019 07:27:58 -0700 (PDT)
-Received: from chatter.i7.local (192-0-228-88.cpe.teksavvy.com. [192.0.228.88])
-        by smtp.gmail.com with ESMTPSA id j2sm38240945qtb.89.2019.08.05.07.27.57
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 05 Aug 2019 07:27:57 -0700 (PDT)
-Date:   Mon, 5 Aug 2019 10:27:56 -0400
-From:   Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Micah Morton <mortonm@chromium.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] SafeSetID MAINTAINERS file update for v5.3
-Message-ID: <20190805142756.GA4887@chatter.i7.local>
-References: <CAJ-EccMXEVktpuPS5BwkGqTo++dGcpHAuSUZo7WgJhAzFByz0g@mail.gmail.com>
- <CAHk-=whZzJ8WxAeHcirUghcbeOYxmpCr+XxeS9ngH3df3+=p2Q@mail.gmail.com>
- <CAJ-EccOqmmrf2KPb7Z7NU6bF_4W1XUawLLy=pLekCyFKqusjKQ@mail.gmail.com>
- <CAHk-=wgT7Z3kCbKS9Q1rdA=OVxPL32CdBovX=eHvD2PppWCHpQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgT7Z3kCbKS9Q1rdA=OVxPL32CdBovX=eHvD2PppWCHpQ@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Mon, 5 Aug 2019 10:28:25 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x75EM128049094
+        for <linux-kernel@vger.kernel.org>; Mon, 5 Aug 2019 10:28:24 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u6nec2st6-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 10:28:23 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Mon, 5 Aug 2019 15:28:21 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 5 Aug 2019 15:28:18 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x75ES0Du31129946
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 5 Aug 2019 14:28:00 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 835F611C058;
+        Mon,  5 Aug 2019 14:28:17 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2096911C04C;
+        Mon,  5 Aug 2019 14:28:16 +0000 (GMT)
+Received: from dhcp-9-31-103-47.watson.ibm.com (unknown [9.31.103.47])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  5 Aug 2019 14:28:15 +0000 (GMT)
+Subject: Re: [PATCH] ima: Allow to import the blacklisted cert signed by
+ secondary CA cert
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Jia Zhang <zhang.jia@linux.alibaba.com>, dhowells@redhat.com,
+        dmitry.kasatkin@gmail.com
+Cc:     keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Mark D. Baushke" <mdb@juniper.net>,
+        Petko Manolov <petkan@mip-labs.com>
+Date:   Mon, 05 Aug 2019 10:28:15 -0400
+In-Reply-To: <d6a27436-3822-3dda-a3be-4e2dfbe04390@linux.alibaba.com>
+References: <1564622625-112173-1-git-send-email-zhang.jia@linux.alibaba.com>
+         <1564700229.11223.9.camel@linux.ibm.com>
+         <d6a27436-3822-3dda-a3be-4e2dfbe04390@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19080514-0008-0000-0000-000003056D1C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19080514-0009-0000-0000-0000A17F72E7
+Message-Id: <1565015295.11223.147.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-05_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=930 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908050159
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 04, 2019 at 10:47:54AM -0700, Linus Torvalds wrote:
-> - maybe pr-tracker-bot ignores follow-up emails with "Re:" in the 
-> subject?
+On Fri, 2019-08-02 at 09:42 +0800, Jia Zhang wrote:
+> 
+> On 2019/8/2 上午6:57, Mimi Zohar wrote:
+> > Hi Jia,
+> > 
+> > On Thu, 2019-08-01 at 09:23 +0800, Jia Zhang wrote:
+> >> Similar to .ima, the cert imported to .ima_blacklist is able to be
+> >> authenticated by a secondary CA cert.
+> >>
+> >> Signed-off-by: Jia Zhang <zhang.jia@linux.alibaba.com>
+> > 
+> > The IMA blacklist, which is defined as experimental for a reason, was
+> > upstreamed prior to the system blacklist.  Any reason you're not using
+> > the system blacklist?  Before making this sort of change, I'd like
+> > some input from others.
+> 
+> In our trusted cloud service, the IMA private key is controlled by
+> tenant for some reason. Some unprofessional operations made by tenant
+> may lead to the leakage of IMA private key. So the need for importing
+> the blacklisted is necessary，without system/kexec reboot, on the
+> contrary, the system blacklist needs a kernel rebuild and system/kexec
+> reboot, without runtime and fine-grained control.
+> 
+> The secondary CA cert has a similar story, but it is not controlled by
+> tenant. It is always imported during system/kexec boot to serve
+> importing IMA trusted cert and IMA blacklisted cert.
 
-Yes, this is the culprit. Here are the matching regexes:
+Before expanding the set of keys permitted to blacklist a key on the
+IMA keyring, there needs to be a way of differentiating how keys may
+be used.  The same certificate should not be allowed to be loaded onto
+both the IMA and the IMA blacklist keyrings for obvious reasons.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/mricon/korg-helpers.git/tree/pr-tracker-bot.py#n41
+The normal way of blacklisting a key is by using CRLs.  I'm not
+recommending adding full CRL support in the kernel, but using the key
+usage extension to differentiate who may sign a certificate being
+black listed.  Please refer to section "4.2.1.3.  Key Usage", in
+particular the cRLSign bit.
 
-Normally, pull requests don't come in as replies -- this is the first 
-one that got missed in months, to my knowledge.
+thanks,
 
-I can change it to be more permissive -- the only concern would be that 
-we would be scanning more bodies, and there *might* be a chance where we 
-end up tracking the wrong message if someone uses Outlook-style replies 
-(fully quoted messages without '>') and those replies arrive before the 
-original message. Both of these are very unlikely to happen (in fact, I 
-believe using Outlook-style replies on LKML would result in mass 
-outrage).
+Mimi
 
-So, just let me know if you'd like me to make this change and I'll 
-modify the regex to be something like '^\S*:?\s*\[GIT' that should match 
-most permutations of Re/Aw/etc.
-
--K
