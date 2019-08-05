@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FFC2C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 274E6C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CEE221874
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF59E2075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:09:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010551;
-	bh=vCjxf26LljFZ7AN0o80Vc5x4tVJJM9kGc7NBmOrgOCE=;
+	s=default; t=1565010554;
+	bh=NkoFAn4xJ2jlJdbsRP+BzE2rZQN58hFHOKUeHRZe9sI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n7c+ERF0vQjp6zW7CO9ssB7a3FPMx8p0HUL3gmFfZ3m6O5pCxnIz6qwSDlGrJvT5r
-	 N6VMgry+qkeRkRl9r7/dyxsxnohA4ExSNL86znSRvzCGg7KqRgqAjVd2PqxfO2QfiG
-	 gl8095UG7waygYuHpiWQzKqLkFiLsx8cZTeMe18Q=
+	b=pHOeOmxW/WqC0uSfkGlpU1ugCBVU1aOuiJL+Z26PFXuqt2+fCOW/ceAh+m4J07b46
+	 hctIh88xqBoOhvvAimA2HZSuhl/sKgl4Kv2HYb3i/cquZv1uhERpfNh7EO84mw3+/J
+	 cjAkP0b5FqLhIhI5TMmDWETdJMK4Ec8AlDyZktqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730139AbfHENJK (ORCPT
+        id S1730151AbfHENJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:09:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47382 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:09:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729698AbfHENJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:09:03 -0400
+        id S1730134AbfHENJJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:09:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D78AF2075B;
-        Mon,  5 Aug 2019 13:09:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C40D2075B;
+        Mon,  5 Aug 2019 13:09:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010543;
-        bh=vCjxf26LljFZ7AN0o80Vc5x4tVJJM9kGc7NBmOrgOCE=;
+        s=default; t=1565010548;
+        bh=NkoFAn4xJ2jlJdbsRP+BzE2rZQN58hFHOKUeHRZe9sI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jOu0LgDiFGYUCTKc+vW0/JOYyJhydj/oNVolukj0n6WhQN/+3xFwYenh+DqRJCZlu
-         Ms3ilNX6baFaPQlmPqo8BWJkzTCGuH/mXcz/81snbapjDlhVTm81ZJqTVH9PKI2eLv
-         vXyc+DsbMZgMrt68PXki/fJs/wboZoB/KpbCpAdQ=
+        b=1H11pKVn1ITDArlZDxDpMx8Va+GAL2k7V27CrL/GJMBbvAtjAKmrnwj44yacmPllT
+         3S28EKCs2i3HiNc8RnZElRRV1mPIMjNHFT+XlIuZ0j6q+dd+kcJ3wHjccoTwvRzpsK
+         39HuNzSXTkTg5BU9oYWJbJtaBIQOEb/DDNpZ5dFc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 4.19 11/74] dmaengine: rcar-dmac: Reject zero-length slave DMA requests
-Date:   Mon,  5 Aug 2019 15:02:24 +0200
-Message-Id: <20190805124936.716885433@linuxfoundation.org>
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 13/74] fs/adfs: super: fix use-after-free bug
+Date:   Mon,  5 Aug 2019 15:02:26 +0200
+Message-Id: <20190805124936.871654524@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124935.819068648@linuxfoundation.org>
 References: <20190805124935.819068648@linuxfoundation.org>
@@ -61,44 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 78efb76ab4dfb8f74f290ae743f34162cd627f19 ]
+[ Upstream commit 5808b14a1f52554de612fee85ef517199855e310 ]
 
-While the .device_prep_slave_sg() callback rejects empty scatterlists,
-it still accepts single-entry scatterlists with a zero-length segment.
-These may happen if a driver calls dmaengine_prep_slave_single() with a
-zero len parameter.  The corresponding DMA request will never complete,
-leading to messages like:
+Fix a use-after-free bug during filesystem initialisation, where we
+access the disc record (which is stored in a buffer) after we have
+released the buffer.
 
-    rcar-dmac e7300000.dma-controller: Channel Address Error happen
-
-and DMA timeouts.
-
-Although requesting a zero-length DMA request is a driver bug, rejecting
-it early eases debugging.  Note that the .device_prep_dma_memcpy()
-callback already rejects requests to copy zero bytes.
-
-Reported-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Analyzed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/sh/rcar-dmac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/adfs/super.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
-index 0b05a1e08d213..041ce864097e4 100644
---- a/drivers/dma/sh/rcar-dmac.c
-+++ b/drivers/dma/sh/rcar-dmac.c
-@@ -1164,7 +1164,7 @@ rcar_dmac_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
- 	struct rcar_dmac_chan *rchan = to_rcar_dmac_chan(chan);
+diff --git a/fs/adfs/super.c b/fs/adfs/super.c
+index 7e099a7a4eb1e..4dc15b2634894 100644
+--- a/fs/adfs/super.c
++++ b/fs/adfs/super.c
+@@ -369,6 +369,7 @@ static int adfs_fill_super(struct super_block *sb, void *data, int silent)
+ 	struct buffer_head *bh;
+ 	struct object_info root_obj;
+ 	unsigned char *b_data;
++	unsigned int blocksize;
+ 	struct adfs_sb_info *asb;
+ 	struct inode *root;
+ 	int ret = -EINVAL;
+@@ -420,8 +421,10 @@ static int adfs_fill_super(struct super_block *sb, void *data, int silent)
+ 		goto error_free_bh;
+ 	}
  
- 	/* Someone calling slave DMA on a generic channel? */
--	if (rchan->mid_rid < 0 || !sg_len) {
-+	if (rchan->mid_rid < 0 || !sg_len || !sg_dma_len(sgl)) {
- 		dev_warn(chan->device->dev,
- 			 "%s: bad parameter: len=%d, id=%d\n",
- 			 __func__, sg_len, rchan->mid_rid);
++	blocksize = 1 << dr->log2secsize;
+ 	brelse(bh);
+-	if (sb_set_blocksize(sb, 1 << dr->log2secsize)) {
++
++	if (sb_set_blocksize(sb, blocksize)) {
+ 		bh = sb_bread(sb, ADFS_DISCRECORD / sb->s_blocksize);
+ 		if (!bh) {
+ 			adfs_error(sb, "couldn't read superblock on "
 -- 
 2.20.1
 
