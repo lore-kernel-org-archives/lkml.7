@@ -2,53 +2,54 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23774C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 235F5C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1F5B206C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:04:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D08C5216B7
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:04:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010272;
-	bh=HI8Bcj0/Y78Lr5nke/yKwlk1lz1igip0lnZrf8wQm2U=;
+	s=default; t=1565010277;
+	bh=kGX1jxzuDNRJqOod9t7QrMG4O+Bd/lEDlWmeu/BAsbA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0CBzA/JCwGZHtosG//ejIPiE0WO+vWMBX6wDDu+AHLmMAuELaqt31szF9uCHZiVji
-	 Ls5TF3a3w/mXLY7M6YJfEdYcZy9UTwJJCJxciUQUVqb4Ee6iKG7pmYBg2uFF0jcs0w
-	 N2d7y68LutyZ9wCou9ZGDnVJPsmDmGq1Sn5NQBq4=
+	b=DojRG86bHfyE3z4Ao9BRAoZcjkfxfcNv6CeP9NltcTACkN/FBFtberd6LDS+flcVt
+	 oT4zZboTps1GPpqW48w5kiy8ReWBDrpzcj1K6e4m9J4DzfswjDetnQvr0UkNRjLLcM
+	 BwjZwkFFpr/ui0K4dmpQXjeYtIW7qTO1ssPXJ5kQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729047AbfHENEa (ORCPT
+        id S1729084AbfHENEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:04:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40100 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:04:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729022AbfHENE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:04:26 -0400
+        id S1729053AbfHENEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:04:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9461B206C1;
-        Mon,  5 Aug 2019 13:04:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0921214C6;
+        Mon,  5 Aug 2019 13:04:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010266;
-        bh=HI8Bcj0/Y78Lr5nke/yKwlk1lz1igip0lnZrf8wQm2U=;
+        s=default; t=1565010271;
+        bh=kGX1jxzuDNRJqOod9t7QrMG4O+Bd/lEDlWmeu/BAsbA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qwiefaUMP2YDR3owS3iMFUvAW1e3mdddojQN/t7Rmb+jg39Ke3nS71sA/yl08fTqY
-         EpCzZPqjUZ3aXOhPc6m6T/iZom3aher1gJbYzyILrE5mX5vJKCdq+BN8KH52oMwQRD
-         n0u5kRSFc9InguOVbF0rIz3tDkOHKOD3DBLWrOuM=
+        b=l7MmsMMQe14UJLfBK5IeGJNA/cqBr2X7wNHpLLOjsAu8qor6vbTjQvrqY87Six/IK
+         dzhStr47peCyEQIXPn+NUZSVXcW3JIrYJf3Oe6yRvgYnxxntkq74O0moPNMA9khjDZ
+         7k3NOpdJNM26W+ehsIVRhiHra8j0+FlHAafmtiPs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Jan Beulich <jbeulich@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Subject: [PATCH 4.4 22/22] xen/swiotlb: fix condition for calling xen_destroy_contiguous_region()
-Date:   Mon,  5 Aug 2019 15:02:59 +0200
-Message-Id: <20190805124923.549465086@linuxfoundation.org>
+        stable@vger.kernel.org, Petr Cvek <petrcvekcz@gmail.com>,
+        Paul Burton <paul.burton@mips.com>, hauke@hauke-m.de,
+        john@phrozen.org, linux-mips@vger.kernel.org,
+        openwrt-devel@lists.openwrt.org, pakahmar@hotmail.com,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 04/22] MIPS: lantiq: Fix bitfield masking
+Date:   Mon,  5 Aug 2019 15:02:41 +0200
+Message-Id: <20190805124919.695465347@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124918.070468681@linuxfoundation.org>
 References: <20190805124918.070468681@linuxfoundation.org>
@@ -61,44 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juergen Gross <jgross@suse.com>
+[ Upstream commit ba1bc0fcdeaf3bf583c1517bd2e3e29cf223c969 ]
 
-commit 50f6393f9654c561df4cdcf8e6cfba7260143601 upstream.
+The modification of EXIN register doesn't clean the bitfield before
+the writing of a new value. After a few modifications the bitfield would
+accumulate only '1's.
 
-The condition in xen_swiotlb_free_coherent() for deciding whether to
-call xen_destroy_contiguous_region() is wrong: in case the region to
-be freed is not contiguous calling xen_destroy_contiguous_region() is
-the wrong thing to do: it would result in inconsistent mappings of
-multiple PFNs to the same MFN. This will lead to various strange
-crashes or data corruption.
-
-Instead of calling xen_destroy_contiguous_region() in that case a
-warning should be issued as that situation should never occur.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Reviewed-by: Jan Beulich <jbeulich@suse.com>
-Acked-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Petr Cvek <petrcvekcz@gmail.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: hauke@hauke-m.de
+Cc: john@phrozen.org
+Cc: linux-mips@vger.kernel.org
+Cc: openwrt-devel@lists.openwrt.org
+Cc: pakahmar@hotmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/swiotlb-xen.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/mips/lantiq/irq.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/xen/swiotlb-xen.c
-+++ b/drivers/xen/swiotlb-xen.c
-@@ -365,8 +365,8 @@ xen_swiotlb_free_coherent(struct device
- 	/* Convert the size to actually allocated. */
- 	size = 1UL << (order + XEN_PAGE_SHIFT);
+diff --git a/arch/mips/lantiq/irq.c b/arch/mips/lantiq/irq.c
+index 2e7f60c9fc5df..a7057a06c0961 100644
+--- a/arch/mips/lantiq/irq.c
++++ b/arch/mips/lantiq/irq.c
+@@ -160,8 +160,9 @@ static int ltq_eiu_settype(struct irq_data *d, unsigned int type)
+ 			if (edge)
+ 				irq_set_handler(d->hwirq, handle_edge_irq);
  
--	if (((dev_addr + size - 1 <= dma_mask)) ||
--	    range_straddles_page_boundary(phys, size))
-+	if (!WARN_ON((dev_addr + size - 1 > dma_mask) ||
-+		     range_straddles_page_boundary(phys, size)))
- 		xen_destroy_contiguous_region(phys, order);
+-			ltq_eiu_w32(ltq_eiu_r32(LTQ_EIU_EXIN_C) |
+-				(val << (i * 4)), LTQ_EIU_EXIN_C);
++			ltq_eiu_w32((ltq_eiu_r32(LTQ_EIU_EXIN_C) &
++				    (~(7 << (i * 4)))) | (val << (i * 4)),
++				    LTQ_EIU_EXIN_C);
+ 		}
+ 	}
  
- 	xen_free_coherent_pages(hwdev, size, vaddr, (dma_addr_t)phys, attrs);
+-- 
+2.20.1
+
 
 
