@@ -2,174 +2,116 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C83DBC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 20:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CDEC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 20:16:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A19A620C01
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 20:09:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E9F620C01
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 20:16:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565036216;
+	bh=TnjhPCPHD4aVxnOBUKs3MsDE1ln6QOlh1WYrpHpZbx8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wI7bwTfc2sA1y2l3IFAU+W2TyWrO3NZtxvw2agUCWEq3R9JLrDCHLbGTQGgCxXH9p
+	 UfZZ5U4Xf/GxOc9jVyUESXSPPrLTFHnU7sDHuzvaM3/qZO5nmkAR+Yr7Rz7b3ZwCGt
+	 bIOgWGCXKBJc49/D4P7yz7yniDPsh16dFGHglgs8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730435AbfHEUJU (ORCPT
+        id S1730576AbfHEUQz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 16:09:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41672 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727460AbfHEUJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 16:09:20 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2224688317;
-        Mon,  5 Aug 2019 20:09:19 +0000 (UTC)
-Received: from pauld.bos.csb (dhcp-17-51.bos.redhat.com [10.18.17.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D64E1600CC;
-        Mon,  5 Aug 2019 20:09:16 +0000 (UTC)
-Date:   Mon, 5 Aug 2019 16:09:15 -0400
-From:   Phil Auld <pauld@redhat.com>
-To:     Julien Desfossez <jdesfossez@digitalocean.com>
-Cc:     "Li, Aubrey" <aubrey.li@linux.intel.com>,
-        Aaron Lu <aaron.lu@linux.alibaba.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
-Message-ID: <20190805200914.GD20173@pauld.bos.csb>
-References: <635c01b0-d8f3-561b-5396-10c75ed03712@oracle.com>
- <20190613032246.GA17752@sinkpad>
- <CAERHkrsMFjjBpPZS7jDhzbob4PSmiPj83OfqEeiKgaDAU3ajOA@mail.gmail.com>
- <20190619183302.GA6775@sinkpad>
- <20190718100714.GA469@aaronlu>
- <CAERHkrtvLKxrpvfw04urAuougsYOWnNw4-H1vUDFx27Dvy0=Ww@mail.gmail.com>
- <20190725143003.GA992@aaronlu>
- <20190726152101.GA27884@sinkpad>
- <7dc86e3c-aa3f-905f-3745-01181a3b0dac@linux.intel.com>
- <20190802153715.GA18075@sinkpad>
+        Mon, 5 Aug 2019 16:16:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54154 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730147AbfHEUQy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 16:16:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A5C9CAF0C;
+        Mon,  5 Aug 2019 20:16:52 +0000 (UTC)
+Date:   Mon, 5 Aug 2019 22:16:50 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Pankaj Suryawanshi <pankajssuryawanshi@gmail.com>
+Cc:     Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, pankaj.suryawanshi@einfochips.com
+Subject: Re: oom-killer
+Message-ID: <20190805201650.GT7597@dhcp22.suse.cz>
+References: <CACDBo54Jbueeq1XbtbrFOeOEyF-Q4ipZJab8mB7+0cyK1Foqyw@mail.gmail.com>
+ <20190805112437.GF7597@dhcp22.suse.cz>
+ <0821a17d-1703-1b82-d850-30455e19e0c1@suse.cz>
+ <20190805120525.GL7597@dhcp22.suse.cz>
+ <CACDBo562xHy6McF5KRq3yngKqAm4a15FFKgbWkCTGQZ0pnJWgw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190802153715.GA18075@sinkpad>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Mon, 05 Aug 2019 20:09:19 +0000 (UTC)
+In-Reply-To: <CACDBo562xHy6McF5KRq3yngKqAm4a15FFKgbWkCTGQZ0pnJWgw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon 05-08-19 21:04:53, Pankaj Suryawanshi wrote:
+> On Mon, Aug 5, 2019 at 5:35 PM Michal Hocko <mhocko@kernel.org> wrote:
+> >
+> > On Mon 05-08-19 13:56:20, Vlastimil Babka wrote:
+> > > On 8/5/19 1:24 PM, Michal Hocko wrote:
+> > > >> [  727.954355] CPU: 0 PID: 56 Comm: kworker/u8:2 Tainted: P           O  4.14.65 #606
+> > > > [...]
+> > > >> [  728.029390] [<c034a094>] (oom_kill_process) from [<c034af24>] (out_of_memory+0x140/0x368)
+> > > >> [  728.037569]  r10:00000001 r9:c12169bc r8:00000041 r7:c121e680 r6:c1216588 r5:dd347d7c > [  728.045392]  r4:d5737080
+> > > >> [  728.047929] [<c034ade4>] (out_of_memory) from [<c03519ac>]  (__alloc_pages_nodemask+0x1178/0x124c)
+> > > >> [  728.056798]  r7:c141e7d0 r6:c12166a4 r5:00000000 r4:00001155
+> > > >> [  728.062460] [<c0350834>] (__alloc_pages_nodemask) from [<c021e9d4>] (copy_process.part.5+0x114/0x1a28)
+> > > >> [  728.071764]  r10:00000000 r9:dd358000 r8:00000000 r7:c1447e08 r6:c1216588 r5:00808111
+> > > >> [  728.079587]  r4:d1063c00
+> > > >> [  728.082119] [<c021e8c0>] (copy_process.part.5) from [<c0220470>] (_do_fork+0xd0/0x464)
+> > > >> [  728.090034]  r10:00000000 r9:00000000 r8:dd008400 r7:00000000 r6:c1216588 r5:d2d58ac0
+> > > >> [  728.097857]  r4:00808111
+> > > >
+> > > > The call trace tells that this is a fork (of a usermodhlper but that is
+> > > > not all that important.
+> > > > [...]
+> > > >> [  728.260031] DMA free:17960kB min:16384kB low:25664kB high:29760kB active_anon:3556kB inactive_anon:0kB active_file:280kB inactive_file:28kB unevictable:0kB writepending:0kB present:458752kB managed:422896kB mlocked:0kB kernel_stack:6496kB pagetables:9904kB bounce:0kB free_pcp:348kB local_pcp:0kB free_cma:0kB
+> > > >> [  728.287402] lowmem_reserve[]: 0 0 579 579
+> > > >
+> > > > So this is the only usable zone and you are close to the min watermark
+> > > > which means that your system is under a serious memory pressure but not
+> > > > yet under OOM for order-0 request. The situation is not great though
+> > >
+> > > Looking at lowmem_reserve above, wonder if 579 applies here? What does
+> > > /proc/zoneinfo say?
+> 
+> 
+> What is  lowmem_reserve[]: 0 0 579 579 ?
 
-On Fri, Aug 02, 2019 at 11:37:15AM -0400 Julien Desfossez wrote:
-> We tested both Aaron's and Tim's patches and here are our results.
-> 
-> Test setup:
-> - 2 1-thread sysbench, one running the cpu benchmark, the other one the
->   mem benchmark
-> - both started at the same time
-> - both are pinned on the same core (2 hardware threads)
-> - 10 30-seconds runs
-> - test script: https://paste.debian.net/plainh/834cf45c
-> - only showing the CPU events/sec (higher is better)
-> - tested 4 tag configurations:
->   - no tag
->   - sysbench mem untagged, sysbench cpu tagged
->   - sysbench mem tagged, sysbench cpu untagged
->   - both tagged with a different tag
-> - "Alone" is the sysbench CPU running alone on the core, no tag
-> - "nosmt" is both sysbench pinned on the same hardware thread, no tag
-> - "Tim's full patchset + sched" is an experiment with Tim's patchset
->   combined with Aaron's "hack patch" to get rid of the remaining deep
->   idle cases
-> - In all test cases, both tasks can run simultaneously (which was not
->   the case without those patches), but the standard deviation is a
->   pretty good indicator of the fairness/consistency.
-> 
-> No tag
-> ------
-> Test                            Average     Stdev
-> Alone                           1306.90     0.94
-> nosmt                           649.95      1.44
-> Aaron's full patchset:          828.15      32.45
-> Aaron's first 2 patches:        832.12      36.53
-> Aaron's 3rd patch alone:        864.21      3.68
-> Tim's full patchset:            852.50      4.11
-> Tim's full patchset + sched:    852.59      8.25
-> 
-> Sysbench mem untagged, sysbench cpu tagged
-> ------------------------------------------
-> Test                            Average     Stdev
-> Alone                           1306.90     0.94
-> nosmt                           649.95      1.44
-> Aaron's full patchset:          586.06      1.77
-> Aaron's first 2 patches:        630.08      47.30
-> Aaron's 3rd patch alone:        1086.65     246.54
-> Tim's full patchset:            852.50      4.11
-> Tim's full patchset + sched:    390.49      15.76
-> 
-> Sysbench mem tagged, sysbench cpu untagged
-> ------------------------------------------
-> Test                            Average     Stdev
-> Alone                           1306.90     0.94
-> nosmt                           649.95      1.44
-> Aaron's full patchset:          583.77      3.52
-> Aaron's first 2 patches:        513.63      63.09
-> Aaron's 3rd patch alone:        1171.23     3.35
-> Tim's full patchset:            564.04      58.05
-> Tim's full patchset + sched:    1026.16     49.43
-> 
-> Both sysbench tagged
-> --------------------
-> Test                            Average     Stdev
-> Alone                           1306.90     0.94
-> nosmt                           649.95      1.44
-> Aaron's full patchset:          582.15      3.75
-> Aaron's first 2 patches:        561.07      91.61
-> Aaron's 3rd patch alone:        638.49      231.06
-> Tim's full patchset:            679.43      70.07
-> Tim's full patchset + sched:    664.34      210.14
-> 
+This controls how much of memory from a lower zone you might an
+allocation request for a higher zone consume. E.g. __GFP_HIGHMEM is
+allowed to use both lowmem and highmem zones. It is preferable to use
+highmem zone because other requests are not allowed to use it.
 
-Sorry if I'm missing something obvious here but with only 2 processes 
-of interest shouldn't one tagged and one untagged be about the same
-as both tagged?  
+Please see __zone_watermark_ok for more details.
 
-In both cases the 2 sysbenches should not be running on the core at 
-the same time. 
-
-There will be times when oher non-related threads could share the core
-with the untagged one. Is that enough to account for this difference?
-
-
-Thanks,
-Phil
-
-
-> So in terms of fairness, Aaron's full patchset is the most consistent, but only
-> Tim's patchset performs better than nosmt in some conditions.
+> > This is GFP_KERNEL request essentially so there shouldn't be any lowmem
+> > reserve here, no?
 > 
-> Of course, this is one of the worst case scenario, as soon as we have
-> multithreaded applications on overcommitted systems, core scheduling performs
-> better than nosmt.
 > 
-> Thanks,
-> 
-> Julien
+> Why only low 1G is accessible by kernel in 32-bit system ?
+
+https://www.kernel.org/doc/gorman/, https://lwn.net/Articles/75174/
+and many more articles. In very short, the 32b virtual address space
+is quite small and it has to cover both the users space and the
+kernel. That is why we do split it into 3G reserved for userspace and 1G
+for kernel. Kernel can only access its 1G portion directly everything
+else has to be mapped explicitly (e.g. while data is copied).
+
+> My system configuration is :-
+> 3G/1G - vmsplit
+> vmalloc = 480M (I think vmalloc size will set your highmem ?)
+
+No, vmalloc is part of the 1GB kernel adress space.
 
 -- 
+Michal Hocko
+SUSE Labs
