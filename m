@@ -2,115 +2,105 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6BCC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B820C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 694202086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:25:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C826F20651
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:26:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565015186;
+	bh=skX07n3VdFTtx5SM7xLwQgWBuzwcYzG6fi9cXTyEaxs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Pklmm3ZQdLXWmo08Xqx83WPaOsv4SpXXHc4v/U7pmTWcrEe3AXRvafZGYfRaAjCwQ
+	 3m8eAZiezKhholdr8N0TOij7h0cLFyY/zzlO7TabpI+qZwXBRInE8+E+jQaDHJMVeJ
+	 Yr9YXuYGZ6EbK/qJcA31VKGooYgbtyt94tSYK3Js=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729140AbfHEOZ4 (ORCPT
+        id S1729485AbfHEO0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 10:25:56 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:9762 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728043AbfHEOZz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 10:25:55 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x75EMJeP054931
-        for <linux-kernel@vger.kernel.org>; Mon, 5 Aug 2019 10:25:54 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u6ne12pah-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 10:25:54 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Mon, 5 Aug 2019 15:25:51 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 5 Aug 2019 15:25:46 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x75EPiE337486818
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 5 Aug 2019 14:25:44 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 01BDAA405E;
-        Mon,  5 Aug 2019 14:25:44 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 11DCBA4057;
-        Mon,  5 Aug 2019 14:25:42 +0000 (GMT)
-Received: from dhcp-9-31-103-47.watson.ibm.com (unknown [9.31.103.47])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  5 Aug 2019 14:25:41 +0000 (GMT)
-Subject: Re: [PATCH v12 01/11] MODSIGN: Export module signature definitions
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Philipp Rudo <prudo@linux.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc:     Jessica Yu <jeyu@kernel.org>, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        David Howells <dhowells@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "AKASHI, Takahiro" <takahiro.akashi@linaro.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Date:   Mon, 05 Aug 2019 10:25:41 -0400
-In-Reply-To: <20190805151123.12510d72@laptop-ibm>
-References: <20190628021934.4260-1-bauerman@linux.ibm.com>
-         <20190628021934.4260-2-bauerman@linux.ibm.com>
-         <20190701144752.GC25484@linux-8ccs> <87lfxel2q6.fsf@morokweng.localdomain>
-         <20190704125427.31146026@laptop-ibm> <874l41ocf5.fsf@morokweng.localdomain>
-         <20190705150000.372345b0@laptop-ibm> <8736iw9y00.fsf@morokweng.localdomain>
-         <20190805151123.12510d72@laptop-ibm>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19080514-0016-0000-0000-0000029A6FB3
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19080514-0017-0000-0000-000032F977CF
-Message-Id: <1565015141.11223.145.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-05_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=981 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908050159
+        Mon, 5 Aug 2019 10:26:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41012 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727460AbfHEO0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 10:26:25 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0C3C0AE48;
+        Mon,  5 Aug 2019 14:26:24 +0000 (UTC)
+Date:   Mon, 5 Aug 2019 16:26:22 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Masoud Sharbiani <msharbiani@apple.com>,
+        Greg KH <gregkh@linuxfoundation.org>, hannes@cmpxchg.org,
+        vdavydov.dev@gmail.com, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Possible mem cgroup bug in kernels between 4.18.0 and 5.3-rc1.
+Message-ID: <20190805142622.GR7597@dhcp22.suse.cz>
+References: <20190802144110.GL6461@dhcp22.suse.cz>
+ <5DE6F4AE-F3F9-4C52-9DFC-E066D9DD5EDC@apple.com>
+ <20190802191430.GO6461@dhcp22.suse.cz>
+ <A06C5313-B021-4ADA-9897-CE260A9011CC@apple.com>
+ <f7733773-35bc-a1f6-652f-bca01ea90078@I-love.SAKURA.ne.jp>
+ <d7efccf4-7f07-10da-077d-a58dafbf627e@I-love.SAKURA.ne.jp>
+ <20190805084228.GB7597@dhcp22.suse.cz>
+ <7e3c0399-c091-59cd-dbe6-ff53c7c8adc9@i-love.sakura.ne.jp>
+ <20190805114434.GK7597@dhcp22.suse.cz>
+ <0b817204-29f4-adfb-9b78-4fec5fa8f680@i-love.sakura.ne.jp>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0b817204-29f4-adfb-9b78-4fec5fa8f680@i-love.sakura.ne.jp>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-08-05 at 15:11 +0200, Philipp Rudo wrote:
-> Hi Thiago,
-> 
-> > > The patch looks good now.  
+On Mon 05-08-19 23:00:12, Tetsuo Handa wrote:
+> On 2019/08/05 20:44, Michal Hocko wrote:
+> >> Allowing forced charge due to being unable to invoke memcg OOM killer
+> >> will lead to global OOM situation, and just returning -ENOMEM will not
+> >> solve memcg OOM situation.
 > > 
-> > Thanks! Can I add your Reviewed-by?
+> > Returning -ENOMEM would effectivelly lead to triggering the oom killer
+> > from the page fault bail out path. So effectively get us back to before
+> > 29ef680ae7c21110. But it is true that this is riskier from the
+> > observability POV when a) the OOM path wouldn't point to the culprit and
+> > b) it would leak ENOMEM from g-u-p path.
+> > 
 > 
-> sorry, for the late answer, but I was on vacation the last two weeks. I hope
-> it's not too late now.
-> 
-> Reviewed-by: Philipp Rudo <prudo@linux.ibm.com>
+> Excuse me? But according to my experiment, below code showed flood of
+> "Returning -ENOMEM" message instead of invoking the OOM killer.
+> I didn't find it gets us back to before 29ef680ae7c21110...
 
-Thanks!  This patch set is still in the #next-queued-testing
-branch.  I'm still hoping for a few more tags, before pushing it out
-to the #next-integrity branch later today.
+You would need to declare OOM_ASYNC to return ENOMEM properly from the
+charge (which is effectivelly a revert of 29ef680ae7c21110 for NOFS
+allocations). Something like the following
 
-Mimi
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index ba9138a4a1de..cc34ff0932ce 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -1797,7 +1797,7 @@ static enum oom_status mem_cgroup_oom(struct mem_cgroup *memcg, gfp_t mask, int
+ 	 * Please note that mem_cgroup_out_of_memory might fail to find a
+ 	 * victim and then we have to bail out from the charge path.
+ 	 */
+-	if (memcg->oom_kill_disable) {
++	if (memcg->oom_kill_disable || !(mask & __GFP_FS)) {
+ 		if (!current->in_user_fault)
+ 			return OOM_SKIPPED;
+ 		css_get(&memcg->css);
 
+I am quite surprised that your patch didn't trigger the global OOM
+though. It might mean that ENOMEM doesn't propagate all the way down to
+the #PF handler for this path for some reason.
+
+Anyway what I meant to say is that returning ENOMEM has the
+observable issues as well.
+-- 
+Michal Hocko
+SUSE Labs
