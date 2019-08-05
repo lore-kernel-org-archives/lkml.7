@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26507C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10471C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6D7120651
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D887D20651
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:26:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011574;
-	bh=o3AVFO3fKITsxqa+CrmjvSNxJsiSSMNI2nHCdCUjIF4=;
+	s=default; t=1565011578;
+	bh=U0qe1jI0Qe1xImFHXsq+pAjMSMkxQ/xoidN/fbDpSLs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P63ytpk7wbgzmqYc/o3EB19IAJdKEhFXF9arme30oMf3DxxqDWujwU5erTBbYAhmz
-	 YaAVOfNLblpUkKqvVqM6jmxY21oxHIf68LNQVjnI94U+DkHYXdxpq5H+0gnbTFUVHr
-	 3sXdR3oIDQA8Vcud6Ae862jUrPY2AC51sOEL44FQ=
+	b=VqiC/qTsUeKWKBR9Uw91aVH6Txtq/qCQWZ2c6kk0v7hnzsi7LGIEKwtqHPNdiVQ3v
+	 tzkTqsrR4qA0HS7jNNSZCebN4xwJMqhUplgYzp/qNwHsb3d5jINqcs/SCbK6jDjJuL
+	 ObKJnGXlAXRN6sOQ3P2ut9ajLPVVV6ZfYchsnIJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731410AbfHEN0M (ORCPT
+        id S1731433AbfHEN0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:26:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34674 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:26:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731064AbfHEN0I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:26:08 -0400
+        id S1731388AbfHEN0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:26:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B54220644;
-        Mon,  5 Aug 2019 13:26:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B829D20651;
+        Mon,  5 Aug 2019 13:26:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011567;
-        bh=o3AVFO3fKITsxqa+CrmjvSNxJsiSSMNI2nHCdCUjIF4=;
+        s=default; t=1565011570;
+        bh=U0qe1jI0Qe1xImFHXsq+pAjMSMkxQ/xoidN/fbDpSLs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bS2tnEnjYihq5fxbwHUYEe5WTCSheCihNCHPnriMZdthyIeR5hbA60Zu4vGeIThZ0
-         0JoclKyxFXJuOmSdGgHXtrZAZqjQMaF09UIriINBwGCR3/KkQfwbVDgSe3Qa7dXSwR
-         zsiwtNcIVE4PZXQ4LdMadsQGw6gC8YX4VeSJSffU=
+        b=y8xWpcb3mOHjytqH2V4KitIUObYuozlRhGuNPghaH9xY8GhMGKrxxrxM5v60e7sKQ
+         f/zHL88bHZiI8n8R4pfHqQs/ARGh3M/HxR58lt2Sa3OdUuf/z9rx03l/1vXj/B9v7f
+         GSLFqtZ1xlG6tlQ/+N10fWnFw0atERcibQ8IbEpo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH 5.2 111/131] drivers/perf: arm_pmu: Fix failure path in PM notifier
-Date:   Mon,  5 Aug 2019 15:03:18 +0200
-Message-Id: <20190805124959.400939001@linuxfoundation.org>
+        stable@vger.kernel.org, Will Deacon <will@kernel.org>
+Subject: [PATCH 5.2 112/131] arm64: compat: Allow single-byte watchpoints on all addresses
+Date:   Mon,  5 Aug 2019 15:03:19 +0200
+Message-Id: <20190805124959.467768241@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -62,34 +60,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Will Deacon <will@kernel.org>
 
-commit 0d7fd70f26039bd4b33444ca47f0e69ce3ae0354 upstream.
+commit 849adec41203ac5837c40c2d7e08490ffdef3c2c upstream.
 
-Handling of the CPU_PM_ENTER_FAILED transition in the Arm PMU PM
-notifier code incorrectly skips restoration of the counters. Fix the
-logic so that CPU_PM_ENTER_FAILED follows the same path as CPU_PM_EXIT.
+Commit d968d2b801d8 ("ARM: 7497/1: hw_breakpoint: allow single-byte
+watchpoints on all addresses") changed the validation requirements for
+hardware watchpoints on arch/arm/. Update our compat layer to implement
+the same relaxation.
 
 Cc: <stable@vger.kernel.org>
-Fixes: da4e4f18afe0f372 ("drivers/perf: arm_pmu: implement CPU_PM notifier")
-Reported-by: Anders Roxell <anders.roxell@linaro.org>
-Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/perf/arm_pmu.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/kernel/hw_breakpoint.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/perf/arm_pmu.c
-+++ b/drivers/perf/arm_pmu.c
-@@ -723,8 +723,8 @@ static int cpu_pm_pmu_notify(struct noti
- 		cpu_pm_pmu_setup(armpmu, cmd);
- 		break;
- 	case CPU_PM_EXIT:
--		cpu_pm_pmu_setup(armpmu, cmd);
- 	case CPU_PM_ENTER_FAILED:
-+		cpu_pm_pmu_setup(armpmu, cmd);
- 		armpmu->start(armpmu);
- 		break;
- 	default:
+--- a/arch/arm64/kernel/hw_breakpoint.c
++++ b/arch/arm64/kernel/hw_breakpoint.c
+@@ -536,13 +536,14 @@ int hw_breakpoint_arch_parse(struct perf
+ 			/* Aligned */
+ 			break;
+ 		case 1:
+-			/* Allow single byte watchpoint. */
+-			if (hw->ctrl.len == ARM_BREAKPOINT_LEN_1)
+-				break;
+ 		case 2:
+ 			/* Allow halfword watchpoints and breakpoints. */
+ 			if (hw->ctrl.len == ARM_BREAKPOINT_LEN_2)
+ 				break;
++		case 3:
++			/* Allow single byte watchpoint. */
++			if (hw->ctrl.len == ARM_BREAKPOINT_LEN_1)
++				break;
+ 		default:
+ 			return -EINVAL;
+ 		}
 
 
