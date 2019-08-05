@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFEC9C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E4C1C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 836A3216B7
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:19:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFF1D214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:19:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011165;
-	bh=MrAJKCv6cNse/W4T69Bzjx0rHgIpjdfdG4O21grCYHY=;
+	s=default; t=1565011168;
+	bh=MzY3GTrzMHFCOZgbaePkw1i7Fuq60WcQXcMJR8PmiuA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V5Kx9GbW8T5laLIBnABLmDZa46HXTdIJTiHGnZwtkCU4Q5w73gwQYL95Oi2MsXKjO
-	 QY5AjwU7XTff3A7b8v5MeOBMuETbidHbCSIcf2LevzQHmdVRxvwwhCEg3QSDmlqW14
-	 IRETG5M0i0fnrFfPd24kxjUkI35dGpMHs3dsgqEo=
+	b=apcIg/S61sJbKxCa+cy2p4G3MbPrl7jWQT/VnQy6jS5NkHnMyhmZNzVZFVIRcYq1D
+	 2g4sB0JUVx66JD85pNA4Lik+6a4X3stIEMhV3y0+P7ejcMTylLmXzjoheREpcBDG38
+	 JWFRt8JDn9rZQRdiifUyQow5Xqm54iX+HG798L6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729510AbfHENTY (ORCPT
+        id S1729529AbfHENT2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:19:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55380 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:19:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728991AbfHENTX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:19:23 -0400
+        id S1728991AbfHENT0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:19:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FCD720880;
-        Mon,  5 Aug 2019 13:19:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55255214C6;
+        Mon,  5 Aug 2019 13:19:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011163;
-        bh=MrAJKCv6cNse/W4T69Bzjx0rHgIpjdfdG4O21grCYHY=;
+        s=default; t=1565011165;
+        bh=MzY3GTrzMHFCOZgbaePkw1i7Fuq60WcQXcMJR8PmiuA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wqVvKkyyvTVZ/AkpMnhni2N+VBq28XZMO27XL5kske7gxgDO7R7c3pXXOYzMZuQgq
-         tz0jxDZnB7IxTU5nKbz+8+yiPlAWfOB+RsgViDxGf7RKA2hwQKCcVOTCqI4tgnEpQS
-         yGQrjo8Qvydl8XbYgIXY5+Z1sKERku2ZzJ+X9gCk=
+        b=JEbvMfqI45LW9UeJo+rnAJTEbgnUBSIVbBGqDkkuvEb0Q5LYTd14BxvcN49w2nh7+
+         zK+PvODpLjJL8AVEhVGIEIwu6mR74eyVDl97VBu4AQ5jzX/Q4Iu/Ba4/ALnwpYYVCs
+         KqgSxOP+nfS6c49MIzADogcVG678mh/sAOS9mNtM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Xiaolin Zhang <xiaolin.zhang@intel.com>
-Subject: [PATCH 4.19 68/74] drm/i915/gvt: fix incorrect cache entry for guest page mapping
-Date:   Mon,  5 Aug 2019 15:03:21 +0200
-Message-Id: <20190805124941.302293447@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+fee3a14d4cdf92646287@syzkaller.appspotmail.com,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Paul Moore <paul@paul-moore.com>
+Subject: [PATCH 4.19 51/74] selinux: fix memory leak in policydb_init()
+Date:   Mon,  5 Aug 2019 15:03:04 +0200
+Message-Id: <20190805124940.017741367@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124935.819068648@linuxfoundation.org>
 References: <20190805124935.819068648@linuxfoundation.org>
@@ -59,49 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaolin Zhang <xiaolin.zhang@intel.com>
+From: Ondrej Mosnacek <omosnace@redhat.com>
 
-commit 7366aeb77cd840f3edea02c65065d40affaa7f45 upstream.
+commit 45385237f65aeee73641f1ef737d7273905a233f upstream.
 
-GPU hang observed during the guest OCL conformance test which is caused
-by THP GTT feature used durning the test.
+Since roles_init() adds some entries to the role hash table, we need to
+destroy also its keys/values on error, otherwise we get a memory leak in
+the error path.
 
-It was observed the same GFN with different size (4K and 2M) requested
-from the guest in GVT. So during the guest page dma map stage, it is
-required to unmap first with orginal size and then remap again with
-requested size.
-
-Fixes: b901b252b6cf ("drm/i915/gvt: Add 2M huge gtt support")
-Cc: stable@vger.kernel.org
-Reviewed-by: Zhenyu Wang <zhenyuw@linux.intel.com>
-Signed-off-by: Xiaolin Zhang <xiaolin.zhang@intel.com>
-Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Cc: <stable@vger.kernel.org>
+Reported-by: syzbot+fee3a14d4cdf92646287@syzkaller.appspotmail.com
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/gvt/kvmgt.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ security/selinux/ss/policydb.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/i915/gvt/kvmgt.c
-+++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
-@@ -1748,6 +1748,18 @@ int kvmgt_dma_map_guest_page(unsigned lo
- 		ret = __gvt_cache_add(info->vgpu, gfn, *dma_addr, size);
- 		if (ret)
- 			goto err_unmap;
-+	} else if (entry->size != size) {
-+		/* the same gfn with different size: unmap and re-map */
-+		gvt_dma_unmap_page(vgpu, gfn, entry->dma_addr, entry->size);
-+		__gvt_cache_remove_entry(vgpu, entry);
+--- a/security/selinux/ss/policydb.c
++++ b/security/selinux/ss/policydb.c
+@@ -275,6 +275,8 @@ static int rangetr_cmp(struct hashtab *h
+ 	return v;
+ }
+ 
++static int (*destroy_f[SYM_NUM]) (void *key, void *datum, void *datap);
 +
-+		ret = gvt_dma_map_page(vgpu, gfn, dma_addr, size);
-+		if (ret)
-+			goto err_unlock;
-+
-+		ret = __gvt_cache_add(info->vgpu, gfn, *dma_addr, size);
-+		if (ret)
-+			goto err_unmap;
- 	} else {
- 		kref_get(&entry->ref);
- 		*dma_addr = entry->dma_addr;
+ /*
+  * Initialize a policy database structure.
+  */
+@@ -322,8 +324,10 @@ static int policydb_init(struct policydb
+ out:
+ 	hashtab_destroy(p->filename_trans);
+ 	hashtab_destroy(p->range_tr);
+-	for (i = 0; i < SYM_NUM; i++)
++	for (i = 0; i < SYM_NUM; i++) {
++		hashtab_map(p->symtab[i].table, destroy_f[i], NULL);
+ 		hashtab_destroy(p->symtab[i].table);
++	}
+ 	return rc;
+ }
+ 
 
 
