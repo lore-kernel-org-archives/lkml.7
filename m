@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 925E5C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 23:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8089CC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 23:35:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FCCB2070D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 23:35:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 541872070D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 23:35:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P0cWEJqD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YW2JbBhT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731298AbfHEXfn (ORCPT
+        id S1731353AbfHEXfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 19:35:43 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41783 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731231AbfHEXfh (ORCPT
+        Mon, 5 Aug 2019 19:35:47 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:36935 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731280AbfHEXfm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 19:35:37 -0400
-Received: by mail-pg1-f193.google.com with SMTP id x15so30169830pgg.8;
-        Mon, 05 Aug 2019 16:35:36 -0700 (PDT)
+        Mon, 5 Aug 2019 19:35:42 -0400
+Received: by mail-pl1-f195.google.com with SMTP id b3so37084980plr.4;
+        Mon, 05 Aug 2019 16:35:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=6Pj12shXDJ0qL2ITkdFID+0sK7YPIfnJU0EODI45PAo=;
-        b=P0cWEJqDtIxlI1iTv4y7nWfH9E/dxbKOHhDEh1Ldkd4KsNCON8XIrlTGdDK1ATCV24
-         1pIOi/RmvDSo99JRk88cCOrbmxC7aRhJu7psaA0w/Wb8Dy7uQd0qAqeAWD6gS89htzum
-         IXoJG5CORpjEXHBRY0klwJJh1HpapaZ7g5kv2Ar2lryCWFh4NwADK88QZxREjbpWskO1
-         7iRKe9s9zr0BQS6lPdiqAHIyjO62zig/8ZcIipv999RP/bKmNDcwpPVac7YKd6ubANy3
-         M8sIgODKgXP1t/GSK4n0bavVAMcyuHQzQnpD3Pg/Ld/IKwiHaxJMhawz31vUWPTDcSym
-         W54w==
+        bh=2TmLGvTN3FaWVeRsZPV3e4KNsmV2AReP7cWUVSqpqFQ=;
+        b=YW2JbBhT1KOAfZKebBO9NM/G5Db95SUaRLnTey3pDLof4EeuR2oudZUxy8zi3ksHrp
+         n/rM4Ga7htyDE97Ns+wPj+3Z8PhgQ/mkooxrj+Oj+RLx4/nnq0bUD+aDUnVf1LBrq9xF
+         dY0j2ZVZAyPgtxwlAKR9qwP4wj/h48HGi4ffXdnH8gu8bIzxJ8uHY2W+u7NH0GnqxTD8
+         dRHgc922vuRBkdb5WRupFzWcgYSpGtu+hSoihVTRk9nHn6Zo5xvrqkBk6f2tAOvr6c0G
+         mFXWCA9xq+KMxQdYSaIZjMOJSVwdiGQuFvo1KeBfdkD79sC1CTS7ef5vvvfOPlyvigqS
+         IVNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=6Pj12shXDJ0qL2ITkdFID+0sK7YPIfnJU0EODI45PAo=;
-        b=HSKkuzEs97l9bS3k4mdcAncOHZ9IbdgUEkTrqagIEe3BSKZTmxoRvaa0Mx9PMz+4eB
-         oBfqqfoTg48v2rXrI4FpQ6Z/rbfKXzkW3ZAx+jNn4NNvNUnKkEgvk5GAyg14OjAPfhEn
-         F0fZyyIRrdhlNATeqplk7Y4Hhj824vL2tph01kZJK3ve+d6ALN2lsd0cQSz6cKAd9zPF
-         XZ+IBITgNnFp6KRWwggqlFdN4A+XQ/n65vXw8uxkuPWSKWCayPVRSq5AUBKPGL/O18g8
-         fz8+4k2KNyoJW3HWLuoeFTzkM7LkZCvZ5us1vfaiBnZMhLzxKKjjqGBqBldk18l3Qv9k
-         ea8A==
-X-Gm-Message-State: APjAAAUR9JATyqFujkmOlI6zgACWiPXanuYOqHrb+omk3kgrGPsf5zTu
-        g4aO9czMu4eqV1ILjDWotvFImB3J
-X-Google-Smtp-Source: APXvYqwCuNAlXO9lVulSaYfkaEjh7QPRwoh7y+NSTuatvygZigIcX3cPqTy4WpLO+oFiGtP3uC0Vaw==
-X-Received: by 2002:a17:90a:ca11:: with SMTP id x17mr194531pjt.107.1565048136137;
-        Mon, 05 Aug 2019 16:35:36 -0700 (PDT)
+        bh=2TmLGvTN3FaWVeRsZPV3e4KNsmV2AReP7cWUVSqpqFQ=;
+        b=teNXJwM2nAyOGhatMv1pZrNVWswP76C7iQvGHwog712DchYdMjhi7mDy1woI8d8v0H
+         hGNfk9jk/Y0H5uOOU4a22AzzrcvmjT3Uk9T3wJb3YWrUnQfdjsoX95am9prX9GnAvu0S
+         Guuj/G0GeCMhBi4SYXa6CVjKtgghq01ycTzwXrw4wMkPa7ZggL/IBYStVeFVNGCuwAal
+         wLrJ7SySRsI+Eyoqf7NtgY2Zd3/PzRuhTjyHTahMRuBOTFCTMTz1ulBYpNzyXGyzvTrQ
+         BIi/2PIE/wLw8q+G4G6kiz8MhP3QeUx/xO9Nld9zcb4tfwfybhDCsE++Sa1j/vxvNOGw
+         w7GQ==
+X-Gm-Message-State: APjAAAXVBfW3rDE/IdYLv5oRoJCcpWuiMWgvpmjtRiCCghMU0zEEWWI3
+        LkAV5k9nP74M2oom8XlzUKWt1vPf
+X-Google-Smtp-Source: APXvYqzJbrsuJ3HwTZ98E/Apw4jZA8VmFc9SY7qiYBjg/8j77ZDblKl2/AqIbDwaFPx6pAGuizw+Iw==
+X-Received: by 2002:a17:902:6a87:: with SMTP id n7mr251709plk.336.1565048141256;
+        Mon, 05 Aug 2019 16:35:41 -0700 (PDT)
 Received: from majic.sklembedded.com (c-73-202-231-77.hsd1.ca.comcast.net. [73.202.231.77])
-        by smtp.googlemail.com with ESMTPSA id 30sm31296349pjk.17.2019.08.05.16.35.35
+        by smtp.googlemail.com with ESMTPSA id 30sm31296349pjk.17.2019.08.05.16.35.40
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 05 Aug 2019 16:35:35 -0700 (PDT)
+        Mon, 05 Aug 2019 16:35:40 -0700 (PDT)
 From:   Steve Longerbeam <slongerbeam@gmail.com>
 To:     linux-media@vger.kernel.org
 Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
@@ -70,9 +70,9 @@ Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
         devel@driverdev.osuosl.org (open list:STAGING SUBSYSTEM),
         linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX
         / MXC ARM ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 18/22] media: imx: csi: Create media links in bound notifier
-Date:   Mon,  5 Aug 2019 16:35:01 -0700
-Message-Id: <20190805233505.21167-19-slongerbeam@gmail.com>
+Subject: [PATCH 22/22] media: imx: TODO: Remove issues regarding media link creation
+Date:   Mon,  5 Aug 2019 16:35:05 -0700
+Message-Id: <20190805233505.21167-23-slongerbeam@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190805233505.21167-1-slongerbeam@gmail.com>
 References: <20190805233505.21167-1-slongerbeam@gmail.com>
@@ -81,63 +81,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement a notifier bound op to register media links from the remote
-sub-device's source pad(s) to the CSI sink pad.
+Remove the TODO items regarding media link creation, these issues are
+resolved after exporting media link creation to individual entity bound
+callbacks and the use of media_create_fwnode_links(),
+media_create_fwnode_pad_links(), and media_entity_get_fwnode_pad().
 
 Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
 ---
- drivers/staging/media/imx/imx-media-csi.c | 24 +++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ drivers/staging/media/imx/TODO | 29 -----------------------------
+ 1 file changed, 29 deletions(-)
 
-diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
-index b39d79e63ac2..37b10cbf3c1a 100644
---- a/drivers/staging/media/imx/imx-media-csi.c
-+++ b/drivers/staging/media/imx/imx-media-csi.c
-@@ -120,6 +120,11 @@ static inline struct csi_priv *sd_to_dev(struct v4l2_subdev *sdev)
- 	return container_of(sdev, struct csi_priv, sd);
- }
+diff --git a/drivers/staging/media/imx/TODO b/drivers/staging/media/imx/TODO
+index 6f29b5ca5324..a371cdedcdb0 100644
+--- a/drivers/staging/media/imx/TODO
++++ b/drivers/staging/media/imx/TODO
+@@ -17,35 +17,6 @@
+   decided whether this feature is useful enough to make it generally
+   available by exporting to v4l2-core.
  
-+static inline struct csi_priv *notifier_to_dev(struct v4l2_async_notifier *n)
-+{
-+	return container_of(n, struct csi_priv, notifier);
-+}
-+
- static inline bool is_parallel_bus(struct v4l2_fwnode_endpoint *ep)
- {
- 	return ep->bus_type != V4L2_MBUS_CSI2_DPHY;
-@@ -1895,6 +1900,23 @@ static int imx_csi_parse_endpoint(struct device *dev,
- 	return fwnode_device_is_available(asd->match.fwnode) ? 0 : -ENOTCONN;
- }
+-- After all async subdevices have been bound, v4l2_fwnode_parse_link()
+-  is used to form the media links between the devices discovered in
+-  the OF graph.
+-
+-  While this approach allows support for arbitrary OF graphs, there
+-  are some assumptions for this to work:
+-
+-  1. If a port owned by a device in the graph has endpoint nodes, the
+-     port is treated as a media pad.
+-
+-     This presents problems for devices that don't make this port = pad
+-     assumption. Examples are SMIAPP compatible cameras which define only
+-     a single output port node, but which define multiple pads owned
+-     by multiple subdevices (pixel-array, binner, scaler). Or video
+-     decoders (entity function MEDIA_ENT_F_ATV_DECODER), which also define
+-     only a single output port node, but define multiple pads for video,
+-     VBI, and audio out.
+-
+-     A workaround at present is to set the port reg properties to
+-     correspond to the media pad index that the port represents. A
+-     possible long-term solution is to implement a subdev API that
+-     maps a port id to a media pad index.
+-
+-  2. Every endpoint of a port owned by a device in the graph is treated
+-     as a media link.
+-
+-     Which means a port must not contain mixed-use endpoints, they
+-     must all refer to media links between V4L2 subdevices.
+-
+ - i.MX7: all of the above, since it uses the imx media core
  
-+static int imx_csi_notify_bound(struct v4l2_async_notifier *notifier,
-+				struct v4l2_subdev *sd,
-+				struct v4l2_async_subdev *asd)
-+{
-+	struct csi_priv *priv = notifier_to_dev(notifier);
-+	struct media_pad *sink = &priv->sd.entity.pads[CSI_SINK_PAD];
-+
-+	return media_create_fwnode_pad_links(sink,
-+					     dev_fwnode(priv->dev->parent),
-+					     &sd->entity,
-+					     dev_fwnode(sd->dev), 0);
-+}
-+
-+static const struct v4l2_async_notifier_operations csi_notify_ops = {
-+	.bound = imx_csi_notify_bound,
-+};
-+
- static int imx_csi_async_register(struct csi_priv *priv)
- {
- 	struct fwnode_handle *fwnode;
-@@ -1903,6 +1925,8 @@ static int imx_csi_async_register(struct csi_priv *priv)
- 
- 	v4l2_async_notifier_init(&priv->notifier);
- 
-+	priv->notifier.ops = &csi_notify_ops;
-+
- 	fwnode = dev_fwnode(priv->dev);
- 
- 	/* get this CSI's port id */
+ - i.MX7: use Frame Interval Monitor
 -- 
 2.17.1
 
