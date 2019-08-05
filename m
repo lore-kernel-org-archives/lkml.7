@@ -2,55 +2,52 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC26C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8192EC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0613820651
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5754720651
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:27:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011634;
-	bh=xpJM/gqp3zYrSfs70sHH80p2hZCGqfxlZBzlDuDyikQ=;
+	s=default; t=1565011641;
+	bh=Cu99jApK5uKYYlPO+FvuDKIlH7hKNvpn6uCuVC1DBrY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CuHxJEBpT2Loq5kwghHZY3qEjftYSsp1RSExntvp2qskrpbeDp7ARyWE20MO/UnZ/
-	 fL9tjsP+1rBKXihZuAjsh0mHl0pWJTrBsEZTy6/dDR8TLrNvhChJUQWXUX3qhj1igc
-	 HvfXFvRUZk0XtquNqcFtDhAGI50M2/PawqwhMIQk=
+	b=vKifRTpM9frnuIaLB932kIMZI7en6tUY0vujFw/HGhF4wSwLKGcntFqfCN2BO1+4L
+	 P88lYnVvwVSL1VMpJRQe5bFMu7xt2D6RhK2rvqCFKFnMGMzvnmXCqbXQmp7HEAqtVf
+	 a3L/TPNJd0h7UC/lCdwzRmOD8icyMxcBAvVorwTs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730932AbfHEN1N (ORCPT
+        id S1731131AbfHENZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:27:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33722 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:25:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730189AbfHENZN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:25:13 -0400
+        id S1730312AbfHENY6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:24:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 576FE20644;
-        Mon,  5 Aug 2019 13:25:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B24DF20644;
+        Mon,  5 Aug 2019 13:24:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011512;
-        bh=xpJM/gqp3zYrSfs70sHH80p2hZCGqfxlZBzlDuDyikQ=;
+        s=default; t=1565011497;
+        bh=Cu99jApK5uKYYlPO+FvuDKIlH7hKNvpn6uCuVC1DBrY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yKeqRwbqXoYBlzX7wfNiHiZkV52HFJFESa68nYxWSSXDFcIuUu/MlsR3JRHuRAc+6
-         D35tMl80icwIIfiiYXsSHiTvsMiXWQI8Jc2KxFVcaoxNvEGvvlxn3l8HZNKYWcBq0R
-         BeWzW3Dk4EGLhqwfQ8B2N7euLqHnCdHpzlZOopfM=
+        b=1RexkAZTHUYqMxi0fHzomFh52yLiXfa2le/S4hQX90YcLiep7TyVXGNepricdw1CM
+         JGwcHCQ6bOG/YSWZMRd+WN9UnFIk+ifFxVi6k9HzO/vd05desxMEm1TuUICLIpw1xX
+         e3Ak67b7Rni+qgtDSx/0qZm4ovy5r2mUJmU8S18c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, linux-block@vger.kernel.org,
-        Ratna Manoj Bolla <manoj.br@gmail.com>, nbd@other.debian.org,
-        David Woodhouse <dwmw@amazon.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Munehisa Kamata <kamatam@amazon.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.2 117/131] nbd: replace kill_bdev() with __invalidate_device() again
-Date:   Mon,  5 Aug 2019 15:03:24 +0200
-Message-Id: <20190805124959.791932900@linuxfoundation.org>
+        stable@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 073/131] dma-direct: correct the physical addr in dma_direct_sync_sg_for_cpu/device
+Date:   Mon,  5 Aug 2019 15:02:40 +0200
+Message-Id: <20190805124956.543654128@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -63,74 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Munehisa Kamata <kamatam@amazon.com>
+[ Upstream commit 449fa54d6815be8c2c1f68fa9dbbae9384a7c03e ]
 
-commit 2b5c8f0063e4b263cf2de82029798183cf85c320 upstream.
+dma_map_sg() may use swiotlb buffer when the kernel command line includes
+"swiotlb=force" or the dma_addr is out of dev->dma_mask range.  After
+DMA complete the memory moving from device to memory, then user call
+dma_sync_sg_for_cpu() to sync with DMA buffer, and copy the original
+virtual buffer to other space.
 
-Commit abbbdf12497d ("replace kill_bdev() with __invalidate_device()")
-once did this, but 29eaadc03649 ("nbd: stop using the bdev everywhere")
-resurrected kill_bdev() and it has been there since then. So buffer_head
-mappings still get killed on a server disconnection, and we can still
-hit the BUG_ON on a filesystem on the top of the nbd device.
+So dma_direct_sync_sg_for_cpu() should use swiotlb physical addr, not
+the original physical addr from sg_phys(sg).
 
-  EXT4-fs (nbd0): mounted filesystem with ordered data mode. Opts: (null)
-  block nbd0: Receive control failed (result -32)
-  block nbd0: shutting down sockets
-  print_req_error: I/O error, dev nbd0, sector 66264 flags 3000
-  EXT4-fs warning (device nbd0): htree_dirblock_to_tree:979: inode #2: lblock 0: comm ls: error -5 reading directory block
-  print_req_error: I/O error, dev nbd0, sector 2264 flags 3000
-  EXT4-fs error (device nbd0): __ext4_get_inode_loc:4690: inode #2: block 283: comm ls: unable to read itable block
-  EXT4-fs error (device nbd0) in ext4_reserve_inode_write:5894: IO failure
-  ------------[ cut here ]------------
-  kernel BUG at fs/buffer.c:3057!
-  invalid opcode: 0000 [#1] SMP PTI
-  CPU: 7 PID: 40045 Comm: jbd2/nbd0-8 Not tainted 5.1.0-rc3+ #4
-  Hardware name: Amazon EC2 m5.12xlarge/, BIOS 1.0 10/16/2017
-  RIP: 0010:submit_bh_wbc+0x18b/0x190
-  ...
-  Call Trace:
-   jbd2_write_superblock+0xf1/0x230 [jbd2]
-   ? account_entity_enqueue+0xc5/0xf0
-   jbd2_journal_update_sb_log_tail+0x94/0xe0 [jbd2]
-   jbd2_journal_commit_transaction+0x12f/0x1d20 [jbd2]
-   ? __switch_to_asm+0x40/0x70
-   ...
-   ? lock_timer_base+0x67/0x80
-   kjournald2+0x121/0x360 [jbd2]
-   ? remove_wait_queue+0x60/0x60
-   kthread+0xf8/0x130
-   ? commit_timeout+0x10/0x10 [jbd2]
-   ? kthread_bind+0x10/0x10
-   ret_from_fork+0x35/0x40
+dma_direct_sync_sg_for_device() also has the same issue, correct it as
+well.
 
-With __invalidate_device(), I no longer hit the BUG_ON with sync or
-unmount on the disconnected device.
-
-Fixes: 29eaadc03649 ("nbd: stop using the bdev everywhere")
-Cc: linux-block@vger.kernel.org
-Cc: Ratna Manoj Bolla <manoj.br@gmail.com>
-Cc: nbd@other.debian.org
-Cc: stable@vger.kernel.org
-Cc: David Woodhouse <dwmw@amazon.com>
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Munehisa Kamata <kamatam@amazon.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 55897af63091("dma-direct: merge swiotlb_dma_ops into the dma_direct code")
+Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/nbd.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/dma/direct.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -1229,7 +1229,7 @@ static void nbd_clear_sock_ioctl(struct
- 				 struct block_device *bdev)
- {
- 	sock_shutdown(nbd);
--	kill_bdev(bdev);
-+	__invalidate_device(bdev, true);
- 	nbd_bdev_reset(bdev);
- 	if (test_and_clear_bit(NBD_HAS_CONFIG_REF,
- 			       &nbd->config->runtime_flags))
+diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+index 2c2772e9702ab..2c6d51a62251d 100644
+--- a/kernel/dma/direct.c
++++ b/kernel/dma/direct.c
+@@ -231,12 +231,14 @@ void dma_direct_sync_sg_for_device(struct device *dev,
+ 	int i;
+ 
+ 	for_each_sg(sgl, sg, nents, i) {
+-		if (unlikely(is_swiotlb_buffer(sg_phys(sg))))
+-			swiotlb_tbl_sync_single(dev, sg_phys(sg), sg->length,
++		phys_addr_t paddr = dma_to_phys(dev, sg_dma_address(sg));
++
++		if (unlikely(is_swiotlb_buffer(paddr)))
++			swiotlb_tbl_sync_single(dev, paddr, sg->length,
+ 					dir, SYNC_FOR_DEVICE);
+ 
+ 		if (!dev_is_dma_coherent(dev))
+-			arch_sync_dma_for_device(dev, sg_phys(sg), sg->length,
++			arch_sync_dma_for_device(dev, paddr, sg->length,
+ 					dir);
+ 	}
+ }
+@@ -268,11 +270,13 @@ void dma_direct_sync_sg_for_cpu(struct device *dev,
+ 	int i;
+ 
+ 	for_each_sg(sgl, sg, nents, i) {
++		phys_addr_t paddr = dma_to_phys(dev, sg_dma_address(sg));
++
+ 		if (!dev_is_dma_coherent(dev))
+-			arch_sync_dma_for_cpu(dev, sg_phys(sg), sg->length, dir);
+-	
+-		if (unlikely(is_swiotlb_buffer(sg_phys(sg))))
+-			swiotlb_tbl_sync_single(dev, sg_phys(sg), sg->length, dir,
++			arch_sync_dma_for_cpu(dev, paddr, sg->length, dir);
++
++		if (unlikely(is_swiotlb_buffer(paddr)))
++			swiotlb_tbl_sync_single(dev, paddr, sg->length, dir,
+ 					SYNC_FOR_CPU);
+ 	}
+ 
+-- 
+2.20.1
+
 
 
