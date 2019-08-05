@@ -2,100 +2,190 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D35B3C32750
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCC6C32750
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7F17218B6
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:48:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C88F2218B6
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:49:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727738AbfHEHsV (ORCPT
+        id S1727628AbfHEHtv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 03:48:21 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:41791 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726394AbfHEHsV (ORCPT
+        Mon, 5 Aug 2019 03:49:51 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:40197 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726394AbfHEHtv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 03:48:21 -0400
-Received: by mail-qt1-f194.google.com with SMTP id d17so1132263qtj.8;
-        Mon, 05 Aug 2019 00:48:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PIF4PYPyygnM1ho5NzdMwBMUBtSeyQAwHUR2WJm17mU=;
-        b=mYgD2r+VEJqZq4fowusYZzZ/RKV/blrA14mIsiNd3kuG5hqyNCUQS873515eQfl788
-         AGEf395/NYRvYNsY/6Xgc4UVLh8AIb8pYGXhQcDjALjxDOVPHlj6SPvO/iijKcsLOIqc
-         /Zi76ktQHjDLcQ/8b2ew9BIuAUbKSBeg9PIQpp7dUgZV6y3wH8C+MA22fL0e0EFg9rdJ
-         Fp1yj6gDlZn/uSNVoS/84i5QR1S+lzXWEwi8jo416seCb+1Qc5NdPiGVKQuxw//N4EjO
-         maupv7hASvRxx9DZaoLALBHa+gg3YCKGas2rM6m1sdxlBh4Elj9q2ZJExAW+ytFRA44C
-         kxXA==
-X-Gm-Message-State: APjAAAX2Z0f7nF6IDizZlDSBdbUBwddw8Soy4SJJD9WZVng5Ez1HrrLg
-        6eW0LLHCBgx12wOe344mnTwdkhKPNAM26AwwPX0=
-X-Google-Smtp-Source: APXvYqxiNlojiW3VMRgMyDRNUGmaUhkPF0Y2iM4dh4k+cbmySHUI5Tf81/3/PgsbXX9xChMbLn5UQE+B13awcg7mBK8=
-X-Received: by 2002:a0c:ba2c:: with SMTP id w44mr106591931qvf.62.1564991299977;
- Mon, 05 Aug 2019 00:48:19 -0700 (PDT)
+        Mon, 5 Aug 2019 03:49:51 -0400
+Received: from uno.localdomain (host150-24-dynamic.51-79-r.retail.telecomitalia.it [79.51.24.150])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id A1E3A240004;
+        Mon,  5 Aug 2019 07:49:45 +0000 (UTC)
+Date:   Mon, 5 Aug 2019 09:51:09 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        fabrizio.castro@bp.renesas.com,
+        "open list:DRM DRIVERS FOR RENESAS" <dri-devel@lists.freedesktop.org>,
+        "open list:DRM DRIVERS FOR RENESAS" 
+        <linux-renesas-soc@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm: rcar_lvds: Fix dual link mode operations
+Message-ID: <20190805075109.oe6slqetqoe5wqzr@uno.localdomain>
+References: <20190723165700.13124-1-jacopo+renesas@jmondi.org>
+ <20190801151129.GF5024@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-References: <20190708125247.3769080-1-arnd@arndb.de> <6aa562a3-effe-12c2-25d8-47ecf583d724@vaisala.com>
-In-Reply-To: <6aa562a3-effe-12c2-25d8-47ecf583d724@vaisala.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 5 Aug 2019 09:48:03 +0200
-Message-ID: <CAK8P3a2_UtCDGG0qtTyTAADh4BoErS_q0PBMGmZ7UUHrQ9Y2ww@mail.gmail.com>
-Subject: Re: [PATCH] power: reset: nvmem-reboot-mode: add CONFIG_OF dependency
-To:     Nandor Han <nandor.han@vaisala.com>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="f6oy4oxrt3xzydfx"
+Content-Disposition: inline
+In-Reply-To: <20190801151129.GF5024@pendragon.ideasonboard.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 5, 2019 at 9:10 AM Nandor Han <nandor.han@vaisala.com> wrote:
+
+--f6oy4oxrt3xzydfx
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+
+Hi Laurent,
+
+On Thu, Aug 01, 2019 at 06:11:29PM +0300, Laurent Pinchart wrote:
+> Hello Jacopo,
 >
-> On 7/8/19 3:52 PM, Arnd Bergmann wrote:
-> > Without CONFIG_OF, we get a build failure in the reboot-mode
-> > implementation:
+> Thank you for the patch.
+>
+> On Tue, Jul 23, 2019 at 06:57:00PM +0200, Jacopo Mondi wrote:
+> > The R-Car LVDS encoder units support dual-link operations by splitting
+> > the pixel output between the primary encoder and the companion one.
+>
+> s/the companion one/its companion/
+>
 > >
-> > drivers/power/reset/reboot-mode.c: In function 'reboot_mode_register':
-> > drivers/power/reset/reboot-mode.c:72:2: error: implicit declaration of function 'for_each_property_of_node'; did you mean 'for_each_child_of_node'? [-Werror=implicit-function-declaration]
-> >    for_each_property_of_node(np, prop) {
+> > In order for the primary encoder to succesfully control the companion's
+> > operations this should not fail at probe time and register itself its
+> > associated drm bridge so that the primary one can find it.
+>
+> This is hard to parse.
+>
+
+Re-reading the whole commit message, I would actually drop it
+completely, it's enough what we have here below.
+
+> > Currently the companion encoder fails at probe time, causing the
+> > registration of the primary to fail preventing the whole DU unit to be
+> > registered correctly.
 > >
-> > Add a Kconfig dependency like we have for the other users of
-> > CONFIG_REBOOT_MODE.
+> > Fixes: fa440d870358 ("drm: rcar-du: lvds: Add support for dual-link mode")
+> > Reported-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 > >
-> > Fixes: 7a78a7f7695b ("power: reset: nvmem-reboot-mode: use NVMEM as reboot mode write interface")
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > > ---
-> >   drivers/power/reset/Kconfig | 1 +
-> >   1 file changed, 1 insertion(+)
+> > The "Fixes" tag refers to a patch currently part of the
+> > renesas-drivers-2019-07-09-v5.2 branch of Geert's renesas-drivers tree.
 > >
-> > diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-> > index 8dfb105db391..a564237278ff 100644
-> > --- a/drivers/power/reset/Kconfig
-> > +++ b/drivers/power/reset/Kconfig
-> > @@ -248,6 +248,7 @@ config POWER_RESET_SC27XX
+> >  drivers/gpu/drm/rcar-du/rcar_lvds.c | 31 +++++++++++++++++++++--------
+> >  1 file changed, 23 insertions(+), 8 deletions(-)
 > >
-> >   config NVMEM_REBOOT_MODE
-> >       tristate "Generic NVMEM reboot mode driver"
-> > +     depends on OF
-> >       select REBOOT_MODE
-> >       help
-> >         Say y here will enable reboot mode driver. This will
+> > diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
+> > index bada7ee98544..8b015ba95895 100644
+> > --- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
+> > +++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
+> > @@ -767,14 +767,29 @@ static int rcar_lvds_parse_dt(struct rcar_lvds *lvds)
+> >  	of_node_put(remote_input);
+> >  	of_node_put(remote);
 > >
+> > -	/*
+> > -	 * On D3/E3 the LVDS encoder provides a clock to the DU, which can be
+> > -	 * used for the DPAD output even when the LVDS output is not connected.
+> > -	 * Don't fail probe in that case as the DU will need the bridge to
+> > -	 * control the clock.
+> > -	 */
+> > -	if (lvds->info->quirks & RCAR_LVDS_QUIRK_EXT_PLL)
+> > -		return ret == -ENODEV ? 0 : ret;
+> > +	switch (ret) {
+> > +	case -ENODEV:
+> > +		/*
+> > +		 * On D3/E3 the LVDS encoder provides a clock to the DU, which
+> > +		 * can be used for the DPAD output even when the LVDS output is
+> > +		 * not connected. Don't fail probe in that case as the DU will
+> > +		 * need the bridge to control the clock.
+> > +		 */
+> > +		if (lvds->info->quirks & RCAR_LVDS_QUIRK_EXT_PLL)
+> > +			ret = 0;
+> > +		break;
+> > +	case -ENXIO:
+> > +		/*
+> > +		 * When the LVDS output is used in dual link mode, the
+> > +		 * companion encoder fails at
+> > +		 * 'rcar_lvds_parse_dt_companion()'. Don't fail probe in
+> > +		 * that case as the master encoder will need the companion's
+> > +		 * bridge to control its operations.
+> > +		 */
+> > +		if (lvds->info->quirks & RCAR_LVDS_QUIRK_DUAL_LINK)
+> > +			ret = 0;
 >
-> Wouldn't this be more appropriate to add the "depends on OF" to "config
-> REBOOT_MODE" section, since this is an error to `reboot-mode.c` unit?
+> As -ENXIO can only be returned by rcar_lvds_parse_dt_companion(), and
+> rcar_lvds_parse_dt_companion() is only called when the
+> RCAR_LVDS_QUIRK_DUAL_LINK flag is set, this essentially means that you
+> always zero the error returned from rcar_lvds_parse_dt_companion(). This
 
-It's too late for 5.3-stable now, as that would break existing configurations
-that won't select REBOOT_MODE themselves, and it adds a bit of complexity,
-but we could to it for 5.4 if you think that is necessary.
+Not totally correct, as rcar_lvds_parse_dt_companion() might also
+return EPROBE_DEFER, but...
 
-       Arnd
+> is both complicated and too drastic as the second -ENXIO error case
+> shouldn't be ignored. It would be better and simpler to return 0 from
+> rcar_lvds_parse_dt_companion() when the renesas,companion property can't
+> be found.
+
+I agree, returning 0 when when the property is not specified is enough
+and much simpler. I got dragged away by the idea of centralizing error
+handling at the end of the function, but it's ugly and also wrongly
+zeroes the second -ENXIO error returned by the parse_companion
+function.
+
+I'll change to what you suggested!
+Thanks
+  j
+
+>
+> > +		break;
+> > +	}
+> >
+> >  	return ret;
+> >  }
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
+
+--f6oy4oxrt3xzydfx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1H3+0ACgkQcjQGjxah
+VjxYkxAAlzArBpJQTnAx+2BDrFdNyuVKxAzyoEexaV7boeg586M5iV8fTmgjScff
+4KA54u80j8KxeK9adk7cqeqH1wPi+DkkMomFRPpJzUHrwlVpwPXoVERWOIYEVV4Y
+XA4f+xUHBjm0Ftxx9XJPKEbFyFkJYFZLZyl9r3a0PVccA3yikoQqPBP4FX7xrALM
+lAj/o14JXh0voNbK7k6w+LjM1JieofeJjXk59FmeKrIDy9pvM6IlvBQsC7hSmPZ7
+hsOiKk0kEjMA89aVAPnyhq7vP79F4q3A2C0XjUwgv/hO6JTD7zWVTc1/TItzajQV
+6WmnHMM9CUiKDD1Oo2O25fzBjmbNpm+HMclxxoF2IGGgDpRph4rbKio+NjmIDc/A
+myw7qRfM9juRgGOFXYwQgDpQY/tmaqKhr+hTodwj/BKUwIDzk1l5BfN/JGASEgxQ
+aj2KtNJdTyor7wTktGJ1yFWoBRUsVanGwf/fnOPhMqLlPNz/cdjmR3qjQYimjCLs
+G+GLCmlx9it5ZCnM6xhLj6JhysKpHONJGzbbXQqPoBgA3O0IjoOFg1PS3qztEjSg
+bB5XBKLVSnNNq5Yb7DBWnH+5H7j3iFwK2gXHdSrC/PJnNqeN5DLMFJvJkpmlfwb7
+jLHPMhBT58VN8f9YDS+Y5RUByO3tv0SvVm+nO/KI4i8xfbG+5n8=
+=lvdp
+-----END PGP SIGNATURE-----
+
+--f6oy4oxrt3xzydfx--
