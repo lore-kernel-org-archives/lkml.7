@@ -2,185 +2,141 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8AFCC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77AD3C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB1C02075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BAEB216B7
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 14:39:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="y/H1IuHA"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="h3QJQUw7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729128AbfHEOjk (ORCPT
+        id S1729362AbfHEOjo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 10:39:40 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:34282 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728149AbfHEOjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 10:39:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=IeOH3oshZOnypMVGQWFImyX6LwfvJFmlGyYwHKRWVis=; b=y/H1IuHAz2xH6KAAg1Db/wvVdi
-        BAYlOx98HBwt+ZcC0Pn3prgmOGYmYL41y3nFd5ojKT4qn2r3NztcuRW1Hy/IdD4kQ8buaIDCKvjDp
-        11lD45o3yzKb1AB1mDmcVo/9Vy7deVYgmTbIO2oOgDJawDHlUyZodnE9TH8Fbz7wM934=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hue99-0007XJ-Vw; Mon, 05 Aug 2019 16:39:35 +0200
-Date:   Mon, 5 Aug 2019 16:39:35 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, davem@davemloft.net,
-        robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com,
-        hkallweit1@gmail.com
-Subject: Re: [PATCH 05/16] net: phy: adin: configure RGMII/RMII/MII modes on
- config
-Message-ID: <20190805143935.GM24275@lunn.ch>
-References: <20190805165453.3989-1-alexandru.ardelean@analog.com>
- <20190805165453.3989-6-alexandru.ardelean@analog.com>
+        Mon, 5 Aug 2019 10:39:44 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:18954 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728149AbfHEOjm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 10:39:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1565015981; x=1596551981;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=PjUvu54jPktsncSuy4evUoV6hUaQZpbCooGfSdcFC2c=;
+  b=h3QJQUw7399+BrWPZ3KGT8a2j6WD3RU0WdTkTMYGrTnj/5zE9ZCWebcL
+   oTk/+a7y3ksiN3tHFNGKeF81EWu28nhUvmqdUAIndsQqoyxF3KxUPanBS
+   qq8Yupx8Ur/SxeigwWdhoSW7khHWG+mvUkXEpFE883BhpCTSqvaYhnXSS
+   c=;
+X-IronPort-AV: E=Sophos;i="5.64,350,1559520000"; 
+   d="scan'208";a="777792833"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-27fb8269.us-east-1.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 05 Aug 2019 14:39:39 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-27fb8269.us-east-1.amazon.com (Postfix) with ESMTPS id DA9F1A1C18;
+        Mon,  5 Aug 2019 14:39:35 +0000 (UTC)
+Received: from EX13D19EUB003.ant.amazon.com (10.43.166.69) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 5 Aug 2019 14:39:35 +0000
+Received: from ua9e4f3715fbc5f.ant.amazon.com (10.43.162.137) by
+ EX13D19EUB003.ant.amazon.com (10.43.166.69) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 5 Aug 2019 14:39:25 +0000
+From:   Hanna Hawa <hhhawa@amazon.com>
+To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>, <bp@alien8.de>,
+        <mchehab@kernel.org>, <james.morse@arm.com>, <davem@davemloft.net>,
+        <gregkh@linuxfoundation.org>, <linus.walleij@linaro.org>,
+        <Jonathan.Cameron@huawei.com>, <nicolas.ferre@microchip.com>,
+        <paulmck@linux.ibm.com>
+CC:     <dwmw@amazon.co.uk>, <benh@amazon.com>, <ronenk@amazon.com>,
+        <talel@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-edac@vger.kernel.org>, <hhhawa@amazon.com>
+Subject: [PATCH v5 0/4] Add support for Amazon's Annapurna Labs EDAC for L1/L2
+Date:   Mon, 5 Aug 2019 15:39:07 +0100
+Message-ID: <20190805143911.12185-1-hhhawa@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190805165453.3989-6-alexandru.ardelean@analog.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.137]
+X-ClientProxiedBy: EX13D03UWA001.ant.amazon.com (10.43.160.141) To
+ EX13D19EUB003.ant.amazon.com (10.43.166.69)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 07:54:42PM +0300, Alexandru Ardelean wrote:
-> The ADIN1300 chip supports RGMII, RMII & MII modes. Default (if
-> unconfigured) is RGMII.
-> This change adds support for configuring these modes via the device
-> registers.
-> 
-> For RGMII with internal delays (modes RGMII_ID,RGMII_TXID, RGMII_RXID),
+This series adds L1 and L2 caches support for error detection and
+correction for Amazon's Annapurna Labs SoCs.
+Alpine SoCs supports L1 and L2 single bit correction and two bits detection
+capability based on ARM implementation.
 
-It would be nice to add the missing space.
+Changes since v4:
+-----------------
+- Added include for cpumask.h in al_l2_edac.c
+- Fix RAMID error print according to ARM TRM
+- Use for_each_possible_cpu() to parse information for DT.
+- Add missing of_node_put() call.
 
-> the default delay is 2 ns. This can be configurable and will be done in
-> a subsequent change.
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> ---
->  drivers/net/phy/adin.c | 79 +++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 78 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-> index 3dd9fe50f4c8..dbdb8f60741c 100644
-> --- a/drivers/net/phy/adin.c
-> +++ b/drivers/net/phy/adin.c
-> @@ -33,14 +33,91 @@
->  	 ADIN1300_INT_HW_IRQ_EN)
->  #define ADIN1300_INT_STATUS_REG			0x0019
->  
-> +#define ADIN1300_GE_RGMII_CFG_REG		0xff23
-> +#define   ADIN1300_GE_RGMII_RXID_EN		BIT(2)
-> +#define   ADIN1300_GE_RGMII_TXID_EN		BIT(1)
-> +#define   ADIN1300_GE_RGMII_EN			BIT(0)
-> +
-> +#define ADIN1300_GE_RMII_CFG_REG		0xff24
-> +#define   ADIN1300_GE_RMII_EN			BIT(0)
-> +
-> +static int adin_config_rgmii_mode(struct phy_device *phydev,
-> +				  phy_interface_t intf)
-> +{
-> +	int reg;
-> +
-> +	reg = phy_read_mmd(phydev, MDIO_MMD_VEND1, ADIN1300_GE_RGMII_CFG_REG);
-> +	if (reg < 0)
-> +		return reg;
-> +
-> +	if (!phy_interface_mode_is_rgmii(intf)) {
-> +		reg &= ~ADIN1300_GE_RGMII_EN;
-> +		goto write;
-> +	}
-> +
-> +	reg |= ADIN1300_GE_RGMII_EN;
-> +
-> +	if (intf == PHY_INTERFACE_MODE_RGMII_ID ||
-> +	    intf == PHY_INTERFACE_MODE_RGMII_RXID) {
-> +		reg |= ADIN1300_GE_RGMII_RXID_EN;
-> +	} else {
-> +		reg &= ~ADIN1300_GE_RGMII_RXID_EN;
-> +	}
-> +
-> +	if (intf == PHY_INTERFACE_MODE_RGMII_ID ||
-> +	    intf == PHY_INTERFACE_MODE_RGMII_TXID) {
-> +		reg |= ADIN1300_GE_RGMII_TXID_EN;
-> +	} else {
-> +		reg &= ~ADIN1300_GE_RGMII_TXID_EN;
-> +	}
+Changes since v3:
+-----------------
+- Added include for smp.h sysreg.h 
+- Use scnprintf instead of snprintf
+- Move write_sysreg_s after valid check to minimize the window between
+read/write.
+- Use IS_ERR_OR_NULL instead of IS_ERR, because
+edac_device_alloc_ctl_info may return NULL.
 
-Nice. Often driver writers forget to clear the delay, they only set
-it. Not so here.
+Changes since v2:
+-----------------
+- Use BIT for single bit instead of GENMASK
+- Use BIT_ULL and GENMASK_ULL for 64bit vector
+- Fix the mod_name/ctrl_name.
 
-However, is checkpatch happy with this? Each half of the if/else is a
-single statement, so the {} are not needed.
+Changes since v1:
+-----------------
+- Split into two drivers
+- Get cpu-mask according to l2-cache handler from devicetree
+- Remove parameter casting
+- Use GENMASK() in bit mask
+- Use FIELD_GET()
+- Update define description PLRU_RAM -> PF_RAM
+- Use sys_reg() and read_sysreg_s()
+- Remove all write/read wrappers
+- Check fatal field to set if the error correctable or not
+- Remove un-relevant information from error prints.
+- Update smp_call_function_single() call function to wait
+- remove usage of get_online_cpus/put_online_cpus
+- Use on_each_cpu() and smp_call_function_any() instead of loop with for_each_cpu.
+- use buffer for error prints and pass to edac API
+- Remove edac_op_state set
+- Add for loop to report on repeated errors of the same type
+- Fix error name of the TLB to be L2_TLB as written in ARM TRM
+- Minor change in Kconfig
+- Minor changes in commit message
 
-> +
-> +write:
-> +	return phy_write_mmd(phydev, MDIO_MMD_VEND1,
-> +			     ADIN1300_GE_RGMII_CFG_REG, reg);
-> +}
-> +
-> +static int adin_config_rmii_mode(struct phy_device *phydev,
-> +				 phy_interface_t intf)
-> +{
-> +	int reg;
-> +
-> +	reg = phy_read_mmd(phydev, MDIO_MMD_VEND1, ADIN1300_GE_RMII_CFG_REG);
-> +	if (reg < 0)
-> +		return reg;
-> +
-> +	if (intf != PHY_INTERFACE_MODE_RMII) {
-> +		reg &= ~ADIN1300_GE_RMII_EN;
-> +		goto write;
+Hanna Hawa (4):
+  dt-bindings: EDAC: Add Amazon's Annapurna Labs L1 EDAC
+  edac: Add support for Amazon's Annapurna Labs L1 EDAC
+  dt-bindings: EDAC: Add Amazon's Annapurna Labs L2 EDAC
+  edac: Add support for Amazon's Annapurna Labs L2 EDAC
 
-goto? Really?
+ .../bindings/edac/amazon,al-l1-edac.txt       |  14 ++
+ .../bindings/edac/amazon,al-l2-edac.txt       |  20 ++
+ MAINTAINERS                                   |  12 ++
+ drivers/edac/Kconfig                          |  16 ++
+ drivers/edac/Makefile                         |   2 +
+ drivers/edac/al_l1_edac.c                     | 158 ++++++++++++++
+ drivers/edac/al_l2_edac.c                     | 192 ++++++++++++++++++
+ 7 files changed, 414 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-l1-edac.txt
+ create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-l2-edac.txt
+ create mode 100644 drivers/edac/al_l1_edac.c
+ create mode 100644 drivers/edac/al_l2_edac.c
 
-> +	}
-> +
-> +	reg |= ADIN1300_GE_RMII_EN;
-> +
-> +write:
-> +	return phy_write_mmd(phydev, MDIO_MMD_VEND1,
-> +			     ADIN1300_GE_RMII_CFG_REG, reg);
-> +}
-> +
->  static int adin_config_init(struct phy_device *phydev)
->  {
-> -	int rc;
-> +	phy_interface_t interface, rc;
+-- 
+2.17.1
 
-genphy_config_init() does not return a phy_interface_t!
-
->  
->  	rc = genphy_config_init(phydev);
->  	if (rc < 0)
->  		return rc;
->  
-> +	interface = phydev->interface;
-> +
-> +	rc = adin_config_rgmii_mode(phydev, interface);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	rc = adin_config_rmii_mode(phydev, interface);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	dev_info(&phydev->mdio.dev, "PHY is using mode '%s'\n",
-> +		 phy_modes(phydev->interface));
-
-phydev_dbg(), or not at all.
-
-	      Andrew
