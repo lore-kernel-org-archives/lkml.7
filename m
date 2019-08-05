@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A145C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7675C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0079320644
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84EDF20644
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:27:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011607;
-	bh=DRDerXr9DW86qLGdmqopt7ynBm6nHUnwaVDipglW7BA=;
+	s=default; t=1565011620;
+	bh=ue8M6fAPwJ2UPAAvXxZMUClM5SYWBiQ6eKDMyOYP5vc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CxlK63iqgqggCDnbktWumXoTiGabA6+hA7jVZI5T7szyGpl6K16dXPePeZIYnecCp
-	 ScfTw3abrQArvGCMZ9tYWvdfTP21O72dBamS25iSu3o5F31npNw8+xhOPmAnDR4Hvo
-	 wAFLyjr3lYhOMtf4MuT7JOy0y+ONIhCOmxe3KDBU=
+	b=PIj1kzVPTw3Q8DZF31S8U0ZeRfBrysFEJcriXRrVeDx37V1VZn1CHykCt80OIIORo
+	 QHD7rHy8sRCqWnvlx2bequvMeRRlssZxMK8O8IeEjnWwaIPwVD/f7E3dm837ZE00zg
+	 AujbUg5ouMxuUWevsy5OMT1kBhu1s1BAXVZmStfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731318AbfHENZv (ORCPT
+        id S1730948AbfHENZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:25:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34320 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:25:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731288AbfHENZr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:25:47 -0400
+        id S1730801AbfHENZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:25:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3F2820651;
-        Mon,  5 Aug 2019 13:25:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEF5120644;
+        Mon,  5 Aug 2019 13:25:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011546;
-        bh=DRDerXr9DW86qLGdmqopt7ynBm6nHUnwaVDipglW7BA=;
+        s=default; t=1565011528;
+        bh=ue8M6fAPwJ2UPAAvXxZMUClM5SYWBiQ6eKDMyOYP5vc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=niOxGXooJz3aBI+grsWaEPpuX7RGxjW2F42uCpcQxzVgcahXqBoRN6Up21UbL1Ro1
-         Knhwxc/g6tRXWEqupTDSQjrKoIWH1sUqMYYFH2JzCGwSiU+rHPdIkIpINWxGcu1htg
-         dMInEVnim/tNv456FDGlszgPKhyEVp9uu4WTzXLI=
+        b=FayOv8xXTQQDXU2pf01zCj8e9Ka9cY5u7jbh9B86SeTRl3wc6P3owFoDZdc0MIfgA
+         77BtyiQ6H8HCvFYZB8eKeMsZBRQISOI6cPRXlwqast6ytnEz+PT5YGWpRpuiU4pOZt
+         seGtMpLuQfJ5lAN7jV/tTx6Y3zKbN+CDoG8saOgY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.2 129/131] IB/hfi1: Field not zero-ed when allocating TID flow memory
-Date:   Mon,  5 Aug 2019 15:03:36 +0200
-Message-Id: <20190805125000.619598200@linuxfoundation.org>
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Jan Kara <jack@suse.cz>, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.2 105/131] loop: Fix mount(2) failure due to race with LOOP_SET_FD
+Date:   Mon,  5 Aug 2019 15:03:12 +0200
+Message-Id: <20190805124959.005408571@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -61,43 +60,210 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kaike Wan <kaike.wan@intel.com>
+From: Jan Kara <jack@suse.cz>
 
-commit dc25b239ebeaa3c58e5ceaa732140427d386aa16 upstream.
+commit 89e524c04fa966330e2e80ab2bc50b9944c5847a upstream.
 
-The field flow->resync_npkts is added for TID RDMA WRITE request and
-zero-ed when a TID RDMA WRITE RESP packet is received by the requester.
-This field is used to rewind a request during retry in the function
-hfi1_tid_rdma_restart_req() shared by both TID RDMA WRITE and TID RDMA
-READ requests. Therefore, when a TID RDMA READ request is retried, this
-field may not be initialized at all, which causes the retry to start at an
-incorrect psn, leading to the drop of the retry request by the responder.
+Commit 33ec3e53e7b1 ("loop: Don't change loop device under exclusive
+opener") made LOOP_SET_FD ioctl acquire exclusive block device reference
+while it updates loop device binding. However this can make perfectly
+valid mount(2) fail with EBUSY due to racing LOOP_SET_FD holding
+temporarily the exclusive bdev reference in cases like this:
 
-This patch fixes the problem by zeroing out the field when the flow memory
-is allocated.
+for i in {a..z}{a..z}; do
+        dd if=/dev/zero of=$i.image bs=1k count=0 seek=1024
+        mkfs.ext2 $i.image
+        mkdir mnt$i
+done
 
-Fixes: 838b6fd2d9ca ("IB/hfi1: TID RDMA RcvArray programming and TID allocation")
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20190715164534.74174.6177.stgit@awfm-01.aw.intel.com
-Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+echo "Run"
+for i in {a..z}{a..z}; do
+        mount -o loop -t ext2 $i.image mnt$i &
+done
+
+Fix the problem by not getting full exclusive bdev reference in
+LOOP_SET_FD but instead just mark the bdev as being claimed while we
+update the binding information. This just blocks new exclusive openers
+instead of failing them with EBUSY thus fixing the problem.
+
+Fixes: 33ec3e53e7b1 ("loop: Don't change loop device under exclusive opener")
+Cc: stable@vger.kernel.org
+Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/hfi1/tid_rdma.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/block/loop.c |   16 +++++----
+ fs/block_dev.c       |   83 +++++++++++++++++++++++++++++++++++----------------
+ include/linux/fs.h   |    6 +++
+ 3 files changed, 73 insertions(+), 32 deletions(-)
 
---- a/drivers/infiniband/hw/hfi1/tid_rdma.c
-+++ b/drivers/infiniband/hw/hfi1/tid_rdma.c
-@@ -1620,6 +1620,7 @@ static int hfi1_kern_exp_rcv_alloc_flows
- 		flows[i].req = req;
- 		flows[i].npagesets = 0;
- 		flows[i].pagesets[0].mapped =  0;
-+		flows[i].resync_npkts = 0;
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -932,6 +932,7 @@ static int loop_set_fd(struct loop_devic
+ 	struct file	*file;
+ 	struct inode	*inode;
+ 	struct address_space *mapping;
++	struct block_device *claimed_bdev = NULL;
+ 	int		lo_flags = 0;
+ 	int		error;
+ 	loff_t		size;
+@@ -950,10 +951,11 @@ static int loop_set_fd(struct loop_devic
+ 	 * here to avoid changing device under exclusive owner.
+ 	 */
+ 	if (!(mode & FMODE_EXCL)) {
+-		bdgrab(bdev);
+-		error = blkdev_get(bdev, mode | FMODE_EXCL, loop_set_fd);
+-		if (error)
++		claimed_bdev = bd_start_claiming(bdev, loop_set_fd);
++		if (IS_ERR(claimed_bdev)) {
++			error = PTR_ERR(claimed_bdev);
+ 			goto out_putf;
++		}
  	}
- 	req->flows = flows;
+ 
+ 	error = mutex_lock_killable(&loop_ctl_mutex);
+@@ -1023,15 +1025,15 @@ static int loop_set_fd(struct loop_devic
+ 	mutex_unlock(&loop_ctl_mutex);
+ 	if (partscan)
+ 		loop_reread_partitions(lo, bdev);
+-	if (!(mode & FMODE_EXCL))
+-		blkdev_put(bdev, mode | FMODE_EXCL);
++	if (claimed_bdev)
++		bd_abort_claiming(bdev, claimed_bdev, loop_set_fd);
  	return 0;
+ 
+ out_unlock:
+ 	mutex_unlock(&loop_ctl_mutex);
+ out_bdev:
+-	if (!(mode & FMODE_EXCL))
+-		blkdev_put(bdev, mode | FMODE_EXCL);
++	if (claimed_bdev)
++		bd_abort_claiming(bdev, claimed_bdev, loop_set_fd);
+ out_putf:
+ 	fput(file);
+ out:
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -1151,8 +1151,7 @@ static struct gendisk *bdev_get_gendisk(
+  * Pointer to the block device containing @bdev on success, ERR_PTR()
+  * value on failure.
+  */
+-static struct block_device *bd_start_claiming(struct block_device *bdev,
+-					      void *holder)
++struct block_device *bd_start_claiming(struct block_device *bdev, void *holder)
+ {
+ 	struct gendisk *disk;
+ 	struct block_device *whole;
+@@ -1199,6 +1198,62 @@ static struct block_device *bd_start_cla
+ 		return ERR_PTR(err);
+ 	}
+ }
++EXPORT_SYMBOL(bd_start_claiming);
++
++static void bd_clear_claiming(struct block_device *whole, void *holder)
++{
++	lockdep_assert_held(&bdev_lock);
++	/* tell others that we're done */
++	BUG_ON(whole->bd_claiming != holder);
++	whole->bd_claiming = NULL;
++	wake_up_bit(&whole->bd_claiming, 0);
++}
++
++/**
++ * bd_finish_claiming - finish claiming of a block device
++ * @bdev: block device of interest
++ * @whole: whole block device (returned from bd_start_claiming())
++ * @holder: holder that has claimed @bdev
++ *
++ * Finish exclusive open of a block device. Mark the device as exlusively
++ * open by the holder and wake up all waiters for exclusive open to finish.
++ */
++void bd_finish_claiming(struct block_device *bdev, struct block_device *whole,
++			void *holder)
++{
++	spin_lock(&bdev_lock);
++	BUG_ON(!bd_may_claim(bdev, whole, holder));
++	/*
++	 * Note that for a whole device bd_holders will be incremented twice,
++	 * and bd_holder will be set to bd_may_claim before being set to holder
++	 */
++	whole->bd_holders++;
++	whole->bd_holder = bd_may_claim;
++	bdev->bd_holders++;
++	bdev->bd_holder = holder;
++	bd_clear_claiming(whole, holder);
++	spin_unlock(&bdev_lock);
++}
++EXPORT_SYMBOL(bd_finish_claiming);
++
++/**
++ * bd_abort_claiming - abort claiming of a block device
++ * @bdev: block device of interest
++ * @whole: whole block device (returned from bd_start_claiming())
++ * @holder: holder that has claimed @bdev
++ *
++ * Abort claiming of a block device when the exclusive open failed. This can be
++ * also used when exclusive open is not actually desired and we just needed
++ * to block other exclusive openers for a while.
++ */
++void bd_abort_claiming(struct block_device *bdev, struct block_device *whole,
++		       void *holder)
++{
++	spin_lock(&bdev_lock);
++	bd_clear_claiming(whole, holder);
++	spin_unlock(&bdev_lock);
++}
++EXPORT_SYMBOL(bd_abort_claiming);
+ 
+ #ifdef CONFIG_SYSFS
+ struct bd_holder_disk {
+@@ -1668,29 +1723,7 @@ int blkdev_get(struct block_device *bdev
+ 
+ 		/* finish claiming */
+ 		mutex_lock(&bdev->bd_mutex);
+-		spin_lock(&bdev_lock);
+-
+-		if (!res) {
+-			BUG_ON(!bd_may_claim(bdev, whole, holder));
+-			/*
+-			 * Note that for a whole device bd_holders
+-			 * will be incremented twice, and bd_holder
+-			 * will be set to bd_may_claim before being
+-			 * set to holder
+-			 */
+-			whole->bd_holders++;
+-			whole->bd_holder = bd_may_claim;
+-			bdev->bd_holders++;
+-			bdev->bd_holder = holder;
+-		}
+-
+-		/* tell others that we're done */
+-		BUG_ON(whole->bd_claiming != holder);
+-		whole->bd_claiming = NULL;
+-		wake_up_bit(&whole->bd_claiming, 0);
+-
+-		spin_unlock(&bdev_lock);
+-
++		bd_finish_claiming(bdev, whole, holder);
+ 		/*
+ 		 * Block event polling for write claims if requested.  Any
+ 		 * write holder makes the write_holder state stick until
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2615,6 +2615,12 @@ extern struct block_device *blkdev_get_b
+ 					       void *holder);
+ extern struct block_device *blkdev_get_by_dev(dev_t dev, fmode_t mode,
+ 					      void *holder);
++extern struct block_device *bd_start_claiming(struct block_device *bdev,
++					      void *holder);
++extern void bd_finish_claiming(struct block_device *bdev,
++			       struct block_device *whole, void *holder);
++extern void bd_abort_claiming(struct block_device *bdev,
++			      struct block_device *whole, void *holder);
+ extern void blkdev_put(struct block_device *bdev, fmode_t mode);
+ extern int __blkdev_reread_part(struct block_device *bdev);
+ extern int blkdev_reread_part(struct block_device *bdev);
 
 
