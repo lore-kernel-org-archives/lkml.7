@@ -8,71 +8,63 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A455C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 23:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC6EC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 23:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 088FD216B7
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 23:36:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C08452070D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 23:36:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X1OFNeqh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FGVT31NI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731422AbfHEXgT (ORCPT
+        id S1731440AbfHEXg3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 19:36:19 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40166 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731186AbfHEXfb (ORCPT
+        Mon, 5 Aug 2019 19:36:29 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:41549 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731136AbfHEXf0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 19:35:31 -0400
-Received: by mail-pg1-f193.google.com with SMTP id w10so40516675pgj.7;
-        Mon, 05 Aug 2019 16:35:30 -0700 (PDT)
+        Mon, 5 Aug 2019 19:35:26 -0400
+Received: by mail-pl1-f194.google.com with SMTP id m9so36921728pls.8;
+        Mon, 05 Aug 2019 16:35:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Fq0ktF/hBsnVFU7IozmhPFjtW2ydpZCCyFzM6I7LgOw=;
-        b=X1OFNeqhQV0f90G9Q7+G/pt7EmUwrtUkbHW/9JOGxoTbmYiXMk1Gj8dkdpGlNnMIGU
-         wlOOqDsjYDIbpNdCyuIysrh8YqS3FTQHYSEsfxu6VJSZV5FBXrd9ZVMZkzOSiUR3yA7q
-         EAktoUHQQMN5VidRCbgrtsBJqlD4u9AH8Dm6kJwWq5rluZLYfKVE6zRJIScYE3HNRgY2
-         xXDcJi1j75wi81PTvQQXY3CRCCF1fL1MkxWwNbdulab2B9AxUf4/X8cRgu5k9ittbDTD
-         fXbDLmVbTjoaPuzBDLcfgAcjPvA4XeY6rSQEgAl2eIpxNNDhoQSNJUtKymgqCZv9GaaG
-         30JA==
+        bh=zuSwOrhBwRQRJK3HV6p1JJE9Ot+MWPiWfnDhw3EwSv0=;
+        b=FGVT31NIzx7m9SF7Q0Dc1L8TsU4TH+S600fxoJ9YuNKFMCRHwmFra98AB2Ef9nWJf1
+         DdO6fY1kLxQN7xXToQ0cagEvPC5e3rIPjMa57igQ7ALrU7KEFwGy8Sf01gJS5nEzYmqW
+         CXiENe5g8DuLhFJs3XDaoGNmVm+B/96Z3ZM8E3t29/nhccr0eQMmyZOXdoD8IQjUfYOT
+         R7HEfUbnARG0IxRVTO1PQtn6Tr9423SMsfm7HZzZcmC9g6x0TSFhxYTa02JTETEz9BnF
+         xuNhZ/BylpxFyArCh30z8hjyE7pd0fgWBzKbByT81KkjA31jhxm2L56kOS/AROSiqlxv
+         Wryw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Fq0ktF/hBsnVFU7IozmhPFjtW2ydpZCCyFzM6I7LgOw=;
-        b=U6TNY6AgcJ+fxwUqgwrTZWCAM77oh4chTfP/irMDek5O/WJkjkMcoWq7uzRFnSr9hK
-         ETEu4H5cHaMe28WDiuLxtFdpfrFEG4dgHXoisvsISn69b2oJV0oiW0nUCdCPV4efQG/W
-         I2vD0av7ZHaZPpVBjWm97Mz0b12Wv+Zy8bnGRQGP0gzYULKVb9Qxb1smiNmP/bCKNzbd
-         3/uB3mPQfsWiEL/uSiyP7DHlKhqZQ+GYrH25T5ilu5nx5c80oY4+JbMc7bIXK8caA37C
-         iX54GOYhEXq0psCTIylQwsQHYZ3F9WEvGHxHmqxl9CtawT97MqV+XAmNSuL7y9/AEL/S
-         sM7A==
-X-Gm-Message-State: APjAAAVDS+RFFoiFO1d8wEdH62Xn0+LOUaUWw1de6c0G1ZgXWcaXLLla
-        d5cgQx1F80CQMP4MhtgqkLxKFjvZ
-X-Google-Smtp-Source: APXvYqz//7Zz8md/vVO2OPMxigo9UdlkkrkEJTsuzTyBl7CXjyfMV9TJYqhZbR9u7wNriFPY1YaD/w==
-X-Received: by 2002:a17:90a:cb81:: with SMTP id a1mr189808pju.81.1565048130114;
-        Mon, 05 Aug 2019 16:35:30 -0700 (PDT)
+        bh=zuSwOrhBwRQRJK3HV6p1JJE9Ot+MWPiWfnDhw3EwSv0=;
+        b=DeTiwHHKNCx645ix/0mi/81J3v4bCJuaE2ijY+Dw5W/9MBcSlIBtIj3K1/c02tN14o
+         jOcCGNX0oFqhrNUbB2OClqNQw7qmpLLis1ckj0xDonLcO0pSjUFSHpMGsVgWIQDH2bdh
+         WPOpb6TPIzmmuA0QQgASqyKMWwjBY0Ke8GzPIy2VXizpwfXmV6aUHtBwmXCt61XDmiaT
+         muFcwWtukuz/NMbM2PvOevWwEhJ/fMxNBOBzz9mkgGLhsEzd17VpjmleyTisHveeYSwK
+         75tIO9KdAucmIyWVTPDfXky2+REEn7SDu1pydaz1FQlzSpKJYC+wE/1qsKhdis5RckRC
+         Ltmg==
+X-Gm-Message-State: APjAAAXqgtAN2/OzIbGEBFgj51IO01MGFLsAFYoGZuJPG+eH3+t0IHs6
+        VwuMldxTE0l0JChIK8mRah0PESay
+X-Google-Smtp-Source: APXvYqxK4pAauGaw8Udm7cWR+aa6q19pAm0uea65JLPXzYXqBuTFmmBzLFxGNrVU7vSGiVXiEq8cwQ==
+X-Received: by 2002:a17:902:8f81:: with SMTP id z1mr254403plo.290.1565048125076;
+        Mon, 05 Aug 2019 16:35:25 -0700 (PDT)
 Received: from majic.sklembedded.com (c-73-202-231-77.hsd1.ca.comcast.net. [73.202.231.77])
-        by smtp.googlemail.com with ESMTPSA id 30sm31296349pjk.17.2019.08.05.16.35.28
+        by smtp.googlemail.com with ESMTPSA id 30sm31296349pjk.17.2019.08.05.16.35.24
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 05 Aug 2019 16:35:29 -0700 (PDT)
+        Mon, 05 Aug 2019 16:35:24 -0700 (PDT)
 From:   Steve Longerbeam <slongerbeam@gmail.com>
 To:     linux-media@vger.kernel.org
 Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mickael Guene <mickael.guene@st.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devel@driverdev.osuosl.org (open list:STAGING SUBSYSTEM),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX
-        / MXC ARM ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 13/22] media: imx: mipi csi-2: Create media links in bound notifier
-Date:   Mon,  5 Aug 2019 16:34:56 -0700
-Message-Id: <20190805233505.21167-14-slongerbeam@gmail.com>
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 10/22] media: st-mipid02: Fix fwnode media link creation
+Date:   Mon,  5 Aug 2019 16:34:53 -0700
+Message-Id: <20190805233505.21167-11-slongerbeam@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190805233505.21167-1-slongerbeam@gmail.com>
 References: <20190805233505.21167-1-slongerbeam@gmail.com>
@@ -81,63 +73,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement a notifier bound op to register media links from the remote
-sub-device's source pad(s) to the mipi csi-2 receiver sink pad.
+mipid02_async_bound() passes the bound subdev's sd->fwnode to
+media_entity_get_fwnode_pad(). This is likely not an endpoint
+fwnode as required by media_entity_get_fwnode_pad(), for most
+subdevices it is the port parent of endpoint fwnode(s). This has only
+worked before because no entities have implemented the .get_fwnode_pad()
+op yet, and the default behavior of media_entity_get_fwnode_pad()
+was to ignore the passed fwnode and return the first pad that matches
+the given direction flags.
+
+Fix this by replacing the calls to media_entity_get_fwnode_pad() and
+media_create_pad_link() with a call to media_create_fwnode_pad_links().
+
+Fixes: 642bb5e88fed8 ("media: st-mipid02: MIPID02 CSI-2 to PARALLEL
+bridge driver")
 
 Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
 ---
- drivers/staging/media/imx/imx6-mipi-csi2.c | 24 ++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ drivers/media/i2c/st-mipid02.c | 20 ++++++--------------
+ 1 file changed, 6 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/staging/media/imx/imx6-mipi-csi2.c b/drivers/staging/media/imx/imx6-mipi-csi2.c
-index 408ee2765e77..5b2258156781 100644
---- a/drivers/staging/media/imx/imx6-mipi-csi2.c
-+++ b/drivers/staging/media/imx/imx6-mipi-csi2.c
-@@ -91,6 +91,11 @@ static inline struct csi2_dev *sd_to_dev(struct v4l2_subdev *sdev)
- 	return container_of(sdev, struct csi2_dev, sd);
- }
- 
-+static inline struct csi2_dev *notifier_to_dev(struct v4l2_async_notifier *n)
-+{
-+	return container_of(n, struct csi2_dev, notifier);
-+}
-+
- /*
-  * The required sequence of MIPI CSI-2 startup as specified in the i.MX6
-  * reference manual is as follows:
-@@ -573,6 +578,23 @@ static int csi2_parse_endpoint(struct device *dev,
- 	return 0;
- }
- 
-+static int csi2_notify_bound(struct v4l2_async_notifier *notifier,
-+			     struct v4l2_subdev *sd,
-+			     struct v4l2_async_subdev *asd)
-+{
-+	struct csi2_dev *csi2 = notifier_to_dev(notifier);
-+	struct media_pad *sink = &csi2->sd.entity.pads[CSI2_SINK_PAD];
-+
-+	return media_create_fwnode_pad_links(sink,
-+					     dev_fwnode(csi2->dev),
-+					     &sd->entity,
-+					     dev_fwnode(sd->dev), 0);
-+}
-+
-+static const struct v4l2_async_notifier_operations csi2_notify_ops = {
-+	.bound = csi2_notify_bound,
-+};
-+
- static int csi2_probe(struct platform_device *pdev)
+diff --git a/drivers/media/i2c/st-mipid02.c b/drivers/media/i2c/st-mipid02.c
+index 81285b8d5cfb..b26d5550874f 100644
+--- a/drivers/media/i2c/st-mipid02.c
++++ b/drivers/media/i2c/st-mipid02.c
+@@ -798,24 +798,16 @@ static int mipid02_async_bound(struct v4l2_async_notifier *notifier,
  {
- 	unsigned int sink_port = 0;
-@@ -646,6 +668,8 @@ static int csi2_probe(struct platform_device *pdev)
+ 	struct mipid02_dev *bridge = to_mipid02_dev(notifier->sd);
+ 	struct i2c_client *client = bridge->i2c_client;
+-	int source_pad;
+ 	int ret;
  
- 	v4l2_async_notifier_init(&csi2->notifier);
+ 	dev_dbg(&client->dev, "sensor_async_bound call %p", s_subdev);
  
-+	csi2->notifier.ops = &csi2_notify_ops;
-+
- 	ret = v4l2_async_register_fwnode_subdev(
- 		&csi2->sd, &csi2->notifier, sizeof(struct v4l2_async_subdev),
- 		&sink_port, 1, csi2_parse_endpoint);
+-	source_pad = media_entity_get_fwnode_pad(&s_subdev->entity,
+-						 s_subdev->fwnode,
+-						 MEDIA_PAD_FL_SOURCE);
+-	if (source_pad < 0) {
+-		dev_err(&client->dev, "Couldn't find output pad for subdev %s\n",
+-			s_subdev->name);
+-		return source_pad;
+-	}
+-
+-	ret = media_create_pad_link(&s_subdev->entity, source_pad,
+-				    &bridge->sd.entity, 0,
+-				    MEDIA_LNK_FL_ENABLED |
+-				    MEDIA_LNK_FL_IMMUTABLE);
++	ret = media_create_fwnode_pad_links(&bridge->sd.entity.pads[0],
++					    dev_fwnode(&client->dev),
++					    &s_subdev->entity,
++					    dev_fwnode(s_subdev->dev),
++					    MEDIA_LNK_FL_ENABLED |
++					    MEDIA_LNK_FL_IMMUTABLE);
+ 	if (ret) {
+ 		dev_err(&client->dev, "Couldn't create media link %d", ret);
+ 		return ret;
 -- 
 2.17.1
 
