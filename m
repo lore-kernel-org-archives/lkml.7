@@ -2,106 +2,79 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC11DC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC5EC32754
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A90A216B7
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:50:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44A5A2186A
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:50:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730541AbfHENuv (ORCPT
+        id S1730362AbfHENum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:50:51 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:58213 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728910AbfHENuu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:50:50 -0400
-X-Originating-IP: 82.246.155.60
-Received: from localhost (hy283-1-82-246-155-60.fbx.proxad.net [82.246.155.60])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 1708A20008;
-        Mon,  5 Aug 2019 13:50:44 +0000 (UTC)
-Date:   Mon, 5 Aug 2019 15:50:44 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Frank Wunderlich <frank-w@public-files.de>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Allison Randal <allison@lohutok.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Tianping . Fang" <tianping.fang@mediatek.com>,
-        Josef Friedl <josef.friedl@speed.at>
-Subject: Re: [PATCH v3 05/10] rtc: mt6397: add compatible for mt6323
-Message-ID: <20190805135044.GH3600@piout.net>
-References: <20190729174154.4335-1-frank-w@public-files.de>
- <20190729174154.4335-6-frank-w@public-files.de>
+        Mon, 5 Aug 2019 09:50:42 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:44550 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729845AbfHENu2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:50:28 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 20F3588411166E615543;
+        Mon,  5 Aug 2019 21:50:24 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.75) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 5 Aug 2019 21:50:13 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <jejb@linux.vnet.ibm.com>, <martin.petersen@oracle.com>
+CC:     <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>,
+        Xiang Chen <chenxiang66@hisilicon.com>,
+        "John Garry" <john.garry@huawei.com>
+Subject: [PATCH 08/15] scsi: hisi_sas: Make slot buf minimum allocation of PAGE_SIZE
+Date:   Mon, 5 Aug 2019 21:48:05 +0800
+Message-ID: <1565012892-75940-9-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
+In-Reply-To: <1565012892-75940-1-git-send-email-john.garry@huawei.com>
+References: <1565012892-75940-1-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190729174154.4335-6-frank-w@public-files.de>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.75]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/07/2019 19:41:49+0200, Frank Wunderlich wrote:
-> From: Josef Friedl <josef.friedl@speed.at>
-> 
-> use mt6397 rtc driver also for mt6323
-> compatible needed because of different rtc-base/size see part 7
+From: Xiang Chen <chenxiang66@hisilicon.com>
 
-I still don't think this is a good reason so I would remove that
-sentence. Also, it refers to part 7 which is an info that will not be
-available when looking at the git history.
+For a system with PAGE_SIZE of 16K or 64K, the size every time we want to
+alloc may be small like 4K, but for function dmam_alloc_coherent(), the
+least size it allocates is PAGE_SIZE, so it will waste much memory for the
+situation.
 
-> 
-> changes since v2: splitted this from v2.3 suggested-by Alexandre Belloni
-> 
+To solve the issue, limit the minimum allocation size of slot buf to
+PAGE_SIZE.
 
-Changelog after the --- marker please.
+Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+---
+ drivers/scsi/hisi_sas/hisi_sas_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Signed-off-by: Josef Friedl <josef.friedl@speed.at>
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> ---
->  drivers/rtc/rtc-mt6397.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-> index 9370b7fc9f81..21cd9cc8b4c7 100644
-> --- a/drivers/rtc/rtc-mt6397.c
-> +++ b/drivers/rtc/rtc-mt6397.c
-> @@ -325,6 +325,7 @@ static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_rtc_suspend,
->  			mt6397_rtc_resume);
-> 
->  static const struct of_device_id mt6397_rtc_of_match[] = {
-> +	{ .compatible = "mediatek,mt6323-rtc", },
->  	{ .compatible = "mediatek,mt6397-rtc", },
->  	{ }
->  };
-> --
-> 2.17.1
-> 
-
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
+index 7efa8dfa0cc1..39ae69e42d26 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_main.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+@@ -2389,7 +2389,7 @@ int hisi_sas_alloc(struct hisi_hba *hisi_hba)
+ 	else
+ 		sz_slot_buf_ru = sizeof(struct hisi_sas_slot_buf_table);
+ 	sz_slot_buf_ru = roundup(sz_slot_buf_ru, 64);
+-	s = lcm(max_command_entries_ru, sz_slot_buf_ru);
++	s = max(lcm(max_command_entries_ru, sz_slot_buf_ru), PAGE_SIZE);
+ 	blk_cnt = (max_command_entries_ru * sz_slot_buf_ru) / s;
+ 	slots_per_blk = s / sz_slot_buf_ru;
+ 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.17.1
+
