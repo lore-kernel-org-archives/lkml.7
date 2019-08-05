@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F329C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3EBCC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2740820880
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C05012075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:20:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011241;
-	bh=Y8PBpS1nYNHZhQZB7D/E6RDyOcPvA3yZ0fBim/2aaEM=;
+	s=default; t=1565011244;
+	bh=NiODZww1Lx7CncHNndOsLnpgx9qKu/NV6F80uKpbQqk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F5Zo2241xL+55Q+tpsAOEDoqJtjpze9bEdCN0B3GKp4mw1sSnkNQOpP/SXO+SKnp8
-	 sUhN1w71PjHi5qEgbgFCupbPv+Vope1rx7FPb9VSRr1BPUXe1KGYe8A9419NkQi6xz
-	 9vJsja8IB3/m2do+3XXrH7EJATUrvawHmogMYfLo=
+	b=d7SLgv8QbG75IJBXKigi6NnmsYgJY81TrcFsOGwTF989KIGoR/DFNxaNcHX0ki8rK
+	 a7WwzHhe/0a6mBgbeWMBAT/h5RWx4VeyhCYe9IG9tUQMAD0inqkHoQDFhCY66hJVVy
+	 QYLj6003IYQvN2v3zvbLSRDu2pHLqW6dak77co54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730297AbfHENUk (ORCPT
+        id S1730318AbfHENUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:20:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56660 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:20:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728977AbfHENUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:20:33 -0400
+        id S1729773AbfHENUj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:20:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EC472075B;
-        Mon,  5 Aug 2019 13:20:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A25522075B;
+        Mon,  5 Aug 2019 13:20:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011232;
-        bh=Y8PBpS1nYNHZhQZB7D/E6RDyOcPvA3yZ0fBim/2aaEM=;
+        s=default; t=1565011238;
+        bh=NiODZww1Lx7CncHNndOsLnpgx9qKu/NV6F80uKpbQqk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NcKTNuiSTTwunkPWKTeWjMCXVxOtdxIazp2g6FqlOo2RCi/p3bAqVWUYTtz9c1LPa
-         rosTxl1YCHlTa5rPIXd4JxWRaJpTJHTpscUMLJz3JbBbwAeEimTaZdmDG9pG4GysI4
-         ElLRAbAuYrwgc/YKKnmrDoGDPrw9Sn4X5qR7FQuo=
+        b=0xHXnB1S2VH7fBPIFI0lk+XyymZYIYquiKtO3WGs/C6fi7HU/A1p6jcbJpJI4Pkvz
+         PwxbFThzO9HPnXdw4MWe1B2zokKr/B06yCNEG3bGCW80ZWSvPChbsGqJFWg0QtUeWw
+         bgpeZLGhpjU57jPW5XtOzJVSSJGh0TmUOaEnJag4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Olof Johansson <olof@lixom.net>,
+        stable@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Olof Johansson <olof@lixom.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 015/131] firmware/psci: psci_checker: Park kthreads before stopping them
-Date:   Mon,  5 Aug 2019 15:01:42 +0200
-Message-Id: <20190805124952.458284431@linuxfoundation.org>
+Subject: [PATCH 5.2 017/131] arm64: qcom: qcs404: Add reset-cells to GCC node
+Date:   Mon,  5 Aug 2019 15:01:44 +0200
+Message-Id: <20190805124952.589825090@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -63,77 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 92e074acf6f7694e96204265eb18ac113f546e80 ]
+[ Upstream commit 0763d0c2273a3c72247d325c48fbac3d918d6b87 ]
 
-Since commit 85f1abe0019f ("kthread, sched/wait: Fix kthread_parkme()
-completion issue"), kthreads that are bound to a CPU must be parked
-before being stopped. At the moment the PSCI checker calls
-kthread_stop() directly on the suspend kthread, which triggers the
-following warning:
+This patch adds a reset-cells property to the gcc controller on the QCS404.
+Without this in place, we get warnings like the following if nodes reference
+a gcc reset:
 
-[    6.068288] WARNING: CPU: 1 PID: 1 at kernel/kthread.c:398 __kthread_bind_mask+0x20/0x78
-               ...
-[    6.190151] Call trace:
-[    6.192566]  __kthread_bind_mask+0x20/0x78
-[    6.196615]  kthread_unpark+0x74/0x80
-[    6.200235]  kthread_stop+0x44/0x1d8
-[    6.203769]  psci_checker+0x3bc/0x484
-[    6.207389]  do_one_initcall+0x48/0x260
-[    6.211180]  kernel_init_freeable+0x2c8/0x368
-[    6.215488]  kernel_init+0x10/0x100
-[    6.218935]  ret_from_fork+0x10/0x1c
-[    6.222467] ---[ end trace e05e22863d043cd3 ]---
+arch/arm64/boot/dts/qcom/qcs404.dtsi:261.38-310.5: Warning (resets_property):
+/soc@0/remoteproc@b00000: Missing property '#reset-cells' in node
+/soc@0/clock-controller@1800000 or bad phandle (referred from resets[0])
+  also defined at arch/arm64/boot/dts/qcom/qcs404-evb.dtsi:82.18-84.3
+  DTC     arch/arm64/boot/dts/qcom/qcs404-evb-4000.dtb
+arch/arm64/boot/dts/qcom/qcs404.dtsi:261.38-310.5: Warning (resets_property):
+/soc@0/remoteproc@b00000: Missing property '#reset-cells' in node
+/soc@0/clock-controller@1800000 or bad phandle (referred from resets[0])
+  also defined at arch/arm64/boot/dts/qcom/qcs404-evb.dtsi:82.18-84.3
 
-kthread_unpark() tries to bind the thread to its CPU and aborts with a
-WARN() if the thread wasn't in TASK_PARKED state. Park the kthreads
-before stopping them.
-
-Fixes: 85f1abe0019f ("kthread, sched/wait: Fix kthread_parkme() completion issue")
-Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Signed-off-by: Andy Gross <agross@kernel.org>
+Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Olof Johansson <olof@lixom.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/psci/psci_checker.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/qcom/qcs404.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/firmware/psci/psci_checker.c b/drivers/firmware/psci/psci_checker.c
-index 08c85099d4d0c..f3659443f8c2c 100644
---- a/drivers/firmware/psci/psci_checker.c
-+++ b/drivers/firmware/psci/psci_checker.c
-@@ -359,16 +359,16 @@ static int suspend_test_thread(void *arg)
- 	for (;;) {
- 		/* Needs to be set first to avoid missing a wakeup. */
- 		set_current_state(TASK_INTERRUPTIBLE);
--		if (kthread_should_stop()) {
--			__set_current_state(TASK_RUNNING);
-+		if (kthread_should_park())
- 			break;
--		}
- 		schedule();
- 	}
+diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+index ffedf9640af7d..65a2cbeb28bec 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+@@ -383,6 +383,7 @@
+ 			compatible = "qcom,gcc-qcs404";
+ 			reg = <0x01800000 0x80000>;
+ 			#clock-cells = <1>;
++			#reset-cells = <1>;
  
- 	pr_info("CPU %d suspend test results: success %d, shallow states %d, errors %d\n",
- 		cpu, nb_suspend, nb_shallow_sleep, nb_err);
- 
-+	kthread_parkme();
-+
- 	return nb_err;
- }
- 
-@@ -433,8 +433,10 @@ static int suspend_tests(void)
- 
- 
- 	/* Stop and destroy all threads, get return status. */
--	for (i = 0; i < nb_threads; ++i)
-+	for (i = 0; i < nb_threads; ++i) {
-+		err += kthread_park(threads[i]);
- 		err += kthread_stop(threads[i]);
-+	}
-  out:
- 	cpuidle_resume_and_unlock();
- 	kfree(threads);
+ 			assigned-clocks = <&gcc GCC_APSS_AHB_CLK_SRC>;
+ 			assigned-clock-rates = <19200000>;
 -- 
 2.20.1
 
