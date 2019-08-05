@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1645C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC26C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 887AC20644
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0613820651
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:27:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011625;
-	bh=q4cx6ERxCg35OXauZh1EdpLoel4i0GeKje0usDm2w3w=;
+	s=default; t=1565011634;
+	bh=xpJM/gqp3zYrSfs70sHH80p2hZCGqfxlZBzlDuDyikQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g2kvGc/Be//WVeGkNMcUjCHRKYOKPz5pH5s49b23mP1qGF6A9NxufIqnawmoCARQh
-	 f4igVj4xGD1LERm5AKH9gCXVUGfxIMRHTi+DJQnSf9iwQJPo7rGfu44NdP41MNF0mY
-	 HfC/rKOzxSwTG82CfeYssTvvjB+9F8D0rxDNF/Q4=
+	b=CuHxJEBpT2Loq5kwghHZY3qEjftYSsp1RSExntvp2qskrpbeDp7ARyWE20MO/UnZ/
+	 fL9tjsP+1rBKXihZuAjsh0mHl0pWJTrBsEZTy6/dDR8TLrNvhChJUQWXUX3qhj1igc
+	 HvfXFvRUZk0XtquNqcFtDhAGI50M2/PawqwhMIQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730776AbfHEN1E (ORCPT
+        id S1730932AbfHEN1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:27:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33922 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:27:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730716AbfHENZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:25:24 -0400
+        id S1730189AbfHENZN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:25:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 969CE20644;
-        Mon,  5 Aug 2019 13:25:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 576FE20644;
+        Mon,  5 Aug 2019 13:25:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011523;
-        bh=q4cx6ERxCg35OXauZh1EdpLoel4i0GeKje0usDm2w3w=;
+        s=default; t=1565011512;
+        bh=xpJM/gqp3zYrSfs70sHH80p2hZCGqfxlZBzlDuDyikQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lkiy3Y5BfViM3KngXBMDVyFRW76mYC4E3AuEHE+ewlfc0E97TFTm3O4YcmXV4DYHF
-         U/aeeOk9SzCr8kvKDhmHodMbUr/eEale/MDkRUPl+pY2gQ4IrihrLrE1Qt3KuGxbqL
-         Aml3dJTQItzvc97+r6koudeX6C+OeZ9BY00K753c=
+        b=yKeqRwbqXoYBlzX7wfNiHiZkV52HFJFESa68nYxWSSXDFcIuUu/MlsR3JRHuRAc+6
+         D35tMl80icwIIfiiYXsSHiTvsMiXWQI8Jc2KxFVcaoxNvEGvvlxn3l8HZNKYWcBq0R
+         BeWzW3Dk4EGLhqwfQ8B2N7euLqHnCdHpzlZOopfM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>
-Subject: [PATCH 5.2 121/131] RDMA/devices: Do not deadlock during client removal
-Date:   Mon,  5 Aug 2019 15:03:28 +0200
-Message-Id: <20190805125000.066370950@linuxfoundation.org>
+        stable@vger.kernel.org, linux-block@vger.kernel.org,
+        Ratna Manoj Bolla <manoj.br@gmail.com>, nbd@other.debian.org,
+        David Woodhouse <dwmw@amazon.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Munehisa Kamata <kamatam@amazon.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.2 117/131] nbd: replace kill_bdev() with __invalidate_device() again
+Date:   Mon,  5 Aug 2019 15:03:24 +0200
+Message-Id: <20190805124959.791932900@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -60,211 +63,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Munehisa Kamata <kamatam@amazon.com>
 
-commit 621e55ff5b8e0ab5d1063f0eae0ef3960bef8f6e upstream.
+commit 2b5c8f0063e4b263cf2de82029798183cf85c320 upstream.
 
-lockdep reports:
+Commit abbbdf12497d ("replace kill_bdev() with __invalidate_device()")
+once did this, but 29eaadc03649 ("nbd: stop using the bdev everywhere")
+resurrected kill_bdev() and it has been there since then. So buffer_head
+mappings still get killed on a server disconnection, and we can still
+hit the BUG_ON on a filesystem on the top of the nbd device.
 
-   WARNING: possible circular locking dependency detected
+  EXT4-fs (nbd0): mounted filesystem with ordered data mode. Opts: (null)
+  block nbd0: Receive control failed (result -32)
+  block nbd0: shutting down sockets
+  print_req_error: I/O error, dev nbd0, sector 66264 flags 3000
+  EXT4-fs warning (device nbd0): htree_dirblock_to_tree:979: inode #2: lblock 0: comm ls: error -5 reading directory block
+  print_req_error: I/O error, dev nbd0, sector 2264 flags 3000
+  EXT4-fs error (device nbd0): __ext4_get_inode_loc:4690: inode #2: block 283: comm ls: unable to read itable block
+  EXT4-fs error (device nbd0) in ext4_reserve_inode_write:5894: IO failure
+  ------------[ cut here ]------------
+  kernel BUG at fs/buffer.c:3057!
+  invalid opcode: 0000 [#1] SMP PTI
+  CPU: 7 PID: 40045 Comm: jbd2/nbd0-8 Not tainted 5.1.0-rc3+ #4
+  Hardware name: Amazon EC2 m5.12xlarge/, BIOS 1.0 10/16/2017
+  RIP: 0010:submit_bh_wbc+0x18b/0x190
+  ...
+  Call Trace:
+   jbd2_write_superblock+0xf1/0x230 [jbd2]
+   ? account_entity_enqueue+0xc5/0xf0
+   jbd2_journal_update_sb_log_tail+0x94/0xe0 [jbd2]
+   jbd2_journal_commit_transaction+0x12f/0x1d20 [jbd2]
+   ? __switch_to_asm+0x40/0x70
+   ...
+   ? lock_timer_base+0x67/0x80
+   kjournald2+0x121/0x360 [jbd2]
+   ? remove_wait_queue+0x60/0x60
+   kthread+0xf8/0x130
+   ? commit_timeout+0x10/0x10 [jbd2]
+   ? kthread_bind+0x10/0x10
+   ret_from_fork+0x35/0x40
 
-   modprobe/302 is trying to acquire lock:
-   0000000007c8919c ((wq_completion)ib_cm){+.+.}, at: flush_workqueue+0xdf/0x990
+With __invalidate_device(), I no longer hit the BUG_ON with sync or
+unmount on the disconnected device.
 
-   but task is already holding lock:
-   000000002d3d2ca9 (&device->client_data_rwsem){++++}, at: remove_client_context+0x79/0xd0 [ib_core]
-
-   which lock already depends on the new lock.
-
-   the existing dependency chain (in reverse order) is:
-
-   -> #2 (&device->client_data_rwsem){++++}:
-          down_read+0x3f/0x160
-          ib_get_net_dev_by_params+0xd5/0x200 [ib_core]
-          cma_ib_req_handler+0x5f6/0x2090 [rdma_cm]
-          cm_process_work+0x29/0x110 [ib_cm]
-          cm_req_handler+0x10f5/0x1c00 [ib_cm]
-          cm_work_handler+0x54c/0x311d [ib_cm]
-          process_one_work+0x4aa/0xa30
-          worker_thread+0x62/0x5b0
-          kthread+0x1ca/0x1f0
-          ret_from_fork+0x24/0x30
-
-   -> #1 ((work_completion)(&(&work->work)->work)){+.+.}:
-          process_one_work+0x45f/0xa30
-          worker_thread+0x62/0x5b0
-          kthread+0x1ca/0x1f0
-          ret_from_fork+0x24/0x30
-
-   -> #0 ((wq_completion)ib_cm){+.+.}:
-          lock_acquire+0xc8/0x1d0
-          flush_workqueue+0x102/0x990
-          cm_remove_one+0x30e/0x3c0 [ib_cm]
-          remove_client_context+0x94/0xd0 [ib_core]
-          disable_device+0x10a/0x1f0 [ib_core]
-          __ib_unregister_device+0x5a/0xe0 [ib_core]
-          ib_unregister_device+0x21/0x30 [ib_core]
-          mlx5_ib_stage_ib_reg_cleanup+0x9/0x10 [mlx5_ib]
-          __mlx5_ib_remove+0x3d/0x70 [mlx5_ib]
-          mlx5_ib_remove+0x12e/0x140 [mlx5_ib]
-          mlx5_remove_device+0x144/0x150 [mlx5_core]
-          mlx5_unregister_interface+0x3f/0xf0 [mlx5_core]
-          mlx5_ib_cleanup+0x10/0x3a [mlx5_ib]
-          __x64_sys_delete_module+0x227/0x350
-          do_syscall_64+0xc3/0x6a4
-          entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Which is due to the read side of the client_data_rwsem being obtained
-recursively through a work queue flush during cm client removal.
-
-The lock is being held across the remove in remove_client_context() so
-that the function is a fence, once it returns the client is removed. This
-is required so that the two callers do not proceed with destruction until
-the client completes removal.
-
-Instead of using client_data_rwsem use the existing device unregistration
-refcount and add a similar client unregistration (client->uses) refcount.
-
-This will fence the two unregistration paths without holding any locks.
-
-Cc: <stable@vger.kernel.org>
-Fixes: 921eab1143aa ("RDMA/devices: Re-organize device.c locking")
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Link: https://lore.kernel.org/r/20190731081841.32345-2-leon@kernel.org
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+Fixes: 29eaadc03649 ("nbd: stop using the bdev everywhere")
+Cc: linux-block@vger.kernel.org
+Cc: Ratna Manoj Bolla <manoj.br@gmail.com>
+Cc: nbd@other.debian.org
+Cc: stable@vger.kernel.org
+Cc: David Woodhouse <dwmw@amazon.com>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Munehisa Kamata <kamatam@amazon.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/device.c |   54 +++++++++++++++++++++++++++++----------
- include/rdma/ib_verbs.h          |    3 ++
- 2 files changed, 44 insertions(+), 13 deletions(-)
+ drivers/block/nbd.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/infiniband/core/device.c
-+++ b/drivers/infiniband/core/device.c
-@@ -98,6 +98,12 @@ static LIST_HEAD(client_list);
- static DEFINE_XARRAY_FLAGS(clients, XA_FLAGS_ALLOC);
- static DECLARE_RWSEM(clients_rwsem);
- 
-+static void ib_client_put(struct ib_client *client)
-+{
-+	if (refcount_dec_and_test(&client->uses))
-+		complete(&client->uses_zero);
-+}
-+
- /*
-  * If client_data is registered then the corresponding client must also still
-  * be registered.
-@@ -651,6 +657,14 @@ static int add_client_context(struct ib_
- 
- 	down_write(&device->client_data_rwsem);
- 	/*
-+	 * So long as the client is registered hold both the client and device
-+	 * unregistration locks.
-+	 */
-+	if (!refcount_inc_not_zero(&client->uses))
-+		goto out_unlock;
-+	refcount_inc(&device->refcount);
-+
-+	/*
- 	 * Another caller to add_client_context got here first and has already
- 	 * completely initialized context.
- 	 */
-@@ -673,6 +687,9 @@ static int add_client_context(struct ib_
- 	return 0;
- 
- out:
-+	ib_device_put(device);
-+	ib_client_put(client);
-+out_unlock:
- 	up_write(&device->client_data_rwsem);
- 	return ret;
- }
-@@ -692,7 +709,7 @@ static void remove_client_context(struct
- 	client_data = xa_load(&device->client_data, client_id);
- 	xa_clear_mark(&device->client_data, client_id, CLIENT_DATA_REGISTERED);
- 	client = xa_load(&clients, client_id);
--	downgrade_write(&device->client_data_rwsem);
-+	up_write(&device->client_data_rwsem);
- 
- 	/*
- 	 * Notice we cannot be holding any exclusive locks when calling the
-@@ -702,17 +719,13 @@ static void remove_client_context(struct
- 	 *
- 	 * For this reason clients and drivers should not call the
- 	 * unregistration functions will holdling any locks.
--	 *
--	 * It tempting to drop the client_data_rwsem too, but this is required
--	 * to ensure that unregister_client does not return until all clients
--	 * are completely unregistered, which is required to avoid module
--	 * unloading races.
- 	 */
- 	if (client->remove)
- 		client->remove(device, client_data);
- 
- 	xa_erase(&device->client_data, client_id);
--	up_read(&device->client_data_rwsem);
-+	ib_device_put(device);
-+	ib_client_put(client);
- }
- 
- static int alloc_port_data(struct ib_device *device)
-@@ -1696,6 +1709,8 @@ int ib_register_client(struct ib_client
- 	unsigned long index;
- 	int ret;
- 
-+	refcount_set(&client->uses, 1);
-+	init_completion(&client->uses_zero);
- 	ret = assign_client_id(client);
- 	if (ret)
- 		return ret;
-@@ -1731,16 +1746,29 @@ void ib_unregister_client(struct ib_clie
- 	unsigned long index;
- 
- 	down_write(&clients_rwsem);
-+	ib_client_put(client);
- 	xa_clear_mark(&clients, client->client_id, CLIENT_REGISTERED);
- 	up_write(&clients_rwsem);
-+
-+	/* We do not want to have locks while calling client->remove() */
-+	rcu_read_lock();
-+	xa_for_each (&devices, index, device) {
-+		if (!ib_device_try_get(device))
-+			continue;
-+		rcu_read_unlock();
-+
-+		remove_client_context(device, client->client_id);
-+
-+		ib_device_put(device);
-+		rcu_read_lock();
-+	}
-+	rcu_read_unlock();
-+
- 	/*
--	 * Every device still known must be serialized to make sure we are
--	 * done with the client callbacks before we return.
-+	 * remove_client_context() is not a fence, it can return even though a
-+	 * removal is ongoing. Wait until all removals are completed.
- 	 */
--	down_read(&devices_rwsem);
--	xa_for_each (&devices, index, device)
--		remove_client_context(device, client->client_id);
--	up_read(&devices_rwsem);
-+	wait_for_completion(&client->uses_zero);
- 
- 	down_write(&clients_rwsem);
- 	list_del(&client->list);
---- a/include/rdma/ib_verbs.h
-+++ b/include/rdma/ib_verbs.h
-@@ -2722,6 +2722,9 @@ struct ib_client {
- 			const union ib_gid *gid,
- 			const struct sockaddr *addr,
- 			void *client_data);
-+
-+	refcount_t uses;
-+	struct completion uses_zero;
- 	struct list_head list;
- 	u32 client_id;
- 
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -1229,7 +1229,7 @@ static void nbd_clear_sock_ioctl(struct
+ 				 struct block_device *bdev)
+ {
+ 	sock_shutdown(nbd);
+-	kill_bdev(bdev);
++	__invalidate_device(bdev, true);
+ 	nbd_bdev_reset(bdev);
+ 	if (test_and_clear_bit(NBD_HAS_CONFIG_REF,
+ 			       &nbd->config->runtime_flags))
 
 
