@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B94FFC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C77C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FCCD20657
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3758120657
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:27:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011651;
-	bh=yqDscHPa/fiMt6yGAlf9JVuAFonzA6QS9rUXGTVI+Uk=;
+	s=default; t=1565011654;
+	bh=qZUoQsNFF8x1QEte1TYFLVH5sAbJwW4O0DOzKBslNRs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jb+RuRU/FrtwfNBF7U62WMYuk/oaNRRH9o2ab8yA7potqPqcXZ7+gtbNhQ3Qqe/Cg
-	 iOkQ3WQTYyppsnqMgEM9H6PQuzBPKOB60hmENt/NI19PzYiSWymwrXWdcSXVm7f2VL
-	 mBNgIlqjALK+fQEglKsfobxy+GHjRsxIN6Rhs+mE=
+	b=ZEDdAqP3rB6/HtKv4LVkftIJtJT1/Sn+t7nez/8GjJE+m5YC0nDh1kX9oQ//z+xJI
+	 /1Xc+D/Xn6w5bvfThsQwNDcJGZj0yoWmbp3cpY6chKei53CoYic28856MhPySYMK1k
+	 /ntsc9XPcj4UxyFJ2hlxDQR27dQTcIZ3bFn02XGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730763AbfHENYo (ORCPT
+        id S1730737AbfHEN1c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:24:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33178 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:27:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731055AbfHENYj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:24:39 -0400
+        id S1731071AbfHENYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:24:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82FE120651;
-        Mon,  5 Aug 2019 13:24:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C550920644;
+        Mon,  5 Aug 2019 13:24:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011479;
-        bh=yqDscHPa/fiMt6yGAlf9JVuAFonzA6QS9rUXGTVI+Uk=;
+        s=default; t=1565011484;
+        bh=qZUoQsNFF8x1QEte1TYFLVH5sAbJwW4O0DOzKBslNRs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=npwbM9z+R2F3BYZkJGoVjwAYNWxxt8zxuVo0cMblXTdrfP2fXlP7tkaKnqVQE/B38
-         hnB6qgNlVKQsLthy2Mk0AS5JNgADubNrVRevQ8uZ9HhjzuJMyp0ELzU0v3t90N9q9u
-         5myvdssaBFZoLX0eWgB8mTMmfJYQU67DBDx4wuWM=
+        b=zkmDqtu80jOfUcowf2CUm882ROvb66gsgNleXGf0puHiTQX9jug/R6NN+DmNywfF5
+         WoDmJkWwIsUoO0YyQfLXxxEkhpT4n/uQS+ic3u2qXEJ0OIzTtHu5lSoqIT+KdKmDF8
+         S+IJfFkOvPcL2NvaiAGht7Gv0bQzGiys4dfxl8Mk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: [PATCH 5.2 076/131] kbuild: initialize CLANG_FLAGS correctly in the top Makefile
-Date:   Mon,  5 Aug 2019 15:02:43 +0200
-Message-Id: <20190805124956.848367443@linuxfoundation.org>
+        stable@vger.kernel.org, Milan Broz <gmazyland@gmail.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH 5.2 078/131] tpm: Fix null pointer dereference on chip register error path
+Date:   Mon,  5 Aug 2019 15:02:45 +0200
+Message-Id: <20190805124957.042182129@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -61,57 +59,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Milan Broz <gmazyland@gmail.com>
 
-commit 5241ab4cf42d3a93b933b55d3d53f43049081fa1 upstream.
+commit 1e5ac6300a07ceecfc70a893ebef3352be21e6f8 upstream.
 
-CLANG_FLAGS is initialized by the following line:
+If clk_enable is not defined and chip initialization
+is canceled code hits null dereference.
 
-  CLANG_FLAGS     := --target=$(notdir $(CROSS_COMPILE:%-=%))
+Easily reproducible with vTPM init fail:
+  swtpm chardev --tpmstate dir=nonexistent_dir --tpm2 --vtpm-proxy
 
-..., which is run only when CROSS_COMPILE is set.
+BUG: kernel NULL pointer dereference, address: 00000000
+...
+Call Trace:
+ tpm_chip_start+0x9d/0xa0 [tpm]
+ tpm_chip_register+0x10/0x1a0 [tpm]
+ vtpm_proxy_work+0x11/0x30 [tpm_vtpm_proxy]
+ process_one_work+0x214/0x5a0
+ worker_thread+0x134/0x3e0
+ ? process_one_work+0x5a0/0x5a0
+ kthread+0xd4/0x100
+ ? process_one_work+0x5a0/0x5a0
+ ? kthread_park+0x90/0x90
+ ret_from_fork+0x19/0x24
 
-Some build targets (bindeb-pkg etc.) recurse to the top Makefile.
-
-When you build the kernel with Clang but without CROSS_COMPILE,
-the same compiler flags such as -no-integrated-as are accumulated
-into CLANG_FLAGS.
-
-If you run 'make CC=clang' and then 'make CC=clang bindeb-pkg',
-Kbuild will recompile everything needlessly due to the build command
-change.
-
-Fix this by correctly initializing CLANG_FLAGS.
-
-Fixes: 238bcbc4e07f ("kbuild: consolidate Clang compiler flags")
-Cc: <stable@vger.kernel.org> # v5.0+
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Nick Desaulniers <ndesaulniers@google.com>
+Fixes: 719b7d81f204 ("tpm: introduce tpm_chip_start() and tpm_chip_stop()")
+Cc: stable@vger.kernel.org # v5.1+
+Signed-off-by: Milan Broz <gmazyland@gmail.com>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Makefile |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/char/tpm/tpm-chip.c |   23 ++++++++++++++++-------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
 
---- a/Makefile
-+++ b/Makefile
-@@ -467,6 +467,7 @@ KBUILD_CFLAGS_MODULE  := -DMODULE
- KBUILD_LDFLAGS_MODULE := -T $(srctree)/scripts/module-common.lds
- KBUILD_LDFLAGS :=
- GCC_PLUGINS_CFLAGS :=
-+CLANG_FLAGS :=
+--- a/drivers/char/tpm/tpm-chip.c
++++ b/drivers/char/tpm/tpm-chip.c
+@@ -77,6 +77,18 @@ static int tpm_go_idle(struct tpm_chip *
+ 	return chip->ops->go_idle(chip);
+ }
  
- export ARCH SRCARCH CONFIG_SHELL HOSTCC KBUILD_HOSTCFLAGS CROSS_COMPILE AS LD CC
- export CPP AR NM STRIP OBJCOPY OBJDUMP PAHOLE KBUILD_HOSTLDFLAGS KBUILD_HOSTLDLIBS
-@@ -519,7 +520,7 @@ endif
++static void tpm_clk_enable(struct tpm_chip *chip)
++{
++	if (chip->ops->clk_enable)
++		chip->ops->clk_enable(chip, true);
++}
++
++static void tpm_clk_disable(struct tpm_chip *chip)
++{
++	if (chip->ops->clk_enable)
++		chip->ops->clk_enable(chip, false);
++}
++
+ /**
+  * tpm_chip_start() - power on the TPM
+  * @chip:	a TPM chip to use
+@@ -89,13 +101,12 @@ int tpm_chip_start(struct tpm_chip *chip
+ {
+ 	int ret;
  
- ifneq ($(shell $(CC) --version 2>&1 | head -n 1 | grep clang),)
- ifneq ($(CROSS_COMPILE),)
--CLANG_FLAGS	:= --target=$(notdir $(CROSS_COMPILE:%-=%))
-+CLANG_FLAGS	+= --target=$(notdir $(CROSS_COMPILE:%-=%))
- GCC_TOOLCHAIN_DIR := $(dir $(shell which $(CROSS_COMPILE)elfedit))
- CLANG_FLAGS	+= --prefix=$(GCC_TOOLCHAIN_DIR)
- GCC_TOOLCHAIN	:= $(realpath $(GCC_TOOLCHAIN_DIR)/..)
+-	if (chip->ops->clk_enable)
+-		chip->ops->clk_enable(chip, true);
++	tpm_clk_enable(chip);
+ 
+ 	if (chip->locality == -1) {
+ 		ret = tpm_request_locality(chip);
+ 		if (ret) {
+-			chip->ops->clk_enable(chip, false);
++			tpm_clk_disable(chip);
+ 			return ret;
+ 		}
+ 	}
+@@ -103,8 +114,7 @@ int tpm_chip_start(struct tpm_chip *chip
+ 	ret = tpm_cmd_ready(chip);
+ 	if (ret) {
+ 		tpm_relinquish_locality(chip);
+-		if (chip->ops->clk_enable)
+-			chip->ops->clk_enable(chip, false);
++		tpm_clk_disable(chip);
+ 		return ret;
+ 	}
+ 
+@@ -124,8 +134,7 @@ void tpm_chip_stop(struct tpm_chip *chip
+ {
+ 	tpm_go_idle(chip);
+ 	tpm_relinquish_locality(chip);
+-	if (chip->ops->clk_enable)
+-		chip->ops->clk_enable(chip, false);
++	tpm_clk_disable(chip);
+ }
+ EXPORT_SYMBOL_GPL(tpm_chip_stop);
+ 
 
 
