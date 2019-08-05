@@ -2,91 +2,71 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31AF9C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9310CC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 061462087B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:12:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62F9F2086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:13:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565007168;
-	bh=6p61YBrigsh6c3DdbGJboBrAdx42HdHFK34yib23crQ=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=CXWi9YaLmKq0JTgT/letLrgXlJbchPjr1vTbqd5OSIMkpIMldh7x37Aen7jSUOBmM
-	 Ye3QaDskH4f5vvooHyHaz2FrHNeZjo02wsIdZU5i6dvRd4TBjYJV7MJlukgvD43WBf
-	 GWOKplJgr7J8F/yDU2CQ6B4f99I+Op/+zUB2xxpQ=
+	s=default; t=1565007200;
+	bh=arDSwSwx9DPKLDnb31ij2wSMJ0HnKhWIs23mlSMx7O8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QecqU8ofOKt6oiLzt8fYICNP1CpxuvGMCRYIJ0SC+PNbUVM/0vFlcjcP+BD8W44TP
+	 SPGjFffvxbZW7V5IhaSP7kk8n3i7tV4nCQk7ca8+pO7xBRRAN6TGvQPYvMeae6QmjF
+	 jlIBsZUi7Wi6OuhNoM8V0q7j1/4EUGsUI+03VO2w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728649AbfHEMMq (ORCPT
+        id S1728674AbfHEMNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 08:12:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55998 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727553AbfHEMMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 08:12:46 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F5A72086D;
-        Mon,  5 Aug 2019 12:12:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565007165;
-        bh=6p61YBrigsh6c3DdbGJboBrAdx42HdHFK34yib23crQ=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=a7h/o3HHcs8Cr+t8AkTKNuTIvz23zMUQ4XBqfsz7eJhTxhczASKr9TbLI1fxBmuh4
-         t4OYPI5Ek0Bv0pQMGdHQQ29AvPD+JaBibq26hD0Iun6PGlabqB5N+WzTwf30WzZirc
-         A6ngax6fKWtdA1MBqm8sfPPuiRNHCEl6rVpwDhCs=
-Date:   Mon, 5 Aug 2019 14:12:40 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     =?ISO-8859-15?Q?Istv=E1n_V=E1radi?= <ivaradi@varadiistvan.hu>
-cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] HID: Add Saitek X52 to the HID IDs
-In-Reply-To: <20190724180806.5745-1-ivaradi@varadiistvan.hu>
-Message-ID: <nycvar.YFH.7.76.1908051411410.5899@cbobk.fhfr.pm>
-References: <20190724180806.5745-1-ivaradi@varadiistvan.hu>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Mon, 5 Aug 2019 08:13:19 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44478 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727349AbfHEMNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 08:13:18 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 86CCFB63C;
+        Mon,  5 Aug 2019 12:13:17 +0000 (UTC)
+Date:   Mon, 5 Aug 2019 14:13:14 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Is it safe to kmalloc a large size of memory in interrupt
+ handler?
+Message-ID: <20190805121314.GN7597@dhcp22.suse.cz>
+References: <CABXRUiSuZc+W7884ek9YifKdx1eiJ_pmyRM42KK0ZhSK9xTkFw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABXRUiSuZc+W7884ek9YifKdx1eiJ_pmyRM42KK0ZhSK9xTkFw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Jul 2019, István Váradi wrote:
+On Mon 05-08-19 19:57:54, Fuqian Huang wrote:
+> In the implementation of kmalloc.
+> when the allocated size is larger than KMALLOC_MAX_CACHE_SIZE,
+> it will call kmalloc_large to allocate the memory.
+> kmalloc_large ->
+> kmalloc_order_trace->kmalloc_order->alloc_pages->alloc_pages_current->alloc_pages_nodemask->get_page_from_freelist->node_reclaim->__node_reclaim->shrink_node->shrink_node_memcg->get_scan_count
 
-> The USB device ID of the Saitek X52 joystick is added as a
-> define to hid-ids.h.
-> 
-> Signed-off-by: István Váradi <ivaradi@varadiistvan.hu>
-> ---
->  drivers/hid/hid-ids.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-> index 0d695f8e1b2c..3a90962614ef 100644
-> --- a/drivers/hid/hid-ids.h
-> +++ b/drivers/hid/hid-ids.h
-> @@ -989,6 +989,7 @@
->  #define USB_DEVICE_ID_SAITEK_RAT7	0x0cd7
->  #define USB_DEVICE_ID_SAITEK_RAT9	0x0cfa
->  #define USB_DEVICE_ID_SAITEK_MMO7	0x0cd0
-> +#define USB_DEVICE_ID_SAITEK_X52	0x075c
->  
->  #define USB_VENDOR_ID_SAMSUNG		0x0419
->  #define USB_DEVICE_ID_SAMSUNG_IR_REMOTE	0x0001
+You shouldn't really get there when using GFP_NOWAIT/GFP_ATOMIC.
 
-István,
+> get_scan_count will call spin_unlock_irq which enables local interrupt.
+> As the local interrupt should be disabled in the interrupt handler.
+> It is safe to use kmalloc to allocate a large size of memory in
+> interrupt handler?
 
-thanks for the fix. I don't think it's necessary to have this as a 
-split-out change from the quirk addition. I've squashed the two patches 
-into one, and applied to for-5.3/upstream-fixes.
+It will work very unreliably because larger physically contiguous memory
+is not generally available without doing compaction after a longer
+runtime. In general I would recommend to use pre allocated buffers or
+defer the actual handling to a less restricted context if possible.
 
 -- 
-Jiri Kosina
+Michal Hocko
 SUSE Labs
-
