@@ -2,236 +2,88 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B120C32751
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2711C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5C332086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 820ED2086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:50:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729256AbfHENst (ORCPT
+        id S1729403AbfHENuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:48:49 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:51181 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbfHENst (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:48:49 -0400
-X-Originating-IP: 82.246.155.60
-Received: from localhost (hy283-1-82-246-155-60.fbx.proxad.net [82.246.155.60])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 7169F240015;
-        Mon,  5 Aug 2019 13:48:43 +0000 (UTC)
-Date:   Mon, 5 Aug 2019 15:48:42 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Frank Wunderlich <frank-w@public-files.de>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Allison Randal <allison@lohutok.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Tianping . Fang" <tianping.fang@mediatek.com>,
-        Josef Friedl <josef.friedl@speed.at>
-Subject: Re: [PATCH v3 03/10] rtc: mt6397: move some common definitions into
- rtc.h
-Message-ID: <20190805134842.GG3600@piout.net>
-References: <20190729174154.4335-1-frank-w@public-files.de>
- <20190729174154.4335-4-frank-w@public-files.de>
+        Mon, 5 Aug 2019 09:50:21 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:34658 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728815AbfHENuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:50:20 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id E507AC09D589F8D79A86;
+        Mon,  5 Aug 2019 21:50:18 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.75) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 5 Aug 2019 21:50:12 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <jejb@linux.vnet.ibm.com>, <martin.petersen@oracle.com>
+CC:     <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>, Luo Jiaxing <luojiaxing@huawei.com>,
+        John Garry <john.garry@huawei.com>
+Subject: [PATCH 03/15] scsi: hisi_sas: Fix pointer usage error in show debugfs IOST/ITCT
+Date:   Mon, 5 Aug 2019 21:48:00 +0800
+Message-ID: <1565012892-75940-4-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
+In-Reply-To: <1565012892-75940-1-git-send-email-john.garry@huawei.com>
+References: <1565012892-75940-1-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190729174154.4335-4-frank-w@public-files.de>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.75]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/07/2019 19:41:47+0200, Frank Wunderlich wrote:
-> From: Josef Friedl <josef.friedl@speed.at>
-> 
-> move code to separate header-file to reuse definitions later
-> in poweroff-driver (drivers/power/reset/mt6323-poweroff.c)
-> 
-> changes since v2: add missing commit-message
+From: Luo Jiaxing <luojiaxing@huawei.com>
 
-The changelog should be after the --- marker.
-> 
-> Suggested-by: Frank Wunderlich <frank-w@public-files.de>
-> Signed-off-by: Josef Friedl <josef.friedl@speed.at>
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> ---
->  drivers/rtc/rtc-mt6397.c       | 55 +-------------------------
->  include/linux/mfd/mt6397/rtc.h | 71 ++++++++++++++++++++++++++++++++++
->  2 files changed, 72 insertions(+), 54 deletions(-)
->  create mode 100644 include/linux/mfd/mt6397/rtc.h
-> 
-> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-> index b46ed4dc7015..c08ee5edf865 100644
-> --- a/drivers/rtc/rtc-mt6397.c
-> +++ b/drivers/rtc/rtc-mt6397.c
-> @@ -9,60 +9,7 @@
->  #include <linux/module.h>
->  #include <linux/regmap.h>
->  #include <linux/rtc.h>
-> -#include <linux/irqdomain.h>
-> -#include <linux/platform_device.h>
-> -#include <linux/of_address.h>
-> -#include <linux/of_irq.h>
-> -#include <linux/io.h>
-> -#include <linux/mfd/mt6397/core.h>
-> -
-> -#define RTC_BBPU		0x0000
-> -#define RTC_BBPU_CBUSY		BIT(6)
-> -
-> -#define RTC_WRTGR		0x003c
-> -
-> -#define RTC_IRQ_STA		0x0002
-> -#define RTC_IRQ_STA_AL		BIT(0)
-> -#define RTC_IRQ_STA_LP		BIT(3)
-> -
-> -#define RTC_IRQ_EN		0x0004
-> -#define RTC_IRQ_EN_AL		BIT(0)
-> -#define RTC_IRQ_EN_ONESHOT	BIT(2)
-> -#define RTC_IRQ_EN_LP		BIT(3)
-> -#define RTC_IRQ_EN_ONESHOT_AL	(RTC_IRQ_EN_ONESHOT | RTC_IRQ_EN_AL)
-> -
-> -#define RTC_AL_MASK		0x0008
-> -#define RTC_AL_MASK_DOW		BIT(4)
-> -
-> -#define RTC_TC_SEC		0x000a
-> -/* Min, Hour, Dom... register offset to RTC_TC_SEC */
-> -#define RTC_OFFSET_SEC		0
-> -#define RTC_OFFSET_MIN		1
-> -#define RTC_OFFSET_HOUR		2
-> -#define RTC_OFFSET_DOM		3
-> -#define RTC_OFFSET_DOW		4
-> -#define RTC_OFFSET_MTH		5
-> -#define RTC_OFFSET_YEAR		6
-> -#define RTC_OFFSET_COUNT	7
-> -
-> -#define RTC_AL_SEC		0x0018
-> -
-> -#define RTC_PDN2		0x002e
-> -#define RTC_PDN2_PWRON_ALARM	BIT(4)
-> -
-> -#define RTC_MIN_YEAR		1968
-> -#define RTC_BASE_YEAR		1900
-> -#define RTC_NUM_YEARS		128
-> -#define RTC_MIN_YEAR_OFFSET	(RTC_MIN_YEAR - RTC_BASE_YEAR)
-> -
-> -struct mt6397_rtc {
-> -	struct device		*dev;
-> -	struct rtc_device	*rtc_dev;
-> -	struct mutex		lock;
-> -	struct regmap		*regmap;
-> -	int			irq;
-> -	u32			addr_base;
-> -};
-> +#include <linux/mfd/mt6397/rtc.h>
-> 
->  static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
->  {
-> diff --git a/include/linux/mfd/mt6397/rtc.h b/include/linux/mfd/mt6397/rtc.h
-> new file mode 100644
-> index 000000000000..b702c29e8c74
-> --- /dev/null
-> +++ b/include/linux/mfd/mt6397/rtc.h
-> @@ -0,0 +1,71 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2014-2018 MediaTek Inc.
-> + *
-> + * Author: Tianping.Fang <tianping.fang@mediatek.com>
-> + *        Sean Wang <sean.wang@mediatek.com>
-> + */
-> +
-> +#ifndef _LINUX_MFD_MT6397_RTC_H_
-> +#define _LINUX_MFD_MT6397_RTC_H_
-> +
-> +#include <linux/jiffies.h>
-> +#include <linux/mutex.h>
-> +#include <linux/regmap.h>
-> +#include <linux/rtc.h>
-> +
-> +#define RTC_BBPU               0x0000
-> +#define RTC_BBPU_CBUSY         BIT(6)
-> +#define RTC_BBPU_KEY            (0x43 << 8)
-> +
-> +#define RTC_WRTGR              0x003c
-> +
-> +#define RTC_IRQ_STA            0x0002
-> +#define RTC_IRQ_STA_AL         BIT(0)
-> +#define RTC_IRQ_STA_LP         BIT(3)
-> +
-> +#define RTC_IRQ_EN             0x0004
-> +#define RTC_IRQ_EN_AL          BIT(0)
-> +#define RTC_IRQ_EN_ONESHOT     BIT(2)
-> +#define RTC_IRQ_EN_LP          BIT(3)
-> +#define RTC_IRQ_EN_ONESHOT_AL  (RTC_IRQ_EN_ONESHOT | RTC_IRQ_EN_AL)
-> +
-> +#define RTC_AL_MASK            0x0008
-> +#define RTC_AL_MASK_DOW                BIT(4)
-> +
-> +#define RTC_TC_SEC             0x000a
-> +/* Min, Hour, Dom... register offset to RTC_TC_SEC */
-> +#define RTC_OFFSET_SEC         0
-> +#define RTC_OFFSET_MIN         1
-> +#define RTC_OFFSET_HOUR                2
-> +#define RTC_OFFSET_DOM         3
-> +#define RTC_OFFSET_DOW         4
-> +#define RTC_OFFSET_MTH         5
-> +#define RTC_OFFSET_YEAR                6
-> +#define RTC_OFFSET_COUNT       7
-> +
-> +#define RTC_AL_SEC             0x0018
-> +
-> +#define RTC_PDN2               0x002e
-> +#define RTC_PDN2_PWRON_ALARM   BIT(4)
-> +
-> +#define RTC_MIN_YEAR           1968
-> +#define RTC_BASE_YEAR          1900
-> +#define RTC_NUM_YEARS          128
-> +#define RTC_MIN_YEAR_OFFSET    (RTC_MIN_YEAR - RTC_BASE_YEAR)
-> +
-> +#define MTK_RTC_POLL_DELAY_US  10
-> +#define MTK_RTC_POLL_TIMEOUT   (jiffies_to_usecs(HZ))
-> +
-> +struct mt6397_rtc {
-> +	struct device           *dev;
-> +	struct rtc_device       *rtc_dev;
-> +
-> +	/* Protect register access from multiple tasks */
-> +	struct mutex            lock;
-> +	struct regmap           *regmap;
-> +	int                     irq;
-> +	u32                     addr_base;
-> +};
-> +
-> +#endif /* _LINUX_MFD_MT6397_RTC_H_ */
-> --
-> 2.17.1
-> 
+Fix how the pointer is set in hisi_sas_debugfs_iost_show() and
+hisi_sas_debugfs_itct_show().
 
+Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+---
+ drivers/scsi/hisi_sas/hisi_sas_main.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
+index 54bbab7151c7..325ec4306794 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_main.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+@@ -2992,9 +2992,10 @@ static int hisi_sas_debugfs_iost_show(struct seq_file *s, void *p)
+ 	struct hisi_hba *hisi_hba = s->private;
+ 	struct hisi_sas_iost *debugfs_iost = hisi_hba->debugfs_iost;
+ 	int i, ret, max_command_entries = HISI_SAS_MAX_COMMANDS;
+-	__le64 *iost = &debugfs_iost->qw0;
+ 
+ 	for (i = 0; i < max_command_entries; i++, debugfs_iost++) {
++		__le64 *iost = &debugfs_iost->qw0;
++
+ 		ret = hisi_sas_show_row_64(s, i, sizeof(*debugfs_iost),
+ 					   iost);
+ 		if (ret)
+@@ -3022,9 +3023,10 @@ static int hisi_sas_debugfs_itct_show(struct seq_file *s, void *p)
+ 	int i, ret;
+ 	struct hisi_hba *hisi_hba = s->private;
+ 	struct hisi_sas_itct *debugfs_itct = hisi_hba->debugfs_itct;
+-	__le64 *itct = &debugfs_itct->qw0;
+ 
+ 	for (i = 0; i < HISI_SAS_MAX_ITCT_ENTRIES; i++, debugfs_itct++) {
++		__le64 *itct = &debugfs_itct->qw0;
++
+ 		ret = hisi_sas_show_row_64(s, i, sizeof(*debugfs_itct),
+ 					   itct);
+ 		if (ret)
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.17.1
+
