@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B03C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7F1C32754
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C5492087B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:07:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 934C621738
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:07:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010474;
-	bh=Y7H5Tx5TKs6oZOGrf2kI1xPvC93P3TzGFRr5OzZN/hU=;
+	s=default; t=1565010477;
+	bh=agc1PVtAORgXiE6ckLoFTP2zJuRjb4W6lkyVJlTVHyg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v6rghnfxkLu+fzRZ8y3T5NRkv8HQiRSaf8b0MlnHvMyZYFufENO2FBQbvKJXvaszr
-	 wHhQ/dYk5gH9eJbAlbakgbvXHEGNwKmGs3IFh007TwOTNR6yicxTUz/l2NelEstrS5
-	 Z0ZDJztaAJ5+hYzehI4OvRRXLNmo8PGC54j5kT7E=
+	b=OJse/FsBJikxHkVR1xJVUT7Ak4AQMhbpTLPxb2ywhIPZb1oJ9HiQqw8tgX+EjPN9a
+	 tAb6IESKN3f/f8SUVNMQz4CBuiVfhKM9CUtRRRJ25hfzBlk8so/cpwYd3bu8VT6mMv
+	 JvZhG3aiYHDe8bi/6SLGSelPZONDg4HiYG2g5DQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729893AbfHENHx (ORCPT
+        id S1729906AbfHENH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:07:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45558 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:07:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728965AbfHENHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:07:49 -0400
+        id S1729882AbfHENHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:07:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29FD02067D;
-        Mon,  5 Aug 2019 13:07:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B91492087B;
+        Mon,  5 Aug 2019 13:07:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010468;
-        bh=Y7H5Tx5TKs6oZOGrf2kI1xPvC93P3TzGFRr5OzZN/hU=;
+        s=default; t=1565010471;
+        bh=agc1PVtAORgXiE6ckLoFTP2zJuRjb4W6lkyVJlTVHyg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VdaR7pBKVL8LBKpUIbZv2+LbYqEgAEJ//VJ9gcEmLZwpEFrUFBD5g1RFPGMXoz02P
-         oevVkJ0yUt5Z4OkfmI5xarDlKGQG3ZmfxqXgpQG9zcD50bSC61sGV51QViWgCVdB37
-         3qU7o/mNTWRDTPsmDFvNZPDXAipzkGqqsgJKUGqQ=
+        b=Mg9g/rfUciPkQQi6ayY5sR0hSpZuN65oO6Ssw+Nou+8W4YZFzMRprrHmq4E7OUJ6e
+         GilfSh0CKdRnA+Mi5P+G5AhE97IVtg9aoeoU8U0MdQGekodNSminK0zrjiRiCQOY4e
+         +xf1V/IfgisNEHKL79BT2Bz7cVuEAgTREMrldcR8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cheng Jian <cj.chengjian@huawei.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        stable@vger.kernel.org, Prarit Bhargava <prarit@redhat.com>,
+        Barret Rhoden <brho@google.com>,
+        David Arcari <darcari@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 05/53] ftrace: Enable trampoline when rec count returns back to one
-Date:   Mon,  5 Aug 2019 15:02:30 +0200
-Message-Id: <20190805124928.616961161@linuxfoundation.org>
+Subject: [PATCH 4.14 06/53] kernel/module.c: Only return -EEXIST for modules that have finished loading
+Date:   Mon,  5 Aug 2019 15:02:31 +0200
+Message-Id: <20190805124928.729264842@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124927.973499541@linuxfoundation.org>
 References: <20190805124927.973499541@linuxfoundation.org>
@@ -60,103 +63,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a124692b698b00026a58d89831ceda2331b2e1d0 ]
+[ Upstream commit 6e6de3dee51a439f76eb73c22ae2ffd2c9384712 ]
 
-Custom trampolines can only be enabled if there is only a single ops
-attached to it. If there's only a single callback registered to a function,
-and the ops has a trampoline registered for it, then we can call the
-trampoline directly. This is very useful for improving the performance of
-ftrace and livepatch.
+Microsoft HyperV disables the X86_FEATURE_SMCA bit on AMD systems, and
+linux guests boot with repeated errors:
 
-If more than one callback is registered to a function, the general
-trampoline is used, and the custom trampoline is not restored back to the
-direct call even if all the other callbacks were unregistered and we are
-back to one callback for the function.
+amd64_edac_mod: Unknown symbol amd_unregister_ecc_decoder (err -2)
+amd64_edac_mod: Unknown symbol amd_register_ecc_decoder (err -2)
+amd64_edac_mod: Unknown symbol amd_report_gart_errors (err -2)
+amd64_edac_mod: Unknown symbol amd_unregister_ecc_decoder (err -2)
+amd64_edac_mod: Unknown symbol amd_register_ecc_decoder (err -2)
+amd64_edac_mod: Unknown symbol amd_report_gart_errors (err -2)
 
-To fix this, set FTRACE_FL_TRAMP flag if rec count is decremented
-to one, and the ops that left has a trampoline.
+The warnings occur because the module code erroneously returns -EEXIST
+for modules that have failed to load and are in the process of being
+removed from the module list.
 
-Testing After this patch :
+module amd64_edac_mod has a dependency on module edac_mce_amd.  Using
+modules.dep, systemd will load edac_mce_amd for every request of
+amd64_edac_mod.  When the edac_mce_amd module loads, the module has
+state MODULE_STATE_UNFORMED and once the module load fails and the state
+becomes MODULE_STATE_GOING.  Another request for edac_mce_amd module
+executes and add_unformed_module() will erroneously return -EEXIST even
+though the previous instance of edac_mce_amd has MODULE_STATE_GOING.
+Upon receiving -EEXIST, systemd attempts to load amd64_edac_mod, which
+fails because of unknown symbols from edac_mce_amd.
 
-insmod livepatch_unshare_files.ko
-cat /sys/kernel/debug/tracing/enabled_functions
+add_unformed_module() must wait to return for any case other than
+MODULE_STATE_LIVE to prevent a race between multiple loads of
+dependent modules.
 
-	unshare_files (1) R I	tramp: 0xffffffffc0000000(klp_ftrace_handler+0x0/0xa0) ->ftrace_ops_assist_func+0x0/0xf0
-
-echo unshare_files > /sys/kernel/debug/tracing/set_ftrace_filter
-echo function > /sys/kernel/debug/tracing/current_tracer
-cat /sys/kernel/debug/tracing/enabled_functions
-
-	unshare_files (2) R I ->ftrace_ops_list_func+0x0/0x150
-
-echo nop > /sys/kernel/debug/tracing/current_tracer
-cat /sys/kernel/debug/tracing/enabled_functions
-
-	unshare_files (1) R I	tramp: 0xffffffffc0000000(klp_ftrace_handler+0x0/0xa0) ->ftrace_ops_assist_func+0x0/0xf0
-
-Link: http://lkml.kernel.org/r/1556969979-111047-1-git-send-email-cj.chengjian@huawei.com
-
-Signed-off-by: Cheng Jian <cj.chengjian@huawei.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+Signed-off-by: Barret Rhoden <brho@google.com>
+Cc: David Arcari <darcari@redhat.com>
+Cc: Jessica Yu <jeyu@kernel.org>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Jessica Yu <jeyu@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/ftrace.c | 28 +++++++++++++++-------------
- 1 file changed, 15 insertions(+), 13 deletions(-)
+ kernel/module.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index c4a0ad18c8593..7420f5f360947 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -1712,6 +1712,11 @@ static bool test_rec_ops_needs_regs(struct dyn_ftrace *rec)
- 	return  keep_regs;
- }
+diff --git a/kernel/module.c b/kernel/module.c
+index 94528b8910278..4b372c14d9a1f 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -3391,8 +3391,7 @@ static bool finished_loading(const char *name)
+ 	sched_annotate_sleep();
+ 	mutex_lock(&module_mutex);
+ 	mod = find_module_all(name, strlen(name), true);
+-	ret = !mod || mod->state == MODULE_STATE_LIVE
+-		|| mod->state == MODULE_STATE_GOING;
++	ret = !mod || mod->state == MODULE_STATE_LIVE;
+ 	mutex_unlock(&module_mutex);
  
-+static struct ftrace_ops *
-+ftrace_find_tramp_ops_any(struct dyn_ftrace *rec);
-+static struct ftrace_ops *
-+ftrace_find_tramp_ops_next(struct dyn_ftrace *rec, struct ftrace_ops *ops);
-+
- static bool __ftrace_hash_rec_update(struct ftrace_ops *ops,
- 				     int filter_hash,
- 				     bool inc)
-@@ -1840,15 +1845,17 @@ static bool __ftrace_hash_rec_update(struct ftrace_ops *ops,
- 			}
- 
- 			/*
--			 * If the rec had TRAMP enabled, then it needs to
--			 * be cleared. As TRAMP can only be enabled iff
--			 * there is only a single ops attached to it.
--			 * In otherwords, always disable it on decrementing.
--			 * In the future, we may set it if rec count is
--			 * decremented to one, and the ops that is left
--			 * has a trampoline.
-+			 * The TRAMP needs to be set only if rec count
-+			 * is decremented to one, and the ops that is
-+			 * left has a trampoline. As TRAMP can only be
-+			 * enabled if there is only a single ops attached
-+			 * to it.
- 			 */
--			rec->flags &= ~FTRACE_FL_TRAMP;
-+			if (ftrace_rec_count(rec) == 1 &&
-+			    ftrace_find_tramp_ops_any(rec))
-+				rec->flags |= FTRACE_FL_TRAMP;
-+			else
-+				rec->flags &= ~FTRACE_FL_TRAMP;
- 
- 			/*
- 			 * flags will be cleared in ftrace_check_record()
-@@ -2041,11 +2048,6 @@ static void print_ip_ins(const char *fmt, const unsigned char *p)
- 		printk(KERN_CONT "%s%02x", i ? ":" : "", p[i]);
- }
- 
--static struct ftrace_ops *
--ftrace_find_tramp_ops_any(struct dyn_ftrace *rec);
--static struct ftrace_ops *
--ftrace_find_tramp_ops_next(struct dyn_ftrace *rec, struct ftrace_ops *ops);
--
- enum ftrace_bug_type ftrace_bug_type;
- const void *ftrace_expected;
- 
+ 	return ret;
+@@ -3560,8 +3559,7 @@ again:
+ 	mutex_lock(&module_mutex);
+ 	old = find_module_all(mod->name, strlen(mod->name), true);
+ 	if (old != NULL) {
+-		if (old->state == MODULE_STATE_COMING
+-		    || old->state == MODULE_STATE_UNFORMED) {
++		if (old->state != MODULE_STATE_LIVE) {
+ 			/* Wait in case it fails to load. */
+ 			mutex_unlock(&module_mutex);
+ 			err = wait_event_interruptible(module_wq,
 -- 
 2.20.1
 
