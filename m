@@ -7,58 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62270C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 882F4C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 347F420644
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:26:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 539AF20644
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:26:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011590;
-	bh=g/aiK7KHlJwpW7n5tGJSO+VFCcemY6f1VKZdH/9n0VQ=;
+	s=default; t=1565011595;
+	bh=2iqeMQ6BayS9bS2utCwM9RRUDsXLJkPpLTa6/n5JQOk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WGS6mX/ST621QsclFQAcfGoO0Ql9lerShD5Q+i39u6g4jDnh19ZKBpiNKKw8T0+bV
-	 xhRlU3aMMV27rf1fmn/0PizapwYU7nUhXwhAwMdC+LX3SReXsVyzlELqOGANEtNu+y
-	 XIpsLAYt2n9sB9Fp/dbhnWXEBct1pdXjOKiBozc0=
+	b=SpbQvXSp67KWfZJJk4egb3KifG59o+ISRECEoLFk2+lfsB/BSuGgOcfMXLmJTkwnw
+	 MRsfcz0C+MyH6RbAoQixfzdQSORcnWa9J+to1vBukc0pjMJCmuV2kCdbOJazbOjA4i
+	 PQjAHIXnhsjnnPYSxtkXhXB2bpdFvvkGGJoMeTJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731153AbfHEN02 (ORCPT
+        id S1731396AbfHEN0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:26:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34786 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:26:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731412AbfHEN0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:26:13 -0400
+        id S1731372AbfHEN0F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:26:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3232620644;
-        Mon,  5 Aug 2019 13:26:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7029B20644;
+        Mon,  5 Aug 2019 13:26:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011572;
-        bh=g/aiK7KHlJwpW7n5tGJSO+VFCcemY6f1VKZdH/9n0VQ=;
+        s=default; t=1565011564;
+        bh=2iqeMQ6BayS9bS2utCwM9RRUDsXLJkPpLTa6/n5JQOk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tOMGCRdv8xYsmAPsJZdmk/DEHF//yMGrOLwKavtPMUad+ih6KAql+fM2j8RbCQysx
-         yV/6pal4hKOi+i537aY61hqabHQ39Ta4/Vf7le5NRDdo2cJ2ssZskJgvr3U5ZWFlEw
-         IQBFmrV4G4y7qL9GlP1E7n96drd7g5T+E+jmH/gE=
+        b=VDxmqlkamfkYSvWpWvAycQgGBRwZAWqNJCMUEtgfUDt4E7R3GGDfHea/NlJt6TVwf
+         NQJS/J4uhXBeSB05t2WPbPlIYgplq+UiFll7o1rFipN6PwsR0Wla9j8b8qEVL6F6oF
+         3RFtraxGyZnisFW+PLLBYaC1DZCAbtq+yU1wTLyw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.2 103/131] ubsan: build ubsan.c more conservatively
-Date:   Mon,  5 Aug 2019 15:03:10 +0200
-Message-Id: <20190805124958.858669410@linuxfoundation.org>
+        stable@vger.kernel.org, Sven Schnelle <svens@stackframe.org>,
+        Helge Deller <deller@gmx.de>
+Subject: [PATCH 5.2 110/131] parisc: Fix build of compressed kernel even with debug enabled
+Date:   Mon,  5 Aug 2019 15:03:17 +0200
+Message-Id: <20190805124959.330035289@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -71,70 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Helge Deller <deller@gmx.de>
 
-commit af700eaed0564d5d3963a7a51cb0843629d7fe3d upstream.
+commit 3fe6c873af2f2247544debdbe51ec29f690a2ccf upstream.
 
-objtool points out several conditions that it does not like, depending
-on the combination with other configuration options and compiler
-variants:
+With debug info enabled (CONFIG_DEBUG_INFO=y) the resulting vmlinux may get
+that huge that we need to increase the start addresss for the decompression
+text section otherwise one will face a linker error.
 
-stack protector:
-  lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch()+0xbf: call to __stack_chk_fail() with UACCESS enabled
-  lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch_v1()+0xbe: call to __stack_chk_fail() with UACCESS enabled
-
-stackleak plugin:
-  lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch()+0x4a: call to stackleak_track_stack() with UACCESS enabled
-  lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch_v1()+0x4a: call to stackleak_track_stack() with UACCESS enabled
-
-kasan:
-  lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch()+0x25: call to memcpy() with UACCESS enabled
-  lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch_v1()+0x25: call to memcpy() with UACCESS enabled
-
-The stackleak and kasan options just need to be disabled for this file
-as we do for other files already.  For the stack protector, we already
-attempt to disable it, but this fails on clang because the check is
-mixed with the gcc specific -fno-conserve-stack option.  According to
-Andrey Ryabinin, that option is not even needed, dropping it here fixes
-the stackprotector issue.
-
-Link: http://lkml.kernel.org/r/20190722125139.1335385-1-arnd@arndb.de
-Link: https://lore.kernel.org/lkml/20190617123109.667090-1-arnd@arndb.de/t/
-Link: https://lore.kernel.org/lkml/20190722091050.2188664-1-arnd@arndb.de/t/
-Fixes: d08965a27e84 ("x86/uaccess, ubsan: Fix UBSAN vs. SMAP")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: Sven Schnelle <svens@stackframe.org>
+Tested-by: Sven Schnelle <svens@stackframe.org>
+Cc: stable@vger.kernel.org # v4.14+
+Signed-off-by: Helge Deller <deller@gmx.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- lib/Makefile |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/parisc/boot/compressed/vmlinux.lds.S |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -278,7 +278,8 @@ obj-$(CONFIG_UCS2_STRING) += ucs2_string
- obj-$(CONFIG_UBSAN) += ubsan.o
+--- a/arch/parisc/boot/compressed/vmlinux.lds.S
++++ b/arch/parisc/boot/compressed/vmlinux.lds.S
+@@ -48,8 +48,8 @@ SECTIONS
+ 		*(.rodata.compressed)
+ 	}
  
- UBSAN_SANITIZE_ubsan.o := n
--CFLAGS_ubsan.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
-+KASAN_SANITIZE_ubsan.o := n
-+CFLAGS_ubsan.o := $(call cc-option, -fno-stack-protector) $(DISABLE_STACKLEAK_PLUGIN)
+-	/* bootloader code and data starts behind area of extracted kernel */
+-	. = (SZ_end - SZparisc_kernel_start + KERNEL_BINARY_TEXT_START);
++	/* bootloader code and data starts at least behind area of extracted kernel */
++	. = MAX(ABSOLUTE(.), (SZ_end - SZparisc_kernel_start + KERNEL_BINARY_TEXT_START));
  
- obj-$(CONFIG_SBITMAP) += sbitmap.o
- 
+ 	/* align on next page boundary */
+ 	. = ALIGN(4096);
 
 
