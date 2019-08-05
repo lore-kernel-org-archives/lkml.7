@@ -2,126 +2,114 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 268BEC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBD2C32751
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C22120880
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE4FB20880
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:53:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XfOUnVg5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729919AbfHERwI (ORCPT
+        id S1729547AbfHERx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 13:52:08 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:55953 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726559AbfHERwH (ORCPT
+        Mon, 5 Aug 2019 13:53:57 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:32861 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727830AbfHERx4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 13:52:07 -0400
-Received: by mail-io1-f71.google.com with SMTP id f22so93039841ioh.22
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 10:52:07 -0700 (PDT)
+        Mon, 5 Aug 2019 13:53:56 -0400
+Received: by mail-ed1-f66.google.com with SMTP id i11so16149586edq.0
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 10:53:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EZ8m1iqTznWb8vi5XPTFdc0ZbQusxg4ERCrVoyD9ISg=;
+        b=XfOUnVg5KOyMkHHbMLHfSyWW3eShErC1ZO7KaeuVE4c54XbH0wRE4McEEJQN83CJv7
+         vlEx46cX8pvZJ4EDx1NikoDX7WrjLnpOIy7MO2/56Otw5kV7wyI3yDsbvoN3ZpT5D/O6
+         ANPGCeMkcoH/YNWa/o+tvNrJPHEu96Dp3rLi8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=2CgEpJm4dc6plTMBewlYD9DVekR0ydsouo6c7dRQapo=;
-        b=cB2l6TvhOyeUCKU1sG5rvvaQBBB7ELaSZ2yppWMmX/BoiMPi0FE0cVgY0OvWM3opv/
-         5+ezvnq+LsOqJVsj9FFKwgWQRcuQxQ275sCFQ/IE3qdcejbAdWPQGZTsPNcN2YoYAEDv
-         3V1082YRJJjEg/4jT1Kbf7pVitM2peWDQrKpaoALbaGfL4UaCetNwDKXx2ESYN6QTJgK
-         7FJogd9ofbv+gX7AgVrOIMsKAuGM8X8vBMYpD/I0Js+43lWLxw8IHrHVeecSOOW8Wvnr
-         oa7m8S4ykkCXwUYiYjArMyiXoJ1otPhuzo17lzz1tVpKk0gFrUfbs6XBVcJjTeYAqxfQ
-         yS6w==
-X-Gm-Message-State: APjAAAVNWCmPLbWvkibAJr6slp7vgV/0VrnsgUxUEGHGMtBZR8124HLP
-        lGx3j3WWNx8qR6Ntd4AuRq+cq5u8d41EO8oJpVB87kD731KC
-X-Google-Smtp-Source: APXvYqxRmARPYj4Nqgkpm82Fmphfj/+y18LbFnUWEzBcKGuASRhHNGfHfj0iftlQPvnLkcEhCpUTKLHZyPFDxPqVcpvSANlleQ5f
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EZ8m1iqTznWb8vi5XPTFdc0ZbQusxg4ERCrVoyD9ISg=;
+        b=XcV2FwEYuX1L/LVREGXHO6XjIbYl0KRSbBF8rhzFF3ZOOiFR5L5o+maPCmov2EYCvo
+         rceC+yV2RwwN6E6hU5N7fwGanQHmnJNVOlR1EjKEuHt9lhEaEWzorq92UQ2sNoDLKQ7j
+         72520NZJOKPyCOnotOXpMUCE+7kLS1D4jTU+njxNWx+Xev7OT0MAjZgk1DZQdWSKNU14
+         Vy5ridf02M3PapSuLAgFK+174sY3YDpe4zzkL5s3MlBsrqZvxp1RVUyyimaGG4l7Iai3
+         LZgdSxhMBOHmRQnQ9pyuXi7qNBfqQ19bPu5m2SeLcuN5v0YxBdp8cqq79EJJywcoZvMY
+         XNDg==
+X-Gm-Message-State: APjAAAXpEvPRVTDEpDrchCSqRfE0BB1ZjBG6dPN2tFdGJ0aViVfrYv+L
+        G1zQhLr6a95EToql7raVu8NM81pT3hM=
+X-Google-Smtp-Source: APXvYqzHj0uub+Sc8EaYCuixsRYIlH85nY3Ytm888DV+7a49O1nNMQQOmRRn6dw9Z37uxVhCI1aaSA==
+X-Received: by 2002:a17:906:f211:: with SMTP id gt17mr117837949ejb.263.1565027634939;
+        Mon, 05 Aug 2019 10:53:54 -0700 (PDT)
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com. [209.85.128.49])
+        by smtp.gmail.com with ESMTPSA id hh16sm14106145ejb.18.2019.08.05.10.53.53
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 05 Aug 2019 10:53:53 -0700 (PDT)
+Received: by mail-wm1-f49.google.com with SMTP id f17so73836715wme.2
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 10:53:53 -0700 (PDT)
+X-Received: by 2002:a1c:7c11:: with SMTP id x17mr18318882wmc.22.1565027633048;
+ Mon, 05 Aug 2019 10:53:53 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:dd17:: with SMTP id f23mr1252383ioc.213.1565027527087;
- Mon, 05 Aug 2019 10:52:07 -0700 (PDT)
-Date:   Mon, 05 Aug 2019 10:52:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d0df7f058f625d13@google.com>
-Subject: WARNING: refcount bug in blk_mq_free_request (2)
-From:   syzbot <syzbot+f4316dab9d4518b755eb@syzkaller.appspotmail.com>
-To:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20190730191303.206365-1-thgarnie@chromium.org>
+ <20190730191303.206365-2-thgarnie@chromium.org> <20190805163202.GD18785@zn.tnic>
+ <201908050952.BC1F7C3@keescook> <20190805172733.GE18785@zn.tnic>
+In-Reply-To: <20190805172733.GE18785@zn.tnic>
+From:   Thomas Garnier <thgarnie@chromium.org>
+Date:   Mon, 5 Aug 2019 10:53:41 -0700
+X-Gmail-Original-Message-ID: <CAJcbSZEnPeCnkpc+uHmBWRJeaaw4TPy9HPkSGeriDb6mN6HR1g@mail.gmail.com>
+Message-ID: <CAJcbSZEnPeCnkpc+uHmBWRJeaaw4TPy9HPkSGeriDb6mN6HR1g@mail.gmail.com>
+Subject: Re: [PATCH v9 01/11] x86/crypto: Adapt assembly for PIE support
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon, Aug 5, 2019 at 10:27 AM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Mon, Aug 05, 2019 at 09:54:44AM -0700, Kees Cook wrote:
+> > I think there was some long-ago feedback from someone (Ingo?) about
+> > giving context for the patch so looking at one individually would let
+> > someone know that it was part of a larger series.
 
-syzbot found the following crash on:
+That's correct.
 
-HEAD commit:    e21a712a Linux 5.3-rc3
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10cf349a600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a4c9e9f08e9e8960
-dashboard link: https://syzkaller.appspot.com/bug?extid=f4316dab9d4518b755eb
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=117a1906600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11aa11aa600000
+>
+> Strange. But then we'd have to "mark" all patches which belong to a
+> larger series this way, no? And we don't do that...
+>
+> > Do you think it should just be dropped in each patch?
+>
+> I think reading it once is enough. If the change alone in some commit
+> message is not clear why it is being done - to support PIE - then sure,
+> by all means. But slapping it everywhere...
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+f4316dab9d4518b755eb@syzkaller.appspotmail.com
+I assume the last sentence could be removed in most cases.
 
-------------[ cut here ]------------
-refcount_t: underflow; use-after-free.
-WARNING: CPU: 1 PID: 16 at lib/refcount.c:190 refcount_sub_and_test_checked  
-lib/refcount.c:190 [inline]
-WARNING: CPU: 1 PID: 16 at lib/refcount.c:190  
-refcount_sub_and_test_checked+0x1d0/0x200 lib/refcount.c:180
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 16 Comm: ksoftirqd/1 Not tainted 5.3.0-rc3 #98
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  panic+0x2dc/0x755 kernel/panic.c:219
-  __warn.cold+0x20/0x4c kernel/panic.c:576
-  report_bug+0x263/0x2b0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1026
-RIP: 0010:refcount_sub_and_test_checked lib/refcount.c:190 [inline]
-RIP: 0010:refcount_sub_and_test_checked+0x1d0/0x200 lib/refcount.c:180
-Code: 1d 7e b3 64 06 31 ff 89 de e8 9c a3 35 fe 84 db 75 94 e8 53 a2 35 fe  
-48 c7 c7 80 02 c6 87 c6 05 5e b3 64 06 01 e8 18 15 07 fe <0f> 0b e9 75 ff  
-ff ff e8 34 a2 35 fe e9 6e ff ff ff 48 89 df e8 b7
-RSP: 0018:ffff8880a990fbb0 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000100 RSI: ffffffff815c3ba6 RDI: ffffed1015321f68
-RBP: ffff8880a990fc48 R08: ffff8880a9900440 R09: ffffed1015d24101
-R10: ffffed1015d24100 R11: ffff8880ae920807 R12: 00000000ffffffff
-R13: 0000000000000001 R14: ffff8880a990fc20 R15: 0000000000000000
-  refcount_dec_and_test_checked+0x1b/0x20 lib/refcount.c:220
-  blk_mq_free_request+0x3b8/0x580 block/blk-mq.c:524
-  __blk_mq_end_request block/blk-mq.c:550 [inline]
-  blk_mq_end_request+0x456/0x560 block/blk-mq.c:559
-  nbd_complete_rq+0x42/0x50 drivers/block/nbd.c:322
-  blk_done_softirq+0x2fe/0x4d0 block/blk-softirq.c:37
-  __do_softirq+0x262/0x98c kernel/softirq.c:292
-  run_ksoftirqd kernel/softirq.c:603 [inline]
-  run_ksoftirqd+0x8e/0x110 kernel/softirq.c:595
-  smpboot_thread_fn+0x6a3/0xa40 kernel/smpboot.c:165
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+>
+> --
+> Regards/Gruss,
+>     Boris.
+>
+> Good mailing practices for 400: avoid top-posting and trim the reply.
