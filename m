@@ -2,106 +2,113 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F888C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64561C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 184B8206C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 350E8216B7
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:03:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565017389;
-	bh=+Xz3bwnFyaWyqY9a37gwwnBNAogellhkHzcb0xquKIA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OsUPKqSYEFu2bkZ0Q8OlHFABBik1KnRFnpK/Pb69AMb+v//B70alt+36Ii69ZXBqu
-	 yc+rWc6USp4IPBY563qONstgA+5oPmpRmw1fiF9kXjn41doBq+zgAdYEeh0ycQugbb
-	 pGY1XyMoWkRaPtubbji1YqDNwrhgGe7KT5EvaIsU=
+	s=default; t=1565017395;
+	bh=mGMOj50fXp/v6QoYrHAatLsGom85kt/Zt7pjKIUrniY=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=Z3U3p1YYfl4NNyqCARqqN1G2yTF2ZLcMC13HD5ZNqh/kHjRTsLuCF4s7U7TL6kpds
+	 GIXyNS5rtAvBNgtDKoCQpasc2kkCy0FSD03L3u7wAVbKrQFcJWL7ZzqgJWNZvdZtqu
+	 w4A5LS+Tzbde0mDpY6hn4ZUO9x0fuMJFXDriOW+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729021AbfHEPDI (ORCPT
+        id S1729308AbfHEPDO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 11:03:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36544 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 11:03:14 -0400
+Received: from foss.arm.com ([217.140.110.172]:50452 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728043AbfHEPDH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 11:03:07 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46BBA206C1;
-        Mon,  5 Aug 2019 15:03:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565017386;
-        bh=+Xz3bwnFyaWyqY9a37gwwnBNAogellhkHzcb0xquKIA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=au5ozn6Us640CQSmT+gPP1wjfGcLKu+5AO3u44G76dCrxZWNyyj1JcwczmM6US+Dn
-         IiWu9CBPX4J8YB54hKk0nqGlb9y9AuROg+Rzr1ViY2xle0v+U4k59UI9YGzet5c7YZ
-         Uu9F7zgngDfMe+2b6iAurxNCW5MLhRAYDMZGoEO8=
-Date:   Mon, 5 Aug 2019 17:03:04 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Giridhar Prasath R <cristianoprasath@gmail.com>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: pi433 line over 80 characters in multiple places
-Message-ID: <20190805150304.GA746@kroah.com>
-References: <20190805000248.4902-1-cristianoprasath@gmail.com>
+        id S1728043AbfHEPDO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 11:03:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B9A8337;
+        Mon,  5 Aug 2019 08:03:13 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7BCC13F706;
+        Mon,  5 Aug 2019 08:03:11 -0700 (PDT)
+Subject: Re: [PATCH 3/5] MIPS: lantiq: add an irq_domain and irq_chip for EBU
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     tglx@linutronix.de, jason@lakedaemon.net, ralf@linux-mips.org,
+        paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org,
+        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        john@phrozen.org, Hauke Mehrtens <hauke@hauke-m.de>
+References: <20190727175315.28834-1-martin.blumenstingl@googlemail.com>
+ <20190727175315.28834-4-martin.blumenstingl@googlemail.com>
+ <86y30imq9p.wl-marc.zyngier@arm.com>
+ <CAFBinCCb4aTfuxaSrUp8xbUjjefi_qHOUJLjzH+acUTLY+6Geg@mail.gmail.com>
+ <86o916mx2m.wl-maz@kernel.org>
+ <CAFBinCDRBmG39Pa4XBa2Bu8K6GH7iz_YyKoJ795XKTnEz2b4VQ@mail.gmail.com>
+From:   Marc Zyngier <maz@kernel.org>
+Organization: Approximate
+Message-ID: <f779fc72-ec40-214b-eb81-d21d6b15d5b3@kernel.org>
+Date:   Mon, 5 Aug 2019 16:03:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190805000248.4902-1-cristianoprasath@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CAFBinCDRBmG39Pa4XBa2Bu8K6GH7iz_YyKoJ795XKTnEz2b4VQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 05:32:45AM +0530, Giridhar Prasath R wrote:
-> Fix the following checkpatch warnings:
+On 03/08/2019 18:33, Martin Blumenstingl wrote:
+> Hi Marc,
 > 
-> WARNING: line over 80 characters
-> FILE: drivers/staging/pi433/pi433_if.h
+> On Sat, Aug 3, 2019 at 11:12 AM Marc Zyngier <maz@kernel.org> wrote:
+>>
+>> Hi Martin,
+>>
+>> On Thu, 01 Aug 2019 18:42:42 +0100,
+>> Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
+>>
+>> [...]
+>>
+>>>>> +static void ltq_ebu_irq_handler(struct irq_desc *desc)
+>>>>> +{
+>>>>> +     struct irq_domain *domain = irq_desc_get_handler_data(desc);
+>>>>> +     struct irq_chip *irqchip = irq_desc_get_chip(desc);
+>>>>> +
+>>>>> +     chained_irq_enter(irqchip, desc);
+>>>>> +
+>>>>> +     generic_handle_irq(irq_find_mapping(domain, 0));
+>>>>
+>>>> Having an irqdomain for a single interrupt is a bit over the top... Is
+>>>> that for the convenience of the DT infrastructure?
+>>> yes, I did it to get DT support
+>>> please let me know if there's a "better" way (preferably with another
+>>> driver as example)
+>>
+>> To be honest, the chained handler is what troubles me the most. You
+>> normally would use such a construct if you had a multiplexer. In your
+>> case, you have a 1:1 relationship between input and output. It is just
+>> that this irqchip allows the trigger to be adapted, which normally
+>> calls for a hierarchical implementation.
+>>
+>> In your case, with only a single interrupt, it doesn't matter much
+>> though.
+> I see, thank you for the explanation
 > 
-> Signed-off-by: Giridhar Prasath R <cristianoprasath@gmail.com>
-> ---
->  drivers/staging/pi433/pi433_if.h | 23 ++++++++++++++++-------
->  1 file changed, 16 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/staging/pi433/pi433_if.h b/drivers/staging/pi433/pi433_if.h
-> index 9feb95c431cb..915bd96910c6 100644
-> --- a/drivers/staging/pi433/pi433_if.h
-> +++ b/drivers/staging/pi433/pi433_if.h
-> @@ -117,9 +117,14 @@ struct pi433_rx_cfg {
->  
->  	/* packet format */
->  	enum option_on_off	enable_sync;
-> -	enum option_on_off	enable_length_byte;	  /* should be used in combination with sync, only */
-> -	enum address_filtering	enable_address_filtering; /* operational with sync, only */
-> -	enum option_on_off	enable_crc;		  /* only operational, if sync on and fixed length or length byte is used */
-> +	/* should be used in combination with sync, only */
-> +	enum option_on_off	enable_length_byte;
-> +	/* operational with sync, only */
-> +	enum address_filtering	enable_address_filtering;
-> +	/* only operational,
-> +	 * if sync on and fixed length or length byte is used
-> +	 */
-> +	enum option_on_off	enable_crc;
->  
->  	__u8			sync_length;
->  	__u8			fixed_message_length;
-> @@ -132,10 +137,14 @@ struct pi433_rx_cfg {
->  
->  #define PI433_IOC_MAGIC			'r'
->  
-> -#define PI433_IOC_RD_TX_CFG	_IOR(PI433_IOC_MAGIC, PI433_TX_CFG_IOCTL_NR, char[sizeof(struct pi433_tx_cfg)])
-> -#define PI433_IOC_WR_TX_CFG	_IOW(PI433_IOC_MAGIC, PI433_TX_CFG_IOCTL_NR, char[sizeof(struct pi433_tx_cfg)])
-> +#define PI433_IOC_RD_TX_CFG	_IOR(PI433_IOC_MAGIC, PI433_TX_CFG_IOCTL_NR,\
-> +char[sizeof(struct pi433_tx_cfg)])
+> can you name a driver for a hierarchical irqchip driver that you
+> consider "clean" which I could use as reference?
 
-Ick, that does not look better :(
+Finding a "clean" driver is a challenge, as the world of IRQ controllers
+is where both HW and SW engineers (me included) love to "innovate" ;-).
 
-We write code for humans first, compilers second.
+I'd recommend you have a look at drivers/irqchip/irq-mtk-cirq.c, which
+is almost as simple as it gets.
 
-The original is fine, thanks.
+Thanks,
 
-greg k-h
+	M.
+-- 
+Jazz is not dead, it just smells funny...
