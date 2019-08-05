@@ -4,68 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E88C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:22:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 140B2C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 029C92067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:22:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8EE220880
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:22:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011366;
-	bh=abVtm5R4TC05I+ifUy0dsctYKFHWSDncpsOa7i8Gpus=;
+	s=default; t=1565011371;
+	bh=ZSE3dFkGhmtS4G/zJCdfivvA+aFzvFaTfpakk9idhlM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kOBOclxp8PPMpGipJvJ+RWBveJ1MA8SrEnDsM/yZnbMgUekOEeS6ksbkJCGyAVisC
-	 ZDbUXrdhffbW8Ld/1rPZYZcJy00SyHvJlGfS1WvYCDdWYc9FxkZPulGF0+Atp4BRaY
-	 2MXDN9ti9WX984zNM8dY3CA4P42jN/Zs7xalZyis=
+	b=p7J3gTTT9x7h7Yh+l8W0pjwXmdS2pjs8UwDm51Ah/hET76kH6NVGcFRkJ1KdTPxEG
+	 1j/D+zWWYUfRFLFpLtGBVjt42mlu38OzBZxXrqQDw0hTEJkCqdXqsRkYFxRgKFFLTL
+	 01tw9VN4/vnZWGWrbPWEMdr0+XRtP/7Q2cwTpZlU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730745AbfHENWo (ORCPT
+        id S1730773AbfHENWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:22:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59252 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:22:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729989AbfHENWk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:22:40 -0400
+        id S1730760AbfHENWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:22:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D2E421871;
-        Mon,  5 Aug 2019 13:22:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC1F52067D;
+        Mon,  5 Aug 2019 13:22:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011359;
-        bh=abVtm5R4TC05I+ifUy0dsctYKFHWSDncpsOa7i8Gpus=;
+        s=default; t=1565011367;
+        bh=ZSE3dFkGhmtS4G/zJCdfivvA+aFzvFaTfpakk9idhlM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F7aimuNtg43x3v1JjLY8GRgBYpwTfhi3Qdmlfp89RAabddXyHjrFwuTFwU8A2xNu7
-         D3X82YPWVPsJ2tv0PIZ9KRjUvKL1F5SEGe3/QLkDELdW5F4FysYrANQgL/Rhzz6UVy
-         Q1IuMTx9pc+iUA+pmtSUWVWgk5RwurCTXngRpowQ=
+        b=ULwbZgxLLtzQ4agOQQUFPrz7nnTLV82xQDSw+z4aTwJv+NnQtIOotbAT/l66ScO2U
+         ZJu/nmRycG7OTbVDN1QH06K/C2iVpj+QjUCyok9qv5q5ZAFZaOTHF5haTSBqb6B0fe
+         76HRUz8r5TBncYtV88DUkEH/la6qISasG5ntQvIQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@suse.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        Huang Ying <ying.huang@intel.com>,
-        James Morris <jmorris@namei.org>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, Takashi Iwai <tiwai@suse.de>,
+        stable@vger.kernel.org, Cfir Cohen <cfir@google.com>,
+        David Rientjes <rientjes@google.com>,
         Tom Lendacky <thomas.lendacky@amd.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Yaowei Bai <baiyaowei@cmss.chinamobile.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.2 063/131] device-dax: fix memory and resource leak if hotplug fails
-Date:   Mon,  5 Aug 2019 15:02:30 +0200
-Message-Id: <20190805124955.668151080@linuxfoundation.org>
+        Gary R Hook <gary.hook@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 066/131] crypto: ccp - Fix SEV_VERSION_GREATER_OR_EQUAL
+Date:   Mon,  5 Aug 2019 15:02:33 +0200
+Message-Id: <20190805124955.894262734@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -78,99 +63,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 31e4ca92a7dd4cdebd7fe1456b3b0b6ace9a816f ]
+[ Upstream commit 83bf42510d7f7e1daa692c096e8e9919334d7b57 ]
 
-Patch series ""Hotremove" persistent memory", v6.
+SEV_VERSION_GREATER_OR_EQUAL() will fail if upgrading from 2.2 to 3.1, for
+example, because the minor version is not equal to or greater than the
+major.
 
-Recently, adding a persistent memory to be used like a regular RAM was
-added to Linux.  This work extends this functionality to also allow hot
-removing persistent memory.
+Fix this and move to a static inline function for appropriate type
+checking.
 
-We (Microsoft) have an important use case for this functionality.
-
-The requirement is for physical machines with small amount of RAM (~8G)
-to be able to reboot in a very short period of time (<1s).  Yet, there
-is a userland state that is expensive to recreate (~2G).
-
-The solution is to boot machines with 2G preserved for persistent
-memory.
-
-Copy the state, and hotadd the persistent memory so machine still has
-all 8G available for runtime.  Before reboot, offline and hotremove
-device-dax 2G, copy the memory that is needed to be preserved to pmem0
-device, and reboot.
-
-The series of operations look like this:
-
-1. After boot restore /dev/pmem0 to ramdisk to be consumed by apps.
-   and free ramdisk.
-2. Convert raw pmem0 to devdax
-   ndctl create-namespace --mode devdax --map mem -e namespace0.0 -f
-3. Hotadd to System RAM
-   echo dax0.0 > /sys/bus/dax/drivers/device_dax/unbind
-   echo dax0.0 > /sys/bus/dax/drivers/kmem/new_id
-   echo online_movable > /sys/devices/system/memoryXXX/state
-4. Before reboot hotremove device-dax memory from System RAM
-   echo offline > /sys/devices/system/memoryXXX/state
-   echo dax0.0 > /sys/bus/dax/drivers/kmem/unbind
-5. Create raw pmem0 device
-   ndctl create-namespace --mode raw  -e namespace0.0 -f
-6. Copy the state that was stored by apps to ramdisk to pmem device
-7. Do kexec reboot or reboot through firmware if firmware does not
-   zero memory in pmem0 region (These machines have only regular
-   volatile memory). So to have pmem0 device either memmap kernel
-   parameter is used, or devices nodes in dtb are specified.
-
-This patch (of 3):
-
-When add_memory() fails, the resource and the memory should be freed.
-
-Link: http://lkml.kernel.org/r/20190517215438.6487-2-pasha.tatashin@soleen.com
-Fixes: c221c0b0308f ("device-dax: "Hotplug" persistent memory for use like normal RAM")
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-Reviewed-by: Dave Hansen <dave.hansen@intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Fengguang Wu <fengguang.wu@intel.com>
-Cc: Huang Ying <ying.huang@intel.com>
-Cc: James Morris <jmorris@namei.org>
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: Keith Busch <keith.busch@intel.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Ross Zwisler <zwisler@kernel.org>
-Cc: Sasha Levin <sashal@kernel.org>
-Cc: Takashi Iwai <tiwai@suse.de>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Yaowei Bai <baiyaowei@cmss.chinamobile.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: edd303ff0e9e ("crypto: ccp - Add DOWNLOAD_FIRMWARE SEV command")
+Reported-by: Cfir Cohen <cfir@google.com>
+Signed-off-by: David Rientjes <rientjes@google.com>
+Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
+Acked-by: Gary R Hook <gary.hook@amd.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dax/kmem.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/crypto/ccp/psp-dev.c | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-index a02318c6d28ab..4c0131857133d 100644
---- a/drivers/dax/kmem.c
-+++ b/drivers/dax/kmem.c
-@@ -66,8 +66,11 @@ int dev_dax_kmem_probe(struct device *dev)
- 	new_res->name = dev_name(dev);
+diff --git a/drivers/crypto/ccp/psp-dev.c b/drivers/crypto/ccp/psp-dev.c
+index de5a8ca70d3da..6b17d179ef8a0 100644
+--- a/drivers/crypto/ccp/psp-dev.c
++++ b/drivers/crypto/ccp/psp-dev.c
+@@ -24,10 +24,6 @@
+ #include "sp-dev.h"
+ #include "psp-dev.h"
  
- 	rc = add_memory(numa_node, new_res->start, resource_size(new_res));
--	if (rc)
-+	if (rc) {
-+		release_resource(new_res);
-+		kfree(new_res);
- 		return rc;
-+	}
+-#define SEV_VERSION_GREATER_OR_EQUAL(_maj, _min)	\
+-		((psp_master->api_major) >= _maj &&	\
+-		 (psp_master->api_minor) >= _min)
+-
+ #define DEVICE_NAME		"sev"
+ #define SEV_FW_FILE		"amd/sev.fw"
+ #define SEV_FW_NAME_SIZE	64
+@@ -47,6 +43,15 @@ MODULE_PARM_DESC(psp_probe_timeout, " default timeout value, in seconds, during
+ static bool psp_dead;
+ static int psp_timeout;
  
- 	return 0;
- }
++static inline bool sev_version_greater_or_equal(u8 maj, u8 min)
++{
++	if (psp_master->api_major > maj)
++		return true;
++	if (psp_master->api_major == maj && psp_master->api_minor >= min)
++		return true;
++	return false;
++}
++
+ static struct psp_device *psp_alloc_struct(struct sp_device *sp)
+ {
+ 	struct device *dev = sp->dev;
+@@ -588,7 +593,7 @@ static int sev_ioctl_do_get_id2(struct sev_issue_cmd *argp)
+ 	int ret;
+ 
+ 	/* SEV GET_ID is available from SEV API v0.16 and up */
+-	if (!SEV_VERSION_GREATER_OR_EQUAL(0, 16))
++	if (!sev_version_greater_or_equal(0, 16))
+ 		return -ENOTSUPP;
+ 
+ 	if (copy_from_user(&input, (void __user *)argp->data, sizeof(input)))
+@@ -651,7 +656,7 @@ static int sev_ioctl_do_get_id(struct sev_issue_cmd *argp)
+ 	int ret;
+ 
+ 	/* SEV GET_ID available from SEV API v0.16 and up */
+-	if (!SEV_VERSION_GREATER_OR_EQUAL(0, 16))
++	if (!sev_version_greater_or_equal(0, 16))
+ 		return -ENOTSUPP;
+ 
+ 	/* SEV FW expects the buffer it fills with the ID to be
+@@ -1053,7 +1058,7 @@ void psp_pci_init(void)
+ 		psp_master->sev_state = SEV_STATE_UNINIT;
+ 	}
+ 
+-	if (SEV_VERSION_GREATER_OR_EQUAL(0, 15) &&
++	if (sev_version_greater_or_equal(0, 15) &&
+ 	    sev_update_firmware(psp_master->dev) == 0)
+ 		sev_get_api_version();
+ 
 -- 
 2.20.1
 
