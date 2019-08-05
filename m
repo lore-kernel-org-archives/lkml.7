@@ -2,219 +2,160 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 572D7C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68888C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2027120B1F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:59:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C7F0217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 09:00:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EDZTk6Fn"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="IEWHez7Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727893AbfHEI7y (ORCPT
+        id S1727920AbfHEI77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 04:59:54 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33643 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727225AbfHEI7y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 04:59:54 -0400
-Received: by mail-pg1-f193.google.com with SMTP id n190so4250238pgn.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 01:59:53 -0700 (PDT)
+        Mon, 5 Aug 2019 04:59:59 -0400
+Received: from mail-eopbgr1410124.outbound.protection.outlook.com ([40.107.141.124]:36579
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727855AbfHEI7z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 04:59:55 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=amTK67qYb5kxcRha/PpXdTCCRWbSeBM57ZQ+8E9M5qRZdaRu3AIeVw52DTKzX9SdshhzJNFDBisfeyzXRLNFUF9fVjdeaqxdNm6AucDzZFAEzqKILA86yTiXmLJOVS3EbsBVTTaOOnDs+5Owvj+AFwZ2s4Cf7LuaG/nMT1C6XQQJt/PnvmSpSuAMH/edwS/Sb5T9/DDB0Zkk9Q3O0xbW6HZNQtuGVZcuX/2AyU+00JndPVNw7ajyv60J6aGHFOLp6/GfJd8QCcHsHbPwTqwIPkn0R9lJn6HwT0S7TEr7PiDZQPtoahL6NnRq5ZVfAB4yav+ao4/WgzcxXUPZLHFbYg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zuIMtIkzJotMv6SkT0lzhrqP0UyTWDQ4cLNA5GMC6RE=;
+ b=c7Ts6cBnTpAbi2VNtuvMSVRYJVnsfQ9e6z5RniloCTQCFKPS8ol3L4PXfODZd86D4HjssMlPdaCsa0V3/yEbe3S6VRoFtzNIe2VATtFdWiwk5xYgTIiDpwElO8Th6srmA/rcPnilukLJA7U+/7M71p+OWuPnEPMzHo/DAZpGOkKpLbtsOQZah1DxOOkHvDBq7lXgArqWC1zUp06Nu35vGpe72uD6f4Hqp8OEQpo7pGcP31OPH3FGQkyjkDy7eknC6aOaeSiliYmL/K1ffhXGgkH06eLuFVrUY7vltrlxR7D0AlNt9kagHCeNlJRu01EIle44B/9gIWAJVzWPZTY/9g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=bp.renesas.com;dmarc=pass action=none
+ header.from=bp.renesas.com;dkim=pass header.d=bp.renesas.com;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=FIbiHcGDYSov0UE7VA5uO1KbDNgvOwrKf/S6d4sgUvg=;
-        b=EDZTk6FnPwJnYHzVY2dB6l0getqsLnh2GZ70TOet6d1NN2FYg19k31wxZpmVhbRZOI
-         OmmLeqAxuSFO2qg8o1gRqMoQHjRH1oL3WLUvTsIInFb+tFJBPhg7aww5pW5UR+tGIIrH
-         Ti7W2MfJmUfw84YYcaLBHWFjgwPDjmKpU9t8gwKnE+vmQ+FMzEfbfLpuxIxWtBYTW6S8
-         loMM9VHYGN2EnX6cU7IAa6PW80sSdWwGlaR2KXZvoL2g/OeHgADcZm7CuH1EHavNLYaq
-         73cssw1P7SLpKmsMNMcv1tcq5sEblqYjlfhOaOXAqH3NLAtYJ8+0RLf0Z65LEa9ajLDY
-         ++HA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=FIbiHcGDYSov0UE7VA5uO1KbDNgvOwrKf/S6d4sgUvg=;
-        b=VeG6AxTQZalwO4yegvymDZ8P5GCyr6BRGP7ktllqaRaQZsTi832DSfeIbw4WHbompG
-         N+Q+XyW/YdPFRZyXd+adr4iFGMOr0S5oTnWWdzmqF0x5ac5JyZ67Z9PcKOl6tOWe+C5R
-         z83FIQOjjwlC7zj2tlgratlZ6JGSg+wf/5m6y80rMxMSE49eAfKjdojhxQM9bhXP3OCb
-         l7oR1qyww96MF2z32tfDIlFgKG4PDoXD/g20rkuAxZzV9iCmJOi1/Om+HpURpXeVu+oe
-         WKTHgltVw8MWoM+JspdBCxpwPLBjMtd3cbPEIlhP7zv5so0TygnDakV+2KwMtO+8aVeG
-         Cq2w==
-X-Gm-Message-State: APjAAAWVw4SLon1+lwnbic8OVOG2rhF2OFwC62M2dJeZGz+/SwbWgGDZ
-        cv3cSzRXHVGNEAXblr/PjQ==
-X-Google-Smtp-Source: APXvYqxzK4bknrl6FhPLuz+tGHkR7LApM/9uwty0Ya3DxRCeJxpJA+oBwJ1i6hIMnyWrfDw/J0Ki0w==
-X-Received: by 2002:a63:6f81:: with SMTP id k123mr138151417pgc.12.1564995593254;
-        Mon, 05 Aug 2019 01:59:53 -0700 (PDT)
-Received: from mylaptop.redhat.com ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id v184sm82428375pfb.82.2019.08.05.01.59.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 05 Aug 2019 01:59:52 -0700 (PDT)
-From:   Pingfan Liu <kernelfans@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>, x86@kernel.org
-Cc:     Pingfan Liu <kernelfans@gmail.com>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>, Qian Cai <cai@lca.pw>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Daniel Drake <drake@endlessm.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>,
-        Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org
-Subject: [PATCH 2/4] x86/apic: record capped cpu in generic_processor_info()
-Date:   Mon,  5 Aug 2019 16:58:57 +0800
-Message-Id: <1564995539-29609-3-git-send-email-kernelfans@gmail.com>
-X-Mailer: git-send-email 2.7.5
-In-Reply-To: <1564995539-29609-1-git-send-email-kernelfans@gmail.com>
-References: <1564995539-29609-1-git-send-email-kernelfans@gmail.com>
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zuIMtIkzJotMv6SkT0lzhrqP0UyTWDQ4cLNA5GMC6RE=;
+ b=IEWHez7Zs0b4VuVZzPptQ23idNuf1VKRiplTmXQ1cS6XYKioFOkJ2QFTNRXFBLB6F17MyReLzhmLyK0VYmeOwBZBDXvLelz32sEhaCbfTOyeTvDcWHm/XRLbwHxoFEFGKe10ExNYUv7YywjR7ZdNajm0+0Nlqpu6STyGXxxE0n4=
+Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com (52.133.163.13) by
+ TY1PR01MB1673.jpnprd01.prod.outlook.com (52.133.162.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2136.16; Mon, 5 Aug 2019 08:59:52 +0000
+Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com
+ ([fe80::d881:cb74:8277:5a16]) by TY1PR01MB1770.jpnprd01.prod.outlook.com
+ ([fe80::d881:cb74:8277:5a16%7]) with mapi id 15.20.2136.010; Mon, 5 Aug 2019
+ 08:59:52 +0000
+From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+CC:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>
+Subject: RE: [PATCH/RFC 02/12] dt-bindings: display: renesas: lvds: Document
+ renesas,swap-data
+Thread-Topic: [PATCH/RFC 02/12] dt-bindings: display: renesas: lvds: Document
+ renesas,swap-data
+Thread-Index: AQHVSQTAkHqVuaZ+mkSDN4F3/wGVC6bnejAAgATJjGA=
+Date:   Mon, 5 Aug 2019 08:59:51 +0000
+Message-ID: <TY1PR01MB17706A4FF4C26CD4BDA1A5DAC0DA0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1564731249-22671-3-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20190802074428.GB5008@pendragon.ideasonboard.com>
+In-Reply-To: <20190802074428.GB5008@pendragon.ideasonboard.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=fabrizio.castro@bp.renesas.com; 
+x-originating-ip: [193.141.220.21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 14b0c9d2-b9e3-4136-b886-08d71983472c
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:TY1PR01MB1673;
+x-ms-traffictypediagnostic: TY1PR01MB1673:
+x-microsoft-antispam-prvs: <TY1PR01MB1673378B4DA39B2829B22749C0DA0@TY1PR01MB1673.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 01208B1E18
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(366004)(39860400002)(136003)(376002)(396003)(189003)(199004)(71190400001)(71200400001)(76176011)(102836004)(64756008)(316002)(66446008)(74316002)(54906003)(66066001)(486006)(53936002)(26005)(107886003)(33656002)(8936002)(7736002)(14454004)(6506007)(53546011)(4326008)(44832011)(5660300002)(25786009)(2906002)(305945005)(7416002)(86362001)(446003)(8676002)(478600001)(68736007)(55016002)(11346002)(229853002)(3846002)(6116002)(256004)(186003)(52536014)(6436002)(76116006)(66946007)(66556008)(66476007)(81166006)(6246003)(476003)(9686003)(6916009)(99286004)(81156014)(7696005)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1673;H:TY1PR01MB1770.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: bp.renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: e8rTS7MiQ4DhwIfRBFRKENDqBqyl19otiiNI18Vku2wxbOP+TYMrvbCO7/AyimhDabZaVnj5k0LOFjfzTqcO7j7JWvFhgCWeti2VFkDAdqiq0w5n/c3t7VYL3LWYBoTiM2gYKrZuhPbieff8tG00+zll8dbunTxrwL1djU3TdEvqICnRm6mJ4xhz5qoHkbTLA6vbAlheAfsqYp8zRMJpwRFFOTFRWcob+r7BOMjDs3l7sM2nMRd7zNLX8mUJ0JcrzYFadbss6Dv56dkvECMhLaRU4tgCs7i0vnrEH2XJAc4k3DZR2DzfdMUsuuKKyCAoRLqRk0/KEvPDb/Ij8mF8AxLrNFqAGRW8wkPMqJRIXkF8mWgfbIgZf0rfLjyQtuLNuacUi/pB4fkcU7YXG046/FRb3bg01ccaR6B/frrNLBo=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 14b0c9d2-b9e3-4136-b886-08d71983472c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Aug 2019 08:59:51.9089
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fabrizio.castro@bp.renesas.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1673
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No matter the cpu is capped by nr_cpus option, recording the mapping
-between all cpus' id and apic id
-
-Later this mapping will be used by BSP to sent SIPI to bring capped cpu to
-stable state
-
-Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-To: Andy Lutomirski <luto@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-To: x86@kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Qian Cai <cai@lca.pw>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Daniel Drake <drake@endlessm.com>
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: kexec@lists.infradead.org
----
- arch/x86/include/asm/smp.h   |  2 ++
- arch/x86/kernel/apic/apic.c  | 21 +++++++++++++++------
- arch/x86/kernel/cpu/common.c |  4 ++++
- 3 files changed, 21 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/include/asm/smp.h b/arch/x86/include/asm/smp.h
-index e1356a3..5f63399 100644
---- a/arch/x86/include/asm/smp.h
-+++ b/arch/x86/include/asm/smp.h
-@@ -196,5 +196,7 @@ extern void nmi_selftest(void);
- #define nmi_selftest() do { } while (0)
- #endif
- 
-+extern struct cpumask *cpu_capped_mask;
-+
- #endif /* __ASSEMBLY__ */
- #endif /* _ASM_X86_SMP_H */
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index f4f603a..6a57bad3 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -2296,9 +2296,10 @@ static int allocate_logical_cpuid(int apicid)
- 
- int generic_processor_info(int apicid, int version)
- {
--	int cpu, max = nr_cpu_ids;
-+	int thiscpu, cpu, max = nr_cpu_ids;
- 	bool boot_cpu_detected = physid_isset(boot_cpu_physical_apicid,
- 				phys_cpu_present_map);
-+	bool capped = false;
- 
- 	/*
- 	 * boot_cpu_physical_apicid is designed to have the apicid
-@@ -2322,7 +2323,7 @@ int generic_processor_info(int apicid, int version)
- 	if (disabled_cpu_apicid != BAD_APICID &&
- 	    disabled_cpu_apicid != read_apic_id() &&
- 	    disabled_cpu_apicid == apicid) {
--		int thiscpu = num_processors + disabled_cpus;
-+		thiscpu = num_processors + disabled_cpus;
- 
- 		pr_warning("APIC: Disabling requested cpu."
- 			   " Processor %d/0x%x ignored.\n",
-@@ -2338,7 +2339,7 @@ int generic_processor_info(int apicid, int version)
- 	 */
- 	if (!boot_cpu_detected && num_processors >= nr_cpu_ids - 1 &&
- 	    apicid != boot_cpu_physical_apicid) {
--		int thiscpu = max + disabled_cpus - 1;
-+		thiscpu = max + disabled_cpus - 1;
- 
- 		pr_warning(
- 			"APIC: NR_CPUS/possible_cpus limit of %i almost"
-@@ -2346,20 +2347,28 @@ int generic_processor_info(int apicid, int version)
- 			"  Processor %d/0x%x ignored.\n", max, thiscpu, apicid);
- 
- 		disabled_cpus++;
--		return -EINVAL;
-+		capped = true;
- 	}
- 
- 	if (num_processors >= nr_cpu_ids) {
--		int thiscpu = max + disabled_cpus;
-+		thiscpu = max + disabled_cpus;
- 
- 		pr_warning("APIC: NR_CPUS/possible_cpus limit of %i "
- 			   "reached. Processor %d/0x%x ignored.\n",
- 			   max, thiscpu, apicid);
- 
- 		disabled_cpus++;
--		return -EINVAL;
-+		capped = true;
- 	}
- 
-+	if (capped) {
-+		/* record the mapping between capped cpu and apicid */
-+		if (thiscpu < NR_CPUS && cpu_capped_mask != NULL) {
-+			cpuid_to_apicid[thiscpu] = apicid;
-+			cpumask_set_cpu(thiscpu, cpu_capped_mask);
-+		}
-+		return -EINVAL;
-+	}
- 	if (apicid == boot_cpu_physical_apicid) {
- 		/*
- 		 * x86_bios_cpu_apicid is required to have processors listed
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 1147217..4d87df5 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -66,6 +66,9 @@ u32 elf_hwcap2 __read_mostly;
- cpumask_var_t cpu_initialized_mask;
- cpumask_var_t cpu_callout_mask;
- cpumask_var_t cpu_callin_mask;
-+/* size of NR_CPUS is required. */
-+struct cpumask __cpu_capped_mask __initdata;
-+struct cpumask *cpu_capped_mask;
- 
- /* representing cpus for which sibling maps can be computed */
- cpumask_var_t cpu_sibling_setup_mask;
-@@ -84,6 +87,7 @@ void __init setup_cpu_local_masks(void)
- 	alloc_bootmem_cpumask_var(&cpu_callin_mask);
- 	alloc_bootmem_cpumask_var(&cpu_callout_mask);
- 	alloc_bootmem_cpumask_var(&cpu_sibling_setup_mask);
-+	cpu_capped_mask = &__cpu_capped_mask;
- }
- 
- static void default_init(struct cpuinfo_x86 *c)
--- 
-2.7.5
-
+SGkgTGF1cmVudCwNCg0KVGhhbmsgeW91IGZvciB5b3VyIGZlZWRiYWNrIQ0KDQo+IEZyb206IExh
+dXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4NCj4gU2Vu
+dDogMDIgQXVndXN0IDIwMTkgMDg6NDQNCj4gU3ViamVjdDogUmU6IFtQQVRDSC9SRkMgMDIvMTJd
+IGR0LWJpbmRpbmdzOiBkaXNwbGF5OiByZW5lc2FzOiBsdmRzOiBEb2N1bWVudCByZW5lc2FzLHN3
+YXAtZGF0YQ0KPiANCj4gSGkgRmFicml6aW8sDQo+IA0KPiBUaGFuayB5b3UgZm9yIHRoZSBwYXRj
+aC4NCj4gDQo+IE9uIEZyaSwgQXVnIDAyLCAyMDE5IGF0IDA4OjMzOjU5QU0gKzAxMDAsIEZhYnJp
+emlvIENhc3RybyB3cm90ZToNCj4gPiBSLUNhciBEMywgUi1DYXIgRTMsIGFuZCBSWi9HMkUgc3Vw
+cG9ydCBkdWFsLWxpbmsgbW9kZS4NCj4gPiBJbiBzdWNoIGEgbW9kZSwgdGhlIGZpcnN0IExWRFMg
+ZW5jb2RlciBlbWl0cyBldmVuIGRhdGEsIGFuZCB0aGUNCj4gPiBzZWNvbmQgTFZEUyBlbmNvZGVy
+IGVtaXRzIG9kZCBkYXRhLiBUaGlzIHBhdGNoIGRvY3VtZW50cyBwcm9wZXJ0eQ0KPiA+IHJlbmVz
+YXMsc3dhcC1kYXRhLCB1c2VkIHRvIHN3YXAgZXZlbiBhbmQgb2RkIGRhdGEgYXJvdW5kLg0KPiA+
+DQo+ID4gU2lnbmVkLW9mZi1ieTogRmFicml6aW8gQ2FzdHJvIDxmYWJyaXppby5jYXN0cm9AYnAu
+cmVuZXNhcy5jb20+DQo+ID4gLS0tDQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGx2ZHMudHh0IHwgNSArKysrKw0KPiA+ICAxIGZp
+bGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsbHZkcy50
+eHQNCj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uv
+cmVuZXNhcyxsdmRzLnR4dA0KPiA+IGluZGV4IGRlY2U3OWUuLjg5ODAxNzkgMTAwNjQ0DQo+ID4g
+LS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3Jl
+bmVzYXMsbHZkcy50eHQNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9icmlkZ2UvcmVuZXNhcyxsdmRzLnR4dA0KPiA+IEBAIC01Miw2ICs1MiwxMSBA
+QCBPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+ICAgIG1hbmRhdG9yeSBmb3IgdGhlIGZpcnN0IExW
+RFMgZW5jb2RlciBvbiBSLUNhciBEMywgUi1DYXIgRTMsIGFuZCBSWi9HMkUgU29DcywNCj4gPiAg
+ICBhbmQgc2hhbGwgcG9pbnQgdG8gdGhlIHNlY29uZCBlbmNvZGVyIHRvIGJlIHVzZWQgYXMgYSBj
+b21wYW5pb24gaW4gZHVhbC1saW5rDQo+ID4gICAgbW9kZS4gSXQgc2hhbGwgbm90IGJlIHNldCBm
+b3IgYW55IG90aGVyIExWRFMgZW5jb2Rlci4NCj4gPiArLSByZW5lc2FzLHN3YXAtZGF0YSA6IHdo
+ZW4gaW4gZHVhbC1saW5rIG1vZGUsIHRoZSBmaXJzdCBMVkRTIGVuY29kZXIgbm9ybWFsbHkNCj4g
+PiArICBlbWl0cyBldmVuIGRhdGEsIGFuZCB0aGUgc2Vjb25kIExWRFMgZW5jb2RlciBlbWl0cyBv
+ZGQgZGF0YS4gV2hlbiBwcm9wZXJ0eQ0KPiA+ICsgIHJlbmVzYXMsc3dhcC1kYXRhIGlzIHNwZWNp
+ZmllZCwgdGhlIGRhdGEgZW1pdHRlZCBieSB0aGUgdHdvIGVuY29kZXJzIHdpbGwgYmUNCj4gPiAr
+ICBzd2FwcGVkIGFyb3VuZC4gVGhpcyBwcm9wZXJ0eSBjYW4gb25seSBiZSB1c2VkIGluIGNvbmp1
+bmN0aW9uIHdpdGggcHJvcGVydHkNCj4gPiArICByZW5lc2FzLGNvbXBhbmlvbi4NCj4gDQo+IEZy
+b20gYW4gTFZEUyBlbmNvZGVyIHBvaW50IG9mIHZpZXcgdGhpcyBpcyBtb3JlIGEgY29uZmlndXJh
+dGlvbiBvcHRpb24NCj4gdGhhbiBhIGRlc2NyaXB0aW9uIG9mIHRoZSBoYXJkd2FyZS4gV291bGRu
+J3QgaXQgYmUgYmV0dGVyIGZvciB0aGUgTFZEUw0KPiBzaW5rIHRvIHJlcG9ydCB3aGljaCBvZiB0
+aGUgb2RkIG9yIGV2ZW4gcGl4ZWxzIGl0IGV4cGVjdHMgb24gZWFjaCBvZiBpdHMNCj4gZW5kcG9p
+bnRzID8NCg0KWWVzLCB0aGF0IHdvdWxkIGJlIG15IHByZWZlcmVuY2UgdG9vLCBhbmQgaXQgd291
+bGQgYmUgYmV0dGVyLCBJIGFtIGp1c3Qgbm90IGVudGlyZWx5DQp3aGF0J3MgdGhlIGJlc3QgcGxh
+Y2UgZm9yIHRoaXMgaW5mb3JtYXRpb24gdGhvdWdoDQoNCj4gVGhlIExWRFMgZW5jb2RlciBkcml2
+ZXIgY291bGQgdGhlbiBxdWVyeSB0aGF0IGF0IHJ1bnRpbWUgYW5kDQo+IGNvbmZpZ3VyZSBpdHNl
+bGYgYWNjb3JkaW5nbHkuIElkZWFsbHkgdGhpcyBzaG91bGQgYmUgcXVlcmllZCB0aHJvdWdoIHRo
+ZQ0KPiBkcm1fYnJpZGdlX3RpbWluZ3Mgc3RydWN0dXJlIChvciB0aHJvdWdoIGEgc2ltaWxhciBt
+ZWFuKSwgbm90IHRocm91Z2gNCj4gRFQuIEFuIExWRFMgc2luayB0aGF0IGhhcyBhIGZpeGVkIG1h
+cHBpbmcgb2Ygb2RkL2V2ZW4gcGl4ZWxzIHRvDQo+IGVuZHBvaW50cyB3b3VsZG4ndCBuZWVkIHRo
+ZSBpbmZvcm1hdGlvbiB0byBiZSBzcGVjaWZpZWQgaW4gRFQgYXQgYWxsLg0KDQpJc24ndCBkcm1f
+YnJpZGdlX3RpbWluZ3Mgc3BlY2lmaWMgZm9yIGJyaWRnZXM/DQoNClRoYW5rcyENCkZhYg0KDQo+
+IA0KPiA+DQo+ID4NCj4gPiAgRXhhbXBsZToNCj4gDQo+IC0tDQo+IFJlZ2FyZHMsDQo+IA0KPiBM
+YXVyZW50IFBpbmNoYXJ0DQo=
