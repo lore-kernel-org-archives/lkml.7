@@ -2,124 +2,122 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D71DAC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FD0C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A682D2064A
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:41:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63A08214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:45:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jf1TsCUn"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="VZ3nhSd2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728842AbfHEQlC (ORCPT
+        id S1729392AbfHEQpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 12:41:02 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40564 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726559AbfHEQlC (ORCPT
+        Mon, 5 Aug 2019 12:45:31 -0400
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:39846 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727802AbfHEQp3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 12:41:02 -0400
-Received: by mail-wr1-f65.google.com with SMTP id r1so85034968wrl.7;
-        Mon, 05 Aug 2019 09:41:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:references:user-agent:to:cc:subject:message-id:in-reply-to
-         :date:mime-version;
-        bh=ABajkI5eExlI/xSitmeiji8gDOSYLzGBroq8lVBwkdg=;
-        b=Jf1TsCUn3vg9vZIttQpRDxQyLLdSkih/m9y3kA3yWVwK1tHBcluvzb64DtQ25oH1/V
-         xc+QogvPb9pckGM5vfsy43/UEaWPZWupWkE5UPXHzZT5A7/7Ma3dw/KrHAyWf+SIQ5pr
-         Dcvq5iH0eSbCNiujtHHwUJZ240xv7Qi/eds7T8oztvpIBx2XrJ5va7rgiLI/SzDbk43Q
-         Z9ORvjpxuJo5BgjdcSStKB849ChK0G8vPO2yzLZGaqzz0g6WR36X48+GBvCQz9Tay6xs
-         czQE6+3WjSb7nz9cH1JuMb4iiT+97q5c2zuu/BUbeRroBVjCzNGInLsmtjQPkR05iWcK
-         8OZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:references:user-agent:to:cc:subject
-         :message-id:in-reply-to:date:mime-version;
-        bh=ABajkI5eExlI/xSitmeiji8gDOSYLzGBroq8lVBwkdg=;
-        b=ja333Nqtw20Mg9p87EzOhrEgYcG7GmjPnXLyAE4NJqb8hLRY9yagT4GFUZuohHJ2iR
-         SAmnNigQGyxIXTdBfVu1ZmiFSDyC6AneB1xemr2cNDqdrSWKVN7wIHvKnAQbW87i3zL5
-         2yhFktPRlmgHyb+QfCQ9uOSWZs4O/b6z1deXeokbgBny6NOEFGBO3n25sHdGA2wA1+KA
-         m4GALRztMhorwE0gqrRmO3FSmuWBup1q8j2x7eyTIqjnQOSEnKNiYUL7HQBeEJEQ4IAn
-         1Mr64JLB9LZNDW4q9FGYPZ3+PywIqfx2Q6j4YtdSh3rvHuSYYyy6/Fswk4l+xi6ykduS
-         NKhg==
-X-Gm-Message-State: APjAAAVKtD726JUIa1WAiplMkkuru1+L8SojAzp9AdVuxovPwFYEwhzT
-        ndKL1hSyrCfEkuxXvSgtEVL3KSef2ck=
-X-Google-Smtp-Source: APXvYqz/Y6nmSCAzfJUUyNSVsxAyHbqu5I0RQoLKZMj78OsAAfjqWRVGFPKFfORnGY8ls5vKuqHU6Q==
-X-Received: by 2002:adf:f050:: with SMTP id t16mr791943wro.99.1565023259727;
-        Mon, 05 Aug 2019 09:40:59 -0700 (PDT)
-Received: from ptitpuce ([2a01:e35:8b6a:1220:5461:8d4f:b809:4bf8])
-        by smtp.gmail.com with ESMTPSA id i12sm99839220wrx.61.2019.08.05.09.40.56
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 05 Aug 2019 09:40:59 -0700 (PDT)
-From:   Christophe de Dinechin <christophe.de.dinechin@gmail.com>
-X-Google-Original-From: Christophe de Dinechin <christophe@dinechin.org>
-References: <20190802145017.42543-1-steven.price@arm.com> <20190802145017.42543-2-steven.price@arm.com>
-User-agent: mu4e 1.3.2; emacs 26.2
-To:     Steven Price <steven.price@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Will Deacon <will@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/9] KVM: arm64: Document PV-time interface
-Message-ID: <m1mugnmv0x.fsf@dinechin.org>
-In-reply-to: <20190802145017.42543-2-steven.price@arm.com>
-Date:   Mon, 05 Aug 2019 18:40:54 +0200
-MIME-Version: 1.0
-Content-Type: text/plain
+        Mon, 5 Aug 2019 12:45:29 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 9EE9BC01AA;
+        Mon,  5 Aug 2019 16:45:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1565023529; bh=aTDnCXcniV6uvBzYE58A0TIJ6PhSk7VA//+4NwG8t7k=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=VZ3nhSd25VX1ZTWVBt76NJf/dbL5rJJvKCDZbo84nMneh3Y9RKrJ+zMM7lIDRvE6M
+         FfhcpHthvaLjryhS85Ub/Lz9W/GlSGepfwy6B+uod38DJHf5CGBhOjThsgDDh0Wc/X
+         6HPL/vRUZZdxQ+EKv1hhPV90jlIFIrBI/rFQ57OEywiS5N/wcpcZr97afr7DLlacII
+         tRoxEieG8rgWO88xGLGc7jLTxOQhKPFOz9HrVE+8H6wer9BZtLuggIkD48A9BpHb0k
+         wiepy3aucbK6a0ClVrgwRtqkOyQpp/8F7YJ1fFaTNApGHEC5aYwJ946em5XbseFddC
+         TKdw2mByKGdzg==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 64B02A0074;
+        Mon,  5 Aug 2019 16:45:27 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next 07/26] net: stmmac: selftests: Add RSS test
+Date:   Mon,  5 Aug 2019 18:44:34 +0200
+Message-Id: <060d0e29c13f75123d8dfa17de5fcbb679048fc7.1565022597.git.joabreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1565022597.git.joabreu@synopsys.com>
+References: <cover.1565022597.git.joabreu@synopsys.com>
+In-Reply-To: <cover.1565022597.git.joabreu@synopsys.com>
+References: <cover.1565022597.git.joabreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add a test for RSS in the stmmac selftests.
 
-Steven Price writes:
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+---
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Jose Abreu <joabreu@synopsys.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ .../net/ethernet/stmicro/stmmac/stmmac_selftests.c    | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-> Introduce a paravirtualization interface for KVM/arm64 based on the
-> "Arm Paravirtualized Time for Arm-Base Systems" specification DEN 0057A.
->
-> This only adds the details about "Stolen Time" as the details of "Live
-> Physical Time" have not been fully agreed.
->
-[...]
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+index a97b1ea76438..83b775a8cedc 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+@@ -700,6 +700,21 @@ static int stmmac_test_flowctrl(struct stmmac_priv *priv)
+ 	return ret;
+ }
+ 
++static int stmmac_test_rss(struct stmmac_priv *priv)
++{
++	struct stmmac_packet_attrs attr = { };
++
++	if (!priv->dma_cap.rssen || !priv->rss.enable)
++		return -EOPNOTSUPP;
++
++	attr.dst = priv->dev->dev_addr;
++	attr.exp_hash = true;
++	attr.sport = 0x321;
++	attr.dport = 0x123;
++
++	return __stmmac_test_loopback(priv, &attr);
++}
++
+ #define STMMAC_LOOPBACK_NONE	0
+ #define STMMAC_LOOPBACK_MAC	1
+ #define STMMAC_LOOPBACK_PHY	2
+@@ -745,6 +760,10 @@ static const struct stmmac_test {
+ 		.name = "Flow Control         ",
+ 		.lb = STMMAC_LOOPBACK_PHY,
+ 		.fn = stmmac_test_flowctrl,
++	}, {
++		.name = "RSS                  ",
++		.lb = STMMAC_LOOPBACK_PHY,
++		.fn = stmmac_test_rss,
+ 	},
+ };
+ 
+-- 
+2.7.4
 
-> +
-> +Stolen Time
-> +-----------
-> +
-> +The structure pointed to by the PV_TIME_ST hypercall is as follows:
-> +
-> +  Field       | Byte Length | Byte Offset | Description
-> +  ----------- | ----------- | ----------- | --------------------------
-> +  Revision    |      4      |      0      | Must be 0 for version 0.1
-> +  Attributes  |      4      |      4      | Must be 0
-> +  Stolen time |      8      |      8      | Stolen time in unsigned
-> +              |             |             | nanoseconds indicating how
-> +              |             |             | much time this VCPU thread
-> +              |             |             | was involuntarily not
-> +              |             |             | running on a physical CPU.
-
-I know very little about the topic, but I don't understand how the spec
-as proposed allows an accurate reading of the relation between physical
-time and stolen time simultaneously. In other words, could you draw
-Figure 1 of the spec from within the guest? Or is it a non-objective?
-
-For example, if you read the stolen time before you read CNTVCT_EL0,
-isn't it possible for a lengthy event like a migration to occur between
-the two reads, causing the stolen time to be obsolete and off by seconds?
-
---
-Cheers,
-Christophe de Dinechin (IRC c3d)
