@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B29EDC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C6CC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DAF6217D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC37820B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 06:23:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fossix-org.20150623.gappssmtp.com header.i=@fossix-org.20150623.gappssmtp.com header.b="DyTNWuBb"
+	dkim=pass (2048-bit key) header.d=fossix-org.20150623.gappssmtp.com header.i=@fossix-org.20150623.gappssmtp.com header.b="ofzpa4RM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727516AbfHEGXB (ORCPT
+        id S1727533AbfHEGXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 02:23:01 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43995 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727476AbfHEGW5 (ORCPT
+        Mon, 5 Aug 2019 02:23:02 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33164 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727496AbfHEGXA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 02:22:57 -0400
-Received: by mail-pg1-f196.google.com with SMTP id r26so3203260pgl.10
-        for <linux-kernel@vger.kernel.org>; Sun, 04 Aug 2019 23:22:56 -0700 (PDT)
+        Mon, 5 Aug 2019 02:23:00 -0400
+Received: by mail-pf1-f193.google.com with SMTP id g2so39085828pfq.0
+        for <linux-kernel@vger.kernel.org>; Sun, 04 Aug 2019 23:23:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fossix-org.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=/vBF5JTfDPD1eFNn26nmOgc2qt/ewQKezlZWhxI2nZg=;
-        b=DyTNWuBb4kQvUn1ItwT8CNs4KhYeYQvuWYL2ITj7Q/UjJ75VR8Ph5+HXAEHPLHg8O1
-         TbmqcgqRAdsoYI40VPkTwdEsCIDTjm/hRbSGuFU+6r8fL85PZHTDD6qNhHklkGsTui3O
-         mZ0ySqOZ7h8o+i4iWUiob7HzWGPOEBvH0STYs3XJZITO14EADR7jAgBOpXwOS4ydqGtC
-         Yx361gNWiRfEcCkGEB6wchEj57s3YCGInlRneNiKkhSg7BEb0cNcWyXESO6DTBi2YvgL
-         lpfwJ0YduRXPK0mGdwK9piEAZHXeNCA8ejUZiim/V8zq41M155xjtqaNsVEwzHA586Zr
-         F3Aw==
+        bh=wTlpYyZD/0q9aMn5q4HeUbQoatHU8kq64x9EtI8Wul4=;
+        b=ofzpa4RMVAg9SEnJH93KWyT5+FnI3bDtLrgWsm3zOuSoKpwJefrzrWUNT5B8mPsCo5
+         FHqW38pd2ClHxZp3vHitq4XQikfaDrcGann4aQk3idg3ZMoEdRPmo8Bh7u0SHZk9mnk3
+         Qm/PWosgezMuZvPx/H1J4tRxnrFttBph68j+lK7tVvrHoeQ4gDxyiJGtQe8zjp/XvT42
+         9WBBVjSoW3kbtpzPZJhWwNp5bQjwYoGN+p0v6Tqv+anrZTt6/9+6fwdl9DD+lVPgOqnd
+         iKglAljvNwz+aLB/fzPM5QUO6O98NQV4eEY83+LDRp+m+svmXRJZAZ6PpoRZEQU0SUk7
+         Anmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=/vBF5JTfDPD1eFNn26nmOgc2qt/ewQKezlZWhxI2nZg=;
-        b=B6qSzzcr4Y5+cqe18CkzuXPeS+jIWCgglautOKAUxykWiLWFch5o9eEimIr86YsQG6
-         I7J0HWdWspkeeo0z+kZciyy+Lgc5MF750SeVg1hXOD/1J86NWyFi4e2krjTlsEfV2Tuf
-         TZ3AMtMvL+HcO0TXmHC1Xw7dLtQupLmPkTGyO9Sxlr6X39r/sgxmoFj3sopuCfy/kL2i
-         tuedtT4Vn208TF66pAECXJMT7x7gstXQFuoL26TFZti3XbwqZyWFQ2I0laAlhnBR87eX
-         XwHqFREch+2xgmBkVLeDzPsRWXSwtLWnqSOQVee57tnpinuPByVWh6lyjW70q0s62hii
-         /4mg==
-X-Gm-Message-State: APjAAAXTjJFN1JGlX0Ijm/nIdKf+Eu7R1P2rk6/zWF146vWfdEitS0BT
-        5vTmhA3uXt0P1kW+B41YVhA=
-X-Google-Smtp-Source: APXvYqyy89fYUgNZK6OF1vscZW+pTf7gtiD+sHVJFBUHgbHjR6/Cj+jqTeTkGoziMfLWzbigC6/XAQ==
-X-Received: by 2002:a63:e09:: with SMTP id d9mr18349434pgl.442.1564986176422;
-        Sun, 04 Aug 2019 23:22:56 -0700 (PDT)
+        bh=wTlpYyZD/0q9aMn5q4HeUbQoatHU8kq64x9EtI8Wul4=;
+        b=eeonzND4rsavpUTBYXggviyHPCKs9zbysi2nWrTfk+M9CVOCZyqiHvLM19RWZRkv2R
+         L9fWgbmzYfQLXAlWMKf+LdR3RUcZB8rQGTu07ELU+6zudIJIcgq3Ah2Tkf6gZJF2cdjB
+         9jD0vwkhUlVobBO3KLDZ4gQ+FnMXqdAbiOLnRp38Ul0zrx8g9UlhyPMLsWy52f3URrs3
+         3VBUMdufzAihYBsz6x4mUd/ThmGx4apD3u+pj6lngJikl2GdAyFiMlotS198kHEz/wxU
+         SFPPOmBuLLrOulg9js/O0vdfTRGzIeUzLP+9RVURcEQG/T/Ui/cF/kQnxXNGzC0dDJWh
+         ebdw==
+X-Gm-Message-State: APjAAAVXlDtoEFwF9a40GAxvvCgzmBiRHrSo7DfQVzehkp84try4WX1M
+        LzURYMPMThL/atLALCKt4QPoFw==
+X-Google-Smtp-Source: APXvYqx2a53J7+K3AmO8itomjLV2KyMw6dQquJOLFFdxZSKfiDrkTVsqjyaK3xoFqKxYlp7ye3PD6A==
+X-Received: by 2002:a17:90a:7148:: with SMTP id g8mr16739525pjs.51.1564986179854;
+        Sun, 04 Aug 2019 23:22:59 -0700 (PDT)
 Received: from santosiv.in.ibm.com ([129.41.84.66])
-        by smtp.gmail.com with ESMTPSA id i14sm124680082pfk.0.2019.08.04.23.22.53
+        by smtp.gmail.com with ESMTPSA id i14sm124680082pfk.0.2019.08.04.23.22.56
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 04 Aug 2019 23:22:55 -0700 (PDT)
+        Sun, 04 Aug 2019 23:22:59 -0700 (PDT)
 From:   Santosh Sivaraj <santosh@fossix.org>
 To:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
         linux-kernel@vger.kernel.org
@@ -67,9 +67,9 @@ Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Nicholas Piggin <npiggin@gmail.com>,
         christophe leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v7 6/7] powerpc/mce: Handle UE event for memcpy_mcsafe
-Date:   Mon,  5 Aug 2019 11:52:24 +0530
-Message-Id: <20190805062225.4354-7-santosh@fossix.org>
+Subject: [PATCH v7 7/7] powerpc: add machine check safe copy_to_user
+Date:   Mon,  5 Aug 2019 11:52:25 +0530
+Message-Id: <20190805062225.4354-8-santosh@fossix.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190805062225.4354-1-santosh@fossix.org>
 References: <20190805062225.4354-1-santosh@fossix.org>
@@ -80,131 +80,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If we take a UE on one of the instructions with a fixup entry, set nip
-to continue execution at the fixup entry. Stop processing the event
-further or print it.
+Use  memcpy_mcsafe() implementation to define copy_to_user_mcsafe()
 
-Based-on-patch-by: Reza Arbab <arbab@linux.ibm.com>
-Cc: Reza Arbab <arbab@linux.ibm.com>
-Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
 Signed-off-by: Santosh Sivaraj <santosh@fossix.org>
 ---
- arch/powerpc/include/asm/mce.h  |  4 +++-
- arch/powerpc/kernel/mce.c       | 13 +++++++++++--
- arch/powerpc/kernel/mce_power.c | 15 +++++++++++++--
- 3 files changed, 27 insertions(+), 5 deletions(-)
+ arch/powerpc/Kconfig               |  1 +
+ arch/powerpc/include/asm/uaccess.h | 14 ++++++++++++++
+ 2 files changed, 15 insertions(+)
 
-diff --git a/arch/powerpc/include/asm/mce.h b/arch/powerpc/include/asm/mce.h
-index f3a6036b6bc0..e1931c8c2743 100644
---- a/arch/powerpc/include/asm/mce.h
-+++ b/arch/powerpc/include/asm/mce.h
-@@ -122,7 +122,8 @@ struct machine_check_event {
- 			enum MCE_UeErrorType ue_error_type:8;
- 			u8		effective_address_provided;
- 			u8		physical_address_provided;
--			u8		reserved_1[5];
-+			u8		ignore_event;
-+			u8		reserved_1[4];
- 			u64		effective_address;
- 			u64		physical_address;
- 			u8		reserved_2[8];
-@@ -193,6 +194,7 @@ struct mce_error_info {
- 	enum MCE_Initiator	initiator:8;
- 	enum MCE_ErrorClass	error_class:8;
- 	bool			sync_error;
-+	bool			ignore_event;
- };
- 
- #define MAX_MC_EVT	100
-diff --git a/arch/powerpc/kernel/mce.c b/arch/powerpc/kernel/mce.c
-index 8c0b471658a7..7a9a0bf6d614 100644
---- a/arch/powerpc/kernel/mce.c
-+++ b/arch/powerpc/kernel/mce.c
-@@ -144,6 +144,7 @@ void save_mce_event(struct pt_regs *regs, long handled,
- 		if (phys_addr != ULONG_MAX) {
- 			mce->u.ue_error.physical_address_provided = true;
- 			mce->u.ue_error.physical_address = phys_addr;
-+			mce->u.ue_error.ignore_event = mce_err->ignore_event;
- 		}
- 	}
- 	return;
-@@ -256,8 +257,13 @@ static void machine_process_ue_event(struct work_struct *work)
- 		/*
- 		 * This should probably queued elsewhere, but
- 		 * oh! well
-+		 *
-+		 * Don't report this machine check because the caller has a
-+		 * asked us to ignore the event, it has a fixup handler which
-+		 * will do the appropriate error handling and reporting.
- 		 */
--		if (evt->error_type == MCE_ERROR_TYPE_UE) {
-+		if (evt->error_type == MCE_ERROR_TYPE_UE &&
-+		    !evt->u.ue_error.ignore_event) {
- 			if (evt->u.ue_error.physical_address_provided) {
- 				unsigned long pfn;
- 
-@@ -291,8 +297,11 @@ static void machine_check_process_queued_event(struct irq_work *work)
- 		index = __this_cpu_read(mce_queue_count) - 1;
- 		evt = this_cpu_ptr(&mce_event_queue[index]);
- 
--		if (evt->error_type == MCE_ERROR_TYPE_UE)
-+		if (evt->error_type == MCE_ERROR_TYPE_UE) {
- 			machine_check_ue_event(evt);
-+			if (evt->u.ue_error.ignore_event)
-+				return;
-+		}
- 
- 		machine_check_print_event_info(evt, false, false);
- 		__this_cpu_dec(mce_queue_count);
-diff --git a/arch/powerpc/kernel/mce_power.c b/arch/powerpc/kernel/mce_power.c
-index bed38a8e2e50..36ca45bbb273 100644
---- a/arch/powerpc/kernel/mce_power.c
-+++ b/arch/powerpc/kernel/mce_power.c
-@@ -11,6 +11,7 @@
- 
- #include <linux/types.h>
- #include <linux/ptrace.h>
-+#include <linux/extable.h>
- #include <asm/mmu.h>
- #include <asm/mce.h>
- #include <asm/machdep.h>
-@@ -18,6 +19,7 @@
- #include <asm/pte-walk.h>
- #include <asm/sstep.h>
- #include <asm/exception-64s.h>
-+#include <asm/extable.h>
- 
- /*
-  * Convert an address related to an mm to a physical address.
-@@ -558,9 +560,18 @@ static int mce_handle_derror(struct pt_regs *regs,
- 	return 0;
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 77f6ebf97113..4316e36095a2 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -137,6 +137,7 @@ config PPC
+ 	select ARCH_HAS_STRICT_KERNEL_RWX	if ((PPC_BOOK3S_64 || PPC32) && !RELOCATABLE && !HIBERNATION)
+ 	select ARCH_HAS_TICK_BROADCAST		if GENERIC_CLOCKEVENTS_BROADCAST
+ 	select ARCH_HAS_UACCESS_FLUSHCACHE	if PPC64
++	select ARCH_HAS_UACCESS_MCSAFE		if PPC64
+ 	select ARCH_HAS_UBSAN_SANITIZE_ALL
+ 	select ARCH_HAVE_NMI_SAFE_CMPXCHG
+ 	select ARCH_KEEP_MEMBLOCK
+diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
+index 8b03eb44e876..15002b51ff18 100644
+--- a/arch/powerpc/include/asm/uaccess.h
++++ b/arch/powerpc/include/asm/uaccess.h
+@@ -387,6 +387,20 @@ static inline unsigned long raw_copy_to_user(void __user *to,
+ 	return ret;
  }
  
--static long mce_handle_ue_error(struct pt_regs *regs)
-+static long mce_handle_ue_error(struct pt_regs *regs,
-+				struct mce_error_info *mce_err)
- {
- 	long handled = 0;
-+	const struct exception_table_entry *entry;
-+
-+	entry = search_kernel_exception_table(regs->nip);
-+	if (entry) {
-+		mce_err->ignore_event = true;
-+		regs->nip = extable_fixup(entry);
-+		return 1;
++static __always_inline unsigned long __must_check
++copy_to_user_mcsafe(void __user *to, const void *from, unsigned long n)
++{
++	if (likely(check_copy_size(from, n, true))) {
++		if (access_ok(to, n)) {
++			allow_write_to_user(to, n);
++			n = memcpy_mcsafe((void *)to, from, n);
++			prevent_write_to_user(to, n);
++		}
 +	}
++
++	return n;
++}
++
+ extern unsigned long __clear_user(void __user *addr, unsigned long size);
  
- 	/*
- 	 * On specific SCOM read via MMIO we may get a machine check
-@@ -593,7 +604,7 @@ static long mce_handle_error(struct pt_regs *regs,
- 				&phys_addr);
- 
- 	if (!handled && mce_err.error_type == MCE_ERROR_TYPE_UE)
--		handled = mce_handle_ue_error(regs);
-+		handled = mce_handle_ue_error(regs, &mce_err);
- 
- 	save_mce_event(regs, handled, &mce_err, regs->nip, addr, phys_addr);
- 
+ static inline unsigned long clear_user(void __user *addr, unsigned long size)
 -- 
 2.20.1
 
