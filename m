@@ -2,59 +2,52 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8FBEC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:15:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46FDDC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8110B2067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:15:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A2652067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:15:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010930;
-	bh=CPidt5qYrKRZHVWOKAKvDOcmkxJnxtGZPC+iMWtWdFI=;
+	s=default; t=1565010938;
+	bh=PCg97u3p1U941e7BvgXoCYqVd4ZisV+e5YDO8vEZl8w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nrN8JlvpFoIMCV8ihbeM0L2fcXMYKkUcK9KkQFUCkU3xvwqK/S+aJV/uZtdeGZ28o
-	 yQaIaayva1gr8uKJy4rdOachHNEcpW7zPARgkM5xWxfH5dT3OnYAJ3eg/OQ3ANn3CK
-	 OqqJW3xT0m6f7fRKGCXApkK5WQzPt2IKIc36oZb4=
+	b=O8S0IZ+8J7+Af33FKva+Uuc3p0Ve8rRcUu3p55JO9cf514x9IgREL4QEfT4pTffrs
+	 Jw7fQELnCFgQUcKXZ0HN4Z4AopW/GoZ1xPQ1C48fgts5Ks5hc5vNN9UKmVeRa408ck
+	 AXDW0ySLS5FRt4lWZpvEMcAnfvwWcJZ3bsUHibp8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729995AbfHENPZ (ORCPT
+        id S1729997AbfHENPh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:15:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44662 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:15:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728884AbfHENHQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:07:16 -0400
+        id S1729686AbfHENHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:07:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3345F2173B;
-        Mon,  5 Aug 2019 13:07:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A90362075B;
+        Mon,  5 Aug 2019 13:06:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010435;
-        bh=CPidt5qYrKRZHVWOKAKvDOcmkxJnxtGZPC+iMWtWdFI=;
+        s=default; t=1565010420;
+        bh=PCg97u3p1U941e7BvgXoCYqVd4ZisV+e5YDO8vEZl8w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LzUb+SWaKiaZjJbEqASoki4fC5bcTmZAv4P1wshiSrkPVUT661BtUW5kuCI2dQiq1
-         eZMkBoBGSZbU/NKKrGFVjPmy2cbPUjdoQ3e93GQaF19s2RF81IUqGYl3CgXXu08gHG
-         mTZG9gxbz92/KMxG6NKFriqHnn7BUlgufvY+843I=
+        b=BI3uZjsM6rHo9e/QdjMDx5qsQ6zW50f40nitM0Dmivbj8ZAr9gWQvmRArR2SFo1wq
+         LeyI3Yfpb2nslLVavRpSImhFDymgozerYxyrHlofNcfoHnBQD6zK6cY5YbF9GfIeJn
+         c8gal+JqifWm9UEKJp7uq8b33GRu20Yyi74eGRdU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
-        Michal Nazarewicz <mina86@mina86.com>,
-        Yue Hu <huyue2@yulong.com>, Mike Rapoport <rppt@linux.ibm.com>,
-        Laura Abbott <labbott@redhat.com>, Peng Fan <peng.fan@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 22/53] mm/cma.c: fail if fixed declaration cant be honored
-Date:   Mon,  5 Aug 2019 15:02:47 +0200
-Message-Id: <20190805124930.521354885@linuxfoundation.org>
+Subject: [PATCH 4.14 17/53] x86: kvm: avoid constant-conversion warning
+Date:   Mon,  5 Aug 2019 15:02:42 +0200
+Message-Id: <20190805124930.002378879@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124927.973499541@linuxfoundation.org>
 References: <20190805124927.973499541@linuxfoundation.org>
@@ -67,66 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c633324e311243586675e732249339685e5d6faa ]
+[ Upstream commit a6a6d3b1f867d34ba5bd61aa7bb056b48ca67cff ]
 
-The description of cma_declare_contiguous() indicates that if the
-'fixed' argument is true the reserved contiguous area must be exactly at
-the address of the 'base' argument.
+clang finds a contruct suspicious that converts an unsigned
+character to a signed integer and back, causing an overflow:
 
-However, the function currently allows the 'base', 'size', and 'limit'
-arguments to be silently adjusted to meet alignment constraints.  This
-commit enforces the documented behavior through explicit checks that
-return an error if the region does not fit within a specified region.
+arch/x86/kvm/mmu.c:4605:39: error: implicit conversion from 'int' to 'u8' (aka 'unsigned char') changes value from -205 to 51 [-Werror,-Wconstant-conversion]
+                u8 wf = (pfec & PFERR_WRITE_MASK) ? ~w : 0;
+                   ~~                               ^~
+arch/x86/kvm/mmu.c:4607:38: error: implicit conversion from 'int' to 'u8' (aka 'unsigned char') changes value from -241 to 15 [-Werror,-Wconstant-conversion]
+                u8 uf = (pfec & PFERR_USER_MASK) ? ~u : 0;
+                   ~~                              ^~
+arch/x86/kvm/mmu.c:4609:39: error: implicit conversion from 'int' to 'u8' (aka 'unsigned char') changes value from -171 to 85 [-Werror,-Wconstant-conversion]
+                u8 ff = (pfec & PFERR_FETCH_MASK) ? ~x : 0;
+                   ~~                               ^~
 
-Link: http://lkml.kernel.org/r/1561422051-16142-1-git-send-email-opendmb@gmail.com
-Fixes: 5ea3b1b2f8ad ("cma: add placement specifier for "cma=" kernel parameter")
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Acked-by: Michal Nazarewicz <mina86@mina86.com>
-Cc: Yue Hu <huyue2@yulong.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Laura Abbott <labbott@redhat.com>
-Cc: Peng Fan <peng.fan@nxp.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Andrey Konovalov <andreyknvl@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Add an explicit cast to tell clang that everything works as
+intended here.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://github.com/ClangBuiltLinux/linux/issues/95
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/cma.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/x86/kvm/mmu.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/mm/cma.c b/mm/cma.c
-index 56761e40d1918..c4a34c813d470 100644
---- a/mm/cma.c
-+++ b/mm/cma.c
-@@ -277,6 +277,12 @@ int __init cma_declare_contiguous(phys_addr_t base,
- 	 */
- 	alignment = max(alignment,  (phys_addr_t)PAGE_SIZE <<
- 			  max_t(unsigned long, MAX_ORDER - 1, pageblock_order));
-+	if (fixed && base & (alignment - 1)) {
-+		ret = -EINVAL;
-+		pr_err("Region at %pa must be aligned to %pa bytes\n",
-+			&base, &alignment);
-+		goto err;
-+	}
- 	base = ALIGN(base, alignment);
- 	size = ALIGN(size, alignment);
- 	limit &= ~(alignment - 1);
-@@ -307,6 +313,13 @@ int __init cma_declare_contiguous(phys_addr_t base,
- 	if (limit == 0 || limit > memblock_end)
- 		limit = memblock_end;
+diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
+index f97b533bc6e68..87a0601b1c204 100644
+--- a/arch/x86/kvm/mmu.c
++++ b/arch/x86/kvm/mmu.c
+@@ -4313,11 +4313,11 @@ static void update_permission_bitmask(struct kvm_vcpu *vcpu,
+ 		 */
  
-+	if (base + size > limit) {
-+		ret = -EINVAL;
-+		pr_err("Size (%pa) of region at %pa exceeds limit (%pa)\n",
-+			&size, &base, &limit);
-+		goto err;
-+	}
-+
- 	/* Reserve memory */
- 	if (fixed) {
- 		if (memblock_is_region_reserved(base, size) ||
+ 		/* Faults from writes to non-writable pages */
+-		u8 wf = (pfec & PFERR_WRITE_MASK) ? ~w : 0;
++		u8 wf = (pfec & PFERR_WRITE_MASK) ? (u8)~w : 0;
+ 		/* Faults from user mode accesses to supervisor pages */
+-		u8 uf = (pfec & PFERR_USER_MASK) ? ~u : 0;
++		u8 uf = (pfec & PFERR_USER_MASK) ? (u8)~u : 0;
+ 		/* Faults from fetches of non-executable pages*/
+-		u8 ff = (pfec & PFERR_FETCH_MASK) ? ~x : 0;
++		u8 ff = (pfec & PFERR_FETCH_MASK) ? (u8)~x : 0;
+ 		/* Faults from kernel mode fetches of user pages */
+ 		u8 smepf = 0;
+ 		/* Faults from kernel mode accesses of user pages */
 -- 
 2.20.1
 
