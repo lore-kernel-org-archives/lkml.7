@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4DD9C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 641EDC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:16:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 881692075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:16:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39BB52075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:16:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010972;
-	bh=mh/16J6YfSdJ2lTmJ0XsrPlGVYth0/sK7TNK0AjCJNk=;
+	s=default; t=1565010975;
+	bh=qATYd373WHoQvx1nv4OGTJ3AU14oMmdMwgqxo4er9L0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0x+pLy+tS6tv73ew2zqki2jUCZPateo3uMrB+DYZiQFOxiZ9tRsn9oMe1ucvDjigT
-	 5yDim0cSdb55s2YmuSJUqvYUVg+jIOW97kxW4Dm1POYEOV52Bh/sSBZ7PuBjSlIlwP
-	 dxCrsD9ROxBd/JITxgHpKsEsa/cSGQ5H9I6MVmUc=
+	b=Whlvq5Bk2Mf9/kcrV1kSMLuDu+dH+PjuUR2eeTc9SSKWupJc1bZoiq955zbj70GfI
+	 OKEwoaRLXCTGOwYlURSBuRo0rzl+cHfmtmqRH6vdEHp1taaHMXlJneUdBaXqo1Mleb
+	 RG57dBJW/2SHPorvvVAQesvK/J9OrIRT44/cG7t8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729592AbfHENGZ (ORCPT
+        id S1729101AbfHENGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:06:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43084 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:06:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729548AbfHENGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:06:22 -0400
+        id S1729073AbfHENGT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:06:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53AD1214C6;
-        Mon,  5 Aug 2019 13:06:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF840206C1;
+        Mon,  5 Aug 2019 13:06:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010381;
-        bh=mh/16J6YfSdJ2lTmJ0XsrPlGVYth0/sK7TNK0AjCJNk=;
+        s=default; t=1565010379;
+        bh=qATYd373WHoQvx1nv4OGTJ3AU14oMmdMwgqxo4er9L0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KLm/Axfp95IUTwGVnYXnau2Pzq8SgdYWm0398GfdGA/zyasO79+pRTF23+Rdt2huv
-         sS385crQP8YNFYRHTReEE1uUcy2aYa8UihaMZno4dKG3bZbUU1Spb7rMzg4MjTKFLV
-         yenain/FTznraBP2N1w/DMvIGEyQfKYHtY7sbdSw=
+        b=ZyQPSFyyVwP27zdSRYHiaciyTUzwBac1gkjGXzLx9sa6iKAxcJzF0Q9qXfjz4BuGQ
+         0yS1BTPzUrGbTMVkjdDLvs0YKxDqAtpOi8fWJXpCYTsRdJVlpJZ/NP5TYNVIRXp5sU
+         VBlX3UoN6dnQVqZHdPc+bS6fQ9svd0EP1MhJvl/4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
         Thomas Gleixner <tglx@linutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 17/42] x86: math-emu: Hide clang warnings for 16-bit overflow
-Date:   Mon,  5 Aug 2019 15:02:43 +0200
-Message-Id: <20190805124926.851261996@linuxfoundation.org>
+Subject: [PATCH 4.9 16/42] x86/apic: Silence -Wtype-limits compiler warnings
+Date:   Mon,  5 Aug 2019 15:02:42 +0200
+Message-Id: <20190805124926.694565998@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124924.788666484@linuxfoundation.org>
 References: <20190805124924.788666484@linuxfoundation.org>
@@ -60,67 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 29e7e9664aec17b94a9c8c5a75f8d216a206aa3a ]
+[ Upstream commit ec6335586953b0df32f83ef696002063090c7aef ]
 
-clang warns about a few parts of the math-emu implementation
-where a 16-bit integer becomes negative during assignment:
+There are many compiler warnings like this,
 
-arch/x86/math-emu/poly_tan.c:88:35: error: implicit conversion from 'int' to 'short' changes value from 49216 to -16320 [-Werror,-Wconstant-conversion]
-                                      (0x41 + EXTENDED_Ebias) | SIGN_Negative);
-                                      ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
-arch/x86/math-emu/fpu_emu.h:180:58: note: expanded from macro 'setexponent16'
- #define setexponent16(x,y)  { (*(short *)&((x)->exp)) = (y); }
-                                                      ~  ^
-arch/x86/math-emu/reg_constant.c:37:32: error: implicit conversion from 'int' to 'short' changes value from 49085 to -16451 [-Werror,-Wconstant-conversion]
-FPU_REG const CONST_PI2extra = MAKE_REG(NEG, -66,
-                               ^~~~~~~~~~~~~~~~~~
-arch/x86/math-emu/reg_constant.c:21:25: note: expanded from macro 'MAKE_REG'
-                ((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
-                 ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
-arch/x86/math-emu/reg_constant.c:48:28: error: implicit conversion from 'int' to 'short' changes value from 65535 to -1 [-Werror,-Wconstant-conversion]
-FPU_REG const CONST_QNaN = MAKE_REG(NEG, EXP_OVER, 0x00000000, 0xC0000000);
-                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-arch/x86/math-emu/reg_constant.c:21:25: note: expanded from macro 'MAKE_REG'
-                ((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
-                 ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from ./arch/x86/include/asm/smp.h:13,
+                 from ./arch/x86/include/asm/mmzone_64.h:11,
+                 from ./arch/x86/include/asm/mmzone.h:5,
+                 from ./include/linux/mmzone.h:969,
+                 from ./include/linux/gfp.h:6,
+                 from ./include/linux/mm.h:10,
+                 from arch/x86/kernel/apic/io_apic.c:34:
+arch/x86/kernel/apic/io_apic.c: In function 'check_timer':
+./arch/x86/include/asm/apic.h:37:11: warning: comparison of unsigned
+expression >= 0 is always true [-Wtype-limits]
+   if ((v) <= apic_verbosity) \
+           ^~
+arch/x86/kernel/apic/io_apic.c:2160:2: note: in expansion of macro
+'apic_printk'
+  apic_printk(APIC_QUIET, KERN_INFO "..TIMER: vector=0x%02X "
+  ^~~~~~~~~~~
+./arch/x86/include/asm/apic.h:37:11: warning: comparison of unsigned
+expression >= 0 is always true [-Wtype-limits]
+   if ((v) <= apic_verbosity) \
+           ^~
+arch/x86/kernel/apic/io_apic.c:2207:4: note: in expansion of macro
+'apic_printk'
+    apic_printk(APIC_QUIET, KERN_ERR "..MP-BIOS bug: "
+    ^~~~~~~~~~~
 
-The code is correct as is, so add a typecast to shut up the warnings.
+APIC_QUIET is 0, so silence them by making apic_verbosity type int.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Qian Cai <cai@lca.pw>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190712090816.350668-1-arnd@arndb.de
+Link: https://lkml.kernel.org/r/1562621805-24789-1-git-send-email-cai@lca.pw
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/math-emu/fpu_emu.h      | 2 +-
- arch/x86/math-emu/reg_constant.c | 2 +-
+ arch/x86/include/asm/apic.h | 2 +-
+ arch/x86/kernel/apic/apic.c | 2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/math-emu/fpu_emu.h b/arch/x86/math-emu/fpu_emu.h
-index afbc4d805d66f..df5aee5402c44 100644
---- a/arch/x86/math-emu/fpu_emu.h
-+++ b/arch/x86/math-emu/fpu_emu.h
-@@ -176,7 +176,7 @@ static inline void reg_copy(FPU_REG const *x, FPU_REG *y)
- #define setexponentpos(x,y) { (*(short *)&((x)->exp)) = \
-   ((y) + EXTENDED_Ebias) & 0x7fff; }
- #define exponent16(x)         (*(short *)&((x)->exp))
--#define setexponent16(x,y)  { (*(short *)&((x)->exp)) = (y); }
-+#define setexponent16(x,y)  { (*(short *)&((x)->exp)) = (u16)(y); }
- #define addexponent(x,y)    { (*(short *)&((x)->exp)) += (y); }
- #define stdexp(x)           { (*(short *)&((x)->exp)) += EXTENDED_Ebias; }
+diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
+index 2188b5af81676..f39fd349cef65 100644
+--- a/arch/x86/include/asm/apic.h
++++ b/arch/x86/include/asm/apic.h
+@@ -50,7 +50,7 @@ static inline void generic_apic_probe(void)
  
-diff --git a/arch/x86/math-emu/reg_constant.c b/arch/x86/math-emu/reg_constant.c
-index 00548354912f4..382093c5072b0 100644
---- a/arch/x86/math-emu/reg_constant.c
-+++ b/arch/x86/math-emu/reg_constant.c
-@@ -17,7 +17,7 @@
- #include "control_w.h"
+ #ifdef CONFIG_X86_LOCAL_APIC
  
- #define MAKE_REG(s, e, l, h) { l, h, \
--		((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
-+		(u16)((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
+-extern unsigned int apic_verbosity;
++extern int apic_verbosity;
+ extern int local_apic_timer_c2_ok;
  
- FPU_REG const CONST_1 = MAKE_REG(POS, 0, 0x00000000, 0x80000000);
- #if 0
+ extern int disable_apic;
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 4f2af1ee09cbe..cc9a6f680225e 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -183,7 +183,7 @@ int first_system_vector = FIRST_SYSTEM_VECTOR;
+ /*
+  * Debug level, exported for io_apic.c
+  */
+-unsigned int apic_verbosity;
++int apic_verbosity;
+ 
+ int pic_mode;
+ 
 -- 
 2.20.1
 
