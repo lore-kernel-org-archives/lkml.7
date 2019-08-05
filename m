@@ -2,112 +2,142 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB10C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 478E5C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3054D2086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C47B2086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:29:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565022457;
-	bh=bIJkquuckN/cWKNKddZcFZPC0ZCpRqz2ZZh+yTuo/tI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ahMpML3+MBxl9e7BjwYNtZ45DtMGHVQmPT1x/elc3QXGIsjjffIp1FW5fl08KOTAK
-	 ILYtDosfzIPA8PR3+kJRHD9xl+i4QMuVQoaDckhfclKlY5NNITsMysqj+LwLkwokm/
-	 6Qa9w+Z8lS5TUImBAWN6eWssOLgspTpd2CK+qovA=
+	s=default; t=1565022554;
+	bh=dCJz3UpwG2J4Jywk6aEw0EeYoqu+jo/GEAS5b6ZqMXU=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=bipfiJr2Lo58ZlGrYa/iT/5/6NZHTVAAEoS767FHlVDYbZDm71S1lACE1tF8L+zbJ
+	 yzaZ/ILCejwYZnaV+Qx/9W+Yc+ocAgv8vj91tsUvRhtvS72oFTTopIVHfFr4azYdaI
+	 KVKl0G3JuVGQusjyYTaBpwTJiOPxESSqTt8a9b6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729795AbfHEQ1g (ORCPT
+        id S1730167AbfHEQ3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 12:27:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60024 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 12:29:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:51590 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728867AbfHEQ1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 12:27:30 -0400
-Received: from localhost.localdomain (unknown [194.230.155.124])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71BC0214C6;
-        Mon,  5 Aug 2019 16:27:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565022449;
-        bh=bIJkquuckN/cWKNKddZcFZPC0ZCpRqz2ZZh+yTuo/tI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qIgPrNEj+TK7Pbrh4jN8GIAWCfI3X27itlOhzxELCjqom84ddFpBKX1slaa7bI1IX
-         AAcXQHHdD2gvzuzjLQ9pjGWpFDIesJZ+rSPQd3cYLsKMzh1XNsEWONZKbAr1EWsm8i
-         cpZc4ufYFsUQlECy09mTWVYQjIUzQ9ri63AQM0lE=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Tomasz Figa <tomasz.figa@gmail.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Kukjin Kim <kgene@kernel.org>,
+        id S1729835AbfHEQ3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 12:29:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5058A344;
+        Mon,  5 Aug 2019 09:29:00 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 96E5D3F694;
+        Mon,  5 Aug 2019 09:28:58 -0700 (PDT)
+Subject: Re: [PATCH 6/9] KVM: arm64: Provide a PV_TIME device to user space
+To:     Steven Price <steven.price@arm.com>
+Cc:     kvm@vger.kernel.org,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        linux-doc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
         linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>, notify@kernel.org
-Subject: [PATCH 4/4] pinctrl: samsung: Fix device node refcount leaks in init code
-Date:   Mon,  5 Aug 2019 18:27:10 +0200
-Message-Id: <20190805162710.7789-4-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190805162710.7789-1-krzk@kernel.org>
-References: <20190805162710.7789-1-krzk@kernel.org>
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
+        Julien Thierry <julien.thierry.kdev@gmail.com>
+References: <20190802145017.42543-1-steven.price@arm.com>
+ <20190802145017.42543-7-steven.price@arm.com> <20190803135113.6cdf500c@why>
+ <1a7d5be6-184b-0c78-61a3-b01730cb5df9@arm.com>
+From:   Marc Zyngier <maz@kernel.org>
+Organization: Approximate
+Message-ID: <c18f9d74-48eb-3e03-dca8-ad44e6d6b682@kernel.org>
+Date:   Mon, 5 Aug 2019 17:28:57 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <1a7d5be6-184b-0c78-61a3-b01730cb5df9@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Several functions use for_each_child_of_node() loop with a break to find
-a matching child node.  Although each iteration of
-for_each_child_of_node puts the previous node, but early exit from loop
-misses it.  This leads to leak of device node.
+On 05/08/2019 17:10, Steven Price wrote:
+> On 03/08/2019 13:51, Marc Zyngier wrote:
+>> On Fri,  2 Aug 2019 15:50:14 +0100
+>> Steven Price <steven.price@arm.com> wrote:
+>>
+>>> Allow user space to inform the KVM host where in the physical memory
+>>> map the paravirtualized time structures should be located.
+>>>
+>>> A device is created which provides the base address of an array of
+>>> Stolen Time (ST) structures, one for each VCPU. There must be (64 *
+>>> total number of VCPUs) bytes of memory available at this location.
+>>>
+>>> The address is given in terms of the physical address visible to
+>>> the guest and must be 64 byte aligned. The memory should be marked as
+>>> reserved to the guest to stop it allocating it for other purposes.
+>>
+>> Why? You seem to be allocating the memory from the kernel, so as far as
+>> the guest is concerned, this isn't generally usable memory.
+> 
+> I obviously didn't word it very well - that's what I meant. The "memory"
+> that represents the stolen time structure shouldn't be shown to the
+> guest as normal memory, but "reserved" for the purpose of stolen time.
+> 
+> To be honest it looks like I forgot to rewrite this commit message -
+> which 64 byte alignment is all that the guest can rely on (because each
+> vCPU has it's own structure), the actual array of structures needs to be
+> page aligned to ensure we can safely map it into the guest.
+> 
+>>>
+>>> Signed-off-by: Steven Price <steven.price@arm.com>
+>>> ---
+>>>  arch/arm64/include/asm/kvm_mmu.h  |   2 +
+>>>  arch/arm64/include/uapi/asm/kvm.h |   6 +
+>>>  arch/arm64/kvm/Makefile           |   1 +
+>>>  include/uapi/linux/kvm.h          |   2 +
+>>>  virt/kvm/arm/mmu.c                |  44 +++++++
+>>>  virt/kvm/arm/pvtime.c             | 190 ++++++++++++++++++++++++++++++
+>>>  6 files changed, 245 insertions(+)
+>>>  create mode 100644 virt/kvm/arm/pvtime.c
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/pinctrl/samsung/pinctrl-samsung.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+[...]
 
-diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/samsung/pinctrl-samsung.c
-index de0477bb469d..f26574ef234a 100644
---- a/drivers/pinctrl/samsung/pinctrl-samsung.c
-+++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
-@@ -272,6 +272,7 @@ static int samsung_dt_node_to_map(struct pinctrl_dev *pctldev,
- 						&reserved_maps, num_maps);
- 		if (ret < 0) {
- 			samsung_dt_free_map(pctldev, *map, *num_maps);
-+			of_node_put(np);
- 			return ret;
- 		}
- 	}
-@@ -785,8 +786,10 @@ static struct samsung_pmx_func *samsung_pinctrl_create_functions(
- 		if (!of_get_child_count(cfg_np)) {
- 			ret = samsung_pinctrl_create_function(dev, drvdata,
- 							cfg_np, func);
--			if (ret < 0)
-+			if (ret < 0) {
-+				of_node_put(cfg_np);
- 				return ERR_PTR(ret);
-+			}
- 			if (ret > 0) {
- 				++func;
- 				++func_cnt;
-@@ -797,8 +800,11 @@ static struct samsung_pmx_func *samsung_pinctrl_create_functions(
- 		for_each_child_of_node(cfg_np, func_np) {
- 			ret = samsung_pinctrl_create_function(dev, drvdata,
- 						func_np, func);
--			if (ret < 0)
-+			if (ret < 0) {
-+				of_node_put(func_np);
-+				of_node_put(cfg_np);
- 				return ERR_PTR(ret);
-+			}
- 			if (ret > 0) {
- 				++func;
- 				++func_cnt;
+>>> +static int kvm_arm_pvtime_set_attr(struct kvm_device *dev,
+>>> +				   struct kvm_device_attr *attr)
+>>> +{
+>>> +	struct kvm_arch_pvtime *pvtime = &dev->kvm->arch.pvtime;
+>>> +	u64 __user *user = (u64 __user *)attr->addr;
+>>> +	u64 paddr;
+>>> +	int ret;
+>>> +
+>>> +	switch (attr->group) {
+>>> +	case KVM_DEV_ARM_PV_TIME_PADDR:
+>>> +		if (get_user(paddr, user))
+>>> +			return -EFAULT;
+>>> +		if (paddr & 63)
+>>> +			return -EINVAL;
+>>
+>> You should check whether the device fits into the IPA space for this
+>> guest, and whether it overlaps with anything else.
+> 
+> pvtime_map_pages() should fail in the case of overlap. That seems
+> sufficient to me - do you think we need something stronger?
+
+Definitely. stage2_set_pte() won't fail for a non-IO overlapping
+mapping, and will just treat it as guest memory. If this overlaps with a
+memslot, we'll never be able to fault that page in, ending up with
+interesting memory corruption... :-/
+
+That's one of the reasons why I think option (2) in your earlier email
+is an interesting one, as it sidesteps a whole lot of ugly and hard to
+test corner cases.
+
+Thanks,
+
+	M.
 -- 
-2.17.1
-
+Jazz is not dead, it just smells funny...
