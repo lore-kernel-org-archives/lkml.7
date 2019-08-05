@@ -2,79 +2,104 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CC0C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB58C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CE3F20B1F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:46:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1656B205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 12:47:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j/bAgWAi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728720AbfHEMp7 (ORCPT
+        id S1728769AbfHEMrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 08:45:59 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41748 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726779AbfHEMp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 08:45:58 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7BF1081DEC;
-        Mon,  5 Aug 2019 12:45:58 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-81.ams2.redhat.com [10.36.116.81])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2A4B56012D;
-        Mon,  5 Aug 2019 12:45:58 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 63FC29D00; Mon,  5 Aug 2019 14:45:57 +0200 (CEST)
-Date:   Mon, 5 Aug 2019 14:45:57 +0200
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     intel-gfx@lists.freedesktop.org, thomas@shipmail.org,
-        tzimmermann@suse.de, ckoenig.leichtzumerken@gmail.com,
-        bskeggs@redhat.com, daniel@ffwll.ch,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>, David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 11/18] [fixup] ttm
-Message-ID: <20190805124557.eazqln75mqm2ms63@sirius.home.kraxel.org>
-References: <20190805124310.3275-1-kraxel@redhat.com>
- <20190805124310.3275-12-kraxel@redhat.com>
+        Mon, 5 Aug 2019 08:47:18 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35051 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726779AbfHEMrR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 08:47:17 -0400
+Received: by mail-io1-f67.google.com with SMTP id m24so167021337ioo.2;
+        Mon, 05 Aug 2019 05:47:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aNRu8d6P0l9UPeO2XHPUBXtwBghX09sN9CzqbrlIoh0=;
+        b=j/bAgWAil3mRiYky6AnRqLeM8V1zdbGU/zoXCwNDELkUqbe57Wb3Rqul+Yp7KZYmnp
+         /pXsxz4Ec1Ja6QFaBuqCCTyu4IjNEWuXjoThkG+AEQ3Th8XgyCwagIqsWbWYPl+qLynY
+         W81J2gSa/MLIwFXNv3zKXUKIu5+D6qnfW8TKgghA/61gAyF195B5MtLkiuE6PG8N0NnQ
+         /jqsrHJ7xyMicdJQmRxfBJG7YG5IsqcncR8/nnzSg6vU/sfnl9j+NaGJwjiVoItP7UVP
+         EROiUjX4A8VVYEfbXRhf/BX2VbQyKxkP3acsT18XJ41Jp698vRCg2ZZbbeGLgnFHmK/y
+         HpwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aNRu8d6P0l9UPeO2XHPUBXtwBghX09sN9CzqbrlIoh0=;
+        b=mJz9CU045Tvh6I/fIkeLnimMLsV/ZiIYruMmtModtZwQHS9xztZhMzMJjxiZ3o+toF
+         YmjsEhTrSPxZaa/UjlfaP+f1pkh7HrlTw0fKZwjuo2PpuOJ2plehJ1YhGIuum1n9W8DE
+         1kjc9RTlNAqYxT2dcpi7wWrx7E4NuRbxm6dJgKwt7y1mKOGSh8gAGbdtmvo8wBLcyNCx
+         ccjyBPjzAM7FrHRf8r5JFWJBXR7uRoXxItscZBaGw76K/UPLSRa/W5LZDnL0WFH+3Fhc
+         b3jtyylqqOD59RDnjWtvQI63It3GXi7o1u68UI9YAFI3bkIzAto1UIu9zfXBmW0ot2dR
+         pJMQ==
+X-Gm-Message-State: APjAAAXMEPukTE20sldkFSovfHUr+8vXoqM9C8WvSVogKZ9pK/yCRuUb
+        VjM+c7IZQk2OkrUArP9TvRdDpa6OH9hB8IJg2jw=
+X-Google-Smtp-Source: APXvYqzXL2hkLoxBzy0mGaLH2PFh9enoPkAIlPHpx/CXR2e8aI0nWFKy0Tu9frhpX5sT1w1c87ndw7D6azKbKOfDYYg=
+X-Received: by 2002:a02:cb4b:: with SMTP id k11mr152797148jap.109.1565009236799;
+ Mon, 05 Aug 2019 05:47:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190805124310.3275-12-kraxel@redhat.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Mon, 05 Aug 2019 12:45:58 +0000 (UTC)
+References: <20190731195713.3150463-1-arnd@arndb.de> <20190731195713.3150463-3-arnd@arndb.de>
+ <20190801055821.GB24607@kroah.com>
+In-Reply-To: <20190801055821.GB24607@kroah.com>
+From:   Sylvain Lemieux <slemieux.tyco@gmail.com>
+Date:   Mon, 5 Aug 2019 08:47:05 -0400
+Message-ID: <CA+rxa6rJE2R7R_r8nx7HyHu4xc8ujQB1rRG+0Yx2XzwtoiD5CQ@mail.gmail.com>
+Subject: Re: [PATCH 02/14] usb: udc: lpc32xx: allow compile-testing
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, soc@kernel.org,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Guenter Roeck <linux@roeck-us.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        linux-serial@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 02:43:03PM +0200, Gerd Hoffmann wrote:
-> ---
->  drivers/gpu/drm/ttm/ttm_bo.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/ttm/ttm_bo.c b/drivers/gpu/drm/ttm/ttm_bo.c
-> index b3d628b3f038..73d407494586 100644
-> --- a/drivers/gpu/drm/ttm/ttm_bo.c
-> +++ b/drivers/gpu/drm/ttm/ttm_bo.c
-> @@ -961,7 +961,7 @@ static int ttm_bo_mem_force_space(struct ttm_buffer_object *bo,
->  	struct ww_acquire_ctx *ticket;
->  	int ret;
->  
-> -	ticket = reservation_object_locking_ctx(bo->resv);
-> +	ticket = reservation_object_locking_ctx(bo->base.resv);
->  	do {
->  		ret = (*man->func->get_node)(man, bo, place, mem);
->  		if (unlikely(ret != 0))
+Acked-by: Sylvain Lemieux <slemieux.tyco@gmail.com>
 
-Oops.  This is meant to be squashed into 10/18 of course.
-
-cheers,
-  Gerd
-
+On Thu, Aug 1, 2019 at 1:58 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Wed, Jul 31, 2019 at 09:56:44PM +0200, Arnd Bergmann wrote:
+> > The only thing that prevents building this driver on other
+> > platforms is the mach/hardware.h include, which is not actually
+> > used here at all, so remove the line and allow CONFIG_COMPILE_TEST.
+> >
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> >  drivers/usb/gadget/udc/Kconfig       | 3 ++-
+> >  drivers/usb/gadget/udc/lpc32xx_udc.c | 2 --
+> >  2 files changed, 2 insertions(+), 3 deletions(-)
+>
+> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
