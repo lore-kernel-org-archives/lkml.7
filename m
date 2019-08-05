@@ -2,233 +2,105 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E9DC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 05:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43961C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 05:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F09320818
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 05:48:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="sVnmdtBT"
+	by mail.kernel.org (Postfix) with ESMTP id 10E2620657
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 05:57:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564984650;
+	bh=CluuMJNOmsHOA+mAZyMfZg778egHHWNYSrWjkWdY6cI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YJ08kqefRELzlMmRjpbJ/mUYciywZTYNjxQLVHC4Azmy9Hwih32Fasj0h5Ihog3+0
+	 sg/nEBWkFd+rdCcor6jKRsiCEJKigz19wXW0WXNx3Kw4gdw6sEXRJzSDD4Y0ll266X
+	 fl21UlRwIrFbN/J1iOd8N/SvVT5bJmRV2o+Tn7jY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727264AbfHEFsu (ORCPT
+        id S1727291AbfHEF53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 01:48:50 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39662 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbfHEFst (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 01:48:49 -0400
-Received: by mail-wm1-f67.google.com with SMTP id u25so61346186wmc.4
-        for <linux-kernel@vger.kernel.org>; Sun, 04 Aug 2019 22:48:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1TgAgMN1acZNwv5Q61grmXOTBBeUYwY88MxdxlFsIgo=;
-        b=sVnmdtBTLTowplyB43mPn9+XoIJom4npEqgCUIIA9I6z56mRtxYVMUUcDlq+XvFMl0
-         SN6cLhPICpsyH32V+Pk3fcQsMLNfI8XWZHZwK35OZEmkchXkHZuB2R7U9Eo2vMf+8eZc
-         4Wk2w/b2Q0K+QYb5s/FZZ++0Zu4jh5eYgUzfhRNP9nUtl1LG1eQPQyDFiTN+gW2fkht3
-         ukkGxL+AVLE41Lp2MCbJZ4PFjOU7foC7WwD4VgSBd9EkBfKFfqO9aH43GMaCxkzPcyb/
-         i8QUc3Pb1e8jaxMzV8q1CdLlAQE0pQlf87lWDs3irHeCIAkKkcaq6jEhhjCJ03SVqrDK
-         gISQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1TgAgMN1acZNwv5Q61grmXOTBBeUYwY88MxdxlFsIgo=;
-        b=iThMSPUfGZLierpaSmwhSNytQGiXY0YLYZP46zghnu4H50sfXbmkqKvA0c6zTg9pda
-         9gP/np0IcG9MXL05VYsm38T9wgbdd5ENFWJGJqfTFh6PB5MFSMkgepdTmT5iXEbuEIaT
-         OPioKPSfp5y89JVyplaGRCckMhe5iVUE6CDhX4n8ITEUb7CbkCe42ItsaX+FsoKliyTy
-         EiDh69/cRfyXyIS32iDMrt1BKmam/0kgFrz9c/n5dRmLRwGlkI5uFTCQFb0UU4UMZAgQ
-         4bpQQ0QgH1PC7TlCvNuxni4/HRm0oZ6sEKetPAMuLONzxsFjKPdhqR3iTUyUnaLwCihQ
-         flgg==
-X-Gm-Message-State: APjAAAX7hGHdum0t3RPnZb6S0xLNQDgzE1WU8djeBUTwbzO0wZy5Ttip
-        zwrwOS01iRnRk+aKYqaZBmW2I84wz0j92ggg04Wv1Q==
-X-Google-Smtp-Source: APXvYqzW3IowkTSrn4nUEPSacemcxGVfBVssQwFtqtRFmO8Phkuhnd8lGP7wGdYpat5rhVK2w/B0MXCPFoNEYeOkEz4=
-X-Received: by 2002:a1c:cfc5:: with SMTP id f188mr15160196wmg.24.1564984126543;
- Sun, 04 Aug 2019 22:48:46 -0700 (PDT)
+        Mon, 5 Aug 2019 01:57:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44124 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725951AbfHEF52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 01:57:28 -0400
+Received: from localhost (unknown [77.137.115.125])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0961B20657;
+        Mon,  5 Aug 2019 05:57:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564984647;
+        bh=CluuMJNOmsHOA+mAZyMfZg778egHHWNYSrWjkWdY6cI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LEnRxcXU43u2fZXKbn6MhQzNUjxbHOrdqfVA1Y0H/3qTz5hhcdCwvvAxMtGuObd4k
+         6S/gfgGtA1mzMSK0vwmWmonBjHg7SeOvW1gEJc1OnMp3kZIyssFGVFqpo0g8YXmHYI
+         y7xrk7M3Sn88ATaKkP+Ys7RbQqz5rj4Hcn2SgbcY=
+Date:   Mon, 5 Aug 2019 08:57:23 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Saeed Mahameed <saeedm@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+        Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/3] Use refcount_t for refcount
+Message-ID: <20190805055723.GM4832@mtr-leonro.mtl.com>
+References: <20190802121035.1315-1-hslester96@gmail.com>
+ <20190804124820.GH4832@mtr-leonro.mtl.com>
+ <CANhBUQ0rMKHmh4ibktwRmVN6NU=HAjs-Q7PrF9yX5x5yOyOB2A@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190802074620.115029-1-anup.patel@wdc.com> <20190802074620.115029-5-anup.patel@wdc.com>
- <9f30d2b6-fa2c-22ff-e597-b9fbd1c700ff@redhat.com>
-In-Reply-To: <9f30d2b6-fa2c-22ff-e597-b9fbd1c700ff@redhat.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Mon, 5 Aug 2019 11:18:34 +0530
-Message-ID: <CAAhSdy16w+98VB7+DtVJOngABu2uUDmYmqURMsRBqzvKCQfGUQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 04/19] RISC-V: Add initial skeletal KVM support
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Radim K <rkrcmar@redhat.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANhBUQ0rMKHmh4ibktwRmVN6NU=HAjs-Q7PrF9yX5x5yOyOB2A@mail.gmail.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 2, 2019 at 2:31 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
+On Sun, Aug 04, 2019 at 10:58:19PM +0800, Chuhong Yuan wrote:
+> On Sun, Aug 4, 2019 at 8:48 PM Leon Romanovsky <leon@kernel.org> wrote:
+> >
+> > On Fri, Aug 02, 2019 at 08:10:35PM +0800, Chuhong Yuan wrote:
+> > > Reference counters are preferred to use refcount_t instead of
+> > > atomic_t.
+> > > This is because the implementation of refcount_t can prevent
+> > > overflows and detect possible use-after-free.
+> > >
+> > > First convert the refcount field to refcount_t in mlx5/driver.h.
+> > > Then convert the uses to refcount_() APIs.
+> >
+> > You can't do it, because you need to ensure that driver compiles and
+> > works between patches. By converting driver.h alone to refcount_t, you
+> > simply broke mlx5 driver.
+> >
 >
-> On 02/08/19 09:47, Anup Patel wrote:
-> > +static void kvm_riscv_check_vcpu_requests(struct kvm_vcpu *vcpu)
-> > +{
-> > +     if (kvm_request_pending(vcpu)) {
-> > +             /* TODO: */
-> > +
-> > +             /*
-> > +              * Clear IRQ_PENDING requests that were made to guarantee
-> > +              * that a VCPU sees new virtual interrupts.
-> > +              */
-> > +             kvm_check_request(KVM_REQ_IRQ_PENDING, vcpu);
-> > +     }
-> > +}
->
-> This kvm_check_request can go away (as it does in patch 6).
+> It is my fault... I am not clear how to send patches which cross
+> several subsystems, so I sent them in series.
+> Maybe I should merge these patches together?
 
-Argh, I should have removed it in v2 itself.
-
-Thanks for catching. I will update.
-
->
-> > +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
-> > +{
-> > +     int ret;
-> > +     unsigned long scause, stval;
->
-> You need to wrap this with srcu_read_lock/srcu_read_unlock, otherwise
-> stage2_page_fault can access freed memslot arrays.  (ARM doesn't have
-> this issue because it does not have to decode instructions on MMIO faults).
-
-Looking at KVM ARM/ARM64, I was not sure about use of kvm->srcu. Thanks
-for clarifying. I will use kvm->srcu like you suggested.
-
->
-> That is,
->
->         vcpu->srcu_idx = srcu_read_lock(&vcpu->kvm->srcu);
->
-> > +     /* Process MMIO value returned from user-space */
-> > +     if (run->exit_reason == KVM_EXIT_MMIO) {
-> > +             ret = kvm_riscv_vcpu_mmio_return(vcpu, vcpu->run);
-> > +             if (ret)
-> > +                     return ret;
-> > +     }
-> > +
-> > +     if (run->immediate_exit)
-> > +             return -EINTR;
-> > +
-> > +     vcpu_load(vcpu);
-> > +
-> > +     kvm_sigset_activate(vcpu);
-> > +
-> > +     ret = 1;
-> > +     run->exit_reason = KVM_EXIT_UNKNOWN;
-> > +     while (ret > 0) {
-> > +             /* Check conditions before entering the guest */
-> > +             cond_resched();
-> > +
-> > +             kvm_riscv_check_vcpu_requests(vcpu);
-> > +
-> > +             preempt_disable();
-> > +
-> > +             local_irq_disable();
-> > +
-> > +             /*
-> > +              * Exit if we have a signal pending so that we can deliver
-> > +              * the signal to user space.
-> > +              */
-> > +             if (signal_pending(current)) {
-> > +                     ret = -EINTR;
-> > +                     run->exit_reason = KVM_EXIT_INTR;
-> > +             }
->
-> Add an srcu_read_unlock here (and then the smp_store_mb can become
-> smp_mb__after_srcu_read_unlock + WRITE_ONCE).
-
-Sure, I will update.
+In case of conversion patches, yes, you need to perform such change
+in one shot.
 
 >
 >
-> > +             /*
-> > +              * Ensure we set mode to IN_GUEST_MODE after we disable
-> > +              * interrupts and before the final VCPU requests check.
-> > +              * See the comment in kvm_vcpu_exiting_guest_mode() and
-> > +              * Documentation/virtual/kvm/vcpu-requests.rst
-> > +              */
-> > +             smp_store_mb(vcpu->mode, IN_GUEST_MODE);
-> > +
-> > +             if (ret <= 0 ||
-> > +                 kvm_request_pending(vcpu)) {
-> > +                     vcpu->mode = OUTSIDE_GUEST_MODE;
-> > +                     local_irq_enable();
-> > +                     preempt_enable();
-> > +                     continue;
-> > +             }
-> > +
-> > +             guest_enter_irqoff();
-> > +
-> > +             __kvm_riscv_switch_to(&vcpu->arch);
-> > +
-> > +             vcpu->mode = OUTSIDE_GUEST_MODE;
-> > +             vcpu->stat.exits++;
-> > +
-> > +             /* Save SCAUSE and STVAL because we might get an interrupt
-> > +              * between __kvm_riscv_switch_to() and local_irq_enable()
-> > +              * which can potentially overwrite SCAUSE and STVAL.
-> > +              */
-> > +             scause = csr_read(CSR_SCAUSE);
-> > +             stval = csr_read(CSR_STVAL);
-> > +
-> > +             /*
-> > +              * We may have taken a host interrupt in VS/VU-mode (i.e.
-> > +              * while executing the guest). This interrupt is still
-> > +              * pending, as we haven't serviced it yet!
-> > +              *
-> > +              * We're now back in HS-mode with interrupts disabled
-> > +              * so enabling the interrupts now will have the effect
-> > +              * of taking the interrupt again, in HS-mode this time.
-> > +              */
-> > +             local_irq_enable();
-> > +
-> > +             /*
-> > +              * We do local_irq_enable() before calling guest_exit() so
-> > +              * that if a timer interrupt hits while running the guest
-> > +              * we account that tick as being spent in the guest. We
-> > +              * enable preemption after calling guest_exit() so that if
-> > +              * we get preempted we make sure ticks after that is not
-> > +              * counted as guest time.
-> > +              */
-> > +             guest_exit();
-> > +
-> > +             preempt_enable();
+> > NAK, to be clear.
+> >
+> > And please don't sent series of patches as standalone patches.
+> >
 >
-> And another srcu_read_lock here.  Using vcpu->srcu_idx instead of a
-> local variable also allows system_opcode_insn to wrap kvm_vcpu_block
-> with a srcu_read_unlock/srcu_read_lock pair.
+> Due to the reason mentioned above, I sent them seperately.
 
-Okay.
+Create patch, run ./scripts/get_maintainer.pl on it and send according
+to generated output. You are not doing kernel core changes and there is
+no need to worry about cross subsystem complexity as long as you will
+put relevant maintainers in TO: field.
+
+Thanks
 
 >
-> > +             ret = kvm_riscv_vcpu_exit(vcpu, run, scause, stval);
-> > +     }
-> > +
-> > +     kvm_sigset_deactivate(vcpu);
->
-> And finally srcu_read_unlock here.
-
-Okay.
-
-Regards,
-Anup
+> > Thanks,
