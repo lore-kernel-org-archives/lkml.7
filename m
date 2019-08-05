@@ -2,103 +2,115 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF81AC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B969C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF0B620B1F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:32:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69FED20B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:35:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="eLCpJfoh"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="hthEXQoY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730212AbfHEScA (ORCPT
+        id S1730217AbfHESfW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 14:32:00 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46416 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730055AbfHEScA (ORCPT
+        Mon, 5 Aug 2019 14:35:22 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36845 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729383AbfHESfW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 14:32:00 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c3so16929914pfa.13
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 11:32:00 -0700 (PDT)
+        Mon, 5 Aug 2019 14:35:22 -0400
+Received: by mail-wm1-f66.google.com with SMTP id g67so69862680wme.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 11:35:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=GAZtoqMTbDsSEkTKLvtg+7SDqJDueQbXtR/WE8SM+Mc=;
-        b=eLCpJfoh/+Lkf3U5Jq1Gw1cvSEsPrPw2J+Jj1cKEaDJJOhXr0kqg4nEbozdiW9YyZW
-         MxwXt8S6yghOSjDY3p0XzVPZkQ9IDX8wNCa+Qv6vXmaUTiEb+PublVJvS7pSWJGp8KEx
-         w9HQXI6qhlsTEtJk/CdDPSdHkxIWQIH6hjn96/vYSQJ8y01/RqngcS6Oq2O9DA5M5rVN
-         fvxg1/cP+66yiU9OGP3cgIMltSY6quBi6snXE8Lh6SdljDPnXzTsPpnLyTbyUbk8aWam
-         aCjEgEpKTEI7REjqoFE/WpbKcnCBuJMhe6vk5dAdvMc2bGkn8nFYuZ1PobjwNlCPV9X1
-         L22A==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=zonXc3/aq46YHRaoY/iCK1+k43XKTgCzmG0UQJgG+z8=;
+        b=hthEXQoYYgY0fhTSkH9Vx7nvNA+llRLzD3MI+F6sx1jO3yWhb4QIbJ6b1Xy4q8uDlK
+         QOHE46t5saknXTiu0fP5G+gDVyXwapBG0t0lPXY/FR0YeguEmP31ykEERyRaNvFUQ8Mv
+         T6/Gi6gXw4R6+N2Xo1rdjZhK10vO5rVD9Kvc5Y28C3OE2/XE/EGNADw5iDL88iEP9s/p
+         Hvwtd7KsP6+rZxkmMvVHMS/KUhPCgg86ExfyINSR+8ZURNw+zLSbou9dok6I0aA7OInZ
+         b6TfNOowwBWEFq8BlzBjhHM4ZoW51WfIgWIsee1kmOy7QGNnsauUwhZJKmdFmIXm7zBA
+         UmGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=GAZtoqMTbDsSEkTKLvtg+7SDqJDueQbXtR/WE8SM+Mc=;
-        b=dldxz27WoVkCuurFSBQwMWqEVVq856D0siQ1qENiuNvIFYTzrvCmmtxRp/xdLlvgEy
-         pS5c1vljpKOSXpyDqy4zVf0CWl7Rfs0/LdgEzrB/1BDEPgdD/wVMRlDVB8bhjGCf4fHV
-         pT/dyXNls8GafCHtzZRbunAF7aQPBfZewpfr/TNYy78Y0mXiHe5oEL7PVRex9eOQM7tp
-         H5DsWJjYAc2dZNmeja9rw0UtbA6pfVsx3BJ3Ir9o0ruOLuf6/y9oUn01fszzDrp9S1th
-         +il80AFobn8iNM3rVZvfTf7TfgQ0HraRSZ4eZU8uWnoG80ipTvWPYeTPEObwQ77c7lIp
-         qsLg==
-X-Gm-Message-State: APjAAAWcf7mMzsmued2LQWX9zdXQTrppM63FOqU06zFisV9pPl9wOfAU
-        GTg+ql43rUYl9Cj1Q23IB1hOZQ==
-X-Google-Smtp-Source: APXvYqy5L3JR07HcEnA00M1CL8VNhKg77fHOWXFhUU5EGpQJP/FGGVXDbvKX2iSPUCmowPs/39oslw==
-X-Received: by 2002:a63:c118:: with SMTP id w24mr136487259pgf.347.1565029919532;
-        Mon, 05 Aug 2019 11:31:59 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:7483:80d6:7f67:2672])
-        by smtp.googlemail.com with ESMTPSA id a1sm51592199pgh.61.2019.08.05.11.31.58
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 05 Aug 2019 11:31:58 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Tony Lindgren <tony@atomide.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Alexander Clouter <alex@digriz.org.uk>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: Re: [PATCH] ARM: Replace strncmp with str_has_prefix
-In-Reply-To: <20190730024426.17262-1-hslester96@gmail.com>
-References: <20190730024426.17262-1-hslester96@gmail.com>
-Date:   Mon, 05 Aug 2019 11:31:57 -0700
-Message-ID: <7hzhknh3aa.fsf@baylibre.com>
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=zonXc3/aq46YHRaoY/iCK1+k43XKTgCzmG0UQJgG+z8=;
+        b=P8hVs1DGwEQXs/dsU0LuThvSE23B9RBkixSEy/VGechXydvXWApVMojzeeo5WO66nF
+         NYcy0UHg895AHOHIItcbnRhusXaNFxPSWZHv4oFha5ZL/rd6OlrNc4mXJP+emDpcO5+u
+         DNe8py9josM8DjggEwjNMR7t4bSRyydAuA/dWwyCefJzcFL3OtKZ3vZXGv8fznOmm76h
+         2pBJZSSwLT494G9dKfm4/RzJlzKsL9enjLKqtLGut5U9aUQYzEV6LqXmA4BZOiroqbLp
+         g/A+0Na5NiUQHjoKaah/VEoTo8a3jbbRikRsUp9iycNoP/wvHHo2Ch07tnB7k/BLxsDe
+         RCsQ==
+X-Gm-Message-State: APjAAAV2mXllL0fWfyFgapahs4ofKIaA4VyYvqyDfuiacQnVC94UQysb
+        uhofwcxYTKZYxxwou5ih3Qc=
+X-Google-Smtp-Source: APXvYqzY7OsNmwIWSX5CYlp0IZgujoGvomN+1R7UBPB67LukyzF6bYH9pKxjYThhPzxOh6dW8/uSSw==
+X-Received: by 2002:a1c:a6c8:: with SMTP id p191mr18768406wme.99.1565030120160;
+        Mon, 05 Aug 2019 11:35:20 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id v65sm100331874wme.31.2019.08.05.11.35.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 05 Aug 2019 11:35:18 -0700 (PDT)
+Message-ID: <5d4876e6.1c69fb81.24541.29fa@mx.google.com>
+Date:   Mon, 05 Aug 2019 11:35:18 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Tree: stable-rc
+X-Kernelci-Kernel: v4.19.64-75-g27e5d9acda64
+X-Kernelci-Branch: linux-4.19.y
+X-Kernelci-Report-Type: boot
+In-Reply-To: <20190805124935.819068648@linuxfoundation.org>
+References: <20190805124935.819068648@linuxfoundation.org>
+Subject: Re: [PATCH 4.19 00/74] 4.19.65-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Chuhong Yuan <hslester96@gmail.com> writes:
+stable-rc/linux-4.19.y boot: 65 boots: 1 failed, 64 passed (v4.19.64-75-g27=
+e5d9acda64)
 
-> In commit b6b2735514bc
-> ("tracing: Use str_has_prefix() instead of using fixed sizes")
-> the newly introduced str_has_prefix() was used
-> to replace error-prone strncmp(str, const, len).
-> Here fix codes with the same pattern.
->
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> ---
->  arch/arm/kernel/module-plts.c        | 2 +-
->  arch/arm/mach-omap2/omap_device.c    | 4 ++--
->  arch/arm/mach-omap2/pm-debug.c       | 8 ++++----
->  arch/arm/mach-omap2/pm.c             | 2 +-
->  arch/arm/mach-omap2/pm44xx.c         | 2 +-
->  arch/arm/mach-omap2/sr_device.c      | 8 ++++----
->  arch/arm/mach-orion5x/ts78xx-setup.c | 4 ++--
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.19.y/kernel/v4.19.64-75-g27e5d9acda64/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.19.=
+y/kernel/v4.19.64-75-g27e5d9acda64/
 
-For the OMAP stuff:
+Tree: stable-rc
+Branch: linux-4.19.y
+Git Describe: v4.19.64-75-g27e5d9acda64
+Git Commit: 27e5d9acda64f19f64a7db74e3bff765c11248bf
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 34 unique boards, 17 SoC families, 12 builds out of 206
 
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>  # arch/arm/mach-omap2/*
+Boot Regressions Detected:
 
-Kevin
+arm:
+
+    multi_v7_defconfig:
+        gcc-8:
+          exynos5250-snow:
+              lab-collabora: new failure (last pass: v4.19.64)
+
+Boot Failure Detected:
+
+arm:
+    multi_v7_defconfig:
+        gcc-8:
+            exynos5250-snow: 1 failed lab
+
+---
+For more info write to <info@kernelci.org>
