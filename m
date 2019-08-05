@@ -2,117 +2,88 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 362A3C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 21:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FFEC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 21:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10E3420C01
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 21:40:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09C862075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 21:42:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730600AbfHEVj7 (ORCPT
+        id S1730629AbfHEVmh convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 17:39:59 -0400
-Received: from mga17.intel.com ([192.55.52.151]:58423 "EHLO mga17.intel.com"
+        Mon, 5 Aug 2019 17:42:37 -0400
+Received: from mga17.intel.com ([192.55.52.151]:58605 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727328AbfHEVj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 17:39:58 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1728798AbfHEVmh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 17:42:37 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 14:39:58 -0700
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 14:42:36 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,350,1559545200"; 
-   d="scan'208";a="176434585"
-Received: from unknown (HELO localhost) ([10.252.52.83])
-  by orsmga003.jf.intel.com with ESMTP; 05 Aug 2019 14:39:48 -0700
-Date:   Tue, 6 Aug 2019 00:39:46 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
-        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
-        rientjes@google.com, cedric.xing@intel.com,
-        Suresh Siddha <suresh.b.siddha@intel.com>
-Subject: Re: [PATCH v21 16/28] x86/sgx: Add the Linux SGX Enclave Driver
-Message-ID: <20190805213909.x5wv26zrgwqfrp4d@linux.intel.com>
-References: <20190713170804.2340-1-jarkko.sakkinen@linux.intel.com>
- <20190713170804.2340-17-jarkko.sakkinen@linux.intel.com>
- <20190805161644.GD29275@linux.intel.com>
+   d="scan'208";a="257838415"
+Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
+  by orsmga001.jf.intel.com with ESMTP; 05 Aug 2019 14:42:36 -0700
+Received: from orsmsx155.amr.corp.intel.com (10.22.240.21) by
+ ORSMSX106.amr.corp.intel.com (10.22.225.133) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 5 Aug 2019 14:42:36 -0700
+Received: from orsmsx104.amr.corp.intel.com ([169.254.4.30]) by
+ ORSMSX155.amr.corp.intel.com ([169.254.7.34]) with mapi id 14.03.0439.000;
+ Mon, 5 Aug 2019 14:42:36 -0700
+From:   "Bowers, AndrewX" <andrewx.bowers@intel.com>
+To:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>
+Subject: RE: [Intel-wired-lan] [PATCH 1/2] ixgbe: Explicitly initialize
+ reference count to 0
+Thread-Topic: [Intel-wired-lan] [PATCH 1/2] ixgbe: Explicitly initialize
+ reference count to 0
+Thread-Index: AQHVSSDDoE9fR5KaZUKecUISPt1qS6btGweA
+Date:   Mon, 5 Aug 2019 21:42:36 +0000
+Message-ID: <26D9FDECA4FBDD4AADA65D8E2FC68A4A1D40F162@ORSMSX104.amr.corp.intel.com>
+References: <20190802105457.16596-1-hslester96@gmail.com>
+In-Reply-To: <20190802105457.16596-1-hslester96@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZjU1NjUwYzYtNmNhNy00OTc4LThlMjMtNzQyMzlhYTI4NmUxIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiMElwSmlCWldlK290OTlrRVRtNGlTTkhSc1pjMGIxSzlLSDBZUGlVRnhleXdtRitXaTR1azRKVXpXaXEzWk05UiJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.400.15
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.138]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190805161644.GD29275@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 09:16:44AM -0700, Sean Christopherson wrote:
-> On Sat, Jul 13, 2019 at 08:07:52PM +0300, Jarkko Sakkinen wrote:
-> > +static unsigned long sgx_get_unmapped_area(struct file *file,
-> > +					   unsigned long addr,
-> > +					   unsigned long len,
-> > +					   unsigned long pgoff,
-> > +					   unsigned long flags)
-> > +{
-> > +	if (flags & MAP_PRIVATE)
-> > +		return -EINVAL;
-> > +
-> > +	if (flags & MAP_FIXED)
-> > +		return addr;
-> > +
-> > +	if (len < 2 * PAGE_SIZE || len & (len - 1))
-> > +		return -EINVAL;
-> > +
-> > +	addr = current->mm->get_unmapped_area(file, addr, 2 * len, pgoff,
-> > +					      flags);
-> > +	if (IS_ERR_VALUE(addr))
-> > +		return addr;
-> > +
-> > +	addr = (addr + (len - 1)) & ~(len - 1);
-> > +
-> > +	return addr;
-> > +}
+> -----Original Message-----
+> From: Intel-wired-lan [mailto:intel-wired-lan-bounces@osuosl.org] On
+> Behalf Of Chuhong Yuan
+> Sent: Friday, August 2, 2019 3:55 AM
+> Cc: netdev@vger.kernel.org; Chuhong Yuan <hslester96@gmail.com>; linux-
+> kernel@vger.kernel.org; intel-wired-lan@lists.osuosl.org; David S . Miller
+> <davem@davemloft.net>
+> Subject: [Intel-wired-lan] [PATCH 1/2] ixgbe: Explicitly initialize reference
+> count to 0
 > 
-> Thinking about this more, I don't think the driver should verify or adjust
-> @addr and @len during non-fixed mmap().  There is no requirement that
-> userspace must map the full ELRANGE, or that an enclave's ELRANGE can
-> *never* be mapped to non-EPC.  The architectural requirement is that an
-> access that hits ELRANGE must map to the EPC *if* the CPU is executing the
-> associated enclave.
+> The driver does not explicitly call atomic_set to initialize refcount to 0.
+> Add the call so that it will be more straight forward to convert refcount from
+> atomic_t to refcount_t.
+> 
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> ---
+>  drivers/net/ethernet/intel/ixgbe/ixgbe_fcoe.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-Yeah, well, these were done in a quite different "ecosystem" where range
-was the enclave and not like now. Can be considered as cruft that we
-have simply missed when moving the fd associated enclaves.
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
 
-In the current framework of things it definitely makes sense to remove
-these calculations.
 
-So, I guess we will end up to:
-
-static unsigned long sgx_get_unmapped_area(struct file *file,
-					   unsigned long addr,
-					   unsigned long len,
-					   unsigned long pgoff,
-					   unsigned long flags)
-{
-	if (flags & MAP_PRIVATE)
-		return -EINVAL;
-
-	if (flags & MAP_FIXED)
-		return addr;
-
-	return current->mm->get_unmapped_area(file, addr, len, pgoff, flags);
-}
-
-/Jarkko
