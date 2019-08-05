@@ -2,108 +2,120 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE0D2C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:34:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C16E4C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A46BE2087B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:34:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YDCLR3lX"
+	by mail.kernel.org (Postfix) with ESMTP id 9E42B20856
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:36:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728305AbfHEKeH (ORCPT
+        id S1728232AbfHEKgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 06:34:07 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:39659 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727230AbfHEKeG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 06:34:06 -0400
-Received: by mail-lf1-f68.google.com with SMTP id x3so3749226lfn.6
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 03:34:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=JGtqwITu2uNu0KF6vt+VLLqwcEMqaP+PiWiHY6OQtsY=;
-        b=YDCLR3lXJ7d0Z4YqSLxOVJjSXKF8PSiCsmyC82hOuP2j31RTZ71Jfi1KO2C3/XZXBd
-         KQNt15eK9ofwpKOSOcx7bYoa3rQTLBLpFstYZ/qLz2mxDZrlVUtJwXyJx+ItO33Ezynx
-         WpdvKBDW/WZ2hQx86yBCUsOt7jRWtlx8pjHekN91U+LLlUkyjW2j3KSb3DOog57r/11E
-         XuFvzq1mzUcEE82AT7fBdtAS9JUxMEwuM98z7XNaQVFOK9Bsbnh6zPdNnNnxEZrouQk4
-         Tn1osA5l/+HfcEaWZMruPnpCx0m/wXh03YNEis8QlPwSSxC6JG7TeVU/4VtJdH7iPLyl
-         W44A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=JGtqwITu2uNu0KF6vt+VLLqwcEMqaP+PiWiHY6OQtsY=;
-        b=twiQ1eWtv/AKP1AiTNwEwizISfwYSOzlodh5E/y1iVUuhqx+jSgXNetzR0xsRybTm3
-         fg4UI2MBV6d3qeCXXvJXHGIUI63W8lpvzVvd8CpDsA6kYeqI23rBHLXN8h+hh5IEeHCU
-         UWo51n+gWA+se4HcgduJbxNLYFx/u840z6XXcdmwwk2/WP9DkoKb3Eo4vLz5zeh9X1ZG
-         //CU0nEPRBhm5AdGTkW/FBk4cznJBTy4Y1R3OG832Ezh+Ej+RFfn8/WOIucKvOx1GuTM
-         /ItQ81Vhm3LutRusSZrulHDvhfDCYHzalIb7kiBEAsHgt60EETzsbkstVL6FTo69WPwu
-         0oSw==
-X-Gm-Message-State: APjAAAXQex6g1k07xVCajdKFNrRnGxtVLJ9Yo4719+rrxLl0viYyiE+d
-        3ZVTFTnx2ohkFKFjDwmESQ0W5DXcuXqRaFnSqPHB7g==
-X-Google-Smtp-Source: APXvYqzH+R60ewO8XJ2gzoKiGmqUfBqtDJ2yUJTWbBfcdO++jKdzS/wcmFQSFHQC4vAyafrpnBTKHWgC43U+he1CuA8=
-X-Received: by 2002:a19:ed11:: with SMTP id y17mr1890223lfy.141.1565001244892;
- Mon, 05 Aug 2019 03:34:04 -0700 (PDT)
+        Mon, 5 Aug 2019 06:36:09 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41924 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727230AbfHEKgJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 06:36:09 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id CF319AB92;
+        Mon,  5 Aug 2019 10:36:07 +0000 (UTC)
+Date:   Mon, 5 Aug 2019 20:36:30 +1000
+From:   Aleksa Sarai <asarai@suse.de>
+To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Cc:     "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-man <linux-man@vger.kernel.org>,
+        Containers <containers@lists.linux-foundation.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jordan Ogas <jogas@lanl.gov>, Al Viro <viro@ftp.linux.org.uk>
+Subject: Re: pivot_root(".", ".") and the fchdir() dance
+Message-ID: <20190805103630.tu4kytsbi5evfrhi@mikami>
+References: <CAKgNAki0bR5zZr+kp_xjq+bNUky6-F+s2ep+jnR0YrjHhNMB1g@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190726112816.19723-1-anders.roxell@linaro.org>
-In-Reply-To: <20190726112816.19723-1-anders.roxell@linaro.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 5 Aug 2019 12:33:53 +0200
-Message-ID: <CACRpkdYyEi1Z9a2uz88Rks3QMYzV4W_cJ2FJ4pY1Hn6_qdAeeA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pinctrl: qcom: spmi-gpio: Mark expected switch fall-through
-To:     Anders Roxell <anders.roxell@linaro.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="6qypzrljzt2mkjjn"
+Content-Disposition: inline
+In-Reply-To: <CAKgNAki0bR5zZr+kp_xjq+bNUky6-F+s2ep+jnR0YrjHhNMB1g@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 1:28 PM Anders Roxell <anders.roxell@linaro.org> wr=
-ote:
 
-> When fall-through warnings was enabled by default the following warnings
-> was starting to show up:
->
-> ../drivers/pinctrl/qcom/pinctrl-spmi-gpio.c: In function =E2=80=98pmic_gp=
-io_populate=E2=80=99:
-> ../drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:815:20: warning: this stateme=
-nt may fall
->  through [-Wimplicit-fallthrough=3D]
->    pad->have_buffer =3D true;
->    ~~~~~~~~~~~~~~~~~^~~~~~
-> ../drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:816:2: note: here
->   case PMIC_GPIO_SUBTYPE_GPIOC_4CH:
->   ^~~~
-> ../drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:820:20: warning: this stateme=
-nt may fall
->  through [-Wimplicit-fallthrough=3D]
->    pad->have_buffer =3D true;
->    ~~~~~~~~~~~~~~~~~^~~~~~
-> ../drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:821:2: note: here
->   case PMIC_GPIO_SUBTYPE_GPIOC_8CH:
->   ^~~~
->
-> Rework so that the compiler doesn't warn about fall-through.
->
-> Fixes: d93512ef0f0e ("Makefile: Globally enable fall-through warning")
-> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+--6qypzrljzt2mkjjn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Patch applied.
+On 2019-08-01, Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> wrote:
+> I'd like to add some documentation about the pivot_root(".", ".")
+> idea, but I have a doubt/question. In the lxc_pivot_root() code we
+> have these steps
+>=20
+>         oldroot =3D open("/", O_DIRECTORY | O_RDONLY | O_CLOEXEC);
+>         newroot =3D open(rootfs, O_DIRECTORY | O_RDONLY | O_CLOEXEC);
+>=20
+>         fchdir(newroot);
+>         pivot_root(".", ".");
+>=20
+>         fchdir(oldroot);      // ****
 
-Yours,
-Linus Walleij
+This one is "required" because (as the pivot_root(2) man page states),
+it's technically not guaranteed by the kernel that the process's cwd
+will be the same after pivot_root(2):
+
+> pivot_root() may or may not change the current root and the current
+> working directory of any processes or threads which use the old root
+> directory.
+
+Now, if it turns out that we can rely on the current behaviour (and the
+man page you're improving is actually inaccurate on this point) then
+you're right that this fchdir(2) isn't required.
+
+>         mount("", ".", "", MS_SLAVE | MS_REC, NULL);
+>         umount2(".", MNT_DETACH);
+
+>         fchdir(newroot);      // ****
+
+And this one is required because we are in @oldroot at this point, due
+to the first fchdir(2). If we don't have the first one, then switching
+=66rom "." to "/" in the mount/umount2 calls should fix the issue.
+
+We do something very similar to this in runc as well[1] (though, as the
+commit message says, I "borrowed" the idea from LXC).
+
+[1]: https://github.com/opencontainers/runc/commit/f8e6b5af5e120ab7599885bd=
+13a932d970ccc748
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--6qypzrljzt2mkjjn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEXzbGxhtUYBJKdfWmnhiqJn3bjbQFAl1IBqsACgkQnhiqJn3b
+jbTjfw/+Pnh6zFLbDf4UKFZiPT2tLK91Q5TuWjlmjWxJxZMtGNxvDyQiyYXaNXn7
+rskiOzCFTl2i3N5BJZCuT3LPfT9+jdHQ1lYowlGZh0AVSQrWksAUsEEumyMFxqpo
+/ltTRWeQG51pqiqW+Nutd5VH3qsaHT2WfNYHnGSuzyHn+lykwgLymnE7MzjgGPZV
+vm9IGDEQmpHMZuc6cAxKzC74Fa98QDmKS0K0R32GaLFc7Y28HNnDq/fnNbzAkVYO
+OwGDY1p97vVk6Zc0MOQuyjAYng+lnaD+wp1uEYai8hpPud5AZ6WBxFke5l83TKjk
+lJgYx+CT+/inlUcRZ7X8/8MofET/P8K65fteEL+SvoSpBakVmztMVKIvasll+eja
+81rffEeIy+3X8pRhSSN8R3yFLk29uw+oQxj5FJlr6IGX0uiRnk1m93KuphlsBg4w
+jedZ9O+LE2DbjHT43Xz7u0oeeUYVF+Hs2aZXOXbxRGeJl1HiQYlJqW1mdWGwQKKf
+1r3zSxaTfXz8svNsHA0fRlZi7S5psoUMRdNEhsQGW/GKr3KTtojUvEqeGGKhW6H4
+KgJR6OHlmfRwwgCtiaLx09736H3/m/zG5gPsGTKZGP51LnQWYjpUaUMm+55tSUg9
+waJ52wsLxsmJiJ6zYGHzih7sK6LJZMT0ZvqWUXAO5DPK5P2UPqc=
+=Ti2z
+-----END PGP SIGNATURE-----
+
+--6qypzrljzt2mkjjn--
