@@ -2,51 +2,54 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEC1C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F102FC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 029C320880
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C55A22067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:10:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010634;
-	bh=rVdNOYNZGUrED489nDxiAoFBEAt2PWzy6ZMn4bS+Tng=;
+	s=default; t=1565010638;
+	bh=xnjTLQj/KZjHELxGR6ezwzVsHjQKUD9v24S4/Ae5VUo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2UzIirpZK6e4Gv//Mv+hozPoL3IJo/y7r8ns+I7CZgfED1A1MOwYGXsVDLQu2UNqE
-	 cpQ1S/3wvBiLwnVOGkYMqTjwydSZ4uicbJCRYmAxuMZ84dieXo/XtmJCExJLQcuQYx
-	 RmKFful/5MrvoY5MMaQI94goWmbWTNqyg2liTQ8M=
+	b=tPHKAARE9sphgQCRdTThSVxC8ly70hdlaeim+sIt301HewEXYPTItF+wdhW/c4ENx
+	 sQJdyTpQwHqasxNBzP6wkpqbacBuPduuMLmspVH2+0TTsH9fXFIhjfHtqf+x+nswTG
+	 8W8QLwdQDTPHkGckmJo5yNqzdKMBJq9roBu3NsaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730342AbfHENKc (ORCPT
+        id S1730359AbfHENKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:10:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49380 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:10:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729988AbfHENK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:10:27 -0400
+        id S1730347AbfHENKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:10:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03B872067D;
-        Mon,  5 Aug 2019 13:10:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B95FC2067D;
+        Mon,  5 Aug 2019 13:10:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010626;
-        bh=rVdNOYNZGUrED489nDxiAoFBEAt2PWzy6ZMn4bS+Tng=;
+        s=default; t=1565010634;
+        bh=xnjTLQj/KZjHELxGR6ezwzVsHjQKUD9v24S4/Ae5VUo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GKHOcU5uKZHOVEPDe6KtmFri55Ugh6ShcYfeX0rBw6qIkTME0CRCjOOXPVLRGGyN8
-         uiOLFeqfXtzKC6HHblrZN5t1VWWP4SELiBpKH94Xdlmzx8wCyuFfbLxmO6HC2pY9yG
-         65P/DhydnLFRYAskQRrSqGxLSmJu1wvSRbDPNBFk=
+        b=xP2XvJlbfoBTmZc+w/4BZZUPRCVRNYCgXsmm/EFbWqB5TqLllTaAwqjcQThj5LqZs
+         42DRHdMN90j7Hv5JypCz+z41YDn9kX+n7+kmYIMu5WWAbXDJyETekPwum4wL/lpizs
+         oPgzA6aWbCrxoxrP4zsboWHDt16H3Y8kMxnj430g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "M. Vefa Bicakci" <m.v.b@runbox.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH 4.19 42/74] kconfig: Clear "written" flag to avoid data loss
-Date:   Mon,  5 Aug 2019 15:02:55 +0200
-Message-Id: <20190805124939.270100307@linuxfoundation.org>
+        stable@vger.kernel.org, "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        "Yan, Zheng" <zyan@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 18/74] ceph: fix improper use of smp_mb__before_atomic()
+Date:   Mon,  5 Aug 2019 15:02:31 +0200
+Message-Id: <20190805124937.270523477@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124935.819068648@linuxfoundation.org>
 References: <20190805124935.819068648@linuxfoundation.org>
@@ -59,52 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: M. Vefa Bicakci <m.v.b@runbox.com>
+[ Upstream commit 749607731e26dfb2558118038c40e9c0c80d23b5 ]
 
-commit 0c5b6c28ed68becb692b43eae5e44d5aa7e160ce upstream.
+This barrier only applies to the read-modify-write operations; in
+particular, it does not apply to the atomic64_set() primitive.
 
-Prior to this commit, starting nconfig, xconfig or gconfig, and saving
-the .config file more than once caused data loss, where a .config file
-that contained only comments would be written to disk starting from the
-second save operation.
+Replace the barrier with an smp_mb().
 
-This bug manifests itself because the SYMBOL_WRITTEN flag is never
-cleared after the first call to conf_write, and subsequent calls to
-conf_write then skip all of the configuration symbols due to the
-SYMBOL_WRITTEN flag being set.
-
-This commit resolves this issue by clearing the SYMBOL_WRITTEN flag
-from all symbols before conf_write returns.
-
-Fixes: 8e2442a5f86e ("kconfig: fix missing choice values in auto.conf")
-Cc: linux-stable <stable@vger.kernel.org> # 4.19+
-Signed-off-by: M. Vefa Bicakci <m.v.b@runbox.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: fdd4e15838e59 ("ceph: rework dcache readdir")
+Reported-by: "Paul E. McKenney" <paulmck@linux.ibm.com>
+Reported-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
+Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/kconfig/confdata.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ fs/ceph/super.h | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/scripts/kconfig/confdata.c
-+++ b/scripts/kconfig/confdata.c
-@@ -784,6 +784,7 @@ int conf_write(const char *name)
- 	const char *str;
- 	char dirname[PATH_MAX+1], tmpname[PATH_MAX+22], newname[PATH_MAX+8];
- 	char *env;
-+	int i;
- 
- 	dirname[0] = 0;
- 	if (name && name[0]) {
-@@ -860,6 +861,9 @@ next:
- 	}
- 	fclose(out);
- 
-+	for_all_symbols(i, sym)
-+		sym->flags &= ~SYMBOL_WRITTEN;
-+
- 	if (*tmpname) {
- 		strcat(dirname, basename);
- 		strcat(dirname, ".old");
+diff --git a/fs/ceph/super.h b/fs/ceph/super.h
+index 582e28fd1b7bf..d8579a56e5dc2 100644
+--- a/fs/ceph/super.h
++++ b/fs/ceph/super.h
+@@ -526,7 +526,12 @@ static inline void __ceph_dir_set_complete(struct ceph_inode_info *ci,
+ 					   long long release_count,
+ 					   long long ordered_count)
+ {
+-	smp_mb__before_atomic();
++	/*
++	 * Makes sure operations that setup readdir cache (update page
++	 * cache and i_size) are strongly ordered w.r.t. the following
++	 * atomic64_set() operations.
++	 */
++	smp_mb();
+ 	atomic64_set(&ci->i_complete_seq[0], release_count);
+ 	atomic64_set(&ci->i_complete_seq[1], ordered_count);
+ }
+-- 
+2.20.1
+
 
 
