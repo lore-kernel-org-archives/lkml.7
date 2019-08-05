@@ -2,137 +2,152 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 854FCC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CDD2C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6490C2086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46CD221738
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:27:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729210AbfHEQZx (ORCPT
+        id S1729244AbfHEQ1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 12:25:53 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:41100 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728871AbfHEQZx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 12:25:53 -0400
-Received: from mail-pl1-f198.google.com ([209.85.214.198])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1hufnz-0007xm-7O
-        for linux-kernel@vger.kernel.org; Mon, 05 Aug 2019 16:25:51 +0000
-Received: by mail-pl1-f198.google.com with SMTP id d2so46579418pla.18
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 09:25:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=ahDv1JQ0w2AsFEFKjWvYewqWbx39Q78We1s4PnzLIHE=;
-        b=RTDUT4Y2d47CpJ6jm+5Pl7TU3vHXKKquEuPX7bFxJUsI1HYMJdLS0mdANZiGLfIbrz
-         sU+UmbPwNGXjscRDepZiSrAsVVJCDILVAD/7hL/eNA0gVj7fW4rsgt04ZSvBOXdLehgf
-         yATncsRGs/eDEWWCeSVZ+tIsk3zCnYSrFZEaTeiNKQts9bJBJ9ohfbgtM+2xa4jfBv8P
-         6Qhz9a0McZovq4DL+xBOn7gVVOVNJogRl7xonFGMI2pttT5It9EWTq0vrp24E37TpCk5
-         UKkz5FQj4aqEsdSINjy54V2oQlSeDigJ0i0X/5a4u2tVExstsADdpZt55XOHEg2oIr0g
-         MuKA==
-X-Gm-Message-State: APjAAAVbt0O8yY/U3VjYbbOeVCwP4s2+CnbWyMlcD0PuztXewJYEx3BK
-        HBNhUytSQJaZ2sZREjoS2bm90O/x5cBhlugaVg0HYQrBjv8alQ15ULqqXkAWjdu2V9kiKl0wNC6
-        l79jyNS/9FDI7zxRxswMrA6E8gKbCoIg/BEnB7BQ/vQ==
-X-Received: by 2002:a63:1c22:: with SMTP id c34mr30357127pgc.56.1565022349742;
-        Mon, 05 Aug 2019 09:25:49 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyGlZdsZ6bGXay0VR9+yR4cNcswW8S4n0UbagMs6pMa5uYImce0UHWrQvcHTxX+l+t8F0knuA==
-X-Received: by 2002:a63:1c22:: with SMTP id c34mr30357110pgc.56.1565022349363;
-        Mon, 05 Aug 2019 09:25:49 -0700 (PDT)
-Received: from 2001-b011-380f-37d3-6851-7bc4-3469-2fa7.dynamic-ip6.hinet.net (2001-b011-380f-37d3-6851-7bc4-3469-2fa7.dynamic-ip6.hinet.net. [2001:b011:380f:37d3:6851:7bc4:3469:2fa7])
-        by smtp.gmail.com with ESMTPSA id u134sm82343207pfc.19.2019.08.05.09.25.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 05 Aug 2019 09:25:48 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8;
-        delsp=yes;
-        format=flowed
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v3 0/8] PM / ACPI: sleep: Additional changes related to
- suspend-to-idle
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <5997740.FPbUVk04hV@kreacher>
-Date:   Tue, 6 Aug 2019 00:25:41 +0800
-Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mario Limonciello <mario.limonciello@dell.com>
-Content-Transfer-Encoding: 8bit
-Message-Id: <63E89FFF-9471-4F65-B05D-E99EC5C9EFD6@canonical.com>
-References: <5997740.FPbUVk04hV@kreacher>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Mon, 5 Aug 2019 12:27:18 -0400
+Received: from mga17.intel.com ([192.55.52.151]:35190 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726620AbfHEQ1R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 12:27:17 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 09:27:17 -0700
+X-IronPort-AV: E=Sophos;i="5.64,350,1559545200"; 
+   d="scan'208";a="185363930"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 09:27:17 -0700
+Message-ID: <ed48ecdb833808bf6b08bc54fa98503cbad493f3.camel@linux.intel.com>
+Subject: Re: [PATCH v3 6/6] virtio-balloon: Add support for providing unused
+ page reports to host
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        kvm@vger.kernel.org, david@redhat.com, mst@redhat.com,
+        dave.hansen@intel.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org
+Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
+        konrad.wilk@oracle.com, willy@infradead.org,
+        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com
+Date:   Mon, 05 Aug 2019 09:27:16 -0700
+In-Reply-To: <1cff09a4-d302-639c-ab08-9d82e5fc1383@redhat.com>
+References: <20190801222158.22190.96964.stgit@localhost.localdomain>
+         <20190801223829.22190.36831.stgit@localhost.localdomain>
+         <1cff09a4-d302-639c-ab08-9d82e5fc1383@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-at 18:33, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+On Mon, 2019-08-05 at 12:00 -0400, Nitesh Narayan Lal wrote:
+> On 8/1/19 6:38 PM, Alexander Duyck wrote:
+> > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > 
+> > Add support for the page reporting feature provided by virtio-balloon.
+> > Reporting differs from the regular balloon functionality in that is is
+> > much less durable than a standard memory balloon. Instead of creating a
+> > list of pages that cannot be accessed the pages are only inaccessible
+> > while they are being indicated to the virtio interface. Once the
+> > interface has acknowledged them they are placed back into their respective
+> > free lists and are once again accessible by the guest system.
+> > 
+> > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > ---
+> >  drivers/virtio/Kconfig              |    1 +
+> >  drivers/virtio/virtio_balloon.c     |   56 +++++++++++++++++++++++++++++++++++
+> >  include/uapi/linux/virtio_balloon.h |    1 +
+> >  3 files changed, 58 insertions(+)
+> > 
+> > diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
+> > index 078615cf2afc..4b2dd8259ff5 100644
+> > --- a/drivers/virtio/Kconfig
+> > +++ b/drivers/virtio/Kconfig
+> > @@ -58,6 +58,7 @@ config VIRTIO_BALLOON
+> >  	tristate "Virtio balloon driver"
+> >  	depends on VIRTIO
+> >  	select MEMORY_BALLOON
+> > +	select PAGE_REPORTING
+> >  	---help---
+> >  	 This driver supports increasing and decreasing the amount
+> >  	 of memory within a KVM guest.
+> > diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+> > index 2c19457ab573..971fe924e34f 100644
+> > --- a/drivers/virtio/virtio_balloon.c
+> > +++ b/drivers/virtio/virtio_balloon.c
+> > @@ -19,6 +19,7 @@
+> >  #include <linux/mount.h>
+> >  #include <linux/magic.h>
+> >  #include <linux/pseudo_fs.h>
+> > +#include <linux/page_reporting.h>
+> >  
+> >  /*
+> >   * Balloon device works in 4K page units.  So each page is pointed to by
+> > @@ -37,6 +38,9 @@
+> >  #define VIRTIO_BALLOON_FREE_PAGE_SIZE \
+> >  	(1 << (VIRTIO_BALLOON_FREE_PAGE_ORDER + PAGE_SHIFT))
+> >  
+> > +/*  limit on the number of pages that can be on the reporting vq */
+> > +#define VIRTIO_BALLOON_VRING_HINTS_MAX	16
+> > +
+> >  #ifdef CONFIG_BALLOON_COMPACTION
+> >  static struct vfsmount *balloon_mnt;
+> >  #endif
+> > @@ -46,6 +50,7 @@ enum virtio_balloon_vq {
+> >  	VIRTIO_BALLOON_VQ_DEFLATE,
+> >  	VIRTIO_BALLOON_VQ_STATS,
+> >  	VIRTIO_BALLOON_VQ_FREE_PAGE,
+> > +	VIRTIO_BALLOON_VQ_REPORTING,
+> >  	VIRTIO_BALLOON_VQ_MAX
+> >  };
+> >  
+> > @@ -113,6 +118,10 @@ struct virtio_balloon {
+> >  
+> >  	/* To register a shrinker to shrink memory upon memory pressure */
+> >  	struct shrinker shrinker;
+> > +
+> > +	/* Unused page reporting device */
+> > +	struct virtqueue *reporting_vq;
+> > +	struct page_reporting_dev_info ph_dev_info;
+> >  };
+> >  
+> >  static struct virtio_device_id id_table[] = {
+> > @@ -152,6 +161,23 @@ static void tell_host(struct virtio_balloon *vb, struct virtqueue *vq)
+> >  
+> >  }
+> >  
+> > +void virtballoon_unused_page_report(struct page_reporting_dev_info *ph_dev_info,
+> > +				    unsigned int nents)
+> > +{
+> > +	struct virtio_balloon *vb =
+> > +		container_of(ph_dev_info, struct virtio_balloon, ph_dev_info);
+> > +	struct virtqueue *vq = vb->reporting_vq;
+> > +	unsigned int unused;
+> > +
+> > +	/* We should always be able to add these buffers to an empty queue. */
+> > +	virtqueue_add_inbuf(vq, ph_dev_info->sg, nents, vb,
+> > +			    GFP_NOWAIT | __GFP_NOWARN);
+> 
+> I think you should handle allocation failure here. It is a possibility, isn't?
+> Maybe return an error or even disable page hinting/reporting?
+> 
 
-> Hi All,
->
->>> On top of the "Simplify the suspend-to-idle control flow" patch series
->>> posted previously:
->>>
->>> https://lore.kernel.org/lkml/71085220.z6FKkvYQPX@kreacher/
->>>
->>> sanitize the suspend-to-idle flow even further.
->>>
->>> First off, decouple EC wakeup from the LPS0 _DSM processing (patch 1).
->>>
->>> Next, reorder the code to invoke LPS0 _DSM Functions 5 and 6 in the
->>> specification-compliant order with respect to suspending and resuming
->>> devices (patch 2).
->>>
->>> Finally, rearrange lps0_device_attach() (patch 3) and add a command line
->>> switch to prevent the LPS0 _DSM from being used.
->>
->> The v2 is because I found a (minor) bug in patch 1, decided to use a  
->> module
->> parameter instead of a kernel command line option in patch 4.  Also, there
->> are 4 new patches:
->>
->> Patch 5: Switch the EC over to polling during "noirq" suspend and back
->> during "noirq" resume.
->>
->> Patch 6: Eliminate acpi_sleep_no_ec_events().
->>
->> Patch 7: Consolidate some EC code depending on PM_SLEEP.
->>
->> Patch 8: Add EC GPE dispatching debug message.
->
-> The v3 is just a rearranged v2 so as to move the post sensitive patch  
-> (previous patch 2)
-> to the end of the series.   [After applying the full series the code is  
-> the same as before.]
->
-> For easier testing, the series (along with some previous patches depended  
-> on by it)
-> is available in the pm-s2idle-testing branch of the linux-pm.git tree at  
-> kernel.org:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log/?h=pm-s2idle-testing
-
-I’ve just tested the full series on Latitude 5300, and the additional  
-spurious wake up is gone.
-
-Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-
->
-> Please refer to the changelogs for details.
->
-> Thanks,
-> Rafael
-
+I don't think it is an issue I have to worry about. Specifically I am
+limiting the size of the scatterlist based on the size of the vq. As such
+I will never exceed the size and should be able to use it to store the
+scatterlist directly.
 
