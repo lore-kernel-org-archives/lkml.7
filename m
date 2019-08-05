@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 344F8C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C19FC32751
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F276E2173B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:08:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 535992173B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:08:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010489;
-	bh=HieSV+SPC7yu3sb5MXxN1dqPjg2oY2jH03BIgWZbI6E=;
+	s=default; t=1565010491;
+	bh=IqjSK9W3j2L6/NohAdlcBv+/sC6WYnsk0r0fGiwNuA8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pO+eBUgc2mdZNG81bklpCsCI5f0VykI3dWPlyOfFmBEcmuMLnIfRfUCc+E5zYMRM4
-	 9D1ebkgEYFm4wcsitikAK+gXm/KjF1XHm6XLiQk9T0OMRb/PS5mbePoy+did4cXxd7
-	 XQ/BijGPIjKtePvaX+GeZPDeY/ma+7+fw4UgcliA=
+	b=0BAlzjclBLoWNg20RI1mgUgt1UtELkRt6h+SXH6fQanR5+drfLCmqwT6k+Az7s3MT
+	 o5TjtoFMgpa8PfnZlwiWnKnX8cPALwIdJkynWIph/sunzc+zczXQrY0qLXy9RQDwz8
+	 +0NWwNyIW0z7XyfpQrCjYEOUP3RpHaGVG6Q+OH+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729357AbfHENIH (ORCPT
+        id S1729970AbfHENIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:08:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45972 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:08:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729094AbfHENIF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:08:05 -0400
+        id S1729955AbfHENIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:08:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B35512075B;
-        Mon,  5 Aug 2019 13:08:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DCB92075B;
+        Mon,  5 Aug 2019 13:08:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010484;
-        bh=HieSV+SPC7yu3sb5MXxN1dqPjg2oY2jH03BIgWZbI6E=;
+        s=default; t=1565010486;
+        bh=IqjSK9W3j2L6/NohAdlcBv+/sC6WYnsk0r0fGiwNuA8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BebPuzCe5G5Svty23irpb61PFcShfqaDCeZLNeBngHA3+xJPY3sUAbsK5Risnu//j
-         9XDPHee3w3rxxjCibUHutEylfEVZRt6y7FUPV0O+z2w/iSXtiF00xyzFcKawWwL4X+
-         gl7g/CuexGcdOPSirelnohH9UPbC/uNE3bTsbZlU=
+        b=x8e50++dqz1ikr54ufAbsgC6MMDp+N5DN9wU0Yc3eIEVOy+u8CvM2tc1YrSoZ79Fk
+         eUkf7Y+hhTbU7vwistQyh9jkyZzR122hgDFv+mJm0EIZGOOENUhH0G4SxqwKne4tbw
+         ETiI1+cQl1mHqVLUlfSEOo5iSMX+Ig91u7M2DRbs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 34/53] Btrfs: fix incremental send failure after deduplication
-Date:   Mon,  5 Aug 2019 15:02:59 +0200
-Message-Id: <20190805124931.988306131@linuxfoundation.org>
+        stable@vger.kernel.org, linux-block@vger.kernel.org,
+        Ratna Manoj Bolla <manoj.br@gmail.com>, nbd@other.debian.org,
+        David Woodhouse <dwmw@amazon.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Munehisa Kamata <kamatam@amazon.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.14 43/53] nbd: replace kill_bdev() with __invalidate_device() again
+Date:   Mon,  5 Aug 2019 15:03:08 +0200
+Message-Id: <20190805124932.785697070@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124927.973499541@linuxfoundation.org>
 References: <20190805124927.973499541@linuxfoundation.org>
@@ -59,180 +63,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Munehisa Kamata <kamatam@amazon.com>
 
-commit b4f9a1a87a48c255bb90d8a6c3d555a1abb88130 upstream.
+commit 2b5c8f0063e4b263cf2de82029798183cf85c320 upstream.
 
-When doing an incremental send operation we can fail if we previously did
-deduplication operations against a file that exists in both snapshots. In
-that case we will fail the send operation with -EIO and print a message
-to dmesg/syslog like the following:
+Commit abbbdf12497d ("replace kill_bdev() with __invalidate_device()")
+once did this, but 29eaadc03649 ("nbd: stop using the bdev everywhere")
+resurrected kill_bdev() and it has been there since then. So buffer_head
+mappings still get killed on a server disconnection, and we can still
+hit the BUG_ON on a filesystem on the top of the nbd device.
 
-  BTRFS error (device sdc): Send: inconsistent snapshot, found updated \
-  extent for inode 257 without updated inode item, send root is 258, \
-  parent root is 257
+  EXT4-fs (nbd0): mounted filesystem with ordered data mode. Opts: (null)
+  block nbd0: Receive control failed (result -32)
+  block nbd0: shutting down sockets
+  print_req_error: I/O error, dev nbd0, sector 66264 flags 3000
+  EXT4-fs warning (device nbd0): htree_dirblock_to_tree:979: inode #2: lblock 0: comm ls: error -5 reading directory block
+  print_req_error: I/O error, dev nbd0, sector 2264 flags 3000
+  EXT4-fs error (device nbd0): __ext4_get_inode_loc:4690: inode #2: block 283: comm ls: unable to read itable block
+  EXT4-fs error (device nbd0) in ext4_reserve_inode_write:5894: IO failure
+  ------------[ cut here ]------------
+  kernel BUG at fs/buffer.c:3057!
+  invalid opcode: 0000 [#1] SMP PTI
+  CPU: 7 PID: 40045 Comm: jbd2/nbd0-8 Not tainted 5.1.0-rc3+ #4
+  Hardware name: Amazon EC2 m5.12xlarge/, BIOS 1.0 10/16/2017
+  RIP: 0010:submit_bh_wbc+0x18b/0x190
+  ...
+  Call Trace:
+   jbd2_write_superblock+0xf1/0x230 [jbd2]
+   ? account_entity_enqueue+0xc5/0xf0
+   jbd2_journal_update_sb_log_tail+0x94/0xe0 [jbd2]
+   jbd2_journal_commit_transaction+0x12f/0x1d20 [jbd2]
+   ? __switch_to_asm+0x40/0x70
+   ...
+   ? lock_timer_base+0x67/0x80
+   kjournald2+0x121/0x360 [jbd2]
+   ? remove_wait_queue+0x60/0x60
+   kthread+0xf8/0x130
+   ? commit_timeout+0x10/0x10 [jbd2]
+   ? kthread_bind+0x10/0x10
+   ret_from_fork+0x35/0x40
 
-This requires that we deduplicate to the same file in both snapshots for
-the same amount of times on each snapshot. The issue happens because a
-deduplication only updates the iversion of an inode and does not update
-any other field of the inode, therefore if we deduplicate the file on
-each snapshot for the same amount of time, the inode will have the same
-iversion value (stored as the "sequence" field on the inode item) on both
-snapshots, therefore it will be seen as unchanged between in the send
-snapshot while there are new/updated/deleted extent items when comparing
-to the parent snapshot. This makes the send operation return -EIO and
-print an error message.
+With __invalidate_device(), I no longer hit the BUG_ON with sync or
+unmount on the disconnected device.
 
-Example reproducer:
-
-  $ mkfs.btrfs -f /dev/sdb
-  $ mount /dev/sdb /mnt
-
-  # Create our first file. The first half of the file has several 64Kb
-  # extents while the second half as a single 512Kb extent.
-  $ xfs_io -f -s -c "pwrite -S 0xb8 -b 64K 0 512K" /mnt/foo
-  $ xfs_io -c "pwrite -S 0xb8 512K 512K" /mnt/foo
-
-  # Create the base snapshot and the parent send stream from it.
-  $ btrfs subvolume snapshot -r /mnt /mnt/mysnap1
-  $ btrfs send -f /tmp/1.snap /mnt/mysnap1
-
-  # Create our second file, that has exactly the same data as the first
-  # file.
-  $ xfs_io -f -c "pwrite -S 0xb8 0 1M" /mnt/bar
-
-  # Create the second snapshot, used for the incremental send, before
-  # doing the file deduplication.
-  $ btrfs subvolume snapshot -r /mnt /mnt/mysnap2
-
-  # Now before creating the incremental send stream:
-  #
-  # 1) Deduplicate into a subrange of file foo in snapshot mysnap1. This
-  #    will drop several extent items and add a new one, also updating
-  #    the inode's iversion (sequence field in inode item) by 1, but not
-  #    any other field of the inode;
-  #
-  # 2) Deduplicate into a different subrange of file foo in snapshot
-  #    mysnap2. This will replace an extent item with a new one, also
-  #    updating the inode's iversion by 1 but not any other field of the
-  #    inode.
-  #
-  # After these two deduplication operations, the inode items, for file
-  # foo, are identical in both snapshots, but we have different extent
-  # items for this inode in both snapshots. We want to check this doesn't
-  # cause send to fail with an error or produce an incorrect stream.
-
-  $ xfs_io -r -c "dedupe /mnt/bar 0 0 512K" /mnt/mysnap1/foo
-  $ xfs_io -r -c "dedupe /mnt/bar 512K 512K 512K" /mnt/mysnap2/foo
-
-  # Create the incremental send stream.
-  $ btrfs send -p /mnt/mysnap1 -f /tmp/2.snap /mnt/mysnap2
-  ERROR: send ioctl failed with -5: Input/output error
-
-This issue started happening back in 2015 when deduplication was updated
-to not update the inode's ctime and mtime and update only the iversion.
-Back then we would hit a BUG_ON() in send, but later in 2016 send was
-updated to return -EIO and print the error message instead of doing the
-BUG_ON().
-
-A test case for fstests follows soon.
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203933
-Fixes: 1c919a5e13702c ("btrfs: don't update mtime/ctime on deduped inodes")
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: 29eaadc03649 ("nbd: stop using the bdev everywhere")
+Cc: linux-block@vger.kernel.org
+Cc: Ratna Manoj Bolla <manoj.br@gmail.com>
+Cc: nbd@other.debian.org
+Cc: stable@vger.kernel.org
+Cc: David Woodhouse <dwmw@amazon.com>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Munehisa Kamata <kamatam@amazon.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/send.c |   77 ++++++++++----------------------------------------------
- 1 file changed, 15 insertions(+), 62 deletions(-)
+ drivers/block/nbd.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/btrfs/send.c
-+++ b/fs/btrfs/send.c
-@@ -6130,68 +6130,21 @@ static int changed_extent(struct send_ct
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -1207,7 +1207,7 @@ static void nbd_clear_sock_ioctl(struct
+ 				 struct block_device *bdev)
  {
- 	int ret = 0;
- 
--	if (sctx->cur_ino != sctx->cmp_key->objectid) {
--
--		if (result == BTRFS_COMPARE_TREE_CHANGED) {
--			struct extent_buffer *leaf_l;
--			struct extent_buffer *leaf_r;
--			struct btrfs_file_extent_item *ei_l;
--			struct btrfs_file_extent_item *ei_r;
--
--			leaf_l = sctx->left_path->nodes[0];
--			leaf_r = sctx->right_path->nodes[0];
--			ei_l = btrfs_item_ptr(leaf_l,
--					      sctx->left_path->slots[0],
--					      struct btrfs_file_extent_item);
--			ei_r = btrfs_item_ptr(leaf_r,
--					      sctx->right_path->slots[0],
--					      struct btrfs_file_extent_item);
--
--			/*
--			 * We may have found an extent item that has changed
--			 * only its disk_bytenr field and the corresponding
--			 * inode item was not updated. This case happens due to
--			 * very specific timings during relocation when a leaf
--			 * that contains file extent items is COWed while
--			 * relocation is ongoing and its in the stage where it
--			 * updates data pointers. So when this happens we can
--			 * safely ignore it since we know it's the same extent,
--			 * but just at different logical and physical locations
--			 * (when an extent is fully replaced with a new one, we
--			 * know the generation number must have changed too,
--			 * since snapshot creation implies committing the current
--			 * transaction, and the inode item must have been updated
--			 * as well).
--			 * This replacement of the disk_bytenr happens at
--			 * relocation.c:replace_file_extents() through
--			 * relocation.c:btrfs_reloc_cow_block().
--			 */
--			if (btrfs_file_extent_generation(leaf_l, ei_l) ==
--			    btrfs_file_extent_generation(leaf_r, ei_r) &&
--			    btrfs_file_extent_ram_bytes(leaf_l, ei_l) ==
--			    btrfs_file_extent_ram_bytes(leaf_r, ei_r) &&
--			    btrfs_file_extent_compression(leaf_l, ei_l) ==
--			    btrfs_file_extent_compression(leaf_r, ei_r) &&
--			    btrfs_file_extent_encryption(leaf_l, ei_l) ==
--			    btrfs_file_extent_encryption(leaf_r, ei_r) &&
--			    btrfs_file_extent_other_encoding(leaf_l, ei_l) ==
--			    btrfs_file_extent_other_encoding(leaf_r, ei_r) &&
--			    btrfs_file_extent_type(leaf_l, ei_l) ==
--			    btrfs_file_extent_type(leaf_r, ei_r) &&
--			    btrfs_file_extent_disk_bytenr(leaf_l, ei_l) !=
--			    btrfs_file_extent_disk_bytenr(leaf_r, ei_r) &&
--			    btrfs_file_extent_disk_num_bytes(leaf_l, ei_l) ==
--			    btrfs_file_extent_disk_num_bytes(leaf_r, ei_r) &&
--			    btrfs_file_extent_offset(leaf_l, ei_l) ==
--			    btrfs_file_extent_offset(leaf_r, ei_r) &&
--			    btrfs_file_extent_num_bytes(leaf_l, ei_l) ==
--			    btrfs_file_extent_num_bytes(leaf_r, ei_r))
--				return 0;
--		}
--
--		inconsistent_snapshot_error(sctx, result, "extent");
--		return -EIO;
--	}
-+	/*
-+	 * We have found an extent item that changed without the inode item
-+	 * having changed. This can happen either after relocation (where the
-+	 * disk_bytenr of an extent item is replaced at
-+	 * relocation.c:replace_file_extents()) or after deduplication into a
-+	 * file in both the parent and send snapshots (where an extent item can
-+	 * get modified or replaced with a new one). Note that deduplication
-+	 * updates the inode item, but it only changes the iversion (sequence
-+	 * field in the inode item) of the inode, so if a file is deduplicated
-+	 * the same amount of times in both the parent and send snapshots, its
-+	 * iversion becames the same in both snapshots, whence the inode item is
-+	 * the same on both snapshots.
-+	 */
-+	if (sctx->cur_ino != sctx->cmp_key->objectid)
-+		return 0;
- 
- 	if (!sctx->cur_inode_new_gen && !sctx->cur_inode_deleted) {
- 		if (result != BTRFS_COMPARE_TREE_DELETED)
+ 	sock_shutdown(nbd);
+-	kill_bdev(bdev);
++	__invalidate_device(bdev, true);
+ 	nbd_bdev_reset(bdev);
+ 	if (test_and_clear_bit(NBD_HAS_CONFIG_REF,
+ 			       &nbd->config->runtime_flags))
 
 
