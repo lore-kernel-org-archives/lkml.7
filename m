@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FBF4C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D95BDC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 060F8214C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:23:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB3402067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:23:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011383;
-	bh=dmXDvN0EtKV+Iu6gVqeRXk7BBaGA1sPoN7oLHkVNaQg=;
+	s=default; t=1565011390;
+	bh=uXHNVe8C8fpJN8+Z05jRnqLV7K7iMj/zai16Jdh9jgE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aX1yXxVxPbV5uKeNwUECeMQVWp49tzaNly4qPJznKB8xFGYMXc3nsjK9kBoAxi6P0
-	 RO/1ZvKaSA3KEXZsNhulUWI5pFFQ6bHZ7r2FJt1cuf6bhFvZjBTV+9bisrvPrpmz+N
-	 SN/tq3igNUVvLwptPF4pJuzRSi0rhun8p0c2pIqs=
+	b=OozlxM6d1vjJ7y0arrT46CQv7H8Vc/LiKzPTMk3fzMoSowxUu/ZyOsJ41FcwS3aPu
+	 pk3K4JglHQnH8ilX6Gg2S1UyW7HjAPh2b3Skvb5ko8PKuINZD6YHuLDvA0UE04Zg8b
+	 GBPXxFA4wD76Jz7BiamZPPKMbfz8T08EYoSEQufQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730790AbfHENXB (ORCPT
+        id S1730546AbfHENXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:23:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59634 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:23:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728885AbfHENW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:22:58 -0400
+        id S1730483AbfHENWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:22:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C76E20880;
-        Mon,  5 Aug 2019 13:22:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9839214C6;
+        Mon,  5 Aug 2019 13:22:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011377;
-        bh=dmXDvN0EtKV+Iu6gVqeRXk7BBaGA1sPoN7oLHkVNaQg=;
+        s=default; t=1565011372;
+        bh=uXHNVe8C8fpJN8+Z05jRnqLV7K7iMj/zai16Jdh9jgE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gA8m2h60vbgjFg5o9FAjYBG3C/lUchOX22VWnoweXAivHlycMYbwrXwg/zb/2tNXM
-         H/pYy+Y4Ui6HNZynzFOlKGv1xvDWb1p1LnOcbc4vcxFhb49m8UAbC/P8V0WDzyKf/J
-         LYh2550lrlFAw2Yinq5wnV1tx7cnQFf6ZFS4nS9g=
+        b=dyDE9972wX5Bz6+vu85T46/GueERJJfvqk9h0c/y79c4sgPcRm+2GOK6w6qiej4mb
+         6wSaZLezc8wsZOK9vsIFWhbHU4my89SF6R6Kj5qBnlSTJdj0JAoIaTHfqvN364Qxr4
+         0QNz+AOLUdt5wJ8Pj2/CtQcxA15TqYOevfFqKiz4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 043/131] ACPI: fix false-positive -Wuninitialized warning
-Date:   Mon,  5 Aug 2019 15:02:10 +0200
-Message-Id: <20190805124954.322524180@linuxfoundation.org>
+Subject: [PATCH 5.2 068/131] x86/kvm: Dont call kvm_spurious_fault() from .fixup
+Date:   Mon,  5 Aug 2019 15:02:35 +0200
+Message-Id: <20190805124956.051151076@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -62,56 +62,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit dfd6f9ad36368b8dbd5f5a2b2f0a4705ae69a323 ]
+[ Upstream commit 3901336ed9887b075531bffaeef7742ba614058b ]
 
-clang gets confused by an uninitialized variable in what looks
-to it like a never executed code path:
+After making a change to improve objtool's sibling call detection, it
+started showing the following warning:
 
-arch/x86/kernel/acpi/boot.c:618:13: error: variable 'polarity' is uninitialized when used here [-Werror,-Wuninitialized]
-        polarity = polarity ? ACPI_ACTIVE_LOW : ACPI_ACTIVE_HIGH;
-                   ^~~~~~~~
-arch/x86/kernel/acpi/boot.c:606:32: note: initialize the variable 'polarity' to silence this warning
-        int rc, irq, trigger, polarity;
-                                      ^
-                                       = 0
-arch/x86/kernel/acpi/boot.c:617:12: error: variable 'trigger' is uninitialized when used here [-Werror,-Wuninitialized]
-        trigger = trigger ? ACPI_LEVEL_SENSITIVE : ACPI_EDGE_SENSITIVE;
-                  ^~~~~~~
-arch/x86/kernel/acpi/boot.c:606:22: note: initialize the variable 'trigger' to silence this warning
-        int rc, irq, trigger, polarity;
-                            ^
-                             = 0
+  arch/x86/kvm/vmx/nested.o: warning: objtool: .fixup+0x15: sibling call from callable instruction with modified stack frame
 
-This is unfortunately a design decision in clang and won't be fixed.
+The problem is the ____kvm_handle_fault_on_reboot() macro.  It does a
+fake call by pushing a fake RIP and doing a jump.  That tricks the
+unwinder into printing the function which triggered the exception,
+rather than the .fixup code.
 
-Changing the acpi_get_override_irq() macro to an inline function
-reliably avoids the issue.
+Instead of the hack to make it look like the original function made the
+call, just change the macro so that the original function actually does
+make the call.  This allows removal of the hack, and also makes objtool
+happy.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+I triggered a vmx instruction exception and verified that the stack
+trace is still sane:
+
+  kernel BUG at arch/x86/kvm/x86.c:358!
+  invalid opcode: 0000 [#1] SMP PTI
+  CPU: 28 PID: 4096 Comm: qemu-kvm Not tainted 5.2.0+ #16
+  Hardware name: Lenovo THINKSYSTEM SD530 -[7X2106Z000]-/-[7X2106Z000]-, BIOS -[TEE113Z-1.00]- 07/17/2017
+  RIP: 0010:kvm_spurious_fault+0x5/0x10
+  Code: 00 00 00 00 00 8b 44 24 10 89 d2 45 89 c9 48 89 44 24 10 8b 44 24 08 48 89 44 24 08 e9 d4 40 22 00 0f 1f 40 00 0f 1f 44 00 00 <0f> 0b 66 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 41 55 49 89 fd 41
+  RSP: 0018:ffffbf91c683bd00 EFLAGS: 00010246
+  RAX: 000061f040000000 RBX: ffff9e159c77bba0 RCX: ffff9e15a5c87000
+  RDX: 0000000665c87000 RSI: ffff9e15a5c87000 RDI: ffff9e159c77bba0
+  RBP: 0000000000000000 R08: 0000000000000000 R09: ffff9e15a5c87000
+  R10: 0000000000000000 R11: fffff8f2d99721c0 R12: ffff9e159c77bba0
+  R13: ffffbf91c671d960 R14: ffff9e159c778000 R15: 0000000000000000
+  FS:  00007fa341cbe700(0000) GS:ffff9e15b7400000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 00007fdd38356804 CR3: 00000006759de003 CR4: 00000000007606e0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  PKRU: 55555554
+  Call Trace:
+   loaded_vmcs_init+0x4f/0xe0
+   alloc_loaded_vmcs+0x38/0xd0
+   vmx_create_vcpu+0xf7/0x600
+   kvm_vm_ioctl+0x5e9/0x980
+   ? __switch_to_asm+0x40/0x70
+   ? __switch_to_asm+0x34/0x70
+   ? __switch_to_asm+0x40/0x70
+   ? __switch_to_asm+0x34/0x70
+   ? free_one_page+0x13f/0x4e0
+   do_vfs_ioctl+0xa4/0x630
+   ksys_ioctl+0x60/0x90
+   __x64_sys_ioctl+0x16/0x20
+   do_syscall_64+0x55/0x1c0
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  RIP: 0033:0x7fa349b1ee5b
+
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/64a9b64d127e87b6920a97afde8e96ea76f6524e.1563413318.git.jpoimboe@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/acpi.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/kvm_host.h | 34 ++++++++++++++++++---------------
+ 1 file changed, 19 insertions(+), 15 deletions(-)
 
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index d315d86844e49..872ab208c8ad8 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -317,7 +317,10 @@ void acpi_set_irq_model(enum acpi_irq_model_id model,
- #ifdef CONFIG_X86_IO_APIC
- extern int acpi_get_override_irq(u32 gsi, int *trigger, int *polarity);
- #else
--#define acpi_get_override_irq(gsi, trigger, polarity) (-1)
-+static inline int acpi_get_override_irq(u32 gsi, int *trigger, int *polarity)
-+{
-+	return -1;
-+}
- #endif
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 08f46951c4306..8253925c5e8cc 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1491,25 +1491,29 @@ enum {
+ #define kvm_arch_vcpu_memslots_id(vcpu) ((vcpu)->arch.hflags & HF_SMM_MASK ? 1 : 0)
+ #define kvm_memslots_for_spte_role(kvm, role) __kvm_memslots(kvm, (role).smm)
+ 
++asmlinkage void __noreturn kvm_spurious_fault(void);
++
  /*
-  * This function undoes the effect of one call to acpi_register_gsi().
+  * Hardware virtualization extension instructions may fault if a
+  * reboot turns off virtualization while processes are running.
+- * Trap the fault and ignore the instruction if that happens.
++ * Usually after catching the fault we just panic; during reboot
++ * instead the instruction is ignored.
+  */
+-asmlinkage void kvm_spurious_fault(void);
+-
+-#define ____kvm_handle_fault_on_reboot(insn, cleanup_insn)	\
+-	"666: " insn "\n\t" \
+-	"668: \n\t"                           \
+-	".pushsection .fixup, \"ax\" \n" \
+-	"667: \n\t" \
+-	cleanup_insn "\n\t"		      \
+-	"cmpb $0, kvm_rebooting \n\t"	      \
+-	"jne 668b \n\t"      		      \
+-	__ASM_SIZE(push) " $666b \n\t"	      \
+-	"jmp kvm_spurious_fault \n\t"	      \
+-	".popsection \n\t" \
+-	_ASM_EXTABLE(666b, 667b)
++#define ____kvm_handle_fault_on_reboot(insn, cleanup_insn)		\
++	"666: \n\t"							\
++	insn "\n\t"							\
++	"jmp	668f \n\t"						\
++	"667: \n\t"							\
++	"call	kvm_spurious_fault \n\t"				\
++	"668: \n\t"							\
++	".pushsection .fixup, \"ax\" \n\t"				\
++	"700: \n\t"							\
++	cleanup_insn "\n\t"						\
++	"cmpb	$0, kvm_rebooting\n\t"					\
++	"je	667b \n\t"						\
++	"jmp	668b \n\t"						\
++	".popsection \n\t"						\
++	_ASM_EXTABLE(666b, 700b)
+ 
+ #define __kvm_handle_fault_on_reboot(insn)		\
+ 	____kvm_handle_fault_on_reboot(insn, "")
 -- 
 2.20.1
 
