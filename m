@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA33EC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0026FC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B362721738
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:08:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1D0821871
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:08:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010527;
-	bh=MOuKC8I1RoB4fNZwnZbzsS0b8tFGJ5lvAPB/Q8JQVmw=;
+	s=default; t=1565010532;
+	bh=Vl6OPnb9Fexr5uG2WQcqeRCcoYoD+Utx6wUVCjijQ8Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ppwICGmKfDFMfNcf6Z/JvSaZHr9xQsmOGOpGVdO+HC1CzIYi+//FxglRtF/hU9JcB
-	 ly80JNmFmigRLgpc0gJLUgO0pzs9VsTnVu3cFGJKPfCzSdCGb7FWZ5bjqEnCVKLI1E
-	 +LjlqWSl/NOfLCTjjSUljRbJwagizneNkOCxOML4=
+	b=WcLGGUe9WzYTw+HhYsTtNvw8L2IarAuh4ns5ADmWr2zLG75X7IYH6o3LtaYurSdVq
+	 prgiCSHHUYIGChSN1J9EQaeHpx3I5o+ynCNa1+mmDpADrlywbsiKrsL5P3CkvSn7Rc
+	 HiNQF4q7K1uWDyI3APJTF5l5XFM7DJayY6c8KgME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730083AbfHENIq (ORCPT
+        id S1730101AbfHENIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:08:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46912 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:08:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729578AbfHENIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:08:43 -0400
+        id S1729621AbfHENIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:08:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 559252067D;
-        Mon,  5 Aug 2019 13:08:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 804C02087B;
+        Mon,  5 Aug 2019 13:08:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010522;
-        bh=MOuKC8I1RoB4fNZwnZbzsS0b8tFGJ5lvAPB/Q8JQVmw=;
+        s=default; t=1565010528;
+        bh=Vl6OPnb9Fexr5uG2WQcqeRCcoYoD+Utx6wUVCjijQ8Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yV6Z585Ig0c9RHab2z+RLMvUoMFqyPM+8yuGNmWoqPb28PO64+vq5OdlUiaZCL16e
-         iKUlGY+h4AxPRzQZlOTbHLAf0u1WcP7B16sZzVib8HJ6mge9+a1MWU5PjvkRN5xu/y
-         C03PCnR7cl5COW2NM4aql0NU4J0YHVyl20VhLsSc=
+        b=dcaenoE9nskvM0OA/pAMs4OeaTJJbsEmfRP9a49xGHCQysjoJyseceU9OvBFeM2I5
+         yJb5e+cK0rOMCD7JT291FDIpuzHxzYhbIqNDn/RcP8MVF13cTEcYtpsXd6Snhye0am
+         3tNg+mT2A8L/6XkguH38zXkYCFGG3Raz9hH0z+1M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Doug Ledford <dledford@redhat.com>
-Subject: [PATCH 4.14 38/53] IB/hfi1: Fix Spectre v1 vulnerability
-Date:   Mon,  5 Aug 2019 15:03:03 +0200
-Message-Id: <20190805124932.331142598@linuxfoundation.org>
+        stable@vger.kernel.org, Stefan Haberland <sth@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.14 40/53] s390/dasd: fix endless loop after read unit address configuration
+Date:   Mon,  5 Aug 2019 15:03:05 +0200
+Message-Id: <20190805124932.496816209@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124927.973499541@linuxfoundation.org>
 References: <20190805124927.973499541@linuxfoundation.org>
@@ -60,48 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Stefan Haberland <sth@linux.ibm.com>
 
-commit 6497d0a9c53df6e98b25e2b79f2295d7caa47b6e upstream.
+commit 41995342b40c418a47603e1321256d2c4a2ed0fb upstream.
 
-sl is controlled by user-space, hence leading to a potential
-exploitation of the Spectre variant 1 vulnerability.
+After getting a storage server event that causes the DASD device driver
+to update its unit address configuration during a device shutdown there is
+the possibility of an endless loop in the device driver.
 
-Fix this by sanitizing sl before using it to index ibp->sl_to_sc.
+In the system log there will be ongoing DASD error messages with RC: -19.
 
-Notice that given that speculation windows are large, the policy is
-to kill the speculation on the first load and not worry if it can be
-completed with a dependent load/store [1].
+The reason is that the loop starting the ruac request only terminates when
+the retry counter is decreased to 0. But in the sleep_on function there are
+early exit paths that do not decrease the retry counter.
 
-[1] https://lore.kernel.org/lkml/20180423164740.GY17484@dhcp22.suse.cz/
+Prevent an endless loop by handling those cases separately.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Link: https://lore.kernel.org/r/20190731175428.GA16736@embeddedor
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+Remove the unnecessary do..while loop since the sleep_on function takes
+care of retries by itself.
+
+Fixes: 8e09f21574ea ("[S390] dasd: add hyper PAV support to DASD device driver, part 1")
+Cc: stable@vger.kernel.org # 2.6.25+
+Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
+Reviewed-by: Jan Hoeppner <hoeppner@linux.ibm.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/hfi1/verbs.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/s390/block/dasd_alias.c |   22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
---- a/drivers/infiniband/hw/hfi1/verbs.c
-+++ b/drivers/infiniband/hw/hfi1/verbs.c
-@@ -54,6 +54,7 @@
- #include <linux/mm.h>
- #include <linux/vmalloc.h>
- #include <rdma/opa_addr.h>
-+#include <linux/nospec.h>
+--- a/drivers/s390/block/dasd_alias.c
++++ b/drivers/s390/block/dasd_alias.c
+@@ -383,6 +383,20 @@ suborder_not_supported(struct dasd_ccw_r
+ 	char msg_format;
+ 	char msg_no;
  
- #include "hfi.h"
- #include "common.h"
-@@ -1587,6 +1588,7 @@ static int hfi1_check_ah(struct ib_devic
- 	sl = rdma_ah_get_sl(ah_attr);
- 	if (sl >= ARRAY_SIZE(ibp->sl_to_sc))
- 		return -EINVAL;
-+	sl = array_index_nospec(sl, ARRAY_SIZE(ibp->sl_to_sc));
++	/*
++	 * intrc values ENODEV, ENOLINK and EPERM
++	 * will be optained from sleep_on to indicate that no
++	 * IO operation can be started
++	 */
++	if (cqr->intrc == -ENODEV)
++		return 1;
++
++	if (cqr->intrc == -ENOLINK)
++		return 1;
++
++	if (cqr->intrc == -EPERM)
++		return 1;
++
+ 	sense = dasd_get_sense(&cqr->irb);
+ 	if (!sense)
+ 		return 0;
+@@ -447,12 +461,8 @@ static int read_unit_address_configurati
+ 	lcu->flags &= ~NEED_UAC_UPDATE;
+ 	spin_unlock_irqrestore(&lcu->lock, flags);
  
- 	sc5 = ibp->sl_to_sc[sl];
- 	if (sc_to_vlt(dd, sc5) > num_vls && sc_to_vlt(dd, sc5) != 0xf)
+-	do {
+-		rc = dasd_sleep_on(cqr);
+-		if (rc && suborder_not_supported(cqr))
+-			return -EOPNOTSUPP;
+-	} while (rc && (cqr->retries > 0));
+-	if (rc) {
++	rc = dasd_sleep_on(cqr);
++	if (rc && !suborder_not_supported(cqr)) {
+ 		spin_lock_irqsave(&lcu->lock, flags);
+ 		lcu->flags |= NEED_UAC_UPDATE;
+ 		spin_unlock_irqrestore(&lcu->lock, flags);
 
 
