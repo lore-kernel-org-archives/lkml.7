@@ -5,41 +5,41 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E677C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 823FCC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40121206A2
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3265D20880
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 18:01:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="iBQSd25U"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="kl1B+uSc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730160AbfHESBf (ORCPT
+        id S1730307AbfHESBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 14:01:35 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:56142 "EHLO
+        Mon, 5 Aug 2019 14:01:38 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:56172 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726559AbfHESBe (ORCPT
+        by vger.kernel.org with ESMTP id S1727830AbfHESBe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 5 Aug 2019 14:01:34 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id EA45CC0A6B;
-        Mon,  5 Aug 2019 18:01:33 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 1EBFEC0A75;
+        Mon,  5 Aug 2019 18:01:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1565028094; bh=fbtQFB9LCewR+4CQnQA+pjZHqX6A89CQKWKrIGkEz44=;
+        t=1565028094; bh=aFQyYC49aEuzT6mdwS7IuCxzUctBZfDEyfsSdsFi+i8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=iBQSd25UVNyYm+S3WEREWlo5+RMVjc0mJLyVaG/CVEZ5tjsJG5sl0i+e3wVdqwZ3b
-         /0DVI1zdLe/qult05m1Y08LJKBa6hPPdktAKwx+z7HoIOZTSL7cpSISwdJa+RQejUE
-         BN4ezMcDdyZ901z+YEZ4esZbL2Py38V1/rq2iSG2xgOrZu0Xm1pirY9aEdQH9ELhkn
-         1vLW8szIAAby5ukWY307jm5ZG/SC6Zd76qWEteYGXiAnCGsmnh2Agyyq6zpGtEAzbc
-         Ahd952CpZ6QJ+EcW0/rPwUvYwvklpsX2EKBGO0Z+VfDYSB1rSQF6pykvKBmbCDSqNo
-         hDr+R2Gah35mQ==
+        b=kl1B+uScgLbq0QN3ASeesG8qDJvJg0KNIDht/6WzKB5J8IP9/Gg+VGSE7eYZwqW/C
+         4wHavn2dopF1IFj5si65qxfcNfsAkI2yQQ3KwrHmuUoqC8RizeQU46WAY17kZrMJUN
+         GNhwryYEJ7K7f/Y898fKxDDWlOkaJy2k+DQtjW7/wr37BvIb076Y0tmDi8Vu8fgDpH
+         SArlEh793s63h3X3SoP7AtFurKUxdfWDE/Spg8y1SDEfVXwmacCXo9ECpL2kRIkwD5
+         wjvQgTwQ2VVZZZjGvxE8D4B6s/kIxYw3OK+QfkUzzDnmHnybDfrJ59rCZG0XqONw6h
+         PlOf+S/lJhtkA==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id A5BE3A0057;
+        by mailhost.synopsys.com (Postfix) with ESMTP id CF7A4A0078;
         Mon,  5 Aug 2019 18:01:32 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
@@ -51,9 +51,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 05/10] net: stmmac: xgmac: Implement tx_queue_prio()
-Date:   Mon,  5 Aug 2019 20:01:18 +0200
-Message-Id: <e0536be2fc13bdd7df7815f4863fef57accfab48.1565027782.git.joabreu@synopsys.com>
+Subject: [PATCH net-next 09/10] net: stmmac: selftests: Add test for VLAN and Double VLAN Filtering
+Date:   Mon,  5 Aug 2019 20:01:22 +0200
+Message-Id: <1fa42ae457a3817554e53fba7145df4a86f335a9.1565027782.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1565027782.git.joabreu@synopsys.com>
 References: <cover.1565027782.git.joabreu@synopsys.com>
@@ -64,7 +64,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement the TX Queue Priority callback in XGMAC core.
+Add a selftest for VLAN and Double VLAN Filtering in stmmac.
 
 Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 ---
@@ -78,62 +78,232 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h      |  4 ++++
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 19 ++++++++++++++++++-
- 2 files changed, 22 insertions(+), 1 deletion(-)
+ .../net/ethernet/stmicro/stmmac/stmmac_selftests.c | 205 +++++++++++++++++++++
+ 1 file changed, 205 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-index 86a42bc39d21..b77091161765 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-@@ -127,6 +127,10 @@
- #define XGMAC_MTL_RXQ_DMA_MAP1		0x00001034
- #define XGMAC_QxMDMACH(x)		GENMASK((x) * 8 + 3, (x) * 8)
- #define XGMAC_QxMDMACH_SHIFT(x)		((x) * 8)
-+#define XGMAC_TC_PRTY_MAP0		0x00001040
-+#define XGMAC_TC_PRTY_MAP1		0x00001044
-+#define XGMAC_PSTC(x)			GENMASK((x) * 8 + 7, (x) * 8)
-+#define XGMAC_PSTC_SHIFT(x)		((x) * 8)
- #define XGMAC_MTL_TXQ_OPMODE(x)		(0x00001100 + (0x80 * (x)))
- #define XGMAC_TQS			GENMASK(25, 16)
- #define XGMAC_TQS_SHIFT			16
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-index ce6503dfc86d..bfbd5ae11540 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-@@ -118,6 +118,23 @@ static void dwxgmac2_rx_queue_prio(struct mac_device_info *hw, u32 prio,
- 	writel(value, ioaddr + reg);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+index 83b775a8cedc..6b08bb15af15 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+@@ -715,6 +715,203 @@ static int stmmac_test_rss(struct stmmac_priv *priv)
+ 	return __stmmac_test_loopback(priv, &attr);
  }
  
-+static void dwxgmac2_tx_queue_prio(struct mac_device_info *hw, u32 prio,
-+				   u32 queue)
++static int stmmac_test_vlan_validate(struct sk_buff *skb,
++				     struct net_device *ndev,
++				     struct packet_type *pt,
++				     struct net_device *orig_ndev)
 +{
-+	void __iomem *ioaddr = hw->pcsr;
-+	u32 value, reg;
++	struct stmmac_test_priv *tpriv = pt->af_packet_priv;
++	struct stmmachdr *shdr;
++	struct ethhdr *ehdr;
++	struct udphdr *uhdr;
++	struct iphdr *ihdr;
 +
-+	reg = (queue < 4) ? XGMAC_TC_PRTY_MAP0 : XGMAC_TC_PRTY_MAP1;
-+	if (queue >= 4)
-+		queue -= 4;
++	skb = skb_unshare(skb, GFP_ATOMIC);
++	if (!skb)
++		goto out;
 +
-+	value = readl(ioaddr + reg);
-+	value &= ~XGMAC_PSTC(queue);
-+	value |= (prio << XGMAC_PSTC_SHIFT(queue)) & XGMAC_PSTC(queue);
++	if (skb_linearize(skb))
++		goto out;
++	if (skb_headlen(skb) < (STMMAC_TEST_PKT_SIZE - ETH_HLEN))
++		goto out;
 +
-+	writel(value, ioaddr + reg);
++	ehdr = (struct ethhdr *)skb_mac_header(skb);
++	if (!ether_addr_equal(ehdr->h_dest, tpriv->packet->dst))
++		goto out;
++
++	ihdr = ip_hdr(skb);
++	if (tpriv->double_vlan)
++		ihdr = (struct iphdr *)(skb_network_header(skb) + 4);
++	if (ihdr->protocol != IPPROTO_UDP)
++		goto out;
++
++	uhdr = (struct udphdr *)((u8 *)ihdr + 4 * ihdr->ihl);
++	if (uhdr->dest != htons(tpriv->packet->dport))
++		goto out;
++
++	shdr = (struct stmmachdr *)((u8 *)uhdr + sizeof(*uhdr));
++	if (shdr->magic != cpu_to_be64(STMMAC_TEST_PKT_MAGIC))
++		goto out;
++
++	tpriv->ok = true;
++	complete(&tpriv->comp);
++
++out:
++	kfree_skb(skb);
++	return 0;
 +}
 +
- static void dwxgmac2_prog_mtl_rx_algorithms(struct mac_device_info *hw,
- 					    u32 rx_alg)
- {
-@@ -428,7 +445,7 @@ const struct stmmac_ops dwxgmac210_ops = {
- 	.rx_ipc = dwxgmac2_rx_ipc,
- 	.rx_queue_enable = dwxgmac2_rx_queue_enable,
- 	.rx_queue_prio = dwxgmac2_rx_queue_prio,
--	.tx_queue_prio = NULL,
-+	.tx_queue_prio = dwxgmac2_tx_queue_prio,
- 	.rx_queue_routing = NULL,
- 	.prog_mtl_rx_algorithms = dwxgmac2_prog_mtl_rx_algorithms,
- 	.prog_mtl_tx_algorithms = dwxgmac2_prog_mtl_tx_algorithms,
++static int stmmac_test_vlanfilt(struct stmmac_priv *priv)
++{
++	struct stmmac_packet_attrs attr = { };
++	struct stmmac_test_priv *tpriv;
++	struct sk_buff *skb = NULL;
++	int ret = 0, i;
++
++	if (!priv->dma_cap.vlhash)
++		return -EOPNOTSUPP;
++
++	tpriv = kzalloc(sizeof(*tpriv), GFP_KERNEL);
++	if (!tpriv)
++		return -ENOMEM;
++
++	tpriv->ok = false;
++	init_completion(&tpriv->comp);
++
++	tpriv->pt.type = htons(ETH_P_IP);
++	tpriv->pt.func = stmmac_test_vlan_validate;
++	tpriv->pt.dev = priv->dev;
++	tpriv->pt.af_packet_priv = tpriv;
++	tpriv->packet = &attr;
++
++	/*
++	 * As we use HASH filtering, false positives may appear. This is a
++	 * specially chosen ID so that adjacent IDs (+4) have different
++	 * HASH values.
++	 */
++	tpriv->vlan_id = 0x123;
++	dev_add_pack(&tpriv->pt);
++
++	ret = vlan_vid_add(priv->dev, htons(ETH_P_8021Q), tpriv->vlan_id);
++	if (ret)
++		goto cleanup;
++
++	for (i = 0; i < 4; i++) {
++		attr.vlan = 1;
++		attr.vlan_id_out = tpriv->vlan_id + i;
++		attr.dst = priv->dev->dev_addr;
++		attr.sport = 9;
++		attr.dport = 9;
++
++		skb = stmmac_test_get_udp_skb(priv, &attr);
++		if (!skb) {
++			ret = -ENOMEM;
++			goto vlan_del;
++		}
++
++		skb_set_queue_mapping(skb, 0);
++		ret = dev_queue_xmit(skb);
++		if (ret)
++			goto vlan_del;
++
++		wait_for_completion_timeout(&tpriv->comp, STMMAC_LB_TIMEOUT);
++		ret = !tpriv->ok;
++		if (ret && !i) {
++			goto vlan_del;
++		} else if (!ret && i) {
++			ret = -1;
++			goto vlan_del;
++		} else {
++			ret = 0;
++		}
++
++		tpriv->ok = false;
++	}
++
++vlan_del:
++	vlan_vid_del(priv->dev, htons(ETH_P_8021Q), tpriv->vlan_id);
++cleanup:
++	dev_remove_pack(&tpriv->pt);
++	kfree(tpriv);
++	return ret;
++}
++
++static int stmmac_test_dvlanfilt(struct stmmac_priv *priv)
++{
++	struct stmmac_packet_attrs attr = { };
++	struct stmmac_test_priv *tpriv;
++	struct sk_buff *skb = NULL;
++	int ret = 0, i;
++
++	if (!priv->dma_cap.vlhash)
++		return -EOPNOTSUPP;
++
++	tpriv = kzalloc(sizeof(*tpriv), GFP_KERNEL);
++	if (!tpriv)
++		return -ENOMEM;
++
++	tpriv->ok = false;
++	tpriv->double_vlan = true;
++	init_completion(&tpriv->comp);
++
++	tpriv->pt.type = htons(ETH_P_8021Q);
++	tpriv->pt.func = stmmac_test_vlan_validate;
++	tpriv->pt.dev = priv->dev;
++	tpriv->pt.af_packet_priv = tpriv;
++	tpriv->packet = &attr;
++
++	/*
++	 * As we use HASH filtering, false positives may appear. This is a
++	 * specially chosen ID so that adjacent IDs (+4) have different
++	 * HASH values.
++	 */
++	tpriv->vlan_id = 0x123;
++	dev_add_pack(&tpriv->pt);
++
++	ret = vlan_vid_add(priv->dev, htons(ETH_P_8021AD), tpriv->vlan_id);
++	if (ret)
++		goto cleanup;
++
++	for (i = 0; i < 4; i++) {
++		attr.vlan = 2;
++		attr.vlan_id_out = tpriv->vlan_id + i;
++		attr.dst = priv->dev->dev_addr;
++		attr.sport = 9;
++		attr.dport = 9;
++
++		skb = stmmac_test_get_udp_skb(priv, &attr);
++		if (!skb) {
++			ret = -ENOMEM;
++			goto vlan_del;
++		}
++
++		skb_set_queue_mapping(skb, 0);
++		ret = dev_queue_xmit(skb);
++		if (ret)
++			goto vlan_del;
++
++		wait_for_completion_timeout(&tpriv->comp, STMMAC_LB_TIMEOUT);
++		ret = !tpriv->ok;
++		if (ret && !i) {
++			goto vlan_del;
++		} else if (!ret && i) {
++			ret = -1;
++			goto vlan_del;
++		} else {
++			ret = 0;
++		}
++
++		tpriv->ok = false;
++	}
++
++vlan_del:
++	vlan_vid_del(priv->dev, htons(ETH_P_8021AD), tpriv->vlan_id);
++cleanup:
++	dev_remove_pack(&tpriv->pt);
++	kfree(tpriv);
++	return ret;
++}
++
+ #define STMMAC_LOOPBACK_NONE	0
+ #define STMMAC_LOOPBACK_MAC	1
+ #define STMMAC_LOOPBACK_PHY	2
+@@ -764,6 +961,14 @@ static const struct stmmac_test {
+ 		.name = "RSS                  ",
+ 		.lb = STMMAC_LOOPBACK_PHY,
+ 		.fn = stmmac_test_rss,
++	}, {
++		.name = "VLAN Filtering       ",
++		.lb = STMMAC_LOOPBACK_PHY,
++		.fn = stmmac_test_vlanfilt,
++	}, {
++		.name = "Double VLAN Filtering",
++		.lb = STMMAC_LOOPBACK_PHY,
++		.fn = stmmac_test_dvlanfilt,
+ 	},
+ };
+ 
 -- 
 2.7.4
 
