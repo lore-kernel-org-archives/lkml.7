@@ -2,165 +2,110 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC46C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6448C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E20B52067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B105E20679
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 08:06:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="D1Oaua35"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="OKXu80bh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbfHEIGI (ORCPT
+        id S1727812AbfHEIGe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 04:06:08 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:47214 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726423AbfHEIGI (ORCPT
+        Mon, 5 Aug 2019 04:06:34 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36527 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726659AbfHEIGe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 04:06:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Ewu2VQx7ohjTv9REeCE3iKUZBfpdE7LS97SwyPI4rIw=; b=D1Oaua359olNxByaLu35WaYTo
-        FT+J/OtFJoqrh9db+zAMRPY6k+7jQvK6iZZ9a2jOdSZefPYgoRUH6nZaprzobOz6Z1PeZnFIPgrTd
-        tidbMsv01HsuBxh6nlh+YCNuNYJfLBUprxLm1Kk+2KjE4XwtMHGHq4B8PGM3RyZ8mrbqd0+4r8ZzY
-        0MKckdEJLExMYwDX96KrnpyfpkdHFKlcGITdNPz6x+j/ka40TqCGA3GpVZ7PmNbtU2C9G9794abN6
-        z+V4BWMtUEMEZGd6hDfGB8fr6Y1dSDjnjBqjRS04/VhLYOly7X1QSbC9y3gc0zEHY5NdyTvnc+xdg
-        zK0SjYHmw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1huXzp-0006NN-Im; Mon, 05 Aug 2019 08:05:33 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id CBCA920268334; Mon,  5 Aug 2019 10:05:31 +0200 (CEST)
-Date:   Mon, 5 Aug 2019 10:05:31 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, rostedt@goodmis.org,
-        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
-        oleg@redhat.com, joel@joelfernandes.org
-Subject: Re: [PATCH RFC tip/core/rcu 14/14] rcu/nohz: Make multi_cpu_stop()
- enable tick on all online CPUs
-Message-ID: <20190805080531.GH2349@hirez.programming.kicks-ass.net>
-References: <20190802151435.GA1081@linux.ibm.com>
- <20190802151501.13069-14-paulmck@linux.ibm.com>
- <20190804144317.GF2349@hirez.programming.kicks-ass.net>
- <20190804144835.GB2386@hirez.programming.kicks-ass.net>
- <20190804184159.GC28441@linux.ibm.com>
+        Mon, 5 Aug 2019 04:06:34 -0400
+Received: by mail-lj1-f196.google.com with SMTP id i21so78497867ljj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 01:06:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4jotGUYX3HDjIjrPWkq93S31gJkGTLLQx5i8QIerKxE=;
+        b=OKXu80bhtKFjmm2MpkIDYVWmXqi7Y+Xjky/uEczjP2Zl5b7vO97lSZ4GxsSOJjZduQ
+         VgPXNXexmCAKG6Z+637VhMExKFfEjxuDw3H3mRcIbO3qLRCxF1TJiOxHnvXkyL1xl5hz
+         9tSzcuFZEaM47GjqXTJ6n5YnEqhbYAzKlpVrDHKCy9VeCfnp53elgyy+VMv+lz31Ers7
+         Eic301vKwslj47MtbPz81DyzufZoA3sVB/fmBoMeBi2wwb65qyfXQctIncrR9gNzSMvv
+         ew3Ty0ZvYjqCUhy9kY7gTZ+iW4B61AZpbS675ligIs/I+dyRKPx83vFtsSrTsvbz0lFJ
+         WX4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4jotGUYX3HDjIjrPWkq93S31gJkGTLLQx5i8QIerKxE=;
+        b=WaMpPYzTmmkmUuODPEE7LUsOAFrgnjIOCHjgdm9LMVQUJtyBYLp+BADaMI3gPmYE2s
+         tLptodLCGxMAAZyjOne9Z+DI9QkXZc3R4vhK6IAytHYRUGRph1M8YNOnSHkS1ZnNVj/b
+         TsCamwgWehD7hlCTOWFNBDKecUZeroBm8gph6rI5sMpj1IIY/a2+KA7IG3RDabxUpm35
+         M8prAkb9ZAJ/JjLj7hPKLyNtkXRVBYYEz16D9hgp6y3xHo2vEwNF6/lo7l6EZ1jk+UVh
+         3GvzTMC3R9z/YsQF1oBByfN5QDepHu5OEa5bs0v7BelKWMW34d037eTgz83+6ONgilni
+         l8qg==
+X-Gm-Message-State: APjAAAVtXi/oyZgWDXxJ/fhPT94apg27eu/HsKCNXplTpDjMeFfIB0gG
+        BriBuIkwxmgt9enebEUn6djfCLDv6NH+iQ==
+X-Google-Smtp-Source: APXvYqyZpQSVk777vhC2lpS6B8C38YOlvgzOQV2vQdpdrwUMZBvpR5l2r7dZg3bY6N4q4hVA/QRa0Q==
+X-Received: by 2002:a2e:9b48:: with SMTP id o8mr78054712ljj.122.1564992392086;
+        Mon, 05 Aug 2019 01:06:32 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:44f5:2f9a:806:ec14:8a98:a30c? ([2a00:1fa0:44f5:2f9a:806:ec14:8a98:a30c])
+        by smtp.gmail.com with ESMTPSA id l24sm17213019lji.78.2019.08.05.01.06.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 05 Aug 2019 01:06:31 -0700 (PDT)
+Subject: Re: [PATCH 2/2] MIPS: remove support for DMA_ATTR_WRITE_COMBINE
+To:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org
+Cc:     Shawn Anastasio <shawn@anastas.io>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20190805080145.5694-1-hch@lst.de>
+ <20190805080145.5694-3-hch@lst.de>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <f02604c5-dbea-e64e-cfb7-3a002b0da9a6@cogentembedded.com>
+Date:   Mon, 5 Aug 2019 11:06:24 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190804184159.GC28441@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190805080145.5694-3-hch@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 04, 2019 at 11:41:59AM -0700, Paul E. McKenney wrote:
-> On Sun, Aug 04, 2019 at 04:48:35PM +0200, Peter Zijlstra wrote:
-> > On Sun, Aug 04, 2019 at 04:43:17PM +0200, Peter Zijlstra wrote:
-> > > On Fri, Aug 02, 2019 at 08:15:01AM -0700, Paul E. McKenney wrote:
-> > > > The multi_cpu_stop() function relies on the scheduler to gain control from
-> > > > whatever is running on the various online CPUs, including any nohz_full
-> > > > CPUs running long loops in kernel-mode code.  Lack of the scheduler-clock
-> > > > interrupt on such CPUs can delay multi_cpu_stop() for several minutes
-> > > > and can also result in RCU CPU stall warnings.  This commit therefore
-> > > > causes multi_cpu_stop() to enable the scheduler-clock interrupt on all
-> > > > online CPUs.
-> > > 
-> > > This sounds wrong; should we be fixing sched_can_stop_tick() instead to
-> > > return false when the stop task is runnable?
+Hello!
+
+On 05.08.2019 11:01, Christoph Hellwig wrote:
+
+> Mips uses the KSEG1 kernel memory segment do map dma coherent
+
+     MIPS. s/do/to/?
+
+> allocations for n
+
+on-coherent devices as uncachable, and does not have
+
+    Uncacheable?
+
+> any kind of special support for DMA_ATTR_WRITE_COMBINE in the allocation
+> path.  Thus supporting DMA_ATTR_WRITE_COMBINE in dma_mmap_attrs will
+> lead to multiple mappings with different caching attributes.
 > 
-> Agreed.  However, it is proving surprisingly hard to come up with a
-> code sequence that has the effect of rcu_nocb without nohz_full.
-> And rcu_nocb works just fine.  With nohz_full also in place, I am
-> decreasing the failure rate, but it still fails, perhaps a few times
-> per hour of TREE04 rcutorture on an eight-CPU system.  (My 12-CPU
-> system stubbornly refuses to fail.  Good thing I kept the eight-CPU
-> system around, I guess.)
-> 
-> When I arrive at some sequence of actions that actually work reliably,
-> then by all means let's put it somewhere in the NO_HZ_FULL machinery!
+> Fixes: 8c172467be36 ("MIPS: Add implementation of dma_map_ops.mmap()")
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+[...]
 
-I'm confused; what are you arguing? The patch as proposed is just wrong,
-it needs to go.
-
-> > And even without that; I don't understand how we're not instantly
-> > preempted the moment we enqueue the stop task.
-> 
-> There is no preemption because CONFIG_PREEMPT=n for the scenarios still
-
-That doesn't make sense; even with CONFIG_PREEMPT=n we set
-TIF_NEED_RESCHED. We'll just not react to it as promptly (only explicit
-rescheduling points and return to userspace). Enabling the tick will not
-make any difference what so ever.
-
-Tick based preemption will not 'fix' the lack of wakeup preemption. If
-the stop task wakeup didn't set TIF_NEED_RESCHED, the OTHER/CFS tick
-will not either.
-
-> having trouble.  Yes, there are cond_resched() calls, but they don't do
-> anything unless the appropriate flags are set, which won't always happen
-> without the tick, apparently.  Or without -something- that isn't always
-> happening as it should.
-
-Right; so clearly we're not understanding what's happening. That seems
-like a requirement for actually doing a patch.
-
-> > Any enqueue, should go through check_preempt_curr() which will be an
-> > instant resched_curr() when we just woke the stop class.
-> 
-> I did try hitting all of the CPUs with resched_cpu().  Ten times on each
-> CPU with a ten-jiffy wait between each.  This might have decreased the
-> probability of excessively long CPU-stopper waits by a factor of two or
-> three, but it did not eliminate the excessively long waits.
-> 
-> What else should I try?
-> 
-> For example, are there any diagnostics I could collect, say from within
-> the CPU stopper when things are taking too long?  I see CPU-stopper
-> delays in excess of five -minutes-, so this is anything but subtle.
-
-Catch the whole thing in a function trace?
-
-The chain that should instantly set TIF_NEED_RESCHED:
-
-  stop_machine()
-    stop_machine_cpuslocked()
-      stop_cpus()
-        __stop_cpus()
-          queue_stop_cpus_work()
-            cpu_stop_queue_work()
-	      wake_up_q()
-	        wake_up_process()
-
-
-  wake_up_process()
-    try_to_wake_up()
-      ttwu_queue()
-        ttwu_queue_remote()
-	  <- scheduler_ipi()
-	    sched_ttwu_pending()
-	      ttwu_do_activate()
-
-        ttwu_do_activate()
-	  activate_task()
-	  ttwu_do_wakeup()
-	    check_preempt_curr()
-	      resched_curr()
-
-You could frob some tracing into __stop_cpus(), before
-wait_for_completion(), at that point all the CPUs in @cpumask should
-either be running the stop task or have TIF_NEED_RESCHED set.
-
-
+MBR, Sergei
