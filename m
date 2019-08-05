@@ -4,206 +4,164 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9571C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 03:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E91DEC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 03:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1DEE2075C
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 03:07:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C77F12075C
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 03:08:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbfHEDHZ (ORCPT
+        id S1727049AbfHEDI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 4 Aug 2019 23:07:25 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:57653 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbfHEDHZ (ORCPT
+        Sun, 4 Aug 2019 23:08:26 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:37663 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726765AbfHEDI0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 4 Aug 2019 23:07:25 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x7537CRU004066, This message is accepted by code: ctloc85258
-Received: from RS-CAS02.realsil.com.cn (msx.realsil.com.cn[172.29.17.3](maybeforged))
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x7537CRU004066
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 5 Aug 2019 11:07:12 +0800
-Received: from toshiba (172.29.36.108) by RS-CAS02.realsil.com.cn
- (172.29.17.3) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 5 Aug 2019
- 11:07:12 +0800
-Date:   Mon, 5 Aug 2019 11:07:33 +0800
-From:   Alex Lu <alex_lu@realsil.com.cn>
-To:     Marcel Holtmann <marcel@holtmann.org>
-CC:     Johan Hedberg <johan.hedberg@gmail.com>,
-        <linux-bluetooth@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Max Chou <max.chou@realtek.com>
-Subject: [PATCH v2] Bluetooth: btrtl: Save firmware and config
-Message-ID: <20190805030733.GA11069@toshiba>
+        Sun, 4 Aug 2019 23:08:26 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=chge@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TYeMQGU_1564974500;
+Received: from IT-C02YD3Q7JG5H.local(mailfrom:chge@linux.alibaba.com fp:SMTPD_---0TYeMQGU_1564974500)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 05 Aug 2019 11:08:21 +0800
+Subject: Re: [Ocfs2-devel] [PATCH 1/3 v2] fs: ocfs2: Fix possible null-pointer
+ dereferences in ocfs2_xa_prepare_entry()
+To:     Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Jia-Ju Bai <baijiaju1990@gmail.com>, mark@fasheh.com,
+        jlbec@evilplan.org, Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, ocfs2-devel@oss.oracle.com,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20190726101447.9153-1-baijiaju1990@gmail.com>
+ <d56d61b1-d468-f967-4aaf-bb419c139bc3@linux.alibaba.com>
+From:   Changwei Ge <chge@linux.alibaba.com>
+Message-ID: <2b0fa21a-3351-0e3c-4355-54f22559a772@linux.alibaba.com>
+Date:   Mon, 5 Aug 2019 11:08:20 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Originating-IP: [172.29.36.108]
+In-Reply-To: <d56d61b1-d468-f967-4aaf-bb419c139bc3@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Lu <alex_lu@realsil.com.cn>
+Hi Jia-Ju,
 
-usb reset resume will cause downloading firmware again and
-requesting firmware may be failed while host is resuming
 
-Signed-off-by: Alex Lu <alex_lu@realsil.com.cn>
----
- drivers/bluetooth/btrtl.c | 101 ++++++++++++++++++++++++++++++++++++--
- 1 file changed, 97 insertions(+), 4 deletions(-)
+Please checkout my comments inline.
 
-diff --git a/drivers/bluetooth/btrtl.c b/drivers/bluetooth/btrtl.c
-index 208feef63de4..416a5cb676e3 100644
---- a/drivers/bluetooth/btrtl.c
-+++ b/drivers/bluetooth/btrtl.c
-@@ -56,6 +56,8 @@ struct btrtl_device_info {
- 	int cfg_len;
- };
- 
-+static struct btrtl_device_info dev_info;
-+
- static const struct id_table ic_id_table[] = {
- 	{ IC_MATCH_FL_LMPSUBV, RTL_ROM_LMP_8723A, 0x0,
- 	  .config_needed = false,
-@@ -553,8 +555,23 @@ struct btrtl_device_info *btrtl_initialize(struct hci_dev *hdev,
- 			goto err_free;
- 	}
- 
--	btrtl_dev->fw_len = rtl_load_file(hdev, btrtl_dev->ic_info->fw_name,
--					  &btrtl_dev->fw_data);
-+	if (dev_info.ic_info == NULL ||
-+	    dev_info.ic_info != btrtl_dev->ic_info) {
-+		btrtl_dev->fw_len = rtl_load_file(hdev,
-+						  btrtl_dev->ic_info->fw_name,
-+						  &btrtl_dev->fw_data);
-+		/* Make sure that fw is stored later */
-+		dev_info.ic_info = NULL;
-+	} else {
-+		if (dev_info.fw_len > 0)
-+			btrtl_dev->fw_data = kmemdup(dev_info.fw_data,
-+						     dev_info.fw_len,
-+						     GFP_KERNEL);
-+		if (btrtl_dev->fw_data)
-+			btrtl_dev->fw_len = dev_info.fw_len;
-+		else
-+			btrtl_dev->fw_len = -ENOMEM;
-+	}
- 	if (btrtl_dev->fw_len < 0) {
- 		rtl_dev_err(hdev, "firmware file %s not found\n",
- 			    btrtl_dev->ic_info->fw_name);
-@@ -570,8 +587,21 @@ struct btrtl_device_info *btrtl_initialize(struct hci_dev *hdev,
- 			snprintf(cfg_name, sizeof(cfg_name), "%s.bin",
- 				 btrtl_dev->ic_info->cfg_name);
- 		}
--		btrtl_dev->cfg_len = rtl_load_file(hdev, cfg_name,
--						   &btrtl_dev->cfg_data);
-+
-+		if (dev_info.ic_info == NULL ||
-+		    dev_info.ic_info != btrtl_dev->ic_info) {
-+			btrtl_dev->cfg_len = rtl_load_file(hdev, cfg_name,
-+							&btrtl_dev->cfg_data);
-+		} else {
-+			if (dev_info.cfg_len > 0)
-+				btrtl_dev->cfg_data = kmemdup(dev_info.cfg_data,
-+							      dev_info.cfg_len,
-+							      GFP_KERNEL);
-+			if (btrtl_dev->cfg_data)
-+				btrtl_dev->cfg_len = dev_info.cfg_len;
-+			else
-+				btrtl_dev->cfg_len = -ENOMEM;
-+		}
- 		if (btrtl_dev->ic_info->config_needed &&
- 		    btrtl_dev->cfg_len <= 0) {
- 			rtl_dev_err(hdev, "mandatory config file %s not found\n",
-@@ -620,6 +650,49 @@ int btrtl_download_firmware(struct hci_dev *hdev,
- }
- EXPORT_SYMBOL_GPL(btrtl_download_firmware);
- 
-+static void dev_fw_free(void)
-+{
-+	kfree(dev_info.fw_data);
-+	kfree(dev_info.cfg_data);
-+	memset(&dev_info, 0, sizeof(dev_info));
-+}
-+
-+static void dev_fw_dup(struct btrtl_device_info *btrtl_dev)
-+{
-+	dev_fw_free();
-+
-+	dev_info.ic_info = btrtl_dev->ic_info;
-+	dev_info.rom_version = btrtl_dev->rom_version;
-+
-+	dev_info.fw_len = btrtl_dev->fw_len;
-+	if (dev_info.fw_len > 0)
-+		dev_info.fw_data = kmemdup(btrtl_dev->fw_data,
-+					   btrtl_dev->fw_len, GFP_KERNEL);
-+	if (!dev_info.fw_data) {
-+		BT_ERR("Failed to save rtl firmware");
-+		goto err_memdup;
-+	}
-+
-+	dev_info.cfg_len = btrtl_dev->cfg_len;
-+	if (dev_info.cfg_len > 0)
-+		dev_info.cfg_data = kmemdup(btrtl_dev->cfg_data,
-+					    btrtl_dev->cfg_len, GFP_KERNEL);
-+	if (!dev_info.cfg_data) {
-+		if (dev_info.ic_info->config_needed) {
-+			BT_ERR("Failed to save mandatory rtl config file");
-+			goto err_memdup;
-+		} else {
-+			dev_info.cfg_len = 0;
-+		}
-+		BT_WARN("Failed to save rtl config file");
-+	}
-+
-+	return;
-+
-+err_memdup:
-+	dev_fw_free();
-+}
-+
- int btrtl_setup_realtek(struct hci_dev *hdev)
- {
- 	struct btrtl_device_info *btrtl_dev;
-@@ -629,6 +702,9 @@ int btrtl_setup_realtek(struct hci_dev *hdev)
- 	if (IS_ERR(btrtl_dev))
- 		return PTR_ERR(btrtl_dev);
- 
-+	if (btrtl_dev->ic_info && dev_info.ic_info != btrtl_dev->ic_info)
-+		dev_fw_dup(btrtl_dev);
-+
- 	ret = btrtl_download_firmware(hdev, btrtl_dev);
- 
- 	btrtl_free(btrtl_dev);
-@@ -745,6 +821,23 @@ int btrtl_get_uart_settings(struct hci_dev *hdev,
- }
- EXPORT_SYMBOL_GPL(btrtl_get_uart_settings);
- 
-+static int btrtl_module_init(void)
-+{
-+	BT_INFO("btrtl: init");
-+
-+	return 0;
-+}
-+
-+static void btrtl_module_exit(void)
-+{
-+	BT_INFO("btrtl: exit");
-+
-+	dev_fw_free();
-+}
-+
-+module_init(btrtl_module_init);
-+module_exit(btrtl_module_exit)
-+
- MODULE_AUTHOR("Daniel Drake <drake@endlessm.com>");
- MODULE_DESCRIPTION("Bluetooth support for Realtek devices ver " VERSION);
- MODULE_VERSION(VERSION);
--- 
-2.19.2
 
+On 2019/7/27 8:49 上午, Joseph Qi wrote:
+>
+> On 19/7/26 18:14, Jia-Ju Bai wrote:
+>> In ocfs2_xa_prepare_entry(), there is an if statement on line 2136 to
+>> check whether loc->xl_entry is NULL:
+>>      if (loc->xl_entry)
+>>
+>> When loc->xl_entry is NULL, it is used on line 2158:
+>>      ocfs2_xa_add_entry(loc, name_hash);
+
+This won't deference a NULL ->xl_entry because ->xlo_add_entry() is 
+already called to whether ocfs2_xa_block_add_entry() or 
+ocfs2_xa_bucket_add_entry()
+
+ From the function name we can tell the intention it wants to add entry 
+so of course it should be NULL before calling it.
+
+
+Thanks,
+
+Changwei
+
+
+>>          loc->xl_entry->xe_name_hash = cpu_to_le32(name_hash);
+>>          loc->xl_entry->xe_name_offset = cpu_to_le16(loc->xl_size);
+>> and line 2164:
+>>      ocfs2_xa_add_namevalue(loc, xi);
+>>          loc->xl_entry->xe_value_size = cpu_to_le64(xi->xi_value_len);
+>>          loc->xl_entry->xe_name_len = xi->xi_name_len;
+>>
+>> Thus, possible null-pointer dereferences may occur.
+>>
+>> To fix these bugs, if loc-xl_entry is NULL, ocfs2_xa_prepare_entry()
+>> abnormally returns with -EINVAL.
+>>
+>> These bugs are found by a static analysis tool STCheck written by us.
+>>
+>> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+> Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+>> ---
+>> v2:
+>> * Directly return -EINVAL if loc-xl_entry is NULL.
+>>    Thank Joseph for helpful advice.
+>>
+>> ---
+>>   fs/ocfs2/xattr.c | 44 +++++++++++++++++++++++---------------------
+>>   1 file changed, 23 insertions(+), 21 deletions(-)
+>>
+>> diff --git a/fs/ocfs2/xattr.c b/fs/ocfs2/xattr.c
+>> index 385f3aaa2448..4b876c82a35c 100644
+>> --- a/fs/ocfs2/xattr.c
+>> +++ b/fs/ocfs2/xattr.c
+>> @@ -2133,29 +2133,31 @@ static int ocfs2_xa_prepare_entry(struct ocfs2_xa_loc *loc,
+>>   	if (rc)
+>>   		goto out;
+>>   
+>> -	if (loc->xl_entry) {
+>> -		if (ocfs2_xa_can_reuse_entry(loc, xi)) {
+>> -			orig_value_size = loc->xl_entry->xe_value_size;
+>> -			rc = ocfs2_xa_reuse_entry(loc, xi, ctxt);
+>> -			if (rc)
+>> -				goto out;
+>> -			goto alloc_value;
+>> -		}
+>> +	if (!loc->xl_entry) {
+>> +		rc = -EINVAL;
+>> +		goto out;
+>> +	}
+>>   
+>> -		if (!ocfs2_xattr_is_local(loc->xl_entry)) {
+>> -			orig_clusters = ocfs2_xa_value_clusters(loc);
+>> -			rc = ocfs2_xa_value_truncate(loc, 0, ctxt);
+>> -			if (rc) {
+>> -				mlog_errno(rc);
+>> -				ocfs2_xa_cleanup_value_truncate(loc,
+>> -								"overwriting",
+>> -								orig_clusters);
+>> -				goto out;
+>> -			}
+>> +	if (ocfs2_xa_can_reuse_entry(loc, xi)) {
+>> +		orig_value_size = loc->xl_entry->xe_value_size;
+>> +		rc = ocfs2_xa_reuse_entry(loc, xi, ctxt);
+>> +		if (rc)
+>> +			goto out;
+>> +		goto alloc_value;
+>> +	}
+>> +
+>> +	if (!ocfs2_xattr_is_local(loc->xl_entry)) {
+>> +		orig_clusters = ocfs2_xa_value_clusters(loc);
+>> +		rc = ocfs2_xa_value_truncate(loc, 0, ctxt);
+>> +		if (rc) {
+>> +			mlog_errno(rc);
+>> +			ocfs2_xa_cleanup_value_truncate(loc,
+>> +							"overwriting",
+>> +							orig_clusters);
+>> +			goto out;
+>>   		}
+>> -		ocfs2_xa_wipe_namevalue(loc);
+>> -	} else
+>> -		ocfs2_xa_add_entry(loc, name_hash);
+>> +	}
+>> +	ocfs2_xa_wipe_namevalue(loc);
+>>   
+>>   	/*
+>>   	 * If we get here, we have a blank entry.  Fill it.  We grow our
+>>
+> _______________________________________________
+> Ocfs2-devel mailing list
+> Ocfs2-devel@oss.oracle.com
+> https://oss.oracle.com/mailman/listinfo/ocfs2-devel
