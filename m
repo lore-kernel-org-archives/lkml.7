@@ -1,88 +1,101 @@
 Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.0 required=3.0 tests=FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED95C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C832DC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF3C8206A2
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:49:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F6DB206A2
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:51:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729162AbfHEQtX (ORCPT
+        id S1729194AbfHEQvP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 12:49:23 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:33982 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726693AbfHEQtX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 12:49:23 -0400
-Received: by mail-io1-f66.google.com with SMTP id k8so168771714iot.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 09:49:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Iy0zgi7c5Mt6BCyigJ+sau0NZkAGLjojiGbTtlpXmX4=;
-        b=AO8WILTZ2F4Y3kf5g/GRZ6sa70Xh6EURZvliiklrJnVqmHxLoYeYLxUqZQa1JZhjhH
-         MKLjHewO8ZB0Izz1i9/YGQ0edVZSL8EidXmT3m2axVEBZ3CjkxcAZUNuyEUKEpvqY59S
-         Cu2A4B0gTL6SY2id05Bm02i6OOGBGngxo1Y0yL4xnCekSAYNprFjvqv/NSNK/5NgUbbZ
-         setNr+1S2Bmk4W3j93vYebcpp/f4J4xbvYkPaNi9UK9V61Z6BKqk5Nl1mBZQpEKBhev1
-         whvWKr0lIiG8kJd0Uh/oO37Fl4dCq4+qRfgILYmkZu2OjooKTwxrYFPpnYkLQN8jxOC3
-         NzEQ==
-X-Gm-Message-State: APjAAAUGt4cjzhyCHTulaFtwTFIgFjdpFw2z/LkV5GdvcbvT4Xup+Pom
-        XhEz3RtymE+jY+vWV2qoWlRYNA==
-X-Google-Smtp-Source: APXvYqylsgW6+SJQlfTE/tTlTjRGeYSraVjmnVSRxvw6S4E37w75djUCGF7oXf/2sEbet6SG4H43dw==
-X-Received: by 2002:a02:c6a9:: with SMTP id o9mr101484652jan.90.1565023762315;
-        Mon, 05 Aug 2019 09:49:22 -0700 (PDT)
-Received: from google.com ([2620:15c:183:0:5118:89b3:1f18:4090])
-        by smtp.gmail.com with ESMTPSA id e188sm75590176ioa.3.2019.08.05.09.49.20
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 05 Aug 2019 09:49:21 -0700 (PDT)
-Date:   Mon, 5 Aug 2019 10:49:17 -0600
-From:   Raul Rangel <rrangel@chromium.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Daniel Kurtz <djkurtz@chromium.org>,
-        hongjiefang <hongjiefang@asrmicro.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Kyle Roeschley <kyle.roeschley@ni.com>,
-        Avri Altman <avri.altman@wdc.com>
-Subject: Re: [RFC PATCH 1/2] mmc: sdhci: Manually check card status after
- reset
-Message-ID: <20190805164917.GA93879@google.com>
-References: <20190501175457.195855-1-rrangel@chromium.org>
- <CAPDyKFpL1nHt1E1zgS-iDZf_KDWk2CN32Lvr+5Nmo8CtB2VCWg@mail.gmail.com>
- <20190607160553.GA185100@google.com>
- <CAPDyKFout6AY2Q92pYQ-KPH0NENq1-SkYivkDxjjb=uB=tKXuQ@mail.gmail.com>
- <20190610163252.GA227032@google.com>
- <fcdf6cc4-2729-abe2-85c8-b0d04901c5ae@intel.com>
- <20190619145625.GA50985@google.com>
- <20190801151624.GA155392@google.com>
- <a9a8d3f5-d600-7c8d-8734-cf6a017849c5@intel.com>
+        Mon, 5 Aug 2019 12:51:15 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:33117 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726691AbfHEQvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 12:51:14 -0400
+Received: from LHREML713-CAH.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 9C1E5B6612111EB1A583;
+        Mon,  5 Aug 2019 17:51:13 +0100 (IST)
+Received: from [10.210.168.118] (10.210.168.118) by smtpsuk.huawei.com
+ (10.201.108.36) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 5 Aug
+ 2019 17:51:03 +0100
+Subject: Re: [PATCH] KEYS: trusted: allow module init if TPM is inactive or
+ deactivated
+To:     Tyler Hicks <tyhicks@canonical.com>,
+        Mimi Zohar <zohar@linux.ibm.com>
+CC:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        <jejb@linux.ibm.com>, <jgg@ziepe.ca>,
+        <linux-integrity@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <keyrings@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <crazyt2019+lml@gmail.com>, <nayna@linux.vnet.ibm.com>,
+        <silviu.vlasceanu@huawei.com>
+References: <20190705163735.11539-1-roberto.sassu@huawei.com>
+ <20190711194811.rfsohbfc3a7carpa@linux.intel.com>
+ <b4454a78-1f1b-cc75-114a-99926e097b05@huawei.com>
+ <20190801163215.mfkagoafkxscesne@linux.intel.com>
+ <e50c4cfa-1f0c-6f4d-1910-010a8d874393@huawei.com>
+ <20190802142721.GA26616@elm>
+ <20190802194226.oiztvme5klkmw6fh@linux.intel.com>
+ <20190802202343.GE26616@elm>
+ <e10f7b04-3d63-435e-180e-72a084ac4bab@huawei.com>
+ <1565020459.11223.179.camel@linux.ibm.com> <20190805160451.GB3449@elm>
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+Message-ID: <0d9f2f6f-9a69-5169-a92d-9ca7de3c0d18@huawei.com>
+Date:   Mon, 5 Aug 2019 18:51:09 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a9a8d3f5-d600-7c8d-8734-cf6a017849c5@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190805160451.GB3449@elm>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.210.168.118]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 07:58:20AM +0300, Adrian Hunter wrote:
+On 8/5/2019 6:04 PM, Tyler Hicks wrote:
+> On 2019-08-05 11:54:19, Mimi Zohar wrote:
+>> On Mon, 2019-08-05 at 16:50 +0200, Roberto Sassu wrote:
+>>> Regarding Mimi's proposal to avoid the issue by extending the PCR with
+>>> zeros, I think it also achieve the goal.
+>>
+>> Roberto, removing the following code from init_digests() would be the
+>> equivalent to the prior code, without needing to make any other
+>> changes.  Let's keep it simple.  Do you want to post the patch with
+>> the change, or should I?
+>>
+>>          ret = tpm_get_random(chip, digest, TPM_MAX_DIGEST_SIZE);
+>>          if (ret < 0)
+>>                  return ret;
+>>          if (ret < TPM_MAX_DIGEST_SIZE)
+>>                  return -EFAULT;
+>>
+>> As I can't duplicate the problem, it would need to be tested by others
+>> experiencing the problem.
 > 
-> You seem not to have answered to my suggestion for a change to sdhci_reinit() here:
+> The bug reporter tested Roberto's last patch:
 > 
-> 	https://lore.kernel.org/lkml/fcdf6cc4-2729-abe2-85c8-b0d04901c5ae@intel.com/
+>   https://bugzilla.kernel.org/show_bug.cgi?id=203953#c8
 > 
-I thought I answered it here: https://lore.kernel.org/lkml/20190619145625.GA50985@google.com/#t
+> We should Cc the reporter on future patches or at least leave another
+> testing request in the bugzilla.
 
-Did I miss something?
+I don't see the reporter's email. Please ask him to test the new patch.
 
 Thanks
+
+Roberto
+
+-- 
+HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
+Managing Director: Li Peng, Li Jian, Shi Yanli
