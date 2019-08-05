@@ -2,143 +2,161 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E7DC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1BFC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA6152147A
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:55:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CSOoOFmz"
+	by mail.kernel.org (Postfix) with ESMTP id D8F312147A
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 16:55:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729951AbfHEQzV (ORCPT
+        id S1729972AbfHEQzk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 12:55:21 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:59582 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729152AbfHEQzV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 12:55:21 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x75GiGpV039612;
-        Mon, 5 Aug 2019 16:54:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=AiaTx4RKmFmDRhFvPbii96+I2RlIDqHm4KrNnvPT2u0=;
- b=CSOoOFmzfLHDAKdLl74xlQAFf0qqaSWA0Jy+V82mmEXmE6i1X98vzhCO8kFn5IgwLuko
- 3KqiIPAx8c5Ri17YNKlWNUKtja37et/tXJRXH3sTvMC0oIDWxlXWvBDiNCePg/k+H/y9
- YMya9tabSBUyrVgtRwswkL1zFE402XivlgzI3AxiwEzHXT6AcEUBNCw4gwQLX8DMM3hn
- ntGN2gO8CApvxyYzP5ovCBKpgfSLqhs/ldzrQiR8+k9m4LlvsNmQHJd0pvb3MYuOpgbJ
- MtBmxe90hEUBgDUQoKTg5mxLWaGpypmAD23wcspqqzlODjj+7RtneACpVf6+ysxWEfoR bQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2u51ptrk2j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 05 Aug 2019 16:54:53 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x75GkrJB140464;
-        Mon, 5 Aug 2019 16:54:52 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2u51kmnj6g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 05 Aug 2019 16:54:52 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x75GskDR008576;
-        Mon, 5 Aug 2019 16:54:46 GMT
-Received: from [192.168.1.222] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 05 Aug 2019 09:54:46 -0700
-Subject: Re: [PATCH 1/3] mm, reclaim: make should_continue_reclaim perform
- dryrun detection
-To:     Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Cc:     Hillf Danton <hdanton@sina.com>, Michal Hocko <mhocko@kernel.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20190802223930.30971-1-mike.kravetz@oracle.com>
- <20190802223930.30971-2-mike.kravetz@oracle.com>
- <bb16d3f0-0984-be32-4346-358abad92c4c@suse.cz>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <e2252a42-063a-8f34-c300-9250d783b2fb@oracle.com>
-Date:   Mon, 5 Aug 2019 09:54:45 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 5 Aug 2019 12:55:40 -0400
+Received: from mga01.intel.com ([192.55.52.88]:43767 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727349AbfHEQzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 12:55:40 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 09:55:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,350,1559545200"; 
+   d="scan'208";a="175635793"
+Received: from buildpc-hp-z230.iind.intel.com (HELO buildpc-HP-Z230) ([10.223.89.34])
+  by fmsmga007.fm.intel.com with ESMTP; 05 Aug 2019 09:55:35 -0700
+Date:   Mon, 5 Aug 2019 22:27:29 +0530
+From:   Sanyog Kale <sanyog.r.kale@intel.com>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, vkoul@kernel.org,
+        gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com
+Subject: Re: [RFC PATCH 28/40] soundwire: intel: handle disabled links
+Message-ID: <20190805165729.GC24889@buildpc-HP-Z230>
+References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
+ <20190725234032.21152-29-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <bb16d3f0-0984-be32-4346-358abad92c4c@suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9340 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=962
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908050184
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9340 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=987 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908050184
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190725234032.21152-29-pierre-louis.bossart@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/5/19 1:42 AM, Vlastimil Babka wrote:
-> On 8/3/19 12:39 AM, Mike Kravetz wrote:
->> From: Hillf Danton <hdanton@sina.com>
->>
->> Address the issue of should_continue_reclaim continuing true too often
->> for __GFP_RETRY_MAYFAIL attempts when !nr_reclaimed and nr_scanned.
->> This could happen during hugetlb page allocation causing stalls for
->> minutes or hours.
->>
->> We can stop reclaiming pages if compaction reports it can make a progress.
->> A code reshuffle is needed to do that.
+On Thu, Jul 25, 2019 at 06:40:20PM -0500, Pierre-Louis Bossart wrote:
+> On most hardware platforms, SoundWire interfaces are pin-muxed with
+> other interfaces (typically DMIC or I2S) and the status of each link
+> needs to be checked at boot time.
 > 
->> And it has side-effects, however,
->> with allocation latencies in other cases but that would come at the cost
->> of potential premature reclaim which has consequences of itself.
+> For Intel platforms, the BIOS provides a menu to enable/disable the
+> links separately, and the information is provided to the OS with an
+> Intel-specific _DSD property. The same capability will be added to
+> revisions of the MIPI DisCo specification.
 > 
-> Based on Mel's longer explanation, can we clarify the wording here? e.g.:
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> ---
+>  drivers/soundwire/intel.c     | 26 ++++++++++++++++++++++----
+>  include/linux/soundwire/sdw.h |  2 ++
+>  2 files changed, 24 insertions(+), 4 deletions(-)
 > 
-> There might be side-effect for other high-order allocations that would
-> potentially benefit from more reclaim before compaction for them to be
-> faster and less likely to stall, but the consequences of
-> premature/over-reclaim are considered worse.
-> 
->> We can also bail out of reclaiming pages if we know that there are not
->> enough inactive lru pages left to satisfy the costly allocation.
->>
->> We can give up reclaiming pages too if we see dryrun occur, with the
->> certainty of plenty of inactive pages. IOW with dryrun detected, we are
->> sure we have reclaimed as many pages as we could.
->>
->> Cc: Mike Kravetz <mike.kravetz@oracle.com>
->> Cc: Mel Gorman <mgorman@suse.de>
->> Cc: Michal Hocko <mhocko@kernel.org>
->> Cc: Vlastimil Babka <vbabka@suse.cz>
->> Cc: Johannes Weiner <hannes@cmpxchg.org>
->> Signed-off-by: Hillf Danton <hdanton@sina.com>
->> Tested-by: Mike Kravetz <mike.kravetz@oracle.com>
->> Acked-by: Mel Gorman <mgorman@suse.de>
-> 
-> Acked-by: Vlastimil Babka <vbabka@suse.cz>
-> I will send some followup cleanup.
-> 
-> There should be also Mike's SOB?
+> diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+> index 796ac2bc8cea..5947fa8e840b 100644
+> --- a/drivers/soundwire/intel.c
+> +++ b/drivers/soundwire/intel.c
+> @@ -90,6 +90,8 @@
+>  #define SDW_ALH_STRMZCFG_DMAT		GENMASK(7, 0)
+>  #define SDW_ALH_STRMZCFG_CHN		GENMASK(19, 16)
+>  
+> +#define SDW_INTEL_QUIRK_MASK_BUS_DISABLE	BIT(1)
+> +
+>  enum intel_pdi_type {
+>  	INTEL_PDI_IN = 0,
+>  	INTEL_PDI_OUT = 1,
+> @@ -922,7 +924,7 @@ static int sdw_master_read_intel_prop(struct sdw_bus *bus)
+>  	struct sdw_master_prop *prop = &bus->prop;
+>  	struct fwnode_handle *link;
+>  	char name[32];
+> -	int nval, i;
+> +	u32 quirk_mask;
+>  
+>  	/* Find master handle */
+>  	snprintf(name, sizeof(name),
+> @@ -937,6 +939,14 @@ static int sdw_master_read_intel_prop(struct sdw_bus *bus)
+>  	fwnode_property_read_u32(link,
+>  				 "intel-sdw-ip-clock",
+>  				 &prop->mclk_freq);
+> +
+> +	fwnode_property_read_u32(link,
+> +				 "intel-quirk-mask",
+> +				 &quirk_mask);
+> +
+> +	if (quirk_mask & SDW_INTEL_QUIRK_MASK_BUS_DISABLE)
+> +		prop->hw_disabled = true;
+> +
+>  	return 0;
+>  }
+>  
+> @@ -997,6 +1007,12 @@ static int intel_probe(struct platform_device *pdev)
+>  		goto err_master_reg;
+>  	}
+>  
+> +	if (sdw->cdns.bus.prop.hw_disabled) {
+> +		dev_info(&pdev->dev, "SoundWire master %d is disabled, ignoring\n",
+> +			 sdw->cdns.bus.link_id);
+> +		return 0;
+> +	}
+> +
+>  	/* Initialize shim and controller */
+>  	intel_link_power_up(sdw);
+>  	intel_shim_init(sdw);
+> @@ -1050,9 +1066,11 @@ static int intel_remove(struct platform_device *pdev)
+>  
+>  	sdw = platform_get_drvdata(pdev);
+>  
+> -	intel_debugfs_exit(sdw);
+> -	free_irq(sdw->res->irq, sdw);
+> -	snd_soc_unregister_component(sdw->cdns.dev);
+> +	if (!sdw->cdns.bus.prop.hw_disabled) {
+> +		intel_debugfs_exit(sdw);
+> +		free_irq(sdw->res->irq, sdw);
+> +		snd_soc_unregister_component(sdw->cdns.dev);
+> +	}
+>  	sdw_delete_bus_master(&sdw->cdns.bus);
+>  
+>  	return 0;
+> diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
+> index c7dfc824be80..f78b076a8782 100644
+> --- a/include/linux/soundwire/sdw.h
+> +++ b/include/linux/soundwire/sdw.h
+> @@ -380,6 +380,7 @@ struct sdw_slave_prop {
+>   * @err_threshold: Number of times that software may retry sending a single
+>   * command
+>   * @mclk_freq: clock reference passed to SoundWire Master, in Hz.
+> + * @hw_disabled: if true, the Master is not functional, typically due to pin-mux
+>   */
+>  struct sdw_master_prop {
+>  	u32 revision;
+> @@ -395,6 +396,7 @@ struct sdw_master_prop {
+>  	bool dynamic_frame;
+>  	u32 err_threshold;
+>  	u32 mclk_freq;
+> +	bool hw_disabled;
 
-Will do.
-My apologies, the process of handling patches created by others is new
-to me.
+Do we have such cases where some of SoundWire links are disabled and
+some enabled?
 
-Also, will incorporate Mel's explanation.
+>  };
+>  
+>  int sdw_master_read_prop(struct sdw_bus *bus);
+> -- 
+> 2.20.1
+> 
+
 -- 
-Mike Kravetz
