@@ -2,134 +2,276 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40916C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE73C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED0D1216F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02DE721738
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:05:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010317;
-	bh=TqnifPeWFcqsVHSip/uFpPPI4gb3Qj12me9k3CbRWJ8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eR+8oXwKPS3sQtlroWvEuVHGs2MUnbTywxe7UB6uIT4V18sCuSugIsb89VTwR2mpE
-	 hLxB+qP1/F8qbraKJQy2TQcmaJox+huemhcAHDSQszXoUoOLjjN1V9jSSb1CtzEpCV
-	 UlnFmc5h+cLxz8AVxD3JckTVCOGH4R45Vrzi3WsE=
+	s=default; t=1565010328;
+	bh=1KhugDbYUY1S51uwi69yCtGXNjuJxQjnkDZDsrv/bog=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=X3nsd/1CJ2BZV0Z6Rp9zhDeE1KECEXxEYCMYOSWWBhtBv1EShmQ+0F0/Y1Lk+Sa0T
+	 8D10aJdx4NR4sToxGsZTQcpAYix1q+e/i3yIir4vIF9KSyIqGP62N1AUCAiTWzv/k0
+	 cBWxa8nP4e9B/pWiMQ2XMm4B0CWvVVoSlHFt5acs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729262AbfHENFP (ORCPT
+        id S1729297AbfHENF0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:05:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41134 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:05:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729246AbfHENFL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:05:11 -0400
+        id S1729274AbfHENFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:05:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 815CA206C1;
-        Mon,  5 Aug 2019 13:05:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8775206C1;
+        Mon,  5 Aug 2019 13:05:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010310;
-        bh=TqnifPeWFcqsVHSip/uFpPPI4gb3Qj12me9k3CbRWJ8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yXRHyBNoGijq3z0hcnZM9O6Soy7E6qSesEKduUCu25+PgPFnaGC5vGRy/QxOwKFn4
-         nQ0/6xprQc9zFrdT28lnUd8MdVvNIKxAqg5YSmnlN4noQ0qJALVerzgKoPuQTk+jtW
-         do7S3jLum9xGK0tcQwIjEePB3jTyq+0DQs3i7Jg4=
+        s=default; t=1565010320;
+        bh=1KhugDbYUY1S51uwi69yCtGXNjuJxQjnkDZDsrv/bog=;
+        h=From:To:Cc:Subject:Date:From;
+        b=AaSLtXmPuBM6yfIsa5l5YBVwdtQFIfo1GVFN0hTNBdBRY4KlLILp65RtIN18tX6XO
+         AUbRTePlNny/RtRl6gvKHErL4HrdnP9d+13LW0X5qBGCvYJing2T8W0ZDNPgr3oB7v
+         ubOToXLVW+z3rCU09xUTZl3Xgpp0S8hGghQSEL20=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Prarit Bhargava <prarit@redhat.com>,
-        Barret Rhoden <brho@google.com>,
-        David Arcari <darcari@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 06/42] kernel/module.c: Only return -EEXIST for modules that have finished loading
-Date:   Mon,  5 Aug 2019 15:02:32 +0200
-Message-Id: <20190805124925.612535283@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.9 00/42] 4.9.188-stable review
+Date:   Mon,  5 Aug 2019 15:02:26 +0200
+Message-Id: <20190805124924.788666484@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190805124924.788666484@linuxfoundation.org>
-References: <20190805124924.788666484@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.188-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.9.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.9.188-rc1
+X-KernelTest-Deadline: 2019-08-07T12:49+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6e6de3dee51a439f76eb73c22ae2ffd2c9384712 ]
+This is the start of the stable review cycle for the 4.9.188 release.
+There are 42 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-Microsoft HyperV disables the X86_FEATURE_SMCA bit on AMD systems, and
-linux guests boot with repeated errors:
+Responses should be made by Wed 07 Aug 2019 12:47:58 PM UTC.
+Anything received after that time might be too late.
 
-amd64_edac_mod: Unknown symbol amd_unregister_ecc_decoder (err -2)
-amd64_edac_mod: Unknown symbol amd_register_ecc_decoder (err -2)
-amd64_edac_mod: Unknown symbol amd_report_gart_errors (err -2)
-amd64_edac_mod: Unknown symbol amd_unregister_ecc_decoder (err -2)
-amd64_edac_mod: Unknown symbol amd_register_ecc_decoder (err -2)
-amd64_edac_mod: Unknown symbol amd_report_gart_errors (err -2)
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.188-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
+and the diffstat can be found below.
 
-The warnings occur because the module code erroneously returns -EEXIST
-for modules that have failed to load and are in the process of being
-removed from the module list.
+thanks,
 
-module amd64_edac_mod has a dependency on module edac_mce_amd.  Using
-modules.dep, systemd will load edac_mce_amd for every request of
-amd64_edac_mod.  When the edac_mce_amd module loads, the module has
-state MODULE_STATE_UNFORMED and once the module load fails and the state
-becomes MODULE_STATE_GOING.  Another request for edac_mce_amd module
-executes and add_unformed_module() will erroneously return -EEXIST even
-though the previous instance of edac_mce_amd has MODULE_STATE_GOING.
-Upon receiving -EEXIST, systemd attempts to load amd64_edac_mod, which
-fails because of unknown symbols from edac_mce_amd.
+greg k-h
 
-add_unformed_module() must wait to return for any case other than
-MODULE_STATE_LIVE to prevent a race between multiple loads of
-dependent modules.
+-------------
+Pseudo-Shortlog of commits:
 
-Signed-off-by: Prarit Bhargava <prarit@redhat.com>
-Signed-off-by: Barret Rhoden <brho@google.com>
-Cc: David Arcari <darcari@redhat.com>
-Cc: Jessica Yu <jeyu@kernel.org>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Jessica Yu <jeyu@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/module.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.9.188-rc1
 
-diff --git a/kernel/module.c b/kernel/module.c
-index 2325c9821f2a1..fb9e07aec49e0 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -3351,8 +3351,7 @@ static bool finished_loading(const char *name)
- 	sched_annotate_sleep();
- 	mutex_lock(&module_mutex);
- 	mod = find_module_all(name, strlen(name), true);
--	ret = !mod || mod->state == MODULE_STATE_LIVE
--		|| mod->state == MODULE_STATE_GOING;
-+	ret = !mod || mod->state == MODULE_STATE_LIVE;
- 	mutex_unlock(&module_mutex);
- 
- 	return ret;
-@@ -3515,8 +3514,7 @@ again:
- 	mutex_lock(&module_mutex);
- 	old = find_module_all(mod->name, strlen(mod->name), true);
- 	if (old != NULL) {
--		if (old->state == MODULE_STATE_COMING
--		    || old->state == MODULE_STATE_UNFORMED) {
-+		if (old->state != MODULE_STATE_LIVE) {
- 			/* Wait in case it fails to load. */
- 			mutex_unlock(&module_mutex);
- 			err = wait_event_interruptible(module_wq,
--- 
-2.20.1
+Vlastimil Babka <vbabka@suse.cz>
+    x86, mm, gup: prevent get_page() race with munmap in paravirt guest
 
+Josh Poimboeuf <jpoimboe@redhat.com>
+    objtool: Support GCC 9 cold subfunction naming scheme
+
+Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+    include/linux/module.h: copy __init/__exit attrs to init/cleanup_module
+
+Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+    Backport minimal compiler_attributes.h to support GCC 9
+
+Jean Delvare <jdelvare@suse.de>
+    eeprom: at24: make spd world-readable again
+
+Andrea Arcangeli <aarcange@redhat.com>
+    coredump: fix race condition between collapse_huge_page() and core dumping
+
+Ajay Kaher <akaher@vmware.com>
+    infiniband: fix race condition between infiniband mlx4, mlx5 driver and core dumping
+
+Andrea Arcangeli <aarcange@redhat.com>
+    coredump: fix race condition between mmget_not_zero()/get_task_mm() and core dumping
+
+Yishai Hadas <yishaih@mellanox.com>
+    IB/mlx5: Fix RSS Toeplitz setup to be aligned with the HW specification
+
+Juergen Gross <jgross@suse.com>
+    xen/swiotlb: fix condition for calling xen_destroy_contiguous_region()
+
+Will Deacon <will@kernel.org>
+    drivers/perf: arm_pmu: Fix failure path in PM notifier
+
+Stefan Haberland <sth@linux.ibm.com>
+    s390/dasd: fix endless loop after read unit address configuration
+
+Ondrej Mosnacek <omosnace@redhat.com>
+    selinux: fix memory leak in policydb_init()
+
+Michael Wu <michael.wu@vatics.com>
+    gpiolib: fix incorrect IRQ requesting of an active-low lineevent
+
+Douglas Anderson <dianders@chromium.org>
+    mmc: dw_mmc: Fix occasional hang after tuning on eMMC
+
+Filipe Manana <fdmanana@suse.com>
+    Btrfs: fix incremental send failure after deduplication
+
+Masahiro Yamada <yamada.masahiro@socionext.com>
+    kbuild: initialize CLANG_FLAGS correctly in the top Makefile
+
+Zhenzhong Duan <zhenzhong.duan@oracle.com>
+    x86, boot: Remove multiple copy of static function sanitize_boot_params()
+
+Josh Poimboeuf <jpoimboe@redhat.com>
+    x86/kvm: Don't call kvm_spurious_fault() from .fixup
+
+Kees Cook <keescook@chromium.org>
+    ipc/mqueue.c: only perform resource calculation if user valid
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    drivers/rapidio/devices/rio_mport_cdev.c: NUL terminate some strings
+
+Mikko Rapeli <mikko.rapeli@iki.fi>
+    uapi linux/coda_psdev.h: move upc_req definition from uapi to kernel side headers
+
+Sam Protsenko <semen.protsenko@linaro.org>
+    coda: fix build using bare-metal toolchain
+
+Zhouyang Jia <jiazhouyang09@gmail.com>
+    coda: add error handling for fget
+
+Doug Berger <opendmb@gmail.com>
+    mm/cma.c: fail if fixed declaration can't be honored
+
+Arnd Bergmann <arnd@arndb.de>
+    x86: math-emu: Hide clang warnings for 16-bit overflow
+
+Qian Cai <cai@lca.pw>
+    x86/apic: Silence -Wtype-limits compiler warnings
+
+Benjamin Poirier <bpoirier@suse.com>
+    be2net: Signal that the device cannot transmit during reconfiguration
+
+Arnd Bergmann <arnd@arndb.de>
+    ACPI: fix false-positive -Wuninitialized warning
+
+Benjamin Block <bblock@linux.ibm.com>
+    scsi: zfcp: fix GCC compiler warning emitted with -Wmaybe-uninitialized
+
+Jeff Layton <jlayton@kernel.org>
+    ceph: return -ERANGE if virtual xattr value didn't fit in buffer
+
+Andrea Parri <andrea.parri@amarulasolutions.com>
+    ceph: fix improper use of smp_mb__before_atomic()
+
+David Sterba <dsterba@suse.com>
+    btrfs: fix minimum number of chunk errors for DUP
+
+Russell King <rmk+kernel@armlinux.org.uk>
+    fs/adfs: super: fix use-after-free bug
+
+Geert Uytterhoeven <geert+renesas@glider.be>
+    dmaengine: rcar-dmac: Reject zero-length slave DMA requests
+
+Petr Cvek <petrcvekcz@gmail.com>
+    MIPS: lantiq: Fix bitfield masking
+
+Prarit Bhargava <prarit@redhat.com>
+    kernel/module.c: Only return -EEXIST for modules that have finished loading
+
+Cheng Jian <cj.chengjian@huawei.com>
+    ftrace: Enable trampoline when rec count returns back to one
+
+Douglas Anderson <dianders@chromium.org>
+    ARM: dts: rockchip: Mark that the rk3288 timer might stop in suspend
+
+Douglas Anderson <dianders@chromium.org>
+    ARM: dts: rockchip: Make rk3288-veyron-mickey's emmc work again
+
+Douglas Anderson <dianders@chromium.org>
+    ARM: dts: rockchip: Make rk3288-veyron-minnie run at hs200
+
+Russell King <rmk+kernel@armlinux.org.uk>
+    ARM: riscpc: fix DMA
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                    |  7 +--
+ arch/arm/boot/dts/rk3288-veyron-mickey.dts  |  4 --
+ arch/arm/boot/dts/rk3288-veyron-minnie.dts  |  4 --
+ arch/arm/boot/dts/rk3288.dtsi               |  1 +
+ arch/arm/mach-rpc/dma.c                     |  5 +-
+ arch/mips/lantiq/irq.c                      |  5 +-
+ arch/x86/boot/compressed/misc.c             |  1 +
+ arch/x86/boot/compressed/misc.h             |  1 -
+ arch/x86/include/asm/apic.h                 |  2 +-
+ arch/x86/include/asm/kvm_host.h             | 34 +++++++------
+ arch/x86/kernel/apic/apic.c                 |  2 +-
+ arch/x86/math-emu/fpu_emu.h                 |  2 +-
+ arch/x86/math-emu/reg_constant.c            |  2 +-
+ arch/x86/mm/gup.c                           | 32 +++++++++++-
+ drivers/android/binder.c                    |  6 +++
+ drivers/dma/sh/rcar-dmac.c                  |  2 +-
+ drivers/gpio/gpiolib.c                      |  6 ++-
+ drivers/infiniband/hw/mlx4/main.c           |  4 +-
+ drivers/infiniband/hw/mlx5/main.c           |  3 ++
+ drivers/infiniband/hw/mlx5/qp.c             |  1 -
+ drivers/misc/eeprom/at24.c                  |  2 +-
+ drivers/mmc/host/dw_mmc.c                   |  3 +-
+ drivers/net/ethernet/emulex/benet/be_main.c |  6 ++-
+ drivers/perf/arm_pmu.c                      |  2 +-
+ drivers/rapidio/devices/rio_mport_cdev.c    |  2 +
+ drivers/s390/block/dasd_alias.c             | 22 ++++++---
+ drivers/s390/scsi/zfcp_erp.c                |  7 +++
+ drivers/xen/swiotlb-xen.c                   |  4 +-
+ fs/adfs/super.c                             |  5 +-
+ fs/btrfs/send.c                             | 77 ++++++-----------------------
+ fs/btrfs/volumes.c                          |  3 +-
+ fs/ceph/super.h                             |  7 ++-
+ fs/ceph/xattr.c                             | 14 +++---
+ fs/coda/psdev.c                             |  5 +-
+ fs/proc/task_mmu.c                          | 18 +++++++
+ fs/userfaultfd.c                            |  9 ++++
+ include/linux/acpi.h                        |  5 +-
+ include/linux/coda.h                        |  3 +-
+ include/linux/coda_psdev.h                  | 11 +++++
+ include/linux/compiler.h                    | 16 ++++++
+ include/linux/mm.h                          | 24 +++++++++
+ include/linux/module.h                      |  4 +-
+ include/uapi/linux/coda_psdev.h             | 13 -----
+ ipc/mqueue.c                                | 19 +++----
+ kernel/module.c                             |  6 +--
+ kernel/trace/ftrace.c                       | 28 ++++++-----
+ mm/cma.c                                    | 13 +++++
+ mm/khugepaged.c                             |  3 ++
+ mm/mmap.c                                   |  6 ++-
+ security/selinux/ss/policydb.c              |  6 ++-
+ tools/objtool/elf.c                         |  2 +-
+ 51 files changed, 294 insertions(+), 175 deletions(-)
 
 
