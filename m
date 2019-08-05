@@ -2,140 +2,102 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A737C41514
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FD5C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:17:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F52221849
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7D9A20B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 07:17:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E3Jze4jb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbfHEHQu (ORCPT
+        id S1727729AbfHEHR3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 03:16:50 -0400
-Received: from mga14.intel.com ([192.55.52.115]:2431 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727632AbfHEHQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 03:16:43 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 00:16:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,349,1559545200"; 
-   d="scan'208";a="176230600"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 05 Aug 2019 00:16:41 -0700
-From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To:     Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        kan.liang@linux.intel.com, Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [PATCH v4 5/7] perf intel-pt: Process options for PEBS event synthesis
-Date:   Mon,  5 Aug 2019 10:16:16 +0300
-Message-Id: <20190805071618.29468-6-alexander.shishkin@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190805071618.29468-1-alexander.shishkin@linux.intel.com>
-References: <20190805071618.29468-1-alexander.shishkin@linux.intel.com>
+        Mon, 5 Aug 2019 03:17:29 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:45090 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726423AbfHEHR3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 03:17:29 -0400
+Received: by mail-vs1-f68.google.com with SMTP id h28so55276064vsl.12
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 00:17:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QEcUadHXWt33HMQdDgSeAKvTfA2rNyZ6IARX0W+jn4E=;
+        b=E3Jze4jbk8v4bCCKp+/huj4YLKUWLvrxZFVF/kCE12qIWkQjuraZpc0df1+VdCjt9I
+         6wuRaUt3gSQ8QUSKQB7mon5lEXHR7fuO9FSYIeZWGGf78+ykXSQrJt/MbP1DIto50SxF
+         +BfnuqlHdAyxnP7DqiXY3vIrTQ3ZNbdmf1R4Ep0kSsyLZB2SkriQrAAri/B2GVqU2OLB
+         I3UDHqwoQxh9ir5JiVLFgcPaJC0X0jKSg7WtPpXnOJpeDRPsDWhhXuIdJfZuvQm1fId/
+         x6A0rkmiHC5qgK1+uMyhAAGdThB5mnLCqERO7djadIXTtQ/oHSDXI/HOU/Th/GnmlrA9
+         zNVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QEcUadHXWt33HMQdDgSeAKvTfA2rNyZ6IARX0W+jn4E=;
+        b=goCYWwsnE/23Sjt84mAgBUUzMPoncHnmiOORqta1sp1UbuCeAv2kkNlJT17h2tXrIA
+         BUdvK83J+O74ELGgJITYqOn4XGW6wRSrcp5PPUX69zOxwERAzEssrYSZ78sYFvxXnvOd
+         b+JNU9Uo4WaZMWr5HAsWYzsydK4kK55icBW6YS1Tl1XlXm+Qy+nFu+EoFbPpSyOA6y5d
+         uqUxhegrdZaeaoK/layT8P6FWUkOL4BLHXHtKTF6FAJly9i4gNrqfH4V4Iqk/p8a13P0
+         qX4gQqf3gp3IAUS+l5ujExbKeJCmvsLsGEYXnropu3mni0P6QxOji+lBJojwDktQO1bA
+         1hNw==
+X-Gm-Message-State: APjAAAWSkemR7k9NEK+5pttvPDZ7KR1/4MtxHeZncAfB+CiQfqSazSdt
+        xyJqW4ro6xx7hLrylooJWwcNOoDyqw1HxLoqIj64hg==
+X-Google-Smtp-Source: APXvYqwQut/wHazS7Y2F5Kb/YuEqVPhcSdRYnqFrxjYYdHA8Z7HkVqTC8twtGBaUyNA/ddSnssS/hwPRzHKFHQj/XYc=
+X-Received: by 2002:a67:f7cd:: with SMTP id a13mr30605473vsp.163.1564989448027;
+ Mon, 05 Aug 2019 00:17:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190804070329.14503-1-ttayar@habana.ai>
+In-Reply-To: <20190804070329.14503-1-ttayar@habana.ai>
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+Date:   Mon, 5 Aug 2019 10:17:02 +0300
+Message-ID: <CAFCwf12WFRf-UorVkfKSwLthsW-_=Gc7vcvisVC6Wh017o+2Eg@mail.gmail.com>
+Subject: Re: [PATCH] habanalabs: Update DRAM consumption on context tear down
+To:     Tomer Tayar <ttayar@habana.ai>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+On Sun, Aug 4, 2019 at 10:03 AM Tomer Tayar <ttayar@habana.ai> wrote:
+>
+> The patch adds a missing update of the DRAM memory consumption, when a
+> context is being torn down without an organized release of the allocated
+> memory.
+>
+> Signed-off-by: Tomer Tayar <ttayar@habana.ai>
+> ---
+>  drivers/misc/habanalabs/memory.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/misc/habanalabs/memory.c b/drivers/misc/habanalabs/memory.c
+> index 42d237cae1dc..365fb0cb8dff 100644
+> --- a/drivers/misc/habanalabs/memory.c
+> +++ b/drivers/misc/habanalabs/memory.c
+> @@ -1629,6 +1629,8 @@ void hl_vm_ctx_fini(struct hl_ctx *ctx)
+>                         dev_dbg(hdev->dev,
+>                                 "page list 0x%p of asid %d is still alive\n",
+>                                 phys_pg_list, ctx->asid);
+> +                       atomic64_sub(phys_pg_list->total_size,
+> +                                       &hdev->dram_used_mem);
+>                         free_phys_pg_pack(hdev, phys_pg_list);
+>                         idr_remove(&vm->phys_pg_pack_handles, i);
+>                 }
+> --
+> 2.17.1
+>
 
-Process synth_opts.other_events and attr.aux_source to set up for
-synthesizing PEBs via Intel PT events.
-
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
----
- tools/perf/arch/x86/util/intel-pt.c | 23 +++++++++++++++++++++++
- tools/perf/util/intel-pt.c          | 18 ++++++++++++++++++
- 2 files changed, 41 insertions(+)
-
-diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
-index 609088c01e3a..c92ece8af3b8 100644
---- a/tools/perf/arch/x86/util/intel-pt.c
-+++ b/tools/perf/arch/x86/util/intel-pt.c
-@@ -548,6 +548,26 @@ static int intel_pt_validate_config(struct perf_pmu *intel_pt_pmu,
- 					evsel->attr.config);
- }
- 
-+/*
-+ * Currently, there is not enough information to disambiguate different PEBS
-+ * events, so only allow one.
-+ */
-+static bool intel_pt_too_many_aux_source(struct perf_evlist *evlist)
-+{
-+	struct perf_evsel *evsel;
-+	int aux_source_cnt = 0;
-+
-+	evlist__for_each_entry(evlist, evsel)
-+		aux_source_cnt += !!evsel->attr.aux_source;
-+
-+	if (aux_source_cnt > 1) {
-+		pr_err(INTEL_PT_PMU_NAME " supports at most one event with aux-source\n");
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
- static int intel_pt_recording_options(struct auxtrace_record *itr,
- 				      struct perf_evlist *evlist,
- 				      struct record_opts *opts)
-@@ -588,6 +608,9 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
- 		return -EINVAL;
- 	}
- 
-+	if (intel_pt_too_many_aux_source(evlist))
-+		return -EINVAL;
-+
- 	if (!opts->full_auxtrace)
- 		return 0;
- 
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index df061599fef4..587a2dfb416b 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -2894,6 +2894,22 @@ static int intel_pt_synth_events(struct intel_pt *pt,
- 	return 0;
- }
- 
-+static void intel_pt_setup_pebs_events(struct intel_pt *pt)
-+{
-+	struct perf_evsel *evsel;
-+
-+	if (!pt->synth_opts.other_events)
-+		return;
-+
-+	evlist__for_each_entry(pt->session->evlist, evsel) {
-+		if (evsel->attr.aux_source && evsel->id) {
-+			pt->sample_pebs = true;
-+			pt->pebs_evsel = evsel;
-+			return;
-+		}
-+	}
-+}
-+
- static struct perf_evsel *intel_pt_find_sched_switch(struct perf_evlist *evlist)
- {
- 	struct perf_evsel *evsel;
-@@ -3263,6 +3279,8 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
- 	if (err)
- 		goto err_delete_thread;
- 
-+	intel_pt_setup_pebs_events(pt);
-+
- 	err = auxtrace_queues__process_index(&pt->queues, session);
- 	if (err)
- 		goto err_delete_thread;
--- 
-2.20.1
-
+This patch is:
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+Applied to -fixed.
+Thanks.
+Oded
