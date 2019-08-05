@@ -2,73 +2,177 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24669C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72605C32751
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9FE121872
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:44:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C5C12070D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:48:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731003AbfHEWoX (ORCPT
+        id S1730941AbfHEWsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 18:44:23 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:48735 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729999AbfHEWoW (ORCPT
+        Mon, 5 Aug 2019 18:48:33 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40752 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729999AbfHEWsc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 18:44:22 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1huliG-0002SR-1v; Mon, 05 Aug 2019 22:44:20 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        linux-ext4@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ext4: set error return correctly when ext4_htree_store_dirent fails
-Date:   Mon,  5 Aug 2019 23:44:19 +0100
-Message-Id: <20190805224419.24639-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 5 Aug 2019 18:48:32 -0400
+Received: by mail-wr1-f67.google.com with SMTP id r1so85900030wrl.7
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 15:48:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hJENxI80wN/86YgQghn0VINHjK39PsuKHSLq53FzU0c=;
+        b=iqSm+f1cpLd+dsWLQfPjbpsS1uP1rZapJgBRkeUkTc4GUdGUUsOy0xE4IwGkF/8dws
+         2mQK9ceirNfiXjmj9Iv0qhxSIMsFziuLNbHWLVcSXlYBTqqBk1xHH1Qk0iSrmvm0M4sG
+         dhEc3w5CAnBuRa5C56ulEmOSe5dVMY/wmMeEPzVSNE4TG2df85hNxnZrGI/fgjl2CiUy
+         7nbCy00AgP6KLrRo2zuSxd9SClXlRBCMhTPkvCmH8IHAAt0rE+KkM6HIRwUBIaWZrLu9
+         xKKikVb5oF/UnSBApoKmHliURoD6MbOygEhLWzC5AspMiruKq4LhuGxs53Wd0OFPs+ey
+         k2FQ==
+X-Gm-Message-State: APjAAAX/EP3KyfTehhmGAlck2pFpeo2tIcBV9xZfvx0Er73guLsPvB/E
+        +QK6q6K7X9wYoZCcuhnYowJsOA==
+X-Google-Smtp-Source: APXvYqySdg9YV4EiqlDPuqWbtbpBlPFVL1PtOB/3nLSu+w1Ygep569/JFe8N8aLYngb2EaWbgudBkw==
+X-Received: by 2002:a5d:63c8:: with SMTP id c8mr291879wrw.21.1565045310601;
+        Mon, 05 Aug 2019 15:48:30 -0700 (PDT)
+Received: from [192.168.0.24] ([181.120.177.224])
+        by smtp.gmail.com with ESMTPSA id b8sm115684209wmh.46.2019.08.05.15.48.25
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 05 Aug 2019 15:48:29 -0700 (PDT)
+Subject: Re: [PATCH RFC] modpost: Support I2C Aliases from OF tables
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>
+References: <20190710193918.31135-1-kieran.bingham+renesas@ideasonboard.com>
+ <0e1b6e0b-1c94-4b00-7fda-c2a303ee3816@redhat.com>
+ <20190731194419.GB4084@kunai>
+ <CAK7LNAQ6siWHU+N2c+6gqh7hHEJ_aDrVoiWnrTq1jiXQWSYYBA@mail.gmail.com>
+From:   Javier Martinez Canillas <javierm@redhat.com>
+Message-ID: <2567a74d-738e-6fed-d91c-cc70743e116d@redhat.com>
+Date:   Tue, 6 Aug 2019 00:48:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK7LNAQ6siWHU+N2c+6gqh7hHEJ_aDrVoiWnrTq1jiXQWSYYBA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Hello Masahiro-san,
 
-Currently when the call to ext4_htree_store_dirent fails the error return
-variable 'ret' is is not being set to the error code and variable count is
-instead, hence the error code is not being returned.  Fix this by assigning
-ret to the error return code.
+On 8/1/19 4:17 AM, Masahiro Yamada wrote:
+> Hi.
+> 
+> On Thu, Aug 1, 2019 at 4:44 AM Wolfram Sang <wsa@the-dreams.de> wrote:
+>>
+>> Hi Javier,
+>>
+>> thank you for providing the extra information.
+>>
+>> (And Kieran, thanks for the patch!)
+>>
+>>> The other option is to remove i2c_of_match_device() and don't make OF match
+>>> to fallback to i2c_of_match_device_sysfs(). This is what happens in the ACPI
+>>> case, since i2c_device_match() just calls acpi_driver_match_device() directly
+>>> and doesn't have a wrapper function that fallbacks to sysfs matching.
+>>>
+>>> In this case an I2C device ID table would be required if the devices have to
+>>> be instantiated through sysfs. That way the I2C table would be used both for
+>>> auto-loading and also to match the device when it doesn't have an of_node.
+>>
+>> That would probably mean that only a minority of drivers will not add an I2C
+>> device ID table because it is easy to add an you get the sysfs feature?
+>>
+>> Then we are back again with the situation that most drivers will have
+>> multiple tables. With the minor change that the I2C device id table is
+>> not required anymore by the core, but it will be just very useful to
+>> have? Or?
+>>
+>>> If the former is the correct way to solve this then the patch looks good to me.
+>>>
+>>> Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+>>
+>> For this actual patch from Kieran, I'd like to hear an opinion from the
+>> people maintaining modpost.
+> 
+> 
+> As you see 'git log scripts/mod/file2alias.c',
+> this file is touched by every subsystem.
+> 
+> So, the decision is up to you, Wolfram.
+> And, you can pick this to your tree if you like.
+> 
+> 
+> The implementation is really trivial.
+> 
+> 
+> As Javier pointed out, this discussion comes down to
+> "do we want to fall back to i2c_of_match_device_sysfs()?"
+> 
 
-Addresses-Coverity: ("Unused value")
-Fixes: 8af0f0822797 ("ext4: fix readdir error in the case of inline_data+dir_index")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- fs/ext4/inline.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yes, I think that's the crux of the matter. Basically the matching logic
+should be consistent with the modalias uevent exposed to user-space to
+auto-load modules.
 
-diff --git a/fs/ext4/inline.c b/fs/ext4/inline.c
-index 88cdf3c90bd1..2fec62d764fa 100644
---- a/fs/ext4/inline.c
-+++ b/fs/ext4/inline.c
-@@ -1416,7 +1416,7 @@ int ext4_inlinedir_to_tree(struct file *dir_file,
- 		err = ext4_htree_store_dirent(dir_file, hinfo->hash,
- 					      hinfo->minor_hash, de, &tmp_str);
- 		if (err) {
--			count = err;
-+			ret = err;
- 			goto out;
- 		}
- 		count++;
+So I think that we should either:
+
+a) take Kieran's patch or b) remove the i2c_of_match_device_sysfs() fallback
+for OF and require an I2C device table for sysfs instantiation and matching.
+
+> If a driver supports DT and devices are instantiated via DT,
+> in which situation is this useful?
+
+Is useful if you don't have all the I2C devices described in the DT. For example
+a daughterboard with an I2C device is connected to a board through an expansion
+slot or an I2C device connected directly to I2C pins exposed in a machine.
+
+In these cases your I2C devices won't be static so users might want to use the
+sysfs user-space interface to instantiate the I2C devices, i.e:
+
+ # echo eeprom 0x50 > /sys/bus/i2c/devices/i2c-3/new_device
+
+as explained in https://github.com/torvalds/linux/blob/master/Documentation/i2c/instantiating-devices#L207
+
+> Do legacy non-DT platforms need this?
+
+Yes, can also be used by non-DT platforms. But in this case isn't a problem
+because drivers for these platform will already have an I2C device ID table.
+
+> 
+> 
+> 
+>> The aproach looks okay to me, yet I can't
+>> tell how "easy" we are with adding new types like 'i2c_of'.
+> 
+> As far as I understood, this patch provides a shorthand.
+> You can save one table, but still get the
+> same MODULE_ALIAS in the *.mod.c file.
+> You need to add two MODULE_DEVICE_TABLE() though.
+> 
+> MODULE_DEVICE_TABLE(of, si4713_of_match);
+> MODULE_DEVICE_TABLE(i2c_of, si4713_of_match);
+>
+
+That's my understanding as well.
+
+Best regards,
 -- 
-2.20.1
-
+Javier Martinez Canillas
+Software Engineer - Desktop Hardware Enablement
+Red Hat
