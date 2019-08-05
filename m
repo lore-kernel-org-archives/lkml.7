@@ -2,111 +2,103 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11AB3C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F14C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E72252067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:11:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDD382067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:11:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565010711;
+	bh=8pfShbSLqzovdddcWb6AYq0zOV+VifEe/RzMPa7IiVc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=znfa2nyWS2NFwvuTCqWYEvAih5FYbFAafgo6L6yYuJox2X0/e01KeL98oc+H1aqUG
+	 o/h15kAgdEECf+NEFPBbEkdMrdZ3dpln+G9jLEmXuY9Ptio1atG/pUGYMhksAxiVLA
+	 L6cHCULZ50Dp7MZEKHvWDbLcsMPdmh2A8Gz1bS6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730116AbfHENLj (ORCPT
+        id S1730108AbfHENLu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:11:39 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54642 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729605AbfHENLh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:11:37 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x75D4ESW051140
-        for <linux-kernel@vger.kernel.org>; Mon, 5 Aug 2019 09:11:36 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u6kyxbnuc-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 09:11:36 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <prudo@linux.ibm.com>;
-        Mon, 5 Aug 2019 14:11:32 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 5 Aug 2019 14:11:27 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x75DBPAY52166750
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 5 Aug 2019 13:11:25 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 270E742057;
-        Mon,  5 Aug 2019 13:11:25 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9623542049;
-        Mon,  5 Aug 2019 13:11:24 +0000 (GMT)
-Received: from laptop-ibm (unknown [9.152.212.171])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  5 Aug 2019 13:11:24 +0000 (GMT)
-Date:   Mon, 5 Aug 2019 15:11:23 +0200
-From:   Philipp Rudo <prudo@linux.ibm.com>
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc:     Jessica Yu <jeyu@kernel.org>, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        "James Morris" <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "David Howells" <dhowells@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "AKASHI\, Takahiro" <takahiro.akashi@linaro.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH v12 01/11] MODSIGN: Export module signature definitions
-In-Reply-To: <8736iw9y00.fsf@morokweng.localdomain>
-References: <20190628021934.4260-1-bauerman@linux.ibm.com>
-        <20190628021934.4260-2-bauerman@linux.ibm.com>
-        <20190701144752.GC25484@linux-8ccs>
-        <87lfxel2q6.fsf@morokweng.localdomain>
-        <20190704125427.31146026@laptop-ibm>
-        <874l41ocf5.fsf@morokweng.localdomain>
-        <20190705150000.372345b0@laptop-ibm>
-        <8736iw9y00.fsf@morokweng.localdomain>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 5 Aug 2019 09:11:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50092 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730430AbfHENKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:10:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D8C02067D;
+        Mon,  5 Aug 2019 13:10:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565010655;
+        bh=8pfShbSLqzovdddcWb6AYq0zOV+VifEe/RzMPa7IiVc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VnWjEHo+Z238CU0ovDn0U1QVC7/8nkoW/F0lvUZCSLIPcztXZZ3QKCloMG93K6ujK
+         u2LisnUnNXnHX/lKUQuqRG5h5EhOpBIbMXG0VlRyFVTN1/xKXEBD/Rp49Aa/t3Orto
+         jJXprsH0JUTUUaYOK82BOvm+lpJ6lJdG/dUw3QJg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 22/74] perf version: Fix segfault due to missing OPT_END()
+Date:   Mon,  5 Aug 2019 15:02:35 +0200
+Message-Id: <20190805124937.564145380@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190805124935.819068648@linuxfoundation.org>
+References: <20190805124935.819068648@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19080513-4275-0000-0000-000003549A8C
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19080513-4276-0000-0000-0000386593D2
-Message-Id: <20190805151123.12510d72@laptop-ibm>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-05_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=911 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908050146
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thiago,
+[ Upstream commit 916c31fff946fae0e05862f9b2435fdb29fd5090 ]
 
-> > The patch looks good now.  
-> 
-> Thanks! Can I add your Reviewed-by?
+'perf version' on powerpc segfaults when used with non-supported
+option:
+  # perf version -a
+  Segmentation fault (core dumped)
 
-sorry, for the late answer, but I was on vacation the last two weeks. I hope
-it's not too late now.
+Fix this.
 
-Reviewed-by: Philipp Rudo <prudo@linux.ibm.com>
+Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Tested-by: Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Link: http://lkml.kernel.org/r/20190611030109.20228-1-ravi.bangoria@linux.ibm.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/perf/builtin-version.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tools/perf/builtin-version.c b/tools/perf/builtin-version.c
+index 50df168be326d..b02c961046403 100644
+--- a/tools/perf/builtin-version.c
++++ b/tools/perf/builtin-version.c
+@@ -19,6 +19,7 @@ static struct version version;
+ static struct option version_options[] = {
+ 	OPT_BOOLEAN(0, "build-options", &version.build_options,
+ 		    "display the build options"),
++	OPT_END(),
+ };
+ 
+ static const char * const version_usage[] = {
+-- 
+2.20.1
+
+
 
