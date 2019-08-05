@@ -4,53 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D339BC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4755AC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9765E216F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:12:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17EE0216F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010765;
-	bh=k2Eu4AtNfLVBB+3ReNjOJ55pY8hm1o606I6hLFu+uso=;
+	s=default; t=1565010772;
+	bh=2VID9je89f2HovuhxPIOTTpBneUuIvmnOWdBH/NvQJ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x1pJH8pjgT0yxzr1JtJtJNzujzqhAAEL8yUYiDE5vKZ1eJT+SUsMZjFRZYW768GmN
-	 9oB+E1fVC0YWOPkldRqwJjLFE7JjAa2FS9H5ZcsDe7MFNXP72U1g8jZiG6hNjfe01g
-	 82ILS7+oZc7nFpvySZNCrRxZQJs7ryQN60InMX9U=
+	b=ONEvns0TaIAvJR5e6W0kt2a7kTe+IpnF2zS4lTKRpgrKYwJK/rzJAk1L3WA6uPJX8
+	 UCq6IfcU2rajnjWs0F87WQQaKOQbmp1LSIwvvL1D9GKMCyxtJW3b2L0rCbrJDBArn8
+	 h93EnHsMaVayhGIjxJr2WTyR6G6H3ueU7aH3dZP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730158AbfHENMo (ORCPT
+        id S1730215AbfHENMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:12:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48836 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:12:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729153AbfHENKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:10:03 -0400
+        id S1730274AbfHENJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:09:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 713F72173B;
-        Mon,  5 Aug 2019 13:10:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E98432087B;
+        Mon,  5 Aug 2019 13:09:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010602;
-        bh=k2Eu4AtNfLVBB+3ReNjOJ55pY8hm1o606I6hLFu+uso=;
+        s=default; t=1565010595;
+        bh=2VID9je89f2HovuhxPIOTTpBneUuIvmnOWdBH/NvQJ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pduLCgr2sZhGb9sEM//M/Wo6sjidHAFh5ALYs7GoWODVKnlhLZb3EGcfZbWiYyCuz
-         J2sh3F3UMrjbJoVzf1/Snf81QMRNo+ZV7AfJ3aOSvZX8PAPeJq6Cz2Rnj34dHvQkWg
-         1jyUmZbv962vbpA4IQMyyi0hI8XUHVrC079xCYDE=
+        b=IGUOBxry90y05hO5kT0deqN48ilBaACHoyrVjiBtulAsmoqp4GRfaHP65BFErqCXe
+         xwNKXNIqfxrrwqotq8Y31er03JGGrKp+oEhoosqOKUPXdvh5SY62MAVxq5uRRUpGGS
+         k1NOwfi46wHf6JgrZOQ/XRLOVfJkYkSEiUJOFxFc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Alexandre Bounine <alex.bou9@gmail.com>,
-        Ira Weiny <ira.weiny@intel.com>,
+        stable@vger.kernel.org, Zhouyang Jia <jiazhouyang09@gmail.com>,
+        Jan Harkes <jaharkes@cs.cmu.edu>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Colin Ian King <colin.king@canonical.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        David Howells <dhowells@redhat.com>,
+        Fabian Frederick <fabf@skynet.be>,
+        Mikko Rapeli <mikko.rapeli@iki.fi>,
+        Sam Protsenko <semen.protsenko@linaro.org>,
+        Yann Droneaud <ydroneaud@opteya.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 34/74] drivers/rapidio/devices/rio_mport_cdev.c: NUL terminate some strings
-Date:   Mon,  5 Aug 2019 15:02:47 +0200
-Message-Id: <20190805124938.547554946@linuxfoundation.org>
+Subject: [PATCH 4.19 31/74] coda: add error handling for fget
+Date:   Mon,  5 Aug 2019 15:02:44 +0200
+Message-Id: <20190805124938.266379089@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124935.819068648@linuxfoundation.org>
 References: <20190805124935.819068648@linuxfoundation.org>
@@ -63,45 +70,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 156e0b1a8112b76e351684ac948c59757037ac36 ]
+[ Upstream commit 02551c23bcd85f0c68a8259c7b953d49d44f86af ]
 
-The dev_info.name[] array has space for RIO_MAX_DEVNAME_SZ + 1
-characters.  But the problem here is that we don't ensure that the user
-put a NUL terminator on the end of the string.  It could lead to an out
-of bounds read.
+When fget fails, the lack of error-handling code may cause unexpected
+results.
 
-Link: http://lkml.kernel.org/r/20190529110601.GB19119@mwanda
-Fixes: e8de370188d0 ("rapidio: add mport char device driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Alexandre Bounine <alex.bou9@gmail.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
+This patch adds error-handling code after calling fget.
+
+Link: http://lkml.kernel.org/r/2514ec03df9c33b86e56748513267a80dd8004d9.1558117389.git.jaharkes@cs.cmu.edu
+Signed-off-by: Zhouyang Jia <jiazhouyang09@gmail.com>
+Signed-off-by: Jan Harkes <jaharkes@cs.cmu.edu>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Colin Ian King <colin.king@canonical.com>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Fabian Frederick <fabf@skynet.be>
+Cc: Mikko Rapeli <mikko.rapeli@iki.fi>
+Cc: Sam Protsenko <semen.protsenko@linaro.org>
+Cc: Yann Droneaud <ydroneaud@opteya.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rapidio/devices/rio_mport_cdev.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/coda/psdev.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/rapidio/devices/rio_mport_cdev.c b/drivers/rapidio/devices/rio_mport_cdev.c
-index cbe467ff1aba9..fa0bbda4b3f2e 100644
---- a/drivers/rapidio/devices/rio_mport_cdev.c
-+++ b/drivers/rapidio/devices/rio_mport_cdev.c
-@@ -1688,6 +1688,7 @@ static int rio_mport_add_riodev(struct mport_cdev_priv *priv,
+diff --git a/fs/coda/psdev.c b/fs/coda/psdev.c
+index c5234c21b5394..55824cba32453 100644
+--- a/fs/coda/psdev.c
++++ b/fs/coda/psdev.c
+@@ -187,8 +187,11 @@ static ssize_t coda_psdev_write(struct file *file, const char __user *buf,
+ 	if (req->uc_opcode == CODA_OPEN_BY_FD) {
+ 		struct coda_open_by_fd_out *outp =
+ 			(struct coda_open_by_fd_out *)req->uc_data;
+-		if (!outp->oh.result)
++		if (!outp->oh.result) {
+ 			outp->fh = fget(outp->fd);
++			if (!outp->fh)
++				return -EBADF;
++		}
+ 	}
  
- 	if (copy_from_user(&dev_info, arg, sizeof(dev_info)))
- 		return -EFAULT;
-+	dev_info.name[sizeof(dev_info.name) - 1] = '\0';
- 
- 	rmcd_debug(RDEV, "name:%s ct:0x%x did:0x%x hc:0x%x", dev_info.name,
- 		   dev_info.comptag, dev_info.destid, dev_info.hopcount);
-@@ -1819,6 +1820,7 @@ static int rio_mport_del_riodev(struct mport_cdev_priv *priv, void __user *arg)
- 
- 	if (copy_from_user(&dev_info, arg, sizeof(dev_info)))
- 		return -EFAULT;
-+	dev_info.name[sizeof(dev_info.name) - 1] = '\0';
- 
- 	mport = priv->md->mport;
- 
+         wake_up(&req->uc_sleep);
 -- 
 2.20.1
 
