@@ -2,89 +2,101 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A180C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 11:18:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1F8C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 11:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F5DD20856
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 11:18:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HfMDJKbi"
+	by mail.kernel.org (Postfix) with ESMTP id E513320856
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 11:18:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728457AbfHELSR (ORCPT
+        id S1728472AbfHELS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 07:18:17 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34143 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727328AbfHELSQ (ORCPT
+        Mon, 5 Aug 2019 07:18:57 -0400
+Received: from bmailout3.hostsharing.net ([176.9.242.62]:51639 "EHLO
+        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727158AbfHELS4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 07:18:16 -0400
-Received: by mail-lj1-f195.google.com with SMTP id p17so78979294ljg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 04:18:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pTrdNULqRQePZooec8hzYMuIdhWzshDsgdUne7v9Rpw=;
-        b=HfMDJKbibOLBUBs34DEUtHqcUBsW8mIlsJ4cc8eYz6VcbQmKPZvnH/qVxN79tm1G08
-         bEjAhCBkfH4Nj/pWLyZMs29VsnmVCV9q4O5CrlHx7hESCejGeUF5Y2ycoW+s1yhIrQBq
-         sYcAbdXAidoCi9RTvz3gvMMZEzbhDFaae9gYrqA3JyeVq4vtDIb4kw6dDCyCZLt70BJX
-         HGEx7Z65iLiegnTNg2lGymGYbDDRjkalIgzSel+z9gtWuD/MpLa88cjXdTRAOQM7AfOl
-         FnEOH5AXGz8ex15jR2XnRA1OsQJoagE/0AUdvuplwCjEYYFrZDA5fYM4BxZM/aH/zXSs
-         wMDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pTrdNULqRQePZooec8hzYMuIdhWzshDsgdUne7v9Rpw=;
-        b=Fjlfun/aId6Cl1+k1wSIGlD3+ROzowVVatDu5b7QOXbEpDpNYGpa6z5uv3+5XAKwBW
-         2XbtJTzxNj0g1qygFHkvrGsiOKLdJzPbtfWOfMCS8h6PWy0WaUrACIVjd7XqBrP5NV9j
-         tGyN5iaUXYssUHgdivDD8RgDrYzd1f54AOmXmB5GXqDTRkL2b+Xc+hqKqvnI2QdOGdxk
-         tajxG7hiSMyeIn6rDuqlFi+yY0sff76zx7Pr/wXp1uqtBD3DSelssGI1emu1TtoWd5R5
-         YXNKBlljNnk7i3nQvGyPc7b38IaIBPus2pnIG6Zk5Pz8OVeqesS8e1Obtjw0ErdioygL
-         5A8A==
-X-Gm-Message-State: APjAAAXVh3JEKreCBqVYOLTQykuLNPH8vC26jUCSP8qGccxSi0ON8yVS
-        Us1NagaT78jMxC7lcPL0ZXlA1zMCh8nAezVHbg8bMiG3
-X-Google-Smtp-Source: APXvYqyLXiSKJTl98Lkgl0Ja3jEwM+BGOX7bwjIKoiganUjSPKjHOrR2xjbwuvFB38NS1GCnOdkwwVZ1OFVgw843jm4=
-X-Received: by 2002:a2e:2c14:: with SMTP id s20mr16561733ljs.54.1565003894943;
- Mon, 05 Aug 2019 04:18:14 -0700 (PDT)
+        Mon, 5 Aug 2019 07:18:56 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id BDFE3100AF48B;
+        Mon,  5 Aug 2019 13:18:54 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 6A5E44BA41; Mon,  5 Aug 2019 13:18:54 +0200 (CEST)
+Date:   Mon, 5 Aug 2019 13:18:54 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Keith Busch <keith.busch@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Kai Heng Feng <kai.heng.feng@canonical.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] PCI: pciehp: Prevent deadlock on disconnect
+Message-ID: <20190805111854.al5bj3q2gdng5ai6@wunner.de>
+References: <20190618125051.2382-1-mika.westerberg@linux.intel.com>
+ <20190618125051.2382-2-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
-References: <1564465410-9165-1-git-send-email-hayashi.kunihiko@socionext.com> <1564465410-9165-2-git-send-email-hayashi.kunihiko@socionext.com>
-In-Reply-To: <1564465410-9165-2-git-send-email-hayashi.kunihiko@socionext.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 5 Aug 2019 13:18:03 +0200
-Message-ID: <CACRpkdbt63WrZszChi25H+mxrHneKFHbakiYYskCLSXO=A9rkQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] pinctrl: uniphier: Separate modem group from UART
- ctsrts group
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190618125051.2382-2-mika.westerberg@linux.intel.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 7:43 AM Kunihiko Hayashi
-<hayashi.kunihiko@socionext.com> wrote:
+On Tue, Jun 18, 2019 at 03:50:51PM +0300, Mika Westerberg wrote:
+> If there are more than one PCIe switch with hotplug downstream ports
+> hot-removing them leads to a following deadlock:
+[...]
+> What happens here is that the whole hierarchy is runtime resumed and the
+> parent PCIe downstream port, who got the hot-remove event, starts
+> removing devices below it taking pci_lock_rescan_remove() lock. When the
+> child PCIe port is runtime resumed it calls pciehp_check_presence()
+> which ends up calling pciehp_card_present() and pciehp_check_link_active().
+> Both of these read their parts of PCIe config space by calling helper
+> function pcie_capability_read_word(). Now, this function notices that
+> the underlying device is already gone and returns PCIBIOS_DEVICE_NOT_FOUND
+> with the capability value set to 0. When pciehp gets this value it
+> thinks that its child device is also hot-removed and schedules its IRQ
+> thread to handle the event.
+> 
+> The deadlock happens when the child's IRQ thread runs and tries to
+> acquire pci_lock_rescan_remove() which is already taken by the parent
+> and the parent waits for the child's IRQ thread to finish.
+> 
+> We can prevent this from happening by checking the return value of
+> pcie_capability_read_word() and if it is PCIBIOS_DEVICE_NOT_FOUND stop
+> performing any hot-removal activities.
 
-> It depends on the board implementation whether to have each pins of
-> CTS/RTS, and others for modem. So it is necessary to divide current
-> uart_ctsrts group into uart_ctsrts and uart_modem groups.
->
-> Since the number of implemented pins for modem differs depending
-> on SoC, each uart_modem group also has a different number of pins.
->
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+IIUC this patch only avoids the deadlock if the child hotplug port happens
+to be runtime suspended when it is surprise removed.  The deadlock isn't
+avoided if is runtime resumed.
 
-Patch applied with Masahiro's ACK.
+This patch I posted last year should cover both cases:
 
-Yours,
-Linus Walleij
+https://patchwork.kernel.org/patch/10468065/
+
+However, as I've noted in this follow-up to the patch, I don't consider
+my solution a proper fix either:
+
+https://patchwork.kernel.org/patch/10468065/#22206721
+
+Rather, the problem should be addressed by unbinding PCI drivers without
+holding pci_lock_rescan_remove().
+
+I'm truly sorry but I haven't been able to make much progress on this
+as I got caught up with other things.  Part of the problem is that this
+is volunteer work.  Maybe someone's interested in hiring me to work on it?
+Resume available on request.  (But I'll get to it sooner or later whether
+paid or not, unless someone else beats me to it. :-) )
+
+Thanks,
+
+Lukas
