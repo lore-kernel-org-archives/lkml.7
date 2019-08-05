@@ -2,52 +2,53 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 641EDC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46558C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39BB52075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 105A62075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:16:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010975;
-	bh=qATYd373WHoQvx1nv4OGTJ3AU14oMmdMwgqxo4er9L0=;
+	s=default; t=1565010982;
+	bh=CYvkzKEU1nyUw5Pdr5OI8fZUul+Ab5odDtLyQv/4T6c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Whlvq5Bk2Mf9/kcrV1kSMLuDu+dH+PjuUR2eeTc9SSKWupJc1bZoiq955zbj70GfI
-	 OKEwoaRLXCTGOwYlURSBuRo0rzl+cHfmtmqRH6vdEHp1taaHMXlJneUdBaXqo1Mleb
-	 RG57dBJW/2SHPorvvVAQesvK/J9OrIRT44/cG7t8=
+	b=B3ghWokbcOOHL6pHYPanM0GQrbNYn8/4kgEdxWeKaDmZe3ilxI+48zTqwysG5wnIh
+	 asIe59oOa9aYp/fj5pivutRCmfCpkRpvDIA07fvSpWnmjeaX+wboGe466ENAtnfmYr
+	 y6OBwhfRk91T5TiBURbxGGLJiTtd4/kMAvlY4SJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729101AbfHENGY (ORCPT
+        id S1729536AbfHENGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:06:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42978 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:06:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729073AbfHENGT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:06:19 -0400
+        id S1729507AbfHENGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:06:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF840206C1;
-        Mon,  5 Aug 2019 13:06:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BB20206C1;
+        Mon,  5 Aug 2019 13:06:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010379;
-        bh=qATYd373WHoQvx1nv4OGTJ3AU14oMmdMwgqxo4er9L0=;
+        s=default; t=1565010369;
+        bh=CYvkzKEU1nyUw5Pdr5OI8fZUul+Ab5odDtLyQv/4T6c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZyQPSFyyVwP27zdSRYHiaciyTUzwBac1gkjGXzLx9sa6iKAxcJzF0Q9qXfjz4BuGQ
-         0yS1BTPzUrGbTMVkjdDLvs0YKxDqAtpOi8fWJXpCYTsRdJVlpJZ/NP5TYNVIRXp5sU
-         VBlX3UoN6dnQVqZHdPc+bS6fQ9svd0EP1MhJvl/4=
+        b=ZNGvRM+1Ftjzh4iqC9UtE640eNnDoxsxKX/QjgHxMJxu8+SyUV6R0+kYaWTS0s7mh
+         Ermz9+k2CREUYyFpPO4xD4EuUFrTmyUL90lsZDbVl8h1v4em3Mt4iOr80KIHNF+gJb
+         7balmMkZLuTtgq/xmMjo+yURCZA4usAcHoupe+J8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 16/42] x86/apic: Silence -Wtype-limits compiler warnings
-Date:   Mon,  5 Aug 2019 15:02:42 +0200
-Message-Id: <20190805124926.694565998@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "stable@vger.kernel.org, Miguel Ojeda" 
+        <miguel.ojeda.sandonis@gmail.com>, Rolf Eike Beer <eb@emlix.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Subject: [PATCH 4.9 39/42] Backport minimal compiler_attributes.h to support GCC 9
+Date:   Mon,  5 Aug 2019 15:03:05 +0200
+Message-Id: <20190805124929.606014897@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124924.788666484@linuxfoundation.org>
 References: <20190805124924.788666484@linuxfoundation.org>
@@ -60,74 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ec6335586953b0df32f83ef696002063090c7aef ]
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
 
-There are many compiler warnings like this,
+This adds support for __copy to v4.9.y so that we can use it in
+init/exit_module to avoid -Werror=missing-attributes errors on GCC 9.
 
-In file included from ./arch/x86/include/asm/smp.h:13,
-                 from ./arch/x86/include/asm/mmzone_64.h:11,
-                 from ./arch/x86/include/asm/mmzone.h:5,
-                 from ./include/linux/mmzone.h:969,
-                 from ./include/linux/gfp.h:6,
-                 from ./include/linux/mm.h:10,
-                 from arch/x86/kernel/apic/io_apic.c:34:
-arch/x86/kernel/apic/io_apic.c: In function 'check_timer':
-./arch/x86/include/asm/apic.h:37:11: warning: comparison of unsigned
-expression >= 0 is always true [-Wtype-limits]
-   if ((v) <= apic_verbosity) \
-           ^~
-arch/x86/kernel/apic/io_apic.c:2160:2: note: in expansion of macro
-'apic_printk'
-  apic_printk(APIC_QUIET, KERN_INFO "..TIMER: vector=0x%02X "
-  ^~~~~~~~~~~
-./arch/x86/include/asm/apic.h:37:11: warning: comparison of unsigned
-expression >= 0 is always true [-Wtype-limits]
-   if ((v) <= apic_verbosity) \
-           ^~
-arch/x86/kernel/apic/io_apic.c:2207:4: note: in expansion of macro
-'apic_printk'
-    apic_printk(APIC_QUIET, KERN_ERR "..MP-BIOS bug: "
-    ^~~~~~~~~~~
+Link: https://lore.kernel.org/lkml/259986242.BvXPX32bHu@devpool35/
+Cc: <stable@vger.kernel.org>
+Suggested-by: Rolf Eike Beer <eb@emlix.com>
+Signed-off-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-APIC_QUIET is 0, so silence them by making apic_verbosity type int.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/1562621805-24789-1-git-send-email-cai@lca.pw
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/apic.h | 2 +-
- arch/x86/kernel/apic/apic.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ include/linux/compiler.h |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
-index 2188b5af81676..f39fd349cef65 100644
---- a/arch/x86/include/asm/apic.h
-+++ b/arch/x86/include/asm/apic.h
-@@ -50,7 +50,7 @@ static inline void generic_apic_probe(void)
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -54,6 +54,22 @@ extern void __chk_io_ptr(const volatile
  
- #ifdef CONFIG_X86_LOCAL_APIC
+ #ifdef __KERNEL__
  
--extern unsigned int apic_verbosity;
-+extern int apic_verbosity;
- extern int local_apic_timer_c2_ok;
- 
- extern int disable_apic;
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index 4f2af1ee09cbe..cc9a6f680225e 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -183,7 +183,7 @@ int first_system_vector = FIRST_SYSTEM_VECTOR;
- /*
-  * Debug level, exported for io_apic.c
-  */
--unsigned int apic_verbosity;
-+int apic_verbosity;
- 
- int pic_mode;
- 
--- 
-2.20.1
-
++/*
++ * Minimal backport of compiler_attributes.h to add support for __copy
++ * to v4.9.y so that we can use it in init/exit_module to avoid
++ * -Werror=missing-attributes errors on GCC 9.
++ */
++#ifndef __has_attribute
++# define __has_attribute(x) __GCC4_has_attribute_##x
++# define __GCC4_has_attribute___copy__                0
++#endif
++
++#if __has_attribute(__copy__)
++# define __copy(symbol)                 __attribute__((__copy__(symbol)))
++#else
++# define __copy(symbol)
++#endif
++
+ #ifdef __GNUC__
+ #include <linux/compiler-gcc.h>
+ #endif
 
 
