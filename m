@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E86B7C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42234C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C02BC2067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:08:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C5D52075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:08:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010498;
-	bh=Ap2H5CQO9aDb8ZQtV7wn10As0qwPXWvFFEfaAB3hdpc=;
+	s=default; t=1565010504;
+	bh=A5ZW29GuUfPYErheh8nvrd4HYtrgpzaFd7HKDsLwvE8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mo2AiPuDJ5XjjAceWGK2I7zeVgaHoyBSSWuoUnSDO+y9a4JbWnWYNbreXbQUyndjL
-	 OgogMO0U2mOTAc4ovBSHd0NjIWEHSdGd/QbUF7TZilnFABAe+TPdExoSvD2V4s02+D
-	 hbGrhWZjVuw1pmmc5x/YzYQ33gqosunAuMaFxAzs=
+	b=EG+k5gw9ehhiMRz0VXYNRzjg1gLQR2OObgOJgAmKJBGqkFgsN+WqnV6h0GWwECENO
+	 4QWIGXj7yjjYkvcnt7oHIkksjk9AMwOI16Ow9Sp0McWFKzctLxjvjSZuR5kmRcJrC/
+	 sFdsOOkRQALcBmmL/TbGlGPCvz0Km1ZRlxPr0qd4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730000AbfHENIR (ORCPT
+        id S1730019AbfHENIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:08:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46238 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:08:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729988AbfHENIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:08:15 -0400
+        id S1729511AbfHENIU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:08:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03BD121743;
-        Mon,  5 Aug 2019 13:08:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33B4E21743;
+        Mon,  5 Aug 2019 13:08:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010494;
-        bh=Ap2H5CQO9aDb8ZQtV7wn10As0qwPXWvFFEfaAB3hdpc=;
+        s=default; t=1565010499;
+        bh=A5ZW29GuUfPYErheh8nvrd4HYtrgpzaFd7HKDsLwvE8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hCX7El45Y1NYloDGAWAenri9IHlL5UttGHPJyw+sfEXFfpRLjWg+ZcFcFbusY3JcV
-         hCkycOQH7DLMvvkpN6ialslNcrXJfGCYLcM+OL49aCN2R6FREY0mpwG6M6jbmfhw9o
-         yu3arl42yFUFai7OPRccCnATTG/kLwpgaCfgbuIE=
+        b=LwlQ5Fvk16CvrxlSYCgoHSrqEMp6lnMTuh5UAJTGLvZeXLwQTBvp/0Egdo0jAYvCJ
+         wTsESNEi9+9gDbNVGGgvRMu8ea3vYUcfyFZeiUR1YVWwzh8hl5WLXWO/27qrUPALld
+         yt43CvfDCsBcF7Z4ZhF7NOYIApm7b2DTFkwYpQ6A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Yishai Hadas <yishaih@mellanox.com>,
-        Artemy Kovalyov <artemyko@mellanox.com>,
+        Alex Vainman <alexv@mellanox.com>,
         Leon Romanovsky <leonro@mellanox.com>,
         Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.14 46/53] IB/mlx5: Use direct mkey destroy command upon UMR unreg failure
-Date:   Mon,  5 Aug 2019 15:03:11 +0200
-Message-Id: <20190805124933.060025951@linuxfoundation.org>
+Subject: [PATCH 4.14 48/53] IB/mlx5: Fix RSS Toeplitz setup to be aligned with the HW specification
+Date:   Mon,  5 Aug 2019 15:03:13 +0200
+Message-Id: <20190805124933.238863292@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124927.973499541@linuxfoundation.org>
 References: <20190805124927.973499541@linuxfoundation.org>
@@ -63,57 +63,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yishai Hadas <yishaih@mellanox.com>
 
-commit afd1417404fba6dbfa6c0a8e5763bd348da682e4 upstream.
+commit b7165bd0d6cbb93732559be6ea8774653b204480 upstream.
 
-Use a direct firmware command to destroy the mkey in case the unreg UMR
-operation has failed.
+The specification for the Toeplitz function doesn't require to set the key
+explicitly to be symmetric. In case a symmetric functionality is required
+a symmetric key can be simply used.
 
-This prevents a case that a mkey will leak out from the cache post a
-failure to be destroyed by a UMR WR.
+Wrongly forcing the algorithm to symmetric causes the wrong packet
+distribution and a performance degradation.
 
-In case the MR cache limit didn't reach a call to add another entry to the
-cache instead of the destroyed one is issued.
-
-In addition, replaced a warn message to WARN_ON() as this flow is fatal
-and can't happen unless some bug around.
-
-Link: https://lore.kernel.org/r/20190723065733.4899-4-leon@kernel.org
-Cc: <stable@vger.kernel.org> # 4.10
-Fixes: 49780d42dfc9 ("IB/mlx5: Expose MR cache for mlx5_ib")
+Link: https://lore.kernel.org/r/20190723065733.4899-7-leon@kernel.org
+Cc: <stable@vger.kernel.org> # 4.7
+Fixes: 28d6137008b2 ("IB/mlx5: Add RSS QP support")
 Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
-Reviewed-by: Artemy Kovalyov <artemyko@mellanox.com>
+Reviewed-by: Alex Vainman <alexv@mellanox.com>
 Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/mlx5/mr.c |   13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/infiniband/hw/mlx5/qp.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/drivers/infiniband/hw/mlx5/mr.c
-+++ b/drivers/infiniband/hw/mlx5/mr.c
-@@ -538,13 +538,16 @@ void mlx5_mr_cache_free(struct mlx5_ib_d
- 	int c;
+--- a/drivers/infiniband/hw/mlx5/qp.c
++++ b/drivers/infiniband/hw/mlx5/qp.c
+@@ -1425,7 +1425,6 @@ static int create_rss_raw_qp_tir(struct
+ 		}
  
- 	c = order2idx(dev, mr->order);
--	if (c < 0 || c >= MAX_MR_CACHE_ENTRIES) {
--		mlx5_ib_warn(dev, "order %d, cache index %d\n", mr->order, c);
--		return;
--	}
-+	WARN_ON(c < 0 || c >= MAX_MR_CACHE_ENTRIES);
- 
--	if (unreg_umr(dev, mr))
-+	if (unreg_umr(dev, mr)) {
-+		mr->allocated_from_cache = false;
-+		destroy_mkey(dev, mr);
-+		ent = &cache->ent[c];
-+		if (ent->cur < ent->limit)
-+			queue_work(cache->wq, &ent->work);
- 		return;
-+	}
- 
- 	ent = &cache->ent[c];
- 	spin_lock_irq(&ent->lock);
+ 		MLX5_SET(tirc, tirc, rx_hash_fn, MLX5_RX_HASH_FN_TOEPLITZ);
+-		MLX5_SET(tirc, tirc, rx_hash_symmetric, 1);
+ 		memcpy(rss_key, ucmd.rx_hash_key, len);
+ 		break;
+ 	}
 
 
