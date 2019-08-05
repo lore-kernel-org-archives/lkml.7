@@ -2,165 +2,93 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C080C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED56C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E86512087B
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:17:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="TQS2PEoq"
+	by mail.kernel.org (Postfix) with ESMTP id 2C7752087B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 10:17:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728364AbfHEKRP (ORCPT
+        id S1728381AbfHEKRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 06:17:15 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:48842 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727158AbfHEKRO (ORCPT
+        Mon, 5 Aug 2019 06:17:20 -0400
+Received: from smtp180.sjtu.edu.cn ([202.120.2.180]:52172 "EHLO
+        smtp180.sjtu.edu.cn" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbfHEKRT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 06:17:14 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 563172F9;
-        Mon,  5 Aug 2019 12:17:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1565000232;
-        bh=mqdLCGTLZQXDGi/vqwQcb5FtYFpqzjRn/gvCjgjqTpY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TQS2PEoqz/2A5ipX9abBLnHS2NgeDYXB4szYFKtJdcGYGAVCbxnFzktMTN1ytxHNq
-         yVFH01E3YnWw5VX7PLGKLqQkSn70ZspAv3SO0RYcj3fJBSga3EtKgkQ22pZ2RaywVw
-         wJeJwfxaASprD0t+6iDPfdeu2lD//OnaUNre6aVI=
-Date:   Mon, 5 Aug 2019 13:17:10 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>
-Subject: Re: [PATCH/RFC 05/12] drm: rcar-du: lvds: Add data swap support
-Message-ID: <20190805101710.GD29747@pendragon.ideasonboard.com>
-References: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1564731249-22671-6-git-send-email-fabrizio.castro@bp.renesas.com>
- <20190802080613.GF5008@pendragon.ideasonboard.com>
- <TY1PR01MB1770F1B00FEA431E43978FD9C0DA0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <TY1PR01MB1770F1B00FEA431E43978FD9C0DA0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 5 Aug 2019 06:17:19 -0400
+Received: from proxy01.sjtu.edu.cn (unknown [202.112.26.54])
+        by smtp180.sjtu.edu.cn (Postfix) with ESMTPS id 0F71210089E14;
+        Mon,  5 Aug 2019 18:17:17 +0800 (CST)
+Received: from localhost (localhost [127.0.0.1])
+        by proxy01.sjtu.edu.cn (Postfix) with ESMTP id F0F422042423F;
+        Mon,  5 Aug 2019 18:17:16 +0800 (CST)
+X-Virus-Scanned: amavisd-new at proxy01.sjtu.edu.cn
+Received: from proxy01.sjtu.edu.cn ([127.0.0.1])
+        by localhost (proxy01.sjtu.edu.cn [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id hJCk14iFE37W; Mon,  5 Aug 2019 18:17:16 +0800 (CST)
+Received: from xywang-pc.ipads-lab.se.sjtu.edu.cn (unknown [202.120.40.82])
+        (Authenticated sender: xywang.sjtu@sjtu.edu.cn)
+        by proxy01.sjtu.edu.cn (Postfix) with ESMTPA id CB5602042423E;
+        Mon,  5 Aug 2019 18:17:16 +0800 (CST)
+From:   Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
+Cc:     lftan@altera.com, rppt@linux.vnet.ibm.com,
+        nios2-dev@lists.rocketboards.org, linux-kernel@vger.kernel.org,
+        Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
+Subject: [PATCH] nios2: force the string buffer NULL-terminated
+Date:   Mon,  5 Aug 2019 18:17:12 +0800
+Message-Id: <20190805101712.22580-1-xywang.sjtu@sjtu.edu.cn>
+X-Mailer: git-send-email 2.11.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fabrizio,
+strncpy() does not ensure NULL-termination when the input string
+size equals to the destination buffer size COMMAND_LINE_SIZE.
+Besides, grep under arch/ with 'boot_command_line' shows
+no other arch-specific code uses strncpy() when copying
+boot_command_line.
 
-On Mon, Aug 05, 2019 at 09:32:42AM +0000, Fabrizio Castro wrote:
-> On 02 August 2019 09:06 Laurent Pinchart wrote:
-> > On Fri, Aug 02, 2019 at 08:34:02AM +0100, Fabrizio Castro wrote:
-> > > When in vertical stripe mode of operation, there is the option
-> > > of swapping even data and odd data on the two LVDS interfaces
-> > > used to drive the video output.
-> > > Add data swap support by exposing a new DT property named
-> > > "renesas,swap-data".
-> > >
-> > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > > ---
-> > >  drivers/gpu/drm/rcar-du/rcar_lvds.c | 23 ++++++++++++++++-------
-> > >  1 file changed, 16 insertions(+), 7 deletions(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> > > index 3aeaf9e..c306fab 100644
-> > > --- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> > > +++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> > > @@ -69,6 +69,7 @@ struct rcar_lvds {
-> > >
-> > >  	struct drm_bridge *companion;
-> > >  	bool dual_link;
-> > > +	bool stripe_swap_data;
-> > >  };
-> > >
-> > >  #define bridge_to_rcar_lvds(bridge) \
-> > > @@ -439,12 +440,16 @@ static void rcar_lvds_enable(struct drm_bridge *bridge)
-> > >  	rcar_lvds_write(lvds, LVDCHCR, lvdhcr);
-> > >
-> > >  	if (lvds->info->quirks & RCAR_LVDS_QUIRK_DUAL_LINK) {
-> > > -		/*
-> > > -		 * Configure vertical stripe based on the mode of operation of
-> > > -		 * the connected device.
-> > > -		 */
-> > > -		rcar_lvds_write(lvds, LVDSTRIPE,
-> > > -				lvds->dual_link ? LVDSTRIPE_ST_ON : 0);
-> > > +		u32 lvdstripe = 0;
-> > > +
-> > > +		if (lvds->dual_link)
-> > > +			/*
-> > > +			 * Configure vertical stripe based on the mode of
-> > > +			 * operation of the connected device.
-> > > +			 */
-> > > +			lvdstripe = LVDSTRIPE_ST_ON | (lvds->stripe_swap_data ?
-> > > +						       LVDSTRIPE_ST_SWAP : 0);
-> > 
-> > Would the following be simpler ?
-> > 
-> > 		lvdstripe = (lvds->dual_link ? LVDSTRIPE_ST_ON : 0)
-> > 			  | (lvds->stripe_swap_data ? LVDSTRIPE_ST_SWAP : 0);
-> > 
-> > > +		rcar_lvds_write(lvds, LVDSTRIPE, lvdstripe);
-> 
-> I actually think I need to rework this patch slightly, because the user manual
-> says that ST_SWAP is reserved for LVD1STRIPE, so I need to make sure we
-> don't set it for LVDS1.
-> 
-> So perhaps, this could translate to something like:
-> If (lvds->dual_link)
-> 	lvdstripe = LVDSTRIPE_ST_ON | (<swap-whatever> && lvds->companion) ? LVDSTRIPE_ST_SWAP : 0);
-> 
-> I don't think we should be setting LVDSTRIPE_ST_SWAP without LVDSTRIPE_ST_ON, this solution
-> would allow us to test lvds->dual_link only once, and will prevent us from setting LVDSTRIPE_ST_SWAP if
-> LVDSTRIPE_ST_ON is not set or if we are touching LVDS1.
-> 
-> What do you think?
+Use strlcpy() instead.
 
-I was thinking that lvds->stripe_swap_data should only be set when
-lvds->dual_link is set and lvds->companion is non-NULL, so both are
-roughly equivalent. It's a detail anyway, it doesn't matter too much.
+This issue is identified by a Coccinelle script.
 
-> > >  	}
-> > >
-> > >  	/*
-> > > @@ -770,8 +775,12 @@ static int rcar_lvds_parse_dt(struct rcar_lvds *lvds)
-> > >  		}
-> > >  	}
-> > >
-> > > -	if (lvds->dual_link)
-> > > +	if (lvds->dual_link) {
-> > > +		lvds->stripe_swap_data = of_property_read_bool(
-> > > +						lvds->dev->of_node,
-> > > +						"renesas,swap-data");
-> > >  		ret = rcar_lvds_parse_dt_companion(lvds);
-> > > +	}
-> > 
-> > As explained in the review of the corresponding DT bindings, I think
-> > this should be queried from the remote device rather than specified in
-> > DT.
-> > 
-> > >
-> > >  done:
-> > >  	of_node_put(local_output);
+Signed-off-by: Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
+---
+ arch/nios2/kernel/setup.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/arch/nios2/kernel/setup.c b/arch/nios2/kernel/setup.c
+index 6bbd4ae2beb0..4cf35b09c0ec 100644
+--- a/arch/nios2/kernel/setup.c
++++ b/arch/nios2/kernel/setup.c
+@@ -123,7 +123,7 @@ asmlinkage void __init nios2_boot_init(unsigned r4, unsigned r5, unsigned r6,
+ 		dtb_passed = r6;
+ 
+ 		if (r7)
+-			strncpy(cmdline_passed, (char *)r7, COMMAND_LINE_SIZE);
++			strlcpy(cmdline_passed, (char *)r7, COMMAND_LINE_SIZE);
+ 	}
+ #endif
+ 
+@@ -131,10 +131,10 @@ asmlinkage void __init nios2_boot_init(unsigned r4, unsigned r5, unsigned r6,
+ 
+ #ifndef CONFIG_CMDLINE_FORCE
+ 	if (cmdline_passed[0])
+-		strncpy(boot_command_line, cmdline_passed, COMMAND_LINE_SIZE);
++		strlcpy(boot_command_line, cmdline_passed, COMMAND_LINE_SIZE);
+ #ifdef CONFIG_NIOS2_CMDLINE_IGNORE_DTB
+ 	else
+-		strncpy(boot_command_line, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
++		strlcpy(boot_command_line, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
+ #endif
+ #endif
+ 
 -- 
-Regards,
+2.11.0
 
-Laurent Pinchart
