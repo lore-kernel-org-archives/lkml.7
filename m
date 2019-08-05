@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8300EC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45575C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5658A21871
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:19:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 195F32075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:19:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011192;
-	bh=I5NZIyZZlv8ZEO1IZmmwcSXPI8K4vbdP0BRpONsv+QE=;
+	s=default; t=1565011196;
+	bh=xdCYdjfiBaSQZRO9aUNInNiabgYff/7tlTke98MlrR0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A0lLB2Gcw77queERRa1e7/JU6afV8HUBwaapK1nZZAV0VKp3xB6m+Kb/59anIJOHa
-	 mpgjqxLg85aT6ePT0A+R1jmR9P6jZ7TadYzL4d4sxlNYArmuNPvghBgi1RlES7EB1X
-	 TKQJ3uj5Ng8ZyFCRw2NE3gv8C6zVekmwr1P+w1/k=
+	b=dy0EkXPiS+i/EwPZeb7jL6Qyyg9ZrAFTm/BbmvOMoxwILV/2RfFQIoqE0qgSGgjUW
+	 LHAg4XJamGEaqo4I4ozPX43xp3iXezBfoC0muH/zhevcNPruzwx1R3wKVhMkpbDBls
+	 o7emYRvS3nv/X2gB/NFbFuat70TTFEjacXsnZwvM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729877AbfHENTv (ORCPT
+        id S1730021AbfHENTz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:19:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55890 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:19:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729788AbfHENTp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:19:45 -0400
+        id S1729942AbfHENTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:19:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF58121743;
-        Mon,  5 Aug 2019 13:19:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 987742075B;
+        Mon,  5 Aug 2019 13:19:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011184;
-        bh=I5NZIyZZlv8ZEO1IZmmwcSXPI8K4vbdP0BRpONsv+QE=;
+        s=default; t=1565011192;
+        bh=xdCYdjfiBaSQZRO9aUNInNiabgYff/7tlTke98MlrR0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vO8UimynPea8FAnmKwH0Rpu2c9BDaQaIkFw5lddwNRNfyUL9z1ijTUpy9PitHmOyS
-         qqclniKceQ91pKyVdDqjvR5iazZqKsEJOh3QgbhNlXPEPFWmZfHu9IBtk5ezwOsFm5
-         A+3RtgzKQxIgHSWGBKRIPxDdqyc6eGIYxvStw1ic=
+        b=LDEXqrpyqp6BujLhpnnmmmh+eBd889w4C6Lje44j35+/qJC6zDC/2dGzth9W69GSC
+         gMmLQno+Qs+ays/ilga+JKLDD2qnm1rf95nns27/be9fQ3TUt9zCSldHec8t8md0CG
+         I7837q7x6gK3WzWKBHxoszeglkcyNex97trXFzus=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 52/74] ALSA: hda: Fix 1-minute detection delay when i915 module is not available
-Date:   Mon,  5 Aug 2019 15:03:05 +0200
-Message-Id: <20190805124940.087422108@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Down <chris@chrisdown.name>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>, Roman Gushchin <guro@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 55/74] cgroup: kselftest: relax fs_spec checks
+Date:   Mon,  5 Aug 2019 15:03:08 +0200
+Message-Id: <20190805124940.331222447@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124935.819068648@linuxfoundation.org>
 References: <20190805124935.819068648@linuxfoundation.org>
@@ -60,52 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Samuel Thibault <samuel.thibault@ens-lyon.org>
+From: Chris Down <chris@chrisdown.name>
 
-commit 74bf71ed792ab0f64631cc65ccdb54c356c36d45 upstream.
+commit b59b1baab789eacdde809135542e3d4f256f6878 upstream.
 
-Distribution installation images such as Debian include different sets
-of modules which can be downloaded dynamically.  Such images may notably
-include the hda sound modules but not the i915 DRM module, even if the
-latter was enabled at build time, as reported on
-https://bugs.debian.org/931507
+On my laptop most memcg kselftests were being skipped because it claimed
+cgroup v2 hierarchy wasn't mounted, but this isn't correct.  Instead, it
+seems current systemd HEAD mounts it with the name "cgroup2" instead of
+"cgroup":
 
-In such a case hdac_i915 would be linked in and try to load the i915
-module, fail since it is not there, but still wait for a whole minute
-before giving up binding with it.
+    % grep cgroup /proc/mounts
+    cgroup2 /sys/fs/cgroup cgroup2 rw,nosuid,nodev,noexec,relatime,nsdelegate 0 0
 
-This fixes such as case by only waiting for the binding if the module
-was properly loaded (or module support is disabled, in which case i915
-is already compiled-in anyway).
+I can't think of a reason to need to check fs_spec explicitly
+since it's arbitrary, so we can just rely on fs_vfstype.
 
-Fixes: f9b54e1961c7 ("ALSA: hda/i915: Allow delayed i915 audio component binding")
-Signed-off-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
+After these changes, `make TARGETS=cgroup kselftest` actually runs the
+cgroup v2 tests in more cases.
+
+Link: http://lkml.kernel.org/r/20190723210737.GA487@chrisdown.name
+Signed-off-by: Chris Down <chris@chrisdown.name>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Roman Gushchin <guro@fb.com>
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/hda/hdac_i915.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ tools/testing/selftests/cgroup/cgroup_util.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/sound/hda/hdac_i915.c
-+++ b/sound/hda/hdac_i915.c
-@@ -143,10 +143,12 @@ int snd_hdac_i915_init(struct hdac_bus *
- 	if (!acomp)
- 		return -ENODEV;
- 	if (!acomp->ops) {
--		request_module("i915");
--		/* 60s timeout */
--		wait_for_completion_timeout(&bind_complete,
--					    msecs_to_jiffies(60 * 1000));
-+		if (!IS_ENABLED(CONFIG_MODULES) ||
-+		    !request_module("i915")) {
-+			/* 60s timeout */
-+			wait_for_completion_timeout(&bind_complete,
-+						   msecs_to_jiffies(60 * 1000));
-+		}
- 	}
- 	if (!acomp->ops) {
- 		dev_info(bus->dev, "couldn't bind with audio component\n");
+--- a/tools/testing/selftests/cgroup/cgroup_util.c
++++ b/tools/testing/selftests/cgroup/cgroup_util.c
+@@ -181,8 +181,7 @@ int cg_find_unified_root(char *root, siz
+ 		strtok(NULL, delim);
+ 		strtok(NULL, delim);
+ 
+-		if (strcmp(fs, "cgroup") == 0 &&
+-		    strcmp(type, "cgroup2") == 0) {
++		if (strcmp(type, "cgroup2") == 0) {
+ 			strncpy(root, mount, len);
+ 			return 0;
+ 		}
 
 
