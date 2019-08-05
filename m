@@ -5,59 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98555C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E557C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F5732147A
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE3052147A
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:06:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010396;
-	bh=m3AUNa45QmVDF2VHITaB9pzyD5ROiFTPHFTLG+IWK0s=;
+	s=default; t=1565010402;
+	bh=kb2qztZNXYuDAakz0fFwrKBOTaXYkdUowlL/hLTh4u4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s+P/7HQrhyZH/2aU2SLFYSV6r11Fvy0UmqwJFAj5pG2Ucr7AoqeOUe5sKMUmGlwOk
-	 HFpu3hc0TzYI4Qhv0zoYC97taO/2ICtVuf5mhLY4R1ZwUcOSFW2pAIZ0En43KXSD4M
-	 0HX/HMFtUZIIK/I1vhr5/EwLjxwk2cVO+nar7glQ=
+	b=1h1/1Y9tRcVPJ09maD2cqt6x9nAPWIixsgeYHj4NFQG56HzYmpB80XqVpsJ7rPETk
+	 C3z+lIBrsHytDQYRJ6C6j1cwQPjr5a3W3O7jFccxfe7gqRALNqa/sxqx7XCtcc7NhN
+	 TOaBsBZGjas54z0i0erC84EZPtL/KGMi7YLXlH1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729634AbfHENGf (ORCPT
+        id S1729654AbfHENGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:06:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43378 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:06:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729606AbfHENGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:06:32 -0400
+        id S1729055AbfHENGf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:06:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 192852075B;
-        Mon,  5 Aug 2019 13:06:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0D162087B;
+        Mon,  5 Aug 2019 13:06:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010391;
-        bh=m3AUNa45QmVDF2VHITaB9pzyD5ROiFTPHFTLG+IWK0s=;
+        s=default; t=1565010394;
+        bh=kb2qztZNXYuDAakz0fFwrKBOTaXYkdUowlL/hLTh4u4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nPodm97exKO3XmRK6ImMypOz8S1sY0r+6K5FVxv7qI+O3xnUkf89+FOtCT5GQqghq
-         TseWGBrvgBZKDXPZ8wouMvPPeu1naDLh9eP3bly5ZTFBlfGBYGNRpMN5RuAfaw4Nh5
-         OQq2hoQfnZ5Vr5tESSunKcbHw9WVgfFTsZFy0lHU=
+        b=YJctzMC58rT/utME0ciEDw8ZASlraEAKk1vR9unHGUXeNv0sSlGrCB9b/PEbPdTpe
+         hWrUPC7Tmd2Uah4ETGyWH3FZMKRotMB4kY2iznrSYiBfT1zlu0SEqK/nFvs44HM1cE
+         3gUpnErC0AwpQdLKEum3Z/GhvdiM8pT6hDDdSo5c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikko Rapeli <mikko.rapeli@iki.fi>,
-        Jan Harkes <jaharkes@cs.cmu.edu>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Colin Ian King <colin.king@canonical.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        David Howells <dhowells@redhat.com>,
-        Fabian Frederick <fabf@skynet.be>,
-        Sam Protsenko <semen.protsenko@linaro.org>,
-        Yann Droneaud <ydroneaud@opteya.com>,
-        Zhouyang Jia <jiazhouyang09@gmail.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Alexandre Bounine <alex.bou9@gmail.com>,
+        Ira Weiny <ira.weiny@intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 21/42] uapi linux/coda_psdev.h: move upc_req definition from uapi to kernel side headers
-Date:   Mon,  5 Aug 2019 15:02:47 +0200
-Message-Id: <20190805124927.429028298@linuxfoundation.org>
+Subject: [PATCH 4.9 22/42] drivers/rapidio/devices/rio_mport_cdev.c: NUL terminate some strings
+Date:   Mon,  5 Aug 2019 15:02:48 +0200
+Message-Id: <20190805124927.547548168@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124924.788666484@linuxfoundation.org>
 References: <20190805124924.788666484@linuxfoundation.org>
@@ -70,103 +63,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f90fb3c7e2c13ae829db2274b88b845a75038b8a ]
+[ Upstream commit 156e0b1a8112b76e351684ac948c59757037ac36 ]
 
-Only users of upc_req in kernel side fs/coda/psdev.c and
-fs/coda/upcall.c already include linux/coda_psdev.h.
+The dev_info.name[] array has space for RIO_MAX_DEVNAME_SZ + 1
+characters.  But the problem here is that we don't ensure that the user
+put a NUL terminator on the end of the string.  It could lead to an out
+of bounds read.
 
-Suggested by Jan Harkes <jaharkes@cs.cmu.edu> in
-  https://lore.kernel.org/lkml/20150531111913.GA23377@cs.cmu.edu/
-
-Fixes these include/uapi/linux/coda_psdev.h compilation errors in userspace:
-
-  linux/coda_psdev.h:12:19: error: field `uc_chain' has incomplete type
-  struct list_head    uc_chain;
-                   ^
-  linux/coda_psdev.h:13:2: error: unknown type name `caddr_t'
-  caddr_t             uc_data;
-  ^
-  linux/coda_psdev.h:14:2: error: unknown type name `u_short'
-  u_short             uc_flags;
-  ^
-  linux/coda_psdev.h:15:2: error: unknown type name `u_short'
-  u_short             uc_inSize;  /* Size is at most 5000 bytes */
-  ^
-  linux/coda_psdev.h:16:2: error: unknown type name `u_short'
-  u_short             uc_outSize;
-  ^
-  linux/coda_psdev.h:17:2: error: unknown type name `u_short'
-  u_short             uc_opcode;  /* copied from data to save lookup */
-  ^
-  linux/coda_psdev.h:19:2: error: unknown type name `wait_queue_head_t'
-  wait_queue_head_t   uc_sleep;   /* process' wait queue */
-  ^
-
-Link: http://lkml.kernel.org/r/9f99f5ce6a0563d5266e6cf7aa9585aac2cae971.1558117389.git.jaharkes@cs.cmu.edu
-Signed-off-by: Mikko Rapeli <mikko.rapeli@iki.fi>
-Signed-off-by: Jan Harkes <jaharkes@cs.cmu.edu>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Colin Ian King <colin.king@canonical.com>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Fabian Frederick <fabf@skynet.be>
-Cc: Sam Protsenko <semen.protsenko@linaro.org>
-Cc: Yann Droneaud <ydroneaud@opteya.com>
-Cc: Zhouyang Jia <jiazhouyang09@gmail.com>
+Link: http://lkml.kernel.org/r/20190529110601.GB19119@mwanda
+Fixes: e8de370188d0 ("rapidio: add mport char device driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Alexandre Bounine <alex.bou9@gmail.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/coda_psdev.h      | 11 +++++++++++
- include/uapi/linux/coda_psdev.h | 13 -------------
- 2 files changed, 11 insertions(+), 13 deletions(-)
+ drivers/rapidio/devices/rio_mport_cdev.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/linux/coda_psdev.h b/include/linux/coda_psdev.h
-index 5b8721efa948e..fe1466daf2918 100644
---- a/include/linux/coda_psdev.h
-+++ b/include/linux/coda_psdev.h
-@@ -19,6 +19,17 @@ struct venus_comm {
- 	struct mutex	    vc_mutex;
- };
+diff --git a/drivers/rapidio/devices/rio_mport_cdev.c b/drivers/rapidio/devices/rio_mport_cdev.c
+index f32fc704cb7ed..28c45db45abad 100644
+--- a/drivers/rapidio/devices/rio_mport_cdev.c
++++ b/drivers/rapidio/devices/rio_mport_cdev.c
+@@ -1743,6 +1743,7 @@ static int rio_mport_add_riodev(struct mport_cdev_priv *priv,
  
-+/* messages between coda filesystem in kernel and Venus */
-+struct upc_req {
-+	struct list_head	uc_chain;
-+	caddr_t			uc_data;
-+	u_short			uc_flags;
-+	u_short			uc_inSize;  /* Size is at most 5000 bytes */
-+	u_short			uc_outSize;
-+	u_short			uc_opcode;  /* copied from data to save lookup */
-+	int			uc_unique;
-+	wait_queue_head_t	uc_sleep;   /* process' wait queue */
-+};
+ 	if (copy_from_user(&dev_info, arg, sizeof(dev_info)))
+ 		return -EFAULT;
++	dev_info.name[sizeof(dev_info.name) - 1] = '\0';
  
- static inline struct venus_comm *coda_vcp(struct super_block *sb)
- {
-diff --git a/include/uapi/linux/coda_psdev.h b/include/uapi/linux/coda_psdev.h
-index 79d05981fc4b0..e2c44d2f7d5bd 100644
---- a/include/uapi/linux/coda_psdev.h
-+++ b/include/uapi/linux/coda_psdev.h
-@@ -6,19 +6,6 @@
- #define CODA_PSDEV_MAJOR 67
- #define MAX_CODADEVS  5	   /* how many do we allow */
+ 	rmcd_debug(RDEV, "name:%s ct:0x%x did:0x%x hc:0x%x", dev_info.name,
+ 		   dev_info.comptag, dev_info.destid, dev_info.hopcount);
+@@ -1874,6 +1875,7 @@ static int rio_mport_del_riodev(struct mport_cdev_priv *priv, void __user *arg)
  
--
--/* messages between coda filesystem in kernel and Venus */
--struct upc_req {
--	struct list_head    uc_chain;
--	caddr_t	            uc_data;
--	u_short	            uc_flags;
--	u_short             uc_inSize;  /* Size is at most 5000 bytes */
--	u_short	            uc_outSize;
--	u_short	            uc_opcode;  /* copied from data to save lookup */
--	int		    uc_unique;
--	wait_queue_head_t   uc_sleep;   /* process' wait queue */
--};
--
- #define CODA_REQ_ASYNC  0x1
- #define CODA_REQ_READ   0x2
- #define CODA_REQ_WRITE  0x4
+ 	if (copy_from_user(&dev_info, arg, sizeof(dev_info)))
+ 		return -EFAULT;
++	dev_info.name[sizeof(dev_info.name) - 1] = '\0';
+ 
+ 	mport = priv->md->mport;
+ 
 -- 
 2.20.1
 
