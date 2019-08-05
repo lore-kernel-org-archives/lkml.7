@@ -2,138 +2,120 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94164C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF23C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68ACF20B1F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:40:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="rbn2dLOE"
+	by mail.kernel.org (Postfix) with ESMTP id 3FB0D21734
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:44:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729270AbfHERkz (ORCPT
+        id S1728917AbfHERoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 13:40:55 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:35036 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726559AbfHERky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 13:40:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=ebRdmkjcxT+QZN99eIo6Wyjsn+ls17In3FnqQq3wMpY=; b=rbn2dLOEPu5Rlz2tmKntmy6/+n
-        ZO0gYBXAWtviaY9T44hoiJQfbq9p73NshciENUou+p0F06s1qBQnBJ/XraRllkuve0GzkcucnbOrf
-        ofdlG6MdIKmKHax7ocilJx2/rjCJKVU0nv7s6TP2FU9aIcMD0MTdsXHQjwyiQo6sooW0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hugyZ-0000IM-7I; Mon, 05 Aug 2019 19:40:51 +0200
-Date:   Mon, 5 Aug 2019 19:40:51 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Hubert Feurstein <h.feurstein@gmail.com>
-Cc:     netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next v2] net: dsa: mv88e6xxx: extend PTP gettime
- function to read system clock
-Message-ID: <20190805174051.GW24275@lunn.ch>
-References: <20190805082642.12873-1-hubert.feurstein@vahle.at>
- <20190805135838.GF24275@lunn.ch>
- <CAFfN3gVFjb0uaF_NSHSOZN2knNn7nK3ZKRnvZDSN9A=+1qa-+A@mail.gmail.com>
+        Mon, 5 Aug 2019 13:44:00 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43818 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726559AbfHERoA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 13:44:00 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x75Hg2No029490
+        for <linux-kernel@vger.kernel.org>; Mon, 5 Aug 2019 13:43:58 -0400
+Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u6rh2hfs8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 13:43:58 -0400
+Received: from localhost
+        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Mon, 5 Aug 2019 18:43:58 +0100
+Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
+        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 5 Aug 2019 18:43:53 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x75Hhqik13500934
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 5 Aug 2019 17:43:52 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2AD80B2064;
+        Mon,  5 Aug 2019 17:43:52 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0CB3EB205F;
+        Mon,  5 Aug 2019 17:43:52 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon,  5 Aug 2019 17:43:51 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 552DA16C9A4C; Mon,  5 Aug 2019 10:43:55 -0700 (PDT)
+Date:   Mon, 5 Aug 2019 10:43:55 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     Andrea Parri <parri.andrea@gmail.com>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Daniel Lustig <dlustig@nvidia.com>
+Subject: Re: [PATCH] MAINTAINERS: Update e-mail address for Andrea Parri
+Reply-To: paulmck@linux.ibm.com
+References: <20190805121517.4734-1-parri.andrea@gmail.com>
+ <76010b66-a662-5b07-a21d-ed074d7d2194@gmail.com>
+ <20190805151545.GA1615@aparri>
+ <1565018618.3341.6.camel@HansenPartnership.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAFfN3gVFjb0uaF_NSHSOZN2knNn7nK3ZKRnvZDSN9A=+1qa-+A@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <1565018618.3341.6.camel@HansenPartnership.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19080517-0072-0000-0000-000004508466
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011555; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000287; SDB=6.01242523; UDB=6.00655387; IPR=6.01023980;
+ MB=3.00028053; MTD=3.00000008; XFM=3.00000015; UTC=2019-08-05 17:43:56
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19080517-0073-0000-0000-00004CC188B2
+Message-Id: <20190805174355.GJ28441@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-05_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908050187
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +static int mv88e6xxx_mdiobus_write_nested(struct mv88e6xxx_chip
-> *chip, int addr, u32 regnum, u16 val)
-> +{
-> +       int err;
-> +
-> +       BUG_ON(in_interrupt());
-> +
-> +       mutex_lock_nested(&chip->bus->mdio_lock, MDIO_MUTEX_NESTED);
-> +       ptp_read_system_prets(chip->ptp_sts);
-> +       err = __mdiobus_write(chip->bus, addr, regnum, val);
-> +       ptp_read_system_postts(chip->ptp_sts);
-> +       mutex_unlock(&chip->bus->mdio_lock);
-> +
-> +       return err;
-> +}
-> +
-> static int mv88e6xxx_smi_direct_write(struct mv88e6xxx_chip *chip,
->                                      int dev, int reg, u16 data)
-> {
->        int ret;
+On Mon, Aug 05, 2019 at 08:23:38AM -0700, James Bottomley wrote:
+> On Mon, 2019-08-05 at 17:15 +0200, Andrea Parri wrote:
+> > > Why don't you also add an entry in .mailmap as Will did in commit
+> > > c584b1202f2d ("MAINTAINERS: Update my email address to use
+> > > @kernel.org")?
+> > 
+> > I considered it but could not understand its purpose...  Maybe you
+> > can explain it to me?  ;-) (can resend with this change if
+> > needed/desired).
 > 
-> -       ret = mdiobus_write_nested_ptp(chip->bus, dev, reg, data,
-> chip->ptp_sts);
-> +       ret = mv88e6xxx_mdiobus_write_nested(chip, dev, reg, data);
->        if (ret < 0)
->                return ret;
-> 
-> The result was:
-> Min:  -8052
-> Max:  9988
-> StdDev: 2490.17
-> Count: 3592
-> 
-> It got improved, but you still have the unpredictable latencies caused by the
-> mdio_done-completion (=> wait_for_completion_timeout) in imx_fec.
+> man git-shortlog gives you the gory detail, but its use is to "coalesce
+> together commits by the same person in the shortlog, where their name
+> and/or email address was spelled differently."  The usual way this
+> happens is that people have the name that appears in the From field
+> with and without initials.
 
-O.K. So lets think about a more generic solution we can use inside the
-mdio bus driver. I don't know if adding an sts pointer to struct
-device will be accepted. But adding one to struct mii_bus should be
-O.K. It can be assigned to once the mdio_lock is taken, to avoid race
-conditions. Add mdio_ptp_read_system_prets(bus) and
-mdio_ptp_read_system_postts(bus) which the bus driver can use.
+New one on me, thank you!  So I should have a line in .mailmap like this?
 
-We also need a fallback in case the bus driver does not use them, so
-something like:
+Paul E. McKenney <paulmck@linux.vnet.ibm.com> <paul.mckenney@linaro.org> <paulmck@linux.ibm.com>
 
-mdiobus_write_sts(...)
-{
-        int retval;
+							Thanx, Paul
 
-        BUG_ON(in_interrupt());
-
-        mutex_lock(&bus->mdio_lock);
-	bus->sts = sts;
-	sts->post_ts = 0;
-
-	ktime_get_real_ts64(&sts->pre_ts);
-
-        retval = __mdiobus_write(bus, addr, regnum, val);
-
-	if (!sts->post_ts)
-	   ktime_get_real_ts64(sts->post_ts)
-
-	bus->sts = NULL;
-        mutex_unlock(&bus->mdio_lock);
-
-        return retval;
-}
-
-So at worse case, we get the time around the whole write operation,
-but the MDIO bus driver can overwrite the pre_ts and set post_ts,
-using mdio_ptp_read_system_prets(bus) and
-mdio_ptp_read_system_postts(bus).
-
-A similar scheme could be implemented to SPI devices, if the SPI
-maintainer would accepted a sts pointer in the SPI bus driver
-structure.
-
-	Andrew
