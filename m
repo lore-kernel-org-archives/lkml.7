@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE279C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A87C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A4BD20880
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5AE3216F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:04:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010282;
-	bh=BFW7DoRAYf7dgaHviXk1Nrn/iOolgbPP3aB044T6Itw=;
+	s=default; t=1565010286;
+	bh=6R9GIXWOrlQN+Ea92Fdg4492sTE786I2GV5BiHqHYfo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LMCtpXQRtHZrWSlGZ9dSunT3J6LPDSni2hWhnm2f4QRjDGiowwjiW9h9yNGahj/lm
-	 RzNfq8/yqC+iyDb/5PGdvXc2Njo6i8BqzxJEIsnw1AHdzmu6Bwp/HFwPZLLDd1uez+
-	 4qWnxKbjFGuFSQnGqN7KyWTDtCUQYQtn0nd+dR0o=
+	b=oFnnCkna8jzx/Reyw71jzprNbbDMFOoO3czNPfAWqcAZaEBCuk77q+UtYjjHYdGyt
+	 6echqYhPjm/QCi81EUSxdJbseg1zdMFQ1+QEnwP5JSkSDhxZ+iUjSXNk5kflDZvWMF
+	 /MpJxgzSoZWJAYbp/2BkQwXqFMr2YeAOtUdeJHIs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729111AbfHENEl (ORCPT
+        id S1729126AbfHENEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:04:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40414 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:04:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729094AbfHENEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:04:39 -0400
+        id S1729094AbfHENEm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:04:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EE27216B7;
-        Mon,  5 Aug 2019 13:04:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07D8D216F4;
+        Mon,  5 Aug 2019 13:04:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010278;
-        bh=BFW7DoRAYf7dgaHviXk1Nrn/iOolgbPP3aB044T6Itw=;
+        s=default; t=1565010281;
+        bh=6R9GIXWOrlQN+Ea92Fdg4492sTE786I2GV5BiHqHYfo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2cwKgzTlq3xVoOOFA4FfTBtbxtxJRG6nI3WCek7Igoy7zcGs7JVXWLskEB7Kfe6uQ
-         MymXdj5GV9h+ew7hHufxOuVLci5gFdEQPnrc4Ghq1L1uOL+lDx0BIvemErdpqiMdOn
-         4ryHkrsBC9rkk6/99gjWBeLxQ695viKfAwrNHQdg=
+        b=VNXiZsYsqWOBHcMMqG+XHLG+es2JnBqo/xyOnD0tKape9tsB0gwMlS4S32OhLD3O5
+         b0lVF89sUtKkjuxgIcqvrj7awB5E1U3QUZry4r+NAh9OjvJUorCM/35VDdjW3WwAN9
+         3T2mDCROZvWXRjkqth0luD6csjFYEAf+CqwpkpHs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        "Yan, Zheng" <zyan@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 07/22] btrfs: fix minimum number of chunk errors for DUP
-Date:   Mon,  5 Aug 2019 15:02:44 +0200
-Message-Id: <20190805124920.288101264@linuxfoundation.org>
+Subject: [PATCH 4.4 08/22] ceph: fix improper use of smp_mb__before_atomic()
+Date:   Mon,  5 Aug 2019 15:02:45 +0200
+Message-Id: <20190805124920.487403360@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124918.070468681@linuxfoundation.org>
 References: <20190805124918.070468681@linuxfoundation.org>
@@ -60,46 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0ee5f8ae082e1f675a2fb6db601c31ac9958a134 ]
+[ Upstream commit 749607731e26dfb2558118038c40e9c0c80d23b5 ]
 
-The list of profiles in btrfs_chunk_max_errors lists DUP as a profile
-DUP able to tolerate 1 device missing. Though this profile is special
-with 2 copies, it still needs the device, unlike the others.
+This barrier only applies to the read-modify-write operations; in
+particular, it does not apply to the atomic64_set() primitive.
 
-Looking at the history of changes, thre's no clear reason why DUP is
-there, functions were refactored and blocks of code merged to one
-helper.
+Replace the barrier with an smp_mb().
 
-d20983b40e828 Btrfs: fix writing data into the seed filesystem
-  - factor code to a helper
-
-de11cc12df173 Btrfs: don't pre-allocate btrfs bio
-  - unrelated change, DUP still in the list with max errors 1
-
-a236aed14ccb0 Btrfs: Deal with failed writes in mirrored configurations
-  - introduced the max errors, leaves DUP and RAID1 in the same group
-
-Reviewed-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: fdd4e15838e59 ("ceph: rework dcache readdir")
+Reported-by: "Paul E. McKenney" <paulmck@linux.ibm.com>
+Reported-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
+Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/volumes.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/ceph/super.h | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
-index 4eb7a6ba7e470..55ce6543050d9 100644
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -4942,8 +4942,7 @@ static inline int btrfs_chunk_max_errors(struct map_lookup *map)
- 
- 	if (map->type & (BTRFS_BLOCK_GROUP_RAID1 |
- 			 BTRFS_BLOCK_GROUP_RAID10 |
--			 BTRFS_BLOCK_GROUP_RAID5 |
--			 BTRFS_BLOCK_GROUP_DUP)) {
-+			 BTRFS_BLOCK_GROUP_RAID5)) {
- 		max_errors = 1;
- 	} else if (map->type & BTRFS_BLOCK_GROUP_RAID6) {
- 		max_errors = 2;
+diff --git a/fs/ceph/super.h b/fs/ceph/super.h
+index 8c8cb8fe3d32f..5d05c77c158d4 100644
+--- a/fs/ceph/super.h
++++ b/fs/ceph/super.h
+@@ -474,7 +474,12 @@ static inline void __ceph_dir_set_complete(struct ceph_inode_info *ci,
+ 					   long long release_count,
+ 					   long long ordered_count)
+ {
+-	smp_mb__before_atomic();
++	/*
++	 * Makes sure operations that setup readdir cache (update page
++	 * cache and i_size) are strongly ordered w.r.t. the following
++	 * atomic64_set() operations.
++	 */
++	smp_mb();
+ 	atomic64_set(&ci->i_complete_seq[0], release_count);
+ 	atomic64_set(&ci->i_complete_seq[1], ordered_count);
+ }
 -- 
 2.20.1
 
