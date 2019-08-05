@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2C6C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB841C32751
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A660A214C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 717AD2067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:07:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010428;
-	bh=blRLmnAgq9vIKbAm3Qr4/7wU19D31dejsERhS5dUFT4=;
+	s=default; t=1565010432;
+	bh=fEYuSV/F6Tk531Y+E5CEhoOWgFZOxHEEEMG54SyEPDs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L15cDGgw4MRr54B0ozNGL/5IgdGNhBomfIt8CrOtgLY6or/T4EwlkaKGXUf5jFYPj
-	 fgNEJ/gQYB1shDJxzU8ptCZwsg5iR3AABxJXHgcxtsWBEjPKwsbSWCrQ1Pwy96gu6u
-	 0h6KgJTbHTM6p+JsN/Q6ILTr8FwXr2tnbVW3kFYw=
+	b=HShI6WefIStILnH2CiQenCmve614jK09lh+I43qJE6G7DMBNgxEhA0ar4WjHm3POc
+	 knrTtwuChbFXLYwKPnvcpOpUfqFDAj3JHJYG2UpgXX8Q8N+kXn7QqkolEgTwb29y3M
+	 9yFvxIlETXaiJ6VJla3vb9JqRQTJvMVtRE6oNp+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729167AbfHENHH (ORCPT
+        id S1729758AbfHENHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:07:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44222 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:07:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729226AbfHENHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:07:03 -0400
+        id S1728468AbfHENHG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:07:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 419D02087B;
-        Mon,  5 Aug 2019 13:07:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D56AE2075B;
+        Mon,  5 Aug 2019 13:07:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010422;
-        bh=blRLmnAgq9vIKbAm3Qr4/7wU19D31dejsERhS5dUFT4=;
+        s=default; t=1565010425;
+        bh=fEYuSV/F6Tk531Y+E5CEhoOWgFZOxHEEEMG54SyEPDs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1kNEQ8kFPmuPKdvAzw29YdzUv2c53mhVa6Hhb7A5zVU5Pi1waVWwM61I2czNarVoo
-         gaUB65eN7ldyJGaTlYXKVZX6fZQvqyGDRqNNnxeSoCEoGjMrjq9KdDhIrO2ERs5gkt
-         6HoMoD+E7fEkO9Epk0y7yt2xjJitbVUWLI4aH+Rc=
+        b=n97k+AiN6LIQR9Hb4CxGiTfrppl3uWhdO4FbdedTiFnzHD4YxLc4b86L+nDUrSLV6
+         ly6pw2jSYCgNGoSZrv3rd6LtOYoEpQoKe22+SMUZoMNrGkElS1JZYXu8Q5q4+3MjUW
+         eTdzxNStKKxhEOc8AzKkRM58kVoIgrkhjg8LFVzM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Benjamin Poirier <bpoirier@suse.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 18/53] ACPI: fix false-positive -Wuninitialized warning
-Date:   Mon,  5 Aug 2019 15:02:43 +0200
-Message-Id: <20190805124930.125473107@linuxfoundation.org>
+Subject: [PATCH 4.14 19/53] be2net: Signal that the device cannot transmit during reconfiguration
+Date:   Mon,  5 Aug 2019 15:02:44 +0200
+Message-Id: <20190805124930.241063403@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124927.973499541@linuxfoundation.org>
 References: <20190805124927.973499541@linuxfoundation.org>
@@ -62,56 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit dfd6f9ad36368b8dbd5f5a2b2f0a4705ae69a323 ]
+[ Upstream commit 7429c6c0d9cb086d8e79f0d2a48ae14851d2115e ]
 
-clang gets confused by an uninitialized variable in what looks
-to it like a never executed code path:
+While changing the number of interrupt channels, be2net stops adapter
+operation (including netif_tx_disable()) but it doesn't signal that it
+cannot transmit. This may lead dev_watchdog() to falsely trigger during
+that time.
 
-arch/x86/kernel/acpi/boot.c:618:13: error: variable 'polarity' is uninitialized when used here [-Werror,-Wuninitialized]
-        polarity = polarity ? ACPI_ACTIVE_LOW : ACPI_ACTIVE_HIGH;
-                   ^~~~~~~~
-arch/x86/kernel/acpi/boot.c:606:32: note: initialize the variable 'polarity' to silence this warning
-        int rc, irq, trigger, polarity;
-                                      ^
-                                       = 0
-arch/x86/kernel/acpi/boot.c:617:12: error: variable 'trigger' is uninitialized when used here [-Werror,-Wuninitialized]
-        trigger = trigger ? ACPI_LEVEL_SENSITIVE : ACPI_EDGE_SENSITIVE;
-                  ^~~~~~~
-arch/x86/kernel/acpi/boot.c:606:22: note: initialize the variable 'trigger' to silence this warning
-        int rc, irq, trigger, polarity;
-                            ^
-                             = 0
+Add the missing call to netif_carrier_off(), following the pattern used in
+many other drivers. netif_carrier_on() is already taken care of in
+be_open().
 
-This is unfortunately a design decision in clang and won't be fixed.
-
-Changing the acpi_get_override_irq() macro to an inline function
-reliably avoids the issue.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Benjamin Poirier <bpoirier@suse.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/acpi.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/emulex/benet/be_main.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 13c105121a185..d7a9700b93339 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -324,7 +324,10 @@ void acpi_set_irq_model(enum acpi_irq_model_id model,
- #ifdef CONFIG_X86_IO_APIC
- extern int acpi_get_override_irq(u32 gsi, int *trigger, int *polarity);
- #else
--#define acpi_get_override_irq(gsi, trigger, polarity) (-1)
-+static inline int acpi_get_override_irq(u32 gsi, int *trigger, int *polarity)
-+{
-+	return -1;
-+}
- #endif
- /*
-  * This function undoes the effect of one call to acpi_register_gsi().
+diff --git a/drivers/net/ethernet/emulex/benet/be_main.c b/drivers/net/ethernet/emulex/benet/be_main.c
+index 39f399741647f..cabeb1790db76 100644
+--- a/drivers/net/ethernet/emulex/benet/be_main.c
++++ b/drivers/net/ethernet/emulex/benet/be_main.c
+@@ -4600,8 +4600,12 @@ int be_update_queues(struct be_adapter *adapter)
+ 	struct net_device *netdev = adapter->netdev;
+ 	int status;
+ 
+-	if (netif_running(netdev))
++	if (netif_running(netdev)) {
++		/* device cannot transmit now, avoid dev_watchdog timeouts */
++		netif_carrier_off(netdev);
++
+ 		be_close(netdev);
++	}
+ 
+ 	be_cancel_worker(adapter);
+ 
 -- 
 2.20.1
 
