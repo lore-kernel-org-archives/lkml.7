@@ -7,54 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2066AC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 703DFC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E63EB20880
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:10:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 434EB2075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:10:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010625;
-	bh=Oz6P3yvKf6wkzTeJ2/NqPW8vYc0v2HrdUwmn9CEeN2Y=;
+	s=default; t=1565010628;
+	bh=gyW6hqBHgxS9UATd8iYnBBFQ6Gx6Cl2pEKQbSIN47Sg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ia1T4nw5sH3hlySfz9tXXmcb+6Ada7Hqyz3LZQyJkiLBCyDzcOjwr2O1grPz1ocxl
-	 6GhQWT8wctvlIAn3Ij652ga6Re1yxhnaOWjNaO8NcHeb4B0nBYW1MRBPWqoafS2Lhq
-	 eKGlSjTJomMcGHAlcyRKCkpkFRhNqeldtOA1rUmo=
+	b=Bv60EDkgLmkkW1bMVp8Q8TCJOr7nWkV6ez/vxCt5Ich+Nj7fzAtkEAZwgX12cEF9P
+	 oS8yyJKM3t2HlBKsHVXOW6OkaDVz31RRGz6FYT+eJxjnhNQEzh8Z0t6O7VAGpCuyAs
+	 l7WwdZhp/A8BslDX6FHxqzNXgMLh3r7xZNrDo9So=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729996AbfHENKX (ORCPT
+        id S1729748AbfHENK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:10:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49080 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:10:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729712AbfHENKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:10:13 -0400
+        id S1729712AbfHENKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:10:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F1852173B;
-        Mon,  5 Aug 2019 13:10:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67F5D2075B;
+        Mon,  5 Aug 2019 13:10:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010613;
-        bh=Oz6P3yvKf6wkzTeJ2/NqPW8vYc0v2HrdUwmn9CEeN2Y=;
+        s=default; t=1565010623;
+        bh=gyW6hqBHgxS9UATd8iYnBBFQ6Gx6Cl2pEKQbSIN47Sg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=erXb5E74tv6bBMT/7XUqU0iPBI5RD8DlS8MF5dCXAmPDWdRI3FipIACGtE/WvSxic
-         jhFHnNBDjDpT1YXNAw6EgcOvHQculZDJxaBsn2i6tZFc/J3WdhzYOuRSHu9ml/hLL7
-         3PrMe6h99VZMhhNARqUD2LEeLz2eDINzXU+bJnA0=
+        b=2hMCL7bsf0KuPWUEE1Y/ikPfjYnIPPTrYykKYv00NSfUR/tDeQVFqTj2RtwD/0yn1
+         +kv/U4lAZHi3FcDzoISvRF8GDJgroQvpIANFHO686iskNSAN8sjZcEYkN26xWTRVVh
+         MJC5UnSOlxKv/ECAdgEjrNjC1vQ0L36a0f4Lanco=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
+        stable@vger.kernel.org, Yongxin Liu <yongxin.liu@windriver.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 37/74] xen/pv: Fix a boot up hang revealed by int3 self test
-Date:   Mon,  5 Aug 2019 15:02:50 +0200
-Message-Id: <20190805124938.827633793@linuxfoundation.org>
+Subject: [PATCH 4.19 41/74] drm/nouveau: fix memory leak in nouveau_conn_reset()
+Date:   Mon,  5 Aug 2019 15:02:54 +0200
+Message-Id: <20190805124939.182347763@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124935.819068648@linuxfoundation.org>
 References: <20190805124935.819068648@linuxfoundation.org>
@@ -67,115 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b23e5844dfe78a80ba672793187d3f52e4b528d7 ]
+[ Upstream commit 09b90e2fe35faeace2488234e2a7728f2ea8ba26 ]
 
-Commit 7457c0da024b ("x86/alternatives: Add int3_emulate_call()
-selftest") is used to ensure there is a gap setup in int3 exception stack
-which could be used for inserting call return address.
+In nouveau_conn_reset(), if connector->state is true,
+__drm_atomic_helper_connector_destroy_state() will be called,
+but the memory pointed by asyc isn't freed. Memory leak happens
+in the following function __drm_atomic_helper_connector_reset(),
+where newly allocated asyc->state will be assigned to connector->state.
 
-This gap is missed in XEN PV int3 exception entry path, then below panic
-triggered:
+So using nouveau_conn_atomic_destroy_state() instead of
+__drm_atomic_helper_connector_destroy_state to free the "old" asyc.
 
-[    0.772876] general protection fault: 0000 [#1] SMP NOPTI
-[    0.772886] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.2.0+ #11
-[    0.772893] RIP: e030:int3_magic+0x0/0x7
-[    0.772905] RSP: 3507:ffffffff82203e98 EFLAGS: 00000246
-[    0.773334] Call Trace:
-[    0.773334]  alternative_instructions+0x3d/0x12e
-[    0.773334]  check_bugs+0x7c9/0x887
-[    0.773334]  ? __get_locked_pte+0x178/0x1f0
-[    0.773334]  start_kernel+0x4ff/0x535
-[    0.773334]  ? set_init_arg+0x55/0x55
-[    0.773334]  xen_start_kernel+0x571/0x57a
+Here the is the log showing memory leak.
 
-For 64bit PV guests, Xen's ABI enters the kernel with using SYSRET, with
-%rcx/%r11 on the stack. To convert back to "normal" looking exceptions,
-the xen thunks do 'xen_*: pop %rcx; pop %r11; jmp *'.
+unreferenced object 0xffff8c5480483c80 (size 192):
+  comm "kworker/0:2", pid 188, jiffies 4294695279 (age 53.179s)
+  hex dump (first 32 bytes):
+    00 f0 ba 7b 54 8c ff ff 00 00 00 00 00 00 00 00  ...{T...........
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<000000005005c0d0>] kmem_cache_alloc_trace+0x195/0x2c0
+    [<00000000a122baed>] nouveau_conn_reset+0x25/0xc0 [nouveau]
+    [<000000004fd189a2>] nouveau_connector_create+0x3a7/0x610 [nouveau]
+    [<00000000c73343a8>] nv50_display_create+0x343/0x980 [nouveau]
+    [<000000002e2b03c3>] nouveau_display_create+0x51f/0x660 [nouveau]
+    [<00000000c924699b>] nouveau_drm_device_init+0x182/0x7f0 [nouveau]
+    [<00000000cc029436>] nouveau_drm_probe+0x20c/0x2c0 [nouveau]
+    [<000000007e961c3e>] local_pci_probe+0x47/0xa0
+    [<00000000da14d569>] work_for_cpu_fn+0x1a/0x30
+    [<0000000028da4805>] process_one_work+0x27c/0x660
+    [<000000001d415b04>] worker_thread+0x22b/0x3f0
+    [<0000000003b69f1f>] kthread+0x12f/0x150
+    [<00000000c94c29b7>] ret_from_fork+0x3a/0x50
 
-E.g. Extracting 'xen_pv_trap xenint3' we have:
-xen_xenint3:
- pop %rcx;
- pop %r11;
- jmp xenint3
-
-As xenint3 and int3 entry code are same except xenint3 doesn't generate
-a gap, we can fix it by using int3 and drop useless xenint3.
-
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Stefano Stabellini <sstabellini@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Yongxin Liu <yongxin.liu@windriver.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/entry/entry_64.S    | 1 -
- arch/x86/include/asm/traps.h | 2 +-
- arch/x86/xen/enlighten_pv.c  | 2 +-
- arch/x86/xen/xen-asm_64.S    | 1 -
- 4 files changed, 2 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_connector.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index 206df099950ea..e7572a209fbe7 100644
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -1196,7 +1196,6 @@ idtentry stack_segment		do_stack_segment	has_error_code=1
- #ifdef CONFIG_XEN
- idtentry xennmi			do_nmi			has_error_code=0
- idtentry xendebug		do_debug		has_error_code=0
--idtentry xenint3		do_int3			has_error_code=0
- #endif
+diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.c b/drivers/gpu/drm/nouveau/nouveau_connector.c
+index 247f72cc4d10a..fb0094fc55834 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_connector.c
++++ b/drivers/gpu/drm/nouveau/nouveau_connector.c
+@@ -251,7 +251,7 @@ nouveau_conn_reset(struct drm_connector *connector)
+ 		return;
  
- idtentry general_protection	do_general_protection	has_error_code=1
-diff --git a/arch/x86/include/asm/traps.h b/arch/x86/include/asm/traps.h
-index afbc87206886e..b771bb3d159bc 100644
---- a/arch/x86/include/asm/traps.h
-+++ b/arch/x86/include/asm/traps.h
-@@ -40,7 +40,7 @@ asmlinkage void simd_coprocessor_error(void);
- asmlinkage void xen_divide_error(void);
- asmlinkage void xen_xennmi(void);
- asmlinkage void xen_xendebug(void);
--asmlinkage void xen_xenint3(void);
-+asmlinkage void xen_int3(void);
- asmlinkage void xen_overflow(void);
- asmlinkage void xen_bounds(void);
- asmlinkage void xen_invalid_op(void);
-diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
-index 782f98b332f05..1730a26ff6abc 100644
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -597,12 +597,12 @@ struct trap_array_entry {
- 
- static struct trap_array_entry trap_array[] = {
- 	{ debug,                       xen_xendebug,                    true },
--	{ int3,                        xen_xenint3,                     true },
- 	{ double_fault,                xen_double_fault,                true },
- #ifdef CONFIG_X86_MCE
- 	{ machine_check,               xen_machine_check,               true },
- #endif
- 	{ nmi,                         xen_xennmi,                      true },
-+	{ int3,                        xen_int3,                        false },
- 	{ overflow,                    xen_overflow,                    false },
- #ifdef CONFIG_IA32_EMULATION
- 	{ entry_INT80_compat,          xen_entry_INT80_compat,          false },
-diff --git a/arch/x86/xen/xen-asm_64.S b/arch/x86/xen/xen-asm_64.S
-index 417b339e5c8e1..3a6feed76dfc1 100644
---- a/arch/x86/xen/xen-asm_64.S
-+++ b/arch/x86/xen/xen-asm_64.S
-@@ -30,7 +30,6 @@ xen_pv_trap divide_error
- xen_pv_trap debug
- xen_pv_trap xendebug
- xen_pv_trap int3
--xen_pv_trap xenint3
- xen_pv_trap xennmi
- xen_pv_trap overflow
- xen_pv_trap bounds
+ 	if (connector->state)
+-		__drm_atomic_helper_connector_destroy_state(connector->state);
++		nouveau_conn_atomic_destroy_state(connector, connector->state);
+ 	__drm_atomic_helper_connector_reset(connector, &asyc->state);
+ 	asyc->dither.mode = DITHERING_MODE_AUTO;
+ 	asyc->dither.depth = DITHERING_DEPTH_AUTO;
 -- 
 2.20.1
 
