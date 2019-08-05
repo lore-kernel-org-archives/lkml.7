@@ -2,70 +2,117 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4A8C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 23:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E869C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 23:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 752DF2070D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 23:34:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6D322070D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 23:35:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UEBoLUE6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730996AbfHEXeK (ORCPT
+        id S1731055AbfHEXfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 19:34:10 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:43698 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728483AbfHEXeJ (ORCPT
+        Mon, 5 Aug 2019 19:35:13 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45535 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728483AbfHEXfN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 19:34:09 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1humU9-0007b9-41; Mon, 05 Aug 2019 23:33:49 +0000
-Date:   Tue, 6 Aug 2019 00:33:49 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        David Howells <dhowells@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCHv2 2/3] i915: convert to new mount API
-Message-ID: <20190805233349.GA27746@ZenIV.linux.org.uk>
-References: <20190805160307.5418-1-sergey.senozhatsky@gmail.com>
- <20190805160307.5418-3-sergey.senozhatsky@gmail.com>
- <20190805181255.GH1131@ZenIV.linux.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190805181255.GH1131@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+        Mon, 5 Aug 2019 19:35:13 -0400
+Received: by mail-pg1-f195.google.com with SMTP id o13so40498210pgp.12;
+        Mon, 05 Aug 2019 16:35:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=fpjseVSUss2LkAdgKt7/i93QGkQFGmCf+/5YmrX1uIQ=;
+        b=UEBoLUE6TOnktq0qwecZhcc58krHIy0NrLnA2JejGKdaPwA71LeRZgFPOgmSxAweHr
+         IoXl6dWBSi5zvPf3JJfkosVWfC/RgGOSnwomIBoCms6iyd+A5uBNMH0I9ldaECqQqjez
+         /TUqbAWemIc6vm8Or2nD481kCJKxUdGe8+4SQHJoveoJw301QfY19jbrvwDIUsWnS8jK
+         ddXOpeAWPMODrQoVhaKlRSCJWMcDRwUj3xKXvv08nOLNA7YT2tGN9K0fI0IgOofqVCO7
+         rX9TD79OC3MIc2djYfbPQ2UYYM8ugJU4NveAgNpOP19a04uJEo0F4dRmwYdiQac2qiVD
+         TWMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=fpjseVSUss2LkAdgKt7/i93QGkQFGmCf+/5YmrX1uIQ=;
+        b=eCpV0nOBBkG2/xIzB2KtLN/gP3EfbBNtnpJoixYmiBZWDdIRt0OCt9NHgDobdsUH6C
+         y7jCqqkTwr8AlkH60oCZ1k/ofpz0OVIg4yP3jbbgvDpVd1+VbpTjOO6L423NjpXlr8ze
+         3hpctnqERMogKZgjv/PCOlPksY1R07tgaSj9r3hjtpfVwgdW4OnHHMG1WaesqSZrY8hF
+         jvAL4XjcLomms0ol+cXgIYuJc6fUEJUNepVjEAn/Xi67rURhD0T+pwbxtwZWaV3ScjVj
+         +2qup5Dwmx4I4Tj9FZbcTRuq0uQ/3q1rs7cnRuhD7tbtLSR+rLv00OOr9FABc51wHYRE
+         jsXA==
+X-Gm-Message-State: APjAAAXO4Ushk9YJ+xtYrjbyWClylPvPyoLbTHxactgPUoV503I9Lv+h
+        p1H32+kPgMT0uoaql1f0B9PVMZAT
+X-Google-Smtp-Source: APXvYqzYukYrcOoU9GMSBqOK3gJWry7lChLl+XFcob2BVHpiHpWIpjdxmlmyLQONGs8F/7psO3EqJg==
+X-Received: by 2002:aa7:93bb:: with SMTP id x27mr587342pff.10.1565048112341;
+        Mon, 05 Aug 2019 16:35:12 -0700 (PDT)
+Received: from majic.sklembedded.com (c-73-202-231-77.hsd1.ca.comcast.net. [73.202.231.77])
+        by smtp.googlemail.com with ESMTPSA id 30sm31296349pjk.17.2019.08.05.16.35.11
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 05 Aug 2019 16:35:11 -0700 (PDT)
+From:   Steve Longerbeam <slongerbeam@gmail.com>
+To:     linux-media@vger.kernel.org
+Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 01/22] media: entity: Pass entity to get_fwnode_pad operation
+Date:   Mon,  5 Aug 2019 16:34:44 -0700
+Message-Id: <20190805233505.21167-2-slongerbeam@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190805233505.21167-1-slongerbeam@gmail.com>
+References: <20190805233505.21167-1-slongerbeam@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 07:12:55PM +0100, Al Viro wrote:
-> On Tue, Aug 06, 2019 at 01:03:06AM +0900, Sergey Senozhatsky wrote:
-> > tmpfs does not set ->remount_fs() anymore and its users need
-> > to be converted to new mount API.
-> 
-> Could you explain why the devil do you bother with remount at all?
-> Why not pass the right options when mounting the damn thing?
+Add a missing pointer to the entity in the media_entity operation
+get_fwnode_pad.
 
-Incidentally, the only remaining modular user of get_fs_type() is the
-same i915_gemfs.c.  And I wonder if we should aim for unexporting
-the damn thing instead of exporting put_filesystem()...
+Fixes: ae45cd5efc120 ("[media] media: entity: Add get_fwnode_pad entity
+operation")
 
-Note that users in tomoyo and apparmor are bogus - they are in the
-instances of ill-defined method that needs to be split and moved,
-with the lookups (fs type included) replaced with callers passing
-the values they look up and will end up using.
+Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
+---
+ drivers/media/mc/mc-entity.c | 2 +-
+ include/media/media-entity.h | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-IOW, outside of core VFS we have very few legitimate users, and the
-one in kernel/trace might be better off as vfs_submount_by_name().
+diff --git a/drivers/media/mc/mc-entity.c b/drivers/media/mc/mc-entity.c
+index 7c429ce98bae..c333320f790a 100644
+--- a/drivers/media/mc/mc-entity.c
++++ b/drivers/media/mc/mc-entity.c
+@@ -386,7 +386,7 @@ int media_entity_get_fwnode_pad(struct media_entity *entity,
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = entity->ops->get_fwnode_pad(&endpoint);
++	ret = entity->ops->get_fwnode_pad(entity, &endpoint);
+ 	if (ret < 0)
+ 		return ret;
+ 
+diff --git a/include/media/media-entity.h b/include/media/media-entity.h
+index 8cb2c504a05c..cde80ad029b7 100644
+--- a/include/media/media-entity.h
++++ b/include/media/media-entity.h
+@@ -212,7 +212,8 @@ struct media_pad {
+  *    mutex held.
+  */
+ struct media_entity_operations {
+-	int (*get_fwnode_pad)(struct fwnode_endpoint *endpoint);
++	int (*get_fwnode_pad)(struct media_entity *entity,
++			      struct fwnode_endpoint *endpoint);
+ 	int (*link_setup)(struct media_entity *entity,
+ 			  const struct media_pad *local,
+ 			  const struct media_pad *remote, u32 flags);
+-- 
+2.17.1
+
