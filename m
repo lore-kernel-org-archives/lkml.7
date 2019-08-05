@@ -2,111 +2,100 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46FDDC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ECDFC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A2652067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:15:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010938;
-	bh=PCg97u3p1U941e7BvgXoCYqVd4ZisV+e5YDO8vEZl8w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O8S0IZ+8J7+Af33FKva+Uuc3p0Ve8rRcUu3p55JO9cf514x9IgREL4QEfT4pTffrs
-	 Jw7fQELnCFgQUcKXZ0HN4Z4AopW/GoZ1xPQ1C48fgts5Ks5hc5vNN9UKmVeRa408ck
-	 AXDW0ySLS5FRt4lWZpvEMcAnfvwWcJZ3bsUHibp8=
+	by mail.kernel.org (Postfix) with ESMTP id 56E5E2067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:15:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="GuxWmFT6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729997AbfHENPh (ORCPT
+        id S1730087AbfHENPm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:15:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44162 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:15:42 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:33962 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729686AbfHENHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:07:01 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A90362075B;
-        Mon,  5 Aug 2019 13:06:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010420;
-        bh=PCg97u3p1U941e7BvgXoCYqVd4ZisV+e5YDO8vEZl8w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BI3uZjsM6rHo9e/QdjMDx5qsQ6zW50f40nitM0Dmivbj8ZAr9gWQvmRArR2SFo1wq
-         LeyI3Yfpb2nslLVavRpSImhFDymgozerYxyrHlofNcfoHnBQD6zK6cY5YbF9GfIeJn
-         c8gal+JqifWm9UEKJp7uq8b33GRu20Yyi74eGRdU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 17/53] x86: kvm: avoid constant-conversion warning
-Date:   Mon,  5 Aug 2019 15:02:42 +0200
-Message-Id: <20190805124930.002378879@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190805124927.973499541@linuxfoundation.org>
-References: <20190805124927.973499541@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1729686AbfHENPj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:15:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=mMVLKd7RxWHn6VLFRfZGxtHqq0KuNG0+8uSax8MKgBQ=; b=GuxWmFT6OVlx+jFTv+Z7Zd1Wgb
+        HphyPBudXIGS+EiQ8QoZ0QBY8tClZVVgGH5iPyjTABd+o77dK7kPqS96WGxmNbyS3buiX0OWBD12U
+        o8xM2c2KshtAzrMQ6a4sx0Tmjso0+eGJYJfo1uWDAsb/qyqgyryz6iyaVVQ0fXOUX5MM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hucpn-0006Tb-Fe; Mon, 05 Aug 2019 15:15:31 +0200
+Date:   Mon, 5 Aug 2019 15:15:31 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Tao Ren <taoren@fb.com>
+Cc:     Vladimir Oltean <olteanv@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Arun Parameswaran <arun.parameswaran@broadcom.com>,
+        Justin Chen <justinpopo6@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
+Subject: Re: [PATCH net-next v3] net: phy: broadcom: add 1000Base-X support
+ for BCM54616S
+Message-ID: <20190805131531.GB24275@lunn.ch>
+References: <20190802215419.313512-1-taoren@fb.com>
+ <CA+h21hrOEape89MTqCUyGFt=f6ba7Q-2KcOsN_Vw2Qv8iq86jw@mail.gmail.com>
+ <53e18a01-3d08-3023-374f-2c712c4ee9ea@fb.com>
+ <20190804145152.GA6800@lunn.ch>
+ <2dd073b2-8495-593f-cd56-c39fd1c38a42@fb.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2dd073b2-8495-593f-cd56-c39fd1c38a42@fb.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a6a6d3b1f867d34ba5bd61aa7bb056b48ca67cff ]
+On Mon, Aug 05, 2019 at 06:38:16AM +0000, Tao Ren wrote:
+> Hi Andrew,
+> 
+> On 8/4/19 7:51 AM, Andrew Lunn wrote:
+> >>> The patchset looks better now. But is it ok, I wonder, to keep
+> >>> PHY_BCM_FLAGS_MODE_1000BX in phydev->dev_flags, considering that
+> >>> phy_attach_direct is overwriting it?
+> >>
+> > 
+> >> I checked ftgmac100 driver (used on my machine) and it calls
+> >> phy_connect_direct which passes phydev->dev_flags when calling
+> >> phy_attach_direct: that explains why the flag is not cleared in my
+> >> case.
+> > 
+> > Yes, that is the way it is intended to be used. The MAC driver can
+> > pass flags to the PHY. It is a fragile API, since the MAC needs to
+> > know what PHY is being used, since the flags are driver specific.
+> > 
+> > One option would be to modify the assignment in phy_attach_direct() to
+> > OR in the flags passed to it with flags which are already in
+> > phydev->dev_flags.
+> 
 
-clang finds a contruct suspicious that converts an unsigned
-character to a signed integer and back, causing an overflow:
+> It sounds like a reasonable fix/enhancement to replace overriding
+> with OR, no matter which direction we are going to (either adding
+> 1000bx aneg in genphy or providing phy-specific aneg callback).
 
-arch/x86/kvm/mmu.c:4605:39: error: implicit conversion from 'int' to 'u8' (aka 'unsigned char') changes value from -205 to 51 [-Werror,-Wconstant-conversion]
-                u8 wf = (pfec & PFERR_WRITE_MASK) ? ~w : 0;
-                   ~~                               ^~
-arch/x86/kvm/mmu.c:4607:38: error: implicit conversion from 'int' to 'u8' (aka 'unsigned char') changes value from -241 to 15 [-Werror,-Wconstant-conversion]
-                u8 uf = (pfec & PFERR_USER_MASK) ? ~u : 0;
-                   ~~                              ^~
-arch/x86/kvm/mmu.c:4609:39: error: implicit conversion from 'int' to 'u8' (aka 'unsigned char') changes value from -171 to 85 [-Werror,-Wconstant-conversion]
-                u8 ff = (pfec & PFERR_FETCH_MASK) ? ~x : 0;
-                   ~~                               ^~
+> Do you want me to send out the patch (I feel it's better to be in a
+> separate patch?) or someone else will take care of it?
 
-Add an explicit cast to tell clang that everything works as
-intended here.
+Hi Tao
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://github.com/ClangBuiltLinux/linux/issues/95
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/kvm/mmu.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Please send a patch.
 
-diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-index f97b533bc6e68..87a0601b1c204 100644
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -4313,11 +4313,11 @@ static void update_permission_bitmask(struct kvm_vcpu *vcpu,
- 		 */
- 
- 		/* Faults from writes to non-writable pages */
--		u8 wf = (pfec & PFERR_WRITE_MASK) ? ~w : 0;
-+		u8 wf = (pfec & PFERR_WRITE_MASK) ? (u8)~w : 0;
- 		/* Faults from user mode accesses to supervisor pages */
--		u8 uf = (pfec & PFERR_USER_MASK) ? ~u : 0;
-+		u8 uf = (pfec & PFERR_USER_MASK) ? (u8)~u : 0;
- 		/* Faults from fetches of non-executable pages*/
--		u8 ff = (pfec & PFERR_FETCH_MASK) ? ~x : 0;
-+		u8 ff = (pfec & PFERR_FETCH_MASK) ? (u8)~x : 0;
- 		/* Faults from kernel mode fetches of user pages */
- 		u8 smepf = 0;
- 		/* Faults from kernel mode accesses of user pages */
--- 
-2.20.1
-
-
-
+Thanks
+       Andrew
