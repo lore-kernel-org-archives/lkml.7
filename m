@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5921FC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26507C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B4C020657
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:26:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6D7120651
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:26:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565011568;
-	bh=3Z6DPYk7EHqMo4PyHu7aIciu77HSTlyXUMfDnn5ZPgg=;
+	s=default; t=1565011574;
+	bh=o3AVFO3fKITsxqa+CrmjvSNxJsiSSMNI2nHCdCUjIF4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ucqhwHBJqQa9jXFpWuDnCTPLmVSDoXD8ZdjvU0u/BRg6yF6Vm2/oHpLSqNi4qfrnn
-	 8vCTTVNmk+Rvf2MCdJ6OJ4K45nvPkIgTeCyToRy511xXmPHmdut3VxUAcXAIpQAtf+
-	 bDNVTGir7i5YOOZmfD8n4gAWnAOr6oN0QkFrU0ck=
+	b=P63ytpk7wbgzmqYc/o3EB19IAJdKEhFXF9arme30oMf3DxxqDWujwU5erTBbYAhmz
+	 YaAVOfNLblpUkKqvVqM6jmxY21oxHIf68LNQVjnI94U+DkHYXdxpq5H+0gnbTFUVHr
+	 3sXdR3oIDQA8Vcud6Ae862jUrPY2AC51sOEL44FQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730810AbfHEN0G (ORCPT
+        id S1731410AbfHEN0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:26:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34612 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:26:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731354AbfHEN0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:26:02 -0400
+        id S1731064AbfHEN0I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:26:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD5E220651;
-        Mon,  5 Aug 2019 13:26:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B54220644;
+        Mon,  5 Aug 2019 13:26:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565011562;
-        bh=3Z6DPYk7EHqMo4PyHu7aIciu77HSTlyXUMfDnn5ZPgg=;
+        s=default; t=1565011567;
+        bh=o3AVFO3fKITsxqa+CrmjvSNxJsiSSMNI2nHCdCUjIF4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V/X1n+SI1TcWLR67MNhOmjKlC9Qm7nLxJJJm6xRj/e0ADK4SLXOHs9KjdsDcX9v4d
-         VcUwmZ1G23r5+rZ7aBxesJpKRqwxdXtKEGpYKdNcaNK3kDkbbt2Q/KoUYAKTDdCXVe
-         jVU3GwlxeYLt221y5PySFaLW2if6L8y3KBqgpkkQ=
+        b=bS2tnEnjYihq5fxbwHUYEe5WTCSheCihNCHPnriMZdthyIeR5hbA60Zu4vGeIThZ0
+         0JoclKyxFXJuOmSdGgHXtrZAZqjQMaF09UIriINBwGCR3/KkQfwbVDgSe3Qa7dXSwR
+         zsiwtNcIVE4PZXQ4LdMadsQGw6gC8YX4VeSJSffU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Sven Schnelle <svens@stackframe.org>,
-        Helge Deller <deller@gmx.de>
-Subject: [PATCH 5.2 109/131] parisc: Strip debug info from kernel before creating compressed vmlinuz
-Date:   Mon,  5 Aug 2019 15:03:16 +0200
-Message-Id: <20190805124959.261847620@linuxfoundation.org>
+        stable@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 5.2 111/131] drivers/perf: arm_pmu: Fix failure path in PM notifier
+Date:   Mon,  5 Aug 2019 15:03:18 +0200
+Message-Id: <20190805124959.400939001@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
 References: <20190805124951.453337465@linuxfoundation.org>
@@ -61,34 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+From: Will Deacon <will@kernel.org>
 
-commit e50beea8e7738377b4fa664078547be338038ff9 upstream.
+commit 0d7fd70f26039bd4b33444ca47f0e69ce3ae0354 upstream.
 
-Same as on x86-64, strip the .comment, .note and debug sections from the
-Linux kernel before creating the compressed image for the boot loader.
+Handling of the CPU_PM_ENTER_FAILED transition in the Arm PMU PM
+notifier code incorrectly skips restoration of the counters. Fix the
+logic so that CPU_PM_ENTER_FAILED follows the same path as CPU_PM_EXIT.
 
-Reported-by: James Bottomley <James.Bottomley@HansenPartnership.com>
-Reported-by: Sven Schnelle <svens@stackframe.org>
-Cc: stable@vger.kernel.org # v4.20+
-Signed-off-by: Helge Deller <deller@gmx.de>
+Cc: <stable@vger.kernel.org>
+Fixes: da4e4f18afe0f372 ("drivers/perf: arm_pmu: implement CPU_PM notifier")
+Reported-by: Anders Roxell <anders.roxell@linaro.org>
+Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/parisc/boot/compressed/Makefile |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/perf/arm_pmu.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/parisc/boot/compressed/Makefile
-+++ b/arch/parisc/boot/compressed/Makefile
-@@ -56,7 +56,8 @@ $(obj)/misc.o: $(obj)/sizes.h
- CPPFLAGS_vmlinux.lds += -I$(objtree)/$(obj) -DBOOTLOADER
- $(obj)/vmlinux.lds: $(obj)/sizes.h
- 
--$(obj)/vmlinux.bin: vmlinux
-+OBJCOPYFLAGS_vmlinux.bin := -R .comment -R .note -S
-+$(obj)/vmlinux.bin: vmlinux FORCE
- 	$(call if_changed,objcopy)
- 
- vmlinux.bin.all-y := $(obj)/vmlinux.bin
+--- a/drivers/perf/arm_pmu.c
++++ b/drivers/perf/arm_pmu.c
+@@ -723,8 +723,8 @@ static int cpu_pm_pmu_notify(struct noti
+ 		cpu_pm_pmu_setup(armpmu, cmd);
+ 		break;
+ 	case CPU_PM_EXIT:
+-		cpu_pm_pmu_setup(armpmu, cmd);
+ 	case CPU_PM_ENTER_FAILED:
++		cpu_pm_pmu_setup(armpmu, cmd);
+ 		armpmu->start(armpmu);
+ 		break;
+ 	default:
 
 
