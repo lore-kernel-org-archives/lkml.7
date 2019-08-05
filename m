@@ -2,109 +2,116 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAEAC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A36C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 934A8208E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:17:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="KzhL5uP2"
+	by mail.kernel.org (Postfix) with ESMTP id ECD5E20880
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 17:20:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730095AbfHERRY (ORCPT
+        id S1729166AbfHERU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 13:17:24 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:35370 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728851AbfHERRY (ORCPT
+        Mon, 5 Aug 2019 13:20:28 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:42062 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726559AbfHERU2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 13:17:24 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 29DD32F9;
-        Mon,  5 Aug 2019 19:17:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1565025441;
-        bh=yqTebMyCVqyE1EO2DbL4pb0qQVnsJgnd8Hudm4zbpI4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KzhL5uP2lTRmeOD08ssZF8sSI8Mg9RYislg0FBa+9JrHroFxiuphxs5QPeA+kluDp
-         W76dfIqlkutBAOqccjLBUYYqIHuE/JNH6jiJVMrELoaUqOLNMq3g5hL8p5PQtTGDEt
-         gHbQUtRknGd/W6CCRNi1E2doOmMekIp2TCggA8DQ=
-Date:   Mon, 5 Aug 2019 20:17:19 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        fabrizio.castro@bp.renesas.com,
-        "open list:DRM DRIVERS FOR RENESAS" <dri-devel@lists.freedesktop.org>,
-        "open list:DRM DRIVERS FOR RENESAS" 
-        <linux-renesas-soc@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] drm: rcar_lvds: Fix dual link mode operations
-Message-ID: <20190805171719.GB13149@pendragon.ideasonboard.com>
-References: <20190805161837.11856-1-jacopo+renesas@jmondi.org>
+        Mon, 5 Aug 2019 13:20:28 -0400
+Received: from 162-237-133-238.lightspeed.rcsntx.sbcglobal.net ([162.237.133.238] helo=elm)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <tyhicks@canonical.com>)
+        id 1hugeh-000388-CP; Mon, 05 Aug 2019 17:20:19 +0000
+Date:   Mon, 5 Aug 2019 12:20:14 -0500
+From:   Tyler Hicks <tyhicks@canonical.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>
+Cc:     jarkko.sakkinen@linux.intel.com, jejb@linux.ibm.com,
+        zohar@linux.ibm.com, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org, crazyt2019+lml@gmail.com,
+        nayna@linux.vnet.ibm.com, silviu.vlasceanu@huawei.com
+Subject: Re: [PATCH v3] KEYS: trusted: allow module init if TPM is inactive
+ or deactivated
+Message-ID: <20190805172014.GE3449@elm>
+References: <20190805164427.17408-1-roberto.sassu@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190805161837.11856-1-jacopo+renesas@jmondi.org>
+In-Reply-To: <20190805164427.17408-1-roberto.sassu@huawei.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
-
-Thank you for the patch.
-
-On Mon, Aug 05, 2019 at 06:18:37PM +0200, Jacopo Mondi wrote:
-> The R-Car LVDS encoder units support dual-link operations by splitting
-> the pixel output between the primary encoder and the companion one.
-
-s/companion one/companion encoder/
-
-> Currently the companion encoder fails at probe time, causing the
-> registration of the primary to fail as well, preventing the whole DU unit
-> from being registered at all.
+On 2019-08-05 18:44:27, Roberto Sassu wrote:
+> Commit c78719203fc6 ("KEYS: trusted: allow trusted.ko to initialize w/o a
+> TPM") allows the trusted module to be loaded even if a TPM is not found, to
+> avoid module dependency problems.
 > 
-> Fix this by not bailing out from probe with error if the
-> "renesas,companion" property is not specified.
+> However, trusted module initialization can still fail if the TPM is
+> inactive or deactivated. tpm_get_random() returns an error.
 > 
-> Fixes: fa440d870358 ("drm: rcar-du: lvds: Add support for dual-link mode")
-> Reported-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> This patch removes the call to tpm_get_random() and instead extends the PCR
+> specified by the user with zeros. The security of this alternative is
+> equivalent to the previous one, as either option prevents with a PCR update
+> unsealing and misuse of sealed data by a user space process.
+> 
+> Even if a PCR is extended with zeros, instead of random data, it is still
+> computationally infeasible to find a value as input for a new PCR extend
+> operation, to obtain again the PCR value that would allow unsealing.
+> 
+> Fixes: 240730437deb ("KEYS: trusted: explicitly use tpm_chip structure...")
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> Reviewed-by: Tyler Hicks <tyhicks@canonical.com>
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+The approach changed a fair bit from v2 to v3 so I'll confirm that my
+Reviewed-by still stands.
 
-and applied to my tree, thank you.
+Also, we have positive test results from an affected user:
 
+ https://bugzilla.kernel.org/show_bug.cgi?id=203953#c10
+
+Tyler
+
+> Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
 > ---
->  drivers/gpu/drm/rcar-du/rcar_lvds.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
+>  security/keys/trusted.c | 13 -------------
+>  1 file changed, 13 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> index bada7ee98544..0b872d00760b 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> +++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> @@ -662,10 +662,8 @@ static int rcar_lvds_parse_dt_companion(struct rcar_lvds *lvds)
+> diff --git a/security/keys/trusted.c b/security/keys/trusted.c
+> index 9a94672e7adc..ade699131065 100644
+> --- a/security/keys/trusted.c
+> +++ b/security/keys/trusted.c
+> @@ -1228,24 +1228,11 @@ static int __init trusted_shash_alloc(void)
+>  
+>  static int __init init_digests(void)
+>  {
+> -	u8 digest[TPM_MAX_DIGEST_SIZE];
+> -	int ret;
+> -	int i;
+> -
+> -	ret = tpm_get_random(chip, digest, TPM_MAX_DIGEST_SIZE);
+> -	if (ret < 0)
+> -		return ret;
+> -	if (ret < TPM_MAX_DIGEST_SIZE)
+> -		return -EFAULT;
+> -
+>  	digests = kcalloc(chip->nr_allocated_banks, sizeof(*digests),
+>  			  GFP_KERNEL);
+>  	if (!digests)
+>  		return -ENOMEM;
+>  
+> -	for (i = 0; i < chip->nr_allocated_banks; i++)
+> -		memcpy(digests[i].digest, digest, TPM_MAX_DIGEST_SIZE);
+> -
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.17.1
 > 
->  	/* Locate the companion LVDS encoder for dual-link operation, if any. */
->  	companion = of_parse_phandle(dev->of_node, "renesas,companion", 0);
-> -	if (!companion) {
-> -		dev_err(dev, "Companion LVDS encoder not found\n");
-> -		return -ENXIO;
-> -	}
-> +	if (!companion)
-> +		return 0;
-> 
->  	/*
->  	 * Sanity check: the companion encoder must have the same compatible
-
--- 
-Regards,
-
-Laurent Pinchart
