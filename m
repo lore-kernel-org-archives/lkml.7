@@ -5,52 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E07B5C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF5AC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B798821743
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:07:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A829216F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:07:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010456;
-	bh=6snseJvCWboeNdOF7uhd78WpgriehZ012jDqd7F3R+0=;
+	s=default; t=1565010462;
+	bh=JfkJqyzjEFKl1mlpSKJzk2gE913rb/chJd8gXTPX3wA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WUk2HpkMMAyyzcl6w9PAm8DfDqLEHW5tmZ5iI159Zgo8IbH71TNIJXa1A3v1p+TOy
-	 VbH13nwYvOZRN27Y0hiUigWc2WOv13I/FG1Jf8R0gKBW8KLNQCzrvCl1m5/memfftI
-	 n+HnGnGPPmFseItLnkNHXEg952Kf7Gk6eeG37Eho=
+	b=yzbJUNPelFbiDdaFA8u8Wql/aMzy1XoigG7d0JyWV7Gkp/cN0PTdVEV0APPaP8DeH
+	 KjwQGjSytgj0Vz45ODj6kNHUmBo3G6Yt6ByPCu//DQLC9D3Z6W8Bx7KbFuDVhkJxxY
+	 f9od0prXj0Odt4V1AyI52K/8CXiYWIvRrH0ycxTo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729358AbfHENHf (ORCPT
+        id S1729847AbfHENHl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:07:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44968 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:07:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729795AbfHENH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:07:26 -0400
+        id S1729832AbfHENHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:07:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FFE121738;
-        Mon,  5 Aug 2019 13:07:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 280672087B;
+        Mon,  5 Aug 2019 13:07:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010445;
-        bh=6snseJvCWboeNdOF7uhd78WpgriehZ012jDqd7F3R+0=;
+        s=default; t=1565010455;
+        bh=JfkJqyzjEFKl1mlpSKJzk2gE913rb/chJd8gXTPX3wA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1RNeQB+WCqAx7d+40DW7aRHikhVmkCD8iH4XYGmqihHauNx3Q39MGCVBANnmGulmT
-         stjpz4c/5ACtNnKmjlIwOJCJYQYmLDbLSrrJOQPVIph+qETEKRWrqXHveHSyu50Zj2
-         Yg6OXMjICIGenRqCvPE3TSdI06uorOdXkXBxaEtY=
+        b=iIosfvp0UWAmNBKWU5stPRai6usY5n2TkGGEZg+RugOvtMY6U4P3EjrlOUo+d8Zgc
+         ZpgRLUC+TTyuUoJhro6egszYEb7xwnEgv4ZZEaswmK2r3JmTNmutgymKbnUmrHTpcH
+         VMr8M5VpKRAszOva0mQbJItLS1shdz2rQ8SMEZ60=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Alexandre Bounine <alex.bou9@gmail.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 26/53] drivers/rapidio/devices/rio_mport_cdev.c: NUL terminate some strings
-Date:   Mon,  5 Aug 2019 15:02:51 +0200
-Message-Id: <20190805124930.953644174@linuxfoundation.org>
+Subject: [PATCH 4.14 03/53] ARM: dts: rockchip: Make rk3288-veyron-mickeys emmc work again
+Date:   Mon,  5 Aug 2019 15:02:28 +0200
+Message-Id: <20190805124928.395739904@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124927.973499541@linuxfoundation.org>
 References: <20190805124927.973499541@linuxfoundation.org>
@@ -63,45 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 156e0b1a8112b76e351684ac948c59757037ac36 ]
+[ Upstream commit 99fa066710f75f18f4d9a5bc5f6a711968a581d5 ]
 
-The dev_info.name[] array has space for RIO_MAX_DEVNAME_SZ + 1
-characters.  But the problem here is that we don't ensure that the user
-put a NUL terminator on the end of the string.  It could lead to an out
-of bounds read.
+When I try to boot rk3288-veyron-mickey I totally fail to make the
+eMMC work.  Specifically my logs (on Chrome OS 4.19):
 
-Link: http://lkml.kernel.org/r/20190529110601.GB19119@mwanda
-Fixes: e8de370188d0 ("rapidio: add mport char device driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Alexandre Bounine <alex.bou9@gmail.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+  mmc_host mmc1: card is non-removable.
+  mmc_host mmc1: Bus speed (slot 0) = 400000Hz (slot req 400000Hz, actual 400000HZ div = 0)
+  mmc_host mmc1: Bus speed (slot 0) = 50000000Hz (slot req 52000000Hz, actual 50000000HZ div = 0)
+  mmc1: switch to bus width 8 failed
+  mmc1: switch to bus width 4 failed
+  mmc1: new high speed MMC card at address 0001
+  mmcblk1: mmc1:0001 HAG2e 14.7 GiB
+  mmcblk1boot0: mmc1:0001 HAG2e partition 1 4.00 MiB
+  mmcblk1boot1: mmc1:0001 HAG2e partition 2 4.00 MiB
+  mmcblk1rpmb: mmc1:0001 HAG2e partition 3 4.00 MiB, chardev (243:0)
+  mmc_host mmc1: Bus speed (slot 0) = 400000Hz (slot req 400000Hz, actual 400000HZ div = 0)
+  mmc_host mmc1: Bus speed (slot 0) = 50000000Hz (slot req 52000000Hz, actual 50000000HZ div = 0)
+  mmc1: switch to bus width 8 failed
+  mmc1: switch to bus width 4 failed
+  mmc1: tried to HW reset card, got error -110
+  mmcblk1: error -110 requesting status
+  mmcblk1: recovery failed!
+  print_req_error: I/O error, dev mmcblk1, sector 0
+  ...
+
+When I remove the '/delete-property/mmc-hs200-1_8v' then everything is
+hunky dory.
+
+That line comes from the original submission of the mickey dts
+upstream, so presumably at the time the HS200 was failing and just
+enumerating things as a high speed device was fine.  ...or maybe it's
+just that some mickey devices work when enumerating at "high speed",
+just not mine?
+
+In any case, hs200 seems good now.  Let's turn it on.
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rapidio/devices/rio_mport_cdev.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/rk3288-veyron-mickey.dts | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/rapidio/devices/rio_mport_cdev.c b/drivers/rapidio/devices/rio_mport_cdev.c
-index 76afe1449cab1..ecd71efe8ea00 100644
---- a/drivers/rapidio/devices/rio_mport_cdev.c
-+++ b/drivers/rapidio/devices/rio_mport_cdev.c
-@@ -1742,6 +1742,7 @@ static int rio_mport_add_riodev(struct mport_cdev_priv *priv,
+diff --git a/arch/arm/boot/dts/rk3288-veyron-mickey.dts b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
+index f0994f0e57745..d6ca67866bc00 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-mickey.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
+@@ -161,10 +161,6 @@
+ 	};
+ };
  
- 	if (copy_from_user(&dev_info, arg, sizeof(dev_info)))
- 		return -EFAULT;
-+	dev_info.name[sizeof(dev_info.name) - 1] = '\0';
- 
- 	rmcd_debug(RDEV, "name:%s ct:0x%x did:0x%x hc:0x%x", dev_info.name,
- 		   dev_info.comptag, dev_info.destid, dev_info.hopcount);
-@@ -1873,6 +1874,7 @@ static int rio_mport_del_riodev(struct mport_cdev_priv *priv, void __user *arg)
- 
- 	if (copy_from_user(&dev_info, arg, sizeof(dev_info)))
- 		return -EFAULT;
-+	dev_info.name[sizeof(dev_info.name) - 1] = '\0';
- 
- 	mport = priv->md->mport;
- 
+-&emmc {
+-	/delete-property/mmc-hs200-1_8v;
+-};
+-
+ &i2c2 {
+ 	status = "disabled";
+ };
 -- 
 2.20.1
 
