@@ -2,115 +2,111 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A018C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5523BC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 024E82147A
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:05:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2377D2147A
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 22:09:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565042998;
+	bh=NAJ16jvh/qchypdVowjtbzNr9+9foVnE+vd1uUZQC7g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=VebwhGo0e9ulZP/jGeOFgqTUaWKGhRePyidw8b9Bf8yfYeCDyatgvNciP9YtayjTq
+	 6jsVxDL08OQzdh54VoCoDPnqWviDu9mgX3Pj0ZUxKGpqcVie0ehctT6fenh+RZ7Q9j
+	 tATW9fsMyPB/QD232wnyH8DBj+c0gBsBHmdY+5qM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730882AbfHEWFu (ORCPT
+        id S1730849AbfHEWJ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 18:05:50 -0400
-Received: from mga04.intel.com ([192.55.52.120]:9872 "EHLO mga04.intel.com"
+        Mon, 5 Aug 2019 18:09:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726847AbfHEWFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 18:05:49 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 15:05:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,350,1559545200"; 
-   d="scan'208";a="349235770"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga005.jf.intel.com with ESMTP; 05 Aug 2019 15:05:48 -0700
-Date:   Mon, 5 Aug 2019 15:05:48 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     john.hubbard@gmail.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jerome Glisse <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
-Subject: Re: [PATCH] fs/io_uring.c: convert put_page() to put_user_page*()
-Message-ID: <20190805220547.GB23416@iweiny-DESK2.sc.intel.com>
-References: <20190805023206.8831-1-jhubbard@nvidia.com>
- <20190805220441.GA23416@iweiny-DESK2.sc.intel.com>
+        id S1728483AbfHEWJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 18:09:56 -0400
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABAF7216B7;
+        Mon,  5 Aug 2019 22:09:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565042995;
+        bh=NAJ16jvh/qchypdVowjtbzNr9+9foVnE+vd1uUZQC7g=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=UdlsxMT9wxnPg84czTc53XMAznVmd7n8JRcYPxB0Fu7FGgY6Vf9s/Dqc+UR+3IfO7
+         LPXWB3QDqCrtcNwuUxU7BaE/2hGz/E0e0XBJLo7Q5km8dkVP/ybkS82B3bEJoI21rs
+         XBRKjIh4YtimZeQp5Or12nvID6o1ifjlu7V5KIpU=
+Received: by mail-qt1-f171.google.com with SMTP id d23so82619847qto.2;
+        Mon, 05 Aug 2019 15:09:55 -0700 (PDT)
+X-Gm-Message-State: APjAAAWqtpm+nZDV1X2usZAWszPpM5jNCK8vVpVFS+yAzUgDQEYw9RYl
+        F6gFcCeQV7+EArf6caBFN7RBLQCEdkWMKIzgpg==
+X-Google-Smtp-Source: APXvYqzN7Oaow/mdIokjxZIROhfoq29oWOHhIQUUHynApmz52dA7L6a16lTZR93u1Os4RUyoD7Omw1XiDFtlZBNZ4Fw=
+X-Received: by 2002:a0c:acef:: with SMTP id n44mr215262qvc.39.1565042994893;
+ Mon, 05 Aug 2019 15:09:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190805220441.GA23416@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+References: <20190805122558.5130-1-narmstrong@baylibre.com>
+In-Reply-To: <20190805122558.5130-1-narmstrong@baylibre.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 5 Aug 2019 16:09:43 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+efvvb1UK-Nas0G5XefLWwN7ebnqoevi+W=jj4r3E2dg@mail.gmail.com>
+Message-ID: <CAL_Jsq+efvvb1UK-Nas0G5XefLWwN7ebnqoevi+W=jj4r3E2dg@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: net: meson-dwmac: convert to yaml
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        devicetree@vger.kernel.org, netdev <netdev@vger.kernel.org>,
+        linux-amlogic@lists.infradead.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 03:04:42PM -0700, 'Ira Weiny' wrote:
-> On Sun, Aug 04, 2019 at 07:32:06PM -0700, john.hubbard@gmail.com wrote:
-> > From: John Hubbard <jhubbard@nvidia.com>
-> > 
-> > For pages that were retained via get_user_pages*(), release those pages
-> > via the new put_user_page*() routines, instead of via put_page() or
-> > release_pages().
-> > 
-> > This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
-> > ("mm: introduce put_user_page*(), placeholder versions").
-> > 
-> > Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> > Cc: Jens Axboe <axboe@kernel.dk>
-> > Cc: linux-fsdevel@vger.kernel.org
-> > Cc: linux-block@vger.kernel.org
-> > Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+On Mon, Aug 5, 2019 at 6:26 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> Now that we have the DT validation in place, let's convert the device tree
+> bindings for the Synopsys DWMAC Glue for Amlogic SoCs over to a YAML schemas.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+> Rob,
+>
+> I keep getting :
+> .../devicetree/bindings/net/amlogic,meson-dwmac.example.dt.yaml: ethernet@c9410000: reg: [[3376480256, 65536], [3364046144, 8]] is too long
 
-<sigh>
+Because snps,dwmac.yaml has:
 
-I meant to say I wrote the same patch ...  For this one...
+  reg:
+    maxItems: 1
 
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+The schemas are applied separately and all have to be valid. You'll
+need to change snps,dwmac.yaml to:
 
-> 
-> > ---
-> >  fs/io_uring.c | 8 +++-----
-> >  1 file changed, 3 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/fs/io_uring.c b/fs/io_uring.c
-> > index d542f1cf4428..8a1de5ab9c6d 100644
-> > --- a/fs/io_uring.c
-> > +++ b/fs/io_uring.c
-> > @@ -2815,7 +2815,7 @@ static int io_sqe_buffer_unregister(struct io_ring_ctx *ctx)
-> >  		struct io_mapped_ubuf *imu = &ctx->user_bufs[i];
-> >  
-> >  		for (j = 0; j < imu->nr_bvecs; j++)
-> > -			put_page(imu->bvec[j].bv_page);
-> > +			put_user_page(imu->bvec[j].bv_page);
-> >  
-> >  		if (ctx->account_mem)
-> >  			io_unaccount_mem(ctx->user, imu->nr_bvecs);
-> > @@ -2959,10 +2959,8 @@ static int io_sqe_buffer_register(struct io_ring_ctx *ctx, void __user *arg,
-> >  			 * if we did partial map, or found file backed vmas,
-> >  			 * release any pages we did get
-> >  			 */
-> > -			if (pret > 0) {
-> > -				for (j = 0; j < pret; j++)
-> > -					put_page(pages[j]);
-> > -			}
-> > +			if (pret > 0)
-> > +				put_user_pages(pages, pret);
-> >  			if (ctx->account_mem)
-> >  				io_unaccount_mem(ctx->user, nr_pages);
-> >  			kvfree(imu->bvec);
-> > -- 
-> > 2.22.0
-> > 
+reg:
+  minItems: 1
+  maxItems: 2
+
+
+The schema error messages leave something to be desired. I wish the
+error messages said which schema is throwing the error.
+
+> for the example DT
+>
+> and for the board DT :
+> ../amlogic/meson-gxl-s905x-libretech-cc.dt.yaml: ethernet@c9410000: reg: [[0, 3376480256, 0, 65536, 0, 3364046144, 0, 4]] is too short
+> ../amlogic/meson-gxl-s905x-nexbox-a95x.dt.yaml: soc: ethernet@c9410000:reg:0: [0, 3376480256, 0, 65536, 0, 3364046144, 0, 4] is too long
+>
+> and I don't know how to get rid of it.
+
+The first issue is the same as the above. The 2nd issue is the use of
+<> in dts files becomes stricter with the schema. Each entry in an
+array needs to be bracketed:
+
+reg = <0x0 0xc9410000 0x0 0x10000>,
+          <0x0 0xc8834540 0x0 0x4>;
+
+Rob
