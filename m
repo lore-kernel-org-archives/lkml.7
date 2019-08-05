@@ -2,101 +2,362 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AFC2C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3449AC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCFF0216F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:43:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EGAXu6Ma"
+	by mail.kernel.org (Postfix) with ESMTP id EB3FB2173B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 15:46:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565020000;
+	bh=u7lsS/8/8w7L3VnyMcz6Rwoa3DBa4x5pEdbYelQKDBE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=KTZc2/Z0G/ZYJLzK2GCTo/IiyUETvFyHN3NZ6FDc9nf4CdgAKix/u7F96xLem7Van
+	 ohqWspk9d3YAqi4jpNerptl7NtaaP3uWFg3iAzHCVCvYX23twO2lYfOSZs+mznpGhx
+	 a8T89ZvOab1BtPdYKS/Oh40aC4rSCgssNwK2PUTY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728735AbfHEPnh (ORCPT
+        id S1728868AbfHEPqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 11:43:37 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33518 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726847AbfHEPnh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 11:43:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=QerNwwXIfcVqiUxVIQqRP9I819cRghlSQ0iNJulxaCk=; b=EGAXu6MaYf4Vv4pd0s/b/SV5go
-        rFYmS2peBb1Dus950jsiA9TjNwOJiAiPbPgVTas3HVRBvlgOl0ESqn2KxV6Uc/9INM2JrMzcNJqZl
-        9O/+wHgCgm1NIw9mKJ07jXaadhLaaA8ChicH7Ffo8RvKu63HQ5eORSZjc8sWAqdA+vW89EALgMgXK
-        47mrGqvcJeVBX4WIjwN3PKuVNLhHfWolFnCuUv5ljlUJM6I1wF+0PUJIkflRJCJu+F7E2swvG98Wu
-        Nh8QA+vD4zvoBe4inUBzA2a+cWQfDhmNG698Qn6nwKcGE535N+UW9zlclffBqHUIck7K8UwvILBuS
-        LljtTLIQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1huf90-0000bY-As; Mon, 05 Aug 2019 15:43:30 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6FFDA201F0990; Mon,  5 Aug 2019 17:43:28 +0200 (CEST)
-Date:   Mon, 5 Aug 2019 17:43:28 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     Oleg Nesterov <oleg@redhat.com>, Will Deacon <will@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, bigeasy@linutronix.de,
-        juri.lelli@redhat.com, williams@redhat.com, bristot@redhat.com,
-        longman@redhat.com, dave@stgolabs.net, jack@suse.com
-Subject: Re: [PATCH] locking/percpu_rwsem: Rewrite to not use rwsem
-Message-ID: <20190805154328.GJ2332@hirez.programming.kicks-ass.net>
-References: <20190805140241.GI2332@hirez.programming.kicks-ass.net>
- <20190805144318.GA972@tardis>
- <20190805145813.GB972@tardis>
+        Mon, 5 Aug 2019 11:46:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46612 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728111AbfHEPqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 11:46:38 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B50B82086D;
+        Mon,  5 Aug 2019 15:46:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565019996;
+        bh=u7lsS/8/8w7L3VnyMcz6Rwoa3DBa4x5pEdbYelQKDBE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=CUn5iOaaG4uDCeZFaIGQUAsF6DLTi3NveQDzZkwqu6o04ewg7yHfPEAsbTiBTdBTz
+         aXaf/iOi93HT8BGqA3lmauAbytuxXWNutOcbv12hvS1tzUFyFNaZ7JSANJUdUlLyys
+         t5Olj5Nh453HmkD1kqjQQ+hTNhhyyamwEZVAFvbw=
+Date:   Mon, 5 Aug 2019 16:46:30 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Beniamin Bia <beniamin.bia@analog.com>
+Cc:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
+        <gregkh@linuxfoundation.org>, <linux-iio@vger.kernel.org>,
+        <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
+        <mark.rutland@arm.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <paulmck@linux.ibm.com>,
+        <mchehab+samsung@kernel.org>, <linus.walleij@linaro.org>,
+        <nicolas.ferre@microchip.com>, <biabeniamin@outlook.com>,
+        Stefan Popa <stefan.popa@analog.com>
+Subject: Re: [PATCH 1/4] iio: adc: ad7606: Add support for AD7606B ADC
+Message-ID: <20190805164630.357039e2@archlinux>
+In-Reply-To: <20190802100304.15899-1-beniamin.bia@analog.com>
+References: <20190802100304.15899-1-beniamin.bia@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190805145813.GB972@tardis>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 10:58:13PM +0800, Boqun Feng wrote:
-> On Mon, Aug 05, 2019 at 10:43:18PM +0800, Boqun Feng wrote:
-> > On Mon, Aug 05, 2019 at 04:02:41PM +0200, Peter Zijlstra wrote:
-> > [...]
-> > > =20
-> > >  static inline void percpu_up_read(struct percpu_rw_semaphore *sem)
-> > >  {
-> > > +	rwsem_release(&sem->dep_map, 1, _RET_IP_);
-> > > +
-> > >  	preempt_disable();
-> > >  	/*
-> > >  	 * Same as in percpu_down_read().
-> > >  	 */
-> > > -	if (likely(rcu_sync_is_idle(&sem->rss)))
-> > > +	if (likely(rcu_sync_is_idle(&sem->rss))) {
-> > >  		__this_cpu_dec(*sem->read_count);
-> > > -	else
-> > > -		__percpu_up_read(sem); /* Unconditional memory barrier */
-> > > -	preempt_enable();
-> > > +		preempt_enable();
-> > > +		return;
-> > > +	}
-> > > =20
-> > > -	rwsem_release(&sem->rw_sem.dep_map, 1, _RET_IP_);
-> >=20
-> > Missing a preempt_enable() here?
-> >=20
->=20
-> Ah.. you modified the semantics of __percpu_up_read() to imply a
-> preempt_enable(), sorry for the noise...
+On Fri, 2 Aug 2019 13:03:01 +0300
+Beniamin Bia <beniamin.bia@analog.com> wrote:
 
-Yes indeed; I suppose I should've noted that in the Changlog. The reason
-is that waitqueues use spin_lock() which change into a sleepable lock on
-RT and thus cannot be used with preeption disabled. We also cannot
-(easily) switch to swait because we use both exclusive and !exclusive
-waits.
+> From: Stefan Popa <stefan.popa@analog.com>
+>=20
+> The AD7606B is a 16-bit ADC that supports simultaneous sampling of 8
+> channels. It is pin compatible to AD7606, but adds extra modes by
+> writing to the register map.
+>=20
+> The AD7606B can be configured to work in software mode by setting all
+> oversampling pins to high. This mode is selected by default.
+> The oversampling ratio is configured from the OS_MODE register (address
+> 0x08) with the addition of OS=3D128 and OS=3D256 that were not available =
+in
+> hardware mode.
+>=20
+> The device is configured to output data on a single spi channel, but this
+> configuration must be done right after restart. That is why the delay was
+> removed for devices which doesn't require it.
+>=20
+> Moreover, in software mode, the range gpio has no longer its function.
+> Instead, the scale can be configured individually for each channel from
+> the RANGE_CH registers (address 0x03 to 0x06). Besides the already
+> supported =C2=B110 V and =C2=B15 V ranges, software mode can also accommo=
+date the
+> =C2=B12.5 V range.
+>=20
+> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+> Co-developed-by: Beniamin Bia <beniamin.bia@analog.com>
+> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+
+This looks fine to me. I'll pick it up (if no other comments)
+when you've tidied up the issues Rob raises for the DT bindings.
+
+Thanks,
+
+Jonathan
+
+> ---
+>  drivers/iio/adc/ad7606.c     |  13 ++++-
+>  drivers/iio/adc/ad7606.h     |   4 ++
+>  drivers/iio/adc/ad7606_spi.c | 107 +++++++++++++++++++++++++++++++++++
+>  3 files changed, 122 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
+> index ed2d08437e5d..f5ba94c03a8d 100644
+> --- a/drivers/iio/adc/ad7606.c
+> +++ b/drivers/iio/adc/ad7606.c
+> @@ -410,12 +410,19 @@ static const struct ad7606_chip_info ad7606_chip_in=
+fo_tbl[] =3D {
+>  		.oversampling_avail =3D ad7606_oversampling_avail,
+>  		.oversampling_num =3D ARRAY_SIZE(ad7606_oversampling_avail),
+>  	},
+> +	[ID_AD7606B] =3D {
+> +		.channels =3D ad7606_channels,
+> +		.num_channels =3D 9,
+> +		.oversampling_avail =3D ad7606_oversampling_avail,
+> +		.oversampling_num =3D ARRAY_SIZE(ad7606_oversampling_avail),
+> +	},
+>  	[ID_AD7616] =3D {
+>  		.channels =3D ad7616_channels,
+>  		.num_channels =3D 17,
+>  		.oversampling_avail =3D ad7616_oversampling_avail,
+>  		.oversampling_num =3D ARRAY_SIZE(ad7616_oversampling_avail),
+>  		.os_req_reset =3D true,
+> +		.init_delay_ms =3D 15,
+>  	},
+>  };
+> =20
+> @@ -631,8 +638,10 @@ int ad7606_probe(struct device *dev, int irq, void _=
+_iomem *base_address,
+>  		dev_warn(st->dev, "failed to RESET: no RESET GPIO specified\n");
+> =20
+>  	/* AD7616 requires al least 15ms to reconfigure after a reset */
+> -	if (msleep_interruptible(15))
+> -		return -ERESTARTSYS;
+> +	if (st->chip_info->init_delay_ms) {
+> +		if (msleep_interruptible(st->chip_info->init_delay_ms))
+> +			return -ERESTARTSYS;
+> +	}
+> =20
+>  	st->write_scale =3D ad7606_write_scale_hw;
+>  	st->write_os =3D ad7606_write_os_hw;
+> diff --git a/drivers/iio/adc/ad7606.h b/drivers/iio/adc/ad7606.h
+> index eeaaa8b905db..9350ef1f63b5 100644
+> --- a/drivers/iio/adc/ad7606.h
+> +++ b/drivers/iio/adc/ad7606.h
+> @@ -46,6 +46,8 @@
+>   *			oversampling ratios.
+>   * @oversampling_num	number of elements stored in oversampling_avail arr=
+ay
+>   * @os_req_reset	some devices require a reset to update oversampling
+> + * @init_delay_ms	required delay in miliseconds for initialization
+> + *			after a restart
+>   */
+>  struct ad7606_chip_info {
+>  	const struct iio_chan_spec	*channels;
+> @@ -53,6 +55,7 @@ struct ad7606_chip_info {
+>  	const unsigned int		*oversampling_avail;
+>  	unsigned int			oversampling_num;
+>  	bool				os_req_reset;
+> +	unsigned long			init_delay_ms;
+>  };
+> =20
+>  /**
+> @@ -155,6 +158,7 @@ enum ad7606_supported_device_ids {
+>  	ID_AD7606_8,
+>  	ID_AD7606_6,
+>  	ID_AD7606_4,
+> +	ID_AD7606B,
+>  	ID_AD7616,
+>  };
+> =20
+> diff --git a/drivers/iio/adc/ad7606_spi.c b/drivers/iio/adc/ad7606_spi.c
+> index 98ed52b74507..070ee7e31e2c 100644
+> --- a/drivers/iio/adc/ad7606_spi.c
+> +++ b/drivers/iio/adc/ad7606_spi.c
+> @@ -31,6 +31,20 @@
+>  /* The range of the channel is stored on 2 bits*/
+>  #define AD7616_RANGE_CH_MSK(ch)		(0b11 << (((ch) & 0b11) * 2))
+>  #define AD7616_RANGE_CH_MODE(ch, mode)	((mode) << ((((ch) & 0b11)) * 2))
+> +
+> +#define AD7606_CONFIGURATION_REGISTER	0x02
+> +#define AD7606_SINGLE_DOUT		0x0
+> +
+> +/*
+> + * Range for AD7606B channels are stored in registers starting with addr=
+ess 0x3.
+> + * Each register stores range for 2 channels(4 bits per channel).
+> + */
+> +#define AD7606_RANGE_CH_MSK(ch)		(GENMASK(3, 0) << (4 * ((ch) & 0x1)))
+> +#define AD7606_RANGE_CH_MODE(ch, mode)	\
+> +	((GENMASK(3, 0) & mode) << (4 * ((ch) & 0x1)))
+> +#define AD7606_RANGE_CH_ADDR(ch)	(0x03 + ((ch) >> 1))
+> +#define AD7606_OS_MODE			0x08
+> +
+>  static const struct iio_chan_spec ad7616_sw_channels[] =3D {
+>  	IIO_CHAN_SOFT_TIMESTAMP(16),
+>  	AD7616_CHANNEL(0),
+> @@ -51,6 +65,22 @@ static const struct iio_chan_spec ad7616_sw_channels[]=
+ =3D {
+>  	AD7616_CHANNEL(15),
+>  };
+> =20
+> +static const struct iio_chan_spec ad7606B_sw_channels[] =3D {
+> +	IIO_CHAN_SOFT_TIMESTAMP(8),
+> +	AD7616_CHANNEL(0),
+> +	AD7616_CHANNEL(1),
+> +	AD7616_CHANNEL(2),
+> +	AD7616_CHANNEL(3),
+> +	AD7616_CHANNEL(4),
+> +	AD7616_CHANNEL(5),
+> +	AD7616_CHANNEL(6),
+> +	AD7616_CHANNEL(7),
+> +};
+> +
+> +static const unsigned int ad7606B_oversampling_avail[9] =3D {
+> +	1, 2, 4, 8, 16, 32, 64, 128, 256
+> +};
+> +
+>  static u16 ad7616_spi_rd_wr_cmd(int addr, char isWriteOp)
+>  {
+>  	/*
+> @@ -60,6 +90,16 @@ static u16 ad7616_spi_rd_wr_cmd(int addr, char isWrite=
+Op)
+>  	return ((addr & 0x7F) << 1) | ((isWriteOp & 0x1) << 7);
+>  }
+> =20
+> +static u16 ad7606B_spi_rd_wr_cmd(int addr, char isWriteOp)
+> +{
+> +	/*
+> +	 * The address of register consists of one bit which
+> +	 * specifies a read command placed bit 6, followed by
+> +	 * 6 bits of address.
+> +	 */
+> +	return (addr & 0x3F) | (((~isWriteOp) & 0x1) << 6);
+> +}
+> +
+>  static int ad7606_spi_read_block(struct device *dev,
+>  				 int count, void *buf)
+>  {
+> @@ -169,6 +209,23 @@ static int ad7616_write_os_sw(struct iio_dev *indio_=
+dev, int val)
+>  				     AD7616_OS_MASK, val << 2);
+>  }
+> =20
+> +static int ad7606_write_scale_sw(struct iio_dev *indio_dev, int ch, int =
+val)
+> +{
+> +	struct ad7606_state *st =3D iio_priv(indio_dev);
+> +
+> +	return ad7606_spi_write_mask(st,
+> +				     AD7606_RANGE_CH_ADDR(ch),
+> +				     AD7606_RANGE_CH_MSK(ch),
+> +				     AD7606_RANGE_CH_MODE(ch, val));
+> +}
+> +
+> +static int ad7606_write_os_sw(struct iio_dev *indio_dev, int val)
+> +{
+> +	struct ad7606_state *st =3D iio_priv(indio_dev);
+> +
+> +	return ad7606_spi_reg_write(st, AD7606_OS_MODE, val);
+> +}
+> +
+>  static int ad7616_sw_mode_config(struct iio_dev *indio_dev)
+>  {
+>  	struct ad7606_state *st =3D iio_priv(indio_dev);
+> @@ -189,6 +246,42 @@ static int ad7616_sw_mode_config(struct iio_dev *ind=
+io_dev)
+>  			      AD7616_BURST_MODE | AD7616_SEQEN_MODE);
+>  }
+> =20
+> +static int ad7606B_sw_mode_config(struct iio_dev *indio_dev)
+> +{
+> +	struct ad7606_state *st =3D iio_priv(indio_dev);
+> +	unsigned long os[3] =3D {1};
+> +
+> +	/*
+> +	 * Software mode is enabled when all three oversampling
+> +	 * pins are set to high. If oversampling gpios are defined
+> +	 * in the device tree, then they need to be set to high,
+> +	 * otherwise, they must be hardwired to VDD
+> +	 */
+> +	if (st->gpio_os) {
+> +		gpiod_set_array_value(ARRAY_SIZE(os),
+> +				      st->gpio_os->desc, st->gpio_os->info, os);
+> +	}
+> +	/* OS of 128 and 256 are available only in software mode */
+> +	st->oversampling_avail =3D ad7606B_oversampling_avail;
+> +	st->num_os_ratios =3D ARRAY_SIZE(ad7606B_oversampling_avail);
+> +
+> +	st->write_scale =3D ad7606_write_scale_sw;
+> +	st->write_os =3D &ad7606_write_os_sw;
+> +
+> +	/* Configure device spi to output on a single channel */
+> +	st->bops->reg_write(st,
+> +			    AD7606_CONFIGURATION_REGISTER,
+> +			    AD7606_SINGLE_DOUT);
+> +
+> +	/*
+> +	 * Scale can be configured individually for each channel
+> +	 * in software mode.
+> +	 */
+> +	indio_dev->channels =3D ad7606B_sw_channels;
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct ad7606_bus_ops ad7606_spi_bops =3D {
+>  	.read_block =3D ad7606_spi_read_block,
+>  };
+> @@ -202,6 +295,15 @@ static const struct ad7606_bus_ops ad7616_spi_bops =
+=3D {
+>  	.sw_mode_config =3D ad7616_sw_mode_config,
+>  };
+> =20
+> +static const struct ad7606_bus_ops ad7606B_spi_bops =3D {
+> +	.read_block =3D ad7606_spi_read_block,
+> +	.reg_read =3D ad7606_spi_reg_read,
+> +	.reg_write =3D ad7606_spi_reg_write,
+> +	.write_mask =3D ad7606_spi_write_mask,
+> +	.rd_wr_cmd =3D ad7606B_spi_rd_wr_cmd,
+> +	.sw_mode_config =3D ad7606B_sw_mode_config,
+> +};
+> +
+>  static int ad7606_spi_probe(struct spi_device *spi)
+>  {
+>  	const struct spi_device_id *id =3D spi_get_device_id(spi);
+> @@ -211,6 +313,9 @@ static int ad7606_spi_probe(struct spi_device *spi)
+>  	case ID_AD7616:
+>  		bops =3D &ad7616_spi_bops;
+>  		break;
+> +	case ID_AD7606B:
+> +		bops =3D &ad7606B_spi_bops;
+> +		break;
+>  	default:
+>  		bops =3D &ad7606_spi_bops;
+>  		break;
+> @@ -226,6 +331,7 @@ static const struct spi_device_id ad7606_id_table[] =
+=3D {
+>  	{ "ad7606-4", ID_AD7606_4 },
+>  	{ "ad7606-6", ID_AD7606_6 },
+>  	{ "ad7606-8", ID_AD7606_8 },
+> +	{ "ad7606b",  ID_AD7606B },
+>  	{ "ad7616",   ID_AD7616 },
+>  	{}
+>  };
+> @@ -236,6 +342,7 @@ static const struct of_device_id ad7606_of_match[] =
+=3D {
+>  	{ .compatible =3D "adi,ad7606-4" },
+>  	{ .compatible =3D "adi,ad7606-6" },
+>  	{ .compatible =3D "adi,ad7606-8" },
+> +	{ .compatible =3D "adi,ad7606b" },
+>  	{ .compatible =3D "adi,ad7616" },
+>  	{ },
+>  };
+
