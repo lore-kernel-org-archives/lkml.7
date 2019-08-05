@@ -2,51 +2,53 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46090C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 394D0C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16B2D2067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:10:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B1802173C
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:10:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010649;
-	bh=Y9/KfZJ7BzQ/FNh0VbSKOYU/vLdjc7rLMhft54SUgeM=;
+	s=default; t=1565010654;
+	bh=2Sa/gQR0nElZc1lOcm+cOW+SlHHwNDe/kZ8wHR4OzJ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EJRx3RzJbkcffvHZSEmlUDoY8Uwnms98/Re1D1QbMVXlpdkeDsl4SvurRY91QqYE7
-	 +bAFOn7jwictwr373dzUkbVgzWNzd9IJjP0cRGCkzC6ImV+uACcJrIO/cqPxJOj0nv
-	 H8gZGV8ztcEGDG8XMNqsLHKx3y/Rk6oE9S/5I5sg=
+	b=MiSkUNMTWZpZTUe1RcUPusD+EsUhDaZ43aiyr0L0T5vQ78bMU0ufPX/yyZI7a+9r9
+	 tl1WP13UHOk18mvc5yHJOTy169DAjsck47Wdl5KseGDtMZw0i5Qmp0xmUWUn+5J/UA
+	 dWMwPtOhB55mPYQew1PCKNlqmhNeK3Q+SAyLh7Z0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730403AbfHENKr (ORCPT
+        id S1730428AbfHENKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:10:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49808 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 09:10:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730384AbfHENKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:10:45 -0400
+        id S1730413AbfHENKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:10:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2369C2067D;
-        Mon,  5 Aug 2019 13:10:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DC152067D;
+        Mon,  5 Aug 2019 13:10:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010644;
-        bh=Y9/KfZJ7BzQ/FNh0VbSKOYU/vLdjc7rLMhft54SUgeM=;
+        s=default; t=1565010649;
+        bh=2Sa/gQR0nElZc1lOcm+cOW+SlHHwNDe/kZ8wHR4OzJ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lZXVP2X41znGQg4rl9shZavVUSXPF061A3cxDM1VpkTKis95s4pF3Af38R4xkKvMz
-         KVHuJ/b5aeRvAEUly/bpByW4MAKsI1l6y9pQAxX1vsGTqUEN0J/qfllsMKsWxFU9lk
-         KTllO7TSMamFncVzR/qB9/iUybJhnDx92/Soiy54=
+        b=Mt0wPvuVHHobRkEUgwAd7Mj9x4+skP3PBLfLoqbVSnbGm8Kob+DHOPVf+SaDa/Z9J
+         /ltDXtuiW7iL1mKBZx4ZcMNL4Tham7N1QtB+27vP2vJvieGVgWrpkIHQsX/CvgibVn
+         H41JN6H53GncFkGSaGAunm4tTN7KCMrGyj9gJugc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Wu <michael.wu@vatics.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 4.19 48/74] gpiolib: fix incorrect IRQ requesting of an active-low lineevent
-Date:   Mon,  5 Aug 2019 15:03:01 +0200
-Message-Id: <20190805124939.780763795@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 20/74] ACPI: blacklist: fix clang warning for unused DMI table
+Date:   Mon,  5 Aug 2019 15:02:33 +0200
+Message-Id: <20190805124937.413183105@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190805124935.819068648@linuxfoundation.org>
 References: <20190805124935.819068648@linuxfoundation.org>
@@ -59,70 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Wu <michael.wu@vatics.com>
+[ Upstream commit b80d6a42bdc97bdb6139107d6034222e9843c6e2 ]
 
-commit 223ecaf140b1dd1c1d2a1a1d96281efc5c906984 upstream.
+When CONFIG_DMI is disabled, we only have a tentative declaration,
+which causes a warning from clang:
 
-When a pin is active-low, logical trigger edge should be inverted to match
-the same interrupt opportunity.
+drivers/acpi/blacklist.c:20:35: error: tentative array definition assumed to have one element [-Werror]
+static const struct dmi_system_id acpi_rev_dmi_table[] __initconst;
 
-For example, a button pushed triggers falling edge in ACTIVE_HIGH case; in
-ACTIVE_LOW case, the button pushed triggers rising edge. For user space the
-IRQ requesting doesn't need to do any modification except to configuring
-GPIOHANDLE_REQUEST_ACTIVE_LOW.
+As the variable is not actually used here, hide it entirely
+in an #ifdef to shut up the warning.
 
-For example, we want to catch the event when the button is pushed. The
-button on the original board drives level to be low when it is pushed, and
-drives level to be high when it is released.
-
-In user space we can do:
-
-	req.handleflags = GPIOHANDLE_REQUEST_INPUT;
-	req.eventflags = GPIOEVENT_REQUEST_FALLING_EDGE;
-
-	while (1) {
-		read(fd, &dat, sizeof(dat));
-		if (dat.id == GPIOEVENT_EVENT_FALLING_EDGE)
-			printf("button pushed\n");
-	}
-
-Run the same logic on another board which the polarity of the button is
-inverted; it drives level to be high when pushed, and level to be low when
-released. For this inversion we add flag GPIOHANDLE_REQUEST_ACTIVE_LOW:
-
-	req.handleflags = GPIOHANDLE_REQUEST_INPUT |
-		GPIOHANDLE_REQUEST_ACTIVE_LOW;
-	req.eventflags = GPIOEVENT_REQUEST_FALLING_EDGE;
-
-At the result, there are no any events caught when the button is pushed.
-By the way, button releasing will emit a "falling" event. The timing of
-"falling" catching is not expected.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Michael Wu <michael.wu@vatics.com>
-Tested-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpiolib.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/acpi/blacklist.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -946,9 +946,11 @@ static int lineevent_create(struct gpio_
+diff --git a/drivers/acpi/blacklist.c b/drivers/acpi/blacklist.c
+index 995c4d8922b12..761f0c19a4512 100644
+--- a/drivers/acpi/blacklist.c
++++ b/drivers/acpi/blacklist.c
+@@ -30,7 +30,9 @@
+ 
+ #include "internal.h"
+ 
++#ifdef CONFIG_DMI
+ static const struct dmi_system_id acpi_rev_dmi_table[] __initconst;
++#endif
+ 
+ /*
+  * POLICY: If *anything* doesn't work, put it on the blacklist.
+@@ -74,7 +76,9 @@ int __init acpi_blacklisted(void)
  	}
  
- 	if (eflags & GPIOEVENT_REQUEST_RISING_EDGE)
--		irqflags |= IRQF_TRIGGER_RISING;
-+		irqflags |= test_bit(FLAG_ACTIVE_LOW, &desc->flags) ?
-+			IRQF_TRIGGER_FALLING : IRQF_TRIGGER_RISING;
- 	if (eflags & GPIOEVENT_REQUEST_FALLING_EDGE)
--		irqflags |= IRQF_TRIGGER_FALLING;
-+		irqflags |= test_bit(FLAG_ACTIVE_LOW, &desc->flags) ?
-+			IRQF_TRIGGER_RISING : IRQF_TRIGGER_FALLING;
- 	irqflags |= IRQF_ONESHOT;
- 	irqflags |= IRQF_SHARED;
+ 	(void)early_acpi_osi_init();
++#ifdef CONFIG_DMI
+ 	dmi_check_system(acpi_rev_dmi_table);
++#endif
  
+ 	return blacklisted;
+ }
+-- 
+2.20.1
+
 
 
