@@ -2,154 +2,183 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BFFC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 728FDC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF28A214C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:55:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565013348;
-	bh=mzybu+bDFEKhAYbK0L8pnqrYvuSkK6tBQ5/YJMZrmq4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=qFDvN/ue/pzotgHBIcaE+lPAgNNSlkkD5ePFSQ6XdI6+NFBxUSlL5iB1N1KQVf3NW
-	 9hYWpYF4jWbEAICSh6kJeZvX6wfe8Alddbpyf7K0Fa+Q9uNnfb0IXaG/zShfyiHOy/
-	 //xvarhWHc6fCzJSlc+GLBs4B97JuXB5TpSzP8Xo=
+	by mail.kernel.org (Postfix) with ESMTP id 3B0CF214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:55:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="zx2g0Zkl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729967AbfHENzr (ORCPT
+        id S1730052AbfHENzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:55:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45346 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729720AbfHENzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:55:50 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:20290 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729811AbfHENzn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 5 Aug 2019 09:55:43 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F3AA2087B;
-        Mon,  5 Aug 2019 13:55:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565013343;
-        bh=mzybu+bDFEKhAYbK0L8pnqrYvuSkK6tBQ5/YJMZrmq4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=rtobr340u6jDi5lqe4nMpfdooJa0O1JO+brXW4KXyunFEeS5DV9hmGpsONTDvHyzw
-         MmyJ5zQ4E0Y+MX3DTOZRDa9VHgH7hEwvs9fl7uDPXtAwWRrrBpubFiqKJ/jmt7dSXW
-         2ehblUjsBgtg2uKu5YDU0VAhNouL04mbc7wrRM+k=
-Date:   Mon, 5 Aug 2019 14:55:38 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Kevin Tsai <ktsai@capellamicro.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Daniel Baluta <daniel.baluta@gmail.com>
-Subject: Re: [PATCH v2] iio: light: cm3323: Use device-managed APIs
-Message-ID: <20190805145538.4a3561c0@archlinux>
-In-Reply-To: <20190728143630.7620-1-hslester96@gmail.com>
-References: <20190728143630.7620-1-hslester96@gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x75Dr6eF015931;
+        Mon, 5 Aug 2019 09:55:36 -0400
+Received: from nam04-bn3-obe.outbound.protection.outlook.com (mail-bn3nam04lp2051.outbound.protection.outlook.com [104.47.46.51])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2u6kb20e1r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 05 Aug 2019 09:55:36 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CKjcicxI2CK0H96FktbF9KtKJy9Cs9aKkJWtfzWni9E3HD8Sphvh6ec5ekr4Wd98aZIWYNpX41N9pqEJDH58uJFvHVX0CPYTyg2bQvcFZy9QQLr1NLeH9ykyTovi2fAQUvQ//cmFE77waVgejwdbl6Sem/fVaLBWq95oUYlb8dix+L4A44TmBSI/DSDuZyT3bICmZvMFqmqZGnwK5DJQbMVZN8Y16HcgrgimctZaLGREU8Owxf7CsWyOhUggyxYC/PxUPiF68AaWMRqra8Ad58e0J3fx8LPX1rNln0BuSPLGuBsVCGW1GFVnPa36cwbyr8Z1LxspE8tes33BUlvb1A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XZfnRuVYtokZjwc5ec/5sEejvtx4wWrHXKXoHjeWl4M=;
+ b=MWFqSDa6PlQIi+8R6yew0JVjjq/z2U055HpqFjY/7zfYYowXkCgQL8enG33J0CPgnfMfyv4/yQiwtIFgirVBVnxZ2cF48JGs+JwPF4f/P6YsDGPhNhTpwU0n8BlA8k2waz/dfsuS5p4WbQe9B6SN/xupXnBr2Yl8Pt6HgESTionQyPkp54FzcZcB2msu6jX/cwBtTZqq1IjC5WImL5f/arIo6bZLmMdF0Fs3EEc2m7gc4awAQR/SJHWzNScUKAmUzTw3LButyam8iJni4ZQjB1Y5M8pGZ4X8OH8VnkmDMtRt9WQTG/xMPvqrjDYhfo/UqnOKYlJoa79KjF3KkqzaoQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass (sender ip is
+ 137.71.25.55) smtp.rcpttodomain=vger.kernel.org
+ smtp.mailfrom=analog.com;dmarc=bestguesspass action=none
+ header.from=analog.com;dkim=none (message not signed);arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XZfnRuVYtokZjwc5ec/5sEejvtx4wWrHXKXoHjeWl4M=;
+ b=zx2g0Zkl9D9+44BIH6QkCCOMBdUoQY9RixFtUuaWs115T830wjWiz+e0cakP7YtRj0b2gowIRMBh22Bgj8BqpdpzPj/vdF44OztKzJEJth4wTkro1F5mW6BURFTGkLjryNKpJs9lORdgO6mmlHftNm/hlPSlWWSNh7z/sTxhJRY=
+Received: from BL0PR03CA0025.namprd03.prod.outlook.com (2603:10b6:208:2d::38)
+ by BL0PR03MB4260.namprd03.prod.outlook.com (2603:10b6:208:6b::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2136.17; Mon, 5 Aug
+ 2019 13:55:35 +0000
+Received: from BL2NAM02FT040.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::208) by BL0PR03CA0025.outlook.office365.com
+ (2603:10b6:208:2d::38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2136.13 via Frontend
+ Transport; Mon, 5 Aug 2019 13:55:35 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
+Received: from nwd2mta1.analog.com (137.71.25.55) by
+ BL2NAM02FT040.mail.protection.outlook.com (10.152.77.193) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2136.14
+ via Frontend Transport; Mon, 5 Aug 2019 13:55:35 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x75DtWMW016249
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Mon, 5 Aug 2019 06:55:32 -0700
+Received: from saturn.ad.analog.com (10.48.65.109) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Mon, 5 Aug 2019 09:55:34 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <davem@davemloft.net>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <f.fainelli@gmail.com>,
+        <hkallweit1@gmail.com>, <andrew@lunn.ch>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH 14/16] net: phy: adin: make sure down-speed auto-neg is enabled
+Date:   Mon, 5 Aug 2019 19:54:51 +0300
+Message-ID: <20190805165453.3989-15-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190805165453.3989-1-alexandru.ardelean@analog.com>
+References: <20190805165453.3989-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(136003)(346002)(376002)(396003)(2980300002)(189003)(199004)(7636002)(70586007)(305945005)(70206006)(50466002)(336012)(446003)(246002)(426003)(11346002)(8676002)(126002)(36756003)(476003)(2616005)(2870700001)(5660300002)(44832011)(1076003)(47776003)(186003)(26005)(48376002)(486006)(2906002)(8936002)(50226002)(86362001)(316002)(478600001)(2201001)(6666004)(356004)(51416003)(7696005)(76176011)(4326008)(106002)(107886003)(110136005)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR03MB4260;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 765ccce4-5976-4598-9656-08d719ac96cd
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:BL0PR03MB4260;
+X-MS-TrafficTypeDiagnostic: BL0PR03MB4260:
+X-Microsoft-Antispam-PRVS: <BL0PR03MB4260C657AED80062545A860DF9DA0@BL0PR03MB4260.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
+X-Forefront-PRVS: 01208B1E18
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: mpw++cu8PMlM91yMCgiBAPnT+Fu/j5R3RjJDYOPxjgoQPjgn0JOMfL+YGTVHn9AW3dqNxWWe4x/drzylDBsJCCc59zRY7UxIOhrWZjomzN3wg+sA1cgnceBe4tEgTToBlGcji1uSKTDdZfVauP9zZoVLXfTTHo7Eq548IrncjVbFKIKpl8wQpX4z8AhqBqj2jQd+vbiI4ZQ2J7eeOygnrFMCDAF/iU5Bx3f58FhTHEn8ycFksbPQLt2xLjauWitYTc+j622C6Frs72UseX3xA7RlAzDbSpKBDPn1YFgVi0meMYOpqZhhFZPOrmJ0puMGjiacIIBTCgagleNUQKaMxgY0Xzn/OYZuyOO8DiHf0C5nHRrMBSzHHuMREs5v90wZu+PBqokRdNb/7FXWlkufbGA9uTnY4G08199yIlLLc2E=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Aug 2019 13:55:35.0368
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 765ccce4-5976-4598-9656-08d719ac96cd
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR03MB4260
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-05_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908050154
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Down-speed auto-negotiation may not always be enabled, in which case the
+PHY won't down-shift to 100 or 10 during auto-negotiation.
 
-+CC Daniel as this is one of his I think.
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/net/phy/adin.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-On Sun, 28 Jul 2019 22:36:30 +0800
-Chuhong Yuan <hslester96@gmail.com> wrote:
-
-> Use device-managed APIs to simplify the code.
-> The remove functions are redundant now and can
-> be deleted.
-> 
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to play with it.
-
-Thanks,
-
-Jonathan
-
-> ---
-> Changes in v2:
->   - Split v1 into two patches.
->   - Drop the failed to register message and just
->     return devm_iio_register.
-> 
->  drivers/iio/light/cm3323.c | 33 +++++++++------------------------
->  1 file changed, 9 insertions(+), 24 deletions(-)
-> 
-> diff --git a/drivers/iio/light/cm3323.c b/drivers/iio/light/cm3323.c
-> index 50f3438c2b49..0443861ba1ec 100644
-> --- a/drivers/iio/light/cm3323.c
-> +++ b/drivers/iio/light/cm3323.c
-> @@ -101,15 +101,16 @@ static int cm3323_init(struct iio_dev *indio_dev)
->  	return 0;
->  }
->  
-> -static void cm3323_disable(struct iio_dev *indio_dev)
-> +static void cm3323_disable(void *data)
->  {
->  	int ret;
-> -	struct cm3323_data *data = iio_priv(indio_dev);
-> +	struct iio_dev *indio_dev = data;
-> +	struct cm3323_data *cm_data = iio_priv(indio_dev);
->  
-> -	ret = i2c_smbus_write_word_data(data->client, CM3323_CMD_CONF,
-> +	ret = i2c_smbus_write_word_data(cm_data->client, CM3323_CMD_CONF,
->  					CM3323_CONF_SD_BIT);
->  	if (ret < 0)
-> -		dev_err(&data->client->dev, "Error writing reg_conf\n");
-> +		dev_err(&cm_data->client->dev, "Error writing reg_conf\n");
->  }
->  
->  static int cm3323_set_it_bits(struct cm3323_data *data, int val, int val2)
-> @@ -243,26 +244,11 @@ static int cm3323_probe(struct i2c_client *client,
->  		return ret;
->  	}
->  
-> -	ret = iio_device_register(indio_dev);
-> -	if (ret < 0) {
-> -		dev_err(&client->dev, "failed to register iio dev\n");
-> -		goto err_init;
-> -	}
-> -
-> -	return 0;
-> -err_init:
-> -	cm3323_disable(indio_dev);
-> -	return ret;
-> -}
-> -
-> -static int cm3323_remove(struct i2c_client *client)
-> -{
-> -	struct iio_dev *indio_dev = i2c_get_clientdata(client);
-> -
-> -	iio_device_unregister(indio_dev);
-> -	cm3323_disable(indio_dev);
-> +	ret = devm_add_action_or_reset(&client->dev, cm3323_disable, indio_dev);
-> +	if (ret < 0)
-> +		return ret;
->  
-> -	return 0;
-> +	return devm_iio_device_register(&client->dev, indio_dev);
->  }
->  
->  static const struct i2c_device_id cm3323_id[] = {
-> @@ -276,7 +262,6 @@ static struct i2c_driver cm3323_driver = {
->  		.name = CM3323_DRV_NAME,
->  	},
->  	.probe		= cm3323_probe,
-> -	.remove		= cm3323_remove,
->  	.id_table	= cm3323_id,
->  };
->  
+diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
+index 86848444bd98..a1f3456a8504 100644
+--- a/drivers/net/phy/adin.c
++++ b/drivers/net/phy/adin.c
+@@ -32,6 +32,13 @@
+ #define   ADIN1300_NRG_PD_TX_EN			BIT(2)
+ #define   ADIN1300_NRG_PD_STATUS		BIT(1)
+ 
++#define ADIN1300_PHY_CTRL2			0x0016
++#define   ADIN1300_DOWNSPEED_AN_100_EN		BIT(11)
++#define   ADIN1300_DOWNSPEED_AN_10_EN		BIT(10)
++#define   ADIN1300_GROUP_MDIO_EN		BIT(6)
++#define   ADIN1300_DOWNSPEEDS_EN	\
++	(ADIN1300_DOWNSPEED_AN_100_EN | ADIN1300_DOWNSPEED_AN_10_EN)
++
+ #define ADIN1300_INT_MASK_REG			0x0018
+ #define   ADIN1300_INT_MDIO_SYNC_EN		BIT(9)
+ #define   ADIN1300_INT_ANEG_STAT_CHNG_EN	BIT(8)
+@@ -425,6 +432,22 @@ static int adin_config_mdix(struct phy_device *phydev)
+ 	return phy_write(phydev, ADIN1300_PHY_CTRL1, reg);
+ }
+ 
++static int adin_config_downspeeds(struct phy_device *phydev)
++{
++	int reg;
++
++	reg = phy_read(phydev, ADIN1300_PHY_CTRL2);
++	if (reg < 0)
++		return reg;
++
++	if ((reg & ADIN1300_DOWNSPEEDS_EN) == ADIN1300_DOWNSPEEDS_EN)
++		return 0;
++
++	reg |= ADIN1300_DOWNSPEEDS_EN;
++
++	return phy_write(phydev, ADIN1300_PHY_CTRL2, reg);
++}
++
+ static int adin_config_aneg(struct phy_device *phydev)
+ {
+ 	int ret;
+@@ -433,6 +456,10 @@ static int adin_config_aneg(struct phy_device *phydev)
+ 	if (ret)
+ 		return ret;
+ 
++	ret = adin_config_downspeeds(phydev);
++	if (ret < 0)
++		return ret;
++
+ 	return genphy_config_aneg(phydev);
+ }
+ 
+-- 
+2.20.1
 
