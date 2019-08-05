@@ -2,82 +2,66 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11977C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D68C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDF2020B1F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:58:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="4NJXPaas"
+	by mail.kernel.org (Postfix) with ESMTP id 1987B214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:59:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729301AbfHEN6l (ORCPT
+        id S1729171AbfHEN7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:58:41 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:34128 "EHLO vps0.lunn.ch"
+        Mon, 5 Aug 2019 09:59:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728760AbfHEN6l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:58:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=WYw8/CsyIIlaQwFPL6bzkXMXLdhLLRjQOPAaRx584DU=; b=4NJXPaaslt7RJRsdw2e/74OJjF
-        QOdM8wOeY/5x0ivcRrz2Rz65swlscRiNyfyM3IZe3Jz5JbKKYqXSunnwMl4CuoCeqLqEdG83lYodN
-        vlZgJQqagH3Q6hpoGI0wfVjTWphygWGmHbYPCGOVQ9fTWaVNkhysxe/YLkn1suixFKbo=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hudVW-0007B7-EP; Mon, 05 Aug 2019 15:58:38 +0200
-Date:   Mon, 5 Aug 2019 15:58:38 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Hubert Feurstein <h.feurstein@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Richard Cochran <richardcochran@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next v2] net: dsa: mv88e6xxx: extend PTP gettime
- function to read system clock
-Message-ID: <20190805135838.GF24275@lunn.ch>
-References: <20190805082642.12873-1-hubert.feurstein@vahle.at>
+        id S1728760AbfHEN7V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:59:21 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E502120B1F;
+        Mon,  5 Aug 2019 13:59:19 +0000 (UTC)
+Date:   Mon, 5 Aug 2019 09:59:18 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Jiping Ma <jiping.ma2@windriver.com>, catalin.marinas@arm.com,
+        will.deacon@arm.com, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, kernel-team@android.com,
+        linux-arm-kernel@lists.infradead.org, takahiro.akashi@linaro.org
+Subject: Re: [PATCH v3] tracing: Function stack size and its name mismatch
+ in arm64
+Message-ID: <20190805095918.3942c45b@gandalf.local.home>
+In-Reply-To: <20190805112524.ajlmouutqckwpqyd@willie-the-truck>
+References: <20190802094103.163576-1-jiping.ma2@windriver.com>
+        <20190802112259.0530a648@gandalf.local.home>
+        <20190803082642.GA224541@google.com>
+        <20190805112524.ajlmouutqckwpqyd@willie-the-truck>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190805082642.12873-1-hubert.feurstein@vahle.at>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 10:26:42AM +0200, Hubert Feurstein wrote:
-> From: Hubert Feurstein <h.feurstein@gmail.com>
+On Mon, 5 Aug 2019 12:25:25 +0100
+Will Deacon <will@kernel.org> wrote:
 
-Hi Hubert
+> So, I completely agree with Steve that we shouldn't be littering the core code
+> with #ifdef CONFIG_ARM64, but we probably do need something in the arch backend
+> if we're going to do this properly, and that in turn is likely to need a very
+> different algorithm from the one currently in use.
 
-In your RFC patch, there was some interesting numbers. Can you provide
-numbers of just this patch? How much of an improvement does it make?
+And I'm perfectly fine if someone wants to tear up the current
+implementation, and make one that has callbacks to arch code (with
+defaults for those that don't need it).
 
-Your RFC patch pushed these ptp_read_system_{pre|post}ts() calls down
-into the MDIO driver. This patch is much less invasive, but i wonder
-how much a penalty you paid?
+But it has to be clean. We worked hard to get rid of most "#ifdef"
+being scattered in the kernel, and I'm not bringing it back in my code.
 
-Did you also try moving these calls into global2_avb.c, around the one
-write that really matters?
-
-It was speculated that the jitter comes from contention on the mdio
-bus lock. Did you investigate this? If you can prove this true, one
-thing to try is to take the mdio bus lock in the mv88e6xxx driver,
-take the start timestamp, call __mdiobus_write(), and then the end
-timestamp. The bus contention is then outside your time snapshot.
-
-We could even think about adding a mdiobus_write variant which does
-all this. I'm sure other DSA drivers would find it useful, if it
-really does help.
-
-	   Andrew
+-- Steve
