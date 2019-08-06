@@ -2,88 +2,143 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C7B0C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 00:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F42C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 00:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8D44214C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 00:51:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565052714;
-	bh=Z+9tk3MU66K/tksiFxT3MI1Hc0PsUoTRcxWNrN/xtyc=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=h2AQ/nqbxr8ZXDtZzHQKNZGw1SVBQ8q9OWclD4/uFa9qGtcq3WO4RQQ4MGAXT3fQ7
-	 XXftdqKBD3Fe1bYGXcL8o47ST72T8bBc0dZGg82aLPZnpYxrVorBGox0vW+oMOFqrJ
-	 WrqQbiAF8/9evMOHnzARNWXu/ty8+DcV4KB+qnpo=
+	by mail.kernel.org (Postfix) with ESMTP id 646642070D
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 00:55:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731106AbfHFAvx (ORCPT
+        id S1731115AbfHFAz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 20:51:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59074 "EHLO mail.kernel.org"
+        Mon, 5 Aug 2019 20:55:29 -0400
+Received: from mga07.intel.com ([134.134.136.100]:35775 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729383AbfHFAvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 20:51:53 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26B3D2147A;
-        Tue,  6 Aug 2019 00:51:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565052712;
-        bh=Z+9tk3MU66K/tksiFxT3MI1Hc0PsUoTRcxWNrN/xtyc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=XQDLZWdKWsVDMr+DL3NrjCaZVKK5JNizg+H/cHDpZWeS56OtRgFVN34WpIGj5EUyK
-         XOiJnjMSOYp2Cw+KdRTaN1A4XAsHu6ndOSR7QU4OCjZJTtJyrWDVXDYApFfH4B5BhG
-         2VND5m/8JjvhYGfki9lAtS6UrmwAuPlPrFwSbUww=
-Subject: Re: [PATCH 5.2 000/131] 5.2.7-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190805124951.453337465@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <f2ee51eb-d1e2-1a19-d1a2-dfa181530e03@kernel.org>
-Date:   Mon, 5 Aug 2019 18:51:51 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1729383AbfHFAz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 20:55:28 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 17:55:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,350,1559545200"; 
+   d="scan'208";a="198153100"
+Received: from sahluwal-mobl1.amr.corp.intel.com (HELO pbossart-mobl3.intel.com) ([10.252.202.215])
+  by fmsmga004.fm.intel.com with ESMTP; 05 Aug 2019 17:55:26 -0700
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, Blauciak@vger.kernel.org,
+        Slawomir <slawomir.blauciak@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH 00/17] soundwire: fixes for 5.4
+Date:   Mon,  5 Aug 2019 19:55:05 -0500
+Message-Id: <20190806005522.22642-1-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/5/19 7:01 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.2.7 release.
-> There are 131 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed 07 Aug 2019 12:47:58 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.7-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+This series provides an update on the initial RFC. Debugfs and Intel
+updates will be provided in follow-up patches. The order of patches
+was changed since the RFC so detailed change logs are provided below.
 
-Compiled and booted on my test system. No dmesg regressions.
+Changes since RFC:
 
-thanks,
--- Shuah
+patch1: feedback from Vinod and Cezary
+use local variable to reduce number of de-references
+document that first argument is mandatory
+
+patch2: feedback from Vinod
+document that the work-around is required for all existing controllers
+
+patch 3: feedback from Vinod
+clarify comment that MCP_INT_IRQ ungates all other settings.
+use MCP_INT_SLAVE_MASK instead of all individual settings ORed.
+
+Patch 4: feedback from Vinod:
+demote dynamic debug log to dev_dbg (was dev_err)
+
+patch5:
+clarify commit message that the helpers will be used in the Cadence
+parts as well.
+
+patch 6: feedback from Vinod
+s/BIOS/firmware
+remove magic numbers, introduce macros
+
+patch 7:
+add kbuild warning message in commit message
+
+patch 8:
+no change
+
+patch 9: feedback from Guennadi
+remove unnecessary initializations
+
+patch 10/11/12: feedback from Vinod
+split initial patch in 3 (prototype, Intel, Cadence)
+add explanations on what mclk_freq is in commit messages
+remove pr_err logs missed in RFC
+
+patch 13: feedback from Bard
+remove unecessary reads before update
+
+patch 14:
+no change
+
+patch 15:
+update commit message
+
+patch 16:
+update commit message
+remove unnecessary dynamic debug log
+
+patch 17:
+no change
+
+Bard liao (1):
+  soundwire: include mod_devicetable.h to avoid compiling warnings
+
+Pierre-Louis Bossart (15):
+  soundwire: intel: prevent possible dereference in hw_params
+  soundwire: intel: fix channel number reported by hardware
+  soundwire: cadence_master: revisit interrupt settings
+  soundwire: bus: improve dynamic debug comments for enumeration
+  soundwire: export helpers to find row and column values
+  soundwire: cadence_master: use firmware defaults for frame shape
+  soundwire: stream: fix disable sequence
+  soundwire: stream: remove unnecessary variable initializations
+  soundwire: add new mclk_freq field for properties
+  soundwire: intel: read mclk_freq property from firmware
+  soundwire: cadence_master: make use of mclk_freq property
+  soundwire: intel: handle disabled links
+  soundwire: intel_init: add kernel module parameter to filter out links
+  soundwire: cadence_master: add kernel parameter to override interrupt
+    mask
+  soundwire: intel: move shutdown() callback and don't export symbol
+
+Rander Wang (1):
+  soundwire: cadence_master: fix divider setting in clock register
+
+ drivers/soundwire/bus.c             |   5 +-
+ drivers/soundwire/bus.h             |   7 +-
+ drivers/soundwire/cadence_master.c  | 102 +++++++++++++++++++---------
+ drivers/soundwire/cadence_master.h  |   2 -
+ drivers/soundwire/intel.c           |  83 ++++++++++++++++++++--
+ drivers/soundwire/intel_init.c      |  11 +++
+ drivers/soundwire/stream.c          |  93 ++++++++++++++++---------
+ include/linux/soundwire/sdw.h       |   6 ++
+ include/linux/soundwire/sdw_intel.h |   1 +
+ 9 files changed, 236 insertions(+), 74 deletions(-)
+
+-- 
+2.20.1
 
