@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF82AC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15FF5C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F46921874
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:42:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D97BA21874
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:42:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127736;
-	bh=Jk5erRwdW6Xn1aFjjqOIfAEDX4aSw+GfypMFT+zJTA4=;
+	s=default; t=1565127747;
+	bh=TBavu8KcGlvZPLcjFMqqwVbOt4Ys1Ym3XS3M5RlQgII=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MjODEOFSD4YZLIsV8W7IUnnx4sjSdFUcqs0Wd6hdU5kf5OuXRr1K1NHqqoNJ5EHBy
-	 3d5nFOHpNEDR0jpeks+Qxmv6GRNR9Zxd0k1ON+Csg7SiYEBlmJCTum5vdtl9GngWFR
-	 oeKXQqcXnbqEHo84hm7Pveszmx3wHQJBzvEpN5Zw=
+	b=GzasD0cmGb1gvID3DAuBnPFVLJNiUEJiIsYYgK9Qbwzjmg6aEwm6Zv2A8lc6mROn2
+	 jPehnZLbOY1RQzOOlgowRqXxMc7Ug1dNePRUGYovi1dMHo2rlCJkVkVD4fDP7f1iJq
+	 v6qpImyZ9VUuTw/4MTl81RJG6XI8TgAJElX9Hf+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729319AbfHFVmP (ORCPT
+        id S1729304AbfHFVm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:42:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53496 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:42:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727039AbfHFVfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:35:43 -0400
+        id S1728513AbfHFVf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:35:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F7D821881;
-        Tue,  6 Aug 2019 21:35:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA6CD2187F;
+        Tue,  6 Aug 2019 21:35:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127342;
-        bh=Jk5erRwdW6Xn1aFjjqOIfAEDX4aSw+GfypMFT+zJTA4=;
+        s=default; t=1565127328;
+        bh=TBavu8KcGlvZPLcjFMqqwVbOt4Ys1Ym3XS3M5RlQgII=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A637f3vFyG9695PXdq4NwCgAzxlXBjIPm4xpKr3gUhS346zfkHZAKN4L8fZD20xRY
-         cWO3A+FuZ9FPnruN2aUO2obqndnuwkt2tp86Xznv0lrOKg5/UNaaEXlBkv1Oib+1Sa
-         +W8nAwKO6s3DNC51xiJSoU+kdmD13LRpI0nNrXZ8=
+        b=Uy07BCmDfnltCNGcnXUDJ75tr1IKXjk45Wv5kiaUAIsy7QCowFUBhKBYZkNKl3pqX
+         xI6dk+QPKmXEUhidw4YqwSCwkoMK+ZujhDySITwbsUecU1zf9Wk4X01FOIToRV+v+d
+         GXl8XLryYt0s0FamYhrfSxG+ju764X1udysON9zM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Jeffrin Jose T <jeffrin@rajagiritech.edu.in>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-ide@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 10/32] libata: zpodd: Fix small read overflow in zpodd_get_mech_type()
-Date:   Tue,  6 Aug 2019 17:34:58 -0400
-Message-Id: <20190806213522.19859-10-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Yao Lihua <Lihua.Yao@desay-svautomotive.com>,
+        Linh Phung <linh.phung.jy@renesas.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 03/32] clk: renesas: cpg-mssr: Fix reset control race condition
+Date:   Tue,  6 Aug 2019 17:34:51 -0400
+Message-Id: <20190806213522.19859-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213522.19859-1-sashal@kernel.org>
 References: <20190806213522.19859-1-sashal@kernel.org>
@@ -61,50 +62,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 71d6c505b4d9e6f76586350450e785e3d452b346 ]
+[ Upstream commit e1f1ae8002e4b06addc52443fcd975bbf554ae92 ]
 
-Jeffrin reported a KASAN issue:
+The module reset code in the Renesas CPG/MSSR driver uses
+read-modify-write (RMW) operations to write to a Software Reset Register
+(SRCRn), and simple writes to write to a Software Reset Clearing
+Register (SRSTCLRn), as was mandated by the R-Car Gen2 and Gen3 Hardware
+User's Manuals.
 
-  BUG: KASAN: global-out-of-bounds in ata_exec_internal_sg+0x50f/0xc70
-  Read of size 16 at addr ffffffff91f41f80 by task scsi_eh_1/149
-  ...
-  The buggy address belongs to the variable:
-    cdb.48319+0x0/0x40
+However, this may cause a race condition when two devices are reset in
+parallel: if the reset for device A completes in the middle of the RMW
+operation for device B, device A may be reset again, causing subtle
+failures (e.g. i2c timeouts):
 
-Much like commit 18c9a99bce2a ("libata: zpodd: small read overflow in
-eject_tray()"), this fixes a cdb[] buffer length, this time in
-zpodd_get_mech_type():
+	thread A			thread B
+	--------			--------
 
-We read from the cdb[] buffer in ata_exec_internal_sg(). It has to be
-ATAPI_CDB_LEN (16) bytes long, but this buffer is only 12 bytes.
+	val = SRCRn
+	val |= bit A
+	SRCRn = val
 
-Reported-by: Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
-Fixes: afe759511808c ("libata: identify and init ZPODD devices")
-Link: https://lore.kernel.org/lkml/201907181423.E808958@keescook/
-Tested-by: Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+	delay
+
+					val = SRCRn (bit A is set)
+
+	SRSTCLRn = bit A
+	(bit A in SRCRn is cleared)
+
+					val |= bit B
+					SRCRn = val (bit A and B are set)
+
+This can be reproduced on e.g. Salvator-XS using:
+
+    $ while true; do i2cdump -f -y 4 0x6A b > /dev/null; done &
+    $ while true; do i2cdump -f -y 2 0x10 b > /dev/null; done &
+
+    i2c-rcar e6510000.i2c: error -110 : 40000002
+    i2c-rcar e66d8000.i2c: error -110 : 40000002
+
+According to the R-Car Gen3 Hardware Manual Errata for Rev.
+0.80 of Feb 28, 2018, reflected in Rev. 1.00 of the R-Car Gen3 Hardware
+User's Manual, writes to SRCRn do not require read-modify-write cycles.
+
+Note that the R-Car Gen2 Hardware User's Manual has not been updated
+yet, and still says a read-modify-write sequence is required.  According
+to the hardware team, the reset hardware block is the same on both R-Car
+Gen2 and Gen3, though.
+
+Hence fix the issue by replacing the read-modify-write operations on
+SRCRn by simple writes.
+
+Reported-by: Yao Lihua <Lihua.Yao@desay-svautomotive.com>
+Fixes: 6197aa65c4905532 ("clk: renesas: cpg-mssr: Add support for reset control")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Tested-by: Linh Phung <linh.phung.jy@renesas.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/libata-zpodd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/renesas/renesas-cpg-mssr.c | 16 ++--------------
+ 1 file changed, 2 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/ata/libata-zpodd.c b/drivers/ata/libata-zpodd.c
-index 173e6f2dd9af0..eefda51f97d35 100644
---- a/drivers/ata/libata-zpodd.c
-+++ b/drivers/ata/libata-zpodd.c
-@@ -56,7 +56,7 @@ static enum odd_mech_type zpodd_get_mech_type(struct ata_device *dev)
- 	unsigned int ret;
- 	struct rm_feature_desc *desc;
- 	struct ata_taskfile tf;
--	static const char cdb[] = {  GPCMD_GET_CONFIGURATION,
-+	static const char cdb[ATAPI_CDB_LEN] = {  GPCMD_GET_CONFIGURATION,
- 			2,      /* only 1 feature descriptor requested */
- 			0, 3,   /* 3, removable medium feature */
- 			0, 0, 0,/* reserved */
+diff --git a/drivers/clk/renesas/renesas-cpg-mssr.c b/drivers/clk/renesas/renesas-cpg-mssr.c
+index f4b013e9352d9..24485bee9b49e 100644
+--- a/drivers/clk/renesas/renesas-cpg-mssr.c
++++ b/drivers/clk/renesas/renesas-cpg-mssr.c
+@@ -535,17 +535,11 @@ static int cpg_mssr_reset(struct reset_controller_dev *rcdev,
+ 	unsigned int reg = id / 32;
+ 	unsigned int bit = id % 32;
+ 	u32 bitmask = BIT(bit);
+-	unsigned long flags;
+-	u32 value;
+ 
+ 	dev_dbg(priv->dev, "reset %u%02u\n", reg, bit);
+ 
+ 	/* Reset module */
+-	spin_lock_irqsave(&priv->rmw_lock, flags);
+-	value = readl(priv->base + SRCR(reg));
+-	value |= bitmask;
+-	writel(value, priv->base + SRCR(reg));
+-	spin_unlock_irqrestore(&priv->rmw_lock, flags);
++	writel(bitmask, priv->base + SRCR(reg));
+ 
+ 	/* Wait for at least one cycle of the RCLK clock (@ ca. 32 kHz) */
+ 	udelay(35);
+@@ -562,16 +556,10 @@ static int cpg_mssr_assert(struct reset_controller_dev *rcdev, unsigned long id)
+ 	unsigned int reg = id / 32;
+ 	unsigned int bit = id % 32;
+ 	u32 bitmask = BIT(bit);
+-	unsigned long flags;
+-	u32 value;
+ 
+ 	dev_dbg(priv->dev, "assert %u%02u\n", reg, bit);
+ 
+-	spin_lock_irqsave(&priv->rmw_lock, flags);
+-	value = readl(priv->base + SRCR(reg));
+-	value |= bitmask;
+-	writel(value, priv->base + SRCR(reg));
+-	spin_unlock_irqrestore(&priv->rmw_lock, flags);
++	writel(bitmask, priv->base + SRCR(reg));
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
