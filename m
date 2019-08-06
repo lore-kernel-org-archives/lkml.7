@@ -2,162 +2,90 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D562CC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA030C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:15:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B656C216B7
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:15:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6CB1216B7
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:15:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E2Wc85sL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732891AbfHFOPk (ORCPT
+        id S1732916AbfHFOPx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 10:15:40 -0400
-Received: from mga14.intel.com ([192.55.52.115]:6847 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732664AbfHFOPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 10:15:40 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 07:15:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
-   d="scan'208";a="192674660"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 06 Aug 2019 07:15:36 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 06 Aug 2019 17:15:36 +0300
-Date:   Tue, 6 Aug 2019 17:15:36 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Paul Menzel <pmenzel@molgen.mpg.de>
-Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Matthias Andree <matthias.andree@gmx.de>
-Subject: Re: [Regression] pcie_wait_for_link_delay (1132.853 ms @ 5039.414431)
-Message-ID: <20190806141536.GB2548@lahna.fi.intel.com>
-References: <2857501d-c167-547d-c57d-d5d24ea1f1dc@molgen.mpg.de>
- <20190806093626.GF2548@lahna.fi.intel.com>
- <acca5213-7d8b-7db1-ff3c-cb5b4a704f04@molgen.mpg.de>
- <20190806113154.GS2548@lahna.fi.intel.com>
- <f83a541d-65de-ed05-c4c1-2bda345b30ef@molgen.mpg.de>
+        Tue, 6 Aug 2019 10:15:53 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37757 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732664AbfHFOPx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 10:15:53 -0400
+Received: by mail-lf1-f68.google.com with SMTP id c9so61218844lfh.4
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 07:15:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sAIRh0zHCkxzUmxSyq4qdiGiTcGIDNFzc3TNynpsgqk=;
+        b=E2Wc85sLfivMU4AaCneNl6LCApr1GrJtCEc8ojybQ7Z4JKOMkTX06Un7zgIDoQQb6+
+         6vGIgLwWWDOA62UzA4bpo0CrCe7PnH02iRtfPaN7kS1BhzYyDFD4Lc/w6uBmKmyepx3t
+         hwdxXtIIH1ol5XXIUCjaCG9CtUKpjyQR+XqGrbI0yYK1whN/UZT7myGqfhLOzI2V7+DV
+         7LggCCWyMn9I8J1CCfg7ozwxE30C//brOpGIMtNuUaUYM3jzowZpPqd9SBI+6PpNABrF
+         EZay1BlpSDwastDS1SVWap2cMmM2NjJzWQ369b7XgPCsh+xSWfkg2CaG+BvdyWXr4hY4
+         UWiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sAIRh0zHCkxzUmxSyq4qdiGiTcGIDNFzc3TNynpsgqk=;
+        b=l6N3aM/oEqRtd7abVG/YaA1y6MdV0khRdi4yksiZbfVDor3/L9btevT/omgtG4xxVC
+         xmJfKaNhXIShrqkc62QzVsjExRjqsHMIrAjr6QWo2TmBAXSTIRWeJ67pryXYaDYMoxk/
+         0FFoarQTAM0RUXIdB0wXmO8d0/KcOp/M5VyS4isqc02X2QecHIfaiSFpItTudFqfO0oK
+         YVCftVtXYnfaNILmETw/SPyQ/qFrfVIpGn8WBW3JulxgVP01cJ/Dhfs0wzZ0ROu2Pv6y
+         yrRaMB7fX+f7b+JwyBCrBvEmUcjAAKmVOp4jizlYxNxCZ5QWAotGLbs1iiyN7nCCVm28
+         geAA==
+X-Gm-Message-State: APjAAAXOKY7fmsR6/whOGrf8Yb/7lOUDvm+hVt+2/wf0QLTMQ1bJ0nip
+        mimv/jyApYaZDxQf1fLoxE8Y+8Orub/Nom+AMPZGDg==
+X-Google-Smtp-Source: APXvYqwa7eUgjmF+/YyxXU15VYYv+720bBdbuzkjozsLAQLMlpvCf9Pylm6GgktGjdxlqgSSV2RTz8KoVio2DmPxnIo=
+X-Received: by 2002:ac2:4c07:: with SMTP id t7mr2453376lfq.152.1565100951048;
+ Tue, 06 Aug 2019 07:15:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f83a541d-65de-ed05-c4c1-2bda345b30ef@molgen.mpg.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190805162710.7789-1-krzk@kernel.org>
+In-Reply-To: <20190805162710.7789-1-krzk@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 6 Aug 2019 16:15:38 +0200
+Message-ID: <CACRpkda8P522pkxctZbf2Ut13V6Rzx=mSYsRuHv0BvPyF6q1gA@mail.gmail.com>
+Subject: Re: [PATCH 1/4] pinctrl: samsung: Fix device node refcount leaks in
+ Exynos wakeup controller init
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>, notify@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 04:02:42PM +0200, Paul Menzel wrote:
-> >> How can I read out the delay from the system as done in?
-> > 
-> > The delay is not system wide so it depends on the device. Typically it
-> > is 100ms but there is a way to shorten it using ACPI _DSM.
-> 
-> Yeah, I know. I was wondering if it can easily be read out for a device
-> under `/sys`, other debug level or, for example, with `lspci` or
-> `acpidump`.
+On Mon, Aug 5, 2019 at 6:27 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-AFAIK there is no easy way at least without patching the kernel. You can
-log pdev->d3cold_delay for each device in pci_pm_init() for example.
+> In exynos_eint_wkup_init() the for_each_child_of_node() loop is used
+> with a break to find a matching child node.  Although each iteration of
+> for_each_child_of_node puts the previous node, but early exit from loop
+> misses it.  This leads to leak of device node.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-> >> ```
-> >> static int get_downstream_delay(struct pci_bus *bus)
-> >> {
-> >>         struct pci_dev *pdev;
-> >>         int min_delay = 100;
-> >>         int max_delay = 0;
-> >>
-> >>         list_for_each_entry(pdev, &bus->devices, bus_list) {
-> >>                 if (!pdev->imm_ready)
-> >>                         min_delay = 0;
-> >>                 else if (pdev->d3cold_delay < min_delay)
-> >>                         min_delay = pdev->d3cold_delay;
-> >>                 if (pdev->d3cold_delay > max_delay)
-> >>                         max_delay = pdev->d3cold_delay;
-> >>         }
-> >>
-> >>         return max(min_delay, max_delay);
-> >> }
-> >> ```
-> >>
-> >>>> Anyway, there is such firmware out there, so I’d like to avoid the time
-> >>>> increases.
-> >>>>
-> >>>> As a first step, the commit should be extended to print a warning (maybe if
-> >>>> `initcall_debug` is specified), when the delay is higher than let’s say 50(?)
-> >>>> ms. Also better documentation how to debug these delays would be appreciated.
-> >>
-> >> As your commit message says the standard demands a delay of at least 100 ms, 50 ms
-> >> is of course too short, and maybe 150 ms or so should be used as the threshold.
-> >>
-> >>>> If there is no easy solution, it’d be great if the commit could be reverted for
-> >>>> now, and a better solution be discussed for the next release.
-> >>>
-> >>> There is also kernel bugzilla entry about another regression this causes
-> >>> here:
-> >>>
-> >>>   https://bugzilla.kernel.org/show_bug.cgi?id=204413
-> >>>
-> >>> I agree we should revert c2bf1fc2 now. I'll try to come up alternative
-> >>> solution to these missing delays that hopefully does not break existing
-> >>> setups.
-> >>>
-> >>> Rafael, Bjorn,
-> >>>
-> >>> Can you revert the commit or do you want me to send a revert patch?
-> >>>
-> >>> Thanks and sorry about the breakage.
-> >>
-> >> No worries.
-> > 
-> > Thanks for the lspci output. This explains the 1 second delay:
-> > 
-> >> 		LnkCap:	Port #2, Speed 8GT/s, Width x16, ASPM L0s L1, Exit Latency L0s <256ns, L1 <8us
-> >> 			ClockPM- Surprise- LLActRep- BwNot+ ASPMOptComp+
-> > 
-> > The port does not support active link reporting. Can you try the below
-> > patch?
-> > 
-> > Nicholas, can you also try it? I think it should solve your issue as
-> > well.
-> > 
-> > Thanks!
-> > 
-> > diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-> > index 308c3e0c4a34..bb8c753013d0 100644
-> > --- a/drivers/pci/pcie/portdrv_core.c
-> > +++ b/drivers/pci/pcie/portdrv_core.c
-> > @@ -434,7 +434,8 @@ static void wait_for_downstream_link(struct pci_dev *pdev)
-> >  	 * need to wait 100ms. For higher speeds (gen3) we need to wait
-> >  	 * first for the data link layer to become active.
-> >  	 */
-> > -	if (pcie_get_speed_cap(pdev) <= PCIE_SPEED_5_0GT)
-> > +	if (pcie_get_speed_cap(pdev) <= PCIE_SPEED_5_0GT ||
-> > +	    !pdev->link_active_reporting)
-> >  		msleep(delay);
-> >  	else
-> >  		pcie_wait_for_link_delay(pdev, true, delay);
-> 
-> I can confirm, that the delay is reduced now.
-> 
->     pcieport @ 0000:00:01.0 {pcieport} async_device (Total Suspend: 12.118 ms Total Resume: 105.604 ms)
+I assume you're collecting these for a pull request to me
+at some later point, all look good to me.
 
-Awesome, thanks.
-
-> How can I enable the verbose log messages you got in your commit
-> message like below?
-> 
->     pcieport 0000:00:1b.0: wait for 100ms after DLLLA is set before access to 0000:01:00.0
-
-It did not come from any log message, I just wrote it like that for the
-commit log.
+Yours,
+Linus Walleij
