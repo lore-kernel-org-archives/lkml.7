@@ -7,61 +7,56 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F25C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F6B2C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DA8720B1F
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:19:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7353920B1F
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:21:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="j6er723Z"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="I/G32rLq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730839AbfHFLT5 (ORCPT
+        id S1732733AbfHFLVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 07:19:57 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:55647 "EHLO
+        Tue, 6 Aug 2019 07:21:11 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:54477 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726783AbfHFLT5 (ORCPT
+        with ESMTP id S1726783AbfHFLVK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 07:19:57 -0400
+        Tue, 6 Aug 2019 07:21:10 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x76BJLHk2142127
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x76BKv4U2142329
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 6 Aug 2019 04:19:21 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x76BJLHk2142127
+        Tue, 6 Aug 2019 04:20:57 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x76BKv4U2142329
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1565090363;
-        bh=HLAXuMY+kBpz9A22miFP8B5VmGp1wETWEEUWh5quAYo=;
+        s=2019071901; t=1565090457;
+        bh=5DHQQMlrThLSLa0IhoZQIL07mGa5rz1rbnFabqRBjzI=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=j6er723ZjuBGiD/g1FAUnt5rE2bUvywBvwwPUpw4a+6ySA6DXLJcbmU9AFCJCjZGW
-         rMn/qP+73topYWW8FQiMMqnr+6JFfpTNkL2aaWgjf1uRWuucex8sLk2Y2z3AVTiuh8
-         ds8+HTX33IpU3Vz1dHi02HNQdgHxy8e3DQgdh0saEa0/3xI4Lns7YqIoasYdty+9uv
-         5DVudD3KbqholdWcozteo7YHUmfh2Abm/BQTnqGvs7sq8bwoeyWGNy5FGguVIAtmOm
-         pQ+/kLeW40UxArmVJvWU36jVTR+4kurP2V5tuyMGQshZa5D0yWEqA8NXZpii/+iUNe
-         EgSrcKklzrWkQ==
+        b=I/G32rLqqZXy4W/Ta7Rf08hvGnLActTBwcv5IPNYsr/pLPE/4GZHlnBOhs2S/zFqs
+         5TZAzf0Se6Zjav6pwgLazeGSznSZs6bZeYu+WA74MKn2IbSdZzXi8L1XwSXqsXtrgv
+         B5xbev7kbDFE3kjPYAcAaDrh2V6wrQVNItDICKMefbw9DLzITXVOyw20MJnGScUFfQ
+         d1vKachGnkUTnFnQwZ7Nlj/ybQHzaNWKBBdGhQJqQjeIMns2XYGZtk/QgYeXrKciCN
+         TvLpcCfLiu8q2zKP8d1189XHeK50yVIC8//jWw95Xr4Df9h+3zZ/wS8wIPEqclCv56
+         E84mcGutQpUZw==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x76BJKFA2142116;
-        Tue, 6 Aug 2019 04:19:20 -0700
-Date:   Tue, 6 Aug 2019 04:19:20 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x76BKu7n2142326;
+        Tue, 6 Aug 2019 04:20:56 -0700
+Date:   Tue, 6 Aug 2019 04:20:56 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Dietmar Eggemann <tipbot@zytor.com>
-Message-ID: <tip-f4904815f97a934258445a8f763f6b6c48f007e7@git.kernel.org>
-Cc:     hpa@zytor.com, luca.abeni@santannapisa.it,
-        valentin.schneider@arm.com, tglx@linutronix.de,
-        dietmar.eggemann@arm.com, qais.yousef@arm.com,
-        juri.lelli@redhat.com, bristot@redhat.com,
-        linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@kernel.org
-Reply-To: dietmar.eggemann@arm.com, tglx@linutronix.de,
-          qais.yousef@arm.com, luca.abeni@santannapisa.it, hpa@zytor.com,
-          valentin.schneider@arm.com, peterz@infradead.org,
-          mingo@kernel.org, bristot@redhat.com, juri.lelli@redhat.com,
-          linux-kernel@vger.kernel.org
-In-Reply-To: <20190802145945.18702-2-dietmar.eggemann@arm.com>
-References: <20190802145945.18702-2-dietmar.eggemann@arm.com>
+From:   tip-bot for Suren Baghdasaryan <tipbot@zytor.com>
+Message-ID: <tip-04e048cf09d7b5fc995817cdc5ae1acd4482429c@git.kernel.org>
+Cc:     hpa@zytor.com, nnk@google.com, surenb@google.com,
+        peterz@infradead.org, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, mingo@kernel.org
+Reply-To: peterz@infradead.org, tglx@linutronix.de, mingo@kernel.org,
+          linux-kernel@vger.kernel.org, surenb@google.com, nnk@google.com,
+          hpa@zytor.com
+In-Reply-To: <20190730013310.162367-1-surenb@google.com>
+References: <20190730013310.162367-1-surenb@google.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/urgent] sched/deadline: Fix double accounting of
- rq/running bw in push & pull
-Git-Commit-ID: f4904815f97a934258445a8f763f6b6c48f007e7
+Subject: [tip:sched/urgent] sched/psi: Do not require setsched permission
+ from the trigger creator
+Git-Commit-ID: 04e048cf09d7b5fc995817cdc5ae1acd4482429c
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -75,71 +70,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  f4904815f97a934258445a8f763f6b6c48f007e7
-Gitweb:     https://git.kernel.org/tip/f4904815f97a934258445a8f763f6b6c48f007e7
-Author:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-AuthorDate: Fri, 2 Aug 2019 15:59:43 +0100
+Commit-ID:  04e048cf09d7b5fc995817cdc5ae1acd4482429c
+Gitweb:     https://git.kernel.org/tip/04e048cf09d7b5fc995817cdc5ae1acd4482429c
+Author:     Suren Baghdasaryan <surenb@google.com>
+AuthorDate: Mon, 29 Jul 2019 18:33:10 -0700
 Committer:  Peter Zijlstra <peterz@infradead.org>
 CommitDate: Tue, 6 Aug 2019 12:49:18 +0200
 
-sched/deadline: Fix double accounting of rq/running bw in push & pull
+sched/psi: Do not require setsched permission from the trigger creator
 
-{push,pull}_dl_task() always calls {de,}activate_task() with .flags=0
-which sets p->on_rq=TASK_ON_RQ_MIGRATING.
+When a process creates a new trigger by writing into /proc/pressure/*
+files, permissions to write such a file should be used to determine whether
+the process is allowed to do so or not. Current implementation would also
+require such a process to have setsched capability. Setting of psi trigger
+thread's scheduling policy is an implementation detail and should not be
+exposed to the user level. Remove the permission check by using _nocheck
+version of the function.
 
-{push,pull}_dl_task()->{de,}activate_task()->{de,en}queue_task()->
-{de,en}queue_task_dl() calls {sub,add}_{running,rq}_bw() since
-p->on_rq==TASK_ON_RQ_MIGRATING.
-So {sub,add}_{running,rq}_bw() in {push,pull}_dl_task() is
-double-accounting for that task.
-
-Fix it by removing rq/running bw accounting in [push/pull]_dl_task().
-
-Fixes: 7dd778841164 ("sched/core: Unify p->on_rq updates")
-Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Suggested-by: Nick Kralevich <nnk@google.com>
+Signed-off-by: Suren Baghdasaryan <surenb@google.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Luca Abeni <luca.abeni@santannapisa.it>
-Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Qais Yousef <qais.yousef@arm.com>
-Link: https://lkml.kernel.org/r/20190802145945.18702-2-dietmar.eggemann@arm.com
+Cc: lizefan@huawei.com
+Cc: mingo@redhat.com
+Cc: akpm@linux-foundation.org
+Cc: kernel-team@android.com
+Cc: dennisszhou@gmail.com
+Cc: dennis@kernel.org
+Cc: hannes@cmpxchg.org
+Cc: axboe@kernel.dk
+Link: https://lkml.kernel.org/r/20190730013310.162367-1-surenb@google.com
 ---
- kernel/sched/deadline.c | 8 --------
- 1 file changed, 8 deletions(-)
+ kernel/sched/psi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index ef5b9f6b1d42..46122edd8552 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -2088,17 +2088,13 @@ retry:
- 	}
- 
- 	deactivate_task(rq, next_task, 0);
--	sub_running_bw(&next_task->dl, &rq->dl);
--	sub_rq_bw(&next_task->dl, &rq->dl);
- 	set_task_cpu(next_task, later_rq->cpu);
--	add_rq_bw(&next_task->dl, &later_rq->dl);
- 
- 	/*
- 	 * Update the later_rq clock here, because the clock is used
- 	 * by the cpufreq_update_util() inside __add_running_bw().
- 	 */
- 	update_rq_clock(later_rq);
--	add_running_bw(&next_task->dl, &later_rq->dl);
- 	activate_task(later_rq, next_task, ENQUEUE_NOCLOCK);
- 	ret = 1;
- 
-@@ -2186,11 +2182,7 @@ static void pull_dl_task(struct rq *this_rq)
- 			resched = true;
- 
- 			deactivate_task(src_rq, p, 0);
--			sub_running_bw(&p->dl, &src_rq->dl);
--			sub_rq_bw(&p->dl, &src_rq->dl);
- 			set_task_cpu(p, this_cpu);
--			add_rq_bw(&p->dl, &this_rq->dl);
--			add_running_bw(&p->dl, &this_rq->dl);
- 			activate_task(this_rq, p, 0);
- 			dmin = p->dl.deadline;
- 
+diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+index 7fe2c5fd26b5..23fbbcc414d5 100644
+--- a/kernel/sched/psi.c
++++ b/kernel/sched/psi.c
+@@ -1061,7 +1061,7 @@ struct psi_trigger *psi_trigger_create(struct psi_group *group,
+ 			mutex_unlock(&group->trigger_lock);
+ 			return ERR_CAST(kworker);
+ 		}
+-		sched_setscheduler(kworker->task, SCHED_FIFO, &param);
++		sched_setscheduler_nocheck(kworker->task, SCHED_FIFO, &param);
+ 		kthread_init_delayed_work(&group->poll_work,
+ 				psi_poll_work);
+ 		rcu_assign_pointer(group->poll_kworker, kworker);
