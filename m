@@ -2,309 +2,380 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE09FC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 19:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7885CC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 19:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E512214C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 19:53:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DD77205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 19:54:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VV9Ppa9u"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="b9GAepqR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726452AbfHFTxo (ORCPT
+        id S1726549AbfHFTyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 15:53:44 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34996 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbfHFTxo (ORCPT
+        Tue, 6 Aug 2019 15:54:11 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:44600 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbfHFTyK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 15:53:44 -0400
-Received: by mail-ot1-f66.google.com with SMTP id j19so18903932otq.2
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 12:53:42 -0700 (PDT)
+        Tue, 6 Aug 2019 15:54:10 -0400
+Received: by mail-qk1-f193.google.com with SMTP id d79so63854216qke.11
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 12:54:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EqsW5OxmHQog0ub+PR7AiYisz4NBU3NrkElZBQlr6Eg=;
-        b=VV9Ppa9ubKevm1FzmVSanYWoYM0w7rLwWRQmH965qhyVf1qatFwRlusXKU/hTIjN/F
-         IGToUS+l7tA+5npP8+46S8ldh8waArpKKeXjxGZU+wRX1VNMT5mlsXobnrk4Q2YVf4Nh
-         axRqXmQ7WKuzDsjRxzbt4No6hSL7FTZTTLuX2Xt1B2jqW3czAGvb8xcvf/jlPpjgMWlQ
-         vebcyyCW8t1ZXr0E1jPM/vjquO5UdIrsBzFiTlo8s3XwrDwxy/ywQSTgWL65/Tu1q03U
-         pwfVuJS1FaZZIrMlUKIbHjF/TkZ6S0nQ5eI1C8MAYjQjRqV4FxZo7NCvMcm13Iqn0pnK
-         Wvwg==
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=1rHDXdmOEwR8xptFY1wQGCbwesX8kKKPC5gJB64uoto=;
+        b=b9GAepqRbKFM3pzqYg2LpdHR2OEdgWMc/HZxIv2Gp9vLLA3ZTzFCsANpReq6o3heh3
+         W1ptDk2UP62oVh0l6motNAk9K+wx+wzmppMPTOJTEgaxY2+N7G1GfJsdfjFGK9J/ydhd
+         1JAQk+iuy/FOLH+ODao/HTvc8ZtAAW1UurzvdNfmAUudfT/DZ0X+8DL+1u85ZSbBYCly
+         WgtOdpYIMLK+B2j83KqX+LKq9JgvsjwdwG7j0sTwebuX3AHqYlKN3JJ05J8D/90qYLwr
+         3ydTkB4DNAQnO7JPElLfGlkn1OHq07X5Z9MyGidOLtK0y+fU5ATneF1nAhI/NLAg8l8A
+         ZIEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EqsW5OxmHQog0ub+PR7AiYisz4NBU3NrkElZBQlr6Eg=;
-        b=NfFtBplAWIbWABBCQhpBB5as2LrHjGnwcrJbcsJFFo4no1kQWHCLLG9SR14Q3lis/w
-         Dll/AHl/CiCJ249vpIxSe/wS3JTkzKKuJB7W2eORzWpHW9ra57y/Eqek0wWErxksuxGN
-         z4aI1vIuVMbneV+RAdT8yR4JquZB4zfrgOMzgWLIz1yfN6m941yeu2PCulpiZCLOkZdo
-         GmJQgQjZXTFFUMBViIOiPIfdijxaUmK52qsFyeerReApYEJSrSANjuk0V9OQapqxI4Fh
-         WNNxkC/pFOfrHa/f3Exgh85ckfuwJRI26kj7ePAaKQo/fQsKlk72vjKEZL50rRtpkJea
-         LpmQ==
-X-Gm-Message-State: APjAAAVFSt9OhShEuXMW0hCIUrabsUKhyhjMOzzi3MfJwxzCe/MS6KlD
-        7Q+z32dE/lCMhhjcFqtyu9z4BPoWIqQ4LLocZqg+Fg==
-X-Google-Smtp-Source: APXvYqwwLAAeLEryd1T7Fj/e7qjG8GzcaLSq1KsTk2lQtSKu8Wn++OZ/kBVzpBstbZZetXSWgB410s/9UQ4SvZCq298=
-X-Received: by 2002:a05:6602:cc:: with SMTP id z12mr5424136ioe.86.1565121222227;
- Tue, 06 Aug 2019 12:53:42 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=1rHDXdmOEwR8xptFY1wQGCbwesX8kKKPC5gJB64uoto=;
+        b=dJOfm60LDVnYEMs6TOqMZhyPEt1hdG1LEktp5cjoTRyRoloWuHHKCtXbHI1XaENqGK
+         cbqL0ecaAH/bQS2sDcNjX9TK4qq9r5N2Klm0oWsjvYeyo4T8NG7LOUPwZ+TahL+GA+NF
+         OkfxmAwhW1IYUFupXmPGVL9oCgMTe3+6RnuMQvsr305w6VGE96H5kva4LoF4cnsAEaPf
+         PunPMGhMpeE8w5xoHpIRQCFzhPCpLvBJlndEsT0fbT8NFWviDdQpQN5egdAC009WcBcj
+         OwMl1IuEEAAGjeL/Ozm4hphlwAHtG0OVcUUzEYkatf151C6RUIiaxgZs+2+KIPZrpjns
+         DJIw==
+X-Gm-Message-State: APjAAAXhSw6WXdc+MX4EzLnYCWQlQMmclS5w51svGJYmnUuouGRYRgeI
+        eg9rhex9FvURvym/W3CNJbD797BadIE=
+X-Google-Smtp-Source: APXvYqxrBdTEbJz96Q2eq+iIvW0j3N8XWLn08kcP6O+0VhSZ/q8ftrBCG23A5U4DAubf7/lDubR3mQ==
+X-Received: by 2002:ae9:df84:: with SMTP id t126mr2672184qkf.328.1565121249378;
+        Tue, 06 Aug 2019 12:54:09 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id l8sm2170230qtr.38.2019.08.06.12.54.08
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 06 Aug 2019 12:54:09 -0700 (PDT)
+Date:   Tue, 6 Aug 2019 12:53:42 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Hayes Wang <hayeswang@realtek.com>
+Cc:     <netdev@vger.kernel.org>, <nic_swsd@realtek.com>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>
+Subject: Re: [PATCH net-next 2/5] r8152: replace array with linking list for
+ rx information
+Message-ID: <20190806125342.4620a94f@cakuba.netronome.com>
+In-Reply-To: <1394712342-15778-291-albertk@realtek.com>
+References: <1394712342-15778-289-albertk@realtek.com>
+        <1394712342-15778-291-albertk@realtek.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-References: <20190802015332.229322-1-henryburns@google.com>
- <20190802015332.229322-2-henryburns@google.com> <20190805042821.GA102749@google.com>
- <CAGQXPTiHtNJsBz8dGCvejtmvGgPNHBoQHSmbX4XkxJ5DTmUWGg@mail.gmail.com> <20190806013846.GA71899@google.com>
-In-Reply-To: <20190806013846.GA71899@google.com>
-From:   Henry Burns <henryburns@google.com>
-Date:   Tue, 6 Aug 2019 12:53:06 -0700
-Message-ID: <CAGQXPThXpTwnV+VM2qSyJyRv9LzKhVStCE5SORWBrwddBr2OCw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] mm/zsmalloc.c: Fix race condition in zs_destroy_pool
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Nitin Gupta <ngupta@vflare.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jonathan Adams <jwadams@google.com>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, henrywolfeburns@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-By the way, I will lose access to this email in 3 days, so I've cc'd a
-personal email.
+On Tue, 6 Aug 2019 19:18:01 +0800, Hayes Wang wrote:
+> The original method uses an array to store the rx information. The
+> new one uses a list to link each rx structure. Then, it is possible
+> to increase/decrease the number of rx structure dynamically.
+> 
+> Signed-off-by: Hayes Wang <hayeswang@realtek.com>
+> ---
+>  drivers/net/usb/r8152.c | 187 ++++++++++++++++++++++++++++------------
+>  1 file changed, 132 insertions(+), 55 deletions(-)
+> 
+> diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+> index 0f07ed05ab34..44d832ceb516 100644
+> --- a/drivers/net/usb/r8152.c
+> +++ b/drivers/net/usb/r8152.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/mdio.h>
+>  #include <linux/usb/cdc.h>
+>  #include <linux/suspend.h>
+> +#include <linux/atomic.h>
+>  #include <linux/acpi.h>
+>  
+>  /* Information for net-next */
+> @@ -694,7 +695,7 @@ struct tx_desc {
+>  struct r8152;
+>  
+>  struct rx_agg {
+> -	struct list_head list;
+> +	struct list_head list, info_list;
+>  	struct urb *urb;
+>  	struct r8152 *context;
+>  	void *buffer;
+> @@ -719,7 +720,7 @@ struct r8152 {
+>  	struct net_device *netdev;
+>  	struct urb *intr_urb;
+>  	struct tx_agg tx_info[RTL8152_MAX_TX];
+> -	struct rx_agg rx_info[RTL8152_MAX_RX];
+> +	struct list_head rx_info;
+>  	struct list_head rx_done, tx_free;
+>  	struct sk_buff_head tx_queue, rx_queue;
+>  	spinlock_t rx_lock, tx_lock;
+> @@ -744,6 +745,8 @@ struct r8152 {
+>  		void (*autosuspend_en)(struct r8152 *tp, bool enable);
+>  	} rtl_ops;
+>  
+> +	atomic_t rx_count;
 
+I wonder what the advantage of rx_count being atomic is, perhpas it
+could be protected by the same lock as the list head?
 
-On Mon, Aug 5, 2019 at 6:38 PM Minchan Kim <minchan@kernel.org> wrote:
-> On Mon, Aug 05, 2019 at 10:34:41AM -0700, Henry Burns wrote:
-> > On Sun, Aug 4, 2019 at 9:28 PM Minchan Kim <minchan@kernel.org> wrote:
-> > > On Thu, Aug 01, 2019 at 06:53:32PM -0700, Henry Burns wrote:
-> > > > In zs_destroy_pool() we call flush_work(&pool->free_work). However, we
-> > > > have no guarantee that migration isn't happening in the background
-> > > > at that time.
-> > > >
-> > > > Since migration can't directly free pages, it relies on free_work
-> > > > being scheduled to free the pages.  But there's nothing preventing an
-> > > > in-progress migrate from queuing the work *after*
-> > > > zs_unregister_migration() has called flush_work().  Which would mean
-> > > > pages still pointing at the inode when we free it.
-> > >
-> > > We already unregister shrinker so there is no upcoming async free call
-> > > via shrinker so the only concern is zs_compact API direct call from
-> > > the user. Is that what what you desribe from the description?
-> >
-> > What I am describing is a call to zsmalloc_aops->migratepage() by
-> > kcompactd (which can call schedule work in either
-> > zs_page_migrate() or zs_page_putback should the zspage become empty).
-> >
-> > While we are migrating a page, we remove it from the class. Suppose
-> > zs_free() loses a race with migration. We would schedule
-> > async_free_zspage() to handle freeing that zspage, however we have no
-> > guarantee that migration has finished
-> > by the time we finish flush_work(&pool->work). In that case we then
-> > call iput(inode), and now we have a page
-> > pointing to a non-existent inode. (At which point something like
-> > kcompactd would potentially BUG() if it tries to get a page
-> > (from the inode) that doesn't exist anymore)
-> >
->
-> True.
-> I totally got mixed up internal migration and external migration. :-/
->
-> >
-> > >
-> > > If so, can't we add a flag to indicate destroy of the pool and
-> > > global counter to indicate how many of zs_compact was nested?
-> > >
-> > > So, zs_unregister_migration in zs_destroy_pool can set the flag to
-> > > prevent upcoming zs_compact call and wait until the global counter
-> > > will be zero. Once it's done, finally flush the work.
-> > >
-> > > My point is it's not a per-class granuarity but global.
-> >
-> > We could have a pool level counter of isolated pages, and wait for
-> > that to finish before starting flush_work(&pool->work); However,
-> > that would require an atomic_long in zs_pool, and we would have to eat
-> > the cost of any contention over that lock. Still, it might be
-> > preferable to a per-class granularity.
->
-> That would be better for performance-wise but how it's significant?
-> Migration is not already hot path so adding a atomic variable in that path
-> wouldn't make noticible slow.
->
-> Rather than performance, my worry is maintainance so prefer simple and
-> not fragile.
+>  	int intr_interval;
+>  	u32 saved_wolopts;
+>  	u32 msg_enable;
+> @@ -1468,19 +1471,86 @@ static inline void *tx_agg_align(void *data)
+>  	return (void *)ALIGN((uintptr_t)data, TX_ALIGN);
+>  }
+>  
+> +static void free_rx_agg(struct r8152 *tp, struct rx_agg *agg)
+> +{
+> +	list_del(&agg->info_list);
+> +
+> +	usb_free_urb(agg->urb);
+> +	kfree(agg->buffer);
+> +	kfree(agg);
+> +
+> +	atomic_dec(&tp->rx_count);
+> +}
+> +
+> +static struct rx_agg *alloc_rx_agg(struct r8152 *tp, gfp_t mflags)
+> +{
+> +	struct net_device *netdev = tp->netdev;
+> +	int node = netdev->dev.parent ? dev_to_node(netdev->dev.parent) : -1;
+> +	struct rx_agg *rx_agg;
+> +
+> +	rx_agg = kmalloc_node(sizeof(*rx_agg), mflags, node);
+> +	if (rx_agg) {
 
-It sounds to me like you are saying that the current approach is fine, does this
-match up with your understanding?
+nit: you could possibly save the indentation by returning early here
 
->
-> >
-> > >
-> > > Thanks.
-> > >
-> > > >
-> > > > Since we know at destroy time all objects should be free, no new
-> > > > migrations can come in (since zs_page_isolate() fails for fully-free
-> > > > zspages).  This means it is sufficient to track a "# isolated zspages"
-> > > > count by class, and have the destroy logic ensure all such pages have
-> > > > drained before proceeding.  Keeping that state under the class
-> > > > spinlock keeps the logic straightforward.
-> > > >
-> > > > Signed-off-by: Henry Burns <henryburns@google.com>
-> > > > ---
-> > > >  mm/zsmalloc.c | 68 ++++++++++++++++++++++++++++++++++++++++++++++++---
-> > > >  1 file changed, 65 insertions(+), 3 deletions(-)
-> > > >
-> > > > diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
-> > > > index efa660a87787..1f16ed4d6a13 100644
-> > > > --- a/mm/zsmalloc.c
-> > > > +++ b/mm/zsmalloc.c
-> > > > @@ -53,6 +53,7 @@
-> > > >  #include <linux/zpool.h>
-> > > >  #include <linux/mount.h>
-> > > >  #include <linux/migrate.h>
-> > > > +#include <linux/wait.h>
-> > > >  #include <linux/pagemap.h>
-> > > >  #include <linux/fs.h>
-> > > >
-> > > > @@ -206,6 +207,10 @@ struct size_class {
-> > > >       int objs_per_zspage;
-> > > >       /* Number of PAGE_SIZE sized pages to combine to form a 'zspage' */
-> > > >       int pages_per_zspage;
-> > > > +#ifdef CONFIG_COMPACTION
-> > > > +     /* Number of zspages currently isolated by compaction */
-> > > > +     int isolated;
-> > > > +#endif
-> > > >
-> > > >       unsigned int index;
-> > > >       struct zs_size_stat stats;
-> > > > @@ -267,6 +272,8 @@ struct zs_pool {
-> > > >  #ifdef CONFIG_COMPACTION
-> > > >       struct inode *inode;
-> > > >       struct work_struct free_work;
-> > > > +     /* A workqueue for when migration races with async_free_zspage() */
-> > > > +     struct wait_queue_head migration_wait;
-> > > >  #endif
-> > > >  };
-> > > >
-> > > > @@ -1917,6 +1924,21 @@ static void putback_zspage_deferred(struct zs_pool *pool,
-> > > >
-> > > >  }
-> > > >
-> > > > +static inline void zs_class_dec_isolated(struct zs_pool *pool,
-> > > > +                                      struct size_class *class)
-> > > > +{
-> > > > +     assert_spin_locked(&class->lock);
-> > > > +     VM_BUG_ON(class->isolated <= 0);
-> > > > +     class->isolated--;
-> > > > +     /*
-> > > > +      * There's no possibility of racing, since wait_for_isolated_drain()
-> > > > +      * checks the isolated count under &class->lock after enqueuing
-> > > > +      * on migration_wait.
-> > > > +      */
-> > > > +     if (class->isolated == 0 && waitqueue_active(&pool->migration_wait))
-> > > > +             wake_up_all(&pool->migration_wait);
-> > > > +}
-> > > > +
-> > > >  static void replace_sub_page(struct size_class *class, struct zspage *zspage,
-> > > >                               struct page *newpage, struct page *oldpage)
-> > > >  {
-> > > > @@ -1986,6 +2008,7 @@ static bool zs_page_isolate(struct page *page, isolate_mode_t mode)
-> > > >        */
-> > > >       if (!list_empty(&zspage->list) && !is_zspage_isolated(zspage)) {
-> > > >               get_zspage_mapping(zspage, &class_idx, &fullness);
-> > > > +             class->isolated++;
-> > > >               remove_zspage(class, zspage, fullness);
-> > > >       }
-> > > >
-> > > > @@ -2085,8 +2108,14 @@ static int zs_page_migrate(struct address_space *mapping, struct page *newpage,
-> > > >        * Page migration is done so let's putback isolated zspage to
-> > > >        * the list if @page is final isolated subpage in the zspage.
-> > > >        */
-> > > > -     if (!is_zspage_isolated(zspage))
-> > > > +     if (!is_zspage_isolated(zspage)) {
-> > > > +             /*
-> > > > +              * We still hold the class lock while all of this is happening,
-> > > > +              * so we cannot race with zs_destroy_pool()
-> > > > +              */
-> > > >               putback_zspage_deferred(pool, class, zspage);
-> > > > +             zs_class_dec_isolated(pool, class);
-> > > > +     }
-> > > >
-> > > >       reset_page(page);
-> > > >       put_page(page);
-> > > > @@ -2131,9 +2160,11 @@ static void zs_page_putback(struct page *page)
-> > > >
-> > > >       spin_lock(&class->lock);
-> > > >       dec_zspage_isolation(zspage);
-> > > > -     if (!is_zspage_isolated(zspage))
-> > > > -             putback_zspage_deferred(pool, class, zspage);
-> > > >
-> > > > +     if (!is_zspage_isolated(zspage)) {
-> > > > +             putback_zspage_deferred(pool, class, zspage);
-> > > > +             zs_class_dec_isolated(pool, class);
-> > > > +     }
-> > > >       spin_unlock(&class->lock);
-> > > >  }
-> > > >
-> > > > @@ -2156,8 +2187,36 @@ static int zs_register_migration(struct zs_pool *pool)
-> > > >       return 0;
-> > > >  }
-> > > >
-> > > > +static bool class_isolated_are_drained(struct size_class *class)
-> > > > +{
-> > > > +     bool ret;
-> > > > +
-> > > > +     spin_lock(&class->lock);
-> > > > +     ret = class->isolated == 0;
-> > > > +     spin_unlock(&class->lock);
-> > > > +     return ret;
-> > > > +}
-> > > > +
-> > > > +/* Function for resolving migration */
-> > > > +static void wait_for_isolated_drain(struct zs_pool *pool)
-> > > > +{
-> > > > +     int i;
-> > > > +
-> > > > +     /*
-> > > > +      * We're in the process of destroying the pool, so there are no
-> > > > +      * active allocations. zs_page_isolate() fails for completely free
-> > > > +      * zspages, so we need only wait for each size_class's isolated
-> > > > +      * count to hit zero.
-> > > > +      */
-> > > > +     for (i = 0; i < ZS_SIZE_CLASSES; i++) {
-> > > > +             wait_event(pool->migration_wait,
-> > > > +                        class_isolated_are_drained(pool->size_class[i]));
-> > > > +     }
-> > > > +}
-> > > > +
-> > > >  static void zs_unregister_migration(struct zs_pool *pool)
-> > > >  {
-> > > > +     wait_for_isolated_drain(pool); /* This can block */
-> > > >       flush_work(&pool->free_work);
-> > > >       iput(pool->inode);
-> > > >  }
-> > > > @@ -2401,6 +2460,8 @@ struct zs_pool *zs_create_pool(const char *name)
-> > > >       if (!pool->name)
-> > > >               goto err;
-> > > >
-> > > > +     init_waitqueue_head(&pool->migration_wait);
-> > > > +
-> > > >       if (create_cache(pool))
-> > > >               goto err;
-> > > >
-> > > > @@ -2466,6 +2527,7 @@ struct zs_pool *zs_create_pool(const char *name)
-> > > >               class->index = i;
-> > > >               class->pages_per_zspage = pages_per_zspage;
-> > > >               class->objs_per_zspage = objs_per_zspage;
-> > > > +             class->isolated = 0;
-> > > >               spin_lock_init(&class->lock);
-> > > >               pool->size_class[i] = class;
-> > > >               for (fullness = ZS_EMPTY; fullness < NR_ZS_FULLNESS;
-> > > > --
-> > > > 2.22.0.770.g0f2c4a37fd-goog
-> > > >
+> +		unsigned long flags;
+> +		u8 *buf;
+> +
+> +		buf = kmalloc_node(tp->rx_buf_sz, mflags, node);
+> +		if (!buf)
+> +			goto free_rx;
+> +
+> +		if (buf != rx_agg_align(buf)) {
+> +			kfree(buf);
+> +			buf = kmalloc_node(tp->rx_buf_sz + RX_ALIGN, mflags,
+> +					   node);
+> +			if (!buf)
+> +				goto free_rx;
+> +		}
+> +
+> +		rx_agg->buffer = buf;
+> +		rx_agg->head = rx_agg_align(buf);
+> +
+> +		rx_agg->urb = usb_alloc_urb(0, mflags);
+> +		if (!rx_agg->urb)
+> +			goto free_buf;
+> +
+> +		rx_agg->context = tp;
+> +
+> +		INIT_LIST_HEAD(&rx_agg->list);
+> +		INIT_LIST_HEAD(&rx_agg->info_list);
+> +		spin_lock_irqsave(&tp->rx_lock, flags);
+> +		list_add_tail(&rx_agg->info_list, &tp->rx_info);
+> +		spin_unlock_irqrestore(&tp->rx_lock, flags);
+> +
+> +		atomic_inc(&tp->rx_count);
+> +	}
+> +
+> +	return rx_agg;
+> +
+> +free_buf:
+> +	kfree(rx_agg->buffer);
+> +free_rx:
+> +	kfree(rx_agg);
+> +	return NULL;
+> +}
+> +
+>  static void free_all_mem(struct r8152 *tp)
+>  {
+> +	struct list_head *cursor, *next;
+> +	unsigned long flags;
+>  	int i;
+>  
+> -	for (i = 0; i < RTL8152_MAX_RX; i++) {
+> -		usb_free_urb(tp->rx_info[i].urb);
+> -		tp->rx_info[i].urb = NULL;
+> +	spin_lock_irqsave(&tp->rx_lock, flags);
+>  
+> -		kfree(tp->rx_info[i].buffer);
+> -		tp->rx_info[i].buffer = NULL;
+> -		tp->rx_info[i].head = NULL;
+> +	list_for_each_safe(cursor, next, &tp->rx_info) {
+
+nit: list_for_each_entry_safe, perhaps?
+
+> +		struct rx_agg *agg;
+> +
+> +		agg = list_entry(cursor, struct rx_agg, info_list);
+> +		free_rx_agg(tp, agg);
+>  	}
+>  
+> +	spin_unlock_irqrestore(&tp->rx_lock, flags);
+> +
+> +	WARN_ON(unlikely(atomic_read(&tp->rx_count)));
+
+nit: WARN_ON() has an unlikely() already built in
+
+>  	for (i = 0; i < RTL8152_MAX_TX; i++) {
+>  		usb_free_urb(tp->tx_info[i].urb);
+>  		tp->tx_info[i].urb = NULL;
+> @@ -1503,46 +1573,28 @@ static int alloc_all_mem(struct r8152 *tp)
+>  	struct usb_interface *intf = tp->intf;
+>  	struct usb_host_interface *alt = intf->cur_altsetting;
+>  	struct usb_host_endpoint *ep_intr = alt->endpoint + 2;
+> -	struct urb *urb;
+>  	int node, i;
+> -	u8 *buf;
+>  
+>  	node = netdev->dev.parent ? dev_to_node(netdev->dev.parent) : -1;
+>  
+>  	spin_lock_init(&tp->rx_lock);
+>  	spin_lock_init(&tp->tx_lock);
+> +	INIT_LIST_HEAD(&tp->rx_info);
+>  	INIT_LIST_HEAD(&tp->tx_free);
+>  	INIT_LIST_HEAD(&tp->rx_done);
+>  	skb_queue_head_init(&tp->tx_queue);
+>  	skb_queue_head_init(&tp->rx_queue);
+> +	atomic_set(&tp->rx_count, 0);
+>  
+>  	for (i = 0; i < RTL8152_MAX_RX; i++) {
+> -		buf = kmalloc_node(tp->rx_buf_sz, GFP_KERNEL, node);
+> -		if (!buf)
+> -			goto err1;
+> -
+> -		if (buf != rx_agg_align(buf)) {
+> -			kfree(buf);
+> -			buf = kmalloc_node(tp->rx_buf_sz + RX_ALIGN, GFP_KERNEL,
+> -					   node);
+> -			if (!buf)
+> -				goto err1;
+> -		}
+> -
+> -		urb = usb_alloc_urb(0, GFP_KERNEL);
+> -		if (!urb) {
+> -			kfree(buf);
+> +		if (!alloc_rx_agg(tp, GFP_KERNEL))
+>  			goto err1;
+> -		}
+> -
+> -		INIT_LIST_HEAD(&tp->rx_info[i].list);
+> -		tp->rx_info[i].context = tp;
+> -		tp->rx_info[i].urb = urb;
+> -		tp->rx_info[i].buffer = buf;
+> -		tp->rx_info[i].head = rx_agg_align(buf);
+>  	}
+>  
+>  	for (i = 0; i < RTL8152_MAX_TX; i++) {
+> +		struct urb *urb;
+> +		u8 *buf;
+> +
+>  		buf = kmalloc_node(agg_buf_sz, GFP_KERNEL, node);
+>  		if (!buf)
+>  			goto err1;
+> @@ -2331,44 +2383,69 @@ static void rxdy_gated_en(struct r8152 *tp, bool enable)
+>  
+>  static int rtl_start_rx(struct r8152 *tp)
+>  {
+> -	int i, ret = 0;
+> +	struct list_head *cursor, *next, tmp_list;
+> +	unsigned long flags;
+> +	int ret = 0;
+> +
+> +	INIT_LIST_HEAD(&tmp_list);
+> +
+> +	spin_lock_irqsave(&tp->rx_lock, flags);
+>  
+>  	INIT_LIST_HEAD(&tp->rx_done);
+> -	for (i = 0; i < RTL8152_MAX_RX; i++) {
+> -		INIT_LIST_HEAD(&tp->rx_info[i].list);
+> -		ret = r8152_submit_rx(tp, &tp->rx_info[i], GFP_KERNEL);
+> -		if (ret)
+> -			break;
+> -	}
+>  
+> -	if (ret && ++i < RTL8152_MAX_RX) {
+> -		struct list_head rx_queue;
+> -		unsigned long flags;
+> +	list_splice_init(&tp->rx_info, &tmp_list);
+>  
+> -		INIT_LIST_HEAD(&rx_queue);
+> +	spin_unlock_irqrestore(&tp->rx_lock, flags);
+>  
+> -		do {
+> -			struct rx_agg *agg = &tp->rx_info[i++];
+> -			struct urb *urb = agg->urb;
+> +	list_for_each_safe(cursor, next, &tmp_list) {
+> +		struct rx_agg *agg;
+>  
+> -			urb->actual_length = 0;
+> -			list_add_tail(&agg->list, &rx_queue);
+> -		} while (i < RTL8152_MAX_RX);
+> +		agg = list_entry(cursor, struct rx_agg, info_list);
+> +		INIT_LIST_HEAD(&agg->list);
+>  
+> -		spin_lock_irqsave(&tp->rx_lock, flags);
+> -		list_splice_tail(&rx_queue, &tp->rx_done);
+> -		spin_unlock_irqrestore(&tp->rx_lock, flags);
+> +		if (ret < 0)
+> +			list_add_tail(&agg->list, &tp->rx_done);
+> +		else
+> +			ret = r8152_submit_rx(tp, agg, GFP_KERNEL);
+>  	}
+>  
+> +	spin_lock_irqsave(&tp->rx_lock, flags);
+> +	WARN_ON(unlikely(!list_empty(&tp->rx_info)));
+> +	list_splice(&tmp_list, &tp->rx_info);
+> +	spin_unlock_irqrestore(&tp->rx_lock, flags);
+> +
+>  	return ret;
+>  }
+>  
+>  static int rtl_stop_rx(struct r8152 *tp)
+>  {
+> -	int i;
+> +	struct list_head *cursor, *next, tmp_list;
+> +	unsigned long flags;
+> +
+> +	INIT_LIST_HEAD(&tmp_list);
+>  
+> -	for (i = 0; i < RTL8152_MAX_RX; i++)
+> -		usb_kill_urb(tp->rx_info[i].urb);
+> +	/* The usb_kill_urb() couldn't be used in atomic.
+> +	 * Therefore, move the list of rx_info to a tmp one.
+> +	 * Then, list_for_each_safe could be used without
+> +	 * spin lock.
+> +	 */
+
+Would you mind explaining in a little more detail why taking the
+entries from the list for a brief period of time is safe? 
+
+> +	spin_lock_irqsave(&tp->rx_lock, flags);
+> +	list_splice_init(&tp->rx_info, &tmp_list);
+> +	spin_unlock_irqrestore(&tp->rx_lock, flags);
+> +
+> +	list_for_each_safe(cursor, next, &tmp_list) {
+> +		struct rx_agg *agg;
+> +
+> +		agg = list_entry(cursor, struct rx_agg, info_list);
+> +		usb_kill_urb(agg->urb);
+> +	}
+> +
+> +	/* Move back the list of temp to the rx_info */
+> +	spin_lock_irqsave(&tp->rx_lock, flags);
+> +	WARN_ON(unlikely(!list_empty(&tp->rx_info)));
+> +	list_splice(&tmp_list, &tp->rx_info);
+> +	spin_unlock_irqrestore(&tp->rx_lock, flags);
+>  
+>  	while (!skb_queue_empty(&tp->rx_queue))
+>  		dev_kfree_skb(__skb_dequeue(&tp->rx_queue));
+
