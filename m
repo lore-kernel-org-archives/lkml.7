@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D570C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 850D0C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07E10217F5
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57524217F5
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:37:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127418;
-	bh=jJbQj9IBuTF7hQ6keXh168M8a7RYG+o6Io5SAcC7px8=;
+	s=default; t=1565127424;
+	bh=l8NwiHFMXDEl1X0qgSIpGIWwQKOuiYtWWz4EUu6nMos=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qmD/Q4RwAUBF+b0EBc7qf796E6EaafEzsunBRAD+p4SuZZcX4MdqbU+b+g5HSrZER
-	 bkgVkcB27Sskdbe7JTjR1tAkJ2aKIyB9vMluoBjSWL38DIlRy837Nsod/s9FUzxxin
-	 W/5+h/fGdVhZOkHVgMkIKOzg8QMqJBH4MESAtiKA=
+	b=geSI5dM+9juuUb7qH1706m91ws+tsZAM733pYaMYuy6uGJRWpqe7+FEzImLQSPrnF
+	 bi2+vlk6CLw6V2DvOPVgf80FlGbdOgW8eE1zS5QX2/I6RQlMIPWMj2lfepPYQZ85Gt
+	 BsjBcmI1Bxf54IWKIF/LIdNu6Om7ycnfDloMrH3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729173AbfHFVg5 (ORCPT
+        id S1729209AbfHFVhD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:36:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54616 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:37:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729099AbfHFVgs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:36:48 -0400
+        id S1729172AbfHFVg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:36:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6F67217F5;
-        Tue,  6 Aug 2019 21:36:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2552217F5;
+        Tue,  6 Aug 2019 21:36:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127407;
-        bh=jJbQj9IBuTF7hQ6keXh168M8a7RYG+o6Io5SAcC7px8=;
+        s=default; t=1565127416;
+        bh=l8NwiHFMXDEl1X0qgSIpGIWwQKOuiYtWWz4EUu6nMos=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CYm/rhNMfI98YkIisxJM4CEqWTBZ6Ld+0QGKM+a6ID/WMXCWS0mkomHJ91gsWujKK
-         uG8m+FgcCQTsk/LyuOVgr67Xoa0Q7ORE+5eRlk8P60aUEKe4t1xgidXQFQx52lOvUK
-         Tt7E84v/xgr60FWdXWzCDVzgSQIGjqgCT+Dx4exo=
+        b=JneXrAqzX0Yf9jxDFwOtBA2BFyIa6LDmqhEal81vpyWVJtCL83nD6DOznNK7baKeg
+         o+ti6j51sESg7CVo3ALlYJ+fI+88/VgaNY8K/2COSmH/jHqNRiDrIqUEYIANCSRcPT
+         UcJNEZVQIenSoRv66jQG7MDjWOqYURoAmW1MPIxg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 12/25] scsi: qla2xxx: Fix possible fcport null-pointer dereferences
-Date:   Tue,  6 Aug 2019 17:36:09 -0400
-Message-Id: <20190806213624.20194-12-sashal@kernel.org>
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sean Paul <seanpaul@chromium.org>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 17/25] drm/vgem: fix cache synchronization on arm/arm64
+Date:   Tue,  6 Aug 2019 17:36:14 -0400
+Message-Id: <20190806213624.20194-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213624.20194-1-sashal@kernel.org>
 References: <20190806213624.20194-1-sashal@kernel.org>
@@ -60,48 +61,215 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Rob Clark <robdclark@chromium.org>
 
-[ Upstream commit e82f04ec6ba91065fd33a6201ffd7cab840e1475 ]
+[ Upstream commit 7e9e5ead55beacc11116b3fb90b0de6e7cf55a69 ]
 
-In qla2x00_alloc_fcport(), fcport is assigned to NULL in the error
-handling code on line 4880:
-    fcport = NULL;
+drm_cflush_pages() is no-op on arm/arm64.  But instead we can use
+dma_sync API.
 
-Then fcport is used on lines 4883-4886:
-    INIT_WORK(&fcport->del_work, qla24xx_delete_sess_fn);
-	INIT_WORK(&fcport->reg_work, qla_register_fcport_fn);
-	INIT_LIST_HEAD(&fcport->gnl_entry);
-	INIT_LIST_HEAD(&fcport->list);
+Fixes failures w/ vgem_test.
 
-Thus, possible null-pointer dereferences may occur.
-
-To fix these bugs, qla2x00_alloc_fcport() directly returns NULL
-in the error handling code.
-
-These bugs are found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190717211542.30482-1-robdclark@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/vgem/vgem_drv.c | 130 ++++++++++++++++++++------------
+ 1 file changed, 83 insertions(+), 47 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
-index aef1e1a555350..0e154fea693e7 100644
---- a/drivers/scsi/qla2xxx/qla_init.c
-+++ b/drivers/scsi/qla2xxx/qla_init.c
-@@ -4252,7 +4252,7 @@ qla2x00_alloc_fcport(scsi_qla_host_t *vha, gfp_t flags)
- 		ql_log(ql_log_warn, vha, 0xd049,
- 		    "Failed to allocate ct_sns request.\n");
- 		kfree(fcport);
--		fcport = NULL;
-+		return NULL;
+diff --git a/drivers/gpu/drm/vgem/vgem_drv.c b/drivers/gpu/drm/vgem/vgem_drv.c
+index aa592277d5108..b0aa362a31e41 100644
+--- a/drivers/gpu/drm/vgem/vgem_drv.c
++++ b/drivers/gpu/drm/vgem/vgem_drv.c
+@@ -47,10 +47,16 @@ static struct vgem_device {
+ 	struct platform_device *platform;
+ } *vgem_device;
+ 
++static void sync_and_unpin(struct drm_vgem_gem_object *bo);
++static struct page **pin_and_sync(struct drm_vgem_gem_object *bo);
++
+ static void vgem_gem_free_object(struct drm_gem_object *obj)
+ {
+ 	struct drm_vgem_gem_object *vgem_obj = to_vgem_bo(obj);
+ 
++	if (!obj->import_attach)
++		sync_and_unpin(vgem_obj);
++
+ 	kvfree(vgem_obj->pages);
+ 	mutex_destroy(&vgem_obj->pages_lock);
+ 
+@@ -79,40 +85,15 @@ static int vgem_gem_fault(struct vm_fault *vmf)
+ 
+ 	ret = -ENOENT;
+ 	mutex_lock(&obj->pages_lock);
++	if (!obj->pages)
++		pin_and_sync(obj);
+ 	if (obj->pages) {
+ 		get_page(obj->pages[page_offset]);
+ 		vmf->page = obj->pages[page_offset];
+ 		ret = 0;
  	}
- 	INIT_WORK(&fcport->del_work, qla24xx_delete_sess_fn);
- 	INIT_LIST_HEAD(&fcport->gnl_entry);
+ 	mutex_unlock(&obj->pages_lock);
+-	if (ret) {
+-		struct page *page;
+-
+-		page = shmem_read_mapping_page(
+-					file_inode(obj->base.filp)->i_mapping,
+-					page_offset);
+-		if (!IS_ERR(page)) {
+-			vmf->page = page;
+-			ret = 0;
+-		} else switch (PTR_ERR(page)) {
+-			case -ENOSPC:
+-			case -ENOMEM:
+-				ret = VM_FAULT_OOM;
+-				break;
+-			case -EBUSY:
+-				ret = VM_FAULT_RETRY;
+-				break;
+-			case -EFAULT:
+-			case -EINVAL:
+-				ret = VM_FAULT_SIGBUS;
+-				break;
+-			default:
+-				WARN_ON(PTR_ERR(page));
+-				ret = VM_FAULT_SIGBUS;
+-				break;
+-		}
+ 
+-	}
+ 	return ret;
+ }
+ 
+@@ -278,32 +259,93 @@ static const struct file_operations vgem_driver_fops = {
+ 	.release	= drm_release,
+ };
+ 
+-static struct page **vgem_pin_pages(struct drm_vgem_gem_object *bo)
++/* Called under pages_lock, except in free path (where it can't race): */
++static void sync_and_unpin(struct drm_vgem_gem_object *bo)
+ {
+-	mutex_lock(&bo->pages_lock);
+-	if (bo->pages_pin_count++ == 0) {
+-		struct page **pages;
++	struct drm_device *dev = bo->base.dev;
++
++	if (bo->table) {
++		dma_sync_sg_for_cpu(dev->dev, bo->table->sgl,
++				bo->table->nents, DMA_BIDIRECTIONAL);
++		sg_free_table(bo->table);
++		kfree(bo->table);
++		bo->table = NULL;
++	}
++
++	if (bo->pages) {
++		drm_gem_put_pages(&bo->base, bo->pages, true, true);
++		bo->pages = NULL;
++	}
++}
++
++static struct page **pin_and_sync(struct drm_vgem_gem_object *bo)
++{
++	struct drm_device *dev = bo->base.dev;
++	int npages = bo->base.size >> PAGE_SHIFT;
++	struct page **pages;
++	struct sg_table *sgt;
++
++	WARN_ON(!mutex_is_locked(&bo->pages_lock));
++
++	pages = drm_gem_get_pages(&bo->base);
++	if (IS_ERR(pages)) {
++		bo->pages_pin_count--;
++		mutex_unlock(&bo->pages_lock);
++		return pages;
++	}
+ 
+-		pages = drm_gem_get_pages(&bo->base);
+-		if (IS_ERR(pages)) {
+-			bo->pages_pin_count--;
+-			mutex_unlock(&bo->pages_lock);
+-			return pages;
+-		}
++	sgt = drm_prime_pages_to_sg(pages, npages);
++	if (IS_ERR(sgt)) {
++		dev_err(dev->dev,
++			"failed to allocate sgt: %ld\n",
++			PTR_ERR(bo->table));
++		drm_gem_put_pages(&bo->base, pages, false, false);
++		mutex_unlock(&bo->pages_lock);
++		return ERR_CAST(bo->table);
++	}
++
++	/*
++	 * Flush the object from the CPU cache so that importers
++	 * can rely on coherent indirect access via the exported
++	 * dma-address.
++	 */
++	dma_sync_sg_for_device(dev->dev, sgt->sgl,
++			sgt->nents, DMA_BIDIRECTIONAL);
++
++	bo->pages = pages;
++	bo->table = sgt;
++
++	return pages;
++}
++
++static struct page **vgem_pin_pages(struct drm_vgem_gem_object *bo)
++{
++	struct page **pages;
+ 
+-		bo->pages = pages;
++	mutex_lock(&bo->pages_lock);
++	if (bo->pages_pin_count++ == 0 && !bo->pages) {
++		pages = pin_and_sync(bo);
++	} else {
++		WARN_ON(!bo->pages);
++		pages = bo->pages;
+ 	}
+ 	mutex_unlock(&bo->pages_lock);
+ 
+-	return bo->pages;
++	return pages;
+ }
+ 
+ static void vgem_unpin_pages(struct drm_vgem_gem_object *bo)
+ {
++	/*
++	 * We shouldn't hit this for imported bo's.. in the import
++	 * case we don't own the scatter-table
++	 */
++	WARN_ON(bo->base.import_attach);
++
+ 	mutex_lock(&bo->pages_lock);
+ 	if (--bo->pages_pin_count == 0) {
+-		drm_gem_put_pages(&bo->base, bo->pages, true, true);
+-		bo->pages = NULL;
++		WARN_ON(!bo->table);
++		sync_and_unpin(bo);
+ 	}
+ 	mutex_unlock(&bo->pages_lock);
+ }
+@@ -311,18 +353,12 @@ static void vgem_unpin_pages(struct drm_vgem_gem_object *bo)
+ static int vgem_prime_pin(struct drm_gem_object *obj)
+ {
+ 	struct drm_vgem_gem_object *bo = to_vgem_bo(obj);
+-	long n_pages = obj->size >> PAGE_SHIFT;
+ 	struct page **pages;
+ 
+ 	pages = vgem_pin_pages(bo);
+ 	if (IS_ERR(pages))
+ 		return PTR_ERR(pages);
+ 
+-	/* Flush the object from the CPU cache so that importers can rely
+-	 * on coherent indirect access via the exported dma-address.
+-	 */
+-	drm_clflush_pages(pages, n_pages);
+-
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
