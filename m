@@ -2,169 +2,96 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48151C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 19:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4886C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 19:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13D51205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 19:52:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B06D7205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 19:53:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Yzk47bOJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BVtj3Pif"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726295AbfHFTwp (ORCPT
+        id S1726444AbfHFTxD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 15:52:45 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:37885 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbfHFTwp (ORCPT
+        Tue, 6 Aug 2019 15:53:03 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40376 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbfHFTxD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 15:52:45 -0400
-Received: by mail-oi1-f196.google.com with SMTP id t76so68433536oih.4;
-        Tue, 06 Aug 2019 12:52:44 -0700 (PDT)
+        Tue, 6 Aug 2019 15:53:03 -0400
+Received: by mail-oi1-f195.google.com with SMTP id w196so47066804oie.7;
+        Tue, 06 Aug 2019 12:53:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=4E/kye31gm/TUQMINOCXfCGV9Lfx0lm6nnvhyTx90lw=;
-        b=Yzk47bOJktflINEYudmIXcRskp+l8U5BovlNaqWp2akIE2xwTuHvoX3zT22MAUDuJ3
-         XO8JCNSJ39+r3FvB83PSqvCOdBb6dA453gqBq5UjxYm/x939xxHrUQzGEjpWMeDkbg7C
-         PU9R1vq6BARJBbD+Qx8FegPLsD/BA+rrPXewHWSRN9ukZN2EId0grtB068+Xr6vbxVvs
-         fJ9+rJiecg5Jn3pzoqdn4FJOtqfEIua19AftTYsNEwolx2VFWVCN7f0cwiIYqdjfj2ew
-         nwgw6Avn3h9aL2w/i5R+J0oEt6Ie4TjULWWKGT8FbgpuY1Nd4cVcGk7HfaKsTVYhV7NB
-         aslA==
+        bh=KmU4HJB87X8xhCUfLfjkNelVmkZzhKKTTRnmGP3cf9U=;
+        b=BVtj3Pifd5xr8+HJJFf4aJmYb9qybfaNXVqzIbEG9IIKBACsE97O8oil++vm+WDz3f
+         nwOXAtDNiBE7kkTXWbyXNkrR+vUtboSqYBexi4cmkHKKx7Y21RHWf/TsIXh3OBqiyIn8
+         kgEQgTkoUh/m6QVIPewlvTNVT86h2iU2w+1lZdEgSBVTfAwvY//38uEdGIsb4WBXzu8E
+         RtebHHU2dCD/UM/5K4RmeMlAuyvypIJ+aMUFGDELhsZ/gBs2lRUspxTgyblGARaakmS/
+         jYdNYkRuTEeqR5OiWTKp1kL44ROEmsy+3efPL++mXO8wtBHa7t8tiqTJYwKg+5X01RXs
+         HRXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4E/kye31gm/TUQMINOCXfCGV9Lfx0lm6nnvhyTx90lw=;
-        b=J97I8khRV4aUIrKxU6BpSL428fy58Qzn4U/9L8pGQy6saPuRu3i44xEiAm0Rz4v6MP
-         6DNatja/cWF+9Wn372TT1ZHqiVEeAo7oZ4YHLbcHJzLyKYKT8fPEPZOEP6E7Z7W5hlVr
-         kf8XhvCIdNf6W0k2VSXLkxmDeW/PrJoedyVufBhIBUQ52BuM3VmkSeYV/z8KmiRcOtEA
-         ZCdf0mCsSWfXVHjnRauWedADjc2s1Th3BQfU4KYoBDc3/2ZMI7mXj+R9dSBg+bgdQML2
-         8DvoT60TYlDabSldY5MPov/ziuX5y0tYFoOIlwVQiTg91eyJzYt/iP6YYQkoxYwT8luB
-         c3Ew==
-X-Gm-Message-State: APjAAAV/shxJ67pIMrWbDh2zVcJz8z03F/4C4DZPwvQL+gXJtZFEuM/P
-        HX66+xx5lFm5qM30tE4f/fNsRpSUvd4Brz3hlXU=
-X-Google-Smtp-Source: APXvYqw1ATDKzq4Ht5dmq0BSO1jAsgEOQjI9m/cdHrI7S9kc9h6PS8yJ28neuhhhpzIY2bUqGqV7RB4pF2K8DWgt1V0=
-X-Received: by 2002:a05:6808:3d6:: with SMTP id o22mr3801512oie.140.1565121163808;
- Tue, 06 Aug 2019 12:52:43 -0700 (PDT)
+        bh=KmU4HJB87X8xhCUfLfjkNelVmkZzhKKTTRnmGP3cf9U=;
+        b=SyedbWa9rkKeaR379l6VCKXeVG2clB3EBZH1G8q87s02Z+YOnQ5bFlrQQ/oxK/aBfs
+         wLOCLm/lF34psAb5Ai3x3AKYs8BjsyEKoDiwanJ01fu0WrBPnb62XI7WyB6KKIPBBBlz
+         3Hapfn0WuRDwsEdoLwHd7M33Ezvf142Os4oSc6nq9CN2oElKgkX6BigZjSLQe5LxJVL8
+         Ch0Rt7kWOUrjhG4mevCLyUA55Ib+wZOkJDbv2KtpNniSZo2JFjqXE5h2YjnTxWhhFIM6
+         unXbMqFJouqbkrxrrpdy2szXXH7sK/bXQK7lVmTBxTcQ7HhGl2X5nsVDZqsMmL6raiYS
+         tCRg==
+X-Gm-Message-State: APjAAAXc+NPex6TofDWDUsmRGPecv9wV5HoJfvEj/JydACIhp+JvvERX
+        /YIFTe3a+wclvSZ6hQwxkeUi8HvKc/Sc75UmDwQ3RPVj
+X-Google-Smtp-Source: APXvYqx+q743nGPHX6aJH/9jIqgTQd8k5xwXFPshKqY+NszZolvWwtyutRRUfJ99Fcu5s3o7aw9Mdlg1WTzTh9OMidI=
+X-Received: by 2002:a02:cd82:: with SMTP id l2mr5991247jap.96.1565121182404;
+ Tue, 06 Aug 2019 12:53:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190731153529.30159-1-glaroque@baylibre.com> <20190731153529.30159-3-glaroque@baylibre.com>
- <CAFBinCDGSJABnS1L1ULueyeXZaV38qrxEA0a12gB-uyRC_TvPQ@mail.gmail.com> <14e14cd9-46bd-0d43-654c-6db64397f5c7@baylibre.com>
-In-Reply-To: <14e14cd9-46bd-0d43-654c-6db64397f5c7@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Tue, 6 Aug 2019 21:52:32 +0200
-Message-ID: <CAFBinCB3ZBPVEJKV2Rfh_w-zWrhoToYdoYE6Wox+JeB-YH+Khw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/6] thermal: amlogic: Add thermal driver to support
- G12 SoCs
-To:     guillaume La Roque <glaroque@baylibre.com>
-Cc:     daniel.lezcano@linaro.org, khilman@baylibre.com,
-        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pm@vger.kernel.org
+References: <20190806092919.13211-1-firo.yang@suse.com> <20190806.113640.171591509807004446.davem@davemloft.net>
+In-Reply-To: <20190806.113640.171591509807004446.davem@davemloft.net>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Tue, 6 Aug 2019 12:52:51 -0700
+Message-ID: <CAKgT0UctiHjKxGXHJEiJX4_aEJt1swBAxMOKPT9huXBOcf+2VQ@mail.gmail.com>
+Subject: Re: [Intel-wired-lan] [PATCH 1/1] ixgbe: sync the first fragment unconditionally
+To:     David Miller <davem@davemloft.net>
+Cc:     firo.yang@suse.com, Netdev <netdev@vger.kernel.org>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guillaume,
-
-On Mon, Aug 5, 2019 at 2:48 PM guillaume La Roque <glaroque@baylibre.com> wrote:
+On Tue, Aug 6, 2019 at 11:36 AM David Miller <davem@davemloft.net> wrote:
 >
-> Hi Martin,
+> From: Firo Yang <firo.yang@suse.com>
+> Date: Tue, 6 Aug 2019 09:29:51 +0000
 >
-> again thanks for your review.
-you're welcome - thank you for working on the driver :-)
-
-[...]
-> > The IP block has more functionality, which may be added to this driver
-> > in the future:
-> > - reading up to 16 stored temperature samples
->
-> it's not working, you can verify it if you check the regmap define in the driver. in fact temp is only write in one register, it's confirmed by amlogic.
-I missed that - so please skip this part
-
-[...]
-> >> +config AMLOGIC_THERMAL
-> > we typically use "MESON" in the Kconfig symbols:
-> > $ grep -c AMLOGIC .config
-> > 1
-> > $ grep -c MESON .config
-> > 33
+> > In Xen environment, if Xen-swiotlb is enabled, ixgbe driver
+> > could possibly allocate a page, DMA memory buffer, for the first
+> > fragment which is not suitable for Xen-swiotlb to do DMA operations.
+> > Xen-swiotlb will internally allocate another page for doing DMA
+> > operations. It requires syncing between those two pages. Otherwise,
+> > we may get an incomplete skb. To fix this problem, sync the first
+> > fragment no matter the first fargment is makred as "page_released"
+> > or not.
 > >
-> > I also wonder if we should add G12 or G12A so we don't conflict with
-> > upcoming thermal sensors with a different design (assuming that this
-> > will be a thing).
-> > for example we already have three different USB2 PHY drivers
-> >
-> > [...]
+> > Signed-off-by: Firo Yang <firo.yang@suse.com>
 >
-> i check with Neil and for new family it's better to use Amlogic instead of meson.
-can you please share the considerations behind this decision?
-if new drivers should use AMLOGIC_* Kconfig symbols instead of MESON_*
-then we all should know about it
+> I don't understand, an unmap operation implies a sync operation.
 
-> i don't add G12 because we already know it's same sensors for SM1 SoC family [0].
-my idea behind this was to avoid conflicts in the future
-in case of the thermal driver we may be fine with using a generic name
-assuming that Amlogic will not switch to a new IP block in the next
-years
-I'm not saying you have to change the name - I'm bringing this up so
-you can decide for yourself based on examples from the past
+Actually it doesn't because ixgbe is mapping and unmapping with
+DMA_ATTR_SKIP_CPU_SYNC.
 
-here are a few examples:
-- when Kevin upstreamed the MMC driver for GX he decided to use
-MMC_MESON_GX for the Kconfig symbol name. it turns out that this is
-smart because there are at least two other MMC controller IPs on the
-32-bit SoCs. due to him including GX in the name the drivers are easy
-to differentiate (MMC_MESON_MX_SDIO and MMC_MESON_MX_SDHC being the
-other ones, while the latter is not upstream yet)
-- when Carlo upstreamed the eFuse driver he decided to use MESON_EFUSE
-for the Kconfig symbol name. I found out much later that the 32-bit
-SoCs use a different IP (or at least direct register access instead of
-going through Secure Monitor). the driver for the 32-bit SoCs now uses
-MESON_MX_EFUSE. if you don't know which driver applies where then it's
-easy to mix up MESON_EFUSE and MESON_MX_EFUSE
-- when Jerome upstreamed the ALSA driver for AXG (which is also used
-on G12A and G12B) he decided to use the SND_MESON_AXG_* prefix for the
-Kconfig symbol names. in my opinion this was a good choice because GXM
-and everything earlier (including the 32-bit SoCs) use a different
-audio IP block. we won't have a Kconfig symbol name clash when a
-driver for the "older" SoCs is upstreamed
-- (there are more examples, Meson8b USB PHY driver, Meson8b DWMAC
-glue, ... - just like there's many examples where the IP block is
-mostly compatible with older generations: SAR ADC, RNG, SPI, ...)
-
-I'm not sure what driver naming rules other mainline SoC teams use
-to me it seems that the rule for Allwinner driver names is to use the
-"code-name of the first SoC the IP block appeared in"
-
-[...]
-> >> +static int amlogic_thermal_get_temp(void *data, int *temp)
-> >> +{
-> >> +       unsigned int tvalue;
-> >> +       struct amlogic_thermal *pdata = data;
-> >> +
-> >> +       if (!data)
-> >> +               return -EINVAL;
-> >> +
-> >> +       regmap_read(pdata->regmap, TSENSOR_STAT0, &tvalue);
-> >> +       *temp = code_to_temp(pdata,
-> >> +                            tvalue & TSENSOR_READ_TEMP_MASK);
-> > maybe simply move the implementation from code_to_temp here?
->
-> for the optional function it could be a problem if i move all in code_to_temp.
->
-> i prefer to have a function which are just do the conversion.
-I didn't consider this before but you are right
-if the other temperature registers (like IRQ thresholds) also use a
-"temperature code" then it should be a dedicated function (so it'll be
-easier to add more functionality to the driver)
-
-
-Martin
+The patch description isn't very good. The issue is that the sync in
+this case is being skipped in ixgbe_get_rx_buffer for a frame where
+the buffer spans more then a single page. As such we need to do both
+the sync and the unmap call on the last frame when we encounter the
+End Of Packet.
