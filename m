@@ -2,109 +2,83 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7F6C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D7CC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2EB92086D
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:30:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 764792086D
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:32:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="j9iJQxwO"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="E6PqIWDx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733251AbfHFSaw (ORCPT
+        id S1732457AbfHFScu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 14:30:52 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:5216 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733207AbfHFSav (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 14:30:51 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d49c7640000>; Tue, 06 Aug 2019 11:31:00 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 06 Aug 2019 11:30:50 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 06 Aug 2019 11:30:50 -0700
-Received: from [10.21.132.143] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 6 Aug
- 2019 18:30:48 +0000
-Subject: Re: [PATCH 5.2 000/131] 5.2.7-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20190805124951.453337465@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <c01bc729-c9c1-fe90-4850-7907fee27a2b@nvidia.com>
-Date:   Tue, 6 Aug 2019 19:30:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 6 Aug 2019 14:32:50 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:60212 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728041AbfHFSct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 14:32:49 -0400
+Received: from zn.tnic (p200300EC2F1369001D2C1334F0CDB20E.dip0.t-ipconnect.de [IPv6:2003:ec:2f13:6900:1d2c:1334:f0cd:b20e])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DF6541EC0503;
+        Tue,  6 Aug 2019 20:32:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1565116368;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=/l9VW0w4uCu16D3f5mJOrOKOlGq/I6xHwmMbd4lMFWY=;
+        b=E6PqIWDxKsMdip2+UpzkKRhk0TairgFhYExErCT9qvrOrQsJmKnrQCMeS9/1ZNqmdHTSxQ
+        PlPbpWeag0ZjofSNuhZqgrV39jMpENR5p2hxcQFnPS05ppqikHEC+lbNLIBQpQ5g2W79OS
+        8qP5T3jE8skvcVkF05PMF63U+FQ2fx0=
+Date:   Tue, 6 Aug 2019 20:33:33 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Reinette Chatre <reinette.chatre@intel.com>
+Cc:     tglx@linutronix.de, fenghua.yu@intel.com, tony.luck@intel.com,
+        kuo-lang.tseng@intel.com, mingo@redhat.com, hpa@zytor.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 01/10] x86/CPU: Expose if cache is inclusive of lower
+ level caches
+Message-ID: <20190806183333.GA4698@zn.tnic>
+References: <cover.1564504901.git.reinette.chatre@intel.com>
+ <6c78593207224014d6a9d43698a3d1a0b3ccf2b6.1564504901.git.reinette.chatre@intel.com>
+ <20190802180352.GE30661@zn.tnic>
+ <e532ab90-196c-8b58-215a-f56f5e409512@intel.com>
+ <20190803094423.GA2100@zn.tnic>
+ <122b005a-46b1-2b1e-45a8-7f92a5dba2d9@intel.com>
+ <20190806155716.GE25897@zn.tnic>
+ <151002be-33e6-20d6-7699-bc9be7e51f33@intel.com>
+ <20190806173300.GF25897@zn.tnic>
+ <d0c04521-ec1a-3468-595c-6929f25f37ff@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1565116261; bh=bQOMsPRpWfX8AcWHZv8yqa6y1pTvG4iIz83aVeLmSHM=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=j9iJQxwONCUniRP6oKAT3E7Vi5l1xngB9tkKirz4yOBLy6vYgHjWq7AL5pPLSa/SN
-         Zyt6K4bWotsdwzMIce+N2mpbHKKPrIGMwdcLUqmEJFKNhC6Eqb4kH/uxSwsD8/eyJS
-         9z3szsjKKVp+LWHzk14EE+gBaD0zQ2X6+F0+1Uxrn34WAR2scsPCGiy1r8N1OUratb
-         MS8cz98QIfTZFKTmZcuL0AJIaLqT5tdXrJ/8NYIQ1VECTItPJOhI54012vjGudx1YN
-         3SStUhzKeF69Anf6L30D0RHzLJzErMhrGNWHh84AJ0q43LgS9Q7ELw/rdeu/y0v/Dn
-         YsL7xziI4/y0Q==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <d0c04521-ec1a-3468-595c-6929f25f37ff@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 06, 2019 at 11:13:22AM -0700, Reinette Chatre wrote:
+> Some platforms being enabled in this round have SKUs with inclusive
+> cache and also SKUs with non-inclusive cache. The non-inclusive cache
+> SKUs do not support cache pseudo-locking and cannot be made to support
+> cache pseudo-locking with software changes. Needing to know if cache is
+> inclusive or not will thus remain a requirement to distinguish between
+> these different SKUs. Supporting cache pseudo-locking on platforms with
+> non inclusive cache will require new hardware features.
 
-On 05/08/2019 14:01, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.2.7 release.
-> There are 131 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed 07 Aug 2019 12:47:58 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.7-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-
-All tests passing for Tegra ...
-
-Test results for stable-v5.2:
-    12 builds:	12 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    38 tests:	38 pass, 0 fail
-
-Linux version:	5.2.7-rc1-g22499a291939
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
-
-Cheers
-Jon
+Is there another way/CPUID bit or whatever to tell us whether the
+platform supports cache pseudo-locking or is the cache inclusivity the
+only one?
 
 -- 
-nvpublic
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
