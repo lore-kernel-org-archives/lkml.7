@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CDEC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75533C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18C5321874
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 481A22189E
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:43:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127801;
-	bh=s4vO960xaF/WXh1KYwGXEgeKkh5fC0qCzFj6uInBGGs=;
+	s=default; t=1565127804;
+	bh=3A6m9fMUKPW0uA/L4zOoMyYo00AiR3KuJVo9+xKS1CU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e6S4GSj4RAiaCFHLrfuoKx6EYLAILD9BZc2q3/A+LwdcMpSSZ1zcTXJ03bSoYD6qE
-	 ogbJlMBRtcJsYOp2XZRmLA6qCRu4SVYYkE00ZAIpesTXKWbInDWtUzRZqb0o/aexyG
-	 1/gut1JxhsvB6U6ImiPwg/uTOzQJZueLyouUebxo=
+	b=UlGDZG142YzC4XDVsOFtYQi0z84LXVoEfA7U1G51UNtDYacgL2Y2Hs8vrXkl9ZjoS
+	 nFQiypCnknBVG0ZDMXFBUGp3X7xaEl5ohhLCq2CQV/mKRB8NsQMAENdWZTlKWS8JHm
+	 fxJ7sYDxuF1orE3oFsCG622fgZN869xkcmUNvxCU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbfHFVer (ORCPT
+        id S1728934AbfHFVnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:34:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52526 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:43:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727779AbfHFVen (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:34:43 -0400
+        id S1727881AbfHFVer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:34:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC0722089E;
-        Tue,  6 Aug 2019 21:34:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 106012089E;
+        Tue,  6 Aug 2019 21:34:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127282;
-        bh=s4vO960xaF/WXh1KYwGXEgeKkh5fC0qCzFj6uInBGGs=;
+        s=default; t=1565127286;
+        bh=3A6m9fMUKPW0uA/L4zOoMyYo00AiR3KuJVo9+xKS1CU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uZ2WGMGXGlAVCW5ydEA4J0abRpXS/R02Dsgreaz0iAUZhikRUu/I6vMjIE98dtUz8
-         9k50FvZrg7sTV6ZT0gWGAq3Gh9zvePzJ3CNY8rIGr1S8r3LCpdY4vZ5icAfYlxPvqL
-         tbn98qc+TmQE48WIUyQZu6Fj0lySRtR5+WAF88BQ=
+        b=Nj6mLkp8Ij16qORmI4NIvb4lpFW5f6z4lC0fimakhM+HqgcBfzHQSzIm2f1v02N+8
+         i5H9/BrApvndxd1fv75Fw9swLVOJfzeawMqofdJUETaxsVo1hTziaRlYi4PWOt93ss
+         znCXPoCbE3Au1hplTIF0YODj/Hk7EVOZIsHTzfwc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 41/59] arm64: unwind: Prohibit probing on return_address()
-Date:   Tue,  6 Aug 2019 17:33:01 -0400
-Message-Id: <20190806213319.19203-41-sashal@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>, Will Deacon <will@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 43/59] arm64/mm: fix variable 'tag' set but not used
+Date:   Tue,  6 Aug 2019 17:33:03 -0400
+Message-Id: <20190806213319.19203-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213319.19203-1-sashal@kernel.org>
 References: <20190806213319.19203-1-sashal@kernel.org>
@@ -59,76 +58,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit ee07b93e7721ccd5d5b9fa6f0c10cb3fe2f1f4f9 ]
+[ Upstream commit 7732d20a160c76006c7fe7bca5178aea6af1d2e8 ]
 
-Prohibit probing on return_address() and subroutines which
-is called from return_address(), since the it is invoked from
-trace_hardirqs_off() which is also kprobe blacklisted.
+When CONFIG_KASAN_SW_TAGS=n, set_tag() is compiled away. GCC throws a
+warning,
 
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+mm/kasan/common.c: In function '__kasan_kmalloc':
+mm/kasan/common.c:464:5: warning: variable 'tag' set but not used
+[-Wunused-but-set-variable]
+  u8 tag = 0xff;
+     ^~~
+
+Fix it by making __tag_set() a static inline function the same as
+arch_kasan_set_tag() in mm/kasan/kasan.h for consistency because there
+is a macro in arch/arm64/include/asm/kasan.h,
+
+ #define arch_kasan_set_tag(addr, tag) __tag_set(addr, tag)
+
+However, when CONFIG_DEBUG_VIRTUAL=n and CONFIG_SPARSEMEM_VMEMMAP=y,
+page_to_virt() will call __tag_set() with incorrect type of a
+parameter, so fix that as well. Also, still let page_to_virt() return
+"void *" instead of "const void *", so will not need to add a similar
+cast in lowmem_page_address().
+
+Signed-off-by: Qian Cai <cai@lca.pw>
 Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/return_address.c | 3 +++
- arch/arm64/kernel/stacktrace.c     | 3 +++
- 2 files changed, 6 insertions(+)
+ arch/arm64/include/asm/memory.h | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/kernel/return_address.c b/arch/arm64/kernel/return_address.c
-index b21cba90f82dd..491184a9f0812 100644
---- a/arch/arm64/kernel/return_address.c
-+++ b/arch/arm64/kernel/return_address.c
-@@ -8,6 +8,7 @@
+diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
+index b7ba75809751e..fb04f10a78ab3 100644
+--- a/arch/arm64/include/asm/memory.h
++++ b/arch/arm64/include/asm/memory.h
+@@ -210,7 +210,11 @@ extern u64			vabits_user;
+ #define __tag_reset(addr)	untagged_addr(addr)
+ #define __tag_get(addr)		(__u8)((u64)(addr) >> 56)
+ #else
+-#define __tag_set(addr, tag)	(addr)
++static inline const void *__tag_set(const void *addr, u8 tag)
++{
++	return addr;
++}
++
+ #define __tag_reset(addr)	(addr)
+ #define __tag_get(addr)		0
+ #endif
+@@ -301,8 +305,8 @@ static inline void *phys_to_virt(phys_addr_t x)
+ #define page_to_virt(page)	({					\
+ 	unsigned long __addr =						\
+ 		((__page_to_voff(page)) | PAGE_OFFSET);			\
+-	unsigned long __addr_tag =					\
+-		 __tag_set(__addr, page_kasan_tag(page));		\
++	const void *__addr_tag =					\
++		__tag_set((void *)__addr, page_kasan_tag(page));	\
+ 	((void *)__addr_tag);						\
+ })
  
- #include <linux/export.h>
- #include <linux/ftrace.h>
-+#include <linux/kprobes.h>
- 
- #include <asm/stack_pointer.h>
- #include <asm/stacktrace.h>
-@@ -29,6 +30,7 @@ static int save_return_addr(struct stackframe *frame, void *d)
- 		return 0;
- 	}
- }
-+NOKPROBE_SYMBOL(save_return_addr);
- 
- void *return_address(unsigned int level)
- {
-@@ -52,3 +54,4 @@ void *return_address(unsigned int level)
- 		return NULL;
- }
- EXPORT_SYMBOL_GPL(return_address);
-+NOKPROBE_SYMBOL(return_address);
-diff --git a/arch/arm64/kernel/stacktrace.c b/arch/arm64/kernel/stacktrace.c
-index 62d395151abe6..cd7dab54d17b3 100644
---- a/arch/arm64/kernel/stacktrace.c
-+++ b/arch/arm64/kernel/stacktrace.c
-@@ -7,6 +7,7 @@
- #include <linux/kernel.h>
- #include <linux/export.h>
- #include <linux/ftrace.h>
-+#include <linux/kprobes.h>
- #include <linux/sched.h>
- #include <linux/sched/debug.h>
- #include <linux/sched/task_stack.h>
-@@ -73,6 +74,7 @@ int notrace unwind_frame(struct task_struct *tsk, struct stackframe *frame)
- 
- 	return 0;
- }
-+NOKPROBE_SYMBOL(unwind_frame);
- 
- void notrace walk_stackframe(struct task_struct *tsk, struct stackframe *frame,
- 		     int (*fn)(struct stackframe *, void *), void *data)
-@@ -87,6 +89,7 @@ void notrace walk_stackframe(struct task_struct *tsk, struct stackframe *frame,
- 			break;
- 	}
- }
-+NOKPROBE_SYMBOL(walk_stackframe);
- 
- #ifdef CONFIG_STACKTRACE
- struct stack_trace_data {
 -- 
 2.20.1
 
