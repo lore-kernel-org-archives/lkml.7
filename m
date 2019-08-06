@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B85FC32751
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 827B4C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3526B218A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55F5D216F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:43:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127782;
-	bh=gHKN6VO5FHUT4n/WevuPBAN7VBwc4Wg2WGpEHcz+kKs=;
+	s=default; t=1565127785;
+	bh=NK3Gu0440IlcmUfslpeJUoyzrVonh+nts5KJQ4s0wiY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XA1Hoo7HqjdXBLG4kTTCBTCqTiErfT5CViAduYLQt+x8mQpeQwHdeZWXiK6y99xkd
-	 Uv7GaKpDaLnJdKG5sAaISgx4oC1xbk4GUR6fbvSqZyNQ3UaewB92EUyoMQPa/MELrl
-	 ZkY/L51ywk+FtaYgRASn1REXcoVcsBi2jGMSQ628=
+	b=rzJ6yyPYWfX83uMxvK6gNcgMGUOF4qUtz/K7k0RjJ4TR0sOPdhfyLkYrL3fMcKaJk
+	 bCIk9TgFKz7DdRL9oNDhQchpQUSGYqpCq4t5PDRx9LNVdhHVszZHnvMIXCFZXGzUMJ
+	 llxyqNqOSdMuFJ0LmwitS6p9CTVa8N1RuJP75Hg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728856AbfHFVnB (ORCPT
+        id S1728910AbfHFVnD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:43:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52772 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:43:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728048AbfHFVe7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:34:59 -0400
+        id S1728040AbfHFVe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:34:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D2B3217D7;
-        Tue,  6 Aug 2019 21:34:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05E9C2089E;
+        Tue,  6 Aug 2019 21:34:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127299;
-        bh=gHKN6VO5FHUT4n/WevuPBAN7VBwc4Wg2WGpEHcz+kKs=;
+        s=default; t=1565127297;
+        bh=NK3Gu0440IlcmUfslpeJUoyzrVonh+nts5KJQ4s0wiY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JrK4dhXdy+dtCt41psVtswv87CiLNPLx2+eU17rUJ/YaMZCGfK+P7hJwfaqISetvL
-         pfYyVMwPvxgKfSRYJwQkHPZo+/AeezdrXJYUKWRx3Mqe253G8hvccSEtC6l8eACSIy
-         5B6p2XwQFJN8yDAUXaF4fDyWTGh5WwXmpbZohkrg=
+        b=xaesQYG/jCLbLYe8a4Sqc30N8fyxOlnqSHb3EM699B+4gB3E1KgTPdeGY04n5lS75
+         AVXu5FbqCTYj3E6fKHEBfhL/ZTfwfgSzhUwiwar+d2S9dzQIw+mmBSCrwIO0GzT2rz
+         SAeMEoIxd2NWHhK9+RTIirXyrjFqRqiYgyVUrzhg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 50/59] RDMA/hns: Fix error return code in hns_roce_v1_rsv_lp_qp()
-Date:   Tue,  6 Aug 2019 17:33:10 -0400
-Message-Id: <20190806213319.19203-50-sashal@kernel.org>
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.2 49/59] drm: msm: Fix add_gpu_components
+Date:   Tue,  6 Aug 2019 17:33:09 -0400
+Message-Id: <20190806213319.19203-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213319.19203-1-sashal@kernel.org>
 References: <20190806213319.19203-1-sashal@kernel.org>
@@ -60,40 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-[ Upstream commit 020fb3bebc224dfe9353a56ecbe2d5fac499dffc ]
+[ Upstream commit 9ca7ad6c7706edeae331c1632d0c63897418ebad ]
 
-Fix to return error code -ENOMEM from the rdma_zalloc_drv_obj() error
-handling case instead of 0, as done elsewhere in this function.
+add_gpu_components() adds found GPU nodes from the DT to the match list,
+regardless of the status of the nodes.  This is a problem, because if the
+nodes are disabled, they should not be on the match list because they will
+not be matched.  This prevents display from initing if a GPU node is
+defined, but it's status is disabled.
 
-Fixes: e8ac9389f0d7 ("RDMA: Fix allocation failure on pointer pd")
-Fixes: 21a428a019c9 ("RDMA: Handle PD allocations by IB/core")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Link: https://lore.kernel.org/r/20190801012725.150493-1-weiyongjun1@huawei.com
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+Fix this by checking the node's status before adding it to the match list.
+
+Fixes: dc3ea265b856 (drm/msm: Drop the gpu binding)
+Reviewed-by: Rob Clark <robdclark@gmail.com>
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190626180015.45242-1-jeffrey.l.hugo@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hns/hns_roce_hw_v1.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/msm/msm_drv.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v1.c b/drivers/infiniband/hw/hns/hns_roce_hw_v1.c
-index e068a02122f5e..9496c69fff3a2 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hw_v1.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_hw_v1.c
-@@ -745,8 +745,10 @@ static int hns_roce_v1_rsv_lp_qp(struct hns_roce_dev *hr_dev)
+diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+index 4a0fe8a25ad77..a56eef3cfee78 100644
+--- a/drivers/gpu/drm/msm/msm_drv.c
++++ b/drivers/gpu/drm/msm/msm_drv.c
+@@ -1267,7 +1267,8 @@ static int add_gpu_components(struct device *dev,
+ 	if (!np)
+ 		return 0;
  
- 	ibdev = &hr_dev->ib_dev;
- 	pd = rdma_zalloc_drv_obj(ibdev, ib_pd);
--	if (!pd)
-+	if (!pd) {
-+		ret = -ENOMEM;
- 		goto alloc_mem_failed;
-+	}
+-	drm_of_component_match_add(dev, matchptr, compare_of, np);
++	if (of_device_is_available(np))
++		drm_of_component_match_add(dev, matchptr, compare_of, np);
  
- 	pd->device  = ibdev;
- 	ret = hns_roce_alloc_pd(pd, NULL);
+ 	of_node_put(np);
+ 
 -- 
 2.20.1
 
