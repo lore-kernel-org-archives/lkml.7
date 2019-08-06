@@ -2,109 +2,176 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D83C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 07:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5A7C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 07:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 413C520665
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 07:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FED920665
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 07:24:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732049AbfHFHWv (ORCPT
+        id S1732022AbfHFHYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 03:22:51 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:44668 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731735AbfHFHWv (ORCPT
+        Tue, 6 Aug 2019 03:24:32 -0400
+Received: from bmailout3.hostsharing.net ([176.9.242.62]:58399 "EHLO
+        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731735AbfHFHYb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 03:22:51 -0400
-Received: by mail-ot1-f65.google.com with SMTP id b7so39926692otl.11;
-        Tue, 06 Aug 2019 00:22:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=thaFZP7CFw87PdGBAS/x5P7euY9O7a6MADouBJzdobA=;
-        b=Fb+zwMYtYvsQMRaFQG2I9Nj3NTNqArMnK+39/JMMzxOnKoKWeQU/zqBwYQ6XjhWWzo
-         kAzmpClBPLzW/vfpUn1Bvjw9OG2uyeeOaxsvdbHfGotwphxYCjSdT9te+216Rt+CX/EW
-         h7yBEJ65QplQfT3eFDCR2lZJILlTImAE32xEuM/u4rgsqPcDfdWWnAypPyQ41MIne2f7
-         Vg9LAfegda8+VsyxSYiIYQIqXlXNqxpugG1bVhQ2twVjIq6/k6LUYVWjbFsQT/36GNYq
-         cJf6hnY/BHzO5Vab5dega+E9NdvZF8+ospRn4vNf3/GlCppIYuAL8RRPbkP9tSq3loHu
-         1ivg==
-X-Gm-Message-State: APjAAAUdM5BhoJ3d7FRCf4oWKcY3sMz8lsH2Kned0ZP816msxX9HXR1b
-        14wc3Au4HHzbC1qlbuH8nVzauTTXfq+APqcRL88=
-X-Google-Smtp-Source: APXvYqw0qhnYdCkCrJv4CVIkE6TUfK9Pkw2Y8ea4/DHFvGNdwc0gdv51OB9qMX+Fu5ypV74krTuV4kZlkx8+LHxm2Hc=
-X-Received: by 2002:a9d:5c11:: with SMTP id o17mr1687245otk.107.1565076170034;
- Tue, 06 Aug 2019 00:22:50 -0700 (PDT)
+        Tue, 6 Aug 2019 03:24:31 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id A9E27101C06FB;
+        Tue,  6 Aug 2019 09:24:28 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 6ED1FCCB7; Tue,  6 Aug 2019 09:24:28 +0200 (CEST)
+Date:   Tue, 6 Aug 2019 09:24:28 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yaohongbo@huawei.com,
+        guohanjun@huawei.com, huawei.libin@huawei.com
+Subject: Re: [RFC PATCH] pciehp: use completion to wait irq_thread
+ 'pciehp_ist'
+Message-ID: <20190806072428.2v7k775tvvgkbloh@wunner.de>
+References: <1562226638-54134-1-git-send-email-wangxiongfeng2@huawei.com>
 MIME-Version: 1.0
-References: <20190710193918.31135-1-kieran.bingham+renesas@ideasonboard.com>
- <0e1b6e0b-1c94-4b00-7fda-c2a303ee3816@redhat.com> <20190731194419.GB4084@kunai>
- <f4a78e93-6aaa-bc72-cf94-06fc2574451c@redhat.com>
-In-Reply-To: <f4a78e93-6aaa-bc72-cf94-06fc2574451c@redhat.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 6 Aug 2019 09:22:39 +0200
-Message-ID: <CAMuHMdUA-hjVqSP_c0cB=76cfrucF6xxRi3ymVoEsJ2hbkfT=A@mail.gmail.com>
-Subject: Re: [PATCH RFC] modpost: Support I2C Aliases from OF tables
-To:     Javier Martinez Canillas <javierm@redhat.com>
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1562226638-54134-1-git-send-email-wangxiongfeng2@huawei.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Javier,
+On Thu, Jul 04, 2019 at 03:50:38PM +0800, Xiongfeng Wang wrote:
+> When I use the following command to power on a slot which has been
+> powered off already.
+> echo 1 > /sys/bus/pci/slots/22/power
+> It prints the following error:
+> -bash: echo: write error: No such device
+> But the slot is actually powered on and the devices is probed.
+> 
+> In function 'pciehp_sysfs_enable_slot()', we use 'wait_event()' to wait
+> until 'ctrl->pending_events' is cleared in 'pciehp_ist()'. But in some
+> situation, when 'pciehp_ist()' is woken up on a nearby CPU after
+> 'pciehp_request' is called, 'ctrl->pending_events' is cleared before we
+> go into sleep state. 'wait_event()' will check the condition before
+> going into sleep. So we return immediately and '-ENODEV' is return.
+> 
+> This patch use struct completion to wait until irq_thread 'pciehp_ist'
+> is completed.
 
-On Tue, Aug 6, 2019 at 12:25 AM Javier Martinez Canillas
-<javierm@redhat.com> wrote:
-> On 7/31/19 9:44 PM, Wolfram Sang wrote:
-> > Hi Javier,
-> >> The other option is to remove i2c_of_match_device() and don't make OF match
-> >> to fallback to i2c_of_match_device_sysfs(). This is what happens in the ACPI
-> >> case, since i2c_device_match() just calls acpi_driver_match_device() directly
-> >> and doesn't have a wrapper function that fallbacks to sysfs matching.
-> >>
-> >> In this case an I2C device ID table would be required if the devices have to
-> >> be instantiated through sysfs. That way the I2C table would be used both for
-> >> auto-loading and also to match the device when it doesn't have an of_node.
-> >
-> > That would probably mean that only a minority of drivers will not add an I2C
-> > device ID table because it is easy to add an you get the sysfs feature?
-> >
->
-> I believe so yes.
+Thank you, good catch.
 
-> As Masahiro-san mentioned, this approach will still require to add a new macro
-> MODULE_DEVICE_TABLE(i2c_of, bar_of_match) so the OF device table is used twice.
->
-> One to expose the "of:N*T*Cfoo,bar" and another one to expose it as "i2c:bar".
->
-> I expect that many developers would miss adding this macro for new drivers that
-> are DT-only and so sysfs instantiation would not work there. So whatever is the
-> approach taken we should clearly document all this so drivers authors are aware.
+Unfortunately your patch still allows the following race AFAICS:
 
-You could add a new I2C_MODULE_DEVICE_TABLE() that adds both, right?
-Makes it a little bit easier to check/enforce this.
+* pciehp_ist() is running (e.g. due to a hotplug operation)
+* a request to disable or enable the slot is submitted via sysfs,
+  the completion is reinitialized
+* pciehp_ist() finishes, signals completion
+* the sysfs request returns to user space prematurely
+* pciehp_ist() is run, handles the sysfs request, signals completion again
 
-Gr{oetje,eeting}s,
+I'd suggest something like the below instead, could you give it a whirl
+and see if it reliably fixes the issue for you?
 
-                        Geert
+-- >8 --
 
+Subject: [PATCH] PCI: pciehp: Avoid returning prematurely from sysfs requests
+
+A sysfs request to enable or disable a PCIe hotplug slot should not
+return before it has been carried out.  That is sought to be achieved
+by waiting until the controller's "pending_events" have been cleared.
+
+However the IRQ thread pciehp_ist() clears the "pending_events" before
+it acts on them.  If pciehp_sysfs_enable_slot() / _disable_slot() happen
+to check the "pending_events" after they have been cleared but while
+pciehp_ist() is still running, the functions may return prematurely
+with an incorrect return value.
+
+Fix by introducing an "ist_running" flag which must be false before a
+sysfs request is allowed to return.
+
+Fixes: 32a8cef274fe ("PCI: pciehp: Enable/disable exclusively from IRQ thread")
+Link: https://lore.kernel.org/linux-pci/1562226638-54134-1-git-send-email-wangxiongfeng2@huawei.com
+Reported-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: stable@vger.kernel.org # v4.19+
+---
+ drivers/pci/hotplug/pciehp.h      | 2 ++
+ drivers/pci/hotplug/pciehp_ctrl.c | 6 ++++--
+ drivers/pci/hotplug/pciehp_hpc.c  | 2 ++
+ 3 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
+index 8c51a04b8083..e316bde45c7b 100644
+--- a/drivers/pci/hotplug/pciehp.h
++++ b/drivers/pci/hotplug/pciehp.h
+@@ -72,6 +72,7 @@ extern int pciehp_poll_time;
+  * @reset_lock: prevents access to the Data Link Layer Link Active bit in the
+  *	Link Status register and to the Presence Detect State bit in the Slot
+  *	Status register during a slot reset which may cause them to flap
++ * @ist_running: flag to keep user request waiting while IRQ thread is running
+  * @request_result: result of last user request submitted to the IRQ thread
+  * @requester: wait queue to wake up on completion of user request,
+  *	used for synchronous slot enable/disable request via sysfs
+@@ -101,6 +102,7 @@ struct controller {
+ 
+ 	struct hotplug_slot hotplug_slot;	/* hotplug core interface */
+ 	struct rw_semaphore reset_lock;
++	unsigned int ist_running;
+ 	int request_result;
+ 	wait_queue_head_t requester;
+ };
+diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+index 631ced0ab28a..1ce9ce335291 100644
+--- a/drivers/pci/hotplug/pciehp_ctrl.c
++++ b/drivers/pci/hotplug/pciehp_ctrl.c
+@@ -368,7 +368,8 @@ int pciehp_sysfs_enable_slot(struct hotplug_slot *hotplug_slot)
+ 		ctrl->request_result = -ENODEV;
+ 		pciehp_request(ctrl, PCI_EXP_SLTSTA_PDC);
+ 		wait_event(ctrl->requester,
+-			   !atomic_read(&ctrl->pending_events));
++			   !atomic_read(&ctrl->pending_events) &&
++			   !ctrl->ist_running);
+ 		return ctrl->request_result;
+ 	case POWERON_STATE:
+ 		ctrl_info(ctrl, "Slot(%s): Already in powering on state\n",
+@@ -401,7 +402,8 @@ int pciehp_sysfs_disable_slot(struct hotplug_slot *hotplug_slot)
+ 		mutex_unlock(&ctrl->state_lock);
+ 		pciehp_request(ctrl, DISABLE_SLOT);
+ 		wait_event(ctrl->requester,
+-			   !atomic_read(&ctrl->pending_events));
++			   !atomic_read(&ctrl->pending_events) &&
++			   !ctrl->ist_running);
+ 		return ctrl->request_result;
+ 	case POWEROFF_STATE:
+ 		ctrl_info(ctrl, "Slot(%s): Already in powering off state\n",
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index bd990e3371e3..9e2d7688e8cc 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -608,6 +608,7 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
+ 	irqreturn_t ret;
+ 	u32 events;
+ 
++	ctrl->ist_running = true;
+ 	pci_config_pm_runtime_get(pdev);
+ 
+ 	/* rerun pciehp_isr() if the port was inaccessible on interrupt */
+@@ -654,6 +655,7 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
+ 	up_read(&ctrl->reset_lock);
+ 
+ 	pci_config_pm_runtime_put(pdev);
++	ctrl->ist_running = false;
+ 	wake_up(&ctrl->requester);
+ 	return IRQ_HANDLED;
+ }
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.20.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
