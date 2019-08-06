@@ -2,315 +2,315 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 170D2C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 01:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B73C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 01:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCDAD216B7
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 01:36:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3508214C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 01:38:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565055534;
+	bh=WTdiUgRTFaO0iG0zBI8ONgiNuzUCoQhTxZacJyElReM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=likRt2gXdS3bPBH81jejBgQNkt6qBSIrPIh6pMrYGpup2AS/2gC3DAqjgarYay104
+	 0LyHEZCbLxzDjoVUYxg1nmjVrlCcyiMCksGwsPCF/esZ0FVpW1NZ8f5TsJ6ZJUMYUp
+	 kB6J+GtUtXSgkheRGCQe0Nevt4FIOQsDDysFX42s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731303AbfHFBgT (ORCPT
+        id S1731290AbfHFBix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 21:36:19 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4177 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728870AbfHFBgT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 21:36:19 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id EEEE4F0AE15A92C4CDFA;
-        Tue,  6 Aug 2019 09:36:15 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.204) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 6 Aug 2019
- 09:36:14 +0800
-Subject: Re: [PATCH v2] f2fs: separate NOCoW and pinfile semantics
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
-References: <20190723023640.GC60778@jaegeuk-macbookpro.roam.corp.google.com>
- <d4d064a2-2b3c-3536-6488-39e7cfdb1ea4@huawei.com>
- <20190729055738.GA95664@jaegeuk-macbookpro.roam.corp.google.com>
- <07cd3aba-3516-9ba5-286e-277abb98e244@huawei.com>
- <20190730180231.GB76478@jaegeuk-macbookpro.roam.corp.google.com>
- <00e70eb1-c4fa-a6c9-69d7-71ff995c7d6c@huawei.com>
- <20190801041435.GB84433@jaegeuk-macbookpro.roam.corp.google.com>
- <d35d5ad7-5622-fbf5-5853-e541f8c26670@huawei.com>
- <20190801222746.GA27597@jaegeuk-macbookpro.roam.corp.google.com>
- <5d566fce-4412-65b2-e9d9-279b648f7551@huawei.com>
- <20190806003749.GB98101@jaegeuk-macbookpro.roam.corp.google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <b5549a88-6805-99a8-4b0a-3bbf49da794c@huawei.com>
-Date:   Tue, 6 Aug 2019 09:36:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 5 Aug 2019 21:38:53 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:38684 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728870AbfHFBix (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 21:38:53 -0400
+Received: by mail-pg1-f196.google.com with SMTP id z14so3418317pga.5
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 18:38:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pl8UsF4L2ZgN2cVoUatHU9qNDymPWthAuYy0ZpUojvc=;
+        b=LWHFsZXQeOtaAf0vU5ZLc/uArDplP5t2VWo/9efFUT1IM0+JY3EiW/byzmVHAkZxRd
+         IAZBSUHc4bKMvF0PjTiQN6WDOgaa69V8P6AmKSOsNnmGu+gnDKQHbRrDLBNSiui/s49E
+         aDXuIerm8fGsMSv7mOfIFaSVfvZAb+VXtfUBtCvOYAVwmzsKjGLnV0hkzr7Wi+eUHWXc
+         9VuCF0PqMmZGa2T4HrHrkFj2TEcOMQ6/Iq1jkQmNtpQyYhBbHwyIB6A1xaoakgpxqdIu
+         zgPPlIGpfrdUi/8CzM+k6XC7mMcJa7+6ZZO1LW5zvkpUQVjyFdkD/tj6tr5SJQbGqTzK
+         JwOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pl8UsF4L2ZgN2cVoUatHU9qNDymPWthAuYy0ZpUojvc=;
+        b=oR0qum75wbfeFcxBGgnYGxa228mEzvrQxmOvcPGcvJ4DyaADZOx+nfxOh08f17Qo6B
+         j3HCM4jD3BDnwnalFMPVRqdxE2OnZpx9ojtHH9ZsqGS1V1qMw9p/2dTRo56msq7krD9C
+         td2qiJJqp+viFofL2Lh9hYHC6EQhXCU4YUgslk+a6FfhqvV7Uukv1q2dblGVGkrhEpfP
+         +leFInH53FLJ03Zhf4t8b12J2X6ZGfCkROWjRh1G2hI4/IXqk/lJkNa8d/o8p7A7KSmF
+         lAjjXG77dxKULDisTLcto+a2WJgKFitMI9qWZb+KB/DaWrl/iOthVJlAGY9BGXL2Ir6Z
+         2Fkw==
+X-Gm-Message-State: APjAAAXgKvuQqI8Ja3gS0Qr3OSI7k+QForh7fgHFiABZSfvuyaA3GIwC
+        KjXzavu4A6aoXAqeRke/igE=
+X-Google-Smtp-Source: APXvYqzfJAxA1OnUEHw9LW/32P82SS68sMs2IhsEUGFClYXA8MiJ6dqBpGqNgm00eqeVW9d9O6FQvg==
+X-Received: by 2002:aa7:8a97:: with SMTP id a23mr936671pfc.117.1565055531996;
+        Mon, 05 Aug 2019 18:38:51 -0700 (PDT)
+Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
+        by smtp.gmail.com with ESMTPSA id f19sm125035106pfk.180.2019.08.05.18.38.48
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 05 Aug 2019 18:38:50 -0700 (PDT)
+Date:   Tue, 6 Aug 2019 10:38:46 +0900
+From:   Minchan Kim <minchan@kernel.org>
+To:     Henry Burns <henryburns@google.com>
+Cc:     Nitin Gupta <ngupta@vflare.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jonathan Adams <jwadams@google.com>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] mm/zsmalloc.c: Fix race condition in zs_destroy_pool
+Message-ID: <20190806013846.GA71899@google.com>
+References: <20190802015332.229322-1-henryburns@google.com>
+ <20190802015332.229322-2-henryburns@google.com>
+ <20190805042821.GA102749@google.com>
+ <CAGQXPTiHtNJsBz8dGCvejtmvGgPNHBoQHSmbX4XkxJ5DTmUWGg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190806003749.GB98101@jaegeuk-macbookpro.roam.corp.google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGQXPTiHtNJsBz8dGCvejtmvGgPNHBoQHSmbX4XkxJ5DTmUWGg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/8/6 8:37, Jaegeuk Kim wrote:
-> On 08/02, Chao Yu wrote:
->> On 2019/8/2 6:27, Jaegeuk Kim wrote:
->>> On 08/01, Chao Yu wrote:
->>>> On 2019/8/1 12:14, Jaegeuk Kim wrote:
->>>>> On 07/31, Chao Yu wrote:
->>>>>> On 2019/7/31 2:02, Jaegeuk Kim wrote:
->>>>>>> On 07/29, Chao Yu wrote:
->>>>>>>> On 2019/7/29 13:57, Jaegeuk Kim wrote:
->>>>>>>>> On 07/23, Chao Yu wrote:
->>>>>>>>>> On 2019/7/23 10:36, Jaegeuk Kim wrote:
->>>>>>>>>>> On 07/19, Chao Yu wrote:
->>>>>>>>>>>> Pinning a file is heavy, because skipping pinned files make GC
->>>>>>>>>>>> running with heavy load or no effect.
->>>>>>>>>>>
->>>>>>>>>>> Pinned file is a part of NOCOW files, so I don't think we can simply drop it
->>>>>>>>>>> for backward compatibility.
->>>>>>>>>>
->>>>>>>>>> Yes,
->>>>>>>>>>
->>>>>>>>>> But what I concerned is that pin file is too heavy, so in order to satisfy below
->>>>>>>>>> demand, how about introducing pin_file_2 flag to triggering IPU only during
->>>>>>>>>> flush/writeback.
->>>>>>>>>
->>>>>>>>> That can be done by cold files?
->>>>>>>>
->>>>>>>> Then it may inherit property of cold type file, e.g. a) goes into cold area; b)
->>>>>>>> update with very low frequency.
->>>>>>>>
->>>>>>>> Actually pin_file_2 could be used by db-wal/log file, which are updated
->>>>>>>> frequently, and should go to hot/warm area, it does not match above two property.
->>>>>>>
->>>>>>> How about considering another name like "IPU-only mode"?
->>>>>>>
->>>>>>>               fallocate         write    Flag         GC
->>>>>>> Pin_file:     preallocate       IPU      FS_NOCOW_FL  Not allowed
->>>>>>> IPU_file:     Not preallocate   IPU      N/A          Default by temperature
->>>>>>
->>>>>> One question, do we need preallocate physical block address for IPU_file as
->>>>>> Pin_file? since it can enhance db file's sequential read performance, not sure,
->>>>>> db can handle random data in preallocated blocks.
->>>>>
->>>>> db file will do atomic writes, which can not be used with this. -wal may be able
->>>>
->>>> Now WAL mode were set by default in Android, so most of db file are -wal type now.
->>>
->>> Will be back again tho.
->>
->> R?
+On Mon, Aug 05, 2019 at 10:34:41AM -0700, Henry Burns wrote:
+> On Sun, Aug 4, 2019 at 9:28 PM Minchan Kim <minchan@kernel.org> wrote:
+> >
+> > Hi Henry,
+> >
+> > On Thu, Aug 01, 2019 at 06:53:32PM -0700, Henry Burns wrote:
+> > > In zs_destroy_pool() we call flush_work(&pool->free_work). However, we
+> > > have no guarantee that migration isn't happening in the background
+> > > at that time.
+> > >
+> > > Since migration can't directly free pages, it relies on free_work
+> > > being scheduled to free the pages.  But there's nothing preventing an
+> > > in-progress migrate from queuing the work *after*
+> > > zs_unregister_migration() has called flush_work().  Which would mean
+> > > pages still pointing at the inode when we free it.
+> >
+> > We already unregister shrinker so there is no upcoming async free call
+> > via shrinker so the only concern is zs_compact API direct call from
+> > the user. Is that what what you desribe from the description?
 > 
-> Q.
+> What I am describing is a call to zsmalloc_aops->migratepage() by
+> kcompactd (which can call schedule work in either
+> zs_page_migrate() or zs_page_putback should the zspage become empty).
 > 
->>
->>>
->>>>
->>>>> to preallocate blocks, but it can eat disk space unnecessarily.
->>>>
->>>> I meant .db-wal file rather than .db.
->>>>
->>>> Yes, that's ext4 style, that would bring better performance due to less holes in
->>>> block distribution.
->>>>
->>>> I don't think we need to worry about space issue for db-wal file. I tracked
->>>> .db-wal file's update before:
->>>> - there are very frequently truncation and deletion, that means the preallocated
->>>> blocks won't exist for long time.
->>>> - and also there are very frequently append writes, I suspect there almost very
->>>> few preallocate block are not written.
->>>> - total db-wal file number is less.
->>>
->>> Sometimes it can be large enough for system.
->>
->> For this, it's trade off:
->> - lose a few disk space at the very begin of db-wal lifecycle Or
->> - face fragment and read performance degradation.
->>
->>> If it's from user apps and short lived, why do we need preallocation?
->>
->> It triggers sequential read on db-wal file during checkpoint, though it's short
->> lived, still it can affect performance.
->>
->> What do you think of doing some performance test on WAL file to decide the
->> preallocation policy?
+> While we are migrating a page, we remove it from the class. Suppose
+> zs_free() loses a race with migration. We would schedule
+> async_free_zspage() to handle freeing that zspage, however we have no
+> guarantee that migration has finished
+> by the time we finish flush_work(&pool->work). In that case we then
+> call iput(inode), and now we have a page
+> pointing to a non-existent inode. (At which point something like
+> kcompactd would potentially BUG() if it tries to get a page
+> (from the inode) that doesn't exist anymore)
 > 
-> Good idea. Can we?
 
-Let me test for numbers later.
-
-Thanks,
+True.
+I totally got mixed up internal migration and external migration. :-/
 
 > 
->>
->> Thanks,
->>
->>>
->>>>
->>>>>
->>>>>>
->>>>>> Other behaviors looks good to me. :)
->>>>>>
->>>>>> I plan to use last bit in inode.i_inline to store this flag.
->>>>>
->>>>> Why not using i_flag like FS_NOCOW_FL?
->>>>
->>>> Oops, as you listed in last email, I can see you don't want to break
->>>> FS_NOCOW_FL's semantics for backward compatibility.
->>>>
->>>> 			Flag
->>>> IPU_file		N/A			
->>>>
->>>> If we plan to use FS_NOCOW_FL, that's what this patch has already did, you can
->>>> merge it directly... :P
->>>>
->>>>>
->>>>>>
->>>>>>> Cold_file:    Not preallocate   IPU      N/A          Move in cold area
->>>>>>> Hot_file:     Not preallocate   IPU/OPU  N/A          Move in hot area
->>>>>>
->>>>>> Should hot file be gced to hot area? That would mix new hot data with old 'hot'
->>>>>> data which actually become cold.
->>>>>
->>>>> But, user explicitly specified this is hot.
->>>>
->>>> With current implementation, GC will migrate data from hot/warm/cold area to
->>>> cold area.
->>>>
->>>> Thanks,
->>>>
->>>>>
->>>>>>
->>>>>> Thanks,
->>>>>>
->>>>>>>
->>>>>>>>
->>>>>>>> Thank,
->>>>>>>>
->>>>>>>>>
->>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>>>
->>>>>>>>>>>> So that this patch propose to separate nocow and pinfile semantics:
->>>>>>>>>>>> - NOCoW flag can only be set on regular file.
->>>>>>>>>>>> - NOCoW file will only trigger IPU at common writeback/flush.
->>>>>>>>>>>> - NOCow file will do OPU during GC.
->>>>>>>>>>>>
->>>>>>>>>>>> For the demand of 1) avoid fragment of file's physical block and
->>>>>>>>>>>> 2) userspace don't care about file's specific physical address,
->>>>>>>>>>>> tagging file as NOCoW will be cheaper than pinned one.
->>>>>>>>>>
->>>>>>>>>> ^^^
->>>>>>>>>>
->>>>>>>>>> Thanks,
->>>>>>>>>>
->>>>>>>>>>>>
->>>>>>>>>>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
->>>>>>>>>>>> ---
->>>>>>>>>>>> v2:
->>>>>>>>>>>> - rebase code to fix compile error.
->>>>>>>>>>>>  fs/f2fs/data.c |  3 ++-
->>>>>>>>>>>>  fs/f2fs/f2fs.h |  1 +
->>>>>>>>>>>>  fs/f2fs/file.c | 22 +++++++++++++++++++---
->>>>>>>>>>>>  3 files changed, 22 insertions(+), 4 deletions(-)
->>>>>>>>>>>>
->>>>>>>>>>>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
->>>>>>>>>>>> index a2a28bb269bf..15fb8954c363 100644
->>>>>>>>>>>> --- a/fs/f2fs/data.c
->>>>>>>>>>>> +++ b/fs/f2fs/data.c
->>>>>>>>>>>> @@ -1884,7 +1884,8 @@ static inline bool check_inplace_update_policy(struct inode *inode,
->>>>>>>>>>>>  
->>>>>>>>>>>>  bool f2fs_should_update_inplace(struct inode *inode, struct f2fs_io_info *fio)
->>>>>>>>>>>>  {
->>>>>>>>>>>> -	if (f2fs_is_pinned_file(inode))
->>>>>>>>>>>> +	if (f2fs_is_pinned_file(inode) ||
->>>>>>>>>>>> +			F2FS_I(inode)->i_flags & F2FS_NOCOW_FL)
->>>>>>>>>>>>  		return true;
->>>>>>>>>>>>  
->>>>>>>>>>>>  	/* if this is cold file, we should overwrite to avoid fragmentation */
->>>>>>>>>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
->>>>>>>>>>>> index 596ab3e1dd7b..f6c5a3d2e659 100644
->>>>>>>>>>>> --- a/fs/f2fs/f2fs.h
->>>>>>>>>>>> +++ b/fs/f2fs/f2fs.h
->>>>>>>>>>>> @@ -2374,6 +2374,7 @@ static inline void f2fs_change_bit(unsigned int nr, char *addr)
->>>>>>>>>>>>  #define F2FS_NOATIME_FL			0x00000080 /* do not update atime */
->>>>>>>>>>>>  #define F2FS_INDEX_FL			0x00001000 /* hash-indexed directory */
->>>>>>>>>>>>  #define F2FS_DIRSYNC_FL			0x00010000 /* dirsync behaviour (directories only) */
->>>>>>>>>>>> +#define F2FS_NOCOW_FL			0x00800000 /* Do not cow file */
->>>>>>>>>>>>  #define F2FS_PROJINHERIT_FL		0x20000000 /* Create with parents projid */
->>>>>>>>>>>>  
->>>>>>>>>>>>  /* Flags that should be inherited by new inodes from their parent. */
->>>>>>>>>>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
->>>>>>>>>>>> index 7ca545874060..ae0fec54cac6 100644
->>>>>>>>>>>> --- a/fs/f2fs/file.c
->>>>>>>>>>>> +++ b/fs/f2fs/file.c
->>>>>>>>>>>> @@ -1692,6 +1692,7 @@ static const struct {
->>>>>>>>>>>>  	{ F2FS_NOATIME_FL,	FS_NOATIME_FL },
->>>>>>>>>>>>  	{ F2FS_INDEX_FL,	FS_INDEX_FL },
->>>>>>>>>>>>  	{ F2FS_DIRSYNC_FL,	FS_DIRSYNC_FL },
->>>>>>>>>>>> +	{ F2FS_NOCOW_FL,	FS_NOCOW_FL },
->>>>>>>>>>>>  	{ F2FS_PROJINHERIT_FL,	FS_PROJINHERIT_FL },
->>>>>>>>>>>>  };
->>>>>>>>>>>>  
->>>>>>>>>>>> @@ -1715,7 +1716,8 @@ static const struct {
->>>>>>>>>>>>  		FS_NODUMP_FL |		\
->>>>>>>>>>>>  		FS_NOATIME_FL |		\
->>>>>>>>>>>>  		FS_DIRSYNC_FL |		\
->>>>>>>>>>>> -		FS_PROJINHERIT_FL)
->>>>>>>>>>>> +		FS_PROJINHERIT_FL |	\
->>>>>>>>>>>> +		FS_NOCOW_FL)
->>>>>>>>>>>>  
->>>>>>>>>>>>  /* Convert f2fs on-disk i_flags to FS_IOC_{GET,SET}FLAGS flags */
->>>>>>>>>>>>  static inline u32 f2fs_iflags_to_fsflags(u32 iflags)
->>>>>>>>>>>> @@ -1753,8 +1755,6 @@ static int f2fs_ioc_getflags(struct file *filp, unsigned long arg)
->>>>>>>>>>>>  		fsflags |= FS_ENCRYPT_FL;
->>>>>>>>>>>>  	if (f2fs_has_inline_data(inode) || f2fs_has_inline_dentry(inode))
->>>>>>>>>>>>  		fsflags |= FS_INLINE_DATA_FL;
->>>>>>>>>>>> -	if (is_inode_flag_set(inode, FI_PIN_FILE))
->>>>>>>>>>>> -		fsflags |= FS_NOCOW_FL;
->>>>>>>>>>>>  
->>>>>>>>>>>>  	fsflags &= F2FS_GETTABLE_FS_FL;
->>>>>>>>>>>>  
->>>>>>>>>>>> @@ -1794,6 +1794,22 @@ static int f2fs_ioc_setflags(struct file *filp, unsigned long arg)
->>>>>>>>>>>>  	if (ret)
->>>>>>>>>>>>  		goto out;
->>>>>>>>>>>>  
->>>>>>>>>>>> +	if ((fsflags ^ old_fsflags) & FS_NOCOW_FL) {
->>>>>>>>>>>> +		if (!S_ISREG(inode->i_mode)) {
->>>>>>>>>>>> +			ret = -EINVAL;
->>>>>>>>>>>> +			goto out;
->>>>>>>>>>>> +		}
->>>>>>>>>>>> +
->>>>>>>>>>>> +		if (f2fs_should_update_outplace(inode, NULL)) {
->>>>>>>>>>>> +			ret = -EINVAL;
->>>>>>>>>>>> +			goto out;
->>>>>>>>>>>> +		}
->>>>>>>>>>>> +
->>>>>>>>>>>> +		ret = f2fs_convert_inline_inode(inode);
->>>>>>>>>>>> +		if (ret)
->>>>>>>>>>>> +			goto out;
->>>>>>>>>>>> +	}
->>>>>>>>>>>> +
->>>>>>>>>>>>  	ret = f2fs_setflags_common(inode, iflags,
->>>>>>>>>>>>  			f2fs_fsflags_to_iflags(F2FS_SETTABLE_FS_FL));
->>>>>>>>>>>>  out:
->>>>>>>>>>>> -- 
->>>>>>>>>>>> 2.18.0.rc1
->>>>>>>>>>> .
->>>>>>>>>>>
->>>>>>>>> .
->>>>>>>>>
->>>>>>> .
->>>>>>>
->>>>> .
->>>>>
->>> .
->>>
-> .
+> >
+> > If so, can't we add a flag to indicate destroy of the pool and
+> > global counter to indicate how many of zs_compact was nested?
+> >
+> > So, zs_unregister_migration in zs_destroy_pool can set the flag to
+> > prevent upcoming zs_compact call and wait until the global counter
+> > will be zero. Once it's done, finally flush the work.
+> >
+> > My point is it's not a per-class granuarity but global.
 > 
+> We could have a pool level counter of isolated pages, and wait for
+> that to finish before starting flush_work(&pool->work); However,
+> that would require an atomic_long in zs_pool, and we would have to eat
+> the cost of any contention over that lock. Still, it might be
+> preferable to a per-class granularity.
+
+That would be better for performance-wise but how it's significant?
+Migration is not already hot path so adding a atomic variable in that path
+wouldn't make noticible slow.
+
+Rather than performance, my worry is maintainance so prefer simple and
+not fragile.
+
+> 
+> >
+> > Thanks.
+> >
+> > >
+> > > Since we know at destroy time all objects should be free, no new
+> > > migrations can come in (since zs_page_isolate() fails for fully-free
+> > > zspages).  This means it is sufficient to track a "# isolated zspages"
+> > > count by class, and have the destroy logic ensure all such pages have
+> > > drained before proceeding.  Keeping that state under the class
+> > > spinlock keeps the logic straightforward.
+> > >
+> > > Signed-off-by: Henry Burns <henryburns@google.com>
+> > > ---
+> > >  mm/zsmalloc.c | 68 ++++++++++++++++++++++++++++++++++++++++++++++++---
+> > >  1 file changed, 65 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
+> > > index efa660a87787..1f16ed4d6a13 100644
+> > > --- a/mm/zsmalloc.c
+> > > +++ b/mm/zsmalloc.c
+> > > @@ -53,6 +53,7 @@
+> > >  #include <linux/zpool.h>
+> > >  #include <linux/mount.h>
+> > >  #include <linux/migrate.h>
+> > > +#include <linux/wait.h>
+> > >  #include <linux/pagemap.h>
+> > >  #include <linux/fs.h>
+> > >
+> > > @@ -206,6 +207,10 @@ struct size_class {
+> > >       int objs_per_zspage;
+> > >       /* Number of PAGE_SIZE sized pages to combine to form a 'zspage' */
+> > >       int pages_per_zspage;
+> > > +#ifdef CONFIG_COMPACTION
+> > > +     /* Number of zspages currently isolated by compaction */
+> > > +     int isolated;
+> > > +#endif
+> > >
+> > >       unsigned int index;
+> > >       struct zs_size_stat stats;
+> > > @@ -267,6 +272,8 @@ struct zs_pool {
+> > >  #ifdef CONFIG_COMPACTION
+> > >       struct inode *inode;
+> > >       struct work_struct free_work;
+> > > +     /* A workqueue for when migration races with async_free_zspage() */
+> > > +     struct wait_queue_head migration_wait;
+> > >  #endif
+> > >  };
+> > >
+> > > @@ -1917,6 +1924,21 @@ static void putback_zspage_deferred(struct zs_pool *pool,
+> > >
+> > >  }
+> > >
+> > > +static inline void zs_class_dec_isolated(struct zs_pool *pool,
+> > > +                                      struct size_class *class)
+> > > +{
+> > > +     assert_spin_locked(&class->lock);
+> > > +     VM_BUG_ON(class->isolated <= 0);
+> > > +     class->isolated--;
+> > > +     /*
+> > > +      * There's no possibility of racing, since wait_for_isolated_drain()
+> > > +      * checks the isolated count under &class->lock after enqueuing
+> > > +      * on migration_wait.
+> > > +      */
+> > > +     if (class->isolated == 0 && waitqueue_active(&pool->migration_wait))
+> > > +             wake_up_all(&pool->migration_wait);
+> > > +}
+> > > +
+> > >  static void replace_sub_page(struct size_class *class, struct zspage *zspage,
+> > >                               struct page *newpage, struct page *oldpage)
+> > >  {
+> > > @@ -1986,6 +2008,7 @@ static bool zs_page_isolate(struct page *page, isolate_mode_t mode)
+> > >        */
+> > >       if (!list_empty(&zspage->list) && !is_zspage_isolated(zspage)) {
+> > >               get_zspage_mapping(zspage, &class_idx, &fullness);
+> > > +             class->isolated++;
+> > >               remove_zspage(class, zspage, fullness);
+> > >       }
+> > >
+> > > @@ -2085,8 +2108,14 @@ static int zs_page_migrate(struct address_space *mapping, struct page *newpage,
+> > >        * Page migration is done so let's putback isolated zspage to
+> > >        * the list if @page is final isolated subpage in the zspage.
+> > >        */
+> > > -     if (!is_zspage_isolated(zspage))
+> > > +     if (!is_zspage_isolated(zspage)) {
+> > > +             /*
+> > > +              * We still hold the class lock while all of this is happening,
+> > > +              * so we cannot race with zs_destroy_pool()
+> > > +              */
+> > >               putback_zspage_deferred(pool, class, zspage);
+> > > +             zs_class_dec_isolated(pool, class);
+> > > +     }
+> > >
+> > >       reset_page(page);
+> > >       put_page(page);
+> > > @@ -2131,9 +2160,11 @@ static void zs_page_putback(struct page *page)
+> > >
+> > >       spin_lock(&class->lock);
+> > >       dec_zspage_isolation(zspage);
+> > > -     if (!is_zspage_isolated(zspage))
+> > > -             putback_zspage_deferred(pool, class, zspage);
+> > >
+> > > +     if (!is_zspage_isolated(zspage)) {
+> > > +             putback_zspage_deferred(pool, class, zspage);
+> > > +             zs_class_dec_isolated(pool, class);
+> > > +     }
+> > >       spin_unlock(&class->lock);
+> > >  }
+> > >
+> > > @@ -2156,8 +2187,36 @@ static int zs_register_migration(struct zs_pool *pool)
+> > >       return 0;
+> > >  }
+> > >
+> > > +static bool class_isolated_are_drained(struct size_class *class)
+> > > +{
+> > > +     bool ret;
+> > > +
+> > > +     spin_lock(&class->lock);
+> > > +     ret = class->isolated == 0;
+> > > +     spin_unlock(&class->lock);
+> > > +     return ret;
+> > > +}
+> > > +
+> > > +/* Function for resolving migration */
+> > > +static void wait_for_isolated_drain(struct zs_pool *pool)
+> > > +{
+> > > +     int i;
+> > > +
+> > > +     /*
+> > > +      * We're in the process of destroying the pool, so there are no
+> > > +      * active allocations. zs_page_isolate() fails for completely free
+> > > +      * zspages, so we need only wait for each size_class's isolated
+> > > +      * count to hit zero.
+> > > +      */
+> > > +     for (i = 0; i < ZS_SIZE_CLASSES; i++) {
+> > > +             wait_event(pool->migration_wait,
+> > > +                        class_isolated_are_drained(pool->size_class[i]));
+> > > +     }
+> > > +}
+> > > +
+> > >  static void zs_unregister_migration(struct zs_pool *pool)
+> > >  {
+> > > +     wait_for_isolated_drain(pool); /* This can block */
+> > >       flush_work(&pool->free_work);
+> > >       iput(pool->inode);
+> > >  }
+> > > @@ -2401,6 +2460,8 @@ struct zs_pool *zs_create_pool(const char *name)
+> > >       if (!pool->name)
+> > >               goto err;
+> > >
+> > > +     init_waitqueue_head(&pool->migration_wait);
+> > > +
+> > >       if (create_cache(pool))
+> > >               goto err;
+> > >
+> > > @@ -2466,6 +2527,7 @@ struct zs_pool *zs_create_pool(const char *name)
+> > >               class->index = i;
+> > >               class->pages_per_zspage = pages_per_zspage;
+> > >               class->objs_per_zspage = objs_per_zspage;
+> > > +             class->isolated = 0;
+> > >               spin_lock_init(&class->lock);
+> > >               pool->size_class[i] = class;
+> > >               for (fullness = ZS_EMPTY; fullness < NR_ZS_FULLNESS;
+> > > --
+> > > 2.22.0.770.g0f2c4a37fd-goog
+> > >
