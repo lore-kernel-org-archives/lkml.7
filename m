@@ -2,316 +2,505 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A6D3C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 00:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D5ADC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 00:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03603216B7
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 00:37:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565051874;
-	bh=sbaxTE7kYFCFGs3ifzk0BZVFtKFrLdqe3vyYh0wqMBU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wk8h1uvRW4kSD+gfQbN0NMhwy64TQNEfUpXzjFL/03Wglhuc389sV61tcf0iMtM5w
-	 EC6ch8PIZJ9uZ0aLY+GO7l7jOl/AFW5ZzUVrPvQfqUNrzq9LJ5LtEKVscDvP3wPe3g
-	 vxHHrPY3HNCACorID9bC/+yFpZI20AXuSfieTLdg=
+	by mail.kernel.org (Postfix) with ESMTP id 183B721743
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 00:38:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="ZGfMkscq";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SuoNoSB0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731171AbfHFAhw (ORCPT
+        id S1731172AbfHFAiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 20:37:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55380 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728870AbfHFAhw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 20:37:52 -0400
-Received: from localhost (unknown [104.132.0.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88D332147A;
-        Tue,  6 Aug 2019 00:37:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565051870;
-        bh=sbaxTE7kYFCFGs3ifzk0BZVFtKFrLdqe3vyYh0wqMBU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ScwRm8hYp7YQfd8Ar9IxfsD1IvTjjwbM9jdo1Kd4SoDa8WR86nXNa01XPZU3REWWy
-         wvgcV2VQ+AR7KTnMyIVtNtSIv5ux4o6nw94lUm18wR6u88fn6RXCw85FNO/Ohe7xFP
-         waJwBcl7zjIbk+x0JP69cudAjwY/VbY5Nq3Xko2w=
-Date:   Mon, 5 Aug 2019 17:37:49 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, chao@kernel.org
-Subject: Re: [PATCH v2] f2fs: separate NOCoW and pinfile semantics
-Message-ID: <20190806003749.GB98101@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20190723023640.GC60778@jaegeuk-macbookpro.roam.corp.google.com>
- <d4d064a2-2b3c-3536-6488-39e7cfdb1ea4@huawei.com>
- <20190729055738.GA95664@jaegeuk-macbookpro.roam.corp.google.com>
- <07cd3aba-3516-9ba5-286e-277abb98e244@huawei.com>
- <20190730180231.GB76478@jaegeuk-macbookpro.roam.corp.google.com>
- <00e70eb1-c4fa-a6c9-69d7-71ff995c7d6c@huawei.com>
- <20190801041435.GB84433@jaegeuk-macbookpro.roam.corp.google.com>
- <d35d5ad7-5622-fbf5-5853-e541f8c26670@huawei.com>
- <20190801222746.GA27597@jaegeuk-macbookpro.roam.corp.google.com>
- <5d566fce-4412-65b2-e9d9-279b648f7551@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5d566fce-4412-65b2-e9d9-279b648f7551@huawei.com>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+        Mon, 5 Aug 2019 20:38:50 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:59553 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728483AbfHFAit (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 20:38:49 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id EB5B52307;
+        Mon,  5 Aug 2019 20:38:47 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Mon, 05 Aug 2019 20:38:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm3; bh=x/FmbQA70Z4mje3y7VGtwApl9xp6RTV
+        VRLXboLhs2Fk=; b=ZGfMkscqBzdJrmqsA76P07XYPKAByfmKxaJlWOgGcYyoh9M
+        sAMv+9LxEvw7F9Tc2j0VSPOAzYCeq6EYXZkt/1yqDnjTm83/9wVj2fiKfms4Do7u
+        BH66HBfVN2EQhrsAneqJUPEwOlNF9qTsdp+zPawpHkEmaMeZmJCtVg5ZJ1adT2ue
+        2Ia7S/WYRx5Nlw14UlgZfgCO6pMPrFwb4T/MF3RZWscFMSMAM0aqImq1SPMjBubF
+        t2QgkRraeYwbCGbW+Y7xmIqbghI7ulOhhQy3pNsgd07Xrd1mpK6cE1lJJn/LpSNS
+        1Ot9lgrKOpFmgtuSx0At/JhI2t6O7j1nb5prqMg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=x/FmbQ
+        A70Z4mje3y7VGtwApl9xp6RTVVRLXboLhs2Fk=; b=SuoNoSB0MGyMGuV9TmVmin
+        OVkbJSgM74uliWJdHaFH5pfCfEst4COYfXuaQsRNfURCvyqpcHu143/qNO3+CHa+
+        vRKLoNPniz7pQng1cj+d8MpAgl2F/HTJIhMkFtXdtmOlY3Bvsvrxn4/CHJKLeg5w
+        xto0yJATXsx8QXMQ69xdSMDqOFuHo0LEGke+5IrqQoMw0uOivZBDM67186zit2NO
+        NWg+OfvQPjFZyMVR6qyh9ZAxj+F5NFz+U/tyyROxrOXwNjrLeT3dWv+jUZqMktoE
+        GX2dgYRA2c/WS89D99wNpaD/cZFtdWYeVB1I+px/oIQKKlyGKUpvze0pd+kZ80pQ
+        ==
+X-ME-Sender: <xms:FsxIXT8wMy-ydYcbV5G-ZVOSE-QDHzUWny3Y5l8ZNrln4XSOve3ZQg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddruddtledgfeelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
+    rhfuihiivgeptd
+X-ME-Proxy: <xmx:FsxIXZwvIstLosN--5ek9_dPgLXA7RM2KIeV4QaCF5PW_bCqGHMEaw>
+    <xmx:FsxIXV-5zm2SKq2_OxzcVbsmGTftaF6L8671VDaaMtixr6YzNgQCLQ>
+    <xmx:FsxIXXMqEjsNp8tvzrKNlCqD4jbHgzelhLqJO9LgFFaQYn5pEUy1iQ>
+    <xmx:F8xIXY3W9NCJ9W17PBCvX4_MUuGxFvQl-n5qb-Frqv7y-GGv9uYJQQ>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 8E116E00A2; Mon,  5 Aug 2019 20:38:46 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.6-799-g925e343-fmstable-20190729v1
+Mime-Version: 1.0
+Message-Id: <222b7a32-7c69-4af1-a72f-433e671604d3@www.fastmail.com>
+In-Reply-To: <497ab8d6-24aa-c505-a1fa-e71fa1560da1@intel.com>
+References: <20190805025155.9020-1-andrew@aj.id.au>
+ <20190805025155.9020-3-andrew@aj.id.au>
+ <497ab8d6-24aa-c505-a1fa-e71fa1560da1@intel.com>
+Date:   Tue, 06 Aug 2019 10:09:11 +0930
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Adrian Hunter" <adrian.hunter@intel.com>,
+        linux-mmc <linux-mmc@vger.kernel.org>
+Cc:     "Ulf Hansson" <ulf.hansson@linaro.org>,
+        "Rob Herring" <robh+dt@kernel.org>, mark.rutland@arm.com,
+        "Joel Stanley" <joel@jms.id.au>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        "Ryan Chen" <ryanchen.aspeed@gmail.com>
+Subject: Re: [PATCH v4 2/2] mmc: Add support for the ASPEED SD controller
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/02, Chao Yu wrote:
-> On 2019/8/2 6:27, Jaegeuk Kim wrote:
-> > On 08/01, Chao Yu wrote:
-> >> On 2019/8/1 12:14, Jaegeuk Kim wrote:
-> >>> On 07/31, Chao Yu wrote:
-> >>>> On 2019/7/31 2:02, Jaegeuk Kim wrote:
-> >>>>> On 07/29, Chao Yu wrote:
-> >>>>>> On 2019/7/29 13:57, Jaegeuk Kim wrote:
-> >>>>>>> On 07/23, Chao Yu wrote:
-> >>>>>>>> On 2019/7/23 10:36, Jaegeuk Kim wrote:
-> >>>>>>>>> On 07/19, Chao Yu wrote:
-> >>>>>>>>>> Pinning a file is heavy, because skipping pinned files make GC
-> >>>>>>>>>> running with heavy load or no effect.
-> >>>>>>>>>
-> >>>>>>>>> Pinned file is a part of NOCOW files, so I don't think we can simply drop it
-> >>>>>>>>> for backward compatibility.
-> >>>>>>>>
-> >>>>>>>> Yes,
-> >>>>>>>>
-> >>>>>>>> But what I concerned is that pin file is too heavy, so in order to satisfy below
-> >>>>>>>> demand, how about introducing pin_file_2 flag to triggering IPU only during
-> >>>>>>>> flush/writeback.
-> >>>>>>>
-> >>>>>>> That can be done by cold files?
-> >>>>>>
-> >>>>>> Then it may inherit property of cold type file, e.g. a) goes into cold area; b)
-> >>>>>> update with very low frequency.
-> >>>>>>
-> >>>>>> Actually pin_file_2 could be used by db-wal/log file, which are updated
-> >>>>>> frequently, and should go to hot/warm area, it does not match above two property.
-> >>>>>
-> >>>>> How about considering another name like "IPU-only mode"?
-> >>>>>
-> >>>>>               fallocate         write    Flag         GC
-> >>>>> Pin_file:     preallocate       IPU      FS_NOCOW_FL  Not allowed
-> >>>>> IPU_file:     Not preallocate   IPU      N/A          Default by temperature
-> >>>>
-> >>>> One question, do we need preallocate physical block address for IPU_file as
-> >>>> Pin_file? since it can enhance db file's sequential read performance, not sure,
-> >>>> db can handle random data in preallocated blocks.
-> >>>
-> >>> db file will do atomic writes, which can not be used with this. -wal may be able
-> >>
-> >> Now WAL mode were set by default in Android, so most of db file are -wal type now.
-> > 
-> > Will be back again tho.
-> 
-> R?
 
-Q.
 
+On Mon, 5 Aug 2019, at 23:08, Adrian Hunter wrote:
+> On 5/08/19 5:51 AM, Andrew Jeffery wrote:
+> > Add a minimal driver for ASPEED's SD controller, which exposes two
+> > SDHCIs.
+> > 
+> > The ASPEED design implements a common register set for the SDHCIs, and
+> > moves some of the standard configuration elements out to this common
+> > area (e.g. 8-bit mode, and card detect configuration which is not
+> > currently supported).
+> > 
+> > The SD controller has a dedicated hardware interrupt that is shared
+> > between the slots. The common register set exposes information on which
+> > slot triggered the interrupt; early revisions of the patch introduced an
+> > irqchip for the register, but reality is it doesn't behave as an
+> > irqchip, and the result fits awkwardly into the irqchip APIs. Instead
+> > I've taken the simple approach of using the IRQ as a shared IRQ with
+> > some minor performance impact for the second slot.
+> > 
+> > Ryan was the original author of the patch - I've taken his work and
+> > massaged it to drop the irqchip support and rework the devicetree
+> > integration. The driver has been smoke tested under qemu against a
+> > minimal SD controller model and lightly tested on an ast2500-evb.
+> > 
+> > Signed-off-by: Ryan Chen <ryanchen.aspeed@gmail.com>
+> > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> 
+> One minor comment otherwise:
+> 
+> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 > 
 > > 
-> >>
-> >>> to preallocate blocks, but it can eat disk space unnecessarily.
-> >>
-> >> I meant .db-wal file rather than .db.
-> >>
-> >> Yes, that's ext4 style, that would bring better performance due to less holes in
-> >> block distribution.
-> >>
-> >> I don't think we need to worry about space issue for db-wal file. I tracked
-> >> .db-wal file's update before:
-> >> - there are very frequently truncation and deletion, that means the preallocated
-> >> blocks won't exist for long time.
-> >> - and also there are very frequently append writes, I suspect there almost very
-> >> few preallocate block are not written.
-> >> - total db-wal file number is less.
+> > ---
+> > v3: No change
+> > v2:
+> > * Add AST2600 compatible
+> > * Drop SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN
+> > * Ensure slot number is valid
+> > * Fix build with CONFIG_MODULES
+> > * Fix module license string
+> > * Non-PCI devices won't die
+> > * Rename aspeed_sdc_configure_8bit_mode()
+> > * Rename aspeed_sdhci_pdata
+> > * Switch to sdhci_enable_clk()
+> > * Use PTR_ERR() on the right `struct platform_device *`
+> > ---
+> >  drivers/mmc/host/Kconfig           |  12 ++
+> >  drivers/mmc/host/Makefile          |   1 +
+> >  drivers/mmc/host/sdhci-of-aspeed.c | 328 +++++++++++++++++++++++++++++
+> >  3 files changed, 341 insertions(+)
+> >  create mode 100644 drivers/mmc/host/sdhci-of-aspeed.c
 > > 
-> > Sometimes it can be large enough for system.
+> > diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+> > index 14d89a108edd..0f8a230de2f3 100644
+> > --- a/drivers/mmc/host/Kconfig
+> > +++ b/drivers/mmc/host/Kconfig
+> > @@ -154,6 +154,18 @@ config MMC_SDHCI_OF_ARASAN
+> >  
+> >  	  If unsure, say N.
+> >  
+> > +config MMC_SDHCI_OF_ASPEED
+> > +	tristate "SDHCI OF support for the ASPEED SDHCI controller"
+> > +	depends on MMC_SDHCI_PLTFM
+> > +	depends on OF
+> > +	help
+> > +	  This selects the ASPEED Secure Digital Host Controller Interface.
+> > +
+> > +	  If you have a controller with this interface, say Y or M here. You
+> > +	  also need to enable an appropriate bus interface.
+> > +
+> > +	  If unsure, say N.
+> > +
+> >  config MMC_SDHCI_OF_AT91
+> >  	tristate "SDHCI OF support for the Atmel SDMMC controller"
+> >  	depends on MMC_SDHCI_PLTFM
+> > diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
+> > index 73578718f119..390ee162fe71 100644
+> > --- a/drivers/mmc/host/Makefile
+> > +++ b/drivers/mmc/host/Makefile
+> > @@ -84,6 +84,7 @@ obj-$(CONFIG_MMC_SDHCI_ESDHC_IMX)	+= sdhci-esdhc-imx.o
+> >  obj-$(CONFIG_MMC_SDHCI_DOVE)		+= sdhci-dove.o
+> >  obj-$(CONFIG_MMC_SDHCI_TEGRA)		+= sdhci-tegra.o
+> >  obj-$(CONFIG_MMC_SDHCI_OF_ARASAN)	+= sdhci-of-arasan.o
+> > +obj-$(CONFIG_MMC_SDHCI_OF_ASPEED)	+= sdhci-of-aspeed.o
+> >  obj-$(CONFIG_MMC_SDHCI_OF_AT91)		+= sdhci-of-at91.o
+> >  obj-$(CONFIG_MMC_SDHCI_OF_ESDHC)	+= sdhci-of-esdhc.o
+> >  obj-$(CONFIG_MMC_SDHCI_OF_HLWD)		+= sdhci-of-hlwd.o
+> > diff --git a/drivers/mmc/host/sdhci-of-aspeed.c b/drivers/mmc/host/sdhci-of-aspeed.c
+> > new file mode 100644
+> > index 000000000000..d31785ec90d7
+> > --- /dev/null
+> > +++ b/drivers/mmc/host/sdhci-of-aspeed.c
+> > @@ -0,0 +1,328 @@
+> > +// SPDX-License-Identifier: GPL-2.0-or-later
+> > +/* Copyright (C) 2019 ASPEED Technology Inc. */
+> > +/* Copyright (C) 2019 IBM Corp. */
+> > +
+> > +#include <linux/clk.h>
+> > +#include <linux/delay.h>
+> > +#include <linux/device.h>
+> > +#include <linux/io.h>
+> > +#include <linux/mmc/host.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of_address.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_platform.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/spinlock.h>
+> > +
+> > +#include "sdhci-pltfm.h"
+> > +
+> > +#define ASPEED_SDC_INFO		0x00
+> > +#define   ASPEED_SDC_S1MMC8	BIT(25)
+> > +#define   ASPEED_SDC_S0MMC8	BIT(24)
+> > +
+> > +struct aspeed_sdc {
+> > +	struct clk *clk;
+> > +	struct resource *res;
+> > +
+> > +	spinlock_t lock;
+> > +	void __iomem *regs;
+> > +};
+> > +
+> > +struct aspeed_sdhci {
+> > +	struct aspeed_sdc *parent;
+> > +	u32 width_mask;
+> > +};
+> > +
+> > +static void aspeed_sdc_configure_8bit_mode(struct aspeed_sdc *sdc,
+> > +					   struct aspeed_sdhci *sdhci,
+> > +					   bool bus8)
+> > +{
+> > +	u32 info;
+> > +
+> > +	/* Set/clear 8 bit mode */
+> > +	spin_lock(&sdc->lock);
+> > +	info = readl(sdc->regs + ASPEED_SDC_INFO);
+> > +	if (bus8)
+> > +		info |= sdhci->width_mask;
+> > +	else
+> > +		info &= ~sdhci->width_mask;
+> > +	writel(info, sdc->regs + ASPEED_SDC_INFO);
+> > +	spin_unlock(&sdc->lock);
+> > +}
+> > +
+> > +static void aspeed_sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
+> > +{
+> > +	int div;
+> > +	u16 clk;
+> > +
+> > +	if (clock == host->clock)
+> > +		return;
+> > +
+> > +	sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
+> > +
+> > +	if (clock == 0)
+> > +		goto out;
+> > +
+> > +	for (div = 1; div < 256; div *= 2) {
+> > +		if ((host->max_clk / div) <= clock)
+> > +			break;
+> > +	}
+> > +	div >>= 1;
+> > +
+> > +	clk = div << SDHCI_DIVIDER_SHIFT;
+> > +
+> > +	sdhci_enable_clk(host, clk);
+> > +
+> > +out:
+> > +	host->clock = clock;
+> > +}
+> > +
+> > +static void aspeed_sdhci_set_bus_width(struct sdhci_host *host, int width)
+> > +{
+> > +	struct sdhci_pltfm_host *pltfm_priv;
+> > +	struct aspeed_sdhci *aspeed_sdhci;
+> > +	struct aspeed_sdc *aspeed_sdc;
+> > +	u8 ctrl;
+> > +
+> > +	pltfm_priv = sdhci_priv(host);
+> > +	aspeed_sdhci = sdhci_pltfm_priv(pltfm_priv);
+> > +	aspeed_sdc = aspeed_sdhci->parent;
+> > +
+> > +	/* Set/clear 8-bit mode */
+> > +	aspeed_sdc_configure_8bit_mode(aspeed_sdc, aspeed_sdhci,
+> > +				       width == MMC_BUS_WIDTH_8);
+> > +
+> > +	/* Set/clear 1 or 4 bit mode */
+> > +	ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
+> > +	if (width == MMC_BUS_WIDTH_4)
+> > +		ctrl |= SDHCI_CTRL_4BITBUS;
+> > +	else
+> > +		ctrl &= ~SDHCI_CTRL_4BITBUS;
+> > +	sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
+> > +}
+> > +
+> > +static const struct sdhci_ops aspeed_sdhci_ops = {
+> > +	.set_clock = aspeed_sdhci_set_clock,
+> > +	.get_max_clock = sdhci_pltfm_clk_get_max_clock,
+> > +	.set_bus_width = aspeed_sdhci_set_bus_width,
+> > +	.get_timeout_clock = sdhci_pltfm_clk_get_max_clock,
+> > +	.reset = sdhci_reset,
+> > +	.set_uhs_signaling = sdhci_set_uhs_signaling,
+> > +};
+> > +
+> > +static const struct sdhci_pltfm_data aspeed_sdhci_pdata = {
+> > +	.ops = &aspeed_sdhci_ops,
+> > +	.quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
+> > +};
+> > +
+> > +static inline int aspeed_sdhci_calculate_slot(struct aspeed_sdhci *dev,
+> > +					      struct resource *res)
+> > +{
+> > +	resource_size_t delta;
+> > +
+> > +	if (!res || resource_type(res) != IORESOURCE_MEM)
+> > +		return -EINVAL;
+> > +
+> > +	if (res->start < dev->parent->res->start)
+> > +		return -EINVAL;
+> > +
+> > +	delta = res->start - dev->parent->res->start;
+> > +	if (delta & (0x100 - 1))
+> > +		return -EINVAL;
+> > +
+> > +	return (delta / 0x100) - 1;
+> > +}
+> > +
+> > +static int aspeed_sdhci_probe(struct platform_device *pdev)
+> > +{
+> > +	struct sdhci_pltfm_host *pltfm_host;
+> > +	struct aspeed_sdhci *dev;
+> > +	struct sdhci_host *host;
+> > +	struct resource *res;
+> > +	int slot;
+> > +	int ret;
+> > +
+> > +	host = sdhci_pltfm_init(pdev, &aspeed_sdhci_pdata, sizeof(*dev));
+> > +	if (IS_ERR(host))
+> > +		return PTR_ERR(host);
+> > +
+> > +	pltfm_host = sdhci_priv(host);
+> > +	dev = sdhci_pltfm_priv(pltfm_host);
+> > +	dev->parent = dev_get_drvdata(pdev->dev.parent);
+> > +
+> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +	slot = aspeed_sdhci_calculate_slot(dev, res);
+> > +
+> > +	if (slot < 0)
+> > +		return slot;
+> > +	else if (slot >= 2)
+> > +		return -EINVAL;
+> > +
+> > +	dev_info(&pdev->dev, "Configuring for slot %d\n", slot);
+> > +	dev->width_mask = !slot ? ASPEED_SDC_S0MMC8 : ASPEED_SDC_S1MMC8;
+> > +
+> > +	sdhci_get_of_property(pdev);
+> > +
+> > +	pltfm_host->clk = devm_clk_get(&pdev->dev, NULL);
+> > +	if (IS_ERR(pltfm_host->clk))
+> > +		return PTR_ERR(pltfm_host->clk);
+> > +
+> > +	ret = clk_prepare_enable(pltfm_host->clk);
+> > +	if (ret) {
+> > +		dev_err(&pdev->dev, "Unable to enable SDIO clock\n");
+> > +		goto err_pltfm_free;
+> > +	}
+> > +
+> > +	ret = mmc_of_parse(host->mmc);
+> > +	if (ret)
+> > +		goto err_sdhci_add;
+> > +
+> > +	ret = sdhci_add_host(host);
+> > +	if (ret)
+> > +		goto err_sdhci_add;
+> > +
+> > +	return 0;
+> > +
+> > +err_sdhci_add:
+> > +	clk_disable_unprepare(pltfm_host->clk);
+> > +err_pltfm_free:
+> > +	sdhci_pltfm_free(pdev);
+> > +	return ret;
+> > +}
+> > +
+> > +static int aspeed_sdhci_remove(struct platform_device *pdev)
+> > +{
+> > +	struct sdhci_pltfm_host *pltfm_host;
+> > +	struct sdhci_host *host;
+> > +	int dead = 0;
+> > +
+> > +	host = platform_get_drvdata(pdev);
+> > +	pltfm_host = sdhci_priv(host);
+> > +
+> > +	sdhci_remove_host(host, dead);
+> > +
+> > +	clk_disable_unprepare(pltfm_host->clk);
+> > +
+> > +	sdhci_pltfm_free(pdev);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct of_device_id aspeed_sdhci_of_match[] = {
+> > +	{ .compatible = "aspeed,ast2400-sdhci", },
+> > +	{ .compatible = "aspeed,ast2500-sdhci", },
+> > +	{ .compatible = "aspeed,ast2600-sdhci", },
+> > +	{ }
+> > +};
+> > +
+> > +static struct platform_driver aspeed_sdhci_driver = {
+> > +	.driver		= {
+> > +		.name	= "sdhci-aspeed",
+> > +		.of_match_table = aspeed_sdhci_of_match,
+> > +	},
+> > +	.probe		= aspeed_sdhci_probe,
+> > +	.remove		= aspeed_sdhci_remove,
+> > +};
+> > +
+> > +static int aspeed_sdc_probe(struct platform_device *pdev)
+> > +
+> > +{
+> > +	struct device_node *parent, *child;
+> > +	struct aspeed_sdc *sdc;
+> > +	int ret;
+> > +
+> > +	sdc = devm_kzalloc(&pdev->dev, sizeof(*sdc), GFP_KERNEL);
+> > +	if (!sdc)
+> > +		return -ENOMEM;
+> > +
+> > +	spin_lock_init(&sdc->lock);
+> > +
+> > +	sdc->clk = devm_clk_get(&pdev->dev, NULL);
+> > +	if (IS_ERR(sdc->clk))
+> > +		return PTR_ERR(sdc->clk);
+> > +
+> > +	ret = clk_prepare_enable(sdc->clk);
+> > +	if (ret) {
+> > +		dev_err(&pdev->dev, "Unable to enable SDCLK\n");
+> > +		return ret;
+> > +	}
+> > +
+> > +	sdc->res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +	sdc->regs = devm_ioremap_resource(&pdev->dev, sdc->res);
+> > +	if (IS_ERR(sdc->regs)) {
+> > +		ret = PTR_ERR(sdc->regs);
+> > +		goto err_clk;
+> > +	}
+> > +
+> > +	dev_set_drvdata(&pdev->dev, sdc);
+> > +
+> > +	parent = pdev->dev.of_node;
+> > +	for_each_available_child_of_node(parent, child) {
+> > +		struct platform_device *cpdev;
+> > +
+> > +		cpdev = of_platform_device_create(child, NULL, &pdev->dev);
+> > +		if (IS_ERR(cpdev)) {
+> > +			of_node_put(child);
+> > +			ret = PTR_ERR(cpdev);
+> > +			goto err_clk;
+> > +		}
+> > +	}
+> > +
+> > +	return 0;
+> > +
+> > +err_clk:
+> > +	clk_disable_unprepare(sdc->clk);
+> > +	return ret;
+> > +}
+> > +
+> > +static int aspeed_sdc_remove(struct platform_device *pdev)
+> > +{
+> > +	struct aspeed_sdc *sdc = dev_get_drvdata(&pdev->dev);
+> > +
+> > +	clk_disable_unprepare(sdc->clk);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct of_device_id aspeed_sdc_of_match[] = {
+> > +	{ .compatible = "aspeed,ast2400-sd-controller", },
+> > +	{ .compatible = "aspeed,ast2500-sd-controller", },
+> > +	{ .compatible = "aspeed,ast2600-sd-controller", },
+> > +	{ }
+> > +};
+> > +
+> > +MODULE_DEVICE_TABLE(of, aspeed_sdc_of_match);
+> > +
+> > +static struct platform_driver aspeed_sdc_driver = {
+> > +	.driver		= {
+> > +		.name	= "sd-controller-aspeed",
+> > +		.pm	= &sdhci_pltfm_pmops,
+> > +		.of_match_table = aspeed_sdc_of_match,
+> > +	},
+> > +	.probe		= aspeed_sdc_probe,
+> > +	.remove		= aspeed_sdc_remove,
+> > +};
+> > +
+> > +static int __init aspeed_sdc_init(void)
+> > +{
+> > +	int rc;
+> > +
+> > +	rc = platform_driver_register(&aspeed_sdhci_driver);
+> > +	if (rc < 0)
+> > +		return rc;
+> > +
+> > +	return platform_driver_register(&aspeed_sdc_driver);
 > 
-> For this, it's trade off:
-> - lose a few disk space at the very begin of db-wal lifecycle Or
-> - face fragment and read performance degradation.
-> 
-> > If it's from user apps and short lived, why do we need preallocation?
-> 
-> It triggers sequential read on db-wal file during checkpoint, though it's short
-> lived, still it can affect performance.
-> 
-> What do you think of doing some performance test on WAL file to decide the
-> preallocation policy?
+> Shouldn't aspeed_sdhci_driver be unregistered here if there was an error.
 
-Good idea. Can we?
+Yeah, fair point. I'll send a v5 to fix that.
 
-> 
-> Thanks,
-> 
-> > 
-> >>
-> >>>
-> >>>>
-> >>>> Other behaviors looks good to me. :)
-> >>>>
-> >>>> I plan to use last bit in inode.i_inline to store this flag.
-> >>>
-> >>> Why not using i_flag like FS_NOCOW_FL?
-> >>
-> >> Oops, as you listed in last email, I can see you don't want to break
-> >> FS_NOCOW_FL's semantics for backward compatibility.
-> >>
-> >> 			Flag
-> >> IPU_file		N/A			
-> >>
-> >> If we plan to use FS_NOCOW_FL, that's what this patch has already did, you can
-> >> merge it directly... :P
-> >>
-> >>>
-> >>>>
-> >>>>> Cold_file:    Not preallocate   IPU      N/A          Move in cold area
-> >>>>> Hot_file:     Not preallocate   IPU/OPU  N/A          Move in hot area
-> >>>>
-> >>>> Should hot file be gced to hot area? That would mix new hot data with old 'hot'
-> >>>> data which actually become cold.
-> >>>
-> >>> But, user explicitly specified this is hot.
-> >>
-> >> With current implementation, GC will migrate data from hot/warm/cold area to
-> >> cold area.
-> >>
-> >> Thanks,
-> >>
-> >>>
-> >>>>
-> >>>> Thanks,
-> >>>>
-> >>>>>
-> >>>>>>
-> >>>>>> Thank,
-> >>>>>>
-> >>>>>>>
-> >>>>>>>>
-> >>>>>>>>>
-> >>>>>>>>>>
-> >>>>>>>>>> So that this patch propose to separate nocow and pinfile semantics:
-> >>>>>>>>>> - NOCoW flag can only be set on regular file.
-> >>>>>>>>>> - NOCoW file will only trigger IPU at common writeback/flush.
-> >>>>>>>>>> - NOCow file will do OPU during GC.
-> >>>>>>>>>>
-> >>>>>>>>>> For the demand of 1) avoid fragment of file's physical block and
-> >>>>>>>>>> 2) userspace don't care about file's specific physical address,
-> >>>>>>>>>> tagging file as NOCoW will be cheaper than pinned one.
-> >>>>>>>>
-> >>>>>>>> ^^^
-> >>>>>>>>
-> >>>>>>>> Thanks,
-> >>>>>>>>
-> >>>>>>>>>>
-> >>>>>>>>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> >>>>>>>>>> ---
-> >>>>>>>>>> v2:
-> >>>>>>>>>> - rebase code to fix compile error.
-> >>>>>>>>>>  fs/f2fs/data.c |  3 ++-
-> >>>>>>>>>>  fs/f2fs/f2fs.h |  1 +
-> >>>>>>>>>>  fs/f2fs/file.c | 22 +++++++++++++++++++---
-> >>>>>>>>>>  3 files changed, 22 insertions(+), 4 deletions(-)
-> >>>>>>>>>>
-> >>>>>>>>>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> >>>>>>>>>> index a2a28bb269bf..15fb8954c363 100644
-> >>>>>>>>>> --- a/fs/f2fs/data.c
-> >>>>>>>>>> +++ b/fs/f2fs/data.c
-> >>>>>>>>>> @@ -1884,7 +1884,8 @@ static inline bool check_inplace_update_policy(struct inode *inode,
-> >>>>>>>>>>  
-> >>>>>>>>>>  bool f2fs_should_update_inplace(struct inode *inode, struct f2fs_io_info *fio)
-> >>>>>>>>>>  {
-> >>>>>>>>>> -	if (f2fs_is_pinned_file(inode))
-> >>>>>>>>>> +	if (f2fs_is_pinned_file(inode) ||
-> >>>>>>>>>> +			F2FS_I(inode)->i_flags & F2FS_NOCOW_FL)
-> >>>>>>>>>>  		return true;
-> >>>>>>>>>>  
-> >>>>>>>>>>  	/* if this is cold file, we should overwrite to avoid fragmentation */
-> >>>>>>>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> >>>>>>>>>> index 596ab3e1dd7b..f6c5a3d2e659 100644
-> >>>>>>>>>> --- a/fs/f2fs/f2fs.h
-> >>>>>>>>>> +++ b/fs/f2fs/f2fs.h
-> >>>>>>>>>> @@ -2374,6 +2374,7 @@ static inline void f2fs_change_bit(unsigned int nr, char *addr)
-> >>>>>>>>>>  #define F2FS_NOATIME_FL			0x00000080 /* do not update atime */
-> >>>>>>>>>>  #define F2FS_INDEX_FL			0x00001000 /* hash-indexed directory */
-> >>>>>>>>>>  #define F2FS_DIRSYNC_FL			0x00010000 /* dirsync behaviour (directories only) */
-> >>>>>>>>>> +#define F2FS_NOCOW_FL			0x00800000 /* Do not cow file */
-> >>>>>>>>>>  #define F2FS_PROJINHERIT_FL		0x20000000 /* Create with parents projid */
-> >>>>>>>>>>  
-> >>>>>>>>>>  /* Flags that should be inherited by new inodes from their parent. */
-> >>>>>>>>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> >>>>>>>>>> index 7ca545874060..ae0fec54cac6 100644
-> >>>>>>>>>> --- a/fs/f2fs/file.c
-> >>>>>>>>>> +++ b/fs/f2fs/file.c
-> >>>>>>>>>> @@ -1692,6 +1692,7 @@ static const struct {
-> >>>>>>>>>>  	{ F2FS_NOATIME_FL,	FS_NOATIME_FL },
-> >>>>>>>>>>  	{ F2FS_INDEX_FL,	FS_INDEX_FL },
-> >>>>>>>>>>  	{ F2FS_DIRSYNC_FL,	FS_DIRSYNC_FL },
-> >>>>>>>>>> +	{ F2FS_NOCOW_FL,	FS_NOCOW_FL },
-> >>>>>>>>>>  	{ F2FS_PROJINHERIT_FL,	FS_PROJINHERIT_FL },
-> >>>>>>>>>>  };
-> >>>>>>>>>>  
-> >>>>>>>>>> @@ -1715,7 +1716,8 @@ static const struct {
-> >>>>>>>>>>  		FS_NODUMP_FL |		\
-> >>>>>>>>>>  		FS_NOATIME_FL |		\
-> >>>>>>>>>>  		FS_DIRSYNC_FL |		\
-> >>>>>>>>>> -		FS_PROJINHERIT_FL)
-> >>>>>>>>>> +		FS_PROJINHERIT_FL |	\
-> >>>>>>>>>> +		FS_NOCOW_FL)
-> >>>>>>>>>>  
-> >>>>>>>>>>  /* Convert f2fs on-disk i_flags to FS_IOC_{GET,SET}FLAGS flags */
-> >>>>>>>>>>  static inline u32 f2fs_iflags_to_fsflags(u32 iflags)
-> >>>>>>>>>> @@ -1753,8 +1755,6 @@ static int f2fs_ioc_getflags(struct file *filp, unsigned long arg)
-> >>>>>>>>>>  		fsflags |= FS_ENCRYPT_FL;
-> >>>>>>>>>>  	if (f2fs_has_inline_data(inode) || f2fs_has_inline_dentry(inode))
-> >>>>>>>>>>  		fsflags |= FS_INLINE_DATA_FL;
-> >>>>>>>>>> -	if (is_inode_flag_set(inode, FI_PIN_FILE))
-> >>>>>>>>>> -		fsflags |= FS_NOCOW_FL;
-> >>>>>>>>>>  
-> >>>>>>>>>>  	fsflags &= F2FS_GETTABLE_FS_FL;
-> >>>>>>>>>>  
-> >>>>>>>>>> @@ -1794,6 +1794,22 @@ static int f2fs_ioc_setflags(struct file *filp, unsigned long arg)
-> >>>>>>>>>>  	if (ret)
-> >>>>>>>>>>  		goto out;
-> >>>>>>>>>>  
-> >>>>>>>>>> +	if ((fsflags ^ old_fsflags) & FS_NOCOW_FL) {
-> >>>>>>>>>> +		if (!S_ISREG(inode->i_mode)) {
-> >>>>>>>>>> +			ret = -EINVAL;
-> >>>>>>>>>> +			goto out;
-> >>>>>>>>>> +		}
-> >>>>>>>>>> +
-> >>>>>>>>>> +		if (f2fs_should_update_outplace(inode, NULL)) {
-> >>>>>>>>>> +			ret = -EINVAL;
-> >>>>>>>>>> +			goto out;
-> >>>>>>>>>> +		}
-> >>>>>>>>>> +
-> >>>>>>>>>> +		ret = f2fs_convert_inline_inode(inode);
-> >>>>>>>>>> +		if (ret)
-> >>>>>>>>>> +			goto out;
-> >>>>>>>>>> +	}
-> >>>>>>>>>> +
-> >>>>>>>>>>  	ret = f2fs_setflags_common(inode, iflags,
-> >>>>>>>>>>  			f2fs_fsflags_to_iflags(F2FS_SETTABLE_FS_FL));
-> >>>>>>>>>>  out:
-> >>>>>>>>>> -- 
-> >>>>>>>>>> 2.18.0.rc1
-> >>>>>>>>> .
-> >>>>>>>>>
-> >>>>>>> .
-> >>>>>>>
-> >>>>> .
-> >>>>>
-> >>> .
-> >>>
-> > .
-> > 
+Thanks for the feedback.
+
+Andrew
