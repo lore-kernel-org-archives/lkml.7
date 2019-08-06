@@ -2,127 +2,115 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4B0C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 20:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C95AAC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 20:16:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3F8F2070C
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 20:14:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k8lxIrEw"
+	by mail.kernel.org (Postfix) with ESMTP id 9E80B20717
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 20:16:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565122575;
+	bh=CHdEFDdC6MO7xI0dc+/jQv+NXvBM8cI43X6TKLK577M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EKdGonOaA9mw6/DWpi83Ozkm1Tk/u6nxlU01J7/Lx2Yw7Of1jcX0jsXF0N7QwC2/K
+	 wJrg5C79zwgmzf90QmEPcWGZvPBxHHfQ4v0NNtoXgMD26U0WMoqQY3da6zt/aweHy7
+	 NJQ9qBgEXWI6rRzglXjStQmYUBQ9pkl5GWuOnytM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbfHFUOL (ORCPT
+        id S1726376AbfHFUQO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 16:14:11 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:39971 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbfHFUOL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 16:14:11 -0400
-Received: by mail-oi1-f194.google.com with SMTP id w196so47160815oie.7;
-        Tue, 06 Aug 2019 13:14:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DHPLsakTg1F9PtegMLuUGuWnfD3D92bcDfRxNDjqJI4=;
-        b=k8lxIrEwMdAN3Wz6Y91EdQtfNt6sY0pqfBSAdqSvEzioqIOdX2BHS9WAp37OFMe8VC
-         3DDmsgXtIP2U5GVRbF6C0SwdLYAY7Q0PtWLJRi72ukPxIDwY93uptRkBPV+R+vw+SxCr
-         3ZO6rdzbJbR3aNRIn9OkujG2f/Map30fxD0yQU/QUESsylr+TWLQNrivWc7mfV11RwQd
-         62BcPfSxpEsd5Hm0yLW6XFPp4qzAIYQ6qc42vFvr3XINFlv/vvLwLreEcOYBkXEKT5Hz
-         A3pR5L0+wLEVOBQF444i1ErkjW/CROHv2Uj5nNJnm1xXPrXgkDpYZcJlzK+GT2CXp97p
-         ArdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DHPLsakTg1F9PtegMLuUGuWnfD3D92bcDfRxNDjqJI4=;
-        b=chEPfoas9U0xqup49GJTdKNJsEXCj22uwc3pOaTEm8AOkJx1889zAzI1P0Jst0CPAO
-         +mB8V0APhBm9Q+xyd84wUCxiuGtiFrhlpjVD6oflcNFVFgWXvLPkBAlCH7VNDw6uAacz
-         M07963IRFi/iUplOqkIvWHwVDc6sQghLNElhCCDzalcli22uxBIZxFt/nnUZcr69WQLg
-         iKz2oLidfHxiioPf9D2oZGy8zYorFok15A06w37oWTsQDMCjBK+lXnqin4fPxtD/hjvW
-         MGhrpneuzjQlep6EkdWoaTd/OZkZ7nTAGbV5nGbhOrfleZwbDvB5a4nkcvYsC+wCDvnT
-         r92w==
-X-Gm-Message-State: APjAAAUxtBbbhKixiL7n6rzA0Td64oHGkO6jXSHq3oiVPQE/N6CY6RTy
-        8nnIAzjU2TZ6MmS9TECE9ENiEpb7IQCzjJ/FUMM=
-X-Google-Smtp-Source: APXvYqzpsRU4U1y4gTKmBv9/Rt7TEBY/Ggbjy+Jkbq/7IroTE6LpnfiJJQOcHRvZJijSwJPaBPod6NihIbdweNp8v7s=
-X-Received: by 2002:a02:ca19:: with SMTP id i25mr6227780jak.6.1565122449379;
- Tue, 06 Aug 2019 13:14:09 -0700 (PDT)
+        Tue, 6 Aug 2019 16:16:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33028 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725881AbfHFUQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 16:16:14 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7AD82070C;
+        Tue,  6 Aug 2019 20:16:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565122573;
+        bh=CHdEFDdC6MO7xI0dc+/jQv+NXvBM8cI43X6TKLK577M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ow2jBeqS4Y7JdM2VwzqcvRHDfcYU5ouUMku8rA0TEMfRBQDVxyFec06eyKybYUgQj
+         KySLkYju9Gy0giIsRKiwHVCe2w5O03hmfEqqL1u/EMaYF4M5aWvTCLomJ6ILbWLvTT
+         r29xKNy6KNSqg5rwyLzneBnk8LV420HPO1gyF9MM=
+Date:   Tue, 6 Aug 2019 15:16:11 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "driverdev-devel@linuxdriverproject.org" 
+        <driverdev-devel@linuxdriverproject.org>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        "jackm@mellanox.com" <jackm@mellanox.com>
+Subject: Re: [PATCH v2] PCI: hv: Fix panic by calling hv_pci_remove_slots()
+ earlier
+Message-ID: <20190806201611.GT151852@google.com>
+References: <PU1P153MB01693F32F6BB02F9655CC84EBFD90@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-References: <20190731195713.3150463-1-arnd@arndb.de> <20190731195713.3150463-9-arnd@arndb.de>
-In-Reply-To: <20190731195713.3150463-9-arnd@arndb.de>
-From:   Sylvain Lemieux <slemieux.tyco@gmail.com>
-Date:   Tue, 6 Aug 2019 16:13:58 -0400
-Message-ID: <CA+rxa6ovZ+ghiHyGQXepx0pEo465WHEP3TJq+dcnZyx2weE0uw@mail.gmail.com>
-Subject: Re: [PATCH 08/14] net: lpc-enet: allow compile testing
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     soc@kernel.org,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        linux-serial@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PU1P153MB01693F32F6BB02F9655CC84EBFD90@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Acked-by: Sylvain Lemieux <slemieux.tyco@gmail.com>
+Thanks for updating this.  But you didn't update the subject line,
+which is really still a little too low-level.  Maybe Lorenzo will fix
+this.  Something like this, maybe?
 
-On Wed, Jul 31, 2019 at 4:01 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> The lpc-enet driver can now be built on all platforms, so
-> allow compile testing as well.
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+  PCI: hv: Avoid use of hv_pci_dev->pci_slot after freeing it
+
+On Fri, Aug 02, 2019 at 10:50:20PM +0000, Dexuan Cui wrote:
+> 
+> The slot must be removed before the pci_dev is removed, otherwise a panic
+> can happen due to use-after-free.
+> 
+> Fixes: 15becc2b56c6 ("PCI: hv: Add hv_pci_remove_slots() when we unload the driver")
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> Cc: stable@vger.kernel.org
 > ---
->  drivers/net/ethernet/nxp/Kconfig   | 2 +-
->  drivers/net/ethernet/nxp/lpc_eth.c | 1 +
->  2 files changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/net/ethernet/nxp/Kconfig b/drivers/net/ethernet/nxp/Kconfig
-> index 261f107e2be0..418afb84c84b 100644
-> --- a/drivers/net/ethernet/nxp/Kconfig
-> +++ b/drivers/net/ethernet/nxp/Kconfig
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  config LPC_ENET
->          tristate "NXP ethernet MAC on LPC devices"
-> -        depends on ARCH_LPC32XX
-> +        depends on ARCH_LPC32XX || COMPILE_TEST
->          select PHYLIB
->          help
->           Say Y or M here if you want to use the NXP ethernet MAC included on
-> diff --git a/drivers/net/ethernet/nxp/lpc_eth.c b/drivers/net/ethernet/nxp/lpc_eth.c
-> index 0893b77c385d..34fdf2100772 100644
-> --- a/drivers/net/ethernet/nxp/lpc_eth.c
-> +++ b/drivers/net/ethernet/nxp/lpc_eth.c
-> @@ -14,6 +14,7 @@
->  #include <linux/crc32.h>
->  #include <linux/etherdevice.h>
->  #include <linux/module.h>
-> +#include <linux/of.h>
->  #include <linux/of_net.h>
->  #include <linux/phy.h>
->  #include <linux/platform_device.h>
-> --
-> 2.20.0
->
+> 
+> Changes in v2:
+>   Improved the changelog accordign to the discussion with Bjorn Helgaas:
+> 	  https://lkml.org/lkml/2019/8/1/1173
+> 	  https://lkml.org/lkml/2019/8/2/1559
+> 
+>  drivers/pci/controller/pci-hyperv.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index 6b9cc6e60a..68c611d 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -2757,8 +2757,8 @@ static int hv_pci_remove(struct hv_device *hdev)
+>  		/* Remove the bus from PCI's point of view. */
+>  		pci_lock_rescan_remove();
+>  		pci_stop_root_bus(hbus->pci_bus);
+> -		pci_remove_root_bus(hbus->pci_bus);
+>  		hv_pci_remove_slots(hbus);
+> +		pci_remove_root_bus(hbus->pci_bus);
+>  		pci_unlock_rescan_remove();
+>  		hbus->state = hv_pcibus_removed;
+>  	}
+> -- 
+> 1.8.3.1
+> 
