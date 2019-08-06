@@ -2,136 +2,155 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8200FC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94FA4C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A587820B1F
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:42:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="EWEQt0a3"
+	by mail.kernel.org (Postfix) with ESMTP id 6E2ED20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:42:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387905AbfHFQmR (ORCPT
+        id S2387948AbfHFQmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 12:42:17 -0400
-Received: from mo4-p00-ob.smtp.rzone.de ([85.215.255.24]:26683 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732048AbfHFQmR (ORCPT
+        Tue, 6 Aug 2019 12:42:23 -0400
+Received: from smtp-sh.infomaniak.ch ([128.65.195.4]:38011 "EHLO
+        smtp-sh.infomaniak.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387860AbfHFQmV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 12:42:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1565109732;
-        s=strato-dkim-0002; d=hartkopp.net;
-        h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=KJ/hU+j/ewD+T3jhdhw81CeIOchxwYxcu7jDq+0evYc=;
-        b=EWEQt0a3YmaP3YyjkblXoNj3lrfFCSJWLTd2aCDYSFxKJREXbnfoKWbzGabdRmXFqC
-        +hTkuV0p3zxofX9Dm5CNyVvwTxmo7UXvMEzuLRjGGLy9b0yY3RiZ6s9Qd1+ItvtgmIHc
-        +leSIWOj++VVD5FU6CNm9n6QRCtihSbRaZWAebrPug9MIj+b5/aaMG4s0n4ytI0apIO7
-        zLBahmoGybPy0q95xJp/BAHrOZ3nqjupcdDGSWDmKotDe7eXxzWMz5tXk9eQMjd9WSq/
-        p1mEcpQVhLUXnLbqkJTkl0/KYv/u+uMqcJUFUO2RPKeqiPAHIVnx+tc4RbWtpjwlt6jh
-        5ArA==
-X-RZG-AUTH: ":P2MHfkW8eP4Mre39l357AZT/I7AY/7nT2yrDxb8mjG14FZxedJy6qgO1o3PMaViOoLMJU8h5l0ix"
-X-RZG-CLASS-ID: mo00
-Received: from [192.168.1.177]
-        by smtp.strato.de (RZmta 44.24 DYNA|AUTH)
-        with ESMTPSA id k05d3bv76GfoJR9
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Tue, 6 Aug 2019 18:41:50 +0200 (CEST)
-Subject: Re: [PATCH net-next] net: can: Fix compiling warning
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Mao Wenan <maowenan@huawei.com>, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <20190802033643.84243-1-maowenan@huawei.com>
- <0050efdb-af9f-49b9-8d83-f574b3d46a2e@hartkopp.net>
- <20190806135231.GJ1974@kadam>
-From:   Oliver Hartkopp <socketcan@hartkopp.net>
-Message-ID: <6e1c5aa0-8ed3-eec3-a34d-867ea8f54e9d@hartkopp.net>
-Date:   Tue, 6 Aug 2019 18:41:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 6 Aug 2019 12:42:21 -0400
+Received: from smtp8.infomaniak.ch (smtp8.infomaniak.ch [83.166.132.38])
+        by smtp-sh.infomaniak.ch (8.14.5/8.14.5) with ESMTP id x76GesNS032199
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 6 Aug 2019 18:40:54 +0200
+Received: from ns3096276.ip-94-23-54.eu (ns3096276.ip-94-23-54.eu [94.23.54.103])
+        (authenticated bits=0)
+        by smtp8.infomaniak.ch (8.14.5/8.14.5) with ESMTP id x76GemgJ022929
+        (version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=NO);
+        Tue, 6 Aug 2019 18:40:48 +0200
+Subject: Re: [RFC PATCH v1 1/5] fs: Add support for an O_MAYEXEC flag on
+ sys_open()
+To:     Andy Lutomirski <luto@kernel.org>, Jan Kara <jack@suse.cz>,
+        Song Liu <songliubraving@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        James Morris <jmorris@namei.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>, Shuah Khan <shuah@kernel.org>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Matthew Bobrowski <mbobrowski@mbobrowski.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+References: <20181212081712.32347-1-mic@digikod.net>
+ <20181212081712.32347-2-mic@digikod.net>
+ <20181212144306.GA19945@quack2.suse.cz>
+ <CALCETrVeZ0eufFXwfhtaG_j+AdvbzEWE0M3wjXMWVEO7pj+xkw@mail.gmail.com>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Openpgp: preference=signencrypt
+Message-ID: <0a16e842-d636-60ac-427a-3500224f4f8d@digikod.net>
+Date:   Tue, 6 Aug 2019 18:40:48 +0200
+User-Agent: 
 MIME-Version: 1.0
-In-Reply-To: <20190806135231.GJ1974@kadam>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <CALCETrVeZ0eufFXwfhtaG_j+AdvbzEWE0M3wjXMWVEO7pj+xkw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Dan,
 
-On 06/08/2019 15.52, Dan Carpenter wrote:
-> On Fri, Aug 02, 2019 at 10:10:20AM +0200, Oliver Hartkopp wrote:
-
->> Btw. what kind of compiler/make switches are you using so that I can see
->> these warnings myself the next time?
+On 05/08/2019 01:55, Andy Lutomirski wrote:
+> On Wed, Dec 12, 2018 at 6:43 AM Jan Kara <jack@suse.cz> wrote:
+>>
+>> On Wed 12-12-18 09:17:08, Mickaël Salaün wrote:
+>>> When the O_MAYEXEC flag is passed, sys_open() may be subject to
+>>> additional restrictions depending on a security policy implemented by an
+>>> LSM through the inode_permission hook.
+>>>
+>>> The underlying idea is to be able to restrict scripts interpretation
+>>> according to a policy defined by the system administrator.  For this to
+>>> be possible, script interpreters must use the O_MAYEXEC flag
+>>> appropriately.  To be fully effective, these interpreters also need to
+>>> handle the other ways to execute code (for which the kernel can't help):
+>>> command line parameters (e.g., option -e for Perl), module loading
+>>> (e.g., option -m for Python), stdin, file sourcing, environment
+>>> variables, configuration files...  According to the threat model, it may
+>>> be acceptable to allow some script interpreters (e.g. Bash) to interpret
+>>> commands from stdin, may it be a TTY or a pipe, because it may not be
+>>> enough to (directly) perform syscalls.
+>>>
+>>> A simple security policy implementation is available in a following
+>>> patch for Yama.
+>>>
+>>> This is an updated subset of the patch initially written by Vincent
+>>> Strubel for CLIP OS:
+>>> https://github.com/clipos-archive/src_platform_clip-patches/blob/f5cb330d6b684752e403b4e41b39f7004d88e561/1901_open_mayexec.patch
+>>> This patch has been used for more than 10 years with customized script
+>>> interpreters.  Some examples can be found here:
+>>> https://github.com/clipos-archive/clipos4_portage-overlay/search?q=O_MAYEXEC
+>>>
+>>> Signed-off-by: Mickaël Salaün <mic@digikod.net>
+>>> Signed-off-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
+>>> Signed-off-by: Vincent Strubel <vincent.strubel@ssi.gouv.fr>
+>>> Reviewed-by: Philippe Trébuchet <philippe.trebuchet@ssi.gouv.fr>
+>>> Cc: Al Viro <viro@zeniv.linux.org.uk>
+>>> Cc: Kees Cook <keescook@chromium.org>
+>>> Cc: Mickaël Salaün <mickael.salaun@ssi.gouv.fr>
+>>
+>> ...
+>>
+>>> diff --git a/fs/open.c b/fs/open.c
+>>> index 0285ce7dbd51..75479b79a58f 100644
+>>> --- a/fs/open.c
+>>> +++ b/fs/open.c
+>>> @@ -974,6 +974,10 @@ static inline int build_open_flags(int flags, umode_t mode, struct open_flags *o
+>>>       if (flags & O_APPEND)
+>>>               acc_mode |= MAY_APPEND;
+>>>
+>>> +     /* Check execution permissions on open. */
+>>> +     if (flags & O_MAYEXEC)
+>>> +             acc_mode |= MAY_OPENEXEC;
+>>> +
+>>>       op->acc_mode = acc_mode;
+>>>
+>>>       op->intent = flags & O_PATH ? 0 : LOOKUP_OPEN;
+>>
+>> I don't feel experienced enough in security to tell whether we want this
+>> functionality or not. But if we do this, shouldn't we also set FMODE_EXEC
+>> on the resulting struct file? That way also security_file_open() can be
+>> used to arbitrate such executable opens and in particular
+>> fanotify permission event FAN_OPEN_EXEC will get properly generated which I
+>> guess is desirable (support for it is sitting in my tree waiting for the
+>> merge window) - adding some audit people involved in FAN_OPEN_EXEC to
+>> CC. Just an idea...
+>>
 > 
-> These are Sparse warnings, not from GCC.
+> I would really like to land this patch.  I'm fiddling with making
+> bpffs handle permissions intelligently, and the lack of a way to say
+> "hey, I want to open this bpf program so that I can run it" is
+> annoying.
 
-I compiled the code (the original version), but I do not get that 
-"Should it be static?" warning:
-
-user@box:~/net-next$ make C=1
-   CALL    scripts/checksyscalls.sh
-   CALL    scripts/atomic/check-atomics.sh
-   DESCEND  objtool
-   CHK     include/generated/compile.h
-   CHECK   net/can/af_can.c
-./include/linux/sched.h:609:43: error: bad integer constant expression
-./include/linux/sched.h:609:73: error: invalid named zero-width bitfield 
-`value'
-./include/linux/sched.h:610:43: error: bad integer constant expression
-./include/linux/sched.h:610:67: error: invalid named zero-width bitfield 
-`bucket_id'
-   CC [M]  net/can/af_can.o
-   CHECK   net/can/proc.c
-./include/linux/sched.h:609:43: error: bad integer constant expression
-./include/linux/sched.h:609:73: error: invalid named zero-width bitfield 
-`value'
-./include/linux/sched.h:610:43: error: bad integer constant expression
-./include/linux/sched.h:610:67: error: invalid named zero-width bitfield 
-`bucket_id'
-   CC [M]  net/can/proc.o
-   LD [M]  net/can/can.o
-   CHECK   net/can/raw.c
-./include/linux/sched.h:609:43: error: bad integer constant expression
-./include/linux/sched.h:609:73: error: invalid named zero-width bitfield 
-`value'
-./include/linux/sched.h:610:43: error: bad integer constant expression
-./include/linux/sched.h:610:67: error: invalid named zero-width bitfield 
-`bucket_id'
-   CC [M]  net/can/raw.o
-   LD [M]  net/can/can-raw.o
-   CHECK   net/can/bcm.c
-./include/linux/sched.h:609:43: error: bad integer constant expression
-./include/linux/sched.h:609:73: error: invalid named zero-width bitfield 
-`value'
-./include/linux/sched.h:610:43: error: bad integer constant expression
-./include/linux/sched.h:610:67: error: invalid named zero-width bitfield 
-`bucket_id'
-   CC [M]  net/can/bcm.o
-   LD [M]  net/can/can-bcm.o
-   CHECK   net/can/gw.c
-./include/linux/sched.h:609:43: error: bad integer constant expression
-./include/linux/sched.h:609:73: error: invalid named zero-width bitfield 
-`value'
-./include/linux/sched.h:610:43: error: bad integer constant expression
-./include/linux/sched.h:610:67: error: invalid named zero-width bitfield 
-`bucket_id'
-   CC [M]  net/can/gw.o
-   LD [M]  net/can/can-gw.o
-Kernel: arch/x86/boot/bzImage is ready  (#2)
-
-I've seen that warning at different other code - but not in bcm.c & raw.c
-
-I downloaded & compiled the latest sparse source. But still no "static" 
-warning. Any idea?
-
-Best regards,
-Oliver
+Are you OK with this series? What about Aleksa's work on openat2(), and
+Sean's work on SGX/noexec? Is it time to send a new patch series (with a
+dedicated LSM instead of Yama)?
