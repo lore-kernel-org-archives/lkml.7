@@ -6,97 +6,87 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE4FC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B31C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38FE820C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5AB721871
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:46:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732908AbfHFPqd (ORCPT
+        id S1732936AbfHFPqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 11:46:33 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:44598 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbfHFPqd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 11:46:33 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 49FFE80475;
-        Tue,  6 Aug 2019 17:46:29 +0200 (CEST)
-Date:   Tue, 6 Aug 2019 17:46:27 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>, tzimmermann@suse.de,
-        Sean Paul <sean@poorly.run>
-Subject: Re: [PATCH 1/3] drm: add gem ttm helpers
-Message-ID: <20190806154627.GA10478@ravnborg.org>
-References: <20190806133454.8254-1-kraxel@redhat.com>
- <20190806133454.8254-2-kraxel@redhat.com>
+        Tue, 6 Aug 2019 11:46:44 -0400
+Received: from mga03.intel.com ([134.134.136.65]:46146 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729161AbfHFPqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 11:46:44 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 08:40:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
+   d="scan'208";a="179186990"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga006.jf.intel.com with ESMTP; 06 Aug 2019 08:40:33 -0700
+Date:   Tue, 6 Aug 2019 08:40:33 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH v2 2/5] x86: KVM: svm: avoid flooding logs when
+ skip_emulated_instruction() fails
+Message-ID: <20190806154033.GD27766@linux.intel.com>
+References: <20190806060150.32360-1-vkuznets@redhat.com>
+ <20190806060150.32360-3-vkuznets@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190806133454.8254-2-kraxel@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=20KFwNOVAAAA:8
-        a=IZVlWtmyn-D7wekicaMA:9 a=CjuIK1q_8ugA:10
+In-Reply-To: <20190806060150.32360-3-vkuznets@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gerd.
-
-On Tue, Aug 06, 2019 at 03:34:52PM +0200, Gerd Hoffmann wrote:
-> Now with ttm_buffer_object being a subclass of drm_gem_object we can
-> easily lookup ttm_buffer_object for a given drm_gem_object, which in
-> turm allows to create common helper functions.  This patch starts off
-> with dump mmap helpers.
+On Tue, Aug 06, 2019 at 08:01:47AM +0200, Vitaly Kuznetsov wrote:
+> When we're unable to skip instruction with kvm_emulate_instruction() we
+> will not advance RIP and most likely the guest will get stuck as
+> consequitive attempts to execute the same instruction will likely result
+> in the same behavior.
 > 
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-
-One nit below.
-
+> As we're not supposed to see these messages under normal conditions, switch
+> to pr_err_once().
+> 
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Reviewed-by: Jim Mattson <jmattson@google.com>
 > ---
->  include/drm/drm_gem_ttm_helper.h     | 27 +++++++++++++++
->  drivers/gpu/drm/drm_gem_ttm_helper.c | 52 ++++++++++++++++++++++++++++
->  drivers/gpu/drm/Kconfig              |  7 ++++
->  drivers/gpu/drm/Makefile             |  3 ++
->  4 files changed, 89 insertions(+)
->  create mode 100644 include/drm/drm_gem_ttm_helper.h
->  create mode 100644 drivers/gpu/drm/drm_gem_ttm_helper.c
+>  arch/x86/kvm/svm.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/include/drm/drm_gem_ttm_helper.h b/include/drm/drm_gem_ttm_helper.h
-> new file mode 100644
-> index 000000000000..2c6874190b17
-> --- /dev/null
-> +++ b/include/drm/drm_gem_ttm_helper.h
-> @@ -0,0 +1,27 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> +
-> +#ifndef DRM_GEM_TTM_HELPER_H
-> +#define DRM_GEM_TTM_HELPER_H
-> +
-> +#include <drm/drm_gem.h>
-> +#include <drm/ttm/ttm_bo_api.h>
-> +#include <linux/kernel.h> /* for container_of() */
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index 7e843b340490..80f576e05112 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -782,7 +782,8 @@ static void skip_emulated_instruction(struct kvm_vcpu *vcpu)
+>  	if (!svm->next_rip) {
+>  		if (kvm_emulate_instruction(vcpu, EMULTYPE_SKIP) !=
+>  				EMULATE_DONE)
+> -			printk(KERN_DEBUG "%s: NOP\n", __func__);
+> +			pr_err_once("KVM: %s: unable to skip instruction\n",
+> +				    __func__);
 
-The typical order of include files is:
+IMO the proper fix would be to change skip_emulated_instruction() to
+return an int so that emulation failure can be reported back up the stack.
+It's a relatively minor change as there are a limited number of call sites
+to skip_emulated_instruction() in SVM and VMX.
 
-#include <linux/*>
-
-#include <drm/*>
-
-So space between each block of includes and sort within each block.
-
-The comment "/* for container_of() */" is not really useful for
-anyone.
-
-	Sam
+>  		return;
+>  	}
+>  	if (svm->next_rip - kvm_rip_read(vcpu) > MAX_INST_SIZE)
+> -- 
+> 2.20.1
+> 
