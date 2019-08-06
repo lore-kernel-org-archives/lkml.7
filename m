@@ -2,103 +2,172 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5482FC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11871C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C69A20C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:04:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SEwGHkmi"
+	by mail.kernel.org (Postfix) with ESMTP id D343B2089E
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:07:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731593AbfHFMEp (ORCPT
+        id S1728886AbfHFMHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 08:04:45 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:57506 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726783AbfHFMEp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 08:04:45 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x76C409i076642;
-        Tue, 6 Aug 2019 12:04:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=bPliwkGTvpcew6pJBv+ngwOrNIRjc2W/37cr0qQOeFc=;
- b=SEwGHkmif8CpscXJfHDn/qyv/zUZt3VpsemT07L1JWp/l4Zqpmy7HbeO6QF8kBXTnG3s
- ROKUKqUUopkdJV2/zZwc+jmNw1u4gVMqEdxSvVY1NiAVMRl6fjkz2FCEmDI62RIPDdBl
- xy8Jyk32yRiAHteyR3neftSlkL9kHu0nJBWvANxVnSAR1R1XjMLRonjic72c3QZNtkMD
- lZxkwFaVzaSiXCpix0xgzujA+F/8vTIcvB3wUkf1+HyuhiJ3fUniSC5MwKejZ7/XW+sa
- VSryg2ycmAJNQOcBeqa04xdBan4o6r8v9grYUeGk/4vYCX+Mz9oRNC/kkBgtK+FpW+gU Qg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2u527pnkad-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 06 Aug 2019 12:04:39 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x76C2bvh086897;
-        Tue, 6 Aug 2019 12:04:39 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2u75bvejj0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 06 Aug 2019 12:04:39 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x76C4bRA002921;
-        Tue, 6 Aug 2019 12:04:38 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 06 Aug 2019 05:04:36 -0700
-Date:   Tue, 6 Aug 2019 15:04:27 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Merwin Trever Ferrao <merwintf@gmail.com>
-Cc:     Larry.Finger@lwfinger.net, gregkh@linuxfoundation.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Staging: rtl8188eu: core: rtw_security: fixed a coding
- style issue
-Message-ID: <20190806120427.GG1974@kadam>
-References: <20190806115438.GA24258@IoT-COE>
+        Tue, 6 Aug 2019 08:07:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:60768 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726036AbfHFMHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 08:07:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1DE6228;
+        Tue,  6 Aug 2019 05:07:10 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4EFBC3F694;
+        Tue,  6 Aug 2019 05:07:09 -0700 (PDT)
+Date:   Tue, 6 Aug 2019 13:07:07 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64/cache: fix -Woverride-init compiler warnings
+Message-ID: <20190806120706.GC475@lakrids.cambridge.arm.com>
+References: <1564759944-2197-1-git-send-email-cai@lca.pw>
+ <20190805095256.ocgdb2yfhnbdz6kw@willie-the-truck>
+ <771C4B4C-6D79-419D-9778-5DE1BFC67FBE@lca.pw>
+ <20190805140118.fys437oor2b2rnq5@willie-the-truck>
+ <06613F4A-3DA7-4FF9-8616-52CB4BB58C48@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190806115438.GA24258@IoT-COE>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9340 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908060121
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9340 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908060121
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <06613F4A-3DA7-4FF9-8616-52CB4BB58C48@lca.pw>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 05:24:38PM +0530, Merwin Trever Ferrao wrote:
-> Fixed WARNING: else is not generally useful after a break or return
-> ---
+On Mon, Aug 05, 2019 at 11:50:03PM -0400, Qian Cai wrote:
+> 
+> 
+> > On Aug 5, 2019, at 10:01 AM, Will Deacon <will@kernel.org> wrote:
+> > 
+> > On Mon, Aug 05, 2019 at 07:47:37AM -0400, Qian Cai wrote:
+> >> 
+> >> 
+> >>> On Aug 5, 2019, at 5:52 AM, Will Deacon <will@kernel.org> wrote:
+> >>> 
+> >>> On Fri, Aug 02, 2019 at 11:32:24AM -0400, Qian Cai wrote:
+> >>>> The commit 155433cb365e ("arm64: cache: Remove support for ASID-tagged
+> >>>> VIVT I-caches") introduced some compiation warnings from GCC,
+> >>>> 
+> >>>> arch/arm64/kernel/cpuinfo.c:38:26: warning: initialized field
+> >>>> overwritten [-Woverride-init]
+> >>>> [ICACHE_POLICY_VIPT]  = "VIPT",
+> >>>>                         ^~~~~~
+> >>>> arch/arm64/kernel/cpuinfo.c:38:26: note: (near initialization for
+> >>>> 'icache_policy_str[2]')
+> >>>> arch/arm64/kernel/cpuinfo.c:39:26: warning: initialized field
+> >>>> overwritten [-Woverride-init]
+> >>>> [ICACHE_POLICY_PIPT]  = "PIPT",
+> >>>>                         ^~~~~~
+> >>>> arch/arm64/kernel/cpuinfo.c:39:26: note: (near initialization for
+> >>>> 'icache_policy_str[3]')
+> >>>> arch/arm64/kernel/cpuinfo.c:40:27: warning: initialized field
+> >>>> overwritten [-Woverride-init]
+> >>>> [ICACHE_POLICY_VPIPT]  = "VPIPT",
+> >>>>                          ^~~~~~~
+> >>>> arch/arm64/kernel/cpuinfo.c:40:27: note: (near initialization for
+> >>>> 'icache_policy_str[0]')
+> >>>> 
+> >>>> because it initializes icache_policy_str[0 ... 3] twice.
+> >>>> 
+> >>>> Fixes: 155433cb365e ("arm64: cache: Remove support for ASID-tagged VIVT I-caches")
+> >>>> Signed-off-by: Qian Cai <cai@lca.pw>
+> >>>> ---
+> >>>> arch/arm64/kernel/cpuinfo.c | 4 ++--
+> >>>> 1 file changed, 2 insertions(+), 2 deletions(-)
+> >>>> 
+> >>>> diff --git a/arch/arm64/kernel/cpuinfo.c b/arch/arm64/kernel/cpuinfo.c
+> >>>> index 876055e37352..193b38da8d96 100644
+> >>>> --- a/arch/arm64/kernel/cpuinfo.c
+> >>>> +++ b/arch/arm64/kernel/cpuinfo.c
+> >>>> @@ -34,10 +34,10 @@
+> >>>> static struct cpuinfo_arm64 boot_cpu_data;
+> >>>> 
+> >>>> static char *icache_policy_str[] = {
+> >>>> -	[0 ... ICACHE_POLICY_PIPT]	= "RESERVED/UNKNOWN",
+> >>>> +	[ICACHE_POLICY_VPIPT]		= "VPIPT",
+> >>>> +	[ICACHE_POLICY_VPIPT + 1]	= "RESERVED/UNKNOWN",
+> >>>> 	[ICACHE_POLICY_VIPT]		= "VIPT",
+> >>>> 	[ICACHE_POLICY_PIPT]		= "PIPT",
+> >>>> -	[ICACHE_POLICY_VPIPT]		= "VPIPT",
+> >>> 
+> >>> I really don't like this patch. Using "[0 ... MAXIDX] = <default>" is a
+> >>> useful idiom and I think the code is more error-prone the way you have
+> >>> restructured it.
+> >>> 
+> >>> Why are you passing -Woverride-init to the compiler anyway? There's only
+> >>> one Makefile that references that option, and it's specific to a pinctrl
+> >>> driver.
+> >> 
+> >> Those extra warnings can be enabled by “make W=1”. “-Woverride-init “ seems to be useful
+> >> to catch potential developer mistakes with unintented double-initializations. It is normal to
+> >> start to fix the most of false-positives first before globally enabling the flag by default just like
+> >> “-Wimplicit-fallthrough” mentioned in,
+> >> 
+> >> https://lwn.net/Articles/794944/
+> > 
+> > I think this case is completely different to the implicit fallthrough stuff.
+> > The solution there was simply to add a comment without restructuring the
+> > surrounding code. What your patch does here is actively make the code harder
+> > to understand.
+> > 
+> > Initialising a static array with a non-zero pattern is a useful idiom and I
+> > don't think we should throw that away just to appease a silly compiler
+> > warning that appears only with non-default build options. Have a look at
+> > the way we use PERF_MAP_ALL_UNSUPPORTED in the Arm PMU code, for example.
+> 
+> Well, both GCC and Clang would generate warnings for those. Clang even enable this by
+> default,
+> 
+> https://releases.llvm.org/8.0.0/tools/clang/docs/DiagnosticsReference.html#winitializer-overrides
+> 
+> Assume compiler people are sane, I probably not call those are “silly”.
 
-Much better, but you forgot the the Signed-off-by so we can't apply it.
+We're not disputing the sanity of compiler folk; Will did not say
+anything about that.
 
-Also it's nice to be more specific with the subject.
-[PATCH] Staging: rtl8188eu: rtw_security: tidy up crc32_init().
-And for the full commit message maybe write something like:
+The warning is unhelpful in the case of the [0 ... MAXIDX] = <default>
+idiom, and the modification you suggest:
 
-This code generates a checkpatch warning:
+* Makes the code harder to read.
 
-    WARNING: else is not generally useful after a break or return
+* Increases the necessary context. e.g. I must know the specific values
+  of the enum to know that ICACHE_POLICY_VPIPT + 1 is the unallocated
+  slot.
 
-If we move the declarations to the start of the function then we can
-pull the code back one tab and it makes the function a lot more readable.
+* Less robust. If the enum gets re-ordered, we must update the array.
+  If the enum is expanded, new elements must be added to the array to
+  initialize entries to the default value, which also makes the code
+  more verbose and painful to read. IIUC if we don't explicitly
+  initialize an element, we won't get a warning, which would be harmful.
 
-regards,
-dan carpenter
+If there's some way to mark the default initialization as overridable,
+I think that would be fine, e.g.
 
+struct foo *array[] = {
+	[0 ... MAXIDX] __default = <default>,
+	[SOMEIDX] = <someval>,
+	[OTHERIDX] = <otherval>,
+}
+
+We have a number of cases where the [0 ... MAXIDX] = <default> idiom are
+used, and I don't think that any of them should be changed in the manner
+suggested by this patch.
+
+
+Thanks,
+Mark.
