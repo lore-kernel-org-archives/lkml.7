@@ -2,120 +2,491 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFDEEC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 07:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA026C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 07:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1D5D2070C
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 07:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91A82216B7
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 07:56:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="xarmdgAb"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="sD1Mk/1I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732166AbfHFHz0 (ORCPT
+        id S1732183AbfHFH43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 03:55:26 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45990 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727259AbfHFHz0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 03:55:26 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n1so574400wrw.12
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 00:55:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NZRqT8V+HbaNyUlq3PdBNLAEq/GOVw1hFRgyTGAZtYU=;
-        b=xarmdgAb/WJ9uvxeIe7Vvnuil2dEKchf6tYjy8/jZl8nFLLjSJPqAS0O5pOi/iLqEP
-         LNTPcNvW/M+iilAxfnXWBex9Gej95dQnl8JyhGtmVJjcOCe1bM1fTpkGTxdABhKl8Lbd
-         i7h607XcKNy/vmaj9QEeMNQRJHB4XjeCEXcRe62ehN+bjsC6uoW7Doqy+hsTr91TUg0w
-         HTpi3lWeBPbGzHmKNxlDrENj91LydNecOWqUNEAeNMtx4KYRndhdjatqBgUl8hobEd2S
-         90f5DI8yESaDekqlY00MwIwgEMyfrabfwIpXEmHYw5OTqIZyFncYfjFWNv74xCxekTie
-         Uu5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NZRqT8V+HbaNyUlq3PdBNLAEq/GOVw1hFRgyTGAZtYU=;
-        b=VdHAE1lBEsc2HjE7BiSlOXM1J+fmsSd39T8T81sfGfjLl6IH1ShnVjEc2d/P5s/fpV
-         MID4/QGBwaYb/JkQk5yhU8+utMDuOG99T8U0KdvfeNLFWKrYmTsnEi7CEknISVlarLx2
-         qKUFEnjGf/SBUlNXm3khjE3P58RJsU9WXnpUyDUw3VWqREjWjsh1sC2MXJ6gpX/f3/TL
-         O0YRtGDjUE0Fyr6pwP3HAmSHDXXW1O8hjBScX/aZamklZVokispRz5GmxyUu5ib4AQp/
-         YHHepnwCMRv8BiFw7FzRlVY4OudQkg57lR+dQTvdTO4O9aEPQBfIrm40Mi17WQURo4o2
-         KYuw==
-X-Gm-Message-State: APjAAAWqVhL1tZQ3uaVa3zO6+Kb76mphFmp80/qGjuip3lHcMXW775yX
-        /ojjLHw47YXnueUCXXZWI4LVXA==
-X-Google-Smtp-Source: APXvYqzfaTBkqaGB//oMRTCwkGNn27u+6JoIXAVBcyBbQWY0HtlhPHe6dXf75sino24ZgDU9UIpu+A==
-X-Received: by 2002:a05:6000:1007:: with SMTP id a7mr3111062wrx.172.1565078123923;
-        Tue, 06 Aug 2019 00:55:23 -0700 (PDT)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id q18sm107379252wrw.36.2019.08.06.00.55.23
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 00:55:23 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     khilman@baylibre.com
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Christian Hewitt <christianshewitt@gmail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH] dt-bindings: arm: amlogic: fix x96-max/sei510 section in amlogic.yaml
-Date:   Tue,  6 Aug 2019 09:55:20 +0200
-Message-Id: <20190806075520.14652-1-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
+        Tue, 6 Aug 2019 03:56:29 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:53323 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727259AbfHFH42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 03:56:28 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 462n5P4B0qz9txYB;
+        Tue,  6 Aug 2019 09:56:25 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=sD1Mk/1I; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id uOxT8aFbiBhy; Tue,  6 Aug 2019 09:56:25 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 462n5P2nLRz9txY9;
+        Tue,  6 Aug 2019 09:56:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1565078185; bh=exbILqtHWAbzCI2aKAx+UNXJ2ZIEmuAnB2WNoplJ2AY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=sD1Mk/1IPTF/mWmhMAOyYAgBuJQEOafiBOnKhWXSBkJ2T/mTNes5SyRPiXpiHoWPF
+         f4tc9S+69+bJMnI2OSH/TDjUvlwgLbU1vBWVaWQCpIown1I/2wU1KkihATMut040AW
+         M172noQ9m9O+NrjZzgnmm5lBz+Ectq5VNtY/vxrY=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7DFE08B7E4;
+        Tue,  6 Aug 2019 09:56:26 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id mk5_9WsK2-lo; Tue,  6 Aug 2019 09:56:26 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 849FE8B7E2;
+        Tue,  6 Aug 2019 09:56:25 +0200 (CEST)
+Subject: Re: [PATCH v4 07/10] powerpc/fsl_booke/32: randomize the kernel image
+ offset
+To:     Jason Yan <yanaijie@huawei.com>, mpe@ellerman.id.au,
+        linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com,
+        benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com,
+        keescook@chromium.org, kernel-hardening@lists.openwall.com
+Cc:     linux-kernel@vger.kernel.org, wangkefeng.wang@huawei.com,
+        yebin10@huawei.com, thunder.leizhen@huawei.com,
+        jingxiangfeng@huawei.com, fanchengyang@huawei.com,
+        zhaohongjiang@huawei.com
+References: <20190805064335.19156-1-yanaijie@huawei.com>
+ <20190805064335.19156-8-yanaijie@huawei.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <3edec35b-8d61-07ff-558d-2d7e0c28a0e2@c-s.fr>
+Date:   Tue, 6 Aug 2019 09:56:25 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190805064335.19156-8-yanaijie@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Hewitt <christianshewitt@gmail.com>
 
-Move amediatech,x96-max and seirobotics,sei510 to the S905D2 section and
-update the S905D2 description to S905D2/X2/Y2.
 
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- Documentation/devicetree/bindings/arm/amlogic.yaml | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Le 05/08/2019 à 08:43, Jason Yan a écrit :
+> After we have the basic support of relocate the kernel in some
+> appropriate place, we can start to randomize the offset now.
+> 
+> Entropy is derived from the banner and timer, which will change every
+> build and boot. This not so much safe so additionally the bootloader may
+> pass entropy via the /chosen/kaslr-seed node in device tree.
+> 
+> We will use the first 512M of the low memory to randomize the kernel
+> image. The memory will be split in 64M zones. We will use the lower 8
+> bit of the entropy to decide the index of the 64M zone. Then we chose a
+> 16K aligned offset inside the 64M zone to put the kernel in.
+> 
+>      KERNELBASE
+> 
+>          |-->   64M   <--|
+>          |               |
+>          +---------------+    +----------------+---------------+
+>          |               |....|    |kernel|    |               |
+>          +---------------+    +----------------+---------------+
+>          |                         |
+>          |----->   offset    <-----|
+> 
+>                                kimage_vaddr
+> 
+> We also check if we will overlap with some areas like the dtb area, the
+> initrd area or the crashkernel area. If we cannot find a proper area,
+> kaslr will be disabled and boot from the original kernel.
+> 
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> Cc: Diana Craciun <diana.craciun@nxp.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: Kees Cook <keescook@chromium.org>
+> Reviewed-by: Diana Craciun <diana.craciun@nxp.com>
+> Tested-by: Diana Craciun <diana.craciun@nxp.com>
 
-diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
-index 325c6fd3566d..4668064dd7e5 100644
---- a/Documentation/devicetree/bindings/arm/amlogic.yaml
-+++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
-@@ -91,13 +91,11 @@ properties:
-       - description: Boards with the Amlogic Meson GXL S905X SoC
-         items:
-           - enum:
--              - amediatech,x96-max
-               - amlogic,p212
-               - hwacom,amazetv
-               - khadas,vim
-               - libretech,cc
-               - nexbox,a95x
--              - seirobotics,sei510
-           - const: amlogic,s905x
-           - const: amlogic,meson-gxl
- 
-@@ -129,10 +127,12 @@ properties:
-           - const: amlogic,a113d
-           - const: amlogic,meson-axg
- 
--      - description: Boards with the Amlogic Meson G12A S905D2 SoC
-+      - description: Boards with the Amlogic Meson G12A S905D2/X2/Y2 SoC
-         items:
-           - enum:
-+              - amediatech,x96-max
-               - amlogic,u200
-+              - seirobotics,sei510
-           - const: amlogic,g12a
- 
-       - description: Boards with the Amlogic Meson G12B S922X SoC
--- 
-2.22.0
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
+One small comment below
+
+> ---
+>   arch/powerpc/kernel/kaslr_booke.c | 322 +++++++++++++++++++++++++++++-
+>   1 file changed, 320 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/powerpc/kernel/kaslr_booke.c b/arch/powerpc/kernel/kaslr_booke.c
+> index 30f84c0321b2..97250cad71de 100644
+> --- a/arch/powerpc/kernel/kaslr_booke.c
+> +++ b/arch/powerpc/kernel/kaslr_booke.c
+> @@ -23,6 +23,8 @@
+>   #include <linux/delay.h>
+>   #include <linux/highmem.h>
+>   #include <linux/memblock.h>
+> +#include <linux/libfdt.h>
+> +#include <linux/crash_core.h>
+>   #include <asm/pgalloc.h>
+>   #include <asm/prom.h>
+>   #include <asm/io.h>
+> @@ -34,15 +36,329 @@
+>   #include <asm/machdep.h>
+>   #include <asm/setup.h>
+>   #include <asm/paca.h>
+> +#include <asm/kdump.h>
+>   #include <mm/mmu_decl.h>
+> +#include <generated/compile.h>
+> +#include <generated/utsrelease.h>
+> +
+> +#ifdef DEBUG
+> +#define DBG(fmt...) printk(KERN_ERR fmt)
+> +#else
+> +#define DBG(fmt...)
+> +#endif
+> +
+> +struct regions {
+> +	unsigned long pa_start;
+> +	unsigned long pa_end;
+> +	unsigned long kernel_size;
+> +	unsigned long dtb_start;
+> +	unsigned long dtb_end;
+> +	unsigned long initrd_start;
+> +	unsigned long initrd_end;
+> +	unsigned long crash_start;
+> +	unsigned long crash_end;
+> +	int reserved_mem;
+> +	int reserved_mem_addr_cells;
+> +	int reserved_mem_size_cells;
+> +};
+>   
+>   extern int is_second_reloc;
+>   
+> +/* Simplified build-specific string for starting entropy. */
+> +static const char build_str[] = UTS_RELEASE " (" LINUX_COMPILE_BY "@"
+> +		LINUX_COMPILE_HOST ") (" LINUX_COMPILER ") " UTS_VERSION;
+> +
+> +static __init void kaslr_get_cmdline(void *fdt)
+> +{
+> +	int node = fdt_path_offset(fdt, "/chosen");
+> +
+> +	early_init_dt_scan_chosen(node, "chosen", 1, boot_command_line);
+> +}
+> +
+> +static unsigned long __init rotate_xor(unsigned long hash, const void *area,
+> +				       size_t size)
+> +{
+> +	size_t i;
+> +	unsigned long *ptr = (unsigned long *)area;
+
+As area is a void *, this cast shouldn't be necessary. Or maybe it is 
+necessary because it discards the const ?
+
+Christophe
+
+> +
+> +	for (i = 0; i < size / sizeof(hash); i++) {
+> +		/* Rotate by odd number of bits and XOR. */
+> +		hash = (hash << ((sizeof(hash) * 8) - 7)) | (hash >> 7);
+> +		hash ^= ptr[i];
+> +	}
+> +
+> +	return hash;
+> +}
+> +
+> +/* Attempt to create a simple but unpredictable starting entropy. */
+> +static unsigned long __init get_boot_seed(void *fdt)
+> +{
+> +	unsigned long hash = 0;
+> +
+> +	hash = rotate_xor(hash, build_str, sizeof(build_str));
+> +	hash = rotate_xor(hash, fdt, fdt_totalsize(fdt));
+> +
+> +	return hash;
+> +}
+> +
+> +static __init u64 get_kaslr_seed(void *fdt)
+> +{
+> +	int node, len;
+> +	fdt64_t *prop;
+> +	u64 ret;
+> +
+> +	node = fdt_path_offset(fdt, "/chosen");
+> +	if (node < 0)
+> +		return 0;
+> +
+> +	prop = fdt_getprop_w(fdt, node, "kaslr-seed", &len);
+> +	if (!prop || len != sizeof(u64))
+> +		return 0;
+> +
+> +	ret = fdt64_to_cpu(*prop);
+> +	*prop = 0;
+> +	return ret;
+> +}
+> +
+> +static __init bool regions_overlap(u32 s1, u32 e1, u32 s2, u32 e2)
+> +{
+> +	return e1 >= s2 && e2 >= s1;
+> +}
+> +
+> +static __init bool overlaps_reserved_region(const void *fdt, u32 start,
+> +					    u32 end, struct regions *regions)
+> +{
+> +	int subnode, len, i;
+> +	u64 base, size;
+> +
+> +	/* check for overlap with /memreserve/ entries */
+> +	for (i = 0; i < fdt_num_mem_rsv(fdt); i++) {
+> +		if (fdt_get_mem_rsv(fdt, i, &base, &size) < 0)
+> +			continue;
+> +		if (regions_overlap(start, end, base, base + size))
+> +			return true;
+> +	}
+> +
+> +	if (regions->reserved_mem < 0)
+> +		return false;
+> +
+> +	/* check for overlap with static reservations in /reserved-memory */
+> +	for (subnode = fdt_first_subnode(fdt, regions->reserved_mem);
+> +	     subnode >= 0;
+> +	     subnode = fdt_next_subnode(fdt, subnode)) {
+> +		const fdt32_t *reg;
+> +		u64 rsv_end;
+> +
+> +		len = 0;
+> +		reg = fdt_getprop(fdt, subnode, "reg", &len);
+> +		while (len >= (regions->reserved_mem_addr_cells +
+> +			       regions->reserved_mem_size_cells)) {
+> +			base = fdt32_to_cpu(reg[0]);
+> +			if (regions->reserved_mem_addr_cells == 2)
+> +				base = (base << 32) | fdt32_to_cpu(reg[1]);
+> +
+> +			reg += regions->reserved_mem_addr_cells;
+> +			len -= 4 * regions->reserved_mem_addr_cells;
+> +
+> +			size = fdt32_to_cpu(reg[0]);
+> +			if (regions->reserved_mem_size_cells == 2)
+> +				size = (size << 32) | fdt32_to_cpu(reg[1]);
+> +
+> +			reg += regions->reserved_mem_size_cells;
+> +			len -= 4 * regions->reserved_mem_size_cells;
+> +
+> +			if (base >= regions->pa_end)
+> +				continue;
+> +
+> +			rsv_end = min(base + size, (u64)U32_MAX);
+> +
+> +			if (regions_overlap(start, end, base, rsv_end))
+> +				return true;
+> +		}
+> +	}
+> +	return false;
+> +}
+> +
+> +static __init bool overlaps_region(const void *fdt, u32 start,
+> +				   u32 end, struct regions *regions)
+> +{
+> +	if (regions_overlap(start, end, regions->dtb_start,
+> +			    regions->dtb_end))
+> +		return true;
+> +
+> +	if (regions_overlap(start, end, regions->initrd_start,
+> +			    regions->initrd_end))
+> +		return true;
+> +
+> +	if (regions_overlap(start, end, regions->crash_start,
+> +			    regions->crash_end))
+> +		return true;
+> +
+> +	return overlaps_reserved_region(fdt, start, end, regions);
+> +}
+> +
+> +static void __init get_crash_kernel(void *fdt, unsigned long size,
+> +				    struct regions *regions)
+> +{
+> +#ifdef CONFIG_CRASH_CORE
+> +	unsigned long long crash_size, crash_base;
+> +	int ret;
+> +
+> +	ret = parse_crashkernel(boot_command_line, size, &crash_size,
+> +				&crash_base);
+> +	if (ret != 0 || crash_size == 0)
+> +		return;
+> +	if (crash_base == 0)
+> +		crash_base = KDUMP_KERNELBASE;
+> +
+> +	regions->crash_start = (unsigned long)crash_base;
+> +	regions->crash_end = (unsigned long)(crash_base + crash_size);
+> +
+> +	DBG("crash_base=0x%llx crash_size=0x%llx\n", crash_base, crash_size);
+> +#endif
+> +}
+> +
+> +static void __init get_initrd_range(void *fdt, struct regions *regions)
+> +{
+> +	u64 start, end;
+> +	int node, len;
+> +	const __be32 *prop;
+> +
+> +	node = fdt_path_offset(fdt, "/chosen");
+> +	if (node < 0)
+> +		return;
+> +
+> +	prop = fdt_getprop(fdt, node, "linux,initrd-start", &len);
+> +	if (!prop)
+> +		return;
+> +	start = of_read_number(prop, len / 4);
+> +
+> +	prop = fdt_getprop(fdt, node, "linux,initrd-end", &len);
+> +	if (!prop)
+> +		return;
+> +	end = of_read_number(prop, len / 4);
+> +
+> +	regions->initrd_start = (unsigned long)start;
+> +	regions->initrd_end = (unsigned long)end;
+> +
+> +	DBG("initrd_start=0x%llx  initrd_end=0x%llx\n", start, end);
+> +}
+> +
+> +static __init unsigned long get_usable_offset(const void *fdt, struct regions *regions,
+> +					      unsigned long start)
+> +{
+> +	unsigned long pa;
+> +	unsigned long pa_end;
+> +
+> +	for (pa = start; pa > regions->pa_start; pa -= SZ_16K) {
+> +		pa_end = pa + regions->kernel_size;
+> +		if (overlaps_region(fdt, pa, pa_end, regions))
+> +			continue;
+> +
+> +		return pa;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static __init void get_cell_sizes(const void *fdt, int node, int *addr_cells,
+> +				  int *size_cells)
+> +{
+> +	const int *prop;
+> +	int len;
+> +
+> +	/*
+> +	 * Retrieve the #address-cells and #size-cells properties
+> +	 * from the 'node', or use the default if not provided.
+> +	 */
+> +	*addr_cells = *size_cells = 1;
+> +
+> +	prop = fdt_getprop(fdt, node, "#address-cells", &len);
+> +	if (len == 4)
+> +		*addr_cells = fdt32_to_cpu(*prop);
+> +	prop = fdt_getprop(fdt, node, "#size-cells", &len);
+> +	if (len == 4)
+> +		*size_cells = fdt32_to_cpu(*prop);
+> +}
+> +
+>   static unsigned long __init kaslr_choose_location(void *dt_ptr, phys_addr_t size,
+>   						  unsigned long kernel_sz)
+>   {
+> -	/* return a fixed offset of 64M for now */
+> -	return SZ_64M;
+> +	unsigned long offset, random;
+> +	unsigned long ram, linear_sz;
+> +	unsigned long kaslr_offset;
+> +	u64 seed;
+> +	struct regions regions;
+> +	unsigned long index;
+> +
+> +	random = get_boot_seed(dt_ptr);
+> +
+> +	seed = get_tb() << 32;
+> +	seed ^= get_tb();
+> +	random = rotate_xor(random, &seed, sizeof(seed));
+> +
+> +	/*
+> +	 * Retrieve (and wipe) the seed from the FDT
+> +	 */
+> +	seed = get_kaslr_seed(dt_ptr);
+> +	if (seed)
+> +		random = rotate_xor(random, &seed, sizeof(seed));
+> +
+> +	ram = min((phys_addr_t)__max_low_memory, size);
+> +	ram = map_mem_in_cams(ram, CONFIG_LOWMEM_CAM_NUM, true);
+> +	linear_sz = min(ram, (unsigned long)SZ_512M);
+> +
+> +	/* If the linear size is smaller than 64M, do not randmize */
+> +	if (linear_sz < SZ_64M)
+> +		return 0;
+> +
+> +	memset(&regions, 0, sizeof(regions));
+> +
+> +	/* check for a reserved-memory node and record its cell sizes */
+> +	regions.reserved_mem = fdt_path_offset(dt_ptr, "/reserved-memory");
+> +	if (regions.reserved_mem >= 0)
+> +		get_cell_sizes(dt_ptr, regions.reserved_mem,
+> +			       &regions.reserved_mem_addr_cells,
+> +			       &regions.reserved_mem_size_cells);
+> +
+> +	regions.pa_start = 0;
+> +	regions.pa_end = linear_sz;
+> +	regions.dtb_start = __pa(dt_ptr);
+> +	regions.dtb_end = __pa(dt_ptr) + fdt_totalsize(dt_ptr);
+> +	regions.kernel_size = kernel_sz;
+> +
+> +	get_initrd_range(dt_ptr, &regions);
+> +	get_crash_kernel(dt_ptr, ram, &regions);
+> +
+> +	/*
+> +	 * Decide which 64M we want to start
+> +	 * Only use the low 8 bits of the random seed
+> +	 */
+> +	index = random & 0xFF;
+> +	index %= linear_sz / SZ_64M;
+> +
+> +	/* Decide offset inside 64M */
+> +	if (index == 0) {
+> +		offset = random % (SZ_64M - round_up(kernel_sz, SZ_16K) * 2);
+> +		offset += round_up(kernel_sz, SZ_16K);
+> +		offset = round_up(offset, SZ_16K);
+> +	} else {
+> +		offset = random % (SZ_64M - kernel_sz);
+> +		offset = round_down(offset, SZ_16K);
+> +	}
+> +
+> +	while (index >= 0) {
+> +		offset = offset + index * SZ_64M;
+> +		kaslr_offset = get_usable_offset(dt_ptr, &regions, offset);
+> +		if (kaslr_offset)
+> +			break;
+> +		index--;
+> +	}
+> +
+> +	/* Did not find any usable region? Give up randomize */
+> +	if (index < 0)
+> +		kaslr_offset = 0;
+> +
+> +	return kaslr_offset;
+>   }
+>   
+>   /*
+> @@ -59,6 +375,8 @@ notrace void __init kaslr_early_init(void *dt_ptr, phys_addr_t size)
+>   
+>   	kernel_sz = (unsigned long)_end - KERNELBASE;
+>   
+> +	kaslr_get_cmdline(dt_ptr);
+> +
+>   	offset = kaslr_choose_location(dt_ptr, size, kernel_sz);
+>   
+>   	if (offset == 0)
+> 
