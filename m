@@ -2,138 +2,144 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C3C5C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8021AC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B13B20880
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:44:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565091848;
-	bh=J19hEAXKLjWoAV6gzHixycM8hbuedWz6gTO3vyb2jhw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JduBWz+5Icl/o7a51j42F0vykoeCCEC50bh+Xe4yBmWEA2pW8Fz346f746MK1fJ3Q
-	 2Fdiz8KrLS//F6j9pODEQ3WnoAnw+7ifcG6nN1mQlOf7t1Q07PJEj8Pylqv34x7ei/
-	 fOOd81V2ReGm4+ENUtbgQ6yiaTAAZ03JxgMR8L3E=
+	by mail.kernel.org (Postfix) with ESMTP id 310A820880
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:46:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="CGz9N9fI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730868AbfHFLoH (ORCPT
+        id S1728716AbfHFLqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 07:44:07 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58590 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726783AbfHFLoH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 07:44:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0656EAF59;
-        Tue,  6 Aug 2019 11:44:04 +0000 (UTC)
-Date:   Tue, 6 Aug 2019 13:44:02 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Brendan Gregg <bgregg@netflix.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christian Hansen <chansen3@cisco.com>, dancol@google.com,
-        fmayer@google.com, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Mike Rapoport <rppt@linux.ibm.com>, minchan@kernel.org,
-        namhyung@google.com, paulmck@linux.ibm.com,
-        Robin Murphy <robin.murphy@arm.com>,
-        Roman Gushchin <guro@fb.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, surenb@google.com,
-        Thomas Gleixner <tglx@linutronix.de>, tkjos@google.com,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v4 4/5] page_idle: Drain all LRU pagevec before idle
- tracking
-Message-ID: <20190806114402.GX11812@dhcp22.suse.cz>
-References: <20190805170451.26009-1-joel@joelfernandes.org>
- <20190805170451.26009-4-joel@joelfernandes.org>
- <20190806084357.GK11812@dhcp22.suse.cz>
- <20190806104554.GB218260@google.com>
- <20190806105149.GT11812@dhcp22.suse.cz>
- <20190806111921.GB117316@google.com>
+        Tue, 6 Aug 2019 07:46:06 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33756 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbfHFLqF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 07:46:05 -0400
+Received: by mail-ot1-f65.google.com with SMTP id q20so91557382otl.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 04:46:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+2GLuom5LkEzk75iKp/W/dLLzktwu1z9FB3lzR1vH88=;
+        b=CGz9N9fIrOmtsbSaHjVpA+Ay5xvmrIhIp710TV/jZE4ebeccflhTltK6pThFqAUoNz
+         7SKf/DRH2L8JHnbihzZBeQ/LT11QTkOA0t4JhIY14g/EnqlOH9aKw1VU3CRk0eqOPV4r
+         Cm2dLLmSUPy1r41Y9W2+7c5LrJn+g2OfePzZ0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+2GLuom5LkEzk75iKp/W/dLLzktwu1z9FB3lzR1vH88=;
+        b=NthVOYMwg8jVNP8X0Qr6HL7cDc32VNWnOXXubQLOD00Bk8UIYW6H4/g0rVMkb1MYAW
+         9MdoehM5+amSlk54HsmnwjdiU6/LcB0IvzL0mJ2nanLKvbO0zw1/yXt4yLX29ciYBe5J
+         fsAI5VgEKTDw1CLYHjlNBEE87BVLOLcI/18yyECIijAGQo0Xz2MpaNjk7jZJOSqgRR3I
+         uvnBmF1+yr8TonNlxKOiOVV0KOe4bDAAHFIhm/wlZYfiaLXLA/UfQ1MjxydIvHD4s059
+         s7e3Ag468eyQatTg+UeqsjD91+FBiuImKKpflP3XRMru4oAT4WUhYi990wgYHKRUT/VF
+         aCEA==
+X-Gm-Message-State: APjAAAUB3UD5DO1Ffr+Jo4E2VUfHUB1Uh5FnVqLXlk98W0pb36kaEe/j
+        4lFRzNbRWdDlSoGC+vk5VxroPR5PIfH0uTIS3Zp02g==
+X-Google-Smtp-Source: APXvYqxsVgZsi3QItTRxougIwHgd9GmIH1aNgoPdpOjOudg5TAf9holb/8M8flURvPkrOcwY2yoQJMmlqESNr+y2wz0=
+X-Received: by 2002:a9d:590d:: with SMTP id t13mr2946119oth.281.1565091964657;
+ Tue, 06 Aug 2019 04:46:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190806111921.GB117316@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190806091233.GX7444@phenom.ffwll.local> <20190806104835.26075-1-brian.starkey@arm.com>
+In-Reply-To: <20190806104835.26075-1-brian.starkey@arm.com>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Tue, 6 Aug 2019 13:45:53 +0200
+Message-ID: <CAKMK7uHjz=t2dCVwCbEf5qUkcEcyUSqL=hjsHb-ZJ0pD2w7rvQ@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/crc-debugfs: Add notes about CRC<->commit interactions
+To:     Brian Starkey <brian.starkey@arm.com>
+Cc:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        nd <nd@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 06-08-19 07:19:21, Joel Fernandes wrote:
-> On Tue, Aug 06, 2019 at 12:51:49PM +0200, Michal Hocko wrote:
-> > On Tue 06-08-19 06:45:54, Joel Fernandes wrote:
-> > > On Tue, Aug 06, 2019 at 10:43:57AM +0200, Michal Hocko wrote:
-> > > > On Mon 05-08-19 13:04:50, Joel Fernandes (Google) wrote:
-> > > > > During idle tracking, we see that sometimes faulted anon pages are in
-> > > > > pagevec but are not drained to LRU. Idle tracking considers pages only
-> > > > > on LRU. Drain all CPU's LRU before starting idle tracking.
-> > > > 
-> > > > Please expand on why does this matter enough to introduce a potentially
-> > > > expensinve draining which has to schedule a work on each CPU and wait
-> > > > for them to finish.
-> > > 
-> > > Sure, I can expand. I am able to find multiple issues involving this. One
-> > > issue looks like idle tracking is completely broken. It shows up in my
-> > > testing as if a page that is marked as idle is always "accessed" -- because
-> > > it was never marked as idle (due to not draining of pagevec).
-> > > 
-> > > The other issue shows up as a failure in my "swap test", with the following
-> > > sequence:
-> > > 1. Allocate some pages
-> > > 2. Write to them
-> > > 3. Mark them as idle                                    <--- fails
-> > > 4. Introduce some memory pressure to induce swapping.
-> > > 5. Check the swap bit I introduced in this series.      <--- fails to set idle
-> > >                                                              bit in swap PTE.
-> > > 
-> > > Draining the pagevec in advance fixes both of these issues.
-> > 
-> > This belongs to the changelog.
-> 
-> Sure, will add.
-> 
-> 
-> > > This operation even if expensive is only done once during the access of the
-> > > page_idle file. Did you have a better fix in mind?
-> > 
-> > Can we set the idle bit also for non-lru pages as long as they are
-> > reachable via pte?
-> 
-> Not at the moment with the current page idle tracking code. PageLRU(page)
-> flag is checked in page_idle_get_page().
+On Tue, Aug 6, 2019 at 12:48 PM Brian Starkey <brian.starkey@arm.com> wrote:
+>
+> CRC generation can be impacted by commits coming from userspace, and
+> enabling CRC generation may itself trigger a commit. Add notes about
+> this to the kerneldoc.
+>
+> Signed-off-by: Brian Starkey <brian.starkey@arm.com>
 
-yes, I am aware of the current code. I strongly suspect that the PageLRU
-check was there to not mark arbitrary page looked up by pfn with the
-idle bit because that would be unexpected. But I might be easily wrong
-here.
+lgtm, my earlier r-b holds. Well maybe should have a v2 here somewhere
+with what you changed.
+-Daniel
+> ---
+>  drivers/gpu/drm/drm_debugfs_crc.c | 17 +++++++++++++----
+>  include/drm/drm_crtc.h            |  4 ++++
+>  2 files changed, 17 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/drm_debugfs_crc.c b/drivers/gpu/drm/drm_debugfs_crc.c
+> index 7ca486d750e9..77159b6e77c3 100644
+> --- a/drivers/gpu/drm/drm_debugfs_crc.c
+> +++ b/drivers/gpu/drm/drm_debugfs_crc.c
+> @@ -65,10 +65,19 @@
+>   * it submits. In this general case, the maximum userspace can do is to compare
+>   * the reported CRCs of frames that should have the same contents.
+>   *
+> - * On the driver side the implementation effort is minimal, drivers only need to
+> - * implement &drm_crtc_funcs.set_crc_source. The debugfs files are automatically
+> - * set up if that vfunc is set. CRC samples need to be captured in the driver by
+> - * calling drm_crtc_add_crc_entry().
+> + * On the driver side the implementation effort is minimal, drivers only need
+> + * to implement &drm_crtc_funcs.set_crc_source. The debugfs files are
+> + * automatically set up if that vfunc is set. CRC samples need to be captured
+> + * in the driver by calling drm_crtc_add_crc_entry(). Depending on the driver
+> + * and HW requirements, &drm_crtc_funcs.set_crc_source may result in a commit
+> + * (even a full modeset).
+> + *
+> + * CRC results must be reliable across non-full-modeset atomic commits, so if a
+> + * commit via DRM_IOCTL_MODE_ATOMIC would disable or otherwise interfere with
+> + * CRC generation, then the driver must mark that commit as a full modeset
+> + * (drm_atomic_crtc_needs_modeset() should return true). As a result, to ensure
+> + * consistent results, generic userspace must re-setup CRC generation after a
+> + * legacy SETCRTC or an atomic commit with DRM_MODE_ATOMIC_ALLOW_MODESET.
+>   */
+>
+>  static int crc_control_show(struct seq_file *m, void *data)
+> diff --git a/include/drm/drm_crtc.h b/include/drm/drm_crtc.h
+> index 128d8b210621..7d14c11bdc0a 100644
+> --- a/include/drm/drm_crtc.h
+> +++ b/include/drm/drm_crtc.h
+> @@ -756,6 +756,9 @@ struct drm_crtc_funcs {
+>          * provided from the configured source. Drivers must accept an "auto"
+>          * source name that will select a default source for this CRTC.
+>          *
+> +        * This may trigger an atomic modeset commit if necessary, to enable CRC
+> +        * generation.
+> +        *
+>          * Note that "auto" can depend upon the current modeset configuration,
+>          * e.g. it could pick an encoder or output specific CRC sampling point.
+>          *
+> @@ -767,6 +770,7 @@ struct drm_crtc_funcs {
+>          * 0 on success or a negative error code on failure.
+>          */
+>         int (*set_crc_source)(struct drm_crtc *crtc, const char *source);
+> +
+>         /**
+>          * @verify_crc_source:
+>          *
+> --
+> 2.17.1
+>
 
-> Even if we could set it for non-LRU, the idle bit (page flag) would not be
-> cleared if page is not on LRU because page-reclaim code (page_referenced() I
-> believe) would not clear it.
 
-Yes, it is either reclaim when checking references as you say but also
-mark_page_accessed. I believe the later might still have the page on the
-pcp LRU add cache. Maybe I am missing something something but it seems
-that there is nothing fundamentally requiring the user mapped page to be
-on the LRU list when seting the idle bit.
-
-That being said, your big hammer approach will work more reliable but if
-you do not feel like changing the underlying PageLRU assumption then
-document that draining should be removed longterm.
 -- 
-Michal Hocko
-SUSE Labs
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
