@@ -2,71 +2,97 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08239C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD08C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D85112086D
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 184F12070D
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:52:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732421AbfHFIux (ORCPT
+        id S1732422AbfHFIwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 04:50:53 -0400
-Received: from mga07.intel.com ([134.134.136.100]:5513 "EHLO mga07.intel.com"
+        Tue, 6 Aug 2019 04:52:05 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:36324 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731835AbfHFIux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 04:50:53 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 01:36:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
-   d="scan'208";a="202738275"
-Received: from mylly.fi.intel.com (HELO [10.237.72.124]) ([10.237.72.124])
-  by fmsmga002.fm.intel.com with ESMTP; 06 Aug 2019 01:36:22 -0700
-Subject: Re: [PATCH] i2c: designware: Fix unused variable warning in
- i2c_dw_init_recovery_info
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190806075054.GA15418@embeddedor>
-From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Message-ID: <2ddc2077-aefb-2330-3096-7473dc55f19c@linux.intel.com>
-Date:   Tue, 6 Aug 2019 11:36:21 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190806075054.GA15418@embeddedor>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        id S1728998AbfHFIwE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 04:52:04 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C1AD82002AF;
+        Tue,  6 Aug 2019 10:52:02 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5798E200043;
+        Tue,  6 Aug 2019 10:51:58 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A1B4F40293;
+        Tue,  6 Aug 2019 16:51:52 +0800 (SGT)
+From:   Chuanhua Han <chuanhua.han@nxp.com>
+To:     shawnguo@kernel.org, leoyang.li@nxp.com, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuanhua Han <chuanhua.han@nxp.com>
+Subject: [PATCH 1/4] arm64: dts: ls1088a: Fix incorrect I2C clock divider
+Date:   Tue,  6 Aug 2019 16:42:20 +0800
+Message-Id: <20190806084223.23543-1-chuanhua.han@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+Ls1088a platform, the i2c input clock is actually platform pll CLK / 8
+(this is the hardware connection), other clock divider can not get the
+correct i2c clock, resulting in the output of SCL pin clock is not
+accurate.
 
-On 8/6/19 10:50 AM, Gustavo A. R. Silva wrote:
-> Fix the following warning:
-> 
-> drivers/i2c/busses/i2c-designware-master.c: In function ‘i2c_dw_init_recovery_info’:
-> drivers/i2c/busses/i2c-designware-master.c:658:6: warning: unused variable ‘r’ [-Wunused-variable]
->    int r;
->        ^
-> 
-> Fixes: 33eb09a02e8d ("i2c: designware: make use of devm_gpiod_get_optional")
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
-This was fixed yesterday, not applied yet though:
+Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-https://www.spinics.net/lists/linux-i2c/msg41651.html
-
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+index 20f5ebd..30b760e 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+@@ -324,7 +324,7 @@
+ 			#size-cells = <0>;
+ 			reg = <0x0 0x2000000 0x0 0x10000>;
+ 			interrupts = <0 34 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&clockgen 4 3>;
++			clocks = <&clockgen 4 7>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -334,7 +334,7 @@
+ 			#size-cells = <0>;
+ 			reg = <0x0 0x2010000 0x0 0x10000>;
+ 			interrupts = <0 34 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&clockgen 4 3>;
++			clocks = <&clockgen 4 7>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -344,7 +344,7 @@
+ 			#size-cells = <0>;
+ 			reg = <0x0 0x2020000 0x0 0x10000>;
+ 			interrupts = <0 35 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&clockgen 4 3>;
++			clocks = <&clockgen 4 7>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -354,7 +354,7 @@
+ 			#size-cells = <0>;
+ 			reg = <0x0 0x2030000 0x0 0x10000>;
+ 			interrupts = <0 35 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&clockgen 4 3>;
++			clocks = <&clockgen 4 7>;
+ 			status = "disabled";
+ 		};
+ 
 -- 
-Jarkko
+2.9.5
+
