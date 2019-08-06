@@ -4,52 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0171C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F8DC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 792C82089E
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A6E32186A
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:36:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127391;
-	bh=DQdXSQ4X7DbgcH47Q4hpV8D3kwoEFSWaAT50oKzYm0g=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=b2OJdFrD7SgK4NYSOw6jlb32UK1ddp7X2nGCW3Xhl5KEMiBX5LZxTBgOO3TAOXIXD
-	 LCFq4579kf7fvvMp7HBnWvDj7tg1BZM001vNXi6SY/B1AFW49MN1BL7p8pWLI3TnIA
-	 o4NkYS+0FUYqNwaGlgErub8XWBW63q3kfkn3s2p0=
+	s=default; t=1565127400;
+	bh=wdq+/b6wjxif/d4ZjVblztZEPaDTsEPHclcNCvKTkPA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VPQGcwQ0kRH0p6h/C9BUpq3qufDEy8KnCp0+hzdPXInWjSTOhW5uX3viGVJdsABQl
+	 R6NuQYS5RtqNVGWuN1KeKgUqVYctuqYL+iXKwiY/2n5+pazb37iybkGJyuvVOeAHyO
+	 Oi2RWlHvEQv5ZMY1vhhb23tX/NWO8rYMXeWSLqO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728996AbfHFVga (ORCPT
+        id S1729045AbfHFVgj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:36:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54278 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:36:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727823AbfHFVg1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:36:27 -0400
+        id S1729004AbfHFVgf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:36:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 695AC2089E;
-        Tue,  6 Aug 2019 21:36:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48164217F5;
+        Tue,  6 Aug 2019 21:36:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127386;
-        bh=DQdXSQ4X7DbgcH47Q4hpV8D3kwoEFSWaAT50oKzYm0g=;
-        h=From:To:Cc:Subject:Date:From;
-        b=wqJrdbA1AI3yqByhGiIO1vEGvdXOk/3YY8d5udTROFzsHG+R1ouhnP3n/plmTu/Ns
-         151B5YglFLhJtlLKTFX+IRdEs37dU6U3Ira3wbCIIyraToDLgMFkAFILqfadJL2Ig9
-         trCz8pmYhJxAhicUSDshaLCElJJxbGscnGEs013I=
+        s=default; t=1565127394;
+        bh=wdq+/b6wjxif/d4ZjVblztZEPaDTsEPHclcNCvKTkPA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nrShrKdtm6vALjw2EgrSSBfTtFsVsRX1Pmqlgf80/N8zefitxnbppK/uNNx+GJwwm
+         iyUGDqQwIkuW/qDcER/N/Q4NJzo+Dh8xbiNRS5BftSUH/26/7RFkRrE66O9LngRtnt
+         L3Lk1kXlM9K3ZqRAobf66e/uTOtBZQ39+cIZraH8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 01/25] clk: at91: generated: Truncate divisor to GENERATED_MAX_DIV + 1
-Date:   Tue,  6 Aug 2019 17:35:58 -0400
-Message-Id: <20190806213624.20194-1-sashal@kernel.org>
+Cc:     Nianyao Tang <tangnianyao@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 05/25] irqchip/gic-v3-its: Free unused vpt_page when alloc vpe table fail
+Date:   Tue,  6 Aug 2019 17:36:02 -0400
+Message-Id: <20190806213624.20194-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190806213624.20194-1-sashal@kernel.org>
+References: <20190806213624.20194-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,39 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+From: Nianyao Tang <tangnianyao@huawei.com>
 
-[ Upstream commit 1573eebeaa8055777eb753f9b4d1cbe653380c38 ]
+[ Upstream commit 34f8eb92ca053cbba2887bb7e4dbf2b2cd6eb733 ]
 
-In clk_generated_determine_rate(), if the divisor is greater than
-GENERATED_MAX_DIV + 1, then the wrong best_rate will be returned.
-If clk_generated_set_rate() will be called later with this wrong
-rate, it will return -EINVAL, so the generated clock won't change
-its value. Do no let the divisor be greater than GENERATED_MAX_DIV + 1.
+In its_vpe_init, when its_alloc_vpe_table fails, we should free
+vpt_page allocated just before, instead of vpe->vpt_page.
+Let's fix it.
 
-Fixes: 8c7aa6328947 ("clk: at91: clk-generated: remove useless divisor loop")
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Nianyao Tang <tangnianyao@huawei.com>
+Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/at91/clk-generated.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/irqchip/irq-gic-v3-its.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/at91/clk-generated.c b/drivers/clk/at91/clk-generated.c
-index 33481368740e7..113152425a95d 100644
---- a/drivers/clk/at91/clk-generated.c
-+++ b/drivers/clk/at91/clk-generated.c
-@@ -153,6 +153,8 @@ static int clk_generated_determine_rate(struct clk_hw *hw,
- 			continue;
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index 121fb552f8734..f80666acb9efd 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -2631,7 +2631,7 @@ static int its_vpe_init(struct its_vpe *vpe)
  
- 		div = DIV_ROUND_CLOSEST(parent_rate, req->rate);
-+		if (div > GENERATED_MAX_DIV + 1)
-+			div = GENERATED_MAX_DIV + 1;
+ 	if (!its_alloc_vpe_table(vpe_id)) {
+ 		its_vpe_id_free(vpe_id);
+-		its_free_pending_table(vpe->vpt_page);
++		its_free_pending_table(vpt_page);
+ 		return -ENOMEM;
+ 	}
  
- 		clk_generated_best_diff(req, parent, parent_rate, div,
- 					&best_diff, &best_rate);
 -- 
 2.20.1
 
