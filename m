@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB5C7C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACC1C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 740062189E
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:36:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E287A21873
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:36:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127404;
-	bh=7zP639Yf+JAZfevormF1ky6aQLsAHxhcE9zk56ebQ14=;
+	s=default; t=1565127412;
+	bh=liipdRNcywBv5GyrbrKDxuhA7yyoc8OQY3Ocg0KhIL0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2AOu4Y0UiwiYmilJVC3DqU2A16HxlgfFfB9z+Tk4DPMAY99zfxjk1yzTAcRfU3HZC
-	 ad1Ox9CXJmMLn5jkshE9Fi6Owfok4bqrhWQRH9Zl3BTO7cVy1c7+lIUZf8ItTukQx/
-	 qRt5UeEYoEQGjvgUsgnv2Wrs/25hyPiXyS3CRXHo=
+	b=M8NQdOnAa8Aw9u4XHsZ3WmeMQG49aB9eYxz45z+sMF2NxyFyiFqwyRY6BDFp7TBIX
+	 9BSCr7sK34hXDr+41SMNal0EJi0CF2+7MyR1pqrLMY6dSZkXX9EF4BPkO7E4rYd71F
+	 i1iZpxTOgRrGdV39W9c27uGL1MyOe55PKMGqEg+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729066AbfHFVgn (ORCPT
+        id S1729132AbfHFVgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:36:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54454 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:36:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727901AbfHFVgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:36:39 -0400
+        id S1729077AbfHFVgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:36:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4F2E21873;
-        Tue,  6 Aug 2019 21:36:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEAD921872;
+        Tue,  6 Aug 2019 21:36:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127398;
-        bh=7zP639Yf+JAZfevormF1ky6aQLsAHxhcE9zk56ebQ14=;
+        s=default; t=1565127406;
+        bh=liipdRNcywBv5GyrbrKDxuhA7yyoc8OQY3Ocg0KhIL0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c63xiqmLcBCbWhXDtmxPfWSubPlvdW7aJZVnLaCh2n2liRE0xwEN23n1TLgf/dHm5
-         kwBXZHRPFexfPPdrETUmqLOY3mz2UtP69ZyzizdFQ6cnTXeAG9hdqHoZo1y0Gyqguw
-         8wBEmEp7wLczWivctBn+CcnN+I9YODKm1ABSMS5I=
+        b=oDyiOLJc0mp5mSVTogeLx4z+LOPLp8XKxBKqto9crLHKi/MRiurtndppSvl5Npno7
+         EbmKMqtQoZNkodqt7DC/qEZMknqUemaXWtENLPU21YmI/2YMra4m1h7Goh/SVEa8cc
+         YEgrA09C7DGyxIFZ268/jE75r1N9/mCdVDPTAVAM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vince Weaver <vincent.weaver@maine.edu>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 07/25] perf header: Fix divide by zero error if f_header.attr_size==0
-Date:   Tue,  6 Aug 2019 17:36:04 -0400
-Message-Id: <20190806213624.20194-7-sashal@kernel.org>
+Cc:     Don Brace <don.brace@microsemi.com>,
+        Bader Ali - Saleh <bader.alisaleh@microsemi.com>,
+        Scott Teel <scott.teel@microsemi.com>,
+        Scott Benesh <scott.benesh@microsemi.com>,
+        Kevin Barnett <kevin.barnett@microsemi.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, esc.storagedev@microsemi.com,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 11/25] scsi: hpsa: correct scsi command status issue after reset
+Date:   Tue,  6 Aug 2019 17:36:08 -0400
+Message-Id: <20190806213624.20194-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213624.20194-1-sashal@kernel.org>
 References: <20190806213624.20194-1-sashal@kernel.org>
@@ -63,52 +64,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vince Weaver <vincent.weaver@maine.edu>
+From: Don Brace <don.brace@microsemi.com>
 
-[ Upstream commit 7622236ceb167aa3857395f9bdaf871442aa467e ]
+[ Upstream commit eeebce1862970653cdf5c01e98bc669edd8f529a ]
 
-So I have been having lots of trouble with hand-crafted perf.data files
-causing segfaults and the like, so I have started fuzzing the perf tool.
-
-First issue found:
-
-If f_header.attr_size is 0 in the perf.data file, then perf will crash
-with a divide-by-zero error.
-
-Committer note:
-
-Added a pr_err() to tell the user why the command failed.
-
-Signed-off-by: Vince Weaver <vincent.weaver@maine.edu>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/alpine.DEB.2.21.1907231100440.14532@macbook-air
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reviewed-by: Bader Ali - Saleh <bader.alisaleh@microsemi.com>
+Reviewed-by: Scott Teel <scott.teel@microsemi.com>
+Reviewed-by: Scott Benesh <scott.benesh@microsemi.com>
+Reviewed-by: Kevin Barnett <kevin.barnett@microsemi.com>
+Signed-off-by: Don Brace <don.brace@microsemi.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/header.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/scsi/hpsa.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 26437143c9406..c78c2ed009ea0 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -2901,6 +2901,13 @@ int perf_session__read_header(struct perf_session *session)
- 			   file->path);
- 	}
+diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
+index 6d520e8945f73..3b892918d8219 100644
+--- a/drivers/scsi/hpsa.c
++++ b/drivers/scsi/hpsa.c
+@@ -2266,6 +2266,8 @@ static int handle_ioaccel_mode2_error(struct ctlr_info *h,
+ 	case IOACCEL2_SERV_RESPONSE_COMPLETE:
+ 		switch (c2->error_data.status) {
+ 		case IOACCEL2_STATUS_SR_TASK_COMP_GOOD:
++			if (cmd)
++				cmd->result = 0;
+ 			break;
+ 		case IOACCEL2_STATUS_SR_TASK_COMP_CHK_COND:
+ 			cmd->result |= SAM_STAT_CHECK_CONDITION;
+@@ -2425,8 +2427,10 @@ static void process_ioaccel2_completion(struct ctlr_info *h,
  
-+	if (f_header.attr_size == 0) {
-+		pr_err("ERROR: The %s file's attr size field is 0 which is unexpected.\n"
-+		       "Was the 'perf record' command properly terminated?\n",
-+		       data->file.path);
-+		return -EINVAL;
+ 	/* check for good status */
+ 	if (likely(c2->error_data.serv_response == 0 &&
+-			c2->error_data.status == 0))
++			c2->error_data.status == 0)) {
++		cmd->result = 0;
+ 		return hpsa_cmd_free_and_done(h, c, cmd);
 +	}
-+
- 	nr_attrs = f_header.attrs.size / f_header.attr_size;
- 	lseek(fd, f_header.attrs.offset, SEEK_SET);
  
+ 	/*
+ 	 * Any RAID offload error results in retry which will use
+@@ -5494,6 +5498,12 @@ static int hpsa_scsi_queue_command(struct Scsi_Host *sh, struct scsi_cmnd *cmd)
+ 	}
+ 	c = cmd_tagged_alloc(h, cmd);
+ 
++	/*
++	 * This is necessary because the SML doesn't zero out this field during
++	 * error recovery.
++	 */
++	cmd->result = 0;
++
+ 	/*
+ 	 * Call alternate submit routine for I/O accelerated commands.
+ 	 * Retries always go down the normal I/O path.
 -- 
 2.20.1
 
