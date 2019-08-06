@@ -2,99 +2,155 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A8F5C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 22:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB5AC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 22:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3994E216B7
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 22:37:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42127216F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 22:39:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nUtwo04z"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="N+N2WWOp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727223AbfHFWhy (ORCPT
+        id S1727039AbfHFWjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 18:37:54 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43008 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726461AbfHFWhy (ORCPT
+        Tue, 6 Aug 2019 18:39:19 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:41020 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726238AbfHFWjS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 18:37:54 -0400
-Received: by mail-pg1-f193.google.com with SMTP id r26so6386825pgl.10
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 15:37:54 -0700 (PDT)
+        Tue, 6 Aug 2019 18:39:18 -0400
+Received: by mail-pl1-f194.google.com with SMTP id m9so38301525pls.8
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 15:39:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LEBBY/3cfwZghFgvlOug6xWmEiQbNBJw16Nwo29xdMQ=;
-        b=nUtwo04zLd++8NyzceuLQ9K5rPwE4gGu6zIueWfxrfY8nWZCU0kg8fQvqSFMpsQRmQ
-         q7cQajIFapzT5PtsAXv84Yv+Q12PzvzGuVoYNJWSFn96ZYk2oRAsDx+7oGDdJYlh3SZU
-         vncE2/U/+9+bNNhRMisdX5pDtCV9VfdL0WYC5zLnlI6prNunbLw/IrOFuGnKRtahj9lh
-         62SsKbFCi5z7wX8KlFYIrjROzRjkI0cIqn57m5YEjel1LUPAcwyaNSTu8jQ/l5zkC5sg
-         lHJPlajutsLX9KzuzHnkRgPs2kLJgM+a33EbyoUhJ1a20Vn8ymqfJSIUmBwGORIJp+tX
-         hqyg==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=DIpHTKWjD4rF/KJrRuSkwHeOUpaLVVDIAggz3LoXJms=;
+        b=N+N2WWOptMgDNYTYkzTbcV47a9wPJ1n1/idslwNMmF4/tunvjufQbJtkdQJvLQfy5P
+         7jFvHwayOjWOUIIEegAPOuDrnw/fJNs2FF/X62PNS5evAi+6c4G1Df9ADYSuHxB5tfn7
+         NnyebRDEkTWpS5eci438g80RQAqqmxJsL3ttoyi5+1nckv0CwQLy/23T9wpwVnwUml7H
+         9zgAnfsbBQIjG9RGFeyQbI2r04Top8OUG86uWR+B5WJ91hEP6SsHck0k+oTAY1cTQNmu
+         XDPtkGmZEMGGBOT3WCB0aqGqCh4KBmIqvDs3bx8isEM1UPvbmtHfwIdHd1Lg/J7/j49a
+         K0ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LEBBY/3cfwZghFgvlOug6xWmEiQbNBJw16Nwo29xdMQ=;
-        b=srnqxhM54qxNnjrQUSRfj5002+XmCRqnv0IB4/ko/1/Vp1yMQ8GwPIGk8SHwfcZJ9w
-         zpmdenIpiNd3T9dYN16RRjMbD+WebOoGZhOsHERPGuhE5qsYHEDQog8NKTlaNe4KjLuV
-         H22DtFp8fVyLdcvCQStuj/g3MJ5QKhlbfOmTvpeiajHK7pmk2J4JCzAv9fO4dtFx2fzX
-         cDRFA7EIQliWnZPtK90C35I5zbkfHmz6vRQ8wcGAN7MuIcH9nkz8BdjNnC1fti24zmSa
-         gVR41+1H5kxQ7oSflpV65KZIgHeHwyoDMtUcDt5oJAnkp/WSw/NBlng0LC8BRFBGA6qT
-         oCzQ==
-X-Gm-Message-State: APjAAAX8KRpIFRs+kJwLBdFhHyeHyWICeNqHkfWtXN7w/zOlLwHzhzmQ
-        WiZB0gkEWPL7jbnk2nmaoy0mWTp6W4kuhuXxeFtXJg==
-X-Google-Smtp-Source: APXvYqzHiPqnRDL7C3Le9GukRZozDeYh1OFO1GZlcr1HO0BBbZWWYTJ2zvJ4ZVm7JnRYmZj9LOpIn0Rx4wE6vjyUBB8=
-X-Received: by 2002:a17:90a:bf02:: with SMTP id c2mr5430397pjs.73.1565131073425;
- Tue, 06 Aug 2019 15:37:53 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DIpHTKWjD4rF/KJrRuSkwHeOUpaLVVDIAggz3LoXJms=;
+        b=WFInY3ebbrDT7G+obw1cCh4RVuDP6P2FR9JYIvS3bwa+iTmLCq9dxWGtV6T7FM0miv
+         UhydlcwBtgNZnhKq2FK8mkf0rAWLIBNVkdT5afLHdL+cmVxfvUGIALljI44cWuDb0TKz
+         2aawE+VrX3dpCWA9U68XOTYYz0Dlrb2YnZfYF4EYm8wh8cWLrLic7wDZKaaivl5POvyn
+         VT98XwN27DtqfP0Wfw4H5eJuWcV8knjVYhXBMMSjYcZBYY/xe31oFYSi8U6Fcrw+K6vw
+         P4gSjgTP+GrmeXmWmffFWvvROcBJAB9He/OyqRzCxFngD2Ekbjj7xJovIPN5tFSFPiWB
+         BMeQ==
+X-Gm-Message-State: APjAAAU9Ep3jvFQ0NXzqTyeg+vntSH8iQOOJTu00AFArMzVWi3FO1AvM
+        YrAHiYA5bgFEflaqGRlNSNcFYA==
+X-Google-Smtp-Source: APXvYqz6Oz3jiqEmfuZp9KTeQL2O1NALaEdQDSAjpvH9fuXBTRbDtV4rjJfzyiy2z3EoqFMfsQNvlQ==
+X-Received: by 2002:a17:902:1e6:: with SMTP id b93mr5198362plb.295.1565131157719;
+        Tue, 06 Aug 2019 15:39:17 -0700 (PDT)
+Received: from ?IPv6:2605:e000:100e:83a1:ed52:95d0:ca21:f42b? ([2605:e000:100e:83a1:ed52:95d0:ca21:f42b])
+        by smtp.gmail.com with ESMTPSA id q198sm91525702pfq.155.2019.08.06.15.39.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 06 Aug 2019 15:39:16 -0700 (PDT)
+Subject: Re: WARNING: refcount bug in blk_mq_free_request (2)
+To:     Keith Busch <kbusch@kernel.org>,
+        syzbot <syzbot+f4316dab9d4518b755eb@syzkaller.appspotmail.com>
+Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>,
+        Josef Bacik <josef@toxicpanda.com>
+References: <000000000000d0df7f058f625d13@google.com>
+ <20190806154313.GC24030@localhost.localdomain>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <8663d0d5-f643-ae20-7c1f-446e165c49d2@kernel.dk>
+Date:   Tue, 6 Aug 2019 15:39:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190712001708.170259-1-ndesaulniers@google.com>
- <874l31r88y.fsf@concordia.ellerman.id.au> <3a2b6d4f9356d54ab8e83fbf25ba9c5f50181f0d.camel@sipsolutions.net>
-In-Reply-To: <3a2b6d4f9356d54ab8e83fbf25ba9c5f50181f0d.camel@sipsolutions.net>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 6 Aug 2019 15:37:42 -0700
-Message-ID: <CAKwvOdmBeB1BezsGh=cK=U9m8goKzZnngDRzNM7B1voZfh8yWg@mail.gmail.com>
-Subject: Re: [PATCH -next] iwlwifi: dbg: work around clang bug by marking
- debug strings static
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Shahar S Matityahu <shahar.s.matityahu@intel.com>,
-        Sara Sharon <sara.sharon@intel.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190806154313.GC24030@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 1, 2019 at 12:11 AM Johannes Berg <johannes@sipsolutions.net> wrote:
->
->
-> > Luca, you said this was already fixed in your internal tree, and the fix
-> > would appear soon in next, but I don't see anything in linux-next?
->
-> Luca is still on vacation, but I just sent out a version of the patch we
-> had applied internally.
->
-> Also turns out it wasn't actually _fixed_, just _moved_, so those
-> internal patches wouldn't have helped anyway.
+On 8/6/19 8:43 AM, Keith Busch wrote:
+> On Mon, Aug 05, 2019 at 10:52:07AM -0700, syzbot wrote:
+>> Hello,
+>>
+>> syzbot found the following crash on:
+>>
+>> HEAD commit:    e21a712a Linux 5.3-rc3
+>> git tree:       upstream
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=10cf349a600000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=a4c9e9f08e9e8960
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=f4316dab9d4518b755eb
+>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=117a1906600000
+>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11aa11aa600000
+>>
+>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+>> Reported-by: syzbot+f4316dab9d4518b755eb@syzkaller.appspotmail.com
+>>
+>> ------------[ cut here ]------------
+>> refcount_t: underflow; use-after-free.
+>> WARNING: CPU: 1 PID: 16 at lib/refcount.c:190 refcount_sub_and_test_checked
+>> lib/refcount.c:190 [inline]
+>> WARNING: CPU: 1 PID: 16 at lib/refcount.c:190
+>> refcount_sub_and_test_checked+0x1d0/0x200 lib/refcount.c:180
+>> Kernel panic - not syncing: panic_on_warn set ...
+>> CPU: 1 PID: 16 Comm: ksoftirqd/1 Not tainted 5.3.0-rc3 #98
+>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+>> Google 01/01/2011
+>> Call Trace:
+>>    __dump_stack lib/dump_stack.c:77 [inline]
+>>    dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+>>    panic+0x2dc/0x755 kernel/panic.c:219
+>>    __warn.cold+0x20/0x4c kernel/panic.c:576
+>>    report_bug+0x263/0x2b0 lib/bug.c:186
+>>    fixup_bug arch/x86/kernel/traps.c:179 [inline]
+>>    fixup_bug arch/x86/kernel/traps.c:174 [inline]
+>>    do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+>>    do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+>>    invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1026
+>> RIP: 0010:refcount_sub_and_test_checked lib/refcount.c:190 [inline]
+>> RIP: 0010:refcount_sub_and_test_checked+0x1d0/0x200 lib/refcount.c:180
+>> Code: 1d 7e b3 64 06 31 ff 89 de e8 9c a3 35 fe 84 db 75 94 e8 53 a2 35 fe
+>> 48 c7 c7 80 02 c6 87 c6 05 5e b3 64 06 01 e8 18 15 07 fe <0f> 0b e9 75 ff
+>> ff ff e8 34 a2 35 fe e9 6e ff ff ff 48 89 df e8 b7
+>> RSP: 0018:ffff8880a990fbb0 EFLAGS: 00010286
+>> RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+>> RDX: 0000000000000100 RSI: ffffffff815c3ba6 RDI: ffffed1015321f68
+>> RBP: ffff8880a990fc48 R08: ffff8880a9900440 R09: ffffed1015d24101
+>> R10: ffffed1015d24100 R11: ffff8880ae920807 R12: 00000000ffffffff
+>> R13: 0000000000000001 R14: ffff8880a990fc20 R15: 0000000000000000
+>>    refcount_dec_and_test_checked+0x1b/0x20 lib/refcount.c:220
+>>    blk_mq_free_request+0x3b8/0x580 block/blk-mq.c:524
+>>    __blk_mq_end_request block/blk-mq.c:550 [inline]
+>>    blk_mq_end_request+0x456/0x560 block/blk-mq.c:559
+>>    nbd_complete_rq+0x42/0x50 drivers/block/nbd.c:322
+>>    blk_done_softirq+0x2fe/0x4d0 block/blk-softirq.c:37
+>>    __do_softirq+0x262/0x98c kernel/softirq.c:292
+>>    run_ksoftirqd kernel/softirq.c:603 [inline]
+>>    run_ksoftirqd+0x8e/0x110 kernel/softirq.c:595
+>>    smpboot_thread_fn+0x6a3/0xa40 kernel/smpboot.c:165
+>>    kthread+0x361/0x430 kernel/kthread.c:255
+>>    ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+>> Kernel Offset: disabled
+>> Rebooting in 86400 seconds..
+> 
+> It looks like ndb's timeout handler may complete the same request twice:
+> first via ndb_config_put()->ndb_clear_sock(), then again explicitly
+> through a direct call to blk_mq_complete_request().
 
-Thanks for the report. Do you have a link?
-I'll rebase my patch then.
+Adding Josef.
+
 -- 
-Thanks,
-~Nick Desaulniers
+Jens Axboe
+
