@@ -2,122 +2,201 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B114CC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 04:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A78C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 04:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6731420C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 04:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F6D120C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 04:16:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kL9lyAAp"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DzyWmD70"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728084AbfHFEKw (ORCPT
+        id S1727717AbfHFEQO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 00:10:52 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:32919 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbfHFEKw (ORCPT
+        Tue, 6 Aug 2019 00:16:14 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41898 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfHFEQO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 00:10:52 -0400
-Received: by mail-pl1-f193.google.com with SMTP id c14so37209091plo.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 21:10:52 -0700 (PDT)
+        Tue, 6 Aug 2019 00:16:14 -0400
+Received: by mail-ed1-f67.google.com with SMTP id p15so80981316eds.8
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 21:16:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7f2EvO5gb/gF1pHUEiS10k+vqob3KzvKRDpJw7YgyDc=;
-        b=kL9lyAApHjKrFWMjvVQgGntfAqj0l3ygD1PGr+eFgyPTwM7LqYSHklBRMk7LrYvQg7
-         IxsJY8dERYCkTtqdFsQUeKWmxVE/N/6oYdZx0WsUSObDb228rpNFd1RNpJPfA6h+Yew+
-         FHQ6nPQvkX2DcHxn4jErfSEAvZKLFpmLECvOoKAzrhmgx8TjF3dUjIqitmUXcKztOsbx
-         6hslncKxYmN+9GQbaAMZcBaxxsaxYOk7mJPZeReuAJJuJ301uSx/av3H+MiD9OUL+Mwt
-         HbEmy0ukS5IvRHguPdIfPF6ORQPS0k6RGVTZEgZrbsRhqiEHl86F/+Tva54B5Ldk+QyO
-         FIpQ==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pl4laxveqxbFoLVSBJBsq2q/ipMs/mfndz3RNUveMcY=;
+        b=DzyWmD70Zod3tb8nY7SBaJ4s0DWTv5hzieoY1t3GEvpTHlT0z0PqeA5HuhuyPtBXeO
+         ssFzaWqQydsNv2erkIXMw18neZsvg1hmc5NXlBGD3cK5nXU8UlbWgbWVvWG1eFtUd9J1
+         9chrOStlqltKvAyh1pVAZbCTr1c3uxL9tphL8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7f2EvO5gb/gF1pHUEiS10k+vqob3KzvKRDpJw7YgyDc=;
-        b=mIBfjbFjWjgAkZA32RZVUj8jj4FPJXaonq2YCCIR6+bfBMRcITkz21RW0H9aEpQQYA
-         MSHmJ3/pb+fx1p/VRToS2A1pthVq/viQlh8xIzkgsKUSFLMyQfel0DXxrtO4MwQCcyCn
-         wImHCh2N/cY7r3u6P5q3ZtOO9S3wRRCo75zZKFDehF0iARXSL4iBXb+hyRKN+nypmWHA
-         xn2QnfKw93mNRhPyLlpMpP4FJPloaTBuYtcUKtjVuh/xkDYObpvtxqxWnr/wX3iTEj/Q
-         3I8WyrixnJxQ8foA6h+qRNx9QvVc6pP7/Pq1EeSubd8dNWtPDbSaZAy0+8OBPaAQFDGk
-         9aPg==
-X-Gm-Message-State: APjAAAXWJ1o6ADzKGqPmVfd4H9cYbnCrEsnCumX5uRPlhyVsGVxpszC5
-        m7/+IWg2dUY4k4A1QK0J6ER/BQ==
-X-Google-Smtp-Source: APXvYqwEZh6EPRtHwi5fjKhv6XjpkhMidWikuyLXVKSpwNu/hIGcVTqdrS1glwhtaKHn7A4MVlLH+A==
-X-Received: by 2002:a17:902:8bc1:: with SMTP id r1mr1152698plo.42.1565064651684;
-        Mon, 05 Aug 2019 21:10:51 -0700 (PDT)
-Received: from localhost ([122.172.146.3])
-        by smtp.gmail.com with ESMTPSA id g4sm100629374pfo.93.2019.08.05.21.10.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 05 Aug 2019 21:10:50 -0700 (PDT)
-Date:   Tue, 6 Aug 2019 09:40:48 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "v4 . 18+" <stable@vger.kernel.org>,
-        Doug Smythies <doug.smythies@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V3 2/2] cpufreq: intel_pstate: Implement ->resolve_freq()
-Message-ID: <20190806041048.ksqs3l5bzsakaael@vireshk-i7>
-References: <7dedb6bd157b8183c693bb578e25e313cf4f451d.1564724511.git.viresh.kumar@linaro.org>
- <23e3dee8688f5a9767635b686bb7a9c0e09a4438.1564724511.git.viresh.kumar@linaro.org>
- <CAJZ5v0iqztRWyxf1cgiAN1dK4qTGwy9raaGOx5u3tfBTGUKOng@mail.gmail.com>
- <2676200.jfxhmTd764@kreacher>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pl4laxveqxbFoLVSBJBsq2q/ipMs/mfndz3RNUveMcY=;
+        b=Rsw7J39eC+wsxQVZ2U5j21CumiU8PtTL4j0vqXiy5zashku09+BT9NmDl8JJ9zSsRk
+         P4TJmP8HCMaFHfmf/O90P57X4HX6qa86vvtCUKnhmWnTdf51Gtrf6NCqIHvdauGqyl/v
+         BarSLrNOinFFRtLHPgqlJhdDbdFzB1gVAmXSjPo4b/uL5mFS+0DyZyY3WHDEdQP3HroE
+         Dtw4LFB7Dxg6lgXPSWoiUM1eWT7B1t+y7u3G6LzjO/lQTiWhAwlF8G7G9RK6KT+hi9H7
+         qxFeukUUWQ6Vfb9fajiSG69ZWUk1d+G2bkIb/7lzp5WepkJA1h5mm8Ca3rHYk4ksUqeo
+         sfsg==
+X-Gm-Message-State: APjAAAWWum8ig2ClQWkXhk6+vZwAJaHeEKfefcsaL4I70HqJVpdt8o2U
+        LLeZZ6Eb26HLMf6LOpbQnBwN3HotSKlawQ==
+X-Google-Smtp-Source: APXvYqy7DLe+7iNspUZnXq1dmaMb9yQpFxVuiWKSSgJhEMVODObsnhI8Ulyd81pdRow7vozjTpgSJQ==
+X-Received: by 2002:a17:906:154d:: with SMTP id c13mr1261405ejd.208.1565064971539;
+        Mon, 05 Aug 2019 21:16:11 -0700 (PDT)
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com. [209.85.128.46])
+        by smtp.gmail.com with ESMTPSA id q13sm19724216edn.92.2019.08.05.21.16.10
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 05 Aug 2019 21:16:10 -0700 (PDT)
+Received: by mail-wm1-f46.google.com with SMTP id v19so74971549wmj.5
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 21:16:10 -0700 (PDT)
+X-Received: by 2002:a1c:407:: with SMTP id 7mr1839604wme.113.1565064969579;
+ Mon, 05 Aug 2019 21:16:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2676200.jfxhmTd764@kreacher>
-User-Agent: NeoMutt/20180716-391-311a52
+References: <20181017075242.21790-1-henryhsu@chromium.org> <CAAFQd5AL2CnnWLk+i133RRa36HTa0baFkezRhpTXf9YP0DSF1Q@mail.gmail.com>
+ <CAHNYxRwbSSp02Zr4a1z5gh0q6cHUUDnZCqRQU7QtP8LMe3Jp2A@mail.gmail.com>
+ <1610184.U7oo9Z4Yep@avalon> <CAAFQd5A7k2VgmawF-x=AcKhJiG-shrJiCP4Tu9054J0eE91+9w@mail.gmail.com>
+ <d79e0857-c6ae-9e57-52e2-e596864a68f8@metafoo.de> <CAAFQd5C_QucJiZMUgCpztC52Mi3p6HDThHNkcNOm9C+SZUDDYQ@mail.gmail.com>
+ <20190313012451.GR891@pendragon.ideasonboard.com> <CAAFQd5DtSD3TrXz8jaFnmBgpRQ6Gnq+LKxyY+LNZrqiM1pxNVA@mail.gmail.com>
+In-Reply-To: <CAAFQd5DtSD3TrXz8jaFnmBgpRQ6Gnq+LKxyY+LNZrqiM1pxNVA@mail.gmail.com>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Tue, 6 Aug 2019 13:15:57 +0900
+X-Gmail-Original-Message-ID: <CAAFQd5DreQkUsG9PnUxWMUDo6c+AxQMHm4ErZQFPjGqJz=wmCg@mail.gmail.com>
+Message-ID: <CAAFQd5DreQkUsG9PnUxWMUDo6c+AxQMHm4ErZQFPjGqJz=wmCg@mail.gmail.com>
+Subject: Re: [PATCH] media: uvcvideo: Add boottime clock support
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Alexandru Stan <amstan@chromium.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Heng-Ruey Hsu <henryhsu@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ricky Liang <jcliang@chromium.org>, linux-iio@vger.kernel.org,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        =?UTF-8?B?SnVuZ28gTGluICjmnpfmmI7kv4op?= <jungo.lin@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02-08-19, 11:28, Rafael J. Wysocki wrote:
-> On Friday, August 2, 2019 11:17:55 AM CEST Rafael J. Wysocki wrote:
-> > On Fri, Aug 2, 2019 at 7:44 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+On Wed, Mar 13, 2019 at 11:38 AM Tomasz Figa <tfiga@chromium.org> wrote:
+>
+> On Wed, Mar 13, 2019 at 10:25 AM Laurent Pinchart
+> <laurent.pinchart@ideasonboard.com> wrote:
+> >
+> > Hi Tomasz,
+> >
+> > On Fri, Nov 23, 2018 at 11:46:43PM +0900, Tomasz Figa wrote:
+> > > On Fri, Nov 2, 2018 at 12:03 AM Lars-Peter Clausen wrote:
+> > > > On 11/01/2018 03:30 PM, Tomasz Figa wrote:
+> > > >> On Thu, Nov 1, 2018 at 11:03 PM Laurent Pinchart wrote:
+> > > >>> On Thursday, 18 October 2018 20:28:06 EET Alexandru M Stan wrote:
+> > > >>>> On Wed, Oct 17, 2018 at 9:31 PM, Tomasz Figa wrote:
+> > > >>>>> On Thu, Oct 18, 2018 at 5:50 AM Laurent Pinchart wrote:
+> > > >>>>>> On Wednesday, 17 October 2018 11:28:52 EEST Tomasz Figa wrote:
+> > > >>>>>>> On Wed, Oct 17, 2018 at 5:02 PM Laurent Pinchart wrote:
+> > > >>>>>>>> On Wednesday, 17 October 2018 10:52:42 EEST Heng-Ruey Hsu wrote:
+> > > >>>>>>>>> Android requires camera timestamps to be reported with
+> > > >>>>>>>>> CLOCK_BOOTTIME to sync timestamp with other sensor sources.
+> > > >>>>>>>>
+> > > >>>>>>>> What's the rationale behind this, why can't CLOCK_MONOTONIC work ? If
+> > > >>>>>>>> the monotonic clock has shortcomings that make its use impossible for
+> > > >>>>>>>> proper synchronization, then we should consider switching to
+> > > >>>>>>>> CLOCK_BOOTTIME globally in V4L2, not in selected drivers only.
+> > > >>>>>>>
+> > > >>>>>>> CLOCK_BOOTTIME includes the time spent in suspend, while
+> > > >>>>>>> CLOCK_MONOTONIC doesn't. I can imagine the former being much more
+> > > >>>>>>> useful for anything that cares about the actual, long term, time
+> > > >>>>>>> tracking. Especially important since suspend is a very common event on
+> > > >>>>>>> Android and doesn't stop the time flow there, i.e. applications might
+> > > >>>>>>> wake up the device to perform various tasks at necessary times.
+> > > >>>>>>
+> > > >>>>>> Sure, but this patch mentions timestamp synchronization with other
+> > > >>>>>> sensors, and from that point of view, I'd like to know what is wrong with
+> > > >>>>>> the monotonic clock if all devices use it.
+> > > >>>>>
+> > > >>>>> AFAIK the sensors mentioned there are not camera sensors, but rather
+> > > >>>>> things we normally put under IIO, e.g. accelerometers, gyroscopes and
+> > > >>>>> so on. I'm not sure how IIO deals with timestamps, but Android seems
+> > > >>>>> to operate in the CLOCK_BOTTIME domain. Let me add some IIO folks.
+> > > >>>>>
+> > > >>>>> Gwendal, Alexandru, do you think you could shed some light on how we
+> > > >>>>> handle IIO sensors timestamps across the kernel, Chrome OS and
+> > > >>>>> Android?
+> > > >>>>
+> > > >>>> On our devices of interest have a specialized "sensor" that comes via
+> > > >>>> IIO (from the EC, cros-ec-ring driver) that can be used to more
+> > > >>>> accurately timestamp each frame (since it's recorded with very low
+> > > >>>> jitter by a realtime-ish OS). In some high level userspace thing
+> > > >>>> (specifically the Android Camera HAL) we try to pick the best
+> > > >>>> timestamp from the IIO, whatever's closest to what the V4L stuff gives
+> > > >>>> us.
+> > > >>>>
+> > > >>>> I guess the Android convention is for sensor timestamps to be in
+> > > >>>> CLOCK_BOOTTIME (maybe because it likes sleeping so much). There's
+> > > >>>> probably no advantage to using one over the other, but the important
+> > > >>>> thing is that they have to be the same, otherwise the closest match
+> > > >>>> logic would fail.
+> > > >>>
+> > > >>> That's my understanding too, I don't think CLOCK_BOOTTIME really brings much
+> > > >>> benefit in this case,
+> > > >>
+> > > >> I think it does have a significant benefit. CLOCK_MONOTONIC stops when
+> > > >> the device is sleeping, but the sensors can still capture various
+> > > >> actions. We would lose the time keeping of those actions if we use
+> > > >> CLOCK_MONOTONIC.
+> > > >>
+> > > >>> but it's important than all timestamps use the same
+> > > >>> clock. The question is thus which clock we should select. Mainline mostly uses
+> > > >>> CLOCK_MONOTONIC, and Android CLOCK_BOOTTIME. Would you like to submit patches
+> > > >>> to switch Android to CLOCK_MONOTONIC ? :-)
+> > > >>
+> > > >> Is it Android using CLOCK_BOOTTIME or the sensors (IIO?). I have
+> > > >> almost zero familiarity with the IIO subsystem and was hoping someone
+> > > >> from there could comment on what time domain is used for those
+> > > >> sensors.
+> > > >
+> > > > IIO has the option to choose between BOOTTIME or MONOTONIC (and a few
+> > > > others) for the timestamp on a per device basis.
+> > > >
+> > > > There was a bit of a discussion about this a while back. See
+> > > > https://lkml.org/lkml/2018/7/10/432 and the following thread.
 > > >
-> > > Intel pstate driver exposes min_perf_pct and max_perf_pct sysfs files,
-> > > which can be used to force a limit on the min/max P state of the driver.
-> > > Though these files eventually control the min/max frequencies that the
-> > > CPUs will run at, they don't make a change to policy->min/max values.
-> > 
-> > That's correct.
-> > 
-> > > When the values of these files are changed (in passive mode of the
-> > > driver), it leads to calling ->limits() callback of the cpufreq
-> > > governors, like schedutil. On a call to it the governors shall
-> > > forcefully update the frequency to come within the limits.
-> > 
-> > OK, so the problem is that it is a bug to invoke the governor's ->limits()
-> > callback without updating policy->min/max, because that's what
-> > "limits" mean to the governors.
-> > 
-> > Fair enough.
-> 
-> AFAICS this can be addressed by adding PM QoS freq limits requests of each CPU to
-> intel_pstate in the passive mode such that changing min_perf_pct or max_perf_pct
-> will cause these requests to be updated.
+> > > Given that IIO supports BOOTTIME in upstream already and also the
+> > > important advantage of using it over MONOTONIC for systems which keep
+> > > capturing events during sleep, do you think we could move on with some
+> > > way to support it in uvcvideo or preferably V4L2 in general?
+> >
+> > I'm not opposed to that, but I don't think we should approach that from
+> > a UVC point of view. The issue should be addressed in V4L2, and then
+> > driver-specific support could be added, if needed.
+>
+> Yes, fully agreed. The purpose of sending this patch was just to start
+> the discussion on how to support this.
+>
+> Do you think something like a buffer flag called
+> V4L2_BUF_FLAG_TIMESTAMP_BOOTTIME that could be set by the userspace at
+> QBUF could work here? (That would change the timestamp flags
+> semantics, because it used to be just the information from the driver,
+> but shouldn't have any compatibility implications.) I suppose we would
+> also need some capability flag for querying purposes, possibly added
+> to the capability flags returned by REQBUFS/CREATE_BUFS?
 
-Right, that sounds like a good plan.
+Any thoughts?
 
-But that will never make it to the stable kernels as there will be a
-long dependency of otherwise unrelated patches to get that done. My
-initial thought was to get this patch merged as it is and then later
-migrate to QoS, but since this patch doesn't fix ondemand and
-conservative, this patch isn't good enough as well.
+Adding Hans and Kieran for more insight.
 
-Maybe we should add the regular notifier based solution first, mark it
-for stable kernels, and then add the QoS specific solution ?
-
--- 
-viresh
+Best regards,
+Tomasz
