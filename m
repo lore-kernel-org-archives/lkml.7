@@ -2,129 +2,114 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A154EC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 06:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73484C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 06:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D18F216B7
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 06:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A14E216B7
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 06:09:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QjX0MuLm";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="S5CI0Rb9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731751AbfHFGIJ (ORCPT
+        id S1731776AbfHFGJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 02:08:09 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4179 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731540AbfHFGII (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 02:08:08 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B983E3713BE58045AB45;
-        Tue,  6 Aug 2019 14:08:02 +0800 (CST)
-Received: from [127.0.0.1] (10.133.217.137) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Tue, 6 Aug 2019
- 14:07:55 +0800
-Subject: Re: [RFC PATCH] rtc: add a schedule point in 'rtc_timer_do_work'
-To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>, <a.zummo@towertech.it>,
-        <alexandre.belloni@bootlin.com>
-CC:     <linux-rtc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <puranjay12@gmail.com>, <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        wangkefeng wang <wangkefeng.wang@huawei.com>
-References: <1564054230-32742-1-git-send-email-wangxiongfeng2@huawei.com>
-From:   Kefeng Wang <wangkefeng.wang@huawei.com>
-Message-ID: <6232158b-fed4-4e6a-84af-1aa6deb65608@huawei.com>
-Date:   Tue, 6 Aug 2019 14:07:54 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 6 Aug 2019 02:09:25 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:60536 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731540AbfHFGJZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 02:09:25 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 3A87B6074F; Tue,  6 Aug 2019 06:09:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1565071764;
+        bh=wZcoG9zcx7oPu5yPKEHbjF3L04ndvtLGIQczn3qAEqo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=QjX0MuLmufD/DJFzwmFbuvo3PpgoPujwR12W/px/t9AQdSXcZuVkYgH773b5Z/8Lt
+         kQGtCspneGFWvmzUVMQWUdC6zEDTvwlCbXmn2u6TUI5BxLqSco2Gp9rvUfV6ON4bAe
+         m5wsUi18XfApyOVOPumFKrc36lz6kNGUpx23oJcI=
+Received: from [10.79.43.141] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 22DB66074F;
+        Tue,  6 Aug 2019 06:09:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1565071763;
+        bh=wZcoG9zcx7oPu5yPKEHbjF3L04ndvtLGIQczn3qAEqo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=S5CI0Rb9KUYip0Lt36qMzQ2afynyi51AS+EvikUB6Xups9KekncIaYB+Q8xhqw0Bi
+         ATdVmMokFk/4fFVoQ1UVfD4N6SfHiI82ud4SQEa+lmq4WpyX3NT9tM89ruzeCcEWl8
+         xcw4KOLkq29F/kBOPdNdzFBWwvHfg5Q53q7S0yd0=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 22DB66074F
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add SC7180 pinctrl
+ binding
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jitendra Sharma <shajit@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>
+References: <20190801100717.23333-1-rnayak@codeaurora.org>
+ <CACRpkdYLb-WWSEL8yG3yy8Qq7bOKP9JjUGV51mY6=aEwrQAJvg@mail.gmail.com>
+ <CACRpkdaoOuyUmysb3OmErbLJ6zZuHGGt7RRzG9wULDkg=hLCAw@mail.gmail.com>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <d227c2b1-50df-b3e0-ea44-595c5e32fc61@codeaurora.org>
+Date:   Tue, 6 Aug 2019 11:39:19 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1564054230-32742-1-git-send-email-wangxiongfeng2@huawei.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <CACRpkdaoOuyUmysb3OmErbLJ6zZuHGGt7RRzG9wULDkg=hLCAw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.217.137]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kindly ping...
 
-On 2019/7/25 19:30, Xiongfeng Wang wrote:
-> When I ran the syzkaller testsuite, it prints out the following calltrace.
+
+On 8/5/2019 5:05 PM, Linus Walleij wrote:
+> On Mon, Aug 5, 2019 at 1:34 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>> On Thu, Aug 1, 2019 at 12:07 PM Rajendra Nayak <rnayak@codeaurora.org> wrote:
+>>
+>>> From: Jitendra Sharma <shajit@codeaurora.org>
+>>>
+>>> Add the binding for the TLMM pinctrl block found in the SC7180 platform
+>>>
+>>> Signed-off-by: Jitendra Sharma <shajit@codeaurora.org>
+>>> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+>>> [rnayak: Fix some copy-paste issues, sort and fix functions]
+>>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>>
+>> Patch applied with Bjorn's ACK.
 > 
-> [  138.350029] rcu: INFO: rcu_sched self-detected stall on CPU
-> [  138.354703] rcu: 	2-....: (104998 ticks this GP) idle=ece/1/0x4000000000000002 softirq=2825/2825 fqs=26250
-> [  138.357771] 	(t=105005 jiffies g=8033 q=1)
-> [  138.358952] NMI backtrace for cpu 2
-> [  138.359954] CPU: 2 PID: 170 Comm: kworker/2:1 Not tainted 5.2.0-514.55.6.9.x86_64 #64
-> [  138.362212] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.10.2-0-g5f4c7b1-prebuilt.qemu-project.org 04/01/2014
-> [  138.365818] Workqueue: events rtc_timer_do_work
-> [  138.367122] Call Trace:
-> [  138.367815]  <IRQ>
-> [  138.368420]  dump_stack+0xa7/0xf9
-> [  138.369372]  nmi_cpu_backtrace+0xc2/0xd0
-> [  138.370516]  ? lapic_can_unplug_cpu+0xa0/0xa0
-> [  138.371747]  nmi_trigger_cpumask_backtrace+0x14e/0x190
-> [  138.373201]  rcu_dump_cpu_stacks+0x97/0xc5
-> [  138.374376]  rcu_sched_clock_irq+0x819/0x8d0
-> [  138.375571]  ? tick_sched_do_timer+0xb0/0xb0
-> [  138.376787]  ? tick_sched_do_timer+0xb0/0xb0
-> [  138.377991]  update_process_times+0x2d/0x60
-> [  138.379176]  tick_sched_handle+0x2f/0x70
-> [  138.381088]  tick_sched_timer+0x41/0x90
-> [  138.382170]  __hrtimer_run_queues+0x11b/0x580
-> [  138.383386]  hrtimer_interrupt+0x11b/0x280
-> [  138.384585]  smp_apic_timer_interrupt+0x7a/0x230
-> [  138.385909]  apic_timer_interrupt+0xf/0x20
-> [  138.387066]  </IRQ>
-> [  138.387668] RIP: 0010:debug_lockdep_rcu_enabled+0x6/0x30
-> [  138.389149] Code: 1f 44 00 00 0f 1f 44 00 00 f0 ff 05 94 08 32 01 c3 0f 1f 00 0f 1f 44 00 00 f0 ff 0d 84 08 32 01 c3 0f 1f 00 8b 0d 2e 59 54 01 <31> c0 85 c9 74 21 8b 15 c2 b8 54 01 85 d2 74 17 65 48 8b 04 25 c0
-> [  138.394395] RSP: 0018:ffffc9000080fd30 EFLAGS: 00000203 ORIG_RAX: ffffffffffffff13
-> [  138.397117] RAX: 0000000000000000 RBX: ffff88813b77de10 RCX: 0000000000000002
-> [  138.399104] RDX: 0000000000000000 RSI: ffffffff81886439 RDI: ffff88813b77de10
-> [  138.401128] RBP: ffffc9000080fe38 R08: 0000000000000000 R09: 0000000000000000
-> [  138.403149] R10: 0000000000000001 R11: 0000000000000013 R12: ffff88813b77de98
-> [  138.405147] R13: ffff88813bab0c00 R14: 1a15e2eb5cd98000 R15: 000000003b9aca00
-> [  138.407118]  ? rtc_timer_do_work+0x349/0x710
-> [  138.408344]  rtc_timer_do_work+0x35c/0x710
-> [  138.409516]  ? graph_unlock+0x41/0x80
-> [  138.410591]  ? process_one_work+0x1d4/0x710
-> [  138.412062]  process_one_work+0x272/0x710
-> [  138.413193]  ? process_one_work+0x1d4/0x710
-> [  138.414376]  worker_thread+0x58/0x520
-> [  138.415405]  kthread+0x120/0x160
-> [  138.416337]  ? process_one_work+0x710/0x710
-> [  138.417486]  ? kthread_bind+0x20/0x20
-> [  138.418526]  ret_from_fork+0x24/0x30
+> Ooops there is v2 and even v3 coming, OK I wait for v3 and
+> backed this out.
+
+Hi Linus, I just posted the v3 out with all the ACKs added.
+They should be good to pick up now.
+thanks,
+Rajendra
+
 > 
-> After looking into the syzkaller log, I found out it is caused by the
-> following procedure. Firstly, enable the update interrupt through ioctl
-> 'RTC_UIE_ON'. Secondly, set the rtc time to be a far further time
-> through ioctl 'RTC_SET_TIME'. This will cause we stuck in
-> 'rtc_timer_do_work()' because the expiring time of 'UIE' is far less
-> than the current rtc time. This patch add a schedule point to avoid the
-> RCU calltrace.
-> 
-> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-> ---
->  drivers/rtc/interface.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/rtc/interface.c b/drivers/rtc/interface.c
-> index 72b7ddc4..0c8339d 100644
-> --- a/drivers/rtc/interface.c
-> +++ b/drivers/rtc/interface.c
-> @@ -911,6 +911,8 @@ void rtc_timer_do_work(struct work_struct *work)
->  			timerqueue_add(&rtc->timerqueue, &timer->node);
->  			trace_rtc_timer_enqueue(timer);
->  		}
-> +
-> +		cond_resched();
->  	}
->  
->  	/* Set next alarm */
+> Yours,
+> Linus Walleij
 > 
 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
