@@ -2,170 +2,289 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37351C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 00:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D83C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 00:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0322F20880
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 00:23:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="UrNTAitJ"
+	by mail.kernel.org (Postfix) with ESMTP id C600D208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 00:35:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565051731;
+	bh=lBgCz4t4Y49z22ltJYFFWgPICIaXUC5VKxDbL+3wXhM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xUG73gA3ZLpVqD2/fUzwOyLHv2Hm0EKT8HH7SnrtxKMWIH4WdB6NKuASCzQ13WQlJ
+	 6kaj4ZZH56ed+180+0VqWF4fYZZO7G5kKEjtkwr+LX1ja5Vd+LA9oNijRqcJVlKcEb
+	 Pp6wwV9fI6bOJoDBItK6vPuxKAZX/u3/HDrU+k8Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731315AbfHFAXY (ORCPT
+        id S1731081AbfHFAfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 20:23:24 -0400
-Received: from onstation.org ([52.200.56.107]:35898 "EHLO onstation.org"
+        Mon, 5 Aug 2019 20:35:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731081AbfHFAW7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 20:22:59 -0400
-Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        id S1728870AbfHFAfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 20:35:24 -0400
+Received: from localhost (unknown [104.132.0.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 080F63E916;
-        Tue,  6 Aug 2019 00:22:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1565050978;
-        bh=IQhXf+A0bqjtZ5xj4NWh6EORXhsS6v3VvILOTL0ar4c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UrNTAitJgUWYHDvxNeF52hjy+kLrncoVz5t7TjWnqsKkUa0EFYMJ53z3opQiw8B98
-         /Q3jX7lUODkPSA6freeg67U5m55JCCB6pxDdwNxME1SMGtR19k1JrdFHeP13Yrm6wx
-         5yLJt7N/G1SMaZj/u17a1xaLtrN+GmP5k12vX8Dc=
-From:   Brian Masney <masneyb@onstation.org>
-To:     agross@kernel.org, robdclark@gmail.com, sean@poorly.run,
-        robh+dt@kernel.org, bjorn.andersson@linaro.org
-Cc:     airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com,
-        jonathan@marek.ca, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        jcrouse@codeaurora.org
-Subject: [PATCH v5 4/7] firmware: qcom: scm: add support to restore secure config to qcm_scm-32
-Date:   Mon,  5 Aug 2019 20:22:26 -0400
-Message-Id: <20190806002229.8304-5-masneyb@onstation.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190806002229.8304-1-masneyb@onstation.org>
-References: <20190806002229.8304-1-masneyb@onstation.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AA68208C3;
+        Tue,  6 Aug 2019 00:35:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565051723;
+        bh=lBgCz4t4Y49z22ltJYFFWgPICIaXUC5VKxDbL+3wXhM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OKlYQx2iGvu9urbTbje0N7FvExAlXtKpHsxY5dAYymPlN2va9dUIOkzZIsZy+j8yp
+         EXN363I9jXg9+bcURWVQLyaZOwzFR9u+ZL1jhsN2lBYH/nJ7rOcBSqFV6W2b5KynRu
+         b6RUKiZ9ex46DLkC01mE22EbUuxRXfrb0iV4NMrs=
+Date:   Mon, 5 Aug 2019 17:35:22 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     Chao Yu <chao@kernel.org>, linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 RESEND] f2fs: introduce sb.required_features to store
+ incompatible features
+Message-ID: <20190806003522.GA98101@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190729150351.12223-1-chao@kernel.org>
+ <20190730231850.GA7097@jaegeuk-macbookpro.roam.corp.google.com>
+ <c7232d80-a4d8-88ae-2eca-01290dd0e56a@huawei.com>
+ <20190801042215.GC84433@jaegeuk-macbookpro.roam.corp.google.com>
+ <345c55ea-01c2-a9d1-4367-716dbd08ae9d@huawei.com>
+ <20190801223509.GB27597@jaegeuk-macbookpro.roam.corp.google.com>
+ <8e906ddb-81d8-b63e-0c19-1ee9fc7f5cbf@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8e906ddb-81d8-b63e-0c19-1ee9fc7f5cbf@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@gmail.com>
+On 08/02, Chao Yu wrote:
+> On 2019/8/2 6:35, Jaegeuk Kim wrote:
+> > On 08/01, Chao Yu wrote:
+> >> On 2019/8/1 12:22, Jaegeuk Kim wrote:
+> >>> On 07/31, Chao Yu wrote:
+> >>>> On 2019/7/31 7:18, Jaegeuk Kim wrote:
+> >>>>> On 07/29, Chao Yu wrote:
+> >>>>>> From: Chao Yu <yuchao0@huawei.com>
+> >>>>>>
+> >>>>>> Later after this patch was merged, all new incompatible feature's
+> >>>>>> bit should be added into sb.required_features field, and define new
+> >>>>>> feature function with F2FS_INCOMPAT_FEATURE_FUNCS() macro.
+> >>>>>>
+> >>>>>> Then during mount, we will do sanity check with enabled features in
+> >>>>>> image, if there are features in sb.required_features that kernel can
+> >>>>>> not recognize, just fail the mount.
+> >>>>>>
+> >>>>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> >>>>>> ---
+> >>>>>> v3:
+> >>>>>> - change commit title.
+> >>>>>> - fix wrong macro name.
+> >>>>>>  fs/f2fs/f2fs.h          | 15 +++++++++++++++
+> >>>>>>  fs/f2fs/super.c         | 10 ++++++++++
+> >>>>>>  include/linux/f2fs_fs.h |  3 ++-
+> >>>>>>  3 files changed, 27 insertions(+), 1 deletion(-)
+> >>>>>>
+> >>>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> >>>>>> index a6eb828af57f..b8e17d4ddb8d 100644
+> >>>>>> --- a/fs/f2fs/f2fs.h
+> >>>>>> +++ b/fs/f2fs/f2fs.h
+> >>>>>> @@ -163,6 +163,15 @@ struct f2fs_mount_info {
+> >>>>>>  #define F2FS_CLEAR_FEATURE(sbi, mask)					\
+> >>>>>>  	(sbi->raw_super->feature &= ~cpu_to_le32(mask))
+> >>>>>>  
+> >>>>>> +#define F2FS_INCOMPAT_FEATURES		0
+> >>>>>> +
+> >>>>>> +#define F2FS_HAS_INCOMPAT_FEATURE(sbi, mask)				\
+> >>>>>> +	((sbi->raw_super->required_features & cpu_to_le32(mask)) != 0)
+> >>>>>> +#define F2FS_SET_INCOMPAT_FEATURE(sbi, mask)				\
+> >>>>>> +	(sbi->raw_super->required_features |= cpu_to_le32(mask))
+> >>>>>> +#define F2FS_CLEAR_INCOMPAT_FEATURE(sbi, mask)				\
+> >>>>>> +	(sbi->raw_super->required_features &= ~cpu_to_le32(mask))
+> >>>>>> +
+> >>>>>>  /*
+> >>>>>>   * Default values for user and/or group using reserved blocks
+> >>>>>>   */
+> >>>>>> @@ -3585,6 +3594,12 @@ F2FS_FEATURE_FUNCS(lost_found, LOST_FOUND);
+> >>>>>>  F2FS_FEATURE_FUNCS(sb_chksum, SB_CHKSUM);
+> >>>>>>  F2FS_FEATURE_FUNCS(casefold, CASEFOLD);
+> >>>>>>  
+> >>>>>> +#define F2FS_INCOMPAT_FEATURE_FUNCS(name, flagname) \
+> >>>>>> +static inline int f2fs_sb_has_##name(struct f2fs_sb_info *sbi) \
+> >>>>>> +{ \
+> >>>>>> +	return F2FS_HAS_INCOMPAT_FEATURE(sbi, F2FS_FEATURE_##flagname); \
+> >>>>>> +}
+> >>>>>> +
+> >>>>>>  #ifdef CONFIG_BLK_DEV_ZONED
+> >>>>>>  static inline bool f2fs_blkz_is_seq(struct f2fs_sb_info *sbi, int devi,
+> >>>>>>  				    block_t blkaddr)
+> >>>>>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+> >>>>>> index 5540fee0fe3f..3701dcce90e6 100644
+> >>>>>> --- a/fs/f2fs/super.c
+> >>>>>> +++ b/fs/f2fs/super.c
+> >>>>>> @@ -2513,6 +2513,16 @@ static int sanity_check_raw_super(struct f2fs_sb_info *sbi,
+> >>>>>>  		return -EINVAL;
+> >>>>>>  	}
+> >>>>>>  
+> >>>>>> +	/* check whether current kernel supports all features on image */
+> >>>>>> +	if (le32_to_cpu(raw_super->required_features) &
+> >>>>>
+> >>>>> ...
+> >>>>> #define F2FS_FEATURE_VERITY	0x0400	/* reserved */
+> >>>>> ...
+> >>>>> #define F2FS_FEATURE_CASEFOLD	0x1000
+> >>>>> #define F2FS_FEATURE_SUPPORT	0x1BFF
+> >>>>>
+> >>>>> 	if (le32_to_cpu(raw_super->required_features) & ~F2FS_FEATURE_SUPPORT) {
+> >>>>> 		...
+> >>>>> 		return -EINVAL;
+> >>>>> 	}
+> >>>>
+> >>>> Um, I thought .required_features are used to store new feature flags from 0x0.
+> >>>>
+> >>>> All 'F2FS_FEATURE_SUPPORT' bits should be stored in sb.feature instead of
+> >>>> sb.required_features, I'm confused...
+> >>>
+> >>> I'm thinking,
+> >>>
+> >>> f2fs-tools     sb->required_features     f2fs    F2FS_FEATURE_SUPPORT
+> >>> v0             0                         v0      no_check -> ok
+> >>> v1             0x1BFF                    v0      no_check -> ok
+> >>> v0             0                         v1      0x1BFF -> ok
+> >>> v1             0x1BFF                    v1      0x1BFF -> ok
+> >>> v2             0x3BFF                    v1      0x1BFF -> fail
+> >>> v1             0x1BFF                    v2      0x3BFF -> ok
+> >>> v2             0x3BFF                    v2      0x3BFF -> ok
+> >>
+> >> I see, it's a bit waste for 0x1FFF low bits in sb->required_features. Why not
+> >> leaving 0x0FFF in sb->feature w/o sanity check. And make all new incompatible
+> >> features (including casefold) adding into sb->required_features.
+> > 
+> > I don't think we can define like this, and we still have 32bits feature filed.
+> > This would give another confusion to understand. VERITY is reserved only now.
+> > 
+> > #define F2FS_FEATURE_CASEFOLD		0x0001
+> 
+> Oops, so you want to make .required_features being almost a mirror of .feature,
+> and do sanity check on it... I can see now. :P
+> 
+> If so, why not just use .feature:
 
-Add support to restore the secure configuration for qcm_scm-32.c. This
-is needed by the On Chip MEMory (OCMEM) that is present on some
-Snapdragon devices.
+Sometimes, we don't need to set the flag, but not required at some point.
+(e.g., verify)
 
-Signed-off-by: Rob Clark <robdclark@gmail.com>
-[masneyb@onstation.org: ported to latest kernel; set ctx_bank_num to
- spare parameter.]
-Signed-off-by: Brian Masney <masneyb@onstation.org>
----
-Changes since v4:
-- None
-
-Changes since v3:
-- None
-
-Changes since v2:
-- None
-
-Changes since v1:
-- Use existing __qcom_scm_restore_sec_cfg() function stub in
-  qcom_scm-32.c that was unimplemented
-- Set the cfg.ctx_bank_num to the spare function parameter. It was
-  previously set to the device_id.
-
- drivers/firmware/qcom_scm-32.c | 17 ++++++++++++++++-
- drivers/firmware/qcom_scm.c    | 13 +++++++++++++
- include/linux/qcom_scm.h       | 11 +++++++++++
- 3 files changed, 40 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-32.c
-index 4c2514e5e249..5d90b7f5ab5a 100644
---- a/drivers/firmware/qcom_scm-32.c
-+++ b/drivers/firmware/qcom_scm-32.c
-@@ -617,7 +617,22 @@ int __qcom_scm_assign_mem(struct device *dev, phys_addr_t mem_region,
- int __qcom_scm_restore_sec_cfg(struct device *dev, u32 device_id,
- 			       u32 spare)
- {
--	return -ENODEV;
-+	struct msm_scm_sec_cfg {
-+		__le32 id;
-+		__le32 ctx_bank_num;
-+	} cfg;
-+	int ret, scm_ret = 0;
-+
-+	cfg.id = cpu_to_le32(device_id);
-+	cfg.ctx_bank_num = cpu_to_le32(spare);
-+
-+	ret = qcom_scm_call(dev, QCOM_SCM_SVC_MP, QCOM_SCM_RESTORE_SEC_CFG,
-+			    &cfg, sizeof(cfg), &scm_ret, sizeof(scm_ret));
-+
-+	if (ret || scm_ret)
-+		return ret ? ret : -EINVAL;
-+
-+	return 0;
- }
- 
- int __qcom_scm_iommu_secure_ptbl_size(struct device *dev, u32 spare,
-diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-index 7e285ff3961d..27c1d98a34e6 100644
---- a/drivers/firmware/qcom_scm.c
-+++ b/drivers/firmware/qcom_scm.c
-@@ -367,6 +367,19 @@ static const struct reset_control_ops qcom_scm_pas_reset_ops = {
- 	.deassert = qcom_scm_pas_reset_deassert,
- };
- 
-+/**
-+ * qcom_scm_restore_sec_cfg_available() - Check if secure environment
-+ * supports restore security config interface.
-+ *
-+ * Return true if restore-cfg interface is supported, false if not.
-+ */
-+bool qcom_scm_restore_sec_cfg_available(void)
-+{
-+	return __qcom_scm_is_call_available(__scm->dev, QCOM_SCM_SVC_MP,
-+					    QCOM_SCM_RESTORE_SEC_CFG);
-+}
-+EXPORT_SYMBOL(qcom_scm_restore_sec_cfg_available);
-+
- int qcom_scm_restore_sec_cfg(u32 device_id, u32 spare)
- {
- 	return __qcom_scm_restore_sec_cfg(__scm->dev, device_id, spare);
-diff --git a/include/linux/qcom_scm.h b/include/linux/qcom_scm.h
-index b49b734d662c..04382e1798e4 100644
---- a/include/linux/qcom_scm.h
-+++ b/include/linux/qcom_scm.h
-@@ -34,6 +34,16 @@ enum qcom_scm_ocmem_client {
- 	QCOM_SCM_OCMEM_DEBUG_ID,
- };
- 
-+enum qcom_scm_sec_dev_id {
-+	QCOM_SCM_MDSS_DEV_ID    = 1,
-+	QCOM_SCM_OCMEM_DEV_ID   = 5,
-+	QCOM_SCM_PCIE0_DEV_ID   = 11,
-+	QCOM_SCM_PCIE1_DEV_ID   = 12,
-+	QCOM_SCM_GFX_DEV_ID     = 18,
-+	QCOM_SCM_UFS_DEV_ID     = 19,
-+	QCOM_SCM_ICE_DEV_ID     = 20,
-+};
-+
- #define QCOM_SCM_VMID_HLOS       0x3
- #define QCOM_SCM_VMID_MSS_MSA    0xF
- #define QCOM_SCM_VMID_WLAN       0x18
-@@ -70,6 +80,7 @@ extern int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
- extern void qcom_scm_cpu_power_down(u32 flags);
- extern u32 qcom_scm_get_version(void);
- extern int qcom_scm_set_remote_state(u32 state, u32 id);
-+extern bool qcom_scm_restore_sec_cfg_available(void);
- extern int qcom_scm_restore_sec_cfg(u32 device_id, u32 spare);
- extern int qcom_scm_iommu_secure_ptbl_size(u32 spare, size_t *size);
- extern int qcom_scm_iommu_secure_ptbl_init(u64 addr, u32 size, u32 spare);
--- 
-2.21.0
-
+> 
+> kernel	tool
+> v5.2 .. 1.12
+> #define	F2FS_FEATURE_SUPPORT		0x0BFF
+> 
+> v5.3 .. 1.13
+> #define F2FS_FEATURE_CASEFOLD		0x1000
+> #define	F2FS_FEATURE_SUPPORT		0x1BFF
+> 
+> v5.4 .. 1.14
+> #define F2FS_FEATURE_CASEFOLD		0x1000
+> #define F2FS_FEATURE_COMPRESS		0x2000
+> #define	F2FS_FEATURE_SUPPORT		0x3BFF
+> 
+> f2fs-tools	sb->feature		f2fs	F2FS_FEATURE_SUPPORT
+> 
+> [enable all features in tools]
+> v1.12		0x0BFF			v5.2	no_check -> ok
+> v1.12		0x0BFF			v5.3	0x1BFF -> ok
+> v1.12		0x0BFF			v5.4	0x3BFF -> ok
+> 
+> v1.13		0x1BFF			v5.2	that's issue we need to fix
+> v1.13		0x1BFF			v5.3	0x1BFF -> ok
+> v1.13		0x1BFF			v5.4	0x3BFF -> ok
+> 
+> v1.14		0x3BFF			v5.2	that's issue we need to fix
+> v1.14		0x3BFF			v5.3	0x1BFF -> fail
+> v1.14		0x3BFF			v5.4	0x3BFF -> ok
+> 
+> Or am I missing something?
+> 
+> Thanks,
+> 
+> > 
+> >>
+> >> Then that would be:
+> >>
+> >> kernel	tool
+> >> v5.2 .. 1.12
+> >> #define	F2FS_FEATURE_SUPPORT		0x0000
+> >>
+> >> v5.3 .. 1.13
+> >> #define F2FS_FEATURE_CASEFOLD		0x0001
+> >> #define	F2FS_FEATURE_SUPPORT		0x0001
+> >>
+> >> v5.4 .. 1.14
+> >> #define F2FS_FEATURE_CASEFOLD		0x0001
+> >> #define F2FS_FEATURE_COMPRESS		0x0002
+> >> #define	F2FS_FEATURE_SUPPORT		0x0003
+> >>
+> >> f2fs-tools	sb->required_features	f2fs	F2FS_FEATURE_SUPPORT
+> >>
+> >> v1.12		0x0000			v5.2	no_check -> ok
+> >> v1.12		0x0000			v5.3	0x0001 -> ok
+> >> v1.12		0x0000			v5.4	0x0003 -> ok
+> >>
+> >> v1.13		0x0001			v5.2	that's issue we need to fix
+> >> v1.13		0x0001			v5.3	0x0001 -> ok
+> >> v1.13		0x0001			v5.4	0x0003 -> ok
+> >>
+> >> v1.14		0x0003			v5.2	that's issue we need to fix
+> >> v1.14		0x0003			v5.3	0x0001 -> fail
+> >> v1.14		0x0003			v5.4	0x0003 -> ok
+> >>
+> >> And all compatible features can be added into sb->feature[_VERITY, ....].
+> >>
+> >> Would that okay to you?
+> >>
+> >> Thanks,
+> >>
+> >>>
+> >>>>
+> >>>> Thanks,
+> >>>>
+> >>>>>
+> >>>>>
+> >>>>>> +			~F2FS_INCOMPAT_FEATURES) {
+> >>>>>> +		f2fs_info(sbi, "Unsupported feature: %x: supported: %x",
+> >>>>>> +			  le32_to_cpu(raw_super->required_features) ^
+> >>>>>> +			  F2FS_INCOMPAT_FEATURES,
+> >>>>>> +			  F2FS_INCOMPAT_FEATURES);
+> >>>>>> +		return -EINVAL;
+> >>>>>> +	}
+> >>>>>> +
+> >>>>>>  	/* Check checksum_offset and crc in superblock */
+> >>>>>>  	if (__F2FS_HAS_FEATURE(raw_super, F2FS_FEATURE_SB_CHKSUM)) {
+> >>>>>>  		crc_offset = le32_to_cpu(raw_super->checksum_offset);
+> >>>>>> diff --git a/include/linux/f2fs_fs.h b/include/linux/f2fs_fs.h
+> >>>>>> index a2b36b2e286f..4141be3f219c 100644
+> >>>>>> --- a/include/linux/f2fs_fs.h
+> >>>>>> +++ b/include/linux/f2fs_fs.h
+> >>>>>> @@ -117,7 +117,8 @@ struct f2fs_super_block {
+> >>>>>>  	__u8 hot_ext_count;		/* # of hot file extension */
+> >>>>>>  	__le16	s_encoding;		/* Filename charset encoding */
+> >>>>>>  	__le16	s_encoding_flags;	/* Filename charset encoding flags */
+> >>>>>> -	__u8 reserved[306];		/* valid reserved region */
+> >>>>>> +	__le32 required_features;       /* incompatible features to old kernel */
+> >>>>>> +	__u8 reserved[302];		/* valid reserved region */
+> >>>>>>  	__le32 crc;			/* checksum of superblock */
+> >>>>>>  } __packed;
+> >>>>>>  
+> >>>>>> -- 
+> >>>>>> 2.22.0
+> >>>>> .
+> >>>>>
+> >>> .
+> >>>
+> > .
+> > 
