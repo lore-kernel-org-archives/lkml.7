@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D5EC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF82AC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8754216F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:42:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F46921874
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:42:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127730;
-	bh=8I7S6yTtwobncyGta3F3FwqpMCUGh9F1btmxAa4dioA=;
+	s=default; t=1565127736;
+	bh=Jk5erRwdW6Xn1aFjjqOIfAEDX4aSw+GfypMFT+zJTA4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eq7yBWXqdZbQbT7+0vtF4cGtm9JWUBNxhlK/ENIbCcCTm0I59m0vLqwfacrkzxPDk
-	 weJr75LUKaIJfd2ZZsqXsTjslN2U79wYDVfBB/3BxShPT9TaPO+jkkaN4Ezsc7fN+A
-	 eKJiv5pQfbyFag+S2QWEb8/GUAuO/rTFLTW99qr0=
+	b=MjODEOFSD4YZLIsV8W7IUnnx4sjSdFUcqs0Wd6hdU5kf5OuXRr1K1NHqqoNJ5EHBy
+	 3d5nFOHpNEDR0jpeks+Qxmv6GRNR9Zxd0k1ON+Csg7SiYEBlmJCTum5vdtl9GngWFR
+	 oeKXQqcXnbqEHo84hm7Pveszmx3wHQJBzvEpN5Zw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729287AbfHFVmJ (ORCPT
+        id S1729319AbfHFVmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:42:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53510 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:42:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728672AbfHFVfp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:35:45 -0400
+        id S1727039AbfHFVfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:35:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4358E217D9;
-        Tue,  6 Aug 2019 21:35:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F7D821881;
+        Tue,  6 Aug 2019 21:35:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127344;
-        bh=8I7S6yTtwobncyGta3F3FwqpMCUGh9F1btmxAa4dioA=;
+        s=default; t=1565127342;
+        bh=Jk5erRwdW6Xn1aFjjqOIfAEDX4aSw+GfypMFT+zJTA4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qII7Dhub55ts4Td3QvXGDOwjYThvf/IYAHePKC+hCJcQ25spugVQKIj/zuv83JWMQ
-         Dz09HS+hl80UFGkseXJ7nT0NOkZdMoT8V0E1haG4SWNxYQrJ6b0jWqyu+BV6m5/Oni
-         rfJ0gkbP03XRkZ9+syr9vd/aLpQ2V47aR08OxjCw=
+        b=A637f3vFyG9695PXdq4NwCgAzxlXBjIPm4xpKr3gUhS346zfkHZAKN4L8fZD20xRY
+         cWO3A+FuZ9FPnruN2aUO2obqndnuwkt2tp86Xznv0lrOKg5/UNaaEXlBkv1Oib+1Sa
+         +W8nAwKO6s3DNC51xiJSoU+kdmD13LRpI0nNrXZ8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 11/32] drm/bridge: lvds-encoder: Fix build error while CONFIG_DRM_KMS_HELPER=m
-Date:   Tue,  6 Aug 2019 17:34:59 -0400
-Message-Id: <20190806213522.19859-11-sashal@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Jeffrin Jose T <jeffrin@rajagiritech.edu.in>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-ide@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 10/32] libata: zpodd: Fix small read overflow in zpodd_get_mech_type()
+Date:   Tue,  6 Aug 2019 17:34:58 -0400
+Message-Id: <20190806213522.19859-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213522.19859-1-sashal@kernel.org>
 References: <20190806213522.19859-1-sashal@kernel.org>
@@ -60,39 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit f4cc743a98136df3c3763050a0e8223b52d9a960 ]
+[ Upstream commit 71d6c505b4d9e6f76586350450e785e3d452b346 ]
 
-If DRM_LVDS_ENCODER=y but CONFIG_DRM_KMS_HELPER=m,
-build fails:
+Jeffrin reported a KASAN issue:
 
-drivers/gpu/drm/bridge/lvds-encoder.o: In function `lvds_encoder_probe':
-lvds-encoder.c:(.text+0x155): undefined reference to `devm_drm_panel_bridge_add'
+  BUG: KASAN: global-out-of-bounds in ata_exec_internal_sg+0x50f/0xc70
+  Read of size 16 at addr ffffffff91f41f80 by task scsi_eh_1/149
+  ...
+  The buggy address belongs to the variable:
+    cdb.48319+0x0/0x40
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: dbb58bfd9ae6 ("drm/bridge: Fix lvds-encoder since the panel_bridge rework.")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190729071216.27488-1-yuehaibing@huawei.com
+Much like commit 18c9a99bce2a ("libata: zpodd: small read overflow in
+eject_tray()"), this fixes a cdb[] buffer length, this time in
+zpodd_get_mech_type():
+
+We read from the cdb[] buffer in ata_exec_internal_sg(). It has to be
+ATAPI_CDB_LEN (16) bytes long, but this buffer is only 12 bytes.
+
+Reported-by: Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
+Fixes: afe759511808c ("libata: identify and init ZPODD devices")
+Link: https://lore.kernel.org/lkml/201907181423.E808958@keescook/
+Tested-by: Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/ata/libata-zpodd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-index bf6cad6c9178b..7a3e5a8f6439b 100644
---- a/drivers/gpu/drm/bridge/Kconfig
-+++ b/drivers/gpu/drm/bridge/Kconfig
-@@ -46,6 +46,7 @@ config DRM_DUMB_VGA_DAC
- config DRM_LVDS_ENCODER
- 	tristate "Transparent parallel to LVDS encoder support"
- 	depends on OF
-+	select DRM_KMS_HELPER
- 	select DRM_PANEL_BRIDGE
- 	help
- 	  Support for transparent parallel to LVDS encoders that don't require
+diff --git a/drivers/ata/libata-zpodd.c b/drivers/ata/libata-zpodd.c
+index 173e6f2dd9af0..eefda51f97d35 100644
+--- a/drivers/ata/libata-zpodd.c
++++ b/drivers/ata/libata-zpodd.c
+@@ -56,7 +56,7 @@ static enum odd_mech_type zpodd_get_mech_type(struct ata_device *dev)
+ 	unsigned int ret;
+ 	struct rm_feature_desc *desc;
+ 	struct ata_taskfile tf;
+-	static const char cdb[] = {  GPCMD_GET_CONFIGURATION,
++	static const char cdb[ATAPI_CDB_LEN] = {  GPCMD_GET_CONFIGURATION,
+ 			2,      /* only 1 feature descriptor requested */
+ 			0, 3,   /* 3, removable medium feature */
+ 			0, 0, 0,/* reserved */
 -- 
 2.20.1
 
