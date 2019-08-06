@@ -2,499 +2,591 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E5D1C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 745AAC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:08:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDB7920B1F
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:06:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ristioja.ee header.i=@ristioja.ee header.b="fWMaSV+I"
+	by mail.kernel.org (Postfix) with ESMTP id 322742075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:08:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732158AbfHFSGw (ORCPT
+        id S1732612AbfHFSIg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 14:06:52 -0400
-Received: from heh.ee ([213.35.143.160]:53210 "EHLO mx1.heh.ee"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730268AbfHFSGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 14:06:52 -0400
-X-Greylist: delayed 413 seconds by postgrey-1.27 at vger.kernel.org; Tue, 06 Aug 2019 14:06:50 EDT
-Received: from [0.0.0.0] (unknown [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.heh.ee (Postfix) with ESMTPSA id 1F08D16BDB9;
-        Tue,  6 Aug 2019 20:59:56 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=ristioja.ee; s=mail;
-        t=1565114396; bh=T2Y9CUN+uKC8gX7t4fAZkVpFPD9j4PDSZGpdx5uw5QM=;
-        h=From:Subject:To:Date;
-        b=fWMaSV+IJ12Gy5wgM8/J8SVZVhvyDfVQjz6G/XXYiUeVQVxqHAnw0XFMDBEXmBumz
-         q10Iw6ZyNw/fMhetjDNy2n6cn2pnN7KubntwRgaz17XwDCNqMI7qLWl53fHnh0Rkye
-         AMc9kqpgMZopS5yoGjCPCl1ozq6x++XOYo6llACI=
-From:   Jaak Ristioja <jaak@ristioja.ee>
-Subject: Xorg indefinitely hangs in kernelspace
-Openpgp: preference=signencrypt
-Autocrypt: addr=jaak@ristioja.ee; prefer-encrypt=mutual; keydata=
- mDMEWyjlXBYJKwYBBAHaRw8BAQdABEPNmQfWmwZZXSl5vKnpI1UVtS4l2N9kv7KqyFYtfLe0
- IEphYWsgUmlzdGlvamEgPGphYWtAcmlzdGlvamEuZWU+iJYEExYIAD4WIQTjaPCMFhRItZ2p
- iV/uxscoTrbt3AUCWyjlXAIbIwUJA8OZNAULCQgHAgYVCgkICwIEFgIDAQIeAQIXgAAKCRDu
- xscoTrbt3OYPAP9l6ZjLh4qK2r/H1b+7a7qZIAjwf0o4AX6qvtX1WERxywEAhhtOHg+G8idL
- FR08XPW7nlobl2qEHMnqBTqteSsz1gG4OARbKOVcEgorBgEEAZdVAQUBAQdAU6y3a2gcxTI+
- bZgPkJjPXxr0tvuLpCqkIb/envF5ajADAQgHiH4EGBYIACYWIQTjaPCMFhRItZ2piV/uxsco
- Trbt3AUCWyjlXAIbDAUJA8OZNAAKCRDuxscoTrbt3OG5AP0cd6gLbKVSBvSEgRNQ+BNk/1a5
- lSQtocXAcwUx0X9h0gEAqIZ9u7pCWBlRTL+rij97VWWkB/jb1deZ2gExNhd6RAU=
-To:     Dave Airlie <airlied@redhat.com>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org,
-        spice-devel@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Message-ID: <92785039-0941-4626-610b-f4e3d9613069@ristioja.ee>
-Date:   Tue, 6 Aug 2019 21:00:10 +0300
-User-Agent: undefined
+        Tue, 6 Aug 2019 14:08:36 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39152 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726783AbfHFSIg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 14:08:36 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x76I2PNd132741
+        for <linux-kernel@vger.kernel.org>; Tue, 6 Aug 2019 14:08:31 -0400
+Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u7eb2rgvf-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 14:08:30 -0400
+Received: from localhost
+        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Tue, 6 Aug 2019 19:08:30 +0100
+Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
+        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 6 Aug 2019 19:08:24 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x76I8NuM43843910
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 6 Aug 2019 18:08:23 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C0693B206E;
+        Tue,  6 Aug 2019 18:08:23 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8E2F6B205F;
+        Tue,  6 Aug 2019 18:08:23 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue,  6 Aug 2019 18:08:23 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 32C1A16C17E8; Tue,  6 Aug 2019 11:08:24 -0700 (PDT)
+Date:   Tue, 6 Aug 2019 11:08:24 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mingo@kernel.org, jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, rostedt@goodmis.org,
+        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
+        oleg@redhat.com, joel@joelfernandes.org
+Subject: Re: [PATCH RFC tip/core/rcu 14/14] rcu/nohz: Make multi_cpu_stop()
+ enable tick on all online CPUs
+Reply-To: paulmck@linux.ibm.com
+References: <20190802151435.GA1081@linux.ibm.com>
+ <20190802151501.13069-14-paulmck@linux.ibm.com>
+ <20190804144317.GF2349@hirez.programming.kicks-ass.net>
+ <20190804144835.GB2386@hirez.programming.kicks-ass.net>
+ <20190804184159.GC28441@linux.ibm.com>
+ <20190805080531.GH2349@hirez.programming.kicks-ass.net>
+ <20190805145448.GI28441@linux.ibm.com>
+ <20190805155024.GK2332@hirez.programming.kicks-ass.net>
+ <20190805174800.GK28441@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190805174800.GK28441@linux.ibm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19080618-0060-0000-0000-000003699552
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011561; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000287; SDB=6.01243004; UDB=6.00655680; IPR=6.01024468;
+ MB=3.00028068; MTD=3.00000008; XFM=3.00000015; UTC=2019-08-06 18:08:28
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19080618-0061-0000-0000-00004A739DF1
+Message-Id: <20190806180824.GA28448@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-06_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908060162
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+On Mon, Aug 05, 2019 at 10:48:00AM -0700, Paul E. McKenney wrote:
+> On Mon, Aug 05, 2019 at 05:50:24PM +0200, Peter Zijlstra wrote:
+> > On Mon, Aug 05, 2019 at 07:54:48AM -0700, Paul E. McKenney wrote:
+> > 
+> > > > Right; so clearly we're not understanding what's happening. That seems
+> > > > like a requirement for actually doing a patch.
+> > > 
+> > > Almost but not quite.  It is a requirement for a patch *that* *is*
+> > > *supposed* *to* *be* *a* *fix*.  If you are trying to prohibit me from
+> > > writing experimental patches, please feel free to take a long walk on
+> > > a short pier.
+> > > 
+> > > Understood???
+> > 
+> > Ah, my bad, I thought you were actually proposing this as an actual
+> > patch. I now see that is my bad, I'd overlooked the RFC part.
+> 
+> No problem!
+> 
+> And of course adding tracing decreases the frequency and duration of
+> the multi_cpu_stop().  Re-running with shorter-duration triggering.  ;-)
 
-I'm writing to report a crash in the QXL / DRM code in the Linux kernel.
-I originally filed the issue on LaunchPad and more details can be found
-there, although I doubt whether these details are useful.
+And I did eventually get a good trace.  If I am interpreting this trace
+correctly, the torture_-135 task didn't get around to attempting to wake
+up all of the CPUs.  I will try again, but this time with the sched_switch
+trace event enabled.
 
-  https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1813620
+As a side note, enabling ftrace from the command line seems to interact
+badly with turning tracing off and on in the kernel, so I eventually
+resorted to trace_printk() in the functions of interest.  The trace
+output is below, followed by the current diagnostic patch.  Please note
+that I am -not- using the desperation hammer-the-scheduler patches.
 
-I first experienced these issues with:
+More as I learn more!
 
-* Ubuntu 18.04 (probably kernel 4.15.something)
-* Ubuntu 18.10 (kernel 4.18.0-13)
-* Ubuntu 19.04 (kernel 5.0.0-13-generic)
-* Ubuntu 19.04 (mainline kernel 5.1-rc7)
-* Ubuntu 19.04 (mainline kernel 5.2.0-050200rc1-generic)
+							Thanx, Paul
 
-Here is the crash output from dmesg:
+------------------------------------------------------------------------
 
-[354073.713350] INFO: task Xorg:920 blocked for more than 120 seconds.
-[354073.717755]       Not tainted 5.2.0-050200rc1-generic #201905191930
-[354073.722277] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-disables this message.
-[354073.738332] Xorg            D    0   920    854 0x00404004
-[354073.738334] Call Trace:
-[354073.738340]  __schedule+0x2ba/0x650
-[354073.738342]  schedule+0x2d/0x90
-[354073.738343]  schedule_preempt_disabled+0xe/0x10
-[354073.738345]  __ww_mutex_lock.isra.11+0x3e0/0x750
-[354073.738346]  __ww_mutex_lock_slowpath+0x16/0x20
-[354073.738347]  ww_mutex_lock+0x34/0x50
-[354073.738352]  ttm_eu_reserve_buffers+0x1f9/0x2e0 [ttm]
-[354073.738356]  qxl_release_reserve_list+0x67/0x150 [qxl]
-[354073.738358]  ? qxl_bo_pin+0xaa/0x190 [qxl]
-[354073.738359]  qxl_cursor_atomic_update+0x1b0/0x2e0 [qxl]
-[354073.738367]  drm_atomic_helper_commit_planes+0xb9/0x220 [drm_kms_helper]
-[354073.738371]  drm_atomic_helper_commit_tail+0x2b/0x70 [drm_kms_helper]
-[354073.738374]  commit_tail+0x67/0x70 [drm_kms_helper]
-[354073.738378]  drm_atomic_helper_commit+0x113/0x120 [drm_kms_helper]
-[354073.738390]  drm_atomic_commit+0x4a/0x50 [drm]
-[354073.738394]  drm_atomic_helper_update_plane+0xe9/0x100 [drm_kms_helper]
-[354073.738402]  __setplane_atomic+0xd3/0x120 [drm]
-[354073.738410]  drm_mode_cursor_universal+0x142/0x270 [drm]
-[354073.738418]  drm_mode_cursor_common+0xcb/0x220 [drm]
-[354073.738425]  ? drm_mode_cursor_ioctl+0x60/0x60 [drm]
-[354073.738432]  drm_mode_cursor2_ioctl+0xe/0x10 [drm]
-[354073.738438]  drm_ioctl_kernel+0xb0/0x100 [drm]
-[354073.738440]  ? ___sys_recvmsg+0x16c/0x200
-[354073.738445]  drm_ioctl+0x233/0x410 [drm]
-[354073.738452]  ? drm_mode_cursor_ioctl+0x60/0x60 [drm]
-[354073.738454]  ? timerqueue_add+0x57/0x90
-[354073.738456]  ? enqueue_hrtimer+0x3c/0x90
-[354073.738458]  do_vfs_ioctl+0xa9/0x640
-[354073.738459]  ? fput+0x13/0x20
-[354073.738461]  ? __sys_recvmsg+0x88/0xa0
-[354073.738462]  ksys_ioctl+0x67/0x90
-[354073.738463]  __x64_sys_ioctl+0x1a/0x20
-[354073.738465]  do_syscall_64+0x5a/0x140
-[354073.738467]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[354073.738468] RIP: 0033:0x7ffad14d3417
-[354073.738472] Code: Bad RIP value.
-[354073.738472] RSP: 002b:00007ffdd5679978 EFLAGS: 00003246 ORIG_RAX:
-0000000000000010
-[354073.738473] RAX: ffffffffffffffda RBX: 000056428a474610 RCX:
-00007ffad14d3417
-[354073.738474] RDX: 00007ffdd56799b0 RSI: 00000000c02464bb RDI:
-000000000000000e
-[354073.738474] RBP: 00007ffdd56799b0 R08: 0000000000000040 R09:
-0000000000000010
-[354073.738475] R10: 000000000000003f R11: 0000000000003246 R12:
-00000000c02464bb
-[354073.738475] R13: 000000000000000e R14: 0000000000000000 R15:
-000056428a4721d0
-[354073.738511] INFO: task kworker/1:0:27625 blocked for more than 120
-seconds.
-[354073.745154]       Not tainted 5.2.0-050200rc1-generic #201905191930
-[354073.751900] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-disables this message.
-[354073.762197] kworker/1:0     D    0 27625      2 0x80004000
-[354073.762205] Workqueue: events qxl_client_monitors_config_work_func [qxl]
-[354073.762206] Call Trace:
-[354073.762211]  __schedule+0x2ba/0x650
-[354073.762214]  schedule+0x2d/0x90
-[354073.762215]  schedule_preempt_disabled+0xe/0x10
-[354073.762216]  __ww_mutex_lock.isra.11+0x3e0/0x750
-[354073.762217]  ? __switch_to_asm+0x34/0x70
-[354073.762218]  ? __switch_to_asm+0x40/0x70
-[354073.762219]  ? __switch_to_asm+0x40/0x70
-[354073.762220]  __ww_mutex_lock_slowpath+0x16/0x20
-[354073.762221]  ww_mutex_lock+0x34/0x50
-[354073.762235]  drm_modeset_lock+0x35/0xb0 [drm]
-[354073.762243]  drm_modeset_lock_all_ctx+0x5d/0xe0 [drm]
-[354073.762251]  drm_modeset_lock_all+0x5e/0xb0 [drm]
-[354073.762252]  qxl_display_read_client_monitors_config+0x1e1/0x370 [qxl]
-[354073.762254]  qxl_client_monitors_config_work_func+0x15/0x20 [qxl]
-[354073.762256]  process_one_work+0x20f/0x410
-[354073.762257]  worker_thread+0x34/0x400
-[354073.762259]  kthread+0x120/0x140
-[354073.762260]  ? process_one_work+0x410/0x410
-[354073.762261]  ? __kthread_parkme+0x70/0x70
-[354073.762262]  ret_from_fork+0x35/0x40
-[354194.557095] INFO: task Xorg:920 blocked for more than 241 seconds.
-[354194.558311]       Not tainted 5.2.0-050200rc1-generic #201905191930
-[354194.559484] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-disables this message.
-[354194.560936] Xorg            D    0   920    854 0x00404004
-[354194.560938] Call Trace:
-[354194.560944]  __schedule+0x2ba/0x650
-[354194.560946]  schedule+0x2d/0x90
-[354194.560947]  schedule_preempt_disabled+0xe/0x10
-[354194.560948]  __ww_mutex_lock.isra.11+0x3e0/0x750
-[354194.560950]  __ww_mutex_lock_slowpath+0x16/0x20
-[354194.560950]  ww_mutex_lock+0x34/0x50
-[354194.560956]  ttm_eu_reserve_buffers+0x1f9/0x2e0 [ttm]
-[354194.560959]  qxl_release_reserve_list+0x67/0x150 [qxl]
-[354194.560961]  ? qxl_bo_pin+0xaa/0x190 [qxl]
-[354194.560963]  qxl_cursor_atomic_update+0x1b0/0x2e0 [qxl]
-[354194.560971]  drm_atomic_helper_commit_planes+0xb9/0x220 [drm_kms_helper]
-[354194.560975]  drm_atomic_helper_commit_tail+0x2b/0x70 [drm_kms_helper]
-[354194.560979]  commit_tail+0x67/0x70 [drm_kms_helper]
-[354194.560982]  drm_atomic_helper_commit+0x113/0x120 [drm_kms_helper]
-[354194.560993]  drm_atomic_commit+0x4a/0x50 [drm]
-[354194.560997]  drm_atomic_helper_update_plane+0xe9/0x100 [drm_kms_helper]
-[354194.561011]  __setplane_atomic+0xd3/0x120 [drm]
-[354194.561019]  drm_mode_cursor_universal+0x142/0x270 [drm]
-[354194.561027]  drm_mode_cursor_common+0xcb/0x220 [drm]
-[354194.561034]  ? drm_mode_cursor_ioctl+0x60/0x60 [drm]
-[354194.561041]  drm_mode_cursor2_ioctl+0xe/0x10 [drm]
-[354194.561047]  drm_ioctl_kernel+0xb0/0x100 [drm]
-[354194.561049]  ? ___sys_recvmsg+0x16c/0x200
-[354194.561057]  drm_ioctl+0x233/0x410 [drm]
-[354194.561080]  ? drm_mode_cursor_ioctl+0x60/0x60 [drm]
-[354194.561082]  ? timerqueue_add+0x57/0x90
-[354194.561084]  ? enqueue_hrtimer+0x3c/0x90
-[354194.561086]  do_vfs_ioctl+0xa9/0x640
-[354194.561088]  ? fput+0x13/0x20
-[354194.561089]  ? __sys_recvmsg+0x88/0xa0
-[354194.561090]  ksys_ioctl+0x67/0x90
-[354194.561091]  __x64_sys_ioctl+0x1a/0x20
-[354194.561093]  do_syscall_64+0x5a/0x140
-[354194.561094]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[354194.561096] RIP: 0033:0x7ffad14d3417
-[354194.561100] Code: Bad RIP value.
-[354194.561100] RSP: 002b:00007ffdd5679978 EFLAGS: 00003246 ORIG_RAX:
-0000000000000010
-[354194.561101] RAX: ffffffffffffffda RBX: 000056428a474610 RCX:
-00007ffad14d3417
-[354194.561102] RDX: 00007ffdd56799b0 RSI: 00000000c02464bb RDI:
-000000000000000e
-[354194.561102] RBP: 00007ffdd56799b0 R08: 0000000000000040 R09:
-0000000000000010
-[354194.561103] R10: 000000000000003f R11: 0000000000003246 R12:
-00000000c02464bb
-[354194.561103] R13: 000000000000000e R14: 0000000000000000 R15:
-000056428a4721d0
-[354194.561163] INFO: task kworker/1:0:27625 blocked for more than 241
-seconds.
-[354194.562474]       Not tainted 5.2.0-050200rc1-generic #201905191930
-[354194.563994] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-disables this message.
-[354194.565474] kworker/1:0     D    0 27625      2 0x80004000
-[354194.565479] Workqueue: events qxl_client_monitors_config_work_func [qxl]
-[354194.565480] Call Trace:
-[354194.565483]  __schedule+0x2ba/0x650
-[354194.565484]  schedule+0x2d/0x90
-[354194.565486]  schedule_preempt_disabled+0xe/0x10
-[354194.565486]  __ww_mutex_lock.isra.11+0x3e0/0x750
-[354194.565488]  ? __switch_to_asm+0x34/0x70
-[354194.565489]  ? __switch_to_asm+0x40/0x70
-[354194.565490]  ? __switch_to_asm+0x40/0x70
-[354194.565490]  __ww_mutex_lock_slowpath+0x16/0x20
-[354194.565491]  ww_mutex_lock+0x34/0x50
-[354194.565499]  drm_modeset_lock+0x35/0xb0 [drm]
-[354194.565507]  drm_modeset_lock_all_ctx+0x5d/0xe0 [drm]
-[354194.565514]  drm_modeset_lock_all+0x5e/0xb0 [drm]
-[354194.565516]  qxl_display_read_client_monitors_config+0x1e1/0x370 [qxl]
-[354194.565518]  qxl_client_monitors_config_work_func+0x15/0x20 [qxl]
-[354194.565519]  process_one_work+0x20f/0x410
-[354194.565521]  worker_thread+0x34/0x400
-[354194.565522]  kthread+0x120/0x140
-[354194.565523]  ? process_one_work+0x410/0x410
-[354194.565524]  ? __kthread_parkme+0x70/0x70
-[354194.565525]  ret_from_fork+0x35/0x40
-[354315.400956] INFO: task Xorg:920 blocked for more than 362 seconds.
-[354315.411626]       Not tainted 5.2.0-050200rc1-generic #201905191930
-[354315.422647] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-disables this message.
-[354315.435897] Xorg            D    0   920    854 0x00404004
-[354315.435899] Call Trace:
-[354315.435923]  __schedule+0x2ba/0x650
-[354315.435925]  schedule+0x2d/0x90
-[354315.435927]  schedule_preempt_disabled+0xe/0x10
-[354315.435928]  __ww_mutex_lock.isra.11+0x3e0/0x750
-[354315.435929]  __ww_mutex_lock_slowpath+0x16/0x20
-[354315.435930]  ww_mutex_lock+0x34/0x50
-[354315.435935]  ttm_eu_reserve_buffers+0x1f9/0x2e0 [ttm]
-[354315.435939]  qxl_release_reserve_list+0x67/0x150 [qxl]
-[354315.435941]  ? qxl_bo_pin+0xaa/0x190 [qxl]
-[354315.435943]  qxl_cursor_atomic_update+0x1b0/0x2e0 [qxl]
-[354315.435951]  drm_atomic_helper_commit_planes+0xb9/0x220 [drm_kms_helper]
-[354315.435955]  drm_atomic_helper_commit_tail+0x2b/0x70 [drm_kms_helper]
-[354315.435958]  commit_tail+0x67/0x70 [drm_kms_helper]
-[354315.435962]  drm_atomic_helper_commit+0x113/0x120 [drm_kms_helper]
-[354315.435974]  drm_atomic_commit+0x4a/0x50 [drm]
-[354315.435977]  drm_atomic_helper_update_plane+0xe9/0x100 [drm_kms_helper]
-[354315.435985]  __setplane_atomic+0xd3/0x120 [drm]
-[354315.435993]  drm_mode_cursor_universal+0x142/0x270 [drm]
-[354315.436001]  drm_mode_cursor_common+0xcb/0x220 [drm]
-[354315.436009]  ? drm_mode_cursor_ioctl+0x60/0x60 [drm]
-[354315.436016]  drm_mode_cursor2_ioctl+0xe/0x10 [drm]
-[354315.436021]  drm_ioctl_kernel+0xb0/0x100 [drm]
-[354315.436023]  ? ___sys_recvmsg+0x16c/0x200
-[354315.436029]  drm_ioctl+0x233/0x410 [drm]
-[354315.436036]  ? drm_mode_cursor_ioctl+0x60/0x60 [drm]
-[354315.436038]  ? timerqueue_add+0x57/0x90
-[354315.436040]  ? enqueue_hrtimer+0x3c/0x90
-[354315.436042]  do_vfs_ioctl+0xa9/0x640
-[354315.436043]  ? fput+0x13/0x20
-[354315.436045]  ? __sys_recvmsg+0x88/0xa0
-[354315.436046]  ksys_ioctl+0x67/0x90
-[354315.436047]  __x64_sys_ioctl+0x1a/0x20
-[354315.436049]  do_syscall_64+0x5a/0x140
-[354315.436050]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[354315.436051] RIP: 0033:0x7ffad14d3417
-[354315.436069] Code: Bad RIP value.
-[354315.436070] RSP: 002b:00007ffdd5679978 EFLAGS: 00003246 ORIG_RAX:
-0000000000000010
-[354315.436071] RAX: ffffffffffffffda RBX: 000056428a474610 RCX:
-00007ffad14d3417
-[354315.436071] RDX: 00007ffdd56799b0 RSI: 00000000c02464bb RDI:
-000000000000000e
-[354315.436072] RBP: 00007ffdd56799b0 R08: 0000000000000040 R09:
-0000000000000010
-[354315.436072] R10: 000000000000003f R11: 0000000000003246 R12:
-00000000c02464bb
-[354315.436073] R13: 000000000000000e R14: 0000000000000000 R15:
-000056428a4721d0
-[354315.436103] INFO: task kworker/1:0:27625 blocked for more than 362
-seconds.
-[354315.451103]       Not tainted 5.2.0-050200rc1-generic #201905191930
-[354315.461927] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-disables this message.
-[354315.477908] kworker/1:0     D    0 27625      2 0x80004000
-[354315.477916] Workqueue: events qxl_client_monitors_config_work_func [qxl]
-[354315.477918] Call Trace:
-[354315.477924]  __schedule+0x2ba/0x650
-[354315.477925]  schedule+0x2d/0x90
-[354315.477927]  schedule_preempt_disabled+0xe/0x10
-[354315.477928]  __ww_mutex_lock.isra.11+0x3e0/0x750
-[354315.477930]  ? __switch_to_asm+0x34/0x70
-[354315.477931]  ? __switch_to_asm+0x40/0x70
-[354315.477932]  ? __switch_to_asm+0x40/0x70
-[354315.477933]  __ww_mutex_lock_slowpath+0x16/0x20
-[354315.477933]  ww_mutex_lock+0x34/0x50
-[354315.477947]  drm_modeset_lock+0x35/0xb0 [drm]
-[354315.477955]  drm_modeset_lock_all_ctx+0x5d/0xe0 [drm]
-[354315.477963]  drm_modeset_lock_all+0x5e/0xb0 [drm]
-[354315.477965]  qxl_display_read_client_monitors_config+0x1e1/0x370 [qxl]
-[354315.477967]  qxl_client_monitors_config_work_func+0x15/0x20 [qxl]
-[354315.477969]  process_one_work+0x20f/0x410
-[354315.477970]  worker_thread+0x34/0x400
-[354315.477972]  kthread+0x120/0x140
-[354315.477973]  ? process_one_work+0x410/0x410
-[354315.477973]  ? __kthread_parkme+0x70/0x70
-[354315.477975]  ret_from_fork+0x35/0x40
-[354436.251965] INFO: task Xorg:920 blocked for more than 483 seconds.
-[354436.253054]       Not tainted 5.2.0-050200rc1-generic #201905191930
-[354436.254109] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-disables this message.
-[354436.255421] Xorg            D    0   920    854 0x00404004
-[354436.255423] Call Trace:
-[354436.255429]  __schedule+0x2ba/0x650
-[354436.255431]  schedule+0x2d/0x90
-[354436.255433]  schedule_preempt_disabled+0xe/0x10
-[354436.255434]  __ww_mutex_lock.isra.11+0x3e0/0x750
-[354436.255435]  __ww_mutex_lock_slowpath+0x16/0x20
-[354436.255435]  ww_mutex_lock+0x34/0x50
-[354436.255441]  ttm_eu_reserve_buffers+0x1f9/0x2e0 [ttm]
-[354436.255445]  qxl_release_reserve_list+0x67/0x150 [qxl]
-[354436.255446]  ? qxl_bo_pin+0xaa/0x190 [qxl]
-[354436.255448]  qxl_cursor_atomic_update+0x1b0/0x2e0 [qxl]
-[354436.255456]  drm_atomic_helper_commit_planes+0xb9/0x220 [drm_kms_helper]
-[354436.255459]  drm_atomic_helper_commit_tail+0x2b/0x70 [drm_kms_helper]
-[354436.255463]  commit_tail+0x67/0x70 [drm_kms_helper]
-[354436.255467]  drm_atomic_helper_commit+0x113/0x120 [drm_kms_helper]
-[354436.255479]  drm_atomic_commit+0x4a/0x50 [drm]
-[354436.255482]  drm_atomic_helper_update_plane+0xe9/0x100 [drm_kms_helper]
-[354436.255490]  __setplane_atomic+0xd3/0x120 [drm]
-[354436.255498]  drm_mode_cursor_universal+0x142/0x270 [drm]
-[354436.255506]  drm_mode_cursor_common+0xcb/0x220 [drm]
-[354436.255513]  ? drm_mode_cursor_ioctl+0x60/0x60 [drm]
-[354436.255520]  drm_mode_cursor2_ioctl+0xe/0x10 [drm]
-[354436.255526]  drm_ioctl_kernel+0xb0/0x100 [drm]
-[354436.255527]  ? ___sys_recvmsg+0x16c/0x200
-[354436.255533]  drm_ioctl+0x233/0x410 [drm]
-[354436.255540]  ? drm_mode_cursor_ioctl+0x60/0x60 [drm]
-[354436.255542]  ? timerqueue_add+0x57/0x90
-[354436.255544]  ? enqueue_hrtimer+0x3c/0x90
-[354436.255546]  do_vfs_ioctl+0xa9/0x640
-[354436.255547]  ? fput+0x13/0x20
-[354436.255548]  ? __sys_recvmsg+0x88/0xa0
-[354436.255550]  ksys_ioctl+0x67/0x90
-[354436.255551]  __x64_sys_ioctl+0x1a/0x20
-[354436.255553]  do_syscall_64+0x5a/0x140
-[354436.255554]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[354436.255555] RIP: 0033:0x7ffad14d3417
-[354436.255559] Code: Bad RIP value.
-[354436.255560] RSP: 002b:00007ffdd5679978 EFLAGS: 00003246 ORIG_RAX:
-0000000000000010
-[354436.255561] RAX: ffffffffffffffda RBX: 000056428a474610 RCX:
-00007ffad14d3417
-[354436.255561] RDX: 00007ffdd56799b0 RSI: 00000000c02464bb RDI:
-000000000000000e
-[354436.255562] RBP: 00007ffdd56799b0 R08: 0000000000000040 R09:
-0000000000000010
-[354436.255562] R10: 000000000000003f R11: 0000000000003246 R12:
-00000000c02464bb
-[354436.255563] R13: 000000000000000e R14: 0000000000000000 R15:
-000056428a4721d0
-[354436.255599] INFO: task kworker/1:0:27625 blocked for more than 483
-seconds.
-[354436.256802]       Not tainted 5.2.0-050200rc1-generic #201905191930
-[354436.257874] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-disables this message.
-[354436.278727] kworker/1:0     D    0 27625      2 0x80004000
-[354436.278735] Workqueue: events qxl_client_monitors_config_work_func [qxl]
-[354436.278736] Call Trace:
-[354436.278742]  __schedule+0x2ba/0x650
-[354436.278743]  schedule+0x2d/0x90
-[354436.278745]  schedule_preempt_disabled+0xe/0x10
-[354436.278746]  __ww_mutex_lock.isra.11+0x3e0/0x750
-[354436.278747]  ? __switch_to_asm+0x34/0x70
-[354436.278748]  ? __switch_to_asm+0x40/0x70
-[354436.278749]  ? __switch_to_asm+0x40/0x70
-[354436.278750]  __ww_mutex_lock_slowpath+0x16/0x20
-[354436.278751]  ww_mutex_lock+0x34/0x50
-[354436.278764]  drm_modeset_lock+0x35/0xb0 [drm]
-[354436.278772]  drm_modeset_lock_all_ctx+0x5d/0xe0 [drm]
-[354436.278779]  drm_modeset_lock_all+0x5e/0xb0 [drm]
-[354436.278781]  qxl_display_read_client_monitors_config+0x1e1/0x370 [qxl]
-[354436.278783]  qxl_client_monitors_config_work_func+0x15/0x20 [qxl]
-[354436.278785]  process_one_work+0x20f/0x410
-[354436.278786]  worker_thread+0x34/0x400
-[354436.278787]  kthread+0x120/0x140
-[354436.278788]  ? process_one_work+0x410/0x410
-[354436.278789]  ? __kthread_parkme+0x70/0x70
-[354436.278790]  ret_from_fork+0x35/0x40
-[354557.088600] INFO: task Xorg:920 blocked for more than 604 seconds.
-[354557.089689]       Not tainted 5.2.0-050200rc1-generic #201905191930
-[354557.090759] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-disables this message.
-[354557.092075] Xorg            D    0   920    854 0x00404004
-[354557.092077] Call Trace:
-[354557.092083]  __schedule+0x2ba/0x650
-[354557.092085]  schedule+0x2d/0x90
-[354557.092086]  schedule_preempt_disabled+0xe/0x10
-[354557.092087]  __ww_mutex_lock.isra.11+0x3e0/0x750
-[354557.092089]  __ww_mutex_lock_slowpath+0x16/0x20
-[354557.092089]  ww_mutex_lock+0x34/0x50
-[354557.092095]  ttm_eu_reserve_buffers+0x1f9/0x2e0 [ttm]
-[354557.092098]  qxl_release_reserve_list+0x67/0x150 [qxl]
-[354557.092100]  ? qxl_bo_pin+0xaa/0x190 [qxl]
-[354557.092102]  qxl_cursor_atomic_update+0x1b0/0x2e0 [qxl]
-[354557.092110]  drm_atomic_helper_commit_planes+0xb9/0x220 [drm_kms_helper]
-[354557.092114]  drm_atomic_helper_commit_tail+0x2b/0x70 [drm_kms_helper]
-[354557.092117]  commit_tail+0x67/0x70 [drm_kms_helper]
-[354557.092121]  drm_atomic_helper_commit+0x113/0x120 [drm_kms_helper]
-[354557.092133]  drm_atomic_commit+0x4a/0x50 [drm]
-[354557.092137]  drm_atomic_helper_update_plane+0xe9/0x100 [drm_kms_helper]
-[354557.092145]  __setplane_atomic+0xd3/0x120 [drm]
-[354557.092154]  drm_mode_cursor_universal+0x142/0x270 [drm]
-[354557.092162]  drm_mode_cursor_common+0xcb/0x220 [drm]
-[354557.092170]  ? drm_mode_cursor_ioctl+0x60/0x60 [drm]
-[354557.092179]  drm_mode_cursor2_ioctl+0xe/0x10 [drm]
-[354557.092185]  drm_ioctl_kernel+0xb0/0x100 [drm]
-[354557.092187]  ? ___sys_recvmsg+0x16c/0x200
-[354557.092193]  drm_ioctl+0x233/0x410 [drm]
-[354557.092201]  ? drm_mode_cursor_ioctl+0x60/0x60 [drm]
-[354557.092203]  ? timerqueue_add+0x57/0x90
-[354557.092205]  ? enqueue_hrtimer+0x3c/0x90
-[354557.092207]  do_vfs_ioctl+0xa9/0x640
-[354557.092208]  ? fput+0x13/0x20
-[354557.092209]  ? __sys_recvmsg+0x88/0xa0
-[354557.092210]  ksys_ioctl+0x67/0x90
-[354557.092212]  __x64_sys_ioctl+0x1a/0x20
-[354557.092213]  do_syscall_64+0x5a/0x140
-[354557.092215]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[354557.092216] RIP: 0033:0x7ffad14d3417
-[354557.092220] Code: Bad RIP value.
-[354557.092221] RSP: 002b:00007ffdd5679978 EFLAGS: 00003246 ORIG_RAX:
-0000000000000010
-[354557.092222] RAX: ffffffffffffffda RBX: 000056428a474610 RCX:
-00007ffad14d3417
-[354557.092223] RDX: 00007ffdd56799b0 RSI: 00000000c02464bb RDI:
-000000000000000e
-[354557.092223] RBP: 00007ffdd56799b0 R08: 0000000000000040 R09:
-0000000000000010
-[354557.092223] R10: 000000000000003f R11: 0000000000003246 R12:
-00000000c02464bb
-[354557.092224] R13: 000000000000000e R14: 0000000000000000 R15:
-000056428a4721d0
-[354557.092259] INFO: task kworker/1:0:27625 blocked for more than 604
-seconds.
-[354557.093464]       Not tainted 5.2.0-050200rc1-generic #201905191930
-[354557.094520] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-disables this message.
-[354557.095834] kworker/1:0     D    0 27625      2 0x80004000
-[354557.095838] Workqueue: events qxl_client_monitors_config_work_func [qxl]
-[354557.095839] Call Trace:
-[354557.095841]  __schedule+0x2ba/0x650
-[354557.095843]  schedule+0x2d/0x90
-[354557.095844]  schedule_preempt_disabled+0xe/0x10
-[354557.095845]  __ww_mutex_lock.isra.11+0x3e0/0x750
-[354557.095846]  ? __switch_to_asm+0x34/0x70
-[354557.095847]  ? __switch_to_asm+0x40/0x70
-[354557.095848]  ? __switch_to_asm+0x40/0x70
-[354557.095849]  __ww_mutex_lock_slowpath+0x16/0x20
-[354557.095850]  ww_mutex_lock+0x34/0x50
-[354557.095858]  drm_modeset_lock+0x35/0xb0 [drm]
-[354557.095866]  drm_modeset_lock_all_ctx+0x5d/0xe0 [drm]
-[354557.095874]  drm_modeset_lock_all+0x5e/0xb0 [drm]
-[354557.095876]  qxl_display_read_client_monitors_config+0x1e1/0x370 [qxl]
-[354557.095878]  qxl_client_monitors_config_work_func+0x15/0x20 [qxl]
-[354557.095880]  process_one_work+0x20f/0x410
-[354557.095881]  worker_thread+0x34/0x400
-[354557.095882]  kthread+0x120/0x140
-[354557.095883]  ? process_one_work+0x410/0x410
-[354557.095884]  ? __kthread_parkme+0x70/0x70
-[354557.095885]  ret_from_fork+0x35/0x40
+[  280.918596] torture_-135     0.... 163481679us : __stop_cpus: __stop_cpus entered
+[  280.918596] torture_-135     0.... 163481680us : queue_stop_cpus_work: queue_stop_cpus_work entered
+[  280.918596] torture_-135     0.... 163481681us : cpu_stop_queue_work: cpu_stop_queue_work entered
+[  280.918596] torture_-135     0.... 163481681us : wake_up_q: wake_up_q entered
+[  280.918596] torture_-135     0.... 163481682us : wake_up_process: wake_up_process entered
+[  280.918596] torture_-135     0.... 163481682us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] torture_-135     0d... 163481682us : try_to_wake_up: ttwu_queue entered
+[  280.918596] torture_-135     0d... 163481682us : ttwu_do_activate.isra.108: ttwu_do_activate entered
+[  280.918596] torture_-135     0d... 163481682us : activate_task: activate_task entered
+[  280.918596] torture_-135     0d... 163481683us : ttwu_do_wakeup.isra.107: ttwu_do_wakeup entered
+[  280.918596] torture_-135     0d... 163481683us : check_preempt_curr: check_preempt_curr entered
+[  280.918596] torture_-135     0d... 163481683us : resched_curr: resched_curr entered
+[  280.918596] torture_-135     0.N.. 163481684us : cpu_stop_queue_work: cpu_stop_queue_work entered
+[  280.918596] torture_-135     0.N.. 163481684us : wake_up_q: wake_up_q entered
+[  280.918596] torture_-135     0.N.. 163481684us : wake_up_process: wake_up_process entered
+[  280.918596] torture_-135     0.N.. 163481685us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] torture_-135     0dN.. 163481685us : try_to_wake_up: ttwu_queue entered
+[  280.918596] torture_-135     0dN.. 163481685us : try_to_wake_up: ttwu_queue_remote entered
+[  280.918596] torture_-135     0.N.. 163481695us : cpu_stop_queue_work: cpu_stop_queue_work entered
+[  280.918596]   <idle>-0       1d... 163481700us : scheduler_ipi: scheduler_ipi entered
+[  280.918596]   <idle>-0       1d.h. 163481702us : sched_ttwu_pending: sched_ttwu_pending entered
+[  280.918596]   <idle>-0       1d.h. 163481702us : sched_ttwu_pending: sched_ttwu_pending non-NULL llist
+[  280.918596]   <idle>-0       1d.h. 163481702us : ttwu_do_activate.isra.108: ttwu_do_activate entered
+[  280.918596]   <idle>-0       1d.h. 163481703us : activate_task: activate_task entered
+[  280.918596]   <idle>-0       1d.h. 163481703us : ttwu_do_wakeup.isra.107: ttwu_do_wakeup entered
+[  280.918596]   <idle>-0       1d.h. 163481703us : check_preempt_curr: check_preempt_curr entered
+[  280.918596]   <idle>-0       1d.h. 163481707us : resched_curr: resched_curr entered
+[  280.918596] torture_-135     0.N.. 163481713us : wake_up_q: wake_up_q entered
+[  280.918596] torture_-135     0.N.. 163481713us : wake_up_process: wake_up_process entered
+[  280.918596] torture_-135     0.N.. 163481713us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] torture_-135     0dN.. 163481713us : try_to_wake_up: ttwu_queue entered
+[  280.918596] torture_-135     0dN.. 163481714us : try_to_wake_up: ttwu_queue_remote entered
+[  280.918596] torture_-135     0.N.. 163481722us : cpu_stop_queue_work: cpu_stop_queue_work entered
+[  280.918596] torture_-135     0.N.. 163481723us : wake_up_q: wake_up_q entered
+[  280.918596] torture_-135     0.N.. 163481723us : wake_up_process: wake_up_process entered
+[  280.918596] torture_-135     0.N.. 163481723us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] torture_-135     0dN.. 163481723us : try_to_wake_up: ttwu_queue entered
+[  280.918596] torture_-135     0dN.. 163481724us : try_to_wake_up: ttwu_queue_remote entered
+[  280.918596]   <idle>-0       1.N.. 163481730us : sched_ttwu_pending: sched_ttwu_pending entered
+[  280.918596] torture_-135     0.N.. 163481732us : cpu_stop_queue_work: cpu_stop_queue_work entered
+[  280.918596] torture_-135     0.N.. 163481732us : wake_up_q: wake_up_q entered
+[  280.918596] torture_-135     0.N.. 163481732us : wake_up_process: wake_up_process entered
+[  280.918596] torture_-135     0.N.. 163481733us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] torture_-135     0dN.. 163481733us : try_to_wake_up: ttwu_queue entered
+[  280.918596] rcu_tort-130     3d... 163481733us : scheduler_ipi: scheduler_ipi entered
+[  280.918596] torture_-135     0dN.. 163481733us : try_to_wake_up: ttwu_queue_remote entered
+[  280.918596] rcu_tort-130     3d.h. 163481734us : sched_ttwu_pending: sched_ttwu_pending entered
+[  280.918596] rcu_tort-130     3d.h. 163481734us : sched_ttwu_pending: sched_ttwu_pending non-NULL llist
+[  280.918596] rcu_tort-130     3d.h. 163481735us : ttwu_do_activate.isra.108: ttwu_do_activate entered
+[  280.918596] rcu_tort-130     3d.h. 163481735us : activate_task: activate_task entered
+[  280.918596] rcu_tort-130     3d.h. 163481735us : ttwu_do_wakeup.isra.107: ttwu_do_wakeup entered
+[  280.918596] rcu_tort-130     3d.h. 163481735us : check_preempt_curr: check_preempt_curr entered
+[  280.918596] rcu_tort-130     3d.h. 163481735us : resched_curr: resched_curr entered
+[  280.918596] torture_-135     0.N.. 163481742us : cpu_stop_queue_work: cpu_stop_queue_work entered
+[  280.918596] torture_-135     0.N.. 163481742us : wake_up_q: wake_up_q entered
+[  280.918596] torture_-135     0.N.. 163481742us : wake_up_process: wake_up_process entered
+[  280.918596] torture_-135     0.N.. 163481742us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] torture_-135     0dN.. 163481743us : try_to_wake_up: ttwu_queue entered
+[  280.918596] torture_-135     0dN.. 163481743us : try_to_wake_up: ttwu_queue_remote entered
+[  280.918596] rcu_tort-128     4d... 163481743us : scheduler_ipi: scheduler_ipi entered
+[  280.918596] rcu_tort-124     2d... 163481746us : scheduler_ipi: scheduler_ipi entered
+[  280.918596] rcu_tort-128     4d.h. 163481746us : sched_ttwu_pending: sched_ttwu_pending entered
+[  280.918596] rcu_tort-128     4d.h. 163481746us : sched_ttwu_pending: sched_ttwu_pending non-NULL llist
+[  280.918596] rcu_tort-124     2d.h. 163481747us : sched_ttwu_pending: sched_ttwu_pending entered
+[  280.918596] rcu_tort-128     4d.h. 163481747us : ttwu_do_activate.isra.108: ttwu_do_activate entered
+[  280.918596] rcu_tort-124     2d.h. 163481747us : sched_ttwu_pending: sched_ttwu_pending non-NULL llist
+[  280.918596] rcu_tort-124     2d.h. 163481747us : ttwu_do_activate.isra.108: ttwu_do_activate entered
+[  280.918596] rcu_tort-128     4d.h. 163481747us : activate_task: activate_task entered
+[  280.918596] rcu_tort-124     2d.h. 163481748us : activate_task: activate_task entered
+[  280.918596] rcu_tort-128     4d.h. 163481748us : ttwu_do_wakeup.isra.107: ttwu_do_wakeup entered
+[  280.918596] rcu_tort-124     2d.h. 163481748us : ttwu_do_wakeup.isra.107: ttwu_do_wakeup entered
+[  280.918596] rcu_tort-128     4d.h. 163481748us : check_preempt_curr: check_preempt_curr entered
+[  280.918596] rcu_tort-124     2d.h. 163481748us : check_preempt_curr: check_preempt_curr entered
+[  280.918596] rcu_tort-128     4d.h. 163481748us : resched_curr: resched_curr entered
+[  280.918596] rcu_tort-124     2d.h. 163481749us : resched_curr: resched_curr entered
+[  280.918596] torture_-135     0.N.. 163481752us : cpu_stop_queue_work: cpu_stop_queue_work entered
+[  280.918596] torture_-135     0.N.. 163481753us : wake_up_q: wake_up_q entered
+[  280.918596] torture_-135     0.N.. 163481753us : wake_up_process: wake_up_process entered
+[  280.918596] torture_-135     0.N.. 163481753us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] torture_-135     0dN.. 163481753us : try_to_wake_up: ttwu_queue entered
+[  280.918596] torture_-135     0dN.. 163481753us : try_to_wake_up: ttwu_queue_remote entered
+[  280.918596]   <idle>-0       5d... 163481772us : scheduler_ipi: scheduler_ipi entered
+[  280.918596]   <idle>-0       5d.h. 163481773us : sched_ttwu_pending: sched_ttwu_pending entered
+[  280.918596]   <idle>-0       5d.h. 163481774us : sched_ttwu_pending: sched_ttwu_pending non-NULL llist
+[  280.918596]   <idle>-0       5d.h. 163481774us : ttwu_do_activate.isra.108: ttwu_do_activate entered
+[  280.918596]   <idle>-0       5d.h. 163481775us : activate_task: activate_task entered
+[  280.918596]   <idle>-0       5d.h. 163481776us : ttwu_do_wakeup.isra.107: ttwu_do_wakeup entered
+[  280.918596]   <idle>-0       5d.h. 163481776us : check_preempt_curr: check_preempt_curr entered
+[  280.918596]   <idle>-0       5d.h. 163481776us : resched_curr: resched_curr entered
+[  280.918596]   <idle>-0       5.N.. 163481808us : sched_ttwu_pending: sched_ttwu_pending entered
+[  280.918596] migratio-11      0..s1 163481828us : wake_up_process: wake_up_process entered
+[  280.918596] migratio-11      0..s1 163481829us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] migratio-11      0d.s1 163481829us : try_to_wake_up: ttwu_queue entered
+[  280.918596] migratio-11      0d.s1 163481829us : try_to_wake_up: ttwu_queue_remote entered
+[  280.918596] migratio-14      1d..1 163481869us : scheduler_ipi: scheduler_ipi entered
+[  280.918596] migratio-14      1d.h1 163481870us : sched_ttwu_pending: sched_ttwu_pending entered
+[  280.918596] migratio-14      1d.h1 163481870us : sched_ttwu_pending: sched_ttwu_pending non-NULL llist
+[  280.918596] migratio-14      1d.h1 163481871us : ttwu_do_activate.isra.108: ttwu_do_activate entered
+[  280.918596] migratio-14      1d.h1 163481890us : activate_task: activate_task entered
+[  280.918596] migratio-14      1d.h1 163481891us : ttwu_do_wakeup.isra.107: ttwu_do_wakeup entered
+[  280.918596] migratio-14      1d.h1 163481892us : check_preempt_curr: check_preempt_curr entered
+[  280.918596] migratio-11      0..s1 163483828us : wake_up_process: wake_up_process entered
+[  280.918596] migratio-11      0..s1 163483828us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] migratio-11      0d.s1 163483828us : try_to_wake_up: ttwu_queue entered
+[  280.918596] migratio-11      0d.s1 163483829us : ttwu_do_activate.isra.108: ttwu_do_activate entered
+[  280.918596] migratio-11      0d.s1 163483829us : activate_task: activate_task entered
+[  280.918596] migratio-11      0d.s1 163483829us : ttwu_do_wakeup.isra.107: ttwu_do_wakeup entered
+[  280.918596] migratio-11      0d.s1 163483829us : check_preempt_curr: check_preempt_curr entered
+[  280.918596]   <idle>-0       7d... 163483829us : scheduler_ipi: scheduler_ipi entered
+[  280.918596]   <idle>-0       7d.h. 163486880us : sched_ttwu_pending: sched_ttwu_pending entered
+[  280.918596]   <idle>-0       7d.h. 163486881us : sched_ttwu_pending: sched_ttwu_pending non-NULL llist
+[  280.918596]   <idle>-0       7d.h. 163486885us : ttwu_do_activate.isra.108: ttwu_do_activate entered
+[  280.918596]   <idle>-0       7d.h. 163486885us : activate_task: activate_task entered
+[  280.918596]   <idle>-0       7d.h. 163486885us : ttwu_do_wakeup.isra.107: ttwu_do_wakeup entered
+[  280.918596]   <idle>-0       7d.h. 163486886us : check_preempt_curr: check_preempt_curr entered
+[  280.918596]   <idle>-0       7d.h. 163486889us : resched_curr: resched_curr entered
+[  280.918596]   <idle>-0       7.N.. 163486937us : sched_ttwu_pending: sched_ttwu_pending entered
+[  280.918596] migratio-40      5d..1 278818221us : sched_ttwu_pending: sched_ttwu_pending entered
+[  280.918596] migratio-11      0d.h1 278818380us : wake_up_process: wake_up_process entered
+[  280.918596] migratio-11      0d.h1 278818382us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] migratio-11      0d.h1 278818384us : try_to_wake_up: ttwu_queue entered
+[  280.918596] migratio-11      0d.h1 278818384us : try_to_wake_up: ttwu_queue_remote entered
+[  280.918596] rcu_tort-123     3d... 278818385us : wake_up_process: wake_up_process entered
+[  280.918596] rcu_tort-123     3d... 278818386us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] rcu_tort-123     3d... 278818387us : try_to_wake_up: ttwu_queue entered
+[  280.918596] rcu_tort-123     3d... 278818387us : try_to_wake_up: ttwu_queue_remote entered
+[  280.918596] migratio-33      4d.s1 278818403us : activate_task: activate_task entered
+[  280.918596] migratio-33      4d.s1 278818405us : check_preempt_curr: check_preempt_curr entered
+[  280.918596] migratio-11      0d.s1 278818416us : scheduler_ipi: scheduler_ipi entered
+[  280.918596] migratio-11      0d.H1 278818417us : sched_ttwu_pending: sched_ttwu_pending entered
+[  280.918596] migratio-11      0d.H1 278818417us : sched_ttwu_pending: sched_ttwu_pending non-NULL llist
+[  280.918596] migratio-11      0d.H1 278818418us : ttwu_do_activate.isra.108: ttwu_do_activate entered
+[  280.918596] migratio-11      0d.H1 278818421us : activate_task: activate_task entered
+[  280.918596] migratio-11      0d.H1 278818423us : ttwu_do_wakeup.isra.107: ttwu_do_wakeup entered
+[  280.918596] migratio-11      0d.H1 278818423us : check_preempt_curr: check_preempt_curr entered
+[  280.918596] migratio-11      0..s1 278818425us : wake_up_process: wake_up_process entered
+[  280.918596] migratio-11      0..s1 278818426us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] migratio-11      0d.s1 278818427us : try_to_wake_up: ttwu_queue entered
+[  280.918596] migratio-11      0d.s1 278818427us : ttwu_do_activate.isra.108: ttwu_do_activate entered
+[  280.918596] migratio-11      0d.s1 278818427us : activate_task: activate_task entered
+[  280.918596] migratio-11      0d.s1 278818428us : ttwu_do_wakeup.isra.107: ttwu_do_wakeup entered
+[  280.918596] migratio-11      0d.s1 278818428us : check_preempt_curr: check_preempt_curr entered
+[  280.918596] rcu_tort-124     2d... 278818429us : activate_task: activate_task entered
+[  280.918596] migratio-11      0d.s1 278818430us : wake_up_process: wake_up_process entered
+[  280.918596] migratio-11      0d.s1 278818431us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] rcu_tort-124     2d... 278818431us : check_preempt_curr: check_preempt_curr entered
+[  280.918596] migratio-11      0d.s1 278818431us : try_to_wake_up: ttwu_queue entered
+[  280.918596] migratio-11      0d.s1 278818432us : ttwu_do_activate.isra.108: ttwu_do_activate entered
+[  280.918596] migratio-11      0d.s1 278818432us : activate_task: activate_task entered
+[  280.918596] rcu_tort-124     2d... 278818432us : activate_task: activate_task entered
+[  280.918596] migratio-11      0d.s1 278818432us : ttwu_do_wakeup.isra.107: ttwu_do_wakeup entered
+[  280.918596] migratio-11      0d.s1 278818433us : check_preempt_curr: check_preempt_curr entered
+[  280.918596] rcu_tort-124     2d... 278818434us : check_preempt_curr: check_preempt_curr entered
+[  280.918596] migratio-11      0d.s1 278818434us : wake_up_process: wake_up_process entered
+[  280.918596] migratio-11      0d.s1 278818434us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] migratio-11      0d.s1 278818435us : wake_up_process: wake_up_process entered
+[  280.918596] migratio-11      0d.s1 278818435us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] migratio-11      0d.s1 278818436us : wake_up_process: wake_up_process entered
+[  280.918596] migratio-11      0d.s1 278818436us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] migratio-11      0d.s1 278818438us : wake_up_process: wake_up_process entered
+[  280.918596] migratio-11      0d.s1 278818438us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] migratio-11      0d.s1 278818439us : wake_up_process: wake_up_process entered
+[  280.918596] migratio-11      0d.s1 278818440us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] migratio-11      0..s1 278818441us : wake_up_process: wake_up_process entered
+[  280.918596] migratio-11      0..s1 278818441us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] migratio-11      0d.s1 278818441us : try_to_wake_up: ttwu_queue entered
+[  280.918596] migratio-11      0d.s1 278818442us : ttwu_do_activate.isra.108: ttwu_do_activate entered
+[  280.918596] migratio-11      0d.s1 278818442us : activate_task: activate_task entered
+[  280.918596] migratio-11      0d.s1 278818443us : ttwu_do_wakeup.isra.107: ttwu_do_wakeup entered
+[  280.918596] migratio-11      0d.s1 278818443us : check_preempt_curr: check_preempt_curr entered
+[  280.918596] migratio-11      0..s1 278818444us : wake_up_process: wake_up_process entered
+[  280.918596] migratio-11      0..s1 278818444us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] migratio-11      0d.s1 278818445us : try_to_wake_up: ttwu_queue entered
+[  280.918596] migratio-11      0d.s1 278818445us : ttwu_do_activate.isra.108: ttwu_do_activate entered
+[  280.918596] migratio-11      0d.s1 278818446us : activate_task: activate_task entered
+[  280.918596] migratio-11      0d.s1 278818446us : ttwu_do_wakeup.isra.107: ttwu_do_wakeup entered
+[  280.918596] migratio-11      0d.s1 278818447us : check_preempt_curr: check_preempt_curr entered
+[  280.918596] migratio-11      0..s1 278818449us : wake_up_process: wake_up_process entered
+[  280.918596] migratio-11      0..s1 278818449us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] rcu_tort-126     2d... 278818451us : activate_task: activate_task entered
+[  280.918596] rcu_tort-126     2d... 278818452us : check_preempt_curr: check_preempt_curr entered
+[  280.918596] rcu_tort-126     2d... 278818452us : resched_curr: resched_curr entered
+[  280.918596] rcu_tort-126     2dN.. 278818453us : activate_task: activate_task entered
+[  280.918596] rcu_tort-126     2dN.. 278818454us : check_preempt_curr: check_preempt_curr entered
+[  280.918596] rcu_tort-126     2dN.. 278818454us : activate_task: activate_task entered
+[  280.918596] rcu_tort-126     2dN.. 278818455us : check_preempt_curr: check_preempt_curr entered
+[  280.918596] migratio-11      0d.s1 278818466us : try_to_wake_up: ttwu_queue entered
+[  280.918596] migratio-11      0d.s1 278818466us : ttwu_do_activate.isra.108: ttwu_do_activate entered
+[  280.918596] migratio-11      0d.s1 278818467us : activate_task: activate_task entered
+[  280.918596] migratio-11      0d.s1 278818467us : ttwu_do_wakeup.isra.107: ttwu_do_wakeup entered
+[  280.918596] migratio-11      0d.s1 278818468us : check_preempt_curr: check_preempt_curr entered
+[  280.918596] migratio-11      0d.s1 278818469us : wake_up_process: wake_up_process entered
+[  280.918596] migratio-11      0d.s1 278818469us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] migratio-11      0..s1 278818481us : wake_up_process: wake_up_process entered
+[  280.918596] migratio-11      0..s1 278818481us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] migratio-11      0d.s1 278818482us : try_to_wake_up: ttwu_queue entered
+[  280.918596] migratio-11      0d.s1 278818483us : ttwu_do_activate.isra.108: ttwu_do_activate entered
+[  280.918596] migratio-11      0d.s1 278818483us : activate_task: activate_task entered
+[  280.918596] migratio-11      0d.s1 278818484us : ttwu_do_wakeup.isra.107: ttwu_do_wakeup entered
+[  280.918596] migratio-11      0d.s1 278818484us : check_preempt_curr: check_preempt_curr entered
+[  280.918596] migratio-11      0d.s1 278818485us : wake_up_process: wake_up_process entered
+[  280.918596] migratio-11      0d.s1 278818485us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] migratio-11      0d.s1 278818487us : wake_up_process: wake_up_process entered
+[  280.918596] migratio-11      0d.s1 278818487us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] migratio-11      0d.s1 278818488us : wake_up_process: wake_up_process entered
+[  280.918596] migratio-11      0d.s1 278818488us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] migratio-11      0d.s1 278818489us : wake_up_process: wake_up_process entered
+[  280.918596] migratio-11      0d.s1 278818490us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] migratio-11      0d.s1 278818491us : wake_up_process: wake_up_process entered
+[  280.918596] migratio-11      0d.s1 278818491us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] migratio-11      0d.s1 278818492us : wake_up_process: wake_up_process entered
+[  280.918596] migratio-11      0d.s1 278818492us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] migratio-11      0d.s1 278818493us : wake_up_process: wake_up_process entered
+[  280.918596] migratio-11      0d.s1 278818493us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] migratio-11      0d.s1 278818494us : wake_up_process: wake_up_process entered
+[  280.918596] migratio-11      0d.s1 278818495us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] kworker/-62      0d... 278818512us : wake_up_process: wake_up_process entered
+[  280.918596] kworker/-62      0d... 278818512us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] kworker/-62      0d... 278818513us : try_to_wake_up: ttwu_queue entered
+[  280.918596] kworker/-62      0d... 278818514us : ttwu_do_activate.isra.108: ttwu_do_activate entered
+[  280.918596] kworker/-62      0d... 278818514us : activate_task: activate_task entered
+[  280.918596] kworker/-62      0d... 278818515us : ttwu_do_wakeup.isra.107: ttwu_do_wakeup entered
+[  280.918596] kworker/-62      0d... 278818516us : check_preempt_curr: check_preempt_curr entered
+[  280.918596] kworker/-161     0d... 278818518us : wake_up_process: wake_up_process entered
+[  280.918596] kworker/-161     0d... 278818519us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] kworker/-161     0d... 278818519us : try_to_wake_up: ttwu_queue entered
+[  280.918596] kworker/-161     0d... 278818519us : ttwu_do_activate.isra.108: ttwu_do_activate entered
+[  280.918596] kworker/-161     0d... 278818520us : activate_task: activate_task entered
+[  280.918596] kworker/-161     0d... 278818520us : ttwu_do_wakeup.isra.107: ttwu_do_wakeup entered
+[  280.918596] kworker/-161     0d... 278818521us : check_preempt_curr: check_preempt_curr entered
+[  280.918596] kworker/-161     0d... 278818522us : wake_up_process: wake_up_process entered
+[  280.918596] kworker/-161     0d... 278818522us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] kworker/-161     0d... 278818523us : wake_up_process: wake_up_process entered
+[  280.918596] kworker/-161     0d... 278818523us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] kworker/-161     0d... 278818524us : wake_up_process: wake_up_process entered
+[  280.918596] kworker/-161     0d... 278818524us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] kworker/-161     0d... 278818526us : wake_up_process: wake_up_process entered
+[  280.918596] kworker/-161     0d... 278818526us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] kworker/-177     0.... 278818628us : wake_up_q: wake_up_q entered
+[  280.918596] kworker/-177     0d... 278818629us : wake_up_process: wake_up_process entered
+[  280.918596] kworker/-177     0d... 278818629us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] kworker/-177     0d... 278818630us : try_to_wake_up: ttwu_queue entered
+[  280.918596] kworker/-177     0d... 278818630us : ttwu_do_activate.isra.108: ttwu_do_activate entered
+[  280.918596] kworker/-177     0d... 278818631us : activate_task: activate_task entered
+[  280.918596] kworker/-177     0d... 278818632us : ttwu_do_wakeup.isra.107: ttwu_do_wakeup entered
+[  280.918596] kworker/-177     0d... 278818632us : check_preempt_curr: check_preempt_curr entered
+[  280.918596] rcu_tort-131     2d.s. 278821050us : wake_up_process: wake_up_process entered
+[  280.918596] rcu_tort-131     2d.s. 278821051us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] rcu_tort-131     2d.s. 278821052us : try_to_wake_up: ttwu_queue entered
+[  280.918596] rcu_tort-131     2d.s. 278821052us : ttwu_do_activate.isra.108: ttwu_do_activate entered
+[  280.918596] rcu_tort-131     2d.s. 278821052us : activate_task: activate_task entered
+[  280.918596] rcu_tort-131     2d.s. 278821053us : ttwu_do_wakeup.isra.107: ttwu_do_wakeup entered
+[  280.918596] rcu_tort-131     2d.s. 278821054us : check_preempt_curr: check_preempt_curr entered
+[  280.918596] migratio-14      1dNs1 278821054us : scheduler_ipi: scheduler_ipi entered
+[  280.918596] migratio-14      1dNH1 278821055us : sched_ttwu_pending: sched_ttwu_pending entered
+[  280.918596] migratio-14      1dNH1 278821055us : sched_ttwu_pending: sched_ttwu_pending non-NULL llist
+[  280.918596] migratio-14      1dNH1 278821056us : ttwu_do_activate.isra.108: ttwu_do_activate entered
+[  280.918596] migratio-14      1dNH1 278821056us : activate_task: activate_task entered
+[  280.918596] migratio-14      1dNH1 278821058us : ttwu_do_wakeup.isra.107: ttwu_do_wakeup entered
+[  280.918596] migratio-14      1dNH1 278821058us : check_preempt_curr: check_preempt_curr entered
+[  280.918596] migratio-14      1dNs1 278821070us : activate_task: activate_task entered
+[  280.918596] migratio-14      1dNs1 278821070us : check_preempt_curr: check_preempt_curr entered
+[  280.918596] migratio-14      1dNs1 278821071us : activate_task: activate_task entered
+[  280.918596] migratio-14      1dNs1 278821071us : check_preempt_curr: check_preempt_curr entered
+[  280.918596] migratio-14      1dN.1 278821073us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] migratio-14      1dN.1 278821074us : try_to_wake_up: ttwu_queue entered
+[  280.918596] migratio-14      1dN.1 278821075us : try_to_wake_up: ttwu_queue_remote entered
+[  280.918596] kworker/-178     0d... 278821153us : scheduler_ipi: scheduler_ipi entered
+[  280.918596] kworker/-178     0d.h. 278821154us : sched_ttwu_pending: sched_ttwu_pending entered
+[  280.918596] kworker/-178     0d.h. 278821154us : sched_ttwu_pending: sched_ttwu_pending non-NULL llist
+[  280.918596] kworker/-178     0d.h. 278821155us : ttwu_do_activate.isra.108: ttwu_do_activate entered
+[  280.918596] kworker/-178     0d.h. 278821155us : activate_task: activate_task entered
+[  280.918596] kworker/-178     0d.h. 278821157us : ttwu_do_wakeup.isra.107: ttwu_do_wakeup entered
+[  280.918596] kworker/-178     0d.h. 278821157us : check_preempt_curr: check_preempt_curr entered
+[  280.918596] kworker/-178     0d... 278821174us : try_to_wake_up: try_to_wake_up entered
+[  280.918596] kworker/-178     0d... 278821175us : try_to_wake_up: ttwu_queue entered
+[  280.918596] kworker/-178     0d... 278821175us : ttwu_do_activate.isra.108: ttwu_do_activate entered
+[  280.918596] kworker/-178     0d... 278821176us : activate_task: activate_task entered
+[  280.918596] kworker/-178     0d... 278821176us : ttwu_do_wakeup.isra.107: ttwu_do_wakeup entered
+[  280.918596] kworker/-178     0d... 278821177us : check_preempt_curr: check_preempt_curr entered
 
-Please contact me if more information is needed.
+------------------------------------------------------------------------
 
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index ce00b442ced0..1a50ed258ef0 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -3569,6 +3569,7 @@ void __init rcu_init(void)
+ 	rcu_par_gp_wq = alloc_workqueue("rcu_par_gp", WQ_MEM_RECLAIM, 0);
+ 	WARN_ON(!rcu_par_gp_wq);
+ 	srcu_init();
++	tracing_off();
+ }
+ 
+ #include "tree_stall.h"
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 0b22e55cebe8..6949ae27fae5 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -479,6 +479,7 @@ void wake_up_q(struct wake_q_head *head)
+ {
+ 	struct wake_q_node *node = head->first;
+ 
++	trace_printk("%s entered\n", __func__);
+ 	while (node != WAKE_Q_TAIL) {
+ 		struct task_struct *task;
+ 
+@@ -509,6 +510,7 @@ void resched_curr(struct rq *rq)
+ 	struct task_struct *curr = rq->curr;
+ 	int cpu;
+ 
++	trace_printk("%s entered\n", __func__);
+ 	lockdep_assert_held(&rq->lock);
+ 
+ 	if (test_tsk_need_resched(curr))
+@@ -1197,6 +1199,7 @@ static inline void dequeue_task(struct rq *rq, struct task_struct *p, int flags)
+ 
+ void activate_task(struct rq *rq, struct task_struct *p, int flags)
+ {
++	trace_printk("%s entered\n", __func__);
+ 	if (task_contributes_to_load(p))
+ 		rq->nr_uninterruptible--;
+ 
+@@ -1298,6 +1301,7 @@ void check_preempt_curr(struct rq *rq, struct task_struct *p, int flags)
+ {
+ 	const struct sched_class *class;
+ 
++	trace_printk("%s entered\n", __func__);
+ 	if (p->sched_class == rq->curr->sched_class) {
+ 		rq->curr->sched_class->check_preempt_curr(rq, p, flags);
+ 	} else {
+@@ -2097,6 +2101,7 @@ ttwu_stat(struct task_struct *p, int cpu, int wake_flags)
+ static void ttwu_do_wakeup(struct rq *rq, struct task_struct *p, int wake_flags,
+ 			   struct rq_flags *rf)
+ {
++	trace_printk("%s entered\n", __func__);
+ 	check_preempt_curr(rq, p, wake_flags);
+ 	p->state = TASK_RUNNING;
+ 	trace_sched_wakeup(p);
+@@ -2132,6 +2137,7 @@ ttwu_do_activate(struct rq *rq, struct task_struct *p, int wake_flags,
+ {
+ 	int en_flags = ENQUEUE_WAKEUP | ENQUEUE_NOCLOCK;
+ 
++	trace_printk("%s entered\n", __func__);
+ 	lockdep_assert_held(&rq->lock);
+ 
+ #ifdef CONFIG_SMP
+@@ -2178,9 +2184,11 @@ void sched_ttwu_pending(void)
+ 	struct task_struct *p, *t;
+ 	struct rq_flags rf;
+ 
++	trace_printk("%s entered\n", __func__);
+ 	if (!llist)
+ 		return;
+ 
++	trace_printk("%s non-NULL llist\n", __func__);
+ 	rq_lock_irqsave(rq, &rf);
+ 	update_rq_clock(rq);
+ 
+@@ -2192,6 +2200,7 @@ void sched_ttwu_pending(void)
+ 
+ void scheduler_ipi(void)
+ {
++	trace_printk("%s entered\n", __func__);
+ 	/*
+ 	 * Fold TIF_NEED_RESCHED into the preempt_count; anybody setting
+ 	 * TIF_NEED_RESCHED remotely (for the first time) will also send
+@@ -2232,6 +2241,7 @@ static void ttwu_queue_remote(struct task_struct *p, int cpu, int wake_flags)
+ {
+ 	struct rq *rq = cpu_rq(cpu);
+ 
++	trace_printk("%s entered\n", __func__);
+ 	p->sched_remote_wakeup = !!(wake_flags & WF_MIGRATED);
+ 
+ 	if (llist_add(&p->wake_entry, &cpu_rq(cpu)->wake_list)) {
+@@ -2277,6 +2287,7 @@ static void ttwu_queue(struct task_struct *p, int cpu, int wake_flags)
+ 	struct rq *rq = cpu_rq(cpu);
+ 	struct rq_flags rf;
+ 
++	trace_printk("%s entered\n", __func__);
+ #if defined(CONFIG_SMP)
+ 	if (sched_feat(TTWU_QUEUE) && !cpus_share_cache(smp_processor_id(), cpu)) {
+ 		sched_clock_cpu(cpu); /* Sync clocks across CPUs */
+@@ -2399,6 +2410,7 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+ 	unsigned long flags;
+ 	int cpu, success = 0;
+ 
++	trace_printk("%s entered\n", __func__);
+ 	preempt_disable();
+ 	if (p == current) {
+ 		/*
+@@ -2545,6 +2557,7 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+  */
+ int wake_up_process(struct task_struct *p)
+ {
++	trace_printk("%s entered\n", __func__);
+ 	return try_to_wake_up(p, TASK_NORMAL, 0);
+ }
+ EXPORT_SYMBOL(wake_up_process);
+diff --git a/kernel/stop_machine.c b/kernel/stop_machine.c
+index 5c2b2f90fae1..d3441acabc80 100644
+--- a/kernel/stop_machine.c
++++ b/kernel/stop_machine.c
+@@ -80,6 +80,7 @@ static bool cpu_stop_queue_work(unsigned int cpu, struct cpu_stop_work *work)
+ 	unsigned long flags;
+ 	bool enabled;
+ 
++	trace_printk("%s entered\n", __func__);
+ 	preempt_disable();
+ 	raw_spin_lock_irqsave(&stopper->lock, flags);
+ 	enabled = stopper->enabled;
+@@ -382,6 +383,7 @@ static bool queue_stop_cpus_work(const struct cpumask *cpumask,
+ 	 * preempted by a stopper which might wait for other stoppers
+ 	 * to enter @fn which can lead to deadlock.
+ 	 */
++	trace_printk("%s entered\n", __func__);
+ 	preempt_disable();
+ 	stop_cpus_in_progress = true;
+ 	for_each_cpu(cpu, cpumask) {
+@@ -402,11 +404,17 @@ static int __stop_cpus(const struct cpumask *cpumask,
+ 		       cpu_stop_fn_t fn, void *arg)
+ {
+ 	struct cpu_stop_done done;
++	unsigned long j = jiffies;
+ 
++	tracing_on();
++	trace_printk("%s entered\n", __func__);
+ 	cpu_stop_init_done(&done, cpumask_weight(cpumask));
+ 	if (!queue_stop_cpus_work(cpumask, fn, arg, &done))
+ 		return -ENOENT;
+ 	wait_for_completion(&done.completion);
++	tracing_off();
++	if (time_after(jiffies, j + HZ * 20))
++		ftrace_dump(DUMP_ALL);
+ 	return done.ret;
+ }
+ 
+@@ -442,6 +450,7 @@ int stop_cpus(const struct cpumask *cpumask, cpu_stop_fn_t fn, void *arg)
+ {
+ 	int ret;
+ 
++	trace_printk("%s entered\n", __func__);
+ 	/* static works are used, process one request at a time */
+ 	mutex_lock(&stop_cpus_mutex);
+ 	ret = __stop_cpus(cpumask, fn, arg);
+@@ -599,6 +608,7 @@ int stop_machine_cpuslocked(cpu_stop_fn_t fn, void *data,
+ 		.active_cpus = cpus,
+ 	};
+ 
++	trace_printk("%s: entered\n", __func__);
+ 	lockdep_assert_cpus_held();
+ 
+ 	if (!stop_machine_initialized) {
 
-Best regards,
-Jaak Ristioja
