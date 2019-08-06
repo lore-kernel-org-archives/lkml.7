@@ -2,150 +2,131 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C8BC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A02B0C32754
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 380F820B1F
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:03:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78E6520B1F
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:04:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vg2eXa17"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="kwN8iZgG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730071AbfHFMD1 (ORCPT
+        id S1731368AbfHFMET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 08:03:27 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:40057 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726092AbfHFMD0 (ORCPT
+        Tue, 6 Aug 2019 08:04:19 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:42671 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728056AbfHFMES (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 08:03:26 -0400
-Received: by mail-ed1-f67.google.com with SMTP id k8so82026365eds.7;
-        Tue, 06 Aug 2019 05:03:25 -0700 (PDT)
+        Tue, 6 Aug 2019 08:04:18 -0400
+Received: by mail-qt1-f193.google.com with SMTP id h18so84224753qtm.9
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 05:04:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=0ibbfjjlcjqJhBjocgI23MMIU0ZjpMBB8zJJ1s3Y/U8=;
-        b=Vg2eXa17xUoxRlChCoci37B6L/lyFDQ9plgCkdnEBxPZZckdHS7JzDElMclSVP4BCs
-         6zMFs6pqODtDeABCJeeU8KejTPacxF2bnpBiWL0zZ4WuZHTbI3AiQgRv+9IuUww2QfGA
-         vkFHmcU2hTkcqElqT7JuyGeYI0KDIFC76+jKny/eH/HHqDFxyn9fAQhfAmDTKr9BVPlk
-         rDlITcAs+hZFUgu85dxCcJnGdZJTcyYd2Ied31JG7/FFawFT2gZyh+dqq3tGpSdMejCL
-         8avIearjdAdvw8Xvg87WzqmymgZWriEhz/yPMnrZJgCNILb0RwDD6/vb98/taFJdtVwF
-         +D3Q==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=/FPGr6jzHPYMmvLrWMP/4jeZ5wMtWr8MomConqYdxCw=;
+        b=kwN8iZgGsA616k+ie7zVtqoKkPJCUoU9iiNH6foaeOBTxgKFKg+cZig/4zEdPfsbAE
+         imTkOw+N/gal+1pboal/fWK91KxOgzhhMdL0iTRREJABvKyEt3Ufx9IKidWtLDpA7wlG
+         9D0U+Ocv+7+jGN8gmxkVmfJqgoulbE7JQaMbA++nVny+EMylWeaEfpgkD0hSjvguAUdx
+         LTme6+JAjIDsU31cell6nZpPIOasOpsE3BLX48Nh53wDpRS1MGS6UPgJlSEriefVBoaW
+         X9Q/yQXt7r0a9KNgEj2XwtztzIPh4TLr8mCicotwiPelZo/OQ+sSdt6ODRD0nTuMLItg
+         nPCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=0ibbfjjlcjqJhBjocgI23MMIU0ZjpMBB8zJJ1s3Y/U8=;
-        b=pK7PU4n0vhfSPZ+7jQClH+K9xt8lWRW26LSzbrNvb/lqWjIwX9aosSnUL2UfhvT9Np
-         eBXaZ23yVhSBWFmwORpvFcuE151RSQXWKd4lPdkAJZJ3HM7LSSGMfNcd7ejKnMpYD9A+
-         YVVsG07TuVvCtFDc8oaPeZV90Kk9Rr+QiKLAM4Su/cg5Bouv2M3lnBPoqbzelsaFjc9f
-         GLjKz3lHXGvAUPhAIqjL4WW3MhmAxgzgArQPxaafeLE4Fgd/5ELFSbQtiKBhB/0p9/SJ
-         ddLBSTQMy8NWRM8Hj5Rz91SHGjy6aTY+5/b5AouZY2QFW5Exp5p6dgx2YyxxjvtseXJK
-         CTdw==
-X-Gm-Message-State: APjAAAXUQVqF+Vq0wruIN95YAS8Sz5KNkiTOUMd5HLqQtK81ndk+W6rv
-        8fd7pYvnCZ/IiCyuTT5Efen5X9DaODJswz2K/2s=
-X-Google-Smtp-Source: APXvYqw1I4EIWuPevu8wlirFV9J2GRKXYhv53MxSJBZOnAKpdcJeuHzCogMPbneXuIRWGHA9eGhBF1r/1dMNvJ8UrqA=
-X-Received: by 2002:a17:906:154f:: with SMTP id c15mr2756640ejd.268.1565093005065;
- Tue, 06 Aug 2019 05:03:25 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=/FPGr6jzHPYMmvLrWMP/4jeZ5wMtWr8MomConqYdxCw=;
+        b=jne4Y4nkO1OZDNJK3VgfJ5rUtc66tsY0+6bHsaKQY4OluMBnpjv9OeM6bgq+isI7Xh
+         zITo8wT1/x9ksI1UvG/fRFII7wXf88Pgcdi1SgIZvekxSnDGH2nhz8nGjB5xkxy7+aRi
+         /Ls7wEph4JGei+9E8d6XDmDqOrW4ISgrUWFs44e4c2qhndZKHh+9Bokuzz2UkxyasbAq
+         EiiPTYrcjaRlzbULH5DVXkJqNEn1WcredMQb3Hy2KEWZf42DXSWRXUuXpF/6mlrN6VUZ
+         EjSH9yeiG0elY4KG5+VPTdic2k4NqYHj5VnKM3qsfnyBMz79VXu36BD+KgiyLzKKIOHo
+         Eahw==
+X-Gm-Message-State: APjAAAUth1c+mXsGBc9l2yUpBsokXkWMvQj7V0KMNsbgoq8DyH6dUkGl
+        ktjl4CVAN6+ySGJPy70WHld8bA==
+X-Google-Smtp-Source: APXvYqyl6pRejslnyvYVBtbHRarAvLE8/IwB9kBOqtljVW3kFuK45lKI6xsfV3oqosPPvOz7rhnfwA==
+X-Received: by 2002:ac8:252e:: with SMTP id 43mr2606764qtm.61.1565093057443;
+        Tue, 06 Aug 2019 05:04:17 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id c45sm44553632qte.70.2019.08.06.05.04.16
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 06 Aug 2019 05:04:16 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1huyCO-0003hy-5t; Tue, 06 Aug 2019 09:04:16 -0300
+Date:   Tue, 6 Aug 2019 09:04:16 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     mst@redhat.com, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH V2 7/9] vhost: do not use RCU to synchronize MMU notifier
+ with worker
+Message-ID: <20190806120416.GB11627@ziepe.ca>
+References: <20190731084655.7024-1-jasowang@redhat.com>
+ <20190731084655.7024-8-jasowang@redhat.com>
+ <20190731123935.GC3946@ziepe.ca>
+ <7555c949-ae6f-f105-6e1d-df21ddae9e4e@redhat.com>
+ <20190731193057.GG3946@ziepe.ca>
+ <a3bde826-6329-68e4-2826-8a9de4c5bd1e@redhat.com>
+ <20190801141512.GB23899@ziepe.ca>
+ <42ead87b-1749-4c73-cbe4-29dbeb945041@redhat.com>
+ <20190802124613.GA11245@ziepe.ca>
+ <11b2a930-eae4-522c-4132-3f8a2da05666@redhat.com>
 MIME-Version: 1.0
-References: <CAKgNAki0bR5zZr+kp_xjq+bNUky6-F+s2ep+jnR0YrjHhNMB1g@mail.gmail.com>
- <20190805103630.tu4kytsbi5evfrhi@mikami> <3a96c631-6595-b75e-f6a7-db703bf89bcf@gmail.com>
- <da747415-4c7a-f931-6f2e-2962da63c161@philippwendler.de>
-In-Reply-To: <da747415-4c7a-f931-6f2e-2962da63c161@philippwendler.de>
-Reply-To: mtk.manpages@gmail.com
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Date:   Tue, 6 Aug 2019 14:03:13 +0200
-Message-ID: <CAKgNAkjS+x7aMVUiVSgCRwgi8rnukqJv=svtTARE-tt-oxQxWw@mail.gmail.com>
-Subject: Re: pivot_root(".", ".") and the fchdir() dance
-To:     Philipp Wendler <ml@philippwendler.de>
-Cc:     Aleksa Sarai <asarai@suse.de>,
-        linux-man <linux-man@vger.kernel.org>,
-        Containers <containers@lists.linux-foundation.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jordan Ogas <jogas@lanl.gov>, werner@almesberger.net,
-        Al Viro <viro@ftp.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <11b2a930-eae4-522c-4132-3f8a2da05666@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Philipp,
+On Mon, Aug 05, 2019 at 12:20:45PM +0800, Jason Wang wrote:
+> 
+> On 2019/8/2 下午8:46, Jason Gunthorpe wrote:
+> > On Fri, Aug 02, 2019 at 05:40:07PM +0800, Jason Wang wrote:
+> > > > This must be a proper barrier, like a spinlock, mutex, or
+> > > > synchronize_rcu.
+> > > 
+> > > I start with synchronize_rcu() but both you and Michael raise some
+> > > concern.
+> > I've also idly wondered if calling synchronize_rcu() under the various
+> > mm locks is a deadlock situation.
+> 
+> 
+> Maybe, that's why I suggest to use vhost_work_flush() which is much
+> lightweight can can achieve the same function. It can guarantee all previous
+> work has been processed after vhost_work_flush() return.
 
-On Tue, 6 Aug 2019 at 10:12, Philipp Wendler <ml@philippwendler.de> wrote:
->
-> Hello Michael, hello Aleksa,
->
-> Am 05.08.19 um 14:29 schrieb Michael Kerrisk (man-pages):
->
-> > On 8/5/19 12:36 PM, Aleksa Sarai wrote:
-> >> On 2019-08-01, Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> wrote:
-> >>> I'd like to add some documentation about the pivot_root(".", ".")
-> >>> idea, but I have a doubt/question. In the lxc_pivot_root() code we
-> >>> have these steps
-> >>>
-> >>>         oldroot = open("/", O_DIRECTORY | O_RDONLY | O_CLOEXEC);
-> >>>         newroot = open(rootfs, O_DIRECTORY | O_RDONLY | O_CLOEXEC);
-> >>>
-> >>>         fchdir(newroot);
-> >>>         pivot_root(".", ".");
-> >>>
-> >>>         fchdir(oldroot);      // ****
-> >>>
-> >>>         mount("", ".", "", MS_SLAVE | MS_REC, NULL);
-> >>>         umount2(".", MNT_DETACH);
-> >>
-> >>>         fchdir(newroot);      // ****
-> >>
-> >> And this one is required because we are in @oldroot at this point, due
-> >> to the first fchdir(2). If we don't have the first one, then switching
-> >> from "." to "/" in the mount/umount2 calls should fix the issue.
-> >
-> > See my notes above for why I therefore think that the second fchdir()
-> > is also not needed (and therefore why switching from "." to "/" in the
-> > mount()/umount2() calls is unnecessary.
-> >
-> > Do you agree with my analysis?
->
-> If both the second and third fchdir are not required,
-> then we do not need to bother with file descriptors at all, right?
+If things are already running in a work, then yes, you can piggyback
+on the existing spinlocks inside the workqueue and be Ok
 
-Exactly.
+However, if that work is doing any copy_from_user, then the flush
+becomes dependent on swap and it won't work again...
 
-> Indeed, my tests show that the following seems to work fine:
->
-> chdir(rootfs)
-> pivot_root(".", ".")
-> umount2(".", MNT_DETACH)
+> > > 1) spinlock: add lots of overhead on datapath, this leads 0 performance
+> > > improvement.
+> > I think the topic here is correctness not performance improvement> 
+ 
+> But the whole series is to speed up vhost.
 
-Thanks for the confirmation, That's also exactly what I tested.
+So? Starting with a whole bunch of crazy, possibly broken, locking and
+claiming a performance win is not reasonable.
 
-> I tested that with my own tool[1] that uses user namespaces and marks
-> everything MS_PRIVATE before, so I do not need the mount(MS_SLAVE) here.
->
-> And it works the same with both umount2("/") and umount2(".").
+> Spinlock is correct but make the whole series meaningless consider it won't
+> bring any performance improvement.
 
-Yes.
+You can't invent a faster spinlock by opencoding some wild
+scheme. There is nothing special about the usage here, it needs a
+blocking lock, plain and simple.
 
-> Did I overlook something that makes the file descriptors required?
-
-No.
-
-> If not, wouldn't the above snippet make sense as example in the man page?
-
-I have exactly that snippet in a pending change for the manual page :-).
-
-Cheers,
-
-Michael
-
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+Jason
