@@ -2,361 +2,150 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A095C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C8BC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C04C20B1F
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:58:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 380F820B1F
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:03:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="Q/Cspor0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vg2eXa17"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731006AbfHFL6J (ORCPT
+        id S1730071AbfHFMD1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 07:58:09 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:50234 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726243AbfHFL6I (ORCPT
+        Tue, 6 Aug 2019 08:03:27 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:40057 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726092AbfHFMD0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 07:58:08 -0400
-Received: by mail-wm1-f65.google.com with SMTP id v15so77914563wml.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 04:58:04 -0700 (PDT)
+        Tue, 6 Aug 2019 08:03:26 -0400
+Received: by mail-ed1-f67.google.com with SMTP id k8so82026365eds.7;
+        Tue, 06 Aug 2019 05:03:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HipvVzip+SvgCCvlPkREKUIpD/Rq5iyM6ORwsOJkPoM=;
-        b=Q/Cspor0lpl8jL7JpPl0FO9TAtExf0Gp3OudhePc8na+jCG4qPhY+7exk2Cco4LsIN
-         8LRAbN4PuzrgkU0xFMQ3q1LUJuynEw+m8/ObW5kB4zUJ+nklzHKLUCRf6UBR7sECy44y
-         c99MC42qfX+CyqoDntsbi6A2mxqpJsOY6OnT6pWZ3knc8QA4+EYDqIhxIQPFwUG6YPJX
-         4FfGjbVlEKU5an/rOAiacRkvJhCsdj0+YL2g9Ga7HHGV8ICCYTGWEqOx8NEpgygjWPpS
-         eziR+km+NHD4RoC2UKEhdZTPzezJjxnzgfs1YrDnOwMxugy8JEDGkziefhtTmoKY2UI1
-         KW0Q==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=0ibbfjjlcjqJhBjocgI23MMIU0ZjpMBB8zJJ1s3Y/U8=;
+        b=Vg2eXa17xUoxRlChCoci37B6L/lyFDQ9plgCkdnEBxPZZckdHS7JzDElMclSVP4BCs
+         6zMFs6pqODtDeABCJeeU8KejTPacxF2bnpBiWL0zZ4WuZHTbI3AiQgRv+9IuUww2QfGA
+         vkFHmcU2hTkcqElqT7JuyGeYI0KDIFC76+jKny/eH/HHqDFxyn9fAQhfAmDTKr9BVPlk
+         rDlITcAs+hZFUgu85dxCcJnGdZJTcyYd2Ied31JG7/FFawFT2gZyh+dqq3tGpSdMejCL
+         8avIearjdAdvw8Xvg87WzqmymgZWriEhz/yPMnrZJgCNILb0RwDD6/vb98/taFJdtVwF
+         +D3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HipvVzip+SvgCCvlPkREKUIpD/Rq5iyM6ORwsOJkPoM=;
-        b=V0BIQd6Tna7pV2X8i6iweRcyjwWjSAC/UYNa14Gl9/v71lqr7lxmET5kjf/QhcF5Y0
-         I1qFLew4guEZuvQ22pBajOGhzKxnq22G7wlzioYaWUUAyA9iKPsOS/phwHUiFjNQDmga
-         UmA8ezMfoLq5XF94DH0LmPtlTjcM9HPMRWGMoywFGojS9bWwa4kUYoK4jhCyTI2SLhJC
-         FYxnvJFNVy3FKNRL1TkovZ/M+cU+cDeKFxowYHVyRzmSpDbytjChGkLLHF4np4eWgj06
-         180neYVtlRcrd/wPXoOkc6GHiLY4bLDjQEeO1pdNdIrsRABZ94gQY/mjonWwPB8eJMmR
-         //+w==
-X-Gm-Message-State: APjAAAVT1+C1Yy7CMEtr1vL+OK2MYaHaxGxCef2Z2UZK0uuS+7HA4Abi
-        9jseAIGWOwq8Qoed5qJ4e5Lvtpm+VV3fYycUi9H0vg==
-X-Google-Smtp-Source: APXvYqxEG/ckMbXv+MseMxQsB7FBIMk8wYV8o+7PyurCz/nVLmYfrfFdL/+umDm2gr0Tx+Htd3cH3mtJl41JHjceP6U=
-X-Received: by 2002:a1c:b457:: with SMTP id d84mr4760241wmf.153.1565092684138;
- Tue, 06 Aug 2019 04:58:04 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=0ibbfjjlcjqJhBjocgI23MMIU0ZjpMBB8zJJ1s3Y/U8=;
+        b=pK7PU4n0vhfSPZ+7jQClH+K9xt8lWRW26LSzbrNvb/lqWjIwX9aosSnUL2UfhvT9Np
+         eBXaZ23yVhSBWFmwORpvFcuE151RSQXWKd4lPdkAJZJ3HM7LSSGMfNcd7ejKnMpYD9A+
+         YVVsG07TuVvCtFDc8oaPeZV90Kk9Rr+QiKLAM4Su/cg5Bouv2M3lnBPoqbzelsaFjc9f
+         GLjKz3lHXGvAUPhAIqjL4WW3MhmAxgzgArQPxaafeLE4Fgd/5ELFSbQtiKBhB/0p9/SJ
+         ddLBSTQMy8NWRM8Hj5Rz91SHGjy6aTY+5/b5AouZY2QFW5Exp5p6dgx2YyxxjvtseXJK
+         CTdw==
+X-Gm-Message-State: APjAAAXUQVqF+Vq0wruIN95YAS8Sz5KNkiTOUMd5HLqQtK81ndk+W6rv
+        8fd7pYvnCZ/IiCyuTT5Efen5X9DaODJswz2K/2s=
+X-Google-Smtp-Source: APXvYqw1I4EIWuPevu8wlirFV9J2GRKXYhv53MxSJBZOnAKpdcJeuHzCogMPbneXuIRWGHA9eGhBF1r/1dMNvJ8UrqA=
+X-Received: by 2002:a17:906:154f:: with SMTP id c15mr2756640ejd.268.1565093005065;
+ Tue, 06 Aug 2019 05:03:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAMGffEkotpvVz8FA78vNFh0qZv3kEMNrXXfVPEUC=MhH0pMCZA@mail.gmail.com>
- <0a83fde3-1a74-684c-0d70-fb44b9021f96@molgen.mpg.de> <CAMGffE=_kPoBmSwbxvrqdqbhpR5Cu2Vbe4ArGqm9ns9+iVEH_g@mail.gmail.com>
- <CAMGffEkcXcQC+kjwdH0iVSrFDk-o+dp+b3Q1qz4z=R=6D+QqLQ@mail.gmail.com>
- <87h86vjhv0.fsf@notabene.neil.brown.name> <CAMGffEnKXQJBbDS8Yi0S5ZKEMHVJ2_SKVPHeb9Rcd6oT_8eTuw@mail.gmail.com>
-In-Reply-To: <CAMGffEnKXQJBbDS8Yi0S5ZKEMHVJ2_SKVPHeb9Rcd6oT_8eTuw@mail.gmail.com>
-From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
-Date:   Tue, 6 Aug 2019 13:57:53 +0200
-Message-ID: <CAMGffEkfs0KsuWX8vGY==1dym78d6wsao_otSjzBAPzwGtoQcw@mail.gmail.com>
-Subject: Re: Bisected: Kernel 4.14 + has 3 times higher write IO latency than
- Kernel 4.4 with raid1
-To:     NeilBrown <neilb@suse.com>
-Cc:     linux-raid <linux-raid@vger.kernel.org>,
-        Alexandr Iarygin <alexandr.iarygin@cloud.ionos.com>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        linux-kernel@vger.kernel.org
+References: <CAKgNAki0bR5zZr+kp_xjq+bNUky6-F+s2ep+jnR0YrjHhNMB1g@mail.gmail.com>
+ <20190805103630.tu4kytsbi5evfrhi@mikami> <3a96c631-6595-b75e-f6a7-db703bf89bcf@gmail.com>
+ <da747415-4c7a-f931-6f2e-2962da63c161@philippwendler.de>
+In-Reply-To: <da747415-4c7a-f931-6f2e-2962da63c161@philippwendler.de>
+Reply-To: mtk.manpages@gmail.com
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Date:   Tue, 6 Aug 2019 14:03:13 +0200
+Message-ID: <CAKgNAkjS+x7aMVUiVSgCRwgi8rnukqJv=svtTARE-tt-oxQxWw@mail.gmail.com>
+Subject: Re: pivot_root(".", ".") and the fchdir() dance
+To:     Philipp Wendler <ml@philippwendler.de>
+Cc:     Aleksa Sarai <asarai@suse.de>,
+        linux-man <linux-man@vger.kernel.org>,
+        Containers <containers@lists.linux-foundation.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jordan Ogas <jogas@lanl.gov>, werner@almesberger.net,
+        Al Viro <viro@ftp.linux.org.uk>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 6, 2019 at 9:54 AM Jinpu Wang <jinpu.wang@cloud.ionos.com> wrote:
->
-> On Tue, Aug 6, 2019 at 1:46 AM NeilBrown <neilb@suse.com> wrote:
-> >
-> > On Mon, Aug 05 2019, Jinpu Wang wrote:
-> >
-> > > Hi Neil,
-> > >
-> > > For the md higher write IO latency problem, I bisected it to these commits:
-> > >
-> > > 4ad23a97 MD: use per-cpu counter for writes_pending
-> > > 210f7cd percpu-refcount: support synchronous switch to atomic mode.
-> > >
-> > > Do you maybe have an idea? How can we fix it?
-> >
-> > Hmmm.... not sure.
-> Hi Neil,
->
-> Thanks for reply, detailed result in line.
-> >
-> > My guess is that the set_in_sync() call from md_check_recovery()
-> > is taking a long time, and is being called too often.
-> >
-> > Could you try two experiments please.
-> >
-> Baseline on 5.3-rc3:
-> root@ib2:/home/jwang# cat md_lat_ib2_5.3.0-rc3-1-storage_2019_0806_092003.log
-> write-test: (g=0): rw=write, bs=4K-4K/4K-4K/4K-4K, ioengine=libaio, iodepth=32
-> fio-2.2.10
-> Starting 1 process
->
-> write-test: (groupid=0, jobs=1): err= 0: pid=2621: Tue Aug  6 09:20:44 2019
->   write: io=800004KB, bw=20000KB/s, iops=4999, runt= 40001msec
->     slat (usec): min=2, max=69992, avg= 5.37, stdev=374.95
->     clat (usec): min=0, max=147, avg= 2.42, stdev=13.57
->      lat (usec): min=2, max=70079, avg= 7.84, stdev=376.07
->     clat percentiles (usec):
->      |  1.00th=[    0],  5.00th=[    0], 10.00th=[    0], 20.00th=[    1],
->      | 30.00th=[    1], 40.00th=[    1], 50.00th=[    1], 60.00th=[    1],
->      | 70.00th=[    1], 80.00th=[    1], 90.00th=[    1], 95.00th=[    1],
->      | 99.00th=[   96], 99.50th=[  125], 99.90th=[  137], 99.95th=[  139],
->      | 99.99th=[  141]
->     bw (KB  /s): min=18454, max=21608, per=100.00%, avg=20005.15, stdev=352.24
->     lat (usec) : 2=98.52%, 4=0.01%, 10=0.01%, 20=0.02%, 50=0.06%
->     lat (usec) : 100=0.46%, 250=0.94%
->   cpu          : usr=4.64%, sys=0.00%, ctx=197118, majf=0, minf=11
->   IO depths    : 1=98.5%, 2=0.1%, 4=0.1%, 8=0.1%, 16=0.1%, 32=1.3%, >=64=0.0%
->      submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
->      complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
->      issued    : total=r=0/w=200001/d=0, short=r=0/w=0/d=0, drop=r=0/w=0/d=0
->      latency   : target=0, window=0, percentile=100.00%, depth=32
->
-> Run status group 0 (all jobs):
->   WRITE: io=800004KB, aggrb=19999KB/s, minb=19999KB/s, maxb=19999KB/s,
-> mint=40001msec, maxt=40001msec
->
-> Disk stats (read/write):
->     md0: ios=60/199436, merge=0/0, ticks=0/0, in_queue=0, util=0.00%,
-> aggrios=0/0, aggrmerge=0/0, aggrticks=0/0, aggrin_queue=0,
-> aggrutil=0.00%
->   ram0: ios=0/0, merge=0/0, ticks=0/0, in_queue=0, util=0.00%
->   ram1: ios=0/0, merge=0/0, ticks=0/0, in_queue=0, util=0.00%
->
->
-> > 1/ set  /sys/block/md0/md/safe_mode_delay
-> >    to 20 or more.  It defaults to about 0.2.
-> only set 20 to safe_mode_delay,  give a nice improvement.
-> root@ib2:/home/jwang# cat md_lat_ib2_5.3.0-rc3-1-storage_2019_0806_092144.log
-> write-test: (g=0): rw=write, bs=4K-4K/4K-4K/4K-4K, ioengine=libaio, iodepth=32
-> fio-2.2.10
-> Starting 1 process
->
-> write-test: (groupid=0, jobs=1): err= 0: pid=2676: Tue Aug  6 09:22:25 2019
->   write: io=800004KB, bw=20000KB/s, iops=4999, runt= 40001msec
->     slat (usec): min=2, max=99490, avg= 2.98, stdev=222.46
->     clat (usec): min=0, max=103, avg= 0.96, stdev= 4.51
->      lat (usec): min=2, max=99581, avg= 3.99, stdev=222.71
->     clat percentiles (usec):
->      |  1.00th=[    0],  5.00th=[    0], 10.00th=[    0], 20.00th=[    0],
->      | 30.00th=[    1], 40.00th=[    1], 50.00th=[    1], 60.00th=[    1],
->      | 70.00th=[    1], 80.00th=[    1], 90.00th=[    1], 95.00th=[    1],
->      | 99.00th=[    1], 99.50th=[    1], 99.90th=[   90], 99.95th=[   91],
->      | 99.99th=[   95]
->     bw (KB  /s): min=20000, max=20008, per=100.00%, avg=20001.82, stdev= 3.38
->     lat (usec) : 2=99.72%, 4=0.01%, 10=0.01%, 20=0.01%, 50=0.01%
->     lat (usec) : 100=0.25%, 250=0.01%
->   cpu          : usr=3.17%, sys=1.48%, ctx=199470, majf=0, minf=11
->   IO depths    : 1=99.7%, 2=0.1%, 4=0.1%, 8=0.1%, 16=0.1%, 32=0.2%, >=64=0.0%
->      submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
->      complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
->      issued    : total=r=0/w=200001/d=0, short=r=0/w=0/d=0, drop=r=0/w=0/d=0
->      latency   : target=0, window=0, percentile=100.00%, depth=32
->
-> Run status group 0 (all jobs):
->   WRITE: io=800004KB, aggrb=19999KB/s, minb=19999KB/s, maxb=19999KB/s,
-> mint=40001msec, maxt=40001msec
->
-> Disk stats (read/write):
->     md0: ios=60/199461, merge=0/0, ticks=0/0, in_queue=0, util=0.00%,
-> aggrios=0/0, aggrmerge=0/0, aggrticks=0/0, aggrin_queue=0,
-> aggrutil=0.00%
->   ram0: ios=0/0, merge=0/0, ticks=0/0, in_queue=0, util=0.00%
->   ram1: ios=0/0, merge=0/0, ticks=0/0, in_queue=0, util=0.00%
->
->
-> >
-> > 2/ comment out the call the set_in_sync() in md_check_recovery().
-> Only commented out set_in_sync get a better improvement
-> root@ib2:/home/jwang# cat md_lat_ib2_5.3.0-rc3-1-storage+_2019_0806_093340.log
-> write-test: (g=0): rw=write, bs=4K-4K/4K-4K/4K-4K, ioengine=libaio, iodepth=32
-> fio-2.2.10
-> Starting 1 process
->
-> write-test: (groupid=0, jobs=1): err= 0: pid=2626: Tue Aug  6 09:34:20 2019
->   write: io=800004KB, bw=20000KB/s, iops=4999, runt= 40001msec
->     slat (usec): min=2, max=29, avg= 2.49, stdev= 0.72
->     clat (usec): min=0, max=101, avg= 0.78, stdev= 1.17
->      lat (usec): min=2, max=117, avg= 3.34, stdev= 1.25
->     clat percentiles (usec):
->      |  1.00th=[    0],  5.00th=[    0], 10.00th=[    0], 20.00th=[    0],
->      | 30.00th=[    1], 40.00th=[    1], 50.00th=[    1], 60.00th=[    1],
->      | 70.00th=[    1], 80.00th=[    1], 90.00th=[    1], 95.00th=[    1],
->      | 99.00th=[    1], 99.50th=[    1], 99.90th=[    1], 99.95th=[    1],
->      | 99.99th=[   72]
->     bw (KB  /s): min=20000, max=20008, per=100.00%, avg=20002.03, stdev= 3.50
->     lat (usec) : 2=99.96%, 4=0.01%, 10=0.01%, 20=0.01%, 50=0.01%
->     lat (usec) : 100=0.02%, 250=0.01%
->   cpu          : usr=4.17%, sys=0.00%, ctx=199951, majf=0, minf=12
->   IO depths    : 1=100.0%, 2=0.1%, 4=0.1%, 8=0.1%, 16=0.1%, 32=0.1%, >=64=0.0%
->      submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
->      complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
->      issued    : total=r=0/w=200001/d=0, short=r=0/w=0/d=0, drop=r=0/w=0/d=0
->      latency   : target=0, window=0, percentile=100.00%, depth=32
->
-> Run status group 0 (all jobs):
->   WRITE: io=800004KB, aggrb=19999KB/s, minb=19999KB/s, maxb=19999KB/s,
-> mint=40001msec, maxt=40001msec
->
-> Disk stats (read/write):
->     md0: ios=60/199435, merge=0/0, ticks=0/0, in_queue=0, util=0.00%,
-> aggrios=0/0, aggrmerge=0/0, aggrticks=0/0, aggrin_queue=0,
-> aggrutil=0.00%
->   ram0: ios=0/0, merge=0/0, ticks=0/0, in_queue=0, util=0.00%
->   ram1: ios=0/0, merge=0/0, ticks=0/0, in_queue=0, util=0.00%
->
-> With both applied
-> root@ib2:/home/jwang# cat md_lat_ib2_5.3.0-rc3-1-storage+_2019_0806_093916.log
-> write-test: (g=0): rw=write, bs=4K-4K/4K-4K/4K-4K, ioengine=libaio, iodepth=32
-> fio-2.2.10
-> Starting 1 process
->
-> write-test: (groupid=0, jobs=1): err= 0: pid=2709: Tue Aug  6 09:39:57 2019
->   write: io=800004KB, bw=20000KB/s, iops=4999, runt= 40001msec
->     slat (usec): min=2, max=16, avg= 2.46, stdev= 0.69
->     clat (usec): min=0, max=100, avg= 0.61, stdev= 1.18
->      lat (usec): min=2, max=104, avg= 3.12, stdev= 1.33
->     clat percentiles (usec):
->      |  1.00th=[    0],  5.00th=[    0], 10.00th=[    0], 20.00th=[    0],
->      | 30.00th=[    0], 40.00th=[    0], 50.00th=[    1], 60.00th=[    1],
->      | 70.00th=[    1], 80.00th=[    1], 90.00th=[    1], 95.00th=[    1],
->      | 99.00th=[    1], 99.50th=[    1], 99.90th=[    1], 99.95th=[    1],
->      | 99.99th=[   70]
->     bw (KB  /s): min=20000, max=20008, per=100.00%, avg=20002.73, stdev= 3.82
->     lat (usec) : 2=99.96%, 4=0.01%, 10=0.01%, 20=0.01%, 50=0.01%
->     lat (usec) : 100=0.02%, 250=0.01%
->   cpu          : usr=3.33%, sys=1.31%, ctx=199941, majf=0, minf=12
->   IO depths    : 1=100.0%, 2=0.1%, 4=0.1%, 8=0.1%, 16=0.1%, 32=0.1%, >=64=0.0%
->      submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
->      complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
->      issued    : total=r=0/w=200001/d=0, short=r=0/w=0/d=0, drop=r=0/w=0/d=0
->      latency   : target=0, window=0, percentile=100.00%, depth=32
->
-> Run status group 0 (all jobs):
->   WRITE: io=800004KB, aggrb=19999KB/s, minb=19999KB/s, maxb=19999KB/s,
-> mint=40001msec, maxt=40001msec
->
-> Disk stats (read/write):
->     md0: ios=60/199460, merge=0/0, ticks=0/0, in_queue=0, util=0.00%,
-> aggrios=0/0, aggrmerge=0/0, aggrticks=0/0, aggrin_queue=0,
-> aggrutil=0.00%
->   ram0: ios=0/0, merge=0/0, ticks=0/0, in_queue=0, util=0.00%
->   ram1: ios=0/0, merge=0/0, ticks=0/0, in_queue=0, util=0.00%
->
-> >
-> > Then run the least separately after each of these changes.
-> >
->
->
-> > I the second one makes a difference, I'd like to know how often it gets
-> > called - and why.  The test
-> >         if ( ! (
-> >                 (mddev->sb_flags & ~ (1<<MD_SB_CHANGE_PENDING)) ||
-> >                 test_bit(MD_RECOVERY_NEEDED, &mddev->recovery) ||
-> >                 test_bit(MD_RECOVERY_DONE, &mddev->recovery) ||
-> >                 (mddev->external == 0 && mddev->safemode == 1) ||
-> >                 (mddev->safemode == 2
-> >                  && !mddev->in_sync && mddev->recovery_cp == MaxSector)
-> >                 ))
-> >                 return;
-> >
-I added following debug message:
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -2404,6 +2404,8 @@ static void export_array(struct mddev *mddev)
- static bool set_in_sync(struct mddev *mddev)
- {
-        lockdep_assert_held(&mddev->lock);
-+       pr_info("md %s in_sync is %d, sb_flags %ld, recovery %ld,
-external %d, safemode %d, recovery_cp %llu\n",mdname(mddev),
-mddev->in_sync, mddev->sb_flags, mddev->recovery, mddev->external,
-mddev->safemode, (unsigned long long)mddev->recovery_cp);
-+
-        if (!mddev->in_sync) {
-                mddev->sync_checkers++;
-                spin_unlock(&mddev->lock);
-@@ -2411,6 +2413,7 @@ static bool set_in_sync(struct mddev *mddev)
-                spin_lock(&mddev->lock);
-                if (!mddev->in_sync &&
-                    percpu_ref_is_zero(&mddev->writes_pending)) {
-+            pr_info("set_in_sync\n");
-                        mddev->in_sync = 1;
-                        /*
-                         * Ensure ->in_sync is visible before we clear
+Hello Philipp,
 
-The relevant dmesg:
-[  103.976374] md/raid1:md0: not clean -- starting background reconstruction
-[  103.976479] md/raid1:md0: active with 2 out of 2 mirrors
-[  103.976597] md0: detected capacity change from 0 to 535822336
-[  103.976721] md: resync of RAID array md0
-[  104.427369] md md0 in_sync is 0, sb_flags 6, recovery 3, external
-0, safemode 0, recovery_cp 393216
-[  105.052186] md md0 in_sync is 0, sb_flags 2, recovery 3, external
-0, safemode 0, recovery_cp 458752
-[  105.127718] set_in_sync
-[  105.133299] md md0 in_sync is 0, sb_flags 2, recovery 3, external
-0, safemode 0, recovery_cp 524288
-[  105.207723] set_in_sync
-[  105.213318] md md0 in_sync is 0, sb_flags 2, recovery 3, external
-0, safemode 0, recovery_cp 589824
-[  105.287717] set_in_sync
-[  105.293299] md md0 in_sync is 0, sb_flags 2, recovery 3, external
-0, safemode 0, recovery_cp 655360
-[  105.347718] set_in_sync
-[  105.353267] md md0 in_sync is 0, sb_flags 2, recovery 3, external
-0, safemode 0, recovery_cp 720896
-[  105.397717] set_in_sync
-[  105.403367] md md0 in_sync is 0, sb_flags 2, recovery 3, external
-0, safemode 0, recovery_cp 786432
-[  105.457718] set_in_sync
-[  105.981324] md md0 in_sync is 0, sb_flags 2, recovery 3, external
-0, safemode 0, recovery_cp 851968
-[  106.017718] set_in_sync
-[  106.022784] md md0 in_sync is 0, sb_flags 2, recovery 3, external
-0, safemode 0, recovery_cp 917504
-[  106.057718] set_in_sync
-[  106.063357] md md0 in_sync is 0, sb_flags 2, recovery 3, external
-0, safemode 0, recovery_cp 983040
-[  106.117718] set_in_sync
-[  106.122851] md: md0: resync done.
-[  106.123261] md md0 in_sync is 0, sb_flags 5, recovery 19, external
-0, safemode 0, recovery_cp 18446744073709551615
-[  106.157741] md md0 in_sync is 0, sb_flags 0, recovery 32, external
-0, safemode 0, recovery_cp 18446744073709551615
-[  106.217718] set_in_sync
-[  144.707722] md md0 in_sync is 0, sb_flags 0, recovery 0, external
-0, safemode 0, recovery_cp 18446744073709551615
-[  144.767720] set_in_sync
-
-Please let me know if you need further information, I can also test
-any draft patch if needed.
-
-Thanks,
-Jack Wang
-
-
-
-
-> > should normally return when doing lots of IO - I'd like to know
-> > which condition causes it to not return.
-> I will check, and report later today.
-> Thanks again!
+On Tue, 6 Aug 2019 at 10:12, Philipp Wendler <ml@philippwendler.de> wrote:
 >
-> Jack Wang
+> Hello Michael, hello Aleksa,
+>
+> Am 05.08.19 um 14:29 schrieb Michael Kerrisk (man-pages):
+>
+> > On 8/5/19 12:36 PM, Aleksa Sarai wrote:
+> >> On 2019-08-01, Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> wrote:
+> >>> I'd like to add some documentation about the pivot_root(".", ".")
+> >>> idea, but I have a doubt/question. In the lxc_pivot_root() code we
+> >>> have these steps
+> >>>
+> >>>         oldroot = open("/", O_DIRECTORY | O_RDONLY | O_CLOEXEC);
+> >>>         newroot = open(rootfs, O_DIRECTORY | O_RDONLY | O_CLOEXEC);
+> >>>
+> >>>         fchdir(newroot);
+> >>>         pivot_root(".", ".");
+> >>>
+> >>>         fchdir(oldroot);      // ****
+> >>>
+> >>>         mount("", ".", "", MS_SLAVE | MS_REC, NULL);
+> >>>         umount2(".", MNT_DETACH);
+> >>
+> >>>         fchdir(newroot);      // ****
+> >>
+> >> And this one is required because we are in @oldroot at this point, due
+> >> to the first fchdir(2). If we don't have the first one, then switching
+> >> from "." to "/" in the mount/umount2 calls should fix the issue.
 > >
-> > Thanks,
-> > NeilBrown
+> > See my notes above for why I therefore think that the second fchdir()
+> > is also not needed (and therefore why switching from "." to "/" in the
+> > mount()/umount2() calls is unnecessary.
+> >
+> > Do you agree with my analysis?
+>
+> If both the second and third fchdir are not required,
+> then we do not need to bother with file descriptors at all, right?
+
+Exactly.
+
+> Indeed, my tests show that the following seems to work fine:
+>
+> chdir(rootfs)
+> pivot_root(".", ".")
+> umount2(".", MNT_DETACH)
+
+Thanks for the confirmation, That's also exactly what I tested.
+
+> I tested that with my own tool[1] that uses user namespaces and marks
+> everything MS_PRIVATE before, so I do not need the mount(MS_SLAVE) here.
+>
+> And it works the same with both umount2("/") and umount2(".").
+
+Yes.
+
+> Did I overlook something that makes the file descriptors required?
+
+No.
+
+> If not, wouldn't the above snippet make sense as example in the man page?
+
+I have exactly that snippet in a pending change for the manual page :-).
+
+Cheers,
+
+Michael
+
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
