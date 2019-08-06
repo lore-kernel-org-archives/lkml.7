@@ -2,93 +2,135 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A81C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D67C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2B2B208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:37:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Aat9VujI"
+	by mail.kernel.org (Postfix) with ESMTP id BD646208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:40:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727350AbfHFXhj (ORCPT
+        id S1726889AbfHFXkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 19:37:39 -0400
-Received: from mail-ot1-f51.google.com ([209.85.210.51]:39021 "EHLO
-        mail-ot1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbfHFXhj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 19:37:39 -0400
-Received: by mail-ot1-f51.google.com with SMTP id r21so91019629otq.6;
-        Tue, 06 Aug 2019 16:37:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8L9+kA0ZqqoXXOvjVGsnYHKbZZYVFf05tAiM0vqOfpY=;
-        b=Aat9VujIbakXAbrANx5VLitNoxcOmDSXhUPZoTZt2JOLtepc2KnR/KDSbYgkdqscTY
-         h+/woRs4GEMd+/BND8Xi9UVfmBAGdphXhw7uY3ek9ZQlHkWd7g+tSqZJ/HfSyiARHcNQ
-         dtRokDXuScQueRKy+qUuSWqvPN7ZsS33aaEaywzZIHQmyOaBbtrVhmyanRqF6Nvlxkx2
-         lgM0SVKEmpzOWCbLCESXylW8Da0VuzkKHby6yXe+Wi8T/dG8CZgF+Hz82sWwAVD7ttTf
-         kmDCLXSHGeHTuQIL87GePfCPxJsfgM5vdmu3UpCr2454jWbrkBR78X5WzS+w5UAR6/CL
-         QF4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8L9+kA0ZqqoXXOvjVGsnYHKbZZYVFf05tAiM0vqOfpY=;
-        b=tyHRHSLu0P/B/dETKVFgSmJxY/wqj+xLLsW+d8ddzF7p85K48/lWEd1GTWqi7OlQz3
-         J7cwgzGim9qyl7b2e6pAlHZBxaA5vy37To9KtZp9a7cRc6b4f3SdJVAp89ajsiK0vCVA
-         XDgYDdW6MDsxFfQJjS965XsVPiYWkxPh8VUHmkmy57oo6gAeBGtRbzGwAfK9gwjOVLj9
-         g5UHEM/L075SN7oh/D9BFEpPNpYbhfD7pZnadD7URlVl0YQIDzfqCmNnOBjB1Cgv1Jtx
-         NYCXrpiIyjz5JU/RoMVdBaS9oulEHYHDB/vt6/h9pE2EdtLPiIMyQSwiLziZzFP+64uu
-         /0BA==
-X-Gm-Message-State: APjAAAUJu9vwCViSmvoYeXPoO/Is7TXR9IliFnZMJk4kcf4KLa2+dsab
-        e7zLcWiE/ll1uzknlMhEKRPqd7Li3QB6LqBpc0Hmk7qKH9s=
-X-Google-Smtp-Source: APXvYqwWhdojtNp06dNBY/mjr5KCbVJJTzbQYRADOl71ExYCcR1ZqHsrFWcbV6lA3DN8mFMbxMFajwdBnxPsohodEso=
-X-Received: by 2002:aca:2211:: with SMTP id b17mr3691703oic.64.1565134657862;
- Tue, 06 Aug 2019 16:37:37 -0700 (PDT)
+        Tue, 6 Aug 2019 19:40:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35848 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726133AbfHFXkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 19:40:39 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id EBFD5AD12;
+        Tue,  6 Aug 2019 23:40:36 +0000 (UTC)
+From:   NeilBrown <neilb@suse.com>
+To:     Jinpu Wang <jinpu.wang@cloud.ionos.com>,
+        Neil F Brown <nfbrown@suse.com>
+Date:   Wed, 07 Aug 2019 09:40:26 +1000
+Cc:     Alexandr Iarygin <alexandr.iarygin@cloud.ionos.com>,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        linux-kernel@vger.kernel.org,
+        linux-raid <linux-raid@vger.kernel.org>
+Subject: Re: Bisected: Kernel 4.14 + has 3 times higher write IO latency than Kernel 4.4 with raid1
+In-Reply-To: <CAMGffEkfs0KsuWX8vGY==1dym78d6wsao_otSjzBAPzwGtoQcw@mail.gmail.com>
+References: <CAMGffEkotpvVz8FA78vNFh0qZv3kEMNrXXfVPEUC=MhH0pMCZA@mail.gmail.com> <0a83fde3-1a74-684c-0d70-fb44b9021f96@molgen.mpg.de> <CAMGffE=_kPoBmSwbxvrqdqbhpR5Cu2Vbe4ArGqm9ns9+iVEH_g@mail.gmail.com> <CAMGffEkcXcQC+kjwdH0iVSrFDk-o+dp+b3Q1qz4z=R=6D+QqLQ@mail.gmail.com> <87h86vjhv0.fsf@notabene.neil.brown.name> <CAMGffEnKXQJBbDS8Yi0S5ZKEMHVJ2_SKVPHeb9Rcd6oT_8eTuw@mail.gmail.com> <CAMGffEkfs0KsuWX8vGY==1dym78d6wsao_otSjzBAPzwGtoQcw@mail.gmail.com>
+Message-ID: <87blx1kglx.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-References: <20190807093037.65ac614e@canb.auug.org.au>
-In-Reply-To: <20190807093037.65ac614e@canb.auug.org.au>
-From:   Yifeng Sun <pkusunyifeng@gmail.com>
-Date:   Tue, 6 Aug 2019 16:37:26 -0700
-Message-ID: <CAEYOeXMV1DbTsy7U1-Fu0eztVGpw-+ZEJTK0Hzm8xbqCL7fabw@mail.gmail.com>
-Subject: Re: linux-next: Signed-off-by missing for commit in the net-next tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-My apologies, thanks for the email. Please add the signed-off if you can.
+On Tue, Aug 06 2019, Jinpu Wang wrote:
 
-Signed-off-by: Yifeng Sun <pkusunyifeng@gmail.com>
+> On Tue, Aug 6, 2019 at 9:54 AM Jinpu Wang <jinpu.wang@cloud.ionos.com> wr=
+ote:
+>>
+>> On Tue, Aug 6, 2019 at 1:46 AM NeilBrown <neilb@suse.com> wrote:
+>> >
+>> > On Mon, Aug 05 2019, Jinpu Wang wrote:
+>> >
+>> > > Hi Neil,
+>> > >
+>> > > For the md higher write IO latency problem, I bisected it to these c=
+ommits:
+>> > >
+>> > > 4ad23a97 MD: use per-cpu counter for writes_pending
+>> > > 210f7cd percpu-refcount: support synchronous switch to atomic mode.
+>> > >
+>> > > Do you maybe have an idea? How can we fix it?
+>> >
+>> > Hmmm.... not sure.
+>> Hi Neil,
+>>
+>> Thanks for reply, detailed result in line.
+
+Thanks for the extra testing.
+...
+> [  105.133299] md md0 in_sync is 0, sb_flags 2, recovery 3, external
+> 0, safemode 0, recovery_cp 524288
+...
+
+ahh - the resync was still happening.  That explains why set_in_sync()
+is being called so often.  If you wait for sync to complete (or create
+the array with --assume-clean) you should see more normal behaviour.
+
+This patch should fix it.  I think we can do better but it would be more
+complex so no suitable for backports to -stable.
+
+Once you confirm it works, I'll send it upstream with a
+Reported-and-Tested-by from you.
 
 Thanks,
-Yifeng
+NeilBrown
 
-On Tue, Aug 6, 2019 at 4:30 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> Commit
->
->   aa733660dbd8 ("openvswitch: Print error when ovs_execute_actions() fails")
->
-> is missing a Signed-off-by from its author.
->
-> --
-> Cheers,
-> Stephen Rothwell
+
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 24638ccedce4..624cf1ac43dc 100644
+=2D-- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -8900,6 +8900,7 @@ void md_check_recovery(struct mddev *mddev)
+=20
+ 	if (mddev_trylock(mddev)) {
+ 		int spares =3D 0;
++		bool try_set_sync =3D mddev->safemode !=3D 0;
+=20
+ 		if (!mddev->external && mddev->safemode =3D=3D 1)
+ 			mddev->safemode =3D 0;
+@@ -8945,7 +8946,7 @@ void md_check_recovery(struct mddev *mddev)
+ 			}
+ 		}
+=20
+=2D		if (!mddev->external && !mddev->in_sync) {
++		if (try_set_sync && !mddev->external && !mddev->in_sync) {
+ 			spin_lock(&mddev->lock);
+ 			set_in_sync(mddev);
+ 			spin_unlock(&mddev->lock);
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl1KD+oACgkQOeye3VZi
+gbkOBBAAvAchxMWgyz5FTx4uM4/I228Z2NCgD/+0UHkI6Z46bivBLwpCu3BhqSgX
+EADIcAm+gfJU569NUFaMBQbTy+m/X3e6GoEaN6hVrilBhNKTOyUSibk6qFTXT9J0
+2el59+qsf2fx9MqtwT5ClEMTIIp9P1251snNDMSdIFjJwmEe1tKTselsO2GI4fNJ
+0CNBxsUa4dQwDOLx7+7at7dWF26ZRWVWkSp+eaUgtyxc3w2WFroM7xAlIvr6pzwL
+M/mfLTXNyuSUsB2em/QsXiguKECbtZYDhhQrspYbvS/Z6CZYGalDQGhCv9efeVvQ
+7MAGSeo3emoy5fm2JB9z+xqF6KHdG+uK0PNOs7LE22tBiSnPlXW3raGZso2K7arQ
+H++UvSwkqRTw8GY2vTa0wLJ0cG4I7twXJjxrFQU8Tjk89BUECxryW9TkJHl/AjhU
+hL6X+itFyKMg7mc2H7B0PqdLz5dkcvnpJbmbs0O3BFNEGGjR+PG+qdAee/fbPmxk
+p5X2qRocvzUG8AaAlVpYJpaUi++9B5EPxtaGaMEiz4Xa4mEvFzwZ2KXIytJfiy7X
+mUo/EOGtodMV2L8Rim5hSXTTx29NYh97/PiPFb+GMRwm+txNyopiFi+GyK072GTq
+7trxozNthdQLrvEAq9CTa/yyxDHVtEhTL7Mun85HqZIrUZdf15c=
+=O8+M
+-----END PGP SIGNATURE-----
+--=-=-=--
