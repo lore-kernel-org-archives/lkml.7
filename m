@@ -2,99 +2,90 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86EB2C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E91DEC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DA0020B1F
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B41F720B1F
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:49:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cfdkpelc"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GsAGNu2Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731307AbfHFMtI (ORCPT
+        id S1731196AbfHFMtz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 08:49:08 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:44362 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbfHFMtH (ORCPT
+        Tue, 6 Aug 2019 08:49:55 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:49230 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbfHFMty (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 08:49:07 -0400
-Received: by mail-lf1-f67.google.com with SMTP id v16so7146539lfg.11
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 05:49:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dE5JuDdEA/pQScNByPn3VC+2psga/+uhIp5+6Lpb/IU=;
-        b=CfdkpelcPzvwnG1MdqcjcMyI02MUVnNU6luZnIfMDPb2TDvDh/PMhfidkJDiDm5vjw
-         TSvW1XIVaisosJn9owSOQNrRfN01cs41uzJMTlM1VsZX0cW6SBzNzVZKo2WGsc7xHA/y
-         52dUv8uwgMs+ujW6Xv1T48Zb1XvjfjCWbXCG46cuulJ68eqIsTcpjWkGSqGqJIk/zhKt
-         FmDBpMi8Fdr7o1vGrpM/XkRced54b6WwHbfhJBaJgtO7Nxsv4XjRHbsliAGTfPn5nSRH
-         4P0r6a4S4hwn0ipXQEhPdnBvxTjgs3aWXnX3Ob+3gbZvc/hC66HkM8kC7oWs5VCWX1de
-         wM1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dE5JuDdEA/pQScNByPn3VC+2psga/+uhIp5+6Lpb/IU=;
-        b=oLpaL9SVe0d5E2YXKa1HBwY/PZq0etBj2u5lYjJLw+3d/h0h1YHZeL/FY6zlvqwhze
-         PKtLE+mJ5Bxa+lDcLgC1TT4ZCUYr8MMqlRMSsSCn6oMPQrxOl7kGGmQIIoYWCYlpOiKX
-         B2o9DJHL/cjxESqMa82lx4tQeIoWUIlgsbxeNVnH8Alm0d8JITIOQrsAocfpheh93ren
-         5r1q5FIJnsLe1ZTarC2DDMAHDAsDVvJd4nKI2wIfs5sg/pNO7rTG7NezQGNpujUkf8HY
-         Aam5mOqZTSLTS89B/ePiMjTvSdgsMZjiHDS/EQwIgTtYTokP9GHpo942pv1+7m7m7QJ9
-         8PBQ==
-X-Gm-Message-State: APjAAAVyfazmCU4gw3vlDsQiEFxw2z22q4TifpjuqmS1rQJf9qElASzI
-        WOLc/Y96HoXXzwCO73uG11vjK1JO3Eje+gsgy+lwdA==
-X-Google-Smtp-Source: APXvYqw0Wl1Q08gOWskV45KZ1hlu4YydCL1Uqb2v8Dojvc+PSoMPhvxKIqVPTrhNLCBWwALS8FyzMEW+/49Nw/ggfeM=
-X-Received: by 2002:ac2:5dd6:: with SMTP id x22mr2349039lfq.92.1565095745984;
- Tue, 06 Aug 2019 05:49:05 -0700 (PDT)
+        Tue, 6 Aug 2019 08:49:54 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x76CkMM6041562;
+        Tue, 6 Aug 2019 12:48:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=zBKsoyvZW42pljgNs2qIOF6TztDTbsqax0iQzIQWQUA=;
+ b=GsAGNu2Y6qtsIHwl45KkdUA6HeAwIhix9kO+Z6MO+x+7QPubpPVdo2Um4Y7xtMLsZiEg
+ 5IZ6PCp10+0JMkU0tUHg6Z4BPLldm7AyznNWjVxulJ/frAUXplxQcdHPg9BySdj4mSRQ
+ XaZtw8jHWj0GDW9aaPWSar7XBNCFexDB+1r4u5E99JUPRgfLngAUXJhXmKcc/KLFDbe1
+ bzM5O4ySrXozVEMbSA6llto4+QtJHad92MXMnHdj8Lnjb5SiBXhDumt9kG6OmhZCfgfP
+ g7DRe6XvgRixUvhHC8d5KVSnveK84iK6muRdsX8evknWCXQ97Z1Y4eBfL8JxnIvOKODr Yg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2u51ptx08h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 06 Aug 2019 12:48:28 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x76CldLw014390;
+        Tue, 6 Aug 2019 12:48:27 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2u7576yns5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 06 Aug 2019 12:48:27 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x76CmQZA008964;
+        Tue, 6 Aug 2019 12:48:26 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 06 Aug 2019 05:48:25 -0700
+Date:   Tue, 6 Aug 2019 15:48:19 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Merwin Trever Ferrao <merwintf@gmail.com>
+Cc:     Larry.Finger@lwfinger.net, gregkh@linuxfoundation.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Staging: rtl8188eu: core: rtw_security: tidy up
+ crc32_init()
+Message-ID: <20190806124819.GE1935@kadam>
+References: <20190806122849.GA25628@IoT-COE>
 MIME-Version: 1.0
-References: <20190806024923.34355-1-hui.song_1@nxp.com>
-In-Reply-To: <20190806024923.34355-1-hui.song_1@nxp.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 6 Aug 2019 14:48:54 +0200
-Message-ID: <CACRpkdZ7hW+hSC41JqjqfLrwWvRY80+_8sXC89OhN7SwVtU7MA@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: mpc8xxx: Add new platforms GPIO DT node description
-To:     Hui Song <hui.song_1@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190806122849.GA25628@IoT-COE>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9340 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=960
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908060128
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9340 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908060127
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hui,
+Looks good.
 
-On Tue, Aug 6, 2019 at 4:59 AM Hui Song <hui.song_1@nxp.com> wrote:
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-> From: Song Hui <hui.song_1@nxp.com>
->
-> Update the NXP GPIO node dt-binding file for QorIQ and
-> Layerscape platforms, and add one more example with
-> ls1028a GPIO node.
->
-> Signed-off-by: Song Hui <hui.song_1@nxp.com>
-(...)
-> +Example of gpio-controller node for a ls1028a SoC:
-> +
-> +gpio1: gpio@2300000 {
-> +       compatible = "fsl,ls1028a-gpio","fsl,qoriq-gpio";
+regards,
+dan carpenter
 
-What you need to do is to add "fsl,ls1028a-gpio" to the list
-of compatible values at the top of the file "Required properties".
-Please send a v2 with this fixed.
-
-Yours,
-Linus Walleij
