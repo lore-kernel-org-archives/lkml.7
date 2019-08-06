@@ -2,107 +2,163 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DAB9C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2925C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53509208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:32:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="I621EdGh"
+	by mail.kernel.org (Postfix) with ESMTP id 7FA53208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:33:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387862AbfHFQc0 (ORCPT
+        id S2387876AbfHFQdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 12:32:26 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:41198 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732809AbfHFQcZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 12:32:25 -0400
-Received: by mail-ot1-f66.google.com with SMTP id o101so94003514ota.8
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 09:32:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KBxXq8YTWqrzjOONyNdo67CLVjbGNpjfYUbKMPMPSDc=;
-        b=I621EdGhepEbCNMhRh/ZLPcDGselbtxmltdR802wrqrXLRID4S5GgQmJEtmeHcB6CX
-         AZ7IWSkq384F70ACBOlYgpZHby9PusV2Ob/dS5I2cU/rpeh6VZOVpXML8HzoV12TEIxh
-         +MHRnEfuTt8BDqW57xvh2YdBYXbD9YHYhCU6Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KBxXq8YTWqrzjOONyNdo67CLVjbGNpjfYUbKMPMPSDc=;
-        b=iavJlEZPj4wEgqc9wfKkgqVWqyftd/8SkyMXuKd++bTcs+0WrHiJSPsMseGhbrvmUe
-         gueBXAKgSTaeKAKYSu2zUseM0DYjOShBjyRXPKNQzBtIZXmB8Fx4E2oijCI97UAhqfdx
-         DpdXhBEmJge+m05VLZq9Oc53M46VCIYqILPXeXxEwez7g7YztRF1Jqot+fb8sriBMP5F
-         2ZD+Y76Wu/dWtVdSihY0mPgwdrMrBlq+aEME/C8JPK84hdRQLQzsLeUK1THFIb0cULCw
-         E0ccwtNwpZXd45Zf/xEqy0lAbMkFbnrjOpEZ3NW9XpQxNGAHLCiEAlxsO9tQ3KkKGTC7
-         l/5g==
-X-Gm-Message-State: APjAAAWvmfFaT2mO/VPmigOySfliUE3L6NL+v6g3GSyJEeNb+BgbvBLg
-        G+BFI+J4nWatp+U1PHussgDymwzHzHxNugF0RyQDFQ==
-X-Google-Smtp-Source: APXvYqyoPmb4InoTECAZM2ixU1RK2J1UKKqwBWQUbzMA9FlBRHuKXtJkWqf6x4AfDRv9GhjmviHmJs99wWNE6FVoQLI=
-X-Received: by 2002:a5d:9bc6:: with SMTP id d6mr4118794ion.160.1565109144963;
- Tue, 06 Aug 2019 09:32:24 -0700 (PDT)
+        Tue, 6 Aug 2019 12:33:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:36620 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732809AbfHFQdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 12:33:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 02A1E344;
+        Tue,  6 Aug 2019 09:33:35 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 71DA23F575;
+        Tue,  6 Aug 2019 09:33:34 -0700 (PDT)
+Date:   Tue, 6 Aug 2019 17:33:32 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Jianjun Wang <jianjun.wang@mediatek.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        youlin.pei@mediatek.com, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [v2,2/2] PCI: mediatek: Add controller support for MT7629
+Message-ID: <20190806163332.GQ56241@e119886-lin.cambridge.arm.com>
+References: <20190628073425.25165-1-jianjun.wang@mediatek.com>
+ <20190628073425.25165-3-jianjun.wang@mediatek.com>
+ <1564385918.17211.6.camel@mhfsdcap03>
 MIME-Version: 1.0
-References: <CAJ-EccMXEVktpuPS5BwkGqTo++dGcpHAuSUZo7WgJhAzFByz0g@mail.gmail.com>
- <CAHk-=whZzJ8WxAeHcirUghcbeOYxmpCr+XxeS9ngH3df3+=p2Q@mail.gmail.com>
- <CAJ-EccOqmmrf2KPb7Z7NU6bF_4W1XUawLLy=pLekCyFKqusjKQ@mail.gmail.com>
- <CAHk-=wgT7Z3kCbKS9Q1rdA=OVxPL32CdBovX=eHvD2PppWCHpQ@mail.gmail.com>
- <20190805142756.GA4887@chatter.i7.local> <CAHk-=wgdiiBVprEVoi8+mpicGnOVNZ4Lb9YUJVskOXahO50sXw@mail.gmail.com>
- <20190805191136.GB4887@chatter.i7.local> <CAHk-=wg4xMXMM3EfW=NV6YuScA4zvcvaCAPou3bxegjGy6r-qA@mail.gmail.com>
- <20190805192727.GA15470@chatter.i7.local>
-In-Reply-To: <20190805192727.GA15470@chatter.i7.local>
-From:   Micah Morton <mortonm@chromium.org>
-Date:   Tue, 6 Aug 2019 09:32:14 -0700
-Message-ID: <CAJ-EccPFnR7fTFee3s_1Er+-zbhD8AqaJu_ifTLwHUykKmwJLg@mail.gmail.com>
-Subject: Re: [GIT PULL] SafeSetID MAINTAINERS file update for v5.3
-To:     Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1564385918.17211.6.camel@mhfsdcap03>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 5, 2019 at 12:27 PM Konstantin Ryabitsev
-<konstantin@linuxfoundation.org> wrote:
->
-> On Mon, Aug 05, 2019 at 12:17:49PM -0700, Linus Torvalds wrote:
-> >> However, I suspect that getting message-ids for all your pull
-> >> requests
-> >> would significantly complicate your workflow.
-> >
-> >Yeah, that would be a noticeable annoyance. If I were to process pull
-> >requests the way I used to process emailed patches (ie "git am -s" on
-> >a mailbox) that would be a natural thing to perhaps do, but it's not
-> >at all how it ends up working. Having to save the pull request email
-> >to then process it with some script would turn it into a chore.
-> >
-> >I think the pr-tracker-bot clearly catches most cases as it is, and
-> >it's only the occasional "somebody did something odd" that then misses
-> >an automated response. Not a huge deal. For me it was actually more
-> >the "I didn't understand why the response didn't happen", not so much
-> >"I really want to always see responses".
->
-> Ok, let me add a fix for Re: at the start -- this won't make things
-> significantly more expensive, but will catch this particular corner
-> case.
->
-> Best regards,
-> -K
+On Mon, Jul 29, 2019 at 03:38:38PM +0800, Jianjun Wang wrote:
+> On Fri, 2019-06-28 at 15:34 +0800, Jianjun Wang wrote:
+> > MT7629 is an ARM platform SoC which has the same PCIe IP with MT7622.
+> > 
+> > The HW default value of its Device ID is invalid, fix its Device ID to
+> > match the hardware implementation.
+> > 
+> > Acked-by: Ryder Lee <ryder.lee@mediatek.com>
+> > Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
+> > ---
+> >  drivers/pci/controller/pcie-mediatek.c | 18 ++++++++++++++++++
+> >  include/linux/pci_ids.h                |  1 +
+> >  2 files changed, 19 insertions(+)
+> > 
+> > diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+> > index 80601e1b939e..e5e6740b635d 100644
+> > --- a/drivers/pci/controller/pcie-mediatek.c
+> > +++ b/drivers/pci/controller/pcie-mediatek.c
+> > @@ -73,6 +73,7 @@
+> >  #define PCIE_MSI_VECTOR		0x0c0
+> >  
+> >  #define PCIE_CONF_VEND_ID	0x100
+> > +#define PCIE_CONF_DEVICE_ID	0x102
+> >  #define PCIE_CONF_CLASS_ID	0x106
+> >  
+> >  #define PCIE_INT_MASK		0x420
+> > @@ -141,12 +142,16 @@ struct mtk_pcie_port;
+> >  /**
+> >   * struct mtk_pcie_soc - differentiate between host generations
+> >   * @need_fix_class_id: whether this host's class ID needed to be fixed or not
+> > + * @need_fix_device_id: whether this host's Device ID needed to be fixed or not
+> > + * @device_id: Device ID which this host need to be fixed
 
-Linus, thanks for the tips earlier about gitk. I'll use that in the future.
+Really trivial nit: s/Device ID/device ID/ to be consistent with class ID above it.
 
-Unfortunately I didn't have the mental model quite right of what
-happens during the pull request. I was thinking along the lines of my
-commits being cherry picked onto your tree, rather than how it
-actually happens with git merge where my tree's commit history needs
-to match yours perfectly.
+Either way:
+
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+
+
+> >   * @ops: pointer to configuration access functions
+> >   * @startup: pointer to controller setting functions
+> >   * @setup_irq: pointer to initialize IRQ functions
+> >   */
+> >  struct mtk_pcie_soc {
+> >  	bool need_fix_class_id;
+> > +	bool need_fix_device_id;
+> > +	unsigned int device_id;
+> >  	struct pci_ops *ops;
+> >  	int (*startup)(struct mtk_pcie_port *port);
+> >  	int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
+> > @@ -696,6 +701,9 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
+> >  		writew(val, port->base + PCIE_CONF_CLASS_ID);
+> >  	}
+> >  
+> > +	if (soc->need_fix_device_id)
+> > +		writew(soc->device_id, port->base + PCIE_CONF_DEVICE_ID);
+> > +
+> >  	/* 100ms timeout value should be enough for Gen1/2 training */
+> >  	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_V2, val,
+> >  				 !!(val & PCIE_PORT_LINKUP_V2), 20,
+> > @@ -1216,11 +1224,21 @@ static const struct mtk_pcie_soc mtk_pcie_soc_mt7622 = {
+> >  	.setup_irq = mtk_pcie_setup_irq,
+> >  };
+> >  
+> > +static const struct mtk_pcie_soc mtk_pcie_soc_mt7629 = {
+> > +	.need_fix_class_id = true,
+> > +	.need_fix_device_id = true,
+> > +	.device_id = PCI_DEVICE_ID_MEDIATEK_7629,
+> > +	.ops = &mtk_pcie_ops_v2,
+> > +	.startup = mtk_pcie_startup_port_v2,
+> > +	.setup_irq = mtk_pcie_setup_irq,
+> > +};
+> > +
+> >  static const struct of_device_id mtk_pcie_ids[] = {
+> >  	{ .compatible = "mediatek,mt2701-pcie", .data = &mtk_pcie_soc_v1 },
+> >  	{ .compatible = "mediatek,mt7623-pcie", .data = &mtk_pcie_soc_v1 },
+> >  	{ .compatible = "mediatek,mt2712-pcie", .data = &mtk_pcie_soc_mt2712 },
+> >  	{ .compatible = "mediatek,mt7622-pcie", .data = &mtk_pcie_soc_mt7622 },
+> > +	{ .compatible = "mediatek,mt7629-pcie", .data = &mtk_pcie_soc_mt7629 },
+> >  	{},
+> >  };
+> >  
+> > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> > index 70e86148cb1e..aa32962759b2 100644
+> > --- a/include/linux/pci_ids.h
+> > +++ b/include/linux/pci_ids.h
+> > @@ -2131,6 +2131,7 @@
+> >  #define PCI_VENDOR_ID_MYRICOM		0x14c1
+> >  
+> >  #define PCI_VENDOR_ID_MEDIATEK		0x14c3
+> > +#define PCI_DEVICE_ID_MEDIATEK_7629	0x7629
+> >  
+> >  #define PCI_VENDOR_ID_TITAN		0x14D2
+> >  #define PCI_DEVICE_ID_TITAN_010L	0x8001
+> 
+> Hi Bjorn & Lorenzo,
+> 
+> Is this patch ok or is there anything I need to fixed?
+> 
+> Thanks.
+> 
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
