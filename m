@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A54C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E8EC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E45321874
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:45:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14460216F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:45:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127947;
-	bh=Jk5erRwdW6Xn1aFjjqOIfAEDX4aSw+GfypMFT+zJTA4=;
+	s=default; t=1565127955;
+	bh=TN/yZ7FjGl5BN0jJpt8bZnFuEvxtK5gvDFA4qWawSi8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dRv8jY2prNDEFfm85tcm8P2rf2Lbz4g05BJOKKVAzcQO9CNkLIkSvXqra23qNmnML
-	 PH7Z6xETCLwa2WP+xjPzbhMy/gZoaRJ8La4jlcputFMWwdb+r9Kps8CcZcgPJRZ6E5
-	 prv06hCCwHcmBrdwVzCOm5T8Ldu9r+wi+tu4fR6M=
+	b=F+piHDyDBhlCnd0M9AQ6uqV6kaZbudlCI8QG3jPXB4WV/hgD0jpwHzHWNxdQ5bhO2
+	 m93S7NCJczBe+MhTNXdW+3RLbrPokAGkokQnT5fPv2w1grW4z2KV1Gom6ve7mz+Njl
+	 BljtDAWtf8Yh5n7rESRSgK0oqQivliBZt6llpUqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729048AbfHFVpn (ORCPT
+        id S1727195AbfHFVdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:45:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51768 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:33:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727357AbfHFVdy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:33:54 -0400
+        id S1727067AbfHFVde (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:33:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A10FE217D7;
-        Tue,  6 Aug 2019 21:33:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C973A21743;
+        Tue,  6 Aug 2019 21:33:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127233;
-        bh=Jk5erRwdW6Xn1aFjjqOIfAEDX4aSw+GfypMFT+zJTA4=;
+        s=default; t=1565127212;
+        bh=TN/yZ7FjGl5BN0jJpt8bZnFuEvxtK5gvDFA4qWawSi8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=feHyXgTcy9GqrMhZxry1QlRp1GoyC86IVKzC3w4cKySDKWAyf/igLa2nOeNUW2x+L
-         ZgAxG+rTdaTGGH0KLspj7EJEUonaP0r1bvriEjqxU6K/ANp1h5l4PPK+uUNpYzHeUp
-         YxcWsgSWi1ZD8m9cEfbDaGmRrMN652J1pZqg1MdQ=
+        b=IO2DxLoLP2XBTcG6DKhj+LtbEryyetM83hLNmJuHMzuRKI1DKItYI61T3Y9eWyOTY
+         /WdZgZ1Jo2dpipEoIzfC557ZT7OgPUEwDvZfoguzUH6oEDsrLLk91pDrEHNz1nronB
+         shkGE3xB2I3bz6k9TSoERWwkMIU5rIxQeJSWY5CM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Jeffrin Jose T <jeffrin@rajagiritech.edu.in>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-ide@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 20/59] libata: zpodd: Fix small read overflow in zpodd_get_mech_type()
-Date:   Tue,  6 Aug 2019 17:32:40 -0400
-Message-Id: <20190806213319.19203-20-sashal@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org,
+        linux-doc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 10/59] mm/hmm: always return EBUSY for invalid ranges in hmm_range_{fault,snapshot}
+Date:   Tue,  6 Aug 2019 17:32:30 -0400
+Message-Id: <20190806213319.19203-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213319.19203-1-sashal@kernel.org>
 References: <20190806213319.19203-1-sashal@kernel.org>
@@ -61,50 +62,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 71d6c505b4d9e6f76586350450e785e3d452b346 ]
+[ Upstream commit 2bcbeaefde2f0384d6ad351c151b1a9fe7791a0a ]
 
-Jeffrin reported a KASAN issue:
+We should not have two different error codes for the same
+condition. EAGAIN must be reserved for the FAULT_FLAG_ALLOW_RETRY retry
+case and signals to the caller that the mmap_sem has been unlocked.
 
-  BUG: KASAN: global-out-of-bounds in ata_exec_internal_sg+0x50f/0xc70
-  Read of size 16 at addr ffffffff91f41f80 by task scsi_eh_1/149
-  ...
-  The buggy address belongs to the variable:
-    cdb.48319+0x0/0x40
+Use EBUSY for the !valid case so that callers can get the locking right.
 
-Much like commit 18c9a99bce2a ("libata: zpodd: small read overflow in
-eject_tray()"), this fixes a cdb[] buffer length, this time in
-zpodd_get_mech_type():
-
-We read from the cdb[] buffer in ata_exec_internal_sg(). It has to be
-ATAPI_CDB_LEN (16) bytes long, but this buffer is only 12 bytes.
-
-Reported-by: Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
-Fixes: afe759511808c ("libata: identify and init ZPODD devices")
-Link: https://lore.kernel.org/lkml/201907181423.E808958@keescook/
-Tested-by: Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Link: https://lore.kernel.org/r/20190724065258.16603-2-hch@lst.de
+Tested-by: Ralph Campbell <rcampbell@nvidia.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
+[jgg: elaborated commit message]
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/libata-zpodd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/vm/hmm.rst |  2 +-
+ mm/hmm.c                 | 10 ++++------
+ 2 files changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/ata/libata-zpodd.c b/drivers/ata/libata-zpodd.c
-index 173e6f2dd9af0..eefda51f97d35 100644
---- a/drivers/ata/libata-zpodd.c
-+++ b/drivers/ata/libata-zpodd.c
-@@ -56,7 +56,7 @@ static enum odd_mech_type zpodd_get_mech_type(struct ata_device *dev)
- 	unsigned int ret;
- 	struct rm_feature_desc *desc;
- 	struct ata_taskfile tf;
--	static const char cdb[] = {  GPCMD_GET_CONFIGURATION,
-+	static const char cdb[ATAPI_CDB_LEN] = {  GPCMD_GET_CONFIGURATION,
- 			2,      /* only 1 feature descriptor requested */
- 			0, 3,   /* 3, removable medium feature */
- 			0, 0, 0,/* reserved */
+diff --git a/Documentation/vm/hmm.rst b/Documentation/vm/hmm.rst
+index 7cdf7282e0229..65b6c1109cc81 100644
+--- a/Documentation/vm/hmm.rst
++++ b/Documentation/vm/hmm.rst
+@@ -231,7 +231,7 @@ respect in order to keep things properly synchronized. The usage pattern is::
+       ret = hmm_range_snapshot(&range);
+       if (ret) {
+           up_read(&mm->mmap_sem);
+-          if (ret == -EAGAIN) {
++          if (ret == -EBUSY) {
+             /*
+              * No need to check hmm_range_wait_until_valid() return value
+              * on retry we will get proper error with hmm_range_snapshot()
+diff --git a/mm/hmm.c b/mm/hmm.c
+index 4c405dfbd2b3d..27dd9a8816272 100644
+--- a/mm/hmm.c
++++ b/mm/hmm.c
+@@ -995,7 +995,7 @@ EXPORT_SYMBOL(hmm_range_unregister);
+  * @range: range
+  * Returns: -EINVAL if invalid argument, -ENOMEM out of memory, -EPERM invalid
+  *          permission (for instance asking for write and range is read only),
+- *          -EAGAIN if you need to retry, -EFAULT invalid (ie either no valid
++ *          -EBUSY if you need to retry, -EFAULT invalid (ie either no valid
+  *          vma or it is illegal to access that range), number of valid pages
+  *          in range->pfns[] (from range start address).
+  *
+@@ -1019,7 +1019,7 @@ long hmm_range_snapshot(struct hmm_range *range)
+ 	do {
+ 		/* If range is no longer valid force retry. */
+ 		if (!range->valid)
+-			return -EAGAIN;
++			return -EBUSY;
+ 
+ 		vma = find_vma(hmm->mm, start);
+ 		if (vma == NULL || (vma->vm_flags & device_vma))
+@@ -1117,10 +1117,8 @@ long hmm_range_fault(struct hmm_range *range, bool block)
+ 
+ 	do {
+ 		/* If range is no longer valid force retry. */
+-		if (!range->valid) {
+-			up_read(&hmm->mm->mmap_sem);
+-			return -EAGAIN;
+-		}
++		if (!range->valid)
++			return -EBUSY;
+ 
+ 		vma = find_vma(hmm->mm, start);
+ 		if (vma == NULL || (vma->vm_flags & device_vma))
 -- 
 2.20.1
 
