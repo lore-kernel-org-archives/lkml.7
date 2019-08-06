@@ -2,183 +2,105 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E498C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 07:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 089F4C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 07:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1ABC2070C
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 07:53:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565078021;
-	bh=aJ0gQzi7CraBWdrdtCA4IL3fP5WniL7j6VEH8TSyJcA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=0VzcFbOpYBDfu//fILFsGDp6AbFwCteLkGnt2GQJ8fnGQWTTPF5Qy1qEQrDNM1wKv
-	 ONXrQsLiL6/qZF76cLX1iZaotn3ZK3Mh/OlHLIYoYfiKqS3lu2u+xFrXEFB4ExwfdT
-	 GZ5C8INEDxJTQq9tg779zsvDGsZ+cXRmv6PZW7xs=
+	by mail.kernel.org (Postfix) with ESMTP id D6A802070C
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 07:53:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732156AbfHFHxk (ORCPT
+        id S1732170AbfHFHxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 03:53:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45056 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726834AbfHFHxk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 03:53:40 -0400
-Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.30.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B1F62070C;
-        Tue,  6 Aug 2019 07:53:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565078018;
-        bh=aJ0gQzi7CraBWdrdtCA4IL3fP5WniL7j6VEH8TSyJcA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=1n7Hj6wUYdRi13ylYAbZAQKJOegww1bDawoCRtkzjFJsy0basJ/Y1n6NPdrwGXndS
-         Jv19YVFircA6CLaZOJIrTwJQqgJ5VSUyJmiCWI7Cy5CyX9yht1tzMWcHYK/+m1EmFj
-         rVpzuGb35YaLm2Nw03cPYhqNetxNCAMKVHp+yiZg=
-Received: by wens.tw (Postfix, from userid 1000)
-        id AF4E35FC97; Tue,  6 Aug 2019 15:53:35 +0800 (CST)
-From:   Chen-Yu Tsai <wens@kernel.org>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Chen-Yu Tsai <wens@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH net v2] net: dsa: Check existence of .port_mdb_add callback before calling it
-Date:   Tue,  6 Aug 2019 15:53:25 +0800
-Message-Id: <20190806075325.9011-1-wens@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Tue, 6 Aug 2019 03:53:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42958 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726834AbfHFHxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 03:53:48 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 84A25AD29;
+        Tue,  6 Aug 2019 07:53:47 +0000 (UTC)
+Subject: Re: [PATCH V2] fork: Improve error message for corrupted page tables
+To:     Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Cc:     dave.hansen@intel.com, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+References: <3ef8a340deb1c87b725d44edb163073e2b6eca5a.1565059496.git.sai.praneeth.prakhya@intel.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <5ba88460-cf01-3d53-6d13-45e650b4eacd@suse.cz>
+Date:   Tue, 6 Aug 2019 09:53:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <3ef8a340deb1c87b725d44edb163073e2b6eca5a.1565059496.git.sai.praneeth.prakhya@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
 
-With the recent addition of commit 75dad2520fc3 ("net: dsa: b53: Disable
-all ports on setup"), users of b53 (BCM53125 on Lamobo R1 in my case)
-are forced to use the dsa subsystem to enable the switch, instead of
-having it in the default transparent "forward-to-all" mode.
+On 8/6/19 5:05 AM, Sai Praneeth Prakhya wrote:
+> When a user process exits, the kernel cleans up the mm_struct of the user
+> process and during cleanup, check_mm() checks the page tables of the user
+> process for corruption (E.g: unexpected page flags set/cleared). For
+> corrupted page tables, the error message printed by check_mm() isn't very
+> clear as it prints the loop index instead of page table type (E.g: Resident
+> file mapping pages vs Resident shared memory pages). The loop index in
+> check_mm() is used to index rss_stat[] which represents individual memory
+> type stats. Hence, instead of printing index, print memory type, thereby
+> improving error message.
+> 
+> Without patch:
+> --------------
+> [  204.836425] mm/pgtable-generic.c:29: bad p4d 0000000089eb4e92(800000025f941467)
+> [  204.836544] BUG: Bad rss-counter state mm:00000000f75895ea idx:0 val:2
+> [  204.836615] BUG: Bad rss-counter state mm:00000000f75895ea idx:1 val:5
+> [  204.836685] BUG: non-zero pgtables_bytes on freeing mm: 20480
+> 
+> With patch:
+> -----------
+> [   69.815453] mm/pgtable-generic.c:29: bad p4d 0000000084653642(800000025ca37467)
+> [   69.815872] BUG: Bad rss-counter state mm:00000000014a6c03 type:MM_FILEPAGES val:2
+> [   69.815962] BUG: Bad rss-counter state mm:00000000014a6c03 type:MM_ANONPAGES val:5
+> [   69.816050] BUG: non-zero pgtables_bytes on freeing mm: 20480
+> 
+> Also, change print function (from printk(KERN_ALERT, ..) to pr_alert()) so
+> that it matches the other print statement.
+> 
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+> Acked-by: Dave Hansen <dave.hansen@intel.com>
+> Suggested-by: Dave Hansen <dave.hansen@intel.com>
+> Signed-off-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
 
-The b53 driver does not support mdb bitmap functions. However the dsa
-layer does not check for the existence of the .port_mdb_add callback
-before actually using it. This results in a NULL pointer dereference,
-as shown in the kernel oops below.
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
-The other functions seem to be properly guarded. Do the same for
-.port_mdb_add in dsa_switch_mdb_add_bitmap() as well.
+I would also add something like this to reduce risk of breaking it in the
+future:
 
-b53 is not the only driver that doesn't support mdb bitmap functions.
-Others include bcm_sf2, dsa_loop, lantiq_gswip, mt7530, mv88e6060,
-qca8k, realtek-smi, and vitesse-vsc73xx.
-
-    8<--- cut here ---
-    Unable to handle kernel NULL pointer dereference at virtual address 00000000
-    pgd = (ptrval)
-    [00000000] *pgd=00000000
-    Internal error: Oops: 80000005 [#1] SMP ARM
-    Modules linked in: rtl8xxxu rtl8192cu rtl_usb rtl8192c_common rtlwifi mac80211 cfg80211
-    CPU: 1 PID: 134 Comm: kworker/1:2 Not tainted 5.3.0-rc1-00247-gd3519030752a #1
-    Hardware name: Allwinner sun7i (A20) Family
-    Workqueue: events switchdev_deferred_process_work
-    PC is at 0x0
-    LR is at dsa_switch_event+0x570/0x620
-    pc : [<00000000>]    lr : [<c08533ec>]    psr: 80070013
-    sp : ee871db8  ip : 00000000  fp : ee98d0a4
-    r10: 0000000c  r9 : 00000008  r8 : ee89f710
-    r7 : ee98d040  r6 : ee98d088  r5 : c0f04c48  r4 : ee98d04c
-    r3 : 00000000  r2 : ee89f710  r1 : 00000008  r0 : ee98d040
-    Flags: Nzcv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
-    Control: 10c5387d  Table: 6deb406a  DAC: 00000051
-    Process kworker/1:2 (pid: 134, stack limit = 0x(ptrval))
-    Stack: (0xee871db8 to 0xee872000)
-    1da0:                                                       ee871e14 103ace2d
-    1dc0: 00000000 ffffffff 00000000 ee871e14 00000005 00000000 c08524a0 00000000
-    1de0: ffffe000 c014bdfc c0f04c48 ee871e98 c0f04c48 ee9e5000 c0851120 c014bef0
-    1e00: 00000000 b643aea2 ee9b4068 c08509a8 ee2bf940 ee89f710 ee871ecb 00000000
-    1e20: 00000008 103ace2d 00000000 c087e248 ee29c868 103ace2d 00000001 ffffffff
-    1e40: 00000000 ee871e98 00000006 00000000 c0fb2a50 c087e2d0 ffffffff c08523c4
-    1e60: ffffffff c014bdfc 00000006 c0fad2d0 ee871e98 ee89f710 00000000 c014c500
-    1e80: 00000000 ee89f3c0 c0f04c48 00000000 ee9e5000 c087dfb4 ee9e5000 00000000
-    1ea0: ee89f710 ee871ecb 00000001 103ace2d 00000000 c0f04c48 00000000 c087e0a8
-    1ec0: 00000000 efd9a3e0 0089f3c0 103ace2d ee89f700 ee89f710 ee9e5000 00000122
-    1ee0: 00000100 c087e130 ee89f700 c0fad2c8 c1003ef0 c087de4c 2e928000 c0fad2ec
-    1f00: c0fad2ec ee839580 ef7a62c0 ef7a9400 00000000 c087def8 c0fad2ec c01447dc
-    1f20: ef315640 ef7a62c0 00000008 ee839580 ee839594 ef7a62c0 00000008 c0f03d00
-    1f40: ef7a62d8 ef7a62c0 ffffe000 c0145b84 ffffe000 c0fb2420 c0bfaa8c 00000000
-    1f60: ffffe000 ee84b600 ee84b5c0 00000000 ee870000 ee839580 c0145b40 ef0e5ea4
-    1f80: ee84b61c c014a6f8 00000001 ee84b5c0 c014a5b0 00000000 00000000 00000000
-    1fa0: 00000000 00000000 00000000 c01010e8 00000000 00000000 00000000 00000000
-    1fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-    1fe0: 00000000 00000000 00000000 00000000 00000013 00000000 00000000 00000000
-    [<c08533ec>] (dsa_switch_event) from [<c014bdfc>] (notifier_call_chain+0x48/0x84)
-    [<c014bdfc>] (notifier_call_chain) from [<c014bef0>] (raw_notifier_call_chain+0x18/0x20)
-    [<c014bef0>] (raw_notifier_call_chain) from [<c08509a8>] (dsa_port_mdb_add+0x48/0x74)
-    [<c08509a8>] (dsa_port_mdb_add) from [<c087e248>] (__switchdev_handle_port_obj_add+0x54/0xd4)
-    [<c087e248>] (__switchdev_handle_port_obj_add) from [<c087e2d0>] (switchdev_handle_port_obj_add+0x8/0x14)
-    [<c087e2d0>] (switchdev_handle_port_obj_add) from [<c08523c4>] (dsa_slave_switchdev_blocking_event+0x94/0xa4)
-    [<c08523c4>] (dsa_slave_switchdev_blocking_event) from [<c014bdfc>] (notifier_call_chain+0x48/0x84)
-    [<c014bdfc>] (notifier_call_chain) from [<c014c500>] (blocking_notifier_call_chain+0x50/0x68)
-    [<c014c500>] (blocking_notifier_call_chain) from [<c087dfb4>] (switchdev_port_obj_notify+0x44/0xa8)
-    [<c087dfb4>] (switchdev_port_obj_notify) from [<c087e0a8>] (switchdev_port_obj_add_now+0x90/0x104)
-    [<c087e0a8>] (switchdev_port_obj_add_now) from [<c087e130>] (switchdev_port_obj_add_deferred+0x14/0x5c)
-    [<c087e130>] (switchdev_port_obj_add_deferred) from [<c087de4c>] (switchdev_deferred_process+0x64/0x104)
-    [<c087de4c>] (switchdev_deferred_process) from [<c087def8>] (switchdev_deferred_process_work+0xc/0x14)
-    [<c087def8>] (switchdev_deferred_process_work) from [<c01447dc>] (process_one_work+0x218/0x50c)
-    [<c01447dc>] (process_one_work) from [<c0145b84>] (worker_thread+0x44/0x5bc)
-    [<c0145b84>] (worker_thread) from [<c014a6f8>] (kthread+0x148/0x150)
-    [<c014a6f8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
-    Exception stack(0xee871fb0 to 0xee871ff8)
-    1fa0:                                     00000000 00000000 00000000 00000000
-    1fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-    1fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-    Code: bad PC value
-    ---[ end trace 1292c61abd17b130 ]---
-
-    [<c08533ec>] (dsa_switch_event) from [<c014bdfc>] (notifier_call_chain+0x48/0x84)
-    corresponds to
-
-	$ arm-linux-gnueabihf-addr2line -C -i -e vmlinux c08533ec
-
-	linux/net/dsa/switch.c:156
-	linux/net/dsa/switch.c:178
-	linux/net/dsa/switch.c:328
-
-Fixes: e6db98db8a95 ("net: dsa: add switch mdb bitmap functions")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
-Changes since v1:
-
-  - Moved the check to the beginning of dsa_switch_mdb_add()
-
-Looks like we could also move the ops check out of
-dsa_switch_mdb_prepare_bitmap(), though I suppose keeping the code the
-way it is now is clearer.
-
----
- net/dsa/switch.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/net/dsa/switch.c b/net/dsa/switch.c
-index 4ec5b7f85d51..231af5268656 100644
---- a/net/dsa/switch.c
-+++ b/net/dsa/switch.c
-@@ -164,6 +164,9 @@ static int dsa_switch_mdb_add(struct dsa_switch *ds,
- 	struct switchdev_trans *trans = info->trans;
- 	int port;
+----8<----
+diff --git a/include/linux/mm_types_task.h b/include/linux/mm_types_task.h
+index d7016dcb245e..a6f83cbe4603 100644
+--- a/include/linux/mm_types_task.h
++++ b/include/linux/mm_types_task.h
+@@ -36,6 +36,9 @@ struct vmacache {
+ 	struct vm_area_struct *vmas[VMACACHE_SIZE];
+ };
  
-+	if (!ds->ops->port_mdb_add)
-+		return -EOPNOTSUPP;
-+
- 	/* Build a mask of Multicast group members */
- 	bitmap_zero(ds->bitmap, ds->num_ports);
- 	if (ds->index == info->sw_index)
--- 
-2.20.1
-
++/*
++ * When touching this, update also resident_page_types in kernel/fork.c
++ */
+ enum {
+ 	MM_FILEPAGES,	/* Resident file mapping pages */
+ 	MM_ANONPAGES,	/* Resident anonymous pages */
