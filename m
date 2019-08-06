@@ -2,161 +2,307 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A225C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF41C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 484EC2173B
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:12:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E942A2173C
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:13:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NLzdWuiC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfHFVMT (ORCPT
+        id S1726714AbfHFVNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:12:19 -0400
-Received: from mga04.intel.com ([192.55.52.120]:45403 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726869AbfHFVMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:12:18 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 14:12:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
-   d="scan'208";a="349548305"
-Received: from sai-dev-mach.sc.intel.com ([143.183.140.153])
-  by orsmga005.jf.intel.com with ESMTP; 06 Aug 2019 14:12:17 -0700
-From:   Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
-To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Cc:     dave.hansen@intel.com, anshuman.khandual@arm.com, vbabka@suse.cz,
-        mhocko@suse.com,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH V3] fork: Improve error message for corrupted page tables
-Date:   Tue,  6 Aug 2019 14:09:07 -0700
-Message-Id: <da75b5153f617f4c5739c08ee6ebeb3d19db0fbc.1565123758.git.sai.praneeth.prakhya@intel.com>
-X-Mailer: git-send-email 2.19.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 6 Aug 2019 17:13:22 -0400
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:53942 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725973AbfHFVNW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:13:22 -0400
+Received: by mail-pl1-f201.google.com with SMTP id y22so49045328plr.20
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 14:13:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=a29LgJr2OVNgNdoTJtcopFf7qnnTbwaGIZqViSAu3/k=;
+        b=NLzdWuiCXL7c0/dtL69GVOr2Y63qNgQ+sCoXTw5/DacbxJ/IGbROhYZ3ObSBXAq6q8
+         2hxY7491HJ22D4YaH/n5icGPjX3DdFJTWgLw/FNkw7pWT7OS/UOYO0MqMxVk3kAS6Pcc
+         Co7bMNmQVZuGQybu72NrTWqVBs0gxUDzKXJiTzaGlhYIyYlddQxcsUJVQfDayFM1LyB/
+         QHCwpQ1l4aNaVooWK88K/I1UdYZKc12S2WN1d0SROT9ThZJ4bAe1fSmnxBdnCk+uFK0Z
+         mEulgzOHXV18SdoceNA8bCLf6ToNHdSLjiSko1wjx5A2EW6JnTcc/ihF1SMmPdPWBUQw
+         TQVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=a29LgJr2OVNgNdoTJtcopFf7qnnTbwaGIZqViSAu3/k=;
+        b=gDUm4LLosiI962okJ3zeAvhd4AKHZZvOfJq6HEkvcaE7IS616OdStXgjPbhEn8Pks8
+         O5aIPi4FBMm/LtxjqDNx6aA2npXsae6R+xGdRTE9SUICKCZTKHhFovRPMmR98Z+KQIUd
+         JUxixOknhisGO5SYtFf9ydM4RK5U72X/3yjPzhqprCM7kjIUbrCfnD6Lvu//Mu/nC3rM
+         Kyjce0QAWbg5pCsGHQgc1nExFtLDb5J7Vj9KCugEXBt7jmgBaKiAa2dSQcdcSc6W2Zec
+         63CzsDO8YpdnDWOrVkw3LiuqtFDOUvIcEB681g9k9ryJ3rQRF/GcF7Hr+1ksrTPl/wkX
+         tsAw==
+X-Gm-Message-State: APjAAAVzM0qWgFWAltw0mCW8hNU9KPiqkXrsDVQFwKW/ZpxmbBro1ARv
+        z9iLHUWCo1eCkXewVeYvAQbEDUWSZA==
+X-Google-Smtp-Source: APXvYqz7QBtDtaXLR5iNw8IILGOdYiseG9OIezrHeW8Ibpw3dPeu/OQrEHvPnp9cujI51MmNw1JvVKirlw==
+X-Received: by 2002:a65:5183:: with SMTP id h3mr4783468pgq.250.1565126000981;
+ Tue, 06 Aug 2019 14:13:20 -0700 (PDT)
+Date:   Tue,  6 Aug 2019 14:10:46 -0700
+Message-Id: <20190806211047.232709-1-nhuck@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
+Subject: [RFC PATCH 1/2] Add clang-tidy and static analyzer support to makefile
+From:   Nathan Huckleberry <nhuck@google.com>
+To:     mark.rutland@arm.com
+Cc:     clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org,
+        Nathan Huckleberry <nhuck@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a user process exits, the kernel cleans up the mm_struct of the user
-process and during cleanup, check_mm() checks the page tables of the user
-process for corruption (E.g: unexpected page flags set/cleared). For
-corrupted page tables, the error message printed by check_mm() isn't very
-clear as it prints the loop index instead of page table type (E.g: Resident
-file mapping pages vs Resident shared memory pages). The loop index in
-check_mm() is used to index rss_stat[] which represents individual memory
-type stats. Hence, instead of printing index, print memory type, thereby
-improving error message.
-
-Without patch:
---------------
-[  204.836425] mm/pgtable-generic.c:29: bad p4d 0000000089eb4e92(800000025f941467)
-[  204.836544] BUG: Bad rss-counter state mm:00000000f75895ea idx:0 val:2
-[  204.836615] BUG: Bad rss-counter state mm:00000000f75895ea idx:1 val:5
-[  204.836685] BUG: non-zero pgtables_bytes on freeing mm: 20480
-
-With patch:
------------
-[   69.815453] mm/pgtable-generic.c:29: bad p4d 0000000084653642(800000025ca37467)
-[   69.815872] BUG: Bad rss-counter state mm:00000000014a6c03 type:MM_FILEPAGES val:2
-[   69.815962] BUG: Bad rss-counter state mm:00000000014a6c03 type:MM_ANONPAGES val:5
-[   69.816050] BUG: non-zero pgtables_bytes on freeing mm: 20480
-
-Also, change print function (from printk(KERN_ALERT, ..) to pr_alert()) so
-that it matches the other print statement.
-
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Acked-by: Dave Hansen <dave.hansen@intel.com>
-Suggested-by: Dave Hansen <dave.hansen@intel.com>
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Signed-off-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+Signed-off-by: Nathan Huckleberry <nhuck@google.com>
 ---
+These patches add clang-tidy and the clang static-analyzer as make
+targets. The goal of these patches is to make static analysis tools
+usable and extendable by any developer or researcher who is familiar
+with basic c++.
 
-Changes from V2 to V3:
-----------------------
-1. Add comment that suggests to update resident_page_types[] if there are any
-   changes to exisiting page types in <linux/mm_types_task.h>
-2. Add a build check to enforce resident_page_types[] is always in sync
-3. Use a macro to populate elements of resident_page_types[]
+The current static analysis tools require intimate knowledge of the internal
+workings of the static analysis.  Clang-tidy and the clang static analyzers
+expose an easy to use api and allow users unfamiliar with clang to
+write new checks with relative ease.
 
-Changes from V1 to V2:
-----------------------
-1. Move struct definition from header file to fork.c file, so that it won't be
-   included in every compilation unit. As this struct is used *only* in fork.c,
-   include the definition in fork.c itself.
-2. Index the struct to match respective macros.
-3. Mention about print function change in commit message.
+===Clang-tidy===
 
- include/linux/mm_types_task.h |  4 ++++
- kernel/fork.c                 | 16 ++++++++++++++--
- 2 files changed, 18 insertions(+), 2 deletions(-)
+Clang-tidy is an easily extendable 'linter' that runs on the AST.
+Clang-tidy checks are easy to write and understand. A check consists of
+two parts, a matcher and a checker. The matcher is created using a
+domain specific language that acts on the AST
+(https://clang.llvm.org/docs/LibASTMatchersReference.html).  When AST
+nodes are found by the matcher a callback is made to the checker. The
+checker can then execute additional checks and issue warnings.
 
-diff --git a/include/linux/mm_types_task.h b/include/linux/mm_types_task.h
-index d7016dcb245e..c1bc6731125c 100644
---- a/include/linux/mm_types_task.h
-+++ b/include/linux/mm_types_task.h
-@@ -36,6 +36,10 @@ struct vmacache {
- 	struct vm_area_struct *vmas[VMACACHE_SIZE];
- };
+Here is an example clang-tidy check to report functions that have calls
+to local_irq_disable without calls to local_irq_enable and vice-versa.
+Functions flagged with __attribute((annotation("ignore_irq_balancing")))
+are ignored for analysis.
+
+The full patch can be found here (https://reviews.llvm.org/D65828)
+
+```
+void IrqUnbalancedCheck::registerMatchers(MatchFinder *Finder) {
+  // finds calls to "arch_local_irq_disable" in a function body
+  auto disable =
+              forEachDescendant(
+                  callExpr(
+                      hasDeclaration(
+                          namedDecl(
+                              hasName("arch_local_irq_disable")))).bind("disable"));
+
+  // finds calls to "arch_local_irq_enable" in a function body
+  auto enable =
+              forEachDescendant(
+                  callExpr(
+                      hasDeclaration(
+                          namedDecl(
+                              hasName("arch_local_irq_enable")))).bind("enable"));
+
+  // Looks for function body that has the following property:
+  // ((disable && !enable) || (enable && !disable))
+  auto matcher = functionDecl(
+      anyOf(allOf(disable, unless(enable)), allOf(enable, unless(disable))));
+
+  Finder->addMatcher(matcher.bind("func"), this);
+}
+
+std::string annotation = "ignore_irq_balancing";
+void IrqUnbalancedCheck::check(const MatchFinder::MatchResult &Result) {
+  const auto *MatchedDecl = Result.Nodes.getNodeAs<FunctionDecl>("func");
+  const auto *DisableCall = Result.Nodes.getNodeAs<CallExpr>("disable");
+  const auto *EnableCall = Result.Nodes.getNodeAs<CallExpr>("enable");
+
+  // If the function has __attribute((annotate("ignore_irq_balancing"))
+  for (const auto *Attr : MatchedDecl->attrs()) {
+    if (Attr->getKind() == clang::attr::Annotate) {
+      if(dyn_cast<AnnotateAttr>(Attr)->getAnnotation().str() == annotation) {
+        return;
+      }
+    }
+  }
+
+  if(EnableCall) {
+    diag(MatchedDecl->getLocation(), "call to 'enable_local_irq' without 'disable_local_irq' in %0 ")
+        << MatchedDecl;
+    diag(EnableCall->getBeginLoc(), "call to 'enable_local_irq'", DiagnosticIDs::Note)
+        << MatchedDecl;
+  }
+
+  if(DisableCall) {
+    diag(MatchedDecl->getLocation(), "call to 'disable_local_irq' without 'enable_local_irq' in %0 ")
+        << MatchedDecl;
+    diag(DisableCall->getBeginLoc(), "call to 'disable_local_irq'", DiagnosticIDs::Note)
+        << MatchedDecl;
+  }
+}
+```
+
+===Clang static analyzer===
+
+The clang static analyzer is a more powerful static analysis tool that
+uses symbolic execution to find bugs. Currently there is a check that
+looks for potential security bugs from invalid uses of kmalloc and
+kfree. There are several more general purpose checks that are useful for
+the kernel.
+
+The clang static analyzer is well documented and designed to be
+extensible.
+(https://clang-analyzer.llvm.org/checker_dev_manual.html)
+(https://github.com/haoNoQ/clang-analyzer-guide/releases/download/v0.1/clang-analyzer-guide-v0.1.pdf)
+
+
+Why add clang-tidy and the clang static analyzer when other static
+analyzers are already in the kernel?
+
+The main draw of the clang tools is how accessible they are. The clang
+documentation is very nice and these tools are built specifically to be
+easily extendable by any developer. They provide an accessible method of
+bug-finding and research to people who are not overly familiar with the
+kernel codebase.
+
+ Makefile                                      |  3 ++
+ scripts/clang-tools/Makefile.clang-tools      | 35 ++++++++++++++
+ .../{ => clang-tools}/gen_compile_commands.py |  0
+ scripts/clang-tools/parse_compile_commands.py | 47 +++++++++++++++++++
+ 4 files changed, 85 insertions(+)
+ create mode 100644 scripts/clang-tools/Makefile.clang-tools
+ rename scripts/{ => clang-tools}/gen_compile_commands.py (100%)
+ create mode 100755 scripts/clang-tools/parse_compile_commands.py
+
+diff --git a/Makefile b/Makefile
+index fabc127d127f..49f1d3fa48a8 100644
+--- a/Makefile
++++ b/Makefile
+@@ -709,6 +709,7 @@ KBUILD_CFLAGS	+= $(call cc-option,--param=allow-store-data-races=0)
  
-+/*
-+ * When updating this, please also update struct resident_page_types[] in
-+ * kernel/fork.c
-+ */
- enum {
- 	MM_FILEPAGES,	/* Resident file mapping pages */
- 	MM_ANONPAGES,	/* Resident anonymous pages */
-diff --git a/kernel/fork.c b/kernel/fork.c
-index d8ae0f1b4148..7583e0fde0ed 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -125,6 +125,15 @@ int nr_threads;			/* The idle threads do not count.. */
+ include scripts/Makefile.kcov
+ include scripts/Makefile.gcc-plugins
++include scripts/clang-tools/Makefile.clang-tools
  
- static int max_threads;		/* tunable limit on nr_threads */
- 
-+#define NAMED_ARRAY_INDEX(x)	[x] = __stringify(x)
+ ifdef CONFIG_READABLE_ASM
+ # Disable optimizations that make assembler listings hard to read.
+@@ -1470,6 +1471,8 @@ help:
+ 	@echo  '  headers_check   - Sanity check on exported headers'
+ 	@echo  '  headerdep       - Detect inclusion cycles in headers'
+ 	@echo  '  coccicheck      - Check with Coccinelle'
++	@echo  '  clang-analyzer  - Check with clang static analyzer'
++	@echo  '  clang-tidy      - Check with clang-tidy'
+ 	@echo  ''
+ 	@echo  'Kernel selftest:'
+ 	@echo  '  kselftest       - Build and run kernel selftest (run as root)'
+diff --git a/scripts/clang-tools/Makefile.clang-tools b/scripts/clang-tools/Makefile.clang-tools
+new file mode 100644
+index 000000000000..0adb6df20777
+--- /dev/null
++++ b/scripts/clang-tools/Makefile.clang-tools
+@@ -0,0 +1,35 @@
++# SPDX-License-Identifier: GPL-2.0
++PHONY += clang-tidy
++HAS_PARALLEL := $(shell (parallel --version 2> /dev/null) | grep 'GNU parallel' 2> /dev/null)
++clang-tidy:
++ifdef CONFIG_CC_IS_CLANG
++	$(PYTHON3) scripts/clang-tools/gen_compile_commands.py
++ifdef HAS_PARALLEL
++	#Xargs interleaves multiprocessed output. GNU Parallel does not.
++	scripts/clang-tools/parse_compile_commands.py compile_commands.json \
++		| parallel -k -j $(shell nproc) 'echo {} && clang-tidy -p . "-checks=-*,linuxkernel-*" {}'
++else
++	@echo "GNU parallel is not installed. Defaulting to non-parallelized runs"
++	scripts/clang-tools/parse_compile_commands.py compile_commands.json \
++		| xargs -L 1 -I@ sh -c "echo '@' && clang-tidy -p . '-checks=-*,linuxkernel-*' @"
++endif
++else
++	$(error Clang-tidy requires CC=clang)
++endif
 +
-+static const char * const resident_page_types[] = {
-+	NAMED_ARRAY_INDEX(MM_FILEPAGES),
-+	NAMED_ARRAY_INDEX(MM_ANONPAGES),
-+	NAMED_ARRAY_INDEX(MM_SWAPENTS),
-+	NAMED_ARRAY_INDEX(MM_SHMEMPAGES),
-+};
++PHONY += clang-analyzer
++clang-analyzer:
++ifdef CONFIG_CC_IS_CLANG
++	$(PYTHON3) scripts/clang-tools/gen_compile_commands.py
++ifdef HAS_PARALLEL
++	#Xargs interleaves multiprocessed output. GNU Parallel does not.
++	scripts/clang-tools/parse_compile_commands.py compile_commands.json \
++		| parallel -k -j $(shell nproc) 'echo {} && clang-tidy -p . "-checks=-*,clang-analyzer-*" {}'
++else
++	@echo "GNU parallel is not installed. Defaulting to non-parallelized runs"
++	scripts/clang-tools/parse_compile_commands.py compile_commands.json \
++		| xargs -L 1 -I@ sh -c "echo '@' && clang-tidy -p . '-checks=-*,clang-analyzer-*' @"
++endif
++else
++	$(error Clang-analyzer requires CC=clang)
++endif
+diff --git a/scripts/gen_compile_commands.py b/scripts/clang-tools/gen_compile_commands.py
+similarity index 100%
+rename from scripts/gen_compile_commands.py
+rename to scripts/clang-tools/gen_compile_commands.py
+diff --git a/scripts/clang-tools/parse_compile_commands.py b/scripts/clang-tools/parse_compile_commands.py
+new file mode 100755
+index 000000000000..d6bc1bf9951e
+--- /dev/null
++++ b/scripts/clang-tools/parse_compile_commands.py
+@@ -0,0 +1,47 @@
++#!/usr/bin/env python
++# SPDX-License-Identifier: GPL-2.0
++#
++# Copyright (C) Google LLC, 2019
++#
++# Author: Nathan Huckleberry <nhuck@google.com>
++#
++"""A helper routine for make clang-tidy to parse compile_commands.json."""
 +
- DEFINE_PER_CPU(unsigned long, process_counts) = 0;
- 
- __cacheline_aligned DEFINE_RWLOCK(tasklist_lock);  /* outer */
-@@ -645,12 +654,15 @@ static void check_mm(struct mm_struct *mm)
- {
- 	int i;
- 
-+	BUILD_BUG_ON_MSG(ARRAY_SIZE(resident_page_types) != NR_MM_COUNTERS,
-+			 "Please make sure 'struct resident_page_types[]' is updated as well");
++import argparse
++import json
++import logging
++import os
++import re
 +
- 	for (i = 0; i < NR_MM_COUNTERS; i++) {
- 		long x = atomic_long_read(&mm->rss_stat.count[i]);
- 
- 		if (unlikely(x))
--			printk(KERN_ALERT "BUG: Bad rss-counter state "
--					  "mm:%p idx:%d val:%ld\n", mm, i, x);
-+			pr_alert("BUG: Bad rss-counter state mm:%p type:%s val:%ld\n",
-+				 mm, resident_page_types[i], x);
- 	}
- 
- 	if (mm_pgtables_bytes(mm))
++def parse_arguments():
++  """Set up and parses command-line arguments.
++  Returns:
++    file_path: Path to compile_commands.json file
++  """
++  usage = """Parse a compilation database and return a list of files
++  included in the database"""
++  parser = argparse.ArgumentParser(description=usage)
++
++  file_path_help = ('Path to the compilation database to parse')
++  parser.add_argument('file',  type=str, help=file_path_help)
++
++  args = parser.parse_args()
++
++  return args.file
++
++
++def main():
++  filename = parse_arguments()
++
++  #Read JSON data into the datastore variable
++  if filename:
++    with open(filename, 'r') as f:
++      datastore = json.load(f)
++
++      #Use the new datastore datastructure
++      for entry in datastore:
++        print(entry['file'])
++
++
++if __name__ == '__main__':
++    main()
 -- 
-2.7.4
+2.22.0.709.g102302147b-goog
 
