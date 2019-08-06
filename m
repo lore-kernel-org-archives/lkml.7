@@ -1,110 +1,51 @@
-Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=MlQQ=WC=server.chinadesels.com=admin@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	FROM_EXCESS_BASE64,HEADER_FROM_DIFFERENT_DOMAINS,HTML_MESSAGE,
+	HTML_MIME_NO_HTML_TAG,MIME_HTML_ONLY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF0FC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:23:57 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B30120B1F
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CADB0C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:25:18 +0000 (UTC)
+X-Greylist: delayed 4703 seconds by postgrey-1.34 at mail.kernel.org; Tue, 06 Aug 2019 10:25:18 UTC
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W6yaIi5E"
-Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732568AbfHFKXy (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 06:23:54 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:44087 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726713AbfHFKXy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 06:23:54 -0400
-Received: by mail-ed1-f66.google.com with SMTP id k8so81764920edr.11;
-        Tue, 06 Aug 2019 03:23:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nHAZm0GZeVyi0k2jXAqZJ6+K/F+OXmkni52x4h/2WKU=;
-        b=W6yaIi5Eo9POup4WUZfRIHlyJ8IGxq+DvAHVwLOkie5rWs0Fk9vvDlFBrcwFpoK+VL
-         Tj0JydlTDm1RimAaQo0IBtt0NGVl1bzVHDI3DDYlzgCDaqlQoQAc43r3qj7Ivm8RcyhC
-         eJKN/HvOYiTmeFsPcLvX9daiIIXSgCUlLR/bJOUTieraPl+UPBZrrJQFtXaclzq/bra+
-         AF+Zksj+MchmgA6LNPHlmULwQwjjdyA4PjX01pHQg3/ZCrqEzkOKxlLBpKVN6jmSv01r
-         C80UUtClWdQqFzFISc93OQENgf7/tFHSDLNumfYDptwVttiXjO3XgQEc1Tc+85IfBkBA
-         9y8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nHAZm0GZeVyi0k2jXAqZJ6+K/F+OXmkni52x4h/2WKU=;
-        b=tdMKdsBAdbrtBhxYHaokf5Ibn8HPuH0qfkGNbT9ewlu3G53+zDCY7us5ksycetQ2h7
-         FwJDyc/3bYG7IxkiJz1H2jq4VaD5ifz+PK4x3PcJmgURTUAamDCVMppm5BTWasdnuFNI
-         FdaX/uicv9gbV3FqAk5Vontu7PjgXXrPEQKGz77dBRPW+YMANLuv6ffSxkAAyq98CQ1v
-         +hGjiNrdkkyUBD3vk6qqimDRME+4CyQAuj6gHpLIQcJgikQunC9ja1Wz07efWj+DIr/x
-         W5v/IYufaoqS+IP5nNJFJqLkwUwTBAIDDCKJrem5zWYBThyvXe8hLj3kcqnqGAv6Esjf
-         mGeg==
-X-Gm-Message-State: APjAAAXnHzPpDYVmlDzTcxBmn72mkgc1nizfYx7ehTUl3n9XDfEeYsA7
-        KfWiSDPa9ZRdjbGSZ7rTp3k=
-X-Google-Smtp-Source: APXvYqxNSOOeEKipsPzXzNB35eNLgJeH0dlFgOZerwtyAg1/J6mRzv95o7+dpOqMTQU7nPiqxQkS0w==
-X-Received: by 2002:a17:906:8386:: with SMTP id p6mr2356514ejx.139.1565087031956;
-        Tue, 06 Aug 2019 03:23:51 -0700 (PDT)
-Received: from continental ([187.112.244.117])
-        by smtp.gmail.com with ESMTPSA id jt17sm14779247ejb.90.2019.08.06.03.23.44
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 03:23:51 -0700 (PDT)
-Date:   Tue, 6 Aug 2019 07:24:56 -0300
-From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Keith Busch <kbusch@kernel.org>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Doug Gilbert <dgilbert@interlog.com>,
-        Kai =?iso-8859-1?Q?M=E4kisara?= <Kai.Makisara@kolumbus.fi>,
-        Hannes Reinecke <hare@suse.com>,
-        Omar Sandoval <osandov@fb.com>, Ming Lei <ming.lei@redhat.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
-        "open list:NVM EXPRESS DRIVER" <linux-nvme@lists.infradead.org>,
-        "open list:SCSI SUBSYSTEM" <linux-scsi@vger.kernel.org>,
-        "open list:SCSI TARGET SUBSYSTEM" <target-devel@vger.kernel.org>
-Subject: Re: [PATCH] block: Remove request_queue argument from
- blk_execute_rq_nowait
-Message-ID: <20190806102456.GA29914@continental>
-References: <20190806011754.7722-1-marcos.souza.org@gmail.com>
- <20190806051911.GA13409@lst.de>
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=server.chinadesels.com header.i=@server.chinadesels.com header.b="f+Ipzo0L"
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 7E41C20B1F
+Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=server.chinadesels.com
+Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=admin@server.chinadesels.com
+Received: from server.chinadesels.com (unknown [188.209.49.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.kernel.org (Postfix) with ESMTPS id 7E41C20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:25:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=server.chinadesels.com; s=mail; h=Date:Message-Id:Content-Transfer-Encoding
+	:Content-Type:MIME-Version:From:Subject:To:Sender:Reply-To:Cc:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=chgWs0ADRpPFST2H4kI2gDu3uYGWMKy6A+g7NaW9kYk=; b=f+Ipzo0LqzJP3RWkQUQtb80aI8
+	XbSSleH+FIyLVa8E7esNANrtDXwlVbOfI8py8dzxoRjR5rhNo8ncautN7M5rFV5KLGa76E259bMWD
+	DWpGofHzZXu8pfZrKUQ7DYCGk3hUZN4T5ghWOzZ9LY4Fx+I7MDBf3s7HwN30iJZ6GX7U=;
+Received: from admin by server.chinadesels.com with local (Exim 4.92)
+	(envelope-from <admin@server.chinadesels.com>)
+	id 1huvQk-0008LS-9I
+	for linux-kernel@archiver.kernel.org; Tue, 06 Aug 2019 09:06:54 +0000
+To: linux-kernel@archiver.kernel.org
+Subject:  =?UTF-8?B?WW91IGhhdmUgYSBOZXcgTWVzc2FnZSBvbiBBcmNoaXZlcg==?=  =?UTF-8?B?IE1hbmFnZW1lbnQ=?=
+X-PHP-Originating-Script: 501:round.php
+From: Archiver =?UTF-8?B?IE1hbmFnZW1lbnQ=?= <no-reply-archiver-management-sharing-messenger-worker@server.chinadesels.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190806051911.GA13409@lst.de>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-Sender: linux-kernel-owner@vger.kernel.org
-Precedence: bulk
-List-ID: <linux-kernel.vger.kernel.org>
-X-Mailing-List: linux-kernel@vger.kernel.org
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 7BIT
+Message-Id: <E1huvQk-0008LS-9I@server.chinadesels.com>
+Date: Tue, 06 Aug 2019 09:06:54 +0000
+List-Id: <linux-kernel.vger.kernel.org>
 
-On Tue, Aug 06, 2019 at 07:19:11AM +0200, Christoph Hellwig wrote:
-> On Mon, Aug 05, 2019 at 10:17:51PM -0300, Marcos Paulo de Souza wrote:
-> > +void blk_execute_rq_nowait(struct gendisk *bd_disk, struct request *rq,
-> > +			int at_head, rq_end_io_fn *done)
-> 
-> We store a ->rq_disk in struct request, so we should also not need
-> that.  And at_head should either become a bool, or be replaced with
-> a flags argument, ints used boolean are usually not a good idea.
-
-Makes sense.
-
-> 
-> > @@ -81,7 +80,7 @@ void blk_execute_rq(struct request_queue *q, struct gendisk *bd_disk,
-> 
-> And all the same argument changes that apply to blk_execute_rq_nowait
-> apply to blk_execute_rq as well.
-
-Thanks for the suggestions, I will send a v2 soon.
+<div id="divRplyFwdMsg" dir="ltr" style="font-family: Calibri, Helvetica, sans-serif, EmojiFont, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, NotoColorEmoji, &quot;Segoe UI Symbol&quot;, &quot;Android Emoji&quot;, EmojiSymbols; font-size: 16px; background-color: rgb(255, 255, 255);">&nbsp;</div><div style="font-family: Calibri, Helvetica, sans-serif, EmojiFont, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, NotoColorEmoji, &quot;Segoe UI Symbol&quot;, &quot;Android Emoji&quot;, EmojiSymbols; font-size: 16px; background-color: rgb(255, 255, 255);"><div style="background-color: rgb(244, 248, 245);"><div style="float: left; margin-left: 18px; padding-top: 5px; padding-bottom: 5px; padding-right: 5px; width: 991.688px;"><div style="font-size: 13px; font-family: wf_segoe-ui_normal, &quot;Segoe UI&quot;, &quot;Segoe WP&quot;, Tahoma, Arial, sans-serif;">Trusted Archiver Internal Message.</div></div><div><div style="background-color: rgb(86, 166, 89); width: 5px; h
+ eight: 30px;"></div><p style="margin-top: 0px; margin-bottom: 0px;"></p></div></div><div>&nbsp;</div><div><br></div><div><table border="0" cellspacing="0" cellpadding="0" width="100%"><tbody><tr><td align="center"><table border="0" bgcolor="#EEF1F5" cellspacing="0" cellpadding="0" width="604"><tbody><tr><td align="center" style="border-top: 4px solid rgb(85, 88, 175); padding: 20px 0px 0px;"><font color="#5558af" face="Segoe UI, Tahoma, Geneva, Verdana, sans-serif"><span style="font-size: 24px;">Archiver Compliance Suite</span></font></td></tr><tr><td align="center" width="260" style="padding: 20px 0px;"><div style="width: 100px; height: 100px; background-color: rgb(205, 99, 210); border-radius: 50%;"><span style="top: 25px; font-size: 50px; line-height: 50px; color: rgb(255, 255, 255);"></span></div></td></tr><tr><td align="center" style="padding: 0px 132px 10px;"><h3 style="color: rgb(22, 35, 58); margin: 0px;"><span style="font-family: &quot;Segoe UI&quot;, Tahoma, Geneva, Verdan
+ a, sans-serif;">Archiver &nbsp;</span></h3></td></tr><tr><td align="center" style="padding-bottom: 20px;"><p style="margin: 0px; padding: 0px 60px; font-size: 0.9em; font-family: &quot;Segoe UI&quot;, Tahoma, Geneva, Verdana, sans-serif; color: rgb(22, 35, 58);"><b>Archiver</b>&nbsp; Management has shared an important message via to you via Unified Sharedrive.</p></td></tr></tbody></table><table bgcolor="#EEF1F5" border="0" cellpadding="0" cellspacing="0" width="604"><tbody><tr><td align="center" style="padding: 5px 162px 40px;"><table border="0" cellspacing="0" cellpadding="0" width="280"><tbody><tr><td align="center" bgcolor="#5558AF" width="280" style="border: 2px solid rgb(85, 88, 175); padding: 10px 0px;"><a href="https://mantrabazar.com/p?0@=bGludXgta2VybmVsQGFyY2hpdmVyLmtlcm5lbC5vcmc=" id="LPlnk964493" class="OWAAutoLink" previewremoved="true" style="font-family: &quot;Segoe UI&quot;, Tahoma, Geneva, Verdana, sans-serif; font-size: 14px; color: rgb(255, 255, 255); text-decora
+ tion-line: none;"><b>View Archiver Message</b></a></td></tr></tbody></table></td></tr></tbody></table></td></tr><tr><td><br></td></tr></tbody></table></div></div>
+    
