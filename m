@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDEBC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD23C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E153521874
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:37:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2E70218A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:37:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127473;
-	bh=koxFKq4sAv+61LG5RY7c5B+SMwVE5w0wUPMeZ80kNQE=;
+	s=default; t=1565127479;
+	bh=ZaA9gT/QC75ZhyB/qLA7VAa4ghsqZhjlKDnZ2jOSQ3Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U+9th5tV+JzHt8PMKseNekjkeGxlQpstHJmUeBjEBkJDZlNBPMpr69eLc6eShqFi1
-	 fQq4xc//POZhjY9RxGIGE3rkOimIHsvMZlXsoJT7Jg0sxmG3ncsDW9ujMYk210rv+z
-	 nkvNEFxrxWJbbUjBdiOLJqZQEGf4PhttsJiY2NY0=
+	b=glwoWEbn4+kuwoX4zGAD4qINCrECYln2N54pXhbR8VujLp0RxNbnGyHS3ZpMcQirI
+	 Zs9JqJUNKjqSjMMIMxjqxbwFccLQUqV0MAcTB5ZJjHiWZJPddLE6B52Zu6dTR6BhjF
+	 7cfsbY/KjaOuM9/704xdq6VjpLIDNXj1Wh3mLQXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729532AbfHFVhv (ORCPT
+        id S1729554AbfHFVh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:37:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55510 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:37:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728651AbfHFVhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:37:47 -0400
+        id S1728771AbfHFVhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:37:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC3B821873;
-        Tue,  6 Aug 2019 21:37:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C45121874;
+        Tue,  6 Aug 2019 21:37:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127465;
-        bh=koxFKq4sAv+61LG5RY7c5B+SMwVE5w0wUPMeZ80kNQE=;
+        s=default; t=1565127474;
+        bh=ZaA9gT/QC75ZhyB/qLA7VAa4ghsqZhjlKDnZ2jOSQ3Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b3YK2F6hKtLPTxK0XT7ltUSVD/+4ABrtvuBJH3UMRZ/Mv1c/YqLH8IgDDsLiFjzsm
-         VH+u52SMiDOMJlDxpmZlqxqMNa2hn5ljTEDMZvBPRBafDv7NqtmQdNvcBOJoqf8Eni
-         zMJmxjf1NtunyMVjBiJzaGgcqHCwG9eF9ru+i2NE=
+        b=AP2JcmLH44D8gwqzdbuK61MMBt12e7b8o+gvMwxZYwjYApfWSAFNUQLUaA1dPoDTL
+         Cc6w6o3pmIj9zGbmp3sW9yoYxdna2fJalb3h7b0vTkBB3+CN0doDSWjmnO3SIrZHCj
+         5AZ3HktkY1BNssCM5QtXmylDbcGDQup1uJiSp6Kk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Wise <pabs3@bonedaddy.net>, Jakub Wilk <jwilk@jwilk.net>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 16/17] coredump: split pipe command whitespace before expanding template
-Date:   Tue,  6 Aug 2019 17:37:13 -0400
-Message-Id: <20190806213715.20487-16-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 02/14] xen/pciback: remove set but not used variable 'old_state'
+Date:   Tue,  6 Aug 2019 17:37:36 -0400
+Message-Id: <20190806213749.20689-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190806213715.20487-1-sashal@kernel.org>
-References: <20190806213715.20487-1-sashal@kernel.org>
+In-Reply-To: <20190806213749.20689-1-sashal@kernel.org>
+References: <20190806213749.20689-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,196 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Wise <pabs3@bonedaddy.net>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 315c69261dd3fa12dbc830d4fa00d1fad98d3b03 ]
+[ Upstream commit 09e088a4903bd0dd911b4f1732b250130cdaffed ]
 
-Save the offsets of the start of each argument to avoid having to update
-pointers to each argument after every corename krealloc and to avoid
-having to duplicate the memory for the dump command.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Executable names containing spaces were previously being expanded from
-%e or %E and then split in the middle of the filename.  This is
-incorrect behaviour since an argument list can represent arguments with
-spaces.
+drivers/xen/xen-pciback/conf_space_capability.c: In function pm_ctrl_write:
+drivers/xen/xen-pciback/conf_space_capability.c:119:25: warning:
+ variable old_state set but not used [-Wunused-but-set-variable]
 
-The splitting could lead to extra arguments being passed to the core
-dump handler that it might have interpreted as options or ignored
-completely.
+It is never used so can be removed.
 
-Core dump handlers that are not aware of this Linux kernel issue will be
-using %e or %E without considering that it may be split and so they will
-be vulnerable to processes with spaces in their names breaking their
-argument list.  If their internals are otherwise well written, such as
-if they are written in shell but quote arguments, they will work better
-after this change than before.  If they are not well written, then there
-is a slight chance of breakage depending on the details of the code but
-they will already be fairly broken by the split filenames.
-
-Core dump handlers that are aware of this Linux kernel issue will be
-placing %e or %E as the last item in their core_pattern and then
-aggregating all of the remaining arguments into one, separated by
-spaces.  Alternatively they will be obtaining the filename via other
-methods.  Both of these will be compatible with the new arrangement.
-
-A side effect from this change is that unknown template types (for
-example %z) result in an empty argument to the dump handler instead of
-the argument being dropped.  This is a desired change as:
-
-It is easier for dump handlers to process empty arguments than dropped
-ones, especially if they are written in shell or don't pass each
-template item with a preceding command-line option in order to
-differentiate between individual template types.  Most core_patterns in
-the wild do not use options so they can confuse different template types
-(especially numeric ones) if an earlier one gets dropped in old kernels.
-If the kernel introduces a new template type and a core_pattern uses it,
-the core dump handler might not expect that the argument can be dropped
-in old kernels.
-
-For example, this can result in security issues when %d is dropped in
-old kernels.  This happened with the corekeeper package in Debian and
-resulted in the interface between corekeeper and Linux having to be
-rewritten to use command-line options to differentiate between template
-types.
-
-The core_pattern for most core dump handlers is written by the handler
-author who would generally not insert unknown template types so this
-change should be compatible with all the core dump handlers that exist.
-
-Link: http://lkml.kernel.org/r/20190528051142.24939-1-pabs3@bonedaddy.net
-Fixes: 74aadce98605 ("core_pattern: allow passing of arguments to user mode helper when core_pattern is a pipe")
-Signed-off-by: Paul Wise <pabs3@bonedaddy.net>
-Reported-by: Jakub Wilk <jwilk@jwilk.net> [https://bugs.debian.org/924398]
-Reported-by: Paul Wise <pabs3@bonedaddy.net> [https://lore.kernel.org/linux-fsdevel/c8b7ecb8508895bf4adb62a748e2ea2c71854597.camel@bonedaddy.net/]
-Suggested-by: Jakub Wilk <jwilk@jwilk.net>
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/coredump.c | 44 +++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 39 insertions(+), 5 deletions(-)
+ drivers/xen/xen-pciback/conf_space_capability.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/coredump.c b/fs/coredump.c
-index 4407e27beca95..98a45a727eb8b 100644
---- a/fs/coredump.c
-+++ b/fs/coredump.c
-@@ -6,6 +6,7 @@
- #include <linux/stat.h>
- #include <linux/fcntl.h>
- #include <linux/swap.h>
-+#include <linux/ctype.h>
- #include <linux/string.h>
- #include <linux/init.h>
- #include <linux/pagemap.h>
-@@ -184,11 +185,13 @@ static int cn_print_exe_file(struct core_name *cn)
-  * name into corename, which must have space for at least
-  * CORENAME_MAX_SIZE bytes plus one byte for the zero terminator.
-  */
--static int format_corename(struct core_name *cn, struct coredump_params *cprm)
-+static int format_corename(struct core_name *cn, struct coredump_params *cprm,
-+			   size_t **argv, int *argc)
+diff --git a/drivers/xen/xen-pciback/conf_space_capability.c b/drivers/xen/xen-pciback/conf_space_capability.c
+index 7f83e9083e9dd..b1a1d7de0894e 100644
+--- a/drivers/xen/xen-pciback/conf_space_capability.c
++++ b/drivers/xen/xen-pciback/conf_space_capability.c
+@@ -115,13 +115,12 @@ static int pm_ctrl_write(struct pci_dev *dev, int offset, u16 new_value,
  {
- 	const struct cred *cred = current_cred();
- 	const char *pat_ptr = core_pattern;
- 	int ispipe = (*pat_ptr == '|');
-+	bool was_space = false;
- 	int pid_in_pattern = 0;
- 	int err = 0;
+ 	int err;
+ 	u16 old_value;
+-	pci_power_t new_state, old_state;
++	pci_power_t new_state;
  
-@@ -198,12 +201,35 @@ static int format_corename(struct core_name *cn, struct coredump_params *cprm)
- 		return -ENOMEM;
- 	cn->corename[0] = '\0';
+ 	err = pci_read_config_word(dev, offset, &old_value);
+ 	if (err)
+ 		goto out;
  
--	if (ispipe)
-+	if (ispipe) {
-+		int argvs = sizeof(core_pattern) / 2;
-+		(*argv) = kmalloc_array(argvs, sizeof(**argv), GFP_KERNEL);
-+		if (!(*argv))
-+			return -ENOMEM;
-+		(*argv)[(*argc)++] = 0;
- 		++pat_ptr;
-+	}
+-	old_state = (pci_power_t)(old_value & PCI_PM_CTRL_STATE_MASK);
+ 	new_state = (pci_power_t)(new_value & PCI_PM_CTRL_STATE_MASK);
  
- 	/* Repeat as long as we have more pattern to process and more output
- 	   space */
- 	while (*pat_ptr) {
-+		/*
-+		 * Split on spaces before doing template expansion so that
-+		 * %e and %E don't get split if they have spaces in them
-+		 */
-+		if (ispipe) {
-+			if (isspace(*pat_ptr)) {
-+				was_space = true;
-+				pat_ptr++;
-+				continue;
-+			} else if (was_space) {
-+				was_space = false;
-+				err = cn_printf(cn, "%c", '\0');
-+				if (err)
-+					return err;
-+				(*argv)[(*argc)++] = cn->used;
-+			}
-+		}
- 		if (*pat_ptr != '%') {
- 			err = cn_printf(cn, "%c", *pat_ptr++);
- 		} else {
-@@ -543,6 +569,8 @@ void do_coredump(const siginfo_t *siginfo)
- 	struct cred *cred;
- 	int retval = 0;
- 	int ispipe;
-+	size_t *argv = NULL;
-+	int argc = 0;
- 	struct files_struct *displaced;
- 	/* require nonrelative corefile path and be extra careful */
- 	bool need_suid_safe = false;
-@@ -589,9 +617,10 @@ void do_coredump(const siginfo_t *siginfo)
- 
- 	old_cred = override_creds(cred);
- 
--	ispipe = format_corename(&cn, &cprm);
-+	ispipe = format_corename(&cn, &cprm, &argv, &argc);
- 
- 	if (ispipe) {
-+		int argi;
- 		int dump_count;
- 		char **helper_argv;
- 		struct subprocess_info *sub_info;
-@@ -634,12 +663,16 @@ void do_coredump(const siginfo_t *siginfo)
- 			goto fail_dropcount;
- 		}
- 
--		helper_argv = argv_split(GFP_KERNEL, cn.corename, NULL);
-+		helper_argv = kmalloc_array(argc + 1, sizeof(*helper_argv),
-+					    GFP_KERNEL);
- 		if (!helper_argv) {
- 			printk(KERN_WARNING "%s failed to allocate memory\n",
- 			       __func__);
- 			goto fail_dropcount;
- 		}
-+		for (argi = 0; argi < argc; argi++)
-+			helper_argv[argi] = cn.corename + argv[argi];
-+		helper_argv[argi] = NULL;
- 
- 		retval = -ENOMEM;
- 		sub_info = call_usermodehelper_setup(helper_argv[0],
-@@ -649,7 +682,7 @@ void do_coredump(const siginfo_t *siginfo)
- 			retval = call_usermodehelper_exec(sub_info,
- 							  UMH_WAIT_EXEC);
- 
--		argv_free(helper_argv);
-+		kfree(helper_argv);
- 		if (retval) {
- 			printk(KERN_INFO "Core dump to |%s pipe failed\n",
- 			       cn.corename);
-@@ -768,6 +801,7 @@ void do_coredump(const siginfo_t *siginfo)
- 	if (ispipe)
- 		atomic_dec(&core_dump_count);
- fail_unlock:
-+	kfree(argv);
- 	kfree(cn.corename);
- 	coredump_finish(mm, core_dumped);
- 	revert_creds(old_cred);
+ 	new_value &= PM_OK_BITS;
 -- 
 2.20.1
 
