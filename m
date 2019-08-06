@@ -2,110 +2,100 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05490C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0771C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD43D21880
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:43:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127809;
-	bh=qMAinlzQ7+uEcv47sCj80Tt1am1WRdCpsOCm4BaZJ0w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A2rAxeBLfHvVGbuuMyWOTcNnOi5HzcGqyEyKguJlKFUmn77sIWGAOY1ADbR+2ynBt
-	 pj2tiRngEknx6gwuaKwqoaf9gOn+7MpR3oprBAiApfQcW78eWmOWo53x/DTkruq09U
-	 Js8IYXrOpdMWe9RKMpesCBPkVnp8xgnx7W2yb2ZE=
+	by mail.kernel.org (Postfix) with ESMTP id 9D4A72189E
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:43:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="N6BSRdRn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729013AbfHFVn2 (ORCPT
+        id S1729087AbfHFVne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:43:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52448 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727766AbfHFVeh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:34:37 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A000D217D9;
-        Tue,  6 Aug 2019 21:34:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127276;
-        bh=qMAinlzQ7+uEcv47sCj80Tt1am1WRdCpsOCm4BaZJ0w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YxKJE3y5+YrfIFQPuqAMZdB3WE8RyPjMYLOPbujAVqzAxrWCu61wGz4weOgoUisGU
-         GpLJuXHDIWVUTws82JhRWFgURh7U+c6SGdGK+RD9BEOZfdFdok620c3iG3sqYrrcaW
-         gOTeHGqMgyNvcCxRckGpTO/gzcbvJUacqcrJhkDg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        stable@kernel.org, Ray Jui <ray.jui@broadcom.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 39/59] i2c: iproc: Fix i2c master read more than 63 bytes
-Date:   Tue,  6 Aug 2019 17:32:59 -0400
-Message-Id: <20190806213319.19203-39-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190806213319.19203-1-sashal@kernel.org>
-References: <20190806213319.19203-1-sashal@kernel.org>
+        Tue, 6 Aug 2019 17:43:34 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:40175 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727223AbfHFVn1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:43:27 -0400
+Received: by mail-oi1-f196.google.com with SMTP id w196so47521373oie.7
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 14:43:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=vhe3NIF3L0LjxKZNqf8InaUKQ77kVe6kvjOAn65IGds=;
+        b=N6BSRdRniocyn4ejlcjwILFWDY5joDFEbRQhIX1AV3bb0FBmT0j9KxUwDXMLa++MZs
+         k6h1ebPWOtIsRz3NyUJPFrWYFFSMrBfHbu7E0A0KAwLWVPEXCD5plJjT63hJZzL3fxkt
+         0yGnwzx1sYkDaa71qYxpu9NQ+QsI7pM68XvRIndMRxUXHCIqf5cPo+e3lRuARXbeyiVV
+         736nExQHV6Kj2t1IUCEAAagart90x4gg/BeRVdQ5n0OaSBrQan67Z1S/vbmTVNgUmQIk
+         sRWsPm+iIlVEXks8xrRmyl7uoe4YSOmZXNLgrQS0eddPTf0aawpGHZaP+O0PVSuFqe7f
+         P/Vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=vhe3NIF3L0LjxKZNqf8InaUKQ77kVe6kvjOAn65IGds=;
+        b=A/sKLxlUP6lvLCruY65uf6wRHVyhGzFqu5RT61/rm4sKhdKk1eKXlY2x1sKaoICVDu
+         7OXx4O9c287cnb0/PzFq+zr1JdBTeKvKhxKXysyAwjmTjYq0wM7Qapb8k/KfAUgM3Ouq
+         EFehoSbhwTIQyvk6G4qlE6Dr3ITNwXCdcvacD7PyTpjSgoyRDF3u8VH9cx6p6lzX2epd
+         0kO030xKY6I1+ycNUduO98NJKl12tjrkPXQFc8rG/cnNxvviNFQR4s21mg1y27avsliM
+         +3KmKtIGx0z4C13ZbrghNY38vS8wXMhuErQfNjK1QOmvktUuYXilvrzErcnzmkm5N6gY
+         Ps5g==
+X-Gm-Message-State: APjAAAV2G5cFljVk2ABmgTzsTTiDL+4ZILPcK7dHSxEVQXexAWI09sii
+        jWfKaevPiPJRulDwAKbGmRrzpA==
+X-Google-Smtp-Source: APXvYqyktUJakypJR/fPYCChZtne19bHMs3XPkuT+lRzZxUNjA+2z6Ue4aq5O1qokA7WMUjW9h+gzQ==
+X-Received: by 2002:a02:c6a9:: with SMTP id o9mr6748787jan.90.1565127806394;
+        Tue, 06 Aug 2019 14:43:26 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id d25sm73339652iom.52.2019.08.06.14.43.25
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 06 Aug 2019 14:43:25 -0700 (PDT)
+Date:   Tue, 6 Aug 2019 14:43:25 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Atish Patra <atish.patra@wdc.com>
+cc:     linux-kernel@vger.kernel.org, Alan Kao <alankao@andestech.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <anup.patel@wdc.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        devicetree@vger.kernel.org, Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>,
+        linux-riscv@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v4 4/4] dt-bindings: Update the riscv,isa string
+ description
+In-Reply-To: <20190803042723.7163-5-atish.patra@wdc.com>
+Message-ID: <alpine.DEB.2.21.9999.1908061443140.13971@viisi.sifive.com>
+References: <20190803042723.7163-1-atish.patra@wdc.com> <20190803042723.7163-5-atish.patra@wdc.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+On Fri, 2 Aug 2019, Atish Patra wrote:
 
-[ Upstream commit fd01eecdf9591453177d7b06faaabef8c300114a ]
+> Since the RISC-V specification states that ISA description strings are
+> case-insensitive, there's no functional difference between mixed-case,
+> upper-case, and lower-case ISA strings. Thus, to simplify parsing,
+> specify that the letters present in "riscv,isa" must be all lowercase.
+> 
+> Suggested-by: Paul Walmsley <paul.walmsley@sifive.com>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
 
-Use SMBUS_MASTER_DATA_READ.MASTER_RD_STATUS bit to check for RX
-FIFO empty condition because SMBUS_MASTER_FIFO_CONTROL.MASTER_RX_PKT_COUNT
-is not updated for read >= 64 bytes. This fixes the issue when trying to
-read from the I2C slave more than 63 bytes.
+Thanks, queued for v5.3-rc4.
 
-Fixes: c24b8d574b7c ("i2c: iproc: Extend I2C read up to 255 bytes")
-Cc: stable@kernel.org
-Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/i2c/busses/i2c-bcm-iproc.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
-index a845b8decac8f..ad1681872e39d 100644
---- a/drivers/i2c/busses/i2c-bcm-iproc.c
-+++ b/drivers/i2c/busses/i2c-bcm-iproc.c
-@@ -403,16 +403,18 @@ static bool bcm_iproc_i2c_slave_isr(struct bcm_iproc_i2c_dev *iproc_i2c,
- static void bcm_iproc_i2c_read_valid_bytes(struct bcm_iproc_i2c_dev *iproc_i2c)
- {
- 	struct i2c_msg *msg = iproc_i2c->msg;
-+	uint32_t val;
- 
- 	/* Read valid data from RX FIFO */
- 	while (iproc_i2c->rx_bytes < msg->len) {
--		if (!((iproc_i2c_rd_reg(iproc_i2c, M_FIFO_CTRL_OFFSET) >> M_FIFO_RX_CNT_SHIFT)
--		      & M_FIFO_RX_CNT_MASK))
-+		val = iproc_i2c_rd_reg(iproc_i2c, M_RX_OFFSET);
-+
-+		/* rx fifo empty */
-+		if (!((val >> M_RX_STATUS_SHIFT) & M_RX_STATUS_MASK))
- 			break;
- 
- 		msg->buf[iproc_i2c->rx_bytes] =
--			(iproc_i2c_rd_reg(iproc_i2c, M_RX_OFFSET) >>
--			M_RX_DATA_SHIFT) & M_RX_DATA_MASK;
-+			(val >> M_RX_DATA_SHIFT) & M_RX_DATA_MASK;
- 		iproc_i2c->rx_bytes++;
- 	}
- }
--- 
-2.20.1
-
+- Paul
