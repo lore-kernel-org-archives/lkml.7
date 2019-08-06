@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A843C32751
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 248DDC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:46:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65694216F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE0F9216F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:46:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127963;
-	bh=7PacgezBhWgl49FGiKUsGiEA921Ao2dsp7XTPPO661U=;
+	s=default; t=1565127968;
+	bh=JRxs4CjZsR9Mwk1SkqyAGfhLAqxCj8GtLVUw0Wj+tr8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yHf8rI4hw1BmCVQlsvYKDlvD2wKPpSn2mAX78zo5HrCOokKeqyeqXU9koJ3z9MOb/
-	 i0kgSWOkSgkWXA/+uHw3GolJ/iXmHLhgM3EbBOprd7vnMgdztGehNtrx275vOy/CMt
-	 EdmX2fmjYXwtOjncLKKDDad6gBtrKu5aD9fqcPok=
+	b=ECVETUPPkhX5TTYvh0rfbienE6U17uDYN6HFG4/eAwDoTu90gFUWmI6LplIdSv1Ce
+	 QiDQLUGjlsCc68DpjLJGDxJssXVPZmuuDWXZWB4m6vrf7k76n9Jok5WsdhgjlJHphp
+	 Ks412YxqYlJJbwbiLrPLtu/S3lp/bDugdC4zBotM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727216AbfHFVqB (ORCPT
+        id S1727646AbfHFVqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:46:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51450 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:46:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727123AbfHFVdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:33:36 -0400
+        id S1727088AbfHFVdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:33:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAAB5217D7;
-        Tue,  6 Aug 2019 21:33:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B4E4216F4;
+        Tue,  6 Aug 2019 21:33:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127215;
-        bh=7PacgezBhWgl49FGiKUsGiEA921Ao2dsp7XTPPO661U=;
+        s=default; t=1565127214;
+        bh=JRxs4CjZsR9Mwk1SkqyAGfhLAqxCj8GtLVUw0Wj+tr8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T+ZXhAj2hKVEJW8KIgJdC55VEzMpYZjoF+DuoAiatx0vIl7kPOZokAoIFCh/pMWuP
-         re22MSlsJbwdNR9q1riIggxdKxEJ0t5IEEkjn4ITZMn+/9PyN7+qtqHNJ07YvAMZto
-         6BKGnj0R9iU5+FbCmoLsEhnAxrD5dC5t1fSL2NQ8=
+        b=mdftATFeAVABEVh2zaeYcT9dtkRN15z3Sg7hWUO9IErS5dsVQqm9vy1PdDOx84pWM
+         i391tVwoz6qbVX0JCOFCsh4tlN1DIgRxp84ll4+Zg2AM6qMrby7osSSN1Jh5kK/fNx
+         QRWdi+kyCDuf5T0K2rRVzyUy3ntPEO/F66L+0ALw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nianyao Tang <tangnianyao@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 12/59] irqchip/gic-v3-its: Free unused vpt_page when alloc vpe table fail
-Date:   Tue,  6 Aug 2019 17:32:32 -0400
-Message-Id: <20190806213319.19203-12-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 11/59] xen/pciback: remove set but not used variable 'old_state'
+Date:   Tue,  6 Aug 2019 17:32:31 -0400
+Message-Id: <20190806213319.19203-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213319.19203-1-sashal@kernel.org>
 References: <20190806213319.19203-1-sashal@kernel.org>
@@ -62,38 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nianyao Tang <tangnianyao@huawei.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 34f8eb92ca053cbba2887bb7e4dbf2b2cd6eb733 ]
+[ Upstream commit 09e088a4903bd0dd911b4f1732b250130cdaffed ]
 
-In its_vpe_init, when its_alloc_vpe_table fails, we should free
-vpt_page allocated just before, instead of vpe->vpt_page.
-Let's fix it.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Nianyao Tang <tangnianyao@huawei.com>
-Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
+drivers/xen/xen-pciback/conf_space_capability.c: In function pm_ctrl_write:
+drivers/xen/xen-pciback/conf_space_capability.c:119:25: warning:
+ variable old_state set but not used [-Wunused-but-set-variable]
+
+It is never used so can be removed.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/xen/xen-pciback/conf_space_capability.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 35500801dc2b5..20e5482d91b94 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -3010,7 +3010,7 @@ static int its_vpe_init(struct its_vpe *vpe)
+diff --git a/drivers/xen/xen-pciback/conf_space_capability.c b/drivers/xen/xen-pciback/conf_space_capability.c
+index 73427d8e01161..e5694133ebe57 100644
+--- a/drivers/xen/xen-pciback/conf_space_capability.c
++++ b/drivers/xen/xen-pciback/conf_space_capability.c
+@@ -116,13 +116,12 @@ static int pm_ctrl_write(struct pci_dev *dev, int offset, u16 new_value,
+ {
+ 	int err;
+ 	u16 old_value;
+-	pci_power_t new_state, old_state;
++	pci_power_t new_state;
  
- 	if (!its_alloc_vpe_table(vpe_id)) {
- 		its_vpe_id_free(vpe_id);
--		its_free_pending_table(vpe->vpt_page);
-+		its_free_pending_table(vpt_page);
- 		return -ENOMEM;
- 	}
+ 	err = pci_read_config_word(dev, offset, &old_value);
+ 	if (err)
+ 		goto out;
  
+-	old_state = (pci_power_t)(old_value & PCI_PM_CTRL_STATE_MASK);
+ 	new_state = (pci_power_t)(new_value & PCI_PM_CTRL_STATE_MASK);
+ 
+ 	new_value &= PM_OK_BITS;
 -- 
 2.20.1
 
