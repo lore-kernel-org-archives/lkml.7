@@ -2,181 +2,186 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD67C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFBFC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DD9D2173C
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:15:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="irgws0PH"
+	by mail.kernel.org (Postfix) with ESMTP id A1056208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:16:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387869AbfHFQPj (ORCPT
+        id S2387733AbfHFQQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 12:15:39 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34472 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387588AbfHFQPi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 12:15:38 -0400
-Received: by mail-ot1-f66.google.com with SMTP id n5so93941806otk.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 09:15:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XmBWrF/l706tTfdjqSR6o57eiT2cKuc01B3zqvw2hyQ=;
-        b=irgws0PHUZn4pJRAqbDrBGoE91h4tKEf578kGsM+bhYBlN6zwuD6eCoEh9iXCZaWgX
-         jj7qvYikZUNeXPLxtdUYy81ZnldK54ER7B463rLo2I40Xv+1Elh0MRjmaliKPrSqg1BZ
-         7Ar/Dl6ahyj1hhsKqwS5AkMp9ZYEqKFoEEjR0L9FJd5StW8e9YahlfT3s3GuWOQadX+a
-         Q7YL8GSIzyttc14Y6B8Pdnrjx0OeGfTv51MuwzhtZRkBZNsuigWjWXh9XmyoWLwL5QDL
-         WekEBBpKKvxaNdUJBsRNR7qdSORyORQv1GHPQvJVpWEeR7ZwNUPns20p+q+Ns+yixgKz
-         2azw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XmBWrF/l706tTfdjqSR6o57eiT2cKuc01B3zqvw2hyQ=;
-        b=W/Z9mtpK4AXCt0dJpFeUK5LfbISQeb275VOuNkX6BfVHeqTimsmfk4BAksu5Gkt50X
-         /Eh2AEYL8LSBSvWq2C5b/LNUfdmKmqxo/QyyEPUvIrUECx094RSID9bpso7fatjR9X3W
-         mV6z3ViK2hg5WWG4KYSQz0VVEKZ2zUlGE3zLaYNtxIog+zrMsGDpYd1sn6Bn6uz7iVRo
-         kTjUx1L7Hqo76xcCK1Cp0XZqvTaMfL/Nkkop85gg2vuC+HZU6iboe9i9dXAQ6Jox0Vqg
-         zJSdvfi4Y5k9h8r2ixiv8MR5eX+mH22QSr04tclgM3wrjXCZcLImA6BplT7tnGJDfi90
-         FlLw==
-X-Gm-Message-State: APjAAAWMyczXAT6McVn7bKIm1vEnit9yLk1Yk+K1IFxAYYezd54qWIY2
-        SELdV+L6a/s94NRY75WqNDR40yYx4kRqpknkKuKjQpApsW8=
-X-Google-Smtp-Source: APXvYqwyeSIhx1y4ui2pMFiAgfRnKRGa17W9CpGizynyyEF79cuw/8LleWldT3a5dd0HmWWGVR2QiMroX2nDRghDgeI=
-X-Received: by 2002:a9d:7248:: with SMTP id a8mr4080253otk.363.1565108137806;
- Tue, 06 Aug 2019 09:15:37 -0700 (PDT)
+        Tue, 6 Aug 2019 12:16:29 -0400
+Received: from foss.arm.com ([217.140.110.172]:36182 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731840AbfHFQQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 12:16:29 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 45872344;
+        Tue,  6 Aug 2019 09:16:28 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E4CA63F575;
+        Tue,  6 Aug 2019 09:16:26 -0700 (PDT)
+Date:   Tue, 6 Aug 2019 17:16:24 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-pm@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        LAKML <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 5/6] ARM: psci: cpuidle: Enable PSCI CPUidle driver
+Message-ID: <20190806161624.GE16546@e107155-lin>
+References: <20190722153745.32446-1-lorenzo.pieralisi@arm.com>
+ <20190722153745.32446-6-lorenzo.pieralisi@arm.com>
 MIME-Version: 1.0
-References: <20190725023100.31141-1-t-fukasawa@vx.jp.nec.com>
- <20190725023100.31141-3-t-fukasawa@vx.jp.nec.com> <20190725090341.GC13855@dhcp22.suse.cz>
- <40b3078e-fb8b-87ef-5c4e-6321956cc940@vx.jp.nec.com> <20190726070615.GB6142@dhcp22.suse.cz>
- <3a926ce5-75b9-ea94-d6e4-6888872e0dc4@vx.jp.nec.com> <CAPcyv4iCXWgxkLi3eM_EaqD0cuzmRyg5k4c9CeS1TyN+bajXFw@mail.gmail.com>
- <20190806064636.GU7597@dhcp22.suse.cz>
-In-Reply-To: <20190806064636.GU7597@dhcp22.suse.cz>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 6 Aug 2019 09:15:25 -0700
-Message-ID: <CAPcyv4i5FjTOnPbXNcTzvt+e6RQYow0JRQwSFuxaa62LSuvzHQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] /proc/kpageflags: do not use uninitialized struct pages
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        "hch@lst.de" <hch@lst.de>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Junichi Nomura <j-nomura@ce.jp.nec.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190722153745.32446-6-lorenzo.pieralisi@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 5, 2019 at 11:47 PM Michal Hocko <mhocko@kernel.org> wrote:
->
-> On Mon 05-08-19 20:27:03, Dan Williams wrote:
-> > On Sun, Aug 4, 2019 at 10:31 PM Toshiki Fukasawa
-> > <t-fukasawa@vx.jp.nec.com> wrote:
-> > >
-> > > On 2019/07/26 16:06, Michal Hocko wrote:
-> > > > On Fri 26-07-19 06:25:49, Toshiki Fukasawa wrote:
-> > > >>
-> > > >>
-> > > >> On 2019/07/25 18:03, Michal Hocko wrote:
-> > > >>> On Thu 25-07-19 02:31:18, Toshiki Fukasawa wrote:
-> > > >>>> A kernel panic was observed during reading /proc/kpageflags for
-> > > >>>> first few pfns allocated by pmem namespace:
-> > > >>>>
-> > > >>>> BUG: unable to handle page fault for address: fffffffffffffffe
-> > > >>>> [  114.495280] #PF: supervisor read access in kernel mode
-> > > >>>> [  114.495738] #PF: error_code(0x0000) - not-present page
-> > > >>>> [  114.496203] PGD 17120e067 P4D 17120e067 PUD 171210067 PMD 0
-> > > >>>> [  114.496713] Oops: 0000 [#1] SMP PTI
-> > > >>>> [  114.497037] CPU: 9 PID: 1202 Comm: page-types Not tainted 5.3.0-rc1 #1
-> > > >>>> [  114.497621] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.0-0-g63451fca13-prebuilt.qemu-project.org 04/01/2014
-> > > >>>> [  114.498706] RIP: 0010:stable_page_flags+0x27/0x3f0
-> > > >>>> [  114.499142] Code: 82 66 90 66 66 66 66 90 48 85 ff 0f 84 d1 03 00 00 41 54 55 48 89 fd 53 48 8b 57 08 48 8b 1f 48 8d 42 ff 83 e2 01 48 0f 44 c7 <48> 8b 00 f6 c4 02 0f 84 57 03 00 00 45 31 e4 48 8b 55 08 48 89 ef
-> > > >>>> [  114.500788] RSP: 0018:ffffa5e601a0fe60 EFLAGS: 00010202
-> > > >>>> [  114.501373] RAX: fffffffffffffffe RBX: ffffffffffffffff RCX: 0000000000000000
-> > > >>>> [  114.502009] RDX: 0000000000000001 RSI: 00007ffca13a7310 RDI: ffffd07489000000
-> > > >>>> [  114.502637] RBP: ffffd07489000000 R08: 0000000000000001 R09: 0000000000000000
-> > > >>>> [  114.503270] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000240000
-> > > >>>> [  114.503896] R13: 0000000000080000 R14: 00007ffca13a7310 R15: ffffa5e601a0ff08
-> > > >>>> [  114.504530] FS:  00007f0266c7f540(0000) GS:ffff962dbbac0000(0000) knlGS:0000000000000000
-> > > >>>> [  114.505245] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > >>>> [  114.505754] CR2: fffffffffffffffe CR3: 000000023a204000 CR4: 00000000000006e0
-> > > >>>> [  114.506401] Call Trace:
-> > > >>>> [  114.506660]  kpageflags_read+0xb1/0x130
-> > > >>>> [  114.507051]  proc_reg_read+0x39/0x60
-> > > >>>> [  114.507387]  vfs_read+0x8a/0x140
-> > > >>>> [  114.507686]  ksys_pread64+0x61/0xa0
-> > > >>>> [  114.508021]  do_syscall_64+0x5f/0x1a0
-> > > >>>> [  114.508372]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > > >>>> [  114.508844] RIP: 0033:0x7f0266ba426b
-> > > >>>>
-> > > >>>> The reason for the panic is that stable_page_flags() which parses
-> > > >>>> the page flags uses uninitialized struct pages reserved by the
-> > > >>>> ZONE_DEVICE driver.
-> > > >>>
-> > > >>> Why pmem hasn't initialized struct pages?
-> > > >>
-> > > >> We proposed to initialize in previous approach but that wasn't merged.
-> > > >> (See https://marc.info/?l=linux-mm&m=152964792500739&w=2)
-> > > >>
-> > > >>> Isn't that a bug that should be addressed rather than paper over it like this?
-> > > >>
-> > > >> I'm not sure. What do you think, Dan?
-> > > >
-> > > > Yeah, I am really curious about details. Why do we keep uninitialized
-> > > > struct pages at all? What is a random pfn walker supposed to do? What
-> > > > kind of metadata would be clobbered? In other words much more details
-> > > > please.
-> > > >
-> > > I also want to know. I do not think that initializing struct pages will
-> > > clobber any metadata.
-> >
-> > The nvdimm implementation uses vmem_altmap to arrange for the 'struct
-> > page' array to be allocated from a reservation of a pmem namespace. A
-> > namespace in this mode contains an info-block that consumes the first
-> > 8K of the namespace capacity, capacity designated for page mapping,
-> > capacity for padding the start of data to optionally 4K, 2MB, or 1GB
-> > (on x86), and then the namespace data itself. The implementation
-> > specifies a section aligned (now sub-section aligned) address to
-> > arch_add_memory() to establish the linear mapping to map the metadata,
-> > and then vmem_altmap indicates to memmap_init_zone() which pfns
-> > represent data. The implementation only specifies enough 'struct page'
-> > capacity for pfn_to_page() to operate on the data space, not the
-> > namespace metadata space.
->
-> Maybe I am dense but I do not really understand what prevents those
-> struct pages to be initialized to whatever state nvidimm subsystem
-> expects them to be? Is that a initialization speed up optimization?
+On Mon, Jul 22, 2019 at 04:37:44PM +0100, Lorenzo Pieralisi wrote:
+> Allow selection of the PSCI CPUidle in the kernel by adding
+> the required Kconfig options.
+> 
+> Remove PSCI callbacks from ARM/ARM64 generic CPU ops
+> to prevent the PSCI idle driver from clashing with the generic
+> ARM CPUidle driver initialization, that relies on CPU ops
+> to initialize and enter idle states.
+> 
+> Update the affected defconfig files to guarantee seamingless
+> transition from the generic ARM CPUidle to the PSCI CPUidle
+> driver on arch/platforms using it.
+> 
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> ---
+>  arch/arm/configs/imx_v6_v7_defconfig | 1 +
+>  arch/arm64/configs/defconfig         | 1 +
 
-No, not an optimization. If anything a regrettable choice in the
-initial implementation to not reserve struct page space for the
-metadata area. Certainly the kernel could fix this going forward, and
-there are some configurations where even the existing allocation could
-store those pfns, but there are others that need that reservation. So
-there is a regression risk for some currently working configurations.
+Better to keep above you as separate patch, though it may cause
+minor issues from bisectibility. It may be needed anyway for merging.
 
-As always we could try making the reservation change and fail to
-instantiate old namespaces that don't reserve enough capacity to see
-who screams. I think the risk is low, but non-zero. That makes my
-first choice to teach kpageflags_read() about the constraint.
+>  arch/arm64/kernel/cpuidle.c          | 7 ++++---
+>  arch/arm64/kernel/psci.c             | 4 ----
+>  drivers/cpuidle/Kconfig.arm          | 8 ++++++--
+>  drivers/firmware/psci/psci.c         | 9 ---------
+>  6 files changed, 12 insertions(+), 18 deletions(-)
+> 
+> diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
+> index a53b29251ed4..4174fd1b79e7 100644
+> --- a/arch/arm/configs/imx_v6_v7_defconfig
+> +++ b/arch/arm/configs/imx_v6_v7_defconfig
+> @@ -60,6 +60,7 @@ CONFIG_ARM_IMX6Q_CPUFREQ=y
+>  CONFIG_ARM_IMX_CPUFREQ_DT=y
+>  CONFIG_CPU_IDLE=y
+>  CONFIG_ARM_CPUIDLE=y
+> +CONFIG_ARM_PSCI_CPUIDLE=y
+>  CONFIG_VFP=y
+>  CONFIG_NEON=y
+>  CONFIG_PM_DEBUG=y
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 0e58ef02880c..c0a7cfe3aebd 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -72,6 +72,7 @@ CONFIG_RANDOMIZE_BASE=y
+>  CONFIG_HIBERNATION=y
+>  CONFIG_WQ_POWER_EFFICIENT_DEFAULT=y
+>  CONFIG_ARM_CPUIDLE=y
+> +CONFIG_ARM_PSCI_CPUIDLE=y
+>  CONFIG_CPU_FREQ=y
+>  CONFIG_CPU_FREQ_STAT=y
+>  CONFIG_CPU_FREQ_GOV_POWERSAVE=m
+> diff --git a/arch/arm64/kernel/cpuidle.c b/arch/arm64/kernel/cpuidle.c
+> index d1048173fd8a..4bcd1bca0dfc 100644
+> --- a/arch/arm64/kernel/cpuidle.c
+> +++ b/arch/arm64/kernel/cpuidle.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/cpu_pm.h>
+>  #include <linux/of.h>
+>  #include <linux/of_device.h>
+> +#include <linux/psci.h>
+>  
+>  #include <asm/cpuidle.h>
+>  #include <asm/cpu_ops.h>
+> @@ -48,15 +49,15 @@ int arm_cpuidle_suspend(int index)
+>  
+>  int acpi_processor_ffh_lpi_probe(unsigned int cpu)
+>  {
+> -	return arm_cpuidle_init(cpu);
+> +	return psci_acpi_cpu_init_idle(cpu);
 
-> > The proposal to validate ZONE_DEVICE pfns against the altmap seems the
-> > right approach to me.
->
-> This however means that all pfn walkers have to be aware of these
-> special struct pages somehow and that is error prone.
+This will break build as psci_acpi_cpu_init_idle is introduced in next patch.
+You can simply move it to next patch I assume.
 
-True, but what other blind pfn walkers do we have besides
-kpageflags_read()? I expect most other pfn_to_page() code paths are
-constrained to known pfns and avoid this surprise, but yes I need to
-go audit those.
+>  }
+>  
+>  int acpi_processor_ffh_lpi_enter(struct acpi_lpi_state *lpi)
+>  {
+>  	if (ARM64_LPI_IS_RETENTION_STATE(lpi->arch_flags))
+> -		return CPU_PM_CPU_IDLE_ENTER_RETENTION(arm_cpuidle_suspend,
+> +		return CPU_PM_CPU_IDLE_ENTER_RETENTION(psci_cpu_suspend_enter,
+>  						lpi->index);
+>  	else
+> -		return CPU_PM_CPU_IDLE_ENTER(arm_cpuidle_suspend, lpi->index);
+> +		return CPU_PM_CPU_IDLE_ENTER(psci_cpu_suspend_enter, lpi->index);
+>  }
+>  #endif
+> diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
+> index 85ee7d07889e..a543ab7e007c 100644
+> --- a/arch/arm64/kernel/psci.c
+> +++ b/arch/arm64/kernel/psci.c
+> @@ -105,10 +105,6 @@ static int cpu_psci_cpu_kill(unsigned int cpu)
+>  
+>  const struct cpu_operations cpu_psci_ops = {
+>  	.name		= "psci",
+> -#ifdef CONFIG_CPU_IDLE
+> -	.cpu_init_idle	= psci_cpu_init_idle,
+> -	.cpu_suspend	= psci_cpu_suspend_enter,
+> -#endif
+>  	.cpu_init	= cpu_psci_cpu_init,
+>  	.cpu_prepare	= cpu_psci_cpu_prepare,
+>  	.cpu_boot	= cpu_psci_cpu_boot,
+> diff --git a/drivers/cpuidle/Kconfig.arm b/drivers/cpuidle/Kconfig.arm
+> index 929b57424ea4..b9c56c60ab98 100644
+> --- a/drivers/cpuidle/Kconfig.arm
+> +++ b/drivers/cpuidle/Kconfig.arm
+> @@ -14,8 +14,12 @@ config ARM_CPUIDLE
+>            provided by architecture code.
+>  
+>  config ARM_PSCI_CPUIDLE
+> -	bool
+> -
+> +	bool "PSCI CPU idle Driver"
+
+As mentioned in previous patch, do you see issues having just above
+change in this patch and the below ones moved to the previous.
+
+> +	depends on ARM_PSCI_FW
+> +	select DT_IDLE_STATES
+> +	select CPU_IDLE_MULTIPLE_DRIVERS
+> +	help
+> +	  Select this to enable PSCI firmware based CPUidle driver for ARM.
+
+You need extra blank line here.
+
+--
+Regards,
+Sudeep
