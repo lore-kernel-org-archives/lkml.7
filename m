@@ -2,208 +2,541 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF98C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 04:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A55C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 04:39:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9DF42147A
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 04:39:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFD6C2147A
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 04:39:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="FBEhx0k1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sHuZlGzI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731400AbfHFEjG (ORCPT
+        id S1731537AbfHFEjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 00:39:06 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:36604 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725997AbfHFEjG (ORCPT
+        Tue, 6 Aug 2019 00:39:11 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35995 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731414AbfHFEjK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 00:39:06 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id x764bcwx031340;
-        Tue, 6 Aug 2019 13:37:39 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x764bcwx031340
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1565066259;
-        bh=DssnpgN3lxR1x9/Nc48fcCal/c42cAzZLORr8Jquom8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=FBEhx0k1/VXFd+9Dyo7ZWsGCBPr/2mFs1YQm9vEP+No8jX4tLt36lr4TS2uWCgoPm
-         OZ71RUINKTQ5aCSfr0ZJ9dTWXzX+aWQ48+KmEhokWh497XyppQEVSzKET09f5uOVAa
-         viOcZmihxO0kvAq9FIE7k8n5umcrD0h+Zzec1uVpsrwd3mLytGMhErJZIfZakifOEZ
-         u5KVVJDq9bHWUEyLDNxUsQHQdGZ+m4xWWMnIJgOKXOBjOhbo5GWoB9pEnR7wE2ht2u
-         dfWSIuAmgqisoQMyCBEG02Bw9hJwlM0jjnf8iiFLOQYfLokQ2IfZ5SEy0aUEAQmQPE
-         /S8Hg7ZRjo33Q==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Sam Ravnborg <sam@ravnborg.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [RFC PATCH] kbuild: re-implement detection of CONFIG options leaked to user-space
-Date:   Tue,  6 Aug 2019 13:37:29 +0900
-Message-Id: <20190806043729.5562-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 6 Aug 2019 00:39:10 -0400
+Received: by mail-pf1-f193.google.com with SMTP id r7so40782716pfl.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 21:39:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4pL9QxD8I0IYYJHrNxWf0x0gy/gWBUjHWquEqZ1gKy0=;
+        b=sHuZlGzI+lFL8rYlnakjknXetLHp8mNJ3wj7i47oyO2V1z3DE7b1NTD26z83l/RAD+
+         0g2fEmls2n8mEuGLrBld2WCXeRjiP6TKulfForldJxu+hVBTWGZ2Y98pr/pxEeJyJFzg
+         2nk15NjdFF1cSFK4ou+s2Vmy2TMQJXy7Ioxr7sx+nT5vDO/4hiR2sCIde8Oo9MfAi8s1
+         HukmNs8RMZwvylnH+6XTdif0QhPS2t8nmNXmzjiDq7lr4q+3idI8vKTGgmQlR6q4WBOO
+         4nYLvur+gA1eIcWW6vx/J8IzBboZo8Fx5Dqcu1pnZDVsA03+/FuBxU8Z4owKkYlo/qFW
+         csNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4pL9QxD8I0IYYJHrNxWf0x0gy/gWBUjHWquEqZ1gKy0=;
+        b=qKqrdra+SWLGhaC7jnOcnxLWY6zQHgSPOoMi8mVB0SLbi5G7BAJzAieXmalgbxD9p/
+         WbhsXYed9FIaeDSEc8dYyWvg7NuASYpPk8ynOGIzl+iyWJseAnG8YxV4iWHU7DWl5/Pi
+         sJNrfDpRLPZ2mzFo8hzkLLj/ODX8pwZ3SItlgZiFAQEGJMGyWgDCtP4PfmWkjqhOsPh0
+         x/ocghPftRX8cMo8pU7pUQ2XeHnG8+1I4VmrK4TPKlOBWPLrYmduEIzZSwcVCleaV1wi
+         9GbDMtd5UtxoCqhsrY2hVdQmD+MM9DHIr22D7+EDXxjvxz116EX/4xkuLoWFFdfnGhv1
+         2kJw==
+X-Gm-Message-State: APjAAAXZxaJNav8B824WEjX+ghQON9+STEC0OmoelOoc4apeHgxbjTUy
+        GMVVA5iOQgiWPPMWrYPN4VX79w==
+X-Google-Smtp-Source: APXvYqyBA8XtV1AHgO+T9tX8nbhvmUk8AlBlP6xh1KKn+TXtuSaQC8BVNzG5rWtsgyhXp6gX4xabSA==
+X-Received: by 2002:aa7:9dc7:: with SMTP id g7mr1572597pfq.170.1565066348375;
+        Mon, 05 Aug 2019 21:39:08 -0700 (PDT)
+Received: from localhost ([122.172.146.3])
+        by smtp.gmail.com with ESMTPSA id u23sm1686102pgj.58.2019.08.05.21.39.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 05 Aug 2019 21:39:07 -0700 (PDT)
+Date:   Tue, 6 Aug 2019 10:09:04 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Len Brown <lenb@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Schmauss <erik.schmauss@intel.com>,
+        linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@acpica.org
+Subject: Re: [PATCH V2 05/10] ACPI: cpufreq: Switch to QoS requests instead
+ of cpufreq notifier
+Message-ID: <20190806043904.dbpon4qf3mfsm4vz@vireshk-i7>
+References: <cover.1563862014.git.viresh.kumar@linaro.org>
+ <86dc4a082ea00c278c0e1d7f3fcbdc4ab9af2eec.1563862014.git.viresh.kumar@linaro.org>
+ <1782403.O7LH3UnqfR@kreacher>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1782403.O7LH3UnqfR@kreacher>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-scripts/headers_check.pl can detect references to CONFIG options in
-exported headers, but it has been disabled for more than a decade.
+On 05-08-19, 11:42, Rafael J. Wysocki wrote:
+> On Tuesday, July 23, 2019 8:14:05 AM CEST Viresh Kumar wrote:
+> > @@ -310,8 +339,11 @@ static int __init acpi_processor_driver_init(void)
+> >  	cpuhp_setup_state_nocalls(CPUHP_ACPI_CPUDRV_DEAD, "acpi/cpu-drv:dead",
+> >  				  NULL, acpi_soft_cpu_dead);
+> >  
+> > -	acpi_thermal_cpufreq_init();
+> > -	acpi_processor_ppc_init();
+> > +	if (!cpufreq_register_notifier(&acpi_processor_notifier_block,
+> > +				       CPUFREQ_POLICY_NOTIFIER)) {
+> > +		acpi_processor_cpufreq_init = true;
+> 
+> Can't that be set/cleared by acpi_processor_notifier() itself?
 
-Reverting commit 7e3fa5614117 ("kbuild: drop check for CONFIG_ in
-headers_check") would emit the following warnings for headers_check
-on x86:
+This is required to be done only once at initialization and setting it
+to true again and again on every invocation of the notifier callback
+doesn't look right.
 
-usr/include/mtd/ubi-user.h:283: leaks CONFIG_MTD_UBI_BEB_LIMIT to userspace where it is not valid
-usr/include/linux/elfcore.h:62: leaks CONFIG_BINFMT_ELF_FDPIC to userspace where it is not valid
-usr/include/linux/atmdev.h:104: leaks CONFIG_COMPAT to userspace where it is not valid
-usr/include/linux/raw.h:17: leaks CONFIG_MAX_RAW_DEVS to userspace where it is not valid
-usr/include/linux/pktcdvd.h:37: leaks CONFIG_CDROM_PKTCDVD_WCACHE to userspace where it is not valid
-usr/include/linux/videodev2.h:2465: leaks CONFIG_VIDEO_ADV_DEBUG to userspace where it is not valid
-usr/include/linux/bpf.h:249: leaks CONFIG_EFFICIENT_UNALIGNED_ACCESS to userspace where it is not valid
-usr/include/linux/bpf.h:819: leaks CONFIG_CGROUP_NET_CLASSID to userspace where it is not valid
-usr/include/linux/bpf.h:1011: leaks CONFIG_IP_ROUTE_CLASSID to userspace where it is not valid
-usr/include/linux/bpf.h:1742: leaks CONFIG_BPF_KPROBE_OVERRIDE to userspace where it is not valid
-usr/include/linux/bpf.h:1747: leaks CONFIG_FUNCTION_ERROR_INJECTION to userspace where it is not valid
-usr/include/linux/bpf.h:1936: leaks CONFIG_XFRM to userspace where it is not valid
-usr/include/linux/bpf.h:2184: leaks CONFIG_BPF_LIRC_MODE2 to userspace where it is not valid
-usr/include/linux/bpf.h:2210: leaks CONFIG_BPF_LIRC_MODE2 to userspace where it is not valid
-usr/include/linux/bpf.h:2227: leaks CONFIG_SOCK_CGROUP_DATA to userspace where it is not valid
-usr/include/linux/bpf.h:2311: leaks CONFIG_NET to userspace where it is not valid
-usr/include/linux/bpf.h:2348: leaks CONFIG_NET to userspace where it is not valid
-usr/include/linux/bpf.h:2422: leaks CONFIG_BPF_LIRC_MODE2 to userspace where it is not valid
-usr/include/linux/bpf.h:2528: leaks CONFIG_NET to userspace where it is not valid
-usr/include/linux/eventpoll.h:82: leaks CONFIG_PM_SLEEP to userspace where it is not valid
-usr/include/linux/hw_breakpoint.h:27: leaks CONFIG_HAVE_MIXED_BREAKPOINTS_REGS to userspace where it is not valid
-usr/include/linux/cm4000_cs.h:26: leaks CONFIG_COMPAT to userspace where it is not valid
-usr/include/linux/pkt_cls.h:301: leaks CONFIG_NET_CLS_ACT to userspace where it is not valid
-usr/include/asm-generic/unistd.h:651: leaks CONFIG_MMU to userspace where it is not valid
-usr/include/asm-generic/fcntl.h:119: leaks CONFIG_64BIT to userspace where it is not valid
-usr/include/asm-generic/bitsperlong.h:9: leaks CONFIG_64BIT to userspace where it is not valid
-usr/include/asm/e820.h:14: leaks CONFIG_NODES_SHIFT to userspace where it is not valid
-usr/include/asm/e820.h:39: leaks CONFIG_X86_PMEM_LEGACY to userspace where it is not valid
-usr/include/asm/e820.h:49: leaks CONFIG_INTEL_TXT to userspace where it is not valid
-usr/include/asm/mman.h:7: leaks CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS to userspace where it is not valid
-usr/include/asm/auxvec.h:14: leaks CONFIG_IA32_EMULATION to userspace where it is not valid
+I have updated the patch based on rest of your suggestions, please see
+if it looks okay now.
 
-Most of these are false positives because scripts/headers_check.pl
-parses comment lines.
-
-It is also false negative. arch/x86/include/uapi/asm/auxvec.h contains
-CONFIG_IA32_EMULATION and CONFIG_X86_64, but the only former is reported.
-
-It would be possible to fix scripts/headers_check.pl, of course.
-However, we already have some duplicated checks between headers_check
-and CONFIG_UAPI_HEADER_TEST. At this moment of time, there are still
-dozens of headers excluded from the header test (usr/include/Makefile),
-but we might be able to remove headers_check when the time comes.
-
-I re-implemented it in scripts/headers_install.sh by using sed because
-the most of code in scripts/headers_install.sh is written is sed.
-
-This patch works like this:
-
-[1] Run scripts/unifdef first because we need to drop the code
-    surrounded by #ifdef __KERNEL__ ... #endif
-
-[2] Remove all C style comments. The sed code is somewhat complicated
-    since we need to deal with both single and multi line comments.
-
-    Precisely speaking, a comment block is replaced with a space just
-    in case.
-
-      CONFIG_FOO/* this is a comment */CONFIG_BAR
-
-    should be converted into:
-
-      CONFIG_FOO CONFIG_BAR
-
-    instead of:
-
-      CONFIG_FOOCONFIG_BAR
-
-[3] Match CONFIG_... pattern. It correctly matches to all CONFIG options
-    that appear in a single line.
-
-After this commit, you will see the following warnings, all of which
-are real ones.
-
-warning: include/uapi/linux/elfcore.h: leaks CONFIG_BINFMT_ELF_FDPIC to user-space
-warning: include/uapi/linux/atmdev.h: leaks CONFIG_COMPAT to user-space
-warning: include/uapi/linux/raw.h: leaks CONFIG_MAX_RAW_DEVS to user-space
-warning: include/uapi/linux/pktcdvd.h: leaks CONFIG_CDROM_PKTCDVD_WCACHE to user-space
-warning: include/uapi/linux/eventpoll.h: leaks CONFIG_PM_SLEEP to user-space
-warning: include/uapi/linux/hw_breakpoint.h: leaks CONFIG_HAVE_MIXED_BREAKPOINTS_REGS to user-space
-warning: include/uapi/asm-generic/fcntl.h: leaks CONFIG_64BIT to user-space
-warning: arch/x86/include/uapi/asm/mman.h: leaks CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS to user-space
-warning: arch/x86/include/uapi/asm/auxvec.h: leaks CONFIG_IA32_EMULATION to user-space
-warning: arch/x86/include/uapi/asm/auxvec.h: leaks CONFIG_X86_64 to user-space
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
-I was playing with sed yesterday, but the resulted code might be unreadable.
-
-Sed scripts tend to be somewhat unreadable.
-I just wondered which language is appropriate for this?
-Maybe perl, or what else? I am not good at perl, though.
-
-Maybe, it will be better to fix existing warnings
-before enabling this check.
-If somebody takes a closer look at them, that would be great.
-
- scripts/headers_install.sh | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
-
-diff --git a/scripts/headers_install.sh b/scripts/headers_install.sh
-index bbaf29386995..73d95e457090 100755
---- a/scripts/headers_install.sh
-+++ b/scripts/headers_install.sh
-@@ -41,5 +41,34 @@ sed -E -e '
- scripts/unifdef -U__KERNEL__ -D__EXPORTED_HEADERS__ $TMPFILE > $OUTFILE
- [ $? -gt 1 ] && exit 1
- 
-+# Remove /* ... */ style comments, and find CONFIG_ references in code
-+configs=$(sed -e '
-+:comment
-+	s:/\*[^*][^*]*:/*:
-+	s:/\*\*\**\([^/]\):/*\1:
-+	t comment
-+	s:/\*\*/: :
-+	t comment
-+	/\/\*/! b check
-+	N
-+	b comment
-+:print
-+	P
-+	D
-+:check
-+	s:^[^[:alnum:]_][^[:alnum:]_]*::
-+	t check
-+	s:^\(CONFIG_[[:alnum:]_]*\):\1\n:
-+	t print
-+	s:^[[:alnum:]_][[:alnum:]_]*::
-+	t check
-+	d
-+' $OUTFILE)
-+
-+for c in $configs
-+do
-+	echo "warning: $INFILE: leaks $c to user-space" >&2
-+done
-+
- rm -f $TMPFILE
- trap - EXIT
 -- 
-2.17.1
+viresh
 
+-------------------------8<-------------------------
+From 7998742113d93f22078d5f267a50c91bd87a3e24 Mon Sep 17 00:00:00 2001
+Message-Id: <7998742113d93f22078d5f267a50c91bd87a3e24.1565066143.git.viresh.kumar@linaro.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Date: Mon, 15 Jul 2019 15:06:02 +0530
+Subject: [PATCH] ACPI: cpufreq: Switch to QoS requests instead of cpufreq
+ notifier
+
+The cpufreq core now takes the min/max frequency constraints via QoS
+requests and the CPUFREQ_ADJUST notifier shall get removed later on.
+
+Switch over to using the QoS request for maximum frequency constraint
+for acpi driver.
+
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ drivers/acpi/processor_driver.c  | 37 ++++++++++--
+ drivers/acpi/processor_perflib.c | 96 +++++++++++---------------------
+ drivers/acpi/processor_thermal.c | 81 +++++++++++++--------------
+ include/acpi/processor.h         | 21 ++++---
+ 4 files changed, 118 insertions(+), 117 deletions(-)
+
+diff --git a/drivers/acpi/processor_driver.c b/drivers/acpi/processor_driver.c
+index aea8d674a33d..2c911fcaa4b4 100644
+--- a/drivers/acpi/processor_driver.c
++++ b/drivers/acpi/processor_driver.c
+@@ -284,6 +284,29 @@ static int acpi_processor_stop(struct device *dev)
+ 	return 0;
+ }
+ 
++bool acpi_processor_cpufreq_init;
++
++static int acpi_processor_notifier(struct notifier_block *nb,
++				   unsigned long event, void *data)
++{
++	struct cpufreq_policy *policy = data;
++	int cpu = policy->cpu;
++
++	if (event == CPUFREQ_CREATE_POLICY) {
++		acpi_thermal_cpufreq_init(cpu);
++		acpi_processor_ppc_init(cpu);
++	} else if (event == CPUFREQ_REMOVE_POLICY) {
++		acpi_processor_ppc_exit(cpu);
++		acpi_thermal_cpufreq_exit(cpu);
++	}
++
++	return 0;
++}
++
++static struct notifier_block acpi_processor_notifier_block = {
++	.notifier_call = acpi_processor_notifier,
++};
++
+ /*
+  * We keep the driver loaded even when ACPI is not running.
+  * This is needed for the powernow-k8 driver, that works even without
+@@ -310,8 +333,10 @@ static int __init acpi_processor_driver_init(void)
+ 	cpuhp_setup_state_nocalls(CPUHP_ACPI_CPUDRV_DEAD, "acpi/cpu-drv:dead",
+ 				  NULL, acpi_soft_cpu_dead);
+ 
+-	acpi_thermal_cpufreq_init();
+-	acpi_processor_ppc_init();
++	if (!cpufreq_register_notifier(&acpi_processor_notifier_block,
++				       CPUFREQ_POLICY_NOTIFIER))
++		acpi_processor_cpufreq_init = true;
++
+ 	acpi_processor_throttling_init();
+ 	return 0;
+ err:
+@@ -324,8 +349,12 @@ static void __exit acpi_processor_driver_exit(void)
+ 	if (acpi_disabled)
+ 		return;
+ 
+-	acpi_processor_ppc_exit();
+-	acpi_thermal_cpufreq_exit();
++	if (acpi_processor_cpufreq_init) {
++		cpufreq_unregister_notifier(&acpi_processor_notifier_block,
++					    CPUFREQ_POLICY_NOTIFIER);
++		acpi_processor_cpufreq_init = false;
++	}
++
+ 	cpuhp_remove_state_nocalls(hp_online);
+ 	cpuhp_remove_state_nocalls(CPUHP_ACPI_CPUDRV_DEAD);
+ 	driver_unregister(&acpi_processor_driver);
+diff --git a/drivers/acpi/processor_perflib.c b/drivers/acpi/processor_perflib.c
+index ee87cb6f6e59..f3801d7c0d36 100644
+--- a/drivers/acpi/processor_perflib.c
++++ b/drivers/acpi/processor_perflib.c
+@@ -50,57 +50,13 @@ module_param(ignore_ppc, int, 0644);
+ MODULE_PARM_DESC(ignore_ppc, "If the frequency of your machine gets wrongly" \
+ 		 "limited by BIOS, this should help");
+ 
+-#define PPC_REGISTERED   1
+-#define PPC_IN_USE       2
+-
+-static int acpi_processor_ppc_status;
+-
+-static int acpi_processor_ppc_notifier(struct notifier_block *nb,
+-				       unsigned long event, void *data)
+-{
+-	struct cpufreq_policy *policy = data;
+-	struct acpi_processor *pr;
+-	unsigned int ppc = 0;
+-
+-	if (ignore_ppc < 0)
+-		ignore_ppc = 0;
+-
+-	if (ignore_ppc)
+-		return 0;
+-
+-	if (event != CPUFREQ_ADJUST)
+-		return 0;
+-
+-	mutex_lock(&performance_mutex);
+-
+-	pr = per_cpu(processors, policy->cpu);
+-	if (!pr || !pr->performance)
+-		goto out;
+-
+-	ppc = (unsigned int)pr->performance_platform_limit;
+-
+-	if (ppc >= pr->performance->state_count)
+-		goto out;
+-
+-	cpufreq_verify_within_limits(policy, 0,
+-				     pr->performance->states[ppc].
+-				     core_frequency * 1000);
+-
+-      out:
+-	mutex_unlock(&performance_mutex);
+-
+-	return 0;
+-}
+-
+-static struct notifier_block acpi_ppc_notifier_block = {
+-	.notifier_call = acpi_processor_ppc_notifier,
+-};
++static bool acpi_processor_ppc_in_use;
+ 
+ static int acpi_processor_get_platform_limit(struct acpi_processor *pr)
+ {
+ 	acpi_status status = 0;
+ 	unsigned long long ppc = 0;
+-
++	int ret;
+ 
+ 	if (!pr)
+ 		return -EINVAL;
+@@ -112,7 +68,7 @@ static int acpi_processor_get_platform_limit(struct acpi_processor *pr)
+ 	status = acpi_evaluate_integer(pr->handle, "_PPC", NULL, &ppc);
+ 
+ 	if (status != AE_NOT_FOUND)
+-		acpi_processor_ppc_status |= PPC_IN_USE;
++		acpi_processor_ppc_in_use = true;
+ 
+ 	if (ACPI_FAILURE(status) && status != AE_NOT_FOUND) {
+ 		ACPI_EXCEPTION((AE_INFO, status, "Evaluating _PPC"));
+@@ -124,6 +80,16 @@ static int acpi_processor_get_platform_limit(struct acpi_processor *pr)
+ 
+ 	pr->performance_platform_limit = (int)ppc;
+ 
++	if (ignore_ppc || ppc >= pr->performance->state_count)
++		return 0;
++
++	ret = dev_pm_qos_update_request(&pr->perflib_req,
++			pr->performance->states[ppc].core_frequency * 1000);
++	if (ret) {
++		pr_warn("Failed to update perflib freq constraint: cpu%d (%d)\n",
++			pr->id, ret);
++	}
++
+ 	return 0;
+ }
+ 
+@@ -184,23 +150,29 @@ int acpi_processor_get_bios_limit(int cpu, unsigned int *limit)
+ }
+ EXPORT_SYMBOL(acpi_processor_get_bios_limit);
+ 
+-void acpi_processor_ppc_init(void)
++void acpi_processor_ppc_init(int cpu)
+ {
+-	if (!cpufreq_register_notifier
+-	    (&acpi_ppc_notifier_block, CPUFREQ_POLICY_NOTIFIER))
+-		acpi_processor_ppc_status |= PPC_REGISTERED;
+-	else
+-		printk(KERN_DEBUG
+-		       "Warning: Processor Platform Limit not supported.\n");
++	struct acpi_processor *pr = per_cpu(processors, cpu);
++	int ret;
++
++	ret = dev_pm_qos_add_request(get_cpu_device(cpu),
++				     &pr->perflib_req, DEV_PM_QOS_MAX_FREQUENCY,
++				     INT_MAX);
++	if (ret < 0) {
++		pr_err("Failed to add freq constraint for cpu%d (%d)\n", cpu,
++		       ret);
++		return;
++	}
++
++	if (ignore_ppc < 0)
++		ignore_ppc = 0;
+ }
+ 
+-void acpi_processor_ppc_exit(void)
++void acpi_processor_ppc_exit(int cpu)
+ {
+-	if (acpi_processor_ppc_status & PPC_REGISTERED)
+-		cpufreq_unregister_notifier(&acpi_ppc_notifier_block,
+-					    CPUFREQ_POLICY_NOTIFIER);
++	struct acpi_processor *pr = per_cpu(processors, cpu);
+ 
+-	acpi_processor_ppc_status &= ~PPC_REGISTERED;
++	dev_pm_qos_remove_request(&pr->perflib_req);
+ }
+ 
+ static int acpi_processor_get_performance_control(struct acpi_processor *pr)
+@@ -477,7 +449,7 @@ int acpi_processor_notify_smm(struct module *calling_module)
+ 	static int is_done = 0;
+ 	int result;
+ 
+-	if (!(acpi_processor_ppc_status & PPC_REGISTERED))
++	if (!acpi_processor_cpufreq_init)
+ 		return -EBUSY;
+ 
+ 	if (!try_module_get(calling_module))
+@@ -513,7 +485,7 @@ int acpi_processor_notify_smm(struct module *calling_module)
+ 	 * we can allow the cpufreq driver to be rmmod'ed. */
+ 	is_done = 1;
+ 
+-	if (!(acpi_processor_ppc_status & PPC_IN_USE))
++	if (!acpi_processor_ppc_in_use)
+ 		module_put(calling_module);
+ 
+ 	return 0;
+@@ -742,7 +714,7 @@ acpi_processor_register_performance(struct acpi_processor_performance
+ {
+ 	struct acpi_processor *pr;
+ 
+-	if (!(acpi_processor_ppc_status & PPC_REGISTERED))
++	if (!acpi_processor_cpufreq_init)
+ 		return -EINVAL;
+ 
+ 	mutex_lock(&performance_mutex);
+diff --git a/drivers/acpi/processor_thermal.c b/drivers/acpi/processor_thermal.c
+index 50fb0107375e..e38dba339dfb 100644
+--- a/drivers/acpi/processor_thermal.c
++++ b/drivers/acpi/processor_thermal.c
+@@ -35,7 +35,6 @@ ACPI_MODULE_NAME("processor_thermal");
+ #define CPUFREQ_THERMAL_MAX_STEP 3
+ 
+ static DEFINE_PER_CPU(unsigned int, cpufreq_thermal_reduction_pctg);
+-static unsigned int acpi_thermal_cpufreq_is_init = 0;
+ 
+ #define reduction_pctg(cpu) \
+ 	per_cpu(cpufreq_thermal_reduction_pctg, phys_package_first_cpu(cpu))
+@@ -61,35 +60,11 @@ static int phys_package_first_cpu(int cpu)
+ static int cpu_has_cpufreq(unsigned int cpu)
+ {
+ 	struct cpufreq_policy policy;
+-	if (!acpi_thermal_cpufreq_is_init || cpufreq_get_policy(&policy, cpu))
++	if (!acpi_processor_cpufreq_init || cpufreq_get_policy(&policy, cpu))
+ 		return 0;
+ 	return 1;
+ }
+ 
+-static int acpi_thermal_cpufreq_notifier(struct notifier_block *nb,
+-					 unsigned long event, void *data)
+-{
+-	struct cpufreq_policy *policy = data;
+-	unsigned long max_freq = 0;
+-
+-	if (event != CPUFREQ_ADJUST)
+-		goto out;
+-
+-	max_freq = (
+-	    policy->cpuinfo.max_freq *
+-	    (100 - reduction_pctg(policy->cpu) * 20)
+-	) / 100;
+-
+-	cpufreq_verify_within_limits(policy, 0, max_freq);
+-
+-      out:
+-	return 0;
+-}
+-
+-static struct notifier_block acpi_thermal_cpufreq_notifier_block = {
+-	.notifier_call = acpi_thermal_cpufreq_notifier,
+-};
+-
+ static int cpufreq_get_max_state(unsigned int cpu)
+ {
+ 	if (!cpu_has_cpufreq(cpu))
+@@ -108,7 +83,10 @@ static int cpufreq_get_cur_state(unsigned int cpu)
+ 
+ static int cpufreq_set_cur_state(unsigned int cpu, int state)
+ {
+-	int i;
++	struct cpufreq_policy *policy;
++	struct acpi_processor *pr;
++	unsigned long max_freq;
++	int i, ret;
+ 
+ 	if (!cpu_has_cpufreq(cpu))
+ 		return 0;
+@@ -121,33 +99,50 @@ static int cpufreq_set_cur_state(unsigned int cpu, int state)
+ 	 * frequency.
+ 	 */
+ 	for_each_online_cpu(i) {
+-		if (topology_physical_package_id(i) ==
++		if (topology_physical_package_id(i) !=
+ 		    topology_physical_package_id(cpu))
+-			cpufreq_update_policy(i);
++			continue;
++
++		pr = per_cpu(processors, i);
++
++		policy = cpufreq_cpu_get(i);
++		if (!policy)
++			return -EINVAL;
++
++		max_freq = (policy->cpuinfo.max_freq * (100 - reduction_pctg(i) * 20)) / 100;
++
++		cpufreq_cpu_put(policy);
++
++		ret = dev_pm_qos_update_request(&pr->thermal_req, max_freq);
++		if (ret) {
++			pr_warn("Failed to update thermal freq constraint: cpu%d (%d)\n",
++				pr->id, ret);
++		}
+ 	}
+ 	return 0;
+ }
+ 
+-void acpi_thermal_cpufreq_init(void)
++void acpi_thermal_cpufreq_init(int cpu)
+ {
+-	int i;
+-
+-	i = cpufreq_register_notifier(&acpi_thermal_cpufreq_notifier_block,
+-				      CPUFREQ_POLICY_NOTIFIER);
+-	if (!i)
+-		acpi_thermal_cpufreq_is_init = 1;
++	struct acpi_processor *pr = per_cpu(processors, cpu);
++	int ret;
++
++	ret = dev_pm_qos_add_request(get_cpu_device(cpu),
++				     &pr->thermal_req, DEV_PM_QOS_MAX_FREQUENCY,
++				     INT_MAX);
++	if (ret < 0) {
++		pr_err("Failed to add freq constraint for cpu%d (%d)\n", cpu,
++		       ret);
++		return;
++	}
+ }
+ 
+-void acpi_thermal_cpufreq_exit(void)
++void acpi_thermal_cpufreq_exit(int cpu)
+ {
+-	if (acpi_thermal_cpufreq_is_init)
+-		cpufreq_unregister_notifier
+-		    (&acpi_thermal_cpufreq_notifier_block,
+-		     CPUFREQ_POLICY_NOTIFIER);
++	struct acpi_processor *pr = per_cpu(processors, cpu);
+ 
+-	acpi_thermal_cpufreq_is_init = 0;
++	dev_pm_qos_remove_request(&pr->thermal_req);
+ }
+-
+ #else				/* ! CONFIG_CPU_FREQ */
+ static int cpufreq_get_max_state(unsigned int cpu)
+ {
+diff --git a/include/acpi/processor.h b/include/acpi/processor.h
+index 1194a4c78d55..ea21a6d20da7 100644
+--- a/include/acpi/processor.h
++++ b/include/acpi/processor.h
+@@ -4,6 +4,8 @@
+ 
+ #include <linux/kernel.h>
+ #include <linux/cpu.h>
++#include <linux/cpufreq.h>
++#include <linux/pm_qos.h>
+ #include <linux/thermal.h>
+ #include <asm/acpi.h>
+ 
+@@ -230,6 +232,8 @@ struct acpi_processor {
+ 	struct acpi_processor_limit limit;
+ 	struct thermal_cooling_device *cdev;
+ 	struct device *dev; /* Processor device. */
++	struct dev_pm_qos_request perflib_req;
++	struct dev_pm_qos_request thermal_req;
+ };
+ 
+ struct acpi_processor_errata {
+@@ -296,16 +300,17 @@ static inline void acpi_processor_ffh_cstate_enter(struct acpi_processor_cx
+ /* in processor_perflib.c */
+ 
+ #ifdef CONFIG_CPU_FREQ
+-void acpi_processor_ppc_init(void);
+-void acpi_processor_ppc_exit(void);
++extern bool acpi_processor_cpufreq_init;
++void acpi_processor_ppc_init(int cpu);
++void acpi_processor_ppc_exit(int cpu);
+ void acpi_processor_ppc_has_changed(struct acpi_processor *pr, int event_flag);
+ extern int acpi_processor_get_bios_limit(int cpu, unsigned int *limit);
+ #else
+-static inline void acpi_processor_ppc_init(void)
++static inline void acpi_processor_ppc_init(int cpu)
+ {
+ 	return;
+ }
+-static inline void acpi_processor_ppc_exit(void)
++static inline void acpi_processor_ppc_exit(int cpu)
+ {
+ 	return;
+ }
+@@ -421,14 +426,14 @@ static inline int acpi_processor_hotplug(struct acpi_processor *pr)
+ int acpi_processor_get_limit_info(struct acpi_processor *pr);
+ extern const struct thermal_cooling_device_ops processor_cooling_ops;
+ #if defined(CONFIG_ACPI_CPU_FREQ_PSS) & defined(CONFIG_CPU_FREQ)
+-void acpi_thermal_cpufreq_init(void);
+-void acpi_thermal_cpufreq_exit(void);
++void acpi_thermal_cpufreq_init(int cpu);
++void acpi_thermal_cpufreq_exit(int cpu);
+ #else
+-static inline void acpi_thermal_cpufreq_init(void)
++static inline void acpi_thermal_cpufreq_init(int cpu)
+ {
+ 	return;
+ }
+-static inline void acpi_thermal_cpufreq_exit(void)
++static inline void acpi_thermal_cpufreq_exit(int cpu)
+ {
+ 	return;
+ }
