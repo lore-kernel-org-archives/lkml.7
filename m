@@ -2,91 +2,186 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 077BCC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 20:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64948C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 20:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7265214C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 20:07:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565122032;
-	bh=kHsnvNvTVEeBnqmn4w4RA+tgsK4XbSrY86eIYVgnNBE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NsEXQ6GMdLHJyL4FeC2YDTkgBeFTnBdokFgOwFjJ375WfUpOx5ZRHSpLkgkvJ8ZbZ
-	 5xtXJ5iPLYSnzpnJdt0JQtIDe1JKmWvl0d36URNlzzRGvJnvgUMuzzZFriGEP7Rtab
-	 qaZRQKh0px2whku63NRjLaw099ieM+slWbKkDRUE=
+	by mail.kernel.org (Postfix) with ESMTP id 3844B2070C
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 20:11:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sIXKlKnG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726305AbfHFUHL (ORCPT
+        id S1726345AbfHFULx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 16:07:11 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34499 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbfHFUHL (ORCPT
+        Tue, 6 Aug 2019 16:11:53 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:35751 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbfHFULw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 16:07:11 -0400
-Received: by mail-pl1-f193.google.com with SMTP id i2so38322931plt.1;
-        Tue, 06 Aug 2019 13:07:10 -0700 (PDT)
+        Tue, 6 Aug 2019 16:11:52 -0400
+Received: by mail-oi1-f196.google.com with SMTP id a127so68428730oii.2;
+        Tue, 06 Aug 2019 13:11:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=L9+cVJ1tHnXHLgWnIFc8trRPYs0ZvKQBrpOrQ/JACNw=;
+        b=sIXKlKnGMf3/x5UdpiL2krma7wQpwGLW+fNiBVYGuAg+enmNapJrdHJOK3Oz6VrG4S
+         uyrECxK7aeBd7o3/uEp8bWKsib3jCFom0hef5aSfRgnTGDHYO+nZABn6EpZoOfS//Di8
+         K3J2QiIPIqO43WOsFkM/9MS+hFVl0vY7nLlRLOOOT38bOre68X6M4+VE7+iryhYTkoWH
+         +iIcdRhzuCzCJXfZ2RI2EC7lMHdMYNFg0AFO6lRZgQWTJRQOF+px3mavO28/a1fqiwMl
+         zIzP3jFzckC9iAiQ+eeHYXmFqjmRtbWUw99s2dPsWL3ujUbHxrOx7r/gJGbY7a2vzl0c
+         vmCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3lnYdbWOBA6dA1vSTeMR5gZWomXsRJ4E1lTXIOz1Z5U=;
-        b=nIT8GaohLPRf9a4CpudSfss8J/uYq3fHL2y0z3z5It2yywOpvzbAcSnwHjo+nWx/Gn
-         80YeoDvXTlIUn9bZorUPK8fLRTTn89pOT7eMGNahFNERadisVXoAd9RjA9A6JrAiSHUu
-         9JjVIrTfOm5OMGrppO5zTW7LL9kEcSFkSLeQzgHS8Z+hTG2JywMPdgF06aHOhakkxotX
-         5zDNNf7TJ/nh+YI5MNMr2fhbDNAhiGScnWJyU31A2quhgDWil1L5DxlbRlPNjte7yBau
-         jI6lzqdGwwCAUCb6FpZSMoDCT4Q4UmpKw6FcnpkMWRFiWa3VOoE1/jydrDzZOXFyzVc4
-         Ov0A==
-X-Gm-Message-State: APjAAAUE1Hl23XfWj6lccVtNAQmg8yKZt2B4DJ8UbSr2bdQ/+m3uZwgK
-        PNdlFTIiLTgxMTDFKsmBs1A=
-X-Google-Smtp-Source: APXvYqxx5a2IVFilbFs0bVFe6JoYxYxIny7e7YtcwdzL7abFcKoSAW5uPmhhL2D/ZNw1BMCOkbOF1A==
-X-Received: by 2002:a17:902:4623:: with SMTP id o32mr4733619pld.112.1565122030074;
-        Tue, 06 Aug 2019 13:07:10 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id 11sm88459493pfw.33.2019.08.06.13.07.08
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 13:07:08 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 7B8DA4025E; Tue,  6 Aug 2019 20:07:07 +0000 (UTC)
-Date:   Tue, 6 Aug 2019 20:07:07 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Kinky Nekoboi <kinky_nekoboi@nekoboi.moe>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: XFS segementation fault with new linux 4.19.63
-Message-ID: <20190806200707.GV30113@42.do-not-panic.com>
-References: <e0ca189e-2f96-6599-40ce-a4fc8866d8d1@nekoboi.moe>
- <20190806070806.GA13112@infradead.org>
- <cbe57554-ed5f-6163-d48c-9069aa2dcc7b@nekoboi.moe>
- <20190806092318.GE7777@dread.disaster.area>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=L9+cVJ1tHnXHLgWnIFc8trRPYs0ZvKQBrpOrQ/JACNw=;
+        b=csWeasVMoCS7SXc4EKv854JGcrPKsKac/IlS3oSQQa87YP3HCdVRG1SPJwlUbXInuo
+         zhVHI4l65PLNKF4UrDJHdpgotD/ixnRf5J1PW1GN4AJhcKwq3/ntYeIVGJd3DK5tOSfG
+         2XlNEyskSEzLABHCqJ4i88oJV0T+Lv7Y5FjP1bm/2Mv/P80Jl69tv7g46fv3uTBEz7ry
+         3WYUzw1MnvCzWYHYqWEqLN2t8+Nkly86kXGjCKnXFOl/TAQiWEShYNgAQCaoBQK6tOev
+         Z5HBGE9R8yl94BHII6ZL67PDQ+PipWTuJGvimADPbJ+3QOFIFXvoNeljJXOWnfRq0hWW
+         PRAw==
+X-Gm-Message-State: APjAAAWhV8d3ZVSZDozyfK2n5PHUgeM7DFK0J/jbB5ohQDsZ3NANhb1i
+        3cJZnBO2FXb569Vxa1LkOkicqPQxmR2EdaCScMQ=
+X-Google-Smtp-Source: APXvYqzgWKoM+BMJTliT2FhYuhnnw0Sff1jkVm8UFW2f3OncWRNYvDy3QFieh0lskdwjWmdDcfZrqUQTJBiO+gLmuHM=
+X-Received: by 2002:a05:6638:c8:: with SMTP id w8mr6365741jao.52.1565122310484;
+ Tue, 06 Aug 2019 13:11:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190806092318.GE7777@dread.disaster.area>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190731195713.3150463-1-arnd@arndb.de> <20190731195713.3150463-8-arnd@arndb.de>
+In-Reply-To: <20190731195713.3150463-8-arnd@arndb.de>
+From:   Sylvain Lemieux <slemieux.tyco@gmail.com>
+Date:   Tue, 6 Aug 2019 16:11:38 -0400
+Message-ID: <CA+rxa6pcw7une0YUyMd1ZxUpcAqRRqZHcEUXxTYuscmpDUsCuQ@mail.gmail.com>
+Subject: Re: [PATCH 07/14] net: lpc-enet: move phy setup into platform code
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     soc@kernel.org,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Guenter Roeck <linux@roeck-us.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        linux-serial@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 07:23:18PM +1000, Dave Chinner wrote:
-> On Tue, Aug 06, 2019 at 09:10:57AM +0200, Kinky Nekoboi wrote:
-> > Addional info:
-> > 
-> > this only occurs if kernel is compiled with:
-> > 
-> > CONFIG_XFS_DEBUG=y
-> > 
-> > running 4.19.64 without xfs debugging works fine
-> 
-> I'm guessing 4.19 doesn't have commit c08768977b9a ("xfs: finobt AG
-> reserves don't consider last AG can be a runt")....
-
-It does not. Kinky, can you confirm if cherry picking it fixes your
-crash? If so I can queue it up for the next batch of fixes for v4.19.
-
-  Luis
+On Wed, Jul 31, 2019 at 4:01 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> Setting the phy mode requires touching a platform specific
+> register, which prevents us from building the driver without
+> its header files.
+>
+> Move it into a separate function in arch/arm/mach/lpc32xx
+> to hide the core registers from the network driver.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  arch/arm/mach-lpc32xx/common.c       | 12 ++++++++++++
+>  drivers/net/ethernet/nxp/lpc_eth.c   | 12 +-----------
+>  include/linux/soc/nxp/lpc32xx-misc.h |  5 +++++
+>  3 files changed, 18 insertions(+), 11 deletions(-)
+>
+> diff --git a/arch/arm/mach-lpc32xx/common.c b/arch/arm/mach-lpc32xx/common.c
+> index f648324d5fb4..a475339333c1 100644
+> --- a/arch/arm/mach-lpc32xx/common.c
+> +++ b/arch/arm/mach-lpc32xx/common.c
+> @@ -63,6 +63,18 @@ u32 lpc32xx_return_iram(void __iomem **mapbase, dma_addr_t *dmaaddr)
+>  }
+>  EXPORT_SYMBOL_GPL(lpc32xx_return_iram);
+>
+> +void lpc32xx_set_phy_interface_mode(phy_interface_t mode)
+> +{
+> +       u32 tmp = __raw_readl(LPC32XX_CLKPWR_MACCLK_CTRL);
+> +       tmp &= ~LPC32XX_CLKPWR_MACCTRL_PINS_MSK;
+> +       if (mode == PHY_INTERFACE_MODE_MII)
+> +               tmp |= LPC32XX_CLKPWR_MACCTRL_USE_MII_PINS;
+> +       else
+> +               tmp |= LPC32XX_CLKPWR_MACCTRL_USE_RMII_PINS;
+> +       __raw_writel(tmp, LPC32XX_CLKPWR_MACCLK_CTRL);
+> +}
+> +EXPORT_SYMBOL_GPL(lpc32xx_set_phy_interface_mode);
+> +
+>  static struct map_desc lpc32xx_io_desc[] __initdata = {
+>         {
+>                 .virtual        = (unsigned long)IO_ADDRESS(LPC32XX_AHB0_START),
+> diff --git a/drivers/net/ethernet/nxp/lpc_eth.c b/drivers/net/ethernet/nxp/lpc_eth.c
+> index bcdd0adcfb0c..0893b77c385d 100644
+> --- a/drivers/net/ethernet/nxp/lpc_eth.c
+> +++ b/drivers/net/ethernet/nxp/lpc_eth.c
+> @@ -20,9 +20,6 @@
+>  #include <linux/spinlock.h>
+>  #include <linux/soc/nxp/lpc32xx-misc.h>
+>
+> -#include <mach/hardware.h>
+> -#include <mach/platform.h>
+> -
+>  #define MODNAME "lpc-eth"
+>  #define DRV_VERSION "1.00"
+>
+> @@ -1237,16 +1234,9 @@ static int lpc_eth_drv_probe(struct platform_device *pdev)
+>         dma_addr_t dma_handle;
+>         struct resource *res;
+>         int irq, ret;
+> -       u32 tmp;
+>
+>         /* Setup network interface for RMII or MII mode */
+> -       tmp = __raw_readl(LPC32XX_CLKPWR_MACCLK_CTRL);
+> -       tmp &= ~LPC32XX_CLKPWR_MACCTRL_PINS_MSK;
+> -       if (lpc_phy_interface_mode(dev) == PHY_INTERFACE_MODE_MII)
+> -               tmp |= LPC32XX_CLKPWR_MACCTRL_USE_MII_PINS;
+> -       else
+> -               tmp |= LPC32XX_CLKPWR_MACCTRL_USE_RMII_PINS;
+> -       __raw_writel(tmp, LPC32XX_CLKPWR_MACCLK_CTRL);
+> +       lpc32xx_set_phy_interface_mode(lpc_phy_interface_mode(dev));
+>
+>         /* Get platform resources */
+>         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> diff --git a/include/linux/soc/nxp/lpc32xx-misc.h b/include/linux/soc/nxp/lpc32xx-misc.h
+> index f232e1a1bcdc..af4f82f6cf3b 100644
+> --- a/include/linux/soc/nxp/lpc32xx-misc.h
+> +++ b/include/linux/soc/nxp/lpc32xx-misc.h
+> @@ -9,9 +9,11 @@
+>  #define __SOC_LPC32XX_MISC_H
+>
+>  #include <linux/types.h>
+> +#include <linux/phy.h>
+>
+>  #ifdef CONFIG_ARCH_LPC32XX
+>  extern u32 lpc32xx_return_iram(void __iomem **mapbase, dma_addr_t *dmaaddr);
+> +extern void lpc32xx_set_phy_interface_mode(phy_interface_t mode);
+>  #else
+>  static inline u32 lpc32xx_return_iram(void __iomem **mapbase, dma_addr_t *dmaaddr)
+>  {
+> @@ -19,6 +21,9 @@ static inline u32 lpc32xx_return_iram(void __iomem **mapbase, dma_addr_t *dmaadd
+>         *dmaaddr = 0;
+>         return 0;
+>  }
+> +static inline void lpc32xx_set_phy_interface_mode(phy_interface_t mode)
+> +{
+> +}
+>  #endif
+>
+>  #endif  /* __SOC_LPC32XX_MISC_H */
+> --
+> 2.20.0
+>
