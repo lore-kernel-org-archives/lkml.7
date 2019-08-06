@@ -2,129 +2,107 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74453C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 03:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5565C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 03:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EE27214C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 03:08:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A84A720B1F
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 03:13:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731528AbfHFDIl (ORCPT
+        id S1730974AbfHFDNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 23:08:41 -0400
-Received: from mga02.intel.com ([134.134.136.20]:6367 "EHLO mga02.intel.com"
+        Mon, 5 Aug 2019 23:13:10 -0400
+Received: from mga05.intel.com ([192.55.52.43]:62755 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730036AbfHFDIl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 23:08:41 -0400
+        id S1729334AbfHFDNJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 23:13:09 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 20:08:41 -0700
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 20:13:09 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,352,1559545200"; 
-   d="scan'208";a="168166998"
+   d="scan'208";a="202666879"
 Received: from sai-dev-mach.sc.intel.com ([143.183.140.153])
-  by orsmga008.jf.intel.com with ESMTP; 05 Aug 2019 20:08:40 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 05 Aug 2019 20:13:09 -0700
+Message-ID: <1c6a18dd63e6005045034ccc7b04390ab3c605e5.camel@intel.com>
+Subject: Re: [PATCH] fork: Improve error message for corrupted page tables
 From:   Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
-To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Cc:     dave.hansen@intel.com,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+To:     Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
         Ingo Molnar <mingo@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: [PATCH V2] fork: Improve error message for corrupted page tables
-Date:   Mon,  5 Aug 2019 20:05:27 -0700
-Message-Id: <3ef8a340deb1c87b725d44edb163073e2b6eca5a.1565059496.git.sai.praneeth.prakhya@intel.com>
-X-Mailer: git-send-email 2.19.1
+        Peter Zijlstra <peterz@infradead.org>
+Date:   Mon, 05 Aug 2019 20:09:59 -0700
+In-Reply-To: <4236c0c5-9671-b9fe-b5eb-7d1908767905@suse.cz>
+References: <20190730221820.7738-1-sai.praneeth.prakhya@intel.com>
+         <20190731152753.b17d9c4418f4bf6815a27ad8@linux-foundation.org>
+         <a05920e5994fb74af480255471a6c3f090f29b27.camel@intel.com>
+         <20190731212052.5c262ad084cbd6cf475df005@linux-foundation.org>
+         <FFF73D592F13FD46B8700F0A279B802F4F9D61B5@ORSMSX114.amr.corp.intel.com>
+         <4236c0c5-9671-b9fe-b5eb-7d1908767905@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a user process exits, the kernel cleans up the mm_struct of the user
-process and during cleanup, check_mm() checks the page tables of the user
-process for corruption (E.g: unexpected page flags set/cleared). For
-corrupted page tables, the error message printed by check_mm() isn't very
-clear as it prints the loop index instead of page table type (E.g: Resident
-file mapping pages vs Resident shared memory pages). The loop index in
-check_mm() is used to index rss_stat[] which represents individual memory
-type stats. Hence, instead of printing index, print memory type, thereby
-improving error message.
+On Mon, 2019-08-05 at 15:28 +0200, Vlastimil Babka wrote:
+> On 8/2/19 8:46 AM, Prakhya, Sai Praneeth wrote:
+> > > > > > +static const char * const resident_page_types[NR_MM_COUNTERS] = {
+> > > > > > +	"MM_FILEPAGES",
+> > > > > > +	"MM_ANONPAGES",
+> > > > > > +	"MM_SWAPENTS",
+> > > > > > +	"MM_SHMEMPAGES",
+> > > > > > +};
+> > > > > 
+> > > > > But please let's not put this in a header file.  We're asking the
+> > > > > compiler to put a copy of all of this into every compilation unit
+> > > > > which includes the header.  Presumably the compiler is smart enough
+> > > > > not to do that, but it's not good practice.
+> > > > 
+> > > > Thanks for the explanation. Makes sense to me.
+> > > > 
+> > > > Just wanted to check before sending V2, Is it OK if I add this to
+> > > > kernel/fork.c? or do you have something else in mind?
+> > > 
+> > > I was thinking somewhere like mm/util.c so the array could be used by
+> > > other
+> > > code.  But it seems there is no such code.  Perhaps it's best to just
+> > > leave fork.c as
+> > > it is now.
+> > 
+> > Ok, so does that mean have the struct in header file itself?
+> 
+> If the struct definition (including the string values) was in mm/util.c,
+> there would have to be a declaration in a header. If it's in fork.c with
+> the only users, there doesn't need to be separate declaration in a header.
 
-Without patch:
---------------
-[  204.836425] mm/pgtable-generic.c:29: bad p4d 0000000089eb4e92(800000025f941467)
-[  204.836544] BUG: Bad rss-counter state mm:00000000f75895ea idx:0 val:2
-[  204.836615] BUG: Bad rss-counter state mm:00000000f75895ea idx:1 val:5
-[  204.836685] BUG: non-zero pgtables_bytes on freeing mm: 20480
+Makes sense.
 
-With patch:
------------
-[   69.815453] mm/pgtable-generic.c:29: bad p4d 0000000084653642(800000025ca37467)
-[   69.815872] BUG: Bad rss-counter state mm:00000000014a6c03 type:MM_FILEPAGES val:2
-[   69.815962] BUG: Bad rss-counter state mm:00000000014a6c03 type:MM_ANONPAGES val:5
-[   69.816050] BUG: non-zero pgtables_bytes on freeing mm: 20480
+> 
+> > Sorry! for too many questions. I wanted to check with you before changing 
+> > because it's *the* fork.c file (I presume random changes will not be
+> > encouraged here)
+> > 
+> > I am not yet clear on what's the right thing to do here :(
+> > So, could you please help me in deciding.
+> 
+> fork.c should be fine, IMHO
 
-Also, change print function (from printk(KERN_ALERT, ..) to pr_alert()) so
-that it matches the other print statement.
+I was leaning to add struct definition in fork.c as well but just wanted to
+check with Andrew before posting V2.
 
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-Acked-by: Dave Hansen <dave.hansen@intel.com>
-Suggested-by: Dave Hansen <dave.hansen@intel.com>
-Signed-off-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
----
+Thanks for the reply though :)
 
-Changes from V1 to V2:
-----------------------
-1. Move struct definition from header file to fork.c file, so that it won't be
-   included in every compilation unit. As this struct is used *only* in fork.c,
-   include the definition in fork.c itself.
-2. Index the struct to match respective macros.
-3. Mention about print function change in commit message.
-
- kernel/fork.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/fork.c b/kernel/fork.c
-index d8ae0f1b4148..f34f441c50c0 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -125,6 +125,13 @@ int nr_threads;			/* The idle threads do not count.. */
- 
- static int max_threads;		/* tunable limit on nr_threads */
- 
-+static const char * const resident_page_types[NR_MM_COUNTERS] = {
-+	[MM_FILEPAGES]		= "MM_FILEPAGES",
-+	[MM_ANONPAGES]		= "MM_ANONPAGES",
-+	[MM_SWAPENTS]		= "MM_SWAPENTS",
-+	[MM_SHMEMPAGES]		= "MM_SHMEMPAGES",
-+};
-+
- DEFINE_PER_CPU(unsigned long, process_counts) = 0;
- 
- __cacheline_aligned DEFINE_RWLOCK(tasklist_lock);  /* outer */
-@@ -649,8 +656,8 @@ static void check_mm(struct mm_struct *mm)
- 		long x = atomic_long_read(&mm->rss_stat.count[i]);
- 
- 		if (unlikely(x))
--			printk(KERN_ALERT "BUG: Bad rss-counter state "
--					  "mm:%p idx:%d val:%ld\n", mm, i, x);
-+			pr_alert("BUG: Bad rss-counter state mm:%p type:%s val:%ld\n",
-+				 mm, resident_page_types[i], x);
- 	}
- 
- 	if (mm_pgtables_bytes(mm))
--- 
-2.7.4
+Regards,
+Sai
 
