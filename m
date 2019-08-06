@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C20AC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89724C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:40:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09BFF2189E
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:40:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52E4A21874
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:40:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127627;
-	bh=w3ngC3KJWZkUT1tEKcDAKTAJKNEh4FF8APwIg6eCV4M=;
+	s=default; t=1565127631;
+	bh=7453QdbZ69rGgIHi7rLYXGRYZtuEL6PFS0PesIiLggk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xy6dZFMEStFgzjsVw9OcsbdD7D8ViKxuBB0EaH/6EWLqN2fr5cymOG+ILa80bZWEI
-	 vr0BDvnVHyPl3MQbzR25bew/sVAOZgolni9hXF6YwBeTNxC0IkPGNJ+d/ks9R5yKVV
-	 Z2p5sdxGCvudPQkM8hYZ71j9YfknA1yMr9Ch1AIA=
+	b=VwTy+ejfFgHm/m2C8orynNOe4goIyWZe4O4D4rxQeSLQdD3Ojz43yiD6GLRRtpSfC
+	 YO9APTaGq/8dKKej4g+iVj9y+BjgdkW24MxyOEwwlze9r7zdHCu1SbsFdItW0yjWLf
+	 KpOqQvS0cn1tVhRtMfO7S0AytvFgORnBnYbdnTz4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729303AbfHFVkV (ORCPT
+        id S1729399AbfHFVka (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:40:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54688 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:40:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729139AbfHFVgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:36:52 -0400
+        id S1728005AbfHFVgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:36:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D83921872;
-        Tue,  6 Aug 2019 21:36:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 701AC217F5;
+        Tue,  6 Aug 2019 21:36:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127412;
-        bh=w3ngC3KJWZkUT1tEKcDAKTAJKNEh4FF8APwIg6eCV4M=;
+        s=default; t=1565127410;
+        bh=7453QdbZ69rGgIHi7rLYXGRYZtuEL6PFS0PesIiLggk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n6iv/hdwyHPzG2ZUH49jjO6EbWMBge+BuSdvS8IHtrfiqcoKZlBqAgJ2xnSv0pQa8
-         jGMT96ffqj8AjT9+Vw9sunG9tArbaAsVjOJY7bRnIzGNI1UStQyNzgx4xuIeYFrggF
-         XSKt6H4n8zdyPEvxdPWQiGVawqsT9tsWqSAMU37M=
+        b=Ui7FuPF9QchBzGtZHrEfYl1ZrAJGTTzBAGav7J2Pw4AVp70+vD1W8DAu5HvCkBcu4
+         cWASi32kQnNwrArbFZZSfrOh03ro1/AoGrzBVUHD1qqbNkB6Uh6dwDzxCVhi84tO6y
+         nIBLvfSWsNF75mP+xXUnDWzxQ2rc80UiMUwZ75VQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 15/25] kbuild: modpost: handle KBUILD_EXTRA_SYMBOLS only for external modules
-Date:   Tue,  6 Aug 2019 17:36:12 -0400
-Message-Id: <20190806213624.20194-15-sashal@kernel.org>
+Cc:     Christian Brauner <christian@brauner.io>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 13/25] exit: make setting exit_state consistent
+Date:   Tue,  6 Aug 2019 17:36:10 -0400
+Message-Id: <20190806213624.20194-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213624.20194-1-sashal@kernel.org>
 References: <20190806213624.20194-1-sashal@kernel.org>
@@ -58,35 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Christian Brauner <christian@brauner.io>
 
-[ Upstream commit cb4819934a7f9b87876f11ed05b8624c0114551b ]
+[ Upstream commit 30b692d3b390c6fe78a5064be0c4bbd44a41be59 ]
 
-KBUILD_EXTRA_SYMBOLS makes sense only when building external modules.
-Moreover, the modpost sets 'external_module' if the -e option is given.
+Since commit b191d6491be6 ("pidfd: fix a poll race when setting exit_state")
+we unconditionally set exit_state to EXIT_ZOMBIE before calling into
+do_notify_parent(). This was done to eliminate a race when querying
+exit_state in do_notify_pidfd().
+Back then we decided to do the absolute minimal thing to fix this and
+not touch the rest of the exit_notify() function where exit_state is
+set.
+Since this fix has not caused any issues change the setting of
+exit_state to EXIT_DEAD in the autoreap case to account for the fact hat
+exit_state is set to EXIT_ZOMBIE unconditionally. This fix was planned
+but also explicitly requested in [1] and makes the whole code more
+consistent.
 
-I replaced $(patsubst %, -e %,...) with simpler $(addprefix -e,...)
-while I was here.
+/* References */
+[1]: https://lore.kernel.org/lkml/CAHk-=wigcxGFR2szue4wavJtH5cYTTeNES=toUBVGsmX0rzX+g@mail.gmail.com
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Christian Brauner <christian@brauner.io>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/Makefile.modpost | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/exit.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
-index 991db7d6e4df8..cf6f33b2633d5 100644
---- a/scripts/Makefile.modpost
-+++ b/scripts/Makefile.modpost
-@@ -75,7 +75,7 @@ modpost = scripts/mod/modpost                    \
-  $(if $(CONFIG_MODULE_SRCVERSION_ALL),-a,)       \
-  $(if $(KBUILD_EXTMOD),-i,-o) $(kernelsymfile)   \
-  $(if $(KBUILD_EXTMOD),-I $(modulesymfile))      \
-- $(if $(KBUILD_EXTRA_SYMBOLS), $(patsubst %, -e %,$(KBUILD_EXTRA_SYMBOLS))) \
-+ $(if $(KBUILD_EXTMOD),$(addprefix -e ,$(KBUILD_EXTRA_SYMBOLS))) \
-  $(if $(KBUILD_EXTMOD),-o $(modulesymfile))      \
-  $(if $(CONFIG_DEBUG_SECTION_MISMATCH),,-S)      \
-  $(if $(CONFIG_SECTION_MISMATCH_WARN_ONLY),,-E)  \
+diff --git a/kernel/exit.c b/kernel/exit.c
+index 95ce231ff5e24..5fa0c2884470d 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -730,9 +730,10 @@ static void exit_notify(struct task_struct *tsk, int group_dead)
+ 		autoreap = true;
+ 	}
+ 
+-	tsk->exit_state = autoreap ? EXIT_DEAD : EXIT_ZOMBIE;
+-	if (tsk->exit_state == EXIT_DEAD)
++	if (autoreap) {
++		tsk->exit_state = EXIT_DEAD;
+ 		list_add(&tsk->ptrace_entry, &dead);
++	}
+ 
+ 	/* mt-exec, de_thread() is waiting for group leader */
+ 	if (unlikely(tsk->signal->notify_count < 0))
 -- 
 2.20.1
 
