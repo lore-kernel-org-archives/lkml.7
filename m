@@ -1,79 +1,115 @@
-Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0950C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 23:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 146DBC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 00:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B89D20825
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 23:59:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA15D2173C
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 00:03:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bQK7Lw6T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731034AbfHEX7C (ORCPT
+        id S1731052AbfHFADz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 19:59:02 -0400
-Received: from mail-oi1-f199.google.com ([209.85.167.199]:49676 "EHLO
-        mail-oi1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728870AbfHEX7C (ORCPT
+        Mon, 5 Aug 2019 20:03:55 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40910 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728483AbfHFADz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 19:59:02 -0400
-Received: by mail-oi1-f199.google.com with SMTP id m24so20019836oih.16
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 16:59:01 -0700 (PDT)
+        Mon, 5 Aug 2019 20:03:55 -0400
+Received: by mail-ot1-f65.google.com with SMTP id l15so30904762oth.7
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 17:03:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Lg/DgxD3VnnGHA1TcpT2F4zdWkdlPFk/7sUfWPDW9zE=;
+        b=bQK7Lw6Ta7pxzVic0w3JpbqQC3Q3gA+uD3iHWbJfaDr5Fhk6XXl1PTil8laFZKlseS
+         2szxRHloYyOd8o8vSzhxOpV+obbD4Q7/zlz/LW6AAJJsoXsIZ4GlHNl0IqY3yTn3hC0X
+         Hi0Mjj0RcipQvLI+6MEHX5kc5BMpxtaUalx5p5inl3pJo5u3zAhBAwUCA6xZoH9+DCxk
+         J+Fhh//1Lx4sNGlyuqyIoaIDkI1vuGCbkByJMsTQU24sj13y44TxbS9P5IVFlcDwPloi
+         eraKnbPZ4symb7LieX8BKOz5OmmxpdmuXDFhJHW+Yj29vD27NUuF3CpeI8DZyh1LdTil
+         D9rA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=cCEYw1YNz6YzHWfgF679x03NeagqCuKTljhuC5ujasE=;
-        b=re1/pip6YgeLyfYr8B383WdgNFV2jKcpejJEBa13KlUdRtBMUvHO2ci6/wl6pDaJBH
-         X7Gc9DTf4Xj19s6v+XW04vJpMwRkXY/c5T2eULF3F0EccRkxFd8wPSK0esx/y6GywNJt
-         aFv9+BCQH1MMbsn2Kcrwpsp1hB9tV0AlC8Qtalr1l7kONzcnJyA+hA1+bV8b6VGoGvxE
-         fz6mnzSJ1D48LsCyfdhfyqOTBASSvKH1Id5NthifJ5RDEQw9Zk1ey65v+C3u3jrTtwOU
-         532PeHSebC5uJwPngDG2hrLcKphpaSs3sD9SVjEsioETkP8yDtsgWylKDap7HYd2fZZT
-         x5Ww==
-X-Gm-Message-State: APjAAAVHYxjg3ZQjwzPG5ze40XbQrN+L8ohXD5n2+7pNqPX6BmLwSH4q
-        2kYdMPdbKyFWRizOmAVBoX76NfEBezoIbzUIAk4kXaIpJ6na
-X-Google-Smtp-Source: APXvYqwnWehfXVv+cTgMbmC8JDtGgeKanwz/g7rHrVO82/VKU6rQkcOihO2EYpiU+OJoGnyjFk/K9Z7NbCjOUvfNijzTrmNmUP5+
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Lg/DgxD3VnnGHA1TcpT2F4zdWkdlPFk/7sUfWPDW9zE=;
+        b=cYXcemPeZ0ZxfIMcUw2L6p2+UXqwi8AakIcDkjY5MvdJ1MDBClrTEC6Dw1WY7/H9GZ
+         AAMZYgMKgiLkaUiU2WlZ7HIFrMOv3O9peCkcdPsNy1vOF+5tqBkoiTsrHHEv/jIAeT9M
+         9U2WzdkRYFRgKWM/7K3VhR2QnG9Dpbmm6EueUlTX1iZG1RxUkQ/7VU7MKbLucTjsuZIZ
+         du4BrKjnbUasRJoegBsYxQyf3OEOVRiPX9T8rl/9JWhlfklSBLa1lkYQaaGPDAgLQJJQ
+         kXXyu5O0EzWjFqAYbUZo/CQ48dZ3G7OqjHeFd023ipyMYBMRT5rdipN0J/jeIbj2ih0C
+         BhKw==
+X-Gm-Message-State: APjAAAUuV9BErIsqRClHgoEAj6o1jDRyCyXGr013w7iDidnR8U0jOlOx
+        Vv6zCF1F98x4GpuAmbFANdL/zzwrhGtKTp9QpZApnw==
+X-Google-Smtp-Source: APXvYqwIS1h7siX+nevMs4Z+Oy5KRR3DjgmRHxK4CUcKMskHi2jBpE3xTaaEjAqNsmEHp6TlpFd5duss1Xn1hOoOda0=
+X-Received: by 2002:a9d:6256:: with SMTP id i22mr517569otk.139.1565049834029;
+ Mon, 05 Aug 2019 17:03:54 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:5:: with SMTP id z5mr1098412jao.58.1565049541088;
- Mon, 05 Aug 2019 16:59:01 -0700 (PDT)
-Date:   Mon, 05 Aug 2019 16:59:01 -0700
-In-Reply-To: <000000000000d0df7f058f625d13@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f3dd5b058f677d84@google.com>
-Subject: Re: WARNING: refcount bug in blk_mq_free_request (2)
-From:   syzbot <syzbot+f4316dab9d4518b755eb@syzkaller.appspotmail.com>
-To:     axboe@kernel.dk, hch@lst.de, keith.busch@intel.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20190805130403.06dc27b4@canb.auug.org.au> <20190805145638.222e58b1@canb.auug.org.au>
+In-Reply-To: <20190805145638.222e58b1@canb.auug.org.au>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Mon, 5 Aug 2019 17:03:18 -0700
+Message-ID: <CAGETcx_Xwu64+CFz_AxUpDBeRBfB9+qU7pSc+KvVFVOOsjMUvw@mail.gmail.com>
+Subject: Re: linux-next: build warning after merge of the driver-core tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Greg KH <greg@kroah.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On Sun, Aug 4, 2019 at 9:56 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> On Mon, 5 Aug 2019 13:04:03 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >
+> > After merging the driver-core tree, today's linux-next build (powerpc
+> > ppc64_defconfig) produced this warning:
+> >
+> > drivers/of/platform.c:674:12: warning: 'of_link_to_suppliers' defined but not used [-Wunused-function]
+> >  static int of_link_to_suppliers(struct device *dev)
+> >             ^~~~~~~~~~~~~~~~~~~~
+> >
+> > Introduced by commit
+> >
+> >   690ff7881b26 ("of/platform: Add functional dependency link from DT bindings")
+>
+> It also produced this warning:
+>
+> drivers/of/platform.c: In function 'of_link_property':
+> drivers/of/platform.c:650:18: warning: ?: using integer constants in boolean context [-Wint-in-bool-context]
+>   return done ? 0 : -ENODEV;
+>
 
-commit 12f5b93145450c750f315657ef239a314811aeeb
-Author: Keith Busch <keith.busch@intel.com>
-Date:   Tue May 29 13:52:28 2018 +0000
+Thanks for reporting Stephen!
 
-     blk-mq: Remove generation seqeunce
+I'll fix the bool vs int thing right away. Weird that no other
+compilation caught it.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1263808c600000
-start commit:   e21a712a Linux 5.3-rc3
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1163808c600000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1663808c600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a4c9e9f08e9e8960
-dashboard link: https://syzkaller.appspot.com/bug?extid=f4316dab9d4518b755eb
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=117a1906600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11aa11aa600000
+As for the function not used, I'll move all the new code into the
+already existing ifndef CONFIG_PPC for now.
 
-Reported-by: syzbot+f4316dab9d4518b755eb@syzkaller.appspotmail.com
-Fixes: 12f5b9314545 ("blk-mq: Remove generation seqeunce")
+Looks like PPC doesn't populate platform devices from DT using the
+generic of_platform_default_populate_init() in drivers/of/platform.c.
+I tried grepping around, but I don't see clearly where all the devices
+are populated from DT for PPC. I'm not familiar with PPC, so if you or
+someone else can give me a pointer to how devices are populated in
+PPC, that's be helpful. If there's interest in this series for PPC,
+I'd be happy to add support to however PPC populates the devices from
+DT -- specifically, creating device links for devices as they are
+populated.
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Thanks,
+Saravana
