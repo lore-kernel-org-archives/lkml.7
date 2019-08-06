@@ -2,128 +2,141 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3E4C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 19:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F97C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 20:00:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB773208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 19:55:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D3A02070C
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 20:00:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fGAJjSUR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TngasMsK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbfHFTzA (ORCPT
+        id S1726155AbfHFUA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 15:55:00 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40356 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbfHFTy7 (ORCPT
+        Tue, 6 Aug 2019 16:00:58 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34186 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbfHFUA6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 15:54:59 -0400
-Received: by mail-wr1-f65.google.com with SMTP id r1so89020965wrl.7;
-        Tue, 06 Aug 2019 12:54:58 -0700 (PDT)
+        Tue, 6 Aug 2019 16:00:58 -0400
+Received: by mail-ot1-f68.google.com with SMTP id n5so95691125otk.1;
+        Tue, 06 Aug 2019 13:00:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:from:message-id;
-        bh=pweWeMZ+YAimqC/rJkc+DaUbocqC+KDHTVadFtRmDA0=;
-        b=fGAJjSURN9jdmlO/I/yY7LcvHVIFWmV3kCQetZLe/YsASKUdA/2V49frkUJFh32akX
-         gt/nIuAshzYJrMBWOFMq7WOhOnKJNFylLc88RXm5VVxEyXnwZExq/aQyyFcw6PsIBdUO
-         UJBdbyqjns/oNRuElRx8SE96dBXcqAcxK/aj5vopiYWvxDSJwtP4RSABBjLH4MQt17dB
-         AOwLQA5PL/xZM+pTYZxvJhnFpmDkdLkUqo8nndY4GhfnYq58zUpjD8I5R57K4OgKkBFx
-         zGfzjahX0X8XzLBcff5KFwL0tPALfivB00M77hWMEdiAzB0K55NAJxYWQYAE+1ReF+f8
-         qkQA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VaOMR+SUZElYH0Eetic8a/+Hs8jgmt9NIHaGtBcxFPM=;
+        b=TngasMsK4VNmxfirXQoozUrNZixTJrh5h2kC3Fa/ZBpmNydnUMizu+QaNDXrbPORqA
+         LUcxKGR2kGLPUVCAG+ujMbZlMdv+IqWR9ra+m7iTJ+AfMC++Y8R1xruk5J8HBma3OVeD
+         271cMVDklGhu0DXNyPhReNS4Glv9BEMFIaN627Isa45aEM8M/7FYQLApxbPd9oAnUBsi
+         +jSt8X2b5XtoADey3XpzbHQ8I/uqgwx1UQszsKkhViGmHE+noAbMvXvgz0Hlxq3sflXD
+         a5q/tYKeEbtB+ocWno6jFcyYfWsM3YCcfNsKZjEyssRSg0lno7aji39ysG0kykKk8pNV
+         foHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=pweWeMZ+YAimqC/rJkc+DaUbocqC+KDHTVadFtRmDA0=;
-        b=WurGKoyN2lV3dZY27B2iD59Pkm57nngCQuoA0JCxmdWNrXcqPOUTorzW0CTsnTz+CD
-         fUzu7Xi/KbFgJRj/iuRy8d9SUsof5QPxw2n/1y9klemunXVVAu8W/tR35yStFjQanxrv
-         pctQbFR3vt+67Wqj7VCFj1jLqLOHJ6xaeSyw/84aaywlMGmvU1xhIbI27OWxXAIzuPaz
-         MxO7ykkjeG2QXqgsuRvveMJ3sLnp3IFaMRfeemq9KJ9shOQiykykAZqgiuJUtZ3hTGBj
-         UDzGj0QYcbGBx99Fuj3k6DY4ugBnfFo++QRA+EgIYrU020QFmeA+BdLSxqLDTLN4MSTB
-         IO7g==
-X-Gm-Message-State: APjAAAU8dfRGIAOotTjHeKzqZd34RaSGGpkG/Zy4jWKzDYBzyNMAh5hd
-        A3slLXpUvDMcN9Sl3n/VPARv8QJO3kI=
-X-Google-Smtp-Source: APXvYqyqfIIs/GR5fj1UygzkWQGeAlXeuTKMOwI7ZkHYeJsqCO/4oOppuFUB/Tcua3HuCcOYDPpdjw==
-X-Received: by 2002:adf:fe10:: with SMTP id n16mr5585332wrr.92.1565121297462;
-        Tue, 06 Aug 2019 12:54:57 -0700 (PDT)
-Received: from [192.168.1.32] ([141.226.31.91])
-        by smtp.gmail.com with ESMTPSA id a8sm77911466wma.31.2019.08.06.12.54.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 06 Aug 2019 12:54:56 -0700 (PDT)
-Date:   Tue, 06 Aug 2019 22:54:48 +0300
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CACRpkdaTmxQn2Z=vD6nyqk-iXCFrnCG1xpkXwO3-+sazOhGBvw@mail.gmail.com>
-References: <20190803133436.15016-1-rfried.dev@gmail.com> <CACRpkdYEdQdk62bWJ2=i2Mbvpz3kwL=9bnMoxksFsTgAHRh68w@mail.gmail.com> <CACRpkdaTmxQn2Z=vD6nyqk-iXCFrnCG1xpkXwO3-+sazOhGBvw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VaOMR+SUZElYH0Eetic8a/+Hs8jgmt9NIHaGtBcxFPM=;
+        b=d6x9tKU8H+85I5DoxKfkK/VswvlFTmxDLOnleMKDLvOQV+bUZHKX/i0F2KOG7ae5dt
+         vkaNWkXBlB0sAjAU+8ksiiFFF6sWeXuDg4rdXCVch3DFUEjYQq4RFQoh7L6Dx3UKg6lr
+         m44U8eAy51xqXbFvp5idVB+fbawZF8nEXrckKwjsHZU1pcoHKbZKNZVeC0W0/HU+Fc51
+         Zlk2KJpE2fk8YJdayFGpP3lMlonkbSzWjL4uAfOsazkX7og/MQLgi9fmZO8hEWoAuuBa
+         z8/y1M+WJ0x4SlN0CV/fFe50eihRFWwaWxJC612efekceBGFjbs0cG8L2CphApNENjz1
+         kpWw==
+X-Gm-Message-State: APjAAAVcONRrLNEHmIhVUPCi98B7ddfhwzwdjkeiYclWQIXhGWV1tgdX
+        rRw0zMpUpzc6rLCLJVVS7H1vCNszKXHLhhsJYPy7xadcGhw=
+X-Google-Smtp-Source: APXvYqx+MC/6Cl1pEL3O2XLiSNXCdL35U9JI3kpbwQNG/AkZ6DUYfCMIFGJfMWultA7dg8cGYp72TdjyMGK15LDUL3o=
+X-Received: by 2002:a6b:dd18:: with SMTP id f24mr5102882ioc.97.1565121656651;
+ Tue, 06 Aug 2019 13:00:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] gpiolib: Take MUX usage into account
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Stefan Wahren <stefan.wahren@i2se.com>
-From:   Ramon Fried <rfried.dev@gmail.com>
-Message-ID: <2F7B6E95-045E-4F57-B2CB-858BEE298986@gmail.com>
+References: <20190806092919.13211-1-firo.yang@suse.com>
+In-Reply-To: <20190806092919.13211-1-firo.yang@suse.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Tue, 6 Aug 2019 13:00:45 -0700
+Message-ID: <CAKgT0UdFky-tnyhn_oXGefex=9FN5ckAJ0YYd2Z7STZg1V48Hg@mail.gmail.com>
+Subject: Re: [PATCH 1/1] ixgbe: sync the first fragment unconditionally
+To:     Firo Yang <firo.yang@suse.com>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On August 6, 2019 4:11:27 PM GMT+03:00, Linus Walleij <linus=2Ewalleij@lin=
-aro=2Eorg> wrote:
->On Tue, Aug 6, 2019 at 3:04 PM Linus Walleij <linus=2Ewalleij@linaro=2Eor=
-g>
->wrote:
->> On Sat, Aug 3, 2019 at 3:34 PM Ramon Fried <rfried=2Edev@gmail=2Ecom>
->wrote:
->>
->> > From: Stefan Wahren <stefan=2Ewahren@i2se=2Ecom>
->> >
->> > The user space like gpioinfo only see the GPIO usage but not the
->> > MUX usage (e=2Eg=2E I2C or SPI usage) of a pin=2E As a user we want t=
-o
->know which
->> > pin is free/safe to use=2E So take the MUX usage of strict pinmux
->controllers
->> > into account to get a more realistic view for ioctl
->GPIO_GET_LINEINFO_IOCTL=2E
->> >
->> > Signed-off-by: Stefan Wahren <stefan=2Ewahren@i2se=2Ecom>
->> > Tested-By: Ramon Fried <rfried=2Edev@gmail=2Ecom>
->> > Signed-off-by: Ramon Fried <rfried=2Edev@gmail=2Ecom>
->> > ---
->> > Sending Stefan's RFC as patch, as I tested it and it seems to work,
->> > additionally, an accompanying fix was made by me to gpiolibd to fix
->a
->> > display error of the actual result:
->> > https://patchwork=2Eozlabs=2Eorg/patch/1139923/
->>
->> This is mostly fine, some style nits so I fixed it up when
->> applying=2E
+On Tue, Aug 6, 2019 at 2:38 AM Firo Yang <firo.yang@suse.com> wrote:
 >
->Ooops no=2E It needs a deeper rework in accordance to my comments
->last time it was posted=2E Please read this reply to Stefan's patch
->and address the comments:
+> In Xen environment, if Xen-swiotlb is enabled, ixgbe driver
+> could possibly allocate a page, DMA memory buffer, for the first
+> fragment which is not suitable for Xen-swiotlb to do DMA operations.
+> Xen-swiotlb will internally allocate another page for doing DMA
+> operations. It requires syncing between those two pages. Otherwise,
+> we may get an incomplete skb. To fix this problem, sync the first
+> fragment no matter the first fargment is makred as "page_released"
+> or not.
 >
-NP, I'll try to address these in a new patch=2E=20
-Thanks=2E=20
-Ramon=20
->https://lore=2Ekernel=2Eorg/linux-gpio/CACRpkdb5DjAMRYkT+b0U6HVk7E6ccLT79=
--LB=3DQGQWWtE17aPUg@mail=2Egmail=2Ecom/
->
->Yours,
->Linus Walleij
+> Signed-off-by: Firo Yang <firo.yang@suse.com>
 
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+From what I can tell the code below is fine. However the patch
+description isn't very clear about the issue.
+
+Specifically since we are mapping the frame with
+DMA_ATTR_SKIP_CPU_SYNC we have to unmap with that as well. As a result
+a sync is not performed on an unmap and must be done manually as we
+skipped it for the first frag. As such we need to always sync before
+possibly performing a page unmap operation.
+
+Also you can probably add the following to your patch description"
+Fixes: f3213d932173 ("ixgbe: Update driver to make use of DMA
+attributes in Rx path")
+Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+
+> ---
+>  drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 16 +++++++++-------
+>  1 file changed, 9 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+> index cbaf712d6529..200de9838096 100644
+> --- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+> +++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+> @@ -1825,13 +1825,7 @@ static void ixgbe_pull_tail(struct ixgbe_ring *rx_ring,
+>  static void ixgbe_dma_sync_frag(struct ixgbe_ring *rx_ring,
+>                                 struct sk_buff *skb)
+>  {
+> -       /* if the page was released unmap it, else just sync our portion */
+> -       if (unlikely(IXGBE_CB(skb)->page_released)) {
+> -               dma_unmap_page_attrs(rx_ring->dev, IXGBE_CB(skb)->dma,
+> -                                    ixgbe_rx_pg_size(rx_ring),
+> -                                    DMA_FROM_DEVICE,
+> -                                    IXGBE_RX_DMA_ATTR);
+> -       } else if (ring_uses_build_skb(rx_ring)) {
+> +       if (ring_uses_build_skb(rx_ring)) {
+>                 unsigned long offset = (unsigned long)(skb->data) & ~PAGE_MASK;
+>
+>                 dma_sync_single_range_for_cpu(rx_ring->dev,
+> @@ -1848,6 +1842,14 @@ static void ixgbe_dma_sync_frag(struct ixgbe_ring *rx_ring,
+>                                               skb_frag_size(frag),
+>                                               DMA_FROM_DEVICE);
+>         }
+> +
+> +       /* If the page was released, just unmap it. */
+> +       if (unlikely(IXGBE_CB(skb)->page_released)) {
+> +               dma_unmap_page_attrs(rx_ring->dev, IXGBE_CB(skb)->dma,
+> +                                    ixgbe_rx_pg_size(rx_ring),
+> +                                    DMA_FROM_DEVICE,
+> +                                    IXGBE_RX_DMA_ATTR);
+> +       }
+>  }
+>
+>  /**
+> --
+> 2.16.4
+>
