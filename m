@@ -2,178 +2,179 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA755C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 17:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F40C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 17:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 944142075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 17:27:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565112460;
-	bh=ER+Nl4pxFNJU3e70FJE7jNnErfZCfsI3TyP4TmACNds=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=m4OoGyB77bDwO016RWb7BQjXet3AyiLrjwAxGh8YrKWJE1zz1VhYIS0iHbcFlX9Ch
-	 2DGV8BVxeJKGcpg96gAbkp00+9aKUZ8BMOIrOEIp/JFb+niMews/8mvn/w6qvELQhS
-	 MC6NotUBCEMhwl5CNeEAsOUi1n83UXsTO7t0wPc0=
+	by mail.kernel.org (Postfix) with ESMTP id 7DAB8214C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 17:27:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QnEK1uGV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733287AbfHFR1j (ORCPT
+        id S1733307AbfHFR16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 13:27:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45822 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730835AbfHFR1j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 13:27:39 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 377762075B;
-        Tue,  6 Aug 2019 17:27:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565112457;
-        bh=ER+Nl4pxFNJU3e70FJE7jNnErfZCfsI3TyP4TmACNds=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=AdiCqECZs91CTONxWgnjAx5IsFWWNT9uwS2CniDZGESp9YGtU/shjcNmdyZ29s9Pz
-         VecEbTLHRWUN566NClsxkLP0s5ofUxkfnEhnTp/+LVzJwo7jLjglRkRugx/A4RiaM1
-         Z/F5Pz3xA+hy3R2RvRQXYtxhcp7tICa663xrrxls=
-Subject: Re: [PATCH v4 2/2] usbip: Implement SG support to vhci-hcd and stub
- driver
-To:     Suwan Kim <suwan.kim027@gmail.com>
-Cc:     valentina.manea.m@gmail.com, gregkh@linuxfoundation.org,
-        stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190806123154.23798-1-suwan.kim027@gmail.com>
- <20190806123154.23798-3-suwan.kim027@gmail.com>
- <eeb617a1-e0e0-f27e-f8c7-e0180bb6e911@kernel.org>
- <20190806154856.GB3738@localhost.localdomain>
-From:   shuah <shuah@kernel.org>
-Message-ID: <c7143f4c-e54b-21c9-6d84-21bda239234a@kernel.org>
-Date:   Tue, 6 Aug 2019 11:27:36 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190806154856.GB3738@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 6 Aug 2019 13:27:58 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:52734 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730835AbfHFR16 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 13:27:58 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x76H9w4u089314;
+        Tue, 6 Aug 2019 17:27:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
+ bh=APGgD2qTHotK94otaKMSFu+Fqn3rhhV5q78cD+VLKR8=;
+ b=QnEK1uGVZXTycSp9FE6Ag63qxyOk1FWl0DfANEu1driBxn4Nty6leZahrJCPvQzTWw09
+ /hIu5odh1DzcOd6j+f4bmMsFusyYdz73GAjYWtvjGRG6L9c8z2uYhcvh65hdZ0C1xIWC
+ QLAdniVNlDORQb6b0rFBzzJgjVB4HzSpKvQyadTXsWYkj9Mo8DvHA5qDrKMCJj9Hl/N+
+ mj0u4rNZHWrtTU8zNcMSla70HI+T+KPo9uPRhdPi4xI6MepsEyj1J8jn8PijVHmbCIyv
+ QdeKkj6akVb0qj6WAOw3VTu7nZzxcS4Ob4VkB/9KNyDZAZK72HbkRJSJgeHlHKVsd12b uA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2u51ptyp8y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 06 Aug 2019 17:27:53 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x76H8OHC141125;
+        Tue, 6 Aug 2019 17:25:52 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2u75776nhj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 06 Aug 2019 17:25:52 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x76HPoNN018667;
+        Tue, 6 Aug 2019 17:25:50 GMT
+Received: from brm-x32-03.us.oracle.com (/10.80.150.35)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 06 Aug 2019 10:25:50 -0700
+From:   Jane Chu <jane.chu@oracle.com>
+To:     n-horiguchi@ah.jp.nec.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Cc:     linux-nvdimm@lists.01.org
+Subject: [PATCH v4 2/2] mm/memory-failure: Poison read receives SIGKILL instead of SIGBUS if mmaped more than once
+Date:   Tue,  6 Aug 2019 11:25:45 -0600
+Message-Id: <1565112345-28754-3-git-send-email-jane.chu@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1565112345-28754-1-git-send-email-jane.chu@oracle.com>
+References: <1565112345-28754-1-git-send-email-jane.chu@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9341 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908060156
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9341 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908060156
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/6/19 9:48 AM, Suwan Kim wrote:
-> On Tue, Aug 06, 2019 at 09:13:54AM -0600, shuah wrote:
->> On 8/6/19 6:31 AM, Suwan Kim wrote:
->>> There are bugs on vhci with usb 3.0 storage device. In USB, each SG
->>> list entry buffer should be divisible by the bulk max packet size.
->>> But with native SG support, this problem doesn't matter because the
->>> SG buffer is treated as contiguous buffer. But without native SG
->>> support, USB storage driver breaks SG list into several URBs and the
->>> error occurs because of a buffer size of URB that cannot be divided
->>> by the bulk max packet size. The error situation is as follows.
->>>
->>> When USB Storage driver requests 31.5 KB data and has SG list which
->>> has 3584 bytes buffer followed by 7 4096 bytes buffer for some
->>> reason. USB Storage driver splits this SG list into several URBs
->>> because VHCI doesn't support SG and sends them separately. So the
->>> first URB buffer size is 3584 bytes. When receiving data from device,
->>> USB 3.0 device sends data packet of 1024 bytes size because the max
->>> packet size of BULK pipe is 1024 bytes. So device sends 4096 bytes.
->>> But the first URB buffer has only 3584 bytes buffer size. So host
->>> controller terminates the transfer even though there is more data to
->>> receive. So, vhci needs to support SG transfer to prevent this error.
->>>
->>> In this patch, vhci supports SG regardless of whether the server's
->>> host controller supports SG or not, because stub driver splits SG
->>> list into several URBs if the server's host controller doesn't
->>> support SG.
->>>
->>> To support SG, vhci_map_urb_for_dma() sets URB_DMA_MAP_SG flag in
->>> urb->transfer_flags if URB has SG list and this flag will tell stub
->>> driver to use SG list.
->>>
->>> vhci sends each SG list entry to stub driver. Then, stub driver sees
->>> the total length of the buffer and allocates SG table and pages
->>> according to the total buffer length calling sgl_alloc(). After stub
->>> driver receives completed URB, it again sends each SG list entry to
->>> vhci.
->>>
->>> If the server's host controller doesn't support SG, stub driver
->>> breaks a single SG request into several URBs and submits them to
->>> the server's host controller. When all the split URBs are completed,
->>> stub driver reassembles the URBs into a single return command and
->>> sends it to vhci.
->>>
->>> Moreover, in the situation where vhci supports SG, but stub driver
->>> does not, or vice versa, usbip works normally. Because there is no
->>> protocol modification, there is no problem in communication between
->>> server and client even if the one has a kernel without SG support.
->>>
->>> In the case of vhci supports SG and stub driver doesn't, because
->>> vhci sends only the total length of the buffer to stub driver as
->>> it did before the patch applied, stub driver only needs to allocate
->>> the required length of buffers regardless of whether vhci supports
->>> SG or not.
->>>
->>> If stub driver needs to send data buffer to vhci because of IN pipe,
->>> stub driver also sends only total length of buffer as metadata and
->>> then sends real data as vhci does. Then vhci receive data from stub
->>> driver and store it to the corresponding buffer of SG list entry.
->>>
->>> In the case of stub driver that supports SG, buffer is allocated by
->>> sgl_alloc(). However, stub driver that does not support SG allocates
->>> buffer using only kmalloc(). Therefore, if vhci supports SG and stub
->>> driver doesn't, stub driver has to allocate buffer with kmalloc() as
->>> much as the total length of SG buffer which is quite huge when vhci
->>> sends SG request, so it has big overhead in buffer allocation.
->>>
->>> And for the case of stub driver supports SG and vhci doesn't, since
->>> the USB storage driver checks that vhci doesn't support SG and sends
->>> the request to stub driver by splitting the SG list into multiple
->>> URBs, stub driver allocates a buffer with kmalloc() as it did before
->>> this patch.
->>>
->>> VUDC also works well with this patch. Tests are done with two USB
->>> gadget created by CONFIGFS USB gadget. Both use the BULK pipe.
->>>
->>>           1. Serial gadget
->>>           2. Mass storage gadget
->>>
->>>    * Serial gadget test
->>>
->>> Serial gadget on the host sends and receives data using cat command
->>> on the /dev/ttyGS<N>. The client uses minicom to communicate with
->>> the serial gadget.
->>>
->>>    * Mass storage gadget test
->>>
->>> After connecting the gadget with vhci, use "dd" to test read and
->>> write operation on the client side.
->>>
->>> Read  - dd if=/dev/sd<N> iflag=direct of=/dev/null bs=1G count=1
->>> Write - dd if=<my file path> iflag=direct of=/dev/sd<N> bs=1G count=1
->>>
->>
->> Thanks for the test results.
->>
->> Were you able to test with USB lowspeed devices?
-> 
-> I tested USB3 super-speed device and USB2 high-speed device.
-> But I don't have full/low speed device that uses BULK transfer.
-> In USB spec, low-speed device doesn't support BULK transfer.
-> 
+Mmap /dev/dax more than once, then read the poison location using address
+from one of the mappings. The other mappings due to not having the page
+mapped in will cause SIGKILLs delivered to the process. SIGKILL succeeds
+over SIGBUS, so user process looses the opportunity to handle the UE.
 
-I think I mentioned earlier that the reason to test with lowspeed
-is make sure there are no regressions due this change. You aren't
-testing BULK transfer, you are looking for any regressions.
+Although one may add MAP_POPULATE to mmap(2) to work around the issue,
+MAP_POPULATE makes mapping 128GB of pmem several magnitudes slower, so
+isn't always an option.
 
-> Do I add test description about the USB3 super-speed and USB2
-> high-speed device to the commit log?
-> 
+Details -
 
-Please do.
+ndctl inject-error --block=10 --count=1 namespace6.0
 
-thanks,
--- Shuah
+./read_poison -x dax6.0 -o 5120 -m 2
+mmaped address 0x7f5bb6600000
+mmaped address 0x7f3cf3600000
+doing local read at address 0x7f3cf3601400
+Killed
+
+Console messages in instrumented kernel -
+
+mce: Uncorrected hardware memory error in user-access at edbe201400
+Memory failure: tk->addr = 7f5bb6601000
+Memory failure: address edbe201: call dev_pagemap_mapping_shift
+dev_pagemap_mapping_shift: page edbe201: no PUD
+Memory failure: tk->size_shift == 0
+Memory failure: Unable to find user space address edbe201 in read_poison
+Memory failure: tk->addr = 7f3cf3601000
+Memory failure: address edbe201: call dev_pagemap_mapping_shift
+Memory failure: tk->size_shift = 21
+Memory failure: 0xedbe201: forcibly killing read_poison:22434 because of failure to unmap corrupted page
+  => to deliver SIGKILL
+Memory failure: 0xedbe201: Killing read_poison:22434 due to hardware memory corruption
+  => to deliver SIGBUS
+
+Signed-off-by: Jane Chu <jane.chu@oracle.com>
+Suggested-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+---
+ mm/memory-failure.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
+
+diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+index 51d5b20..bd4db33 100644
+--- a/mm/memory-failure.c
++++ b/mm/memory-failure.c
+@@ -199,7 +199,6 @@ struct to_kill {
+ 	struct task_struct *tsk;
+ 	unsigned long addr;
+ 	short size_shift;
+-	char addr_valid;
+ };
+ 
+ /*
+@@ -318,22 +317,27 @@ static void add_to_kill(struct task_struct *tsk, struct page *p,
+ 	}
+ 
+ 	tk->addr = page_address_in_vma(p, vma);
+-	tk->addr_valid = 1;
+ 	if (is_zone_device_page(p))
+ 		tk->size_shift = dev_pagemap_mapping_shift(p, vma);
+ 	else
+ 		tk->size_shift = compound_order(compound_head(p)) + PAGE_SHIFT;
+ 
+ 	/*
+-	 * In theory we don't have to kill when the page was
+-	 * munmaped. But it could be also a mremap. Since that's
+-	 * likely very rare kill anyways just out of paranoia, but use
+-	 * a SIGKILL because the error is not contained anymore.
++	 * Send SIGKILL if "tk->addr == -EFAULT". Also, as
++	 * "tk->size_shift" is always non-zero for !is_zone_device_page(),
++	 * so "tk->size_shift == 0" effectively checks no mapping on
++	 * ZONE_DEVICE. Indeed, when a devdax page is mmapped N times
++	 * to a process' address space, it's possible not all N VMAs
++	 * contain mappings for the page, but at least one VMA does.
++	 * Only deliver SIGBUS with payload derived from the VMA that
++	 * has a mapping for the page.
+ 	 */
+-	if (tk->addr == -EFAULT || tk->size_shift == 0) {
++	if (tk->addr == -EFAULT) {
+ 		pr_info("Memory failure: Unable to find user space address %lx in %s\n",
+ 			page_to_pfn(p), tsk->comm);
+-		tk->addr_valid = 0;
++	} else if (tk->size_shift == 0) {
++		kfree(tk);
++		return;
+ 	}
+ 
+ 	get_task_struct(tsk);
+@@ -361,7 +365,7 @@ static void kill_procs(struct list_head *to_kill, int forcekill, bool fail,
+ 			 * make sure the process doesn't catch the
+ 			 * signal and then access the memory. Just kill it.
+ 			 */
+-			if (fail || tk->addr_valid == 0) {
++			if (fail || tk->addr == -EFAULT) {
+ 				pr_err("Memory failure: %#lx: forcibly killing %s:%d because of failure to unmap corrupted page\n",
+ 				       pfn, tk->tsk->comm, tk->tsk->pid);
+ 				do_send_sig_info(SIGKILL, SEND_SIG_PRIV,
+-- 
+1.8.3.1
+
