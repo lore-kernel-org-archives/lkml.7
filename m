@@ -2,101 +2,176 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B15C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE45DC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FEBF20C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:07:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89A3D20818
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:07:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xfVML/Pa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732854AbfHFOHE (ORCPT
+        id S1732869AbfHFOHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 10:07:04 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:46399 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729525AbfHFOHD (ORCPT
+        Tue, 6 Aug 2019 10:07:45 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:55572 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726834AbfHFOHp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 10:07:03 -0400
-Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1hv07A-00031G-2a; Tue, 06 Aug 2019 16:07:00 +0200
-Message-ID: <1565100418.2323.32.camel@pengutronix.de>
-Subject: Re: Regression due to d98849aff879 (dma-direct: handle
- DMA_ATTR_NO_KERNEL_MAPPING in common code)
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Christoph Hellwig <hch@lst.de>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>
-Date:   Tue, 06 Aug 2019 16:06:58 +0200
-In-Reply-To: <20190806140408.GA22902@lst.de>
-References: <1565082809.2323.24.camel@pengutronix.de>
-         <20190806113318.GA20215@lst.de>
-         <41cc93b1-62b5-7fb6-060d-01982e68503b@amd.com>
-         <20190806140408.GA22902@lst.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Tue, 6 Aug 2019 10:07:45 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x76E7hXW127613;
+        Tue, 6 Aug 2019 09:07:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1565100463;
+        bh=9YtLjEZEadsz4KozTsMZV1AwvV6y2GZFO/F76/NxOT0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=xfVML/Paw5tmeELiNpO0KHNOaVe9i8KBpyIcgVeISCQbqllotcfyRcgymsa2szCxW
+         K9ath2sKcY4lG12mB/LmK/zGF+FWWJzZSchVBNTvktqfbewyEZuJ7z8rwTsB4ag1Ya
+         x774B5HBpIuIBy0TVdOokSb7Eo95sgERErOuKAOw=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x76E7hvw077090
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 6 Aug 2019 09:07:43 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 6 Aug
+ 2019 09:07:42 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 6 Aug 2019 09:07:43 -0500
+Received: from [137.167.41.248] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x76E7frI020451;
+        Tue, 6 Aug 2019 09:07:41 -0500
+Subject: Re: [PATCH] phy: ti: am654-serdes: fix an use-after-free in
+ serdes_am654_clk_register()
+To:     Wen Yang <wen.yang99@zte.com.cn>, <linux-kernel@vger.kernel.org>
+CC:     <xue.zhihong@zte.com.cn>, <wang.yi59@zte.com.cn>,
+        <cheng.shengyu@zte.com.cn>, Kishon Vijay Abraham I <kishon@ti.com>
+References: <1562566745-7447-1-git-send-email-wen.yang99@zte.com.cn>
+ <1562566745-7447-4-git-send-email-wen.yang99@zte.com.cn>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <2eec3583-4f89-189c-4a08-57b5acc2272b@ti.com>
+Date:   Tue, 6 Aug 2019 17:07:42 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <1562566745-7447-4-git-send-email-wen.yang99@zte.com.cn>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Dienstag, den 06.08.2019, 16:04 +0200 schrieb Christoph Hellwig:
-> Ok, does this work?
+
+
+On 08/07/2019 09:19, Wen Yang wrote:
+> The regmap_node variable is still being used in the syscon_node_to_regmap()
+> call after the of_node_put() call, which may result in use-after-free.
 > 
-> --
-> From 34d35f335a98f515f2516b515051e12eae744c8d Mon Sep 17 00:00:00 2001
-> > From: Christoph Hellwig <hch@lst.de>
-> Date: Tue, 6 Aug 2019 14:33:23 +0300
-> Subject: dma-direct: fix DMA_ATTR_NO_KERNEL_MAPPING
-> 
-> The new DMA_ATTR_NO_KERNEL_MAPPING needs to actually assign
-> a dma_addr to work.  Also skip it if the architecture needs
-> forced decryption handling, as that needs a kernel virtual
-> address.
-> 
-> Fixes: d98849aff879 (dma-direct: handle DMA_ATTR_NO_KERNEL_MAPPING in common code)
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Fixes: 71e2f5c5c224 ("phy: ti: Add a new SERDES driver for TI's AM654x SoC")
+> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> Cc: Roger Quadros <rogerq@ti.com>
+> Cc: linux-kernel@vger.kernel.org
+
+Reviewed-by: Roger Quadros <rogerq@ti.com>
+
 > ---
->  kernel/dma/direct.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  drivers/phy/ti/phy-am654-serdes.c | 33 ++++++++++++++++++++++-----------
+>  1 file changed, 22 insertions(+), 11 deletions(-)
 > 
-> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-> index 59bdceea3737..b01064d884f2 100644
-> --- a/kernel/dma/direct.c
-> +++ b/kernel/dma/direct.c
-> @@ -130,11 +130,13 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
-> >  	if (!page)
-> >  		return NULL;
->  
-> > -	if (attrs & DMA_ATTR_NO_KERNEL_MAPPING) {
-> > +	if ((attrs & DMA_ATTR_NO_KERNEL_MAPPING) &&
-> +	    !force_dma_unencrypted(dev)) {
+> diff --git a/drivers/phy/ti/phy-am654-serdes.c b/drivers/phy/ti/phy-am654-serdes.c
+> index f8edd08..f14f1f0 100644
+> --- a/drivers/phy/ti/phy-am654-serdes.c
+> +++ b/drivers/phy/ti/phy-am654-serdes.c
+> @@ -405,6 +405,7 @@ static int serdes_am654_clk_register(struct serdes_am654 *am654_phy,
+>  	const __be32 *addr;
+>  	unsigned int reg;
+>  	struct clk *clk;
+> +	int ret = 0;
+>  
+>  	mux = devm_kzalloc(dev, sizeof(*mux), GFP_KERNEL);
+>  	if (!mux)
+> @@ -413,34 +414,40 @@ static int serdes_am654_clk_register(struct serdes_am654 *am654_phy,
+>  	init = &mux->clk_data;
+>  
+>  	regmap_node = of_parse_phandle(node, "ti,serdes-clk", 0);
+> -	of_node_put(regmap_node);
+>  	if (!regmap_node) {
+>  		dev_err(dev, "Fail to get serdes-clk node\n");
+> -		return -ENODEV;
+> +		ret = -ENODEV;
+> +		goto out_put_node;
+>  	}
+>  
+>  	regmap = syscon_node_to_regmap(regmap_node->parent);
+>  	if (IS_ERR(regmap)) {
+>  		dev_err(dev, "Fail to get Syscon regmap\n");
+> -		return PTR_ERR(regmap);
+> +		ret = PTR_ERR(regmap);
+> +		goto out_put_node;
+>  	}
+>  
+>  	num_parents = of_clk_get_parent_count(node);
+>  	if (num_parents < 2) {
+>  		dev_err(dev, "SERDES clock must have parents\n");
+> -		return -EINVAL;
+> +		ret = -EINVAL;
+> +		goto out_put_node;
+>  	}
+>  
+>  	parent_names = devm_kzalloc(dev, (sizeof(char *) * num_parents),
+>  				    GFP_KERNEL);
+> -	if (!parent_names)
+> -		return -ENOMEM;
+> +	if (!parent_names) {
+> +		ret = -ENOMEM;
+> +		goto out_put_node;
+> +	}
+>  
+>  	of_clk_parent_fill(node, parent_names, num_parents);
+>  
+>  	addr = of_get_address(regmap_node, 0, NULL, NULL);
+> -	if (!addr)
+> -		return -EINVAL;
+> +	if (!addr) {
+> +		ret = -EINVAL;
+> +		goto out_put_node;
+> +	}
+>  
+>  	reg = be32_to_cpu(*addr);
+>  
+> @@ -456,12 +463,16 @@ static int serdes_am654_clk_register(struct serdes_am654 *am654_phy,
+>  	mux->hw.init = init;
+>  
+>  	clk = devm_clk_register(dev, &mux->hw);
+> -	if (IS_ERR(clk))
+> -		return PTR_ERR(clk);
+> +	if (IS_ERR(clk)) {
+> +		ret = PTR_ERR(clk);
+> +		goto out_put_node;
+> +	}
+>  
+>  	am654_phy->clks[clock_num] = clk;
+>  
+> -	return 0;
+> +out_put_node:
+> +	of_node_put(regmap_node);
+> +	return ret;
+>  }
+>  
+>  static const struct of_device_id serdes_am654_id_table[] = {
+> 
 
-dma_direct_free_pages() then needs the same check, as otherwise the cpu
-address is treated as a cookie instead of a real address and the
-encryption needs to be re-enabled.
-
-Regards,
-Lucas
-
->  		/* remove any dirty cache lines on the kernel alias */
-> >  		if (!PageHighMem(page))
-> >  			arch_dma_prep_coherent(page, size);
-> >  		/* return the page pointer as the opaque cookie */
-> > +		*dma_handle = phys_to_dma(dev, page_to_phys(page));
-> >  		return page;
-> >  	}
->  
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
