@@ -2,135 +2,104 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D973C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E291CC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AFE6214C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:19:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565097572;
-	bh=fwhYa36kicYLd4QAPZrcY2nHdSADWgG7TogiOuwcMIE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pdLhr+WsSn1bV8O/t1VQDJTZvQdLPb+bjb2gwBxteoztVhbCV3xY3IPSJ2ZbApfLP
-	 RXPuhKcQY6x1zhumMlp3o6lzzWuxIOhQgi9oLfsyGLihgRx+P3BMj6UZqQcGexBcHC
-	 6lkOhUSYCZsbz34aVOBpArRP2GVw+w3jUT+KR1Tw=
+	by mail.kernel.org (Postfix) with ESMTP id B382B214C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:19:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=techveda-org.20150623.gappssmtp.com header.i=@techveda-org.20150623.gappssmtp.com header.b="rk8JETip"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731859AbfHFNTa (ORCPT
+        id S1731787AbfHFNT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 09:19:30 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52606 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbfHFNTa (ORCPT
+        Tue, 6 Aug 2019 09:19:58 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:43511 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726877AbfHFNT6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 09:19:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=/YlBTsdKaLWiGTA3PgSDfUuNoWKMNUoS35CDFJHvndg=; b=wXJ0GPsyXW3kOHbFTuOfhIXfp
-        0tuUwVVQ+VRWj3g0WdMV33xltNLalzNIVhnDTNZDPy2Fe1tzCgG9SqLtQVatAaFR5x8CJSkD366pG
-        +5lBZ03HBwKvUTXDBjjdUqHE5Ld3Msmt8mKMtFauycD6ygiJnL6CchvyIAr1gSV+HvmYI=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1huzN8-0004aT-5B; Tue, 06 Aug 2019 13:19:26 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 274A02742B67; Tue,  6 Aug 2019 14:19:25 +0100 (BST)
-Date:   Tue, 6 Aug 2019 14:19:25 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Konstantin Ryabitsev <mricon@kernel.org>
-Subject: Re: [GIT PULL] regulator fixes for v5.3
-Message-ID: <20190806131925.GC4527@sirena.org.uk>
-References: <20190805143431.GH6432@sirena.org.uk>
- <CAADWXX_DXyBx5soZdYMcGtVB-MFhCy0C590ez=OH09eA+c1Kvw@mail.gmail.com>
+        Tue, 6 Aug 2019 09:19:58 -0400
+Received: by mail-pl1-f196.google.com with SMTP id 4so30874835pld.10
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 06:19:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=techveda-org.20150623.gappssmtp.com; s=20150623;
+        h=from:subject:to:cc:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=IBYvx+JN3Tfby2a0Arr9iQ+FXDdmq2f9yE3G5sV6sLw=;
+        b=rk8JETipFCVycaKi9C2t1/NXX6S9JXK3Kci+dufck79btVc+OPSWTY8bo4+JdQvNzs
+         wc1xY+HSpCBWg/RHE54WVzhNLjtfMVV/9fWb6Gofl9zZ5Rnoc3ec5Tj1x3+tfXZYCIoJ
+         5q9fWxc/tE1GE2rHWpJU6uA4KWYY4+jqCFmbJ8WMZR6TpZluBcCuBL2AwVKzm2pejAX6
+         o91L5g3Peu2pH06dFOlmxN5mVeBDBMxITfy40Qz3cFDYUp8uWOWJ87OGWdQMf9Z2+q8e
+         yt2SVZpZGFSJfw7WqFr/mSqe7crd3spigbpomxSqXHHbMZTjByf2z957ggO8c0sVs7Ev
+         JC4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=IBYvx+JN3Tfby2a0Arr9iQ+FXDdmq2f9yE3G5sV6sLw=;
+        b=rbRVaFGPrs6jcZ2sApqQbstpZ/V9OrfcRo8ltAiqRANzE9Zp2n/FyUXA0+kS+TPjpe
+         J1OmFBEqQBAeI5uwZmcPE3OrI+gc5cvvuMQP2FqVwlBwWuTD2Qp/ogdATSxBAAjqyAPq
+         wsn5ry1WVmxLgd3NRfcjZQqMPdP87WvfgCM1l7S7S1kCiUlHcRfGyX/nMLMHQf30ETeg
+         s9SYUQwsu9AmH25+mpXD8QzW/eFNee6eHjBpgTnsIf0zPAfqlvoTZJrg/9kS+VrSxFug
+         zvFznMNXiXW79XeiwtLzNlc5/rAfzb7zOWOvuwUjRA3haDZx8uGhPjbf112Q/ipAhAji
+         XC8A==
+X-Gm-Message-State: APjAAAWZlhnBi6kK+jv0njBpBI5sMTc8gt9hFd7lQ1Atv6UROExbE0Hi
+        1MhK76sLDL0Eluegh09XkVhpsre9NfU=
+X-Google-Smtp-Source: APXvYqx17DAM1y2MpTGW4R9yvKYeLMnLAnm2Qpx44e6ubvVEIXtRpAvdyjcfrquxR5V+ZpCsaGThZw==
+X-Received: by 2002:a17:902:100a:: with SMTP id b10mr3120380pla.338.1565097597255;
+        Tue, 06 Aug 2019 06:19:57 -0700 (PDT)
+Received: from [192.168.1.3] ([49.204.224.178])
+        by smtp.gmail.com with ESMTPSA id n185sm75009415pga.16.2019.08.06.06.19.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 06 Aug 2019 06:19:56 -0700 (PDT)
+From:   Suniel Mahesh <sunil.m@techveda.org>
+Subject: Machine specific static mappings iotable_init(), are they required ?
+To:     linux-arm-kernel@lists.infradead.org, linux@armlinux.org.uk,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Cc:     thomas.petazzoni@free-electrons.com
+Message-ID: <a0d03054-b583-2d6b-aa32-e0f453767b88@techveda.org>
+Date:   Tue, 6 Aug 2019 18:49:52 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5G06lTa6Jq83wMTw"
-Content-Disposition: inline
-In-Reply-To: <CAADWXX_DXyBx5soZdYMcGtVB-MFhCy0C590ez=OH09eA+c1Kvw@mail.gmail.com>
-X-Cookie: All men have the right to wait in line.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---5G06lTa6Jq83wMTw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I am trying to port a machine based on arm926 with MMU, having 64MB of RAM.  
 
-On Mon, Aug 05, 2019 at 11:42:29AM -0700, Linus Torvalds wrote:
+I am trying to understand the difference between: 
 
-Adding Konstantin.
+machine specific static I/O mappings which are done via iotable_init()
+(done via callback .map_io in DT_MACHINE_START) and 
+dynamic I/O mappings done via ioremap()
 
->  these got marked as spam once again, because
->=20
->    dmarc=3Dfail (p=3DNONE sp=3DNONE dis=3DNONE) header.from=3Dkernel.org
->=20
-> and I think it's because you have
->=20
->    DKIM-Signature: v=3D1; a=3Drsa-sha256; q=3Ddns/txt; c=3Drelaxed/relaxe=
-d;
-> d=3Dsirena.org.uk;
->=20
-> but then you have
->=20
->    From: Mark Brown <broonie@kernel.org>
->=20
-> so the DKIM signature is all correct, but it's correct for
-> sirena.org.uk, not for the sender information..
+In the kernel docs/mailing list, I have encountered a statement which states:
 
-Well, AFAICT this is your mail provider deciding to impose their own
-requirements on things.  (and for clarity it's only the From: that has
-kernel.org, the envelope sender has sirena.org.uk.)
+"with machine specific static I/O mappings which are done via iotable_init(), 
+registers can be mapped at the upper end of vmalloc area so that one can use as
+little of the VA space as possible so vmalloc and friends have a better chance of 
+getting memory"
 
-The DKIM signature there says that the sirena.org.uk systems are
-asserting that they take responsibility for the headers they sign, this
-is true and says nothing about the content of those headers other than
-you can tell if they were modified since leaving sirena.org.uk.  The
-DMARC check is a separate one based on the domain reported in the
-address, kernel.org has one which explicitly advertises having no policy
-and only filtering 1% of outbound mail so shouldn't really mean anything
-for processing.  DMARC can flag that there has to be a DKIM signature
-=66rom the domain in the headers but kernel.org doesn't do that.
+I am writing board initialization C file and got stuck at .map_io callback function,
+whether to define it or not. If yes, under what scenario should I do it
 
-We *do* have a SPF record for kernel.org which I think isn't helping
-since it flags all hosts as being SOFTFAIL (the last match is ~all)
-which is supposed to be something along the lines of accept but flag, I
-can see your provider deciding that spam is the appropriate tag there.
-As far as I can see that'd also flag mail sent by things like the
-patchwork tracker bot similarly (it sends from mail.kernel.org which
-isn't advertised as a sender).
+now-a-days I think less boards are using iotable_init(). (is this defunct) ? 
+I might be wrong here
 
-I suspect Google will only be happy if I inject mail through them,
-possibly also if I filter kernel.org mail to redirect via kernel.org
-though that might still trip them up.
+Can't I use ioremap and do dynamic mappings when ever required via device tree ?
+If I do so will I encounter any problems with vmalloc area.
 
---5G06lTa6Jq83wMTw
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1JflwACgkQJNaLcl1U
-h9BM4wf/Rx59c60W/6jq29u9EAPRAe3iUem2n9OYioKpZU+gVTmr08lf0m3nB6ih
-cTi5ehzBOSic1SyflKvj1tzT0DV971WRZvj2Z0mUppcNrv37ouUYxJf3qg8n5N+k
-qSS/1yHme62GA0nNvBa6vt/ZG8OwhAOB9T3fC5h5UlPx3ikh49TA3BAxjPcLHNmX
-VLCXVQrju0Tai8mCMpP9ugZnUXlG9Fmwu+ixw7c5kAkmAP3FjS/BsJAX5vCXlioe
-TvUIA0qEmezB1AeoVZiY6/f5L46Qucb82sQbjBzKOOxO+a/CAHOhPLWxQOVasnED
-2IJmcn574cSJqu9OAPEQipJ3787wQg==
-=l47q
------END PGP SIGNATURE-----
-
---5G06lTa6Jq83wMTw--
+Thanks & Regards
+-- 
+Suniel Mahesh
