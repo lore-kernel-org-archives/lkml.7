@@ -2,99 +2,240 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2ECC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 807EFC41514
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BECF20578
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DDD3216F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:12:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732834AbfHFSLp (ORCPT
+        id S1732940AbfHFSMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 14:11:45 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23354 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728756AbfHFSLo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 14:11:44 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x76I22LZ076181
-        for <linux-kernel@vger.kernel.org>; Tue, 6 Aug 2019 14:11:44 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u7ea7grja-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 14:11:43 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <sebott@linux.ibm.com>;
-        Tue, 6 Aug 2019 19:11:41 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 6 Aug 2019 19:11:38 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x76IBbYr52887594
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 6 Aug 2019 18:11:37 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2A37F4C044;
-        Tue,  6 Aug 2019 18:11:37 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CB5FA4C050;
-        Tue,  6 Aug 2019 18:11:36 +0000 (GMT)
-Received: from sig-9-145-31-144.uk.ibm.com (unknown [9.145.31.144])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue,  6 Aug 2019 18:11:36 +0000 (GMT)
-Date:   Tue, 6 Aug 2019 20:11:36 +0200 (CEST)
-From:   Sebastian Ott <sebott@linux.ibm.com>
-X-X-Sender: sebott@schleppi
-To:     Denis Efremov <efremov@linux.com>
-cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        linux-pci@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] s390/pci: PCI_IOV_RESOURCES loop refactoring in
- zpci_map_resources
-In-Reply-To: <20190806160137.29275-1-efremov@linux.com>
-References: <20190806160137.29275-1-efremov@linux.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
-Organization: =?ISO-8859-15?Q?=22IBM_Deutschland_Research_&_Development_GmbH?=
- =?ISO-8859-15?Q?_=2F_Vorsitzende_des_Aufsichtsrats=3A_Matthias?=
- =?ISO-8859-15?Q?_Hartmann_Gesch=E4ftsf=FChrung=3A_Dirk_Wittkopp?=
- =?ISO-8859-15?Q?_Sitz_der_Gesellschaft=3A_B=F6blingen_=2F_Reg?=
- =?ISO-8859-15?Q?istergericht=3A_Amtsgericht_Stuttgart=2C_HRB_2432?=
- =?ISO-8859-15?Q?94=22?=
+        Tue, 6 Aug 2019 14:12:20 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46200 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728756AbfHFSMT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 14:12:19 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A6E40AEF6;
+        Tue,  6 Aug 2019 18:12:17 +0000 (UTC)
+Message-ID: <12eb3aba207c552e5eb727535e7c4f08673c4c80.camel@suse.de>
+Subject: Re: [PATCH 3/8] of/fdt: add function to get the SoC wide DMA
+ addressable memory size
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Christoph Hellwig <hch@lst.de>,
+        wahrenst@gmx.net, Marc Zyngier <marc.zyngier@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        linux-mm@kvack.org, Frank Rowand <frowand.list@gmail.com>,
+        phill@raspberryi.org, Florian Fainelli <f.fainelli@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Eric Anholt <eric@anholt.net>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>
+Date:   Tue, 06 Aug 2019 20:12:10 +0200
+In-Reply-To: <CAL_Jsq+LjsRmFg-xaLgpVx3miXN3hid3aD+mgTW__j0SbEFYjQ@mail.gmail.com>
+References: <20190731154752.16557-1-nsaenzjulienne@suse.de>
+         <20190731154752.16557-4-nsaenzjulienne@suse.de>
+         <CAL_JsqKF5nh3hcdLTG5+6RU3_TnFrNX08vD6qZ8wawoA3WSRpA@mail.gmail.com>
+         <2050374ac07e0330e505c4a1637256428adb10c4.camel@suse.de>
+         <CAL_Jsq+LjsRmFg-xaLgpVx3miXN3hid3aD+mgTW__j0SbEFYjQ@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-BWDWLSX5DbZPpBq0FAfV"
+User-Agent: Evolution 3.32.4 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-TM-AS-GCONF: 00
-x-cbid: 19080618-0016-0000-0000-0000029AE5D5
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19080618-0017-0000-0000-000032F9F41F
-Message-Id: <alpine.LFD.2.21.1908062009230.2835@schleppi>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-06_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=748 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908060162
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 6 Aug 2019, Denis Efremov wrote:
-> This patch alters the for loop iteration scheme in zpci_map_resources
-> to make it more usual. Thus, the patch generalizes the style for
-> PCI_IOV_RESOURCES iteration and improves readability.
-> 
-> Signed-off-by: Denis Efremov <efremov@linux.com>
 
-Applied for inclusion via s390/linux.git . Thanks!
+--=-BWDWLSX5DbZPpBq0FAfV
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Sebastian
+Hi Rob,
+
+On Mon, 2019-08-05 at 13:23 -0600, Rob Herring wrote:
+> On Mon, Aug 5, 2019 at 10:03 AM Nicolas Saenz Julienne
+> <nsaenzjulienne@suse.de> wrote:
+> > Hi Rob,
+> > Thanks for the review!
+> >=20
+> > On Fri, 2019-08-02 at 11:17 -0600, Rob Herring wrote:
+> > > On Wed, Jul 31, 2019 at 9:48 AM Nicolas Saenz Julienne
+> > > <nsaenzjulienne@suse.de> wrote:
+> > > > Some SoCs might have multiple interconnects each with their own DMA
+> > > > addressing limitations. This function parses the 'dma-ranges' on ea=
+ch of
+> > > > them and tries to guess the maximum SoC wide DMA addressable memory
+> > > > size.
+> > > >=20
+> > > > This is specially useful for arch code in order to properly setup C=
+MA
+> > > > and memory zones.
+> > >=20
+> > > We already have a way to setup CMA in reserved-memory, so why is this
+> > > needed for that?
+> >=20
+> > Correct me if I'm wrong but I got the feeling you got the point of the =
+patch
+> > later on.
+>=20
+> No, for CMA I don't. Can't we already pass a size and location for CMA
+> region under /reserved-memory. The only advantage here is perhaps the
+> CMA range could be anywhere in the DMA zone vs. a fixed location.
+
+Now I get it, sorry I wasn't aware of that interface.
+
+Still, I'm not convinced it matches RPi's use case as this would hard-code
+CMA's size. Most people won't care, but for the ones that do, it's nicer to
+change the value from the kernel command line than editing the dtb. I get t=
+hat
+if you need to, for example, reserve some memory for the video to work, it'=
+s
+silly not to hard-code it. Yet due to the board's nature and users base I s=
+ay
+it's important to favor flexibility. It would also break compatibility with
+earlier versions of the board and diverge from the downstream kernel behavi=
+our.
+Which is a bigger issue than it seems as most users don't always understand
+which kernel they are running and unknowingly copy configuration options fr=
+om
+forums.
+
+As I also need to know the DMA addressing limitations to properly configure
+memory zones and dma-direct. Setting up the proper CMA constraints during t=
+he
+arch's init will be trivial anyway.
+
+> > > IMO, I'd just do:
+> > >=20
+> > > if (of_fdt_machine_is_compatible(blob, "brcm,bcm2711"))
+> > >     dma_zone_size =3D XX;
+> > >=20
+> > > 2 lines of code is much easier to maintain than 10s of incomplete cod=
+e
+> > > and is clearer who needs this. Maybe if we have dozens of SoCs with
+> > > this problem we should start parsing dma-ranges.
+> >=20
+> > FYI that's what arm32 is doing at the moment and was my first instinct.=
+ But
+> > it
+> > seems that arm64 has been able to survive so far without any machine
+> > specific
+> > code and I have the feeling Catalin and Will will not be happy about th=
+is
+> > solution. Am I wrong?
+>=20
+> No doubt. I'm fine if the 2 lines live in drivers/of/.
+>=20
+> Note that I'm trying to reduce the number of early_init_dt_scan_*
+> calls from arch code into the DT code so there's more commonality
+> across architectures in the early DT scans. So ideally, this can all
+> be handled under early_init_dt_scan() call.
+
+How does this look? (I'll split it in two patches and add a comment explain=
+ing
+why dt_dma_zone_size is needed)
+
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index f2444c61a136..1395be40b722 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -30,6 +30,8 @@
+=20
+ #include "of_private.h"
+=20
++u64 dt_dma_zone_size __ro_after_init;
++
+ /*
+  * of_fdt_limit_memory - limit the number of regions in the /memory node
+  * @limit: maximum entries
+@@ -802,6 +805,11 @@ const char * __init of_flat_dt_get_machine_name(void)
+        return name;
+ }
+=20
++static const int __init of_fdt_machine_is_compatible(char *name)
++{
++       return of_compat_cmp(of_flat_dt_get_machine_name(), name, strlen(na=
+me));
++}
++
+ /**
+  * of_flat_dt_match_machine - Iterate match tables to find matching machin=
+e.
+  *
+@@ -1260,6 +1268,14 @@ void __init early_init_dt_scan_nodes(void)
+        of_scan_flat_dt(early_init_dt_scan_memory, NULL);
+ }
+=20
++void __init early_init_dt_get_dma_zone_size(void)
++{
++       dt_dma_zone_size =3D 0;
++
++       if (of_fdt_machine_is_compatible("brcm,bcm2711"))
++               dt_dma_zone_size =3D 0x3c000000;
++}
++
+ bool __init early_init_dt_scan(void *params)
+ {
+        bool status;
+@@ -1269,6 +1285,7 @@ bool __init early_init_dt_scan(void *params)
+                return false;
+=20
+        early_init_dt_scan_nodes();
++       early_init_dt_get_dma_zone_size();
+        return true;
+ }
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index 2ad36b7bd4fa..b5a9f685de14 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -27,6 +27,8 @@ extern void *of_fdt_unflatten_tree(const unsigned long *b=
+lob,
+                                   struct device_node *dad,
+                                   struct device_node **mynodes);
+=20
++extern u64 dt_dma_zone_size __ro_after_init;
++
+ /* TBD: Temporary export of fdt globals - remove when code fully merged */
+ extern int __initdata dt_root_addr_cells;
+ extern int __initdata dt_root_size_cells;
+
+=20
+Regards,
+Nicolas
+
+
+
+--=-BWDWLSX5DbZPpBq0FAfV
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl1JwvoACgkQlfZmHno8
+x/5f/QgAsruOFQ8PvpoSHvG6DlzmdqSfRJK2v/9MyF59tpuvGoJUQggc4SObGIz8
+/Nk2Md0j7gXdLjr+t1elpo6xBmJxLWhZPw7HfIx1ejSHv2QK+gJopm/BJ54gV8cl
+oUh+Ed8eD1FBlYszwI3YRaKY/HXcQaZn97el4/AaCbztxkkAg1xEH/1L6XPwf2FC
+j9/TMxpFyE6aWdQ5GtOzxL1RVmzOEYgpvsr+mKxOFHX9V5+8UXNnLDRDjR36Ms78
+NVgFECrTr4rxiU2UJalTgyyPtch73aj8xMNKwHkOyiagITz9PhesPdVYy9sLWTM+
+KTFFdX5XzhKpZAHyjtBWPWEKO34aqg==
+=JTdS
+-----END PGP SIGNATURE-----
+
+--=-BWDWLSX5DbZPpBq0FAfV--
 
