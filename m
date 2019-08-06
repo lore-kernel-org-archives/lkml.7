@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A186EC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 316A9C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BCC3217F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:34:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 056BC217D9
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:34:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127269;
-	bh=d3C4g9gaX7ZxIX8z6EjnIicHuLXSAtpXg8kYz21AgXo=;
+	s=default; t=1565127273;
+	bh=m5gHbQrcUMFbJ76EWBnK/TgYPTtChWNCLVydJT9814s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uyPYV7kEvdYlnpXm9b0j6929wvyobW7qdpQ9LhbkdqzXtfOWuB2c/BCeQFLXHnPc1
-	 A58u/3ZSyWC61BByWrPtiabyJVPE7LEAZjYVh0Lq3tWv+QbGWRI2WH3KrKKUjP/oNQ
-	 BMDNFYBkwahZ+tPil/AkqTXNi9KqfBxPpnhKbITM=
+	b=lLoh/bh6zCM7AeUHh2/kAlBwHK/tDcqVOKIrI4iJhApfyNnpsszzmSVLbaqzEiSp1
+	 +4gPAC2fyUNXPTvTnYl6yNpsuAz/UcaE4JxmFa29UqjsYuL1/qrvP5jGvmaklhT2nY
+	 4XISwq3VYUyQkvG2X53MhxofEZ/t5MLGwhhRw/2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727741AbfHFVe2 (ORCPT
+        id S1727772AbfHFVec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:34:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52226 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:34:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727677AbfHFVeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:34:25 -0400
+        id S1727724AbfHFVe2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:34:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B4EF21874;
-        Tue,  6 Aug 2019 21:34:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A3B4217D9;
+        Tue,  6 Aug 2019 21:34:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127265;
-        bh=d3C4g9gaX7ZxIX8z6EjnIicHuLXSAtpXg8kYz21AgXo=;
+        s=default; t=1565127267;
+        bh=m5gHbQrcUMFbJ76EWBnK/TgYPTtChWNCLVydJT9814s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V1RmEbBqqZMh21+1q7/pBqwI2P0h+mZ0ngjJruFRx6QgO06hn9VevZ3dek/byIYaM
-         Fgff/wN74bZtoaKxcVSYVq41tGhGWiJPVv3g9cbqqVbdKfrzkc/iSqkyPwhkiJ6bgU
-         3Ldlwl4vAbdAD776GTd1i208aVSVOecEBQ18zYPo=
+        b=0nGiPdQY73MucymDa1/7dic/V3gGrVItm8bBRRjU8Gv1ilk4nwvRXyYiRceFwKnOc
+         UlY7oWDW95SZgOeiOtet8PMqWc+DiOz1u76ftIcu5aGOLZXDLzFwSD0mn+mGcOTqr3
+         8TXJyMtI0Dv83qu5Pbp2v/88jFJ04QEXBEHokrU8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-ide@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 33/59] ata: libahci: do not complain in case of deferred probe
-Date:   Tue,  6 Aug 2019 17:32:53 -0400
-Message-Id: <20190806213319.19203-33-sashal@kernel.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Peter Smith <peter.smith@linaro.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.2 35/59] kbuild: Check for unknown options with cc-option usage in Kconfig and clang
+Date:   Tue,  6 Aug 2019 17:32:55 -0400
+Message-Id: <20190806213319.19203-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213319.19203-1-sashal@kernel.org>
 References: <20190806213319.19203-1-sashal@kernel.org>
@@ -60,36 +64,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Stephen Boyd <swboyd@chromium.org>
 
-[ Upstream commit 090bb803708198e5ab6b0046398c7ed9f4d12d6b ]
+[ Upstream commit e8de12fb7cde2c85bc31097cd098da79a4818305 ]
 
-Retrieving PHYs can defer the probe, do not spawn an error when
--EPROBE_DEFER is returned, it is normal behavior.
+If the particular version of clang a user has doesn't enable
+-Werror=unknown-warning-option by default, even though it is the
+default[1], then make sure to pass the option to the Kconfig cc-option
+command so that testing options from Kconfig files works properly.
+Otherwise, depending on the default values setup in the clang toolchain
+we will silently assume options such as -Wmaybe-uninitialized are
+supported by clang, when they really aren't.
 
-Fixes: b1a9edbda040 ("ata: libahci: allow to use multiple PHYs")
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+A compilation issue only started happening for me once commit
+589834b3a009 ("kbuild: Add -Werror=unknown-warning-option to
+CLANG_FLAGS") was applied on top of commit b303c6df80c9 ("kbuild:
+compute false-positive -Wmaybe-uninitialized cases in Kconfig"). This
+leads kbuild to try and test for the existence of the
+-Wmaybe-uninitialized flag with the cc-option command in
+scripts/Kconfig.include, and it doesn't see an error returned from the
+option test so it sets the config value to Y. Then the Makefile tries to
+pass the unknown option on the command line and
+-Werror=unknown-warning-option catches the invalid option and breaks the
+build. Before commit 589834b3a009 ("kbuild: Add
+-Werror=unknown-warning-option to CLANG_FLAGS") the build works fine,
+but any cc-option test of a warning option in Kconfig files silently
+evaluates to true, even if the warning option flag isn't supported on
+clang.
+
+Note: This doesn't change cc-option usages in Makefiles because those
+use a different rule that includes KBUILD_CFLAGS by default (see the
+__cc-option command in scripts/Kbuild.incluide). The KBUILD_CFLAGS
+variable already has the -Werror=unknown-warning-option flag set. Thanks
+to Doug for pointing out the different rule.
+
+[1] https://clang.llvm.org/docs/DiagnosticsReference.html#wunknown-warning-option
+Cc: Peter Smith <peter.smith@linaro.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/libahci_platform.c | 3 +++
- 1 file changed, 3 insertions(+)
+ scripts/Kconfig.include | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/ata/libahci_platform.c b/drivers/ata/libahci_platform.c
-index 72312ad2e142d..c25cdbf817f18 100644
---- a/drivers/ata/libahci_platform.c
-+++ b/drivers/ata/libahci_platform.c
-@@ -338,6 +338,9 @@ static int ahci_platform_get_phy(struct ahci_host_priv *hpriv, u32 port,
- 		hpriv->phys[port] = NULL;
- 		rc = 0;
- 		break;
-+	case -EPROBE_DEFER:
-+		/* Do not complain yet */
-+		break;
+diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
+index 8a5c4d645eb14..4bbf4fc163a29 100644
+--- a/scripts/Kconfig.include
++++ b/scripts/Kconfig.include
+@@ -25,7 +25,7 @@ failure = $(if-success,$(1),n,y)
  
- 	default:
- 		dev_err(dev,
+ # $(cc-option,<flag>)
+ # Return y if the compiler supports <flag>, n otherwise
+-cc-option = $(success,$(CC) -Werror $(1) -E -x c /dev/null -o /dev/null)
++cc-option = $(success,$(CC) -Werror $(CLANG_FLAGS) $(1) -E -x c /dev/null -o /dev/null)
+ 
+ # $(ld-option,<flag>)
+ # Return y if the linker supports <flag>, n otherwise
 -- 
 2.20.1
 
