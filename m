@@ -2,171 +2,159 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 490C6C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C831CC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 248B220717
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:18:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 975242187F
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:20:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="WLX9eAV+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732943AbfHFPSK (ORCPT
+        id S1733082AbfHFPUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 11:18:10 -0400
-Received: from mga06.intel.com ([134.134.136.31]:22167 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726713AbfHFPSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 11:18:09 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 08:16:37 -0700
-X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
-   d="scan'208";a="185676339"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 08:16:36 -0700
-Message-ID: <dcd778623685079f66bfccb5dc0195e6f5bc992d.camel@linux.intel.com>
-Subject: Re: [PATCH v3 6/6] virtio-balloon: Add support for providing unused
- page reports to host
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        kvm@vger.kernel.org, david@redhat.com, dave.hansen@intel.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, yang.zhang.wz@gmail.com,
-        pagupta@redhat.com, riel@surriel.com, konrad.wilk@oracle.com,
-        willy@infradead.org, lcapitulino@redhat.com, wei.w.wang@intel.com,
-        aarcange@redhat.com, pbonzini@redhat.com, dan.j.williams@intel.com
-Date:   Tue, 06 Aug 2019 08:16:36 -0700
-In-Reply-To: <20190806073047-mutt-send-email-mst@kernel.org>
-References: <20190801222158.22190.96964.stgit@localhost.localdomain>
-         <20190801223829.22190.36831.stgit@localhost.localdomain>
-         <1cff09a4-d302-639c-ab08-9d82e5fc1383@redhat.com>
-         <ed48ecdb833808bf6b08bc54fa98503cbad493f3.camel@linux.intel.com>
-         <20190806073047-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Tue, 6 Aug 2019 11:20:05 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45331 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732024AbfHFPUF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 11:20:05 -0400
+Received: by mail-pg1-f196.google.com with SMTP id o13so41748328pgp.12
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 08:20:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DLr/S8jU71563TTjt3V9DdQkFNfZZ9GpEDLqJqyThL8=;
+        b=WLX9eAV+Do9txkuh9FQp3qtI2mkb3uS6AWtl5v+D2s68dxeCFgLT8Mu0dlFrU308LQ
+         sC+N27xnuwSrtm+Fkx/n/0WT6ocS2hECqVMaOg2jUc5fvRrC59LIGmFPN9Vp9gF1OGo6
+         EbYSi32+OEJ6Oq5K3W2+BSQeACoJmAG4Q1XEU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DLr/S8jU71563TTjt3V9DdQkFNfZZ9GpEDLqJqyThL8=;
+        b=TldGXS5ehnw4dKxlQoxuF+v0iYE7GNw2c1mCRsTYoX00BHk32V4RhJiD7AqIev+w5o
+         jMKJYJtr7HQPUiTZZSwSl4eOXVkxE8mJ0ZcQFrrcrHKZCBaZxDZ3rPUcElnJ3KE7ufwI
+         1y28yLyMXtqshhsGZxs1uMFljN7I9PKe1cPnbJzemhQI42FPWCfE2tw0vAl8szHwBdfB
+         uwv6Fgm7Kj+krFdlv2Kt7Mqn0/QpofbT5IVGPPitAoPCBDSL4SibQdXPtCZoN9K5cuZ7
+         xpmOMZcBrjiXL5UEXVk/AXEWKQmUB8p3d/HhqOH+2NMoc36Lwp0cvitatGQAo4joK/XH
+         eCfw==
+X-Gm-Message-State: APjAAAWgXgu9RotkTb+pzUqMVvQdZGHJHgj0oQ5CcLoS/poccjq/LxtL
+        6fop50m8b1tJ00hxK3OEMxui+g==
+X-Google-Smtp-Source: APXvYqxVQuc55AKHRFXAeMJAi3UPCUUUsl8H3gf0xO9Gg7+Z0EfVEsgvhGQKwjSNvREljAcS14pVrA==
+X-Received: by 2002:a17:90a:8d09:: with SMTP id c9mr3784595pjo.131.1565104803991;
+        Tue, 06 Aug 2019 08:20:03 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id s5sm71081936pfm.97.2019.08.06.08.20.02
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 06 Aug 2019 08:20:02 -0700 (PDT)
+Date:   Tue, 6 Aug 2019 11:20:01 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Brendan Gregg <bgregg@netflix.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christian Hansen <chansen3@cisco.com>, dancol@google.com,
+        fmayer@google.com, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Mike Rapoport <rppt@linux.ibm.com>, namhyung@google.com,
+        paulmck@linux.ibm.com, Roman Gushchin <guro@fb.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, surenb@google.com,
+        Thomas Gleixner <tglx@linutronix.de>, tkjos@google.com,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v4 3/5] [RFC] arm64: Add support for idle bit in swap PTE
+Message-ID: <20190806152001.GA39951@google.com>
+References: <20190805170451.26009-1-joel@joelfernandes.org>
+ <20190805170451.26009-3-joel@joelfernandes.org>
+ <20190806084203.GJ11812@dhcp22.suse.cz>
+ <20190806103627.GA218260@google.com>
+ <20190806104755.GR11812@dhcp22.suse.cz>
+ <20190806111446.GA117316@google.com>
+ <20190806115703.GY11812@dhcp22.suse.cz>
+ <20190806144747.GA72938@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190806144747.GA72938@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-08-06 at 07:31 -0400, Michael S. Tsirkin wrote:
-> On Mon, Aug 05, 2019 at 09:27:16AM -0700, Alexander Duyck wrote:
-> > On Mon, 2019-08-05 at 12:00 -0400, Nitesh Narayan Lal wrote:
-> > > On 8/1/19 6:38 PM, Alexander Duyck wrote:
-> > > > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+On Tue, Aug 06, 2019 at 11:47:47PM +0900, Minchan Kim wrote:
+> On Tue, Aug 06, 2019 at 01:57:03PM +0200, Michal Hocko wrote:
+> > On Tue 06-08-19 07:14:46, Joel Fernandes wrote:
+> > > On Tue, Aug 06, 2019 at 12:47:55PM +0200, Michal Hocko wrote:
+> > > > On Tue 06-08-19 06:36:27, Joel Fernandes wrote:
+> > > > > On Tue, Aug 06, 2019 at 10:42:03AM +0200, Michal Hocko wrote:
+> > > > > > On Mon 05-08-19 13:04:49, Joel Fernandes (Google) wrote:
+> > > > > > > This bit will be used by idle page tracking code to correctly identify
+> > > > > > > if a page that was swapped out was idle before it got swapped out.
+> > > > > > > Without this PTE bit, we lose information about if a page is idle or not
+> > > > > > > since the page frame gets unmapped.
+> > > > > > 
+> > > > > > And why do we need that? Why cannot we simply assume all swapped out
+> > > > > > pages to be idle? They were certainly idle enough to be reclaimed,
+> > > > > > right? Or what does idle actualy mean here?
+> > > > > 
+> > > > > Yes, but other than swapping, in Android a page can be forced to be swapped
+> > > > > out as well using the new hints that Minchan is adding?
 > > > > 
-> > > > Add support for the page reporting feature provided by virtio-balloon.
-> > > > Reporting differs from the regular balloon functionality in that is is
-> > > > much less durable than a standard memory balloon. Instead of creating a
-> > > > list of pages that cannot be accessed the pages are only inaccessible
-> > > > while they are being indicated to the virtio interface. Once the
-> > > > interface has acknowledged them they are placed back into their respective
-> > > > free lists and are once again accessible by the guest system.
-> > > > 
-> > > > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > > > ---
-> > > >  drivers/virtio/Kconfig              |    1 +
-> > > >  drivers/virtio/virtio_balloon.c     |   56 +++++++++++++++++++++++++++++++++++
-> > > >  include/uapi/linux/virtio_balloon.h |    1 +
-> > > >  3 files changed, 58 insertions(+)
-> > > > 
-> > > > diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
-> > > > index 078615cf2afc..4b2dd8259ff5 100644
-> > > > --- a/drivers/virtio/Kconfig
-> > > > +++ b/drivers/virtio/Kconfig
-> > > > @@ -58,6 +58,7 @@ config VIRTIO_BALLOON
-> > > >  	tristate "Virtio balloon driver"
-> > > >  	depends on VIRTIO
-> > > >  	select MEMORY_BALLOON
-> > > > +	select PAGE_REPORTING
-> > > >  	---help---
-> > > >  	 This driver supports increasing and decreasing the amount
-> > > >  	 of memory within a KVM guest.
-> > > > diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-> > > > index 2c19457ab573..971fe924e34f 100644
-> > > > --- a/drivers/virtio/virtio_balloon.c
-> > > > +++ b/drivers/virtio/virtio_balloon.c
-> > > > @@ -19,6 +19,7 @@
-> > > >  #include <linux/mount.h>
-> > > >  #include <linux/magic.h>
-> > > >  #include <linux/pseudo_fs.h>
-> > > > +#include <linux/page_reporting.h>
-> > > >  
-> > > >  /*
-> > > >   * Balloon device works in 4K page units.  So each page is pointed to by
-> > > > @@ -37,6 +38,9 @@
-> > > >  #define VIRTIO_BALLOON_FREE_PAGE_SIZE \
-> > > >  	(1 << (VIRTIO_BALLOON_FREE_PAGE_ORDER + PAGE_SHIFT))
-> > > >  
-> > > > +/*  limit on the number of pages that can be on the reporting vq */
-> > > > +#define VIRTIO_BALLOON_VRING_HINTS_MAX	16
-> > > > +
-> > > >  #ifdef CONFIG_BALLOON_COMPACTION
-> > > >  static struct vfsmount *balloon_mnt;
-> > > >  #endif
-> > > > @@ -46,6 +50,7 @@ enum virtio_balloon_vq {
-> > > >  	VIRTIO_BALLOON_VQ_DEFLATE,
-> > > >  	VIRTIO_BALLOON_VQ_STATS,
-> > > >  	VIRTIO_BALLOON_VQ_FREE_PAGE,
-> > > > +	VIRTIO_BALLOON_VQ_REPORTING,
-> > > >  	VIRTIO_BALLOON_VQ_MAX
-> > > >  };
-> > > >  
-> > > > @@ -113,6 +118,10 @@ struct virtio_balloon {
-> > > >  
-> > > >  	/* To register a shrinker to shrink memory upon memory pressure */
-> > > >  	struct shrinker shrinker;
-> > > > +
-> > > > +	/* Unused page reporting device */
-> > > > +	struct virtqueue *reporting_vq;
-> > > > +	struct page_reporting_dev_info ph_dev_info;
-> > > >  };
-> > > >  
-> > > >  static struct virtio_device_id id_table[] = {
-> > > > @@ -152,6 +161,23 @@ static void tell_host(struct virtio_balloon *vb, struct virtqueue *vq)
-> > > >  
-> > > >  }
-> > > >  
-> > > > +void virtballoon_unused_page_report(struct page_reporting_dev_info *ph_dev_info,
-> > > > +				    unsigned int nents)
-> > > > +{
-> > > > +	struct virtio_balloon *vb =
-> > > > +		container_of(ph_dev_info, struct virtio_balloon, ph_dev_info);
-> > > > +	struct virtqueue *vq = vb->reporting_vq;
-> > > > +	unsigned int unused;
-> > > > +
-> > > > +	/* We should always be able to add these buffers to an empty queue. */
-> > > > +	virtqueue_add_inbuf(vq, ph_dev_info->sg, nents, vb,
-> > > > +			    GFP_NOWAIT | __GFP_NOWARN);
+> > > > Yes and that is effectivelly making them idle, no?
 > > > 
-> > > I think you should handle allocation failure here. It is a possibility, isn't?
-> > > Maybe return an error or even disable page hinting/reporting?
-> > > 
+> > > That depends on how you think of it.
 > > 
-> > I don't think it is an issue I have to worry about. Specifically I am
-> > limiting the size of the scatterlist based on the size of the vq. As such
-> > I will never exceed the size and should be able to use it to store the
-> > scatterlist directly.
+> > I would much prefer to have it documented so that I do not have to guess ;)
+> > 
+> > > If you are thinking of a monitoring
+> > > process like a heap profiler, then from the heap profiler's (that only cares
+> > > about the process it is monitoring) perspective it will look extremely odd if
+> > > pages that are recently accessed by the process appear to be idle which would
+> > > falsely look like those processes are leaking memory. The reality being,
+> > > Android forced those pages into swap because of other reasons. I would like
+> > > for the swapping mechanism, whether forced swapping or memory reclaim, not to
+> > > interfere with the idle detection.
+> > 
+> > Hmm, but how are you going to handle situation when the page is unmapped
+> > and refaulted again (e.g. a normal reclaim of a pagecache)? You are
+> > losing that information same was as in the swapout case, no? Or am I
+> > missing something?
 > 
-> I agree. But it can't hurt to BUG_ON for good measure.
-> 
+> If page is unmapped, it's not a idle memory any longer because it's
+> free memory. We could detect the pte is not present.
 
-I wouldn't use a BUG_ON as that seems overkill. No need to panic the
-kernel just because we couldn't report some idle pages.
+I think Michal is not talking of explictly being unmapped, but about the case
+where a file-backed mapped page is unmapped due to memory pressure ? This is
+similar to the swap situation.
 
-I can probably do something like:
-	if (WARN_ON(err))
-		return;
+Basically... file page is marked idle, then it is accessed by userspace. Then
+memory pressure drops it off the page cache so the idle information is lost.
+Next time we check the page_idle, we miss that it was accessed indeed.
 
-That way the unused page reporting can run to completion still and the
-fact that we aren't really hinting on the pages would effectively be no
-different then if we had a direct assigned device or shared memory in the
-hypervisor.
+It is not an issue for the heap profiler or anonymous memory per-se. But is
+similar to the swap situation.
+
+> If page is refaulted, it's not a idle memory any longer because it's
+> accessed again. We could detect it because the newly allocated page
+> doesn't have a PG_idle page flag.
+
+In the refault case, yes it should not be a problem.
+
+thanks,
+
+ - Joel
 
