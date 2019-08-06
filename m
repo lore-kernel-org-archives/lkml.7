@@ -2,71 +2,45 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2401AC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 03:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74453C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 03:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9937214C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 03:08:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uvjciLg/"
+	by mail.kernel.org (Postfix) with ESMTP id 4EE27214C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 03:08:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731512AbfHFDIQ (ORCPT
+        id S1731528AbfHFDIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 23:08:16 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:43829 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731487AbfHFDIL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 23:08:11 -0400
-Received: by mail-ua1-f67.google.com with SMTP id o2so33107376uae.10;
-        Mon, 05 Aug 2019 20:08:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Bs0lmDNxa1aAKQKN0MVTNnd8nYHoFzSTA2dziDK99ZE=;
-        b=uvjciLg/2rMNF9ijkXRPobQpKgmfo/ydHMGgu4GxJKxFzJBwyrpN+RChv7QwZtutE8
-         m5utMFeOfsgoMxA4fQI4Fnr/Cl3KkzU3WWz5UOFWPtZ+UkUM3yib9prf5EOBprUE5Y8M
-         ixjEoe47akhAGY8Smy6lnzseKdVIyykZS4daWDvbtGw8f8sR8Vl6jJLwFq3EgRA0Is0d
-         g0Qp0u8cY2uoPlS+Nd22AG3WdJKVq9JZEfWDYnMpo9y2RquGYd8/Db16dc+7QOr2v0Ec
-         JcU/CWRn38fT7dHWq3K24h/KCRHLKwbQtmMCNwAe6fj5TKgEJz8cI7/elvVnMwLRugqX
-         KosQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Bs0lmDNxa1aAKQKN0MVTNnd8nYHoFzSTA2dziDK99ZE=;
-        b=K+mPNHcU6s5NDcjpG5VLzgCz4N5cp4pGVsoFAZ8I4q9zumJjkrSy18QtuIT4kCMGt+
-         fzL0S850WS3SxPhlGD48UrjpJt1fXYvYJIHuZbo6jE9Hjh1ArpuaRW2ZY3zhpyO+6YF4
-         tg72e3BrgIAPUKvNx0Vt9WrtgGNk8/+jlrLZLmiiX+mW/NMiOxW640/Cy30bFocaEnMM
-         1erZ6AAe0Rl7u0Q/ZnD5PlQYK+POd+w83Qpj1ywY99yeO6fdPepMtmeucEwgcZdEK5H1
-         jcwfVho536TOWc9XlpxZjTyHYSKm/Z4pacveE4qyS/4s+JzhHfsp61au/hzafNk60wyH
-         cPWg==
-X-Gm-Message-State: APjAAAUSAzdgZXtu4ESPQNQLrc9ILtHusqthg68S3a/JRti08cHnBU+V
-        5+689NWE3HcKhagPvNJwD+JysX0mX3E=
-X-Google-Smtp-Source: APXvYqz1jj9chZIr0Yf4E395LCJUYFXV1bMRm3+VXYW8Siypet9RS1vk/lBrCB7r6RHni4579BUOnA==
-X-Received: by 2002:ab0:a1:: with SMTP id 30mr779825uaj.29.1565060890557;
-        Mon, 05 Aug 2019 20:08:10 -0700 (PDT)
-Received: from asus-S451LA.lan ([190.22.46.249])
-        by smtp.gmail.com with ESMTPSA id v190sm22683156vkd.37.2019.08.05.20.08.08
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 05 Aug 2019 20:08:10 -0700 (PDT)
-From:   Luis Araneda <luaraneda@gmail.com>
-To:     linux@armlinux.org.uk, michal.simek@xilinx.com
-Cc:     stable@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Luis Araneda <luaraneda@gmail.com>
-Subject: [PATCH 2/2] ARM: zynq: Use memcpy_toio instead of memcpy on smp bring-up
-Date:   Mon,  5 Aug 2019 23:07:18 -0400
-Message-Id: <20190806030718.29048-3-luaraneda@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190806030718.29048-1-luaraneda@gmail.com>
-References: <20190806030718.29048-1-luaraneda@gmail.com>
+        Mon, 5 Aug 2019 23:08:41 -0400
+Received: from mga02.intel.com ([134.134.136.20]:6367 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730036AbfHFDIl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 23:08:41 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Aug 2019 20:08:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,352,1559545200"; 
+   d="scan'208";a="168166998"
+Received: from sai-dev-mach.sc.intel.com ([143.183.140.153])
+  by orsmga008.jf.intel.com with ESMTP; 05 Aug 2019 20:08:40 -0700
+From:   Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Cc:     dave.hansen@intel.com,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: [PATCH V2] fork: Improve error message for corrupted page tables
+Date:   Mon,  5 Aug 2019 20:05:27 -0700
+Message-Id: <3ef8a340deb1c87b725d44edb163073e2b6eca5a.1565059496.git.sai.praneeth.prakhya@intel.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,35 +48,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This fixes a kernel panic (read overflow) on memcpy when
-FORTIFY_SOURCE is enabled.
+When a user process exits, the kernel cleans up the mm_struct of the user
+process and during cleanup, check_mm() checks the page tables of the user
+process for corruption (E.g: unexpected page flags set/cleared). For
+corrupted page tables, the error message printed by check_mm() isn't very
+clear as it prints the loop index instead of page table type (E.g: Resident
+file mapping pages vs Resident shared memory pages). The loop index in
+check_mm() is used to index rss_stat[] which represents individual memory
+type stats. Hence, instead of printing index, print memory type, thereby
+improving error message.
 
-The computed size of memcpy args are:
-- p_size (dst): 4294967295 = (size_t) -1
-- q_size (src): 1
-- size (len): 8
+Without patch:
+--------------
+[  204.836425] mm/pgtable-generic.c:29: bad p4d 0000000089eb4e92(800000025f941467)
+[  204.836544] BUG: Bad rss-counter state mm:00000000f75895ea idx:0 val:2
+[  204.836615] BUG: Bad rss-counter state mm:00000000f75895ea idx:1 val:5
+[  204.836685] BUG: non-zero pgtables_bytes on freeing mm: 20480
 
-Additionally, the memory is marked as __iomem, so one of
-the memcpy_* functions should be used for read/write
+With patch:
+-----------
+[   69.815453] mm/pgtable-generic.c:29: bad p4d 0000000084653642(800000025ca37467)
+[   69.815872] BUG: Bad rss-counter state mm:00000000014a6c03 type:MM_FILEPAGES val:2
+[   69.815962] BUG: Bad rss-counter state mm:00000000014a6c03 type:MM_ANONPAGES val:5
+[   69.816050] BUG: non-zero pgtables_bytes on freeing mm: 20480
 
-Signed-off-by: Luis Araneda <luaraneda@gmail.com>
+Also, change print function (from printk(KERN_ALERT, ..) to pr_alert()) so
+that it matches the other print statement.
+
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+Acked-by: Dave Hansen <dave.hansen@intel.com>
+Suggested-by: Dave Hansen <dave.hansen@intel.com>
+Signed-off-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
 ---
- arch/arm/mach-zynq/platsmp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-zynq/platsmp.c b/arch/arm/mach-zynq/platsmp.c
-index 38728badabd4..a10085be9073 100644
---- a/arch/arm/mach-zynq/platsmp.c
-+++ b/arch/arm/mach-zynq/platsmp.c
-@@ -57,7 +57,7 @@ int zynq_cpun_start(u32 address, int cpu)
- 			* 0x4: Jump by mov instruction
- 			* 0x8: Jumping address
- 			*/
--			memcpy((__force void *)zero, &zynq_secondary_trampoline,
-+			memcpy_toio(zero, &zynq_secondary_trampoline,
- 							trampoline_size);
- 			writel(address, zero + trampoline_size);
+Changes from V1 to V2:
+----------------------
+1. Move struct definition from header file to fork.c file, so that it won't be
+   included in every compilation unit. As this struct is used *only* in fork.c,
+   include the definition in fork.c itself.
+2. Index the struct to match respective macros.
+3. Mention about print function change in commit message.
+
+ kernel/fork.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/fork.c b/kernel/fork.c
+index d8ae0f1b4148..f34f441c50c0 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -125,6 +125,13 @@ int nr_threads;			/* The idle threads do not count.. */
  
+ static int max_threads;		/* tunable limit on nr_threads */
+ 
++static const char * const resident_page_types[NR_MM_COUNTERS] = {
++	[MM_FILEPAGES]		= "MM_FILEPAGES",
++	[MM_ANONPAGES]		= "MM_ANONPAGES",
++	[MM_SWAPENTS]		= "MM_SWAPENTS",
++	[MM_SHMEMPAGES]		= "MM_SHMEMPAGES",
++};
++
+ DEFINE_PER_CPU(unsigned long, process_counts) = 0;
+ 
+ __cacheline_aligned DEFINE_RWLOCK(tasklist_lock);  /* outer */
+@@ -649,8 +656,8 @@ static void check_mm(struct mm_struct *mm)
+ 		long x = atomic_long_read(&mm->rss_stat.count[i]);
+ 
+ 		if (unlikely(x))
+-			printk(KERN_ALERT "BUG: Bad rss-counter state "
+-					  "mm:%p idx:%d val:%ld\n", mm, i, x);
++			pr_alert("BUG: Bad rss-counter state mm:%p type:%s val:%ld\n",
++				 mm, resident_page_types[i], x);
+ 	}
+ 
+ 	if (mm_pgtables_bytes(mm))
 -- 
-2.22.0
+2.7.4
 
