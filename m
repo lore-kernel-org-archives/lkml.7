@@ -2,58 +2,58 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F04C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E663CC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EEAF20818
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E0DB216B7
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:47:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="BK0x5edz"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="e1W5PQo6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732650AbfHFKp5 (ORCPT
+        id S1732679AbfHFKrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 06:45:57 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46892 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730844AbfHFKp4 (ORCPT
+        Tue, 6 Aug 2019 06:47:19 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35030 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730068AbfHFKrS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 06:45:56 -0400
-Received: by mail-pg1-f196.google.com with SMTP id w3so4175820pgt.13
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 03:45:56 -0700 (PDT)
+        Tue, 6 Aug 2019 06:47:18 -0400
+Received: by mail-pl1-f196.google.com with SMTP id w24so37717088plp.2
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 03:47:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=joelfernandes.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=ABKgADdiGa23iy+5xy09f6OBQqR3I/07f0qdbQrp2Ug=;
-        b=BK0x5edz5Iheer/fK6xR02+EYpWEe73+fBNaVu3psDyEfFgQR4iTDEjMX3llLyVbBQ
-         oo5c2wtKKMdHq+s0dbGvvCrA28tZJ7WgRbNvmF9B9TCPhzQEMI365I16VRvzSe8CiyqZ
-         ulIdft17U/LPUUnWy2+R0724GxrzxbZjJPUj8=
+        bh=781gQFojuZXlLR9f0Rnz2BsSQ1xNulNQY/lDauCDdSA=;
+        b=e1W5PQo6UI3vE5fsYo9GNTQns85aj/gUpDhLx9+3D64tPpFl02X83oJkMy9XzTBNmf
+         x7k9LQX1mYX3Ou3y4IWdZK6NAO3h5S7a8ijztUPEK9VYoOKSdCKcExDxxqYFFPD7vS3L
+         s8MA9DjsMd/kXQN1m2atBXnvStSWMRuGddxJk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ABKgADdiGa23iy+5xy09f6OBQqR3I/07f0qdbQrp2Ug=;
-        b=ZN03eDvIdXCg+JbgGO4GvUl268LNLd71ikiPOryX/pK9a339isnczUJeJv3z3KARQw
-         hNkpdFHluL+8ir8SrqjL4lJDCM6pwKGLcR95l6v2CRcfsjxUp52WU+4HH6cb5GM9txJv
-         TwWWx3PrHOyju13e2RMZ0QUSnccp/t1caQQy/jeaUwXSwuRdQrqPyoTw9WM7tI8Uo+GJ
-         4RuYZ50ThF/HKb2TiSPwPVpQitl3enGbfAvGVmiboczx0DDVIuXywDM7pRhKut0Mf2U0
-         RDg94hwZjC2o+D444Q3WZAY3ZvVzujzvxNVb7lgps6eFqOoFI+8r6iXQktR88MWgzb0H
-         HVUg==
-X-Gm-Message-State: APjAAAXJWr8LxCoegUTBlJPVrk4u5gREVpOoJlmaGVKmDRzmPNVyrG1i
-        gELKD4kB0RvOCOnqAl4Ob+pKLA==
-X-Google-Smtp-Source: APXvYqyKhAOOvSnRzmdX9OiAK7Cu7h4b/c73qpWbsn3JUV5APW6ELiBP2MjwevD8QijB6PWnNqvwJA==
-X-Received: by 2002:aa7:90d4:: with SMTP id k20mr2919746pfk.78.1565088356112;
-        Tue, 06 Aug 2019 03:45:56 -0700 (PDT)
+        bh=781gQFojuZXlLR9f0Rnz2BsSQ1xNulNQY/lDauCDdSA=;
+        b=D/OBf9lhZSKqtQH3+vvsOCnnuz9ADmjoplOTi7EbNvYZoFvn91VOGjI0jjPZMOzEhw
+         qm2K/ufCVpSyJTch5ueqxb3Z5WyAyTzx/UX/XI95jTm1XNdnCJqnHHDCh33aTd2AUj7/
+         O/PD8iOOMY6TR8RxLa8QFtJLwo/gy4zFVYvI6R3lLDQI9uyW1vRHoeKQedQ8CuUBYFqL
+         gKNV6aepM0LSLFhhTIs2Rk+5cOuzMNWnFF8Y+6TQ1eF6ac7Pw/BAPKWardR/17kaMQK5
+         2mUpbNIG9M8hjJGm+/F/6aLKMKh4yFI8pHq4Zo7OEeI2jRyFMGk/0q9mKXOcexwFMtV5
+         CGZw==
+X-Gm-Message-State: APjAAAUDxICGbt/nz3m+lnYtUWeh5Uu2Babj+ZAmWfKtNMih7zK+q4G5
+        FrU5My7Q5OrlaFvtxiqAgDCHYQ==
+X-Google-Smtp-Source: APXvYqyckGHtBm2UKAu71b4v/ySxM/JXAjxm9Txb7Dg6O/cihgtEDSFSoalvYdEzzWgdgOHwA+AgNw==
+X-Received: by 2002:a17:902:654f:: with SMTP id d15mr2365106pln.253.1565088438061;
+        Tue, 06 Aug 2019 03:47:18 -0700 (PDT)
 Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id b126sm126571952pfa.126.2019.08.06.03.45.54
+        by smtp.gmail.com with ESMTPSA id a21sm95934459pfi.27.2019.08.06.03.47.16
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 03:45:55 -0700 (PDT)
-Date:   Tue, 6 Aug 2019 06:45:54 -0400
+        Tue, 06 Aug 2019 03:47:17 -0700 (PDT)
+Date:   Tue, 6 Aug 2019 06:47:15 -0400
 From:   Joel Fernandes <joel@joelfernandes.org>
 To:     Michal Hocko <mhocko@kernel.org>
 Cc:     linux-kernel@vger.kernel.org,
@@ -77,95 +77,67 @@ Cc:     linux-kernel@vger.kernel.org,
         Thomas Gleixner <tglx@linutronix.de>, tkjos@google.com,
         Vladimir Davydov <vdavydov.dev@gmail.com>,
         Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v4 4/5] page_idle: Drain all LRU pagevec before idle
- tracking
-Message-ID: <20190806104554.GB218260@google.com>
+Subject: Re: [PATCH v4 1/5] mm/page_idle: Add per-pid idle page tracking
+ using virtual indexing
+Message-ID: <20190806104715.GC218260@google.com>
 References: <20190805170451.26009-1-joel@joelfernandes.org>
- <20190805170451.26009-4-joel@joelfernandes.org>
- <20190806084357.GK11812@dhcp22.suse.cz>
+ <20190806085605.GL11812@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190806084357.GK11812@dhcp22.suse.cz>
+In-Reply-To: <20190806085605.GL11812@dhcp22.suse.cz>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 10:43:57AM +0200, Michal Hocko wrote:
-> On Mon 05-08-19 13:04:50, Joel Fernandes (Google) wrote:
-> > During idle tracking, we see that sometimes faulted anon pages are in
-> > pagevec but are not drained to LRU. Idle tracking considers pages only
-> > on LRU. Drain all CPU's LRU before starting idle tracking.
+On Tue, Aug 06, 2019 at 10:56:05AM +0200, Michal Hocko wrote:
+> On Mon 05-08-19 13:04:47, Joel Fernandes (Google) wrote:
+> > The page_idle tracking feature currently requires looking up the pagemap
+> > for a process followed by interacting with /sys/kernel/mm/page_idle.
+> > Looking up PFN from pagemap in Android devices is not supported by
+> > unprivileged process and requires SYS_ADMIN and gives 0 for the PFN.
+> > 
+> > This patch adds support to directly interact with page_idle tracking at
+> > the PID level by introducing a /proc/<pid>/page_idle file.  It follows
+> > the exact same semantics as the global /sys/kernel/mm/page_idle, but now
+> > looking up PFN through pagemap is not needed since the interface uses
+> > virtual frame numbers, and at the same time also does not require
+> > SYS_ADMIN.
+> > 
+> > In Android, we are using this for the heap profiler (heapprofd) which
+> > profiles and pin points code paths which allocates and leaves memory
+> > idle for long periods of time. This method solves the security issue
+> > with userspace learning the PFN, and while at it is also shown to yield
+> > better results than the pagemap lookup, the theory being that the window
+> > where the address space can change is reduced by eliminating the
+> > intermediate pagemap look up stage. In virtual address indexing, the
+> > process's mmap_sem is held for the duration of the access.
 > 
-> Please expand on why does this matter enough to introduce a potentially
-> expensinve draining which has to schedule a work on each CPU and wait
-> for them to finish.
+> As already mentioned in one of the previous versions. The interface
+> seems sane and the usecase as well. So I do not really have high level
+> objections.
 
-Sure, I can expand. I am able to find multiple issues involving this. One
-issue looks like idle tracking is completely broken. It shows up in my
-testing as if a page that is marked as idle is always "accessed" -- because
-it was never marked as idle (due to not draining of pagevec).
+That is great to know.
 
-The other issue shows up as a failure in my "swap test", with the following
-sequence:
-1. Allocate some pages
-2. Write to them
-3. Mark them as idle                                    <--- fails
-4. Introduce some memory pressure to induce swapping.
-5. Check the swap bit I introduced in this series.      <--- fails to set idle
-                                                             bit in swap PTE.
+> From a quick look at the patch I would just object to pulling swap idle
+> tracking into this patch because it makes the review harder and it is
+> essentially a dead code until a later patch. I am also not sure whether
+> that is really necessary and it really begs for an explicit
+> justification.
 
-Draining the pagevec in advance fixes both of these issues.
+Ok I will split it out, and also expand on the need for it a bit more.
 
-This operation even if expensive is only done once during the access of the
-page_idle file. Did you have a better fix in mind?
+> 
+> I will try to go through the patch more carefully later as time allows.
 
-thanks,
-
- - Joel
-
+Thanks a lot.
 
 > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > ---
-> >  mm/page_idle.c | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> > 
-> > diff --git a/mm/page_idle.c b/mm/page_idle.c
-> > index a5b00d63216c..2972367a599f 100644
-> > --- a/mm/page_idle.c
-> > +++ b/mm/page_idle.c
-> > @@ -180,6 +180,8 @@ static ssize_t page_idle_bitmap_read(struct file *file, struct kobject *kobj,
-> >  	unsigned long pfn, end_pfn;
-> >  	int bit, ret;
-> >  
-> > +	lru_add_drain_all();
-> > +
-> >  	ret = page_idle_get_frames(pos, count, NULL, &pfn, &end_pfn);
-> >  	if (ret == -ENXIO)
-> >  		return 0;  /* Reads beyond max_pfn do nothing */
-> > @@ -211,6 +213,8 @@ static ssize_t page_idle_bitmap_write(struct file *file, struct kobject *kobj,
-> >  	unsigned long pfn, end_pfn;
-> >  	int bit, ret;
-> >  
-> > +	lru_add_drain_all();
-> > +
-> >  	ret = page_idle_get_frames(pos, count, NULL, &pfn, &end_pfn);
-> >  	if (ret)
-> >  		return ret;
-> > @@ -428,6 +432,8 @@ ssize_t page_idle_proc_generic(struct file *file, char __user *ubuff,
-> >  	walk.private = &priv;
-> >  	walk.mm = mm;
-> >  
-> > +	lru_add_drain_all();
-> > +
-> >  	down_read(&mm->mmap_sem);
-> >  
-> >  	/*
-> > -- 
-> > 2.22.0.770.g0f2c4a37fd-goog
-> 
 > -- 
 > Michal Hocko
 > SUSE Labs
+
+ - Joel
+
