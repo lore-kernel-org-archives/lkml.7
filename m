@@ -7,51 +7,55 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8438FC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57327C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 590C82089E
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:35:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29F57217D9
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:35:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127315;
-	bh=tnBCKsNOXpc/So9mge9o69O10x6UKsl/NYQ+QplWqDo=;
+	s=default; t=1565127325;
+	bh=cPivkqwnQ1OdRMluIbubqEiTl3DSailklhPA6Iw5au4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fG200dLtEM0KPI5UKNFD2GblLDlN6HOK0sneToPhkf/Y+wQkcFAcFFUD7Wb0GLkSc
-	 KbpCaEebLtZA+orx8sjoBUQhbAMwJv6yLQ9mwol1SFr5C1dESFKWXuzTuYVfjxOzG0
-	 oMENHFnLHJAUhMnLI4v50rZt3o8DcBAMli1qXDhM=
+	b=BZKKyNnF63uapZ6oLBlxX6oZDiFIEYEVLMssGIbS+C/bsP9dyebgHB+nK3gotG8CZ
+	 LY39sWitNNjtB4BUkdGSPyRc02JqdCtsKtgSZdQjBQlH/WEvwvCPh4pgZ9OBck3NtV
+	 xvyHcKu6f8nKvQ88GuNvJ5eCbGn2qKPxjiubMHTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbfHFVfK (ORCPT
+        id S1728453AbfHFVfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:35:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52902 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:35:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728172AbfHFVfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:35:07 -0400
+        id S1728333AbfHFVfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:35:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66D96217F5;
-        Tue,  6 Aug 2019 21:35:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A53D62089E;
+        Tue,  6 Aug 2019 21:35:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127306;
-        bh=tnBCKsNOXpc/So9mge9o69O10x6UKsl/NYQ+QplWqDo=;
+        s=default; t=1565127318;
+        bh=cPivkqwnQ1OdRMluIbubqEiTl3DSailklhPA6Iw5au4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0SMu6vPLVAQdNgrK/yUVnxifbLj7RDXmrfs1PyIfJtGzPxZ/rYoJz8pDqmtvLl2ht
-         SF4eOaPI4P1Adir3X5cGM9vMAGKy2kdSptQ/YOJWUYWNmEyXykp6MVojy5s+h0Ex1+
-         rrFMX7TxaZZAs6QylVjbjm4jTqYFAWZAv1odLNHo=
+        b=oldEed+hx2SsGGcigoPJ5DkGtmF2H+whCxo8x7JcEq4GCNSdyiSK6BEyefJwEIane
+         GnRnV0btWFkjUOMfdUtas2FqJk1Pt4LzF7SXLozF3Q8py+uUGpGVPZmfEO5MS8zZks
+         poox7QAuOqPW2IugRLnjQYmjoJAnAyhjzsH0LhUU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 53/59] arm64: Make debug exception handlers visible from RCU
-Date:   Tue,  6 Aug 2019 17:33:13 -0400
-Message-Id: <20190806213319.19203-53-sashal@kernel.org>
+Cc:     Nayna Jain <nayna@linux.ibm.com>,
+        Michal Suchanek <msuchanek@suse.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Sachin Sant <sachinp@linux.vnet.ibm.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-integrity@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 59/59] tpm: tpm_ibm_vtpm: Fix unallocated banks
+Date:   Tue,  6 Aug 2019 17:33:19 -0400
+Message-Id: <20190806213319.19203-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213319.19203-1-sashal@kernel.org>
 References: <20190806213319.19203-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,151 +64,169 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Nayna Jain <nayna@linux.ibm.com>
 
-[ Upstream commit d8bb6718c4db9bcd075dde7ff55d46091ccfae15 ]
+[ Upstream commit fa4f99c05320eb28bf6ba52a9adf64d888da1f9e ]
 
-Make debug exceptions visible from RCU so that synchronize_rcu()
-correctly track the debug exception handler.
+The nr_allocated_banks and allocated banks are initialized as part of
+tpm_chip_register. Currently, this is done as part of auto startup
+function. However, some drivers, like the ibm vtpm driver, do not run
+auto startup during initialization. This results in uninitialized memory
+issue and causes a kernel panic during boot.
 
-This also introduces sanity checks for user-mode exceptions as same
-as x86's ist_enter()/ist_exit().
+This patch moves the pcr allocation outside the auto startup function
+into tpm_chip_register. This ensures that allocated banks are initialized
+in any case.
 
-The debug exception can interrupt in idle task. For example, it warns
-if we put a kprobe on a function called from idle task as below.
-The warning message showed that the rcu_read_lock() caused this
-problem. But actually, this means the RCU is lost the context which
-is already in NMI/IRQ.
-
-  /sys/kernel/debug/tracing # echo p default_idle_call >> kprobe_events
-  /sys/kernel/debug/tracing # echo 1 > events/kprobes/enable
-  /sys/kernel/debug/tracing # [  135.122237]
-  [  135.125035] =============================
-  [  135.125310] WARNING: suspicious RCU usage
-  [  135.125581] 5.2.0-08445-g9187c508bdc7 #20 Not tainted
-  [  135.125904] -----------------------------
-  [  135.126205] include/linux/rcupdate.h:594 rcu_read_lock() used illegally while idle!
-  [  135.126839]
-  [  135.126839] other info that might help us debug this:
-  [  135.126839]
-  [  135.127410]
-  [  135.127410] RCU used illegally from idle CPU!
-  [  135.127410] rcu_scheduler_active = 2, debug_locks = 1
-  [  135.128114] RCU used illegally from extended quiescent state!
-  [  135.128555] 1 lock held by swapper/0/0:
-  [  135.128944]  #0: (____ptrval____) (rcu_read_lock){....}, at: call_break_hook+0x0/0x178
-  [  135.130499]
-  [  135.130499] stack backtrace:
-  [  135.131192] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.2.0-08445-g9187c508bdc7 #20
-  [  135.131841] Hardware name: linux,dummy-virt (DT)
-  [  135.132224] Call trace:
-  [  135.132491]  dump_backtrace+0x0/0x140
-  [  135.132806]  show_stack+0x24/0x30
-  [  135.133133]  dump_stack+0xc4/0x10c
-  [  135.133726]  lockdep_rcu_suspicious+0xf8/0x108
-  [  135.134171]  call_break_hook+0x170/0x178
-  [  135.134486]  brk_handler+0x28/0x68
-  [  135.134792]  do_debug_exception+0x90/0x150
-  [  135.135051]  el1_dbg+0x18/0x8c
-  [  135.135260]  default_idle_call+0x0/0x44
-  [  135.135516]  cpu_startup_entry+0x2c/0x30
-  [  135.135815]  rest_init+0x1b0/0x280
-  [  135.136044]  arch_call_rest_init+0x14/0x1c
-  [  135.136305]  start_kernel+0x4d4/0x500
-  [  135.136597]
-
-So make debug exception visible to RCU can fix this warning.
-
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Acked-by: Paul E. McKenney <paulmck@linux.ibm.com>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Will Deacon <will@kernel.org>
+Fixes: 879b589210a9 ("tpm: retrieve digest size of unknown algorithms with PCR read")
+Reported-by: Michal Suchanek <msuchanek@suse.de>
+Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Tested-by: Michal Suchánek <msuchanek@suse.de>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/mm/fault.c | 57 +++++++++++++++++++++++++++++++++++++------
- 1 file changed, 49 insertions(+), 8 deletions(-)
+ drivers/char/tpm/tpm-chip.c | 20 ++++++++++++++++++++
+ drivers/char/tpm/tpm.h      |  2 ++
+ drivers/char/tpm/tpm1-cmd.c | 36 ++++++++++++++++++++++++------------
+ drivers/char/tpm/tpm2-cmd.c |  6 +-----
+ 4 files changed, 47 insertions(+), 17 deletions(-)
 
-diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-index 2d115016feb42..414b8e0f19e0e 100644
---- a/arch/arm64/mm/fault.c
-+++ b/arch/arm64/mm/fault.c
-@@ -800,6 +800,53 @@ void __init hook_debug_fault_code(int nr,
- 	debug_fault_info[nr].name	= name;
+diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
+index d47ad10a35fe3..1d3c25831604a 100644
+--- a/drivers/char/tpm/tpm-chip.c
++++ b/drivers/char/tpm/tpm-chip.c
+@@ -545,6 +545,20 @@ static int tpm_add_hwrng(struct tpm_chip *chip)
+ 	return hwrng_register(&chip->hwrng);
  }
  
-+/*
-+ * In debug exception context, we explicitly disable preemption despite
-+ * having interrupts disabled.
-+ * This serves two purposes: it makes it much less likely that we would
-+ * accidentally schedule in exception context and it will force a warning
-+ * if we somehow manage to schedule by accident.
-+ */
-+static void debug_exception_enter(struct pt_regs *regs)
++static int tpm_get_pcr_allocation(struct tpm_chip *chip)
 +{
-+	/*
-+	 * Tell lockdep we disabled irqs in entry.S. Do nothing if they were
-+	 * already disabled to preserve the last enabled/disabled addresses.
-+	 */
-+	if (interrupts_enabled(regs))
-+		trace_hardirqs_off();
++	int rc;
 +
-+	if (user_mode(regs)) {
-+		RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
-+	} else {
-+		/*
-+		 * We might have interrupted pretty much anything.  In
-+		 * fact, if we're a debug exception, we can even interrupt
-+		 * NMI processing. We don't want this code makes in_nmi()
-+		 * to return true, but we need to notify RCU.
-+		 */
-+		rcu_nmi_enter();
++	rc = (chip->flags & TPM_CHIP_FLAG_TPM2) ?
++	     tpm2_get_pcr_allocation(chip) :
++	     tpm1_get_pcr_allocation(chip);
++
++	if (rc > 0)
++		return -ENODEV;
++
++	return rc;
++}
++
+ /*
+  * tpm_chip_register() - create a character device for the TPM chip
+  * @chip: TPM chip to use.
+@@ -564,6 +578,12 @@ int tpm_chip_register(struct tpm_chip *chip)
+ 	if (rc)
+ 		return rc;
+ 	rc = tpm_auto_startup(chip);
++	if (rc) {
++		tpm_chip_stop(chip);
++		return rc;
 +	}
 +
-+	preempt_disable();
-+
-+	/* This code is a bit fragile.  Test it. */
-+	RCU_LOCKDEP_WARN(!rcu_is_watching(), "exception_enter didn't work");
-+}
-+NOKPROBE_SYMBOL(debug_exception_enter);
-+
-+static void debug_exception_exit(struct pt_regs *regs)
-+{
-+	preempt_enable_no_resched();
-+
-+	if (!user_mode(regs))
-+		rcu_nmi_exit();
-+
-+	if (interrupts_enabled(regs))
-+		trace_hardirqs_on();
-+}
-+NOKPROBE_SYMBOL(debug_exception_exit);
-+
- #ifdef CONFIG_ARM64_ERRATUM_1463225
- DECLARE_PER_CPU(int, __in_cortex_a76_erratum_1463225_wa);
++	rc = tpm_get_pcr_allocation(chip);
+ 	tpm_chip_stop(chip);
+ 	if (rc)
+ 		return rc;
+diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
+index e503ffc3aa39c..a7fea3e0ca86a 100644
+--- a/drivers/char/tpm/tpm.h
++++ b/drivers/char/tpm/tpm.h
+@@ -394,6 +394,7 @@ int tpm1_pcr_read(struct tpm_chip *chip, u32 pcr_idx, u8 *res_buf);
+ ssize_t tpm1_getcap(struct tpm_chip *chip, u32 subcap_id, cap_t *cap,
+ 		    const char *desc, size_t min_cap_length);
+ int tpm1_get_random(struct tpm_chip *chip, u8 *out, size_t max);
++int tpm1_get_pcr_allocation(struct tpm_chip *chip);
+ unsigned long tpm_calc_ordinal_duration(struct tpm_chip *chip, u32 ordinal);
+ int tpm_pm_suspend(struct device *dev);
+ int tpm_pm_resume(struct device *dev);
+@@ -449,6 +450,7 @@ int tpm2_unseal_trusted(struct tpm_chip *chip,
+ ssize_t tpm2_get_tpm_pt(struct tpm_chip *chip, u32 property_id,
+ 			u32 *value, const char *desc);
  
-@@ -840,12 +887,7 @@ asmlinkage void __exception do_debug_exception(unsigned long addr_if_watchpoint,
- 	if (cortex_a76_erratum_1463225_debug_handler(regs))
- 		return;
- 
--	/*
--	 * Tell lockdep we disabled irqs in entry.S. Do nothing if they were
--	 * already disabled to preserve the last enabled/disabled addresses.
--	 */
--	if (interrupts_enabled(regs))
--		trace_hardirqs_off();
-+	debug_exception_enter(regs);
- 
- 	if (user_mode(regs) && !is_ttbr0_addr(pc))
- 		arm64_apply_bp_hardening();
-@@ -855,7 +897,6 @@ asmlinkage void __exception do_debug_exception(unsigned long addr_if_watchpoint,
- 				 inf->sig, inf->code, (void __user *)pc, esr);
++ssize_t tpm2_get_pcr_allocation(struct tpm_chip *chip);
+ int tpm2_auto_startup(struct tpm_chip *chip);
+ void tpm2_shutdown(struct tpm_chip *chip, u16 shutdown_type);
+ unsigned long tpm2_calc_ordinal_duration(struct tpm_chip *chip, u32 ordinal);
+diff --git a/drivers/char/tpm/tpm1-cmd.c b/drivers/char/tpm/tpm1-cmd.c
+index faacbe1ffa1a9..149e953ca3699 100644
+--- a/drivers/char/tpm/tpm1-cmd.c
++++ b/drivers/char/tpm/tpm1-cmd.c
+@@ -699,18 +699,6 @@ int tpm1_auto_startup(struct tpm_chip *chip)
+ 		goto out;
  	}
  
--	if (interrupts_enabled(regs))
--		trace_hardirqs_on();
-+	debug_exception_exit(regs);
+-	chip->allocated_banks = kcalloc(1, sizeof(*chip->allocated_banks),
+-					GFP_KERNEL);
+-	if (!chip->allocated_banks) {
+-		rc = -ENOMEM;
+-		goto out;
+-	}
+-
+-	chip->allocated_banks[0].alg_id = TPM_ALG_SHA1;
+-	chip->allocated_banks[0].digest_size = hash_digest_size[HASH_ALGO_SHA1];
+-	chip->allocated_banks[0].crypto_id = HASH_ALGO_SHA1;
+-	chip->nr_allocated_banks = 1;
+-
+ 	return rc;
+ out:
+ 	if (rc > 0)
+@@ -779,3 +767,27 @@ int tpm1_pm_suspend(struct tpm_chip *chip, u32 tpm_suspend_pcr)
+ 	return rc;
  }
- NOKPROBE_SYMBOL(do_debug_exception);
+ 
++/**
++ * tpm1_get_pcr_allocation() - initialize the allocated bank
++ * @chip: TPM chip to use.
++ *
++ * The function initializes the SHA1 allocated bank to extend PCR
++ *
++ * Return:
++ * * 0 on success,
++ * * < 0 on error.
++ */
++int tpm1_get_pcr_allocation(struct tpm_chip *chip)
++{
++	chip->allocated_banks = kcalloc(1, sizeof(*chip->allocated_banks),
++					GFP_KERNEL);
++	if (!chip->allocated_banks)
++		return -ENOMEM;
++
++	chip->allocated_banks[0].alg_id = TPM_ALG_SHA1;
++	chip->allocated_banks[0].digest_size = hash_digest_size[HASH_ALGO_SHA1];
++	chip->allocated_banks[0].crypto_id = HASH_ALGO_SHA1;
++	chip->nr_allocated_banks = 1;
++
++	return 0;
++}
+diff --git a/drivers/char/tpm/tpm2-cmd.c b/drivers/char/tpm/tpm2-cmd.c
+index d103545e40550..ba9acae83bff1 100644
+--- a/drivers/char/tpm/tpm2-cmd.c
++++ b/drivers/char/tpm/tpm2-cmd.c
+@@ -840,7 +840,7 @@ struct tpm2_pcr_selection {
+ 	u8  pcr_select[3];
+ } __packed;
+ 
+-static ssize_t tpm2_get_pcr_allocation(struct tpm_chip *chip)
++ssize_t tpm2_get_pcr_allocation(struct tpm_chip *chip)
+ {
+ 	struct tpm2_pcr_selection pcr_selection;
+ 	struct tpm_buf buf;
+@@ -1040,10 +1040,6 @@ int tpm2_auto_startup(struct tpm_chip *chip)
+ 			goto out;
+ 	}
+ 
+-	rc = tpm2_get_pcr_allocation(chip);
+-	if (rc)
+-		goto out;
+-
+ 	rc = tpm2_get_cc_attrs_tbl(chip);
+ 
+ out:
 -- 
 2.20.1
 
