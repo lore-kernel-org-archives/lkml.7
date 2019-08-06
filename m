@@ -2,328 +2,186 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B53BCC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 22:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4AA3C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 22:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D603218A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 22:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3CBA21872
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 22:08:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TOMfBvy3"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="uoHPmS9+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727447AbfHFWIG (ORCPT
+        id S1727529AbfHFWIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 18:08:06 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38691 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727147AbfHFWHy (ORCPT
+        Tue, 6 Aug 2019 18:08:31 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:40402 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727464AbfHFWIb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 18:07:54 -0400
-Received: by mail-pl1-f193.google.com with SMTP id az7so38382257plb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 15:07:54 -0700 (PDT)
+        Tue, 6 Aug 2019 18:08:31 -0400
+Received: by mail-qt1-f195.google.com with SMTP id a15so86244953qtn.7
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 15:08:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=h/xhP/vB7IkzGf8wgypQiR7wXsPZkOsDnbKr/VVmc1c=;
-        b=TOMfBvy3auNNsbtX7pMhzSFghcR0Y3nkcmgpZPntLPGtn10unKBLqZ3VvVxcesV/Zl
-         4xnaqpSB9qZYbcAj5XLMSdhF8XTnzxpLMsxth6YYHpCimGRDHSM6/l00/Hrb/qAylbFr
-         J+L5fvDaOzsvGpcr7XL+8iARpP7InreIOJhos=
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=lgpI3ynHW3gTvfclzfXkVuyqpqeD3VNzN05HaWx4zvc=;
+        b=uoHPmS9+YoOxcoJBDbzfC+2fbzNEkLRoav7HUYfBUs9/anx0fxJOpaTnyi46GM/rJJ
+         CqXno/3jcs1X1U0FuCvbUjuZt95T++kOykcCT1edliWysW7pqf2xdfINEWc+GSF69zPE
+         jtHxEzv4MwSIFGUNIT7R9gz1Bv1LSteX2Sid9G0hOHIfI49Hp3EpcE/5Ogq45V9pl/7H
+         wcb0ruPFB9D2hHg4FQIgrCXvkjhcPzLVr3u8ROXXrOFetGkQXdUBrnr0D3+gaAAeZ3e3
+         dEjz9enIH+6aoeYC0FoZNymuqfkuvnM+oCZwxsW+T5CwZJTgU2KaRQgxxqWprLgJKSFB
+         98wA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=h/xhP/vB7IkzGf8wgypQiR7wXsPZkOsDnbKr/VVmc1c=;
-        b=OJjO9m1QleXkYdGEWJ8RtkCNPd9UvGgSUmowYEdoNn20HSpmSgvWhO/MafyBDUgmie
-         gyQPAx66kMDi523DmOv7WFEWyV6J7AdZ4RIpwiYnSLc0aFtz/0HVmfZyK2qT4iH/VOKK
-         lEgaQnP9J5M/PHAwxFBO0snEhBfxs8sWrx61rHohouVbjNjg0hq1cv1BTrINGlT8/3Pd
-         MhORyKAP8RHoY2ju9P1jQC5yXEqCUBj+N0hGHQnEe3TFf3bK3HI0UkC5ShQGFh9bVHOp
-         63/kLikw093YvWc312/CcmbcNpICxLW8joUi7AlV+TrY2TMhER2cL/hRIvoXmACNaqkj
-         jqFA==
-X-Gm-Message-State: APjAAAXE8P8LNlb+9EYN56alICmwHL/KFybBiZPlT7YwKTK3aUC/xdUx
-        7xyVRVSmgX2ruvIf7vwisqhVcg==
-X-Google-Smtp-Source: APXvYqwwdF1lRp3/AgWvmNMONW0hz7Usq6oiIdN3G6dHCBEdd6jsPmnih7QV1onNwq1d6FKLb0tojA==
-X-Received: by 2002:a17:902:7083:: with SMTP id z3mr195085plk.87.1565129273802;
-        Tue, 06 Aug 2019 15:07:53 -0700 (PDT)
-Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id p7sm98982509pfp.131.2019.08.06.15.07.52
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=lgpI3ynHW3gTvfclzfXkVuyqpqeD3VNzN05HaWx4zvc=;
+        b=oWs04iJG1rQpVzlN+oIy1rLJigaGGyF3vcPwCxBeCsjlfA+7ExU9mwaG7bP+8f9ICJ
+         yzvJOawFWeFbGtAYi+ukY1IVOCB9CBEhpXIzF/3st4Bg/4fA62e12mai5XK3e5e62wZM
+         hDgYFZnZcj4xyhDID8thKX7c102UlpdM02fqlMLeZD9dmpjKWfrebHFinu+EcU7PW9on
+         zXRzPZQm/H3bJWB86qFnqsQ7pFYaYSD5hH6ODK54QjfUGq8mOOF2ByX7wymE3PfHFO+5
+         8bAkwNUkTGcGaDp+bYr2ffUdZromhm6Wn6Ze+Pdwdqnix4nRf/HJIbvg0JUi2sKEILXc
+         APJg==
+X-Gm-Message-State: APjAAAVGqV0mYxbnIvekdvuezQwPDGcjw4kqV5zBJjRCNIjQARlmiSMU
+        KNAdcMFZehG+sD44GSCd840ydvUq9nw=
+X-Google-Smtp-Source: APXvYqyM775FoP3ymrZoS1cfi0VLU7KWY4ABIV0dCgd+BKaX2iGy1XM4e6b8j0l6rf7gx/MWm2HYZg==
+X-Received: by 2002:ad4:5405:: with SMTP id f5mr5184364qvt.242.1565129310229;
+        Tue, 06 Aug 2019 15:08:30 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id z5sm36883130qti.80.2019.08.06.15.08.28
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 15:07:53 -0700 (PDT)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Andrey Pronin <apronin@chromium.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Alexander Steffen <Alexander.Steffen@infineon.com>
-Subject: [PATCH v3 2/4] tpm: tpm_tis_spi: Export functionality to other drivers
-Date:   Tue,  6 Aug 2019 15:07:48 -0700
-Message-Id: <20190806220750.86597-3-swboyd@chromium.org>
-X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
-In-Reply-To: <20190806220750.86597-1-swboyd@chromium.org>
-References: <20190806220750.86597-1-swboyd@chromium.org>
+        Tue, 06 Aug 2019 15:08:29 -0700 (PDT)
+Date:   Tue, 6 Aug 2019 15:08:02 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Hayes Wang <hayeswang@realtek.com>
+Cc:     <netdev@vger.kernel.org>, <nic_swsd@realtek.com>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>
+Subject: Re: [PATCH net-next 4/5] r8152: support skb_add_rx_frag
+Message-ID: <20190806150802.72e0ef02@cakuba.netronome.com>
+In-Reply-To: <1394712342-15778-293-albertk@realtek.com>
+References: <1394712342-15778-289-albertk@realtek.com>
+        <1394712342-15778-293-albertk@realtek.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We want to use most of the code in this driver, except we want to modify
-the flow control and idle behavior. Let's "libify" this driver so that
-another driver can call the code in here and slightly tweak the
-behavior.
+On Tue, 6 Aug 2019 19:18:03 +0800, Hayes Wang wrote:
+> Use skb_add_rx_frag() to reduce the memory copy for rx data.
+> 
+> Use a new list of rx_used to store the rx buffer which couldn't be
+> reused yet.
+> 
+> Besides, the total number of rx buffer may be increased or decreased
+> dynamically. And it is limited by RTL8152_MAX_RX_AGG.
+> 
+> Signed-off-by: Hayes Wang <hayeswang@realtek.com>
 
-Cc: Andrey Pronin <apronin@chromium.org>
-Cc: Duncan Laurie <dlaurie@chromium.org>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Guenter Roeck <groeck@chromium.org>
-Cc: Alexander Steffen <Alexander.Steffen@infineon.com>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- drivers/char/tpm/tpm_tis_spi.c | 98 +++++++++++++++++++---------------
- drivers/char/tpm/tpm_tis_spi.h | 37 +++++++++++++
- 2 files changed, 93 insertions(+), 42 deletions(-)
- create mode 100644 drivers/char/tpm/tpm_tis_spi.h
+> diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+> index 401e56112365..1615900c8592 100644
+> --- a/drivers/net/usb/r8152.c
+> +++ b/drivers/net/usb/r8152.c
+> @@ -584,6 +584,9 @@ enum rtl_register_content {
+>  #define TX_ALIGN		4
+>  #define RX_ALIGN		8
+>  
+> +#define RTL8152_MAX_RX_AGG	(10 * RTL8152_MAX_RX)
+> +#define RTL8152_RXFG_HEADSZ	256
+> +
+>  #define INTR_LINK		0x0004
+>  
+>  #define RTL8152_REQT_READ	0xc0
+> @@ -720,7 +723,7 @@ struct r8152 {
+>  	struct net_device *netdev;
+>  	struct urb *intr_urb;
+>  	struct tx_agg tx_info[RTL8152_MAX_TX];
+> -	struct list_head rx_info;
+> +	struct list_head rx_info, rx_used;
 
-diff --git a/drivers/char/tpm/tpm_tis_spi.c b/drivers/char/tpm/tpm_tis_spi.c
-index 19513e622053..fd3fb4f9f506 100644
---- a/drivers/char/tpm/tpm_tis_spi.c
-+++ b/drivers/char/tpm/tpm_tis_spi.c
-@@ -36,26 +36,43 @@
- #include <linux/tpm.h>
- #include "tpm.h"
- #include "tpm_tis_core.h"
-+#include "tpm_tis_spi.h"
- 
- #define MAX_SPI_FRAMESIZE 64
- 
--struct tpm_tis_spi_phy {
--	struct tpm_tis_data priv;
--	struct spi_device *spi_device;
--	u8 *iobuf;
--};
--
--static inline struct tpm_tis_spi_phy *to_tpm_tis_spi_phy(struct tpm_tis_data *data)
-+static int tpm_tis_spi_flow_control(struct tpm_tis_spi_phy *phy,
-+				    struct spi_transfer *spi_xfer)
- {
--	return container_of(data, struct tpm_tis_spi_phy, priv);
-+	struct spi_message m;
-+	int ret, i;
-+
-+	if ((phy->iobuf[3] & 0x01) == 0) {
-+		// handle SPI wait states
-+		phy->iobuf[0] = 0;
-+
-+		for (i = 0; i < TPM_RETRY; i++) {
-+			spi_xfer->len = 1;
-+			spi_message_init(&m);
-+			spi_message_add_tail(spi_xfer, &m);
-+			ret = spi_sync_locked(phy->spi_device, &m);
-+			if (ret < 0)
-+				return ret;
-+			if (phy->iobuf[0] & 0x01)
-+				break;
-+		}
-+
-+		if (i == TPM_RETRY)
-+			return -ETIMEDOUT;
-+	}
-+
-+	return 0;
- }
- 
--static int tpm_tis_spi_transfer(struct tpm_tis_data *data, u32 addr, u16 len,
-+int tpm_tis_spi_transfer(struct tpm_tis_data *data, u32 addr, u16 len,
- 				u8 *in, const u8 *out)
- {
- 	struct tpm_tis_spi_phy *phy = to_tpm_tis_spi_phy(data);
- 	int ret = 0;
--	int i;
- 	struct spi_message m;
- 	struct spi_transfer spi_xfer;
- 	u8 transfer_len;
-@@ -82,26 +99,9 @@ static int tpm_tis_spi_transfer(struct tpm_tis_data *data, u32 addr, u16 len,
- 		if (ret < 0)
- 			goto exit;
- 
--		if ((phy->iobuf[3] & 0x01) == 0) {
--			// handle SPI wait states
--			phy->iobuf[0] = 0;
--
--			for (i = 0; i < TPM_RETRY; i++) {
--				spi_xfer.len = 1;
--				spi_message_init(&m);
--				spi_message_add_tail(&spi_xfer, &m);
--				ret = spi_sync_locked(phy->spi_device, &m);
--				if (ret < 0)
--					goto exit;
--				if (phy->iobuf[0] & 0x01)
--					break;
--			}
--
--			if (i == TPM_RETRY) {
--				ret = -ETIMEDOUT;
--				goto exit;
--			}
--		}
-+		ret = phy->flow_control(phy, &spi_xfer);
-+		if (ret < 0)
-+			goto exit;
- 
- 		spi_xfer.cs_change = 0;
- 		spi_xfer.len = transfer_len;
-@@ -117,6 +117,8 @@ static int tpm_tis_spi_transfer(struct tpm_tis_data *data, u32 addr, u16 len,
- 
- 		spi_message_init(&m);
- 		spi_message_add_tail(&spi_xfer, &m);
-+		if (phy->pre_transfer)
-+			phy->pre_transfer(phy);
- 		ret = spi_sync_locked(phy->spi_device, &m);
- 		if (ret < 0)
- 			goto exit;
-@@ -133,9 +135,10 @@ static int tpm_tis_spi_transfer(struct tpm_tis_data *data, u32 addr, u16 len,
- 	spi_bus_unlock(phy->spi_device->master);
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(tpm_tis_spi_transfer);
- 
--static int tpm_tis_spi_read_bytes(struct tpm_tis_data *data, u32 addr,
--				  u16 len, u8 *result)
-+static int tpm_tis_spi_read_bytes(struct tpm_tis_data *data, u32 addr, u16 len,
-+				  u8 *result)
- {
- 	return tpm_tis_spi_transfer(data, addr, len, result, NULL);
- }
-@@ -146,7 +149,7 @@ static int tpm_tis_spi_write_bytes(struct tpm_tis_data *data, u32 addr,
- 	return tpm_tis_spi_transfer(data, addr, len, NULL, value);
- }
- 
--static int tpm_tis_spi_read16(struct tpm_tis_data *data, u32 addr, u16 *result)
-+int tpm_tis_spi_read16(struct tpm_tis_data *data, u32 addr, u16 *result)
- {
- 	__le16 result_le;
- 	int rc;
-@@ -158,8 +161,9 @@ static int tpm_tis_spi_read16(struct tpm_tis_data *data, u32 addr, u16 *result)
- 
- 	return rc;
- }
-+EXPORT_SYMBOL_GPL(tpm_tis_spi_read16);
- 
--static int tpm_tis_spi_read32(struct tpm_tis_data *data, u32 addr, u32 *result)
-+int tpm_tis_spi_read32(struct tpm_tis_data *data, u32 addr, u32 *result)
- {
- 	__le32 result_le;
- 	int rc;
-@@ -171,8 +175,9 @@ static int tpm_tis_spi_read32(struct tpm_tis_data *data, u32 addr, u32 *result)
- 
- 	return rc;
- }
-+EXPORT_SYMBOL_GPL(tpm_tis_spi_read32);
- 
--static int tpm_tis_spi_write32(struct tpm_tis_data *data, u32 addr, u32 value)
-+int tpm_tis_spi_write32(struct tpm_tis_data *data, u32 addr, u32 value)
- {
- 	__le32 value_le;
- 	int rc;
-@@ -183,6 +188,20 @@ static int tpm_tis_spi_write32(struct tpm_tis_data *data, u32 addr, u32 value)
- 
- 	return rc;
- }
-+EXPORT_SYMBOL_GPL(tpm_tis_spi_write32);
-+
-+int tpm_tis_spi_init(struct spi_device *spi, struct tpm_tis_spi_phy *phy,
-+		     int irq, const struct tpm_tis_phy_ops *phy_ops)
-+{
-+	phy->iobuf = devm_kmalloc(&spi->dev, MAX_SPI_FRAMESIZE, GFP_KERNEL);
-+	if (!phy->iobuf)
-+		return -ENOMEM;
-+
-+	phy->spi_device = spi;
-+
-+	return tpm_tis_core_init(&spi->dev, &phy->priv, irq, phy_ops, NULL);
-+}
-+EXPORT_SYMBOL_GPL(tpm_tis_spi_init);
- 
- static const struct tpm_tis_phy_ops tpm_spi_phy_ops = {
- 	.read_bytes = tpm_tis_spi_read_bytes,
-@@ -202,11 +221,7 @@ static int tpm_tis_spi_probe(struct spi_device *dev)
- 	if (!phy)
- 		return -ENOMEM;
- 
--	phy->spi_device = dev;
--
--	phy->iobuf = devm_kmalloc(&dev->dev, MAX_SPI_FRAMESIZE, GFP_KERNEL);
--	if (!phy->iobuf)
--		return -ENOMEM;
-+	phy->flow_control = tpm_tis_spi_flow_control;
- 
- 	/* If the SPI device has an IRQ then use that */
- 	if (dev->irq > 0)
-@@ -214,8 +229,7 @@ static int tpm_tis_spi_probe(struct spi_device *dev)
- 	else
- 		irq = -1;
- 
--	return tpm_tis_core_init(&dev->dev, &phy->priv, irq, &tpm_spi_phy_ops,
--				 NULL);
-+	return tpm_tis_spi_init(dev, phy, irq, &tpm_spi_phy_ops);
- }
- 
- static SIMPLE_DEV_PM_OPS(tpm_tis_pm, tpm_pm_suspend, tpm_tis_resume);
-diff --git a/drivers/char/tpm/tpm_tis_spi.h b/drivers/char/tpm/tpm_tis_spi.h
-new file mode 100644
-index 000000000000..48be5130794a
---- /dev/null
-+++ b/drivers/char/tpm/tpm_tis_spi.h
-@@ -0,0 +1,37 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2015 Infineon Technologies AG
-+ * Copyright (C) 2016 STMicroelectronics SAS
-+ */
-+
-+#ifndef TPM_TIS_SPI_H
-+#define TPM_TIS_SPI_H
-+
-+#include "tpm_tis_core.h"
-+
-+struct tpm_tis_spi_phy {
-+	struct tpm_tis_data priv;
-+	struct spi_device *spi_device;
-+	int (*flow_control)(struct tpm_tis_spi_phy *phy,
-+			     struct spi_transfer *xfer);
-+	void (*pre_transfer)(struct tpm_tis_spi_phy *phy);
-+
-+	u8 *iobuf;
-+};
-+
-+static inline struct tpm_tis_spi_phy *to_tpm_tis_spi_phy(struct tpm_tis_data *data)
-+{
-+	return container_of(data, struct tpm_tis_spi_phy, priv);
-+}
-+
-+extern int tpm_tis_spi_init(struct spi_device *spi, struct tpm_tis_spi_phy *phy,
-+			    int irq, const struct tpm_tis_phy_ops *phy_ops);
-+
-+extern int tpm_tis_spi_transfer(struct tpm_tis_data *data, u32 addr, u16 len,
-+				u8 *in, const u8 *out);
-+
-+extern int tpm_tis_spi_read16(struct tpm_tis_data *data, u32 addr, u16 *result);
-+extern int tpm_tis_spi_read32(struct tpm_tis_data *data, u32 addr, u32 *result);
-+extern int tpm_tis_spi_write32(struct tpm_tis_data *data, u32 addr, u32 value);
-+
-+#endif
--- 
-Sent by a computer through tubes
+I don't see where entries on the rx_used list get freed when driver is
+unloaded, could you explain how that's taken care of?
 
+>  	struct list_head rx_done, tx_free;
+>  	struct sk_buff_head tx_queue, rx_queue;
+>  	spinlock_t rx_lock, tx_lock;
+> @@ -1476,7 +1479,7 @@ static void free_rx_agg(struct r8152 *tp, struct rx_agg *agg)
+>  	list_del(&agg->info_list);
+>  
+>  	usb_free_urb(agg->urb);
+> -	__free_pages(agg->page, get_order(tp->rx_buf_sz));
+> +	put_page(agg->page);
+>  	kfree(agg);
+>  
+>  	atomic_dec(&tp->rx_count);
+> @@ -1493,7 +1496,7 @@ static struct rx_agg *alloc_rx_agg(struct r8152 *tp, gfp_t mflags)
+>  	if (rx_agg) {
+>  		unsigned long flags;
+>  
+> -		rx_agg->page = alloc_pages(mflags, order);
+> +		rx_agg->page = alloc_pages(mflags | __GFP_COMP, order);
+>  		if (!rx_agg->page)
+>  			goto free_rx;
+>  
+> @@ -1951,6 +1954,50 @@ static u8 r8152_rx_csum(struct r8152 *tp, struct rx_desc *rx_desc)
+>  	return checksum;
+>  }
+>  
+> +static inline bool rx_count_exceed(struct r8152 *tp)
+> +{
+> +	return atomic_read(&tp->rx_count) > RTL8152_MAX_RX;
+> +}
+> +
+> +static inline int agg_offset(struct rx_agg *agg, void *addr)
+> +{
+> +	return (int)(addr - agg->buffer);
+> +}
+> +
+> +static struct rx_agg *rtl_get_free_rx(struct r8152 *tp, gfp_t mflags)
+> +{
+> +	struct list_head *cursor, *next;
+> +	struct rx_agg *agg_free = NULL;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&tp->rx_lock, flags);
+> +
+> +	list_for_each_safe(cursor, next, &tp->rx_used) {
+> +		struct rx_agg *agg;
+> +
+> +		agg = list_entry(cursor, struct rx_agg, list);
+> +
+> +		if (page_count(agg->page) == 1) {
+> +			if (!agg_free) {
+> +				list_del_init(cursor);
+> +				agg_free = agg;
+> +				continue;
+> +			} else if (rx_count_exceed(tp)) {
+
+nit: else unnecessary after continue
+
+> +				list_del_init(cursor);
+> +				free_rx_agg(tp, agg);
+> +			}
+> +			break;
+> +		}
+> +	}
+> +
+> +	spin_unlock_irqrestore(&tp->rx_lock, flags);
+> +
+> +	if (!agg_free && atomic_read(&tp->rx_count) < RTL8152_MAX_RX_AGG)
+> +		agg_free = alloc_rx_agg(tp, mflags);
+> +
+> +	return agg_free;
+> +}
+> +
+>  static int rx_bottom(struct r8152 *tp, int budget)
+>  {
+>  	unsigned long flags;
