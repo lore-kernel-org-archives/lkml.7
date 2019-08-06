@@ -2,140 +2,108 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 739E6C32751
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 20:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95311C32751
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 20:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EAFB2173B
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 20:41:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E3422070D
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 20:43:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="NnXhgYdU"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="OlW+pdsb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbfHFUlo (ORCPT
+        id S1726626AbfHFUnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 16:41:44 -0400
-Received: from mail-eopbgr1310135.outbound.protection.outlook.com ([40.107.131.135]:21914
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        Tue, 6 Aug 2019 16:43:02 -0400
+Received: from mail-eopbgr70070.outbound.protection.outlook.com ([40.107.7.70]:48206
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725948AbfHFUln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 16:41:43 -0400
+        id S1726068AbfHFUnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 16:43:01 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dhzeoYzZddQQ4hEsWHxG9aaeC9EKyTHagFwBJTQEgSyFeofm2/O6qy0d9fYP1FRjIWJAc1YPbw9sHu2AC9OxZnlUD4FQPrtxE+9qtJ5V2SmBfklUxw0u/uWpq70e5nu4Qsli6MJCJEyh8YGmp+8iJls9h4VnAksBPbdhNHBNxGYAE4n/kts1bFYm4IHDRAApHI8Fw4JGYizF++SgxEmjzNDzCJhq3oS+F1gFJVhYocBUBXzEYmopV2kxDYetVC5XQZWQ4Q7Cu4z5TUeFTvtSCDaUVVOQHAwKH1bkG4VDeUW6SzCakG/1yu8HyMuxP2pU71d1kYk1We0Act7PXV7Biw==
+ b=LlVMYeM3Za9NXBpc8tVwsIKe45Je13FhqDhvoKYVN5fkpvs+713j5LeWTe+5awLsZvxao5skQgCqV0D+YyvffAwXENzp2nfQK2KToWw1unMXk7YQKxswpzFiSlzqN76UWcwwN88Kqfs2VotP2EPVhEXlHYh470qdHQAt8ypi9Rf0iQs9dO/nHcUGMWM9dQmniGyYmIOrpI0j/4LUMpd7Bq0KpyFBBdxXrfnQceGQAc3JjV7w4VujgB2ZWQatyGK9wQHAcnI5b+NY33Bgm0yuRNGj3V9e42zTNfj/vhfeqyH3tjvSAn3sZNZ8Kt02UyIde6kuAdFywLNwUHqALqaC3w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YZ1cugY2l89UOfg4M+e97u/Gp0GOrWSN7N5GJnU+NAA=;
- b=mLWL7RLKx4GmObITVRwiep2nmv4lvyi4CYcjyth2bYbYY4AJKl4w2yk2e7X8y4VTa9VSj0QmzEDHvvDVX/lBIVzRhLz9e8j3rBh1/6ootq5GInhg/7RW+n4QQMCCdVw0cqDBJrwHm7KTjGEgCORkkoPFr3rFAMJDL0d7aTKm2L8KGbe6rOl+XSiqhB3PoVn7wodu10jXauApYKh4+Ju8+rykgFNlstCcBzQeGUKmDJJOMAPVYGLHP4KfF8/jkxgWIL60frU4to22dVv/wDetEI2T2gZkBiJ9e5dTwBf5QXuZ48SR2vba62A5nVkO3WOiWfqohfh8o+Nhaj9I9qpWCw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
+ bh=RC6UTi8hbsNJx196SNdi2dODmCtlTPfqnbKPeSV3LE0=;
+ b=LYii3s4ujERJ6ryXl6arML+ZLaeYDFyCLAOkUcper+BzY4PPdv1WOf8HecbNetL9c+ukP0BLQn3xyjPgfgfDg2x00G8YRUMj40XmJywe3o7QrRNxJk9zUrxj30/pgApDCzJ/VKTQkX/rv7p4QZK1DJ5q5HG6Hb6ihPCfUZDbFJc/Wa6ftvdpEi+xE80qPh6nT5+7aaCgEEcMo0Ov8pGgfZozdN66LLncmUyQRXJtxIi1Y82wQP8wxAaB7cx/QzCnGhar2NNVWHJ9Jy4ANFYij8rY+z3ZpXKVuti3/qmSfejs05y7CAY00jo/DddzOV0jEWqFHo6qp+iItPX7jpnAHA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=mellanox.com;dmarc=pass action=none
+ header.from=mellanox.com;dkim=pass header.d=mellanox.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YZ1cugY2l89UOfg4M+e97u/Gp0GOrWSN7N5GJnU+NAA=;
- b=NnXhgYdUVE8qKg5ku1VIYwbRAjd6eFYo4PW/qpsiRBBm8XhTKMZy4iwIMiDKd90yFArelXZOXzLspwYQYR/ELa+V50d+kkqZ3IjwQ4t7m3pQPztigj4S8MHyaj+mgLbakeFa4DAQ/uSpiQaVUsdx/5Q39ZtehLQckuic3AmPfDw=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0153.APCP153.PROD.OUTLOOK.COM (10.170.188.143) with Microsoft SMTP
+ bh=RC6UTi8hbsNJx196SNdi2dODmCtlTPfqnbKPeSV3LE0=;
+ b=OlW+pdsbh1SuPsaIb6okb2eFs/6u1VC5COXr8WzlLb5usC2dKtCbxgc5USilYKgRUTnck6F4JXu9KOP10pk5cl5mA6RId6MBdrfNNE2iokSh4pElliCopgWCj9qtxvyU1lHTzbVtH+owmNs/wiGXRavaoll/0O05IAo+WpFNX4Y=
+Received: from DB6PR0501MB2759.eurprd05.prod.outlook.com (10.172.227.7) by
+ DB6PR0501MB2213.eurprd05.prod.outlook.com (10.168.58.24) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.2; Tue, 6 Aug 2019 20:41:17 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::d44e:57b7:d8fc:e91c]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::d44e:57b7:d8fc:e91c%7]) with mapi id 15.20.2157.001; Tue, 6 Aug 2019
- 20:41:17 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "driverdev-devel@linuxdriverproject.org" 
-        <driverdev-devel@linuxdriverproject.org>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        "jackm@mellanox.com" <jackm@mellanox.com>
-Subject: RE: [PATCH v2] PCI: hv: Fix panic by calling hv_pci_remove_slots()
- earlier
-Thread-Topic: [PATCH v2] PCI: hv: Fix panic by calling hv_pci_remove_slots()
- earlier
-Thread-Index: AdVJg/VErstT3ocmRgK9bYa/R2iIzADD9S6AAADIwIA=
-Date:   Tue, 6 Aug 2019 20:41:17 +0000
-Message-ID: <PU1P153MB0169F9EDD707FFE1517F8D56BFD50@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <PU1P153MB01693F32F6BB02F9655CC84EBFD90@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
- <20190806201611.GT151852@google.com>
-In-Reply-To: <20190806201611.GT151852@google.com>
+ 15.20.2136.17; Tue, 6 Aug 2019 20:42:57 +0000
+Received: from DB6PR0501MB2759.eurprd05.prod.outlook.com
+ ([fe80::3c28:c77d:55b0:15b2]) by DB6PR0501MB2759.eurprd05.prod.outlook.com
+ ([fe80::3c28:c77d:55b0:15b2%5]) with mapi id 15.20.2136.018; Tue, 6 Aug 2019
+ 20:42:57 +0000
+From:   Saeed Mahameed <saeedm@mellanox.com>
+To:     "hslester96@gmail.com" <hslester96@gmail.com>
+CC:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] net/mlx5e: Use refcount_t for refcount
+Thread-Topic: [PATCH v2] net/mlx5e: Use refcount_t for refcount
+Thread-Index: AQHVSVIhSHjGbDfeSka9iay/Nq7XtqbunGYA
+Date:   Tue, 6 Aug 2019 20:42:56 +0000
+Message-ID: <aaf9680afe5c62d0cf71ff4382b66b3e4d735008.camel@mellanox.com>
+References: <20190802164828.20243-1-hslester96@gmail.com>
+In-Reply-To: <20190802164828.20243-1-hslester96@gmail.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-06T20:41:13.6105173Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=ef4cfa41-bcf8-4a13-b8e0-804fece49d8c;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+user-agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:8:1875:bb73:d63d:4a8a]
+ smtp.mailfrom=saeedm@mellanox.com; 
+x-originating-ip: [209.116.155.178]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a85639a2-3309-4d03-6518-08d71aae6e5d
+x-ms-office365-filtering-correlation-id: e91cb3db-a096-47fa-18b7-08d71aaea9c1
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:PU1P153MB0153;
-x-ms-traffictypediagnostic: PU1P153MB0153:|PU1P153MB0153:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <PU1P153MB01534F34B9B4D55C99C2B905BFD50@PU1P153MB0153.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB6PR0501MB2213;
+x-ms-traffictypediagnostic: DB6PR0501MB2213:
+x-microsoft-antispam-prvs: <DB6PR0501MB2213CE4EDF3D2748828AE692BED50@DB6PR0501MB2213.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
 x-forefront-prvs: 0121F24F22
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(376002)(396003)(366004)(136003)(39860400002)(189003)(199004)(8676002)(71190400001)(71200400001)(81166006)(8936002)(81156014)(25786009)(54906003)(4326008)(7736002)(76176011)(7696005)(6116002)(305945005)(33656002)(22452003)(6916009)(52536014)(316002)(99286004)(86362001)(6436002)(102836004)(53936002)(11346002)(256004)(14444005)(55016002)(46003)(14454004)(9686003)(6246003)(446003)(7416002)(229853002)(476003)(6506007)(53546011)(486006)(66556008)(76116006)(64756008)(66446008)(66476007)(8990500004)(10290500003)(5660300002)(4744005)(2906002)(186003)(74316002)(68736007)(66946007)(10090500001)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0153;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(366004)(39860400002)(136003)(376002)(189003)(199004)(54906003)(25786009)(99286004)(2906002)(91956017)(36756003)(76116006)(86362001)(76176011)(2351001)(316002)(58126008)(1411001)(11346002)(446003)(71200400001)(2501003)(71190400001)(186003)(102836004)(6506007)(256004)(26005)(486006)(476003)(2616005)(64756008)(66556008)(66476007)(6436002)(6916009)(81156014)(81166006)(5640700003)(14454004)(8676002)(6512007)(4326008)(305945005)(6246003)(66446008)(7736002)(66946007)(229853002)(8936002)(53936002)(118296001)(5660300002)(66066001)(68736007)(1361003)(3846002)(6486002)(6116002)(4744005)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0501MB2213;H:DB6PR0501MB2759.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: VBf8LFw0hkCX1KeN2DgARS5yOHi3QrMq8TCDZU4UWboHdWBvwU5kCIuT36CX+Jyb9FfII7aKhkT3JCS53ZwpOOMtkA2ZHT8DwWOBstEz1QY98A/Ubx5RvVQbGoa+L8NjUwYYtf0CeJFzO3yhTGnvdJMjE06Zi1x1nh5DO1pr46iW3ylCLEGoceTOdm2BDdnLES06N0ysQgPwrpdLMYoio1xpHZlUwCybbuDzAraYaeDtkZ7ZXM9+XeoU9yhcR859L2hn33x2TMwBNv2zEER6qLQIolVHSbYgNbwSV2wWKIsGEoPHawf17gtWu1OTPkCjjq0oaZhL1pdpt7LgFOXi5Ct64h2FRDDWKcqqHfcq4fs0Cnyo57/rywlOLIy0CGe5Co3K0M8S4cxTKuxUHhSGenFUDSFIKZAcwRhynmUtIBA=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: +3rTcz0Zl0/QDXt1GNSILPI7n2u6tyspYfL24+R4O28Bs71KQATACOqSHWu67z6pdcsGwqGaJ5ASF4TXX6DqgQXzGAfBCHKVdI2vgClOQVbOKhjPyX3q3Ej5hLoNrSZsYS1OqudqDhfB1JRRIqRGWflI8rZwkKlJpP/R3QsBDU3F+zTZEJAb3SU/YCOKQKWyUhd3AzuV4n2w50kqIxbNu7aHNOt1rvfnKTjeI8hYJuqZXZeVWh/4kEGyFPAv7T4Y+opuZej/Xgy81awG1iRgHeRhSmuCNg+EZ8oB142S6ylB3hROLj8f1MYRRMir8OdhplgyqzsMvBX9+ZUL0mCfDecSqfBLRzArfEvXTaxDY7E6hze0PmbPcApt+fSHbcWkQUTTFmuhYf+iGhYkUJBFJOGFbHAjXP6avu1SmN8jOwY=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9B85D9351BAF1A43924BC19ACC9325AC@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a85639a2-3309-4d03-6518-08d71aae6e5d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Aug 2019 20:41:17.0293
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e91cb3db-a096-47fa-18b7-08d71aaea9c1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Aug 2019 20:42:56.9491
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nejQ+Fv2/uIFCgeX1KVnoLsr3SzhkBuGnLJuVHMHKwQlZoRZwfBjVKez2BofbSvX9taDqh+A+ZulXChQMn2E3g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0153
+X-MS-Exchange-CrossTenant-userprincipalname: saeedm@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0501MB2213
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: linux-hyperv-owner@vger.kernel.org
-> <linux-hyperv-owner@vger.kernel.org> On Behalf Of Bjorn Helgaas
-> Sent: Tuesday, August 6, 2019 1:16 PM
-> To: Dexuan Cui <decui@microsoft.com>
->=20
-> Thanks for updating this.  But you didn't update the subject line,
-> which is really still a little too low-level.  Maybe Lorenzo will fix
-> this.  Something like this, maybe?
->=20
->   PCI: hv: Avoid use of hv_pci_dev->pci_slot after freeing it
-
-This is better. Thanks!
-
-I hope Lorenzo can help to fix this so I could avoid a v3. :-)
-
-Thanks,
--- Dexuan
+T24gU2F0LCAyMDE5LTA4LTAzIGF0IDAwOjQ4ICswODAwLCBDaHVob25nIFl1YW4gd3JvdGU6DQo+
+IHJlZmNvdW50X3QgaXMgYmV0dGVyIGZvciByZWZlcmVuY2UgY291bnRlcnMgc2luY2UgaXRzDQo+
+IGltcGxlbWVudGF0aW9uIGNhbiBwcmV2ZW50IG92ZXJmbG93cy4NCj4gU28gY29udmVydCBhdG9t
+aWNfdCByZWYgY291bnRlcnMgdG8gcmVmY291bnRfdC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IENo
+dWhvbmcgWXVhbiA8aHNsZXN0ZXI5NkBnbWFpbC5jb20+DQo+IC0tLQ0KPiBDaGFuZ2VzIGluIHYy
+Og0KPiAgIC0gQWRkICNpbmNsdWRlLg0KPiANCg0KQWNrZWQtYnk6IFNhZWVkIE1haGFtZWVkIDxz
+YWVlZG1AbWVsbGFub3guY29tPg0KDQpEYXZlLCB1cCB0byB5b3UgdGFrZSBpdCwgb3IgbGVhdmUg
+aXQgdG8gbWUgOikuDQoNCg==
