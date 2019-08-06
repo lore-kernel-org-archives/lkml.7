@@ -2,248 +2,393 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99966C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEAAC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D1E720C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:02:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="XDRw6tCx"
+	by mail.kernel.org (Postfix) with ESMTP id 8267D2075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:02:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732445AbfHFOC2 (ORCPT
+        id S1732734AbfHFOCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 10:02:28 -0400
-Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:57250 "EHLO
-        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726834AbfHFOC1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 10:02:27 -0400
-Received: from pps.filterd (m0170393.ppops.net [127.0.0.1])
-        by mx0a-00154904.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x76E02CL019792;
-        Tue, 6 Aug 2019 10:02:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=iYMNMZYnKpwv2bjj9FYprIo2vpkrKBVUFUkpE1z8JqE=;
- b=XDRw6tCx+0IknZAtmfR3qBWl219FOzHGTGw8fv474NcmsEanvS6n7+w8RWchlwnmo2Qw
- XM4732opo1+LqQ04EYVLY0p8KwI254UN3LNG7k0l7NTtmCkIvCSkws0iaKQOh/RsY4az
- 71kG8W2j837NzECe+UsA6iSFh48J6mNst+5owZq4XcLMPSuz7NcqurkmHKBBXGULcsuX
- YOEOX+xEyvL5DEdTxaZ8zF4wb4k6lbanZ0Os3OEGSMkpPzroJU8fp7xoxCgvxtFIa0/d
- XKD/+Qrc2H7kR+oE9SnnzX8KPNoDCnKeBJuDdDvxVhb/eZfpDcESw1i66pGWXS6D31ov ZA== 
-Received: from mx0b-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0a-00154904.pphosted.com with ESMTP id 2u55kj3xaq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 06 Aug 2019 10:02:25 -0400
-Received: from pps.filterd (m0090350.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x76Dwchg096647;
-        Tue, 6 Aug 2019 10:02:25 -0400
-Received: from ausxipps301.us.dell.com (ausxipps301.us.dell.com [143.166.148.223])
-        by mx0b-00154901.pphosted.com with ESMTP id 2u7ahtgf9y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 06 Aug 2019 10:02:24 -0400
-X-LoopCount0: from 10.166.132.133
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
-   d="scan'208";a="379332134"
-From:   <Mario.Limonciello@dell.com>
-To:     <rafael@kernel.org>, <kai.heng.feng@canonical.com>
-CC:     <kbusch@kernel.org>, <keith.busch@intel.com>, <hch@lst.de>,
-        <sagi@grimberg.me>, <linux-nvme@lists.infradead.org>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <rajatja@google.com>
-Subject: RE: [Regression] Commit "nvme/pci: Use host managed power state for
- suspend" has problems
-Thread-Topic: [Regression] Commit "nvme/pci: Use host managed power state for
- suspend" has problems
-Thread-Index: AQHVQs6UiIesxZzK0UKkUWrQRuKoE6bbsW+A///PBcCAAGObgIAHcfaAgABB9YD//9WSkIAAb9eAgAAIQgD//8kpUAALdBYAADIaeYAAAeOLAAAAd84AABYXlgAAEZduAAAHfW7gAALiG4AAGiqrgAAASjWAAKf60QAABLdLAAAXuLOg
-Date:   Tue, 6 Aug 2019 14:02:22 +0000
-Message-ID: <1d05e26a91f94e5b92eaf5854fa85289@AUSX13MPC105.AMER.DELL.COM>
-References: <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM>
- <CAJZ5v0iDQ4=kTUgW94tKGt7oJzA_3uVU_M6HAMbNCRXwp_do8A@mail.gmail.com>
- <47415939.KV5G6iaeJG@kreacher> <20190730144134.GA12844@localhost.localdomain>
- <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM>
- <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com>
- <20190730191934.GD13948@localhost.localdomain>
- <7d3e0b8ba1444194a153c93faa1cabb3@AUSX13MPC105.AMER.DELL.COM>
- <20190730213114.GK13948@localhost.localdomain>
- <CAJZ5v0gxfeMN8eCNRjcXmUOkReVsdozb3EccaYMpnmSHu3771g@mail.gmail.com>
- <20190731221956.GB15795@localhost.localdomain>
- <CAJZ5v0hxYGBXau39sb80MQ8jbZZCzH0JU2DYZvn9JOtYT2+30g@mail.gmail.com>
- <70D536BE-8DC7-4CA2-84A9-AFB067BA520E@canonical.com>
- <CAJZ5v0hFYEv_+vFkrxaCn_pNAbyqmO_cLb5GOLNn_xxRRwjh2g@mail.gmail.com>
- <38d4b4b107154454a932781acde0fa5a@AUSX13MPC105.AMER.DELL.COM>
- <CAJZ5v0jmO4FMOVYs62wkvPrUW81scD2H7cJyRc+tfoj+vODVbQ@mail.gmail.com>
- <43A8DF53-8463-4314-9E8E-47A7D3C5A709@canonical.com>
- <CAJZ5v0ipG-MJjERBL9fjx29QktaYEKSmMCbWiEGPHsbF=Xfxtw@mail.gmail.com>
- <1FA3D56B-80C6-496C-8772-2F773AA8043C@canonical.com>
- <CAJZ5v0g_yAP=zgYDXtJWtwceQp4wWPWFghDDD0opdZ4zT-yo5Q@mail.gmail.com>
-In-Reply-To: <CAJZ5v0g_yAP=zgYDXtJWtwceQp4wWPWFghDDD0opdZ4zT-yo5Q@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2019-08-06T14:02:20.7039904Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual;
- aiplabel=External Public
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.143.18.86]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 6 Aug 2019 10:02:49 -0400
+Received: from mx3.molgen.mpg.de ([141.14.17.11]:47701 "EHLO mx1.molgen.mpg.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726834AbfHFOCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 10:02:49 -0400
+Received: from rabammel.molgen.mpg.de (rabammel.molgen.mpg.de [141.14.30.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: pmenzel)
+        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 1AEE6201A3C27;
+        Tue,  6 Aug 2019 16:02:44 +0200 (CEST)
+Subject: Re: [Regression] pcie_wait_for_link_delay (1132.853 ms @ 5039.414431)
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Matthias Andree <matthias.andree@gmx.de>
+References: <2857501d-c167-547d-c57d-d5d24ea1f1dc@molgen.mpg.de>
+ <20190806093626.GF2548@lahna.fi.intel.com>
+ <acca5213-7d8b-7db1-ff3c-cb5b4a704f04@molgen.mpg.de>
+ <20190806113154.GS2548@lahna.fi.intel.com>
+From:   Paul Menzel <pmenzel@molgen.mpg.de>
+Message-ID: <f83a541d-65de-ed05-c4c1-2bda345b30ef@molgen.mpg.de>
+Date:   Tue, 6 Aug 2019 16:02:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-06_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908060140
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908060141
+In-Reply-To: <20190806113154.GS2548@lahna.fi.intel.com>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms080300050909010500090106"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUmFmYWVsIEouIFd5c29j
-a2kgPHJhZmFlbEBrZXJuZWwub3JnPg0KPiBTZW50OiBNb25kYXksIEF1Z3VzdCA1LCAyMDE5IDQ6
-MjkgUE0NCj4gVG86IEthaS1IZW5nIEZlbmcNCj4gQ2M6IFJhZmFlbCBKLiBXeXNvY2tpOyBMaW1v
-bmNpZWxsbywgTWFyaW87IEtlaXRoIEJ1c2NoOyBLZWl0aCBCdXNjaDsgQ2hyaXN0b3BoDQo+IEhl
-bGx3aWc7IFNhZ2kgR3JpbWJlcmc7IGxpbnV4LW52bWU7IExpbnV4IFBNOyBMaW51eCBLZXJuZWwg
-TWFpbGluZyBMaXN0OyBSYWphdCBKYWluDQo+IFN1YmplY3Q6IFJlOiBbUmVncmVzc2lvbl0gQ29t
-bWl0ICJudm1lL3BjaTogVXNlIGhvc3QgbWFuYWdlZCBwb3dlciBzdGF0ZSBmb3INCj4gc3VzcGVu
-ZCIgaGFzIHByb2JsZW1zDQo+IA0KPiANCj4gW0VYVEVSTkFMIEVNQUlMXQ0KPiANCj4gT24gTW9u
-LCBBdWcgNSwgMjAxOSBhdCA5OjE0IFBNIEthaS1IZW5nIEZlbmcNCj4gPGthaS5oZW5nLmZlbmdA
-Y2Fub25pY2FsLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBhdCAxOTowNCwgUmFmYWVsIEouIFd5c29j
-a2kgPHJhZmFlbEBrZXJuZWwub3JnPiB3cm90ZToNCj4gPg0KPiA+ID4gT24gRnJpLCBBdWcgMiwg
-MjAxOSBhdCAxMjo1NSBQTSBLYWktSGVuZyBGZW5nDQo+ID4gPiA8a2FpLmhlbmcuZmVuZ0BjYW5v
-bmljYWwuY29tPiB3cm90ZToNCj4gPiA+PiBhdCAwNjoyNiwgUmFmYWVsIEouIFd5c29ja2kgPHJh
-ZmFlbEBrZXJuZWwub3JnPiB3cm90ZToNCj4gPiA+Pg0KPiA+ID4+PiBPbiBUaHUsIEF1ZyAxLCAy
-MDE5IGF0IDk6MDUgUE0gPE1hcmlvLkxpbW9uY2llbGxvQGRlbGwuY29tPiB3cm90ZToNCj4gPiA+
-Pj4+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4+Pj4+IEZyb206IFJhZmFlbCBK
-LiBXeXNvY2tpIDxyYWZhZWxAa2VybmVsLm9yZz4NCj4gPiA+Pj4+PiBTZW50OiBUaHVyc2RheSwg
-QXVndXN0IDEsIDIwMTkgMTI6MzAgUE0NCj4gPiA+Pj4+PiBUbzogS2FpLUhlbmcgRmVuZzsgS2Vp
-dGggQnVzY2g7IExpbW9uY2llbGxvLCBNYXJpbw0KPiA+ID4+Pj4+IENjOiBLZWl0aCBCdXNjaDsg
-Q2hyaXN0b3BoIEhlbGx3aWc7IFNhZ2kgR3JpbWJlcmc7IGxpbnV4LW52bWU7IExpbnV4DQo+ID4g
-Pj4+Pj4gUE07IExpbnV4DQo+ID4gPj4+Pj4gS2VybmVsIE1haWxpbmcgTGlzdDsgUmFqYXQgSmFp
-bg0KPiA+ID4+Pj4+IFN1YmplY3Q6IFJlOiBbUmVncmVzc2lvbl0gQ29tbWl0ICJudm1lL3BjaTog
-VXNlIGhvc3QgbWFuYWdlZCBwb3dlcg0KPiA+ID4+Pj4+IHN0YXRlIGZvcg0KPiA+ID4+Pj4+IHN1
-c3BlbmQiIGhhcyBwcm9ibGVtcw0KPiA+ID4+Pj4+DQo+ID4gPj4+Pj4NCj4gPiA+Pj4+PiBbRVhU
-RVJOQUwgRU1BSUxdDQo+ID4gPj4+Pj4NCj4gPiA+Pj4+PiBPbiBUaHUsIEF1ZyAxLCAyMDE5IGF0
-IDExOjA2IEFNIEthaS1IZW5nIEZlbmcNCj4gPiA+Pj4+PiA8a2FpLmhlbmcuZmVuZ0BjYW5vbmlj
-YWwuY29tPiB3cm90ZToNCj4gPiA+Pj4+Pj4gYXQgMDY6MzMsIFJhZmFlbCBKLiBXeXNvY2tpIDxy
-YWZhZWxAa2VybmVsLm9yZz4gd3JvdGU6DQo+ID4gPj4+Pj4+DQo+ID4gPj4+Pj4+PiBPbiBUaHUs
-IEF1ZyAxLCAyMDE5IGF0IDEyOjIyIEFNIEtlaXRoIEJ1c2NoIDxrYnVzY2hAa2VybmVsLm9yZz4N
-Cj4gPiA+Pj4+Pj4+IHdyb3RlOg0KPiA+ID4+Pj4+Pj4+IE9uIFdlZCwgSnVsIDMxLCAyMDE5IGF0
-IDExOjI1OjUxUE0gKzAyMDAsIFJhZmFlbCBKLiBXeXNvY2tpIHdyb3RlOg0KPiA+ID4+Pj4+Pj4+
-PiBBIGNvdXBsZSBvZiByZW1hcmtzIGlmIHlvdSB3aWxsLg0KPiA+ID4+Pj4+Pj4+Pg0KPiA+ID4+
-Pj4+Pj4+PiBGaXJzdCwgd2UgZG9uJ3Qga25vdyB3aGljaCBjYXNlIGlzIHRoZSBtYWpvcml0eSBh
-dCB0aGlzIHBvaW50LiAgRm9yDQo+ID4gPj4+Pj4+Pj4+IG5vdywgdGhlcmUgaXMgb25lIGV4YW1w
-bGUgb2YgZWFjaCwgYnV0IGl0IG1heSB2ZXJ5IHdlbGwgdHVybiBvdXQNCj4gPiA+Pj4+Pj4+Pj4g
-dGhhdA0KPiA+ID4+Pj4+Pj4+PiB0aGUgU0sgSHluaXggQkM1MDEgYWJvdmUgbmVlZHMgdG8gYmUg
-cXVpcmtlZC4NCj4gPiA+Pj4+Pj4+Pj4NCj4gPiA+Pj4+Pj4+Pj4gU2Vjb25kLCB0aGUgcmVmZXJl
-bmNlIGhlcmUgcmVhbGx5IGlzIDUuMiwgc28gaWYgdGhlcmUgYXJlIGFueQ0KPiA+ID4+Pj4+Pj4+
-PiBzeXN0ZW1zDQo+ID4gPj4+Pj4+Pj4+IHRoYXQgYXJlIG5vdCBiZXR0ZXIgb2ZmIHdpdGggNS4z
-LXJjIHRoYW4gdGhleSB3ZXJlIHdpdGggNS4yLA0KPiA+ID4+Pj4+Pj4+PiB3ZWxsLCB3ZQ0KPiA+
-ID4+Pj4+Pj4+PiBoYXZlIG5vdCBtYWRlIHByb2dyZXNzLiAgSG93ZXZlciwgaWYgdGhlcmUgYXJl
-IHN5c3RlbXMgdGhhdCBhcmUNCj4gPiA+Pj4+Pj4+Pj4gd29yc2UNCj4gPiA+Pj4+Pj4+Pj4gb2Zm
-IHdpdGggNS4zLCB0aGF0J3MgYmFkLiAgSW4gdGhlIGZhY2Ugb2YgdGhlIGxhdGVzdCBmaW5kaW5n
-cyB0aGUNCj4gPiA+Pj4+Pj4+Pj4gb25seQ0KPiA+ID4+Pj4+Pj4+PiB3YXkgdG8gYXZvaWQgdGhh
-dCBpcyB0byBiZSBiYWNrd2FyZHMgY29tcGF0aWJsZSB3aXRoIDUuMiBhbmQgdGhhdCdzDQo+ID4g
-Pj4+Pj4+Pj4+IHdoZXJlIG15IHBhdGNoIGlzIGdvaW5nLiAgVGhhdCBjYW5ub3QgYmUgYWNoaWV2
-ZWQgYnkgcXVpcmtpbmcgYWxsDQo+ID4gPj4+Pj4+Pj4+IGNhc2VzIHRoYXQgYXJlIHJlcG9ydGVk
-IGFzICJiYWQiLCBiZWNhdXNlIHRoZXJlIHN0aWxsIG1heSBiZQ0KPiA+ID4+Pj4+Pj4+PiB1bnJl
-cG9ydGVkIG9uZXMuDQo+ID4gPj4+Pj4+Pj4NCj4gPiA+Pj4+Pj4+PiBJIGhhdmUgdG8gYWdyZWUu
-IEkgdGhpbmsgeW91ciBwcm9wb3NhbCBtYXkgYWxsb3cgUENJIEQzY29sZCwNCj4gPiA+Pj4+Pj4+
-DQo+ID4gPj4+Pj4+PiBZZXMsIGl0IG1heS4NCj4gPiA+Pj4+Pj4NCj4gPiA+Pj4+Pj4gU29tZWhv
-dyB0aGUgOTM4MCB3aXRoIFRvc2hpYmEgTlZNZSBuZXZlciBoaXRzIFNMUF9TMCB3aXRoIG9yDQo+
-IHdpdGhvdXQNCj4gPiA+Pj4+Pj4gUmFmYWVs4oCZcyBwYXRjaC4NCj4gPiA+Pj4+Pj4gQnV0IHRo
-ZSDigJxyZWFs4oCdIHMyaWRsZSBwb3dlciBjb25zdW1wdGlvbiBkb2VzIGltcHJvdmUgd2l0aCB0
-aGUgcGF0Y2guDQo+ID4gPj4+Pj4NCj4gPiA+Pj4+PiBEbyB5b3UgbWVhbiB0aGlzIHBhdGNoOg0K
-PiA+ID4+Pj4+DQo+ID4gPj4+Pj4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGludXgtcG0vNzBE
-NTM2QkUtOERDNy00Q0EyLTg0QTktDQo+ID4gPj4+Pj4NCj4gQUZCMDY3QkE1MjBFQGNhbm9uaWNh
-bC5jb20vVC8jbTQ1NmFhNWM2OTk3M2EzYjY4ZjJjZGQ0NzEzYTFjZTgzYmU1MTQ1DQo+ID4gPj4+
-Pj4gOGYNCj4gPiA+Pj4+Pg0KPiA+ID4+Pj4+IG9yIHRoZSAkc3ViamVjdCBvbmUgd2l0aG91dCB0
-aGUgYWJvdmU/DQo+ID4gPj4+Pj4NCj4gPiA+Pj4+Pj4gQ2FuIHdlIHVzZSBhIERNSSBiYXNlZCBx
-dWlyayBmb3IgdGhpcyBwbGF0Zm9ybT8gSXQgc2VlbXMgbGlrZSBhDQo+ID4gPj4+Pj4+IHBsYXRm
-b3JtDQo+ID4gPj4+Pj4+IHNwZWNpZmljIGlzc3VlLg0KPiA+ID4+Pj4+DQo+ID4gPj4+Pj4gV2Ug
-c2VlbSB0byBzZWUgdG9vIG1hbnkgInBsYXRmb3JtLXNwZWNpZmljIGlzc3VlcyIgaGVyZS4gOi0p
-DQo+ID4gPj4+Pj4NCj4gPiA+Pj4+PiBUbyBtZSwgdGhlIHN0YXR1cyBxdW8gKGllLiB3aGF0IHdl
-IGhhdmUgaW4gNS4zLXJjMikgaXMgbm90IGRlZmVuc2libGUuDQo+ID4gPj4+Pj4gU29tZXRoaW5n
-IG5lZWRzIHRvIGJlIGRvbmUgdG8gaW1wcm92ZSB0aGUgc2l0dWF0aW9uLg0KPiA+ID4+Pj4NCj4g
-PiA+Pj4+IFJhZmFlbCwgd291bGQgaXQgYmUgcG9zc2libGUgdG8gdHJ5IHBvcHBpbmcgb3V0IFBD
-NDAxIGZyb20gdGhlIDkzODAgYW5kDQo+ID4gPj4+PiBpbnRvIGEgOTM2MCB0bw0KPiA+ID4+Pj4g
-Y29uZmlybSB0aGVyZSBhY3R1YWxseSBiZWluZyBhIHBsYXRmb3JtIGltcGFjdCBvciBub3Q/DQo+
-ID4gPj4+DQo+ID4gPj4+IE5vdCByZWFsbHksIHNvcnJ5Lg0KPiA+ID4+Pg0KPiA+ID4+Pj4gSSB3
-YXMgaG9waW5nIHRvIGhhdmUgc29tZXRoaW5nIHVzZWZ1bCBmcm9tIEh5bml4IGJ5IG5vdyBiZWZv
-cmUNCj4gPiA+Pj4+IHJlc3BvbmRpbmcsIGJ1dCBvaCB3ZWxsLg0KPiA+ID4+Pj4NCj4gPiA+Pj4+
-IEluIHRlcm1zIG9mIHdoYXQgaXMgdGhlIG1ham9yaXR5LCBJIGRvIGtub3cgdGhhdCBiZXR3ZWVu
-IGZvbGtzIGF0IERlbGwsDQo+ID4gPj4+PiBHb29nbGUsIENvbXBhbCwNCj4gPiA+Pj4+IFdpc3Ry
-b24sIENhbm9uaWNhbCwgTWljcm9uLCBIeW5peCwgVG9zaGliYSwgTGl0ZU9uLCBhbmQgV2VzdGVy
-biBEaWdpdGFsDQo+ID4gPj4+PiB3ZSB0ZXN0ZWQgYSB3aWRlDQo+ID4gPj4+PiB2YXJpZXR5IG9m
-IFNTRHMgd2l0aCB0aGlzIHBhdGNoIHNlcmllcy4gIEkgd291bGQgbGlrZSB0byB0aGluayB0aGF0
-IHRoZXkNCj4gPiA+Pj4+IGFyZSByZXByZXNlbnRhdGl2ZSBvZg0KPiA+ID4+Pj4gd2hhdCdzIGJl
-aW5nIG1hbnVmYWN0dXJlZCBpbnRvIG1hY2hpbmVzIG5vdy4NCj4gPiA+Pj4NCj4gPiA+Pj4gV2Vs
-bCwgd2hhdCBhYm91dCBkcml2ZXMgYWxyZWFkeSBpbiB0aGUgZmllbGQ/ICBNeSBjb25jZXJuIGlz
-IG1vc3RseQ0KPiA+ID4+PiBhYm91dCB0aG9zZSBvbmVzLg0KPiA+ID4+Pg0KPiA+ID4+Pj4gTm90
-YWJseSB0aGUgTGl0ZU9uIENMMSB3YXMgdGVzdGVkIHdpdGggdGhlIEhNQiBmbHVzaGluZyBzdXBw
-b3J0IGFuZA0KPiA+ID4+Pj4gYW5kIEh5bml4IFBDNDAxIHdhcyB0ZXN0ZWQgd2l0aCBvbGRlciBm
-aXJtd2FyZSB0aG91Z2guDQo+ID4gPj4+Pg0KPiA+ID4+Pj4+Pj4+IEluIHdoaWNoIGNhc2Ugd2Ug
-ZG8gbmVlZCB0byByZWludHJvZHVjZSB0aGUgSE1CIGhhbmRsaW5nLg0KPiA+ID4+Pj4+Pj4NCj4g
-PiA+Pj4+Pj4+IFJpZ2h0Lg0KPiA+ID4+Pj4+Pg0KPiA+ID4+Pj4+PiBUaGUgcGF0Y2ggYWxvbmUg
-ZG9lc27igJl0IGJyZWFrIEhNQiBUb3NoaWJhIE5WTWUgSSB0ZXN0ZWQuIEJ1dCBJIHRoaW5rDQo+
-ID4gPj4+Pj4+IGl04oCZcw0KPiA+ID4+Pj4+PiBzdGlsbCBzYWZlciB0byBkbyBwcm9wZXIgSE1C
-IGhhbmRsaW5nLg0KPiA+ID4+Pj4+DQo+ID4gPj4+Pj4gV2VsbCwgc28gY2FuIGFueW9uZSBwbGVh
-c2UgcHJvcG9zZSBzb21ldGhpbmcgc3BlY2lmaWM/ICBMaWtlIGFuDQo+ID4gPj4+Pj4gYWx0ZXJu
-YXRpdmUgcGF0Y2g/DQo+ID4gPj4+Pg0KPiA+ID4+Pj4gVGhpcyB3YXMgcHJvcG9zZWQgYSBmZXcg
-ZGF5cyBhZ286DQo+ID4gPj4+PiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1haWwv
-bGludXgtbnZtZS8yMDE5LUp1bHkvMDI2MDU2Lmh0bWwNCj4gPiA+Pj4+DQo+ID4gPj4+PiBIb3dl
-dmVyIHdlJ3JlIHN0aWxsIG5vdCBzdXJlIHdoeSBpdCBpcyBuZWVkZWQsIGFuZCBpdCB3aWxsIHRh
-a2Ugc29tZQ0KPiA+ID4+Pj4gdGltZSB0byBnZXQNCj4gPiA+Pj4+IGEgcHJvcGVyIGZhaWx1cmUg
-YW5hbHlzaXMgZnJvbSBMaXRlT24gIHJlZ2FyZGluZyB0aGUgQ0wxLg0KPiA+ID4+Pg0KPiA+ID4+
-PiBUaGFua3MgZm9yIHRoZSB1cGRhdGUsIGJ1dCBJTU8gd2Ugc3RpbGwgbmVlZCB0byBkbyBzb21l
-dGhpbmcgYmVmb3JlDQo+ID4gPj4+IGZpbmFsIDUuMyB3aGlsZSB0aGUgaW52ZXN0aWdhdGlvbiBj
-b250aW51ZXMuDQo+ID4gPj4+DQo+ID4gPj4+IEhvbmVzdGx5LCBhdCB0aGlzIHBvaW50IEkgd291
-bGQgdm90ZSBmb3IgZ29pbmcgYmFjayB0byB0aGUgNS4yDQo+ID4gPj4+IGJlaGF2aW9yIGF0IGxl
-YXN0IGJ5IGRlZmF1bHQgYW5kIG9ubHkgcnVubmluZyB0aGUgbmV3IGNvZGUgb24gdGhlDQo+ID4g
-Pj4+IGRyaXZlcyBrbm93biB0byByZXF1aXJlIGl0IChiZWNhdXNlIHRoZXkgd2lsbCBibG9jayBQ
-QzEwIG90aGVyd2lzZSkuDQo+ID4gPj4+DQo+ID4gPj4+IFBvc3NpYmx5IChpZGVhbGx5KSB3aXRo
-IGFuIG9wdGlvbiBmb3IgdXNlcnMgd2hvIGNhbid0IGdldCBiZXlvbmQgUEMzDQo+ID4gPj4+IHRv
-IHRlc3Qgd2hldGhlciBvciBub3QgdGhlIG5ldyBjb2RlIGhlbHBzIHRoZW0uDQo+ID4gPj4NCj4g
-PiA+PiBJIGp1c3QgZm91bmQgb3V0IHRoYXQgdGhlIFhQUyA5MzgwIGF0IG15IGhhbmQgbmV2ZXIg
-cmVhY2hlcyBTTFBfUzAgYnV0DQo+ID4gPj4gb25seQ0KPiA+ID4+IFBDMTAuDQo+ID4gPg0KPiA+
-ID4gVGhhdCdzIHRoZSBjYXNlIGZvciBtZSB0b28uDQo+ID4gPg0KPiA+ID4+IFRoaXMgaGFwcGVu
-cyB3aXRoIG9yIHdpdGhvdXQgcHV0dGluZyB0aGUgZGV2aWNlIHRvIEQzLg0KPiA+ID4NCj4gPiA+
-IE9uIG15IHN5c3RlbSwgdGhvdWdoLCBpdCBvbmx5IGNhbiBnZXQgdG8gUEMzIHdpdGhvdXQgcHV0
-dGluZyB0aGUgTlZNZQ0KPiA+ID4gaW50byBEMyAoYXMgcmVwb3J0ZWQgcHJldmlvdXNseSkuDQo+
-ID4NCj4gPiBJIGZvcmdvdCB0byBhc2ssIHdoYXQgQklPUyB2ZXJzaW9uIGRvZXMgdGhlIHN5c3Rl
-bSBoYXZlPw0KPiA+IEkgZG9u4oCZdCBzZWUgdGhpcyBpc3N1ZSBvbiBCSU9TIHYxLjUuMC4NCj4g
-DQo+IEl0IGlzIDEuNS4wIGhlcmUgdG9vLg0KDQpBbGwsIHJlZ2FyZGluZyB0aGUgbmVlZCBmb3Ig
-dGhlIHBhdGNoIHByb3Bvc2VkIGJ5IFJhZmFlbCBvbiBQQzQwMSwgSSBoYXZlIHNvbWUgdXBkYXRl
-cw0KdG8gc2hhcmUgZnJvbSBIeW5peC4NCkZpcnN0IG9mZiAtIHRoZSBmaXJtd2FyZSBjaGFuZ2Vs
-b2cgaXMgbWlzbGVhZGluZyBmcm9tIDgwMDA2RTAwIHRvIDgwMDA3RTAwLg0KDQpUaGUgY2hhbmdl
-IHdhcyBtYWRlIGluIHRoZSBmaXJtd2FyZSBzcGVjaWZpY2FsbHkgYmVjYXVzZSBvZiBhIGNoYW5n
-ZSBpbiBiZWhhdmlvciBmcm9tDQpJbnRlbCBLQkwgdG8gQ0ZMIGFuZCBXSEwuICBPbiBDRkwvV0hM
-IHRoZSBwZXJpb2Qgb2YgdGltZSB0aGF0IFJlZkNsayB3YXMgdHVybmVkIG9uIGFmdGVyIEwxLjIN
-CndhcyBsYXJnZXIgdGhhbiBLQkwgcGxhdGZvcm1zLiAgU28gdGhpcyBtZWFudCB0aGF0IEh5bml4
-IGNvdWxkbid0IGxvY2sgdXAgZnJvbSBDTEtSRVEjDQp0byBSZWZDbGsgYXMgcXVpY2tseSBvbiBD
-RkwvV0hMLiAgU28gdGhlcmUgaXMgYSAibGFyZ2VyIiBmaXhlZCBkZWxheSBpbnRyb2R1Y2VkIGlu
-IHRoZWlyIEZXLg0KDQpUbyB0aG9zZSB0aGF0IGRvbid0IGtub3cgLSBYUFMgOTM4MCBpcyBhIFdI
-TCBwbGF0Zm9ybS4NCg0KU2Vjb25kIC0gYSBoeXBvdGhlc2lzIG9mIHdoYXQgaXMgaGFwcGVuaW5n
-IHdpdGggdGhlIHBhdGNoIHByb3Bvc2VkIGJ5IFJhZmFlbCBpcyB0aGF0IHRoZSBsaW5rDQppcyBv
-bmx5IHRyYW5zaXRpb25pbmcgdG8gTDEuMCByYXRoZXIgdGhhbiBMMS4yLiAgVGhpcyBtYXkgc2F0
-aXNmeSB0aGUgUE1DIGJ1dCBpdCBzaG91bGRuJ3QgbGVhZCB0bw0KdGhlIGxvd2VzdCBhY3R1YWwg
-ZGV2aWNlIHBvd2VyIHN0YXRlLg0KDQo=
+This is a cryptographically signed message in MIME format.
+
+--------------ms080300050909010500090106
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+Dear Mika,
+
+
+On 06.08.19 13:31, Mika Westerberg wrote:
+> On Tue, Aug 06, 2019 at 11:57:26AM +0200, Paul Menzel wrote:
+
+>> On 06.08.19 11:36, Mika Westerberg wrote:
+>>> +Nicholas and Matthias
+>>>
+>>> On Tue, Aug 06, 2019 at 11:20:37AM +0200, Paul Menzel wrote:
+>>
+>>>> Commit c2bf1fc2 (PCI: Add missing link delays required by the PCIe s=
+pec) [1]=20
+>>>> increases the resume time from ACPI S3 on a desktop system Dell Opti=
+Plex 5040
+>>>> by one second. It looks like this is expected from the commit messag=
+e, but
+>>>> breaks existing systems with boot time requirements. I measured this=
+ with the
+>>>> help of the pm-graph script `sleepgraph.py` [2].
+>>>>
+>>>>     0000:00:01.0 resume_noirq (1134.715 ms @ 5039.412578 to 5040.547=
+293)
+>>>>         =E2=80=A6
+>>>>             pcie_wait_for_link_delay (1132.853 ms @ 5039.414431)
+>>
+>> By the way, here is the trace excerpt with the interesting comments.
+>>
+>> ```
+>>  5040.547284 |   1)  kworker-3594  |   1132852 us  |              } /*=
+ schedule_timeout */
+>>  5040.547284 |   1)  kworker-3594  |   1132853 us  |            } /* m=
+sleep */
+>>  5040.547284 |   1)  kworker-3594  |   1132853 us  |          } /* pci=
+e_wait_for_link_delay */
+>>  5040.547284 |   1)  kworker-3594  |   1132856 us  |        } /* wait_=
+for_downstream_link */
+>>  5040.547285 |   1)  kworker-3594  |               |        device_for=
+_each_child() {
+>>  5040.547285 |   1)  kworker-3594  |   0.185 us    |          _raw_spi=
+n_lock_irqsave();
+>>  5040.547286 |   1)  kworker-3594  |   0.136 us    |          _raw_spi=
+n_unlock_irqrestore();
+>>  5040.547286 |   1)  kworker-3594  |   0.190 us    |          pm_iter(=
+);
+>>  5040.547286 |   1)  kworker-3594  |   0.129 us    |          _raw_spi=
+n_lock_irqsave();
+>>  5040.547287 |   1)  kworker-3594  |   0.134 us    |          _raw_spi=
+n_unlock_irqrestore();
+>>  5040.547287 |   1)  kworker-3594  |   0.194 us    |          pm_iter(=
+);
+>>  5040.547287 |   1)  kworker-3594  |   0.134 us    |          _raw_spi=
+n_lock_irqsave();
+>>  5040.547288 |   1)  kworker-3594  |   0.133 us    |          _raw_spi=
+n_unlock_irqrestore();
+>>  5040.547288 |   1)  kworker-3594  |   0.187 us    |          pm_iter(=
+);
+>>  5040.547288 |   1)  kworker-3594  |   0.135 us    |          _raw_spi=
+n_lock_irqsave();
+>>  5040.547289 |   1)  kworker-3594  |   0.135 us    |          _raw_spi=
+n_unlock_irqrestore();
+>>  5040.547289 |   1)  kworker-3594  |   0.271 us    |          pm_iter(=
+);
+>>  5040.547289 |   1)  kworker-3594  |   0.132 us    |          _raw_spi=
+n_lock_irqsave();
+>>  5040.547290 |   1)  kworker-3594  |   0.137 us    |          _raw_spi=
+n_unlock_irqrestore();
+>>  5040.547290 |   1)  kworker-3594  |   5.036 us    |        } /* devic=
+e_for_each_child */
+>>  5040.547290 |   1)  kworker-3594  |   1132862 us  |      } /* pcie_po=
+rt_device_resume_noirq */
+>>  5040.547290 |   1)  kworker-3594  |   1134709 us  |    } /* pci_pm_re=
+sume_noirq */
+>> ```
+>>
+>>>> $ lspci -nn
+>>>> 00:00.0 Host bridge [0600]: Intel Corporation Xeon E3-1200 v5/E3-150=
+0 v5/6th Gen Core Processor Host Bridge/DRAM Registers [8086:191f] (rev 0=
+7)
+>>>> 00:01.0 PCI bridge [0604]: Intel Corporation Xeon E3-1200 v5/E3-1500=
+ v5/6th Gen Core Processor PCIe Controller (x16) [8086:1901] (rev 07)
+>>>> 00:14.0 USB controller [0c03]: Intel Corporation Sunrise Point-H USB=
+ 3.0 xHCI Controller [8086:a12f] (rev 31)
+>>>> 00:14.2 Signal processing controller [1180]: Intel Corporation Sunri=
+se Point-H Thermal subsystem [8086:a131] (rev 31)
+>>>> 00:16.0 Communication controller [0780]: Intel Corporation Sunrise P=
+oint-H CSME HECI #1 [8086:a13a] (rev 31)
+>>>> 00:17.0 SATA controller [0106]: Intel Corporation Sunrise Point-H SA=
+TA controller [AHCI mode] [8086:a102] (rev 31)
+>>>> 00:1c.0 PCI bridge [0604]: Intel Corporation Sunrise Point-H PCI Exp=
+ress Root Port #1 [8086:a110] (rev f1)
+>>>> 00:1f.0 ISA bridge [0601]: Intel Corporation Sunrise Point-H LPC Con=
+troller [8086:a146] (rev 31)
+>>>> 00:1f.2 Memory controller [0580]: Intel Corporation Sunrise Point-H =
+PMC [8086:a121] (rev 31)
+>>>> 00:1f.3 Audio device [0403]: Intel Corporation Sunrise Point-H HD Au=
+dio [8086:a170] (rev 31)
+>>>> 00:1f.4 SMBus [0c05]: Intel Corporation Sunrise Point-H SMBus [8086:=
+a123] (rev 31)
+>>>> 00:1f.6 Ethernet controller [0200]: Intel Corporation Ethernet Conne=
+ction (2) I219-V [8086:15b8] (rev 31)
+>>>> 01:00.0 VGA compatible controller [0300]: Advanced Micro Devices, In=
+c. [AMD/ATI] Oland XT [Radeon HD 8670 / R7 250/350] [1002:6610] (rev 81)
+>>>> 01:00.1 Audio device [0403]: Advanced Micro Devices, Inc. [AMD/ATI] =
+Cape Verde/Pitcairn HDMI Audio [Radeon HD 7700/7800 Series] [1002:aab0]
+>>>> 02:00.0 PCI bridge [0604]: Texas Instruments XIO2001 PCI Express-to-=
+PCI Bridge [104c:8240]
+>>>>
+>>>> So, it=E2=80=99s about the internal Intel graphics device, which is =
+not used on this=20
+>>>> system, as there is an external AMD graphics device plugged in.
+>>>>
+>>>> As far as I understand it, it=E2=80=99s a bug in the firmware, that =
+a one second delay
+>>>> is specified?
+>>
+>> How can I read out the delay from the system as done in?
+>=20
+> The delay is not system wide so it depends on the device. Typically it
+> is 100ms but there is a way to shorten it using ACPI _DSM.
+
+Yeah, I know. I was wondering if it can easily be read out for a device
+under `/sys`, other debug level or, for example, with `lspci` or
+`acpidump`.
+
+>> ```
+>> static int get_downstream_delay(struct pci_bus *bus)
+>> {
+>>         struct pci_dev *pdev;
+>>         int min_delay =3D 100;
+>>         int max_delay =3D 0;
+>>
+>>         list_for_each_entry(pdev, &bus->devices, bus_list) {
+>>                 if (!pdev->imm_ready)
+>>                         min_delay =3D 0;
+>>                 else if (pdev->d3cold_delay < min_delay)
+>>                         min_delay =3D pdev->d3cold_delay;
+>>                 if (pdev->d3cold_delay > max_delay)
+>>                         max_delay =3D pdev->d3cold_delay;
+>>         }
+>>
+>>         return max(min_delay, max_delay);
+>> }
+>> ```
+>>
+>>>> Anyway, there is such firmware out there, so I=E2=80=99d like to avo=
+id the time
+>>>> increases.
+>>>>
+>>>> As a first step, the commit should be extended to print a warning (m=
+aybe if
+>>>> `initcall_debug` is specified), when the delay is higher than let=E2=
+=80=99s say 50(?)
+>>>> ms. Also better documentation how to debug these delays would be app=
+reciated.
+>>
+>> As your commit message says the standard demands a delay of at least 1=
+00 ms, 50 ms
+>> is of course too short, and maybe 150 ms or so should be used as the t=
+hreshold.
+>>
+>>>> If there is no easy solution, it=E2=80=99d be great if the commit co=
+uld be reverted for
+>>>> now, and a better solution be discussed for the next release.
+>>>
+>>> There is also kernel bugzilla entry about another regression this cau=
+ses
+>>> here:
+>>>
+>>>   https://bugzilla.kernel.org/show_bug.cgi?id=3D204413
+>>>
+>>> I agree we should revert c2bf1fc2 now. I'll try to come up alternativ=
+e
+>>> solution to these missing delays that hopefully does not break existi=
+ng
+>>> setups.
+>>>
+>>> Rafael, Bjorn,
+>>>
+>>> Can you revert the commit or do you want me to send a revert patch?
+>>>
+>>> Thanks and sorry about the breakage.
+>>
+>> No worries.
+>=20
+> Thanks for the lspci output. This explains the 1 second delay:
+>=20
+>> 		LnkCap:	Port #2, Speed 8GT/s, Width x16, ASPM L0s L1, Exit Latency L=
+0s <256ns, L1 <8us
+>> 			ClockPM- Surprise- LLActRep- BwNot+ ASPMOptComp+
+>=20
+> The port does not support active link reporting. Can you try the below
+> patch?
+>=20
+> Nicholas, can you also try it? I think it should solve your issue as
+> well.
+>=20
+> Thanks!
+>=20
+> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv=
+_core.c
+> index 308c3e0c4a34..bb8c753013d0 100644
+> --- a/drivers/pci/pcie/portdrv_core.c
+> +++ b/drivers/pci/pcie/portdrv_core.c
+> @@ -434,7 +434,8 @@ static void wait_for_downstream_link(struct pci_dev=
+ *pdev)
+>  	 * need to wait 100ms. For higher speeds (gen3) we need to wait
+>  	 * first for the data link layer to become active.
+>  	 */
+> -	if (pcie_get_speed_cap(pdev) <=3D PCIE_SPEED_5_0GT)
+> +	if (pcie_get_speed_cap(pdev) <=3D PCIE_SPEED_5_0GT ||
+> +	    !pdev->link_active_reporting)
+>  		msleep(delay);
+>  	else
+>  		pcie_wait_for_link_delay(pdev, true, delay);
+
+I can confirm, that the delay is reduced now.
+
+    pcieport @ 0000:00:01.0 {pcieport} async_device (Total Suspend: 12.11=
+8 ms Total Resume: 105.604 ms)
+
+How can I enable the verbose log messages you got in your commit
+message like below?
+
+    pcieport 0000:00:1b.0: wait for 100ms after DLLLA is set before acces=
+s to 0000:01:00.0
+
+
+Kind regards,
+
+Paul
+
+
+--------------ms080300050909010500090106
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
+EFowggUSMIID+qADAgECAgkA4wvV+K8l2YEwDQYJKoZIhvcNAQELBQAwgYIxCzAJBgNVBAYT
+AkRFMSswKQYDVQQKDCJULVN5c3RlbXMgRW50ZXJwcmlzZSBTZXJ2aWNlcyBHbWJIMR8wHQYD
+VQQLDBZULVN5c3RlbXMgVHJ1c3QgQ2VudGVyMSUwIwYDVQQDDBxULVRlbGVTZWMgR2xvYmFs
+Um9vdCBDbGFzcyAyMB4XDTE2MDIyMjEzMzgyMloXDTMxMDIyMjIzNTk1OVowgZUxCzAJBgNV
+BAYTAkRFMUUwQwYDVQQKEzxWZXJlaW4genVyIEZvZXJkZXJ1bmcgZWluZXMgRGV1dHNjaGVu
+IEZvcnNjaHVuZ3NuZXR6ZXMgZS4gVi4xEDAOBgNVBAsTB0RGTi1QS0kxLTArBgNVBAMTJERG
+Ti1WZXJlaW4gQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkgMjCCASIwDQYJKoZIhvcNAQEBBQAD
+ggEPADCCAQoCggEBAMtg1/9moUHN0vqHl4pzq5lN6mc5WqFggEcVToyVsuXPztNXS43O+FZs
+FVV2B+pG/cgDRWM+cNSrVICxI5y+NyipCf8FXRgPxJiZN7Mg9mZ4F4fCnQ7MSjLnFp2uDo0p
+eQcAIFTcFV9Kltd4tjTTwXS1nem/wHdN6r1ZB+BaL2w8pQDcNb1lDY9/Mm3yWmpLYgHurDg0
+WUU2SQXaeMpqbVvAgWsRzNI8qIv4cRrKO+KA3Ra0Z3qLNupOkSk9s1FcragMvp0049ENF4N1
+xDkesJQLEvHVaY4l9Lg9K7/AjsMeO6W/VRCrKq4Xl14zzsjz9AkH4wKGMUZrAcUQDBHHWekC
+AwEAAaOCAXQwggFwMA4GA1UdDwEB/wQEAwIBBjAdBgNVHQ4EFgQUk+PYMiba1fFKpZFK4OpL
+4qIMz+EwHwYDVR0jBBgwFoAUv1kgNgB5oKAia4zV8mHSuCzLgkowEgYDVR0TAQH/BAgwBgEB
+/wIBAjAzBgNVHSAELDAqMA8GDSsGAQQBga0hgiwBAQQwDQYLKwYBBAGBrSGCLB4wCAYGZ4EM
+AQICMEwGA1UdHwRFMEMwQaA/oD2GO2h0dHA6Ly9wa2kwMzM2LnRlbGVzZWMuZGUvcmwvVGVs
+ZVNlY19HbG9iYWxSb290X0NsYXNzXzIuY3JsMIGGBggrBgEFBQcBAQR6MHgwLAYIKwYBBQUH
+MAGGIGh0dHA6Ly9vY3NwMDMzNi50ZWxlc2VjLmRlL29jc3ByMEgGCCsGAQUFBzAChjxodHRw
+Oi8vcGtpMDMzNi50ZWxlc2VjLmRlL2NydC9UZWxlU2VjX0dsb2JhbFJvb3RfQ2xhc3NfMi5j
+ZXIwDQYJKoZIhvcNAQELBQADggEBAIcL/z4Cm2XIVi3WO5qYi3FP2ropqiH5Ri71sqQPrhE4
+eTizDnS6dl2e6BiClmLbTDPo3flq3zK9LExHYFV/53RrtCyD2HlrtrdNUAtmB7Xts5et6u5/
+MOaZ/SLick0+hFvu+c+Z6n/XUjkurJgARH5pO7917tALOxrN5fcPImxHhPalR6D90Bo0fa3S
+PXez7vTXTf/D6OWST1k+kEcQSrCFWMBvf/iu7QhCnh7U3xQuTY+8npTD5+32GPg8SecmqKc2
+2CzeIs2LgtjZeOJVEqM7h0S2EQvVDFKvaYwPBt/QolOLV5h7z/0HJPT8vcP9SpIClxvyt7bP
+ZYoaorVyGTkwggWNMIIEdaADAgECAgwcOtRQhH7u81j4jncwDQYJKoZIhvcNAQELBQAwgZUx
+CzAJBgNVBAYTAkRFMUUwQwYDVQQKEzxWZXJlaW4genVyIEZvZXJkZXJ1bmcgZWluZXMgRGV1
+dHNjaGVuIEZvcnNjaHVuZ3NuZXR6ZXMgZS4gVi4xEDAOBgNVBAsTB0RGTi1QS0kxLTArBgNV
+BAMTJERGTi1WZXJlaW4gQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkgMjAeFw0xNjExMDMxNTI0
+NDhaFw0zMTAyMjIyMzU5NTlaMGoxCzAJBgNVBAYTAkRFMQ8wDQYDVQQIDAZCYXllcm4xETAP
+BgNVBAcMCE11ZW5jaGVuMSAwHgYDVQQKDBdNYXgtUGxhbmNrLUdlc2VsbHNjaGFmdDEVMBMG
+A1UEAwwMTVBHIENBIC0gRzAyMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnhx4
+59Lh4WqgOs/Md04XxU2yFtfM15ZuJV0PZP7BmqSJKLLPyqmOrADfNdJ5PIGBto2JBhtRRBHd
+G0GROOvTRHjzOga95WOTeura79T21FWwwAwa29OFnD3ZplQs6HgdwQrZWNi1WHNJxn/4mA19
+rNEBUc5urSIpZPvZi5XmlF3v3JHOlx3KWV7mUteB4pwEEfGTg4npPAJbp2o7arxQdoIq+Pu2
+OsvqhD7Rk4QeaX+EM1QS4lqd1otW4hE70h/ODPy1xffgbZiuotWQLC6nIwa65Qv6byqlIX0q
+Zuu99Vsu+r3sWYsL5SBkgecNI7fMJ5tfHrjoxfrKl/ErTAt8GQIDAQABo4ICBTCCAgEwEgYD
+VR0TAQH/BAgwBgEB/wIBATAOBgNVHQ8BAf8EBAMCAQYwKQYDVR0gBCIwIDANBgsrBgEEAYGt
+IYIsHjAPBg0rBgEEAYGtIYIsAQEEMB0GA1UdDgQWBBTEiKUH7rh7qgwTv9opdGNSG0lwFjAf
+BgNVHSMEGDAWgBST49gyJtrV8UqlkUrg6kviogzP4TCBjwYDVR0fBIGHMIGEMECgPqA8hjpo
+dHRwOi8vY2RwMS5wY2EuZGZuLmRlL2dsb2JhbC1yb290LWcyLWNhL3B1Yi9jcmwvY2Fjcmwu
+Y3JsMECgPqA8hjpodHRwOi8vY2RwMi5wY2EuZGZuLmRlL2dsb2JhbC1yb290LWcyLWNhL3B1
+Yi9jcmwvY2FjcmwuY3JsMIHdBggrBgEFBQcBAQSB0DCBzTAzBggrBgEFBQcwAYYnaHR0cDov
+L29jc3AucGNhLmRmbi5kZS9PQ1NQLVNlcnZlci9PQ1NQMEoGCCsGAQUFBzAChj5odHRwOi8v
+Y2RwMS5wY2EuZGZuLmRlL2dsb2JhbC1yb290LWcyLWNhL3B1Yi9jYWNlcnQvY2FjZXJ0LmNy
+dDBKBggrBgEFBQcwAoY+aHR0cDovL2NkcDIucGNhLmRmbi5kZS9nbG9iYWwtcm9vdC1nMi1j
+YS9wdWIvY2FjZXJ0L2NhY2VydC5jcnQwDQYJKoZIhvcNAQELBQADggEBABLpeD5FygzqOjj+
+/lAOy20UQOGWlx0RMuPcI4nuyFT8SGmK9lD7QCg/HoaJlfU/r78ex+SEide326evlFAoJXIF
+jVyzNltDhpMKrPIDuh2N12zyn1EtagqPL6hu4pVRzcBpl/F2HCvtmMx5K4WN1L1fmHWLcSap
+dhXLvAZ9RG/B3rqyULLSNN8xHXYXpmtvG0VGJAndZ+lj+BH7uvd3nHWnXEHC2q7iQlDUqg0a
+wIqWJgdLlx1Q8Dg/sodv0m+LN0kOzGvVDRCmowBdWGhhusD+duKV66pBl+qhC+4LipariWaM
+qK5ppMQROATjYeNRvwI+nDcEXr2vDaKmdbxgDVwwggWvMIIEl6ADAgECAgweKlJIhfynPMVG
+/KIwDQYJKoZIhvcNAQELBQAwajELMAkGA1UEBhMCREUxDzANBgNVBAgMBkJheWVybjERMA8G
+A1UEBwwITXVlbmNoZW4xIDAeBgNVBAoMF01heC1QbGFuY2stR2VzZWxsc2NoYWZ0MRUwEwYD
+VQQDDAxNUEcgQ0EgLSBHMDIwHhcNMTcxMTE0MTEzNDE2WhcNMjAxMTEzMTEzNDE2WjCBizEL
+MAkGA1UEBhMCREUxIDAeBgNVBAoMF01heC1QbGFuY2stR2VzZWxsc2NoYWZ0MTQwMgYDVQQL
+DCtNYXgtUGxhbmNrLUluc3RpdHV0IGZ1ZXIgbW9sZWt1bGFyZSBHZW5ldGlrMQ4wDAYDVQQL
+DAVNUElNRzEUMBIGA1UEAwwLUGF1bCBNZW56ZWwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw
+ggEKAoIBAQDIh/UR/AX/YQ48VWWDMLTYtXjYJyhRHMc81ZHMMoaoG66lWB9MtKRTnB5lovLZ
+enTIUyPsCrMhTqV9CWzDf6v9gOTWVxHEYqrUwK5H1gx4XoK81nfV8oGV4EKuVmmikTXiztGz
+peyDmOY8o/EFNWP7YuRkY/lPQJQBeBHYq9AYIgX4StuXu83nusq4MDydygVOeZC15ts0tv3/
+6WmibmZd1OZRqxDOkoBbY3Djx6lERohs3IKS6RKiI7e90rCSy9rtidJBOvaQS9wvtOSKPx0a
++2pAgJEVzZFjOAfBcXydXtqXhcpOi2VCyl+7+LnnTz016JJLsCBuWEcB3kP9nJYNAgMBAAGj
+ggIxMIICLTAJBgNVHRMEAjAAMA4GA1UdDwEB/wQEAwIF4DAdBgNVHSUEFjAUBggrBgEFBQcD
+AgYIKwYBBQUHAwQwHQYDVR0OBBYEFHM0Mc3XjMLlhWpp4JufRELL4A/qMB8GA1UdIwQYMBaA
+FMSIpQfuuHuqDBO/2il0Y1IbSXAWMCAGA1UdEQQZMBeBFXBtZW56ZWxAbW9sZ2VuLm1wZy5k
+ZTB9BgNVHR8EdjB0MDigNqA0hjJodHRwOi8vY2RwMS5wY2EuZGZuLmRlL21wZy1nMi1jYS9w
+dWIvY3JsL2NhY3JsLmNybDA4oDagNIYyaHR0cDovL2NkcDIucGNhLmRmbi5kZS9tcGctZzIt
+Y2EvcHViL2NybC9jYWNybC5jcmwwgc0GCCsGAQUFBwEBBIHAMIG9MDMGCCsGAQUFBzABhido
+dHRwOi8vb2NzcC5wY2EuZGZuLmRlL09DU1AtU2VydmVyL09DU1AwQgYIKwYBBQUHMAKGNmh0
+dHA6Ly9jZHAxLnBjYS5kZm4uZGUvbXBnLWcyLWNhL3B1Yi9jYWNlcnQvY2FjZXJ0LmNydDBC
+BggrBgEFBQcwAoY2aHR0cDovL2NkcDIucGNhLmRmbi5kZS9tcGctZzItY2EvcHViL2NhY2Vy
+dC9jYWNlcnQuY3J0MEAGA1UdIAQ5MDcwDwYNKwYBBAGBrSGCLAEBBDARBg8rBgEEAYGtIYIs
+AQEEAwYwEQYPKwYBBAGBrSGCLAIBBAMGMA0GCSqGSIb3DQEBCwUAA4IBAQCQs6bUDROpFO2F
+Qz2FMgrdb39VEo8P3DhmpqkaIMC5ZurGbbAL/tAR6lpe4af682nEOJ7VW86ilsIJgm1j0ueY
+aOuL8jrN4X7IF/8KdZnnNnImW3QVni6TCcc+7+ggci9JHtt0IDCj5vPJBpP/dKXLCN4M+exl
+GXYpfHgxh8gclJPY1rquhQrihCzHfKB01w9h9tWZDVMtSoy9EUJFhCXw7mYUsvBeJwZesN2B
+fndPkrXx6XWDdU3S1LyKgHlLIFtarLFm2Hb5zAUR33h+26cN6ohcGqGEEzgIG8tXS8gztEaj
+1s2RyzmKd4SXTkKR3GhkZNVWy+gM68J7jP6zzN+cMYIDmjCCA5YCAQEwejBqMQswCQYDVQQG
+EwJERTEPMA0GA1UECAwGQmF5ZXJuMREwDwYDVQQHDAhNdWVuY2hlbjEgMB4GA1UECgwXTWF4
+LVBsYW5jay1HZXNlbGxzY2hhZnQxFTATBgNVBAMMDE1QRyBDQSAtIEcwMgIMHipSSIX8pzzF
+RvyiMA0GCWCGSAFlAwQCAQUAoIIB8TAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqG
+SIb3DQEJBTEPFw0xOTA4MDYxNDAyNDJaMC8GCSqGSIb3DQEJBDEiBCDtas+1jhXy+SYUZkWo
+LG/F/KllXXFxE52AVHuZjFKkgDBsBgkqhkiG9w0BCQ8xXzBdMAsGCWCGSAFlAwQBKjALBglg
+hkgBZQMEAQIwCgYIKoZIhvcNAwcwDgYIKoZIhvcNAwICAgCAMA0GCCqGSIb3DQMCAgFAMAcG
+BSsOAwIHMA0GCCqGSIb3DQMCAgEoMIGJBgkrBgEEAYI3EAQxfDB6MGoxCzAJBgNVBAYTAkRF
+MQ8wDQYDVQQIDAZCYXllcm4xETAPBgNVBAcMCE11ZW5jaGVuMSAwHgYDVQQKDBdNYXgtUGxh
+bmNrLUdlc2VsbHNjaGFmdDEVMBMGA1UEAwwMTVBHIENBIC0gRzAyAgweKlJIhfynPMVG/KIw
+gYsGCyqGSIb3DQEJEAILMXygejBqMQswCQYDVQQGEwJERTEPMA0GA1UECAwGQmF5ZXJuMREw
+DwYDVQQHDAhNdWVuY2hlbjEgMB4GA1UECgwXTWF4LVBsYW5jay1HZXNlbGxzY2hhZnQxFTAT
+BgNVBAMMDE1QRyBDQSAtIEcwMgIMHipSSIX8pzzFRvyiMA0GCSqGSIb3DQEBAQUABIIBACac
+L/ZEg0llV582Zg9QCBXgk8DF9rG3lHP5sh8CfoLw6IEPHsZzwSpImoghCHFQy4cdZ4mYU3yd
+B5TXTOjXF7VkhMzZlRtU4G3D9S/Z/Nw1cOX1Zs/cayI2Z4qgK14Csfk4ltsYexpGv2uGBbFa
+9p16n9eviDQFh3/H+wZwvYUDT/7NQVGbi86I5MK2xxBjk55vu8/3Z3D5ZugdhwFnVULmXPHO
+cuonvpMLiWLHQNiIkgVm1Ku6QqSAhfk+sAqR+BQ6IAtV+4uWv7F4Un1h3MS5/fpkDon777VO
+z8It3+aNr5jq1ClPzj5syBGF4hSaxGII+hyOLT/S1H/l175HKLcAAAAAAAA=
+--------------ms080300050909010500090106--
