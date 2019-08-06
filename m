@@ -2,153 +2,87 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B58EBC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 03:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A94C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 03:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E63E217F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 03:27:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="J9nWhfi9"
+	by mail.kernel.org (Postfix) with ESMTP id DF6B020C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 03:27:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731197AbfHFD1R (ORCPT
+        id S1731489AbfHFD1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 23:27:17 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:43700 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729383AbfHFD1Q (ORCPT
+        Mon, 5 Aug 2019 23:27:24 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:31240 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729383AbfHFD1Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 23:27:16 -0400
-Received: by mail-oi1-f193.google.com with SMTP id w79so64543843oif.10
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 20:27:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Nxtz2kZ+l7OR4MFHv2stHBbHUHxdL1vfEFCmbcfh8CA=;
-        b=J9nWhfi9ZP583VeloWxqen9o8Z08nPXCs2Mg+X3S6ICi4P0yXoDyV5Ww7hSDCD6rnq
-         rGGBQ5hhMBUlQPbK8q1/eLX+2LSiqtTinvh2tgmcqMPjVlxIypXqVOv6omJUvp+VC6IP
-         rMZ5pxEXcSZ35hDaCFpvOZd/Nk7N/K4dTb57qARzZp86bvb6ajq9SqGVJmDAjki99Zfn
-         NnNWG45uHpYle+tuGgJ2aDK6SF3vuXxiMwdSi4HH7Hz2C+dev9gpTmTqtqzvnpxIjXy2
-         1nlOjCSHfoswnQ1PsB7vf1rlohQoJrGyhchm4mBW7MjUJwYFeNCM/a4tpCfob5/lM/Lf
-         jp5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Nxtz2kZ+l7OR4MFHv2stHBbHUHxdL1vfEFCmbcfh8CA=;
-        b=hEVT9K5kWn18Qf4RpuqoVHW7ZpoGkM/v/k6hhZoSdxq8YhiOfR7I6iH1Cn8/20OAJg
-         ldrN6K4bVx3eztMvAKHXn54q1RvToFSsaEO/Q/KoYOcp+zpyK2Ef99j+ylT0W0DKiF6f
-         VKxcZiMB4lXNlzUZHX4Nw4VJojZN0ATYNSVNhn+If6YJ8lMNwK9mLgzQG5ZZwosHcxOs
-         rsdeQ1/Rns6xdtzGQ8OVa0AvsX9whaVuPMf25Q653hD/kMg7PdKIB/Hnu702KJxM5QhY
-         CmOmsf0fF3hzvN9c2vixexeMvq4QPnkPIIFxhxg54/JUGgsGMAErDrPLXuUwQeEwf0cy
-         GExg==
-X-Gm-Message-State: APjAAAXLXrkGjuCoKDr8J/dmS+Qm5A/CazYvromKQS/bYWsXQJBgsTXk
-        Ssq5sBzhvNh1qH9mst/57zXa8t/VVY+1xXHrqVhSfw==
-X-Google-Smtp-Source: APXvYqzqOFl+rejoEX8/ERi13dLIbgq21jpzsPxnsRuP8cMnosl8/EC6nixIh/y4rOGQU3UUzihpDdFgKpHGnTa/ZDA=
-X-Received: by 2002:aca:ec82:: with SMTP id k124mr966027oih.73.1565062035500;
- Mon, 05 Aug 2019 20:27:15 -0700 (PDT)
+        Mon, 5 Aug 2019 23:27:24 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x763RMiQ045929
+        for <linux-kernel@vger.kernel.org>; Mon, 5 Aug 2019 23:27:23 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u6xn25me5-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 23:27:23 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Tue, 6 Aug 2019 04:27:10 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 6 Aug 2019 04:27:06 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x763R5Id54853792
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 6 Aug 2019 03:27:05 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 24931A4062;
+        Tue,  6 Aug 2019 03:27:05 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 89FD8A405B;
+        Tue,  6 Aug 2019 03:27:03 +0000 (GMT)
+Received: from [9.124.31.110] (unknown [9.124.31.110])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  6 Aug 2019 03:27:03 +0000 (GMT)
+Subject: Re: [PATCH v3 0/3] Powerpc64/Watchpoint: Few important fixes
+To:     mpe@ellerman.id.au, mikey@neuling.org
+Cc:     benh@kernel.crashing.org, paulus@samba.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        npiggin@gmail.com, christophe.leroy@c-s.fr,
+        naveen.n.rao@linux.vnet.ibm.com,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <20190710045445.31037-1-ravi.bangoria@linux.ibm.com>
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Date:   Tue, 6 Aug 2019 08:57:02 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190725023100.31141-1-t-fukasawa@vx.jp.nec.com>
- <20190725023100.31141-3-t-fukasawa@vx.jp.nec.com> <20190725090341.GC13855@dhcp22.suse.cz>
- <40b3078e-fb8b-87ef-5c4e-6321956cc940@vx.jp.nec.com> <20190726070615.GB6142@dhcp22.suse.cz>
- <3a926ce5-75b9-ea94-d6e4-6888872e0dc4@vx.jp.nec.com>
-In-Reply-To: <3a926ce5-75b9-ea94-d6e4-6888872e0dc4@vx.jp.nec.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 5 Aug 2019 20:27:03 -0700
-Message-ID: <CAPcyv4iCXWgxkLi3eM_EaqD0cuzmRyg5k4c9CeS1TyN+bajXFw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] /proc/kpageflags: do not use uninitialized struct pages
-To:     Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        "hch@lst.de" <hch@lst.de>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Junichi Nomura <j-nomura@ce.jp.nec.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190710045445.31037-1-ravi.bangoria@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19080603-0028-0000-0000-0000038C0670
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19080603-0029-0000-0000-0000244C65DB
+Message-Id: <334222f3-37af-722c-aa87-02d629b6062a@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-06_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=662 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908060038
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 4, 2019 at 10:31 PM Toshiki Fukasawa
-<t-fukasawa@vx.jp.nec.com> wrote:
->
-> On 2019/07/26 16:06, Michal Hocko wrote:
-> > On Fri 26-07-19 06:25:49, Toshiki Fukasawa wrote:
-> >>
-> >>
-> >> On 2019/07/25 18:03, Michal Hocko wrote:
-> >>> On Thu 25-07-19 02:31:18, Toshiki Fukasawa wrote:
-> >>>> A kernel panic was observed during reading /proc/kpageflags for
-> >>>> first few pfns allocated by pmem namespace:
-> >>>>
-> >>>> BUG: unable to handle page fault for address: fffffffffffffffe
-> >>>> [  114.495280] #PF: supervisor read access in kernel mode
-> >>>> [  114.495738] #PF: error_code(0x0000) - not-present page
-> >>>> [  114.496203] PGD 17120e067 P4D 17120e067 PUD 171210067 PMD 0
-> >>>> [  114.496713] Oops: 0000 [#1] SMP PTI
-> >>>> [  114.497037] CPU: 9 PID: 1202 Comm: page-types Not tainted 5.3.0-rc1 #1
-> >>>> [  114.497621] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.0-0-g63451fca13-prebuilt.qemu-project.org 04/01/2014
-> >>>> [  114.498706] RIP: 0010:stable_page_flags+0x27/0x3f0
-> >>>> [  114.499142] Code: 82 66 90 66 66 66 66 90 48 85 ff 0f 84 d1 03 00 00 41 54 55 48 89 fd 53 48 8b 57 08 48 8b 1f 48 8d 42 ff 83 e2 01 48 0f 44 c7 <48> 8b 00 f6 c4 02 0f 84 57 03 00 00 45 31 e4 48 8b 55 08 48 89 ef
-> >>>> [  114.500788] RSP: 0018:ffffa5e601a0fe60 EFLAGS: 00010202
-> >>>> [  114.501373] RAX: fffffffffffffffe RBX: ffffffffffffffff RCX: 0000000000000000
-> >>>> [  114.502009] RDX: 0000000000000001 RSI: 00007ffca13a7310 RDI: ffffd07489000000
-> >>>> [  114.502637] RBP: ffffd07489000000 R08: 0000000000000001 R09: 0000000000000000
-> >>>> [  114.503270] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000240000
-> >>>> [  114.503896] R13: 0000000000080000 R14: 00007ffca13a7310 R15: ffffa5e601a0ff08
-> >>>> [  114.504530] FS:  00007f0266c7f540(0000) GS:ffff962dbbac0000(0000) knlGS:0000000000000000
-> >>>> [  114.505245] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> >>>> [  114.505754] CR2: fffffffffffffffe CR3: 000000023a204000 CR4: 00000000000006e0
-> >>>> [  114.506401] Call Trace:
-> >>>> [  114.506660]  kpageflags_read+0xb1/0x130
-> >>>> [  114.507051]  proc_reg_read+0x39/0x60
-> >>>> [  114.507387]  vfs_read+0x8a/0x140
-> >>>> [  114.507686]  ksys_pread64+0x61/0xa0
-> >>>> [  114.508021]  do_syscall_64+0x5f/0x1a0
-> >>>> [  114.508372]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> >>>> [  114.508844] RIP: 0033:0x7f0266ba426b
-> >>>>
-> >>>> The reason for the panic is that stable_page_flags() which parses
-> >>>> the page flags uses uninitialized struct pages reserved by the
-> >>>> ZONE_DEVICE driver.
-> >>>
-> >>> Why pmem hasn't initialized struct pages?
-> >>
-> >> We proposed to initialize in previous approach but that wasn't merged.
-> >> (See https://marc.info/?l=linux-mm&m=152964792500739&w=2)
-> >>
-> >>> Isn't that a bug that should be addressed rather than paper over it like this?
-> >>
-> >> I'm not sure. What do you think, Dan?
-> >
-> > Yeah, I am really curious about details. Why do we keep uninitialized
-> > struct pages at all? What is a random pfn walker supposed to do? What
-> > kind of metadata would be clobbered? In other words much more details
-> > please.
-> >
-> I also want to know. I do not think that initializing struct pages will
-> clobber any metadata.
+Mikey, mpe ...
 
-The nvdimm implementation uses vmem_altmap to arrange for the 'struct
-page' array to be allocated from a reservation of a pmem namespace. A
-namespace in this mode contains an info-block that consumes the first
-8K of the namespace capacity, capacity designated for page mapping,
-capacity for padding the start of data to optionally 4K, 2MB, or 1GB
-(on x86), and then the namespace data itself. The implementation
-specifies a section aligned (now sub-section aligned) address to
-arch_add_memory() to establish the linear mapping to map the metadata,
-and then vmem_altmap indicates to memmap_init_zone() which pfns
-represent data. The implementation only specifies enough 'struct page'
-capacity for pfn_to_page() to operate on the data space, not the
-namespace metadata space.
+Any thoughts?
 
-The proposal to validate ZONE_DEVICE pfns against the altmap seems the
-right approach to me.
