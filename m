@@ -2,233 +2,298 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4C5C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 07:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90061C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 07:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90FAD2086D
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 07:26:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HkHWeHbe"
+	by mail.kernel.org (Postfix) with ESMTP id 59A4620C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 07:28:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732021AbfHFH0h (ORCPT
+        id S1732033AbfHFH2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 03:26:37 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44387 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731557AbfHFH0g (ORCPT
+        Tue, 6 Aug 2019 03:28:24 -0400
+Received: from esa4.mentor.iphmx.com ([68.232.137.252]:50056 "EHLO
+        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731557AbfHFH2X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 03:26:36 -0400
-Received: by mail-lf1-f68.google.com with SMTP id v16so6333968lfg.11
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 00:26:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=RwJqQDsRZ9AaLr/ekC9Gdx1vhurMfbMK5qMIFyjdmMY=;
-        b=HkHWeHbeFUjBWyDvZUKxfFH/WkeH9dkUS16Y5GRnBi91t54nMbVt/XorG/JXWA5jZJ
-         wv+hU6jBYyJN9xQ7qSqsopUw/vFHMrdRD1cLx4l91coySp/zMd/MnmN0UmtLRKykM0rF
-         YdIWhEyurVbfV+9tIpH9dpxK22vM77eZZuLl5biNjJKFM+VBPfS0/l3m6C0X6+1lLl1q
-         F+tHsOeqwfnFw3jv2GJ7FzfTfrIEcaNA4yEclC038TBckWjvRjK0bV2wdjey/rtobNnv
-         TmGR7hZ3tngqlGETH0zEKPgyNOJmDaUbn1CIdFR5E/QZMXgF/kaZ4CX78i0t40y3ak3B
-         KAcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=RwJqQDsRZ9AaLr/ekC9Gdx1vhurMfbMK5qMIFyjdmMY=;
-        b=PgQhOEsx3w/SjrqvWuFaC95wwlPZzgfpkvFovIjRbnbjSMyrTnByRk62hd+vZjdDGR
-         JzeNj4r9JTHWKrTPgWS6uzP9QQEXr1wPZeMULAKpIH4fAGeZpSUEoOFrdTarToPYLccg
-         S71m9zkh+Et/AsHzv28L67+X+j4HKz0wibwYFNT2lwBS7RQQRu63vc9/050x7piAaobn
-         EhaVdHXbyYZJREOz7v2YwbZAwwfdw9IJhJ6H1F+BHrC9pRZJ3rVzaQN4xT+blMxK8o/V
-         mocS9F7NP7YL3vMP63PpVV9soRQzC7ZSU5Y3TndmBf65H/u2qIcXaWV7MKT0mdMi/6H6
-         u6aw==
-X-Gm-Message-State: APjAAAVGkhECaBetvUFhoqUeqho4KeqtELKRND9CgPG/jyS7LCWQR1zo
-        V58vWBvPC7LYsaRhTQngsBrzKuIH/bSTYhLJ2dFZOQ==
-X-Google-Smtp-Source: APXvYqxNSUUlWAzx8oictpwRYd8Zg+c7SEIFsrenLoLlTH9vDkh63cTnmW1jbAgbNgPTEOHbkG3/J8Cj5I115SVc55U=
-X-Received: by 2002:a19:5f0f:: with SMTP id t15mr1409306lfb.67.1565076394740;
- Tue, 06 Aug 2019 00:26:34 -0700 (PDT)
+        Tue, 6 Aug 2019 03:28:23 -0400
+X-Greylist: delayed 426 seconds by postgrey-1.27 at vger.kernel.org; Tue, 06 Aug 2019 03:28:22 EDT
+IronPort-SDR: j9eLfhqmlrdKRfV98AKqbtRM0gGOfxcaOukQSpbRTGeq9T7JKAfYDAwBanzv/u82JSutp3hUId
+ +Z5syIZ9Vdz4XXPIisBccRelKdOwmurky+4dWukq9z2Cg1UL0fIErkFpyqPt1YLFIgwbAKgOlm
+ mCX++M8CRGAV+EWl4qkzyaWKvKtlo0+p4ru8O0EsUjXMhkwh5kJNAij4qeqYsnnWajqnMvr05L
+ tAd1FwDBzoEopDuZQ8XKdoIvvIXMB6vxiPwPyQXYlsAtEAgiYqhlaDvX0hT0/nzwcrB52pBHWY
+ 92U=
+X-IronPort-AV: E=Sophos;i="5.64,352,1559548800"; 
+   d="scan'208";a="40206524"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa4.mentor.iphmx.com with ESMTP; 05 Aug 2019 23:21:15 -0800
+IronPort-SDR: WP1n50YQpkUi8UHPfq9Uhy3Q80W3OHO97juBjokPJAwmL7Zz0mkFVtLgVHXDqV2jeQefMn+NrJ
+ vqdEoFmoHrG6CV16CKijBkganpIIFKPu2loYop2jASZ4k0XMqasQ0qUiIgIZDWyLLW3vXUduNY
+ V2lsdIlKA4twG3HIuGbD6mxdVzpC0dcNZr8be5be6C97S2EiDHjlMBAAqVC4mHICB3/vWi+nTJ
+ S1yi0WOAa+f84zOgKExAG64oyp283ot+X3e1EjdFTBcW4SyV8OiF/rJMaTplXRCm4Y0lnfyfB3
+ Dsc=
+Subject: Re: [PATCH v1 2/3] ASoC: rsnd: Allow reconfiguration of clock rate
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+CC:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <twischer@de.adit-jv.com>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
+References: <20190722072403.11008-1-jiada_wang@mentor.com>
+ <20190722072403.11008-3-jiada_wang@mentor.com>
+ <87a7d6h3b2.wl-kuninori.morimoto.gx@renesas.com>
+From:   Jiada Wang <jiada_wang@mentor.com>
+Message-ID: <731330d0-e177-f9cb-50d2-91701f8dff0a@mentor.com>
+Date:   Tue, 6 Aug 2019 16:21:00 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190805124918.070468681@linuxfoundation.org>
-In-Reply-To: <20190805124918.070468681@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 6 Aug 2019 12:56:23 +0530
-Message-ID: <CA+G9fYvhTQfV=gOVeqtNax9sgmRVUexWAwkBcorEG3PqShGXsw@mail.gmail.com>
-Subject: Re: [PATCH 4.4 00/22] 4.4.188-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <87a7d6h3b2.wl-kuninori.morimoto.gx@renesas.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SVR-ORW-MBX-05.mgc.mentorg.com (147.34.90.205) To
+ svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 5 Aug 2019 at 18:34, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.4.188 release.
-> There are 22 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed 07 Aug 2019 12:47:58 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.4.188-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+Hi Morimoto-san
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Sorry for the delayed response
 
-Summary
-------------------------------------------------------------------------
+On 2019/07/22 17:41, Kuninori Morimoto wrote:
+> 
+> Hi Jiada
+> 
+> The solution looks very over-kill to me,
+> especiallyq [3/3] patch is too much to me.
+> 
+> 1st, can we start clock at .hw_param, instead of .prepare ?
+> and stop it at .hw_free ?
+> 
+the reasoning to move start of clock from .init to .prepare by
+commit 4d230d1271064 ("ASoC: rsnd: fixup not to call clk_get/set under 
+non-atomic")
+is to prevent clk_{get, set_rate} be called from atomic context,
+since .hw_params is non atomic context,
+so I think start of clock can be moved from .prepare to .hw_params
 
-kernel: 4.4.188-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.4.y
-git commit: 462a4b2bd3bfaa6e11d1e8180bc95324efc96390
-git describe: v4.4.187-23-g462a4b2bd3bf
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.4-oe/bui=
-ld/v4.4.187-23-g462a4b2bd3bf
+> 2nd, can we keep usrcnt setup as-is ?
+> I guess we can just avoid rsnd_ssi_master_clk_start() if ssi->rate was not 0 ?
 
+I don't fully understand your 2nd question,
+in case of rsnd_ssi_master_clk_stop(), if avoid 
+rsnd_ssi_master_clk_stop() when ssi->rate is 0 by apply following change
 
-No regressions (compared to build v4.4.187)
+  	static void rsnd_ssi_master_clk_stop(struct rsnd_mod *mod,
+  				     struct rsnd_dai_stream *io)
+  	{
+  		...
+  -		if (ssi->usrcnt > 1)
+  +		if (ssi->rate == 0)
+  			return;
+  		...
+  	}
 
+then when any IO stream with same SSI calls .hw_free,
+the other IO stream's clock will be stopped too.
 
-No fixes (compared to build v4.4.187)
+Thanks,
+Jiada
 
-Ran 20069 total tests in the following environments and test suites.
-
-Environments
---------------
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-open-posix-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* network-basic-tests
-* perf
-* prep-tmp-disk
-* spectre-meltdown-checker-test
-* kvm-unit-tests
-* v4l2-compliance
-* install-android-platform-tools-r2600
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* ssuite
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.4.188-rc1
-git repo: https://git.linaro.org/lkft/arm64-stable-rc.git
-git branch: 4.4.188-rc1-hikey-20190805-520
-git commit: c9b6c3a54493f03773243bfd3c3ffbc88982ec27
-git describe: 4.4.188-rc1-hikey-20190805-520
-Test details: https://qa-reports.linaro.org/lkft/linaro-hikey-stable-rc-4.4=
--oe/build/4.4.188-rc1-hikey-20190805-520
-
-
-No regressions (compared to build 4.4.187-rc2-hikey-20190802-517)
-
-
-No fixes (compared to build 4.4.187-rc2-hikey-20190802-517)
-
-Ran 1550 total tests in the following environments and test suites.
-
-Environments
---------------
-- hi6220-hikey - arm64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+> similar for rsnd_ssi_master_clk_stop()
+> 
+> 	static int rsnd_ssi_master_clk_start(struct rsnd_mod *mod,
+> 				     struct rsnd_dai_stream *io)
+> 	{
+> 		...
+> 		if (ssi->rate)
+> 			return 0;
+> 		...
+> 	}
+> 
+> 	static void rsnd_ssi_master_clk_stop(struct rsnd_mod *mod,
+> 				     struct rsnd_dai_stream *io)
+> 	{
+> 		...
+> -		if (ssi->usrcnt > 1)
+> +		if (ssi->rate == 0)
+> 			return;
+> 		...
+> 	}
+> 
+> 
+>> From: Timo Wischer <twischer@de.adit-jv.com>
+>>
+>> Currently after clock rate is started in .prepare reconfiguration
+>> of clock rate is not allowed, unless the stream is stopped.
+>>
+>> But there is use case in Gstreamer ALSA sink, in case of changed caps
+>> Gsreatmer reconfigs and it calls snd_pcm_hw_free() before snd_pcm_prepre().
+>> See gstreamer1.0-plugins-base/
+>> gst-libs/gst/audio/gstaudiobasesink.c: gst_audio_base_sink_setcaps():
+>> - gst_audio_ring_buffer_release()
+>> - gst_audio_sink_ring_buffer_release()
+>> - gst_alsasink_unprepare()
+>> - snd_pcm_hw_free()
+>> is called before
+>> - gst_audio_ring_buffer_acquire()
+>> - gst_audio_sink_ring_buffer_acquire()
+>> - gst_alsasink_prepare()
+>> - set_hwparams()
+>> - snd_pcm_hw_params()
+>> - snd_pcm_prepare()
+>>
+>> The issue mentioned in this commit can be reproduced with the following
+>> aplay patch:
+>>
+>>      >diff --git a/aplay/aplay.c b/aplay/aplay.c
+>>      >@@ -2760,6 +2760,8 @@ static void playback_go(int fd, size_t loaded,
+>>      >      header(rtype, name);
+>>      >      set_params();
+>>      >+     hwparams.rate = (hwparams.rate == 48000) ? 44100 : 48000;
+>>      >+     set_params();
+>>      >
+>>      >      while (loaded > chunk_bytes && written < count && !in_aborting)
+>>      >      {
+>>      >              if (pcm_write(audiobuf + written, chunk_size) <= 0)
+>>
+>> $ aplay -Dplughw:0,0,0 -c8 -fS24_LE -r48000 /dev/zero
+>> rcar_sound ec500000.sound: SSI parent/child should use same rate
+>> rcar_sound ec500000.sound: ssi[3] : prepare error -22
+>> rcar_sound ec500000.sound: ASoC: cpu DAI prepare error: -22
+>> rsnd_link0: ASoC: prepare FE rsnd_link0 failed
+>>
+>> this patch address the issue by stop clock in .hw_free,
+>> to allow reconfiguration of clock rate without stop of the stream.
+>>
+>> Signed-off-by: Timo Wischer <twischer@de.adit-jv.com>
+>> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+>> ---
+>>   sound/soc/sh/rcar/ssi.c | 53 +++++++++++++++++++++++++++++------------
+>>   1 file changed, 38 insertions(+), 15 deletions(-)
+>>
+>> diff --git a/sound/soc/sh/rcar/ssi.c b/sound/soc/sh/rcar/ssi.c
+>> index f6a7466622ea..f43937d2c588 100644
+>> --- a/sound/soc/sh/rcar/ssi.c
+>> +++ b/sound/soc/sh/rcar/ssi.c
+>> @@ -286,7 +286,7 @@ static int rsnd_ssi_master_clk_start(struct rsnd_mod *mod,
+>>   	if (rsnd_ssi_is_multi_slave(mod, io))
+>>   		return 0;
+>>   
+>> -	if (ssi->usrcnt > 0) {
+>> +	if (ssi->rate) {
+>>   		if (ssi->rate != rate) {
+>>   			dev_err(dev, "SSI parent/child should use same rate\n");
+>>   			return -EINVAL;
+>> @@ -471,13 +471,9 @@ static int rsnd_ssi_init(struct rsnd_mod *mod,
+>>   			 struct rsnd_dai_stream *io,
+>>   			 struct rsnd_priv *priv)
+>>   {
+>> -	struct rsnd_ssi *ssi = rsnd_mod_to_ssi(mod);
+>> -
+>>   	if (!rsnd_ssi_is_run_mods(mod, io))
+>>   		return 0;
+>>   
+>> -	ssi->usrcnt++;
+>> -
+>>   	rsnd_mod_power_on(mod);
+>>   
+>>   	rsnd_ssi_config_init(mod, io);
+>> @@ -505,18 +501,8 @@ static int rsnd_ssi_quit(struct rsnd_mod *mod,
+>>   		return -EIO;
+>>   	}
+>>   
+>> -	rsnd_ssi_master_clk_stop(mod, io);
+>> -
+>>   	rsnd_mod_power_off(mod);
+>>   
+>> -	ssi->usrcnt--;
+>> -
+>> -	if (!ssi->usrcnt) {
+>> -		ssi->cr_own	= 0;
+>> -		ssi->cr_mode	= 0;
+>> -		ssi->wsr	= 0;
+>> -	}
+>> -
+>>   	return 0;
+>>   }
+>>   
+>> @@ -525,6 +511,7 @@ static int rsnd_ssi_hw_params(struct rsnd_mod *mod,
+>>   			      struct snd_pcm_substream *substream,
+>>   			      struct snd_pcm_hw_params *params)
+>>   {
+>> +	struct rsnd_ssi *ssi = rsnd_mod_to_ssi(mod);
+>>   	struct rsnd_dai *rdai = rsnd_io_to_rdai(io);
+>>   	unsigned int fmt_width = snd_pcm_format_width(params_format(params));
+>>   
+>> @@ -536,6 +523,11 @@ static int rsnd_ssi_hw_params(struct rsnd_mod *mod,
+>>   		return -EINVAL;
+>>   	}
+>>   
+>> +	if (!rsnd_ssi_is_run_mods(mod, io))
+>> +		return 0;
+>> +
+>> +	ssi->usrcnt++;
+>> +
+>>   	return 0;
+>>   }
+>>   
+>> @@ -913,6 +905,35 @@ static int rsnd_ssi_prepare(struct rsnd_mod *mod,
+>>   	return rsnd_ssi_master_clk_start(mod, io);
+>>   }
+>>   
+>> +static int rsnd_ssi_hw_free(struct rsnd_mod *mod, struct rsnd_dai_stream *io,
+>> +			    struct snd_pcm_substream *substream)
+>> +{
+>> +	struct rsnd_ssi *ssi = rsnd_mod_to_ssi(mod);
+>> +
+>> +	if (!rsnd_ssi_is_run_mods(mod, io))
+>> +		return 0;
+>> +
+>> +	if (!ssi->usrcnt) {
+>> +		struct rsnd_priv *priv = rsnd_mod_to_priv(mod);
+>> +		struct device *dev = rsnd_priv_to_dev(priv);
+>> +
+>> +		dev_err(dev, "%s usrcnt error\n", rsnd_mod_name(mod));
+>> +		return -EIO;
+>> +	}
+>> +
+>> +	rsnd_ssi_master_clk_stop(mod, io);
+>> +
+>> +	ssi->usrcnt--;
+>> +
+>> +	if (!ssi->usrcnt) {
+>> +		ssi->cr_own	= 0;
+>> +		ssi->cr_mode	= 0;
+>> +		ssi->wsr	= 0;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>   static struct rsnd_mod_ops rsnd_ssi_pio_ops = {
+>>   	.name		= SSI_NAME,
+>>   	.probe		= rsnd_ssi_common_probe,
+>> @@ -926,6 +947,7 @@ static struct rsnd_mod_ops rsnd_ssi_pio_ops = {
+>>   	.pcm_new	= rsnd_ssi_pcm_new,
+>>   	.hw_params	= rsnd_ssi_hw_params,
+>>   	.prepare	= rsnd_ssi_prepare,
+>> +	.hw_free	= rsnd_ssi_hw_free,
+>>   	.get_status	= rsnd_ssi_get_status,
+>>   };
+>>   
+>> @@ -1012,6 +1034,7 @@ static struct rsnd_mod_ops rsnd_ssi_dma_ops = {
+>>   	.pcm_new	= rsnd_ssi_pcm_new,
+>>   	.fallback	= rsnd_ssi_fallback,
+>>   	.hw_params	= rsnd_ssi_hw_params,
+>> +	.hw_free	= rsnd_ssi_hw_free,
+>>   	.prepare	= rsnd_ssi_prepare,
+>>   	.get_status	= rsnd_ssi_get_status,
+>>   };
+>> -- 
+>> 2.19.2
+>>
