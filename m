@@ -2,88 +2,144 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA67C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 283F2C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1054F206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:25:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB09E2173C
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:29:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XYT6KPkA";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="T6XQFH4X"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M1Cpzj/7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730496AbfHFMZr (ORCPT
+        id S1730788AbfHFM3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 08:25:47 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:54538 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbfHFMZq (ORCPT
+        Tue, 6 Aug 2019 08:29:01 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46978 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726711AbfHFM3B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 08:25:46 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 3E5D460452; Tue,  6 Aug 2019 12:25:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1565094346;
-        bh=nlFQIg/gVN0nwYqtpZP/7+7QfiDAEcVDq908uP/58+Y=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=XYT6KPkAc1Y4OuGaF93Wts5e3kBiE6qExY4hqUTItTZDx0+6XXNahNuMERDkJlrkn
-         NX2bevJv8JpMSNtsgsflRP5gJp9y46kvl8kLm6XiOsvkxHbBnjtlt5ciIriZqdwiF8
-         M/GzB7oHed7gTzTCcUEE7lQxa2k9JBaynarD6aXw=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8F157608A5;
-        Tue,  6 Aug 2019 12:25:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1565094345;
-        bh=nlFQIg/gVN0nwYqtpZP/7+7QfiDAEcVDq908uP/58+Y=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=T6XQFH4XqbX0ZOz/n8kdvEwuokYyf1j6+sNmHgR8aOzolBNeoouGXqJPuDevXN6OP
-         Yz8nObbyyyxtR80Oo0EpVuwQVFmJuOOAb29PhMZzA+JEIacXSbOo/CaxrN1XJOv6Rp
-         prv9t+kBBHRC2kIOHnqYddIIJGljwl/de9KFt2rw=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8F157608A5
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Tue, 6 Aug 2019 08:29:01 -0400
+Received: by mail-pg1-f195.google.com with SMTP id w3so4315393pgt.13
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 05:29:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=TAkr50ijx8uYBSMvjJlZB0+VJTs1FTT2VnuFaShQXNo=;
+        b=M1Cpzj/7rNIxbHRqUPvLOeU/gHQtCssc9hYvhmUxHsnJOd0HVPukRZF2hERxcIqtVW
+         VCsbXTgZm8u5jYdkXoG/rW8Ox5LUTICEr0sQtAUXDcIxMmvgKiTnQqnvuyms5MtWb+2D
+         r9VRIXaqjscdeZOPFg5Cd0zfC0nX09fumWnv2CkgUnV3QoC4qqOWvoVe6nJiqpXLREMq
+         DrN4sH9xBT3ZVS7ghP+nQIoXUKYDHnwbSDusV132j6NxPV3e9cb5sc7zGXRG/VnxpfYA
+         cGI0Yai5rcUN6pq2NXVIr93Q2ioqwf8tG8rLPXeXhrd048n467rF8MzaEn8+5deOK/IK
+         6Gvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=TAkr50ijx8uYBSMvjJlZB0+VJTs1FTT2VnuFaShQXNo=;
+        b=Bp2GlLzfUUJpjELd3vWQyp+XXvqrmBsAkMM0yhoeHwTTTO50GGoChJPtPKcpJfH4VZ
+         kA+fGphemhYE6RCqcsmut2ZUEwwgJpdV1PC2ts7k9+KG1tscqgEACfRCgGo7QJxWsV93
+         Z8c28E/yRdceRB7r5HTS7ZWskC1OzhZUJre2a+DHDciXm59ErW4HtfDqnunrTEwJzyGW
+         zBYcOU69+MxG4bdl16zpcFn3ApJiVyOXyj0nyAAGVGqcA1GFfT8FtiMy/+Q3UHJDlvkQ
+         710TorDzGMowW2vEGvtZvHzyYdITmRH9SUggtZannRcSCppww6mdqpwwQ35s9ssoqarW
+         JrNw==
+X-Gm-Message-State: APjAAAU0T89QhpLpQDd22WRKrcUm8Pvt6MWIkpufzOpa9xE8j0e+Xl6V
+        qanpo+6Fc4ZYJjZ+OfhV5ko=
+X-Google-Smtp-Source: APXvYqywhiZJSJjgzafUW390rY+y8rUndAU2xen9Y11XFEmgMYEMpJ3sitE9HVud3KQFoUPLdQHnBw==
+X-Received: by 2002:a63:6f81:: with SMTP id k123mr2938399pgc.12.1565094540469;
+        Tue, 06 Aug 2019 05:29:00 -0700 (PDT)
+Received: from IoT-COE ([2401:4900:2712:6d:6061:e04e:e2af:fb26])
+        by smtp.gmail.com with ESMTPSA id u128sm100439738pfu.48.2019.08.06.05.28.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 06 Aug 2019 05:29:00 -0700 (PDT)
+Date:   Tue, 6 Aug 2019 17:58:49 +0530
+From:   Merwin Trever Ferrao <merwintf@gmail.com>
+To:     Larry.Finger@lwfinger.net, gregkh@linuxfoundation.org,
+        dan.carpenter@oracle.com
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        merwintf@gmail.com
+Subject: [PATCH] Staging: rtl8188eu: core: rtw_security: tidy up crc32_init()
+Message-ID: <20190806122849.GA25628@IoT-COE>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] bcma: Use dev_get_drvdata
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190723082918.21077-1-hslester96@gmail.com>
-References: <20190723082918.21077-1-hslester96@gmail.com>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     unlisted-recipients:; (no To-header on input)
-        =?utf-8?b?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Illegal-Object: Syntax error in Cc: address found on vger.kernel.org:
-        Cc:     unlisted-recipients:; (no To-header on input)=?utf-8?b?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-                                                                     ^-missing end of address
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190806122546.3E5D460452@smtp.codeaurora.org>
-Date:   Tue,  6 Aug 2019 12:25:46 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Chuhong Yuan <hslester96@gmail.com> wrote:
+This code generates checkpatch warning:
 
-> Instead of using to_pci_dev + pci_get_drvdata,
-> use dev_get_drvdata to make code simpler.
-> 
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+WARNING: else is not generally useful after a break or return
 
-Patch applied to wireless-drivers-next.git, thanks.
+Moving the declaration to the top of the function we can pull the
+code back one tab and it makes it more readable.
 
-9236c1250cb7 bcma: Use dev_get_drvdata
+Signed-off-by: Merwin Trever Ferrao <merwintf@gmail.com>
+---
+ drivers/staging/rtl8188eu/core/rtw_security.c | 41 +++++++++----------
+ 1 file changed, 20 insertions(+), 21 deletions(-)
 
+diff --git a/drivers/staging/rtl8188eu/core/rtw_security.c b/drivers/staging/rtl8188eu/core/rtw_security.c
+index 2f90f60f1681..435c0fbec54a 100644
+--- a/drivers/staging/rtl8188eu/core/rtw_security.c
++++ b/drivers/staging/rtl8188eu/core/rtw_security.c
+@@ -87,29 +87,28 @@ static u8 crc32_reverseBit(u8 data)
+ 
+ static void crc32_init(void)
+ {
+-	if (bcrc32initialized == 1) {
++	int i, j;
++	u32 c;
++	u8 *p = (u8 *)&c, *p1;
++	u8 k;
++
++	if (bcrc32initialized == 1)
+ 		return;
+-	} else {
+-		int i, j;
+-		u32 c;
+-		u8 *p = (u8 *)&c, *p1;
+-		u8 k;
+-
+-		c = 0x12340000;
+-
+-		for (i = 0; i < 256; ++i) {
+-			k = crc32_reverseBit((u8)i);
+-			for (c = ((u32)k) << 24, j = 8; j > 0; --j)
+-				c = c & 0x80000000 ? (c << 1) ^ CRC32_POLY : (c << 1);
+-			p1 = (u8 *)&crc32_table[i];
+-
+-			p1[0] = crc32_reverseBit(p[3]);
+-			p1[1] = crc32_reverseBit(p[2]);
+-			p1[2] = crc32_reverseBit(p[1]);
+-			p1[3] = crc32_reverseBit(p[0]);
+-		}
+-		bcrc32initialized = 1;
++
++	c = 0x12340000;
++
++	for (i = 0; i < 256; ++i) {
++		k = crc32_reverseBit((u8)i);
++		for (c = ((u32)k) << 24, j = 8; j > 0; --j)
++			c = c & 0x80000000 ? (c << 1) ^ CRC32_POLY : (c << 1);
++		p1 = (u8 *)&crc32_table[i];
++
++		p1[0] = crc32_reverseBit(p[3]);
++		p1[1] = crc32_reverseBit(p[2]);
++		p1[2] = crc32_reverseBit(p[1]);
++		p1[3] = crc32_reverseBit(p[0]);
+ 	}
++	bcrc32initialized = 1;
+ }
+ 
+ static __le32 getcrc32(u8 *buf, int len)
 -- 
-https://patchwork.kernel.org/patch/11054111/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.17.1
 
