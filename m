@@ -2,96 +2,79 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DCDC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CE4C32751
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60F0020818
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27632216B7
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:02:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565107322;
+	bh=HOrSVJmekUuoCcV/AI4yIkSlnbHhBNxOYMrMq6QoUfA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2qcHTxnyxr3XT4+gQdPAxUpkzTbjA/5gzXsG9hBHHtyEyuPrlf2SF746yzOb5fqG1
+	 m9l229rR+1gJ2KquVQkQ1juxLf4T+moxgciJJVABr2gqmBGJIax/osPgasTa1YxSeN
+	 M72KS8o4dUTb1wISQ7lqPbaUmOHHxBv3rQDfshoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387504AbfHFQBu (ORCPT
+        id S2387540AbfHFQCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 12:01:50 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51984 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728756AbfHFQBu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 12:01:50 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 207so78761921wma.1;
-        Tue, 06 Aug 2019 09:01:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8BYSLhg5cqJdI/Qakd7sQwghpIb3plM/wekPJNZB95U=;
-        b=X8vaBzf/Y76GVt7YmME7wBTCO0ehItVLkV5G/9kN6eU8mPXYUozcBBBNDMYnDf3EFw
-         SWUNrGKAVjdx/K2bu1AePiYdakcdC7AJ2mbQ3LsAT9IhJQBNhb9JeST9CfzrAaBzVZ6s
-         b0fqGsUCiye9tDp8P4SoudMI4HQpU10iz1+q1v5yhnihpj2oV2EMuk1GLYDIESx+bGp3
-         ZGJHvBGojCc7M8eagIZJ8S6o7Sme4ahDSDC3usLnH3d0Qj44qe3R28D2rlCiFLnKOYWk
-         CiAZl/wFeN7oRMhEH/7RsAhZdIdsv+gN+9LVIdw1qHXQtPZMlk7umzP3I38VgnwERJEq
-         w54Q==
-X-Gm-Message-State: APjAAAXfjSwpuAzaAAd6Y347f1x+L0ZPAG3cnT1Mmeiu6CupK72HMiBU
-        DVnByczk5RRKneLLR67ur+Y=
-X-Google-Smtp-Source: APXvYqxeuzoa2DLBzGVGm9OW8kXz3P0h8I74oSH2Q9hyJT47ssuRyoCLCXVTpKaKuLNcb5ViZgMX9w==
-X-Received: by 2002:a05:600c:2117:: with SMTP id u23mr5462928wml.117.1565107308156;
-        Tue, 06 Aug 2019 09:01:48 -0700 (PDT)
-Received: from green.intra.ispras.ru (bran.ispras.ru. [83.149.199.196])
-        by smtp.googlemail.com with ESMTPSA id b203sm129380410wmd.41.2019.08.06.09.01.47
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 09:01:47 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Denis Efremov <efremov@linux.com>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        linux-pci@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] s390/pci: PCI_IOV_RESOURCES loop refactoring in zpci_map_resources
-Date:   Tue,  6 Aug 2019 19:01:37 +0300
-Message-Id: <20190806160137.29275-1-efremov@linux.com>
-X-Mailer: git-send-email 2.21.0
+        Tue, 6 Aug 2019 12:02:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46884 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728756AbfHFQCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 12:02:01 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 724DA20818;
+        Tue,  6 Aug 2019 16:01:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565107319;
+        bh=HOrSVJmekUuoCcV/AI4yIkSlnbHhBNxOYMrMq6QoUfA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=p1wdzBKALR62tUMD+QaTFEmzmEaW/8ZtLkwmt1k0SZpOfKlq8F7+00YtT0PDB671O
+         6MCbL6mxtDPl/Pm1xnT3zD9QAOfdVoyNYCokwpqFYdpH7cNXhUex7HHgh++7A4cFhk
+         kRXe/2bFa4GIKUztyTDJD0mY2eJ5H4q9xqTXxgWQ=
+Date:   Tue, 6 Aug 2019 18:01:57 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.2 000/131] 5.2.7-stable review
+Message-ID: <20190806160157.GA1988@kroah.com>
+References: <20190805124951.453337465@linuxfoundation.org>
+ <20190806155020.GE12156@roeck-us.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190806155020.GE12156@roeck-us.net>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch alters the for loop iteration scheme in zpci_map_resources
-to make it more usual. Thus, the patch generalizes the style for
-PCI_IOV_RESOURCES iteration and improves readability.
+On Tue, Aug 06, 2019 at 08:50:20AM -0700, Guenter Roeck wrote:
+> On Mon, Aug 05, 2019 at 03:01:27PM +0200, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.2.7 release.
+> > There are 131 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Wed 07 Aug 2019 12:47:58 PM UTC.
+> > Anything received after that time might be too late.
+> > 
+> 
+> Build results:
+> 	total: 159 pass: 159 fail: 0
+> Qemu test results:
+> 	total: 364 pass: 364 fail: 0
 
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
- arch/s390/pci/pci.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Wonderful, thanks for testing all of these and letting me know.
 
-diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
-index b0e3b9a0e488..c7fea9bea8cb 100644
---- a/arch/s390/pci/pci.c
-+++ b/arch/s390/pci/pci.c
-@@ -431,13 +431,13 @@ static void zpci_map_resources(struct pci_dev *pdev)
- 	}
- 
- #ifdef CONFIG_PCI_IOV
--	i = PCI_IOV_RESOURCES;
-+	for (i = 0; i < PCI_SRIOV_NUM_BARS; i++) {
-+		int bar = i + PCI_IOV_RESOURCES;
- 
--	for (; i < PCI_SRIOV_NUM_BARS + PCI_IOV_RESOURCES; i++) {
--		len = pci_resource_len(pdev, i);
-+		len = pci_resource_len(pdev, bar);
- 		if (!len)
- 			continue;
--		pdev->resource[i].parent = &iov_res;
-+		pdev->resource[bar].parent = &iov_res;
- 	}
- #endif
- }
--- 
-2.21.0
-
+greg k-h
