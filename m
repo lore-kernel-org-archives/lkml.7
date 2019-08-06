@@ -2,474 +2,240 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A8CC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E3CC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9F90214C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D58620C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:06:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Xc03wMxh"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="p1Fc7dSS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732440AbfHFNFj (ORCPT
+        id S1732560AbfHFNGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 09:05:39 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38026 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731677AbfHFNFQ (ORCPT
+        Tue, 6 Aug 2019 09:06:44 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:44915 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731379AbfHFNGn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 09:05:16 -0400
-Received: by mail-wr1-f66.google.com with SMTP id g17so87825851wrr.5
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 06:05:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=XpuZkkEr4/E1fLajnLLj8hhoKOa6kl91KbDCambRcZo=;
-        b=Xc03wMxhO07fS3kgXEqIiLcfZL3hySLg+2Dj3ggZ842/9L1c72y3rbnEC+bANb7qpw
-         baqB7BEO5JKzhGgZYP5olNEez0riSMd6e2Gs46kZCweCAXb37mmbV7D+wVtbKKrAVT93
-         bk1eEyHWuRbZ1pJVHr6rYsXJz1NzHDKoW+yfC50FrlnfutZd8v9CdzqYaaTikuckseoW
-         kjj7GFsLijSvEmxYrEOwZmhaQISavsC5O/aa9rkCAYiU8xHR9wtVeRHSK1sVOD/RxlUo
-         yXwmBD9UzTzmhAK9UW7XK2EBqfDyCImwqaR/vqxzUG4X00BF36LOTkDttetD3JR99390
-         WR+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=XpuZkkEr4/E1fLajnLLj8hhoKOa6kl91KbDCambRcZo=;
-        b=fM3sx7uXVgoVKz/Z7HNRQTBGGvdRwfn9t9hWnn4QG1/dLEUZp8lw/WrUn+VPo+JZBD
-         8qLeLgP+DftTLvlc6BoleQmNfoNSLUHb/BTU3+jhg0azMS8yiLb41bSeDCduyACvQu3W
-         YAldO1X5Xx2LWr7KQzRzo3onwJhEg/Ldh1eg+l2t+bKqYcWS3ezqJto33PmseFqex/Eq
-         n/Uk8iyKpEBjN7Zea6A9gs9AOoxVaHk9ufOmLLWzzJWaOZytDg93s2Yf1M/X4oJPzlM7
-         urhpiF37c8IaZlGWHBBY5wucYVe7SLRBELhSzg3fAVRcbP2cgrEts+c3K8earziwFJs5
-         /dHA==
-X-Gm-Message-State: APjAAAXrcxL3Rt3OQ2wK9rFtGI0PKaUhWop05i7k4rNjX78GM/l5Q3Cn
-        purLx8Gm5VLAQIPB0t0geVmcPA==
-X-Google-Smtp-Source: APXvYqwXKj5hOuFRAG0Bh6fnpIG4Lv4H51efaRjM+V7sP9GwGumbPzPEtEicc3IKuIw2b8gf2SQbSw==
-X-Received: by 2002:adf:f812:: with SMTP id s18mr5224531wrp.32.1565096712849;
-        Tue, 06 Aug 2019 06:05:12 -0700 (PDT)
-Received: from glaroque-ThinkPad-T480.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id j33sm201888738wre.42.2019.08.06.06.05.11
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 06:05:12 -0700 (PDT)
-From:   Guillaume La Roque <glaroque@baylibre.com>
-To:     daniel.lezcano@linaro.org, khilman@baylibre.com
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3 2/6] thermal: amlogic: Add thermal driver to support G12 SoCs
-Date:   Tue,  6 Aug 2019 15:05:02 +0200
-Message-Id: <20190806130506.8753-3-glaroque@baylibre.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190806130506.8753-1-glaroque@baylibre.com>
-References: <20190806130506.8753-1-glaroque@baylibre.com>
+        Tue, 6 Aug 2019 09:06:43 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x76D6WBe2187767
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 6 Aug 2019 06:06:33 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x76D6WBe2187767
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1565096793;
+        bh=AtCqteFjldMB6T0RG6+s029XovRQR+lH66/cIYM5M/Q=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=p1Fc7dSS8EY0GsBuaunxLYcf7IrvCwQN6gldM+2GfsKzkyF46o0MK+nCnnp4K+2uZ
+         De9M/5SmzEPvz02/QOvobwLll7XER7RH8PV74j9FIjryfJgT1bZUHQkbPMNTMZJowR
+         DuvK0OxhKPhHxTia21nQve8wQAzii1Ip/AGDbyA/nD9pm9b+ZZ2PuFWMLJlLeax/1F
+         U7vLODHflZUHTkU/oOhr+8mJbG+GRWwa3B10OvtEvj5wD5xNJwCzU4gu2dwkuJFbeU
+         YoyWBsWPHStiD9Na9gEDqcvQxXODPhRshnoDCpa3PjyqbwyD9uC29WoVWgTVG2S9VV
+         Y69zuD02mpV6A==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x76D6WMw2187764;
+        Tue, 6 Aug 2019 06:06:32 -0700
+Date:   Tue, 6 Aug 2019 06:06:32 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Mukesh Ojha <tipbot@zytor.com>
+Message-ID: <tip-5f35d5a66b3ec62cb5ec4ec2ad9aebe2ac325673@git.kernel.org>
+Cc:     tglx@linutronix.de, mingo@kernel.org, hpa@zytor.com,
+        peterz@infradead.org, linux-kernel@vger.kernel.org,
+        mojha@codeaurora.org
+Reply-To: peterz@infradead.org, tglx@linutronix.de, hpa@zytor.com,
+          mojha@codeaurora.org, mingo@kernel.org,
+          linux-kernel@vger.kernel.org
+In-Reply-To: <1564585504-3543-1-git-send-email-mojha@codeaurora.org>
+References: <1564585504-3543-1-git-send-email-mojha@codeaurora.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:locking/core] locking/mutex: Make __mutex_owner static to
+ mutex.c
+Git-Commit-ID: 5f35d5a66b3ec62cb5ec4ec2ad9aebe2ac325673
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Amlogic G12A and G12B SoCs integrate two thermal sensors
-with the same design.
-One is located close to the DDR controller and the other one is
-located close to the PLLs (between the CPU and GPU).
+Commit-ID:  5f35d5a66b3ec62cb5ec4ec2ad9aebe2ac325673
+Gitweb:     https://git.kernel.org/tip/5f35d5a66b3ec62cb5ec4ec2ad9aebe2ac325673
+Author:     Mukesh Ojha <mojha@codeaurora.org>
+AuthorDate: Wed, 31 Jul 2019 20:35:03 +0530
+Committer:  Peter Zijlstra <peterz@infradead.org>
+CommitDate: Tue, 6 Aug 2019 12:49:16 +0200
 
-The calibration data for each of the thermal sensors instance is
-stored in a different location within the AO region.
+locking/mutex: Make __mutex_owner static to mutex.c
 
-Implement reading the temperature from each thermal sensor.
+__mutex_owner() should only be used by the mutex api's.
+So, to put this restiction let's move the __mutex_owner()
+function definition from linux/mutex.h to mutex.c file.
 
-The IP block has more functionality, which may be added to this driver
-in the future:
-- chip reset when the temperature exceeds a configurable threshold
-- up to four interrupts when the temperature has risen above a
-configurable threshold
-- up to four interrupts when the temperature has fallen below a
-configurable threshold
+There exist functions that uses __mutex_owner() like
+mutex_is_locked() and mutex_trylock_recursive(), So
+to keep legacy thing intact move them as well and
+export them.
 
-Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+Move mutex_waiter structure also to keep it private to the
+file.
+
+Signed-off-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: mingo@redhat.com
+Cc: will@kernel.org
+Link: https://lkml.kernel.org/r/1564585504-3543-1-git-send-email-mojha@codeaurora.org
 ---
- drivers/thermal/Kconfig           |  11 +
- drivers/thermal/Makefile          |   1 +
- drivers/thermal/amlogic_thermal.c | 336 ++++++++++++++++++++++++++++++
- 3 files changed, 348 insertions(+)
- create mode 100644 drivers/thermal/amlogic_thermal.c
+ include/linux/mutex.h  | 38 +++-----------------------------------
+ kernel/locking/mutex.c | 39 +++++++++++++++++++++++++++++++++++++++
+ kernel/locking/mutex.h |  2 ++
+ 3 files changed, 44 insertions(+), 35 deletions(-)
 
-diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-index 9966364a6deb..0f31bb4bc372 100644
---- a/drivers/thermal/Kconfig
-+++ b/drivers/thermal/Kconfig
-@@ -348,6 +348,17 @@ config MTK_THERMAL
- 	  Enable this option if you want to have support for thermal management
- 	  controller present in Mediatek SoCs
+diff --git a/include/linux/mutex.h b/include/linux/mutex.h
+index dcd03fee6e01..eb8c62aba263 100644
+--- a/include/linux/mutex.h
++++ b/include/linux/mutex.h
+@@ -65,29 +65,6 @@ struct mutex {
+ #endif
+ };
  
-+config AMLOGIC_THERMAL
-+	tristate "Amlogic Thermal Support"
-+	default ARCH_MESON
-+	depends on OF && ARCH_MESON
-+	help
-+	  If you say yes here you get support for Amlogic Thermal
-+	  for G12 SoC Family.
-+
-+	  This driver can also be built as a module. If so, the module will
-+	  be called amlogic_thermal.
-+
- menu "Intel thermal drivers"
- depends on X86 || X86_INTEL_QUARK || COMPILE_TEST
- source "drivers/thermal/intel/Kconfig"
-diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-index 74a37c7f847a..baeb70bf0568 100644
---- a/drivers/thermal/Makefile
-+++ b/drivers/thermal/Makefile
-@@ -54,3 +54,4 @@ obj-$(CONFIG_MTK_THERMAL)	+= mtk_thermal.o
- obj-$(CONFIG_GENERIC_ADC_THERMAL)	+= thermal-generic-adc.o
- obj-$(CONFIG_ZX2967_THERMAL)	+= zx2967_thermal.o
- obj-$(CONFIG_UNIPHIER_THERMAL)	+= uniphier_thermal.o
-+obj-$(CONFIG_AMLOGIC_THERMAL)     += amlogic_thermal.o
-diff --git a/drivers/thermal/amlogic_thermal.c b/drivers/thermal/amlogic_thermal.c
-new file mode 100644
-index 000000000000..672d11abd8c7
---- /dev/null
-+++ b/drivers/thermal/amlogic_thermal.c
-@@ -0,0 +1,336 @@
-+// SPDX-License-Identifier: GPL-2.0+
+-/*
+- * Internal helper function; C doesn't allow us to hide it :/
+- *
+- * DO NOT USE (outside of mutex code).
+- */
+-static inline struct task_struct *__mutex_owner(struct mutex *lock)
+-{
+-	return (struct task_struct *)(atomic_long_read(&lock->owner) & ~0x07);
+-}
+-
+-/*
+- * This is the control structure for tasks blocked on mutex,
+- * which resides on the blocked task's kernel stack:
+- */
+-struct mutex_waiter {
+-	struct list_head	list;
+-	struct task_struct	*task;
+-	struct ww_acquire_ctx	*ww_ctx;
+-#ifdef CONFIG_DEBUG_MUTEXES
+-	void			*magic;
+-#endif
+-};
+-
+ #ifdef CONFIG_DEBUG_MUTEXES
+ 
+ #define __DEBUG_MUTEX_INITIALIZER(lockname)				\
+@@ -144,10 +121,7 @@ extern void __mutex_init(struct mutex *lock, const char *name,
+  *
+  * Returns true if the mutex is locked, false if unlocked.
+  */
+-static inline bool mutex_is_locked(struct mutex *lock)
+-{
+-	return __mutex_owner(lock) != NULL;
+-}
++extern bool mutex_is_locked(struct mutex *lock);
+ 
+ /*
+  * See kernel/locking/mutex.c for detailed documentation of these APIs.
+@@ -220,13 +194,7 @@ enum mutex_trylock_recursive_enum {
+  *  - MUTEX_TRYLOCK_SUCCESS   - lock acquired,
+  *  - MUTEX_TRYLOCK_RECURSIVE - we already owned the lock.
+  */
+-static inline /* __deprecated */ __must_check enum mutex_trylock_recursive_enum
+-mutex_trylock_recursive(struct mutex *lock)
+-{
+-	if (unlikely(__mutex_owner(lock) == current))
+-		return MUTEX_TRYLOCK_RECURSIVE;
+-
+-	return mutex_trylock(lock);
+-}
++extern /* __deprecated */ __must_check enum mutex_trylock_recursive_enum
++mutex_trylock_recursive(struct mutex *lock);
+ 
+ #endif /* __LINUX_MUTEX_H */
+diff --git a/kernel/locking/mutex.c b/kernel/locking/mutex.c
+index 5e069734363c..ac4929f1e085 100644
+--- a/kernel/locking/mutex.c
++++ b/kernel/locking/mutex.c
+@@ -36,6 +36,19 @@
+ # include "mutex.h"
+ #endif
+ 
 +/*
-+ * Amlogic Thermal Sensor Driver
-+ *
-+ * Copyright (C) 2017 Huan Biao <huan.biao@amlogic.com>
-+ * Copyright (C) 2019 Guillaume La Roque <glaroque@baylibre.com>
-+ *
-+ * Register value to celsius temperature formulas:
-+ *	Read_Val	    m * U
-+ * U = ---------, Uptat = ---------
-+ *	2^16		  1 + n * U
-+ *
-+ * Temperature = A * ( Uptat + u_efuse / 2^16 )- B
-+ *
-+ *  A B m n : calibration parameters
-+ *  u_efuse : fused calibration value, it's a signed 16 bits value
++ * This is the control structure for tasks blocked on mutex,
++ * which resides on the blocked task's kernel stack:
 + */
-+
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/thermal.h>
-+
-+#include "thermal_core.h"
-+
-+#define TSENSOR_CFG_REG1			0x4
-+	#define TSENSOR_CFG_REG1_RSET_VBG	BIT(12)
-+	#define TSENSOR_CFG_REG1_RSET_ADC	BIT(11)
-+	#define TSENSOR_CFG_REG1_VCM_EN		BIT(10)
-+	#define TSENSOR_CFG_REG1_VBG_EN		BIT(9)
-+	#define TSENSOR_CFG_REG1_OUT_CTL	BIT(6)
-+	#define TSENSOR_CFG_REG1_FILTER_EN	BIT(5)
-+	#define TSENSOR_CFG_REG1_DEM_EN		BIT(3)
-+	#define TSENSOR_CFG_REG1_CH_SEL		GENMASK(1, 0)
-+	#define TSENSOR_CFG_REG1_ENABLE		\
-+		(TSENSOR_CFG_REG1_FILTER_EN |	\
-+		 TSENSOR_CFG_REG1_VCM_EN |	\
-+		 TSENSOR_CFG_REG1_VBG_EN |	\
-+		 TSENSOR_CFG_REG1_DEM_EN |	\
-+		 TSENSOR_CFG_REG1_CH_SEL)
-+
-+#define TSENSOR_STAT0			0x40
-+
-+#define TSENSOR_STAT9			0x64
-+
-+#define TSENSOR_READ_TEMP_MASK		GENMASK(15, 0)
-+#define TSENSOR_TEMP_MASK		GENMASK(11, 0)
-+
-+#define TSENSOR_TRIM_SIGN_MASK		BIT(15)
-+#define TSENSOR_TRIM_TEMP_MASK		GENMASK(14, 0)
-+#define TSENSOR_TRIM_VERSION_MASK	GENMASK(31, 24)
-+
-+#define TSENSOR_TRIM_VERSION(_version)	\
-+	FIELD_GET(TSENSOR_TRIM_VERSION_MASK, _version)
-+
-+#define TSENSOR_TRIM_CALIB_VALID_MASK	(GENMASK(3, 2) | BIT(7))
-+
-+#define TSENSOR_CALIB_OFFSET	1
-+#define TSENSOR_CALIB_SHIFT	4
-+
-+/**
-+ * struct amlogic_thermal_soc_calib_data
-+ * @A, B, m, n: calibration parameters
-+ * This structure is required for configuration of amlogic thermal driver.
-+ */
-+struct amlogic_thermal_soc_calib_data {
-+	int A;
-+	int B;
-+	int m;
-+	int n;
++struct mutex_waiter {
++	struct list_head	list;
++	struct task_struct	*task;
++	struct ww_acquire_ctx	*ww_ctx;
++#ifdef CONFIG_DEBUG_MUTEXES
++	void			*magic;
++#endif
 +};
 +
-+/**
-+ * struct amlogic_thermal_data
-+ * @u_efuse_off: register offset to read fused calibration value
-+ * @soc: calibration parameters structure pointer
-+ * @regmap_config: regmap config for the device
-+ * This structure is required for configuration of amlogic thermal driver.
-+ */
-+struct amlogic_thermal_data {
-+	int u_efuse_off;
-+	const struct amlogic_thermal_soc_calib_data *calibration_parameters;
-+	const struct regmap_config *regmap_config;
-+};
-+
-+struct amlogic_thermal {
-+	struct platform_device *pdev;
-+	const struct amlogic_thermal_data *data;
-+	struct regmap *regmap;
-+	struct regmap *sec_ao_map;
-+	struct clk *clk;
-+	struct thermal_zone_device *tzd;
-+	u32 trim_info;
-+	void __iomem *base;
-+};
-+
+ void
+ __mutex_init(struct mutex *lock, const char *name, struct lock_class_key *key)
+ {
+@@ -65,11 +78,37 @@ EXPORT_SYMBOL(__mutex_init);
+ 
+ #define MUTEX_FLAGS		0x07
+ 
 +/*
-+ * Calculate a temperature value from a temperature code.
-+ * The unit of the temperature is degree milliCelsius.
++ * Internal helper function; C doesn't allow us to hide it :/
++ *
++ * DO NOT USE (outside of mutex code).
 + */
-+static int amlogic_thermal_code_to_millicelsius(struct amlogic_thermal *pdata,
-+						int temp_code)
++static inline struct task_struct *__mutex_owner(struct mutex *lock)
 +{
-+	const struct amlogic_thermal_soc_calib_data *param =
-+					pdata->data->calibration_parameters;
-+	int temp;
-+	s64 factor, Uptat, uefuse;
-+
-+	uefuse = pdata->trim_info & TSENSOR_TRIM_SIGN_MASK ?
-+			     ~(pdata->trim_info & TSENSOR_TRIM_TEMP_MASK) + 1 :
-+			     (pdata->trim_info & TSENSOR_TRIM_TEMP_MASK);
-+
-+	factor = param->n * temp_code;
-+	factor = div_s64(factor, 100);
-+
-+	Uptat = temp_code * param->m;
-+	Uptat = div_s64(Uptat, 100);
-+	Uptat = Uptat * BIT(16);
-+	Uptat = div_s64(Uptat, BIT(16) + factor);
-+
-+	temp = (Uptat + uefuse) * param->A;
-+	temp = div_s64(temp, BIT(16));
-+	temp = (temp - param->B) * 100;
-+
-+	return temp;
++	return (struct task_struct *)(atomic_long_read(&lock->owner) & ~0x07);
 +}
 +
-+static int amlogic_thermal_initialize(struct amlogic_thermal *pdata)
+ static inline struct task_struct *__owner_task(unsigned long owner)
+ {
+ 	return (struct task_struct *)(owner & ~MUTEX_FLAGS);
+ }
+ 
++bool mutex_is_locked(struct mutex *lock)
 +{
-+	int ret = 0;
-+	int ver;
-+
-+	regmap_read(pdata->sec_ao_map, pdata->data->u_efuse_off,
-+		    &pdata->trim_info);
-+
-+	ver = TSENSOR_TRIM_VERSION(pdata->trim_info);
-+
-+	if ((ver & TSENSOR_TRIM_CALIB_VALID_MASK) == 0) {
-+		ret = -EINVAL;
-+		dev_err(&pdata->pdev->dev,
-+			"tsensor thermal calibration not supported: 0x%x!\n",
-+			ver);
-+	}
-+
-+	return ret;
++	return __mutex_owner(lock) != NULL;
 +}
++EXPORT_SYMBOL(mutex_is_locked);
 +
-+static int amlogic_thermal_enable(struct amlogic_thermal *data)
++__must_check enum mutex_trylock_recursive_enum
++mutex_trylock_recursive(struct mutex *lock)
 +{
-+	int ret;
++	if (unlikely(__mutex_owner(lock) == current))
++		return MUTEX_TRYLOCK_RECURSIVE;
 +
-+	ret = clk_prepare_enable(data->clk);
-+	if (ret)
-+		return ret;
-+	regmap_update_bits(data->regmap, TSENSOR_CFG_REG1,
-+			   TSENSOR_CFG_REG1_ENABLE, TSENSOR_CFG_REG1_ENABLE);
-+
-+	return 0;
++	return mutex_trylock(lock);
 +}
++EXPORT_SYMBOL(mutex_trylock_recursive);
 +
-+static int amlogic_thermal_disable(struct amlogic_thermal *data)
-+{
-+	regmap_update_bits(data->regmap, TSENSOR_CFG_REG1,
-+			   TSENSOR_CFG_REG1_ENABLE, 0);
-+	clk_disable_unprepare(data->clk);
+ static inline unsigned long __owner_flags(unsigned long owner)
+ {
+ 	return owner & MUTEX_FLAGS;
+diff --git a/kernel/locking/mutex.h b/kernel/locking/mutex.h
+index 1c2287d3fa71..7cde5c6d414e 100644
+--- a/kernel/locking/mutex.h
++++ b/kernel/locking/mutex.h
+@@ -19,6 +19,8 @@
+ #define debug_mutex_unlock(lock)			do { } while (0)
+ #define debug_mutex_init(lock, name, key)		do { } while (0)
+ 
++struct mutex_waiter;
 +
-+	return 0;
-+}
-+
-+static int amlogic_thermal_get_temp(void *data, int *temp)
-+{
-+	unsigned int tval;
-+	struct amlogic_thermal *pdata = data;
-+
-+	if (!data)
-+		return -EINVAL;
-+
-+	regmap_read(pdata->regmap, TSENSOR_STAT0, &tval);
-+	*temp =
-+	   amlogic_thermal_code_to_millicelsius(pdata,
-+						tval & TSENSOR_READ_TEMP_MASK);
-+
-+	return 0;
-+}
-+
-+static const struct thermal_zone_of_device_ops amlogic_thermal_ops = {
-+	.get_temp	= amlogic_thermal_get_temp,
-+};
-+
-+static const struct regmap_config amlogic_thermal_regmap_config_g12 = {
-+	.reg_bits = 8,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+	.max_register = TSENSOR_STAT9,
-+};
-+
-+static const struct amlogic_thermal_soc_calib_data amlogic_thermal_g12 = {
-+	.A = 9411,
-+	.B = 3159,
-+	.m = 424,
-+	.n = 324,
-+};
-+
-+static const struct amlogic_thermal_data amlogic_thermal_g12_cpu_param = {
-+	.u_efuse_off = 0x128,
-+	.calibration_parameters = &amlogic_thermal_g12,
-+	.regmap_config = &amlogic_thermal_regmap_config_g12,
-+};
-+
-+static const struct amlogic_thermal_data amlogic_thermal_g12_ddr_param = {
-+	.u_efuse_off = 0xf0,
-+	.calibration_parameters = &amlogic_thermal_g12,
-+	.regmap_config = &amlogic_thermal_regmap_config_g12,
-+};
-+
-+static const struct of_device_id of_amlogic_thermal_match[] = {
-+	{
-+		.compatible = "amlogic,g12-ddr-thermal",
-+		.data = &amlogic_thermal_g12_ddr_param,
-+	},
-+	{
-+		.compatible = "amlogic,g12-cpu-thermal",
-+		.data = &amlogic_thermal_g12_cpu_param,
-+	},
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, of_amlogic_thermal_match);
-+
-+static int amlogic_thermal_probe(struct platform_device *pdev)
-+{
-+	struct amlogic_thermal *pdata;
-+	struct device *dev = &pdev->dev;
-+	struct resource *res;
-+	int ret;
-+
-+	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return -ENOMEM;
-+
-+	pdata->data = of_device_get_match_data(dev);
-+	pdata->pdev = pdev;
-+	platform_set_drvdata(pdev, pdata);
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	pdata->base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(pdata->base)) {
-+		dev_err(dev, "failed to get io address\n");
-+		return PTR_ERR(pdata->base);
-+	}
-+
-+	pdata->regmap = devm_regmap_init_mmio(dev, pdata->base,
-+					      pdata->data->regmap_config);
-+	if (IS_ERR(pdata->regmap))
-+		return PTR_ERR(pdata->regmap);
-+
-+	pdata->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(pdata->clk)) {
-+		if (PTR_ERR(pdata->clk) != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get clock\n");
-+		return PTR_ERR(pdata->clk);
-+	}
-+
-+	pdata->sec_ao_map = syscon_regmap_lookup_by_phandle
-+		(pdev->dev.of_node, "amlogic,ao-secure");
-+	if (IS_ERR(pdata->sec_ao_map)) {
-+		dev_err(dev, "syscon regmap lookup failed.\n");
-+		return PTR_ERR(pdata->sec_ao_map);
-+	}
-+
-+	pdata->tzd = devm_thermal_zone_of_sensor_register(&pdev->dev,
-+							  0,
-+							  pdata,
-+							  &amlogic_thermal_ops);
-+	if (IS_ERR(pdata->tzd)) {
-+		ret = PTR_ERR(pdata->tzd);
-+		dev_err(dev, "Failed to register tsensor: %d\n", ret);
-+		return PTR_ERR(pdata->tzd);
-+	}
-+
-+	ret = amlogic_thermal_initialize(pdata);
-+	if (ret)
-+		return ret;
-+
-+	ret = amlogic_thermal_enable(pdata);
-+	if (ret)
-+		clk_disable_unprepare(pdata->clk);
-+
-+	return ret;
-+}
-+
-+static int amlogic_thermal_remove(struct platform_device *pdev)
-+{
-+	struct amlogic_thermal *data = platform_get_drvdata(pdev);
-+
-+	return amlogic_thermal_disable(data);
-+}
-+
-+static int __maybe_unused amlogic_thermal_suspend(struct device *dev)
-+{
-+	struct amlogic_thermal *data = dev_get_drvdata(dev);
-+
-+	return amlogic_thermal_disable(data);
-+}
-+
-+static int __maybe_unused amlogic_thermal_resume(struct device *dev)
-+{
-+	struct amlogic_thermal *data = dev_get_drvdata(dev);
-+
-+	return amlogic_thermal_enable(data);
-+}
-+
-+static SIMPLE_DEV_PM_OPS(amlogic_thermal_pm_ops,
-+			 amlogic_thermal_suspend, amlogic_thermal_resume);
-+
-+static struct platform_driver amlogic_thermal_driver = {
-+	.driver = {
-+		.name		= "amlogic_thermal",
-+		.pm		= &amlogic_thermal_pm_ops,
-+		.of_match_table = of_amlogic_thermal_match,
-+	},
-+	.probe	= amlogic_thermal_probe,
-+	.remove	= amlogic_thermal_remove,
-+};
-+
-+module_platform_driver(amlogic_thermal_driver);
-+
-+MODULE_AUTHOR("Guillaume La Roque <glaroque@baylibre.com>");
-+MODULE_DESCRIPTION("Amlogic thermal driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.17.1
-
+ static inline void
+ debug_mutex_lock_common(struct mutex *lock, struct mutex_waiter *waiter)
+ {
