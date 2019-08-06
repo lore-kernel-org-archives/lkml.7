@@ -2,109 +2,94 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2F1C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49432C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3437520C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 183F020C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:55:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565088714;
-	bh=kmKIvIJkyBaPZsGIyMclmezcj1Lv6hfOU6Sr/4MtWew=;
+	s=default; t=1565088906;
+	bh=1JLTPpfpkPsqwSWrtotrOkeGqj0j+IBBMzsscXAmtE8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=td3HK/PRw6mhPW1ehi8PuT0yNX80JmI8HubowkoUMs3Jla4vCVcd8G2tEsb37nsd4
-	 krlC5SbBoP8USMwlzmzgqq/HEUPPslOCb134PFrVFh+m3LHzSTDIU9c9ctUO06Tqkm
-	 eFC+FRfx1IOLRbUmrjtNxOqDJeq4MOSmkQmC6OsI=
+	b=IEGTj2NrvekL69k8v9WWe6k5D4F7DQMvtFYKPi/SIQ6PH+yXVsVuSqL0juxavMMbe
+	 mNe8qAsyDhdMcT43kDyQA/OfSE/xbm7Dl8Cm4xdNE47AMnDNV3dtx2C9vMdRQNY5X1
+	 XepkgmD2uxj6Fk8/geb7c1LXorcLf2O2vHZ3iD0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732604AbfHFKvx (ORCPT
+        id S1732575AbfHFKzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 06:51:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43404 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728845AbfHFKvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 06:51:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CF4EBAFCC;
-        Tue,  6 Aug 2019 10:51:50 +0000 (UTC)
-Date:   Tue, 6 Aug 2019 12:51:49 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
+        Tue, 6 Aug 2019 06:55:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47002 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731006AbfHFKzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 06:55:04 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E4692054F;
+        Tue,  6 Aug 2019 10:55:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565088903;
+        bh=1JLTPpfpkPsqwSWrtotrOkeGqj0j+IBBMzsscXAmtE8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wvEGbIxhNadQsLLAHlAEdyO1dalgt7IsDGyqS5dUC2ckk5y2FqHLujgmFZaL+ReSB
+         T5sjR86if2cn3Gre0veQONg+aw+ZFdg0iKpVQCziI9Dd5h9zlEhjAlIlEuVhy0k7z3
+         WsKdHSAvl8De1y9oDgWPEXnfWEAS5nJ4Y73Y+fBc=
+Date:   Tue, 6 Aug 2019 12:55:01 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Brendan Gregg <bgregg@netflix.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christian Hansen <chansen3@cisco.com>, dancol@google.com,
-        fmayer@google.com, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Mike Rapoport <rppt@linux.ibm.com>, minchan@kernel.org,
-        namhyung@google.com, paulmck@linux.ibm.com,
-        Robin Murphy <robin.murphy@arm.com>,
-        Roman Gushchin <guro@fb.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, surenb@google.com,
-        Thomas Gleixner <tglx@linutronix.de>, tkjos@google.com,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v4 4/5] page_idle: Drain all LRU pagevec before idle
- tracking
-Message-ID: <20190806105149.GT11812@dhcp22.suse.cz>
-References: <20190805170451.26009-1-joel@joelfernandes.org>
- <20190805170451.26009-4-joel@joelfernandes.org>
- <20190806084357.GK11812@dhcp22.suse.cz>
- <20190806104554.GB218260@google.com>
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Subject: Re: [PATCH 5.2 000/131] 5.2.7-stable review
+Message-ID: <20190806105501.GB15070@kroah.com>
+References: <20190805124951.453337465@linuxfoundation.org>
+ <CA+G9fYsbLHkmg8en+WJ00pO-TO+z7ZQXprNP4CAc+_cgC_koGA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190806104554.GB218260@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYsbLHkmg8en+WJ00pO-TO+z7ZQXprNP4CAc+_cgC_koGA@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 06-08-19 06:45:54, Joel Fernandes wrote:
-> On Tue, Aug 06, 2019 at 10:43:57AM +0200, Michal Hocko wrote:
-> > On Mon 05-08-19 13:04:50, Joel Fernandes (Google) wrote:
-> > > During idle tracking, we see that sometimes faulted anon pages are in
-> > > pagevec but are not drained to LRU. Idle tracking considers pages only
-> > > on LRU. Drain all CPU's LRU before starting idle tracking.
-> > 
-> > Please expand on why does this matter enough to introduce a potentially
-> > expensinve draining which has to schedule a work on each CPU and wait
-> > for them to finish.
+On Tue, Aug 06, 2019 at 11:47:49AM +0530, Naresh Kamboju wrote:
+> On Mon, 5 Aug 2019 at 18:50, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 5.2.7 release.
+> > There are 131 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Wed 07 Aug 2019 12:47:58 PM UTC.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.7-rc1.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
 > 
-> Sure, I can expand. I am able to find multiple issues involving this. One
-> issue looks like idle tracking is completely broken. It shows up in my
-> testing as if a page that is marked as idle is always "accessed" -- because
-> it was never marked as idle (due to not draining of pagevec).
-> 
-> The other issue shows up as a failure in my "swap test", with the following
-> sequence:
-> 1. Allocate some pages
-> 2. Write to them
-> 3. Mark them as idle                                    <--- fails
-> 4. Introduce some memory pressure to induce swapping.
-> 5. Check the swap bit I introduced in this series.      <--- fails to set idle
->                                                              bit in swap PTE.
-> 
-> Draining the pagevec in advance fixes both of these issues.
+> Results from Linaro’s test farm.
+> No regressions on arm64, arm, x86_64, and i386.
 
-This belongs to the changelog.
+Thanks for testing all of these and letting me know.
 
-> This operation even if expensive is only done once during the access of the
-> page_idle file. Did you have a better fix in mind?
-
-Can we set the idle bit also for non-lru pages as long as they are
-reachable via pte?
--- 
-Michal Hocko
-SUSE Labs
+greg k-h
