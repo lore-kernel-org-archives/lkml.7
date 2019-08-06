@@ -2,99 +2,128 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C527C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 01:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D53C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 01:33:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6848A2147A
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 01:33:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I6z6O7r3"
+	by mail.kernel.org (Postfix) with ESMTP id CAD532147A
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 01:33:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731336AbfHFBdg (ORCPT
+        id S1731366AbfHFBdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 21:33:36 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:41817 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728870AbfHFBdg (ORCPT
+        Mon, 5 Aug 2019 21:33:45 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:51505 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728870AbfHFBdp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 21:33:36 -0400
-Received: by mail-qt1-f196.google.com with SMTP id d17so4059152qtj.8
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 18:33:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id;
-        bh=3Q58zsuke6wL53H4L04d0Bb7ddU3CfSaVopOCua6A/0=;
-        b=I6z6O7r3bTflfnCWcqkpvE2mqzgQuHYLFT6MkZp0mZMZMQY8RyQ+feZCfoS9hi3Xqy
-         TP8h6xHhaLdVoXbxc2okS54YaAbAltMFH8zPZq3Ag5qF/VYe8cPESBjzbU2lJOgLsjZ+
-         +gNqKtoMHFU7pT188vUoWhF2H2j4niN/M61rt+rGI/+x4MEaNAoiagXLhdWm+lYZXV7c
-         x6udGDlR3vLoKsZN5GOD0cS9qjZoMpt16TPV0TKjD2BkWCS5tqOfwwwItNc1U8j5pO6w
-         +tq9kNvuMw73Yagz6yl3Y8W7xC1w6CxaPEf2qJXZu1ni+JvZ9yhtpklqEUFl4TsmfpsR
-         Ug5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=3Q58zsuke6wL53H4L04d0Bb7ddU3CfSaVopOCua6A/0=;
-        b=hVNymI+iFOES82674+wYFWmk2wWQEtoEEi5h8wH9fuQX9cLVpnkf/ktDX3byzzUbA3
-         ECF6O6uRVCr5hhJAs2hnKPpt1vgFrczvYPc+oNV0GXHIDCV6h1Qk6gag64/xMtRRETcV
-         Snhq9LjR7VUPY9uoFY6pgTJzoBc35ef9W/Ubuie/p9lxgQGxR8/u92xc5zT7u9GMTnvk
-         MrgpZG2oSFY4IwMq1cdvWWga+xUONxUqHhFh2NR0L6ctRYFqWqjbEv8rwLvh6bsweHT+
-         HZj3erF/75svEpUrogc8/LOcdXHlzV/wp+vuxfSe9FFuLJTQLFm/ssR9t3u6+ZWnDaeo
-         2uzQ==
-X-Gm-Message-State: APjAAAXOXTAJKxL1TcCw4Gj1h9A63gnZRfuPJYCAQ11mzaL+s97leFOO
-        s9gvkIrsEgy4TRfgJ4MhF95aW2TkYf9OnQ==
-X-Google-Smtp-Source: APXvYqzgRzdHJOOQyzxpSYifLO5Qk5rHQG71pSzz//XeqGOwQ18oRylnPv1yxUlNr/5FHtW0umMFUA==
-X-Received: by 2002:ac8:2774:: with SMTP id h49mr855184qth.97.1565055214743;
-        Mon, 05 Aug 2019 18:33:34 -0700 (PDT)
-Received: from localhost.localdomain ([2804:431:c7f0:2195:b8bc:4baa:a575:e6c8])
-        by smtp.gmail.com with ESMTPSA id k123sm34789574qkf.13.2019.08.05.18.33.31
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 05 Aug 2019 18:33:33 -0700 (PDT)
-From:   Jose Carlos Cazarin Filho <joseespiriki@gmail.com>
-To:     Larry.Finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
-        gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
-Subject: [PATCH] rtl8712: rtl871x_ioctl_linux.c: fix unnecessary typecast
-Date:   Mon,  5 Aug 2019 22:33:29 -0300
-Message-Id: <20190806013329.28574-1-joseespiriki@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 5 Aug 2019 21:33:45 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R641e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TYmOEx4_1565055217;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TYmOEx4_1565055217)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 06 Aug 2019 09:33:40 +0800
+Subject: Re: [PATCH v2 0/4] per-cgroup numa suite
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+To:     Peter Zijlstra <peterz@infradead.org>, hannes@cmpxchg.org,
+        mhocko@kernel.org, vdavydov.dev@gmail.com,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        mcgrof@kernel.org, keescook@chromium.org,
+        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
+        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
+        Hillf Danton <hdanton@sina.com>
+References: <209d247e-c1b2-3235-2722-dd7c1f896483@linux.alibaba.com>
+ <60b59306-5e36-e587-9145-e90657daec41@linux.alibaba.com>
+ <65c1987f-bcce-2165-8c30-cf8cf3454591@linux.alibaba.com>
+Message-ID: <789b95a2-6a92-eb30-85c5-af8e5dcc8048@linux.alibaba.com>
+Date:   Tue, 6 Aug 2019 09:33:37 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <65c1987f-bcce-2165-8c30-cf8cf3454591@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix checkpath warning:
-WARNING: Unnecessary typecast of c90 int constant
+Hi, Folks
 
-Signed-off-by: Jose Carlos Cazarin Filho <joseespiriki@gmail.com>
----
- Hello all!
- This is my first commit to the Linux Kernel, I'm doing this to learn and be able
- to contribute more in the future
- Peace all! 
- drivers/staging/rtl8712/rtl871x_ioctl_linux.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Please feel free to comment if you got any concerns :-)
 
-diff --git a/drivers/staging/rtl8712/rtl871x_ioctl_linux.c b/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
-index 944336e0d..da371072e 100644
---- a/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
-+++ b/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
-@@ -665,8 +665,8 @@ static int r8711_wx_set_freq(struct net_device *dev,
- 
- /* If setting by frequency, convert to a channel */
- 	if ((fwrq->e == 1) &&
--	  (fwrq->m >= (int) 2.412e8) &&
--	  (fwrq->m <= (int) 2.487e8)) {
-+	  (fwrq->m >= 2.412e8) &&
-+	  (fwrq->m <= 2.487e8)) {
- 		int f = fwrq->m / 100000;
- 		int c = 0;
- 
--- 
-2.17.1
+Hi, Peter
 
+How do you think about this version?
+
+Please let us know if it's still not good enough to be accepted :-)
+
+Regards,
+Michael Wang
+
+On 2019/7/16 上午11:38, 王贇 wrote:
+> During our torturing on numa stuff, we found problems like:
+> 
+>   * missing per-cgroup information about the per-node execution status
+>   * missing per-cgroup information about the numa locality
+> 
+> That is when we have a cpu cgroup running with bunch of tasks, no good
+> way to tell how it's tasks are dealing with numa.
+> 
+> The first two patches are trying to complete the missing pieces, but
+> more problems appeared after monitoring these status:
+> 
+>   * tasks not always running on the preferred numa node
+>   * tasks from same cgroup running on different nodes
+> 
+> The task numa group handler will always check if tasks are sharing pages
+> and try to pack them into a single numa group, so they will have chance to
+> settle down on the same node, but this failed in some cases:
+> 
+>   * workloads share page caches rather than share mappings
+>   * workloads got too many wakeup across nodes
+> 
+> Since page caches are not traced by numa balancing, there are no way to
+> realize such kind of relationship, and when there are too many wakeup,
+> task will be drag from the preferred node and then migrate back by numa
+> balancing, repeatedly.
+> 
+> Here the third patch try to address the first issue, we could now give hint
+> to kernel about the relationship of tasks, and pack them into single numa
+> group.
+> 
+> And the forth patch introduced numa cling, which try to address the wakup
+> issue, now we try to make task stay on the preferred node on wakeup in fast
+> path, in order to address the unbalancing risk, we monitoring the numa
+> migration failure ratio, and pause numa cling when it reach the specified
+> degree.
+> 
+> Since v1:
+>   * move statistics from memory cgroup into cpu group
+>   * statistics now accounting in hierarchical way
+>   * locality now accounted into 8 regions equally
+>   * numa cling no longer override select_idle_sibling, instead we
+>     prevent numa swap migration with tasks cling to dst-node, also
+>     prevent wake affine to drag tasks away which already cling to
+>     prev-cpu
+>   * other refine on comments and names
+> 
+> Michael Wang (4):
+>   v2 numa: introduce per-cgroup numa balancing locality statistic
+>   v2 numa: append per-node execution time in cpu.numa_stat
+>   v2 numa: introduce numa group per task group
+>   v4 numa: introduce numa cling feature
+> 
+>  include/linux/sched.h        |   8 +-
+>  include/linux/sched/sysctl.h |   3 +
+>  kernel/sched/core.c          |  85 ++++++++
+>  kernel/sched/debug.c         |   7 +
+>  kernel/sched/fair.c          | 510 ++++++++++++++++++++++++++++++++++++++++++-
+>  kernel/sched/sched.h         |  41 ++++
+>  kernel/sysctl.c              |   9 +
+>  7 files changed, 651 insertions(+), 12 deletions(-)
+> 
