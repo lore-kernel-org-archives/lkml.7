@@ -2,79 +2,143 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0471FC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD30C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9B2720C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:03:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ptp7kkvT"
+	by mail.kernel.org (Postfix) with ESMTP id EDE62214C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:04:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730471AbfHFNDm (ORCPT
+        id S1731301AbfHFNEN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 09:03:42 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:59766 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726713AbfHFNDm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 09:03:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=jwyUMBVjiYnUmvqz+giwj5r280EW828xGRYTzfWaN3w=; b=ptp7kkvTn803t1ObiCaymhOJp
-        biPQk0rsgodiwdHrCK32q17oPe+aNX6zEYN7WKjNyHu2gRXRiMJ8QThBRkl3tvV6NE4UFWLeIBRDG
-        u4MQw5puHNHMdPKcMiEw0/0xVqj6hl5tvx5tav12tOV0GGAmqfnfc9/0dQmDFV053jfZytr7uSfJb
-        2If11HHO5wMhNo9Hx0+3qKov9WbDLTErhMw8izm3NttZdJbXgS3pH3ZkTPxFvLdJKnXIi1AkzTmw8
-        7Gqa6pouUNitaQ/EcTNpFmu1btxio+8tdAjr+gIiXu5NTYovqt3g/BCt4sln5nSTHYMh3xBCSKDHl
-        HyWaO925g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1huz7o-0002jB-Tv; Tue, 06 Aug 2019 13:03:37 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DE9FA3067E2;
-        Tue,  6 Aug 2019 15:03:08 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 42FDA201B6A97; Tue,  6 Aug 2019 15:03:34 +0200 (CEST)
-Date:   Tue, 6 Aug 2019 15:03:34 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Phil Auld <pauld@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH] sched: use rq_lock/unlock in online_fair_sched_group
-Message-ID: <20190806130334.GO2349@hirez.programming.kicks-ass.net>
-References: <20190801133749.11033-1-pauld@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190801133749.11033-1-pauld@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 6 Aug 2019 09:04:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57316 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726092AbfHFNEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 09:04:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 05F04B061;
+        Tue,  6 Aug 2019 13:04:10 +0000 (UTC)
+Date:   Tue, 06 Aug 2019 15:04:10 +0200
+Message-ID: <s5ho912momt.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Luca Coelho <luca@coelho.fi>
+Cc:     dor.shaish@intel.com, Josh Boyer <jwboyer@kernel.org>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Regression with the latest iwlwifi-9260-*-46.ucode
+In-Reply-To: <a394850acbe0f05d6428ce466ecac1cfaefadd59.camel@coelho.fi>
+References: <s5hr26m9gvc.wl-tiwai@suse.de>
+        <280dad08ba9864755c3c45ed3ce26d602fe18a49.camel@intel.com>
+        <s5ho91pzyml.wl-tiwai@suse.de>
+        <s5hwogcxwt4.wl-tiwai@suse.de>
+        <b225d043d8581e0fec68cb63f7433161868293f3.camel@coelho.fi>
+        <s5hmuh7xrqy.wl-tiwai@suse.de>
+        <38635c1b10018859457787ecff4f92a3ceec34a4.camel@coelho.fi>
+        <ef32cea91614b9708a474e223f3fbbb85a95501d.camel@coelho.fi>
+        <s5hsgqgnczv.wl-tiwai@suse.de>
+        <99462e51eda721d5d85d9ea9e2c28da62f8b54f5.camel@coelho.fi>
+        <a394850acbe0f05d6428ce466ecac1cfaefadd59.camel@coelho.fi>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 09:37:49AM -0400, Phil Auld wrote:
-> Enabling WARN_DOUBLE_CLOCK in /sys/kernel/debug/sched_features causes
-
-ISTR there were more issues; but it sure is good to start picking them
-off.
-
-> warning to fire in update_rq_clock. This seems to be caused by onlining
-> a new fair sched group not using the rq lock wrappers.
+On Mon, 05 Aug 2019 14:03:55 +0200,
+Luca Coelho wrote:
 > 
-> [472978.683085] rq->clock_update_flags & RQCF_UPDATED
-> [472978.683100] WARNING: CPU: 5 PID: 54385 at kernel/sched/core.c:210 update_rq_clock+0xec/0x150
+> On Mon, 2019-08-05 at 13:10 +0300, Luca Coelho wrote:
+> > On Mon, 2019-08-05 at 12:05 +0200, Takashi Iwai wrote:
+> > > On Mon, 05 Aug 2019 11:53:33 +0200,
+> > > Luca Coelho wrote:
+> > > > On Mon, 2019-08-05 at 12:48 +0300, Luca Coelho wrote:
+> > > > > On Sun, 2019-07-21 at 18:43 +0200, Takashi Iwai wrote:
+> > > > > > On Sat, 20 Jul 2019 22:49:33 +0200,
+> > > > > > Luca Coelho wrote:
+> > > > > > > On Sat, 2019-07-20 at 22:42 +0200, Takashi Iwai wrote:
+> > > > > > > > On Fri, 19 Jul 2019 20:07:46 +0200,
+> > > > > > > > Takashi Iwai wrote:
+> > > > > > > > > On Fri, 19 Jul 2019 18:36:53 +0200,
+> > > > > > > > > Luciano Coelho wrote:
+> > > > > > > > > > Adding Dor.
+> > > > > > > > > > 
+> > > > > > > > > > Hi Takashi,
+> > > > > > > > > > 
+> > > > > > > > > > Do you have full logs of the crash? We can't see much from the log
+> > > > > > > > > > snippet pasted in the bug report.
+> > > > > > > > > 
+> > > > > > > > > OK, I'll ask reporters.  If you have a SUSE/openSUSE bugzilla account,
+> > > > > > > > > feel free to join there.
+> > > > > > > > 
+> > > > > > > > FYI, the dmesg's have been uploaded to the same bugzilla entry:
+> > > > > > > >   https://bugzilla.opensuse.org/show_bug.cgi?id=1142128
+> > > > > > > > 
+> > > > > > > 
+> > > > > > > Thanks!
+> > > > > > > 
+> > > > > > > BTW, I pushed new firmwares to our firmware tree in git.kernel.org
+> > > > > > > today.  This is the patch:
+> > > > > > > 
+> > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/iwlwifi/linux-firmware.git/commit/?id=b5f09bb4f816abace0227d0f4e749859364cef6b
+> > > > > > > 
+> > > > > > > It would be great if you can try it out and let us know whether the problem is gone or not.
+> > > > > > 
+> > > > > > I created a test package and asked for testing.
+> > > > > > The test result seems negative, showing the same error,
+> > > > > > unfortunately.
+> > > > > > 
+> > > > > > The dmesg was uploaded on the bugzilla entry.
+> > > > > 
+> > > > > Thanks Takashi! We will look into them as soon as possible (sorry for
+> > > > > the late reply, I just came back from vacations).
+> > > > 
+> > > > Actually, I just noticed that your bugzilla is closed as "RESOLVED
+> > > > FIXED".  Is this still an issue?
+> > > 
+> > > It's "closed" because our package contains the revert.
+> > > 
+> > > > This seems like a mismatch between the WiFi and BT firmwares... And
+> > > > most likely the same issue as this:
+> > > > 
+> > > > https://bugzilla.kernel.org/show_bug.cgi?id=202163
+> > > 
+> > > OK, so we need the update of the whole linux-firmware.
+> > > I'll refresh the package and ask for testing.
+> > 
+> > I'm not sure the new BT firmware is in linux-firmware yet, since I
+> > don't handle BT stuff.  I hope it is.
+> 
+> I just double-checked this and got confirmation that the latest BT
+> firmware in linux-firmware.git is compatible with the latest WiFi
+> firmware there as well.
+> 
+> The only caveat is that the machine needs to be cold-booted for it to
+> work....
+> 
+> But we are taking steps to make sure this will not happen next time
+> (i.e. for future hardware), by syncing our BT and WiFi firmware
+> releases.
 
-> Using the wrappers in online_fair_sched_group instead of the raw locking 
-> removes this warning. 
+Now we got a feedback from the latest linux-firmware (20190726) and
+surprising the result was negative.  The dmesg after the cold boot is
+found at:
+  https://bugzilla.suse.com/show_bug.cgi?id=1142128#c26
 
-Yeah, that seems sane. Thanks!
+The kernel is 5.2.3, so it should be new enough.
+
+If anything else needed (or something missing), let us know.
+
+
+thanks,
+
+Takashi
