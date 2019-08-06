@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2121CC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6239C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBD8521874
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:39:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9523321874
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:39:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127541;
-	bh=bciCVAO771nWd3gcn770/n2Rb6usypvaCcgPlLxEQ58=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=lzhPbecYsUHDkaZt4NiIRDnwVwED5nTl6KCZFgZCmZh+xBDvKiMqfK6BydbUkCR6P
-	 osnekLRKpm8vggLY9tuiU9ntP5dxITkGOnEaoYPoRiEEaDknYxwujlIOlNNzpPEezl
-	 aybalOdT3GNHqIt6Zmc0evMykzMfc55wjri7gnuc=
+	s=default; t=1565127545;
+	bh=EvCSsJWI/XMqsNjvcfOoKaxR/N0uPcaJBeJXu9zYGmE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jD8YbP2DbUEZm9FG6geIuyG2pBmf3yYwWpQgsJ3SPwhUqJra/YIoT/1GYknHPUSXh
+	 N3pXpTI13nzAUcK43+3FEmC+5VTaOo8dRBSfW7I7dBDIyhnKxV0h8iRIb+Ot6Y3Py1
+	 2nwHBb2T2xor+2rFLBPz1SXbB3nkWz8vFDkJMxpw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729541AbfHFVh4 (ORCPT
+        id S1727905AbfHFVjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:37:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55574 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:39:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729525AbfHFVhw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:37:52 -0400
+        id S1728753AbfHFVhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:37:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A074D21874;
-        Tue,  6 Aug 2019 21:37:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52F812189D;
+        Tue,  6 Aug 2019 21:37:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127471;
-        bh=bciCVAO771nWd3gcn770/n2Rb6usypvaCcgPlLxEQ58=;
-        h=From:To:Cc:Subject:Date:From;
-        b=LzPVLC186TZSh+QRWSP8aTLXnXkh8CrHPOnH3rrZoPYm+skP3SarGBy7RbpKhXFNa
-         kVBHvt5pOd0F7Gl812+x/+UOBnqYfl3MaznlxVTIixpD3EeNenpkCxQ0/5FgkPJrA4
-         fV+rWTN60E3RIWMvQkM3IGHrwxLAGpdWduUBln94=
+        s=default; t=1565127474;
+        bh=EvCSsJWI/XMqsNjvcfOoKaxR/N0uPcaJBeJXu9zYGmE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1ogaw3EWioectkEj6AxGhAUBqY5Z0CC9u9ggkIpcPeCIlsiicHH50ShiZwUZit3dT
+         hUEbJXT5IrRrSjeNLvTNTodIMw3qXK9Imk3xNmM2Ioyov77WRgfDIYSJqGunRk902W
+         T6QWzluMX9hI8JpT1vL3MECuUioPrsiXw2SWqKcI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Max Filippov <jcmvbkbc@gmail.com>, Sasha Levin <sashal@kernel.org>,
-        linux-xtensa@linux-xtensa.org
-Subject: [PATCH AUTOSEL 4.4 01/14] xtensa: fix build for cores with coprocessors
-Date:   Tue,  6 Aug 2019 17:37:35 -0400
-Message-Id: <20190806213749.20689-1-sashal@kernel.org>
+Cc:     Lucas Stach <l.stach@pengutronix.de>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 03/14] irqchip/irq-imx-gpcv2: Forward irq type to parent
+Date:   Tue,  6 Aug 2019 17:37:37 -0400
+Message-Id: <20190806213749.20689-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190806213749.20689-1-sashal@kernel.org>
+References: <20190806213749.20689-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -56,33 +58,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Filippov <jcmvbkbc@gmail.com>
+From: Lucas Stach <l.stach@pengutronix.de>
 
-[ Upstream commit e3cacb73e626d885b8cf24103fed0ae26518e3c4 ]
+[ Upstream commit 9a446ef08f3bfc0c3deb9c6be840af2528ef8cf8 ]
 
-Assembly entry/return abstraction change didn't add asmmacro.h include
-statement to coprocessor.S, resulting in references to undefined macros
-abi_entry and abi_ret on cores that define XTENSA_HAVE_COPROCESSORS.
-Fix that by including asm/asmmacro.h from the coprocessor.S.
+The GPCv2 is a stacked IRQ controller below the ARM GIC. It doesn't
+care about the IRQ type itself, but needs to forward the type to the
+parent IRQ controller, so this one can be configured correctly.
 
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/xtensa/kernel/coprocessor.S | 1 +
+ drivers/irqchip/irq-imx-gpcv2.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/xtensa/kernel/coprocessor.S b/arch/xtensa/kernel/coprocessor.S
-index a482df5df2b2c..c5d6285201252 100644
---- a/arch/xtensa/kernel/coprocessor.S
-+++ b/arch/xtensa/kernel/coprocessor.S
-@@ -14,6 +14,7 @@
- 
- #include <linux/linkage.h>
- #include <asm/asm-offsets.h>
-+#include <asm/asmmacro.h>
- #include <asm/processor.h>
- #include <asm/coprocessor.h>
- #include <asm/thread_info.h>
+diff --git a/drivers/irqchip/irq-imx-gpcv2.c b/drivers/irqchip/irq-imx-gpcv2.c
+index 2d203b422129e..c56da0b13da5d 100644
+--- a/drivers/irqchip/irq-imx-gpcv2.c
++++ b/drivers/irqchip/irq-imx-gpcv2.c
+@@ -145,6 +145,7 @@ static struct irq_chip gpcv2_irqchip_data_chip = {
+ 	.irq_unmask		= imx_gpcv2_irq_unmask,
+ 	.irq_set_wake		= imx_gpcv2_irq_set_wake,
+ 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
++	.irq_set_type		= irq_chip_set_type_parent,
+ #ifdef CONFIG_SMP
+ 	.irq_set_affinity	= irq_chip_set_affinity_parent,
+ #endif
 -- 
 2.20.1
 
