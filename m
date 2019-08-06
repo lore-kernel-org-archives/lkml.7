@@ -2,83 +2,137 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E56C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78078C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04CD32086D
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:48:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F2C72086D
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:49:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="I8CviA6x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732392AbfHFIs2 (ORCPT
+        id S1732393AbfHFItw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 04:48:28 -0400
-Received: from verein.lst.de ([213.95.11.211]:54580 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728998AbfHFIs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 04:48:28 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 5B809227A81; Tue,  6 Aug 2019 10:48:22 +0200 (CEST)
-Date:   Tue, 6 Aug 2019 10:48:21 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, Christoph Hellwig <hch@lst.de>,
-        Rob Clark <robdclark@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] drm: add cache support for arm64
-Message-ID: <20190806084821.GA17129@lst.de>
-References: <20190805211451.20176-1-robdclark@gmail.com>
+        Tue, 6 Aug 2019 04:49:52 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54574 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732320AbfHFItv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 04:49:51 -0400
+Received: by mail-wm1-f66.google.com with SMTP id p74so77307073wme.4
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 01:49:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=e/5FlaB9m3gEnKe48majyR+7xFOfFfXfyiygau9Wh2Q=;
+        b=I8CviA6xn+lteqKb2DklgcnuqBxGyR27LIonjjd1h6SlJ7vCnVT73BukBTDQpMD/QN
+         U2y4909fk17Tj5+3DdR7UNyfYIEf0X01AupJp7sjyy+38+tOjJs0Uf+JrTykxS5yDnwl
+         wpOTes3fxdYyL63v1gnEB0C5Yv8qgoEypMDTFHQyFrFNwkr3OnK1em/jY5s6AmTUf0bq
+         Ru/EEqxoGZ1zYjLzFWFmPK8ebIGnhYIBm77pE5A4FxWigCCjJ7LHtKmhzsCkqNbHyIPQ
+         vHE+9pliBkDd0CMU9qbuKNEbEw1dETq0tYpY6S4ziSkyt3NVkefhqW5/l6FiivltiBZ4
+         qeOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=e/5FlaB9m3gEnKe48majyR+7xFOfFfXfyiygau9Wh2Q=;
+        b=OrIzPSwH292XWKHlkFkJcSAmLVVA6QqJAgIdSAlpncCLqMUA1OqRT4g1XvAo/Xfiil
+         /z1FAacGBVWeKgCBzEqt+3+Pu/aukTe8zpuub9ia5VNi8MhsV7pe9Zvmi0wg9gO5QbBz
+         DLYKib6OPKhMF8bXnkHeikWTOAbclUp+RWeI5BSBlx9vP6qXCgXLw1vqfpaGCqQ+jaN6
+         qpArTQZtHHGr0b3Jr+r+Z9x/f4D/XCVGorFowmt/fak8coPkpiPclNquXfLfPyu5w4GW
+         7x2YmP9mwo54UKzF+sZ88W1+qD9jlttd3zNaXIuvKe3dhmVDquNIJkK6EqrP7DYTvWpZ
+         djmQ==
+X-Gm-Message-State: APjAAAUumBZxXL/arlQ2SlxgXuKNjv/jnY9gQo74k71GCCY686Fca1tm
+        r6WXfYjXrkH2R000CqpgU6B6lQ==
+X-Google-Smtp-Source: APXvYqydrWSyKv/Z8aE0wnm5mBDuLQIs85p2Q4UZiFE76n+eAsC040k+pd2/Q6j5qysjYrVv9GE9ZA==
+X-Received: by 2002:a1c:720e:: with SMTP id n14mr3443503wmc.53.1565081389300;
+        Tue, 06 Aug 2019 01:49:49 -0700 (PDT)
+Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id x8sm74356883wmc.5.2019.08.06.01.49.48
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 06 Aug 2019 01:49:48 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 3/9] clk: meson: axg-audio: Don't reference clk_init_data after registration
+In-Reply-To: <20190731193517.237136-4-sboyd@kernel.org>
+References: <20190731193517.237136-1-sboyd@kernel.org> <20190731193517.237136-4-sboyd@kernel.org>
+Date:   Tue, 06 Aug 2019 10:49:47 +0200
+Message-ID: <1jwofqvftg.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190805211451.20176-1-robdclark@gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This goes in the wrong direction.  drm_cflush_* are a bad API we need to
-get rid of, not add use of it.  The reason for that is two-fold:
+On Wed 31 Jul 2019 at 12:35, Stephen Boyd <sboyd@kernel.org> wrote:
 
- a) it doesn't address how cache maintaince actually works in most
-    platforms.  When talking about a cache we three fundamental operations:
+> A future patch is going to change semantics of clk_register() so that
+> clk_hw::init is guaranteed to be NULL after a clk is registered. Avoid
+> referencing this member here so that we don't run into NULL pointer
+> exceptions.
 
-	1) write back - this writes the content of the cache back to the
-	   backing memory
-	2) invalidate - this remove the content of the cache
-	3) write back + invalidate - do both of the above
+Hi Stephen,
 
- b) which of the above operation you use when depends on a couple of
-    factors of what you want to do with the range you do the cache
-    maintainance operations
+What to do you indend to do with this one ? Will you apply directly or
+should we take it ?
 
-Take a look at the comment in arch/arc/mm/dma.c around line 30 that
-explains how this applies to buffer ownership management.  Note that
-"for device" applies to "for userspace" in the same way, just that
-userspace then also needs to follow this protocol.  So the whole idea
-that random driver code calls random low-level cache maintainance
-operations (and use the non-specific term flush to make it all more
-confusing) is a bad idea.  Fortunately enough we have really good
-arch helpers for all non-coherent architectures (this excludes the
-magic i915 won't be covered by that, but that is a separate issue
-to be addressed later, and the fact that while arm32 did grew them
-very recently and doesn't expose them for all configs, which is easily
-fixable if needed) with arch_sync_dma_for_device and
-arch_sync_dma_for_cpu.  So what we need is to figure out where we
-have valid cases for buffer ownership transfer outside the DMA
-API, and build proper wrappers around the above function for that.
-My guess is it should probably be build to go with the iommu API
-as that is the only other way to map memory for DMA access, but
-if you have a better idea I'd be open to discussion.
+We have several changes for the controller which may conflict with this
+one. It is nothing major but the sooner I know how this changes goes in,
+the sooner I can rebase the rest.
+
+Also, We were (re)using the init_data only on register failures.
+I understand that you want to guarantee .init is NULL when the clock is
+registered, but it this particular case, the registeration failed so the
+clock is not registered.
+
+IMO, it would be better if devm_clk_hw_register() left the init_data
+untouched if the registration fails.
+
+>
+> Cc: Neil Armstrong <narmstrong@baylibre.com>
+> Cc: Jerome Brunet <jbrunet@baylibre.com>
+> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+> ---
+>
+> Please ack so I can take this through clk tree
+>
+>  drivers/clk/meson/axg-audio.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/clk/meson/axg-audio.c b/drivers/clk/meson/axg-audio.c
+> index 8028ff6f6610..db0b73d53551 100644
+> --- a/drivers/clk/meson/axg-audio.c
+> +++ b/drivers/clk/meson/axg-audio.c
+> @@ -992,15 +992,18 @@ static int axg_audio_clkc_probe(struct platform_device *pdev)
+>  
+>  	/* Take care to skip the registered input clocks */
+>  	for (i = AUD_CLKID_DDR_ARB; i < data->hw_onecell_data->num; i++) {
+> +		const char *name;
+> +
+>  		hw = data->hw_onecell_data->hws[i];
+>  		/* array might be sparse */
+>  		if (!hw)
+>  			continue;
+>  
+> +		name = hw->init->name;
+> +
+>  		ret = devm_clk_hw_register(dev, hw);
+>  		if (ret) {
+> -			dev_err(dev, "failed to register clock %s\n",
+> -				hw->init->name);
+> +			dev_err(dev, "failed to register clock %s\n", name);
+>  			return ret;
+>  		}
+>  	}
+> -- 
+> Sent by a computer through tubes
