@@ -2,156 +2,92 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04967C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B62C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9C5E20717
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC25020717
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:48:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="DHDWmi6d"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kx1nhGFR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732652AbfHFPsO (ORCPT
+        id S1733013AbfHFPs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 11:48:14 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34365 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728189AbfHFPsO (ORCPT
+        Tue, 6 Aug 2019 11:48:58 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37252 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728582AbfHFPs6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 11:48:14 -0400
-Received: by mail-pg1-f196.google.com with SMTP id n9so35585955pgc.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 08:48:14 -0700 (PDT)
+        Tue, 6 Aug 2019 11:48:58 -0400
+Received: by mail-pl1-f195.google.com with SMTP id b3so38065791plr.4;
+        Tue, 06 Aug 2019 08:48:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=3PRJIP91/AQ/oyHrXd4NPkQ8KybghYi4upuqcJUjSbQ=;
-        b=DHDWmi6dSuFjRnennVT95S4pXEJ37oOBjcfvuwJF56/1dOiRdLLJ+qxk198MtfGcAv
-         27dc158ZXVmSzEUSDiFJkkcdy9kW+jPXcaujqMWSpJs5pyYQGcMSSF+8sAIRFJE4oLip
-         AoqvDJ71rBS6FAf9wA+jadrC45BYOJUa/z1KA=
+        bh=ZPSCVpajlof03gZfDiU14WfcdldH6Wl7wE+QAHDIdw0=;
+        b=kx1nhGFR5nSKxtKBm/qEM86awxqKyznowIdWpV9mhEPn5+65f+no6W5czdTPWGBo7x
+         Tfqr6z+rzM3hwHn5qFeT9R14SS5SWAmkm6pViULwGHoEX2dnIsJFchAcfz/AtK0zHKEK
+         Kgj1r4amJMNThJkWFVuHqCgkYnSmqfa+OW30qgoYYdKHENvbkSzBC5XnGvS5KycKk025
+         P6rzJqTqGPM5Ppp3Axljt4GtNaVcnnQyF8Kf/j+zn8u39s0Y+ewb79XbALrFjajmY8gd
+         fV0IKOr6W6cC7xFfGFBOaKtvJY8Vxtv9H3+jcymRM6Qy/FvYgjM1iBYp8MXKEFGQ/aZn
+         WgMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3PRJIP91/AQ/oyHrXd4NPkQ8KybghYi4upuqcJUjSbQ=;
-        b=tAHe0gtVcyf6aI74kgGU8Fp8DdwiN3w6gj15zCR3rWgeeg2PdaAS/P42lvaNOr78Wq
-         +RFek/Hp+6A96hns6+2cx2gkYkmLgfoLe5pCLB0bJtowK2HSi6udtuJzmVZJfigMo7n6
-         whDfsEgCM7EajPhMLyiwoHpmRvFYfyqy0PflwmncrQ5uQkPd/6di/HM7M0inruEqw0ff
-         8Qd9bXT9tRYjAcrQVGJr/Ehs8p5KpRLMyMUBcFylTd2dalj9yfetdNJJF+6LmAG2vqOQ
-         JSUxmlDfBDoLl1n0RvnLzBql81IW/cgEhW385rm1zxhyHG8Sde7rcapS1y9YktaHKR2U
-         2ezQ==
-X-Gm-Message-State: APjAAAVM0mS5BJh55bQr0fStdhon+/TV4cTkrdeKH/Jj6idu0Z74u3iW
-        Tgw9jE/oqu6DFPiUrUo8dqHmZw==
-X-Google-Smtp-Source: APXvYqwRBTUwdJjZqywEVj3R4ki4ntt43ZMkU8pP14OJ3NdosvZLrmuW9LtRkaKzaK3TaSfW6a4Iag==
-X-Received: by 2002:aa7:9293:: with SMTP id j19mr4520097pfa.90.1565106493576;
-        Tue, 06 Aug 2019 08:48:13 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id t96sm20287354pjb.1.2019.08.06.08.48.12
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 08:48:12 -0700 (PDT)
-Date:   Tue, 6 Aug 2019 11:48:11 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Jiping Ma <jiping.ma2@windriver.com>, mingo@redhat.com,
-        catalin.marinas@arm.com, will.deacon@arm.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3] tracing: Function stack size and its name mismatch in
- arm64
-Message-ID: <20190806154811.GB39951@google.com>
-References: <20190802094103.163576-1-jiping.ma2@windriver.com>
- <20190802112259.0530a648@gandalf.local.home>
- <20190802120920.3b1f4351@gandalf.local.home>
- <20190802121124.6b41f26a@gandalf.local.home>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZPSCVpajlof03gZfDiU14WfcdldH6Wl7wE+QAHDIdw0=;
+        b=NEI3UZ8VEiZpRquUH2xCKey9JPTlxnIAGiWc+U/1NR29MTThoX/YSEgP7mPtmedfH5
+         pslb0+Jg8XIrODDeGdxpZ+8T93kO4O5dykyhXpf7VYSz+t3pOQiQXd/lvLTrSXhMmKf1
+         2I2/mrL5zhbbp7qJbzuTF+X7KhEKSxcGp8Il4EMhwbgEyBrb6VXgYC6UK0MrNOmOC9qj
+         TKfR1OVxqETCQyiYAXsoq8GatLQ/OAhuzlrtYlPcM0TASM/ot5m7TaYdiSiGXLK8SDne
+         W78/wBNaENgEVu2SxN/j9INjcxky0Oevy6zHvfTj1hc+YaFrLeB6xWbwKbOfO+RA1ZyG
+         NNuw==
+X-Gm-Message-State: APjAAAX4hoUCvauBhzPO6kg1Pjcny5z7VkJwgf13sZ0utqsQJ+Kl8g9Z
+        2j5B+/44m3+kfTGB12yqhbI=
+X-Google-Smtp-Source: APXvYqwqs1ztN3R0VuflUXTKVjBf2XmHLR0F7IpaQ/mgY+cknym+LaDOhgZNCfD0lGbfF86qxKuISg==
+X-Received: by 2002:a17:902:20c8:: with SMTP id v8mr3858617plg.284.1565106537701;
+        Tue, 06 Aug 2019 08:48:57 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id o128sm94096967pfb.42.2019.08.06.08.48.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 06 Aug 2019 08:48:56 -0700 (PDT)
+Date:   Tue, 6 Aug 2019 08:48:55 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.4 00/22] 4.4.188-stable review
+Message-ID: <20190806154855.GA12156@roeck-us.net>
+References: <20190805124918.070468681@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190802121124.6b41f26a@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190805124918.070468681@linuxfoundation.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 12:11:24PM -0400, Steven Rostedt wrote:
-> On Fri, 2 Aug 2019 12:09:20 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
+On Mon, Aug 05, 2019 at 03:02:37PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.188 release.
+> There are 22 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> > On Fri, 2 Aug 2019 11:22:59 -0400
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
-> > 
-> > > I think you are not explaining the issue correctly. From looking at the
-> > > document, I think what you want to say is that the LR is saved *after*
-> > > the data for the function. Is that correct? If so, then yes, it would
-> > > cause the stack tracing algorithm to be incorrect.
-> > > 
-> > 
-> > [..]
-> > 
-> > > Can someone confirm that this is the real issue?
-> > 
-> > Does this patch fix your issue?
-> >
+> Responses should be made by Wed 07 Aug 2019 12:47:58 PM UTC.
+> Anything received after that time might be too late.
 > 
-> Bah, I hit "attach" instead of "insert" (I wondered why it didn't
-> insert). Here's the patch without the attachment.
-> 
-> -- Steve
-> 
-> diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
-> index 5ab5200b2bdc..13a4832cfb00 100644
-> --- a/arch/arm64/include/asm/ftrace.h
-> +++ b/arch/arm64/include/asm/ftrace.h
-> @@ -13,6 +13,7 @@
->  #define HAVE_FUNCTION_GRAPH_FP_TEST
->  #define MCOUNT_ADDR		((unsigned long)_mcount)
->  #define MCOUNT_INSN_SIZE	AARCH64_INSN_SIZE
-> +#define ARCH_RET_ADDR_AFTER_LOCAL_VARS 1
->  
->  #ifndef __ASSEMBLY__
->  #include <linux/compat.h>
-> diff --git a/kernel/trace/trace_stack.c b/kernel/trace/trace_stack.c
-> index 5d16f73898db..050c6bd9beac 100644
-> --- a/kernel/trace/trace_stack.c
-> +++ b/kernel/trace/trace_stack.c
-> @@ -158,6 +158,18 @@ static void check_stack(unsigned long ip, unsigned long *stack)
->  			i++;
->  	}
->  
-> +#ifdef ARCH_RET_ADDR_AFTER_LOCAL_VARS
-> +	/*
-> +	 * Most archs store the return address before storing the
-> +	 * function's local variables. But some archs do this backwards.
-> +	 */
-> +	if (x > 1) {
-> +		memmove(&stack_trace_index[0], &stack_trace_index[1],
-> +			sizeof(stack_trace_index[0]) * (x - 1));
-> +		x--;
-> +	}
-> +#endif
-> +
->  	stack_trace_nr_entries = x;
->  
->  	if (task_stack_end_corrupted(current)) {
 
+Build results:
+	total: 170 pass: 170 fail: 0
+Qemu test results:
+	total: 301 pass: 301 fail: 0
 
-I am not fully understanding the fix :(. If the positions of the data and
-FP/LR are swapped, then there should be a loop of some sort where the FP/LR
-are copied repeatedly to undo the mess we are discussing. But in this patch
-I see only one copy happening. May be I just don't understand this code well
-enough. Are there any more clues for helping understand the fix?
-
-Also, this stack trace loop (original code) is a bit hairy :) It appears
-there is a call to stack_trace_save() followed by another loop that goes
-through the returned entries from there and tries to generate a set of
-indexes. Isn't the real issue that the entries returned by stack_trace_save()
-are a out of whack? I am curious also if other users of stack_trace_save()
-will suffer from the same issue.
-
-thanks,
-
- - Joel
-
+Guenter
