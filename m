@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DF0C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 926C0C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A66B4216F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:46:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AC92216F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:46:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127975;
-	bh=fc+CB2Ssrn59WPr6z/hOAw7WWXrO2WuzYj3CQEMvPIU=;
+	s=default; t=1565127979;
+	bh=mTa9ObJI1tPmKslY7UHxoXGKBG5f58d3ovgEkn6DzO4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rsEKztTLRo/IJBUIAyEYpTg3jxmfENHRXK3ZFAulEPOp9b+nEmM8wkftyF/Kh1KE/
-	 E94dqkuUmXUWel9HByFIOUruMw0d7z1MSXc+lCyFtLU63PBnI4TTQZGRIOO79zR8t0
-	 sXKc39lWW1idxcwA5/F1/+OQRLeDNBb1sg+ioLnk=
+	b=sqRxjqJQUwafHF/9a2COCWyv7iUDzA3QeoE6J3pYBDi9XVmeveVC2xkSb4wc8/vmH
+	 fdlqZS4tVaqJ4IWDUuE6oGgsaKdVjVxBMkS+dzM+u1HNz5DK4c2TnHE4OlHhE9zxwg
+	 dwu49KyuBU6Mj2oiy8/pLQfAnTOfKpPiUC5o9jMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbfHFVqO (ORCPT
+        id S1726992AbfHFVda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:46:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51304 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726983AbfHFVda (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 6 Aug 2019 17:33:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51198 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726853AbfHFVd0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:33:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 246A8217D9;
-        Tue,  6 Aug 2019 21:33:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9409121880;
+        Tue,  6 Aug 2019 21:33:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127210;
-        bh=fc+CB2Ssrn59WPr6z/hOAw7WWXrO2WuzYj3CQEMvPIU=;
+        s=default; t=1565127205;
+        bh=mTa9ObJI1tPmKslY7UHxoXGKBG5f58d3ovgEkn6DzO4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e//4k9qlsdcqXc6DCH6S5ulFnMnNzT+qihhcUQbpZFcDn+UeX/YZVGoCSa/miym9B
-         uVQxCu0GMmsyNJ42rRDdkFCXgUuo7s86+Zbg1rvFPaK5Cy74oVLI5VH04GXyYFp50u
-         JgL0iK2rF2ZDDegOynMXPqQzIy8eDptHKO2jwE10=
+        b=Vn3i3jpreZ/qfnc4jMmfhmohyAm6EoW+bZ4DJfD1a6uY3s8JXG2+UN+rlRpbRXJkk
+         h+9fsGSnp6mtk03iD1j+KANlP/ZTucnFmGkE36BZLrkMfIxlK/nzifDR/HLZ1lWl6i
+         LS9rS8WGfrWs2/iv7LhTtf2EFAhIYxPjgM+ChB2k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jean Delvare <jdelvare@suse.de>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 08/59] platform/x86: pcengines-apuv2: Fix softdep statement
-Date:   Tue,  6 Aug 2019 17:32:28 -0400
-Message-Id: <20190806213319.19203-8-sashal@kernel.org>
+Cc:     Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 04/59] clk: sprd: Select REGMAP_MMIO to avoid compile errors
+Date:   Tue,  6 Aug 2019 17:32:24 -0400
+Message-Id: <20190806213319.19203-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213319.19203-1-sashal@kernel.org>
 References: <20190806213319.19203-1-sashal@kernel.org>
@@ -63,36 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jean Delvare <jdelvare@suse.de>
+From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-[ Upstream commit edbfe83def34153a05439ecb3352ae0bb65024de ]
+[ Upstream commit c9a67cbb5189e966c70451562b2ca4c3876ab546 ]
 
-Only first MODULE_SOFTDEP statement is handled per module.
-Multiple dependencies must be expressed in a single statement.
+Make REGMAP_MMIO selected to avoid undefined reference to regmap symbols.
 
-Signed-off-by: Jean Delvare <jdelvare@suse.de>
-Cc: "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: Andy Shevchenko <andy@infradead.org>
-[andy: massaged commit message]
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: d41f59fd92f2 ("clk: sprd: Add common infrastructure")
+Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/pcengines-apuv2.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/clk/sprd/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/pcengines-apuv2.c b/drivers/platform/x86/pcengines-apuv2.c
-index c1ca931e1fab8..7a8cbfb5d2135 100644
---- a/drivers/platform/x86/pcengines-apuv2.c
-+++ b/drivers/platform/x86/pcengines-apuv2.c
-@@ -255,6 +255,4 @@ MODULE_DESCRIPTION("PC Engines APUv2/APUv3 board GPIO/LED/keys driver");
- MODULE_LICENSE("GPL");
- MODULE_DEVICE_TABLE(dmi, apu_gpio_dmi_table);
- MODULE_ALIAS("platform:pcengines-apuv2");
--MODULE_SOFTDEP("pre: platform:" AMD_FCH_GPIO_DRIVER_NAME);
--MODULE_SOFTDEP("pre: platform:leds-gpio");
--MODULE_SOFTDEP("pre: platform:gpio_keys_polled");
-+MODULE_SOFTDEP("pre: platform:" AMD_FCH_GPIO_DRIVER_NAME " platform:leds-gpio platform:gpio_keys_polled");
+diff --git a/drivers/clk/sprd/Kconfig b/drivers/clk/sprd/Kconfig
+index 91d3d721c801e..3c219af251001 100644
+--- a/drivers/clk/sprd/Kconfig
++++ b/drivers/clk/sprd/Kconfig
+@@ -3,6 +3,7 @@ config SPRD_COMMON_CLK
+ 	tristate "Clock support for Spreadtrum SoCs"
+ 	depends on ARCH_SPRD || COMPILE_TEST
+ 	default ARCH_SPRD
++	select REGMAP_MMIO
+ 
+ if SPRD_COMMON_CLK
+ 
 -- 
 2.20.1
 
