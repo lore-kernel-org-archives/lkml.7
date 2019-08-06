@@ -4,53 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 812D5C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31921C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4506F21880
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE1392189E
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:43:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127820;
-	bh=GTeKPiSpI0Ea9eCn2SaiWsSMjQ1GBjsNhDD41ADmNiM=;
+	s=default; t=1565127827;
+	bh=5ZvQzk9R5TI5bGpVv5L8Rn41Krgjr3O3/iejLxZa8a0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jsrmWdN6wq0ZEFNXmaPQKcHsUnxFnWxwPW63w3AA918Y/yLjNyROY32aoS2/+BaU6
-	 cGHtxrjuX+gSQUYx6gvz8ZjASv8Guj9dBzdQVgs3KQV1Y01aGzbs6BhUcws8JRfbs2
-	 XDFa3FBau+rJpA8elwXsWonojSkX+yXrhROJSJ34=
+	b=AMd5KjwS/3f3nlMa8VMg+wfPr30RvajIVJdYHrbOHejbmFHJthI25nuPRyxjMtyC/
+	 gMmZbgQfBCRF7ZXv0wqVoVFrcMKeyeJ9+rc9QLdSQQH2m4iMvAqefOLNKLsK/rrNUI
+	 NWetqw+ZEWmuox9hvs7Zg3leY8t9bUzfjEY50Lwk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728578AbfHFVnj (ORCPT
+        id S1729183AbfHFVnp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:43:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52296 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:43:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727677AbfHFVe3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:34:29 -0400
+        id S1727659AbfHFVeY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:34:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E447C21874;
-        Tue,  6 Aug 2019 21:34:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25953216F4;
+        Tue,  6 Aug 2019 21:34:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127268;
-        bh=GTeKPiSpI0Ea9eCn2SaiWsSMjQ1GBjsNhDD41ADmNiM=;
+        s=default; t=1565127264;
+        bh=5ZvQzk9R5TI5bGpVv5L8Rn41Krgjr3O3/iejLxZa8a0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h+113blxGLI7+PZnfclsVDQFYDEsrGxj9BSbXIfimrkVD/p0mcuxWmye6Fl4DAcnJ
-         +ixHFcmSLEMpLcEv1/jqfn50U+Jh5w8mBsXBwFe2CR9iKe1MbTluHmtpHky5b4ehBG
-         usNMvREqC9k6ahCrqAOa4hHBWfcd46X3qpK5HJ3U=
+        b=GOlXEax/8r6MqxapX+EGFiRhVcSaJRgPHWBzCQQ/hjK9n2SKnrTm4Trbiw1lBQsIe
+         BQsS7LiQUgwQG0NR/W4xNQkaHetpzr2rOsa6u3QYszT8+iJTSBUov6foxXnf26TKUn
+         x+FpUsANjEAnuua7Gd2N12nsTsED358APp02PnS4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-efi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 36/59] arm64/efi: fix variable 'si' set but not used
-Date:   Tue,  6 Aug 2019 17:32:56 -0400
-Message-Id: <20190806213319.19203-36-sashal@kernel.org>
+Cc:     Wang Xiayang <xywang.sjtu@sjtu.edu.cn>,
+        Chunming Zhou <david1.zhou@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.2 32/59] drm/amdgpu: fix a potential information leaking bug
+Date:   Tue,  6 Aug 2019 17:32:52 -0400
+Message-Id: <20190806213319.19203-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213319.19203-1-sashal@kernel.org>
 References: <20190806213319.19203-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,43 +63,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
 
-[ Upstream commit f1d4836201543e88ebe70237e67938168d5fab19 ]
+[ Upstream commit 929e571c04c285861e0bb049a396a2bdaea63282 ]
 
-GCC throws out this warning on arm64.
+Coccinelle reports a path that the array "data" is never initialized.
+The path skips the checks in the conditional branches when either
+of callback functions, read_wave_vgprs and read_wave_sgprs, is not
+registered. Later, the uninitialized "data" array is read
+in the while-loop below and passed to put_user().
 
-drivers/firmware/efi/libstub/arm-stub.c: In function 'efi_entry':
-drivers/firmware/efi/libstub/arm-stub.c:132:22: warning: variable 'si'
-set but not used [-Wunused-but-set-variable]
+Fix the path by allocating the array with kcalloc().
 
-Fix it by making free_screen_info() a static inline function.
+The patch is simplier than adding a fall-back branch that explicitly
+calls memset(data, 0, ...). Also it does not need the multiplication
+1024*sizeof(*data) as the size parameter for memset() though there is
+no risk of integer overflow.
 
-Acked-by: Will Deacon <will@kernel.org>
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
+Reviewed-by: Chunming Zhou <david1.zhou@amd.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/efi.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/include/asm/efi.h b/arch/arm64/include/asm/efi.h
-index c9e9a6978e73e..d3cb42fd51ec2 100644
---- a/arch/arm64/include/asm/efi.h
-+++ b/arch/arm64/include/asm/efi.h
-@@ -105,7 +105,11 @@ static inline unsigned long efi_get_max_initrd_addr(unsigned long dram_base,
- 	((protocol##_t *)instance)->f(instance, ##__VA_ARGS__)
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
+index 8930d66f22040..91bfb24f963e5 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
+@@ -703,7 +703,7 @@ static ssize_t amdgpu_debugfs_gpr_read(struct file *f, char __user *buf,
+ 	thread = (*pos & GENMASK_ULL(59, 52)) >> 52;
+ 	bank = (*pos & GENMASK_ULL(61, 60)) >> 60;
  
- #define alloc_screen_info(x...)		&screen_info
--#define free_screen_info(x...)
-+
-+static inline void free_screen_info(efi_system_table_t *sys_table_arg,
-+				    struct screen_info *si)
-+{
-+}
+-	data = kmalloc_array(1024, sizeof(*data), GFP_KERNEL);
++	data = kcalloc(1024, sizeof(*data), GFP_KERNEL);
+ 	if (!data)
+ 		return -ENOMEM;
  
- /* redeclare as 'hidden' so the compiler will generate relative references */
- extern struct screen_info screen_info __attribute__((__visibility__("hidden")));
 -- 
 2.20.1
 
