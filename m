@@ -2,114 +2,90 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0DBDC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 04:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3EC1C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 04:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A11ED2070C
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 04:24:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9980420B1F
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 04:34:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="1fb8tsw+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728155AbfHFEYw (ORCPT
+        id S1729434AbfHFEev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 00:24:52 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59900 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725798AbfHFEYw (ORCPT
+        Tue, 6 Aug 2019 00:34:51 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:47015 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbfHFEev (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 00:24:52 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x764Ls2c084837
-        for <linux-kernel@vger.kernel.org>; Tue, 6 Aug 2019 00:24:51 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2u6wy70gf1-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 00:24:50 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <daniel@linux.ibm.com>;
-        Tue, 6 Aug 2019 05:24:49 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 6 Aug 2019 05:24:47 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x764OkN238207620
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 6 Aug 2019 04:24:46 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AE4E6A404D;
-        Tue,  6 Aug 2019 04:24:46 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5A244A4059;
-        Tue,  6 Aug 2019 04:24:46 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  6 Aug 2019 04:24:46 +0000 (GMT)
-Received: from volution.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 22B8CA01F6;
-        Tue,  6 Aug 2019 14:24:45 +1000 (AEST)
-From:   Daniel Black <daniel@linux.ibm.com>
-Cc:     Daniel Black <daniel@linux.ibm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        linux-acpi@vger.kernel.org (open list:ACPI),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] acpi/hmat: ACPI_HMAT_MEMORY_PD_VALID is deprecated in ACPI-6.3
-Date:   Tue,  6 Aug 2019 14:24:39 +1000
-X-Mailer: git-send-email 2.21.0
+        Tue, 6 Aug 2019 00:34:51 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c3so17636556pfa.13
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 21:34:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=37e73pgeUst/e32No0I5VlF96GbX2bnFea6wHE9lo0U=;
+        b=1fb8tsw+IDfyYebA8NHR9PDMJAuQesOzz/4+8c6F3puynzPajSonryQyPh0Kuobou9
+         vyzPLWjKg2Fx4Z/XCdhQBxhV15xnBVPYb5qyzq3gF4MyDhFnA8n4OIB/E1FPhX841kIl
+         ZZRI4i5Yr7S2qvgCkRnCrH+lNfb/9gZOK2yiFoFwhuakHZs3bcsjDdamB7yiOqXLD2l1
+         ITwCcZ31Ka5Fyw1tDzbF7JZkncEq4tjxcR9LPjGPdKpouDu0By6wTdr7c64bk8a23cV/
+         C/IGopUF0QO5fDkgNxiaS7O1q7YW+qU8yiDbLTEY5N5c805gudzKLpmeZV1jWfH5OmEx
+         ni/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=37e73pgeUst/e32No0I5VlF96GbX2bnFea6wHE9lo0U=;
+        b=HBphC5zpSxh6HuxOFpox/TH/kA0NhHjmxRFEG3CQHK1muBEFsCNWtumj99yW5KEY0D
+         AsXvZUE7OSxOuk+su8XLq3/6Wk/Qgb7wPDHzkW5ZktnDV5gWMFsdQK2VqyPogD/xJnfg
+         Bclj4fPkNOr2Shc0sloYCSdygW8M7da+I7VQKowabd2Ub1RamAHYoffiB9JXN7IkGRQE
+         /XRQHHf1cJanCUl2JS+Fm6j3l4rh9T0yHPxh+YX4030EFvkcd/LuicpFhMi9gzX5YZev
+         CBdvt1AvGMoivKr4nD9kr4PWqPI9znbl1ku80vgoi9nXpfSiQafJakgnBakNxEqPAxra
+         xFlg==
+X-Gm-Message-State: APjAAAUno24+F7bgWT9BmgOxqRl4FreT2LCTgXq9lai1aLumaeRv7e4g
+        wO8gda4tae7z2kAbyfKKdTiVZQ==
+X-Google-Smtp-Source: APXvYqxSbFtO3Q8AmtiweeWMVTX404S5ZZBWpaWkpDDNXsVITjS2rpZBN1xFskUAblQd3Ye+zshvsQ==
+X-Received: by 2002:aa7:9513:: with SMTP id b19mr1660078pfp.30.1565066090291;
+        Mon, 05 Aug 2019 21:34:50 -0700 (PDT)
+Received: from cakuba.netronome.com (c-71-204-185-212.hsd1.ca.comcast.net. [71.204.185.212])
+        by smtp.gmail.com with ESMTPSA id 10sm104956416pfb.30.2019.08.05.21.34.49
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 05 Aug 2019 21:34:49 -0700 (PDT)
+Date:   Mon, 5 Aug 2019 21:34:25 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>
+Cc:     netdev@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 03/10] net: stmmac: Fix issues when number of
+ Queues >= 4
+Message-ID: <20190805213425.3fce1d42@cakuba.netronome.com>
+In-Reply-To: <5e95bb1761f9438361f198d744640685a34790ea.1565027782.git.joabreu@synopsys.com>
+References: <cover.1565027782.git.joabreu@synopsys.com>
+        <5e95bb1761f9438361f198d744640685a34790ea.1565027782.git.joabreu@synopsys.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19080604-0008-0000-0000-00000305A25B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19080604-0009-0000-0000-0000A17FA9E0
-Message-Id: <20190806042440.16445-1-daniel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-06_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=868 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908060051
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ACPI-6.3 corresponds to when hmat revision was bumped from
-1 to 2. In this version ACPI_HMAT_MEMORY_PD_VALID was
-deprecated and made reserved.
+On Mon,  5 Aug 2019 20:01:16 +0200, Jose Abreu wrote:
+> When queues >= 4 we use different registers but we were not subtracting
+> the offset of 4. Fix this.
+> 
+> Found out by Coverity.
+> 
+> Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 
-As such in revision 2+ we shouldn't be testing this flag.
-
-This is as per ACPI-6.3, 5.2.27.3, Table 5-145
-"Memory Proximity Domain Attributes Structure"
-for Flags.
-
-Signed-off-by: Daniel Black <daniel@linux.ibm.com>
----
- drivers/acpi/hmat/hmat.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/acpi/hmat/hmat.c b/drivers/acpi/hmat/hmat.c
-index 96b7d39a97c6..e938e34673d9 100644
---- a/drivers/acpi/hmat/hmat.c
-+++ b/drivers/acpi/hmat/hmat.c
-@@ -382,7 +382,7 @@ static int __init hmat_parse_proximity_domain(union acpi_subtable_headers *heade
- 		pr_info("HMAT: Memory Flags:%04x Processor Domain:%d Memory Domain:%d\n",
- 			p->flags, p->processor_PD, p->memory_PD);
- 
--	if (p->flags & ACPI_HMAT_MEMORY_PD_VALID) {
-+	if (p->flags & ACPI_HMAT_MEMORY_PD_VALID && hmat_revision == 1) {
- 		target = find_mem_target(p->memory_PD);
- 		if (!target) {
- 			pr_debug("HMAT: Memory Domain missing from SRAT\n");
--- 
-2.21.0
-
+Should this be a bug fix for the net tree?
