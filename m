@@ -2,133 +2,98 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC76C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C880AC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D25002089E
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:36:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565102173;
-	bh=kCYuK7jsaRb+EulCep8i2uBtT2+apq+LDv+IlfpiwtU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cq1qqEpFfi7Nl/S/f/bLwmMfnTAZ1FvW2TrrJam0MMzC0jla2VPH4eZz87QSzOK8s
-	 f5mojsha592Z6YC5fe3oZBGmosM+2fPdol1uXBjqyrY7NOlspBcJQowcLoROddmq/o
-	 qNE5pAWhJ2oZTGsv0oLJEcJAiIE7DuLMPt98IDjk=
+	by mail.kernel.org (Postfix) with ESMTP id 9E3E12089E
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:36:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733017AbfHFOgM (ORCPT
+        id S1733057AbfHFOgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 10:36:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33814 "EHLO mx1.suse.de"
+        Tue, 6 Aug 2019 10:36:24 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:39340 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731783AbfHFOgM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 10:36:12 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7E64CAE1B;
-        Tue,  6 Aug 2019 14:36:10 +0000 (UTC)
-Date:   Tue, 6 Aug 2019 16:36:08 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Suren Baghdasaryan <surenb@google.com>,
-        "Artem S. Tashkinov" <aros@gmx.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>
-Subject: Re: Let's talk about the elephant in the room - the Linux kernel's
- inability to gracefully handle low memory pressure
-Message-ID: <20190806143608.GE11812@dhcp22.suse.cz>
-References: <d9802b6a-949b-b327-c4a6-3dbca485ec20@gmx.com>
- <ce102f29-3adc-d0fd-41ee-e32c1bcd7e8d@suse.cz>
- <20190805193148.GB4128@cmpxchg.org>
- <CAJuCfpHhR+9ybt9ENzxMbdVUd_8rJN+zFbDm+5CeE2Desu82Gg@mail.gmail.com>
- <398f31f3-0353-da0c-fc54-643687bb4774@suse.cz>
- <20190806142728.GA12107@cmpxchg.org>
+        id S1731783AbfHFOgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 10:36:24 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id DA590CFB332690251CE8;
+        Tue,  6 Aug 2019 22:36:17 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 6 Aug 2019 22:36:07 +0800
+From:   Mao Wenan <maowenan@huawei.com>
+To:     <socketcan@hartkopp.net>, <davem@davemloft.net>,
+        <netdev@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        "Mao Wenan" <maowenan@huawei.com>
+Subject: [PATCH net-next v5] net: can: Fix sparse warnings for two functions
+Date:   Tue, 6 Aug 2019 22:40:43 +0800
+Message-ID: <20190806144043.187422-1-maowenan@huawei.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <d928a635-accd-2a8f-1829-5d7da551a8e8@web.de>
+References: <d928a635-accd-2a8f-1829-5d7da551a8e8@web.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190806142728.GA12107@cmpxchg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 06-08-19 10:27:28, Johannes Weiner wrote:
-> On Tue, Aug 06, 2019 at 11:36:48AM +0200, Vlastimil Babka wrote:
-> > On 8/6/19 3:08 AM, Suren Baghdasaryan wrote:
-> > >> @@ -1280,3 +1285,50 @@ static int __init psi_proc_init(void)
-> > >>         return 0;
-> > >>  }
-> > >>  module_init(psi_proc_init);
-> > >> +
-> > >> +#define OOM_PRESSURE_LEVEL     80
-> > >> +#define OOM_PRESSURE_PERIOD    (10 * NSEC_PER_SEC)
-> > > 
-> > > 80% of the last 10 seconds spent in full stall would definitely be a
-> > > problem. If the system was already low on memory (which it probably
-> > > is, or we would not be reclaiming so hard and registering such a big
-> > > stall) then oom-killer would probably kill something before 8 seconds
-> > > are passed.
-> > 
-> > If oom killer can act faster, than great! On small embedded systems you probably
-> > don't enable PSI anyway?
-> > 
-> > > If my line of thinking is correct, then do we really
-> > > benefit from such additional protection mechanism? I might be wrong
-> > > here because my experience is limited to embedded systems with
-> > > relatively small amounts of memory.
-> > 
-> > Well, Artem in his original mail describes a minutes long stall. Things are
-> > really different on a fast desktop/laptop with SSD. I have experienced this as
-> > well, ending up performing manual OOM by alt-sysrq-f (then I put more RAM than
-> > 8GB in the laptop). IMHO the default limit should be set so that the user
-> > doesn't do that manual OOM (or hard reboot) before the mechanism kicks in. 10
-> > seconds should be fine.
-> 
-> That's exactly what I have experienced in the past, and this was also
-> the consistent story in the bug reports we have had.
-> 
-> I suspect it requires a certain combination of RAM size, CPU speed,
-> and IO capacity: the OOM killer kicks in when reclaim fails, which
-> happens when all scanned LRU pages were locked and under IO. So IO
-> needs to be slow enough, or RAM small enough, that the CPU can scan
-> all LRU pages while they are temporarily unreclaimable (page lock).
-> 
-> It may well be that on phones the RAM is small enough relative to CPU
-> size.
-> 
-> But on desktops/servers, we frequently see that there is a wider
-> window of memory consumption in which reclaim efficiency doesn't drop
-> low enough for the OOM killer to kick in. In the time it takes the CPU
-> to scan through RAM, enough pages will have *just* finished reading
-> for reclaim to free them again and continue to make "progress".
-> 
-> We do know that the OOM killer might not kick in for at least 20-25
-> minutes while the system is entirely unresponsive. People usually
-> don't wait this long before forcibly rebooting. In a managed fleet,
-> ssh heartbeat tests eventually fail and force a reboot.
-> 
-> I'm not sure 10s is the perfect value here, but I do think the kernel
-> should try to get out of such a state, where interacting with the
-> system is impossible, within a reasonable amount of time.
-> 
-> It could be a little too short for non-interactive number-crunching
-> systems...
+There are two warnings in net/can, fix them by setting
+bcm_sock_no_ioctlcmd and raw_sock_no_ioctlcmd as static.
 
-Would it be possible to have a module with tunning knobs as parameters
-and hook into the PSI infrastructure? People can play with the setting
-to their need, we wouldn't really have think about the user visible API
-for the tuning and this could be easily adopted as an opt-in mechanism
-without a risk of regressions.
+net/can/bcm.c:1683:5: warning: symbol 'bcm_sock_no_ioctlcmd' was not declared. Should it be static?
+net/can/raw.c:840:5: warning: symbol 'raw_sock_no_ioctlcmd' was not declared. Should it be static?
 
-I would really love to see a simple threshing watchdog like the one you
-have proposed earlier. It is self contained and easy to play with if the
-parameters are not hardcoded.
+Fixes: 473d924d7d46 ("can: fix ioctl function removal")
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+Acked-by: Oliver Hartkopp <socketcan@hartkopp.net>
+---
+ v2: change patch description typo error, 'warings' to 'warnings'.
+ v3: change subject of patch.
+ v4: change the alignment of two functions. 
+ v5: change subject of patch.
+ net/can/bcm.c | 4 ++--
+ net/can/raw.c | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
+diff --git a/net/can/bcm.c b/net/can/bcm.c
+index bf1d0bbecec8..eb1d28b8c46a 100644
+--- a/net/can/bcm.c
++++ b/net/can/bcm.c
+@@ -1680,8 +1680,8 @@ static int bcm_recvmsg(struct socket *sock, struct msghdr *msg, size_t size,
+ 	return size;
+ }
+ 
+-int bcm_sock_no_ioctlcmd(struct socket *sock, unsigned int cmd,
+-			 unsigned long arg)
++static int bcm_sock_no_ioctlcmd(struct socket *sock, unsigned int cmd,
++				unsigned long arg)
+ {
+ 	/* no ioctls for socket layer -> hand it down to NIC layer */
+ 	return -ENOIOCTLCMD;
+diff --git a/net/can/raw.c b/net/can/raw.c
+index da386f1fa815..a30aaecd9327 100644
+--- a/net/can/raw.c
++++ b/net/can/raw.c
+@@ -837,8 +837,8 @@ static int raw_recvmsg(struct socket *sock, struct msghdr *msg, size_t size,
+ 	return size;
+ }
+ 
+-int raw_sock_no_ioctlcmd(struct socket *sock, unsigned int cmd,
+-			 unsigned long arg)
++static int raw_sock_no_ioctlcmd(struct socket *sock, unsigned int cmd,
++				unsigned long arg)
+ {
+ 	/* no ioctls for socket layer -> hand it down to NIC layer */
+ 	return -ENOIOCTLCMD;
 -- 
-Michal Hocko
-SUSE Labs
+2.20.1
+
