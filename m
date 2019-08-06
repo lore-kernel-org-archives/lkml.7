@@ -2,107 +2,123 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95912C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB122C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AB272070D
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:01:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565132466;
-	bh=vGl/qyUj+m3xdNJaJ9fF/HjSzIEZvTJK5xJjIUiHOxQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Cywmq4lee1rJVKq+f3gV8hjT743dKwQoCItC8NmesY+SYrMrFXVqASZnI9YsxmBqF
-	 2jf9rNN6+tilNkCrF3Kjd8iEAT7zwWNsysUxk3KVmMqU+xjkV+BvJcMmda/3U4BRnZ
-	 kl1sd4GxjCkDdU3hOZQdNZEctKSUXupCMjMrHQho=
+	by mail.kernel.org (Postfix) with ESMTP id 942B920717
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:02:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="EvhQhv1x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbfHFXBF (ORCPT
+        id S1726880AbfHFXCH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 19:01:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51448 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725974AbfHFXBF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 19:01:05 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C7A32070D;
-        Tue,  6 Aug 2019 23:01:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565132464;
-        bh=vGl/qyUj+m3xdNJaJ9fF/HjSzIEZvTJK5xJjIUiHOxQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ram+yxpjoZZlMPdi2p/p8wC9xbLXU244ul4IK2w7JME7Dob0R4Qy/D1hsmAvZ0GDM
-         lPuIhCuLFw5/g2cagStWN5Eua65k6HVxgrIAfPon7hrUHTVSJGBaJH22M3WDg17C6L
-         TdVf/pEW1LNxxYciU9FWLJmB9xyejRP00N6oKK4k=
-Date:   Tue, 6 Aug 2019 16:01:02 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     axboe@kernel.dk, jack@suse.cz, hannes@cmpxchg.org,
-        mhocko@kernel.org, vdavydov.dev@gmail.com, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, guro@fb.com
-Subject: Re: [PATCH 2/4] bdi: Add bdi->id
-Message-Id: <20190806160102.11366694af6b56d9c4ca6ea3@linux-foundation.org>
-In-Reply-To: <20190803140155.181190-3-tj@kernel.org>
-References: <20190803140155.181190-1-tj@kernel.org>
-        <20190803140155.181190-3-tj@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 6 Aug 2019 19:02:07 -0400
+Received: from mail-eopbgr740135.outbound.protection.outlook.com ([40.107.74.135]:1255
+        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725974AbfHFXCG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 19:02:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=INmoz4eXM2ntDORtuWJqgBIrQAWAHy+/Rln+hGtjDrWlxfUuuFX0VSsqT3EQJIfujiSWFnCR+iDK25QPAGA4dmDBC6iraaYUFdBmWWSUI93//trWeniXMbQrP2k+HvNaE9tONuDzSViyeR1xUKUspc3ILKA9YRuLDZ1f34c/7CjNW3cSmxggLS56ICmK6xkaMNPCZPXaeez798gFqdHhuKSIUHcZuFS+QJV3oTke4aV4oCN7fDuGoWS5fCGaAwhSeBKdocYF3TmdUNTGnP+65D0prHOKgUQARd+aEJQc3ZqLiCm/57kR71APJDn0yuylUbXYd1xeJ7GWRnruNBxgfQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QUJYuCO7RWte/Ul/XpqQsVcfsqQBozGceOKRqd9EHpI=;
+ b=S5BEjO5W0RjeuUyTimRImCSTah5g7GS3IrkTgWXaQC/pI7OERnOwkNXBcsUq2zWPPOfDLAYgyjRvxvscqwvh5bwkf3anitRYlxjyAwVv5HioXfsNDhmKwmMsz13e5eT3exw9GnUwiY/VO2VkS5eVQCy1s/628Ecoakq3e61cHYvrYklzNO6BZ18pBPrlEwaMDPQinYVj19ENQnpDaTpHp0sTCYli43cQANUvz2Gd1fK8y6wOGoIWEb0HC2oiR69lu1wxJ2xEIsV0czLdQH8OS4tsKoqisMuIxtIS7SSqOIep5hDGxctkcsqA/mMzQBps1AFw9GtPFAD0t0U5rLvkVQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=wavecomp.com;dmarc=pass action=none
+ header.from=mips.com;dkim=pass header.d=mips.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QUJYuCO7RWte/Ul/XpqQsVcfsqQBozGceOKRqd9EHpI=;
+ b=EvhQhv1xtafmklxngM5yTv/NarO25t8Zs6JepbYqoF/Z8moO4VBiM9z1QNOA6luaTAr0zdVV1vY68feBp9U0ruxPfMr1T65ZvQZO+zDlS9LYfHb3MEB6VU5oehYnGDhuAQhUaM9pNL/6T4wUqCFWfYY1e3ALB3qEv/wF8f3Mr2s=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
+ MWHPR2201MB1519.namprd22.prod.outlook.com (10.174.170.156) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2136.20; Tue, 6 Aug 2019 23:02:03 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::f566:bf1f:dcd:862c]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::f566:bf1f:dcd:862c%10]) with mapi id 15.20.2136.018; Tue, 6 Aug 2019
+ 23:02:03 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Zhou Yanjie <zhouyanjie@zoho.com>
+CC:     "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ralf@linux-mips.org" <ralf@linux-mips.org>,
+        "paul@crapouillou.net" <paul@crapouillou.net>,
+        Paul Burton <pburton@wavecomp.com>,
+        "jhogan@kernel.org" <jhogan@kernel.org>,
+        "malat@debian.org" <malat@debian.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "syq@debian.org" <syq@debian.org>,
+        "chenhc@lemote.com" <chenhc@lemote.com>,
+        "jiaxun.yang@flygoat.com" <jiaxun.yang@flygoat.com>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+Subject: Re: [PATCH 1/2 v4] MIPS: Ingenic: Fix bugs when detecting X1000's L2
+  cache.
+Thread-Topic: [PATCH 1/2 v4] MIPS: Ingenic: Fix bugs when detecting X1000's L2
+  cache.
+Thread-Index: AQHVTKr2THW3JwVNBUW249zIXgbWgQ==
+Date:   Tue, 6 Aug 2019 23:02:03 +0000
+Message-ID: <MWHPR2201MB1277252B4F5EC00386B604E6C1D50@MWHPR2201MB1277.namprd22.prod.outlook.com>
+References: <1564734457-48801-2-git-send-email-zhouyanjie@zoho.com>
+In-Reply-To: <1564734457-48801-2-git-send-email-zhouyanjie@zoho.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR01CA0014.prod.exchangelabs.com (2603:10b6:a02:80::27)
+ To MWHPR2201MB1277.namprd22.prod.outlook.com (2603:10b6:301:18::12)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [12.94.197.246]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 44b44362-8510-44b8-712d-08d71ac2185d
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1519;
+x-ms-traffictypediagnostic: MWHPR2201MB1519:
+x-microsoft-antispam-prvs: <MWHPR2201MB151953F0CDC21AF21C2551A0C1D50@MWHPR2201MB1519.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-forefront-prvs: 0121F24F22
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39850400004)(136003)(366004)(346002)(376002)(189003)(199004)(68736007)(33656002)(486006)(256004)(14454004)(7736002)(74316002)(8936002)(81156014)(305945005)(8676002)(66066001)(81166006)(6436002)(9686003)(6246003)(229853002)(53936002)(55016002)(558084003)(4326008)(6916009)(2906002)(71190400001)(316002)(7416002)(6506007)(6116002)(186003)(76176011)(3846002)(71200400001)(26005)(99286004)(25786009)(102836004)(64756008)(54906003)(66476007)(478600001)(52536014)(66946007)(66446008)(5660300002)(44832011)(476003)(7696005)(52116002)(42882007)(386003)(11346002)(446003)(66556008);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1519;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: BEm6M2XzDmw1b5iealTl5e668SNHMILbmYIm4+/K87amMaiefgPViVe7M0qkhQvQRG1GIeg83V6hSaWWmsMpom/+aEYBpi2DyauFrqoMRMPf9x4G8N7uhF6jT16mzTm0bSQNkE0oNaOhppBksl19ArviSkF806cD7nVxnU5aQBbVKzOb7Rii/FuBqdWyjKojo50uAsyRX6hy41Kx0CKrqFg8AsLPSG60h/O9vuznxdT2xpr2ALTK7o/Ho2FIVt4O/G4Q/gjbo8j3Pt95E1hx1lO78CmoAFi1fAKHVJ5yI+VyDGVjYk1AS3zv8cQeh7ZH2vMp4rRE1ki2Nu4ueiSJvHulO83nOwFK/iNNkHrcwCyqlU6hl3Zri1C0SaGdBqTgdp6OEHy9kEnU1hKjJGeimh7xz0+7PGQAFB9UMGG6OHs=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 44b44362-8510-44b8-712d-08d71ac2185d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Aug 2019 23:02:03.3932
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1519
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat,  3 Aug 2019 07:01:53 -0700 Tejun Heo <tj@kernel.org> wrote:
+Hello,
 
-> There currently is no way to universally identify and lookup a bdi
-> without holding a reference and pointer to it.  This patch adds an
-> non-recycling bdi->id and implements bdi_get_by_id() which looks up
-> bdis by their ids.  This will be used by memcg foreign inode flushing.
+Zhou Yanjie wrote:
+> 1.fix bugs when detecting L2 cache sets value.
+> 2.fix bugs when detecting L2 cache ways value.
 
-Why is the id non-recycling?  Presumably to address some
-lifetime/lookup issues, but what are they?
+Series applied to mips-next.
 
-Why was the IDR code not used?
+Thanks,
+    Paul
 
-> I left bdi_list alone for simplicity and because while rb_tree does
-> support rcu assignment it doesn't seem to guarantee lossless walk when
-> walk is racing aginst tree rebalance operations.
-> 
-> ...
->
-> +/**
-> + * bdi_get_by_id - lookup and get bdi from its id
-> + * @id: bdi id to lookup
-> + *
-> + * Find bdi matching @id and get it.  Returns NULL if the matching bdi
-> + * doesn't exist or is already unregistered.
-> + */
-> +struct backing_dev_info *bdi_get_by_id(u64 id)
-> +{
-> +	struct backing_dev_info *bdi = NULL;
-> +	struct rb_node **p;
-> +
-> +	spin_lock_irq(&bdi_lock);
-
-Why irq-safe?  Everywhere else uses spin_lock_bh(&bdi_lock).
-
-> +	p = bdi_lookup_rb_node(id, NULL);
-> +	if (*p) {
-> +		bdi = rb_entry(*p, struct backing_dev_info, rb_node);
-> +		bdi_get(bdi);
-> +	}
-> +	spin_unlock_irq(&bdi_lock);
-> +
-> +	return bdi;
-> +}
-> +
->
-> ...
->
+[ This message was auto-generated; if you believe anything is incorrect
+  then please email paul.burton@mips.com to report it. ]
