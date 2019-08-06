@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6387C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DCEDC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CDC7217F5
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C45C2216F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:34:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127240;
-	bh=YWZMTuicYL37W61tyGEDFMuUQiDu4m6h46X35x3t5h4=;
+	s=default; t=1565127245;
+	bh=tX3+3B/kq+FNOebC/0HT2A+XLEXbQHn4wNEEh5n8x30=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lyDwF89bkLDW1PeL/LynwnDPP0DQNJ5d5+uCNYWKN4pydDEiTcfo8kofjWuljLabo
-	 U4NEtzi9cQFXGP26OrYNQT4LMTna8LJBdec8uft/FPONxK63dumnSQaOe1hR6OWMGS
-	 sJKyZNVLgjNcrxcq27jzgzFpv9fEuH+dE69SxaKU=
+	b=EMGBzWUYdLdDcIWCgHe/P2EkW4YjWefVsqeXidfanlfT+5D0/RRHn7cOZighmPAQS
+	 LZKNwQuBL4+apiBLsuTChRUFzwiiGbwWpa/iKKGG1IG9sTl4bS/BTQRB21MfiseIRn
+	 wGwhRfjmDFgffs2r6+ZwRtmSW7HyVN94WDmm9acA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbfHFVd7 (ORCPT
+        id S1727507AbfHFVeE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:33:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51746 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:34:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727324AbfHFVdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:33:53 -0400
+        id S1726542AbfHFVeB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:34:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8423B21743;
-        Tue,  6 Aug 2019 21:33:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1AA7217D7;
+        Tue,  6 Aug 2019 21:33:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127232;
-        bh=YWZMTuicYL37W61tyGEDFMuUQiDu4m6h46X35x3t5h4=;
+        s=default; t=1565127240;
+        bh=tX3+3B/kq+FNOebC/0HT2A+XLEXbQHn4wNEEh5n8x30=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Be9ieqRNixxKdnMAM0zYAo1XUd2ZNj7DNYZsdYszaXhkXsGKL3Jg3MXW+CGMX7FZD
-         VB001adF+KKNQIs26jzxZ0VSi6nd+Xr2PNkwbqTH1UtRbPdKdMy85UPxBZAHX3jwz4
-         6pMdO7nZFefSZMfMvewwFlkbsBnFRRhK0yXNNqkg=
+        b=gX4cHNQyMNSy1yXOlXBcHXLLueFK7M45r7mY4ePUlzB2rpr/yrTC8m4gX5gawm08J
+         3PsaNHFFyAHRIReKJHavKlO6twagKP6MGASauxSO4rT4hi2nFLl9XJ5hYnPA/tJjNz
+         Aa/ZEtnfnheu+zagDCMTAs9fPJcJI95VJxMKEMEg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yuki Tsunashima <ytsunashima@jp.adit-jv.com>,
-        Suresh Udipi <sudipi@jp.adit-jv.com>,
-        Adam Miartus <amiartus@de.adit-jv.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 19/59] ALSA: pcm: fix lost wakeup event scenarios in snd_pcm_drain
-Date:   Tue,  6 Aug 2019 17:32:39 -0400
-Message-Id: <20190806213319.19203-19-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.2 23/59] drm/bridge: tc358764: Fix build error
+Date:   Tue,  6 Aug 2019 17:32:43 -0400
+Message-Id: <20190806213319.19203-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213319.19203-1-sashal@kernel.org>
 References: <20190806213319.19203-1-sashal@kernel.org>
@@ -60,48 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuki Tsunashima <ytsunashima@jp.adit-jv.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 37151a41df800493cfcbbef4f7208ffe04feb959 ]
+[ Upstream commit e1ae72a21e5f0d1846e26e3f5963930664702071 ]
 
-lost wakeup can occur after enabling irq, therefore put task
-into interruptible before enabling interrupts,
+If CONFIG_DRM_TOSHIBA_TC358764=y but CONFIG_DRM_KMS_HELPER=m,
+building fails:
 
-without this change, task can be put to sleep and snd_pcm_drain
-will delay
+drivers/gpu/drm/bridge/tc358764.o:(.rodata+0x228): undefined reference to `drm_atomic_helper_connector_reset'
+drivers/gpu/drm/bridge/tc358764.o:(.rodata+0x240): undefined reference to `drm_helper_probe_single_connector_modes'
+drivers/gpu/drm/bridge/tc358764.o:(.rodata+0x268): undefined reference to `drm_atomic_helper_connector_duplicate_state'
+drivers/gpu/drm/bridge/tc358764.o:(.rodata+0x270): undefined reference to `drm_atomic_helper_connector_destroy_state'
 
-Fixes: f2b3614cefb6 ("ALSA: PCM - Don't check DMA time-out too shortly")
-Signed-off-by: Yuki Tsunashima <ytsunashima@jp.adit-jv.com>
-Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
-[ported from 4.9]
-Signed-off-by: Adam Miartus <amiartus@de.adit-jv.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Like TC358767, select DRM_KMS_HELPER to fix this, and
+change to select DRM_PANEL to avoid recursive dependency.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: f38b7cca6d0e ("drm/bridge: tc358764: Add DSI to LVDS bridge driver")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190729090520.25968-1-yuehaibing@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/pcm_native.c | 3 ++-
+ drivers/gpu/drm/bridge/Kconfig | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sound/core/pcm_native.c b/sound/core/pcm_native.c
-index 12dd9b318db18..703857aab00fc 100644
---- a/sound/core/pcm_native.c
-+++ b/sound/core/pcm_native.c
-@@ -1873,6 +1873,7 @@ static int snd_pcm_drain(struct snd_pcm_substream *substream,
- 		if (!to_check)
- 			break; /* all drained */
- 		init_waitqueue_entry(&wait, current);
-+		set_current_state(TASK_INTERRUPTIBLE);
- 		add_wait_queue(&to_check->sleep, &wait);
- 		snd_pcm_stream_unlock_irq(substream);
- 		if (runtime->no_period_wakeup)
-@@ -1885,7 +1886,7 @@ static int snd_pcm_drain(struct snd_pcm_substream *substream,
- 			}
- 			tout = msecs_to_jiffies(tout * 1000);
- 		}
--		tout = schedule_timeout_interruptible(tout);
-+		tout = schedule_timeout(tout);
+diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+index cc62603b87c59..e4e22bbae2a7c 100644
+--- a/drivers/gpu/drm/bridge/Kconfig
++++ b/drivers/gpu/drm/bridge/Kconfig
+@@ -117,9 +117,10 @@ config DRM_THINE_THC63LVD1024
  
- 		snd_pcm_stream_lock_irq(substream);
- 		group = snd_pcm_stream_group_ref(substream);
+ config DRM_TOSHIBA_TC358764
+ 	tristate "TC358764 DSI/LVDS bridge"
+-	depends on DRM && DRM_PANEL
+ 	depends on OF
+ 	select DRM_MIPI_DSI
++	select DRM_KMS_HELPER
++	select DRM_PANEL
+ 	help
+ 	  Toshiba TC358764 DSI/LVDS bridge driver.
+ 
 -- 
 2.20.1
 
