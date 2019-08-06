@@ -2,111 +2,101 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62DC3C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45935C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:11:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C5AE20C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BC7E20C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:11:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HlpTB3Af"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732029AbfHFNKT convert rfc822-to-8bit (ORCPT
+        id S1731379AbfHFNLl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 09:10:19 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:29072 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731515AbfHFNKT (ORCPT
+        Tue, 6 Aug 2019 09:11:41 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:41128 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726834AbfHFNLl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 09:10:19 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-31-8SN7SsMjODOE3pGV42hYng-1; Tue, 06 Aug 2019 14:10:15 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 6 Aug 2019 14:10:14 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 6 Aug 2019 14:10:14 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Dan Carpenter' <dan.carpenter@oracle.com>,
-        Jose Carlos Cazarin Filho <joseespiriki@gmail.com>
-CC:     "Larry.Finger@lwfinger.net" <Larry.Finger@lwfinger.net>,
-        "florian.c.schilhabel@googlemail.com" 
-        <florian.c.schilhabel@googlemail.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lkcamp@lists.libreplanetbr.org" <lkcamp@lists.libreplanetbr.org>
-Subject: RE: [PATCH] rtl8712: rtl871x_ioctl_linux.c: fix unnecessary typecast
-Thread-Topic: [PATCH] rtl8712: rtl871x_ioctl_linux.c: fix unnecessary typecast
-Thread-Index: AQHVTE2Sh/UbLvavCEKXN3OpolxoRabuFsqQ
-Date:   Tue, 6 Aug 2019 13:10:14 +0000
-Message-ID: <8d6c6714f9ca46ab90b2a747c05b899b@AcuMS.aculab.com>
-References: <20190806013329.28574-1-joseespiriki@gmail.com>
- <20190806115305.GF1974@kadam>
-In-Reply-To: <20190806115305.GF1974@kadam>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 6 Aug 2019 09:11:41 -0400
+Received: by mail-lf1-f65.google.com with SMTP id 62so56203546lfa.8
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 06:11:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=H0vagFQ3739JrCrLPS29VGkKplJ4eh9USrRRP/YZnBk=;
+        b=HlpTB3AfoXubHmbOTwFI+0OzaGP1Nl1VLy/JFzh9Njx8wGbwMJFMbtKjx9/NUZsNaK
+         K/cLL+pL8bOt2yI5TdoHessmfhPymfIpULOlpiELbAQV2MYtjGGiAjnUE6YRw4FlPO64
+         9tKJjn34YL8ZdybMMzgV6I4LdPJTgRfmD+p/tD1aysDuEBmMjul2DGFEuaKOPTXGSW0n
+         iq7NUCiBTtqdbjRhhsTQ562D8Qk8cNr2L2+/gsV6e8pkg5zv70zLhylKA0pk3b1h9/EY
+         ghVnyeP6tnoQCfvqcyRXCanw6EEjd5sa6qQlf4xbpSiWcwpUhdYlUkzkU6VLdqhWOU1G
+         a7dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=H0vagFQ3739JrCrLPS29VGkKplJ4eh9USrRRP/YZnBk=;
+        b=kdI1a2Amh/iwTIHmq0EHIKW2d61sJuvUpdpWnWjqYx5yHtaRXhsfR6tuUnhgsz+bUJ
+         PXbETI/MuEOepk6RNUh0EgraT3kEk4Bv+J+Vr0bwvfk3uCHRFM3UK+lSlcP3AwmOucXJ
+         L/iqkWV6D1iWlPEiZjmN2DxcZBzP/l6JBo+aTGoRqwoBAR4coxwoDkA//nmsQGwyJ23s
+         L3erslqcRw1l8IuR0HwyrNgvdOl2z9sA61tRhrRrvRjKkw0T1JHHrNLVdZu7Zfxwfvlm
+         4tsg9+Ed3Eo6Fkxvh/IVsyFbpwjRSFFcw33oCCn44RM9NBPr2LqZQHVwChMx/USqQRdi
+         +1PA==
+X-Gm-Message-State: APjAAAVHDba9gzr6xQ2uvQx6vpsY0QppimJyNWyVJswuNOxkS+pvSy4u
+        hl++fYp+cmMeJoyfEjJ+CnmK24EeUxJf4wKIUh6Aog==
+X-Google-Smtp-Source: APXvYqzf6iu18R7AJxDTK2zthx5LMRLAJUY6nOomob8YHK0YdoAPZzSyuo4h4xrvBPHV8bSSRkMHbrL2d8wZnkPasUw=
+X-Received: by 2002:ac2:5c42:: with SMTP id s2mr2536999lfp.61.1565097098965;
+ Tue, 06 Aug 2019 06:11:38 -0700 (PDT)
 MIME-Version: 1.0
-X-MC-Unique: 8SN7SsMjODOE3pGV42hYng-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <20190803133436.15016-1-rfried.dev@gmail.com> <CACRpkdYEdQdk62bWJ2=i2Mbvpz3kwL=9bnMoxksFsTgAHRh68w@mail.gmail.com>
+In-Reply-To: <CACRpkdYEdQdk62bWJ2=i2Mbvpz3kwL=9bnMoxksFsTgAHRh68w@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 6 Aug 2019 15:11:27 +0200
+Message-ID: <CACRpkdaTmxQn2Z=vD6nyqk-iXCFrnCG1xpkXwO3-+sazOhGBvw@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: Take MUX usage into account
+To:     Ramon Fried <rfried.dev@gmail.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Stefan Wahren <stefan.wahren@i2se.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter
-> Sent: 06 August 2019 12:53
-> On Mon, Aug 05, 2019 at 10:33:29PM -0300, Jose Carlos Cazarin Filho wrote:
-> > Fix checkpath warning:
-> > WARNING: Unnecessary typecast of c90 int constant
+On Tue, Aug 6, 2019 at 3:04 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Sat, Aug 3, 2019 at 3:34 PM Ramon Fried <rfried.dev@gmail.com> wrote:
+>
+> > From: Stefan Wahren <stefan.wahren@i2se.com>
 > >
-> > Signed-off-by: Jose Carlos Cazarin Filho <joseespiriki@gmail.com>
+> > The user space like gpioinfo only see the GPIO usage but not the
+> > MUX usage (e.g. I2C or SPI usage) of a pin. As a user we want to know which
+> > pin is free/safe to use. So take the MUX usage of strict pinmux controllers
+> > into account to get a more realistic view for ioctl GPIO_GET_LINEINFO_IOCTL.
+> >
+> > Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> > Tested-By: Ramon Fried <rfried.dev@gmail.com>
+> > Signed-off-by: Ramon Fried <rfried.dev@gmail.com>
 > > ---
-> >  Hello all!
-> >  This is my first commit to the Linux Kernel, I'm doing this to learn and be able
-> >  to contribute more in the future
-> >  Peace all!
-> >  drivers/staging/rtl8712/rtl871x_ioctl_linux.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
-> b/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
-> > index 944336e0d..da371072e 100644
-> > --- a/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
-> > +++ b/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
-> > @@ -665,8 +665,8 @@ static int r8711_wx_set_freq(struct net_device *dev,
-> >
-> >  /* If setting by frequency, convert to a channel */
-> >  	if ((fwrq->e == 1) &&
-> > -	  (fwrq->m >= (int) 2.412e8) &&
-> > -	  (fwrq->m <= (int) 2.487e8)) {
-> > +	  (fwrq->m >= 2.412e8) &&
-> > +	  (fwrq->m <= 2.487e8)) {
-> 
-> I don't think we can do this.  You're not allowed to use floats in the
-> kernel (because they make context switching slow).  I could have sworn
-> that we use the -nofp to stop the compile when people use floats but
-> this compiles fine for me.
+> > Sending Stefan's RFC as patch, as I tested it and it seems to work,
+> > additionally, an accompanying fix was made by me to gpiolibd to fix a
+> > display error of the actual result:
+> > https://patchwork.ozlabs.org/patch/1139923/
+>
+> This is mostly fine, some style nits so I fixed it up when
+> applying.
 
-My guess is the 'c90 int constant' text.
+Ooops no. It needs a deeper rework in accordance to my comments
+last time it was posted. Please read this reply to Stefan's patch
+and address the comments:
 
-It rather implies that '2.412e8' has become the same as '2141200000'.
-Which is rather worrying because suddenly 'int_var * 2.4e8' might
-be an integer multiply rather than a double one and overflow.
-Have the standard people broken code again?
+https://lore.kernel.org/linux-gpio/CACRpkdb5DjAMRYkT+b0U6HVk7E6ccLT79-LB=QGQWWtE17aPUg@mail.gmail.com/
 
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+Yours,
+Linus Walleij
