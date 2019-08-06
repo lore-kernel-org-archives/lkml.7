@@ -2,166 +2,397 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17954C32751
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85892C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D485B214C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45B5720B1F
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:16:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="CG5mOnAd"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="OggTUEsp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727497AbfHFXQ3 (ORCPT
+        id S1727518AbfHFXQh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 19:16:29 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53720 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727439AbfHFXQZ (ORCPT
+        Tue, 6 Aug 2019 19:16:37 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:41917 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727283AbfHFXQT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 19:16:25 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 10so717745wmp.3
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 16:16:23 -0700 (PDT)
+        Tue, 6 Aug 2019 19:16:19 -0400
+Received: by mail-qt1-f196.google.com with SMTP id d17so7513965qtj.8
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 16:16:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Q61qm30k8cg74IhXkTUjHjLeO5mUvURwLoiElUgi8sA=;
-        b=CG5mOnAd/KW5rIyYsfrD490hIM61X0WzvKgxKZKRNh1jbjz3QVZzq/BixrHW97Y1bZ
-         5bcL6b5ns+9nUsXfNYBhtP1nup+a6bcv+sOsyI+6d78PGJXA+WQojPR+nXuAUKycyODS
-         SF8LepmehB+2SnMgqAjYVO/syNqKd47gZ8RS6s7gYrmDvbTUOxzupWz+yoz5SXCmxe9n
-         uUWFSm8nyF3ZKPovqDFvymKkg6Wm0AUuBWDYjSWxblYTcoakjOe/3IKGtDwYQHmxqc9Q
-         WeRbC4xKJj1kqo/MnRE5WE/Ygbpg6qdGy3sONDN1T+ecuJvl+OlpV1DqSYBSFzXsNDwQ
-         C3+Q==
+        d=ziepe.ca; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Pn+tyQ3Pr4O2LIFi6En+JQU77nMjukrgPYCGXMr75Sc=;
+        b=OggTUEspMMn1b2yn+uWIxqTUSf36GrQvvrKxao/PHqyl+DTzlNDH4G1PGH3Rn0oGUS
+         9yWjg40oqduC6+lBlaQt5AEvzMMt0+HwZg55qm2B0NolxD6rKy/+kW7fIzbbXJKBopU0
+         i0almRR6UKPo/GhOflLmKlphmx9M/H798dmunpZq7PtsAO2b61x95N71srn2s2CDP8O8
+         2Nnw5Qr44QCLihcSGiRyMe3Kj2uVDFPch0f783vgeAsiRsnpUJHeAgiwM1GQwWYB1VHE
+         DvJqjSXNfKnDYlNgHN92XgTfN016uxa+ZXPo1oS4z0q6EyI5dcvmeyhfMveigWb28Muk
+         7f4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Q61qm30k8cg74IhXkTUjHjLeO5mUvURwLoiElUgi8sA=;
-        b=HGPu1WYTzsPaaqtA/H+hJ1/3FuoIs9N9PuYBpLf417VE3YA/VuDQbefnmFZDSK3d+H
-         pe0TSxYhHZol5Xbia7YL0WDiJXeXfhNW62Ts5SNemI68qy0jHGZghUGK7tdFAhtAWKud
-         U2yNb2o3PQHI8Zs43spMuNsxjiXKu8JWZ4ZA1jXDfkV3t13i/FoRyrjxnsvhX9EDaKoI
-         DHBMJiygbPLuWWjjltuoNQ8gxmh9YzSBye9dOw7cYege1NcDRHennEPlb2caSK4u8E4c
-         CHvqG42GO8Q/M6bdj7SVoAupTz2X/qY7JqT0uhSGfy64FtLuFo+7Mxsm6QGbhXL8HZj5
-         Iy9Q==
-X-Gm-Message-State: APjAAAVhDBOLpX6ZiCG5ypoNeEcTbAnhVVY+p/w+EpynfcnZW/6ed1Hm
-        wjo1PMizDJoj75xBe4ug8wKwJU+Noi8OQXi8Mhb8JjMgvMwuncv3NzcwPwdAB99aUYUlqjHTFyX
-        gzQ8pwYSfFXpCBNYPzd5T1xcp7l5UqUL0IYFGJ7mZifozjrFHbrEcFd+cvTC59PPdNoqswb7cOL
-        xjlxi0KHL9KXBXlmSZGqiD8cQOR/eJ2cQZDAX5Qpo=
-X-Google-Smtp-Source: APXvYqxZdd7iJIqOekT+GFHNpa0uxjIVasHt3cn+nlZds1B0ydrjr2hGKRtue33c0rK7PgKaL/W/JQ==
-X-Received: by 2002:a1c:c545:: with SMTP id v66mr6790710wmf.51.1565133383213;
-        Tue, 06 Aug 2019 16:16:23 -0700 (PDT)
-Received: from [10.83.36.153] ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id o6sm193083319wra.27.2019.08.06.16.16.22
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 06 Aug 2019 16:16:22 -0700 (PDT)
-Subject: Re: [PATCH 4.19 17/32] iommu/vt-d: Dont queue_iova() if there is no
- flush queue
-From:   Dmitry Safonov <dima@arista.com>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     linux-kernel@vger.kernel.org,
-        David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        iommu@lists.linux-foundation.org, Joerg Roedel <jroedel@suse.de>
-References: <20190802092101.913646560@linuxfoundation.org>
- <20190802092107.177554199@linuxfoundation.org> <20190803213453.GA22416@amd>
- <dc639510-5d88-5b05-a973-5f4b7c720f76@arista.com>
-Message-ID: <858b5409-d8ed-5ff1-2daf-3f6287fb5c8e@arista.com>
-Date:   Wed, 7 Aug 2019 00:16:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Pn+tyQ3Pr4O2LIFi6En+JQU77nMjukrgPYCGXMr75Sc=;
+        b=aFFkSECaIO+IHSoePj4LLBuV0Bp6sIO+1vZpgns1lIqaeYgv3EMXcbAapmaOzFUVtn
+         /jeyTK24yEkMaxuvI1lVMAT4mD/fyA0RVWnAH5Gt8QKdYyHVE47cE3cvfoaB7VeOCjN9
+         0AKnTFlJ8ibyA/mgP7S0Ebo9+LCHa3NKc24p7fVGZVX5YJUghlkZNqU4LM4H74cVLLAW
+         /odvjMEo++6180xidgG90oFyWcSU+D8t/S2OgEPQNLP30doENyaPm5td4D1VBcbT2hlc
+         jpluwkWCtR92KLeauVe87zmVAObfbG+FIiN0JBya00nJg6IqNorDMmpK9xixUy9alNe4
+         3Unw==
+X-Gm-Message-State: APjAAAVTXKiMvi9pmpQWQMWVi37I2WqtHuGCiuby0iTkNfb6JKyyXBfy
+        bftcTtuOn89rmhJ+rZGwuiV2fg==
+X-Google-Smtp-Source: APXvYqxTw9+mlouFwWoFRA0XatHqfMRrcpDdIv2NXf5/HvRxmFylGt3sJXAS2PMqHoBRobENBadT3A==
+X-Received: by 2002:ac8:285c:: with SMTP id 28mr5575869qtr.186.1565133378273;
+        Tue, 06 Aug 2019 16:16:18 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id r40sm47669868qtr.57.2019.08.06.16.16.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 06 Aug 2019 16:16:17 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hv8gg-0006ey-Dk; Tue, 06 Aug 2019 20:16:14 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     linux-mm@kvack.org
+Cc:     Andrea Arcangeli <aarcange@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        Dimitri Sivanich <sivanich@sgi.com>,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        iommu@lists.linux-foundation.org, intel-gfx@lists.freedesktop.org,
+        Gavin Shan <shangw@linux.vnet.ibm.com>,
+        Andrea Righi <andrea@betterlinux.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH v3 hmm 08/11] drm/radeon: use mmu_notifier_get/put for struct radeon_mn
+Date:   Tue,  6 Aug 2019 20:15:45 -0300
+Message-Id: <20190806231548.25242-9-jgg@ziepe.ca>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190806231548.25242-1-jgg@ziepe.ca>
+References: <20190806231548.25242-1-jgg@ziepe.ca>
 MIME-Version: 1.0
-In-Reply-To: <dc639510-5d88-5b05-a973-5f4b7c720f76@arista.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CLOUD-SEC-AV-Info: arista,google_mail,monitor
-X-CLOUD-SEC-AV-Sent: true
-X-Gm-Spam: 0
-X-Gm-Phishy: 0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/6/19 11:47 PM, Dmitry Safonov wrote:
-> Hi Pavel,
-> 
-> On 8/3/19 10:34 PM, Pavel Machek wrote:
->> Hi!
->>
->>> --- a/drivers/iommu/intel-iommu.c
->>> +++ b/drivers/iommu/intel-iommu.c
->>> @@ -3721,7 +3721,7 @@ static void intel_unmap(struct device *d
->>>  
->>>  	freelist = domain_unmap(domain, start_pfn, last_pfn);
->>>  
->>> -	if (intel_iommu_strict) {
->>> +	if (intel_iommu_strict || !has_iova_flush_queue(&domain->iovad)) {
->>>  		iommu_flush_iotlb_psi(iommu, domain, start_pfn,
->>>  				      nrpages, !freelist, 0);
->>>  		/* free iova */
->>> --- a/drivers/iommu/iova.c
->>> +++ b/drivers/iommu/iova.c
->>> @@ -65,9 +65,14 @@ init_iova_domain(struct iova_domain *iov
->>>  }
->>>  EXPORT_SYMBOL_GPL(init_iova_domain);
->>>  
->>> +bool has_iova_flush_queue(struct iova_domain *iovad)
->>> +{
->>> +	return !!iovad->fq;
->>
->> Should this be READ_ONCE()?
-> 
-> Why? Compiler can't anyhow assume that it's always true/false and there
-> is a clear data dependency between this and:
-> :	queue_iova(&domain->iovad, iova_pfn, nrpages,
-> :			   (unsigned long)freelist);
-> 
->>
->>> @@ -100,13 +106,17 @@ int init_iova_flush_queue(struct iova_do
->>>  	for_each_possible_cpu(cpu) {
->>>  		struct iova_fq *fq;
->>>  
->>> -		fq = per_cpu_ptr(iovad->fq, cpu);
->>> +		fq = per_cpu_ptr(queue, cpu);
->>>  		fq->head = 0;
->>>  		fq->tail = 0;
->>>  
->>>  		spin_lock_init(&fq->lock);
->>>  	}
->>>  
->>> +	smp_wmb();
->>> +
->>> +	iovad->fq = queue;
->>> +
->>
->> Could we have a comment why the barrier is needed,
-> 
-> I'm up for the comment if you feel like it - in my POV it's quite
-> obvious that we want finish initializing the queue's internals before
-> assigning the queue. I didn't put the comment exactly because I felt
-> like it would state something evident [in my POV].
-> 
->> and perhaps there
->> should be oposing smp_rmb() somewhere? Does this need to be
->> WRITE_ONCE() as it is racing against reader?
-> 
-> I feel confused. I might have forgotten everything about barriers, but
-> again if I'm not mistaken, one doesn't need a barrier in:
-> : if (A->a != NULL)
-> :     use(A); /* dereferences A->a */
-> : else
-> :     /* don't use `a' */
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-And in this simplified example I mean that use() will either see A->a
-initialized (IOW, CPU can't load A->a->field1 before checking the
-condition) or use() will not be called.
+radeon is using a device global hash table to track what mmu_notifiers
+have been registered on struct mm. This is better served with the new
+get/put scheme instead.
 
-Thanks,
-          Dmitry
+radeon has a bug where it was not blocking notifier release() until all
+the BO's had been invalidated. This could result in a use after free of
+pages the BOs. This is tied into a second bug where radeon left the
+notifiers running endlessly even once the interval tree became
+empty. This could result in a use after free with module unload.
+
+Both are fixed by changing the lifetime model, the BOs exist in the
+interval tree with their natural lifetimes independent of the mm_struct
+lifetime using the get/put scheme. The release runs synchronously and just
+does invalidate_start across the entire interval tree to create the
+required DMA fence.
+
+Additions to the interval tree after release are already impossible as
+only current->mm is used during the add.
+
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+---
+ drivers/gpu/drm/radeon/radeon.h        |   3 -
+ drivers/gpu/drm/radeon/radeon_device.c |   2 -
+ drivers/gpu/drm/radeon/radeon_drv.c    |   2 +
+ drivers/gpu/drm/radeon/radeon_mn.c     | 157 ++++++-------------------
+ 4 files changed, 38 insertions(+), 126 deletions(-)
+
+AMD team: I wonder if kfd has similar lifetime issues?
+
+diff --git a/drivers/gpu/drm/radeon/radeon.h b/drivers/gpu/drm/radeon/radeon.h
+index 32808e50be12f8..918164f90b114a 100644
+--- a/drivers/gpu/drm/radeon/radeon.h
++++ b/drivers/gpu/drm/radeon/radeon.h
+@@ -2451,9 +2451,6 @@ struct radeon_device {
+ 	/* tracking pinned memory */
+ 	u64 vram_pin_size;
+ 	u64 gart_pin_size;
+-
+-	struct mutex	mn_lock;
+-	DECLARE_HASHTABLE(mn_hash, 7);
+ };
+ 
+ bool radeon_is_px(struct drm_device *dev);
+diff --git a/drivers/gpu/drm/radeon/radeon_device.c b/drivers/gpu/drm/radeon/radeon_device.c
+index dceb554e567446..788b1d8a80e660 100644
+--- a/drivers/gpu/drm/radeon/radeon_device.c
++++ b/drivers/gpu/drm/radeon/radeon_device.c
+@@ -1325,8 +1325,6 @@ int radeon_device_init(struct radeon_device *rdev,
+ 	init_rwsem(&rdev->pm.mclk_lock);
+ 	init_rwsem(&rdev->exclusive_lock);
+ 	init_waitqueue_head(&rdev->irq.vblank_queue);
+-	mutex_init(&rdev->mn_lock);
+-	hash_init(rdev->mn_hash);
+ 	r = radeon_gem_init(rdev);
+ 	if (r)
+ 		return r;
+diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
+index a6cbe11f79c611..b6535ac91fdb74 100644
+--- a/drivers/gpu/drm/radeon/radeon_drv.c
++++ b/drivers/gpu/drm/radeon/radeon_drv.c
+@@ -35,6 +35,7 @@
+ #include <linux/module.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/vga_switcheroo.h>
++#include <linux/mmu_notifier.h>
+ 
+ #include <drm/drm_crtc_helper.h>
+ #include <drm/drm_drv.h>
+@@ -624,6 +625,7 @@ static void __exit radeon_exit(void)
+ {
+ 	pci_unregister_driver(pdriver);
+ 	radeon_unregister_atpx_handler();
++	mmu_notifier_synchronize();
+ }
+ 
+ module_init(radeon_init);
+diff --git a/drivers/gpu/drm/radeon/radeon_mn.c b/drivers/gpu/drm/radeon/radeon_mn.c
+index 8c3871ed23a9f0..fc8254273a800b 100644
+--- a/drivers/gpu/drm/radeon/radeon_mn.c
++++ b/drivers/gpu/drm/radeon/radeon_mn.c
+@@ -37,17 +37,8 @@
+ #include "radeon.h"
+ 
+ struct radeon_mn {
+-	/* constant after initialisation */
+-	struct radeon_device	*rdev;
+-	struct mm_struct	*mm;
+ 	struct mmu_notifier	mn;
+ 
+-	/* only used on destruction */
+-	struct work_struct	work;
+-
+-	/* protected by rdev->mn_lock */
+-	struct hlist_node	node;
+-
+ 	/* objects protected by lock */
+ 	struct mutex		lock;
+ 	struct rb_root_cached	objects;
+@@ -58,55 +49,6 @@ struct radeon_mn_node {
+ 	struct list_head		bos;
+ };
+ 
+-/**
+- * radeon_mn_destroy - destroy the rmn
+- *
+- * @work: previously sheduled work item
+- *
+- * Lazy destroys the notifier from a work item
+- */
+-static void radeon_mn_destroy(struct work_struct *work)
+-{
+-	struct radeon_mn *rmn = container_of(work, struct radeon_mn, work);
+-	struct radeon_device *rdev = rmn->rdev;
+-	struct radeon_mn_node *node, *next_node;
+-	struct radeon_bo *bo, *next_bo;
+-
+-	mutex_lock(&rdev->mn_lock);
+-	mutex_lock(&rmn->lock);
+-	hash_del(&rmn->node);
+-	rbtree_postorder_for_each_entry_safe(node, next_node,
+-					     &rmn->objects.rb_root, it.rb) {
+-
+-		interval_tree_remove(&node->it, &rmn->objects);
+-		list_for_each_entry_safe(bo, next_bo, &node->bos, mn_list) {
+-			bo->mn = NULL;
+-			list_del_init(&bo->mn_list);
+-		}
+-		kfree(node);
+-	}
+-	mutex_unlock(&rmn->lock);
+-	mutex_unlock(&rdev->mn_lock);
+-	mmu_notifier_unregister(&rmn->mn, rmn->mm);
+-	kfree(rmn);
+-}
+-
+-/**
+- * radeon_mn_release - callback to notify about mm destruction
+- *
+- * @mn: our notifier
+- * @mn: the mm this callback is about
+- *
+- * Shedule a work item to lazy destroy our notifier.
+- */
+-static void radeon_mn_release(struct mmu_notifier *mn,
+-			      struct mm_struct *mm)
+-{
+-	struct radeon_mn *rmn = container_of(mn, struct radeon_mn, mn);
+-	INIT_WORK(&rmn->work, radeon_mn_destroy);
+-	schedule_work(&rmn->work);
+-}
+-
+ /**
+  * radeon_mn_invalidate_range_start - callback to notify about mm change
+  *
+@@ -183,65 +125,44 @@ static int radeon_mn_invalidate_range_start(struct mmu_notifier *mn,
+ 	return ret;
+ }
+ 
+-static const struct mmu_notifier_ops radeon_mn_ops = {
+-	.release = radeon_mn_release,
+-	.invalidate_range_start = radeon_mn_invalidate_range_start,
+-};
++static void radeon_mn_release(struct mmu_notifier *mn, struct mm_struct *mm)
++{
++	struct mmu_notifier_range range = {
++		.mm = mm,
++		.start = 0,
++		.end = ULONG_MAX,
++		.flags = 0,
++		.event = MMU_NOTIFY_UNMAP,
++	};
++
++	radeon_mn_invalidate_range_start(mn, &range);
++}
+ 
+-/**
+- * radeon_mn_get - create notifier context
+- *
+- * @rdev: radeon device pointer
+- *
+- * Creates a notifier context for current->mm.
+- */
+-static struct radeon_mn *radeon_mn_get(struct radeon_device *rdev)
++static struct mmu_notifier *radeon_mn_alloc_notifier(struct mm_struct *mm)
+ {
+-	struct mm_struct *mm = current->mm;
+ 	struct radeon_mn *rmn;
+-	int r;
+-
+-	if (down_write_killable(&mm->mmap_sem))
+-		return ERR_PTR(-EINTR);
+-
+-	mutex_lock(&rdev->mn_lock);
+-
+-	hash_for_each_possible(rdev->mn_hash, rmn, node, (unsigned long)mm)
+-		if (rmn->mm == mm)
+-			goto release_locks;
+ 
+ 	rmn = kzalloc(sizeof(*rmn), GFP_KERNEL);
+-	if (!rmn) {
+-		rmn = ERR_PTR(-ENOMEM);
+-		goto release_locks;
+-	}
++	if (!rmn)
++		return ERR_PTR(-ENOMEM);
+ 
+-	rmn->rdev = rdev;
+-	rmn->mm = mm;
+-	rmn->mn.ops = &radeon_mn_ops;
+ 	mutex_init(&rmn->lock);
+ 	rmn->objects = RB_ROOT_CACHED;
+-	
+-	r = __mmu_notifier_register(&rmn->mn, mm);
+-	if (r)
+-		goto free_rmn;
+-
+-	hash_add(rdev->mn_hash, &rmn->node, (unsigned long)mm);
+-
+-release_locks:
+-	mutex_unlock(&rdev->mn_lock);
+-	up_write(&mm->mmap_sem);
+-
+-	return rmn;
+-
+-free_rmn:
+-	mutex_unlock(&rdev->mn_lock);
+-	up_write(&mm->mmap_sem);
+-	kfree(rmn);
++	return &rmn->mn;
++}
+ 
+-	return ERR_PTR(r);
++static void radeon_mn_free_notifier(struct mmu_notifier *mn)
++{
++	kfree(container_of(mn, struct radeon_mn, mn));
+ }
+ 
++static const struct mmu_notifier_ops radeon_mn_ops = {
++	.release = radeon_mn_release,
++	.invalidate_range_start = radeon_mn_invalidate_range_start,
++	.alloc_notifier = radeon_mn_alloc_notifier,
++	.free_notifier = radeon_mn_free_notifier,
++};
++
+ /**
+  * radeon_mn_register - register a BO for notifier updates
+  *
+@@ -254,15 +175,16 @@ static struct radeon_mn *radeon_mn_get(struct radeon_device *rdev)
+ int radeon_mn_register(struct radeon_bo *bo, unsigned long addr)
+ {
+ 	unsigned long end = addr + radeon_bo_size(bo) - 1;
+-	struct radeon_device *rdev = bo->rdev;
++	struct mmu_notifier *mn;
+ 	struct radeon_mn *rmn;
+ 	struct radeon_mn_node *node = NULL;
+ 	struct list_head bos;
+ 	struct interval_tree_node *it;
+ 
+-	rmn = radeon_mn_get(rdev);
+-	if (IS_ERR(rmn))
+-		return PTR_ERR(rmn);
++	mn = mmu_notifier_get(&radeon_mn_ops, current->mm);
++	if (IS_ERR(mn))
++		return PTR_ERR(mn);
++	rmn = container_of(mn, struct radeon_mn, mn);
+ 
+ 	INIT_LIST_HEAD(&bos);
+ 
+@@ -309,22 +231,13 @@ int radeon_mn_register(struct radeon_bo *bo, unsigned long addr)
+  */
+ void radeon_mn_unregister(struct radeon_bo *bo)
+ {
+-	struct radeon_device *rdev = bo->rdev;
+-	struct radeon_mn *rmn;
++	struct radeon_mn *rmn = bo->mn;
+ 	struct list_head *head;
+ 
+-	mutex_lock(&rdev->mn_lock);
+-	rmn = bo->mn;
+-	if (rmn == NULL) {
+-		mutex_unlock(&rdev->mn_lock);
+-		return;
+-	}
+-
+ 	mutex_lock(&rmn->lock);
+ 	/* save the next list entry for later */
+ 	head = bo->mn_list.next;
+ 
+-	bo->mn = NULL;
+ 	list_del(&bo->mn_list);
+ 
+ 	if (list_empty(head)) {
+@@ -335,5 +248,7 @@ void radeon_mn_unregister(struct radeon_bo *bo)
+ 	}
+ 
+ 	mutex_unlock(&rmn->lock);
+-	mutex_unlock(&rdev->mn_lock);
++
++	mmu_notifier_put(&rmn->mn);
++	bo->mn = NULL;
+ }
+-- 
+2.22.0
+
