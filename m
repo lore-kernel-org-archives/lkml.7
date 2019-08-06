@@ -2,176 +2,100 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05870C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 07:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F36EC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 07:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D079E216F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 07:19:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565075951;
-	bh=swLdWN/c3YNiNoEDBUnhTuMLT4pIrTC41Pfwb24gXQ8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=qtkgM75+9LluTje98gqPSkT9aLFolYCPHbCqr0eo0rkMWeV85WYvWr4bHmuMGSwYK
-	 hWgGjKJoAjosnbjIsO79VpZNC7yb+izEQ9yXCsveg7RDQTMa+pnjIOpSwki/oRmlZY
-	 vv6HAfpi9bd7Xu6x5r3XQgA8fLZQ5DmRZxy4/SWM=
+	by mail.kernel.org (Postfix) with ESMTP id 0406D2147A
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 07:19:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="qj1+3eKY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732131AbfHFHTL (ORCPT
+        id S1732134AbfHFHT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 03:19:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38568 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731807AbfHFHTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 03:19:10 -0400
-Received: from guoren-Inspiron-7460.lan (unknown [223.93.147.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B62B42070C;
-        Tue,  6 Aug 2019 07:19:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565075949;
-        bh=swLdWN/c3YNiNoEDBUnhTuMLT4pIrTC41Pfwb24gXQ8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=SA9MUzOU7xfygcVSI9BbYgctl/RUzZ359BexoHuidG2VXASkHNfMQbp9N4xUg6mJq
-         27ldNV7Dis1ZIrB5bbzjVliUSbgvsoeKgwDSiTUVBI7tUj71rnr8TRnt3h/CuHIzog
-         JDzI7VXUOtSeO04GKYVprwYmS7Oo6jWaYe7VYttM=
-From:   guoren@kernel.org
-To:     arnd@arndb.de
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-csky@vger.kernel.org, feng_shizhu@dahuatech.com,
-        zhang_jian5@dahuatech.com, zheng_xingjian@dahuatech.com,
-        zhu_peng@dahuatech.com, Guo Ren <ren_guo@c-sky.com>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: [PATCH V2 2/3] csky/dma: Fixup cache_op failed when cross memory ZONEs
-Date:   Tue,  6 Aug 2019 15:18:41 +0800
-Message-Id: <1565075921-25734-1-git-send-email-guoren@kernel.org>
-X-Mailer: git-send-email 2.7.4
+        Tue, 6 Aug 2019 03:19:56 -0400
+Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:50064 "EHLO
+        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731807AbfHFHTz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 03:19:55 -0400
+Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
+        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 5210B2E129D;
+        Tue,  6 Aug 2019 10:19:52 +0300 (MSK)
+Received: from smtpcorp1p.mail.yandex.net (smtpcorp1p.mail.yandex.net [2a02:6b8:0:1472:2741:0:8b6:10])
+        by mxbackcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id kYXKZpPAQ1-JqZiG3nU;
+        Tue, 06 Aug 2019 10:19:52 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1565075992; bh=N6mFKzcJuhbgMksEZaXjMK9Sa+aXVEkZHt/RWDgwRic=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=qj1+3eKYycJsRWYRyESXh/le9T+uXhFB29JZh8tHuGVXVY4TzJH31MfvV4dDd3p3D
+         5j+amf4w55mGNYaE/HxSlnsaBt7smrFwVUAi4JQnakvs/XAP5VyloJFo3MqiiLQ9zS
+         ItceemZk1AVrWepJltjbLkwA8naBgpG1rtuSRmSk=
+Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:81f7:1ca8:6615:d682])
+        by smtpcorp1p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id J4Zd7BQsFS-JpkCvNW7;
+        Tue, 06 Aug 2019 10:19:52 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH RFC] mm/memcontrol: reclaim severe usage over high limit
+ in get_user_pages loop
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+References: <156431697805.3170.6377599347542228221.stgit@buzz>
+ <20190729154952.GC21958@cmpxchg.org> <20190729185509.GI9330@dhcp22.suse.cz>
+ <20190802094028.GG6461@dhcp22.suse.cz>
+ <105a2f1f-de5c-7bac-3aa5-87bd1dbcaed9@yandex-team.ru>
+ <20190802114438.GH6461@dhcp22.suse.cz>
+ <20190806070728.GB11812@dhcp22.suse.cz>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <c6b2c864-985a-2565-95e7-3af9e3e015f8@yandex-team.ru>
+Date:   Tue, 6 Aug 2019 10:19:49 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190806070728.GB11812@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guo Ren <ren_guo@c-sky.com>
+On 8/6/19 10:07 AM, Michal Hocko wrote:
+> On Fri 02-08-19 13:44:38, Michal Hocko wrote:
+> [...]
+>>>> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+>>>> index ba9138a4a1de..53a35c526e43 100644
+>>>> --- a/mm/memcontrol.c
+>>>> +++ b/mm/memcontrol.c
+>>>> @@ -2429,8 +2429,12 @@ static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
+>>>>    				schedule_work(&memcg->high_work);
+>>>>    				break;
+>>>>    			}
+>>>> -			current->memcg_nr_pages_over_high += batch;
+>>>> -			set_notify_resume(current);
+>>>> +			if (gfpflags_allow_blocking(gfp_mask)) {
+>>>> +				reclaim_high(memcg, nr_pages, GFP_KERNEL);
+>>
+>> ups, this should be s@GFP_KERNEL@gfp_mask@
+>>
+>>>> +			} else {
+>>>> +				current->memcg_nr_pages_over_high += batch;
+>>>> +				set_notify_resume(current);
+>>>> +			}
+>>>>    			break;
+>>>>    		}
+>>>>    	} while ((memcg = parent_mem_cgroup(memcg)));
+>>>>
+> 
+> Should I send an official patch for this?
+> 
 
-If the paddr and size are cross between NORMAL_ZONE and HIGHMEM_ZONE
-memory range, cache_op will panic in do_page_fault with bad_area.
-
-Optimize the code to support the range which cross memory ZONEs.
-
-Changes for V2:
- - Revert back to postcore_initcall
-
-Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
----
- arch/csky/mm/dma-mapping.c | 71 +++++++++++++++++-----------------------------
- 1 file changed, 26 insertions(+), 45 deletions(-)
-
-diff --git a/arch/csky/mm/dma-mapping.c b/arch/csky/mm/dma-mapping.c
-index 80783bb..65f531d 100644
---- a/arch/csky/mm/dma-mapping.c
-+++ b/arch/csky/mm/dma-mapping.c
-@@ -20,69 +20,50 @@ static int __init atomic_pool_init(void)
- }
- postcore_initcall(atomic_pool_init);
- 
--void arch_dma_prep_coherent(struct page *page, size_t size)
--{
--	if (PageHighMem(page)) {
--		unsigned int count = PAGE_ALIGN(size) >> PAGE_SHIFT;
--
--		do {
--			void *ptr = kmap_atomic(page);
--			size_t _size = (size < PAGE_SIZE) ? size : PAGE_SIZE;
--
--			memset(ptr, 0, _size);
--			dma_wbinv_range((unsigned long)ptr,
--					(unsigned long)ptr + _size);
--
--			kunmap_atomic(ptr);
--
--			page++;
--			size -= PAGE_SIZE;
--			count--;
--		} while (count);
--	} else {
--		void *ptr = page_address(page);
--
--		memset(ptr, 0, size);
--		dma_wbinv_range((unsigned long)ptr, (unsigned long)ptr + size);
--	}
--}
--
- static inline void cache_op(phys_addr_t paddr, size_t size,
- 			    void (*fn)(unsigned long start, unsigned long end))
- {
--	struct page *page = pfn_to_page(paddr >> PAGE_SHIFT);
--	unsigned int offset = paddr & ~PAGE_MASK;
--	size_t left = size;
--	unsigned long start;
-+	struct page *page    = phys_to_page(paddr);
-+	void *start          = __va(page_to_phys(page));
-+	unsigned long offset = offset_in_page(paddr);
-+	size_t left          = size;
- 
- 	do {
- 		size_t len = left;
- 
-+		if (offset + len > PAGE_SIZE)
-+			len = PAGE_SIZE - offset;
-+
- 		if (PageHighMem(page)) {
--			void *addr;
-+			start = kmap_atomic(page);
- 
--			if (offset + len > PAGE_SIZE) {
--				if (offset >= PAGE_SIZE) {
--					page += offset >> PAGE_SHIFT;
--					offset &= ~PAGE_MASK;
--				}
--				len = PAGE_SIZE - offset;
--			}
-+			fn((unsigned long)start + offset,
-+					(unsigned long)start + offset + len);
- 
--			addr = kmap_atomic(page);
--			start = (unsigned long)(addr + offset);
--			fn(start, start + len);
--			kunmap_atomic(addr);
-+			kunmap_atomic(start);
- 		} else {
--			start = (unsigned long)phys_to_virt(paddr);
--			fn(start, start + size);
-+			fn((unsigned long)start + offset,
-+					(unsigned long)start + offset + len);
- 		}
- 		offset = 0;
-+
- 		page++;
-+		start += PAGE_SIZE;
- 		left -= len;
- 	} while (left);
- }
- 
-+static void dma_wbinv_set_zero_range(unsigned long start, unsigned long end)
-+{
-+	memset((void *)start, 0, end - start);
-+	dma_wbinv_range(start, end);
-+}
-+
-+void arch_dma_prep_coherent(struct page *page, size_t size)
-+{
-+	cache_op(page_to_phys(page), size, dma_wbinv_set_zero_range);
-+}
-+
- void arch_sync_dma_for_device(struct device *dev, phys_addr_t paddr,
- 			      size_t size, enum dma_data_direction dir)
- {
--- 
-2.7.4
-
+I prefer to keep it as is while we have no better solution.
