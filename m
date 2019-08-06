@@ -2,122 +2,133 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81AE3C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 03:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A22AC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 03:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 519D420C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 03:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4075C2173B
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 03:28:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="GteYQ77L"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kPmJavQl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731490AbfHFD1g (ORCPT
+        id S1731358AbfHFD2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 23:27:36 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:39806 "EHLO
+        Mon, 5 Aug 2019 23:28:53 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:34190 "EHLO
         mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729383AbfHFD1f (ORCPT
+        with ESMTP id S1728892AbfHFD2x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 23:27:35 -0400
-Received: by mail-qt1-f195.google.com with SMTP id l9so83117241qtu.6
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 20:27:35 -0700 (PDT)
+        Mon, 5 Aug 2019 23:28:53 -0400
+Received: by mail-qt1-f195.google.com with SMTP id k10so14027732qtq.1;
+        Mon, 05 Aug 2019 20:28:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=7I+W1IHQoXT5wG6AmL/uplOOrHiM/gS299fH35smI2I=;
-        b=GteYQ77LCE+NXYg+K4be284RsKS1h1ELviGK0SVws/hdbk8Fdkh2Nw9bZCAcgNioFe
-         NjKyEUSuQbZ1NB88MRZbBeTB8ciGwJVaUxl+6HuOqH0xiq49WzSAn0qpTCeY6w9Faj3F
-         oXbkZWMYN3kV0ralkzNxBlNqs03+hoYHwK28kRjSsmdz1/kziwXhF0c71rtnpWBA6pE+
-         W+8BVTX1c2gf/qLtOF3JezTFjk7Lm0jIcMG9amp05PRI6UpGiF+u+njxfV0wT9tKqKYb
-         7opepZB2hnAdfEOBFz91arf6uRQYeDnaxqfsXEEA/wEmWFRyf+XInMCaRU6lP0/lQRkL
-         WYCA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aoJs4+GZcrMW12maFhHxBWCjreCnZG8IIroKJ5Dk56w=;
+        b=kPmJavQlKC0qoOuF78dkRk9X6JVlHFkwGK1peHZHj0UFVxLbLlTm/X+vuwLi6rDTmY
+         aXayCcF6YYeKFgRSI6W+734GagJiaJfX8BHoIixitFMdY/4AsEYsSaLqxSWluMm4xaSE
+         zA7OGuMlaprEKB+sr57Wibi7sFwTkSY3z2Me5Qe32x+F596HUdYRuJFkul4bFSQprW1q
+         JrldsZuhof5957Q/xkny1ZgQ2FPbIB6s4K1Vc5E/R9BsiqIKmSkhL5Dd60a7+AyG0Mih
+         9XtZ7rSBPguMqHF6magt/107WW1GNFKFxW1lzNzuAAIYzmWN5NHZb3YqFy8xH567gitR
+         vi3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=7I+W1IHQoXT5wG6AmL/uplOOrHiM/gS299fH35smI2I=;
-        b=nakx8AQgtBgHBQUf5Y40/D7ZOLqQj8POHROqTbnBuNHykNkfOxSAC/OZ4K7hJajTAG
-         Ugdk8Psh3+NkE44DdfhueG/0sxrI42BovtwyOBQ9uVOwAzvwYROi7AoW6GumpLqXxzK+
-         FRWV+x6C/HQYvhE8EHENYGh7CETtttC466nPEkm6qtdpGVl2DpK+ddIEl+y6KEs1sDZ7
-         1x9OVy2cfU82AGtm5kllNCrBVVDUWVeTDFGrk7/CBzvS6o9wAqpUgseeWlrg7zxy/6x5
-         x3vvHDlmTSX40YFniPd9+AdBZyGdR/a6q67B+2vRkbpgphN6fTdVbRiulCzxtn7fgtvZ
-         NuSQ==
-X-Gm-Message-State: APjAAAXQB9T5/rNLkzDSw+ORqtQ38ICOrs/SSVzybZPiEgktrbI8jbeC
-        yUIkYoFUhgijNHoWX6apzo+Aeg==
-X-Google-Smtp-Source: APXvYqxr9YCL08+FHp/K5Wy5t/sLEwyqKoNQgzetzS19x8cuoy4vyiAzic0dcnLG7XC4Dx5guujpsA==
-X-Received: by 2002:ac8:35f6:: with SMTP id l51mr1190044qtb.109.1565062054968;
-        Mon, 05 Aug 2019 20:27:34 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id m5sm35790115qke.25.2019.08.05.20.27.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 05 Aug 2019 20:27:34 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH] scsi/megaraid_sas: fix a compilation warning
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <1564151143-22889-1-git-send-email-cai@lca.pw>
-Date:   Mon, 5 Aug 2019 23:27:32 -0400
-Cc:     jejb@linux.ibm.com, Kashyap Desai <kashyap.desai@broadcom.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        shivasharan.srikanteshwara@broadcom.com,
-        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <B961A6AE-2377-406C-891D-4363DCD9827C@lca.pw>
-References: <1564151143-22889-1-git-send-email-cai@lca.pw>
-To:     martin.petersen@oracle.com
-X-Mailer: Apple Mail (2.3445.104.11)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aoJs4+GZcrMW12maFhHxBWCjreCnZG8IIroKJ5Dk56w=;
+        b=Jfoh4/Ar/bTmtjxyJTc2mHlINRQu1K7VctMa9BTuNfnfq0FCba5AwXrSYg9F4PweVj
+         7DR3fKYzWAlCXYeHm+nXQ1SIClM6m4Dfbd0LZACCbG3QNY3sBnQqvog5C0BDw1ALa4j/
+         ZnsAqmZc5z8QcMxyfvW6fJbNPKs6+2m1w1QQ4keIR3Rz8WMc6mQ3GyeuRHbga0Y/F6gY
+         06QdvJ+iLu7079+yhu2gpiG953/1da+VWh6dQT0i2OUBJVmftkJs6unXFjfghcVvlusK
+         OQGHA9IT2ET1wWlOIwLMtBdyxzypECraPIZjRSP+FYsmwl+lqH5+O4hrRFCDzqpAuetS
+         N/QQ==
+X-Gm-Message-State: APjAAAWBZm3kyimouf4FSgQpRHYfnUlPejnvqWOrevfPPqKuiP2zikRh
+        q5hCO3MYF6ReRCqCryyHJ4Td99QpeMkFCnvHo+Hdvw==
+X-Google-Smtp-Source: APXvYqz6dPCfj+pirXMMo99Ejr8ClrpVzZXvEm5OpbqIaQEx0AF8UPM5lFBqF88MBMF0yiaRMwtPQsCKPr2MU1U78kg=
+X-Received: by 2002:ac8:f3b:: with SMTP id e56mr1164468qtk.123.1565062132340;
+ Mon, 05 Aug 2019 20:28:52 -0700 (PDT)
+MIME-Version: 1.0
+References: <156431697805.3170.6377599347542228221.stgit@buzz>
+ <20190729091738.GF9330@dhcp22.suse.cz> <3d6fc779-2081-ba4b-22cf-be701d617bb4@yandex-team.ru>
+ <20190729103307.GG9330@dhcp22.suse.cz> <CAHbLzkrdj-O2uXwM8ujm90OcgjyR4nAiEbFtRGe7SOoY_fs=BA@mail.gmail.com>
+ <20190729184850.GH9330@dhcp22.suse.cz> <CAHbLzkp9xFV2sE0TdKfWNRVcAwaYNKwDugRiBBoEKx6A_Hr3Jw@mail.gmail.com>
+ <20190802093507.GF6461@dhcp22.suse.cz> <CAHbLzkrjh7KEvdfXackaVy8oW5CU=UaBucERffxcUorgq1vdoA@mail.gmail.com>
+ <20190805143239.GS7597@dhcp22.suse.cz>
+In-Reply-To: <20190805143239.GS7597@dhcp22.suse.cz>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Mon, 5 Aug 2019 20:28:40 -0700
+Message-ID: <CAHbLzkpD+kawkR42mWpxvZHvSZNhYEsibiMYzx+3q0rTBS6L9g@mail.gmail.com>
+Subject: Re: [PATCH RFC] mm/memcontrol: reclaim severe usage over high limit
+ in get_user_pages loop
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        cgroups@vger.kernel.org, Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ping. Please take a look at this trivial patch.
+On Mon, Aug 5, 2019 at 7:32 AM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Fri 02-08-19 11:56:28, Yang Shi wrote:
+> > On Fri, Aug 2, 2019 at 2:35 AM Michal Hocko <mhocko@kernel.org> wrote:
+> > >
+> > > On Thu 01-08-19 14:00:51, Yang Shi wrote:
+> > > > On Mon, Jul 29, 2019 at 11:48 AM Michal Hocko <mhocko@kernel.org> wrote:
+> > > > >
+> > > > > On Mon 29-07-19 10:28:43, Yang Shi wrote:
+> > > > > [...]
+> > > > > > I don't worry too much about scale since the scale issue is not unique
+> > > > > > to background reclaim, direct reclaim may run into the same problem.
+> > > > >
+> > > > > Just to clarify. By scaling problem I mean 1:1 kswapd thread to memcg.
+> > > > > You can have thousands of memcgs and I do not think we really do want
+> > > > > to create one kswapd for each. Once we have a kswapd thread pool then we
+> > > > > get into a tricky land where a determinism/fairness would be non trivial
+> > > > > to achieve. Direct reclaim, on the other hand is bound by the workload
+> > > > > itself.
+> > > >
+> > > > Yes, I agree thread pool would introduce more latency than dedicated
+> > > > kswapd thread. But, it looks not that bad in our test. When memory
+> > > > allocation is fast, even though dedicated kswapd thread can't catch
+> > > > up. So, such background reclaim is best effort, not guaranteed.
+> > > >
+> > > > I don't quite get what you mean about fairness. Do you mean they may
+> > > > spend excessive cpu time then cause other processes starvation? I
+> > > > think this could be mitigated by properly organizing and setting
+> > > > groups. But, I agree this is tricky.
+> > >
+> > > No, I meant that the cost of reclaiming a unit of charges (e.g.
+> > > SWAP_CLUSTER_MAX) is not constant and depends on the state of the memory
+> > > on LRUs. Therefore any thread pool mechanism would lead to unfair
+> > > reclaim and non-deterministic behavior.
+> >
+> > Yes, the cost depends on the state of pages, but I still don't quite
+> > understand what does "unfair" refer to in this context. Do you mean
+> > some cgroups may reclaim much more than others?
+>
+> > Or the work may take too long so it can't not serve other cgroups in time?
+>
+> exactly.
 
-> On Jul 26, 2019, at 10:25 AM, Qian Cai <cai@lca.pw> wrote:
->=20
-> The commit de516379e85f ("scsi: megaraid_sas: changes to function
-> prototypes") introduced a comilation warning due to it changed the
-> function prototype of read_fw_status_reg() to take an instance pointer
-> instead, but forgot to remove an unused variable.
->=20
-> drivers/scsi/megaraid/megaraid_sas_fusion.c: In function
-> 'megasas_fusion_update_can_queue':
-> drivers/scsi/megaraid/megaraid_sas_fusion.c:326:39: warning: variable
-> 'reg_set' set but not used [-Wunused-but-set-variable]
->  struct megasas_register_set __iomem *reg_set;
->                                       ^~~~~~~
-> Fixes: de516379e85f ("scsi: megaraid_sas: changes to function =
-prototypes")
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
-> drivers/scsi/megaraid/megaraid_sas_fusion.c | 3 ---
-> 1 file changed, 3 deletions(-)
->=20
-> diff --git a/drivers/scsi/megaraid/megaraid_sas_fusion.c =
-b/drivers/scsi/megaraid/megaraid_sas_fusion.c
-> index a32b3f0fcd15..e8092d59d575 100644
-> --- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
-> +++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
-> @@ -323,9 +323,6 @@ inline void megasas_return_cmd_fusion(struct =
-megasas_instance *instance,
-> {
-> 	u16 cur_max_fw_cmds =3D 0;
-> 	u16 ldio_threshold =3D 0;
-> -	struct megasas_register_set __iomem *reg_set;
-> -
-> -	reg_set =3D instance->reg_set;
->=20
-> 	/* ventura FW does not fill outbound_scratch_pad_2 with queue =
-depth */
-> 	if (instance->adapter_type < VENTURA_SERIES)
-> --=20
-> 1.8.3.1
->=20
+Actually, I'm not very concerned by this. In our design each memcg has
+its dedicated work (memcg->wmark_work), so the reclaim work for
+different memcgs could be run in parallel since they are *different*
+work in fact although they run the same function. And, We could queue
+them to a dedicated unbound workqueue which may have maximum 512 or
+scale with nr cpus active works. Although the system may have
+thousands of online memcgs, I'm supposed it should be rare to have all
+of them trigger reclaim at the same time.
 
+> --
+> Michal Hocko
+> SUSE Labs
