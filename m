@@ -2,249 +2,108 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33134C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6A4C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:11:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F38AF208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAD27208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:11:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387719AbfHFQLg (ORCPT
+        id S2387696AbfHFQLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 12:11:36 -0400
-Received: from mga18.intel.com ([134.134.136.126]:30680 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387634AbfHFQLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 6 Aug 2019 12:11:35 -0400
-X-Amp-Result: UNSCANNABLE
+Received: from mga17.intel.com ([192.55.52.151]:42152 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387636AbfHFQLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 12:11:35 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 09:11:34 -0700
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 09:11:35 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
-   d="scan'208";a="198355851"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga004.fm.intel.com with ESMTP; 06 Aug 2019 09:11:33 -0700
-Date:   Tue, 6 Aug 2019 09:11:33 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jim Mattson <jmattson@google.com>
-Subject: Re: [PATCH v2 5/5] x86: KVM: svm: remove hardcoded instruction
- length from intercepts
-Message-ID: <20190806161133.GF27766@linux.intel.com>
-References: <20190806060150.32360-1-vkuznets@redhat.com>
- <20190806060150.32360-6-vkuznets@redhat.com>
+   d="scan'208";a="175923145"
+Received: from orsmsx103.amr.corp.intel.com ([10.22.225.130])
+  by fmsmga007.fm.intel.com with ESMTP; 06 Aug 2019 09:11:34 -0700
+Received: from orsmsx114.amr.corp.intel.com ([169.254.8.96]) by
+ ORSMSX103.amr.corp.intel.com ([169.254.5.108]) with mapi id 14.03.0439.000;
+ Tue, 6 Aug 2019 09:11:34 -0700
+From:   "Prakhya, Sai Praneeth" <sai.praneeth.prakhya@intel.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+CC:     "Hansen, Dave" <dave.hansen@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: RE: [PATCH V2] fork: Improve error message for corrupted page tables
+Thread-Topic: [PATCH V2] fork: Improve error message for corrupted page
+ tables
+Thread-Index: AQHVTARBoUI2WxhjVEayaDrB3An0D6buNXYAgAAKzgCAAAqoYA==
+Date:   Tue, 6 Aug 2019 16:11:34 +0000
+Message-ID: <FFF73D592F13FD46B8700F0A279B802F4FA16F3E@ORSMSX114.amr.corp.intel.com>
+References: <3ef8a340deb1c87b725d44edb163073e2b6eca5a.1565059496.git.sai.praneeth.prakhya@intel.com>
+ <5ba88460-cf01-3d53-6d13-45e650b4eacd@suse.cz>
+ <926d50ce-4742-0ae7-474c-ef561fe23cdd@arm.com>
+In-Reply-To: <926d50ce-4742-0ae7-474c-ef561fe23cdd@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMWMwZTViNDQtZTY2NS00ZGIyLWJiNDEtNDA0MWUzNGJlZjAyIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoibnVsc2VlbWpRSkdYTzJjVEloM0swVisrYVVFRTBWWWc0TDJYdjV0blVWblowQ0lVRmNKbmJHa29ZWWNqZmdkZCJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: request-justification,no-action
+x-originating-ip: [10.22.254.138]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190806060150.32360-6-vkuznets@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 08:01:50AM +0200, Vitaly Kuznetsov wrote:
-> Various intercepts hard-code the respective instruction lengths to optimize
-> skip_emulated_instruction(): when next_rip is pre-set we skip
-> kvm_emulate_instruction(vcpu, EMULTYPE_SKIP). The optimization is, however,
-> incorrect: different (redundant) prefixes could be used to enlarge the
-> instruction. We can't really avoid decoding.
-> 
-> svm->next_rip is not used when CPU supports 'nrips' (X86_FEATURE_NRIPS)
-> feature: next RIP is provided in VMCB. The feature is not really new
-> (Opteron G3s had it already) and the change should have zero affect.
-> 
-> Remove manual svm->next_rip setting with hard-coded instruction lengths.
-> The only case where we now use svm->next_rip is EXIT_IOIO: the instruction
-> length is provided to us by hardware.
-> 
-> Reported-by: Jim Mattson <jmattson@google.com>
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
->  arch/x86/kvm/svm.c | 15 ++-------------
->  1 file changed, 2 insertions(+), 13 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 793a60461abe..dce215250d1f 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -2905,13 +2905,11 @@ static int nop_on_interception(struct vcpu_svm *svm)
->  
->  static int halt_interception(struct vcpu_svm *svm)
->  {
-> -	svm->next_rip = kvm_rip_read(&svm->vcpu) + 1;
->  	return kvm_emulate_halt(&svm->vcpu);
->  }
->  
->  static int vmmcall_interception(struct vcpu_svm *svm)
->  {
-> -	svm->next_rip = kvm_rip_read(&svm->vcpu) + 3;
->  	return kvm_emulate_hypercall(&svm->vcpu);
->  }
->  
-> @@ -3699,7 +3697,6 @@ static int vmload_interception(struct vcpu_svm *svm)
->  
->  	nested_vmcb = map.hva;
->  
-> -	svm->next_rip = kvm_rip_read(&svm->vcpu) + 3;
->  	ret = kvm_skip_emulated_instruction(&svm->vcpu);
->  
->  	nested_svm_vmloadsave(nested_vmcb, svm->vmcb);
-> @@ -3726,7 +3723,6 @@ static int vmsave_interception(struct vcpu_svm *svm)
->  
->  	nested_vmcb = map.hva;
->  
-> -	svm->next_rip = kvm_rip_read(&svm->vcpu) + 3;
->  	ret = kvm_skip_emulated_instruction(&svm->vcpu);
->  
->  	nested_svm_vmloadsave(svm->vmcb, nested_vmcb);
-> @@ -3740,8 +3736,8 @@ static int vmrun_interception(struct vcpu_svm *svm)
->  	if (nested_svm_check_permissions(svm))
->  		return 1;
->  
-> -	/* Save rip after vmrun instruction */
-> -	kvm_rip_write(&svm->vcpu, kvm_rip_read(&svm->vcpu) + 3);
-> +	if (!kvm_skip_emulated_instruction(&svm->vcpu))
-> +		return 1;
-
-This is broken, e.g. KVM shouldn't resume the guest on single-step strap,
-nor should it skip the meat of VMRUN emulation.  There are also several
-pre-existing bugs, e.g. #GP can be injected due to invalid vmcb_gpa after
-%rip is incremented and single-step #DB can be suppressed on failed
-VMRUN (assuming that's not architectural behavior?).
-
-Calling kvm_skip_emulated_instruction() after nested_svm_vmrun() looks like
-it'd cause all kinds of problems, so I think the correct fix is to put the
-call to kvm_skip_emulated_instruction() inside nested_svm_vmrun(), after
-it maps the vmcb_gpa, e.g. something like this in the end (optionally
-moving nested_svm_vmrun_msrpm() inside nested_svm_run() to eliminate the
-weird goto handling).
-
-static int nested_svm_vmrun(struct vcpu_svm *svm)
-{
-	int rc, ret;
-	struct vmcb *nested_vmcb;
-	struct vmcb *hsave = svm->nested.hsave;
-	struct vmcb *vmcb = svm->vmcb;
-	struct kvm_host_map map;
-	u64 vmcb_gpa;
-
-	vmcb_gpa = svm->vmcb->save.rax;
-
-	rc = kvm_vcpu_map(&svm->vcpu, gfn_to_gpa(vmcb_gpa), &map);
-	if (rc == -EINVAL)
-		kvm_inject_gp(&svm->vcpu, 0);
-		return 1;
-	}
-
-	ret = kvm_skip_emulated_instruction(&svm->vcpu);
-	if (rc)
-		return ret;
-
-	nested_vmcb = map.hva;
-
-	if (!nested_vmcb_checks(nested_vmcb)) {
-		nested_vmcb->control.exit_code    = SVM_EXIT_ERR;
-		nested_vmcb->control.exit_code_hi = 0;
-		nested_vmcb->control.exit_info_1  = 0;
-		nested_vmcb->control.exit_info_2  = 0;
-
-		kvm_vcpu_unmap(&svm->vcpu, &map, true);
-
-		return ret;
-	}
-
-	<  ... more existing code ... >
-
-	enter_svm_guest_mode(svm, vmcb_gpa, nested_vmcb, &map);
-
-	if (!nested_svm_vmrun_msrpm(svm)) {
-		svm->vmcb->control.exit_code    = SVM_EXIT_ERR;
-		svm->vmcb->control.exit_code_hi = 0;
-		svm->vmcb->control.exit_info_1  = 0;
-		svm->vmcb->control.exit_info_2  = 0;
-
-		nested_svm_vmexit(svm);
-	}
-
-	return ret;
-}
-
-static int vmrun_interception(struct vcpu_svm *svm)
-{
-	if (nested_svm_check_permissions(svm))
-		return 1;
-
-	return nested_svm_vmrun(svm)
-}
-
->  
->  	if (!nested_svm_vmrun(svm))
->  		return 1;
-> @@ -3777,7 +3773,6 @@ static int stgi_interception(struct vcpu_svm *svm)
->  	if (vgif_enabled(svm))
->  		clr_intercept(svm, INTERCEPT_STGI);
->  
-> -	svm->next_rip = kvm_rip_read(&svm->vcpu) + 3;
->  	ret = kvm_skip_emulated_instruction(&svm->vcpu);
->  	kvm_make_request(KVM_REQ_EVENT, &svm->vcpu);
->  
-> @@ -3793,7 +3788,6 @@ static int clgi_interception(struct vcpu_svm *svm)
->  	if (nested_svm_check_permissions(svm))
->  		return 1;
->  
-> -	svm->next_rip = kvm_rip_read(&svm->vcpu) + 3;
->  	ret = kvm_skip_emulated_instruction(&svm->vcpu);
->  
->  	disable_gif(svm);
-> @@ -3818,7 +3812,6 @@ static int invlpga_interception(struct vcpu_svm *svm)
->  	/* Let's treat INVLPGA the same as INVLPG (can be optimized!) */
->  	kvm_mmu_invlpg(vcpu, kvm_rax_read(&svm->vcpu));
->  
-> -	svm->next_rip = kvm_rip_read(&svm->vcpu) + 3;
->  	return kvm_skip_emulated_instruction(&svm->vcpu);
->  }
->  
-> @@ -3841,7 +3834,6 @@ static int xsetbv_interception(struct vcpu_svm *svm)
->  	u32 index = kvm_rcx_read(&svm->vcpu);
->  
->  	if (kvm_set_xcr(&svm->vcpu, index, new_bv) == 0) {
-> -		svm->next_rip = kvm_rip_read(&svm->vcpu) + 3;
->  		return kvm_skip_emulated_instruction(&svm->vcpu);
->  	}
->  
-> @@ -3918,7 +3910,6 @@ static int task_switch_interception(struct vcpu_svm *svm)
->  
->  static int cpuid_interception(struct vcpu_svm *svm)
->  {
-> -	svm->next_rip = kvm_rip_read(&svm->vcpu) + 2;
->  	return kvm_emulate_cpuid(&svm->vcpu);
->  }
->  
-> @@ -4248,7 +4239,6 @@ static int rdmsr_interception(struct vcpu_svm *svm)
->  
->  		kvm_rax_write(&svm->vcpu, msr_info.data & 0xffffffff);
->  		kvm_rdx_write(&svm->vcpu, msr_info.data >> 32);
-> -		svm->next_rip = kvm_rip_read(&svm->vcpu) + 2;
->  		return kvm_skip_emulated_instruction(&svm->vcpu);
->  	}
->  }
-> @@ -4454,7 +4444,6 @@ static int wrmsr_interception(struct vcpu_svm *svm)
->  		return 1;
->  	} else {
->  		trace_kvm_msr_write(ecx, data);
-> -		svm->next_rip = kvm_rip_read(&svm->vcpu) + 2;
->  		return kvm_skip_emulated_instruction(&svm->vcpu);
->  	}
->  }
-> -- 
-> 2.20.1
-> 
+PiA+PiBXaXRob3V0IHBhdGNoOg0KPiA+PiAtLS0tLS0tLS0tLS0tLQ0KPiA+PiBbICAyMDQuODM2
+NDI1XSBtbS9wZ3RhYmxlLWdlbmVyaWMuYzoyOTogYmFkIHA0ZA0KPiA+PiAwMDAwMDAwMDg5ZWI0
+ZTkyKDgwMDAwMDAyNWY5NDE0NjcpDQo+ID4+IFsgIDIwNC44MzY1NDRdIEJVRzogQmFkIHJzcy1j
+b3VudGVyIHN0YXRlIG1tOjAwMDAwMDAwZjc1ODk1ZWEgaWR4OjANCj4gPj4gdmFsOjIgWyAgMjA0
+LjgzNjYxNV0gQlVHOiBCYWQgcnNzLWNvdW50ZXIgc3RhdGUgbW06MDAwMDAwMDBmNzU4OTVlYQ0K
+PiA+PiBpZHg6MSB2YWw6NSBbICAyMDQuODM2Njg1XSBCVUc6IG5vbi16ZXJvIHBndGFibGVzX2J5
+dGVzIG9uIGZyZWVpbmcNCj4gPj4gbW06IDIwNDgwDQo+ID4+DQo+ID4+IFdpdGggcGF0Y2g6DQo+
+ID4+IC0tLS0tLS0tLS0tDQo+ID4+IFsgICA2OS44MTU0NTNdIG1tL3BndGFibGUtZ2VuZXJpYy5j
+OjI5OiBiYWQgcDRkDQo+IDAwMDAwMDAwODQ2NTM2NDIoODAwMDAwMDI1Y2EzNzQ2NykNCj4gPj4g
+WyAgIDY5LjgxNTg3Ml0gQlVHOiBCYWQgcnNzLWNvdW50ZXIgc3RhdGUgbW06MDAwMDAwMDAwMTRh
+NmMwMw0KPiB0eXBlOk1NX0ZJTEVQQUdFUyB2YWw6Mg0KPiA+PiBbICAgNjkuODE1OTYyXSBCVUc6
+IEJhZCByc3MtY291bnRlciBzdGF0ZSBtbTowMDAwMDAwMDAxNGE2YzAzDQo+IHR5cGU6TU1fQU5P
+TlBBR0VTIHZhbDo1DQo+ID4+IFsgICA2OS44MTYwNTBdIEJVRzogbm9uLXplcm8gcGd0YWJsZXNf
+Ynl0ZXMgb24gZnJlZWluZyBtbTogMjA0ODANCj4gPj4NCj4gPj4gQWxzbywgY2hhbmdlIHByaW50
+IGZ1bmN0aW9uIChmcm9tIHByaW50ayhLRVJOX0FMRVJULCAuLikgdG8NCj4gPj4gcHJfYWxlcnQo
+KSkgc28gdGhhdCBpdCBtYXRjaGVzIHRoZSBvdGhlciBwcmludCBzdGF0ZW1lbnQuDQo+ID4+DQo+
+ID4+IENjOiBJbmdvIE1vbG5hciA8bWluZ29Aa2VybmVsLm9yZz4NCj4gPj4gQ2M6IFZsYXN0aW1p
+bCBCYWJrYSA8dmJhYmthQHN1c2UuY3o+DQo+ID4+IENjOiBQZXRlciBaaWpsc3RyYSA8cGV0ZXJ6
+QGluZnJhZGVhZC5vcmc+DQo+ID4+IENjOiBBbmRyZXcgTW9ydG9uIDxha3BtQGxpbnV4LWZvdW5k
+YXRpb24ub3JnPg0KPiA+PiBDYzogQW5zaHVtYW4gS2hhbmR1YWwgPGFuc2h1bWFuLmtoYW5kdWFs
+QGFybS5jb20+DQo+ID4+IEFja2VkLWJ5OiBEYXZlIEhhbnNlbiA8ZGF2ZS5oYW5zZW5AaW50ZWwu
+Y29tPg0KPiA+PiBTdWdnZXN0ZWQtYnk6IERhdmUgSGFuc2VuIDxkYXZlLmhhbnNlbkBpbnRlbC5j
+b20+DQo+ID4+IFNpZ25lZC1vZmYtYnk6IFNhaSBQcmFuZWV0aCBQcmFraHlhIDxzYWkucHJhbmVl
+dGgucHJha2h5YUBpbnRlbC5jb20+DQo+ID4NCj4gPiBBY2tlZC1ieTogVmxhc3RpbWlsIEJhYmth
+IDx2YmFia2FAc3VzZS5jej4NCj4gPg0KPiA+IEkgd291bGQgYWxzbyBhZGQgc29tZXRoaW5nIGxp
+a2UgdGhpcyB0byByZWR1Y2UgcmlzayBvZiBicmVha2luZyBpdCBpbg0KPiA+IHRoZQ0KPiA+IGZ1
+dHVyZToNCj4gPg0KPiA+IC0tLS04PC0tLS0NCj4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51
+eC9tbV90eXBlc190YXNrLmgNCj4gPiBiL2luY2x1ZGUvbGludXgvbW1fdHlwZXNfdGFzay5oIGlu
+ZGV4IGQ3MDE2ZGNiMjQ1ZS4uYTZmODNjYmU0NjAzDQo+ID4gMTAwNjQ0DQo+ID4gLS0tIGEvaW5j
+bHVkZS9saW51eC9tbV90eXBlc190YXNrLmgNCj4gPiArKysgYi9pbmNsdWRlL2xpbnV4L21tX3R5
+cGVzX3Rhc2suaA0KPiA+IEBAIC0zNiw2ICszNiw5IEBAIHN0cnVjdCB2bWFjYWNoZSB7DQo+ID4g
+IAlzdHJ1Y3Qgdm1fYXJlYV9zdHJ1Y3QgKnZtYXNbVk1BQ0FDSEVfU0laRV07ICB9Ow0KPiA+DQo+
+ID4gKy8qDQo+ID4gKyAqIFdoZW4gdG91Y2hpbmcgdGhpcywgdXBkYXRlIGFsc28gcmVzaWRlbnRf
+cGFnZV90eXBlcyBpbg0KPiA+ICtrZXJuZWwvZm9yay5jICAqLw0KPiA+ICBlbnVtIHsNCj4gPiAg
+CU1NX0ZJTEVQQUdFUywJLyogUmVzaWRlbnQgZmlsZSBtYXBwaW5nIHBhZ2VzICovDQo+ID4gIAlN
+TV9BTk9OUEFHRVMsCS8qIFJlc2lkZW50IGFub255bW91cyBwYWdlcyAqLw0KPiA+DQo+IA0KPiBB
+Z3JlZWQgYW5kIHdpdGggdGhhdA0KPiANCj4gUmV2aWV3ZWQtYnk6IEFuc2h1bWFuIEtoYW5kdWFs
+IDxhbnNodW1hbi5raGFuZHVhbEBhcm0uY29tPg0KDQpUaGFua3MgZm9yIHRoZSByZXZpZXcgYW5k
+IGhlbHBpbmcgbWUgaW4gaW1wcm92aW5nIHRoZSBwYXRjaCA6KQ0KDQpSZWdhcmRzLA0KU2FpDQo=
