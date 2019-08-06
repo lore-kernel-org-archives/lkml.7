@@ -2,117 +2,93 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE510C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30ADFC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C0F92089E
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:11:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565104307;
-	bh=6UDrRhYrOs/0fVNeFUa7B2/tVmvKcooNzy/lwG+cCG0=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=JpFGT4OMtwBSpaYICtQfx2d3v+G+J4JNZXp3xU52I37ki4VWQMwn3DzwcRUMWB0zJ
-	 iCRi7N3Ty7DWZ5BNaRRiFwlpG+ptMYCV6b3zYPHfpN+KHltl2pwiq03mCCtKOu8Key
-	 xkpAikUKdU5Xx86PSrzGmITs7ZQvybn6IfJwPldY=
+	by mail.kernel.org (Postfix) with ESMTP id 0169920717
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:12:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732259AbfHFPLq (ORCPT
+        id S1732605AbfHFPMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 11:11:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56780 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 11:12:33 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:55616 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726713AbfHFPLp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 11:11:45 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCA9F2089E;
-        Tue,  6 Aug 2019 15:11:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565104305;
-        bh=6UDrRhYrOs/0fVNeFUa7B2/tVmvKcooNzy/lwG+cCG0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=k6IBJzQx9Arxu9foQUy+C1P4gaB9mQ07b842qiWcYyMDUu8gNQN6rq7QT9uRCAvCb
-         8wEWWuGOGCTnGaGo3VBmag8BLg/EVF0Td+PCzKJ6fstT7C43cnYrGl8W0nztAj+aw4
-         cCjlwkwKoMmSn8gmQFpAvOh3Y348vzvNBshV5wno=
-Subject: Re: [PATCH v4 1/2] usbip: Skip DMA mapping and unmapping for urb at
- vhci
-To:     Suwan Kim <suwan.kim027@gmail.com>, valentina.manea.m@gmail.com,
-        gregkh@linuxfoundation.org, stern@rowland.harvard.edu
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shuah <shuah@kernel.org>
-References: <20190806123154.23798-1-suwan.kim027@gmail.com>
- <20190806123154.23798-2-suwan.kim027@gmail.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <c3485edd-f7e3-95a7-38db-acda371575a2@kernel.org>
-Date:   Tue, 6 Aug 2019 09:11:30 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190806123154.23798-2-suwan.kim027@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        id S1726713AbfHFPMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 11:12:33 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 06D7F1A02BD;
+        Tue,  6 Aug 2019 17:12:29 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id ED6491A062C;
+        Tue,  6 Aug 2019 17:12:28 +0200 (CEST)
+Received: from fsr-ub1864-103.ea.freescale.net (fsr-ub1864-103.ea.freescale.net [10.171.82.17])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 18B5C205DD;
+        Tue,  6 Aug 2019 17:12:28 +0200 (CEST)
+From:   Daniel Baluta <daniel.baluta@nxp.com>
+To:     broonie@kernel.org
+Cc:     l.stach@pengutronix.de, mihai.serban@gmail.com,
+        alsa-devel@alsa-project.org, timur@kernel.org,
+        shengjiu.wang@nxp.com, angus@akkea.ca, tiwai@suse.com,
+        nicoleotsuka@gmail.com, linux-imx@nxp.com, kernel@pengutronix.de,
+        festevam@gmail.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org,
+        Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [PATCH v3 0/5] Add support for new SAI IP version
+Date:   Tue,  6 Aug 2019 18:12:09 +0300
+Message-Id: <20190806151214.6783-1-daniel.baluta@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/6/19 6:31 AM, Suwan Kim wrote:
-> vhci doesn’t do DMA for remote device. Actually, the real DMA
-> operation is done by network card driver. vhci just passes virtual
-> address of the buffer to the network stack, so vhci doesn’t use and
-> need dma address of the buffer of the URB.
-> 
-> But HCD provides DMA mapping and unmapping function by default.
-> Moreover, it causes unnecessary DMA mapping and unmapping which
-> will be done again at the NIC driver and it wastes CPU cycles.
-> So, implement map_urb_for_dma and unmap_urb_for_dma function for
-> vhci in order to skip the DMA mapping and unmapping procedure.
-> 
-> When it comes to supporting SG for vhci, it is useful to use native
-> SG list (urb->num_sgs) instead of mapped SG list because DMA mapping
-> fnuction can adjust the number of SG list (urb->num_mapped_sgs).
-> And vhci_map_urb_for_dma() prevents isoc pipe from using SG as
-> hcd_map_urb_for_dma() does.
-> 
-> Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
-> ---
-> v3 - v4:
-> - Replace WARN_ON() with pr_err() in the error path.
-> 
-> v2 - v3
-> - Move setting URB_DMA_MAP_SG flag to the patch 2.
-> - Prevent isoc pipe from using SG buffer.
-> 
-> v1 - v2
-> - Add setting URB_DMA_MAP_SG flag in urb->transfer_flags to tell
-> stub driver to use SG buffer.
-> ---
->   drivers/usb/usbip/vhci_hcd.c | 19 +++++++++++++++++++
->   1 file changed, 19 insertions(+)
-> 
-> diff --git a/drivers/usb/usbip/vhci_hcd.c b/drivers/usb/usbip/vhci_hcd.c
-> index 000ab7225717..429e4e989f38 100644
-> --- a/drivers/usb/usbip/vhci_hcd.c
-> +++ b/drivers/usb/usbip/vhci_hcd.c
-> @@ -1288,6 +1288,22 @@ static int vhci_free_streams(struct usb_hcd *hcd, struct usb_device *udev,
->   	return 0;
->   }
->   
-> +static int vhci_map_urb_for_dma(struct usb_hcd *hcd, struct urb *urb,
-> +				gfp_t mem_flags)
-> +{
-> +	if (usb_endpoint_xfer_isoc(&urb->ep->desc) && urb->num_sgs) {
-> +		pr_err("SG is not supported for isochronous transfer\n");
+So far SAI IPs integrated with imx6 only supported one data line.
+Starting with imx7 and imx8 SAI integration support up to 8 data
+lines. First patch introduce register definition to support this.
 
-Any reason to not use dev_err()?
+New SAI IP version introduces two new registers (Version and Parmeter
+registers) which are placed at the beginning of register address space.
+For this reason we need to fix the register's address. Support for
+this is introduced in patch 3.
 
-Looks good otherwise.
+Changes since v2:
+	- removed patches regarding data line mask because I need to
+	find a better way to describe to model data lines. Perhaps,we
+	only need to specify how many datalines a specific SAI instance
+	supports and then let SAI driver to activate datalines based on
+	the number of channels. Will open the discussion on this on a
+	separate thread.
+	- fixed devicetree documentation as per Nicolin comments and
+	will send a separate patch to convert it to yaml.
 
-thanks,
--- Shuah
+Changes since v1:
+        - removed patches from Lucas as they were already accepted
+        - addressed comments from Lucas and Nicolin regarding
+        device tree property naming
+        - removed comment saying that "datalines" must be always
+        consecutively enabled (this is not true, checked with IP owner)
+        - added new patch to document newly introduced compatbile
+          strings
+        - removed patch introducing combined mode as I will still need
+        some time to figure out how to properly allow users to set it.
+
+Daniel Baluta (5):
+  ASoC: fsl_sai: Add registers definition for multiple datalines
+  ASoC: fsl_sai: Update Tx/Rx channel enable mask
+  ASoC: fsl_sai: Add support for SAI new version
+  ASoC: fsl_sai: Add support for imx7ulp/imx8mq
+  ASoC: dt-bindings: Introduce compatible strings for 7ULP and 8MQ
+
+ .../devicetree/bindings/sound/fsl-sai.txt     |   3 +-
+ sound/soc/fsl/fsl_sai.c                       | 320 ++++++++++++------
+ sound/soc/fsl/fsl_sai.h                       |  78 +++--
+ 3 files changed, 273 insertions(+), 128 deletions(-)
+
+-- 
+2.17.1
+
