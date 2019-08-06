@@ -2,129 +2,113 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38062C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 00:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A53C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 00:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06B742147A
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 00:40:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="aXF8VKy/"
+	by mail.kernel.org (Postfix) with ESMTP id 02146214C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 00:42:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565052139;
+	bh=eZwQBDcR/MKYEfWG81eygG4AefN+C5bI0r2OySbuQH0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OnqHF/NPIdjXMC2MwbLKEGFLjRPX1jbapcCLBrpEAPcB3BPFlif0cuSVGm4xWXWif
+	 a/o5J7mrGRP+26AFpUfG6K0cUemxGTNJbvmZ/09xQgWi+0CfqwsxZwPrtmBFUALCFs
+	 4K0ugUwW9FLh6xcxCJVYCxiarSlwhn6rzug7r8t0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731135AbfHFAk1 (ORCPT
+        id S1731117AbfHFAmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 20:40:27 -0400
-Received: from gateway30.websitewelcome.com ([192.185.160.12]:14498 "EHLO
-        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728870AbfHFAk1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 20:40:27 -0400
-X-Greylist: delayed 1320 seconds by postgrey-1.27 at vger.kernel.org; Mon, 05 Aug 2019 20:40:27 EDT
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway30.websitewelcome.com (Postfix) with ESMTP id A3039AA10
-        for <linux-kernel@vger.kernel.org>; Mon,  5 Aug 2019 19:18:27 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id unBLhxBhu2qH7unBLhyAGl; Mon, 05 Aug 2019 19:18:27 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=qYZMHbpehI1ztCaWNIng3GM0OrNZZVH0chvksCa52IE=; b=aXF8VKy/PnWoChp8posGTJQYQO
-        QES4o3BfmhJkZeITsi7saNsCzp3XaFt7J/0JKzp0CehFyDRMsa5UDCk+0wdB7aCxpKgQKUSd2ev0+
-        Joq03xhyJIQugTEluvwErX8nYNE1zPFjdaoUN3/T6v9EbTD5WKX0LG55UWox6TR2HunSvHMtfn6d2
-        PpLaTycJfUq88lzWf9nyp7FHTsuqTJqc+c+ZiSCmfAdy//lHv1+H2hDFBhl0lFFBlkgsXCbMwIqZr
-        d1k29yRz4RzwSgqFgrFqBOtaEJ8z+Lh8Lv8l2ZnbYyrK4dwhzEQICvxXmpXvQ0IL290gVvQeIt9R4
-        tVDqLOAA==;
-Received: from [187.192.11.120] (port=41292 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hunBK-001CRl-Hp; Mon, 05 Aug 2019 19:18:26 -0500
-Date:   Mon, 5 Aug 2019 19:18:25 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@redhat.com>
-Cc:     dm-devel@redhat.com, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] dm raid1: Use struct_size() in kzalloc()
-Message-ID: <20190806001825.GA6854@embeddedor>
+        Mon, 5 Aug 2019 20:42:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728483AbfHFAmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 20:42:17 -0400
+Received: from localhost (unknown [104.132.0.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F09D2147A;
+        Tue,  6 Aug 2019 00:42:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565052136;
+        bh=eZwQBDcR/MKYEfWG81eygG4AefN+C5bI0r2OySbuQH0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hZTdUh7m+TxBSmTs1N9DcHxM8FaEQOdounaDItLqslNEzK+yF2IKj+bbhmz8mgVMJ
+         /dN79jv0RBiOXWzAmzAamqFYi8tzCE66mk+DmHzlpQtB2jFWpFcM16V4/wIJgzwdLx
+         v/S0twBm+UcvLi7A5PnuHNeL+2s37gvWfMf3XW58=
+Date:   Mon, 5 Aug 2019 17:42:15 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, chao@kernel.org
+Subject: Re: [PATCH] Revert "f2fs: avoid out-of-range memory access"
+Message-ID: <20190806004215.GC98101@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190802101548.96543-1-yuchao0@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.11.120
-X-Source-L: No
-X-Exim-ID: 1hunBK-001CRl-Hp
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [187.192.11.120]:41292
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 7
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20190802101548.96543-1-yuchao0@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One of the more common cases of allocation size calculations is finding
-the size of a structure that has a zero-sized array at the end, along
-with memory for some number of elements for that array. For example:
+On 08/02, Chao Yu wrote:
+> As Pavel Machek reported:
+> 
+> "We normally use -EUCLEAN to signal filesystem corruption. Plus, it is
+> good idea to report it to the syslog and mark filesystem as "needing
+> fsck" if filesystem can do that."
+> 
+> Still we need improve the original patch with:
+> - use unlikely keyword
+> - add message print
+> - return EUCLEAN
+> 
+> However, after rethink this patch, I don't think we should add such
+> condition check here as below reasons:
+> - We have already checked the field in f2fs_sanity_check_ckpt(),
+> - If there is fs corrupt or security vulnerability, there is nothing
+> to guarantee the field is integrated after the check, unless we do
+> the check before each of its use, however no filesystem does that.
+> - We only have similar check for bitmap, which was added due to there
+> is bitmap corruption happened on f2fs' runtime in product.
+> - There are so many key fields in SB/CP/NAT did have such check
+> after f2fs_sanity_check_{sb,cp,..}.
+> 
+> So I propose to revert this unneeded check.
 
-struct mirror_set {
-	...
-        struct mirror mirror[0];
-};
+IIRC, this came from security vulnerability report which can access
+out-of-boundary memory region. Could you write another patch to address the
+above issues?
 
-size = sizeof(struct mirror_set) + count * sizeof(struct mirror);
-instance = kzalloc(size, GFP_KERNEL)
-
-Instead of leaving these open-coded and prone to type mistakes, we can
-now use the new struct_size() helper:
-
-instance = kzalloc(struct_size(instance, mirror, count), GFP_KERNEL)
-
-Notice that, in this case, variable len is not necessary, hence it
-is removed.
-
-This code was detected with the help of Coccinelle.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/md/dm-raid1.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
-diff --git a/drivers/md/dm-raid1.c b/drivers/md/dm-raid1.c
-index 5a51151f680d..f7226ab57fc8 100644
---- a/drivers/md/dm-raid1.c
-+++ b/drivers/md/dm-raid1.c
-@@ -878,12 +878,9 @@ static struct mirror_set *alloc_context(unsigned int nr_mirrors,
- 					struct dm_target *ti,
- 					struct dm_dirty_log *dl)
- {
--	size_t len;
- 	struct mirror_set *ms = NULL;
- 
--	len = sizeof(*ms) + (sizeof(ms->mirror[0]) * nr_mirrors);
--
--	ms = kzalloc(len, GFP_KERNEL);
-+	ms = kzalloc(struct_size(ms, mirror, nr_mirrors), GFP_KERNEL);
- 	if (!ms) {
- 		ti->error = "Cannot allocate mirror context";
- 		return NULL;
--- 
-2.22.0
-
+> 
+> This reverts commit 56f3ce675103e3fb9e631cfb4131fc768bc23e9a.
+> 
+> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> ---
+>  fs/f2fs/segment.c | 5 -----
+>  1 file changed, 5 deletions(-)
+> 
+> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> index 9693fa4c8971..2eff9c008ae0 100644
+> --- a/fs/f2fs/segment.c
+> +++ b/fs/f2fs/segment.c
+> @@ -3492,11 +3492,6 @@ static int read_compacted_summaries(struct f2fs_sb_info *sbi)
+>  		seg_i = CURSEG_I(sbi, i);
+>  		segno = le32_to_cpu(ckpt->cur_data_segno[i]);
+>  		blk_off = le16_to_cpu(ckpt->cur_data_blkoff[i]);
+> -		if (blk_off > ENTRIES_IN_SUM) {
+> -			f2fs_bug_on(sbi, 1);
+> -			f2fs_put_page(page, 1);
+> -			return -EFAULT;
+> -		}
+>  		seg_i->next_segno = segno;
+>  		reset_curseg(sbi, i, 0);
+>  		seg_i->alloc_type = ckpt->alloc_type[i];
+> -- 
+> 2.18.0.rc1
