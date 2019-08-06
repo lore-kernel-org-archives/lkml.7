@@ -2,92 +2,160 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B62C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18CE7C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC25020717
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D406720717
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:49:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kx1nhGFR"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="w6bE8yyR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733013AbfHFPs6 (ORCPT
+        id S1733060AbfHFPtB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 11:48:58 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37252 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728582AbfHFPs6 (ORCPT
+        Tue, 6 Aug 2019 11:49:01 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45380 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728189AbfHFPs7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 11:48:58 -0400
-Received: by mail-pl1-f195.google.com with SMTP id b3so38065791plr.4;
-        Tue, 06 Aug 2019 08:48:58 -0700 (PDT)
+        Tue, 6 Aug 2019 11:48:59 -0400
+Received: by mail-wr1-f68.google.com with SMTP id n1so2107547wrw.12
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 08:48:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZPSCVpajlof03gZfDiU14WfcdldH6Wl7wE+QAHDIdw0=;
-        b=kx1nhGFR5nSKxtKBm/qEM86awxqKyznowIdWpV9mhEPn5+65f+no6W5czdTPWGBo7x
-         Tfqr6z+rzM3hwHn5qFeT9R14SS5SWAmkm6pViULwGHoEX2dnIsJFchAcfz/AtK0zHKEK
-         Kgj1r4amJMNThJkWFVuHqCgkYnSmqfa+OW30qgoYYdKHENvbkSzBC5XnGvS5KycKk025
-         P6rzJqTqGPM5Ppp3Axljt4GtNaVcnnQyF8Kf/j+zn8u39s0Y+ewb79XbALrFjajmY8gd
-         fV0IKOr6W6cC7xFfGFBOaKtvJY8Vxtv9H3+jcymRM6Qy/FvYgjM1iBYp8MXKEFGQ/aZn
-         WgMw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=ptPXLxjVOz5ihhTCmiUb9SOxRUsWyiRA05QMfRaZBxE=;
+        b=w6bE8yyR4JBMEwgSHmi79Wk/S5gGY7QNyEgwpYESM1UsZeHe9oXGFXOjGBVtLpYPpY
+         75UNnjLCnIU71rz0/DzhDgVdx+jOY8vj9weixLvt1xGWN1nDZbqLUfzqlAFS6yzbcY0t
+         x0gHfMqDPQv8ft6XaBN4MD9fJYLf5ayeUrg0mxIpjqmIigCd6Dq/rKAW76guSobApOcM
+         PP7IelmEGrRww5xFAGwh3PP7oCVBakK7Oy4Uzcm/cRNOydWsdWZO71q8SGaimFOnx4mM
+         OsdKoaZmFbVGIDEfcOFt/AkyEAZ1Zvj8kgS5CXuiKQWdLd4+75EdEjuQY+ASe7/KJNK4
+         CLmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZPSCVpajlof03gZfDiU14WfcdldH6Wl7wE+QAHDIdw0=;
-        b=NEI3UZ8VEiZpRquUH2xCKey9JPTlxnIAGiWc+U/1NR29MTThoX/YSEgP7mPtmedfH5
-         pslb0+Jg8XIrODDeGdxpZ+8T93kO4O5dykyhXpf7VYSz+t3pOQiQXd/lvLTrSXhMmKf1
-         2I2/mrL5zhbbp7qJbzuTF+X7KhEKSxcGp8Il4EMhwbgEyBrb6VXgYC6UK0MrNOmOC9qj
-         TKfR1OVxqETCQyiYAXsoq8GatLQ/OAhuzlrtYlPcM0TASM/ot5m7TaYdiSiGXLK8SDne
-         W78/wBNaENgEVu2SxN/j9INjcxky0Oevy6zHvfTj1hc+YaFrLeB6xWbwKbOfO+RA1ZyG
-         NNuw==
-X-Gm-Message-State: APjAAAX4hoUCvauBhzPO6kg1Pjcny5z7VkJwgf13sZ0utqsQJ+Kl8g9Z
-        2j5B+/44m3+kfTGB12yqhbI=
-X-Google-Smtp-Source: APXvYqwqs1ztN3R0VuflUXTKVjBf2XmHLR0F7IpaQ/mgY+cknym+LaDOhgZNCfD0lGbfF86qxKuISg==
-X-Received: by 2002:a17:902:20c8:: with SMTP id v8mr3858617plg.284.1565106537701;
-        Tue, 06 Aug 2019 08:48:57 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id o128sm94096967pfb.42.2019.08.06.08.48.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=ptPXLxjVOz5ihhTCmiUb9SOxRUsWyiRA05QMfRaZBxE=;
+        b=oxrKF7ZrG1a2vetvT8iCkje8TYruSQOdMSkYAbIu0CuD3Ye4n0d960DpescPjtZPW+
+         OWSr+lIrWkwOzjdGIrNQfpo08T9bJH3YKDjFlWYS6r7F8W39I8YlcKkoLMvQHBiWwwoT
+         SSInv+Gi/XVzNVNvt1mB/AQr2DJemhSidBSq4Q13nrkp/Q/aHstp8rMblFyNFOQpZEgg
+         T4Fi5ciWS0LrPsMKbHdpICzdI9yaQejexCnWmGmw6HG6aG8NDdb6oYW4oDXbsUMCANPg
+         zIm/RVrtVz+ypKou+c8aa9e8ZXzT/pflaMkHU7hzcwltCwt74ZXksjLZBKc8FgUKf5HI
+         Cv8Q==
+X-Gm-Message-State: APjAAAVaVi+f9r3Pi/UBAhQTegTXvN0bKIGL6N51gmglTW19yciNggiQ
+        EwWYBZHkL2jnoDcUVLF3Z0dR+NdkBAII0g==
+X-Google-Smtp-Source: APXvYqwLw8pawFldZrxXX9Gtm1nlbBcuyp5d8zHcvqzmVQsJ1G56os/jsJsXUzedykBZSHqd0ogd8w==
+X-Received: by 2002:adf:fdcc:: with SMTP id i12mr5656825wrs.88.1565106536555;
         Tue, 06 Aug 2019 08:48:56 -0700 (PDT)
-Date:   Tue, 6 Aug 2019 08:48:55 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.4 00/22] 4.4.188-stable review
-Message-ID: <20190806154855.GA12156@roeck-us.net>
-References: <20190805124918.070468681@linuxfoundation.org>
+Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id t185sm80363630wma.11.2019.08.06.08.48.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 06 Aug 2019 08:48:55 -0700 (PDT)
+Subject: Re: [PATCH 6/6] arm64: dts: meson-g12b-khadas-vim3: add initial
+ device-tree
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
+        Christian Hewitt <christianshewitt@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20190731124000.22072-1-narmstrong@baylibre.com>
+ <20190731124000.22072-7-narmstrong@baylibre.com>
+ <CAFBinCAD6F=bEE8Z2MvNZLJVKZ3siPqdJ36GuCYkp=DuY3AecQ@mail.gmail.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <198d9d59-78bd-1092-69dd-9dde62915ac5@baylibre.com>
+Date:   Tue, 6 Aug 2019 17:48:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190805124918.070468681@linuxfoundation.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAFBinCAD6F=bEE8Z2MvNZLJVKZ3siPqdJ36GuCYkp=DuY3AecQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 03:02:37PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.4.188 release.
-> There are 22 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 03/08/2019 20:50, Martin Blumenstingl wrote:
+> On Wed, Jul 31, 2019 at 2:44 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+> [...]
+>> +       memory@0 {
+>> +               device_type = "memory";
+>> +               reg = <0x0 0x0 0x0 0x40000000>;
+> nit-pick: we typically use the memory size used in the board size with
+> the lowest amount of RAM - 2GiB in this case. so I would change it to
+> 0x80000000
+
+Right
+
 > 
-> Responses should be made by Wed 07 Aug 2019 12:47:58 PM UTC.
-> Anything received after that time might be too late.
+> [...]
+>> +       leds {
+>> +               compatible = "gpio-leds";
+>> +
+>> +               white {
+>> +                       label = "vim3:white";
+> downstream sources use label="sys_led"
+> should we call it vim3:white:sys?
 > 
 
-Build results:
-	total: 170 pass: 170 fail: 0
-Qemu test results:
-	total: 301 pass: 301 fail: 0
+OK, no problem
+Thanks for the review.
 
-Guenter
+Neil
