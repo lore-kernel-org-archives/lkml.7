@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36153C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B85FC32751
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED6DC216F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3526B218A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:43:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127776;
-	bh=0/I9yaWwLfbVKWZtR4EeIsv5AWU4gyl+tYZMLtkaT/A=;
+	s=default; t=1565127782;
+	bh=gHKN6VO5FHUT4n/WevuPBAN7VBwc4Wg2WGpEHcz+kKs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mELsYGF88oq7sOX8sFhE+ggyxbg0tqja/Pme957mbV0ENFUJ4TcJcEHgkP0WvZ1aw
-	 4o4QAj/CIrCAHqBGNlj7EjCgqf0e1cJqzX/wez6BsSqAEBFz2/a3KZFfJt9C0ZToEH
-	 KggRNkevY20YCKARfQdm8mt3fEohx4NKduOK8/aY=
+	b=XA1Hoo7HqjdXBLG4kTTCBTCqTiErfT5CViAduYLQt+x8mQpeQwHdeZWXiK6y99xkd
+	 Uv7GaKpDaLnJdKG5sAaISgx4oC1xbk4GUR6fbvSqZyNQ3UaewB92EUyoMQPa/MELrl
+	 ZkY/L51ywk+FtaYgRASn1REXcoVcsBi2jGMSQ628=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728513AbfHFVmy (ORCPT
+        id S1728856AbfHFVnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:42:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52796 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:43:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728069AbfHFVfA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:35:00 -0400
+        id S1728048AbfHFVe7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:34:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70A4C21874;
-        Tue,  6 Aug 2019 21:34:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D2B3217D7;
+        Tue,  6 Aug 2019 21:34:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127300;
-        bh=0/I9yaWwLfbVKWZtR4EeIsv5AWU4gyl+tYZMLtkaT/A=;
+        s=default; t=1565127299;
+        bh=gHKN6VO5FHUT4n/WevuPBAN7VBwc4Wg2WGpEHcz+kKs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y3eA7Ptb2ZX3rT3jh+daN44b6WbHR2C8pT0EDF1OjPDpy0fOw/Z/lLwfUjqd/0foG
-         0v6OerFKBZm0LSG6w8RYNaAewa/SxJnYcUnUC3GRqWHos9K7hxaFpoBZogDQeLPLpx
-         IHm4RQ2btxo2qMxqToQvYFIbMP3xrfS9DhPQNDds=
+        b=JrK4dhXdy+dtCt41psVtswv87CiLNPLx2+eU17rUJ/YaMZCGfK+P7hJwfaqISetvL
+         pfYyVMwPvxgKfSRYJwQkHPZo+/AeezdrXJYUKWRx3Mqe253G8hvccSEtC6l8eACSIy
+         5B6p2XwQFJN8yDAUXaF4fDyWTGh5WwXmpbZohkrg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.2 51/59] drm/exynos: fix missing decrement of retry counter
-Date:   Tue,  6 Aug 2019 17:33:11 -0400
-Message-Id: <20190806213319.19203-51-sashal@kernel.org>
+Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 50/59] RDMA/hns: Fix error return code in hns_roce_v1_rsv_lp_qp()
+Date:   Tue,  6 Aug 2019 17:33:10 -0400
+Message-Id: <20190806213319.19203-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213319.19203-1-sashal@kernel.org>
 References: <20190806213319.19203-1-sashal@kernel.org>
@@ -60,41 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit 1bbbab097a05276e312dd2462791d32b21ceb1ee ]
+[ Upstream commit 020fb3bebc224dfe9353a56ecbe2d5fac499dffc ]
 
-Currently the retry counter is not being decremented, leading to a
-potential infinite spin if the scalar_reads don't change state.
+Fix to return error code -ENOMEM from the rdma_zalloc_drv_obj() error
+handling case instead of 0, as done elsewhere in this function.
 
-Addresses-Coverity: ("Infinite loop")
-Fixes: 280e54c9f614 ("drm/exynos: scaler: Reset hardware before starting the operation")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Inki Dae <inki.dae@samsung.com>
+Fixes: e8ac9389f0d7 ("RDMA: Fix allocation failure on pointer pd")
+Fixes: 21a428a019c9 ("RDMA: Handle PD allocations by IB/core")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+Link: https://lore.kernel.org/r/20190801012725.150493-1-weiyongjun1@huawei.com
+Signed-off-by: Doug Ledford <dledford@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/exynos/exynos_drm_scaler.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/infiniband/hw/hns/hns_roce_hw_v1.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_scaler.c b/drivers/gpu/drm/exynos/exynos_drm_scaler.c
-index ec9c1b7d31033..8989f8af716b7 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_scaler.c
-+++ b/drivers/gpu/drm/exynos/exynos_drm_scaler.c
-@@ -94,12 +94,12 @@ static inline int scaler_reset(struct scaler_context *scaler)
- 	scaler_write(SCALER_CFG_SOFT_RESET, SCALER_CFG);
- 	do {
- 		cpu_relax();
--	} while (retry > 1 &&
-+	} while (--retry > 1 &&
- 		 scaler_read(SCALER_CFG) & SCALER_CFG_SOFT_RESET);
- 	do {
- 		cpu_relax();
- 		scaler_write(1, SCALER_INT_EN);
--	} while (retry > 0 && scaler_read(SCALER_INT_EN) != 1);
-+	} while (--retry > 0 && scaler_read(SCALER_INT_EN) != 1);
+diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v1.c b/drivers/infiniband/hw/hns/hns_roce_hw_v1.c
+index e068a02122f5e..9496c69fff3a2 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_hw_v1.c
++++ b/drivers/infiniband/hw/hns/hns_roce_hw_v1.c
+@@ -745,8 +745,10 @@ static int hns_roce_v1_rsv_lp_qp(struct hns_roce_dev *hr_dev)
  
- 	return retry ? 0 : -EIO;
- }
+ 	ibdev = &hr_dev->ib_dev;
+ 	pd = rdma_zalloc_drv_obj(ibdev, ib_pd);
+-	if (!pd)
++	if (!pd) {
++		ret = -ENOMEM;
+ 		goto alloc_mem_failed;
++	}
+ 
+ 	pd->device  = ibdev;
+ 	ret = hns_roce_alloc_pd(pd, NULL);
 -- 
 2.20.1
 
