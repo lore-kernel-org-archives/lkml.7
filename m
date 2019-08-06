@@ -2,146 +2,92 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5BDC32754
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC1DC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34A9520C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:36:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565098602;
-	bh=Z+FnyuvhyHFY98v/41stQdrl5WFV8d/8/KwkxLTuC0s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=blZ96RAoaFNIhMCCbnYW4IBc7neKidQBo8pwjHgqmRscsDGyLYH2t+2AtkuD6Z0N9
-	 ogBmRWogMI0Gs9N6GxvQfHTmvsgyZXPz9KpZcgv6MMdvakcIazDEQSYQSDdrk9oFN7
-	 2QGesYS+36zUFCfHMXYKl66Fuw4mVnn6VIYNOtRw=
+	by mail.kernel.org (Postfix) with ESMTP id AFE3E20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:37:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731053AbfHFNgl (ORCPT
+        id S1731725AbfHFNhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 09:36:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47700 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726092AbfHFNgl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 09:36:41 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63992206A2;
-        Tue,  6 Aug 2019 13:36:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565098599;
-        bh=Z+FnyuvhyHFY98v/41stQdrl5WFV8d/8/KwkxLTuC0s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1jO/BjLahJpbTqPAHOWZ3Gtqul5YAAcpR/h+ZcBUq0gsXqu0vO9fysubuai58qPHW
-         NOTI4prJ+iWQWCkM/HD4dPJ8pnXabGg0d3REehztoV7uo6f2kpY0l5NUzMCZldZYX3
-         qOhDdanOEeA5kqx7ewR+43T4mvwyCxyMgFBBtGXs=
-Date:   Tue, 6 Aug 2019 08:36:38 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Linux PCI <linux-pci@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/5] PCI / PM: Check for error when reading PME status
-Message-ID: <20190806133638.GQ151852@google.com>
-References: <20190805205214.194981-1-helgaas@kernel.org>
- <20190805205214.194981-4-helgaas@kernel.org>
- <CAJZ5v0i5oVuZMxFmYiLnYPk=BsFGGiYntez3m1V5xeWgTgA4hg@mail.gmail.com>
+        Tue, 6 Aug 2019 09:37:07 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:46802 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726092AbfHFNhH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 09:37:07 -0400
+Received: by mail-qk1-f195.google.com with SMTP id r4so62758583qkm.13
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 06:37:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+EmwYezlru/6l1RGke6OfmjMerhgmwmHntHPbq6+2AE=;
+        b=X9jivODWgvbrVW3YnABVDFkAgfLbnFTLsljL+72r/VTHs+S38Gtw2F650AAzjbuoep
+         uoU5VEZHCt6dVtI3isF4NZKv0ebdWx57yeO4hbg5cjPulpMsNw4jCECVl3F//4kgCsaS
+         r69yCb44T5QnAzO18neujO8CYh14nl+wKhkAfuA01Uvj23tn8jghxvzhK/tQBDUqjeDK
+         inZTz2+ivmrMmDcrXMkN4TNSQBb8RfbygyON6V5TNQqArE8me2M+FlekHrNH+odaHZS2
+         S8myt5DTVgV76eXKKFsmlt1tn0Vgi9y2ecp8LoXxLttwc2wmvMm7MxHQriyLXxD/088H
+         vR5g==
+X-Gm-Message-State: APjAAAWly5YGNwEherX3bE0KAU6ifUUVW86E8riHlbS/Fz+GTdAEOSDd
+        RWMCvNz0JxPXPkYS1SpX5wEoJQ==
+X-Google-Smtp-Source: APXvYqwQogResfBtEcBuAcFTuCtTWGzeNFF/0eeIOxkxJPkA8JpnI8WBDTcUIzFbb3AvBDILVnFfYQ==
+X-Received: by 2002:ae9:efc6:: with SMTP id d189mr2946499qkg.323.1565098625407;
+        Tue, 06 Aug 2019 06:37:05 -0700 (PDT)
+Received: from redhat.com ([147.234.38.1])
+        by smtp.gmail.com with ESMTPSA id q73sm24068906qke.90.2019.08.06.06.37.01
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 06 Aug 2019 06:37:04 -0700 (PDT)
+Date:   Tue, 6 Aug 2019 09:36:58 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH V2 7/9] vhost: do not use RCU to synchronize MMU notifier
+ with worker
+Message-ID: <20190806093633-mutt-send-email-mst@kernel.org>
+References: <a3bde826-6329-68e4-2826-8a9de4c5bd1e@redhat.com>
+ <20190801141512.GB23899@ziepe.ca>
+ <42ead87b-1749-4c73-cbe4-29dbeb945041@redhat.com>
+ <20190802124613.GA11245@ziepe.ca>
+ <20190802100414-mutt-send-email-mst@kernel.org>
+ <20190802172418.GB11245@ziepe.ca>
+ <20190803172944-mutt-send-email-mst@kernel.org>
+ <20190804001400.GA25543@ziepe.ca>
+ <20190804040034-mutt-send-email-mst@kernel.org>
+ <20190806115317.GA11627@ziepe.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJZ5v0i5oVuZMxFmYiLnYPk=BsFGGiYntez3m1V5xeWgTgA4hg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190806115317.GA11627@ziepe.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 11:02:51PM +0200, Rafael J. Wysocki wrote:
-> On Mon, Aug 5, 2019 at 10:52 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > pci_check_pme_status() reads the Power Management capability to determine
-> > whether a device has generated a PME.  The capability is in config space,
-> > which is accessible in D0, D1, D2, and D3hot, but not in D3cold.
-> >
-> > If we call pci_check_pme_status() on a device that's in D3cold, config
-> > reads fail and return ~0 data, which we erroneously interpreted as "the
-> > device has generated a PME".
-> >
-> > 000dd5316e1c ("PCI: Do not poll for PME if the device is in D3cold")
-> > avoided many of these problems by avoiding pci_check_pme_status() if we
-> > think the device is in D3cold.  However, it is not a complete fix because
-> > the device may go to D3cold after we check its power state but before
-> > pci_check_pme_status() reads the Power Management Status Register.
-> >
-> > Return false ("device has not generated a PME") if we get an error response
-> > reading the Power Management Status Register.
-> >
-> > Fixes: 000dd5316e1c ("PCI: Do not poll for PME if the device is in D3cold")
-> > Fixes: 71a83bd727cc ("PCI/PM: add runtime PM support to PCIe port")
-> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > ---
-> >  drivers/pci/pci.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index 984171d40858..af6a97d7012b 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -2008,6 +2008,9 @@ bool pci_check_pme_status(struct pci_dev *dev)
-> >
-> >         pmcsr_pos = dev->pm_cap + PCI_PM_CTRL;
-> >         pci_read_config_word(dev, pmcsr_pos, &pmcsr);
-> > +       if (pmcsr == (u16) PCI_ERROR_RESPONSE)
-> > +               return false;
+On Tue, Aug 06, 2019 at 08:53:17AM -0300, Jason Gunthorpe wrote:
+> On Sun, Aug 04, 2019 at 04:07:17AM -0400, Michael S. Tsirkin wrote:
+> > > > > Also, why can't this just permanently GUP the pages? In fact, where
+> > > > > does it put_page them anyhow? Worrying that 7f466 adds a get_user page
+> > > > > but does not add a put_page??
+> > > 
+> > > You didn't answer this.. Why not just use GUP?
+> > > 
+> > > Jason
+> > 
+> > Sorry I misunderstood the question. Permanent GUP breaks lots of
+> > functionality we need such as THP and numa balancing.
 > 
-> No, sorry.
+> Really? It doesn't look like that many pages are involved..
 > 
-> We tried that and it didn't work.
-> 
-> pcie_pme_handle_request() depends on this returning "true" for all
-> bits set, as from its perspective "device is not accessible" may very
-> well mean "device may have signaled PME".
+> Jason
 
-Right, it's obviously wrong in the case of devices that advertise
-D3cold in PME_Support, i.e., devices that can generate PME even with
-main power off.  Also, we may want to try to wake up devices if the
-config read fails for a reason other than the device being in D3cold.
+Yea. But they just might happen to be heavily accessed ones....
 
-What I don't like about the current code is that it checks
-PCI_PM_CTRL_PME_STATUS in data that may be completely bogus.  Do you
-think it would be better to do something like this:
-
-  pci_read_config_word(dev, pmcsr_pos, &pmcsr);
-  if (pmcsr == (u16) PCI_ERROR_RESPONSE) {
-    if (pci_pme_capable(dev, PCI_PM_CAP_PME_D3cold))
-      return true;
-    return false;
-  }
-
-or maybe this:
-
-  pci_read_config_word(dev, pmcsr_pos, &pmcsr);
-  if (pmcsr == (u16) PCI_ERROR_RESPONSE)
-    return true;
-
-We should get PCI_ERROR_RESPONSE pretty reliably from devices in
-D3cold, so the first possibility would cover that case.
-
-But since pci_check_pme_status() basically returns a hint ("true"
-means a device *may* have generated a PME), and even if the hint is
-wrong, the worst that happens is an unnecessary wakeup, maybe the
-second possibility is safer.
-
-What do you think?
-
-> >         if (!(pmcsr & PCI_PM_CTRL_PME_STATUS))
-> >                 return false;
+-- 
+MST
