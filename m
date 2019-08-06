@@ -2,163 +2,185 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 258F1C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B769BC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDF622089E
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:03:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565132591;
-	bh=qT4gAKs+8ApcJTe9M2dRBF2NOvklKVKeDkSelB5PNpE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=qSZ7PZ75PT0hMUdtNw7meInKQfBCxOwN5YiIQ8mVr0zo0eGpyUucXXI82DIRQoiuL
-	 26W4ct3ny2M/dAWfDN2UX7Xj7rplTWdraIZpZ5Fk0rsSB5jzeaMrfaGZ5o+AbGXCqQ
-	 Soa22khGk9TUCw4wX4pjxLLbwDalw7guMo0X4odU=
+	by mail.kernel.org (Postfix) with ESMTP id 82309214C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:16:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="MzTXpv/R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbfHFXDJ (ORCPT
+        id S1726838AbfHFXQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 19:03:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51718 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726133AbfHFXDJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 19:03:09 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A33320717;
-        Tue,  6 Aug 2019 23:03:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565132587;
-        bh=qT4gAKs+8ApcJTe9M2dRBF2NOvklKVKeDkSelB5PNpE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=nYhQksXMjFdjn7qsubpevTF4BxP7xsit/IdT2SfJ3mrS0Rx7B0zEjLoFZc8NJZXxT
-         jiawPejTfcVjvKx3FcMC6k2JIomNwGOL5/r2KBhYy/ve+cJBFcRC62rjV6qGuOk6dC
-         UUV7Z7MUl5e1flsun/zvccyVkG5K2bYpuLV3Qae0=
-Date:   Tue, 6 Aug 2019 16:03:06 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     axboe@kernel.dk, jack@suse.cz, hannes@cmpxchg.org,
-        mhocko@kernel.org, vdavydov.dev@gmail.com, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, guro@fb.com
-Subject: Re: [PATCH 4/4] writeback, memcg: Implement foreign dirty flushing
-Message-Id: <20190806160306.5330bd4fdddf357db4b7086c@linux-foundation.org>
-In-Reply-To: <20190803140155.181190-5-tj@kernel.org>
-References: <20190803140155.181190-1-tj@kernel.org>
-        <20190803140155.181190-5-tj@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 6 Aug 2019 19:16:16 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:44829 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726069AbfHFXQP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 19:16:15 -0400
+Received: by mail-qk1-f195.google.com with SMTP id d79so64291408qke.11
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 16:16:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=evI7jo74G4Gx7Gga7ZV8g3f7D3AhHv7OMI4oYy7KjpQ=;
+        b=MzTXpv/RThZvTM0oekrE0HbJIq9MDfLDK/pFUY/Kg6pyTj13D+sPiKCI/dSGwPAxpY
+         66cmu6NttsKhYSMYlnguyr7uhmgAbn3zoEecwJHbFK40+26VHkYuF99AdRjGXrECGqPh
+         vtfbOQsp5XxERMNpAIlGBC0fNvBHCI4Xe9NbY9LiKeaS2gZSeE7ortCdr7AwymC1bQMf
+         tH8isbUtYa12pesEmXPJTyySS7DaU/IrFA7s+yY18pgcvmsoF40zJdJl86bWxSpitktu
+         59wGxHKZqUMMqNyx4DORY6ozb2JQGWE2AME4lSBAP89G+fxJ+NZfrKn08DfZpc+bITKO
+         VTAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=evI7jo74G4Gx7Gga7ZV8g3f7D3AhHv7OMI4oYy7KjpQ=;
+        b=am/Aijh9hqEBtKvcZRhFw/Vv55yBZGWa1SaJ0C8tsKzuKKzSGRAR8i0UN0/ae3RzvK
+         VTn9LWiRRLH5T0iNqTW/rZdiXMM9LDF+A86b91oXzwnJYHfx9tII6L72iqoH/jMc3czi
+         RlG2U2cjgzyK75oayhp2V2of4JYi3N0dP2uYJ2J+n8hUCsgrjMsmR8Q7MOI56gOgzyer
+         HcAURGLyHj+i5RIAsFKK6nERz3XxVnugpKKpRXFjajiADTpJ9RrcRYHhKW3pTyvYnNSn
+         72THE32n7mFMnVBr8fGKRPmHx+nDrKrjtBdNLWQezEiR/sK8twRkSYnl/aJvSjKEdsgG
+         wpbg==
+X-Gm-Message-State: APjAAAUGfZC9BEtRnh25TuUgP/dkrRn+7Oe4ldnKG0H1UShzAI3q6yEm
+        n0A/jbpXBfgE37QpWUghwsHx+A==
+X-Google-Smtp-Source: APXvYqylqTmNzPQYqTYhRiwrI4AtCqibIZpw6EBPoIBj42tnctW/9AiKc7I50IcPqwnV2QCyiSKRxQ==
+X-Received: by 2002:a37:660d:: with SMTP id a13mr5780388qkc.36.1565133374824;
+        Tue, 06 Aug 2019 16:16:14 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id f22sm35086171qkk.45.2019.08.06.16.16.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 06 Aug 2019 16:16:14 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hv8gg-0006eG-0j; Tue, 06 Aug 2019 20:16:14 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     linux-mm@kvack.org
+Cc:     Andrea Arcangeli <aarcange@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        Dimitri Sivanich <sivanich@sgi.com>,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        iommu@lists.linux-foundation.org, intel-gfx@lists.freedesktop.org,
+        Gavin Shan <shangw@linux.vnet.ibm.com>,
+        Andrea Righi <andrea@betterlinux.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: [PATCH v3 hmm 01/11] mm/mmu_notifiers: hoist do_mmu_notifier_register down_write to the caller
+Date:   Tue,  6 Aug 2019 20:15:38 -0300
+Message-Id: <20190806231548.25242-2-jgg@ziepe.ca>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190806231548.25242-1-jgg@ziepe.ca>
+References: <20190806231548.25242-1-jgg@ziepe.ca>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat,  3 Aug 2019 07:01:55 -0700 Tejun Heo <tj@kernel.org> wrote:
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-> There's an inherent mismatch between memcg and writeback.  The former
-> trackes ownership per-page while the latter per-inode.  This was a
-> deliberate design decision because honoring per-page ownership in the
-> writeback path is complicated, may lead to higher CPU and IO overheads
-> and deemed unnecessary given that write-sharing an inode across
-> different cgroups isn't a common use-case.
-> 
-> Combined with inode majority-writer ownership switching, this works
-> well enough in most cases but there are some pathological cases.  For
-> example, let's say there are two cgroups A and B which keep writing to
-> different but confined parts of the same inode.  B owns the inode and
-> A's memory is limited far below B's.  A's dirty ratio can rise enough
-> to trigger balance_dirty_pages() sleeps but B's can be low enough to
-> avoid triggering background writeback.  A will be slowed down without
-> a way to make writeback of the dirty pages happen.
-> 
-> This patch implements foreign dirty recording and foreign mechanism so
-> that when a memcg encounters a condition as above it can trigger
-> flushes on bdi_writebacks which can clean its pages.  Please see the
-> comment on top of mem_cgroup_track_foreign_dirty_slowpath() for
-> details.
-> 
-> ...
->
-> +void mem_cgroup_track_foreign_dirty_slowpath(struct page *page,
-> +					     struct bdi_writeback *wb)
-> +{
-> +	struct mem_cgroup *memcg = page->mem_cgroup;
-> +	struct memcg_cgwb_frn *frn;
-> +	u64 now = jiffies_64;
-> +	u64 oldest_at = now;
-> +	int oldest = -1;
-> +	int i;
-> +
-> +	/*
-> +	 * Pick the slot to use.  If there is already a slot for @wb, keep
-> +	 * using it.  If not replace the oldest one which isn't being
-> +	 * written out.
-> +	 */
-> +	for (i = 0; i < MEMCG_CGWB_FRN_CNT; i++) {
-> +		frn = &memcg->cgwb_frn[i];
-> +		if (frn->bdi_id == wb->bdi->id &&
-> +		    frn->memcg_id == wb->memcg_css->id)
-> +			break;
-> +		if (frn->at < oldest_at && atomic_read(&frn->done.cnt) == 1) {
-> +			oldest = i;
-> +			oldest_at = frn->at;
-> +		}
-> +	}
-> +
-> +	if (i < MEMCG_CGWB_FRN_CNT) {
-> +		unsigned long update_intv =
-> +			min_t(unsigned long, HZ,
-> +			      msecs_to_jiffies(dirty_expire_interval * 10) / 8);
+This simplifies the code to not have so many one line functions and extra
+logic. __mmu_notifier_register() simply becomes the entry point to
+register the notifier, and the other one calls it under lock.
 
-An explanation of what's going on here would be helpful.
+Also add a lockdep_assert to check that the callers are holding the lock
+as expected.
 
-Why "* 1.25" and not, umm "* 1.24"?
+Suggested-by: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+---
+ mm/mmu_notifier.c | 35 ++++++++++++++---------------------
+ 1 file changed, 14 insertions(+), 21 deletions(-)
 
-> +		/*
-> +		 * Re-using an existing one.  Let's update timestamp lazily
-> +		 * to avoid making the cacheline hot.
-> +		 */
-> +		if (frn->at < now - update_intv)
-> +			frn->at = now;
-> +	} else if (oldest >= 0) {
-> +		/* replace the oldest free one */
-> +		frn = &memcg->cgwb_frn[oldest];
-> +		frn->bdi_id = wb->bdi->id;
-> +		frn->memcg_id = wb->memcg_css->id;
-> +		frn->at = now;
-> +	}
-> +}
-> +
-> +/*
-> + * Issue foreign writeback flushes for recorded foreign dirtying events
-> + * which haven't expired yet and aren't already being written out.
-> + */
-> +void mem_cgroup_flush_foreign(struct bdi_writeback *wb)
-> +{
-> +	struct mem_cgroup *memcg = mem_cgroup_from_css(wb->memcg_css);
-> +	unsigned long intv = msecs_to_jiffies(dirty_expire_interval * 10);
-
-Ditto.
-
-> +	u64 now = jiffies_64;
-> +	int i;
-> +
-> +	for (i = 0; i < MEMCG_CGWB_FRN_CNT; i++) {
-> +		struct memcg_cgwb_frn *frn = &memcg->cgwb_frn[i];
-> +
-> +		if (frn->at > now - intv && atomic_read(&frn->done.cnt) == 1) {
-> +			frn->at = 0;
-> +			cgroup_writeback_by_id(frn->bdi_id, frn->memcg_id,
-> +					       LONG_MAX, WB_REASON_FOREIGN_FLUSH,
-> +					       &frn->done);
-> +		}
-> +	}
-> +}
-> +
+diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
+index b5670620aea0fc..218a6f108bc2d0 100644
+--- a/mm/mmu_notifier.c
++++ b/mm/mmu_notifier.c
+@@ -236,22 +236,22 @@ void __mmu_notifier_invalidate_range(struct mm_struct *mm,
+ }
+ EXPORT_SYMBOL_GPL(__mmu_notifier_invalidate_range);
+ 
+-static int do_mmu_notifier_register(struct mmu_notifier *mn,
+-				    struct mm_struct *mm,
+-				    int take_mmap_sem)
++/*
++ * Same as mmu_notifier_register but here the caller must hold the
++ * mmap_sem in write mode.
++ */
++int __mmu_notifier_register(struct mmu_notifier *mn, struct mm_struct *mm)
+ {
+ 	struct mmu_notifier_mm *mmu_notifier_mm;
+ 	int ret;
+ 
++	lockdep_assert_held_write(&mm->mmap_sem);
+ 	BUG_ON(atomic_read(&mm->mm_users) <= 0);
+ 
+-	ret = -ENOMEM;
+ 	mmu_notifier_mm = kmalloc(sizeof(struct mmu_notifier_mm), GFP_KERNEL);
+ 	if (unlikely(!mmu_notifier_mm))
+-		goto out;
++		return -ENOMEM;
+ 
+-	if (take_mmap_sem)
+-		down_write(&mm->mmap_sem);
+ 	ret = mm_take_all_locks(mm);
+ 	if (unlikely(ret))
+ 		goto out_clean;
+@@ -279,13 +279,11 @@ static int do_mmu_notifier_register(struct mmu_notifier *mn,
+ 
+ 	mm_drop_all_locks(mm);
+ out_clean:
+-	if (take_mmap_sem)
+-		up_write(&mm->mmap_sem);
+ 	kfree(mmu_notifier_mm);
+-out:
+ 	BUG_ON(atomic_read(&mm->mm_users) <= 0);
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(__mmu_notifier_register);
+ 
+ /*
+  * Must not hold mmap_sem nor any other VM related lock when calling
+@@ -302,19 +300,14 @@ static int do_mmu_notifier_register(struct mmu_notifier *mn,
+  */
+ int mmu_notifier_register(struct mmu_notifier *mn, struct mm_struct *mm)
+ {
+-	return do_mmu_notifier_register(mn, mm, 1);
+-}
+-EXPORT_SYMBOL_GPL(mmu_notifier_register);
++	int ret;
+ 
+-/*
+- * Same as mmu_notifier_register but here the caller must hold the
+- * mmap_sem in write mode.
+- */
+-int __mmu_notifier_register(struct mmu_notifier *mn, struct mm_struct *mm)
+-{
+-	return do_mmu_notifier_register(mn, mm, 0);
++	down_write(&mm->mmap_sem);
++	ret = __mmu_notifier_register(mn, mm);
++	up_write(&mm->mmap_sem);
++	return ret;
+ }
+-EXPORT_SYMBOL_GPL(__mmu_notifier_register);
++EXPORT_SYMBOL_GPL(mmu_notifier_register);
+ 
+ /* this is called after the last mmu_notifier_unregister() returned */
+ void __mmu_notifier_mm_destroy(struct mm_struct *mm)
+-- 
+2.22.0
 
