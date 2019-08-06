@@ -2,92 +2,80 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 646C0C41514
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2AAC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3904B20717
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:50:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jhpBffvh"
+	by mail.kernel.org (Postfix) with ESMTP id 9B02220C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:50:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733210AbfHFPuX (ORCPT
+        id S1733218AbfHFPut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 11:50:23 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46669 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728041AbfHFPuX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 11:50:23 -0400
-Received: by mail-pl1-f194.google.com with SMTP id c2so38010644plz.13;
-        Tue, 06 Aug 2019 08:50:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=u6dMmkj149gP9miv8zHDNNMFxn9m6BrDvxKXAqMzwEI=;
-        b=jhpBffvhPSCf3In/Wz50tsgAGUBC3BQ0Qlf7ouWoE5TXvjnd0Usp2S+XZQt0QZ/i22
-         mAMLBxJs8Xv2L4vCPggXPK9U2DcY/ge+OzlOyxOlHLKzToI8sk9A02IHZHZaehVKqhk/
-         1o52A6FYUnE0B9FMis8k62hNWY1b8IQzR/4zit67MLekuh+CPQX/J5Z4K4WX1MW2jHlt
-         RUEz7y6PmUFwCkhRzj5lr/FeotQ3GRrfGFPFXaFk7jE6fTV0jpvOob1wsCVDI5eKr9an
-         NcRp8Q+jJXpsaOEK+nRPCLdhByatAks64YCeXy/dbh9Lipw1fVL+rWM1czjUwXv5HxbE
-         RUrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=u6dMmkj149gP9miv8zHDNNMFxn9m6BrDvxKXAqMzwEI=;
-        b=Yt0tSWkvakZBgpWxVvQtBChiQ5Med9yyfb2kGRg4JscRQWcyLDJzbBQQMpRtnS3yef
-         Dd3BvbXgCZek3zThLUU0L2pB65mPeWHshhS34gNAZH6fP7Ys3UZ4Oh4GDQ+0kvHil9El
-         t2pSh/590rHTPL9dYTzZFBSPbEK5+PlrrgRx90+EFdD5Th89kdSSjBDLZyp8rrkTSv9m
-         SB2+tqeA/3Ls3WNpxA1F8thknj05yPxdZYtkPo7049NeAz66Xrd/ihJRk7EA0/mubb8T
-         rezJr21BxxG3pNRGXTE04EubBmvE/YJHgX09WP9ycKMRIzNaeMgTP22VlkWga3nitZrL
-         EKjQ==
-X-Gm-Message-State: APjAAAXaIN62hg0frW55NoYBqCUsdipWGref5qFoUGmbDHMzHdgE3xHe
-        f/I+Uurk1AL3cx9qTylSNW8=
-X-Google-Smtp-Source: APXvYqwXTfTWcMTHnb8iFDeDq6YX5vcra5uOdK9UmjmFGKkzVuPr4IzB9htp53hUE6hZf+lvY+DdnQ==
-X-Received: by 2002:a17:902:2ec5:: with SMTP id r63mr3800478plb.21.1565106622445;
-        Tue, 06 Aug 2019 08:50:22 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 67sm65790348pfd.177.2019.08.06.08.50.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 06 Aug 2019 08:50:21 -0700 (PDT)
-Date:   Tue, 6 Aug 2019 08:50:20 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.2 000/131] 5.2.7-stable review
-Message-ID: <20190806155020.GE12156@roeck-us.net>
-References: <20190805124951.453337465@linuxfoundation.org>
+        Tue, 6 Aug 2019 11:50:49 -0400
+Received: from verein.lst.de ([213.95.11.211]:57530 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728041AbfHFPut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 11:50:49 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 125CC227A81; Tue,  6 Aug 2019 17:50:45 +0200 (CEST)
+Date:   Tue, 6 Aug 2019 17:50:44 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Rob Clark <robdclark@chromium.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Rob Clark <robdclark@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] drm: add cache support for arm64
+Message-ID: <20190806155044.GC25050@lst.de>
+References: <20190805211451.20176-1-robdclark@gmail.com> <20190806084821.GA17129@lst.de> <CAJs_Fx6eh1w7c=crMoD5XyEOMzP6orLhqUewErE51cPGYmObBQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190805124951.453337465@linuxfoundation.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAJs_Fx6eh1w7c=crMoD5XyEOMzP6orLhqUewErE51cPGYmObBQ@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 03:01:27PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.2.7 release.
-> There are 131 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed 07 Aug 2019 12:47:58 PM UTC.
-> Anything received after that time might be too late.
-> 
+On Tue, Aug 06, 2019 at 07:11:41AM -0700, Rob Clark wrote:
+> Agreed that drm_cflush_* isn't a great API.  In this particular case
+> (IIUC), I need wb+inv so that there aren't dirty cache lines that drop
+> out to memory later, and so that I don't get a cache hit on
+> uncached/wc mmap'ing.
 
-Build results:
-	total: 159 pass: 159 fail: 0
-Qemu test results:
-	total: 364 pass: 364 fail: 0
+So what is the use case here?  Allocate pages using the page allocator
+(or CMA for that matter), and then mmaping them to userspace and never
+touching them again from the kernel?
 
-Guenter
+> Tying it in w/ iommu seems a bit weird to me.. but maybe that is just
+> me, I'm certainly willing to consider proposals or to try things and
+> see how they work out.
+
+This was just my through as the fit seems easy.  But maybe you'll
+need to explain your use case(s) a bit more so that we can figure out
+what a good high level API is.
+
+> Exposing the arch_sync_* API and using that directly (bypassing
+> drm_cflush_*) actually seems pretty reasonable and pragmatic.  I did
+> have one doubt, as phys_to_virt() is only valid for kernel direct
+> mapped memory (AFAIU), what happens for pages that are not in kernel
+> linear map?  Maybe it is ok to ignore those pages, since they won't
+> have an aliased mapping?
+
+They could have an aliased mapping in vmalloc/vmap space for example,
+if you created one.  We have the flush_kernel_vmap_range /
+invalidate_kernel_vmap_range APIs for those, that are implement
+on architectures with VIVT caches.
