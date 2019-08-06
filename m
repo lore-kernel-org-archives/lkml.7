@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECF5C32751
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E88EBC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28EAD217D9
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:33:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC820217D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:33:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127222;
-	bh=SDgvjDR81+fPZOdTNC5f0V9NZfAQNRzqN+nYvN92QTs=;
+	s=default; t=1565127224;
+	bh=gx8SFavgzOTEOESs7rzfvsJIXbtJJ880k7HdXMQfhM4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eFrfdRWF8E8Sb/Hu9ZHqpw45Mtsxe2RUhR82+JcAi28BimDBobOXINp2QnTafQ+sL
-	 WaJmKrAoMuoOm9mEFD4c1KROrHYSWx9t2mrz6xLaaPTXJd2EbkY6a7bI397OmjVToY
-	 R3wsH8vNVA8unmNOoWwRRTTuqhL/we37dERtMwzg=
+	b=wIwtmfEcbcp3Hcu9VTRdp/+tVlaXn6KacHt4mVkYNAc5mj9K1pwHn3irBAiEbssjL
+	 r0r/RuxdtgIRoOAlvj3Lu0KdrGWTetQZ2WXOpdEjm5ilGzKrod7gU9JH0O/rieI/07
+	 xEHWyVeiKpbPNf1mz7FWKEAKJXo48ryw/RGIK7RU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727218AbfHFVdl (ORCPT
+        id S1727241AbfHFVdn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:33:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51468 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:33:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727147AbfHFVdh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:33:37 -0400
+        id S1727165AbfHFVdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:33:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F23AF21880;
-        Tue,  6 Aug 2019 21:33:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5D0B21881;
+        Tue,  6 Aug 2019 21:33:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127216;
-        bh=SDgvjDR81+fPZOdTNC5f0V9NZfAQNRzqN+nYvN92QTs=;
+        s=default; t=1565127217;
+        bh=gx8SFavgzOTEOESs7rzfvsJIXbtJJ880k7HdXMQfhM4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wAVfILQ1FIiLfIk1nIhCexoQ78hlDg0Lp0FpJmffFtV9sgDvXQKlNQq8jJ8jMnf+U
-         f1FnmWQywVDlD9I0zDAQidMWujql4JUel7E0srMewafagAvZzwAK7+74sWA9Wilwon
-         +HRfZ5OnetEmKIVUq9hWEVYb8QCDhkIvu5Q267QU=
+        b=u6G51MKZHQ57aE2syMLXLyUoPCsf3qQorT7zMGnm6BXenRoej37TS8p+Ytss2MMnR
+         iFnQzDrerYR+h3QKYZMKyLQtz3W91Nxisvl9vCd8oYvO4KjED+9CpAo0eclIYgw0Gf
+         iCudtjEcXerCI0L9ncIT2Hnb9npcDG8WSzptXDVU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lucas Stach <l.stach@pengutronix.de>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 13/59] irqchip/irq-imx-gpcv2: Forward irq type to parent
-Date:   Tue,  6 Aug 2019 17:32:33 -0400
-Message-Id: <20190806213319.19203-13-sashal@kernel.org>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.2 14/59] f2fs: fix to read source block before invalidating it
+Date:   Tue,  6 Aug 2019 17:32:34 -0400
+Message-Id: <20190806213319.19203-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213319.19203-1-sashal@kernel.org>
 References: <20190806213319.19203-1-sashal@kernel.org>
@@ -58,33 +59,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+From: Jaegeuk Kim <jaegeuk@kernel.org>
 
-[ Upstream commit 9a446ef08f3bfc0c3deb9c6be840af2528ef8cf8 ]
+[ Upstream commit 543b8c468f55f27f3c0178a22a91a51aabbbc428 ]
 
-The GPCv2 is a stacked IRQ controller below the ARM GIC. It doesn't
-care about the IRQ type itself, but needs to forward the type to the
-parent IRQ controller, so this one can be configured correctly.
+f2fs_allocate_data_block() invalidates old block address and enable new block
+address. Then, if we try to read old block by f2fs_submit_page_bio(), it will
+give WARN due to reading invalid blocks.
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
+Let's make the order sanely back.
+
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-imx-gpcv2.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/f2fs/gc.c | 70 +++++++++++++++++++++++++---------------------------
+ 1 file changed, 34 insertions(+), 36 deletions(-)
 
-diff --git a/drivers/irqchip/irq-imx-gpcv2.c b/drivers/irqchip/irq-imx-gpcv2.c
-index bf2237ac5d091..4f74c15c47555 100644
---- a/drivers/irqchip/irq-imx-gpcv2.c
-+++ b/drivers/irqchip/irq-imx-gpcv2.c
-@@ -131,6 +131,7 @@ static struct irq_chip gpcv2_irqchip_data_chip = {
- 	.irq_unmask		= imx_gpcv2_irq_unmask,
- 	.irq_set_wake		= imx_gpcv2_irq_set_wake,
- 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
-+	.irq_set_type		= irq_chip_set_type_parent,
- #ifdef CONFIG_SMP
- 	.irq_set_affinity	= irq_chip_set_affinity_parent,
- #endif
+diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+index 963fb4571fd98..bb6fd5a506d39 100644
+--- a/fs/f2fs/gc.c
++++ b/fs/f2fs/gc.c
+@@ -794,6 +794,29 @@ static int move_data_block(struct inode *inode, block_t bidx,
+ 	if (lfs_mode)
+ 		down_write(&fio.sbi->io_order_lock);
+ 
++	mpage = f2fs_grab_cache_page(META_MAPPING(fio.sbi),
++					fio.old_blkaddr, false);
++	if (!mpage)
++		goto up_out;
++
++	fio.encrypted_page = mpage;
++
++	/* read source block in mpage */
++	if (!PageUptodate(mpage)) {
++		err = f2fs_submit_page_bio(&fio);
++		if (err) {
++			f2fs_put_page(mpage, 1);
++			goto up_out;
++		}
++		lock_page(mpage);
++		if (unlikely(mpage->mapping != META_MAPPING(fio.sbi) ||
++						!PageUptodate(mpage))) {
++			err = -EIO;
++			f2fs_put_page(mpage, 1);
++			goto up_out;
++		}
++	}
++
+ 	f2fs_allocate_data_block(fio.sbi, NULL, fio.old_blkaddr, &newaddr,
+ 					&sum, CURSEG_COLD_DATA, NULL, false);
+ 
+@@ -801,44 +824,18 @@ static int move_data_block(struct inode *inode, block_t bidx,
+ 				newaddr, FGP_LOCK | FGP_CREAT, GFP_NOFS);
+ 	if (!fio.encrypted_page) {
+ 		err = -ENOMEM;
+-		goto recover_block;
+-	}
+-
+-	mpage = f2fs_pagecache_get_page(META_MAPPING(fio.sbi),
+-					fio.old_blkaddr, FGP_LOCK, GFP_NOFS);
+-	if (mpage) {
+-		bool updated = false;
+-
+-		if (PageUptodate(mpage)) {
+-			memcpy(page_address(fio.encrypted_page),
+-					page_address(mpage), PAGE_SIZE);
+-			updated = true;
+-		}
+ 		f2fs_put_page(mpage, 1);
+-		invalidate_mapping_pages(META_MAPPING(fio.sbi),
+-					fio.old_blkaddr, fio.old_blkaddr);
+-		if (updated)
+-			goto write_page;
+-	}
+-
+-	err = f2fs_submit_page_bio(&fio);
+-	if (err)
+-		goto put_page_out;
+-
+-	/* write page */
+-	lock_page(fio.encrypted_page);
+-
+-	if (unlikely(fio.encrypted_page->mapping != META_MAPPING(fio.sbi))) {
+-		err = -EIO;
+-		goto put_page_out;
+-	}
+-	if (unlikely(!PageUptodate(fio.encrypted_page))) {
+-		err = -EIO;
+-		goto put_page_out;
++		goto recover_block;
+ 	}
+ 
+-write_page:
++	/* write target block */
+ 	f2fs_wait_on_page_writeback(fio.encrypted_page, DATA, true, true);
++	memcpy(page_address(fio.encrypted_page),
++				page_address(mpage), PAGE_SIZE);
++	f2fs_put_page(mpage, 1);
++	invalidate_mapping_pages(META_MAPPING(fio.sbi),
++				fio.old_blkaddr, fio.old_blkaddr);
++
+ 	set_page_dirty(fio.encrypted_page);
+ 	if (clear_page_dirty_for_io(fio.encrypted_page))
+ 		dec_page_count(fio.sbi, F2FS_DIRTY_META);
+@@ -869,11 +866,12 @@ static int move_data_block(struct inode *inode, block_t bidx,
+ put_page_out:
+ 	f2fs_put_page(fio.encrypted_page, 1);
+ recover_block:
+-	if (lfs_mode)
+-		up_write(&fio.sbi->io_order_lock);
+ 	if (err)
+ 		f2fs_do_replace_block(fio.sbi, &sum, newaddr, fio.old_blkaddr,
+ 								true, true);
++up_out:
++	if (lfs_mode)
++		up_write(&fio.sbi->io_order_lock);
+ put_out:
+ 	f2fs_put_dnode(&dn);
+ out:
 -- 
 2.20.1
 
