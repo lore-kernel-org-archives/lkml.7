@@ -2,206 +2,76 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2822CC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F29C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC0D020C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BF142089E
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:33:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732806AbfHFLcp (ORCPT
+        id S1732812AbfHFLdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 07:32:45 -0400
-Received: from ozlabs.org ([203.11.71.1]:56657 "EHLO ozlabs.org"
+        Tue, 6 Aug 2019 07:33:22 -0400
+Received: from verein.lst.de ([213.95.11.211]:55706 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728845AbfHFLcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 07:32:45 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 462sty3LhMz9s7T;
-        Tue,  6 Aug 2019 21:32:42 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
-        "linuxppc-dev\@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "christophe.leroy\@c-s.fr" <christophe.leroy@c-s.fr>,
-        "npiggin\@gmail.com" <npiggin@gmail.com>
-Cc:     "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Grant McEwan <grant.mcewan@alliedtelesis.co.nz>
-Subject: Re: SMP lockup at boot on Freescale/NXP T2080 (powerpc 64)
-In-Reply-To: <4525a16cd3e65f89741b50daf2ec259b6baaab78.camel@alliedtelesis.co.nz>
-References: <1564970785.27215.29.camel@alliedtelesis.co.nz> <4525a16cd3e65f89741b50daf2ec259b6baaab78.camel@alliedtelesis.co.nz>
-Date:   Tue, 06 Aug 2019 21:32:39 +1000
-Message-ID: <87wofqv8a0.fsf@concordia.ellerman.id.au>
+        id S1730399AbfHFLdV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 07:33:21 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id B6461227A81; Tue,  6 Aug 2019 13:33:18 +0200 (CEST)
+Date:   Tue, 6 Aug 2019 13:33:18 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Lucas Stach <l.stach@pengutronix.de>
+Cc:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: Regression due to d98849aff879 (dma-direct: handle
+ DMA_ATTR_NO_KERNEL_MAPPING in common code)
+Message-ID: <20190806113318.GA20215@lst.de>
+References: <1565082809.2323.24.camel@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1565082809.2323.24.camel@pengutronix.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Chris Packham <Chris.Packham@alliedtelesis.co.nz> writes:
-> On Mon, 2019-08-05 at 14:06 +1200, Chris Packham wrote:
->> Hi All,
->> 
->> I have a custom board that uses the Freescale/NXP T2080 SoC.
->> 
->> The board boots fine using v4.19.60 but when I use v5.1.21 it locks
->> up
->> waiting for the other CPUs to come online (earlyprintk output below).
->> If I set maxcpus=0 then the system boots all the way through to
->> userland. The same thing happens with 5.3-rc2.
->> 
->> The defconfig I'm using is 
->> https://gist.github.com/cpackham/f24d0b426f3
->> de0eaaba17b82c3528a9d it was updated from the working v4.19.60
->> defconfig using make olddefconfig.
->> 
->> Does this ring any bells for anyone?
->> 
->> I haven't dug into the differences between the working an non-working
->> versions yet. I'll start looking now.
->
-> I've bisected this to the following commit
+On Tue, Aug 06, 2019 at 11:13:29AM +0200, Lucas Stach wrote:
+> Hi Christoph,
+> 
+> I just found a regression where my NVMe device is no longer able to set
+> up its HMB.
+> 
+> After subject commit dma_direct_alloc_pages() is no longer initializing
+> dma_handle properly when DMA_ATTR_NO_KERNEL_MAPPING is set, as the
+> function is now returning too early.
+> 
+> Now this could easily be fixed by adding the phy_to_dma translation to
+> the NO_KERNEL_MAPPING code path, but I'm not sure how this stuff
+> interacts with the memory encryption stuff set up later in the
+> function, so I guess this should be looked at by someone with more
+> experience with this code than me.
 
-Thanks that's super helpful.
+There is not much we can do about the memory encryption case here,
+as that requires a kernel address to mark the memory as unencrypted.
 
-> commit ed1cd6deb013a11959d17a94e35ce159197632da
-> Author: Christophe Leroy <christophe.leroy@c-s.fr>
-> Date:   Thu Jan 31 10:08:58 2019 +0000
->
->     powerpc: Activate CONFIG_THREAD_INFO_IN_TASK
->     
->     This patch activates CONFIG_THREAD_INFO_IN_TASK which
->     moves the thread_info into task_struct.
->
-> I'll be the first to admit this is well beyond my area of knowledge so
-> I'm unsure what about this patch is problematic but I can be fairly
-> sure that a build immediately before this patch works while a build
-> with this patch hangs.
-
-It makes a pretty fundamental change to the way the kernel stores some
-information about each task, moving it off the stack and into the task
-struct.
-
-It definitely has the potential to break things, but I thought we had
-reasonable test coverage of the Book3E platforms, I have a p5020ds
-(e5500) that I boot as part of my CI.
-
-Aha. If I take your config and try to boot it on my p5020ds I get the
-same behaviour, stuck at SMP bringup. So it seems it's something in your
-config vs corenet64_smp_defconfig that is triggering the bug.
-
-Can you try bisecting what in the config triggers it?
-
-To do that you checkout ed1cd6deb013a11959d17a94e35ce159197632da, then
-you build/boot with corenet64_smp_defconfig to confirm it works. Then
-you use tools/testing/ktest/config-bisect.pl to bisect the changes in
-the .config.
-
-cheers
+So the obvious trivial fix is probably the right one:
 
 
->> Booting...
->> MMU: Supported page sizes
->>          4 KB as direct
->>       2048 KB as direct & indirect
->>       4096 KB as direct
->>      16384 KB as direct
->>      65536 KB as direct
->>     262144 KB as direct
->>    1048576 KB as direct
->> MMU: Book3E HW tablewalk enabled
->> Linux version 5.1.21-at1+ (@chrisp-dl) (gcc version 4.9.3 (crosstool-
->> NG 
->> crosstool-ng-1.22.0)) #24 SMP PREEMPT Mon Aug 5 01:42:00 UTC 2019
->> Found initrd at 0xc00000002f045000:0xc000000030000000
->> Using CoreNet Generic machine description
->> Found legacy serial port 0 for /soc@ffe000000/serial@11c500
->>   mem=ffe11c500, taddr=ffe11c500, irq=0, clk=300000000, speed=0
->> Found legacy serial port 1 for /soc@ffe000000/serial@11c600
->>   mem=ffe11c600, taddr=ffe11c600, irq=0, clk=300000000, speed=0
->> Found legacy serial port 2 for /soc@ffe000000/serial@11d500
->>   mem=ffe11d500, taddr=ffe11d500, irq=0, clk=300000000, speed=0
->> Found legacy serial port 3 for /soc@ffe000000/serial@11d600
->>   mem=ffe11d600, taddr=ffe11d600, irq=0, clk=300000000, speed=0
->> printk: bootconsole [udbg0] enabled
->> CPU maps initialized for 2 threads per core
->>  (thread shift is 1)
->> Allocated 1856 bytes for 8 pacas
->> -----------------------------------------------------
->> phys_mem_size     = 0x100000000
->> dcache_bsize      = 0x40
->> icache_bsize      = 0x40
->> cpu_features      = 0x00000003009003b6
->>   possible        = 0x00000003009003b6
->>   always          = 0x00000003008003b4
->> cpu_user_features = 0xdc008000 0x08000000
->> mmu_features      = 0x000a0010
->> firmware_features = 0x0000000000000000
->> -----------------------------------------------------
->> CoreNet Generic board
->> barrier-nospec: using isync; sync as speculation barrier
->> barrier-nospec: patched 412 locations
->> Top of RAM: 0x100000000, Total RAM: 0x100000000
->> Memory hole size: 0MB
->> Zone ranges:
->>   DMA      [mem 0x0000000000000000-0x000000007fffefff]
->>   Normal   [mem 0x000000007ffff000-0x00000000ffffffff]
->> Movable zone start for each node
->> Early memory node ranges
->>   node   0: [mem 0x0000000000000000-0x00000000ffffffff]
->> Initmem setup node 0 [mem 0x0000000000000000-0x00000000ffffffff]
->> On node 0 totalpages: 1048576
->>   DMA zone: 7168 pages used for memmap
->>   DMA zone: 0 pages reserved
->>   DMA zone: 524287 pages, LIFO batch:63
->>   Normal zone: 7169 pages used for memmap
->>   Normal zone: 524289 pages, LIFO batch:63
->> MMU: Allocated 2112 bytes of context maps for 255 contexts
->> percpu: Embedded 22 pages/cpu s49304 r0 d40808 u131072
->> pcpu-alloc: s49304 r0 d40808 u131072 alloc=1*1048576
->> pcpu-alloc: [0] 0 1 2 3 4 5 6 7 
->> Built 1 zonelists, mobility grouping on.  Total pages: 1034239
->> Kernel command line: console=ttyS0,115200 root=/dev/ram0
->> releasefile=linuxbox_ppc64_e6500mc-tb233.rel bootversion=6.2.7
->> loglevel=8 mtdoops.mtddev=errlog
->> mtdparts=fff800000.flash:4088M(user),8M(errlog)
->> earlyprintk=ttyS0,115200 real_init=
->> /bin/sh securitylevel=1 reladdr=0x1000000,1522523
->> printk: log_buf_len individual max cpu contribution: 4096 bytes
->> printk: log_buf_len total cpu_extra contributions: 28672 bytes
->> printk: log_buf_len min size: 16384 bytes
->> printk: log_buf_len: 65536 bytes
->> printk: early log buf free: 12412(75%)
->> Dentry cache hash table entries: 524288 (order: 10, 4194304 bytes)
->> Inode-cache hash table entries: 262144 (order: 9, 2097152 bytes)
->> Memory: 3979284K/4194304K available (8704K kernel code, 1584K rwdata,
->> 2496K rodata, 472K init, 299K bss, 215020K reserved, 0K cma-reserved)
->> SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=8, Nodes=1
->> rcu: Preemptible hierarchical RCU implementation.
->> rcu:    RCU event tracing is enabled.
->>         Tasks RCU enabled.
->> rcu: RCU calculated value of scheduler-enlistment delay is 25
->> jiffies.
->> NR_IRQS: 512, nr_irqs: 512, preallocated irqs: 16
->> mpic: Setting up MPIC " OpenPIC  " version 1.2 at ffe040000, max 8
->> CPUs
->> mpic: ISU size: 512, shift: 9, mask: 1ff
->> mpic: Initializing for 512 sources
->> time_init: decrementer frequency = 37.500000 MHz
->> time_init: processor frequency   = 1500.000000 MHz
->> clocksource: timebase: mask: 0xffffffffffffffff max_cycles:
->> 0x8a60dd6a9, max_idle_ns: 440795204056 ns
->> clocksource: timebase mult[1aaaaaab] shift[24] registered
->> clockevent: decrementer mult[999999a] shift[32] cpu[0]
->> pid_max: default: 32768 minimum: 301
->> Mount-cache hash table entries: 8192 (order: 4, 65536 bytes)
->> Mountpoint-cache hash table entries: 8192 (order: 4, 65536 bytes)
->> e6500 family performance monitor hardware support registered
->> rcu: Hierarchical SRCU implementation.
->> smp: Bringing up secondary CPUs ...
+diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+index 59bdceea3737..c49120193309 100644
+--- a/kernel/dma/direct.c
++++ b/kernel/dma/direct.c
+@@ -135,6 +135,7 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
+ 		if (!PageHighMem(page))
+ 			arch_dma_prep_coherent(page, size);
+ 		/* return the page pointer as the opaque cookie */
++		*dma_handle = phys_to_dma(dev, page_to_phys(page));
+ 		return page;
+ 	}
+ 
