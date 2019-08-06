@@ -2,200 +2,133 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF80C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B30DC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4510420C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D38392075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:53:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="eZwyX0IY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YDWulAFE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387951AbfHFQsZ (ORCPT
+        id S1733161AbfHFQxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 12:48:25 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:37098 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732788AbfHFQsY (ORCPT
+        Tue, 6 Aug 2019 12:53:52 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34285 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728927AbfHFQxw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 12:48:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=2xbU9eGH8Hn5AbLibXFA8i2BhIbjPGsDxSHEGclO7DY=; b=eZwyX0IYZ2o1mynwE2Hz8BgOn
-        1IYSUKBfERotJIfG9zTtzX0bg4i08mQ5mMz6MCpMov84N9NI9dKaErTO39e8hveags+aR+z+d61qP
-        W3w6jej9QozJBNVBhiIvdTj7/8x21XG296MB4TCw5PA3XToUIUHcmZVo2bgcj29giaXjSaRwo5m1i
-        apKc2Nx+v1j2CSPgt0VzhW9CxMtyl+lhnoPIf1/QpSd7MesE+kISmudz2+Jf9n3t9voIsXSyen3WY
-        +ze92NX2gq4pRI9lO51qHr+H7EmvaTCALnfcgZUyl64IRxEtq2PKmgi/japG58C1Z2+kdJ8eNmMbW
-        Nmv4H0fpQ==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:49228)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hv2dF-0000TH-Ou; Tue, 06 Aug 2019 17:48:17 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hv2dE-0000fq-Mb; Tue, 06 Aug 2019 17:48:16 +0100
-Date:   Tue, 6 Aug 2019 17:48:16 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Will Deacon <will@kernel.org>
-Cc:     Shawn Anastasio <shawn@anastas.io>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] dma-mapping: fix page attributes for dma_mmap_*
-Message-ID: <20190806164816.GE1330@shell.armlinux.org.uk>
-References: <20190801142118.21225-1-hch@lst.de>
- <20190801142118.21225-2-hch@lst.de>
- <20190801162305.3m32chycsdjmdejk@willie-the-truck>
- <20190801163457.GB26588@lst.de>
- <20190801164411.kmsl4japtfkgvzxe@willie-the-truck>
- <20190802081441.GA9725@lst.de>
- <20190802103803.3qrbhqwxlasojsco@willie-the-truck>
- <20190803064812.GA29746@lst.de>
- <20190806160854.htk67msiyadlrl4m@willie-the-truck>
- <20190806164503.GD1330@shell.armlinux.org.uk>
+        Tue, 6 Aug 2019 12:53:52 -0400
+Received: by mail-wr1-f66.google.com with SMTP id 31so88635084wrm.1;
+        Tue, 06 Aug 2019 09:53:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=gxNkkJD3b/WJ2BCN1yM/UBEgODs/xbGIxyPlrinnovU=;
+        b=YDWulAFE5M1Cj2s64V8j8s4cLZ1QNjqZ5aD10HE/qncnQNsNiWNP1srKy9Z936zPzZ
+         GfLtuLfTfrrKO3l7ixtUHK6aIHkRVgaik5+aOyFeBIxlxV7xPMyeKBLP45ubBVWxqsvG
+         wv/eUSKpDGVhO/g1WIJNOS0+R9Wfm8cnW8QIO5tIdAWAE7WTYI7POS3z35s1jXLnCod4
+         CWXJQqx3mhYa908hr5zPh9VqNo/osxl0WXgr26ayPgSZw6kCEbUbyRkHjfamOz2yZxLr
+         yYLSsxfbZ8JDyt/lxippVAe3faaTsN4WpYs1vq6t0UsM2gnR9HGI8OGgrzC6l8M2QSke
+         UBOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=gxNkkJD3b/WJ2BCN1yM/UBEgODs/xbGIxyPlrinnovU=;
+        b=QdON+hfanZRqD8cCT+topmyEO3sUEoaRjRnbCJzwxR7wzyRKdss6V4z/oGqbcYIJuj
+         yEAaQiUcSup0dOdcD9704qezWV+sWG1649aB0XfFkQQJR04fHe/YGNfYFqsFg8i0ZOfn
+         E7m3K+9bmLrM6UFrpV53BF3uGz9DFUIKFAUGrwC7iCjQbypQLGew8GOwizn2+GhNsm/J
+         cxaYwQfOU0PC0Sq6CiBr7fimv4dj1maER6Z2UMwo7zjXBU2FJLcJZzN4gGa9IqGb50gr
+         7+4FW0NFPgS4au0CWlzRToaxcQhXO5aRkb/kCss2WZ0RUdgZXmmDnGd2yFpHBmEeq7PW
+         FVPw==
+X-Gm-Message-State: APjAAAUkO6rERWhiSm/BEasrlWqr0J7WYWt6A4e5dn83yDbPHg6cB6uQ
+        MwfZoOfZmUvpESFBrb9ez0bB0zkX
+X-Google-Smtp-Source: APXvYqwkEM8/7FtU/qIz2EzqolfwDqNOFGtE+29zXZgsxLDAnchWnPtpfHMtQFGIzAti+86XMVHClQ==
+X-Received: by 2002:adf:ec49:: with SMTP id w9mr5292515wrn.303.1565110429245;
+        Tue, 06 Aug 2019 09:53:49 -0700 (PDT)
+Received: from [172.30.90.245] (sjewanfw1-nat.mentorg.com. [139.181.7.34])
+        by smtp.gmail.com with ESMTPSA id l15sm2581667wrq.64.2019.08.06.09.53.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 06 Aug 2019 09:53:48 -0700 (PDT)
+Subject: Re: [PATCH 04/22] media: Move v4l2_fwnode_parse_link from v4l2 to
+ driver base
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Hyun Kwon <hyun.kwon@xilinx.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Len Brown <lenb@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Enrico Weigelt <info@metux.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/ZYNQ ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        "open list:ACPI" <linux-acpi@vger.kernel.org>
+References: <20190805233505.21167-1-slongerbeam@gmail.com>
+ <20190805233505.21167-5-slongerbeam@gmail.com>
+ <CAHp75VcOh8bOf_s6t0ehwGtcYn64QFGj303SVvpHrztEOhTRgg@mail.gmail.com>
+From:   Steve Longerbeam <slongerbeam@gmail.com>
+Message-ID: <4750b347-b421-6569-600f-0ced8406460e@gmail.com>
+Date:   Tue, 6 Aug 2019 09:53:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190806164503.GD1330@shell.armlinux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAHp75VcOh8bOf_s6t0ehwGtcYn64QFGj303SVvpHrztEOhTRgg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 05:45:03PM +0100, Russell King - ARM Linux admin wrote:
-> On Tue, Aug 06, 2019 at 05:08:54PM +0100, Will Deacon wrote:
-> > On Sat, Aug 03, 2019 at 08:48:12AM +0200, Christoph Hellwig wrote:
-> > > On Fri, Aug 02, 2019 at 11:38:03AM +0100, Will Deacon wrote:
-> > > > 
-> > > > So this boils down to a terminology mismatch. The Arm architecture doesn't have
-> > > > anything called "write combine", so in Linux we instead provide what the Arm
-> > > > architecture calls "Normal non-cacheable" memory for pgprot_writecombine().
-> > > > Amongst other things, this memory type permits speculation, unaligned accesses
-> > > > and merging of writes. I found something in the architecture spec about
-> > > > non-cachable memory, but it's written in Armglish[1].
-> > > > 
-> > > > pgprot_noncached(), on the other hand, provides what the architecture calls
-> > > > Strongly Ordered or Device-nGnRnE memory. This is intended for mapping MMIO
-> > > > (i.e. PCI config space) and therefore forbids speculation, preserves access
-> > > > size, requires strict alignment and also forces write responses to come from
-> > > > the endpoint.
-> > > > 
-> > > > I think the naming mismatch is historical, but on arm64 we wanted to use the
-> > > > same names as arm32 so that any drivers using these things directly would get
-> > > > the same behaviour.
-> > > 
-> > > That all makes sense, but it totally needs a comment.  I'll try to draft
-> > > one based on this.  I've also looked at the arm32 code a bit more, and
-> > > it seems arm always (?) supported Normal non-cacheable attribute, but
-> > > Linux only optionally uses it for arm v6+ because of fears of drivers
-> > > missing barriers.
-> > 
-> > I think it was also to do with aliasing, but I don't recall all of the
-> > details.
-> 
-> ARMv6+ is where the architecture significantly changed to introduce
-> the idea of [Normal, Device, Strongly Ordered] where Normal has the
-> cache attributes.
-> 
-> Before that, we had just "uncached/unbuffered, uncached/buffered,
-> cached/unbuffered, cached/buffered" modes.
-> 
-> The write buffer (enabled by buffered modes) has no architected
-> guarantees about how long writes will sit in it, and there is only
-> the "drain write buffer" instruction to push writes out.
-> 
-> Up to and including ARMv5, we took the easy approach of just using
-> the "uncached/unbuffered" mode since that is (a) the safest, and (b)
-> avoids write buffers that alias when there are multiple different
-> mappings.
-> 
-> We could have used a different approach, making all IO writes contain
-> a "drain write buffer" instruction, and map DMA memory as "buffered",
-> but as there were no Linux barriers defined to order memory accesses
-> to DMA memory (so, for example, ring buffers can be updated in the
-> correct order) back in those days, using the uncached/unbuffered mode
-> was the sanest and most reliable solution.
-> 
-> > 
-> > > The other really weird things is that in arm32
-> > > pgprot_dmacoherent incudes the L_PTE_XN bit, which from my understanding
-> > > is the no-execture bit, but pgprot_writecombine does not.  This seems to
-> > > not very unintentional.  So minus that the whole DMA_ATTR_WRITE_COMBІNE
-> > > seems to be about flagging old arm specific drivers as having the proper
-> > > barriers in places and otherwise is a no-op.
-> > 
-> > I think it only matters for Armv7 CPUs, but yes, we should probably be
-> > setting L_PTE_XN for both of these memory types.
-> 
-> Conventionally, pgprot_writecombine() has only been used to change
-> the memory type and not the permissions.  Since writecombine memory
-> is still capable of being executed, I don't see any reason to set XN
-> for it.
-> 
-> If the user wishes to mmap() using PROT_READ|PROT_EXEC, then is there
-> really a reason for writecombine to set XN overriding the user?
-> 
-> That said, pgprot_writecombine() is mostly used for framebuffers, which
-> arguably shouldn't be executable anyway - but who'd want to mmap() the
-> framebuffer with PROT_EXEC?
-> 
-> > 
-> > > Here is my tentative plan:
-> > > 
-> > >  - respin this patch with a small fix to handle the
-> > >    DMA_ATTR_NON_CONSISTENT (as in ignore it unless actually supported),
-> > >    but keep the name as-is to avoid churn.  This should allow 5.3
-> > >    inclusion and backports
-> > >  - remove DMA_ATTR_WRITE_COMBINE support from mips, probably also 5.3
-> > >    material.
-> > >  - move all architectures but arm over to just define
-> > >    pgprot_dmacoherent, including a comment with the above explanation
-> > >    for arm64.
-> > 
-> > That would be great, thanks.
-> > 
-> > >  - make DMA_ATTR_WRITE_COMBINE a no-op and schedule it for removal,
-> > >    thus removing the last instances of arch_dma_mmap_pgprot
-> > 
-> > All sounds good to me, although I suppose 32-bit Arm platforms without
-> > CONFIG_ARM_DMA_MEM_BUFFERABLE may run into issues if DMA_ATTR_WRITE_COMBINE
-> > disappears. Only one way to find out...
-> 
-> Looking at the results of grep, I think only OMAP2+ and Exynos may be
-> affected.
-> 
-> However, removing writecombine support from the DMA API is going to
-> have a huge impact for framebuffers on earlier ARMs - that's where we
-> do expect framebuffers to be mapped "uncached/buffered" for performance
-> reasons and not "uncached/unbuffered".  It's quite literally the
-> difference between console scrolling being usable and totally unusable.
-> 
-> Given what I've said above, switching to using buffered mode for normal
-> DMA mappings is data-corrupting risky - as in your filesystem could get
-> fried.  I don't think we should play fast and loose with people's data
-> by randomly changing that "because we'd like to", and I don't see that
-> screwing the console is really an option either.
+Hi Andy,
 
-Sorry, I forgot to explain - the reason is dma_alloc_writecombine()
-internally uses DMA_ATTR_WRITE_COMBINE, which I'd forgotten about
-when grepping - so there's potentially way more users than my greps
-above found.
+On 8/5/19 11:41 PM, Andy Shevchenko wrote:
+> On Tue, Aug 6, 2019 at 2:37 AM Steve Longerbeam <slongerbeam@gmail.com> wrote:
+>> There is nothing v4l2-specific about v4l2_fwnode_{parse|put}_link().
+>> Make these functions more generally available by moving them to driver
+>> base, with the appropriate name changes to the functions and struct.
+>>
+>> In the process embed a 'struct fwnode_endpoint' in 'struct fwnode_link'
+>> for both sides of the link, and make use of fwnode_graph_parse_endpoint()
+>> to fully parse both endpoints. Rename members local_node and
+>> remote_node to more descriptive local_port_parent and
+>> remote_port_parent.
+>>
+> May I ask if it's going to be used outside of v4l2?
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+It could be, I can see fwnode_graph_parse_link() being useful in DRM, 
+for example. But at this, only media core and v4l2 are making use of it.
+
+This patch was created so that fwnode links can be parsed in a new media 
+core function that forms media links from fwnode links.
+
+The full patchset doesn't seem to be up yet, but see [1] for the cover 
+letter.
+
+Steve
+
+[1] https://www.mail-archive.com/linux-media@vger.kernel.org/msg148910.html
