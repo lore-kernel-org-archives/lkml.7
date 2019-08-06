@@ -2,103 +2,187 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB5AC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 01:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B190FC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 01:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 093C2214C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 01:20:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C1B52147A
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 01:22:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I4hS4PEo"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZAFMx35A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731219AbfHFBUd (ORCPT
+        id S1731245AbfHFBWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 21:20:33 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45434 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728851AbfHFBUd (ORCPT
+        Mon, 5 Aug 2019 21:22:17 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:43686 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728870AbfHFBWQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 21:20:33 -0400
-Received: by mail-pf1-f195.google.com with SMTP id r1so40527348pfq.12;
-        Mon, 05 Aug 2019 18:20:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mtYMlQz5eR4+kIe+tAhZIY/OAiGfRw2YuZyhkg6PTbo=;
-        b=I4hS4PEoJyvL+rw1aye+bkuNyFTmZHeIiI7RFxBXJ0CuNP49MtEx6c4dDp0dM/tsx/
-         htvzfDxZ5r+0xq/giBKycsgk0ooQTnliw8jAdM/W7Q3ZOPIXKO2qQyyIEZllNw9fCaCK
-         AFdoMHbbELxkIctqol+apII3pU0v0VXRJ+BZTJNcArgxrMpmPImidiNKJGa2PwyGiGNv
-         o8knT7XYXIG+Goz56jLAprXlNR6Ro/Kzov23naZj39nZRkay4wQSSRKGepoZcGaR4LWM
-         AS12+SoRSLzpL24lbVcgQ/5ahDrIgIt89rGuB5PPO3/lXQeKGmqNafdrVjeefbqsXOSG
-         JgRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mtYMlQz5eR4+kIe+tAhZIY/OAiGfRw2YuZyhkg6PTbo=;
-        b=BRp0WiGNesg3UtanXmlWzRTp0wUgepVuHJD5ipbkYbAuGeU+B3WI2VEl+GIBxLCZsa
-         ArAXwkRZFLLIVz7ssszBnxKglfIEpTZrXBgPSH7vMkr4bOmRLmt0K2C/tBwNfZGhXdWm
-         qr2hJNEAfQJ+jk8ktNwvet3JQOmZK7dmj5CP7ODzUTbHWsCGL/tn4z74NH+NRlcWZF7t
-         SoUuwqTLR8/xAmrlHksL3VytZFTKtZpyztpUNqHUavTKTQsKuuC/XevxP3zMts1foK09
-         v1BBbZR27gUcEz1sIkmOOUt0ZVXUovXkpg/4ap5rdWsP82g4V6cemU4uEdWEsK8cETCJ
-         j8IQ==
-X-Gm-Message-State: APjAAAWmpkRS6UE8gdCPvT4TcblrdS+ChN4AOhV2IFmqeCT+MHHkRZm2
-        BEu6eJdj01Ffo+rRTjoTmQQ=
-X-Google-Smtp-Source: APXvYqyk8tVOqj3JMVpCjtlfaOGnmhUXY3kE6uE0j7jKcIcNic1rF0xLGvreX1yB+YVxBYd2ICFGvQ==
-X-Received: by 2002:a62:63c7:: with SMTP id x190mr842306pfb.181.1565054432856;
-        Mon, 05 Aug 2019 18:20:32 -0700 (PDT)
-Received: from localhost ([175.223.3.169])
-        by smtp.gmail.com with ESMTPSA id b3sm101609286pfp.65.2019.08.05.18.20.30
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 05 Aug 2019 18:20:31 -0700 (PDT)
-Date:   Tue, 6 Aug 2019 10:20:27 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        David Howells <dhowells@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCHv2 2/3] i915: convert to new mount API
-Message-ID: <20190806012027.GA6149@jagdpanzerIV>
-References: <20190805160307.5418-1-sergey.senozhatsky@gmail.com>
- <20190805160307.5418-3-sergey.senozhatsky@gmail.com>
- <20190805181255.GH1131@ZenIV.linux.org.uk>
+        Mon, 5 Aug 2019 21:22:16 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x761Ilxb060018;
+        Tue, 6 Aug 2019 01:22:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=7mqtDNQW17wh8jjWUIS7aCzHRrfrEOkRi+bBZ0RKygQ=;
+ b=ZAFMx35AFg+cTadk7K9Rmqm8hWz9h8f08/Dk+mZ1qj5rzJL2U+5a3yWDxoaeQp0cfzUQ
+ /6/u3SargjukblITQiWeHWoT9VZCNOFLl40z2BMBcxPfZlMXFeteSh8XQPNHbs5zNHQ3
+ Q9LxVp80GCIa3kvP7ajvDYgH3KqM0z6ulcsiE+n0wvgbwD76mxxjOCUm6ggMSE7INJEx
+ /Jd3g9J+7/Rjco6rwp/aMccmvHQQlZduGxE1tMEZJ6wdflooZLowkjk9eORaRAlHb79u
+ kSiHwCSXcLzc99YwB2ZF6dn2Hd6mqDhr9SrgoOP1oqm4LU0Cho53PCZ8o5rpJX0Sni1C pw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2u51pttpr7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 06 Aug 2019 01:22:11 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x761Hg6a126547;
+        Tue, 6 Aug 2019 01:22:11 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2u4ycubjjc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 06 Aug 2019 01:22:11 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x761M9P4010568;
+        Tue, 6 Aug 2019 01:22:10 GMT
+Received: from [10.182.69.106] (/10.182.69.106)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 05 Aug 2019 18:22:09 -0700
+Subject: Re: [PATCH] block: fix RO partition with RW disk
+To:     Junxiao Bi <junxiao.bi@oracle.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        axboe@kernel.dk, martin.petersen@oracle.com,
+        "osandov@fb.com" <osandov@fb.com>
+References: <20190805200138.28098-1-junxiao.bi@oracle.com>
+From:   Dongli Zhang <dongli.zhang@oracle.com>
+Message-ID: <d587ff2b-2dd0-4aca-3d9c-f127a03e0314@oracle.com>
+Date:   Tue, 6 Aug 2019 09:22:14 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190805181255.GH1131@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190805200138.28098-1-junxiao.bi@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9340 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908060013
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9340 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908060013
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (08/05/19 19:12), Al Viro wrote:
-[..]
-> On Tue, Aug 06, 2019 at 01:03:06AM +0900, Sergey Senozhatsky wrote:
-> > tmpfs does not set ->remount_fs() anymore and its users need
-> > to be converted to new mount API.
+Hi Junxiao,
+
+While this is reported by md, is it possible to reproduce the error on purpose
+with other device (e.g., loop) and add a test to blktests?
+
+Dongli Zhang
+
+On 8/6/19 4:01 AM, Junxiao Bi wrote:
+> When md raid1 was used with imsm metadata, during the boot stage,
+> the raid device will first be set to readonly, then mdmon will set
+> it read-write later. When there were some partitions in this device,
+> the following race would make some partition left ro and fail to mount.
 > 
-> Could you explain why the devil do you bother with remount at all?
-
-I would redirect this question to i915 developers. As far as I know
-i915 performance suffers with huge pages enabled.
-
-> Why not pass the right options when mounting the damn thing?
-
-vfs_kern_mount()? It still requires struct file_system_type, which
-we need to get and put.
-
-	-ss
+> CPU 1:                                                 CPU 2:
+> add_partition()                                        set_disk_ro() //set disk RW
+>  //disk was RO, so partition set to RO
+>  p->policy = get_disk_ro(disk);
+>                                                         if (disk->part0.policy != flag) {
+>                                                             set_disk_ro_uevent(disk, flag);
+>                                                             // disk set to RW
+>                                                             disk->part0.policy = flag;
+>                                                         }
+>                                                         // set all exit partition to RW
+>                                                         while ((part = disk_part_iter_next(&piter)))
+>                                                             part->policy = flag;
+>  // this part was not yet added, so it was still RO
+>  rcu_assign_pointer(ptbl->part[partno], p);
+> 
+> Move RO status setting of partitions after they were added into partition
+> table and introduce a mutex to sync RO status between disk and partitions.
+> 
+> Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
+> ---
+>  block/genhd.c             | 3 +++
+>  block/partition-generic.c | 5 ++++-
+>  include/linux/genhd.h     | 1 +
+>  3 files changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/block/genhd.c b/block/genhd.c
+> index 54f1f0d381f4..f3cce1d354cf 100644
+> --- a/block/genhd.c
+> +++ b/block/genhd.c
+> @@ -1479,6 +1479,7 @@ struct gendisk *__alloc_disk_node(int minors, int node_id)
+>  		}
+>  		ptbl = rcu_dereference_protected(disk->part_tbl, 1);
+>  		rcu_assign_pointer(ptbl->part[0], &disk->part0);
+> +		mutex_init(&disk->part_lock);
+>  
+>  		/*
+>  		 * set_capacity() and get_capacity() currently don't use
+> @@ -1570,6 +1571,7 @@ void set_disk_ro(struct gendisk *disk, int flag)
+>  	struct disk_part_iter piter;
+>  	struct hd_struct *part;
+>  
+> +	mutex_lock(&disk->part_lock);
+>  	if (disk->part0.policy != flag) {
+>  		set_disk_ro_uevent(disk, flag);
+>  		disk->part0.policy = flag;
+> @@ -1579,6 +1581,7 @@ void set_disk_ro(struct gendisk *disk, int flag)
+>  	while ((part = disk_part_iter_next(&piter)))
+>  		part->policy = flag;
+>  	disk_part_iter_exit(&piter);
+> +	mutex_unlock(&disk->part_lock);
+>  }
+>  
+>  EXPORT_SYMBOL(set_disk_ro);
+> diff --git a/block/partition-generic.c b/block/partition-generic.c
+> index aee643ce13d1..63cb6fb996ff 100644
+> --- a/block/partition-generic.c
+> +++ b/block/partition-generic.c
+> @@ -345,7 +345,6 @@ struct hd_struct *add_partition(struct gendisk *disk, int partno,
+>  		queue_limit_discard_alignment(&disk->queue->limits, start);
+>  	p->nr_sects = len;
+>  	p->partno = partno;
+> -	p->policy = get_disk_ro(disk);
+>  
+>  	if (info) {
+>  		struct partition_meta_info *pinfo = alloc_part_info(disk);
+> @@ -401,6 +400,10 @@ struct hd_struct *add_partition(struct gendisk *disk, int partno,
+>  	/* everything is up and running, commence */
+>  	rcu_assign_pointer(ptbl->part[partno], p);
+>  
+> +	mutex_lock(&disk->part_lock);
+> +	p->policy = get_disk_ro(disk);
+> +	mutex_unlock(&disk->part_lock);
+> +
+>  	/* suppress uevent if the disk suppresses it */
+>  	if (!dev_get_uevent_suppress(ddev))
+>  		kobject_uevent(&pdev->kobj, KOBJ_ADD);
+> diff --git a/include/linux/genhd.h b/include/linux/genhd.h
+> index 8b5330dd5ac0..df6ddca8a92c 100644
+> --- a/include/linux/genhd.h
+> +++ b/include/linux/genhd.h
+> @@ -201,6 +201,7 @@ struct gendisk {
+>  	 */
+>  	struct disk_part_tbl __rcu *part_tbl;
+>  	struct hd_struct part0;
+> +	struct mutex part_lock;
+>  
+>  	const struct block_device_operations *fops;
+>  	struct request_queue *queue;
+> 
