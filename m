@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36541C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1567C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFFCF20665
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:16:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91BBC21743
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:16:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="gl65vyO7"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="PQ0M61X7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731980AbfHFNQ1 (ORCPT
+        id S1731856AbfHFNQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 09:16:27 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:58078 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726713AbfHFNQ0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 6 Aug 2019 09:16:26 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:58048 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726036AbfHFNQZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 09:16:25 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 1D2A1C21BE;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 0CA3BC013F;
         Tue,  6 Aug 2019 13:16:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1565097385; bh=opvibQbBIJ9hPlS0cfa2HRwHJqvFyO5wQchN17Kouis=;
+        t=1565097385; bh=PzcmJCbPYX+OZLIvi4MBaIkFWoGiqDdFjnCO2Yf+1qA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=gl65vyO70WuPrNU99j3+rcaGPQE9v0MaLBbO4SGX4mm4j9niN+dkuOcxlB9oHrywT
-         QLhGyx7fW7cJrz6Wis3wMyWcsD8h+bitUGhRVJdlpAvVVH7e88SDzKnlAwwRuy4GL+
-         Gk2BTFjbWpkdbm04W89UapSOgCJ3aPayfkvR7VtKJ8nVqFa/F1H2UIhPaHTwK32YLd
-         t9oHylsakXSlhCNzy0AdaVcqK+tUnALY3Whj+ZArNFtPtI9QUsmHDjjP2QJBjjH0dt
-         oNRP3f1vnGgxK+q9Lx+2M0gFrn6xya1rua9kTjmEmwdqSoReL+Sph+zX0Y+Yo71Jhf
-         X50G6IQE6yMEA==
+        b=PQ0M61X75mVCtSfdIwcov/QfjFYGmeniEFTzxj0Bjc8AFoOMbYNX6VtD9h5b+cqbN
+         D4By4TIItzc7Av42E52DkK+LDZ5KvJMENwhZe9k5IwK/cNsQmTVKo/LQyi5bFbI154
+         quix5DFKMnKhJ/Mj+4HA5Bu2pS6ftM6Mglz6pYzEdPq87cpgEugEBKpxvbK68qDO+T
+         Ufi8f+kPQ1sjy8N2tvXPI8g4XThYOtQGaQrMmPFvvWqu6vywvDSdkUpYYo030XaYHu
+         uYuYiL75K/ma0ODgh1P7odkN+zJzQT12w0I3mXNn71dL2QhNeiy0XRyUbBcT3XYiqq
+         pPBuax+CeXqbQ==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id CF8E8A0066;
+        by mailhost.synopsys.com (Postfix) with ESMTP id BBFCFA0063;
         Tue,  6 Aug 2019 13:16:23 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
@@ -51,9 +51,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net 3/3] net: stmmac: tc: Do not return a fragment entry
-Date:   Tue,  6 Aug 2019 15:16:18 +0200
-Message-Id: <67f380701fc127022e1d5a0922725bdf1bc185f4.1565097294.git.joabreu@synopsys.com>
+Subject: [PATCH net 2/3] net: stmmac: Fix issues when number of Queues >= 4
+Date:   Tue,  6 Aug 2019 15:16:17 +0200
+Message-Id: <ce1579192a4efa265db973dedd04e88150e67799.1565097294.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1565097294.git.joabreu@synopsys.com>
 References: <cover.1565097294.git.joabreu@synopsys.com>
@@ -64,8 +64,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Do not try to return a fragment entry from TC list. Otherwise we may not
-clean properly allocated entries.
+When queues >= 4 we use different registers but we were not subtracting
+the offset of 4. Fix this.
+
+Found out by Coverity.
 
 Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 
@@ -80,22 +82,54 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c   | 4 ++++
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 4 ++++
+ 2 files changed, 8 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
-index 58ea18af9813..37c0bc699cd9 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
-@@ -37,7 +37,7 @@ static struct stmmac_tc_entry *tc_find_entry(struct stmmac_priv *priv,
- 		entry = &priv->tc_entries[i];
- 		if (!entry->in_use && !first && free)
- 			first = entry;
--		if (entry->handle == loc && !free)
-+		if ((entry->handle == loc) && !free && !entry->is_frag)
- 			dup = entry;
- 	}
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+index 01c2e2d83e76..fc9954e4a772 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+@@ -85,6 +85,8 @@ static void dwmac4_rx_queue_priority(struct mac_device_info *hw,
+ 	u32 value;
  
+ 	base_register = (queue < 4) ? GMAC_RXQ_CTRL2 : GMAC_RXQ_CTRL3;
++	if (queue >= 4)
++		queue -= 4;
+ 
+ 	value = readl(ioaddr + base_register);
+ 
+@@ -102,6 +104,8 @@ static void dwmac4_tx_queue_priority(struct mac_device_info *hw,
+ 	u32 value;
+ 
+ 	base_register = (queue < 4) ? GMAC_TXQ_PRTY_MAP0 : GMAC_TXQ_PRTY_MAP1;
++	if (queue >= 4)
++		queue -= 4;
+ 
+ 	value = readl(ioaddr + base_register);
+ 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+index 03a6a59650ca..85c68b7ee8c6 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+@@ -108,6 +108,8 @@ static void dwxgmac2_rx_queue_prio(struct mac_device_info *hw, u32 prio,
+ 	u32 value, reg;
+ 
+ 	reg = (queue < 4) ? XGMAC_RXQ_CTRL2 : XGMAC_RXQ_CTRL3;
++	if (queue >= 4)
++		queue -= 4;
+ 
+ 	value = readl(ioaddr + reg);
+ 	value &= ~XGMAC_PSRQ(queue);
+@@ -171,6 +173,8 @@ static void dwxgmac2_map_mtl_to_dma(struct mac_device_info *hw, u32 queue,
+ 	u32 value, reg;
+ 
+ 	reg = (queue < 4) ? XGMAC_MTL_RXQ_DMA_MAP0 : XGMAC_MTL_RXQ_DMA_MAP1;
++	if (queue >= 4)
++		queue -= 4;
+ 
+ 	value = readl(ioaddr + reg);
+ 	value &= ~XGMAC_QxMDMACH(queue);
 -- 
 2.7.4
 
