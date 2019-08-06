@@ -2,104 +2,115 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D549C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3212C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6F06216F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3AE121743
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:26:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="rJxitHnv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbfHFVZE (ORCPT
+        id S1726799AbfHFV0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:25:04 -0400
-Received: from mga17.intel.com ([192.55.52.151]:3493 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726044AbfHFVZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:25:04 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 14:25:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
-   d="scan'208";a="165111737"
-Received: from sai-dev-mach.sc.intel.com ([143.183.140.153])
-  by orsmga007.jf.intel.com with ESMTP; 06 Aug 2019 14:25:03 -0700
-Message-ID: <25c28a6e5137aa396bc13a2f581566e13e98f45e.camel@intel.com>
-Subject: Re: [PATCH V2] fork: Improve error message for corrupted page tables
-From:   Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        dave.hansen@intel.com, Ingo Molnar <mingo@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-Date:   Tue, 06 Aug 2019 14:21:54 -0700
-In-Reply-To: <20190806083605.GA19060@dhcp22.suse.cz>
-References: <3ef8a340deb1c87b725d44edb163073e2b6eca5a.1565059496.git.sai.praneeth.prakhya@intel.com>
-         <20190806083605.GA19060@dhcp22.suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Tue, 6 Aug 2019 17:26:01 -0400
+Received: from mail-eopbgr150085.outbound.protection.outlook.com ([40.107.15.85]:11744
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725974AbfHFV0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:26:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Wk72cbqzZm7yTdY4T7yv/tMHn3Ly+YQwJugsAP+ciWyc1fhzo6H/S8Zhjvpcpdy9s32IZwxewr8pHDwEo+DlyOQj9UkaVYRt5zOW4aGKxEaRtLZ8eaAYxuErUkPKnRFnspSrJclY9EVUlkfSUKtITGPExAg+M+l+YiIN2Tp7EM1r+JLZL3/ia8AI4choQ7/4fcWIFtHqwHjsM9rsbg3wNgfbE5qxxKc/3G2Sacx8W/fp/MLD3dkl2hKcpoYzLFx+n1qF8lm58kCJ2PWXzT5ccvT+B7W1tKV9I4fvsFKkIC5dbwd6sBX0wpqwyQaJMY7h3ZmLI7ogYfF1ajfZAD/E2Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nql08hVIJI8Q0Xr00jlqwb993QQn2lnk0uN+7xKbuWs=;
+ b=HJurNLf1XyEZlm3xBgYWJqzJzRug3V5Sf9TSZoTpmLiQ1fefWTgroZkBWdgTqnVgm2nrHeqmAcHYS9UT4qpAY0X1u6bzk6bxrPlsDgm+n6DlakreDEFLsRNm3cI31Dy49E1r1bU5OBXuhMSfW1HEG381zVZhX41Pa9umdi71m+XMJOdAkjQymvfkV/GcysQrOfESVAoonSQXqp3T47iVVi983VtwVaJoghtOAP2km013wFnP5Fg/2M7nutqLhEDfEe2zS9+WrA3l3qDGjpA5hLu5jemf7KZQij0qST/75pF9vguU4KApZg/vzyKjvzzoQ083CTIzzsPsuQ9clCImEg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=mellanox.com;dmarc=pass action=none
+ header.from=mellanox.com;dkim=pass header.d=mellanox.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nql08hVIJI8Q0Xr00jlqwb993QQn2lnk0uN+7xKbuWs=;
+ b=rJxitHnvRTmeQr51+WiYaxTT/hCnEmDHCKTWd7LEgGnu2drtQ0fR1+RuZq7NSpBWPesP7ZkvmkdPx2sa+IbexQczia5pOFAqO8xURKqGVir8FxliThlfQwR2uZ/eUTZrkummXejiJc1ceY+DQRaWlN9T+8zmwUZUQG/tJXHuWIg=
+Received: from DB6PR0501MB2759.eurprd05.prod.outlook.com (10.172.227.7) by
+ DB6PR0501MB2680.eurprd05.prod.outlook.com (10.172.226.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2136.14; Tue, 6 Aug 2019 21:25:56 +0000
+Received: from DB6PR0501MB2759.eurprd05.prod.outlook.com
+ ([fe80::3c28:c77d:55b0:15b2]) by DB6PR0501MB2759.eurprd05.prod.outlook.com
+ ([fe80::3c28:c77d:55b0:15b2%5]) with mapi id 15.20.2136.018; Tue, 6 Aug 2019
+ 21:25:56 +0000
+From:   Saeed Mahameed <saeedm@mellanox.com>
+To:     "davem@davemloft.net" <davem@davemloft.net>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "hslester96@gmail.com" <hslester96@gmail.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "leon@kernel.org" <leon@kernel.org>
+Subject: Re: [PATCH v2] net/mlx5e: Use refcount_t for refcount
+Thread-Topic: [PATCH v2] net/mlx5e: Use refcount_t for refcount
+Thread-Index: AQHVSVIhSHjGbDfeSka9iay/Nq7XtqbunGYAgAABpgCAAApdgA==
+Date:   Tue, 6 Aug 2019 21:25:55 +0000
+Message-ID: <bd5df8d6fc9ed2be710dbca06739b7b580a309cc.camel@mellanox.com>
+References: <20190802164828.20243-1-hslester96@gmail.com>
+         <aaf9680afe5c62d0cf71ff4382b66b3e4d735008.camel@mellanox.com>
+         <20190806.134848.2232719643712591918.davem@davemloft.net>
+In-Reply-To: <20190806.134848.2232719643712591918.davem@davemloft.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=saeedm@mellanox.com; 
+x-originating-ip: [209.116.155.178]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 93720661-8681-4eef-73c0-08d71ab4ab09
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB6PR0501MB2680;
+x-ms-traffictypediagnostic: DB6PR0501MB2680:
+x-microsoft-antispam-prvs: <DB6PR0501MB268021EF0FAF2ABC2AF2CFADBED50@DB6PR0501MB2680.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 0121F24F22
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(136003)(376002)(366004)(39860400002)(189003)(199004)(11346002)(4744005)(5640700003)(58126008)(66946007)(66556008)(66476007)(6246003)(4326008)(102836004)(26005)(6506007)(66446008)(64756008)(91956017)(316002)(6512007)(14454004)(86362001)(66066001)(2906002)(76116006)(6436002)(486006)(256004)(476003)(186003)(2616005)(229853002)(446003)(6486002)(118296001)(7736002)(478600001)(53936002)(81166006)(99286004)(81156014)(71200400001)(71190400001)(36756003)(1730700003)(5660300002)(2351001)(54906003)(305945005)(3846002)(8936002)(6116002)(8676002)(25786009)(68736007)(76176011)(6916009)(2501003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0501MB2680;H:DB6PR0501MB2759.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 5hvwgCPR7tCQIiblLL/hw6a/Cy5NbS8A9iz+MVhlyeQ4vCZiS3BZ2NCORyDNqlAfwSRpHfiTExNyeQCxvLecdt2SUL9SlpnSdV3T63jxUZ7IT7ea/IJ6Rs2woUoE772LAkTprwqJZ0Ng1SJ83X5zh47Sl+PyBIEGjfzWRp/UPtcnkGEVwE1qDPJVkx0n8p6IwroIBeSWti7wb7pBPSKJi7BFQXjOgHTKPgKwhLWX+muh7B1vMjZuBUVpn1FzlirxBhk34ah50BcXEf4wvpV+TMg54eet6JWiGKzadmVeAGJEUwFGJtBnqGZ1JVJDZQmRWu241YAqSIkWw40X7Dc8/+GA8WXCkFZ26RhbXxnPTvzw6UWWksNnSAoPe3qcSDvIWAh0UQpxjUXdvOMwyD2ttgl/J4nz7WlbIUegnFoNKW4=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2D727C5CD0484B418A0B9FE74C3E583A@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 93720661-8681-4eef-73c0-08d71ab4ab09
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Aug 2019 21:25:56.0204
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: saeedm@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0501MB2680
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-08-06 at 10:36 +0200, Michal Hocko wrote:
-> On Mon 05-08-19 20:05:27, Sai Praneeth Prakhya wrote:
-> > When a user process exits, the kernel cleans up the mm_struct of the user
-> > process and during cleanup, check_mm() checks the page tables of the user
-> > process for corruption (E.g: unexpected page flags set/cleared). For
-> > corrupted page tables, the error message printed by check_mm() isn't very
-> > clear as it prints the loop index instead of page table type (E.g:
-> > Resident
-> > file mapping pages vs Resident shared memory pages). The loop index in
-> > check_mm() is used to index rss_stat[] which represents individual memory
-> > type stats. Hence, instead of printing index, print memory type, thereby
-> > improving error message.
-> > 
-> > Without patch:
-> > --------------
-> > [  204.836425] mm/pgtable-generic.c:29: bad p4d
-> > 0000000089eb4e92(800000025f941467)
-> > [  204.836544] BUG: Bad rss-counter state mm:00000000f75895ea idx:0 val:2
-> > [  204.836615] BUG: Bad rss-counter state mm:00000000f75895ea idx:1 val:5
-> > [  204.836685] BUG: non-zero pgtables_bytes on freeing mm: 20480
-> > 
-> > With patch:
-> > -----------
-> > [   69.815453] mm/pgtable-generic.c:29: bad p4d
-> > 0000000084653642(800000025ca37467)
-> > [   69.815872] BUG: Bad rss-counter state mm:00000000014a6c03
-> > type:MM_FILEPAGES val:2
-> > [   69.815962] BUG: Bad rss-counter state mm:00000000014a6c03
-> > type:MM_ANONPAGES val:5
-> > [   69.816050] BUG: non-zero pgtables_bytes on freeing mm: 20480
-> 
-> I like this. On any occasion I am investigating an issue with an rss
-> inbalance I have to go back to kernel sources to see which pte type that
-> is.
-> 
-
-Hopefully, this patch will be useful to you the next time you run into any rss
-imbalance issues.
-
-> > Also, change print function (from printk(KERN_ALERT, ..) to pr_alert()) so
-> > that it matches the other print statement.
-> 
-> good change as well. Maybe we should also lower the loglevel (in a
-> separate patch) as well. While this is not nice because we are
-> apparently leaking memory behind it shouldn't be really critical enough
-> to jump on normal consoles.
-
-Ya.. I think, probably could be lowered to pr_err() or pr_warn().
-
-Regards,
-Sai
-
+T24gVHVlLCAyMDE5LTA4LTA2IGF0IDEzOjQ4IC0wNzAwLCBEYXZpZCBNaWxsZXIgd3JvdGU6DQo+
+IEZyb206IFNhZWVkIE1haGFtZWVkIDxzYWVlZG1AbWVsbGFub3guY29tPg0KPiBEYXRlOiBUdWUs
+IDYgQXVnIDIwMTkgMjA6NDI6NTYgKzAwMDANCj4gDQo+ID4gT24gU2F0LCAyMDE5LTA4LTAzIGF0
+IDAwOjQ4ICswODAwLCBDaHVob25nIFl1YW4gd3JvdGU6DQo+ID4gPiByZWZjb3VudF90IGlzIGJl
+dHRlciBmb3IgcmVmZXJlbmNlIGNvdW50ZXJzIHNpbmNlIGl0cw0KPiA+ID4gaW1wbGVtZW50YXRp
+b24gY2FuIHByZXZlbnQgb3ZlcmZsb3dzLg0KPiA+ID4gU28gY29udmVydCBhdG9taWNfdCByZWYg
+Y291bnRlcnMgdG8gcmVmY291bnRfdC4NCj4gPiA+IA0KPiA+ID4gU2lnbmVkLW9mZi1ieTogQ2h1
+aG9uZyBZdWFuIDxoc2xlc3Rlcjk2QGdtYWlsLmNvbT4NCj4gPiA+IC0tLQ0KPiA+ID4gQ2hhbmdl
+cyBpbiB2MjoNCj4gPiA+ICAgLSBBZGQgI2luY2x1ZGUuDQo+ID4gPiANCj4gPiANCj4gPiBBY2tl
+ZC1ieTogU2FlZWQgTWFoYW1lZWQgPHNhZWVkbUBtZWxsYW5veC5jb20+DQo+ID4gDQo+ID4gRGF2
+ZSwgdXAgdG8geW91IHRha2UgaXQsIG9yIGxlYXZlIGl0IHRvIG1lIDopLg0KPiANCj4gUGxlYXNl
+IHRha2UgaXQsIHRoYW5rIHlvdS4NCg0KT2ssIHJ1bm5pbmcgc29tZSBidWlsZCB0ZXN0cyB3aWxs
+IGFwcGx5IHNob3J0bHkgdG8gbmV0LW5leHQtbWx4NS4NClRoYW5rcyBldmVyeW9uZSENCg==
