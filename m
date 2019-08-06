@@ -2,133 +2,74 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C69C32751
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC67C41514
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A8EF2086D
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:36:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C30A8206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:37:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732363AbfHFIgt (ORCPT
+        id S1732374AbfHFIhJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 04:36:49 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57862 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730068AbfHFIgs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 04:36:48 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A0BBEAF90;
-        Tue,  6 Aug 2019 08:36:46 +0000 (UTC)
-Subject: Re: [PATCH] mm/mempolicy.c: Remove unnecessary nodemask check in
- kernel_migrate_pages()
-To:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Andrea Arcangeli <aarcange@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Oscar Salvador <osalvador@suse.de>, linux-mm@kvack.org,
-        Linux API <linux-api@vger.kernel.org>,
-        "linux-man@vger.kernel.org" <linux-man@vger.kernel.org>
-References: <20190806023634.55356-1-wangkefeng.wang@huawei.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <80f8da83-f425-1aab-f47e-8da41ec6dcbf@suse.cz>
-Date:   Tue, 6 Aug 2019 10:36:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 6 Aug 2019 04:37:09 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:58234 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728998AbfHFIhI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 04:37:08 -0400
+Received: from wf0413.dip.tu-dresden.de ([141.76.181.157] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1huuxd-0003Rg-64; Tue, 06 Aug 2019 10:36:49 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Sean Paul <sean@poorly.run>, Sam Ravnborg <sam@ravnborg.org>,
+        amd-gfx@lists.freedesktop.org
+Cc:     dri-devel@lists.freedesktop.org, kernel@collabora.com,
+        Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Inki Dae <inki.dae@samsung.com>,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Sandy Huang <hjc@rock-chips.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org,
+        linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 04/13] drm: rockchip: Provide ddc symlink in rk3066_hdmi sysfs directory
+Date:   Tue, 06 Aug 2019 10:36:48 +0200
+Message-ID: <2234467.HdXYNSqS9h@phil>
+In-Reply-To: <e3058e1973c9c7649a0818450188b5c3db442b3e.1564591626.git.andrzej.p@collabora.com>
+References: <65481afa-1104-4ee9-e53d-f2732a10d4b9@baylibre.com> <cover.1564591626.git.andrzej.p@collabora.com> <e3058e1973c9c7649a0818450188b5c3db442b3e.1564591626.git.andrzej.p@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <20190806023634.55356-1-wangkefeng.wang@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/6/19 4:36 AM, Kefeng Wang wrote:
-> 1) task_nodes = cpuset_mems_allowed(current);
->    -> cpuset_mems_allowed() guaranteed to return some non-empty
->       subset of node_states[N_MEMORY].
-
-Right, there's an explicit guarantee.
-
-> 2) nodes_and(*new, *new, task_nodes);
->    -> after nodes_and(), the 'new' should be empty or appropriate
->       nodemask(online node and with memory).
+Am Mittwoch, 31. Juli 2019, 18:58:13 CEST schrieb Andrzej Pietrasiewicz:
+> Use the ddc pointer provided by the generic connector.
 > 
-> After 1) and 2), we could remove unnecessary check whether the 'new'
-> AND node_states[N_MEMORY] is empty.
+> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+> Acked-by: Sam Ravnborg <sam@ravnborg.org>
+> Reviewed-by: Emil Velikov <emil.velikov@collabora.com>
 
-Yeah looks like the check is there due to evolution of the code, where initially
-it was added to prevent calling the syscall with bogus nodes, but now that's
-achieved by cpuset_mems_allowed().
+Acked-by: Heiko Stuebner <heiko@sntech.de>
 
-> Cc: Andrea Arcangeli <aarcange@redhat.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: linux-mm@kvack.org
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-
-> ---
-> 
-> [QUESTION]
-> 
-> SYSCALL_DEFINE4(migrate_pages, pid_t, pid, unsigned long, maxnode,
->                 const unsigned long __user *, old_nodes,
->                 const unsigned long __user *, new_nodes)
-> {
->         return kernel_migrate_pages(pid, maxnode, old_nodes, new_nodes);
-> }
-> 
-> The migrate_pages() takes pid argument, witch is the ID of the process
-> whose pages are to be moved. should the cpuset_mems_allowed(current) be
-> cpuset_mems_allowed(task)?
-
-The check for cpuset_mems_allowed(task) is just above the code you change, so
-the new nodes have to be subset of the target task's cpuset.
-But they also have to be allowed by the calling task's cpuset. In manpage of
-migrate_pages(2), this is hinted by the NOTES "Use get_mempolicy(2) with the
-MPOL_F_MEMS_ALLOWED flag to obtain the set of nodes that are allowed by the
-calling process's cpuset..."
-
-But perhaps the manpage should be better clarified:
-
-- the EINVAL case includes "Or, none of the node IDs specified by new_nodes are
-on-line and allowed by the process's current cpuset context, or none of the
-specified nodes contain memory." - this should probably say "calling process" to
-disambiguate
-- the EPERM case should mention that new_nodes have to be subset of the target
-process' cpuset context. The caller should also have CAP_SYS_NICE and
-ptrace_may_access()
-
->  mm/mempolicy.c | 4 ----
->  1 file changed, 4 deletions(-)
-> 
-> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> index f48693f75b37..fceb44066184 100644
-> --- a/mm/mempolicy.c
-> +++ b/mm/mempolicy.c
-> @@ -1467,10 +1467,6 @@ static int kernel_migrate_pages(pid_t pid, unsigned long maxnode,
->  	if (nodes_empty(*new))
->  		goto out_put;
->  
-> -	nodes_and(*new, *new, node_states[N_MEMORY]);
-> -	if (nodes_empty(*new))
-> -		goto out_put;
-> -
->  	err = security_task_movememory(task);
->  	if (err)
->  		goto out_put;
-> 
 
