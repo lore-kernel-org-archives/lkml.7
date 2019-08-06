@@ -2,113 +2,246 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A53C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 00:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC0FC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 00:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02146214C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 00:42:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565052139;
-	bh=eZwQBDcR/MKYEfWG81eygG4AefN+C5bI0r2OySbuQH0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OnqHF/NPIdjXMC2MwbLKEGFLjRPX1jbapcCLBrpEAPcB3BPFlif0cuSVGm4xWXWif
-	 a/o5J7mrGRP+26AFpUfG6K0cUemxGTNJbvmZ/09xQgWi+0CfqwsxZwPrtmBFUALCFs
-	 4K0ugUwW9FLh6xcxCJVYCxiarSlwhn6rzug7r8t0=
+	by mail.kernel.org (Postfix) with ESMTP id 04A032147A
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 00:43:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J6ADLRqw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731117AbfHFAmR (ORCPT
+        id S1731146AbfHFAnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 20:42:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56666 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728483AbfHFAmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 20:42:17 -0400
-Received: from localhost (unknown [104.132.0.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F09D2147A;
-        Tue,  6 Aug 2019 00:42:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565052136;
-        bh=eZwQBDcR/MKYEfWG81eygG4AefN+C5bI0r2OySbuQH0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hZTdUh7m+TxBSmTs1N9DcHxM8FaEQOdounaDItLqslNEzK+yF2IKj+bbhmz8mgVMJ
-         /dN79jv0RBiOXWzAmzAamqFYi8tzCE66mk+DmHzlpQtB2jFWpFcM16V4/wIJgzwdLx
-         v/S0twBm+UcvLi7A5PnuHNeL+2s37gvWfMf3XW58=
-Date:   Mon, 5 Aug 2019 17:42:15 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, chao@kernel.org
-Subject: Re: [PATCH] Revert "f2fs: avoid out-of-range memory access"
-Message-ID: <20190806004215.GC98101@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20190802101548.96543-1-yuchao0@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190802101548.96543-1-yuchao0@huawei.com>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+        Mon, 5 Aug 2019 20:43:01 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37167 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729383AbfHFAnB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 20:43:01 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 19so40487773pfa.4
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 17:43:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=ueOERlEtYBgX0GLBCId/GHdBVP4Bxw4qttSqTD9yYIo=;
+        b=J6ADLRqwbznZafl9dA+zR/2eExHzMsBD6jFL0wDfzPnnQ9Kn9zyIvETW9D6pmsJk5O
+         eDfBAcq6htpwC1PVmviIBQLnqxBP+Xm7Ve6RCCtmmkAKAx6V4uqJ7aJTxgW2p8mefxsz
+         uJ2iB5ztDWE8rG4N8DXEkckrOwR5YeZiDbtOFPTBKJ/GYIewMyaeV0cgr0c6DQJBc11H
+         YPpirIiPuYTyJmW0GIZQERcg9NrnGIPcv32fuYfVXCJnkOaOO40Hq0IPjb4KJYZadKo2
+         4QPPvB2bv1r6bJGtbVpquIrYJHgTTwAUkso9Fj8W94yN3IM3LbOPhy5CPdH3KLTef74J
+         R1Vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ueOERlEtYBgX0GLBCId/GHdBVP4Bxw4qttSqTD9yYIo=;
+        b=V7zQUgCfNZ9U30TgRfEeBjizM/OhnQ43zNMTzYjmayavWZYlzkIHkus+Q73P8lvBb8
+         pT9W3Nxq7dsITTkjKJyt+zC6XmmvTrzuy6Vh/WZIHRPYBoPLJOtXhKMjJRaytd9EA5m2
+         EVsOVsa/03Wxnd+BnPhw3jYLGHi/mcw/WFBUoPM0ZYV9WY8B6JbyNABo2gNtQK9Fu0uq
+         mV4/6Yb/2IgYPZiFP0MgtQvEVxhUrqavcSphUe2cpxE9SNlQCTQQ4dOJPUOgQnT2Oe6H
+         S/qhPnOo5g9XOCTIv1rgLA/Se7GZ9i8LUQOULx5roGNhwhOAZBaAzCR1OUnCxz16w3VT
+         caYQ==
+X-Gm-Message-State: APjAAAXh0YUwsurJGpFu68yfXrpiiBIQISAJLxFkf+baeE9WX7oRWRbJ
+        wCR56CvTWDHPVqsEe2Y99n02UQ==
+X-Google-Smtp-Source: APXvYqxal+OsTtvFj4HRmsoSYr/SwRw4CC3u6NOxtF7px8Njr/YvDoTKVjcN7oYFWsNucTfvjhg02Q==
+X-Received: by 2002:a65:5202:: with SMTP id o2mr497163pgp.29.1565052180144;
+        Mon, 05 Aug 2019 17:43:00 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id h6sm81898821pfb.20.2019.08.05.17.42.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 05 Aug 2019 17:42:59 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Evan Green <evgreen@chromium.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>
+Subject: [PATCH] phy: qcom-qmp: Correct ready status, again
+Date:   Mon,  5 Aug 2019 17:42:56 -0700
+Message-Id: <20190806004256.20152-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/02, Chao Yu wrote:
-> As Pavel Machek reported:
-> 
-> "We normally use -EUCLEAN to signal filesystem corruption. Plus, it is
-> good idea to report it to the syslog and mark filesystem as "needing
-> fsck" if filesystem can do that."
-> 
-> Still we need improve the original patch with:
-> - use unlikely keyword
-> - add message print
-> - return EUCLEAN
-> 
-> However, after rethink this patch, I don't think we should add such
-> condition check here as below reasons:
-> - We have already checked the field in f2fs_sanity_check_ckpt(),
-> - If there is fs corrupt or security vulnerability, there is nothing
-> to guarantee the field is integrated after the check, unless we do
-> the check before each of its use, however no filesystem does that.
-> - We only have similar check for bitmap, which was added due to there
-> is bitmap corruption happened on f2fs' runtime in product.
-> - There are so many key fields in SB/CP/NAT did have such check
-> after f2fs_sanity_check_{sb,cp,..}.
-> 
-> So I propose to revert this unneeded check.
+Despite extensive testing of 885bd765963b ("phy: qcom-qmp: Correct
+READY_STATUS poll break condition") I failed to conclude that the
+PHYSTATUS bit of the PCS_STATUS register used in PCIe and USB3 falls as
+the PHY gets ready. Similar to the prior bug with UFS the code will
+generally get past the check before the transition and thereby
+"succeed".
 
-IIRC, this came from security vulnerability report which can access
-out-of-boundary memory region. Could you write another patch to address the
-above issues?
+Correct the name of the register used PCIe and USB3 PHYs, replace
+mask_pcs_ready with a constant expression depending on the type of the
+PHY and check for the appropriate ready state.
 
-> 
-> This reverts commit 56f3ce675103e3fb9e631cfb4131fc768bc23e9a.
-> 
-> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> ---
->  fs/f2fs/segment.c | 5 -----
->  1 file changed, 5 deletions(-)
-> 
-> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> index 9693fa4c8971..2eff9c008ae0 100644
-> --- a/fs/f2fs/segment.c
-> +++ b/fs/f2fs/segment.c
-> @@ -3492,11 +3492,6 @@ static int read_compacted_summaries(struct f2fs_sb_info *sbi)
->  		seg_i = CURSEG_I(sbi, i);
->  		segno = le32_to_cpu(ckpt->cur_data_segno[i]);
->  		blk_off = le16_to_cpu(ckpt->cur_data_blkoff[i]);
-> -		if (blk_off > ENTRIES_IN_SUM) {
-> -			f2fs_bug_on(sbi, 1);
-> -			f2fs_put_page(page, 1);
-> -			return -EFAULT;
-> -		}
->  		seg_i->next_segno = segno;
->  		reset_curseg(sbi, i, 0);
->  		seg_i->alloc_type = ckpt->alloc_type[i];
-> -- 
-> 2.18.0.rc1
+Cc: stable@vger.kernel.org
+Cc: Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: Evan Green <evgreen@chromium.org>
+Cc: Niklas Cassel <niklas.cassel@linaro.org>
+Reported-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+Fixes: 885bd765963b ("phy: qcom-qmp: Correct READY_STATUS poll break condition")
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ drivers/phy/qualcomm/phy-qcom-qmp.c | 33 ++++++++++++++---------------
+ 1 file changed, 16 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+index 34ff6434da8f..6bb49cc25c63 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+@@ -35,7 +35,7 @@
+ #define PLL_READY_GATE_EN			BIT(3)
+ /* QPHY_PCS_STATUS bit */
+ #define PHYSTATUS				BIT(6)
+-/* QPHY_COM_PCS_READY_STATUS bit */
++/* QPHY_PCS_READY_STATUS & QPHY_COM_PCS_READY_STATUS bit */
+ #define PCS_READY				BIT(0)
+ 
+ /* QPHY_V3_DP_COM_RESET_OVRD_CTRL register bits */
+@@ -115,6 +115,7 @@ enum qphy_reg_layout {
+ 	QPHY_SW_RESET,
+ 	QPHY_START_CTRL,
+ 	QPHY_PCS_READY_STATUS,
++	QPHY_PCS_STATUS,
+ 	QPHY_PCS_AUTONOMOUS_MODE_CTRL,
+ 	QPHY_PCS_LFPS_RXTERM_IRQ_CLEAR,
+ 	QPHY_PCS_LFPS_RXTERM_IRQ_STATUS,
+@@ -133,7 +134,7 @@ static const unsigned int pciephy_regs_layout[] = {
+ 	[QPHY_FLL_MAN_CODE]		= 0xd4,
+ 	[QPHY_SW_RESET]			= 0x00,
+ 	[QPHY_START_CTRL]		= 0x08,
+-	[QPHY_PCS_READY_STATUS]		= 0x174,
++	[QPHY_PCS_STATUS]		= 0x174,
+ };
+ 
+ static const unsigned int usb3phy_regs_layout[] = {
+@@ -144,7 +145,7 @@ static const unsigned int usb3phy_regs_layout[] = {
+ 	[QPHY_FLL_MAN_CODE]		= 0xd0,
+ 	[QPHY_SW_RESET]			= 0x00,
+ 	[QPHY_START_CTRL]		= 0x08,
+-	[QPHY_PCS_READY_STATUS]		= 0x17c,
++	[QPHY_PCS_STATUS]		= 0x17c,
+ 	[QPHY_PCS_AUTONOMOUS_MODE_CTRL]	= 0x0d4,
+ 	[QPHY_PCS_LFPS_RXTERM_IRQ_CLEAR]  = 0x0d8,
+ 	[QPHY_PCS_LFPS_RXTERM_IRQ_STATUS] = 0x178,
+@@ -153,7 +154,7 @@ static const unsigned int usb3phy_regs_layout[] = {
+ static const unsigned int qmp_v3_usb3phy_regs_layout[] = {
+ 	[QPHY_SW_RESET]			= 0x00,
+ 	[QPHY_START_CTRL]		= 0x08,
+-	[QPHY_PCS_READY_STATUS]		= 0x174,
++	[QPHY_PCS_STATUS]		= 0x174,
+ 	[QPHY_PCS_AUTONOMOUS_MODE_CTRL]	= 0x0d8,
+ 	[QPHY_PCS_LFPS_RXTERM_IRQ_CLEAR]  = 0x0dc,
+ 	[QPHY_PCS_LFPS_RXTERM_IRQ_STATUS] = 0x170,
+@@ -911,7 +912,6 @@ struct qmp_phy_cfg {
+ 
+ 	unsigned int start_ctrl;
+ 	unsigned int pwrdn_ctrl;
+-	unsigned int mask_pcs_ready;
+ 	unsigned int mask_com_pcs_ready;
+ 
+ 	/* true, if PHY has a separate PHY_COM control block */
+@@ -1074,7 +1074,6 @@ static const struct qmp_phy_cfg msm8996_pciephy_cfg = {
+ 
+ 	.start_ctrl		= PCS_START | PLL_READY_GATE_EN,
+ 	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
+-	.mask_pcs_ready		= PHYSTATUS,
+ 	.mask_com_pcs_ready	= PCS_READY,
+ 
+ 	.has_phy_com_ctrl	= true,
+@@ -1106,7 +1105,6 @@ static const struct qmp_phy_cfg msm8996_usb3phy_cfg = {
+ 
+ 	.start_ctrl		= SERDES_START | PCS_START,
+ 	.pwrdn_ctrl		= SW_PWRDN,
+-	.mask_pcs_ready		= PHYSTATUS,
+ };
+ 
+ /* list of resets */
+@@ -1136,7 +1134,6 @@ static const struct qmp_phy_cfg ipq8074_pciephy_cfg = {
+ 
+ 	.start_ctrl		= SERDES_START | PCS_START,
+ 	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
+-	.mask_pcs_ready		= PHYSTATUS,
+ 
+ 	.has_phy_com_ctrl	= false,
+ 	.has_lane_rst		= false,
+@@ -1167,7 +1164,6 @@ static const struct qmp_phy_cfg qmp_v3_usb3phy_cfg = {
+ 
+ 	.start_ctrl		= SERDES_START | PCS_START,
+ 	.pwrdn_ctrl		= SW_PWRDN,
+-	.mask_pcs_ready		= PHYSTATUS,
+ 
+ 	.has_pwrdn_delay	= true,
+ 	.pwrdn_delay_min	= POWER_DOWN_DELAY_US_MIN,
+@@ -1199,7 +1195,6 @@ static const struct qmp_phy_cfg qmp_v3_usb3_uniphy_cfg = {
+ 
+ 	.start_ctrl		= SERDES_START | PCS_START,
+ 	.pwrdn_ctrl		= SW_PWRDN,
+-	.mask_pcs_ready		= PHYSTATUS,
+ 
+ 	.has_pwrdn_delay	= true,
+ 	.pwrdn_delay_min	= POWER_DOWN_DELAY_US_MIN,
+@@ -1226,7 +1221,6 @@ static const struct qmp_phy_cfg sdm845_ufsphy_cfg = {
+ 
+ 	.start_ctrl		= SERDES_START,
+ 	.pwrdn_ctrl		= SW_PWRDN,
+-	.mask_pcs_ready		= PCS_READY,
+ 
+ 	.is_dual_lane_phy	= true,
+ 	.no_pcs_sw_reset	= true,
+@@ -1254,7 +1248,6 @@ static const struct qmp_phy_cfg msm8998_pciephy_cfg = {
+ 
+ 	.start_ctrl             = SERDES_START | PCS_START,
+ 	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
+-	.mask_pcs_ready		= PHYSTATUS,
+ };
+ 
+ static const struct qmp_phy_cfg msm8998_usb3phy_cfg = {
+@@ -1279,7 +1272,6 @@ static const struct qmp_phy_cfg msm8998_usb3phy_cfg = {
+ 
+ 	.start_ctrl             = SERDES_START | PCS_START,
+ 	.pwrdn_ctrl             = SW_PWRDN,
+-	.mask_pcs_ready         = PHYSTATUS,
+ 
+ 	.is_dual_lane_phy       = true,
+ };
+@@ -1457,7 +1449,7 @@ static int qcom_qmp_phy_enable(struct phy *phy)
+ 	void __iomem *pcs = qphy->pcs;
+ 	void __iomem *dp_com = qmp->dp_com;
+ 	void __iomem *status;
+-	unsigned int mask, val;
++	unsigned int mask, val, ready;
+ 	int ret;
+ 
+ 	dev_vdbg(qmp->dev, "Initializing QMP phy\n");
+@@ -1545,10 +1537,17 @@ static int qcom_qmp_phy_enable(struct phy *phy)
+ 	/* start SerDes and Phy-Coding-Sublayer */
+ 	qphy_setbits(pcs, cfg->regs[QPHY_START_CTRL], cfg->start_ctrl);
+ 
+-	status = pcs + cfg->regs[QPHY_PCS_READY_STATUS];
+-	mask = cfg->mask_pcs_ready;
++	if (cfg->type == PHY_TYPE_UFS) {
++		status = pcs + cfg->regs[QPHY_PCS_READY_STATUS];
++		mask = PCS_READY;
++		ready = PCS_READY;
++	} else {
++		status = pcs + cfg->regs[QPHY_PCS_STATUS];
++		mask = PHYSTATUS;
++		ready = 0;
++	}
+ 
+-	ret = readl_poll_timeout(status, val, val & mask, 10,
++	ret = readl_poll_timeout(status, val, (val & mask) == ready, 10,
+ 				 PHY_INIT_COMPLETE_TIMEOUT);
+ 	if (ret) {
+ 		dev_err(qmp->dev, "phy initialization timed-out\n");
+-- 
+2.18.0
+
