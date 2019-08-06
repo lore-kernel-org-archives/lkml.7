@@ -2,101 +2,147 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA865C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF4EC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92FCA2086D
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:38:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="k7i/S0Ul"
+	by mail.kernel.org (Postfix) with ESMTP id 95B0C2086D
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:42:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565080929;
+	bh=mQmW8WP++xqjXYWStqLf9365MI5GYhuaGDypz2zbb9g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HptkTFlZlha+HPjQDh4EcbvU7lJRyx34sZLOLEUgQ7vgUi9j7C3+fo0RxgVelkVLY
+	 Wy7803rqDny4rHDMqfAXTzXB3kbIM024CEdF7q38uylxIB97lAf8OznZDsEoWKtKFL
+	 8vZe7FS47Vz8aymVc8s7hX44WgeLIcP4FArEnPqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732284AbfHFIio (ORCPT
+        id S1732272AbfHFImJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 04:38:44 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55363 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729987AbfHFIin (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 04:38:43 -0400
-Received: by mail-wm1-f67.google.com with SMTP id a15so77292062wmj.5
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 01:38:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=qSnv/+vT/SIYwYJQCT7nUDhLGYyBse0g569xwPymLuI=;
-        b=k7i/S0Uly+lYudrLsi5NMZAiSdRC1hWmKyOsqGQviJPbYlaGo7X+7lvdEsQr4w6K18
-         hqgrCW0P4CeRROJFb0KFnU3qONfUt/8Qksx76/dk933FkCBCUcUelsT/NGFwGpXciyvh
-         dkkuIx2/3DK+T53BTbgxN1AXD3nKAlbBF2IGNCVu2K/Z/7dNVKpHX9rWytsDH1uIrMIV
-         KNsraa3hrNqV7VoS7QuDjNWF2AC5tyCQlXQ2ESyY2LibCPZw0H7V6YV0WN2qO339IjJr
-         QR8S+lfICoUcroG1XEt2uXKVULW0Q3TMBOFEd/Z6fxbp5BOzFU9YvP4RaL1ZT+1AhwOf
-         lhsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=qSnv/+vT/SIYwYJQCT7nUDhLGYyBse0g569xwPymLuI=;
-        b=hRHc0SWegHjPF/pn7Jgbs0h2GDvXqJiUeoOh8eYHebOwuoZ2oylBfgcoDGzwN0wGUm
-         x6k7jaWFDyZnuUFtRJNWbsiQJeBh4NLxSGkt3ESiYkdZ+eJXy8D1RTjp1opaUS94lAon
-         KV1NW6imzQ5l2uIB/kiMLeMb+7Uuep5E3f69vVPL2oOYAL5V+oVuDj4f+x7g98hLCFu4
-         je3OgMsimJQlSYBv5JYUTeqgEhfZWc4HV88E+HLMWOx6tJ2Iv9x2RnTvonTtMjM4Yu5/
-         otTBNzwBWrULSP2UgKXXIRch3X/ZcFUcb652Pt/z5eK4JLrZPiCeAWoQGcqrNKiPhhGS
-         OMCQ==
-X-Gm-Message-State: APjAAAXmpFgsy1cjanbmn4bR42DjyBTLO0Ub9ckSUuFWqqvTfnLdJqk4
-        JzRwRPP+VvKrCyoBPFCpBPIQaw==
-X-Google-Smtp-Source: APXvYqyNFcCjMT1EIr9SnBdj/3eb0N8J9r+MuFXedPFys0HGgjwjrbMnJn/62KpXxR8OMt0blyPHyg==
-X-Received: by 2002:a1c:968c:: with SMTP id y134mr3179146wmd.122.1565080721469;
-        Tue, 06 Aug 2019 01:38:41 -0700 (PDT)
-Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id k9sm61670274wmi.33.2019.08.06.01.38.40
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 01:38:40 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>, sboyd@kernel.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 0/4] clk: meson: g12a: add support for DVFS
-In-Reply-To: <20190731084019.8451-1-narmstrong@baylibre.com>
-References: <20190731084019.8451-1-narmstrong@baylibre.com>
-Date:   Tue, 06 Aug 2019 10:38:40 +0200
-Message-ID: <1jzhkmvgbz.fsf@starbuckisacylon.baylibre.com>
+        Tue, 6 Aug 2019 04:42:09 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59462 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728918AbfHFImI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 04:42:08 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B55EBABC7;
+        Tue,  6 Aug 2019 08:42:05 +0000 (UTC)
+Date:   Tue, 6 Aug 2019 10:42:03 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Brendan Gregg <bgregg@netflix.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christian Hansen <chansen3@cisco.com>, dancol@google.com,
+        fmayer@google.com, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>, joelaf@google.com,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Mike Rapoport <rppt@linux.ibm.com>, minchan@kernel.org,
+        namhyung@google.com, paulmck@linux.ibm.com,
+        Roman Gushchin <guro@fb.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, surenb@google.com,
+        Thomas Gleixner <tglx@linutronix.de>, tkjos@google.com,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v4 3/5] [RFC] arm64: Add support for idle bit in swap PTE
+Message-ID: <20190806084203.GJ11812@dhcp22.suse.cz>
+References: <20190805170451.26009-1-joel@joelfernandes.org>
+ <20190805170451.26009-3-joel@joelfernandes.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190805170451.26009-3-joel@joelfernandes.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 31 Jul 2019 at 10:40, Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> Neil Armstrong (4):
->   clk: core: introduce clk_hw_set_parent()
->   clk: meson: add g12a cpu dynamic divider driver
->   clk: meson: g12a: add notifiers to handle cpu clock change
->   clk: meson: g12a: expose CPUB clock ID for G12B
->
->  drivers/clk/clk.c                     |   6 +
->  drivers/clk/meson/Kconfig             |   5 +
->  drivers/clk/meson/Makefile            |   1 +
->  drivers/clk/meson/clk-cpu-dyndiv.c    |  73 ++++
->  drivers/clk/meson/clk-cpu-dyndiv.h    |  20 +
->  drivers/clk/meson/g12a.c              | 535 +++++++++++++++++++++++---
->  drivers/clk/meson/g12a.h              |   1 -
->  include/dt-bindings/clock/g12a-clkc.h |   1 +
->  include/linux/clk-provider.h          |   1 +
->  9 files changed, 588 insertions(+), 55 deletions(-)
->  create mode 100644 drivers/clk/meson/clk-cpu-dyndiv.c
->  create mode 100644 drivers/clk/meson/clk-cpu-dyndiv.h
+On Mon 05-08-19 13:04:49, Joel Fernandes (Google) wrote:
+> This bit will be used by idle page tracking code to correctly identify
+> if a page that was swapped out was idle before it got swapped out.
+> Without this PTE bit, we lose information about if a page is idle or not
+> since the page frame gets unmapped.
 
-Patchset looks good to me.
-Waiting for Stephen's ack on patch #1 to apply it.
+And why do we need that? Why cannot we simply assume all swapped out
+pages to be idle? They were certainly idle enough to be reclaimed,
+right? Or what does idle actualy mean here?
 
->
+> In this patch we reuse PTE_DEVMAP bit since idle page tracking only
+> works on user pages in the LRU. Device pages should not consitute those
+> so it should be unused and safe to use.
+> 
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> ---
+>  arch/arm64/Kconfig                    |  1 +
+>  arch/arm64/include/asm/pgtable-prot.h |  1 +
+>  arch/arm64/include/asm/pgtable.h      | 15 +++++++++++++++
+>  3 files changed, 17 insertions(+)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 3adcec05b1f6..9d1412c693d7 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -128,6 +128,7 @@ config ARM64
+>  	select HAVE_ARCH_MMAP_RND_BITS
+>  	select HAVE_ARCH_MMAP_RND_COMPAT_BITS if COMPAT
+>  	select HAVE_ARCH_PREL32_RELOCATIONS
+> +	select HAVE_ARCH_PTE_SWP_PGIDLE
+>  	select HAVE_ARCH_SECCOMP_FILTER
+>  	select HAVE_ARCH_STACKLEAK
+>  	select HAVE_ARCH_THREAD_STRUCT_WHITELIST
+> diff --git a/arch/arm64/include/asm/pgtable-prot.h b/arch/arm64/include/asm/pgtable-prot.h
+> index 92d2e9f28f28..917b15c5d63a 100644
+> --- a/arch/arm64/include/asm/pgtable-prot.h
+> +++ b/arch/arm64/include/asm/pgtable-prot.h
+> @@ -18,6 +18,7 @@
+>  #define PTE_SPECIAL		(_AT(pteval_t, 1) << 56)
+>  #define PTE_DEVMAP		(_AT(pteval_t, 1) << 57)
+>  #define PTE_PROT_NONE		(_AT(pteval_t, 1) << 58) /* only when !PTE_VALID */
+> +#define PTE_SWP_PGIDLE		PTE_DEVMAP		 /* for idle page tracking during swapout */
+>  
+>  #ifndef __ASSEMBLY__
+>  
+> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+> index 3f5461f7b560..558f5ebd81ba 100644
+> --- a/arch/arm64/include/asm/pgtable.h
+> +++ b/arch/arm64/include/asm/pgtable.h
+> @@ -212,6 +212,21 @@ static inline pte_t pte_mkdevmap(pte_t pte)
+>  	return set_pte_bit(pte, __pgprot(PTE_DEVMAP));
+>  }
+>  
+> +static inline int pte_swp_page_idle(pte_t pte)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline pte_t pte_swp_mkpage_idle(pte_t pte)
+> +{
+> +	return set_pte_bit(pte, __pgprot(PTE_SWP_PGIDLE));
+> +}
+> +
+> +static inline pte_t pte_swp_clear_page_idle(pte_t pte)
+> +{
+> +	return clear_pte_bit(pte, __pgprot(PTE_SWP_PGIDLE));
+> +}
+> +
+>  static inline void set_pte(pte_t *ptep, pte_t pte)
+>  {
+>  	WRITE_ONCE(*ptep, pte);
 > -- 
-> 2.22.0
+> 2.22.0.770.g0f2c4a37fd-goog
+
+-- 
+Michal Hocko
+SUSE Labs
