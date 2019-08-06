@@ -2,128 +2,315 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D53C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 01:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 170D2C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 01:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAD532147A
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 01:33:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCDAD216B7
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 01:36:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731366AbfHFBdp (ORCPT
+        id S1731303AbfHFBgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 21:33:45 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:51505 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728870AbfHFBdp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 21:33:45 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R641e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TYmOEx4_1565055217;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TYmOEx4_1565055217)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 06 Aug 2019 09:33:40 +0800
-Subject: Re: [PATCH v2 0/4] per-cgroup numa suite
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-To:     Peter Zijlstra <peterz@infradead.org>, hannes@cmpxchg.org,
-        mhocko@kernel.org, vdavydov.dev@gmail.com,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        mcgrof@kernel.org, keescook@chromium.org,
-        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
-        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
-        Hillf Danton <hdanton@sina.com>
-References: <209d247e-c1b2-3235-2722-dd7c1f896483@linux.alibaba.com>
- <60b59306-5e36-e587-9145-e90657daec41@linux.alibaba.com>
- <65c1987f-bcce-2165-8c30-cf8cf3454591@linux.alibaba.com>
-Message-ID: <789b95a2-6a92-eb30-85c5-af8e5dcc8048@linux.alibaba.com>
-Date:   Tue, 6 Aug 2019 09:33:37 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.0
+        Mon, 5 Aug 2019 21:36:19 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4177 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728870AbfHFBgT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 21:36:19 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id EEEE4F0AE15A92C4CDFA;
+        Tue,  6 Aug 2019 09:36:15 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 6 Aug 2019
+ 09:36:14 +0800
+Subject: Re: [PATCH v2] f2fs: separate NOCoW and pinfile semantics
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
+References: <20190723023640.GC60778@jaegeuk-macbookpro.roam.corp.google.com>
+ <d4d064a2-2b3c-3536-6488-39e7cfdb1ea4@huawei.com>
+ <20190729055738.GA95664@jaegeuk-macbookpro.roam.corp.google.com>
+ <07cd3aba-3516-9ba5-286e-277abb98e244@huawei.com>
+ <20190730180231.GB76478@jaegeuk-macbookpro.roam.corp.google.com>
+ <00e70eb1-c4fa-a6c9-69d7-71ff995c7d6c@huawei.com>
+ <20190801041435.GB84433@jaegeuk-macbookpro.roam.corp.google.com>
+ <d35d5ad7-5622-fbf5-5853-e541f8c26670@huawei.com>
+ <20190801222746.GA27597@jaegeuk-macbookpro.roam.corp.google.com>
+ <5d566fce-4412-65b2-e9d9-279b648f7551@huawei.com>
+ <20190806003749.GB98101@jaegeuk-macbookpro.roam.corp.google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <b5549a88-6805-99a8-4b0a-3bbf49da794c@huawei.com>
+Date:   Tue, 6 Aug 2019 09:36:36 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <65c1987f-bcce-2165-8c30-cf8cf3454591@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190806003749.GB98101@jaegeuk-macbookpro.roam.corp.google.com>
+Content-Type: text/plain; charset="windows-1252"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Folks
+On 2019/8/6 8:37, Jaegeuk Kim wrote:
+> On 08/02, Chao Yu wrote:
+>> On 2019/8/2 6:27, Jaegeuk Kim wrote:
+>>> On 08/01, Chao Yu wrote:
+>>>> On 2019/8/1 12:14, Jaegeuk Kim wrote:
+>>>>> On 07/31, Chao Yu wrote:
+>>>>>> On 2019/7/31 2:02, Jaegeuk Kim wrote:
+>>>>>>> On 07/29, Chao Yu wrote:
+>>>>>>>> On 2019/7/29 13:57, Jaegeuk Kim wrote:
+>>>>>>>>> On 07/23, Chao Yu wrote:
+>>>>>>>>>> On 2019/7/23 10:36, Jaegeuk Kim wrote:
+>>>>>>>>>>> On 07/19, Chao Yu wrote:
+>>>>>>>>>>>> Pinning a file is heavy, because skipping pinned files make GC
+>>>>>>>>>>>> running with heavy load or no effect.
+>>>>>>>>>>>
+>>>>>>>>>>> Pinned file is a part of NOCOW files, so I don't think we can simply drop it
+>>>>>>>>>>> for backward compatibility.
+>>>>>>>>>>
+>>>>>>>>>> Yes,
+>>>>>>>>>>
+>>>>>>>>>> But what I concerned is that pin file is too heavy, so in order to satisfy below
+>>>>>>>>>> demand, how about introducing pin_file_2 flag to triggering IPU only during
+>>>>>>>>>> flush/writeback.
+>>>>>>>>>
+>>>>>>>>> That can be done by cold files?
+>>>>>>>>
+>>>>>>>> Then it may inherit property of cold type file, e.g. a) goes into cold area; b)
+>>>>>>>> update with very low frequency.
+>>>>>>>>
+>>>>>>>> Actually pin_file_2 could be used by db-wal/log file, which are updated
+>>>>>>>> frequently, and should go to hot/warm area, it does not match above two property.
+>>>>>>>
+>>>>>>> How about considering another name like "IPU-only mode"?
+>>>>>>>
+>>>>>>>               fallocate         write    Flag         GC
+>>>>>>> Pin_file:     preallocate       IPU      FS_NOCOW_FL  Not allowed
+>>>>>>> IPU_file:     Not preallocate   IPU      N/A          Default by temperature
+>>>>>>
+>>>>>> One question, do we need preallocate physical block address for IPU_file as
+>>>>>> Pin_file? since it can enhance db file's sequential read performance, not sure,
+>>>>>> db can handle random data in preallocated blocks.
+>>>>>
+>>>>> db file will do atomic writes, which can not be used with this. -wal may be able
+>>>>
+>>>> Now WAL mode were set by default in Android, so most of db file are -wal type now.
+>>>
+>>> Will be back again tho.
+>>
+>> R?
+> 
+> Q.
+> 
+>>
+>>>
+>>>>
+>>>>> to preallocate blocks, but it can eat disk space unnecessarily.
+>>>>
+>>>> I meant .db-wal file rather than .db.
+>>>>
+>>>> Yes, that's ext4 style, that would bring better performance due to less holes in
+>>>> block distribution.
+>>>>
+>>>> I don't think we need to worry about space issue for db-wal file. I tracked
+>>>> .db-wal file's update before:
+>>>> - there are very frequently truncation and deletion, that means the preallocated
+>>>> blocks won't exist for long time.
+>>>> - and also there are very frequently append writes, I suspect there almost very
+>>>> few preallocate block are not written.
+>>>> - total db-wal file number is less.
+>>>
+>>> Sometimes it can be large enough for system.
+>>
+>> For this, it's trade off:
+>> - lose a few disk space at the very begin of db-wal lifecycle Or
+>> - face fragment and read performance degradation.
+>>
+>>> If it's from user apps and short lived, why do we need preallocation?
+>>
+>> It triggers sequential read on db-wal file during checkpoint, though it's short
+>> lived, still it can affect performance.
+>>
+>> What do you think of doing some performance test on WAL file to decide the
+>> preallocation policy?
+> 
+> Good idea. Can we?
 
-Please feel free to comment if you got any concerns :-)
+Let me test for numbers later.
 
-Hi, Peter
+Thanks,
 
-How do you think about this version?
-
-Please let us know if it's still not good enough to be accepted :-)
-
-Regards,
-Michael Wang
-
-On 2019/7/16 上午11:38, 王贇 wrote:
-> During our torturing on numa stuff, we found problems like:
 > 
->   * missing per-cgroup information about the per-node execution status
->   * missing per-cgroup information about the numa locality
-> 
-> That is when we have a cpu cgroup running with bunch of tasks, no good
-> way to tell how it's tasks are dealing with numa.
-> 
-> The first two patches are trying to complete the missing pieces, but
-> more problems appeared after monitoring these status:
-> 
->   * tasks not always running on the preferred numa node
->   * tasks from same cgroup running on different nodes
-> 
-> The task numa group handler will always check if tasks are sharing pages
-> and try to pack them into a single numa group, so they will have chance to
-> settle down on the same node, but this failed in some cases:
-> 
->   * workloads share page caches rather than share mappings
->   * workloads got too many wakeup across nodes
-> 
-> Since page caches are not traced by numa balancing, there are no way to
-> realize such kind of relationship, and when there are too many wakeup,
-> task will be drag from the preferred node and then migrate back by numa
-> balancing, repeatedly.
-> 
-> Here the third patch try to address the first issue, we could now give hint
-> to kernel about the relationship of tasks, and pack them into single numa
-> group.
-> 
-> And the forth patch introduced numa cling, which try to address the wakup
-> issue, now we try to make task stay on the preferred node on wakeup in fast
-> path, in order to address the unbalancing risk, we monitoring the numa
-> migration failure ratio, and pause numa cling when it reach the specified
-> degree.
-> 
-> Since v1:
->   * move statistics from memory cgroup into cpu group
->   * statistics now accounting in hierarchical way
->   * locality now accounted into 8 regions equally
->   * numa cling no longer override select_idle_sibling, instead we
->     prevent numa swap migration with tasks cling to dst-node, also
->     prevent wake affine to drag tasks away which already cling to
->     prev-cpu
->   * other refine on comments and names
-> 
-> Michael Wang (4):
->   v2 numa: introduce per-cgroup numa balancing locality statistic
->   v2 numa: append per-node execution time in cpu.numa_stat
->   v2 numa: introduce numa group per task group
->   v4 numa: introduce numa cling feature
-> 
->  include/linux/sched.h        |   8 +-
->  include/linux/sched/sysctl.h |   3 +
->  kernel/sched/core.c          |  85 ++++++++
->  kernel/sched/debug.c         |   7 +
->  kernel/sched/fair.c          | 510 ++++++++++++++++++++++++++++++++++++++++++-
->  kernel/sched/sched.h         |  41 ++++
->  kernel/sysctl.c              |   9 +
->  7 files changed, 651 insertions(+), 12 deletions(-)
+>>
+>> Thanks,
+>>
+>>>
+>>>>
+>>>>>
+>>>>>>
+>>>>>> Other behaviors looks good to me. :)
+>>>>>>
+>>>>>> I plan to use last bit in inode.i_inline to store this flag.
+>>>>>
+>>>>> Why not using i_flag like FS_NOCOW_FL?
+>>>>
+>>>> Oops, as you listed in last email, I can see you don't want to break
+>>>> FS_NOCOW_FL's semantics for backward compatibility.
+>>>>
+>>>> 			Flag
+>>>> IPU_file		N/A			
+>>>>
+>>>> If we plan to use FS_NOCOW_FL, that's what this patch has already did, you can
+>>>> merge it directly... :P
+>>>>
+>>>>>
+>>>>>>
+>>>>>>> Cold_file:    Not preallocate   IPU      N/A          Move in cold area
+>>>>>>> Hot_file:     Not preallocate   IPU/OPU  N/A          Move in hot area
+>>>>>>
+>>>>>> Should hot file be gced to hot area? That would mix new hot data with old 'hot'
+>>>>>> data which actually become cold.
+>>>>>
+>>>>> But, user explicitly specified this is hot.
+>>>>
+>>>> With current implementation, GC will migrate data from hot/warm/cold area to
+>>>> cold area.
+>>>>
+>>>> Thanks,
+>>>>
+>>>>>
+>>>>>>
+>>>>>> Thanks,
+>>>>>>
+>>>>>>>
+>>>>>>>>
+>>>>>>>> Thank,
+>>>>>>>>
+>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>>> So that this patch propose to separate nocow and pinfile semantics:
+>>>>>>>>>>>> - NOCoW flag can only be set on regular file.
+>>>>>>>>>>>> - NOCoW file will only trigger IPU at common writeback/flush.
+>>>>>>>>>>>> - NOCow file will do OPU during GC.
+>>>>>>>>>>>>
+>>>>>>>>>>>> For the demand of 1) avoid fragment of file's physical block and
+>>>>>>>>>>>> 2) userspace don't care about file's specific physical address,
+>>>>>>>>>>>> tagging file as NOCoW will be cheaper than pinned one.
+>>>>>>>>>>
+>>>>>>>>>> ^^^
+>>>>>>>>>>
+>>>>>>>>>> Thanks,
+>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+>>>>>>>>>>>> ---
+>>>>>>>>>>>> v2:
+>>>>>>>>>>>> - rebase code to fix compile error.
+>>>>>>>>>>>>  fs/f2fs/data.c |  3 ++-
+>>>>>>>>>>>>  fs/f2fs/f2fs.h |  1 +
+>>>>>>>>>>>>  fs/f2fs/file.c | 22 +++++++++++++++++++---
+>>>>>>>>>>>>  3 files changed, 22 insertions(+), 4 deletions(-)
+>>>>>>>>>>>>
+>>>>>>>>>>>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+>>>>>>>>>>>> index a2a28bb269bf..15fb8954c363 100644
+>>>>>>>>>>>> --- a/fs/f2fs/data.c
+>>>>>>>>>>>> +++ b/fs/f2fs/data.c
+>>>>>>>>>>>> @@ -1884,7 +1884,8 @@ static inline bool check_inplace_update_policy(struct inode *inode,
+>>>>>>>>>>>>  
+>>>>>>>>>>>>  bool f2fs_should_update_inplace(struct inode *inode, struct f2fs_io_info *fio)
+>>>>>>>>>>>>  {
+>>>>>>>>>>>> -	if (f2fs_is_pinned_file(inode))
+>>>>>>>>>>>> +	if (f2fs_is_pinned_file(inode) ||
+>>>>>>>>>>>> +			F2FS_I(inode)->i_flags & F2FS_NOCOW_FL)
+>>>>>>>>>>>>  		return true;
+>>>>>>>>>>>>  
+>>>>>>>>>>>>  	/* if this is cold file, we should overwrite to avoid fragmentation */
+>>>>>>>>>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>>>>>>>>>>>> index 596ab3e1dd7b..f6c5a3d2e659 100644
+>>>>>>>>>>>> --- a/fs/f2fs/f2fs.h
+>>>>>>>>>>>> +++ b/fs/f2fs/f2fs.h
+>>>>>>>>>>>> @@ -2374,6 +2374,7 @@ static inline void f2fs_change_bit(unsigned int nr, char *addr)
+>>>>>>>>>>>>  #define F2FS_NOATIME_FL			0x00000080 /* do not update atime */
+>>>>>>>>>>>>  #define F2FS_INDEX_FL			0x00001000 /* hash-indexed directory */
+>>>>>>>>>>>>  #define F2FS_DIRSYNC_FL			0x00010000 /* dirsync behaviour (directories only) */
+>>>>>>>>>>>> +#define F2FS_NOCOW_FL			0x00800000 /* Do not cow file */
+>>>>>>>>>>>>  #define F2FS_PROJINHERIT_FL		0x20000000 /* Create with parents projid */
+>>>>>>>>>>>>  
+>>>>>>>>>>>>  /* Flags that should be inherited by new inodes from their parent. */
+>>>>>>>>>>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+>>>>>>>>>>>> index 7ca545874060..ae0fec54cac6 100644
+>>>>>>>>>>>> --- a/fs/f2fs/file.c
+>>>>>>>>>>>> +++ b/fs/f2fs/file.c
+>>>>>>>>>>>> @@ -1692,6 +1692,7 @@ static const struct {
+>>>>>>>>>>>>  	{ F2FS_NOATIME_FL,	FS_NOATIME_FL },
+>>>>>>>>>>>>  	{ F2FS_INDEX_FL,	FS_INDEX_FL },
+>>>>>>>>>>>>  	{ F2FS_DIRSYNC_FL,	FS_DIRSYNC_FL },
+>>>>>>>>>>>> +	{ F2FS_NOCOW_FL,	FS_NOCOW_FL },
+>>>>>>>>>>>>  	{ F2FS_PROJINHERIT_FL,	FS_PROJINHERIT_FL },
+>>>>>>>>>>>>  };
+>>>>>>>>>>>>  
+>>>>>>>>>>>> @@ -1715,7 +1716,8 @@ static const struct {
+>>>>>>>>>>>>  		FS_NODUMP_FL |		\
+>>>>>>>>>>>>  		FS_NOATIME_FL |		\
+>>>>>>>>>>>>  		FS_DIRSYNC_FL |		\
+>>>>>>>>>>>> -		FS_PROJINHERIT_FL)
+>>>>>>>>>>>> +		FS_PROJINHERIT_FL |	\
+>>>>>>>>>>>> +		FS_NOCOW_FL)
+>>>>>>>>>>>>  
+>>>>>>>>>>>>  /* Convert f2fs on-disk i_flags to FS_IOC_{GET,SET}FLAGS flags */
+>>>>>>>>>>>>  static inline u32 f2fs_iflags_to_fsflags(u32 iflags)
+>>>>>>>>>>>> @@ -1753,8 +1755,6 @@ static int f2fs_ioc_getflags(struct file *filp, unsigned long arg)
+>>>>>>>>>>>>  		fsflags |= FS_ENCRYPT_FL;
+>>>>>>>>>>>>  	if (f2fs_has_inline_data(inode) || f2fs_has_inline_dentry(inode))
+>>>>>>>>>>>>  		fsflags |= FS_INLINE_DATA_FL;
+>>>>>>>>>>>> -	if (is_inode_flag_set(inode, FI_PIN_FILE))
+>>>>>>>>>>>> -		fsflags |= FS_NOCOW_FL;
+>>>>>>>>>>>>  
+>>>>>>>>>>>>  	fsflags &= F2FS_GETTABLE_FS_FL;
+>>>>>>>>>>>>  
+>>>>>>>>>>>> @@ -1794,6 +1794,22 @@ static int f2fs_ioc_setflags(struct file *filp, unsigned long arg)
+>>>>>>>>>>>>  	if (ret)
+>>>>>>>>>>>>  		goto out;
+>>>>>>>>>>>>  
+>>>>>>>>>>>> +	if ((fsflags ^ old_fsflags) & FS_NOCOW_FL) {
+>>>>>>>>>>>> +		if (!S_ISREG(inode->i_mode)) {
+>>>>>>>>>>>> +			ret = -EINVAL;
+>>>>>>>>>>>> +			goto out;
+>>>>>>>>>>>> +		}
+>>>>>>>>>>>> +
+>>>>>>>>>>>> +		if (f2fs_should_update_outplace(inode, NULL)) {
+>>>>>>>>>>>> +			ret = -EINVAL;
+>>>>>>>>>>>> +			goto out;
+>>>>>>>>>>>> +		}
+>>>>>>>>>>>> +
+>>>>>>>>>>>> +		ret = f2fs_convert_inline_inode(inode);
+>>>>>>>>>>>> +		if (ret)
+>>>>>>>>>>>> +			goto out;
+>>>>>>>>>>>> +	}
+>>>>>>>>>>>> +
+>>>>>>>>>>>>  	ret = f2fs_setflags_common(inode, iflags,
+>>>>>>>>>>>>  			f2fs_fsflags_to_iflags(F2FS_SETTABLE_FS_FL));
+>>>>>>>>>>>>  out:
+>>>>>>>>>>>> -- 
+>>>>>>>>>>>> 2.18.0.rc1
+>>>>>>>>>>> .
+>>>>>>>>>>>
+>>>>>>>>> .
+>>>>>>>>>
+>>>>>>> .
+>>>>>>>
+>>>>> .
+>>>>>
+>>> .
+>>>
+> .
 > 
