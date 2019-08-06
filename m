@@ -2,116 +2,113 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB6CC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36400C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3604206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:31:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09B07206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:32:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="jRJr7Jqs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732280AbfHFIbq (ORCPT
+        id S1732225AbfHFIcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 04:31:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:58618 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726713AbfHFIbq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 04:31:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6D59F337;
-        Tue,  6 Aug 2019 01:31:45 -0700 (PDT)
-Received: from [10.163.1.69] (unknown [10.163.1.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B3763F706;
-        Tue,  6 Aug 2019 01:31:42 -0700 (PDT)
-Subject: Re: [PATCH V2] fork: Improve error message for corrupted page tables
-To:     Vlastimil Babka <vbabka@suse.cz>,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Cc:     dave.hansen@intel.com, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <3ef8a340deb1c87b725d44edb163073e2b6eca5a.1565059496.git.sai.praneeth.prakhya@intel.com>
- <5ba88460-cf01-3d53-6d13-45e650b4eacd@suse.cz>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <926d50ce-4742-0ae7-474c-ef561fe23cdd@arm.com>
-Date:   Tue, 6 Aug 2019 14:02:26 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 6 Aug 2019 04:32:31 -0400
+Received: from gateway20.websitewelcome.com ([192.185.4.169]:32818 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726713AbfHFIcb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 04:32:31 -0400
+X-Greylist: delayed 1460 seconds by postgrey-1.27 at vger.kernel.org; Tue, 06 Aug 2019 04:32:31 EDT
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id 3E372400CCC9F
+        for <linux-kernel@vger.kernel.org>; Tue,  6 Aug 2019 02:04:19 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id uuVuhKzHT3Qi0uuVuh4Lqf; Tue, 06 Aug 2019 03:08:10 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=tqouW1qc7UK4ejwDOesOIcmQuJMwuxvioRsJeeb5IM4=; b=jRJr7JqsYbSOKqd3gMKqlUEGdo
+        P3OgHdi2UEwTbXofL3M+SRi1gJ2Z4GjkdghudNwCHsdYrMJkwpFcWX+0UbTYUX+g2UZYBDHMss7RY
+        1v9RcUlL3gZI0JB/wonWbx1xTppZ7c0L5/luX6ETiDSh8PCNRtX/j04bfAx5Km1AjSASCjRQXvtKU
+        wUmmu0YtI2mqcVQPswZx5+FrCe2CAUgQxi9y8xu+4J2WGaeKjzKpsr+GbBhAf8ySTfcs8Xj5AyCSU
+        yabIKstVHzxCdxNqDLqDCNAXwfAO/3idG1hHr3reEdXk2bmjvHo+fU2n7tXGGVY68sT47qwcBqP1j
+        CCkwmx0Q==;
+Received: from [187.192.11.120] (port=43488 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1huuVt-000ibV-Rp; Tue, 06 Aug 2019 03:08:09 -0500
+Date:   Tue, 6 Aug 2019 03:08:08 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] ata: rb532_cf: Fix unused variable warning in
+ rb532_pata_driver_probe
+Message-ID: <20190806080808.GA30026@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <5ba88460-cf01-3d53-6d13-45e650b4eacd@suse.cz>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.11.120
+X-Source-L: No
+X-Exim-ID: 1huuVt-000ibV-Rp
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [187.192.11.120]:43488
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 5
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fix the following warning (Building: rb532_defconfig mips):
 
+drivers/ata/pata_rb532_cf.c: In function ‘rb532_pata_driver_remove’:
+drivers/ata/pata_rb532_cf.c:161:24: warning: unused variable ‘info’ [-Wunused-variable]
+  struct rb532_cf_info *info = ah->private_data;
+                        ^~~~
 
-On 08/06/2019 01:23 PM, Vlastimil Babka wrote:
-> 
-> On 8/6/19 5:05 AM, Sai Praneeth Prakhya wrote:
->> When a user process exits, the kernel cleans up the mm_struct of the user
->> process and during cleanup, check_mm() checks the page tables of the user
->> process for corruption (E.g: unexpected page flags set/cleared). For
->> corrupted page tables, the error message printed by check_mm() isn't very
->> clear as it prints the loop index instead of page table type (E.g: Resident
->> file mapping pages vs Resident shared memory pages). The loop index in
->> check_mm() is used to index rss_stat[] which represents individual memory
->> type stats. Hence, instead of printing index, print memory type, thereby
->> improving error message.
->>
->> Without patch:
->> --------------
->> [  204.836425] mm/pgtable-generic.c:29: bad p4d 0000000089eb4e92(800000025f941467)
->> [  204.836544] BUG: Bad rss-counter state mm:00000000f75895ea idx:0 val:2
->> [  204.836615] BUG: Bad rss-counter state mm:00000000f75895ea idx:1 val:5
->> [  204.836685] BUG: non-zero pgtables_bytes on freeing mm: 20480
->>
->> With patch:
->> -----------
->> [   69.815453] mm/pgtable-generic.c:29: bad p4d 0000000084653642(800000025ca37467)
->> [   69.815872] BUG: Bad rss-counter state mm:00000000014a6c03 type:MM_FILEPAGES val:2
->> [   69.815962] BUG: Bad rss-counter state mm:00000000014a6c03 type:MM_ANONPAGES val:5
->> [   69.816050] BUG: non-zero pgtables_bytes on freeing mm: 20480
->>
->> Also, change print function (from printk(KERN_ALERT, ..) to pr_alert()) so
->> that it matches the other print statement.
->>
->> Cc: Ingo Molnar <mingo@kernel.org>
->> Cc: Vlastimil Babka <vbabka@suse.cz>
->> Cc: Peter Zijlstra <peterz@infradead.org>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
->> Acked-by: Dave Hansen <dave.hansen@intel.com>
->> Suggested-by: Dave Hansen <dave.hansen@intel.com>
->> Signed-off-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
-> 
-> Acked-by: Vlastimil Babka <vbabka@suse.cz>
-> 
-> I would also add something like this to reduce risk of breaking it in the
-> future:
-> 
-> ----8<----
-> diff --git a/include/linux/mm_types_task.h b/include/linux/mm_types_task.h
-> index d7016dcb245e..a6f83cbe4603 100644
-> --- a/include/linux/mm_types_task.h
-> +++ b/include/linux/mm_types_task.h
-> @@ -36,6 +36,9 @@ struct vmacache {
->  	struct vm_area_struct *vmas[VMACACHE_SIZE];
->  };
->  
-> +/*
-> + * When touching this, update also resident_page_types in kernel/fork.c
-> + */
->  enum {
->  	MM_FILEPAGES,	/* Resident file mapping pages */
->  	MM_ANONPAGES,	/* Resident anonymous pages */
-> 
+Fixes: cd56f35e52d9 ("ata: rb532_cf: Convert to use GPIO descriptors")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/ata/pata_rb532_cf.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Agreed and with that
+diff --git a/drivers/ata/pata_rb532_cf.c b/drivers/ata/pata_rb532_cf.c
+index 7c37f2ff09e4..deae466395de 100644
+--- a/drivers/ata/pata_rb532_cf.c
++++ b/drivers/ata/pata_rb532_cf.c
+@@ -158,7 +158,6 @@ static int rb532_pata_driver_probe(struct platform_device *pdev)
+ static int rb532_pata_driver_remove(struct platform_device *pdev)
+ {
+ 	struct ata_host *ah = platform_get_drvdata(pdev);
+-	struct rb532_cf_info *info = ah->private_data;
+ 
+ 	ata_host_detach(ah);
+ 
+-- 
+2.22.0
 
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
