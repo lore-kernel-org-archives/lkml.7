@@ -2,107 +2,90 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FD5C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE12C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2821220B1F
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2520F20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:18:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="YLSHDIxE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732625AbfHFKPl (ORCPT
+        id S1732520AbfHFKSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 06:15:41 -0400
-Received: from foss.arm.com ([217.140.110.172]:59898 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726713AbfHFKPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 06:15:41 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F8A4337;
-        Tue,  6 Aug 2019 03:15:40 -0700 (PDT)
-Received: from [10.1.25.155] (summers-iphone.cambridge.arm.com [10.1.25.155])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 25B1B3F694;
-        Tue,  6 Aug 2019 03:15:37 -0700 (PDT)
-Subject: Re: [PATCH v2 10/12] irqchip/gic-v3: Warn about inconsistent
- implementations of extended ranges
-To:     Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Lokesh Vutla <lokeshvutla@ti.com>,
-        John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        linux-arm-kernel@lists.infradead.org
-References: <20190806100121.240767-1-maz@kernel.org>
- <20190806100121.240767-11-maz@kernel.org>
-From:   Vladimir Murzin <vladimir.murzin@arm.com>
-Message-ID: <e5512fcc-e24e-c29a-8a57-011d194e3c41@arm.com>
-Date:   Tue, 6 Aug 2019 11:15:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190806100121.240767-11-maz@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 6 Aug 2019 06:18:34 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:47009 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726713AbfHFKSd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 06:18:33 -0400
+Received: by mail-pl1-f196.google.com with SMTP id c2so37659336plz.13
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 03:18:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=B2Az8FZ7ku0X2inJnd7funCGhhLUuh16TDsRGjU7wPY=;
+        b=YLSHDIxEYeh158kEGbiXMI86GIByE6ZBeC0wvOq22XFHllvFtRDEVX/D4B2rCKIkpU
+         B95CBSqrEOjKGdoZI6typuPUN1FG/78x+D6pL8LNHFsHe0YSQYZwO+nNZiMOca5i3WsF
+         HH1Csge+AVd6PV0yT31mCQliC59Y77ttlGxFU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=B2Az8FZ7ku0X2inJnd7funCGhhLUuh16TDsRGjU7wPY=;
+        b=gbq0jjWeWjW015xJBbWaC6GQcn3b93abRo6Fm1A2XvIJsWNnzj/lxWfkUWrvhr6wvq
+         9jaukn9EL/n2Cs8cgt1Nzt3eXL3zYC+eYhjkqKEa2GLytwUqma0el14PC3c1JGW4s3im
+         ZfrWdoJg4EKL08gdayq3yfs4EUDfJFA87vnOovKWasQ1QVvZw39W7565RIwizbDsMb0c
+         LCIyUAC08/6arOxLDCC3JmVatNugFRnAKNJ5S5elb2ndCOoxZeoGt94Yod/ym4MUkJ6+
+         /QjO/uyIvVZKnP9yQEZBLI4qu7I46kDkxhRWApCWZS2+Xygr8xSF6IwkIK4SgBPmSL4W
+         dWHQ==
+X-Gm-Message-State: APjAAAWFK7lwHeraBnmboW2m0GszYAVXNPcEK6vrdg3vRLHPnQrAqlT5
+        cZKMGQwkjfjO4TvF+V2P7TQGtA==
+X-Google-Smtp-Source: APXvYqxyS1wEbeR/Ana/G2s2t8MN3btZM/Gabob2KwSWhuZCr75sQgO/4yYcxz0amLEeqYPRTivpyQ==
+X-Received: by 2002:a17:902:12d:: with SMTP id 42mr2319319plb.187.1565086712671;
+        Tue, 06 Aug 2019 03:18:32 -0700 (PDT)
+Received: from rayagonda.dhcp.broadcom.net ([192.19.234.250])
+        by smtp.gmail.com with ESMTPSA id y23sm90516588pfo.106.2019.08.06.03.18.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 06 Aug 2019 03:18:31 -0700 (PDT)
+From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+To:     Kamal Dasu <kdasu.kdev@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Subject: [PATCH v1 1/1] spi: bcm-qspi: Make BSPI default mode
+Date:   Tue,  6 Aug 2019 15:44:34 +0530
+Message-Id: <1565086474-4461-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+Switch back to BSPI mode after MSPI operations (write and erase)
+are completed. This change will keep qpsi in BSPI mode by default.
 
-On 8/6/19 11:01 AM, Marc Zyngier wrote:
-> As is it usual for the GIC, it isn't disallowed to put together a system
-> that is majorly inconsistent, with a distributor supporting the
-> extended ranges while some of the CPUs don't.
-> 
-> Kindly tell the user that things are sailing isn't going to be smooth.
-> 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> ---
->  drivers/irqchip/irq-gic-v3.c       | 5 +++++
->  include/linux/irqchip/arm-gic-v3.h | 1 +
->  2 files changed, 6 insertions(+)
-> 
-> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-> index f53e58d398ba..334a10d9dbfb 100644
-> --- a/drivers/irqchip/irq-gic-v3.c
-> +++ b/drivers/irqchip/irq-gic-v3.c
-> @@ -1014,6 +1014,11 @@ static void gic_cpu_init(void)
->  
->  	gic_enable_redist(true);
->  
-> +	WARN((gic_data.ppi_nr > 16 || GIC_ESPI_NR != 0) &&
-> +	     !(gic_read_ctlr() & ICC_CTLR_EL1_ExtRange),
-> +	     "Distributor has extended ranges, but CPU%d doesn't\n",
-> +	     smp_processor_id());
-> +
+Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+---
+ drivers/spi/spi-bcm-qspi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Should such setup be tainted?
-
-Cheers
-Vladimir
-
->  	rbase = gic_data_rdist_sgi_base();
->  
->  	/* Configure SGIs/PPIs as non-secure Group-1 */
-> diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
-> index 9ec3349dee04..5cc10cf7cb3e 100644
-> --- a/include/linux/irqchip/arm-gic-v3.h
-> +++ b/include/linux/irqchip/arm-gic-v3.h
-> @@ -496,6 +496,7 @@
->  #define ICC_CTLR_EL1_A3V_SHIFT		15
->  #define ICC_CTLR_EL1_A3V_MASK		(0x1 << ICC_CTLR_EL1_A3V_SHIFT)
->  #define ICC_CTLR_EL1_RSS		(0x1 << 18)
-> +#define ICC_CTLR_EL1_ExtRange		(0x1 << 19)
->  #define ICC_PMR_EL1_SHIFT		0
->  #define ICC_PMR_EL1_MASK		(0xff << ICC_PMR_EL1_SHIFT)
->  #define ICC_BPR0_EL1_SHIFT		0
-> 
+diff --git a/drivers/spi/spi-bcm-qspi.c b/drivers/spi/spi-bcm-qspi.c
+index 902bdbf..46a811a 100644
+--- a/drivers/spi/spi-bcm-qspi.c
++++ b/drivers/spi/spi-bcm-qspi.c
+@@ -897,6 +897,7 @@ static int bcm_qspi_transfer_one(struct spi_master *master,
+ 
+ 		read_from_hw(qspi, slots);
+ 	}
++	bcm_qspi_enable_bspi(qspi);
+ 
+ 	return 0;
+ }
+-- 
+1.9.1
 
