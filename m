@@ -4,38 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83CF0C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C256C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5743A20B1F
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F31E4214C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:19:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732818AbfHFLTE (ORCPT
+        id S1732880AbfHFLTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 07:19:04 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:57486 "EHLO
+        Tue, 6 Aug 2019 07:19:23 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:57488 "EHLO
         rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730677AbfHFLS6 (ORCPT
+        with ESMTP id S1731281AbfHFLTC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 07:18:58 -0400
+        Tue, 6 Aug 2019 07:19:02 -0400
 Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x76BIu04023717, This message is accepted by code: ctloc85258
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x76BJ0Yj023727, This message is accepted by code: ctloc85258
 Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x76BIu04023717
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x76BJ0Yj023727
         (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 6 Aug 2019 19:18:56 +0800
+        Tue, 6 Aug 2019 19:19:00 +0800
 Received: from fc30.localdomain (172.21.177.138) by RTITCASV01.realtek.com.tw
  (172.21.6.18) with Microsoft SMTP Server id 14.3.439.0; Tue, 6 Aug 2019
- 19:18:54 +0800
+ 19:18:58 +0800
 From:   Hayes Wang <hayeswang@realtek.com>
 To:     <netdev@vger.kernel.org>
 CC:     <nic_swsd@realtek.com>, <linux-kernel@vger.kernel.org>,
         <linux-usb@vger.kernel.org>, Hayes Wang <hayeswang@realtek.com>
-Subject: [PATCH net-next 2/5] r8152: replace array with linking list for rx information
-Date:   Tue, 6 Aug 2019 19:18:01 +0800
-Message-ID: <1394712342-15778-291-albertk@realtek.com>
+Subject: [PATCH net-next 4/5] r8152: support skb_add_rx_frag
+Date:   Tue, 6 Aug 2019 19:18:03 +0800
+Message-ID: <1394712342-15778-293-albertk@realtek.com>
 X-Mailer: Microsoft Office Outlook 11
 In-Reply-To: <1394712342-15778-289-albertk@realtek.com>
 References: <1394712342-15778-289-albertk@realtek.com>
@@ -48,293 +48,259 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The original method uses an array to store the rx information. The
-new one uses a list to link each rx structure. Then, it is possible
-to increase/decrease the number of rx structure dynamically.
+Use skb_add_rx_frag() to reduce the memory copy for rx data.
+
+Use a new list of rx_used to store the rx buffer which couldn't be
+reused yet.
+
+Besides, the total number of rx buffer may be increased or decreased
+dynamically. And it is limited by RTL8152_MAX_RX_AGG.
 
 Signed-off-by: Hayes Wang <hayeswang@realtek.com>
 ---
- drivers/net/usb/r8152.c | 187 ++++++++++++++++++++++++++++------------
- 1 file changed, 132 insertions(+), 55 deletions(-)
+ drivers/net/usb/r8152.c | 122 +++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 108 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index 0f07ed05ab34..44d832ceb516 100644
+index 401e56112365..1615900c8592 100644
 --- a/drivers/net/usb/r8152.c
 +++ b/drivers/net/usb/r8152.c
-@@ -22,6 +22,7 @@
- #include <linux/mdio.h>
- #include <linux/usb/cdc.h>
- #include <linux/suspend.h>
-+#include <linux/atomic.h>
- #include <linux/acpi.h>
+@@ -584,6 +584,9 @@ enum rtl_register_content {
+ #define TX_ALIGN		4
+ #define RX_ALIGN		8
  
- /* Information for net-next */
-@@ -694,7 +695,7 @@ struct tx_desc {
- struct r8152;
++#define RTL8152_MAX_RX_AGG	(10 * RTL8152_MAX_RX)
++#define RTL8152_RXFG_HEADSZ	256
++
+ #define INTR_LINK		0x0004
  
- struct rx_agg {
--	struct list_head list;
-+	struct list_head list, info_list;
- 	struct urb *urb;
- 	struct r8152 *context;
- 	void *buffer;
-@@ -719,7 +720,7 @@ struct r8152 {
+ #define RTL8152_REQT_READ	0xc0
+@@ -720,7 +723,7 @@ struct r8152 {
  	struct net_device *netdev;
  	struct urb *intr_urb;
  	struct tx_agg tx_info[RTL8152_MAX_TX];
--	struct rx_agg rx_info[RTL8152_MAX_RX];
-+	struct list_head rx_info;
+-	struct list_head rx_info;
++	struct list_head rx_info, rx_used;
  	struct list_head rx_done, tx_free;
  	struct sk_buff_head tx_queue, rx_queue;
  	spinlock_t rx_lock, tx_lock;
-@@ -744,6 +745,8 @@ struct r8152 {
- 		void (*autosuspend_en)(struct r8152 *tp, bool enable);
- 	} rtl_ops;
+@@ -1476,7 +1479,7 @@ static void free_rx_agg(struct r8152 *tp, struct rx_agg *agg)
+ 	list_del(&agg->info_list);
  
-+	atomic_t rx_count;
-+
- 	int intr_interval;
- 	u32 saved_wolopts;
- 	u32 msg_enable;
-@@ -1468,19 +1471,86 @@ static inline void *tx_agg_align(void *data)
- 	return (void *)ALIGN((uintptr_t)data, TX_ALIGN);
+ 	usb_free_urb(agg->urb);
+-	__free_pages(agg->page, get_order(tp->rx_buf_sz));
++	put_page(agg->page);
+ 	kfree(agg);
+ 
+ 	atomic_dec(&tp->rx_count);
+@@ -1493,7 +1496,7 @@ static struct rx_agg *alloc_rx_agg(struct r8152 *tp, gfp_t mflags)
+ 	if (rx_agg) {
+ 		unsigned long flags;
+ 
+-		rx_agg->page = alloc_pages(mflags, order);
++		rx_agg->page = alloc_pages(mflags | __GFP_COMP, order);
+ 		if (!rx_agg->page)
+ 			goto free_rx;
+ 
+@@ -1951,6 +1954,50 @@ static u8 r8152_rx_csum(struct r8152 *tp, struct rx_desc *rx_desc)
+ 	return checksum;
  }
  
-+static void free_rx_agg(struct r8152 *tp, struct rx_agg *agg)
++static inline bool rx_count_exceed(struct r8152 *tp)
 +{
-+	list_del(&agg->info_list);
-+
-+	usb_free_urb(agg->urb);
-+	kfree(agg->buffer);
-+	kfree(agg);
-+
-+	atomic_dec(&tp->rx_count);
++	return atomic_read(&tp->rx_count) > RTL8152_MAX_RX;
 +}
 +
-+static struct rx_agg *alloc_rx_agg(struct r8152 *tp, gfp_t mflags)
++static inline int agg_offset(struct rx_agg *agg, void *addr)
 +{
-+	struct net_device *netdev = tp->netdev;
-+	int node = netdev->dev.parent ? dev_to_node(netdev->dev.parent) : -1;
-+	struct rx_agg *rx_agg;
++	return (int)(addr - agg->buffer);
++}
 +
-+	rx_agg = kmalloc_node(sizeof(*rx_agg), mflags, node);
-+	if (rx_agg) {
-+		unsigned long flags;
-+		u8 *buf;
++static struct rx_agg *rtl_get_free_rx(struct r8152 *tp, gfp_t mflags)
++{
++	struct list_head *cursor, *next;
++	struct rx_agg *agg_free = NULL;
++	unsigned long flags;
 +
-+		buf = kmalloc_node(tp->rx_buf_sz, mflags, node);
-+		if (!buf)
-+			goto free_rx;
++	spin_lock_irqsave(&tp->rx_lock, flags);
 +
-+		if (buf != rx_agg_align(buf)) {
-+			kfree(buf);
-+			buf = kmalloc_node(tp->rx_buf_sz + RX_ALIGN, mflags,
-+					   node);
-+			if (!buf)
-+				goto free_rx;
++	list_for_each_safe(cursor, next, &tp->rx_used) {
++		struct rx_agg *agg;
++
++		agg = list_entry(cursor, struct rx_agg, list);
++
++		if (page_count(agg->page) == 1) {
++			if (!agg_free) {
++				list_del_init(cursor);
++				agg_free = agg;
++				continue;
++			} else if (rx_count_exceed(tp)) {
++				list_del_init(cursor);
++				free_rx_agg(tp, agg);
++			}
++			break;
++		}
++	}
++
++	spin_unlock_irqrestore(&tp->rx_lock, flags);
++
++	if (!agg_free && atomic_read(&tp->rx_count) < RTL8152_MAX_RX_AGG)
++		agg_free = alloc_rx_agg(tp, mflags);
++
++	return agg_free;
++}
++
+ static int rx_bottom(struct r8152 *tp, int budget)
+ {
+ 	unsigned long flags;
+@@ -1986,7 +2033,7 @@ static int rx_bottom(struct r8152 *tp, int budget)
+ 
+ 	list_for_each_safe(cursor, next, &rx_queue) {
+ 		struct rx_desc *rx_desc;
+-		struct rx_agg *agg;
++		struct rx_agg *agg, *agg_next;
+ 		int len_used = 0;
+ 		struct urb *urb;
+ 		u8 *rx_data;
+@@ -1998,6 +2045,8 @@ static int rx_bottom(struct r8152 *tp, int budget)
+ 		if (urb->actual_length < ETH_ZLEN)
+ 			goto submit;
+ 
++		agg_next = rtl_get_free_rx(tp, GFP_ATOMIC);
++
+ 		rx_desc = agg->buffer;
+ 		rx_data = agg->buffer;
+ 		len_used += sizeof(struct rx_desc);
+@@ -2005,7 +2054,7 @@ static int rx_bottom(struct r8152 *tp, int budget)
+ 		while (urb->actual_length > len_used) {
+ 			struct net_device *netdev = tp->netdev;
+ 			struct net_device_stats *stats = &netdev->stats;
+-			unsigned int pkt_len;
++			unsigned int pkt_len, rx_frag_head_sz;
+ 			struct sk_buff *skb;
+ 
+ 			/* limite the skb numbers for rx_queue */
+@@ -2023,22 +2072,37 @@ static int rx_bottom(struct r8152 *tp, int budget)
+ 			pkt_len -= ETH_FCS_LEN;
+ 			rx_data += sizeof(struct rx_desc);
+ 
+-			skb = napi_alloc_skb(napi, pkt_len);
++			if (!agg_next || RTL8152_RXFG_HEADSZ > pkt_len)
++				rx_frag_head_sz = pkt_len;
++			else
++				rx_frag_head_sz = RTL8152_RXFG_HEADSZ;
++
++			skb = napi_alloc_skb(napi, rx_frag_head_sz);
+ 			if (!skb) {
+ 				stats->rx_dropped++;
+ 				goto find_next_rx;
+ 			}
+ 
+ 			skb->ip_summed = r8152_rx_csum(tp, rx_desc);
+-			memcpy(skb->data, rx_data, pkt_len);
+-			skb_put(skb, pkt_len);
++			memcpy(skb->data, rx_data, rx_frag_head_sz);
++			skb_put(skb, rx_frag_head_sz);
++			pkt_len -= rx_frag_head_sz;
++			rx_data += rx_frag_head_sz;
++			if (pkt_len) {
++				skb_add_rx_frag(skb, 0, agg->page,
++						agg_offset(agg, rx_data),
++						pkt_len,
++						SKB_DATA_ALIGN(pkt_len));
++				get_page(agg->page);
++			}
++
+ 			skb->protocol = eth_type_trans(skb, netdev);
+ 			rtl_rx_vlan_tag(rx_desc, skb);
+ 			if (work_done < budget) {
+ 				napi_gro_receive(napi, skb);
+ 				work_done++;
+ 				stats->rx_packets++;
+-				stats->rx_bytes += pkt_len;
++				stats->rx_bytes += skb->len;
+ 			} else {
+ 				__skb_queue_tail(&tp->rx_queue, skb);
+ 			}
+@@ -2046,10 +2110,24 @@ static int rx_bottom(struct r8152 *tp, int budget)
+ find_next_rx:
+ 			rx_data = rx_agg_align(rx_data + pkt_len + ETH_FCS_LEN);
+ 			rx_desc = (struct rx_desc *)rx_data;
+-			len_used = (int)(rx_data - (u8 *)agg->buffer);
++			len_used = agg_offset(agg, rx_data);
+ 			len_used += sizeof(struct rx_desc);
+ 		}
+ 
++		WARN_ON(!agg_next && page_count(agg->page) > 1);
++
++		if (agg_next) {
++			spin_lock_irqsave(&tp->rx_lock, flags);
++			if (page_count(agg->page) == 1) {
++				list_add(&agg_next->list, &tp->rx_used);
++			} else {
++				list_add_tail(&agg->list, &tp->rx_used);
++				agg = agg_next;
++				urb = agg->urb;
++			}
++			spin_unlock_irqrestore(&tp->rx_lock, flags);
 +		}
 +
-+		rx_agg->buffer = buf;
-+		rx_agg->head = rx_agg_align(buf);
-+
-+		rx_agg->urb = usb_alloc_urb(0, mflags);
-+		if (!rx_agg->urb)
-+			goto free_buf;
-+
-+		rx_agg->context = tp;
-+
-+		INIT_LIST_HEAD(&rx_agg->list);
-+		INIT_LIST_HEAD(&rx_agg->info_list);
-+		spin_lock_irqsave(&tp->rx_lock, flags);
-+		list_add_tail(&rx_agg->info_list, &tp->rx_info);
-+		spin_unlock_irqrestore(&tp->rx_lock, flags);
-+
-+		atomic_inc(&tp->rx_count);
-+	}
-+
-+	return rx_agg;
-+
-+free_buf:
-+	kfree(rx_agg->buffer);
-+free_rx:
-+	kfree(rx_agg);
-+	return NULL;
-+}
-+
- static void free_all_mem(struct r8152 *tp)
+ submit:
+ 		if (!ret) {
+ 			ret = r8152_submit_rx(tp, agg, GFP_ATOMIC);
+@@ -2376,13 +2454,14 @@ static int rtl_start_rx(struct r8152 *tp)
  {
-+	struct list_head *cursor, *next;
-+	unsigned long flags;
- 	int i;
+ 	struct list_head *cursor, *next, tmp_list;
+ 	unsigned long flags;
+-	int ret = 0;
++	int ret = 0, i = 0;
  
--	for (i = 0; i < RTL8152_MAX_RX; i++) {
--		usb_free_urb(tp->rx_info[i].urb);
--		tp->rx_info[i].urb = NULL;
-+	spin_lock_irqsave(&tp->rx_lock, flags);
+ 	INIT_LIST_HEAD(&tmp_list);
  
--		kfree(tp->rx_info[i].buffer);
--		tp->rx_info[i].buffer = NULL;
--		tp->rx_info[i].head = NULL;
-+	list_for_each_safe(cursor, next, &tp->rx_info) {
-+		struct rx_agg *agg;
-+
-+		agg = list_entry(cursor, struct rx_agg, info_list);
-+		free_rx_agg(tp, agg);
- 	}
- 
-+	spin_unlock_irqrestore(&tp->rx_lock, flags);
-+
-+	WARN_ON(unlikely(atomic_read(&tp->rx_count)));
-+
- 	for (i = 0; i < RTL8152_MAX_TX; i++) {
- 		usb_free_urb(tp->tx_info[i].urb);
- 		tp->tx_info[i].urb = NULL;
-@@ -1503,46 +1573,28 @@ static int alloc_all_mem(struct r8152 *tp)
- 	struct usb_interface *intf = tp->intf;
- 	struct usb_host_interface *alt = intf->cur_altsetting;
- 	struct usb_host_endpoint *ep_intr = alt->endpoint + 2;
--	struct urb *urb;
- 	int node, i;
--	u8 *buf;
- 
- 	node = netdev->dev.parent ? dev_to_node(netdev->dev.parent) : -1;
- 
- 	spin_lock_init(&tp->rx_lock);
- 	spin_lock_init(&tp->tx_lock);
-+	INIT_LIST_HEAD(&tp->rx_info);
- 	INIT_LIST_HEAD(&tp->tx_free);
- 	INIT_LIST_HEAD(&tp->rx_done);
- 	skb_queue_head_init(&tp->tx_queue);
- 	skb_queue_head_init(&tp->rx_queue);
-+	atomic_set(&tp->rx_count, 0);
- 
- 	for (i = 0; i < RTL8152_MAX_RX; i++) {
--		buf = kmalloc_node(tp->rx_buf_sz, GFP_KERNEL, node);
--		if (!buf)
--			goto err1;
--
--		if (buf != rx_agg_align(buf)) {
--			kfree(buf);
--			buf = kmalloc_node(tp->rx_buf_sz + RX_ALIGN, GFP_KERNEL,
--					   node);
--			if (!buf)
--				goto err1;
--		}
--
--		urb = usb_alloc_urb(0, GFP_KERNEL);
--		if (!urb) {
--			kfree(buf);
-+		if (!alloc_rx_agg(tp, GFP_KERNEL))
- 			goto err1;
--		}
--
--		INIT_LIST_HEAD(&tp->rx_info[i].list);
--		tp->rx_info[i].context = tp;
--		tp->rx_info[i].urb = urb;
--		tp->rx_info[i].buffer = buf;
--		tp->rx_info[i].head = rx_agg_align(buf);
- 	}
- 
- 	for (i = 0; i < RTL8152_MAX_TX; i++) {
-+		struct urb *urb;
-+		u8 *buf;
-+
- 		buf = kmalloc_node(agg_buf_sz, GFP_KERNEL, node);
- 		if (!buf)
- 			goto err1;
-@@ -2331,44 +2383,69 @@ static void rxdy_gated_en(struct r8152 *tp, bool enable)
- 
- static int rtl_start_rx(struct r8152 *tp)
- {
--	int i, ret = 0;
-+	struct list_head *cursor, *next, tmp_list;
-+	unsigned long flags;
-+	int ret = 0;
-+
-+	INIT_LIST_HEAD(&tmp_list);
-+
-+	spin_lock_irqsave(&tp->rx_lock, flags);
+ 	spin_lock_irqsave(&tp->rx_lock, flags);
  
  	INIT_LIST_HEAD(&tp->rx_done);
--	for (i = 0; i < RTL8152_MAX_RX; i++) {
--		INIT_LIST_HEAD(&tp->rx_info[i].list);
--		ret = r8152_submit_rx(tp, &tp->rx_info[i], GFP_KERNEL);
--		if (ret)
--			break;
--	}
++	INIT_LIST_HEAD(&tp->rx_used);
  
--	if (ret && ++i < RTL8152_MAX_RX) {
--		struct list_head rx_queue;
--		unsigned long flags;
-+	list_splice_init(&tp->rx_info, &tmp_list);
+ 	list_splice_init(&tp->rx_info, &tmp_list);
  
--		INIT_LIST_HEAD(&rx_queue);
-+	spin_unlock_irqrestore(&tp->rx_lock, flags);
+@@ -2394,10 +2473,18 @@ static int rtl_start_rx(struct r8152 *tp)
+ 		agg = list_entry(cursor, struct rx_agg, info_list);
+ 		INIT_LIST_HEAD(&agg->list);
  
--		do {
--			struct rx_agg *agg = &tp->rx_info[i++];
--			struct urb *urb = agg->urb;
-+	list_for_each_safe(cursor, next, &tmp_list) {
-+		struct rx_agg *agg;
+-		if (ret < 0)
++		/* Only RTL8152_MAX_RX rx_agg need to be submitted. */
++		if (++i > RTL8152_MAX_RX) {
++			spin_lock_irqsave(&tp->rx_lock, flags);
++			list_add_tail(&agg->list, &tp->rx_used);
++			spin_unlock_irqrestore(&tp->rx_lock, flags);
++		} else if (unlikely(ret < 0)) {
++			spin_lock_irqsave(&tp->rx_lock, flags);
+ 			list_add_tail(&agg->list, &tp->rx_done);
+-		else
++			spin_unlock_irqrestore(&tp->rx_lock, flags);
++		} else {
+ 			ret = r8152_submit_rx(tp, agg, GFP_KERNEL);
++		}
+ 	}
  
--			urb->actual_length = 0;
--			list_add_tail(&agg->list, &rx_queue);
--		} while (i < RTL8152_MAX_RX);
-+		agg = list_entry(cursor, struct rx_agg, info_list);
-+		INIT_LIST_HEAD(&agg->list);
+ 	spin_lock_irqsave(&tp->rx_lock, flags);
+@@ -2429,7 +2516,14 @@ static int rtl_stop_rx(struct r8152 *tp)
+ 		struct rx_agg *agg;
  
--		spin_lock_irqsave(&tp->rx_lock, flags);
--		list_splice_tail(&rx_queue, &tp->rx_done);
--		spin_unlock_irqrestore(&tp->rx_lock, flags);
-+		if (ret < 0)
-+			list_add_tail(&agg->list, &tp->rx_done);
+ 		agg = list_entry(cursor, struct rx_agg, info_list);
+-		usb_kill_urb(agg->urb);
++
++		/* At least RTL8152_MAX_RX rx_agg have the page_count being
++		 * equal to 1, so the other ones could be freed safely.
++		 */
++		if (page_count(agg->page) > 1)
++			free_rx_agg(tp, agg);
 +		else
-+			ret = r8152_submit_rx(tp, agg, GFP_KERNEL);
++			usb_kill_urb(agg->urb);
  	}
  
-+	spin_lock_irqsave(&tp->rx_lock, flags);
-+	WARN_ON(unlikely(!list_empty(&tp->rx_info)));
-+	list_splice(&tmp_list, &tp->rx_info);
-+	spin_unlock_irqrestore(&tp->rx_lock, flags);
-+
- 	return ret;
- }
- 
- static int rtl_stop_rx(struct r8152 *tp)
- {
--	int i;
-+	struct list_head *cursor, *next, tmp_list;
-+	unsigned long flags;
-+
-+	INIT_LIST_HEAD(&tmp_list);
- 
--	for (i = 0; i < RTL8152_MAX_RX; i++)
--		usb_kill_urb(tp->rx_info[i].urb);
-+	/* The usb_kill_urb() couldn't be used in atomic.
-+	 * Therefore, move the list of rx_info to a tmp one.
-+	 * Then, list_for_each_safe could be used without
-+	 * spin lock.
-+	 */
-+
-+	spin_lock_irqsave(&tp->rx_lock, flags);
-+	list_splice_init(&tp->rx_info, &tmp_list);
-+	spin_unlock_irqrestore(&tp->rx_lock, flags);
-+
-+	list_for_each_safe(cursor, next, &tmp_list) {
-+		struct rx_agg *agg;
-+
-+		agg = list_entry(cursor, struct rx_agg, info_list);
-+		usb_kill_urb(agg->urb);
-+	}
-+
-+	/* Move back the list of temp to the rx_info */
-+	spin_lock_irqsave(&tp->rx_lock, flags);
-+	WARN_ON(unlikely(!list_empty(&tp->rx_info)));
-+	list_splice(&tmp_list, &tp->rx_info);
-+	spin_unlock_irqrestore(&tp->rx_lock, flags);
- 
- 	while (!skb_queue_empty(&tp->rx_queue))
- 		dev_kfree_skb(__skb_dequeue(&tp->rx_queue));
+ 	/* Move back the list of temp to the rx_info */
 -- 
 2.21.0
 
