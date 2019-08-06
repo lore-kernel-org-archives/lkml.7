@@ -2,171 +2,162 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F0CC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D562CC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38A2120818
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:15:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m9QjYsJz"
+	by mail.kernel.org (Postfix) with ESMTP id B656C216B7
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:15:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732833AbfHFOPd (ORCPT
+        id S1732891AbfHFOPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 10:15:33 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:37786 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726834AbfHFOPc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 10:15:32 -0400
-Received: by mail-qk1-f193.google.com with SMTP id d15so62942787qkl.4
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 07:15:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9AtvYU2xgoxOs2OEONfJSqtaxyOSpXmvUC2SyXZ4+ps=;
-        b=m9QjYsJzYzzo/iy9iyElP8LFJ9SMn9cGEwiCJmsC6jNlyhN65Xj98OwmMB4SO8Unon
-         9jVnusHCyWBCb1DDEw3O0NlOvubJSVnUxWvicXTSEFVluNUybD8iA2hgh/d+dIm4DmQJ
-         1g0qhi5z3cSo4Tzv8zSYYXhSpW/XJJJ3GnkP83wXg2ev3J4TPxg4Wxe3S06di8Zd9Dru
-         OKPs6MPQaR18QI9Jww8YBJlwywyTkiKJqSAgqn3vaeCqFg7RAkW1FwzCpFOs4UBXUpCh
-         w+Om9lZq1XsrCwAlSCgYuEflxlVFgsRpqNTxBDdXiUxM2sTr5ALXphey5ZqBehAz708L
-         DgcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9AtvYU2xgoxOs2OEONfJSqtaxyOSpXmvUC2SyXZ4+ps=;
-        b=G/QxLTe1kSSZeVs9jKeTqiyZNOlyvm1P7RLnMn0tE/4QM2Oi11MhISxAh2jpmPdtjS
-         8bJBR+DG24Bc7smUzsJsB32ElI0UzqPaKg/If3KQW+Kr5UoTjjaKDCgLFQgiYGpPT3Xp
-         niQROxbtwHa+a++NEvCxD24zU2is7BJKF4Kk+nzS0ENZk4X0tJHkBldJ2qV3/tVN4V8U
-         rruAeI/drkLkUVEhyzPUOHImgc+JDvI/6F17+niKp9jB4g7SECy52G8rRMjPrlr1I0ca
-         dqhzuWCZihuxyiz3jbUV2MgzEgrV9XfTV3XOgEuMz1H/lvrYxjtxr9a5JcTKTo4rrlNl
-         uRsg==
-X-Gm-Message-State: APjAAAWhjGxeidepFwVhY+PJm2svlzHSxePaPaOoRJOFA0v4ZLdgfBXZ
-        xIWdr/kZv8BL8C22FX8dmAY7ga8A
-X-Google-Smtp-Source: APXvYqwqLBbVnvevVEpri5oDehbzM8jw0xlRaG5GOrmEupq2dQXIllKUcDu9SSl/LPhBAVXObyOQMg==
-X-Received: by 2002:a05:620a:710:: with SMTP id 16mr3326693qkc.382.1565100931572;
-        Tue, 06 Aug 2019 07:15:31 -0700 (PDT)
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id x206sm39820445qkb.127.2019.08.06.07.15.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 06 Aug 2019 07:15:30 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 266D122050;
-        Tue,  6 Aug 2019 10:15:29 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Tue, 06 Aug 2019 10:15:29 -0400
-X-ME-Sender: <xms:f4tJXb1luMls74UyiXxUp5X4Gx_fJ0tT079ngtOeq0dA1FtF64iZGA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddruddutddgjeefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjfgesghdtreertdervdenucfhrhhomhepuehoqhhu
-    nhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucfkphepge
-    ehrdefvddruddvkedruddtleenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdo
-    mhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejke
-    ehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgr
-    mhgvnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:f4tJXVmyOeJONud6STna3aaFBlXsdQPQVpVuRfIWDdhQK2nVZJwHhw>
-    <xmx:f4tJXSUQekbz_85q0HlBB0jXUpTt3GZsIk-PKgdTeIDQC6M1kvn1Sg>
-    <xmx:f4tJXbvaq9lqkXlTeQHy3b3oFD0hw-X8_Yf6xfo4HMsGL9athr5nFw>
-    <xmx:gYtJXTEDnmZyvj72srK4LfgZaIfW_EYleP6S3l3HBU3v9N3Fss6gbNW7taA>
-Received: from localhost (unknown [45.32.128.109])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 5281C8005B;
-        Tue,  6 Aug 2019 10:15:27 -0400 (EDT)
-Date:   Tue, 6 Aug 2019 22:15:23 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Oleg Nesterov <oleg@redhat.com>, Will Deacon <will@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, bigeasy@linutronix.de,
-        juri.lelli@redhat.com, williams@redhat.com, bristot@redhat.com,
-        longman@redhat.com, dave@stgolabs.net, jack@suse.com
-Subject: Re: [PATCH] locking/percpu_rwsem: Rewrite to not use rwsem
-Message-ID: <20190806141523.GC972@tardis>
-References: <20190805140241.GI2332@hirez.programming.kicks-ass.net>
- <20190805144318.GA972@tardis>
- <20190805145813.GB972@tardis>
- <20190805154328.GJ2332@hirez.programming.kicks-ass.net>
+        Tue, 6 Aug 2019 10:15:40 -0400
+Received: from mga14.intel.com ([192.55.52.115]:6847 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732664AbfHFOPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 10:15:40 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 07:15:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
+   d="scan'208";a="192674660"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 06 Aug 2019 07:15:36 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 06 Aug 2019 17:15:36 +0300
+Date:   Tue, 6 Aug 2019 17:15:36 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Matthias Andree <matthias.andree@gmx.de>
+Subject: Re: [Regression] pcie_wait_for_link_delay (1132.853 ms @ 5039.414431)
+Message-ID: <20190806141536.GB2548@lahna.fi.intel.com>
+References: <2857501d-c167-547d-c57d-d5d24ea1f1dc@molgen.mpg.de>
+ <20190806093626.GF2548@lahna.fi.intel.com>
+ <acca5213-7d8b-7db1-ff3c-cb5b4a704f04@molgen.mpg.de>
+ <20190806113154.GS2548@lahna.fi.intel.com>
+ <f83a541d-65de-ed05-c4c1-2bda345b30ef@molgen.mpg.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="9Ek0hoCL9XbhcSqy"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190805154328.GJ2332@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f83a541d-65de-ed05-c4c1-2bda345b30ef@molgen.mpg.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 06, 2019 at 04:02:42PM +0200, Paul Menzel wrote:
+> >> How can I read out the delay from the system as done in?
+> > 
+> > The delay is not system wide so it depends on the device. Typically it
+> > is 100ms but there is a way to shorten it using ACPI _DSM.
+> 
+> Yeah, I know. I was wondering if it can easily be read out for a device
+> under `/sys`, other debug level or, for example, with `lspci` or
+> `acpidump`.
 
---9Ek0hoCL9XbhcSqy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+AFAIK there is no easy way at least without patching the kernel. You can
+log pdev->d3cold_delay for each device in pci_pm_init() for example.
 
-On Mon, Aug 05, 2019 at 05:43:28PM +0200, Peter Zijlstra wrote:
-> On Mon, Aug 05, 2019 at 10:58:13PM +0800, Boqun Feng wrote:
-> > On Mon, Aug 05, 2019 at 10:43:18PM +0800, Boqun Feng wrote:
-> > > On Mon, Aug 05, 2019 at 04:02:41PM +0200, Peter Zijlstra wrote:
-> > > [...]
-> > > > =20
-> > > >  static inline void percpu_up_read(struct percpu_rw_semaphore *sem)
-> > > >  {
-> > > > +	rwsem_release(&sem->dep_map, 1, _RET_IP_);
-> > > > +
-> > > >  	preempt_disable();
-> > > >  	/*
-> > > >  	 * Same as in percpu_down_read().
-> > > >  	 */
-> > > > -	if (likely(rcu_sync_is_idle(&sem->rss)))
-> > > > +	if (likely(rcu_sync_is_idle(&sem->rss))) {
-> > > >  		__this_cpu_dec(*sem->read_count);
-> > > > -	else
-> > > > -		__percpu_up_read(sem); /* Unconditional memory barrier */
-> > > > -	preempt_enable();
-> > > > +		preempt_enable();
-> > > > +		return;
-> > > > +	}
-> > > > =20
-> > > > -	rwsem_release(&sem->rw_sem.dep_map, 1, _RET_IP_);
-> > >=20
-> > > Missing a preempt_enable() here?
-> > >=20
-> >=20
-> > Ah.. you modified the semantics of __percpu_up_read() to imply a
-> > preempt_enable(), sorry for the noise...
->=20
-> Yes indeed; I suppose I should've noted that in the Changlog. The reason
-> is that waitqueues use spin_lock() which change into a sleepable lock on
-> RT and thus cannot be used with preeption disabled. We also cannot
-> (easily) switch to swait because we use both exclusive and !exclusive
-> waits.
+> >> ```
+> >> static int get_downstream_delay(struct pci_bus *bus)
+> >> {
+> >>         struct pci_dev *pdev;
+> >>         int min_delay = 100;
+> >>         int max_delay = 0;
+> >>
+> >>         list_for_each_entry(pdev, &bus->devices, bus_list) {
+> >>                 if (!pdev->imm_ready)
+> >>                         min_delay = 0;
+> >>                 else if (pdev->d3cold_delay < min_delay)
+> >>                         min_delay = pdev->d3cold_delay;
+> >>                 if (pdev->d3cold_delay > max_delay)
+> >>                         max_delay = pdev->d3cold_delay;
+> >>         }
+> >>
+> >>         return max(min_delay, max_delay);
+> >> }
+> >> ```
+> >>
+> >>>> Anyway, there is such firmware out there, so I’d like to avoid the time
+> >>>> increases.
+> >>>>
+> >>>> As a first step, the commit should be extended to print a warning (maybe if
+> >>>> `initcall_debug` is specified), when the delay is higher than let’s say 50(?)
+> >>>> ms. Also better documentation how to debug these delays would be appreciated.
+> >>
+> >> As your commit message says the standard demands a delay of at least 100 ms, 50 ms
+> >> is of course too short, and maybe 150 ms or so should be used as the threshold.
+> >>
+> >>>> If there is no easy solution, it’d be great if the commit could be reverted for
+> >>>> now, and a better solution be discussed for the next release.
+> >>>
+> >>> There is also kernel bugzilla entry about another regression this causes
+> >>> here:
+> >>>
+> >>>   https://bugzilla.kernel.org/show_bug.cgi?id=204413
+> >>>
+> >>> I agree we should revert c2bf1fc2 now. I'll try to come up alternative
+> >>> solution to these missing delays that hopefully does not break existing
+> >>> setups.
+> >>>
+> >>> Rafael, Bjorn,
+> >>>
+> >>> Can you revert the commit or do you want me to send a revert patch?
+> >>>
+> >>> Thanks and sorry about the breakage.
+> >>
+> >> No worries.
+> > 
+> > Thanks for the lspci output. This explains the 1 second delay:
+> > 
+> >> 		LnkCap:	Port #2, Speed 8GT/s, Width x16, ASPM L0s L1, Exit Latency L0s <256ns, L1 <8us
+> >> 			ClockPM- Surprise- LLActRep- BwNot+ ASPMOptComp+
+> > 
+> > The port does not support active link reporting. Can you try the below
+> > patch?
+> > 
+> > Nicholas, can you also try it? I think it should solve your issue as
+> > well.
+> > 
+> > Thanks!
+> > 
+> > diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+> > index 308c3e0c4a34..bb8c753013d0 100644
+> > --- a/drivers/pci/pcie/portdrv_core.c
+> > +++ b/drivers/pci/pcie/portdrv_core.c
+> > @@ -434,7 +434,8 @@ static void wait_for_downstream_link(struct pci_dev *pdev)
+> >  	 * need to wait 100ms. For higher speeds (gen3) we need to wait
+> >  	 * first for the data link layer to become active.
+> >  	 */
+> > -	if (pcie_get_speed_cap(pdev) <= PCIE_SPEED_5_0GT)
+> > +	if (pcie_get_speed_cap(pdev) <= PCIE_SPEED_5_0GT ||
+> > +	    !pdev->link_active_reporting)
+> >  		msleep(delay);
+> >  	else
+> >  		pcie_wait_for_link_delay(pdev, true, delay);
+> 
+> I can confirm, that the delay is reduced now.
+> 
+>     pcieport @ 0000:00:01.0 {pcieport} async_device (Total Suspend: 12.118 ms Total Resume: 105.604 ms)
 
-Thanks for the explanation. I was missing the point that the modfication
-is mostly for RT, much clear now ;-)
+Awesome, thanks.
 
-Regards,
-Boqun
+> How can I enable the verbose log messages you got in your commit
+> message like below?
+> 
+>     pcieport 0000:00:1b.0: wait for 100ms after DLLLA is set before access to 0000:01:00.0
 
---9Ek0hoCL9XbhcSqy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEj5IosQTPz8XU1wRHSXnow7UH+rgFAl1Ji3MACgkQSXnow7UH
-+riAXAf/Qrwte7r5kR7uqoNuz+QiENJSrEGxIs5zR5ymKXqpqz6ayQEsh+U1q4Qm
-7TyNIBAqr+vxDHz9JbUVglPGXfQLzXyDtAv8VrqxrtMWCu+ILUwWvBujh+jLt5RY
-ss0a2p5wpcF15OU10ZgWv/p9cglcP6RoFJXtqLnCYWzvrZmk7r+ei7WrJ2qSt88b
-lvCTy0qOIk50yVJxkOtdJNq4weVPP1OzsAnYDZY431pBbb2v2wMoC4e1atnkcLg5
-C24pnoDA9qyYDqWSYWRhC6ST7YK2FkTKM8zZX3d7UcXz7AAKXWkdSNzrF8xVHYmY
-xYfaGZwFC5c4ky/ZmV087LAioTxVig==
-=5Ujv
------END PGP SIGNATURE-----
-
---9Ek0hoCL9XbhcSqy--
+It did not come from any log message, I just wrote it like that for the
+commit log.
