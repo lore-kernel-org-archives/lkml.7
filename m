@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F994C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD53DC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F5DC21880
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:41:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5C8821743
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:41:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127704;
-	bh=ICW1EZWYyolokCIk894k1nfiyeOYuE8gOC7+rgj4iQ0=;
+	s=default; t=1565127715;
+	bh=PLr8k4TWW+G7xVQIGP2VSxN/aJZHk3HpXCqOe3yDu7Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qS8TgYM5vmOuzsOLPOnNPVfisq/+9k4AGp5Yvy6tlUJMjVAdZYSrQcST1jNnxEh0p
-	 p2Mt6ljGhyjGIu5rt34yU61gZdCWf9zrzq1PAbqXXFlQrIHj0GDsCp0X8eoX22uySY
-	 /TPzOSzFTOhZk9+HxDwWvRioL1L/HUlEph7j5RYE=
+	b=e7FAdtO3VY3E0Ygab4XFPSSjzDREuEB9tVNvTvHbuItUtlex+BP1XgqQs41LfMQYV
+	 RE36xmDkvaPseL9GN3U06zsoDH8nfVaUg7V539KSFm1XekGoo/K1daCGhiedF071tI
+	 sbf5nExZ7G0dcNDNuO/UfPHn/LFBz3TGY58Lns0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729405AbfHFVlm (ORCPT
+        id S1728986AbfHFVly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:41:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53750 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:41:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728764AbfHFVf6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:35:58 -0400
+        id S1728718AbfHFVfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:35:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C97B221881;
-        Tue,  6 Aug 2019 21:35:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7015E217D9;
+        Tue,  6 Aug 2019 21:35:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127356;
-        bh=ICW1EZWYyolokCIk894k1nfiyeOYuE8gOC7+rgj4iQ0=;
+        s=default; t=1565127350;
+        bh=PLr8k4TWW+G7xVQIGP2VSxN/aJZHk3HpXCqOe3yDu7Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XArS8nSq0SDOyQZ9bgSZtZbQfFbfn3VvAp1yeHjsjVvHPc76rVIN0LOokQHmVExbt
-         nC6tm+xCvMdTSqjpfBq4bfisEdngx9s5UyQ5f09Vblp4aAc93vbT5eROMIn8wNTQRn
-         LbniFUfaEcAeNiDUYRX7ax8CxPvJ0e2uG2d/NjLo=
+        b=I024dj+7Attu6TFnLvr0OgrgjTf+WiFeq61k1vxeN6xkaBDyFUzBK+Xs7DAbNWThk
+         jXSKS+W72djbUA9VHIrH4oSzGmWGQIGyuv+ZueeqX7U+hvCL2V/DvnDInjFtSDc5el
+         ZLWKIViJ5bBZpn54DyHoNVVyrOTF+qQrTa8IpTew=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Peter Smith <peter.smith@linaro.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 19/32] kbuild: Check for unknown options with cc-option usage in Kconfig and clang
-Date:   Tue,  6 Aug 2019 17:35:07 -0400
-Message-Id: <20190806213522.19859-19-sashal@kernel.org>
+Cc:     Christian Brauner <christian@brauner.io>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 15/32] exit: make setting exit_state consistent
+Date:   Tue,  6 Aug 2019 17:35:03 -0400
+Message-Id: <20190806213522.19859-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213522.19859-1-sashal@kernel.org>
 References: <20190806213522.19859-1-sashal@kernel.org>
@@ -64,65 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Boyd <swboyd@chromium.org>
+From: Christian Brauner <christian@brauner.io>
 
-[ Upstream commit e8de12fb7cde2c85bc31097cd098da79a4818305 ]
+[ Upstream commit 30b692d3b390c6fe78a5064be0c4bbd44a41be59 ]
 
-If the particular version of clang a user has doesn't enable
--Werror=unknown-warning-option by default, even though it is the
-default[1], then make sure to pass the option to the Kconfig cc-option
-command so that testing options from Kconfig files works properly.
-Otherwise, depending on the default values setup in the clang toolchain
-we will silently assume options such as -Wmaybe-uninitialized are
-supported by clang, when they really aren't.
+Since commit b191d6491be6 ("pidfd: fix a poll race when setting exit_state")
+we unconditionally set exit_state to EXIT_ZOMBIE before calling into
+do_notify_parent(). This was done to eliminate a race when querying
+exit_state in do_notify_pidfd().
+Back then we decided to do the absolute minimal thing to fix this and
+not touch the rest of the exit_notify() function where exit_state is
+set.
+Since this fix has not caused any issues change the setting of
+exit_state to EXIT_DEAD in the autoreap case to account for the fact hat
+exit_state is set to EXIT_ZOMBIE unconditionally. This fix was planned
+but also explicitly requested in [1] and makes the whole code more
+consistent.
 
-A compilation issue only started happening for me once commit
-589834b3a009 ("kbuild: Add -Werror=unknown-warning-option to
-CLANG_FLAGS") was applied on top of commit b303c6df80c9 ("kbuild:
-compute false-positive -Wmaybe-uninitialized cases in Kconfig"). This
-leads kbuild to try and test for the existence of the
--Wmaybe-uninitialized flag with the cc-option command in
-scripts/Kconfig.include, and it doesn't see an error returned from the
-option test so it sets the config value to Y. Then the Makefile tries to
-pass the unknown option on the command line and
--Werror=unknown-warning-option catches the invalid option and breaks the
-build. Before commit 589834b3a009 ("kbuild: Add
--Werror=unknown-warning-option to CLANG_FLAGS") the build works fine,
-but any cc-option test of a warning option in Kconfig files silently
-evaluates to true, even if the warning option flag isn't supported on
-clang.
+/* References */
+[1]: https://lore.kernel.org/lkml/CAHk-=wigcxGFR2szue4wavJtH5cYTTeNES=toUBVGsmX0rzX+g@mail.gmail.com
 
-Note: This doesn't change cc-option usages in Makefiles because those
-use a different rule that includes KBUILD_CFLAGS by default (see the
-__cc-option command in scripts/Kbuild.incluide). The KBUILD_CFLAGS
-variable already has the -Werror=unknown-warning-option flag set. Thanks
-to Doug for pointing out the different rule.
-
-[1] https://clang.llvm.org/docs/DiagnosticsReference.html#wunknown-warning-option
-Cc: Peter Smith <peter.smith@linaro.org>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Christian Brauner <christian@brauner.io>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/Kconfig.include | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/exit.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
-index dad5583451afb..3b2861f47709b 100644
---- a/scripts/Kconfig.include
-+++ b/scripts/Kconfig.include
-@@ -20,7 +20,7 @@ success = $(if-success,$(1),y,n)
+diff --git a/kernel/exit.c b/kernel/exit.c
+index 5c0964dc805ac..d9cfc39e5f97b 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -732,9 +732,10 @@ static void exit_notify(struct task_struct *tsk, int group_dead)
+ 		autoreap = true;
+ 	}
  
- # $(cc-option,<flag>)
- # Return y if the compiler supports <flag>, n otherwise
--cc-option = $(success,$(CC) -Werror $(1) -E -x c /dev/null -o /dev/null)
-+cc-option = $(success,$(CC) -Werror $(CLANG_FLAGS) $(1) -E -x c /dev/null -o /dev/null)
+-	tsk->exit_state = autoreap ? EXIT_DEAD : EXIT_ZOMBIE;
+-	if (tsk->exit_state == EXIT_DEAD)
++	if (autoreap) {
++		tsk->exit_state = EXIT_DEAD;
+ 		list_add(&tsk->ptrace_entry, &dead);
++	}
  
- # $(ld-option,<flag>)
- # Return y if the linker supports <flag>, n otherwise
+ 	/* mt-exec, de_thread() is waiting for group leader */
+ 	if (unlikely(tsk->signal->notify_count < 0))
 -- 
 2.20.1
 
