@@ -2,101 +2,104 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D37C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6CEC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1185620C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:48:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565088481;
-	bh=fKhZivAr3gJ3L9/sxJ7AHJ9vy+HnqkA2YRt0LA1Lrng=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=W4XKcltUYmNBmVTVOwn4KpPE/tJh9sJTjySTsGPEr42N3CvGnxlaSUHaA9FLbRhbm
-	 5QiJFTZJUoiB2CpXA06Z8D3byt6atgU0BCXuaGrB9fjJ9padBE4/2bQ/wg2+CezK4L
-	 krDDNk0Y7xsR7x7dSI1T1pHrrJ7cKG5GwsbihFpM=
+	by mail.kernel.org (Postfix) with ESMTP id C361420818
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:48:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M4HUVcHj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732717AbfHFKr7 (ORCPT
+        id S1732746AbfHFKsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 06:47:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42398 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728845AbfHFKr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 06:47:59 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 73D9CAFCC;
-        Tue,  6 Aug 2019 10:47:57 +0000 (UTC)
-Date:   Tue, 6 Aug 2019 12:47:55 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Brendan Gregg <bgregg@netflix.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christian Hansen <chansen3@cisco.com>, dancol@google.com,
-        fmayer@google.com, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Mike Rapoport <rppt@linux.ibm.com>, minchan@kernel.org,
-        namhyung@google.com, paulmck@linux.ibm.com,
-        Roman Gushchin <guro@fb.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, surenb@google.com,
-        Thomas Gleixner <tglx@linutronix.de>, tkjos@google.com,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v4 3/5] [RFC] arm64: Add support for idle bit in swap PTE
-Message-ID: <20190806104755.GR11812@dhcp22.suse.cz>
-References: <20190805170451.26009-1-joel@joelfernandes.org>
- <20190805170451.26009-3-joel@joelfernandes.org>
- <20190806084203.GJ11812@dhcp22.suse.cz>
- <20190806103627.GA218260@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190806103627.GA218260@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 6 Aug 2019 06:48:05 -0400
+Received: from mail-pf1-f175.google.com ([209.85.210.175]:35192 "EHLO
+        mail-pf1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728845AbfHFKsE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 06:48:04 -0400
+Received: by mail-pf1-f175.google.com with SMTP id u14so41316390pfn.2;
+        Tue, 06 Aug 2019 03:48:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=tSv0N+buuXcfO2cMmMhlzp2LfygH9vWetg+buoM6+PE=;
+        b=M4HUVcHj3lA270e1ADCiKHblHxlb+KfeMaLEsCpeMYzREBWo/h6X/pOFR3Yw8RA5R+
+         +RMnaNsaT2MqnLIDPPJlR6op/GcNKibUh1j4zCBtJjGPUhV9kPSqqzhR9HK5+Gdplx2v
+         4xUFFzMEEC3LKQNEuF00f6UbLeqxSBhX1N+hEDgiirGXJqxjpUZG7g5pn5iiCSHwdL76
+         XQGhdevZ7T6zfjHIECxwTo/oCXQMCmAmZQ0VdswzO2kYIiIAnZK3KqWjAIQ5URfxJHBl
+         OHF84giOeCoadHjuoicuc927ncNvap6ANjahQPbvtHAxM7cJMN9OYbjk6PC2DGogcqx8
+         sfJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=tSv0N+buuXcfO2cMmMhlzp2LfygH9vWetg+buoM6+PE=;
+        b=udHzXEL5AAQLOIP5hqEC1G7Gnd49hJKFiYQVjpTUdw1B6XuG8NzY1Cwo6xeEOCxVfY
+         sDnBumAULsu0N13+cq3gBNc5ynZWetVGhqMGAmCiLT99qqGFzK1UA8sH9bCuyVL/MjMm
+         GKnOvArkbHJnpEKH4FkXKRKwnh2IK/2Z5IAw4gSGX3yuWb6jp/Ckxh8Na2JkKhr4SPR6
+         XFiZpMISOXw8RsO/qsXaDt09OsdvLfLYiGzbQAyFFqXOCXbCffp7nDJR/M2t+zsCfobO
+         RVx5QnF7UCU/meFG+lAGfCZFteWyYIiBjhsV/GuNSeQugorxaDcChErfiCqEUFCXDpS4
+         JFrg==
+X-Gm-Message-State: APjAAAWYkpRbHp41nobfFtvCR0T1khwXr00hellTeM+RPPGmdjHjVTOw
+        N+z0qehswm/jHBIxQv55BXLTEo3IOjS4Hw==
+X-Google-Smtp-Source: APXvYqzjn12vozHs0fboLhCynVya4jjSWy7VPGJi4K0jd3nYUa/1Jg07U9WJB9Et0BNhCKglVhUt/g==
+X-Received: by 2002:aa7:8a99:: with SMTP id a25mr3007540pfc.127.1565088483835;
+        Tue, 06 Aug 2019 03:48:03 -0700 (PDT)
+Received: from SC-GAME.lan ([2408:8256:3084:b0:885f:efd1:c65b:ab81])
+        by smtp.gmail.com with ESMTPSA id v63sm89417888pfv.174.2019.08.06.03.47.58
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 06 Aug 2019 03:48:02 -0700 (PDT)
+From:   Chen Minqiang <ptpt52@gmail.com>
+Cc:     davem@davemloft.net, Chen Minqiang <ptpt52@gmail.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] net/ipv4: reset mac head before call ip_tunnel_rcv()
+Date:   Tue,  6 Aug 2019 18:47:31 +0800
+Message-Id: <20190806104731.30603-1-ptpt52@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 06-08-19 06:36:27, Joel Fernandes wrote:
-> On Tue, Aug 06, 2019 at 10:42:03AM +0200, Michal Hocko wrote:
-> > On Mon 05-08-19 13:04:49, Joel Fernandes (Google) wrote:
-> > > This bit will be used by idle page tracking code to correctly identify
-> > > if a page that was swapped out was idle before it got swapped out.
-> > > Without this PTE bit, we lose information about if a page is idle or not
-> > > since the page frame gets unmapped.
-> > 
-> > And why do we need that? Why cannot we simply assume all swapped out
-> > pages to be idle? They were certainly idle enough to be reclaimed,
-> > right? Or what does idle actualy mean here?
-> 
-> Yes, but other than swapping, in Android a page can be forced to be swapped
-> out as well using the new hints that Minchan is adding?
+Signed-off-by: Chen Minqiang <ptpt52@gmail.com>
+---
+ net/ipv4/ipip.c | 1 +
+ net/ipv6/sit.c  | 1 +
+ 2 files changed, 2 insertions(+)
 
-Yes and that is effectivelly making them idle, no?
-
-> Also, even if they were idle enough to be swapped, there is a chance that they
-> were marked as idle and *accessed* before the swapping. Due to swapping, the
-> "page was accessed since we last marked it as idle" information is lost. I am
-> able to verify this.
-> 
-> Idle in this context means the same thing as in page idle tracking terms, the
-> page was not accessed by userspace since we last marked it as idle (using
-> /proc/<pid>/page_idle).
-
-Please describe a usecase and why that information might be useful.
-
+diff --git a/net/ipv4/ipip.c b/net/ipv4/ipip.c
+index 43adfc1641ba..ba2b5fc8910f 100644
+--- a/net/ipv4/ipip.c
++++ b/net/ipv4/ipip.c
+@@ -242,6 +242,7 @@ static int ipip_tunnel_rcv(struct sk_buff *skb, u8 ipproto)
+ 			if (!tun_dst)
+ 				return 0;
+ 		}
++		skb_reset_mac_header(skb);
+ 		return ip_tunnel_rcv(tunnel, skb, tpi, tun_dst, log_ecn_error);
+ 	}
+ 
+diff --git a/net/ipv6/sit.c b/net/ipv6/sit.c
+index 80610899a323..44a9674d06a6 100644
+--- a/net/ipv6/sit.c
++++ b/net/ipv6/sit.c
+@@ -739,6 +739,7 @@ static int sit_tunnel_rcv(struct sk_buff *skb, u8 ipproto)
+ 			tpi = &ipip_tpi;
+ 		if (iptunnel_pull_header(skb, 0, tpi->proto, false))
+ 			goto drop;
++		skb_reset_mac_header(skb);
+ 		return ip_tunnel_rcv(tunnel, skb, tpi, NULL, log_ecn_error);
+ 	}
+ 
 -- 
-Michal Hocko
-SUSE Labs
+2.17.1
+
