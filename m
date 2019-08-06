@@ -2,131 +2,109 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D2DC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D957C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 485AC20C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:26:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565115972;
-	bh=sbO0nE9384gcc6xD06AuymJFXg8osSzO1359K+pMu6Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OSWgKeq1k1bOmZMCmlExI/079onecUtZvWPMINoN5ox6iiOH8yvY9XnQ/mPAaB0Wo
-	 UahnBFBpV5nPMqP6XAdXtor6gQtXB5NEl3hMapE+NGya70d6N3zHpbC9fH0os7y2km
-	 LO+SROKUwGSzU5L6dPU0QaRKPvbLTlhYC2qCXGEk=
+	by mail.kernel.org (Postfix) with ESMTP id 22445214C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:28:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rR8Ga6Ci"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730268AbfHFS0K (ORCPT
+        id S1732357AbfHFS2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 14:26:10 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59682 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727549AbfHFS0K (ORCPT
+        Tue, 6 Aug 2019 14:28:36 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:14339 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728879AbfHFS2g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 14:26:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=YUYFEtxyIM/Z4kpTSGmIasxeWQN/9EH3EiO8E1CRrbI=; b=Mn0IAWzIMSeGH0FpNL7tk00YF
-        LUiDaewEUoR5a/f/3fttxLo0qS19rskp6U4ihi5FzI6WhPpdE4mMh/7byENDhjHjnoh792Qr+XRRw
-        J+PaYpbwnmvSV8wTGMja8PxNGYPvYpL0MefhZD549z4Ny9qM9HXkUJ3QLerY4MHCcuyPw=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1hv49v-0005PN-3j; Tue, 06 Aug 2019 18:26:07 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 3738C2742BDD; Tue,  6 Aug 2019 19:26:06 +0100 (BST)
-Date:   Tue, 6 Aug 2019 19:26:06 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Philippe Schenker <philippe.schenker@toradex.com>
-Cc:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 1/2] Regulator: Core: Add clock-enable to
- fixed-regulator
-Message-ID: <20190806182606.GG4527@sirena.org.uk>
-References: <20190730173006.15823-1-dev@pschenker.ch>
- <20190730173006.15823-2-dev@pschenker.ch>
- <20190730181038.GK4264@sirena.org.uk>
- <b5e1cc3fb5838d9ea4160078402bff95903ba0da.camel@toradex.com>
- <20190731212335.GL4369@sirena.org.uk>
- <0b51a86ad6ee7e143506501937863cd8559244ec.camel@toradex.com>
- <20190805163724.GK6432@sirena.org.uk>
- <af076ff7e1df4c07ab659ff83efa0c85d5e5e3d6.camel@toradex.com>
+        Tue, 6 Aug 2019 14:28:36 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d49c6d40000>; Tue, 06 Aug 2019 11:28:37 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 06 Aug 2019 11:28:35 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 06 Aug 2019 11:28:35 -0700
+Received: from [10.21.132.143] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 6 Aug
+ 2019 18:28:32 +0000
+Subject: Re: [PATCH 4.4 00/22] 4.4.188-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20190805124918.070468681@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <03ce83bc-067c-c930-0028-1d3ce7b6fbb7@nvidia.com>
+Date:   Tue, 6 Aug 2019 19:28:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="L1c6L/cjZjI9d0Eq"
-Content-Disposition: inline
-In-Reply-To: <af076ff7e1df4c07ab659ff83efa0c85d5e5e3d6.camel@toradex.com>
-X-Cookie: All men have the right to wait in line.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190805124918.070468681@linuxfoundation.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565116117; bh=MUkGVA4XVzc8WZGmgMOMqOSvFHBdX9slptdQf++hRDw=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=rR8Ga6CiloU+FAAG5wTxr93QYGdMtaBj8FCGN/pUyK7jYp/UodVhJSgMiGF4rFuoF
+         rApUJB8WERZnQfY/b7vDHCSXUAMR5spTDorfxJk9i8ASI4c+o0elGdMHQPXNQzfByE
+         dmoahyM9VNYQtQwEgCIQufq8SJN6Rn06OjygJPRcuy8HvfNQ5hDkY5g06P80UE2e3O
+         51ay519S4VPsKMKIJV+l8jRS2PCG1VUq5P8cGnDEvAU8gJP1zfkzUhJsfBR6anio7Q
+         oTcZ9vSWL+00NKUnHThbaAHcf5dn82E0V8i5zFe6AToM625R7LPYVVlbTEdXpLdU8d
+         QKxdqSB/h3sYg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---L1c6L/cjZjI9d0Eq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 05/08/2019 14:02, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.188 release.
+> There are 22 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed 07 Aug 2019 12:47:58 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.188-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-On Tue, Aug 06, 2019 at 12:57:32PM +0000, Philippe Schenker wrote:
-> On Mon, 2019-08-05 at 17:37 +0100, Mark Brown wrote:
 
-> > So the capacitor on the input of the p-FET is keeping the switch on?
-> > When I say it's not switching with the clock I mean it's not constantly
-> > bouncing on and off at whatever rate the clock is going at.
+All test passing for Tegra ...
 
-> Ah, that's what you mean. Yes, the capacitor gets slowly charged with
-> the
-> resistor but nearly instantly discharged with the n-FET. So this
-> capacitor
-> is used as a Low-Pass filter to get the p-FET to be constantly switched.
+Test results for stable-v4.4:
+    6 builds:	6 pass, 0 fail
+    12 boots:	12 pass, 0 fail
+    19 tests:	19 pass, 0 fail
 
-> It is not bouncing on and off with the clock but rather it is switched
-> constantly.
+Linux version:	4.4.188-rc1-g462a4b2bd3bf
+Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
+                tegra30-cardhu-a04
 
-Good, I guess this might be part of why it's got this poor ramp time.
+Cheers
+Jon
 
-> > I think you are going to end up with a hack no matter what.
-
-> That's exactly what I'm trying to prevent. To introduce a fixed
-> regulator that can have a clock is not a hack for me.
-> That the hardware solution is a hack is debatable yes, but why should I
-> not try to solve it properly in software?
-
-A lot of this discussion is around the definition of terms like "hack"
-and "proper".
-
-> In the end I just want to represent our hardware in software. Would you
-> agree to create a new clock-regulator.c driver?
-> Or would it make more sense to extend fixed.c to support clocks-enable
-> without touching core?
-
-At least a separate compatible makes sense, I'd have to see the code to
-be clear if a completely separate driver makes sense but it'll need
-separate ops at least.  There'd definitely be a lot of overlap though so
-it's worth looking at.
-
---L1c6L/cjZjI9d0Eq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1Jxj0ACgkQJNaLcl1U
-h9BYwwf+PficToNtWBf/QerO7Vq5QspxtqyqtatS4M9ZlcsHPhJ8+bBwc9Eda+T+
-XjcL09fZdVsweddmRgAvyoNKvPjbv/BMz0jmKmUQKipXDhTWS6IgNhWXfCrpizPl
-4wLbPCimTJVGfkUboyM5ka8OuH/xo/my92iUIQURdjpTXEEGIhCzq3ezDVIHwtL0
-NoUpjJhkMkbvOEsjO3O62npmGFppMO/nSj/G5BGroNU3DlW2xeabNoG+QrIjN3dm
-9TByVcL3GJ+CyKVJRmFlwbFd3KB4C5TsAhEL4Nr65jD0mA349Ss58XSVn3jZ+9RR
-ZeAaATekeVK8kvtNpEbLeuja0kXbfA==
-=S33F
------END PGP SIGNATURE-----
-
---L1c6L/cjZjI9d0Eq--
+-- 
+nvpublic
