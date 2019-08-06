@@ -2,155 +2,192 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94FA4C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B93EFC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E2ED20B1F
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8336B20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:45:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="AY0UMJb+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387948AbfHFQmX (ORCPT
+        id S1733081AbfHFQph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 12:42:23 -0400
-Received: from smtp-sh.infomaniak.ch ([128.65.195.4]:38011 "EHLO
-        smtp-sh.infomaniak.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387860AbfHFQmV (ORCPT
+        Tue, 6 Aug 2019 12:45:37 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:37022 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732117AbfHFQph (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 12:42:21 -0400
-Received: from smtp8.infomaniak.ch (smtp8.infomaniak.ch [83.166.132.38])
-        by smtp-sh.infomaniak.ch (8.14.5/8.14.5) with ESMTP id x76GesNS032199
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 6 Aug 2019 18:40:54 +0200
-Received: from ns3096276.ip-94-23-54.eu (ns3096276.ip-94-23-54.eu [94.23.54.103])
-        (authenticated bits=0)
-        by smtp8.infomaniak.ch (8.14.5/8.14.5) with ESMTP id x76GemgJ022929
-        (version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=NO);
-        Tue, 6 Aug 2019 18:40:48 +0200
-Subject: Re: [RFC PATCH v1 1/5] fs: Add support for an O_MAYEXEC flag on
- sys_open()
-To:     Andy Lutomirski <luto@kernel.org>, Jan Kara <jack@suse.cz>,
-        Song Liu <songliubraving@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        James Morris <jmorris@namei.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>, Shuah Khan <shuah@kernel.org>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Matthew Bobrowski <mbobrowski@mbobrowski.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-References: <20181212081712.32347-1-mic@digikod.net>
- <20181212081712.32347-2-mic@digikod.net>
- <20181212144306.GA19945@quack2.suse.cz>
- <CALCETrVeZ0eufFXwfhtaG_j+AdvbzEWE0M3wjXMWVEO7pj+xkw@mail.gmail.com>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Openpgp: preference=signencrypt
-Message-ID: <0a16e842-d636-60ac-427a-3500224f4f8d@digikod.net>
-Date:   Tue, 6 Aug 2019 18:40:48 +0200
-User-Agent: 
+        Tue, 6 Aug 2019 12:45:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=L8Qsi9HRlyoVoGH2S+hSRi65LltiNgW4vXbUSsBYNjo=; b=AY0UMJb+iW++EBhB14ReL07/6
+        b0pFwP1ANs8Ey7rLTMwawQUMPdUAgfQRQVnZ/OR7JKCYpuel75mq1XkvJI3943Z3MQqQqQhkmdhxO
+        gMiRvM5UopNJOrzm9fVvISbh1BDxrhypglyOjuUgab1W+soP+Y92sFkPmzHVACpr+/u106dEpfBCi
+        WoNn1LreZ4+hkZCRMYbGZ1hOFo9APnQctrKosgfefHdeyXB6/JMXLVG9ifNeovhlGxV0lw0W8ajJ3
+        1igtLNju1aD0Nr45s4CdgQBE/9z4vnCe4JZPjGxIYq1S39XMDc/p6GxbFVUBCrhp5yKR6Z534S6qB
+        7mcKWkceQ==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:49226)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1hv2aC-0000SB-Ab; Tue, 06 Aug 2019 17:45:08 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1hv2a7-0000fh-Ka; Tue, 06 Aug 2019 17:45:03 +0100
+Date:   Tue, 6 Aug 2019 17:45:03 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Will Deacon <will@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org,
+        Shawn Anastasio <shawn@anastas.io>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dma-mapping: fix page attributes for dma_mmap_*
+Message-ID: <20190806164503.GD1330@shell.armlinux.org.uk>
+References: <20190801142118.21225-1-hch@lst.de>
+ <20190801142118.21225-2-hch@lst.de>
+ <20190801162305.3m32chycsdjmdejk@willie-the-truck>
+ <20190801163457.GB26588@lst.de>
+ <20190801164411.kmsl4japtfkgvzxe@willie-the-truck>
+ <20190802081441.GA9725@lst.de>
+ <20190802103803.3qrbhqwxlasojsco@willie-the-truck>
+ <20190803064812.GA29746@lst.de>
+ <20190806160854.htk67msiyadlrl4m@willie-the-truck>
 MIME-Version: 1.0
-In-Reply-To: <CALCETrVeZ0eufFXwfhtaG_j+AdvbzEWE0M3wjXMWVEO7pj+xkw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+In-Reply-To: <20190806160854.htk67msiyadlrl4m@willie-the-truck>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 05/08/2019 01:55, Andy Lutomirski wrote:
-> On Wed, Dec 12, 2018 at 6:43 AM Jan Kara <jack@suse.cz> wrote:
->>
->> On Wed 12-12-18 09:17:08, Mickaël Salaün wrote:
->>> When the O_MAYEXEC flag is passed, sys_open() may be subject to
->>> additional restrictions depending on a security policy implemented by an
->>> LSM through the inode_permission hook.
->>>
->>> The underlying idea is to be able to restrict scripts interpretation
->>> according to a policy defined by the system administrator.  For this to
->>> be possible, script interpreters must use the O_MAYEXEC flag
->>> appropriately.  To be fully effective, these interpreters also need to
->>> handle the other ways to execute code (for which the kernel can't help):
->>> command line parameters (e.g., option -e for Perl), module loading
->>> (e.g., option -m for Python), stdin, file sourcing, environment
->>> variables, configuration files...  According to the threat model, it may
->>> be acceptable to allow some script interpreters (e.g. Bash) to interpret
->>> commands from stdin, may it be a TTY or a pipe, because it may not be
->>> enough to (directly) perform syscalls.
->>>
->>> A simple security policy implementation is available in a following
->>> patch for Yama.
->>>
->>> This is an updated subset of the patch initially written by Vincent
->>> Strubel for CLIP OS:
->>> https://github.com/clipos-archive/src_platform_clip-patches/blob/f5cb330d6b684752e403b4e41b39f7004d88e561/1901_open_mayexec.patch
->>> This patch has been used for more than 10 years with customized script
->>> interpreters.  Some examples can be found here:
->>> https://github.com/clipos-archive/clipos4_portage-overlay/search?q=O_MAYEXEC
->>>
->>> Signed-off-by: Mickaël Salaün <mic@digikod.net>
->>> Signed-off-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
->>> Signed-off-by: Vincent Strubel <vincent.strubel@ssi.gouv.fr>
->>> Reviewed-by: Philippe Trébuchet <philippe.trebuchet@ssi.gouv.fr>
->>> Cc: Al Viro <viro@zeniv.linux.org.uk>
->>> Cc: Kees Cook <keescook@chromium.org>
->>> Cc: Mickaël Salaün <mickael.salaun@ssi.gouv.fr>
->>
->> ...
->>
->>> diff --git a/fs/open.c b/fs/open.c
->>> index 0285ce7dbd51..75479b79a58f 100644
->>> --- a/fs/open.c
->>> +++ b/fs/open.c
->>> @@ -974,6 +974,10 @@ static inline int build_open_flags(int flags, umode_t mode, struct open_flags *o
->>>       if (flags & O_APPEND)
->>>               acc_mode |= MAY_APPEND;
->>>
->>> +     /* Check execution permissions on open. */
->>> +     if (flags & O_MAYEXEC)
->>> +             acc_mode |= MAY_OPENEXEC;
->>> +
->>>       op->acc_mode = acc_mode;
->>>
->>>       op->intent = flags & O_PATH ? 0 : LOOKUP_OPEN;
->>
->> I don't feel experienced enough in security to tell whether we want this
->> functionality or not. But if we do this, shouldn't we also set FMODE_EXEC
->> on the resulting struct file? That way also security_file_open() can be
->> used to arbitrate such executable opens and in particular
->> fanotify permission event FAN_OPEN_EXEC will get properly generated which I
->> guess is desirable (support for it is sitting in my tree waiting for the
->> merge window) - adding some audit people involved in FAN_OPEN_EXEC to
->> CC. Just an idea...
->>
+On Tue, Aug 06, 2019 at 05:08:54PM +0100, Will Deacon wrote:
+> On Sat, Aug 03, 2019 at 08:48:12AM +0200, Christoph Hellwig wrote:
+> > On Fri, Aug 02, 2019 at 11:38:03AM +0100, Will Deacon wrote:
+> > > 
+> > > So this boils down to a terminology mismatch. The Arm architecture doesn't have
+> > > anything called "write combine", so in Linux we instead provide what the Arm
+> > > architecture calls "Normal non-cacheable" memory for pgprot_writecombine().
+> > > Amongst other things, this memory type permits speculation, unaligned accesses
+> > > and merging of writes. I found something in the architecture spec about
+> > > non-cachable memory, but it's written in Armglish[1].
+> > > 
+> > > pgprot_noncached(), on the other hand, provides what the architecture calls
+> > > Strongly Ordered or Device-nGnRnE memory. This is intended for mapping MMIO
+> > > (i.e. PCI config space) and therefore forbids speculation, preserves access
+> > > size, requires strict alignment and also forces write responses to come from
+> > > the endpoint.
+> > > 
+> > > I think the naming mismatch is historical, but on arm64 we wanted to use the
+> > > same names as arm32 so that any drivers using these things directly would get
+> > > the same behaviour.
+> > 
+> > That all makes sense, but it totally needs a comment.  I'll try to draft
+> > one based on this.  I've also looked at the arm32 code a bit more, and
+> > it seems arm always (?) supported Normal non-cacheable attribute, but
+> > Linux only optionally uses it for arm v6+ because of fears of drivers
+> > missing barriers.
 > 
-> I would really like to land this patch.  I'm fiddling with making
-> bpffs handle permissions intelligently, and the lack of a way to say
-> "hey, I want to open this bpf program so that I can run it" is
-> annoying.
+> I think it was also to do with aliasing, but I don't recall all of the
+> details.
 
-Are you OK with this series? What about Aleksa's work on openat2(), and
-Sean's work on SGX/noexec? Is it time to send a new patch series (with a
-dedicated LSM instead of Yama)?
+ARMv6+ is where the architecture significantly changed to introduce
+the idea of [Normal, Device, Strongly Ordered] where Normal has the
+cache attributes.
+
+Before that, we had just "uncached/unbuffered, uncached/buffered,
+cached/unbuffered, cached/buffered" modes.
+
+The write buffer (enabled by buffered modes) has no architected
+guarantees about how long writes will sit in it, and there is only
+the "drain write buffer" instruction to push writes out.
+
+Up to and including ARMv5, we took the easy approach of just using
+the "uncached/unbuffered" mode since that is (a) the safest, and (b)
+avoids write buffers that alias when there are multiple different
+mappings.
+
+We could have used a different approach, making all IO writes contain
+a "drain write buffer" instruction, and map DMA memory as "buffered",
+but as there were no Linux barriers defined to order memory accesses
+to DMA memory (so, for example, ring buffers can be updated in the
+correct order) back in those days, using the uncached/unbuffered mode
+was the sanest and most reliable solution.
+
+> 
+> > The other really weird things is that in arm32
+> > pgprot_dmacoherent incudes the L_PTE_XN bit, which from my understanding
+> > is the no-execture bit, but pgprot_writecombine does not.  This seems to
+> > not very unintentional.  So minus that the whole DMA_ATTR_WRITE_COMBІNE
+> > seems to be about flagging old arm specific drivers as having the proper
+> > barriers in places and otherwise is a no-op.
+> 
+> I think it only matters for Armv7 CPUs, but yes, we should probably be
+> setting L_PTE_XN for both of these memory types.
+
+Conventionally, pgprot_writecombine() has only been used to change
+the memory type and not the permissions.  Since writecombine memory
+is still capable of being executed, I don't see any reason to set XN
+for it.
+
+If the user wishes to mmap() using PROT_READ|PROT_EXEC, then is there
+really a reason for writecombine to set XN overriding the user?
+
+That said, pgprot_writecombine() is mostly used for framebuffers, which
+arguably shouldn't be executable anyway - but who'd want to mmap() the
+framebuffer with PROT_EXEC?
+
+> 
+> > Here is my tentative plan:
+> > 
+> >  - respin this patch with a small fix to handle the
+> >    DMA_ATTR_NON_CONSISTENT (as in ignore it unless actually supported),
+> >    but keep the name as-is to avoid churn.  This should allow 5.3
+> >    inclusion and backports
+> >  - remove DMA_ATTR_WRITE_COMBINE support from mips, probably also 5.3
+> >    material.
+> >  - move all architectures but arm over to just define
+> >    pgprot_dmacoherent, including a comment with the above explanation
+> >    for arm64.
+> 
+> That would be great, thanks.
+> 
+> >  - make DMA_ATTR_WRITE_COMBINE a no-op and schedule it for removal,
+> >    thus removing the last instances of arch_dma_mmap_pgprot
+> 
+> All sounds good to me, although I suppose 32-bit Arm platforms without
+> CONFIG_ARM_DMA_MEM_BUFFERABLE may run into issues if DMA_ATTR_WRITE_COMBINE
+> disappears. Only one way to find out...
+
+Looking at the results of grep, I think only OMAP2+ and Exynos may be
+affected.
+
+However, removing writecombine support from the DMA API is going to
+have a huge impact for framebuffers on earlier ARMs - that's where we
+do expect framebuffers to be mapped "uncached/buffered" for performance
+reasons and not "uncached/unbuffered".  It's quite literally the
+difference between console scrolling being usable and totally unusable.
+
+Given what I've said above, switching to using buffered mode for normal
+DMA mappings is data-corrupting risky - as in your filesystem could get
+fried.  I don't think we should play fast and loose with people's data
+by randomly changing that "because we'd like to", and I don't see that
+screwing the console is really an option either.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
