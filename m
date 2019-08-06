@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1DCC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B1FAC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EB3221874
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:40:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 242CE21874
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:40:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127615;
-	bh=7KTd3LPFTH2SgepDnMv66CGy4bSSr5z7yqSys9HBKws=;
+	s=default; t=1565127624;
+	bh=Bl9/DbJ3RHmDEt92DJen9NmESl82esOn0yRvhyAXIgo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HB6n9zK+NdXOOJInPaHddmCFyuuXo5gPE1MzaWqI0rKYD4apRcBBcEVZA04qIONuw
-	 JeB3Yt1iybHi14xTwqV+5Z0QUw6TaBYmbbTFjK5L7TvFPV0pFrdE8lJ9o36oAe4sdv
-	 Sp5AIox3ehTdcnibeK0JRYFqBn0XhsQj50gtdz+U=
+	b=niKJ0dajfKmHv7S3HfSawZ5c/dy31QUn6PlAuO+/BpUPH3Y+/z+Fhd10bPAHj36Y0
+	 iJ+Ru1jTtuJA2/jY3cZ7FpWJEHXgCJFTPKpaq4a5hslw3xZuy7gLmuWQhLIk09lAXo
+	 EO6lDoD/blF/8H2FkYwCzW0wQgjHDBqKCK7Bnk/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729137AbfHFVkO (ORCPT
+        id S1729359AbfHFVkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:40:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54798 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:40:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729179AbfHFVhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:37:00 -0400
+        id S1729077AbfHFVgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:36:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 808A42186A;
-        Tue,  6 Aug 2019 21:36:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BF202186A;
+        Tue,  6 Aug 2019 21:36:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127420;
-        bh=7KTd3LPFTH2SgepDnMv66CGy4bSSr5z7yqSys9HBKws=;
+        s=default; t=1565127411;
+        bh=Bl9/DbJ3RHmDEt92DJen9NmESl82esOn0yRvhyAXIgo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KhkK4hfZpGnRSBLIpemRQQkCkbYldtHbiJ+2DyNY5VUe/deilenynQea7JkdCpDMN
-         dhb+kuVC6lf7D5PVtCuC85pQ7DR7a/f4aeX0TU9hmkEF7EVvwGJs5vpsyZgimRZFpJ
-         YaQU8fYdMoL3dHYdDoh8adiE9mIVhq6uvfxrvevo=
+        b=OMvQAXdG919MNvcRTfQN/rghosCe75cC5kVryezs1NRkpoPAiOglKG46M7CsMXekh
+         W3SWjzxWGpwd5C3Jkb5Z5W/rwIDm3+NnRBl56FkqflFLBemenzj/GM9WCVuFvCTvZ7
+         W1+vtiltxcl+gRJdripZh7BCBuHXbJLzMnGL3M4A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 18/25] arm64: unwind: Prohibit probing on return_address()
-Date:   Tue,  6 Aug 2019 17:36:15 -0400
-Message-Id: <20190806213624.20194-18-sashal@kernel.org>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-ide@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 14/25] ata: libahci: do not complain in case of deferred probe
+Date:   Tue,  6 Aug 2019 17:36:11 -0400
+Message-Id: <20190806213624.20194-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213624.20194-1-sashal@kernel.org>
 References: <20190806213624.20194-1-sashal@kernel.org>
@@ -59,76 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-[ Upstream commit ee07b93e7721ccd5d5b9fa6f0c10cb3fe2f1f4f9 ]
+[ Upstream commit 090bb803708198e5ab6b0046398c7ed9f4d12d6b ]
 
-Prohibit probing on return_address() and subroutines which
-is called from return_address(), since the it is invoked from
-trace_hardirqs_off() which is also kprobe blacklisted.
+Retrieving PHYs can defer the probe, do not spawn an error when
+-EPROBE_DEFER is returned, it is normal behavior.
 
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Will Deacon <will@kernel.org>
+Fixes: b1a9edbda040 ("ata: libahci: allow to use multiple PHYs")
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/return_address.c | 3 +++
- arch/arm64/kernel/stacktrace.c     | 3 +++
- 2 files changed, 6 insertions(+)
+ drivers/ata/libahci_platform.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/kernel/return_address.c b/arch/arm64/kernel/return_address.c
-index 933adbc0f654d..0311fe52c8ffb 100644
---- a/arch/arm64/kernel/return_address.c
-+++ b/arch/arm64/kernel/return_address.c
-@@ -11,6 +11,7 @@
+diff --git a/drivers/ata/libahci_platform.c b/drivers/ata/libahci_platform.c
+index a270a1173c8cb..70cdbf1b0f9a3 100644
+--- a/drivers/ata/libahci_platform.c
++++ b/drivers/ata/libahci_platform.c
+@@ -300,6 +300,9 @@ static int ahci_platform_get_phy(struct ahci_host_priv *hpriv, u32 port,
+ 		hpriv->phys[port] = NULL;
+ 		rc = 0;
+ 		break;
++	case -EPROBE_DEFER:
++		/* Do not complain yet */
++		break;
  
- #include <linux/export.h>
- #include <linux/ftrace.h>
-+#include <linux/kprobes.h>
- 
- #include <asm/stack_pointer.h>
- #include <asm/stacktrace.h>
-@@ -32,6 +33,7 @@ static int save_return_addr(struct stackframe *frame, void *d)
- 		return 0;
- 	}
- }
-+NOKPROBE_SYMBOL(save_return_addr);
- 
- void *return_address(unsigned int level)
- {
-@@ -55,3 +57,4 @@ void *return_address(unsigned int level)
- 		return NULL;
- }
- EXPORT_SYMBOL_GPL(return_address);
-+NOKPROBE_SYMBOL(return_address);
-diff --git a/arch/arm64/kernel/stacktrace.c b/arch/arm64/kernel/stacktrace.c
-index d5718a060672e..2ae7630d685b5 100644
---- a/arch/arm64/kernel/stacktrace.c
-+++ b/arch/arm64/kernel/stacktrace.c
-@@ -18,6 +18,7 @@
- #include <linux/kernel.h>
- #include <linux/export.h>
- #include <linux/ftrace.h>
-+#include <linux/kprobes.h>
- #include <linux/sched.h>
- #include <linux/sched/debug.h>
- #include <linux/sched/task_stack.h>
-@@ -85,6 +86,7 @@ int notrace unwind_frame(struct task_struct *tsk, struct stackframe *frame)
- 
- 	return 0;
- }
-+NOKPROBE_SYMBOL(unwind_frame);
- 
- void notrace walk_stackframe(struct task_struct *tsk, struct stackframe *frame,
- 		     int (*fn)(struct stackframe *, void *), void *data)
-@@ -99,6 +101,7 @@ void notrace walk_stackframe(struct task_struct *tsk, struct stackframe *frame,
- 			break;
- 	}
- }
-+NOKPROBE_SYMBOL(walk_stackframe);
- 
- #ifdef CONFIG_STACKTRACE
- struct stack_trace_data {
+ 	default:
+ 		dev_err(dev,
 -- 
 2.20.1
 
