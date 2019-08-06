@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 910BDC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A36AC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 566582187F
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:35:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 649A721874
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:35:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127344;
-	bh=hnjPdept+35vMcFmZGvmNQcR4/QsLjxDNRb8z2SIzBQ=;
+	s=default; t=1565127346;
+	bh=uaoAP0RYgmLFAgqlfAfjdWejslREn9k7x9lGtVwS8zk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z/+LZzvTkf/lFCqUnb7t/hnoqghbEmdBe9h/OpTnCPZHXS/Hje4KHQpOmlNb9mFKK
-	 T7q+NqaiMwW3+jNYWlZ6GWjmDhKQLcAksWb/U/hKuP8RI0fD5DRLm/jrqPx55btRej
-	 8BAaHunOarNRfppeE7XbydbnrCPbbx/Ovw0zEP8E=
+	b=urYJoRoqGhV6NbrSdnfB3MIH6AfTl/ikC9VEP5dTlzyMia6xglXlhdl22ZDoE33B9
+	 jnf/3JeG9x/4AX2ngOtv27C3xy8gSCvql+I380CYILX4WcGnebjwKfJPseEKq3ryT+
+	 ceSEkc4r8jbutqIvx+RVTSYI0i+AgsBNeVKOjYGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728662AbfHFVfm (ORCPT
+        id S1728676AbfHFVfp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:35:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53340 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:35:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728522AbfHFVfg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:35:36 -0400
+        id S1728582AbfHFVfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:35:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31B08217D9;
-        Tue,  6 Aug 2019 21:35:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB9B12186A;
+        Tue,  6 Aug 2019 21:35:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127335;
-        bh=hnjPdept+35vMcFmZGvmNQcR4/QsLjxDNRb8z2SIzBQ=;
+        s=default; t=1565127338;
+        bh=uaoAP0RYgmLFAgqlfAfjdWejslREn9k7x9lGtVwS8zk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yN1jEisrw3+8W85T9HRqmOlb60qgOmvLlQsRl1LnucOkam9gPLKzu+U4vplOpv5PH
-         uj8GZr5hnqc8p9BYUWVjTfQrZo/Wqc8SPPrUgWRA3ERqcu456xun7lRVcXkGKhS9wB
-         KQQ5scvPZhmmgosPUPkD68uxu6H/WMnUG3Y3rJjc=
+        b=sXrKoObfQGMZ+HrG5isq4fKIAC8T89SbW5ZS5xOyaj+LAlqcQGCJcwDKn68OGfpFc
+         kCKpWUqNPuFLQfye/7QXtaOXyi32dij1IdxiB6aZ0xbvJlDrTrt3KJn5+13BFiDHbN
+         lSes4453FB9k6WhDMFth1dNefRm6DPNsE2PCR2vk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nianyao Tang <tangnianyao@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 06/32] irqchip/gic-v3-its: Free unused vpt_page when alloc vpe table fail
-Date:   Tue,  6 Aug 2019 17:34:54 -0400
-Message-Id: <20190806213522.19859-6-sashal@kernel.org>
+Cc:     Vince Weaver <vincent.weaver@maine.edu>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 08/32] perf header: Fix divide by zero error if f_header.attr_size==0
+Date:   Tue,  6 Aug 2019 17:34:56 -0400
+Message-Id: <20190806213522.19859-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213522.19859-1-sashal@kernel.org>
 References: <20190806213522.19859-1-sashal@kernel.org>
@@ -62,37 +63,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nianyao Tang <tangnianyao@huawei.com>
+From: Vince Weaver <vincent.weaver@maine.edu>
 
-[ Upstream commit 34f8eb92ca053cbba2887bb7e4dbf2b2cd6eb733 ]
+[ Upstream commit 7622236ceb167aa3857395f9bdaf871442aa467e ]
 
-In its_vpe_init, when its_alloc_vpe_table fails, we should free
-vpt_page allocated just before, instead of vpe->vpt_page.
-Let's fix it.
+So I have been having lots of trouble with hand-crafted perf.data files
+causing segfaults and the like, so I have started fuzzing the perf tool.
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Nianyao Tang <tangnianyao@huawei.com>
-Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
+First issue found:
+
+If f_header.attr_size is 0 in the perf.data file, then perf will crash
+with a divide-by-zero error.
+
+Committer note:
+
+Added a pr_err() to tell the user why the command failed.
+
+Signed-off-by: Vince Weaver <vincent.weaver@maine.edu>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/alpine.DEB.2.21.1907231100440.14532@macbook-air
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/header.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index ee30e8965d1be..9ba73e11757d9 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -2883,7 +2883,7 @@ static int its_vpe_init(struct its_vpe *vpe)
- 
- 	if (!its_alloc_vpe_table(vpe_id)) {
- 		its_vpe_id_free(vpe_id);
--		its_free_pending_table(vpe->vpt_page);
-+		its_free_pending_table(vpt_page);
- 		return -ENOMEM;
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 7f2e3b1c746c9..94278f914cdca 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -3285,6 +3285,13 @@ int perf_session__read_header(struct perf_session *session)
+ 			   data->file.path);
  	}
+ 
++	if (f_header.attr_size == 0) {
++		pr_err("ERROR: The %s file's attr size field is 0 which is unexpected.\n"
++		       "Was the 'perf record' command properly terminated?\n",
++		       data->file.path);
++		return -EINVAL;
++	}
++
+ 	nr_attrs = f_header.attrs.size / f_header.attr_size;
+ 	lseek(fd, f_header.attrs.offset, SEEK_SET);
  
 -- 
 2.20.1
