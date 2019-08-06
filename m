@@ -2,164 +2,145 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44826C0650F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E05C433FF
 	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 03:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C9F920717
+	by mail.kernel.org (Postfix) with ESMTP id 44713214C6
 	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 03:05:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="haLVWJVZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565060724;
+	bh=v8QxH42cmRdLjjjgcgYR8oGtYuPx+d7WmvMLNipbegc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MlK7rkRXen0kl1jIVkVl06PFdgSXp6+ZRC9l7LZkKudJmMC5sZ4CyIQVXjAijRkN5
+	 PVCvtEZ4HGw3k9fEEAgKX0EPQv8LLqlSOrEXfzTeNCOtvpm5vdw3UPDRQYjFoQDsX6
+	 uB5Hc0mPiBRIDhuDVxE2dm8h3WI+FuVIhXhhNUcQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731063AbfHFDFS (ORCPT
+        id S1731329AbfHFDFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 5 Aug 2019 23:05:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51074 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729334AbfHFDFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 5 Aug 2019 23:05:18 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:44975 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728892AbfHFDFR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 23:05:17 -0400
-Received: by mail-qt1-f194.google.com with SMTP id 44so52090472qtg.11
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 20:05:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PyvuAycN0W7JrDx3dUfXKO7/FDDYlxGkKJhnNFbl+Qo=;
-        b=haLVWJVZHX58MY+5/AxQGIuz/IAD+SOxcyhpUofD684Gyjqc+/Zk+t4Vz9XImOm7Qf
-         nwAXh/JpsapL6n55M0UPxAjiS+Zar79YScfY+eGLRiRAzNUB+EkjIPlC4d/gfLLP7Pyr
-         OldecaVOr2KbtJWvGOLoxk1CfEUWb+0Aj7KvTH+AuWcNkCPq8wZKeXnkbQKkTmCbmwjC
-         YA3I3gedGvZjINpM7OqFTbn/FmWHBY2VwuxQ634E9FnI7xOVl7f+7j8QBMyFywIfqpju
-         ppLvfIy3HTrL1NVP43XfLMqmOkIWf0jZUV1mNbiT1fygm/PKqF6UBpEwnq3p802grxZW
-         grBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PyvuAycN0W7JrDx3dUfXKO7/FDDYlxGkKJhnNFbl+Qo=;
-        b=U71i5InFhYdCFMGOzAFRNP0Mg6W1YFoBHv2cbOekdpT+RidIzFIZ414ttwSu2rPbwB
-         RtQMuIPSeiUJMcsjdg+Mt9zem8CxylAFeHsw+3jeylSyhZ/UXjEL2h/rw30CY0XTp2mE
-         nEcMDaf3HqL2smzwiRIxsail1iqQnfvMMIZ3VctxUnjHrWWIVGRgwDkYPAqbrFtDTDJJ
-         C4lYaRIVuxSisxt7R3WatnbsldTeBE05XFuMDCSVHfmZQdkgGo9r3Qmkx456c8EUxv/p
-         RVkNiUemOXZ58UXYcTjZe6rYDXy+aDJqknXdxTF9FozQtF5FfDcVaDrCy96mNDehOfZM
-         h3TA==
-X-Gm-Message-State: APjAAAWTvj8KlWC0BBPixkoshD1EdQwR4MJEKtN0YAZ5w3l5j1wGJDk8
-        BD1axUngmhuJGjl/5fPlyxM+2w==
-X-Google-Smtp-Source: APXvYqyQHY2lzxrxYaWxWvSLlKXKRgWIivDNAfo/0lKfpW9wImOssr3JY3nj/MOZ1d63fldC9mJqbA==
-X-Received: by 2002:aed:39e7:: with SMTP id m94mr1223027qte.0.1565060716457;
-        Mon, 05 Aug 2019 20:05:16 -0700 (PDT)
-Received: from ovpn-120-115.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id u4sm37185800qkb.16.2019.08.05.20.05.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 05 Aug 2019 20:05:15 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     will@kernel.org, catalin.marinas@arm.com
-Cc:     rrichter@cavium.com, robin.murphy@arm.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH v3] arm64/prefetch: fix a -Wtype-limits warning
-Date:   Mon,  5 Aug 2019 23:05:03 -0400
-Message-Id: <20190806030503.1178-1-cai@lca.pw>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
+Received: from localhost (unknown [104.132.0.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0926F20717;
+        Tue,  6 Aug 2019 03:05:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565060717;
+        bh=v8QxH42cmRdLjjjgcgYR8oGtYuPx+d7WmvMLNipbegc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gfcNMDs+AkItbvEcvhBqViIkZCosaZYHBqLsVxHhnYcT146Kx2XVRrTPBk1KsdTpU
+         IPCRqEV115D+3VPnxAiYymcBmQwG0OiJmjt4vTbdsKlYeaI14ElfL62mswclyHhyob
+         JOMTpgqLBYuEletbN+zcP/+1VeFKtlPsVVW4hNlo=
+Date:   Mon, 5 Aug 2019 20:05:16 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, chao@kernel.org
+Subject: Re: [PATCH] Revert "f2fs: avoid out-of-range memory access"
+Message-ID: <20190806030516.GA11817@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190802101548.96543-1-yuchao0@huawei.com>
+ <20190806004215.GC98101@jaegeuk-macbookpro.roam.corp.google.com>
+ <dd284020-77b0-1627-2fc2-bc51745adfd3@huawei.com>
+ <20190806012839.GD1029@jaegeuk-macbookpro.roam.corp.google.com>
+ <5c449273-5cf7-bcc6-a396-584b933833c1@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5c449273-5cf7-bcc6-a396-584b933833c1@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit d5370f754875 ("arm64: prefetch: add alternative pattern for
-CPUs without a prefetcher") introduced MIDR_IS_CPU_MODEL_RANGE() to be
-used in has_no_hw_prefetch() with rv_min=0 which generates a compilation
-warning from GCC,
+On 08/06, Chao Yu wrote:
+> On 2019/8/6 9:28, Jaegeuk Kim wrote:
+> > On 08/06, Chao Yu wrote:
+> >> On 2019/8/6 8:42, Jaegeuk Kim wrote:
+> >>> On 08/02, Chao Yu wrote:
+> >>>> As Pavel Machek reported:
+> >>>>
+> >>>> "We normally use -EUCLEAN to signal filesystem corruption. Plus, it is
+> >>>> good idea to report it to the syslog and mark filesystem as "needing
+> >>>> fsck" if filesystem can do that."
+> >>>>
+> >>>> Still we need improve the original patch with:
+> >>>> - use unlikely keyword
+> >>>> - add message print
+> >>>> - return EUCLEAN
+> >>>>
+> >>>> However, after rethink this patch, I don't think we should add such
+> >>>> condition check here as below reasons:
+> >>>> - We have already checked the field in f2fs_sanity_check_ckpt(),
+> >>>> - If there is fs corrupt or security vulnerability, there is nothing
+> >>>> to guarantee the field is integrated after the check, unless we do
+> >>>> the check before each of its use, however no filesystem does that.
+> >>>> - We only have similar check for bitmap, which was added due to there
+> >>>> is bitmap corruption happened on f2fs' runtime in product.
+> >>>> - There are so many key fields in SB/CP/NAT did have such check
+> >>>> after f2fs_sanity_check_{sb,cp,..}.
+> >>>>
+> >>>> So I propose to revert this unneeded check.
+> >>>
+> >>> IIRC, this came from security vulnerability report which can access
+> >>
+> >> I don't think that's correct report, since we have checked validation of that
+> >> field during mount, if it can be ruined after that, any variables can't be trusted.
+> > 
+> > I assumed this was reproduced with a fuzzed image.
+> 
+> I expect f2fs_sanity_check_ckpt() should reject mounting such fuzzed image.
 
-In file included from ./arch/arm64/include/asm/cache.h:8,
-               from ./include/linux/cache.h:6,
-               from ./include/linux/printk.h:9,
-               from ./include/linux/kernel.h:15,
-               from ./include/linux/cpumask.h:10,
-               from arch/arm64/kernel/cpufeature.c:11:
-arch/arm64/kernel/cpufeature.c: In function 'has_no_hw_prefetch':
-./arch/arm64/include/asm/cputype.h:59:26: warning: comparison of
-unsigned expression >= 0 is always true [-Wtype-limits]
-_model == (model) && rv >= (rv_min) && rv <= (rv_max);  \
-                        ^~
-arch/arm64/kernel/cpufeature.c:889:9: note: in expansion of macro
-'MIDR_IS_CPU_MODEL_RANGE'
-return MIDR_IS_CPU_MODEL_RANGE(midr, MIDR_THUNDERX,
-       ^~~~~~~~~~~~~~~~~~~~~~~
+It seems I should have reviewed this more carefully. Checking the security
+concern one more time.
 
-Fix it by converting MIDR_IS_CPU_MODEL_RANGE to a static inline
-function.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
----
-
-v3: Convert MIDR_IS_CPU_MODEL_RANGE to a static inline function.
-v2: Use "s32" for "rv", so "variant 0/revision 0" can be covered.
-
- arch/arm64/include/asm/cputype.h | 21 +++++++++++----------
- arch/arm64/kernel/cpufeature.c   |  2 +-
- 2 files changed, 12 insertions(+), 11 deletions(-)
-
-diff --git a/arch/arm64/include/asm/cputype.h b/arch/arm64/include/asm/cputype.h
-index e7d46631cc42..b1454d117cd2 100644
---- a/arch/arm64/include/asm/cputype.h
-+++ b/arch/arm64/include/asm/cputype.h
-@@ -51,14 +51,6 @@
- #define MIDR_CPU_MODEL_MASK (MIDR_IMPLEMENTOR_MASK | MIDR_PARTNUM_MASK | \
- 			     MIDR_ARCHITECTURE_MASK)
- 
--#define MIDR_IS_CPU_MODEL_RANGE(midr, model, rv_min, rv_max)		\
--({									\
--	u32 _model = (midr) & MIDR_CPU_MODEL_MASK;			\
--	u32 rv = (midr) & (MIDR_REVISION_MASK | MIDR_VARIANT_MASK);	\
--									\
--	_model == (model) && rv >= (rv_min) && rv <= (rv_max);		\
-- })
--
- #define ARM_CPU_IMP_ARM			0x41
- #define ARM_CPU_IMP_APM			0x50
- #define ARM_CPU_IMP_CAVIUM		0x43
-@@ -159,10 +151,19 @@ struct midr_range {
- #define MIDR_REV(m, v, r) MIDR_RANGE(m, v, r, v, r)
- #define MIDR_ALL_VERSIONS(m) MIDR_RANGE(m, 0, 0, 0xf, 0xf)
- 
-+static inline bool midr_is_cpu_model_range(u32 midr, u32 model, u32 rv_min,
-+					   u32 rv_max)
-+{
-+	u32 _model = midr & MIDR_CPU_MODEL_MASK;
-+	u32 rv = midr & (MIDR_REVISION_MASK | MIDR_VARIANT_MASK);
-+
-+	return _model == model && rv >= rv_min && rv <= rv_max;
-+}
-+
- static inline bool is_midr_in_range(u32 midr, struct midr_range const *range)
- {
--	return MIDR_IS_CPU_MODEL_RANGE(midr, range->model,
--				 range->rv_min, range->rv_max);
-+	return midr_is_cpu_model_range(midr, range->model,
-+				       range->rv_min, range->rv_max);
- }
- 
- static inline bool
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index d19d14ba9ae4..95201e5ff5e1 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -886,7 +886,7 @@ static bool has_no_hw_prefetch(const struct arm64_cpu_capabilities *entry, int _
- 	u32 midr = read_cpuid_id();
- 
- 	/* Cavium ThunderX pass 1.x and 2.x */
--	return MIDR_IS_CPU_MODEL_RANGE(midr, MIDR_THUNDERX,
-+	return midr_is_cpu_model_range(midr, MIDR_THUNDERX,
- 		MIDR_CPU_VAR_REV(0, 0),
- 		MIDR_CPU_VAR_REV(1, MIDR_REVISION_MASK));
- }
--- 
-2.20.1 (Apple Git-117)
-
+> 
+> > I'll check it with Ocean.
+> > 
+> >>
+> >> Now we just check bitmaps at real-time, because we have encountered such bitmap
+> >> corruption in product.
+> >>
+> >> Thanks,
+> >>
+> >>> out-of-boundary memory region. Could you write another patch to address the
+> >>> above issues?
+> >>>
+> >>>>
+> >>>> This reverts commit 56f3ce675103e3fb9e631cfb4131fc768bc23e9a.
+> >>>>
+> >>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> >>>> ---
+> >>>>  fs/f2fs/segment.c | 5 -----
+> >>>>  1 file changed, 5 deletions(-)
+> >>>>
+> >>>> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> >>>> index 9693fa4c8971..2eff9c008ae0 100644
+> >>>> --- a/fs/f2fs/segment.c
+> >>>> +++ b/fs/f2fs/segment.c
+> >>>> @@ -3492,11 +3492,6 @@ static int read_compacted_summaries(struct f2fs_sb_info *sbi)
+> >>>>  		seg_i = CURSEG_I(sbi, i);
+> >>>>  		segno = le32_to_cpu(ckpt->cur_data_segno[i]);
+> >>>>  		blk_off = le16_to_cpu(ckpt->cur_data_blkoff[i]);
+> >>>> -		if (blk_off > ENTRIES_IN_SUM) {
+> >>>> -			f2fs_bug_on(sbi, 1);
+> >>>> -			f2fs_put_page(page, 1);
+> >>>> -			return -EFAULT;
+> >>>> -		}
+> >>>>  		seg_i->next_segno = segno;
+> >>>>  		reset_curseg(sbi, i, 0);
+> >>>>  		seg_i->alloc_type = ckpt->alloc_type[i];
+> >>>> -- 
+> >>>> 2.18.0.rc1
+> >>> .
+> >>>
+> > .
+> > 
