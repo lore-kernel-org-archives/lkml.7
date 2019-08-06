@@ -2,89 +2,69 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54653C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 05:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C62DBC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 05:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28AE1206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 05:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1DC8206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 05:48:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731701AbfHFFrY (ORCPT
+        id S1731685AbfHFFsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 01:47:24 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:46369 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbfHFFrX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 01:47:23 -0400
-Received: by mail-yb1-f196.google.com with SMTP id w196so2283553ybe.13;
-        Mon, 05 Aug 2019 22:47:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7HC4POCzIDqskggOt6lQiYyg5UHZw5xvry3RRGbyMKo=;
-        b=ouKGS64yoOJQTRYB9zwz/Gj5gXNcTLUQ5X+5qynHGcnj8cFiEeFRBxStgdquY9d2j+
-         CweBdYGs9UX/xFzRV5T5W88gfg0CXBeTz4BEjYECPr675MFWlNmWeGRn1MDC0BY8iVHb
-         nxpiSeikHUxVgeRkfQwLASUr1cfmn4ibOvJqb3MkS6oz3xUHrBujIhNPmjA+VIS6Q/tV
-         EbjSs9vhrTHPj5DWltHAp+IzhTM3aPQysb78Nro+XCzKnyKVjw82xwdLxm3XHflXPT6T
-         oKZMhs7BCyMokIFBdXgp1QlEAHhjb0U3wJL1XBW4JR7834OfmwNciiVfI7B7XzV41hV+
-         Vy1g==
-X-Gm-Message-State: APjAAAU9D8Kn9d5hH09hDnYK8muU5i9P/U7uZY+SpMCnGp0Qf7qDE1Y7
-        RF/6DCLthZSSXBWR94d9MStu4NHOXtU2E2yy8/I=
-X-Google-Smtp-Source: APXvYqz3tYY7LUGGqsLQ1LpzPu4Cmx1TthFxzfD6TolHMI4FXEVi365AamdDKilNrXz+SkYAN9dOjSMG8xBO9sIRKe8=
-X-Received: by 2002:a25:5f06:: with SMTP id t6mr1194536ybb.325.1565070442867;
- Mon, 05 Aug 2019 22:47:22 -0700 (PDT)
+        Tue, 6 Aug 2019 01:48:46 -0400
+Received: from verein.lst.de ([213.95.11.211]:53346 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725798AbfHFFsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 01:48:46 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id EBE5268B02; Tue,  6 Aug 2019 07:48:41 +0200 (CEST)
+Date:   Tue, 6 Aug 2019 07:48:41 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Anshuman Khandual <anshuman.linux@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>
+Subject: Re: [PATCH v3 13/16] powerpc/pseries/iommu: Don't use
+ dma_iommu_ops on secure guests
+Message-ID: <20190806054841.GA14197@lst.de>
+References: <20190806052237.12525-1-bauerman@linux.ibm.com> <20190806052237.12525-14-bauerman@linux.ibm.com>
 MIME-Version: 1.0
-References: <1564566033-676-1-git-send-email-harini.katakam@xilinx.com>
- <1564566033-676-2-git-send-email-harini.katakam@xilinx.com>
- <20190804145633.GB6800@lunn.ch> <CAFcVECL6cvCjeo+fn1NDyMDZyZXDrWyhD9djvcVXiLVLiLgGeA@mail.gmail.com>
- <20190805132045.GC24275@lunn.ch> <CAFcVECLUNYRC-iZbKvvq2_XMLfXg7E10yAU5J_8GaEB3ExWRxg@mail.gmail.com>
- <CAFcVECLVHY5X=wctxVqRqDTDyG7Zavkt5ui4RtFBLP8g8MW1SA@mail.gmail.com> <20190805171639.GV24275@lunn.ch>
-In-Reply-To: <20190805171639.GV24275@lunn.ch>
-From:   Harini Katakam <harinik@xilinx.com>
-Date:   Tue, 6 Aug 2019 11:17:11 +0530
-Message-ID: <CAFcVECKp0N-82WX-mtT_J_jZ0u8C221bwLRrrSELZ1jgMKs-wA@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/2] dt-bindings: net: macb: Add new property for PS
- SGMII only
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Harini Katakam <harini.katakam@xilinx.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        David Miller <davem@davemloft.net>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190806052237.12525-14-bauerman@linux.ibm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+On Tue, Aug 06, 2019 at 02:22:34AM -0300, Thiago Jung Bauermann wrote:
+> @@ -1318,7 +1319,10 @@ void iommu_init_early_pSeries(void)
+>  	of_reconfig_notifier_register(&iommu_reconfig_nb);
+>  	register_memory_notifier(&iommu_mem_nb);
+>  
+> -	set_pci_dma_ops(&dma_iommu_ops);
+> +	if (is_secure_guest())
+> +		set_pci_dma_ops(NULL);
+> +	else
+> +		set_pci_dma_ops(&dma_iommu_ops);
 
-On Mon, Aug 5, 2019 at 10:47 PM Andrew Lunn <andrew@lunn.ch> wrote:
->
-> > Even with the use of this interrupt, the link status actions (link print and
-> > netif ops) will still be required. And also the need for macb_open to
-> > proceed without phydev. Could you please let me know if that is acceptable
-> > to patch or if there's a cleaner way to
-> > report this link status?
->
-> It sounds like you need to convert to phylink, so you get full sfp
-> support. phylib does not handle hotplug of PHYs.
->
-> Please look at the comments Russell gave the last time this was
-> attempted.
+Shoudn't:
 
-Yes, I looked at the comments from Russell and wasn't sure if this
-case qualified for phylink.
+	if (!is_secure_guest())
+		set_pci_dma_ops(&dma_iommu_ops);
 
-Regards,
-Harini
+be enough here, given that NULL is the default?
+
+Also either way I think this conditional needs a comment explaining
+why it is there.
