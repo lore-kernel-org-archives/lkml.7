@@ -2,77 +2,88 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 808BAC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B95C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 520C820717
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:15:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 057EC216B7
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:16:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565104560;
+	bh=la0HnOemoXK5fpvWjp+yCiuvCkWWSLx12p8REZ1hLrc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ANsFB65sj21ylPI1JTkgjJ2OY9FDaZuvAH72Sc6YCA/FkkdOiC4m5j9kurRS/oDa7
+	 40vDir1OVnjSRPcuDeur+ShTnv6FgCjm3monWRseO8C9BNbWDHBnlga0vTkO7vI95a
+	 Ikp1uohJy8HuZMzIX2ea9sU6hxJcfh9+60t5DByM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731909AbfHFPPr (ORCPT
+        id S1732757AbfHFPP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 11:15:47 -0400
-Received: from mga05.intel.com ([192.55.52.43]:53860 "EHLO mga05.intel.com"
+        Tue, 6 Aug 2019 11:15:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726877AbfHFPPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 11:15:46 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 08:15:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
-   d="scan'208";a="176656459"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 06 Aug 2019 08:15:44 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id B86EC162; Tue,  6 Aug 2019 18:15:43 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2] tracing: Be more clever when dumping hex in __print_hex()
-Date:   Tue,  6 Aug 2019 18:15:43 +0300
-Message-Id: <20190806151543.86061-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        id S1726713AbfHFPP6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 11:15:58 -0400
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A620D2173C;
+        Tue,  6 Aug 2019 15:15:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565104557;
+        bh=la0HnOemoXK5fpvWjp+yCiuvCkWWSLx12p8REZ1hLrc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cScU+ROGIiEoPjPJtTRdXG1cbQsMMpzEBSty6kfgERiB6umRY2L+C2ht5GwKKeCdJ
+         nf0igOibxERc7xRV173c1Dp8A004bt+yeTKLrOFqRSGcUO70GxzHw5vhMW517vqGh3
+         exHqFJOsZ4QKxPe/HxRcIXgWmdcw20oZH+8I7bEQ=
+Received: by mail-qk1-f170.google.com with SMTP id g18so63145536qkl.3;
+        Tue, 06 Aug 2019 08:15:57 -0700 (PDT)
+X-Gm-Message-State: APjAAAVppu63WgttGv36475I5TjltgHt8Lu1MVjC/pPlv0rwbE2KmE0N
+        X7DGuaZJwiNMorb5l6naVpbdLkMt7lPorqZrkQ==
+X-Google-Smtp-Source: APXvYqwLPJFWVImQ45weKYeyNJR2eA5NTRfK2u/H55qjIL0tD0cxfdGp8MnhGn/VAZvOKrsEobtM9NSgRSK3rhzUNug=
+X-Received: by 2002:a37:a010:: with SMTP id j16mr3781144qke.152.1565104556857;
+ Tue, 06 Aug 2019 08:15:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190806125041.16105-1-narmstrong@baylibre.com> <20190806125041.16105-3-narmstrong@baylibre.com>
+In-Reply-To: <20190806125041.16105-3-narmstrong@baylibre.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 6 Aug 2019 09:15:45 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKnzNMittFbvmz+ELu9UVMkmPmFoVT8ydWOYtCST+MwVA@mail.gmail.com>
+Message-ID: <CAL_JsqKnzNMittFbvmz+ELu9UVMkmPmFoVT8ydWOYtCST+MwVA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: net: meson-dwmac: convert to yaml
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        devicetree@vger.kernel.org, netdev <netdev@vger.kernel.org>,
+        linux-amlogic@lists.infradead.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hex dump as many as 16 bytes at once in trace_print_hex_seq()
-instead of byte-by-byte approach.
+On Tue, Aug 6, 2019 at 6:50 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> Now that we have the DT validation in place, let's convert the device tree
+> bindings for the Synopsys DWMAC Glue for Amlogic SoCs over to a YAML schemas.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  .../bindings/net/amlogic,meson-dwmac.yaml     | 113 ++++++++++++++++++
+>  .../devicetree/bindings/net/meson-dwmac.txt   |  71 -----------
+>  .../devicetree/bindings/net/snps,dwmac.yaml   |   5 +
+>  3 files changed, 118 insertions(+), 71 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/amlogic,meson-dwmac.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/net/meson-dwmac.txt
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-v2: fix length calculation, so, when buf_len=16 it won't indefinitely loop
- kernel/trace/trace_output.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+I don't love the compatible schema with 'additionalItems: true' and
+contains, but I guess it is what it is. I'm hopeful schemas help limit
+how many variations we end up with.
 
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index cab4a5398f1d..d54ce252b05a 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -219,10 +219,10 @@ trace_print_hex_seq(struct trace_seq *p, const unsigned char *buf, int buf_len,
- {
- 	int i;
- 	const char *ret = trace_seq_buffer_ptr(p);
-+	const char *fmt = concatenate ? "%*phN" : "%*ph";
- 
--	for (i = 0; i < buf_len; i++)
--		trace_seq_printf(p, "%s%2.2x", concatenate || i == 0 ? "" : " ",
--				 buf[i]);
-+	for (i = 0; i < buf_len; i += 16)
-+		trace_seq_printf(p, fmt, min(buf_len - i, 16), &buf[i]);
- 	trace_seq_putc(p, 0);
- 
- 	return ret;
--- 
-2.20.1
+Reviewed-by: Rob Herring <robh@kernel.org>
 
+Rob
