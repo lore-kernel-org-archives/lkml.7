@@ -2,159 +2,155 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C831CC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 323F0C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 975242187F
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFC1F216B7
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:20:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="WLX9eAV+"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="VmNYw1Ja"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733082AbfHFPUF (ORCPT
+        id S1733133AbfHFPUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 11:20:05 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45331 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732024AbfHFPUF (ORCPT
+        Tue, 6 Aug 2019 11:20:23 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:57677 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732024AbfHFPUX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 11:20:05 -0400
-Received: by mail-pg1-f196.google.com with SMTP id o13so41748328pgp.12
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 08:20:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DLr/S8jU71563TTjt3V9DdQkFNfZZ9GpEDLqJqyThL8=;
-        b=WLX9eAV+Do9txkuh9FQp3qtI2mkb3uS6AWtl5v+D2s68dxeCFgLT8Mu0dlFrU308LQ
-         sC+N27xnuwSrtm+Fkx/n/0WT6ocS2hECqVMaOg2jUc5fvRrC59LIGmFPN9Vp9gF1OGo6
-         EbYSi32+OEJ6Oq5K3W2+BSQeACoJmAG4Q1XEU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DLr/S8jU71563TTjt3V9DdQkFNfZZ9GpEDLqJqyThL8=;
-        b=TldGXS5ehnw4dKxlQoxuF+v0iYE7GNw2c1mCRsTYoX00BHk32V4RhJiD7AqIev+w5o
-         jMKJYJtr7HQPUiTZZSwSl4eOXVkxE8mJ0ZcQFrrcrHKZCBaZxDZ3rPUcElnJ3KE7ufwI
-         1y28yLyMXtqshhsGZxs1uMFljN7I9PKe1cPnbJzemhQI42FPWCfE2tw0vAl8szHwBdfB
-         uwv6Fgm7Kj+krFdlv2Kt7Mqn0/QpofbT5IVGPPitAoPCBDSL4SibQdXPtCZoN9K5cuZ7
-         xpmOMZcBrjiXL5UEXVk/AXEWKQmUB8p3d/HhqOH+2NMoc36Lwp0cvitatGQAo4joK/XH
-         eCfw==
-X-Gm-Message-State: APjAAAWgXgu9RotkTb+pzUqMVvQdZGHJHgj0oQ5CcLoS/poccjq/LxtL
-        6fop50m8b1tJ00hxK3OEMxui+g==
-X-Google-Smtp-Source: APXvYqxVQuc55AKHRFXAeMJAi3UPCUUUsl8H3gf0xO9Gg7+Z0EfVEsgvhGQKwjSNvREljAcS14pVrA==
-X-Received: by 2002:a17:90a:8d09:: with SMTP id c9mr3784595pjo.131.1565104803991;
-        Tue, 06 Aug 2019 08:20:03 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id s5sm71081936pfm.97.2019.08.06.08.20.02
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 08:20:02 -0700 (PDT)
-Date:   Tue, 6 Aug 2019 11:20:01 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Brendan Gregg <bgregg@netflix.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christian Hansen <chansen3@cisco.com>, dancol@google.com,
-        fmayer@google.com, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Mike Rapoport <rppt@linux.ibm.com>, namhyung@google.com,
-        paulmck@linux.ibm.com, Roman Gushchin <guro@fb.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, surenb@google.com,
-        Thomas Gleixner <tglx@linutronix.de>, tkjos@google.com,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v4 3/5] [RFC] arm64: Add support for idle bit in swap PTE
-Message-ID: <20190806152001.GA39951@google.com>
-References: <20190805170451.26009-1-joel@joelfernandes.org>
- <20190805170451.26009-3-joel@joelfernandes.org>
- <20190806084203.GJ11812@dhcp22.suse.cz>
- <20190806103627.GA218260@google.com>
- <20190806104755.GR11812@dhcp22.suse.cz>
- <20190806111446.GA117316@google.com>
- <20190806115703.GY11812@dhcp22.suse.cz>
- <20190806144747.GA72938@google.com>
+        Tue, 6 Aug 2019 11:20:23 -0400
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x76FKDh8015073
+        for <linux-kernel@vger.kernel.org>; Wed, 7 Aug 2019 00:20:13 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x76FKDh8015073
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1565104814;
+        bh=i+FEvR/efuw3Idz+I3UfAGgy5H3JLZbboBPNDDtTNz8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=VmNYw1JaZizdi0/b6wyZ7iD4a55YXg5c4iAN6s9qyizPMhYawqp136BXm5hrd9RyG
+         VDOwwlT/SVXU+I4I/WaJo2bBi1EgLeB3ZJI7q3rjmI7v6ZUZ0b6V9lvXh9CoqgjjY2
+         kGvJlL16JuuXTvDzmb1B8xOG176561vcOSQjQHbfBdV0PhiiEWlUlBJk97V1nv0L55
+         3p+FpluqY/WvV5+rG8YqxHx/Jhh/LBvRAlKsFqXFMNWhAQAp8FnYSUJptwtWlHFxBI
+         1OFmbgQ9tCeh1asL5v+EAuDb2W8EzaY76wKp6OQIJlQZLdsdkLjQiKVkKofhMV9KQQ
+         AiwhZnTZPiM/A==
+X-Nifty-SrcIP: [209.85.217.54]
+Received: by mail-vs1-f54.google.com with SMTP id 190so58542377vsf.9
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 08:20:13 -0700 (PDT)
+X-Gm-Message-State: APjAAAXQhIaaMQ1yJIuUUWos+Bg2ybxRtXPkLply+UN/bMTCh+GwTwMe
+        GNzoZ/SMletPGtdDzuq9qKblbJYXxfIMnz0XGzg=
+X-Google-Smtp-Source: APXvYqw8NAl1Oqazt55RhaYIuzXlPleRxF2o7rmwlLXmz1SSSwLnIlZnXz8/6do7KFel5de8AmoxZnU7NgsPAS/5oek=
+X-Received: by 2002:a67:f495:: with SMTP id o21mr2670793vsn.54.1565104812592;
+ Tue, 06 Aug 2019 08:20:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190806144747.GA72938@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190731190309.19909-1-rikard.falkeborn@gmail.com>
+ <47d29791addc075431737aff4b64531a668d4c1b.camel@perches.com>
+ <CAK7LNAQdgUOsjWtWFnXm66DPnYFRp=i69DMyr+q4+NT+SPCQxA@mail.gmail.com>
+ <2b782cf609330f53b6ecc5b75a8a4b49898483eb.camel@perches.com>
+ <CAK7LNASw+Fraio3t=bZw-FzJihScTuDR=p2EktFVOmdLH4GTGA@mail.gmail.com>
+ <20190802181853.GA809@rikard> <CAK7LNAT+cNxna4SER04MdkBsq_LDg4TwYR_U1ioNNxYOZWXigA@mail.gmail.com>
+ <CAK7LNAQv-5epL8DYDaUdHsQEQ=Va676t_6TgsaSYC30Eix=iyw@mail.gmail.com>
+ <20190803183637.GA831@rikard> <CAK7LNASBndh4yJKVdeMb7RQGopUzEUSNXPQcUgQdB8PiJetMuQ@mail.gmail.com>
+ <20190805195526.GA869@rikard>
+In-Reply-To: <20190805195526.GA869@rikard>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 7 Aug 2019 00:19:36 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATpQDWoMv+hnPrb1DTu4HravUhuhANnQkayxaJw99_ajQ@mail.gmail.com>
+Message-ID: <CAK7LNATpQDWoMv+hnPrb1DTu4HravUhuhANnQkayxaJw99_ajQ@mail.gmail.com>
+Subject: Re: [PATCH] linux/bits.h: Add compile time sanity check of GENMASK inputs
+To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Cc:     Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 11:47:47PM +0900, Minchan Kim wrote:
-> On Tue, Aug 06, 2019 at 01:57:03PM +0200, Michal Hocko wrote:
-> > On Tue 06-08-19 07:14:46, Joel Fernandes wrote:
-> > > On Tue, Aug 06, 2019 at 12:47:55PM +0200, Michal Hocko wrote:
-> > > > On Tue 06-08-19 06:36:27, Joel Fernandes wrote:
-> > > > > On Tue, Aug 06, 2019 at 10:42:03AM +0200, Michal Hocko wrote:
-> > > > > > On Mon 05-08-19 13:04:49, Joel Fernandes (Google) wrote:
-> > > > > > > This bit will be used by idle page tracking code to correctly identify
-> > > > > > > if a page that was swapped out was idle before it got swapped out.
-> > > > > > > Without this PTE bit, we lose information about if a page is idle or not
-> > > > > > > since the page frame gets unmapped.
-> > > > > > 
-> > > > > > And why do we need that? Why cannot we simply assume all swapped out
-> > > > > > pages to be idle? They were certainly idle enough to be reclaimed,
-> > > > > > right? Or what does idle actualy mean here?
-> > > > > 
-> > > > > Yes, but other than swapping, in Android a page can be forced to be swapped
-> > > > > out as well using the new hints that Minchan is adding?
-> > > > 
-> > > > Yes and that is effectivelly making them idle, no?
-> > > 
-> > > That depends on how you think of it.
-> > 
-> > I would much prefer to have it documented so that I do not have to guess ;)
-> > 
-> > > If you are thinking of a monitoring
-> > > process like a heap profiler, then from the heap profiler's (that only cares
-> > > about the process it is monitoring) perspective it will look extremely odd if
-> > > pages that are recently accessed by the process appear to be idle which would
-> > > falsely look like those processes are leaking memory. The reality being,
-> > > Android forced those pages into swap because of other reasons. I would like
-> > > for the swapping mechanism, whether forced swapping or memory reclaim, not to
-> > > interfere with the idle detection.
-> > 
-> > Hmm, but how are you going to handle situation when the page is unmapped
-> > and refaulted again (e.g. a normal reclaim of a pagecache)? You are
-> > losing that information same was as in the swapout case, no? Or am I
-> > missing something?
-> 
-> If page is unmapped, it's not a idle memory any longer because it's
-> free memory. We could detect the pte is not present.
+Hi Rikard,
 
-I think Michal is not talking of explictly being unmapped, but about the case
-where a file-backed mapped page is unmapped due to memory pressure ? This is
-similar to the swap situation.
 
-Basically... file page is marked idle, then it is accessed by userspace. Then
-memory pressure drops it off the page cache so the idle information is lost.
-Next time we check the page_idle, we miss that it was accessed indeed.
+On Tue, Aug 6, 2019 at 4:55 AM Rikard Falkeborn
+<rikard.falkeborn@gmail.com> wrote:
+>
+> On Sun, Aug 04, 2019 at 03:45:16PM +0900, Masahiro Yamada wrote:
+> > On Sun, Aug 4, 2019 at 3:36 AM Rikard Falkeborn
+> > <rikard.falkeborn@gmail.com> wrote:
+> > >
+> > > On Sat, Aug 03, 2019 at 12:12:46PM +0900, Masahiro Yamada wrote:
+> > > > On Sat, Aug 3, 2019 at 12:03 PM Masahiro Yamada
+> > > > <yamada.masahiro@socionext.com> wrote:
+> > > >
+> > > > >
+> > > > > BTW, v2 is already inconsistent.
+> > > > > If you wanted GENMASK_INPUT_CHECK() to return 'unsigned long',,
+> > > > > you would have to cast (low) > (high) as well:
+> > > > >
+> > > > >                (unsigned long)((low) > (high)), UL(0))))
+> > > > >
+> > > > > This is totally redundant, and weird.
+> > > >
+> > > > I take back this comment.
+> > > > You added (unsigned long) to the beginning of this macro.
+> > > > So, the type is consistent, but I believe all casts should be removed.
+> > >
+> > > Maybe you're right. BUILD_BUG_ON_ZERO returns size_t regardless of
+> > > inputs. I was worried that on some platform, size_t would be larger than
+> > > unsigned long (as far as I could see, the standard does not give any
+> > > guarantees), and thus all of a sudden GENMASK would be 8 bytes instead
+> > > of 4, but perhaps that is not a problem?
+> >
+> >
+> > How about adding (int) cast to BUILD_BUG_ON_ZERO() ?
+>
+> I'll have a look.
 
-It is not an issue for the heap profiler or anonymous memory per-se. But is
-similar to the swap situation.
 
-> If page is refaulted, it's not a idle memory any longer because it's
-> accessed again. We could detect it because the newly allocated page
-> doesn't have a PG_idle page flag.
 
-In the refault case, yes it should not be a problem.
+I found a more important problem in this patch.
 
-thanks,
+You used __is_constexpr(), which is defined in <linux/kernel.h>.
 
- - Joel
+This header does not include <linux/kernel.h>,
+so this header is not self-contained anymore.
 
+The following test code fails to build:
+
+#include <linux/bits.h>
+unsigned long foo(unsigned long in_bits)
+{
+        return in_bits & GENMASK(5, 3);
+}
+
+
+
+However, you cannot include <linux/kernel.h> from <linux/bits.h>.
+See the log of 8bd9cb51daac89337295b6f037b0486911e1b408
+
+This header was split out to not pull in <linux/bitops.h>
+Including <linux/kernel.h> pulls in <linux/bitops.h> again.
+
+
+In summary, please use __builtin_constant_p()
+instead of __is_constexpr().
+
+
+You can shorten __builtin_constant_p(high) && __builtin_constant_p(low)
+into __builtin_constant_p((low) > (high)).
+
+
+How about this?
+
+
+#define GENMASK_INPUT_CHECK(high, low) \
+       BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+              __builtin_constant_p((low) > (high)), (low) > (high), 0))
+
+
+-- 
+Best Regards
+Masahiro Yamada
