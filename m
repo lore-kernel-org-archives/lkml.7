@@ -7,53 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C56AC41514
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6387C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ECE32089E
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CDC7217F5
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:34:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127235;
-	bh=IrSPkdOFNLVvzypNG0n03D0Y8Azmy/p852QGNEcsraw=;
+	s=default; t=1565127240;
+	bh=YWZMTuicYL37W61tyGEDFMuUQiDu4m6h46X35x3t5h4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ouh6W0heqyUeyFKjHMDeWWyNm4joCrsBQnTDZjTa8j1nbQ480nxTMYKNfV2o0J4c7
-	 f4cdaLijz5bS1RfCiV9EyVQDi6nih9PHDhQ8tQi8blPB/o3ysoxFRAIoeBGUk1NYL2
-	 lxZsoRdNlusPxka6q0vpqrq8jOAWQofqr4reGqH4=
+	b=lyDwF89bkLDW1PeL/LynwnDPP0DQNJ5d5+uCNYWKN4pydDEiTcfo8kofjWuljLabo
+	 U4NEtzi9cQFXGP26OrYNQT4LMTna8LJBdec8uft/FPONxK63dumnSQaOe1hR6OWMGS
+	 sJKyZNVLgjNcrxcq27jzgzFpv9fEuH+dE69SxaKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727360AbfHFVdy (ORCPT
+        id S1726426AbfHFVd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:33:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51676 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:33:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726238AbfHFVdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:33:49 -0400
+        id S1727324AbfHFVdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:33:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 858952089E;
-        Tue,  6 Aug 2019 21:33:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8423B21743;
+        Tue,  6 Aug 2019 21:33:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127228;
-        bh=IrSPkdOFNLVvzypNG0n03D0Y8Azmy/p852QGNEcsraw=;
+        s=default; t=1565127232;
+        bh=YWZMTuicYL37W61tyGEDFMuUQiDu4m6h46X35x3t5h4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O6IO+vNV721LKt3fv7JWQr0YxlJfTYU67q8IxB/B0xbKeNh4lRjqeEo8eVoOTx0Hq
-         PWuK6Io5Yukf3xsR8KRKIZIriuEK8L95rzr0it8Jp/e5nTmbNt2rJLUXBVv6HYAubx
-         qrSkVLe3B+7avjt7mLRAMayVrYd2GLn0dXAR9Qmk=
+        b=Be9ieqRNixxKdnMAM0zYAo1XUd2ZNj7DNYZsdYszaXhkXsGKL3Jg3MXW+CGMX7FZD
+         VB001adF+KKNQIs26jzxZ0VSi6nd+Xr2PNkwbqTH1UtRbPdKdMy85UPxBZAHX3jwz4
+         6pMdO7nZFefSZMfMvewwFlkbsBnFRRhK0yXNNqkg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Numfor Mbiziwo-Tiapo <nums@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
-        Mark Drayton <mbd@fb.com>, Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Stephane Eranian <eranian@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.2 17/59] perf header: Fix use of unitialized value warning
-Date:   Tue,  6 Aug 2019 17:32:37 -0400
-Message-Id: <20190806213319.19203-17-sashal@kernel.org>
+Cc:     Yuki Tsunashima <ytsunashima@jp.adit-jv.com>,
+        Suresh Udipi <sudipi@jp.adit-jv.com>,
+        Adam Miartus <amiartus@de.adit-jv.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 19/59] ALSA: pcm: fix lost wakeup event scenarios in snd_pcm_drain
+Date:   Tue,  6 Aug 2019 17:32:39 -0400
+Message-Id: <20190806213319.19203-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213319.19203-1-sashal@kernel.org>
 References: <20190806213319.19203-1-sashal@kernel.org>
@@ -66,68 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Numfor Mbiziwo-Tiapo <nums@google.com>
+From: Yuki Tsunashima <ytsunashima@jp.adit-jv.com>
 
-[ Upstream commit 20f9781f491360e7459c589705a2e4b1f136bee9 ]
+[ Upstream commit 37151a41df800493cfcbbef4f7208ffe04feb959 ]
 
-When building our local version of perf with MSAN (Memory Sanitizer) and
-running the perf record command, MSAN throws a use of uninitialized
-value warning in "tools/perf/util/util.c:333:6".
+lost wakeup can occur after enabling irq, therefore put task
+into interruptible before enabling interrupts,
 
-This warning stems from the "buf" variable being passed into "write".
-It originated as the variable "ev" with the type union perf_event*
-defined in the "perf_event__synthesize_attr" function in
-"tools/perf/util/header.c".
+without this change, task can be put to sleep and snd_pcm_drain
+will delay
 
-In the "perf_event__synthesize_attr" function they allocate space with a malloc
-call using ev, then go on to only assign some of the member variables before
-passing "ev" on as a parameter to the "process" function therefore "ev"
-contains uninitialized memory. Changing the malloc call to zalloc to initialize
-all the members of "ev" which gets rid of the warning.
-
-To reproduce this warning, build perf by running:
-make -C tools/perf CLANG=1 CC=clang EXTRA_CFLAGS="-fsanitize=memory\
- -fsanitize-memory-track-origins"
-
-(Additionally, llvm might have to be installed and clang might have to
-be specified as the compiler - export CC=/usr/bin/clang)
-
-then running:
-tools/perf/perf record -o - ls / | tools/perf/perf --no-pager annotate\
- -i - --stdio
-
-Please see the cover letter for why false positive warnings may be
-generated.
-
-Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Drayton <mbd@fb.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20190724234500.253358-2-nums@google.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: f2b3614cefb6 ("ALSA: PCM - Don't check DMA time-out too shortly")
+Signed-off-by: Yuki Tsunashima <ytsunashima@jp.adit-jv.com>
+Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
+[ported from 4.9]
+Signed-off-by: Adam Miartus <amiartus@de.adit-jv.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/header.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/core/pcm_native.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index fd543f209bd0a..1156ebda47c3f 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -3565,7 +3565,7 @@ int perf_event__synthesize_attr(struct perf_tool *tool,
- 	size += sizeof(struct perf_event_header);
- 	size += ids * sizeof(u64);
+diff --git a/sound/core/pcm_native.c b/sound/core/pcm_native.c
+index 12dd9b318db18..703857aab00fc 100644
+--- a/sound/core/pcm_native.c
++++ b/sound/core/pcm_native.c
+@@ -1873,6 +1873,7 @@ static int snd_pcm_drain(struct snd_pcm_substream *substream,
+ 		if (!to_check)
+ 			break; /* all drained */
+ 		init_waitqueue_entry(&wait, current);
++		set_current_state(TASK_INTERRUPTIBLE);
+ 		add_wait_queue(&to_check->sleep, &wait);
+ 		snd_pcm_stream_unlock_irq(substream);
+ 		if (runtime->no_period_wakeup)
+@@ -1885,7 +1886,7 @@ static int snd_pcm_drain(struct snd_pcm_substream *substream,
+ 			}
+ 			tout = msecs_to_jiffies(tout * 1000);
+ 		}
+-		tout = schedule_timeout_interruptible(tout);
++		tout = schedule_timeout(tout);
  
--	ev = malloc(size);
-+	ev = zalloc(size);
- 
- 	if (ev == NULL)
- 		return -ENOMEM;
+ 		snd_pcm_stream_lock_irq(substream);
+ 		group = snd_pcm_stream_group_ref(substream);
 -- 
 2.20.1
 
