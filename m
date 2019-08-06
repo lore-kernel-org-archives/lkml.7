@@ -2,140 +2,120 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B92FC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C24C32751
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A56F20818
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36FC620818
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:51:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="q5a6Wu2J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbfHFSvj (ORCPT
+        id S1726495AbfHFSv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 14:51:39 -0400
-Received: from mga11.intel.com ([192.55.52.93]:5993 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725948AbfHFSvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 14:51:38 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 11:51:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
-   d="scan'208";a="182053414"
-Received: from megha-z97x-ud7-th.sc.intel.com ([143.183.85.162])
-  by FMSMGA003.fm.intel.com with ESMTP; 06 Aug 2019 11:51:38 -0700
-Message-ID: <1565118769.2401.120.camel@intel.com>
-Subject: Re: [RFC V1 RESEND 0/6] Introduce dynamic allocation/freeing of
- MSI-X vectors
-From:   Megha Dey <megha.dey@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, marc.zyngier@arm.com, ashok.raj@intel.com,
-        jacob.jun.pan@linux.intel.com
-Date:   Tue, 06 Aug 2019 12:12:49 -0700
-In-Reply-To: <20190802002442.GI151852@google.com>
-References: <1561162778-12669-1-git-send-email-megha.dey@linux.intel.com>
-         <20190802002442.GI151852@google.com>
+        Tue, 6 Aug 2019 14:51:58 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:38087 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725798AbfHFSv5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 14:51:57 -0400
+Received: by mail-ot1-f66.google.com with SMTP id d17so95169935oth.5
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 11:51:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aGCcLtK25GuveYiFjhwocqTOqxw5HIZH0JbQl66UTl8=;
+        b=q5a6Wu2JffaVHSnXg3X5NgLo7sEfrMh4H/pE7ZTJenizHNyZziPaDY+sKY4OALTbdm
+         wWeUsPsuiAD7aiR2FOdge5bw9vBJkZpbZK/ApWIjWB3eOGut9lYi7v626S/DWLkuG+Fr
+         HsqzZuekniCMpYkDgy/V6P9lbnq9eSJXNuVH7/+d+SlnrhpWcjGn3c8gqHa1e6jPm2He
+         44FW/xjQAlIzFwFgX6j548WyXfkKSDNpble5Vw2lfIJHPA2Lb5ZWUjBDWaxgMWCRMb6J
+         H2FW8SGNPvor8jaYMjskiuEJCJSfaC57nPSIZVEgYfTfpuFwxmHWH3nSpAXN/go/VPiE
+         D0Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aGCcLtK25GuveYiFjhwocqTOqxw5HIZH0JbQl66UTl8=;
+        b=IvA7/LG2ibAydV36Xav91MWrynWB0Wh0ZDhJQxfeqpFIUSPtTOytITeF/gsu8mshFu
+         fUeMwaugRF9XlYRaESKnceaa4MTcUaORGqzIGD0ray8lXEvZZnjm/yYkRv9QBToUXclV
+         N+WIBa6aC5/LawR1Xsoay2Fv+s6cfjG69tPktgF1Eklt02UfuYFw6wYcxqoMBioQdowD
+         t1N2TtphFXJaouf/wfOXH3ndValHWjxbmrJLRQ0X6FWYKSnlXeXkQl0bnz7XYsQr3RVs
+         sNjCHSOWi8U0+0A641fhzEcCr0tyuUk5YZx8L0/vIwUMcpGdHPHT8zp75gFRffDTRutB
+         EI3Q==
+X-Gm-Message-State: APjAAAXrNEHY54vYBgdry+dHRP7t+QfOPPaRDAeQVuZ0vDgxXPabtBzf
+        ehWCT6nyJTjs6mmUGzWLClWk2K5NAcaNPMow2IYzSQ==
+X-Google-Smtp-Source: APXvYqwcmVP6EF7nHglBfXmejG+UyrqAm46scDpHmg5aEHLa6bLfwM+0QBmdRY1EL3pmwrUfpCyo9HYDXxOrdkSyK5s=
+X-Received: by 2002:a05:6830:13d9:: with SMTP id e25mr4622173otq.197.1565117516786;
+ Tue, 06 Aug 2019 11:51:56 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190805175848.163558-1-trong@android.com> <20190805175848.163558-4-trong@android.com>
+ <5d48bbc2.1c69fb81.62114.5473@mx.google.com>
+In-Reply-To: <5d48bbc2.1c69fb81.62114.5473@mx.google.com>
+From:   Tri Vo <trong@android.com>
+Date:   Tue, 6 Aug 2019 11:51:45 -0700
+Message-ID: <CANA+-vBFY_mVfhhK=5BL5m_yyQ5+GTE9bv32fk-qsfnAmfE4nA@mail.gmail.com>
+Subject: Re: [PATCH v7 3/3] PM / wakeup: Show wakeup sources stats in sysfs
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Hridya Valsaraju <hridya@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-08-01 at 19:24 -0500, Bjorn Helgaas wrote:
-> Hi Megha,
-> 
-> On Fri, Jun 21, 2019 at 05:19:32PM -0700, Megha Dey wrote:
-> > 
-> > Currently, MSI-X vector enabling and allocation for a PCIe device
-> > is
-> > static i.e. a device driver gets only one chance to enable a
-> > specific
-> > number of MSI-X vectors, usually during device probe. Also, in many
-> > cases, drivers usually reserve more than required number of vectors
-> > anticipating their use, which unnecessarily blocks resources that
-> > could have been made available to other devices. Lastly, there is
-> > no
-> > way for drivers to reserve more vectors, if the MSI-x has already
-> > been
-> > enabled for that device.
-> >  
-> > Hence, a dynamic MSI-X kernel infrastructure can benefit drivers by
-> > deferring MSI-X allocation to post probe phase, where actual demand
-> > information is available.
-> >  
-> > This patchset enables the dynamic allocation/de-allocation of MSI-X
-> > vectors by introducing 2 new APIs:
-> > pci_alloc_irq_vectors_dyn() and pci_free_irq_vectors_grp():
-> > 
-> > We have had requests from some of the NIC/RDMA users who have lots
-> > of
-> > interrupt resources and would like to allocate them on demand,
-> > instead of using an all or none approach.
-> > 
-> > The APIs are fairly well tested (multiple
-> > allocations/deallocations),
-> > but we have no early adopters yet. Hence, sending this series as an
-> > RFC for review and comments.
-> > 
-> > The patches are based out of Linux 5.2-rc5.
-> > 
-> > Megha Dey (6):
-> >   PCI/MSI: New structures/macros for dynamic MSI-X allocation
-> >   PCI/MSI: Dynamic allocation of MSI-X vectors by group
-> >   x86: Introduce the dynamic teardown function
-> >   PCI/MSI: Introduce new structure to manage MSI-x entries
-> s/MSI-x/MSI-X/
-> If "entries" here means the same as "vectors" above, please use the
-> same word.
-> 
+On Mon, Aug 5, 2019 at 4:29 PM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Tri Vo (2019-08-05 10:58:48)
+> > diff --git a/drivers/base/power/wakeup_stats.c b/drivers/base/power/wakeup_stats.c
+> > new file mode 100644
+> > index 000000000000..3a4f55028e27
+> > --- /dev/null
+> > +++ b/drivers/base/power/wakeup_stats.c
+> > @@ -0,0 +1,161 @@
+> [...]
+> > +/**
+> > + * wakeup_source_sysfs_add - Add wakeup_source attributes to sysfs.
+> > + * @parent: Device given wakeup source is associated with (or NULL if virtual).
+> > + * @ws: Wakeup source to be added in sysfs.
+> > + */
+> > +int wakeup_source_sysfs_add(struct device *parent, struct wakeup_source *ws)
+> > +{
+> > +       struct device *dev;
+> > +
+> > +       dev = device_create_with_groups(wakeup_class, parent, MKDEV(0, 0), ws,
+> > +                                       wakeup_source_groups, "wakeup%d",
+> > +                                       ws->id);
+> > +       if (IS_ERR(dev))
+> > +               return PTR_ERR(dev);
+> > +       ws->dev = dev;
+> > +       pm_runtime_no_callbacks(ws->dev);
+>
+> Does this only avoid adding runtime PM attributes?
+>
+> I thought we would call device_set_pm_not_required() on the device here.
+> Probably requiring a bit of copy/paste from device_create_with_groups()
+> so that it can be set before the device is registered. Or another
+> version of device_create_with_groups() that does everything besides call
+> device_add().
 
-Hi Bjorn,
+Comments on pm_runtime_no_callbacks() say,
+  "Set the power.no_callbacks flag, which tells the PM core that this
+   device is power-managed through its parent and has no runtime PM
+   callbacks of its own.  The runtime sysfs attributes will be removed."
 
-Well, here entries basically mean the msi_desc entries. I thought MSI
-vectors are used for each address/data pair, hence used the term
-entries. Will update it to vectors to ensure uniformity.
-
-> > 
-> >   PCI/MSI: Free MSI-X resources by group
-> Is "resources" the same as "vectors"?
-> 
-
-Yes, will update this in V2.
-
-> > 
-> >   Documentation: PCI/MSI: Document dynamic MSI-X infrastructure
-> When you post a v2 after addressing Thomas' comments, please make
-> these subject lines imperative sentences beginning with a descriptive
-> verb.  You can run "git log --oneline drivers/pci" to see the style.
-
-Sure, I will update the subject lines in V2.
-
-> If you're adding a specific interface or structure, mention it by
-> name
-> in the subject if it's practical.  The "x86" line needs a little more
-> context; I assume it should include "IRQ", "MSI-X", or something.
-> 
-
-True, will change this in V2.
-
-> > 
-> >  Documentation/PCI/MSI-HOWTO.txt |  38 +++++
-> >  arch/x86/include/asm/x86_init.h |   1 +
-> >  arch/x86/kernel/x86_init.c      |   6 +
-> >  drivers/pci/msi.c               | 363
-> > +++++++++++++++++++++++++++++++++++++---
-> >  drivers/pci/probe.c             |   9 +
-> >  include/linux/device.h          |   3 +
-> >  include/linux/msi.h             |  13 ++
-> >  include/linux/pci.h             |  61 +++++++
-> >  kernel/irq/msi.c                |  34 +++-
-> >  9 files changed, 497 insertions(+), 31 deletions(-)
-> > 
+Sound like it's appropriate to apply this function to the wakeup source.
