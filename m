@@ -7,53 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2643C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E41DDC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6ABA21874
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:35:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3D9621874
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:35:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127348;
-	bh=LoyyK8Y5wmTJ2vvA2mKELmonKgoKSQ2GhMLrgEDDMUw=;
+	s=default; t=1565127352;
+	bh=V76xE9yx0XUDLCJlnul7L7uvJfM4tYzp8LxJd5ggxiI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nuyOUMgZ0mat38+TI7pmm8aotRKDYIckNTOa1MXMqR5jalzxW2gXbSEixUkIMbjIc
-	 HypbsMiabrPKyTzEg0T/W+UN3JnPGOYc6Kx/CO119kG3mJ/EdPCV70BmB413teZmzr
-	 c8iGXkL908e2kE7cTB/9HbfachzHseYZ5zKnPKkk=
+	b=UcE5fX41tl8wpgJ+SjBY3/dws/rfAH/wDrdvRtkNvQm6K7/9FLXDVEzWmO3ASiU/m
+	 HYawR9dMmgqPw79pGnZOZfFf9peKTlLm2pvKA93nyrNWISCbrSZB4wSURfDL+2ktFq
+	 6XP9nwBlu30hdDdms9Rf26K3l6vPUA6qZKoaf22w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728692AbfHFVfr (ORCPT
+        id S1728725AbfHFVfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:35:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53458 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:35:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728652AbfHFVfm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:35:42 -0400
+        id S1727479AbfHFVfr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:35:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51EEB217F5;
-        Tue,  6 Aug 2019 21:35:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A573217F5;
+        Tue,  6 Aug 2019 21:35:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127341;
-        bh=LoyyK8Y5wmTJ2vvA2mKELmonKgoKSQ2GhMLrgEDDMUw=;
+        s=default; t=1565127346;
+        bh=V76xE9yx0XUDLCJlnul7L7uvJfM4tYzp8LxJd5ggxiI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QrxRfgxwj6uclAFdiE0PRD81bdQ7STeq+YI+YDSho+c0x7z2nL14+DgKXe3nhcE4w
-         cDt4VoiYTdpPrywEZXGK2VJvQC0pu3jFEdcIikp9W4OjpJxgwUeGhc30kVn0AnnxN1
-         h3iOWquBiP8yMI1N89EBRQlUQTIoMrG1Ns9lKEYM=
+        b=h6cEojdhiB/Uc3u2JqxWV+kLdfS9MB8ZxXohCl+J18wWLobojc8K5iQ7CG8hP4/Dq
+         ovDH1rzPKg4jJ9w0vqaoVO841Fz8y1HXRhYVrdIINaSXoFNfLYoo89B6QiO++i5vty
+         mQjEhPYuZMlHPsRv07tsFtMChWG6yaVFDVGphg3k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Numfor Mbiziwo-Tiapo <nums@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
-        Mark Drayton <mbd@fb.com>, Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Stephane Eranian <eranian@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 09/32] perf header: Fix use of unitialized value warning
-Date:   Tue,  6 Aug 2019 17:34:57 -0400
-Message-Id: <20190806213522.19859-9-sashal@kernel.org>
+Cc:     Don Brace <don.brace@microsemi.com>,
+        Bader Ali - Saleh <bader.alisaleh@microsemi.com>,
+        Scott Teel <scott.teel@microsemi.com>,
+        Scott Benesh <scott.benesh@microsemi.com>,
+        Kevin Barnett <kevin.barnett@microsemi.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, esc.storagedev@microsemi.com,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 13/32] scsi: hpsa: correct scsi command status issue after reset
+Date:   Tue,  6 Aug 2019 17:35:01 -0400
+Message-Id: <20190806213522.19859-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213522.19859-1-sashal@kernel.org>
 References: <20190806213522.19859-1-sashal@kernel.org>
@@ -66,68 +64,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Numfor Mbiziwo-Tiapo <nums@google.com>
+From: Don Brace <don.brace@microsemi.com>
 
-[ Upstream commit 20f9781f491360e7459c589705a2e4b1f136bee9 ]
+[ Upstream commit eeebce1862970653cdf5c01e98bc669edd8f529a ]
 
-When building our local version of perf with MSAN (Memory Sanitizer) and
-running the perf record command, MSAN throws a use of uninitialized
-value warning in "tools/perf/util/util.c:333:6".
-
-This warning stems from the "buf" variable being passed into "write".
-It originated as the variable "ev" with the type union perf_event*
-defined in the "perf_event__synthesize_attr" function in
-"tools/perf/util/header.c".
-
-In the "perf_event__synthesize_attr" function they allocate space with a malloc
-call using ev, then go on to only assign some of the member variables before
-passing "ev" on as a parameter to the "process" function therefore "ev"
-contains uninitialized memory. Changing the malloc call to zalloc to initialize
-all the members of "ev" which gets rid of the warning.
-
-To reproduce this warning, build perf by running:
-make -C tools/perf CLANG=1 CC=clang EXTRA_CFLAGS="-fsanitize=memory\
- -fsanitize-memory-track-origins"
-
-(Additionally, llvm might have to be installed and clang might have to
-be specified as the compiler - export CC=/usr/bin/clang)
-
-then running:
-tools/perf/perf record -o - ls / | tools/perf/perf --no-pager annotate\
- -i - --stdio
-
-Please see the cover letter for why false positive warnings may be
-generated.
-
-Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Drayton <mbd@fb.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20190724234500.253358-2-nums@google.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reviewed-by: Bader Ali - Saleh <bader.alisaleh@microsemi.com>
+Reviewed-by: Scott Teel <scott.teel@microsemi.com>
+Reviewed-by: Scott Benesh <scott.benesh@microsemi.com>
+Reviewed-by: Kevin Barnett <kevin.barnett@microsemi.com>
+Signed-off-by: Don Brace <don.brace@microsemi.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/header.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/hpsa.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 94278f914cdca..3a1a1fe8fea3c 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -3372,7 +3372,7 @@ int perf_event__synthesize_attr(struct perf_tool *tool,
- 	size += sizeof(struct perf_event_header);
- 	size += ids * sizeof(u64);
+diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
+index c43eccdea65d2..f570b8c5d857c 100644
+--- a/drivers/scsi/hpsa.c
++++ b/drivers/scsi/hpsa.c
+@@ -2320,6 +2320,8 @@ static int handle_ioaccel_mode2_error(struct ctlr_info *h,
+ 	case IOACCEL2_SERV_RESPONSE_COMPLETE:
+ 		switch (c2->error_data.status) {
+ 		case IOACCEL2_STATUS_SR_TASK_COMP_GOOD:
++			if (cmd)
++				cmd->result = 0;
+ 			break;
+ 		case IOACCEL2_STATUS_SR_TASK_COMP_CHK_COND:
+ 			cmd->result |= SAM_STAT_CHECK_CONDITION;
+@@ -2479,8 +2481,10 @@ static void process_ioaccel2_completion(struct ctlr_info *h,
  
--	ev = malloc(size);
-+	ev = zalloc(size);
+ 	/* check for good status */
+ 	if (likely(c2->error_data.serv_response == 0 &&
+-			c2->error_data.status == 0))
++			c2->error_data.status == 0)) {
++		cmd->result = 0;
+ 		return hpsa_cmd_free_and_done(h, c, cmd);
++	}
  
- 	if (ev == NULL)
- 		return -ENOMEM;
+ 	/*
+ 	 * Any RAID offload error results in retry which will use
+@@ -5617,6 +5621,12 @@ static int hpsa_scsi_queue_command(struct Scsi_Host *sh, struct scsi_cmnd *cmd)
+ 	}
+ 	c = cmd_tagged_alloc(h, cmd);
+ 
++	/*
++	 * This is necessary because the SML doesn't zero out this field during
++	 * error recovery.
++	 */
++	cmd->result = 0;
++
+ 	/*
+ 	 * Call alternate submit routine for I/O accelerated commands.
+ 	 * Retries always go down the normal I/O path.
 -- 
 2.20.1
 
