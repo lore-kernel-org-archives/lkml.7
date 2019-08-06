@@ -2,156 +2,171 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE94C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 09:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D93AEC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 09:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8135208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 09:00:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B302B208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 09:01:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732337AbfHFJAi (ORCPT
+        id S1732379AbfHFJBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 05:00:38 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:34182 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728056AbfHFJAi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 05:00:38 -0400
-Received: by mail-qt1-f193.google.com with SMTP id k10so14616046qtq.1;
-        Tue, 06 Aug 2019 02:00:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GJI8Q958h48076lj7HHRUT6jGx524lciyFVkT7AnhmM=;
-        b=Ozubf8tdz/lc02BmyX+ghmtZysUvlHmCLbr7v2zhI46tMBEIhBvrAe6DYCRQXiFufu
-         pJvMotonslwTtTxm1i9MDjZAQ8Qi02vpEsQ7gZqolTlFl7y2gS7xtY6BGOK0+HyXzVpK
-         iBbVkvRbZNLJHKo5nsCxTOEWbujKWa6I4R7ssnr5lC7EbPeFD8xfOqpEb7u/1gv6ng90
-         gogmMLNeOjHj4UlTb1Drlj71g399wGDh+QXW3htrIilAcMtvz32taDsAgi73gk9aSdGU
-         GZiWkUHw5+WkY5NsAV0/7GnmIxbHVZlvLMJxPxQVxuMKKLlZuU85pi2og7+SJ21lh/9v
-         Q6Yw==
-X-Gm-Message-State: APjAAAUKQpCEtzo/xvVIooe6SRtOS4Sr/Naw03ex8dbfUEt2xC7lJORX
-        CWCHQo7pdfDXWV5hCzdpAEFMKtKZPlIkVQ4oRSg=
-X-Google-Smtp-Source: APXvYqy4PNWX5BTQ7QWu0URcWKn8nWqNLxwxK1RLYZMdN26VOViuvMztTtwIO8SzKaQh+zB7b2A0pIesdDnxXYb45To=
-X-Received: by 2002:a0c:b758:: with SMTP id q24mr1953315qve.45.1565082036702;
- Tue, 06 Aug 2019 02:00:36 -0700 (PDT)
+        Tue, 6 Aug 2019 05:01:48 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59812 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728056AbfHFJBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 05:01:47 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5DEB13082B15;
+        Tue,  6 Aug 2019 09:01:47 +0000 (UTC)
+Received: from t460s.redhat.com (ovpn-117-71.ams2.redhat.com [10.36.117.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 039DE1A269;
+        Tue,  6 Aug 2019 09:01:42 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: [PATCH v1] driver/base/memory.c: Validate memory block size early
+Date:   Tue,  6 Aug 2019 11:01:42 +0200
+Message-Id: <20190806090142.22709-1-david@redhat.com>
 MIME-Version: 1.0
-References: <20190806043729.5562-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190806043729.5562-1-yamada.masahiro@socionext.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 6 Aug 2019 11:00:19 +0200
-Message-ID: <CAK8P3a2POcb+AReLKib513i_RTN9kLM_Tun7+G5LOacDuy7gjQ@mail.gmail.com>
-Subject: Re: [RFC PATCH] kbuild: re-implement detection of CONFIG options
- leaked to user-space
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        bpf@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Amit Pundir <amit.pundir@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 06 Aug 2019 09:01:47 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 6, 2019 at 6:38 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> I was playing with sed yesterday, but the resulted code might be unreadable.
->
-> Sed scripts tend to be somewhat unreadable.
-> I just wondered which language is appropriate for this?
-> Maybe perl, or what else? I am not good at perl, though.
+Let's validate the memory block size early, when initializing the
+memory device infrastructure. Fail hard in case the value is not
+suitable.
 
-I like the sed version, in particular as it seems to do the job and
-I'm not volunteering to write it in anything else.
+As nobody checks the return value of memory_dev_init(), turn it into a
+void function and fail with a panic in all scenarios instead. Otherwise,
+we'll crash later during boot when core/drivers expect that the memory
+device infrastructure (including memory_block_size_bytes()) works as
+expected.
 
-> Maybe, it will be better to fix existing warnings
-> before enabling this check.
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ drivers/base/memory.c  | 31 +++++++++----------------------
+ include/linux/memory.h |  6 +++---
+ 2 files changed, 12 insertions(+), 25 deletions(-)
 
-Yes, absolutely.
+diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+index 790b3bcd63a6..6bea4f3f8040 100644
+--- a/drivers/base/memory.c
++++ b/drivers/base/memory.c
+@@ -100,21 +100,6 @@ unsigned long __weak memory_block_size_bytes(void)
+ }
+ EXPORT_SYMBOL_GPL(memory_block_size_bytes);
+ 
+-static unsigned long get_memory_block_size(void)
+-{
+-	unsigned long block_sz;
+-
+-	block_sz = memory_block_size_bytes();
+-
+-	/* Validate blk_sz is a power of 2 and not less than section size */
+-	if ((block_sz & (block_sz - 1)) || (block_sz < MIN_MEMORY_BLOCK_SIZE)) {
+-		WARN_ON(1);
+-		block_sz = MIN_MEMORY_BLOCK_SIZE;
+-	}
+-
+-	return block_sz;
+-}
+-
+ /*
+  * Show the first physical section index (number) of this memory block.
+  */
+@@ -461,7 +446,7 @@ static DEVICE_ATTR_RO(removable);
+ static ssize_t block_size_bytes_show(struct device *dev,
+ 				     struct device_attribute *attr, char *buf)
+ {
+-	return sprintf(buf, "%lx\n", get_memory_block_size());
++	return sprintf(buf, "%lx\n", memory_block_size_bytes());
+ }
+ 
+ static DEVICE_ATTR_RO(block_size_bytes);
+@@ -811,19 +796,22 @@ static const struct attribute_group *memory_root_attr_groups[] = {
+ /*
+  * Initialize the sysfs support for memory devices...
+  */
+-int __init memory_dev_init(void)
++void __init memory_dev_init(void)
+ {
+ 	int ret;
+ 	int err;
+ 	unsigned long block_sz, nr;
+ 
++	/* Validate the configured memory block size */
++	block_sz = memory_block_size_bytes();
++	if (!is_power_of_2(block_sz) || block_sz < MIN_MEMORY_BLOCK_SIZE)
++		panic("Memory block size not suitable: 0x%lx\n", block_sz);
++	sections_per_block = block_sz / MIN_MEMORY_BLOCK_SIZE;
++
+ 	ret = subsys_system_register(&memory_subsys, memory_root_attr_groups);
+ 	if (ret)
+ 		goto out;
+ 
+-	block_sz = get_memory_block_size();
+-	sections_per_block = block_sz / MIN_MEMORY_BLOCK_SIZE;
+-
+ 	/*
+ 	 * Create entries for memory sections that were found
+ 	 * during boot and have been initialized
+@@ -839,8 +827,7 @@ int __init memory_dev_init(void)
+ 
+ out:
+ 	if (ret)
+-		printk(KERN_ERR "%s() failed: %d\n", __func__, ret);
+-	return ret;
++		panic("%s() failed: %d\n", __func__, ret);
+ }
+ 
+ /**
+diff --git a/include/linux/memory.h b/include/linux/memory.h
+index 704215d7258a..0ebb105eb261 100644
+--- a/include/linux/memory.h
++++ b/include/linux/memory.h
+@@ -79,9 +79,9 @@ struct mem_section;
+ #define IPC_CALLBACK_PRI        10
+ 
+ #ifndef CONFIG_MEMORY_HOTPLUG_SPARSE
+-static inline int memory_dev_init(void)
++static inline void memory_dev_init(void)
+ {
+-	return 0;
++	return;
+ }
+ static inline int register_memory_notifier(struct notifier_block *nb)
+ {
+@@ -112,7 +112,7 @@ extern int register_memory_isolate_notifier(struct notifier_block *nb);
+ extern void unregister_memory_isolate_notifier(struct notifier_block *nb);
+ int create_memory_block_devices(unsigned long start, unsigned long size);
+ void remove_memory_block_devices(unsigned long start, unsigned long size);
+-extern int memory_dev_init(void);
++extern void memory_dev_init(void);
+ extern int memory_notify(unsigned long val, void *v);
+ extern int memory_isolate_notify(unsigned long val, void *v);
+ extern struct memory_block *find_memory_block(struct mem_section *);
+-- 
+2.21.0
 
-> If somebody takes a closer look at them, that would be great.
-
-Let's see:
-
-> warning: include/uapi/linux/elfcore.h: leaks CONFIG_BINFMT_ELF_FDPIC to user-space
-
-This one is nontrivial, since it defines two incompatible layouts for
-this structure,
-and the fdpic version is currently not usable at all from user space. Also,
-the definition breaks configurations that have both CONFIG_BINFMT_ELF
-and CONFIG_BINFMT_ELF_FDPIC enabled, which has become possible
-with commit 382e67aec6a7 ("ARM: enable elf_fdpic on systems with an MMU").
-
-The best way forward I see is to duplicate the structure definition, adding
-a new 'struct elf_fdpic_prstatus', and using that in fs/binfmt_elf_fdpic.c.
-The same change is required in include/linux/elfcore-compat.h.
-
-> warning: include/uapi/linux/atmdev.h: leaks CONFIG_COMPAT to user-space
-
-The "#define COMPAT_ATM_ADDPARTY" can be moved to include/linux/atmdev.h,
-it's not needed in the uapi header
-
-> warning: include/uapi/linux/raw.h: leaks CONFIG_MAX_RAW_DEVS to user-space
-
-This has never been usable, I'd just remove MAX_RAW_MINORS and change
-drivers/char/raw.c to use CONFIG_MAX_RAW_DEVS
-
-> warning: include/uapi/linux/pktcdvd.h: leaks CONFIG_CDROM_PKTCDVD_WCACHE to user-space
-
-USE_WCACHING can be moved to drivers/block/pktcdvd.c
-
-> warning: include/uapi/linux/eventpoll.h: leaks CONFIG_PM_SLEEP to user-space
-
-ep_take_care_of_epollwakeup() should not be in the header at all I think.
-Commit 95f19f658ce1 ("epoll: drop EPOLLWAKEUP if PM_SLEEP is disabled")
-was wrong to move it out of fs/eventpoll.c, and I'd just move it back
-as an inline function. (Added Amit to Cc for clarification).
-
-> warning: include/uapi/linux/hw_breakpoint.h: leaks CONFIG_HAVE_MIXED_BREAKPOINTS_REGS to user-space
-
-enum bp_type_idx started out in kernel/events/hw_breakpoint.c
-and was later moved to a header which then became public. I
-don't think it was ever meant to be public though. We either want
-to move it back, or change the CONFIG_HAVE_MIXED_BREAKPOINTS_REGS
-macro to an __ARCH_HAVE_MIXED_BREAKPOINTS_REGS that
-is explicitly set in a header file by x86 and superh.
-
-> warning: include/uapi/asm-generic/fcntl.h: leaks CONFIG_64BIT to user-space
-
-The #ifdef could just be changed to
-#if __BITS_PER_LONG == 32
-
-We could also do this differently, given that most 64-bit architectures define
-the same macros in their arch/*/include/asm/compat.h files (parisc and mips
-use different values).
-
-> warning: arch/x86/include/uapi/asm/mman.h: leaks CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS to user-space
-
-I think arch_vm_get_page_prot should not be in the uapi header,
-other architectures have it in arch/powerpc/include/asm/mman.h
-
-> warning: arch/x86/include/uapi/asm/auxvec.h: leaks CONFIG_IA32_EMULATION to user-space
-> warning: arch/x86/include/uapi/asm/auxvec.h: leaks CONFIG_X86_64 to user-space
-
-It looks like this definition has always been wrong, across several
-changes that made it wrong in different ways.
-
-AT_VECTOR_SIZE_ARCH is supposed to define the size of the extra
-aux vectors, which is meant to be '2' for i386 tasks, and '1' for
-x86_64 tasks, regardless of how the kernel is configured. I looked at
-this for a bit but it's hard to tell how to fix this without introducing
-possible regressions. Note how 'mm->saved_auxv' uses this
-size and gets copied between kernel and user space.
-
-       Arnd
