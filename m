@@ -2,242 +2,270 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0578EC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 17:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E18C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 17:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBD362075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 17:36:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C052920717
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 17:38:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JTGcrXJx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387512AbfHFRgx (ORCPT
+        id S2387572AbfHFRir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 13:36:53 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:50245 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727549AbfHFRgx (ORCPT
+        Tue, 6 Aug 2019 13:38:47 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:60086 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731830AbfHFRir (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 13:36:53 -0400
-Received: from mail-wr1-f71.google.com ([209.85.221.71])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <andrea.righi@canonical.com>)
-        id 1hv3OF-0004u6-6h
-        for linux-kernel@vger.kernel.org; Tue, 06 Aug 2019 17:36:51 +0000
-Received: by mail-wr1-f71.google.com with SMTP id g8so42465976wrw.2
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 10:36:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=k8160bX0AxtMu26pGIgkyDQWX/jNyhf79KSwyNs478o=;
-        b=VOxzUJDxIpSVMqCWN6wYU/eeQ5G2tfRGMM0e042UEeqMo5tSto+kS+EV+hQGzXlhyb
-         HhtxRFIkGzFe8PR2MKg+BNePdHiuoFnTeFUz5N79u7Pl9lBUVhXvbzrzEm9NLwEw4+Lw
-         fdqu3ziCuO2CVRgcf5YF1K/drFUN56TjnCwyBw4N2TpV0cT+RbyjI0m17FP6Q3mNj+DI
-         hBoEyaMaCYR7Wo2WNg7NMJxzyojYJhsdicWgv9kFq9x2kVL87T76/VDfDCpEnWIubVte
-         b/Y/jG8X97IVNOn4Hob8cLKF1Bvviv4wgWifo5QgP5cgC5fCnuuj6Elxb2/2UcWKeWki
-         Oqkg==
-X-Gm-Message-State: APjAAAUtfDi+l03VEIHo9MoDjq9sUtluqLZjydPtSprw73yaUjEafGhR
-        iBQggTL3dyXbGSwatXysgFGQZaUyq8x9JEmnBJdCac5GqVQQghFJdNjK/83NmGljuB6dDuFiFO+
-        CwhobnFEmQ3ncRsiktM0ejcu/dbfwHkzmVudpFH9Cjw==
-X-Received: by 2002:adf:fb8e:: with SMTP id a14mr5757122wrr.263.1565113010859;
-        Tue, 06 Aug 2019 10:36:50 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzYJp403TRPYY3zd/y/fwObneeFGKmHHtTn6IwcDMPaLZy9dcv4UGBUxm4X+BuRKTGcDEQpnA==
-X-Received: by 2002:adf:fb8e:: with SMTP id a14mr5757103wrr.263.1565113010488;
-        Tue, 06 Aug 2019 10:36:50 -0700 (PDT)
-Received: from localhost (host21-131-dynamic.46-79-r.retail.telecomitalia.it. [79.46.131.21])
-        by smtp.gmail.com with ESMTPSA id e19sm122697381wra.71.2019.08.06.10.36.49
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 10:36:49 -0700 (PDT)
-Date:   Tue, 6 Aug 2019 19:36:48 +0200
-From:   Andrea Righi <andrea.righi@canonical.com>
-To:     Coly Li <colyli@suse.de>
-Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
-        linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] bcache: fix deadlock in bcache_allocator
-Message-ID: <20190806173648.GB27866@xps-13>
-References: <20190806091801.GC11184@xps-13>
+        Tue, 6 Aug 2019 13:38:47 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x76HcKok007671;
+        Tue, 6 Aug 2019 12:38:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1565113100;
+        bh=rJsG4X64+05xGE5m7rzAm+zLsHKU8QbIpns9wHygRi8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=JTGcrXJxmNXfgFaTAASCC8SBU0IJYQKQ9sqs1KXIxaYUufOHQoFVSZnbd2BvK5njh
+         fZDQwADBbTvkxFkt4XnG0TMlvWO9YT7XMiXlARvBBWS9RhxLIADyRSPZ4qRVjNxKi0
+         gL+fxOYLnghoOyTN4v2RUhKvKlg4GCqEtToiwFrg=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x76HcKZA075961
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 6 Aug 2019 12:38:20 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 6 Aug
+ 2019 12:38:19 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 6 Aug 2019 12:38:19 -0500
+Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x76HcJ61094917;
+        Tue, 6 Aug 2019 12:38:19 -0500
+Subject: Re: [PATCH 0/6] hwspinlock: allow sharing of hwspinlocks
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Fabien DESSENNE <fabien.dessenne@st.com>
+CC:     Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Benjamin GAIGNARD <benjamin.gaignard@st.com>
+References: <1552492237-28810-1-git-send-email-fabien.dessenne@st.com>
+ <20190801191403.GA7234@tuxbook-pro>
+ <1a057176-81ab-e302-4375-2717ceef6924@st.com>
+ <20190805174659.GA23928@tuxbook-pro>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <dcd1aeea-cffe-d5fb-af5a-e52efcc2e046@ti.com>
+Date:   Tue, 6 Aug 2019 12:38:19 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190806091801.GC11184@xps-13>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190805174659.GA23928@tuxbook-pro>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 11:18:01AM +0200, Andrea Righi wrote:
-> bcache_allocator() can call the following:
-> 
->  bch_allocator_thread()
->   -> bch_prio_write()
->      -> bch_bucket_alloc()
->         -> wait on &ca->set->bucket_wait
-> 
-> But the wake up event on bucket_wait is supposed to come from
-> bch_allocator_thread() itself => deadlock:
-> 
-> [ 1158.490744] INFO: task bcache_allocato:15861 blocked for more than 10 seconds.
-> [ 1158.495929]       Not tainted 5.3.0-050300rc3-generic #201908042232
-> [ 1158.500653] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> [ 1158.504413] bcache_allocato D    0 15861      2 0x80004000
-> [ 1158.504419] Call Trace:
-> [ 1158.504429]  __schedule+0x2a8/0x670
-> [ 1158.504432]  schedule+0x2d/0x90
-> [ 1158.504448]  bch_bucket_alloc+0xe5/0x370 [bcache]
-> [ 1158.504453]  ? wait_woken+0x80/0x80
-> [ 1158.504466]  bch_prio_write+0x1dc/0x390 [bcache]
-> [ 1158.504476]  bch_allocator_thread+0x233/0x490 [bcache]
-> [ 1158.504491]  kthread+0x121/0x140
-> [ 1158.504503]  ? invalidate_buckets+0x890/0x890 [bcache]
-> [ 1158.504506]  ? kthread_park+0xb0/0xb0
-> [ 1158.504510]  ret_from_fork+0x35/0x40
-> 
-> Fix by making the call to bch_prio_write() non-blocking, so that
-> bch_allocator_thread() never waits on itself.
-> 
-> Moreover, make sure to wake up the garbage collector thread when
-> bch_prio_write() is failing to allocate buckets.
-> 
-> BugLink: https://bugs.launchpad.net/bugs/1784665
-> BugLink: https://bugs.launchpad.net/bugs/1796292
-> Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
-> ---
-> Changes in v2:
->  - prevent retry_invalidate busy loop in bch_allocator_thread()
-> 
->  drivers/md/bcache/alloc.c  |  5 ++++-
->  drivers/md/bcache/bcache.h |  2 +-
->  drivers/md/bcache/super.c  | 13 +++++++++----
->  3 files changed, 14 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/md/bcache/alloc.c b/drivers/md/bcache/alloc.c
-> index 6f776823b9ba..a1df0d95151c 100644
-> --- a/drivers/md/bcache/alloc.c
-> +++ b/drivers/md/bcache/alloc.c
-> @@ -377,7 +377,10 @@ static int bch_allocator_thread(void *arg)
->  			if (!fifo_full(&ca->free_inc))
->  				goto retry_invalidate;
->  
-> -			bch_prio_write(ca);
-> +			if (bch_prio_write(ca, false) < 0) {
-> +				ca->invalidate_needs_gc = 1;
-> +				wake_up_gc(ca->set);
-> +			}
->  		}
->  	}
->  out:
-> diff --git a/drivers/md/bcache/bcache.h b/drivers/md/bcache/bcache.h
-> index 013e35a9e317..deb924e1d790 100644
-> --- a/drivers/md/bcache/bcache.h
-> +++ b/drivers/md/bcache/bcache.h
-> @@ -977,7 +977,7 @@ bool bch_cached_dev_error(struct cached_dev *dc);
->  __printf(2, 3)
->  bool bch_cache_set_error(struct cache_set *c, const char *fmt, ...);
->  
-> -void bch_prio_write(struct cache *ca);
-> +int bch_prio_write(struct cache *ca, bool wait);
->  void bch_write_bdev_super(struct cached_dev *dc, struct closure *parent);
->  
->  extern struct workqueue_struct *bcache_wq;
-> diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-> index 20ed838e9413..716ea272fb55 100644
-> --- a/drivers/md/bcache/super.c
-> +++ b/drivers/md/bcache/super.c
-> @@ -529,7 +529,7 @@ static void prio_io(struct cache *ca, uint64_t bucket, int op,
->  	closure_sync(cl);
->  }
->  
-> -void bch_prio_write(struct cache *ca)
-> +int bch_prio_write(struct cache *ca, bool wait)
->  {
->  	int i;
->  	struct bucket *b;
-> @@ -564,8 +564,12 @@ void bch_prio_write(struct cache *ca)
->  		p->magic	= pset_magic(&ca->sb);
->  		p->csum		= bch_crc64(&p->magic, bucket_bytes(ca) - 8);
->  
-> -		bucket = bch_bucket_alloc(ca, RESERVE_PRIO, true);
-> -		BUG_ON(bucket == -1);
-> +		bucket = bch_bucket_alloc(ca, RESERVE_PRIO, wait);
-> +		if (bucket == -1) {
-> +			if (!wait)
-> +				return -ENOMEM;
-> +			BUG_ON(1);
-> +		}
+Hi Fabien,
 
-Coly,
+On 8/5/19 12:46 PM, Bjorn Andersson wrote:
+> On Mon 05 Aug 01:48 PDT 2019, Fabien DESSENNE wrote:
+> 
+>>
+>> On 01/08/2019 9:14 PM, Bjorn Andersson wrote:
+>>> On Wed 13 Mar 08:50 PDT 2019, Fabien Dessenne wrote:
+>>>
+>>>> The current implementation does not allow two different devices to use
+>>>> a common hwspinlock. This patch set proposes to have, as an option, some
+>>>> hwspinlocks shared between several users.
+>>>>
+>>>> Below is an example that explain the need for this:
+>>>> 	exti: interrupt-controller@5000d000 {
+>>>> 		compatible = "st,stm32mp1-exti", "syscon";
+>>>> 		interrupt-controller;
+>>>> 		#interrupt-cells = <2>;
+>>>> 		reg = <0x5000d000 0x400>;
+>>>> 		hwlocks = <&hsem 1>;
+>>>> 	};
+>>>> The two drivers (stm32mp1-exti and syscon) refer to the same hwlock.
+>>>> With the current hwspinlock implementation, only the first driver succeeds
+>>>> in requesting (hwspin_lock_request_specific) the hwlock. The second request
+>>>> fails.
 
-looking more at this change, I think we should handle the failure path
-properly or we may leak buckets, am I right? (sorry for not realizing
-this before). Maybe we need something like the following on top of my
-previous patch.
+Help me understand the problem that you are trying to solve here. Is
+this a case of you having two clients on Linux-side needing to use the
+same lock but still requiring the arbitration with software running on
+some other remote processor? Are they talking to the same entity on the
+remote-side or different peers.
 
-I'm going to run more stress tests with this patch applied and will try
-to figure out if we're actually leaking buckets without it.
+I see the series is all about getting a handle so that they can use the
+API, and is the expected usage that the same entity will lock and unlock
+before the other driver can lock it.
 
----
-Subject: bcache: prevent leaking buckets in bch_prio_write()
+>>>>
+>>>>
+>>>> The proposed approach does not modify the API, but extends the DT 'hwlocks'
+>>>> property with a second optional parameter (the first one identifies an
+>>>> hwlock) that specifies whether an hwlock is requested for exclusive usage
+>>>> (current behavior) or can be shared between several users.
+>>>> Examples:
+>>>> 	hwlocks = <&hsem 8>;	Ref to hwlock #8 for exclusive usage
+>>>> 	hwlocks = <&hsem 8 0>;	Ref to hwlock #8 for exclusive (0) usage
+>>>> 	hwlocks = <&hsem 8 1>;	Ref to hwlock #8 for shared (1) usage
+>>>>
+>>>> As a constraint, the #hwlock-cells value must be 1 or 2.
+>>>> In the current implementation, this can have theorically any value but:
+>>>> - all of the exisiting drivers use the same value : 1.
+>>>> - the framework supports only one value : 1 (see implementation of
+>>>>    of_hwspin_lock_simple_xlate())
+>>>> Hence, it shall not be a problem to restrict this value to 1 or 2 since
+>>>> it won't break any driver.
+>>>>
+>>> Hi Fabien,
+>>>
+>>> Your series looks good, but it makes me wonder why the hardware locks
+>>> should be an exclusive resource.
+>>>
+>>> How about just making all (specific) locks shared?
+>>
+>> Hi Bjorn,
+>>
+>> Making all locks shared is a possible implementation (my first 
+>> implementation
+>> was going this way) but there are some drawbacks we must be aware of:
+>>
+>> A/ This theoretically break the legacy behavior (the legacy works with
+>> exclusive (UNUSED radix tag) usage). As a consequence, an existing driver
+>> that is currently failing to request a lock (already claimed by another
+>> user) would now work fine. Not sure that there are such drivers, so this
+>> point is probably not a real issue.
+>>
+> 
+> Right, it's possible that a previously misconfigured system now
+> successfully probes more than one device that uses a particular
+> spinlock. But such system would be suffering from issues related to e.g.
+> probe ordering.
+> 
+> So I think we should ignore this issue.
+> 
+>> B/ This would introduce some inconsistency between the two 'request' API
+>> which are hwspin_lock_request() and hwspin_lock_request_specific().
+>> hwspin_lock_request() looks for an unused lock, so requests for an exclusive
+>> usage. On the other side, request_specific() would request shared locks.
+>> Worst the following sequence can transform an exclusive usage into a shared
+>>
+> 
+> There is already an inconsistency in between these; as with above any
+> system that uses both request() and request_specific() will be suffering
+> from intermittent failures due to probe ordering.
+> 
+>> one:
+>>    -hwspin_lock_request() -> returns Id#0 (exclusive)
+>>    -hwspin_lock_request() -> returns Id#1 (exclusive)
+>>    -hwspin_lock_request_specific(0) -> returns Id#0 and makes Id#0 shared
+>> Honestly I am not sure that this is a real issue, but it's better to have it
+>> in mind before we take ay decision
 
-Handle the allocation failure path properly in bch_prio_write() to avoid
-leaking buckets from the previous successful iterations.
+Wouldn't it be actually simpler to just introduce a new specific API
+variant for this, similar to the reset core for example (it uses a
+separate exclusive API), without having to modify the bindings at all.
+It is just a case of your driver using the right API, and the core can
+be modified to use the additional tag semantics based on the API. It
+should avoid any confusion with say using a different second cell value
+for the same lock in two different nodes.
 
-Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
----
- drivers/md/bcache/super.c | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+If you are sharing a hwlock on the Linux side, surely your driver should
+be aware that it is a shared lock. The tag can be set during the first
+request API, and you look through both tags when giving out a handle.
 
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index 716ea27..727266f 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -531,7 +531,7 @@ static void prio_io(struct cache *ca, uint64_t bucket, int op,
- 
- int bch_prio_write(struct cache *ca, bool wait)
- {
--	int i;
-+	int i, j, ret = 0;
- 	struct bucket *b;
- 	struct closure cl;
- 
-@@ -566,9 +566,11 @@ int bch_prio_write(struct cache *ca, bool wait)
- 
- 		bucket = bch_bucket_alloc(ca, RESERVE_PRIO, wait);
- 		if (bucket == -1) {
--			if (!wait)
--				return -ENOMEM;
--			BUG_ON(1);
-+			if (!wait) {
-+				ret = -ENOMEM;
-+				break;
-+			}
-+			BUG();
- 		}
- 
- 		mutex_unlock(&ca->set->bucket_lock);
-@@ -590,14 +592,14 @@ int bch_prio_write(struct cache *ca, bool wait)
- 	 * Don't want the old priorities to get garbage collected until after we
- 	 * finish writing the new ones, and they're journalled
- 	 */
--	for (i = 0; i < prio_buckets(ca); i++) {
--		if (ca->prio_last_buckets[i])
-+	for (j = prio_buckets(ca) - 1; j > i; --j) {
-+		if (ca->prio_last_buckets[j])
- 			__bch_bucket_free(ca,
--				&ca->buckets[ca->prio_last_buckets[i]]);
-+				&ca->buckets[ca->prio_last_buckets[j]]);
- 
--		ca->prio_last_buckets[i] = ca->prio_buckets[i];
-+		ca->prio_last_buckets[j] = ca->prio_buckets[j];
- 	}
--	return 0;
-+	return ret;
- }
- 
- static void prio_read(struct cache *ca, uint64_t bucket)
--- 
-2.7.4
+Obviously, the hwspin_lock_request() API usage semantics always had the
+implied additional need for communicating the lock id to the other peer
+entity, so a realistic usage is most always the specific API variant. I
+doubt this API would be of much use for the shared driver usage. This
+also implies that the client user does not care about specifying a lock
+in DT.
+
+regards
+Suman
+
+> 
+> The case where I can see a
+> problem with this would be if the two clients somehow would nest their
+> locking regions.
+> 
+> But generally I think this could consider this an improvement, because
+> the request_specific() would now be able to acquire its hwlock, with
+> some additional contention due to the multiple use.
+> 
+>> I could not find any driver using the hwspin_lock_request() API, we
+>> may decide to remove (or to make deprecated) this API, having
+>> everything 'shared without any conditions'.
+>>
+> 
+> It would be nice to have an upstream user of this API.
+> 
+>>
+>> I can see three options:
+>> 1- Keep my initial proposition
+>> 2- Have hwspin_lock_request_specific() using shared locks and
+>>     hwspin_lock_request() using unused (so 'initially' exclusive) locks.
+>> 3- Have hwspin_lock_request_specific() using shared locks and
+>>     remove/make deprecated hwspin_lock_request().
+>>
+>> Just let me know what is your preference.
+>>
+> 
+> I think we should start with #2 and would like input from e.g. Suman
+> regarding #3.
+> 
+> Regards,
+> Bjorn
+> 
+>> BR
+>>
+>> Fabien
+>>
+>>>
+>>> Regards,
+>>> Bjorn
+>>>
+>>>> Fabien Dessenne (6):
+>>>>    dt-bindings: hwlock: add support of shared locks
+>>>>    hwspinlock: allow sharing of hwspinlocks
+>>>>    dt-bindings: hwlock: update STM32 #hwlock-cells value
+>>>>    ARM: dts: stm32: Add hwspinlock node for stm32mp157 SoC
+>>>>    ARM: dts: stm32: Add hwlock for irqchip on stm32mp157
+>>>>    ARM: dts: stm32: hwlocks for GPIO for stm32mp157
+>>>>
+>>>>   .../devicetree/bindings/hwlock/hwlock.txt          | 27 +++++--
+>>>>   .../bindings/hwlock/st,stm32-hwspinlock.txt        |  6 +-
+>>>>   Documentation/hwspinlock.txt                       | 10 ++-
+>>>>   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi          |  2 +
+>>>>   arch/arm/boot/dts/stm32mp157c.dtsi                 | 10 +++
+>>>>   drivers/hwspinlock/hwspinlock_core.c               | 82 +++++++++++++++++-----
+>>>>   drivers/hwspinlock/hwspinlock_internal.h           |  2 +
+>>>>   7 files changed, 108 insertions(+), 31 deletions(-)
+>>>>
+>>>> -- 
+>>>> 2.7.4
+>>>>
 
