@@ -2,69 +2,277 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA91FC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 05:24:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE4F0C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 05:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90D252070D
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 05:24:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EAB82070D
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 05:25:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731554AbfHFFYz (ORCPT
+        id S1731639AbfHFFZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 01:24:55 -0400
-Received: from gate.crashing.org ([63.228.1.57]:49586 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726036AbfHFFYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 01:24:55 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x765OKnm016656;
-        Tue, 6 Aug 2019 00:24:21 -0500
-Message-ID: <198e51f1454720f15f0570e98203834eed11893f.camel@kernel.crashing.org>
-Subject: Re: [PATCH v3] nvme-pci: Support shared tags across queues for
- Apple 2018 controllers
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Keith Busch <keith.busch@intel.com>
-Cc:     Keith Busch <kbusch@kernel.org>, linux-nvme@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Paul Pawlowski <paul@mrarm.io>,
-        Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
-        Minwoo Im <minwoo.im.dev@gmail.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>
-Date:   Tue, 06 Aug 2019 15:24:19 +1000
-In-Reply-To: <20190805134907.GC18647@localhost.localdomain>
-References: <b1f9bdf0294b8d87d292de3c7462c8e99551b02d.camel@kernel.crashing.org>
-         <20190730153044.GA13948@localhost.localdomain>
-         <2030a028664a9af9e96fffca3ab352faf1f739e5.camel@kernel.crashing.org>
-         <6290507e1b2830b1729fc858cd5c20b85d092728.camel@kernel.crashing.org>
-         <20190805134907.GC18647@localhost.localdomain>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 6 Aug 2019 01:25:35 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45884 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726036AbfHFFZe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 01:25:34 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x765Lvo9065226;
+        Tue, 6 Aug 2019 01:23:13 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u71j1kjxv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 06 Aug 2019 01:23:10 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x765MGwP066179;
+        Tue, 6 Aug 2019 01:23:10 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u71j1kjxk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 06 Aug 2019 01:23:10 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x765KFGG025244;
+        Tue, 6 Aug 2019 05:23:09 GMT
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
+        by ppma01dal.us.ibm.com with ESMTP id 2u51w6wy7j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 06 Aug 2019 05:23:09 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x765N8oo50463146
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 6 Aug 2019 05:23:08 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6EF60112065;
+        Tue,  6 Aug 2019 05:23:08 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5D3AE112061;
+        Tue,  6 Aug 2019 05:23:06 +0000 (GMT)
+Received: from morokweng.localdomain.com (unknown [9.85.207.254])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue,  6 Aug 2019 05:23:06 +0000 (GMT)
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Anshuman Khandual <anshuman.linux@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Subject: [PATCH v3 04/16] powerpc/prom_init: Add the ESM call to prom_init
+Date:   Tue,  6 Aug 2019 02:22:25 -0300
+Message-Id: <20190806052237.12525-5-bauerman@linux.ibm.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190806052237.12525-1-bauerman@linux.ibm.com>
+References: <20190806052237.12525-1-bauerman@linux.ibm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-06_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908060063
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-08-05 at 07:49 -0600, Keith Busch wrote:
-> > Ping ? I had another look today and I don't feel like mucking around
-> > with all the AQ size logic, AEN magic tag etc... just for that sake of
-> > that Apple gunk. I'm happy to have it give up IO tags, it doesn't seem
-> > to make much of a difference in practice anyway.
-> > 
-> > But if you feel strongly about it, then I'll implement the "proper" way
-> > sometimes this week, adding a way to shrink the AQ down to something
-> > like 3 (one admin request, one async event (AEN), and the empty slot)
-> > by making a bunch of the constants involved variables instead.
-> 
-> I don't feel too strongly about it. I think your patch is fine, so
-> 
-> Acked-by: Keith Busch <keith.busch@intel.com>
+From: Ram Pai <linuxram@us.ibm.com>
 
-Thanks, I'll fold the test and respin this week.
+Make the Enter-Secure-Mode (ESM) ultravisor call to switch the VM to secure
+mode. Pass kernel base address and FDT address so that the Ultravisor is
+able to verify the integrity of the VM using information from the ESM blob.
 
-Cheers,
-Ben.
+Add "svm=" command line option to turn on switching to secure mode.
 
+Signed-off-by: Ram Pai <linuxram@us.ibm.com>
+[ andmike: Generate an RTAS os-term hcall when the ESM ucall fails. ]
+Signed-off-by: Michael Anderson <andmike@linux.ibm.com>
+[ bauerman: Cleaned up the code a bit. ]
+Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+---
+ .../admin-guide/kernel-parameters.txt         |  5 +
+ arch/powerpc/include/asm/ultravisor-api.h     |  3 +
+ arch/powerpc/kernel/prom_init.c               | 96 +++++++++++++++++++
+ 3 files changed, 104 insertions(+)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 7ccd158b3894..231a008b7961 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -4620,6 +4620,11 @@
+ 			/sys/power/pm_test). Only available when CONFIG_PM_DEBUG
+ 			is set. Default value is 5.
+ 
++	svm=		[PPC]
++			Format: { on | off | y | n | 1 | 0 }
++			This parameter controls use of the Protected
++			Execution Facility on pSeries.
++
+ 	swapaccount=[0|1]
+ 			[KNL] Enable accounting of swap in memory resource
+ 			controller if no parameter or 1 is given or disable
+diff --git a/arch/powerpc/include/asm/ultravisor-api.h b/arch/powerpc/include/asm/ultravisor-api.h
+index 88ffa78f9d61..d3503d1f447e 100644
+--- a/arch/powerpc/include/asm/ultravisor-api.h
++++ b/arch/powerpc/include/asm/ultravisor-api.h
+@@ -20,4 +20,7 @@
+ #define U_PARAMETER		H_PARAMETER
+ #define U_SUCCESS		H_SUCCESS
+ 
++/* opcodes */
++#define UV_ESM				0xF110
++
+ #endif /* _ASM_POWERPC_ULTRAVISOR_API_H */
+diff --git a/arch/powerpc/kernel/prom_init.c b/arch/powerpc/kernel/prom_init.c
+index 514707ef6779..74f70f90eff0 100644
+--- a/arch/powerpc/kernel/prom_init.c
++++ b/arch/powerpc/kernel/prom_init.c
+@@ -40,6 +40,7 @@
+ #include <asm/sections.h>
+ #include <asm/machdep.h>
+ #include <asm/asm-prototypes.h>
++#include <asm/ultravisor-api.h>
+ 
+ #include <linux/linux_logo.h>
+ 
+@@ -171,6 +172,10 @@ static bool __prombss prom_radix_disable;
+ static bool __prombss prom_xive_disable;
+ #endif
+ 
++#ifdef CONFIG_PPC_SVM
++static bool __prombss prom_svm_enable;
++#endif
++
+ struct platform_support {
+ 	bool hash_mmu;
+ 	bool radix_mmu;
+@@ -812,6 +817,17 @@ static void __init early_cmdline_parse(void)
+ 		prom_debug("XIVE disabled from cmdline\n");
+ 	}
+ #endif /* CONFIG_PPC_PSERIES */
++
++#ifdef CONFIG_PPC_SVM
++	opt = prom_strstr(prom_cmd_line, "svm=");
++	if (opt) {
++		bool val;
++
++		opt += sizeof("svm=") - 1;
++		if (!prom_strtobool(opt, &val))
++			prom_svm_enable = val;
++	}
++#endif /* CONFIG_PPC_SVM */
+ }
+ 
+ #ifdef CONFIG_PPC_PSERIES
+@@ -1712,6 +1728,43 @@ static void __init prom_close_stdin(void)
+ 	}
+ }
+ 
++#ifdef CONFIG_PPC_SVM
++static int prom_rtas_hcall(uint64_t args)
++{
++	register uint64_t arg1 asm("r3") = H_RTAS;
++	register uint64_t arg2 asm("r4") = args;
++
++	asm volatile("sc 1\n" : "=r" (arg1) :
++			"r" (arg1),
++			"r" (arg2) :);
++	return arg1;
++}
++
++static struct rtas_args __prombss os_term_args;
++
++static void __init prom_rtas_os_term(char *str)
++{
++	phandle rtas_node;
++	__be32 val;
++	u32 token;
++
++	prom_debug("%s: start...\n", __func__);
++	rtas_node = call_prom("finddevice", 1, 1, ADDR("/rtas"));
++	prom_debug("rtas_node: %x\n", rtas_node);
++	if (!PHANDLE_VALID(rtas_node))
++		return;
++
++	val = 0;
++	prom_getprop(rtas_node, "ibm,os-term", &val, sizeof(val));
++	token = be32_to_cpu(val);
++	prom_debug("ibm,os-term: %x\n", token);
++	if (token == 0)
++		prom_panic("Could not get token for ibm,os-term\n");
++	os_term_args.token = cpu_to_be32(token);
++	prom_rtas_hcall((uint64_t)&os_term_args);
++}
++#endif /* CONFIG_PPC_SVM */
++
+ /*
+  * Allocate room for and instantiate RTAS
+  */
+@@ -3168,6 +3221,46 @@ static void unreloc_toc(void)
+ #endif
+ #endif
+ 
++#ifdef CONFIG_PPC_SVM
++/*
++ * Perform the Enter Secure Mode ultracall.
++ */
++static int enter_secure_mode(unsigned long kbase, unsigned long fdt)
++{
++	register unsigned long r3 asm("r3") = UV_ESM;
++	register unsigned long r4 asm("r4") = kbase;
++	register unsigned long r5 asm("r5") = fdt;
++
++	asm volatile("sc 2" : "+r"(r3) : "r"(r4), "r"(r5));
++
++	return r3;
++}
++
++/*
++ * Call the Ultravisor to transfer us to secure memory if we have an ESM blob.
++ */
++static void setup_secure_guest(unsigned long kbase, unsigned long fdt)
++{
++	int ret;
++
++	if (!prom_svm_enable)
++		return;
++
++	/* Switch to secure mode. */
++	prom_printf("Switching to secure mode.\n");
++
++	ret = enter_secure_mode(kbase, fdt);
++	if (ret != U_SUCCESS) {
++		prom_printf("Returned %d from switching to secure mode.\n", ret);
++		prom_rtas_os_term("Switch to secure mode failed.\n");
++	}
++}
++#else
++static void setup_secure_guest(unsigned long kbase, unsigned long fdt)
++{
++}
++#endif /* CONFIG_PPC_SVM */
++
+ /*
+  * We enter here early on, when the Open Firmware prom is still
+  * handling exceptions and the MMU hash table for us.
+@@ -3366,6 +3459,9 @@ unsigned long __init prom_init(unsigned long r3, unsigned long r4,
+ 	unreloc_toc();
+ #endif
+ 
++	/* Move to secure memory if we're supposed to be secure guests. */
++	setup_secure_guest(kbase, hdr);
++
+ 	__start(hdr, kbase, 0, 0, 0, 0, 0);
+ 
+ 	return 0;
