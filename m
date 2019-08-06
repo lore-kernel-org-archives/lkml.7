@@ -2,350 +2,695 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A859C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 02:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89606C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 02:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3435F2173B
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 02:22:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49BFD2147A
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 02:24:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731435AbfHFCWg (ORCPT
+        id S1731437AbfHFCYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 22:22:36 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3764 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729921AbfHFCWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 22:22:35 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 003FABA19E8410753350;
-        Tue,  6 Aug 2019 10:22:33 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 6 Aug 2019
- 10:22:32 +0800
-Subject: Re: [PATCH v3 RESEND] f2fs: introduce sb.required_features to store
- incompatible features
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     Chao Yu <chao@kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>
-References: <20190730231850.GA7097@jaegeuk-macbookpro.roam.corp.google.com>
- <c7232d80-a4d8-88ae-2eca-01290dd0e56a@huawei.com>
- <20190801042215.GC84433@jaegeuk-macbookpro.roam.corp.google.com>
- <345c55ea-01c2-a9d1-4367-716dbd08ae9d@huawei.com>
- <20190801223509.GB27597@jaegeuk-macbookpro.roam.corp.google.com>
- <8e906ddb-81d8-b63e-0c19-1ee9fc7f5cbf@huawei.com>
- <20190806003522.GA98101@jaegeuk-macbookpro.roam.corp.google.com>
- <e48514d5-0f3f-8dd7-06ab-b7faf71101ba@huawei.com>
- <20190806012407.GB1029@jaegeuk-macbookpro.roam.corp.google.com>
- <103d1df0-eb5b-4854-0959-a84785eb85a8@huawei.com>
- <20190806021144.GB7280@jaegeuk-macbookpro.roam.corp.google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <a155121f-2e1b-c3c5-17bb-b5ac3f4a7b1f@huawei.com>
-Date:   Tue, 6 Aug 2019 10:22:50 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 5 Aug 2019 22:24:14 -0400
+Received: from aclms1.advantech.com.tw ([61.58.41.199]:63397 "EHLO
+        ACLMS1.advantech.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729921AbfHFCYO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 22:24:14 -0400
+X-Greylist: delayed 605 seconds by postgrey-1.27 at vger.kernel.org; Mon, 05 Aug 2019 22:24:13 EDT
+Received: from taipei08.ADVANTECH.CORP (unverified [172.20.0.235]) by ACLMS1.advantech.com.tw
+ (Clearswift SMTPRS 5.6.0) with ESMTP id <Td972d4b108ac14014b1940@ACLMS1.advantech.com.tw>;
+ Tue, 6 Aug 2019 10:14:04 +0800
+From:   <Amy.Shih@advantech.com.tw>
+To:     <she90122@gmail.com>
+CC:     <amy.shih@advantech.com.tw>, <oakley.ding@advantech.com.tw>,
+        <jia.sui@advantech.com.cn>, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [v3,1/1] hwmon: (nct7904) Add extra sysfs support for fan, voltage and temperature.
+Date:   Tue, 6 Aug 2019 02:13:38 +0000
+Message-ID: <20190806021339.11936-1-Amy.Shih@advantech.com.tw>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20190806021144.GB7280@jaegeuk-macbookpro.roam.corp.google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-Originating-IP: [172.17.10.28]
+X-ClientProxiedBy: ACLDAG.ADVANTECH.CORP (172.20.2.88) To
+ taipei08.ADVANTECH.CORP (172.20.0.235)
+X-StopIT: No
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/8/6 10:11, Jaegeuk Kim wrote:
-> On 08/06, Chao Yu wrote:
->> On 2019/8/6 9:24, Jaegeuk Kim wrote:
->>> On 08/06, Chao Yu wrote:
->>>> On 2019/8/6 8:35, Jaegeuk Kim wrote:
->>>>> On 08/02, Chao Yu wrote:
->>>>>> On 2019/8/2 6:35, Jaegeuk Kim wrote:
->>>>>>> On 08/01, Chao Yu wrote:
->>>>>>>> On 2019/8/1 12:22, Jaegeuk Kim wrote:
->>>>>>>>> On 07/31, Chao Yu wrote:
->>>>>>>>>> On 2019/7/31 7:18, Jaegeuk Kim wrote:
->>>>>>>>>>> On 07/29, Chao Yu wrote:
->>>>>>>>>>>> From: Chao Yu <yuchao0@huawei.com>
->>>>>>>>>>>>
->>>>>>>>>>>> Later after this patch was merged, all new incompatible feature's
->>>>>>>>>>>> bit should be added into sb.required_features field, and define new
->>>>>>>>>>>> feature function with F2FS_INCOMPAT_FEATURE_FUNCS() macro.
->>>>>>>>>>>>
->>>>>>>>>>>> Then during mount, we will do sanity check with enabled features in
->>>>>>>>>>>> image, if there are features in sb.required_features that kernel can
->>>>>>>>>>>> not recognize, just fail the mount.
->>>>>>>>>>>>
->>>>>>>>>>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
->>>>>>>>>>>> ---
->>>>>>>>>>>> v3:
->>>>>>>>>>>> - change commit title.
->>>>>>>>>>>> - fix wrong macro name.
->>>>>>>>>>>>  fs/f2fs/f2fs.h          | 15 +++++++++++++++
->>>>>>>>>>>>  fs/f2fs/super.c         | 10 ++++++++++
->>>>>>>>>>>>  include/linux/f2fs_fs.h |  3 ++-
->>>>>>>>>>>>  3 files changed, 27 insertions(+), 1 deletion(-)
->>>>>>>>>>>>
->>>>>>>>>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
->>>>>>>>>>>> index a6eb828af57f..b8e17d4ddb8d 100644
->>>>>>>>>>>> --- a/fs/f2fs/f2fs.h
->>>>>>>>>>>> +++ b/fs/f2fs/f2fs.h
->>>>>>>>>>>> @@ -163,6 +163,15 @@ struct f2fs_mount_info {
->>>>>>>>>>>>  #define F2FS_CLEAR_FEATURE(sbi, mask)					\
->>>>>>>>>>>>  	(sbi->raw_super->feature &= ~cpu_to_le32(mask))
->>>>>>>>>>>>  
->>>>>>>>>>>> +#define F2FS_INCOMPAT_FEATURES		0
->>>>>>>>>>>> +
->>>>>>>>>>>> +#define F2FS_HAS_INCOMPAT_FEATURE(sbi, mask)				\
->>>>>>>>>>>> +	((sbi->raw_super->required_features & cpu_to_le32(mask)) != 0)
->>>>>>>>>>>> +#define F2FS_SET_INCOMPAT_FEATURE(sbi, mask)				\
->>>>>>>>>>>> +	(sbi->raw_super->required_features |= cpu_to_le32(mask))
->>>>>>>>>>>> +#define F2FS_CLEAR_INCOMPAT_FEATURE(sbi, mask)				\
->>>>>>>>>>>> +	(sbi->raw_super->required_features &= ~cpu_to_le32(mask))
->>>>>>>>>>>> +
->>>>>>>>>>>>  /*
->>>>>>>>>>>>   * Default values for user and/or group using reserved blocks
->>>>>>>>>>>>   */
->>>>>>>>>>>> @@ -3585,6 +3594,12 @@ F2FS_FEATURE_FUNCS(lost_found, LOST_FOUND);
->>>>>>>>>>>>  F2FS_FEATURE_FUNCS(sb_chksum, SB_CHKSUM);
->>>>>>>>>>>>  F2FS_FEATURE_FUNCS(casefold, CASEFOLD);
->>>>>>>>>>>>  
->>>>>>>>>>>> +#define F2FS_INCOMPAT_FEATURE_FUNCS(name, flagname) \
->>>>>>>>>>>> +static inline int f2fs_sb_has_##name(struct f2fs_sb_info *sbi) \
->>>>>>>>>>>> +{ \
->>>>>>>>>>>> +	return F2FS_HAS_INCOMPAT_FEATURE(sbi, F2FS_FEATURE_##flagname); \
->>>>>>>>>>>> +}
->>>>>>>>>>>> +
->>>>>>>>>>>>  #ifdef CONFIG_BLK_DEV_ZONED
->>>>>>>>>>>>  static inline bool f2fs_blkz_is_seq(struct f2fs_sb_info *sbi, int devi,
->>>>>>>>>>>>  				    block_t blkaddr)
->>>>>>>>>>>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
->>>>>>>>>>>> index 5540fee0fe3f..3701dcce90e6 100644
->>>>>>>>>>>> --- a/fs/f2fs/super.c
->>>>>>>>>>>> +++ b/fs/f2fs/super.c
->>>>>>>>>>>> @@ -2513,6 +2513,16 @@ static int sanity_check_raw_super(struct f2fs_sb_info *sbi,
->>>>>>>>>>>>  		return -EINVAL;
->>>>>>>>>>>>  	}
->>>>>>>>>>>>  
->>>>>>>>>>>> +	/* check whether current kernel supports all features on image */
->>>>>>>>>>>> +	if (le32_to_cpu(raw_super->required_features) &
->>>>>>>>>>>
->>>>>>>>>>> ...
->>>>>>>>>>> #define F2FS_FEATURE_VERITY	0x0400	/* reserved */
->>>>>>>>>>> ...
->>>>>>>>>>> #define F2FS_FEATURE_CASEFOLD	0x1000
->>>>>>>>>>> #define F2FS_FEATURE_SUPPORT	0x1BFF
->>>>>>>>>>>
->>>>>>>>>>> 	if (le32_to_cpu(raw_super->required_features) & ~F2FS_FEATURE_SUPPORT) {
->>>>>>>>>>> 		...
->>>>>>>>>>> 		return -EINVAL;
->>>>>>>>>>> 	}
->>>>>>>>>>
->>>>>>>>>> Um, I thought .required_features are used to store new feature flags from 0x0.
->>>>>>>>>>
->>>>>>>>>> All 'F2FS_FEATURE_SUPPORT' bits should be stored in sb.feature instead of
->>>>>>>>>> sb.required_features, I'm confused...
->>>>>>>>>
->>>>>>>>> I'm thinking,
->>>>>>>>>
->>>>>>>>> f2fs-tools     sb->required_features     f2fs    F2FS_FEATURE_SUPPORT
->>>>>>>>> v0             0                         v0      no_check -> ok
->>>>>>>>> v1             0x1BFF                    v0      no_check -> ok
->>>>>>>>> v0             0                         v1      0x1BFF -> ok
->>>>>>>>> v1             0x1BFF                    v1      0x1BFF -> ok
->>>>>>>>> v2             0x3BFF                    v1      0x1BFF -> fail
->>>>>>>>> v1             0x1BFF                    v2      0x3BFF -> ok
->>>>>>>>> v2             0x3BFF                    v2      0x3BFF -> ok
->>>>>>>>
->>>>>>>> I see, it's a bit waste for 0x1FFF low bits in sb->required_features. Why not
->>>>>>>> leaving 0x0FFF in sb->feature w/o sanity check. And make all new incompatible
->>>>>>>> features (including casefold) adding into sb->required_features.
->>>>>>>
->>>>>>> I don't think we can define like this, and we still have 32bits feature filed.
->>>>>>> This would give another confusion to understand. VERITY is reserved only now.
->>>>>>>
->>>>>>> #define F2FS_FEATURE_CASEFOLD		0x0001
->>>>>>
->>>>>> Oops, so you want to make .required_features being almost a mirror of .feature,
->>>>>> and do sanity check on it... I can see now. :P
->>>>>>
->>>>>> If so, why not just use .feature:
->>>>>
->>>>> Sometimes, we don't need to set the flag, but not required at some point.
->>>>> (e.g., verify)
->>>>
->>>> Sorry, I'm not sure whether I have understood your point... :(
->>>>
->>>> IIUC of your point, we have defined F2FS_FEATURE_SUPPORT (0x0BFF) which excludes
->>>> F2FS_FEATURE_VERITY (0x0400) feature bit, then once verity feature merged in
->>>> kernel, we can add it into F2FS_FEATURE_SUPPORT, any problem we may face here?
->>>
->>> I was thinking the cases like "don't care features" made by mkfs. For example,
->>> mkfs can set F2FS_FEATURE_BLKZONED, which doesn't need f2fs being supported.
->>
->> Yes, I can understand this.
->>
->> So F2FS_FEATURE_SUPPORT can exclude them directly?
-> 
-> No, I'd like to control it via mkfs. Kernel always needs to say what they can
-> support, IIUC your point.
+From: "amy.shih" <amy.shih@advantech.com.tw>
 
-Oh, it's different macros, we will define F2FS_INCOMPAT_FEATURE_SUPPORT 0x19B9,
-and F2FS_ALL_FEATURE_SUPPORT (0x0001 | 0x0002 ... ).
+NCT-7904D also supports reading of channel limitation registers
+and SMI status registers for fan, voltage and temperature monitoring,
+and also supports reading of temperature sensor type which is thermal diode,
+thermistor, AMD SB-TSI or Intel PECI, thus add below sysfs nodes:
 
-In sanity check function, we only check .feature with
-F2FS_INCOMPAT_FEATURE_SUPPORT. And of course, meanwhile kernel will say it
-supports features in F2FS_ALL_FEATURE_SUPPORT.
+-fan[1-*]_min
+-fan[1-*]_alarm
+-in[1-*]_min
+-in[1-*]_max
+-in[1-*]_alarm
+-temp[1-*]_max
+-temp[1-*]_max_hyst
+-temp[1-*]_emergency
+-temp[1-*]_emergency_hyst
+-temp[1-*]_alarm
+-temp[1-*]_type
 
-Thanks,
+Signed-off-by: amy.shih <amy.shih@advantech.com.tw>
+---
+Changes in v3:
+- Squashed subsequent fixes of below patches into one patch.
 
-> 
->>
->> excluded:
->>
->> #define F2FS_FEATURE_BLKZONED		0x0002
->> #define F2FS_FEATURE_ATOMIC_WRITE	0x0004
->> #define F2FS_FEATURE_LOST_FOUND		0x0200
->>
->> included:
->>
->> #define F2FS_FEATURE_ENCRYPT		0x0001
->> #define F2FS_FEATURE_EXTRA_ATTR		0x0008
->> #define F2FS_FEATURE_PRJQUOTA		0x0010
->> #define F2FS_FEATURE_INODE_CHKSUM	0x0020
->> #define F2FS_FEATURE_FLEXIBLE_INLINE_XATTR	0x0040
->> #define F2FS_FEATURE_QUOTA_INO		0x0080
->> #define F2FS_FEATURE_INODE_CRTIME	0x0100
->> #define F2FS_FEATURE_SB_CHKSUM		0x0800
->> //#define F2FS_FEATURE_VERITY		0x0400	/* reserved */
->> #define F2FS_FEATURE_CASEFOLD		0x1000
->>
->> #define F2FS_FEATURE_SUPPORT		0x19B9
->>
->> Thanks,
->>
->>>
->>>>
->>>> Thanks
->>>>
->>>>>
->>>>>>
->>>>>> kernel	tool
->>>>>> v5.2 .. 1.12
->>>>>> #define	F2FS_FEATURE_SUPPORT		0x0BFF
->>>>>>
->>>>>> v5.3 .. 1.13
->>>>>> #define F2FS_FEATURE_CASEFOLD		0x1000
->>>>>> #define	F2FS_FEATURE_SUPPORT		0x1BFF
->>>>>>
->>>>>> v5.4 .. 1.14
->>>>>> #define F2FS_FEATURE_CASEFOLD		0x1000
->>>>>> #define F2FS_FEATURE_COMPRESS		0x2000
->>>>>> #define	F2FS_FEATURE_SUPPORT		0x3BFF
->>>>>>
->>>>>> f2fs-tools	sb->feature		f2fs	F2FS_FEATURE_SUPPORT
->>>>>>
->>>>>> [enable all features in tools]
->>>>>> v1.12		0x0BFF			v5.2	no_check -> ok
->>>>>> v1.12		0x0BFF			v5.3	0x1BFF -> ok
->>>>>> v1.12		0x0BFF			v5.4	0x3BFF -> ok
->>>>>>
->>>>>> v1.13		0x1BFF			v5.2	that's issue we need to fix
->>>>>> v1.13		0x1BFF			v5.3	0x1BFF -> ok
->>>>>> v1.13		0x1BFF			v5.4	0x3BFF -> ok
->>>>>>
->>>>>> v1.14		0x3BFF			v5.2	that's issue we need to fix
->>>>>> v1.14		0x3BFF			v5.3	0x1BFF -> fail
->>>>>> v1.14		0x3BFF			v5.4	0x3BFF -> ok
->>>>>>
->>>>>> Or am I missing something?
->>>>>>
->>>>>> Thanks,
->>>>>>
->>>>>>>
->>>>>>>>
->>>>>>>> Then that would be:
->>>>>>>>
->>>>>>>> kernel	tool
->>>>>>>> v5.2 .. 1.12
->>>>>>>> #define	F2FS_FEATURE_SUPPORT		0x0000
->>>>>>>>
->>>>>>>> v5.3 .. 1.13
->>>>>>>> #define F2FS_FEATURE_CASEFOLD		0x0001
->>>>>>>> #define	F2FS_FEATURE_SUPPORT		0x0001
->>>>>>>>
->>>>>>>> v5.4 .. 1.14
->>>>>>>> #define F2FS_FEATURE_CASEFOLD		0x0001
->>>>>>>> #define F2FS_FEATURE_COMPRESS		0x0002
->>>>>>>> #define	F2FS_FEATURE_SUPPORT		0x0003
->>>>>>>>
->>>>>>>> f2fs-tools	sb->required_features	f2fs	F2FS_FEATURE_SUPPORT
->>>>>>>>
->>>>>>>> v1.12		0x0000			v5.2	no_check -> ok
->>>>>>>> v1.12		0x0000			v5.3	0x0001 -> ok
->>>>>>>> v1.12		0x0000			v5.4	0x0003 -> ok
->>>>>>>>
->>>>>>>> v1.13		0x0001			v5.2	that's issue we need to fix
->>>>>>>> v1.13		0x0001			v5.3	0x0001 -> ok
->>>>>>>> v1.13		0x0001			v5.4	0x0003 -> ok
->>>>>>>>
->>>>>>>> v1.14		0x0003			v5.2	that's issue we need to fix
->>>>>>>> v1.14		0x0003			v5.3	0x0001 -> fail
->>>>>>>> v1.14		0x0003			v5.4	0x0003 -> ok
->>>>>>>>
->>>>>>>> And all compatible features can be added into sb->feature[_VERITY, ....].
->>>>>>>>
->>>>>>>> Would that okay to you?
->>>>>>>>
->>>>>>>> Thanks,
->>>>>>>>
->>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> Thanks,
->>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>>> +			~F2FS_INCOMPAT_FEATURES) {
->>>>>>>>>>>> +		f2fs_info(sbi, "Unsupported feature: %x: supported: %x",
->>>>>>>>>>>> +			  le32_to_cpu(raw_super->required_features) ^
->>>>>>>>>>>> +			  F2FS_INCOMPAT_FEATURES,
->>>>>>>>>>>> +			  F2FS_INCOMPAT_FEATURES);
->>>>>>>>>>>> +		return -EINVAL;
->>>>>>>>>>>> +	}
->>>>>>>>>>>> +
->>>>>>>>>>>>  	/* Check checksum_offset and crc in superblock */
->>>>>>>>>>>>  	if (__F2FS_HAS_FEATURE(raw_super, F2FS_FEATURE_SB_CHKSUM)) {
->>>>>>>>>>>>  		crc_offset = le32_to_cpu(raw_super->checksum_offset);
->>>>>>>>>>>> diff --git a/include/linux/f2fs_fs.h b/include/linux/f2fs_fs.h
->>>>>>>>>>>> index a2b36b2e286f..4141be3f219c 100644
->>>>>>>>>>>> --- a/include/linux/f2fs_fs.h
->>>>>>>>>>>> +++ b/include/linux/f2fs_fs.h
->>>>>>>>>>>> @@ -117,7 +117,8 @@ struct f2fs_super_block {
->>>>>>>>>>>>  	__u8 hot_ext_count;		/* # of hot file extension */
->>>>>>>>>>>>  	__le16	s_encoding;		/* Filename charset encoding */
->>>>>>>>>>>>  	__le16	s_encoding_flags;	/* Filename charset encoding flags */
->>>>>>>>>>>> -	__u8 reserved[306];		/* valid reserved region */
->>>>>>>>>>>> +	__le32 required_features;       /* incompatible features to old kernel */
->>>>>>>>>>>> +	__u8 reserved[302];		/* valid reserved region */
->>>>>>>>>>>>  	__le32 crc;			/* checksum of superblock */
->>>>>>>>>>>>  } __packed;
->>>>>>>>>>>>  
->>>>>>>>>>>> -- 
->>>>>>>>>>>> 2.22.0
->>>>>>>>>>> .
->>>>>>>>>>>
->>>>>>>>> .
->>>>>>>>>
->>>>>>> .
->>>>>>>
->>>>> .
->>>>>
->>> .
->>>
-> .
-> 
+-- Fix bad fallthrough in various switch statements.
+-- Fix the wrong declared of tmp as u8 in nct7904_write_in, declared tmp to int.
+-- Fix incorrect register setting of voltage.
+-- Fix incorrect register bit mapping of temperature alarm.
+-- Fix wrong return code 0x1fff in function nct7904_write_fan.
+-- Delete wrong comment in function nct7904_write_in.
+-- Fix wrong attribute names for temperature.
+-- Fix wrong registers setting for temperature.
+
+Changes in v2:
+- Fix bad fallthrough in various switch statements.
+- Fix the wrong declared of tmp as u8 in nct7904_write_in, declared tmp to int.
+---
+ drivers/hwmon/nct7904.c | 469 ++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 424 insertions(+), 45 deletions(-)
+
+diff --git a/drivers/hwmon/nct7904.c b/drivers/hwmon/nct7904.c
+index 710c30562fc1..d842c10ba11f 100644
+--- a/drivers/hwmon/nct7904.c
++++ b/drivers/hwmon/nct7904.c
+@@ -46,10 +46,33 @@
+ #define DTS_T_CTRL1_REG		0x27
+ #define VT_ADC_MD_REG		0x2E
+ 
++#define VSEN1_HV_LL_REG		0x02	/* Bank 1; 2 regs (HV/LV) per sensor */
++#define VSEN1_LV_LL_REG		0x03	/* Bank 1; 2 regs (HV/LV) per sensor */
++#define VSEN1_HV_HL_REG		0x00	/* Bank 1; 2 regs (HV/LV) per sensor */
++#define VSEN1_LV_HL_REG		0x01	/* Bank 1; 2 regs (HV/LV) per sensor */
++#define SMI_STS1_REG		0xC1	/* Bank 0; SMI Status Register */
++#define SMI_STS5_REG		0xC5	/* Bank 0; SMI Status Register */
++#define SMI_STS7_REG		0xC7	/* Bank 0; SMI Status Register */
++#define SMI_STS8_REG		0xC8	/* Bank 0; SMI Status Register */
++
+ #define VSEN1_HV_REG		0x40	/* Bank 0; 2 regs (HV/LV) per sensor */
+ #define TEMP_CH1_HV_REG		0x42	/* Bank 0; same as VSEN2_HV */
+ #define LTD_HV_REG		0x62	/* Bank 0; 2 regs in VSEN range */
++#define LTD_HV_HL_REG		0x44	/* Bank 1; 1 reg for LTD */
++#define LTD_LV_HL_REG		0x45	/* Bank 1; 1 reg for LTD */
++#define LTD_HV_LL_REG		0x46	/* Bank 1; 1 reg for LTD */
++#define LTD_LV_LL_REG		0x47	/* Bank 1; 1 reg for LTD */
++#define TEMP_CH1_CH_REG		0x05	/* Bank 1; 1 reg for LTD */
++#define TEMP_CH1_W_REG		0x06	/* Bank 1; 1 reg for LTD */
++#define TEMP_CH1_WH_REG		0x07	/* Bank 1; 1 reg for LTD */
++#define TEMP_CH1_C_REG		0x04	/* Bank 1; 1 reg per sensor */
++#define DTS_T_CPU1_C_REG	0x90	/* Bank 1; 1 reg per sensor */
++#define DTS_T_CPU1_CH_REG	0x91	/* Bank 1; 1 reg per sensor */
++#define DTS_T_CPU1_W_REG	0x92	/* Bank 1; 1 reg per sensor */
++#define DTS_T_CPU1_WH_REG	0x93	/* Bank 1; 1 reg per sensor */
+ #define FANIN1_HV_REG		0x80	/* Bank 0; 2 regs (HV/LV) per sensor */
++#define FANIN1_HV_HL_REG	0x60	/* Bank 1; 2 regs (HV/LV) per sensor */
++#define FANIN1_LV_HL_REG	0x61	/* Bank 1; 2 regs (HV/LV) per sensor */
+ #define T_CPU1_HV_REG		0xA0	/* Bank 0; 2 regs (HV/LV) per sensor */
+ 
+ #define PRTS_REG		0x03	/* Bank 2 */
+@@ -58,6 +81,8 @@
+ #define FANCTL1_FMR_REG		0x00	/* Bank 3; 1 reg per channel */
+ #define FANCTL1_OUT_REG		0x10	/* Bank 3; 1 reg per channel */
+ 
++#define ENABLE_TSI	BIT(1)
++
+ static const unsigned short normal_i2c[] = {
+ 	0x2d, 0x2e, I2C_CLIENT_END
+ };
+@@ -72,6 +97,7 @@ struct nct7904_data {
+ 	u8 fan_mode[FANCTL_MAX];
+ 	u8 enable_dts;
+ 	u8 has_dts;
++	u8 temp_mode; /* 0: TR mode, 1: TD mode */
+ };
+ 
+ /* Access functions */
+@@ -170,6 +196,25 @@ static int nct7904_read_fan(struct device *dev, u32 attr, int channel,
+ 			rpm = 1350000 / cnt;
+ 		*val = rpm;
+ 		return 0;
++	case hwmon_fan_min:
++		ret = nct7904_read_reg16(data, BANK_1,
++					 FANIN1_HV_HL_REG + channel * 2);
++		if (ret < 0)
++			return ret;
++		cnt = ((ret & 0xff00) >> 3) | (ret & 0x1f);
++		if (cnt == 0x1fff)
++			rpm = 0;
++		else
++			rpm = 1350000 / cnt;
++		*val = rpm;
++		return 0;
++	case hwmon_fan_alarm:
++		ret = nct7904_read_reg(data, BANK_0,
++				       SMI_STS7_REG + (channel >> 3));
++		if (ret < 0)
++			return ret;
++		*val = (ret >> (channel & 0x07)) & 1;
++		return 0;
+ 	default:
+ 		return -EOPNOTSUPP;
+ 	}
+@@ -179,8 +224,20 @@ static umode_t nct7904_fan_is_visible(const void *_data, u32 attr, int channel)
+ {
+ 	const struct nct7904_data *data = _data;
+ 
+-	if (attr == hwmon_fan_input && data->fanin_mask & (1 << channel))
+-		return 0444;
++	switch (attr) {
++	case hwmon_fan_input:
++	case hwmon_fan_alarm:
++		if (data->fanin_mask & (1 << channel))
++			return 0444;
++		break;
++	case hwmon_fan_min:
++		if (data->fanin_mask & (1 << channel))
++			return 0644;
++		break;
++	default:
++		break;
++	}
++
+ 	return 0;
+ }
+ 
+@@ -211,6 +268,37 @@ static int nct7904_read_in(struct device *dev, u32 attr, int channel,
+ 			volt *= 6; /* 0.006V scale */
+ 		*val = volt;
+ 		return 0;
++	case hwmon_in_min:
++		ret = nct7904_read_reg16(data, BANK_1,
++					 VSEN1_HV_LL_REG + index * 4);
++		if (ret < 0)
++			return ret;
++		volt = ((ret & 0xff00) >> 5) | (ret & 0x7);
++		if (index < 14)
++			volt *= 2; /* 0.002V scale */
++		else
++			volt *= 6; /* 0.006V scale */
++		*val = volt;
++		return 0;
++	case hwmon_in_max:
++		ret = nct7904_read_reg16(data, BANK_1,
++					 VSEN1_HV_HL_REG + index * 4);
++		if (ret < 0)
++			return ret;
++		volt = ((ret & 0xff00) >> 5) | (ret & 0x7);
++		if (index < 14)
++			volt *= 2; /* 0.002V scale */
++		else
++			volt *= 6; /* 0.006V scale */
++		*val = volt;
++		return 0;
++	case hwmon_in_alarm:
++		ret = nct7904_read_reg(data, BANK_0,
++				       SMI_STS1_REG + (index >> 3));
++		if (ret < 0)
++			return ret;
++		*val = (ret >> (index & 0x07)) & 1;
++		return 0;
+ 	default:
+ 		return -EOPNOTSUPP;
+ 	}
+@@ -221,9 +309,20 @@ static umode_t nct7904_in_is_visible(const void *_data, u32 attr, int channel)
+ 	const struct nct7904_data *data = _data;
+ 	int index = nct7904_chan_to_index[channel];
+ 
+-	if (channel > 0 && attr == hwmon_in_input &&
+-	    (data->vsen_mask & BIT(index)))
+-		return 0444;
++	switch (attr) {
++	case hwmon_in_input:
++	case hwmon_in_alarm:
++		if (channel > 0 && (data->vsen_mask & BIT(index)))
++			return 0444;
++		break;
++	case hwmon_in_min:
++	case hwmon_in_max:
++		if (channel > 0 && (data->vsen_mask & BIT(index)))
++			return 0644;
++		break;
++	default:
++		break;
++	}
+ 
+ 	return 0;
+ }
+@@ -233,6 +332,7 @@ static int nct7904_read_temp(struct device *dev, u32 attr, int channel,
+ {
+ 	struct nct7904_data *data = dev_get_drvdata(dev);
+ 	int ret, temp;
++	unsigned int reg1, reg2, reg3;
+ 
+ 	switch (attr) {
+ 	case hwmon_temp_input:
+@@ -250,16 +350,100 @@ static int nct7904_read_temp(struct device *dev, u32 attr, int channel,
+ 		temp = ((ret & 0xff00) >> 5) | (ret & 0x7);
+ 		*val = sign_extend32(temp, 10) * 125;
+ 		return 0;
++	case hwmon_temp_alarm:
++		if (channel < 5) {
++			ret = nct7904_read_reg(data, BANK_0,
++					       SMI_STS1_REG);
++			if (ret < 0)
++				return ret;
++			*val = (ret >> (((channel * 2) + 1) & 0x07)) & 1;
++		} else {
++			if ((channel - 5) < 4) {
++				ret = nct7904_read_reg(data, BANK_0,
++						       SMI_STS7_REG +
++						       ((channel - 5) >> 3));
++				if (ret < 0)
++					return ret;
++				*val = (ret >> ((channel - 5) & 0x07)) & 1;
++			} else {
++				ret = nct7904_read_reg(data, BANK_0,
++						       SMI_STS8_REG +
++						       ((channel - 5) >> 3));
++				if (ret < 0)
++					return ret;
++				*val = (ret >> (((channel - 5) & 0x07) - 4))
++							& 1;
++			}
++		}
++		return 0;
++	case hwmon_temp_type:
++		if (channel < 5) {
++			if ((data->tcpu_mask >> channel) & 0x01) {
++				if ((data->temp_mode >> channel) & 0x01)
++					*val = 3; /* TD */
++				else
++					*val = 4; /* TR */
++			} else {
++				*val = 0;
++			}
++		} else {
++			if ((data->has_dts >> (channel - 5)) & 0x01) {
++				if (data->enable_dts & ENABLE_TSI)
++					*val = 5; /* TSI */
++				else
++					*val = 6; /* PECI */
++			} else {
++				*val = 0;
++			}
++		}
++		return 0;
++	case hwmon_temp_max:
++		reg1 = LTD_HV_HL_REG;
++		reg2 = TEMP_CH1_W_REG;
++		reg3 = DTS_T_CPU1_W_REG;
++		break;
++	case hwmon_temp_max_hyst:
++		reg1 = LTD_LV_HL_REG;
++		reg2 = TEMP_CH1_WH_REG;
++		reg3 = DTS_T_CPU1_WH_REG;
++		break;
++	case hwmon_temp_crit:
++		reg1 = LTD_HV_LL_REG;
++		reg2 = TEMP_CH1_C_REG;
++		reg3 = DTS_T_CPU1_C_REG;
++		break;
++	case hwmon_temp_crit_hyst:
++		reg1 = LTD_LV_LL_REG;
++		reg2 = TEMP_CH1_CH_REG;
++		reg3 = DTS_T_CPU1_CH_REG;
++		break;
+ 	default:
+ 		return -EOPNOTSUPP;
+ 	}
++
++	if (channel == 4)
++		ret = nct7904_read_reg(data, BANK_1, reg1);
++	else if (channel < 5)
++		ret = nct7904_read_reg(data, BANK_1,
++				       reg2 + channel * 8);
++	else
++		ret = nct7904_read_reg(data, BANK_1,
++				       reg3 + (channel - 5) * 4);
++
++	if (ret < 0)
++		return ret;
++	*val = ret * 1000;
++	return 0;
+ }
+ 
+ static umode_t nct7904_temp_is_visible(const void *_data, u32 attr, int channel)
+ {
+ 	const struct nct7904_data *data = _data;
+ 
+-	if (attr == hwmon_temp_input) {
++	switch (attr) {
++	case hwmon_temp_input:
++	case hwmon_temp_alarm:
++	case hwmon_temp_type:
+ 		if (channel < 5) {
+ 			if (data->tcpu_mask & BIT(channel))
+ 				return 0444;
+@@ -267,6 +451,21 @@ static umode_t nct7904_temp_is_visible(const void *_data, u32 attr, int channel)
+ 			if (data->has_dts & BIT(channel - 5))
+ 				return 0444;
+ 		}
++		break;
++	case hwmon_temp_max:
++	case hwmon_temp_max_hyst:
++	case hwmon_temp_crit:
++	case hwmon_temp_crit_hyst:
++		if (channel < 5) {
++			if (data->tcpu_mask & BIT(channel))
++				return 0644;
++		} else {
++			if (data->has_dts & BIT(channel - 5))
++				return 0644;
++		}
++		break;
++	default:
++		break;
+ 	}
+ 
+ 	return 0;
+@@ -297,6 +496,137 @@ static int nct7904_read_pwm(struct device *dev, u32 attr, int channel,
+ 	}
+ }
+ 
++static int nct7904_write_temp(struct device *dev, u32 attr, int channel,
++			      long val)
++{
++	struct nct7904_data *data = dev_get_drvdata(dev);
++	int ret;
++	unsigned int reg1, reg2, reg3;
++
++	val = clamp_val(val / 1000, -128, 127);
++
++	switch (attr) {
++	case hwmon_temp_max:
++		reg1 = LTD_HV_HL_REG;
++		reg2 = TEMP_CH1_W_REG;
++		reg3 = DTS_T_CPU1_W_REG;
++		break;
++	case hwmon_temp_max_hyst:
++		reg1 = LTD_LV_HL_REG;
++		reg2 = TEMP_CH1_WH_REG;
++		reg3 = DTS_T_CPU1_WH_REG;
++		break;
++	case hwmon_temp_crit:
++		reg1 = LTD_HV_LL_REG;
++		reg2 = TEMP_CH1_C_REG;
++		reg3 = DTS_T_CPU1_C_REG;
++		break;
++	case hwmon_temp_crit_hyst:
++		reg1 = LTD_LV_LL_REG;
++		reg2 = TEMP_CH1_CH_REG;
++		reg3 = DTS_T_CPU1_CH_REG;
++		break;
++	default:
++		return -EOPNOTSUPP;
++	}
++	if (channel == 4)
++		ret = nct7904_write_reg(data, BANK_1, reg1, val);
++	else if (channel < 5)
++		ret = nct7904_write_reg(data, BANK_1,
++					reg2 + channel * 8, val);
++	else
++		ret = nct7904_write_reg(data, BANK_1,
++					reg3 + (channel - 5) * 4, val);
++
++	return ret;
++}
++
++static int nct7904_write_fan(struct device *dev, u32 attr, int channel,
++			     long val)
++{
++	struct nct7904_data *data = dev_get_drvdata(dev);
++	int ret;
++	u8 tmp;
++
++	switch (attr) {
++	case hwmon_fan_min:
++		if (val <= 0)
++			return 0;
++
++		val = clamp_val((1350000 + (val >> 1)) / val, 1, 0x1fff);
++		tmp = (val >> 5) & 0xff;
++		ret = nct7904_write_reg(data, BANK_1,
++					FANIN1_HV_HL_REG + channel * 2, tmp);
++		if (ret < 0)
++			return ret;
++		tmp = val & 0x1f;
++		ret = nct7904_write_reg(data, BANK_1,
++					FANIN1_LV_HL_REG + channel * 2, tmp);
++		return ret;
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
++static int nct7904_write_in(struct device *dev, u32 attr, int channel,
++			    long val)
++{
++	struct nct7904_data *data = dev_get_drvdata(dev);
++	int ret, index, tmp;
++
++	index = nct7904_chan_to_index[channel];
++
++	if (index < 14)
++		val = val / 2; /* 0.002V scale */
++	else
++		val = val / 6; /* 0.006V scale */
++
++	val = clamp_val(val, 0, 0x7ff);
++
++	switch (attr) {
++	case hwmon_in_min:
++		tmp = nct7904_read_reg(data, BANK_1,
++				       VSEN1_LV_LL_REG + index * 4);
++		if (tmp < 0)
++			return tmp;
++		tmp &= ~0x7;
++		tmp |= val & 0x7;
++		ret = nct7904_write_reg(data, BANK_1,
++					VSEN1_LV_LL_REG + index * 4, tmp);
++		if (ret < 0)
++			return ret;
++		tmp = nct7904_read_reg(data, BANK_1,
++				       VSEN1_HV_LL_REG + index * 4);
++		if (tmp < 0)
++			return tmp;
++		tmp = (val >> 3) & 0xff;
++		ret = nct7904_write_reg(data, BANK_1,
++					VSEN1_HV_LL_REG + index * 4, tmp);
++		return ret;
++	case hwmon_in_max:
++		tmp = nct7904_read_reg(data, BANK_1,
++				       VSEN1_LV_HL_REG + index * 4);
++		if (tmp < 0)
++			return tmp;
++		tmp &= ~0x7;
++		tmp |= val & 0x7;
++		ret = nct7904_write_reg(data, BANK_1,
++					VSEN1_LV_HL_REG + index * 4, tmp);
++		if (ret < 0)
++			return ret;
++		tmp = nct7904_read_reg(data, BANK_1,
++				       VSEN1_HV_HL_REG + index * 4);
++		if (tmp < 0)
++			return tmp;
++		tmp = (val >> 3) & 0xff;
++		ret = nct7904_write_reg(data, BANK_1,
++					VSEN1_HV_HL_REG + index * 4, tmp);
++		return ret;
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
+ static int nct7904_write_pwm(struct device *dev, u32 attr, int channel,
+ 			     long val)
+ {
+@@ -354,8 +684,14 @@ static int nct7904_write(struct device *dev, enum hwmon_sensor_types type,
+ 			 u32 attr, int channel, long val)
+ {
+ 	switch (type) {
++	case hwmon_in:
++		return nct7904_write_in(dev, attr, channel, val);
++	case hwmon_fan:
++		return nct7904_write_fan(dev, attr, channel, val);
+ 	case hwmon_pwm:
+ 		return nct7904_write_pwm(dev, attr, channel, val);
++	case hwmon_temp:
++		return nct7904_write_temp(dev, attr, channel, val);
+ 	default:
+ 		return -EOPNOTSUPP;
+ 	}
+@@ -404,51 +740,91 @@ static int nct7904_detect(struct i2c_client *client,
+ 
+ static const struct hwmon_channel_info *nct7904_info[] = {
+ 	HWMON_CHANNEL_INFO(in,
+-			   HWMON_I_INPUT, /* dummy, skipped in is_visible */
+-			   HWMON_I_INPUT,
+-			   HWMON_I_INPUT,
+-			   HWMON_I_INPUT,
+-			   HWMON_I_INPUT,
+-			   HWMON_I_INPUT,
+-			   HWMON_I_INPUT,
+-			   HWMON_I_INPUT,
+-			   HWMON_I_INPUT,
+-			   HWMON_I_INPUT,
+-			   HWMON_I_INPUT,
+-			   HWMON_I_INPUT,
+-			   HWMON_I_INPUT,
+-			   HWMON_I_INPUT,
+-			   HWMON_I_INPUT,
+-			   HWMON_I_INPUT,
+-			   HWMON_I_INPUT,
+-			   HWMON_I_INPUT,
+-			   HWMON_I_INPUT,
+-			   HWMON_I_INPUT,
+-			   HWMON_I_INPUT),
++			   /* dummy, skipped in is_visible */
++			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
++			   HWMON_I_ALARM,
++			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
++			   HWMON_I_ALARM,
++			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
++			   HWMON_I_ALARM,
++			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
++			   HWMON_I_ALARM,
++			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
++			   HWMON_I_ALARM,
++			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
++			   HWMON_I_ALARM,
++			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
++			   HWMON_I_ALARM,
++			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
++			   HWMON_I_ALARM,
++			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
++			   HWMON_I_ALARM,
++			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
++			   HWMON_I_ALARM,
++			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
++			   HWMON_I_ALARM,
++			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
++			   HWMON_I_ALARM,
++			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
++			   HWMON_I_ALARM,
++			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
++			   HWMON_I_ALARM,
++			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
++			   HWMON_I_ALARM,
++			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
++			   HWMON_I_ALARM,
++			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
++			   HWMON_I_ALARM,
++			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
++			   HWMON_I_ALARM,
++			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
++			   HWMON_I_ALARM,
++			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
++			   HWMON_I_ALARM,
++			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
++			   HWMON_I_ALARM),
+ 	HWMON_CHANNEL_INFO(fan,
+-			   HWMON_F_INPUT,
+-			   HWMON_F_INPUT,
+-			   HWMON_F_INPUT,
+-			   HWMON_F_INPUT,
+-			   HWMON_F_INPUT,
+-			   HWMON_F_INPUT,
+-			   HWMON_F_INPUT,
+-			   HWMON_F_INPUT),
++			   HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_ALARM,
++			   HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_ALARM,
++			   HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_ALARM,
++			   HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_ALARM,
++			   HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_ALARM,
++			   HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_ALARM,
++			   HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_ALARM,
++			   HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_ALARM),
+ 	HWMON_CHANNEL_INFO(pwm,
+ 			   HWMON_PWM_INPUT | HWMON_PWM_ENABLE,
+ 			   HWMON_PWM_INPUT | HWMON_PWM_ENABLE,
+ 			   HWMON_PWM_INPUT | HWMON_PWM_ENABLE,
+ 			   HWMON_PWM_INPUT | HWMON_PWM_ENABLE),
+ 	HWMON_CHANNEL_INFO(temp,
+-			   HWMON_T_INPUT,
+-			   HWMON_T_INPUT,
+-			   HWMON_T_INPUT,
+-			   HWMON_T_INPUT,
+-			   HWMON_T_INPUT,
+-			   HWMON_T_INPUT,
+-			   HWMON_T_INPUT,
+-			   HWMON_T_INPUT,
+-			   HWMON_T_INPUT),
++			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
++			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
++			   HWMON_T_CRIT_HYST,
++			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
++			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
++			   HWMON_T_CRIT_HYST,
++			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
++			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
++			   HWMON_T_CRIT_HYST,
++			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
++			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
++			   HWMON_T_CRIT_HYST,
++			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
++			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
++			   HWMON_T_CRIT_HYST,
++			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
++			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
++			   HWMON_T_CRIT_HYST,
++			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
++			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
++			   HWMON_T_CRIT_HYST,
++			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
++			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
++			   HWMON_T_CRIT_HYST,
++			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
++			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
++			   HWMON_T_CRIT_HYST),
+ 	NULL
+ };
+ 
+@@ -530,11 +906,14 @@ static int nct7904_probe(struct i2c_client *client,
+ 	if (ret < 0)
+ 		return ret;
+ 
++	data->temp_mode = 0;
+ 	for (i = 0; i < 4; i++) {
+ 		val = (ret & (0x03 << i)) >> (i * 2);
+ 		bit = (1 << i);
+ 		if (val == 0)
+ 			data->tcpu_mask &= ~bit;
++		else if (val == 0x1 || val == 0x2)
++			data->temp_mode |= bit;
+ 	}
+ 
+ 	/* PECI */
+@@ -557,7 +936,7 @@ static int nct7904_probe(struct i2c_client *client,
+ 		if (ret < 0)
+ 			return ret;
+ 		data->has_dts = ret & 0xF;
+-		if (data->enable_dts & 0x2) {
++		if (data->enable_dts & ENABLE_TSI) {
+ 			ret = nct7904_read_reg(data, BANK_0, DTS_T_CTRL1_REG);
+ 			if (ret < 0)
+ 				return ret;
+-- 
+2.17.1
+
