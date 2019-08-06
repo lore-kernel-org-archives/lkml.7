@@ -4,53 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E36E6C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 245D7C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B21EC21874
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:39:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E76EE21874
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:40:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127594;
-	bh=ZaA9gT/QC75ZhyB/qLA7VAa4ghsqZhjlKDnZ2jOSQ3Q=;
+	s=default; t=1565127604;
+	bh=xExYZlj16QTL8K2BGncB++iPUVhpTo03XydSzUlUYrs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CmXd6uVnzq6FoFOsdjbjjaILYOgAK5OIIWmPmafJUlHQ1CCU9lLzdhZ+Vk/txXsdQ
-	 KkGh81XgYcZ2HFnN7xNHv7hmJ6Qm8WaVGMHakCjeG4Rm1cRska5+FvWbezE84m6iMz
-	 EYcHhT0JyUQ3lGSrflFoZ0Wj77cIWTZDvRi78uqU=
+	b=xDwANhIto7ty8kkHX/92tz/P/sXxYrWWA3Y91Xz3npZrh+OJ5tCAYYuHxUwgCVJSs
+	 gJxmZ58ap/NxizuPuG8wJwXd+7ivfgb9S03PyBdzVK9Lrd64X+qzn2LYNtRxULk2p4
+	 j/YaUtFNRsCZcd2eBmyF0cafAvxI9H3AdtPCjT04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729181AbfHFVjt (ORCPT
+        id S1728801AbfHFVkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:39:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55116 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:40:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729295AbfHFVhV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:37:21 -0400
+        id S1728242AbfHFVhL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:37:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE98A20C01;
-        Tue,  6 Aug 2019 21:37:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E00C2186A;
+        Tue,  6 Aug 2019 21:37:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127440;
-        bh=ZaA9gT/QC75ZhyB/qLA7VAa4ghsqZhjlKDnZ2jOSQ3Q=;
+        s=default; t=1565127430;
+        bh=xExYZlj16QTL8K2BGncB++iPUVhpTo03XydSzUlUYrs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NELLlGaUluOQaS+h8WBZMauLiMb8bKTkHJWeJPS8QfWn5C9wWL3yYdu7ZSJP2GUaH
-         vRm+ezDttcmCj4tfgo2g2TKbdv/FrCtMxhWPqzjiPs0nq/1PzWSADlWnSIG6wywbog
-         TzE54sZc2rmfXddK01HetgQ8zvSYLchktz6mYfQU=
+        b=XAwaarHpV717TG1nAICwOukhfIqjeeYR0tSgg6T0nQr9k77qyAu+clRmplXqF0ywb
+         EO90tN1z9HmtovbWNvfYYPA5ik85fODDyTBtytLaMPiFfA1mBm/KsEKe0VmeDR7EW5
+         ypkS7zG9Ii5xTZDCD8uXjKJvf0a51gun02xFN7jA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 02/17] xen/pciback: remove set but not used variable 'old_state'
-Date:   Tue,  6 Aug 2019 17:36:59 -0400
-Message-Id: <20190806213715.20487-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 23/25] ocfs2: remove set but not used variable 'last_hash'
+Date:   Tue,  6 Aug 2019 17:36:20 -0400
+Message-Id: <20190806213624.20194-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190806213715.20487-1-sashal@kernel.org>
-References: <20190806213715.20487-1-sashal@kernel.org>
+In-Reply-To: <20190806213624.20194-1-sashal@kernel.org>
+References: <20190806213624.20194-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,44 +68,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 09e088a4903bd0dd911b4f1732b250130cdaffed ]
+[ Upstream commit 7bc36e3ce91471b6377c8eadc0a2f220a2280083 ]
 
 Fixes gcc '-Wunused-but-set-variable' warning:
 
-drivers/xen/xen-pciback/conf_space_capability.c: In function pm_ctrl_write:
-drivers/xen/xen-pciback/conf_space_capability.c:119:25: warning:
- variable old_state set but not used [-Wunused-but-set-variable]
+  fs/ocfs2/xattr.c: In function ocfs2_xattr_bucket_find:
+  fs/ocfs2/xattr.c:3828:6: warning: variable last_hash set but not used [-Wunused-but-set-variable]
 
-It is never used so can be removed.
+It's never used and can be removed.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
+Link: http://lkml.kernel.org/r/20190716132110.34836-1-yuehaibing@huawei.com
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
+Acked-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/xen-pciback/conf_space_capability.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/ocfs2/xattr.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/xen/xen-pciback/conf_space_capability.c b/drivers/xen/xen-pciback/conf_space_capability.c
-index 7f83e9083e9dd..b1a1d7de0894e 100644
---- a/drivers/xen/xen-pciback/conf_space_capability.c
-+++ b/drivers/xen/xen-pciback/conf_space_capability.c
-@@ -115,13 +115,12 @@ static int pm_ctrl_write(struct pci_dev *dev, int offset, u16 new_value,
- {
- 	int err;
- 	u16 old_value;
--	pci_power_t new_state, old_state;
-+	pci_power_t new_state;
+diff --git a/fs/ocfs2/xattr.c b/fs/ocfs2/xattr.c
+index fb0a4eec310ce..77740ef5a8e85 100644
+--- a/fs/ocfs2/xattr.c
++++ b/fs/ocfs2/xattr.c
+@@ -3832,7 +3832,6 @@ static int ocfs2_xattr_bucket_find(struct inode *inode,
+ 	u16 blk_per_bucket = ocfs2_blocks_per_xattr_bucket(inode->i_sb);
+ 	int low_bucket = 0, bucket, high_bucket;
+ 	struct ocfs2_xattr_bucket *search;
+-	u32 last_hash;
+ 	u64 blkno, lower_blkno = 0;
  
- 	err = pci_read_config_word(dev, offset, &old_value);
- 	if (err)
- 		goto out;
+ 	search = ocfs2_xattr_bucket_new(inode);
+@@ -3876,8 +3875,6 @@ static int ocfs2_xattr_bucket_find(struct inode *inode,
+ 		if (xh->xh_count)
+ 			xe = &xh->xh_entries[le16_to_cpu(xh->xh_count) - 1];
  
--	old_state = (pci_power_t)(old_value & PCI_PM_CTRL_STATE_MASK);
- 	new_state = (pci_power_t)(new_value & PCI_PM_CTRL_STATE_MASK);
+-		last_hash = le32_to_cpu(xe->xe_name_hash);
+-
+ 		/* record lower_blkno which may be the insert place. */
+ 		lower_blkno = blkno;
  
- 	new_value &= PM_OK_BITS;
 -- 
 2.20.1
 
