@@ -7,47 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD23C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72BDEC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2E70218A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45DFC20C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:38:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127479;
-	bh=ZaA9gT/QC75ZhyB/qLA7VAa4ghsqZhjlKDnZ2jOSQ3Q=;
+	s=default; t=1565127487;
+	bh=zIiCuKNDpcRRRa9nJ08ZfVRNQarneq0WoQKE0ZlFYf0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=glwoWEbn4+kuwoX4zGAD4qINCrECYln2N54pXhbR8VujLp0RxNbnGyHS3ZpMcQirI
-	 Zs9JqJUNKjqSjMMIMxjqxbwFccLQUqV0MAcTB5ZJjHiWZJPddLE6B52Zu6dTR6BhjF
-	 7cfsbY/KjaOuM9/704xdq6VjpLIDNXj1Wh3mLQXE=
+	b=pEm9kYkjMKn8+Ll9wnYktcmLc/kLr6YooWB4ZLSQ33yWeHPF8Bf0HUBWCG3eG6QXm
+	 yd1dZVypPNSnO8ZOQTZw5A0uG9lMIFtFKZkpHCv5Bv9rV4qP/3zS8wCa3/4CD6YPjg
+	 3XbgsKq/UgN9FICA2RR3hgb+nnVpsQacYbRkhPUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729554AbfHFVh5 (ORCPT
+        id S1729619AbfHFViG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:37:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55606 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:38:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728771AbfHFVhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:37:54 -0400
+        id S1729560AbfHFViB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:38:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C45121874;
-        Tue,  6 Aug 2019 21:37:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22DB92189D;
+        Tue,  6 Aug 2019 21:37:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127474;
-        bh=ZaA9gT/QC75ZhyB/qLA7VAa4ghsqZhjlKDnZ2jOSQ3Q=;
+        s=default; t=1565127480;
+        bh=zIiCuKNDpcRRRa9nJ08ZfVRNQarneq0WoQKE0ZlFYf0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AP2JcmLH44D8gwqzdbuK61MMBt12e7b8o+gvMwxZYwjYApfWSAFNUQLUaA1dPoDTL
-         Cc6w6o3pmIj9zGbmp3sW9yoYxdna2fJalb3h7b0vTkBB3+CN0doDSWjmnO3SIrZHCj
-         5AZ3HktkY1BNssCM5QtXmylDbcGDQup1uJiSp6Kk=
+        b=iKolr7hQamjIU2KfjhW2nC2MLFrZb4eQXU2ArNtwqkn1paLEEB8Fh1hAyaU2gexc7
+         QFnYlT8/q3nCyQPTnnU1AW3qNCHCEQJGdM7+nT7WIY5lpIM8AgnCsQoSBmrC0Xza8b
+         5zd2V2jRTiMuKWMpgZ0KJTNaZlAg2+laInuc9seA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 02/14] xen/pciback: remove set but not used variable 'old_state'
-Date:   Tue,  6 Aug 2019 17:37:36 -0400
-Message-Id: <20190806213749.20689-2-sashal@kernel.org>
+Cc:     Numfor Mbiziwo-Tiapo <nums@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
+        Mark Drayton <mbd@fb.com>, Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Stephane Eranian <eranian@google.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.4 05/14] perf header: Fix use of unitialized value warning
+Date:   Tue,  6 Aug 2019 17:37:39 -0400
+Message-Id: <20190806213749.20689-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213749.20689-1-sashal@kernel.org>
 References: <20190806213749.20689-1-sashal@kernel.org>
@@ -60,46 +66,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Numfor Mbiziwo-Tiapo <nums@google.com>
 
-[ Upstream commit 09e088a4903bd0dd911b4f1732b250130cdaffed ]
+[ Upstream commit 20f9781f491360e7459c589705a2e4b1f136bee9 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+When building our local version of perf with MSAN (Memory Sanitizer) and
+running the perf record command, MSAN throws a use of uninitialized
+value warning in "tools/perf/util/util.c:333:6".
 
-drivers/xen/xen-pciback/conf_space_capability.c: In function pm_ctrl_write:
-drivers/xen/xen-pciback/conf_space_capability.c:119:25: warning:
- variable old_state set but not used [-Wunused-but-set-variable]
+This warning stems from the "buf" variable being passed into "write".
+It originated as the variable "ev" with the type union perf_event*
+defined in the "perf_event__synthesize_attr" function in
+"tools/perf/util/header.c".
 
-It is never used so can be removed.
+In the "perf_event__synthesize_attr" function they allocate space with a malloc
+call using ev, then go on to only assign some of the member variables before
+passing "ev" on as a parameter to the "process" function therefore "ev"
+contains uninitialized memory. Changing the malloc call to zalloc to initialize
+all the members of "ev" which gets rid of the warning.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
+To reproduce this warning, build perf by running:
+make -C tools/perf CLANG=1 CC=clang EXTRA_CFLAGS="-fsanitize=memory\
+ -fsanitize-memory-track-origins"
+
+(Additionally, llvm might have to be installed and clang might have to
+be specified as the compiler - export CC=/usr/bin/clang)
+
+then running:
+tools/perf/perf record -o - ls / | tools/perf/perf --no-pager annotate\
+ -i - --stdio
+
+Please see the cover letter for why false positive warnings may be
+generated.
+
+Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Drayton <mbd@fb.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Stephane Eranian <eranian@google.com>
+Link: http://lkml.kernel.org/r/20190724234500.253358-2-nums@google.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/xen-pciback/conf_space_capability.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ tools/perf/util/header.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/xen/xen-pciback/conf_space_capability.c b/drivers/xen/xen-pciback/conf_space_capability.c
-index 7f83e9083e9dd..b1a1d7de0894e 100644
---- a/drivers/xen/xen-pciback/conf_space_capability.c
-+++ b/drivers/xen/xen-pciback/conf_space_capability.c
-@@ -115,13 +115,12 @@ static int pm_ctrl_write(struct pci_dev *dev, int offset, u16 new_value,
- {
- 	int err;
- 	u16 old_value;
--	pci_power_t new_state, old_state;
-+	pci_power_t new_state;
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 0102dd46fb6da..bcb8e85a40f90 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -2680,7 +2680,7 @@ int perf_event__synthesize_attr(struct perf_tool *tool,
+ 	size += sizeof(struct perf_event_header);
+ 	size += ids * sizeof(u64);
  
- 	err = pci_read_config_word(dev, offset, &old_value);
- 	if (err)
- 		goto out;
+-	ev = malloc(size);
++	ev = zalloc(size);
  
--	old_state = (pci_power_t)(old_value & PCI_PM_CTRL_STATE_MASK);
- 	new_state = (pci_power_t)(new_value & PCI_PM_CTRL_STATE_MASK);
- 
- 	new_value &= PM_OK_BITS;
+ 	if (ev == NULL)
+ 		return -ENOMEM;
 -- 
 2.20.1
 
