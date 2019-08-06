@@ -2,89 +2,109 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6106EC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C759EC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3235B2189E
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:40:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="bqB7pni7"
+	by mail.kernel.org (Postfix) with ESMTP id 903A421874
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:40:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565127640;
+	bh=Jk5erRwdW6Xn1aFjjqOIfAEDX4aSw+GfypMFT+zJTA4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gr5gfn4ChEU991cd5H0HN1JTbpfaPE+D7UW6wdaZcWG+rEXqqP1MkhPFkYy8F8NCE
+	 DKmyhLUrmjxE9mQLr9p1N8VcZDQ70ZxJm8ekTfQGe4Wgzy89TuLbgOusDlssLCmvOt
+	 3lVi+3UKE2J6+kpXq+Cieczxk6MqvnLyJqpvYR/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729455AbfHFVke (ORCPT
+        id S1727084AbfHFVgs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:40:34 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:35002 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729369AbfHFVka (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:40:30 -0400
-Received: by mail-qk1-f196.google.com with SMTP id r21so64249410qke.2
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 14:40:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=Js86RGa+7gv8Dz+uRj1Z85NVpKzURiNKiRWdZZpNzpY=;
-        b=bqB7pni758j//HeQjWeQWyiOkiio/33jFDo5D/Rv43HC0kMCmA5p2jGfzO94R2MA88
-         vL5PEaVpJPJLw6FKGxxHf3bsrOfsqZi1ED9Iwni8F9f28HbFNdfGl417EMsohc4D89Do
-         5A2M4b8qmq9OHs17lIwFmC47xvsrrFhDGBBQKRkoYDTgEbinjFDvPDorGbk9IXR4GPMx
-         /1cbfnsFSxcrAnqgh9Pv2xIuRA/8gBCoQ/X6NHVYHV4PSV54LQ2iY0Uuq1PtYNiVFSAx
-         U6l1ta4OkHR2G9J5T9iFhoO8OwpjSEq3ovytdwQup92QaJfsMXvujUcHayqnIm1nHNeo
-         ZzFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=Js86RGa+7gv8Dz+uRj1Z85NVpKzURiNKiRWdZZpNzpY=;
-        b=T34FdoV6RK9Jfu+YsZlzbesVHfz9M6QqgNy5NckvAKPYHFxWCodMBRCeLP3heAV+tQ
-         ZaSpSuw+QREIrUoSSFHLHodWuHLPGOTojukvERPrb1aXmYbAy39VZBtymYeurXRlHdVi
-         5Z7qJREYoaA9icLuZPLmEnA+21vgXMVulwEcARdt7S+QZnzNtDn0YT41kl6ZBfemin80
-         pXv+NjGiwFkAl9U1EdAAca90jATYtXMo7Vpb7DQ/Xy6ZrKFc9Y1Bu0DDKr95vje3DdX4
-         cv1NFrp7URURHHd3YXaFfpn5K2Oiee0MN0nmVjmsOVbD5Lv64X0wuqRKUfZxDa0sB9Bd
-         XX4A==
-X-Gm-Message-State: APjAAAWvI0n/0ulyi7+VS9wxKLuPHBfyfkUctNje9GmRf7QdfmtTv/DI
-        nkoTBg1bgnFBGf5ULv7jVSNYLS9FJTU=
-X-Google-Smtp-Source: APXvYqx2q+8HP8EC16vCqUFUk+3+NZe8oYqCl8kwmI9uG79YCv0SXk/bLnAw8YF+vBdK7leiGMQEMw==
-X-Received: by 2002:a37:c81:: with SMTP id 123mr740898qkm.300.1565127629072;
-        Tue, 06 Aug 2019 14:40:29 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id e7sm36124885qtp.91.2019.08.06.14.40.28
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 14:40:28 -0700 (PDT)
-Date:   Tue, 6 Aug 2019 14:40:03 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Hayes Wang <hayeswang@realtek.com>
-Cc:     <netdev@vger.kernel.org>, <nic_swsd@realtek.com>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>
-Subject: Re: [PATCH net-next 2/5] r8152: replace array with linking list for
- rx information
-Message-ID: <20190806144003.457b244e@cakuba.netronome.com>
-In-Reply-To: <20190806125342.4620a94f@cakuba.netronome.com>
-References: <1394712342-15778-289-albertk@realtek.com>
-        <1394712342-15778-291-albertk@realtek.com>
-        <20190806125342.4620a94f@cakuba.netronome.com>
-Organization: Netronome Systems, Ltd.
+        Tue, 6 Aug 2019 17:36:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54544 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727814AbfHFVgn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:36:43 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1771217F5;
+        Tue,  6 Aug 2019 21:36:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565127403;
+        bh=Jk5erRwdW6Xn1aFjjqOIfAEDX4aSw+GfypMFT+zJTA4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Fw1YOeyUEyPVuTUqeBo0yj+I8E9ktH+wlEgZz9wQ2GqjHz//A19hX3/lz3xAefZ62
+         D9EtbMifyfbt1FzASzfhZmUNXIVSfDdnIUDu+jGPImFRyC0Mpw9z4UyLvSB8MyA5Xc
+         L7GzlzkcArXBtfCbT1iwd62Mc11f81u0NOrNsCOs=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>,
+        Jeffrin Jose T <jeffrin@rajagiritech.edu.in>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-ide@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 09/25] libata: zpodd: Fix small read overflow in zpodd_get_mech_type()
+Date:   Tue,  6 Aug 2019 17:36:06 -0400
+Message-Id: <20190806213624.20194-9-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190806213624.20194-1-sashal@kernel.org>
+References: <20190806213624.20194-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 6 Aug 2019 12:53:42 -0700, Jakub Kicinski wrote:
-> > @@ -744,6 +745,8 @@ struct r8152 {
-> >  		void (*autosuspend_en)(struct r8152 *tp, bool enable);
-> >  	} rtl_ops;
-> >  
-> > +	atomic_t rx_count;  
-> 
-> I wonder what the advantage of rx_count being atomic is, perhpas it
-> could be protected by the same lock as the list head?
+From: Kees Cook <keescook@chromium.org>
 
-Okay, I see you're using it to test the queue length without the lock in
-a later patch.
+[ Upstream commit 71d6c505b4d9e6f76586350450e785e3d452b346 ]
+
+Jeffrin reported a KASAN issue:
+
+  BUG: KASAN: global-out-of-bounds in ata_exec_internal_sg+0x50f/0xc70
+  Read of size 16 at addr ffffffff91f41f80 by task scsi_eh_1/149
+  ...
+  The buggy address belongs to the variable:
+    cdb.48319+0x0/0x40
+
+Much like commit 18c9a99bce2a ("libata: zpodd: small read overflow in
+eject_tray()"), this fixes a cdb[] buffer length, this time in
+zpodd_get_mech_type():
+
+We read from the cdb[] buffer in ata_exec_internal_sg(). It has to be
+ATAPI_CDB_LEN (16) bytes long, but this buffer is only 12 bytes.
+
+Reported-by: Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
+Fixes: afe759511808c ("libata: identify and init ZPODD devices")
+Link: https://lore.kernel.org/lkml/201907181423.E808958@keescook/
+Tested-by: Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/ata/libata-zpodd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/ata/libata-zpodd.c b/drivers/ata/libata-zpodd.c
+index 173e6f2dd9af0..eefda51f97d35 100644
+--- a/drivers/ata/libata-zpodd.c
++++ b/drivers/ata/libata-zpodd.c
+@@ -56,7 +56,7 @@ static enum odd_mech_type zpodd_get_mech_type(struct ata_device *dev)
+ 	unsigned int ret;
+ 	struct rm_feature_desc *desc;
+ 	struct ata_taskfile tf;
+-	static const char cdb[] = {  GPCMD_GET_CONFIGURATION,
++	static const char cdb[ATAPI_CDB_LEN] = {  GPCMD_GET_CONFIGURATION,
+ 			2,      /* only 1 feature descriptor requested */
+ 			0, 3,   /* 3, removable medium feature */
+ 			0, 0, 0,/* reserved */
+-- 
+2.20.1
+
